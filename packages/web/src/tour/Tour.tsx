@@ -1,10 +1,8 @@
-import React, { useCallback, useEffect, useRef } from 'react';
-import { useRefMap } from '@coinbase/cds-common/hooks/useRefMap';
+import React, { createContext, useCallback, useEffect, useRef } from 'react';
 import {
   OverlayContentContext,
   type OverlayContentContextValue,
 } from '@coinbase/cds-common/overlays/OverlayContentContext';
-import { RefMapContext } from '@coinbase/cds-common/system/RefMapContext';
 import { TourContext, type TourContextValue } from '@coinbase/cds-common/tour/TourContext';
 import type {
   TourOptions,
@@ -177,6 +175,18 @@ const scrollIntoView = async (element: HTMLElement | null, scrollOptions?: TourS
 
 export type TourFC = <T extends string = string>(props: TourProps<T>) => React.ReactNode;
 
+export type TourRefContextValue = {
+  setActiveTourStepTarget: (target: HTMLElement | null) => void;
+};
+
+// This context is used to update the ref to the tour step target element.
+export const TourRefContext = createContext<TourRefContextValue>({
+  setActiveTourStepTarget: () => {},
+});
+
+const defaultTourStepOffset = 24;
+const defaultTourStepShiftPadding = 32;
+
 const TourComponent = <T extends string = string>({
   steps,
   activeTourStep,
@@ -185,7 +195,7 @@ const TourComponent = <T extends string = string>({
   TourMaskComponent = DefaultTourMask,
   TourStepArrowComponent = DefaultTourStepArrow,
   hideOverlay,
-  tourStepOffset = 24,
+  tourStepOffset = defaultTourStepOffset,
   tourStepShift,
   tourStepAutoPlacement,
   tourMaskPadding,
@@ -198,12 +208,19 @@ const TourComponent = <T extends string = string>({
   id,
   testID,
 }: TourProps<T>) => {
-  const refMap = useRefMap<HTMLElement>();
   const tourStepArrowRef = useRef<HTMLElement>(null);
   const RenderedTourStep = activeTourStep?.Component;
   const RenderedTourStepArrow = activeTourStep?.ArrowComponent ?? TourStepArrowComponent;
-  const activeTourStepTarget = activeTourStep ? refMap.getRef(activeTourStep.id) : null;
-  const defaultTourStepShiftPadding = 32;
+
+  // This ref is used to store the active tour step target element.
+  // We use a ref instead of a state because we want to avoid re-rendering the component
+  const activeTourStepTargetRef = useRef<HTMLElement | null>(null);
+
+  const blockScroll = useScrollBlocker();
+  const [animation, animationApi] = useSpring(
+    () => ({ from: { opacity: 0 }, config: springConfig.slow }),
+    [],
+  );
 
   const {
     refs,
@@ -220,45 +237,81 @@ const TourComponent = <T extends string = string>({
     whileElementsMounted: autoUpdate,
   });
 
-  const [animation, animationApi] = useSpring(
-    () => ({ from: { opacity: 0 }, config: springConfig.slow }),
-    [],
-  );
-
   const handleChange = useCallback(
     (tourStep: TourStepValue<T> | null) => {
-      // If the opacity is already 0, animating it to 0 does not trigger `onRest`
-      if (animation.opacity.get() === 0) return onChange(tourStep);
       void animationApi.start({
         to: { opacity: 0 },
         config: springConfig.stiff,
-        onRest: () => onChange(tourStep),
+        onResolve: () => onChange(tourStep),
       });
     },
-    [animation.opacity, animationApi, onChange],
+    [animationApi, onChange],
   );
-
-  const revealTourStep = useCallback(async () => {
-    if (!disableAutoScroll && !activeTourStep?.disableAutoScroll)
-      await scrollIntoView(activeTourStepTarget, activeTourStep?.scrollOptions ?? scrollOptions);
-    refs.setReference(activeTourStepTarget);
-    void animationApi.start({ to: { opacity: 1 }, config: springConfig.slow });
-  }, [activeTourStep, activeTourStepTarget, refs, animationApi, disableAutoScroll, scrollOptions]);
 
   const api = useTour<T>({ steps, activeTourStep, onChange: handleChange });
 
-  const blockScroll = useScrollBlocker();
+  // Component Lifecycle & Side Effects
+  // ---------------------------------------------------------------------------
+  // This component's visual side effects (scrolling and animations) are driven
+  // by a single callback, `handleSetActiveTourStepTarget`.
+  //
+  // This function is called from the `TourStep` component's ref callback
+  // whenever the active step changes. Because the ref callback is tied to the
+  // lifecycle of the `TourStep`, it reliably fires whenever a new step becomes
+  // active, regardless of whether the change was triggered internally (by a
+  // "Next" button) or externally (by a direct prop change).
+  //
+  // This centralizes the logic for revealing a step: we get the target element,
+  // scroll it into view, and then kick off the fade-in animation, all in one
+  // sequential, event-driven flow.
 
+  const handleActiveTourStepTargetChange = useCallback(
+    (target: HTMLElement | null) => {
+      refs.setReference(target);
+      activeTourStepTargetRef.current = target;
+
+      const revealTourStep = async () => {
+        // Scroll the new target into view.
+        if (!disableAutoScroll && !activeTourStep?.disableAutoScroll) {
+          await scrollIntoView(
+            activeTourStepTargetRef.current,
+            activeTourStep?.scrollOptions ?? scrollOptions,
+          );
+        }
+        void animationApi.start({ to: { opacity: 1 }, config: springConfig.slow });
+      };
+
+      void revealTourStep();
+    },
+    [refs, disableAutoScroll, scrollOptions, animationApi, activeTourStep],
+  );
+
+  // Manages scroll locking for the tour's duration. `useEffect` is used to
+  // guarantee that scroll is re-enabled when the tour is closed or unmounted.
   useEffect(() => {
-    if (!activeTourStep) return;
-    blockScroll(true);
-    void revealTourStep();
-    return () => blockScroll(false);
-  }, [activeTourStep, blockScroll, revealTourStep]);
+    if (activeTourStep?.id) {
+      blockScroll(true);
+    } else {
+      activeTourStepTargetRef.current = null;
+    }
+
+    return () => {
+      blockScroll(false);
+    };
+  }, [
+    activeTourStep,
+    activeTourStepTargetRef,
+    animationApi,
+    blockScroll,
+    disableAutoScroll,
+    scrollOptions,
+  ]);
 
   return (
     <OverlayContentContext.Provider value={overlayContentContextValue}>
-      <RefMapContext.Provider value={refMap}>
+      <TourRefContext.Provider
+        value={{ setActiveTourStepTarget: handleActiveTourStepTargetChange }}
+      >
         <TourContext.Provider value={api as TourContextValue}>
           {children}
           {!!RenderedTourStep && (
@@ -272,15 +325,16 @@ const TourComponent = <T extends string = string>({
                 id={id}
                 role="dialog"
               >
-                {!(activeTourStep.hideOverlay ?? hideOverlay) && activeTourStepTarget && (
-                  <animated.div style={animation}>
-                    <TourMaskComponent
-                      activeTourStepTargetRect={activeTourStepTarget.getBoundingClientRect()}
-                      borderRadius={activeTourStep.tourMaskBorderRadius ?? tourMaskBorderRadius}
-                      padding={activeTourStep.tourMaskPadding ?? tourMaskPadding}
-                    />
-                  </animated.div>
-                )}
+                {!(activeTourStep.hideOverlay ?? hideOverlay) &&
+                  activeTourStepTargetRef.current && (
+                    <animated.div style={animation}>
+                      <TourMaskComponent
+                        activeTourStepTargetRect={activeTourStepTargetRef.current.getBoundingClientRect()}
+                        borderRadius={activeTourStep.tourMaskBorderRadius ?? tourMaskBorderRadius}
+                        padding={activeTourStep.tourMaskPadding ?? tourMaskPadding}
+                      />
+                    </animated.div>
+                  )}
                 <div ref={refs.setFloating} style={floatingStyles}>
                   <FocusTrap>
                     <animated.div style={animation}>
@@ -298,7 +352,7 @@ const TourComponent = <T extends string = string>({
             </Portal>
           )}
         </TourContext.Provider>
-      </RefMapContext.Provider>
+      </TourRefContext.Provider>
     </OverlayContentContext.Provider>
   );
 };
