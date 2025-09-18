@@ -1,0 +1,23 @@
+### Basic usage
+
+```tsx live
+function Example() {
+  const options = [
+    { label: 'My Portfolio', id: 'portfolio' },
+    { label: 'Family Account', id: 'family' },
+    { label: 'Business Account', id: 'business' },
+  ];
+  const [selected, setSelected] = useState('portfolio');
+
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+      <NavigationTitleSelect
+        options={options}
+        value={selected}
+        onChange={setSelected}
+        accessibilityLabel="Switch account"
+      />
+    </div>
+  );
+}
+```

@@ -1,0 +1,181 @@
+import { type CSSProperties, forwardRef, memo, useId, useMemo } from 'react';
+import type { ThemeVars } from '@cbhq/cds-common/core/theme';
+import { css } from '@linaria/core';
+
+import { cx } from '../cx';
+import { Box, HStack, VStack } from '../layout';
+import type { ResponsiveProp } from '../styles/styleProps';
+import { Pressable, type PressableProps } from '../system/Pressable';
+import { Text } from '../typography/Text';
+
+import { Checkbox } from './Checkbox';
+import type { ControlBaseProps } from './Control';
+import { useSelectionCellControlHeight } from './useSelectionCellControlHeight';
+
+export type CheckboxCellBaseProps<T extends string> = Omit<
+  PressableProps<'label'>,
+  'title' | 'onChange'
+> &
+  Omit<
+    ControlBaseProps<T>,
+    'onChange' | 'title' | 'children' | 'iconStyle' | 'labelStyle' | 'checked'
+  > & {
+    checked?: boolean;
+    title: React.ReactNode;
+    description?: React.ReactNode;
+    onChange?: (inputChangeEvent: React.ChangeEvent<HTMLInputElement>) => void;
+    columnGap?: ResponsiveProp<ThemeVars.Space>;
+    rowGap?: ResponsiveProp<ThemeVars.Space>;
+    /** Custom ID for the title element. If not provided, a unique ID will be generated. */
+    titleId?: string;
+    /** Custom ID for the description element. If not provided, a unique ID will be generated. */
+    descriptionId?: string;
+  };
+
+export type CheckboxCellProps<T extends string> = CheckboxCellBaseProps<T> & {
+  classNames?: {
+    root?: string;
+    checkboxContainer?: string;
+    title?: string;
+    description?: string;
+    contentContainer?: string;
+  };
+  styles?: {
+    root?: CSSProperties;
+    checkboxContainer?: CSSProperties;
+    title?: CSSProperties;
+    description?: CSSProperties;
+    contentContainer?: CSSProperties;
+  };
+};
+
+const baseCss = css`
+  &:focus-within {
+    border-color: var(--border-color-focused);
+    box-shadow: 0 0 0 var(--border-width-focused) var(--border-color-focused);
+  }
+`;
+
+const CheckboxCellWithRef = forwardRef(function CheckboxCell<T extends string>(
+  {
+    title,
+    description,
+    checked,
+    onChange,
+    disabled,
+    columnGap = 2,
+    rowGap = 0,
+    padding = 2,
+    borderWidth = 100,
+    borderRadius = 200,
+    titleId: customTitleId,
+    descriptionId: customDescriptionId,
+    testID,
+    style,
+    value,
+    noScaleOnPress = true,
+    readOnly,
+    indeterminate,
+    className,
+    classNames,
+    styles,
+    ...props
+  }: CheckboxCellProps<T>,
+  ref: React.ForwardedRef<HTMLLabelElement>,
+) {
+  const generatedTitleId = useId();
+  const generatedDescriptionId = useId();
+
+  const titleId = customTitleId ?? generatedTitleId;
+  const descriptionId = customDescriptionId ?? generatedDescriptionId;
+
+  const pressableStyle = useMemo(() => {
+    return {
+      '--border-color-unfocused': 'transparent',
+      '--border-color-focused': 'var(--color-bgPrimary)',
+      '--border-width-focused': `var(--borderWidth-${borderWidth})`,
+      ...style,
+      ...styles?.root,
+    };
+  }, [borderWidth, style, styles?.root]);
+
+  const ariaLabelledBy = titleId;
+  const ariaDescribedBy = description ? descriptionId : undefined;
+
+  const checkboxContainerHeight = useSelectionCellControlHeight();
+
+  return (
+    <Pressable
+      ref={ref}
+      as="label"
+      background="bg"
+      borderColor="bgLine"
+      borderRadius={borderRadius}
+      borderWidth={borderWidth}
+      className={cx(baseCss, className, classNames?.root)}
+      disabled={disabled || readOnly}
+      gap={columnGap}
+      noScaleOnPress={noScaleOnPress}
+      padding={padding}
+      style={pressableStyle}
+      testID={testID}
+      {...props}
+    >
+      <HStack
+        alignItems="center"
+        className={classNames?.checkboxContainer}
+        height={checkboxContainerHeight}
+        style={styles?.checkboxContainer}
+      >
+        <Checkbox
+          aria-describedby={ariaDescribedBy}
+          aria-labelledby={ariaLabelledBy}
+          checked={!!checked}
+          disabled={disabled}
+          indeterminate={indeterminate}
+          onChange={onChange}
+          readOnly={readOnly}
+          value={value}
+        />
+      </HStack>
+      <VStack
+        className={classNames?.contentContainer}
+        gap={rowGap}
+        style={styles?.contentContainer}
+      >
+        {typeof title === 'string' ? (
+          <Text className={classNames?.title} font="headline" id={titleId} style={styles?.title}>
+            {title}
+          </Text>
+        ) : (
+          <Box className={classNames?.title} id={titleId} style={styles?.title}>
+            {title}
+          </Box>
+        )}
+        {description &&
+          (typeof description === 'string' ? (
+            <Text
+              className={classNames?.description}
+              color="fgMuted"
+              font="body"
+              id={descriptionId}
+              style={styles?.description}
+            >
+              {description}
+            </Text>
+          ) : (
+            <Box className={classNames?.description} id={descriptionId} style={styles?.description}>
+              {description}
+            </Box>
+          ))}
+      </VStack>
+    </Pressable>
+  );
+}) as <T extends string>(
+  props: CheckboxCellProps<T> & { ref?: React.Ref<HTMLLabelElement> },
+) => React.ReactElement;
+
+export const CheckboxCell = memo(CheckboxCellWithRef) as typeof CheckboxCellWithRef &
+  React.MemoExoticComponent<typeof CheckboxCellWithRef>;
+
+CheckboxCell.displayName = 'CheckboxCell';

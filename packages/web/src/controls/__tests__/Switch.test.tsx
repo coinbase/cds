@@ -1,0 +1,142 @@
+import { useState } from 'react';
+import { renderA11y } from '@cbhq/cds-web-utils';
+import { fireEvent, render, screen } from '@testing-library/react';
+
+import { DefaultThemeProvider } from '../../utils/test';
+import { Switch } from '../Switch';
+
+describe('Switch.test', () => {
+  it('handles input', () => {
+    const TestComponent = () => {
+      const [checked, setChecked] = useState(false);
+      const onChange: React.ChangeEventHandler<HTMLInputElement> = (event) =>
+        setChecked(event.target.checked);
+      return (
+        <DefaultThemeProvider>
+          <div>checked is {checked ? 'true' : 'false'}</div>
+          <Switch checked={checked} onChange={onChange}>
+            test label
+          </Switch>
+        </DefaultThemeProvider>
+      );
+    };
+
+    render(<TestComponent />);
+
+    expect(screen.getByText('checked is false')).toBeTruthy();
+
+    fireEvent.click(screen.getByRole('switch'));
+
+    expect(screen.getByText('checked is true')).toBeTruthy();
+
+    fireEvent.click(screen.getByRole('switch'));
+
+    expect(screen.getByText('checked is false')).toBeTruthy();
+  });
+
+  it('passes accessibility', async () => {
+    expect(
+      await renderA11y(
+        <DefaultThemeProvider>
+          <Switch onChange={jest.fn()}>test label</Switch>
+        </DefaultThemeProvider>,
+      ),
+    ).toHaveNoViolations();
+  });
+
+  it('renders label', () => {
+    render(
+      <DefaultThemeProvider>
+        <Switch onChange={jest.fn()}>test label</Switch>
+      </DefaultThemeProvider>,
+    );
+
+    expect(screen.getByLabelText('test label')).toBeTruthy();
+  });
+
+  it('disables user interaction when disabled', () => {
+    const onChange = jest.fn();
+
+    render(
+      <DefaultThemeProvider>
+        <Switch disabled onChange={onChange} />
+      </DefaultThemeProvider>,
+    );
+
+    // dispatching event doesn't respect disabled inputs
+    // so we use click method directly
+    screen.getByRole('switch').click();
+
+    expect(onChange).not.toHaveBeenCalled();
+  });
+
+  it('sets forwarded ref', () => {
+    const ref = { current: null };
+
+    render(
+      <DefaultThemeProvider>
+        <Switch ref={ref} onChange={jest.fn()} />
+      </DefaultThemeProvider>,
+    );
+
+    expect(ref.current).toBeInstanceOf(HTMLInputElement);
+  });
+
+  it('renders testID', () => {
+    render(
+      <DefaultThemeProvider>
+        <Switch onChange={jest.fn()} testID="test-test-id" />
+      </DefaultThemeProvider>,
+    );
+
+    expect(screen.getByTestId('test-test-id')).toBeTruthy();
+  });
+
+  it('has default color', () => {
+    render(
+      <DefaultThemeProvider>
+        <Switch onChange={jest.fn()} testID="test-switch" />
+      </DefaultThemeProvider>,
+    );
+
+    const track = screen.getByTestId('switch-track');
+
+    expect(track.className).toContain('bgTertiary');
+  });
+
+  it('has default color when checked', () => {
+    render(
+      <DefaultThemeProvider>
+        <Switch checked onChange={jest.fn()} testID="test-switch" />
+      </DefaultThemeProvider>,
+    );
+
+    const track = screen.getByTestId('switch-track');
+
+    expect(track.className).toContain('bgPrimary');
+  });
+
+  it('applies custom controlColor prop when checked', () => {
+    render(
+      <DefaultThemeProvider>
+        <Switch checked controlColor="bgPositive" onChange={jest.fn()} testID="test-switch" />
+      </DefaultThemeProvider>,
+    );
+
+    const thumb = screen.getByTestId('switch-thumb');
+
+    expect(thumb.className).toContain('bgPositive');
+  });
+
+  it('uses bgTertiary color when unchecked regardless of controlColor prop', () => {
+    render(
+      <DefaultThemeProvider>
+        <Switch controlColor="bgPositive" onChange={jest.fn()} testID="test-switch" />
+      </DefaultThemeProvider>,
+    );
+
+    const track = screen.getByTestId('switch-track');
+
+    expect(track.className).toContain('bgTertiary');
+  });
+});

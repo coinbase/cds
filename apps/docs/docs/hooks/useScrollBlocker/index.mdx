@@ -1,0 +1,22 @@
+---
+id: useScrollBlocker
+title: useScrollBlocker
+platform_switcher_options: { web: true }
+hide_title: true
+---
+
+import { ComponentHeader } from '@site/src/components/page/ComponentHeader';
+import { HooksBanner } from '@site/src/components/page/ComponentBanner/HooksBanner';
+import webMetadata from './webMetadata.json';
+import { HookTabsContainer } from '@site/src/components/page/HookTabsContainer';
+import WebExamples, { toc as webExamplesToc } from './_webExamples.mdx';
+import WebApi, { toc as webApiToc } from './_webApi.mdx';
+
+<ComponentHeader title="useScrollBlocker" banner={<HooksBanner />} webMetadata={webMetadata} />
+
+<HookTabsContainer
+  webExamples={<WebExamples />}
+  webExamplesToc={webExamplesToc}
+  webApi={<WebApi />}
+  webApiToc={webApiToc}
+/>

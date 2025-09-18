@@ -1,0 +1,184 @@
+## Label Below
+
+```jsx live
+<VStack gap={2}>
+  <ProgressBarWithFixedLabels startLabel={0} endLabel={20} labelPlacement="below">
+    <ProgressBar progress={0.2} />
+  </ProgressBarWithFixedLabels>
+  <ProgressBarWithFixedLabels endLabel={20} labelPlacement="below">
+    <ProgressBar progress={0.2} />
+  </ProgressBarWithFixedLabels>
+</VStack>
+```
+
+## Label Beside
+
+```jsx live
+<VStack gap={2}>
+  <ProgressBarWithFixedLabels startLabel={0} endLabel={20} labelPlacement="beside">
+    <ProgressBar progress={0.2} />
+  </ProgressBarWithFixedLabels>
+  <ProgressBarWithFixedLabels endLabel={20} labelPlacement="beside">
+    <ProgressBar progress={0.2} />
+  </ProgressBarWithFixedLabels>
+</VStack>
+```
+
+## Disabled
+
+```jsx live
+<VStack gap={2}>
+  <ProgressBarWithFixedLabels startLabel={0} endLabel={20} disabled labelPlacement="beside">
+    <ProgressBar disabled progress={0.2} />
+  </ProgressBarWithFixedLabels>
+  <ProgressBarWithFixedLabels startLabel={0} endLabel={20} disabled labelPlacement="above">
+    <ProgressBar disabled progress={0.2} />
+  </ProgressBarWithFixedLabels>
+</VStack>
+```
+
+## Custom Labels
+
+```jsx live
+function Example() {
+  const renderStartLabelNumStr = useCallback((num) => {
+    return `$${num.toLocaleString()}`;
+  }, []);
+
+  const renderEndLabelNumStr = useCallback((num) => {
+    return `${num.toLocaleString()} left`;
+  }, []);
+
+  const renderStartLabelNum = useCallback((num, disabled) => {
+    return (
+      <TextTitle3 disabled={disabled} as="span">
+        ${num.toLocaleString()}
+      </TextTitle3>
+    );
+  }, []);
+
+  const renderEndLabelNum = useCallback((num, disabled) => {
+    return (
+      <TextLabel2 disabled={disabled} as="span" align="end" noWrap>
+        ${num.toLocaleString()} left
+      </TextLabel2>
+    );
+  }, []);
+
+  return (
+    <VStack gap={2}>
+      <ProgressBarWithFixedLabels
+        startLabel={{ value: 12500, render: renderStartLabelNumStr }}
+        endLabel={{ value: 35500, render: renderEndLabelNumStr }}
+        labelPlacement="above"
+      >
+        <ProgressBar progress={0.6} />
+      </ProgressBarWithFixedLabels>
+      <ProgressBarWithFixedLabels
+        startLabel={{ value: 12500, render: renderStartLabelNum }}
+        endLabel={{ value: 35500, render: renderEndLabelNum }}
+        labelPlacement="above"
+      >
+        <ProgressBar progress={0.6} />
+      </ProgressBarWithFixedLabels>
+
+      <ProgressBarWithFixedLabels
+        startLabel={{ value: 12500, render: renderStartLabelNumStr }}
+        endLabel={{ value: 35500, render: renderEndLabelNumStr }}
+        labelPlacement="above"
+        disabled
+      >
+        <ProgressBar disabled progress={0.6} />
+      </ProgressBarWithFixedLabels>
+      <ProgressBarWithFixedLabels
+        startLabel={{ value: 12500, render: renderStartLabelNum }}
+        endLabel={{ value: 35500, render: renderEndLabelNum }}
+        labelPlacement="above"
+        disabled
+      >
+        <ProgressBar disabled progress={0.6} />
+      </ProgressBarWithFixedLabels>
+    </VStack>
+  );
+}
+```
+
+## Custom Styles
+
+You can customize the appearance of the progress bar and labels using the `styles` prop.
+
+```tsx live
+<ProgressContainerWithButtons>
+  {({ calculateProgress }) => (
+    <VStack gap={2}>
+      <ProgressBarWithFixedLabels
+        endLabel={Math.round(calculateProgress(0.7) * 100)}
+        labelPlacement="above"
+        startLabel={0}
+        styles={{
+          startLabel: {
+            color: 'var(--color-fgNegative)',
+          },
+          endLabel: {
+            color: 'var(--color-fgPositive)',
+            fontWeight: 'bold',
+          },
+        }}
+      >
+        <ProgressBar
+          color="bgPositive"
+          progress={calculateProgress(0.7)}
+          styles={{
+            container: {
+              height: 'var(--space-8)',
+              borderRadius: 'var(--borderRadius-1000)',
+            },
+            progress: {
+              borderRadius: 'var(--borderRadius-1000)',
+            },
+          }}
+        />
+      </ProgressBarWithFixedLabels>
+    </VStack>
+  )}
+</ProgressContainerWithButtons>
+```
+
+## Interactive Demo
+
+This is for demo purposes. ProgressContainerWithButtons isn't designed for production usage.
+
+```jsx live
+<ProgressContainerWithButtons>
+  {({ calculateProgress }) => (
+    <VStack gap={2}>
+      <ProgressBarWithFixedLabels
+        startLabel={0}
+        endLabel={Math.round(calculateProgress(0.2) * 100)}
+        labelPlacement="below"
+      >
+        <ProgressBar progress={calculateProgress(0.2)} />
+      </ProgressBarWithFixedLabels>
+      <ProgressBarWithFixedLabels
+        endLabel={Math.round(calculateProgress(0.2) * 100)}
+        labelPlacement="below"
+      >
+        <ProgressBar progress={calculateProgress(0.2)} />
+      </ProgressBarWithFixedLabels>
+      <ProgressBarWithFixedLabels
+        startLabel={0}
+        endLabel={Math.round(calculateProgress(0.2) * 100)}
+        labelPlacement="beside"
+      >
+        <ProgressBar progress={calculateProgress(0.2)} />
+      </ProgressBarWithFixedLabels>
+      <ProgressBarWithFixedLabels
+        endLabel={Math.round(calculateProgress(0.2) * 100)}
+        labelPlacement="beside"
+      >
+        <ProgressBar progress={calculateProgress(0.2)} />
+      </ProgressBarWithFixedLabels>
+    </VStack>
+  )}
+</ProgressContainerWithButtons>
+```

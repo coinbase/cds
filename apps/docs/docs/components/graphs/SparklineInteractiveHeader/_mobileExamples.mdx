@@ -1,0 +1,47 @@
+### Default usage
+
+```jsx
+<Box padding={3} width="100%">
+  <SparklineInteractivePriceWithHeader data={sparklineInteractiveData} strokeColor="#F7931A" />
+</Box>
+```
+
+### Fill
+
+The fill will be added by default
+
+```jsx
+<Box padding={3} width="100%">
+  <SparklineInteractivePriceWithHeader data={sparklineInteractiveData} fill strokeColor="#F7931A" />
+</Box>
+```
+
+### Compact
+
+```jsx
+<Box padding={3} width="100%">
+  <SparklineInteractivePriceWithHeader
+    compact
+    fill
+    strokeColor="#F7931A"
+    data={sparklineInteractiveData}
+  />
+</Box>
+```
+
+### Custom Label
+
+```jsx
+<Box padding={3} width="100%">
+  <SparklineInteractivePriceWithHeader
+    data={sparklineInteractiveData}
+    strokeColor="#F7931A"
+    labelNode={
+      <HStack gap={1} alignItems="center" paddingBottom={0}>
+        <Icon active name="wallet" size="s" />
+        <TextTitle3 as="span">CustomHeader</TextTitle3>
+      </HStack>
+    }
+  />
+</Box>
+```

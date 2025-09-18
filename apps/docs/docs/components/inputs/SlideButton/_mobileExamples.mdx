@@ -1,0 +1,189 @@
+import useBaseUrl from '@docusaurus/useBaseUrl';
+import ThemedImage from '@theme/ThemedImage';
+
+### SlideButton
+
+Use the `onChange` prop to listen and make changes to the `checked` state.
+
+<ThemedImage
+  sources={{
+    light: useBaseUrl('/img/docs/slideButton/default.gif'),
+    dark: useBaseUrl('/img/docs/slideButton/default_dark.gif'),
+  }}
+  style={{
+    borderRadius: 'var(--borderRadius-400)',
+    border: '1.5px solid var(--color-bgLine)',
+  }}
+  alt="Slide button"
+/>
+
+```jsx
+function Example() {
+  const [checked, setChecked] = useState(false);
+
+  return (
+    <SlideButton
+      checked={checked}
+      onChange={setChecked}
+      onSlideComplete={() => console.log('Completed')}
+      uncheckedLabel="Swipe to confirm"
+      checkedLabel="Confirming..."
+    />
+  );
+}
+```
+
+### Negative SlideButton
+
+You can use the `variant` prop to change the color of the button.
+
+<ThemedImage
+  sources={{
+    light: useBaseUrl('/img/docs/slideButton/negative_variant.jpg'),
+    dark: useBaseUrl('/img/docs/slideButton/negative_variant_dark.jpg'),
+  }}
+  style={{
+    borderRadius: 'var(--borderRadius-400)',
+    border: '1.5px solid var(--color-bgLine)',
+  }}
+  alt="Negative variant slide button"
+/>
+
+```jsx
+function Example() {
+  const [checked, setChecked] = useState(false);
+
+  return (
+    <SlideButton
+      checked={checked}
+      onChange={setChecked}
+      onSlideComplete={() => console.log('Completed')}
+      uncheckedLabel="Swipe to confirm"
+      checkedLabel="Confirming..."
+      variant="negative"
+    />
+  );
+}
+```
+
+### Auto Complete on Threshold
+
+You can set the button to automatically complete when the slide reaches the threshold:
+
+```jsx
+function Example() {
+  const [checked, setChecked] = useState(false);
+
+  return (
+    <SlideButton
+      checked={checked}
+      onChange={setChecked}
+      onSlideComplete={() => console.log('Completed')}
+      uncheckedLabel="Swipe to confirm"
+      checkedLabel="Confirming..."
+      autoCompleteSlideOnThresholdMet
+    />
+  );
+}
+```
+
+### Custom Nodes on SlideButton
+
+You can also use SlideButton with custom nodes.
+
+<ThemedImage
+  sources={{
+    light: useBaseUrl('/img/docs/slideButton/custom_nodes.jpg'),
+    dark: useBaseUrl('/img/docs/slideButton/custom_nodes_dark.jpg'),
+  }}
+  style={{
+    borderRadius: 'var(--borderRadius-400)',
+    border: '1.5px solid var(--color-bgLine)',
+  }}
+  alt="Custom nodes on slide button"
+/>
+
+```jsx
+function Example() {
+  const [checked, setChecked] = useState(false);
+
+  return (
+    <SlideButton
+      checked={checked}
+      onChange={setChecked}
+      onSlideComplete={() => console.log('Completed')}
+      uncheckedLabel="Swipe to enable notifications"
+      checkedLabel="Enabling..."
+      startUncheckedNode={<Icon color="fgInverse" name="bellCheck" size="m" />}
+      endCheckedNode={<Icon color="fgInverse" name="bellInactive" size="m" />}
+    />
+  );
+}
+```
+
+### Custom Background and Handle Components
+
+You can customize the background and handle components of the SlideButton.
+
+<ThemedImage
+  sources={{
+    light: useBaseUrl('/img/docs/slideButton/custom_components.jpg'),
+    dark: useBaseUrl('/img/docs/slideButton/custom_components_dark.jpg'),
+  }}
+  style={{
+    borderRadius: 'var(--borderRadius-400)',
+    border: '1.5px solid var(--color-bgLine)',
+  }}
+  alt="Custom background and handle components"
+/>
+
+```jsx
+function Example() {
+  const [checked, setChecked] = useState(false);
+
+  const CustomHandle = ({ checked, ...props }: SlideButtonHandleProps) => (
+    <Pressable
+      {...props}
+      accessibilityLabel="Demo button"
+      accessibilityRole="button"
+      background={checked ? 'bgPositive' : 'bgNegative'}
+      borderRadius={300}
+      width="100%"
+    >
+      <HStack alignItems="center" height="100%" justifyContent="center" width="100%">
+        <HStack height="100%" pin="right" alignItems="center" padding={2}>
+          <TextLabel1>➡️</TextLabel1>
+        </HStack>
+      </HStack>
+    </Pressable>
+  );
+
+  const CustomBackground = ({ checked, ...props }: SlideButtonBackgroundProps) => (
+    <HStack
+      {...props}
+      bordered
+      alignItems="center"
+      background="bgSecondary"
+      borderColor={checked ? 'fgPositive' : 'fgNegative'}
+      borderRadius={300}
+      height="100%"
+      justifyContent="center"
+      width="100%"
+    >
+      <TextHeadline>Slide me</TextHeadline>
+    </HStack>
+  );
+
+  return (
+    <SlideButton
+      uncheckedLabel="Swipe to confirm"
+      checkedLabel="Confirming..."
+      checked={checked}
+      onChange={setChecked}
+      SlideButtonBackgroundComponent={CustomBackground}
+      SlideButtonHandleComponent={CustomHandle}
+      height={50}
+    />
+  );
+}
+```

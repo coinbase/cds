@@ -1,0 +1,104 @@
+import React, { memo, useCallback, useMemo, useRef, useState } from 'react';
+import { sidebarMenuMaxWidth, sidebarMenuMinWidth } from '@cbhq/cds-common/tokens/menu';
+import type { SharedProps } from '@cbhq/cds-common/types';
+
+import type { DropdownProps } from '../dropdown';
+import { Dropdown } from '../dropdown';
+import { useA11yControlledVisibility } from '../hooks/useA11yControlledVisibility';
+import type { PopoverContentPositionConfig } from '../overlays/popover/PopoverProps';
+import { Tooltip } from '../overlays/tooltip/Tooltip';
+
+import { useSidebarContext } from './SidebarContext';
+import type { SidebarItemProps } from './SidebarItem';
+import { SidebarItem } from './SidebarItem';
+
+export type SidebarMoreMenuProps = {
+  children: React.ReactNode;
+  /**
+   * Title of the menu trigger. Use this prop to localize the trigger title.
+   * @default More
+   */
+  triggerTitle?: string;
+} & Pick<DropdownProps, 'value' | 'onBlur' | 'disablePortal' | 'onChange'> &
+  Pick<SidebarItemProps, 'active' | 'tooltipContent' | 'onClick' | 'Component' | 'borderRadius'> &
+  SharedProps;
+
+const defaultContentPosition: PopoverContentPositionConfig = {
+  gap: 3,
+  placement: 'right-start',
+};
+
+export const SidebarMoreMenu = memo(function SidebarMoreMenu({
+  children,
+  active,
+  onClick,
+  value,
+  tooltipContent,
+  disablePortal,
+  triggerTitle = 'More',
+  Component,
+  borderRadius,
+  ...props
+}: SidebarMoreMenuProps) {
+  const [visible, setVisible] = useState(false);
+  const { collapsed } = useSidebarContext();
+  const triggerRef = useRef<HTMLButtonElement>(null);
+
+  const { triggerAccessibilityProps, controlledElementAccessibilityProps } =
+    useA11yControlledVisibility(visible, {
+      accessibilityLabel: triggerTitle,
+      hasPopupType: 'menu',
+    });
+
+  const baseTrigger = useMemo(
+    () => (
+      <SidebarItem
+        ref={triggerRef}
+        Component={Component}
+        active={active}
+        borderRadius={borderRadius}
+        icon="moreVertical"
+        onClick={onClick}
+        testID="sidebar-more-menu-trigger"
+        title={triggerTitle}
+        {...triggerAccessibilityProps}
+      />
+    ),
+    [onClick, active, triggerTitle, triggerAccessibilityProps, Component, borderRadius],
+  );
+
+  const trigger = useMemo(() => {
+    return collapsed && tooltipContent ? (
+      <Tooltip content={tooltipContent} disablePortal={disablePortal} placement="right">
+        {baseTrigger}
+      </Tooltip>
+    ) : (
+      baseTrigger
+    );
+  }, [collapsed, tooltipContent, disablePortal, baseTrigger]);
+
+  const handleCloseMenu = useCallback(() => {
+    triggerRef.current?.focus();
+    setVisible(false);
+  }, []);
+  const handleOpenMenu = useCallback(() => {
+    setVisible(true);
+  }, []);
+
+  return (
+    <Dropdown
+      content={children}
+      contentPosition={defaultContentPosition}
+      controlledElementAccessibilityProps={controlledElementAccessibilityProps}
+      disablePortal={disablePortal}
+      maxWidth={sidebarMenuMaxWidth}
+      minWidth={sidebarMenuMinWidth}
+      onCloseMenu={handleCloseMenu}
+      onOpenMenu={handleOpenMenu}
+      value={value}
+      {...props}
+    >
+      {trigger}
+    </Dropdown>
+  );
+});

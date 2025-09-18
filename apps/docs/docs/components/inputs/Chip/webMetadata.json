@@ -1,0 +1,17 @@
+{
+  "import": "import { Chip } from '@cbhq/cds-web/chips/Chip'",
+  "source": "https://github.com/coinbase/cds-staging/blob/master/packages/web/src/chips/Chip.tsx",
+  "storybook": "https://cds-storybook.coinbase.com/?path=/story/core-components-chips-chip--default",
+  "description": "A compact, interactive content element.",
+  "relatedComponents": [
+    {
+      "label": "InputChip",
+      "url": "/components/inputs/InputChip/"
+    },
+    {
+      "label": "SelectChip",
+      "url": "/components/inputs/SelectChip/"
+    }
+  ],
+  "dependencies": []
+}

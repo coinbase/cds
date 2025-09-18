@@ -1,0 +1,119 @@
+### Basic DotCount
+
+```jsx live
+function DotCountBasic() {
+  const counts = [1, 100, 30, 2, 0, 99];
+  return (
+    <VStack gap={2}>
+      {counts.map((count) => (
+        <Box padding={1} key={`DotCount-${count}`}>
+          <DotCount count={count} />
+        </Box>
+      ))}
+      With max prop
+      <VStack alignItems="flex-start" padding={1}>
+        <DotCount count={11} max={9} />
+      </VStack>
+    </VStack>
+  );
+}
+```
+
+### Variants
+
+```jsx live
+function Variants() {
+  return <DotCount count={30} variant="negative" />;
+}
+```
+
+### Placements
+
+```jsx live
+function Placements() {
+  return (
+    <DotCount count={30} pin="top-end">
+      <VStack bordered padding={2}>
+        Child
+      </VStack>
+    </DotCount>
+  );
+}
+```
+
+### Dotting Relative to Shape of Child
+
+You can use the overlap prop to place the dot relative to the corner of the wrapped element.
+
+```jsx live
+function DottingRelativeToShapeOfChild() {
+  return (
+    <HStack gap={2}>
+      <DotCount count={30} pin="top-end">
+        <VStack bordered padding={2}>
+          Child
+        </VStack>
+      </DotCount>
+      <DotCount count={120} pin="top-end">
+        <VStack bordered padding={2}>
+          Child
+        </VStack>
+      </DotCount>
+      <DotCount count={30} pin="top-end" overlap="circular">
+        <VStack bordered padding={2} borderRadius="800">
+          Child
+        </VStack>
+      </DotCount>
+      <DotCount count={120} pin="top-end" overlap="circular">
+        <VStack bordered padding={2} borderRadius="800">
+          Child
+        </VStack>
+      </DotCount>
+    </HStack>
+  );
+}
+```
+
+### Customize Style
+
+You can use the styles or classNames prop to customize appearance.
+
+```jsx live
+function CustomizeStyle() {
+  const theme = useTheme();
+  return (
+    <HStack gap={2}>
+      <DotCount
+        count={5}
+        styles={{
+          container: {
+            backgroundColor: theme.color.bgPositive,
+            borderColor: theme.color.fgPositive,
+          },
+        }}
+      />
+      <DotCount
+        count={10}
+        styles={{
+          container: {
+            borderRadius: '4px',
+            padding: '2px 6px',
+          },
+        }}
+      />
+      <DotCount
+        count={42}
+        styles={{
+          container: {
+            backgroundColor: theme.color.bgNegative,
+            minWidth: '24px',
+          },
+          text: {
+            fontWeight: 'normal',
+          },
+        }}
+      />
+    </HStack>
+  );
+}
+```

@@ -1,0 +1,23 @@
+### Basic example
+
+```jsx live
+<Pictogram name="shield" dimension="64x64" />
+```
+
+### `scaleMultiplier` prop
+
+If no predefined dimensions fit your use case, you can use the `scaleMultiplier` prop to scale the illustration.
+
+Use `scaleMultiplier` sparingly and with caution. We have predefined dimensions to ensure that illustrations scale elegantly.
+
+```jsx live
+<Pictogram name="shield" scaleMultiplier={1.5} />
+```
+
+### Scaling with dimension
+
+If `dimension` and `scaleMultiplier` are both provided the component will scale based on the provided dimension.
+
+```jsx live
+<Pictogram name="shield" dimension="48x48" scaleMultiplier={2.5} />
+```

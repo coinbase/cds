@@ -1,0 +1,50 @@
+name: Setup CDS
+description: Checkout code, setup cache and install yarn packages
+inputs:
+  yarn-install:
+    description: 'Whether to install yarn packages'
+    required: false
+    default: 'true'
+    type: boolean
+  yarn-hardened-mode:
+    description: 'Whether to run yarn in hardened mode'
+    required: false
+    default: 'false'
+    type: boolean
+
+runs:
+  using: composite
+  steps:
+    - name: Fetch master
+      if: github.ref != 'refs/heads/master'
+      run: git fetch -f --no-tags origin master:master
+      shell: bash
+
+    - name: Setup Node
+      uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+      with:
+        node-version-file: .nvmrc
+
+    - name: Setup Yarn
+      run: |
+        corepack enable
+        yarn config set enableGlobalCache false
+        yarn config set enableHardenedMode ${{ inputs.yarn-hardened-mode }}
+      shell: bash
+
+    - name: Setup Yarn Cache
+      if: ${{ inputs.yarn-install == 'true' }}
+      uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+      with:
+        cache: 'yarn'
+
+    - name: Install dependencies
+      if: ${{ inputs.yarn-install == 'true' }}
+      run: yarn --immutable
+      shell: bash
+
+    - name: Set base and head
+      id: set-base-and-head
+      uses: nrwl/nx-set-shas@826660b82addbef3abff5fa871492ebad618c9e1 # v4.3.3
+      with:
+        main-branch-name: 'master'

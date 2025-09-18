@@ -1,0 +1,527 @@
+import React, { memo } from 'react';
+import { assets, coinbaseOneLogo } from '@cbhq/cds-common/internal/data/assets';
+import { css } from '@linaria/core';
+
+import { Button } from '../../buttons/Button';
+import { IconButton } from '../../buttons/IconButton';
+import { ContainedAssetCard, NudgeCard, UpsellCard } from '../../cards';
+import { Box, HStack, VStack } from '../../layout';
+import { RemoteImage } from '../../media';
+import { Pressable } from '../../system/Pressable';
+import { Link, TextHeadline, TextLabel1, TextLabel2, TextTitle2 } from '../../typography';
+import { Carousel } from '../Carousel';
+import { CarouselItem } from '../CarouselItem';
+import { DefaultCarouselNavigation } from '../DefaultCarouselNavigation';
+import {
+  DefaultCarouselPagination,
+  type DefaultCarouselPaginationProps,
+} from '../DefaultCarouselPagination';
+
+export default {
+  title: 'Components/Carousel',
+  component: Carousel,
+};
+
+const SampleCard = ({ text }: { text: string }) => (
+  <Box
+    alignItems="center"
+    borderRadius={200}
+    height="12rem"
+    justifyContent="center"
+    style={{
+      background: 'rgb(var(--blue0))',
+      border: '1px dashed rgb(var(--blue20))',
+    }}
+    width="100%"
+  >
+    <TextLabel1 as="p" color="fgPrimary">
+      {text}
+    </TextLabel1>
+  </Box>
+);
+
+const SampleUpsellCard = ({ isVisible }: { isVisible?: boolean }) => (
+  <UpsellCard
+    action={
+      <Button
+        compact
+        flush="start"
+        numberOfLines={1}
+        onClick={() => console.log('pressed')}
+        tabIndex={isVisible ? undefined : -1}
+        variant="secondary"
+      >
+        Buy Bitcoin now
+      </Button>
+    }
+    description="Check out the most popular assets"
+    media={<img alt="" draggable={false} src={coinbaseOneLogo as string} width={120} />}
+    title="Headline"
+    width="100%"
+  />
+);
+
+const sampleItems = [
+  <SampleCard key="1" text="Slide 1" />,
+  <SampleCard key="2" text="Slide 2" />,
+  <SampleCard key="3" text="Slide 3" />,
+  <SampleCard key="4" text="Slide 4" />,
+  <SampleCard key="5" text="Slide 5" />,
+  <SampleCard key="6" text="Slide 6" />,
+  <SampleCard key="7" text="Slide 7" />,
+  <SampleCard key="8" text="Slide 8" />,
+  <SampleCard key="9" text="Slide 9" />,
+  <SampleCard key="10" text="Slide 10" />,
+];
+
+const marginInline = 'calc(-1 * var(--space-2))';
+
+const gapOnlyStyles = {
+  carousel: {
+    gap: 'var(--space-2)',
+  },
+};
+
+const overflowStyles = {
+  ...gapOnlyStyles,
+  root: {
+    paddingInline: 'var(--space-3)',
+  },
+};
+
+const NegativeMargin = ({ children }: { children: React.ReactNode }) => (
+  <Box style={{ marginInline }}>{children}</Box>
+);
+
+const SeeAllComponent = () => (
+  <TextHeadline paddingEnd={2}>
+    <Link openInNewWindow href="https://coinbase.com/">
+      See all
+    </Link>
+  </TextHeadline>
+);
+
+const SquareAssetCard = ({
+  imageUrl,
+  name,
+  isVisible,
+}: {
+  imageUrl: string;
+  name: string;
+  isVisible?: boolean;
+}) => (
+  <ContainedAssetCard
+    description={
+      <TextLabel2 as="p" color="fgPositive" numberOfLines={2}>
+        &#x2197;6.37%
+      </TextLabel2>
+    }
+    header={<RemoteImage draggable={false} height="32px" source={imageUrl} width="32px" />}
+    onClick={isVisible ? () => console.log('clicked') : undefined}
+    subtitle={name}
+    tabIndex={isVisible ? undefined : -1}
+    title="$0.87"
+  />
+);
+
+const BasicExamples = () => (
+  <VStack gap={4}>
+    <NegativeMargin>
+      <Carousel styles={overflowStyles} title="Snap Page">
+        {sampleItems.map((item, index) => (
+          <CarouselItem
+            key={`spaced-${index}`}
+            id={`spaced-${index}`}
+            width="calc((100% - 2 * var(--space-2)) / 3)"
+          >
+            {item}
+          </CarouselItem>
+        ))}
+      </Carousel>
+    </NegativeMargin>
+    <NegativeMargin>
+      <Carousel drag="snap" snapMode="item" styles={overflowStyles} title="Snap Item">
+        {sampleItems.map((item, index) => (
+          <CarouselItem
+            key={`snap-${index}`}
+            id={`snap-${index}`}
+            width="calc((100% - 2 * var(--space-2)) / 3)"
+          >
+            {item}
+          </CarouselItem>
+        ))}
+      </Carousel>
+    </NegativeMargin>
+    <Carousel
+      NavigationComponent={SeeAllComponent}
+      drag="free"
+      snapMode="item"
+      styles={gapOnlyStyles}
+      title="Square Items Carousel"
+    >
+      {Object.values(assets).map((asset) => (
+        <CarouselItem key={asset.symbol} id={asset.symbol}>
+          {({ isVisible }) => (
+            <SquareAssetCard imageUrl={asset.imageUrl} isVisible={isVisible} name={asset.symbol} />
+          )}
+        </CarouselItem>
+      ))}
+    </Carousel>
+    <Carousel
+      drag="snap"
+      snapMode="page"
+      styles={gapOnlyStyles}
+      title={<TextTitle2 as="h3">Full Width Cards</TextTitle2>}
+    >
+      <CarouselItem id="upsell-1" width="100%">
+        {({ isVisible }) => <SampleUpsellCard isVisible={isVisible} />}
+      </CarouselItem>
+      <CarouselItem id="upsell-2" width="100%">
+        {({ isVisible }) => <SampleUpsellCard isVisible={isVisible} />}
+      </CarouselItem>
+      <CarouselItem id="upsell-3" width="100%">
+        {({ isVisible }) => <SampleUpsellCard isVisible={isVisible} />}
+      </CarouselItem>
+      <CarouselItem id="upsell-4" width="100%">
+        {({ isVisible }) => <SampleUpsellCard isVisible={isVisible} />}
+      </CarouselItem>
+      <CarouselItem id="upsell-5" width="100%">
+        {({ isVisible }) => <SampleUpsellCard isVisible={isVisible} />}
+      </CarouselItem>
+    </Carousel>
+    <Carousel drag="none" styles={gapOnlyStyles} title="Navigation Only (No Drag)">
+      {sampleItems.slice(0, 4).map((item, index) => (
+        <CarouselItem key={`nav-only-${index}`} id={`nav-only-${index}`} width="100%">
+          {item}
+        </CarouselItem>
+      ))}
+    </Carousel>
+    <Carousel
+      hideNavigation
+      hidePagination
+      styles={gapOnlyStyles}
+      title="Drag Only (No Navigation or Pagination)"
+    >
+      {sampleItems.slice(0, 4).map((item, index) => (
+        <CarouselItem key={`drag-only-${index}`} id={`drag-only-${index}`} width="100%">
+          {item}
+        </CarouselItem>
+      ))}
+    </Carousel>
+  </VStack>
+);
+
+const CustomComponentsExample = () => {
+  const CustomPaginationComponent = ({ totalPages, activePageIndex, onClickPage, style }: any) => {
+    const canGoPrevious = activePageIndex > 0;
+    const canGoNext = activePageIndex < totalPages - 1;
+    const dotCss = {
+      width: 'var(--space-2)',
+      height: 'var(--space-2)',
+      borderRadius: 'var(--borderRadius-1000)',
+    } as const;
+
+    const onPrevious = () => {
+      onClickPage(activePageIndex - 1);
+    };
+
+    const onNext = () => {
+      onClickPage(activePageIndex + 1);
+    };
+
+    return (
+      <HStack justifyContent="space-between" paddingY={0.5} style={style}>
+        <HStack gap={1}>
+          <IconButton
+            accessibilityLabel="Previous"
+            disabled={!canGoPrevious}
+            name="caretLeft"
+            onClick={onPrevious}
+            variant="foregroundMuted"
+          />
+          <IconButton
+            accessibilityLabel="Next"
+            disabled={!canGoNext}
+            name="caretRight"
+            onClick={onNext}
+            variant="foregroundMuted"
+          />
+        </HStack>
+        <HStack alignItems="center" gap={1}>
+          {Array.from({ length: totalPages }, (_, index) => (
+            <Pressable
+              key={index}
+              accessibilityLabel={`Go to page ${index + 1}`}
+              background={index === activePageIndex ? 'bgPrimary' : 'bgSecondary'}
+              borderColor={index === activePageIndex ? 'fgPrimary' : 'bgLine'}
+              data-testid={`carousel-page-${index}`}
+              onClick={() => onClickPage(index)}
+              style={dotCss}
+            />
+          ))}
+        </HStack>
+      </HStack>
+    );
+  };
+
+  const ActionButton = ({
+    isVisible,
+    children,
+  }: {
+    isVisible: boolean;
+    children: React.ReactNode;
+  }) => (
+    <Pressable
+      background="transparent"
+      borderRadius={500}
+      onClick={() => console.log('Action pressed')}
+      paddingY={1}
+      tabIndex={isVisible ? undefined : -1}
+    >
+      <TextHeadline color="fgPrimary" numberOfLines={1}>
+        {children}
+      </TextHeadline>
+    </Pressable>
+  );
+
+  return (
+    <NegativeMargin>
+      <Carousel
+        NavigationComponent={SeeAllComponent}
+        PaginationComponent={CustomPaginationComponent}
+        styles={overflowStyles}
+        title="Learn more"
+      >
+        <CarouselItem id="earn-more-crypto" width="100%">
+          {({ isVisible }) => (
+            <NudgeCard
+              action={<ActionButton isVisible={isVisible}>Start earning</ActionButton>}
+              description="You've got unstaked crypto. Stake it now to earn more."
+              minWidth="0"
+              pictogram="key"
+              title="Earn more crypto"
+              width="100%"
+            />
+          )}
+        </CarouselItem>
+        <CarouselItem id="secure-your-account" width="100%">
+          {({ isVisible }) => (
+            <NudgeCard
+              action={<ActionButton isVisible={isVisible}>Enable 2FA</ActionButton>}
+              description="Add two-factor authentication for enhanced security."
+              minWidth="0"
+              pictogram="shield"
+              title="Secure your account"
+              width="100%"
+            />
+          )}
+        </CarouselItem>
+        <CarouselItem id="complete-your-profile" width="100%">
+          {({ isVisible }) => (
+            <NudgeCard
+              action={<ActionButton isVisible={isVisible}>Update profile</ActionButton>}
+              description="Add more details to personalize your experience."
+              minWidth="0"
+              pictogram="accountsNavigation"
+              title="Complete your profile"
+              width="100%"
+            />
+          )}
+        </CarouselItem>
+      </Carousel>
+    </NegativeMargin>
+  );
+};
+
+const CustomStylesExample = () => {
+  const ActionButton = ({
+    isVisible,
+    children,
+  }: {
+    isVisible: boolean;
+    children: React.ReactNode;
+  }) => (
+    <Pressable
+      background="transparent"
+      borderRadius={500}
+      onClick={() => console.log('Action pressed')}
+      paddingY={1}
+      tabIndex={isVisible ? undefined : -1}
+    >
+      <TextHeadline color="fgPrimary" numberOfLines={1}>
+        {children}
+      </TextHeadline>
+    </Pressable>
+  );
+
+  return (
+    <NegativeMargin>
+      <Carousel
+        NavigationComponent={(props) => (
+          <DefaultCarouselNavigation
+            {...props}
+            styles={{
+              previousButton: {
+                position: 'absolute',
+                bottom: 'var(--space-8)',
+                left: 'var(--space-0_5)',
+                zIndex: 1,
+              },
+              nextButton: {
+                position: 'absolute',
+                bottom: 'var(--space-8)',
+                right: 'var(--space-0_5)',
+                zIndex: 1,
+              },
+            }}
+            variant="foregroundMuted"
+          />
+        )}
+        styles={{
+          root: { position: 'relative', paddingInline: 'var(--space-6)' },
+          carousel: { gap: 'var(--space-6)' },
+        }}
+        title="Custom Navigation Positioning"
+      >
+        <CarouselItem id="earn-more-crypto" width="100%">
+          {({ isVisible }) => (
+            <NudgeCard
+              action={<ActionButton isVisible={isVisible}>Start earning</ActionButton>}
+              description="You've got unstaked crypto. Stake it now to earn more."
+              minWidth="0"
+              pictogram="key"
+              title="Earn more crypto"
+              width="100%"
+            />
+          )}
+        </CarouselItem>
+        <CarouselItem id="secure-your-account" width="100%">
+          {({ isVisible }) => (
+            <NudgeCard
+              action={<ActionButton isVisible={isVisible}>Enable 2FA</ActionButton>}
+              description="Add two-factor authentication for enhanced security."
+              minWidth="0"
+              pictogram="shield"
+              title="Secure your account"
+              width="100%"
+            />
+          )}
+        </CarouselItem>
+        <CarouselItem id="complete-your-profile" width="100%">
+          {({ isVisible }) => (
+            <NudgeCard
+              action={<ActionButton isVisible={isVisible}>Update profile</ActionButton>}
+              description="Add more details to personalize your experience."
+              minWidth="0"
+              pictogram="accountsNavigation"
+              title="Complete your profile"
+              width="100%"
+            />
+          )}
+        </CarouselItem>
+      </Carousel>
+    </NegativeMargin>
+  );
+};
+
+const dotCss = css`
+  /* stylelint-disable-next-line plugin/no-low-performance-animation-properties */
+  transition: all 0.3s ease;
+  width: var(--space-1);
+  height: var(--space-1);
+  &[data-active='true'] {
+    width: var(--space-3);
+  }
+`;
+
+const AnimatedPaginationExample = () => {
+  const ActionButton = ({
+    isVisible,
+    children,
+  }: {
+    isVisible: boolean;
+    children: React.ReactNode;
+  }) => (
+    <Pressable
+      background="transparent"
+      borderRadius={500}
+      onClick={() => console.log('Action pressed')}
+      paddingY={1}
+      tabIndex={isVisible ? undefined : -1}
+    >
+      <TextHeadline color="fgPrimary" numberOfLines={1}>
+        {children}
+      </TextHeadline>
+    </Pressable>
+  );
+
+  const AnimatedPagination = memo(({ classNames, ...props }: DefaultCarouselPaginationProps) => {
+    return (
+      <DefaultCarouselPagination
+        classNames={{
+          ...classNames,
+          dot: dotCss,
+        }}
+        {...props}
+      />
+    );
+  });
+
+  return (
+    <NegativeMargin>
+      <Carousel
+        PaginationComponent={AnimatedPagination}
+        drag="snap"
+        snapMode="page"
+        styles={overflowStyles}
+        title="Animated Pagination"
+      >
+        <CarouselItem id="slide-1" width="100%">
+          {({ isVisible }) => (
+            <NudgeCard
+              action={<ActionButton isVisible={isVisible}>Get started</ActionButton>}
+              description="Experience smooth transitions as you navigate through content."
+              minWidth="0"
+              pictogram="key"
+              title="Smooth Animations"
+              width="100%"
+            />
+          )}
+        </CarouselItem>
+        <CarouselItem id="slide-2" width="100%">
+          {({ isVisible }) => (
+            <NudgeCard
+              action={<ActionButton isVisible={isVisible}>Learn more</ActionButton>}
+              description="Active pages expand to pills while inactive ones remain as circles."
+              minWidth="0"
+              pictogram="shield"
+              title="Dynamic Sizing"
+              width="100%"
+            />
+          )}
+        </CarouselItem>
+        <CarouselItem id="slide-3" width="100%">
+          {({ isVisible }) => (
+            <NudgeCard
+              action={<ActionButton isVisible={isVisible}>Explore</ActionButton>}
+              description="Beautiful visual feedback that enhances user experience."
+              minWidth="0"
+              pictogram="accountsNavigation"
+              title="Enhanced UX"
+              width="100%"
+            />
+          )}
+        </CarouselItem>
+      </Carousel>
+    </NegativeMargin>
+  );
+};
+
+export const All = () => (
+  <VStack gap={2}>
+    <BasicExamples />
+    <CustomComponentsExample />
+    <CustomStylesExample />
+    <AnimatedPaginationExample />
+  </VStack>
+);

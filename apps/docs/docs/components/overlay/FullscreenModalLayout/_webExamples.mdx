@@ -1,0 +1,155 @@
+import {
+  Box,
+  Text,
+  PortalProvider,
+  Button,
+  FullscreenModalLayout,
+  VStack,
+  HStack,
+  LogoMark,
+  IconButton,
+} from '@cbhq/cds-web';
+import { loremIpsum } from '@cbhq/cds-common/internal/data/loremIpsum';
+import React, { useCallback, useRef, useState } from 'react';
+
+### Basic usage
+
+This component is primarily used internally by the `Modal` component to provide the animated layout for fullscreen modals. It wraps your modal content and manages the overlay, animations, and focus trapping.
+
+```tsx live
+function Example() {
+  const [visible, setVisible] = useState(false);
+  const triggerRef = useRef(null);
+
+  const toggleOn = useCallback(() => setVisible(true), []);
+  const toggleOff = useCallback(() => setVisible(false), []);
+
+  const headerContent = (
+    <HStack borderedBottom alignItems="center" paddingX={4} paddingY={2}>
+      <Box paddingEnd={3} width={80}>
+        <LogoMark size={32} />
+      </Box>
+      <Box flexGrow={1}>
+        <Text as="h1" display="block" font="title1">
+          Modal
+        </Text>
+      </Box>
+      <Box>
+        <IconButton transparent aria-label="Close modal" name="close" onClick={toggleOff} />
+      </Box>
+    </HStack>
+  );
+
+  const mainContent = (
+    <VStack flexGrow={1} overflow="auto" padding={4}>
+      <Text as="p" display="block" font="body">
+        {loremIpsum}
+      </Text>
+    </VStack>
+  );
+
+  return (
+    <PortalProvider>
+      <Button onClick={toggleOn} ref={triggerRef}>
+        Open Fullscreen Modal
+      </Button>
+      {visible && (
+        <FullscreenModalLayout
+          visible={visible}
+          onRequestClose={toggleOff}
+          accessibilityLabel="Example Fullscreen Modal"
+        >
+          <VStack background="bg" height="100%" width="100%">
+            {headerContent}
+            {mainContent}
+          </VStack>
+        </FullscreenModalLayout>
+      )}
+    </PortalProvider>
+  );
+}
+```
+
+### Example composing content
+
+This example showcases how `FullscreenModalLayout` can be used to structure content across multiple distinct areas. It demonstrates the arrangement of a custom header, a top panel, a central area with left, center, and right panels, and a bottom panel.
+
+```tsx live
+function AllPanelsExample() {
+  const [visible, setVisible] = useState(false);
+  const triggerRef = useRef(null);
+
+  const toggleOn = useCallback(() => setVisible(true), []);
+  const toggleOff = useCallback(() => setVisible(false), []);
+
+  const headerContent = (
+    <HStack borderedBottom alignItems="center" paddingX={4} paddingY={2}>
+      <Box paddingEnd={3} width={80}>
+        <LogoMark size={32} />
+      </Box>
+      <Box flexGrow={1}>
+        <Text as="h1" display="block" font="title1">
+          Modal - All Panels
+        </Text>
+      </Box>
+      <Box>
+        <IconButton transparent aria-label="Close modal" name="close" onClick={toggleOff} />
+      </Box>
+    </HStack>
+  );
+
+  const mainModalContent = (
+    <VStack flexGrow={1} overflow="hidden">
+      <VStack background="bgAlternate" padding={2}>
+        <Text as="p" color="fg" display="block" font="body">
+          Top Panel (e.g., Breadcrumbs, Progress)
+        </Text>
+      </VStack>
+      <HStack flexGrow={1} overflow="hidden">
+        <VStack background="bgAlternate" height="100%" overflow="auto" padding={4} width={360}>
+          <Text as="p" display="block" font="body">
+            Left Panel
+          </Text>
+        </VStack>
+        <VStack flexGrow={1} overflow="auto" padding={4}>
+          <Text as="p" display="block" font="body">
+            Center Panel
+            <br />
+            {loremIpsum}
+          </Text>
+        </VStack>
+        <VStack background="bgAlternate" height="100%" overflow="auto" padding={4} width={360}>
+          <Text as="p" display="block" font="body">
+            Right Panel
+          </Text>
+        </VStack>
+      </HStack>
+      <HStack borderedTop background="bgAlternate" padding={2}>
+        <Text as="p" display="block" font="body">
+          Bottom Panel (e.g., Footer, Actions)
+        </Text>
+      </HStack>
+    </VStack>
+  );
+
+  return (
+    <PortalProvider>
+      <Button ref={triggerRef} onClick={toggleOn}>
+        Open Modal (All Panels)
+      </Button>
+      {visible && (
+        <FullscreenModalLayout
+          onRequestClose={toggleOff}
+          visible={visible}
+          accessibilityLabel="All Panels Fullscreen Modal"
+        >
+          <VStack background="bg" height="100%" width="100%">
+            {headerContent}
+            {mainModalContent}
+          </VStack>
+        </FullscreenModalLayout>
+      )}
+    </PortalProvider>
+  );
+}
+```

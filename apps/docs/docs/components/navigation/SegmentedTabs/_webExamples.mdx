@@ -1,0 +1,197 @@
+### Basic Example
+
+Use the `onChange` prop to listen and make changes to the `activeTab` state.
+
+```jsx live
+function Example() {
+  const tabs = [
+    { id: 'buy', label: 'Buy' },
+    { id: 'sell', label: 'Sell' },
+    { id: 'convert', label: 'Convert' },
+  ];
+  const [activeTab, updateActiveTab] = useState(tabs[0]);
+  const handleChange = useCallback((activeTab) => updateActiveTab(activeTab), []);
+  return (
+    <SegmentedTabs
+      accessibilityLabel="Switch token action views"
+      activeTab={activeTab}
+      onChange={handleChange}
+      tabs={tabs}
+    />
+  );
+}
+```
+
+### With Initial Value
+
+You can set any tab as the initial active tab.
+
+```jsx live
+function Example() {
+  const tabs = [
+    { id: 'buy', label: 'Buy' },
+    { id: 'sell', label: 'Sell' },
+    { id: 'convert', label: 'Convert' },
+  ];
+  const [activeTab, updateActiveTab] = useState(tabs[1]); // Start with 'Sell'
+  const handleChange = useCallback((activeTab) => updateActiveTab(activeTab), []);
+  return (
+    <SegmentedTabs
+      accessibilityLabel="Switch token action views"
+      activeTab={activeTab}
+      onChange={handleChange}
+      tabs={tabs}
+    />
+  );
+}
+```
+
+### No Initial Value
+
+SegmentedTabs can start with no active selection.
+
+```jsx live
+function Example() {
+  const tabs = [
+    { id: 'buy', label: 'Buy' },
+    { id: 'sell', label: 'Sell' },
+    { id: 'convert', label: 'Convert' },
+  ];
+  const [activeTab, updateActiveTab] = useState(null); // No initial selection
+  const handleChange = useCallback((activeTab) => updateActiveTab(activeTab), []);
+  return (
+    <SegmentedTabs
+      accessibilityLabel="Switch token action views"
+      activeTab={activeTab}
+      onChange={handleChange}
+      tabs={tabs}
+    />
+  );
+}
+```
+
+### Disabled State
+
+You can disable the entire SegmentedTabs component.
+
+```jsx live
+function Example() {
+  const tabs = [
+    { id: 'buy', label: 'Buy' },
+    { id: 'sell', label: 'Sell' },
+    { id: 'convert', label: 'Convert' },
+  ];
+  const [activeTab, updateActiveTab] = useState(tabs[0]);
+  const handleChange = useCallback((activeTab) => updateActiveTab(activeTab), []);
+  return (
+    <SegmentedTabs
+      accessibilityLabel="Switch token action views"
+      activeTab={activeTab}
+      disabled
+      onChange={handleChange}
+      tabs={tabs}
+    />
+  );
+}
+```
+
+### Disabled Individual Tab
+
+Individual tabs can be disabled while keeping others interactive.
+
+```jsx live
+function Example() {
+  const tabs = [
+    { id: 'buy', label: 'Buy' },
+    { id: 'sell', label: 'Sell', disabled: true },
+    { id: 'convert', label: 'Convert' },
+  ];
+  const [activeTab, updateActiveTab] = useState(tabs[0]);
+  const handleChange = useCallback((activeTab) => updateActiveTab(activeTab), []);
+  return (
+    <SegmentedTabs
+      accessibilityLabel="Switch token action views"
+      activeTab={activeTab}
+      onChange={handleChange}
+      tabs={tabs}
+    />
+  );
+}
+```
+
+### Custom Tab Component
+
+You can customize individual tabs by providing a custom `Component` for specific tabs.
+
+```jsx live
+function Example() {
+  const CustomSegmentedTab = useCallback(
+    (props) => <SegmentedTab {...props} activeColor="fgWarning" color="bgPrimary" />,
+    [],
+  );
+
+  const tabs = [
+    { id: 'buy', label: 'Buy', Component: CustomSegmentedTab },
+    { id: 'sell', label: 'Sell' },
+    { id: 'convert', label: 'Convert' },
+  ];
+  const [activeTab, updateActiveTab] = useState(tabs[0]);
+  const handleChange = useCallback((activeTab) => updateActiveTab(activeTab), []);
+  return (
+    <SegmentedTabs
+      accessibilityLabel="Switch token action views"
+      activeTab={activeTab}
+      onChange={handleChange}
+      tabs={tabs}
+    />
+  );
+}
+```
+
+### Custom Active Indicator
+
+You can customize the active indicator component and overall styling.
+
+```jsx live
+function Example() {
+  const CustomActiveIndicator = useCallback(
+    ({ activeTabRect }) => (
+      <TabsActiveIndicator activeTabRect={activeTabRect} background="bgOverlay" />
+    ),
+    [],
+  );
+
+  const AnotherCustomSegmentedTab = useCallback(({ id, label, disabled }) => {
+    const { activeTab } = useTabsContext();
+    const isActive = activeTab?.id === id;
+    const renderedLabel = (
+      <Text color={isActive ? 'fgPositive' : 'fgNegative'} font="label2" overflow="truncate">
+        {label}
+      </Text>
+    );
+
+    return (
+      <SegmentedTab disabled={disabled} id={id} label={renderedLabel} style={{ borderRadius: 0 }} />
+    );
+  }, []);
+
+  const tabs = [
+    { id: 'buy', label: 'Buy' },
+    { id: 'sell', label: 'Sell' },
+    { id: 'convert', label: 'Convert' },
+  ];
+  const [activeTab, updateActiveTab] = useState(tabs[0]);
+  const handleChange = useCallback((activeTab) => updateActiveTab(activeTab), []);
+  return (
+    <SegmentedTabs
+      accessibilityLabel="Switch token action views"
+      activeTab={activeTab}
+      borderRadius={0}
+      onChange={handleChange}
+      tabs={tabs}
+      TabComponent={AnotherCustomSegmentedTab}
+      TabsActiveIndicatorComponent={CustomActiveIndicator}
+    />
+  );
+}
+```

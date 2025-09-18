@@ -1,0 +1,38 @@
+### Basic Icon Usage
+
+```tsx
+<CellMedia
+  type="icon"
+  active
+  name="home"
+  accessibilityLabel="Home icon"
+  accessibilityHint="Navigate to home screen"
+/>
+```
+
+### Asset Display
+
+Common usage for displaying cryptocurrency assets with proper accessibility and dark mode enhancements.
+
+```tsx
+<CellMedia
+  type="asset"
+  source={assets.btc.imageUrl}
+  accessibilityLabel="Bitcoin icon"
+  darkModeEnhancementsApplied
+  cache="force-cache"
+/>
+```
+
+### Pictogram Display
+
+Used for displaying pictographic illustrations with accessibility hints.
+
+```tsx
+<CellMedia
+  type="pictogram"
+  illustration={<Pictogram name="recurringPurchases" dimension="48x48" />}
+  accessibilityLabel="Recurring purchases pictogram"
+  accessibilityHint="Illustrates automatic recurring purchase feature"
+/>
+```

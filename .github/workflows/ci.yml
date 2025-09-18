@@ -1,0 +1,287 @@
+name: CI
+
+on:
+  workflow_dispatch: # Allow manual triggering to refresh cached baseline results
+  push:
+    branches: master
+  pull_request:
+    branches: master
+
+concurrency:
+  group: CI-${{github.ref_name}}-${{github.event_name == 'pull_request' && github.event.pull_request.number || github.sha}}
+  cancel-in-progress: ${{github.event_name == 'pull_request'}}
+
+permissions:
+  contents: read
+  actions: read
+
+env:
+  CI: true
+  PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
+  CB_GHA_BRANCH: ${{github.head_ref || github.base_ref || github.ref_name}}
+
+jobs:
+  validate:
+    name: Validate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        with:
+          egress-policy: audit
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          fetch-depth: 100 # TODO: This needs to include the merge-base
+      - uses: ./.github/actions/setup
+      - name: Validate Lockfile
+        run: yarn tsx ./tools/ci/validators/validateLockfile.ts
+      - name: Validate Patches
+        run: yarn tsx ./tools/ci/validators/validatePatches.ts
+      - name: Validate Versioned
+        run: yarn tsx ./tools/ci/validators/validateVersioned.ts
+      - name: Validate CDS Versions
+        run: yarn tsx ./tools/validateCDSVersions.ts
+      - name: Validate Constraints
+        run: yarn constraints || exit 1
+
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        with:
+          egress-policy: audit
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          fetch-depth: 100 # TODO: This needs to include the merge-base
+      - uses: ./.github/actions/setup
+      - name: Lint
+        run: yarn nx affected --target=lint --base=$NX_BASE --head=$NX_HEAD --max-warnings=0
+
+  format:
+    name: Format
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        with:
+          egress-policy: audit
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          fetch-depth: 100 # TODO: This needs to include the merge-base
+      - uses: ./.github/actions/setup
+      - name: Format
+        run: yarn nx format:check  --verbose --base=$NX_BASE --head=$NX_HEAD
+
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        with:
+          egress-policy: audit
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          fetch-depth: 100 # TODO: This needs to include the merge-base
+      - uses: ./.github/actions/setup
+      - name: Test
+        run: yarn nx affected --target=test --base=$NX_BASE --head=$NX_HEAD
+
+  typecheck:
+    name: Typecheck
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        with:
+          egress-policy: audit
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          fetch-depth: 100 # TODO: This needs to include the merge-base
+      - uses: ./.github/actions/setup
+      - name: Typecheck
+        run: yarn nx affected --target=typecheck --base=$NX_BASE --head=$NX_HEAD
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        with:
+          egress-policy: audit
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          fetch-depth: 100 # TODO: This needs to include the merge-base
+      - uses: ./.github/actions/setup
+      - name: Build
+        run: yarn nx affected --exclude=mobile-app --target=build --base=$NX_BASE --head=$NX_HEAD
+
+  depcheck:
+    name: Depcheck
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        with:
+          egress-policy: audit
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          fetch-depth: 100 # TODO: This needs to include the merge-base
+      - uses: ./.github/actions/setup
+
+      # Get the merge-base SHA for cache key (PR only)
+      - name: Get merge-base SHA
+        if: github.event_name == 'pull_request'
+        uses: ./.github/actions/get-merge-base
+        id: get-merge-base
+
+      # For PRs: Try to restore cache using merge-base SHA
+      - name: Restore depcheck baseline (PR)
+        if: github.event_name == 'pull_request'
+        uses: actions/cache/restore@0400d5f644dc74513175e3cd8d07132dd4860809 # v4.2.4
+        id: cache-depcheck
+        with:
+          path: depcheck-results.md
+          key: depcheck-master-${{ steps.get-merge-base.outputs.merge_base }}
+
+      # For PRs: Fail with clear message if no baseline found
+      - name: Check for baseline file (PR)
+        if: github.event_name == 'pull_request' && steps.cache-depcheck.outputs.cache-hit != 'true'
+        run: |
+          echo "::error::ERROR: Depcheck baseline not found for merge-base SHA ${{ steps.get-merge-base.outputs.merge_base }}. This may happen if the merge-base commit doesn't have a cached baseline yet. Please ensure the base branch has run the depcheck job."
+          exit 1
+
+      # Run depcheck in the appropriate mode based on event type
+      - name: Run Depcheck
+        env:
+          DEPCHECK_DIFF: ${{ github.event_name == 'pull_request' }}
+        run: yarn node tools/depcheck.mjs
+
+      # For master: Cache the results with current SHA
+      - name: Cache depcheck results (Master)
+        if: github.ref_name == 'master'
+        uses: actions/cache/save@0400d5f644dc74513175e3cd8d07132dd4860809 # v4.2.4
+        with:
+          path: depcheck-results.md
+          key: depcheck-master-${{ github.sha }}
+
+  # Disabled until we can fix the actual profile-exports script
+  # profile-exports:
+  #   name: Profile Exports
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #       with:
+  #         fetch-depth: 100 # TODO: This needs to include the merge-base
+  #     - uses: ./.github/actions/setup
+
+  #     # Get the merge-base SHA for cache key (PR only)
+  #     - name: Get merge-base SHA
+  #       if: github.event_name == 'pull_request'
+  #       uses: ./.github/actions/get-merge-base
+  #       id: get-merge-base
+
+  #     # For PRs: Try to restore cache using merge-base SHA
+  #     - name: Restore export stats baseline (PR)
+  #       if: github.event_name == 'pull_request'
+  #       uses: actions/cache/restore@v4
+  #       id: cache-export-stats
+  #       with:
+  #         path: export-stats.md
+  #         key: export-stats-master-${{ steps.get-merge-base.outputs.merge_base }}
+
+  #     # For PRs: Fail with clear message if no baseline found
+  #     - name: Check for baseline file (PR)
+  #       if: github.event_name == 'pull_request' && steps.cache-export-stats.outputs.cache-hit != 'true'
+  #       run: |
+  #         echo "::error::ERROR: Export stats baseline not found for merge-base SHA ${{ steps.get-merge-base.outputs.merge_base }}. This may happen if the merge-base commit doesn't have a cached baseline yet. Please ensure the base branch has run the profile-exports job."
+  #         exit 1
+
+  #     # Run profile-exports in the appropriate mode based on event type
+  #     - name: Run Profile Exports
+  #       env:
+  #         PROFILE_EXPORTS_DIFF: ${{ github.event_name == 'pull_request' }}
+  #       run: yarn nx run storybook:profile-exports
+
+  #     # For master: Cache the results with current SHA
+  #     - name: Cache export stats results (Master)
+  #       if: github.ref_name == 'master'
+  #       uses: actions/cache/save@v4
+  #       with:
+  #         path: export-stats.md
+  #         key: export-stats-master-${{ github.sha }}
+
+  bundle-stats:
+    name: Bundle Stats
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        with:
+          egress-policy: audit
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          fetch-depth: 100 # TODO: This needs to include the merge-base
+      - uses: ./.github/actions/setup
+
+      # MASTER ONLY
+      # For master: Build storybook with bundle analyzer
+      - name: Build for analyze (Master)
+        if: github.ref_name == 'master'
+        run: yarn nx run storybook:build-for-analyze
+
+      # For master: Cache the results with current SHA
+      - name: Cache bundle stats results (Master)
+        if: github.ref_name == 'master'
+        uses: actions/cache/save@0400d5f644dc74513175e3cd8d07132dd4860809 # v4.2.4
+        with:
+          path: bundle-stats.json
+          key: bundle-stats-master-${{ github.sha }}
+
+      # PR ONLY
+      # Get the merge-base SHA for cache key (PR only)
+      - name: Get merge-base SHA
+        if: github.event_name == 'pull_request'
+        uses: ./.github/actions/get-merge-base
+        id: get-merge-base
+
+      # For PRs: Try to restore cache using merge-base SHA
+      - name: Restore bundle stats baseline (PR)
+        if: github.event_name == 'pull_request'
+        uses: actions/cache/restore@0400d5f644dc74513175e3cd8d07132dd4860809 # v4.2.4
+        id: cache-bundle-stats
+        with:
+          path: bundle-stats.json
+          key: bundle-stats-master-${{ steps.get-merge-base.outputs.merge_base }}
+
+      # For PRs: Fail with clear message if no baseline found
+      - name: Check for baseline file (PR)
+        if: github.event_name == 'pull_request' && steps.cache-bundle-stats.outputs.cache-hit != 'true'
+        run: |
+          echo "::error::ERROR: Bundle stats baseline not found for merge-base SHA ${{ steps.get-merge-base.outputs.merge_base }}. This may happen if the merge-base commit doesn't have a cached baseline yet. Please ensure the base branch has run the bundle-stats job."
+          exit 1
+
+      # For PRs: Run bundle analysis
+      - name: Analyze bundle (PR)
+        if: github.event_name == 'pull_request'
+        env:
+          ANALYZE_REPORT_PATH: apps/storybook/bundle-stats.json
+        run: yarn nx run storybook:analyze-bundle || echo "Bundle analysis failed"
+
+  lint-styles:
+    name: Lint Styles
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        with:
+          egress-policy: audit
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          fetch-depth: 100 # TODO: This needs to include the merge-base
+      - uses: ./.github/actions/setup
+      - name: Lint Styles
+        run: yarn nx affected --target=lint-styles --base=$NX_BASE --head=$NX_HEAD

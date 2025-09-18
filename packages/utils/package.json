@@ -1,0 +1,41 @@
+{
+  "name": "@cbhq/cds-utils",
+  "version": "2.3.0",
+  "description": "Coinbase Design System - Utils",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:coinbase/cds-staging.git",
+    "directory": "packages/utils"
+  },
+  "react-native": "./src/index.ts",
+  "type": "module",
+  "main": "./esm/index.js",
+  "types": "./dts/index.d.ts",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "types": "./dts/index.d.ts",
+      "default": "./esm/index.js"
+    },
+    "./*": {
+      "types": "./dts/*.d.ts",
+      "default": "./esm/*.js"
+    }
+  },
+  "sideEffects": false,
+  "files": [
+    "dts",
+    "esm",
+    "CHANGELOG"
+  ],
+  "dependencies": {
+    "humps": "^2.0.1",
+    "type-fest": "^2.19.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.28.0",
+    "@babel/preset-env": "^7.28.0",
+    "@babel/preset-react": "^7.27.1",
+    "@babel/preset-typescript": "^7.27.1"
+  }
+}

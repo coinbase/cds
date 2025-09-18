@@ -1,0 +1,144 @@
+secure:
+  required_reviews: 1
+  codeowners_enabled: true
+  branches:
+    - master
+  auto_assign_reviewers: true
+build:
+  engines:
+    # Apps
+    - BaldurECR:
+        name: cds-next-docs
+        path: ./apps/docs/production.Dockerfile
+        autobuild: true
+    - BaldurECR:
+        name: cds-docs-dev
+        path: ./apps/docs/development.Dockerfile
+        autobuild: false
+    - BaldurECR:
+        name: cds-storybook
+        path: ./apps/storybook/production.Dockerfile
+        autobuild: true
+    - BaldurECR:
+        name: cds-storybook-dev
+        path: ./apps/storybook/development.Dockerfile
+        autobuild: false
+    # Packages
+    - BaldurNode:
+        name: package-common
+        path: ./packages/common/publish.Dockerfile
+        autobuild_files:
+          - packages/common/package.json
+        expire_keep_tags_after_days: 1
+        expire_tmp_tags_after_days: 1
+        expire_all_after_days: 2
+    - BaldurNode:
+        name: package-eslint-plugin-cds
+        path: ./packages/eslint-plugin-cds/publish.Dockerfile
+        autobuild_files:
+          - packages/eslint-plugin-cds/package.json
+        expire_keep_tags_after_days: 1
+        expire_tmp_tags_after_days: 1
+        expire_all_after_days: 2
+    - BaldurNode:
+        name: package-icons
+        path: ./packages/icons/publish.Dockerfile
+        autobuild_files:
+          - packages/icons/package.json
+        expire_keep_tags_after_days: 1
+        expire_tmp_tags_after_days: 1
+        expire_all_after_days: 2
+    - BaldurNode:
+        name: package-illustrations
+        path: ./packages/illustrations/publish.Dockerfile
+        autobuild_files:
+          - packages/illustrations/package.json
+        expire_keep_tags_after_days: 1
+        expire_tmp_tags_after_days: 1
+        expire_all_after_days: 2
+    - BaldurNode:
+        name: package-lottie-files
+        path: ./packages/lottie-files/publish.Dockerfile
+        autobuild_files:
+          - packages/lottie-files/package.json
+        expire_keep_tags_after_days: 1
+        expire_tmp_tags_after_days: 1
+        expire_all_after_days: 2
+    - BaldurNode:
+        name: package-mcp-server
+        path: ./packages/mcp-server/publish.Dockerfile
+        autobuild_files:
+          - packages/mcp-server/package.json
+        expire_keep_tags_after_days: 1
+        expire_tmp_tags_after_days: 1
+        expire_all_after_days: 2
+    - BaldurNode:
+        name: package-mobile
+        path: ./packages/mobile/publish.Dockerfile
+        autobuild_files:
+          - packages/mobile/package.json
+        expire_keep_tags_after_days: 1
+        expire_tmp_tags_after_days: 1
+        expire_all_after_days: 2
+    - BaldurNode:
+        name: package-mobile-visualization
+        path: ./packages/mobile-visualization/publish.Dockerfile
+        autobuild_files:
+          - packages/mobile-visualization/package.json
+        expire_keep_tags_after_days: 1
+        expire_tmp_tags_after_days: 1
+        expire_all_after_days: 2
+    - BaldurNode:
+        name: package-ui-mobile-playground
+        path: ./packages/ui-mobile-playground/publish.Dockerfile
+        autobuild_files:
+          - packages/ui-mobile-playground/package.json
+        expire_keep_tags_after_days: 1
+        expire_tmp_tags_after_days: 1
+        expire_all_after_days: 2
+    - BaldurNode:
+        name: package-ui-mobile-visreg
+        path: ./packages/ui-mobile-visreg/publish.Dockerfile
+        autobuild_files:
+          - packages/ui-mobile-visreg/package.json
+        expire_keep_tags_after_days: 1
+        expire_tmp_tags_after_days: 1
+        expire_all_after_days: 2
+    - BaldurNode:
+        name: package-ui-scorecard
+        path: ./packages/ui-scorecard/publish.Dockerfile
+        autobuild_files:
+          - packages/ui-scorecard/package.json
+        expire_keep_tags_after_days: 1
+        expire_tmp_tags_after_days: 1
+        expire_all_after_days: 2
+    - BaldurNode:
+        name: package-utils
+        path: ./packages/utils/publish.Dockerfile
+        autobuild_files:
+          - packages/utils/package.json
+        expire_keep_tags_after_days: 1
+        expire_tmp_tags_after_days: 1
+        expire_all_after_days: 2
+    - BaldurNode:
+        name: package-web
+        path: ./packages/web/publish.Dockerfile
+        autobuild_files:
+          - packages/web/package.json
+        expire_keep_tags_after_days: 1
+        expire_tmp_tags_after_days: 1
+        expire_all_after_days: 2
+    - BaldurNode:
+        name: package-web-visualization
+        path: ./packages/web-visualization/publish.Dockerfile
+        autobuild_files:
+          - packages/web-visualization/package.json
+        expire_keep_tags_after_days: 1
+        expire_tmp_tags_after_days: 1
+        expire_all_after_days: 2
+    # Static assets
+    - BaldurECR:
+        name: static-assets
+        path: ./libs/static-assets/static-assets.Dockerfile
+        autobuild_files:
+          - packages/illustrations/package.json

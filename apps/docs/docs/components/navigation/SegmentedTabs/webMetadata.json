@@ -1,0 +1,18 @@
+{
+  "import": "import { SegmentedTabs } from '@cbhq/cds-web/tabs/SegmentedTabs'",
+  "source": "https://github.com/coinbase/cds-staging/blob/master/packages/web/src/tabs/SegmentedTabs.tsx",
+  "storybook": "https://cds-storybook.coinbase.com/?path=/story/core-components-tabs-segmented-tabs--all",
+  "figma": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/%E2%9C%A8-CDS-Components?node-id=20859-1665",
+  "description": "Switches between different views of content.",
+  "relatedComponents": [
+    {
+      "label": "Button",
+      "url": "/components/inputs/Button/"
+    },
+    {
+      "label": "TabNavigation",
+      "url": "/components/navigation/TabNavigation/"
+    }
+  ],
+  "dependencies": []
+}

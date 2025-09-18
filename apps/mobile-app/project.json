@@ -1,0 +1,145 @@
+{
+  "name": "mobile-app",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/mobile-app/src",
+  "projectType": "application",
+  "tags": [],
+  "targets": {
+    "setup": {
+      "executor": "nx:run-commands",
+      "dependsOn": [
+        "^build"
+      ],
+      "options": {
+        "cwd": "apps/mobile-app",
+        "commands": [
+          "mkdir -p ios",
+          "mkdir -p android"
+        ]
+      }
+    },
+    "launch": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "apps/mobile-app",
+        "command": "node ./scripts/launch.mjs --profile {args.profile} --jsEngine {args.jsEngine} --platform {args.platform}"
+      },
+      "defaultConfiguration": "ios-debug",
+      "configurations": {
+        "ios-debug": {
+          "args": "--profile debug --jsEngine hermes --platform ios"
+        },
+        "android-debug": {
+          "args": "--profile debug --jsEngine hermes --platform android"
+        },
+        "ios-release": {
+          "args": "--profile release --jsEngine hermes --platform ios"
+        },
+        "android-release": {
+          "args": "--profile release --jsEngine hermes --platform android"
+        }
+      }
+    },
+    "start": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "apps/mobile-app",
+        "command": "node ./scripts/start.mjs --profile {args.profile} --jsEngine {args.jsEngine} --platform {args.platform}"
+      },
+      "defaultConfiguration": "ios-debug",
+      "configurations": {
+        "ios-debug": {
+          "args": "--profile debug --jsEngine hermes --platform ios"
+        },
+        "android-debug": {
+          "args": "--profile debug --jsEngine hermes --platform android"
+        }
+      }
+    },
+    "build": {
+      "executor": "nx:run-commands",
+      "dependsOn": [],
+      "options": {
+        "cwd": "apps/mobile-app",
+        "command": "export CDS_METRO_RESOLVER=false && node ./scripts/build.mjs --profile {args.profile} --jsEngine {args.jsEngine} --platform {args.platform}"
+      },
+      "defaultConfiguration": "ios-debug",
+      "configurations": {
+        "ios-debug": {
+          "args": "--profile debug --jsEngine hermes --platform ios"
+        },
+        "android-debug": {
+          "args": "--profile debug --jsEngine hermes --platform android"
+        },
+        "ios-release": {
+          "args": "--profile release --jsEngine hermes --platform ios",
+          "dependsOn": [
+            "^build"
+          ]
+        },
+        "android-release": {
+          "args": "--profile release --jsEngine hermes --platform android",
+          "dependsOn": [
+            "^build"
+          ]
+        }
+      }
+    },
+    "detox": {
+      "executor": "nx:run-commands",
+      "dependsOn": [
+        "^build"
+      ],
+      "options": {
+        "cwd": "apps/mobile-app",
+        "command": "node ./scripts/detox.mjs --profile {args.profile} --jsEngine {args.jsEngine} --platform {args.platform}",
+        "env": {
+          "DETOX_TEST": "true"
+        }
+      },
+      "configurations": {
+        "ios-debug": {
+          "args": "--profile debug --jsEngine hermes --platform ios"
+        },
+        "android-debug": {
+          "args": "--profile debug --jsEngine hermes --platform android"
+        },
+        "ios-release": {
+          "args": "--profile release --jsEngine hermes --platform ios"
+        },
+        "android-release": {
+          "args": "--profile release --jsEngine hermes --platform android"
+        }
+      }
+    },
+    "validate": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "apps/mobile-app",
+        "command": "node ./scripts/validate.mjs"
+      }
+    },
+    "visreg": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "buildkite-agent pipeline upload .buildkite/visreg-ios.yml",
+          "buildkite-agent pipeline upload .buildkite/visreg-android.yml"
+        ],
+        "parallel": true
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "options": {
+        "jestConfig": "{projectRoot}/jest.config.js"
+      }
+    },
+    "typecheck": {
+      "command": "tsc --build --pretty --verbose"
+    }
+  }
+}

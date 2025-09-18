@@ -1,0 +1,290 @@
+### General Upsell
+
+Utilize our Primary Wash Upsell for general information and non-urgent promotions. Its versatile design is perfect for a broad range of content, providing a subtle yet effective approach to engage users. It's also the only Upsell Card that supports Pictogram Illustrations.
+
+```jsx live
+function Example() {
+  function NoopFn() {
+    console.log('pressed');
+  }
+  return (
+    <VStack minHeight={300} padding={2} alignItems="center" justifyContent="center">
+      <UpsellCard
+        title="Recurring Buy"
+        description="Want to add funds to your card every week or month?"
+        action={'Get started'}
+        onActionPress={NoopFn}
+        onDismissPress={NoopFn}
+        media={
+          <Box position="relative" right={24} bottom={6}>
+            <Pictogram name="recurringPurchases" dimension="64x64" />
+          </Box>
+        }
+      />
+    </VStack>
+  );
+}
+```
+
+### Feature Upsell
+
+Ideal for highlighting Coinbase tools, innovative features, and unique functionalities. Choose from our palette of four distinct colors to make your Feature Upsell stand out. Each color is carefully selected to grab attention while aligning with the specific nature of the feature being promoted
+
+```jsx live
+function Example() {
+  const { colorScheme } = useTheme();
+  function NoopFn() {
+    console.log('pressed');
+  }
+  const image = (
+    <Box position="relative" left={16} top={12}>
+      <RemoteImage source="/img/feature.png" height={174} />
+    </Box>
+  );
+  const cards = [
+    {
+      title: 'Up to 3.29% APR on ETHs',
+      description: 'Earn staking rewards on ETH by holding it on Coinbase',
+      action: 'Start earning',
+      onActionPress: NoopFn,
+      onDismissPress: NoopFn,
+      media: image,
+      dangerouslySetBackground: 'rgb(var(--purple70))',
+    },
+    {
+      title: 'Up to 3.29% APR on ETHs',
+      description: 'Earn staking rewards on ETH by holding it on Coinbase',
+      action: 'Start earning',
+      onActionPress: NoopFn,
+      onDismissPress: NoopFn,
+      media: image,
+      dangerouslySetBackground: 'rgb(var(--teal50))',
+    },
+    {
+      title: 'Up to 3.29% APR on ETHs',
+      description: 'Earn staking rewards on ETH by holding it on Coinbase',
+      action: 'Start earning',
+      onActionPress: NoopFn,
+      onDismissPress: NoopFn,
+      media: image,
+      dangerouslySetBackground: 'rgb(var(--blue80))',
+    },
+    {
+      title: 'Up to 3.29% APR on ETHs',
+      description: 'Earn staking rewards on ETH by holding it on Coinbase',
+      action: 'Start earning',
+      onActionPress: NoopFn,
+      onDismissPress: NoopFn,
+      media: image,
+      dangerouslySetBackground: 'rgb(var(--indigo70))',
+    },
+  ];
+  return (
+    <VStack minHeight={300} padding={2} alignItems="center" justifyContent="center" gap={1}>
+      {cards.map((card) => {
+        return (
+          <UpsellCard
+            {...card}
+            title={
+              <TextHeadline color="fgInverse" as="h3">
+                {card.title}
+              </TextHeadline>
+            }
+            description={
+              <TextLabel2 as="p" numberOfLines={3} color="fgInverse">
+                {card.description}
+              </TextLabel2>
+            }
+          />
+        );
+      })}
+    </VStack>
+  );
+}
+```
+
+### Community Upsell
+
+Designed for community-focused upsells, our Community Upsell uses vibrant yellow and purple hues. These energetic colors are excellent for sparking enthusiasm and encouraging active participation, fostering a sense of community engagement
+
+```jsx live
+function Example() {
+  const { colorScheme } = useTheme();
+  function NoopFn() {
+    console.log('pressed');
+  }
+  const cards = [
+    {
+      title: 'Join the community',
+      description: 'Chat with other devs in our Discord community',
+      action: 'Start earning',
+      onActionPress: NoopFn,
+      onDismissPress: NoopFn,
+      media: (
+        <Box position="relative" left={16} top={4}>
+          <RemoteImage source="/img/community.png" height={174} />
+        </Box>
+      ),
+      dangerouslySetBackground: 'rgb(var(--teal70))',
+    },
+    {
+      title: 'Join the community',
+      description: 'Chat with other devs in our Discord community',
+      action: 'Start earning',
+      onActionPress: NoopFn,
+      onDismissPress: NoopFn,
+      media: (
+        <Box position="relative" left={16} top={4}>
+          <RemoteImage source="/img/radial.png" height={174} />
+        </Box>
+      ),
+      dangerouslySetBackground: 'rgb(var(--purple70))',
+    },
+  ];
+  return (
+    <VStack minHeight={300} padding={2} alignItems="center" justifyContent="center" gap={1}>
+      {cards.map((card) => {
+        return (
+          <UpsellCard
+            {...card}
+            title={
+              <TextHeadline color="fgInverse" as="h3">
+                {card.title}
+              </TextHeadline>
+            }
+            description={
+              <TextLabel2 as="p" numberOfLines={3} color="fgInverse">
+                {card.description}
+              </TextLabel2>
+            }
+          />
+        );
+      })}
+    </VStack>
+  );
+}
+```
+
+### Product Upsell
+
+Optimal for business products, security features, and functionalities that emphasize trust and reliability, such as Coinbase One and Coinbase Card. Our blue and black card options symbolize stability, trustworthiness, and professionalism, aligning with the core values of your product offerings
+
+```jsx live
+function Example() {
+  const { colorScheme } = useTheme();
+  function NoopFn() {
+    console.log('pressed');
+  }
+  const cards = [
+    {
+      title: 'Coinbase One offer',
+      description: 'Use code NOV60 when you  sign up for Coinbase One',
+      action: 'Get 60 days free',
+      onActionPress: NoopFn,
+      onDismissPress: NoopFn,
+      media: (
+        <Box position="relative" left={16} top={0}>
+          <RemoteImage source="/img/marketing.png" height={174} />
+        </Box>
+      ),
+      dangerouslySetBackground: 'rgb(var(--blue80))',
+    },
+    {
+      title: 'Coinbase Card',
+      description: 'Spend USDC to get rewards with our Visa® debit card',
+      action: 'Get started',
+      onActionPress: NoopFn,
+      onDismissPress: NoopFn,
+      media: (
+        <Box position="relative" left={16} top={0}>
+          <RemoteImage source="/img/object.png" height={174} />
+        </Box>
+      ),
+      dangerouslySetBackground: 'rgb(var(--gray100))',
+    },
+  ];
+  return (
+    <VStack minHeight={300} padding={2} alignItems="center" justifyContent="center" gap={1}>
+      {cards.map((card) => {
+        return (
+          <UpsellCard
+            {...card}
+            title={
+              <TextHeadline color="fgInverse" as="h3">
+                {card.title}
+              </TextHeadline>
+            }
+            description={
+              <TextLabel2 as="p" numberOfLines={3} color="fgInverse">
+                {card.description}
+              </TextLabel2>
+            }
+          />
+        );
+      })}
+    </VStack>
+  );
+}
+```
+
+### News Upsell
+
+Our News Upsell is specifically tailored for company announcements and policy updates. Its design ensures that important information is conveyed clearly and prominently, ensuring users stays well-informed about the latest developments.
+
+```jsx live
+function Example() {
+  const { colorScheme } = useTheme();
+  function NoopFn() {
+    console.log('pressed');
+  }
+  const cards = [
+    {
+      title: 'Help defend crypto in America',
+      description: 'Help us keep crypto in America with a single click',
+      action: 'Join the fight',
+      onActionPress: NoopFn,
+      onDismissPress: NoopFn,
+      media: (
+        <Box position="relative" left={30} top={0}>
+          <RemoteImage source="/img/place.png" height={196} />
+        </Box>
+      ),
+      dangerouslySetBackground: 'rgb(var(--gray100))',
+    },
+    {
+      title: 'Help defend crypto in America',
+      description: 'Help us keep crypto in America with a single click',
+      action: 'Join the fight',
+      onActionPress: NoopFn,
+      onDismissPress: NoopFn,
+      media: (
+        <Box position="relative" left={30} top={0}>
+          <RemoteImage source="/img/place.png" height={196} />
+        </Box>
+      ),
+      dangerouslySetBackground: 'rgb(var(--indigo70))',
+    },
+  ];
+  return (
+    <VStack minHeight={300} padding={2} alignItems="center" justifyContent="center" gap={1}>
+      {cards.map((card) => {
+        return (
+          <UpsellCard
+            {...card}
+            title={
+              <TextHeadline color="fgInverse" as="h3">
+                {card.title}
+              </TextHeadline>
+            }
+            description={
+              <TextLabel2 as="p" numberOfLines={3} color="fgInverse">
+                {card.description}
+              </TextLabel2>
+            }
+          />
+        );
+      })}
+    </VStack>
+  );
+}
+```

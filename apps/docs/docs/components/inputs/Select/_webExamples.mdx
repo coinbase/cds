@@ -1,0 +1,189 @@
+### Default Composition
+
+`Select` can take anything as a child, however, we strongly recommend that you use `SelectOption`. It has the same API as a `ListCell`, but with custom styles specific to usage within a `Select`. `SelectOption` also comes with a lot of baked in functionality, like keyboard navigation, accessibility properties, and focus behaviors.
+
+```jsx live
+function DefaultSelect() {
+  const [value, setValue] = useState();
+  const options = ['Option 1', 'Option 2', 'Option 3', 'Option 4', 'Option 5', 'Option 6'];
+  return (
+    <VStack padding={2}>
+      <Select value={value} placeholder="Choose something..." onChange={setValue}>
+        {options.map((option) => (
+          <SelectOption value={option} key={option} title={option} description="Description" />
+        ))}
+      </Select>
+    </VStack>
+  );
+}
+```
+
+### Value/Label Object Model
+
+Sometimes you may want to surface a label instead of the select value. You can pass a `valueLabel` prop with the currently selected value's corresponding label, which will appear to be the value of the Select.
+
+```jsx live
+function DefaultSelect() {
+  const [value, setValue] = useState();
+  const options = [
+    { value: '1', label: 'Option 1' },
+    { value: '2', label: 'Option 2' },
+    { value: '3', label: 'Option 3' },
+    { value: '4', label: 'Option 4' },
+  ];
+  const selectedValueLabel = value && options.find((option) => option.value === value).label;
+  return (
+    <VStack padding={2}>
+      <Select
+        value={value}
+        valueLabel={selectedValueLabel}
+        placeholder="Choose something..."
+        onChange={setValue}
+      >
+        {options.map((option) => (
+          <SelectOption
+            value={option.value}
+            key={option.value}
+            title={option.label}
+            description="Description"
+          />
+        ))}
+      </Select>
+    </VStack>
+  );
+}
+```
+
+### Input Stack Options
+
+The `Select` trigger can be customized similar to `TextInput`. These options are also available for mobile implementations.
+
+#### Label and Helper Text
+
+When space is tight, this brings the label inside of the Input. Should be used with a `compact` `SelectOption`.
+
+```jsx live
+function LabelHelperTextSelect() {
+  const [value, setValue] = useState('Option 2');
+  const options = ['Option 1', 'Option 2', 'Option 3', 'Option 4', 'Option 5', 'Option 6'];
+  return (
+    <VStack padding={2}>
+      <Select
+        label="Make a selection"
+        helperText="You can only choose one"
+        value={value}
+        onChange={setValue}
+        startNode={<InputIcon name="calendar" />}
+      >
+        {options.map((option) => (
+          <SelectOption value={option} key={option} title={option} description="Description" />
+        ))}
+      </Select>
+    </VStack>
+  );
+}
+```
+
+### Compact
+
+When space is tight, this brings the label inside of the Input. Should be used with a `compact` `SelectOption`.
+
+```jsx live
+function CompactSelect() {
+  const [value, setValue] = useState('Option 2');
+  const options = ['Option 1', 'Option 2', 'Option 3', 'Option 4', 'Option 5', 'Option 6'];
+  return (
+    <VStack padding={2}>
+      <Select compact label="Make a selection" value={value} onChange={setValue}>
+        {options.map((option) => (
+          <SelectOption
+            value={option}
+            key={option}
+            compact
+            title={option}
+            description="Description"
+          />
+        ))}
+      </Select>
+    </VStack>
+  );
+}
+```
+
+### Variants
+
+Variants can be used to surface positive or negative feedback.
+
+```jsx live
+function Variant() {
+  const [value, setValue] = useState('Positive');
+  const options = ['Positive', 'Negative', 'Primary', 'Secondary', 'Foreground'];
+  return (
+    <VStack padding={2}>
+      <Select
+        variant={value.toLowerCase()}
+        label="Make a selection"
+        helperText="You can only choose one"
+        value={value}
+        onChange={setValue}
+      >
+        {options.map((option) => (
+          <SelectOption value={option} key={option} title={option} />
+        ))}
+      </Select>
+    </VStack>
+  );
+}
+```
+
+### Label Variants
+
+Select supports two label variants: `outside` (default) and `inside`. Note that the `compact` prop, when set to true, will override label variant preference.
+
+:::warning
+
+When using the `inside` label variant, you should always include a `placeholder` prop.
+
+:::
+
+```jsx live
+<VStack gap={3}>
+  <VStack>
+    <Text as="p">
+      <strong>Outside label (default):</strong>
+    </Text>
+    <Select placeholder="Choose an option">
+      <SelectOption value="option1" title="Option 1" description="Description" />
+      <SelectOption value="option2" title="Option 2" description="Description" />
+      <SelectOption value="option3" title="Option 3" description="Description" />
+    </Select>
+  </VStack>
+
+  <VStack>
+    <Text as="p">
+      <strong>Inside label:</strong>
+    </Text>
+    <Select label="Choose Option" labelVariant="inside" placeholder="Select from list">
+      <SelectOption value="option1" title="Option 1" description="Description" />
+      <SelectOption value="option2" title="Option 2" description="Description" />
+      <SelectOption value="option3" title="Option 3" description="Description" />
+    </Select>
+  </VStack>
+
+  <VStack>
+    <Text as="p">
+      <strong>Inside label (with start content):</strong>
+    </Text>
+    <Select
+      label="Filter Options"
+      labelVariant="inside"
+      startNode={<InputIcon name="search" />}
+      placeholder="Search and select"
+    >
+      <SelectOption value="option1" title="Option 1" description="Description" />
+      <SelectOption value="option2" title="Option 2" description="Description" />
+      <SelectOption value="option3" title="Option 3" description="Description" />
+    </Select>
+  </VStack>
+</VStack>
+```

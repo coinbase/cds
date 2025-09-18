@@ -1,0 +1,271 @@
+---
+name: Publish Packages to NPM
+
+on:
+  workflow_dispatch:
+    inputs:
+      packages:
+        description: >-
+          Comma-separated list of packages to publish (leave empty for all)
+        required: false
+        type: string
+      dry-run:
+        description: 'Run in dry-run mode (no actual publishing)'
+        required: true
+        type: boolean
+        default: false
+  pull_request:
+    paths:
+      - 'packages/*/package.json'
+      - 'packages/*/src/**'
+
+jobs:
+  # Determine which packages to build/publish
+  detect-changes:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: read
+    outputs:
+      packages: ${{ steps.packages.outputs.packages }}
+      has-changes: ${{ steps.packages.outputs.has-changes }}
+    steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        with:
+          egress-policy: audit
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          fetch-depth: 0
+      - uses: ./.github/actions/setup
+
+      - name: Determine packages to publish
+        id: packages
+        run: |
+          # Define all publishable packages (those with publish.Dockerfile
+          # and not private: true)
+          ALL_PACKAGES="common,eslint-plugin-cds,icons,illustrations,lottie-files,mobile,mobile-visualization,ui-mobile-playground,utils,web,web-visualization"
+
+          # Function to convert comma-separated list to JSON array
+          csv_to_json() {
+            local csv="$1"
+            if [ -z "$csv" ]; then
+              echo "[]"
+              return
+            fi
+
+            # Split by comma and build JSON array properly
+            echo -n "["
+            local first=true
+            IFS=',' read -ra PACKAGES <<< "$csv"
+            for pkg in "${PACKAGES[@]}"; do
+              # Trim whitespace
+              pkg=$(echo "$pkg" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
+              if [ -n "$pkg" ]; then
+                if [ "$first" = true ]; then
+                  first=false
+                else
+                  echo -n ","
+                fi
+                echo -n "\"$pkg\""
+              fi
+            done
+            echo "]"
+          }
+
+          # Function to validate package names
+          validate_packages() {
+            local csv="$1"
+            local invalid=""
+            IFS=',' read -ra PACKAGES <<< "$csv"
+            for pkg in "${PACKAGES[@]}"; do
+              pkg=$(echo "$pkg" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
+              if [ -n "$pkg" ] && ! echo "$ALL_PACKAGES" | \
+                 grep -q "\b$pkg\b"; then
+                if [ -z "$invalid" ]; then
+                  invalid="$pkg"
+                else
+                  invalid="$invalid, $pkg"
+                fi
+              fi
+            done
+            echo "$invalid"
+          }
+
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            if [ -n "${{ github.event.inputs.packages }}" ]; then
+              PACKAGES="${{ github.event.inputs.packages }}"
+
+              # Validate input packages
+              INVALID=$(validate_packages "$PACKAGES")
+              if [ -n "$INVALID" ]; then
+                echo "::error::Invalid package names: $INVALID"
+                echo "::error::Valid packages are: $ALL_PACKAGES"
+                exit 1
+              fi
+            else
+              PACKAGES="$ALL_PACKAGES"
+            fi
+            PACKAGES_JSON=$(csv_to_json "$PACKAGES")
+            echo "packages=$PACKAGES_JSON" >> $GITHUB_OUTPUT
+            echo "has-changes=true" >> $GITHUB_OUTPUT
+          else
+            # For PRs, detect changed packages using NX_BASE or fallback
+            CHANGED_PACKAGES=""
+            BASE_REF="${NX_BASE:-origin/${{ github.base_ref }}}"
+            echo "Using base reference: $BASE_REF"
+            for pkg in $(echo $ALL_PACKAGES | tr ',' '\n'); do
+              if git diff --name-only $BASE_REF...HEAD | \
+                 grep -q "^packages/$pkg/"; then
+                if [ -z "$CHANGED_PACKAGES" ]; then
+                  CHANGED_PACKAGES="$pkg"
+                else
+                  CHANGED_PACKAGES="$CHANGED_PACKAGES,$pkg"
+                fi
+              fi
+            done
+
+            PACKAGES_JSON=$(csv_to_json "$CHANGED_PACKAGES")
+            echo "packages=$PACKAGES_JSON" >> $GITHUB_OUTPUT
+
+            if [ -n "$CHANGED_PACKAGES" ]; then
+              echo "has-changes=true" >> $GITHUB_OUTPUT
+            else
+              echo "has-changes=false" >> $GITHUB_OUTPUT
+            fi
+          fi
+
+  # Dry run publish (for PRs and manual dry-run)
+  dry-run-publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: read
+    needs: detect-changes
+    if: |
+      needs.detect-changes.outputs.has-changes == 'true' &&
+      needs.detect-changes.outputs.packages != '[]' &&
+      (github.event_name == 'pull_request' ||
+       github.event.inputs.dry-run == 'true')
+    strategy:
+      matrix:
+        package: ${{ fromJson(needs.detect-changes.outputs.packages) }}
+    steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        with:
+          egress-policy: audit
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+      - uses: ./.github/actions/setup
+
+      - name: Build package
+        run: |
+          echo "🔍 Running typecheck for ${{ matrix.package }}..."
+          yarn nx run ${{ matrix.package }}:typecheck
+          echo "🏗️ Building ${{ matrix.package }}..."
+          yarn nx run ${{ matrix.package }}:build
+          echo "✅ Build completed for ${{ matrix.package }}"
+
+      - name: Dry run publish
+        run: |
+          cd packages/${{ matrix.package }}
+          npm publish --dry-run --access public \
+            --registry https://registry.npmjs.org
+          echo "✅ Dry run successful for ${{ matrix.package }}"
+
+  # Actual publish (manual trigger only, not dry-run)
+  publish:
+    runs-on: ubuntu-latest
+    needs: detect-changes
+    if: |
+      needs.detect-changes.outputs.has-changes == 'true' &&
+      needs.detect-changes.outputs.packages != '[]' &&
+      github.event_name == 'workflow_dispatch' &&
+      github.event.inputs.dry-run != 'true'
+    environment: npm
+    permissions:
+      contents: read
+      actions: read
+      id-token: write
+    strategy:
+      matrix:
+        package: ${{ fromJson(needs.detect-changes.outputs.packages) }}
+    steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        with:
+          egress-policy: audit
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+      - uses: ./.github/actions/setup
+
+      - name: Build package
+        run: |
+          echo "🔍 Running typecheck for ${{ matrix.package }}..."
+          yarn nx run ${{ matrix.package }}:typecheck
+          echo "🏗️ Building ${{ matrix.package }}..."
+          yarn nx run ${{ matrix.package }}:build
+          echo "✅ Build completed for ${{ matrix.package }}"
+
+      - name: Publish package
+        run: |
+          cd packages/${{ matrix.package }}
+          echo "🚀 Publishing ${{ matrix.package }} to NPM..."
+
+          # Safety check: verify package.json exists and has correct name
+          if [ ! -f "package.json" ]; then
+            echo "::error::Missing package.json in ${{ matrix.package }}"
+            exit 1
+          fi
+
+          PACKAGE_NAME=$(node -p "require('./package.json').name")
+          echo "📦 Package name from package.json: $PACKAGE_NAME"
+          npm publish --provenance --access public \
+            --registry https://registry.npmjs.org
+          echo "✅ Successfully published ${{ matrix.package }} ($PACKAGE_NAME)"
+
+  # Summary job
+  summary:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: read
+    needs: [detect-changes, dry-run-publish, publish]
+    if: always() && needs.detect-changes.outputs.has-changes == 'true'
+    steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        with:
+          egress-policy: audit
+      - name: Publish Summary
+        run: |
+          echo "## Publishing Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          PKG_VAR='${{ needs.detect-changes.outputs.packages }}'
+          PACKAGES_LIST=$(echo "$PKG_VAR" | \
+            sed 's/\[//g' | sed 's/\]//g' | sed 's/"//g')
+          echo "**Packages:** $PACKAGES_LIST" >> $GITHUB_STEP_SUMMARY
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            MODE="Dry Run (PR)"
+          elif [ "${{ github.event.inputs.dry-run }}" = "true" ]; then
+            MODE="Dry Run (Manual)"
+          else
+            MODE="Live Publish"
+          fi
+          echo "**Mode:** $MODE" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          if [ "${{ needs.dry-run-publish.result }}" = "success" ]; then
+            echo "✅ Dry run publish: **PASSED**" >> $GITHUB_STEP_SUMMARY
+          elif [ "${{ needs.dry-run-publish.result }}" = "skipped" ]; then
+            echo "⏭️ Dry run publish: **SKIPPED**" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ Dry run publish: **FAILED**" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          if [ "${{ needs.publish.result }}" = "success" ]; then
+            echo "✅ Live publish: **PASSED**" >> $GITHUB_STEP_SUMMARY
+          elif [ "${{ needs.publish.result }}" = "skipped" ]; then
+            echo "⏭️ Live publish: **SKIPPED**" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ Live publish: **FAILED**" >> $GITHUB_STEP_SUMMARY
+          fi

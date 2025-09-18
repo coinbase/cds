@@ -1,0 +1,25 @@
+---
+id: playground
+title: Playground
+hide_title: true
+---
+
+import { MDXSection } from '@site/src/components/page/MDXSection';
+import { MDXArticle } from '@site/src/components/page/MDXArticle';
+import { ContentHeader } from '@site/src/components/page/ContentHeader';
+import { PlaygroundBanner } from '@site/src/components/page/ComponentBanner/PlaygroundBanner';
+import { ShareablePlayground } from '@site/src/components/page/ShareablePlayground';
+
+<ContentHeader
+  title="Playground"
+  description="Live code playground for testing and sharing CDS components and code examples. All CDS components and hooks and all React exports are available to use in the playground without importing them. You must call render() to render your code."
+  banner={<PlaygroundBanner />}
+/>
+
+<MDXSection>
+<MDXArticle>
+
+<ShareablePlayground />
+
+</MDXArticle>
+</MDXSection>

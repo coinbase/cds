@@ -1,0 +1,175 @@
+### Basic usage
+
+```tsx
+function BasicSectionHeader() {
+  return (
+    <SectionHeader
+      title="Basic Section Header"
+      testID="basic-section-header"
+      accessibilityLabel="Basic section header example"
+    />
+  );
+}
+```
+
+### With Description and Icons
+
+```tsx
+function SectionHeaderWithDetails() {
+  return (
+    <VStack gap={2}>
+      <SectionHeader
+        title="With Description"
+        description="This is a helpful description that will wrap on mobile devices"
+        testID="description-header"
+      />
+
+      <SectionHeader
+        title="With Icons"
+        start={<Icon name="star" />}
+        icon="info-circle"
+        description="Shows both start and info icons"
+        testID="icons-header"
+      />
+    </VStack>
+  );
+}
+```
+
+### With Balance and Actions
+
+```tsx
+function SectionHeaderWithActions() {
+  return (
+    <VStack gap={2}>
+      <SectionHeader
+        title="Account Balance"
+        balance="$1,234.56"
+        end={
+          <Button
+            variant="secondary"
+            compact
+            onPress={() => console.log('View history')}
+            testID="view-history-button"
+          >
+            History
+          </Button>
+        }
+        testID="balance-header"
+      />
+
+      <SectionHeader
+        title="Actions Example"
+        description="Shows multiple actions that will wrap on mobile"
+        end={
+          <HStack gap={1} flexWrap="wrap">
+            <Button
+              variant="secondary"
+              compact
+              onPress={() => console.log('Export')}
+              testID="export-button"
+            >
+              Export
+            </Button>
+            <Button
+              variant="primary"
+              compact
+              onPress={() => console.log('Details')}
+              testID="details-button"
+            >
+              Details
+            </Button>
+          </HStack>
+        }
+        testID="actions-header"
+      />
+    </VStack>
+  );
+}
+```
+
+### Custom Styling
+
+```tsx
+function StyledSectionHeader() {
+  return (
+    <SectionHeader
+      title="Custom Style"
+      description="With custom padding and background"
+      padding={3}
+      background="bgSecondary"
+      testID="styled-header"
+    />
+  );
+}
+```
+
+# With Start Icon
+
+```tsx
+<SectionHeader title="Section with Start Icon" start={<Icon name="star" />} />
+```
+
+# With Icon After Title
+
+```tsx
+<SectionHeader title="Section with Icon" icon="info-circle" />
+```
+
+# With Balance
+
+```tsx
+<SectionHeader title="Account Balance" balance="$1,234.56" />
+```
+
+# With End Content
+
+```tsx
+<SectionHeader
+  title="Section with Actions"
+  description="This section header includes a button in the end content area."
+  end={
+    <Button variant="secondary" size="sm">
+      Action
+    </Button>
+  }
+/>
+```
+
+# Full Example
+
+```tsx
+<VStack gap={4}>
+  <SectionHeader
+    title="Complete Example"
+    start={<Icon name="star" />}
+    icon="info-circle"
+    description="This example shows all the main features of the SectionHeader component."
+    balance="$1,234.56"
+    end={
+      <Button variant="secondary" size="sm">
+        Learn More
+      </Button>
+    }
+  />
+  <Text>Content below the section header...</Text>
+</VStack>
+```
+
+# With Accessibility
+
+```tsx
+<SectionHeader
+  title="Accessible Header"
+  description="This header includes accessibility props."
+  accessibilityLabel="Section header with description"
+  testID="section-header-example"
+/>
+```
+
+Note: The mobile version of SectionHeader is optimized for touch interactions and mobile screen sizes while maintaining the same core functionality as the web version. The main differences are:
+
+- Uses React Native's View component underneath
+- Includes mobile-specific props like `testID` and `accessibilityLabel`
+- Default padding is adjusted for mobile screens
+- Wraps content appropriately for mobile viewports

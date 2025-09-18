@@ -1,0 +1,75 @@
+## Usage
+
+A Dropdown wraps a subject which when interacted with will toggle the visibility of an elevated surface called a menu.
+
+:::warning
+The `width` must be at least as large as the `content` prop's width, or the Dropdown may have issues in Safari.
+:::
+
+### Mobile
+
+Dropdown is a web only component. If you like to use a “Dropdown” like feature on Mobile, please use Tray instead.
+
+### Basic Dropdown
+
+Dropdown menus can show an scrim below the menu, overlaying all other content on the screen when passed `showOverlay`.
+
+Dropdown can render as a Modal on mobile web if passed `enableMobileModal`.
+
+```jsx live
+function Example() {
+  const [value, setValue] = useState(undefined);
+  const [showMobileModal, setShowMobileModal] = useState(false);
+  const [showOverlay, setShowOverlay] = useState(false);
+
+  const options = ['Option 1', 'Option 2', 'Option 3', 'Option 4', 'Option 5', 'Option 6'];
+
+  const content = useMemo(
+    () => (
+      <>
+        <HStack paddingX={2} paddingY={2}>
+          <Text font="caption" as="h2" color="foregroundMuted">
+            Section Heading
+          </Text>
+        </HStack>
+        {options.map((option) => (
+          <SelectOption value={option} title={option} />
+        ))}
+      </>
+    ),
+    [],
+  );
+
+  return (
+    <PortalProvider>
+      <VStack padding={4}>
+        <VStack width="100%" paddingTop={5} gap={3}>
+          <VStack gap={2}>
+            <Switch checked={showMobileModal} onChange={() => setShowMobileModal((v) => !v)}>
+              Enable Mobile Modal
+            </Switch>
+            <Switch checked={showOverlay} onChange={() => setShowOverlay((v) => !v)}>
+              Show Overlay
+            </Switch>
+          </VStack>
+          <Dropdown
+            value={value}
+            onChange={setValue}
+            content={content}
+            enableMobileModal={showMobileModal}
+            showOverlay={showOverlay}
+          >
+            <Button compact endIcon="caretDown">
+              Open Menu
+            </Button>
+          </Dropdown>
+        </VStack>
+      </VStack>
+    </PortalProvider>
+  );
+}
+```
+
+### Control a Dropdown Programmatically
+
+You can control the visibility of a Dropdown menu programmatically using the exposed `openMenu` and `closeMenu` methods on a Dropdown's `ref`.

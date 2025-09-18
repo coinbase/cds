@@ -1,0 +1,90 @@
+### Basic usage
+
+```tsx live
+() => {
+  const tabs = [
+    { id: 'tab1', label: 'Tab 1' },
+    { id: 'tab2', label: 'Tab 2' },
+    { id: 'tab3', label: 'Tab 3' },
+  ];
+  // TabComponent that uses context and TabLabel, wrapped in Pressable
+  const TabComponent = ({ id, label, disabled }) => {
+    const api = useTabsContext();
+    const isActive = api.activeTab?.id === id;
+    return (
+      <Pressable
+        onClick={() => api.updateActiveTab(id)}
+        disabled={disabled}
+        aria-pressed={isActive}
+        tabIndex={0}
+      >
+        <TabLabel id={id} active={isActive}>
+          {label}
+        </TabLabel>
+      </Pressable>
+    );
+  };
+
+  const CustomTabsActiveIndicator = useCallback((props) => {
+    return <TabsActiveIndicator {...props} background="bgPrimary" bottom={0} height={2} />;
+  }, []);
+
+  const [activeTab, setActiveTab] = useState(tabs[0]);
+  return (
+    <Tabs
+      gap={4}
+      tabs={tabs}
+      activeTab={activeTab}
+      onChange={setActiveTab}
+      TabComponent={TabComponent}
+      TabsActiveIndicatorComponent={CustomTabsActiveIndicator}
+      activeBackground="bgPrimary"
+    />
+  );
+};
+```
+
+### Custom Tab Component
+
+```tsx live
+() => {
+  const tabs = [
+    { id: 'home', label: 'Home', icon: '🏠' },
+    { id: 'profile', label: 'Profile', icon: '👤' },
+    { id: 'settings', label: 'Settings', icon: '⚙️' },
+  ];
+
+  const CustomTabsActiveIndicator = useCallback((props) => {
+    return <TabsActiveIndicator {...props} background="bgPrimary" bottom={0} height={2} />;
+  }, []);
+  // CustomTab uses context and TabLabel, wrapped in Pressable
+  const CustomTab = ({ id, label, icon, disabled }) => {
+    const { activeTab, updateActiveTab } = useTabsContext();
+    const isActive = activeTab?.id === id;
+    return (
+      <Pressable
+        onClick={() => updateActiveTab(id)}
+        disabled={disabled}
+        aria-pressed={isActive}
+        tabIndex={0}
+      >
+        <TabLabel id={id} active={isActive}>
+          {label}
+          {icon}
+        </TabLabel>
+      </Pressable>
+    );
+  };
+  const [activeTab, setActiveTab] = useState(tabs[0]);
+  return (
+    <Tabs
+      gap={4}
+      tabs={tabs}
+      activeTab={activeTab}
+      onChange={setActiveTab}
+      TabComponent={CustomTab}
+      TabsActiveIndicatorComponent={CustomTabsActiveIndicator}
+    />
+  );
+};
+```

@@ -1,0 +1,105 @@
+import { MDXArticle } from '@site/src/components/page/MDXArticle';
+
+<MDXArticle>
+## `useTheme` hook
+
+The `useTheme` hook provides access to the current `theme` and `activeColorScheme`.
+
+The `color` and `spectrum` objects automatically change based on the `activeColorScheme`.
+
+```jsx
+const theme = useTheme();
+theme.activeColorScheme; // "light" or "dark"
+theme.spectrum; // Resolves to lightSpectrum or darkSpectrum, depends on activeColorScheme
+theme.color; // Resolves to lightColor or darkColor, depends on activeColorScheme
+theme.color.bgPrimary; // "rgb(0,82,255)" or "rgb(87,139,250)", depends on activeColorScheme
+theme.space[2]; // 16
+theme.borderRadius[200]; // 8
+theme.fontSize.display3; // "2.5rem"
+```
+
+:::tip
+For best performance, prefer to use CSS Variables instead of the `useTheme` hook whenever possible. [Read more about CSS Variables here &rarr;](/components/other/ThemeProvider#themeprovider-css-variables)
+:::
+
+</MDXArticle>
+<MDXArticle>
+
+## Basic usage
+
+```tsx live
+function Example() {
+  const theme = useTheme();
+
+  return (
+    <VStack gap={2}>
+      <Box padding={3} background="bgAlternate" borderRadius={300}>
+        <TextHeadline>Current Color Scheme: {theme.activeColorScheme}</TextHeadline>
+      </Box>
+
+      <VStack padding={3} background="bgAlternate" borderRadius={300}>
+        <Text font="headline">Theme Colors</Text>
+        <Text>Background: {theme.color.bg}</Text>
+        <Text>Foreground: {theme.color.fg}</Text>
+        <Text>Background Primary: {theme.color.bgPrimary}</Text>
+        <Text>Foreground Primary: {theme.color.fgPrimary}</Text>
+      </VStack>
+    </VStack>
+  );
+}
+```
+
+</MDXArticle>
+
+<MDXArticle>
+## Styling with Theme values
+
+```tsx live
+function Example() {
+  const theme = useTheme();
+
+  const styles = {
+    container: {
+      padding: theme.space[3],
+      backgroundColor: theme.color.bgAlternate,
+      borderRadius: theme.borderRadius[300],
+      boxShadow: theme.shadow.elevation1,
+    },
+    text: {
+      fontSize: theme.fontSize.body,
+      lineHeight: theme.lineHeight.body,
+      fontFamily: theme.fontFamily.body,
+      color: theme.color.fgPrimary,
+    },
+  };
+
+  return (
+    <Box style={styles.container}>
+      <Text style={styles.text}>Styled using theme values</Text>
+    </Box>
+  );
+}
+```
+
+</MDXArticle>
+
+<MDXArticle hideDivider>
+## Color scheme detection
+
+```tsx live
+function Example() {
+  const theme = useTheme();
+  const isDarkMode = theme.activeColorScheme === 'dark';
+
+  return (
+    <Box gap={0.5} borderRadius={300} alignItems="baseline">
+      <Text as="span">This box adapts to {isDarkMode ? 'dark' : 'light'} mode</Text>
+      <TextHeadline as="span" color={isDarkMode ? 'fgMuted' : 'fgPrimary'}>
+        with adaptive text colors
+      </TextHeadline>
+    </Box>
+  );
+}
+```
+
+</MDXArticle>

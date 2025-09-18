@@ -1,0 +1,215 @@
+import React, { memo, useMemo } from 'react';
+import { Animated, StyleSheet, View } from 'react-native';
+import type { StyleProp, ViewStyle } from 'react-native';
+import type { ThemeVars } from '@cbhq/cds-common/core/theme';
+import { focusedInputBorderWidth, inputBorderWidth } from '@cbhq/cds-common/tokens/input';
+import { accessibleOpacityDisabled } from '@cbhq/cds-common/tokens/interactable';
+import type { InputVariant } from '@cbhq/cds-common/types/InputBaseProps';
+import type { SharedProps } from '@cbhq/cds-common/types/SharedProps';
+
+import { useLayout } from '../hooks/useLayout';
+import { useTheme } from '../hooks/useTheme';
+import type { BoxBaseProps, BoxProps } from '../layout';
+import { HStack } from '../layout/HStack';
+import { VStack } from '../layout/VStack';
+import { ColorSurge } from '../motion/ColorSurge';
+
+export type InputStackBaseProps = SharedProps & {
+  /**
+   * Determines the sentiment of the input. Because
+   * we allow startContent and endContent to be custom ReactNode,
+   * the content placed inside these slots will not change colors according
+   * to the variant. You will have to add that yourself
+   */
+  variant?: InputVariant;
+  /**
+   * Width of input as a percentage string.
+   * @default 100%
+   * */
+  width?: BoxProps['width'];
+  /**
+   * Height of input
+   */
+  height?: BoxBaseProps['height'];
+  /**
+   * Toggles input interactability and opacity
+   * @default false
+   */
+  disabled?: boolean;
+  /** Prepends custom content to the start. Content is not part of input */
+  prependNode?: React.ReactNode;
+  /** Adds content to the start of the inner input. Refer to diagram for location of startNode in InputStack component */
+  startNode?: React.ReactNode;
+  /** Appends custom content to the end. Content is not part of input */
+  appendNode?: React.ReactNode;
+  /** Adds content to the end of the inner input. Refer to diagram for location of endNode in InputStack component */
+  endNode?: React.ReactNode;
+  /** Editable area of the Input */
+  inputNode: React.ReactNode;
+  /** Text shown below input. Used for when label is not enough to indicate what this input does */
+  helperTextNode?: React.ReactNode;
+  /** A message indicating the purpose of this input */
+  labelNode?: React.ReactNode;
+  /** This should only be used when focused styles need to be persisted */
+  focused?: boolean;
+  /**
+   * Leverage one of the borderRadius styles we offer to round the corners of the input.
+   * @default 200
+   */
+  borderRadius?: BoxProps['borderRadius'];
+  /**
+   * Enable Color Surge motion
+   */
+  enableColorSurge?: boolean;
+  /** Adds border styling to input  */
+  borderStyle?: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
+  /** Border overlay to animate border when focused */
+  borderFocusedStyle?: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
+  /**
+   * The variant of the label. Only used when compact is not true.
+   * @default 'outside'
+   */
+  labelVariant?: 'inside' | 'outside';
+};
+
+export type InputStackProps = Omit<BoxProps, 'width' | 'height' | 'borderRadius'> &
+  InputStackBaseProps;
+
+const variantColorMap: Record<InputVariant, ThemeVars.Color> = {
+  primary: 'fgPrimary',
+  positive: 'fgPositive',
+  negative: 'fgNegative',
+  foreground: 'fg',
+  foregroundMuted: 'fgMuted',
+  secondary: 'bgSecondary',
+};
+
+export const InputStack = memo(function InputStack({
+  /** CDS custom props */
+  width = '100%',
+  prependNode,
+  endNode,
+  appendNode,
+  startNode,
+  disabled = false,
+  inputNode,
+  helperTextNode,
+  borderStyle,
+  variant,
+  labelNode,
+  testID = '',
+  borderRadius = 200,
+  borderFocusedStyle,
+  focused,
+  enableColorSurge,
+  labelVariant = 'outside',
+  ...props
+}: InputStackProps) {
+  const theme = useTheme();
+  const [inputAreaSize, onInputAreaLayout] = useLayout();
+
+  const inputAreaStyle: ViewStyle = useMemo(() => {
+    const inputBorderRadius: ViewStyle = {
+      ...(prependNode
+        ? {
+            borderTopLeftRadius: 0,
+            borderBottomLeftRadius: 0,
+          }
+        : {}),
+      ...(appendNode
+        ? {
+            borderTopRightRadius: 0,
+            borderBottomRightRadius: 0,
+          }
+        : {}),
+    };
+
+    return {
+      borderColor:
+        variant === 'secondary'
+          ? 'transparent'
+          : theme.color[
+              variant === 'foregroundMuted' || !variant ? 'bgLineHeavy' : variantColorMap[variant]
+            ],
+      flexDirection: 'row',
+      flexGrow: 1,
+      backgroundColor: variant === 'secondary' ? theme.color.bgSecondary : theme.color.bg,
+      borderRadius: theme.borderRadius[borderRadius],
+      overflow: 'hidden',
+      ...inputBorderRadius,
+    };
+  }, [prependNode, appendNode, variant, theme.color, theme.borderRadius, borderRadius]);
+
+  const inputAreaStyles = useMemo(() => {
+    return [inputAreaStyle, borderStyle];
+  }, [borderStyle, inputAreaStyle]);
+
+  const borderFocusedStyles: Animated.WithAnimatedValue<StyleProp<ViewStyle>> = useMemo(() => {
+    return [
+      inputAreaStyle,
+      borderFocusedStyle,
+      {
+        transform: [
+          { translateX: inputAreaSize.x - inputBorderWidth },
+          { translateY: inputAreaSize.y - inputBorderWidth },
+        ],
+        width: inputAreaSize.width + focusedInputBorderWidth,
+        height: inputAreaSize.height + focusedInputBorderWidth,
+        x: inputAreaSize.x,
+        y: inputAreaSize.y,
+        position: 'absolute',
+        borderWidth: focusedInputBorderWidth,
+      },
+    ];
+  }, [borderFocusedStyle, inputAreaSize, inputAreaStyle]);
+
+  return (
+    <VStack
+      gap={0.5}
+      opacity={disabled ? accessibleOpacityDisabled : 1}
+      testID={testID}
+      width={width}
+      {...props}
+    >
+      {!!labelNode && labelVariant === 'outside' && <>{labelNode}</>}
+      <HStack>
+        {!!prependNode && <>{prependNode}</>}
+        <View style={styles.inputAreaContainerStyle}>
+          {focused && <Animated.View style={borderFocusedStyles} />}
+          <Animated.View
+            onLayout={onInputAreaLayout}
+            style={inputAreaStyles}
+            testID={testID && `${testID}-input-area`}
+          >
+            {focused && enableColorSurge && (
+              <ColorSurge background={variant ? variantColorMap[variant] : undefined} />
+            )}
+            {!!startNode && <>{startNode}</>}
+            {!!labelNode && labelVariant === 'inside' ? (
+              <VStack flexGrow={1} minHeight={60} paddingY={1}>
+                {labelNode}
+                {inputNode}
+              </VStack>
+            ) : (
+              inputNode
+            )}
+            {!!endNode && <>{endNode}</>}
+          </Animated.View>
+        </View>
+        {!!appendNode && <>{appendNode}</>}
+      </HStack>
+      {!!helperTextNode && <>{helperTextNode}</>}
+    </VStack>
+  );
+});
+
+// Fixes a problem found in Accordion children element.
+// When `overflow: auto` is set the thickened border when focused is not accounted for
+// hence you see a cutoff.
+// Fix was to add this so there is always 2px outer layer space
+const styles = StyleSheet.create({
+  inputAreaContainerStyle: {
+    padding: 1,
+    flexGrow: 1,
+  },
+});

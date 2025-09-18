@@ -1,0 +1,47 @@
+.codeBlock {
+  margin-bottom: var(--space-3);
+}
+
+.codeBlockContent {
+  /* rtl:ignore */
+  direction: ltr;
+}
+
+/* If you update these styles make sure to also change apps/docs/src/theme/Playground/styles.module.css */
+.codeBlockContent pre {
+  white-space: pre !important;
+  scrollbar-width: thin;
+  background-color: transparent !important;
+  color: var(--color-fg) !important;
+  font-family: var(--fontFamilyMono-label2) !important;
+  font-size: var(--fontSize-label2) !important;
+  font-weight: var(--fontWeight-label2) !important;
+}
+
+.codeBlockLines {
+  float: left;
+}
+
+@media print {
+  .codeBlockLines {
+    white-space: pre-wrap;
+  }
+}
+.buttonGroup button {
+  transition: opacity var(--ifm-transition-fast) ease-in-out;
+  opacity: 0;
+}
+.codeBlock:hover .buttonGroup button {
+  opacity: 0.4;
+}
+
+.codeBlock:hover .buttonGroup button:hover,
+.codeBlock:focus-within .buttonGroup button:focus-visible {
+  opacity: 1;
+}
+
+@media screen and (max-width: 768px) {
+  .codeBlock {
+    margin-bottom: var(--space-2);
+  }
+}

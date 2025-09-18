@@ -1,0 +1,40 @@
+{
+  "name": "cds-webpack-app",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "engines": {
+    "node": "^22"
+  },
+  "scripts": {
+    "dev": "webpack serve --mode=development",
+    "build": "webpack --mode=production",
+    "start": "webpack serve --mode=production"
+  },
+  "dependencies": {
+    "@cbhq/cds-icons": "^5",
+    "@cbhq/cds-illustrations": "^4",
+    "@cbhq/cds-web": "^8",
+    "@cbhq/cds-web-visualization": "^3",
+    "framer-motion": "^11",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.28.0",
+    "@babel/preset-env": "^7.28.0",
+    "@babel/preset-react": "^7.27.1",
+    "@babel/preset-typescript": "^7.27.1",
+    "@types/node": "^22",
+    "@types/react": "^19.1.2",
+    "@types/react-dom": "^19.1.2",
+    "babel-loader": "^10.0.0",
+    "css-loader": "^7.1.2",
+    "html-webpack-plugin": "^5.6.3",
+    "mini-css-extract-plugin": "^2.9.3",
+    "typescript": "~5.9.2",
+    "webpack": "^5.101.0",
+    "webpack-cli": "^6.0.1",
+    "webpack-dev-server": "^5.2.2"
+  }
+}

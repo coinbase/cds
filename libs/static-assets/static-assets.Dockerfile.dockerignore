@@ -1,0 +1,7 @@
+# Ignore these files
+*
+
+# Allow these files
+!libs/static-assets/shard-assets.sh
+
+!packages/illustrations/src/__generated__/

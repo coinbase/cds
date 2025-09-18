@@ -1,0 +1,85 @@
+# TODO: Delete this file for open source
+name: CDS Web Package Scoring
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'packages/web/**'
+
+permissions:
+  id-token: write
+  contents: read
+  issues: write
+  statuses: write
+  pull-requests: write
+  checks: write
+
+jobs:
+  cds-web-package-scoring:
+    name: CDS Web Package Scoring
+    continue-on-error: true
+    runs-on:
+      - default-config
+      - frontend-org-runner
+      - xlarge
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 50
+      - uses: infra/cb-workflow-nx-build-tools/.github/actions/setup@stable
+      - name: Read Config Service
+        uses: infra/cb-action-config-service@master
+        continue-on-error: true
+        with:
+          scope: actions-context/insights-actions-config
+      - name: Run test
+        run: yarn nx run web:test
+      - uses: infra/cb-action-setup-node@master
+        with:
+          version: 20
+      - name: Get new package json version value
+        continue-on-error: true
+        run: >-
+          echo "PACKAGE_VERSION=$(
+            node -e "console.log(require('./packages/web/package.json').version);"
+          )" >> $GITHUB_ENV
+      - name: Fetch package json name
+        continue-on-error: true
+        run: >-
+          echo "PACKAGE_NAME=$(
+            node -e "console.log(require('./packages/web/package.json').name);"
+          )" >> $GITHUB_ENV
+      - run: |
+          echo 'CODE_COVERAGE<<EOF' >> $GITHUB_ENV
+          cat .nx/outs/projects/packages/web/coverage/coverage-summary.json >> $GITHUB_ENV
+          echo 'EOF' >> $GITHUB_ENV
+      - uses: actions/github-script@v6
+        id: get_issue_number
+        with:
+          script: |
+            if (context.issue.number) {
+              // Return issue number if present
+              return context.issue.number;
+            } else {
+              // Otherwise return issue number from commit
+              return (
+                await github.rest.repos.listPullRequestsAssociatedWithCommit({
+                  commit_sha: context.sha,
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                })
+              ).data[0].number;
+            }
+          result-encoding: string
+
+      - uses: infra/insights-actions/actions/package-scoring@v0.0.1
+        continue-on-error: true
+        with:
+          VERSION: ${{ env.PACKAGE_VERSION }}
+          PACKAGE_NAME: ${{ env.PACKAGE_NAME }}
+          PACKAGE_PATH: 'packages/web'
+          CODE_COVERAGE: ${{ fromJson(env.CODE_COVERAGE).total.lines.pct }}
+          GITHUB_SECURITY_TOKEN: ${{ env.GITHUB_SECURITY_TOKEN }}
+          SOURCEGRAPH_TOKEN: ${{ env.SOURCE_GRAPH_TOKEN }}
+          PR_NUMBER: ${{steps.get_issue_number.outputs.result}}

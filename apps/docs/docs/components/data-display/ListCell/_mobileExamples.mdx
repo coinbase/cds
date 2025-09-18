@@ -1,0 +1,130 @@
+### Basic usage
+
+```tsx
+<ListCell title="Basic List Cell" description="A simple example of ListCell" />
+```
+
+### With Media
+
+```tsx
+<ListCell
+  title="List Cell with Media"
+  description="Shows usage with media"
+  media={<CellMedia active name="info" type="icon" />}
+/>
+```
+
+### With Detail and Subdetail
+
+```tsx
+<ListCell
+  title="List Cell with Details"
+  description="Shows usage with detail and subdetail"
+  detail="$1,234.56"
+  subdetail="+2.5%"
+  variant="positive"
+/>
+```
+
+### With Accessory
+
+```tsx
+<ListCell
+  title="List Cell with Accessory"
+  description="Shows usage with accessory"
+  accessory="arrow"
+/>
+```
+
+### Interactive Cell
+
+```tsx
+<ListCell
+  title="Interactive List Cell"
+  description="Tap to interact"
+  media={<CellMedia active name="info" type="icon" />}
+  accessory="arrow"
+  onPress={() => alert('Cell pressed!')}
+/>
+```
+
+### With Helper Text
+
+```tsx
+<VStack gap={3}>
+  <ListCell
+    title="List Cell with Helper Text"
+    description="Shows usage with helper text below the cell"
+    helperText={<CellHelperText>This is a default helper message.</CellHelperText>}
+    media={<CellMedia srouce={assets.btc.imageUrl} type="asset" />}
+    action={<Button compact>Action</Button>}
+  />
+  <ListCell
+    title="List Cell with Warning"
+    description="Shows usage with a warning message"
+    helperText={<CellHelperText variant="warning">This is a warning message.</CellHelperText>}
+    media={<CellMedia source={assets.btc.imageUrl} type="asset" />}
+    action={<Button compact>Action</Button>}
+  />
+  <ListCell
+    title="List Cell with Error"
+    description="Shows usage with an error message"
+    helperText={<CellHelperText variant="error">This is an error message.</CellHelperText>}
+    media={<CellMedia source={assets.btc.imageUrl} type="asset" />}
+    action={<Button compact>Action</Button>}
+  />
+</VStack>
+```
+
+### Compact Mode
+
+```tsx
+<ListCell
+  compact
+  title="Compact List Cell"
+  description="Shows compact variant"
+  media={<CellMedia active name="info" type="icon" />}
+/>
+```
+
+### Selected State
+
+```tsx
+<ListCell
+  selected
+  title="Selected List Cell"
+  description="Shows selected state"
+  media={<CellMedia active name="info" type="icon" />}
+/>
+```
+
+### Loading States
+
+The ListCellFallback component provides loading state representations of ListCell. It uses placeholder rectangles to indicate where content will appear, creating a smooth loading experience. The mobile version leverages the theme system for consistent line heights and reuses the ListCell component structure for layout consistency.
+
+```tsx
+<VStack gap={3}>
+  {/* Basic loading state */}
+  <ListCellFallback title description />
+
+  {/* Loading state with media */}
+  <ListCellFallback title description media="icon" />
+
+  {/* Loading state with details */}
+  <ListCellFallback title description detail subdetail />
+
+  {/* Full loading state with custom widths */}
+  <ListCellFallback
+    title
+    description
+    detail
+    subdetail
+    media="icon"
+    compact
+    rectWidthVariant={1} // Creates a deterministic variant of the loading state
+    disableRandomRectWidth
+  />
+</VStack>
+```
+
+Note: The mobile ListCellFallback uses theme-based line heights and reuses the ListCell component structure, resulting in a more consistent loading state appearance. The compact prop is also supported for loading states.

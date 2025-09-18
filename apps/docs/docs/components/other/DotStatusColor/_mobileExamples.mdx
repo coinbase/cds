@@ -1,0 +1,33 @@
+### Sizes
+
+```jsx
+function Sizes() {
+  const SIZES = ['xs', 's', 'm', 'l'];
+  return (
+    <VStack gap={2}>
+      {SIZES.map((size) => (
+        <VStack gap={1} key={`DotStatusColor-size-${size}`}>
+          <DotStatusColor variant="negative" size={size} />
+        </VStack>
+      ))}
+    </VStack>
+  );
+}
+```
+
+### Variants
+
+```jsx
+function Variants() {
+  const VARIANTS = ['positive', 'negative', 'primary', 'fgMuted', 'warning'];
+  return (
+    <VStack gap={2}>
+      {VARIANTS.map((variant) => (
+        <VStack gap={1} key={`DotStatusColor-variant-${variant}`}>
+          <DotStatusColor variant={variant} />
+        </VStack>
+      ))}
+    </VStack>
+  );
+}
+```

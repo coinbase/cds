@@ -1,0 +1,227 @@
+### Default
+
+Use the Default variant on standard consumer-facing surfaces like Retail where maximum navigation and content space is desired.
+
+```jsx live
+function Example() {
+  const items = [
+    { title: 'Home', icon: 'home' },
+    { title: 'Assets', icon: 'chartPie' },
+    { title: 'Trade', icon: 'trading' },
+    { title: 'Pay', icon: 'pay' },
+    { title: 'For you', icon: 'newsFeed' },
+    { title: 'Earn', icon: 'giftBox' },
+    { title: 'Borrow', icon: 'cash' },
+    { title: 'DeFi', icon: 'defi' },
+  ];
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [moreMenuValue, setMoreMenuValue] = useState();
+  const navItems = items.slice(0, 8);
+  const moreMenuOptions = items.slice(4);
+  const handleMoreMenuChange = (newValue) => {
+    const moreIndex =
+      moreMenuOptions.findIndex((option) => option.title === newValue) + navItems.length;
+    setActiveIndex(moreIndex);
+    setMoreMenuValue(newValue);
+  };
+  const handleItemPress = (index) => {
+    setActiveIndex(index);
+    setMoreMenuValue(undefined);
+  };
+  const renderEnd = () => {
+    return (
+      <Pressable
+        as="button"
+        background="transparent"
+        borderRadius={1000}
+        width="100%"
+        onClick={() => console.log}
+      >
+        <HStack
+          alignItems="center"
+          gap={2}
+          justifyContent="flex-start"
+          padding={2}
+          testID="sidebar-item-primary"
+        >
+          <Icon name="documentation" />
+          <TextHeadline as="span" color="foreground">
+            End item
+          </TextHeadline>
+        </HStack>
+      </Pressable>
+    );
+  };
+  return (
+    <HStack alignItems="flex-start" justifyContent="center" overflow="hidden">
+      <Sidebar
+        logo={
+          <Box height={32}>
+            <SubBrandLogoMark type="commerce" />
+          </Box>
+        }
+        renderEnd={renderEnd}
+      >
+        {navItems.map((item, index) => (
+          <SidebarItem
+            key={`sidebar-item--${item.title}`}
+            active={index === activeIndex}
+            onClick={() => handleItemPress(index)}
+            tooltipContent={item.title}
+            {...item}
+          />
+        ))}
+        <SidebarMoreMenu
+          active={activeIndex >= navItems.length}
+          onChange={handleMoreMenuChange}
+          tooltipContent="More"
+          value={moreMenuValue}
+        >
+          {moreMenuOptions.map((item) => (
+            <SelectOption
+              key={`sidebar-more-menu-item--${item.title}`}
+              description={item.title}
+              media={<Icon name={item.icon} />}
+              value={item.title}
+            />
+          ))}
+        </SidebarMoreMenu>
+      </Sidebar>
+    </HStack>
+  );
+}
+```
+
+### Collapsed
+
+Use for professional-focused interfaces such as Cloud that balance navigation importance with a desire to expand the content viewing area.
+
+```jsx live
+function Example() {
+  const items = [
+    { title: 'Home', icon: 'home' },
+    { title: 'Assets', icon: 'chartPie' },
+    { title: 'Trade', icon: 'trading' },
+    { title: 'Pay', icon: 'pay' },
+    { title: 'For you', icon: 'newsFeed' },
+    { title: 'Earn', icon: 'giftBox' },
+    { title: 'Borrow', icon: 'cash' },
+    { title: 'DeFi', icon: 'defi' },
+  ];
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [moreMenuValue, setMoreMenuValue] = useState();
+  const [collapsed, setCollapsed] = useState(true);
+  const moreMenuOptions = items.slice(4);
+  const handleMoreMenuChange = (newValue) => {
+    const moreIndex =
+      moreMenuOptions.findIndex((option) => option.title === newValue) + items.length;
+    setActiveIndex(moreIndex);
+    setMoreMenuValue(newValue);
+  };
+  const handleItemPress = (index) => {
+    setActiveIndex(index);
+    setMoreMenuValue(undefined);
+  };
+  const renderEnd = () => (
+    <IconButton
+      name={collapsed ? 'caretRight' : 'caretLeft'}
+      onClick={() => setCollapsed(!collapsed)}
+      width="48px"
+      height="48px"
+    />
+  );
+  return (
+    <HStack alignItems="flex-start" justifyContent="center" overflow="hidden">
+      <Sidebar collapsed={collapsed} logo={<LogoMark />} renderEnd={renderEnd}>
+        {items.map((item, index) => (
+          <SidebarItem
+            key={`sidebar-item--${item.title}`}
+            active={index === activeIndex}
+            onClick={() => handleItemPress(index)}
+            tooltipContent={item.title}
+            {...item}
+          />
+        ))}
+        <SidebarMoreMenu
+          active={activeIndex >= items.length}
+          onChange={handleMoreMenuChange}
+          tooltipContent="More"
+          value={moreMenuValue}
+        >
+          {moreMenuOptions.map((item) => (
+            <SelectOption
+              key={`sidebar-more-menu-item--${item.title}`}
+              description={item.title}
+              media={<Icon name={item.icon} />}
+              value={item.title}
+            />
+          ))}
+        </SidebarMoreMenu>
+      </Sidebar>
+    </HStack>
+  );
+}
+```
+
+### Condensed
+
+Use in specialized workflows with complex data displays, such as Exchange and Advanced Trade, where navigation space is minimized to focus on core tasks.
+
+```jsx live
+function Example() {
+  const items = [
+    { title: 'Spot', icon: 'chartCandles' },
+    { title: 'Futures', icon: 'chartBar' },
+    { title: 'Portfolio', icon: 'chartPie' },
+    { title: 'Orders', icon: 'documentation' },
+    { title: 'For you', icon: 'newsFeed' },
+    { title: 'Earn', icon: 'giftBox' },
+    { title: 'Borrow', icon: 'cash' },
+    { title: 'DeFi', icon: 'defi' },
+  ];
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [moreMenuValue, setMoreMenuValue] = useState();
+  const navItems = items.slice(0, 4);
+  const moreMenuOptions = items.slice(4);
+  const handleMoreMenuChange = (newValue) => {
+    const moreIndex =
+      moreMenuOptions.findIndex((option) => option.title === newValue) + navItems.length;
+    setActiveIndex(moreIndex);
+    setMoreMenuValue(newValue);
+  };
+  const handleItemClick = (index) => {
+    setActiveIndex(index);
+    setMoreMenuValue(undefined);
+  };
+  return (
+    <HStack alignItems="flex-start" justifyContent="center" overflow="hidden">
+      <Sidebar logo={<LogoMark foreground />} variant="condensed">
+        {navItems.map((item, index) => (
+          <SidebarItem
+            key={`sidebar-item--${item.title}`}
+            active={index === activeIndex}
+            onClick={() => handleItemClick(index)}
+            tooltipContent={item.title}
+            {...item}
+          />
+        ))}
+        <SidebarMoreMenu
+          active={activeIndex >= navItems.length}
+          onChange={handleMoreMenuChange}
+          tooltipContent="More"
+          value={moreMenuValue}
+        >
+          {moreMenuOptions.map((item) => (
+            <SelectOption
+              key={`sidebar-more-menu-item--${item.title}`}
+              description={item.title}
+              media={<Icon name={item.icon} />}
+              value={item.title}
+            />
+          ))}
+        </SidebarMoreMenu>
+      </Sidebar>
+    </HStack>
+  );
+}
+```

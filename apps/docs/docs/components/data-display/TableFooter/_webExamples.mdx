@@ -1,0 +1,61 @@
+### Basic usage
+
+```tsx live
+<Table bordered variant="ruled">
+  <TableHeader>
+    <TableRow>
+      <TableCell title="Item" />
+      <TableCell title="Price" />
+    </TableRow>
+  </TableHeader>
+  <TableBody>
+    <TableRow>
+      <TableCell title="Product A" />
+      <TableCell title="$100" />
+    </TableRow>
+    <TableRow>
+      <TableCell title="Product B" />
+      <TableCell title="$200" />
+    </TableRow>
+  </TableBody>
+  <TableFooter>
+    <TableRow>
+      <TableCell title="Total" />
+      <TableCell title="$300" />
+    </TableRow>
+  </TableFooter>
+</Table>
+```
+
+### Footer with Summary Data
+
+```tsx live
+<Table bordered variant="ruled">
+  <TableHeader>
+    <TableRow>
+      <TableCell title="Quarter" />
+      <TableCell title="Revenue" />
+      <TableCell title="Growth" alignItems="flex-end" />
+    </TableRow>
+  </TableHeader>
+  <TableBody>
+    <TableRow>
+      <TableCell title="Q1" />
+      <TableCell title="$1.2M" />
+      <TableCell title="+5%" alignItems="flex-end" />
+    </TableRow>
+    <TableRow>
+      <TableCell title="Q2" />
+      <TableCell title="$1.4M" />
+      <TableCell title="+16%" alignItems="flex-end" />
+    </TableRow>
+  </TableBody>
+  <TableFooter>
+    <TableRow backgroundColor="bgAlternate">
+      <TableCell title="YTD" color="primary" />
+      <TableCell title="$2.6M" color="primary" />
+      <TableCell title="+21%" color="primary" alignItems="flex-end" />
+    </TableRow>
+  </TableFooter>
+</Table>
+```

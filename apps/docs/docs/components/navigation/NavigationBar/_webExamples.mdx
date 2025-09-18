@@ -1,0 +1,71 @@
+### Web: Logged in Navigation Bar
+
+```jsx live
+function NavigationWithPress() {
+  const tabs = [
+    {
+      id: 'all',
+      label: 'All',
+    },
+    {
+      id: 'watchlist',
+      label: 'Watchlist',
+    },
+    {
+      id: 'tradable',
+      label: 'Tradable',
+    },
+    {
+      id: 'gainers',
+      label: 'Gainers',
+      count: 2,
+    },
+    {
+      id: 'losers',
+      label: 'Losers',
+    },
+    {
+      id: 'trending',
+      label: 'Trending',
+    },
+    {
+      id: 'other',
+      label: 'Other',
+    },
+  ];
+  const [search, setSearch] = useState('');
+  const [value, setValue] = useState(tabs[1].id);
+  const showBackButton = useMemo(() => value !== tabs[0].id, [value]);
+  const handleBackPress = useCallback(() => {
+    setValue(tabs[0].id);
+  }, []);
+  return (
+    <NavigationBar
+      start={
+        showBackButton && (
+          <IconButton name="backArrow" onClick={handleBackPress} accessibilityLabel="Back" />
+        )
+      }
+      end={
+        <HStack gap={1} alignItems="center">
+          <IconButton accessibilityLabel="Language" active={false} name="globe" />
+          <IconButton accessibilityLabel="Notifications" active name="bell" />
+        </HStack>
+      }
+      bottom={<TabNavigation tabs={tabs} value={value} onChange={setValue} />}
+    >
+      <HStack alignItems="center" flexGrow={1} gap={1}>
+        <VStack width="100%">
+          <SearchInput
+            compact
+            accessibilityLabel="Search"
+            onChangeText={setSearch}
+            placeholder="Search"
+            value={search}
+          />
+        </VStack>
+      </HStack>
+    </NavigationBar>
+  );
+}
+```

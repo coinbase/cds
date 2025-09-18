@@ -1,0 +1,22 @@
+diff --git a/dist/index.d.ts b/dist/index.d.ts
+index 08c3e4ed24c1ed97875ad031a01546a960ddabff..3fe7df962e7630fc6eead12727a1b3f1fcd08b0b 100644
+--- a/dist/index.d.ts
++++ b/dist/index.d.ts
+@@ -2891,7 +2891,7 @@ interface HoverHandlers {
+ }
+ 
+ declare type ViewportEventHandler = (entry: IntersectionObserverEntry | null) => void;
+-interface ViewportOptions {
++export interface ViewportOptions {
+     root?: RefObject<Element>;
+     once?: boolean;
+     margin?: string;
+@@ -2909,7 +2909,7 @@ interface ViewportProps {
+  * @public
+  */
+ declare type VariantLabels = string | string[];
+-interface TransformProperties {
++export interface TransformProperties {
+     x?: string | number;
+     y?: string | number;
+     z?: string | number;

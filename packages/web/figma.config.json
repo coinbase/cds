@@ -1,0 +1,14 @@
+{
+  "codeConnect": {
+    "parser": "react",
+    "label": "React",
+    "include": [
+      "**/*.tsx"
+    ],
+    "exclude": [
+      "**/__tests__/**",
+      "**/__stories__/**",
+      "**/__mocks__/**"
+    ]
+  }
+}

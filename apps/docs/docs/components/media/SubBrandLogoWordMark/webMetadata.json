@@ -1,0 +1,20 @@
+{
+  "import": "import { SubBrandLogoWordmark } from '@cbhq/cds-web/icons/SubBrandLogoWordmark'",
+  "source": "https://github.com/coinbase/cds-staging/blob/master/packages/web/src/icons/SubBrandLogoWordmark.tsx",
+  "storybook": "https://cds-storybook.coinbase.com/?path=/story/core-components-logo-sheet--logo-sheet",
+  "description": "Coinbase sub-brand logo wordmarks for specialized branding.",
+  "relatedComponents": [
+    {
+      "label": "SubBrandLogoMark",
+      "url": "/components/media/SubBrandLogoMark/"
+    },
+    {
+      "label": "LogoWordMark",
+      "url": "/components/media/LogoWordMark/"
+    },
+    {
+      "label": "LogoMark",
+      "url": "/components/media/LogoMark/"
+    }
+  ]
+}

@@ -1,0 +1,72 @@
+### Basic usage
+
+```tsx
+const tabs = [
+  { id: 'tab1', label: 'Tab 1' },
+  { id: 'tab2', label: 'Tab 2' },
+  { id: 'tab3', label: 'Tab 3' },
+];
+
+const TabComponent = ({ id, label, disabled }) => {
+  const { activeTab, updateActiveTab } = useTabsContext();
+  const isActive = activeTab?.id === id;
+  return (
+    <Pressable
+      onPress={() => updateActiveTab(id)}
+      disabled={disabled}
+      accessibilityLabel={label}
+      accessibilityRole="tab"
+      accessibilityState={{ selected: isActive, disabled }}
+    >
+      <TabLabel id={id} active={isActive}>
+        {label}
+      </TabLabel>
+    </Pressable>
+  );
+};
+
+<Tabs
+  tabs={tabs}
+  activeTab={tabs[0]}
+  onChange={() => {}}
+  TabComponent={TabComponent}
+  TabsActiveIndicatorComponent={TabsIndicator}
+/>;
+```
+
+### Custom Tab Component
+
+```tsx
+const tabs = [
+  { id: 'home', label: 'Home', icon: '🏠' },
+  { id: 'profile', label: 'Profile', icon: '👤' },
+  { id: 'settings', label: 'Settings', icon: '⚙️' },
+];
+
+const CustomTab = ({ id, label, icon, disabled }) => {
+  const { activeTab, updateActiveTab } = useTabsContext();
+  const isActive = activeTab?.id === id;
+  return (
+    <Pressable
+      onPress={() => updateActiveTab(id)}
+      disabled={disabled}
+      accessibilityLabel={label}
+      accessibilityRole="tab"
+      accessibilityState={{ selected: isActive, disabled }}
+    >
+      <TabLabel id={id} active={isActive}>
+        {label}
+        {icon}
+      </TabLabel>
+    </Pressable>
+  );
+};
+
+<Tabs
+  tabs={tabs}
+  activeTab={tabs[0]}
+  onChange={() => {}}
+  TabComponent={CustomTab}
+  TabsActiveIndicatorComponent={TabsIndicator}
+/>;
+```

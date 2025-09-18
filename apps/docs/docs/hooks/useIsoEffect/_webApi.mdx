@@ -1,0 +1,22 @@
+import { MDXArticle } from '@site/src/components/page/MDXArticle';
+
+<MDXArticle>
+## Parameters
+
+The `useIsoEffect` hook accepts the same parameters as React's `useEffect` and `useLayoutEffect`:
+
+- `effect: () => (void | (() => void))` - The effect function to run
+- `deps?: any[]` - Optional array of dependencies
+
+</MDXArticle>
+
+<MDXArticle hideDivider>
+## Returns
+
+Returns nothing (void).
+
+:::note
+This hook automatically uses `useLayoutEffect` when running in the browser and falls back to `useEffect` during server-side rendering. This prevents warnings and ensures proper timing of effects across different environments.
+:::
+
+</MDXArticle>

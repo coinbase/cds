@@ -1,0 +1,196 @@
+### Basic usage with Callback
+
+The recommended way to use a `Tray` is by passing a callback as children, which receives a `handleClose` function:
+
+```tsx
+function BasicTray() {
+  const [visible, setVisible] = useState(false);
+  const handleOpen = () => setVisible(true);
+  const handleClose = () => setVisible(false);
+
+  return (
+    <VStack gap={2}>
+      <Button onPress={handleOpen}>Open Tray</Button>
+      {visible && (
+        <Tray title="Example Title" onCloseComplete={handleClose}>
+          {({ handleClose }) => (
+            <VStack gap={2} padding={3}>
+              <Text>This is the content of the tray.</Text>
+              <Button onPress={handleClose}>Close</Button>
+            </VStack>
+          )}
+        </Tray>
+      )}
+    </VStack>
+  );
+}
+```
+
+### Using Ref to Control the Tray
+
+You can also control the Tray using a ref, which provides `open()` and `close()` methods:
+
+```tsx
+function TrayWithRef() {
+  const [visible, setVisible] = useState(false);
+  const trayRef = useRef<DrawerRefBaseProps>(null);
+
+  const handleOpen = () => setVisible(true);
+  const handleClose = () => setVisible(false);
+
+  return (
+    <VStack gap={2}>
+      <Button onPress={handleOpen}>Open Tray</Button>
+      {visible && (
+        <Tray ref={trayRef} title="Ref Controlled Tray" onCloseComplete={handleClose}>
+          <VStack gap={2} padding={3}>
+            <Text>Control this tray using the ref.</Text>
+            <Button onPress={() => trayRef.current?.close()}>Close</Button>
+          </VStack>
+        </Tray>
+      )}
+    </VStack>
+  );
+}
+```
+
+### Scrollable Content
+
+To enable scrolling in a Tray, use `ScrollView` and set `disablePanGesture`:
+
+```tsx
+function ScrollableTray() {
+  const [visible, setVisible] = useState(false);
+  const handleOpen = () => setVisible(true);
+  const handleClose = () => setVisible(false);
+
+  return (
+    <VStack gap={2}>
+      <Button onPress={handleOpen}>Open Scrollable Tray</Button>
+      {visible && (
+        <Tray title="Scrollable Content" onCloseComplete={handleClose} disablePanGesture>
+          {({ handleClose }) => (
+            <VStack gap={2}>
+              <ScrollView style={{ maxHeight: 200 }}>
+                <Pressable>
+                  <VStack padding={3} gap={2}>
+                    <Text>
+                      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
+                      incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
+                      nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                    </Text>
+                    <Text>
+                      Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore
+                      eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt
+                      in culpa qui officia deserunt mollit anim id est laborum.
+                    </Text>
+                  </VStack>
+                </Pressable>
+              </ScrollView>
+              <HStack padding={3} justifyContent="flex-end">
+                <Button onPress={handleClose}>Close</Button>
+              </HStack>
+            </VStack>
+          )}
+        </Tray>
+      )}
+    </VStack>
+  );
+}
+```
+
+### With Selection Menu
+
+When using a Tray for selection, wrap the options in a `Menu` component:
+
+```tsx
+function TrayWithMenu() {
+  const [visible, setVisible] = useState(false);
+  const [selectedValue, setSelectedValue] = useState<string>();
+  const trayRef = useRef<DrawerRefBaseProps>(null);
+
+  const handleOpen = () => setVisible(true);
+  const handleClose = () => setVisible(false);
+
+  const options = ['Option 1', 'Option 2', 'Option 3'];
+
+  const handleSelect = (value: string) => {
+    setSelectedValue(value);
+    trayRef.current?.close();
+  };
+
+  return (
+    <VStack gap={2}>
+      <Button onPress={handleOpen}>Open Menu Tray</Button>
+      {visible && (
+        <Tray ref={trayRef} title="Select an Option" onCloseComplete={handleClose}>
+          <Menu value={selectedValue} onChange={handleSelect}>
+            {options.map((option) => (
+              <SelectOption
+                key={option}
+                title={option}
+                value={option}
+                onPress={() => handleSelect(option)}
+              />
+            ))}
+          </Menu>
+        </Tray>
+      )}
+    </VStack>
+  );
+}
+```
+
+### Multiple Overlay Flow
+
+When transitioning between overlays, ensure proper dismounting using `onCloseComplete`:
+
+```tsx
+function TrayToModalFlow() {
+  const [isTrayVisible, setIsTrayVisible] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+
+  const openTray = () => setIsTrayVisible(true);
+  const closeTray = () => setIsTrayVisible(false);
+  const openModal = () => setIsModalVisible(true);
+  const closeModal = () => setIsModalVisible(false);
+
+  const handleTrayClose = useCallback(() => {
+    closeTray();
+    openModal();
+  }, []);
+
+  return (
+    <VStack gap={2}>
+      <Button onPress={openTray}>Start Flow</Button>
+      {isTrayVisible && (
+        <Tray title="First Step" onCloseComplete={handleTrayClose}>
+          {({ handleClose }) => (
+            <VStack gap={2} padding={3}>
+              <Text>Click below to continue to the modal</Text>
+              <Button onPress={handleClose}>Continue to Modal</Button>
+            </VStack>
+          )}
+        </Tray>
+      )}
+      <Modal visible={isModalVisible} onRequestClose={closeModal}>
+        <ModalHeader title="Second Step" />
+        <ModalBody>
+          <VStack gap={2} padding={3}>
+            <Text>This is the second step in the flow.</Text>
+            <Button onPress={closeModal}>Finish</Button>
+          </VStack>
+        </ModalBody>
+      </Modal>
+    </VStack>
+  );
+}
+```
+
+Note: The Tray component is built on top of the Drawer component and provides a standardized way to present bottom sheets in your mobile application. Key points:
+
+- Use `onCloseComplete` for cleanup when the tray is dismissed
+- Children can be either a React node or a render function that receives a `handleClose` function
+- The `ref` provides `open()` and `close()` methods for controlling the tray
+- Use `disablePanGesture` when implementing scrollable content
+- When transitioning between overlays, ensure proper dismounting using lifecycle methods

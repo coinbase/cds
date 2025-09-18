@@ -1,0 +1,38 @@
+### Basic usage
+
+```tsx
+<Coachmark
+  title="Welcome!"
+  content="This is a Coachmark. Use it to guide users."
+  action={<Button onPress={() => {}}>Got it</Button>}
+  onClose={() => {}}
+/>
+```
+
+### With Media
+
+```tsx
+<Coachmark
+  title="Feature Highlight"
+  content="You can add media to your Coachmark."
+  media={<RemoteImage source={ethBackground} height={150} width="100%" alt="feature" />}
+  action={<Button onPress={() => {}}>Next</Button>}
+  onClose={() => {}}
+/>
+```
+
+### With Checkbox
+
+```tsx
+<Coachmark
+  title="Don't show again?"
+  content="You can add a checkbox to let users opt out."
+  checkbox={
+    <Checkbox value={false} onChange={() => {}}>
+      Don't show this again
+    </Checkbox>
+  }
+  action={<Button onPress={() => {}}>Close</Button>}
+  onClose={() => {}}
+/>
+```

@@ -1,0 +1,17 @@
+name: 'Get Merge Base SHA'
+description: 'Gets the merge-base SHA between the current branch and the target branch'
+outputs:
+  merge_base:
+    description: 'The SHA of the merge-base commit'
+    value: ${{ steps.get-merge-base.outputs.merge_base }}
+runs:
+  using: 'composite'
+  steps:
+    - name: Get merge-base SHA
+      id: get-merge-base
+      shell: bash
+      run: |
+        git fetch origin ${GITHUB_BASE_REF:-master}
+        MERGE_BASE=$(git merge-base HEAD origin/${GITHUB_BASE_REF:-master})
+        echo "merge_base=$MERGE_BASE" >> $GITHUB_OUTPUT
+        echo "Using merge-base SHA: $MERGE_BASE for cache key"

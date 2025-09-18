@@ -1,0 +1,253 @@
+## Deprecation Notice
+
+:::danger Deprecated Component
+
+**RadioGroup is deprecated and will be removed in a future version.**
+
+Use **[ControlGroup](/components/inputs/ControlGroup)** with `role="radiogroup"` instead for better accessibility, consistency, and maintainability.
+
+:::
+
+:::caution Types
+
+RadioGroup onChange fails without a string type declaration for setGroup fns.
+
+```
+const [group, setGroup] = useState<string>();
+```
+
+:::
+
+## Migration Guide
+
+### ✅ Recommended: Using ControlGroup
+
+The new recommended approach provides better accessibility, cleaner API, and consistent behavior across the design system.
+
+```jsx live
+function RecommendedRadioGroup() {
+  const options = [
+    { value: 'btc', children: 'Bitcoin' },
+    { value: 'eth', children: 'Ethereum' },
+    { value: 'ltc', children: 'Litecoin' },
+  ];
+
+  const [selectedCurrency, setSelectedCurrency] = useState('btc');
+
+  return (
+    <VStack gap={2}>
+      <ControlGroup
+        role="radiogroup"
+        ControlComponent={Radio}
+        label="Choose a Currency"
+        options={options}
+        value={selectedCurrency}
+        onChange={(e) => setSelectedCurrency(e.target.value)}
+        name="recommended-radio-group"
+      />
+      <Text font="caption" color="fgMuted">
+        Selected: {selectedCurrency}
+      </Text>
+    </VStack>
+  );
+}
+```
+
+### Migration Steps
+
+1. **Replace RadioGroup with [ControlGroup](/components/inputs/ControlGroup)**:
+
+   ```jsx
+   // Old (deprecated)
+   <RadioGroup
+     value={selectedValue}
+     onChange={onChange}
+     options={{ btc: 'Bitcoin', eth: 'Ethereum' }}
+   />
+
+   // New (recommended)
+   <ControlGroup
+     role="radiogroup"
+     ControlComponent={Radio}
+     options={[
+       { value: 'btc', children: 'Bitcoin' },
+       { value: 'eth', children: 'Ethereum' }
+     ]}
+     value={selectedValue}
+     onChange={onChange}
+   />
+   ```
+
+2. **Update options format**:
+
+   ```jsx
+   // Old: Object format
+   const options = { btc: 'Bitcoin', eth: 'Ethereum' };
+
+   // New: Array format
+   const options = [
+     { value: 'btc', children: 'Bitcoin' },
+     { value: 'eth', children: 'Ethereum' },
+   ];
+   ```
+
+3. **Update onChange handler**:
+
+   ```jsx
+   // Old: Direct value callback
+   const oldOnChange = (value) => setSelected(value);
+
+   // New: Event-based handler
+   const newOnChange = (e) => setSelected(e.target.value);
+   ```
+
+4. **Add proper role**:
+   ```jsx
+   // Always include role="radiogroup" for accessibility
+   <ControlGroup
+     role="radiogroup"
+     ControlComponent={Radio}
+     // ... other props
+   />
+   ```
+
+## Legacy Usage (Deprecated)
+
+:::warning Legacy Example
+
+The following examples show the **deprecated** RadioGroup usage. **Do not use this in new code.** Use [ControlGroup](/components/inputs/ControlGroup) instead.
+
+:::
+
+### Basic RadioGroup (Legacy)
+
+```jsx live
+function LegacyRadioGroupDemo() {
+  // static values should live outside the component in product code.
+  const options = {
+    btc: 'Bitcoin',
+    eth: 'Ethereum',
+    dai: 'Dai',
+  };
+
+  const [group, setGroup] = useState('btc');
+
+  return (
+    <VStack gap={2}>
+      <Text font="headline">Currency Selection (Legacy RadioGroup)</Text>
+      <RadioGroup
+        aria-labelledby="choose-a-currency"
+        id="currency-radio-group"
+        label={
+          <Text as="span" font="headline" id="choose-a-currency">
+            Choose a currency
+          </Text>
+        }
+        name="radio-group1"
+        value={group}
+        onChange={setGroup}
+        options={options}
+      />
+      <Text font="caption" color="fgMuted">
+        Selected: {group}
+      </Text>
+    </VStack>
+  );
+}
+```
+
+### With Custom Label (Legacy)
+
+```jsx live
+function LegacyRadioGroupWithLabel() {
+  const options = {
+    'yellow-jacket': 'Yellow Jacket',
+    bruin: 'Bruin',
+    bronco: 'Bronco',
+  };
+
+  const [mascot, setMascot] = useState('bruin');
+
+  return (
+    <RadioGroup
+      aria-labelledby="choose-a-mascot"
+      id="mascot-radio-group"
+      label={
+        <Text as="span" font="headline" id="choose-a-mascot">
+          Choose a mascot
+        </Text>
+      }
+      name="radio-group2"
+      value={mascot}
+      onChange={setMascot}
+      options={options}
+    />
+  );
+}
+```
+
+### Color Customization (Legacy)
+
+Like other control components (i.e. Checkbox, Switch), you can customize the color of the Radio by setting the `controlColor` prop.
+
+```jsx live
+function CustomColors() {
+  // static values should live outside the component in product code.
+  const options = {
+    btc: 'Bitcoin',
+    eth: 'Ethereum',
+    dai: 'Dai',
+  };
+
+  const [checked, setChecked] = useState(false);
+  const [group, setGroup] = useState();
+
+  return (
+    <VStack>
+      <Radio
+        controlColor="accentBoldGreen"
+        onChange={() => setChecked((s) => !s)}
+        checked={checked}
+      >
+        Custom control color
+      </Radio>
+      <Divider paddingY={2} />
+      <RadioGroup
+        id="mascot-radio-group"
+        aria-labelledby="choose-a-mascot"
+        name="radio-group2"
+        controlColor="accentBoldGreen"
+        value={group}
+        onChange={setGroup}
+        options={options}
+      />
+    </VStack>
+  );
+}
+```
+
+For more advanced color customization, you can use additional style props on individual Radio components like `background`, `borderColor`, and `color`:
+
+```jsx live
+function AdvancedCustomColors() {
+  const [checked, setChecked] = useState(false);
+
+  return (
+    <VStack gap={2}>
+      <Radio checked={checked} controlColor="bgPositive" onChange={() => setChecked((s) => !s)}>
+        Control color prop
+      </Radio>
+      <Radio
+        background={checked ? 'accentBoldPurple' : 'bg'}
+        borderColor={checked ? 'bgNegative' : 'bgWarning'}
+        checked={checked}
+        color="bgPrimary"
+        controlColor="bgPositive"
+        onChange={() => setChecked((s) => !s)}
+      >
+        Advanced styling
+      </Radio>
+    </VStack>
+  );
+}
+```

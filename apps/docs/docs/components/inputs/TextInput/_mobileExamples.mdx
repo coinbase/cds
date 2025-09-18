@@ -1,0 +1,597 @@
+**Note** TextField extends props from [HTMLInputElement](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#attributes) on web. On mobile, it extends [TextInputProps](https://reactnative.dev/docs/textinput#props) from react-native.
+
+### Input Label
+
+Default composition of Inputs.
+
+```jsx
+<VStack gap={3}>
+  <TextInput
+    label="API Access Token"
+    placeholder="HaeJiWplJohn6W42eCq0Qqft0"
+    end={
+      <Box paddingX={2}>
+        <Link variant="caption" color="primary" to="">
+          COPY
+        </Link>
+      </Box>
+    }
+  />
+
+  <VStack>
+    <Text as="p">Use the compact variant when space is tight.</Text>
+    <TextInput
+      compact
+      type="number"
+      step="0.01"
+      label="Amount"
+      placeholder="8293323.23"
+      suffix="USD"
+    />
+  </VStack>
+</VStack>
+```
+
+### Accessible Text Inputs
+
+TextInput comes with an accessibilityLabel prop. If no accessibilityLabel is passed, it will use the label as the accessibilityLabel. If you want an accessibilityLabel that differs from the Label, you can set this prop.
+
+Here, since no accessibilityLabel is passed, the accessibilityLabel will be "Email".
+
+```jsx
+<TextInput label="Email" />
+```
+
+Example of passing an accessibilityLabel. For web, this will set aria-label="Enter a Coinbase Email" under the hood
+
+```jsx
+<TextInput accessibilityLabel="Enter a Coinbase Email" label="Email" />
+```
+
+:::tip Accessibility tip
+
+Like any component system, much of the responsibility for building accessible UIs is in your hands as the consumer to properly implement the component composition. We'll do our best to provide sane fallbacks, but here are the biggest gotchas for `TextInput`s you can watch out for.
+
+<br />
+
+#### `aria-*` attr overrides
+
+Any time you use `variant='negative'`, we assume you're showing an error state. If for some reason this is _not_ the case, you will want to use `aria-invalid={false}` to override the default configuration.
+
+<br />
+
+#### Message format
+
+It's also advised you always format `helperText` with `Error: ${errorMessage}`. We'd do that for you, but _i18n_ isn't baked into CDS. Take a look at the example below:
+
+:::
+
+```jsx
+<VStack gap={4}>
+  <TextInput
+    label="Text Input rendered in an errored state"
+    placeholder="Enter a color"
+    helperText="Error: Your favorite color is not orange"
+    variant="negative"
+  />
+  <TextInput
+    label="Text Input that's red but not in an errored state"
+    placeholder="Enter a color"
+    helperText="You like red?"
+    variant="negative"
+    // Override the default behavior when variant="negative"
+    aria-invalid={false}
+  />
+</VStack>
+```
+
+### Placeholder Text
+
+```jsx
+<TextInput label="Label" placeholder="Placeholder" />
+```
+
+### Borderless TextInput (web)
+
+A borderless TextInput SHOULD NOT be used alone. It should be used
+with a TypeAhead component.
+
+```jsx
+<HStack padding={2}>
+  <TextInput
+    label="Borderless TextInput"
+    placeholder="placeholder"
+    helperText="helperText"
+    bordered={false}
+  />
+</HStack>
+```
+
+### Helper Text
+
+#### Default Sentiment
+
+```jsx
+<VStack gap={3}>
+  <VStack>
+    <TextHeadline as="p">Default sentiment</TextHeadline>
+    <TextInput
+      label="Campaign title"
+      placeholder="Title"
+      helperText="This won't be displayed to user"
+    />
+  </VStack>
+
+  <VStack>
+    <TextHeadline as="p">Positive sentiment</TextHeadline>
+    <TextInput
+      label="Address"
+      helperText="Valid BTC address"
+      variant="positive"
+      placeholder="HaeJiWplJohn6W42eCq0Qqft0"
+      end={<InputIcon active color="fgPositive" name="visible" />}
+    />
+  </VStack>
+
+  <VStack>
+    <TextHeadline as="p">Negative Sentiment</TextHeadline>
+    <TextInput
+      label="Address"
+      helperText="Invalid BTC address"
+      variant="negative"
+      placeholder="HaeJiWplJohn6W42eCq0Qqft0"
+      end={<InputIcon active color="fgNegative" name="visible" />}
+    />
+  </VStack>
+</VStack>
+```
+
+### Color Surge Enabled
+
+```jsx
+<VStack gap={3}>
+  <TextInput
+    label="Default Color Surge"
+    placeholder="Focus me"
+    helperText="This won't be displayed to user"
+    enableColorSurge
+  />
+
+  <TextInput
+    label="Positive Color Surge"
+    placeholder="Focus me"
+    helperText="Valid BTC address"
+    variant="positive"
+    enableColorSurge
+  />
+
+  <TextInput
+    label="Negative Color Surge"
+    placeholder="Focus me"
+    helperText="Invalid BTC address"
+    variant="negative"
+    enableColorSurge
+  />
+</VStack>
+```
+
+### Content Alignment
+
+```jsx
+<VStack gap={3}>
+  <VStack>
+    <Text as="p">
+      <strong>Left aligned: </strong>This is the default setting.
+    </Text>
+    <TextInput label="City/town" placeholder="Oakland" />
+  </VStack>
+
+  <VStack>
+    <Text as="p">Right aligned Used with compact</Text>
+    <TextInput
+      label="Limit price"
+      compact
+      align="end"
+      type="number"
+      step="0.01"
+      placeholder="29.3"
+      suffix="USD"
+    />
+  </VStack>
+</VStack>
+```
+
+### StartContent & EndContent
+
+#### Examples of Input Objects placed at the Start
+
+```jsx
+function StartContentExamples() {
+  return (
+    <VStack gap={3}>
+      <VStack>
+        <Text as="p">
+          <strong>Asset</strong>: Asset objects are not interactive
+        </Text>
+        <TextInput
+          label="Address"
+          start={
+            <Box paddingX={2}>
+              <Avatar
+                size="l"
+                src="https://dynamic-assets.coinbase.com/e785e0181f1a23a30d9476038d9be91e9f6c63959b538eabbc51a1abc8898940383291eede695c3b8dfaa1829a9b57f5a2d0a16b0523580346c6b8fab67af14b/asset_icons/b57ac673f06a4b0338a596817eb0a50ce16e2059f327dc117744449a47915cb2.png"
+                alt="address"
+              />
+            </Box>
+          }
+          placeholder="HaeJiWplJohn6W42eCq0Qqft0"
+        />
+      </VStack>
+
+      <VStack>
+        <Text as="p">
+          <strong>Icon</strong>: Icon objects are not interactive.
+        </Text>
+        <TextInput label="Amount" start={<InputIcon name="cashUSD" />} placeholder="1234" />
+      </VStack>
+
+      <VStack>
+        <Text as="p">
+          <strong>IconButton</strong>: The most common use case for Icon Button at the start of a
+          Text Field is search.
+        </Text>
+        <TextInput
+          label="Search"
+          start={<InputIconButton name="search" />}
+          placeholder="Search for anything"
+        />
+      </VStack>
+    </VStack>
+  );
+}
+```
+
+### Read only
+
+```jsx
+<VStack gap={3}>
+  <TextInput label="Read Only Input" readOnly value="This value cannot be edited" />
+  <TextInput label="Read Only with Suffix" readOnly value="1234.56" suffix="USD" />
+  <TextInput
+    label="Read Only with Start Content"
+    readOnly
+    value="BTC Address"
+    start={<InputIconButton name="search" />}
+  />
+</VStack>
+```
+
+### Label Variants
+
+TextInput supports two label variants: `outside` (default) and `inside`. Note that the `compact` prop, when set to true, will override label variant preference.
+
+:::warning
+
+When using the `inside` label variant, you should always include a `placeholder` prop.
+
+:::
+
+#### Outside label (default)
+
+```jsx
+<TextInput label="Email Address" placeholder="Enter your email" />
+```
+
+#### Inside label
+
+```jsx
+<TextInput label="Email Address" labelVariant="inside" placeholder="Enter your email" />
+```
+
+#### Inside label (with start content)
+
+```jsx
+<TextInput
+  label="Search"
+  labelVariant="inside"
+  start={<InputIconButton name="search" />}
+  placeholder="Search for anything"
+/>
+```
+
+#### Inside label (with end content)
+
+```jsx
+<TextInput
+  label="Password"
+  labelVariant="inside"
+  secureTextEntry
+  end={<InputIconButton name="visibleInactive" />}
+  placeholder="Enter your password"
+/>
+```
+
+## Example of Input Objects placed at the End
+
+Here are some examples and best practices when using end content in a TextField.
+
+```jsx
+<VStack gap={3}>
+  <VStack>
+    <Text as="p">
+      <strong>Icon</strong>: Icon objects are not interactive.
+    </Text>
+    <TextInput
+      label="Address"
+      placeholder="1234 Abc Way"
+      end={<InputIcon name="checkmark" color="fgPositive" />}
+    />
+  </VStack>
+
+  <VStack>
+    <Text as="p">
+      The most common use case for placing a text object at the end of an input is currency. This
+      object is not interactive.
+    </Text>
+    <TextInput
+      label="Amount"
+      type="number"
+      step="0.01"
+      compact
+      placeholder="98329.23"
+      suffix="USD"
+    />
+  </VStack>
+
+  <VStack>
+    <Text as="p">
+      You can add a Text Button object at the end of an Input. "Copy" is a great example of this.
+    </Text>
+    <TextInput
+      label="API Access Token"
+      placeholder="HaeJiWplJohn6W42eCq0Qqft0"
+      end={
+        <Box spacingEnd={2}>
+          <Link variant="caption" color="primary" to="">
+            COPY
+          </Link>
+        </Box>
+      }
+    />
+  </VStack>
+</VStack>
+```
+
+### Password input
+
+Password Input - Use Icon Buttons at the end for actions like showing a password or clearing text from an input.
+
+> a11y tip: Always provide an `accessibilityLabel` to start/end nodes to clearly communicate state/actions
+
+```jsx
+function PasswordInput() {
+  const [isVisible, setIsVisible] = useState(false);
+  const type = useMemo(() => (isVisible ? 'text' : 'password'), [isVisible]);
+
+  return (
+    <TextInput
+      label="Password"
+      type={type}
+      end={
+        <InputIconButton
+          name={isVisible ? 'visibleActive' : 'visibleInactive'}
+          onPress={() => setIsVisible((isVisible) => !setIsVisible)}
+          accessibilityLabel={isVisible ? 'Hide password' : 'Show password'}
+        />
+      }
+    />
+  );
+}
+```
+
+### Link + Icon Button
+
+If needed, you can add a Link + Icon Button like this example here. Use this sparingly and only at the End of an Input.
+
+```jsx
+function CopyTextField() {
+  const [copied, setCopied] = useState(false);
+  const [variant, setVariant] = useState('foregroundMuted');
+  const [helperText, setHelperText] = useState('');
+
+  useEffect(() => {
+    if (copied) {
+      setVariant('positive');
+      setHelperText('Your token has been copied!');
+    } else {
+      setVariant('foregroundMuted');
+      setHelperText('');
+    }
+  }, [copied]);
+
+  const handleOnChange = useCallback(() => {
+    setVariant('foregroundMuted');
+    setCopied(false);
+    setHelperText('');
+  }, []);
+
+  return (
+    <TextInput
+      end={
+        <HStack>
+          <Link onPress={() => setCopied(true)} variant="caption" color={variant}>
+            {copied ? 'copied' : 'copy'}
+          </Link>
+          <InputIcon active color="primary" name="visible" />
+        </HStack>
+      }
+      onChange={handleOnChange}
+      variant={variant}
+      helperText={helperText}
+      label="API Access Token"
+    />
+  );
+}
+```
+
+### Disabled
+
+```jsx
+<VStack gap={3}>
+  <TextInput label="Label" disabled />
+  <TextInput label="Label" compact disabled />
+</VStack>
+```
+
+### TextArea Example (mobile)
+
+On mobile, TextInput is versatile enough to support
+a "TextArea" as well. You just need to add multiline prop.
+Here is an example
+
+```jsx
+const [text, onChangeText] = useState('');
+
+<MockTextInput
+  onChangeText={onChangeText}
+  value={text}
+  label="Textarea"
+  helperText="Write about yourself"
+  variant="foregroundMuted"
+  multiline
+  value="
+      A really really really really
+      long piece 
+      of text
+      displayed. A really really really really
+      long piece 
+      of text
+      displayed. 
+      A really really really really
+      long piece 
+      of text
+      displayed
+    "
+/>;
+```
+
+### Example of a Form
+
+We recommend that you use spacing 3 when building stacked forms.
+
+```jsx
+function FormExample() {
+  const gap = 3;
+
+  const onSubmit = useCallback((e) => {
+    e.preventDefault();
+    console.log(e.currentTarget.nodeValue);
+    alert('Submitted');
+  }, []);
+
+  return (
+    <form onSubmit={onSubmit} action={undefined}>
+      <VStack gap={gap}>
+        <TextInput
+          label="Street address"
+          placeholder="4321 Jade Palace"
+          helperText="Please enter your primary address."
+        />
+        <TextInput label="Unit #" aria-required="true" />
+        <HStack gap={gap}>
+          <TextInput label="City/town" width="70%" />
+          <TextInput label="State" width="30%" />
+        </HStack>
+        <HStack gap={gap}>
+          <TextInput label="Postal code" width="40%" />
+          <TextInput label="Country" width="60%" />
+        </HStack>
+        <ButtonGroup>
+          <Button type="submit">Save</Button>
+        </ButtonGroup>
+      </VStack>
+    </form>
+  );
+}
+```
+
+### Example of a Sign Up Form
+
+```jsx
+<HStack gap={2} alignItems="center">
+  <TextInput
+    label="Email"
+    placeholder="satoshi@nakamoto.com"
+    helperText="Please enter a valid email address"
+  />
+  <Box spacingTop={0.5}>
+    <Button variant="primary">Submit</Button>
+  </Box>
+</HStack>
+```
+
+## Testing
+
+### Testing different parts of the input
+
+You can also use the testIDMap to test different parts
+of the TextInput. If you use testID, it will add the testID to the root
+of the TextInput.
+
+```jsx
+function testExample() {
+  const testIDMap = useMemo(() => {
+    return {
+      input: 'input-id',
+      helperText: 'helperText-id',
+      label: 'label-id',
+      start: 'start-id',
+      end: 'end-id',
+    };
+  }, []);
+  return (
+    <TextInput
+      label="Email"
+      placeholder="satoshi@nakamoto.com"
+      helperText="Please enter a valid email address"
+      testIDMap={testIDMap}
+      start={
+        <Box paddingX={2}>
+          <Avatar
+            size="l"
+            src="https://dynamic-assets.coinbase.com/e785e0181f1a23a30d9476038d9be91e9f6c63959b538eabbc51a1abc8898940383291eede695c3b8dfaa1829a9b57f5a2d0a16b0523580346c6b8fab67af14b/asset_icons/b57ac673f06a4b0338a596817eb0a50ce16e2059f327dc117744449a47915cb2.png"
+            alt="address"
+          />
+        </Box>
+      }
+      end={<InputIcon active color="primary" name="visible" />}
+    />
+  );
+}
+```
+
+## Date Picker Example
+
+You can construct a DatePicker using TextInput
+
+```jsx
+function DatePicker() {
+  return <TextInput label="Pick a date" type="date" />;
+}
+```
+
+## TextInput While Keyboard Is Open (mobile)
+
+If you have the keyboard open, then closing the keyboard and interacting with the text input requires 2 taps, which isn't a great user experience.
+
+To fix this issue, you can wrap the TextInput in a ScrollView, and set keyboardShouldPersistTaps="always".
+
+```jsx
+function TextInputKeyboardExample() {
+  return (
+    <ScrollView style={{ height: '100%' }} keyboardShouldPersistTaps="always">
+      <TextInput label="Amount" type="number" compact placeholder="98329.23" suffix="USD" />
+    </ScrollView>
+  );
+}
+```

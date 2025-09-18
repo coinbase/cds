@@ -1,0 +1,131 @@
+### Basic usage
+
+```tsx live
+<Table variant="ruled" bordered>
+  <TableHeader>
+    <TableRow backgroundColor="bgAlternate">
+      <TableCell title="First Header" />
+      <TableCell>
+        <TextHeadline as="p" color="currentColor">
+          Second Header
+        </TextHeadline>
+      </TableCell>
+      <TableCell title="Third Header" />
+    </TableRow>
+  </TableHeader>
+  <TableBody>
+    <TableRow>
+      <TableCell
+        overflow="truncate"
+        start={
+          <Box spacingEnd={1}>
+            <Avatar
+              name="John Doe"
+              src="https://avatars.slack-edge.com/2019-12-09/865473396980_e8c83b072b452e4d03f7_192.jpg"
+            />
+          </Box>
+        }
+        title="Bitcoin"
+        subtitle="BTC and I'm like please please truncate me"
+      />
+      <TableCell
+        overflow="truncate"
+        alignItems="flex-start"
+        title="$2,475.68"
+        subtitle="0.11882557"
+      />
+      <TableCell>
+        <TextHeadline as="h2" color="currentColor">
+          $2,221.01
+        </TextHeadline>
+        <TextLabel2 as="p" color="foregroundMuted">
+          0.1519581 BTC
+        </TextLabel2>
+      </TableCell>
+    </TableRow>
+  </TableBody>
+  <TableFooter>
+    <TableRow>
+      <TableCell title="First Item (footer)" />
+      <TableCell title="Second Item (footer)" />
+      <TableCell title="Third Item (footer)" />
+    </TableRow>
+  </TableFooter>
+</Table>
+```
+
+### Custom Cell Spacing
+
+```tsx live
+<Table
+  variant="ruled"
+  bordered
+  cellSpacing={{
+    outer: { spacingHorizontal: 2, spacingVertical: 2 },
+    inner: { spacingHorizontal: 2, spacingVertical: 2 },
+  }}
+>
+  <TableHeader>
+    <TableRow>
+      <TableCell title="Name" />
+      <TableCell title="Email" />
+      <TableCell title="Role" />
+    </TableRow>
+  </TableHeader>
+  <TableBody>
+    <TableRow>
+      <TableCell
+        innerSpacing={{ spacingHorizontal: 2, spacingVertical: 0 }}
+        outerSpacing={{ spacingHorizontal: 2, spacingVertical: 0 }}
+        start={<Avatar name="Bob Smith" />}
+        title="Bob Smith"
+        subtitle="Junior Developer"
+      />
+      <TableCell title="example@example.com" />
+      <TableCell title="Engineering" subtitle="Full-time" />
+    </TableRow>
+    <TableRow>
+      <TableCell
+        innerSpacing={{ spacingHorizontal: 5, spacingVertical: 5 }}
+        outerSpacing={{ spacingHorizontal: 5, spacingVertical: 5 }}
+        start={<Avatar name="Alice Smith" />}
+        title="Alice Smith"
+        subtitle="Senior Developer"
+      />
+      <TableCell title="example@example.com" />
+      <TableCell title="Engineering" subtitle="Full-time" />
+    </TableRow>
+  </TableBody>
+</Table>
+```
+
+### Accessibility Example - Multiple Headers
+
+```tsx live
+<Table maxHeight={300} bordered variant="ruled">
+  <TableHeader sticky>
+    <TableRow backgroundColor="bgAlternate">
+      <TableCell title="Currency" />
+      <TableCell title="Balance" />
+      <TableCell title="Status" alignItems="flex-end" />
+    </TableRow>
+  </TableHeader>
+  <TableBody>
+    <TableRow>
+      <TableCell title="BTC" as="th" scope="row" />
+      <TableCell title="$100" />
+      <TableCell title="Pending" alignItems="flex-end" />
+    </TableRow>
+    <TableRow>
+      <TableCell title="ETH" as="th" scope="row" />
+      <TableCell title="$200" />
+      <TableCell title="Complete" alignItems="flex-end" />
+    </TableRow>
+    <TableRow>
+      <TableCell title="APE" as="th" scope="row" />
+      <TableCell title="$300" />
+      <TableCell title="Complete" alignItems="flex-end" />
+    </TableRow>
+  </TableBody>
+</Table>
+```

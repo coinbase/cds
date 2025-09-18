@@ -1,0 +1,22 @@
+The LottieStatusAnimation component for mobile provides the same status animation functionality as the web version, optimized for React Native. It's perfect for showing trade or transaction status with smooth, engaging animations.
+
+### Basic usage
+
+```tsx
+function BasicExample() {
+  const [status, setStatus] = useState('loading');
+
+  return (
+    <VStack gap={3} alignItems="center">
+      <LottieStatusAnimation status={status} height={200} width={200} />
+      <HStack gap={1} flexWrap="wrap" justifyContent="center">
+        <Button onClick={() => setStatus('loading')}>Loading</Button>
+        <Button onClick={() => setStatus('success')}>Success</Button>
+        <Button onClick={() => setStatus('failure')}>Failure</Button>
+        <Button onClick={() => setStatus('pending')}>Pending</Button>
+        <Button onClick={() => setStatus('cardSuccess')}>Card Success</Button>
+      </HStack>
+    </VStack>
+  );
+}
+```

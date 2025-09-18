@@ -1,0 +1,15 @@
+{
+  "name": "eslint-plugin-internal",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/eslint-plugin-internal/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "test": {
+      "executor": "@nx/jest:jest",
+      "options": {
+        "jestConfig": "{projectRoot}/jest.config.mjs"
+      }
+    }
+  }
+}

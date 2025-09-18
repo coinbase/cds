@@ -1,0 +1,98 @@
+diff --git a/dist/engine.js b/dist/engine.js
+index a677fad981f78e88b142de9f037b5e1c544523bd..704e11c205dc316e89a1cfdb53d784f331a4e3b4 100644
+--- a/dist/engine.js
++++ b/dist/engine.js
+@@ -62,7 +62,7 @@ Options:
+     if (!action) {
+         throw new ShowHelpError(`please specify an action for ${generator}.`);
+     }
+-    logger.log(`Loaded templates: ${templates.replace(`${cwd}/`, '')}`);
++    
+     if (!(yield fs_extra_1.default.exists(actionfolder))) {
+         throw new ShowHelpError(`I can't find action '${action}' for generator '${generator}'.
+ 
+diff --git a/dist/ops/add.js b/dist/ops/add.js
+index e2c120a440fe363b9b3e4640a7873754afd5d4cf..95f4081c2fb7222ca0ee8f465cfdefd6eef4f3cd 100644
+--- a/dist/ops/add.js
++++ b/dist/ops/add.js
+@@ -16,7 +16,7 @@ const path_1 = __importDefault(require("path"));
+ const fs_extra_1 = __importDefault(require("fs-extra"));
+ const chalk_1 = require("chalk");
+ const result_1 = __importDefault(require("./result"));
+-const add = (action, args, { logger, cwd, createPrompter }) => __awaiter(void 0, void 0, void 0, function* () {
++const add = (action, args, { logger, cwd, createPrompter, writeFile }) => __awaiter(void 0, void 0, void 0, function* () {
+     const { attributes: { to, inject, unless_exists, force, from, skip_if }, } = action;
+     const result = (0, result_1.default)('add', to);
+     const prompter = createPrompter();
+@@ -48,13 +48,13 @@ const add = (action, args, { logger, cwd, createPrompter }) => __awaiter(void 0,
+         return result('skipped');
+     }
+     if (from) {
+-        const from_path = path_1.default.join(args.templates, from);
++        const from_path = path_1.default.join(cwd, from);
+         const file = fs_extra_1.default.readFileSync(from_path).toString();
+         action.body = file;
+     }
+     if (!args.dry) {
+         yield fs_extra_1.default.ensureDir(path_1.default.dirname(absTo));
+-        yield fs_extra_1.default.writeFile(absTo, action.body);
++        writeFile ? yield writeFile(absTo, action.body, args) : yield fs_extra_1.default.writeFile(absTo, action.body);
+     }
+     const pathToLog = process.env.HYGEN_OUTPUT_ABS_PATH ? absTo : to;
+     logger.ok(`       ${force ? 'FORCED' : 'added'}: ${pathToLog}`);
+diff --git a/dist/render.js b/dist/render.js
+index 5d7c6e52834117fff8180ec75e4c79a69fcd002e..a0c76d955306e551721ace6827732509eac7d9a4 100644
+--- a/dist/render.js
++++ b/dist/render.js
+@@ -60,14 +60,22 @@ const render = (args, config) => __awaiter(void 0, void 0, void 0, function* ()
+         return Object.assign({ file }, (0, front_matter_1.default)(text, { allowUnsafe: true }));
+     }))
+         .then(map(({ file, attributes, body }) => {
++        const argsAsObject = {};
++        for (const [key, value] of Object.entries(args)) {
++          try {
++            argsAsObject[key] = JSON.parse(value);
++          } catch (err) {
++            argsAsObject[key] = value;
++          }
++        }
+         const renderedAttrs = Object.entries(attributes).reduce((obj, [key, value]) => {
+-            return Object.assign(Object.assign({}, obj), { [key]: renderTemplate(value, args, config) });
++            return Object.assign(Object.assign({}, obj), { [key]: renderTemplate(value, argsAsObject, config) });
+         }, {});
+         debug('Rendering file: %o', file);
+         return {
+             file,
+             attributes: renderedAttrs,
+-            body: renderTemplate(body, Object.assign(Object.assign({}, args), { attributes: renderedAttrs }), config),
++            body: renderTemplate(body, Object.assign(Object.assign({}, argsAsObject), { attributes: renderedAttrs }), config),
+         };
+     }));
+ });
+diff --git a/dist/types.d.ts b/dist/types.d.ts
+index c2d1f2c33b6a65d43121a0488e46b90b7871e50e..2ab5c977206bb97ee657db64c74691eea1a68945 100644
+--- a/dist/types.d.ts
++++ b/dist/types.d.ts
+@@ -14,7 +14,11 @@ export interface RenderedAction {
+     attributes: any;
+     body: string;
+ }
+-export interface RunnerConfig {
++export interface RunnerConfig<Args = {
++  dest: string;
++  data: string;
++  config: string
++}> {
+     exec?: (sh: string, body: string) => void;
+     templates?: string;
+     cwd?: string;
+@@ -23,7 +27,9 @@ export interface RunnerConfig {
+     helpers?: any;
+     localsDefaults?: any;
+     createPrompter?: <Q, T>() => Prompter<Q, T>;
++    writeFile?: (path: string, contents: string, args: Args) => Promise<void>;
+ }
++
+ export interface ResolverIO {
+     exists: (arg0: string) => Promise<boolean>;
+     load: (arg0: string) => Promise<Record<string, any>>;

@@ -1,0 +1,75 @@
+### Basic PageHeader
+
+```jsx
+function Example() {
+  return (
+    <PageHeader
+      background="bgPrimaryWash"
+      end={
+        <Link href="/components/typography/link" font="headline" color="fgPrimary">
+          Help
+        </Link>
+      }
+      start={<LogoMark size={32} />}
+      title={'Page Title'}
+    />
+  );
+}
+```
+
+### PageHeader With Custom Styles
+
+Use the `styles` prop to customize the `start`, `end`, `title`, or `root` of `PageHeader`. This example adjusts the spacing to align the header with page content.
+
+```jsx
+function Example() {
+  const theme = useTheme();
+  return (
+    <>
+      <PageHeader
+        background="bgPrimaryWash"
+        end={
+          <HStack alignItems="center" gap={2}>
+            <Link color="fgPrimary" font="headline" href="/components/typography/link">
+              Help
+            </Link>
+            <HStack gap={1}>
+              <IconButton
+                transparent
+                accessibilityLabel="Share"
+                name="externalLink"
+                onPress={() => console.log()}
+                testID="header-external-link-button"
+              />
+              <IconButton
+                transparent
+                accessibilityLabel="Close"
+                name="close"
+                onPress={() => console.log()}
+                testID="header-close-button"
+              />
+            </HStack>
+          </HStack>
+        }
+        start={
+          <IconButton
+            transparent
+            accessibilityLabel="Back"
+            name="backArrow"
+            onPress={() => console.log()}
+            testID="header-back-button"
+          />
+        }
+        styles={{
+          start: { paddingStart: theme.space[1.5] },
+          end: { paddingEnd: theme.space[1.5] },
+        }}
+        title="Page Title"
+      />
+      <Box padding={3}>
+        <TextBody>Content below with padding 3 to align visually with the header actions.</TextBody>
+      </Box>
+    </>
+  );
+}
+```

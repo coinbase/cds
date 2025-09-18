@@ -1,0 +1,27 @@
+{
+  "name": "web-utils",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/web-utils/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "command": "rm -rf cjs && babel ./src --out-dir cjs --extensions .ts,.tsx,.js,.jsx --copy-files --no-copy-ignored"
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "defaultConfiguration": "dev",
+      "configurations": {
+        "dev": {
+          "command": "tsc --build --pretty --verbose"
+        },
+        "prod": {
+          "command": "tsc --build ./tsconfig.build.json --pretty --verbose"
+        }
+      }
+    }
+  }
+}

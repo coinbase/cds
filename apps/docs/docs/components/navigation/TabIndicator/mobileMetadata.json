@@ -1,0 +1,12 @@
+{
+  "import": "import { TabIndicator } from '@cbhq/cds-mobile/tabs/TabIndicator'",
+  "source": "https://github.com/coinbase/cds-staging/blob/master/packages/mobile/src/tabs/TabIndicator.tsx",
+  "description": "A visual indicator that shows the active tab position.",
+  "relatedComponents": [
+    {
+      "label": "TabNavigation",
+      "url": "/components/navigation/TabNavigation/"
+    }
+  ],
+  "dependencies": []
+}

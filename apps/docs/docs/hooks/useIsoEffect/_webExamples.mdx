@@ -1,0 +1,33 @@
+import { MDXArticle } from '@site/src/components/page/MDXArticle';
+
+<MDXArticle hideDivider>
+## Usage
+
+```tsx live
+function Example() {
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+
+  useIsoEffect(() => {
+    const updatePosition = (e: MouseEvent) => {
+      setPosition({ x: e.clientX, y: e.clientY });
+    };
+
+    window.addEventListener('mousemove', updatePosition);
+
+    // Cleanup function to remove event listener
+    return () => {
+      window.removeEventListener('mousemove', updatePosition);
+    };
+  }, []); // Empty deps array means this effect runs once on mount
+
+  return (
+    <VStack gap={2}>
+      <TextHeadline>Mouse Position</TextHeadline>
+      <Text>X: {position.x}</Text>
+      <Text>Y: {position.y}</Text>
+    </VStack>
+  );
+}
+```
+
+</MDXArticle>

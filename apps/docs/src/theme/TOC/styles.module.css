@@ -1,0 +1,17 @@
+.tableOfContentsLink {
+  font-family: var(--fontFamily-label2);
+  font-size: var(--fontSize-label2);
+  line-height: var(--lineHeight-label2);
+  font-weight: var(--fontWeight-label2);
+  color: var(--color-fg);
+  font-optical-sizing: auto;
+  text-decoration: none;
+}
+
+.tableOfContentsLinkActive {
+  color: var(--color-fgPrimary);
+}
+
+.tableOfContentsLink:hover {
+  color: var(--color-fgPrimary);
+}

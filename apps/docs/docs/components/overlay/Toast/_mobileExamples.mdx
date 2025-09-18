@@ -1,0 +1,78 @@
+### Get Started
+
+1. Add `PortalProvider` to the root of your app if it doesn't exist.
+2. Import the `useToast` hook: `import { useToast } from '@cbhq/cds-mobile/overlays/useToast'`;
+3. Show a toast
+
+```jsx
+const toast = useToast();
+toast.show('Copied to clipboard');
+```
+
+### Basic Example
+
+```jsx
+function ToastExample() {
+  function BasicToast() {
+    const toast = useToast();
+    const [toastText, setToastText] = useState('Copied to clipboard');
+
+    const handleShowToast = useCallback(() => {
+      toast.show(toastText, {
+        action: { label: 'Action', onPress: () => console.log('action pressed') },
+        onWillHide: () => {
+          console.log('toast hiding');
+        },
+        onDidHide: () => {
+          console.log('toast hidden');
+        },
+      });
+    }, [toast, toastText]);
+
+    const handleNoAction = () => toast.show(toastText);
+
+    const handleNoClose = () =>
+      toast.show(toastText, {
+        action: { label: 'Action', onPress: () => console.log('action pressed') },
+        hideCloseButton: true,
+      });
+
+    const handleTextOnly = () => toast.show(toastText, { hideCloseButton: true });
+
+    const handleBottomOffset = () => {
+      toast.show('Toast copy', {
+        bottomOffset: 100,
+      });
+    };
+
+    const handleVariant = () => {
+      toast.show('Toast copy', {
+        variant: 'negative',
+      });
+    };
+
+    return (
+      <>
+        <Box paddingBottom={3}>
+          <TextInput
+            label="Toast text"
+            placeholder="Type anything to show in toast"
+            value={toastText}
+            onChange={(e) => setToastText(e.target.value)}
+          />
+        </Box>
+        <HStack gap={1}>
+          <Button onPress={handleShowToast}>Show Toast</Button>
+          <Button onPress={handleNoAction}>No Action</Button>
+          <Button onPress={handleNoClose}>No Close</Button>
+          <Button onPress={handleTextOnly}>Text Only</Button>
+          <Button onPress={handleBottomOffset}>Bottom Offset</Button>
+          <Button onPress={handleVariant}>Variant</Button>
+        </HStack>
+      </>
+    );
+  }
+
+  return <BasicToast />;
+}
+```

@@ -1,0 +1,123 @@
+### Basic PageHeader
+
+A basic page header with a logo on the left, title in the center, and a help link on the right.
+
+```jsx live
+function Example() {
+  return (
+    <PageHeader
+      background="bgPrimaryWash"
+      end={
+        <Link href="/components/typography/link" font="headline" color="fgPrimary">
+          Help
+        </Link>
+      }
+      start={<LogoMark size={32} />}
+      title={'Page Title'}
+    />
+  );
+}
+```
+
+### PageHeader With Custom Styles
+
+Use the `styles` or `classNames` props to customize the `start`, `end`, `title`, or `root` of `PageHeader`. This example adjusts the spacing to align the header with page content.
+
+```jsx live
+function Example() {
+  return (
+    <>
+      <PageHeader
+        styles={{
+          start: {
+            paddingLeft: 'var(--space-1_5)',
+          },
+          end: {
+            paddingRight: 'var(--space-1_5)',
+          },
+        }}
+        background="bgPrimaryWash"
+        end={
+          <HStack alignItems="center" gap={2}>
+            <Link href="/components/typography/link" font="headline" color="fgPrimary">
+              Help
+            </Link>
+            <HStack gap={1}>
+              <IconButton
+                transparent
+                accessibilityLabel="Share"
+                name="externalLink"
+                onClick={() => console.log('Share clicked')}
+                testID="header-external-link-button"
+              />
+              <IconButton
+                transparent
+                accessibilityLabel="Close"
+                name="close"
+                onClick={() => console.log('Close clicked')}
+                testID="header-close-button"
+              />
+            </HStack>
+          </HStack>
+        }
+        start={
+          <IconButton
+            transparent
+            accessibilityLabel="Back"
+            name="backArrow"
+            onClick={() => console.log('Back clicked')}
+            testID="header-back-button"
+          />
+        }
+        title="Trading Settings"
+      />
+      <Box padding={3} background="bgPositiveWash">
+        <VStack gap={3} background="bgPrimaryWash">
+          <TextTitle2>Configure Your Trading Preferences</TextTitle2>
+          <TextBody>
+            Customize your trading experience by adjusting the settings below. These preferences
+            will apply to all your trading activities and can be modified at any time.
+          </TextBody>
+          <TextTitle4>Order Types</TextTitle4>
+          <TextBody color="fgSecondary">
+            Choose your preferred default order types for buying and selling. Market orders execute
+            immediately at current prices, while limit orders allow you to set specific price
+            targets.
+          </TextBody>
+        </VStack>
+      </Box>
+    </>
+  );
+}
+```
+
+### Messaging State (Web)
+
+Use Page Header for full-screen messaging states.
+
+```jsx live
+function Example() {
+  return (
+    <VStack>
+      <PageHeader background="bg" position="sticky" start={<LogoMark size={32} />} top="0" />
+      <Box>
+        <VStack
+          alignContent="center"
+          alignItems="center"
+          flexGrow={1}
+          flexShrink={1}
+          justifyContent="center"
+          paddingX={4}
+          paddingY={10}
+        >
+          <HeroSquare name="bigWarning" />
+          <TextTitle1 as="h3">You need to X before you Y</TextTitle1>
+          <TextBody align="center" as="sub">
+            You&apos;ll need to [add funds] before you can [complete this transaction]
+          </TextBody>
+        </VStack>
+      </Box>
+    </VStack>
+  );
+}
+```

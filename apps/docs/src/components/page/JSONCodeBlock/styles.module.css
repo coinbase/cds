@@ -1,0 +1,13 @@
+.jsonCodeBlock {
+  max-height: 340px;
+  border-radius: var(--borderRadius-400);
+  background: var(--color-bg);
+
+  /* Override CodeBlock component styles */
+  margin-bottom: 0 !important;
+  overflow: scroll !important;
+
+  @media (min-width: 997px) {
+    max-height: 460px;
+  }
+}

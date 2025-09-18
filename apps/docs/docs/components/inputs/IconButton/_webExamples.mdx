@@ -1,0 +1,260 @@
+Icon buttons must have a name (which determines the icon), and can use variants to denote intent and importance.
+
+:::tip Accessibility tip
+
+To ensure your `IconButton` implementation is accessible, it must have an `accessibilityLabel` that describes the purpose of the button.
+
+<br />
+
+In cases where you're composing a button next to a label or some text that describes the buttons
+action, you can setup your system using `accessibilityLabelledBy` prop mapping to the `id` on the
+label node (See [Composed example](#composed-example)).
+
+:::
+
+```jsx live
+<VStack gap={4}>
+  <VStack gap={2}>
+    <Text font="title3">Basic variants</Text>
+    <HStack gap={2}>
+      <IconButton
+        active
+        name="orderHistory"
+        accessibilityLabel="View transaction history"
+        variant="primary"
+        onClick={console.log}
+      />
+      <IconButton
+        active
+        name="gear"
+        accessibilityLabel="View settings"
+        variant="secondary"
+        onClick={console.log}
+      />
+      <IconButton
+        name="phone"
+        accessibilityLabel="View settings"
+        variant="tertiary"
+        onClick={console.log}
+      />
+      <IconButton
+        name="checkmark"
+        accessibilityLabel="Approve transaction"
+        variant="foregroundMuted"
+        onClick={console.log}
+      />
+    </HStack>
+  </VStack>
+
+  <VStack gap={2}>
+    <Text font="title3">Transparent variants</Text>
+    <HStack gap={2}>
+      <IconButton
+        active
+        name="orderHistory"
+        accessibilityLabel="View past order history"
+        variant="primary"
+        transparent
+        onClick={console.log}
+      />
+      <IconButton
+        name="phone"
+        accessibilityLabel="View settings"
+        variant="tertiary"
+        transparent
+        onClick={console.log}
+      />
+      <IconButton
+        active
+        name="gear"
+        accessibilityLabel="Update settings"
+        variant="secondary"
+        transparent
+        onClick={console.log}
+      />
+      <IconButton
+        name="checkmark"
+        accessibilityLabel="Verify your identity"
+        variant="foregroundMuted"
+        transparent
+        onClick={console.log}
+      />
+    </HStack>
+  </VStack>
+
+  <VStack gap={2}>
+    <Text font="title3">Loading states</Text>
+    <HStack gap={2}>
+      <IconButton
+        active
+        name="orderHistory"
+        accessibilityLabel="Loading transaction history"
+        variant="primary"
+        loading
+        onClick={console.log}
+      />
+      <IconButton
+        active
+        name="gear"
+        accessibilityLabel="Loading settings"
+        variant="secondary"
+        loading
+        onClick={console.log}
+      />
+      <IconButton
+        name="checkmark"
+        accessibilityLabel="Processing approval"
+        variant="foregroundMuted"
+        loading
+        onClick={console.log}
+      />
+    </HStack>
+  </VStack>
+
+  <VStack gap={2}>
+    <Text font="title3">Disabled states</Text>
+    <HStack gap={2}>
+      <IconButton
+        active
+        name="orderHistory"
+        accessibilityLabel="View transaction history"
+        variant="primary"
+        disabled
+        onClick={console.log}
+      />
+      <IconButton
+        active
+        name="gear"
+        accessibilityLabel="View settings"
+        variant="secondary"
+        disabled
+        onClick={console.log}
+      />
+      <IconButton
+        name="checkmark"
+        accessibilityLabel="Approve transaction"
+        variant="foregroundMuted"
+        disabled
+        onClick={console.log}
+      />
+    </HStack>
+  </VStack>
+
+  <VStack gap={2}>
+    <Text font="title3">Sizing</Text>
+    <HStack gap={2} alignItems="center">
+      <IconButton
+        active
+        name="gear"
+        accessibilityLabel="Settings - compact"
+        variant="primary"
+        compact
+        onClick={console.log}
+      />
+      <IconButton
+        active
+        name="gear"
+        accessibilityLabel="Settings - regular"
+        variant="primary"
+        compact={false}
+        onClick={console.log}
+      />
+    </HStack>
+  </VStack>
+</VStack>
+```
+
+### Composed example
+
+As referenced above, if you're building a composed system, use the `accessibilityLabelledBy` prop and an `id` on the text node.
+
+```jsx live
+function composedExample() {
+  const [active, setActive] = useState(false);
+  const name = useMemo(() => (active ? 'dropsActive' : 'dropsInactive'), [active]);
+  const variant = useMemo(() => (active ? 'primary' : 'foregroundMuted'), [active]);
+  const label = useMemo(() => (active ? 'Reject drop' : 'Claim drop'), [active]);
+
+  return (
+    <HStack gap={2} alignItems="center">
+      <IconButton
+        name={name}
+        variant={variant}
+        onClick={() => setActive((active) => !active)}
+        // Accessibility props
+        id="my-icon--id"
+        accessibilityLabelledBy="my-label--id"
+      />
+      <Text font="label1" as="label" htmlFor="my-icon--id" id="my-label--id">
+        {label}
+      </Text>
+    </HStack>
+  );
+}
+```
+
+### Loading state
+
+Use the `loading` prop to show a spinner when an action is in progress. The button becomes non-interactive and shows a loading spinner instead of the icon.
+
+```jsx live
+function LoadingExample() {
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleSubmit = () => {
+    setIsLoading(true);
+    // Simulate async operation
+    setTimeout(() => setIsLoading(false), 2000);
+  };
+
+  return (
+    <HStack gap={2}>
+      <IconButton
+        name="checkmark"
+        accessibilityLabel={isLoading ? 'Processing submission' : 'Submit form'}
+        variant="primary"
+        loading={isLoading}
+        onClick={handleSubmit}
+      />
+      <IconButton
+        name="refresh"
+        accessibilityLabel={isLoading ? 'Refreshing data' : 'Refresh data'}
+        variant="secondary"
+        loading={isLoading}
+        onClick={handleSubmit}
+      />
+    </HStack>
+  );
+}
+```
+
+### Sizing
+
+IconButtons come in two sizes: compact (default) and regular. Use `compact={false}` for larger touch targets.
+
+```jsx live
+<HStack gap={2} alignItems="center">
+  <IconButton
+    active
+    name="gear"
+    accessibilityLabel="Settings - compact"
+    variant="primary"
+    compact
+  />
+  <IconButton
+    active
+    name="gear"
+    accessibilityLabel="Settings - regular"
+    variant="primary"
+    compact={false}
+  />
+</HStack>
+```
+
+### A11y
+
+Since icon buttons have no descriptive text or children, an accessibility label must be provided.
+
+```jsx
+<IconButton name="close" accessibilityLabel="Close trade modal" />
+```

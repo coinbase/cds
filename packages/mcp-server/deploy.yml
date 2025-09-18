@@ -1,0 +1,3 @@
+engine: Node
+build_name: package-mcp-server
+continuous: true

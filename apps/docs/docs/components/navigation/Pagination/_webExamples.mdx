@@ -1,0 +1,371 @@
+### Basic Pagination
+
+A simple example showing basic pagination with 10 total pages.
+
+```jsx live
+function BasicPaginationExample() {
+  const [activePage, setActivePage] = useState(1);
+  const totalPages = 10;
+
+  return <Pagination totalPages={totalPages} activePage={activePage} onChange={setActivePage} />;
+}
+```
+
+### Pagination with First/Last Buttons
+
+Shows pagination with the optional First and Last page navigation buttons enabled.
+
+```jsx live
+function FirstLastButtonsPaginationExample() {
+  const [activePage, setActivePage] = useState(5);
+  const totalPages = 15;
+
+  return (
+    <Pagination
+      totalPages={totalPages}
+      activePage={activePage}
+      onChange={setActivePage}
+      showFirstLastButtons
+    />
+  );
+}
+```
+
+### Pagination with Custom Counts
+
+Demonstrates using `siblingCount` and `boundaryCount` to adjust the number of pages displayed around the current page and at the boundaries, useful for larger page ranges.
+
+```jsx live
+function CustomCountsPaginationExample() {
+  const [activePage, setActivePage] = useState(10);
+  const totalPages = 20;
+
+  return (
+    <Pagination
+      totalPages={totalPages}
+      activePage={activePage}
+      onChange={setActivePage}
+      showFirstLastButtons
+      siblingCount={2} // Show 2 pages on each side of the current page
+      boundaryCount={1} // Show 1 page at the start and end
+    />
+  );
+}
+```
+
+### Controlled Pagination
+
+This example explicitly manages the current page state, which might be necessary if the page change triggers other actions like fetching data.
+
+```jsx live
+function ControlledPaginationExample() {
+  const [activePage, setActivePage] = useState(3);
+  const totalPages = 10;
+
+  const handlePageChange = (newPage) => {
+    console.log(`Navigating to page: ${newPage}`);
+    // Here you might fetch data for the new page
+    setActivePage(newPage);
+  };
+
+  return (
+    <Pagination
+      totalPages={totalPages}
+      activePage={activePage}
+      onChange={handlePageChange}
+      showFirstLastButtons
+      tooltipLabels={{
+        first: 'Jump to first page',
+        previous: 'Go back one page',
+        next: 'Go forward one page',
+        last: 'Jump to last page',
+      }}
+    />
+  );
+}
+```
+
+### Using the `usePagination` Hook
+
+This example shows how to use the headless `usePagination` hook to build a custom pagination interface. The hook provides the logic, and you render the UI.
+
+```jsx live
+function UsePaginationHookExample() {
+  const [activePage, setActivePage] = useState(5);
+  const totalPages = 12;
+
+  const { items, goNextPage, goPrevPage, updateActivePage, isFirstPage, isLastPage } =
+    usePagination({
+      totalPages,
+      activePage,
+      onChange: setActivePage,
+      siblingCount: 1,
+      boundaryCount: 1,
+    });
+
+  return (
+    <HStack gap={0.5} alignItems="center" justifyContent="center">
+      <IconButton
+        name="caretLeft"
+        onClick={goPrevPage}
+        disabled={isFirstPage}
+        accessibilityLabel="Previous page"
+        compact
+        variant="secondary"
+        transparent
+      />
+      {items.map((item, index) => {
+        if (item.type === 'ellipsis') {
+          // Render ellipsis as simple text
+          return (
+            <Text
+              key={`ellipsis-${index}`}
+              aria-hidden="true"
+              color="fgMuted"
+              paddingX={1}
+              noWrap
+              testID={`pagination-ellipsis-${index}`}
+            >
+              ...
+            </Text>
+          );
+        }
+        // Render page buttons
+        return (
+          <Button
+            key={item.page}
+            onClick={() => updateActivePage(item.page)}
+            variant={item.selected ? 'primary' : 'secondary'}
+            compact
+            transparent={!item.selected}
+            aria-current={item.selected ? 'page' : undefined}
+            accessibilityLabel={`Page ${item.page}`}
+          >
+            {item.page}
+          </Button>
+        );
+      })}
+      <IconButton
+        name="caretRight"
+        onClick={goNextPage}
+        disabled={isLastPage}
+        accessibilityLabel="Next page"
+        compact
+        variant="secondary"
+        transparent
+      />
+    </HStack>
+  );
+}
+```
+
+### Customized Components
+
+This example demonstrates how to customize the appearance of pagination by providing custom components for page buttons, navigation buttons, and ellipsis.
+
+```jsx live
+function CustomizedPaginationExample() {
+  const [activePage, setActivePage] = useState(5);
+  const totalPages = 20;
+
+  // Custom page button component
+  const CustomPageButton = forwardRef(
+    ({ page, isCurrentPage, onClick, accessibilityLabel }, ref) => (
+      <Box
+        ref={ref}
+        as="button"
+        aria-current={isCurrentPage ? 'page' : undefined}
+        aria-label={accessibilityLabel}
+        background={isCurrentPage ? 'bgSecondary' : 'bg'}
+        borderRadius={100}
+        color={isCurrentPage ? 'fgPrimary' : 'fgMuted'}
+        margin={0}
+        minWidth={8}
+        onClick={() => onClick(page)}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            onClick(page);
+          }
+        }}
+        padding={1}
+        role="button"
+        tabIndex={0}
+        style={{ cursor: 'pointer' }}
+      >
+        <Text font="body">{page}</Text>
+      </Box>
+    ),
+  );
+
+  // Custom navigation button component
+  const CustomNavButton = forwardRef(
+    ({ direction, disabled, onClick, accessibilityLabel }, ref) => {
+      // Direction-specific arrows
+      const getArrow = () => {
+        switch (direction) {
+          case 'first':
+            return '««';
+          case 'previous':
+            return '«';
+          case 'next':
+            return '»';
+          case 'last':
+            return '»»';
+          default:
+            return '';
+        }
+      };
+
+      return (
+        <Box
+          ref={ref}
+          aria-disabled={disabled}
+          aria-label={accessibilityLabel}
+          as="button"
+          background="bgSecondary"
+          borderRadius={100}
+          color={disabled ? 'fgMuted' : 'fgPrimary'}
+          disabled={disabled}
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          margin={0}
+          minWidth={8}
+          onClick={disabled ? undefined : onClick}
+          onKeyDown={(e) => {
+            if (!disabled && (e.key === 'Enter' || e.key === ' ')) {
+              e.preventDefault();
+              onClick();
+            }
+          }}
+          opacity={disabled ? 0.7 : 1}
+          padding={1}
+          role="button"
+          tabIndex={disabled ? -1 : 0}
+          style={{ cursor: disabled ? 'not-allowed' : 'pointer' }}
+        >
+          {getArrow()}
+        </Box>
+      );
+    },
+  );
+
+  // Custom ellipsis component
+  const CustomEllipsis = ({ content = '•••', testID }) => (
+    <Box
+      alignItems="center"
+      aria-hidden="true"
+      color="fgMuted"
+      display="flex"
+      margin={0}
+      padding={1}
+      testID={testID}
+    >
+      <Text font="body" noWrap>
+        {content}
+      </Text>
+    </Box>
+  );
+
+  return (
+    <Pagination
+      activePage={activePage}
+      onChange={setActivePage}
+      totalPages={totalPages}
+      showFirstLastButtons
+      PaginationPageButtonComponent={CustomPageButton}
+      PaginationNavigationButtonComponent={CustomNavButton}
+      PaginationEllipsisComponent={CustomEllipsis}
+    />
+  );
+}
+```
+
+### Pagination with Table
+
+This example demonstrates integrating the Pagination component with a Table, a common use case for pagination.
+
+```jsx live
+function TablePaginationExample() {
+  const totalResults = accounts.length;
+  const PAGE_SIZE = 5;
+  const [activePage, setActivePage] = useState(1);
+  const [isFixed, setIsFixed] = useState(false);
+
+  // Calculate pagination indexes
+  const startIdx = (activePage - 1) * PAGE_SIZE;
+  const endIdx = Math.min(startIdx + PAGE_SIZE, totalResults);
+  const paginatedAccounts = accounts.slice(startIdx, endIdx);
+  const totalPages = Math.ceil(totalResults / PAGE_SIZE);
+
+  const toggleFixed = () => setIsFixed(!isFixed);
+
+  return (
+    <VStack gap={4}>
+      <HStack justifyContent="flex-end">
+        <Switch onChange={toggleFixed} checked={isFixed}>
+          Fixed Layout
+        </Switch>
+      </HStack>
+
+      <Table bordered variant="ruled" tableLayout={isFixed ? 'fixed' : 'auto'}>
+        <TableCaption>Cryptocurrency Accounts</TableCaption>
+        <TableHeader>
+          <TableRow>
+            <TableCell title="Asset" width="30%" />
+            <TableCell title="Balance" width="40%" />
+            <TableCell title="Primary" alignItems="flex-end" width="30%" />
+          </TableRow>
+        </TableHeader>
+
+        <TableBody>
+          {paginatedAccounts.map((account) => (
+            <TableRow key={account.id}>
+              <TableCell
+                start={
+                  <Icon name="currencies" size="m" color={account.currency?.color || 'fgMuted'} />
+                }
+                title={account.name}
+                subtitle={account.currency?.code}
+              />
+              <TableCell title={account.balance?.amount} subtitle={account.balance?.currency} />
+              <TableCell direction="horizontal" justifyContent="flex-end">
+                <Icon
+                  name={account.primary ? 'circleCheckmark' : 'circleCross'}
+                  size="m"
+                  color={account.primary ? 'fgPositive' : 'fgNegative'}
+                />
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+
+        <TableFooter>
+          <TableRow fullWidth>
+            <TableCell colSpan={3} direction="horizontal">
+              <HStack gap={2} alignItems="center">
+                <Text color="fgMuted" font="body">
+                  Page {startIdx + 1}-{endIdx}
+                </Text>
+                <Pagination
+                  activePage={activePage}
+                  onChange={setActivePage}
+                  totalPages={totalPages}
+                  showFirstLastButtons
+                  tooltipLabels={{
+                    first: 'First page of accounts',
+                    previous: 'Previous page of accounts',
+                    next: 'Next page of accounts',
+                    last: 'Last page of accounts',
+                  }}
+                />
+              </HStack>
+            </TableCell>
+          </TableRow>
+        </TableFooter>
+      </Table>
+    </VStack>
+  );
+}
+```

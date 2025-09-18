@@ -1,0 +1,104 @@
+Please refer to the [Modal](/components/overlay/modal) docs for more info on setup and usage.
+
+:::tip Accessibility tip
+
+**Trigger Focus**
+
+A `ref` to the trigger that opens the modal, along with an `onDidClose` method to reset focus on the trigger when the modal closes, needs to be wired up for accessibility (see code example below).
+
+<br />
+
+**Labels**
+
+Modals also require an accessibility label, which we set to `title` by default. However, if you don't want to provide a `title` or there's other text that gives the user better context to the modal, then you can pass an element id to `accessibilityLabelledBy`. Alternatively, you may directly provide a contextual label to `accessibilityLabel`.
+
+:::
+
+### Basic example
+
+```jsx live
+function DefaultModal() {
+  const [visible, setVisible] = useState(false);
+  const triggerRef = useRef(null);
+
+  const toggleOn = useCallback(() => setVisible(true), []);
+  const toggleOff = useCallback(() => setVisible(false), []);
+
+  const handleClose = useCallback(() => {
+    console.log('modal closing');
+    toggleOff();
+  }, [toggleOff]);
+
+  const handleDidClose = useCallback(() => {
+    if (triggerRef.current) {
+      triggerRef.current.focus();
+    }
+  }, []);
+
+  const onClickConsole = () => void console.log;
+
+  const SelectComponent = () => {
+    const [value, setValue] = useState();
+    const options = ['Option 1', 'Option 2', 'Option 3', 'Option 4', 'Option 5', 'Option 6'];
+
+    return (
+      <Select value={value} placeholder="Choose something..." onChange={setValue}>
+        {options.map((option) => (
+          <SelectOption value={option} key={option} title={option} description="Description" />
+        ))}
+      </Select>
+    );
+  };
+
+  const primaryContent = (
+    <VStack>
+      <TextTitle1 as="h1">Fullscreen Modal</TextTitle1>
+      <TextBody as="p">This is a test Fullscreen Modal with components composition.</TextBody>
+      <ListCell
+        title="Bitcoin"
+        description="BTC"
+        detail="$45,123"
+        subdetail="+4.55%"
+        variant="positive"
+      />
+      <SelectComponent />
+      <HStack paddingY={3} gap={3}>
+        <Button onClick={handleClose}>Yes</Button>
+        <Button onClick={handleClose} variant="secondary">
+          No
+        </Button>
+      </HStack>
+    </VStack>
+  );
+
+  const secondaryContent = (
+    <VStack borderRadius={300} elevation={1}>
+      <Accordion defaultActiveKey="2">
+        <AccordionItem itemKey="1" title="Accordion #1" subtitle="subtitle1">
+          <TextBody as="p">{loremIpsum}</TextBody>
+        </AccordionItem>
+        <AccordionItem itemKey="2" title="Accordion #2" subtitle="subtitle2">
+          <TextBody as="p">{loremIpsum}</TextBody>
+        </AccordionItem>
+      </Accordion>
+    </VStack>
+  );
+
+  return (
+    <PortalProvider>
+      <Button onClick={toggleOn} ref={triggerRef}>
+        Open Modal
+      </Button>
+      <FullscreenModal
+        visible={visible}
+        onRequestClose={handleClose}
+        onDidClose={handleDidClose}
+        primaryContent={primaryContent}
+        secondaryContent={secondaryContent}
+        title="Modal title"
+        closeAccessibilityLabel="Close"
+      />
+    </PortalProvider>
+  );
+}
+```

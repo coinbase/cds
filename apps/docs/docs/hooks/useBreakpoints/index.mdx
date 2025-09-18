@@ -1,0 +1,25 @@
+---
+id: useBreakpoints
+title: useBreakpoints
+platform_switcher_options: { web: true }
+hide_title: true
+---
+
+import { ComponentHeader } from '@site/src/components/page/ComponentHeader';
+import { MDXSection } from '@site/src/components/page/MDXSection';
+import { MDXArticle } from '@site/src/components/page/MDXArticle';
+import { HooksBanner } from '@site/src/components/page/ComponentBanner/HooksBanner';
+import webMetadata from './webMetadata.json';
+import { ComponentTabsContainer } from '@site/src/components/page/ComponentTabsContainer';
+import { HookTabsContainer } from '@site/src/components/page/HookTabsContainer';
+import WebExamples, { toc as webExamplesToc } from './_webExamples.mdx';
+import WebApi, { toc as webApiToc } from './_webApi.mdx';
+
+<ComponentHeader title="useBreakpoints" banner={<HooksBanner />} webMetadata={webMetadata} />
+
+<HookTabsContainer
+  webExamples={<WebExamples />}
+  webExamplesToc={webExamplesToc}
+  webApi={<WebApi />}
+  webApiToc={webApiToc}
+/>

@@ -1,0 +1,29 @@
+### Basic Example
+
+```jsx live
+function Example() {
+  return (
+    <VStack bordered borderRadius="400" maxWidth={375} padding={1}>
+      <ContentCardHeader
+        avatar="/img/card/content_card_custom_avatar_1.png"
+        meta={
+          <Box marginLeft={-1}>
+            <TextLabel2 as="span" color="fgMuted" numberOfLines={1}>
+              ・News・5 hrs
+            </TextLabel2>
+          </Box>
+        }
+        title="Description"
+        end={
+          <IconButton
+            transparent
+            accessibilityLabel="More information about coinDesk card news"
+            name="more"
+            variant="secondary"
+          />
+        }
+      />
+    </VStack>
+  );
+}
+```

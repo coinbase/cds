@@ -1,0 +1,69 @@
+### Basic usage
+
+```tsx
+function RadioCellExample() {
+  const [value, setValue] = React.useState('one');
+  return (
+    <VStack gap={2}>
+      <RadioCell
+        title="Option one"
+        description="With a description"
+        checked={value === 'one'}
+        onChange={setValue}
+        value="one"
+      />
+      <RadioCell title="Option two" checked={value === 'two'} onChange={setValue} value="two" />
+      <RadioCell
+        title="Disabled option"
+        checked={false}
+        onChange={() => {}}
+        value="three"
+        disabled
+      />
+    </VStack>
+  );
+}
+```
+
+### With Custom Content and Styling
+
+```tsx
+function CustomRadioCellExample() {
+  const [selectedPlan, setSelectedPlan] = React.useState('pro');
+  return (
+    <VStack gap={2}>
+      <RadioCell
+        checked={selectedPlan === 'basic'}
+        description={
+          <VStack gap={1}>
+            <Text color="fgMuted" font="body">
+              Perfect for individuals getting started
+            </Text>
+            <Text font="label1">$9/month • Up to 5 projects • 1GB storage</Text>
+          </VStack>
+        }
+        onChange={setSelectedPlan}
+        title="Basic Plan"
+        value="basic"
+      />
+      <RadioCell
+        checked={selectedPlan === 'pro'}
+        description={
+          <VStack gap={1}>
+            <Text color="fgMuted" font="body">
+              Great for growing teams and businesses
+            </Text>
+            <Text font="label1">$29/month • Unlimited projects • 10GB storage</Text>
+            <Text color="fgPositive" font="caption">
+              • Most Popular
+            </Text>
+          </VStack>
+        }
+        onChange={setSelectedPlan}
+        title="Pro Plan"
+        value="pro"
+      />
+    </VStack>
+  );
+}
+```

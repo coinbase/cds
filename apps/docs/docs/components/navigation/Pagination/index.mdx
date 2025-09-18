@@ -1,0 +1,28 @@
+---
+id: pagination
+title: Pagination
+platform_switcher_options: { web: true, mobile: false }
+hide_title: true
+---
+
+import { VStack } from '@cbhq/cds-web/layout';
+
+import { ComponentHeader } from '@site/src/components/page/ComponentHeader';
+import { ComponentTabsContainer } from '@site/src/components/page/ComponentTabsContainer';
+import { DefaultBanner } from '@site/src/components/page/ComponentBanner/DefaultBanner';
+
+import webPropsToc from ':docgen/web/pagination/Pagination/toc-props';
+
+import WebPropsTable from './_webPropsTable.mdx';
+import WebExamples, { toc as webExamplesToc } from './_webExamples.mdx';
+import webMetadata from './webMetadata.json';
+
+<VStack gap={5}>
+  <ComponentHeader title="Pagination" webMetadata={webMetadata} />
+  <ComponentTabsContainer
+    webPropsTable={<WebPropsTable />}
+    webExamples={<WebExamples />}
+    webExamplesToc={webExamplesToc}
+    webPropsToc={webPropsToc}
+  />
+</VStack>

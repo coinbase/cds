@@ -1,0 +1,90 @@
+import { MDXSection } from '@site/src/components/page/MDXSection';
+import { MDXArticle } from '@site/src/components/page/MDXArticle';
+
+<MDXSection>
+<MDXArticle>
+## Prerequisites
+
+Before you begin, make sure your development environment meets the following requirements:
+
+- **Node.js**: Version 18 or later.
+- **React Native**: Version 0.64 or later (for mobile applications).
+
+</MDXArticle>
+</MDXSection>
+
+<MDXSection>
+<MDXArticle>
+## Installation
+
+To install the CDS library for React Native applications, run the following command:
+
+```bash
+npm install @cbhq/cds-mobile
+```
+
+Alternatively, if you are using Yarn:
+
+```bash
+yarn add @cbhq/cds-mobile
+```
+
+:::note
+For React Native projects, ensure you have set up your environment for React Native development. Refer to the [React Native Environment Setup Guide](https://reactnative.dev/docs/environment-setup) if needed.
+:::
+
+</MDXArticle>
+</MDXSection>
+
+<MDXSection>
+<MDXArticle>
+## Getting started
+</MDXArticle>
+<MDXArticle>
+### 1. Render a ThemeProvider
+
+Render a ThemeProvider at the root of your application, and pass the `theme` and `activeColorScheme`.
+
+```tsx
+import { ThemeProvider } from '@cbhq/cds-mobile';
+import { defaultTheme } from '@cbhq/cds-mobile/themes/defaultTheme';
+import App from './App';
+
+const Index = () => {
+  return (
+    <ThemeProvider theme={defaultTheme} activeColorScheme="light">
+      <App />
+    </ThemeProvider>
+  );
+};
+
+export default Index;
+```
+
+</MDXArticle>
+<MDXArticle>
+### 2. Verify the installation
+
+Try importing and rendering a simple CDS component.
+
+```tsx
+import { Button } from '@cbhq/cds-mobile/buttons';
+
+const Test = () => (
+  <Button>Click Me</Button>;
+)
+```
+
+</MDXArticle>
+</MDXSection>
+
+<MDXSection>
+<MDXArticle>
+## Next steps
+
+Learn how to customize CDS's appearance.
+
+[See the theming docs here &rarr;](/getting-started/theming)
+
+</MDXArticle>
+</MDXSection>

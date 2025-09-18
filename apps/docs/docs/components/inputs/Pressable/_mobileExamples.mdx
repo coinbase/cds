@@ -1,0 +1,63 @@
+### Basic Pressable
+
+Pressables support an `onPress` prop for handling click/press interactions. When being pressed, the element will scale down to mimic a real-world button press. If this functionality is not desired, pass the `noScaleOnPress` prop.
+
+```jsx
+<Pressable
+  onPress={console.log}
+  background="bgAlternate"
+  borderColor="lineHeavy"
+  borderWidth={100}
+  borderRadius={300}
+>
+  <Box as="span" padding={2}>
+    <TextHeadline as="span">Click me...</TextHeadline>
+  </Box>
+</Pressable>
+```
+
+### Pressable with Transparent Background
+
+```jsx
+<Pressable
+  onPress={console.log}
+  as="button"
+  background="transparent"
+  borderColor="lineHeavy"
+  borderWidth={100}
+  borderRadius={300}
+>
+  <Box as="span" padding={2}>
+    <Text font="headline" as="span">
+      Click me...
+    </Text>
+  </Box>
+</Pressable>
+```
+
+### Block Pressable
+
+Pressables support an `onPress` prop for handling click/press interactions. When being pressed, the element will scale down to mimic a real-world button press. If this functionality is not desired, pass the `noScaleOnPress` prop.
+
+```jsx
+<Pressable
+  block
+  onPress={console.log}
+  background="bgAlternate"
+  borderColor="lineHeavy"
+  borderWidth={100}
+  borderRadius={300}
+>
+  <Box as="span" padding={2}>
+    <TextHeadline as="span">Click me...</TextHeadline>
+  </Box>
+</Pressable>
+```
+
+### A11y
+
+On mobile, all [AccessibilityProps](https://reactnative.dev/docs/accessibility#accessibility-properties) can be passed, with `accessibilityComponentType` and `accessibilityTraits` defaulting to `button`, and `accessibilityState` being set based on loading/disabled props.
+
+On web, all [ARIA attributes](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA) can be passed, with `aria-busy` being set based on loading/disabled props.
+
+> The `as` prop allows any component to be used, but be sure you are using semantically correct elements! For example, no clickable divs.

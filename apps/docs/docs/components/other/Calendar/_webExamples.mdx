@@ -1,0 +1,52 @@
+### Basic usage
+
+```tsx live
+() => {
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  return <Calendar selectedDate={selectedDate} onPressDate={setSelectedDate} />;
+};
+```
+
+### Disabled Dates
+
+```tsx live
+() => {
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  // Disable today and tomorrow
+  const today = new Date();
+  const tomorrow = new Date(today);
+  tomorrow.setDate(today.getDate() + 1);
+  return (
+    <Calendar
+      selectedDate={selectedDate}
+      onPressDate={setSelectedDate}
+      disabledDates={[today, tomorrow]}
+      disabledDateError="This date is not selectable."
+    />
+  );
+};
+```
+
+### Highlighted Dates
+
+```tsx live
+() => {
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  // Highlight the 10th, 15th, and 20th of the current month
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = now.getMonth();
+  const highlightedDates = [
+    new Date(year, month, 10),
+    new Date(year, month, 15),
+    new Date(year, month, 20),
+  ];
+  return (
+    <Calendar
+      selectedDate={selectedDate}
+      onPressDate={setSelectedDate}
+      highlightedDates={highlightedDates}
+    />
+  );
+};
+```

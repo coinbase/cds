@@ -1,0 +1,43 @@
+{
+  "name": "codegen",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/codegen/src",
+  "projectType": "library",
+  "implicitDependencies": [
+    "!web",
+    "!common",
+    "!utils"
+  ],
+  "targets": {
+    "build": {
+      "command": "rm -rf esm && babel ./src --out-dir esm --extensions .ts,.tsx,.js,.jsx --copy-files --no-copy-ignored"
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "defaultConfiguration": "dev",
+      "configurations": {
+        "dev": {
+          "command": "tsc --build --pretty --verbose"
+        },
+        "prod": {
+          "command": "tsc --build ./tsconfig.build.json --pretty --verbose"
+        }
+      }
+    },
+    "update-packages-generic-bump": {
+      "command": "tsx ./src/release/updatePkgsForGenericBump.ts",
+      "options": {
+        "cwd": "libs/codegen"
+      }
+    },
+    "mobile-routes": {
+      "command": "tsx ./src/playground/prepareRoutes.ts",
+      "options": {
+        "cwd": "libs/codegen"
+      }
+    }
+  }
+}

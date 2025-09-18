@@ -1,0 +1,61 @@
+### Basic example
+
+```jsx live
+function Example() {
+  const [visible, setVisible] = useState(false);
+  return (
+    <>
+      <Button onClick={() => setVisible(true)}>Open Modal</Button>
+      <Modal onRequestClose={() => setVisible(false)} visible={visible}>
+        <ModalHeader
+          backAccessibilityLabel="Back"
+          closeAccessibilityLabel="Close"
+          onBackButtonClick={() => setVisible(false)}
+          testID="Basic Modal Test ID"
+          title="Basic Modal"
+        />
+        <ModalBody tabIndex={0} testID="modal-body">
+          Body contents go here
+        </ModalBody>
+        <ModalFooter
+          primaryAction={<Button onClick={() => setVisible(false)}>Save</Button>}
+          secondaryAction={
+            <Button onClick={() => setVisible(false)} variant="secondary">
+              Cancel
+            </Button>
+          }
+        />
+      </Modal>
+    </>
+  );
+}
+```
+
+### Portal Modal
+
+```jsx live
+function Example() {
+  const { openModal, closeModal } = useModal();
+
+  const handlePress = useCallback(
+    () =>
+      openModal(
+        <Modal visible onRequestClose={closeModal}>
+          <ModalHeader closeAccessibilityLabel="Close" title="Default Modal" />
+          <ModalBody>Body contents go here</ModalBody>
+          <ModalFooter
+            primaryAction={<Button onClick={closeModal}>Save</Button>}
+            secondaryAction={
+              <Button onClick={closeModal} variant="secondary">
+                Cancel
+              </Button>
+            }
+          />
+        </Modal>,
+      ),
+    [openModal, closeModal],
+  );
+
+  return <Button onClick={handlePress}>Open Modal</Button>;
+}
+```

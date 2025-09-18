@@ -1,0 +1,3 @@
+engine: Node
+continuous: true
+build_name: package-eslint-plugin-cds

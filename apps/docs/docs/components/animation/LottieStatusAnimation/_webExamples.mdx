@@ -1,0 +1,33 @@
+The LottieStatusAnimation component is specifically designed for displaying trade status animations. It provides a seamless way to show different states like loading, success, failure, pending, and card success with smooth transitions between states.
+
+### Basic usage
+
+The component accepts different status values and automatically plays the appropriate animation:
+
+```tsx live
+function Example() {
+  const [status, setStatus] = useState('loading');
+  const [key, setKey] = useState(0);
+
+  function handleReset() {
+    setKey(key + 1);
+    setStatus('loading');
+  }
+
+  return (
+    <VStack gap={3} alignItems="center">
+      <LottieStatusAnimation key={key} status={status} height={200} width={200} />
+      <HStack gap={1} flexWrap="wrap" justifyContent="center">
+        <Button onClick={() => setStatus('loading')}>Loading</Button>
+        <Button onClick={() => setStatus('success')}>Success</Button>
+        <Button onClick={() => setStatus('failure')}>Failure</Button>
+        <Button onClick={() => setStatus('pending')}>Pending</Button>
+        <Button onClick={() => setStatus('cardSuccess')}>Card Success</Button>
+      </HStack>
+      <Button onClick={handleReset} variant="secondary">
+        Reset Animation
+      </Button>
+    </VStack>
+  );
+}
+```

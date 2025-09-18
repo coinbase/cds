@@ -1,0 +1,10 @@
+/* eslint-disable global-require */
+
+export const routes = [
+  <%_ data.routes.map((route) => { _%>
+    {
+      'key': '<%- route.name %>',
+      'getComponent': () => require("<%- route.path %>").default,
+    },
+  <%_ }) _%>
+];

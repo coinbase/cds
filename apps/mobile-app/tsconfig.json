@@ -1,0 +1,48 @@
+{
+  "extends": "../../tsconfig.project.json",
+  "compilerOptions": {
+    "declarationDir": "dts",
+    "jsx": "react-native",
+    "resolveJsonModule": true,
+    "moduleSuffixes": [
+      ".ios",
+      ".android",
+      ".native",
+      ""
+    ]
+  },
+  "include": [
+    "src/**/*",
+    "*.config.js",
+    "*.config.ts",
+    "scripts",
+    ".eslintrc.cjs",
+    "*.d.ts",
+    "*.json",
+    "e2e"
+  ],
+  "exclude": [],
+  "references": [
+    {
+      "path": "../../packages/common"
+    },
+    {
+      "path": "../../packages/mobile"
+    },
+    {
+      "path": "../../packages/icons"
+    },
+    {
+      "path": "../../packages/illustrations"
+    },
+    {
+      "path": "../../packages/ui-mobile-playground"
+    },
+    {
+      "path": "../../packages/ui-mobile-visreg"
+    },
+    {
+      "path": "../../packages/mobile-visualization"
+    }
+  ]
+}

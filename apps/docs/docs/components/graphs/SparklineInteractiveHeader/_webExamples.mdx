@@ -1,0 +1,51 @@
+:::tip Accessibility tip
+When possible combining content that is contextually related benefits screen reader users. The interactive header within Sparkline is one of these moments. Use an accessibilityLabel prop or aria-label to set the entire context of the interactive header. This way screen reader users will hear the asset name, price, and direction all in one sentence.
+:::
+
+### Default usage
+
+```jsx live
+<Box padding={3} width="100%">
+  <SparklineInteractivePriceWithHeader data={sparklineInteractiveData} strokeColor="#F7931A" />
+</Box>
+```
+
+### Fill
+
+The fill will be added by default
+
+```jsx live
+<Box padding={3} width="100%">
+  <SparklineInteractivePriceWithHeader data={sparklineInteractiveData} fill strokeColor="#F7931A" />
+</Box>
+```
+
+### Compact
+
+```jsx live
+<Box padding={3} width="100%">
+  <SparklineInteractivePriceWithHeader
+    compact
+    fill
+    strokeColor="#F7931A"
+    data={sparklineInteractiveData}
+  />
+</Box>
+```
+
+### Custom Label
+
+```jsx live
+<Box padding={3} width="100%">
+  <SparklineInteractivePriceWithHeader
+    data={sparklineInteractiveData}
+    strokeColor="#F7931A"
+    labelNode={
+      <HStack gap={1} alignItems="center">
+        <Icon active name="wallet" size="s" />
+        <TextTitle3 as="span">CustomHeader</TextTitle3>
+      </HStack>
+    }
+  />
+</Box>
+```

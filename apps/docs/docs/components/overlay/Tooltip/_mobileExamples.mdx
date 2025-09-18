@@ -1,0 +1,26 @@
+### Placement
+
+```jsx
+function DefaultSelect() {
+  const content = 'This is the tooltip Content';
+  return (
+    <HStack spacingHorizontal={2} gap={2} justifyContent="space-around">
+      <Tooltip content={content}>
+        <Button>Default</Button>
+      </Tooltip>
+      <Tooltip content={content} placement="top">
+        <Button>Top</Button>
+      </Tooltip>
+      <Tooltip content={content} placement="left">
+        <Button>Left</Button>
+      </Tooltip>
+      <Tooltip content={content} placement="right">
+        <Button>Right</Button>
+      </Tooltip>
+      <Tooltip content={content} placement="bottom">
+        <Button>Bottom</Button>
+      </Tooltip>
+    </HStack>
+  );
+}
+```

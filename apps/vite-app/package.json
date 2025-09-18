@@ -1,0 +1,29 @@
+{
+  "name": "vite-app",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@cbhq/cds-common": "workspace:^",
+    "@cbhq/cds-icons": "workspace:^",
+    "@cbhq/cds-illustrations": "workspace:^",
+    "@cbhq/cds-web": "workspace:^",
+    "@cbhq/cds-web-visualization": "workspace:^",
+    "framer-motion": "^10.18.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@vitejs/plugin-react": "^5.0.0",
+    "typescript": "~5.9.2",
+    "vite": "^7.1.2"
+  },
+  "packageManager": "yarn@4.7.0"
+}

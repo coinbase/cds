@@ -1,0 +1,31 @@
+---
+id: usePreviousValue
+title: usePreviousValue
+platform_switcher_options: { web: true, mobile: true }
+hide_title: true
+---
+
+import { ComponentHeader } from '@site/src/components/page/ComponentHeader';
+import { HooksBanner } from '@site/src/components/page/ComponentBanner/HooksBanner';
+import metadata from './metadata.json';
+import { HookTabsContainer } from '@site/src/components/page/HookTabsContainer';
+import Examples, { toc as ExamplesToc } from './_examples.mdx';
+import Api, { toc as ApiToc } from './_api.mdx';
+
+<ComponentHeader
+  title="usePreviousValue"
+  banner={<HooksBanner />}
+  webMetadata={metadata}
+  mobileMetadata={metadata}
+/>
+
+<HookTabsContainer
+  webExamples={<Examples />}
+  webExamplesToc={ExamplesToc}
+  webApi={<Api />}
+  webApiToc={ApiToc}
+  mobileExamples={<Examples />}
+  mobileExamplesToc={ExamplesToc}
+  mobileApi={<Api />}
+  mobileApiToc={ApiToc}
+/>

@@ -1,0 +1,16 @@
+{
+  "import": "import { Chip } from '@cbhq/cds-mobile/chips/Chip'",
+  "source": "https://github.com/coinbase/cds-staging/blob/master/packages/mobile/src/chips/Chip.tsx",
+  "description": "A compact, interactive content element.",
+  "relatedComponents": [
+    {
+      "label": "InputChip",
+      "url": "/components/inputs/InputChip/"
+    },
+    {
+      "label": "SelectChip",
+      "url": "/components/inputs/SelectChip/"
+    }
+  ],
+  "dependencies": []
+}

@@ -1,0 +1,164 @@
+Check [here](/components/layout/AccordionItem) for AccordionItem Props.
+
+### Simple Accordion
+
+```jsx live
+<Accordion defaultActiveKey="1" onChange={(itemKey) => console.log(itemKey)}>
+  <AccordionItem
+    itemKey="1"
+    title="Accordion #1"
+    subtitle="subtitle1"
+    media={<CellMedia active type="icon" name="wallet" title="BTC" />}
+  >
+    <TextInput
+      compact
+      type="number"
+      step="0.01"
+      label="Amount"
+      placeholder="8293323.23"
+      suffix="USD"
+    />
+  </AccordionItem>
+  <AccordionItem
+    itemKey="2"
+    title="Accordion #2"
+    subtitle="subtitle2"
+    media={<CellMedia active type="icon" name="wallet" title="BTC" />}
+    onClick={(itemKey) => console.log(itemKey)}
+  >
+    <TextBody as="p">{loremIpsum.repeat(20)}</TextBody>
+  </AccordionItem>
+</Accordion>
+```
+
+### Single item
+
+```jsx live
+<Accordion>
+  <AccordionItem
+    itemKey="1"
+    title="Social security number (SSN/TIN)"
+    subtitle="Your information is protected with 256-bit SSL ecnryption"
+  >
+    <VStack gap={3}>
+      <TextInput
+        compact
+        type="number"
+        step="0.01"
+        label="Amount"
+        placeholder="8293323.23"
+        suffix="USD"
+      />
+      <Box>
+        <Text font="label2" as="p" color="primary">
+          Income from crypto is reportable to the IRS. Your funds may be subject to backup
+          withholding if your SSN is missing or incorrect.
+        </Text>
+      </Box>
+      <HStack gap={2}>
+        <Button variant="secondary">Cancel</Button>
+        <Button>Save</Button>
+      </HStack>
+    </VStack>
+  </AccordionItem>
+</Accordion>
+```
+
+### Multiple items (one item open by default)
+
+```jsx live
+<Accordion defaultActiveKey="2">
+  <AccordionItem itemKey="1" title="What is a W-9 form?">
+    <VStack>
+      <Text font="label2" as="p" color="foregroundMuted">
+        A Tax Certification (W-9 form) is a form that certifies a tax payer's information (name,
+        address and social security number). It should also report whether they have been instructed
+        by the IRS that they are subject to backup withholding.
+      </Text>
+      <Text font="label2" as="p" color="foregroundMuted">
+        To assist with completing the W-9, we have created a digital option which allows for the
+        document to be easily and quickly completed online.
+      </Text>
+    </VStack>
+  </AccordionItem>
+  <AccordionItem itemKey="2" title="What is backup witholding?">
+    <VStack>
+      <Text font="label2" as="p" color="foregroundMuted">
+        Backup withholding is federal tax that financial institutions are required to withhold for
+        individuals with the following situations:
+      </Text>
+      <Text font="label2" as="p" color="foregroundMuted">
+        Backup withholding is federal tax that financial institutions are required to withhold for
+        individuals with the following situations:
+      </Text>
+      <Text font="label2" as="p" color="foregroundMuted">
+        Backup withholding is federal tax that financial institutions are required to withhold for
+        individuals with the following situations:
+      </Text>
+      <Text font="label2" as="p" color="foregroundMuted">
+        Backup withholding is federal tax that financial institutions are required to withhold for
+        individuals with the following situations:
+      </Text>
+
+      <ul>
+        <li>
+          <Text font="label2" as="p" color="foregroundMuted">
+            The account holder does not provide their name and tax identification number and certify
+            that the information is correct in the manner required by the IRS prior to receiving
+            reportable payments including dividends, interest, and gross proceeds from sale
+            transactions.
+          </Text>
+        </li>
+        <li>
+          <Text font="label2" as="p" color="foregroundMuted">
+            B or C Notice - You have recieved either notices from IRS indicating that you are
+            subject to backup withholding
+          </Text>
+        </li>
+      </ul>
+    </VStack>
+  </AccordionItem>
+  <AccordionItem itemKey="3" title="What's a US persons?">
+    <VStack>
+      <Text font="label2" as="p" color="foregroundMuted">
+        To be considered a US person for tax purposes, you must either:
+      </Text>
+      <ul>
+        <li>
+          <Text font="label2" as="p" color="foregroundMuted">
+            Be a US citizen, or
+          </Text>
+        </li>
+        <li>
+          <Text font="label2" as="p" color="foregroundMuted">
+            Pass the permanent resident card test, or
+          </Text>
+        </li>
+        <li>
+          <Text font="label2" as="p" color="foregroundMuted">
+            Pass the substantial presence test (in the US for at least 31 days during the current
+            calendar year and at least 183 days during the last 3 years.
+          </Text>
+        </li>
+      </ul>
+      <Text font="label2" as="p" color="foregroundMuted">
+        If none of the above situations apply to you, you are considered a non-US person for tax
+        purposes.
+      </Text>
+      <Link to="/">Learn more</Link>
+    </VStack>
+  </AccordionItem>
+  <AccordionItem itemKey="4" title="What is a FATCA code?">
+    <VStack>
+      <Text font="label2" as="p" color="foregroundMuted">
+        The Foreign Account Tax Compliance Act (FATCA) requires a participating foreign financial
+        institution to report all US account holders that are specified US persons.
+      </Text>
+      <Text font="label2" as="p" color="foregroundMuted">
+        This is not applicable to our customers because Coinbase accounts are US based and no FATCA
+        code is required.
+      </Text>
+    </VStack>
+  </AccordionItem>
+</Accordion>
+```

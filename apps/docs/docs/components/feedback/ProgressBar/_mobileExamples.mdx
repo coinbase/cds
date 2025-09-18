@@ -1,0 +1,98 @@
+### Default
+
+```tsx
+<VStack gap={2}>
+  <ProgressBar progress={0} />
+  <ProgressBar progress={0.5} />
+  <ProgressBar progress={1} />
+</VStack>
+```
+
+### Weights
+
+```tsx
+<VStack gap={2}>
+  <ProgressBar weight="thin" progress={0.3} />
+  <ProgressBar weight="normal" progress={0.5} />
+  <ProgressBar weight="semiheavy" progress={0.7} />
+  <ProgressBar weight="heavy" progress={0.9} />
+</VStack>
+```
+
+### Disabled
+
+```tsx
+<VStack gap={2}>
+  <ProgressBar disabled progress={0} />
+  <ProgressBar disabled progress={0.5} />
+  <ProgressBar disabled progress={1} />
+</VStack>
+```
+
+### Colors
+
+```tsx
+<VStack gap={2}>
+  <ProgressBar color="bgPositive" progress={0.5} />
+  <ProgressBar color="bgNegative" progress={0.5} />
+  <ProgressBar color="bgPrimary" progress={0.5} />
+  <ProgressBar color="bgWarning" progress={0.5} />
+  <ProgressBar color="fg" progress={0.5} />
+  <ProgressBar disabled color="fg" progress={0.5} />
+</VStack>
+```
+
+### Custom Styles
+
+You can customize the appearance of the progress bar using the `styles` prop. The `root` style controls the container, and `progress` controls the fill bar.
+
+```tsx live
+<ProgressContainerWithButtons>
+  {({ calculateProgress }) => (
+    <VStack gap={2}>
+      <ProgressBar
+        progress={calculateProgress(0.6)}
+        styles={{
+          progress: { backgroundColor: 'orange' },
+        }}
+      />
+      <ProgressBar
+        progress={calculateProgress(0.3)}
+        styles={{
+          root: { height: 32, borderRadius: 16 },
+          progress: { borderRadius: 16 },
+        }}
+      />
+    </VStack>
+  )}
+</ProgressContainerWithButtons>
+```
+
+### Animation Callbacks
+
+You can use the `onAnimationStart` and `onAnimationEnd` callbacks to track the progress of the animation.
+
+```jsx
+function Example() {
+  const [animationStatus, setAnimationStatus] = React.useState('Ready');
+
+  const handleAnimationStart = useCallback(() => {
+    setAnimationStatus('Animating...');
+  }, []);
+
+  const handleAnimationEnd = useCallback(() => {
+    setAnimationStatus('Animation Ended');
+  }, []);
+
+  return (
+    <VStack gap={2}>
+      <Text>Animation Status: {animationStatus}</Text>
+      <ProgressBar
+        onAnimationEnd={handleAnimationEnd}
+        onAnimationStart={handleAnimationStart}
+        progress={calculateProgress(0.2)}
+      />
+    </VStack>
+  );
+}
+```

@@ -1,0 +1,91 @@
+import { MDXArticle } from '@site/src/components/page/MDXArticle';
+
+<MDXArticle>
+
+## Basic usage
+
+Use the `useMediaQuery` hook to call `window.matchMedia` with SSR support. It must be used within a MediaQueryProvider component.
+
+This hook is ideal for conditional rendering based on viewport size, user preferences, or other media features.
+
+It subscribes to a single state shared by all media queries to ensure Suspense works correctly.
+
+[See the MediaQueryProvider docs here &rarr;](/components/other/MediaQueryProvider)
+
+:::warning
+Do not use `useMediaQuery` for responsive styles. Use CSS media queries or [the `StyleProps` API](/getting-started/styling#responsive-styles) for responsive styles.
+:::
+
+```tsx live
+() => {
+  const Page = () => {
+    const isMobile = useMediaQuery('(max-width: 767px)');
+    const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
+    return <JSONCodeBlock json={{ isMobile, prefersDarkMode }} />;
+  };
+
+  const App = () => (
+    <MediaQueryProvider>
+      <Page />
+    </MediaQueryProvider>
+  );
+
+  return <App />;
+};
+```
+
+</MDXArticle>
+<MDXArticle>
+## SSR support
+
+The `useMediaQuery` hook integrates with the MediaQueryProvider `defaultValues` to provide consistent behavior between server and client rendering.
+
+On the client the native `window.matchMedia` API is used. On the server the hook solves the `window.matchMedia` queries by comparing to the MediaQueryProvider `defaultValues`.
+
+The comparison against `defaultValues` during SSR is limited: it cannot solve highly complex media queries. If a complex query cannot be solved during SSR the hook will simply return `false`, and the query can still be solved by `window.matchMedia` on the client.
+
+:::tip
+You can populate the MediaQueryProvider `defaultValues` with user preferences, cookies, etc. to ensure the correct styles are applied on the server.
+:::
+
+### Simple queries that can be solved during SSR
+
+- Simple media queries
+- `width`, `min-width`, `max-width`, `height`, `min-height`, and `max-height` with pixel or em units
+- `prefers-contrast` and `prefers-color-scheme`
+- Logical `and` operator
+
+### Complex queries that cannot be solved during SSR
+
+- Multiple comma-delimited values
+- Logical `not` and `or` operators
+- Mathematical `<=` and `>=` operators
+- Complex or nested queries
+- Other media types or features
+
+[See the MediaQueryProvider SSR docs here &rarr;](/components/other/MediaQueryProvider#ssr-support)
+
+</MDXArticle>
+<MDXArticle>
+
+## Complex queries on the client
+
+Complex queries cannot be solved during SSR. They are solved on the client by calling `window.matchMedia`.
+
+```tsx live
+() => {
+  const isPortrait = useMediaQuery('(orientation: portrait)');
+  const isHighDPI = useMediaQuery('(min-resolution: 2dppx)');
+  const isTouch = useMediaQuery('(pointer: coarse)');
+  const isMediumHeight = useMediaQuery('(min-height: 600px) and (max-height: 900px)');
+
+  const complexQuery = useMediaQuery(
+    `((width >= 1200px) and (orientation: landscape)),
+    (width < 560px) or ((width > 768px) and (width < 900px))`,
+  );
+
+  return <JSONCodeBlock json={{ isPortrait, isHighDPI, isTouch, isMediumHeight, complexQuery }} />;
+};
+```
+
+</MDXArticle>

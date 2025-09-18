@@ -1,0 +1,56 @@
+### Basic Button Group
+
+Uniformly group buttons with consistent spacing between each.
+
+```jsx live
+<ButtonGroup accessibilityLabel="Group">
+  <Button>Save</Button>
+  <Button variant="secondary">Cancel</Button>
+  <Button variant="negative">Delete</Button>
+</ButtonGroup>
+```
+
+The group is rather easy to use, just render a list of buttons. However, there is a hard requirement that direct children _must_ be a `Button` or `IconButton` component. Do _not_ provide your own markup.
+
+```jsx live
+<ButtonGroup accessibilityLabel="Group">
+  <Button>Save</Button>
+  <Button transparent>Cancel</Button>
+</ButtonGroup>
+```
+
+### Block Button Group
+
+If you would like the buttons to expand and fill all available space, pass a `block` prop to the `ButtonGroup`.
+
+```jsx live
+<ButtonGroup block accessibilityLabel="Group">
+  <Button>Save</Button>
+  <Button variant="secondary">Cancel</Button>
+</ButtonGroup>
+```
+
+> If you are using a component that composes around a button component, be sure to pass props from the group down correctly, like `block`.
+
+### Icon buttons
+
+Icon buttons are unique in that their shape is a circle, not a rectangle. Because of this, icon buttons do _not_ support the `block` prop.
+
+```jsx live
+<ButtonGroup accessibilityLabel="Group">
+  <IconButton name="arrowLeft" />
+  <IconButton name="arrowRight" />
+</ButtonGroup>
+```
+
+### A11y
+
+All button groups _require_ an accessibility label describing the group's contents.
+
+```jsx
+<ButtonGroup accessibilityLabel="Asset actions">
+  <Button>Buy</Button>
+  <Button>Sell</Button>
+  <Button variant="secondary">Add to watchlist</Button>
+</ButtonGroup>
+```

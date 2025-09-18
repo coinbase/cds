@@ -1,0 +1,32 @@
+{
+  "name": "docusaurus-plugin-docgen",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/docusaurus-plugin-docgen/src",
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "command": "rm -rf cjs && babel ./src --out-dir cjs --extensions .ts,.tsx,.js,.jsx --copy-files --no-copy-ignored"
+    },
+    "debug": {
+      "command": "tsx ./src/scripts/debug.ts",
+      "options": {
+        "cwd": "libs/docusaurus-plugin-docgen"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "defaultConfiguration": "dev",
+      "configurations": {
+        "dev": {
+          "command": "tsc --build --pretty --verbose"
+        },
+        "prod": {
+          "command": "tsc --build ./tsconfig.build.json --pretty --verbose"
+        }
+      }
+    }
+  }
+}

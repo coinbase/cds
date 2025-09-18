@@ -1,0 +1,67 @@
+import { MDXArticle } from '@site/src/components/page/MDXArticle';
+
+<MDXArticle>
+
+## Parameters
+
+The hook accepts an optional configuration object with the following properties:
+
+### Options
+
+```tsx
+type Options<T extends HTMLElement> = {
+  ref?: RefObject<T> | null;
+  useBorderBoxSize?: boolean;
+  breakpoints?: Record<string, number>;
+  updateOnBreakpointChange?: boolean;
+  shouldUpdate?: (state: State) => boolean;
+  onResize?: (event: Event<T>) => void;
+  polyfill?: any;
+};
+```
+
+- `ref` (optional): A React ref to observe. If not provided, the hook will create one.
+- `useBorderBoxSize` (optional): Whether to use border-box size measurement instead of content-box. Defaults to `false`.
+- `breakpoints` (optional): An object mapping breakpoint names to width values.
+- `updateOnBreakpointChange` (optional): Whether to update state only when breakpoint changes. Defaults to `false`.
+- `shouldUpdate` (optional): A function to conditionally control state updates.
+- `onResize` (optional): Callback fired when the observed element resizes.
+- `polyfill` (optional): A ResizeObserver polyfill for unsupported browsers.
+
+</MDXArticle>
+
+<MDXArticle hideDivider>
+
+## Returns
+
+Returns an object with the following properties:
+
+```tsx
+type Return<T> = {
+  ref: RefObject<T>;
+  currentBreakpoint: string;
+  width: number;
+  height: number;
+  x: number;
+  y: number;
+  entry?: ResizeObserverEntry;
+  observe: (element: T | null) => void;
+  unobserve: () => void;
+};
+```
+
+- `ref`: React ref to attach to the element to observe.
+- `currentBreakpoint`: Current active breakpoint based on element width. Empty if no breakpoints defined.
+- `width`: Width of the observed element in pixels.
+- `height`: Height of the observed element in pixels.
+- `x`: X-coordinate of the element relative to the viewport.
+- `y`: Y-coordinate of the element relative to the viewport.
+- `entry`: Raw ResizeObserver entry object.
+- `observe`: Function to start observing an element.
+- `unobserve`: Function to stop observing the current element.
+
+:::note
+This hook uses the ResizeObserver API to track element dimensions. A polyfill may be required for older browsers.
+:::
+
+</MDXArticle>

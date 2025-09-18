@@ -1,0 +1,41 @@
+---
+description:
+globs:
+alwaysApply: true
+---
+
+# AI Guidelines
+
+This section outlines guidelines for AI code assistants to follow.
+
+## General Principles
+
+- Follow project standards: always follow the Coding Standards and all established coding standards and practices present in the code
+- Minimize unnecessary changes: avoid stylistic or trivial modifications that are unrelated to the task at hand. Do not reformat code, adjust whitespace or quotes, or rename variables unless those changes are a part of a deliberate improvement
+- No unnecessary confirmations: don't ask for confirmation of information already provided in the context
+- Single chunk edits: provide all edits in a single chunk instead of multiple-step instructions or explanations for the same file
+- Explain significant changes: when performing a complex refactor or introducing a non-obvious solution, explain why the changes were made
+
+## Code Reviews
+
+When asked to review a component, check for the following
+
+- Structure: does the component's file follow the correct structure of imports, styles, types, and component?
+- Type safety: were any changes made backwards compatible? Were there any breaking changes? Are props clearly typed and following best practices? Are there any props that are unused / missing?
+- Styling: does the component rely on css variables and theme tokens where possible? Are there any missing className or styles props?
+- Accessibility: does the component follow best practices for accessibility for the platform?
+- Tests & stories: is the component used in a meaningful way by Jest tests and have story examples?
+
+## Use of References
+
+- Link to real files: when referring to existing code, provide a link to the actual file
+- Leverage examples: if unsure about an implementation, look for similar examples in the codebase. It's preferable to follow established patterns in CDS rather than introducing new ones
+
+## Tests
+
+Whenever you make changes, you should run the specific test files or test the entire package you have modified
+
+- To run tests by package, run `yarn nx run [package]:[script]`, such as `yarn nx run mobile:test`
+  - Supports test, build, link, and typecheck as scripts
+- You can also run specific files or tests via `--testPathPattern` and `--testNamePattern` props
+  - For example, running `yarn nx run mobile:test --testPathPattern=IconButton.test.tsx` would test IconButton in mobile

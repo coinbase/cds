@@ -1,0 +1,26 @@
+import { MDXArticle } from '@site/src/components/page/MDXArticle';
+
+<MDXArticle>
+## Parameters
+
+The `useHasMounted` hook does not accept any parameters.
+
+</MDXArticle>
+
+<MDXArticle hideDivider>
+## Returns
+
+```tsx
+type Return = boolean;
+```
+
+Returns a boolean:
+
+- `true`: Component has mounted and is running in a browser environment
+- `false`: Component hasn't mounted yet or is running in a non-browser environment (e.g., server-side rendering)
+
+:::note
+This hook is useful for preventing hydration mismatches and ensuring code only runs in the browser environment.
+:::
+
+</MDXArticle>
