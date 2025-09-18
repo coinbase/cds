@@ -1,0 +1,167 @@
+### Descriptive menu
+
+Use when needing to explain an item in detail. Once selected, only show the title within the chip
+
+```jsx
+function SelectChipExample() {
+  const options = [
+    { title: 'All time return', description: 'Lifetime return of each crypto' },
+    { title: 'Past day’s return', description: "Past day's return on your assets", id: 1 },
+    { title: 'Balance', description: 'The amount you own of each asset', id: 2 },
+    { title: 'Price', description: 'The current price of each asset', id: 3 },
+  ];
+  const [value, setValue] = useState(options[0].title);
+  const content = (
+    <VStack>
+      <HStack padding={2}>
+        <Text font="caption" as="p">
+          Metric
+        </Text>
+      </HStack>
+      {options.map(({ title, description, id }) => (
+        <SelectOption key={id} title={title} description={description} value={title} />
+      ))}
+    </VStack>
+  );
+  return (
+    <HStack>
+      <SelectChip value={value} onChange={setValue} content={content} minWidth={367} />
+    </HStack>
+  );
+}
+```
+
+### Simple menu
+
+A select chip with dropdown menu. Use when changing format of data
+
+```jsx
+function SelectChipExample() {
+  const options = ['USD', 'CAD', 'GBP', 'JPY'];
+  const [value, setValue] = useState(options[0]);
+  const content = (
+    <VStack>
+      {options.map((option) => (
+        <SelectOption key={option} title={option} value={option} />
+      ))}
+    </VStack>
+  );
+  return (
+    <HStack>
+      <SelectChip value={value} onChange={setValue} content={content} minWidth={150} />
+    </HStack>
+  );
+}
+```
+
+### Single selection
+
+When utilizing single select, replace the label with the selection.
+
+```jsx
+function SelectChipExample() {
+  const options = [
+    { title: 'Polygon', value: 'polygon', imageUrl: assets.polygon.imageUrl },
+    { title: 'Ethereum', value: 'ethereum', imageUrl: assets.eth.imageUrl },
+    { title: 'DAI', value: 'dai', imageUrl: assets.dai.imageUrl },
+  ];
+  const [value, setValue] = useState();
+  const handleChange = (newValue) => {
+    setValue(options.find(({ value }) => value === newValue));
+  };
+  const content = (
+    <VStack>
+      <HStack padding={2}>
+        <Text font="caption" as="p">
+          Networks
+        </Text>
+      </HStack>
+      <HStack padding={2}>
+        <Text font="headline" as="p">
+          All networks
+        </Text>
+      </HStack>
+      {options.map(({ title, value, imageUrl }) => {
+        return (
+          <SelectOption
+            key={value}
+            title={title}
+            value={value}
+            media={<CellMedia type="asset" source={imageUrl} />}
+          />
+        );
+      })}
+    </VStack>
+  );
+  return (
+    <HStack>
+      <SelectChip
+        placeholder="Networks"
+        value={value ? value.value : undefined}
+        valueLabel={value ? value.title : undefined}
+        onChange={(newValue) => handleChange(newValue)}
+        content={content}
+        minWidth={200}
+        active={value !== undefined}
+      />
+    </HStack>
+  );
+}
+```
+
+### Sort by
+
+Use sort when giving the user the ability to change the order in which data is shown. Avoid using in conjunction with table data as that function is already built into the cells, and this would be duplicative.
+
+```jsx
+function SelectChipExample() {
+  const options = [
+    {
+      label: 'Price',
+      title: 'Price (High to Low)',
+      value: 'price-high-low',
+      iconName: 'arrowDown',
+    },
+    { label: 'Price', title: 'Price (Low to High)', value: 'price-low-high', iconName: 'arrowUp' },
+    {
+      label: 'Market Cap',
+      title: 'Market Cap (High to Low)',
+      value: 'market-cap-high-low',
+      iconName: 'arrowDown',
+    },
+    {
+      label: 'Market Cap',
+      title: 'Market Cap (Low to High)',
+      value: 'market-cap-low-high',
+      iconName: 'arrowUp',
+    },
+  ];
+  const [value, setValue] = useState(options[0]);
+  const handleChange = (newValue) => {
+    setValue(options.find(({ value }) => value === newValue));
+  };
+  const content = (
+    <VStack>
+      <HStack padding={2}>
+        <Text font="caption" as="p">
+          Sort by
+        </Text>
+      </HStack>
+      {options.map(({ title, value }) => (
+        <SelectOption key={value} title={title} value={value} />
+      ))}
+    </VStack>
+  );
+  return (
+    <HStack>
+      <SelectChip
+        value={value.value}
+        valueLabel={value.label}
+        end={<Icon size="s" color="fg" name={value.iconName} />}
+        onChange={(newValue) => handleChange(newValue)}
+        content={content}
+      />
+    </HStack>
+  );
+}
+```

@@ -1,0 +1,51 @@
+import { MDXArticle } from '@site/src/components/page/MDXArticle';
+
+<MDXArticle>
+## Basic usage
+
+```tsx live
+function Example() {
+  const [count, setCount] = useState(0);
+  const previousCount = usePreviousValue(count);
+
+  return (
+    <VStack gap={3} alignItems="start">
+      <VStack gap={1}>
+        <TextHeadline>Current count: {count}</TextHeadline>
+        <TextHeadline>Previous count: {previousCount ?? 'None'}</TextHeadline>
+      </VStack>
+      <Button onClick={() => setCount(count + 1)}>Increment</Button>
+    </VStack>
+  );
+}
+```
+
+</MDXArticle>
+
+<MDXArticle hideDivider>
+
+## With Complex Values
+
+```tsx live
+function Example() {
+  const [user, setUser] = useState({ name: 'John', age: 25 });
+  const previousUser = usePreviousValue(user);
+
+  const updateAge = () => {
+    setUser((prev) => ({ ...prev, age: prev.age + 1 }));
+  };
+
+  return (
+    <VStack gap={3} alignItems="start">
+      <VStack gap={1}>
+        <TextHeadline>Name: {user.name}</TextHeadline>
+        <TextHeadline>Age: {user.age}</TextHeadline>
+        <TextHeadline>Previous age: {previousUser?.age ?? 'None'}</TextHeadline>
+      </VStack>
+      <Button onClick={updateAge}>Add Year</Button>
+    </VStack>
+  );
+}
+```
+
+</MDXArticle>

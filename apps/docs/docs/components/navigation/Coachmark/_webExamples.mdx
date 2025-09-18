@@ -1,0 +1,65 @@
+### Basic usage
+
+```tsx live
+() => {
+  const [open, setOpen] = useState(true);
+  if (!open) return <Button onClick={() => setOpen(true)}>Show Coachmark</Button>;
+  return (
+    <Coachmark
+      title="Welcome!"
+      content="This is a Coachmark. Use it to guide users."
+      action={
+        <Button compact onClick={() => setOpen(false)}>
+          Got it
+        </Button>
+      }
+      onClose={() => setOpen(false)}
+    />
+  );
+};
+```
+
+### With Media
+
+```tsx live
+() => {
+  const [open, setOpen] = useState(true);
+  if (!open) return <Button onClick={() => setOpen(true)}>Show Coachmark</Button>;
+  return (
+    <Coachmark
+      title="Feature Highlight"
+      content="You can add media to your Coachmark."
+      media={<RemoteImage height={150} width="100%" source={ethBackground} alt="feature" />}
+      action={
+        <Button compact onClick={() => setOpen(false)}>
+          Next
+        </Button>
+      }
+      onClose={() => setOpen(false)}
+    />
+  );
+};
+```
+
+### With Checkbox
+
+```tsx live
+() => {
+  const [open, setOpen] = useState(true);
+  const [checked, setChecked] = useState(false);
+  if (!open) return <Button onClick={() => setOpen(true)}>Show Coachmark</Button>;
+  return (
+    <Coachmark
+      title="Dismiss Coachmark"
+      content="You can add a checkbox to let users opt out."
+      checkbox={
+        <Checkbox checked={checked} onChange={(e) => setChecked(e.target.checked)}>
+          Don't show again
+        </Checkbox>
+      }
+      action={<button onClick={() => setOpen(false)}>Close</button>}
+      onClose={() => setOpen(false)}
+    />
+  );
+};
+```

@@ -1,0 +1,104 @@
+### Basic usage
+
+```tsx live
+<VStack alignItems="center">
+  <Box height="40px">
+    <SubBrandLogoWordmark type="wallet" />
+  </Box>
+</VStack>
+```
+
+### Different Sub-Brand Types
+
+```tsx live
+<VStack gap={4}>
+  <VStack gap={2}>
+    <Text font="label2" color="fgMuted">
+      Wallet
+    </Text>
+    <Box height="40px">
+      <SubBrandLogoWordmark type="wallet" />
+    </Box>
+  </VStack>
+  <VStack gap={2}>
+    <Text font="label2" color="fgMuted">
+      Advanced
+    </Text>
+    <Box height="40px">
+      <SubBrandLogoWordmark type="advanced" />
+    </Box>
+  </VStack>
+  <VStack gap={2}>
+    <Text font="label2" color="fgMuted">
+      Commerce
+    </Text>
+    <Box height="40px">
+      <SubBrandLogoWordmark type="commerce" />
+    </Box>
+  </VStack>
+</VStack>
+```
+
+### Foreground Variations
+
+```tsx live
+<VStack gap={4}>
+  <VStack gap={2}>
+    <Text font="label2" color="fgMuted">
+      Default (brand blue in light mode, white in dark mode)
+    </Text>
+    <Box height="40px">
+      <SubBrandLogoWordmark type="wallet" />
+    </Box>
+  </VStack>
+  <VStack gap={2}>
+    <Text font="label2" color="fgMuted">
+      Foreground (high contrast black in light mode, white in dark mode)
+    </Text>
+    <Box height="40px">
+      <SubBrandLogoWordmark type="wallet" foreground={true} />
+    </Box>
+  </VStack>
+</VStack>
+```
+
+### Sizing
+
+SubBrandLogoWordmark doesn't have a `size` prop. Instead, control its size by setting the width or height of its container. The component will automatically maintain its aspect ratio.
+
+```tsx live
+<VStack gap={4}>
+  <VStack gap={2}>
+    <Text font="label2" color="fgMuted">
+      Small (24px height)
+    </Text>
+    <Box height="24px">
+      <SubBrandLogoWordmark type="wallet" />
+    </Box>
+  </VStack>
+  <VStack gap={2}>
+    <Text font="label2" color="fgMuted">
+      Medium (40px height)
+    </Text>
+    <Box height="40px">
+      <SubBrandLogoWordmark type="wallet" />
+    </Box>
+  </VStack>
+  <VStack gap={2}>
+    <Text font="label2" color="fgMuted">
+      Large (60px height)
+    </Text>
+    <Box height="60px">
+      <SubBrandLogoWordmark type="wallet" />
+    </Box>
+  </VStack>
+  <VStack gap={2}>
+    <Text font="label2" color="fgMuted">
+      Width-constrained (150px width)
+    </Text>
+    <Box width="150px">
+      <SubBrandLogoWordmark type="wallet" />
+    </Box>
+  </VStack>
+</VStack>
+```

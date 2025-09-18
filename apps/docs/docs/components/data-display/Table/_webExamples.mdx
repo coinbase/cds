@@ -1,0 +1,337 @@
+CDS Data Tables allow product teams to place their content in an organized display of rows and columns enabling them to group their data by different classifications so their product users can make comparisons, glean insights and make informed decisions.
+
+Display of content in rows and columns allows data to be organized for further analysis, allowing large amounts of raw data to be sorted and reorganized in a neat format, and allows the inclusion of only the most important or relevant data.
+
+### Principles
+
+A defining element of CDS Data Tables is the ability to "manipulate" the data view. This defining attribute is represented in the table header row; the first row of a table.
+
+The table header row not only labels the columns with a descriptive title but it also provides functionality to re-organize or re-configure what is being displayed in the corresponding cols.
+
+A Data Table requires a header row. However it is not required that a header row have actions (sorting, filtering, etc.)
+
+### When to use
+
+Use Data Tables when you want to:
+
+- Organize data that is too detailed or complicated to be described adequately in the text
+- Show many numerical values and other specific data in a small space
+- Compare and contrast data values with several shared characteristics or variables
+- Organize the order of content
+
+Data Tables can contain:
+
+- Static/Read-only content (text/strings, labels, etc)
+- Interactive elements (input fields, buttons, etc)
+- Actions to query and/or manipulate data (sorting, filtering, etc)
+
+### Cross-Platform
+
+Data Tables are intended for and built for desktop screens. When displaying complex data sets on mobile devices we recommend using CDS Lists View.
+
+### Complicated tables
+
+Sometimes you need to use a more complicated layout to fit your data. That's okay, but please be aware more complex tables come with... [more complexity](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/table#complicated_tables) 🤯
+
+### Accessibility
+
+:::tip Accessibility tip
+Tables should have an accessible label for people using assistive technologies. The preferred and most semantic method is to add a TableCaption as the first child of your Table component (see code examples below). However, if you need more flexibility or your design does not include a caption or title, you can set a label using the `accessibilityLabelledBy` or `accessibilityLabel` props.
+:::
+
+### Table Variants
+
+The Table component supports three variants: `default`, `graph`, and `ruled`.
+
+```tsx live
+<VStack gap={4}>
+  <Table variant="default">
+    <TableCaption>Default variant - Simple and clean</TableCaption>
+    <TableBody>
+      <TableRow>
+        <TableCell title="Default variant" />
+        <TableCell title="Simple and clean" />
+      </TableRow>
+    </TableBody>
+  </Table>
+
+  <Table variant="graph" bordered>
+    <TableCaption>Graph variant - With grid lines</TableCaption>
+    <TableBody>
+      <TableRow>
+        <TableCell title="Graph variant" />
+        <TableCell title="With grid lines" />
+      </TableRow>
+    </TableBody>
+  </Table>
+
+  <Table variant="ruled" bordered>
+    <TableCaption>Ruled variant - With horizontal lines</TableCaption>
+    <TableBody>
+      <TableRow>
+        <TableCell title="Ruled variant" />
+        <TableCell title="With horizontal lines" />
+      </TableRow>
+    </TableBody>
+  </Table>
+</VStack>
+```
+
+### Basic usage with Layout Control
+
+```tsx live
+function Example() {
+  const totalResults = accounts.length;
+  const PAGE_SIZE = 7;
+  const [page, setPage] = useState(1);
+  const [isFixed, setIsFixed] = useState(false);
+  const startIdx = (page - 1) * PAGE_SIZE;
+  const endIdx = Math.min(startIdx + PAGE_SIZE, totalResults);
+  const slicedAccounts = accounts.slice(startIdx, endIdx);
+
+  return (
+    <VStack gap={3}>
+      <HStack justifyContent="flex-end">
+        <Switch onChange={() => setIsFixed((isFixed) => !isFixed)} checked={isFixed}>
+          Fixed Layout
+        </Switch>
+      </HStack>
+      <Table
+        bordered
+        variant="ruled"
+        tableLayout={isFixed ? 'fixed' : 'auto'}
+        accessibilityLabel="Accounts table with pagination"
+      >
+        <TableCaption>Example</TableCaption>
+        <TableHeader>
+          <TableRow>
+            <TableCell title="Currency" width="30%" />
+            <TableCell title="Balance" width="50%" />
+            <TableCell title="Status" alignItems="flex-end" width="20%" />
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {slicedAccounts.map((account) => {
+            return (
+              <TableRow key={`row--${account.name}`}>
+                <TableCell
+                  start={<Icon active name="currencies" size="m" />}
+                  title={account.name}
+                  subtitle={account.currency.name}
+                />
+                <TableCell
+                  title={`$${account.balance.amount}`}
+                  subtitle={account.balance.currency}
+                />
+                <TableCell direction="horizontal" justifyContent="flex-end">
+                  <Icon
+                    name={account.primary ? 'circleCheckmark' : 'circleCross'}
+                    size="m"
+                    color={account.primary ? 'positive' : 'negative'}
+                  />
+                </TableCell>
+              </TableRow>
+            );
+          })}
+        </TableBody>
+        <TableFooter>
+          <TableRow fullWidth>
+            <TableCell direction="horizontal">
+              {[1, 2, 3, 4, 5].map((pg) => (
+                <Button
+                  key={pg}
+                  compact
+                  variant={page === pg ? 'primary' : 'secondary'}
+                  onPress={() => setPage(pg)}
+                >
+                  {pg}
+                </Button>
+              ))}
+            </TableCell>
+          </TableRow>
+        </TableFooter>
+      </Table>
+    </VStack>
+  );
+}
+```
+
+### Cell Spacing and Compact Mode
+
+```tsx live
+function TableCellCompactExample() {
+  const MOCK_DATA = Object.entries(assets).slice(0, 20);
+  const mediaTypes = ['Text', 'Asset', 'Image', 'Avatar'];
+  const [isCompact, setIsCompact] = useState(true);
+
+  return (
+    <VStack gap={3}>
+      <HStack justifyContent="flex-end">
+        <Switch onChange={() => setIsCompact((isCompact) => !isCompact)} checked={isCompact}>
+          Compact
+        </Switch>
+      </HStack>
+      <Table
+        variant="ruled"
+        bordered
+        compact={isCompact}
+        cellSpacing={{
+          inner: { horizontal: 2, vertical: 1 },
+          outer: { horizontal: 3, vertical: 2 },
+        }}
+      >
+        <TableCaption>Compact Example</TableCaption>
+        <TableHeader>
+          <TableRow backgroundColor="bgAlternate">
+            {mediaTypes.map((label) => (
+              <TableCell key={`header-cell-${label}`} title={label} />
+            ))}
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          <TableRow>
+            <TableCellFallback title subtitle />
+            <TableCellFallback title subtitle start="media" />
+            <TableCellFallback title />
+            <TableCellFallback title subtitle />
+          </TableRow>
+          {MOCK_DATA.map((row) => (
+            <TableRow key={`row-${row[0]}`}>
+              {mediaTypes.map((mediaType) => (
+                <TableCell
+                  key={`cell-${row}--${mediaType}`}
+                  title={`${row[1].name}`}
+                  subtitle={row[1].symbol}
+                  start={
+                    mediaType === 'Text' ? null : (
+                      <CellMedia type={mediaType.toLowerCase()} source={row[1].imageUrl} />
+                    )
+                  }
+                />
+              ))}
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </VStack>
+  );
+}
+```
+
+### Height-Constrained Table with Sticky Header
+
+```tsx live
+<Table maxHeight={360} bordered variant="ruled" accessibilityLabel="Cryptocurrency prices table">
+  <TableCaption>Sticky Header Example</TableCaption>
+  <TableHeader sticky>
+    <TableRow backgroundColor="bgAlternate">
+      <TableCell title="Currency" />
+      <TableCell title="Balance" />
+      <TableCell title="Status" alignItems="flex-end" />
+    </TableRow>
+  </TableHeader>
+  <TableBody>
+    {Array.from({ length: 6 }).map((_, i) => (
+      <TableRow key={i}>
+        <TableCell title={['BTC', 'ETH', 'APE', 'SOL', 'CVX', 'AVX'][i]} />
+        <TableCell title={`$${(i + 1) * 100}`} />
+        <TableCell title={i === 0 ? 'Pending' : 'Complete'} alignItems="flex-end" />
+      </TableRow>
+    ))}
+  </TableBody>
+</Table>
+```
+
+### Complex Table Structure with Row/Column Spans
+
+```tsx live
+<Table variant="graph" bordered accessibilityLabel="Transfer conditions and outcomes matrix">
+  <TableCaption>Complex Table Example</TableCaption>
+  <TableHeader>
+    <TableRow>
+      <TableCell title="Transfer type" rowSpan={2} />
+      <TableCell title="Conditions" colSpan={3} />
+      <TableCell title="Outcomes" colSpan={2} />
+    </TableRow>
+    <TableRow>
+      <TableCell title="Destination" />
+      <TableCell title="Currency" />
+      <TableCell title="Transaction size" />
+      <TableCell title="Consensus approvals" />
+      <TableCell title="Video approvals" />
+    </TableRow>
+  </TableHeader>
+  <TableBody>
+    <TableRow>
+      <TableCell title="Vault withdrawal" />
+      <TableCell title="External address" />
+      <TableCell title="Crypto" />
+      <TableCell title="Up to 0.1 BTC" />
+      <TableCell title="2 in 24h" />
+      <TableCell title="1" />
+    </TableRow>
+    <TableRow>
+      <TableCell title="Another row" />
+      <TableCell title="Addy" />
+      <TableCell title="Fiat" />
+      <TableCell title="> $100,000" />
+      <TableCell title="1 in 6mo" />
+      <TableCell title="0" />
+    </TableRow>
+  </TableBody>
+</Table>
+```
+
+### Sortable Table
+
+```tsx live
+function SortingExample() {
+  const [{ sortBy, sortDirection }, setSort] = useState({
+    sortBy: 'name',
+    sortDirection: 'ascending',
+  });
+
+  const onChange = (key) => {
+    const isAscending = key === sortBy && sortDirection === 'ascending';
+    const ascendingOrDescending = isAscending ? 'descending' : 'ascending';
+    setSort({ sortBy: key, sortDirection: ascendingOrDescending });
+  };
+
+  const data = useSort({ data: accounts, sortDirection, sortBy });
+  const getSortableProps = useSortableCell({ sortBy, sortDirection, onChange });
+
+  return (
+    <Table maxHeight={360} bordered accessibilityLabel="Sortable accounts table">
+      <TableCaption>Sorting Example</TableCaption>
+      <TableHeader sticky>
+        <TableRow>
+          <TableCell title="Asset" {...getSortableProps('name')} />
+          <TableCell title="Balance" {...getSortableProps('balance.amount')} />
+          <TableCell title="Status" alignItems="flex-end" />
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {data.map((account) => {
+          return (
+            <TableRow key={`row--${account.name}`}>
+              <TableCell
+                start={<Icon active name="currencies" size="m" />}
+                title={account.name}
+                subtitle={account.currency.name}
+              />
+              <TableCell title={`$${account.balance.amount}`} subtitle={account.balance.currency} />
+              <TableCell direction="horizontal" justifyContent="flex-end">
+                <Icon
+                  name={account.primary ? 'circleCheckmark' : 'circleCross'}
+                  size="m"
+                  color={account.primary ? 'positive' : 'negative'}
+                />
+              </TableCell>
+            </TableRow>
+          );
+        })}
+      </TableBody>
+    </Table>
+  );
+}
+```

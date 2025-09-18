@@ -1,0 +1,184 @@
+import { loremIpsum } from '@cbhq/cds-common/internal/data/loremIpsum';
+import { renderA11y } from '@cbhq/cds-web-utils';
+import { render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+
+import { Text } from '../../../typography/Text';
+import { DefaultThemeProvider, waitForNotToHappen } from '../../../utils/test';
+import { Tray } from '../Tray';
+
+const titleText = 'Test Title';
+
+describe('Tray', () => {
+  it('renders the Tray and passes a11y', async () => {
+    const onCloseCompleteSpy = jest.fn();
+    expect(
+      await renderA11y(
+        <DefaultThemeProvider>
+          <Tray onCloseComplete={onCloseCompleteSpy}>
+            <Text font="body">{loremIpsum}</Text>
+          </Tray>
+        </DefaultThemeProvider>,
+      ),
+    ).toHaveNoViolations();
+  });
+
+  it('renders content', () => {
+    const onCloseCompleteSpy = jest.fn();
+    render(<Tray onCloseComplete={onCloseCompleteSpy}>{loremIpsum}</Tray>, {
+      wrapper: ({ children }) => <DefaultThemeProvider>{children}</DefaultThemeProvider>,
+    });
+    expect(screen.getByText(/Lorem ipsum/)).toBeTruthy();
+  });
+
+  it('renders a title', () => {
+    const onCloseCompleteSpy = jest.fn();
+    render(
+      <DefaultThemeProvider>
+        <Tray onCloseComplete={onCloseCompleteSpy} title={titleText}>
+          {loremIpsum}
+        </Tray>
+      </DefaultThemeProvider>,
+    );
+
+    expect(screen.getByText(titleText)).toBeTruthy();
+  });
+
+  it('renders a custom node for title', () => {
+    const onCloseCompleteSpy = jest.fn();
+    const customTitle = (
+      <Text font="title2" testID="test-title">
+        Test Title
+      </Text>
+    );
+    render(
+      <DefaultThemeProvider>
+        <Tray onCloseComplete={onCloseCompleteSpy} title={customTitle}>
+          {loremIpsum}
+        </Tray>
+      </DefaultThemeProvider>,
+    );
+
+    expect(screen.getByTestId('test-title')).toBeTruthy();
+  });
+
+  it('renders a custom footer', () => {
+    const onCloseCompleteSpy = jest.fn();
+    const customFooter = (
+      <Text font="title2" testID="test-footer">
+        Test Footer
+      </Text>
+    );
+    render(
+      <DefaultThemeProvider>
+        <Tray footer={customFooter} onCloseComplete={onCloseCompleteSpy}>
+          {loremIpsum}
+        </Tray>
+      </DefaultThemeProvider>,
+    );
+
+    expect(screen.getByTestId('test-footer')).toBeTruthy();
+  });
+
+  it('renders a close button which closes the tray', async () => {
+    const onCloseCompleteSpy = jest.fn();
+    render(
+      <DefaultThemeProvider>
+        <Tray onCloseComplete={onCloseCompleteSpy} title={titleText}>
+          {loremIpsum}
+        </Tray>
+      </DefaultThemeProvider>,
+    );
+
+    expect(screen.getByTestId('tray-close-button')).toBeTruthy();
+    screen.getByTestId('tray-close-button').click();
+    await waitFor(() => expect(onCloseCompleteSpy).toHaveBeenCalled());
+  });
+
+  it('renders an overlay which closes the tray on click', async () => {
+    const onCloseCompleteSpy = jest.fn();
+    render(
+      <DefaultThemeProvider>
+        <Tray onCloseComplete={onCloseCompleteSpy} title={titleText}>
+          {loremIpsum}
+        </Tray>
+      </DefaultThemeProvider>,
+    );
+
+    expect(screen.getByTestId('tray-overlay')).toBeTruthy();
+    screen.getByTestId('tray-overlay').click();
+    await waitFor(() => expect(onCloseCompleteSpy).toHaveBeenCalled());
+  });
+
+  it('closes the tray when esc is pressed', async () => {
+    const onCloseCompleteSpy = jest.fn();
+    render(
+      <DefaultThemeProvider>
+        <Tray onCloseComplete={onCloseCompleteSpy} title={titleText}>
+          {loremIpsum}
+        </Tray>
+      </DefaultThemeProvider>,
+    );
+
+    const user = userEvent.setup();
+    await user.keyboard('{Escape}');
+    await waitFor(() => expect(onCloseCompleteSpy).toHaveBeenCalled());
+  });
+
+  it('renders function as children with close handler', async () => {
+    const onCloseCompleteSpy = jest.fn();
+    render(
+      <DefaultThemeProvider>
+        <Tray preventDismiss onCloseComplete={onCloseCompleteSpy} title={titleText}>
+          {({ handleClose }) => <button onClick={handleClose}>custom close button</button>}
+        </Tray>
+      </DefaultThemeProvider>,
+    );
+
+    screen.getByText('custom close button').click();
+    await waitFor(() => expect(onCloseCompleteSpy).toHaveBeenCalled());
+  });
+
+  it('renders a non-dismissable tray when preventDismiss is true', async () => {
+    const onCloseCompleteSpy = jest.fn();
+    render(
+      <DefaultThemeProvider>
+        <Tray preventDismiss onCloseComplete={onCloseCompleteSpy} title={titleText}>
+          {({ handleClose }) => <button onClick={handleClose}>custom close button</button>}
+        </Tray>
+      </DefaultThemeProvider>,
+    );
+
+    // no close button
+    expect(screen.queryByTestId('tray-close-button')).toBeFalsy();
+    // overlay click does nothing
+    screen.getByTestId('tray-overlay').click();
+    // pressing escape does nothing
+    const user = userEvent.setup();
+    await user.keyboard('{Escape}');
+    // tray slide out is 300ms so we need to wait for 350ms to ensure the tray is closed
+    await waitForNotToHappen(() => expect(onCloseCompleteSpy).toHaveBeenCalled(), { timeout: 350 });
+    expect(screen.getByText('custom close button')).toBeTruthy();
+    // clicking the custom close button closes the tray
+    screen.getByText('custom close button').click();
+    await waitFor(() => expect(onCloseCompleteSpy).toHaveBeenCalled());
+  });
+
+  it('calls onVibilityChange callback on open and close', () => {
+    const onVisibilityChangeSpy = jest.fn();
+    const onCloseCompleteSpy = jest.fn();
+    const { unmount } = render(
+      <DefaultThemeProvider>
+        <Tray onCloseComplete={onCloseCompleteSpy} onVisibilityChange={onVisibilityChangeSpy}>
+          {loremIpsum}
+        </Tray>
+      </DefaultThemeProvider>,
+    );
+
+    expect(onVisibilityChangeSpy).toHaveBeenCalledWith('visible');
+
+    unmount();
+
+    expect(onVisibilityChangeSpy).toHaveBeenCalledWith('hidden');
+  });
+});

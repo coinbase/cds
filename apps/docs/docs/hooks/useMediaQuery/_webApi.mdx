@@ -1,0 +1,26 @@
+import { MDXArticle } from '@site/src/components/page/MDXArticle';
+
+<MDXArticle>
+## Parameters
+
+The `useMediaQuery` hook accepts a single parameter:
+
+- `query: string` - A CSS media query string to subscribe to. Can include:
+  - **Viewport dimensions**: `(min-width: 768px)`, `(max-width: 767px)`, `(width: 1024px)`
+  - **User preferences**: `(prefers-color-scheme: dark)`, `(prefers-reduced-motion: reduce)`
+  - **Device features**: `(orientation: portrait)`, `(pointer: coarse)`, `(hover: hover)`
+  - **Complex queries**: Combined with `and`, `not`, or `,` operators
+
+</MDXArticle>
+
+<MDXArticle hideDivider>
+## Returns
+
+Returns a `boolean` that indicates whether the media query matches:
+
+- `true` - The media query conditions are currently met
+- `false` - The media query conditions are not met
+- Automatically updates when the media query state changes
+- Uses MediaQueryProvider's default values during server-side rendering
+
+</MDXArticle>

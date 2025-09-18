@@ -1,0 +1,11 @@
+import ComponentPropsTable from '@site/src/components/page/ComponentPropsTable';
+
+import webPropsData from ':docgen/web/tag/Tag/data';
+import { sharedParentTypes } from ':docgen/_types/sharedParentTypes';
+import { sharedTypeAliases } from ':docgen/_types/sharedTypeAliases';
+
+<ComponentPropsTable
+  props={webPropsData}
+  sharedTypeAliases={sharedTypeAliases}
+  sharedParentTypes={sharedParentTypes}
+/>

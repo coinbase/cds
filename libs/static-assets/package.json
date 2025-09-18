@@ -1,0 +1,11 @@
+{
+  "name": "@cbhq/static-assets",
+  "version": "0.0.0",
+  "description": "Static assets upload for CDS",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:coinbase/cds-staging.git",
+    "directory": "libs/static-assets"
+  }
+}

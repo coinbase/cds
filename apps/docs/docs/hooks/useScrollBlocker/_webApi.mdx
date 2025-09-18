@@ -1,0 +1,25 @@
+import { MDXArticle } from '@site/src/components/page/MDXArticle';
+
+<MDXArticle>
+## Parameters
+
+The `useScrollBlocker` hook does not accept any parameters.
+
+</MDXArticle>
+
+<MDXArticle hideDivider>
+## Returns
+
+```tsx
+type Return = (shouldBlock: boolean) => void;
+```
+
+Returns a function that takes a boolean parameter to control scroll blocking:
+
+- `shouldBlock`: When `true`, blocks page scrolling. When `false`, re-enables scrolling.
+
+:::note
+This hook is useful for temporarily disabling page scrolling, such as when displaying modals or overlays. It automatically handles scroll bar width compensation to prevent layout shifts.
+:::
+
+</MDXArticle>

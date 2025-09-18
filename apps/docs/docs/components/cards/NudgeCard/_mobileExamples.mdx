@@ -1,0 +1,56 @@
+### with Transparent Button
+
+Use if the nudge card's purpose is to provide a gentle reminder or a secondary option. Transparent buttons are less intrusive and blends more seamlessly with the rest of the page.
+
+```jsx
+function Example() {
+  function NoopFn() {
+    console.log('pressed');
+  }
+  const cards = [
+    {
+      title: 'Earn more crypto',
+      description: 'You’ve got unstaked crypto. Stake it now to earn more.',
+      pictogram: 'key',
+      action: 'Start earning',
+      onActionPress: NoopFn,
+      onDismissPress: NoopFn,
+    },
+  ];
+  return (
+    <HStack minHeight={300} padding={2} alignItems="center" justifyContent="center" gap={2}>
+      {cards.map((card) => (
+        <NudgeCard {...card} />
+      ))}
+    </HStack>
+  );
+}
+```
+
+### Compact
+
+Use when space is limited.
+
+```jsx
+function Example() {
+  function NoopFn() {
+    console.log('pressed');
+  }
+  const cards = [
+    {
+      title: 'Derivatives Trading',
+      description: 'Derivative Exchange is available for all users',
+      pictogram: 'derivativesNavigation',
+      onActionPress: NoopFn,
+      compact: true,
+    },
+  ];
+  return (
+    <HStack minHeight={300} padding={2} alignItems="center" justifyContent="center" gap={2}>
+      {cards.map((card) => (
+        <NudgeCard {...card} />
+      ))}
+    </HStack>
+  );
+}
+```

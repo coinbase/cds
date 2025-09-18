@@ -1,0 +1,269 @@
+import { MDXArticle } from '@site/src/components/page/MDXArticle';
+
+<MDXArticle>
+
+## Overview
+
+The `useTheme` hook returns the currently active theme based on the `ThemeProvider's` active color scheme. All values are optimized for web usage, with numeric values in rem units and CSS-compatible formats.
+
+</MDXArticle>
+
+<MDXArticle>
+## Parameters
+
+None. The hook takes no parameters.
+
+</MDXArticle>
+
+<MDXArticle hideDivider>
+## Returns
+
+Returns a `Theme` object containing the following categories of design tokens:
+
+### Color Tokens
+
+#### Color Scheme
+
+- `colorScheme`: `'light' | 'dark'`
+- `spectrum`: Raw color values in RGB format (e.g., `'245,248,255'` for `blue0`)
+
+#### Semantic Colors
+
+- Text Colors
+  - `color.fg`: Primary text color (RGB format)
+  - `color.fgMuted`: Secondary text color
+  - `color.fgInverse`: Inverted text color
+  - `color.fgPrimary`: Primary brand text color
+  - `color.fgWarning`: Warning text color
+  - `color.fgPositive`: Success text color
+  - `color.fgNegative`: Error text color
+
+- Background Colors
+  - `color.bg`: Primary background color
+  - `color.bgAlternate`: Secondary background color
+  - `color.bgInverse`: Inverted background color
+  - `color.bgOverlay`: Semi-transparent overlay
+  - `color.bgPrimary`: Primary brand background
+  - `color.bgPrimaryWash`: Light primary background
+  - `color.bgSecondary`: Secondary background
+  - `color.bgTertiary`: Tertiary background
+  - `color.bgSecondaryWash`: Light secondary background
+  - `color.bgNegative`: Error background
+  - `color.bgNegativeWash`: Light error background
+  - `color.bgPositive`: Success background
+  - `color.bgPositiveWash`: Light success background
+  - `color.bgWarning`: Warning background
+  - `color.bgWarningWash`: Light warning background
+  - `color.currentColor`: Current color context
+  - `color.bgElevation1`: First level elevation background
+  - `color.bgElevation2`: Second level elevation background
+
+- Line Colors
+  - `color.bgLine`: Default line color (semi-transparent)
+  - `color.bgLineHeavy`: Emphasized line color
+  - `color.bgLineInverse`: Inverted line color
+  - `color.bgLinePrimary`: Primary brand line color
+  - `color.bgLinePrimarySubtle`: Subtle primary line color
+
+- Accent Colors
+  - `color.accentSubtleGreen`: Subtle green accent
+  - `color.accentBoldGreen`: Bold green accent
+  - `color.accentSubtleBlue`: Subtle blue accent
+  - `color.accentBoldBlue`: Bold blue accent
+  - `color.accentSubtlePurple`: Subtle purple accent
+  - `color.accentBoldPurple`: Bold purple accent
+  - `color.accentSubtleYellow`: Subtle yellow accent
+  - `color.accentBoldYellow`: Bold yellow accent
+  - `color.accentSubtleRed`: Subtle red accent
+  - `color.accentBoldRed`: Bold red accent
+  - `color.accentSubtleGray`: Subtle gray accent
+  - `color.accentBoldGray`: Bold gray accent
+  - `color.transparent`: Transparent color
+
+### Layout Tokens
+
+#### Spacing
+
+- `space`: Object containing spacing values from `0` to `10` in rem units
+
+  ```tsx
+  {
+    0: 0,
+    '0.25': 2,
+    '0.5': 4,
+    '0.75': 6,
+    1: 8,
+    '1.5': 12,
+    2: 16,
+    3: 24,
+    4: 32,
+    5: 40,
+    6: 48,
+    7: 56,
+    8: 64,
+    9: 72,
+    10: 80
+  }
+  ```
+
+#### Component Sizes
+
+- `iconSize`: `{ xs: 12, s: 16, m: 24, l: 32 }`
+- `avatarSize`: `{ s: 16, m: 24, l: 32, xl: 40, xxl: 48, xxxl: 56 }`
+- `controlSize`: Form control sizes
+
+  ```tsx
+  {
+    checkboxSize: 20,
+    radioSize: 20,
+    switchWidth: 52,
+    switchHeight: 32,
+    switchThumbSize: 30,
+    tileSize: 106
+  }
+  ```
+
+#### Borders
+
+- `borderWidth`: Values from `0` to `500` in pixels
+
+  ```tsx
+  {
+    0: 0,
+    100: 1,
+    200: 2,
+    300: 4,
+    400: 6,
+    500: 8
+  }
+  ```
+
+- `borderRadius`: Values from `0` to `1000` in pixels
+
+  ```tsx
+  {
+    0: 0,
+    100: 4,
+    200: 8,
+    300: 12,
+    400: 16,
+    500: 24,
+    600: 32,
+    700: 40,
+    800: 48,
+    900: 56,
+    1000: 1e5
+  }
+  ```
+
+### Typography Tokens
+
+#### Font Families
+
+- `fontFamily`: Base font families for each text style using CSS variables
+
+  ```tsx
+  {
+    display1: 'var(--cds-font-display)',
+    display2: 'var(--cds-font-display)',
+    display3: 'var(--cds-font-display)',
+    title1: 'var(--cds-font-display)',
+    // ...and more variants
+  }
+  ```
+
+- `fontFamilyMono`: Monospace font families using CSS variables
+
+  ```tsx
+  {
+    display1: 'var(--cds-font-mono)',
+    display2: 'var(--cds-font-mono)',
+    // ...and more variants
+  }
+  ```
+
+#### Text Styles
+
+- `fontSize`: Font sizes in rem units
+
+  ```tsx
+  {
+    display1: '4rem',     // 64px
+    display2: '3rem',     // 48px
+    display3: '2.5rem',   // 40px
+    title1: '1.75rem',    // 28px
+    title2: '1.75rem',    // 28px
+    title3: '1.25rem',    // 20px
+    title4: '1.25rem',    // 20px
+    headline: '1rem',     // 16px
+    body: '1rem',         // 16px
+    label1: '0.875rem',   // 14px
+    label2: '0.875rem',   // 14px
+    caption: '0.8125rem', // 13px
+    legal: '0.8125rem'    // 13px
+  }
+  ```
+
+- `fontWeight`: Font weights as CSS values
+
+  ```tsx
+  {
+    display1: '400',
+    title1: '600',
+    // ...and more variants
+  }
+  ```
+
+- `lineHeight`: Line heights in rem units
+
+  ```tsx
+  {
+    display1: '4.5rem',   // 72px
+    display2: '3.5rem',   // 56px
+    display3: '3rem',     // 48px
+    title1: '2.25rem',    // 36px
+    title2: '2.25rem',    // 36px
+    title3: '1.75rem',    // 28px
+    title4: '1.75rem',    // 28px
+    headline: '1.5rem',   // 24px
+    body: '1.5rem',       // 24px
+    label1: '1.25rem',    // 20px
+    label2: '1.25rem',    // 20px
+    caption: '1rem',      // 16px
+    legal: '1rem'         // 16px
+  }
+  ```
+
+- `textTransform`: Text transformations as CSS values
+
+  ```tsx
+  {
+    caption: 'uppercase',
+    body: 'none',
+    // ...and more variants
+  }
+  ```
+
+### Effect Tokens
+
+#### Shadows
+
+- `shadow`: CSS box-shadow values
+
+  ```tsx
+  {
+    elevation1: '0px 8px 12px rgba(0, 0, 0, 0.12)',
+    elevation2: '0px 8px 24px rgba(0, 0, 0, 0.12)'
+  }
+  ```
+
+## Notes
+
+1. The hook must be used within a `ThemeProvider` component, or it will throw an error.
+2. All numeric values are in rem units for consistent scaling with browser font size.
+3. Colors are provided in RGB format for text and background colors, allowing for opacity adjustments.
+4. Font families use CSS variables (`--cds-font-*`) for dynamic loading and fallback handling.
+5. All values are CSS-compatible and can be used directly in CSS-in-JS solutions.
+6. The theme automatically generates CSS variables for all tokens, making them available in stylesheets.
+
+</MDXArticle>

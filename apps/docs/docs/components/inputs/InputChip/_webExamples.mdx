@@ -1,0 +1,58 @@
+### Basic usage
+
+```tsx live
+function Example() {
+  return (
+    <HStack gap={2}>
+      <InputChip onClick={() => console.log('Remove Basic')} value="Basic Chip" />
+      <InputChip disabled onClick={() => {}} value="Disabled Chip" />
+    </HStack>
+  );
+}
+```
+
+### With Custom Start Element
+
+```tsx live
+function Example() {
+  return (
+    <VStack gap={2}>
+      <HStack gap={2}>
+        <InputChip
+          onClick={() => console.log('Remove Star')}
+          value="With Icon"
+          start={<Icon name="star" />}
+        />
+      </HStack>
+      <HStack gap={2}>
+        <InputChip
+          onClick={() => console.log('Remove BTC')}
+          value="BTC"
+          start={<RemoteImage source={assets.btc.imageUrl} width={16} height={16} />}
+        />
+        <InputChip
+          onClick={() => console.log('Remove ETH')}
+          value="ETH"
+          start={<RemoteImage source={assets.eth.imageUrl} width={16} height={16} />}
+        />
+      </HStack>
+    </VStack>
+  );
+}
+```
+
+### With Custom Accessibility Label
+
+```tsx live
+function Example() {
+  return (
+    <HStack gap={2}>
+      <InputChip
+        onClick={() => console.log('Remove Custom')}
+        value="Custom Label"
+        accessibilityLabel="Custom remove action"
+      />
+    </HStack>
+  );
+}
+```

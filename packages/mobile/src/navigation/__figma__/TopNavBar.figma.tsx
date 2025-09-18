@@ -1,0 +1,329 @@
+import { figma } from '@figma/code-connect';
+
+import { Divider, HStack, VStack } from '../../layout';
+import {
+  BrowserBar,
+  BrowserBarSearchInput,
+  NavBarIconButton,
+  NavigationSubtitle,
+  NavigationTitle,
+  NavigationTitleSelect,
+} from '../../navigation';
+import { TopNavBar } from '../TopNavBar';
+
+figma.connect(
+  TopNavBar,
+  'https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/%E2%9C%A8-CDS-Components?node-id=49598-4137',
+  {
+    variant: {
+      type: 'title + subtitle',
+    },
+    imports: [
+      "import { TopNavBar } from '@cbhq/cds-mobile/navigation/TopNavBar';",
+      "import { Divider } from '@cbhq/cds-mobile/layout/Divider';",
+      "import { VStack } from '@cbhq/cds-mobile/layout/VStack';",
+      "import { HStack } from '@cbhq/cds-mobile/layout/HStack';",
+      "import { NavigationTitle } from '@cbhq/cds-mobile/navigation/NavigationTitle';",
+      "import { NavigationSubtitle } from '@cbhq/cds-mobile/navigation/NavigationSubtitle';",
+    ],
+    props: {
+      title: figma.string('↳ title'),
+      subtitle: figma.boolean('↳ show subtitle', {
+        true: figma.string('↳ subtitle'),
+        false: undefined,
+      }),
+
+      startAction: figma.boolean('show left action', {
+        true: <NavBarIconButton name="appSwitcher" />,
+        false: undefined,
+      }),
+      endAction1: figma.boolean('show right action', {
+        true: <NavBarIconButton name="more" />,
+        false: undefined,
+      }),
+      endAction2: figma.boolean('show 2nd right action', {
+        true: <NavBarIconButton name="gear" />,
+        false: undefined,
+      }),
+      endAction3: figma.boolean('show 3rd right action', {
+        true: <NavBarIconButton name="share" />,
+        false: undefined,
+      }),
+      divider: figma.boolean('show divider', {
+        true: <Divider />,
+        false: undefined,
+      }),
+    },
+    example: function Example({
+      startAction,
+      title,
+      subtitle,
+      endAction1,
+      endAction2,
+      endAction3,
+      divider,
+    }) {
+      return (
+        <VStack>
+          <TopNavBar
+            end={
+              <HStack alignItems="center" gap={0.25}>
+                {endAction3}
+                {endAction2}
+                {endAction1}
+              </HStack>
+            }
+            start={startAction}
+          >
+            <VStack alignItems="center">
+              <NavigationTitle>{title}</NavigationTitle>
+              <NavigationSubtitle>{subtitle}</NavigationSubtitle>
+            </VStack>
+          </TopNavBar>
+          {divider}
+        </VStack>
+      );
+    },
+  },
+);
+
+figma.connect(
+  TopNavBar,
+  'https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/%E2%9C%A8-CDS-Components?node-id=49598-4137',
+  {
+    variant: {
+      type: 'dropdown',
+    },
+    imports: [
+      "import { TopNavBar } from '@cbhq/cds-mobile/navigation/TopNavBar';",
+      "import { Divider } from '@cbhq/cds-mobile/layout/Divider';",
+      "import { VStack } from '@cbhq/cds-mobile/layout/VStack';",
+      "import { HStack } from '@cbhq/cds-mobile/layout/HStack';",
+      "import { NavigationTitleSelect } from '@cbhq/cds-mobile/navigation/NavigationTitleSelect';",
+    ],
+    props: {
+      title: figma.string('↳ title'),
+      startAction: figma.boolean('show left action', {
+        true: <NavBarIconButton name="appSwitcher" />,
+        false: undefined,
+      }),
+      endAction1: figma.boolean('show right action', {
+        true: <NavBarIconButton name="more" />,
+        false: undefined,
+      }),
+      endAction2: figma.boolean('show 2nd right action', {
+        true: <NavBarIconButton name="gear" />,
+        false: undefined,
+      }),
+      endAction3: figma.boolean('show 3rd right action', {
+        true: <NavBarIconButton name="share" />,
+        false: undefined,
+      }),
+      divider: figma.boolean('show divider', {
+        true: <Divider />,
+        false: undefined,
+      }),
+    },
+    example: function Example({ startAction, title, endAction1, endAction2, endAction3, divider }) {
+      return (
+        <VStack>
+          <TopNavBar
+            end={
+              <HStack alignItems="center" gap={0.25}>
+                {endAction3}
+                {endAction2}
+                {endAction1}
+              </HStack>
+            }
+            start={startAction}
+          >
+            <NavigationTitleSelect
+              onChange={() => {}}
+              options={[{ id: 'title', label: title }]}
+              value="title"
+            />
+          </TopNavBar>
+          {divider}
+        </VStack>
+      );
+    },
+  },
+);
+
+figma.connect(
+  TopNavBar,
+  'https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/%E2%9C%A8-CDS-Components?node-id=49598-4137',
+  {
+    variant: {
+      type: 'with search',
+    },
+    imports: [
+      "import { Divider } from '@cbhq/cds-mobile/layout/Divider';",
+      "import { VStack } from '@cbhq/cds-mobile/layout/VStack';",
+      "import { HStack } from '@cbhq/cds-mobile/layout/HStack';",
+      "import { BrowserBar } from '@cbhq/cds-mobile/navigation/BrowserBar';",
+      "import { BrowserBarSearchInput } from '@cbhq/cds-mobile/navigation/BrowserBarSearchInput';",
+    ],
+    props: {
+      startAction: figma.boolean('show left action', {
+        true: <NavBarIconButton name="appSwitcher" />,
+        false: undefined,
+      }),
+      endAction1: figma.boolean('show right action', {
+        true: <NavBarIconButton name="more" />,
+        false: undefined,
+      }),
+      endAction2: figma.boolean('show 2nd right action', {
+        true: <NavBarIconButton name="gear" />,
+        false: undefined,
+      }),
+      endAction3: figma.boolean('show 3rd right action', {
+        true: <NavBarIconButton name="share" />,
+        false: undefined,
+      }),
+      divider: figma.boolean('show divider', {
+        true: <Divider />,
+        false: undefined,
+      }),
+    },
+    example: function Example({ startAction, endAction1, endAction2, endAction3, divider }) {
+      return (
+        <VStack>
+          <BrowserBar
+            end={
+              <HStack alignItems="center" gap={0.25}>
+                {endAction3}
+                {endAction2}
+                {endAction1}
+              </HStack>
+            }
+            start={startAction}
+          >
+            <BrowserBarSearchInput onChangeText={() => {}} value="Search" />
+          </BrowserBar>
+          {divider}
+        </VStack>
+      );
+    },
+  },
+);
+
+figma.connect(
+  TopNavBar,
+  'https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/%E2%9C%A8-CDS-Components?node-id=49598-4137',
+  {
+    variant: {
+      type: 'empty',
+    },
+    imports: [
+      "import { TopNavBar } from '@cbhq/cds-mobile/navigation/TopNavBar';",
+      "import { Divider } from '@cbhq/cds-mobile/layout/Divider';",
+      "import { VStack } from '@cbhq/cds-mobile/layout/VStack';",
+      "import { HStack } from '@cbhq/cds-mobile/layout/HStack';",
+    ],
+    props: {
+      startAction: figma.boolean('show left action', {
+        true: <NavBarIconButton name="appSwitcher" />,
+        false: undefined,
+      }),
+      endAction1: figma.boolean('show right action', {
+        true: <NavBarIconButton name="more" />,
+        false: undefined,
+      }),
+      endAction2: figma.boolean('show 2nd right action', {
+        true: <NavBarIconButton name="gear" />,
+        false: undefined,
+      }),
+      endAction3: figma.boolean('show 3rd right action', {
+        true: <NavBarIconButton name="share" />,
+        false: undefined,
+      }),
+      divider: figma.boolean('show divider', {
+        true: <Divider />,
+        false: undefined,
+      }),
+    },
+    example: function Example({ startAction, endAction1, endAction2, endAction3, divider }) {
+      return (
+        <VStack>
+          <TopNavBar
+            end={
+              <HStack alignItems="center" gap={0.25}>
+                {endAction3}
+                {endAction2}
+                {endAction1}
+              </HStack>
+            }
+            start={startAction}
+          />
+          {divider}
+        </VStack>
+      );
+    },
+  },
+);
+
+figma.connect(
+  TopNavBar,
+  'https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/%E2%9C%A8-CDS-Components?node-id=49598-4137',
+  {
+    variant: {
+      type: 'Market Selector',
+    },
+    imports: [
+      "import { TopNavBar } from '@cbhq/cds-mobile/navigation/TopNavBar';",
+      "import { Divider } from '@cbhq/cds-mobile/layout/Divider';",
+      "import { VStack } from '@cbhq/cds-mobile/layout/VStack';",
+      "import { HStack } from '@cbhq/cds-mobile/layout/HStack';",
+    ],
+    props: {
+      children: figma.children('Market selector'),
+      startAction: figma.boolean('show left action', {
+        true: <NavBarIconButton name="appSwitcher" />,
+        false: undefined,
+      }),
+      endAction1: figma.boolean('show right action', {
+        true: <NavBarIconButton name="more" />,
+        false: undefined,
+      }),
+      endAction2: figma.boolean('show 2nd right action', {
+        true: <NavBarIconButton name="gear" />,
+        false: undefined,
+      }),
+      endAction3: figma.boolean('show 3rd right action', {
+        true: <NavBarIconButton name="share" />,
+        false: undefined,
+      }),
+      divider: figma.boolean('show divider', {
+        true: <Divider />,
+        false: undefined,
+      }),
+    },
+    example: function Example({
+      children,
+      startAction,
+      endAction1,
+      endAction2,
+      endAction3,
+      divider,
+    }) {
+      return (
+        <VStack>
+          <TopNavBar
+            end={
+              <HStack alignItems="center" gap={0.25}>
+                {endAction3}
+                {endAction2}
+                {endAction1}
+              </HStack>
+            }
+            start={startAction}
+          >
+            {children}
+          </TopNavBar>
+          {divider}
+        </VStack>
+      );
+    },
+  },
+);

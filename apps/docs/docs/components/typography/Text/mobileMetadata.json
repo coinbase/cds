@@ -1,0 +1,12 @@
+{
+  "import": "import { Text } from '@cbhq/cds-mobile/typography/Text'",
+  "source": "https://github.com/coinbase/cds-staging/blob/master/packages/mobile/src/typography/Text.tsx",
+  "description": "A generic text element.",
+  "relatedComponents": [
+    {
+      "label": "Link",
+      "url": "/components/typography/Link/"
+    }
+  ],
+  "dependencies": []
+}

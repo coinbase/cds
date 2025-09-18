@@ -1,0 +1,41 @@
+import { MDXArticle } from '@site/src/components/page/MDXArticle';
+
+<MDXArticle>
+## Basic usage
+
+```tsx
+function Example() {
+  const { screenWidth, screenHeight, statusBarHeight } = useDimensions();
+
+  return (
+    <Box backgroundColor="bgAlternate" padding={3} borderRadius={300} width="100%">
+      <VStack gap={2}>
+        <TextHeadline>
+          Screen dimensions: {screenWidth}x{screenHeight}
+        </TextHeadline>
+        <TextHeadline>Status bar height: {statusBarHeight}px</TextHeadline>
+      </VStack>
+    </Box>
+  );
+}
+```
+
+</MDXArticle>
+
+<MDXArticle hideDivider>
+## With Safe Area Layout
+
+```tsx
+function Example() {
+  const { screenHeight, statusBarHeight } = useDimensions();
+  const contentHeight = screenHeight - statusBarHeight;
+
+  return (
+    <Box backgroundColor="bgAlternate" height={contentHeight} paddingTop={statusBarHeight}>
+      <TextHeadline>Content below status bar</TextHeadline>
+    </Box>
+  );
+}
+```
+
+</MDXArticle>

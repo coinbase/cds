@@ -1,0 +1,45 @@
+### Basic example
+
+```jsx live
+<VStack gap={1}>
+  <Fallback width={150} height={45} />
+  <Fallback width={65} height={45} percentage />
+</VStack>
+```
+
+### Shape
+
+The shape of the fallback can further be customized with the `shape` prop.
+
+```jsx live
+<HStack gap={1}>
+  <Fallback width={50} height={50} shape="square" />
+  <Fallback width={50} height={50} shape="squircle" />
+  <Fallback width={50} height={50} shape="circle" />
+</HStack>
+```
+
+:::tip Rectangular fallback width
+
+If the fallback shape is a rectangle and the width is specified as a number, then by default, the width value will be recalculated and randomized within a predetermined threshold (e.g. to add some variety when mulitple fallbacks are presented together). If this behavior is undesirable (e.g. in server-side rendered web apps), randomization can be disabled with the `disableRandomRectWidth` prop.
+
+<br />
+
+Alternatively, you may create a rectangle width variant by setting a number value on the `rectWidthVariant` prop. Variants map to a predetermined set of width values, which are cycled through repeatedly when the set is exhausted. Therefore, it's still possible to achieve some variety, but in a deterministic manner (i.e. safe for server-side rendering). Here's an example:
+
+<br />
+
+```jsx live
+function RenderFallbacksInList() {
+  const items = [{}, {}, {}, {}, {}];
+  return (
+    <VStack gap={1}>
+      {items.map((_, i) => (
+        <Fallback width={150} rectWidthVariant={i} />
+      ))}
+    </VStack>
+  );
+}
+```
+
+:::

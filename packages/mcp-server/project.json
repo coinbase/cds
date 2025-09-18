@@ -1,0 +1,55 @@
+{
+  "name": "mcp-server",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/mcp-server/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "command": "rm -rf esm && babel ./src --out-dir esm --extensions .ts,.tsx,.js,.jsx --copy-files --no-copy-ignored"
+    },
+    "generate-mcp-docs": {
+      "dependsOn": [
+        "docs:build"
+      ],
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "rm -rf mcp-docs",
+          "nx run docs:build-llm-docs ./packages/mcp-server/mcp-docs",
+          "chmod +x esm/server.js esm/setup.js"
+        ],
+        "cwd": "{projectRoot}",
+        "parallel": false
+      }
+    },
+    "inspect": {
+      "dependsOn": [
+        "generate-mcp-docs"
+      ],
+      "command": "npx @modelcontextprotocol/inspector npx tsx src/server.ts",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "defaultConfiguration": "dev",
+      "configurations": {
+        "dev": {
+          "command": "tsc --build --pretty --verbose"
+        },
+        "prod": {
+          "commands": [
+            "tsc --build ./tsconfig.build.json --pretty --verbose",
+            "prettier ./dts --write --loglevel warn"
+          ],
+          "parallel": false
+        }
+      }
+    }
+  }
+}

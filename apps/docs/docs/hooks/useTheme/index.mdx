@@ -1,0 +1,34 @@
+---
+id: useTheme
+title: useTheme
+platform_switcher_options: { web: true, mobile: true }
+hide_title: true
+---
+
+import { ComponentHeader } from '@site/src/components/page/ComponentHeader';
+import { HooksBanner } from '@site/src/components/page/ComponentBanner/HooksBanner';
+import { HookTabsContainer } from '@site/src/components/page/HookTabsContainer';
+import webMetadata from './webMetadata.json';
+import mobileMetadata from './mobileMetadata.json';
+import WebApi, { toc as webApiToc } from './_webApi.mdx';
+import MobileApi, { toc as mobileApiToc } from './_mobileApi.mdx';
+import WebExamples, { toc as webExamplesToc } from './_webExamples.mdx';
+import MobileExamples, { toc as mobileExamplesToc } from './_mobileExamples.mdx';
+
+<ComponentHeader
+  title="useTheme"
+  banner={<HooksBanner />}
+  webMetadata={webMetadata}
+  mobileMetadata={mobileMetadata}
+/>
+
+<HookTabsContainer
+  webApi={<WebApi />}
+  mobileApi={<MobileApi />}
+  webExamples={<WebExamples />}
+  mobileExamples={<MobileExamples />}
+  webApiToc={webApiToc}
+  mobileApiToc={mobileApiToc}
+  webExamplesToc={webExamplesToc}
+  mobileExamplesToc={mobileExamplesToc}
+/>

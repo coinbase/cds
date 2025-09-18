@@ -1,0 +1,40 @@
+---
+id: tabs
+title: Tabs
+platform_switcher_options: { web: true, mobile: true }
+hide_title: true
+---
+
+import { VStack } from '@cbhq/cds-web/layout';
+import { ComponentHeader } from '@site/src/components/page/ComponentHeader';
+import { ComponentTabsContainer } from '@site/src/components/page/ComponentTabsContainer';
+
+import webPropsToc from ':docgen/web/tabs/Tabs/toc-props';
+import mobilePropsToc from ':docgen/mobile/tabs/Tabs/toc-props';
+import WebPropsTable from './_webPropsTable.mdx';
+import MobilePropsTable from './_mobilePropsTable.mdx';
+import WebExamples, { toc as webExamplesToc } from './_webExamples.mdx';
+import MobileExamples, { toc as mobileExamplesToc } from './_mobileExamples.mdx';
+import webMetadata from './webMetadata.json';
+import mobileMetadata from './mobileMetadata.json';
+
+fdsakl;fjsa;
+
+<VStack gap={5}>
+  <ComponentHeader
+    title="Tabs"
+    description="Tabs is a flexible, accessible tab navigation component for React Native, supporting animated indicators, custom tab components, and full accessibility."
+    webMetadata={webMetadata}
+    mobileMetadata={mobileMetadata}
+  />
+  <ComponentTabsContainer
+    webPropsTable={<WebPropsTable />}
+    webExamples={<WebExamples />}
+    mobilePropsTable={<MobilePropsTable />}
+    mobileExamples={<MobileExamples />}
+    webExamplesToc={webExamplesToc}
+    mobileExamplesToc={mobileExamplesToc}
+    webPropsToc={webPropsToc}
+    mobilePropsToc={mobilePropsToc}
+  />
+</VStack>

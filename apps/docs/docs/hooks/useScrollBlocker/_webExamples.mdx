@@ -1,0 +1,58 @@
+import { MDXArticle } from '@site/src/components/page/MDXArticle';
+
+<MDXArticle>
+## Basic usage
+
+```tsx live
+function Example() {
+  const blockScroll = useScrollBlocker();
+  const [isBlocked, setIsBlocked] = useState(false);
+
+  const toggleScroll = () => {
+    setIsBlocked(!isBlocked);
+    blockScroll(!isBlocked);
+  };
+
+  return (
+    <VStack gap={3} alignItems="start">
+      <TextHeadline>Scroll is currently {isBlocked ? 'blocked' : 'enabled'}</TextHeadline>
+      <Button onClick={toggleScroll}>{isBlocked ? 'Enable Scroll' : 'Block Scroll'}</Button>
+    </VStack>
+  );
+}
+```
+
+</MDXArticle>
+
+<MDXArticle hideDivider>
+
+## With Overlay
+
+```tsx live
+function Example() {
+  const blockScroll = useScrollBlocker();
+  const [isOpen, setIsOpen] = useState(false);
+
+  const openModal = () => {
+    setIsOpen(true);
+    blockScroll(true);
+  };
+
+  const closeModal = () => {
+    setIsOpen(false);
+    blockScroll(false);
+  };
+
+  return (
+    <VStack gap={3} alignItems="start">
+      <Button onClick={openModal}>Open Overlay</Button>
+      <Modal visible={isOpen} onRequestClose={closeModal}>
+        <ModalHeader title="Modal Title" />
+        <ModalBody>Modal Content</ModalBody>
+      </Modal>
+    </VStack>
+  );
+}
+```
+
+</MDXArticle>

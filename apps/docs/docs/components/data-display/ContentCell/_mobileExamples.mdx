@@ -1,0 +1,98 @@
+### Basic usage
+
+```tsx
+<ContentCell
+  title="Main Title"
+  subtitle="Subtitle text"
+  description="This is a detailed description of the content."
+  accessibilityLabel="Main content cell"
+/>
+```
+
+### With Meta Information
+
+```tsx
+<ContentCell
+  title="Document Title"
+  subtitle="Last modified by John Doe"
+  meta="2 days ago"
+  description="This example shows how meta information appears aligned to the right."
+  accessibilityHint="Double tap to view document details"
+/>
+```
+
+### With Media and Accessory
+
+```tsx
+<ContentCell
+  title="Profile Information"
+  subtitle="Active Status"
+  media={<Avatar alt="Sneezy" name="Sneezy" size="m" colorScheme="blue" />}
+  accessory="disclosure"
+  description="Profile details with avatar"
+  accessibilityLabel="Jane Smith's profile"
+/>
+```
+
+### Automatic Accessibility Label
+
+```tsx
+<ContentCell
+  title="Meeting with Team"
+  subtitle="Tomorrow at 2 PM"
+  description="Weekly sync meeting"
+  // No accessibilityLabel provided - it will automatically use the title
+/>
+```
+
+### Compact Layout
+
+```tsx
+<ContentCell
+  title="Compact Cell"
+  subtitle="Reduced spacing"
+  description="This cell uses compact spacing for denser layouts."
+  compact
+/>
+```
+
+### Selected State
+
+```tsx
+<ContentCell
+  title="Selected Item"
+  subtitle="With checkmark"
+  description="This cell shows the selected state."
+  selected
+  accessibilityLabel="Selected item"
+/>
+```
+
+### Loading States
+
+The ContentCellFallback component provides loading state representations of ContentCell. It uses placeholder rectangles to indicate where content will appear, creating a smooth loading experience. Each placeholder can have its width determined by a predefined set of values, which can be selected using the `rectWidthVariant` prop. The mobile version leverages the theme system for consistent line heights and reuses the ContentCell component structure for layout consistency.
+
+```tsx
+<VStack gap={3}>
+  {/* Basic loading state */}
+  <ContentCellFallback title subtitle description />
+
+  {/* Loading state with media */}
+  <ContentCellFallback title subtitle description media="avatar" />
+
+  {/* Loading state with meta information */}
+  <ContentCellFallback title subtitle description meta />
+
+  {/* Loading state with custom width variant and disabled randomization */}
+  <ContentCellFallback
+    title
+    subtitle
+    description
+    meta
+    rectWidthVariant={1} // Select a predefined set of widths for the loading rectangles
+    disableRandomRectWidth // Disable random width variations
+  />
+</VStack>
+```
+
+Note: The mobile ContentCellFallback uses theme-based line heights and reuses the ContentCell component structure, resulting in a more consistent loading state appearance.

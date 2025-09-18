@@ -1,0 +1,126 @@
+### Default
+
+Default Link text will inherit parent text styles.
+
+```jsx live
+<Link>Default is inherited text</Link>
+```
+
+### Links inside a paragraph
+
+```jsx live
+<TextBody as="p">
+  Links rendered inside a paragraph tag will automatically display with an{' '}
+  <Link href="https://webaim.org/techniques/hypertext/link_text#underlining">underline</Link>. This
+  can be overridden by setting underline to <b>false</b>, but it's not advised.
+</TextBody>
+```
+
+### Styling your link
+
+To style a `<Link />` component, simply wrap the `Link` node in the desired `Text` component, using the `as` prop for your usecase (for example, `p` for body text, `h1`/`h2`/`h3` for titles, etc). However, there may be times when a rendering a span is exactly what you want. In those cases, providing a font prop makes sense.
+
+Wrapping your Link in the appropriate Text element
+
+```jsx live
+<VStack alignItems="flex-start" gap={3}>
+  <Text font="body" as="p">
+    <Link href="https://www.coinbase.com/" openInNewWindow>
+      body link
+    </Link>
+  </Text>
+  <Text font="caption" as="span">
+    <Link href="https://www.coinbase.com/" openInNewWindow>
+      caption link
+    </Link>
+  </Text>
+  <Text font="label1" as="label">
+    <Link href="https://www.coinbase.com/" openInNewWindow>
+      label1 link
+    </Link>
+  </Text>
+  <Text font="label2" as="label">
+    <Link href="https://www.coinbase.com/" openInNewWindow>
+      label2 link
+    </Link>
+  </Text>
+  <Text font="legal" as="span">
+    <Link href="https://www.coinbase.com/" openInNewWindow>
+      legal link
+    </Link>
+  </Text>
+  <Text font="title1" as="h1">
+    <Link href="https://www.coinbase.com/" openInNewWindow>
+      title1 link
+    </Link>
+  </Text>
+  <Text font="title2" as="h2">
+    <Link href="https://www.coinbase.com/" openInNewWindow>
+      title2 link
+    </Link>
+  </Text>
+  <Text font="title3" as="h3">
+    <Link href="https://www.coinbase.com/" openInNewWindow>
+      title3 link
+    </Link>
+  </Text>
+</VStack>
+```
+
+### Using the font prop
+
+If you find yourself in a situation where you simply need to style a link as a Text component without wrapping it in the semantically appropriate text element, reach for the `font` prop.
+
+```jsx live
+<VStack alignItems="flex-start" gap={3}>
+  {['body', 'caption', 'label1', 'label2', 'legal', 'title1', 'title2', 'title3'].map((font) => (
+    <Link font={font} href="https://www.coinbase.com/" openInNewWindow>
+      {`${font} link`}
+    </Link>
+  ))}
+</VStack>
+```
+
+### Color override
+
+```jsx live
+<Link href="https://www.coinbase.com/" color="fgNegative">
+  With color override
+</Link>
+```
+
+### openInNewWindow and rel props
+
+```jsx live
+<VStack alignItems="flex-start" gap={3}>
+  <Link font="title1" href="https://www.coinbase.com/" openInNewWindow>
+    Open window in existing tab
+  </Link>
+  <Link font="title2" href="https://www.coinbase.com/" rel="noreferrer">
+    Sets rel to noreferrer
+  </Link>
+  <Link font="title3" href="https://www.coinbase.com/" rel="noopener">
+    Sets rel to noopener
+  </Link>
+</VStack>
+```
+
+### Handling onClick
+
+```jsx live
+<Link font="headline" href="#tagname" onClick={() => console.log('pressed link')} rel="noopener">
+  Handles onClick
+</Link>
+```
+
+### Accessibility
+
+:::tip Accessibility tip
+
+[WCAG 2.0](https://webaim.org/standards/wcag/checklist) has 2 requirements for body text links that are not underlined by default:
+
+<br />
+
+_The link text must have a 3:1 contrast ratio from the surrounding non-link text. The link must present a "non-color designator" (typically the introduction of the underline) on both mouse hover and keyboard focus. These two requirements help ensure that all users can differentiate links from non-link text, even if they have low vision, color deficiency, or have overridden page colors._
+
+:::

@@ -1,0 +1,16 @@
+### Basic usage
+
+Use `NavigationTitleSelect` within a `TopNavBar` to allow users to switch between contexts.
+
+```tsx
+<TopNavBar start={<IconButton icon="arrow-left" accessibilityLabel="Back" />}>
+  <NavigationTitleSelect
+    options={[
+      { label: 'My Portfolio', id: 'portfolio' },
+      { label: 'Family Account', id: 'family' },
+    ]}
+    value="portfolio"
+    onChange={(value) => console.log(value)}
+  />
+</TopNavBar>
+```

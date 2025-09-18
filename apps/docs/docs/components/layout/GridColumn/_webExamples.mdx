@@ -1,0 +1,92 @@
+GridColumns can be used to explicitly place children of a [Grid](/components/layout/Grid) between specified grid lines (the vertical and horizontal lines that make up a Grid).
+
+:::note
+GridColumn will _only_ work as a direct descendent of a Grid component.
+:::
+
+It uses the `grid-column` [CSS property](https://developer.mozilla.org/en-US/docs/Web/CSS/grid-column) under the hood. If you want to access the `grid-column` property directly, you can use `gridColumn` prop; otherwise `colStart` and `colEnd` are syntactic sugar for the property.
+
+:::tip
+"Grid lines" are not columns, rather they are the grid itself that is created whenever you specify `columns` or `templateColumns` within a Grid.
+You can see these grid lines if you inspect a Grid in your Dev Tools and click the "grid" tag next to your DOM element.
+:::
+
+You can specify `colStart` and/or `colEnd` which represent the grid lines where the column will start and end, respectively, eg: `colStart={1} colEnd={3}` which will span 2 columns in the parent Grid. Or you can use `gridColumn` which is shorthand for each property separated by a `/`, eg: `gridColumn="1 / -1"` where `-1` is shorthand for the last grid line in the row.
+
+:::note
+Grid grid lines are `1` indexed, so the last grid line in the row will be `numberOfColumns + 1`
+:::
+
+```jsx live
+function GridColumnExample() {
+  return (
+    <Grid gap={0.5} columns={12}>
+      {Array.from({ length: 12 }).map((_, idx) => (
+        <GridColumn background="fgPrimary" padding={2} colStart={1} colEnd={idx + 2} key={idx} />
+      ))}
+    </Grid>
+  );
+}
+```
+
+### Full Bleed Columns
+
+You can use GridColumn to create "full bleed" layouts. This is a common layout where most content will not be edge to edge with the parent Grid, rather, content will only occupy columns in the center of the Grid buffered by gutters on either end; some columns may "break" from this and become full bleed spanning the entire width of the layout. You can use GridColumn to accomplish this within the same parent Grid.
+
+```jsx live
+function FullBleedExample() {
+  function Item({ children, ...props }) {
+    return (
+      <HStack
+        background="bgAlternate"
+        justifyContent="center"
+        alignItems="center"
+        padding={2}
+        minWidth="100px"
+        {...props}
+      >
+        {children}
+      </HStack>
+    );
+  }
+  return (
+    <Grid gap={0.5} templateColumns="100px 1fr 100px">
+      <Item background="bg">
+        <TextBody as="p">Gutter</TextBody>
+      </Item>
+      <Item>
+        <TextBody as="p">Body</TextBody>
+      </Item>
+      <Item background="bg">
+        <TextBody as="p">Gutter</TextBody>
+      </Item>
+      <GridColumn
+        // this is shorthand for first grid line to the last
+        // alternatively, you could also use colSpan={3}
+        // if you know how many columns there are
+        gridColumn="1 / -1"
+        justifyContent="center"
+        background="bgAlternate"
+        padding={2}
+      >
+        <TextBody as="p">Full Bleed</TextBody>
+      </GridColumn>
+    </Grid>
+  );
+}
+```
+
+### A11y
+
+By default GridColumn is not accessibility aware as it renders a standard `div`. We highly encourage the use of semantic elements so that screen readers can easily infer intent. This can be achieved through the `as` and `role` props.
+
+```jsx
+<Grid columns={5} as="ol" role="list">
+  <GridColumn colSpan={3} as="li" role="list-item">
+    1
+  </GridColumn>
+  <GridColumn colSpan={2} as="li" role="list-item">
+    2
+  </GridColumn>
+</Grid>
+```

@@ -1,0 +1,87 @@
+## Basic Example
+
+```jsx live
+<VStack gap={2}>
+  <HStack gap={2} alignItems="center">
+    <Avatar src={assets.btc.imageUrl} />
+  </HStack>
+</VStack>
+```
+
+## Sizes
+
+Avatar comes in six different sizes. The default size is `l`.
+
+```jsx live
+<VStack gap={2}>
+  <HStack gap={2} alignItems="center">
+    <Avatar src={assets.btc.imageUrl} size="s" />
+    <Avatar src={assets.btc.imageUrl} size="m" />
+    <Avatar src={assets.btc.imageUrl} size="l" />
+    <Avatar src={assets.btc.imageUrl} size="xl" />
+    <Avatar src={assets.btc.imageUrl} size="xxl" />
+    <Avatar src={assets.btc.imageUrl} size="xxxl" />
+  </HStack>
+</VStack>
+```
+
+## Shapes
+
+Avatar supports three different shapes: `circle`, `square`, and `hexagon`. The default shape is `circle`.
+
+```jsx live
+<HStack gap={2} alignItems="center">
+  <Avatar name="Alice" colorScheme="blue" size="xl" shape="circle" />
+  <Avatar name="Bob" colorScheme="purple" size="xl" shape="square" />
+  <Avatar name="Charlie" colorScheme="green" size="xl" shape="hexagon" />
+</HStack>
+```
+
+## Selected State
+
+Avatars can show a selected state with a border indicator.
+
+```jsx live
+<HStack gap={2}>
+  <Avatar name="Alice" colorScheme="blue" size="xl" />
+  <Avatar name="Alice" colorScheme="blue" size="xl" selected />
+  <Avatar name="Bob" colorScheme="purple" size="xl" shape="square" />
+  <Avatar name="Bob" colorScheme="purple" size="xl" shape="square" selected />
+</HStack>
+```
+
+## Fallback Image
+
+If you do not provide a src or if the provided src does not resolve, Avatar will surface a placeholder image.
+
+```jsx live
+<HStack gap={2} alignItems="center">
+  <Avatar />
+  <Avatar selected />
+</HStack>
+```
+
+## Fallback with Colors
+
+We've created a palette of identity colors using our CDS spectrum colors. When used as fallback, these colors will generate based on the provided name.
+
+```jsx live
+<VStack gap={2}>
+  <HStack gap={2} alignItems="center">
+    <Avatar name="Alice" colorScheme="blue" size="xl" />
+    <Avatar name="Bob" colorScheme="purple" size="xl" />
+    <Avatar name="Charlie" colorScheme="green" size="xl" />
+    <Avatar name="Diana" colorScheme="teal" size="xl" />
+    <Avatar name="Eve" colorScheme="pink" size="xl" />
+    <Avatar name="Frank" colorScheme="gray" size="xl" />
+  </HStack>
+  <HStack gap={2} alignItems="center">
+    <Avatar name="Alice" colorScheme="blue" size="xl" selected />
+    <Avatar name="Bob" colorScheme="purple" size="xl" selected />
+    <Avatar name="Charlie" colorScheme="green" size="xl" selected />
+    <Avatar name="Diana" colorScheme="teal" size="xl" selected />
+    <Avatar name="Eve" colorScheme="pink" size="xl" selected />
+    <Avatar name="Frank" colorScheme="gray" size="xl" selected />
+  </HStack>
+</VStack>
+```

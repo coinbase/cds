@@ -1,0 +1,57 @@
+### Basic usage
+
+The PortalProvider component is typically used at the root of your application to manage overlay components:
+
+```tsx live
+function Example() {
+  return (
+    <PortalProvider>
+      <Box padding={4} bordered borderRadius={200}>
+        Your app content
+      </Box>
+    </PortalProvider>
+  );
+}
+```
+
+### Custom Portal Nodes
+
+You can disable the default portal rendering and use the PortalNodes component separately:
+
+```tsx live
+function Example() {
+  return (
+    <PortalProvider renderPortals={false}>
+      <Box padding={4} bordered borderRadius={200}>
+        Your app content
+      </Box>
+      <PortalNodes />
+    </PortalProvider>
+  );
+}
+```
+
+### Toast Example
+
+The PortalProvider's `toastBottomOffset` prop sets the default bottom offset for all toasts:
+
+```tsx live
+function Example() {
+  function ToastDemo() {
+    const toast = useToast();
+    return (
+      <Box padding={4} bordered borderRadius={200}>
+        <Button onClick={() => toast.show('This toast appears with a custom bottom offset (80px)')}>
+          Show Toast
+        </Button>
+      </Box>
+    );
+  }
+
+  return (
+    <PortalProvider toastBottomOffset={80}>
+      <ToastDemo />
+    </PortalProvider>
+  );
+}
+```

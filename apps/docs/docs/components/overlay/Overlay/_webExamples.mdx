@@ -1,0 +1,53 @@
+### Basic usage
+
+```tsx live
+function BasicOverlay() {
+  const [isVisible, setIsVisible] = useState(false);
+
+  return (
+    <VStack gap={4} height={200} position="relative" width="100%">
+      <Button onClick={() => setIsVisible(!isVisible)}>
+        {isVisible ? 'Hide' : 'Show'} Overlay
+      </Button>
+      <Text>Content underneath the overlay</Text>
+      {isVisible && <Overlay onClick={() => setIsVisible(false)} />}
+    </VStack>
+  );
+}
+```
+
+### With Animation
+
+```tsx live
+function AnimatedOverlay() {
+  const [isVisible, setIsVisible] = useState(false);
+
+  return (
+    <VStack gap={4} height={200} position="relative" width="100%">
+      <Button onClick={() => setIsVisible(!isVisible)}>
+        {isVisible ? 'Hide' : 'Show'} Animated Overlay
+      </Button>
+      <Text>Content underneath the overlay</Text>
+      {isVisible && <Overlay animated onClick={() => setIsVisible(false)} />}
+    </VStack>
+  );
+}
+```
+
+### Custom Background
+
+```tsx live
+function CustomOverlay() {
+  const [isVisible, setIsVisible] = useState(false);
+
+  return (
+    <VStack gap={4} height={200} position="relative" width="100%">
+      <Button onClick={() => setIsVisible(!isVisible)}>
+        {isVisible ? 'Hide' : 'Show'} Custom Overlay
+      </Button>
+      <Text>Content underneath the overlay</Text>
+      {isVisible && <Overlay animated background="bgLine" onClick={() => setIsVisible(false)} />}
+    </VStack>
+  );
+}
+```

@@ -1,0 +1,81 @@
+### Basic usage
+
+```tsx live
+<ContentCell
+  title="Main Title"
+  subtitle="Subtitle text"
+  description="This is a detailed description of the content that can span multiple lines and will automatically handle overflow."
+/>
+```
+
+### With Meta Information and Truncation
+
+```tsx live
+<ContentCell
+  title="This is a very long title that will be truncated when it exceeds the available space in the container"
+  subtitle="This subtitle will also be truncated if it becomes too long for the container to display"
+  meta="2 days ago"
+  description="The title and subtitle above will be truncated with ellipsis, while this description text will wrap to multiple lines and show scrollbars if needed."
+/>
+```
+
+### With Media and Accessory
+
+```tsx live
+<ContentCell
+  title="Profile Information"
+  subtitle="Active Status"
+  media={<Avatar alt="Sneezy" name="Sneezy" size="m" colorScheme="blue" />}
+  accessory="disclosure"
+  description="This example demonstrates the use of media (avatar) and an accessory indicator."
+/>
+```
+
+### Compact Layout
+
+```tsx live
+<ContentCell
+  title="Compact Cell"
+  subtitle="Reduced spacing"
+  description="This cell uses compact spacing for denser layouts."
+  compact
+/>
+```
+
+### Selected State
+
+```tsx live
+<ContentCell
+  title="Selected Item"
+  subtitle="With checkmark"
+  description="This cell shows the selected state with a checkmark accessory."
+  selected
+/>
+```
+
+### Loading States
+
+The ContentCellFallback component provides loading state representations of ContentCell. It uses placeholder rectangles to indicate where content will appear, creating a smooth loading experience. Each placeholder can have its width determined by a predefined set of values, which can be selected using the `rectWidthVariant` prop. The web version uses percentage-based widths and custom layouts to match the ContentCell structure.
+
+```tsx live
+<VStack gap={3}>
+  {/* Basic loading state */}
+  <ContentCellFallback title subtitle description />
+
+  {/* Loading state with media */}
+  <ContentCellFallback title subtitle description media="avatar" />
+
+  {/* Loading state with meta information */}
+  <ContentCellFallback title subtitle description meta />
+
+  {/* Loading state with custom width variant and disabled randomization */}
+  <ContentCellFallback
+    title
+    subtitle
+    description
+    meta
+    rectWidthVariant={1} // Select a predefined set of widths for the loading rectangles
+    disableRandomRectWidth // Disable random width variations
+  />
+</VStack>
+```

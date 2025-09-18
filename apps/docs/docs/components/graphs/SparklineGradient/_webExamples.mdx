@@ -1,0 +1,75 @@
+Expands upon the [Sparkline](/components/graphs/Sparkline) component to provide a gradient stroke. However, for dark mode we disable the gradient effect. These are typically used at a larger size for portfolio charts or on detail Asset pages.
+
+### Dynamic path colors
+
+```jsx live
+function Example() {
+  const dimensions = { width: 400, height: 200 };
+  const path = useSparklinePath({ ...dimensions, data: prices });
+  return (
+    <VStack gap={2}>
+      {assetColors.map((color) => (
+        <SparklineGradient key={color} {...dimensions} path={path} color={color} />
+      ))}
+    </VStack>
+  );
+}
+```
+
+### Dynamic background colors
+
+```jsx live
+function Example() {
+  const dimensions = { width: 400, height: 200 };
+  const path = useSparklinePath({ ...dimensions, data: prices });
+  return (
+    <VStack gap={2}>
+      {assetColors.map((background) => (
+        <VStack key={background} dangerouslySetBackground={background}>
+          <SparklineGradient {...dimensions} path={path} background={background} color="auto" />
+        </VStack>
+      ))}
+    </VStack>
+  );
+}
+```
+
+### y axis scaling
+
+```jsx live
+function Example() {
+  const yAxisScalingFactor = 0.2;
+  const dimensions = { width: 400, height: 200 };
+  const path = useSparklinePath({ ...dimensions, data: prices, yAxisScalingFactor });
+  return (
+    <VStack gap={2}>
+      <TextLabel1 as="p">Scale {yAxisScalingFactor}</TextLabel1>
+      <SparklineGradient
+        {...dimensions}
+        path={path}
+        color="auto"
+        yAxisScalingFactor={yAxisScalingFactor}
+      />
+    </VStack>
+  );
+}
+```
+
+### Sparkline fill
+
+```jsx live
+function Example() {
+  const dimensions = { width: 400, height: 200 };
+  const path = useSparklinePath({ ...dimensions, data: prices });
+  const area = useSparklineArea({ ...dimensions, data: prices });
+  return (
+    <VStack gap={2}>
+      {assetColors.map((color) => (
+        <SparklineGradient key={color} {...dimensions} path={path} color={color}>
+          <SparklineArea area={area} />
+        </SparklineGradient>
+      ))}
+    </VStack>
+  );
+}
+```

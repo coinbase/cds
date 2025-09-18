@@ -1,0 +1,135 @@
+### Accessibility
+
+#### Screen reader
+
+Screen reader will read all tab labels in the group regardless if some are behind the overflow menu. Ensure that the nextArrowAccessibilityLabel and previousArrowAccessibilityLabel props are set if the tab list has overflow content
+
+#### Keyboarding
+
+Once a tab button is focused, other tabs can be selected by using the arrow keys, following the [w3.org Tabs Design Pattern](https://www.w3.org/WAI/ARIA/apg/patterns/tabpanel/). Tabs are focus trapped, so pressing RightArrow on the last element will cycle back to the first element.
+
+##### Tab:
+
+- When focus moves into the tab list, places focus on the active tab element.
+- When the tab list contains the focus, moves focus to the next element in the page tab sequence outside the tablist, which is the tabpanel unless the first element containing meaningful content inside the tabpanel is focusable.
+
+##### When focus is on a tab element :
+
+- Left Arrow: moves focus to the previous tab. If focus is on the first tab, this action moves focus to the last tab. Optionally, activates the newly focused tab (See note below).
+- Right Arrow: Moves focus to the next tab. If focus is on the last tab element, this action moves focus to the first tab. Optionally, activates the newly focused tab (See note below).
+- Space or Enter: Activates the tab.
+
+```jsx live
+function TabNavigationExample() {
+  // TAB MOCK DATA
+  const tabs = useMemo(() => [
+    { id: 'first_primary_tab', label: 'Tab one' },
+    { id: 'second_primary_tab', label: 'Tab two' },
+    { id: 'third_primary_tab', label: 'Tab three' },
+  ]);
+
+  const [primary, setPrimary] = useState(tabs[0].id);
+
+  // This should be kept out of the fn
+  const MockTabPanel = ({ id, children }) => {
+    /** This is a naive and simple approach to
+     *  illustrate the proper a11y configuration
+     *  Ideally you'll be using some nice animations
+     **/
+    const display = useMemo(() => (primary !== id ? 'none' : undefined), [primary, id]);
+
+    return (
+      <VStack
+        /**
+         * ACCESSIBILITY PROPS
+         * These three props are required to create a truly accessible
+         * tab system, and must be named in the following format
+         * */
+        role="tabpanel"
+        id={`tabpanel--${id}`}
+        accessibilityLabelledBy={`tab--${id}`}
+        // Make sure you're properly showing/hiding this tabpanel
+        display={display}
+        // Style as you wish
+        padding={2}
+        gap={1}
+        bordered
+        borderRadius={400}
+        background="bgPrimaryWash"
+      >
+        {children}
+      </VStack>
+    );
+  };
+
+  // This should be kept out of the fn
+  const MockTabPanels = ({ activeId }) => {
+    const tabDisplay = useMemo(
+      () => ({
+        one: activeId !== tabs[0].id ? 'none' : 'block',
+        two: activeId !== tabs[1].id ? 'none' : 'block',
+        three: activeId !== tabs[2].id ? 'none' : 'block',
+      }),
+      [activeId, tabs],
+    );
+
+    return (
+      <>
+        <MockTabPanel id={tabs[0].id}>
+          <TextTitle1 as="h2" paddingBottom={2}>
+            Let's tab!
+          </TextTitle1>
+          <TextBody as="p">
+            Press the tab key until the <b>Tab one</b> tab is focused.
+          </TextBody>
+          <TextBody as="p">
+            Now try using the right arrow key to move through the tab list.
+          </TextBody>
+          <TextBody as="p">
+            Pretty neat, hey? Okay, what happens if you press the right arrow key when you're at the
+            end of the list?
+          </TextBody>
+          <TextBody as="p">
+            <Link to="https://www.w3.org/WAI/ARIA/apg/example-index/tabs/tabs-manual.html">
+              This link
+            </Link>{' '}
+            in the body of the tab is here to provide another thing to focus on.
+          </TextBody>
+        </MockTabPanel>
+        <MockTabPanel id={tabs[1].id}>
+          <TextTitle1 as="h2" paddingBottom={2}>
+            You made it to tab two!
+          </TextTitle1>
+          <TextBody as="p">You're a natural 🕺</TextBody>
+          <TextBody as="p">Can you make it to tab three?</TextBody>
+        </MockTabPanel>
+        <MockTabPanel id={tabs[2].id}>
+          <TextTitle1 as="h2" paddingBottom={2}>
+            Heyooo, tab three!
+          </TextTitle1>
+          <TextBody as="p">
+            Now if you really want to have some fun, turn on a screen reader like{' '}
+            <Link href="https://www.apple.com/voiceover/info/guide/_1121.html">VoiceOver</Link> and
+            see how it sounds!
+          </TextBody>
+        </MockTabPanel>
+      </>
+    );
+  };
+
+  return (
+    <VStack gap={2}>
+      <TextTitle1 as="h2" id="tab-label">
+        Tab navigation example
+      </TextTitle1>
+      <TabNavigation
+        value={primary}
+        tabs={tabs}
+        onChange={setPrimary}
+        accessibilityLabelledBy="tab-label"
+      />
+      <MockTabPanels activeId={primary} />
+    </VStack>
+  );
+}
+```

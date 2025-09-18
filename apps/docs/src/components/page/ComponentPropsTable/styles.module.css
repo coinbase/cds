@@ -1,0 +1,11 @@
+.propsNameWrapper {
+  scroll-margin-top: calc(
+    var(--ifm-navbar-height) + var(--tabs-wrapper-height) + var(--props-table-search-bar-height) +
+      var(--space-2)
+  );
+}
+
+.propsTable {
+  width: 100%;
+  display: table;
+}

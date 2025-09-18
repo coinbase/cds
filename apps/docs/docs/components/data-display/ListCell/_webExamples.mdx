@@ -1,0 +1,126 @@
+A cell row is divided into the following 4 columns:
+
+- Start: A type of [media](/components/media/CellMedia), like icon or avatar.
+- Middle: The primary content; a title and description.
+- End: Detailed information in neutral, negative, and positive variants.
+- Accessory: A whitelisted icon displayed at the end.
+
+:::warning
+
+The `title`, `description`, `detail` and `subdetail` props are only intended to accept a string or `Text` component. Other use cases, while allowed, are not supported and may result in unexpected behavior.
+
+:::
+
+### Basic usage
+
+```tsx live
+<ListCell title="Basic List Cell" description="A simple example of ListCell" />
+```
+
+### With Leading Icon
+
+```tsx live
+<ListCell
+  title="List Cell with Icon"
+  description="Shows usage with a leading icon"
+  media={<Icon active name="info" />}
+/>
+```
+
+### With Detail and Subdetail
+
+```tsx live
+<ListCell
+  title="List Cell with Details"
+  description="Shows usage with detail and subdetail"
+  detail="Primary detail"
+  subdetail="Secondary detail"
+/>
+```
+
+### Interactive Cell with Accessory
+
+```tsx live
+<ListCell
+  title="Interactive List Cell"
+  description="Click or tap to interact"
+  accessory="arrow"
+  onClick={() => alert('Cell clicked!')}
+/>
+```
+
+### With Helper Text
+
+```tsx live
+<VStack gap={3}>
+  <ListCell
+    title="List Cell with Helper Text"
+    description="Shows usage with helper text below the cell"
+    helperText={<CellHelperText paddingStart={6}>This is a default helper message.</CellHelperText>}
+    media={<CellMedia type="asset" source={assets.btc.imageUrl} />}
+    action={<Button compact>Action</Button>}
+  />
+  <ListCell
+    title="List Cell with Warning"
+    description="Shows usage with a warning message"
+    helperText={
+      <CellHelperText variant="warning" paddingStart={6}>
+        This is a warning message.
+      </CellHelperText>
+    }
+    media={<CellMedia type="asset" source={assets.btc.imageUrl} />}
+    action={<Button compact>Action</Button>}
+  />
+  <ListCell
+    title="List Cell with Error"
+    description="Shows usage with an error message"
+    helperText={
+      <CellHelperText variant="error" paddingStart={6}>
+        This is an error message.
+      </CellHelperText>
+    }
+    media={<CellMedia type="asset" source={assets.btc.imageUrl} />}
+    action={<Button compact>Action</Button>}
+  />
+</VStack>
+```
+
+### Multiline Description
+
+```tsx live
+<ListCell
+  title="Multiline Description"
+  description="This is a longer description that demonstrates how the text wraps when the multiline prop is enabled. It can span multiple lines without truncating."
+  multiline
+/>
+```
+
+### Loading States
+
+The ListCellFallback component provides loading state representations of ListCell. It uses placeholder rectangles to indicate where content will appear, creating a smooth loading experience. The web version uses percentage-based widths and custom layouts to match the ListCell's four-column structure.
+
+```tsx live
+<VStack gap={3}>
+  {/* Basic loading state */}
+  <ListCellFallback title description />
+
+  {/* Loading state with media */}
+  <ListCellFallback title description media="icon" />
+
+  {/* Loading state with details */}
+  <ListCellFallback title description detail subdetail />
+
+  {/* Full loading state with custom widths */}
+  <ListCellFallback
+    title
+    description
+    detail
+    subdetail
+    helperText
+    media="icon"
+    rectWidthVariant={2} // Creates a deterministic variant of the loading state
+    disableRandomRectWidth
+    styles={{ helperText: { paddingLeft: 48 } }}
+  />
+</VStack>
+```

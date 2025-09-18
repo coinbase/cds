@@ -1,0 +1,46 @@
+import { MDXArticle } from '@site/src/components/page/MDXArticle';
+
+<MDXArticle hideDivider>
+## Usage
+
+```tsx live
+function ExampleWithProvider() {
+  const { show: showToast } = useToast();
+
+  // Example provider configuration with action mapping
+  const config = {
+    actionMapping: {
+      onClick: 'click', // Maps CDS onClick to custom 'click' handler
+    },
+    handlers: {
+      Button: {
+        click: ({ componentName, data }) => {
+          showToast(`Button ${componentName} clicked with data: ${JSON.stringify(data)}`);
+        },
+      },
+    },
+  };
+
+  function ButtonExample() {
+    const eventConfig = {
+      actions: ['click'], // Use mapped action name
+      componentName: 'mapped_button',
+      data: {
+        source: 'action_mapping_example',
+      },
+    };
+
+    const handleButtonClick = useEventHandler('Button', 'onClick', eventConfig);
+
+    return <Button onClick={handleButtonClick}>Click for Mapped Action</Button>;
+  }
+
+  return (
+    <EventHandlerProvider config={config}>
+      <ButtonExample />
+    </EventHandlerProvider>
+  );
+}
+```
+
+</MDXArticle>

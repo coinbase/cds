@@ -1,0 +1,36 @@
+{
+  "name": "vscode-plugin",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/vscode-plugin/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "command": "rm -rf dist && rollup -c",
+      "options": {
+        "cwd": "packages/vscode-plugin"
+      }
+    },
+    "watch": {
+      "command": "rollup -c -w",
+      "dependsOn": [
+        "build"
+      ],
+      "options": {
+        "cwd": "packages/vscode-plugin"
+      }
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "defaultConfiguration": "dev",
+      "configurations": {
+        "dev": {
+          "command": "tsc --build --pretty --verbose"
+        },
+        "prod": {
+          "command": "tsc --build ./tsconfig.build.json --pretty --verbose"
+        }
+      }
+    }
+  }
+}

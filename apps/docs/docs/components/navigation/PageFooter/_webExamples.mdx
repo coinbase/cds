@@ -1,0 +1,73 @@
+### Basic usage
+
+```tsx live
+function BasicPageFooter() {
+  return (
+    <PageFooter
+      action={
+        <Button variant="primary" onClick={() => console.log('Clicked')}>
+          Submit
+        </Button>
+      }
+    />
+  );
+}
+```
+
+### Responsive Layout
+
+```tsx live
+function ResponsivePageFooter() {
+  return (
+    <Text color="foregroundMuted" font="caption">
+      Resize window to see button alignment change: centered on mobile, right-aligned on
+      tablet/desktop
+      <PageFooter
+        action={
+          <HStack gap={2}>
+            <Button variant="secondary" onClick={() => console.log('Cancel')}>
+              Cancel
+            </Button>
+            <Button variant="primary" onClick={() => console.log('Submit')}>
+              Submit
+            </Button>
+          </HStack>
+        }
+      />
+    </Text>
+  );
+}
+```
+
+### Custom Layout
+
+```tsx live
+function CustomLayoutFooter() {
+  return (
+    <VStack gap={2}>
+      {/* Override responsive defaults */}
+      <PageFooter
+        action={
+          <Button variant="primary" onClick={() => console.log('Centered')}>
+            Always Centered
+          </Button>
+        }
+        justifyContent="center"
+        paddingX={2}
+      />
+
+      {/* Custom styling */}
+      <PageFooter
+        action={
+          <Button variant="primary" onClick={() => console.log('Custom')}>
+            Custom Height
+          </Button>
+        }
+        backgroundColor="bgSecondary"
+        height={80}
+        paddingY={3}
+      />
+    </VStack>
+  );
+}
+```

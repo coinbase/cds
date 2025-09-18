@@ -1,0 +1,91 @@
+import { MDXArticle } from '@site/src/components/page/MDXArticle';
+
+<MDXArticle>
+## Basic usage
+
+```tsx live
+function Example() {
+  // Create an internal ref for component logic
+  const internalRef = useRef<HTMLDivElement>(null);
+
+  // Simulating a forwarded ref from parent
+  const Component = forwardRef((props, forwardedRef) => {
+    // Merge the internal ref with the forwarded ref
+    const refs = useMergeRefs(forwardedRef, internalRef);
+
+    return (
+      <Box ref={refs} padding={3} background="bgAlternate" borderRadius={300}>
+        <TextBody>This box uses a merged ref</TextBody>
+      </Box>
+    );
+  });
+
+  return <Component />;
+}
+```
+
+</MDXArticle>
+
+<MDXArticle>
+## With Multiple Refs
+
+```tsx live
+function Example() {
+  const firstRef = useRef<HTMLDivElement>(null);
+  const secondRef = useRef<HTMLDivElement>(null);
+  const thirdRef = useRef<HTMLDivElement>(null);
+
+  // Function to check if all refs are properly set
+  const checkRefs = () => {
+    const allRefsSet = firstRef.current && secondRef.current && thirdRef.current;
+    alert(`All refs are ${allRefsSet ? 'set' : 'not set'}`);
+  };
+
+  // Merge all three refs
+  const mergedRefs = useMergeRefs(firstRef, secondRef, thirdRef);
+
+  return (
+    <VStack gap={2}>
+      <Box ref={mergedRefs} padding={3} background="bgAlternate" borderRadius={300}>
+        <TextBody>This element is referenced by three refs</TextBody>
+      </Box>
+      <Button onClick={checkRefs}>Check Refs</Button>
+    </VStack>
+  );
+}
+```
+
+</MDXArticle>
+
+<MDXArticle hideDivider>
+## With Function Ref
+
+```tsx live
+function Example() {
+  const [elementWidth, setElementWidth] = useState<number>(0);
+
+  // Create a function ref that measures the element
+  const functionRef = (element: HTMLDivElement | null) => {
+    if (element) {
+      setElementWidth(element.offsetWidth);
+    }
+  };
+
+  // Create an object ref for other purposes
+  const objectRef = useRef<HTMLDivElement>(null);
+
+  // Merge both types of refs
+  const refs = useMergeRefs(functionRef, objectRef);
+
+  return (
+    <VStack gap={2}>
+      <Box ref={refs} padding={3} background="bgAlternate" borderRadius={300} width="100%">
+        <TextBody>This box uses both function and object refs</TextBody>
+      </Box>
+      <TextBody>Box width: {elementWidth}px</TextBody>
+    </VStack>
+  );
+}
+```
+
+</MDXArticle>

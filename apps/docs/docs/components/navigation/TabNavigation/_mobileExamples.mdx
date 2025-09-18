@@ -1,0 +1,37 @@
+### Basic Example
+
+```jsx
+function TabNavigationExample() {
+  // TAB MOCK DATA
+  const tabs = useMemo(() => [
+    { id: 'first_primary_tab', label: 'Tab one' },
+    { id: 'second_primary_tab', label: 'Tab two' },
+    { id: 'third_primary_tab', label: 'Tab three' },
+    { id: 'fourth_primary_tab', label: 'Tab four' },
+    { id: 'fifth_primary_tab', label: 'Tab five' },
+  ]);
+  const secondaryTabs = useMemo(() => [
+    { id: 'first_secondary_tab', label: 'Tab one' },
+    { id: 'second_secondary_tab', label: 'Tab two' },
+  ]);
+
+  const [primary, setPrimary] = useState();
+  const [secondary, setSecondary] = useState();
+
+  return (
+    <VStack gap={2}>
+      <TabNavigation value={primary} tabs={tabs} onChange={setPrimary} />
+      <TabNavigation
+        variant="secondary"
+        value={secondary}
+        tabs={secondaryTabs}
+        onChange={setSecondary}
+      />
+    </VStack>
+  );
+}
+```
+
+import A11y from './a11y.mdx';
+
+<A11y />

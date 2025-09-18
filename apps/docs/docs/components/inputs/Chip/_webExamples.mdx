@@ -1,0 +1,63 @@
+### Basic usage
+
+```tsx live
+function Example() {
+  return (
+    <HStack gap={2}>
+      <Chip>Basic Chip</Chip>
+      <Chip disabled>Disabled Chip</Chip>
+      <Chip onClick={() => alert('Clicked!')}>Interactive Chip</Chip>
+    </HStack>
+  );
+}
+```
+
+### Variants
+
+```tsx live
+function Example() {
+  return (
+    <VStack gap={2}>
+      <HStack gap={2}>
+        <Chip compact>Compact</Chip>
+        <Chip inverted>Inverted</Chip>
+        <Chip maxWidth={100} numberOfLines={1}>
+          Long text that should truncate nicely
+        </Chip>
+      </HStack>
+    </VStack>
+  );
+}
+```
+
+### With Icons and Images
+
+```tsx live
+function Example() {
+  return (
+    <VStack gap={2}>
+      <HStack gap={2}>
+        <Chip start={<Icon name="star" />}>With Start Icon</Chip>
+        <Chip end={<Icon name="chevronDown" />}>With End Icon</Chip>
+        <Chip start={<Icon name="star" />} end={<Icon name="chevronDown" />}>
+          Both Icons
+        </Chip>
+      </HStack>
+      <HStack gap={2}>
+        <Chip
+          start={<RemoteImage source={assets.btc.imageUrl} width={16} height={16} />}
+          onClick={() => alert('BTC selected')}
+        >
+          BTC
+        </Chip>
+        <Chip
+          start={<RemoteImage source={assets.eth.imageUrl} width={16} height={16} />}
+          onClick={() => alert('ETH selected')}
+        >
+          ETH
+        </Chip>
+      </HStack>
+    </VStack>
+  );
+}
+```

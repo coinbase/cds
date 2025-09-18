@@ -1,0 +1,3 @@
+engine: Node
+build_name: package-lottie-files
+continuous: true

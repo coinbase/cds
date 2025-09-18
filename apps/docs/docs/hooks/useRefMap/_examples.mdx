@@ -1,0 +1,153 @@
+import { MDXArticle } from '@site/src/components/page/MDXArticle';
+
+<MDXArticle>
+## Basic usage
+
+```tsx live
+function Example() {
+  const { registerRef, getRef } = useRefMap<HTMLDivElement>();
+  const toast = useToast();
+
+  const handleClick = () => {
+    // Get the element by its ID and log its dimensions
+    const element = getRef('box1');
+    if (element) {
+      toast.show(`Box dimensions: ${element.offsetWidth}x${element.offsetHeight}`);
+    }
+  };
+
+  return (
+    <VStack gap={2}>
+      <Box
+        ref={(el) => el && registerRef('box1', el)}
+        padding={3}
+        background="bgAlternate"
+        borderRadius={300}
+      >
+        <TextBody>This box is registered with ID 'box1'</TextBody>
+      </Box>
+      <Button onClick={handleClick}>Get Box Dimensions</Button>
+    </VStack>
+  );
+}
+```
+
+</MDXArticle>
+
+<MDXArticle>
+## With Multiple Elements
+
+```tsx live
+function Example() {
+  const { registerRef, getRef } = useRefMap<HTMLDivElement>();
+  const [activeId, setActiveId] = useState<string | null>(null);
+
+  const highlightElement = (id: string) => {
+    // Reset previous highlight
+    if (activeId) {
+      const prevElement = getRef(activeId);
+      if (prevElement) {
+        prevElement.style.outline = 'none';
+      }
+    }
+
+    // Highlight new element
+    const element = getRef(id);
+    if (element) {
+      element.style.outline = '2px solid var(--color-fgPrimary)';
+      setActiveId(id);
+    }
+  };
+
+  return (
+    <VStack gap={3}>
+      <HStack gap={2}>
+        <Button onClick={() => highlightElement('box1')}>Highlight Box 1</Button>
+        <Button onClick={() => highlightElement('box2')}>Highlight Box 2</Button>
+        <Button onClick={() => highlightElement('box3')}>Highlight Box 3</Button>
+      </HStack>
+
+      <VStack gap={2}>
+        <Box
+          ref={(el) => el && registerRef('box1', el)}
+          padding={3}
+          background="bgAlternate"
+          borderRadius={300}
+        >
+          <TextBody>Box 1</TextBody>
+        </Box>
+
+        <Box
+          ref={(el) => el && registerRef('box2', el)}
+          padding={3}
+          background="bgAlternate"
+          borderRadius={300}
+        >
+          <TextBody>Box 2</TextBody>
+        </Box>
+
+        <Box
+          ref={(el) => el && registerRef('box3', el)}
+          padding={3}
+          background="bgAlternate"
+          borderRadius={300}
+        >
+          <TextBody>Box 3</TextBody>
+        </Box>
+      </VStack>
+    </VStack>
+  );
+}
+```
+
+</MDXArticle>
+
+<MDXArticle hideDivider>
+## With Initial Refs
+
+```tsx live
+function Example() {
+  // Create initial refs map
+  const box1Ref = useRef<HTMLDivElement>(null);
+  const box2Ref = useRef<HTMLDivElement>(null);
+
+  const initialRefs = {
+    box1: box1Ref.current,
+    box2: box2Ref.current,
+  };
+
+  const { refs, registerRef } = useRefMap<HTMLDivElement>({
+    initialRefMap: initialRefs,
+  });
+
+  const logRefs = () => {
+    console.log('Current refs:', refs);
+  };
+
+  return (
+    <VStack gap={2}>
+      <Box
+        ref={(el) => el && registerRef('box1', el)}
+        padding={3}
+        background="bgAlternate"
+        borderRadius={300}
+      >
+        <TextBody>Box 1</TextBody>
+      </Box>
+
+      <Box
+        ref={(el) => el && registerRef('box2', el)}
+        padding={3}
+        background="bgAlternate"
+        borderRadius={300}
+      >
+        <TextBody>Box 2</TextBody>
+      </Box>
+
+      <Button onClick={logRefs}>Log Refs</Button>
+    </VStack>
+  );
+}
+```
+
+</MDXArticle>

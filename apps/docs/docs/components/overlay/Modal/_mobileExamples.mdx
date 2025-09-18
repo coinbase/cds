@@ -1,0 +1,32 @@
+### Basic example
+
+```jsx
+function Example() {
+  const [visible, setVisible] = useState(false);
+  return (
+    <>
+      <Button onPress={() => setVisible(true)}>Open Modal</Button>
+      <Modal onRequestClose={() => setVisible(false)} visible={visible}>
+        <ModalHeader
+          backAccessibilityLabel="Back"
+          closeAccessibilityLabel="Close"
+          onBackButtonClick={() => setVisible(false)}
+          testID="Basic Modal Test ID"
+          title="Basic Modal"
+        />
+        <ModalBody tabIndex={0} testID="modal-body">
+          Body contents go here
+        </ModalBody>
+        <ModalFooter
+          primaryAction={<Button onPress={() => setVisible(false)}>Save</Button>}
+          secondaryAction={
+            <Button onPress={() => setVisible(false)} variant="secondary">
+              Cancel
+            </Button>
+          }
+        />
+      </Modal>
+    </>
+  );
+}
+```

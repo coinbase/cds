@@ -1,0 +1,19 @@
+### Basic Example
+
+```jsx
+<VStack bordered borderRadius="400" maxWidth={375} padding={2}>
+  <ContentCardBody
+    body="Bitcoin Network Shatters Records With Hashrate Climbing to 464 EH/s"
+    label={
+      <HStack alignItems="flex-end" flexWrap="wrap" gap={0.5}>
+        <TextLabel2 as="p" color="fgMuted" numberOfLines={1}>
+          BTC
+        </TextLabel2>
+        <TextLabel2 accessibilityLabel="Up 5.12%" as="p" color="fgPositive">
+          ↗ 5.12%
+        </TextLabel2>
+      </HStack>
+    }
+  />
+</VStack>
+```

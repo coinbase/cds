@@ -1,0 +1,36 @@
+`FullscreenAlert` is built on top of `FullscreenModal` with an API that is similar to `Alert`.
+
+:::tip Accessibility tip (Web only)
+
+Alerts require an accessibility label, which we set to `title` by default. However, if there's other text that gives the user better context to the alert, then you can pass an element id to `accessibilityLabelledBy`. Alternatively, you may directly provide a contextual label to `accessibilityLabel`.
+
+:::
+
+### Basic example
+
+```jsx live
+function DefaultAlert() {
+  const [visible, setVisible] = useState(false);
+
+  const handleOpen = () => setVisible(true);
+  const handleClose = () => setVisible(false);
+
+  return (
+    <PortalProvider>
+      <Button onClick={handleOpen}>Open Alert</Button>
+      <FullscreenAlert
+        visible={visible}
+        onRequestClose={handleClose}
+        title="Connection trouble"
+        body="We're unable to connect to our card partner. Apologies for the inconvenience. Please try again later today or tomorrow."
+        heroSquare="errorApp500"
+        preferredActionLabel="Try again"
+        onPreferredActionPress={handleClose}
+        dismissActionLabel="Cancel"
+        onDismissActionPress={handleClose}
+        closeAccessibilityLabel="Close"
+      />
+    </PortalProvider>
+  );
+}
+```

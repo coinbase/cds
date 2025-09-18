@@ -1,0 +1,77 @@
+---
+description:
+globs:
+alwaysApply: true
+---
+
+# Coding Standards
+
+This section outlines the coding standards and best practices for contributing to the Coinbase Design System. Adhering to these guidelines ensures that components remain uniform across the system and are easy to collaborate on.
+
+## Code Cleanliness
+
+- All code should be consistent with established patterns and best practices, readable, and maintainable.
+- Prefer constants over magic numbers: replace hard-coded values with descriptively named constants, in camelCase, defined at the top of the file
+- Use meaningful names: variables and functions should reveal their purpose, and you should avoid abbreviations unless similar ones are used elsewhere already
+- Code is self-documenting: code shouldn't need comments unless it is complex or you need to explain why something is done in a specific way
+
+## Components
+
+- CDS's components are defined in both cds-web (packages/web) and cds-mobile (packages/mobile).
+  In most cases, components will have an implementation in each package.
+- Always memoize components with `memo`
+
+### Component Organization
+
+- Each component gets its own folder under `src/[category]/`
+- Every component should be accompanied by a Storybook file, unit tests and Figma code connect bindings.
+- Sample component folder structure:
+
+  ```
+  ComponentName/
+  ├── ComponentName.tsx       # Main component file
+  ├── index.ts                # Re-exports public API
+  ├── __stories__/            # Storybook stories
+  ├── __tests__/              # Unit tests
+  ├── __figma__/              # Figma exports
+  ```
+
+### File Structure
+
+- Every property of a component's props API must have JSDoc comments
+- Components must export their prop types: a `BaseProps` and `Props` (e.g. `ButtonBaseProps`, `ButtonProps`). For most cases, `BaseProps` will contain all the properties while `Props` will be assigned to `BaseProps`.
+- React component files should follow the same basic structure:
+
+  1. Imports: define imports at the top of the file
+  2. Static Styles: define component default styles using the platform-appropriate method
+  3. Type definitions: define TypeScript types for the component's props
+  4. Component definition: implement the functional component
+
+## Styling Conventions
+
+- Use platform-appropriate styling methods (Linaria for web or `StyleSheet.create` for mobile)
+- All components should support a way to override its default styles
+
+## TypeScript Practices
+
+- Prefer to reuse types via utilities, `Pick` being preferred then secondarily `Omit`/`Exclude`
+- Compose types using type intersections (`&`) in this order: (1) full types (2) Picks (3) Omits (4) other types
+
+  Example:
+
+  ```ts
+  type ComponentTypes = BoxBaseProps &
+    Pick<OtherComponentProps, 'someProp'> &
+    Omit<AnotherComponentProps, 'otherProp'> & {
+      propA: string;
+      propb: number;
+    };
+  ```
+
+## React Hooks & Utility Functions
+
+Ensure best React practices are followed at all times.
+
+- Use `useMemo` for expensive computations or for computed/conditional styles
+- Use `useCallback` for event handlers passed as props
+- Use `useEffect` only for side effects: this means you can use it for API calls, subscriptions, or dom manipulation (with external libraries) as needed, but avoid using it solely as a "watcher" for dependency changes; prefer deriving state directly during render when applicable

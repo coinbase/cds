@@ -1,0 +1,185 @@
+### Informational (Default)
+
+Informational Tags are used to note a characteristic or state of an object. The relationship between the Tag and the other UI component should be easy to interpret for a user.
+
+```jsx
+<HStack gap={2} wrap>
+  <Tag colorScheme="green">Green</Tag>
+  <Tag colorScheme="blue">Blue</Tag>
+  <Tag colorScheme="yellow">Yellow</Tag>
+  <Tag colorScheme="purple">Purple</Tag>
+  <Tag colorScheme="red">Red</Tag>
+  <Tag colorScheme="gray">Gray</Tag>
+</HStack>
+```
+
+### Promotional
+
+Promotional Tags are for editorial, ephemeral communication. Terms like “New”, “Recommended”, “Beta”, “Hot”, “Trending”, fall into this Promotional Tag category.
+
+```jsx
+<HStack gap={2} wrap>
+  <Tag intent="promotional" colorScheme="green">
+    Green
+  </Tag>
+  <Tag intent="promotional" colorScheme="blue">
+    Blue
+  </Tag>
+  <Tag intent="promotional" colorScheme="yellow">
+    Yellow
+  </Tag>
+  <Tag intent="promotional" colorScheme="purple">
+    Purple
+  </Tag>
+  <Tag intent="promotional" colorScheme="red">
+    Red
+  </Tag>
+  <Tag intent="promotional" colorScheme="gray">
+    Gray
+  </Tag>
+</HStack>
+```
+
+### Working with Tags
+
+To get a better idea of what it workng with Tags is like, we've created some example UI components that use Tags.
+
+```jsx
+<HStack justifyContent="space-between" gap="2" alignItems="center">
+  <VStack gap={0.5}>
+    <HStack gap={1}>
+      <TextHeadline as="p">Tax account status</TextHeadline>
+      <Tag colorScheme="red">Not verified</Tag>
+    </HStack>
+    <TextBody as="p">Verify your info for tax reporting purposes.</TextBody>
+  </VStack>
+  <Button>Get started</Button>
+</HStack>
+```
+
+```jsx
+<HStack justifyContent="space-between" gap="2" alignItems="center">
+  <VStack gap={0.5}>
+    <HStack gap={1}>
+      <TextHeadline as="p">Tax account status</TextHeadline>
+      <Tag colorScheme="red">Not verified</Tag>
+    </HStack>
+    <TextBody as="p">Verify your info for tax reporting purposes.</TextBody>
+  </VStack>
+  <Button>Get started</Button>
+</HStack>
+```
+
+```jsx
+function MarginExample() {
+  const renderStartLabelNum = useCallback((num, disabled) => {
+    return (
+      <TextTitle3 disabled={disabled} as="span">
+        ${num.toLocaleString()} (10%)
+      </TextTitle3>
+    );
+  }, []);
+
+  const renderEndLabelNumStr = useCallback((num) => {
+    return `$${num.toLocaleString()}`;
+  }, []);
+
+  return (
+    <HStack gap={3}>
+      <VStack
+        justifyContent="space-between"
+        gap="2"
+        padding={2}
+        bordered
+        borderRadius={300}
+        maxWidth="50%"
+        background
+        elevation={1}
+      >
+        <VStack gap={0.5}>
+          <HStack gap={1}>
+            <TextHeadline as="p">Margin ratio</TextHeadline>
+            <Tag colorScheme="green">Low</Tag>
+          </HStack>
+          <TextBody as="p">
+            The portion of your balance being held on margin is low. No action is required.
+          </TextBody>
+        </VStack>
+        <ProgressBarWithFixedLabels
+          startLabel={{ value: 400, render: renderStartLabelNum }}
+          endLabel={{ value: 40000, render: renderEndLabelNumStr }}
+          labelPlacement="above"
+        >
+          <ProgressBar progress={0.1} color="bgPositive" />
+        </ProgressBarWithFixedLabels>
+      </VStack>
+      <VStack
+        justifyContent="space-between"
+        gap="2"
+        padding={2}
+        bordered
+        borderRadius={300}
+        maxWidth="50%"
+        background
+        elevation={1}
+      >
+        <VStack gap={0.5}>
+          <HStack gap={1}>
+            <TextHeadline as="p">Margin ratio</TextHeadline>
+            <Tag colorScheme="red">high</Tag>
+          </HStack>
+          <TextBody as="p">Margin usage is high. Deposit funds to avoid liquidation</TextBody>
+        </VStack>
+        <ProgressBarWithFixedLabels
+          startLabel={{ value: 60000, render: renderStartLabelNum }}
+          endLabel={{ value: 90000, render: renderEndLabelNumStr }}
+          labelPlacement="above"
+        >
+          <ProgressBar progress={0.65} color="bgNegative" />
+        </ProgressBarWithFixedLabels>
+      </VStack>
+    </HStack>
+  );
+}
+```
+
+```jsx
+<Box justifyContent="center">
+  <Group divider={Divider} width="420px" bordered borderRadius={300} background elevation={1}>
+    <ListCell
+      title={
+        <HStack gap={0.5}>
+          Bank account
+          <Tag colorScheme="green">No fees</Tag>
+        </HStack>
+      }
+      description={
+        <VStack gap={1} alignItems="flex-start">
+          Use a bank account to buy crypto and deposit or withdraw cash
+          <Tag intent="promotional">Recommended</Tag>
+        </VStack>
+      }
+      accessory="arrow"
+      onClick={console.log}
+      multiline
+      media={<IconButton name="bank" color="primary" />}
+    />
+    <ListCell
+      title="Paypal"
+      description="Use a Paypal account to buy crypto and deposit or withdraw funds"
+      accessory="arrow"
+      onClick={console.log}
+      multiline
+      media={<IconButton name="paypal" color="primary" />}
+    />
+    <ListCell
+      title="Debit card"
+      description="Use any Visa or Mastercard debit cart to make small investments"
+      accessory="arrow"
+      onClick={console.log}
+      multiline
+      media={<IconButton name="card" color="primary" />}
+    />
+  </Group>
+</Box>
+```

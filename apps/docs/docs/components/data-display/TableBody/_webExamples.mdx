@@ -1,0 +1,61 @@
+### Basic usage
+
+```tsx live
+<Table bordered>
+  <TableHeader>
+    <TableRow>
+      <TableCell>Header</TableCell>
+    </TableRow>
+  </TableHeader>
+  <TableBody>
+    <TableRow>
+      <TableCell>Content</TableCell>
+    </TableRow>
+  </TableBody>
+</Table>
+```
+
+### Loading State Example
+
+```tsx live
+<Table bordered variant="ruled">
+  <TableHeader>
+    <TableRow>
+      <TableCell title="TableHeader" />
+    </TableRow>
+  </TableHeader>
+  <TableBody>
+    <TableRow>
+      <TableCell height={320} alignItems="center" justifyContent="center">
+        <Spinner size={4} color="primary" />
+        <TextHeadline as="p" spacingTop={2} color="foregroundMuted">
+          Loading content...
+        </TextHeadline>
+      </TableCell>
+    </TableRow>
+  </TableBody>
+</Table>
+```
+
+### Multiple Rows Example
+
+```tsx live
+<Table bordered>
+  <TableHeader>
+    <TableRow>
+      <TableCell>Name</TableCell>
+      <TableCell>Role</TableCell>
+    </TableRow>
+  </TableHeader>
+  <TableBody>
+    <TableRow>
+      <TableCell>John Doe</TableCell>
+      <TableCell>Developer</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Jane Smith</TableCell>
+      <TableCell>Designer</TableCell>
+    </TableRow>
+  </TableBody>
+</Table>
+```

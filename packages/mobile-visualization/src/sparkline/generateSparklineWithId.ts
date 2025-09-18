@@ -1,0 +1,16 @@
+import { cloneElement } from 'react';
+import type React from 'react';
+import type { ElementChildren } from '@cbhq/cds-common/types';
+
+import type { SparklineAreaBaseProps } from './SparklineArea';
+
+export function generateSparklineAreaWithId(
+  id: string,
+  children: ElementChildren<SparklineAreaBaseProps>,
+) {
+  return children
+    ? cloneElement(children as React.ReactElement<SparklineAreaBaseProps>, {
+        patternId: id,
+      })
+    : undefined;
+}

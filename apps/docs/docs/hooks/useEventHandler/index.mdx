@@ -1,0 +1,31 @@
+---
+id: useEventHandler
+title: useEventHandler
+platform_switcher_options: { web: true, mobile: true }
+hide_title: true
+---
+
+import { ComponentHeader } from '@site/src/components/page/ComponentHeader';
+import { HooksBanner } from '@site/src/components/page/ComponentBanner/HooksBanner';
+import { HookTabsContainer } from '@site/src/components/page/HookTabsContainer';
+import metadata from './metadata.json';
+import Examples, { toc as ExamplesToc } from './_examples.mdx';
+import Api, { toc as ApiToc } from './_api.mdx';
+
+<ComponentHeader
+  title="useEventHandler"
+  banner={<HooksBanner />}
+  webMetadata={metadata}
+  mobileMetadata={metadata}
+/>
+
+<HookTabsContainer
+  webExamples={<Examples />}
+  webExamplesToc={ExamplesToc}
+  webApi={<Api />}
+  webApiToc={ApiToc}
+  mobileExamples={<Examples />}
+  mobileExamplesToc={ExamplesToc}
+  mobileApi={<Api />}
+  mobileApiToc={ApiToc}
+/>

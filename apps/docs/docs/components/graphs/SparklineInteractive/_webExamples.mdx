@@ -1,0 +1,101 @@
+### Default usage
+
+```jsx live
+<Box padding={3} width="100%">
+  <SparklineInteractivePrice data={sparklineInteractiveData} strokeColor="#F7931A" />
+</Box>
+```
+
+### Fill
+
+The fill will be added by default
+
+```jsx live
+<Box padding={3} width="100%">
+  <SparklineInteractivePrice data={sparklineInteractiveData} fill strokeColor="#F7931A" />
+</Box>
+```
+
+### Compact
+
+```jsx live
+<Box padding={3} width="100%">
+  <SparklineInteractivePrice data={sparklineInteractiveData} compact strokeColor="#F7931A" />
+</Box>
+```
+
+### Hide period selector
+
+```jsx live
+<Box padding={3} width="100%">
+  <SparklineInteractivePrice
+    data={sparklineInteractiveData}
+    hidePeriodSelector
+    strokeColor="#F7931A"
+  />
+</Box>
+```
+
+### Scaling Factor
+
+The scaling factor is usually used when you want to show less variance in the chart. An example of this is a stable coin that doesn't change price by more than a few cents.
+
+```jsx live
+<Box padding={3} width="100%">
+  <SparklineInteractivePrice
+    data={sparklineInteractiveData}
+    strokeColor="#F7931A"
+    yAxisScalingFactor={0.1}
+  />
+</Box>
+```
+
+### With header
+
+```jsx live
+<Box padding={3} width="100%">
+  <SparklineInteractivePriceWithHeader data={sparklineInteractiveData} fill strokeColor="#F7931A" />
+</Box>
+```
+
+### Custom hover data
+
+```jsx live
+<Box padding={3} width="100%">
+  <SparklineInteractivePrice
+    fill
+    data={sparklineInteractiveData}
+    hoverData={sparklineInteractiveHoverData}
+    strokeColor="#F7931A"
+  />
+</Box>
+```
+
+### Period selector placement
+
+`periodSelectorPlacement` can be used to place the period selector in different positions (`above` or `below`).
+
+```jsx live
+<Box padding={3} width="100%">
+  <SparklineInteractivePrice
+    data={sparklineInteractiveData}
+    strokeColor="#F7931A"
+    periodSelectorPlacement="below"
+  />
+</Box>
+```
+
+### Custom styles
+
+You can also provide custom styles, such as to remove any horizontal padding from the header.
+
+```jsx live
+<Box padding={3} width="100%">
+  <SparklineInteractivePriceWithHeader
+    data={sparklineInteractiveData}
+    fill
+    strokeColor="#F7931A"
+    styles={{ header: { paddingLeft: 0, paddingRight: 0 } }}
+  />
+</Box>
+```

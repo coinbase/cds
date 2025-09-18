@@ -1,0 +1,32 @@
+{
+  "extends": "../../tsconfig.project.json",
+  "compilerOptions": {
+    "declarationDir": "dts"
+  },
+  "include": [
+    "src/**/*",
+    ".storybook/**/*",
+    "playground/**/*",
+    "scripts/**/*",
+    "vite.config.ts",
+    "vite-env.d.ts"
+  ],
+  "exclude": [],
+  "references": [
+    {
+      "path": "../../packages/web"
+    },
+    {
+      "path": "../../packages/common"
+    },
+    {
+      "path": "../../packages/icons"
+    },
+    {
+      "path": "../../packages/illustrations"
+    },
+    {
+      "path": "../../packages/web-visualization"
+    }
+  ]
+}

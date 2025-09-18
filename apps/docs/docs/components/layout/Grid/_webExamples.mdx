@@ -1,0 +1,117 @@
+Grid is essentially a specialized [Box](/components/layout/Box) that lets you use the [CSS grid](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Grid_Layout) API. Even if you're not familiar with CSS grid, Grid includes a few "smart" properties that handle all the grid magic 🪄 under the hood (see [Equal Columns](#equal-columns) and [Implicit Columns](#implicit-columns) examples).
+
+Grid can create three kinds of layouts:
+
+1. **Equal columns** 1-12, with support for responsive columns
+2. **Custom columns** If you're familiar with `grid-template-columns`, this is your swiss army knife prop. See [CSS Grid Track Sizes](https://www.w3.org/TR/css-grid-1/#track-sizes) for the specs.
+3. **Implicit columns** The Grid will automatically layout as many children as can fit in the given space, and recalculate as the screen size changes.
+
+Children of a Grid can be anything, but if you want a child to span multiple columns you'll need to use the GridColumn component. Refer to the [GridColumn](/components/layout/GridColumn) documentation for usage.
+
+### Equal Columns
+
+You can pass an integer between 1 and 12 to `columns` to create equal width columns.
+
+```jsx live
+function Example() {
+  return (
+    <Grid borderColor="line" padding={1} gap={1} columns={6}>
+      {Array.from({ length: 6 }).map((_, idx) => (
+        <HStack
+          background="bgAlternate"
+          justifyContent="center"
+          alignItems="center"
+          padding={2}
+          minWidth="100px"
+          key={idx}
+        >
+          <Text as="p">{idx + 1}</Text>
+        </HStack>
+      ))}
+    </Grid>
+  );
+}
+```
+
+### Custom Columns
+
+You can pass a string to the `templateColumn` prop with anything you would normally set as the value for the `grid-template-columns` CSS property (see [spec](https://developer.mozilla.org/en-US/docs/Web/CSS/grid-template-columns)).
+
+You can use this kind of layout to create ratio-based layouts, too, where each column will vary in size based on a proportion of available space. You can specify this with the `fr` unit, ie: if you want to have 1 column that is 2/3 of the available space and another that is 1/3 you would pass `2fr 1fr` to `columns`.
+
+```jsx live
+function Example() {
+  function Item({ children, ...props }) {
+    return (
+      <HStack
+        background="bgAlternate"
+        justifyContent="center"
+        alignItems="center"
+        padding={2}
+        minWidth="100px"
+        {...props}
+      >
+        {children}
+      </HStack>
+    );
+  }
+  return (
+    <Grid templateColumns="100px 20% min-content 1fr" borderColor="line" padding={1} gap={1}>
+      <Item>
+        <Text as="p">100px</Text>
+      </Item>
+      <Item>
+        <Text as="p">20%</Text>
+      </Item>
+      <Item>
+        <Text as="p">min-content</Text>
+      </Item>
+      <Item>
+        <Text as="p">1fr</Text>
+      </Item>
+    </Grid>
+  );
+}
+```
+
+#### Responsive Custom Columns
+
+The `templateColumn` prop does not take object values, but you can still leverage the [useBreakpoints](/hooks/useBreakpoints) hook to conditionally render different configurations for `templateColumns`.
+
+### Implicit Columns
+
+If you do not pass anything to the `columns` or `templateColumns` props, Grid will automatically lay out children based on available space. When children can no longer fit within a row, it will create additional rows to fit the content. You will have to provide a `columnMin` value, which will determine the minimum track sizing for the columns. You can optionally pass `columnMax` as well.
+
+When using implicit columns, Grid will not support `responsiveConfig`. Rather, columns will automatically wrap to the next line, whichs makes them great when you don't know the size of your content but want to make sure your layout is responsive!
+
+:::note
+Implicit columns will create columns of equal size. If your content will vary in size you should use [HStack](/components/layout/HStack) instead and pass `flexWrap="wrap"`.
+:::
+
+```jsx live
+function Example() {
+  function Item({ children, ...props }) {
+    return (
+      <HStack
+        background="bgAlternate"
+        justifyContent="center"
+        alignItems="center"
+        padding={2}
+        minWidth="100px"
+        {...props}
+      >
+        {children}
+      </HStack>
+    );
+  }
+  return (
+    <Grid columnMin="100px" borderColor="line" padding={1} gap={1}>
+      {Array.from({ length: 12 }).map((_, idx) => (
+        <Item key={idx}>
+          <Text as="p">{idx + 1}</Text>
+        </Item>
+      ))}
+    </Grid>
+  );
+}
+```

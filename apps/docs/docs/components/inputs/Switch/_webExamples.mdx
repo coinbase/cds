@@ -1,0 +1,49 @@
+```jsx live
+function SwitchDemo() {
+  const [checked, setChecked] = useState(false);
+
+  return (
+    <Switch onChange={() => setChecked((s) => !s)} checked={checked}>
+      Dark Mode
+    </Switch>
+  );
+}
+```
+
+### Customizing Colors
+
+Like other control components (i.e. Radio, Checkbox), you can customize the color of the Switch by setting the `controlColor` prop.
+
+```jsx live
+function SwitchDemo() {
+  const [checked, setChecked] = useState(false);
+
+  return (
+    <Switch controlColor="accentBoldGreen" onChange={() => setChecked((s) => !s)} checked={checked}>
+      Custom control color
+    </Switch>
+  );
+}
+```
+
+For more advanced color customization, you can use additional style props like `background`, `borderColor`, `borderWidth`, and `color`:
+
+```jsx live
+function AdvancedSwitchDemo() {
+  const [checked, setChecked] = useState(false);
+
+  return (
+    <Switch
+      background={checked ? 'accentBoldPurple' : 'bgNegative'}
+      borderColor={checked ? 'bgPositive' : 'bgPrimary'}
+      borderWidth={200}
+      checked={checked}
+      color="bgPrimary"
+      controlColor="bgPositive"
+      onChange={() => setChecked((s) => !s)}
+    >
+      Advanced styling
+    </Switch>
+  );
+}
+```

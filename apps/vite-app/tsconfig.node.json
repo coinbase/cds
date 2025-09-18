@@ -1,0 +1,29 @@
+{
+  "extends": "../../tsconfig.project.json",
+  "compilerOptions": {
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",
+    "target": "ES2022",
+    "noEmit": true,
+    "noUncheckedSideEffectImports": true
+  },
+  "include": [
+    "vite.config.ts"
+  ],
+  "references": [
+    {
+      "path": "../../packages/web"
+    },
+    {
+      "path": "../../packages/common"
+    },
+    {
+      "path": "../../packages/icons"
+    },
+    {
+      "path": "../../packages/illustrations"
+    },
+    {
+      "path": "../../packages/web-visualization"
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+### Basic Icon Usage
+
+```tsx live
+<CellMedia active type="icon" name="home" accessibilityLabel="Home icon" />
+```
+
+### Asset Display
+
+Common usage for displaying cryptocurrency assets with proper accessibility.
+
+```tsx live
+<CellMedia type="asset" source={assets.btc.imageUrl} accessibilityLabel="Bitcoin icon" />
+```
+
+### Pictogram Display
+
+Used for displaying pictographic illustrations, commonly used in empty states or feature highlights.
+
+```tsx live
+<CellMedia
+  type="pictogram"
+  illustration={<Pictogram name="recurringPurchases" dimension="48x48" />}
+  accessibilityLabel="Recurring purchases pictogram"
+/>
+```

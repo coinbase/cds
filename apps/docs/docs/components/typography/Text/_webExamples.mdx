@@ -1,0 +1,109 @@
+### Display
+
+Display styles are to be used very sparingly. Display styles supersede Title styles, so they are there for when you need to layer on more hierarchy.
+
+```jsx live
+<VStack>
+  <Text font="display1" as="h1">
+    Display1
+  </Text>
+  <Text font="display2" as="h2">
+    Display2
+  </Text>
+  <Text font="display3" as="h3">
+    Display3
+  </Text>
+</VStack>
+```
+
+### Title
+
+Title styles are used to establish the primary hierarchy in a layout. They should be used to label sections.
+
+```jsx live
+<VStack>
+  <Text font="title1" as="h3">
+    Title1
+  </Text>
+  <Text font="title2" as="h4">
+    Title2
+  </Text>
+  <Text font="title3" as="p">
+    Title3
+  </Text>
+  <Text font="title4" as="p">
+    Title4
+  </Text>
+</VStack>
+```
+
+### Headline & Body
+
+Headline and body styles are your essential content styles. They’re versatile styles that can be used for paragraphs, data, labels for buttons.
+
+```jsx live
+<VStack>
+  <Text font="headline" as="p">
+    Headline
+  </Text>
+  <Text font="body" as="p">
+    Body
+  </Text>
+</VStack>
+```
+
+### Label & Caption
+
+Label and caption styles are when you need to add hierarchy in your content. They ideally are used in conjunction with Headline and Body styles, but in extraordinarily dense interfaces they can replace Headline & Body should you need to present large data sets to users. They’re also great candidates for presenting numbers to the user as they have tabular numbers by default.
+
+```jsx live
+<VStack>
+  <Text font="label1" as="p">
+    Label1
+  </Text>
+  <Text font="label2" as="p">
+    Label2
+  </Text>
+  <Text font="caption" as="p">
+    Caption
+  </Text>
+  <Text font="legal" as="p">
+    Legal
+  </Text>
+</VStack>
+```
+
+### Features
+
+All text components support a few numeric typography styles, overflow, text transformation, flex display, and underline. Please check the Props section for more details.
+
+### A11y
+
+On the web, there are different HTML elements to wrap texts with to communicated semantic meanings of the strings. Therefore, CDS does not make any assumptions about the semantic of the text but ask developers to choose the approriate semantic HTML element via the `as` prop.
+
+```jsx
+<Text font="display1" as="h1">Display</Text>
+
+// If we want large text but not as the page title
+<Text font="display1" as="p">Display</Text>
+```
+
+### Headings
+
+Headings help users understand the hierarchical page organization. All pages on the web should at least have a `<h1>` level heading providing the title or summary of the page. Screen readers users prefer that only the document title be `<h1>` on a page. Headings should NOT be used inside tables header elements (`<th>`).
+
+When using headings, it is confusing to screen reader users to skip heading levels to be more specific (ex. do not go from `<h2>` to ` <h4>`). However, it is permissible to use a higher heading level after a lower heading level, i.e. from `<h4>`to`<h2>`, if the outline of the page calls for it.
+
+One common misconception is that headings for a web app have consistent typography across different pages. That is not an accessibility requirement or a design guideline that our product designers follow. Therefore, based on the content layouts, product engineers should determine the approriate semantic tags to use for each string and choose the proper heading element when the texts convey hierarchical content information.
+
+Yale has a detailed [web accessibility article](https://usability.yale.edu/web-accessibility/articles/headings#:~:text=One%20of%20the%20most%20common,Do%20not%20overuse%20headings) about how to use headings if you want to learn more.
+
+In a nutshell, you can reference the following for the most common text semantics.
+
+- `h1` for page title (exactly one per page)
+- `h2`-`h4` for hierarchical section headings (CDS does not foresee the need for heading level 5 or 6 in Coinbase products).
+- `p` for paragraphs of text with default block display. It can be wrapped inside `blockquote`, `li`, or `label` elements for additional semantics.
+- `li` for bullet points in a list.
+- `time`, `abbr`, `sup`, `kbd`, etc, for granular semantics.
+- `pre` and `code` for preformatted code blocks.
+- `span` when no semantics are required (within buttons for example) and it also has default inline display.

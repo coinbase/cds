@@ -1,0 +1,32 @@
+### Basic usage
+
+```tsx live
+<TileButton title="Coinbase" pictogram="2fa" onClick={() => {}} />
+```
+
+### With count
+
+```tsx live
+<TileButton title="Notifications" pictogram="addToWatchlist" count={3} onClick={() => {}} />
+```
+
+### With custom content
+
+```tsx live
+<TileButton count={0} onClick={() => {}} title="Bitcoin">
+  <RemoteImage source={assets.btc.imageUrl} />
+</TileButton>
+```
+
+### Show overflow
+
+```tsx live
+<Box height={180}>
+  <TileButton
+    title="A very long title that will overflow and show the full text on hover"
+    pictogram="chart"
+    showOverflow
+    onClick={() => {}}
+  />
+</Box>
+```

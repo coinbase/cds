@@ -1,0 +1,177 @@
+{
+  "name": "storybook",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/storybook",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "dev": {
+      "command": "storybook dev"
+    },
+    "start": {
+      "command": "storybook dev",
+      "dependsOn": [
+        "build"
+      ]
+    },
+    "build": {
+      "command": "storybook build --output-dir dist",
+      "inputs": [
+        "{projectRoot}/*",
+        "{projectRoot}/**/*",
+        "{projectRoot}/**/__stories__/**",
+        "{projectRoot}/**/*.stories.*",
+        "{workspaceRoot}/packages/web/**/*.stories.*",
+        "{workspaceRoot}/packages/web-visualization/**/*.stories.*",
+        "!{projectRoot}/scripts/**"
+      ],
+      "outputs": [
+        "{projectRoot}/dist"
+      ]
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    },
+    "typecheck": {
+      "command": "tsc --build --pretty --verbose"
+    },
+    "analyze": {
+      "command": "storybook build --output-dir dist",
+      "inputs": [
+        "{projectRoot}/**/__stories__/**",
+        "{projectRoot}/**/*.stories.*",
+        "{workspaceRoot}/packages/web/**/*.stories.*",
+        "{workspaceRoot}/packages/web-visualization/**/*.stories.*"
+      ],
+      "outputs": [
+        "{projectRoot}/dist"
+      ],
+      "options": {
+        "env": {
+          "ANALYZE": "true"
+        }
+      }
+    },
+    "build-for-analyze": {
+      "command": "storybook build --output-dir dist",
+      "inputs": [
+        "{projectRoot}/**/__stories__/**",
+        "{projectRoot}/**/*.stories.*",
+        "{workspaceRoot}/packages/web/**/*.stories.*",
+        "{workspaceRoot}/packages/web-visualization/**/*.stories.*"
+      ],
+      "outputs": [
+        "{projectRoot}/dist",
+        "{workspaceRoot}/bundle-stats.json",
+        "{projectRoot}/bundle-stats.json"
+      ],
+      "dependsOn": [
+        "^build"
+      ],
+      "defaultConfiguration": "ci",
+      "configurations": {
+        "ci": {
+          "env": {
+            "ANALYZE": "true",
+            "ANALYZE_MODE_JSON": "true"
+          }
+        },
+        "development": {
+          "env": {
+            "ANALYZE": "true",
+            "ANALYZE_MODE_JSON": "false",
+            "ANALYZE_REPORT_PATH": "apps/storybook/bundle-stats.json"
+          }
+        }
+      },
+      "options": {
+        "cwd": "apps/storybook",
+        "env": {
+          "ANALYZE": "true",
+          "ANALYZE_MODE_JSON": "true"
+        }
+      }
+    },
+    "build-for-tests": {
+      "command": "storybook build --output-dir dist",
+      "dependsOn": [
+        "^build"
+      ],
+      "inputs": [
+        "{projectRoot}/**/__stories__/**",
+        "{projectRoot}/**/*.stories.*",
+        "{workspaceRoot}/packages/web/**/*.stories.*",
+        "{workspaceRoot}/packages/web-visualization/**/*.stories.*"
+      ],
+      "outputs": [
+        "{projectRoot}/dist"
+      ],
+      "options": {
+        "cwd": "apps/storybook",
+        "env": {
+          "STORYBOOK_SKIP_ANIMATION": "true"
+        }
+      }
+    },
+    "a11y-web_TODO": {
+      "command": "tsx ./scripts/run-a11y-tests.ts",
+      "dependsOn": [
+        "build-for-tests"
+      ],
+      "inputs": [
+        "{projectRoot}/dist"
+      ],
+      "options": {
+        "cwd": "apps/storybook"
+      }
+    },
+    "percy": {
+      "command": "tsx ./scripts/run-percy.ts",
+      "dependsOn": [
+        "build"
+      ],
+      "inputs": [
+        "{projectRoot}/dist"
+      ],
+      "options": {
+        "cwd": "apps/storybook"
+      }
+    },
+    "serve-storybook": {
+      "command": "concurrently -k -s first -n \"SB,TEST\" -c \"magenta,blue\" \"npx http-server /workdir/apps/storybook/dist --port 6006 --silent\" \"wait-on tcp:6006 && yarn workspace @cds/storybook test-storybook --index-json\"",
+      "options": {
+        "cwd": "apps/storybook"
+      }
+    },
+    "storybook-e2e-test_TODO": {
+      "command": "concurrently -k -s first -n \"SB,TEST\" -c \"magenta,blue\" \"nx run storybook:build && npx http-server /workdir/apps/storybook/dist --port 6006 --silent\" \"wait-on tcp:6006 && yarn workspace @cds/storybook test-storybook --index-json\"",
+      "dependsOn": [
+        "build-for-tests"
+      ],
+      "outputs": [
+        "{projectRoot}/dist"
+      ],
+      "options": {
+        "cwd": "apps/storybook"
+      }
+    },
+    "analyze-bundle": {
+      "command": "tsx ./scripts/analyze-bundle.ts",
+      "dependsOn": [
+        "build-for-analyze"
+      ],
+      "options": {
+        "cwd": "apps/storybook"
+      }
+    },
+    "profile-exports": {
+      "command": "tsx ./scripts/profile-exports.js",
+      "dependsOn": [
+        "^build"
+      ],
+      "options": {
+        "cwd": "apps/storybook"
+      }
+    }
+  }
+}

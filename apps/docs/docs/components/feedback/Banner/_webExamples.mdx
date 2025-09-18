@@ -1,0 +1,96 @@
+### Global Warning Banner
+
+The global warning banner is used to communicate important alerts or warnings to users across the entire platform, ensuring universal visibility and building trust.
+
+```jsx live
+<Banner
+  showDismiss
+  label="Message last updated today at 3:33pm"
+  startIcon="warning"
+  startIconActive
+  styleVariant="global"
+  title="Some features are temporarily unavailable"
+  variant="warning"
+  primaryAction={<Link to="https://www.coinbase.com">Primary</Link>}
+  secondaryAction={<Link to="https://www.coinbase.com">Secondary</Link>}
+>
+  <TextLabel2 as="p">
+    Your funds are safe. We’re looking into it and expect our usual service to return soon.
+    <Link to="https://www.coinbase.com">Learn more</Link>
+  </TextLabel2>
+</Banner>
+```
+
+### In-line Error Banner
+
+The In-line Error Banner is used to display specific error messages directly beneath the relevant section headers. Use in-line banners to help users identify exactly where the error or outage is located.
+
+```jsx live
+<Banner
+  startIcon="info"
+  startIconActive
+  styleVariant="inline"
+  title="Some features are temporarily unavailable"
+  variant="error"
+  primaryAction={<Link to="https://www.coinbase.com">Primary</Link>}
+  secondaryAction={<Link to="https://www.coinbase.com">Secondary</Link>}
+>
+  <TextLabel2 as="p">
+    Your funds are safe. We’re looking into it and expect our usual service to return soon.
+    <Link to="https://www.coinbase.com">Learn more</Link>
+  </TextLabel2>
+</Banner>
+```
+
+### Contextual Promotional Banner
+
+The Contextual Promotional Banner is used to highlight special offers, promotions, or announcements within a specific context or section of the platform. It is used to increase user engagement and drive conversions.
+
+```jsx live
+<Banner
+  startIcon="info"
+  startIconActive
+  styleVariant="contextual"
+  title="Some features are temporarily unavailable"
+  variant="promotional"
+>
+  <TextLabel2 as="p">
+    Your funds are safe. We’re looking into it and expect our usual service to return soon.
+    <Link to="https://www.coinbase.com">Learn more</Link>
+  </TextLabel2>
+</Banner>
+```
+
+### In-line Informational Banner
+
+The in-line Informational Banner is used to provide users with additional information or helpful tips directly within the content or interface, providing relevant guidance.
+
+```jsx live
+<VStack gap={2}>
+  <Banner
+    startIcon="info"
+    startIconActive
+    styleVariant="inline"
+    title="Some features are temporarily unavailable"
+    variant="informational"
+    primaryAction={<Link to="https://www.coinbase.com">Primary</Link>}
+    secondaryAction={<Link to="https://www.coinbase.com">Secondary</Link>}
+  >
+    <TextLabel2 as="p">
+      Your funds are safe. We’re looking into it and expect our usual service to return soon.
+      <Link to="https://www.coinbase.com">Learn more</Link>
+    </TextLabel2>
+  </Banner>
+  <Banner
+    startIcon="warning"
+    startIconActive
+    styleVariant="inline"
+    title="Some features are temporarily unavailable"
+    variant="warning"
+  >
+    <TextLabel2 as="p">
+      <Link to="https://www.coinbase.com">Retry</Link>
+    </TextLabel2>
+  </Banner>
+</VStack>
+```

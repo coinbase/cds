@@ -1,0 +1,14 @@
+**/tsconfig.json
+**/*.ts
+src
+project.json
+docker-compose.yml
+deploy.yml
+babel.config.mjs
+rollup.config.js
+publish.Dockerfile
+tsconfig.tsbuildinfo
+node_modules
+
+# Ignore parent directories
+../**

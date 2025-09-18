@@ -1,0 +1,61 @@
+:::note
+By default, Box has [flexbox](https://developer.mozilla.org/en-US/docs/Learn/CSS/CSS_layout/Flexbox) enabled (`display: flex`), but you can use a Box for any kind of layout via the `display` prop.
+:::
+
+If you want to lay your content out in columns you should reach for [HStack](/components/layout/HStack) (a specialized Box that also allows for gaps between children). When you want to compose more complex layouts with columns of equal size or custom configurations you should use [Grid](/components/layout/Grid) (which leverages [CSS grid](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Grid_Layout)). If you want to lay out content in a single column, you should use [VStack](/components/layout/VStack).
+
+```jsx
+<Box bordered borderRadius="400" background="bgAlternate" paddingX={3} paddingY={2}>
+  Any kind of content can go here!
+</Box>
+```
+
+## A11y
+
+**Web only** By default the box is not accessibility aware as it renders a standard `div`. We highly encourage the use of semantic elements so that screen readers can easily infer intent. This can be achieved through the `as` and `role` props.
+
+```jsx
+<Box as="aside" role="complementary">
+  <SideBar />
+</Box>
+```
+
+## Responsive Styles
+
+**Web only** You can create responsive layouts by passing a configuration object to each supported property of box and specify unique styles for phones, tablets, or desktops.
+
+Please note, there are no default responsive styles for Box. This is an additive feature that you will need to configure yourself.
+
+### Supported Properties
+
+- Padding
+- Margin
+- Gap
+- Flex styles (justify content, align content, align items, align self, flex direction, and flex wrap)
+- Display
+- Visibility
+
+### Usage
+
+```jsx
+function ResponsiveBox() {
+  return (
+    <Box
+      padding={{ base: 4, tablet: 3, desktop: 2 }}
+      gap={{ base: 0.5, tablet: 2, desktop: 3 }}
+      justifyContent={{ base: 'flex-end', tablet: 'flex-start', desktop: 'center' }}
+      alignItems={{ base: 'flex-end', tablet: 'flex-start', desktop: 'center' }}
+    >
+      <HStack padding={1}>
+        <Text as="p">First</Text>
+      </HStack>
+      <HStack background="bgAlternate" padding={1}>
+        <Text as="p">Second</Text>
+      </HStack>
+      <HStack background="bgOverlay" padding={1}>
+        <Text as="p">Third</Text>
+      </HStack>
+    </Box>
+  );
+}
+```

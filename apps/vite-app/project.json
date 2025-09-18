@@ -1,0 +1,27 @@
+{
+  "name": "vite-app",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/vite-app",
+  "projectType": "application",
+  "tags": [],
+  "targets": {
+    "dev": {
+      "command": "vite dev"
+    },
+    "start": {
+      "command": "vite preview",
+      "dependsOn": [
+        "build"
+      ]
+    },
+    "build": {
+      "command": "vite build"
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    },
+    "typecheck": {
+      "command": "tsc --build --pretty --verbose"
+    }
+  }
+}

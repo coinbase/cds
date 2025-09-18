@@ -1,0 +1,22 @@
+{
+  "extends": "../../tsconfig.project.json",
+  "compilerOptions": {
+    "declarationDir": "dts",
+    "rootDir": "src"
+  },
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [],
+  "references": [
+    {
+      "path": "../../packages/common"
+    },
+    {
+      "path": "../../packages/mobile"
+    },
+    {
+      "path": "../../packages/mobile-visualization"
+    }
+  ]
+}

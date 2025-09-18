@@ -1,0 +1,75 @@
+### Basic usage
+
+```tsx live
+function BasicSearchInput() {
+  const [value, setValue] = useState('');
+  return (
+    <VStack gap={2}>
+      <SearchInput
+        value={value}
+        onChangeText={setValue}
+        onClear={() => setValue('')}
+        onSearch={(searchTerm) => console.log('Searching for:', searchTerm)}
+        placeholder="Search..."
+      />
+      <Text color="foregroundMuted" font="caption">
+        Press Enter to trigger search
+      </Text>
+    </VStack>
+  );
+}
+```
+
+### Variants
+
+```tsx live
+function SearchInputVariants() {
+  const [value1, setValue1] = useState('');
+  const [value2, setValue2] = useState('');
+  const [value3, setValue3] = useState('');
+
+  return (
+    <VStack gap={2}>
+      <SearchInput
+        value={value1}
+        onChangeText={setValue1}
+        onClear={() => setValue1('')}
+        placeholder="Compact search..."
+        compact
+      />
+      <SearchInput
+        value={value2}
+        onChangeText={setValue2}
+        onClear={() => setValue2('')}
+        placeholder="Borderless search..."
+        bordered={false}
+      />
+      <SearchInput
+        value={value3}
+        onChangeText={setValue3}
+        onClear={() => setValue3('')}
+        placeholder="No icons..."
+        hideStartIcon
+        hideEndIcon
+      />
+    </VStack>
+  );
+}
+```
+
+### With Custom End Element
+
+```tsx live
+function CustomEndSearchInput() {
+  const [value, setValue] = useState('');
+  return (
+    <SearchInput
+      value={value}
+      onChangeText={setValue}
+      onClear={() => setValue('')}
+      placeholder="Custom end element..."
+      end={<InputIconButton name="filter" onClick={() => console.log('Filter clicked')} />}
+    />
+  );
+}
+```

@@ -1,0 +1,53 @@
+import { MDXArticle } from '@site/src/components/page/MDXArticle';
+
+<MDXArticle>
+`useHasMounted` should be used when conditionally rendering components or styles in SSR or SSG environments.
+
+We recommend using `useHasMounted` whenever you use [useBreakpoints](/hooks/useBreakpoints) or any other hooks that rely on the window object to conditionally render content. This combination can be used to prevent cumulative layout shifts (CLS). This is called two pass rendering and ensures that the component has been mounted and the window object is present before painting the DOM.
+
+```jsx
+const { isPhone } = useBreakpoints();
+const hasMounted = useHasMounted();
+
+// in component render
+{
+  hasMounted && isPhone && <TextHeadline as="h3">Welcome {username}!</TextHeadline>;
+}
+```
+
+</MDXArticle>
+
+<MDXArticle>
+## Basic usage
+
+```tsx live
+function Example() {
+  const hasMounted = useHasMounted();
+
+  return <TextHeadline>Component has {hasMounted ? 'mounted' : 'not mounted'}</TextHeadline>;
+}
+```
+
+</MDXArticle>
+
+<MDXArticle hideDivider>
+
+## Preventing Hydration Mismatch
+
+```tsx live
+function Example() {
+  const hasMounted = useHasMounted();
+  const [currentTime, setCurrentTime] = useState('');
+
+  useEffect(() => {
+    // Only run client-side code after mounting
+    if (hasMounted) {
+      setCurrentTime(new Date().toLocaleTimeString());
+    }
+  }, [hasMounted]);
+
+  return <TextHeadline>{hasMounted ? `Current time: ${currentTime}` : 'Loading...'}</TextHeadline>;
+}
+```
+
+</MDXArticle>

@@ -1,0 +1,38 @@
+// See https://go.microsoft.com/fwlink/?LinkId=733558
+// for the documentation about the tasks.json format
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "cds-vscode-plugin:build",
+      "type": "shell",
+      "command": "yarn nx run cds-vscode-plugin:build",
+      "group": "build"
+    },
+    {
+      "label": "cds-vscode-plugin:watch",
+      "type": "shell",
+      "command": "yarn nx run cds-vscode-plugin:watch",
+      "group": "build",
+      "isBackground": true,
+      "presentation": {
+        "panel": "dedicated",
+        "reveal": "always"
+      }
+    },
+    {
+      "label": "cds-vscode-plugin:stop-watch",
+      "command": "echo ${input:terminate}",
+      "type": "shell",
+      "problemMatcher": []
+    }
+  ],
+  "inputs": [
+    {
+      "id": "terminate",
+      "type": "command",
+      "command": "workbench.action.tasks.terminate",
+      "args": "terminateAll"
+    }
+  ]
+}

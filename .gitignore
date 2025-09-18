@@ -1,0 +1,186 @@
+# Node stuff
+node_modules
+yarn-debug.log*
+yarn-error.log*
+dist
+temp
+
+# Local env variables
+.env.local
+
+# OS ignores
+.DS_Store
+
+# Ruby bundles
+#
+**/vendor
+
+# Xcode
+**/ios/build/
+**/ios/derived_data/
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+xcuserdata
+*.xccheckout
+*.moved-aside
+DerivedData
+*.hmap
+*.ipa
+*.app
+*.xcuserstate
+*.xcworkspace
+*.xcodeproj/
+Pods/
+
+# Android/IntelliJ
+**/android/build/
+**/android/app/build/
+.idea
+.gradle
+local.properties
+*.iml
+*.hprof
+
+# Nx/Builds
+.nx
+.next
+cjs/
+dts/
+lib/
+esm/
+mjs/
+*.tsbuildinfo
+/.cache-loader
+/.linaria-cache
+/build
+
+# Yarn
+.yarn/*
+!.yarn/patches
+!.yarn/releases
+!.yarn/plugins
+!.yarn/sdks
+!.yarn/versions
+.pnp.*
+install-state.gz
+
+# Docusaurus
+.docusaurus
+
+# React Native
+
+## Xcode
+
+**/ios/**/build/
+**/ios/**/*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+xcuserdata
+*.xccheckout
+*.moved-aside
+DerivedData
+*.hmap
+*.ipa
+*.xcuserstate
+
+## Android
+
+**/android/**/build/
+**/android/**/.gradle
+**/android/**/local.properties
+**/android/**/*.iml
+
+## BUCK
+
+buck-out/
+\.buckd/
+*.keystore
+!debug.keystore
+
+## fastlane
+#
+# It is recommended to not store the screenshots in the git repo. Instead, use fastlane to re-generate the
+# screenshots whenever they are needed.
+# For more information about the recommended setup visit:
+# https://docs.fastlane.tools/best-practices/source-control/
+#
+*/fastlane/report.xml
+*/fastlane/Preview.html
+*/fastlane/screenshots
+
+## Bundle artifact
+*.jsbundle
+
+## CocoaPods
+**/ios/Pods/
+
+## Nested node_modules
+
+node_modules/
+
+# Expo
+node_modules/
+.expo/
+dist/
+npm-debug.*
+*.jks
+*.p8
+*.p12
+*.key
+*.log
+*.mobileprovision
+*.orig.*
+web-build/
+ios
+android
+# percy screenshots. defined in ui-mobile-visreg
+artifacts/playground-screenshots 
+# failed detox test screenshots
+apps/mobile-app/artifacts
+apps/mobile-app/prebuilds/android-*
+!apps/mobile-app/prebuilds/android-release-*.zip
+!apps/mobile-app/credentials/android-release-*.keystore
+# temporary build directory for native compilation
+apps/mobile-app/build/
+
+#reassure
+**/.reassure/*
+
+# Husky
+.husky
+
+# Lint-staged
+.lintstagedrc*
+
+# Auto Generated files
+bundle-stats.json
+export-stats.md
+cds-archive-*.txt
+cds-archive-*.zip
+depcheck-results.md
+cds-biweekly-update.md
+missing-files.json
+barrel-files.md
+base-props.json
+
+# temp directory created when running podium scripts. this gets deleted after the script is done, but for the sake of your sanity, let's not track it
+**/.podium/
+**/.a11yLintConfig/
+
+# tarball script artifacts
+tarballs/
+
+# LLM and MCP docs
+mcp-docs/
+

@@ -1,0 +1,53 @@
+### Basic usage
+
+```tsx
+function BasicPageFooter() {
+  return (
+    <PageFooter
+      action={
+        <Button variant="primary" onPress={() => console.log('Pressed')}>
+          Submit
+        </Button>
+      }
+    />
+  );
+}
+```
+
+### Multiple Actions
+
+```tsx
+function MultipleActionsFooter() {
+  return (
+    <PageFooter
+      action={
+        <HStack gap={2} justifyContent="center">
+          <Button variant="secondary" onPress={() => console.log('Cancel')}>
+            Cancel
+          </Button>
+          <Button variant="primary" onPress={() => console.log('Submit')}>
+            Submit
+          </Button>
+        </HStack>
+      }
+    />
+  );
+}
+```
+
+### With Background Color
+
+```tsx
+function StyledFooter() {
+  return (
+    <PageFooter
+      action={
+        <Button variant="primary" onPress={() => console.log('Pressed')}>
+          Submit
+        </Button>
+      }
+      backgroundColor="bgSecondary"
+    />
+  );
+}
+```

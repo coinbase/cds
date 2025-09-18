@@ -1,0 +1,1 @@
+# This is to prevent the codeflow builder from ignoring the .git folder at the root of the project

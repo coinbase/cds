@@ -1,0 +1,73 @@
+### Basic usage
+
+```tsx
+function BasicSearchInput() {
+  const [value, setValue] = useState('');
+  return (
+    <VStack gap={2}>
+      <SearchInput
+        value={value}
+        onChangeText={setValue}
+        onClear={() => setValue('')}
+        onSearch={(searchTerm) => console.log('Searching for:', searchTerm)}
+        placeholder="Search..."
+      />
+      <Text color="foregroundMuted" font="caption">
+        Submit on keyboard or tap search icon
+      </Text>
+    </VStack>
+  );
+}
+```
+
+### With Back Navigation
+
+```tsx
+function SearchInputWithBack() {
+  const [value, setValue] = useState('');
+  return (
+    <VStack gap={2}>
+      <SearchInput
+        value={value}
+        onChangeText={setValue}
+        onClear={() => setValue('')}
+        onBack={() => console.log('Navigating back')}
+        onSearch={(searchTerm) => console.log('Searching for:', searchTerm)}
+        placeholder="Focus to see back arrow..."
+      />
+      <Text color="foregroundMuted" font="caption">
+        Search icon changes to back arrow on focus
+      </Text>
+    </VStack>
+  );
+}
+```
+
+### Variants
+
+```tsx
+function SearchInputVariants() {
+  const [value1, setValue1] = useState('');
+  const [value2, setValue2] = useState('');
+
+  return (
+    <VStack gap={2}>
+      <SearchInput
+        value={value1}
+        onChangeText={setValue1}
+        onClear={() => setValue1('')}
+        placeholder="Always show search icon..."
+        disableBackArrow
+      />
+      <SearchInput
+        value={value2}
+        onChangeText={setValue2}
+        onClear={() => setValue2('')}
+        placeholder="No icons..."
+        hideStartIcon
+        hideEndIcon
+      />
+    </VStack>
+  );
+}
+```

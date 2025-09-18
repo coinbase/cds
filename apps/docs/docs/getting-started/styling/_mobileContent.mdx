@@ -1,0 +1,98 @@
+import { MDXSection } from '@site/src/components/page/MDXSection';
+import { MDXArticle } from '@site/src/components/page/MDXArticle';
+
+<MDXSection>
+<MDXArticle>
+
+## `StyleProps` API
+
+Most components support the StyleProps API. StyleProps automatically have access to the values in the theme, and some StyleProps are limited to only the theme values.
+
+[See the full list of StyleProps here &rarr;](/components/layout/Box/?platform=mobile&tab=props)
+
+```jsx
+// ✅ The `bgNegative` token will automatically update with the theme!
+<Box background="bgNegative" width={100} />
+
+// ❌ Error: Type '"#0000ff"' is not assignable to type 'Color | undefined'.
+<Box background="#0000ff" width={100} />
+```
+
+:::tip
+The docs page of every component has a props table listing all the available props!
+:::
+
+:::note
+The StyleProps API uses the ThemeProvider Context under the hood to enable dynamic theming.
+:::
+
+</MDXArticle>
+</MDXSection>
+
+<MDXSection>
+<MDXArticle>
+
+## `style` and `styles` props
+
+Most components support the native `style` prop for inline styles.
+
+```jsx
+<Box style={{ backgroundColor: '#0000ff' }} />
+```
+
+Some complex components support passing inline styles to subcomponents with the `styles` prop.
+
+```jsx
+<ProgressCircle
+  styles={{
+    circle: {
+      stroke: 'transparent',
+    },
+    progress: {
+      strokeLinecap: 'square',
+    },
+  }}
+  color="fgPositive"
+  progress={0.75}
+  size={100}
+/>
+```
+
+:::note
+We will continue to add the `styles` prop to more components over time. Please feel free to request specific components that you think would benefit from this API.
+:::
+
+</MDXArticle>
+</MDXSection>
+
+<MDXSection>
+<MDXArticle>
+
+## Component specific props
+
+Many components have their own specific props that can affect styling.
+
+```jsx
+<Button compact variant="primary">
+  Click me
+</Button>
+```
+
+</MDXArticle>
+</MDXSection>
+
+<MDXSection>
+<MDXArticle>
+
+## Combining techniques
+
+Mix and match these styling techniques for complete customization!
+
+```jsx
+<Button variant="primary" borderColor="accentBoldPurple" style={{ fontFamily: 'Times' }}>
+  Click me
+</Button>
+```
+
+</MDXArticle>
+</MDXSection>

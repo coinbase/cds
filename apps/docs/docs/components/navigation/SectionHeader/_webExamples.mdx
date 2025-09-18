@@ -1,0 +1,94 @@
+### Basic usage
+
+```tsx live
+<SectionHeader title="Basic Section Header" />
+```
+
+### With Description
+
+```tsx live
+<SectionHeader
+  title="Section with Description"
+  description="This is a helpful description that provides more context about this section. It can span multiple lines and will be truncated after two lines of text if it's too long."
+/>
+```
+
+### With Icons
+
+```tsx live
+<VStack gap={2}>
+  <SectionHeader title="Start Icon Example" start={<Icon active name="star" />} />
+  <SectionHeader
+    title="Info Icon Example"
+    icon="info-circle"
+    description="The info icon is automatically sized and colored"
+  />
+</VStack>
+```
+
+### With Balance and Actions
+
+```tsx live
+<VStack gap={2}>
+  <SectionHeader
+    title="Account Balance"
+    balance="$1,234.56"
+    end={
+      <Button variant="secondary" compact onClick={() => console.log('View history')}>
+        View History
+      </Button>
+    }
+  />
+  <SectionHeader
+    title="Portfolio Value"
+    balance="$5,678.90"
+    description="Total value across all accounts"
+    end={
+      <HStack gap={1}>
+        <Button variant="secondary" compact onClick={() => console.log('Export')}>
+          Export
+        </Button>
+        <Button variant="primary" compact onClick={() => console.log('Details')}>
+          Details
+        </Button>
+      </HStack>
+    }
+  />
+</VStack>
+```
+
+### Layout Customization
+
+```tsx live
+<VStack gap={2}>
+  {/* Custom spacing */}
+  <SectionHeader
+    title="Custom Padding"
+    description="Modified padding and gap"
+    paddingX={6}
+    paddingY={3}
+    gap={2}
+  />
+
+  {/* Custom background and borders */}
+  <SectionHeader
+    title="Styled Background"
+    description="With custom background and border radius"
+    background="bgSecondary"
+    borderRadius={2}
+    paddingX={4}
+  />
+
+  {/* Custom alignment */}
+  <SectionHeader
+    title="Center Aligned"
+    description="Content centered instead of space-between"
+    justifyContent="center"
+    end={
+      <Button variant="secondary" compact onClick={() => console.log('Action')}>
+        Action
+      </Button>
+    }
+  />
+</VStack>
+```

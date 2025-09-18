@@ -1,0 +1,34 @@
+### Basic Example
+
+```jsx
+function TabbedChipsExample() {
+  const tabs = [
+    {
+      id: 'all_tab',
+      label: 'All',
+    },
+    {
+      id: 'swap_',
+      label: 'Swap',
+    },
+    {
+      id: 'collect_tab',
+      label: 'Collect',
+    },
+    {
+      id: 'bridge_tab',
+      label: 'Bridge',
+    },
+  ];
+  const [value, setValue] = useState(tabs[0].id);
+  return (
+    <VStack maxWidth={375} borderRadius={400} bordered paddingX={2} gap={2} paddingY={2}>
+      <VStack paddingTop={1}>
+        <TextTitle3 as="p">Popular assets</TextTitle3>
+      </VStack>
+      <SearchInput compact placeholder="Search by name" />
+      <TabbedChips value={value} onChange={setValue} tabs={tabs} />
+    </VStack>
+  );
+}
+```

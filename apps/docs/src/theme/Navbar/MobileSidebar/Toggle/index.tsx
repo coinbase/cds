@@ -1,0 +1,21 @@
+import React from 'react';
+import { IconButton } from '@cbhq/cds-web/buttons';
+import { useNavbarMobileSidebar } from '@docusaurus/theme-common/internal';
+import { translate } from '@docusaurus/Translate';
+
+export default function MobileSidebarToggle(): JSX.Element {
+  const { toggle, shown } = useNavbarMobileSidebar();
+  return (
+    <IconButton
+      transparent
+      aria-expanded={shown}
+      aria-label={translate({
+        id: 'theme.docs.sidebar.toggleSidebarButtonAriaLabel',
+        message: 'Navigation bar',
+        description: 'The ARIA label for hamburger menu button of mobile navigation',
+      })}
+      name="hamburger"
+      onClick={toggle}
+    />
+  );
+}

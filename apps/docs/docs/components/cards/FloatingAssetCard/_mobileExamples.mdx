@@ -1,0 +1,129 @@
+### Default
+
+Most common composition for displaying individual assets like NFTs or dApps.
+
+```jsx
+function Example() {
+  function NoopFn() {
+    console.log('pressed');
+  }
+  const cards = [
+    {
+      title: 'Balancing the Air',
+      description: '0.5 ETH',
+      subtitle: 'Amber V’s Artwork',
+      onPress: NoopFn,
+      media: (
+        <RemoteImage
+          source="/img/nft.png"
+          height={'100%'}
+          style={{ objectFit: 'cover', cursor: 'pointer' }}
+          width="100%"
+        />
+      ),
+    },
+  ];
+  return (
+    <VStack minHeight={300} padding={2} alignItems="center" justifyContent="center" gap={1}>
+      {cards.map((card) => (
+        <FloatingAssetCard {...card} />
+      ))}
+    </VStack>
+  );
+}
+```
+
+### Descriptions as trends
+
+Trends help users make decisions about whether or not to invest in an asset.
+
+```jsx
+function Example() {
+  function NoopFn() {
+    console.log('pressed');
+  }
+  const cards = [
+    {
+      title: '#7560',
+      description: (
+        <TextLabel2 color="fgPositive" numberOfLines={2}>
+          &#x2197;6.37%
+        </TextLabel2>
+      ),
+      subtitle: 'Bored Ape',
+      onPress: NoopFn,
+      media: (
+        <RemoteImage
+          source="/img/nft_boredape2.png"
+          height={'100%'}
+          style={{ objectFit: 'cover', cursor: 'pointer' }}
+          width="100%"
+        />
+      ),
+    },
+    {
+      title: '#2015',
+      description: (
+        <TextLabel2 color="fgNegative" numberOfLines={2}>
+          &#x2198;6.37%
+        </TextLabel2>
+      ),
+      subtitle: 'Pudgy Penguins',
+      onPress: NoopFn,
+      media: (
+        <RemoteImage
+          source="/img/nft_penguin.png"
+          height={'100%'}
+          style={{ objectFit: 'cover', cursor: 'pointer' }}
+          width="100%"
+        />
+      ),
+    },
+  ];
+  return (
+    <HStack minHeight={300} padding={2} alignItems="center" justifyContent="center" gap={2}>
+      {cards.map((card) => (
+        <FloatingAssetCard {...card} />
+      ))}
+    </HStack>
+  );
+}
+```
+
+### Description as ratings
+
+Use this example for visual assets with ratings.
+
+```jsx
+function Example() {
+  function NoopFn() {
+    console.log('pressed');
+  }
+  const cards = [
+    {
+      title: 'Parallel',
+      description: (
+        <TextLabel2 color="fgMuted" numberOfLines={2}>
+          &#9733;4.5
+        </TextLabel2>
+      ),
+      onPress: NoopFn,
+      media: (
+        <RemoteImage
+          source="/img/collection.png"
+          height={'100%'}
+          style={{ objectFit: 'cover', cursor: 'pointer' }}
+          width="100%"
+        />
+      ),
+    },
+  ];
+  return (
+    <HStack minHeight={300} padding={2} alignItems="center" justifyContent="center" gap={2}>
+      {cards.map((card) => (
+        <FloatingAssetCard {...card} />
+      ))}
+    </HStack>
+  );
+}
+```

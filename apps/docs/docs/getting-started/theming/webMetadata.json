@@ -1,0 +1,3 @@
+{
+  "description": "The theme contains design tokens like colors, fonts, spacing, and more. The ThemeProvider provides access to these values via CSS Variables for web, and React Context for both web and React Native."
+}

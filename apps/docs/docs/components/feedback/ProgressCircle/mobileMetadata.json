@@ -1,0 +1,25 @@
+{
+  "import": "import { ProgressCircle } from '@cbhq/cds-mobile/visualizations/ProgressCircle'",
+  "source": "https://github.com/coinbase/cds-staging/blob/master/packages/mobile/src/visualizations/ProgressCircle.tsx",
+  "description": "A circular visual indicator of completion progress.",
+  "relatedComponents": [
+    {
+      "label": "ProgressBar",
+      "url": "/components/feedback/ProgressBar"
+    },
+    {
+      "label": "ProgressBarWithFloatLabel",
+      "url": "/components/feedback/ProgressBarWithFloatLabel"
+    },
+    {
+      "label": "ProgressBarWithFixedLabels",
+      "url": "/components/feedback/ProgressBarWithFixedLabels"
+    }
+  ],
+  "dependencies": [
+    {
+      "name": "react-native-svg",
+      "version": "^14.1.0"
+    }
+  ]
+}

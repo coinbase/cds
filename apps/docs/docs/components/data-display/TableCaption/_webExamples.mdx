@@ -1,0 +1,76 @@
+### Basic usage
+
+```tsx live
+<Table bordered>
+  <TableCaption>Simple Table Caption</TableCaption>
+  <TableHeader>
+    <TableRow>
+      <TableCell title="Name" />
+      <TableCell title="Role" />
+    </TableRow>
+  </TableHeader>
+  <TableBody>
+    <TableRow>
+      <TableCell title="John Doe" />
+      <TableCell title="Developer" />
+    </TableRow>
+  </TableBody>
+</Table>
+```
+
+### Custom Content
+
+```tsx live
+<Table bordered>
+  <TableCaption>
+    <VStack gap={1}>
+      <TextTitle2 as="h2" color="primary">
+        Project Team
+      </TextTitle2>
+      <Text as="p" color="foregroundMuted">
+        Updated as of March 2024
+      </Text>
+    </VStack>
+  </TableCaption>
+  <TableHeader>
+    <TableRow>
+      <TableCell title="Name" />
+      <TableCell title="Role" />
+    </TableRow>
+  </TableHeader>
+  <TableBody>
+    <TableRow>
+      <TableCell title="John Doe" />
+      <TableCell title="Developer" />
+    </TableRow>
+  </TableBody>
+</Table>
+```
+
+### Styling Options
+
+```tsx live
+<Table bordered>
+  <TableCaption
+    align="center"
+    color="fgPrimary"
+    backgroundColor="bgAlternate"
+    innerSpacing={{ spacingHorizontal: 2, spacingVertical: 1 }}
+    outerSpacing={{ spacingHorizontal: 0, spacingVertical: 1 }}
+  >
+    Quarterly Revenue Report
+  </TableCaption>
+  <TableHeader>
+    <TableRow>
+      <TableCell title="Quarter" />
+      <TableCell title="Revenue" />
+    </TableRow>
+  </TableHeader>
+  <TableBody>
+    <TableRow>
+      <TableCell title="Q1 2024" />
+      <TableCell title="$1.2M" />
+    </TableRow>
+  </TableBody>
+</Table>
+```

@@ -1,0 +1,127 @@
+### Basic usage
+
+```tsx live
+function Example() {
+  const [activeTourStep, setActiveTourStep] = useState(null);
+
+  const StepOne = () => {
+    const [checked, setChecked] = useState(false);
+
+    const { goNextTourStep, stopTour } = useTourContext();
+
+    return (
+      <Coachmark
+        action={<Button variant="secondary" onPress={goNextTourStep} compact label="Next" />}
+        checkbox={
+          <Checkbox checked={checked} onChange={setChecked}>
+            Don&apos;t show again
+          </Checkbox>
+        }
+        content="Add up to 3 lines of body copy. Deliver your message with clarity and impact"
+        onClose={stopTour}
+        title="My first step"
+      />
+    );
+  };
+
+  const StepTwo = () => {
+    const { goNextTourStep, stopTour } = useTourContext();
+    return (
+      <Coachmark
+        action={<Button variant="secondary" onPress={goNextTourStep} compact label="Next" />}
+        content={
+          <VStack gap={2}>
+            <TextCaption as="p" color="fgMuted">
+              50%
+            </TextCaption>
+            <ProgressBar progress={0.5} />
+            <TextBody as="p">
+              Add up to 3 lines of body copy. Deliver your message with clarity and impact
+            </TextBody>
+          </VStack>
+        }
+        media={<RemoteImage height={150} source={ethBackground} width="100%" />}
+        onClose={stopTour}
+        title="My second step"
+      />
+    );
+  };
+
+  const StepThree = () => {
+    const { stopTour, goNextTourStep, goPreviousTourStep } = useTourContext();
+    return (
+      <Coachmark
+        action={
+          <HStack gap={1}>
+            <Button variant="secondary" onPress={goPreviousTourStep} compact label="Back" />
+            <Button variant="secondary" onPress={goNextTourStep} compact label="Next" />
+            <Button variant="secondary" onPress={stopTour} compact label="Done" />
+          </HStack>
+        }
+        content="Add up to 3 lines of body copy. Deliver your message with clarity and impact"
+        title="My third step"
+        width={350}
+      />
+    );
+  };
+
+  const tourSteps = [
+    {
+      id: 'step1',
+      onBeforeActive: () => console.log('step1 before'),
+      Component: StepOne,
+    },
+    {
+      id: 'step2',
+      onBeforeActive: () => console.log('step2 before'),
+      Component: StepTwo,
+    },
+    {
+      id: 'step3',
+      onBeforeActive: () => console.log('step3 before'),
+      Component: StepThree,
+    },
+  ];
+
+  const TourExample = ({ spacerWidthIncrement = 0, spacerHeightIncrement = 500 }) => {
+    const { startTour } = useTourContext();
+
+    const handlePress = useCallback(() => startTour(), [startTour]);
+
+    return (
+      <VStack flexGrow={1} gap={2} justifyContent="space-between">
+        <Button onPress={handlePress} compact label="Start tour" />
+        <TourStep id="step1">
+          <Box backgroundColor="secondary" padding={4}>
+            <Text>This is step 1</Text>
+          </Box>
+        </TourStep>
+        <Box height={spacerHeightIncrement} />
+        <HStack justifyContent="flex-end">
+          <Box flexShrink={0} width={spacerWidthIncrement} />
+          <TourStep id="step2">
+            <Box backgroundColor="secondary" padding={4} width={150}>
+              <Text>This is step 2</Text>
+            </Box>
+          </TourStep>
+        </HStack>
+        <Box height={spacerHeightIncrement} />
+        <HStack>
+          <Box flexShrink={0} width={spacerWidthIncrement * 2} />
+          <TourStep id="step3">
+            <VStack backgroundColor="secondary" padding={4} width={150}>
+              <Text>This is step 3</Text>
+            </VStack>
+          </TourStep>
+        </HStack>
+      </VStack>
+    );
+  };
+
+  return (
+    <Tour activeTourStep={activeTourStep} onChange={setActiveTourStep} steps={tourSteps}>
+      <TourExample />
+    </Tour>
+  );
+}
+```

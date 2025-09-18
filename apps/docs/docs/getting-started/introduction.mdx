@@ -1,0 +1,64 @@
+---
+id: introduction
+title: Introduction
+hide_title: true
+---
+
+import { MDXSection } from '@site/src/components/page/MDXSection';
+import { MDXArticle } from '@site/src/components/page/MDXArticle';
+import { ContentHeader } from '@site/src/components/page/ContentHeader';
+import { GettingStartedBanner } from '@site/src/components/page/ComponentBanner/GettingStartedBanner';
+
+<ContentHeader
+  title="Introduction"
+  description="CDS is a cross-platform component library designed to streamline the development of React and React Native applications. It empowers developers with consistent, reusable, and accessible components that adhere to Coinbase's engineering principles."
+  banner={<GettingStartedBanner />}
+/>
+
+<MDXSection>
+<MDXArticle>
+## What is CDS?
+CDS is a unified component library that supports both web and mobile platforms, ensuring a cohesive user experience across devices. By using CDS, you can:
+
+- **Accelerate Development**: Use pre-built, customizable components to focus on building features instead of reinventing UI elements.
+- **Ensure Consistency**: Maintain a uniform look and feel across your application by leveraging Coinbase's design language.
+- **Improve Performance**: Optimized for speed and scalability, with static CSS for the web and efficient styling for React Native.
+- **Streamline Theming**: Easily apply consistent theming across your app with CDS's ThemeProvider and theme variables.
+- **Enhance Accessibility**: Benefit from accessible components designed with inclusive user experiences in mind.
+
+</MDXArticle>
+
+<MDXArticle hideDivider>
+## Key features
+
+### Cross-platform compatibility
+
+CDS provides components for both React (web) and React Native (mobile), ensuring your application delivers a consistent experience regardless of platform. Web components are imported from `@cbhq/cds-web`, and React Native components are imported from `@cbhq/cds-mobile`.
+
+### Powerful theming
+
+The CDS ThemeProvider allows you to define a custom theme for your application. On the web, CDS utilizes CSS Variables for high-performance styling, while React Native components use a theme Context for dynamic theming. With a unified theming system, you can:
+
+- Customize colors, spacing, typography, and more.
+- Create light and dark themes effortlessly.
+- Ensure design fidelity across platforms.
+
+### Comprehensive component library
+
+CDS includes a wide variety of components, from layout primitives like `Box`, `HStack`, and `Grid` to stateful, interactive components like `Accordion`, `Modal`, and `Dropdown`. These components are:
+
+- Fully customizable via props and theming.
+- Designed to meet modern accessibility standards.
+- Tested and optimized for performance.
+
+### Responsive design
+
+On the web, CDS components support responsive styles out of the box. Use the responsive syntax to adjust layouts and styles based on device breakpoints without writing custom media queries.
+
+### Built for performance
+
+- **Static CSS for Web**: Linaria generates static CSS, ensuring small HTML diffs for server-side rendering (SSR) and fast client-side rendering.
+- **Optimized Native Styling**: React Native components leverage the `StyleSheet` API for performant rendering on mobile devices.
+
+</MDXArticle>
+</MDXSection>

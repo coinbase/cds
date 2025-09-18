@@ -1,0 +1,44 @@
+---
+id: mcp-server
+title: MCP Server
+hide_title: true
+---
+
+import { MDXSection } from '@site/src/components/page/MDXSection';
+import { MDXArticle } from '@site/src/components/page/MDXArticle';
+import { ContentHeader } from '@site/src/components/page/ContentHeader';
+
+<ContentHeader
+  title="MCP Server"
+  description="CDS includes an MCP Server that is automatically updated with each new version of our libraries."
+/>
+
+<MDXSection>
+<MDXArticle>
+## What is MCP?
+
+From [modelcontextprotocol.io](https://modelcontextprotocol.io/docs/getting-started/intro):
+
+> _MCP is an open protocol that standardizes how applications provide context to large language models (LLMs). MCP provides a standardized way to connect AI models to different data sources and tools. MCP enables you build agents and complex workflows on top of LLMs and connects your models with the world._
+
+The CDS MCP server provides CDS context to LLMs, allowing AI models to understand and work with CDS APIs and components.
+
+</MDXArticle>
+</MDXSection>
+
+<MDXSection>
+<MDXArticle>
+## Install for Cursor
+
+The CDS MCP server is included in the `@cbhq/cds-common` package which is installed by default for anyone using CDS.
+
+Run `npx cds-mcp-setup` to setup the MCP server for Cursor.
+
+This installs the MCP server in `<workspace_root>/.cursor/mcp.json` and adds Cursor rules for CDS in `<workspace_root>/.cursor/rules/cds.mcp`.
+
+:::tip
+Make sure to enable the MCP server after installation. Go to `Cursor Settings` &rarr; `Tools & Integrations` &rarr; `MCP Tools` to check which MCP servers are installed.
+:::
+
+</MDXArticle>
+</MDXSection>

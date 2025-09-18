@@ -1,0 +1,139 @@
+{
+  "$schema": "./node_modules/nx/schemas/nx-schema.json",
+  "cacheDirectory": "./.nx/cache",
+  "useInferencePlugins": false,
+  "cli": {
+    "packageManager": "yarn"
+  },
+  "defaultBase": "master",
+  "workspaceLayout": {
+    "appsDir": "apps",
+    "libsDir": "packages"
+  },
+  "namedInputs": {
+    "default": [
+      "{projectRoot}/*",
+      "{projectRoot}/**/*",
+      "sharedGlobals"
+    ],
+    "sharedGlobals": [
+      "{workspaceRoot}/.buildkite/*.yml",
+      "{workspaceRoot}/eslint.config.mjs",
+      "{workspaceRoot}/.github/**/*.yml",
+      "{workspaceRoot}/.*ignore",
+      "{workspaceRoot}/*.config.js",
+      "{workspaceRoot}/*.config.cjs",
+      "{workspaceRoot}/*.config.mjs",
+      "{workspaceRoot}/nx.json",
+      "{workspaceRoot}/package.json",
+      "{workspaceRoot}/tsconfig.json",
+      "{workspaceRoot}/tsconfig.*.json"
+    ],
+    "production": [
+      "default",
+      "!{projectRoot}/**/__stories__/**",
+      "!{projectRoot}/**/__tests__/**",
+      "!{projectRoot}/**/__mocks__/**",
+      "!{projectRoot}/**/__fixtures__/**",
+      "!{projectRoot}/**/*.stories.*",
+      "!{projectRoot}/**/*.test.*",
+      "!{projectRoot}/**/*.spec.*"
+    ]
+  },
+  "targetDefaults": {
+    "build": {
+      "dependsOn": [
+        "^build"
+      ],
+      "options": {
+        "cwd": "{projectRoot}"
+      },
+      "inputs": [
+        "production",
+        "^production"
+      ],
+      "outputs": [
+        "{projectRoot}/cjs",
+        "{projectRoot}/dist",
+        "{projectRoot}/esm",
+        "{projectRoot}/lib"
+      ],
+      "cache": true
+    },
+    "typecheck": {
+      "dependsOn": [
+        "^build",
+        "^typecheck"
+      ],
+      "options": {
+        "cwd": "{projectRoot}"
+      },
+      "inputs": [
+        "default",
+        "^production"
+      ],
+      "outputs": [
+        "{projectRoot}/dts",
+        "{projectRoot}/tsconfig.tsbuildinfo",
+        "{projectRoot}/tsconfig.build.tsbuildinfo"
+      ],
+      "cache": true
+    },
+    "dev": {
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "start": {
+      "dependsOn": [
+        "^build",
+        "typecheck"
+      ],
+      "options": {
+        "cwd": "{projectRoot}"
+      },
+      "inputs": [
+        "production",
+        "^production"
+      ]
+    },
+    "lint": {
+      "inputs": [
+        "default",
+        "^production"
+      ],
+      "outputs": [
+        "{options.outputFile}"
+      ],
+      "cache": true
+    },
+    "test": {
+      "dependsOn": [
+        "^build"
+      ],
+      "inputs": [
+        "default",
+        "^production"
+      ],
+      "outputs": [
+        "{projectRoot}/coverage"
+      ],
+      "cache": true
+    },
+    "a11y-web": {
+      "cache": true
+    },
+    "build-css": {
+      "cache": true
+    },
+    "build-for-tests": {
+      "cache": true
+    },
+    "format": {
+      "cache": true
+    },
+    "lint-styles": {
+      "cache": true
+    }
+  }
+}

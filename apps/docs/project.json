@@ -1,0 +1,72 @@
+{
+  "name": "docs",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/docs",
+  "projectType": "application",
+  "tags": [],
+  "targets": {
+    "dev": {
+      "command": "docusaurus start --port 3000",
+      "dependsOn": [
+        {
+          "projects": [
+            "docusaurus-plugin-docgen",
+            "docusaurus-plugin-kbar"
+          ],
+          "target": "build"
+        }
+      ],
+      "options": {
+        "cwd": "apps/docs",
+        "env": {
+          "NODE_ENV": "development"
+        }
+      }
+    },
+    "start": {
+      "command": "docusaurus serve --dir dist --port 3000",
+      "dependsOn": [
+        "build"
+      ],
+      "options": {
+        "cwd": "apps/docs"
+      }
+    },
+    "build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "docusaurus build --out-dir dist",
+          "node ai-doc-generator/generator.cjs"
+        ],
+        "parallel": false,
+        "cwd": "apps/docs"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    },
+    "clear": {
+      "command": "docusaurus clear",
+      "options": {
+        "cwd": "apps/docs"
+      }
+    },
+    "typecheck": {
+      "command": "tsc --build --pretty --verbose"
+    },
+    "lint-styles": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "stylelint \"**/*.{css,ts,tsx,js,jsx}\" --formatter string",
+        "cwd": "{projectRoot}"
+      }
+    },
+    "build-llm-docs": {
+      "command": "node {projectRoot}/ai-doc-generator/generator.cjs",
+      "options": {
+        "cwd": "{workspaceRoot}"
+      }
+    }
+  }
+}

@@ -1,0 +1,967 @@
+## Basic Example
+
+Carousels are a great way to showcase a list of items in a compact and engaging way.
+By default, Carousels have navigation and pagination enabled.
+You can also add a title to the Carousel by setting `title` prop.
+
+You simply wrap each child in a `CarouselItem` component, and can optionally set the `width` prop to control the width of the item.
+
+You can also set the `styles` prop to control the styles of the carousel, such as the gap between items.
+
+```jsx
+function MyCarousel() {
+  const theme = useTheme();
+  return (
+    <Carousel
+      hidePagination
+      title="Explore Assets"
+      styles={{
+        root: { paddingInline: theme.space[2] },
+        carousel: { gap: theme.space[1] },
+      }}
+    >
+      {Object.values(assets).map((asset, index) => (
+        <CarouselItem key={asset.symbol} id={asset.symbol}>
+          <SquareAssetCard imageUrl={asset.imageUrl} name={asset.symbol} />
+        </CarouselItem>
+      ))}
+    </Carousel>
+  );
+}
+```
+
+## Item Sizing
+
+Items by default take their natural width while in the carousel, such as from our example above.
+However, you can set the `width` prop of `CarouselItem` to control the width of the item.
+
+### Dynamic Sizing
+
+Items can be given a width proportional to the carousel width.
+
+:::tip Tip
+
+If you have a gap between items or padding between the carousel and the edge of the screen,
+you should account for that in the width. For example, if you have a gap of 8px,
+and want to offset 16px from edge of screen, you could do
+
+`<CarouselItem width={((screenWidth - (16 * 2)) - 8) / 2} ... />`
+
+:::
+
+```jsx
+function DynamicSizingCarousel() {
+  const theme = useTheme();
+  const windowWidth = Dimensions.get('window').width;
+
+  const horizontalPadding = theme.space[2];
+
+  const carouselWidth = windowWidth - horizontalPadding * 2;
+  const horizontalGap = theme.space[1];
+
+  // 1 item per page - will rely on Carousel container's width
+  const oneItemWidth = '100%'; // Could alternatively use carouselWidth
+  // 2 items per page - will be calculated based on screen width
+  const twoItemsWidth = (carouselWidth - horizontalGap) / 2;
+  // 3 items per page - will be calculated based on screen width
+  const threeItemsWidth = (carouselWidth - horizontalGap * 2) / 3;
+
+  return (
+    <Carousel
+      hidePagination
+      title="Learn more"
+      styles={{
+        root: { paddingInline: horizontalPadding },
+        carousel: { gap: horizontalGap },
+      }}
+    >
+      <CarouselItem id="recurring-buy" width={twoItemsWidth}>
+        <UpsellCard
+          action="Get started"
+          description="Want to add funds to your card every week or month?"
+          media={
+            <Box bottom={6} position="relative" right={24}>
+              <Pictogram dimension="64x64" name="recurringPurchases" />
+            </Box>
+          }
+          minWidth="0"
+          onActionPress={NoopFn}
+          title="Recurring Buy"
+          width="100%"
+        />
+      </CarouselItem>
+      <CarouselItem id="eths-apr" width={twoItemsWidth}>
+        <UpsellCard
+          action="Start earning"
+          dangerouslySetBackground="rgb(var(--purple70))"
+          description={
+            <TextLabel2 as="p" numberOfLines={3} color="fgInverse">
+              Earn staking rewards on ETH by holding it on Coinbase
+            </TextLabel2>
+          }
+          media={
+            <Box left={16} position="relative" top={12}>
+              <RemoteImage height={174} source="/img/feature.png" />
+            </Box>
+          }
+          minWidth="0"
+          onActionPress={NoopFn}
+          title={
+            <TextHeadline color="fgInverse" as="h3">
+              Up to 3.29% APR on ETHs
+            </TextHeadline>
+          }
+          width="100%"
+        />
+      </CarouselItem>
+    </Carousel>
+  );
+}
+```
+
+### Responsive Sizing
+
+You can also use responsive props to change the number of items visible based on the carousel width.
+The carousel below will show per page 1 item on mobile, 2 items on tablet, and 3 items on desktop (based on screen width).
+
+```jsx
+function ResponsiveSizingCarousel() {
+  const theme = useTheme();
+  const windowWidth = Dimensions.get('window').width;
+
+  const horizontalPadding = theme.space[2];
+
+  const carouselWidth = windowWidth - horizontalPadding * 2;
+  const horizontalGap = theme.space[1];
+
+  // 1 item per page - will rely on Carousel container's width
+  const oneItemWidth = '100%'; // Could alternatively use carouselWidth
+  // 2 items per page - will be calculated based on screen width
+  const twoItemsWidth = (carouselWidth - horizontalGap) / 2;
+  // 3 items per page - will be calculated based on screen width
+  const threeItemsWidth = (carouselWidth - horizontalGap * 2) / 3;
+
+  const itemWidth = {
+    phone: oneItemWidth,
+    tablet: twoItemsWidth,
+    desktop: threeItemsWidth,
+  };
+
+  return (
+    <Carousel
+      hidePagination
+      title="Learn more"
+      styles={{
+        root: { paddingInline: horizontalPadding },
+        carousel: { gap: horizontalGap },
+      }}
+      drag="free"
+    >
+      <CarouselItem id="earn-more-crypto" width={itemWidth}>
+        <NudgeCard
+          title="Earn more crypto"
+          description="You've got unstaked crypto."
+          pictogram="key"
+          action="Start earning"
+          onActionPress={() => console.log('Action pressed')}
+          width="100%"
+          minWidth={0}
+        />
+      </CarouselItem>
+      <CarouselItem id="secure-your-account" width={itemWidth}>
+        <NudgeCard
+          title="Secure your account"
+          description="Add two-factor authentication."
+          pictogram="shield"
+          action="Enable 2FA"
+          onActionPress={() => console.log('Enable 2FA pressed')}
+          width="100%"
+          minWidth={0}
+        />
+      </CarouselItem>
+      <CarouselItem id="complete-your-profile" width={itemWidth}>
+        <NudgeCard
+          title="Complete your profile"
+          description="Add more details."
+          pictogram="accountsNavigation"
+          action="Update"
+          onActionPress={() => console.log('Update profile pressed')}
+          width="100%"
+          minWidth={0}
+        />
+      </CarouselItem>
+    </Carousel>
+  );
+}
+```
+
+### Varied Sizing
+
+Not all carousel items need to be the same size. You can provide CarouselItems of varying widths as well.
+
+```jsx
+function VariedSizingCarousel() {
+  const theme = useTheme();
+  const windowWidth = Dimensions.get('window').width;
+
+  const horizontalPadding = theme.space[2];
+
+  const carouselWidth = windowWidth - horizontalPadding * 2;
+  const horizontalGap = theme.space[1];
+
+  // 1 item per page - will rely on Carousel container's width
+  const oneItemWidth = '100%'; // Could alternatively use carouselWidth
+  // 2 items per page - will be calculated based on screen width
+  const twoItemsWidth = (carouselWidth - horizontalGap) / 2;
+  // 3 items per page - will be calculated based on screen width
+  const threeItemsWidth = (carouselWidth - horizontalGap * 2) / 3;
+
+  const itemWidth = {
+    phone: oneItemWidth,
+    tablet: twoItemsWidth,
+    desktop: threeItemsWidth,
+  };
+
+  return (
+    <Carousel
+      hidePagination
+      title="Varied Sizing"
+      styles={{
+        root: { paddingInline: horizontalPadding },
+        carousel: { gap: horizontalGap },
+      }}
+    >
+      <CarouselItem id="earn-more-crypto" width={itemWidth}>
+        <NudgeCard
+          title="Earn more crypto"
+          description="You've got unstaked crypto. Stake it now to earn more."
+          pictogram="key"
+          action="Start earning"
+          onActionPress={() => console.log('Action pressed')}
+          width="100%"
+          minWidth={0}
+        />
+      </CarouselItem>
+      <CarouselItem id="btc">
+        <SquareAssetCard imageUrl={assets.btc.imageUrl} name="BTC" />
+      </CarouselItem>
+      <CarouselItem id="secure-your-account" width={itemWidth}>
+        <NudgeCard
+          title="Secure your account"
+          description="Add two-factor authentication for enhanced security."
+          pictogram="shield"
+          action="Enable 2FA"
+          onActionPress={() => console.log('Enable 2FA pressed')}
+          width="100%"
+          minWidth={0}
+        />
+      </CarouselItem>
+      <CarouselItem id="eth">
+        <SquareAssetCard imageUrl={assets.eth.imageUrl} name="ETH" />
+      </CarouselItem>
+      <CarouselItem id="complete-your-profile" width={itemWidth}>
+        <NudgeCard
+          title="Complete your profile"
+          description="Add more details to personalize your experience."
+          pictogram="accountsNavigation"
+          action="Update profile"
+          onActionPress={() => console.log('Update profile pressed')}
+          width="100%"
+          minWidth={0}
+        />
+      </CarouselItem>
+      <CarouselItem id="ltc">
+        <SquareAssetCard imageUrl={assets.ltc.imageUrl} name="LTC" />
+      </CarouselItem>
+    </Carousel>
+  );
+}
+```
+
+## Drag
+
+You can set the `drag` prop to `snap` (default), `free`, or `none`.
+When set to `snap`, upon release the carousel will snap to either the nearest item or page (depending on `snapMode`).
+
+```jsx
+function DragCarousel() {
+  return (
+    <Carousel
+      title="Explore Assets"
+      hidePagination
+      drag="free"
+      styles={{
+        root: { paddingInline: horizontalPadding },
+        carousel: { gap: horizontalGap },
+      }}
+      snapMode="item"
+    >
+      {Object.values(assets).map((asset, index) => (
+        <CarouselItem key={asset.symbol} id={asset.symbol}>
+          <SquareAssetCard imageUrl={asset.imageUrl} name={asset.symbol} />
+        </CarouselItem>
+      ))}
+    </Carousel>
+  );
+}
+```
+
+## Snap Mode
+
+You can set the `snapMode` to `page` (default) or `item`.
+When set to `page`, the carousel will automatically group items into pages.
+When set to `item`, the carousel will snap to the nearest item.
+
+```jsx
+function SquareItemsCarousel() {
+  return (
+    <Carousel
+      title="Explore Assets"
+      styles={{
+        root: { paddingInline: horizontalPadding },
+        carousel: { gap: horizontalGap },
+      }}
+      snapMode="item"
+    >
+      {Object.values(assets).map((asset, index) => (
+        <CarouselItem key={asset.symbol} id={asset.symbol}>
+          <SquareAssetCard imageUrl={asset.imageUrl} name={asset.symbol} />
+        </CarouselItem>
+      ))}
+    </Carousel>
+  );
+}
+```
+
+## Overflow
+
+By default, the carousel's inner overflow is visible.
+This means that you can apply padding to the inner carousel element
+(such as `styles={{ carousel: { paddingInline: theme.space[2] } }}`) and it will not be clipped.
+You can pair this with modifying the spacing of the inner carousel to match
+the padding of your page (along with a wrapping div to negate any default spacing).
+This creates a seamless experience.
+
+:::tip Tip
+
+If you want to have the next item be shown at the edge of the screen, make sure your carousel padding is larger than your gap.
+
+:::
+
+```jsx
+function OverflowCarousel() {
+  return (
+    <Carousel
+      title="Explore Assets"
+      snapMode="item"
+      styles={{
+        root: { paddingInline: horizontalPadding },
+        carousel: { gap: horizontalGap },
+      }}
+    >
+      {Object.values(assets).map((asset, index) => (
+        <CarouselItem key={asset.symbol} id={asset.symbol}>
+          <SquareAssetCard imageUrl={asset.imageUrl} name={asset.symbol} />
+        </CarouselItem>
+      ))}
+    </Carousel>
+  );
+}
+```
+
+## Accessibility
+
+The carousel is accessible by default.
+
+You need to use `accessibilityLabel` or `accessibilityLabelledBy` props to provide a label for the carousel items.
+
+Similar to web, you are provided the `isVisible` render prop, however it is not necessary to use since mobile users do not have a keyboard.
+
+```jsx
+<Carousel>
+  <CarouselItem id="btc" accessibilityLabel="Bitcoin">
+    <SquareAssetCard imageUrl={assets.btc.imageUrl} name={assets.btc.symbol} />
+  </CarouselItem>
+  <CarouselItem id="recurring-buy" width="100%" accessibilityLabelledBy="recurring-buy-label">
+    {({ isVisible }) => (
+      <UpsellCard
+        action={
+          <Button
+            compact
+            flush="start"
+            numberOfLines={1}
+            onPress={NoopFn}
+            tabIndex={isVisible ? undefined : -1}
+            variant="secondary"
+          >
+            Get started
+          </Button>
+        }
+        description="Want to add funds to your card every week or month?"
+        media={
+          <Box bottom={6} position="relative" right={24}>
+            <Pictogram dimension="64x64" name="recurringPurchases" />
+          </Box>
+        }
+        minWidth="0"
+        title={
+          <TextHeadline as="h3" id="recurring-buy-label">
+            Recurring Buy
+          </TextHeadline>
+        }
+        width="100%"
+      />
+    )}
+  </CarouselItem>
+</Carousel>
+```
+
+## Customization
+
+### Custom Components
+
+You can customize the navigation and pagination components of the carousel using the `NavigationComponent` and `PaginationComponent` props. You can also modify the title by providing a ReactNode for the `title` prop.
+
+```jsx
+function CustomComponentsCarousel() {
+  function PaginationComponent({ totalPages, activePageIndex, onClickPage, style }) {
+    const canGoPrevious = activePageIndex > 0;
+    const canGoNext = activePageIndex < totalPages - 1;
+    const dotStyles = {
+      width: theme.space[2],
+      height: theme.space[2],
+      borderRadius: theme.borderRadius[1000],
+    } as const;
+    function onPrevious() {
+      onClickPage(activePageIndex - 1);
+    }
+    function onNext() {
+      onClickPage(activePageIndex + 1);
+    }
+    return (
+      <HStack justifyContent="space-between" style={style}>
+        <HStack gap={1}>
+          <IconButton
+            accessibilityLabel="Previous"
+            disabled={!canGoPrevious}
+            name="caretLeft"
+            onPress={onPrevious}
+            variant="foregroundMuted"
+          />
+          <IconButton
+            accessibilityLabel="Next"
+            disabled={!canGoNext}
+            name="caretRight"
+            onPress={onNext}
+            variant="foregroundMuted"
+          />
+        </HStack>
+        <HStack alignItems="center" gap={1}>
+          {Array.from({ length: totalPages }, (_, index) => (
+            <Pressable
+              key={index}
+              accessibilityLabel={`Go to page ${index + 1}`}
+              background={index === activePageIndex ? 'bgPrimary' : 'bgSecondary'}
+              borderColor={index === activePageIndex ? 'fgPrimary' : 'bgLine'}
+              data-testid={`carousel-page-${index}`}
+              onPress={() => onClickPage(index)}
+              style={dotStyles}
+            />
+          ))}
+        </HStack>
+      </HStack>
+    );
+  }
+  function NoopFn() {
+    console.log('pressed');
+  }
+  // ...itemWidth as shown in other examples
+  return (
+      <Carousel
+        NavigationComponent={SeeAllComponent}
+        PaginationComponent={PaginationComponent}
+        styles={{
+          root: { paddingInline: horizontalPadding },
+          carousel: { gap: horizontalGap },
+        }}
+        title={
+          <TextHeadline as="h3">
+            Learn more
+          </TextHeadline>
+        }
+      >
+        <CarouselItem id="recurring-buy" width={itemWidth}>
+          <UpsellCard
+            action="Get started"
+            description="Want to add funds to your card every week or month?"
+            media={
+              <Box bottom={6} position="relative" right={24}>
+                <Pictogram dimension="64x64" name="recurringPurchases" />
+              </Box>
+            }
+            minWidth={0}
+            onActionPress={NoopFn}
+            title="Recurring Buy"
+            width="100%"
+          />
+        </CarouselItem>
+        <CarouselItem id="eths-apr" width={itemWidth}>
+          <UpsellCard
+            action="Start earning"
+            dangerouslySetBackground="rgb(var(--purple70))"
+            description={
+              <TextLabel2 as="p" numberOfLines={3} color="fgInverse">
+                Earn staking rewards on ETH by holding it on Coinbase
+              </TextLabel2>
+            }
+            media={
+              <Box left={16} position="relative" top={12}>
+                <RemoteImage height={174} source="/img/feature.png" />
+              </Box>
+            }
+            minWidth={0}
+            onActionPress={NoopFn}
+            title={
+              <TextHeadline color="fgInverse" as="h3">
+                Up to 3.29% APR on ETHs
+              </TextHeadline>
+            }
+            width="100%"
+          />
+        </CarouselItem>
+        <CarouselItem id="join-the-community" width={itemWidth}>
+          <UpsellCard
+            action="Start chatting"
+            dangerouslySetBackground="rgb(var(--teal70))"
+            description={
+              <TextLabel2 as="p" numberOfLines={3} color="fgInverse">
+                Chat with other devs in our Discord community
+              </TextLabel2>
+            }
+            media={
+              <Box left={16} position="relative" top={4}>
+                <RemoteImage height={174} source="/img/community.png" />
+              </Box>
+            }
+            minWidth={0}
+            onActionPress={NoopFn}
+            title={
+              <TextHeadline color="fgInverse" as="h3">
+                Join the community
+              </TextHeadline>
+            }
+            width="100%"
+          />
+        </CarouselItem>
+        <CarouselItem id="coinbase-one-offer" width={itemWidth}>
+          <UpsellCard
+            action="Get 60 days free"
+            dangerouslySetBackground="rgb(var(--blue80))"
+            description={
+              <TextLabel2 as="p" numberOfLines={3} color="fgInverse">
+                Use code NOV60 when you  sign up for Coinbase One
+              </TextLabel2>
+            }
+            media={
+              <Box left={16} position="relative" top={0}>
+                <RemoteImage height={174} source="/img/marketing.png" />
+              </Box>
+            }
+            minWidth={0}
+            onActionPress={NoopFn}
+            title={
+              <TextHeadline color="fgInverse" as="h3">
+                Coinbase One offer
+              </TextHeadline>
+            }
+            width="100%"
+          />
+        </CarouselItem>
+        <CarouselItem id="coinbase-card" width={itemWidth}>
+          <UpsellCard
+            action="Get started"
+            dangerouslySetBackground="rgb(var(--gray100))"
+            description={
+              <TextLabel2 as="p" numberOfLines={3} color="fgInverse">
+                Spend USDC to get rewards with our Visa® debit card
+              </TextLabel2>
+            }
+            media={
+              <Box left={16} position="relative" top={0}>
+                <RemoteImage height={174} source="/img/object.png" />
+              </Box>
+            }
+            minWidth={0}
+            onActionPress={NoopFn}
+            title={
+              <TextHeadline color="fgInverse" as="h3">
+                Coinbase Card
+              </TextHeadline>
+            }
+            width="100%"
+          />
+        </CarouselItem>
+      </Carousel>
+  );
+}
+```
+
+### Custom Styles
+
+You can use the `styles` props to customize different parts of the carousel.
+
+```jsx
+function CustomStylesCarousel() {
+  return (
+    <Carousel
+      styles={{
+        root: { paddingInline: horizontalPadding },
+        carousel: { gap: horizontalGap },
+      }}
+      NavigationComponent={({
+        className,
+        style,
+        disableGoNext,
+        disableGoPrevious,
+        nextPageAccessibilityLabel,
+        onGoNext,
+        onGoPrevious,
+        previousPageAccessibilityLabel,
+      }) => {
+        return (
+          <DefaultCarouselNavigation
+            className={className}
+            disableGoNext={disableGoNext}
+            disableGoPrevious={disableGoPrevious}
+            nextPageAccessibilityLabel={nextPageAccessibilityLabel}
+            onGoNext={onGoNext}
+            onGoPrevious={onGoPrevious}
+            previousPageAccessibilityLabel={previousPageAccessibilityLabel}
+            style={style}
+            styles={{
+              previousButton: {
+                position: 'absolute',
+                top: theme.space[8],
+                zIndex: 1,
+                left: theme.space[0_5],
+              },
+              nextButton: {
+                position: 'absolute',
+                top: theme.space[8],
+                zIndex: 1,
+                right: theme.space[0_5],
+              },
+            }}
+          />
+        );
+      }}
+    >
+      <CarouselItem id="earn-more-crypto" width="100%">
+        <NudgeCard
+          title="Earn more crypto"
+          description="You've got unstaked crypto. Stake it now to earn more."
+          pictogram="key"
+          action="Start earning"
+          onActionPress={() => console.log('Action pressed')}
+          width="100%"
+          minWidth={0}
+        />
+      </CarouselItem>
+      <CarouselItem id="secure-your-account" width="100%">
+        <NudgeCard
+          title="Secure your account"
+          description="Add two-factor authentication for enhanced security."
+          pictogram="shield"
+          action="Enable 2FA"
+          onActionPress={() => console.log('Enable 2FA pressed')}
+          width="100%"
+          minWidth={0}
+        />
+      </CarouselItem>
+      <CarouselItem id="complete-your-profile" width="100%">
+        <NudgeCard
+          title="Complete your profile"
+          description="Add more details to personalize your experience."
+          pictogram="accountsNavigation"
+          action="Update profile"
+          onActionPress={() => console.log('Update profile pressed')}
+          width="100%"
+          minWidth={0}
+        />
+      </CarouselItem>
+    </Carousel>
+  );
+}
+```
+
+### Dynamic Content
+
+You can dynamically add and remove items from the carousel.
+
+```jsx
+function DynamicContentCarousel() {
+  const [items, setItems] = useState(Object.values(assets).slice(0, 3));
+
+  function addAsset() {
+    const randomAsset =
+      Object.values(assets)[Math.floor(Math.random() * Object.values(assets).length)];
+    setItems([...items, { ...randomAsset, symbol: `${randomAsset.symbol}-${items.length}` }]);
+  }
+
+  return (
+    <VStack gap={2}>
+      <HStack justifyContent="flex-end" gap={2} alignItems="center">
+        <Button compact onPress={addAsset}>
+          Add Asset
+        </Button>
+        <Button compact onPress={() => setItems(items.slice(0, -1))} disabled={items.length === 0}>
+          Remove Last
+        </Button>
+      </HStack>
+      <Carousel
+        title="Explore Assets"
+        styles={{
+          root: { paddingInline: horizontalPadding },
+          carousel: { gap: horizontalGap, height: 156 },
+        }}
+      >
+        {items.map((asset, index) => (
+          <CarouselItem key={asset.symbol} id={asset.symbol}>
+            <SquareAssetCard imageUrl={asset.imageUrl} name={asset.symbol} />
+          </CarouselItem>
+        ))}
+      </Carousel>
+    </VStack>
+  );
+}
+```
+
+### Hide Navigation and Pagination
+
+You can hide the navigation and pagination components of the carousel if desired.
+
+```jsx
+function HideNavigationAndPaginationCarousel() {
+  return (
+    <Carousel
+      title="Explore Assets"
+      hidePagination
+      hideNavigation
+      drag="free"
+      snapMode="item"
+      styles={{
+        root: { paddingInline: horizontalPadding },
+        carousel: { gap: horizontalGap },
+      }}
+    >
+      {Object.values(assets).map((asset, index) => (
+        <CarouselItem key={asset.symbol} id={asset.symbol}>
+          <SquareAssetCard imageUrl={asset.imageUrl} name={asset.symbol} />
+        </CarouselItem>
+      ))}
+    </Carousel>
+  );
+}
+```
+
+## Imperative API
+
+You can control the carousel programmatically using a ref. The carousel exposes methods to navigate to specific pages and access the current page index.
+
+```jsx
+function ImperativeApiCarousel() {
+  const theme = useTheme();
+  const carouselRef = useRef(null);
+  const [currentPageInfo, setCurrentPageInfo] = useState('Page 1');
+
+  const handleGoToPage = (pageIndex) => {
+    if (carouselRef.current) {
+      const clampedPageIndex = Math.max(0, Math.min(carouselRef.current.totalPages - 1, pageIndex));
+      carouselRef.current.goToPage(clampedPageIndex);
+      setCurrentPageInfo(`Page ${clampedPageIndex + 1}`);
+    }
+  };
+
+  const handleGoToFirstPage = () => {
+    handleGoToPage(0);
+  };
+
+  const handleGoToLastPage = () => {
+    if (carouselRef.current) {
+      handleGoToPage(carouselRef.current.totalPages - 1);
+    }
+  };
+
+  const handleGoToPrevPage = () => {
+    if (carouselRef.current) {
+      handleGoToPage(carouselRef.current.activePageIndex - 1);
+    }
+  };
+
+  const handleGoToNextPage = () => {
+    if (carouselRef.current) {
+      handleGoToPage(carouselRef.current.activePageIndex + 1);
+    }
+  };
+
+  return (
+    <VStack gap={2}>
+      <HStack alignItems="center" gap={2} justifyContent="space-between" paddingX={3}>
+        <HStack gap={1}>
+          <IconButton
+            accessibilityLabel="Go to first page"
+            name="doubleChevronRight"
+            onPress={handleGoToFirstPage}
+            style={{ transform: [{ rotate: '180deg' }] }}
+            variant="secondary"
+          />
+          <IconButton
+            active
+            accessibilityLabel="Go to previous page"
+            name="arrowLeft"
+            onPress={handleGoToPrevPage}
+            variant="secondary"
+          />
+        </HStack>
+        <Box
+          alignItems="center"
+          background="bgSecondary"
+          borderRadius={500}
+          flexGrow={1}
+          justifyContent="center"
+          paddingX={2}
+          paddingY={1}
+        >
+          <Text color="fgMuted" font="label1">
+            {currentPageInfo}
+          </Text>
+        </Box>
+        <HStack gap={1}>
+          <IconButton
+            active
+            accessibilityLabel="Go to next page"
+            name="arrowRight"
+            onPress={handleGoToNextPage}
+            variant="secondary"
+          />
+          <IconButton
+            accessibilityLabel="Go to last page"
+            name="doubleChevronRight"
+            onPress={handleGoToLastPage}
+            variant="secondary"
+          />
+        </HStack>
+      </HStack>
+      <Carousel
+        ref={carouselRef}
+        hideNavigation
+        hidePagination
+        drag="none"
+        snapMode="item"
+        styles={{
+          root: { paddingHorizontal: theme.space[3] },
+          carousel: { gap: theme.space[1] },
+        }}
+        title="Explore Assets"
+      >
+        {Object.values(assets).map((asset) => (
+          <CarouselItem key={asset.symbol} accessibilityLabel={asset.name} id={asset.symbol}>
+            <SquareAssetCard imageUrl={asset.imageUrl} name={asset.symbol} />
+          </CarouselItem>
+        ))}
+      </Carousel>
+    </VStack>
+  );
+}
+```
+
+### Animated Pagination
+
+You can create smooth pagination animations by customizing the pagination dots. This example shows how to create expanding dots that smoothly transition between active and inactive states.
+
+```jsx
+function AnimatedPaginationCarousel() {
+  const theme = useTheme();
+
+  const AnimatedPagination = memo((props) => {
+    const { totalPages, activePageIndex, onClickPage, style } = props;
+
+    const AnimatedDot = memo(({ index, isActive, onPress }) => {
+      const dotSize = theme.space[1];
+      const activeDotWidth = theme.space[3];
+
+      const springProps = useSpring({
+        width: isActive ? activeDotWidth : dotSize,
+        backgroundColor: isActive ? theme.color.bgPrimary : theme.color.bgLine,
+        config: { tension: 300, friction: 25 },
+      });
+
+      return (
+        <Pressable
+          accessibilityLabel={`Go to page ${index + 1}`}
+          borderRadius={1000}
+          borderWidth={0}
+          height={dotSize}
+          onPress={onPress}
+        >
+          <animated.View
+            style={[
+              {
+                height: dotSize,
+                borderRadius: dotSize / 2,
+              },
+              springProps,
+            ]}
+          />
+        </Pressable>
+      );
+    });
+
+    return (
+      <HStack alignItems="center" gap={0.5} justifyContent="center" style={style}>
+        {Array.from({ length: totalPages }, (_, index) => (
+          <AnimatedDot
+            key={index}
+            index={index}
+            isActive={index === activePageIndex}
+            onPress={() => onClickPage?.(index)}
+          />
+        ))}
+      </HStack>
+    );
+  });
+
+  return (
+    <Carousel
+      PaginationComponent={AnimatedPagination}
+      drag="snap"
+      snapMode="page"
+      styles={{
+        root: { paddingInline: horizontalPadding },
+        carousel: { gap: horizontalGap },
+      }}
+      title="Explore Assets"
+    >
+      {Object.values(assets).map((asset, index) => (
+        <CarouselItem key={asset.symbol} id={asset.symbol} accessibilityLabel={asset.name}>
+          <SquareAssetCard imageUrl={asset.imageUrl} name={asset.symbol} />
+        </CarouselItem>
+      ))}
+    </Carousel>
+  );
+}
+```
+
+## Callbacks
+
+You can use the `onChangePage`, `onDragStart`, and `onDragEnd` callbacks to listen for user interaction in the carousel.
+
+```tsx
+<Carousel
+  onChangePage={(pageIndex: number) => console.log('Page changed', pageIndex)}
+  onDragStart={() => console.log('Drag started')}
+  onDragEnd={() => console.log('Drag ended')}
+>
+  ...
+</Carousel>
+```

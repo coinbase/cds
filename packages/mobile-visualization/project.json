@@ -1,0 +1,61 @@
+{
+  "name": "mobile-visualization",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/mobile-visualization/src",
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "executor": "nx:run-commands",
+      "defaultConfiguration": "dev",
+      "configurations": {
+        "dev": {
+          "command": "rm -rf esm && babel ./src --out-dir esm --extensions .ts,.tsx,.js,.jsx --copy-files --no-copy-ignored"
+        },
+        "prod": {
+          "commands": [
+            "rm -rf esm && babel ./src --out-dir esm --extensions .ts,.tsx,.js,.jsx --copy-files --no-copy-ignored",
+            "node ../../add-cds7-exports.js @cbhq/cds-mobile-visualization"
+          ],
+          "parallel": false
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "options": {
+        "jestConfig": "{projectRoot}/jest.config.js"
+      }
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "defaultConfiguration": "dev",
+      "configurations": {
+        "dev": {
+          "command": "tsc --build --pretty --verbose"
+        },
+        "prod": {
+          "commands": [
+            "tsc --build ./tsconfig.build.json --pretty --verbose",
+            "prettier ./dts --write --loglevel warn"
+          ],
+          "parallel": false
+        }
+      }
+    },
+    "report-disabled-eslint-rules": {
+      "executor": "@cbhq/prevent-eslint-disable:report"
+    },
+    "publish-figma": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "figma connect publish --token $FIGMA_CODE_CONNECT_TOKEN"
+        ],
+        "cwd": "packages/mobile-visualization"
+      }
+    }
+  }
+}

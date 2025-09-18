@@ -1,0 +1,100 @@
+import { useState } from 'react';
+import type { ColorScheme } from '@cbhq/cds-common';
+import { ThemeProvider } from '@cbhq/cds-web';
+import { SearchInput } from '@cbhq/cds-web/controls';
+import { Box, Divider, Group, HStack, VStack } from '@cbhq/cds-web/layout';
+import { Sidebar, SidebarItem } from '@cbhq/cds-web/navigation';
+import { MediaQueryProvider } from '@cbhq/cds-web/system';
+import { defaultTheme } from '@cbhq/cds-web/themes/defaultTheme';
+
+import { AssetList } from './components/AssetList';
+import { CardList } from './components/CardList';
+import { CDSLogo } from './components/CDSLogo';
+import { Navbar } from './components/Navbar';
+
+const navItems = [
+  {
+    title: 'Assets',
+    icon: 'chartPie',
+  },
+  {
+    title: 'Trade',
+    icon: 'trading',
+  },
+  {
+    title: 'Pay',
+    icon: 'pay',
+  },
+  {
+    title: 'For you',
+    icon: 'newsFeed',
+  },
+  {
+    title: 'Earn',
+    icon: 'giftBox',
+  },
+  {
+    title: 'Borrow',
+    icon: 'cash',
+  },
+  {
+    title: 'DeFi',
+    icon: 'defi',
+  },
+] as const;
+
+export const App = () => {
+  const [activeNavIndex, setActiveNavIndex] = useState(0);
+  const [search, setSearch] = useState('');
+  const activeNavItem = navItems[activeNavIndex];
+
+  const [activeColorScheme, setActiveColorScheme] = useState<ColorScheme>('light');
+
+  const toggleColorScheme = () => setActiveColorScheme((s) => (s === 'light' ? 'dark' : 'light'));
+
+  return (
+    <MediaQueryProvider>
+      <ThemeProvider activeColorScheme={activeColorScheme} theme={defaultTheme}>
+        <HStack background="bg">
+          <Sidebar autoCollapse height="100vh" logo={<CDSLogo />}>
+            {navItems.map(({ title, icon }, index) => (
+              <SidebarItem
+                key={title}
+                active={index === activeNavIndex}
+                icon={icon}
+                onClick={() => setActiveNavIndex(index)}
+                title={title}
+              />
+            ))}
+          </Sidebar>
+          <VStack width="100%" zIndex={0}>
+            <Navbar title={activeNavItem.title} toggleColorScheme={toggleColorScheme} />
+            <Group
+              direction="horizontal"
+              divider={() => <Divider direction="vertical" />}
+              width="100%"
+            >
+              <VStack width={{ base: 500, desktop: 660 }}>
+                <Box padding={2}>
+                  <SearchInput
+                    compact
+                    accessibilityLabel="Search"
+                    onChangeText={setSearch}
+                    placeholder="Search"
+                    value={search}
+                  />
+                </Box>
+                <Box paddingX={2} width="100%">
+                  <AssetList pageSize={5} />
+                </Box>
+              </VStack>
+              <Box paddingX={3} paddingY={2}>
+                <CardList />
+              </Box>
+            </Group>
+          </VStack>
+        </HStack>
+      </ThemeProvider>
+    </MediaQueryProvider>
+  );
+};

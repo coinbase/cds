@@ -1,0 +1,111 @@
+### Basic example
+
+Most common Contained Asset Card. Use for showing individual cryptocurrency assets, balances, earnings, rewards etc.
+
+```jsx live
+function Example() {
+  function NoopFn() {
+    console.log('pressed');
+  }
+  const cards = [
+    {
+      title: '$4.15',
+      description: (
+        <TextLabel2 as="p" color="fgPositive" numberOfLines={2}>
+          &#x2197;73.37%
+        </TextLabel2>
+      ),
+      subtitle: 'ETH',
+      onClick: NoopFn,
+      header: <RemoteImage source={assets.eth.imageUrl} width="32px" height="32px" />,
+    },
+  ];
+  return (
+    <HStack minHeight={300} padding={2} alignItems="center" justifyContent="center" gap={2}>
+      {cards.map((card) => (
+        <ContainedAssetCard {...card} />
+      ))}
+    </HStack>
+  );
+}
+```
+
+### Rectangle
+
+Rectangle
+
+```jsx live
+function Example() {
+  function NoopFn() {
+    console.log('pressed');
+  }
+  const cards = [
+    {
+      title: '$309.43',
+      description: (
+        <TextLabel2 as="p" color="fgPositive" numberOfLines={2}>
+          &#x2197;3.37%
+        </TextLabel2>
+      ),
+      subtitle: 'Bitcoin',
+      onClick: NoopFn,
+      header: <RemoteImage source={assets.btc.imageUrl} width="32px" height="32px" />,
+      size: 'l',
+    },
+  ];
+  return (
+    <HStack minHeight={300} padding={2} alignItems="center" justifyContent="center" gap={2}>
+      {cards.map((card) => (
+        <ContainedAssetCard {...card} />
+      ))}
+    </HStack>
+  );
+}
+```
+
+### without Description
+
+Use this variation when presenting balances.
+
+```jsx live
+function Example() {
+  function NoopFn() {
+    console.log('pressed');
+  }
+  const cards = [
+    {
+      title: 'Oct 12',
+      subtitle: 'Next pay day',
+      onPress: NoopFn,
+      header: (
+        <Box
+          bordered
+          background="bgAlternate"
+          dangerouslySetBackground="rgb(var(--gray100))"
+          borderRadius={400}
+          padding={1}
+        >
+          <Icon color="bg" name="calendar" size="s" />
+        </Box>
+      ),
+    },
+    {
+      title: '+ $24.02',
+      subtitle: 'Sept earnings',
+      onPress: NoopFn,
+      header: (
+        <Box bordered dangerouslySetBackground="rgb(var(--gray100))" borderRadius={400} padding={1}>
+          <Icon active color="bg" name="chartBar" size="s" />
+        </Box>
+      ),
+    },
+  ];
+  return (
+    <HStack minHeight={300} padding={2} alignItems="center" justifyContent="center" gap={2}>
+      {cards.map((card) => (
+        <ContainedAssetCard {...card} />
+      ))}
+    </HStack>
+  );
+}
+```

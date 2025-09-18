@@ -1,0 +1,252 @@
+:::tip Accessibility tip
+
+**Labels**
+
+Trays require an accessibility label, which we set to `title` by default. However, if you don't want to provide a `title` or there's other text that gives the user better context to the tray, then you can pass an element id to `accessibilityLabelledBy`. Alternatively, you may directly provide a contextual label to `accessibilityLabel`.
+
+:::
+
+### Basic usage with Callback
+
+The recommended way to use a `Tray` is by passing a callback as children, which receives a `handleClose` function:
+
+```tsx live
+function BasicTray() {
+  const [visible, setVisible] = useState(false);
+  const handleOpen = () => setVisible(true);
+  const handleClose = () => setVisible(false);
+
+  return (
+    <VStack gap={2}>
+      <Button onClick={handleOpen}>Open Tray</Button>
+      {visible && (
+        <Tray title="Example Title" onCloseComplete={handleClose}>
+          {({ handleClose }) => (
+            <VStack gap={2}>
+              <Text>This is the content of the tray.</Text>
+              <Button onClick={handleClose}>Close</Button>
+            </VStack>
+          )}
+        </Tray>
+      )}
+    </VStack>
+  );
+}
+```
+
+### Using Ref to Control the Tray
+
+:::tip Accessibility tip
+
+**Trigger Focus**
+
+A `ref` to the trigger that opens the tray, along with an `onClosedComplete` method to reset focus on the trigger when the tray closes, needs to be wired up for accessibility (see code example below).
+
+:::
+
+You can also control the Tray using a ref, which provides a `close()` method:
+
+```tsx live
+function TrayWithRef() {
+  const [visible, setVisible] = useState(false);
+  const trayRef = useRef<DrawerRefBaseProps>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+
+  const handleOpen = () => setVisible(true);
+  const handleClose = () => {
+    setVisible(false);
+    triggerRef.current?.focus();
+  };
+
+  return (
+    <VStack gap={2}>
+      <Button ref={triggerRef} onClick={handleOpen}>
+        Open Tray
+      </Button>
+      {visible && (
+        <Tray ref={trayRef} title="Ref Controlled Tray" onCloseComplete={handleClose}>
+          <VStack gap={2}>
+            <Text>Control this tray using the ref.</Text>
+            <Button onClick={() => trayRef.current?.close()}>Close</Button>
+          </VStack>
+        </Tray>
+      )}
+    </VStack>
+  );
+}
+```
+
+### Scrollable Content
+
+Trays with long content will automatically be scrollable.
+
+```tsx live
+function ScrollableTray() {
+  const [visible, setVisible] = useState(false);
+  const handleOpen = () => setVisible(true);
+  const handleClose = () => setVisible(false);
+
+  return (
+    <VStack gap={2}>
+      <Button onClick={handleOpen}>Open Scrollable Tray</Button>
+      {visible && (
+        <Tray title="Scrollable Content" onCloseComplete={handleClose}>
+          {({ handleClose }) => (
+            <VStack gap={2}>
+              <VStack gap={2}>
+                <Text>
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
+                  incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
+                  exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                </Text>
+                <Text>
+                  Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
+                  fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
+                  culpa qui officia deserunt mollit anim id est laborum.
+                </Text>
+                <Text>
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
+                  incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
+                  exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                </Text>
+                <Text>
+                  Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
+                  fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
+                  culpa qui officia deserunt mollit anim id est laborum.
+                </Text>
+                <Text>
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
+                  incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
+                  exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                </Text>
+                <Text>
+                  Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
+                  fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
+                  culpa qui officia deserunt mollit anim id est laborum.
+                </Text>
+                <Text>
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
+                  incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
+                  exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                </Text>
+                <Text>
+                  Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
+                  fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
+                  culpa qui officia deserunt mollit anim id est laborum.
+                </Text>
+                <Text>
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
+                  incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
+                  exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                </Text>
+                <Text>
+                  Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
+                  fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
+                  culpa qui officia deserunt mollit anim id est laborum.
+                </Text>
+                <Text>
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
+                  incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
+                  exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                </Text>
+                <Text>
+                  Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
+                  fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
+                  culpa qui officia deserunt mollit anim id est laborum.
+                </Text>
+              </VStack>
+              <HStack justifyContent="flex-end">
+                <Button onClick={handleClose}>Close</Button>
+              </HStack>
+            </VStack>
+          )}
+        </Tray>
+      )}
+    </VStack>
+  );
+}
+```
+
+### Non-Dismissible Tray
+
+Trays can be configured to prevent the user from dismissing the tray by clicking close, clicking outside, or pressing ESC.
+
+```tsx live
+function NonDismissibleTray() {
+  const [visible, setVisible] = useState(false);
+  const handleOpen = () => setVisible(true);
+  const handleClose = () => setVisible(false);
+
+  return (
+    <VStack gap={2}>
+      <Button onClick={handleOpen}>Open Non-Dismissible Tray</Button>
+      {visible && (
+        <Tray title="Non-Dismissible Tray" preventDismiss onCloseComplete={handleClose}>
+          {({ handleClose }) => (
+            <VStack gap={2}>
+              <Text>
+                This tray cannot be dismissed, user must click an explicit action button to close
+                it.
+              </Text>
+              <Button onClick={handleClose}>Close</Button>
+            </VStack>
+          )}
+        </Tray>
+      )}
+    </VStack>
+  );
+}
+```
+
+### Multiple Overlay Flow
+
+When transitioning between overlays, ensure proper dismounting using `onCloseComplete`:
+
+```tsx live
+function TrayToModalFlow() {
+  const [isTrayVisible, setIsTrayVisible] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+
+  const openTray = () => setIsTrayVisible(true);
+  const closeTray = () => setIsTrayVisible(false);
+  const openModal = () => setIsModalVisible(true);
+  const closeModal = () => setIsModalVisible(false);
+
+  const handleTrayClose = useCallback(() => {
+    closeTray();
+    openModal();
+  }, []);
+
+  return (
+    <VStack gap={2}>
+      <Button onClick={openTray}>Start Flow</Button>
+      {isTrayVisible && (
+        <Tray title="First Step" onCloseComplete={handleTrayClose}>
+          {({ handleClose }) => (
+            <VStack gap={2}>
+              <Text>Click below to continue to the modal</Text>
+              <Button onClick={handleClose}>Continue to Modal</Button>
+            </VStack>
+          )}
+        </Tray>
+      )}
+      <Modal visible={isModalVisible} onRequestClose={closeModal}>
+        <ModalHeader title="Second Step" />
+        <ModalBody>
+          <VStack gap={2}>
+            <Text>This is the second step in the flow.</Text>
+            <Button onClick={closeModal}>Finish</Button>
+          </VStack>
+        </ModalBody>
+      </Modal>
+    </VStack>
+  );
+}
+```
+
+Note: The Tray component is an elevated container that is pinned to the bottom of the screen and provides a standardized way to present bottom sheets in your web application. Key points:
+
+- Use `onCloseComplete` for cleanup when the tray is dismissed
+- Children can be either a React node or a render function that receives a `handleClose` function
+- The `ref` provides `open()` and `close()` methods for controlling the tray
+- When transitioning between overlays, ensure proper dismounting using lifecycle methods

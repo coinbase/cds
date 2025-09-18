@@ -1,0 +1,136 @@
+import React, { Children, isValidElement, useMemo } from 'react';
+import type {
+  AvatarSize,
+  Shape,
+  SharedAccessibilityProps,
+  SharedProps,
+} from '@cbhq/cds-common/types';
+import { css, type LinariaClassName } from '@linaria/core';
+
+import { useTheme } from '../hooks/useTheme';
+import { Box } from '../layout/Box';
+import { Text } from '../typography/Text';
+
+import type { RemoteImageProps } from './RemoteImage';
+
+export type RemoteImageGroupBaseProps = SharedProps &
+  SharedAccessibilityProps & {
+    /**
+     * Indicates the number of remote image before it collapses
+     * @default 4
+     */
+    max?: number;
+    /**
+     * Size of all RemoteImage children in the group.
+     * @default m
+     */
+    size?: AvatarSize | number;
+    /**
+     * Shape of all RemoteImage children in the group
+     * @default circle
+     */
+    shape?: Shape;
+    /** Children content */
+    children?: React.ReactNode;
+  };
+
+export type RemoteImageGroupProps = RemoteImageGroupBaseProps;
+
+const borderRadiusCss: Record<Shape, LinariaClassName> = {
+  circle: css`
+    border-radius: 100%;
+  `,
+  square: css`
+    border-radius: 4px;
+  `,
+  hexagon: css`
+    border-radius: 0;
+  `,
+  squircle: css`
+    border-radius: 8px;
+  `,
+  rectangle: css`
+    border-radius: 0;
+  `,
+};
+
+export const RemoteImageGroup = ({
+  children,
+  size = 'm',
+  max = 4,
+  shape = 'circle',
+  testID,
+  ...props
+}: RemoteImageGroupProps) => {
+  const { avatarSize } = useTheme();
+
+  const borderRadius = borderRadiusCss[shape];
+  const sizeAsNumber = typeof size === 'number' ? size : avatarSize[size];
+  const overlapSpacing = sizeAsNumber <= 40 ? 8 : 16;
+
+  const excess = Children.count(children) - max;
+  const groupChildren = useMemo(() => {
+    const arrayChildren = Children.toArray(children);
+
+    if (excess > 0) {
+      return arrayChildren.slice(0, -excess);
+    }
+
+    return arrayChildren;
+  }, [children, excess]);
+
+  return (
+    <Box alignItems="center" display="flex" position="relative" testID={testID} {...props}>
+      {groupChildren.map((child, index) => {
+        if (!isValidElement(child)) {
+          return null;
+        }
+
+        // dynamically apply uniform sizing and shape to all RemoteImage children elements
+        const clonedChild = React.cloneElement(child as React.ReactElement<RemoteImageProps>, {
+          width: sizeAsNumber,
+          height: sizeAsNumber,
+          ...(child.props.shape ? undefined : { shape }),
+        });
+
+        // zIndex is progressively lower so that each child is stacked below the previous one
+        const zIndex = -index;
+
+        return (
+          <Box
+            key={index}
+            left={index === 0 ? 'initial' : overlapSpacing * zIndex}
+            position="relative"
+            testID={`${testID ? `${testID}-` : ''}inner-box-${index}`}
+            zIndex={zIndex}
+          >
+            {clonedChild}
+          </Box>
+        );
+      })}
+      {excess > 0 && (
+        <Box
+          alignItems="center"
+          background="bgOverlay"
+          className={borderRadius}
+          height={sizeAsNumber}
+          justifyContent="center"
+          left={groupChildren.length * overlapSpacing * -1}
+          position="relative"
+          width={sizeAsNumber}
+          zIndex={groupChildren.length * -1}
+        >
+          <Text
+            font="legal"
+            style={{
+              fontSize: sizeAsNumber * 0.4,
+            }}
+            testID={`${testID}-excess-text`}
+          >
+            +{excess}
+          </Text>
+        </Box>
+      )}
+    </Box>
+  );
+};

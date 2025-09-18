@@ -1,0 +1,194 @@
+import { media } from '@cbhq/cds-web/styles/media';
+import { MDXSection } from '@site/src/components/page/MDXSection';
+import { MDXArticle } from '@site/src/components/page/MDXArticle';
+
+<MDXSection>
+<MDXArticle>
+
+## `StyleProps` API
+
+Most components support the StyleProps API. StyleProps automatically have access to the values in the theme, and some StyleProps are limited to only the theme values.
+
+[See the full list of StyleProps here &rarr;](/components/layout/Box/?platform=web&tab=props)
+
+```jsx
+// ✅ The `bgNegative` token will automatically update with the theme!
+<Box background="bgNegative" width={100} />
+
+// ❌ Error: Type '"#0000ff"' is not assignable to type 'Color | undefined'.
+<Box background="#0000ff" width={100} />
+```
+
+:::tip
+The docs page of every component has a props table listing all the available props!
+:::
+
+:::note
+The StyleProps API applies static atomic classnames under the hood. These classnames reference CSS Variables set by the ThemeProvider to enable dynamic theming.
+:::
+
+</MDXArticle>
+<MDXArticle>
+
+### Responsive styles
+
+On web, all StyleProps support an optional responsive syntax for device-specific styles.
+
+```jsx
+<Box
+  width={{ base: 200, tablet: 200, desktop: 400 }}
+  background={{ base: 'bgPrimary', phone: 'bgSecondary' }}
+/>
+```
+
+- **base:** no media query
+- **phone:** <code>{media.phone}</code>
+- **tablet:** <code>{media.tablet}</code>
+- **desktop:** <code>{media.desktop}</code>
+
+It is not possible to customize the breakpoint values at this time.
+
+Import the `media` object to use CDS breakpoints and media queries in your own custom styles.
+
+[See how breakpoints are defined in the `media` object &rarr;](https://github.com/coinbase/cds-staging/blob/master/packages/web/src/styles/media.ts)
+
+```jsx
+import styled from 'styled-components';
+import { media } from '@cbhq/cds-web/styles/media';
+
+const MyCustomThing = styled.div`
+  ${media.phone} {
+    width: 100px;
+  }
+`;
+```
+
+</MDXArticle>
+</MDXSection>
+
+<MDXSection>
+<MDXArticle>
+
+## `style` and `styles` props
+
+Most components support the native `style` prop for inline styles.
+
+```jsx
+<Box style={{ backgroundColor: '#0000ff' }} />
+```
+
+Some complex components support passing inline styles to subcomponents with the `styles` prop.
+
+```jsx
+<ProgressCircle
+  styles={{
+    circle: {
+      stroke: 'transparent',
+    },
+    progress: {
+      strokeLinecap: 'square',
+    },
+  }}
+  color="fgPositive"
+  progress={0.75}
+  size={100}
+/>
+```
+
+:::note
+We will continue to add the `styles` prop to more components over time. Please feel free to request specific components that you think would benefit from this API.
+:::
+
+</MDXArticle>
+</MDXSection>
+
+<MDXSection>
+<MDXArticle>
+
+## `className` and `classNames` props
+
+Most components support the native `className` prop for inline styles.
+
+```jsx
+<Box className="my-custom-box" />
+```
+
+Some complex components support passing classnames to subcomponents with the `classNames` prop.
+
+```jsx
+<ProgressCircle
+  classNames={{
+    circle: 'my-custom-circle',
+    progress: 'my-custom-progress',
+  }}
+  color="fgPositive"
+  progress={0.75}
+  size={100}
+/>
+```
+
+:::note
+We will continue to add the `classNames` prop to more components over time. Please feel free to request specific components that you think would benefit from this API.
+:::
+
+</MDXArticle>
+</MDXSection>
+
+<MDXSection>
+<MDXArticle>
+
+## Component specific props
+
+Many components have their own specific props that can affect styling.
+
+```jsx
+<Button compact variant="primary">
+  Click me
+</Button>
+```
+
+</MDXArticle>
+</MDXSection>
+
+<MDXSection>
+<MDXArticle>
+
+## Combining techniques
+
+Mix and match these styling techniques for complete customization!
+
+```jsx
+<Button variant="primary" borderColor="accentBoldPurple" style={{ fontFamily: 'Times' }}>
+  Click me
+</Button>
+```
+
+</MDXArticle>
+</MDXSection>
+
+<MDXSection>
+<MDXArticle>
+
+## Global CSS reset
+
+CDS web global styles include a CSS reset which override the browser default styles for some elements. This ensures that polymorphic components render correctly, regardless of their HTML element. [See the full style reset here](https://github.com/coinbase/cds-staging/blob/master/packages/web/src/styles/global.ts).
+
+</MDXArticle>
+</MDXSection>
+
+<MDXSection>
+<MDXArticle>
+
+## Polymorphic components
+
+Many CDS web components have the polymorphic `as` prop, which allows you to change what component or element is being rendered under the hood.
+
+Using the polymorphic `as` prop will change the component's type to allow the relevant native props.
+
+```jsx
+<Button as="a" href="google.com" />
+<Link as="button" type="submit" />
+```
+
+</MDXArticle>
+</MDXSection>

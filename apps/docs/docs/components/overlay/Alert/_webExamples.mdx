@@ -1,0 +1,127 @@
+:::tip Accessibility tip (Web only)
+
+Alerts require an accessibility label, which we set to `title` by default. However, if there's other text that gives the user better context to the alert, then you can pass an element id to `accessibilityLabelledBy`. Alternatively, you may directly provide a contextual label to `accessibilityLabel`.
+
+:::
+
+### Default Alert
+
+Controlled using `visible` and `onRequestClose`.
+
+```jsx live
+function DefaultAlertExample() {
+  const [visible, setVisible] = useState(false);
+
+  const toggleOn = () => setVisible(true);
+  const toggleOff = () => setVisible(false);
+
+  return (
+    <PortalProvider>
+      <ButtonGroup>
+        <Button onClick={toggleOn}>Show Alert</Button>
+      </ButtonGroup>
+      <Alert
+        title="Alert title"
+        body="Alert body type that can run over multiple lines, but should be kept short."
+        pictogram="warning"
+        visible={visible}
+        onRequestClose={toggleOff}
+        preferredActionLabel="Primary"
+        onPreferredActionPress={() => console.log('preferred pressed')}
+        dismissActionLabel="Cancel"
+        onDismissActionPress={() => console.log('dismiss pressed')}
+      />
+    </PortalProvider>
+  );
+}
+```
+
+### Portal Alert
+
+Controlled programmatically using the `useAlert` hook.
+
+:::warning
+
+**Deprecated**: Inserting JSX into the DOM using a function in an event handler is an anti-pattern. This hook will be removed in future version. Use the `visible` and `onRequestClose` props instead
+
+:::
+
+```jsx live
+function PortalAlertExample() {
+  function PortalAlert() {
+    const alert = useAlert();
+
+    const showAlert = () =>
+      alert.open(
+        <Alert
+          title="Alert title"
+          body="Alert body type that can run over multiple lines, but should be kept short."
+          pictogram="warning"
+          visible
+          onRequestClose={alert.close}
+          preferredActionLabel="Save"
+          onPreferredActionPress={() => console.log('Save pressed')}
+        />,
+      );
+
+    return <Button onClick={showAlert}>Show Alert</Button>;
+  }
+
+  return (
+    <PortalProvider>
+      <PortalAlert />
+    </PortalProvider>
+  );
+}
+```
+
+### Alert over Modal
+
+Alert displays on top of a `Modal`. You must pass stacked as a prop to `Alert` when it is used inside of a `Modal`.
+
+```jsx live
+function AlertOnModalExample() {
+  function AlertOnModal() {
+    const { openModal, closeModal } = useModal();
+    const alert = useAlert();
+
+    const showAlert = () =>
+      alert.open(
+        <Alert
+          visible
+          onRequestClose={alert.close}
+          title="Are you sure?"
+          body="Cancel will discard your existing changes, are you sure?"
+          pictogram="warning"
+          preferredActionLabel="Discard"
+          onPreferredActionPress={closeModal}
+          preferredActionVariant="negative"
+          dismissActionLabel="Cancel"
+          stacked
+        />,
+      );
+
+    const handlePress = () => {
+      openModal(
+        <Modal visible onRequestClose={closeModal}>
+          <ModalBody>
+            <TextBody as="p">{loremIpsum}</TextBody>
+          </ModalBody>
+          <ModalFooter
+            primaryAction={<Button onClick={closeModal}>Save</Button>}
+            secondaryAction={<Button onClick={showAlert}>Cancel</Button>}
+          />
+        </Modal>,
+      );
+    };
+
+    return <Button onClick={handlePress}>Open Modal</Button>;
+  }
+
+  return (
+    <PortalProvider>
+      <AlertOnModal />
+    </PortalProvider>
+  );
+}
+```

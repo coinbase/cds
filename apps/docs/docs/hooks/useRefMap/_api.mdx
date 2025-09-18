@@ -1,0 +1,28 @@
+import { MDXArticle } from '@site/src/components/page/MDXArticle';
+
+<MDXArticle>
+## Parameters
+
+The `useRefMap` hook accepts an optional configuration object:
+
+- `options?: RefMapOptions<RefValue>` - Configuration options for the ref map
+  - `initialRefMap?: Record<string, RefValue>` - Optional initial map of refs
+
+The generic type `RefValue` represents the type of values stored in the ref map (typically `HTMLElement` or a specific element type).
+
+</MDXArticle>
+
+<MDXArticle hideDivider>
+## Returns
+
+Returns a `RefMapApi<RefValue>` object with the following properties:
+
+- `refs: Record<string, RefValue>` - The current map of all registered refs
+- `getRef: (id: string) => RefValue | null` - Function to retrieve a ref by its ID
+- `registerRef: (id: string, ref: RefValue) => void` - Function to register a new ref with an ID
+
+:::note
+This hook is particularly useful when working with components that need to manage multiple refs, such as in tour guides where elements need to be highlighted, or in tab systems where tab panels need to be referenced. The hook maintains a stable reference to the ref map and its utility functions across renders.
+:::
+
+</MDXArticle>

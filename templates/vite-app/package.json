@@ -1,0 +1,31 @@
+{
+  "name": "cds-vite-app",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "engines": {
+    "node": "^22"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@cbhq/cds-icons": "^5",
+    "@cbhq/cds-illustrations": "^4",
+    "@cbhq/cds-web": "^8",
+    "@cbhq/cds-web-visualization": "^3",
+    "framer-motion": "^11",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22",
+    "@types/react": "^19.1.2",
+    "@types/react-dom": "^19.1.2",
+    "@vitejs/plugin-react": "^5.0.0",
+    "typescript": "~5.9.2",
+    "vite": "^7.1.2"
+  }
+}
