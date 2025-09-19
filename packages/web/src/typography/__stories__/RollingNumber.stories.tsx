@@ -39,9 +39,7 @@ export const Examples = () => {
       <Text font="label1">Portfolio Balance</Text>
       <RollingNumber
         colorPulseOnUpdate
-        fontFamily="display3"
-        fontSize="display3"
-        fontWeight="display3"
+        font="display3"
         format={{ style: 'currency', currency: 'USD' }}
         value={price}
       />
