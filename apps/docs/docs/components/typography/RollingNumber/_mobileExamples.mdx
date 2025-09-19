@@ -1,30 +1,25 @@
-## Basic Usage
+## Basic Example
+
+RollingNumber displays changing numeric values with a smooth per-digit roll animation and optional color pulse. It supports `Intl.NumberFormat` options, custom typography, ReactNode prefixes/suffixes, and accessibility.
+
+::::tip Getting started
+Pass a number in the `value` prop. Use the `format` prop for Intl formatting (currency, percent, grouping, compact) instead of pre-formatting the string yourself.
+::::
 
 ```tsx
-<RollingNumber value={12345.67} format={{ minimumFractionDigits: 2, maximumFractionDigits: 2 }} />
+<RollingNumber value={12345.67} />
 ```
 
-## Examples
+## Example Use Case
 
 ```tsx
-function Examples() {
-  const values = [12345.67, 12425.32, 12391.02, 12550.87, 12345.67];
-  const differences = [0, 79.65, -34.3, 159.85, -205.2];
-  const [idx, setIdx] = React.useState(0);
-  const price = values[idx];
-  const difference = differences[idx];
-  const onNext = () => setIdx((i) => (i + 1) % values.length);
-
+function ExampleUseCase() {
+  const price = 12345.67;
+  const difference = 79.65;
   const trendColor = difference >= 0 ? 'fgPositive' : 'fgNegative';
 
   return (
     <VStack gap={2}>
-      <Text font="label1">Basic example</Text>
-      <RollingNumber
-        format={{ minimumFractionDigits: 2, maximumFractionDigits: 2 }}
-        value={price}
-      />
-
       <Text font="label1">Portfolio Balance</Text>
       <RollingNumber
         colorPulseOnUpdate
@@ -33,26 +28,28 @@ function Examples() {
         value={price}
       />
 
-      <RollingNumber
-        accessibilityLabelPrefix={difference > 0 ? 'up ' : difference < 0 ? 'down ' : ''}
-        color={trendColor}
-        font="body"
-        format={{
-          style: 'currency',
-          currency: 'USD',
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2,
-        }}
-        prefix={
-          difference >= 0 ? (
-            <Icon color={trendColor} name="diagonalUpArrow" size="xs" />
-          ) : (
-            <Icon color={trendColor} name="diagonalDownArrow" size="xs" />
-          )
-        }
-        suffix={`(${((Math.abs(difference) / price) * 100).toFixed(2)}%)`}
-        value={Math.abs(difference)}
-      />
+      <HStack alignItems="center">
+        <RollingNumber
+          accessibilityLabelPrefix={difference > 0 ? 'up ' : difference < 0 ? 'down ' : ''}
+          color={trendColor}
+          font="body"
+          format={{
+            style: 'currency',
+            currency: 'USD',
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          }}
+          prefix={
+            difference >= 0 ? (
+              <Icon color={trendColor} name="diagonalUpArrow" size="xs" />
+            ) : (
+              <Icon color={trendColor} name="diagonalDownArrow" size="xs" />
+            )
+          }
+          suffix={`(${((Math.abs(difference) / price) * 100).toFixed(2)}%)`}
+          value={Math.abs(difference)}
+        />
+      </HStack>
 
       <Text font="label1">BTC Conversion</Text>
       <HStack alignItems="center" gap={1}>
@@ -66,25 +63,52 @@ function Examples() {
           value={price / 150_000}
         />
       </HStack>
-
-      <Button onPress={onNext}>Next</Button>
     </VStack>
   );
 }
 ```
 
-## Font customization
+## Formatting
 
-Note: Non-tabular numbers are currently not supported in mobile. The `tabularNumbers` setting should not be disabled at this point.
-
-Also note: RollingNumber forwards all Text props, but only character-level typographic props (e.g., `font`, `fontFamily`, `fontSize`, `fontWeight`, `lineHeight`, `tabularNumbers`, `color`) are meaningful for its per-digit rendering. Layout or container-level props (e.g., `justifyContent`, `alignItems`) may have no effect and can cause unexpected behavior—use them judiciously.
+Use `format` prop for currency, percent, grouping, and compact notation formatting. The `format` prop takes in `Intl.NumberFormat` [options](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/NumberFormat/NumberFormat#options).
 
 ```tsx
-function FontCustomization() {
-  const [price, setPrice] = React.useState<number>(9876.54);
-  const onNext = () =>
-    setPrice((p) => Math.max(0, Math.round((p + (Math.random() - 0.5) * 100) * 100) / 100));
+function Format() {
+  const value = 98345.67;
+  return (
+    <VStack gap={2}>
+      <Text font="label1">Compact number with currency sign</Text>
+      <RollingNumber
+        font="display3"
+        format={{
+          style: 'currency',
+          currency: 'USD',
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 5,
+          notation: 'compact',
+        }}
+        value={value}
+      />
+      <Text font="label1">Number without grouping</Text>
+      <RollingNumber font="display3" format={{ useGrouping: false }} value={value} />
+    </VStack>
+  );
+}
+```
 
+## Typography
+
+RollingNumber forwards all Text props, but only character-level typographic props (e.g., `font`, `fontFamily`, `fontSize`, `fontWeight`, `lineHeight`, `tabularNumbers`, `color`) are meaningful for its per-digit rendering. Layout/container props may have no effect—use them judiciously.
+
+::::tip Mobile specifics
+
+- Non-tabular numbers are currently not supported on mobile. The `tabularNumbers` setting should not be disabled.
+- Per-section text styling (color, font, etc.) is not supported on mobile; text styles are applied globally within `RollingNumber`.
+  ::::
+
+```tsx
+function TypographyExamples() {
+  const price = 9876.54;
   return (
     <VStack gap={2}>
       <Text font="label1">Font sizes, weights, and line heights</Text>
@@ -114,13 +138,12 @@ function FontCustomization() {
         format={{ style: 'currency', currency: 'USD' }}
         value={price}
       />
-      <Button onPress={onNext}>Next</Button>
     </VStack>
   );
 }
 ```
 
-## Color And Transition
+## Color and Transition
 
 You can customize the number color and its animation transitions. Configure `y` to control the digit roll, and `color` to control the pulse.
 
@@ -132,9 +155,7 @@ You can customize the number color and its animation transitions. Configure `y` 
 
 ```tsx
 function ColorAndTransition() {
-  const [price, setPrice] = React.useState<number>(555.55);
-  const onNext = () =>
-    setPrice((p) => Math.max(0, Math.round((p + (Math.random() - 0.5) * 50) * 100) / 100));
+  const price = 555.55;
   return (
     <VStack gap={2}>
       <Text font="label1">Color pulse and custom transition</Text>
@@ -229,62 +250,18 @@ function ColorAndTransition() {
         }}
         value={price}
       />
-      <Button onPress={onNext}>Next</Button>
     </VStack>
   );
 }
 ```
 
-## Format
+## Prefix and Suffix
 
-```tsx
-function Format() {
-  const values = [98345.67, 91345.67, 123450.123, 1234512.88];
-  const [idx, setIdx] = React.useState(0);
-  const onNext = () => setIdx((i) => (i + 1) % values.length);
-  const value = values[idx];
-  return (
-    <VStack gap={2}>
-      <Text font="label1">Compact number with currency sign</Text>
-      <RollingNumber
-        font="display3"
-        format={{
-          style: 'currency',
-          currency: 'USD',
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 5,
-          notation: 'compact',
-        }}
-        value={value}
-      />
-      <Text font="label1">Number without grouping</Text>
-      <RollingNumber font="display3" format={{ useGrouping: false }} value={value} />
-      <Button onPress={onNext}>Next</Button>
-    </VStack>
-  );
-}
-```
-
-## Prefix And Suffix (Text And React Nodes)
+Attach text or React nodes before/after the number to create rich compositions. If the prefix/suffix is a string, it will pulse color together with the main number.
 
 ```tsx
 function PrefixAndSuffix() {
-  const values = [98345.67, 91345.67, 123450.123, 1234512.88];
-  const prefixes = ['+', '-', ''];
-  const suffixes = [' BTC', ' ETH', ''];
-  const iconPrefixes = [
-    <Icon key="arrowUp" name="arrowUp" size="l" />,
-    <Icon key="arrowDown" name="arrowDown" size="l" />,
-    <Icon key="arrowDown2" name="arrowDown" size="l" />,
-  ];
-  const iconSuffixes = [
-    <Icon key="arrowDown" name="arrowDown" size="l" />,
-    <Icon key="arrowUp" name="arrowUp" size="l" />,
-    null,
-  ];
-  const [idx, setIdx] = React.useState(0);
-  const onNext = () => setIdx((i) => (i + 1) % values.length);
-  const value = values[idx];
+  const value = 98345.67;
   const format = {
     style: 'currency' as const,
     currency: 'USD',
@@ -298,8 +275,8 @@ function PrefixAndSuffix() {
         colorPulseOnUpdate
         font="display3"
         format={format}
-        prefix={prefixes[idx]}
-        suffix={suffixes[idx]}
+        prefix="+"
+        suffix=" BTC"
         value={value}
       />
       <Text font="label1">Dynamic prefix and suffix</Text>
@@ -307,8 +284,8 @@ function PrefixAndSuffix() {
         colorPulseOnUpdate
         font="display3"
         format={format}
-        prefix={prefixes[idx]}
-        suffix={suffixes[idx]}
+        prefix="-"
+        suffix=" ETH"
         value={value}
       />
       <Text font="label1">ReactNode prefix and suffix</Text>
@@ -316,8 +293,8 @@ function PrefixAndSuffix() {
         colorPulseOnUpdate
         font="display3"
         format={format}
-        prefix={iconPrefixes[idx]}
-        suffix={iconSuffixes[idx]}
+        prefix={<Icon name="arrowUp" size="l" />}
+        suffix={<Icon name="arrowDown" size="l" />}
         value={value}
       />
       <Text font="label1">Suffix wraps to second line</Text>
@@ -338,7 +315,6 @@ function PrefixAndSuffix() {
         suffix="BTC"
         value={value}
       />
-      <Button onPress={onNext}>Next</Button>
     </VStack>
   );
 }
@@ -346,13 +322,9 @@ function PrefixAndSuffix() {
 
 ## Style Overrides
 
-Note: We do not support overriding text styles (color, font, etc.) for individual number sections in mobile. Text styles are applied globally within `RollingNumber`.
-
 ```tsx
 function StyleOverrides() {
-  const [price, setPrice] = React.useState<number>(12345.67);
-  const onNext = () =>
-    setPrice((p) => Math.max(0, Math.round((p + (Math.random() - 0.5) * 200) * 100) / 100));
+  const price = 12345.67;
   return (
     <VStack gap={2}>
       <Text font="label1">Style overrides per section</Text>
@@ -382,22 +354,18 @@ function StyleOverrides() {
         suffix="BTC"
         value={price}
       />
-      <Button onPress={onNext}>Next</Button>
     </VStack>
   );
 }
 ```
 
-## Subscript
+## Subscript Notation for Tiny Decimals
+
+Enable `enableSubscriptNotation` to compactly represent leading zeros in the fractional part.
 
 ```tsx
 function Subscript() {
-  const values = [
-    0.0000000001, 0.00009, 0.000012, 0.0000001, 0.000000001, 0.000000000000000000000011,
-  ];
-  const [idx, setIdx] = React.useState(0);
-  const onNext = () => setIdx((i) => (i + 1) % values.length);
-  const value = values[idx];
+  const value = 0.0000000001;
   const format = { minimumFractionDigits: 2, maximumFractionDigits: 25 } as const;
   return (
     <VStack gap={1}>
@@ -406,36 +374,23 @@ function Subscript() {
       <RollingNumber font="display3" format={format} value={value} />
       <Text font="label2">With subscript:</Text>
       <RollingNumber enableSubscriptNotation font="display3" format={format} value={value} />
-      <Button onPress={onNext}>Next</Button>
     </VStack>
   );
 }
 ```
 
-## User Provided Formatted Value
+## User-Provided Formatted Value
+
+You can also provide `formattedValue`; the component will render it directly instead of using the internal formatter. The numeric `value` is still required to drive animations and the color pulse.
 
 ```tsx
 function UserProvidedFormattedValue() {
-  const btcPrices = [
-    { value: 98_765.43, formattedValue: '¥98,765.43 BTC' },
-    { value: 931.42, formattedValue: '$931.42 BTC' },
-    { value: 100_890.56, formattedValue: '¥100,890.56 BTC' },
-    { value: 149_432.12, formattedValue: '¥149,432.12 BTC' },
-    { value: 150_321.23, formattedValue: '¥150,321.23 BTC' },
-  ];
-  const subscripts = [
-    { value: 0.0000000001, formattedValue: '€0,0₉1', accessibilityLabel: '€0.0000000001' },
-    { value: 0.00009, formattedValue: '€0,0₄9', accessibilityLabel: '€0.00009' },
-    { value: 0.000012, formattedValue: '€0,0₄12', accessibilityLabel: '€0.000012' },
-    { value: 0.0000001, formattedValue: '€0,0₆1', accessibilityLabel: '€0.0000001' },
-    {
-      value: 0.000000000000000000000011,
-      formattedValue: '€0,0₂₂11',
-      accessibilityLabel: '€0.000000000000000000000011',
-    },
-  ];
-  const [idx, setIdx] = React.useState(0);
-  const onNext = () => setIdx((i) => (i + 1) % 5);
+  const btc = { value: 98_765.43, formattedValue: '¥98,765.43 BTC' } as const;
+  const tiny = {
+    value: 0.00009,
+    formattedValue: '€0,0₄9',
+    accessibilityLabel: '€0.00009',
+  } as const;
   return (
     <VStack gap={1}>
       <Text font="label1">User provided formatted value</Text>
@@ -443,25 +398,32 @@ function UserProvidedFormattedValue() {
       <RollingNumber
         colorPulseOnUpdate
         font="display3"
-        formattedValue={btcPrices[idx].formattedValue}
+        formattedValue={btc.formattedValue}
         prefix={<Icon name="crypto" size="l" />}
-        value={btcPrices[idx].value}
+        value={btc.value}
       />
       <Text font="label2">Subscripts with comma as decimal separator</Text>
       <RollingNumber
         colorPulseOnUpdate
-        accessibilityLabel={subscripts[idx].accessibilityLabel}
+        accessibilityLabel={tiny.accessibilityLabel}
         font="display3"
-        formattedValue={subscripts[idx].formattedValue}
-        value={subscripts[idx].value}
+        formattedValue={tiny.formattedValue}
+        value={tiny.value}
       />
-      <Button onPress={onNext}>Next</Button>
     </VStack>
   );
 }
 ```
 
-## Fun Examples
+::::tip Accessibility and formattedValue
+When you provide `formattedValue`, the `accessibilityLabel` will default to your `formattedValue`. However, what’s rendered on screen is not always ideal for accessibility. For example, the subscript notation '0₉' may be announced as '09'. Provide your own `accessibilityLabel` as needed.
+::::
+
+## Patterns & Recipes
+
+Practical demos combining formatting, animation, and interactivity.
+
+### Counter
 
 ```tsx
 function CounterExample() {
@@ -470,7 +432,6 @@ function CounterExample() {
   const onDec = () => setCount((c) => Math.max(0, c - 1));
   return (
     <VStack gap={1}>
-      <Text font="label1">Counter</Text>
       <HStack alignItems="center" gap={2}>
         <IconButton accessibilityLabel="decrement" name="minus" onPress={onDec} />
         <RollingNumber
@@ -485,6 +446,8 @@ function CounterExample() {
   );
 }
 ```
+
+### Countdown
 
 ```tsx
 function CountDownExample() {
@@ -512,7 +475,6 @@ function CountDownExample() {
   const progress = Math.max(0, Math.min(1, (totalSeconds - seconds) / totalSeconds));
   return (
     <VStack gap={1}>
-      <Text font="label1">Countdown clock</Text>
       <RollingNumber font="display3" formattedValue={formatted} value={seconds} />
       <HStack gap={2}>
         <Button onPress={() => setRunning((r) => !r)}>{running ? 'Pause' : 'Start'}</Button>
@@ -533,110 +495,7 @@ function CountDownExample() {
 }
 ```
 
-```tsx
-function SubscriptionPriceExample() {
-  const [yearly, setYearly] = React.useState(false);
-  const price = yearly ? 199 : 19;
-  const suffix = yearly ? '/yr' : '/mo';
-  return (
-    <VStack gap={1}>
-      <RollingNumber
-        colorPulseOnUpdate
-        accessibilityLabel={`$${price} ${suffix === '/yr' ? 'yearly' : 'monthly'}`}
-        font="display1"
-        format={{
-          style: 'currency',
-          currency: 'USD',
-          minimumFractionDigits: 0,
-          maximumFractionDigits: 0,
-        }}
-        styles={{ suffix: { position: 'relative', top: 6, opacity: 0.5 } }}
-        suffix={suffix}
-        transition={{ y: { type: 'spring', stiffness: 80, damping: 24, mass: 3 } }}
-        value={price}
-      />
-      <HStack gap={2}>
-        <Button onPress={() => setYearly((v) => !v)}>
-          {yearly ? 'Switch to monthly' : 'Switch to yearly'}
-        </Button>
-      </HStack>
-    </VStack>
-  );
-}
-```
-
-```tsx
-function StatisticsExample() {
-  const [views, setViews] = React.useState(1234567);
-  const [likes, setLikes] = React.useState(89432);
-  const [shares, setShares] = React.useState(12789);
-  const [downloads, setDownloads] = React.useState(567890);
-  const simulateActivity = () => {
-    setViews((v) => v + Math.floor(Math.random() * 1000));
-    setLikes((l) => l + Math.floor(Math.random() * 200));
-    setShares((s) => s + Math.floor(Math.random() * 100));
-    setDownloads((d) => d + Math.floor(Math.random() * 500));
-  };
-  return (
-    <VStack gap={2}>
-      <Text font="label1">Social Media Statistics</Text>
-      <HStack gap={2}>
-        <VStack alignItems="center" gap={0.5}>
-          <RollingNumber
-            colorPulseOnUpdate
-            font="title1"
-            format={{ notation: 'compact', maximumFractionDigits: 1, minimumFractionDigits: 1 }}
-            positivePulseColor="accentBoldBlue"
-            value={views}
-          />
-          <Text color="fgMuted" font="caption">
-            Views
-          </Text>
-        </VStack>
-        <VStack alignItems="center" gap={0.5}>
-          <RollingNumber
-            colorPulseOnUpdate
-            font="title1"
-            format={{ notation: 'compact', maximumFractionDigits: 1, minimumFractionDigits: 1 }}
-            positivePulseColor="accentBoldRed"
-            prefix={<Icon color="accentBoldRed" name="heart" />}
-            styles={{ prefix: { paddingRight: 4 } }}
-            value={likes}
-          />
-          <Text color="fgMuted" font="caption">
-            Likes
-          </Text>
-        </VStack>
-        <VStack alignItems="center" gap={0.5}>
-          <RollingNumber
-            colorPulseOnUpdate
-            font="title1"
-            format={{ notation: 'compact', maximumFractionDigits: 1, minimumFractionDigits: 1 }}
-            positivePulseColor="accentBoldGreen"
-            value={shares}
-          />
-          <Text color="fgMuted" font="caption">
-            Shares
-          </Text>
-        </VStack>
-        <VStack alignItems="center" gap={0.5}>
-          <RollingNumber
-            colorPulseOnUpdate
-            font="title1"
-            format={{ notation: 'compact', maximumFractionDigits: 1, minimumFractionDigits: 1 }}
-            positivePulseColor="accentBoldPurple"
-            value={downloads}
-          />
-          <Text color="fgMuted" font="caption">
-            Downloads
-          </Text>
-        </VStack>
-      </HStack>
-      <Button onPress={simulateActivity}>Simulate Activity</Button>
-    </VStack>
-  );
-}
-```
+### Live Auction
 
 ```tsx
 function LiveBiddingExample() {
@@ -657,7 +516,6 @@ function LiveBiddingExample() {
   const seconds = timeLeft % 60;
   return (
     <VStack gap={2}>
-      <Text font="label1">Live Auction</Text>
       <VStack gap={1}>
         <Text color="fgMuted" font="caption">
           Current Bid
