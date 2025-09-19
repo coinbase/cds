@@ -55,7 +55,7 @@ export class IntlNumberFormat {
   }
 
   /**
-   * Returns the number parts for NumberTicker with groupings and keys for animations
+   * Returns the number parts for RollingNumber with groupings and keys for animations
    * Examples
    *
    * Example 1 — basic currency

@@ -8,9 +8,9 @@ import { buildAnimation } from './buildAnimation';
 import {
   DEFAULT_TRANSITION,
   digits,
-  type NumberTickerDigitComponent,
-  type NumberTickerDigitProps,
-} from './NumberTicker';
+  type RollingNumberDigitComponent,
+  type RollingNumberDigitProps,
+} from './RollingNumber';
 
 const AnimatedText = Animated.createAnimatedComponent(Text);
 
@@ -24,13 +24,13 @@ const baseStylesheet = StyleSheet.create({
 });
 
 /**
- * Note that the DefaultNumberTickerDigit component implementation is different in web
+ * Note that the DefaultRollingNumberDigit component implementation is different in web
  * and mobile due to different animation libraries and the performance issue in mobile.
  * This has nearly unnoticeable difference in animation effect.
  * Consider align the implementations in the future.
  *  */
-export const DefaultNumberTickerDigit: NumberTickerDigitComponent = memo(
-  forwardRef<View, NumberTickerDigitProps>(
+export const DefaultRollingNumberDigit: RollingNumberDigitComponent = memo(
+  forwardRef<View, RollingNumberDigitProps>(
     (
       {
         value,

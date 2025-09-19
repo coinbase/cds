@@ -101,8 +101,8 @@ const sidebars: SidebarsConfig = {
             { type: 'doc', id: 'components/typography/Text/text', label: 'Text' },
             {
               type: 'doc',
-              id: 'components/typography/NumberTicker/number-ticker',
-              label: 'NumberTicker',
+              id: 'components/typography/RollingNumber/rollingNumber',
+              label: 'RollingNumber',
             },
           ],
         },

@@ -5,12 +5,12 @@ import { m } from 'framer-motion';
 import { cx } from '../../cx';
 import { useHasMounted } from '../../hooks/useHasMounted';
 
-import { DefaultNumberTickerDigit } from './DefaultNumberTickerDigit';
-import { DefaultNumberTickerSymbol } from './DefaultNumberTickerSymbol';
+import { DefaultRollingNumberDigit } from './DefaultRollingNumberDigit';
+import { DefaultRollingNumberSymbol } from './DefaultRollingNumberSymbol';
 import type {
-  NumberTickerNumberSectionComponent,
-  NumberTickerNumberSectionProps,
-} from './NumberTicker';
+  RollingNumberNumberSectionComponent,
+  RollingNumberNumberSectionProps,
+} from './RollingNumber';
 
 const containerCss = css`
   display: inline-flex;
@@ -21,16 +21,16 @@ const isDigit = (char: string) => /^\d$/.test(char);
 const subscripts = ['₀', '₁', '₂', '₃', '₄', '₅', '₆', '₇', '₈', '₉'];
 const isSubscript = (char: string) => subscripts.includes(char);
 
-export const DefaultNumberTickerNumberSection: NumberTickerNumberSectionComponent = memo(
-  forwardRef<HTMLSpanElement, NumberTickerNumberSectionProps>(
+export const DefaultRollingNumberNumberSection: RollingNumberNumberSectionComponent = memo(
+  forwardRef<HTMLSpanElement, RollingNumberNumberSectionProps>(
     (
       {
         intlNumberParts,
         justify = 'flex-start',
         style,
         className,
-        NumberDigitComponent = DefaultNumberTickerDigit,
-        NumberSymbolComponent = DefaultNumberTickerSymbol,
+        NumberDigitComponent = DefaultRollingNumberDigit,
+        NumberSymbolComponent = DefaultRollingNumberSymbol,
         formattedValue,
         transitionConfig,
         ...props

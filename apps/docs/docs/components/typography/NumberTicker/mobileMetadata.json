@@ -1,8 +1,0 @@
-{
-  "import": "import { NumberTicker } from '@coinbase/cds-mobile/typography'",
-  "source": "https://github.com/coinbase/cds/blob/master/packages/mobile/src/typography/NumberTicker/NumberTicker.tsx",
-  "description": "Animated numeric ticker for React Native that pulses color on changes.",
-  "figma": "",
-  "relatedComponents": [],
-  "dependencies": []
-}

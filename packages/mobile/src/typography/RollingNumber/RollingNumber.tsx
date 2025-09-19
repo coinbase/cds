@@ -25,11 +25,11 @@ import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 import { HStack, type HStackProps } from '../../layout/HStack';
 import { Text, type TextProps } from '../Text';
 
-import { DefaultNumberTickerDigit } from './DefaultNumberTickerDigit';
-import { DefaultNumberTickerMask } from './DefaultNumberTickerMask';
-import { DefaultNumberTickerNodeSection } from './DefaultNumberTickerNodeSection';
-import { DefaultNumberTickerNumberSection } from './DefaultNumberTickerNumberSection';
-import { DefaultNumberTickerSymbol } from './DefaultNumberTickerSymbol';
+import { DefaultRollingNumberDigit } from './DefaultRollingNumberDigit';
+import { DefaultRollingNumberMask } from './DefaultRollingNumberMask';
+import { DefaultRollingNumberNodeSection } from './DefaultRollingNumberNodeSection';
+import { DefaultRollingNumberNumberSection } from './DefaultRollingNumberNumberSection';
+import { DefaultRollingNumberSymbol } from './DefaultRollingNumberSymbol';
 import { useColorPulse } from './useColorPulse';
 
 export const DEFAULT_TRANSITION = {
@@ -75,12 +75,12 @@ export type TransitionConfig = {
 };
 
 // Subcomponent prop and component type declarations
-export type NumberTickerMaskProps = HStackProps & {
+export type RollingNumberMaskProps = HStackProps & {
   children?: React.ReactNode;
   ref?: React.Ref<View>;
 };
 
-export type NumberTickerNodeSectionProps = HStackProps & {
+export type RollingNumberNodeSectionProps = HStackProps & {
   children?: React.ReactNode;
   textProps?: TextProps;
   styles?: {
@@ -90,13 +90,13 @@ export type NumberTickerNodeSectionProps = HStackProps & {
   ref?: React.Ref<View>;
 };
 
-export type NumberTickerNumberSectionProps = HStackProps & {
+export type RollingNumberNumberSectionProps = HStackProps & {
   intlNumberParts: KeyedNumberPart[];
   invisibleDigitMeasurements: LayoutMap;
   measurementCompleted: boolean;
   formattedValue?: string;
-  NumberDigitComponent?: NumberTickerDigitComponent;
-  NumberSymbolComponent?: NumberTickerSymbolComponent;
+  NumberDigitComponent?: RollingNumberDigitComponent;
+  NumberSymbolComponent?: RollingNumberSymbolComponent;
   textProps?: TextProps;
   styles?: {
     root?: StyleProp<ViewStyle>;
@@ -106,7 +106,7 @@ export type NumberTickerNumberSectionProps = HStackProps & {
   ref?: React.Ref<View>;
 };
 
-export type NumberTickerDigitProps = ViewProps & {
+export type RollingNumberDigitProps = ViewProps & {
   value: number;
   invisibleDigitMeasurements: LayoutMap;
   initialValue?: number;
@@ -119,7 +119,7 @@ export type NumberTickerDigitProps = ViewProps & {
   ref?: React.Ref<View>;
 };
 
-export type NumberTickerSymbolProps = HStackProps & {
+export type RollingNumberSymbolProps = HStackProps & {
   value: string;
   textProps?: TextProps;
   styles?: {
@@ -130,17 +130,17 @@ export type NumberTickerSymbolProps = HStackProps & {
 };
 
 // TODO: confirm ref definition
-export type NumberTickerMaskComponent = React.FC<NumberTickerMaskProps>;
+export type RollingNumberMaskComponent = React.FC<RollingNumberMaskProps>;
 
-export type NumberTickerNodeSectionComponent = React.FC<NumberTickerNodeSectionProps>;
+export type RollingNumberNodeSectionComponent = React.FC<RollingNumberNodeSectionProps>;
 
-export type NumberTickerNumberSectionComponent = React.FC<NumberTickerNumberSectionProps>;
+export type RollingNumberNumberSectionComponent = React.FC<RollingNumberNumberSectionProps>;
 
-export type NumberTickerDigitComponent = React.FC<NumberTickerDigitProps>;
+export type RollingNumberDigitComponent = React.FC<RollingNumberDigitProps>;
 
-export type NumberTickerSymbolComponent = React.FC<NumberTickerSymbolProps>;
+export type RollingNumberSymbolComponent = React.FC<RollingNumberSymbolProps>;
 
-export type NumberTickerBaseProps = SharedProps &
+export type RollingNumberBaseProps = SharedProps &
   TextProps & {
     /**
      * Number to display
@@ -169,23 +169,23 @@ export type NumberTickerBaseProps = SharedProps &
     /**
      * Override mask component (container around the animated number sections)
      */
-    NumberTickerMaskComponent?: NumberTickerMaskComponent;
+    RollingNumberMaskComponent?: RollingNumberMaskComponent;
     /**
      * Override node section component (wrapping prefix/suffix ReactNodes)
      */
-    NumberTickerNodeSectionComponent?: NumberTickerNodeSectionComponent;
+    RollingNumberNodeSectionComponent?: RollingNumberNodeSectionComponent;
     /**
      * Override number section component (renders Intl intlNumberParts or formatted override)
      */
-    NumberTickerNumberSectionComponent?: NumberTickerNumberSectionComponent;
+    RollingNumberNumberSectionComponent?: RollingNumberNumberSectionComponent;
     /**
      * Override number digit component (per-digit scroller)
      */
-    NumberTickerDigitComponent?: NumberTickerDigitComponent;
+    RollingNumberDigitComponent?: RollingNumberDigitComponent;
     /**
      * Override number symbol component (literal/separators/subscripts)
      */
-    NumberTickerSymbolComponent?: NumberTickerSymbolComponent;
+    RollingNumberSymbolComponent?: RollingNumberSymbolComponent;
     /**
      * Locale to use for formatting. If not provided, will use the locale provided in LocaleProvider.
      */
@@ -249,7 +249,7 @@ export type NumberTickerBaseProps = SharedProps &
     tabularNumbers?: boolean;
   };
 
-export type NumberTickerProps = NumberTickerBaseProps & {
+export type RollingNumberProps = RollingNumberBaseProps & {
   /**
    * Custom styles for the component.
    */
@@ -272,8 +272,8 @@ export type NumberTickerProps = NumberTickerBaseProps & {
   };
 };
 
-export const NumberTicker = memo(
-  forwardRef<View, NumberTickerProps>(
+export const RollingNumber = memo(
+  forwardRef<View, RollingNumberProps>(
     (
       {
         value,
@@ -302,13 +302,13 @@ export const NumberTicker = memo(
         accessibilityLabel,
         accessibilityLabelPrefix = '',
         accessibilityLabelSuffix = '',
-        NumberTickerMaskComponent = DefaultNumberTickerMask,
-        NumberTickerNodeSectionComponent = DefaultNumberTickerNodeSection,
-        NumberTickerNumberSectionComponent = DefaultNumberTickerNumberSection,
-        NumberTickerDigitComponent = DefaultNumberTickerDigit,
-        NumberTickerSymbolComponent = DefaultNumberTickerSymbol,
+        RollingNumberMaskComponent = DefaultRollingNumberMask,
+        RollingNumberNodeSectionComponent = DefaultRollingNumberNodeSection,
+        RollingNumberNumberSectionComponent = DefaultRollingNumberNumberSection,
+        RollingNumberDigitComponent = DefaultRollingNumberDigit,
+        RollingNumberSymbolComponent = DefaultRollingNumberSymbol,
         ...restTextProps
-      }: NumberTickerProps,
+      }: RollingNumberProps,
       ref,
     ) => {
       const { locale: defaultLocale } = useLocale();
@@ -395,42 +395,42 @@ export const NumberTicker = memo(
       const prefixSection = useMemo(
         () => (
           // prefix from props
-          <NumberTickerNodeSectionComponent
+          <RollingNumberNodeSectionComponent
             justifyContent="flex-end"
             style={styles?.prefix}
             styles={{ text: animatedColorStyle }}
             textProps={textProps}
           >
             {prefix}
-          </NumberTickerNodeSectionComponent>
+          </RollingNumberNodeSectionComponent>
         ),
-        [NumberTickerNodeSectionComponent, animatedColorStyle, styles?.prefix, textProps, prefix],
+        [RollingNumberNodeSectionComponent, animatedColorStyle, styles?.prefix, textProps, prefix],
       );
 
       const suffixSection = useMemo(
         () => (
           // suffix from props
-          <NumberTickerNodeSectionComponent
+          <RollingNumberNodeSectionComponent
             justifyContent="flex-start"
             style={styles?.suffix}
             styles={{ text: animatedColorStyle }}
             textProps={textProps}
           >
             {suffix}
-          </NumberTickerNodeSectionComponent>
+          </RollingNumberNodeSectionComponent>
         ),
-        [NumberTickerNodeSectionComponent, animatedColorStyle, styles?.suffix, textProps, suffix],
+        [RollingNumberNodeSectionComponent, animatedColorStyle, styles?.suffix, textProps, suffix],
       );
 
       const intlPartsNumberSection = useMemo(() => {
         const { pre, integer, fraction, post } =
           intlNumberFormatter.formatToParts(enableSubscriptNotation);
         return (
-          <NumberTickerMaskComponent style={styles?.formattedNumberSection}>
+          <RollingNumberMaskComponent style={styles?.formattedNumberSection}>
             {/* Prefix generated by Intl.NumberFormat */}
-            <NumberTickerNumberSectionComponent
-              NumberDigitComponent={NumberTickerDigitComponent}
-              NumberSymbolComponent={NumberTickerSymbolComponent}
+            <RollingNumberNumberSectionComponent
+              NumberDigitComponent={RollingNumberDigitComponent}
+              NumberSymbolComponent={RollingNumberSymbolComponent}
               intlNumberParts={pre}
               invisibleDigitMeasurements={invisibleDigitMeasurements.current}
               justifyContent="flex-end"
@@ -440,9 +440,9 @@ export const NumberTicker = memo(
               textProps={textProps}
               transitionConfig={transitionConfig}
             />
-            <NumberTickerNumberSectionComponent
-              NumberDigitComponent={NumberTickerDigitComponent}
-              NumberSymbolComponent={NumberTickerSymbolComponent}
+            <RollingNumberNumberSectionComponent
+              NumberDigitComponent={RollingNumberDigitComponent}
+              NumberSymbolComponent={RollingNumberSymbolComponent}
               intlNumberParts={integer}
               invisibleDigitMeasurements={invisibleDigitMeasurements.current}
               justifyContent="flex-end"
@@ -452,9 +452,9 @@ export const NumberTicker = memo(
               textProps={textProps}
               transitionConfig={transitionConfig}
             />
-            <NumberTickerNumberSectionComponent
-              NumberDigitComponent={NumberTickerDigitComponent}
-              NumberSymbolComponent={NumberTickerSymbolComponent}
+            <RollingNumberNumberSectionComponent
+              NumberDigitComponent={RollingNumberDigitComponent}
+              NumberSymbolComponent={RollingNumberSymbolComponent}
               intlNumberParts={fraction}
               invisibleDigitMeasurements={invisibleDigitMeasurements.current}
               justifyContent="flex-start"
@@ -465,9 +465,9 @@ export const NumberTicker = memo(
               transitionConfig={transitionConfig}
             />
             {/* Suffix generated by Intl.NumberFormat */}
-            <NumberTickerNumberSectionComponent
-              NumberDigitComponent={NumberTickerDigitComponent}
-              NumberSymbolComponent={NumberTickerSymbolComponent}
+            <RollingNumberNumberSectionComponent
+              NumberDigitComponent={RollingNumberDigitComponent}
+              NumberSymbolComponent={RollingNumberSymbolComponent}
               intlNumberParts={post}
               invisibleDigitMeasurements={invisibleDigitMeasurements.current}
               justifyContent="flex-start"
@@ -477,20 +477,20 @@ export const NumberTicker = memo(
               textProps={textProps}
               transitionConfig={transitionConfig}
             />
-          </NumberTickerMaskComponent>
+          </RollingNumberMaskComponent>
         );
       }, [
         intlNumberFormatter,
         enableSubscriptNotation,
-        NumberTickerMaskComponent,
+        RollingNumberMaskComponent,
         styles?.formattedNumberSection,
         styles?.i18nPrefix,
         styles?.integer,
         styles?.fraction,
         styles?.i18nSuffix,
-        NumberTickerNumberSectionComponent,
-        NumberTickerDigitComponent,
-        NumberTickerSymbolComponent,
+        RollingNumberNumberSectionComponent,
+        RollingNumberDigitComponent,
+        RollingNumberSymbolComponent,
         measurementCompleted,
         animatedColorStyle,
         textProps,
@@ -499,10 +499,10 @@ export const NumberTicker = memo(
 
       const formattedValueNumberSection = useMemo(
         () => (
-          <NumberTickerMaskComponent style={styles?.formattedNumberSection}>
-            <NumberTickerNumberSectionComponent
-              NumberDigitComponent={NumberTickerDigitComponent}
-              NumberSymbolComponent={NumberTickerSymbolComponent}
+          <RollingNumberMaskComponent style={styles?.formattedNumberSection}>
+            <RollingNumberNumberSectionComponent
+              NumberDigitComponent={RollingNumberDigitComponent}
+              NumberSymbolComponent={RollingNumberSymbolComponent}
               formattedValue={formattedValue}
               intlNumberParts={[]}
               invisibleDigitMeasurements={invisibleDigitMeasurements.current}
@@ -512,14 +512,14 @@ export const NumberTicker = memo(
               textProps={textProps}
               transitionConfig={transitionConfig}
             />
-          </NumberTickerMaskComponent>
+          </RollingNumberMaskComponent>
         ),
         [
-          NumberTickerMaskComponent,
+          RollingNumberMaskComponent,
           styles?.formattedNumberSection,
-          NumberTickerNumberSectionComponent,
-          NumberTickerDigitComponent,
-          NumberTickerSymbolComponent,
+          RollingNumberNumberSectionComponent,
+          RollingNumberDigitComponent,
+          RollingNumberSymbolComponent,
           formattedValue,
           measurementCompleted,
           animatedColorStyle,

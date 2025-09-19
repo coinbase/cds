@@ -7,7 +7,7 @@ function Example() {
 
   return (
     <VStack gap={3}>
-      <NumberTicker value={values[valIdx]} font="display3" />
+      <RollingNumber value={values[valIdx]} font="display3" />
       <Button
         onClick={() => {
           setValIdx((prev) => (prev + 1) % values.length);
@@ -40,9 +40,12 @@ function Examples() {
   return (
     <VStack gap={2}>
       <Text font="label1">Basic example</Text>
-      <NumberTicker format={{ minimumFractionDigits: 2, maximumFractionDigits: 2 }} value={price} />
+      <RollingNumber
+        format={{ minimumFractionDigits: 2, maximumFractionDigits: 2 }}
+        value={price}
+      />
       <Text font="label1">Portfolio Balance</Text>
-      <NumberTicker
+      <RollingNumber
         colorPulseOnUpdate
         fontFamily="display3"
         fontSize="display3"
@@ -51,7 +54,7 @@ function Examples() {
         value={price}
       />
       <HStack alignItems="center">
-        <NumberTicker
+        <RollingNumber
           accessibilityLabelPrefix={difference > 0 ? 'up ' : difference < 0 ? 'down ' : ''}
           color={trendColor}
           font="body"
@@ -80,7 +83,7 @@ function Examples() {
       <Text font="label1">BTC Conversion</Text>
       <HStack alignItems="center" gap={1}>
         <Icon color="fgPrimary" name="arrowsVertical" size="xs" testID="swap-icon" />
-        <NumberTicker
+        <RollingNumber
           color="fgPrimary"
           fontFamily="body"
           fontSize="body"
@@ -97,7 +100,7 @@ function Examples() {
 
 ## Font Customization (Sizes, Weights, Line-Height)
 
-Note: NumberTicker forwards all Text props, but only character-level typographic props (e.g., `font`, `fontFamily`, `fontSize`, `fontWeight`, `lineHeight`, `tabularNumbers`, `color`) are meaningful for its per-digit rendering. Layout or container-level props (e.g., `justifyContent`, `alignItems`) may have no effect and can cause unexpected behavior—use them judiciously.
+Note: RollingNumber forwards all Text props, but only character-level typographic props (e.g., `font`, `fontFamily`, `fontSize`, `fontWeight`, `lineHeight`, `tabularNumbers`, `color`) are meaningful for its per-digit rendering. Layout or container-level props (e.g., `justifyContent`, `alignItems`) may have no effect and can cause unexpected behavior—use them judiciously.
 
 ```tsx live
 function Example() {
@@ -109,19 +112,19 @@ function Example() {
       <Text as="p" display="block" font="label1">
         Font sizes, weights, and line heights
       </Text>
-      <NumberTicker
+      <RollingNumber
         fontSize="display3"
         fontWeight="title3"
         value={price}
         format={{ style: 'currency', currency: 'USD' }}
       />
-      <NumberTicker
+      <RollingNumber
         fontSize="title3"
         fontWeight="headline"
         value={price}
         format={{ style: 'currency', currency: 'USD' }}
       />
-      <NumberTicker
+      <RollingNumber
         fontSize="body"
         fontWeight="body"
         lineHeight="display3"
@@ -148,7 +151,7 @@ function Example() {
       <Text as="p" display="block" font="label1">
         Responsive font (phone, tablet, desktop)
       </Text>
-      <NumberTicker
+      <RollingNumber
         font={{ phone: 'body', tablet: 'title3', desktop: 'display3' }}
         format={{ style: 'currency', currency: 'USD' }}
         value={price}
@@ -157,8 +160,12 @@ function Example() {
       <Text as="p" display="block" font="label1">
         Tabular numbers vs non-tabular
       </Text>
-      <NumberTicker font="display3" format={{ style: 'currency', currency: 'USD' }} value={price} />
-      <NumberTicker
+      <RollingNumber
+        font="display3"
+        format={{ style: 'currency', currency: 'USD' }}
+        value={price}
+      />
+      <RollingNumber
         tabularNumbers={false}
         font="display3"
         format={{ style: 'currency', currency: 'USD' }}
@@ -191,7 +198,7 @@ function Example() {
       <Text as="p" display="block" font="label1">
         Color pulse and custom transition
       </Text>
-      <NumberTicker
+      <RollingNumber
         colorPulseOnUpdate
         font="title1"
         format={{ style: 'currency', currency: 'USD' }}
@@ -202,7 +209,7 @@ function Example() {
         value={price}
       />
 
-      <NumberTicker
+      <RollingNumber
         colorPulseOnUpdate
         color="accentBoldBlue"
         font="title1"
@@ -217,7 +224,7 @@ function Example() {
       <Text as="p" display="block" font="label1">
         Customize positive and negative change colors
       </Text>
-      <NumberTicker
+      <RollingNumber
         colorPulseOnUpdate
         font="title1"
         negativePulseColor="bgWarning"
@@ -228,7 +235,7 @@ function Example() {
       <Text as="p" display="block" font="label1">
         Fast digits, slow color
       </Text>
-      <NumberTicker
+      <RollingNumber
         colorPulseOnUpdate
         font="title1"
         format={{ style: 'currency', currency: 'USD' }}
@@ -242,7 +249,7 @@ function Example() {
       <Text as="p" display="block" font="label1">
         Springy digits
       </Text>
-      <NumberTicker
+      <RollingNumber
         colorPulseOnUpdate
         font="title1"
         format={{ style: 'currency', currency: 'USD' }}
@@ -260,7 +267,7 @@ function Example() {
       <Text as="p" display="block" font="label1">
         Custom easings
       </Text>
-      <NumberTicker
+      <RollingNumber
         colorPulseOnUpdate
         font="title1"
         format={{ style: 'currency', currency: 'USD' }}
@@ -283,8 +290,8 @@ function Example() {
   <Text as="p" display="block" font="label1">
     Render as different elements using the as prop
   </Text>
-  <NumberTicker as="h1" value={12345.67} format={{ style: 'currency', currency: 'USD' }} />
-  <NumberTicker as="p" value={12345.67} format={{ style: 'currency', currency: 'USD' }} />
+  <RollingNumber as="h1" value={12345.67} format={{ style: 'currency', currency: 'USD' }} />
+  <RollingNumber as="p" value={12345.67} format={{ style: 'currency', currency: 'USD' }} />
 </VStack>
 ```
 
@@ -300,7 +307,7 @@ function Example() {
         Compact number with currency sign
       </Text>
       <h1>
-        <NumberTicker
+        <RollingNumber
           font="display1"
           format={{
             style: 'currency',
@@ -316,7 +323,7 @@ function Example() {
       <Text as="p" display="block" font="label1">
         Number without grouping
       </Text>
-      <NumberTicker
+      <RollingNumber
         font="display1"
         format={{
           useGrouping: false,
@@ -359,7 +366,7 @@ function Example() {
       <Text as="p" display="block" font="label1">
         Simple text prefix and suffix
       </Text>
-      <NumberTicker
+      <RollingNumber
         colorPulseOnUpdate
         font="display1"
         format={format}
@@ -371,7 +378,7 @@ function Example() {
       <Text as="p" display="block" font="label1">
         ReactNode prefix and suffix
       </Text>
-      <NumberTicker
+      <RollingNumber
         colorPulseOnUpdate
         font="display1"
         format={format}
@@ -399,7 +406,7 @@ function Example() {
       <Text as="p" display="block" font="label1">
         Customize per-section styles
       </Text>
-      <NumberTicker
+      <RollingNumber
         colorPulseOnUpdate
         font="display1"
         format={{
@@ -450,12 +457,12 @@ function Example() {
       <Text as="span" display="block" font="label2">
         Default:
       </Text>
-      <NumberTicker font="display3" format={format} value={value} />
+      <RollingNumber font="display3" format={format} value={value} />
       <Text as="span" display="block" font="label2">
         With subscript:
       </Text>
       {(['display1', 'title3', 'body'] as const).map((fontKey) => (
-        <NumberTicker
+        <RollingNumber
           key={fontKey}
           enableSubscriptNotation
           font={fontKey}
@@ -503,7 +510,7 @@ function Example() {
       <Text as="p" display="block" font="label2">
         BTC prices
       </Text>
-      <NumberTicker
+      <RollingNumber
         colorPulseOnUpdate
         font="display3"
         formattedValue={btcPrices[idx].formattedValue}
@@ -513,7 +520,7 @@ function Example() {
       <Text as="p" display="block" font="label2">
         Subscripts with a comma as the decimal separator
       </Text>
-      <NumberTicker
+      <RollingNumber
         colorPulseOnUpdate
         accessibilityLabel={subscripts[idx].accessibilityLabel}
         font="display3"
@@ -540,7 +547,7 @@ function CounterExample() {
       </Text>
       <HStack alignItems="center" gap={2}>
         <IconButton name="minus" onClick={() => setCount((c) => Math.max(0, c - 1))} />
-        <NumberTicker
+        <RollingNumber
           colorPulseOnUpdate
           font="display1"
           format={{ minimumFractionDigits: 0, maximumFractionDigits: 0 }}
@@ -584,7 +591,7 @@ function CountDownExample() {
   return (
     <VStack gap={1}>
       <Text font="label1">Countdown clock</Text>
-      <NumberTicker font="display3" formattedValue={formatted} value={seconds} />
+      <RollingNumber font="display3" formattedValue={formatted} value={seconds} />
       <HStack gap={2}>
         <Button onClick={() => setRunning((r) => !r)}>{running ? 'Pause' : 'Start'}</Button>
         <Button onClick={onReset}>Reset</Button>
@@ -593,7 +600,7 @@ function CountDownExample() {
       <Text font="label1">Countdown with percent</Text>
       <VStack gap={1}>
         <ProgressBar progress={progress} />
-        <NumberTicker
+        <RollingNumber
           font="body"
           format={{ style: 'percent', maximumFractionDigits: 0 }}
           prefix="Elapsed: "
@@ -612,7 +619,7 @@ function SubscriptionPriceExample() {
   const suffix = yearly ? '/yr' : '/mo';
   return (
     <VStack gap={1}>
-      <NumberTicker
+      <RollingNumber
         colorPulseOnUpdate
         accessibilityLabel={`$${price} ${suffix === '/yr' ? 'yearly' : 'monthly'}`}
         font="display1"
@@ -665,7 +672,7 @@ function StatisticsExample() {
       <Text font="label1">Social Media Statistics</Text>
       <HStack gap={4}>
         <VStack alignItems="center" gap={0.5}>
-          <NumberTicker
+          <RollingNumber
             colorPulseOnUpdate
             font="title1"
             format={{ notation: 'compact', maximumFractionDigits: 1, minimumFractionDigits: 1 }}
@@ -677,7 +684,7 @@ function StatisticsExample() {
           </Text>
         </VStack>
         <VStack alignItems="center" gap={0.5}>
-          <NumberTicker
+          <RollingNumber
             colorPulseOnUpdate
             font="title1"
             format={{ notation: 'compact', maximumFractionDigits: 1, minimumFractionDigits: 1 }}
@@ -691,7 +698,7 @@ function StatisticsExample() {
           </Text>
         </VStack>
         <VStack alignItems="center" gap={0.5}>
-          <NumberTicker
+          <RollingNumber
             colorPulseOnUpdate
             font="title1"
             format={{ notation: 'compact', maximumFractionDigits: 1, minimumFractionDigits: 1 }}
@@ -703,7 +710,7 @@ function StatisticsExample() {
           </Text>
         </VStack>
         <VStack alignItems="center" gap={0.5}>
-          <NumberTicker
+          <RollingNumber
             colorPulseOnUpdate
             font="title1"
             format={{ notation: 'compact', maximumFractionDigits: 1, minimumFractionDigits: 1 }}
@@ -749,7 +756,7 @@ function LiveBiddingExample() {
         <Text color="fgMuted" font="caption">
           Current Bid
         </Text>
-        <NumberTicker
+        <RollingNumber
           colorPulseOnUpdate
           font="display2"
           format={{ style: 'currency', currency: 'USD', minimumFractionDigits: 0 }}
@@ -761,12 +768,12 @@ function LiveBiddingExample() {
           value={currentBid}
         />
         <HStack gap={1}>
-          <NumberTicker font="body" format={{ minimumFractionDigits: 0 }} value={bidCount} />
+          <RollingNumber font="body" format={{ minimumFractionDigits: 0 }} value={bidCount} />
           <Text font="body">bids placed</Text>
           <Text color="fgMuted" font="body">
             •
           </Text>
-          <NumberTicker
+          <RollingNumber
             color={timeLeft < 30 ? 'fgNegative' : 'fg'}
             font="body"
             formattedValue={`${minutes}:${String(seconds).padStart(2, '0')}`}

@@ -5,20 +5,20 @@ import Animated from 'react-native-reanimated';
 import { HStack } from '../../layout';
 import { Text } from '../Text';
 
-import { DefaultNumberTickerDigit } from './DefaultNumberTickerDigit';
-import { DefaultNumberTickerSymbol } from './DefaultNumberTickerSymbol';
+import { DefaultRollingNumberDigit } from './DefaultRollingNumberDigit';
+import { DefaultRollingNumberSymbol } from './DefaultRollingNumberSymbol';
 import type {
-  NumberTickerNumberSectionComponent,
-  NumberTickerNumberSectionProps,
-} from './NumberTicker';
-import { digits } from './NumberTicker';
+  RollingNumberNumberSectionComponent,
+  RollingNumberNumberSectionProps,
+} from './RollingNumber';
+import { digits } from './RollingNumber';
 
 const AnimatedText = Animated.createAnimatedComponent(Text);
 
 const isDigit = (char: string) => digits.includes(parseInt(char));
 
-export const DefaultNumberTickerNumberSection: NumberTickerNumberSectionComponent = memo(
-  forwardRef<View, NumberTickerNumberSectionProps>(
+export const DefaultRollingNumberNumberSection: RollingNumberNumberSectionComponent = memo(
+  forwardRef<View, RollingNumberNumberSectionProps>(
     (
       {
         intlNumberParts,
@@ -26,14 +26,14 @@ export const DefaultNumberTickerNumberSection: NumberTickerNumberSectionComponen
         invisibleDigitMeasurements,
         measurementCompleted,
         formattedValue,
-        NumberDigitComponent = DefaultNumberTickerDigit,
-        NumberSymbolComponent = DefaultNumberTickerSymbol,
+        NumberDigitComponent = DefaultRollingNumberDigit,
+        NumberSymbolComponent = DefaultRollingNumberSymbol,
         style,
         styles,
         justifyContent = 'flex-start',
         transitionConfig,
         ...props
-      }: NumberTickerNumberSectionProps,
+      }: RollingNumberNumberSectionProps,
       ref,
     ) => {
       const [numberSectionHasRendered, setNumberSectionHasRendered] = useState(false);

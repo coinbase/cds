@@ -1,9 +1,0 @@
-{
-  "import": "import { NumberTicker } from '@coinbase/cds-web/typography'",
-  "source": "https://github.com/coinbase/cds/blob/master/packages/web/src/typography/NumberTicker/NumberTicker.tsx",
-  "description": "A simple component that will display an animated number value.",
-  "storybook": "https://cds-storybook.coinbase.com/?path=/story/core-components-numberticker--basic",
-  "figma": "",
-  "relatedComponents": [],
-  "dependencies": []
-}

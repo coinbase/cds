@@ -1,6 +1,6 @@
 ---
-id: number-ticker
-title: NumberTicker
+id: rollingNumber
+title: RollingNumber
 platform_switcher_options: { web: true, mobile: true }
 hide_title: true
 ---
@@ -17,7 +17,11 @@ import webMetadata from './webMetadata.json';
 import mobileMetadata from './mobileMetadata.json';
 
 <VStack gap={5}>
-  <ComponentHeader title="NumberTicker" webMetadata={webMetadata} mobileMetadata={mobileMetadata} />
+  <ComponentHeader
+    title="RollingNumber"
+    webMetadata={webMetadata}
+    mobileMetadata={mobileMetadata}
+  />
   <ComponentTabsContainer
     webPropsTable={<WebPropsTable />}
     mobilePropsTable={<MobilePropsTable />}

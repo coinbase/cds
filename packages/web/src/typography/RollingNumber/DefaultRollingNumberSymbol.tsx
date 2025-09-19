@@ -2,7 +2,7 @@ import { forwardRef, memo, useMemo } from 'react';
 import { css } from '@linaria/core';
 import { m } from 'framer-motion';
 
-import type { NumberTickerSymbolComponent, NumberTickerSymbolProps } from './NumberTicker';
+import type { RollingNumberSymbolComponent, RollingNumberSymbolProps } from './RollingNumber';
 
 const containerCss = css`
   color: inherit;
@@ -11,8 +11,8 @@ const containerCss = css`
   align-items: center;
 `;
 
-export const DefaultNumberTickerSymbol: NumberTickerSymbolComponent = memo(
-  forwardRef<HTMLSpanElement, NumberTickerSymbolProps>(
+export const DefaultRollingNumberSymbol: RollingNumberSymbolComponent = memo(
+  forwardRef<HTMLSpanElement, RollingNumberSymbolProps>(
     ({ type, value, justify, ...props }, ref) => {
       const containerStyle = useMemo(
         () => ({ justifyContent: justify, paddingBottom: type === 'subscript' ? '0.13lh' : '0' }),

@@ -3,7 +3,7 @@ import { StyleSheet, type View } from 'react-native';
 
 import { HStack } from '../../layout/HStack';
 
-import { type NumberTickerMaskComponent, type NumberTickerMaskProps } from './NumberTicker';
+import { type RollingNumberMaskComponent, type RollingNumberMaskProps } from './RollingNumber';
 
 const baseStylesheet = StyleSheet.create({
   mask: {
@@ -12,8 +12,8 @@ const baseStylesheet = StyleSheet.create({
   },
 });
 
-export const DefaultNumberTickerMask: NumberTickerMaskComponent = memo(
-  forwardRef<View, NumberTickerMaskProps>(({ children, style, ...props }, ref) => {
+export const DefaultRollingNumberMask: RollingNumberMaskComponent = memo(
+  forwardRef<View, RollingNumberMaskProps>(({ children, style, ...props }, ref) => {
     const containerStyle = useMemo(() => [baseStylesheet.mask, style], [style]);
     return (
       <HStack ref={ref} style={containerStyle} {...props}>

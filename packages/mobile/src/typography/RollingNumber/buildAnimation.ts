@@ -1,6 +1,6 @@
 import { withSpring, withTiming } from 'react-native-reanimated';
 
-import type { SpringTransition, TimingTransition } from './NumberTicker';
+import type { SpringTransition, TimingTransition } from './RollingNumber';
 
 // Helper to build an animation node from a PropertyTransition
 export const buildAnimation = ({

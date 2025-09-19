@@ -4,15 +4,15 @@ import { m } from 'framer-motion';
 
 import { cx } from '../../cx';
 
-import type { NumberTickerMaskComponent, NumberTickerMaskProps } from './NumberTicker';
+import type { RollingNumberMaskComponent, RollingNumberMaskProps } from './RollingNumber';
 
 const maskCss = css`
   display: inline-flex;
   overflow: clip;
 `;
 
-export const DefaultNumberTickerMask: NumberTickerMaskComponent = memo(
-  forwardRef<HTMLSpanElement, NumberTickerMaskProps>(
+export const DefaultRollingNumberMask: RollingNumberMaskComponent = memo(
+  forwardRef<HTMLSpanElement, RollingNumberMaskProps>(
     ({ children, className, style, ...props }, ref) => (
       <m.span ref={ref} className={cx(maskCss, className)} style={style} {...props}>
         {children}

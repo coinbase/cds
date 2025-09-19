@@ -7,12 +7,12 @@ import { Icon } from '../../icons';
 import { HStack } from '../../layout';
 import { VStack } from '../../layout/VStack';
 import { ProgressBar } from '../../visualizations/ProgressBar';
-import { NumberTicker } from '../NumberTicker/NumberTicker';
+import { RollingNumber } from '../RollingNumber/RollingNumber';
 import { Text } from '../Text';
 
 export default {
-  title: 'Core Components/NumberTicker',
-  component: NumberTicker,
+  title: 'Core Components/RollingNumber',
+  component: RollingNumber,
 };
 
 export const Examples = () => {
@@ -32,9 +32,12 @@ export const Examples = () => {
   return (
     <VStack gap={2}>
       <Text font="label1">Basic example</Text>
-      <NumberTicker format={{ minimumFractionDigits: 2, maximumFractionDigits: 2 }} value={price} />
+      <RollingNumber
+        format={{ minimumFractionDigits: 2, maximumFractionDigits: 2 }}
+        value={price}
+      />
       <Text font="label1">Portfolio Balance</Text>
-      <NumberTicker
+      <RollingNumber
         colorPulseOnUpdate
         fontFamily="display3"
         fontSize="display3"
@@ -43,7 +46,7 @@ export const Examples = () => {
         value={price}
       />
       <HStack alignItems="center">
-        <NumberTicker
+        <RollingNumber
           accessibilityLabelPrefix={difference > 0 ? 'up ' : difference < 0 ? 'down ' : ''}
           color={trendColor}
           font="body"
@@ -72,7 +75,7 @@ export const Examples = () => {
       <Text font="label1">BTC Conversion</Text>
       <HStack alignItems="center" gap={1}>
         <Icon color="fgPrimary" name="arrowsVertical" size="xs" testID="swap-icon" />
-        <NumberTicker
+        <RollingNumber
           color="fgPrimary"
           fontFamily="body"
           fontSize="body"
@@ -93,19 +96,19 @@ export const FontCustomization = () => {
   return (
     <VStack gap={2}>
       <Text font="label1">Font sizes, weights, and line heights</Text>
-      <NumberTicker
+      <RollingNumber
         fontSize="display3"
         fontWeight="title3"
         format={{ style: 'currency', currency: 'USD' }}
         value={price}
       />
-      <NumberTicker
+      <RollingNumber
         fontSize="title3"
         fontWeight="headline"
         format={{ style: 'currency', currency: 'USD' }}
         value={price}
       />
-      <NumberTicker
+      <RollingNumber
         fontSize="body"
         fontWeight="body"
         format={{ style: 'currency', currency: 'USD' }}
@@ -113,14 +116,18 @@ export const FontCustomization = () => {
         value={price}
       />
       <Text font="label1">Responsive font (phone, tablet, desktop)</Text>
-      <NumberTicker
+      <RollingNumber
         font={{ phone: 'body', tablet: 'title3', desktop: 'display3' }}
         format={{ style: 'currency', currency: 'USD' }}
         value={price}
       />
       <Text font="label1">Tabular numbers vs non-tabular numbers</Text>
-      <NumberTicker font="display3" format={{ style: 'currency', currency: 'USD' }} value={price} />
-      <NumberTicker
+      <RollingNumber
+        font="display3"
+        format={{ style: 'currency', currency: 'USD' }}
+        value={price}
+      />
+      <RollingNumber
         font="display3"
         format={{ style: 'currency', currency: 'USD' }}
         tabularNumbers={false}
@@ -138,7 +145,7 @@ export const ColorAndTransition = () => {
   return (
     <VStack gap={2}>
       <Text font="label1">Color pulse and custom transition</Text>
-      <NumberTicker
+      <RollingNumber
         colorPulseOnUpdate
         font="title1"
         format={{ style: 'currency', currency: 'USD' }}
@@ -148,7 +155,7 @@ export const ColorAndTransition = () => {
         }}
         value={price}
       />
-      <NumberTicker
+      <RollingNumber
         colorPulseOnUpdate
         color="accentBoldBlue"
         font="title1"
@@ -161,7 +168,7 @@ export const ColorAndTransition = () => {
       />
 
       <Text font="label1">Customize positive and negative change colors</Text>
-      <NumberTicker
+      <RollingNumber
         colorPulseOnUpdate
         font="title1"
         negativePulseColor="bgWarning"
@@ -169,7 +176,7 @@ export const ColorAndTransition = () => {
         value={price}
       />
       <Text font="label1">Fast digits, slow color</Text>
-      <NumberTicker
+      <RollingNumber
         colorPulseOnUpdate
         font="title1"
         format={{ style: 'currency', currency: 'USD' }}
@@ -180,7 +187,7 @@ export const ColorAndTransition = () => {
         value={price}
       />
       <Text font="label1">Springy digits</Text>
-      <NumberTicker
+      <RollingNumber
         colorPulseOnUpdate
         font="title1"
         format={{ style: 'currency', currency: 'USD' }}
@@ -195,7 +202,7 @@ export const ColorAndTransition = () => {
         value={price}
       />
       <Text font="label1">Custom easings</Text>
-      <NumberTicker
+      <RollingNumber
         colorPulseOnUpdate
         font="title1"
         format={{ style: 'currency', currency: 'USD' }}
@@ -214,8 +221,8 @@ export const Polymorphism = () => {
   return (
     <VStack gap={2}>
       <Text font="label1">Polymorphism</Text>
-      <NumberTicker as="h1" format={{ style: 'currency', currency: 'USD' }} value={12345.67} />
-      <NumberTicker as="p" format={{ style: 'currency', currency: 'USD' }} value={12345.67} />
+      <RollingNumber as="h1" format={{ style: 'currency', currency: 'USD' }} value={12345.67} />
+      <RollingNumber as="p" format={{ style: 'currency', currency: 'USD' }} value={12345.67} />
     </VStack>
   );
 };
@@ -260,9 +267,9 @@ export const Format = () => {
   return (
     <VStack gap={2}>
       <Text font="label1">Compact number with currency sign</Text>
-      <NumberTicker font="display1" format={format} value={value} />
+      <RollingNumber font="display1" format={format} value={value} />
       <Text font="label1">Number without grouping</Text>
-      <NumberTicker font="display1" format={{ useGrouping: false }} value={value} />
+      <RollingNumber font="display1" format={{ useGrouping: false }} value={value} />
       <Button onClick={onNext}>Next</Button>
     </VStack>
   );
@@ -280,7 +287,7 @@ export const PrefixAndSuffix = () => {
   return (
     <VStack gap={2}>
       <Text font="label1">Simple text prefix and suffix</Text>
-      <NumberTicker
+      <RollingNumber
         colorPulseOnUpdate
         font="display1"
         format={format}
@@ -289,7 +296,7 @@ export const PrefixAndSuffix = () => {
         value={value}
       />
       <Text font="label1">Dynamic prefix and suffix</Text>
-      <NumberTicker
+      <RollingNumber
         colorPulseOnUpdate
         font="display1"
         format={format}
@@ -298,7 +305,7 @@ export const PrefixAndSuffix = () => {
         value={value}
       />
       <Text font="label1">ReactNode prefix and suffix</Text>
-      <NumberTicker
+      <RollingNumber
         colorPulseOnUpdate
         font="display1"
         format={format}
@@ -318,7 +325,7 @@ export const StyleOverrides = () => {
   return (
     <VStack gap={2}>
       <Text font="label1">Style overrides per section</Text>
-      <NumberTicker
+      <RollingNumber
         colorPulseOnUpdate
         font="display1"
         format={{
@@ -381,13 +388,13 @@ export const Subscript = () => {
       <Text as="span" font="label2">
         Default:
       </Text>
-      <NumberTicker font="display3" format={format} value={value} />
+      <RollingNumber font="display3" format={format} value={value} />
 
       <Text as="span" font="label2">
         With subscript:
       </Text>
       {fonts.map((fontKey) => (
-        <NumberTicker
+        <RollingNumber
           key={fontKey}
           enableSubscriptNotation
           font={fontKey}
@@ -426,7 +433,7 @@ export const UserProvidedFormattedValue = () => {
     <VStack gap={1}>
       <Text font="label1">User provided formatted value</Text>
       <Text font="label2">BTC prices</Text>
-      <NumberTicker
+      <RollingNumber
         colorPulseOnUpdate
         font="display3"
         formattedValue={btcPrices[idx].formattedValue}
@@ -435,7 +442,7 @@ export const UserProvidedFormattedValue = () => {
       />
 
       <Text font="label2">Subscripts with comma as decimal separator</Text>
-      <NumberTicker
+      <RollingNumber
         colorPulseOnUpdate
         accessibilityLabel={subscripts[idx].accessibilityLabel}
         font="display3"
@@ -456,7 +463,7 @@ const CounterExample = () => {
       <Text font="label1">Counter</Text>
       <HStack alignItems="center" gap={2}>
         <IconButton name="minus" onClick={onDec} />
-        <NumberTicker
+        <RollingNumber
           colorPulseOnUpdate
           font="display1"
           format={{ minimumFractionDigits: 0, maximumFractionDigits: 0 }}
@@ -498,7 +505,7 @@ const CountDownExample = () => {
   return (
     <VStack gap={1}>
       <Text font="label1">Countdown clock</Text>
-      <NumberTicker font="display3" formattedValue={formatted} value={seconds} />
+      <RollingNumber font="display3" formattedValue={formatted} value={seconds} />
       <HStack gap={2}>
         <Button onClick={() => setRunning((r) => !r)}>{running ? 'Pause' : 'Start'}</Button>
         <Button onClick={onReset}>Reset</Button>
@@ -507,7 +514,7 @@ const CountDownExample = () => {
       <Text font="label1">Countdown with percent</Text>
       <VStack gap={1}>
         <ProgressBar progress={progress} />
-        <NumberTicker
+        <RollingNumber
           font="body"
           format={{ style: 'percent', maximumFractionDigits: 0 }}
           prefix="Elapsed: "
@@ -524,7 +531,7 @@ const SubscriptionPriceExample = () => {
   const suffix = yearly ? '/yr' : '/mo';
   return (
     <VStack gap={1}>
-      <NumberTicker
+      <RollingNumber
         colorPulseOnUpdate
         accessibilityLabel={`$${price} ${suffix === '/yr' ? 'yearly' : 'monthly'}`}
         font="display1"
@@ -575,7 +582,7 @@ const StatisticsExample = () => {
       <Text font="label1">Social Media Statistics</Text>
       <HStack gap={4}>
         <VStack alignItems="center" gap={0.5}>
-          <NumberTicker
+          <RollingNumber
             colorPulseOnUpdate
             font="title1"
             format={{ notation: 'compact', maximumFractionDigits: 1, minimumFractionDigits: 1 }}
@@ -587,7 +594,7 @@ const StatisticsExample = () => {
           </Text>
         </VStack>
         <VStack alignItems="center" gap={0.5}>
-          <NumberTicker
+          <RollingNumber
             colorPulseOnUpdate
             font="title1"
             format={{ notation: 'compact', maximumFractionDigits: 1, minimumFractionDigits: 1 }}
@@ -601,7 +608,7 @@ const StatisticsExample = () => {
           </Text>
         </VStack>
         <VStack alignItems="center" gap={0.5}>
-          <NumberTicker
+          <RollingNumber
             colorPulseOnUpdate
             font="title1"
             format={{ notation: 'compact', maximumFractionDigits: 1, minimumFractionDigits: 1 }}
@@ -613,7 +620,7 @@ const StatisticsExample = () => {
           </Text>
         </VStack>
         <VStack alignItems="center" gap={0.5}>
-          <NumberTicker
+          <RollingNumber
             colorPulseOnUpdate
             font="title1"
             format={{ notation: 'compact', maximumFractionDigits: 1, minimumFractionDigits: 1 }}
@@ -657,7 +664,7 @@ const LiveBiddingExample = () => {
         <Text color="fgMuted" font="caption">
           Current Bid
         </Text>
-        <NumberTicker
+        <RollingNumber
           colorPulseOnUpdate
           font="display2"
           format={{ style: 'currency', currency: 'USD', minimumFractionDigits: 0 }}
@@ -669,12 +676,12 @@ const LiveBiddingExample = () => {
           value={currentBid}
         />
         <HStack gap={1}>
-          <NumberTicker font="body" format={{ minimumFractionDigits: 0 }} value={bidCount} />
+          <RollingNumber font="body" format={{ minimumFractionDigits: 0 }} value={bidCount} />
           <Text font="body">bids placed</Text>
           <Text color="fgMuted" font="body">
             •
           </Text>
-          <NumberTicker
+          <RollingNumber
             color={timeLeft < 30 ? 'fgNegative' : 'fg'}
             font="body"
             formattedValue={`${minutes}:${String(seconds).padStart(2, '0')}`}

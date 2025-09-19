@@ -5,12 +5,12 @@ import Animated from 'react-native-reanimated';
 import { HStack } from '../../layout/HStack';
 import { Text } from '../Text';
 
-import type { NumberTickerSymbolComponent, NumberTickerSymbolProps } from './NumberTicker';
+import type { RollingNumberSymbolComponent, RollingNumberSymbolProps } from './RollingNumber';
 
 const AnimatedText = Animated.createAnimatedComponent(Text);
 
-export const DefaultNumberTickerSymbol: NumberTickerSymbolComponent = memo(
-  forwardRef<View, NumberTickerSymbolProps>(
+export const DefaultRollingNumberSymbol: RollingNumberSymbolComponent = memo(
+  forwardRef<View, RollingNumberSymbolProps>(
     ({ value, textProps, style, styles, ...props }, ref) => {
       const containerStyle = useMemo(() => [style, styles?.root], [style, styles?.root]);
       const textNode = useMemo(

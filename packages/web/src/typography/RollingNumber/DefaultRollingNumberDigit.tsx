@@ -6,9 +6,9 @@ import { cx } from '../../cx';
 
 import {
   DEFAULT_TRANSITION,
-  type NumberTickerDigitComponent,
-  type NumberTickerDigitProps,
-} from './NumberTicker';
+  type RollingNumberDigitComponent,
+  type RollingNumberDigitProps,
+} from './RollingNumber';
 
 const digitContainerCss = css`
   display: inline-flex;
@@ -46,13 +46,13 @@ const getWidthInEm = (element: HTMLElement) => {
 };
 
 /**
- * Note that the DefaultNumberTickerDigit component implementation is different in web
+ * Note that the DefaultRollingNumberDigit component implementation is different in web
  * and mobile due to different animation libraries and the performance issue in mobile.
  * This has nearly unnoticeable difference in animation effect.
  * Consider align the implementations in the future.
  *  */
-export const DefaultNumberTickerDigit: NumberTickerDigitComponent = memo(
-  forwardRef<HTMLSpanElement, NumberTickerDigitProps>(
+export const DefaultRollingNumberDigit: RollingNumberDigitComponent = memo(
+  forwardRef<HTMLSpanElement, RollingNumberDigitProps>(
     ({ value, initialValue = value, transitionConfig, ...props }: any, ref) => {
       const internalRef = useRef<HTMLSpanElement>(null);
       useImperativeHandle(ref, () => internalRef.current!, []);

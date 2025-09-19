@@ -5,9 +5,9 @@ import { m } from 'framer-motion';
 import { cx } from '../../cx';
 
 import type {
-  NumberTickerNodeSectionComponent,
-  NumberTickerNodeSectionProps,
-} from './NumberTicker';
+  RollingNumberNodeSectionComponent,
+  RollingNumberNodeSectionProps,
+} from './RollingNumber';
 
 const containerCss = css`
   display: inline-flex;
@@ -17,8 +17,8 @@ const containerCss = css`
   color: inherit;
 `;
 
-export const DefaultNumberTickerNodeSection: NumberTickerNodeSectionComponent = memo(
-  forwardRef<HTMLSpanElement, NumberTickerNodeSectionProps>(
+export const DefaultRollingNumberNodeSection: RollingNumberNodeSectionComponent = memo(
+  forwardRef<HTMLSpanElement, RollingNumberNodeSectionProps>(
     ({ children, justify = 'flex-start', style, className, ...props }, ref) => {
       const containerStyle = useMemo(
         () => ({ justifyContent: justify, ...style }),

@@ -6,14 +6,14 @@ import { HStack } from '../../layout/HStack';
 import { Text } from '../Text';
 
 import type {
-  NumberTickerNodeSectionComponent,
-  NumberTickerNodeSectionProps,
-} from './NumberTicker';
+  RollingNumberNodeSectionComponent,
+  RollingNumberNodeSectionProps,
+} from './RollingNumber';
 
 const AnimatedText = Animated.createAnimatedComponent(Text);
 
-export const DefaultNumberTickerNodeSection: NumberTickerNodeSectionComponent = memo(
-  forwardRef<View, NumberTickerNodeSectionProps>(
+export const DefaultRollingNumberNodeSection: RollingNumberNodeSectionComponent = memo(
+  forwardRef<View, RollingNumberNodeSectionProps>(
     (
       {
         children,
@@ -22,7 +22,7 @@ export const DefaultNumberTickerNodeSection: NumberTickerNodeSectionComponent = 
         styles,
         justifyContent = 'flex-start',
         ...props
-      }: NumberTickerNodeSectionProps,
+      }: RollingNumberNodeSectionProps,
       ref,
     ) => {
       const containerStyle = useMemo(() => [style, styles?.root], [style, styles?.root]);
