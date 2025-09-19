@@ -5,6 +5,7 @@ import Animated, { useAnimatedStyle, useSharedValue } from 'react-native-reanima
 import { Text } from '../Text';
 
 import { buildAnimation } from './buildAnimation';
+import { DefaultRollingNumberMask } from './DefaultRollingNumberMask';
 import {
   DEFAULT_TRANSITION,
   digits,
@@ -40,6 +41,7 @@ export const DefaultRollingNumberDigit: RollingNumberDigitComponent = memo(
         style,
         styles,
         transitionConfig,
+        RollingNumberMaskComponent = DefaultRollingNumberMask,
         ...props
       },
       ref,
@@ -67,23 +69,25 @@ export const DefaultRollingNumberDigit: RollingNumberDigitComponent = memo(
       );
 
       return (
-        <Animated.View ref={ref} style={containerStyle} {...props}>
-          {digits.map((digit) => (
-            <AnimatedText
-              key={digit}
-              style={[
-                {
-                  position: digit === 0 ? 'relative' : 'absolute',
-                  top: digit * measurement.height,
-                },
-                styles?.text,
-              ]}
-              {...textProps}
-            >
-              {digit}
-            </AnimatedText>
-          ))}
-        </Animated.View>
+        <RollingNumberMaskComponent ref={ref} {...props}>
+          <Animated.View style={containerStyle}>
+            {digits.map((digit) => (
+              <AnimatedText
+                key={digit}
+                style={[
+                  {
+                    position: digit === 0 ? 'relative' : 'absolute',
+                    top: digit * measurement.height,
+                  },
+                  styles?.text,
+                ]}
+                {...textProps}
+              >
+                {digit}
+              </AnimatedText>
+            ))}
+          </Animated.View>
+        </RollingNumberMaskComponent>
       );
     },
   ),

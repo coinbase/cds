@@ -6,6 +6,7 @@ import { HStack } from '../../layout';
 import { Text } from '../Text';
 
 import { DefaultRollingNumberDigit } from './DefaultRollingNumberDigit';
+import { DefaultRollingNumberMask } from './DefaultRollingNumberMask';
 import { DefaultRollingNumberSymbol } from './DefaultRollingNumberSymbol';
 import type {
   RollingNumberNumberSectionComponent,
@@ -26,8 +27,9 @@ export const DefaultRollingNumberNumberSection: RollingNumberNumberSectionCompon
         invisibleDigitMeasurements,
         measurementCompleted,
         formattedValue,
-        NumberDigitComponent = DefaultRollingNumberDigit,
-        NumberSymbolComponent = DefaultRollingNumberSymbol,
+        RollingNumberDigitComponent = DefaultRollingNumberDigit,
+        RollingNumberSymbolComponent = DefaultRollingNumberSymbol,
+        RollingNumberMaskComponent = DefaultRollingNumberMask,
         style,
         styles,
         justifyContent = 'flex-start',
@@ -58,7 +60,7 @@ export const DefaultRollingNumberNumberSection: RollingNumberNumberSectionCompon
               typeof part.value !== 'number'
             ) {
               return (
-                <NumberSymbolComponent
+                <RollingNumberSymbolComponent
                   key={part.type === 'literal' ? `${part.key}:${part.value}` : part.key}
                   justifyContent={justifyContent}
                   styles={{ text: styles?.text }}
@@ -70,8 +72,9 @@ export const DefaultRollingNumberNumberSection: RollingNumberNumberSectionCompon
 
             if (!measurementCompleted) return fallbackDigit(part.value);
             return (
-              <NumberDigitComponent
+              <RollingNumberDigitComponent
                 key={part.key}
+                RollingNumberMaskComponent={RollingNumberMaskComponent}
                 initialValue={numberSectionHasRendered ? 0 : undefined}
                 invisibleDigitMeasurements={invisibleDigitMeasurements}
                 onLayout={() => setNumberSectionHasRendered(true)}
@@ -87,14 +90,15 @@ export const DefaultRollingNumberNumberSection: RollingNumberNumberSectionCompon
           setNumberSectionHasRendered,
           intlNumberParts,
           measurementCompleted,
-          NumberDigitComponent,
-          NumberSymbolComponent,
+          RollingNumberDigitComponent,
+          RollingNumberSymbolComponent,
           styles?.text,
           invisibleDigitMeasurements,
           textProps,
           fallbackDigit,
           justifyContent,
           transitionConfig,
+          RollingNumberMaskComponent,
         ],
       );
 
@@ -103,7 +107,7 @@ export const DefaultRollingNumberNumberSection: RollingNumberNumberSectionCompon
           formattedValue?.split('').map((char, index) => {
             if (!isDigit(char)) {
               return (
-                <NumberSymbolComponent
+                <RollingNumberSymbolComponent
                   key={index}
                   justifyContent={justifyContent}
                   styles={{ text: styles?.text }}
@@ -115,8 +119,9 @@ export const DefaultRollingNumberNumberSection: RollingNumberNumberSectionCompon
 
             if (!measurementCompleted) return fallbackDigit(parseInt(char));
             return (
-              <NumberDigitComponent
+              <RollingNumberDigitComponent
                 key={index}
+                RollingNumberMaskComponent={RollingNumberMaskComponent}
                 initialValue={numberSectionHasRendered ? 0 : undefined}
                 invisibleDigitMeasurements={invisibleDigitMeasurements}
                 onLayout={() => setNumberSectionHasRendered(true)}
@@ -132,14 +137,15 @@ export const DefaultRollingNumberNumberSection: RollingNumberNumberSectionCompon
           setNumberSectionHasRendered,
           formattedValue,
           measurementCompleted,
-          NumberDigitComponent,
-          NumberSymbolComponent,
+          RollingNumberDigitComponent,
+          RollingNumberSymbolComponent,
           styles?.text,
           invisibleDigitMeasurements,
           textProps,
           fallbackDigit,
           justifyContent,
           transitionConfig,
+          RollingNumberMaskComponent,
         ],
       );
 

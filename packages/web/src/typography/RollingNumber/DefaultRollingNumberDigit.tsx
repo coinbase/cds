@@ -103,8 +103,8 @@ export const DefaultRollingNumberDigit: RollingNumberDigitComponent = memo(
       );
 
       return (
-        <RollingNumberMaskComponent ref={ref}>
-          <m.span ref={internalRef} className={digitContainerCss} {...props}>
+        <RollingNumberMaskComponent ref={ref} {...props}>
+          <m.span ref={internalRef} className={digitContainerCss}>
             {value !== 0 && (
               <span className={cx(digitNonActiveCss, topNonActiveCss)}>
                 {new Array(value).fill(null).map((_, i) => renderDigit(i))}

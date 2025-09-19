@@ -19,8 +19,6 @@ const containerCss = css`
 `;
 
 const isDigit = (char: string) => /^\d$/.test(char);
-const subscripts = ['₀', '₁', '₂', '₃', '₄', '₅', '₆', '₇', '₈', '₉'];
-const isSubscript = (char: string) => subscripts.includes(char);
 
 export const DefaultRollingNumberNumberSection: RollingNumberNumberSectionComponent = memo(
   forwardRef<HTMLSpanElement, RollingNumberNumberSectionProps>(
@@ -30,8 +28,8 @@ export const DefaultRollingNumberNumberSection: RollingNumberNumberSectionCompon
         justify = 'flex-start',
         style,
         className,
-        NumberDigitComponent = DefaultRollingNumberDigit,
-        NumberSymbolComponent = DefaultRollingNumberSymbol,
+        RollingNumberDigitComponent = DefaultRollingNumberDigit,
+        RollingNumberSymbolComponent = DefaultRollingNumberSymbol,
         RollingNumberMaskComponent = DefaultRollingNumberMask,
         formattedValue,
         transitionConfig,
@@ -51,14 +49,14 @@ export const DefaultRollingNumberNumberSection: RollingNumberNumberSectionCompon
           intlNumberParts.map((part) =>
             (part.type !== 'integer' && part.type !== 'fraction') ||
             typeof part.value !== 'number' ? (
-              <NumberSymbolComponent
+              <RollingNumberSymbolComponent
                 key={part.type === 'literal' ? `${part.key}:${part.value}` : part.key}
                 justify={justify}
                 type={part.type}
                 value={String(part.value)}
               />
             ) : (
-              <NumberDigitComponent
+              <RollingNumberDigitComponent
                 key={part.key}
                 RollingNumberMaskComponent={RollingNumberMaskComponent}
                 initialValue={hasMounted ? 0 : undefined}
@@ -69,9 +67,9 @@ export const DefaultRollingNumberNumberSection: RollingNumberNumberSectionCompon
           ),
         [
           intlNumberParts,
-          NumberSymbolComponent,
+          RollingNumberSymbolComponent,
           justify,
-          NumberDigitComponent,
+          RollingNumberDigitComponent,
           hasMounted,
           transitionConfig,
           RollingNumberMaskComponent,
@@ -84,7 +82,7 @@ export const DefaultRollingNumberNumberSection: RollingNumberNumberSectionCompon
             ?.split('')
             .map((char, index) =>
               isDigit(char) ? (
-                <NumberDigitComponent
+                <RollingNumberDigitComponent
                   key={index}
                   RollingNumberMaskComponent={RollingNumberMaskComponent}
                   initialValue={hasMounted ? 0 : undefined}
@@ -92,17 +90,17 @@ export const DefaultRollingNumberNumberSection: RollingNumberNumberSectionCompon
                   value={parseInt(char)}
                 />
               ) : (
-                <NumberSymbolComponent
+                <RollingNumberSymbolComponent
                   key={index}
                   justify={justify}
-                  type={isSubscript(char) ? 'subscript' : 'literal'}
+                  type="literal"
                   value={char}
                 />
               ),
             ),
         [
-          NumberDigitComponent,
-          NumberSymbolComponent,
+          RollingNumberDigitComponent,
+          RollingNumberSymbolComponent,
           formattedValue,
           hasMounted,
           justify,
