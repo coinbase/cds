@@ -266,6 +266,11 @@ export const routes = [
     getComponent: () => require('@coinbase/cds-mobile/typography/__stories__/Link.stories').default,
   },
   {
+    key: 'NumberTicker',
+    getComponent: () =>
+      require('@coinbase/cds-mobile/typography/__stories__/NumberTicker.stories').default,
+  },
+  {
     key: 'ListCell',
     getComponent: () => require('@coinbase/cds-mobile/cells/__stories__/ListCell.stories').default,
   },

@@ -1,4 +1,5 @@
 export * from './Link';
+export * from './NumberTicker';
 export type { TextProps } from './Text';
 export * from './TextBody';
 export * from './TextCaption';

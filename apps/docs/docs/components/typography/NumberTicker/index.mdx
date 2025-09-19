@@ -1,0 +1,31 @@
+---
+id: number-ticker
+title: NumberTicker
+platform_switcher_options: { web: true, mobile: true }
+hide_title: true
+---
+
+import { VStack } from '@coinbase/cds-web/layout';
+import { ComponentHeader } from '@site/src/components/page/ComponentHeader';
+import { ComponentTabsContainer } from '@site/src/components/page/ComponentTabsContainer';
+
+import WebExamples, { toc as webExamplesToc } from './_webExamples.mdx';
+import MobileExamples, { toc as mobileExamplesToc } from './_mobileExamples.mdx';
+import MobilePropsTable, { toc as mobilePropsToc } from './_mobilePropsTable.mdx';
+import WebPropsTable, { toc as webPropsToc } from './_webPropsTable.mdx';
+import webMetadata from './webMetadata.json';
+import mobileMetadata from './mobileMetadata.json';
+
+<VStack gap={5}>
+  <ComponentHeader title="NumberTicker" webMetadata={webMetadata} mobileMetadata={mobileMetadata} />
+  <ComponentTabsContainer
+    webPropsTable={<WebPropsTable />}
+    mobilePropsTable={<MobilePropsTable />}
+    webExamples={<WebExamples />}
+    mobileExamples={<MobileExamples />}
+    webExamplesToc={webExamplesToc}
+    mobileExamplesToc={mobileExamplesToc}
+    webPropsToc={webPropsToc}
+    mobilePropsToc={mobilePropsToc}
+  />
+</VStack>

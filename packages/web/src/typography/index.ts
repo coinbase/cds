@@ -1,4 +1,5 @@
 export * from './Link';
+export * from './NumberTicker';
 export * from './Text';
 export * from './TextBody';
 export * from './TextCaption';

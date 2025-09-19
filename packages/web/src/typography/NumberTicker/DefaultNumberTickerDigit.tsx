@@ -1,0 +1,113 @@
+import { forwardRef, memo, useCallback, useImperativeHandle, useLayoutEffect, useRef } from 'react';
+import { css } from '@linaria/core';
+import { animate, m } from 'framer-motion';
+
+import { cx } from '../../cx';
+
+import {
+  DEFAULT_TRANSITION,
+  type NumberTickerDigitComponent,
+  type NumberTickerDigitProps,
+} from './NumberTicker';
+
+const digitContainerCss = css`
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+`;
+
+const digitNonActiveCss = css`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: absolute;
+  width: 100%;
+  pointer-events: none;
+  left: 0;
+`;
+
+const topNonActiveCss = css`
+  bottom: 100%;
+`;
+
+const bottomNonActiveCss = css`
+  top: 100%;
+`;
+
+const digitSpanCss = css`
+  display: inline-block;
+  color: inherit;
+`;
+
+const getWidthInEm = (element: HTMLElement) => {
+  const { width, fontSize } = getComputedStyle(element);
+  return `${parseFloat(width) / parseFloat(fontSize)}em`;
+};
+
+/**
+ * Note that the DefaultNumberTickerDigit component implementation is different in web
+ * and mobile due to different animation libraries and the performance issue in mobile.
+ * This has nearly unnoticeable difference in animation effect.
+ * Consider align the implementations in the future.
+ *  */
+export const DefaultNumberTickerDigit: NumberTickerDigitComponent = memo(
+  forwardRef<HTMLSpanElement, NumberTickerDigitProps>(
+    ({ value, initialValue = value, transitionConfig, ...props }: any, ref) => {
+      const internalRef = useRef<HTMLSpanElement>(null);
+      useImperativeHandle(ref, () => internalRef.current!, []);
+
+      const numberRefs = useRef(new Array<HTMLSpanElement | null>(10));
+      const prevValue = useRef(initialValue);
+
+      useLayoutEffect(() => {
+        const prevDigit = numberRefs.current[prevValue.current];
+        const currDigit = numberRefs.current[value];
+        if (!internalRef.current || !prevDigit || !currDigit || value === prevValue.current) return;
+        const box = internalRef.current.getBoundingClientRect();
+        const initialY = box.height * (value - prevValue.current);
+        const prevWidth = getWidthInEm(prevDigit);
+        const currentWidth = getWidthInEm(currDigit);
+        animate(
+          internalRef.current,
+          {
+            y: [initialY, 0],
+            width: [prevWidth, currentWidth],
+          },
+          transitionConfig?.y ?? DEFAULT_TRANSITION.y,
+        );
+
+        prevValue.current = value;
+      }, [transitionConfig, value]);
+
+      const renderDigit = useCallback(
+        (digit: number) => (
+          <span
+            key={digit}
+            ref={(r) => void (numberRefs.current[digit] = r)}
+            className={digitSpanCss}
+          >
+            {digit}
+          </span>
+        ),
+        [],
+      );
+
+      return (
+        <m.span ref={internalRef} className={digitContainerCss} {...props}>
+          {value !== 0 && (
+            <span className={cx(digitNonActiveCss, topNonActiveCss)}>
+              {new Array(value).fill(null).map((_, i) => renderDigit(i))}
+            </span>
+          )}
+          {renderDigit(value)}
+          {value !== 9 && (
+            <span className={cx(digitNonActiveCss, bottomNonActiveCss)}>
+              {new Array(9 - value).fill(null).map((_, i) => renderDigit(value + i + 1))}
+            </span>
+          )}
+        </m.span>
+      );
+    },
+  ),
+);

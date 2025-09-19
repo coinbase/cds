@@ -99,6 +99,11 @@ const sidebars: SidebarsConfig = {
             { type: 'doc', id: 'components/typography/Link/link', label: 'Link' },
             { type: 'doc', id: 'components/typography/Tag/tag', label: 'Tag' },
             { type: 'doc', id: 'components/typography/Text/text', label: 'Text' },
+            {
+              type: 'doc',
+              id: 'components/typography/NumberTicker/number-ticker',
+              label: 'NumberTicker',
+            },
           ],
         },
         {

@@ -164,6 +164,7 @@ module.exports = {
     'tour/Tour',
     'typography/Link',
     'typography/Text',
+    'typography/NumberTicker',
     'tables/Table',
     'tables/TableBody',
     'tables/TableCaption',
