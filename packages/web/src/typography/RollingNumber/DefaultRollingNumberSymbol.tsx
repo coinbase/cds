@@ -12,14 +12,12 @@ const containerCss = css`
 `;
 
 export const DefaultRollingNumberSymbol: RollingNumberSymbolComponent = memo(
-  forwardRef<HTMLSpanElement, RollingNumberSymbolProps>(
-    ({ type, value, justify, ...props }, ref) => {
-      const containerStyle = useMemo(() => ({ justifyContent: justify }), [justify]);
-      return (
-        <m.span ref={ref} className={containerCss} style={containerStyle} {...props}>
-          {value}
-        </m.span>
-      );
-    },
-  ),
+  forwardRef<HTMLSpanElement, RollingNumberSymbolProps>(({ value, justify, ...props }, ref) => {
+    const containerStyle = useMemo(() => ({ justifyContent: justify }), [justify]);
+    return (
+      <m.span ref={ref} className={containerCss} style={containerStyle} {...props}>
+        {value}
+      </m.span>
+    );
+  }),
 );

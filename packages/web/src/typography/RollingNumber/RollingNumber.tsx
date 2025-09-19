@@ -87,13 +87,11 @@ export type RollingNumberDigitProps = HTMLMotionProps<'span'> & {
 };
 
 export type RollingNumberSymbolProps = HTMLMotionProps<'span'> & {
-  type: string;
   justify: CSSProperties['justifyContent'];
   value: string;
   ref?: React.Ref<HTMLSpanElement>;
 };
 
-// TODO: confirm ref definition
 export type RollingNumberMaskComponent = React.FC<RollingNumberMaskProps>;
 
 export type RollingNumberNodeSectionComponent = React.FC<RollingNumberNodeSectionProps>;

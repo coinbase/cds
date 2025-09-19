@@ -52,7 +52,6 @@ export const DefaultRollingNumberNumberSection: RollingNumberNumberSectionCompon
               <RollingNumberSymbolComponent
                 key={part.type === 'literal' ? `${part.key}:${part.value}` : part.key}
                 justify={justify}
-                type={part.type}
                 value={String(part.value)}
               />
             ) : (
@@ -90,12 +89,7 @@ export const DefaultRollingNumberNumberSection: RollingNumberNumberSectionCompon
                   value={parseInt(char)}
                 />
               ) : (
-                <RollingNumberSymbolComponent
-                  key={index}
-                  justify={justify}
-                  type="literal"
-                  value={char}
-                />
+                <RollingNumberSymbolComponent key={index} justify={justify} value={char} />
               ),
             ),
         [
