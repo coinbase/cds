@@ -4,6 +4,7 @@ import { animate, m } from 'framer-motion';
 
 import { cx } from '../../cx';
 
+import { DefaultRollingNumberMask } from './DefaultRollingNumberMask';
 import {
   DEFAULT_TRANSITION,
   type RollingNumberDigitComponent,
@@ -53,9 +54,17 @@ const getWidthInEm = (element: HTMLElement) => {
  *  */
 export const DefaultRollingNumberDigit: RollingNumberDigitComponent = memo(
   forwardRef<HTMLSpanElement, RollingNumberDigitProps>(
-    ({ value, initialValue = value, transitionConfig, ...props }: any, ref) => {
+    (
+      {
+        value,
+        initialValue = value,
+        transitionConfig,
+        RollingNumberMaskComponent = DefaultRollingNumberMask,
+        ...props
+      }: any,
+      ref,
+    ) => {
       const internalRef = useRef<HTMLSpanElement>(null);
-      useImperativeHandle(ref, () => internalRef.current!, []);
 
       const numberRefs = useRef(new Array<HTMLSpanElement | null>(10));
       const prevValue = useRef(initialValue);
@@ -94,19 +103,21 @@ export const DefaultRollingNumberDigit: RollingNumberDigitComponent = memo(
       );
 
       return (
-        <m.span ref={internalRef} className={digitContainerCss} {...props}>
-          {value !== 0 && (
-            <span className={cx(digitNonActiveCss, topNonActiveCss)}>
-              {new Array(value).fill(null).map((_, i) => renderDigit(i))}
-            </span>
-          )}
-          {renderDigit(value)}
-          {value !== 9 && (
-            <span className={cx(digitNonActiveCss, bottomNonActiveCss)}>
-              {new Array(9 - value).fill(null).map((_, i) => renderDigit(value + i + 1))}
-            </span>
-          )}
-        </m.span>
+        <RollingNumberMaskComponent ref={ref}>
+          <m.span ref={internalRef} className={digitContainerCss} {...props}>
+            {value !== 0 && (
+              <span className={cx(digitNonActiveCss, topNonActiveCss)}>
+                {new Array(value).fill(null).map((_, i) => renderDigit(i))}
+              </span>
+            )}
+            {renderDigit(value)}
+            {value !== 9 && (
+              <span className={cx(digitNonActiveCss, bottomNonActiveCss)}>
+                {new Array(9 - value).fill(null).map((_, i) => renderDigit(value + i + 1))}
+              </span>
+            )}
+          </m.span>
+        </RollingNumberMaskComponent>
       );
     },
   ),

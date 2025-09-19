@@ -14,10 +14,7 @@ const containerCss = css`
 export const DefaultRollingNumberSymbol: RollingNumberSymbolComponent = memo(
   forwardRef<HTMLSpanElement, RollingNumberSymbolProps>(
     ({ type, value, justify, ...props }, ref) => {
-      const containerStyle = useMemo(
-        () => ({ justifyContent: justify, paddingBottom: type === 'subscript' ? '0.13lh' : '0' }),
-        [justify, type],
-      );
+      const containerStyle = useMemo(() => ({ justifyContent: justify }), [justify]);
       return (
         <m.span ref={ref} className={containerCss} style={containerStyle} {...props}>
           {value}

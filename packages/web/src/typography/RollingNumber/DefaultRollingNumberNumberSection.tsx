@@ -6,6 +6,7 @@ import { cx } from '../../cx';
 import { useHasMounted } from '../../hooks/useHasMounted';
 
 import { DefaultRollingNumberDigit } from './DefaultRollingNumberDigit';
+import { DefaultRollingNumberMask } from './DefaultRollingNumberMask';
 import { DefaultRollingNumberSymbol } from './DefaultRollingNumberSymbol';
 import type {
   RollingNumberNumberSectionComponent,
@@ -31,6 +32,7 @@ export const DefaultRollingNumberNumberSection: RollingNumberNumberSectionCompon
         className,
         NumberDigitComponent = DefaultRollingNumberDigit,
         NumberSymbolComponent = DefaultRollingNumberSymbol,
+        RollingNumberMaskComponent = DefaultRollingNumberMask,
         formattedValue,
         transitionConfig,
         ...props
@@ -58,6 +60,7 @@ export const DefaultRollingNumberNumberSection: RollingNumberNumberSectionCompon
             ) : (
               <NumberDigitComponent
                 key={part.key}
+                RollingNumberMaskComponent={RollingNumberMaskComponent}
                 initialValue={hasMounted ? 0 : undefined}
                 transitionConfig={transitionConfig}
                 value={part.value}
@@ -66,11 +69,12 @@ export const DefaultRollingNumberNumberSection: RollingNumberNumberSectionCompon
           ),
         [
           intlNumberParts,
-          hasMounted,
+          NumberSymbolComponent,
           justify,
           NumberDigitComponent,
-          NumberSymbolComponent,
+          hasMounted,
           transitionConfig,
+          RollingNumberMaskComponent,
         ],
       );
 
@@ -82,6 +86,7 @@ export const DefaultRollingNumberNumberSection: RollingNumberNumberSectionCompon
               isDigit(char) ? (
                 <NumberDigitComponent
                   key={index}
+                  RollingNumberMaskComponent={RollingNumberMaskComponent}
                   initialValue={hasMounted ? 0 : undefined}
                   transitionConfig={transitionConfig}
                   value={parseInt(char)}
@@ -101,6 +106,7 @@ export const DefaultRollingNumberNumberSection: RollingNumberNumberSectionCompon
           formattedValue,
           hasMounted,
           justify,
+          RollingNumberMaskComponent,
           transitionConfig,
         ],
       );
