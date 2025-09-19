@@ -85,7 +85,10 @@ export type RollingNumberNodeSectionProps = HStackProps & {
   textProps?: TextProps;
   styles?: {
     root?: StyleProp<ViewStyle>;
-    text?: AnimatedStyle<TextStyle>;
+    text?:
+      | AnimatedStyle<TextStyle>
+      | StyleProp<TextStyle>
+      | (AnimatedStyle<TextStyle> | StyleProp<TextStyle>)[];
   };
   ref?: React.Ref<View>;
 };
@@ -101,7 +104,10 @@ export type RollingNumberNumberSectionProps = HStackProps & {
   textProps?: TextProps;
   styles?: {
     root?: StyleProp<ViewStyle>;
-    text?: AnimatedStyle<TextStyle>;
+    text?:
+      | AnimatedStyle<TextStyle>
+      | StyleProp<TextStyle>
+      | (AnimatedStyle<TextStyle> | StyleProp<TextStyle>)[];
   };
   transitionConfig?: TransitionConfig;
   ref?: React.Ref<View>;
@@ -114,7 +120,10 @@ export type RollingNumberDigitProps = ViewProps & {
   textProps?: TextProps;
   styles?: {
     root?: StyleProp<ViewStyle>;
-    text?: AnimatedStyle<TextStyle>;
+    text?:
+      | AnimatedStyle<TextStyle>
+      | StyleProp<TextStyle>
+      | (AnimatedStyle<TextStyle> | StyleProp<TextStyle>)[];
   };
   transitionConfig?: TransitionConfig;
   ref?: React.Ref<View>;
@@ -126,7 +135,10 @@ export type RollingNumberSymbolProps = HStackProps & {
   textProps?: TextProps;
   styles?: {
     root?: StyleProp<ViewStyle>;
-    text?: AnimatedStyle<TextStyle>;
+    text?:
+      | AnimatedStyle<TextStyle>
+      | StyleProp<TextStyle>
+      | (AnimatedStyle<TextStyle> | StyleProp<TextStyle>)[];
   };
   ref?: React.Ref<View>;
 };
@@ -271,6 +283,10 @@ export type RollingNumberProps = RollingNumberBaseProps & {
     i18nSuffix?: StyleProp<ViewStyle>;
     integer?: StyleProp<ViewStyle>;
     fraction?: StyleProp<ViewStyle>;
+    /**
+     * Custom styles for the text (symbol/digit/prefix/suffix).
+     */
+    text?: StyleProp<TextStyle>;
   };
 };
 
@@ -385,13 +401,13 @@ export const RollingNumber = memo(
               accessibilityLabel=""
               importantForAccessibility="no-hide-descendants"
               onLayout={(event: LayoutChangeEvent) => handleMeasure(event, digit)}
-              style={baseStylesheet.hide}
+              style={[baseStylesheet.hide, styles?.text]}
               {...textProps}
             >
               {digit}
             </Text>
           )),
-        [textProps],
+        [textProps, styles?.text],
       );
 
       const prefixSection = useMemo(
@@ -400,13 +416,20 @@ export const RollingNumber = memo(
           <RollingNumberNodeSectionComponent
             justifyContent="flex-end"
             style={styles?.prefix}
-            styles={{ text: animatedColorStyle }}
+            styles={{ text: [animatedColorStyle, styles?.text] }}
             textProps={textProps}
           >
             {prefix}
           </RollingNumberNodeSectionComponent>
         ),
-        [RollingNumberNodeSectionComponent, animatedColorStyle, styles?.prefix, textProps, prefix],
+        [
+          RollingNumberNodeSectionComponent,
+          animatedColorStyle,
+          styles?.prefix,
+          textProps,
+          prefix,
+          styles?.text,
+        ],
       );
 
       const suffixSection = useMemo(
@@ -415,13 +438,20 @@ export const RollingNumber = memo(
           <RollingNumberNodeSectionComponent
             justifyContent="flex-start"
             style={styles?.suffix}
-            styles={{ text: animatedColorStyle }}
+            styles={{ text: [animatedColorStyle, styles?.text] }}
             textProps={textProps}
           >
             {suffix}
           </RollingNumberNodeSectionComponent>
         ),
-        [RollingNumberNodeSectionComponent, animatedColorStyle, styles?.suffix, textProps, suffix],
+        [
+          RollingNumberNodeSectionComponent,
+          animatedColorStyle,
+          styles?.suffix,
+          textProps,
+          suffix,
+          styles?.text,
+        ],
       );
 
       const intlPartsNumberSection = useMemo(() => {
@@ -439,7 +469,7 @@ export const RollingNumber = memo(
               justifyContent="flex-end"
               measurementCompleted={measurementCompleted}
               style={styles?.i18nPrefix}
-              styles={{ text: animatedColorStyle }}
+              styles={{ text: [animatedColorStyle, styles?.text] }}
               textProps={textProps}
               transitionConfig={transitionConfig}
             />
@@ -452,7 +482,7 @@ export const RollingNumber = memo(
               justifyContent="flex-end"
               measurementCompleted={measurementCompleted}
               style={styles?.integer}
-              styles={{ text: animatedColorStyle }}
+              styles={{ text: [animatedColorStyle, styles?.text] }}
               textProps={textProps}
               transitionConfig={transitionConfig}
             />
@@ -465,7 +495,7 @@ export const RollingNumber = memo(
               justifyContent="flex-start"
               measurementCompleted={measurementCompleted}
               style={styles?.fraction}
-              styles={{ text: animatedColorStyle }}
+              styles={{ text: [animatedColorStyle, styles?.text] }}
               textProps={textProps}
               transitionConfig={transitionConfig}
             />
@@ -479,23 +509,24 @@ export const RollingNumber = memo(
               justifyContent="flex-start"
               measurementCompleted={measurementCompleted}
               style={styles?.i18nSuffix}
-              styles={{ text: animatedColorStyle }}
+              styles={{ text: [animatedColorStyle, styles?.text] }}
               textProps={textProps}
               transitionConfig={transitionConfig}
             />
           </HStack>
         );
       }, [
-        RollingNumberMaskComponent,
         intlNumberFormatter,
         enableSubscriptNotation,
         styles?.formattedNumberSection,
         styles?.i18nPrefix,
+        styles?.text,
         styles?.integer,
         styles?.fraction,
         styles?.i18nSuffix,
         RollingNumberNumberSectionComponent,
         RollingNumberDigitComponent,
+        RollingNumberMaskComponent,
         RollingNumberSymbolComponent,
         measurementCompleted,
         animatedColorStyle,
@@ -515,7 +546,7 @@ export const RollingNumber = memo(
             justifyContent="flex-start"
             measurementCompleted={measurementCompleted}
             style={styles?.formattedNumberSection}
-            styles={{ text: animatedColorStyle }}
+            styles={{ text: [animatedColorStyle, styles?.text] }}
             textProps={textProps}
             transitionConfig={transitionConfig}
           />
@@ -523,6 +554,7 @@ export const RollingNumber = memo(
         [
           RollingNumberMaskComponent,
           styles?.formattedNumberSection,
+          styles?.text,
           RollingNumberNumberSectionComponent,
           RollingNumberDigitComponent,
           RollingNumberSymbolComponent,
@@ -540,7 +572,7 @@ export const RollingNumber = memo(
             allowFontScaling
             accessibilityLiveRegion={accessibilityLiveRegion}
             importantForAccessibility="yes"
-            style={baseStylesheet.screenReaderOnly}
+            style={[baseStylesheet.screenReaderOnly, styles?.text]}
             {...textProps}
           >
             {`${accessibilityLabelPrefix}${
@@ -564,6 +596,7 @@ export const RollingNumber = memo(
           prefix,
           suffix,
           accessibilityLabelSuffix,
+          styles?.text,
         ],
       );
 
