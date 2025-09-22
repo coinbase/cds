@@ -1,21 +1,21 @@
 import { useCallback, useMemo } from 'react';
 import { PanResponder, useWindowDimensions } from 'react-native';
 import type { Animated, GestureResponderEvent, PanResponderGestureState } from 'react-native';
-import type { PinningDirection } from '@coinbase/cds-common';
+import type { PinningDirection } from '@cbhq/cds-common';
 import {
   DISMISSAL_DRAG_THRESHOLD,
   DISMISSAL_VELOCITY_THRESHOLD,
   MAX_OVER_DRAG,
   MIN_PAN_DISTANCE,
-} from '@coinbase/cds-common/animation/drawer';
+} from '@cbhq/cds-common/animation/drawer';
 import {
   handleBarHeight,
   handleBarOffset,
   horizontalDrawerPercentageOfView,
   normalizeDrawerPanDistanceMultiplier,
   verticalDrawerPercentageOfView as defaultVerticalDrawerPercentageOfView,
-} from '@coinbase/cds-common/tokens/drawer';
-import { modulate } from '@coinbase/cds-common/utils/modulate';
+} from '@cbhq/cds-common/tokens/drawer';
+import { modulate } from '@cbhq/cds-common/utils/modulate';
 
 type UseDrawerPanResponderParams = {
   drawerAnimation: Animated.Value;

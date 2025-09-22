@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import type { KBarCustomAction } from '@coinbase/docusaurus-plugin-kbar/types';
+import type { KBarCustomAction } from '@cbhq/docusaurus-plugin-kbar/types';
 import ExecutionEnvironment from '@docusaurus/ExecutionEnvironment';
 import { useHistory } from '@docusaurus/router';
 import decreasePriorityIfCategory from '@site/src/utils/decreasePriorityIfCategory';

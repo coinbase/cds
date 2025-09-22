@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { useCounter } from '@coinbase/cds-common/visualizations/useCounter';
+import { useCounter } from '@cbhq/cds-common/visualizations/useCounter';
 import { css } from '@linaria/core';
 
 const containerCss = css`

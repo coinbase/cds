@@ -13,7 +13,7 @@ import type {
   PinPlacement,
   SharedAccessibilityProps,
   SharedProps,
-} from '@coinbase/cds-common/types';
+} from '@cbhq/cds-common/types';
 
 import type { DotPinStylesKey } from '../hooks/useDotPinStyles';
 import { useDotPinStyles } from '../hooks/useDotPinStyles';

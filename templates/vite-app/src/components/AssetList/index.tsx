@@ -5,14 +5,14 @@ import {
   TableFooter,
   TableHeader,
   TableRow,
-} from '@coinbase/cds-web/tables';
+} from '@cbhq/cds-web/tables';
 import { mockAccounts } from './data';
-import { Tooltip } from '@coinbase/cds-web/overlays';
-import { HStack } from '@coinbase/cds-web/layout';
-import { Text } from '@coinbase/cds-web/typography';
+import { Tooltip } from '@cbhq/cds-web/overlays';
+import { HStack } from '@cbhq/cds-web/layout';
+import { Text } from '@cbhq/cds-web/typography';
 import { useState } from 'react';
-import { Icon } from '@coinbase/cds-web/icons';
-import { Pagination } from '@coinbase/cds-web/pagination/Pagination';
+import { Icon } from '@cbhq/cds-web/icons';
+import { Pagination } from '@cbhq/cds-web/pagination/Pagination';
 
 export const AssetList = ({ pageSize }: { pageSize: number }) => {
   const totalResults = mockAccounts.length;

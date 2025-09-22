@@ -3,8 +3,8 @@ import type { PressableProps } from 'react-native';
 import {
   floatingAssetCardLargeWidth,
   floatingAssetCardSmallDimension,
-} from '@coinbase/cds-common/tokens/card';
-import type { SharedProps } from '@coinbase/cds-common/types';
+} from '@cbhq/cds-common/tokens/card';
+import type { SharedProps } from '@cbhq/cds-common/types';
 
 import { HStack, VStack } from '../layout';
 import { Pressable } from '../system';

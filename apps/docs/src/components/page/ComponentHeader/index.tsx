@@ -1,10 +1,10 @@
 import React, { memo } from 'react';
-import { Grid } from '@coinbase/cds-web/layout';
-import { Divider } from '@coinbase/cds-web/layout/Divider';
-import { HStack } from '@coinbase/cds-web/layout/HStack';
-import { VStack } from '@coinbase/cds-web/layout/VStack';
-import { Link } from '@coinbase/cds-web/typography/Link';
-import { Text } from '@coinbase/cds-web/typography/Text';
+import { Grid } from '@cbhq/cds-web/layout';
+import { Divider } from '@cbhq/cds-web/layout/Divider';
+import { HStack } from '@cbhq/cds-web/layout/HStack';
+import { VStack } from '@cbhq/cds-web/layout/VStack';
+import { Link } from '@cbhq/cds-web/typography/Link';
+import { Text } from '@cbhq/cds-web/typography/Text';
 import DocusaurusLink from '@docusaurus/Link';
 import { DefaultBanner } from '@site/src/components/page/ComponentBanner/DefaultBanner';
 import { VersionLabel } from '@site/src/components/page/VersionLabel';
@@ -106,7 +106,7 @@ export const ComponentHeader = memo(
     const descriptionText = activeMetadata?.description ?? description;
 
     const partialPackageName = importText?.split('/')[1].replaceAll("'", '');
-    const packageName = `@coinbase/${partialPackageName}`;
+    const packageName = `@cbhq/${partialPackageName}`;
 
     return (
       <VStack background="bgAlternate" borderRadius={600} overflow="hidden" width="100%">

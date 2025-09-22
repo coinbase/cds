@@ -1,9 +1,9 @@
 import React, { memo, useCallback } from 'react';
-import { animateProgressBaseSpec } from '@coinbase/cds-common/animation/progress';
-import type { ThemeVars } from '@coinbase/cds-common/core/theme';
-import { usePreviousValues } from '@coinbase/cds-common/hooks/usePreviousValues';
-import { durations } from '@coinbase/cds-common/motion/tokens';
-import type { MotionDuration } from '@coinbase/cds-common/types';
+import { animateProgressBaseSpec } from '@cbhq/cds-common/animation/progress';
+import type { ThemeVars } from '@cbhq/cds-common/core/theme';
+import { usePreviousValues } from '@cbhq/cds-common/hooks/usePreviousValues';
+import { durations } from '@cbhq/cds-common/motion/tokens';
+import type { MotionDuration } from '@cbhq/cds-common/types';
 
 import { Text } from '../typography/Text';
 

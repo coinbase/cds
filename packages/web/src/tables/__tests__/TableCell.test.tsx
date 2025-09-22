@@ -1,4 +1,4 @@
-import { renderA11y } from '@coinbase/cds-web-utils/jest';
+import { renderA11y } from '@cbhq/cds-web-utils/jest';
 import { css } from '@linaria/core';
 import { render, screen } from '@testing-library/react';
 

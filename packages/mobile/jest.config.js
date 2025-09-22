@@ -11,7 +11,7 @@ const reactNative = [
   '@bugsnag/react-native',
 ];
 
-const esModules = ['@coinbase', ...reactNative, ...d3];
+const esModules = ['@cbhq', ...reactNative, ...d3];
 
 const isCI = process.env.CI === 'true' || process.env.BUILDKITE === 'true';
 

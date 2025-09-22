@@ -2,7 +2,7 @@ import type {
   LottieStatusAnimationProps,
   LottieStatusAnimationType,
   useStatusAnimationPoller,
-} from '@coinbase/cds-common';
+} from '@cbhq/cds-common';
 import { render, screen, waitFor } from '@testing-library/react-native';
 import LottieView from 'lottie-react-native';
 
@@ -19,8 +19,8 @@ type CdsCommonMockTypes = {
   useStatusAnimationPoller: typeof useStatusAnimationPoller;
 };
 
-jest.mock('@coinbase/cds-common', () => {
-  const actual: CdsCommonMockTypes = jest.requireActual('@coinbase/cds-common');
+jest.mock('@cbhq/cds-common', () => {
+  const actual: CdsCommonMockTypes = jest.requireActual('@cbhq/cds-common');
 
   return {
     ...actual,

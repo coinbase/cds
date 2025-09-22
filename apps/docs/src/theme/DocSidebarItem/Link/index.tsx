@@ -1,6 +1,6 @@
 import React from 'react';
-import { Box, HStack } from '@coinbase/cds-web/layout';
-import { Pressable } from '@coinbase/cds-web/system';
+import { Box, HStack } from '@cbhq/cds-web/layout';
+import { Pressable } from '@cbhq/cds-web/system';
 import isInternalUrl from '@docusaurus/isInternalUrl';
 import Link from '@docusaurus/Link';
 import { isActiveSidebarItem } from '@docusaurus/plugin-content-docs/client';

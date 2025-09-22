@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { ScrollView, View } from 'react-native';
 import type { ViewStyle } from 'react-native';
-import type { PaddingProps } from '@coinbase/cds-common/types';
+import type { PaddingProps } from '@cbhq/cds-common/types';
 
 import { useTheme } from '../hooks/useTheme';
 import type { BoxProps } from '../layout/Box';

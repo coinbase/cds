@@ -1,9 +1,9 @@
 import React, { memo, useRef } from 'react';
-import type { ElementChildren, SharedProps } from '@coinbase/cds-common/types';
-import { getAccessibleColor } from '@coinbase/cds-common/utils/getAccessibleColor';
-import { getSparklineTransform } from '@coinbase/cds-common/visualizations/getSparklineTransform';
-import { generateRandomId } from '@coinbase/cds-utils';
-import { useTheme } from '@coinbase/cds-web/hooks/useTheme';
+import type { ElementChildren, SharedProps } from '@cbhq/cds-common/types';
+import { getAccessibleColor } from '@cbhq/cds-common/utils/getAccessibleColor';
+import { getSparklineTransform } from '@cbhq/cds-common/visualizations/getSparklineTransform';
+import { generateRandomId } from '@cbhq/cds-utils';
+import { useTheme } from '@cbhq/cds-web/hooks/useTheme';
 
 import { generateSparklineAreaWithId } from './generateSparklineWithId';
 import type { SparklineAreaBaseProps } from './SparklineArea';
@@ -17,7 +17,7 @@ export type SparklineBaseProps = SharedProps & {
   color: string;
   /** Height of the Sparkline */
   height: number;
-  /** Svg path as string. CDS offers a `useSparklinePath` which is useful to generate this string. This is accessible via `import { useSparklinePath } from '@coinbase/cds-common/visualizations/useSparklinePath';`. Alternatively, you can use product tailored tooling to generate the SVG path. This component only requires a valid path string is provided. */
+  /** Svg path as string. CDS offers a `useSparklinePath` which is useful to generate this string. This is accessible via `import { useSparklinePath } from '@cbhq/cds-common/visualizations/useSparklinePath';`. Alternatively, you can use product tailored tooling to generate the SVG path. This component only requires a valid path string is provided. */
   path?: string;
   /** Width of the Sparkline */
   width: number;

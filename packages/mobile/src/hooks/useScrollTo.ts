@@ -1,6 +1,6 @@
 import { useCallback, useRef } from 'react';
 import type { ScrollView } from 'react-native';
-import { useMergeRefs } from '@coinbase/cds-common/hooks/useMergeRefs';
+import { useMergeRefs } from '@cbhq/cds-common/hooks/useMergeRefs';
 
 type CallbackRef<T> = (node: T) => void;
 type AnyRef<T> =

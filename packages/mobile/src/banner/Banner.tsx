@@ -1,14 +1,14 @@
 import React, { forwardRef, isValidElement, memo, useCallback, useMemo, useState } from 'react';
 import type { View, ViewStyle } from 'react-native';
-import type { ThemeVars } from '@coinbase/cds-common/core/theme';
-import { variants } from '@coinbase/cds-common/tokens/banner';
+import type { ThemeVars } from '@cbhq/cds-common/core/theme';
+import { variants } from '@cbhq/cds-common/tokens/banner';
 import type {
   BannerStyleVariant,
   BannerVariant,
   IconName,
   SharedProps,
-} from '@coinbase/cds-common/types';
-import { isDevelopment } from '@coinbase/cds-utils';
+} from '@cbhq/cds-common/types';
+import { isDevelopment } from '@cbhq/cds-utils';
 
 import { Collapsible } from '../collapsible/Collapsible';
 import { useTheme } from '../hooks/useTheme';

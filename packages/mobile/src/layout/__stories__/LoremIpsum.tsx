@@ -1,6 +1,6 @@
 import React from 'react';
-import type { ThemeVars } from '@coinbase/cds-common/core/theme';
-import { loremIpsum } from '@coinbase/cds-common/internal/data/loremIpsum';
+import type { ThemeVars } from '@cbhq/cds-common/core/theme';
+import { loremIpsum } from '@cbhq/cds-common/internal/data/loremIpsum';
 
 import { Text } from '../../typography/Text';
 

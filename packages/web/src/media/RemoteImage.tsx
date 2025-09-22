@@ -2,9 +2,9 @@ import React, { memo, useMemo } from 'react';
 import {
   remoteImageDarkFallbackSrc,
   remoteImageLightFallbackSrc,
-} from '@coinbase/cds-common/media/remoteImageFallbackSrc';
-import type { AvatarSize } from '@coinbase/cds-common/types/AvatarSize';
-import type { AspectRatio, Shape } from '@coinbase/cds-common/types/Shape';
+} from '@cbhq/cds-common/media/remoteImageFallbackSrc';
+import type { AvatarSize } from '@cbhq/cds-common/types/AvatarSize';
+import type { AspectRatio, Shape } from '@cbhq/cds-common/types/Shape';
 import { css } from '@linaria/core';
 
 import { cx } from '../cx';

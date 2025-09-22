@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
-import { cx } from '@coinbase/cds-web';
-import { VStack } from '@coinbase/cds-web/layout';
+import { cx } from '@cbhq/cds-web';
+import { VStack } from '@cbhq/cds-web/layout';
 import type { PropSidebarItem } from '@docusaurus/plugin-content-docs';
 import {
   type NavbarSecondaryMenuComponent,

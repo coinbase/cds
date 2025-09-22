@@ -14,21 +14,21 @@ const ruleTester = new RuleTester({
 });
 
 const validButtonWithInnerText = `
-  import { Button } from '@coinbase/cds-mobile/buttons';
+  import { Button } from '@cbhq/cds-mobile/buttons';
   const Component = () => {
     return <Button>test</Button>;
   }
 `;
 
 const validButtonWithCorrectLabel = `
-  import { Button } from '@coinbase/cds-mobile/buttons';
+  import { Button } from '@cbhq/cds-mobile/buttons';
   const Component = () => {
     return <Button accessibilityLabel="test">test</Button>;
   }
 `;
 
 const validButtonWithNestedInnerText = `
-  import { Button } from '@coinbase/cds-mobile/buttons';
+  import { Button } from '@cbhq/cds-mobile/buttons';
   const Component = () => {
     return (
       <Button>
@@ -39,7 +39,7 @@ const validButtonWithNestedInnerText = `
 `;
 
 const validButtonWithNestedExpression = `
-  import { Button } from '@coinbase/cds-mobile/buttons';
+  import { Button } from '@cbhq/cds-mobile/buttons';
   const helper = "test2";
   const Component = () => {
     return (
@@ -64,7 +64,7 @@ ruleTester.run('has-valid-accessibility-descriptors-extended', rule, {
     // Button element without accessibilityLabel
     {
       code: normalizeIndent`
-        import { Button } from '@coinbase/cds-mobile/buttons';
+        import { Button } from '@cbhq/cds-mobile/buttons';
         const Component = () => {
           return (
             <Button/>
@@ -78,7 +78,7 @@ ruleTester.run('has-valid-accessibility-descriptors-extended', rule, {
             {
               messageId: 'missingAccessibilityLabelSuggestion',
               output: normalizeIndent`
-                import { Button } from '@coinbase/cds-mobile/buttons';
+                import { Button } from '@cbhq/cds-mobile/buttons';
                 const Component = () => {
                   return (
                     <Button accessibilityLabel=""/>
@@ -93,7 +93,7 @@ ruleTester.run('has-valid-accessibility-descriptors-extended', rule, {
     // IconButton element without accessibilityLabel
     {
       code: normalizeIndent`
-        import { IconButton } from '@coinbase/cds-mobile/buttons';
+        import { IconButton } from '@cbhq/cds-mobile/buttons';
         const Component = () => {
           return (
             <IconButton/>
@@ -107,7 +107,7 @@ ruleTester.run('has-valid-accessibility-descriptors-extended', rule, {
             {
               messageId: 'missingAccessibilityLabelSuggestion',
               output: normalizeIndent`
-                import { IconButton } from '@coinbase/cds-mobile/buttons';
+                import { IconButton } from '@cbhq/cds-mobile/buttons';
                 const Component = () => {
                   return (
                     <IconButton accessibilityLabel=""/>
@@ -122,7 +122,7 @@ ruleTester.run('has-valid-accessibility-descriptors-extended', rule, {
     // nested buttons without accessibilityLabels
     {
       code: normalizeIndent`
-        import { Button, IconButton } from '@coinbase/cds-mobile/buttons';
+        import { Button, IconButton } from '@cbhq/cds-mobile/buttons';
         const Component = () => {
           return (
             <Button>
@@ -139,7 +139,7 @@ ruleTester.run('has-valid-accessibility-descriptors-extended', rule, {
             {
               messageId: 'missingAccessibilityLabelSuggestion',
               output: normalizeIndent`
-                import { Button, IconButton } from '@coinbase/cds-mobile/buttons';
+                import { Button, IconButton } from '@cbhq/cds-mobile/buttons';
                 const Component = () => {
                   return (
                     <Button accessibilityLabel="">
@@ -158,7 +158,7 @@ ruleTester.run('has-valid-accessibility-descriptors-extended', rule, {
             {
               messageId: 'missingAccessibilityLabelSuggestion',
               output: normalizeIndent`
-                import { Button, IconButton } from '@coinbase/cds-mobile/buttons';
+                import { Button, IconButton } from '@cbhq/cds-mobile/buttons';
                 const Component = () => {
                   return (
                     <Button>

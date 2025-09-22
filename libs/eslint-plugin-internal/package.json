@@ -1,5 +1,5 @@
 {
-  "name": "@coinbase/eslint-plugin-internal",
+  "name": "@cbhq/eslint-plugin-internal",
   "private": true,
   "version": "0.0.0",
   "main": "src/index.mjs",

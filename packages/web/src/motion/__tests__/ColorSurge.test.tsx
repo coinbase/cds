@@ -1,6 +1,6 @@
 import React, { useCallback, useRef } from 'react';
-import type { ThemeVars } from '@coinbase/cds-common/core/theme';
-import { createMotionConfig } from '@coinbase/cds-common/motion/tokens';
+import type { ThemeVars } from '@cbhq/cds-common/core/theme';
+import { createMotionConfig } from '@cbhq/cds-common/motion/tokens';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 
 import type { ColorSurgeTypes } from '../ColorSurge';

@@ -1,5 +1,5 @@
 import React, { type ReactNode, useMemo } from 'react';
-import { cx } from '@coinbase/cds-web';
+import { cx } from '@cbhq/cds-web';
 import { usePropsTOC } from '@site/src/utils/toc/PropsTOCManager';
 import { useTOC } from '@site/src/utils/toc/TOCManager';
 import type { Props } from '@theme/TOC';

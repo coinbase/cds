@@ -1,8 +1,8 @@
 import React, { forwardRef, memo } from 'react';
 import type { AccessibilityProps, View } from 'react-native';
-import type { SharedProps } from '@coinbase/cds-common';
-import { entries } from '@coinbase/cds-utils';
-import { isDevelopment } from '@coinbase/cds-utils/env';
+import type { SharedProps } from '@cbhq/cds-common';
+import { entries } from '@cbhq/cds-utils';
+import { isDevelopment } from '@cbhq/cds-utils/env';
 
 import { type BoxBaseProps } from '../layout';
 import type { GroupBaseProps } from '../layout/Group';

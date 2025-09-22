@@ -1,10 +1,10 @@
 import React, { memo, useCallback, useMemo, useState } from 'react';
-import type { ThemeVars } from '@coinbase/cds-common/core/theme';
-import { fadeDuration } from '@coinbase/cds-common/tokens/sparkline';
-import { useDateLookup } from '@coinbase/cds-common/visualizations/useDateLookup';
-import { cubicBezier } from '@coinbase/cds-web/animation/convertMotionConfig';
-import { HStack } from '@coinbase/cds-web/layout';
-import { TextLabel2 } from '@coinbase/cds-web/typography/TextLabel2';
+import type { ThemeVars } from '@cbhq/cds-common/core/theme';
+import { fadeDuration } from '@cbhq/cds-common/tokens/sparkline';
+import { useDateLookup } from '@cbhq/cds-common/visualizations/useDateLookup';
+import { cubicBezier } from '@cbhq/cds-web/animation/convertMotionConfig';
+import { HStack } from '@cbhq/cds-web/layout';
+import { TextLabel2 } from '@cbhq/cds-web/typography/TextLabel2';
 import { css } from '@linaria/core';
 import times from 'lodash/times';
 

@@ -1,7 +1,7 @@
-import { UpsellCard } from '@coinbase/cds-web/cards';
-import { Box } from '@coinbase/cds-web/layout';
-import { RemoteImage } from '@coinbase/cds-web/media';
-import { Text } from '@coinbase/cds-web/typography';
+import { UpsellCard } from '@cbhq/cds-web/cards';
+import { Box } from '@cbhq/cds-web/layout';
+import { RemoteImage } from '@cbhq/cds-web/media';
+import { Text } from '@cbhq/cds-web/typography';
 
 export const ETHStakingCard = () => {
   return (

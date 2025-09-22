@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, Text } from 'react-native';
-import { useTourContext } from '@coinbase/cds-common/tour/TourContext';
+import { useTourContext } from '@cbhq/cds-common/tour/TourContext';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react-native';
 
 import { DefaultThemeProvider } from '../../utils/testHelpers';

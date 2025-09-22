@@ -1,4 +1,4 @@
-import { zIndex } from '@coinbase/cds-common/tokens/zIndex';
+import { zIndex } from '@cbhq/cds-common/tokens/zIndex';
 import { render, screen } from '@testing-library/react';
 
 import { PortalHost, PortalProvider } from '../PortalProvider';

@@ -2,9 +2,9 @@
 import React, { memo, useEffect, useMemo, useRef } from 'react';
 import { Animated, StyleSheet, View } from 'react-native';
 import type { DimensionValue, ViewStyle } from 'react-native';
-import type { UseFallbackShapeOptions } from '@coinbase/cds-common/hooks/useFallbackShape';
-import { useFallbackShape } from '@coinbase/cds-common/hooks/useFallbackShape';
-import type { Shape } from '@coinbase/cds-common/types/Shape';
+import type { UseFallbackShapeOptions } from '@cbhq/cds-common/hooks/useFallbackShape';
+import { useFallbackShape } from '@cbhq/cds-common/hooks/useFallbackShape';
+import type { Shape } from '@cbhq/cds-common/types/Shape';
 
 import { LinearGradient } from '../gradients/LinearGradient';
 import { useTheme } from '../hooks/useTheme';

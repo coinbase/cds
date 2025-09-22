@@ -1,6 +1,6 @@
 import React from 'react';
-import { useSparklineAreaOpacity } from '@coinbase/cds-common/visualizations/useSparklineAreaOpacity';
-import { useTheme } from '@coinbase/cds-web/hooks/useTheme';
+import { useSparklineAreaOpacity } from '@cbhq/cds-common/visualizations/useSparklineAreaOpacity';
+import { useTheme } from '@cbhq/cds-web/hooks/useTheme';
 
 export type SparklineAreaPatternBaseProps = {
   color: string;

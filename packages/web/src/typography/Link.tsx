@@ -1,5 +1,5 @@
 import React, { forwardRef, memo, useRef } from 'react';
-import { useMergeRefs } from '@coinbase/cds-common/hooks/useMergeRefs';
+import { useMergeRefs } from '@cbhq/cds-common/hooks/useMergeRefs';
 import { css } from '@linaria/core';
 
 import type { Polymorphic } from '../core/polymorphism';

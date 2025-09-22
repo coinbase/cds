@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo, useState } from 'react';
-import type { LottieStatusAnimationType } from '@coinbase/cds-common';
-import { join } from '@coinbase/cds-common';
+import type { LottieStatusAnimationType } from '@cbhq/cds-common';
+import { join } from '@cbhq/cds-common';
 
 import { Button } from '../../buttons/Button';
 import { Example, ExampleScreen } from '../../examples/ExampleScreen';

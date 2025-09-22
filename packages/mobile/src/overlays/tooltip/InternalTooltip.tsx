@@ -4,7 +4,7 @@ import {
   tooltipMaxWidth,
   tooltipPaddingX,
   tooltipPaddingY,
-} from '@coinbase/cds-common/tokens/tooltip';
+} from '@cbhq/cds-common/tokens/tooltip';
 
 import { useLayout } from '../../hooks/useLayout';
 import { useTheme } from '../../hooks/useTheme';

@@ -1,5 +1,5 @@
 import React from 'react';
-import { VStack } from '@coinbase/cds-web/layout';
+import { VStack } from '@cbhq/cds-web/layout';
 
 export function MDXSection({ children }: { children: React.ReactNode }) {
   return (

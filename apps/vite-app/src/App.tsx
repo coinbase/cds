@@ -1,11 +1,11 @@
 import { useState } from 'react';
-import type { ColorScheme } from '@coinbase/cds-common';
-import { ThemeProvider } from '@coinbase/cds-web';
-import { SearchInput } from '@coinbase/cds-web/controls';
-import { Box, Divider, Group, HStack, VStack } from '@coinbase/cds-web/layout';
-import { Sidebar, SidebarItem } from '@coinbase/cds-web/navigation';
-import { MediaQueryProvider } from '@coinbase/cds-web/system';
-import { defaultTheme } from '@coinbase/cds-web/themes/defaultTheme';
+import type { ColorScheme } from '@cbhq/cds-common';
+import { ThemeProvider } from '@cbhq/cds-web';
+import { SearchInput } from '@cbhq/cds-web/controls';
+import { Box, Divider, Group, HStack, VStack } from '@cbhq/cds-web/layout';
+import { Sidebar, SidebarItem } from '@cbhq/cds-web/navigation';
+import { MediaQueryProvider } from '@cbhq/cds-web/system';
+import { defaultTheme } from '@cbhq/cds-web/themes/defaultTheme';
 
 import { AssetList } from './components/AssetList';
 import { CardList } from './components/CardList';

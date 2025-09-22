@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
-import type { BannerProps } from '@coinbase/cds-web/banner/Banner';
-import { Banner } from '@coinbase/cds-web/banner/Banner';
+import type { BannerProps } from '@cbhq/cds-web/banner/Banner';
+import { Banner } from '@cbhq/cds-web/banner/Banner';
 import { processAdmonitionProps } from '@docusaurus/theme-common';
 import type { Props } from '@theme/Admonition';
 

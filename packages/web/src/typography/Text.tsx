@@ -1,5 +1,5 @@
 import React, { forwardRef, memo, useMemo } from 'react';
-import { accessibleOpacityDisabled } from '@coinbase/cds-common/tokens/interactable';
+import { accessibleOpacityDisabled } from '@cbhq/cds-common/tokens/interactable';
 import { css } from '@linaria/core';
 
 import type { Polymorphic } from '../core/polymorphism';

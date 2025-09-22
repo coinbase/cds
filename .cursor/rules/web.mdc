@@ -53,7 +53,7 @@ const baseStyle = css`
 - Merge classes using `cx` in the component's className prop:
 
 ```ts
-import { cx } from "@coinbase/cds-web";
+import { cx } from "@cbhq/cds-web";
 
 className={cx(
   baseStyle,                      // Base styles first

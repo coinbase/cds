@@ -1,10 +1,10 @@
 import React, { forwardRef, memo, useMemo } from 'react';
-import type { ThemeVars } from '@coinbase/cds-common/core/theme';
-import { durations } from '@coinbase/cds-common/motion/tokens';
-import { inputStackGap } from '@coinbase/cds-common/tokens/input';
-import { accessibleOpacityDisabled } from '@coinbase/cds-common/tokens/interactable';
-import type { InputVariant } from '@coinbase/cds-common/types/InputBaseProps';
-import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
+import type { ThemeVars } from '@cbhq/cds-common/core/theme';
+import { durations } from '@cbhq/cds-common/motion/tokens';
+import { inputStackGap } from '@cbhq/cds-common/tokens/input';
+import { accessibleOpacityDisabled } from '@cbhq/cds-common/tokens/interactable';
+import type { InputVariant } from '@cbhq/cds-common/types/InputBaseProps';
+import type { SharedProps } from '@cbhq/cds-common/types/SharedProps';
 import { css } from '@linaria/core';
 
 import { cx } from '../cx';

@@ -1,7 +1,7 @@
 import React, { forwardRef, memo } from 'react';
 import type { View } from 'react-native';
-import type { SharedProps } from '@coinbase/cds-common';
-import { isDevelopment } from '@coinbase/cds-utils';
+import type { SharedProps } from '@cbhq/cds-common';
+import { isDevelopment } from '@cbhq/cds-utils';
 
 import { Group, type GroupProps } from '../layout';
 

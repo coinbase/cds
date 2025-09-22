@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
-import type { AssetKey } from '@coinbase/cds-common/internal/data/assets';
-import { assets } from '@coinbase/cds-common/internal/data/assets';
-import { loremIpsum } from '@coinbase/cds-common/internal/data/loremIpsum';
+import type { AssetKey } from '@cbhq/cds-common/internal/data/assets';
+import { assets } from '@cbhq/cds-common/internal/data/assets';
+import { loremIpsum } from '@cbhq/cds-common/internal/data/loremIpsum';
 
 import { DotSymbol } from '../../dots';
 import { Box } from '../../layout/Box';

@@ -1,5 +1,5 @@
-import type { ThemeConfig } from '@coinbase/cds-web/core/theme';
-import { defaultTheme } from '@coinbase/cds-web/themes/defaultTheme';
+import type { ThemeConfig } from '@cbhq/cds-web/core/theme';
+import { defaultTheme } from '@cbhq/cds-web/themes/defaultTheme';
 
 export const DESKTOP_BREAKPOINT = 1280;
 

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import type { ThemeVars } from '@coinbase/cds-common/core/theme';
+import type { ThemeVars } from '@cbhq/cds-common/core/theme';
 
 import { Button } from '../../buttons/Button';
 import { TextInput } from '../../controls';

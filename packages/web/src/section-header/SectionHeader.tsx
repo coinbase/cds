@@ -1,5 +1,5 @@
 import React, { forwardRef, memo } from 'react';
-import type { IconName } from '@coinbase/cds-icons';
+import type { IconName } from '@cbhq/cds-icons';
 
 import type { Polymorphic } from '../core/polymorphism';
 import { Icon } from '../icons';

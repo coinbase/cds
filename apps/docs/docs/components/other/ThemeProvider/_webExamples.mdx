@@ -1,5 +1,5 @@
-import { defaultTheme } from '@coinbase/cds-web/themes/defaultTheme';
-import { createThemeCssVars } from '@coinbase/cds-web/core/createThemeCssVars';
+import { defaultTheme } from '@cbhq/cds-web/themes/defaultTheme';
+import { createThemeCssVars } from '@cbhq/cds-web/core/createThemeCssVars';
 import { JSONCodeBlock } from '@site/src/components/page/JSONCodeBlock';
 
 ## ThemeProvider component
@@ -9,8 +9,8 @@ The ThemeProvider provides the theme context to all child components, and automa
 You must pass the `theme` prop to configure the theme, and the `activeColorScheme` prop to set light or dark mode.
 
 ```tsx
-import { ThemeProvider } from '@coinbase/cds-web/system/ThemeProvider';
-import { defaultTheme } from '@coinbase/cds-web/themes/defaultTheme';
+import { ThemeProvider } from '@cbhq/cds-web/system/ThemeProvider';
+import { defaultTheme } from '@cbhq/cds-web/themes/defaultTheme';
 
 const App = () => (
   <ThemeProvider theme={defaultTheme} activeColorScheme="light">

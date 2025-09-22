@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { VStack } from '@coinbase/cds-web/layout';
+import { VStack } from '@cbhq/cds-web/layout';
 import type { DocFrontMatter } from '@docusaurus/plugin-content-docs';
 import { useDoc } from '@docusaurus/plugin-content-docs/client';
 import { useWindowSize } from '@docusaurus/theme-common';

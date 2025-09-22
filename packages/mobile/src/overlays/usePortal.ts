@@ -1,3 +1,3 @@
-import { usePortal } from '@coinbase/cds-common/overlays/usePortal';
+import { usePortal } from '@cbhq/cds-common/overlays/usePortal';
 
 export { usePortal };

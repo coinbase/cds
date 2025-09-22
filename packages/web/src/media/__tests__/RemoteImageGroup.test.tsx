@@ -1,7 +1,7 @@
 import '@testing-library/jest-dom';
 
-import type { Shape } from '@coinbase/cds-common/types';
-import { renderA11y } from '@coinbase/cds-web-utils';
+import type { Shape } from '@cbhq/cds-common/types';
+import { renderA11y } from '@cbhq/cds-web-utils';
 import { render, screen } from '@testing-library/react';
 
 import { DefaultThemeProvider } from '../../utils/test';

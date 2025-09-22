@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { Icon } from '@coinbase/cds-web/icons';
-import { HStack } from '@coinbase/cds-web/layout';
-import { Tooltip } from '@coinbase/cds-web/overlays';
-import { Pagination } from '@coinbase/cds-web/pagination/Pagination';
+import { Icon } from '@cbhq/cds-web/icons';
+import { HStack } from '@cbhq/cds-web/layout';
+import { Tooltip } from '@cbhq/cds-web/overlays';
+import { Pagination } from '@cbhq/cds-web/pagination/Pagination';
 import {
   Table,
   TableBody,
@@ -10,8 +10,8 @@ import {
   TableFooter,
   TableHeader,
   TableRow,
-} from '@coinbase/cds-web/tables';
-import { Text } from '@coinbase/cds-web/typography';
+} from '@cbhq/cds-web/tables';
+import { Text } from '@cbhq/cds-web/typography';
 
 import { mockAccounts } from './data';
 

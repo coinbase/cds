@@ -1,15 +1,15 @@
 import React, { memo } from 'react';
-import type { IllustrationVariant } from '@coinbase/cds-common';
-import type { ColorScheme } from '@coinbase/cds-common/core/theme';
+import type { IllustrationVariant } from '@cbhq/cds-common';
+import type { ColorScheme } from '@cbhq/cds-common/core/theme';
 import {
   illustrationDimensions,
   illustrationSizes,
-} from '@coinbase/cds-common/tokens/illustrations';
-import heroSquareVersionMap from '@coinbase/cds-illustrations/__generated__/heroSquare/data/versionMap';
-import pictogramVersionMap from '@coinbase/cds-illustrations/__generated__/pictogram/data/versionMap';
-import spotIconVersionMap from '@coinbase/cds-illustrations/__generated__/spotIcon/data/versionMap';
-import spotRectangleVersionMap from '@coinbase/cds-illustrations/__generated__/spotRectangle/data/versionMap';
-import spotSquareVersionMap from '@coinbase/cds-illustrations/__generated__/spotSquare/data/versionMap';
+} from '@cbhq/cds-common/tokens/illustrations';
+import heroSquareVersionMap from '@cbhq/cds-illustrations/__generated__/heroSquare/data/versionMap';
+import pictogramVersionMap from '@cbhq/cds-illustrations/__generated__/pictogram/data/versionMap';
+import spotIconVersionMap from '@cbhq/cds-illustrations/__generated__/spotIcon/data/versionMap';
+import spotRectangleVersionMap from '@cbhq/cds-illustrations/__generated__/spotRectangle/data/versionMap';
+import spotSquareVersionMap from '@cbhq/cds-illustrations/__generated__/spotSquare/data/versionMap';
 
 import { HStack, VStack } from '../../layout';
 import { ThemeProvider } from '../../system/ThemeProvider';
@@ -115,7 +115,7 @@ export function getIllustrationSheet<Type extends IllustrationVariant>({
     name,
     version,
   }: LocalIllustrationProps) {
-    const svgPath = `@coinbase/cds-illustrations/__generated__/${type}/svg/${activeColorScheme}/${name}-${version}.svg`;
+    const svgPath = `@cbhq/cds-illustrations/__generated__/${type}/svg/${activeColorScheme}/${name}-${version}.svg`;
 
     return <img alt={name} height={height} src={svgPath} width={width} />;
   });

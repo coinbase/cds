@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 import type { ViewStyle } from 'react-native';
-import type { PinningDirection } from '@coinbase/cds-common/types/BoxBaseProps';
+import type { PinningDirection } from '@cbhq/cds-common/types/BoxBaseProps';
 
 export const pinStyles = StyleSheet.create({
   top: {

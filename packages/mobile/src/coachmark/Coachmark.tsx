@@ -1,7 +1,7 @@
 import React, { forwardRef, memo } from 'react';
 import { useWindowDimensions } from 'react-native';
 import type { View } from 'react-native';
-import { type DimensionValue, type SharedProps } from '@coinbase/cds-common';
+import { type DimensionValue, type SharedProps } from '@cbhq/cds-common';
 
 import { IconButton } from '../buttons';
 import { useTheme } from '../hooks/useTheme';

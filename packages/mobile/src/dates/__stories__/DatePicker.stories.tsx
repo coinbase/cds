@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { type DateInputValidationError } from '@coinbase/cds-common/dates/DateInputValidationError';
+import { type DateInputValidationError } from '@cbhq/cds-common/dates/DateInputValidationError';
 
 import { Example, ExampleScreen } from '../../examples/ExampleScreen';
 import { DatePicker } from '../DatePicker';

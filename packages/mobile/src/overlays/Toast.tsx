@@ -2,8 +2,8 @@ import React, { forwardRef, memo, useCallback, useEffect, useImperativeHandle } 
 import type {
   ToastBaseProps as CommonToastBaseProps,
   ToastRefHandle,
-} from '@coinbase/cds-common/overlays/ToastProvider';
-import { zIndex } from '@coinbase/cds-common/tokens/zIndex';
+} from '@cbhq/cds-common/overlays/ToastProvider';
+import { zIndex } from '@cbhq/cds-common/tokens/zIndex';
 
 import { Button } from '../buttons';
 import { useA11y } from '../hooks/useA11y';

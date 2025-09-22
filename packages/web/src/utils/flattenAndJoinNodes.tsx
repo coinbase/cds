@@ -1,5 +1,5 @@
 import React from 'react';
-import flattenNodes from '@coinbase/cds-common/utils/flattenNodes';
+import flattenNodes from '@cbhq/cds-common/utils/flattenNodes';
 
 import type { SpacerBaseProps } from '../layout';
 import type { GroupBaseProps } from '../layout/Group';

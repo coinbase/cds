@@ -1,7 +1,7 @@
 import React, { memo, useCallback, useMemo, useRef } from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { useIndexCounter } from '@coinbase/cds-common/hooks/useIndexCounter';
-import { svgs } from '@coinbase/cds-common/internal/data/assets';
+import { useIndexCounter } from '@cbhq/cds-common/hooks/useIndexCounter';
+import { svgs } from '@cbhq/cds-common/internal/data/assets';
 
 import { Button } from '../../buttons';
 import { Card } from '../../cards';

@@ -1,5 +1,5 @@
 import React, { type ReactNode } from 'react';
-import { HStack } from '@coinbase/cds-web/layout';
+import { HStack } from '@cbhq/cds-web/layout';
 import { useThemeConfig } from '@docusaurus/theme-common';
 import { useAnnouncementBar } from '@docusaurus/theme-common/internal';
 import AnnouncementBarCloseButton from '@theme/AnnouncementBar/CloseButton';

@@ -1,6 +1,6 @@
 import React, { memo, useCallback, useMemo, useRef, useState } from 'react';
-import { sidebarMenuMaxWidth, sidebarMenuMinWidth } from '@coinbase/cds-common/tokens/menu';
-import type { SharedProps } from '@coinbase/cds-common/types';
+import { sidebarMenuMaxWidth, sidebarMenuMinWidth } from '@cbhq/cds-common/tokens/menu';
+import type { SharedProps } from '@cbhq/cds-common/types';
 
 import type { DropdownProps } from '../dropdown';
 import { Dropdown } from '../dropdown';

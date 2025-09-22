@@ -1,5 +1,5 @@
 {
-  "name": "@coinbase/cds-mobile",
+  "name": "@cbhq/cds-mobile",
   "version": "8.12.0",
   "description": "Coinbase Design System - Mobile",
   "repository": {
@@ -130,11 +130,11 @@
     "react-native-svg": "^14.1.0"
   },
   "dependencies": {
-    "@coinbase/cds-common": "workspace:^",
-    "@coinbase/cds-icons": "workspace:^",
-    "@coinbase/cds-illustrations": "workspace:^",
-    "@coinbase/cds-lottie-files": "workspace:^",
-    "@coinbase/cds-utils": "workspace:^",
+    "@cbhq/cds-common": "workspace:^",
+    "@cbhq/cds-icons": "workspace:^",
+    "@cbhq/cds-illustrations": "workspace:^",
+    "@cbhq/cds-lottie-files": "workspace:^",
+    "@cbhq/cds-utils": "workspace:^",
     "@floating-ui/react-native": "^0.10.5",
     "@react-spring/native": "^9.7.4",
     "lodash": "^4.17.21",

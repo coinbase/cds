@@ -1,5 +1,5 @@
 import React, { forwardRef } from 'react';
-import { Link } from '@coinbase/cds-web/typography/Link';
+import { Link } from '@cbhq/cds-web/typography/Link';
 import type { Props } from '@theme/MDXComponents/A';
 
 /**

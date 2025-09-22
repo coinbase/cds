@@ -1,4 +1,4 @@
-import type { InputVariant } from '@coinbase/cds-common';
+import type { InputVariant } from '@cbhq/cds-common';
 import { fireEvent, render, screen } from '@testing-library/react';
 
 import { DefaultThemeProvider } from '../../utils/test';

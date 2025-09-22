@@ -1,5 +1,5 @@
 import React from 'react';
-import type { InputVariant } from '@coinbase/cds-common';
+import type { InputVariant } from '@cbhq/cds-common';
 
 import { Example, ExampleScreen } from '../../examples/ExampleScreen';
 import { Box } from '../../layout/Box';

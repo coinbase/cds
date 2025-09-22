@@ -1,8 +1,8 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { Icon } from '@coinbase/cds-web/icons';
-import { Box } from '@coinbase/cds-web/layout';
-import { Grid } from '@coinbase/cds-web/layout/Grid';
-import { Pressable } from '@coinbase/cds-web/system';
+import { Icon } from '@cbhq/cds-web/icons';
+import { Box } from '@cbhq/cds-web/layout';
+import { Grid } from '@cbhq/cds-web/layout/Grid';
+import { Pressable } from '@cbhq/cds-web/system';
 import { animated, useSpring, useSprings } from '@react-spring/web';
 
 import {

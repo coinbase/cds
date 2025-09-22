@@ -1,6 +1,6 @@
 import React, { memo, useCallback } from 'react';
-import { cx } from '@coinbase/cds-web';
-import { TextLabel2 } from '@coinbase/cds-web/typography/TextLabel2';
+import { cx } from '@cbhq/cds-web';
+import { TextLabel2 } from '@cbhq/cds-web/typography/TextLabel2';
 import { css } from '@linaria/core';
 
 import { useSparklineInteractiveScrubContext } from './SparklineInteractiveScrubProvider';

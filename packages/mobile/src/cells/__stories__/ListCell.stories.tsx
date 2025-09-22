@@ -1,8 +1,8 @@
 import React from 'react';
-import type { CellPriority } from '@coinbase/cds-common';
-import { assets } from '@coinbase/cds-common/internal/data/assets';
-import { selectCellSpacingConfig } from '@coinbase/cds-common/tokens/select';
-import { gutter } from '@coinbase/cds-common/tokens/sizing';
+import type { CellPriority } from '@cbhq/cds-common';
+import { assets } from '@cbhq/cds-common/internal/data/assets';
+import { selectCellSpacingConfig } from '@cbhq/cds-common/tokens/select';
+import { gutter } from '@cbhq/cds-common/tokens/sizing';
 
 import { Button } from '../../buttons/Button';
 import { IconButton } from '../../buttons/IconButton';

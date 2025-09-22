@@ -1,8 +1,8 @@
 import React, { memo, useMemo } from 'react';
-import type { ThemeVars } from '@coinbase/cds-common/core/theme';
-import type { FlexAxisValue, FlexSpaceCommon } from '@coinbase/cds-common/types/BoxBaseProps';
-import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
-import { isDevelopment } from '@coinbase/cds-utils';
+import type { ThemeVars } from '@cbhq/cds-common/core/theme';
+import type { FlexAxisValue, FlexSpaceCommon } from '@cbhq/cds-common/types/BoxBaseProps';
+import type { SharedProps } from '@cbhq/cds-common/types/SharedProps';
+import { isDevelopment } from '@cbhq/cds-utils';
 import { css } from '@linaria/core';
 
 import { Cell, type CellBaseProps } from '../cells/Cell';

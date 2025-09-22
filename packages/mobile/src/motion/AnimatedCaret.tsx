@@ -1,8 +1,8 @@
 import React, { memo, useCallback, useEffect, useMemo, useRef } from 'react';
 import { Animated } from 'react-native';
-import { usePreviousValue } from '@coinbase/cds-common/hooks/usePreviousValue';
-import { animateRotateConfig } from '@coinbase/cds-common/motion/animatedCaret';
-import type { SharedProps } from '@coinbase/cds-common/types';
+import { usePreviousValue } from '@cbhq/cds-common/hooks/usePreviousValue';
+import { animateRotateConfig } from '@cbhq/cds-common/motion/animatedCaret';
+import type { SharedProps } from '@cbhq/cds-common/types';
 
 import { convertMotionConfig } from '../animation/convertMotionConfig';
 import { Icon, type IconProps } from '../icons';

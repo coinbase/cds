@@ -8,7 +8,7 @@ import React, {
 } from 'react';
 import { Animated } from 'react-native';
 import type { ForwardedRef } from 'react';
-import { shakeTransitionConfig, shakeTranslateX } from '@coinbase/cds-common/motion/hint';
+import { shakeTransitionConfig, shakeTranslateX } from '@cbhq/cds-common/motion/hint';
 
 import { convertMotionConfig } from '../animation/convertMotionConfig';
 import { Haptics } from '../utils/haptics';

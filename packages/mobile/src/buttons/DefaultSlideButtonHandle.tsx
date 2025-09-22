@@ -1,7 +1,7 @@
 import React, { forwardRef, memo, useMemo } from 'react';
 import { StyleSheet } from 'react-native';
 import type { View } from 'react-native';
-import { variants } from '@coinbase/cds-common/tokens/button';
+import { variants } from '@cbhq/cds-common/tokens/button';
 import {
   animated,
   type SpringConfig,

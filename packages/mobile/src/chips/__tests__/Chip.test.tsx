@@ -1,5 +1,5 @@
-import type { Shape } from '@coinbase/cds-common';
-import { assets } from '@coinbase/cds-common/internal/data/assets';
+import type { Shape } from '@cbhq/cds-common';
+import { assets } from '@cbhq/cds-common/internal/data/assets';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 
 import { Icon } from '../../icons';

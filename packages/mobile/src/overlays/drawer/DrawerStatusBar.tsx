@@ -1,6 +1,6 @@
 import React, { memo } from 'react';
 import { Platform, StatusBar } from 'react-native';
-import type { PinningDirection } from '@coinbase/cds-common/types';
+import type { PinningDirection } from '@cbhq/cds-common/types';
 
 import { useHasNotch } from '../../hooks/useHasNotch';
 

@@ -1,4 +1,4 @@
-# @coinbase/eslint-plugin-cds
+# @cbhq/eslint-plugin-cds
 
 ## Overview
 
@@ -23,12 +23,12 @@ Eslint v9 introduced the modern _[Flat Config](https://eslint.org/docs/latest/us
 // eslint.config.js
 import js from '@eslint/js';
 import tseslint from 'typescript-eslint';
-import cds from '@coinbase/eslint-plugin-cds';
+import cds from '@cbhq/eslint-plugin-cds';
 
 export default tseslint.config({
   extends: [js.configs.recommended, ...tseslint.configs.recommended, cds.configs.web],
   plugins: {
-    '@coinbase/cds': cds,
+    '@cbhq/cds': cds,
   },
   files: ['**/*.{ts,tsx}'],
 });
@@ -41,9 +41,9 @@ In order to use the CDS plugin in legacy `.eslintrc` configuration files, you wi
 ```js
 // .eslintrc.js
 module.exports = {
-  plugins: ['@typescript-eslint', '@coinbase/cds'],
+  plugins: ['@typescript-eslint', '@cbhq/cds'],
   parser: '@typescript-eslint/parser',
-  extends: ['plugin:@coinbase/cds/web-legacy'],
+  extends: ['plugin:@cbhq/cds/web-legacy'],
 };
 ```
 
@@ -84,7 +84,7 @@ To test on consumer repos locally, you will need to build your `eslint-plugin-cd
 
 2. Add your package as a `devDependency` in the consumer's `package.json`. Use the path in your local directory.
    ```
-   "@coinbase/eslint-plugin-cds": "file:../cds/packages/eslint-plugin-cds/package.tgz",
+   "@cbhq/eslint-plugin-cds": "file:../cds/packages/eslint-plugin-cds/package.tgz",
    ```
 3. Add the plugin and extend a specific config in the `.eslintrc.js`/`eslint.confg.js` file.
 
@@ -238,7 +238,7 @@ To test on consumer repos locally, you will need to build your `eslint-plugin-cd
 
 2. Add your package as a `devDependency` in the consumer's `package.json`. Use the path in your local directory.
    ```
-   "@coinbase/eslint-plugin-cds": "file:../cds/packages/eslint-plugin-cds/package.tgz",
+   "@cbhq/eslint-plugin-cds": "file:../cds/packages/eslint-plugin-cds/package.tgz",
    ```
 3. Add the plugin and extend a specific config in the `.eslintrc.js`/`eslint.confg.js` file.
 

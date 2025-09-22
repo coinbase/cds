@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
-import type { ThemeVars } from '@coinbase/cds-common/core/theme';
-import { usePreviousValue } from '@coinbase/cds-common/hooks/usePreviousValue';
-import { zIndex } from '@coinbase/cds-common/tokens/zIndex';
+import type { ThemeVars } from '@cbhq/cds-common/core/theme';
+import { usePreviousValue } from '@cbhq/cds-common/hooks/usePreviousValue';
+import { zIndex } from '@cbhq/cds-common/tokens/zIndex';
 
 import { Collapsible } from '../collapsible/Collapsible';
 import { Box, HStack, type HStackProps, VStack } from '../layout';

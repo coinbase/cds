@@ -4,10 +4,10 @@ import {
   animateDropdownOpacityOutConfig,
   animateDropdownTransformInConfig,
   animateDropdownTransformOutConfig,
-} from '@coinbase/cds-common/animation/dropdown';
-import { type DateInputValidationError } from '@coinbase/cds-common/dates/DateInputValidationError';
-import { getISOStringLocal } from '@coinbase/cds-common/dates/getISOStringLocal';
-import { zIndex } from '@coinbase/cds-common/tokens/zIndex';
+} from '@cbhq/cds-common/animation/dropdown';
+import { type DateInputValidationError } from '@cbhq/cds-common/dates/DateInputValidationError';
+import { getISOStringLocal } from '@cbhq/cds-common/dates/getISOStringLocal';
+import { zIndex } from '@cbhq/cds-common/tokens/zIndex';
 import { type AnimationProps, m as motion } from 'framer-motion';
 
 import { InputIconButton } from '../controls/InputIconButton';

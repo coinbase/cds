@@ -1,11 +1,11 @@
 import React, { forwardRef, memo, useMemo, useRef } from 'react';
 import { Defs, G, LinearGradient, Path, Stop, Svg } from 'react-native-svg';
-import { getAccessibleForegroundGradient } from '@coinbase/cds-common/color/getAccessibleForegroundGradient';
-import { borderWidth } from '@coinbase/cds-common/tokens/sparkline';
-import { getAccessibleColor } from '@coinbase/cds-common/utils/getAccessibleColor';
-import { getSparklineTransform } from '@coinbase/cds-common/visualizations/getSparklineTransform';
-import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
-import { generateRandomId } from '@coinbase/cds-utils';
+import { getAccessibleForegroundGradient } from '@cbhq/cds-common/color/getAccessibleForegroundGradient';
+import { borderWidth } from '@cbhq/cds-common/tokens/sparkline';
+import { getAccessibleColor } from '@cbhq/cds-common/utils/getAccessibleColor';
+import { getSparklineTransform } from '@cbhq/cds-common/visualizations/getSparklineTransform';
+import { useTheme } from '@cbhq/cds-mobile/hooks/useTheme';
+import { generateRandomId } from '@cbhq/cds-utils';
 
 import { generateSparklineAreaWithId } from './generateSparklineWithId';
 import type { SparklineBaseProps } from './Sparkline';

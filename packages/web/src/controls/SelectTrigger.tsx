@@ -1,7 +1,7 @@
 import React, { forwardRef, memo } from 'react';
-import { useInputVariant } from '@coinbase/cds-common/hooks/useInputVariant';
-import { usePrefixedId } from '@coinbase/cds-common/hooks/usePrefixedId';
-import type { InputVariant } from '@coinbase/cds-common/types';
+import { useInputVariant } from '@cbhq/cds-common/hooks/useInputVariant';
+import { usePrefixedId } from '@cbhq/cds-common/hooks/usePrefixedId';
+import type { InputVariant } from '@cbhq/cds-common/types';
 import { css } from '@linaria/core';
 
 import { VStack } from '../layout';

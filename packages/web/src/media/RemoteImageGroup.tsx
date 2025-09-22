@@ -4,7 +4,7 @@ import type {
   Shape,
   SharedAccessibilityProps,
   SharedProps,
-} from '@coinbase/cds-common/types';
+} from '@cbhq/cds-common/types';
 import { css, type LinariaClassName } from '@linaria/core';
 
 import { useTheme } from '../hooks/useTheme';

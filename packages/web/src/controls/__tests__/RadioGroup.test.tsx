@@ -1,4 +1,4 @@
-import { renderA11y } from '@coinbase/cds-web-utils/jest';
+import { renderA11y } from '@cbhq/cds-web-utils/jest';
 import { fireEvent, render, screen, within } from '@testing-library/react';
 
 import { Text } from '../../typography/Text';

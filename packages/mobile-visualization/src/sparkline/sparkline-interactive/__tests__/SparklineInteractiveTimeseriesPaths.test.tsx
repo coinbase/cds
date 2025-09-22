@@ -1,5 +1,5 @@
-import type { ChartTimeseries } from '@coinbase/cds-common';
-import { DefaultThemeProvider } from '@coinbase/cds-mobile/utils/testHelpers';
+import type { ChartTimeseries } from '@cbhq/cds-common';
+import { DefaultThemeProvider } from '@cbhq/cds-mobile/utils/testHelpers';
 import { render } from '@testing-library/react-native';
 
 import { SparklineInteractiveTimeseriesPaths } from '../SparklineInteractiveTimeseriesPaths';

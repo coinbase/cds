@@ -1,6 +1,6 @@
-import type { ColorScheme } from '@coinbase/cds-common/core/theme';
-import type { IllustrationVariant } from '@coinbase/cds-common/types/IllustrationNames';
-import spotRectangleVersionMap from '@coinbase/cds-illustrations/__generated__/spotRectangle/data/versionMap';
+import type { ColorScheme } from '@cbhq/cds-common/core/theme';
+import type { IllustrationVariant } from '@cbhq/cds-common/types/IllustrationNames';
+import spotRectangleVersionMap from '@cbhq/cds-illustrations/__generated__/spotRectangle/data/versionMap';
 import { render, screen } from '@testing-library/react';
 
 import { DefaultThemeProvider } from '../../utils/test';

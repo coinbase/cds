@@ -1,12 +1,12 @@
 import React, { forwardRef, memo, useCallback } from 'react';
 import type { View } from 'react-native';
-import { useAccordionContext } from '@coinbase/cds-common/accordion/AccordionProvider';
+import { useAccordionContext } from '@cbhq/cds-common/accordion/AccordionProvider';
 import {
   accordionIconHiddenRotate,
   accordionIconVisibleRotate,
-} from '@coinbase/cds-common/animation/accordion';
-import { listHeight } from '@coinbase/cds-common/tokens/cell';
-import type { SharedProps } from '@coinbase/cds-common/types';
+} from '@cbhq/cds-common/animation/accordion';
+import { listHeight } from '@cbhq/cds-common/tokens/cell';
+import type { SharedProps } from '@cbhq/cds-common/types';
 
 import type { CollapsibleBaseProps } from '../collapsible/Collapsible';
 import { useCellSpacing } from '../hooks/useCellSpacing';

@@ -1,5 +1,5 @@
 import React from 'react';
-import { coinbaseOneLogo } from '@coinbase/cds-common/internal/data/assets';
+import { coinbaseOneLogo } from '@cbhq/cds-common/internal/data/assets';
 
 import { Button } from '../../buttons';
 import { HStack, VStack } from '../../layout';

@@ -22,13 +22,13 @@ Before you begin, make sure your development environment meets the following req
 To install the CDS library for React web applications, run the following command:
 
 ```bash
-npm install @coinbase/cds-web
+npm install @cbhq/cds-web
 ```
 
 Alternatively, if you are using Yarn:
 
 ```bash
-yarn add @coinbase/cds-web
+yarn add @cbhq/cds-web
 ```
 
 </MDXArticle>
@@ -44,8 +44,8 @@ yarn add @coinbase/cds-web
 Some global and icon styles are required for components to render correctly. Import these styles near your application entry point.
 
 ```tsx
-import '@coinbase/cds-icons/fonts/web/icon-font.css';
-import '@coinbase/cds-web/globalStyles';
+import '@cbhq/cds-icons/fonts/web/icon-font.css';
+import '@cbhq/cds-web/globalStyles';
 ```
 
 [See the `globalStyles` source code here &rarr;](https://github.com/coinbase/cds-staging/blob/master/packages/web/src/styles/global.ts)
@@ -53,7 +53,7 @@ import '@coinbase/cds-web/globalStyles';
 If you are using the CDS `defaultTheme` you should also import the default font styles.
 
 ```tsx
-import '@coinbase/cds-web/defaultFontStyles';
+import '@cbhq/cds-web/defaultFontStyles';
 ```
 
 </MDXArticle>
@@ -66,8 +66,8 @@ Render a ThemeProvider at the root of your application, and pass the `theme` and
 Render a MediaQueryProvider for components that use the `useMediaQuery` hook.
 
 ```tsx
-import { ThemeProvider, MediaQueryProvider } from '@coinbase/cds-web/system';
-import { defaultTheme } from '@coinbase/cds-web/themes/defaultTheme';
+import { ThemeProvider, MediaQueryProvider } from '@cbhq/cds-web/system';
+import { defaultTheme } from '@cbhq/cds-web/themes/defaultTheme';
 import App from './App';
 
 const Index = () => {
@@ -94,7 +94,7 @@ The MediaQueryProvider prevents issues with `window.matchMedia()` in SSR environ
 Try importing and rendering a simple CDS component.
 
 ```tsx
-import { Button } from '@coinbase/cds-web/buttons';
+import { Button } from '@cbhq/cds-web/buttons';
 
 const Test = () => (
   <Button>Click Me</Button>;
@@ -112,12 +112,12 @@ const Test = () => (
 Here's an example React DOM app using the `defaultTheme`.
 
 ```tsx
-import '@coinbase/cds-icons/fonts/web/icon-font.css';
-import '@coinbase/cds-web/defaultFontStyles';
-import '@coinbase/cds-web/globalStyles';
+import '@cbhq/cds-icons/fonts/web/icon-font.css';
+import '@cbhq/cds-web/defaultFontStyles';
+import '@cbhq/cds-web/globalStyles';
 import { createRoot } from 'react-dom/client';
-import { ThemeProvider, MediaQueryProvider } from '@coinbase/cds-web/system';
-import { defaultTheme } from '@coinbase/cds-web/themes/defaultTheme';
+import { ThemeProvider, MediaQueryProvider } from '@cbhq/cds-web/system';
+import { defaultTheme } from '@cbhq/cds-web/themes/defaultTheme';
 import App from './App';
 
 const root = createRoot(document.getElementById('root'));

@@ -1,6 +1,6 @@
 import React from 'react';
 import type { GestureResponderEvent } from 'react-native';
-import { names } from '@coinbase/cds-icons/names';
+import { names } from '@cbhq/cds-icons/names';
 
 import { Example, ExampleScreen } from '../../examples/ExampleScreen';
 import { HStack } from '../../layout';

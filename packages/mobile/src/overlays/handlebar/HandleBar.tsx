@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import type { ViewProps } from 'react-native';
-import { handleBarHeight, handleBarOffset } from '@coinbase/cds-common/tokens/drawer';
+import { handleBarHeight, handleBarOffset } from '@cbhq/cds-common/tokens/drawer';
 
 import { useTheme } from '../../hooks/useTheme';
 

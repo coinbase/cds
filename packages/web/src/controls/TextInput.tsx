@@ -7,13 +7,13 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import type { ThemeVars } from '@coinbase/cds-common/core/theme';
-import { useMergeRefs } from '@coinbase/cds-common/hooks/useMergeRefs';
-import { usePrefixedId } from '@coinbase/cds-common/hooks/usePrefixedId';
-import type { InputVariant, SharedInputProps } from '@coinbase/cds-common/types/InputBaseProps';
-import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
-import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
-import type { TextAlignProps } from '@coinbase/cds-common/types/TextBaseProps';
+import type { ThemeVars } from '@cbhq/cds-common/core/theme';
+import { useMergeRefs } from '@cbhq/cds-common/hooks/useMergeRefs';
+import { usePrefixedId } from '@cbhq/cds-common/hooks/usePrefixedId';
+import type { InputVariant, SharedInputProps } from '@cbhq/cds-common/types/InputBaseProps';
+import type { SharedAccessibilityProps } from '@cbhq/cds-common/types/SharedAccessibilityProps';
+import type { SharedProps } from '@cbhq/cds-common/types/SharedProps';
+import type { TextAlignProps } from '@cbhq/cds-common/types/TextBaseProps';
 import { css } from '@linaria/core';
 
 import { cx } from '../cx';

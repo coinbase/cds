@@ -1,14 +1,14 @@
 import React, { useMemo } from 'react';
-import { cx } from '@coinbase/cds-web';
-import { VStack } from '@coinbase/cds-web/layout';
-import { Divider } from '@coinbase/cds-web/layout/Divider';
-import { Link } from '@coinbase/cds-web/typography/Link';
-import { TextBody } from '@coinbase/cds-web/typography/TextBody';
-import { TextLabel2 } from '@coinbase/cds-web/typography/TextLabel2';
+import { cx } from '@cbhq/cds-web';
+import { VStack } from '@cbhq/cds-web/layout';
+import { Divider } from '@cbhq/cds-web/layout/Divider';
+import { Link } from '@cbhq/cds-web/typography/Link';
+import { TextBody } from '@cbhq/cds-web/typography/TextBody';
+import { TextLabel2 } from '@cbhq/cds-web/typography/TextLabel2';
 import type {
   ProcessedPropItem,
   SharedTypeAliases,
-} from '@coinbase/docusaurus-plugin-docgen/types';
+} from '@cbhq/docusaurus-plugin-docgen/types';
 import DocusaurusLink from '@docusaurus/Link';
 
 import ModalLink from './ModalLink';

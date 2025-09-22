@@ -1,7 +1,7 @@
-import '@coinbase/cds-icons/fonts/web/icon-font.css';
+import '@cbhq/cds-icons/fonts/web/icon-font.css';
 
 import { useCallback } from 'react';
-import { cx } from '@coinbase/cds-web';
+import { cx } from '@cbhq/cds-web';
 import type { FallbackParams } from '@docusaurus/ErrorBoundary';
 import ErrorBoundary from '@docusaurus/ErrorBoundary';
 import { PageMetadata, SkipToContentFallbackId, ThemeClassNames } from '@docusaurus/theme-common';

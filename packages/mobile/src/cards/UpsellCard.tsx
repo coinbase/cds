@@ -1,12 +1,12 @@
 import React, { isValidElement, memo } from 'react';
 import type { PressableProps } from 'react-native';
-import type { ThemeVars } from '@coinbase/cds-common/core/theme';
-import { upsellCardDefaultWidth, upsellCardMinHeight } from '@coinbase/cds-common/tokens/card';
+import type { ThemeVars } from '@cbhq/cds-common/core/theme';
+import { upsellCardDefaultWidth, upsellCardMinHeight } from '@cbhq/cds-common/tokens/card';
 import type {
   DimensionStyles,
   SharedAccessibilityProps,
   SharedProps,
-} from '@coinbase/cds-common/types';
+} from '@cbhq/cds-common/types';
 
 import { Button, IconButton } from '../buttons';
 import { HStack, VStack } from '../layout';

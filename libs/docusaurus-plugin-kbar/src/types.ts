@@ -1,4 +1,4 @@
-import type { IconName, PictogramName, SpotSquareName } from '@coinbase/cds-common/types';
+import type { IconName, PictogramName, SpotSquareName } from '@cbhq/cds-common/types';
 import type { PluginOptions as DocusaurusPluginOptions } from '@docusaurus/plugin-content-docs';
 import type { SidebarItem as DocusaurusSidebarItem } from '@docusaurus/plugin-content-docs/lib/sidebars/types.js';
 import type { Plugin as DocusaurusPlugin } from '@docusaurus/types';

@@ -1,5 +1,5 @@
 import React from 'react';
-import * as animations from '@coinbase/cds-lottie-files';
+import * as animations from '@cbhq/cds-lottie-files';
 
 import { Example, ExampleScreen } from '../../examples/ExampleScreen';
 import { Box } from '../../layout/Box';

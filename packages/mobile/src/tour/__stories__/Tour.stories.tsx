@@ -2,9 +2,9 @@ import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { Button as NativeButton, Image } from 'react-native';
 import type { View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
-import { ethBackground } from '@coinbase/cds-common/internal/data/assets';
-import { useTourContext } from '@coinbase/cds-common/tour/TourContext';
-import type { TourStepValue } from '@coinbase/cds-common/tour/useTour';
+import { ethBackground } from '@cbhq/cds-common/internal/data/assets';
+import { useTourContext } from '@cbhq/cds-common/tour/TourContext';
+import type { TourStepValue } from '@cbhq/cds-common/tour/useTour';
 
 import { Button } from '../../buttons';
 import { Coachmark } from '../../coachmark/Coachmark';

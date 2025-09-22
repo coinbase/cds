@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { defaultSpacingConfig } from '@coinbase/cds-common/tokens/cell';
+import { defaultSpacingConfig } from '@cbhq/cds-common/tokens/cell';
 
 import type { CellSpacing } from '../cells/Cell';
 

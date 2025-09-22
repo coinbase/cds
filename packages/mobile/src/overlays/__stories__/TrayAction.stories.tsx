@@ -1,6 +1,6 @@
 import React, { useCallback, useRef, useState } from 'react';
 import { FlatList } from 'react-native';
-import { assets } from '@coinbase/cds-common/internal/data/assets';
+import { assets } from '@cbhq/cds-common/internal/data/assets';
 
 import { Button } from '../../buttons/Button';
 import type { ListCellProps } from '../../cells';

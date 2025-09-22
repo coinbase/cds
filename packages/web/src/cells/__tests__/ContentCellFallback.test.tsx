@@ -1,4 +1,4 @@
-import { getRectWidthVariant } from '@coinbase/cds-common/utils/getRectWidthVariant';
+import { getRectWidthVariant } from '@cbhq/cds-common/utils/getRectWidthVariant';
 import { render, screen } from '@testing-library/react';
 
 import { Fallback } from '../../layout/Fallback';

@@ -1,5 +1,5 @@
 import React from 'react';
-import { squareAssets } from '@coinbase/cds-common/internal/data/assets';
+import { squareAssets } from '@cbhq/cds-common/internal/data/assets';
 
 import { Button } from '../../buttons/Button';
 import { HStack } from '../../layout/HStack';

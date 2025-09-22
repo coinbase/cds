@@ -4,8 +4,8 @@ import {
   animateDropdownOpacityOutConfig,
   animateDropdownTransformInConfig,
   animateDropdownTransformOutConfig,
-} from '@coinbase/cds-common/animation/dropdown';
-import type { DimensionValue } from '@coinbase/cds-common/types';
+} from '@cbhq/cds-common/animation/dropdown';
+import type { DimensionValue } from '@cbhq/cds-common/types';
 import type { Placement } from '@popperjs/core';
 import { m as motion } from 'framer-motion';
 

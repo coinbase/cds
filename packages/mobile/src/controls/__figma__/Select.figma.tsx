@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import { useState } from 'react';
-import { useToggler } from '@coinbase/cds-common';
+import { useToggler } from '@cbhq/cds-common';
 import { figma } from '@figma/code-connect';
 
 import { Tray } from '../../overlays/tray/Tray';
@@ -12,8 +12,8 @@ figma.connect(
   'https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/✨-CDS-Components?node-id=247-13005&m=dev',
   {
     imports: [
-      "import { Select } from '@coinbase/cds-mobile/controls/Select';",
-      "import { SelectOption } from '@coinbase/cds-mobile/controls';",
+      "import { Select } from '@cbhq/cds-mobile/controls/Select';",
+      "import { SelectOption } from '@cbhq/cds-mobile/controls';",
     ],
     props: {
       startNode: figma.boolean('show start', {

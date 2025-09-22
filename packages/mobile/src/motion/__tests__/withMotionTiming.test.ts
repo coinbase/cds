@@ -1,4 +1,4 @@
-import { durations } from '@coinbase/cds-common/motion/tokens';
+import { durations } from '@cbhq/cds-common/motion/tokens';
 
 import { mobileCurves } from '../convertMotionConfig';
 import { withMotionTiming } from '../withMotionTiming';

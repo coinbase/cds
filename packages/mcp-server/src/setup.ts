@@ -112,7 +112,7 @@ const installMcpServer = (repoRoot: string, cursorRoot: string) => {
   const prefix = relativeWorkspaceRoot === '' ? '.' : `./${relativeWorkspaceRoot}`;
 
   // --prefix is needed because Cursor runs the server from "/" instead of the workspace root.
-  const mcpServerArgs = ['--prefix', prefix, '-y', '@coinbase/cds-mcp-server'];
+  const mcpServerArgs = ['--prefix', prefix, '-y', '@cbhq/cds-mcp-server'];
 
   if (args.noTelemetry) mcpServerArgs.unshift('DISABLE_CDS_MCP_TELEMETRY=1');
 

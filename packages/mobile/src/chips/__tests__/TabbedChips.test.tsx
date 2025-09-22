@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { sampleTabs } from '@coinbase/cds-common/internal/data/tabs';
+import { sampleTabs } from '@cbhq/cds-common/internal/data/tabs';
 import { render, screen } from '@testing-library/react-native';
 
 import { DefaultThemeProvider } from '../../utils/testHelpers';

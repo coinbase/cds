@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
 import { G, Path, Svg } from 'react-native-svg';
-import type { SubBrandLogoMarkParams } from '@coinbase/cds-common/hooks/useSubBrandLogo';
-import { useSubBrandLogoMark } from '@coinbase/cds-common/hooks/useSubBrandLogo';
+import type { SubBrandLogoMarkParams } from '@cbhq/cds-common/hooks/useSubBrandLogo';
+import { useSubBrandLogoMark } from '@cbhq/cds-common/hooks/useSubBrandLogo';
 
 import { useTheme } from '../hooks/useTheme';
 

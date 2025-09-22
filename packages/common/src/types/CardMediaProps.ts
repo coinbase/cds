@@ -1,4 +1,4 @@
-import type { PictogramName, SpotSquareName } from '@coinbase/cds-illustrations';
+import type { PictogramName, SpotSquareName } from '@cbhq/cds-illustrations';
 
 import type { CardRemoteImageDimensionValue } from './CardRemoteImageProps';
 import type { AspectRatio } from './Shape';

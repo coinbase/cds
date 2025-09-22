@@ -1,7 +1,7 @@
 import React from 'react';
 import { View } from 'react-native';
-import { TabsContext } from '@coinbase/cds-common/tabs/TabsContext';
-import { NoopFn } from '@coinbase/cds-common/utils/mockUtils';
+import { TabsContext } from '@cbhq/cds-common/tabs/TabsContext';
+import { NoopFn } from '@cbhq/cds-common/utils/mockUtils';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 
 import { defaultTheme } from '../../themes/defaultTheme';

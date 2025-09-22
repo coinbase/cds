@@ -1,6 +1,6 @@
 import React, { forwardRef, memo } from 'react';
-import type { ThemeVars } from '@coinbase/cds-common/core/theme';
-import { switchTransitionConfig } from '@coinbase/cds-common/motion/switch';
+import type { ThemeVars } from '@cbhq/cds-common/core/theme';
+import { switchTransitionConfig } from '@cbhq/cds-common/motion/switch';
 import { css } from '@linaria/core';
 import { m as motion } from 'framer-motion';
 

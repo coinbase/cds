@@ -6,10 +6,10 @@ import {
   inactiveScale,
   scaleInConfig,
   scaleOutConfig,
-} from '@coinbase/cds-common/animation/likeButton';
-import { interactableHeight } from '@coinbase/cds-common/tokens/interactableHeight';
-import type { SharedAccessibilityProps, SharedProps } from '@coinbase/cds-common/types';
-import { getButtonSpacingProps } from '@coinbase/cds-common/utils/getButtonSpacingProps';
+} from '@cbhq/cds-common/animation/likeButton';
+import { interactableHeight } from '@cbhq/cds-common/tokens/interactableHeight';
+import type { SharedAccessibilityProps, SharedProps } from '@cbhq/cds-common/types';
+import { getButtonSpacingProps } from '@cbhq/cds-common/utils/getButtonSpacingProps';
 
 import { convertMotionConfig } from '../animation/convertMotionConfig';
 import { TextIcon } from '../icons/TextIcon';

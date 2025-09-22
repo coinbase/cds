@@ -1,6 +1,6 @@
 import React from 'react';
-import { assets, ethBackground } from '@coinbase/cds-common/internal/data/assets';
-import { subheadIconSignMap } from '@coinbase/cds-common/tokens/sparkline';
+import { assets, ethBackground } from '@cbhq/cds-common/internal/data/assets';
+import { subheadIconSignMap } from '@cbhq/cds-common/tokens/sparkline';
 
 import { DotStatusColor } from '../../dots/DotStatusColor';
 import { HStack, VStack } from '../../layout';

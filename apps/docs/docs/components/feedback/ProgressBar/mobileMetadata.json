@@ -1,5 +1,5 @@
 {
-  "import": "import { ProgressBar } from '@coinbase/cds-mobile/visualizations/ProgressBar'",
+  "import": "import { ProgressBar } from '@cbhq/cds-mobile/visualizations/ProgressBar'",
   "source": "https://github.com/coinbase/cds-staging/blob/master/packages/mobile/src/visualizations/ProgressBar.tsx",
   "description": "A visual indicator of completion progress.",
   "relatedComponents": [

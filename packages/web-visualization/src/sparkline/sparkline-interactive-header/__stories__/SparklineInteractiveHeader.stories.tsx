@@ -1,9 +1,9 @@
 import React, { useCallback, useMemo, useRef, useState } from 'react';
-import type { ChartDataPoint, ChartScrubParams } from '@coinbase/cds-common';
-import { sparklineInteractiveData } from '@coinbase/cds-common/internal/visualizations/SparklineInteractiveData';
-import { Icon } from '@coinbase/cds-web/icons';
-import { HStack } from '@coinbase/cds-web/layout';
-import { TextTitle3 } from '@coinbase/cds-web/typography';
+import type { ChartDataPoint, ChartScrubParams } from '@cbhq/cds-common';
+import { sparklineInteractiveData } from '@cbhq/cds-common/internal/visualizations/SparklineInteractiveData';
+import { Icon } from '@cbhq/cds-web/icons';
+import { HStack } from '@cbhq/cds-web/layout';
+import { TextTitle3 } from '@cbhq/cds-web/typography';
 
 import { SparklineInteractive } from '../../sparkline-interactive/SparklineInteractive';
 import {

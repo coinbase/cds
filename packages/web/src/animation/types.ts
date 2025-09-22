@@ -1,4 +1,4 @@
-import type { LottieSource } from '@coinbase/cds-common/types/LottieSource';
+import type { LottieSource } from '@cbhq/cds-common/types/LottieSource';
 import type { AnimationEventName, AnimationItem, SVGRendererConfig } from 'lottie-web';
 
 import type { BoxBaseProps } from '../layout';
@@ -40,8 +40,8 @@ export type LottieBaseProps<T extends string, Source extends LottieSource<T>> = 
    */
   resizeMode?: 'cover' | 'contain' | 'center';
   /**
-   * The source of animation. Should be pulled from @coinbase/cds-lottie-files.
-   * For web, you can import the animation from index since this webpack can handle treeshaking, `import { tradeStatus } from @coinbase/cds-lottie-files`
+   * The source of animation. Should be pulled from @cbhq/cds-lottie-files.
+   * For web, you can import the animation from index since this webpack can handle treeshaking, `import { tradeStatus } from @cbhq/cds-lottie-files`
    */
   source: Source;
   handlers?: LottieEventHandlersMap;

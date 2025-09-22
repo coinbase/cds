@@ -1,11 +1,11 @@
-# @coinbase/cds-icons
+# @cbhq/cds-icons
 
-CDS icons used in @coinbase/cds-web and @coinbase/cds-mobile.
+CDS icons used in @cbhq/cds-web and @cbhq/cds-mobile.
 
 ## Installation
 
 ```shell
-yarn add @coinbase/cds-icons
+yarn add @cbhq/cds-icons
 ```
 
 ## Contributing
@@ -48,7 +48,7 @@ yarn changelog icons
 
 <!-- 8. TODO: add a step to check deployment status -->
 
-9. After the deploy has succeeded, verify that the new package was published at the [production Coinbase NPM registry](https://npmjs.com/package/@coinbase/ui/repos/tree/General/cb-npm-master). It usually takes about 10 min or so for the package to be uploaded. Look for the version number at the bottom of the artifact list in the [package directory](https://npmjs.com/package/@coinbase/ui/repos/tree/General/cb-npm-master/@coinbase/cds-icons/-/@coinbase/cds-icons-1.0.0.tgz).
+9. After the deploy has succeeded, verify that the new package was published at the [production Coinbase NPM registry](https://npmjs.com/package/@cbhq/ui/repos/tree/General/cb-npm-master). It usually takes about 10 min or so for the package to be uploaded. Look for the version number at the bottom of the artifact list in the [package directory](https://npmjs.com/package/@cbhq/ui/repos/tree/General/cb-npm-master/@cbhq/cds-icons/-/@cbhq/cds-icons-1.0.0.tgz).
 
 ### Gotchas
 

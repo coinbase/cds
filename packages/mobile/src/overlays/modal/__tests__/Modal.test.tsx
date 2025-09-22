@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react';
 import { Animated, Modal as RNModal } from 'react-native';
-import { loremIpsum } from '@coinbase/cds-common/internal/data/loremIpsum';
+import { loremIpsum } from '@cbhq/cds-common/internal/data/loremIpsum';
 import { act, cleanup, fireEvent, render, screen } from '@testing-library/react-native';
 
 import type { ButtonProps } from '../../../buttons';

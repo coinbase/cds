@@ -1,5 +1,5 @@
 import type { Animated, StyleProp, ViewStyle } from 'react-native';
-import type { LottieSource } from '@coinbase/cds-common/types';
+import type { LottieSource } from '@cbhq/cds-common/types';
 
 import type { BoxBaseProps } from '../layout';
 
@@ -31,8 +31,8 @@ export type LottieBaseProps<T extends LottieSource = LottieSource> = Omit<
    */
   resizeMode?: 'cover' | 'contain' | 'center';
   /**
-   * The source of animation. Should be pulled from @coinbase/cds-lottie-files.
-   * For mobile, import the animation from the animations folder instead of from index so that unused animations are not included during build, `import { tradeStatus } from @coinbase/cds-lottie-files/tradeStatus`.
+   * The source of animation. Should be pulled from @cbhq/cds-lottie-files.
+   * For mobile, import the animation from the animations folder instead of from index so that unused animations are not included during build, `import { tradeStatus } from @cbhq/cds-lottie-files/tradeStatus`.
    */
   source: T;
   /**

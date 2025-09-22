@@ -2300,7 +2300,7 @@ __metadata:
     "@babel/preset-env": "npm:^7.28.0"
     "@babel/preset-react": "npm:^7.27.1"
     "@babel/preset-typescript": "npm:^7.27.1"
-    "@coinbase/cds-utils": "workspace:^"
+    "@cbhq/cds-utils": "workspace:^"
     "@k-vyn/coloralgorithm": "npm:^1.0.0"
     chalk: "npm:^4.1.2"
     ejs: "npm:^3.1.7"
@@ -2313,18 +2313,18 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@coinbase/cds-common@workspace:^, @coinbase/cds-common@workspace:packages/common":
+"@cbhq/cds-common@workspace:^, @cbhq/cds-common@workspace:packages/common":
   version: 0.0.0-use.local
-  resolution: "@coinbase/cds-common@workspace:packages/common"
+  resolution: "@cbhq/cds-common@workspace:packages/common"
   dependencies:
     "@babel/core": "npm:^7.28.0"
     "@babel/preset-env": "npm:^7.28.0"
     "@babel/preset-react": "npm:^7.27.1"
     "@babel/preset-typescript": "npm:^7.27.1"
-    "@coinbase/cds-icons": "workspace:^"
-    "@coinbase/cds-illustrations": "workspace:^"
-    "@coinbase/cds-mcp-server": "workspace:^"
-    "@coinbase/cds-utils": "workspace:^"
+    "@cbhq/cds-icons": "workspace:^"
+    "@cbhq/cds-illustrations": "workspace:^"
+    "@cbhq/cds-mcp-server": "workspace:^"
+    "@cbhq/cds-utils": "workspace:^"
     "@modelcontextprotocol/sdk": "npm:^1.13.1"
     "@types/react": "npm:^18.3.12"
     d3-array: "npm:^3.2.4"
@@ -2343,9 +2343,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@coinbase/cds-icons@workspace:^, @coinbase/cds-icons@workspace:packages/icons":
+"@cbhq/cds-icons@workspace:^, @cbhq/cds-icons@workspace:packages/icons":
   version: 0.0.0-use.local
-  resolution: "@coinbase/cds-icons@workspace:packages/icons"
+  resolution: "@cbhq/cds-icons@workspace:packages/icons"
   dependencies:
     "@babel/core": "npm:^7.28.0"
     "@babel/preset-env": "npm:^7.28.0"
@@ -2356,9 +2356,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@coinbase/cds-illustrations@workspace:^, @coinbase/cds-illustrations@workspace:packages/illustrations":
+"@cbhq/cds-illustrations@workspace:^, @cbhq/cds-illustrations@workspace:packages/illustrations":
   version: 0.0.0-use.local
-  resolution: "@coinbase/cds-illustrations@workspace:packages/illustrations"
+  resolution: "@cbhq/cds-illustrations@workspace:packages/illustrations"
   dependencies:
     "@babel/core": "npm:^7.28.0"
     "@babel/preset-env": "npm:^7.28.0"
@@ -2369,9 +2369,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@coinbase/cds-lottie-files@workspace:^, @coinbase/cds-lottie-files@workspace:packages/lottie-files":
+"@cbhq/cds-lottie-files@workspace:^, @cbhq/cds-lottie-files@workspace:packages/lottie-files":
   version: 0.0.0-use.local
-  resolution: "@coinbase/cds-lottie-files@workspace:packages/lottie-files"
+  resolution: "@cbhq/cds-lottie-files@workspace:packages/lottie-files"
   dependencies:
     "@babel/core": "npm:^7.28.0"
     "@babel/preset-env": "npm:^7.28.0"
@@ -2380,9 +2380,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@coinbase/cds-mcp-server@workspace:^, @coinbase/cds-mcp-server@workspace:packages/mcp-server":
+"@cbhq/cds-mcp-server@workspace:^, @cbhq/cds-mcp-server@workspace:packages/mcp-server":
   version: 0.0.0-use.local
-  resolution: "@coinbase/cds-mcp-server@workspace:packages/mcp-server"
+  resolution: "@cbhq/cds-mcp-server@workspace:packages/mcp-server"
   dependencies:
     "@babel/core": "npm:^7.28.0"
     "@babel/preset-env": "npm:^7.28.0"
@@ -2401,18 +2401,18 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@coinbase/cds-mobile-visualization@workspace:^, @coinbase/cds-mobile-visualization@workspace:packages/mobile-visualization":
+"@cbhq/cds-mobile-visualization@workspace:^, @cbhq/cds-mobile-visualization@workspace:packages/mobile-visualization":
   version: 0.0.0-use.local
-  resolution: "@coinbase/cds-mobile-visualization@workspace:packages/mobile-visualization"
+  resolution: "@cbhq/cds-mobile-visualization@workspace:packages/mobile-visualization"
   dependencies:
     "@babel/core": "npm:^7.28.0"
     "@babel/preset-env": "npm:^7.28.0"
     "@babel/preset-react": "npm:^7.27.1"
     "@babel/preset-typescript": "npm:^7.27.1"
-    "@coinbase/cds-common": "workspace:^"
-    "@coinbase/cds-lottie-files": "workspace:^"
-    "@coinbase/cds-mobile": "workspace:^"
-    "@coinbase/cds-utils": "workspace:^"
+    "@cbhq/cds-common": "workspace:^"
+    "@cbhq/cds-lottie-files": "workspace:^"
+    "@cbhq/cds-mobile": "workspace:^"
+    "@cbhq/cds-utils": "workspace:^"
     "@figma/code-connect": "npm:^1.3.4"
     "@types/react": "npm:^18.3.12"
     d3-interpolate-path: "npm:^2.3.0"
@@ -2423,10 +2423,10 @@ __metadata:
     react-native-svg: "npm:14.1.0"
     react-test-renderer: "npm:^18.3.1"
   peerDependencies:
-    "@coinbase/cds-common": "workspace:^"
-    "@coinbase/cds-lottie-files": "workspace:^"
-    "@coinbase/cds-mobile": "workspace:^"
-    "@coinbase/cds-utils": "workspace:^"
+    "@cbhq/cds-common": "workspace:^"
+    "@cbhq/cds-lottie-files": "workspace:^"
+    "@cbhq/cds-mobile": "workspace:^"
+    "@cbhq/cds-utils": "workspace:^"
     react: ^18.3.1
     react-native: ^0.74.5
     react-native-gesture-handler: ^2.16.2
@@ -2436,19 +2436,19 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@coinbase/cds-mobile@workspace:^, @coinbase/cds-mobile@workspace:packages/mobile":
+"@cbhq/cds-mobile@workspace:^, @cbhq/cds-mobile@workspace:packages/mobile":
   version: 0.0.0-use.local
-  resolution: "@coinbase/cds-mobile@workspace:packages/mobile"
+  resolution: "@cbhq/cds-mobile@workspace:packages/mobile"
   dependencies:
     "@babel/core": "npm:^7.28.0"
     "@babel/preset-env": "npm:^7.28.0"
     "@babel/preset-react": "npm:^7.27.1"
     "@babel/preset-typescript": "npm:^7.27.1"
-    "@coinbase/cds-common": "workspace:^"
-    "@coinbase/cds-icons": "workspace:^"
-    "@coinbase/cds-illustrations": "workspace:^"
-    "@coinbase/cds-lottie-files": "workspace:^"
-    "@coinbase/cds-utils": "workspace:^"
+    "@cbhq/cds-common": "workspace:^"
+    "@cbhq/cds-icons": "workspace:^"
+    "@cbhq/cds-illustrations": "workspace:^"
+    "@cbhq/cds-lottie-files": "workspace:^"
+    "@cbhq/cds-utils": "workspace:^"
     "@figma/code-connect": "npm:^1.3.4"
     "@floating-ui/react-native": "npm:^0.10.5"
     "@react-native-community/netinfo": "npm:^7.1.7"
@@ -2492,15 +2492,15 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@coinbase/cds-storybook@workspace:apps/storybook":
+"@cbhq/cds-storybook@workspace:apps/storybook":
   version: 0.0.0-use.local
-  resolution: "@coinbase/cds-storybook@workspace:apps/storybook"
+  resolution: "@cbhq/cds-storybook@workspace:apps/storybook"
   dependencies:
-    "@coinbase/cds-common": "workspace:^"
-    "@coinbase/cds-icons": "workspace:^"
-    "@coinbase/cds-illustrations": "workspace:^"
-    "@coinbase/cds-web": "workspace:^"
-    "@coinbase/cds-web-visualization": "workspace:^"
+    "@cbhq/cds-common": "workspace:^"
+    "@cbhq/cds-icons": "workspace:^"
+    "@cbhq/cds-illustrations": "workspace:^"
+    "@cbhq/cds-web": "workspace:^"
+    "@cbhq/cds-web-visualization": "workspace:^"
     "@linaria/babel-preset": "npm:^3.0.0-beta.22"
     "@linaria/core": "npm:^3.0.0-beta.22"
     "@linaria/rollup": "npm:^3.0.0-beta.22"
@@ -2526,9 +2526,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@coinbase/cds-utils@workspace:^, @coinbase/cds-utils@workspace:packages/utils":
+"@cbhq/cds-utils@workspace:^, @cbhq/cds-utils@workspace:packages/utils":
   version: 0.0.0-use.local
-  resolution: "@coinbase/cds-utils@workspace:packages/utils"
+  resolution: "@cbhq/cds-utils@workspace:packages/utils"
   dependencies:
     "@babel/core": "npm:^7.28.0"
     "@babel/preset-env": "npm:^7.28.0"
@@ -2539,9 +2539,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@coinbase/cds-vscode-plugin@workspace:packages/vscode-plugin":
+"@cbhq/cds-vscode-plugin@workspace:packages/vscode-plugin":
   version: 0.0.0-use.local
-  resolution: "@coinbase/cds-vscode-plugin@workspace:packages/vscode-plugin"
+  resolution: "@cbhq/cds-vscode-plugin@workspace:packages/vscode-plugin"
   dependencies:
     "@babel/core": "npm:^7.28.0"
     "@babel/preset-env": "npm:^7.28.0"
@@ -2561,9 +2561,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@coinbase/cds-web-utils@workspace:^, @coinbase/cds-web-utils@workspace:libs/web-utils":
+"@cbhq/cds-web-utils@workspace:^, @cbhq/cds-web-utils@workspace:libs/web-utils":
   version: 0.0.0-use.local
-  resolution: "@coinbase/cds-web-utils@workspace:libs/web-utils"
+  resolution: "@cbhq/cds-web-utils@workspace:libs/web-utils"
   dependencies:
     "@babel/core": "npm:^7.28.0"
     "@babel/preset-env": "npm:^7.28.0"
@@ -2580,18 +2580,18 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@coinbase/cds-web-visualization@workspace:^, @coinbase/cds-web-visualization@workspace:packages/web-visualization":
+"@cbhq/cds-web-visualization@workspace:^, @cbhq/cds-web-visualization@workspace:packages/web-visualization":
   version: 0.0.0-use.local
-  resolution: "@coinbase/cds-web-visualization@workspace:packages/web-visualization"
+  resolution: "@cbhq/cds-web-visualization@workspace:packages/web-visualization"
   dependencies:
     "@babel/core": "npm:^7.28.0"
     "@babel/preset-env": "npm:^7.28.0"
     "@babel/preset-react": "npm:^7.27.1"
     "@babel/preset-typescript": "npm:^7.27.1"
-    "@coinbase/cds-common": "workspace:^"
-    "@coinbase/cds-lottie-files": "workspace:^"
-    "@coinbase/cds-utils": "workspace:^"
-    "@coinbase/cds-web": "workspace:^"
+    "@cbhq/cds-common": "workspace:^"
+    "@cbhq/cds-lottie-files": "workspace:^"
+    "@cbhq/cds-utils": "workspace:^"
+    "@cbhq/cds-web": "workspace:^"
     "@figma/code-connect": "npm:^1.3.4"
     "@linaria/core": "npm:^3.0.0-beta.22"
     "@types/react": "npm:^18.3.12"
@@ -2603,29 +2603,29 @@ __metadata:
     d3-transition: "npm:^3.0.1"
     lodash: "npm:^4.17.21"
   peerDependencies:
-    "@coinbase/cds-common": "workspace:^"
-    "@coinbase/cds-lottie-files": "workspace:^"
-    "@coinbase/cds-utils": "workspace:^"
-    "@coinbase/cds-web": "workspace:^"
+    "@cbhq/cds-common": "workspace:^"
+    "@cbhq/cds-lottie-files": "workspace:^"
+    "@cbhq/cds-utils": "workspace:^"
+    "@cbhq/cds-web": "workspace:^"
     react: ^18.3.1
     react-dom: ^18.3.1
   languageName: unknown
   linkType: soft
 
-"@coinbase/cds-web@workspace:^, @coinbase/cds-web@workspace:packages/web":
+"@cbhq/cds-web@workspace:^, @cbhq/cds-web@workspace:packages/web":
   version: 0.0.0-use.local
-  resolution: "@coinbase/cds-web@workspace:packages/web"
+  resolution: "@cbhq/cds-web@workspace:packages/web"
   dependencies:
     "@babel/core": "npm:^7.28.0"
     "@babel/preset-env": "npm:^7.28.0"
     "@babel/preset-react": "npm:^7.27.1"
     "@babel/preset-typescript": "npm:^7.27.1"
-    "@coinbase/cds-common": "workspace:^"
-    "@coinbase/cds-icons": "workspace:^"
-    "@coinbase/cds-illustrations": "workspace:^"
-    "@coinbase/cds-lottie-files": "workspace:^"
-    "@coinbase/cds-utils": "workspace:^"
-    "@coinbase/cds-web-utils": "workspace:^"
+    "@cbhq/cds-common": "workspace:^"
+    "@cbhq/cds-icons": "workspace:^"
+    "@cbhq/cds-illustrations": "workspace:^"
+    "@cbhq/cds-lottie-files": "workspace:^"
+    "@cbhq/cds-utils": "workspace:^"
+    "@cbhq/cds-web-utils": "workspace:^"
     "@figma/code-connect": "npm:^1.3.4"
     "@floating-ui/react-dom": "npm:^2.1.1"
     "@linaria/core": "npm:^3.0.0-beta.22"
@@ -2658,9 +2658,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@coinbase/docusaurus-plugin-docgen@workspace:^, @coinbase/docusaurus-plugin-docgen@workspace:libs/docusaurus-plugin-docgen":
+"@cbhq/docusaurus-plugin-docgen@workspace:^, @cbhq/docusaurus-plugin-docgen@workspace:libs/docusaurus-plugin-docgen":
   version: 0.0.0-use.local
-  resolution: "@coinbase/docusaurus-plugin-docgen@workspace:libs/docusaurus-plugin-docgen"
+  resolution: "@cbhq/docusaurus-plugin-docgen@workspace:libs/docusaurus-plugin-docgen"
   dependencies:
     "@babel/core": "npm:^7.28.0"
     "@babel/preset-env": "npm:^7.28.0"
@@ -2681,15 +2681,15 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@coinbase/docusaurus-plugin-kbar@workspace:^, @coinbase/docusaurus-plugin-kbar@workspace:libs/docusaurus-plugin-kbar":
+"@cbhq/docusaurus-plugin-kbar@workspace:^, @cbhq/docusaurus-plugin-kbar@workspace:libs/docusaurus-plugin-kbar":
   version: 0.0.0-use.local
-  resolution: "@coinbase/docusaurus-plugin-kbar@workspace:libs/docusaurus-plugin-kbar"
+  resolution: "@cbhq/docusaurus-plugin-kbar@workspace:libs/docusaurus-plugin-kbar"
   dependencies:
     "@babel/core": "npm:^7.28.0"
     "@babel/preset-env": "npm:^7.28.0"
     "@babel/preset-react": "npm:^7.27.1"
     "@babel/preset-typescript": "npm:^7.27.1"
-    "@coinbase/cds-common": "workspace:^"
+    "@cbhq/cds-common": "workspace:^"
     "@docusaurus/logger": "npm:^3.7.0"
     "@docusaurus/plugin-content-docs": "npm:^3.7.0"
     "@docusaurus/types": "npm:^3.7.0"
@@ -2699,9 +2699,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@coinbase/eslint-plugin-cds@workspace:packages/eslint-plugin-cds":
+"@cbhq/eslint-plugin-cds@workspace:packages/eslint-plugin-cds":
   version: 0.0.0-use.local
-  resolution: "@coinbase/eslint-plugin-cds@workspace:packages/eslint-plugin-cds"
+  resolution: "@cbhq/eslint-plugin-cds@workspace:packages/eslint-plugin-cds"
   dependencies:
     "@babel/core": "npm:^7.28.0"
     "@babel/preset-env": "npm:^7.28.0"
@@ -2718,18 +2718,18 @@ __metadata:
     rollup: "npm:^4.22.4"
     typescript: "npm:~5.9.2"
   peerDependencies:
-    "@coinbase/cds-common": "workspace:^"
-    "@coinbase/cds-mobile": "workspace:^"
-    "@coinbase/cds-web": "workspace:^"
+    "@cbhq/cds-common": "workspace:^"
+    "@cbhq/cds-mobile": "workspace:^"
+    "@cbhq/cds-web": "workspace:^"
     eslint: ^8 || ^9
     eslint-plugin-jsx-a11y: ^6
     eslint-plugin-react-native-a11y: ^3
   languageName: unknown
   linkType: soft
 
-"@coinbase/eslint-plugin-internal@workspace:^, @coinbase/eslint-plugin-internal@workspace:libs/eslint-plugin-internal":
+"@cbhq/eslint-plugin-internal@workspace:^, @cbhq/eslint-plugin-internal@workspace:libs/eslint-plugin-internal":
   version: 0.0.0-use.local
-  resolution: "@coinbase/eslint-plugin-internal@workspace:libs/eslint-plugin-internal"
+  resolution: "@cbhq/eslint-plugin-internal@workspace:libs/eslint-plugin-internal"
   dependencies:
     "@typescript-eslint/rule-tester": "npm:^8.29.0"
     "@typescript-eslint/type-utils": "npm:^8.29.0"
@@ -2738,15 +2738,15 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@coinbase/static-assets@workspace:libs/static-assets":
+"@cbhq/static-assets@workspace:libs/static-assets":
   version: 0.0.0-use.local
-  resolution: "@coinbase/static-assets@workspace:libs/static-assets"
+  resolution: "@cbhq/static-assets@workspace:libs/static-assets"
   languageName: unknown
   linkType: soft
 
-"@coinbase/ui-mobile-playground@workspace:^, @coinbase/ui-mobile-playground@workspace:packages/ui-mobile-playground":
+"@cbhq/ui-mobile-playground@workspace:^, @cbhq/ui-mobile-playground@workspace:packages/ui-mobile-playground":
   version: 0.0.0-use.local
-  resolution: "@coinbase/ui-mobile-playground@workspace:packages/ui-mobile-playground"
+  resolution: "@cbhq/ui-mobile-playground@workspace:packages/ui-mobile-playground"
   dependencies:
     "@babel/core": "npm:^7.28.0"
     "@babel/preset-env": "npm:^7.28.0"
@@ -2760,9 +2760,9 @@ __metadata:
     lodash: "npm:^4.17.21"
     react-native-safe-area-context: "npm:4.10.5"
   peerDependencies:
-    "@coinbase/cds-common": "workspace:^"
-    "@coinbase/cds-mobile": "workspace:^"
-    "@coinbase/cds-mobile-visualization": "workspace:^"
+    "@cbhq/cds-common": "workspace:^"
+    "@cbhq/cds-mobile": "workspace:^"
+    "@cbhq/cds-mobile-visualization": "workspace:^"
     "@react-navigation/elements": ^1.3.17
     "@react-navigation/native": ^6.1.6
     "@react-navigation/stack": ^6.3.16
@@ -2772,24 +2772,24 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@coinbase/ui-mobile-visreg@workspace:^, @coinbase/ui-mobile-visreg@workspace:packages/ui-mobile-visreg":
+"@cbhq/ui-mobile-visreg@workspace:^, @cbhq/ui-mobile-visreg@workspace:packages/ui-mobile-visreg":
   version: 0.0.0-use.local
-  resolution: "@coinbase/ui-mobile-visreg@workspace:packages/ui-mobile-visreg"
+  resolution: "@cbhq/ui-mobile-visreg@workspace:packages/ui-mobile-visreg"
   dependencies:
     "@babel/core": "npm:^7.28.0"
     "@babel/preset-env": "npm:^7.28.0"
     "@babel/preset-react": "npm:^7.27.1"
     "@babel/preset-typescript": "npm:^7.27.1"
-    "@coinbase/cds-mobile": "workspace:^"
-    "@coinbase/cds-mobile-visualization": "workspace:^"
+    "@cbhq/cds-mobile": "workspace:^"
+    "@cbhq/cds-mobile-visualization": "workspace:^"
     "@percy/cli": "npm:^1.31.1"
     "@percy/client": "npm:^1.31.1"
     "@percy/sdk-utils": "npm:^1.31.1"
     detox: "npm:^20.14.8"
     lodash: "npm:^4.17.21"
   peerDependencies:
-    "@coinbase/cds-mobile": "workspace:^"
-    "@coinbase/cds-mobile-visualization": "workspace:^"
+    "@cbhq/cds-mobile": "workspace:^"
+    "@cbhq/cds-mobile-visualization": "workspace:^"
     detox: ^20.14.8
   languageName: unknown
   linkType: soft
@@ -17516,7 +17516,7 @@ __metadata:
     "@babel/runtime": "npm:^7.28.2"
     "@babel/template": "npm:^7.20.7"
     "@babel/types": "npm:^7.20.7"
-    "@coinbase/eslint-plugin-internal": "workspace:^"
+    "@cbhq/eslint-plugin-internal": "workspace:^"
     "@figma/code-connect": "npm:^1.3.4"
     "@graphql-tools/jest-transform": "npm:^2.0.0"
     "@inquirer/prompts": "npm:^7.5.3"
@@ -17849,15 +17849,15 @@ __metadata:
     "@babel/preset-react": "npm:^7.27.1"
     "@babel/preset-typescript": "npm:^7.27.1"
     "@babel/runtime": "npm:^7.28.2"
-    "@coinbase/cds-common": "workspace:^"
-    "@coinbase/cds-icons": "workspace:^"
-    "@coinbase/cds-illustrations": "workspace:^"
-    "@coinbase/cds-mobile": "workspace:^"
-    "@coinbase/cds-mobile-visualization": "workspace:^"
-    "@coinbase/cds-web": "workspace:^"
-    "@coinbase/cds-web-visualization": "workspace:^"
-    "@coinbase/docusaurus-plugin-docgen": "workspace:^"
-    "@coinbase/docusaurus-plugin-kbar": "workspace:^"
+    "@cbhq/cds-common": "workspace:^"
+    "@cbhq/cds-icons": "workspace:^"
+    "@cbhq/cds-illustrations": "workspace:^"
+    "@cbhq/cds-mobile": "workspace:^"
+    "@cbhq/cds-mobile-visualization": "workspace:^"
+    "@cbhq/cds-web": "workspace:^"
+    "@cbhq/cds-web-visualization": "workspace:^"
+    "@cbhq/docusaurus-plugin-docgen": "workspace:^"
+    "@cbhq/docusaurus-plugin-kbar": "workspace:^"
     "@docusaurus/core": "npm:^3.7.0"
     "@docusaurus/faster": "npm:^3.7.0"
     "@docusaurus/mdx-loader": "npm:^3.7.0"
@@ -28385,13 +28385,13 @@ __metadata:
   dependencies:
     "@babel/core": "npm:^7.28.0"
     "@bugsnag/react-native": "npm:^7.18.0"
-    "@coinbase/cds-common": "workspace:^"
-    "@coinbase/cds-icons": "workspace:^"
-    "@coinbase/cds-illustrations": "workspace:^"
-    "@coinbase/cds-mobile": "workspace:^"
-    "@coinbase/cds-mobile-visualization": "workspace:^"
-    "@coinbase/ui-mobile-playground": "workspace:^"
-    "@coinbase/ui-mobile-visreg": "workspace:^"
+    "@cbhq/cds-common": "workspace:^"
+    "@cbhq/cds-icons": "workspace:^"
+    "@cbhq/cds-illustrations": "workspace:^"
+    "@cbhq/cds-mobile": "workspace:^"
+    "@cbhq/cds-mobile-visualization": "workspace:^"
+    "@cbhq/ui-mobile-playground": "workspace:^"
+    "@cbhq/ui-mobile-visreg": "workspace:^"
     "@config-plugins/detox": "npm:^6.0.0"
     "@expo-google-fonts/inter": "npm:^0.3.0"
     "@expo-google-fonts/source-code-pro": "npm:^0.3.0"
@@ -38246,11 +38246,11 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "vite-app@workspace:apps/vite-app"
   dependencies:
-    "@coinbase/cds-common": "workspace:^"
-    "@coinbase/cds-icons": "workspace:^"
-    "@coinbase/cds-illustrations": "workspace:^"
-    "@coinbase/cds-web": "workspace:^"
-    "@coinbase/cds-web-visualization": "workspace:^"
+    "@cbhq/cds-common": "workspace:^"
+    "@cbhq/cds-icons": "workspace:^"
+    "@cbhq/cds-illustrations": "workspace:^"
+    "@cbhq/cds-web": "workspace:^"
+    "@cbhq/cds-web-visualization": "workspace:^"
     "@types/react": "npm:^18.3.12"
     "@types/react-dom": "npm:^18.3.1"
     "@vitejs/plugin-react": "npm:^5.0.0"

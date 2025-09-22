@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react';
-import { assets } from '@coinbase/cds-common/internal/data/assets';
-import { avatarSizes } from '@coinbase/cds-common/internal/data/avatars';
+import { assets } from '@cbhq/cds-common/internal/data/assets';
+import { avatarSizes } from '@cbhq/cds-common/internal/data/avatars';
 import { css } from '@linaria/core';
 
 import { Button } from '../../buttons';

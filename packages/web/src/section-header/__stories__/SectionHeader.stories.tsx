@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import { assets } from '@coinbase/cds-common/internal/data/assets';
+import { assets } from '@cbhq/cds-common/internal/data/assets';
 
 import { Button, IconButton } from '../../buttons';
 import { CellMedia } from '../../cells';

@@ -59,7 +59,7 @@ const InputScreen = () => {
         <MockTextInput
           helperText="username must start with an @ symbol"
           label="Username"
-          placeholder="john.doe@coinbase.com"
+          placeholder="john.doe@cbhq.com"
         />
       </Example>
       <Example inline title="TextInput ForegroundMuted accessibility label">
@@ -67,21 +67,21 @@ const InputScreen = () => {
           accessibilityLabel="Accessibility label for username"
           helperText="username must start with an @ symbol"
           label="Username"
-          placeholder="john.doe@coinbase.com"
+          placeholder="john.doe@cbhq.com"
         />
       </Example>
       <Example inline title="TextInput ForegroundMuted accessibility label no helper text">
         <MockTextInput
           accessibilityLabel="Accessibility label for username"
           label="Username"
-          placeholder="john.doe@coinbase.com"
+          placeholder="john.doe@cbhq.com"
         />
       </Example>
       <Example inline title="TextInput ellipsis long text">
         <MockTextInput
           helperText="Use textAlign='unset' to workaround the issue where long text does not ellipsis correctly."
           label="Username"
-          placeholder="john.doe@coinbase.com"
+          placeholder="john.doe@cbhq.com"
           textAlign="unset"
           value="https://github.com/coinbase/cds-staging/blob/master/docs/commands.md!-|?/"
           variant="foregroundMuted"
@@ -91,7 +91,7 @@ const InputScreen = () => {
         <MockTextInput
           helperText="username must start with an @ symbol"
           label="Username"
-          placeholder="john.doe@coinbase.com"
+          placeholder="john.doe@cbhq.com"
           variant="positive"
         />
       </Example>
@@ -99,14 +99,14 @@ const InputScreen = () => {
         <MockTextInput
           helperText="username must start with an @ symbol"
           label="Username"
-          placeholder="john.doe@coinbase.com"
+          placeholder="john.doe@cbhq.com"
           variant="negative"
         />
         <MockTextInput
           align="end"
           helperText="username must start with an @ symbol"
           label="Username"
-          placeholder="john.doe@coinbase.com"
+          placeholder="john.doe@cbhq.com"
           variant="negative"
         />
       </Example>
@@ -115,21 +115,21 @@ const InputScreen = () => {
           enableColorSurge
           helperText="username must start with an @ symbol"
           label="Username"
-          placeholder="john.doe@coinbase.com"
+          placeholder="john.doe@cbhq.com"
           variant="foregroundMuted"
         />
         <MockTextInput
           enableColorSurge
           helperText="username must start with an @ symbol"
           label="Username"
-          placeholder="john.doe@coinbase.com"
+          placeholder="john.doe@cbhq.com"
           variant="positive"
         />
         <MockTextInput
           enableColorSurge
           helperText="username must start with an @ symbol"
           label="Username"
-          placeholder="john.doe@coinbase.com"
+          placeholder="john.doe@cbhq.com"
           variant="negative"
         />
       </Example>
@@ -138,13 +138,13 @@ const InputScreen = () => {
           <MockTextInput
             helperText="username must start with an @ symbol"
             label="Username"
-            placeholder="john.doe@coinbase.com"
+            placeholder="john.doe@cbhq.com"
             variant="negative"
           />
           <MockTextInput
             helperText="username must start with an @ symbol"
             label="Username"
-            placeholder="john.doe@coinbase.com"
+            placeholder="john.doe@cbhq.com"
             variant="negative"
           />
         </VStack>
@@ -365,10 +365,10 @@ const InputScreen = () => {
         <MockComplexInput />
       </Example>
       <Example inline title="TextInput Custom Background">
-        <MockTextInput label="Username" placeholder="john.doe@coinbase.com" style={customStyle} />
+        <MockTextInput label="Username" placeholder="john.doe@cbhq.com" style={customStyle} />
       </Example>
       <Example inline title="TextInput without border">
-        <MockTextInput bordered={false} label="Username" placeholder="john.doe@coinbase.com" />
+        <MockTextInput bordered={false} label="Username" placeholder="john.doe@cbhq.com" />
       </Example>
       <Example inline title="Read-Only TextInput">
         <MockTextInput readOnly label="Read-Only" placeholder="Placeholder" value="Some text" />
@@ -409,13 +409,13 @@ const InputScreen = () => {
         />
       </Example>
       <Example inline title="TextInput with inside label">
-        <MockTextInput label="Username" labelVariant="inside" placeholder="john.doe@coinbase.com" />
+        <MockTextInput label="Username" labelVariant="inside" placeholder="john.doe@cbhq.com" />
       </Example>
       <Example inline title="TextInput with inside label and start node">
         <MockTextInput
           label="Username"
           labelVariant="inside"
-          placeholder="john.doe@coinbase.com"
+          placeholder="john.doe@cbhq.com"
           start={<InputIconButton transparent name="search" />}
         />
       </Example>
@@ -424,7 +424,7 @@ const InputScreen = () => {
           end={<InputIconButton transparent name="lightningBolt" />}
           label="Username"
           labelVariant="inside"
-          placeholder="john.doe@coinbase.com"
+          placeholder="john.doe@cbhq.com"
         />
       </Example>
       <Example inline title="TextInput with inside label and both nodes">
@@ -432,7 +432,7 @@ const InputScreen = () => {
           end={<InputIconButton transparent name="close" />}
           label="Username"
           labelVariant="inside"
-          placeholder="john.doe@coinbase.com"
+          placeholder="john.doe@cbhq.com"
           start={<InputIconButton transparent name="search" />}
         />
       </Example>
@@ -441,7 +441,7 @@ const InputScreen = () => {
           compact
           label="Username"
           labelVariant="inside"
-          placeholder="john.doe@coinbase.com"
+          placeholder="john.doe@cbhq.com"
         />
       </Example>
       <Example inline title="TextInput with inside label and error state">

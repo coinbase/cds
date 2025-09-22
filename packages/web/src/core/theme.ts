@@ -1,4 +1,4 @@
-import type { ColorScheme, ThemeVars } from '@coinbase/cds-common/core/theme';
+import type { ColorScheme, ThemeVars } from '@cbhq/cds-common/core/theme';
 import type { Property } from 'csstype';
 
 export type ThemeConfig = {

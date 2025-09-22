@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
-import { Box, Divider, HStack, VStack } from '@coinbase/cds-web/layout';
-import { Text } from '@coinbase/cds-web/typography';
+import { Box, Divider, HStack, VStack } from '@cbhq/cds-web/layout';
+import { Text } from '@cbhq/cds-web/typography';
 
 import { useDocsTheme } from '../../../theme/Layout/Provider/UnifiedThemeContext';
 import { ButtonLink } from '../../ButtonLink';

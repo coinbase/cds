@@ -1,5 +1,5 @@
 import React from 'react';
-import { cx } from '@coinbase/cds-web';
+import { cx } from '@cbhq/cds-web';
 import { translate } from '@docusaurus/Translate';
 import type { Props } from '@theme/DocSidebar/Desktop/CollapseButton';
 import IconArrow from '@theme/Icon/Arrow';

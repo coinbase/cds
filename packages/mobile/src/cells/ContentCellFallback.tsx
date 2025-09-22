@@ -1,6 +1,6 @@
 import React, { memo } from 'react';
-import type { FallbackRectWidthProps } from '@coinbase/cds-common/types';
-import { getRectWidthVariant } from '@coinbase/cds-common/utils/getRectWidthVariant';
+import type { FallbackRectWidthProps } from '@cbhq/cds-common/types';
+import { getRectWidthVariant } from '@cbhq/cds-common/utils/getRectWidthVariant';
 
 import { useTheme } from '../hooks/useTheme';
 import { Fallback } from '../layout';

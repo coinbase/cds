@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Animated, Platform } from 'react-native';
 import type { LayoutChangeEvent, NativeScrollEvent, NativeSyntheticEvent } from 'react-native';
-import { animateOpacityConfig, animateSizeConfig } from '@coinbase/cds-common/animation/carousel';
+import { animateOpacityConfig, animateSizeConfig } from '@cbhq/cds-common/animation/carousel';
 
 import { convertMotionConfig } from '../../animation/convertMotionConfig';
 import type { ScrollToFn } from '../../hooks/useScrollTo';

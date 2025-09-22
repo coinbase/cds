@@ -68,7 +68,7 @@ import Animated, {
   withSpring,
   runOnJS,
 } from 'react-native-reanimated';
-import { withMotionTiming } from '@coinbase/cds-common/animation';
+import { withMotionTiming } from '@cbhq/cds-common/animation';
 
 // Create shared values
 const opacityAnimatedValue = useSharedValue(0);

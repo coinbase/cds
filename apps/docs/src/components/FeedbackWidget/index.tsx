@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react';
-import { Button } from '@coinbase/cds-web/buttons';
-import { HStack, VStack } from '@coinbase/cds-web/layout';
-import { Text } from '@coinbase/cds-web/typography/Text';
+import { Button } from '@cbhq/cds-web/buttons';
+import { HStack, VStack } from '@cbhq/cds-web/layout';
+import { Text } from '@cbhq/cds-web/typography/Text';
 import { useLocation } from '@docusaurus/router';
 import { useAnalytics } from '@site/src/utils/useAnalytics';
 

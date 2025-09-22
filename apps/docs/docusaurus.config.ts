@@ -29,24 +29,24 @@ const webpackPlugin = () => {
           ...(config.mode === 'production'
             ? {}
             : {
-                '@coinbase/cds-common': path.resolve(__dirname, '../../packages/common/src'),
-                '@coinbase/cds-lottie-files': path.resolve(
+                '@cbhq/cds-common': path.resolve(__dirname, '../../packages/common/src'),
+                '@cbhq/cds-lottie-files': path.resolve(
                   __dirname,
                   '../../packages/lottie-files/src',
                 ),
-                '@coinbase/cds-icons': path.resolve(__dirname, '../../packages/icons/src'),
-                '@coinbase/cds-illustrations': path.resolve(
+                '@cbhq/cds-icons': path.resolve(__dirname, '../../packages/icons/src'),
+                '@cbhq/cds-illustrations': path.resolve(
                   __dirname,
                   '../../packages/illustrations/src',
                 ),
-                '@coinbase/cds-utils': path.resolve(__dirname, '../../packages/utils/src'),
-                '@coinbase/cds-mobile': path.resolve(__dirname, '../../packages/mobile/src'),
-                '@coinbase/cds-mobile-visualization': path.resolve(
+                '@cbhq/cds-utils': path.resolve(__dirname, '../../packages/utils/src'),
+                '@cbhq/cds-mobile': path.resolve(__dirname, '../../packages/mobile/src'),
+                '@cbhq/cds-mobile-visualization': path.resolve(
                   __dirname,
                   '../../packages/mobile-visualization/src',
                 ),
-                '@coinbase/cds-web': path.resolve(__dirname, '../../packages/web/src'),
-                '@coinbase/cds-web-visualization': path.resolve(
+                '@cbhq/cds-web': path.resolve(__dirname, '../../packages/web/src'),
+                '@cbhq/cds-web-visualization': path.resolve(
                   __dirname,
                   '../../packages/web-visualization/src',
                 ),
@@ -238,7 +238,7 @@ const config: Config = {
       },
     ],
     [
-      '@coinbase/docusaurus-plugin-kbar',
+      '@cbhq/docusaurus-plugin-kbar',
       {
         docs: {
           breadcrumbs: false,
@@ -248,7 +248,7 @@ const config: Config = {
         },
       },
     ],
-    ['@coinbase/docusaurus-plugin-docgen', docgenConfig],
+    ['@cbhq/docusaurus-plugin-docgen', docgenConfig],
     webpackPlugin,
   ],
 };

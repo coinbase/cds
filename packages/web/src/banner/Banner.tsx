@@ -7,16 +7,16 @@ import React, {
   useMemo,
   useState,
 } from 'react';
-import type { ThemeVars } from '@coinbase/cds-common/core/theme';
-import type { BannerVariantStyle } from '@coinbase/cds-common/tokens/banner';
-import { bannerMinWidth, variants } from '@coinbase/cds-common/tokens/banner';
+import type { ThemeVars } from '@cbhq/cds-common/core/theme';
+import type { BannerVariantStyle } from '@cbhq/cds-common/tokens/banner';
+import { bannerMinWidth, variants } from '@cbhq/cds-common/tokens/banner';
 import type {
   BannerStyleVariant,
   BannerVariant,
   IconName,
   SharedProps,
-} from '@coinbase/cds-common/types';
-import { isDevelopment } from '@coinbase/cds-utils';
+} from '@cbhq/cds-common/types';
+import { isDevelopment } from '@cbhq/cds-utils';
 import { css } from '@linaria/core';
 
 import { Collapsible } from '../collapsible';

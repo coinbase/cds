@@ -1,8 +1,8 @@
 import React, { forwardRef, memo } from 'react';
 import type { View } from 'react-native';
-import { accordionVisibleMaxHeight } from '@coinbase/cds-common/animation/accordion';
-import { accordionSpacing } from '@coinbase/cds-common/tokens/accordion';
-import type { SharedProps } from '@coinbase/cds-common/types';
+import { accordionVisibleMaxHeight } from '@cbhq/cds-common/animation/accordion';
+import { accordionSpacing } from '@cbhq/cds-common/tokens/accordion';
+import type { SharedProps } from '@cbhq/cds-common/types';
 
 import { Collapsible, type CollapsibleBaseProps } from '../collapsible/Collapsible';
 

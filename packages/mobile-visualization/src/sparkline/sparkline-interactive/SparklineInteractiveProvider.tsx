@@ -10,9 +10,9 @@ import React, {
 import { Animated } from 'react-native';
 import type { SharedValue } from 'react-native-reanimated';
 import { makeMutable, useSharedValue } from 'react-native-reanimated';
-import type { ThemeVars } from '@coinbase/cds-common/core/theme';
-import { gutter } from '@coinbase/cds-common/tokens/sizing';
-import { noop } from '@coinbase/cds-utils';
+import type { ThemeVars } from '@cbhq/cds-common/core/theme';
+import { gutter } from '@cbhq/cds-common/tokens/sizing';
+import { noop } from '@cbhq/cds-utils';
 
 import { useOpacityAnimation } from './useOpacityAnimation';
 

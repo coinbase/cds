@@ -15,7 +15,7 @@ module.exports = {
     ['@babel/preset-react', { runtime: 'automatic' }],
     '@babel/preset-typescript',
     [
-      require.resolve('@coinbase/cds-web-utils/babel/linariaPreset'),
+      require.resolve('@cbhq/cds-web-utils/babel/linariaPreset'),
       {
         sourceDir: 'packages/web/src',
         outputDir: 'packages/web/esm',

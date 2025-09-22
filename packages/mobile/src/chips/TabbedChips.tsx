@@ -1,8 +1,8 @@
 import React, { forwardRef, memo, useCallback, useMemo } from 'react';
 import { ScrollView } from 'react-native';
 import type { View } from 'react-native';
-import { useTabsContext } from '@coinbase/cds-common/tabs/TabsContext';
-import type { TabValue } from '@coinbase/cds-common/tabs/useTabs';
+import { useTabsContext } from '@cbhq/cds-common/tabs/TabsContext';
+import type { TabValue } from '@cbhq/cds-common/tabs/useTabs';
 
 import { useHorizontallyScrollingPressables } from '../hooks/useHorizontallyScrollingPressables';
 import { Box, OverflowGradient } from '../layout';

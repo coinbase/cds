@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react';
-import type { SharedAccessibilityProps } from '@coinbase/cds-common/types';
-import { renderA11y } from '@coinbase/cds-web-utils/jest';
+import type { SharedAccessibilityProps } from '@cbhq/cds-common/types';
+import { renderA11y } from '@cbhq/cds-web-utils/jest';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 
 import { Button } from '../../buttons';

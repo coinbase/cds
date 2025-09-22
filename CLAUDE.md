@@ -52,17 +52,17 @@ yarn nx run web:test --testPathPattern=Button.test
 
 ### Monorepo Structure
 The codebase uses Nx for build orchestration with the following project types:
-- **Packages**: Publishable npm packages in the `packages/` directory (e.g., `@coinbase/cds-web`, `@coinbase/cds-mobile`)
-- **Libraries**: Non-published local npm packages in the `libs/` directory (e.g., `@coinbase/cds-web`, `@coinbase/cds-mobile`)
+- **Packages**: Publishable npm packages in the `packages/` directory (e.g., `@cbhq/cds-web`, `@cbhq/cds-mobile`)
+- **Libraries**: Non-published local npm packages in the `libs/` directory (e.g., `@cbhq/cds-web`, `@cbhq/cds-mobile`)
 - **Applications**: Development and testing apps in the `apps/` directory (Storybook, mobile-app, docs)
 - **Tools**: Build tools and utilities for the monorepo in the `tools/` directory
 
 ### Key Packages/Apps:
-- **`packages/web/`** - React web components (`@coinbase/cds-web`)
-- **`packages/mobile/`** - React Native mobile components (`@coinbase/cds-mobile`)
-- **`packages/common/`** - Shared functionality and types (`@coinbase/cds-common`)
-- **`packages/icons/`** - Icon definitions and data (`@coinbase/cds-icons`)
-- **`packages/illustrations/`** - Illustration assets (`@coinbase/illustrations`)
+- **`packages/web/`** - React web components (`@cbhq/cds-web`)
+- **`packages/mobile/`** - React Native mobile components (`@cbhq/cds-mobile`)
+- **`packages/common/`** - Shared functionality and types (`@cbhq/cds-common`)
+- **`packages/icons/`** - Icon definitions and data (`@cbhq/cds-icons`)
+- **`packages/illustrations/`** - Illustration assets (`@cbhq/illustrations`)
 - **`packages/web-visualization/`** - Web visualization components built with D3
 - **`packages/mobile-visualization/`** - Mobile visualization components built with D3 and react-native-svg
 - **`apps/docs/`** - Public documentation website (Docusaurus)

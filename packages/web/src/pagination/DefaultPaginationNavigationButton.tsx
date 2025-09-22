@@ -1,5 +1,5 @@
 import { forwardRef } from 'react';
-import type { IconName } from '@coinbase/cds-common/types/IconName';
+import type { IconName } from '@cbhq/cds-common/types/IconName';
 
 import { IconButton } from '../buttons/IconButton';
 

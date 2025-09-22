@@ -1,5 +1,5 @@
 {
-  "import": "import { GridColumn } from '@coinbase/cds-web/layout/GridColumn'",
+  "import": "import { GridColumn } from '@cbhq/cds-web/layout/GridColumn'",
   "source": "https://github.com/coinbase/cds-staging/blob/master/packages/web/src/layout/GridColumn.tsx",
   "storybook": "https://cds-storybook.coinbase.com/?path=/story/core-components-grid--grid-examples",
   "description": "Place children of a Grid between specific grid lines.",

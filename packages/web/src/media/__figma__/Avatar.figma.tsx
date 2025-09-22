@@ -7,7 +7,7 @@ figma.connect(
   Avatar,
   'https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/✨-CDS-Components?node-id=60-643&m=dev',
   {
-    imports: ["import {Avatar} from '@coinbase/cds-web/media/Avatar'"],
+    imports: ["import {Avatar} from '@cbhq/cds-web/media/Avatar'"],
     props: {
       shape: figma.enum('shape', {
         circle: 'circle',

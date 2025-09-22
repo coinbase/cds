@@ -1,7 +1,7 @@
 import React from 'react';
-import type { LottieStatusAnimationProps } from '@coinbase/cds-common';
-import { useStatusAnimationPoller } from '@coinbase/cds-common';
-import { tradeStatus } from '@coinbase/cds-lottie-files/tradeStatus';
+import type { LottieStatusAnimationProps } from '@cbhq/cds-common';
+import { useStatusAnimationPoller } from '@cbhq/cds-common';
+import { tradeStatus } from '@cbhq/cds-lottie-files/tradeStatus';
 
 import { useLottie } from './useLottie';
 

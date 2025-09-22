@@ -1,5 +1,5 @@
 import { Pressable } from 'react-native';
-import { glyphMap } from '@coinbase/cds-icons/glyphMap';
+import { glyphMap } from '@cbhq/cds-icons/glyphMap';
 import { fireEvent, render, screen, within } from '@testing-library/react-native';
 
 import { defaultTheme } from '../../themes/defaultTheme';

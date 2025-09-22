@@ -94,59 +94,59 @@ const knownReactRouterImports = {
 
 const knownRelayImports = {
   graphql: {
-    source: '@coinbase/data-layer',
+    source: '@cbhq/data-layer',
     type: 'ImportSpecifier',
   },
   useRelayEnvironment: {
-    source: '@coinbase/data-layer',
+    source: '@cbhq/data-layer',
     type: 'ImportSpecifier',
   },
   useQueryLoader: {
-    source: '@coinbase/data-layer',
+    source: '@cbhq/data-layer',
     type: 'ImportSpecifier',
   },
   usePreloadedQuery: {
-    source: '@coinbase/data-layer',
+    source: '@cbhq/data-layer',
     type: 'ImportSpecifier',
   },
   useLazyLoadQuery: {
-    source: '@coinbase/data-layer',
+    source: '@cbhq/data-layer',
     type: 'ImportSpecifier',
   },
   useFragment: {
-    source: '@coinbase/data-layer',
+    source: '@cbhq/data-layer',
     type: 'ImportSpecifier',
   },
   useRefetchableFragment: {
-    source: '@coinbase/data-layer',
+    source: '@cbhq/data-layer',
     type: 'ImportSpecifier',
   },
   usePaginationFragment: {
-    source: '@coinbase/data-layer',
+    source: '@cbhq/data-layer',
     type: 'ImportSpecifier',
   },
   useBlockingPaginationFragment: {
-    source: '@coinbase/data-layer',
+    source: '@cbhq/data-layer',
     type: 'ImportSpecifier',
   },
   useMutation: {
-    source: '@coinbase/data-layer',
+    source: '@cbhq/data-layer',
     type: 'ImportSpecifier',
   },
   useSubscription: {
-    source: '@coinbase/data-layer',
+    source: '@cbhq/data-layer',
     type: 'ImportSpecifier',
   },
   loadQuery: {
-    source: '@coinbase/data-layer',
+    source: '@cbhq/data-layer',
     type: 'ImportSpecifier',
   },
   fetchQuery: {
-    source: '@coinbase/data-layer',
+    source: '@cbhq/data-layer',
     type: 'ImportSpecifier',
   },
   readInlineData: {
-    source: '@coinbase/data-layer',
+    source: '@cbhq/data-layer',
     type: 'ImportSpecifier',
   },
 };

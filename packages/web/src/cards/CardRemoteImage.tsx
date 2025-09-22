@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import type { CardRemoteImageProps } from '@coinbase/cds-common/types';
+import type { CardRemoteImageProps } from '@cbhq/cds-common/types';
 
 import { RemoteImage } from '../media/RemoteImage';
 

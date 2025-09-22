@@ -3,7 +3,7 @@ import type { Animated } from 'react-native';
 import {
   OverlayContentContext,
   type OverlayContentContextValue,
-} from '@coinbase/cds-common/overlays/OverlayContentContext';
+} from '@cbhq/cds-common/overlays/OverlayContentContext';
 
 import { useTheme } from '../../hooks/useTheme';
 import type { VStackProps } from '../../layout/VStack';

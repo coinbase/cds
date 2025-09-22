@@ -1,8 +1,8 @@
 import React, { cloneElement, memo } from 'react';
 import type { ImageURISource } from 'react-native';
-import type { ThemeVars } from '@coinbase/cds-common/core/theme';
-import { imageSize, mediaSize, pictogramScaleMultiplier } from '@coinbase/cds-common/tokens/cell';
-import type { IconName, SharedAccessibilityProps, SharedProps } from '@coinbase/cds-common/types';
+import type { ThemeVars } from '@cbhq/cds-common/core/theme';
+import { imageSize, mediaSize, pictogramScaleMultiplier } from '@cbhq/cds-common/tokens/cell';
+import type { IconName, SharedAccessibilityProps, SharedProps } from '@cbhq/cds-common/types';
 
 import { Icon } from '../icons/Icon';
 import type { PictogramProps } from '../illustrations';

@@ -1,7 +1,7 @@
-import '@coinbase/cds-icons/fonts/web/icon-font.css';
+import '@cbhq/cds-icons/fonts/web/icon-font.css';
 
-import { defaultFontStyles } from '@coinbase/cds-web/styles/defaultFont';
-import { globalStyles } from '@coinbase/cds-web/styles/global';
+import { defaultFontStyles } from '@cbhq/cds-web/styles/defaultFont';
+import { globalStyles } from '@cbhq/cds-web/styles/global';
 import type { Preview } from '@storybook/react-vite';
 import { themes } from '@storybook/theming';
 

@@ -1,7 +1,7 @@
 import React, { forwardRef, memo, useCallback, useMemo, useRef } from 'react';
-import { IntlDateFormat } from '@coinbase/cds-common/dates/IntlDateFormat';
-import { type DateInputOptions, useDateInput } from '@coinbase/cds-common/dates/useDateInput';
-import { useLocale } from '@coinbase/cds-common/system/LocaleProvider';
+import { IntlDateFormat } from '@cbhq/cds-common/dates/IntlDateFormat';
+import { type DateInputOptions, useDateInput } from '@cbhq/cds-common/dates/useDateInput';
+import { useLocale } from '@cbhq/cds-common/system/LocaleProvider';
 
 import { TextInput, type TextInputProps } from '../controls/TextInput';
 import { VStack } from '../layout/VStack';

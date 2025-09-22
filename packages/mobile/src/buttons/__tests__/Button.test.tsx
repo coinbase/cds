@@ -1,5 +1,5 @@
 import { Animated, Pressable } from 'react-native';
-import { useEventHandler } from '@coinbase/cds-common/hooks/useEventHandler';
+import { useEventHandler } from '@cbhq/cds-common/hooks/useEventHandler';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 
 import { Box } from '../../layout';
@@ -8,7 +8,7 @@ import { Text } from '../../typography/Text';
 import { DefaultThemeProvider } from '../../utils/testHelpers';
 import { Button } from '../Button';
 
-jest.mock('@coinbase/cds-common/hooks/useEventHandler');
+jest.mock('@cbhq/cds-common/hooks/useEventHandler');
 jest.mock('../../utils/debounce');
 
 describe('Button', () => {

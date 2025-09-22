@@ -2,7 +2,7 @@ import os from 'os';
 
 const d3 = ['d3', 'd3-.+', 'internmap'];
 
-const esModules = ['@coinbase', ...d3];
+const esModules = ['@cbhq', ...d3];
 
 const isCI = process.env.CI === 'true' || process.env.BUILDKITE === 'true';
 

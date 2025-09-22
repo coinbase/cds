@@ -1,4 +1,4 @@
-import type { AvatarSize } from '@coinbase/cds-common/types';
+import type { AvatarSize } from '@cbhq/cds-common/types';
 import { render, screen } from '@testing-library/react-native';
 
 import { DefaultThemeProvider, theme as defaultTheme } from '../../utils/testHelpers';

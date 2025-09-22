@@ -184,7 +184,7 @@ const LinkScreen = function LinkScreen() {
       </Example>
       <Example inline>
         <Text font="headline">mailto Link</Text>
-        <Link font="title2" to="mailto:someone@coinbase.com">
+        <Link font="title2" to="mailto:someone@cbhq.com">
           Send email to Someone
         </Link>
       </Example>

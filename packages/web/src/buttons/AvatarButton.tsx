@@ -1,5 +1,5 @@
 import React, { forwardRef, memo, useMemo } from 'react';
-import { interactableHeight } from '@coinbase/cds-common/tokens/interactableHeight';
+import { interactableHeight } from '@cbhq/cds-common/tokens/interactableHeight';
 import { css } from '@linaria/core';
 
 import type { Polymorphic } from '../core/polymorphism';

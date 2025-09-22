@@ -1,6 +1,6 @@
 import React, { memo } from 'react';
-import { gutter } from '@coinbase/cds-common/tokens/sizing';
-import { zIndex } from '@coinbase/cds-common/tokens/zIndex';
+import { gutter } from '@cbhq/cds-common/tokens/sizing';
+import { zIndex } from '@cbhq/cds-common/tokens/zIndex';
 
 import type { HStackProps } from '../../layout/HStack';
 import { HStack } from '../../layout/HStack';

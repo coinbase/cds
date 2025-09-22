@@ -1,5 +1,5 @@
 import React, { forwardRef, memo } from 'react';
-import { isProduction } from '@coinbase/cds-utils';
+import { isProduction } from '@cbhq/cds-utils';
 import { css } from '@linaria/core';
 
 import type { Polymorphic } from '../core/polymorphism';

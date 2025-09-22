@@ -1,5 +1,5 @@
 import { forwardRef, memo } from 'react';
-import { cellHelperTextVariants } from '@coinbase/cds-common/tokens/cell';
+import { cellHelperTextVariants } from '@cbhq/cds-common/tokens/cell';
 
 import { Icon } from '../icons/Icon';
 import { Text, type TextProps } from '../typography/Text';

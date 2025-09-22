@@ -1,6 +1,6 @@
 import React from 'react';
-import type { IconSize } from '@coinbase/cds-common/types';
-import { names } from '@coinbase/cds-icons/names';
+import type { IconSize } from '@cbhq/cds-common/types';
+import { names } from '@cbhq/cds-icons/names';
 
 import { HStack, VStack } from '../../layout';
 import { Icon } from '../Icon';

@@ -1,7 +1,7 @@
 import { DataCardWithCircle } from './DataCardWithCircle';
 import { RecurringBuyCard } from './RecurringBuyCard';
 import { ETHStakingCard } from './ETHStakingCard';
-import { Divider, VStack } from '@coinbase/cds-web/layout';
+import { Divider, VStack } from '@cbhq/cds-web/layout';
 
 export const CardList = () => {
   return (

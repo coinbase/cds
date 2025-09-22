@@ -1,9 +1,9 @@
 import React, { forwardRef, memo, useId, useMemo, useRef } from 'react';
-import { getAccessibleForegroundGradient } from '@coinbase/cds-common/color/getAccessibleForegroundGradient';
-import { getAccessibleColor } from '@coinbase/cds-common/utils/getAccessibleColor';
-import { getSparklineTransform } from '@coinbase/cds-common/visualizations/getSparklineTransform';
-import { generateRandomId } from '@coinbase/cds-utils';
-import { useTheme } from '@coinbase/cds-web/hooks/useTheme';
+import { getAccessibleForegroundGradient } from '@cbhq/cds-common/color/getAccessibleForegroundGradient';
+import { getAccessibleColor } from '@cbhq/cds-common/utils/getAccessibleColor';
+import { getSparklineTransform } from '@cbhq/cds-common/visualizations/getSparklineTransform';
+import { generateRandomId } from '@cbhq/cds-utils';
+import { useTheme } from '@cbhq/cds-web/hooks/useTheme';
 
 import { generateSparklineAreaWithId } from './generateSparklineWithId';
 import type { SparklineBaseProps } from './Sparkline';

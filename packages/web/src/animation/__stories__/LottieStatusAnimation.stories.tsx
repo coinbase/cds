@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import type { LottieStatusAnimationType } from '@coinbase/cds-common/types/LottieStatusAnimationProps';
+import type { LottieStatusAnimationType } from '@cbhq/cds-common/types/LottieStatusAnimationProps';
 
 import { Button } from '../../buttons';
 import { Box, HStack, VStack } from '../../layout';

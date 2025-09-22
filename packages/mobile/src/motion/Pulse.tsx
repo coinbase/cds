@@ -9,8 +9,8 @@ import React, {
 } from 'react';
 import { Animated } from 'react-native';
 import type { ForwardedRef } from 'react';
-import { pulseTransitionConfig, pulseVariantOpacity } from '@coinbase/cds-common/motion/hint';
-import type { MotionTransition, PulseVariant } from '@coinbase/cds-common/types';
+import { pulseTransitionConfig, pulseVariantOpacity } from '@cbhq/cds-common/motion/hint';
+import type { MotionTransition, PulseVariant } from '@cbhq/cds-common/types';
 
 import { convertMotionConfig } from '../animation/convertMotionConfig';
 

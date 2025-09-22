@@ -1,6 +1,6 @@
 import React, { memo, useMemo } from 'react';
 import type { PressableProps } from 'react-native';
-import type { CardMediaPlacement, SharedProps } from '@coinbase/cds-common/types';
+import type { CardMediaPlacement, SharedProps } from '@cbhq/cds-common/types';
 
 import { Button, type ButtonBaseProps, IconButton, type IconButtonBaseProps } from '../buttons';
 import { HStack } from '../layout/HStack';

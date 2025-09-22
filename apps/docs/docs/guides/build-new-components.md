@@ -56,7 +56,7 @@ CDS provides flexible primitives like `Box`, `HStack`, and `VStack` that can be 
 Example:
 
 ```tsx
-import { Box } from '@coinbase/cds-web';
+import { Box } from '@cbhq/cds-web';
 
 const MyComponent = ({ variant = 'primary', isDisabled, onClick }: MyComponentProps) => {
   return (
@@ -81,7 +81,7 @@ Enable developers to customize your component by supporting CDS `StyleProps`. Th
 Example:
 
 ```tsx
-import { Box, StyleProps } from '@coinbase/cds-web';
+import { Box, StyleProps } from '@cbhq/cds-web';
 
 type MyComponentProps = StyleProps & React.HTMLAttributes<HTMLDivElement>;
 
@@ -140,7 +140,7 @@ Here’s a complete example of a custom `Card` component:
 
 ```tsx
 import React from 'react';
-import { Box, Text, StyleProps } from '@coinbase/cds-web';
+import { Box, Text, StyleProps } from '@cbhq/cds-web';
 
 type CardProps = {
   title: string;

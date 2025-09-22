@@ -1,5 +1,5 @@
 import React, { useCallback, useRef, useState } from 'react';
-import { loremIpsum } from '@coinbase/cds-common/internal/data/loremIpsum';
+import { loremIpsum } from '@cbhq/cds-common/internal/data/loremIpsum';
 
 import { Accordion, AccordionItem } from '../../accordion';
 import { Button } from '../../buttons/Button';

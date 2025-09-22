@@ -1,5 +1,5 @@
 import React from 'react';
-import { assets } from '@coinbase/cds-common/internal/data/assets';
+import { assets } from '@cbhq/cds-common/internal/data/assets';
 
 import { useTheme } from '../../hooks/useTheme';
 import { HStack, VStack } from '../../layout';

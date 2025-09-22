@@ -1,7 +1,7 @@
 import React from 'react';
-import { getAvatarFallbackColor } from '@coinbase/cds-common/media/getAvatarFallbackColor';
-import { colorSchemeMap } from '@coinbase/cds-common/tokens/avatar';
-import type { AvatarFallbackColor } from '@coinbase/cds-common/types';
+import { getAvatarFallbackColor } from '@cbhq/cds-common/media/getAvatarFallbackColor';
+import { colorSchemeMap } from '@cbhq/cds-common/tokens/avatar';
+import type { AvatarFallbackColor } from '@cbhq/cds-common/types';
 
 import { Example, ExampleScreen } from '../../examples/ExampleScreen';
 import { HStack } from '../../layout/HStack';

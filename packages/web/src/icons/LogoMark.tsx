@@ -1,6 +1,6 @@
 import React, { memo } from 'react';
-import type { LogoMarkParams } from '@coinbase/cds-common/hooks/useLogo';
-import { useLogoMark } from '@coinbase/cds-common/hooks/useLogo';
+import type { LogoMarkParams } from '@cbhq/cds-common/hooks/useLogo';
+import { useLogoMark } from '@cbhq/cds-common/hooks/useLogo';
 import { css } from '@linaria/core';
 
 import { useTheme } from '../hooks/useTheme';

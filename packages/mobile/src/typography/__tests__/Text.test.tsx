@@ -1,6 +1,6 @@
 import React from 'react';
 import { Animated, Text as RNText } from 'react-native';
-import type { ThemeVars } from '@coinbase/cds-common/core/theme';
+import type { ThemeVars } from '@cbhq/cds-common/core/theme';
 import { render, screen } from '@testing-library/react-native';
 
 import { DefaultThemeProvider } from '../../utils/testHelpers';

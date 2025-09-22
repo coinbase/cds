@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react';
 import { Text, View } from 'react-native';
-import { getAvatarFallbackColor } from '@coinbase/cds-common/media/getAvatarFallbackColor';
+import { getAvatarFallbackColor } from '@cbhq/cds-common/media/getAvatarFallbackColor';
 
 import { Example, ExampleScreen } from '../../examples/ExampleScreen';
 import { HStack } from '../../layout/HStack';

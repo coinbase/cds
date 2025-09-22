@@ -1,5 +1,5 @@
 import React, { memo, useCallback, useRef } from 'react';
-import type { ChartTimeseries } from '@coinbase/cds-common/types/Chart';
+import type { ChartTimeseries } from '@cbhq/cds-common/types/Chart';
 
 import type { SparklineInteractiveBaseProps } from './SparklineInteractive';
 import { SparklineInteractiveAnimatedPath } from './SparklineInteractiveAnimatedPath';

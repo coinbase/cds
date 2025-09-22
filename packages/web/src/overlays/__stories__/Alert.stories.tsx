@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { useAlert } from '@coinbase/cds-common/overlays/useAlert';
+import { useAlert } from '@cbhq/cds-common/overlays/useAlert';
 
 import { Button } from '../../buttons/Button';
 import { Switch } from '../../controls/Switch';

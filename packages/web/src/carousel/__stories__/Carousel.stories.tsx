@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import { assets, coinbaseOneLogo } from '@coinbase/cds-common/internal/data/assets';
+import { assets, coinbaseOneLogo } from '@cbhq/cds-common/internal/data/assets';
 import { css } from '@linaria/core';
 
 import { Button } from '../../buttons/Button';

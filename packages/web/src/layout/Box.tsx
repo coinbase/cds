@@ -1,7 +1,7 @@
 import React, { forwardRef, memo, useMemo } from 'react';
-import type { PinningDirection } from '@coinbase/cds-common/types/BoxBaseProps';
-import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
-import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
+import type { PinningDirection } from '@cbhq/cds-common/types/BoxBaseProps';
+import type { SharedAccessibilityProps } from '@cbhq/cds-common/types/SharedAccessibilityProps';
+import type { SharedProps } from '@cbhq/cds-common/types/SharedProps';
 
 import type { Polymorphic } from '../core/polymorphism';
 import { cx } from '../cx';

@@ -18,11 +18,11 @@ export function buildMobileConfig(plugin: Record<string, unknown>) {
   return {
     plugins: {
       'react-native-a11y': reactNativeA11y,
-      '@coinbase/cds': plugin,
+      '@cbhq/cds': plugin,
     },
     rules: {
       'react-native-a11y/has-accessibility-hint': 'off',
-      '@coinbase/cds/has-valid-accessibility-descriptors-extended': 'warn',
+      '@cbhq/cds/has-valid-accessibility-descriptors-extended': 'warn',
     },
   };
 }
@@ -31,6 +31,6 @@ export const legacyMobileConfig = {
   plugins: ['react-native-a11y'],
   rules: {
     'react-native-a11y/has-accessibility-hint': 'off',
-    '@coinbase/cds/has-valid-accessibility-descriptors-extended': 'warn',
+    '@cbhq/cds/has-valid-accessibility-descriptors-extended': 'warn',
   },
 };

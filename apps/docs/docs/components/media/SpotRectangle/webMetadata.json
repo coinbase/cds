@@ -1,5 +1,5 @@
 {
-  "import": "import { SpotRectangle } from '@coinbase/cds-web/illustratations/SpotRectangle'",
+  "import": "import { SpotRectangle } from '@cbhq/cds-web/illustratations/SpotRectangle'",
   "changelog": "https://github.com/coinbase/cds-staging/blob/master/packages/illustrations/CHANGELOG.md",
   "source": "https://github.com/coinbase/cds-staging/blob/master/packages/web/src/illustrations/SpotRectangle.tsx",
   "storybook": "https://cds-storybook.coinbase.com/?path=/story/illustrations--spot-rectangle",

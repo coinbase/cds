@@ -1,5 +1,5 @@
 {
-  "name": "@coinbase/static-assets",
+  "name": "@cbhq/static-assets",
   "version": "0.0.0",
   "description": "Static assets upload for CDS",
   "private": true,

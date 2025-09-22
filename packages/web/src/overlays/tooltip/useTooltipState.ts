@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from 'react';
-import { usePrefixedId } from '@coinbase/cds-common/hooks/usePrefixedId';
+import { usePrefixedId } from '@cbhq/cds-common/hooks/usePrefixedId';
 
 export const useTooltipState = (id?: string) => {
   const [isHovered, setIsHovered] = useState(false);

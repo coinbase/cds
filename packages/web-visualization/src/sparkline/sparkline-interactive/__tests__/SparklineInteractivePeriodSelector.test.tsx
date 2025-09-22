@@ -1,4 +1,4 @@
-import { DefaultThemeProvider } from '@coinbase/cds-web/utils/test';
+import { DefaultThemeProvider } from '@cbhq/cds-web/utils/test';
 import { fireEvent, render, screen } from '@testing-library/react';
 
 import { SparklineInteractivePeriodSelector } from '../SparklineInteractivePeriodSelector';

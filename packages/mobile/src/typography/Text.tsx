@@ -7,8 +7,8 @@ import {
   type TextProps as NativeTextProps,
   type TextStyle,
 } from 'react-native';
-import type { ThemeVars } from '@coinbase/cds-common/core/theme';
-import { accessibleOpacityDisabled } from '@coinbase/cds-common/tokens/interactable';
+import type { ThemeVars } from '@cbhq/cds-common/core/theme';
+import { accessibleOpacityDisabled } from '@cbhq/cds-common/tokens/interactable';
 
 import { useTextAlign } from '../hooks/useTextAlign';
 import { useTheme } from '../hooks/useTheme';

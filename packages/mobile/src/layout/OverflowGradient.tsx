@@ -1,7 +1,7 @@
 import React, { memo, useMemo } from 'react';
 import { StyleSheet } from 'react-native';
 import type { ViewStyle } from 'react-native';
-import type { PinningDirection, SharedProps } from '@coinbase/cds-common';
+import type { PinningDirection, SharedProps } from '@cbhq/cds-common';
 
 import { LinearGradient } from '../gradients/LinearGradient';
 import { useTheme } from '../hooks/useTheme';

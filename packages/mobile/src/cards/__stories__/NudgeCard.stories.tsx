@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react';
 import { Image, StyleSheet, useWindowDimensions } from 'react-native';
-import { squareAssets } from '@coinbase/cds-common/internal/data/assets';
-import { NoopFn } from '@coinbase/cds-common/utils/mockUtils';
+import { squareAssets } from '@cbhq/cds-common/internal/data/assets';
+import { NoopFn } from '@cbhq/cds-common/utils/mockUtils';
 
 import { Button } from '../../buttons';
 import { Example, ExampleScreen } from '../../examples/ExampleScreen';

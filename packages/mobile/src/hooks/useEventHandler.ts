@@ -3,4 +3,4 @@
  * CDS common is dep of cds-mobile.
  * This allows consumers to pull directly from cds-mobile.
  */
-export { useEventHandler } from '@coinbase/cds-common/hooks/useEventHandler';
+export { useEventHandler } from '@cbhq/cds-common/hooks/useEventHandler';

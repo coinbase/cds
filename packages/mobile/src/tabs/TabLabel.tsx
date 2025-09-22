@@ -1,6 +1,6 @@
 import React, { memo, useEffect, useMemo, useRef } from 'react';
 import { Animated, StyleSheet, View } from 'react-native';
-import type { SharedProps } from '@coinbase/cds-common/types';
+import type { SharedProps } from '@cbhq/cds-common/types';
 
 import { DotCount } from '../dots/DotCount';
 import { useTheme } from '../hooks/useTheme';

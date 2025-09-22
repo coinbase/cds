@@ -1,17 +1,17 @@
 import React, { forwardRef, memo, useCallback, useMemo } from 'react';
 import useMeasure from 'react-use-measure';
-import type { ThemeVars } from '@coinbase/cds-common/core/theme';
-import { useMergeRefs } from '@coinbase/cds-common/hooks/useMergeRefs';
-import { useRefMap } from '@coinbase/cds-common/hooks/useRefMap';
-import { TabsContext } from '@coinbase/cds-common/tabs/TabsContext';
+import type { ThemeVars } from '@cbhq/cds-common/core/theme';
+import { useMergeRefs } from '@cbhq/cds-common/hooks/useMergeRefs';
+import { useRefMap } from '@cbhq/cds-common/hooks/useRefMap';
+import { TabsContext } from '@cbhq/cds-common/tabs/TabsContext';
 import {
   type TabsApi,
   type TabsOptions,
   type TabValue,
   useTabs,
-} from '@coinbase/cds-common/tabs/useTabs';
-import { accessibleOpacityDisabled } from '@coinbase/cds-common/tokens/interactable';
-import { defaultRect, type Rect } from '@coinbase/cds-common/types/Rect';
+} from '@cbhq/cds-common/tabs/useTabs';
+import { accessibleOpacityDisabled } from '@cbhq/cds-common/tokens/interactable';
+import { defaultRect, type Rect } from '@cbhq/cds-common/types/Rect';
 import { m as motion, type MotionProps, type Transition } from 'framer-motion';
 
 import { Box, type BoxDefaultElement, type BoxProps } from '../layout/Box';

@@ -10,7 +10,7 @@ import * as baseStyles from './responsive/base';
 import * as phoneStyles from './responsive/phone';
 import * as tabletStyles from './responsive/tablet';
 import * as desktopStyles from './responsive/desktop';
-import type { TypeOrNumber } from '@coinbase/cds-common/types/TypeOrNumber';
+import type { TypeOrNumber } from '@cbhq/cds-common/types/TypeOrNumber';
 import { globalCDSConfig } from './config';
 
 /**

@@ -1,5 +1,5 @@
 import React, { memo, useMemo } from 'react';
-import type { CardMediaPlacement } from '@coinbase/cds-common/types/CardMediaProps';
+import type { CardMediaPlacement } from '@cbhq/cds-common/types/CardMediaProps';
 
 import type { ButtonBaseProps } from '../buttons/Button';
 import { Button } from '../buttons/Button';

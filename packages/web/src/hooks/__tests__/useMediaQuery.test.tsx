@@ -1,13 +1,13 @@
 import React from 'react';
 import type { ReactNode } from 'react';
-import { isDevelopment } from '@coinbase/cds-utils';
+import { isDevelopment } from '@cbhq/cds-utils';
 import { renderHook } from '@testing-library/react-hooks';
 
 import { MediaQueryProvider } from '../../system/MediaQueryProvider';
 import { useMediaQuery } from '../useMediaQuery';
 
 // Mock isDevelopment
-jest.mock('@coinbase/cds-utils', () => ({
+jest.mock('@cbhq/cds-utils', () => ({
   isDevelopment: jest.fn(),
 }));
 describe('useMediaQuery', () => {

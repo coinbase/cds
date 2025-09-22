@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react';
 import { Path, Svg } from 'react-native-svg';
-import type { IconName } from '@coinbase/cds-common';
+import type { IconName } from '@cbhq/cds-common';
 
 import { Button } from '../../buttons';
 import { ButtonGroup } from '../../buttons/ButtonGroup';
@@ -214,7 +214,7 @@ export const WithButtonGroup = () => {
                   <ListCell
                     description="Satoshi Nakamoto"
                     media={<Avatar accessibilityLabel="Sneezy" colorScheme="blue" name="Sneezy" />}
-                    title="satoshi@coinbase.com"
+                    title="satoshi@cbhq.com"
                   />
                 </Box>
               </MultiContentModule>

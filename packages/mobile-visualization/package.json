@@ -1,5 +1,5 @@
 {
-  "name": "@coinbase/cds-mobile-visualization",
+  "name": "@cbhq/cds-mobile-visualization",
   "version": "3.3.0",
   "description": "Coinbase Design System - Mobile Visualization Native",
   "repository": {
@@ -32,10 +32,10 @@
     "CHANGELOG"
   ],
   "peerDependencies": {
-    "@coinbase/cds-common": "workspace:^",
-    "@coinbase/cds-lottie-files": "workspace:^",
-    "@coinbase/cds-mobile": "workspace:^",
-    "@coinbase/cds-utils": "workspace:^",
+    "@cbhq/cds-common": "workspace:^",
+    "@cbhq/cds-lottie-files": "workspace:^",
+    "@cbhq/cds-mobile": "workspace:^",
+    "@cbhq/cds-utils": "workspace:^",
     "react": "^18.3.1",
     "react-native": "^0.74.5",
     "react-native-gesture-handler": "^2.16.2",
@@ -52,10 +52,10 @@
     "@babel/preset-env": "^7.28.0",
     "@babel/preset-react": "^7.27.1",
     "@babel/preset-typescript": "^7.27.1",
-    "@coinbase/cds-common": "workspace:^",
-    "@coinbase/cds-lottie-files": "workspace:^",
-    "@coinbase/cds-mobile": "workspace:^",
-    "@coinbase/cds-utils": "workspace:^",
+    "@cbhq/cds-common": "workspace:^",
+    "@cbhq/cds-lottie-files": "workspace:^",
+    "@cbhq/cds-mobile": "workspace:^",
+    "@cbhq/cds-utils": "workspace:^",
     "@figma/code-connect": "^1.3.4",
     "@types/react": "^18.3.12",
     "react-native-gesture-handler": "2.16.2",

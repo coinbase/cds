@@ -2,7 +2,7 @@ import React from 'react';
 import type {
   LottieStatusAnimationProps,
   LottieStatusAnimationType,
-} from '@coinbase/cds-common/types/LottieStatusAnimationProps';
+} from '@cbhq/cds-common/types/LottieStatusAnimationProps';
 import { render, screen, waitFor } from '@testing-library/react';
 
 import { LottieStatusAnimation } from '../LottieStatusAnimation';
@@ -11,7 +11,7 @@ type StatusAnimationPollerParams = {
   onFinish?: () => void;
 };
 
-jest.mock('@coinbase/cds-common/lottie/useStatusAnimationPoller', () => ({
+jest.mock('@cbhq/cds-common/lottie/useStatusAnimationPoller', () => ({
   useStatusAnimationPoller: jest
     .fn()
     .mockImplementation(({ onFinish }: StatusAnimationPollerParams) => {

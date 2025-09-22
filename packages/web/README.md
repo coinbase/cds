@@ -1,1 +1,1 @@
-# @coinbase/cds-web
+# @cbhq/cds-web

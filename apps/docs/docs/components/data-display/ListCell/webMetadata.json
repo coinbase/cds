@@ -1,5 +1,5 @@
 {
-  "import": "import { ListCell } from '@coinbase/cds-web/cells/ListCell'",
+  "import": "import { ListCell } from '@cbhq/cds-web/cells/ListCell'",
   "source": "https://github.com/coinbase/cds-staging/blob/master/packages/web/src/cells/ListCell.tsx",
   "description": "A versatile cell component used for displaying content in a list format, supporting various layouts and interactions.",
   "storybook": "https://cds-storybook.coinbase.com/?path=/story/core-components-cells-listcell--with-a-11-y-v-stack",

@@ -1,5 +1,5 @@
 import type { TextStyle, ViewStyle } from 'react-native';
-import type { ColorScheme, ThemeVars } from '@coinbase/cds-common/core/theme';
+import type { ColorScheme, ThemeVars } from '@cbhq/cds-common/core/theme';
 
 type Shadow = {
   shadowColor?: ViewStyle['shadowColor'];

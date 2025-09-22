@@ -1,5 +1,5 @@
 import { Image, StyleSheet } from 'react-native';
-import { assets, ethBackground } from '@coinbase/cds-common/internal/data/assets';
+import { assets, ethBackground } from '@cbhq/cds-common/internal/data/assets';
 
 import { Button, IconButton, IconCounterButton } from '../../buttons';
 import { TextInput } from '../../controls';

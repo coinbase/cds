@@ -1,5 +1,5 @@
 import React from 'react';
-import { useOverlayContentContext } from '@coinbase/cds-common/overlays/OverlayContentContext';
+import { useOverlayContentContext } from '@cbhq/cds-common/overlays/OverlayContentContext';
 import { renderHook } from '@testing-library/react';
 
 import { DefaultThemeProvider } from '../../utils/test';

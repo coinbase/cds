@@ -5,15 +5,15 @@ import {
   StyleSheet,
   type View,
 } from 'react-native';
-import { transparentVariants, variants } from '@coinbase/cds-common/tokens/button';
-import { interactableHeight } from '@coinbase/cds-common/tokens/interactableHeight';
+import { transparentVariants, variants } from '@cbhq/cds-common/tokens/button';
+import { interactableHeight } from '@cbhq/cds-common/tokens/interactableHeight';
 import type {
   ButtonVariant,
   IconName,
   SharedAccessibilityProps,
   SharedProps,
-} from '@coinbase/cds-common/types';
-import { getButtonSpacingProps } from '@coinbase/cds-common/utils/getButtonSpacingProps';
+} from '@cbhq/cds-common/types';
+import { getButtonSpacingProps } from '@cbhq/cds-common/utils/getButtonSpacingProps';
 
 import { useTheme } from '../hooks/useTheme';
 import { Icon } from '../icons/Icon';

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import useMeasure from 'react-use-measure';
-import { sampleTabs } from '@coinbase/cds-common/internal/data/tabs';
+import { sampleTabs } from '@cbhq/cds-common/internal/data/tabs';
 import { render, screen } from '@testing-library/react';
 
 import { DefaultThemeProvider } from '../../utils/test';

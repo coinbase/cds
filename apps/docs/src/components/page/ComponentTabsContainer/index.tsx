@@ -1,11 +1,11 @@
 import React, { useCallback, useMemo, useRef } from 'react';
-import { useTabsContext } from '@coinbase/cds-common/tabs/TabsContext';
-import type { TabValue } from '@coinbase/cds-common/tabs/useTabs';
-import { useDimensions } from '@coinbase/cds-web/hooks/useDimensions';
-import { Box, VStack } from '@coinbase/cds-web/layout';
-import { Pressable } from '@coinbase/cds-web/system';
-import type { TabsActiveIndicatorProps } from '@coinbase/cds-web/tabs/Tabs';
-import { Tabs, TabsActiveIndicator } from '@coinbase/cds-web/tabs/Tabs';
+import { useTabsContext } from '@cbhq/cds-common/tabs/TabsContext';
+import type { TabValue } from '@cbhq/cds-common/tabs/useTabs';
+import { useDimensions } from '@cbhq/cds-web/hooks/useDimensions';
+import { Box, VStack } from '@cbhq/cds-web/layout';
+import { Pressable } from '@cbhq/cds-web/system';
+import type { TabsActiveIndicatorProps } from '@cbhq/cds-web/tabs/Tabs';
+import { Tabs, TabsActiveIndicator } from '@cbhq/cds-web/tabs/Tabs';
 import type { TOCItem } from '@docusaurus/mdx-loader';
 import { useHistory, useLocation } from '@docusaurus/router';
 import { usePlatformContext } from '@site/src/utils/PlatformContext';

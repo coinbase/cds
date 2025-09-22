@@ -1,6 +1,6 @@
 import React from 'react';
-import { assets } from '@coinbase/cds-common/internal/data/assets';
-import { zIndex } from '@coinbase/cds-common/tokens/zIndex';
+import { assets } from '@cbhq/cds-common/internal/data/assets';
+import { zIndex } from '@cbhq/cds-common/tokens/zIndex';
 
 import { HStack, VStack } from '../../layout';
 import { RemoteImage } from '../../media';

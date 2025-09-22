@@ -1,5 +1,5 @@
 import React from 'react';
-import { animations } from '@coinbase/cds-common/motion/tokens';
+import { animations } from '@cbhq/cds-common/motion/tokens';
 
 import { Table, TableBody, TableCell, TableHeader, TableRow } from '../../tables';
 

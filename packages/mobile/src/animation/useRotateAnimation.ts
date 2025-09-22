@@ -1,6 +1,6 @@
 import { useMemo, useRef } from 'react';
 import { Animated } from 'react-native';
-import type { MotionBaseSpec } from '@coinbase/cds-common';
+import type { MotionBaseSpec } from '@cbhq/cds-common';
 
 import { convertMotionConfig } from './convertMotionConfig';
 

@@ -1,5 +1,5 @@
 {
-  "name": "@coinbase/cds-web-utils",
+  "name": "@cbhq/cds-web-utils",
   "version": "0.0.0",
   "private": true,
   "description": "Jest utils and developer tools.",

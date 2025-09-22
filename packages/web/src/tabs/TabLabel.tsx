@@ -1,7 +1,7 @@
 import React, { memo, useCallback, useId, useMemo } from 'react';
-import type { ThemeVars } from '@coinbase/cds-common/core/theme';
-import { usePreviousValue } from '@coinbase/cds-common/hooks/usePreviousValue';
-import type { SharedProps } from '@coinbase/cds-common/types';
+import type { ThemeVars } from '@cbhq/cds-common/core/theme';
+import { usePreviousValue } from '@cbhq/cds-common/hooks/usePreviousValue';
+import type { SharedProps } from '@cbhq/cds-common/types';
 import { css } from '@linaria/core';
 
 import { Collapsible } from '../collapsible';

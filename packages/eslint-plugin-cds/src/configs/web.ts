@@ -18,11 +18,11 @@ export function buildWebConfig(plugin: Record<string, unknown>) {
     files: ['**/*.ts', '**/*.tsx'],
     plugins: {
       'jsx-a11y': jsxA11y,
-      '@coinbase/cds': plugin,
+      '@cbhq/cds': plugin,
     },
     rules: {
-      '@coinbase/cds/control-has-associated-label-extended': 'warn',
-      '@coinbase/cds/no-v7-imports': 'warn',
+      '@cbhq/cds/control-has-associated-label-extended': 'warn',
+      '@cbhq/cds/no-v7-imports': 'warn',
       'jsx-a11y/control-has-associated-label': [
         'warn',
         {
@@ -47,8 +47,8 @@ export function buildWebConfig(plugin: Record<string, unknown>) {
 export const legacyWebConfig = {
   plugins: ['jsx-a11y'],
   rules: {
-    '@coinbase/cds/control-has-associated-label-extended': 'warn',
-    '@coinbase/cds/no-v7-imports': 'warn',
+    '@cbhq/cds/control-has-associated-label-extended': 'warn',
+    '@cbhq/cds/no-v7-imports': 'warn',
   },
   overrides: [
     {

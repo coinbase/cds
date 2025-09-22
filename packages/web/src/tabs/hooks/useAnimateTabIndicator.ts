@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
-import { animateTabIndicatorBaseSpec } from '@coinbase/cds-common/animation/tabs';
-import { usePreviousValues } from '@coinbase/cds-common/hooks/usePreviousValues';
+import { animateTabIndicatorBaseSpec } from '@cbhq/cds-common/animation/tabs';
+import { usePreviousValues } from '@cbhq/cds-common/hooks/usePreviousValues';
 
 import { useMotionProps } from '../../motion/useMotionProps';
 import type { TabIndicatorProps } from '../TabIndicator';

@@ -1,8 +1,8 @@
 import type {
   EventHandlerConfig,
   EventHandlerCustomConfig,
-} from '@coinbase/cds-common/system/EventHandlerProvider';
-import { EventHandlerProvider } from '@coinbase/cds-common/system/EventHandlerProvider';
+} from '@cbhq/cds-common/system/EventHandlerProvider';
+import { EventHandlerProvider } from '@cbhq/cds-common/system/EventHandlerProvider';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 
 import { DefaultThemeProvider } from '../../utils/testHelpers';

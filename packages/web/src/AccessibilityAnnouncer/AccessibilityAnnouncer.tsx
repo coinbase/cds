@@ -1,6 +1,6 @@
 import React, { forwardRef, memo, useEffect, useRef, useState } from 'react';
-import { useMergeRefs } from '@coinbase/cds-common/hooks/useMergeRefs';
-import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
+import { useMergeRefs } from '@cbhq/cds-common/hooks/useMergeRefs';
+import type { SharedProps } from '@cbhq/cds-common/types/SharedProps';
 import { css } from '@linaria/core';
 
 export type AccessibilityAnnouncerProps = Omit<

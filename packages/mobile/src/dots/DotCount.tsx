@@ -13,22 +13,22 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
 } from 'react-native-reanimated';
-import type { ThemeVars } from '@coinbase/cds-common/core/theme';
-import { usePreviousValue } from '@coinbase/cds-common/hooks/usePreviousValue';
+import type { ThemeVars } from '@cbhq/cds-common/core/theme';
+import { usePreviousValue } from '@cbhq/cds-common/hooks/usePreviousValue';
 import {
   dotOpacityEnterConfig,
   dotOpacityExitConfig,
   dotScaleEnterConfig,
   dotScaleExitConfig,
-} from '@coinbase/cds-common/motion/dot';
-import { dotCountSize } from '@coinbase/cds-common/tokens/dot';
+} from '@cbhq/cds-common/motion/dot';
+import { dotCountSize } from '@cbhq/cds-common/tokens/dot';
 import type {
   DotCountPinPlacement,
   DotCountVariants,
   DotOverlap,
   SharedAccessibilityProps,
   SharedProps,
-} from '@coinbase/cds-common/types';
+} from '@cbhq/cds-common/types';
 
 import type { DotPinStylesKey } from '../hooks/useDotPinStyles';
 import { useDotPinStyles } from '../hooks/useDotPinStyles';

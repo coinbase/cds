@@ -14,7 +14,7 @@
         "prod": {
           "commands": [
             "rm -rf esm && babel ./src --out-dir esm --extensions .ts,.tsx,.js,.jsx --copy-files --no-copy-ignored",
-            "node ../../add-cds7-exports.js @coinbase/cds-mobile-visualization"
+            "node ../../add-cds7-exports.js @cbhq/cds-mobile-visualization"
           ],
           "parallel": false
         }
@@ -46,7 +46,7 @@
       }
     },
     "report-disabled-eslint-rules": {
-      "executor": "@coinbase/prevent-eslint-disable:report"
+      "executor": "@cbhq/prevent-eslint-disable:report"
     },
     "publish-figma": {
       "executor": "nx:run-commands",

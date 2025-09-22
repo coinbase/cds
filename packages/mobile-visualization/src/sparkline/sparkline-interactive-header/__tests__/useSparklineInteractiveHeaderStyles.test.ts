@@ -1,6 +1,6 @@
 import type { StyleProp, TextStyle } from 'react-native';
-import { defaultTheme } from '@coinbase/cds-mobile/themes/defaultTheme';
-import { DefaultThemeProvider } from '@coinbase/cds-mobile/utils/testHelpers';
+import { defaultTheme } from '@cbhq/cds-mobile/themes/defaultTheme';
+import { DefaultThemeProvider } from '@cbhq/cds-mobile/utils/testHelpers';
 import { renderHook } from '@testing-library/react-hooks';
 
 import { useSparklineInteractiveHeaderStyles } from '../useSparklineInteractiveHeaderStyles';

@@ -1,4 +1,4 @@
-import { inputBorderWidth } from '@coinbase/cds-common/tokens/input';
+import { inputBorderWidth } from '@cbhq/cds-common/tokens/input';
 import { renderHook } from '@testing-library/react-hooks';
 
 import { useInputBorderAnimation } from '../useInputBorderAnimation';

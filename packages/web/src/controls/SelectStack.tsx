@@ -1,6 +1,6 @@
 import React, { forwardRef, memo } from 'react';
-import type { ThemeVars } from '@coinbase/cds-common/core/theme';
-import type { SharedAccessibilityProps } from '@coinbase/cds-common/types';
+import type { ThemeVars } from '@cbhq/cds-common/core/theme';
+import type { SharedAccessibilityProps } from '@cbhq/cds-common/types';
 
 import { handlePreventPropagation } from '../utils/eventHandlers';
 

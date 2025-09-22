@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import type { ProgressContainerWithButtonsProps } from '@coinbase/cds-common/types/ProgressContainerWithButtonsProps';
+import type { ProgressContainerWithButtonsProps } from '@cbhq/cds-common/types/ProgressContainerWithButtonsProps';
 
 import { Button } from '../buttons';
 import { VStack } from '../layout';

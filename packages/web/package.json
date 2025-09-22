@@ -1,5 +1,5 @@
 {
-  "name": "@coinbase/cds-web",
+  "name": "@cbhq/cds-web",
   "version": "8.12.0",
   "description": "Coinbase Design System - Web",
   "repository": {
@@ -139,11 +139,11 @@
     "react-dom": "^18.3.1"
   },
   "dependencies": {
-    "@coinbase/cds-common": "workspace:^",
-    "@coinbase/cds-icons": "workspace:^",
-    "@coinbase/cds-illustrations": "workspace:^",
-    "@coinbase/cds-lottie-files": "workspace:^",
-    "@coinbase/cds-utils": "workspace:^",
+    "@cbhq/cds-common": "workspace:^",
+    "@cbhq/cds-icons": "workspace:^",
+    "@cbhq/cds-illustrations": "workspace:^",
+    "@cbhq/cds-lottie-files": "workspace:^",
+    "@cbhq/cds-utils": "workspace:^",
     "@floating-ui/react-dom": "^2.1.1",
     "@popperjs/core": "^2.9.0",
     "@react-spring/web": "^9.7.4",
@@ -160,7 +160,7 @@
     "@babel/preset-env": "^7.28.0",
     "@babel/preset-react": "^7.27.1",
     "@babel/preset-typescript": "^7.27.1",
-    "@coinbase/cds-web-utils": "workspace:^",
+    "@cbhq/cds-web-utils": "workspace:^",
     "@figma/code-connect": "^1.3.4",
     "@linaria/core": "^3.0.0-beta.22",
     "@linaria/shaker": "^3.0.0-beta.22",

@@ -1,4 +1,4 @@
-import spotIconVersionMap from '@coinbase/cds-illustrations/__generated__/spotIcon/data/versionMap';
+import spotIconVersionMap from '@cbhq/cds-illustrations/__generated__/spotIcon/data/versionMap';
 
 import {
   createIllustration,
@@ -17,4 +17,4 @@ export type SpotIconBaseProps = IllustrationBaseProps<'spotIcon'> &
     dimension?: IllustrationDimensionsMap['spotSquare'];
   };
 export type SpotIconProps = SpotIconBaseProps;
-export type { SpotIconName } from '@coinbase/cds-illustrations';
+export type { SpotIconName } from '@cbhq/cds-illustrations';

@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
-import type { GroupToggleState } from '@coinbase/cds-common/hooks/useGroupToggler';
-import { useGroupToggler } from '@coinbase/cds-common/hooks/useGroupToggler';
+import type { GroupToggleState } from '@cbhq/cds-common/hooks/useGroupToggler';
+import { useGroupToggler } from '@cbhq/cds-common/hooks/useGroupToggler';
 
 export type CheckboxGroupStateProps<T extends string> = {
   select: React.ChangeEventHandler<HTMLInputElement>;

@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import type { Animated } from 'react-native';
-import { usePreviousValue } from '@coinbase/cds-common/hooks/usePreviousValue';
+import { usePreviousValue } from '@cbhq/cds-common/hooks/usePreviousValue';
 
 type ToggleAnimation = {
   animateIn: Animated.CompositeAnimation;

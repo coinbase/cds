@@ -7,7 +7,7 @@ figma.connect(
   Alert,
   'https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/✨-CDS-Components?node-id=35-698&m=dev',
   {
-    imports: ["import { Alert } from '@coinbase/cds-web/overlays/Alert'"],
+    imports: ["import { Alert } from '@cbhq/cds-web/overlays/Alert'"],
     props: {
       body: figma.string('body'),
       title: figma.string('title'),

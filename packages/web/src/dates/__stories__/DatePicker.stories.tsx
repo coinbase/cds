@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react';
-import { DateInputValidationError } from '@coinbase/cds-common/dates/DateInputValidationError';
-import { LocaleProvider } from '@coinbase/cds-common/system/LocaleProvider';
+import { DateInputValidationError } from '@cbhq/cds-common/dates/DateInputValidationError';
+import { LocaleProvider } from '@cbhq/cds-common/system/LocaleProvider';
 
 import { Box } from '../../layout/Box';
 import { Group } from '../../layout/Group';

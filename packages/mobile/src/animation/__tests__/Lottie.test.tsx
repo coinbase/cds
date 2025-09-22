@@ -1,4 +1,4 @@
-import { nux } from '@coinbase/cds-lottie-files/nux';
+import { nux } from '@cbhq/cds-lottie-files/nux';
 import { render, screen } from '@testing-library/react-native';
 import LottieView from 'lottie-react-native';
 

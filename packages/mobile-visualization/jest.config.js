@@ -8,7 +8,7 @@ const native = [
   '@bugsnag/react-native',
 ];
 
-const esModules = ['@coinbase', ...native, ...d3];
+const esModules = ['@cbhq', ...native, ...d3];
 
 export default {
   coveragePathIgnorePatterns: ['<rootDir>/src/illustrations/images', '.stories.tsx', '__stories__'],

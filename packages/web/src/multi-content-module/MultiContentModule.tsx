@@ -1,6 +1,6 @@
 import React, { forwardRef, isValidElement, memo, useMemo } from 'react';
-import { defaultMaxWidth } from '@coinbase/cds-common/tokens/multiContentModule';
-import type { IllustrationPictogramNames } from '@coinbase/cds-common/types/IllustrationNames';
+import { defaultMaxWidth } from '@cbhq/cds-common/tokens/multiContentModule';
+import type { IllustrationPictogramNames } from '@cbhq/cds-common/types/IllustrationNames';
 
 import { Button } from '../buttons';
 import type { Polymorphic } from '../core/polymorphism';

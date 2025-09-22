@@ -1,5 +1,5 @@
 import React, { forwardRef, memo, useMemo } from 'react';
-import type { TourStepArrowComponentProps } from '@coinbase/cds-common/tour/useTour';
+import type { TourStepArrowComponentProps } from '@cbhq/cds-common/tour/useTour';
 
 import { Box } from '../layout/Box';
 

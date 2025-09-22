@@ -6,11 +6,11 @@ import {
   animateOutOpacityConfig,
   animateOutOverlayOpacityConfig,
   animateOutTranslateYConfig,
-} from '@coinbase/cds-common/animation/fullscreenModal';
+} from '@cbhq/cds-common/animation/fullscreenModal';
 import {
   OverlayContentContext,
   type OverlayContentContextValue,
-} from '@coinbase/cds-common/overlays/OverlayContentContext';
+} from '@cbhq/cds-common/overlays/OverlayContentContext';
 import { css } from '@linaria/core';
 import { m as motion } from 'framer-motion';
 

@@ -11,13 +11,13 @@ import {
   animateInOpacityConfig,
   animateOutBottomConfig,
   animateOutOpacityConfig,
-} from '@coinbase/cds-common/animation/toast';
+} from '@cbhq/cds-common/animation/toast';
 import {
   type ToastBaseProps as CommonToastBaseProps,
   ToastContext,
   type ToastRefHandle,
-} from '@coinbase/cds-common/overlays/ToastProvider';
-import type { SharedAccessibilityProps } from '@coinbase/cds-common/types';
+} from '@cbhq/cds-common/overlays/ToastProvider';
+import type { SharedAccessibilityProps } from '@cbhq/cds-common/types';
 import { css } from '@linaria/core';
 import { m as motion, useAnimation } from 'framer-motion';
 

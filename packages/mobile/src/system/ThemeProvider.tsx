@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useMemo } from 'react';
-import type { ColorScheme } from '@coinbase/cds-common/core/theme';
+import type { ColorScheme } from '@cbhq/cds-common/core/theme';
 
 import type { Theme, ThemeConfig } from '../core/theme';
 

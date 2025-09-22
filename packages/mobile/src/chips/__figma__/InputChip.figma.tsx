@@ -7,7 +7,7 @@ figma.connect(
   InputChip,
   'https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/✨-CDS-Components?node-id=10177-5161&m=dev',
   {
-    imports: ["import { InputChip } from '@coinbase/cds-mobile/chips/InputChip'"],
+    imports: ["import { InputChip } from '@cbhq/cds-mobile/chips/InputChip'"],
     props: {
       value: figma.string('value'),
       start: figma.boolean('show start', {

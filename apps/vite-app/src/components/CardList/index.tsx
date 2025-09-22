@@ -1,4 +1,4 @@
-import { Divider, VStack } from '@coinbase/cds-web/layout';
+import { Divider, VStack } from '@cbhq/cds-web/layout';
 
 import { DataCardWithCircle } from './DataCardWithCircle';
 import { ETHStakingCard } from './ETHStakingCard';

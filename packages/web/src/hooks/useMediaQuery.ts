@@ -1,5 +1,5 @@
 import { useCallback, useContext, useSyncExternalStore } from 'react';
-import { isDevelopment } from '@coinbase/cds-utils';
+import { isDevelopment } from '@cbhq/cds-utils';
 
 import { MediaQueryContext } from '../system/MediaQueryProvider';
 

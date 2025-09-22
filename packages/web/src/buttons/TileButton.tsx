@@ -1,8 +1,8 @@
 import React, { forwardRef, memo, useMemo } from 'react';
-import { gutter } from '@coinbase/cds-common/tokens/sizing';
-import { pictogramScaleMultiplier } from '@coinbase/cds-common/tokens/tile';
-import type { IllustrationPictogramNames } from '@coinbase/cds-common/types';
-import { isDevelopment } from '@coinbase/cds-utils';
+import { gutter } from '@cbhq/cds-common/tokens/sizing';
+import { pictogramScaleMultiplier } from '@cbhq/cds-common/tokens/tile';
+import type { IllustrationPictogramNames } from '@cbhq/cds-common/types';
+import { isDevelopment } from '@cbhq/cds-utils';
 
 import type { Polymorphic } from '../core/polymorphism';
 import type { PictogramName } from '../illustrations/Pictogram';

@@ -1,7 +1,7 @@
 import React, { useMemo, useRef, useState } from 'react';
-import { SearchInput } from '@coinbase/cds-web/controls/SearchInput';
-import { Box, HStack, VStack } from '@coinbase/cds-web/layout';
-import { Text } from '@coinbase/cds-web/typography/Text';
+import { SearchInput } from '@cbhq/cds-web/controls/SearchInput';
+import { Box, HStack, VStack } from '@cbhq/cds-web/layout';
+import { Text } from '@cbhq/cds-web/typography/Text';
 
 import { useIsSticky } from '../../../utils/useIsSticky';
 

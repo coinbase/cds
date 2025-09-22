@@ -1,5 +1,5 @@
 import { type CSSProperties, forwardRef, memo, useId, useMemo } from 'react';
-import type { ThemeVars } from '@coinbase/cds-common/core/theme';
+import type { ThemeVars } from '@cbhq/cds-common/core/theme';
 import { css } from '@linaria/core';
 
 import { cx } from '../cx';

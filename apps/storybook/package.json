@@ -1,5 +1,5 @@
 {
-  "name": "@coinbase/cds-storybook",
+  "name": "@cbhq/cds-storybook",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -7,11 +7,11 @@
     "should-run-visreg": "node ./scripts/shouldRunVisreg.mjs"
   },
   "dependencies": {
-    "@coinbase/cds-common": "workspace:^",
-    "@coinbase/cds-icons": "workspace:^",
-    "@coinbase/cds-illustrations": "workspace:^",
-    "@coinbase/cds-web": "workspace:^",
-    "@coinbase/cds-web-visualization": "workspace:^",
+    "@cbhq/cds-common": "workspace:^",
+    "@cbhq/cds-icons": "workspace:^",
+    "@cbhq/cds-illustrations": "workspace:^",
+    "@cbhq/cds-web": "workspace:^",
+    "@cbhq/cds-web-visualization": "workspace:^",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },

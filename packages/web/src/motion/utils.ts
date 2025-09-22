@@ -1,5 +1,5 @@
-import { curves, durations } from '@coinbase/cds-common/motion/tokens';
-import { isStorybook, isTest } from '@coinbase/cds-utils';
+import { curves, durations } from '@cbhq/cds-common/motion/tokens';
+import { isStorybook, isTest } from '@cbhq/cds-utils';
 import type { Target, TargetAndTransition } from 'framer-motion';
 
 import type { MotionConfigs, MotionSpec, MotionTransition } from './types';

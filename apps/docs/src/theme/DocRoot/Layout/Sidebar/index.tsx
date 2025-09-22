@@ -1,5 +1,5 @@
 import React, { type ReactNode, useCallback, useState } from 'react';
-import { cx } from '@coinbase/cds-web';
+import { cx } from '@cbhq/cds-web';
 import { useDocsSidebar } from '@docusaurus/plugin-content-docs/client';
 import { useLocation } from '@docusaurus/router';
 import { prefersReducedMotion, ThemeClassNames } from '@docusaurus/theme-common';

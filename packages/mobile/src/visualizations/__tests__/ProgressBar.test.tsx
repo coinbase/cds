@@ -1,6 +1,6 @@
 import React, { act } from 'react';
 import type { ReactTestInstance } from 'react-test-renderer';
-import type { UseCounterParams } from '@coinbase/cds-common/visualizations/useCounter';
+import type { UseCounterParams } from '@cbhq/cds-common/visualizations/useCounter';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 
 import { Box } from '../../layout';
@@ -12,7 +12,7 @@ import { ProgressBarWithFloatLabel } from '../ProgressBarWithFloatLabel';
 
 jest.useFakeTimers();
 
-jest.mock('@coinbase/cds-common/visualizations/useCounter', () => ({
+jest.mock('@cbhq/cds-common/visualizations/useCounter', () => ({
   useCounter: ({ endNum }: UseCounterParams) => endNum,
 }));
 

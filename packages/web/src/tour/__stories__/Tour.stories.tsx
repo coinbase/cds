@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
-import { ethBackground } from '@coinbase/cds-common/internal/data/assets';
-import { useTourContext } from '@coinbase/cds-common/tour/TourContext';
-import { type TourStepValue } from '@coinbase/cds-common/tour/useTour';
+import { ethBackground } from '@cbhq/cds-common/internal/data/assets';
+import { useTourContext } from '@cbhq/cds-common/tour/TourContext';
+import { type TourStepValue } from '@cbhq/cds-common/tour/useTour';
 
 import { Button } from '../../buttons';
 import { Coachmark } from '../../coachmark/Coachmark';

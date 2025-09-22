@@ -1,5 +1,5 @@
 import { memo, useMemo } from 'react';
-import type { ButtonVariant, IllustrationHeroSquareNames } from '@coinbase/cds-common/types';
+import type { ButtonVariant, IllustrationHeroSquareNames } from '@cbhq/cds-common/types';
 import { css } from '@linaria/core';
 
 import { Button } from '../buttons';

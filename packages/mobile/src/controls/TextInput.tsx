@@ -17,17 +17,17 @@ import type {
   TextInputProps as RNTextInputProps,
   ViewStyle,
 } from 'react-native';
-import type { ThemeVars } from '@coinbase/cds-common/core/theme';
-import { useInputVariant } from '@coinbase/cds-common/hooks/useInputVariant';
-import { useMergeRefs } from '@coinbase/cds-common/hooks/useMergeRefs';
+import type { ThemeVars } from '@cbhq/cds-common/core/theme';
+import { useInputVariant } from '@cbhq/cds-common/hooks/useInputVariant';
+import { useMergeRefs } from '@cbhq/cds-common/hooks/useMergeRefs';
 import type {
   SharedAccessibilityProps,
   SharedInputProps,
   SharedProps,
   TextAlignProps,
-} from '@coinbase/cds-common/types';
-import type { DimensionValue } from '@coinbase/cds-common/types/DimensionStyles';
-import type { InputVariant } from '@coinbase/cds-common/types/InputBaseProps';
+} from '@cbhq/cds-common/types';
+import type { DimensionValue } from '@cbhq/cds-common/types/DimensionStyles';
+import type { InputVariant } from '@cbhq/cds-common/types/InputBaseProps';
 
 import { useInputBorderStyle } from '../hooks/useInputBorderStyle';
 import { useTheme } from '../hooks/useTheme';

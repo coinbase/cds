@@ -1,6 +1,6 @@
-import { imageSize, mediaSize } from '@coinbase/cds-common/tokens/cell';
-import { glyphMap } from '@coinbase/cds-icons/glyphMap';
-import { renderA11y } from '@coinbase/cds-web-utils/jest';
+import { imageSize, mediaSize } from '@cbhq/cds-common/tokens/cell';
+import { glyphMap } from '@cbhq/cds-icons/glyphMap';
+import { renderA11y } from '@cbhq/cds-web-utils/jest';
 import { render, screen } from '@testing-library/react';
 
 import { Pictogram } from '../../illustrations/Pictogram';

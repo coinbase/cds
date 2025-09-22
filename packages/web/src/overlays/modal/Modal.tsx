@@ -4,15 +4,15 @@ import {
   animateInScaleConfig,
   animateOutOpacityConfig,
   animateOutScaleConfig,
-} from '@coinbase/cds-common/animation/modal';
-import { ModalContext, type ModalContextValue } from '@coinbase/cds-common/overlays/ModalContext';
+} from '@cbhq/cds-common/animation/modal';
+import { ModalContext, type ModalContextValue } from '@cbhq/cds-common/overlays/ModalContext';
 import {
   OverlayContentContext,
   type OverlayContentContextValue,
-} from '@coinbase/cds-common/overlays/OverlayContentContext';
-import { zIndex } from '@coinbase/cds-common/tokens/zIndex';
-import type { PositionStyles, SharedProps } from '@coinbase/cds-common/types';
-import type { Position } from '@coinbase/cds-common/types/Position';
+} from '@cbhq/cds-common/overlays/OverlayContentContext';
+import { zIndex } from '@cbhq/cds-common/tokens/zIndex';
+import type { PositionStyles, SharedProps } from '@cbhq/cds-common/types';
+import type { Position } from '@cbhq/cds-common/types/Position';
 import { css } from '@linaria/core';
 import { m as motion } from 'framer-motion';
 

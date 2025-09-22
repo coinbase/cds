@@ -1,5 +1,5 @@
 {
-  "import": "import { SearchInput } from '@coinbase/cds-web/controls/SearchInput'",
+  "import": "import { SearchInput } from '@cbhq/cds-web/controls/SearchInput'",
   "source": "https://github.com/coinbase/cds-staging/blob/master/packages/web/src/controls/SearchInput.tsx",
   "description": "A control for searching a dataset.",
   "storybook": "https://cds-storybook.coinbase.com/?path=/story/core-components-inputs-searchinput--default",

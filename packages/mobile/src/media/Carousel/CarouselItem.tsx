@@ -1,7 +1,7 @@
 import React, { memo, useCallback, useMemo, useRef, useState } from 'react';
 import { Animated } from 'react-native';
 import type { LayoutChangeEvent, View } from 'react-native';
-import type { ThemeVars } from '@coinbase/cds-common/core/theme';
+import type { ThemeVars } from '@cbhq/cds-common/core/theme';
 
 import { Box } from '../../layout/Box';
 

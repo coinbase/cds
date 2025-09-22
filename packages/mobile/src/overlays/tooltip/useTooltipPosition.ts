@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from 'react';
 import { Platform } from 'react-native';
-import { gutter } from '@coinbase/cds-common/tokens/sizing';
+import { gutter } from '@cbhq/cds-common/tokens/sizing';
 
 import { IOS_BOTTOM_NAV_BAR_HEIGHT, useDimensions } from '../../hooks/useDimensions';
 import { useTheme } from '../../hooks/useTheme';

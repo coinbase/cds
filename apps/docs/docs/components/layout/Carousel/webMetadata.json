@@ -1,5 +1,5 @@
 {
-  "import": "import { Carousel } from '@coinbase/cds-web/carousel/Carousel'",
+  "import": "import { Carousel } from '@cbhq/cds-web/carousel/Carousel'",
   "source": "https://github.com/coinbase/cds-staging/blob/master/packages/web/src/carousel/Carousel.tsx",
   "storybook": "https://cds-storybook.coinbase.com/?path=/story/core-components-carousel--all",
   "figma": "https://www.figma.com/design/XRzGLH42ezSda4UYVfPMMO/Carousel?node-id=26293-2427",

@@ -1,18 +1,18 @@
 import { useMemo, useRef } from 'react';
 import { Animated, Easing, useWindowDimensions } from 'react-native';
-import type { MotionBaseSpec, PinningDirection } from '@coinbase/cds-common';
+import type { MotionBaseSpec, PinningDirection } from '@cbhq/cds-common';
 import {
   animateDrawerInConfig,
   animateDrawerOutConfig,
   drawerAnimationDefaultDuration,
   MAX_OVER_DRAG,
-} from '@coinbase/cds-common/animation/drawer';
-import { durations } from '@coinbase/cds-common/motion/tokens';
+} from '@cbhq/cds-common/animation/drawer';
+import { durations } from '@cbhq/cds-common/motion/tokens';
 import {
   handleBarOffset,
   horizontalDrawerPercentageOfView,
   verticalDrawerPercentageOfView as defaultVerticalDrawerPercentageOfView,
-} from '@coinbase/cds-common/tokens/drawer';
+} from '@cbhq/cds-common/tokens/drawer';
 
 import { convertMotionConfig } from '../../animation/convertMotionConfig';
 

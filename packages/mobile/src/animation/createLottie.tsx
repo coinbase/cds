@@ -1,7 +1,7 @@
 import React, { createRef } from 'react';
 import { Animated } from 'react-native';
-import type { LottiePlayer, LottieSource } from '@coinbase/cds-common';
-import { getLottieDuration, getLottieMarkers } from '@coinbase/cds-common';
+import type { LottiePlayer, LottieSource } from '@cbhq/cds-common';
+import { getLottieDuration, getLottieMarkers } from '@cbhq/cds-common';
 import type LottieView from 'lottie-react-native';
 
 import { Lottie } from './Lottie';

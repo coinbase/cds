@@ -1,8 +1,8 @@
 import { useEffect } from 'react';
 import { Animated } from 'react-native';
 import type { LayoutRectangle } from 'react-native';
-import { durations } from '@coinbase/cds-common/motion/tokens';
-import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
+import { durations } from '@cbhq/cds-common/motion/tokens';
+import { useTheme } from '@cbhq/cds-mobile/hooks/useTheme';
 
 import { useSparklineInteractiveContext } from './SparklineInteractiveProvider';
 import { useSparklineInteractiveConstants } from './useSparklineInteractiveConstants';

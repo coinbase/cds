@@ -1,6 +1,6 @@
 import React from 'react';
-import { cx } from '@coinbase/cds-web';
-import { VStack } from '@coinbase/cds-web/layout/VStack';
+import { cx } from '@cbhq/cds-web';
+import { VStack } from '@cbhq/cds-web/layout/VStack';
 import { useThemeConfig } from '@docusaurus/theme-common';
 import type { Props } from '@theme/DocSidebar/Desktop';
 import CollapseButton from '@theme/DocSidebar/Desktop/CollapseButton';

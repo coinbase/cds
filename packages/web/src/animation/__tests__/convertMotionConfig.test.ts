@@ -1,4 +1,4 @@
-import { curves, durations } from '@coinbase/cds-common/motion/tokens';
+import { curves, durations } from '@cbhq/cds-common/motion/tokens';
 
 import { convertMotionConfig, cubicBezier } from '../convertMotionConfig';
 

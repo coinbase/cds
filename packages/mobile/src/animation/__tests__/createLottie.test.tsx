@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import type { Animated } from 'react-native';
-import { nux } from '@coinbase/cds-lottie-files/nux';
+import { nux } from '@cbhq/cds-lottie-files/nux';
 import { renderHook } from '@testing-library/react-hooks';
 import uniqBy from 'lodash/uniqBy';
 

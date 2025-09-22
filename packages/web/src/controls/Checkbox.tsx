@@ -1,11 +1,11 @@
 import React, { forwardRef, memo, useMemo } from 'react';
-import type { ThemeVars } from '@coinbase/cds-common/core/theme';
+import type { ThemeVars } from '@cbhq/cds-common/core/theme';
 import {
   checkboxOpacityEnterConfig,
   checkboxOpacityExitConfig,
   checkboxScaleEnterConfig,
   checkboxScaleExitConfig,
-} from '@coinbase/cds-common/motion/checkbox';
+} from '@cbhq/cds-common/motion/checkbox';
 import { css } from '@linaria/core';
 import { m as motion } from 'framer-motion';
 

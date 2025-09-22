@@ -1,5 +1,5 @@
 import React, { createContext } from 'react';
-import { isProduction } from '@coinbase/cds-utils';
+import { isProduction } from '@cbhq/cds-utils';
 
 import type { SelectContextType } from './useSelect';
 

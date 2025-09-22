@@ -1,6 +1,6 @@
 import React, { memo, useMemo } from 'react';
 import { I18nManager, type StyleProp, type TextStyle, View, type ViewStyle } from 'react-native';
-import type { PaddingProps, Placement } from '@coinbase/cds-common/types';
+import type { PaddingProps, Placement } from '@cbhq/cds-common/types';
 
 import { Box, VStack } from '../layout';
 

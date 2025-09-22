@@ -1,5 +1,5 @@
 import { memo } from 'react';
-import { cellHelperTextVariants } from '@coinbase/cds-common/tokens/cell';
+import { cellHelperTextVariants } from '@cbhq/cds-common/tokens/cell';
 
 import { Icon } from '../icons/Icon';
 import { HStack, type HStackProps } from '../layout/HStack';

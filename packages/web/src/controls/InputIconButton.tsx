@@ -1,5 +1,5 @@
 import React, { forwardRef, memo, useContext } from 'react';
-import type { IconButtonVariant, InputVariant } from '@coinbase/cds-common/types';
+import type { IconButtonVariant, InputVariant } from '@cbhq/cds-common/types';
 
 import {
   IconButton,

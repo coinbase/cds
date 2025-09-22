@@ -1,7 +1,7 @@
 import { useCallback, useMemo, useRef } from 'react';
 import { Animated, PanResponder, useWindowDimensions } from 'react-native';
-import { bottomPanThreshold, horizontalPanThreshold } from '@coinbase/cds-common/animation/toast';
-import { durations } from '@coinbase/cds-common/motion/tokens';
+import { bottomPanThreshold, horizontalPanThreshold } from '@cbhq/cds-common/animation/toast';
+import { durations } from '@cbhq/cds-common/motion/tokens';
 
 import type { ToastBaseProps } from './Toast';
 

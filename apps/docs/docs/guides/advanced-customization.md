@@ -22,7 +22,7 @@ CDS exposes a robust set of theme variables that control colors, typography, spa
 ### Example: Custom Button Styles
 
 ```tsx
-import { Button } from '@coinbase/cds-web';
+import { Button } from '@cbhq/cds-web';
 
 const CustomButton = () => (
   <Button color="bgPrimary" style={{ '--color-bgPrimary': '#1E90FF' }}>
@@ -40,7 +40,7 @@ CDS components support `StyleProps`, a flexible API for applying styles directly
 ### Example: Responsive Grid Layout
 
 ```tsx
-import { Grid, Box } from '@coinbase/cds-web';
+import { Grid, Box } from '@cbhq/cds-web';
 
 const ResponsiveLayout = () => (
   <Grid templateColumns={{ base: '1fr', tablet: 'repeat(2, 1fr)' }} gap={4}>
@@ -60,7 +60,7 @@ Extend existing CDS components to add custom functionality or styling. Start wit
 
 ```tsx
 import React from 'react';
-import { Box, Text } from '@coinbase/cds-web';
+import { Box, Text } from '@cbhq/cds-web';
 
 const CustomCard = ({ title, description }) => (
   <Box background="bgSecondary" borderRadius={200} padding={4}>
@@ -82,7 +82,7 @@ CDS components can be paired with stateful logic to create dynamic, interactive 
 
 ```tsx
 import React, { useState } from 'react';
-import { Button } from '@coinbase/cds-web';
+import { Button } from '@cbhq/cds-web';
 
 const ToggleButton = () => {
   const [isActive, setIsActive] = useState(false);
@@ -107,7 +107,7 @@ For situations requiring more control, CDS components support the `className` (w
 ### Example: Customizing Styles with `className`
 
 ```tsx
-import { Box } from '@coinbase/cds-web';
+import { Box } from '@cbhq/cds-web';
 
 const CustomStyledBox = () => (
   <Box className="custom-box" style={{ backgroundColor: 'lightblue', borderRadius: '12px' }} />
@@ -118,7 +118,7 @@ const CustomStyledBox = () => (
 
 ```tsx
 import { StyleSheet, View } from 'react-native';
-import { Box } from '@coinbase/cds-mobile';
+import { Box } from '@cbhq/cds-mobile';
 
 const styles = StyleSheet.create({
   customBox: {
@@ -137,7 +137,7 @@ Building custom components from CDS primitives like `Box` and `Text` ensures con
 ### Example: Custom Badge
 
 ```tsx
-import { Box, Text } from '@coinbase/cds-web';
+import { Box, Text } from '@cbhq/cds-web';
 
 const Badge = ({ label, color }) => (
   <Box paddingX={2} paddingY={1} background={color || 'bgPrimary'} borderRadius={100}>

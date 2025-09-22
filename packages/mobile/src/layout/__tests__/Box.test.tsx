@@ -1,5 +1,5 @@
 import { Animated, Text, View } from 'react-native';
-import { zIndex } from '@coinbase/cds-common/tokens/zIndex';
+import { zIndex } from '@cbhq/cds-common/tokens/zIndex';
 import { render, screen } from '@testing-library/react-native';
 
 import { LinearGradient } from '../../gradients/LinearGradient';

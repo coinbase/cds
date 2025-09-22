@@ -8,7 +8,7 @@ import {
   type ViewStyle,
 } from 'react-native';
 import NativeDatePicker from 'react-native-date-picker';
-import { type DateInputValidationError } from '@coinbase/cds-common/dates/DateInputValidationError';
+import { type DateInputValidationError } from '@cbhq/cds-common/dates/DateInputValidationError';
 
 import { InputIconButton } from '../controls/InputIconButton';
 import { VStack } from '../layout/VStack';

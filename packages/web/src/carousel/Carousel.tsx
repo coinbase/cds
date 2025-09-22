@@ -9,9 +9,9 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import { useRefMap } from '@coinbase/cds-common/hooks/useRefMap';
-import { RefMapContext } from '@coinbase/cds-common/system/RefMapContext';
-import type { Rect, SharedAccessibilityProps, SharedProps } from '@coinbase/cds-common/types';
+import { useRefMap } from '@cbhq/cds-common/hooks/useRefMap';
+import { RefMapContext } from '@cbhq/cds-common/system/RefMapContext';
+import type { Rect, SharedAccessibilityProps, SharedProps } from '@cbhq/cds-common/types';
 import { css } from '@linaria/core';
 import {
   domMax,

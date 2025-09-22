@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { feedImages } from '@coinbase/cds-common/internal/data/feedImages';
+import { feedImages } from '@cbhq/cds-common/internal/data/feedImages';
 
 import type { CarouselId } from '../../alpha/carousel/Carousel';
 import { Carousel } from '../../alpha/carousel/Carousel';

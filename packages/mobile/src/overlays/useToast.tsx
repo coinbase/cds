@@ -1,11 +1,11 @@
 import React, { useCallback, useContext, useMemo } from 'react';
-import { ToastContext, type ToastDuration } from '@coinbase/cds-common/overlays/ToastProvider';
+import { ToastContext, type ToastDuration } from '@cbhq/cds-common/overlays/ToastProvider';
 import {
   charsThreshold,
   defaultDuration,
   perCharsDuration,
   withActionDuration,
-} from '@coinbase/cds-common/tokens/toast';
+} from '@cbhq/cds-common/tokens/toast';
 
 import { Toast, type ToastBaseProps } from './Toast';
 

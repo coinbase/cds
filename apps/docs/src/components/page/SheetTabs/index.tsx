@@ -1,12 +1,12 @@
 import React, { useCallback } from 'react';
-import { useTabsContext } from '@coinbase/cds-common/tabs/TabsContext';
-import type { TabValue } from '@coinbase/cds-common/tabs/useTabs';
-import { Box } from '@coinbase/cds-web/layout';
-import type { TabsActiveIndicatorProps } from '@coinbase/cds-web/tabs';
-import { TabsActiveIndicator } from '@coinbase/cds-web/tabs';
-import type { TabsProps as CDSTabsProps } from '@coinbase/cds-web/tabs/Tabs';
-import { Tabs as CDSTabs } from '@coinbase/cds-web/tabs/Tabs';
-import { Text } from '@coinbase/cds-web/typography';
+import { useTabsContext } from '@cbhq/cds-common/tabs/TabsContext';
+import type { TabValue } from '@cbhq/cds-common/tabs/useTabs';
+import { Box } from '@cbhq/cds-web/layout';
+import type { TabsActiveIndicatorProps } from '@cbhq/cds-web/tabs';
+import { TabsActiveIndicator } from '@cbhq/cds-web/tabs';
+import type { TabsProps as CDSTabsProps } from '@cbhq/cds-web/tabs/Tabs';
+import { Tabs as CDSTabs } from '@cbhq/cds-web/tabs/Tabs';
+import { Text } from '@cbhq/cds-web/typography';
 
 const CustomTab = ({ id, label }: TabValue) => {
   const { activeTab, updateActiveTab } = useTabsContext();

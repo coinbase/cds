@@ -3,7 +3,7 @@ import {
   type DimensionValue,
   type SharedAccessibilityProps,
   type SharedProps,
-} from '@coinbase/cds-common/types';
+} from '@cbhq/cds-common/types';
 
 import type { PressableProps } from '../system';
 

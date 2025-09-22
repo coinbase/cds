@@ -1,10 +1,10 @@
-# @coinbase/cds-illustrations
+# @cbhq/cds-illustrations
 
-> [NPM registry](https://www.npmjs.com/package/@coinbase/cds-illustrations)
+> [NPM registry](https://www.npmjs.com/package/@cbhq/cds-illustrations)
 
 All notable changes to this project will be documented in this file.
 
-`@coinbase/cds-illustrations` adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+`@cbhq/cds-illustrations` adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 <!-- template-start -->
 

@@ -1,5 +1,5 @@
 import React, { memo, useMemo } from 'react';
-import type { ThemeVars } from '@coinbase/cds-common/core/theme';
+import type { ThemeVars } from '@cbhq/cds-common/core/theme';
 import type {
   DotOverlap,
   DotSize,
@@ -7,7 +7,7 @@ import type {
   PinPlacement,
   SharedAccessibilityProps,
   SharedProps,
-} from '@coinbase/cds-common/types';
+} from '@cbhq/cds-common/types';
 import { css } from '@linaria/core';
 
 import { useTheme } from '../hooks/useTheme';

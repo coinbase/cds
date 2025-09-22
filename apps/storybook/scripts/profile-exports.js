@@ -180,7 +180,7 @@ fs.mkdirSync(TEMP_NODE_MODULES);
 const builtPackagePaths = globSync(`${BUILD_DIR}/*/`);
 
 const copyToTempNodeModules = (packagePath) => {
-  const moduleName = `@coinbase/cds-${path.basename(packagePath)}`;
+  const moduleName = `@cbhq/cds-${path.basename(packagePath)}`;
   const tempModulePath = path.resolve(TEMP_NODE_MODULES, moduleName);
   fs.cpSync(packagePath, tempModulePath, { recursive: true });
 };
@@ -208,7 +208,7 @@ const median = (numbers) => {
 // Evaluate import runtime costs (e.g. the duration of any side effects)
 const profileExport = async (exportPath) => {
   const exportName = exportPath.replace('./', '');
-  const moduleName = `@coinbase/cds-web/${exportName}`;
+  const moduleName = `@cbhq/cds-web/${exportName}`;
 
   const timesInMs = [];
 

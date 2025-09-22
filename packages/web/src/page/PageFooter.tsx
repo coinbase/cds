@@ -1,7 +1,7 @@
 import React, { forwardRef, memo } from 'react';
-import type { ThemeVars } from '@coinbase/cds-common/core/theme';
-import { pageFooterHeight } from '@coinbase/cds-common/tokens/page';
-import type { PositionStyles, SharedProps } from '@coinbase/cds-common/types';
+import type { ThemeVars } from '@cbhq/cds-common/core/theme';
+import { pageFooterHeight } from '@cbhq/cds-common/tokens/page';
+import type { PositionStyles, SharedProps } from '@cbhq/cds-common/types';
 
 import type { Polymorphic } from '../core/polymorphism';
 import { Box, type BoxDefaultElement, type BoxProps } from '../layout/Box';

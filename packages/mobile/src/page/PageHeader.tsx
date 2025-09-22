@@ -1,8 +1,8 @@
 import React, { forwardRef, memo, useMemo } from 'react';
 import type { StyleProp, View, ViewStyle } from 'react-native';
-import type { ThemeVars } from '@coinbase/cds-common/core/theme';
-import { pageHeaderHeight } from '@coinbase/cds-common/tokens/page';
-import type { PositionStyles, SharedProps } from '@coinbase/cds-common/types';
+import type { ThemeVars } from '@cbhq/cds-common/core/theme';
+import { pageHeaderHeight } from '@cbhq/cds-common/tokens/page';
+import type { PositionStyles, SharedProps } from '@cbhq/cds-common/types';
 
 import { Box, type BoxProps } from '../layout/Box';
 import { HStack } from '../layout/HStack';

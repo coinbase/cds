@@ -1,29 +1,29 @@
 import React, { memo, useCallback, useEffect, useMemo, useState } from 'react';
-import type { ThemeVars } from '@coinbase/cds-common/core/theme';
-import { gutter } from '@coinbase/cds-common/tokens/sizing';
-import { chartCompactHeight, chartHeight } from '@coinbase/cds-common/tokens/sparkline';
+import type { ThemeVars } from '@cbhq/cds-common/core/theme';
+import { gutter } from '@cbhq/cds-common/tokens/sizing';
+import { chartCompactHeight, chartHeight } from '@cbhq/cds-common/tokens/sparkline';
 import type {
   ChartData,
   ChartFormatDate,
   ChartScrubParams,
   ChartTimeseries,
   Placement,
-} from '@coinbase/cds-common/types';
-import { debounce } from '@coinbase/cds-common/utils/debounce';
-import { getAccessibleColor } from '@coinbase/cds-common/utils/getAccessibleColor';
-import { useSparklineCoordinates } from '@coinbase/cds-common/visualizations/useSparklineCoordinates';
-import { chartFallbackNegative, chartFallbackPositive } from '@coinbase/cds-lottie-files';
-import { emptyArray, isStorybook, noop } from '@coinbase/cds-utils';
-import { cx, useTheme } from '@coinbase/cds-web';
-import { Lottie } from '@coinbase/cds-web/animation';
-import { useDimensions } from '@coinbase/cds-web/hooks/useDimensions';
-import { HStack, VStack } from '@coinbase/cds-web/layout';
-import { Box } from '@coinbase/cds-web/layout/Box';
-import { getBrowserGlobals } from '@coinbase/cds-web/utils/browser';
+} from '@cbhq/cds-common/types';
+import { debounce } from '@cbhq/cds-common/utils/debounce';
+import { getAccessibleColor } from '@cbhq/cds-common/utils/getAccessibleColor';
+import { useSparklineCoordinates } from '@cbhq/cds-common/visualizations/useSparklineCoordinates';
+import { chartFallbackNegative, chartFallbackPositive } from '@cbhq/cds-lottie-files';
+import { emptyArray, isStorybook, noop } from '@cbhq/cds-utils';
+import { cx, useTheme } from '@cbhq/cds-web';
+import { Lottie } from '@cbhq/cds-web/animation';
+import { useDimensions } from '@cbhq/cds-web/hooks/useDimensions';
+import { HStack, VStack } from '@cbhq/cds-web/layout';
+import { Box } from '@cbhq/cds-web/layout/Box';
+import { getBrowserGlobals } from '@cbhq/cds-web/utils/browser';
 import {
   VisualizationContainer,
   type VisualizationContainerDimension,
-} from '@coinbase/cds-web/visualizations/VisualizationContainer';
+} from '@cbhq/cds-web/visualizations/VisualizationContainer';
 import isEqual from 'lodash/isEqual';
 import isObject from 'lodash/isObject';
 
@@ -42,7 +42,7 @@ import { SparklineInteractiveScrubHandler } from './SparklineInteractiveScrubHan
 import { SparklineInteractiveScrubProvider } from './SparklineInteractiveScrubProvider';
 import { useSparklineInteractiveConstants } from './useSparklineInteractiveConstants';
 
-export * from '@coinbase/cds-common/types/Chart';
+export * from '@cbhq/cds-common/types/Chart';
 
 export type SparklineInteractiveDefaultFallback = Pick<
   SparklineInteractiveBaseProps<string>,

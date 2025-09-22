@@ -1,9 +1,9 @@
 import React, { forwardRef, Fragment, memo, useMemo } from 'react';
-import type { IconName } from '@coinbase/cds-common';
-import { Icon } from '@coinbase/cds-web/icons/Icon';
-import { Pictogram, type PictogramName } from '@coinbase/cds-web/illustrations/Pictogram';
-import { HStack, VStack } from '@coinbase/cds-web/layout';
-import { Text } from '@coinbase/cds-web/typography/Text';
+import type { IconName } from '@cbhq/cds-common';
+import { Icon } from '@cbhq/cds-web/icons/Icon';
+import { Pictogram, type PictogramName } from '@cbhq/cds-web/illustrations/Pictogram';
+import { HStack, VStack } from '@cbhq/cds-web/layout';
+import { Text } from '@cbhq/cds-web/typography/Text';
 import type { ActionImpl } from 'kbar';
 
 type KBarResultItemProps = {

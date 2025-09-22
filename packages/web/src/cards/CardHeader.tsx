@@ -1,6 +1,6 @@
 import React, { memo } from 'react';
-import { gutter } from '@coinbase/cds-common/tokens/sizing';
-import type { CardHeaderProps } from '@coinbase/cds-common/types';
+import { gutter } from '@cbhq/cds-common/tokens/sizing';
+import type { CardHeaderProps } from '@cbhq/cds-common/types';
 
 import { HStack } from '../layout/HStack';
 import { VStack } from '../layout/VStack';

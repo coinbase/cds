@@ -1,5 +1,5 @@
 import React from 'react';
-import { names } from '@coinbase/cds-icons/names';
+import { names } from '@cbhq/cds-icons/names';
 
 import { HStack, VStack } from '../../layout';
 import { Text } from '../../typography/Text';

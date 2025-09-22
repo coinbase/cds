@@ -23,7 +23,7 @@ import { writeFile } from '../utils/writeFile';
 function getRelativePath(filePath: string) {
   const relativePath = filePath.replace('.tsx', '');
 
-  return `@coinbase/cds-${relativePath}`;
+  return `@cbhq/cds-${relativePath}`;
 }
 
 async function getRoutes() {

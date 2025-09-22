@@ -1,10 +1,10 @@
-# @coinbase/cds-lottie-files
+# @cbhq/cds-lottie-files
 
-> [NPM registry](https://www.npmjs.com/package/@coinbase/cds-lottie-files)
+> [NPM registry](https://www.npmjs.com/package/@cbhq/cds-lottie-files)
 
 All notable changes to this project will be documented in this file.
 
-`@coinbase/cds-lottie-files` adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+`@cbhq/cds-lottie-files` adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 <!-- template-start -->
 

@@ -1,12 +1,12 @@
 import React, { forwardRef, useMemo } from 'react';
-import { getBlendedColor } from '@coinbase/cds-common/color/getBlendedColor';
-import type { ThemeVars } from '@coinbase/cds-common/core/theme';
+import { getBlendedColor } from '@cbhq/cds-common/color/getBlendedColor';
+import type { ThemeVars } from '@cbhq/cds-common/core/theme';
 import {
   accessibleOpacityDisabled,
   opacityDisabled,
   opacityHovered,
   opacityPressed,
-} from '@coinbase/cds-common/tokens/interactable';
+} from '@cbhq/cds-common/tokens/interactable';
 import { css } from '@linaria/core';
 
 import type { Polymorphic } from '../core/polymorphism';

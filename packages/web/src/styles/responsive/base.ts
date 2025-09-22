@@ -4,7 +4,7 @@
 
 /* eslint-disable no-restricted-syntax */
 
-import type { ThemeVars } from '@coinbase/cds-common/core/theme';
+import type { ThemeVars } from '@cbhq/cds-common/core/theme';
 import { css, type LinariaClassName } from '@linaria/core';
 
 import type { DynamicStyleProps } from '../styleProps';

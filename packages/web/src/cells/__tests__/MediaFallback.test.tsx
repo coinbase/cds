@@ -1,4 +1,4 @@
-import { imageSize, mediaSize } from '@coinbase/cds-common/tokens/cell';
+import { imageSize, mediaSize } from '@cbhq/cds-common/tokens/cell';
 import { render, screen } from '@testing-library/react';
 
 import { MediaFallback } from '../MediaFallback';

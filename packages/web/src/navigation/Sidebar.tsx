@@ -1,5 +1,5 @@
 import React, { Children, memo, useMemo } from 'react';
-import { zIndex } from '@coinbase/cds-common/tokens/zIndex';
+import { zIndex } from '@cbhq/cds-common/tokens/zIndex';
 import { css } from '@linaria/core';
 
 import { useDimensions } from '../hooks/useDimensions';

@@ -1,18 +1,18 @@
 import React, { forwardRef, memo } from 'react';
 import type { View } from 'react-native';
-import type { ThemeVars } from '@coinbase/cds-common/core/theme';
+import type { ThemeVars } from '@cbhq/cds-common/core/theme';
 import {
   tagBorderRadiusMap,
   tagColorMap,
   tagFontMap,
   tagHorizontalSpacing,
-} from '@coinbase/cds-common/tokens/tags';
+} from '@cbhq/cds-common/tokens/tags';
 import type {
   SharedAccessibilityProps,
   SharedProps,
   TagColorScheme,
   TagIntent,
-} from '@coinbase/cds-common/types';
+} from '@cbhq/cds-common/types';
 
 import { useTheme } from '../hooks/useTheme';
 import { Box, type BoxProps } from '../layout';

@@ -1,7 +1,7 @@
 import React from 'react';
 import { View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { NoopFn } from '@coinbase/cds-common/utils/mockUtils';
+import { NoopFn } from '@cbhq/cds-common/utils/mockUtils';
 
 import { Button, ButtonGroup } from '../../buttons';
 import { ExampleScreen } from '../../examples/ExampleScreen';

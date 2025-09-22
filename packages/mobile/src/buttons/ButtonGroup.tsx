@@ -4,7 +4,7 @@ import type {
   ElementChildren,
   SharedAccessibilityProps,
   SharedProps,
-} from '@coinbase/cds-common/types';
+} from '@cbhq/cds-common/types';
 
 import { Box, type GroupDirection } from '../layout';
 

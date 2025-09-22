@@ -6,8 +6,8 @@ import React, {
   useImperativeHandle,
   useState,
 } from 'react';
-import type { ThemeVars } from '@coinbase/cds-common/core/theme';
-import { colorSurgeEnterConfig, colorSurgeExitConfig } from '@coinbase/cds-common/motion/hint';
+import type { ThemeVars } from '@cbhq/cds-common/core/theme';
+import { colorSurgeEnterConfig, colorSurgeExitConfig } from '@cbhq/cds-common/motion/hint';
 import { m as motion, useAnimation } from 'framer-motion';
 
 import { Box } from '../layout/Box';

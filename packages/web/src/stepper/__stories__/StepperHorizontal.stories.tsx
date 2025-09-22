@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react';
-import { loremIpsum } from '@coinbase/cds-common/internal/data/loremIpsum';
-import { useStepper } from '@coinbase/cds-common/stepper/useStepper';
+import { loremIpsum } from '@cbhq/cds-common/internal/data/loremIpsum';
+import { useStepper } from '@cbhq/cds-common/stepper/useStepper';
 import { css } from '@linaria/core';
 
 import { Button } from '../../buttons';

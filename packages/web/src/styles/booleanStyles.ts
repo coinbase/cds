@@ -6,7 +6,7 @@
 
 /* eslint-disable no-restricted-syntax */
 
-import type { PinningDirection } from '@coinbase/cds-common/types/BoxBaseProps';
+import type { PinningDirection } from '@cbhq/cds-common/types/BoxBaseProps';
 import { css, type LinariaClassName } from '@linaria/core';
 
 export const borderStyle = {

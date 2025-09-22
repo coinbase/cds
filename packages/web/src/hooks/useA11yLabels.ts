@@ -1,5 +1,5 @@
 import { useId, useMemo } from 'react';
-import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
+import type { SharedAccessibilityProps } from '@cbhq/cds-common/types/SharedAccessibilityProps';
 
 type Options = Pick<SharedAccessibilityProps, 'accessibilityLabelledBy' | 'accessibilityLabel'>;
 /**

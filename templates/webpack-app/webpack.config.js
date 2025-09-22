@@ -24,7 +24,7 @@ export default {
       // Supports extensionless imports with ESM in CDS packages
       {
         test: /\.(js|ts)x?$/,
-        include: /@coinbase\/cds/,
+        include: /@cbhq\/cds/,
         resolve: {
           fullySpecified: false,
         },

@@ -1,4 +1,4 @@
-# @coinbase/ui-mobile-visreg
+# @cbhq/ui-mobile-visreg
 
 This package contains the logic to utilize visreg in your CI.
 
@@ -22,4 +22,4 @@ yarn bump-version ui-mobile-visreg
 
 <!-- 4. TODO: add a step to check deployment status -->
 
-5. After the deploy has succeeded, verify that the new package was published at the [production Coinbase NPM registry](https://npmjs.com/package/@coinbase/ui/repos/tree/General/cb-npm-master). It usually takes about 10 min or so for the package to be uploaded. Look for the version number at the bottom of the artifact list in the [package directory](https://npmjs.com/package/@coinbase/ui/repos/tree/General/cb-npm-master/@coinbase/ui-mobile-visreg/-/@coinbase/ui-mobile-visreg-1.0.0-rc.1.tgz).
+5. After the deploy has succeeded, verify that the new package was published at the [production Coinbase NPM registry](https://npmjs.com/package/@cbhq/ui/repos/tree/General/cb-npm-master). It usually takes about 10 min or so for the package to be uploaded. Look for the version number at the bottom of the artifact list in the [package directory](https://npmjs.com/package/@cbhq/ui/repos/tree/General/cb-npm-master/@cbhq/ui-mobile-visreg/-/@cbhq/ui-mobile-visreg-1.0.0-rc.1.tgz).

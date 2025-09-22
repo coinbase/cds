@@ -1,5 +1,5 @@
 import React from 'react';
-import { assets } from '@coinbase/cds-common/internal/data/assets';
+import { assets } from '@cbhq/cds-common/internal/data/assets';
 
 import { DotSymbol } from '../../dots/DotSymbol';
 import { Divider, HStack, VStack } from '../../layout';

@@ -66,7 +66,7 @@ const config = {
   checkForCardDismissAccessibilityLabelProps: ['NudgeCard', 'UpsellCard'],
   checkForSearchInputAccessibilityLabelProps: ['SearchInput'],
 
-  allowedPackages: ['@coinbase/cds-common', '@coinbase/cds-web', '@coinbase/cds-web-visualization'],
+  allowedPackages: ['@cbhq/cds-common', '@cbhq/cds-web', '@cbhq/cds-web-visualization'],
 };
 
 export const controlHasAssociatedLabelExtended = ruleCreator({

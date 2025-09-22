@@ -3,12 +3,12 @@ import {
   defaultMediaDimension,
   defaultMediaSize,
   defaultPictogramMediaDimension,
-} from '@coinbase/cds-common/tokens/card';
+} from '@cbhq/cds-common/tokens/card';
 import type {
   CardMediaImageSizeObject,
   CardMediaPlacement,
   CardMediaProps as CommonCardMediaProps,
-} from '@coinbase/cds-common/types';
+} from '@cbhq/cds-common/types';
 
 import { Pictogram, SpotSquare } from '../illustrations';
 

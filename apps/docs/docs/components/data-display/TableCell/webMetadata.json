@@ -1,5 +1,5 @@
 {
-  "import": "import { TableCell } from '@coinbase/cds-web/tables/TableCell'",
+  "import": "import { TableCell } from '@cbhq/cds-web/tables/TableCell'",
   "source": "https://github.com/coinbase/cds-staging/blob/master/packages/web/src/tables/TableCell.tsx",
   "description": "Defines individual cells within a Table.",
   "storybook": "https://cds-storybook.coinbase.com/?path=/story/core-components-table-tablecell--cell-spacing",

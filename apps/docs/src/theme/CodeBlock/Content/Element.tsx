@@ -1,7 +1,7 @@
 import React, { type ReactNode } from 'react';
-import { cx } from '@coinbase/cds-web';
-import { Box } from '@coinbase/cds-web/layout';
-import { Text } from '@coinbase/cds-web/typography';
+import { cx } from '@cbhq/cds-web';
+import { Box } from '@cbhq/cds-web/layout';
+import { Text } from '@cbhq/cds-web/typography';
 import type { Props } from '@theme/CodeBlock/Content/Element';
 // <pre> tags in markdown map to CodeBlocks. They may contain JSX children. When
 // the children is not a simple string, we just return a styled block without

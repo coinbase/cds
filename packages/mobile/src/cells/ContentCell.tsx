@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import { isProduction } from '@coinbase/cds-utils';
+import { isProduction } from '@cbhq/cds-utils';
 
 import { Box, HStack, VStack } from '../layout';
 import { Text } from '../typography/Text';

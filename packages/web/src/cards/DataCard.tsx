@@ -1,8 +1,8 @@
 import React, { memo, useMemo } from 'react';
-import type { ThemeVars } from '@coinbase/cds-common/core/theme';
-import { defaultMediaSize } from '@coinbase/cds-common/tokens/card';
-import { gutter } from '@coinbase/cds-common/tokens/sizing';
-import type { SharedProps } from '@coinbase/cds-common/types';
+import type { ThemeVars } from '@cbhq/cds-common/core/theme';
+import { defaultMediaSize } from '@cbhq/cds-common/tokens/card';
+import { gutter } from '@cbhq/cds-common/tokens/sizing';
+import type { SharedProps } from '@cbhq/cds-common/types';
 
 import { HStack } from '../layout/HStack';
 import { Text } from '../typography/Text';

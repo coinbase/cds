@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect } from 'react';
-import { useAlert } from '@coinbase/cds-common/overlays/useAlert';
-import { useModal } from '@coinbase/cds-common/overlays/useModal';
+import { useAlert } from '@cbhq/cds-common/overlays/useAlert';
+import { useModal } from '@cbhq/cds-common/overlays/useModal';
 
 import { Button } from '../../buttons/Button';
 import { Example, ExampleScreen } from '../../examples/ExampleScreen';

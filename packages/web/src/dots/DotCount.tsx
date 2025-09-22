@@ -1,20 +1,20 @@
 import React, { memo, useMemo } from 'react';
-import type { ThemeVars } from '@coinbase/cds-common/core/theme';
+import type { ThemeVars } from '@cbhq/cds-common/core/theme';
 import {
   dotOpacityEnterConfig,
   dotOpacityExitConfig,
   dotScaleEnterConfig,
   dotScaleExitConfig,
-} from '@coinbase/cds-common/motion/dot';
-import { dotCountSize } from '@coinbase/cds-common/tokens/dot';
+} from '@cbhq/cds-common/motion/dot';
+import { dotCountSize } from '@cbhq/cds-common/tokens/dot';
 import type {
   DotCountPinPlacement,
   DotCountVariants,
   DotOverlap,
   SharedAccessibilityProps,
   SharedProps,
-} from '@coinbase/cds-common/types';
-import { parseDotCountMaxOverflow } from '@coinbase/cds-common/utils/parseDotCountMaxOverflow';
+} from '@cbhq/cds-common/types';
+import { parseDotCountMaxOverflow } from '@cbhq/cds-common/utils/parseDotCountMaxOverflow';
 import { css } from '@linaria/core';
 import { m as motion } from 'framer-motion';
 

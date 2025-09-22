@@ -1,6 +1,6 @@
-import type { Shape } from '@coinbase/cds-common';
-import { assets } from '@coinbase/cds-common/internal/data/assets';
-import { renderA11y } from '@coinbase/cds-web-utils';
+import type { Shape } from '@cbhq/cds-common';
+import { assets } from '@cbhq/cds-common/internal/data/assets';
+import { renderA11y } from '@cbhq/cds-web-utils';
 import { fireEvent, render, screen } from '@testing-library/react';
 
 import { Icon } from '../../icons/Icon';

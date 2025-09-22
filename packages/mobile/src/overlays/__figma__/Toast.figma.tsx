@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import React, { useCallback } from 'react';
-import { useToast } from '@coinbase/cds-mobile/overlays/useToast';
+import { useToast } from '@cbhq/cds-mobile/overlays/useToast';
 import { figma } from '@figma/code-connect';
 
 import { Button } from '../../buttons';
@@ -11,7 +11,7 @@ figma.connect(
   Toast,
   'https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/✨-CDS-Components?node-id=8500%3A674',
   {
-    imports: ["import { useToast } from '@coinbase/cds-mobile/overlays/useToast';"],
+    imports: ["import { useToast } from '@cbhq/cds-mobile/overlays/useToast';"],
     props: {
       hideCloseButton: figma.boolean('close', {
         true: undefined,

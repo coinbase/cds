@@ -15,21 +15,21 @@ const ruleTester = new RuleTester({
 });
 
 const validButtonWithInnerText = `
-  import { Button } from '@coinbase/cds-web/buttons';
+  import { Button } from '@cbhq/cds-web/buttons';
   const Component = () => {
     return <Button>test</Button>;
   }
 `;
 
 const validButtonWithCorrectLabel = `
-  import { Button } from '@coinbase/cds-web/buttons';
+  import { Button } from '@cbhq/cds-web/buttons';
   const Component = () => {
     return <Button accessibilityLabel="test">test</Button>;
 }
 `;
 
 const validButtonWithNestedInnerText = `
-  import { Button } from '@coinbase/cds-web/buttons';
+  import { Button } from '@cbhq/cds-web/buttons';
   const Component = () => {
     return (
       <Button>
@@ -40,7 +40,7 @@ const validButtonWithNestedInnerText = `
 `;
 
 const validButtonWithNestedExpression = `
-  import { Button } from '@coinbase/cds-web/buttons';
+  import { Button } from '@cbhq/cds-web/buttons';
   const helper = "test2";
   const Component = () => {
     return (
@@ -65,7 +65,7 @@ ruleTester.run('control-has-associated-label-extended', rule, {
     // Button element without accessibilityLabel
     {
       code: normalizeIndent`
-        import { Button } from '@coinbase/cds-web/buttons';
+        import { Button } from '@cbhq/cds-web/buttons';
         const Component = () => {
           return (
             <Button/>
@@ -79,7 +79,7 @@ ruleTester.run('control-has-associated-label-extended', rule, {
             {
               messageId: 'missingAccessibilityLabelSuggestion',
               output: normalizeIndent`
-                import { Button } from '@coinbase/cds-web/buttons';
+                import { Button } from '@cbhq/cds-web/buttons';
                 const Component = () => {
                   return (
                     <Button accessibilityLabel=""/>
@@ -94,7 +94,7 @@ ruleTester.run('control-has-associated-label-extended', rule, {
     // IconButton element without accessibilityLabel
     {
       code: normalizeIndent`
-        import { IconButton } from '@coinbase/cds-web/buttons';
+        import { IconButton } from '@cbhq/cds-web/buttons';
         const Component = () => {
           return (
             <IconButton/>
@@ -108,7 +108,7 @@ ruleTester.run('control-has-associated-label-extended', rule, {
             {
               messageId: 'missingAccessibilityLabelSuggestion',
               output: normalizeIndent`
-                import { IconButton } from '@coinbase/cds-web/buttons';
+                import { IconButton } from '@cbhq/cds-web/buttons';
                 const Component = () => {
                   return (
                     <IconButton accessibilityLabel=""/>
@@ -123,7 +123,7 @@ ruleTester.run('control-has-associated-label-extended', rule, {
     // nested buttons without accessibilityLabels
     {
       code: normalizeIndent`
-        import { Button, IconButton } from '@coinbase/cds-web/buttons';
+        import { Button, IconButton } from '@cbhq/cds-web/buttons';
         const Component = () => {
           return (
             <Button>
@@ -140,7 +140,7 @@ ruleTester.run('control-has-associated-label-extended', rule, {
             {
               messageId: 'missingAccessibilityLabelSuggestion',
               output: normalizeIndent`
-                import { Button, IconButton } from '@coinbase/cds-web/buttons';
+                import { Button, IconButton } from '@cbhq/cds-web/buttons';
                 const Component = () => {
                   return (
                     <Button accessibilityLabel="">
@@ -159,7 +159,7 @@ ruleTester.run('control-has-associated-label-extended', rule, {
             {
               messageId: 'missingAccessibilityLabelSuggestion',
               output: normalizeIndent`
-                import { Button, IconButton } from '@coinbase/cds-web/buttons';
+                import { Button, IconButton } from '@cbhq/cds-web/buttons';
                 const Component = () => {
                   return (
                     <Button>

@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react';
-import { usePrefixedId } from '@coinbase/cds-common/hooks/usePrefixedId';
-import { renderA11y } from '@coinbase/cds-web-utils/jest';
+import { usePrefixedId } from '@cbhq/cds-common/hooks/usePrefixedId';
+import { renderA11y } from '@cbhq/cds-web-utils/jest';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 
 import { Button } from '../../buttons';

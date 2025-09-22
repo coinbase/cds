@@ -1,9 +1,9 @@
 import React, { memo, useCallback, useMemo } from 'react';
 import { ActivityIndicator, type PressableStateCallbackType, type ViewStyle } from 'react-native';
-import { transparentVariants, variants } from '@coinbase/cds-common/tokens/button';
-import { interactableHeight } from '@coinbase/cds-common/tokens/interactableHeight';
-import type { IconButtonVariant, IconName, SharedProps } from '@coinbase/cds-common/types';
-import { getButtonSpacingProps } from '@coinbase/cds-common/utils/getButtonSpacingProps';
+import { transparentVariants, variants } from '@cbhq/cds-common/tokens/button';
+import { interactableHeight } from '@cbhq/cds-common/tokens/interactableHeight';
+import type { IconButtonVariant, IconName, SharedProps } from '@cbhq/cds-common/types';
+import { getButtonSpacingProps } from '@cbhq/cds-common/utils/getButtonSpacingProps';
 
 import { useTheme } from '../hooks/useTheme';
 import { Icon } from '../icons/Icon';

@@ -1,5 +1,5 @@
 import React, { forwardRef, memo } from 'react';
-import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
+import type { SharedProps } from '@cbhq/cds-common/types/SharedProps';
 import { css } from '@linaria/core';
 
 import { cx } from '../cx';

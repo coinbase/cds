@@ -1,6 +1,6 @@
 import React, { createContext, memo, useCallback, useContext, useMemo, useState } from 'react';
 import type { Dispatch, SetStateAction } from 'react';
-import { noop } from '@coinbase/cds-utils';
+import { noop } from '@cbhq/cds-utils';
 
 type SparklineInteractiveProviderProps = {
   children: React.ReactNode;

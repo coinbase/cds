@@ -2,8 +2,8 @@ import React, { forwardRef, memo, useCallback, useId, useMemo } from 'react';
 import { type AccessibilityActionEvent, type StyleProp, View, type ViewStyle } from 'react-native';
 import type { ForwardedRef } from 'react';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
-import { interactableHeight } from '@coinbase/cds-common/tokens/interactableHeight';
-import type { ButtonVariant } from '@coinbase/cds-common/types';
+import { interactableHeight } from '@cbhq/cds-common/tokens/interactableHeight';
+import type { ButtonVariant } from '@cbhq/cds-common/types';
 import type { SpringValue } from '@react-spring/native';
 import { animated, to, useSpring } from '@react-spring/native';
 

@@ -1,7 +1,7 @@
 import '@testing-library/jest-dom';
 
-import type { AvatarSize } from '@coinbase/cds-common/types/AvatarSize';
-import { renderA11y } from '@coinbase/cds-web-utils/jest';
+import type { AvatarSize } from '@cbhq/cds-common/types/AvatarSize';
+import { renderA11y } from '@cbhq/cds-web-utils/jest';
 import { cleanup, render, screen } from '@testing-library/react';
 
 import { Avatar } from '../Avatar';

@@ -1,4 +1,4 @@
-# @coinbase/docusaurus-plugin-docgen
+# @cbhq/docusaurus-plugin-docgen
 
 Docusaurus plugin for accessing jsdocs parsed from components
 
@@ -7,7 +7,7 @@ Docusaurus plugin for accessing jsdocs parsed from components
 1. Install the plugin
 
 ```sh
-yarn add @coinbase/docusaurus-plugin-docgen
+yarn add @cbhq/docusaurus-plugin-docgen
 ```
 
 2. Add the plugin to the docusaurus.config.js.
@@ -16,13 +16,13 @@ yarn add @coinbase/docusaurus-plugin-docgen
 module.exports = {
   // ...
 
-  plugins: ['@coinbase/docusaurus-plugin-docgen', config],
+  plugins: ['@cbhq/docusaurus-plugin-docgen', config],
 
   // ...
 };
 ```
 
-3. Provide config for `@coinbase/docusaurus-plugin-docgen`. See config section below for more options.
+3. Provide config for `@cbhq/docusaurus-plugin-docgen`. See config section below for more options.
 
 ```js
 const config = {
@@ -40,7 +40,7 @@ const config = {
 module.exports = {
   // ...
 
-  plugins: ['@coinbase/docusaurus-plugin-docgen', config],
+  plugins: ['@cbhq/docusaurus-plugin-docgen', config],
 
   // ...
 };
@@ -91,9 +91,9 @@ import MobilePropsTable from ':docgen/mobile/buttons/Button/api.mdx';
 
 ```
 
-The API table requires adding `@coinbase/docusaurus-theme` in order to include the necessary styles.
+The API table requires adding `@cbhq/docusaurus-theme` in order to include the necessary styles.
 
-You can also use the `@coinbase/docusaurus-preset` which includes `@coinbase/docusaurus-theme` and `@coinbase/docusaurus-plugin-docgen`, and configure with the preset's `docgen` option. The `docgen` preset option takes the same config as this standalone plugin.
+You can also use the `@cbhq/docusaurus-preset` which includes `@cbhq/docusaurus-theme` and `@cbhq/docusaurus-plugin-docgen`, and configure with the preset's `docgen` option. The `docgen` preset option takes the same config as this standalone plugin.
 
 ## Config
 
@@ -119,7 +119,7 @@ If you have a cross-platform library you may have two separate packages that hav
 
 This formatPackageName will allow you to customize those Tab labels.
 
-i.e. remove `@coinbase-cds` scope from `@coinbase/cds-mobile` and `@coinbase/cds-web` so that it returns just 'Mobile' and 'Web'.
+i.e. remove `@cbhq-cds` scope from `@cbhq/cds-mobile` and `@cbhq/cds-web` so that it returns just 'Mobile' and 'Web'.
 
 ```js
 const config = {
@@ -142,7 +142,7 @@ const config = {
    * When you use the templates from plugin, if there are two components with the same name coming from
    * two separate projects (cross platform), it will group those components together and use toggle to switch between them.
    * This formatPackageName will allow you to customize how that toggle is displayed.
-   * i.e. remove `@coinbase-cds` scope from `@coinbase/cds-mobile` and `@coinbase/cds-web` so it returns just 'mobile' and 'web'.
+   * i.e. remove `@cbhq-cds` scope from `@cbhq/cds-mobile` and `@cbhq/cds-web` so it returns just 'mobile' and 'web'.
    */
   formatPackageName: (name) => {
     return name.replace('cds-', '');

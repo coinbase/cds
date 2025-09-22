@@ -7,9 +7,9 @@ import {
   type TextStyle,
   type ViewStyle,
 } from 'react-native';
-import { animateProgressBaseSpec } from '@coinbase/cds-common/animation/progress';
-import { usePreviousValues } from '@coinbase/cds-common/hooks/usePreviousValues';
-import type { Placement } from '@coinbase/cds-common/types';
+import { animateProgressBaseSpec } from '@cbhq/cds-common/animation/progress';
+import { usePreviousValues } from '@cbhq/cds-common/hooks/usePreviousValues';
+import type { Placement } from '@cbhq/cds-common/types';
 
 import { convertMotionConfig } from '../animation/convertMotionConfig';
 import { useLayout } from '../hooks/useLayout';

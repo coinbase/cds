@@ -1,8 +1,8 @@
-import { curves, durations } from '@coinbase/cds-common/motion/tokens';
+import { curves, durations } from '@cbhq/cds-common/motion/tokens';
 import type {
   MotionBaseSpec as DefaultMotionSpec,
   MotionCurve,
-} from '@coinbase/cds-common/types/Motion';
+} from '@cbhq/cds-common/types/Motion';
 
 export const webCurves = {
   global: curves.global.join(),

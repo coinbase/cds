@@ -1,6 +1,6 @@
 import React, { memo } from 'react';
-import { gutter } from '@coinbase/cds-common/tokens/sizing';
-import type { SharedAccessibilityProps } from '@coinbase/cds-common/types';
+import { gutter } from '@cbhq/cds-common/tokens/sizing';
+import type { SharedAccessibilityProps } from '@cbhq/cds-common/types';
 
 import type { BoxBaseProps, BoxProps } from '../layout';
 import { HStack } from '../layout/HStack';

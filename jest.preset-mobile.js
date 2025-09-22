@@ -7,7 +7,7 @@ const esModules = [
   'react-native',
   '@react-native',
   '@react-native-community',
-  '@coinbase/cds-mobile',
+  '@cbhq/cds-mobile',
   'react-native-webview',
   '@bugsnag/react-native',
 ];

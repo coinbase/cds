@@ -1,5 +1,5 @@
 import { type ReactNode } from 'react';
-import { VStack } from '@coinbase/cds-web/layout';
+import { VStack } from '@cbhq/cds-web/layout';
 import { MDXProvider } from '@mdx-js/react';
 import MDXComponents from '@theme/MDXComponents';
 import type { Props } from '@theme/MDXContent';

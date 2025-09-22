@@ -1,6 +1,6 @@
 import React, { memo, useEffect, useMemo, useState } from 'react';
 import { Defs, Mask, Rect as NativeRect, Svg } from 'react-native-svg';
-import { defaultRect, type Rect } from '@coinbase/cds-common/types/Rect';
+import { defaultRect, type Rect } from '@cbhq/cds-common/types/Rect';
 
 import { useTheme } from '../hooks/useTheme';
 import { Box } from '../layout';

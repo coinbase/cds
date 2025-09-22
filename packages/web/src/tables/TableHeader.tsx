@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import { zIndex } from '@coinbase/cds-common/tokens/zIndex';
+import { zIndex } from '@cbhq/cds-common/tokens/zIndex';
 import { css } from '@linaria/core';
 
 import { cx } from '../cx';

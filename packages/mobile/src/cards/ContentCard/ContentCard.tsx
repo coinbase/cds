@@ -1,7 +1,7 @@
 import React, { forwardRef, memo } from 'react';
 import type { View } from 'react-native';
-import { contentCardMaxWidth, contentCardMinWidth } from '@coinbase/cds-common/tokens/card';
-import type { ValidateProps } from '@coinbase/cds-common/types';
+import { contentCardMaxWidth, contentCardMinWidth } from '@cbhq/cds-common/tokens/card';
+import type { ValidateProps } from '@cbhq/cds-common/types';
 
 import { VStack, type VStackProps } from '../../layout';
 

@@ -1,16 +1,16 @@
 import React, { memo, useCallback, useMemo, useRef, useState } from 'react';
-import type { ThemeVars } from '@coinbase/cds-common/core/theme';
-import type { SparklinePeriod } from '@coinbase/cds-common/internal/visualizations/SparklineInteractiveData';
-import type { ChartData, ChartDataPoint, ChartScrubParams } from '@coinbase/cds-common/types';
+import type { ThemeVars } from '@cbhq/cds-common/core/theme';
+import type { SparklinePeriod } from '@cbhq/cds-common/internal/visualizations/SparklineInteractiveData';
+import type { ChartData, ChartDataPoint, ChartScrubParams } from '@cbhq/cds-common/types';
 import {
   SparklineInteractive,
   type SparklineInteractiveBaseProps,
-} from '@coinbase/cds-web-visualization/sparkline/sparkline-interactive/SparklineInteractive';
+} from '@cbhq/cds-web-visualization/sparkline/sparkline-interactive/SparklineInteractive';
 import {
   SparklineInteractiveHeader,
   type SparklineInteractiveHeaderRef,
   type SparklineInteractiveSubHead,
-} from '@coinbase/cds-web-visualization/sparkline/sparkline-interactive-header/SparklineInteractiveHeader';
+} from '@cbhq/cds-web-visualization/sparkline/sparkline-interactive-header/SparklineInteractiveHeader';
 
 type SparklineInteractivePriceProps = Omit<
   SparklineInteractiveBaseProps<SparklinePeriod>,

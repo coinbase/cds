@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { isProduction, noop } from '@coinbase/cds-utils';
+import { isProduction, noop } from '@cbhq/cds-utils';
 
 import { CarouselItemContext } from './CarouselItemContext';
 import type { CarouselItemContextValue } from './types';

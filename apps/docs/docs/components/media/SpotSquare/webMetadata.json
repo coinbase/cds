@@ -1,5 +1,5 @@
 {
-  "import": "import { SpotSquare } from '@coinbase/cds-web/illustratations/SpotSquare'",
+  "import": "import { SpotSquare } from '@cbhq/cds-web/illustratations/SpotSquare'",
   "changelog": "https://github.com/coinbase/cds-staging/blob/master/packages/illustrations/CHANGELOG.md",
   "source": "https://github.com/coinbase/cds-staging/blob/master/packages/web/src/illustrations/SpotSquare.tsx",
   "storybook": "https://cds-storybook.coinbase.com/?path=/story/illustrations--spot-square",

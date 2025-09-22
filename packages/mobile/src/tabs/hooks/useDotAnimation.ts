@@ -5,8 +5,8 @@ import {
   animateDotWidthConfig,
   dotHidden,
   dotVisible,
-} from '@coinbase/cds-common/animation/dot';
-import { getDotSize } from '@coinbase/cds-common/tokens/dot';
+} from '@cbhq/cds-common/animation/dot';
+import { getDotSize } from '@cbhq/cds-common/tokens/dot';
 
 import { convertMotionConfig } from '../../animation/convertMotionConfig';
 

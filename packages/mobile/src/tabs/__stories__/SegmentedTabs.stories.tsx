@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react';
 import { Pressable, ScrollView } from 'react-native';
-import { useTabsContext } from '@coinbase/cds-common/tabs/TabsContext';
-import type { TabValue } from '@coinbase/cds-common/tabs/useTabs';
+import { useTabsContext } from '@cbhq/cds-common/tabs/TabsContext';
+import type { TabValue } from '@cbhq/cds-common/tabs/useTabs';
 
 import { Example, ExampleScreen } from '../../examples/ExampleScreen';
 import { Box } from '../../layout';

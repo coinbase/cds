@@ -3,8 +3,8 @@ import { Image, StyleSheet } from 'react-native';
 import {
   ethBackground,
   floatingAssetCardCustomImage,
-} from '@coinbase/cds-common/internal/data/assets';
-import { NoopFn } from '@coinbase/cds-common/utils/mockUtils';
+} from '@cbhq/cds-common/internal/data/assets';
+import { NoopFn } from '@cbhq/cds-common/utils/mockUtils';
 
 import { Example, ExampleScreen } from '../../examples/ExampleScreen';
 import { Carousel } from '../../media';

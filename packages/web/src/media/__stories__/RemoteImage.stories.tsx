@@ -1,7 +1,7 @@
 import React from 'react';
-import type { ThemeVars } from '@coinbase/cds-common/core/theme';
-import { svgs } from '@coinbase/cds-common/internal/data/assets';
-import { avatarSizes } from '@coinbase/cds-common/internal/data/avatars';
+import type { ThemeVars } from '@cbhq/cds-common/core/theme';
+import { svgs } from '@cbhq/cds-common/internal/data/assets';
+import { avatarSizes } from '@cbhq/cds-common/internal/data/avatars';
 import { css } from '@linaria/core';
 
 import { HStack, VStack } from '../../layout';

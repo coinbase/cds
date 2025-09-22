@@ -1,6 +1,6 @@
 import React from 'react';
 import { Animated } from 'react-native';
-import { DefaultThemeProvider } from '@coinbase/cds-mobile/utils/testHelpers';
+import { DefaultThemeProvider } from '@cbhq/cds-mobile/utils/testHelpers';
 import { render } from '@testing-library/react-native';
 
 import {

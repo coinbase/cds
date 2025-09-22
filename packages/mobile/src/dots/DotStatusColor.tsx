@@ -1,7 +1,7 @@
 import React, { memo, useMemo } from 'react';
 import { View } from 'react-native';
 import type { ViewStyle } from 'react-native';
-import type { ThemeVars } from '@coinbase/cds-common/core/theme';
+import type { ThemeVars } from '@cbhq/cds-common/core/theme';
 import type {
   DotOverlap,
   DotSize,
@@ -9,7 +9,7 @@ import type {
   PinPlacement,
   SharedAccessibilityProps,
   SharedProps,
-} from '@coinbase/cds-common/types';
+} from '@cbhq/cds-common/types';
 
 import type { DotPinStylesKey } from '../hooks/useDotPinStyles';
 import { useDotPinStyles } from '../hooks/useDotPinStyles';

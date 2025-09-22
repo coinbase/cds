@@ -1,15 +1,15 @@
 import React, { memo, useCallback, useMemo, useRef, useState } from 'react';
-import type { ThemeVars } from '@coinbase/cds-common/core/theme';
+import type { ThemeVars } from '@cbhq/cds-common/core/theme';
 import {
   sparklineInteractiveData,
   sparklineInteractiveHoverData,
   type SparklinePeriod,
   strokeColor,
-} from '@coinbase/cds-common/internal/visualizations/SparklineInteractiveData';
-import type { ChartData, ChartDataPoint, ChartScrubParams } from '@coinbase/cds-common/types';
-import { Example, ExampleScreen } from '@coinbase/cds-mobile/examples/ExampleScreen';
-import { Box } from '@coinbase/cds-mobile/layout';
-import { TextTitle3 } from '@coinbase/cds-mobile/typography/TextTitle3';
+} from '@cbhq/cds-common/internal/visualizations/SparklineInteractiveData';
+import type { ChartData, ChartDataPoint, ChartScrubParams } from '@cbhq/cds-common/types';
+import { Example, ExampleScreen } from '@cbhq/cds-mobile/examples/ExampleScreen';
+import { Box } from '@cbhq/cds-mobile/layout';
+import { TextTitle3 } from '@cbhq/cds-mobile/typography/TextTitle3';
 
 import {
   SparklineInteractiveHeader,

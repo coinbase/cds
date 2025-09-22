@@ -1,5 +1,5 @@
 import { useRef } from 'react';
-import { noop } from '@coinbase/cds-utils';
+import { noop } from '@cbhq/cds-utils';
 
 import type { CarouselRef } from './types';
 

@@ -1,8 +1,8 @@
 import React from 'react';
-import { assets } from '@coinbase/cds-common/internal/data/assets';
-import { avatarSizes } from '@coinbase/cds-common/internal/data/avatars';
-import { iconSizes } from '@coinbase/cds-common/internal/data/iconData';
-import { avatarDotSizeMap, avatarIconSizeMap } from '@coinbase/cds-common/tokens/dot';
+import { assets } from '@cbhq/cds-common/internal/data/assets';
+import { avatarSizes } from '@cbhq/cds-common/internal/data/avatars';
+import { iconSizes } from '@cbhq/cds-common/internal/data/iconData';
+import { avatarDotSizeMap, avatarIconSizeMap } from '@cbhq/cds-common/tokens/dot';
 
 import { Example, ExampleScreen } from '../../examples/ExampleScreen';
 import { useTheme } from '../../hooks/useTheme';

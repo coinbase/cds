@@ -13,7 +13,7 @@ import eslintJsxA11y from 'eslint-plugin-jsx-a11y';
 import eslintReactNativeA11y from 'eslint-plugin-react-native-a11y';
 import eslintReactNative from 'eslint-plugin-react-native';
 import eslintCodegen from 'eslint-plugin-codegen';
-import internalPlugin from '@coinbase/eslint-plugin-internal';
+import internalPlugin from '@cbhq/eslint-plugin-internal';
 
 const ignores = [
   '*.md',
@@ -64,14 +64,14 @@ const sharedRules = {
           name: '@linaria/core',
           importNames: ['cx'],
           message:
-            'Do not import `cx` from Linaria. Use the `cx` function from @coinbase/cds-web instead.',
+            'Do not import `cx` from Linaria. Use the `cx` function from @cbhq/cds-web instead.',
         },
       ],
       patterns: [
         {
           group: ['*/booleanStyles', '*/responsive/*'],
           message:
-            'Do not import these styles directly, as it will cause non-deterministic CSS generation. Use the `getStyles` function from @coinbase/cds-web/styles/styleProps.ts or the component StyleProps API instead.',
+            'Do not import these styles directly, as it will cause non-deterministic CSS generation. Use the `getStyles` function from @cbhq/cds-web/styles/styleProps.ts or the component StyleProps API instead.',
         },
       ],
     },

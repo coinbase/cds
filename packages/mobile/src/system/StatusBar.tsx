@@ -1,7 +1,7 @@
 import React, { memo, useCallback, useMemo } from 'react';
 import { Platform, StatusBar as RNStatusBar } from 'react-native';
 import type { StatusBarProps as RNStatusBarProps } from 'react-native';
-import { isLightOrDarkColor } from '@coinbase/cds-common/color/isLightOrDarkColor';
+import { isLightOrDarkColor } from '@cbhq/cds-common/color/isLightOrDarkColor';
 
 import type { Theme } from '../core/theme';
 import { useTheme } from '../hooks/useTheme';

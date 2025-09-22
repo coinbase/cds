@@ -9,7 +9,7 @@ source: https://github.com/coinbase/cds-staging/blob/master/packages/mcp-server/
 
 ## Component Usage Hierarchy
 - CDS is the primary design system for React and React Native in this project.
-- The JS package is `@coinbase/cds-web` for web React apps and `@coinbase/cds-mobile` for mobile React Native apps.
+- The JS package is `@cbhq/cds-web` for web React apps and `@cbhq/cds-mobile` for mobile React Native apps.
 - ALWAYS prioritize CDS components over ANY other UI components when a CDS equivalent exists. For React Native this includes React Native built-ins. For web this includes any HTML native elements.
 - NEVER suggest using alternative UI libraries or components without first confirming a CDS component doesn't exist for the use case.
 - ALWAYS use CDS components even if other local components or screens in the codebase are not currently using them - the goal is to standardize on CDS.
@@ -33,7 +33,7 @@ source: https://github.com/coinbase/cds-staging/blob/master/packages/mcp-server/
 - DO NOT mix CDS and non-CDS component styling approaches unless absolutely necessary.
 
 ## When Suggesting Code
-- ALWAYS import from @coinbase/cds-mobile for mobile or @coinbase/cds-web for web explicitly.
+- ALWAYS import from @cbhq/cds-mobile for mobile or @cbhq/cds-web for web explicitly.
 - INCLUDE complete imports in your code examples.
 - DEMONSTRATE proper usage of CDS theming and styling.
 - SHOW prop usage according to CDS documentation.

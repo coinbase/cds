@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import type { ThemeVars } from '@coinbase/cds-common';
+import type { ThemeVars } from '@cbhq/cds-common';
 
 import { Example, ExampleScreen } from '../../examples/ExampleScreen';
 import { Icon } from '../../icons';

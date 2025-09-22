@@ -1,4 +1,4 @@
-import type { ThemeVarsExtended } from '@coinbase/cds-common/core/theme';
+import type { ThemeVarsExtended } from '@cbhq/cds-common/core/theme';
 
 export const globalCDSConfig: { current: CDSGlobalConfig } = { current: {} };
 

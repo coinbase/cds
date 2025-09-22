@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { FOCUSABLE_ELEMENTS } from '@coinbase/cds-common/tokens/overlays';
+import { FOCUSABLE_ELEMENTS } from '@cbhq/cds-common/tokens/overlays';
 
 import { isBrowser } from '../utils/browser';
 

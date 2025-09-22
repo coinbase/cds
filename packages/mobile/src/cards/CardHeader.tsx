@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import type { CardHeaderProps as CardHeaderBaseProps } from '@coinbase/cds-common/types';
+import type { CardHeaderProps as CardHeaderBaseProps } from '@cbhq/cds-common/types';
 
 import { HStack } from '../layout/HStack';
 import { RemoteImage } from '../media/RemoteImage';

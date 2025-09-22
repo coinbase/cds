@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, HStack } from '@coinbase/cds-web/layout';
+import { Box, HStack } from '@cbhq/cds-web/layout';
 import { useDocsSidebar } from '@docusaurus/plugin-content-docs/client';
 import BackToTopButton from '@theme/BackToTopButton';
 import type { Props } from '@theme/DocRoot/Layout';

@@ -1,5 +1,5 @@
 import React from 'react';
-import type { ElevationLevels } from '@coinbase/cds-common';
+import type { ElevationLevels } from '@cbhq/cds-common';
 
 import { Example, ExampleScreen } from '../../examples/ExampleScreen';
 import { useTheme } from '../../hooks/useTheme';

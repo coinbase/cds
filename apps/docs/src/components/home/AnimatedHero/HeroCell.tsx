@@ -1,8 +1,8 @@
 import React, { useCallback } from 'react';
-import { Box } from '@coinbase/cds-web/layout/Box';
-import type { PressableProps } from '@coinbase/cds-web/system/Pressable';
-import { Pressable } from '@coinbase/cds-web/system/Pressable';
-import { Text } from '@coinbase/cds-web/typography';
+import { Box } from '@cbhq/cds-web/layout/Box';
+import type { PressableProps } from '@cbhq/cds-web/system/Pressable';
+import { Pressable } from '@cbhq/cds-web/system/Pressable';
+import { Text } from '@cbhq/cds-web/typography';
 import { useThrottledValue } from '@site/src/utils/useThrottledValue';
 
 import { characterSet, maxUpdatesPerSecond } from './constants';

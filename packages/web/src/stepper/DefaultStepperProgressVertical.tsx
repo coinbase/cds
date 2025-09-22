@@ -1,5 +1,5 @@
 import { memo, useCallback, useEffect, useRef, useState } from 'react';
-import { defaultRect } from '@coinbase/cds-common/types/Rect';
+import { defaultRect } from '@cbhq/cds-common/types/Rect';
 import { animated, to, useSpring } from '@react-spring/web';
 
 import { useHasMounted } from '../hooks/useHasMounted';

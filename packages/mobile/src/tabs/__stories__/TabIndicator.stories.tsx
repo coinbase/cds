@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import { gutter } from '@coinbase/cds-common/tokens/sizing';
+import { gutter } from '@cbhq/cds-common/tokens/sizing';
 
 import { Button } from '../../buttons';
 import { Example, ExampleScreen } from '../../examples/ExampleScreen';

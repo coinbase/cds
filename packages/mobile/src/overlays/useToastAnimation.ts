@@ -7,7 +7,7 @@ import {
   animateOutOpacityConfig,
   toastHiddenBottom,
   toastHiddenOpacity,
-} from '@coinbase/cds-common/animation/toast';
+} from '@cbhq/cds-common/animation/toast';
 
 import { convertMotionConfig } from '../animation/convertMotionConfig';
 

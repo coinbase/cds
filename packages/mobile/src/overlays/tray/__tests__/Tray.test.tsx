@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import { Text as RNText } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { loremIpsum } from '@coinbase/cds-common/internal/data/loremIpsum';
+import { loremIpsum } from '@cbhq/cds-common/internal/data/loremIpsum';
 import { render, screen } from '@testing-library/react-native';
 
 import { Text } from '../../../typography/Text';

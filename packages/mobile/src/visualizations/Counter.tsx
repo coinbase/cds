@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { useCounter } from '@coinbase/cds-common/visualizations/useCounter';
+import { useCounter } from '@cbhq/cds-common/visualizations/useCounter';
 
 import { Box } from '../layout';
 

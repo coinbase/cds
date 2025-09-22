@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { I18nManager } from 'react-native';
-import type { TextAlignProps } from '@coinbase/cds-common';
+import type { TextAlignProps } from '@cbhq/cds-common';
 
 export type TextAlign = TextAlignProps['align'];
 

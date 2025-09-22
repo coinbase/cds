@@ -3,7 +3,7 @@ import {
   type StepperApi,
   type StepperState,
   useStepper,
-} from '@coinbase/cds-common/stepper/useStepper';
+} from '@cbhq/cds-common/stepper/useStepper';
 import { css } from '@linaria/core';
 
 import { Button } from '../../buttons';

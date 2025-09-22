@@ -50,11 +50,11 @@ const config: StorybookConfig = {
   staticDirs: [
     {
       from: path.resolve(MONOREPO_ROOT, 'packages/icons/src'),
-      to: '@coinbase/cds-icons',
+      to: '@cbhq/cds-icons',
     },
     {
       from: path.resolve(MONOREPO_ROOT, 'packages/illustrations/src'),
-      to: '@coinbase/cds-illustrations',
+      to: '@cbhq/cds-illustrations',
     },
   ],
   env: (config) => ({
@@ -82,13 +82,13 @@ const config: StorybookConfig = {
       ],
       resolve: {
         alias: {
-          '@coinbase/cds-common': path.resolve(MONOREPO_ROOT, 'packages/common/src'),
-          '@coinbase/cds-icons': path.resolve(MONOREPO_ROOT, 'packages/icons/src'),
-          '@coinbase/cds-illustrations': path.resolve(MONOREPO_ROOT, 'packages/illustrations/src'),
-          '@coinbase/cds-lottie-files': path.resolve(MONOREPO_ROOT, 'packages/lottie-files/src'),
-          '@coinbase/cds-utils': path.resolve(MONOREPO_ROOT, 'packages/utils/src'),
-          '@coinbase/cds-web': path.resolve(MONOREPO_ROOT, 'packages/web/src'),
-          '@coinbase/cds-web-visualization': path.resolve(
+          '@cbhq/cds-common': path.resolve(MONOREPO_ROOT, 'packages/common/src'),
+          '@cbhq/cds-icons': path.resolve(MONOREPO_ROOT, 'packages/icons/src'),
+          '@cbhq/cds-illustrations': path.resolve(MONOREPO_ROOT, 'packages/illustrations/src'),
+          '@cbhq/cds-lottie-files': path.resolve(MONOREPO_ROOT, 'packages/lottie-files/src'),
+          '@cbhq/cds-utils': path.resolve(MONOREPO_ROOT, 'packages/utils/src'),
+          '@cbhq/cds-web': path.resolve(MONOREPO_ROOT, 'packages/web/src'),
+          '@cbhq/cds-web-visualization': path.resolve(
             MONOREPO_ROOT,
             'packages/web-visualization/src',
           ),

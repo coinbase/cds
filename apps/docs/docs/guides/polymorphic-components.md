@@ -29,7 +29,7 @@ This approach gives developers the power to:
 
 ```tsx
 import React from 'react';
-import { Box } from '@coinbase/cds-web';
+import { Box } from '@cbhq/cds-web';
 
 const Example = () => (
   <Box as="section" padding={4} background="bgPrimary">
@@ -45,7 +45,7 @@ In this example, the `Box` component renders as a `<section>` element with addit
 
 ```tsx
 import React from 'react';
-import { Box } from '@coinbase/cds-mobile';
+import { Box } from '@cbhq/cds-mobile';
 
 const Example = () => (
   <Box as={Text} padding={4} style={{ fontSize: 18 }}>

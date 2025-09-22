@@ -1,4 +1,4 @@
-import type { AnyObject } from '@coinbase/cds-utils/types';
+import type { AnyObject } from '@cbhq/cds-utils/types';
 
 import { logError } from './logError';
 import type { TemplateMap } from './writeFile';

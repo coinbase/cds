@@ -1,6 +1,6 @@
 import React from 'react';
-import { IconButton } from '@coinbase/cds-web/buttons';
-import { Tooltip } from '@coinbase/cds-web/overlays';
+import { IconButton } from '@cbhq/cds-web/buttons';
+import { Tooltip } from '@cbhq/cds-web/overlays';
 import { useKBar } from 'kbar';
 
 const SearchBar = () => {

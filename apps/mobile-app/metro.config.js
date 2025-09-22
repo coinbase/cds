@@ -10,21 +10,21 @@ const expoConfig = getDefaultConfig(__dirname);
 const defaultSourceExts = ['ts', 'tsx', 'js', 'jsx', 'json', 'd.ts', 'cjs'];
 
 const aliases = {
-  '@coinbase/cds-common': path.resolve(__dirname, '../../packages/common/src'),
-  '@coinbase/cds-icons': path.resolve(__dirname, '../../packages/icons/src'),
-  '@coinbase/cds-illustrations': path.resolve(__dirname, '../../packages/illustrations/src'),
-  '@coinbase/cds-lottie-files': path.resolve(__dirname, '../../packages/lottie-files/src'),
-  '@coinbase/cds-mobile': path.resolve(__dirname, '../../packages/mobile/src'),
-  '@coinbase/cds-mobile-visualization': path.resolve(
+  '@cbhq/cds-common': path.resolve(__dirname, '../../packages/common/src'),
+  '@cbhq/cds-icons': path.resolve(__dirname, '../../packages/icons/src'),
+  '@cbhq/cds-illustrations': path.resolve(__dirname, '../../packages/illustrations/src'),
+  '@cbhq/cds-lottie-files': path.resolve(__dirname, '../../packages/lottie-files/src'),
+  '@cbhq/cds-mobile': path.resolve(__dirname, '../../packages/mobile/src'),
+  '@cbhq/cds-mobile-visualization': path.resolve(
     __dirname,
     '../../packages/mobile-visualization/src',
   ),
-  '@coinbase/cds-utils': path.resolve(__dirname, '../../packages/utils/src'),
-  '@coinbase/ui-mobile-playground': path.resolve(
+  '@cbhq/cds-utils': path.resolve(__dirname, '../../packages/utils/src'),
+  '@cbhq/ui-mobile-playground': path.resolve(
     __dirname,
     '../../packages/ui-mobile-playground/src',
   ),
-  '@coinbase/ui-mobile-visreg': path.resolve(__dirname, '../../packages/ui-mobile-visreg/src'),
+  '@cbhq/ui-mobile-visreg': path.resolve(__dirname, '../../packages/ui-mobile-visreg/src'),
 };
 const pkgCache = {};
 

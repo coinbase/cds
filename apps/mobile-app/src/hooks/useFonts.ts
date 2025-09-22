@@ -8,7 +8,7 @@ import { useFonts as useFontsSourceCodePro } from '@expo-google-fonts/source-cod
 import { useFonts as useFontsExpo } from 'expo-font';
 
 const localFonts = {
-  CoinbaseIcons: require('@coinbase/cds-icons/fonts/native/CoinbaseIcons.ttf') as string,
+  CoinbaseIcons: require('@cbhq/cds-icons/fonts/native/CoinbaseIcons.ttf') as string,
 };
 
 const interFonts = {

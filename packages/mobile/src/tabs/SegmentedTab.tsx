@@ -8,10 +8,10 @@ import {
   type ViewStyle,
 } from 'react-native';
 import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
-import type { ThemeVars } from '@coinbase/cds-common/core/theme';
-import { useTabsContext } from '@coinbase/cds-common/tabs/TabsContext';
-import { type TabValue } from '@coinbase/cds-common/tabs/useTabs';
-import { accessibleOpacityDisabled } from '@coinbase/cds-common/tokens/interactable';
+import type { ThemeVars } from '@cbhq/cds-common/core/theme';
+import { useTabsContext } from '@cbhq/cds-common/tabs/TabsContext';
+import { type TabValue } from '@cbhq/cds-common/tabs/useTabs';
+import { accessibleOpacityDisabled } from '@cbhq/cds-common/tokens/interactable';
 
 import { useTheme } from '../hooks/useTheme';
 import { Box } from '../layout';

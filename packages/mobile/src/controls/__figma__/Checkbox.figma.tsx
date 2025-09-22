@@ -7,7 +7,7 @@ figma.connect(
   Checkbox,
   'https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/✨-CDS-Components?node-id=155-9873&m=dev',
   {
-    imports: ["import { Checkbox } from '@coinbase/cds-mobile/controls/Checkbox'"],
+    imports: ["import { Checkbox } from '@cbhq/cds-mobile/controls/Checkbox'"],
     props: {
       checked: figma.boolean('checked'),
       disabled: figma.boolean('disabled'),

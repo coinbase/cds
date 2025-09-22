@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react';
-import { renderA11y } from '@coinbase/cds-web-utils/jest';
+import { renderA11y } from '@cbhq/cds-web-utils/jest';
 import { fireEvent, render, screen } from '@testing-library/react';
 
 import { Box } from '../../layout/Box';

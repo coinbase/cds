@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { cx } from '@coinbase/cds-web';
-import { VStack } from '@coinbase/cds-web/layout';
+import { cx } from '@cbhq/cds-web';
+import { VStack } from '@cbhq/cds-web/layout';
 import { ThemeClassNames } from '@docusaurus/theme-common';
 import { useAnnouncementBar, useScrollPosition } from '@docusaurus/theme-common/internal';
 import { translate } from '@docusaurus/Translate';

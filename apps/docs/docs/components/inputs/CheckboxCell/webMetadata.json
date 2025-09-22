@@ -1,5 +1,5 @@
 {
-  "import": "import { CheckboxCell } from '@coinbase/cds-web/controls/CheckboxCell'",
+  "import": "import { CheckboxCell } from '@cbhq/cds-web/controls/CheckboxCell'",
   "source": "https://github.com/coinbase/cds-staging/blob/master/packages/web/src/controls/CheckboxCell.tsx",
   "description": "A selectable cell that pairs a checkbox with a title and description for multi-choice selections.",
   "storybook": "https://cds-storybook.coinbase.com/?path=/story/core-components-checkboxcell--default",

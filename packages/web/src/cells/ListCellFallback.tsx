@@ -1,6 +1,6 @@
 import { type CSSProperties, memo, useMemo } from 'react';
-import type { FallbackRectWidthProps, SharedProps } from '@coinbase/cds-common/types';
-import { getRectWidthVariant } from '@coinbase/cds-common/utils/getRectWidthVariant';
+import type { FallbackRectWidthProps, SharedProps } from '@cbhq/cds-common/types';
+import { getRectWidthVariant } from '@cbhq/cds-common/utils/getRectWidthVariant';
 
 import { VStack } from '../layout';
 import { Fallback } from '../layout/Fallback';

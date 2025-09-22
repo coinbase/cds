@@ -1,7 +1,7 @@
 import React, { forwardRef, memo } from 'react';
 import type { View } from 'react-native';
-import type { SectionHeaderProps } from '@coinbase/cds-common';
-import type { IconName } from '@coinbase/cds-icons';
+import type { SectionHeaderProps } from '@cbhq/cds-common';
+import type { IconName } from '@cbhq/cds-icons';
 
 import { Icon } from '../icons';
 import { HStack, VStack } from '../layout';

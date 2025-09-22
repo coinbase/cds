@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
-import { Box, VStack } from '@coinbase/cds-web/layout';
-import { Text } from '@coinbase/cds-web/typography';
+import { Box, VStack } from '@cbhq/cds-web/layout';
+import { Text } from '@cbhq/cds-web/typography';
 import type { PropSidebarItemLink } from '@docusaurus/plugin-content-docs';
 import { useDocsSidebar } from '@docusaurus/plugin-content-docs/lib/client/docsSidebar.js';
 import type { PropSidebarItemCategory } from '@docusaurus/plugin-content-docs/lib/sidebars/types.js';

@@ -1,9 +1,9 @@
 import React, { useCallback, useContext } from 'react';
 import { FlatList } from 'react-native';
 import type { ListRenderItem } from 'react-native';
-import type { CellSpacing } from '@coinbase/cds-mobile/cells/Cell';
-import { ListCell } from '@coinbase/cds-mobile/cells/ListCell';
-import { Box } from '@coinbase/cds-mobile/layout/Box';
+import type { CellSpacing } from '@cbhq/cds-mobile/cells/Cell';
+import { ListCell } from '@cbhq/cds-mobile/cells/ListCell';
+import { Box } from '@cbhq/cds-mobile/layout/Box';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import includes from 'lodash/includes';
 

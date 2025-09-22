@@ -1,6 +1,6 @@
 import React, { forwardRef, memo } from 'react';
 import type { View } from 'react-native';
-import { gutter } from '@coinbase/cds-common/tokens/sizing';
+import { gutter } from '@cbhq/cds-common/tokens/sizing';
 
 import { Divider } from '../layout/Divider';
 import type { GroupProps, RenderGroupItem } from '../layout/Group';
