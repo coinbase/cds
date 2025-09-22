@@ -372,8 +372,9 @@ export const RollingNumber: RollingNumberComponent = memo(
       );
 
       const intlPartsNumberSection = useMemo(() => {
-        const { pre, integer, fraction, post } =
-          intlNumberFormatter.formatToParts(enableSubscriptNotation);
+        const { pre, integer, fraction, post } = intlNumberFormatter.formatToParts({
+          enableSubscriptNotation,
+        });
         return (
           <HStack
             className={classNames?.formattedNumberSection}

@@ -129,7 +129,7 @@ export class IntlNumberFormat {
    * }
    * ```
    */
-  formatToParts(enableSubscriptNotation?: boolean): {
+  formatToParts({ enableSubscriptNotation }: { enableSubscriptNotation?: boolean } = {}): {
     pre: KeyedNumberPart[];
     integer: KeyedNumberPart[];
     fraction: KeyedNumberPart[];

@@ -11,7 +11,9 @@ describe('formatToParts', () => {
       locale,
       format: { maximumFractionDigits: 8 },
     });
-    const { pre, integer, fraction, post } = formatter.formatToParts(true);
+    const { pre, integer, fraction, post } = formatter.formatToParts({
+      enableSubscriptNotation: true,
+    });
     const formatted = formatter.format();
 
     expect(pre.length).toBeGreaterThanOrEqual(0);
@@ -35,7 +37,7 @@ describe('formatToParts', () => {
       locale,
       format: { minimumFractionDigits: 8, maximumFractionDigits: 8 },
     });
-    const { fraction } = formatter.formatToParts(true);
+    const { fraction } = formatter.formatToParts({ enableSubscriptNotation: true });
     const formatted = formatter.format();
 
     expect(fraction.map((p) => `${p.type}:${p.value}`)).toEqual([
@@ -56,7 +58,7 @@ describe('formatToParts', () => {
       locale,
       format: { maximumFractionDigits: 8 },
     });
-    const { fraction } = formatter.formatToParts(false);
+    const { fraction } = formatter.formatToParts({ enableSubscriptNotation: false });
     const formatted = formatter.format();
 
     expect(fraction.map((p) => `${p.type}:${p.value}`)).toEqual([
@@ -76,7 +78,7 @@ describe('formatToParts', () => {
       locale,
       format: { style: 'currency', currency: 'USD', maximumFractionDigits: 8 },
     });
-    const { pre, fraction } = formatter.formatToParts(true);
+    const { pre, fraction } = formatter.formatToParts({ enableSubscriptNotation: true });
     const formatted = formatter.format();
 
     const preStr = pre.map((p) => p.value).join('');
@@ -93,7 +95,7 @@ describe('formatToParts', () => {
       locale,
       format: { maximumFractionDigits: 2 },
     });
-    const { integer, fraction } = formatter.formatToParts(false);
+    const { integer, fraction } = formatter.formatToParts({ enableSubscriptNotation: false });
 
     expect(integer.map((p) => p.value)).toEqual([1, 2, 3]);
     expect(integer.map((p) => p.key)).toEqual(['integer:2', 'integer:1', 'integer:0']);
@@ -112,7 +114,7 @@ describe('formatToParts', () => {
       locale,
       format: { maximumFractionDigits: 8 },
     });
-    const { fraction } = formatter.formatToParts(true);
+    const { fraction } = formatter.formatToParts({ enableSubscriptNotation: true });
 
     expect(fraction.map((p) => `${p.type}:${p.value}`)).toEqual([
       'decimal:.',
@@ -133,7 +135,7 @@ describe('formatToParts', () => {
       value: 123.45,
       locale,
     });
-    const { pre, post } = formatter.formatToParts();
+    const { pre, post } = formatter.formatToParts({ enableSubscriptNotation: false });
     const formatted = formatter.format({ prefix: 'PRE-', suffix: '-SUF' });
     expect(pre.length).toBe(0);
     expect(post.length).toBe(0);
@@ -148,7 +150,9 @@ describe('formatToParts', () => {
       locale,
       format: { maximumFractionDigits: 0 },
     });
-    const { integer, fraction, pre, post } = formatter.formatToParts(true);
+    const { integer, fraction, pre, post } = formatter.formatToParts({
+      enableSubscriptNotation: true,
+    });
     const formatted = formatter.format();
     expect(integer.map((p) => `${p.type}:${p.value}`)).toEqual(['integer:0']);
     expect(fraction.length).toBe(0);
@@ -162,7 +166,7 @@ describe('formatToParts', () => {
       locale,
       format: { maximumFractionDigits: 2 },
     });
-    const { pre, integer } = formatter.formatToParts(false);
+    const { pre, integer } = formatter.formatToParts({ enableSubscriptNotation: false });
     const formatted = formatter.format();
     expect(pre.some((p) => p.type === 'minusSign')).toBe(true);
     expect(integer.map((p) => p.value)).toEqual([1, 2, 3]);
@@ -175,7 +179,7 @@ describe('formatToParts', () => {
       locale: 'en-US',
       format: { maximumFractionDigits: 0 },
     });
-    const { integer } = formatter.formatToParts(false);
+    const { integer } = formatter.formatToParts({ enableSubscriptNotation: false });
     const groups = integer.filter((p) => p.type === 'group');
     expect(groups.length).toBeGreaterThanOrEqual(2);
     expect(groups.map((g) => g.key)).toEqual(['group:1', 'group:0']);
@@ -189,7 +193,7 @@ describe('formatToParts', () => {
       locale: 'de-DE',
       format: { style: 'currency', currency: 'USD', maximumFractionDigits: 5 },
     });
-    const { pre, post } = formatter.formatToParts(true);
+    const { pre, post } = formatter.formatToParts({ enableSubscriptNotation: true });
     const formatted = formatter.format();
     const preStr = pre.map((p) => p.value).join('');
     const postStr = post.map((p) => p.value).join('');
@@ -204,7 +208,7 @@ describe('formatToParts', () => {
       locale,
       format: { maximumFractionDigits: 4 },
     });
-    const { fraction } = formatter.formatToParts(true);
+    const { fraction } = formatter.formatToParts({ enableSubscriptNotation: true });
     expect(fraction.map((p) => p.type)).not.toContain('subscript');
   });
 
@@ -214,7 +218,7 @@ describe('formatToParts', () => {
       locale,
       format: { maximumFractionDigits: 0 },
     });
-    const { integer, fraction } = formatter.formatToParts(false);
+    const { integer, fraction } = formatter.formatToParts({ enableSubscriptNotation: false });
     const formatted = formatter.format();
     expect(fraction.length).toBe(0);
     expect(integer.length).toBeGreaterThan(0);
