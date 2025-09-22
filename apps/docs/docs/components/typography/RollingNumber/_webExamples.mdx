@@ -676,7 +676,6 @@ function LiveBiddingExample() {
           positivePulseColor="accentBoldRed"
           transition={{
             y: { type: 'spring', stiffness: 200, damping: 20 },
-            color: { duration: 1 },
           }}
           value={currentBid}
         />
@@ -700,6 +699,82 @@ function LiveBiddingExample() {
         <Button onClick={() => placeBid(500)}>+$500</Button>
         <Button onClick={() => placeBid(1000)}>+$1000</Button>
       </HStack>
+    </VStack>
+  );
+}
+```
+
+### Social Media Statistics
+
+```tsx live
+function StatisticsExample() {
+  const [views, setViews] = useState(1234567);
+  const [likes, setLikes] = useState(89432);
+  const [shares, setShares] = useState(12789);
+  const [downloads, setDownloads] = useState(567890);
+
+  const simulateActivity = () => {
+    setViews((v) => v + Math.floor(Math.random() * 1000));
+    setLikes((l) => l + Math.floor(Math.random() * 200));
+    setShares((s) => s + Math.floor(Math.random() * 100));
+    setDownloads((d) => d + Math.floor(Math.random() * 500));
+  };
+
+  return (
+    <VStack gap={2}>
+      <HStack gap={4}>
+        <VStack alignItems="center" gap={0.5}>
+          <RollingNumber
+            colorPulseOnUpdate
+            font="title1"
+            format={{ notation: 'compact', maximumFractionDigits: 1, minimumFractionDigits: 1 }}
+            positivePulseColor="accentBoldBlue"
+            value={views}
+          />
+          <Text color="fgMuted" font="caption">
+            Views
+          </Text>
+        </VStack>
+        <VStack alignItems="center" gap={0.5}>
+          <RollingNumber
+            colorPulseOnUpdate
+            font="title1"
+            format={{ notation: 'compact', maximumFractionDigits: 1, minimumFractionDigits: 1 }}
+            positivePulseColor="accentBoldRed"
+            prefix={<Icon color="accentBoldRed" name="heart" />}
+            styles={{ prefix: { paddingRight: 'var(--space-0_5)' } }}
+            value={likes}
+          />
+          <Text color="fgMuted" font="caption">
+            Likes
+          </Text>
+        </VStack>
+        <VStack alignItems="center" gap={0.5}>
+          <RollingNumber
+            colorPulseOnUpdate
+            font="title1"
+            format={{ notation: 'compact', maximumFractionDigits: 1, minimumFractionDigits: 1 }}
+            positivePulseColor="accentBoldGreen"
+            value={shares}
+          />
+          <Text color="fgMuted" font="caption">
+            Shares
+          </Text>
+        </VStack>
+        <VStack alignItems="center" gap={0.5}>
+          <RollingNumber
+            colorPulseOnUpdate
+            font="title1"
+            format={{ notation: 'compact', maximumFractionDigits: 1, minimumFractionDigits: 1 }}
+            positivePulseColor="accentBoldPurple"
+            value={downloads}
+          />
+          <Text color="fgMuted" font="caption">
+            Downloads
+          </Text>
+        </VStack>
+      </HStack>
+      <Button onClick={simulateActivity}>Simulate Activity</Button>
     </VStack>
   );
 }

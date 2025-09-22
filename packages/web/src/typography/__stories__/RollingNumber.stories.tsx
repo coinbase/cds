@@ -669,7 +669,6 @@ const LiveBiddingExample = () => {
           positivePulseColor="accentBoldRed"
           transition={{
             y: { type: 'spring', stiffness: 200, damping: 20 },
-            color: { duration: 1 },
           }}
           value={currentBid}
         />
