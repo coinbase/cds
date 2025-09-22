@@ -1,4 +1,4 @@
-import { glyphMap } from '@coinbase/cds-icons/glyphMap';
+import { glyphMap } from '@cbhq/cds-icons/glyphMap';
 import { render, screen } from '@testing-library/react';
 
 import { DefaultThemeProvider } from '../../utils/test';

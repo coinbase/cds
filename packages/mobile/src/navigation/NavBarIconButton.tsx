@@ -1,5 +1,5 @@
 import { memo, useContext, useEffect } from 'react';
-import type { IconName, IconSize, SharedProps } from '@coinbase/cds-common/types';
+import type { IconName, IconSize, SharedProps } from '@cbhq/cds-common/types';
 
 import type { ButtonBaseProps } from '../buttons/Button';
 import { Icon } from '../icons';

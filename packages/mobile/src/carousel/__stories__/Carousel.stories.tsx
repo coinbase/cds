@@ -1,7 +1,7 @@
 import React, { memo, useCallback, useMemo, useRef, useState } from 'react';
 import { Dimensions, Image, StyleSheet, View } from 'react-native';
 import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
-import { assets, coinbaseOneLogo } from '@coinbase/cds-common/internal/data/assets';
+import { assets, coinbaseOneLogo } from '@cbhq/cds-common/internal/data/assets';
 import { animated, useSpring } from '@react-spring/native';
 
 import { Button } from '../../buttons';

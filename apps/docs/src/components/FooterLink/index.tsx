@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, type TextDefaultElement, type TextProps } from '@coinbase/cds-web/typography/Text';
+import { Text, type TextDefaultElement, type TextProps } from '@cbhq/cds-web/typography/Text';
 import isInternalUrl from '@docusaurus/isInternalUrl';
 import Link, { type Props } from '@docusaurus/Link';
 

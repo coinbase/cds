@@ -1,9 +1,9 @@
 import React, { forwardRef, memo, useMemo, useRef } from 'react';
-import { useMergeRefs } from '@coinbase/cds-common/hooks/useMergeRefs';
-import { usePrefixedId } from '@coinbase/cds-common/hooks/usePrefixedId';
-import { zIndex } from '@coinbase/cds-common/tokens/zIndex';
-import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
-import { isDevelopment } from '@coinbase/cds-utils';
+import { useMergeRefs } from '@cbhq/cds-common/hooks/useMergeRefs';
+import { usePrefixedId } from '@cbhq/cds-common/hooks/usePrefixedId';
+import { zIndex } from '@cbhq/cds-common/tokens/zIndex';
+import type { SharedProps } from '@cbhq/cds-common/types/SharedProps';
+import { isDevelopment } from '@cbhq/cds-utils';
 import { css } from '@linaria/core';
 
 import { cx } from '../cx';

@@ -1,6 +1,6 @@
 import React, { createContext, memo, useContext, useMemo, useState } from 'react';
 import type { Dispatch, SetStateAction } from 'react';
-import { noop } from '@coinbase/cds-utils';
+import { noop } from '@cbhq/cds-utils';
 
 type SparklineInteractiveScrubContextInterface = {
   setLineDOMNode: Dispatch<SetStateAction<HTMLDivElement | null>>; // update the dom directly for performance

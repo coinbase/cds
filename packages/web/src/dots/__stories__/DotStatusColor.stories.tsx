@@ -1,5 +1,5 @@
 import React from 'react';
-import { avatarSizes } from '@coinbase/cds-common/internal/data/avatars';
+import { avatarSizes } from '@cbhq/cds-common/internal/data/avatars';
 
 import { Icon } from '../../icons/Icon';
 import { VStack } from '../../layout';

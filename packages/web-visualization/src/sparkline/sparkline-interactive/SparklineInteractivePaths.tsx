@@ -1,6 +1,6 @@
 import React, { memo, useCallback, useRef } from 'react';
-import type { ChartTimeseries } from '@coinbase/cds-common';
-import { chartCompactHeight, chartHeight } from '@coinbase/cds-common/tokens/sparkline';
+import type { ChartTimeseries } from '@cbhq/cds-common';
+import { chartCompactHeight, chartHeight } from '@cbhq/cds-common/tokens/sparkline';
 
 import type { SparklineInteractiveBaseProps } from './SparklineInteractive';
 import { SparklineInteractiveAnimatedPath } from './SparklineInteractiveAnimatedPath';

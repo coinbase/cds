@@ -12,10 +12,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@coinbase/cds-icons": "^5",
-    "@coinbase/cds-illustrations": "^4",
-    "@coinbase/cds-web": "^8",
-    "@coinbase/cds-web-visualization": "^3",
+    "@cbhq/cds-icons": "^5",
+    "@cbhq/cds-illustrations": "^4",
+    "@cbhq/cds-web": "^8",
+    "@cbhq/cds-web-visualization": "^3",
     "framer-motion": "^11",
     "react": "^19.1.0",
     "react-dom": "^19.1.0"

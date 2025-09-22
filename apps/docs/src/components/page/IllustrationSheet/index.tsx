@@ -4,43 +4,43 @@ import type {
   IllustrationVariant,
   PictogramDimension,
   SpotIconDimension,
-} from '@coinbase/cds-common';
-import type { TabValue } from '@coinbase/cds-common/tabs/useTabs';
+} from '@cbhq/cds-common';
+import type { TabValue } from '@cbhq/cds-common/tabs/useTabs';
 import {
   illustrationDimensionDefaults,
   illustrationDimensions,
-} from '@coinbase/cds-common/tokens/illustrations';
-import heroSquareDescriptionMap from '@coinbase/cds-illustrations/__generated__/heroSquare/data/descriptionMap';
-import heroSquareNames from '@coinbase/cds-illustrations/__generated__/heroSquare/data/names';
-import pictogramDescriptionMap from '@coinbase/cds-illustrations/__generated__/pictogram/data/descriptionMap';
-import pictogramNames from '@coinbase/cds-illustrations/__generated__/pictogram/data/names';
-import spotIconDescriptionMap from '@coinbase/cds-illustrations/__generated__/spotIcon/data/descriptionMap';
-import spotIconNames from '@coinbase/cds-illustrations/__generated__/spotIcon/data/names';
-import spotRectangleDescriptionMap from '@coinbase/cds-illustrations/__generated__/spotRectangle/data/descriptionMap';
-import spotRectangleNames from '@coinbase/cds-illustrations/__generated__/spotRectangle/data/names';
-import spotSquareDescriptionMap from '@coinbase/cds-illustrations/__generated__/spotSquare/data/descriptionMap';
-import spotSquareNames from '@coinbase/cds-illustrations/__generated__/spotSquare/data/names';
-import { SearchInput } from '@coinbase/cds-web/controls/SearchInput';
-import { Select } from '@coinbase/cds-web/controls/Select';
-import { SelectOption } from '@coinbase/cds-web/controls/SelectOption';
+} from '@cbhq/cds-common/tokens/illustrations';
+import heroSquareDescriptionMap from '@cbhq/cds-illustrations/__generated__/heroSquare/data/descriptionMap';
+import heroSquareNames from '@cbhq/cds-illustrations/__generated__/heroSquare/data/names';
+import pictogramDescriptionMap from '@cbhq/cds-illustrations/__generated__/pictogram/data/descriptionMap';
+import pictogramNames from '@cbhq/cds-illustrations/__generated__/pictogram/data/names';
+import spotIconDescriptionMap from '@cbhq/cds-illustrations/__generated__/spotIcon/data/descriptionMap';
+import spotIconNames from '@cbhq/cds-illustrations/__generated__/spotIcon/data/names';
+import spotRectangleDescriptionMap from '@cbhq/cds-illustrations/__generated__/spotRectangle/data/descriptionMap';
+import spotRectangleNames from '@cbhq/cds-illustrations/__generated__/spotRectangle/data/names';
+import spotSquareDescriptionMap from '@cbhq/cds-illustrations/__generated__/spotSquare/data/descriptionMap';
+import spotSquareNames from '@cbhq/cds-illustrations/__generated__/spotSquare/data/names';
+import { SearchInput } from '@cbhq/cds-web/controls/SearchInput';
+import { Select } from '@cbhq/cds-web/controls/Select';
+import { SelectOption } from '@cbhq/cds-web/controls/SelectOption';
 import type {
   HeroSquareName,
   PictogramName,
   SpotIconName,
   SpotRectangleName,
   SpotSquareName,
-} from '@coinbase/cds-web/illustrations';
+} from '@cbhq/cds-web/illustrations';
 import {
   HeroSquare,
   Pictogram,
   SpotIcon,
   SpotRectangle,
   SpotSquare,
-} from '@coinbase/cds-web/illustrations';
-import { Box, Grid, VStack } from '@coinbase/cds-web/layout';
-import { useToast } from '@coinbase/cds-web/overlays/useToast';
-import { Pressable } from '@coinbase/cds-web/system';
-import { Text } from '@coinbase/cds-web/typography';
+} from '@cbhq/cds-web/illustrations';
+import { Box, Grid, VStack } from '@cbhq/cds-web/layout';
+import { useToast } from '@cbhq/cds-web/overlays/useToast';
+import { Pressable } from '@cbhq/cds-web/system';
+import { Text } from '@cbhq/cds-web/typography';
 import throttle from 'lodash/throttle';
 
 import { SheetTabs } from '../SheetTabs';

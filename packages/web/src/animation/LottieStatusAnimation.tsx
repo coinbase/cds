@@ -1,9 +1,9 @@
 import React, { memo, useCallback, useRef, useState } from 'react';
-import { useStatusAnimationPoller } from '@coinbase/cds-common/lottie/useStatusAnimationPoller';
-import type { LottiePlayer } from '@coinbase/cds-common/types/LottiePlayer';
-import type { LottieStatusAnimationProps } from '@coinbase/cds-common/types/LottieStatusAnimationProps';
-import type { TradeStatusLottie } from '@coinbase/cds-lottie-files/tradeStatus';
-import { tradeStatus } from '@coinbase/cds-lottie-files/tradeStatus';
+import { useStatusAnimationPoller } from '@cbhq/cds-common/lottie/useStatusAnimationPoller';
+import type { LottiePlayer } from '@cbhq/cds-common/types/LottiePlayer';
+import type { LottieStatusAnimationProps } from '@cbhq/cds-common/types/LottieStatusAnimationProps';
+import type { TradeStatusLottie } from '@cbhq/cds-lottie-files/tradeStatus';
+import { tradeStatus } from '@cbhq/cds-lottie-files/tradeStatus';
 
 import { Lottie } from './Lottie';
 

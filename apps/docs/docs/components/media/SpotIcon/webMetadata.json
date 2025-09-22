@@ -1,5 +1,5 @@
 {
-  "import": "import { SpotIcon } from '@coinbase/cds-web/illustratations/SpotIcon'",
+  "import": "import { SpotIcon } from '@cbhq/cds-web/illustratations/SpotIcon'",
   "changelog": "https://github.com/coinbase/cds-staging/blob/master/packages/illustrations/CHANGELOG.md",
   "source": "https://github.com/coinbase/cds-staging/blob/master/packages/web/src/illustrations/SpotIcon.tsx",
   "storybook": "https://cds-storybook.coinbase.com/?path=/story/illustrations--spot-icon",

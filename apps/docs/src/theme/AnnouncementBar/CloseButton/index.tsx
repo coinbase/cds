@@ -1,5 +1,5 @@
 import { type ReactNode } from 'react';
-import { IconButton } from '@coinbase/cds-web/buttons';
+import { IconButton } from '@cbhq/cds-web/buttons';
 import { translate } from '@docusaurus/Translate';
 import type { Props } from '@theme/AnnouncementBar/CloseButton';
 

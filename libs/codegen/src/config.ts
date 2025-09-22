@@ -1,4 +1,4 @@
-import { kebabCase, pascalCase, toCssVar, toCssVarFn } from '@coinbase/cds-utils';
+import { kebabCase, pascalCase, toCssVar, toCssVarFn } from '@cbhq/cds-utils';
 import enquirer from 'enquirer';
 import type { Options } from 'execa';
 import { command } from 'execa';

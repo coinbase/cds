@@ -1,8 +1,8 @@
 import 'd3-transition'; // Important! do not remove this, it sets up the linkage so you can use select().transition()
 
 import React, { memo, useCallback, useEffect, useMemo, useRef } from 'react';
-import { animatedPathConfig } from '@coinbase/cds-common/animation/sparkline';
-import { useValueChanges } from '@coinbase/cds-common/hooks/useValueChanges';
+import { animatedPathConfig } from '@cbhq/cds-common/animation/sparkline';
+import { useValueChanges } from '@cbhq/cds-common/hooks/useValueChanges';
 import { interpolatePath } from 'd3-interpolate-path';
 import { select } from 'd3-selection';
 

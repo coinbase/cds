@@ -6,7 +6,7 @@ import { getKBarActions } from './utils/getKBarActions';
 import { logger } from './utils/logger';
 import type { PluginData, PluginOptions } from './types';
 
-const PLUGIN_ID = '@coinbase/docusaurus-plugin-kbar';
+const PLUGIN_ID = '@cbhq/docusaurus-plugin-kbar';
 
 export default async function plugin(
   context: LoadContext,

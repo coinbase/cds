@@ -1,15 +1,15 @@
 import React, { memo, useMemo } from 'react';
 import { StyleSheet } from 'react-native';
-import type { ThemeVars } from '@coinbase/cds-common/core/theme';
-import { colorSchemeMap } from '@coinbase/cds-common/tokens/avatar';
+import type { ThemeVars } from '@cbhq/cds-common/core/theme';
+import { colorSchemeMap } from '@cbhq/cds-common/tokens/avatar';
 import type {
   AvatarFallbackColor,
   AvatarShape,
   AvatarSize,
   SharedAccessibilityProps,
   SharedProps,
-} from '@coinbase/cds-common/types';
-import { getAccessibleColor } from '@coinbase/cds-common/utils/getAccessibleColor';
+} from '@cbhq/cds-common/types';
+import { getAccessibleColor } from '@cbhq/cds-common/utils/getAccessibleColor';
 
 import { useTheme } from '../hooks/useTheme';
 import { Box, type BoxProps } from '../layout/Box';

@@ -1,6 +1,6 @@
-import type { ThemeVars } from '@coinbase/cds-common/core/theme';
-import type { BaseTooltipPlacement, ElevationProps, SharedProps } from '@coinbase/cds-common/types';
-import type { PositionStyles } from '@coinbase/cds-common/types/BoxBaseProps';
+import type { ThemeVars } from '@cbhq/cds-common/core/theme';
+import type { BaseTooltipPlacement, ElevationProps, SharedProps } from '@cbhq/cds-common/types';
+import type { PositionStyles } from '@cbhq/cds-common/types/BoxBaseProps';
 
 import type { PopoverProps } from '../popover/PopoverProps';
 

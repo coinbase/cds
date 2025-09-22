@@ -1,5 +1,5 @@
 {
-  "name": "@coinbase/cds-common",
+  "name": "@cbhq/cds-common",
   "version": "8.12.0",
   "description": "Coinbase Design System - Common",
   "repository": {
@@ -38,10 +38,10 @@
     "react-dom": "^18.3.1"
   },
   "dependencies": {
-    "@coinbase/cds-icons": "workspace:^",
-    "@coinbase/cds-illustrations": "workspace:^",
-    "@coinbase/cds-mcp-server": "workspace:^",
-    "@coinbase/cds-utils": "workspace:^",
+    "@cbhq/cds-icons": "workspace:^",
+    "@cbhq/cds-illustrations": "workspace:^",
+    "@cbhq/cds-mcp-server": "workspace:^",
+    "@cbhq/cds-utils": "workspace:^",
     "@modelcontextprotocol/sdk": "^1.13.1",
     "d3-array": "^3.2.4",
     "d3-color": "^3.1.0",

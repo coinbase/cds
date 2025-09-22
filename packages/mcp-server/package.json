@@ -1,5 +1,5 @@
 {
-  "name": "@coinbase/cds-mcp-server",
+  "name": "@cbhq/cds-mcp-server",
   "version": "8.12.0",
   "description": "Coinbase Design System - MCP Server",
   "repository": {

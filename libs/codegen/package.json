@@ -32,7 +32,7 @@
     "CHANGELOG"
   ],
   "dependencies": {
-    "@coinbase/cds-utils": "workspace:^",
+    "@cbhq/cds-utils": "workspace:^",
     "@k-vyn/coloralgorithm": "^1.0.0",
     "chalk": "^4.1.2",
     "ejs": "^3.1.7",

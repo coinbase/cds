@@ -1,6 +1,6 @@
 import { useMemo, useRef } from 'react';
 import { Animated } from 'react-native';
-import { fadeDuration } from '@coinbase/cds-common/tokens/sparkline';
+import { fadeDuration } from '@cbhq/cds-common/tokens/sparkline';
 
 export function useOpacityAnimation(
   initialValue: number | undefined = 0,

@@ -1,5 +1,5 @@
-import { Box, type BoxDefaultElement, type BoxProps } from '@coinbase/cds-web/layout/Box';
-import { Text } from '@coinbase/cds-web/typography/Text';
+import { Box, type BoxDefaultElement, type BoxProps } from '@cbhq/cds-web/layout/Box';
+import { Text } from '@cbhq/cds-web/typography/Text';
 import { useCDSVersions } from '@site/src/hooks/useCDSVersions';
 
 export type VersionLabelProps = Omit<BoxProps<BoxDefaultElement>, 'children'> & {
@@ -19,21 +19,21 @@ export const VersionLabel = ({
   let version = null;
 
   switch (packageName) {
-    case '@coinbase/cds-common':
-    case '@coinbase/cds-web':
-    case '@coinbase/cds-mobile':
+    case '@cbhq/cds-common':
+    case '@cbhq/cds-web':
+    case '@cbhq/cds-mobile':
       version = versions.cdsCommonVersion;
       break;
-    case '@coinbase/cds-icons':
+    case '@cbhq/cds-icons':
       version = versions.cdsIconsVersion;
       break;
-    case '@coinbase/cds-illustrations':
+    case '@cbhq/cds-illustrations':
       version = versions.cdsIllustrationsVersion;
       break;
-    case '@coinbase/cds-web-visualization':
+    case '@cbhq/cds-web-visualization':
       version = versions.cdsWebVisualizationVersion;
       break;
-    case '@coinbase/cds-mobile-visualization':
+    case '@cbhq/cds-mobile-visualization':
       version = versions.cdsMobileVisualizationVersion;
       break;
     default:

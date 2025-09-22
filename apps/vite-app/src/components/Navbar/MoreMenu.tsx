@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import { IconButton } from '@coinbase/cds-web/buttons';
-import { SelectOption } from '@coinbase/cds-web/controls';
-import { Dropdown } from '@coinbase/cds-web/dropdown';
-import { Box } from '@coinbase/cds-web/layout';
-import { Text } from '@coinbase/cds-web/typography';
+import { IconButton } from '@cbhq/cds-web/buttons';
+import { SelectOption } from '@cbhq/cds-web/controls';
+import { Dropdown } from '@cbhq/cds-web/dropdown';
+import { Box } from '@cbhq/cds-web/layout';
+import { Text } from '@cbhq/cds-web/typography';
 
 const moreMenuOptions = ['Option 1', 'Option 2', 'Option 3', 'Option 4', 'Option 5', 'Option 6'];
 

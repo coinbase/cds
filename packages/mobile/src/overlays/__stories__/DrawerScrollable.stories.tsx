@@ -1,6 +1,6 @@
 import React, { useCallback, useRef, useState } from 'react';
 import { FlatList, ScrollView } from 'react-native';
-import { prices } from '@coinbase/cds-common/internal/data/prices';
+import { prices } from '@cbhq/cds-common/internal/data/prices';
 
 import { Button } from '../../buttons/Button';
 import { Menu, SelectOption } from '../../controls';

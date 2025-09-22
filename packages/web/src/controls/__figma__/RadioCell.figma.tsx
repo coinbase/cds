@@ -6,7 +6,7 @@ figma.connect(
   RadioCell,
   'https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/%E2%9C%A8-CDS-Components?node-id=54927-2624',
   {
-    imports: ["import { RadioCell } from '@coinbase/cds-web/controls/RadioCell'"],
+    imports: ["import { RadioCell } from '@cbhq/cds-web/controls/RadioCell'"],
     props: {
       title: figma.string('title text'),
       description: figma.boolean('description', {
@@ -22,7 +22,7 @@ figma.connect(
   RadioCell,
   'https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/%E2%9C%A8-CDS-Components?node-id=54927-2624',
   {
-    imports: ["import { RadioCell } from '@coinbase/cds-web/controls/RadioCell'"],
+    imports: ["import { RadioCell } from '@cbhq/cds-web/controls/RadioCell'"],
     variant: {
       state: 'selected',
     },

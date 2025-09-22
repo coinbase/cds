@@ -10,9 +10,9 @@ import React, {
 import { Animated, StyleSheet } from 'react-native';
 import type { ScrollView, ScrollViewProps } from 'react-native';
 import { useSafeAreaFrame } from 'react-native-safe-area-context';
-import type { SharedAccessibilityProps, SharedProps } from '@coinbase/cds-common';
-import type { ThemeVars } from '@coinbase/cds-common/core/theme';
-import { gutter } from '@coinbase/cds-common/tokens/sizing';
+import type { SharedAccessibilityProps, SharedProps } from '@cbhq/cds-common';
+import type { ThemeVars } from '@cbhq/cds-common/core/theme';
+import { gutter } from '@cbhq/cds-common/tokens/sizing';
 
 import { useScrollOffset } from '../../hooks/useScrollOffset';
 import type { ScrollToParams } from '../../hooks/useScrollTo';

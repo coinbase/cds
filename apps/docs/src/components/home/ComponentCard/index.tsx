@@ -1,6 +1,6 @@
 import React from 'react';
-import { HStack, VStack } from '@coinbase/cds-web/layout';
-import { Text } from '@coinbase/cds-web/typography';
+import { HStack, VStack } from '@cbhq/cds-web/layout';
+import { Text } from '@cbhq/cds-web/typography';
 import Link from '@docusaurus/Link';
 
 import { useDocsTheme } from '../../../theme/Layout/Provider/UnifiedThemeContext';

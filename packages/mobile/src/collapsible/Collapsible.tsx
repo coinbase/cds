@@ -11,9 +11,9 @@ import {
   animateInOpacityConfig,
   animateOutMaxSizeConfig,
   animateOutOpacityConfig,
-} from '@coinbase/cds-common/animation/collapsible';
-import { usePreviousValue } from '@coinbase/cds-common/hooks/usePreviousValue';
-import type { CollapsibleDirection, PaddingProps, SharedProps } from '@coinbase/cds-common/types';
+} from '@cbhq/cds-common/animation/collapsible';
+import { usePreviousValue } from '@cbhq/cds-common/hooks/usePreviousValue';
+import type { CollapsibleDirection, PaddingProps, SharedProps } from '@cbhq/cds-common/types';
 
 import { useContentSize } from '../hooks/useContentSize';
 import { useTheme } from '../hooks/useTheme';

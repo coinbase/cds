@@ -1,13 +1,13 @@
 import React, { Children, isValidElement, useMemo } from 'react';
 import { StyleSheet, Text } from 'react-native';
 import type { ViewStyle } from 'react-native';
-import { shapeBorderRadius } from '@coinbase/cds-common/tokens/borderRadius';
+import { shapeBorderRadius } from '@cbhq/cds-common/tokens/borderRadius';
 import type {
   AvatarSize,
   Shape,
   SharedAccessibilityProps,
   SharedProps,
-} from '@coinbase/cds-common/types';
+} from '@cbhq/cds-common/types';
 
 import { useTheme } from '../hooks/useTheme';
 import { Box } from '../layout/Box';

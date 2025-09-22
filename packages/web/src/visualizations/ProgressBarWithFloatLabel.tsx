@@ -1,8 +1,8 @@
 import React, { memo, useCallback, useRef } from 'react';
-import { animateProgressBaseSpec } from '@coinbase/cds-common/animation/progress';
-import { usePreviousValues } from '@coinbase/cds-common/hooks/usePreviousValues';
-import type { Placement } from '@coinbase/cds-common/types';
-import { isStorybook } from '@coinbase/cds-utils';
+import { animateProgressBaseSpec } from '@cbhq/cds-common/animation/progress';
+import { usePreviousValues } from '@cbhq/cds-common/hooks/usePreviousValues';
+import type { Placement } from '@cbhq/cds-common/types';
+import { isStorybook } from '@cbhq/cds-utils';
 import { css } from '@linaria/core';
 import type { MotionStyle } from 'framer-motion';
 import { m as motion, useAnimation } from 'framer-motion';

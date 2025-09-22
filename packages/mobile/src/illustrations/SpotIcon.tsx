@@ -1,4 +1,4 @@
-import svgJsMap from '@coinbase/cds-illustrations/__generated__/spotIcon/data/svgJsMap';
+import svgJsMap from '@cbhq/cds-illustrations/__generated__/spotIcon/data/svgJsMap';
 
 import {
   createIllustration,
@@ -18,4 +18,4 @@ export type SpotIconBaseProps = IllustrationBaseProps<'spotIcon'> &
   };
 
 export type SpotIconProps = SpotIconBaseProps;
-export type { SpotIconName } from '@coinbase/cds-illustrations';
+export type { SpotIconName } from '@cbhq/cds-illustrations';

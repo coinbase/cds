@@ -1,5 +1,5 @@
 {
-  "import": "import { ControlGroup } from '@coinbase/cds-mobile/controls/ControlGroup'",
+  "import": "import { ControlGroup } from '@cbhq/cds-mobile/controls/ControlGroup'",
   "source": "https://github.com/coinbase/cds-staging/blob/master/packages/mobile/src/controls/ControlGroup.tsx",
   "description": "A layout component that arranges and manages a group of related controls, such as radio buttons, switches, or checkboxes.",
   "relatedComponents": [

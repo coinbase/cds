@@ -1,8 +1,8 @@
 import React from 'react';
-import { getAvatarFallbackColor } from '@coinbase/cds-common/media/getAvatarFallbackColor';
-import { colorSchemeMap } from '@coinbase/cds-common/tokens/avatar';
-import type { AvatarFallbackColor } from '@coinbase/cds-common/types';
-import type { AvatarSize } from '@coinbase/cds-common/types/AvatarSize';
+import { getAvatarFallbackColor } from '@cbhq/cds-common/media/getAvatarFallbackColor';
+import { colorSchemeMap } from '@cbhq/cds-common/tokens/avatar';
+import type { AvatarFallbackColor } from '@cbhq/cds-common/types';
+import type { AvatarSize } from '@cbhq/cds-common/types/AvatarSize';
 
 import { HStack } from '../../layout/HStack';
 import { VStack } from '../../layout/VStack';

@@ -1,6 +1,6 @@
 import React, { memo, useMemo } from 'react';
-import { type IconName, type IconSize } from '@coinbase/cds-common';
-import { names } from '@coinbase/cds-icons/names';
+import { type IconName, type IconSize } from '@cbhq/cds-common';
+import { names } from '@cbhq/cds-icons/names';
 
 import { useTheme } from '../../hooks/useTheme';
 import { HStack, VStack } from '../../layout';
@@ -15,7 +15,7 @@ function SvgFromFigma({ active, name, size }: SvgFromFigmaProps) {
   const isDarkMode = theme.activeColorScheme === 'dark';
   const sourceSize = getIconSourceSize(iconSize);
   const svgName = `${name}-${sourceSize}-${active ? 'active' : 'inactive'}`;
-  const svgPath = `@coinbase/cds-icons/svgs/${svgName}.svg`;
+  const svgPath = `@cbhq/cds-icons/svgs/${svgName}.svg`;
   const style = useMemo(() => ({ filter: isDarkMode ? 'invert(100%)' : undefined }), [isDarkMode]);
   return <img alt={name} height={iconSize} src={svgPath} style={style} width={iconSize} />;
 }

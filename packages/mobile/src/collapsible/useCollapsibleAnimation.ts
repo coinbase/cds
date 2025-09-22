@@ -1,6 +1,6 @@
 import { useMemo, useRef } from 'react';
 import { Animated } from 'react-native';
-import type { CollapsibleDirection } from '@coinbase/cds-common';
+import type { CollapsibleDirection } from '@cbhq/cds-common';
 import {
   animateInMaxSizeConfig,
   animateInOpacityConfig,
@@ -9,7 +9,7 @@ import {
   collapsibleHiddenMaxSize,
   collapsibleHiddenOpacity,
   collapsibleVisibleOpacity,
-} from '@coinbase/cds-common/animation/collapsible';
+} from '@cbhq/cds-common/animation/collapsible';
 
 import { convertMotionConfig } from '../animation/convertMotionConfig';
 

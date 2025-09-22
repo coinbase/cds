@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react';
-import { sampleTabs } from '@coinbase/cds-common/internal/data/tabs';
-import { gutter } from '@coinbase/cds-common/tokens/sizing';
+import { sampleTabs } from '@cbhq/cds-common/internal/data/tabs';
+import { gutter } from '@cbhq/cds-common/tokens/sizing';
 import sample from 'lodash/sample';
 
 import { Button } from '../../buttons';

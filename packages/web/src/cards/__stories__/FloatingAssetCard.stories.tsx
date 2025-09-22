@@ -2,7 +2,7 @@ import React from 'react';
 import {
   ethBackground,
   floatingAssetCardCustomImage,
-} from '@coinbase/cds-common/internal/data/assets';
+} from '@cbhq/cds-common/internal/data/assets';
 
 import { HStack, VStack } from '../../layout';
 import { Text } from '../../typography/Text';

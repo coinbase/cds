@@ -5,7 +5,7 @@ import {
   animateOutOpacityConfig,
   getTranslateConfigByPlacement,
   tooltipHiddenOpacity,
-} from '@coinbase/cds-common/animation/tooltip';
+} from '@cbhq/cds-common/animation/tooltip';
 
 import { convertMotionConfig } from '../../animation/convertMotionConfig';
 

@@ -1,20 +1,20 @@
 import React, { useCallback, useEffect, useRef } from 'react';
 import { Modal, View } from 'react-native';
-import type { SharedProps } from '@coinbase/cds-common';
-import { useRefMap } from '@coinbase/cds-common/hooks/useRefMap';
+import type { SharedProps } from '@cbhq/cds-common';
+import { useRefMap } from '@cbhq/cds-common/hooks/useRefMap';
 import {
   OverlayContentContext,
   type OverlayContentContextValue,
-} from '@coinbase/cds-common/overlays/OverlayContentContext';
-import { RefMapContext } from '@coinbase/cds-common/system/RefMapContext';
-import { TourContext, type TourContextValue } from '@coinbase/cds-common/tour/TourContext';
+} from '@cbhq/cds-common/overlays/OverlayContentContext';
+import { RefMapContext } from '@cbhq/cds-common/system/RefMapContext';
+import { TourContext, type TourContextValue } from '@cbhq/cds-common/tour/TourContext';
 import type {
   TourOptions,
   TourStepArrowComponent,
   TourStepValue,
-} from '@coinbase/cds-common/tour/useTour';
-import { useTour } from '@coinbase/cds-common/tour/useTour';
-import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
+} from '@cbhq/cds-common/tour/useTour';
+import { useTour } from '@cbhq/cds-common/tour/useTour';
+import type { SharedAccessibilityProps } from '@cbhq/cds-common/types/SharedAccessibilityProps';
 import {
   type AutoPlacementOptions,
   type OffsetOptions,

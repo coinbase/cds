@@ -1,6 +1,6 @@
 import { cloneElement } from 'react';
 import type React from 'react';
-import type { ElementChildren } from '@coinbase/cds-common/types';
+import type { ElementChildren } from '@cbhq/cds-common/types';
 
 import type { SparklineAreaBaseProps } from './SparklineArea';
 

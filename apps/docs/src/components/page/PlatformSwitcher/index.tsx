@@ -1,8 +1,8 @@
 import { useCallback, useMemo, useRef } from 'react';
-import type { TabValue } from '@coinbase/cds-common/tabs/useTabs';
-import { TabsActiveIndicator } from '@coinbase/cds-web/tabs';
-import { SegmentedTabs } from '@coinbase/cds-web/tabs/SegmentedTabs';
-import type { SegmentedTabsActiveIndicatorProps } from '@coinbase/cds-web/tabs/SegmentedTabsActiveIndicator';
+import type { TabValue } from '@cbhq/cds-common/tabs/useTabs';
+import { TabsActiveIndicator } from '@cbhq/cds-web/tabs';
+import { SegmentedTabs } from '@cbhq/cds-web/tabs/SegmentedTabs';
+import type { SegmentedTabsActiveIndicatorProps } from '@cbhq/cds-web/tabs/SegmentedTabsActiveIndicator';
 import { type Platform, usePlatformContext } from '@site/src/utils/PlatformContext';
 
 const SegmentedTabsActiveIndicator = ({ ...props }: SegmentedTabsActiveIndicatorProps) => {

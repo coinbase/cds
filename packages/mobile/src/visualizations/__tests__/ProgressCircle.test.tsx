@@ -1,7 +1,7 @@
 import React from 'react';
 import { View } from 'react-native';
-import { getCircumference, getRadius } from '@coinbase/cds-common/utils/circle';
-import type { UseCounterParams } from '@coinbase/cds-common/visualizations/useCounter';
+import { getCircumference, getRadius } from '@cbhq/cds-common/utils/circle';
+import type { UseCounterParams } from '@cbhq/cds-common/visualizations/useCounter';
 import { render, screen } from '@testing-library/react-native';
 
 import { TextLabel1 } from '../../typography';
@@ -23,7 +23,7 @@ jest.mock('react-native-svg', () => {
   };
 });
 
-jest.mock('@coinbase/cds-common/visualizations/useCounter', () => ({
+jest.mock('@cbhq/cds-common/visualizations/useCounter', () => ({
   useCounter: ({ endNum }: UseCounterParams) => endNum,
 }));
 

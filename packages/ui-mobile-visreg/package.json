@@ -1,5 +1,5 @@
 {
-  "name": "@coinbase/ui-mobile-visreg",
+  "name": "@cbhq/ui-mobile-visreg",
   "version": "4.1.0",
   "private": true,
   "description": "Visreg Helpers",
@@ -38,8 +38,8 @@
     "CHANGELOG"
   ],
   "peerDependencies": {
-    "@coinbase/cds-mobile": "workspace:^",
-    "@coinbase/cds-mobile-visualization": "workspace:^",
+    "@cbhq/cds-mobile": "workspace:^",
+    "@cbhq/cds-mobile-visualization": "workspace:^",
     "detox": "^20.14.8"
   },
   "dependencies": {
@@ -53,8 +53,8 @@
     "@babel/preset-env": "^7.28.0",
     "@babel/preset-react": "^7.27.1",
     "@babel/preset-typescript": "^7.27.1",
-    "@coinbase/cds-mobile": "workspace:^",
-    "@coinbase/cds-mobile-visualization": "workspace:^",
+    "@cbhq/cds-mobile": "workspace:^",
+    "@cbhq/cds-mobile-visualization": "workspace:^",
     "detox": "^20.14.8"
   }
 }

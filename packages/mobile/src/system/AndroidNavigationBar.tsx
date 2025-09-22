@@ -1,7 +1,7 @@
 import { memo, useCallback, useLayoutEffect, useRef } from 'react';
 import { Platform } from 'react-native';
 import changeNavigationBarColor from 'react-native-navigation-bar-color';
-import { colorToHex } from '@coinbase/cds-common/color/colorToHex';
+import { colorToHex } from '@cbhq/cds-common/color/colorToHex';
 
 import type { Theme } from '../core/theme';
 import { useTheme } from '../hooks/useTheme';

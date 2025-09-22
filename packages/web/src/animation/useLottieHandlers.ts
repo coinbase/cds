@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { mapValues } from '@coinbase/cds-utils';
+import { mapValues } from '@cbhq/cds-utils';
 
 import type { LottieEventHandlersMap, LottieListener } from './types';
 

@@ -1,9 +1,9 @@
 import React, { forwardRef, memo } from 'react';
-import { animateProgressBaseSpec } from '@coinbase/cds-common/animation/progress';
-import type { ThemeVars } from '@coinbase/cds-common/core/theme';
-import { usePreviousValues } from '@coinbase/cds-common/hooks/usePreviousValues';
-import type { SharedAccessibilityProps, SharedProps, Weight } from '@coinbase/cds-common/types';
-import { useProgressSize } from '@coinbase/cds-common/visualizations/useProgressSize';
+import { animateProgressBaseSpec } from '@cbhq/cds-common/animation/progress';
+import type { ThemeVars } from '@cbhq/cds-common/core/theme';
+import { usePreviousValues } from '@cbhq/cds-common/hooks/usePreviousValues';
+import type { SharedAccessibilityProps, SharedProps, Weight } from '@cbhq/cds-common/types';
+import { useProgressSize } from '@cbhq/cds-common/visualizations/useProgressSize';
 import { css } from '@linaria/core';
 import { m as motion } from 'framer-motion';
 

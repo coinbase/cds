@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import { loremIpsum } from '@coinbase/cds-common/internal/data/loremIpsum';
+import { loremIpsum } from '@cbhq/cds-common/internal/data/loremIpsum';
 
 import { Button } from '../../buttons';
 import { DotCount } from '../../dots';

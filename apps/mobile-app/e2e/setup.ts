@@ -1,5 +1,5 @@
-import { initialRouteName } from '@coinbase/ui-mobile-playground/components/staticRoutes';
-import { finishVisregTests, navigateToHome } from '@coinbase/ui-mobile-visreg';
+import { initialRouteName } from '@cbhq/ui-mobile-playground/components/staticRoutes';
+import { finishVisregTests, navigateToHome } from '@cbhq/ui-mobile-visreg';
 
 import { openApp } from './utils/openApp';
 

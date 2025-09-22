@@ -10,7 +10,7 @@ The plugin encapsulates two rules at this time:
 
 A fixable rule that applies Coinbase-opinionated styles to a modules import statements.
 This rule copied from internal CB repositories during CDS's transition to open source.
-Eventually, this rule could be moved to a new @coinbase open source package
+Eventually, this rule could be moved to a new @cbhq open source package
 
 ### safely-spread-props
 

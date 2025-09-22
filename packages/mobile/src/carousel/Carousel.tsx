@@ -10,7 +10,7 @@ import React, {
 } from 'react';
 import { type StyleProp, type TextStyle, View, type ViewStyle } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
-import type { Rect, SharedAccessibilityProps, SharedProps } from '@coinbase/cds-common/types';
+import type { Rect, SharedAccessibilityProps, SharedProps } from '@cbhq/cds-common/types';
 import { animated, useSpring } from '@react-spring/native';
 
 import { useLayout } from '../hooks/useLayout';

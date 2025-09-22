@@ -1,5 +1,5 @@
 import React from 'react';
-import { cx } from '@coinbase/cds-web';
+import { cx } from '@cbhq/cds-web';
 import { ThemeClassNames } from '@docusaurus/theme-common';
 import type { Props } from '@theme/DocSidebarItem/Html';
 

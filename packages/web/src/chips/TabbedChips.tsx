@@ -1,6 +1,6 @@
 import React, { forwardRef, memo, useCallback, useMemo, useRef, useState } from 'react';
-import { useTabsContext } from '@coinbase/cds-common/tabs/TabsContext';
-import type { TabValue } from '@coinbase/cds-common/tabs/useTabs';
+import { useTabsContext } from '@cbhq/cds-common/tabs/TabsContext';
+import type { TabValue } from '@cbhq/cds-common/tabs/useTabs';
 import { css } from '@linaria/core';
 
 import { useDimensions } from '../hooks/useDimensions';

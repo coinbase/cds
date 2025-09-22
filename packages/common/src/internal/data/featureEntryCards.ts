@@ -1,4 +1,4 @@
-import type { SpotSquareName } from '@coinbase/cds-illustrations';
+import type { SpotSquareName } from '@cbhq/cds-illustrations';
 
 const onPress = () => console.log('pressed');
 export const featureEntryCards = [

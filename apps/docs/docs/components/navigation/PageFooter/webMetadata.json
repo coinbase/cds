@@ -1,5 +1,5 @@
 {
-  "import": "import { PageFooter } from '@coinbase/cds-web/page/PageFooter'",
+  "import": "import { PageFooter } from '@cbhq/cds-web/page/PageFooter'",
   "source": "https://github.com/coinbase/cds-staging/blob/master/packages/web/src/page/PageFooter.tsx",
   "description": "PageFooter is a layout component that provides a consistent footer area for pages, with responsive padding and justification, typically used for action buttons or navigation elements.",
   "storybook": "https://cds-storybook.coinbase.com/?path=/story/core-components-pagefooter--interactive-footer",

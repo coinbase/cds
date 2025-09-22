@@ -1,8 +1,8 @@
 import React, { forwardRef, memo, useMemo } from 'react';
 import { TextInput } from 'react-native';
 import type { TextInputProps, ViewStyle } from 'react-native';
-import type { SharedProps } from '@coinbase/cds-common/types';
-import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
+import type { SharedProps } from '@cbhq/cds-common/types';
+import type { SharedAccessibilityProps } from '@cbhq/cds-common/types/SharedAccessibilityProps';
 
 import { useTextAlign } from '../hooks/useTextAlign';
 import { useTheme } from '../hooks/useTheme';

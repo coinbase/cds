@@ -1,6 +1,6 @@
 import React, { memo, useEffect, useMemo } from 'react';
 import { createPortal } from 'react-dom';
-import type { SharedProps } from '@coinbase/cds-common/types';
+import type { SharedProps } from '@cbhq/cds-common/types';
 import { css } from '@linaria/core';
 
 import { useIsBrowser } from '../hooks/useIsBrowser';

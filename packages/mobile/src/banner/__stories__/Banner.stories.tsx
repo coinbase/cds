@@ -1,6 +1,6 @@
 import React from 'react';
-import { loremIpsum } from '@coinbase/cds-common/internal/data/loremIpsum';
-import { NoopFn as noopFn } from '@coinbase/cds-common/utils/mockUtils';
+import { loremIpsum } from '@cbhq/cds-common/internal/data/loremIpsum';
+import { NoopFn as noopFn } from '@cbhq/cds-common/utils/mockUtils';
 
 import { Example, ExampleScreen } from '../../examples/ExampleScreen';
 import { Spacer, VStack } from '../../layout';

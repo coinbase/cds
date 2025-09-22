@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import type { IconName } from '@coinbase/cds-common/types';
+import type { IconName } from '@cbhq/cds-common/types';
 
 import { Button } from '../../buttons/Button';
 import { ListCell } from '../../cells/ListCell';

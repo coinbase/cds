@@ -1,4 +1,4 @@
-import heroSquareIllustrations from '@coinbase/cds-illustrations/__generated__/heroSquare/data/svgJsMap';
+import heroSquareIllustrations from '@cbhq/cds-illustrations/__generated__/heroSquare/data/svgJsMap';
 
 import {
   createIllustration,
@@ -20,4 +20,4 @@ export type HeroSquareProps = HeroSquareBaseProps;
 
 export const HeroSquare = createIllustration('heroSquare', heroSquareIllustrations);
 
-export type { HeroSquareName } from '@coinbase/cds-illustrations';
+export type { HeroSquareName } from '@cbhq/cds-illustrations';

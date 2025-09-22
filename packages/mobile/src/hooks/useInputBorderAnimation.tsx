@@ -3,9 +3,9 @@ import { Animated } from 'react-native';
 import {
   animateInputBorderInConfig,
   animateInputBorderOutConfig,
-} from '@coinbase/cds-common/animation/border';
-import type { ThemeVars } from '@coinbase/cds-common/core/theme';
-import type { InputVariant } from '@coinbase/cds-common/types/InputBaseProps';
+} from '@cbhq/cds-common/animation/border';
+import type { ThemeVars } from '@cbhq/cds-common/core/theme';
+import type { InputVariant } from '@cbhq/cds-common/types/InputBaseProps';
 
 import { convertMotionConfig } from '../animation/convertMotionConfig';
 

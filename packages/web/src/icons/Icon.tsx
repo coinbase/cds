@@ -1,8 +1,8 @@
 import React, { forwardRef, memo, useMemo } from 'react';
-import type { IconName, SharedProps, ValidateProps } from '@coinbase/cds-common/types';
-import type { IconSize, IconSourcePixelSize } from '@coinbase/cds-common/types/IconSize';
-import { glyphMap } from '@coinbase/cds-icons/glyphMap';
-import { isDevelopment } from '@coinbase/cds-utils/env';
+import type { IconName, SharedProps, ValidateProps } from '@cbhq/cds-common/types';
+import type { IconSize, IconSourcePixelSize } from '@cbhq/cds-common/types/IconSize';
+import { glyphMap } from '@cbhq/cds-icons/glyphMap';
+import { isDevelopment } from '@cbhq/cds-utils/env';
 import { css, type LinariaClassName } from '@linaria/core';
 
 import { cx } from '../cx';

@@ -1,7 +1,7 @@
 import React, { useCallback, useRef } from 'react';
-import { Dropdown } from '@coinbase/cds-web/dropdown';
-import { Box, VStack } from '@coinbase/cds-web/layout';
-import { Pressable } from '@coinbase/cds-web/system';
+import { Dropdown } from '@cbhq/cds-web/dropdown';
+import { Box, VStack } from '@cbhq/cds-web/layout';
+import { Pressable } from '@cbhq/cds-web/system';
 import {
   type ThemeOption,
   themeOptions,

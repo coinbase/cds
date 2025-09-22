@@ -1,6 +1,6 @@
 import React from 'react';
-import type { InputVariant } from '@coinbase/cds-common';
-import type { ThemeVars } from '@coinbase/cds-common/core/theme';
+import type { InputVariant } from '@cbhq/cds-common';
+import type { ThemeVars } from '@cbhq/cds-common/core/theme';
 
 import { Box } from '../../layout/Box';
 import { InputIcon } from '../InputIcon';

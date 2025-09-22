@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState } from 'react';
-import { loremIpsum } from '@coinbase/cds-common/internal/data/loremIpsum';
-import { sampleTabs } from '@coinbase/cds-common/internal/data/tabs';
+import { loremIpsum } from '@cbhq/cds-common/internal/data/loremIpsum';
+import { sampleTabs } from '@cbhq/cds-common/internal/data/tabs';
 import type { Meta, Story } from '@storybook/react';
 import sample from 'lodash/sample';
 

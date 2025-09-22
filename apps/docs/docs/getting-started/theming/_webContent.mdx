@@ -1,6 +1,6 @@
 import { JSONCodeBlock } from '@site/src/components/page/JSONCodeBlock';
-import { defaultTheme } from '@coinbase/cds-web/themes/defaultTheme';
-import { createThemeCssVars } from '@coinbase/cds-web/core/createThemeCssVars';
+import { defaultTheme } from '@cbhq/cds-web/themes/defaultTheme';
+import { createThemeCssVars } from '@cbhq/cds-web/core/createThemeCssVars';
 import { MDXSection } from '@site/src/components/page/MDXSection';
 import { MDXArticle } from '@site/src/components/page/MDXArticle';
 
@@ -15,8 +15,8 @@ You must pass the `theme` prop to configure the theme, and the `activeColorSchem
 [See the ThemeProvider docs here &rarr;](/components/other/ThemeProvider)
 
 ```tsx
-import { ThemeProvider } from '@coinbase/cds-web/system/ThemeProvider';
-import { defaultTheme } from '@coinbase/cds-web/themes/defaultTheme';
+import { ThemeProvider } from '@cbhq/cds-web/system/ThemeProvider';
+import { defaultTheme } from '@cbhq/cds-web/themes/defaultTheme';
 
 const App = () => (
   <ThemeProvider theme={defaultTheme} activeColorScheme="light">
@@ -267,9 +267,9 @@ While it is possible to customize the `space` values in any way, deviating from 
 In this example we'll start with the `defaultTheme` and customize a couple values.
 
 ```tsx
-import type { ThemeConfig } from '@coinbase/cds-web/core/theme';
-import { ThemeProvider } from '@coinbase/cds-web/system/ThemeProvider';
-import { defaultTheme } from '@coinbase/cds-web/themes/defaultTheme';
+import type { ThemeConfig } from '@cbhq/cds-web/core/theme';
+import { ThemeProvider } from '@cbhq/cds-web/system/ThemeProvider';
+import { defaultTheme } from '@cbhq/cds-web/themes/defaultTheme';
 
 // Define lightSpectrum and darkSpectrum as separate objects
 const lightSpectrum = {
@@ -332,7 +332,7 @@ The `defaultTheme` is a good example of a complete `ThemeConfig`. You can use it
 The `ThemeVars` namespace contains type definitions for all themeable variable names in CDS. It includes any custom theme variables added in `ThemeVarsExtended`.
 
 ```tsx
-import type { ThemeVars } from '@coinbase/cds-common/core/theme';
+import type { ThemeVars } from '@cbhq/cds-common/core/theme';
 
 // All theme variables are accessible through ThemeVars
 ThemeVars.Color; // 'fg' | 'bg' | 'bgPrimary' | 'bgSecondary' | ...
@@ -365,7 +365,7 @@ You can extend the theme by adding custom theme variables. In this example we'll
 Start by overriding interfaces in the `ThemeVarsExtended` namespace to add new theme variables. Only the key names are used, the `void` type is just a necessary placeholder.
 
 ```jsx
-declare module '@coinbase/cds-common/core/theme' {
+declare module '@cbhq/cds-common/core/theme' {
   export namespace ThemeVarsExtended {
     export interface Color {
       myCustomColor: void;
@@ -387,7 +387,7 @@ Call the `initializeCDS` function only once in your app entry point, before your
 Web StyleProps support responsive syntax, so you must provide 4 unique classnames per style prop: one each for `base`, `phone`, `tablet`, and `desktop`. Use the [CDS media object](/getting-started/styling/#responsive-styles) to use the same responsive breakpoints as CDS.
 
 ```jsx
-import { initializeCDS } from '@coinbase/cds-web/styles/config';
+import { initializeCDS } from '@cbhq/cds-web/styles/config';
 
 initializeCDS({
   extendStyleProps: {
@@ -452,7 +452,7 @@ Or, using CSS-in-JS:
 
 ```tsx
 import { css } from '@linaria/core';
-import { media } from '@coinbase/cds-web/styles/media';
+import { media } from '@cbhq/cds-web/styles/media';
 
 const myCustomColor = {
   background: {

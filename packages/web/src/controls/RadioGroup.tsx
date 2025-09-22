@@ -1,6 +1,6 @@
 import React, { forwardRef, memo } from 'react';
-import type { SharedAccessibilityProps, SharedProps, ThemeVars } from '@coinbase/cds-common';
-import { isDevelopment } from '@coinbase/cds-utils';
+import type { SharedAccessibilityProps, SharedProps, ThemeVars } from '@cbhq/cds-common';
+import { isDevelopment } from '@cbhq/cds-utils';
 
 import type { BoxBaseProps } from '../layout';
 import type { GroupBaseProps } from '../layout/Group';

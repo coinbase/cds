@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { gutter } from '@coinbase/cds-common/tokens/sizing';
+import { gutter } from '@cbhq/cds-common/tokens/sizing';
 
 import { Example, ExampleScreen } from '../../examples/ExampleScreen';
 import { VStack } from '../../layout/VStack';

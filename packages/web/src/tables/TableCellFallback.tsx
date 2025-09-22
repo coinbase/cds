@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
-import type { FallbackRectWidthProps } from '@coinbase/cds-common/types/FallbackBaseProps';
-import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
-import { getRectWidthVariant } from '@coinbase/cds-common/utils/getRectWidthVariant';
+import type { FallbackRectWidthProps } from '@cbhq/cds-common/types/FallbackBaseProps';
+import type { SharedProps } from '@cbhq/cds-common/types/SharedProps';
+import { getRectWidthVariant } from '@cbhq/cds-common/utils/getRectWidthVariant';
 import { css } from '@linaria/core';
 
 import { Cell } from '../cells/Cell';

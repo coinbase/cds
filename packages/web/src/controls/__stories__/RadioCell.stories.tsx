@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Switch } from '@coinbase/cds-web/controls';
+import { Switch } from '@cbhq/cds-web/controls';
 
 import { VStack } from '../../layout';
 import { Text } from '../../typography/Text';

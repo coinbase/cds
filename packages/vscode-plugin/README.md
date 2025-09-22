@@ -2,7 +2,7 @@
     <img src="cds-vscode-plugin.gif" alt="CDS VSCode Plugin preview" width="400" />
 </p>
 
-<h1 align="center">@coinbase/cds-vscode-plugin</h1>
+<h1 align="center">@cbhq/cds-vscode-plugin</h1>
 
 <h3 align="center">VSCode Plugin for building with the
 <br />Coinbase Design System</h3>

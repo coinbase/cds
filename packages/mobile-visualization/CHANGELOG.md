@@ -1,10 +1,10 @@
-# @coinbase/cds-mobile-visualization
+# @cbhq/cds-mobile-visualization
 
-> [NPM registry](https://www.npmjs.com/package/@coinbase/cds-mobile-visualization)
+> [NPM registry](https://www.npmjs.com/package/@cbhq/cds-mobile-visualization)
 
 All notable changes to this project will be documented in this file.
 
-`@coinbase/cds-mobile-visualization` adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+`@cbhq/cds-mobile-visualization` adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 <!-- template-start -->
 

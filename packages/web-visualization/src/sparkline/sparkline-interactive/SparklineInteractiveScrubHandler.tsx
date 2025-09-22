@@ -1,12 +1,12 @@
 import React, { memo, useCallback, useMemo, useRef, useState } from 'react';
 import type { KeyboardEvent, MouseEvent } from 'react';
-import type { ChartGetMarker } from '@coinbase/cds-common';
-import { fadeDuration, maskOpacity } from '@coinbase/cds-common/tokens/sparkline';
-import { debounce } from '@coinbase/cds-common/utils/debounce';
-import { noop } from '@coinbase/cds-utils';
-import { cx } from '@coinbase/cds-web';
-import { cubicBezier } from '@coinbase/cds-web/animation/convertMotionConfig';
-import { useDimensions } from '@coinbase/cds-web/hooks/useDimensions';
+import type { ChartGetMarker } from '@cbhq/cds-common';
+import { fadeDuration, maskOpacity } from '@cbhq/cds-common/tokens/sparkline';
+import { debounce } from '@cbhq/cds-common/utils/debounce';
+import { noop } from '@cbhq/cds-utils';
+import { cx } from '@cbhq/cds-web';
+import { cubicBezier } from '@cbhq/cds-web/animation/convertMotionConfig';
+import { useDimensions } from '@cbhq/cds-web/hooks/useDimensions';
 import { css } from '@linaria/core';
 
 import { fadeIn, fadeOut } from './fade';

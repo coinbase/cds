@@ -1,7 +1,7 @@
 import React, { type ReactNode, useCallback } from 'react';
-import { IconButton } from '@coinbase/cds-web/buttons/IconButton';
-import { Tooltip } from '@coinbase/cds-web/overlays/tooltip/Tooltip';
-import { useToast } from '@coinbase/cds-web/overlays/useToast';
+import { IconButton } from '@cbhq/cds-web/buttons/IconButton';
+import { Tooltip } from '@cbhq/cds-web/overlays/tooltip/Tooltip';
+import { useToast } from '@cbhq/cds-web/overlays/useToast';
 import { translate } from '@docusaurus/Translate';
 import type { Props } from '@theme/CodeBlock/CopyButton';
 

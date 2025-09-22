@@ -1,10 +1,10 @@
 import React, { useCallback, useMemo, useRef, useState } from 'react';
-import type { ChartDataPoint, ChartScrubParams } from '@coinbase/cds-common';
+import type { ChartDataPoint, ChartScrubParams } from '@cbhq/cds-common';
 import {
   sparklineInteractiveData,
   sparklineInteractiveHoverData,
-} from '@coinbase/cds-common/internal/visualizations/SparklineInteractiveData';
-import { Box, VStack } from '@coinbase/cds-web/layout';
+} from '@cbhq/cds-common/internal/visualizations/SparklineInteractiveData';
+import { Box, VStack } from '@cbhq/cds-web/layout';
 import { css } from '@linaria/core';
 
 import {

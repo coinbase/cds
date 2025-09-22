@@ -1,6 +1,6 @@
 import React, { memo } from 'react';
-import type { IconButtonVariant } from '@coinbase/cds-common/types/IconButtonBaseProps';
-import type { IconName } from '@coinbase/cds-common/types/IconName';
+import type { IconButtonVariant } from '@cbhq/cds-common/types/IconButtonBaseProps';
+import type { IconName } from '@cbhq/cds-common/types/IconName';
 import { css } from '@linaria/core';
 
 import { IconButton } from '../buttons/IconButton';

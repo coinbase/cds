@@ -1,5 +1,5 @@
 import React from 'react';
-import { assets, ethBackground } from '@coinbase/cds-common/internal/data/assets';
+import { assets, ethBackground } from '@cbhq/cds-common/internal/data/assets';
 
 import { Button, IconButton, IconCounterButton } from '../../../buttons';
 import { NativeTextArea, TextInput } from '../../../controls';

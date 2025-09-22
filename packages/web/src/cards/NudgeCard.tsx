@@ -1,7 +1,7 @@
 import React from 'react';
-import { opacityHovered, opacityPressed } from '@coinbase/cds-common/tokens/interactable';
-import type { ValidateProps } from '@coinbase/cds-common/types';
-import type { IllustrationPictogramNames } from '@coinbase/cds-common/types/IllustrationNames';
+import { opacityHovered, opacityPressed } from '@cbhq/cds-common/tokens/interactable';
+import type { ValidateProps } from '@cbhq/cds-common/types';
+import type { IllustrationPictogramNames } from '@cbhq/cds-common/types/IllustrationNames';
 import { css } from '@linaria/core';
 
 import { IconButton } from '../buttons/IconButton';

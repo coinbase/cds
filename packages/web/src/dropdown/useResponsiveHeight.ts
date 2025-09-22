@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { RectReadOnly } from 'react-use-measure';
-import type { DimensionValue } from '@coinbase/cds-common';
-import type { ThemeVars } from '@coinbase/cds-common/core/theme';
+import type { DimensionValue } from '@cbhq/cds-common';
+import type { ThemeVars } from '@cbhq/cds-common/core/theme';
 
 import { useIsoEffect } from '../hooks/useIsoEffect';
 import { useTheme } from '../hooks/useTheme';

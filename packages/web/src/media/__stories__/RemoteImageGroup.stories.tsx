@@ -1,6 +1,6 @@
 import React from 'react';
-import { assets, squareAssets } from '@coinbase/cds-common/internal/data/assets';
-import { avatarSizes } from '@coinbase/cds-common/internal/data/avatars';
+import { assets, squareAssets } from '@cbhq/cds-common/internal/data/assets';
+import { avatarSizes } from '@cbhq/cds-common/internal/data/avatars';
 
 import { VStack } from '../../layout';
 import { Text, type TextBaseProps } from '../../typography/Text';

@@ -1,5 +1,5 @@
 {
-  "import": "import { RadioCell } from '@coinbase/cds-web/controls/RadioCell'",
+  "import": "import { RadioCell } from '@cbhq/cds-web/controls/RadioCell'",
   "source": "https://github.com/coinbase/cds-staging/blob/master/packages/web/src/controls/RadioCell.tsx",
   "description": "A selectable cell that pairs a radio button with a title and description for single-choice selections.",
   "storybook": "https://cds-storybook.coinbase.com/?path=/story/core-components-radiocell--default",

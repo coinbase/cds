@@ -59,9 +59,9 @@ const config = {
   checkForSearchInputAccessibilityLabelProps: ['SearchInput'],
 
   allowedPackages: [
-    '@coinbase/cds-common',
-    '@coinbase/cds-mobile',
-    '@coinbase/cds-mobile-visualization',
+    '@cbhq/cds-common',
+    '@cbhq/cds-mobile',
+    '@cbhq/cds-mobile-visualization',
   ],
 };
 

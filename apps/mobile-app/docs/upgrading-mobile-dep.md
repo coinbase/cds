@@ -10,7 +10,7 @@ Check out this doc [for more about mobile builds in general](/apps/mobile-app/do
 
 ```shell
 yarn workspace mobile-app add <dependency name>@<version>
-yarn workspace @coinbase/cds-mobile add <dependency name>@<version>
+yarn workspace @cbhq/cds-mobile add <dependency name>@<version>
 //< ui-mobile-playground and ui mobile-visreg should also be updated if needed>
 yarn
 ```

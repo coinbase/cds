@@ -62,7 +62,7 @@ export default defineConfig({
 Wrap your application with the `ThemeProvider` to apply theming:
 
 ```tsx
-import { ThemeProvider } from '@coinbase/cds-web';
+import { ThemeProvider } from '@cbhq/cds-web';
 import App from './App';
 
 ReactDOM.render(
@@ -87,13 +87,13 @@ Ensure your React Native project meets the following requirements:
 CDS uses a React Context for theming in React Native. Install the CDS mobile package:
 
 ```bash
-npm install @coinbase/cds-mobile
+npm install @cbhq/cds-mobile
 ```
 
 Wrap your application with the `ThemeProvider`:
 
 ```tsx
-import { ThemeProvider } from '@coinbase/cds-mobile';
+import { ThemeProvider } from '@cbhq/cds-mobile';
 import App from './App';
 
 export default function Main() {
@@ -139,7 +139,7 @@ If you encounter an error like `Module not found: Can't resolve '*.css'`:
 
 If the `ThemeProvider` throws an error:
 
-1. Ensure `@coinbase/cds-mobile` is installed.
+1. Ensure `@cbhq/cds-mobile` is installed.
 2. Verify that the `ThemeProvider` wraps your root component.
 
 ### Incompatible Dependencies
@@ -159,7 +159,7 @@ CDS components are designed to be tree-shakable. To ensure unused components are
 - Use the `import` syntax to import components individually:
 
   ```tsx
-  import { Button } from '@coinbase/cds-web';
+  import { Button } from '@cbhq/cds-web';
   ```
 
 - Enable tree shaking in your build tool configuration (e.g., Webpack’s `mode: 'production'`).

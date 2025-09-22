@@ -1,5 +1,5 @@
 import React, { forwardRef, memo } from 'react';
-import { borderWidth } from '@coinbase/cds-common/tokens/sparkline';
+import { borderWidth } from '@cbhq/cds-common/tokens/sparkline';
 
 export type SparklinePathRef = SVGPathElement | null;
 

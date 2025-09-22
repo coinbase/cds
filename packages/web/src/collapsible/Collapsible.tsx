@@ -1,5 +1,5 @@
 import React, { forwardRef, memo, useCallback, useMemo, useState } from 'react';
-import type { CollapsibleDirection, PaddingProps, SharedProps } from '@coinbase/cds-common/types';
+import type { CollapsibleDirection, PaddingProps, SharedProps } from '@cbhq/cds-common/types';
 import { m as motion } from 'framer-motion';
 
 import { Box, type BoxDefaultElement, type BoxProps } from '../layout/Box';

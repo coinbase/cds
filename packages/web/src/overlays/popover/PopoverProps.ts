@@ -1,7 +1,7 @@
 import type React from 'react';
-import type { ThemeVars } from '@coinbase/cds-common/core/theme';
-import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
-import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
+import type { ThemeVars } from '@cbhq/cds-common/core/theme';
+import type { SharedAccessibilityProps } from '@cbhq/cds-common/types/SharedAccessibilityProps';
+import type { SharedProps } from '@cbhq/cds-common/types/SharedProps';
 import type { Placement, PositioningStrategy } from '@popperjs/core';
 
 import type { AccessibleControlledReturnType } from '../../hooks/useA11yControlledVisibility';

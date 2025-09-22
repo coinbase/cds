@@ -1,7 +1,7 @@
 import React, { forwardRef, memo, useContext } from 'react';
-import type { ThemeVars } from '@coinbase/cds-common/core/theme';
-import type { InputVariant } from '@coinbase/cds-common/types/InputBaseProps';
-import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
+import type { ThemeVars } from '@cbhq/cds-common/core/theme';
+import type { InputVariant } from '@cbhq/cds-common/types/InputBaseProps';
+import type { SharedProps } from '@cbhq/cds-common/types/SharedProps';
 
 import type { IconProps } from '../icons/Icon';
 import { Icon } from '../icons/Icon';

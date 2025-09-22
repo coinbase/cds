@@ -1,10 +1,10 @@
 import React, { createContext } from 'react';
-import { useToggler } from '@coinbase/cds-common';
-import { Modal } from '@coinbase/cds-web/overlays/modal/Modal';
-import type { ModalBodyProps } from '@coinbase/cds-web/overlays/modal/ModalBody';
-import { ModalBody } from '@coinbase/cds-web/overlays/modal/ModalBody';
-import { ModalHeader } from '@coinbase/cds-web/overlays/modal/ModalHeader';
-import { Link, type LinkBaseProps } from '@coinbase/cds-web/typography/Link';
+import { useToggler } from '@cbhq/cds-common';
+import { Modal } from '@cbhq/cds-web/overlays/modal/Modal';
+import type { ModalBodyProps } from '@cbhq/cds-web/overlays/modal/ModalBody';
+import { ModalBody } from '@cbhq/cds-web/overlays/modal/ModalBody';
+import { ModalHeader } from '@cbhq/cds-web/overlays/modal/ModalHeader';
+import { Link, type LinkBaseProps } from '@cbhq/cds-web/typography/Link';
 
 export type ModalLinkProps = {
   children: string;

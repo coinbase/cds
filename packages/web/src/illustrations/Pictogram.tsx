@@ -1,4 +1,4 @@
-import pictogramVersionMap from '@coinbase/cds-illustrations/__generated__/pictogram/data/versionMap';
+import pictogramVersionMap from '@cbhq/cds-illustrations/__generated__/pictogram/data/versionMap';
 
 import {
   createIllustration,
@@ -18,4 +18,4 @@ export type PictogramBaseProps = IllustrationBaseProps<'pictogram'> &
   };
 
 export type PictogramProps = PictogramBaseProps;
-export type { PictogramName } from '@coinbase/cds-illustrations';
+export type { PictogramName } from '@cbhq/cds-illustrations';

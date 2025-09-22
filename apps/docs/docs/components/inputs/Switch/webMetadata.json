@@ -1,5 +1,5 @@
 {
-  "import": "import { Switch } from '@coinbase/cds-web/controls/Switch'",
+  "import": "import { Switch } from '@cbhq/cds-web/controls/Switch'",
   "source": "https://github.com/coinbase/cds-staging/blob/master/packages/web/src/controls/Switch.tsx",
   "storybook": "https://cds-storybook.coinbase.com/?path=/story/core-components-switch--normal",
   "figma": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/%E2%9C%A8-CDS-Components?m=auto&node-id=466-13810&t=K73gadcWiDv2aYlS-1",

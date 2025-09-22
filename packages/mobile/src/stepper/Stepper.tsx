@@ -1,10 +1,10 @@
 import React, { forwardRef, memo, useEffect, useMemo, useState } from 'react';
 import type { StyleProp, View, ViewStyle } from 'react-native';
-import type { ThemeVars } from '@coinbase/cds-common/core/theme';
-import { useHasMounted } from '@coinbase/cds-common/hooks/useHasMounted';
-import { usePreviousValue } from '@coinbase/cds-common/hooks/usePreviousValue';
-import { containsStep, flattenSteps, isStepVisited } from '@coinbase/cds-common/stepper/utils';
-import type { IconName } from '@coinbase/cds-common/types';
+import type { ThemeVars } from '@cbhq/cds-common/core/theme';
+import { useHasMounted } from '@cbhq/cds-common/hooks/useHasMounted';
+import { usePreviousValue } from '@cbhq/cds-common/hooks/usePreviousValue';
+import { containsStep, flattenSteps, isStepVisited } from '@cbhq/cds-common/stepper/utils';
+import type { IconName } from '@cbhq/cds-common/types';
 import {
   type SpringConfig,
   type SpringValue as SpringValueType,

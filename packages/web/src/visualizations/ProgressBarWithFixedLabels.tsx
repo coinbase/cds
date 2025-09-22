@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import type { PaddingProps, Placement } from '@coinbase/cds-common/types';
+import type { PaddingProps, Placement } from '@cbhq/cds-common/types';
 
 import { cx } from '../cx';
 import { Box } from '../layout/Box';

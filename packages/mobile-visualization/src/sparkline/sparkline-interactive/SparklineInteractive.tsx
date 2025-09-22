@@ -1,7 +1,7 @@
 import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Animated, type StyleProp, StyleSheet, View, type ViewStyle } from 'react-native';
-import type { ThemeVars } from '@coinbase/cds-common/core/theme';
-import type { Placement } from '@coinbase/cds-common/types';
+import type { ThemeVars } from '@cbhq/cds-common/core/theme';
+import type { Placement } from '@cbhq/cds-common/types';
 import type {
   ChartData,
   ChartDataPoint,
@@ -10,16 +10,16 @@ import type {
   ChartGetMarker,
   ChartScrubParams,
   ChartTimeseries,
-} from '@coinbase/cds-common/types/Chart';
-import { minMax } from '@coinbase/cds-common/utils/chart';
-import { getAccessibleColor } from '@coinbase/cds-common/utils/getAccessibleColor';
-import { useSparklineCoordinates } from '@coinbase/cds-common/visualizations/useSparklineCoordinates';
-import { chartFallbackNegative, chartFallbackPositive } from '@coinbase/cds-lottie-files';
-import { Lottie } from '@coinbase/cds-mobile/animation';
-import { useScreenReaderStatus } from '@coinbase/cds-mobile/hooks/useScreenReaderStatus';
-import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
-import { Box } from '@coinbase/cds-mobile/layout';
-import { emptyArray, noop } from '@coinbase/cds-utils';
+} from '@cbhq/cds-common/types/Chart';
+import { minMax } from '@cbhq/cds-common/utils/chart';
+import { getAccessibleColor } from '@cbhq/cds-common/utils/getAccessibleColor';
+import { useSparklineCoordinates } from '@cbhq/cds-common/visualizations/useSparklineCoordinates';
+import { chartFallbackNegative, chartFallbackPositive } from '@cbhq/cds-lottie-files';
+import { Lottie } from '@cbhq/cds-mobile/animation';
+import { useScreenReaderStatus } from '@cbhq/cds-mobile/hooks/useScreenReaderStatus';
+import { useTheme } from '@cbhq/cds-mobile/hooks/useTheme';
+import { Box } from '@cbhq/cds-mobile/layout';
+import { emptyArray, noop } from '@cbhq/cds-utils';
 import isEqual from 'lodash/isEqual';
 import isObject from 'lodash/isObject';
 
@@ -37,7 +37,7 @@ import {
 } from './SparklineInteractiveProvider';
 import { useSparklineInteractiveConstants } from './useSparklineInteractiveConstants';
 
-export * from '@coinbase/cds-common/types/Chart';
+export * from '@cbhq/cds-common/types/Chart';
 
 export type SparklineInteractiveBaseProps<Period extends string> = {
   /**

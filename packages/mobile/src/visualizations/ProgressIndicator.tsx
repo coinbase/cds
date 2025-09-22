@@ -1,7 +1,7 @@
 import React, { forwardRef, memo, useMemo } from 'react';
 import { Animated, StyleSheet } from 'react-native';
 import type { StyleProp, View, ViewStyle } from 'react-native';
-import type { SharedProps } from '@coinbase/cds-common';
+import type { SharedProps } from '@cbhq/cds-common';
 
 import { useTheme } from '../hooks/useTheme';
 import type { BoxProps } from '../layout/Box';

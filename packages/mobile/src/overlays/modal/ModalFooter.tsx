@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react';
 import type { PressableProps } from 'react-native';
-import { useModalContext } from '@coinbase/cds-common/overlays/ModalContext';
-import type { SharedProps } from '@coinbase/cds-common/types';
+import { useModalContext } from '@cbhq/cds-common/overlays/ModalContext';
+import type { SharedProps } from '@cbhq/cds-common/types';
 
 import type { ButtonBaseProps } from '../../buttons/Button';
 import { ButtonGroup, type ButtonGroupProps } from '../../buttons/ButtonGroup';

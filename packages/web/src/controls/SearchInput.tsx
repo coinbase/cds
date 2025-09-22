@@ -1,6 +1,6 @@
 import React, { forwardRef, memo, useCallback, useMemo, useRef } from 'react';
-import { useMergeRefs } from '@coinbase/cds-common/hooks/useMergeRefs';
-import type { IconName } from '@coinbase/cds-common/types';
+import { useMergeRefs } from '@cbhq/cds-common/hooks/useMergeRefs';
+import type { IconName } from '@cbhq/cds-common/types';
 import { css } from '@linaria/core';
 
 import { cx } from '../cx';

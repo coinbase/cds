@@ -20,13 +20,13 @@ Before you begin, make sure your development environment meets the following req
 To install the CDS library for React Native applications, run the following command:
 
 ```bash
-npm install @coinbase/cds-mobile
+npm install @cbhq/cds-mobile
 ```
 
 Alternatively, if you are using Yarn:
 
 ```bash
-yarn add @coinbase/cds-mobile
+yarn add @cbhq/cds-mobile
 ```
 
 :::note
@@ -46,8 +46,8 @@ For React Native projects, ensure you have set up your environment for React Nat
 Render a ThemeProvider at the root of your application, and pass the `theme` and `activeColorScheme`.
 
 ```tsx
-import { ThemeProvider } from '@coinbase/cds-mobile';
-import { defaultTheme } from '@coinbase/cds-mobile/themes/defaultTheme';
+import { ThemeProvider } from '@cbhq/cds-mobile';
+import { defaultTheme } from '@cbhq/cds-mobile/themes/defaultTheme';
 import App from './App';
 
 const Index = () => {
@@ -68,7 +68,7 @@ export default Index;
 Try importing and rendering a simple CDS component.
 
 ```tsx
-import { Button } from '@coinbase/cds-mobile/buttons';
+import { Button } from '@cbhq/cds-mobile/buttons';
 
 const Test = () => (
   <Button>Click Me</Button>;

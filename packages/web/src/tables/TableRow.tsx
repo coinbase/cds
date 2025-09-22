@@ -1,6 +1,6 @@
 import React, { memo, useMemo, useRef } from 'react';
-import type { ThemeVars } from '@coinbase/cds-common/core/theme';
-import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
+import type { ThemeVars } from '@cbhq/cds-common/core/theme';
+import type { SharedProps } from '@cbhq/cds-common/types/SharedProps';
 import { css } from '@linaria/core';
 
 import { cx } from '../cx';

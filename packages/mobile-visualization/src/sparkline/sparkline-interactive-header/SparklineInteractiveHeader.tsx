@@ -1,17 +1,17 @@
 import React, { forwardRef, memo, useCallback, useImperativeHandle, useRef } from 'react';
 import { TextInput, View } from 'react-native';
 import type { FunctionComponent, ReactNode } from 'react';
-import { subheadIconSignMap } from '@coinbase/cds-common/tokens/sparkline';
+import { subheadIconSignMap } from '@cbhq/cds-common/tokens/sparkline';
 import type {
   SharedProps,
   SparklineInteractiveHeaderSignVariant,
   SparklineInteractiveHeaderVariant,
-} from '@coinbase/cds-common/types';
-import { HStack, VStack } from '@coinbase/cds-mobile/layout';
+} from '@cbhq/cds-common/types';
+import { HStack, VStack } from '@cbhq/cds-mobile/layout';
 
 import { useSparklineInteractiveHeaderStyles } from './useSparklineInteractiveHeaderStyles';
 
-export * from '@coinbase/cds-common/types/SparklineInteractiveHeaderBaseProps';
+export * from '@cbhq/cds-common/types/SparklineInteractiveHeaderBaseProps';
 
 export type SparklineInteractiveSubHead = {
   /**

@@ -1,10 +1,10 @@
-# @coinbase/cds-common
+# @cbhq/cds-common
 
-> [NPM registry](https://www.npmjs.com/package/@coinbase/cds-common)
+> [NPM registry](https://www.npmjs.com/package/@cbhq/cds-common)
 
 All notable changes to this project will be documented in this file.
 
-`@coinbase/cds-common` adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+`@cbhq/cds-common` adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 <!-- template-start -->
 

@@ -1,5 +1,5 @@
 {
-  "import": "import { SectionHeader } from '@coinbase/cds-web/section-header/SectionHeader'",
+  "import": "import { SectionHeader } from '@cbhq/cds-web/section-header/SectionHeader'",
   "source": "https://github.com/coinbase/cds-staging/blob/master/packages/web/src/section-header/SectionHeader.tsx",
   "description": "A header component used to organize and label sections of content, with support for icons, descriptions, and additional content.",
   "storybook": "https://cds-storybook.coinbase.com/?path=/story/core-components-sectionheader--examples",

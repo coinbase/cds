@@ -1,5 +1,5 @@
 import { memo, useMemo } from 'react';
-import { containsStep, isStepVisited } from '@coinbase/cds-common/stepper/utils';
+import { containsStep, isStepVisited } from '@cbhq/cds-common/stepper/utils';
 
 import { cx } from '../cx';
 import { HStack, VStack } from '../layout';

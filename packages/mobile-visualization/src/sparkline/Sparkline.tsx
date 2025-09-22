@@ -1,11 +1,11 @@
 import React, { memo, useRef } from 'react';
 import { Defs, G, Path, Svg } from 'react-native-svg';
-import { borderWidth } from '@coinbase/cds-common/tokens/sparkline';
-import type { ElementChildren, SharedProps } from '@coinbase/cds-common/types';
-import { getAccessibleColor } from '@coinbase/cds-common/utils/getAccessibleColor';
-import { getSparklineTransform } from '@coinbase/cds-common/visualizations/getSparklineTransform';
-import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
-import { generateRandomId } from '@coinbase/cds-utils';
+import { borderWidth } from '@cbhq/cds-common/tokens/sparkline';
+import type { ElementChildren, SharedProps } from '@cbhq/cds-common/types';
+import { getAccessibleColor } from '@cbhq/cds-common/utils/getAccessibleColor';
+import { getSparklineTransform } from '@cbhq/cds-common/visualizations/getSparklineTransform';
+import { useTheme } from '@cbhq/cds-mobile/hooks/useTheme';
+import { generateRandomId } from '@cbhq/cds-utils';
 
 import { generateSparklineAreaWithId } from './generateSparklineWithId';
 import type { SparklineAreaBaseProps } from './SparklineArea';
@@ -18,7 +18,7 @@ export type SparklineBaseProps = SharedProps & {
   color: string;
   /** Height of the Sparkline */
   height: number;
-  /** Svg path as string. CDS offers a `useSparklinePath` which is useful to generate this string. This is accessible via `import { useSparklinePath } from '@coinbase/cds-common/visualizations/useSparklinePath';`. Alternatively, you can use product tailored tooling to generate the SVG path. This component only requires a valid path string is provided. */
+  /** Svg path as string. CDS offers a `useSparklinePath` which is useful to generate this string. This is accessible via `import { useSparklinePath } from '@cbhq/cds-common/visualizations/useSparklinePath';`. Alternatively, you can use product tailored tooling to generate the SVG path. This component only requires a valid path string is provided. */
   path?: string;
   /** Width of the Sparkline */
   width: number;

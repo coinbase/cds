@@ -1,5 +1,5 @@
 {
-  "import": "import { Icon } from '@coinbase/cds-web/icons/Icon'",
+  "import": "import { Icon } from '@cbhq/cds-web/icons/Icon'",
   "changelog": "https://github.com/coinbase/cds-staging/blob/master/packages/icons/CHANGELOG.md",
   "source": "https://github.com/coinbase/cds-staging/blob/master/packages/web/src/icons/Icon.tsx",
   "storybook": "https://cds-storybook.coinbase.com/?path=/story/core-components-icon--default",

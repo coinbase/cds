@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo, useRef, useState } from 'react';
-import type { ThemeVars } from '@coinbase/cds-common/core/theme';
-import type { InputVariant } from '@coinbase/cds-common/types/InputBaseProps';
+import type { ThemeVars } from '@cbhq/cds-common/core/theme';
+import type { InputVariant } from '@cbhq/cds-common/types/InputBaseProps';
 import { css } from '@linaria/core';
 
 import { Icon } from '../../icons/Icon';

@@ -1,6 +1,6 @@
 import React, { memo } from 'react';
-import { interactableHeight } from '@coinbase/cds-common/tokens/interactableHeight';
-import type { SharedProps } from '@coinbase/cds-common/types';
+import { interactableHeight } from '@cbhq/cds-common/tokens/interactableHeight';
+import type { SharedProps } from '@cbhq/cds-common/types';
 
 import { Avatar, type AvatarBaseProps } from '../media';
 import { Pressable, type PressableBaseProps } from '../system/Pressable';

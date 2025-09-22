@@ -1,5 +1,5 @@
-import { noop } from '@coinbase/cds-utils';
-import { renderA11y } from '@coinbase/cds-web-utils/jest';
+import { noop } from '@cbhq/cds-utils';
+import { renderA11y } from '@cbhq/cds-web-utils/jest';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 
 import { CellMedia } from '../../cells/CellMedia';

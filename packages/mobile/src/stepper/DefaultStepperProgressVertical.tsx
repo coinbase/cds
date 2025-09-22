@@ -1,6 +1,6 @@
 import { memo, useCallback, useMemo } from 'react';
-import { useHasMounted } from '@coinbase/cds-common/hooks/useHasMounted';
-import { flattenSteps } from '@coinbase/cds-common/stepper/utils';
+import { useHasMounted } from '@cbhq/cds-common/hooks/useHasMounted';
+import { flattenSteps } from '@cbhq/cds-common/stepper/utils';
 import { animated, to, useSpring } from '@react-spring/native';
 
 import { Box } from '../layout/Box';

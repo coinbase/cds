@@ -1,6 +1,6 @@
 import React from 'react';
-import { type ThemeVars } from '@coinbase/cds-common/core/theme';
-import { getAccessibleColor } from '@coinbase/cds-common/utils/getAccessibleColor';
+import { type ThemeVars } from '@cbhq/cds-common/core/theme';
+import { getAccessibleColor } from '@cbhq/cds-common/utils/getAccessibleColor';
 
 import { useTheme } from '../../hooks/useTheme';
 import { Box, Grid, VStack } from '../../layout';

@@ -1,8 +1,8 @@
 import React, { memo, useMemo } from 'react';
 import type { ViewProps } from 'react-native';
-import type { ThemeVars } from '@coinbase/cds-common/core/theme';
-import type { CellPriority, SharedProps } from '@coinbase/cds-common/types';
-import { hasCellPriority } from '@coinbase/cds-common/utils/cell';
+import type { ThemeVars } from '@cbhq/cds-common/core/theme';
+import type { CellPriority, SharedProps } from '@cbhq/cds-common/types';
+import { hasCellPriority } from '@cbhq/cds-common/utils/cell';
 
 import { useCellSpacing } from '../hooks/useCellSpacing';
 import { useTheme } from '../hooks/useTheme';

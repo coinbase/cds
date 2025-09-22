@@ -2,8 +2,8 @@ import React, { forwardRef } from 'react';
 import {
   animateInOpacityConfig,
   animateOutOpacityConfig,
-} from '@coinbase/cds-common/animation/overlay';
-import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
+} from '@cbhq/cds-common/animation/overlay';
+import type { SharedProps } from '@cbhq/cds-common/types/SharedProps';
 import { m as motion } from 'framer-motion';
 
 import { VStack, type VStackDefaultElement, type VStackProps } from '../../layout/VStack';

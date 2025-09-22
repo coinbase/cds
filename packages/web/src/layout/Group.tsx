@@ -1,5 +1,5 @@
 import React, { forwardRef, memo, useMemo } from 'react';
-import type { ThemeVars } from '@coinbase/cds-common/core/theme';
+import type { ThemeVars } from '@cbhq/cds-common/core/theme';
 
 import { flattenAndJoinNodes } from '../utils/flattenAndJoinNodes';
 

@@ -1,3 +1,3 @@
-import type { IconName } from '@coinbase/cds-icons';
+import type { IconName } from '@cbhq/cds-icons';
 
 export type { IconName };

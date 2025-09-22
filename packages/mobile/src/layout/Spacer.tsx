@@ -1,8 +1,8 @@
 import React, { memo } from 'react';
 import { Animated, View } from 'react-native';
 import type { StyleProp, ViewProps, ViewStyle } from 'react-native';
-import type { ThemeVars } from '@coinbase/cds-common/core/theme';
-import type { FixedValue, FlexStyles, SharedProps } from '@coinbase/cds-common/types';
+import type { ThemeVars } from '@cbhq/cds-common/core/theme';
+import type { FixedValue, FlexStyles, SharedProps } from '@cbhq/cds-common/types';
 
 import { useTheme } from '../hooks/useTheme';
 import { getSpacerStyle } from '../utils/getSpacerStyle';

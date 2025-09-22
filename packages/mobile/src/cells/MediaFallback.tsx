@@ -1,6 +1,6 @@
 import React, { memo } from 'react';
-import type { SharedProps } from '@coinbase/cds-common';
-import { imageSize, mediaSize } from '@coinbase/cds-common/tokens/cell';
+import type { SharedProps } from '@cbhq/cds-common';
+import { imageSize, mediaSize } from '@cbhq/cds-common/tokens/cell';
 
 import { Fallback } from '../layout/Fallback';
 

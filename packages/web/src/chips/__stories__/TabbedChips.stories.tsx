@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { longTextTabs, sampleTabs } from '@coinbase/cds-common/internal/data/tabs';
+import { longTextTabs, sampleTabs } from '@cbhq/cds-common/internal/data/tabs';
 
 import { VStack } from '../../layout';
 import type { TabProps } from '../../tabs/TabNavigation';

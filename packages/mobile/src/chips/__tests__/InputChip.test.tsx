@@ -1,6 +1,6 @@
-import type { Shape } from '@coinbase/cds-common';
-import { assets } from '@coinbase/cds-common/internal/data/assets';
-import { NoopFn } from '@coinbase/cds-common/utils/mockUtils';
+import type { Shape } from '@cbhq/cds-common';
+import { assets } from '@cbhq/cds-common/internal/data/assets';
+import { NoopFn } from '@cbhq/cds-common/utils/mockUtils';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 
 import { RemoteImage } from '../../media';

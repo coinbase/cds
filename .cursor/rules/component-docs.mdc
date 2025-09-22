@@ -16,7 +16,7 @@ In `apps/docs/src/components/page/ReactLiveScope.ts`, add the component imports 
 
 ```ts
 // Add imports
-import { ComponentName } from '@coinbase/cds-web';
+import { ComponentName } from '@cbhq/cds-web';
 
 // Add to scope object
 const ReactLiveScope = {
@@ -112,7 +112,7 @@ apps/docs/docs/components/[docs-category]/[ComponentName]/
 
 ```json
 {
-  "import": "import { ComponentName } from '@coinbase/cds-web/[source-category]/[ComponentName]'",
+  "import": "import { ComponentName } from '@cbhq/cds-web/[source-category]/[ComponentName]'",
   "source": "https://github.com/coinbase/cds-staging/blob/master/packages/web/src/[source-category]/[ComponentName].tsx",
   "description": "[Component description]",
   "figma": "[figma link]", // only add if provided
@@ -128,7 +128,7 @@ apps/docs/docs/components/[docs-category]/[ComponentName]/
 
 ```json
 {
-  "import": "import { ComponentName } from '@coinbase/cds-mobile/[source-category]/[ComponentName]'",
+  "import": "import { ComponentName } from '@cbhq/cds-mobile/[source-category]/[ComponentName]'",
   "source": "https://github.com/coinbase/cds-staging/blob/master/packages/mobile/src/[source-category]/[ComponentName].tsx",
   "description": "[Component description]",
   "figma": "[figma link]", // only add if provided
@@ -183,7 +183,7 @@ platform_switcher_options: { web: true, mobile: false }
 hide_title: true
 ---
 
-import { VStack } from '@coinbase/cds-web/layout';
+import { VStack } from '@cbhq/cds-web/layout';
 import { ComponentHeader } from '@site/src/components/page/ComponentHeader';
 import { ComponentTabsContainer } from '@site/src/components/page/ComponentTabsContainer';
 
@@ -213,7 +213,7 @@ platform_switcher_options: { web: false, mobile: true }
 hide_title: true
 ---
 
-import { VStack } from '@coinbase/cds-web/layout';
+import { VStack } from '@cbhq/cds-web/layout';
 import { ComponentHeader } from '@site/src/components/page/ComponentHeader';
 import { ComponentTabsContainer } from '@site/src/components/page/ComponentTabsContainer';
 
@@ -243,7 +243,7 @@ platform_switcher_options: { web: true, mobile: true }
 hide_title: true
 ---
 
-import { VStack } from '@coinbase/cds-web/layout';
+import { VStack } from '@cbhq/cds-web/layout';
 import { ComponentHeader } from '@site/src/components/page/ComponentHeader';
 import { ComponentTabsContainer } from '@site/src/components/page/ComponentTabsContainer';
 

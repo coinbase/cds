@@ -5,16 +5,16 @@ export const RULE_NAME = 'no-v7-imports';
 type MessageIds = 'noV7Imports';
 
 const CDS_PACKAGES = [
-  '@coinbase/cds-common',
-  '@coinbase/cds-icons',
-  '@coinbase/cds-illustrations',
-  '@coinbase/cds-mobile-visualization',
-  '@coinbase/cds-mobile',
-  '@coinbase/cds-web-visualization',
-  '@coinbase/cds-web',
-  '@coinbase/cds-lottie-files',
-  '@coinbase/ui-mobile-playground',
-  '@coinbase/cds-utils',
+  '@cbhq/cds-common',
+  '@cbhq/cds-icons',
+  '@cbhq/cds-illustrations',
+  '@cbhq/cds-mobile-visualization',
+  '@cbhq/cds-mobile',
+  '@cbhq/cds-web-visualization',
+  '@cbhq/cds-web',
+  '@cbhq/cds-lottie-files',
+  '@cbhq/ui-mobile-playground',
+  '@cbhq/cds-utils',
 ];
 
 export const noV7Imports: TSESLint.RuleModule<MessageIds> = {

@@ -7,7 +7,7 @@ import {
   animateOutScaleConfig,
   modalHiddenOpacity,
   modalHiddenScale,
-} from '@coinbase/cds-common/animation/modal';
+} from '@cbhq/cds-common/animation/modal';
 
 import { convertMotionConfig } from '../../animation/convertMotionConfig';
 

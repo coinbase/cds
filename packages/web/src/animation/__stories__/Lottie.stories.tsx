@@ -1,7 +1,7 @@
 import React, { useCallback, useRef } from 'react';
-import type { LottiePlayer } from '@coinbase/cds-common/types/LottiePlayer';
-import type { NuxLottie } from '@coinbase/cds-lottie-files';
-import { nux } from '@coinbase/cds-lottie-files';
+import type { LottiePlayer } from '@cbhq/cds-common/types/LottiePlayer';
+import type { NuxLottie } from '@cbhq/cds-lottie-files';
+import { nux } from '@cbhq/cds-lottie-files';
 
 import { Button } from '../../buttons';
 import { VStack } from '../../layout/VStack';

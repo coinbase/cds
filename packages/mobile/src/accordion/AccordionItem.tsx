@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
 import type { View, ViewProps } from 'react-native';
-import { useAccordionContext } from '@coinbase/cds-common/accordion/AccordionProvider';
-import { accordionMinWidth } from '@coinbase/cds-common/tokens/accordion';
+import { useAccordionContext } from '@cbhq/cds-common/accordion/AccordionProvider';
+import { accordionMinWidth } from '@cbhq/cds-common/tokens/accordion';
 
 import { VStack } from '../layout';
 

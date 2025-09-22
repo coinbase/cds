@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from 'react';
-import { noop } from '@coinbase/cds-utils';
+import { noop } from '@cbhq/cds-utils';
 
 type StepTrackerParams = {
   length: number;

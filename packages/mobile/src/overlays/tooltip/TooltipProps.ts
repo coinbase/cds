@@ -1,11 +1,11 @@
 import type { Animated, LayoutRectangle, ViewProps } from 'react-native';
-import type { ThemeVars } from '@coinbase/cds-common/core/theme';
+import type { ThemeVars } from '@cbhq/cds-common/core/theme';
 import type {
   BaseTooltipPlacement,
   ElevationProps,
   SharedAccessibilityProps,
   SharedProps,
-} from '@coinbase/cds-common/types';
+} from '@cbhq/cds-common/types';
 
 export type TooltipPlacement = Extract<BaseTooltipPlacement, 'bottom' | 'top'>;
 

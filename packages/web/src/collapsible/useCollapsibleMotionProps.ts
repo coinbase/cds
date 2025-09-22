@@ -4,7 +4,7 @@ import {
   animateInOpacityConfig,
   animateOutMaxSizeConfig,
   animateOutOpacityConfig,
-} from '@coinbase/cds-common/animation/collapsible';
+} from '@cbhq/cds-common/animation/collapsible';
 
 import { useMotionProps } from '../motion/useMotionProps';
 

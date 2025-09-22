@@ -1,5 +1,5 @@
 import { Text } from 'react-native';
-import { noop } from '@coinbase/cds-utils';
+import { noop } from '@cbhq/cds-utils';
 import { render, screen } from '@testing-library/react-native';
 
 import { Button } from '../../buttons';

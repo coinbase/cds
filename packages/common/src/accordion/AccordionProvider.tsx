@@ -1,5 +1,5 @@
 import React, { createContext, useCallback, useContext, useMemo, useState } from 'react';
-import { isDevelopment } from '@coinbase/cds-utils/env';
+import { isDevelopment } from '@cbhq/cds-utils/env';
 
 export type AccordionContextValue = {
   activeKey: string | null;

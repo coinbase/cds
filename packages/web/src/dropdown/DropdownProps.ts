@@ -1,4 +1,4 @@
-import type { SharedAccessibilityProps, SharedProps } from '@coinbase/cds-common/types';
+import type { SharedAccessibilityProps, SharedProps } from '@cbhq/cds-common/types';
 
 import { type PopoverProps } from '../overlays/popover/PopoverProps';
 

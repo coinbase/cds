@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo, useRef } from 'react';
-import type { MotionTransition } from '@coinbase/cds-common/types';
+import type { MotionTransition } from '@cbhq/cds-common/types';
 
 import { Button } from '../../buttons';
 import { Example, ExampleScreen } from '../../examples/ExampleScreen';

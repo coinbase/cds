@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-empty-object-type */
 import React, { createContext, useContext, useMemo } from 'react';
-import type { ColorScheme } from '@coinbase/cds-common/core/theme';
+import type { ColorScheme } from '@cbhq/cds-common/core/theme';
 
 import { createThemeCssVars } from '../core/createThemeCssVars';
 import type { Theme, ThemeConfig, ThemeCSSVars } from '../core/theme';

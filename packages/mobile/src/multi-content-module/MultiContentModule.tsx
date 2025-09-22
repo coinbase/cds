@@ -1,6 +1,6 @@
 import React, { forwardRef, isValidElement, memo } from 'react';
 import type { View } from 'react-native';
-import type { IllustrationPictogramNames } from '@coinbase/cds-common/types';
+import type { IllustrationPictogramNames } from '@cbhq/cds-common/types';
 
 import { Button } from '../buttons';
 import { Pictogram } from '../illustrations';

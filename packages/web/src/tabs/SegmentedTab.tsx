@@ -1,8 +1,8 @@
 import React, { forwardRef, memo, useCallback, useMemo } from 'react';
-import type { ThemeVars } from '@coinbase/cds-common/core/theme';
-import { useTabsContext } from '@coinbase/cds-common/tabs/TabsContext';
-import { type TabValue } from '@coinbase/cds-common/tabs/useTabs';
-import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
+import type { ThemeVars } from '@cbhq/cds-common/core/theme';
+import { useTabsContext } from '@cbhq/cds-common/tabs/TabsContext';
+import { type TabValue } from '@cbhq/cds-common/tabs/useTabs';
+import type { SharedProps } from '@cbhq/cds-common/types/SharedProps';
 import { css } from '@linaria/core';
 import { m as motion } from 'framer-motion';
 

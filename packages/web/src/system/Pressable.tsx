@@ -6,8 +6,8 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import { useEventHandler } from '@coinbase/cds-common/hooks/useEventHandler';
-import type { ComponentEventHandlerProps } from '@coinbase/cds-common/types/ComponentEventHandlerProps';
+import { useEventHandler } from '@cbhq/cds-common/hooks/useEventHandler';
+import type { ComponentEventHandlerProps } from '@cbhq/cds-common/types/ComponentEventHandlerProps';
 import { css } from '@linaria/core';
 
 import type { Polymorphic } from '../core/polymorphism';

@@ -1,7 +1,7 @@
 import type {
   MotionBaseSpec,
   MotionTransition as MotionBaseTransition,
-} from '@coinbase/cds-common/types/Motion';
+} from '@cbhq/cds-common/types/Motion';
 import type { TargetAndTransition, Transition, Variant } from 'framer-motion';
 
 export type HintMotionBaseProps = {

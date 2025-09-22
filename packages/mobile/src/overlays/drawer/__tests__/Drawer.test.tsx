@@ -1,10 +1,10 @@
 import { useCallback, useState } from 'react';
 import { Modal } from 'react-native';
 import { initialWindowMetrics, SafeAreaProvider } from 'react-native-safe-area-context';
-import { drawerAnimationDefaultDuration } from '@coinbase/cds-common/animation/drawer';
-import { loremIpsum } from '@coinbase/cds-common/internal/data/loremIpsum';
-import { durations } from '@coinbase/cds-common/motion/tokens';
-import { delay } from '@coinbase/cds-common/utils/delay';
+import { drawerAnimationDefaultDuration } from '@cbhq/cds-common/animation/drawer';
+import { loremIpsum } from '@cbhq/cds-common/internal/data/loremIpsum';
+import { durations } from '@cbhq/cds-common/motion/tokens';
+import { delay } from '@cbhq/cds-common/utils/delay';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react-native';
 
 import { Button } from '../../../buttons';

@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
-import type { ThemeVars } from '@coinbase/cds-common/core/theme';
-import { animateRotateConfig } from '@coinbase/cds-common/motion/animatedCaret';
-import type { InputVariant, SharedProps } from '@coinbase/cds-common/types';
+import type { ThemeVars } from '@cbhq/cds-common/core/theme';
+import { animateRotateConfig } from '@cbhq/cds-common/motion/animatedCaret';
+import type { InputVariant, SharedProps } from '@cbhq/cds-common/types';
 import { m as motion, MotionConfig } from 'framer-motion';
 
 import { useTextInputFocusVariantContent } from '../controls/context';

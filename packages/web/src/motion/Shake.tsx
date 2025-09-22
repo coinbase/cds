@@ -1,6 +1,6 @@
 import React, { forwardRef, memo, useCallback, useEffect, useImperativeHandle } from 'react';
 import type { ForwardedRef } from 'react';
-import { shakeTransitionConfig, shakeTranslateX } from '@coinbase/cds-common/motion/hint';
+import { shakeTransitionConfig, shakeTranslateX } from '@cbhq/cds-common/motion/hint';
 import { m as motion, useAnimation } from 'framer-motion';
 
 import type { HintMotionBaseProps } from './types';

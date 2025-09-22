@@ -1,5 +1,5 @@
 {
-  "import": "import { ProgressBarWithFloatLabel } from '@coinbase/cds-web/visualizations/ProgressBarWithFloatLabel'",
+  "import": "import { ProgressBarWithFloatLabel } from '@cbhq/cds-web/visualizations/ProgressBarWithFloatLabel'",
   "source": "https://github.com/coinbase/cds-staging/blob/master/packages/web/src/visualizations/ProgressBarWithFloatLabel.tsx",
   "description": "A ProgressBar with a floating label that moves with progress.",
   "relatedComponents": [

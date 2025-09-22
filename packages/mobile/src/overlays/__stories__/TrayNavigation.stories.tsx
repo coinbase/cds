@@ -1,7 +1,7 @@
 import React, { useCallback, useRef, useState } from 'react';
-import { navigationOptions } from '@coinbase/cds-common/internal/data/navigation';
-import type { IllustrationPictogramNames } from '@coinbase/cds-common/types';
-import { NoopFn } from '@coinbase/cds-common/utils/mockUtils';
+import { navigationOptions } from '@cbhq/cds-common/internal/data/navigation';
+import type { IllustrationPictogramNames } from '@cbhq/cds-common/types';
+import { NoopFn } from '@cbhq/cds-common/utils/mockUtils';
 
 import { IconButton } from '../../buttons/IconButton';
 import { Menu } from '../../controls/Menu';

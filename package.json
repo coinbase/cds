@@ -103,7 +103,7 @@
     "@babel/runtime": "^7.28.2",
     "@babel/template": "^7.20.7",
     "@babel/types": "^7.20.7",
-    "@coinbase/eslint-plugin-internal": "workspace:^",
+    "@cbhq/eslint-plugin-internal": "workspace:^",
     "@figma/code-connect": "^1.3.4",
     "@graphql-tools/jest-transform": "^2.0.0",
     "@inquirer/prompts": "^7.5.3",

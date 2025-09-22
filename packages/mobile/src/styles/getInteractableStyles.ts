@@ -1,10 +1,10 @@
 import type { ViewStyle } from 'react-native';
-import { getBlendedColor } from '@coinbase/cds-common/color/getBlendedColor';
+import { getBlendedColor } from '@cbhq/cds-common/color/getBlendedColor';
 import {
   accessibleOpacityDisabled,
   opacityPressed,
-} from '@coinbase/cds-common/tokens/interactable';
-import type { ElevationLevels } from '@coinbase/cds-common/types/ElevationLevels';
+} from '@cbhq/cds-common/tokens/interactable';
+import type { ElevationLevels } from '@cbhq/cds-common/types/ElevationLevels';
 
 import { type Theme } from '../core/theme';
 

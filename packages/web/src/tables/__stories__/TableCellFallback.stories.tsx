@@ -1,5 +1,5 @@
 import React from 'react';
-import { useToggler } from '@coinbase/cds-common/hooks/useToggler';
+import { useToggler } from '@cbhq/cds-common/hooks/useToggler';
 import type { Meta, Story } from '@storybook/react';
 
 import { CellMedia, type CellMediaType } from '../../cells/CellMedia';

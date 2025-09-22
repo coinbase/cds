@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react';
 import { View } from 'react-native';
-import { assets } from '@coinbase/cds-common/internal/data/assets';
-import { avatarSizes } from '@coinbase/cds-common/internal/data/avatars';
+import { assets } from '@cbhq/cds-common/internal/data/assets';
+import { avatarSizes } from '@cbhq/cds-common/internal/data/avatars';
 
 import { Button } from '../../buttons';
 import { Example, ExampleScreen } from '../../examples/ExampleScreen';

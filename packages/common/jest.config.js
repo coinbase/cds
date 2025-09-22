@@ -1,6 +1,6 @@
 const d3 = ['d3', 'd3-.+', 'internmap'];
 
-const esModules = ['@coinbase', ...d3];
+const esModules = ['@cbhq', ...d3];
 
 /** @type {import('jest').Config} */
 const config = {

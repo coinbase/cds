@@ -1,9 +1,9 @@
 import { ScrollView } from 'react-native';
 import { SvgXml } from 'react-native-svg';
-import type { IconSourcePixelSize } from '@coinbase/cds-common/types';
-import { useTheme } from '@coinbase/cds-mobile';
-import { IconSheet } from '@coinbase/cds-mobile/icons/__stories__/IconSheet';
-import { Box } from '@coinbase/cds-mobile/layout';
+import type { IconSourcePixelSize } from '@cbhq/cds-common/types';
+import { useTheme } from '@cbhq/cds-mobile';
+import { IconSheet } from '@cbhq/cds-mobile/icons/__stories__/IconSheet';
+import { Box } from '@cbhq/cds-mobile/layout';
 
 import { svgMap } from '../__generated__/iconSvgMap';
 

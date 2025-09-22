@@ -16,13 +16,13 @@ const ruleTester = new RuleTester({
 ruleTester.run('no-v7-imports', noV7Imports, {
   valid: [
     {
-      code: "import { Button } from '@coinbase/cds-web/buttons';",
+      code: "import { Button } from '@cbhq/cds-web/buttons';",
     },
     {
-      code: "import { Text } from '@coinbase/cds-mobile/typography';",
+      code: "import { Text } from '@cbhq/cds-mobile/typography';",
     },
     {
-      code: "import { useTheme } from '@coinbase/cds-common/hooks';",
+      code: "import { useTheme } from '@cbhq/cds-common/hooks';",
     },
     {
       code: "import { SomeComponent } from 'some-other-library/v7/components';",
@@ -30,23 +30,23 @@ ruleTester.run('no-v7-imports', noV7Imports, {
   ],
   invalid: [
     {
-      code: "import { Button } from '@coinbase/cds-web/v7/buttons';",
+      code: "import { Button } from '@cbhq/cds-web/v7/buttons';",
       errors: [{ messageId: 'noV7Imports' }],
     },
     {
-      code: "import { Text } from '@coinbase/cds-mobile/v7/typography';",
+      code: "import { Text } from '@cbhq/cds-mobile/v7/typography';",
       errors: [{ messageId: 'noV7Imports' }],
     },
     {
-      code: "import { useTheme } from '@coinbase/cds-common/v7/hooks';",
+      code: "import { useTheme } from '@cbhq/cds-common/v7/hooks';",
       errors: [{ messageId: 'noV7Imports' }],
     },
     {
-      code: "import { Alert } from '@coinbase/cds-web/v7/overlays/Alert';",
+      code: "import { Alert } from '@cbhq/cds-web/v7/overlays/Alert';",
       errors: [{ messageId: 'noV7Imports' }],
     },
     {
-      code: "import { SparklineInteractiveHeader } from '@coinbase/cds-web-visualization/v7/sparkline/sparkline-interactive-header/SparklineInteractiveHeader';",
+      code: "import { SparklineInteractiveHeader } from '@cbhq/cds-web-visualization/v7/sparkline/sparkline-interactive-header/SparklineInteractiveHeader';",
       errors: [{ messageId: 'noV7Imports' }],
     },
   ],

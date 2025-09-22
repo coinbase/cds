@@ -1,5 +1,5 @@
 import React, { createContext, memo, useContext, useEffect, useState } from 'react';
-import type { SharedProps } from '@coinbase/cds-common';
+import type { SharedProps } from '@cbhq/cds-common';
 
 import { HStack, type HStackProps } from '../layout';
 

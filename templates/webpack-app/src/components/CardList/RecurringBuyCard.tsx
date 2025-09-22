@@ -1,7 +1,7 @@
-import { Button } from '@coinbase/cds-web/buttons';
-import { UpsellCard } from '@coinbase/cds-web/cards';
-import { Box } from '@coinbase/cds-web/layout';
-import { Pictogram } from '@coinbase/cds-web/illustrations';
+import { Button } from '@cbhq/cds-web/buttons';
+import { UpsellCard } from '@cbhq/cds-web/cards';
+import { Box } from '@cbhq/cds-web/layout';
+import { Pictogram } from '@cbhq/cds-web/illustrations';
 
 export const RecurringBuyCard = () => {
   return (

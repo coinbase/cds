@@ -1,7 +1,7 @@
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
-import type { ColorScheme, ThemeVars } from '@coinbase/cds-common/core/theme';
-import type { ThemeConfig } from '@coinbase/cds-web/core/theme';
-import { defaultTheme } from '@coinbase/cds-web/themes/defaultTheme';
+import type { ColorScheme, ThemeVars } from '@cbhq/cds-common/core/theme';
+import type { ThemeConfig } from '@cbhq/cds-web/core/theme';
+import { defaultTheme } from '@cbhq/cds-web/themes/defaultTheme';
 import { useColorMode } from '@docusaurus/theme-common';
 import { docsTheme } from '@site/src/constants';
 import type { Property } from 'csstype';

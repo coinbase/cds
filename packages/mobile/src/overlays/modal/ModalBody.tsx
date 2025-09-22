@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { KeyboardAvoidingView, ScrollView } from 'react-native';
 import type { ScrollViewProps } from 'react-native';
-import { useModalContext } from '@coinbase/cds-common/overlays/ModalContext';
+import { useModalContext } from '@cbhq/cds-common/overlays/ModalContext';
 
 import { useContentSize } from '../../hooks/useContentSize';
 import { useLayout } from '../../hooks/useLayout';

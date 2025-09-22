@@ -1,8 +1,8 @@
 import '@testing-library/jest-dom';
 
 import React from 'react';
-import type { UseCounterParams } from '@coinbase/cds-common/visualizations/useCounter';
-import { renderA11y } from '@coinbase/cds-web-utils/jest';
+import type { UseCounterParams } from '@cbhq/cds-common/visualizations/useCounter';
+import { renderA11y } from '@cbhq/cds-web-utils/jest';
 import { render, screen, waitFor } from '@testing-library/react';
 
 import { Box } from '../../layout/Box';
@@ -10,7 +10,7 @@ import { ProgressBar } from '../ProgressBar';
 import { ProgressBarWithFixedLabels } from '../ProgressBarWithFixedLabels';
 import { ProgressBarWithFloatLabel } from '../ProgressBarWithFloatLabel';
 
-jest.mock('@coinbase/cds-common/visualizations/useCounter', () => ({
+jest.mock('@cbhq/cds-common/visualizations/useCounter', () => ({
   useCounter: ({ endNum }: UseCounterParams) => endNum,
 }));
 jest.mock('../../hooks/useDimensions', () => ({

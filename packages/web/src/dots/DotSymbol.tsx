@@ -6,7 +6,7 @@ import type {
   PinPlacement,
   SharedAccessibilityProps,
   SharedProps,
-} from '@coinbase/cds-common/types';
+} from '@cbhq/cds-common/types';
 import { css } from '@linaria/core';
 
 import { cx } from '../cx';

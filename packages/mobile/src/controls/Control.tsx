@@ -7,13 +7,13 @@ import type {
   PressableStateCallbackType,
   ViewStyle,
 } from 'react-native';
-import type { SharedProps } from '@coinbase/cds-common';
-import type { ThemeVars } from '@coinbase/cds-common/core/theme';
+import type { SharedProps } from '@cbhq/cds-common';
+import type { ThemeVars } from '@cbhq/cds-common/core/theme';
 import {
   accessibleOpacityDisabled,
   opacityPressed,
-} from '@coinbase/cds-common/tokens/interactable';
-import { isDevelopment } from '@coinbase/cds-utils';
+} from '@cbhq/cds-common/tokens/interactable';
+import { isDevelopment } from '@cbhq/cds-utils';
 
 import { useTheme } from '../hooks/useTheme';
 import type { InteractableBaseProps } from '../system';

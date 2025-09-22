@@ -5,11 +5,11 @@ import {
   animatePaddleScaleConfig,
   paddleHidden,
   paddleVisible,
-} from '@coinbase/cds-common/animation/paddle';
-import type { ThemeVars } from '@coinbase/cds-common/core/theme';
-import { durations } from '@coinbase/cds-common/motion/tokens';
-import { zIndex } from '@coinbase/cds-common/tokens/zIndex';
-import type { SharedAccessibilityProps, SharedProps } from '@coinbase/cds-common/types';
+} from '@cbhq/cds-common/animation/paddle';
+import type { ThemeVars } from '@cbhq/cds-common/core/theme';
+import { durations } from '@cbhq/cds-common/motion/tokens';
+import { zIndex } from '@cbhq/cds-common/tokens/zIndex';
+import type { SharedAccessibilityProps, SharedProps } from '@cbhq/cds-common/types';
 import { css } from '@linaria/core';
 import { m as motion } from 'framer-motion';
 

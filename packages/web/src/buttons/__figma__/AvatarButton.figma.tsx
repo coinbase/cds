@@ -7,7 +7,7 @@ figma.connect(
   AvatarButton,
   'https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/✨-CDS-Components?node-id=276-23400&m=dev',
   {
-    imports: ["import {AvatarButton} from '@coinbase/cds-web/buttons/AvatarButton';"],
+    imports: ["import {AvatarButton} from '@cbhq/cds-web/buttons/AvatarButton';"],
     props: {
       //   state: figma.enum('state', {
       //     active: 'active',

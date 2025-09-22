@@ -1,15 +1,15 @@
 import React, { useCallback, useState } from 'react';
-import type { TabValue } from '@coinbase/cds-common/tabs/useTabs';
-import type { IconSize } from '@coinbase/cds-common/types';
-import type { IconName } from '@coinbase/cds-common/types/IconName';
-import { descriptionMap } from '@coinbase/cds-icons/descriptionMap';
-import { names } from '@coinbase/cds-icons/names';
-import { TileButton } from '@coinbase/cds-web/buttons/TileButton';
-import { SearchInput, Switch } from '@coinbase/cds-web/controls';
-import { Icon } from '@coinbase/cds-web/icons/Icon';
-import { Box, Grid } from '@coinbase/cds-web/layout';
-import { useToast } from '@coinbase/cds-web/overlays/useToast';
-import { Text } from '@coinbase/cds-web/typography';
+import type { TabValue } from '@cbhq/cds-common/tabs/useTabs';
+import type { IconSize } from '@cbhq/cds-common/types';
+import type { IconName } from '@cbhq/cds-common/types/IconName';
+import { descriptionMap } from '@cbhq/cds-icons/descriptionMap';
+import { names } from '@cbhq/cds-icons/names';
+import { TileButton } from '@cbhq/cds-web/buttons/TileButton';
+import { SearchInput, Switch } from '@cbhq/cds-web/controls';
+import { Icon } from '@cbhq/cds-web/icons/Icon';
+import { Box, Grid } from '@cbhq/cds-web/layout';
+import { useToast } from '@cbhq/cds-web/overlays/useToast';
+import { Text } from '@cbhq/cds-web/typography';
 import { sortByAlphabet } from '@site/src/utils/sortByAlphabet';
 import { throttle } from 'lodash';
 

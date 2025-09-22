@@ -1,9 +1,9 @@
 import { memo, useMemo } from 'react';
 import type { CSSProperties } from 'react';
 import type { StyleProp, ViewStyle } from 'react-native';
-import { imageSize, mediaSize } from '@coinbase/cds-common/tokens/cell';
-import type { FallbackRectWidthProps, SharedProps } from '@coinbase/cds-common/types';
-import { getRectWidthVariant } from '@coinbase/cds-common/utils/getRectWidthVariant';
+import { imageSize, mediaSize } from '@cbhq/cds-common/tokens/cell';
+import type { FallbackRectWidthProps, SharedProps } from '@cbhq/cds-common/types';
+import { getRectWidthVariant } from '@cbhq/cds-common/utils/getRectWidthVariant';
 
 import { useTheme } from '../hooks/useTheme';
 import { VStack } from '../layout';

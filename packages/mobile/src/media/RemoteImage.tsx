@@ -12,8 +12,8 @@ import type {
 } from 'react-native';
 import { ClipPath, Defs, Image as SvgImage, Path, Svg, SvgXml } from 'react-native-svg';
 import { SvgCssUri } from 'react-native-svg/css';
-import type { ThemeVars } from '@coinbase/cds-common/core/theme';
-import type { AspectRatio, AvatarSize, FixedValue, Shape } from '@coinbase/cds-common/types';
+import type { ThemeVars } from '@cbhq/cds-common/core/theme';
+import type { AspectRatio, AvatarSize, FixedValue, Shape } from '@cbhq/cds-common/types';
 
 import { useTheme } from '../hooks/useTheme';
 

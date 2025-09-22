@@ -1,5 +1,5 @@
 import React from 'react';
-import { useTheme } from '@coinbase/cds-web/hooks/useTheme';
+import { useTheme } from '@cbhq/cds-web/hooks/useTheme';
 
 export const DefaultBanner = () => {
   const { activeColorScheme } = useTheme();

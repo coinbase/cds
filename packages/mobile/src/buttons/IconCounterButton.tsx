@@ -1,9 +1,9 @@
 import React, { forwardRef, memo } from 'react';
 import type { View } from 'react-native';
-import type { ThemeVars } from '@coinbase/cds-common/core/theme';
-import type { IconSize, ValidateProps } from '@coinbase/cds-common/types';
-import { formatCount } from '@coinbase/cds-common/utils/formatCount';
-import type { IconName } from '@coinbase/cds-icons';
+import type { ThemeVars } from '@cbhq/cds-common/core/theme';
+import type { IconSize, ValidateProps } from '@cbhq/cds-common/types';
+import { formatCount } from '@cbhq/cds-common/utils/formatCount';
+import type { IconName } from '@cbhq/cds-icons';
 
 import { Icon } from '../icons';
 import { HStack } from '../layout';

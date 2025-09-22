@@ -1,9 +1,9 @@
 import React, { memo, useMemo } from 'react';
 import { Animated, Text } from 'react-native';
 import type { StyleProp, TextStyle } from 'react-native';
-import type { IconName } from '@coinbase/cds-common';
-import { glyphMap } from '@coinbase/cds-icons/glyphMap';
-import { isDevelopment } from '@coinbase/cds-utils';
+import type { IconName } from '@cbhq/cds-common';
+import { glyphMap } from '@cbhq/cds-icons/glyphMap';
+import { isDevelopment } from '@cbhq/cds-utils';
 
 import { useTheme } from '../hooks/useTheme';
 

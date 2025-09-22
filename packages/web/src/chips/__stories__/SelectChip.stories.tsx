@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { loremIpsum } from '@coinbase/cds-common/internal/data/loremIpsum';
-import type { IconName } from '@coinbase/cds-icons';
+import { loremIpsum } from '@cbhq/cds-common/internal/data/loremIpsum';
+import type { IconName } from '@cbhq/cds-icons';
 
 import { SelectOption } from '../../controls/SelectOption';
 import { Icon } from '../../icons/Icon';

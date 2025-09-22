@@ -1,0 +1,41 @@
+env:
+  LANG: en_US.UTF-8
+  CI: true
+  NX_CAPTURE_METRICS: true
+  NX_CAPTURE_TEST_METRICS: true
+  NX_ENABLE_REMOTE_CACHE: true
+  IOS_PERCY_SECRET: 'infra/buildkite/cds-percy-token-ios'
+  DETOX_RUN_ALL: $DETOX_RUN_ALL
+
+steps:
+  - label: 'Visreg (iOS) %N'
+    key: 'visreg_ios'
+    parallelism: 5
+    env:
+      # Fixes issues with git-mirrors on mac agents
+      BUILDKITE_CLEAN_CHECKOUT: true
+    agents:
+      queue: macos-metal-arm64-xcode15
+    commands:
+      - export PERCY_TOKEN=$(aws secretsmanager get-secret-value --secret-id $$IOS_PERCY_SECRET --query SecretString --output text)
+      - tools/ci/setup.sh
+      - echo "--- Running iOS visreg tests"
+      - yarn nx run mobile-app:detox:ios-release
+    retry:
+      automatic:
+        limit: 1
+    soft_fail: true
+
+  - label: 'Finish Visreg (iOS)'
+    depends_on: 'visreg_ios'
+    allow_dependency_failure: true
+    env:
+      # Fixes issues with git-mirrors on mac agents
+      BUILDKITE_CLEAN_CHECKOUT: true
+    agents:
+      queue: macos-metal-arm64-xcode15
+    commands:
+      - export PERCY_TOKEN=$(aws secretsmanager get-secret-value --secret-id $$IOS_PERCY_SECRET --query SecretString --output text)
+      - npm install -g @percy/cli
+      - npx percy build:finalize
+    soft_fail: true

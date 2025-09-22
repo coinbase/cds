@@ -1,5 +1,5 @@
-import type { DotOverlap } from '@coinbase/cds-common/types/DotBaseProps';
-import type { PinPlacement } from '@coinbase/cds-common/types/Placement';
+import type { DotOverlap } from '@cbhq/cds-common/types/DotBaseProps';
+import type { PinPlacement } from '@cbhq/cds-common/types/Placement';
 
 export const getTransform = (pin?: PinPlacement, overlap?: DotOverlap) => {
   if (pin === undefined) {

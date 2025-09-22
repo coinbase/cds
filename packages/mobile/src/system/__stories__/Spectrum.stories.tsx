@@ -1,5 +1,5 @@
 import React from 'react';
-import { getAccessibleColor } from '@coinbase/cds-common/utils/getAccessibleColor';
+import { getAccessibleColor } from '@cbhq/cds-common/utils/getAccessibleColor';
 
 import { Example, ExampleScreen } from '../../examples/ExampleScreen';
 import { useTheme } from '../../hooks/useTheme';

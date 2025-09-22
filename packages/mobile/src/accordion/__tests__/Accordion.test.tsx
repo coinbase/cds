@@ -1,4 +1,4 @@
-import { noop } from '@coinbase/cds-utils';
+import { noop } from '@cbhq/cds-utils';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react-native';
 
 import { CellMedia } from '../../cells/CellMedia';

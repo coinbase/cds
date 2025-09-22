@@ -1,7 +1,7 @@
 /// <reference types="detox" />
 
 /**
- * Inline implementations of detox utilities to replace @coinbase/detox-utils dependency
+ * Inline implementations of detox utilities to replace @cbhq/detox-utils dependency
  */
 
 /**

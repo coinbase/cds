@@ -1,6 +1,6 @@
 import React, { forwardRef, memo } from 'react';
 import type { View } from 'react-native';
-import type { SharedProps } from '@coinbase/cds-common/types';
+import type { SharedProps } from '@cbhq/cds-common/types';
 
 import type { HStackProps } from '../../layout';
 import { HStack } from '../../layout';

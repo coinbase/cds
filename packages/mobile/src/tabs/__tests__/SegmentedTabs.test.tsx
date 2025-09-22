@@ -1,9 +1,9 @@
 import React from 'react';
 import { type MeasureOnSuccessCallback, View } from 'react-native';
 import Animated from 'react-native-reanimated';
-import { useRefMap } from '@coinbase/cds-common/hooks/useRefMap';
-import { TabsContext } from '@coinbase/cds-common/tabs/TabsContext';
-import { NoopFn } from '@coinbase/cds-common/utils/mockUtils';
+import { useRefMap } from '@cbhq/cds-common/hooks/useRefMap';
+import { TabsContext } from '@cbhq/cds-common/tabs/TabsContext';
+import { NoopFn } from '@cbhq/cds-common/utils/mockUtils';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 
 import { Box } from '../../layout';
@@ -21,7 +21,7 @@ const tabs = [
   { id: 'convert', label: 'Convert', testID: 'convert-tab' },
 ];
 
-jest.mock('@coinbase/cds-common/hooks/useRefMap');
+jest.mock('@cbhq/cds-common/hooks/useRefMap');
 
 const mockUseRefMap = (mocks: ReturnType<typeof useRefMap>) => {
   (useRefMap as jest.Mock).mockReturnValue(mocks);

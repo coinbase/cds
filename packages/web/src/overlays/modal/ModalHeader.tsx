@@ -1,11 +1,11 @@
 import React from 'react';
-import { useModalContext } from '@coinbase/cds-common/overlays/ModalContext';
-import { interactableHeight } from '@coinbase/cds-common/tokens/interactableHeight';
+import { useModalContext } from '@cbhq/cds-common/overlays/ModalContext';
+import { interactableHeight } from '@cbhq/cds-common/tokens/interactableHeight';
 import type {
   SharedAccessibilityProps,
   SharedProps,
   ValidateProps,
-} from '@coinbase/cds-common/types';
+} from '@cbhq/cds-common/types';
 
 import { IconButton } from '../../buttons/IconButton';
 import { Box, type BoxDefaultElement, type BoxProps } from '../../layout/Box';

@@ -1,10 +1,10 @@
-# @coinbase/ui-mobile-playground
+# @cbhq/ui-mobile-playground
 
-> [NPM registry](https://www.npmjs.com/package/@coinbase/ui-mobile-playground)
+> [NPM registry](https://www.npmjs.com/package/@cbhq/ui-mobile-playground)
 
 All notable changes to this project will be documented in this file.
 
-`@coinbase/ui-mobile-playground` adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+`@cbhq/ui-mobile-playground` adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 <!-- template-start -->
 

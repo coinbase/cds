@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import { compactListHeight, listHeight } from '@coinbase/cds-common/tokens/cell';
+import { compactListHeight, listHeight } from '@cbhq/cds-common/tokens/cell';
 
 import { VStack } from '../layout/VStack';
 import { Text } from '../typography/Text';

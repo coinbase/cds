@@ -1,14 +1,14 @@
 import React, { isValidElement, memo } from 'react';
 import type { PressableProps } from 'react-native';
-import { getCardBodySpacingProps } from '@coinbase/cds-common/cards/getCardBodySpacingProps';
-import type { ThemeVars } from '@coinbase/cds-common/core/theme';
+import { getCardBodySpacingProps } from '@cbhq/cds-common/cards/getCardBodySpacingProps';
+import type { ThemeVars } from '@cbhq/cds-common/core/theme';
 import type {
   DimensionStyles,
   DimensionValue,
   IllustrationPictogramNames,
   SharedAccessibilityProps,
   SharedProps,
-} from '@coinbase/cds-common/types';
+} from '@cbhq/cds-common/types';
 
 import { IconButton } from '../buttons';
 import { Pictogram } from '../illustrations/Pictogram';

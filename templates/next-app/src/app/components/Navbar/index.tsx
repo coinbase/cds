@@ -1,10 +1,10 @@
 'use client';
-import { Box, HStack } from '@coinbase/cds-web/layout';
-import { NavigationBar, NavigationTitle } from '@coinbase/cds-web/navigation';
+import { Box, HStack } from '@cbhq/cds-web/layout';
+import { NavigationBar, NavigationTitle } from '@cbhq/cds-web/navigation';
 import { MoreMenu } from './MoreMenu';
 import { UserMenu } from './UserMenu';
-import { IconButton } from '@coinbase/cds-web/buttons';
-import { useTheme } from '@coinbase/cds-web';
+import { IconButton } from '@cbhq/cds-web/buttons';
+import { useTheme } from '@cbhq/cds-web';
 
 export const Navbar = ({
   title,

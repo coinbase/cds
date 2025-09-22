@@ -1,7 +1,7 @@
 import React from 'react';
 import { View } from 'react-native';
-import { assets } from '@coinbase/cds-common/internal/data/assets';
-import { NoopFn } from '@coinbase/cds-common/utils/mockUtils';
+import { assets } from '@cbhq/cds-common/internal/data/assets';
+import { NoopFn } from '@cbhq/cds-common/utils/mockUtils';
 
 import { IconButton } from '../../buttons';
 import { ExampleScreen } from '../../examples/ExampleScreen';

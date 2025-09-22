@@ -1,6 +1,6 @@
 import React, { forwardRef, memo, useCallback, useMemo } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { type SharedProps } from '@coinbase/cds-common';
+import { type SharedProps } from '@cbhq/cds-common';
 
 import { useTheme } from '../hooks/useTheme';
 import { Icon } from '../icons';

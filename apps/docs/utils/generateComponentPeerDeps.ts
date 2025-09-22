@@ -114,13 +114,13 @@ function generateDocumentationTable(analysis: PackageAnalysis): string {
     'This document lists the peer dependencies required for each component when importing individually.\n\n';
 
   // Web Components
-  documentation += '## Web Components (@coinbase/cds-web)\n\n';
+  documentation += '## Web Components (@cbhq/cds-web)\n\n';
   documentation += '| Component | Import Path | Peer Dependencies |\n';
   documentation += '|-----------|-------------|-------------------|\n';
 
   const webComponents = Object.entries(analysis.web).sort(([a], [b]) => a.localeCompare(b));
   for (const [componentName, info] of webComponents) {
-    const importPath = `@coinbase/cds-web${info.exportPath === 'root' ? '' : info.exportPath}`;
+    const importPath = `@cbhq/cds-web${info.exportPath === 'root' ? '' : info.exportPath}`;
     const peerDeps =
       info.peerDependencies.length > 0
         ? info.peerDependencies.map((d) => `${d.name}@${d.version}`).join(', ')
@@ -129,13 +129,13 @@ function generateDocumentationTable(analysis: PackageAnalysis): string {
   }
 
   // Mobile Components
-  documentation += '\n## Mobile Components (@coinbase/cds-mobile)\n\n';
+  documentation += '\n## Mobile Components (@cbhq/cds-mobile)\n\n';
   documentation += '| Component | Import Path | Peer Dependencies |\n';
   documentation += '|-----------|-------------|-------------------|\n';
 
   const mobileComponents = Object.entries(analysis.mobile).sort(([a], [b]) => a.localeCompare(b));
   for (const [componentName, info] of mobileComponents) {
-    const importPath = `@coinbase/cds-mobile${info.exportPath === 'root' ? '' : info.exportPath}`;
+    const importPath = `@cbhq/cds-mobile${info.exportPath === 'root' ? '' : info.exportPath}`;
     const peerDeps =
       info.peerDependencies.length > 0
         ? info.peerDependencies.map((d) => `${d.name}@${d.version}`).join(', ')

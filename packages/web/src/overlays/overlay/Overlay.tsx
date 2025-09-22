@@ -2,7 +2,7 @@ import React, { forwardRef, memo } from 'react';
 import {
   OverlayContentContext,
   type OverlayContentContextValue,
-} from '@coinbase/cds-common/overlays/OverlayContentContext';
+} from '@cbhq/cds-common/overlays/OverlayContentContext';
 
 import type { OverlayProps } from './OverlayContent';
 import { OverlayContent } from './OverlayContent';

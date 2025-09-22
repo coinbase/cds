@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react';
 import { ScrollView } from 'react-native';
-import { assets } from '@coinbase/cds-common/internal/data/assets';
+import { assets } from '@cbhq/cds-common/internal/data/assets';
 
 import { DotSymbol } from '../../dots';
 import { Example, ExampleScreen } from '../../examples/ExampleScreen';

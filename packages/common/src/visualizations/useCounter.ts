@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { isStorybook } from '@coinbase/cds-utils';
+import { isStorybook } from '@cbhq/cds-utils';
 
 export type UseCounterParams = {
   startNum: number;

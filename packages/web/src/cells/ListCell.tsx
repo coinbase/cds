@@ -1,5 +1,5 @@
 import React, { forwardRef, memo, useMemo } from 'react';
-import { compactListHeight, listHeight } from '@coinbase/cds-common/tokens/cell';
+import { compactListHeight, listHeight } from '@cbhq/cds-common/tokens/cell';
 import { css } from '@linaria/core';
 
 import type { Polymorphic } from '../core/polymorphism';

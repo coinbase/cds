@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import type { ColorScheme } from '@coinbase/cds-common/core/theme';
+import type { ColorScheme } from '@cbhq/cds-common/core/theme';
 import type { Meta, Story } from '@storybook/react';
 import sample from 'lodash/sample';
 

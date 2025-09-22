@@ -8,7 +8,7 @@ import { getMinutesBetweenDates } from './utils/getMinutesBetweenDates';
 import { logger } from './utils/logger';
 import type { PluginContent, PluginOptions } from './types';
 
-const PLUGIN_ID = '@coinbase/docusaurus-plugin-docgen';
+const PLUGIN_ID = '@cbhq/docusaurus-plugin-docgen';
 
 /**
  * Persist build state as a global, since the plugin is re-evaluated every hot reload.
@@ -32,7 +32,7 @@ export default function plugin(
 ): Plugin<PluginContent | undefined> {
   /**
    * The directory where we want to output docgen data and components.
-   * If running on website, this will be in .docusaurus/@coinbase/docusaurus-plugin-docgen/default
+   * If running on website, this will be in .docusaurus/@cbhq/docusaurus-plugin-docgen/default
    */
   const pluginDir = path.join(generatedFilesDir, PLUGIN_ID, options.id ?? DEFAULT_PLUGIN_ID);
 

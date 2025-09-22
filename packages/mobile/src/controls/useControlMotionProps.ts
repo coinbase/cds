@@ -5,8 +5,8 @@ import {
   checkboxOpacityExitConfig,
   checkboxScaleEnterConfig,
   checkboxScaleExitConfig,
-} from '@coinbase/cds-common/motion/checkbox';
-import { switchTransitionConfig } from '@coinbase/cds-common/motion/switch';
+} from '@cbhq/cds-common/motion/checkbox';
+import { switchTransitionConfig } from '@cbhq/cds-common/motion/switch';
 
 import { convertMotionConfig } from '../animation/convertMotionConfig';
 

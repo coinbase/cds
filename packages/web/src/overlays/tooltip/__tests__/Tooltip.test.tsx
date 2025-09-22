@@ -1,5 +1,5 @@
-import type { BaseTooltipPlacement } from '@coinbase/cds-common/types';
-import { renderA11y } from '@coinbase/cds-web-utils/jest';
+import type { BaseTooltipPlacement } from '@cbhq/cds-common/types';
+import { renderA11y } from '@cbhq/cds-web-utils/jest';
 import { fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 

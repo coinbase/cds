@@ -1,10 +1,10 @@
 import React from 'react';
-import { cx } from '@coinbase/cds-web';
-import { PortalProvider } from '@coinbase/cds-web/overlays/PortalProvider';
-import { defaultFontStyles } from '@coinbase/cds-web/styles/defaultFont';
-import { globalStyles } from '@coinbase/cds-web/styles/global';
-import { MediaQueryProvider } from '@coinbase/cds-web/system/MediaQueryProvider';
-import { ThemeProvider } from '@coinbase/cds-web/system/ThemeProvider';
+import { cx } from '@cbhq/cds-web';
+import { PortalProvider } from '@cbhq/cds-web/overlays/PortalProvider';
+import { defaultFontStyles } from '@cbhq/cds-web/styles/defaultFont';
+import { globalStyles } from '@cbhq/cds-web/styles/global';
+import { MediaQueryProvider } from '@cbhq/cds-web/system/MediaQueryProvider';
+import { ThemeProvider } from '@cbhq/cds-web/system/ThemeProvider';
 import { DocsPreferredVersionContextProvider } from '@docusaurus/plugin-content-docs/client';
 import { composeProviders } from '@docusaurus/theme-common';
 import {

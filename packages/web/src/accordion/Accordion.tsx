@@ -2,9 +2,9 @@ import React, { Children } from 'react';
 import {
   AccordionProvider,
   type AccordionProviderProps,
-} from '@coinbase/cds-common/accordion/AccordionProvider';
-import type { SharedProps } from '@coinbase/cds-common/types';
-import { join } from '@coinbase/cds-common/utils/join';
+} from '@cbhq/cds-common/accordion/AccordionProvider';
+import type { SharedProps } from '@cbhq/cds-common/types';
+import { join } from '@cbhq/cds-common/utils/join';
 
 import { useTheme } from '../hooks/useTheme';
 import { Divider, VStack } from '../layout';

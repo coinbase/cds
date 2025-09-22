@@ -1,11 +1,11 @@
 import React, { useCallback, useMemo, useState } from 'react';
-import { announcementCards } from '@coinbase/cds-common/internal/data/announcementCards';
-import { avatars } from '@coinbase/cds-common/internal/data/avatars';
-import { dataCards } from '@coinbase/cds-common/internal/data/dataCards';
-import { featureEntryCards } from '@coinbase/cds-common/internal/data/featureEntryCards';
-import { feedImages } from '@coinbase/cds-common/internal/data/feedImages';
-import { loremIpsum } from '@coinbase/cds-common/internal/data/loremIpsum';
-import { baseConfig, storyBuilder } from '@coinbase/cds-common/internal/utils/storyBuilder';
+import { announcementCards } from '@cbhq/cds-common/internal/data/announcementCards';
+import { avatars } from '@cbhq/cds-common/internal/data/avatars';
+import { dataCards } from '@cbhq/cds-common/internal/data/dataCards';
+import { featureEntryCards } from '@cbhq/cds-common/internal/data/featureEntryCards';
+import { feedImages } from '@cbhq/cds-common/internal/data/feedImages';
+import { loremIpsum } from '@cbhq/cds-common/internal/data/loremIpsum';
+import { baseConfig, storyBuilder } from '@cbhq/cds-common/internal/utils/storyBuilder';
 
 import { Button } from '../../buttons';
 import { Box, VStack } from '../../layout';

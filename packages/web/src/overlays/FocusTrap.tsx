@@ -1,7 +1,7 @@
 import React, { memo, useCallback, useEffect, useMemo, useRef } from 'react';
 import type { ReactElement, RefObject } from 'react';
-import { FOCUSABLE_ELEMENTS } from '@coinbase/cds-common/tokens/overlays';
-import { debounce } from '@coinbase/cds-common/utils/debounce';
+import { FOCUSABLE_ELEMENTS } from '@cbhq/cds-common/tokens/overlays';
+import { debounce } from '@cbhq/cds-common/utils/debounce';
 
 import { getBrowserGlobals } from '../utils/browser';
 

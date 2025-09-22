@@ -1,6 +1,6 @@
 import React from 'react';
-import type { PictogramName } from '@coinbase/cds-illustrations';
-import { renderA11y } from '@coinbase/cds-web-utils';
+import type { PictogramName } from '@cbhq/cds-illustrations';
+import { renderA11y } from '@cbhq/cds-web-utils';
 import { fireEvent, render, screen } from '@testing-library/react';
 
 import { DefaultThemeProvider } from '../../utils/test';

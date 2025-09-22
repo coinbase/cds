@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { DateInputValidationError } from '@coinbase/cds-common/dates/DateInputValidationError';
+import { DateInputValidationError } from '@cbhq/cds-common/dates/DateInputValidationError';
 
 import { Box } from '../../layout/Box';
 import { Group } from '../../layout/Group';

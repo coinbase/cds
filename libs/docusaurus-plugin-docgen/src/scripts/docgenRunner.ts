@@ -122,7 +122,7 @@ export async function docgenRunner(params: DocgenRunnerParams): Promise<PluginCo
      * This is why we need a projectName, which can just typically just be the packageNameWithoutScope.
      *
      * If there is no formatPackageName provided to config this will turn:
-     *  `@coinbase/cds-web` -> `cds-web`
+     *  `@cbhq/cds-web` -> `cds-web`
      */
     const projectName = formatPackageName?.(packageNameWithoutScope) ?? packageNameWithoutScope;
 

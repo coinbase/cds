@@ -1,7 +1,7 @@
 import { createRef } from 'react';
 import { Text } from 'react-native';
 import type { View } from 'react-native';
-import { NoopFn } from '@coinbase/cds-common/utils/mockUtils';
+import { NoopFn } from '@cbhq/cds-common/utils/mockUtils';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 
 import { DefaultThemeProvider } from '../../utils/testHelpers';

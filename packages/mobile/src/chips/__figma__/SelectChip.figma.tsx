@@ -9,7 +9,7 @@ figma.connect(
   SelectChip,
   'https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/✨-CDS-Components?node-id=10177-5222&m=dev',
   {
-    imports: ["import { SelectChip } from '@coinbase/cds-mobile/chips'"],
+    imports: ["import { SelectChip } from '@cbhq/cds-mobile/chips'"],
     props: {
       // state: figma.enum('state', {
       //   default: 'default',

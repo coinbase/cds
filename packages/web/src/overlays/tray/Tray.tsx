@@ -7,11 +7,11 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import type { SharedAccessibilityProps } from '@coinbase/cds-common';
+import type { SharedAccessibilityProps } from '@cbhq/cds-common';
 import {
   OverlayContentContext,
   type OverlayContentContextValue,
-} from '@coinbase/cds-common/overlays/OverlayContentContext';
+} from '@cbhq/cds-common/overlays/OverlayContentContext';
 import { m, useAnimation } from 'framer-motion';
 
 import { IconButton } from '../../buttons';

@@ -9,9 +9,9 @@ import React, {
 } from 'react';
 import { Animated } from 'react-native';
 import type { ForwardedRef } from 'react';
-import type { ThemeVars } from '@coinbase/cds-common/core/theme';
-import { colorSurgeEnterConfig, colorSurgeExitConfig } from '@coinbase/cds-common/motion/hint';
-import type { MotionBaseSpec } from '@coinbase/cds-common/types';
+import type { ThemeVars } from '@cbhq/cds-common/core/theme';
+import { colorSurgeEnterConfig, colorSurgeExitConfig } from '@cbhq/cds-common/motion/hint';
+import type { MotionBaseSpec } from '@cbhq/cds-common/types';
 
 import { convertMotionConfig } from '../animation/convertMotionConfig';
 import { Box } from '../layout';

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Appearance, Platform, useColorScheme } from 'react-native';
-import type { ColorScheme } from '@coinbase/cds-common/core/theme';
+import type { ColorScheme } from '@cbhq/cds-common/core/theme';
 
 import { useAppState } from './useAppState';
 

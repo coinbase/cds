@@ -1,4 +1,4 @@
-import heroSquareVersionMap from '@coinbase/cds-illustrations/__generated__/heroSquare/data/versionMap';
+import heroSquareVersionMap from '@cbhq/cds-illustrations/__generated__/heroSquare/data/versionMap';
 
 import {
   createIllustration,
@@ -20,4 +20,4 @@ export type HeroSquareProps = HeroSquareBaseProps;
 
 export const HeroSquare = createIllustration('heroSquare', heroSquareVersionMap);
 
-export type { HeroSquareName } from '@coinbase/cds-illustrations/__generated__/heroSquare/types/HeroSquareName';
+export type { HeroSquareName } from '@cbhq/cds-illustrations/__generated__/heroSquare/types/HeroSquareName';

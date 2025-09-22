@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import {
   OverlayContentContext,
   useOverlayContentContext,
-} from '@coinbase/cds-common/overlays/OverlayContentContext';
+} from '@cbhq/cds-common/overlays/OverlayContentContext';
 
 import { VStack } from '../../layout/VStack';
 import { FullscreenModal } from '../modal/FullscreenModal';

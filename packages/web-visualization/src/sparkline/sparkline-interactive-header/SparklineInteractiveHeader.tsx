@@ -1,17 +1,17 @@
 import React, { forwardRef, memo, useCallback, useImperativeHandle, useMemo, useRef } from 'react';
-import type { ThemeVars } from '@coinbase/cds-common/core/theme';
-import { subheadIconSignMap } from '@coinbase/cds-common/tokens/sparkline';
+import type { ThemeVars } from '@cbhq/cds-common/core/theme';
+import { subheadIconSignMap } from '@cbhq/cds-common/tokens/sparkline';
 import type {
   SharedProps,
   SparklineInteractiveHeaderSignVariant,
   SparklineInteractiveHeaderVariant,
-} from '@coinbase/cds-common/types';
-import { debounce } from '@coinbase/cds-common/utils/debounce';
-import { AccessibilityAnnouncer } from '@coinbase/cds-web/AccessibilityAnnouncer/AccessibilityAnnouncer';
-import { VStack } from '@coinbase/cds-web/layout';
-import { Text } from '@coinbase/cds-web/typography/Text';
+} from '@cbhq/cds-common/types';
+import { debounce } from '@cbhq/cds-common/utils/debounce';
+import { AccessibilityAnnouncer } from '@cbhq/cds-web/AccessibilityAnnouncer/AccessibilityAnnouncer';
+import { VStack } from '@cbhq/cds-web/layout';
+import { Text } from '@cbhq/cds-web/typography/Text';
 
-export * from '@coinbase/cds-common/types/SparklineInteractiveHeaderBaseProps';
+export * from '@cbhq/cds-common/types/SparklineInteractiveHeaderBaseProps';
 
 const variantColorMap: Record<SparklineInteractiveHeaderVariant, ThemeVars.Color> = {
   positive: 'bgPositive',

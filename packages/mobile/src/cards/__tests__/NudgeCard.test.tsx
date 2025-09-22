@@ -1,8 +1,8 @@
 import React from 'react';
 import { Image } from 'react-native';
-import { squareAssets } from '@coinbase/cds-common/internal/data/assets';
-import { NoopFn as noopFn } from '@coinbase/cds-common/utils/mockUtils';
-import type { PictogramName } from '@coinbase/cds-illustrations';
+import { squareAssets } from '@cbhq/cds-common/internal/data/assets';
+import { NoopFn as noopFn } from '@cbhq/cds-common/utils/mockUtils';
+import type { PictogramName } from '@cbhq/cds-illustrations';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 
 import { DefaultThemeProvider } from '../../utils/testHelpers';

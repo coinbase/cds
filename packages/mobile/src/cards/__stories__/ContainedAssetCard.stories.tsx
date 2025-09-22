@@ -1,8 +1,8 @@
 import React from 'react';
 import { Image, StyleSheet } from 'react-native';
-import { assets, ethBackground } from '@coinbase/cds-common/internal/data/assets';
-import { subheadIconSignMap } from '@coinbase/cds-common/tokens/sparkline';
-import { NoopFn } from '@coinbase/cds-common/utils/mockUtils';
+import { assets, ethBackground } from '@cbhq/cds-common/internal/data/assets';
+import { subheadIconSignMap } from '@cbhq/cds-common/tokens/sparkline';
+import { NoopFn } from '@cbhq/cds-common/utils/mockUtils';
 
 import { DotStatusColor } from '../../dots';
 import { Example, ExampleScreen } from '../../examples/ExampleScreen';

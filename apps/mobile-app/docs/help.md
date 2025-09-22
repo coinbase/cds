@@ -83,7 +83,7 @@ To resolve from root:
 8. I'm seeing this build error in my CDS log file in the expo temp directory:
 
 ```shell
-[31mError: While resolving module `@coinbase/cds-icons/names`, the Haste package `@coinbase/cds-icons` was found. However the module `names` could not be found within the package. Indeed, none of these files exist:
+[31mError: While resolving module `@cbhq/cds-icons/names`, the Haste package `@cbhq/cds-icons` was found. However the module `names` could not be found within the package. Indeed, none of these files exist:
 ```
 
 This error can be caused by two things:

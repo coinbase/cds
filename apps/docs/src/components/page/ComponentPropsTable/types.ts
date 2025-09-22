@@ -3,7 +3,7 @@ import type {
   ProcessedPropItem,
   SharedParentTypes,
   SharedTypeAliases,
-} from '@coinbase/docusaurus-plugin-docgen/types';
+} from '@cbhq/docusaurus-plugin-docgen/types';
 
 type ParentTypes = ProcessedDoc['parentTypes'];
 

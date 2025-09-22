@@ -1,8 +1,8 @@
 import React, { memo, useCallback } from 'react';
-import { IconButton } from '@coinbase/cds-web/buttons';
-import { Icon } from '@coinbase/cds-web/icons/Icon';
-import { Divider, HStack } from '@coinbase/cds-web/layout';
-import { Modal } from '@coinbase/cds-web/overlays/modal/Modal';
+import { IconButton } from '@cbhq/cds-web/buttons';
+import { Icon } from '@cbhq/cds-web/icons/Icon';
+import { Divider, HStack } from '@cbhq/cds-web/layout';
+import { Modal } from '@cbhq/cds-web/overlays/modal/Modal';
 import { KBarSearch, useKBar, VisualState } from 'kbar';
 
 import KBarAnimator from '../KBarAnimator';

@@ -1,4 +1,4 @@
-import { animateTabIndicatorBaseSpec } from '@coinbase/cds-common/animation/tabs';
+import { animateTabIndicatorBaseSpec } from '@cbhq/cds-common/animation/tabs';
 
 import { useAnimatedTransition } from '../../hooks/useAnimatedTransition';
 import type { TabIndicatorProps } from '../TabIndicator';

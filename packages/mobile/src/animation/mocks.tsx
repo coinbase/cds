@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { Animated } from 'react-native';
-import { noop } from '@coinbase/cds-utils';
+import { noop } from '@cbhq/cds-utils';
 
 import { Box } from '../layout/Box';
 

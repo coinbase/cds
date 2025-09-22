@@ -1,0 +1,164 @@
+# TODO: Delete this file for open source
+name: CI (github.cbhq.net)
+on:
+  push:
+    branches: master
+  pull_request:
+    branches: master
+
+concurrency:
+  group: CI-${{github.ref_name}}-${{github.event.pull_request.number || github.sha}}
+  cancel-in-progress: ${{github.event_name == 'pull_request'}}
+
+env:
+  CI: true
+  PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
+  NX_SELF_HOSTED_REMOTE_CACHE_SERVER: 'https://nx-remote-cache.cbhq.net'
+  CB_GHA_BRANCH: ${{github.head_ref || github.base_ref || github.ref_name}}
+
+jobs:
+  validate:
+    name: Validate
+    runs-on: [medium, amd64]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 100 # TODO: This needs to include the merge-base
+      - uses: ./.github/actions/setup-internal
+      - name: Validate Lockfile
+        run: yarn tsx ./tools/ci/validators/validateLockfile.ts
+      - name: Validate Patches
+        run: yarn tsx ./tools/ci/validators/validatePatches.ts
+      - name: Validate Versioned
+        run: yarn tsx ./tools/ci/validators/validateVersioned.ts
+      - name: Validate CDS Versions
+        run: yarn tsx ./tools/validateCDSVersions.ts
+      - name: Validate Constraints
+        run: yarn constraints || exit 1
+
+  lint:
+    name: Lint
+    runs-on: [large, amd64]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 100 # TODO: This needs to include the merge-base
+      - uses: ./.github/actions/setup-internal
+      - name: Lint
+        run: yarn nx affected --target=lint --base=$NX_BASE --head=$NX_HEAD --max-warnings=0
+
+  test:
+    name: Test
+    runs-on: [xlarge, amd64]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 100 # TODO: This needs to include the merge-base
+      - uses: ./.github/actions/setup-internal
+      - name: Test
+        run: yarn nx affected --target=test --base=$NX_BASE --head=$NX_HEAD
+
+  typecheck:
+    name: Typecheck
+    runs-on: [medium, amd64]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 100 # TODO: This needs to include the merge-base
+      - uses: ./.github/actions/setup-internal
+      - name: Typecheck
+        run: yarn nx affected --target=typecheck --base=$NX_BASE --head=$NX_HEAD
+
+  build:
+    name: Build
+    runs-on: [xlarge, amd64]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 100 # TODO: This needs to include the merge-base
+      - uses: ./.github/actions/setup-internal
+      - name: Build
+        run: yarn nx affected --exclude=mobile-app --target=build --base=$NX_BASE --head=$NX_HEAD
+
+  storybook-a11y:
+    if: ${{ github.event_name == 'pull_request' }}
+    name: Storybook A11y
+    runs-on: [medium, amd64]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 100 # TODO: This needs to include the merge-base
+      - uses: ./.github/actions/setup-internal
+      - uses: infra/cb-action-docker@master
+        with:
+          image: 652969937640.dkr.ecr.us-east-1.amazonaws.com/containers/node:v22-chrome-ub22
+          command: |-
+            yarn nx affected --target=a11y-web
+          environment: |-
+            STORYBOOK_SKIP_ANIMATION=true
+            CI=true
+
+  # Disabled until we can fix the actual profile-exports script
+  # profile-exports:
+  #   name: Profile Exports
+  #   runs-on: [large, amd64]
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #       with:
+  #         fetch-depth: 100 # TODO: This needs to include the merge-base
+  #     - uses: ./.github/actions/setup-internal
+
+  #     # Get the merge-base SHA for cache key (PR only)
+  #     - name: Get merge-base SHA
+  #       if: github.event_name == 'pull_request'
+  #       uses: ./.github/actions/get-merge-base
+  #       id: get-merge-base
+
+  #     # For PRs: Try to restore cache using merge-base SHA
+  #     - name: Restore export stats baseline (PR)
+  #       if: github.event_name == 'pull_request'
+  #       uses: actions/cache/restore@v4
+  #       id: cache-export-stats
+  #       with:
+  #         path: export-stats.md
+  #         key: export-stats-master-${{ steps.get-merge-base.outputs.merge_base }}
+
+  #     # For PRs: Fail with clear message if no baseline found
+  #     - name: Check for baseline file (PR)
+  #       if: github.event_name == 'pull_request' && steps.cache-export-stats.outputs.cache-hit != 'true'
+  #       run: |
+  #         echo "::error::ERROR: Export stats baseline not found for merge-base SHA ${{ steps.get-merge-base.outputs.merge_base }}. This may happen if the merge-base commit doesn't have a cached baseline yet. Please ensure the base branch has run the profile-exports job."
+  #         exit 1
+
+  #     # Run profile-exports in the appropriate mode based on event type
+  #     - name: Run Profile Exports
+  #       env:
+  #         PROFILE_EXPORTS_DIFF: ${{ github.event_name == 'pull_request' }}
+  #       run: yarn nx run storybook:profile-exports
+
+  #     # For master: Cache the results with current SHA
+  #     - name: Cache export stats results (Master)
+  #       if: github.ref_name == 'master'
+  #       uses: actions/cache/save@v4
+  #       with:
+  #         path: export-stats.md
+  #         key: export-stats-master-${{ github.sha }}
+
+  lint-styles:
+    name: Lint Styles
+    runs-on: [medium, amd64]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 100 # TODO: This needs to include the merge-base
+      - uses: ./.github/actions/setup-internal
+      - name: Lint Styles
+        run: yarn nx affected --target=lint-styles --base=$NX_BASE --head=$NX_HEAD
+
+  summarize-results:
+    needs: [validate, lint, lint-styles, test, typecheck, build, storybook-a11y]
+    if: always()
+    name: Job Status Rollup
+    uses: infra/cb-workflow-result-summary/.github/workflows/workflow-check.yml@master
+    with:
+      include-job-summary: true

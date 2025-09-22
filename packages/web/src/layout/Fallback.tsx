@@ -1,5 +1,5 @@
 import React, { forwardRef, memo, useMemo } from 'react';
-import type { Shape } from '@coinbase/cds-common/types';
+import type { Shape } from '@cbhq/cds-common/types';
 import { css } from '@linaria/core';
 
 import type { Polymorphic } from '../core/polymorphism';

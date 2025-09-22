@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { loremIpsum } from '@coinbase/cds-common/internal/data/loremIpsum';
-import { noop } from '@coinbase/cds-utils';
+import { loremIpsum } from '@cbhq/cds-common/internal/data/loremIpsum';
+import { noop } from '@cbhq/cds-utils';
 
 import { Button } from '../../buttons/Button';
 import { CellMedia } from '../../cells';

@@ -5,7 +5,7 @@ import type {
   IllustrationPictogramNames,
   PositionStyles,
   SharedProps,
-} from '@coinbase/cds-common/types';
+} from '@cbhq/cds-common/types';
 
 import { Button } from '../buttons';
 import { Pictogram } from '../illustrations';

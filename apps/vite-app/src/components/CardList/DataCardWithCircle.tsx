@@ -1,9 +1,9 @@
-import { upsellCardDefaultWidth } from '@coinbase/cds-common/tokens/card';
-import { Button } from '@coinbase/cds-web/buttons';
-import { Card, CardBody, CardFooter } from '@coinbase/cds-web/cards';
-import { Icon } from '@coinbase/cds-web/icons';
-import { Text } from '@coinbase/cds-web/typography';
-import { ProgressCircle } from '@coinbase/cds-web/visualizations';
+import { upsellCardDefaultWidth } from '@cbhq/cds-common/tokens/card';
+import { Button } from '@cbhq/cds-web/buttons';
+import { Card, CardBody, CardFooter } from '@cbhq/cds-web/cards';
+import { Icon } from '@cbhq/cds-web/icons';
+import { Text } from '@cbhq/cds-web/typography';
+import { ProgressCircle } from '@cbhq/cds-web/visualizations';
 
 export const DataCardWithCircle = () => {
   const progress = 0.65;

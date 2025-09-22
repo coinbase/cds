@@ -1,10 +1,10 @@
-# @coinbase/ui-mobile-visreg
+# @cbhq/ui-mobile-visreg
 
-> [NPM registry](https://www.npmjs.com/package/@coinbase/ui-mobile-visreg)
+> [NPM registry](https://www.npmjs.com/package/@cbhq/ui-mobile-visreg)
 
 All notable changes to this project will be documented in this file.
 
-`@coinbase/ui-mobile-visreg` adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+`@cbhq/ui-mobile-visreg` adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 <!-- template-start -->
 

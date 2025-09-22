@@ -1,6 +1,6 @@
 import React, { memo, useCallback, useEffect, useMemo, useRef } from 'react';
 import type { Path } from 'react-native-svg';
-import { useValueChanges } from '@coinbase/cds-common/hooks/useValueChanges';
+import { useValueChanges } from '@cbhq/cds-common/hooks/useValueChanges';
 import * as interpolate from 'd3-interpolate-path';
 
 import { SparklineArea } from '../SparklineArea';

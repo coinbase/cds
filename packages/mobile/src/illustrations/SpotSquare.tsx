@@ -1,4 +1,4 @@
-import spotSquareIllustrations from '@coinbase/cds-illustrations/__generated__/spotSquare/data/svgJsMap';
+import spotSquareIllustrations from '@cbhq/cds-illustrations/__generated__/spotSquare/data/svgJsMap';
 
 import {
   createIllustration,
@@ -19,4 +19,4 @@ export type SpotSquareBaseProps = IllustrationBaseProps<'spotSquare'> &
 
 export type SpotSquareProps = SpotSquareBaseProps;
 
-export type { SpotSquareName } from '@coinbase/cds-illustrations';
+export type { SpotSquareName } from '@cbhq/cds-illustrations';

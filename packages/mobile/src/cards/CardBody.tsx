@@ -1,8 +1,8 @@
 import React, { memo, useMemo } from 'react';
 import type { PressableProps } from 'react-native';
-import { defaultMediaSize } from '@coinbase/cds-common/tokens/card';
-import type { SharedAccessibilityProps } from '@coinbase/cds-common/types';
-import type { PictogramName, SpotSquareName } from '@coinbase/cds-illustrations';
+import { defaultMediaSize } from '@cbhq/cds-common/tokens/card';
+import type { SharedAccessibilityProps } from '@cbhq/cds-common/types';
+import type { PictogramName, SpotSquareName } from '@cbhq/cds-illustrations';
 
 import { Button, type ButtonProps } from '../buttons/Button';
 import type { BoxBaseProps, BoxProps } from '../layout/Box';

@@ -5,7 +5,7 @@ import type {
   PositionStyles,
   SharedProps,
   ValidateProps,
-} from '@coinbase/cds-common/types';
+} from '@cbhq/cds-common/types';
 
 import { Button } from '../buttons';
 import { useA11yLabels } from '../hooks/useA11yLabels';

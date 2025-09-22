@@ -1,5 +1,5 @@
-import { fadeDuration } from '@coinbase/cds-common/tokens/sparkline';
-import { cubicBezier } from '@coinbase/cds-web/animation/convertMotionConfig';
+import { fadeDuration } from '@cbhq/cds-common/tokens/sparkline';
+import { cubicBezier } from '@cbhq/cds-web/animation/convertMotionConfig';
 import { css } from '@linaria/core';
 
 // keyframes are global so they should be namespaced

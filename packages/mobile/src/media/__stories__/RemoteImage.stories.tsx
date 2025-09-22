@@ -1,8 +1,8 @@
 import React from 'react';
-import type { ThemeVars } from '@coinbase/cds-common/core/theme';
-import { assets, squareAssets, svgs } from '@coinbase/cds-common/internal/data/assets';
-import { avatars, avatarSizes } from '@coinbase/cds-common/internal/data/avatars';
-import { entries } from '@coinbase/cds-utils';
+import type { ThemeVars } from '@cbhq/cds-common/core/theme';
+import { assets, squareAssets, svgs } from '@cbhq/cds-common/internal/data/assets';
+import { avatars, avatarSizes } from '@cbhq/cds-common/internal/data/avatars';
+import { entries } from '@cbhq/cds-utils';
 
 import { Example, ExampleScreen } from '../../examples/ExampleScreen';
 import { HStack } from '../../layout/HStack';

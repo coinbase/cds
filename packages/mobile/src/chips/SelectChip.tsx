@@ -1,7 +1,7 @@
 import React, { forwardRef, memo, useCallback, useEffect, useRef, useState } from 'react';
 import type { GestureResponderEvent, View } from 'react-native';
-import { animateCaretInConfig, animateCaretOutConfig } from '@coinbase/cds-common/animation/select';
-import { useMergeRefs } from '@coinbase/cds-common/hooks/useMergeRefs';
+import { animateCaretInConfig, animateCaretOutConfig } from '@cbhq/cds-common/animation/select';
+import { useMergeRefs } from '@cbhq/cds-common/hooks/useMergeRefs';
 
 import { useRotateAnimation } from '../animation/useRotateAnimation';
 import type { SelectBaseProps } from '../controls/Select';

@@ -1,5 +1,5 @@
 import { act, useCallback, useState } from 'react';
-import { withTimeTravel } from '@coinbase/cds-common/jest/timeTravel';
+import { withTimeTravel } from '@cbhq/cds-common/jest/timeTravel';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 
 import { Button } from '../../buttons';

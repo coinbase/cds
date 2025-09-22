@@ -4,7 +4,7 @@ import type {
   SpotIconName,
   SpotRectangleName,
   SpotSquareName,
-} from '@coinbase/cds-illustrations';
+} from '@cbhq/cds-illustrations';
 
 export type IllustrationVariant =
   | 'spotSquare'

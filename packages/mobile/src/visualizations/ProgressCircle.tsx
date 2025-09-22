@@ -2,12 +2,12 @@ import React, { forwardRef, memo, useEffect, useMemo, useRef } from 'react';
 import { Animated, type StyleProp, type View, type ViewStyle } from 'react-native';
 import type { CircleProps } from 'react-native-svg';
 import { Circle, G, Svg } from 'react-native-svg';
-import type { SharedProps, ThemeVars } from '@coinbase/cds-common';
-import { animateProgressBaseSpec } from '@coinbase/cds-common/animation/progress';
-import { getCircumference, getRadius } from '@coinbase/cds-common/utils/circle';
-import { getProgressCircleParams } from '@coinbase/cds-common/visualizations/getProgressCircleParams';
-import { useProgressSize } from '@coinbase/cds-common/visualizations/useProgressSize';
-import { isTest } from '@coinbase/cds-utils';
+import type { SharedProps, ThemeVars } from '@cbhq/cds-common';
+import { animateProgressBaseSpec } from '@cbhq/cds-common/animation/progress';
+import { getCircumference, getRadius } from '@cbhq/cds-common/utils/circle';
+import { getProgressCircleParams } from '@cbhq/cds-common/visualizations/getProgressCircleParams';
+import { useProgressSize } from '@cbhq/cds-common/visualizations/useProgressSize';
+import { isTest } from '@cbhq/cds-utils';
 
 import { convertMotionConfig } from '../animation/convertMotionConfig';
 import { useTheme } from '../hooks/useTheme';

@@ -1,5 +1,5 @@
 import { Animated } from 'react-native';
-import { DefaultThemeProvider } from '@coinbase/cds-mobile/utils/testHelpers';
+import { DefaultThemeProvider } from '@cbhq/cds-mobile/utils/testHelpers';
 import { renderHook } from '@testing-library/react-hooks';
 
 import { useMinMaxTransform } from '../useMinMaxTransform';

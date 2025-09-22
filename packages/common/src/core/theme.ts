@@ -221,7 +221,7 @@ export namespace ThemeVarsDefault {
   }
 }
 
-declare module '@coinbase/cds-common/core/theme' {
+declare module '@cbhq/cds-common/core/theme' {
   /**
    * Override interfaces in this namespace to add new variables to the ThemeVars
    * namespace, making their types available to all CDS components. Only the

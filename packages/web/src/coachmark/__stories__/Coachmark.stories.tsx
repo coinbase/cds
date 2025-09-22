@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { ethBackground } from '@coinbase/cds-common/internal/data/assets';
-import { noop } from '@coinbase/cds-utils';
+import { ethBackground } from '@cbhq/cds-common/internal/data/assets';
+import { noop } from '@cbhq/cds-utils';
 
 import { Button } from '../../buttons';
 import { Checkbox } from '../../controls';

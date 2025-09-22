@@ -1,4 +1,4 @@
-import { DefaultThemeProvider } from '@coinbase/cds-mobile/utils/testHelpers';
+import { DefaultThemeProvider } from '@cbhq/cds-mobile/utils/testHelpers';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 
 import { SparklineInteractivePeriodSelector } from '../SparklineInteractivePeriodSelector';

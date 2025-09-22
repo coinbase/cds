@@ -1,10 +1,10 @@
-# @coinbase/eslint-plugin-cds
+# @cbhq/eslint-plugin-cds
 
-> [NPM registry](https://www.npmjs.com/package/@coinbase/eslint-plugin-cds)
+> [NPM registry](https://www.npmjs.com/package/@cbhq/eslint-plugin-cds)
 
 All notable changes to this project will be documented in this file.
 
-`@coinbase/eslint-plugin-cds` adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+`@cbhq/eslint-plugin-cds` adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 <!-- template-start -->
 

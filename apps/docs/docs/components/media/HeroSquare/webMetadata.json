@@ -1,5 +1,5 @@
 {
-  "import": "import { HeroSquare } from '@coinbase/cds-web/illustrations/HeroSquare'",
+  "import": "import { HeroSquare } from '@cbhq/cds-web/illustrations/HeroSquare'",
   "changelog": "https://github.com/coinbase/cds-staging/blob/master/packages/illustrations/CHANGELOG.md",
   "source": "https://github.com/coinbase/cds-staging/blob/master/packages/web/src/illustrations/HeroSquare.tsx",
   "storybook": "https://cds-storybook.coinbase.com/?path=/story/core-components-herosquare--default",

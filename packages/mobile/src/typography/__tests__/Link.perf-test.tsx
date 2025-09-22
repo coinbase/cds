@@ -1,5 +1,5 @@
 /* eslint-disable jest/expect-expect */
-import { NoopFn } from '@coinbase/cds-common/utils/mockUtils';
+import { NoopFn } from '@cbhq/cds-common/utils/mockUtils';
 import { measurePerformance } from 'reassure';
 
 import { Link } from '../Link';

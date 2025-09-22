@@ -1,5 +1,5 @@
 import React, { forwardRef, memo } from 'react';
-import type { SharedProps } from '@coinbase/cds-common/types';
+import type { SharedProps } from '@cbhq/cds-common/types';
 
 import type { Polymorphic } from '../../core/polymorphism';
 import { Box, type BoxBaseProps, HStack, VStack } from '../../layout';

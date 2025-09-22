@@ -1,4 +1,4 @@
-import type { IconName } from '@coinbase/cds-icons';
+import type { IconName } from '@cbhq/cds-icons';
 
 import type { SharedAccessibilityProps } from './SharedAccessibilityProps';
 import type { SharedProps } from './SharedProps';

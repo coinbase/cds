@@ -1,5 +1,5 @@
 {
-  "import": "import { TileButton } from '@coinbase/cds-web/buttons/TileButton'",
+  "import": "import { TileButton } from '@cbhq/cds-web/buttons/TileButton'",
   "source": "https://github.com/coinbase/cds-staging/blob/master/packages/web/src/buttons/TileButton.tsx",
   "storybook": "https://cds-storybook.coinbase.com/?path=/story/core-components-buttons-tilebutton--tile-button-pictogram",
   "description": "A pressable tile component that displays a pictogram or custom content with a title and optional count. Used for grid-based navigation and quick actions.",

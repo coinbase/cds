@@ -1,0 +1,26 @@
+name: PR (github.cbhq.net)
+on:
+  pull_request:
+    branches: master
+
+concurrency:
+  group: PR-${{github.event.pull_request.number}}
+  cancel-in-progress: true
+
+jobs:
+  labeler:
+    name: 'Pull Request Labeler'
+    runs-on: [default-config, small, frontend-org-runner, amd64]
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Generate dynamic labels
+        run: |
+          chmod +x ./tools/ci/list-directories.sh
+          ./tools/ci/list-directories.sh >> .github/labeler.yml
+      - name: Print .github/labeler.yml contents
+        run: cat .github/labeler.yml
+      - uses: actions/pull-request-labeler@commit-8558fd74291d67161a8a78ce36a881fa63b766a9

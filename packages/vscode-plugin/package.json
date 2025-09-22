@@ -1,8 +1,8 @@
 {
-  "name": "@coinbase/cds-vscode-plugin",
+  "name": "@cbhq/cds-vscode-plugin",
   "version": "0.0.0",
   "private": true,
-  "displayName": "@coinbase/cds-vscode-plugin",
+  "displayName": "@cbhq/cds-vscode-plugin",
   "description": "VSCode Plugin for building with the Coinbase Design System",
   "repository": {
     "type": "git",

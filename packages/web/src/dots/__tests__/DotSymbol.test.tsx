@@ -1,4 +1,4 @@
-import { renderA11y } from '@coinbase/cds-web-utils/jest';
+import { renderA11y } from '@cbhq/cds-web-utils/jest';
 import { render, screen, within } from '@testing-library/react';
 
 import { DotSymbol } from '../DotSymbol';

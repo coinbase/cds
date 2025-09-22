@@ -1,10 +1,10 @@
-# @coinbase/cds-utils
+# @cbhq/cds-utils
 
-> [NPM registry](https://www.npmjs.com/package/@coinbase/cds-utils)
+> [NPM registry](https://www.npmjs.com/package/@cbhq/cds-utils)
 
 All notable changes to this project will be documented in this file.
 
-`@coinbase/cds-utils` adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+`@cbhq/cds-utils` adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 <!-- template-start -->
 

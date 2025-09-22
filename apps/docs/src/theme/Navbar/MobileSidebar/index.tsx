@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef } from 'react';
-import { FocusTrap } from '@coinbase/cds-web/overlays/FocusTrap';
+import { FocusTrap } from '@cbhq/cds-web/overlays/FocusTrap';
 import { useLockBodyScroll, useNavbarMobileSidebar } from '@docusaurus/theme-common/internal';
 import { useWindowSizeWithBreakpointOverride } from '@site/src/utils/useWindowSizeWithBreakpointOverride';
 import NavbarMobileSidebarHeader from '@theme/Navbar/MobileSidebar/Header';

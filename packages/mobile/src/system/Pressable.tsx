@@ -6,8 +6,8 @@ import {
   type PressableProps as NativePressableProps,
   type View,
 } from 'react-native';
-import type { ComponentEventHandlerProps, ValidateProps } from '@coinbase/cds-common';
-import { useEventHandler } from '@coinbase/cds-common/hooks/useEventHandler';
+import type { ComponentEventHandlerProps, ValidateProps } from '@cbhq/cds-common';
+import { useEventHandler } from '@cbhq/cds-common/hooks/useEventHandler';
 
 import { usePressAnimation } from '../hooks/usePressAnimation';
 import { Haptics } from '../utils/haptics';

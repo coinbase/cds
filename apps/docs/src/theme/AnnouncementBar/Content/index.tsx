@@ -1,5 +1,5 @@
 import { type ReactNode } from 'react';
-import { Text } from '@coinbase/cds-web/typography';
+import { Text } from '@cbhq/cds-web/typography';
 import { useThemeConfig } from '@docusaurus/theme-common';
 
 import styles from './styles.module.css';

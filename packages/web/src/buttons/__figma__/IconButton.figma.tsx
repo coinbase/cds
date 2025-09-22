@@ -7,7 +7,7 @@ figma.connect(
   IconButton,
   'https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/✨-CDS-Components?node-id=47-358&m=dev',
   {
-    imports: ["import {IconButton} from '@coinbase/cds-web/buttons/IconButton';"],
+    imports: ["import {IconButton} from '@cbhq/cds-web/buttons/IconButton';"],
     props: {
       // name: figma.instance('icon'),
       variant: figma.enum('variant', {

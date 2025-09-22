@@ -1,7 +1,7 @@
 import React, { memo, useMemo } from 'react';
-import type { AvatarSize } from '@coinbase/cds-common';
-import type { ThemeVars } from '@coinbase/cds-common/core/theme';
-import type { AvatarFallbackColor, AvatarShape, SharedProps } from '@coinbase/cds-common/types';
+import type { AvatarSize } from '@cbhq/cds-common';
+import type { ThemeVars } from '@cbhq/cds-common/core/theme';
+import type { AvatarFallbackColor, AvatarShape, SharedProps } from '@cbhq/cds-common/types';
 import { css, type LinariaClassName } from '@linaria/core';
 
 import { cx } from '../cx';

@@ -1,8 +1,8 @@
 import React from 'react';
 import useMeasure from 'react-use-measure';
-import { useRefMap } from '@coinbase/cds-common/hooks/useRefMap';
-import { TabsContext } from '@coinbase/cds-common/tabs/TabsContext';
-import { renderA11y } from '@coinbase/cds-web-utils';
+import { useRefMap } from '@cbhq/cds-common/hooks/useRefMap';
+import { TabsContext } from '@cbhq/cds-common/tabs/TabsContext';
+import { renderA11y } from '@cbhq/cds-web-utils';
 import { fireEvent, render, screen } from '@testing-library/react';
 
 import { Text } from '../../typography/Text';
@@ -18,7 +18,7 @@ const tabs = [
 ];
 
 jest.mock('react-use-measure');
-jest.mock('@coinbase/cds-common/hooks/useRefMap');
+jest.mock('@cbhq/cds-common/hooks/useRefMap');
 
 const mockUseMeasure = (mocks: Partial<ReturnType<typeof useMeasure>>) => {
   (useMeasure as jest.Mock).mockReturnValue(mocks);

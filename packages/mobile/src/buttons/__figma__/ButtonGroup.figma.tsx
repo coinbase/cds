@@ -7,7 +7,7 @@ figma.connect(
   ButtonGroup,
   'https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/✨-CDS-Components?node-id=283-19617&m=dev',
   {
-    imports: ["import {ButtonGroup} from '@coinbase/cds-mobile/buttons/ButtonGroup'"],
+    imports: ["import {ButtonGroup} from '@cbhq/cds-mobile/buttons/ButtonGroup'"],
     props: {
       direction: figma.enum('orientation', {
         stacked: 'vertical',

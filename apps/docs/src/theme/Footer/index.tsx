@@ -1,6 +1,6 @@
 import React from 'react';
-import { Box, HStack, VStack } from '@coinbase/cds-web/layout';
-import { Text } from '@coinbase/cds-web/typography';
+import { Box, HStack, VStack } from '@cbhq/cds-web/layout';
+import { Text } from '@cbhq/cds-web/typography';
 import type { FooterLinkItem } from '@docusaurus/theme-common';
 import { useThemeConfig } from '@docusaurus/theme-common';
 import { FooterLink } from '@site/src/components/FooterLink';

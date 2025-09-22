@@ -47,7 +47,7 @@ jobs:
         # Do not run affected tests when the run-all `visreg` label is present
         if: ${{ github.event_name == 'pull_request' && !contains(github.event.pull_request.labels.*.name, 'visreg') }}
         run: |
-          if yarn workspace @coinbase/cds-storybook should-run-visreg; then
+          if yarn workspace @cbhq/cds-storybook should-run-visreg; then
             echo "Storybook changes detected, running Visreg Web Percy run"
             echo "SHOULD_RUN_VISREG=true" >> "$GITHUB_OUTPUT"
           else

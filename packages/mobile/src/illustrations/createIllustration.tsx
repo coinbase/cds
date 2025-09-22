@@ -1,26 +1,26 @@
 import React, { memo, useMemo } from 'react';
 import type { AccessibilityProps } from 'react-native';
 import { SvgXml } from 'react-native-svg';
-import type { IllustrationVariant } from '@coinbase/cds-common/types/IllustrationNames';
+import type { IllustrationVariant } from '@cbhq/cds-common/types/IllustrationNames';
 import type {
   HeroSquareDimension,
   PictogramDimension,
   SpotIconDimension,
   SpotRectangleDimension,
   SpotSquareDimension,
-} from '@coinbase/cds-common/types/IllustrationProps';
-import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
-import { convertDimensionToSize } from '@coinbase/cds-common/utils/convertDimensionToSize';
-import { convertSizeWithMultiplier } from '@coinbase/cds-common/utils/convertSizeWithMultiplier';
-import { getDefaultSizeObjectForIllustration } from '@coinbase/cds-common/utils/getDefaultSizeObjectForIllustration';
+} from '@cbhq/cds-common/types/IllustrationProps';
+import type { SharedProps } from '@cbhq/cds-common/types/SharedProps';
+import { convertDimensionToSize } from '@cbhq/cds-common/utils/convertDimensionToSize';
+import { convertSizeWithMultiplier } from '@cbhq/cds-common/utils/convertSizeWithMultiplier';
+import { getDefaultSizeObjectForIllustration } from '@cbhq/cds-common/utils/getDefaultSizeObjectForIllustration';
 import type {
   HeroSquareName,
   PictogramName,
   SpotIconName,
   SpotRectangleName,
   SpotSquareName,
-} from '@coinbase/cds-illustrations';
-import { isDevelopment } from '@coinbase/cds-utils';
+} from '@cbhq/cds-illustrations';
+import { isDevelopment } from '@cbhq/cds-utils';
 
 import { useTheme } from '../hooks/useTheme';
 

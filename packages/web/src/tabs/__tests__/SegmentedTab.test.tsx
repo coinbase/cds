@@ -1,6 +1,6 @@
 import React from 'react';
-import { TabsContext } from '@coinbase/cds-common/tabs/TabsContext';
-import { renderA11y } from '@coinbase/cds-web-utils';
+import { TabsContext } from '@cbhq/cds-common/tabs/TabsContext';
+import { renderA11y } from '@cbhq/cds-web-utils';
 import { fireEvent, render, screen } from '@testing-library/react';
 
 import { Text } from '../../typography/Text';

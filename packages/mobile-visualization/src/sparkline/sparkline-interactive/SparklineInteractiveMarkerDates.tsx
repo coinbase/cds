@@ -1,11 +1,11 @@
 import React, { memo, useMemo } from 'react';
 import { Animated, StyleSheet } from 'react-native';
 import type { ViewStyle } from 'react-native';
-import type { ThemeVars } from '@coinbase/cds-common/core/theme';
-import { useDateLookup } from '@coinbase/cds-common/visualizations/useDateLookup';
-import { useLayout } from '@coinbase/cds-mobile/hooks/useLayout';
-import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
-import { TextLabel2 } from '@coinbase/cds-mobile/typography';
+import type { ThemeVars } from '@cbhq/cds-common/core/theme';
+import { useDateLookup } from '@cbhq/cds-common/visualizations/useDateLookup';
+import { useLayout } from '@cbhq/cds-mobile/hooks/useLayout';
+import { useTheme } from '@cbhq/cds-mobile/hooks/useTheme';
+import { TextLabel2 } from '@cbhq/cds-mobile/typography';
 import times from 'lodash/times';
 
 import type { ChartFormatDate, ChartGetMarker } from './SparklineInteractive';

@@ -1,11 +1,11 @@
 import React, { memo, useCallback, useEffect, useMemo, useRef } from 'react';
 import { G, Path, Svg } from 'react-native-svg';
-import { borderWidth } from '@coinbase/cds-common/tokens/sparkline';
-import type { ChartDataPoint, ChartTimeseries } from '@coinbase/cds-common/types';
-import { getAccessibleColor } from '@coinbase/cds-common/utils/getAccessibleColor';
-import { getSparklineTransform } from '@coinbase/cds-common/visualizations/getSparklineTransform';
-import { useTimeseriesPaths } from '@coinbase/cds-common/visualizations/useTimeseriesPaths';
-import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
+import { borderWidth } from '@cbhq/cds-common/tokens/sparkline';
+import type { ChartDataPoint, ChartTimeseries } from '@cbhq/cds-common/types';
+import { getAccessibleColor } from '@cbhq/cds-common/utils/getAccessibleColor';
+import { getSparklineTransform } from '@cbhq/cds-common/visualizations/getSparklineTransform';
+import { useTimeseriesPaths } from '@cbhq/cds-common/visualizations/useTimeseriesPaths';
+import { useTheme } from '@cbhq/cds-mobile/hooks/useTheme';
 import * as interpolate from 'd3-interpolate-path';
 import type { Area, Line } from 'd3-shape';
 

@@ -42,7 +42,7 @@ figma.connect(
   ComponentName,
   'https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/✨-CDS-Components?node-id=REPLACE_WITH_ACTUAL_NODE_ID&m=dev',
   {
-    imports: ["import { ComponentName } from '@coinbase/cds-PLATFORM/CATEGORY/ComponentName';"],
+    imports: ["import { ComponentName } from '@cbhq/cds-PLATFORM/CATEGORY/ComponentName';"],
     props: {
       // Map Figma properties to component props
       // Use figma.enum() for dropdown/variant properties
@@ -74,13 +74,13 @@ figma.connect(
 
 ### Web Components
 
-- Import path format: `@coinbase/cds-web/[category]/[ComponentName]`
+- Import path format: `@cbhq/cds-web/[category]/[ComponentName]`
 - NO React import needed (already available globally)
 - Use web-specific prop names and values
 
 ### Mobile Components
 
-- Import path format: `@coinbase/cds-mobile/[category]/[ComponentName]`
+- Import path format: `@cbhq/cds-mobile/[category]/[ComponentName]`
 - MUST include `import React from 'react';` at the top
 - Use mobile-specific prop names and values
 - Consider React Native specific properties

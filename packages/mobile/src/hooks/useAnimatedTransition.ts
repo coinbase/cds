@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { Animated } from 'react-native';
-import { usePreviousValues } from '@coinbase/cds-common/hooks/usePreviousValues';
-import type { MotionBaseSpec } from '@coinbase/cds-common/types';
+import { usePreviousValues } from '@cbhq/cds-common/hooks/usePreviousValues';
+import type { MotionBaseSpec } from '@cbhq/cds-common/types';
 
 import { convertMotionConfig } from '../animation/convertMotionConfig';
 

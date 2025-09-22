@@ -1,6 +1,6 @@
 import React, { forwardRef, memo, useMemo } from 'react';
-import { transparentVariants, variants } from '@coinbase/cds-common/tokens/button';
-import type { IconButtonVariant, IconName } from '@coinbase/cds-common/types';
+import { transparentVariants, variants } from '@cbhq/cds-common/tokens/button';
+import type { IconButtonVariant, IconName } from '@cbhq/cds-common/types';
 import { css } from '@linaria/core';
 
 import type { Polymorphic } from '../core/polymorphism';

@@ -1,8 +1,8 @@
 import React, { forwardRef, memo, useCallback, useImperativeHandle } from 'react';
-import { getLottieMarkers } from '@coinbase/cds-common/lottie/lottieUtils';
-import type { LottiePlayer } from '@coinbase/cds-common/types/LottiePlayer';
-import type { LottieMarkersAsMap, LottieSource } from '@coinbase/cds-common/types/LottieSource';
-import { noop } from '@coinbase/cds-utils';
+import { getLottieMarkers } from '@cbhq/cds-common/lottie/lottieUtils';
+import type { LottiePlayer } from '@cbhq/cds-common/types/LottiePlayer';
+import type { LottieMarkersAsMap, LottieSource } from '@cbhq/cds-common/types/LottieSource';
+import { noop } from '@cbhq/cds-utils';
 import { css } from '@linaria/core';
 
 import { Box } from '../layout/Box';

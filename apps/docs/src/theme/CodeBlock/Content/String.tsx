@@ -1,8 +1,8 @@
 import React, { type ReactNode } from 'react';
-import { cx } from '@coinbase/cds-web';
-import { Box, Divider, HStack, VStack } from '@coinbase/cds-web/layout';
-import { ThemeProvider } from '@coinbase/cds-web/system/ThemeProvider';
-import { Text } from '@coinbase/cds-web/typography';
+import { cx } from '@cbhq/cds-web';
+import { Box, Divider, HStack, VStack } from '@cbhq/cds-web/layout';
+import { ThemeProvider } from '@cbhq/cds-web/system/ThemeProvider';
+import { Text } from '@cbhq/cds-web/typography';
 import { useThemeConfig } from '@docusaurus/theme-common';
 import {
   containsLineNumbers,

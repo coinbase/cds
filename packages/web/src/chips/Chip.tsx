@@ -1,6 +1,6 @@
 import React, { forwardRef, Fragment, memo } from 'react';
-import { curves, durations } from '@coinbase/cds-common/motion/tokens';
-import { chipMaxWidth } from '@coinbase/cds-common/tokens/chip';
+import { curves, durations } from '@cbhq/cds-common/motion/tokens';
+import { chipMaxWidth } from '@cbhq/cds-common/tokens/chip';
 import { css } from '@linaria/core';
 
 import { Box, HStack } from '../layout';

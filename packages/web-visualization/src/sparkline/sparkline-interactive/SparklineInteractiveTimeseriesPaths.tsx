@@ -1,10 +1,10 @@
 import React, { memo, useCallback, useEffect, useMemo, useRef } from 'react';
-import { animatedPathConfig } from '@coinbase/cds-common/animation/sparkline';
-import type { ChartDataPoint, ChartTimeseries } from '@coinbase/cds-common/types';
-import { getAccessibleColor } from '@coinbase/cds-common/utils/getAccessibleColor';
-import { getSparklineTransform } from '@coinbase/cds-common/visualizations/getSparklineTransform';
-import { useTimeseriesPaths } from '@coinbase/cds-common/visualizations/useTimeseriesPaths';
-import { useTheme } from '@coinbase/cds-web/hooks/useTheme';
+import { animatedPathConfig } from '@cbhq/cds-common/animation/sparkline';
+import type { ChartDataPoint, ChartTimeseries } from '@cbhq/cds-common/types';
+import { getAccessibleColor } from '@cbhq/cds-common/utils/getAccessibleColor';
+import { getSparklineTransform } from '@cbhq/cds-common/visualizations/getSparklineTransform';
+import { useTimeseriesPaths } from '@cbhq/cds-common/visualizations/useTimeseriesPaths';
+import { useTheme } from '@cbhq/cds-web/hooks/useTheme';
 import { interpolatePath } from 'd3-interpolate-path';
 import { select } from 'd3-selection';
 import type { Area, Line } from 'd3-shape';

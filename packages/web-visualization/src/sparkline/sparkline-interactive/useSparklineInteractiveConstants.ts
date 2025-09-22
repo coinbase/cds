@@ -3,7 +3,7 @@ import {
   borderWidth,
   chartCompactHeight,
   chartHeight as chartHeightToken,
-} from '@coinbase/cds-common/tokens/sparkline';
+} from '@cbhq/cds-common/tokens/sparkline';
 
 import { useSparklineInteractiveContext } from './SparklineInteractiveProvider';
 

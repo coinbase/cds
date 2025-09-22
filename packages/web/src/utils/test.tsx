@@ -1,5 +1,5 @@
 import React from 'react';
-import type { ColorScheme } from '@coinbase/cds-common/core/theme';
+import type { ColorScheme } from '@cbhq/cds-common/core/theme';
 import type { waitForOptions } from '@testing-library/react';
 import { waitFor } from '@testing-library/react';
 

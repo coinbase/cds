@@ -1,7 +1,7 @@
 import React, { forwardRef, memo, useMemo } from 'react';
-import type { ThemeVars } from '@coinbase/cds-common/core/theme';
-import type { CellPriority } from '@coinbase/cds-common/types';
-import { hasCellPriority } from '@coinbase/cds-common/utils/cell';
+import type { ThemeVars } from '@cbhq/cds-common/core/theme';
+import type { CellPriority } from '@cbhq/cds-common/types';
+import { hasCellPriority } from '@cbhq/cds-common/utils/cell';
 import { css } from '@linaria/core';
 
 import type { Polymorphic } from '../core/polymorphism';

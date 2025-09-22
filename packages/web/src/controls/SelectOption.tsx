@@ -1,6 +1,6 @@
 import React, { memo, useCallback, useEffect, useRef } from 'react';
-import { selectCellSpacingConfig } from '@coinbase/cds-common/tokens/select';
-import type { SharedAccessibilityProps } from '@coinbase/cds-common/types';
+import { selectCellSpacingConfig } from '@cbhq/cds-common/tokens/select';
+import type { SharedAccessibilityProps } from '@cbhq/cds-common/types';
 import { css } from '@linaria/core';
 
 import { Cell, type CellBaseProps } from '../cells/Cell';

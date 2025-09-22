@@ -10,5 +10,5 @@ You will need to run `npx react-native link` to link the assets for Android and 
 
 ### Outside mono/repo
 
-- Install package with `yarn add @coinbase/cds-mobile`.
-- Update `react-native.config.js` to include icon font in assets, i.e. `assets: ['./node_modules/@coinbase/cds-mobile/icons/font']`.
+- Install package with `yarn add @cbhq/cds-mobile`.
+- Update `react-native.config.js` to include icon font in assets, i.e. `assets: ['./node_modules/@cbhq/cds-mobile/icons/font']`.

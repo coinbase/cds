@@ -4,8 +4,8 @@ import {
   containedAssetCardLargeDimension,
   containedAssetCardLargeWidth,
   containedAssetCardSmallDimension,
-} from '@coinbase/cds-common/tokens/card';
-import type { SharedProps } from '@coinbase/cds-common/types';
+} from '@cbhq/cds-common/tokens/card';
+import type { SharedProps } from '@cbhq/cds-common/types';
 
 import type { HStackProps } from '../layout';
 import { HStack, VStack } from '../layout';

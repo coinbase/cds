@@ -1,0 +1,63 @@
+# TODO: Delete this file for open source
+name: Visreg Web (github.cbhq.net)
+on:
+  push:
+    branches: [master]
+  pull_request:
+    types: [opened, synchronize, reopened, labeled, unlabeled]
+    branches: [master]
+
+concurrency:
+  group: Visreg-Web-${{github.ref_name}}-${{github.event.pull_request.number || github.sha}}
+  cancel-in-progress: ${{github.event_name == 'pull_request'}}
+
+env:
+  CI: true
+  PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
+
+jobs:
+  visreg-web:
+    name: Visreg Web
+    runs-on: [large, amd64]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 100 # TODO: This needs to include the merge-base
+          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }} # Ensure correct ref for push/PR
+      - uses: infra/cb-action-config-service@master # TODO: Fix for OPEN_SOURCE
+        with: { scope: 'actions-context/cds/percy-web-' }
+      - uses: ./.github/actions/setup-internal
+      - name: Set branch name for Percy
+        id: set_branch
+        run: |
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            echo "PERCY_BRANCH=${{ github.head_ref }}" >> "$GITHUB_ENV"
+          else
+            echo "PERCY_BRANCH=${{ github.ref_name }}" >> "$GITHUB_ENV"
+          fi
+      - name: Evaluate Visreg Web Should Run
+        id: visreg-should-run
+        # Do not run affected tests when the run-all `visreg` label is present
+        if: ${{ github.event_name == 'pull_request' && !contains(github.event.pull_request.labels.*.name, 'visreg') }}
+        run: |
+          if yarn workspace @cbhq/cds-storybook should-run-visreg; then
+            echo "Storybook changes detected, running Visreg Web Percy run"
+            echo "SHOULD_RUN_VISREG=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "No storybook changes detected, skipping Visreg Web Percy run"
+            echo "SHOULD_RUN_VISREG=false" >> "$GITHUB_OUTPUT"
+          fi
+        shell: bash
+      - name: Visreg Web
+        # Run on `master` or when `visreg` label is present, or when an project that affects storybook is changed
+        if: ${{ github.event_name == 'push' || contains(github.event.pull_request.labels.*.name, 'visreg') || steps.visreg-should-run.outputs.SHOULD_RUN_VISREG == 'true' }}
+        uses: infra/cb-action-docker@master # TODO: Fix for OPEN_SOURCE
+        with:
+          image: 652969937640.dkr.ecr.us-east-1.amazonaws.com/containers/node:v22-chrome-ub22
+          command: |-
+            yarn nx run storybook:percy
+          environment: |-
+            STORYBOOK_SKIP_ANIMATION=true
+            PERCY_TOKEN="${{ env.PERCY_TOKEN }}"
+            PERCY_BRANCH=${{ env.PERCY_BRANCH }}
+            CI=true

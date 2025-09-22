@@ -1,12 +1,12 @@
 import React, { memo, useEffect, useMemo } from 'react';
 import { createPortal } from 'react-dom';
-import { PortalContext } from '@coinbase/cds-common/overlays/PortalContext';
-import type { ToastProviderProps } from '@coinbase/cds-common/overlays/ToastProvider';
-import { ToastProvider } from '@coinbase/cds-common/overlays/ToastProvider';
-import { usePortal } from '@coinbase/cds-common/overlays/usePortal';
-import type { PortalNode } from '@coinbase/cds-common/overlays/usePortalState';
-import { usePortalState } from '@coinbase/cds-common/overlays/usePortalState';
-import { zIndex } from '@coinbase/cds-common/tokens/zIndex';
+import { PortalContext } from '@cbhq/cds-common/overlays/PortalContext';
+import type { ToastProviderProps } from '@cbhq/cds-common/overlays/ToastProvider';
+import { ToastProvider } from '@cbhq/cds-common/overlays/ToastProvider';
+import { usePortal } from '@cbhq/cds-common/overlays/usePortal';
+import type { PortalNode } from '@cbhq/cds-common/overlays/usePortalState';
+import { usePortalState } from '@cbhq/cds-common/overlays/usePortalState';
+import { zIndex } from '@cbhq/cds-common/tokens/zIndex';
 
 import { IsoHexagonClipPath } from '../media/Hexagon';
 import { BrowserOnly } from '../system/BrowserOnly';

@@ -1,8 +1,8 @@
 import { useMemo, useRef } from 'react';
-import { useDimensions } from '@coinbase/cds-web/hooks/useDimensions';
-import { HStack } from '@coinbase/cds-web/layout/HStack';
-import { Tooltip } from '@coinbase/cds-web/overlays/tooltip/Tooltip';
-import { Text } from '@coinbase/cds-web/typography/Text';
+import { useDimensions } from '@cbhq/cds-web/hooks/useDimensions';
+import { HStack } from '@cbhq/cds-web/layout/HStack';
+import { Tooltip } from '@cbhq/cds-web/overlays/tooltip/Tooltip';
+import { Text } from '@cbhq/cds-web/typography/Text';
 import { useThemeConfig } from '@docusaurus/theme-common';
 import NavbarThemeToggle from '@site/src/components/nav/NavbarThemeToggle';
 import { useCDSVersions } from '@site/src/hooks/useCDSVersions';
@@ -56,13 +56,13 @@ export default function NavbarContent(): JSX.Element {
       top="calc(var(--space-1) * -0.5)"
       width={260}
     >
-      <Text>@coinbase/cds-common@{cdsCommonVersion}</Text>
-      <Text>@coinbase/cds-mobile@{cdsCommonVersion}</Text>
-      <Text>@coinbase/cds-web@{cdsCommonVersion}</Text>
-      <Text>@coinbase/cds-icons@{cdsIconsVersion}</Text>
-      <Text>@coinbase/cds-illustrations@{cdsIllustrationsVersion}</Text>
-      <Text>@coinbase/cds-mobile-visualization@{cdsMobileVisualizationVersion}</Text>
-      <Text>@coinbase/cds-web-visualization@{cdsWebVisualizationVersion}</Text>
+      <Text>@cbhq/cds-common@{cdsCommonVersion}</Text>
+      <Text>@cbhq/cds-mobile@{cdsCommonVersion}</Text>
+      <Text>@cbhq/cds-web@{cdsCommonVersion}</Text>
+      <Text>@cbhq/cds-icons@{cdsIconsVersion}</Text>
+      <Text>@cbhq/cds-illustrations@{cdsIllustrationsVersion}</Text>
+      <Text>@cbhq/cds-mobile-visualization@{cdsMobileVisualizationVersion}</Text>
+      <Text>@cbhq/cds-web-visualization@{cdsWebVisualizationVersion}</Text>
     </Text>
   );
 

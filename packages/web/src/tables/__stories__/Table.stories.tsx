@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react';
-import { useSort } from '@coinbase/cds-common/hooks/useSort';
-import { useToggler } from '@coinbase/cds-common/hooks/useToggler';
+import { useSort } from '@cbhq/cds-common/hooks/useSort';
+import { useToggler } from '@cbhq/cds-common/hooks/useToggler';
 import type { Meta } from '@storybook/react';
 import startCase from 'lodash/startCase';
 

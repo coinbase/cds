@@ -1,12 +1,12 @@
 import React, { useCallback, useEffect, useMemo } from 'react';
-import type { IconName } from '@coinbase/cds-common/types';
-import { cx } from '@coinbase/cds-web';
-import { Collapsible } from '@coinbase/cds-web/collapsible';
-import { Icon } from '@coinbase/cds-web/icons/Icon';
-import { Box, VStack } from '@coinbase/cds-web/layout';
-import { HStack } from '@coinbase/cds-web/layout/HStack';
-import { Pressable } from '@coinbase/cds-web/system/Pressable';
-import { Text } from '@coinbase/cds-web/typography/Text';
+import type { IconName } from '@cbhq/cds-common/types';
+import { cx } from '@cbhq/cds-web';
+import { Collapsible } from '@cbhq/cds-web/collapsible';
+import { Icon } from '@cbhq/cds-web/icons/Icon';
+import { Box, VStack } from '@cbhq/cds-web/layout';
+import { HStack } from '@cbhq/cds-web/layout/HStack';
+import { Pressable } from '@cbhq/cds-web/system/Pressable';
+import { Text } from '@cbhq/cds-web/typography/Text';
 import Link from '@docusaurus/Link';
 import {
   findFirstSidebarItemLink,

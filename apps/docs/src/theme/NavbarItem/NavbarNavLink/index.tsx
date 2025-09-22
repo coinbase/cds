@@ -1,7 +1,7 @@
 import React from 'react';
-import { cx } from '@coinbase/cds-web';
-import { Box } from '@coinbase/cds-web/layout';
-import { Pressable } from '@coinbase/cds-web/system/Pressable';
+import { cx } from '@cbhq/cds-web';
+import { Box } from '@cbhq/cds-web/layout';
+import { Pressable } from '@cbhq/cds-web/system/Pressable';
 import type { Props as DocusaurusLinkProps } from '@docusaurus/Link';
 import Link from '@docusaurus/Link';
 import { isRegexpStringMatch } from '@docusaurus/theme-common';

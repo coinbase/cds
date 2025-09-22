@@ -1,5 +1,5 @@
 import React, { memo, useEffect, useState } from 'react';
-import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
+import type { SharedProps } from '@cbhq/cds-common/types/SharedProps';
 
 export type CircularProgressProps = {
   /** Radius of circular progress */

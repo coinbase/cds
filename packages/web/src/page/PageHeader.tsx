@@ -1,7 +1,7 @@
 import React, { forwardRef, memo, useMemo } from 'react';
-import type { ThemeVars } from '@coinbase/cds-common/core/theme';
-import { pageHeaderHeight } from '@coinbase/cds-common/tokens/page';
-import type { PositionStyles, SharedProps } from '@coinbase/cds-common/types';
+import type { ThemeVars } from '@cbhq/cds-common/core/theme';
+import { pageHeaderHeight } from '@cbhq/cds-common/tokens/page';
+import type { PositionStyles, SharedProps } from '@cbhq/cds-common/types';
 import { css } from '@linaria/core';
 
 import type { Polymorphic } from '../core/polymorphism';

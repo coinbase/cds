@@ -1,5 +1,5 @@
 import React from 'react';
-import { VStack } from '@coinbase/cds-web/layout';
+import { VStack } from '@cbhq/cds-web/layout';
 import type { Props } from '@theme/Navbar/MobileSidebar/Layout';
 
 export default function NavbarMobileSidebarLayout({

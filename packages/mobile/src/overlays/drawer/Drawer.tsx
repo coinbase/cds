@@ -12,16 +12,16 @@ import type { ModalProps } from 'react-native';
 import {
   drawerAnimationDefaultDuration,
   MAX_OVER_DRAG,
-} from '@coinbase/cds-common/animation/drawer';
+} from '@cbhq/cds-common/animation/drawer';
 import {
   OverlayContentContext,
   type OverlayContentContextValue,
-} from '@coinbase/cds-common/overlays/OverlayContentContext';
+} from '@cbhq/cds-common/overlays/OverlayContentContext';
 import {
   horizontalDrawerPercentageOfView,
   verticalDrawerPercentageOfView as defaultVerticalDrawerPercentageOfView,
-} from '@coinbase/cds-common/tokens/drawer';
-import type { PinningDirection, SharedProps } from '@coinbase/cds-common/types';
+} from '@cbhq/cds-common/tokens/drawer';
+import type { PinningDirection, SharedProps } from '@cbhq/cds-common/types';
 
 import { useTheme } from '../../hooks/useTheme';
 import { Box } from '../../layout/Box';

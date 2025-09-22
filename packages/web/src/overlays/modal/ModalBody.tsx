@@ -1,5 +1,5 @@
 import React, { forwardRef } from 'react';
-import { useModalContext } from '@coinbase/cds-common/overlays/ModalContext';
+import { useModalContext } from '@cbhq/cds-common/overlays/ModalContext';
 
 import { Box, type BoxDefaultElement, type BoxProps } from '../../layout/Box';
 

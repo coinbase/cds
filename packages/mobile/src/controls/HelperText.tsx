@@ -1,6 +1,6 @@
 import React, { memo, useMemo } from 'react';
-import type { ThemeVars } from '@coinbase/cds-common/core/theme';
-import { glyphMap } from '@coinbase/cds-icons/glyphMap';
+import type { ThemeVars } from '@cbhq/cds-common/core/theme';
+import { glyphMap } from '@cbhq/cds-icons/glyphMap';
 
 import { useTheme } from '../hooks/useTheme';
 import { getIconSourceSize } from '../icons/Icon';

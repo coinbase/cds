@@ -1,9 +1,9 @@
 import '@testing-library/jest-dom';
 
 import React from 'react';
-import { getCircumference, getRadius } from '@coinbase/cds-common/utils/circle';
-import type { UseCounterParams } from '@coinbase/cds-common/visualizations/useCounter';
-import { renderA11y } from '@coinbase/cds-web-utils/jest';
+import { getCircumference, getRadius } from '@cbhq/cds-common/utils/circle';
+import type { UseCounterParams } from '@cbhq/cds-common/visualizations/useCounter';
+import { renderA11y } from '@cbhq/cds-web-utils/jest';
 import { render, screen, waitFor } from '@testing-library/react';
 
 import { Box } from '../../layout';
@@ -16,7 +16,7 @@ jest.spyOn(window, 'requestAnimationFrame').mockImplementation((cb: FrameRequest
   cb(time);
   return time;
 });
-jest.mock('@coinbase/cds-common/visualizations/useCounter', () => ({
+jest.mock('@cbhq/cds-common/visualizations/useCounter', () => ({
   useCounter: ({ endNum }: UseCounterParams) => endNum,
 }));
 jest.mock('../../hooks/useDimensions', () => ({
@@ -36,7 +36,7 @@ describe('ProgressCircle tests', () => {
       cb(time);
       return time;
     });
-    jest.mock('@coinbase/cds-common/visualizations/useCounter', () => ({
+    jest.mock('@cbhq/cds-common/visualizations/useCounter', () => ({
       useCounter: ({ endNum }: UseCounterParams) => endNum,
     }));
     jest.mock('../../hooks/useDimensions', () => ({

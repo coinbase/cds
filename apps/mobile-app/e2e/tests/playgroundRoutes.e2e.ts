@@ -1,10 +1,10 @@
-import { keyToRouteName } from '@coinbase/ui-mobile-playground/components/keyToRouteName';
+import { keyToRouteName } from '@cbhq/ui-mobile-playground/components/keyToRouteName';
 import {
   getPlaygroundRoutes,
   navigateToRoute,
   routes,
   uploadScreenshotsToPercyForRoute,
-} from '@coinbase/ui-mobile-visreg';
+} from '@cbhq/ui-mobile-visreg';
 
 const affectedRouteKeys = process.env.DETOX_AFFECTED_ROUTE_KEYS?.split(',');
 

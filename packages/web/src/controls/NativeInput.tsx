@@ -1,7 +1,7 @@
 import React, { forwardRef, memo, useMemo } from 'react';
-import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
-import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
-import type { TextAlignProps } from '@coinbase/cds-common/types/TextBaseProps';
+import type { SharedAccessibilityProps } from '@cbhq/cds-common/types/SharedAccessibilityProps';
+import type { SharedProps } from '@cbhq/cds-common/types/SharedProps';
+import type { TextAlignProps } from '@cbhq/cds-common/types/TextBaseProps';
 import { css } from '@linaria/core';
 
 import { cx } from '../cx';

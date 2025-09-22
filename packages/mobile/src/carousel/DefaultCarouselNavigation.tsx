@@ -1,6 +1,6 @@
 import React, { memo, useMemo } from 'react';
 import type { StyleProp, ViewStyle } from 'react-native';
-import type { IconButtonVariant, IconName } from '@coinbase/cds-common';
+import type { IconButtonVariant, IconName } from '@cbhq/cds-common';
 
 import { IconButton } from '../buttons/IconButton';
 import { useTheme } from '../hooks/useTheme';

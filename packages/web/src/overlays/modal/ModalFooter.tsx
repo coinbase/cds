@@ -1,5 +1,5 @@
 import React from 'react';
-import { useModalContext } from '@coinbase/cds-common/overlays/ModalContext';
+import { useModalContext } from '@cbhq/cds-common/overlays/ModalContext';
 import { css } from '@linaria/core';
 
 import type { ButtonBaseProps } from '../../buttons/Button';

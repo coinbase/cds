@@ -1,5 +1,5 @@
 import React, { forwardRef, memo } from 'react';
-import { type DimensionValue, type SharedProps } from '@coinbase/cds-common';
+import { type DimensionValue, type SharedProps } from '@cbhq/cds-common';
 
 import { IconButton } from '../buttons/IconButton';
 import {

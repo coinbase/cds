@@ -1,16 +1,16 @@
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { TextInput } from 'react-native';
-import type { ThemeVars } from '@coinbase/cds-common/core/theme';
+import type { ThemeVars } from '@cbhq/cds-common/core/theme';
 import {
   sparklineInteractiveData,
   type SparklinePeriod,
-} from '@coinbase/cds-common/internal/visualizations/SparklineInteractiveData';
-import type { ChartData, ChartDataPoint, ChartScrubParams } from '@coinbase/cds-common/types';
-import { IconButton } from '@coinbase/cds-mobile/buttons';
-import { Example, ExampleScreen } from '@coinbase/cds-mobile/examples/ExampleScreen';
-import { Icon } from '@coinbase/cds-mobile/icons';
-import { Box, HStack } from '@coinbase/cds-mobile/layout';
-import { TextTitle3 } from '@coinbase/cds-mobile/typography/TextTitle3';
+} from '@cbhq/cds-common/internal/visualizations/SparklineInteractiveData';
+import type { ChartData, ChartDataPoint, ChartScrubParams } from '@cbhq/cds-common/types';
+import { IconButton } from '@cbhq/cds-mobile/buttons';
+import { Example, ExampleScreen } from '@cbhq/cds-mobile/examples/ExampleScreen';
+import { Icon } from '@cbhq/cds-mobile/icons';
+import { Box, HStack } from '@cbhq/cds-mobile/layout';
+import { TextTitle3 } from '@cbhq/cds-mobile/typography/TextTitle3';
 
 import {
   SparklineInteractive,

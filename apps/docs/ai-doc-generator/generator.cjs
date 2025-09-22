@@ -16,7 +16,7 @@ const DEFAULT_OUTPUT_PATH = path.resolve(__dirname, '../dist/llms');
 
 const docgenPath = path.resolve(
   __dirname,
-  '../.docusaurus/@coinbase/docusaurus-plugin-docgen/default/',
+  '../.docusaurus/@cbhq/docusaurus-plugin-docgen/default/',
 );
 
 const generateDocs = (outputPath) => {

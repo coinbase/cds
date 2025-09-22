@@ -1,6 +1,6 @@
 import React, { memo, useCallback } from 'react';
-import { Box } from '@coinbase/cds-web/layout/Box';
-import { Text } from '@coinbase/cds-web/typography/Text';
+import { Box } from '@cbhq/cds-web/layout/Box';
+import { Text } from '@cbhq/cds-web/typography/Text';
 import { KBarResults as OriginalKBarResults, useMatches } from 'kbar';
 
 import KBarResultItem from './KBarResultItem';

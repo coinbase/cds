@@ -1,16 +1,16 @@
 import React, { forwardRef, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { TouchableWithoutFeedback } from 'react-native';
 import type { ForwardedRef } from 'react';
-import { animateCaretInConfig, animateCaretOutConfig } from '@coinbase/cds-common/animation/select';
-import type { ThemeVars } from '@coinbase/cds-common/core/theme';
-import { useInputVariant } from '@coinbase/cds-common/hooks/useInputVariant';
-import { useMergeRefs } from '@coinbase/cds-common/hooks/useMergeRefs';
+import { animateCaretInConfig, animateCaretOutConfig } from '@cbhq/cds-common/animation/select';
+import type { ThemeVars } from '@cbhq/cds-common/core/theme';
+import { useInputVariant } from '@cbhq/cds-common/hooks/useInputVariant';
+import { useMergeRefs } from '@cbhq/cds-common/hooks/useMergeRefs';
 import type {
   InputVariant,
   SharedAccessibilityProps,
   SharedInputProps,
   SharedProps,
-} from '@coinbase/cds-common/types';
+} from '@cbhq/cds-common/types';
 
 import { useRotateAnimation } from '../animation/useRotateAnimation';
 import { useA11y } from '../hooks/useA11y';

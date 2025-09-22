@@ -1,8 +1,8 @@
 import React from 'react';
-import { Icon } from '@coinbase/cds-web/icons/Icon';
-import { HStack, VStack } from '@coinbase/cds-web/layout';
-import { Pressable } from '@coinbase/cds-web/system/Pressable';
-import { Text } from '@coinbase/cds-web/typography/Text';
+import { Icon } from '@cbhq/cds-web/icons/Icon';
+import { HStack, VStack } from '@cbhq/cds-web/layout';
+import { Pressable } from '@cbhq/cds-web/system/Pressable';
+import { Text } from '@cbhq/cds-web/typography/Text';
 import { useThemeConfig } from '@docusaurus/theme-common';
 
 function useNavbarItems() {

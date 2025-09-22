@@ -1,5 +1,5 @@
 import React, { Children, memo, useMemo } from 'react';
-import type { SharedProps } from '@coinbase/cds-common';
+import type { SharedProps } from '@cbhq/cds-common';
 
 import { TableSectionContext, type TableSectionContextValue } from './context/TableSectionContext';
 

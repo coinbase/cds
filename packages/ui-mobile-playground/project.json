@@ -25,7 +25,7 @@
         "prod": {
           "commands": [
             "rm -rf esm && babel ./src --out-dir esm --extensions .ts,.tsx,.js,.jsx --copy-files --no-copy-ignored",
-            "node ../../add-cds7-exports.js @coinbase/ui-mobile-playground"
+            "node ../../add-cds7-exports.js @cbhq/ui-mobile-playground"
           ],
           "parallel": false
         }

@@ -1,11 +1,11 @@
 import React, { memo } from 'react';
 import { Platform } from 'react-native';
-import { PortalContext } from '@coinbase/cds-common/overlays/PortalContext';
-import type { ToastProviderProps } from '@coinbase/cds-common/overlays/ToastProvider';
-import { ToastProvider } from '@coinbase/cds-common/overlays/ToastProvider';
-import { usePortal } from '@coinbase/cds-common/overlays/usePortal';
-import type { PortalNode } from '@coinbase/cds-common/overlays/usePortalState';
-import { usePortalState } from '@coinbase/cds-common/overlays/usePortalState';
+import { PortalContext } from '@cbhq/cds-common/overlays/PortalContext';
+import type { ToastProviderProps } from '@cbhq/cds-common/overlays/ToastProvider';
+import { ToastProvider } from '@cbhq/cds-common/overlays/ToastProvider';
+import { usePortal } from '@cbhq/cds-common/overlays/usePortal';
+import type { PortalNode } from '@cbhq/cds-common/overlays/usePortalState';
+import { usePortalState } from '@cbhq/cds-common/overlays/usePortalState';
 
 export type PortalProviderProps = ToastProviderProps & {
   /**

@@ -1,5 +1,5 @@
 import React from 'react';
-import type { ColorScheme } from '@coinbase/cds-common/core/theme';
+import type { ColorScheme } from '@cbhq/cds-common/core/theme';
 
 import { Button } from '../../buttons';
 import type { ThemeConfig } from '../../core/theme';

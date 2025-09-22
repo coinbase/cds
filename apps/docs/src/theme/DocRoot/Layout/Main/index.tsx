@@ -1,5 +1,5 @@
 import React from 'react';
-import { HStack } from '@coinbase/cds-web/layout';
+import { HStack } from '@cbhq/cds-web/layout';
 import type { Props } from '@theme/DocRoot/Layout/Main';
 
 const mainStyles = {

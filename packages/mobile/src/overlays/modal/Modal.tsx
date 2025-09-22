@@ -9,13 +9,13 @@ import React, {
 } from 'react';
 import { Modal as RNModal, Platform, SafeAreaView, StatusBar, StyleSheet } from 'react-native';
 import type { ModalProps as RNModalProps } from 'react-native';
-import { usePreviousValue } from '@coinbase/cds-common/hooks/usePreviousValue';
-import { ModalContext, type ModalContextValue } from '@coinbase/cds-common/overlays/ModalContext';
+import { usePreviousValue } from '@cbhq/cds-common/hooks/usePreviousValue';
+import { ModalContext, type ModalContextValue } from '@cbhq/cds-common/overlays/ModalContext';
 import {
   OverlayContentContext,
   type OverlayContentContextValue,
-} from '@coinbase/cds-common/overlays/OverlayContentContext';
-import type { PositionStyles, SharedProps } from '@coinbase/cds-common/types';
+} from '@cbhq/cds-common/overlays/OverlayContentContext';
+import type { PositionStyles, SharedProps } from '@cbhq/cds-common/types';
 
 import { VStack } from '../../layout';
 

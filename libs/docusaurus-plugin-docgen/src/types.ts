@@ -30,7 +30,7 @@ export type PluginOptions = {
    * When you use the templates from plugin, if there are two components with the same name coming from
    * two separate projects (cross platform), it will group those components together and use toggle to switch between them.
    * This formatPackageName will allow you to customize how that toggle is displayed.
-   * i.e. remove `@coinbase-cds` scope from `@coinbase/cds-mobile` and `@coinbase/cds-web` so it returns just 'mobile' and 'web'.
+   * i.e. remove `@cbhq-cds` scope from `@cbhq/cds-mobile` and `@cbhq/cds-web` so it returns just 'mobile' and 'web'.
    */
   formatPackageName?: (name: string) => string;
   /**

@@ -1,7 +1,7 @@
 import React, { type KeyboardEvent, memo, useCallback } from 'react';
-import { useRefMap } from '@coinbase/cds-common/hooks/useRefMap';
-import { RefMapContext, useRefMapContext } from '@coinbase/cds-common/system/RefMapContext';
-import type { SharedProps } from '@coinbase/cds-common/types';
+import { useRefMap } from '@cbhq/cds-common/hooks/useRefMap';
+import { RefMapContext, useRefMapContext } from '@cbhq/cds-common/system/RefMapContext';
+import type { SharedProps } from '@cbhq/cds-common/types';
 import { css } from '@linaria/core';
 
 import { cx } from '../cx';

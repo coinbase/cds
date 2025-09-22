@@ -1,6 +1,6 @@
 import React, { memo } from 'react';
-import type { DimensionValue } from '@coinbase/cds-common/types';
-import { useVisualizationDimensions } from '@coinbase/cds-common/visualizations/useVisualizationDimensions';
+import type { DimensionValue } from '@cbhq/cds-common/types';
+import { useVisualizationDimensions } from '@cbhq/cds-common/visualizations/useVisualizationDimensions';
 
 import { useLayout } from '../hooks/useLayout';
 import { Box } from '../layout';

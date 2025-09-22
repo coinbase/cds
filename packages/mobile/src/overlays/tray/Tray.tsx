@@ -11,8 +11,8 @@ import React, {
 import { useWindowDimensions } from 'react-native';
 import type { ReactNode } from 'react';
 import type { LayoutChangeEvent } from 'react-native';
-import { MAX_OVER_DRAG } from '@coinbase/cds-common/animation/drawer';
-import { verticalDrawerPercentageOfView as defaultVerticalDrawerPercentageOfView } from '@coinbase/cds-common/tokens/drawer';
+import { MAX_OVER_DRAG } from '@cbhq/cds-common/animation/drawer';
+import { verticalDrawerPercentageOfView as defaultVerticalDrawerPercentageOfView } from '@cbhq/cds-common/tokens/drawer';
 
 import { Box, HStack, VStack } from '../../layout';
 import { Text } from '../../typography/Text';

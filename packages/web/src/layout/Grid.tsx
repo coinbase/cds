@@ -1,5 +1,5 @@
 import React, { forwardRef, useMemo } from 'react';
-import { type DimensionValue } from '@coinbase/cds-common/types/DimensionStyles';
+import { type DimensionValue } from '@cbhq/cds-common/types/DimensionStyles';
 
 import type { Polymorphic } from '../core/polymorphism';
 

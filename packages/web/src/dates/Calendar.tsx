@@ -8,12 +8,12 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import { generateCalendarMonth } from '@coinbase/cds-common/dates/generateCalendarMonth';
-import { getISOStringLocal } from '@coinbase/cds-common/dates/getISOStringLocal';
-import { getMidnightDate } from '@coinbase/cds-common/dates/getMidnightDate';
-import { getTimesFromDatesAndRanges } from '@coinbase/cds-common/dates/getTimesFromDatesAndRanges';
-import { useLocale } from '@coinbase/cds-common/system/LocaleProvider';
-import { accessibleOpacityDisabled } from '@coinbase/cds-common/tokens/interactable';
+import { generateCalendarMonth } from '@cbhq/cds-common/dates/generateCalendarMonth';
+import { getISOStringLocal } from '@cbhq/cds-common/dates/getISOStringLocal';
+import { getMidnightDate } from '@cbhq/cds-common/dates/getMidnightDate';
+import { getTimesFromDatesAndRanges } from '@cbhq/cds-common/dates/getTimesFromDatesAndRanges';
+import { useLocale } from '@cbhq/cds-common/system/LocaleProvider';
+import { accessibleOpacityDisabled } from '@cbhq/cds-common/tokens/interactable';
 import { css } from '@linaria/core';
 
 import type { Polymorphic } from '../core/polymorphism';

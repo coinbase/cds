@@ -1,5 +1,5 @@
 import React from 'react';
-import { getAvatarFallbackColor } from '@coinbase/cds-common/media/getAvatarFallbackColor';
+import { getAvatarFallbackColor } from '@cbhq/cds-common/media/getAvatarFallbackColor';
 
 import { HStack } from '../../layout/HStack';
 import { VStack } from '../../layout/VStack';

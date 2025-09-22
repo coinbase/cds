@@ -1,11 +1,11 @@
 import { useCallback, useState } from 'react';
-import * as lottieAnimations from '@coinbase/cds-lottie-files';
-import { Lottie } from '@coinbase/cds-web/animation';
-import { SearchInput } from '@coinbase/cds-web/controls';
-import { Box, Grid, VStack } from '@coinbase/cds-web/layout';
-import { useToast } from '@coinbase/cds-web/overlays/useToast';
-import { Pressable } from '@coinbase/cds-web/system';
-import { Text } from '@coinbase/cds-web/typography';
+import * as lottieAnimations from '@cbhq/cds-lottie-files';
+import { Lottie } from '@cbhq/cds-web/animation';
+import { SearchInput } from '@cbhq/cds-web/controls';
+import { Box, Grid, VStack } from '@cbhq/cds-web/layout';
+import { useToast } from '@cbhq/cds-web/overlays/useToast';
+import { Pressable } from '@cbhq/cds-web/system';
+import { Text } from '@cbhq/cds-web/typography';
 import { sortByAlphabet } from '@site/src/utils/sortByAlphabet';
 import { throttle } from 'lodash';
 

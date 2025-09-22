@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef } from 'react';
 import { Animated } from 'react-native';
-import { animatedPathConfig } from '@coinbase/cds-common/animation/sparkline';
+import { animatedPathConfig } from '@cbhq/cds-common/animation/sparkline';
 
 import { useSparklineInteractiveContext } from './SparklineInteractiveProvider';
 

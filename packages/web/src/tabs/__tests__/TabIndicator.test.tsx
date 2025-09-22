@@ -1,4 +1,4 @@
-import { renderA11y } from '@coinbase/cds-web-utils';
+import { renderA11y } from '@cbhq/cds-web-utils';
 import { render, screen, waitFor } from '@testing-library/react';
 
 import { TabIndicator } from '../TabIndicator';

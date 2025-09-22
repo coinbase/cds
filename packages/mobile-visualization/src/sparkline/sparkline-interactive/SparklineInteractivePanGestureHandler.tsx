@@ -2,9 +2,9 @@ import React, { useCallback } from 'react';
 import { Animated as RNAnimated, Platform, View } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, { runOnJS } from 'react-native-reanimated';
-import type { ChartGetMarker, ChartScrubParams } from '@coinbase/cds-common/types/Chart';
-import { Haptics } from '@coinbase/cds-mobile/utils/haptics';
-import { noop } from '@coinbase/cds-utils';
+import type { ChartGetMarker, ChartScrubParams } from '@cbhq/cds-common/types/Chart';
+import { Haptics } from '@cbhq/cds-mobile/utils/haptics';
+import { noop } from '@cbhq/cds-utils';
 
 import { type SparklineInteractiveProps } from './SparklineInteractive';
 import { useSparklineInteractiveContext } from './SparklineInteractiveProvider';

@@ -1,6 +1,6 @@
 import React, { forwardRef, Fragment, memo } from 'react';
 import type { View } from 'react-native';
-import { chipMaxWidth } from '@coinbase/cds-common/tokens/chip';
+import { chipMaxWidth } from '@cbhq/cds-common/tokens/chip';
 
 import { HStack } from '../layout';
 import { InvertedThemeProvider, Pressable } from '../system';

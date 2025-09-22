@@ -1,13 +1,13 @@
 import { useCallback, useMemo, useState } from 'react';
-import { SearchInput } from '@coinbase/cds-web/controls/SearchInput';
-import { useDimensions } from '@coinbase/cds-web/hooks/useDimensions';
-import { Box, VStack } from '@coinbase/cds-web/layout';
-import { Text } from '@coinbase/cds-web/typography/Text';
+import { SearchInput } from '@cbhq/cds-web/controls/SearchInput';
+import { useDimensions } from '@cbhq/cds-web/hooks/useDimensions';
+import { Box, VStack } from '@cbhq/cds-web/layout';
+import { Text } from '@cbhq/cds-web/typography/Text';
 import type {
   ProcessedPropItem,
   SharedParentTypes,
   SharedTypeAliases,
-} from '@coinbase/docusaurus-plugin-docgen/types';
+} from '@cbhq/docusaurus-plugin-docgen/types';
 import { useIsSticky } from '@site/src/utils/useIsSticky';
 
 import ParentTypesList from './ParentTypesList';

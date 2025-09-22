@@ -1,7 +1,7 @@
 import React, { memo, useContext } from 'react';
-import type { InputVariant, SharedAccessibilityProps } from '@coinbase/cds-common';
-import type { ThemeVars } from '@coinbase/cds-common/core/theme';
-import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
+import type { InputVariant, SharedAccessibilityProps } from '@cbhq/cds-common';
+import type { ThemeVars } from '@cbhq/cds-common/core/theme';
+import type { SharedProps } from '@cbhq/cds-common/types/SharedProps';
 
 import type { IconProps } from '../icons/Icon';
 import { Icon } from '../icons/Icon';

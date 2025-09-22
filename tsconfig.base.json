@@ -24,94 +24,94 @@
     "strict": true,
     "target": "es2020",
     "paths": {
-      "@coinbase/cds-common": [
+      "@cbhq/cds-common": [
         "packages/common/src"
       ],
-      "@coinbase/cds-common/*": [
+      "@cbhq/cds-common/*": [
         "packages/common/src/*"
       ],
-      "@coinbase/cds-icons": [
+      "@cbhq/cds-icons": [
         "packages/icons/src"
       ],
-      "@coinbase/cds-icons/*": [
+      "@cbhq/cds-icons/*": [
         "packages/icons/src/*"
       ],
-      "@coinbase/cds-illustrations": [
+      "@cbhq/cds-illustrations": [
         "packages/illustrations/src"
       ],
-      "@coinbase/cds-illustrations/*": [
+      "@cbhq/cds-illustrations/*": [
         "packages/illustrations/src/*"
       ],
-      "@coinbase/cds-lottie-files": [
+      "@cbhq/cds-lottie-files": [
         "packages/lottie-files/src"
       ],
-      "@coinbase/cds-lottie-files/*": [
+      "@cbhq/cds-lottie-files/*": [
         "packages/lottie-files/src/*"
       ],
-      "@coinbase/cds-mcp-server": [
+      "@cbhq/cds-mcp-server": [
         "packages/mcp-server/src"
       ],
-      "@coinbase/cds-mcp-server/*": [
+      "@cbhq/cds-mcp-server/*": [
         "packages/mcp-server/src/*"
       ],
-      "@coinbase/cds-mobile": [
+      "@cbhq/cds-mobile": [
         "packages/mobile/src"
       ],
-      "@coinbase/cds-mobile-visualization": [
+      "@cbhq/cds-mobile-visualization": [
         "packages/mobile-visualization/src"
       ],
-      "@coinbase/cds-mobile-visualization/*": [
+      "@cbhq/cds-mobile-visualization/*": [
         "packages/mobile-visualization/src/*"
       ],
-      "@coinbase/cds-mobile/*": [
+      "@cbhq/cds-mobile/*": [
         "packages/mobile/src/*"
       ],
-      "@coinbase/cds-utils": [
+      "@cbhq/cds-utils": [
         "packages/utils/src"
       ],
-      "@coinbase/cds-utils/*": [
+      "@cbhq/cds-utils/*": [
         "packages/utils/src/*"
       ],
-      "@coinbase/cds-web": [
+      "@cbhq/cds-web": [
         "packages/web/src"
       ],
-      "@coinbase/cds-web-utils": [
+      "@cbhq/cds-web-utils": [
         "libs/web-utils/src"
       ],
-      "@coinbase/cds-web-utils/*": [
+      "@cbhq/cds-web-utils/*": [
         "libs/web-utils/src/*"
       ],
-      "@coinbase/cds-web-visualization": [
+      "@cbhq/cds-web-visualization": [
         "packages/web-visualization/src"
       ],
-      "@coinbase/cds-web-visualization/*": [
+      "@cbhq/cds-web-visualization/*": [
         "packages/web-visualization/src/*"
       ],
-      "@coinbase/cds-web/*": [
+      "@cbhq/cds-web/*": [
         "packages/web/src/*"
       ],
-      "@coinbase/docusaurus-plugin-docgen": [
+      "@cbhq/docusaurus-plugin-docgen": [
         "libs/docusaurus-plugin-docgen/src"
       ],
-      "@coinbase/docusaurus-plugin-docgen/*": [
+      "@cbhq/docusaurus-plugin-docgen/*": [
         "libs/docusaurus-plugin-docgen/src/*"
       ],
-      "@coinbase/docusaurus-plugin-kbar": [
+      "@cbhq/docusaurus-plugin-kbar": [
         "libs/docusaurus-plugin-kbar/src"
       ],
-      "@coinbase/docusaurus-plugin-kbar/*": [
+      "@cbhq/docusaurus-plugin-kbar/*": [
         "libs/docusaurus-plugin-kbar/src/*"
       ],
-      "@coinbase/ui-mobile-playground": [
+      "@cbhq/ui-mobile-playground": [
         "packages/ui-mobile-playground/src"
       ],
-      "@coinbase/ui-mobile-playground/*": [
+      "@cbhq/ui-mobile-playground/*": [
         "packages/ui-mobile-playground/src/*"
       ],
-      "@coinbase/ui-mobile-visreg": [
+      "@cbhq/ui-mobile-visreg": [
         "packages/ui-mobile-visreg/src"
       ],
-      "@coinbase/ui-mobile-visreg/*": [
+      "@cbhq/ui-mobile-visreg/*": [
         "packages/ui-mobile-visreg/src/*"
       ],
       "@site/*": [

@@ -1,5 +1,5 @@
 import React, { memo, useCallback } from 'react';
-import { useRefMapContext } from '@coinbase/cds-common/system/RefMapContext';
+import { useRefMapContext } from '@cbhq/cds-common/system/RefMapContext';
 
 import { Box } from '../layout/Box';
 

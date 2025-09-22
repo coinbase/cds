@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
 import { View } from 'react-native';
-import { useRefMapContext } from '@coinbase/cds-common/system/RefMapContext';
+import { useRefMapContext } from '@cbhq/cds-common/system/RefMapContext';
 
 type TourStepProps = {
   /** The id of the corresponding tour step data */

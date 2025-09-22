@@ -1,9 +1,9 @@
 import React, { forwardRef, memo, useRef } from 'react';
-import type { ThemeVars } from '@coinbase/cds-common';
-import { animateProgressBaseSpec } from '@coinbase/cds-common/animation/progress';
-import { getCircumference, getRadius } from '@coinbase/cds-common/utils/circle';
-import { getProgressCircleParams } from '@coinbase/cds-common/visualizations/getProgressCircleParams';
-import { useProgressSize } from '@coinbase/cds-common/visualizations/useProgressSize';
+import type { ThemeVars } from '@cbhq/cds-common';
+import { animateProgressBaseSpec } from '@cbhq/cds-common/animation/progress';
+import { getCircumference, getRadius } from '@cbhq/cds-common/utils/circle';
+import { getProgressCircleParams } from '@cbhq/cds-common/visualizations/getProgressCircleParams';
+import { useProgressSize } from '@cbhq/cds-common/visualizations/useProgressSize';
 import { css } from '@linaria/core';
 import { m as motion } from 'framer-motion';
 

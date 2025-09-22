@@ -2,7 +2,7 @@ import safelySpreadPropsRule from './safely-spread-props/index.mjs';
 import importAutofixRule from './import-autofix.mjs';
 
 const plugin = {
-  name: '@coinbase/eslint-plugin-internal',
+  name: '@cbhq/eslint-plugin-internal',
   rules: {
     'import-autofix': importAutofixRule,
     'safely-spread-props': safelySpreadPropsRule,

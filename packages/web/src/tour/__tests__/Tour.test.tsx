@@ -1,6 +1,6 @@
 import React from 'react';
-import { useTourContext } from '@coinbase/cds-common/tour/TourContext';
-import { renderA11y } from '@coinbase/cds-web-utils';
+import { useTourContext } from '@cbhq/cds-common/tour/TourContext';
+import { renderA11y } from '@cbhq/cds-web-utils';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 
 import { DefaultThemeProvider } from '../../utils/test';

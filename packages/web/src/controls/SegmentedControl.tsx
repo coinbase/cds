@@ -1,12 +1,12 @@
 import React, { forwardRef, Fragment, memo, useCallback, useId, useState } from 'react';
 import type { ChangeEvent, ForwardedRef } from 'react';
-import { interactableHeight } from '@coinbase/cds-common/tokens/interactableHeight';
+import { interactableHeight } from '@cbhq/cds-common/tokens/interactableHeight';
 import type {
   IconName,
   IconSize,
   SharedAccessibilityProps,
   SharedProps,
-} from '@coinbase/cds-common/types';
+} from '@cbhq/cds-common/types';
 import { css } from '@linaria/core';
 
 import { cx } from '../cx';

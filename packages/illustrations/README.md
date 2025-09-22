@@ -1,11 +1,11 @@
-# @coinbase/cds-illustrations
+# @cbhq/cds-illustrations
 
-CDS illustrations used in @coinbase/cds-web and @coinbase/cds-mobile.
+CDS illustrations used in @cbhq/cds-web and @cbhq/cds-mobile.
 
 ## Installation
 
 ```shell
-yarn add @coinbase/cds-illustrations
+yarn add @cbhq/cds-illustrations
 ```
 
 ## Contributing
@@ -65,7 +65,7 @@ yarn changelog illustrations
 
 If not, manually trigger the builds if necessary and/or deploy the targets as needed when the build is complete. **_NOTE:_** If you're releasing both icons and illustrations at the same time, you only need to deploy to `production::cds-docs` once, so just pick whichever commit is the most recent and deploy from there.
 
-9.  After the deploy has succeeded, verify that the new package was published at the [production Coinbase NPM registry](https://npmjs.com/package/@coinbase/ui/repos/tree/General/cb-npm-master). It usually takes about 10 min or so for the package to be uploaded. Look for the version number at the bottom of the artifact list in the [package directory](https://npmjs.com/package/@coinbase/ui/repos/tree/General/cb-npm-master/@coinbase/cds-illustrations/-/@coinbase/cds-illustrations-0.0.1.tgz).
+9.  After the deploy has succeeded, verify that the new package was published at the [production Coinbase NPM registry](https://npmjs.com/package/@cbhq/ui/repos/tree/General/cb-npm-master). It usually takes about 10 min or so for the package to be uploaded. Look for the version number at the bottom of the artifact list in the [package directory](https://npmjs.com/package/@cbhq/ui/repos/tree/General/cb-npm-master/@cbhq/cds-illustrations/-/@cbhq/cds-illustrations-0.0.1.tgz).
 
 ### Gotchas
 

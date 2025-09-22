@@ -1,4 +1,4 @@
-import { noop } from '@coinbase/cds-utils';
+import { noop } from '@cbhq/cds-utils';
 import { renderHook } from '@testing-library/react-hooks';
 
 import { TableCellSortIcon } from '../../TableCellSortIcon';

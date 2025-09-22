@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { View } from 'react-native';
-import type { SectionHeaderProps } from '@coinbase/cds-common';
-import { assets } from '@coinbase/cds-common/internal/data/assets';
-import { NoopFn } from '@coinbase/cds-common/utils/mockUtils';
+import type { SectionHeaderProps } from '@cbhq/cds-common';
+import { assets } from '@cbhq/cds-common/internal/data/assets';
+import { NoopFn } from '@cbhq/cds-common/utils/mockUtils';
 
 import { Button, IconButton } from '../../buttons';
 import { SelectChip } from '../../chips/SelectChip';

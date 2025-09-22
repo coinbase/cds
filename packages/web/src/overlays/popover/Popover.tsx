@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions, jsx-a11y/click-events-have-key-events */
 import React, { memo, useCallback, useMemo } from 'react';
-import { zIndex } from '@coinbase/cds-common/tokens/zIndex';
+import { zIndex } from '@cbhq/cds-common/tokens/zIndex';
 import { css } from '@linaria/core';
 
 import { NewAnimatePresence } from '../../animation/NewAnimatePresence';

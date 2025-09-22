@@ -1,5 +1,5 @@
 {
-  "name": "@coinbase/ui-mobile-playground",
+  "name": "@cbhq/ui-mobile-playground",
   "version": "4.5.0",
   "description": "Mobile UI Components in a Playground",
   "repository": {
@@ -34,9 +34,9 @@
     "CHANGELOG"
   ],
   "peerDependencies": {
-    "@coinbase/cds-common": "workspace:^",
-    "@coinbase/cds-mobile": "workspace:^",
-    "@coinbase/cds-mobile-visualization": "workspace:^",
+    "@cbhq/cds-common": "workspace:^",
+    "@cbhq/cds-mobile": "workspace:^",
+    "@cbhq/cds-mobile-visualization": "workspace:^",
     "@react-navigation/elements": "^1.3.17",
     "@react-navigation/native": "^6.1.6",
     "@react-navigation/stack": "^6.3.16",

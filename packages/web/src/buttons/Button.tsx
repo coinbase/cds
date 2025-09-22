@@ -1,11 +1,11 @@
 import React, { forwardRef, memo } from 'react';
-import { transparentVariants, variants } from '@coinbase/cds-common/tokens/button';
+import { transparentVariants, variants } from '@cbhq/cds-common/tokens/button';
 import type {
   ButtonVariant,
   IconName,
   SharedAccessibilityProps,
   SharedProps,
-} from '@coinbase/cds-common/types';
+} from '@cbhq/cds-common/types';
 import { css } from '@linaria/core';
 
 import type { Polymorphic } from '../core/polymorphism';

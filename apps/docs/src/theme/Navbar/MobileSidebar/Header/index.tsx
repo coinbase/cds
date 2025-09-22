@@ -1,6 +1,6 @@
 import React from 'react';
-import { IconButton } from '@coinbase/cds-web/buttons';
-import { HStack } from '@coinbase/cds-web/layout';
+import { IconButton } from '@cbhq/cds-web/buttons';
+import { HStack } from '@cbhq/cds-web/layout';
 import { useNavbarMobileSidebar } from '@docusaurus/theme-common/internal';
 import { translate } from '@docusaurus/Translate';
 import NavbarLogo from '@theme/Navbar/Logo';

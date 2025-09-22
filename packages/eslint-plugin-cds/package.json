@@ -1,5 +1,5 @@
 {
-  "name": "@coinbase/eslint-plugin-cds",
+  "name": "@cbhq/eslint-plugin-cds",
   "version": "3.2.0",
   "description": "ESLint plugin for CDS",
   "repository": {
@@ -18,9 +18,9 @@
     "CHANGELOG"
   ],
   "peerDependencies": {
-    "@coinbase/cds-common": "workspace:^",
-    "@coinbase/cds-mobile": "workspace:^",
-    "@coinbase/cds-web": "workspace:^",
+    "@cbhq/cds-common": "workspace:^",
+    "@cbhq/cds-mobile": "workspace:^",
+    "@cbhq/cds-web": "workspace:^",
     "eslint": "^8 || ^9",
     "eslint-plugin-jsx-a11y": "^6",
     "eslint-plugin-react-native-a11y": "^3"

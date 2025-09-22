@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { sampleTabs as tabs } from '@coinbase/cds-common/internal/data/tabs';
+import { sampleTabs as tabs } from '@cbhq/cds-common/internal/data/tabs';
 import { render, screen } from '@testing-library/react-native';
 
 import { HStack } from '../../layout';
