@@ -26,7 +26,7 @@ const keyParts = (
 };
 
 export class IntlNumberFormat {
-  value: number | bigint;
+  value: number;
   formatOptions?: Intl.NumberFormatOptions;
   locale?: Intl.LocalesArgument;
   formatter: Intl.NumberFormat;
@@ -36,7 +36,7 @@ export class IntlNumberFormat {
     format?: Intl.NumberFormatOptions;
     locale?: Intl.LocalesArgument;
   }) {
-    this.value = props.value;
+    this.value = Number(props.value);
     this.formatOptions = props.format;
     this.locale = props.locale;
 
@@ -44,14 +44,10 @@ export class IntlNumberFormat {
   }
 
   /**
-   * Returns the accessible formatted string (prefix/suffix included only when strings).
-   *  we don't output subscript notation here since subscript notation is bad for accessibility announcements.
+   * Returns the formatted string.
    */
-  format({ prefix = '', suffix = '' }: { prefix?: string; suffix?: string } = {}): string {
-    const numberValue = Number(this.value);
-    const formattedCore = this.formatter.format(numberValue);
-    const withPrefixSuffix = prefix + formattedCore + suffix;
-    return withPrefixSuffix;
+  format(): string {
+    return this.formatter.format(this.value);
   }
 
   /**
@@ -141,8 +137,7 @@ export class IntlNumberFormat {
       );
     }
 
-    const numberValue = Number(this.value);
-    const parts: Array<Intl.NumberFormatPart> = this.formatter.formatToParts(numberValue);
+    const parts: Array<Intl.NumberFormatPart> = this.formatter.formatToParts(this.value);
 
     const pre: KeyedNumberPart[] = [];
     const integerUnkeyed: NumberPart[] = [];

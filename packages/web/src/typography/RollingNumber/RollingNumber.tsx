@@ -315,14 +315,6 @@ export const RollingNumber: RollingNumberComponent = memo(
         [transition],
       );
 
-      const colorControls = useColorPulse({
-        value,
-        defaultColor: color,
-        colorPulseOnUpdate: !!colorPulseOnUpdate,
-        positivePulseColor,
-        negativePulseColor,
-      });
-
       const intlNumberFormatter = useMemo(
         () =>
           new IntlNumberFormat({
@@ -332,6 +324,20 @@ export const RollingNumber: RollingNumberComponent = memo(
           }),
         [value, format, locale],
       );
+
+      const formatted = useMemo(
+        () => formattedValue ?? intlNumberFormatter.format(),
+        [formattedValue, intlNumberFormatter],
+      );
+
+      const colorControls = useColorPulse({
+        value,
+        defaultColor: color,
+        colorPulseOnUpdate: !!colorPulseOnUpdate,
+        positivePulseColor,
+        negativePulseColor,
+        formatted,
+      });
 
       const rootStyle = useMemo(
         () => ({
@@ -471,33 +477,24 @@ export const RollingNumber: RollingNumberComponent = memo(
         ],
       );
 
-      const screenReaderOnlySection = useMemo(
-        () => (
-          <span
-            aria-atomic="true"
-            aria-live={ariaLive}
-            className={screenReaderOnlyCss}
-          >{`${accessibilityLabelPrefix}${
-            accessibilityLabel ??
-            formattedValue ??
-            intlNumberFormatter.format({
-              // only include prefix/suffix if they are strings
-              prefix: typeof prefix === 'string' ? prefix : undefined,
-              suffix: typeof suffix === 'string' ? suffix : undefined,
-            })
-          }${accessibilityLabelSuffix}`}</span>
-        ),
-        [
-          ariaLive,
-          accessibilityLabelPrefix,
-          accessibilityLabel,
-          formattedValue,
-          intlNumberFormatter,
-          prefix,
-          suffix,
-          accessibilityLabelSuffix,
-        ],
-      );
+      const screenReaderOnlySection = useMemo(() => {
+        const formattedWithPrefixSuffix = `${typeof prefix === 'string' ? prefix : ''}${formatted}${typeof suffix === 'string' ? suffix : ''}`;
+        return (
+          <span aria-atomic="true" aria-live={ariaLive} className={screenReaderOnlyCss}>{`
+            ${accessibilityLabelPrefix}
+            ${accessibilityLabel ?? formattedWithPrefixSuffix}
+            ${accessibilityLabelSuffix}
+            `}</span>
+        );
+      }, [
+        ariaLive,
+        accessibilityLabelPrefix,
+        prefix,
+        accessibilityLabel,
+        formatted,
+        suffix,
+        accessibilityLabelSuffix,
+      ]);
 
       return (
         <Text

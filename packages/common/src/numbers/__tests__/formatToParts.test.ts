@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { IntlNumberFormat } from '../IntlNumberFormat';
 
 describe('formatToParts', () => {
@@ -128,20 +126,6 @@ describe('formatToParts', () => {
       'subscript:0',
       'fraction:1',
     ]);
-  });
-
-  it('adds string prefix and suffix only to formatted, not parts', () => {
-    const formatter = new IntlNumberFormat({
-      value: 123.45,
-      locale,
-    });
-    const { pre, post } = formatter.formatToParts({ enableSubscriptNotation: false });
-    const formatted = formatter.format({ prefix: 'PRE-', suffix: '-SUF' });
-    expect(pre.length).toBe(0);
-    expect(post.length).toBe(0);
-    expect(formatted.startsWith('PRE-')).toBe(true);
-    expect(formatted.endsWith('-SUF')).toBe(true);
-    expect(formatted).toContain('123.45');
   });
 
   it('handles zero without decimals', () => {

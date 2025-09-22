@@ -6,12 +6,14 @@ import { useTheme } from '../../hooks/useTheme';
 
 export function useColorPulse({
   value,
+  formatted,
   defaultColor,
   colorPulseOnUpdate,
   positivePulseColor,
   negativePulseColor,
 }: {
   value: number | bigint;
+  formatted: string;
   defaultColor: ThemeVars.Color;
   colorPulseOnUpdate: boolean;
   positivePulseColor: ThemeVars.Color;
@@ -20,6 +22,7 @@ export function useColorPulse({
   const theme = useTheme();
   const baseColor = theme.color[defaultColor];
   const previousValue = useRef<number>(Number(value));
+  const previousStringValue = useRef<string>(formatted);
   const colorControls = useAnimation();
 
   useEffect(() => {
@@ -27,7 +30,12 @@ export function useColorPulse({
 
     const prev = previousValue.current;
     const next = Number(value);
-    const hasMeaningfulChange = !Number.isNaN(prev) && !Number.isNaN(next) && prev !== next;
+    const hasMeaningfulChange =
+      !Number.isNaN(prev) &&
+      !Number.isNaN(next) &&
+      prev !== next &&
+      // a change from 125,000 to 125,001 should not pulse if it's being formatted as 125K, since the displayed value is the same
+      previousStringValue.current !== formatted;
     const pulseColor = hasMeaningfulChange
       ? theme.color[next > prev ? positivePulseColor : negativePulseColor]
       : undefined;
@@ -37,6 +45,7 @@ export function useColorPulse({
     }
 
     previousValue.current = next;
+    previousStringValue.current = formatted;
   }, [
     value,
     colorPulseOnUpdate,
@@ -45,6 +54,7 @@ export function useColorPulse({
     colorControls,
     baseColor,
     theme,
+    formatted,
   ]);
 
   return colorControls;

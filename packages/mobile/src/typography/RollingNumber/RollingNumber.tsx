@@ -371,15 +371,6 @@ export const RollingNumber = memo(
         [transition],
       );
 
-      const animatedColorStyle = useColorPulse({
-        value,
-        defaultColor: colorProp,
-        colorPulseOnUpdate: !!colorPulseOnUpdate,
-        positivePulseColor,
-        negativePulseColor,
-        transitionConfig,
-      });
-
       const intlNumberFormatter = useMemo(
         () =>
           new IntlNumberFormat({
@@ -389,6 +380,21 @@ export const RollingNumber = memo(
           }),
         [value, format, locale],
       );
+
+      const formatted = useMemo(
+        () => formattedValue ?? intlNumberFormatter.format(),
+        [formattedValue, intlNumberFormatter],
+      );
+
+      const animatedColorStyle = useColorPulse({
+        value,
+        defaultColor: colorProp,
+        colorPulseOnUpdate: !!colorPulseOnUpdate,
+        positivePulseColor,
+        negativePulseColor,
+        transitionConfig,
+        formatted,
+      });
 
       const rootStyle = useMemo(() => [style, styles?.root], [style, styles?.root]);
 
@@ -567,8 +573,9 @@ export const RollingNumber = memo(
         ],
       );
 
-      const screenReaderOnlySection = useMemo(
-        () => (
+      const screenReaderOnlySection = useMemo(() => {
+        const formattedWithPrefixSuffix = `${typeof prefix === 'string' ? prefix : ''}${formatted}${typeof suffix === 'string' ? suffix : ''}`;
+        return (
           <Text
             allowFontScaling
             accessibilityLiveRegion={accessibilityLiveRegion}
@@ -576,30 +583,22 @@ export const RollingNumber = memo(
             style={[baseStylesheet.screenReaderOnly, styles?.text]}
             {...textProps}
           >
-            {`${accessibilityLabelPrefix}${
-              accessibilityLabel ??
-              formattedValue ??
-              intlNumberFormatter.format({
-                // only include prefix/suffix if they are strings
-                prefix: typeof prefix === 'string' ? prefix : undefined,
-                suffix: typeof suffix === 'string' ? suffix : undefined,
-              })
-            }${accessibilityLabelSuffix}`}
+            {`${accessibilityLabelPrefix}
+            ${accessibilityLabel ?? formattedWithPrefixSuffix}
+            ${accessibilityLabelSuffix}`}
           </Text>
-        ),
-        [
-          accessibilityLiveRegion,
-          textProps,
-          accessibilityLabelPrefix,
-          accessibilityLabel,
-          formattedValue,
-          intlNumberFormatter,
-          prefix,
-          suffix,
-          accessibilityLabelSuffix,
-          styles?.text,
-        ],
-      );
+        );
+      }, [
+        accessibilityLiveRegion,
+        textProps,
+        accessibilityLabelPrefix,
+        accessibilityLabel,
+        formatted,
+        prefix,
+        suffix,
+        accessibilityLabelSuffix,
+        styles?.text,
+      ]);
 
       return (
         <HStack ref={ref} alignSelf="flex-start" style={rootStyle} testID={testID}>
