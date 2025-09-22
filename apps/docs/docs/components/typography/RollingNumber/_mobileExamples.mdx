@@ -475,7 +475,12 @@ function CountDownExample() {
   const progress = Math.max(0, Math.min(1, (totalSeconds - seconds) / totalSeconds));
   return (
     <VStack gap={1}>
-      <RollingNumber font="display3" formattedValue={formatted} value={seconds} />
+      <RollingNumber
+        font="display3"
+        formattedValue={formatted}
+        value={seconds}
+        accessibilityLiveRegion="none"
+      />
       <HStack gap={2}>
         <Button onPress={() => setRunning((r) => !r)}>{running ? 'Pause' : 'Start'}</Button>
         <Button onPress={onReset}>Reset</Button>
@@ -488,6 +493,7 @@ function CountDownExample() {
           format={{ style: 'percent', maximumFractionDigits: 0 }}
           prefix="Elapsed: "
           value={progress}
+          accessibilityLiveRegion="none"
         />
       </VStack>
     </VStack>
@@ -539,6 +545,7 @@ function LiveBiddingExample() {
             font="body"
             formattedValue={`${minutes}:${String(seconds).padStart(2, '0')}`}
             value={timeLeft}
+            accessibilityLiveRegion="none"
           />
           <Text font="body">remaining</Text>
         </HStack>

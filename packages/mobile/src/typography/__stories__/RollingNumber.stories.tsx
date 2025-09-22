@@ -545,7 +545,12 @@ const CountDownExample = () => {
   return (
     <VStack gap={1}>
       <Text font="label1">Countdown clock</Text>
-      <RollingNumber font="display3" formattedValue={formatted} value={seconds} />
+      <RollingNumber
+        accessibilityLiveRegion="none"
+        font="display3"
+        formattedValue={formatted}
+        value={seconds}
+      />
       <HStack gap={2}>
         <Button onPress={() => setRunning((r) => !r)}>{running ? 'Pause' : 'Start'}</Button>
         <Button onPress={onReset}>Reset</Button>
@@ -555,6 +560,7 @@ const CountDownExample = () => {
       <VStack gap={1}>
         <ProgressBar progress={progress} />
         <RollingNumber
+          accessibilityLiveRegion="none"
           font="body"
           format={{ style: 'percent', maximumFractionDigits: 0 }}
           prefix="Elapsed: "
@@ -720,12 +726,18 @@ const LiveBiddingExample = () => {
           value={currentBid}
         />
         <HStack gap={1}>
-          <RollingNumber font="body" format={{ minimumFractionDigits: 0 }} value={bidCount} />
+          <RollingNumber
+            accessibilityLiveRegion="none"
+            font="body"
+            format={{ minimumFractionDigits: 0 }}
+            value={bidCount}
+          />
           <Text font="body">bids placed</Text>
           <Text color="fgMuted" font="body">
             •
           </Text>
           <RollingNumber
+            accessibilityLiveRegion="none"
             color={timeLeft < 30 ? 'fgNegative' : 'fg'}
             font="body"
             formattedValue={`${minutes}:${String(seconds).padStart(2, '0')}`}

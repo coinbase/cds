@@ -619,7 +619,7 @@ function CountDownExample() {
 
   return (
     <VStack gap={1}>
-      <RollingNumber font="display3" formattedValue={formatted} value={seconds} />
+      <RollingNumber font="display3" formattedValue={formatted} value={seconds} ariaLive="off" />
       <HStack gap={2}>
         <Button onClick={() => setRunning((r) => !r)}>{running ? 'Pause' : 'Start'}</Button>
         <Button onClick={onReset}>Reset</Button>
@@ -633,6 +633,7 @@ function CountDownExample() {
           format={{ style: 'percent', maximumFractionDigits: 0 }}
           prefix="Elapsed: "
           value={progress}
+          ariaLive="off"
         />
       </VStack>
     </VStack>
@@ -690,6 +691,7 @@ function LiveBiddingExample() {
             font="body"
             formattedValue={`${minutes}:${String(seconds).padStart(2, '0')}`}
             value={timeLeft}
+            ariaLive="off"
           />
           <Text font="body">remaining</Text>
         </HStack>
