@@ -159,7 +159,7 @@ export type RollingNumberBaseProps = SharedProps &
     /**
      * Number to display
      */
-    value: number | bigint;
+    value: number;
     /**
      * Format configuration to apply to the value. Uses the JS's Intl.NumberFormat API.
      * Scientific and engineering notation are not supported.

@@ -195,17 +195,4 @@ describe('formatToParts', () => {
     const { fraction } = formatter.formatToParts({ enableSubscriptNotation: true });
     expect(fraction.map((p) => p.type)).not.toContain('subscript');
   });
-
-  it('supports BigInt within safe range', () => {
-    const formatter = new IntlNumberFormat({
-      value: BigInt(9007199254740991), // Number.MAX_SAFE_INTEGER
-      locale,
-      format: { maximumFractionDigits: 0 },
-    });
-    const { integer, fraction } = formatter.formatToParts({ enableSubscriptNotation: false });
-    const formatted = formatter.format();
-    expect(fraction.length).toBe(0);
-    expect(integer.length).toBeGreaterThan(0);
-    expect(formatted).toContain('9');
-  });
 });

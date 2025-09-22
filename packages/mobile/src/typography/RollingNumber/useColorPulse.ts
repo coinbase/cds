@@ -28,7 +28,7 @@ export function useColorPulse({
   negativePulseColor,
   transitionConfig,
 }: {
-  value: number | bigint;
+  value: number;
   formatted: string;
   defaultColor: ThemeVars.Color;
   colorPulseOnUpdate: boolean;

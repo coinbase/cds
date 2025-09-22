@@ -32,11 +32,11 @@ export class IntlNumberFormat {
   formatter: Intl.NumberFormat;
 
   constructor(props: {
-    value: number | bigint;
+    value: number;
     format?: Intl.NumberFormatOptions;
     locale?: Intl.LocalesArgument;
   }) {
-    this.value = Number(props.value);
+    this.value = props.value;
     this.formatOptions = props.format;
     this.locale = props.locale;
 
