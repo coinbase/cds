@@ -1,0 +1,52 @@
+# TODO: Delete this file for open source
+name: Setup CDS
+description: Checkout code, setup cache and install yarn packages
+inputs:
+  yarn-install:
+    description: 'Whether to install yarn packages'
+    required: false
+    default: 'true'
+    type: boolean
+  yarn-hardened-mode:
+    description: 'Whether to run yarn in hardened mode'
+    required: false
+    default: 'false'
+    type: boolean
+
+runs:
+  using: composite
+  steps:
+    - name: Fetch master
+      if: github.ref != 'refs/heads/master'
+      run: git fetch -f --no-tags origin master:master
+      shell: bash
+
+    - name: Setup Node
+      uses: infra/cb-action-setup-node@master
+      with:
+        version: 22
+        setup_yarn: 'false'
+
+    - name: Setup Yarn
+      run: |
+        corepack enable
+        yarn config set enableGlobalCache false
+        yarn config set enableHardenedMode ${{ inputs.yarn-hardened-mode }}
+      shell: bash
+
+    - name: Setup Yarn Cache
+      if: ${{ inputs.yarn-install == 'true' }}
+      uses: actions/setup-node@v4
+      with:
+        cache: 'yarn'
+
+    - name: Install dependencies
+      if: ${{ inputs.yarn-install == 'true' }}
+      run: yarn --immutable
+      shell: bash
+
+    - name: Set base and head
+      id: set-base-and-head
+      uses: actions/nx-set-shas@9d4a35525afa55e210d25d63b5073b02720ef407
+      with:
+        main-branch-name: 'master'

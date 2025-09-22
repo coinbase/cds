@@ -1,0 +1,69 @@
+_visreg_android_shared: &visreg_android_shared
+  plugins:
+    - file:///buildkite/plugins/docker:
+        image: 652969937640.dkr.ecr.us-east-1.amazonaws.com/containers/android:v34-node20
+        wait-network: true
+        privileged: true
+        always-pull: true
+        propagate-environment: true
+        propagate-uid-gid: true
+        volumes:
+          # Allow git operations to work
+          - ${HOME}/.ssh:/root/.ssh
+          - ${HOME}/.git:/root/.git
+        environment:
+          - PLAYSTORE_AUTH
+          - KEY_PASSWORD
+          - KEY_ALIAS
+          - BUGSNAG_KEY
+          - ANDROID_KEYSTORE
+          - PLAYSTORE_PACKAGE_NAME
+          - PERCY_TOKEN
+          - PERCY_TARGET_BRANCH
+          - BUILDKITE_PIPELINE_SLUG
+          - BUILDKITE_PLUGIN_CACHE_S3_BUCKET
+          - AWS_ACCESS_KEY_ID
+          - AWS_SECRET_ACCESS_KEY
+          - AWS_SESSION_TOKEN
+    - file:///buildkite/plugins/cache:
+        key: yarn-node-modules-{{ checksum "yarn.lock" }}-v1
+        paths:
+          - ./.yarn/cache
+          - ./.yarn/install-state.gz
+    - ssh://git@github.cbhq.net/frontend/aws-sm-buildkite-plugin:
+        env:
+          PERCY_TOKEN: infra/buildkite/cds-percy-token-android
+  timeout_in_minutes: 60
+  agents:
+    queue: metal
+  retry:
+    automatic:
+      limit: 2
+
+env:
+  LANG: en_US.UTF-8
+  CI: true
+  NX_CAPTURE_METRICS: true
+  NX_CAPTURE_TEST_METRICS: true
+  NX_ENABLE_REMOTE_CACHE: true
+  ANDROID_NDK_HOME: '$$ANDROID_HOME/ndk/$$NDK_VERSION'
+  DETOX_RUN_ALL: $DETOX_RUN_ALL
+
+steps:
+  - label: 'Visreg (Android) %N'
+    <<: *visreg_android_shared
+    key: 'visreg_android'
+    parallelism: 5
+    commands:
+      - tools/ci/setup.sh
+      - echo "--- Running Android visreg tests"
+      - yarn nx run mobile-app:detox:android-release
+
+  - label: 'Finish Visreg (Android)'
+    allow_dependency_failure: true
+    depends_on: 'visreg_android'
+    parallelism: 1
+    <<: *visreg_android_shared
+    commands:
+      - npm install -g @percy/cli
+      - npx percy build:finalize

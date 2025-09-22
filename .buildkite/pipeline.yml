@@ -1,0 +1,54 @@
+env:
+  LANG: en_US.UTF-8
+  CI: true
+  NX_CAPTURE_METRICS: true
+  NX_CAPTURE_TEST_METRICS: true
+  NX_ENABLE_REMOTE_CACHE: true
+
+_docker_shared: &docker_shared
+  plugins:
+    - file:///buildkite/plugins/docker:
+        image: 652969937640.dkr.ecr.us-east-1.amazonaws.com/containers/node:v22-ub22
+        always-pull: true
+        propagate-environment: true
+        propagate-uid-gid: true
+        volumes:
+          # Allow git operations to work
+          - ${HOME}/.ssh:/root/.ssh
+          - ${HOME}/.git:/root/.git
+        environment:
+          - 'BUILDKITE_API_TOKEN'
+          - 'PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1'
+          - 'BUILDKITE_PIPELINE_SLUG'
+          - 'BUILDKITE_PLUGIN_CACHE_S3_BUCKET'
+          - 'AWS_ACCESS_KEY_ID'
+          - 'AWS_SECRET_ACCESS_KEY'
+          - 'AWS_SESSION_TOKEN'
+    - file:///buildkite/plugins/cache: &cache_plugin_yarn
+        key: yarn-node-modules-{{ checksum "yarn.lock" }}-v1
+        paths:
+          - ./.yarn/cache
+          - ./.yarn/install-state.gz
+
+_k8s_medium: &k8s_medium
+  <<: *docker_shared
+  agents:
+    queue: k8s-docker
+    agent-size: medium
+
+steps:
+  - label: 'Visreg (Mobile - All)'
+    <<: *k8s_medium
+    if: build.branch == 'master' || build.pull_request.labels includes 'visreg'
+    env:
+      DETOX_RUN_ALL: true
+    commands:
+      - tools/ci/setup.sh
+      - yarn nx run mobile-app:visreg
+
+  - label: 'Visreg (Mobile - Affected)'
+    <<: *k8s_medium
+    if: build.branch != 'master' && !(build.pull_request.labels	includes 'visreg')
+    commands:
+      - tools/ci/setup.sh
+      - (yarn workspace mobile-app should-run-visreg && yarn nx run mobile-app:visreg) || echo 'Skipping Percy (Mobile)'
