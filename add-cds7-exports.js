@@ -41,7 +41,7 @@ const packageVersionMap = {
   '@cbhq/cds-web': '^7',
   '@cbhq/cds-lottie-files': '^2',
   '@cbhq/ui-mobile-playground': '^3',
-  '@cbhq/cds-utils': '^2',
+  '@cbhq/cds-utils': '2.0.0',
 };
 
 const globalStylesV7Content = `:root {
