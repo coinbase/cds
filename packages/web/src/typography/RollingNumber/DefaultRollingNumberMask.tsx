@@ -15,9 +15,16 @@ const maskCss = css`
 `;
 
 export const DefaultRollingNumberMask: RollingNumberMaskComponent = memo(
-  forwardRef<HTMLSpanElement, RollingNumberMaskProps>(({ children, className, ...props }, ref) => (
-    <MotionText ref={ref} className={cx(maskCss, className)} {...props}>
-      {children}
-    </MotionText>
-  )),
+  forwardRef<HTMLSpanElement, RollingNumberMaskProps>(
+    ({ children, className, color, ...props }, ref) => (
+      <MotionText
+        ref={ref}
+        className={cx(maskCss, className)}
+        color={color ?? 'inherit'}
+        {...props}
+      >
+        {children}
+      </MotionText>
+    ),
+  ),
 );

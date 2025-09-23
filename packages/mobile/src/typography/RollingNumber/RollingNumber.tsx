@@ -574,7 +574,9 @@ export const RollingNumber = memo(
       );
 
       const screenReaderOnlySection = useMemo(() => {
-        const formattedWithPrefixSuffix = `${typeof prefix === 'string' ? prefix : ''}${formatted}${typeof suffix === 'string' ? suffix : ''}`;
+        const prefixString = typeof prefix === 'string' ? prefix : '';
+        const suffixString = typeof suffix === 'string' ? suffix : '';
+        const formattedWithPrefixSuffix = `${prefixString}${formatted}${suffixString}`;
         return (
           <Text
             allowFontScaling

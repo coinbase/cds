@@ -9,16 +9,15 @@ import type { RollingNumberSymbolComponent, RollingNumberSymbolProps } from './R
 const MotionText = m(Text);
 
 const containerCss = css`
-  color: inherit;
   display: inline-block;
   white-space: pre;
   align-items: center;
 `;
 
 export const DefaultRollingNumberSymbol: RollingNumberSymbolComponent = memo(
-  forwardRef<HTMLSpanElement, RollingNumberSymbolProps>(({ value, ...props }, ref) => {
+  forwardRef<HTMLSpanElement, RollingNumberSymbolProps>(({ value, color, ...props }, ref) => {
     return (
-      <MotionText ref={ref} className={containerCss} {...props}>
+      <MotionText ref={ref} className={containerCss} color={color ?? 'inherit'} {...props}>
         {value}
       </MotionText>
     );

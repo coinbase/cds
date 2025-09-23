@@ -36,6 +36,7 @@ export const DefaultRollingNumberNumberSection: RollingNumberNumberSectionCompon
         RollingNumberMaskComponent = DefaultRollingNumberMask,
         formattedValue,
         transitionConfig,
+        color,
         ...props
       },
       ref,
@@ -106,7 +107,12 @@ export const DefaultRollingNumberNumberSection: RollingNumberNumberSectionCompon
       );
 
       return (
-        <MotionText ref={ref} className={cx(containerCss, className)} {...props}>
+        <MotionText
+          ref={ref}
+          className={cx(containerCss, className)}
+          color={color ?? 'inherit'}
+          {...props}
+        >
           {formattedValue ? formattedValueDigits : intlPartsDigits}
         </MotionText>
       );

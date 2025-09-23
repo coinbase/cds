@@ -63,6 +63,7 @@ export const DefaultRollingNumberDigit: RollingNumberDigitComponent = memo(
         initialValue = value,
         transitionConfig,
         RollingNumberMaskComponent = DefaultRollingNumberMask,
+        color,
         ...props
       },
       ref,
@@ -108,7 +109,12 @@ export const DefaultRollingNumberDigit: RollingNumberDigitComponent = memo(
 
       return (
         <RollingNumberMaskComponent>
-          <MotionText ref={internalRef} className={digitContainerCss} {...props}>
+          <MotionText
+            ref={internalRef}
+            className={digitContainerCss}
+            color={color ?? 'inherit'}
+            {...props}
+          >
             {value !== 0 && (
               <span className={cx(digitNonActiveCss, topNonActiveCss)}>
                 {new Array(value).fill(null).map((_, i) => renderDigit(i))}

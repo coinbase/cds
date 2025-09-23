@@ -17,16 +17,16 @@ const containerCss = css`
   align-items: center;
   justify-content: center;
   white-space: pre;
-  color: inherit;
 `;
 
 export const DefaultRollingNumberNodeSection: RollingNumberNodeSectionComponent = memo(
   forwardRef<HTMLSpanElement, RollingNumberNodeSectionProps>(
-    ({ children, justifyContent = 'flex-start', style, className, ...props }, ref) => {
+    ({ children, justifyContent = 'flex-start', style, className, color, ...props }, ref) => {
       return (
         <MotionText
           ref={ref}
           className={cx(containerCss, className)}
+          color={color ?? 'inherit'}
           justifyContent={justifyContent}
           {...props}
         >
