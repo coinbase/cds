@@ -3,8 +3,11 @@ import { css } from '@linaria/core';
 import { m } from 'framer-motion';
 
 import { cx } from '../../cx';
+import { Text } from '../Text';
 
 import type { RollingNumberMaskComponent, RollingNumberMaskProps } from './RollingNumber';
+
+const MotionText = m(Text);
 
 const maskCss = css`
   display: inline-flex;
@@ -12,11 +15,9 @@ const maskCss = css`
 `;
 
 export const DefaultRollingNumberMask: RollingNumberMaskComponent = memo(
-  forwardRef<HTMLSpanElement, RollingNumberMaskProps>(
-    ({ children, className, style, ...props }, ref) => (
-      <m.span ref={ref} className={cx(maskCss, className)} style={style} {...props}>
-        {children}
-      </m.span>
-    ),
-  ),
+  forwardRef<HTMLSpanElement, RollingNumberMaskProps>(({ children, className, ...props }, ref) => (
+    <MotionText ref={ref} className={cx(maskCss, className)} {...props}>
+      {children}
+    </MotionText>
+  )),
 );

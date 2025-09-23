@@ -1,8 +1,9 @@
-import { forwardRef, memo, useCallback, useLayoutEffect, useRef } from 'react';
+import { forwardRef, memo, useCallback, useImperativeHandle, useLayoutEffect, useRef } from 'react';
 import { css } from '@linaria/core';
 import { animate, m } from 'framer-motion';
 
 import { cx } from '../../cx';
+import { Text } from '../Text';
 
 import { DefaultRollingNumberMask } from './DefaultRollingNumberMask';
 import {
@@ -10,6 +11,8 @@ import {
   type RollingNumberDigitComponent,
   type RollingNumberDigitProps,
 } from './RollingNumber';
+
+const MotionText = m(Text);
 
 const digitContainerCss = css`
   display: inline-flex;
@@ -61,10 +64,11 @@ export const DefaultRollingNumberDigit: RollingNumberDigitComponent = memo(
         transitionConfig,
         RollingNumberMaskComponent = DefaultRollingNumberMask,
         ...props
-      }: any,
+      },
       ref,
     ) => {
       const internalRef = useRef<HTMLSpanElement>(null);
+      useImperativeHandle(ref, () => internalRef.current as HTMLSpanElement);
 
       const numberRefs = useRef(new Array<HTMLSpanElement | null>(10));
       const prevValue = useRef(initialValue);
@@ -103,8 +107,8 @@ export const DefaultRollingNumberDigit: RollingNumberDigitComponent = memo(
       );
 
       return (
-        <RollingNumberMaskComponent ref={ref} {...props}>
-          <m.span ref={internalRef} className={digitContainerCss}>
+        <RollingNumberMaskComponent>
+          <MotionText ref={internalRef} className={digitContainerCss} {...props}>
             {value !== 0 && (
               <span className={cx(digitNonActiveCss, topNonActiveCss)}>
                 {new Array(value).fill(null).map((_, i) => renderDigit(i))}
@@ -116,7 +120,7 @@ export const DefaultRollingNumberDigit: RollingNumberDigitComponent = memo(
                 {new Array(9 - value).fill(null).map((_, i) => renderDigit(value + i + 1))}
               </span>
             )}
-          </m.span>
+          </MotionText>
         </RollingNumberMaskComponent>
       );
     },

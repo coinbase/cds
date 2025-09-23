@@ -4,6 +4,7 @@ import { m } from 'framer-motion';
 
 import { cx } from '../../cx';
 import { useHasMounted } from '../../hooks/useHasMounted';
+import { Text } from '../Text';
 
 import { DefaultRollingNumberDigit } from './DefaultRollingNumberDigit';
 import { DefaultRollingNumberMask } from './DefaultRollingNumberMask';
@@ -12,6 +13,8 @@ import type {
   RollingNumberNumberSectionComponent,
   RollingNumberNumberSectionProps,
 } from './RollingNumber';
+
+const MotionText = m(Text);
 
 const containerCss = css`
   display: inline-flex;
@@ -25,7 +28,7 @@ export const DefaultRollingNumberNumberSection: RollingNumberNumberSectionCompon
     (
       {
         intlNumberParts,
-        justify = 'flex-start',
+        justifyContent = 'flex-start',
         style,
         className,
         RollingNumberDigitComponent = DefaultRollingNumberDigit,
@@ -39,11 +42,6 @@ export const DefaultRollingNumberNumberSection: RollingNumberNumberSectionCompon
     ) => {
       const hasMounted = useHasMounted();
 
-      const containerStyle = useMemo(
-        () => ({ justifyContent: justify, ...style }),
-        [justify, style],
-      );
-
       const intlPartsDigits = useMemo(
         () =>
           intlNumberParts.map((part) =>
@@ -51,7 +49,7 @@ export const DefaultRollingNumberNumberSection: RollingNumberNumberSectionCompon
             typeof part.value !== 'number' ? (
               <RollingNumberSymbolComponent
                 key={part.type === 'literal' ? `${part.key}:${part.value}` : part.key}
-                justify={justify}
+                justifyContent={justifyContent}
                 value={String(part.value)}
               />
             ) : (
@@ -67,7 +65,7 @@ export const DefaultRollingNumberNumberSection: RollingNumberNumberSectionCompon
         [
           intlNumberParts,
           RollingNumberSymbolComponent,
-          justify,
+          justifyContent,
           RollingNumberDigitComponent,
           hasMounted,
           transitionConfig,
@@ -89,7 +87,11 @@ export const DefaultRollingNumberNumberSection: RollingNumberNumberSectionCompon
                   value={parseInt(char)}
                 />
               ) : (
-                <RollingNumberSymbolComponent key={index} justify={justify} value={char} />
+                <RollingNumberSymbolComponent
+                  key={index}
+                  justifyContent={justifyContent}
+                  value={char}
+                />
               ),
             ),
         [
@@ -97,16 +99,16 @@ export const DefaultRollingNumberNumberSection: RollingNumberNumberSectionCompon
           RollingNumberSymbolComponent,
           formattedValue,
           hasMounted,
-          justify,
+          justifyContent,
           RollingNumberMaskComponent,
           transitionConfig,
         ],
       );
 
       return (
-        <m.span ref={ref} className={cx(containerCss, className)} style={containerStyle} {...props}>
+        <MotionText ref={ref} className={cx(containerCss, className)} {...props}>
           {formattedValue ? formattedValueDigits : intlPartsDigits}
-        </m.span>
+        </MotionText>
       );
     },
   ),

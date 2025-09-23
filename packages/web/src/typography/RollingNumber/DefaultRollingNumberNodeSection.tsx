@@ -1,13 +1,16 @@
-import { forwardRef, memo, useMemo } from 'react';
+import { forwardRef, memo } from 'react';
 import { css } from '@linaria/core';
 import { m } from 'framer-motion';
 
 import { cx } from '../../cx';
+import { Text } from '../Text';
 
 import type {
   RollingNumberNodeSectionComponent,
   RollingNumberNodeSectionProps,
 } from './RollingNumber';
+
+const MotionText = m(Text);
 
 const containerCss = css`
   display: inline-flex;
@@ -19,16 +22,16 @@ const containerCss = css`
 
 export const DefaultRollingNumberNodeSection: RollingNumberNodeSectionComponent = memo(
   forwardRef<HTMLSpanElement, RollingNumberNodeSectionProps>(
-    ({ children, justify = 'flex-start', style, className, ...props }, ref) => {
-      const containerStyle = useMemo(
-        () => ({ justifyContent: justify, ...style }),
-        [justify, style],
-      );
-
+    ({ children, justifyContent = 'flex-start', style, className, ...props }, ref) => {
       return (
-        <m.span ref={ref} className={cx(containerCss, className)} style={containerStyle} {...props}>
+        <MotionText
+          ref={ref}
+          className={cx(containerCss, className)}
+          justifyContent={justifyContent}
+          {...props}
+        >
           {children}
-        </m.span>
+        </MotionText>
       );
     },
   ),
