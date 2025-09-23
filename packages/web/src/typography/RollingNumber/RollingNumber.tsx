@@ -147,7 +147,7 @@ export type RollingNumberBaseProps = SharedProps &
     /**
      * Locale to use for formatting. If not provided, will use the locale provided in LocaleProvider.
      */
-    locale?: string;
+    locale?: Intl.LocalesArgument;
     /**
      * Base text color token.
      * When {@link colorPulseOnUpdate} is true, the color will briefly pulse to a
@@ -505,8 +505,8 @@ export const RollingNumber: RollingNumberComponent = memo(
           tabularNumbers={tabularNumbers}
           {...props}
         >
+          {/* render screen reader only section for accessibility */}
           {screenReaderOnlySection}
-          {/* wrap another layer of m.span to use framer-motion color animation */}
           <m.span
             aria-hidden
             animate={colorControls}

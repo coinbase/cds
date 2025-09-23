@@ -1,4 +1,5 @@
 import { forwardRef, memo, useCallback, useImperativeHandle, useLayoutEffect, useRef } from 'react';
+import { getWidthInEm } from '@coinbase/cds-common';
 import { css } from '@linaria/core';
 import { animate, m, type ValueAnimationOptions } from 'framer-motion';
 
@@ -43,11 +44,6 @@ const digitSpanCss = css`
   display: inline-block;
   color: inherit;
 `;
-
-const getWidthInEm = (element: HTMLElement) => {
-  const { width, fontSize } = getComputedStyle(element);
-  return `${parseFloat(width) / parseFloat(fontSize)}em`;
-};
 
 /**
  * Note that the DefaultRollingNumberDigit component implementation is different in web

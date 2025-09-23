@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { curves, durations } from '@coinbase/cds-common/motion/tokens';
 
 import { IconButton } from '../../buttons';
@@ -11,7 +11,7 @@ import { RollingNumber } from '../RollingNumber/RollingNumber';
 import { Text } from '../Text';
 
 export default {
-  title: 'Core Components/RollingNumber',
+  title: 'Components/RollingNumber',
   component: RollingNumber,
 };
 
@@ -452,6 +452,31 @@ export const UserProvidedFormattedValue = () => {
   );
 };
 
+export const Accessibility = () => {
+  return (
+    <VStack gap={2}>
+      <Text font="label1">Override screen reader label (compact notation)</Text>
+      <RollingNumber
+        accessibilityLabel="1,230 followers"
+        font="display3"
+        formattedValue="1.23K"
+        suffix=" followers"
+        value={1230}
+      />
+
+      <Text font="label1">Prefix/Suffix for screen readers (basis points)</Text>
+      <RollingNumber
+        accessibilityLabelPrefix="down "
+        accessibilityLabelSuffix=" likes"
+        font="body"
+        prefix={<Icon name="arrowDown" size="s" />}
+        suffix={<Icon name="heart" size="s" />}
+        value={25}
+      />
+    </VStack>
+  );
+};
+
 const CounterExample = () => {
   const [count, setCount] = React.useState(0);
   const onInc = () => setCount((c) => c + 1);
@@ -703,12 +728,226 @@ const LiveBiddingExample = () => {
   );
 };
 
-export const Fun = () => (
-  <VStack gap={3}>
-    <CounterExample />
-    <CountDownExample />
-    <SubscriptionPriceExample />
-    <StatisticsExample />
-    <LiveBiddingExample />
-  </VStack>
-);
+export const Fun = () => {
+  // Counter
+  const [count, setCount] = useState(0);
+
+  // Countdown
+  const pad = (n: number) => String(n).padStart(2, '0');
+  const totalSeconds = 5 * 60;
+  const [seconds, setSeconds] = useState(totalSeconds);
+  const [running, setRunning] = useState(false);
+  useEffect(() => {
+    if (!running) return;
+    const id = setInterval(() => {
+      setSeconds((prev) => (prev <= 1 ? 0 : prev - 1));
+    }, 1000);
+    return () => clearInterval(id);
+  }, [running]);
+  const minutes = Math.floor(seconds / 60);
+  const secs = seconds % 60;
+  const formatted = `${pad(minutes)}:${pad(secs)}`;
+  const onReset = () => setSeconds(totalSeconds);
+  const progress = Math.max(0, Math.min(1, (totalSeconds - seconds) / totalSeconds));
+
+  // Subscription price
+  const [yearly, setYearly] = useState(false);
+  const price = yearly ? 199 : 19;
+  const suffix = yearly ? '/yr' : '/mo';
+
+  // Statistics
+  const [views, setViews] = useState(1234567);
+  const [likes, setLikes] = useState(89432);
+  const [shares, setShares] = useState(12789);
+  const [downloads, setDownloads] = useState(567890);
+  const simulateActivity = () => {
+    setViews((v) => v + Math.floor(Math.random() * 1000));
+    setLikes((l) => l + Math.floor(Math.random() * 200));
+    setShares((s) => s + Math.floor(Math.random() * 100));
+    setDownloads((d) => d + Math.floor(Math.random() * 500));
+  };
+
+  // Live bidding
+  const [currentBid, setCurrentBid] = useState(45000);
+  const [bidCount, setBidCount] = useState(23);
+  const [timeLeft, setTimeLeft] = useState(180);
+  useEffect(() => {
+    const timer = setInterval(() => setTimeLeft((t) => Math.max(0, t - 1)), 1000);
+    return () => clearInterval(timer);
+  }, []);
+  const placeBid = (inc: number) => {
+    setCurrentBid((b) => b + inc);
+    setBidCount((c) => c + 1);
+  };
+  const lbMinutes = Math.floor(timeLeft / 60);
+  const lbSeconds = timeLeft % 60;
+
+  return (
+    <VStack gap={3}>
+      {/* Counter */}
+      <VStack gap={1}>
+        <Text font="label1">Counter</Text>
+        <HStack alignItems="center" gap={2}>
+          <IconButton name="minus" onClick={() => setCount((c) => Math.max(0, c - 1))} />
+          <RollingNumber
+            colorPulseOnUpdate
+            font="display1"
+            format={{ minimumFractionDigits: 0, maximumFractionDigits: 0 }}
+            value={count}
+          />
+          <IconButton name="add" onClick={() => setCount((c) => c + 1)} />
+        </HStack>
+      </VStack>
+
+      {/* Countdown */}
+      <VStack gap={1}>
+        <Text font="label1">Countdown clock</Text>
+        <RollingNumber ariaLive="off" font="display3" formattedValue={formatted} value={seconds} />
+        <HStack gap={2}>
+          <Button onClick={() => setRunning((r) => !r)}>{running ? 'Pause' : 'Start'}</Button>
+          <Button onClick={onReset}>Reset</Button>
+        </HStack>
+        <Text font="label1">Countdown with percent</Text>
+        <VStack gap={1}>
+          <ProgressBar progress={progress} />
+          <RollingNumber
+            ariaLive="off"
+            font="body"
+            format={{ style: 'percent', maximumFractionDigits: 0 }}
+            prefix="Elapsed: "
+            value={progress}
+          />
+        </VStack>
+      </VStack>
+
+      {/* Subscription */}
+      <VStack gap={1}>
+        <RollingNumber
+          colorPulseOnUpdate
+          accessibilityLabel={`$${price} ${suffix === '/yr' ? 'yearly' : 'monthly'}`}
+          font="display1"
+          format={{
+            style: 'currency',
+            currency: 'USD',
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 0,
+          }}
+          styles={{
+            suffix: {
+              position: 'relative',
+              top: 'var(--space-1_5)',
+              color: 'var(--color-fgMuted)',
+              fontSize: 'var(--fontSize-title1)',
+            },
+          }}
+          suffix={suffix}
+          transition={{ y: { type: 'spring', stiffness: 80, damping: 24, mass: 3 } }}
+          value={price}
+        />
+        <HStack gap={2}>
+          <Button onClick={() => setYearly((v) => !v)}>
+            {yearly ? 'Switch to monthly' : 'Switch to yearly'}
+          </Button>
+        </HStack>
+      </VStack>
+
+      {/* Statistics */}
+      <VStack gap={2}>
+        <Text font="label1">Social Media Statistics</Text>
+        <HStack gap={4}>
+          <VStack alignItems="center" gap={0.5}>
+            <RollingNumber
+              colorPulseOnUpdate
+              font="title1"
+              format={{ notation: 'compact', maximumFractionDigits: 1, minimumFractionDigits: 1 }}
+              positivePulseColor="accentBoldBlue"
+              value={views}
+            />
+            <Text color="fgMuted" font="caption">
+              Views
+            </Text>
+          </VStack>
+          <VStack alignItems="center" gap={0.5}>
+            <RollingNumber
+              colorPulseOnUpdate
+              font="title1"
+              format={{ notation: 'compact', maximumFractionDigits: 1, minimumFractionDigits: 1 }}
+              positivePulseColor="accentBoldRed"
+              prefix={<Icon color="accentBoldRed" name="heart" />}
+              styles={{ prefix: { paddingRight: 'var(--space-0_5)' } }}
+              value={likes}
+            />
+            <Text color="fgMuted" font="caption">
+              Likes
+            </Text>
+          </VStack>
+          <VStack alignItems="center" gap={0.5}>
+            <RollingNumber
+              colorPulseOnUpdate
+              font="title1"
+              format={{ notation: 'compact', maximumFractionDigits: 1, minimumFractionDigits: 1 }}
+              positivePulseColor="accentBoldGreen"
+              value={shares}
+            />
+            <Text color="fgMuted" font="caption">
+              Shares
+            </Text>
+          </VStack>
+          <VStack alignItems="center" gap={0.5}>
+            <RollingNumber
+              colorPulseOnUpdate
+              font="title1"
+              format={{ notation: 'compact', maximumFractionDigits: 1, minimumFractionDigits: 1 }}
+              positivePulseColor="accentBoldPurple"
+              value={downloads}
+            />
+            <Text color="fgMuted" font="caption">
+              Downloads
+            </Text>
+          </VStack>
+        </HStack>
+        <Button onClick={simulateActivity}>Simulate Activity</Button>
+      </VStack>
+
+      {/* Live bidding */}
+      <VStack gap={1}>
+        <Text color="fgMuted" font="caption">
+          Current Bid
+        </Text>
+        <RollingNumber
+          colorPulseOnUpdate
+          font="display2"
+          format={{ style: 'currency', currency: 'USD', minimumFractionDigits: 0 }}
+          positivePulseColor="accentBoldRed"
+          transition={{ y: { type: 'spring', stiffness: 200, damping: 20 } }}
+          value={currentBid}
+        />
+        <HStack gap={1}>
+          <RollingNumber
+            ariaLive="off"
+            font="body"
+            format={{ minimumFractionDigits: 0 }}
+            value={bidCount}
+          />
+          <Text font="body">bids placed</Text>
+          <Text color="fgMuted" font="body">
+            •
+          </Text>
+          <RollingNumber
+            ariaLive="off"
+            color={timeLeft < 30 ? 'fgNegative' : 'fg'}
+            font="body"
+            formattedValue={`${lbMinutes}:${String(lbSeconds).padStart(2, '0')}`}
+            value={timeLeft}
+          />
+          <Text font="body">remaining</Text>
+        </HStack>
+        <HStack gap={1}>
+          <Button onClick={() => placeBid(100)}>+$100</Button>
+          <Button onClick={() => placeBid(500)}>+$500</Button>
+          <Button onClick={() => placeBid(1000)}>+$1000</Button>
+        </HStack>
+      </VStack>
+    </VStack>
+  );
+};

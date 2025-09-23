@@ -2,7 +2,7 @@
   "import": "import { RollingNumber } from '@coinbase/cds-web/typography'",
   "source": "https://github.com/coinbase/cds/blob/master/packages/web/src/typography/RollingNumber/RollingNumber.tsx",
   "description": "A numeric display that animates value changes with rolling digits.",
-  "storybook": "https://cds-storybook.coinbase.com/?path=/story/core-components-rollingnumber--basic",
+  "storybook": "https://cds-storybook.coinbase.com/?path=/story/components-rollingnumber--examples",
   "figma": "",
   "relatedComponents": [],
   "dependencies": []

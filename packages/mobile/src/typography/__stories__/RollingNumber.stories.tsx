@@ -767,6 +767,31 @@ const FunExamples = () => {
   );
 };
 
+const Accessibility = () => {
+  return (
+    <VStack gap={2}>
+      <Text font="label1">Override screen reader label (compact notation)</Text>
+      <RollingNumber
+        accessibilityLabel="1,230 followers"
+        font="display3"
+        formattedValue="1.23K"
+        suffix=" followers"
+        value={1230}
+      />
+
+      <Text font="label1">Prefix/Suffix for screen readers (basis points)</Text>
+      <RollingNumber
+        accessibilityLabelPrefix="down "
+        accessibilityLabelSuffix=" likes"
+        font="body"
+        prefix={<Icon name="arrowDown" size="s" />}
+        suffix={<Icon name="heart" size="s" />}
+        value={25}
+      />
+    </VStack>
+  );
+};
+
 const RollingNumberScreen = () => {
   return (
     <ExampleScreen>
@@ -793,6 +818,9 @@ const RollingNumberScreen = () => {
       </Example>
       <Example title="User Provided Formatted Value">
         <UserProvidedFormattedValue />
+      </Example>
+      <Example title="Accessibility (labels & prefix/suffix)">
+        <Accessibility />
       </Example>
       <Example title="Fun">
         <FunExamples />

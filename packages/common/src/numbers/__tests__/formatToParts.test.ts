@@ -83,8 +83,7 @@ describe('formatToParts', () => {
     expect(preStr).toContain('$');
 
     expect(fraction.map((p) => `${p.type}:${p.value}`)).toContain('subscript:₄');
-    expect(formatted).toContain('$');
-    expect(formatted).toContain('0.00009');
+    expect(formatted).toBe('$0.00009');
   });
 
   it('keys integer RTL and fraction LTR (no subscript)', () => {

@@ -204,7 +204,7 @@ export type RollingNumberBaseProps = SharedProps &
     /**
      * Locale to use for formatting. If not provided, will use the locale provided in LocaleProvider.
      */
-    locale?: string;
+    locale?: Intl.LocalesArgument;
     /**
      * Base text color token.
      * When {@link colorPulseOnUpdate} is true, the color will briefly pulse to a
@@ -600,7 +600,9 @@ export const RollingNumber = memo(
 
       return (
         <HStack ref={ref} alignSelf="flex-start" style={rootStyle} testID={testID}>
+          {/* render invisible measured digits for measuring the digits height */}
           {invisibleMeasuredDigits}
+          {/* render screen reader only section for accessibility */}
           {screenReaderOnlySection}
           <HStack
             accessibilityElementsHidden

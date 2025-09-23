@@ -2,9 +2,7 @@
 
 RollingNumber displays changing numeric values with a smooth per-digit roll animation and optional color pulse. It supports `Intl.NumberFormat` options, custom typography, ReactNode prefixes/suffixes, and accessibility.
 
-::::tip Getting started
 Pass a number in the `value` prop. Use the `format` prop for Intl formatting (currency, percent, grouping, compact) instead of pre-formatting the string yourself.
-::::
 
 ```tsx
 <RollingNumber value={12345.67} />
@@ -100,11 +98,9 @@ function Format() {
 
 RollingNumber forwards all Text props, but only character-level typographic props (e.g., `font`, `fontFamily`, `fontSize`, `fontWeight`, `lineHeight`, `tabularNumbers`, `color`) are meaningful for its per-digit rendering. Layout/container props may have no effect—use them judiciously.
 
-::::tip Mobile specifics
-
-- Non-tabular numbers are currently not supported on mobile. The `tabularNumbers` setting should not be disabled.
-- Per-section text styling (color, font, etc.) is not supported on mobile; text styles are applied globally within `RollingNumber`.
-  ::::
+::::tip Mobile limitation
+Non-tabular numbers are currently not supported on mobile. The `tabularNumbers` setting should not be disabled.
+::::
 
 ```tsx
 function TypographyExamples() {
@@ -321,6 +317,12 @@ function PrefixAndSuffix() {
 ```
 
 ## Style Overrides
+
+Customize the look of each logical section (`i18nPrefix`, `integer`, `fraction`, `i18nSuffix`, `prefix`, `suffix`).
+
+:::tip Mobile limitation
+Per-section text styling (color, font, etc.) is not supported on mobile; text styles are applied globally within `RollingNumber`.
+:::
 
 ```tsx
 function StyleOverrides() {
