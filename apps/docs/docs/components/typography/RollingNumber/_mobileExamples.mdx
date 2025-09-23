@@ -619,7 +619,7 @@ RollingNumber (root: HStack)
        └── NodeSection (suffix)               ← your ReactNode suffix
 ```
 
-Per-digit rendering inside a NumberSection (mobile translates the digit container so the active digit aligns with the top of the mask):
+Per-digit rendering inside a NumberSection:
 
 ```text
 NumberSection
@@ -627,7 +627,7 @@ NumberSection
   └── Digit(s)
        └── Mask (RollingNumberMaskComponent)
             └── Animated.View (digit container)
-                 ├── non-active digits above (positioned)
-                 ├── active digit (top-aligned in mask)
-                 └── non-active digits below (positioned)
+                 ├── non-active digits above
+                 ├── active digit
+                 └── non-active digits below
 ```
