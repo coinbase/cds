@@ -34,7 +34,7 @@ const packageUpdateOrder = [
 const packageVersionMap = {
   '@cbhq/cds-common': '^7',
   '@cbhq/cds-icons': '^4',
-  '@cbhq/cds-illustrations': '^4',
+  '@cbhq/cds-illustrations': '4.9.0',
   '@cbhq/cds-mobile-visualization': '^2',
   '@cbhq/cds-mobile': '^7',
   '@cbhq/cds-web-visualization': '^2',
