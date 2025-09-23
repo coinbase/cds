@@ -25,6 +25,24 @@ const keyParts = (
   return direction === 'rtl' ? keyed.reverse() : keyed;
 };
 
+/**
+ * Lightweight wrapper around the built-in Intl.NumberFormat that standardizes
+ * number formatting across CDS and provides a structure optimized for animated
+ * rendering in RollingNumber components.
+ *
+ * Responsibilities:
+ * - Create and cache an Intl.NumberFormat instance for given value, options, and locale
+ * - Expose a simple `format()` that returns the fully formatted string
+ * - Expose `formatToParts()` that returns logically grouped and keyed parts
+ *   (pre/integer/fraction/post) so UI layers can animate digits and symbols
+ * - Optionally supports subscript notation for leading fractional zeros
+ *
+ * Notes:
+ * - Keys produced by `formatToParts()` are stable and direction-aware so that
+ *   animations (e.g., per-digit transitions) can be deterministic
+ * - If the environment lacks `Intl.NumberFormat.prototype.formatToParts`, the
+ *   method will throw and callers should polyfill it.
+ */
 export class IntlNumberFormat {
   value: number;
   formatOptions?: Intl.NumberFormatOptions;
@@ -133,7 +151,7 @@ export class IntlNumberFormat {
   } {
     if (!Intl.NumberFormat.prototype.formatToParts) {
       throw new Error(
-        'Intl.NumberFormat.prototype.formatToParts is undefined, please ensure Intl is polyfilled or always provide formattedValue.',
+        'Intl.NumberFormat.prototype.formatToParts is undefined, please ensure Intl.NumberFormat is polyfilled.',
       );
     }
 

@@ -181,10 +181,6 @@ export type RollingNumberBaseProps = SharedProps &
      */
     transition?: TransitionConfig;
     /**
-     * Accessibility label to display for screen readers.
-     */
-    accessibilityLabel?: string;
-    /**
      * Accessibility prefix to announce before.
      */
     accessibilityLabelPrefix?: string;

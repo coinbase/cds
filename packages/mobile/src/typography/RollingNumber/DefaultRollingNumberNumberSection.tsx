@@ -1,4 +1,5 @@
 import { forwardRef, memo, useCallback, useMemo, useState } from 'react';
+import type { Key } from 'react';
 import type { View } from 'react-native';
 import Animated from 'react-native-reanimated';
 
@@ -44,8 +45,8 @@ export const DefaultRollingNumberNumberSection: RollingNumberNumberSectionCompon
 
       // fallback digit is used when the measurement is not complete
       const fallbackDigit = useCallback(
-        (digit: number) => (
-          <AnimatedText style={styles?.text} {...textProps}>
+        (digit: number, key: Key) => (
+          <AnimatedText key={key} style={styles?.text} {...textProps}>
             {digit}
           </AnimatedText>
         ),
@@ -70,7 +71,7 @@ export const DefaultRollingNumberNumberSection: RollingNumberNumberSectionCompon
               );
             }
 
-            if (!measurementCompleted) return fallbackDigit(part.value);
+            if (!measurementCompleted) return fallbackDigit(part.value, part.key);
             return (
               <RollingNumberDigitComponent
                 key={part.key}
@@ -117,7 +118,7 @@ export const DefaultRollingNumberNumberSection: RollingNumberNumberSectionCompon
               );
             }
 
-            if (!measurementCompleted) return fallbackDigit(parseInt(char));
+            if (!measurementCompleted) return fallbackDigit(parseInt(char), index);
             return (
               <RollingNumberDigitComponent
                 key={index}

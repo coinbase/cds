@@ -237,17 +237,11 @@ export type RollingNumberBaseProps = SharedProps &
      */
     transition?: TransitionConfig;
     /**
-     * Accessibility label to display for screen readers.
-     */
-    accessibilityLabel?: string;
-    /**
      * Accessibility prefix to announce before.
-     * @default ''
      */
     accessibilityLabelPrefix?: string;
     /**
      * Accessibility suffix to announce after.
-     * @default ''
      */
     accessibilityLabelSuffix?: string;
     /**
@@ -318,8 +312,8 @@ export const RollingNumber = memo(
         transition = DEFAULT_TRANSITION,
         formattedValue,
         accessibilityLabel,
-        accessibilityLabelPrefix = '',
-        accessibilityLabelSuffix = '',
+        accessibilityLabelPrefix,
+        accessibilityLabelSuffix,
         RollingNumberMaskComponent = DefaultRollingNumberMask,
         RollingNumberNodeSectionComponent = DefaultRollingNumberNodeSection,
         RollingNumberNumberSectionComponent = DefaultRollingNumberNumberSection,
@@ -585,9 +579,9 @@ export const RollingNumber = memo(
             style={[baseStylesheet.screenReaderOnly, styles?.text]}
             {...textProps}
           >
-            {`${accessibilityLabelPrefix}
+            {`${accessibilityLabelPrefix ?? ''}
             ${accessibilityLabel ?? formattedWithPrefixSuffix}
-            ${accessibilityLabelSuffix}`}
+            ${accessibilityLabelSuffix ?? ''}`}
           </Text>
         );
       }, [
