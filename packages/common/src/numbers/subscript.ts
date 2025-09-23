@@ -1,6 +1,6 @@
 import type { NumberPart } from './IntlNumberFormat';
 
-const SUB: Record<string, string> = {
+const numberSubscriptMap: Record<string, string> = {
   '0': '₀',
   '1': '₁',
   '2': '₂',
@@ -16,7 +16,7 @@ const SUB: Record<string, string> = {
 export const toSubscriptNumber = (n: number) =>
   String(n)
     .split('')
-    .map((d) => SUB[d] ?? d)
+    .map((d) => numberSubscriptMap[d] ?? d)
     .join('');
 
 /**
@@ -27,17 +27,17 @@ export function buildFractionPartsWithSubscript(fractionDigits: string): NumberP
   if (!match) {
     return fractionDigits.split('').map((d) => ({ type: 'fraction', value: parseInt(d, 10) }));
   }
-  const [, zeros, rest] = match;
+  const [, matchedZeros, restOfDigits] = match;
   // no need to add subscript for single zero or no zeros, 0.0 -> 0.0, 0.912 -> 0.912
-  if (zeros.length <= 1) {
+  if (matchedZeros.length <= 1) {
     return fractionDigits.split('').map((d) => ({ type: 'fraction', value: parseInt(d, 10) }));
   }
   const parts: NumberPart[] = [];
   parts.push({ type: 'fraction', value: 0 });
-  parts.push({ type: 'subscript', value: toSubscriptNumber(zeros.length) });
+  parts.push({ type: 'subscript', value: toSubscriptNumber(matchedZeros.length) });
 
-  for (let i = 0; i < rest.length; i++) {
-    parts.push({ type: 'fraction', value: parseInt(rest[i]!, 10) });
+  for (let i = 0; i < restOfDigits.length; i++) {
+    parts.push({ type: 'fraction', value: parseInt(restOfDigits[i], 10) });
   }
   return parts;
 }

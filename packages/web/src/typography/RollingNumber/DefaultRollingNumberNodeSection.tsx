@@ -1,4 +1,4 @@
-import { forwardRef, memo, useImperativeHandle, useMemo } from 'react';
+import { forwardRef, memo, useMemo } from 'react';
 import { css } from '@linaria/core';
 import { m } from 'framer-motion';
 

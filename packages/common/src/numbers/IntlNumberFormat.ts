@@ -147,35 +147,42 @@ export class IntlNumberFormat {
     const counts: Partial<Record<string, number>> = {};
     const generateKey = (type: string) => `${type}:${(counts[type] = (counts[type] ?? -1) + 1)}`;
 
-    let seenNumber = false;
+    let didParseNumberPart = false;
     for (const part of parts) {
-      const { type } = part;
+      const { type, value } = part;
 
-      if (type === 'integer') {
-        seenNumber = true;
-        integerUnkeyed.push(...splitDigitsIntoParts(part.value, type));
-      } else if (type === 'fraction') {
-        seenNumber = true;
-        if (enableSubscriptNotation) {
-          fractionUnkeyed.push(...buildFractionPartsWithSubscript(part.value));
-        } else {
-          fractionUnkeyed.push(...splitDigitsIntoParts(part.value, type));
+      switch (type) {
+        case 'integer': {
+          didParseNumberPart = true;
+          integerUnkeyed.push(...splitDigitsIntoParts(value, type));
+          break;
         }
-      } else if (type === 'group') {
-        seenNumber = true;
-        integerUnkeyed.push({ type, value: part.value });
-      } else if (type === 'decimal') {
-        seenNumber = true;
-        fractionUnkeyed.push({
-          type,
-          value: part.value,
-        });
-      } else {
-        (seenNumber ? post : pre).push({
-          type,
-          value: part.value,
-          key: generateKey(type),
-        });
+        case 'fraction': {
+          didParseNumberPart = true;
+          const fractionParts = enableSubscriptNotation
+            ? buildFractionPartsWithSubscript(value)
+            : splitDigitsIntoParts(value, type);
+          fractionUnkeyed.push(...fractionParts);
+          break;
+        }
+        case 'group': {
+          didParseNumberPart = true;
+          integerUnkeyed.push({ type, value });
+          break;
+        }
+        case 'decimal': {
+          didParseNumberPart = true;
+          fractionUnkeyed.push({ type, value });
+          break;
+        }
+        default: {
+          (didParseNumberPart ? post : pre).push({
+            type,
+            value,
+            key: generateKey(type),
+          });
+          break;
+        }
       }
     }
 

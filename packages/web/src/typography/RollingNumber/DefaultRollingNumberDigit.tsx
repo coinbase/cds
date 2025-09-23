@@ -1,4 +1,4 @@
-import { forwardRef, memo, useCallback, useImperativeHandle, useLayoutEffect, useRef } from 'react';
+import { forwardRef, memo, useCallback, useLayoutEffect, useRef } from 'react';
 import { css } from '@linaria/core';
 import { animate, m } from 'framer-motion';
 
@@ -6,7 +6,7 @@ import { cx } from '../../cx';
 
 import { DefaultRollingNumberMask } from './DefaultRollingNumberMask';
 import {
-  DEFAULT_TRANSITION,
+  defaultTransitionConfig,
   type RollingNumberDigitComponent,
   type RollingNumberDigitProps,
 } from './RollingNumber';
@@ -83,7 +83,7 @@ export const DefaultRollingNumberDigit: RollingNumberDigitComponent = memo(
             y: [initialY, 0],
             width: [prevWidth, currentWidth],
           },
-          transitionConfig?.y ?? DEFAULT_TRANSITION.y,
+          transitionConfig?.y ?? defaultTransitionConfig.y,
         );
 
         prevValue.current = value;

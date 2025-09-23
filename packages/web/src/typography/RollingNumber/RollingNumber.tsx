@@ -12,9 +12,8 @@ import { type HTMLMotionProps, m, type Transition } from 'framer-motion';
 
 import type { Polymorphic } from '../../core/polymorphism';
 import { cx } from '../../cx';
-import { HStack } from '../../layout';
-import type { TextBaseProps } from '..';
-import { Text } from '..';
+import { HStack } from '../../layout/HStack';
+import { Text, type TextBaseProps } from '../Text';
 
 import { DefaultRollingNumberDigit } from './DefaultRollingNumberDigit';
 import { DefaultRollingNumberMask } from './DefaultRollingNumberMask';
@@ -23,7 +22,7 @@ import { DefaultRollingNumberNumberSection } from './DefaultRollingNumberNumberS
 import { DefaultRollingNumberSymbol } from './DefaultRollingNumberSymbol';
 import { useColorPulse } from './useColorPulse';
 
-export const DEFAULT_TRANSITION = {
+export const defaultTransitionConfig = {
   y: { duration: durations.moderate3 / 1000, ease: curves.global },
   color: { duration: durations.slow4 / 1000, ease: curves.global },
 } as const;
@@ -39,7 +38,7 @@ const tickerContainerCss = css`
 `;
 
 const screenReaderOnlyCss = css`
-  position: absolute !important;
+  position: absolute;
   width: 1px;
   height: 1px;
   padding: 0;
@@ -311,7 +310,7 @@ export const RollingNumber: RollingNumberComponent = memo(
       const locale = localeProp ?? defaultLocale;
 
       const transitionConfig = useMemo(
-        () => ({ ...DEFAULT_TRANSITION, ...transition }),
+        () => ({ ...defaultTransitionConfig, ...transition }),
         [transition],
       );
 
