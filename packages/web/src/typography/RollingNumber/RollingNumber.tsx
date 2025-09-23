@@ -8,7 +8,7 @@ import {
 import { useLocale } from '@coinbase/cds-common/system/LocaleProvider';
 import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 import { css } from '@linaria/core';
-import { type HTMLMotionProps, m, type Transition } from 'framer-motion';
+import { m, type Transition } from 'framer-motion';
 
 import type { Polymorphic } from '../../core/polymorphism';
 import { cx } from '../../cx';
