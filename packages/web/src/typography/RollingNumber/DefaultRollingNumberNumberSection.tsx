@@ -28,15 +28,14 @@ export const DefaultRollingNumberNumberSection: RollingNumberNumberSectionCompon
     (
       {
         intlNumberParts,
+        color = 'inherit',
         justifyContent = 'flex-start',
-        style,
         className,
         RollingNumberDigitComponent = DefaultRollingNumberDigit,
         RollingNumberSymbolComponent = DefaultRollingNumberSymbol,
         RollingNumberMaskComponent = DefaultRollingNumberMask,
         formattedValue,
         transitionConfig,
-        color,
         ...props
       },
       ref,
@@ -110,7 +109,8 @@ export const DefaultRollingNumberNumberSection: RollingNumberNumberSectionCompon
         <MotionText
           ref={ref}
           className={cx(containerCss, className)}
-          color={color ?? 'inherit'}
+          color={color}
+          justifyContent={justifyContent}
           {...props}
         >
           {formattedValue ? formattedValueDigits : intlPartsDigits}

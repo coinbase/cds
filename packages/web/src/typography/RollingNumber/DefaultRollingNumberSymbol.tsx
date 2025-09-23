@@ -2,6 +2,7 @@ import { forwardRef, memo } from 'react';
 import { css } from '@linaria/core';
 import { m } from 'framer-motion';
 
+import { cx } from '../../cx';
 import { Text } from '../Text';
 
 import type { RollingNumberSymbolComponent, RollingNumberSymbolProps } from './RollingNumber';
@@ -15,11 +16,13 @@ const containerCss = css`
 `;
 
 export const DefaultRollingNumberSymbol: RollingNumberSymbolComponent = memo(
-  forwardRef<HTMLSpanElement, RollingNumberSymbolProps>(({ value, color, ...props }, ref) => {
-    return (
-      <MotionText ref={ref} className={containerCss} color={color ?? 'inherit'} {...props}>
-        {value}
-      </MotionText>
-    );
-  }),
+  forwardRef<HTMLSpanElement, RollingNumberSymbolProps>(
+    ({ value, color = 'inherit', className, ...props }, ref) => {
+      return (
+        <MotionText ref={ref} className={cx(containerCss, className)} color={color} {...props}>
+          {value}
+        </MotionText>
+      );
+    },
+  ),
 );

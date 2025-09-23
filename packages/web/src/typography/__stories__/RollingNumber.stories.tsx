@@ -341,10 +341,10 @@ export const StyleOverrides = () => {
             background: 'var(--color-bgSecondaryWash)',
           },
           i18nPrefix: { color: 'var(--color-accentBoldBlue)' },
-          prefix: { color: 'var(--color-accentBoldPurple)' },
+          prefix: { color: 'rgb(var(--purple50))' },
           integer: { letterSpacing: '-1px' },
           fraction: { opacity: 0.2, letterSpacing: '10px' },
-          i18nSuffix: { color: 'var(--color-fgMuted)' },
+          i18nSuffix: { color: 'var(--color-accentBoldRed)' },
           suffix: { color: 'var(--color-accentBoldYellow)', marginLeft: 10 },
         }}
         suffix="BTC"

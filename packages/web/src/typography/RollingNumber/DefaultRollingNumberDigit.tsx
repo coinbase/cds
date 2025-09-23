@@ -60,10 +60,11 @@ export const DefaultRollingNumberDigit: RollingNumberDigitComponent = memo(
     (
       {
         value,
-        initialValue = value,
+        initialValue,
         transitionConfig,
         RollingNumberMaskComponent = DefaultRollingNumberMask,
-        color,
+        color = 'inherit',
+        className,
         ...props
       },
       ref,
@@ -72,7 +73,7 @@ export const DefaultRollingNumberDigit: RollingNumberDigitComponent = memo(
       useImperativeHandle(ref, () => internalRef.current as HTMLSpanElement);
 
       const numberRefs = useRef(new Array<HTMLSpanElement | null>(10));
-      const prevValue = useRef(initialValue);
+      const prevValue = useRef(initialValue ?? value);
 
       useLayoutEffect(() => {
         const prevDigit = numberRefs.current[prevValue.current];
@@ -90,7 +91,6 @@ export const DefaultRollingNumberDigit: RollingNumberDigitComponent = memo(
           },
           (transitionConfig?.y ?? defaultTransitionConfig.y) as ValueAnimationOptions,
         );
-
         prevValue.current = value;
       }, [transitionConfig, value]);
 
@@ -111,8 +111,8 @@ export const DefaultRollingNumberDigit: RollingNumberDigitComponent = memo(
         <RollingNumberMaskComponent>
           <MotionText
             ref={internalRef}
-            className={digitContainerCss}
-            color={color ?? 'inherit'}
+            className={cx(digitContainerCss, className)}
+            color={color}
             {...props}
           >
             {value !== 0 && (

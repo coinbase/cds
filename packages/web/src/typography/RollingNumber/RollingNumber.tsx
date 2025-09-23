@@ -1,4 +1,4 @@
-import { type AriaAttributes, type CSSProperties, forwardRef, memo, useMemo } from 'react';
+import { type AriaAttributes, forwardRef, memo, useMemo } from 'react';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import { curves, durations } from '@coinbase/cds-common/motion/tokens';
 import {

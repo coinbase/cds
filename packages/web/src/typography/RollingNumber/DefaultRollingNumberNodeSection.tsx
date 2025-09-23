@@ -21,12 +21,12 @@ const containerCss = css`
 
 export const DefaultRollingNumberNodeSection: RollingNumberNodeSectionComponent = memo(
   forwardRef<HTMLSpanElement, RollingNumberNodeSectionProps>(
-    ({ children, justifyContent = 'flex-start', style, className, color, ...props }, ref) => {
+    ({ children, color = 'inherit', justifyContent = 'flex-start', className, ...props }, ref) => {
       return (
         <MotionText
           ref={ref}
           className={cx(containerCss, className)}
-          color={color ?? 'inherit'}
+          color={color}
           justifyContent={justifyContent}
           {...props}
         >
