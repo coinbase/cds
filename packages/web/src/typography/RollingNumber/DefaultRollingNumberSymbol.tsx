@@ -19,7 +19,7 @@ export const DefaultRollingNumberSymbol: RollingNumberSymbolComponent = memo(
   forwardRef<HTMLSpanElement, RollingNumberSymbolProps>(
     ({ value, color = 'inherit', className, ...props }, ref) => {
       return (
-        <MotionText ref={ref} className={cx(containerCss, className)} color={color} {...props}>
+        <MotionText ref={ref} className={cx(containerCss, className)} {...props}>
           {value}
         </MotionText>
       );

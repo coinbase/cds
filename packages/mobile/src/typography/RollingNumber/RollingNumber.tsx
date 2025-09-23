@@ -32,7 +32,7 @@ import { DefaultRollingNumberNumberSection } from './DefaultRollingNumberNumberS
 import { DefaultRollingNumberSymbol } from './DefaultRollingNumberSymbol';
 import { useColorPulse } from './useColorPulse';
 
-export const DEFAULT_TRANSITION = {
+export const defaultTransitionConfig = {
   y: {
     duration: durations.moderate3,
     easing: Easing.bezier(...curves.global),
@@ -62,14 +62,16 @@ const baseStylesheet = StyleSheet.create({
 export type LayoutMap = Record<string, LayoutRectangle>;
 
 export type TimingTransition = {
+  // type timing is optional since it's the default
   type?: 'timing';
 } & WithTimingConfig;
 
 export type SpringTransition = {
+  // type spring is required since it's not the default
   type: 'spring';
 } & WithSpringConfig;
 
-export type TransitionConfig = {
+export type RollingNumberTransitionConfig = {
   y?: TimingTransition | SpringTransition;
   color?: TimingTransition | SpringTransition;
 };
@@ -96,12 +98,13 @@ export type RollingNumberNodeSectionProps = HStackProps & {
 export type RollingNumberNumberSectionProps = HStackProps & {
   intlNumberParts: KeyedNumberPart[];
   invisibleDigitMeasurements: LayoutMap;
-  measurementCompleted: boolean;
-  formattedValue?: string;
   RollingNumberDigitComponent?: RollingNumberDigitComponent;
   RollingNumberSymbolComponent?: RollingNumberSymbolComponent;
   RollingNumberMaskComponent?: RollingNumberMaskComponent;
+  formattedValue?: string;
+  transitionConfig?: RollingNumberTransitionConfig;
   textProps?: TextProps;
+  measurementCompleted: boolean;
   styles?: {
     root?: StyleProp<ViewStyle>;
     text?:
@@ -109,14 +112,15 @@ export type RollingNumberNumberSectionProps = HStackProps & {
       | StyleProp<TextStyle>
       | (AnimatedStyle<TextStyle> | StyleProp<TextStyle>)[];
   };
-  transitionConfig?: TransitionConfig;
   ref?: React.Ref<View>;
 };
 
 export type RollingNumberDigitProps = ViewProps & {
   value: number;
-  invisibleDigitMeasurements: LayoutMap;
   initialValue?: number;
+  transitionConfig?: RollingNumberTransitionConfig;
+  RollingNumberMaskComponent?: RollingNumberMaskComponent;
+  invisibleDigitMeasurements: LayoutMap;
   textProps?: TextProps;
   styles?: {
     root?: StyleProp<ViewStyle>;
@@ -125,9 +129,7 @@ export type RollingNumberDigitProps = ViewProps & {
       | StyleProp<TextStyle>
       | (AnimatedStyle<TextStyle> | StyleProp<TextStyle>)[];
   };
-  transitionConfig?: TransitionConfig;
   ref?: React.Ref<View>;
-  RollingNumberMaskComponent?: RollingNumberMaskComponent;
 };
 
 export type RollingNumberSymbolProps = HStackProps & {
@@ -143,7 +145,6 @@ export type RollingNumberSymbolProps = HStackProps & {
   ref?: React.Ref<View>;
 };
 
-// TODO: confirm ref definition
 export type RollingNumberMaskComponent = React.FC<RollingNumberMaskProps>;
 
 export type RollingNumberNodeSectionComponent = React.FC<RollingNumberNodeSectionProps>;
@@ -234,8 +235,9 @@ export type RollingNumberBaseProps = SharedProps &
      * Transition config for the component.
      * If type = 'timing', it follows the reanimated WithTimingConfig.
      * If type = 'spring', it follows the reanimated WithSpringConfig.
+     * Only allow customization of 'y' and 'color' properties.
      */
-    transition?: TransitionConfig;
+    transition?: RollingNumberTransitionConfig;
     /**
      * Accessibility prefix to announce before.
      */
@@ -309,7 +311,7 @@ export const RollingNumber = memo(
         suffix,
         styles,
         enableSubscriptNotation,
-        transition = DEFAULT_TRANSITION,
+        transition = defaultTransitionConfig,
         formattedValue,
         accessibilityLabel,
         accessibilityLabelPrefix,
@@ -361,7 +363,7 @@ export const RollingNumber = memo(
       );
 
       const transitionConfig = useMemo(
-        () => ({ ...DEFAULT_TRANSITION, ...transition }),
+        () => ({ ...defaultTransitionConfig, ...transition }),
         [transition],
       );
 

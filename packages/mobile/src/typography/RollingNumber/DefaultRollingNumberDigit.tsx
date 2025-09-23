@@ -7,7 +7,7 @@ import { Text } from '../Text';
 import { buildAnimation } from './buildAnimation';
 import { DefaultRollingNumberMask } from './DefaultRollingNumberMask';
 import {
-  DEFAULT_TRANSITION,
+  defaultTransitionConfig,
   digits,
   type RollingNumberDigitComponent,
   type RollingNumberDigitProps,
@@ -28,7 +28,6 @@ const baseStylesheet = StyleSheet.create({
  * Note that the DefaultRollingNumberDigit component implementation is different in web
  * and mobile due to different animation libraries and the performance issue in mobile.
  * This has nearly unnoticeable difference in animation effect.
- * Consider align the implementations in the future.
  *  */
 export const DefaultRollingNumberDigit: RollingNumberDigitComponent = memo(
   forwardRef<View, RollingNumberDigitProps>(
@@ -54,7 +53,7 @@ export const DefaultRollingNumberDigit: RollingNumberDigitComponent = memo(
         if (prevValue.current === value) return;
         position.value = buildAnimation({
           toValue: value * measurement.height * -1,
-          transition: transitionConfig?.y ?? DEFAULT_TRANSITION.y,
+          transition: transitionConfig?.y ?? defaultTransitionConfig.y,
         });
         prevValue.current = value;
       }, [measurement.height, position, transitionConfig?.y, value]);

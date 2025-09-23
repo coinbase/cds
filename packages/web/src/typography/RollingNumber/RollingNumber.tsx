@@ -49,7 +49,7 @@ const screenReaderOnlyCss = css`
   border: 0;
 `;
 
-type TransitionConfig = {
+type RollingNumberTransitionConfig = {
   y?: Transition;
   color?: Transition;
 };
@@ -71,14 +71,14 @@ export type RollingNumberNumberSectionProps = TextProps<TextDefaultElement> & {
   RollingNumberSymbolComponent?: RollingNumberSymbolComponent;
   RollingNumberMaskComponent?: RollingNumberMaskComponent;
   formattedValue?: string;
-  transitionConfig?: TransitionConfig;
+  transitionConfig?: RollingNumberTransitionConfig;
   ref?: React.Ref<HTMLSpanElement>;
 };
 
 export type RollingNumberDigitProps = TextProps<TextDefaultElement> & {
   value: number;
   initialValue?: number;
-  transitionConfig?: TransitionConfig;
+  transitionConfig?: RollingNumberTransitionConfig;
   RollingNumberMaskComponent?: RollingNumberMaskComponent;
   ref?: React.Ref<HTMLSpanElement>;
 };
@@ -178,8 +178,9 @@ export type RollingNumberBaseProps = SharedProps &
     /**
      * framer-motion transition config.
      * Only allow per-property transitions like { y: { duration: 1 }, color: { duration: 1 } } instead of {{ duration: 1 }}
+     * Only allow customization of 'y' and 'color' properties.
      */
-    transition?: TransitionConfig;
+    transition?: RollingNumberTransitionConfig;
     /**
      * Accessibility prefix to announce before.
      */

@@ -5,17 +5,14 @@ import {
   cancelAnimation,
   useAnimatedStyle,
   useSharedValue,
-  withDelay,
-  withSequence,
-  withTiming,
 } from 'react-native-reanimated';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 
 import { useTheme } from '../../hooks/useTheme';
 
 import { buildAnimation } from './buildAnimation';
-import type { TransitionConfig } from './RollingNumber';
-import { DEFAULT_TRANSITION } from './RollingNumber';
+import type { RollingNumberTransitionConfig } from './RollingNumber';
+import { defaultTransitionConfig } from './RollingNumber';
 
 export type AnimatedTextStyle = AnimatedStyle<TextStyle>;
 
@@ -34,7 +31,7 @@ export function useColorPulse({
   colorPulseOnUpdate: boolean;
   positivePulseColor: ThemeVars.Color;
   negativePulseColor: ThemeVars.Color;
-  transitionConfig?: TransitionConfig;
+  transitionConfig?: RollingNumberTransitionConfig;
 }): AnimatedTextStyle {
   const theme = useTheme();
   const baseColor = theme.color[defaultColor];
@@ -65,7 +62,7 @@ export function useColorPulse({
       animatedColor.value = pulseColor;
       animatedColor.value = buildAnimation({
         toValue: baseColor,
-        transition: transitionConfig?.color ?? DEFAULT_TRANSITION.color,
+        transition: transitionConfig?.color ?? defaultTransitionConfig.color,
       });
     }
 

@@ -53,7 +53,6 @@ const getWidthInEm = (element: HTMLElement) => {
  * Note that the DefaultRollingNumberDigit component implementation is different in web
  * and mobile due to different animation libraries and the performance issue in mobile.
  * This has nearly unnoticeable difference in animation effect.
- * Consider align the implementations in the future.
  *  */
 export const DefaultRollingNumberDigit: RollingNumberDigitComponent = memo(
   forwardRef<HTMLSpanElement, RollingNumberDigitProps>(
