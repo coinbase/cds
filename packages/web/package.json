@@ -116,6 +116,10 @@
       "types": "./dts/visualizations/index.d.ts",
       "default": "./esm/visualizations/index.js"
     },
+    "./numbers": {
+      "types": "./dts/numbers/index.d.ts",
+      "default": "./esm/numbers/index.js"
+    },
     "./*": {
       "types": "./dts/*.d.ts",
       "default": "./esm/*.js"
