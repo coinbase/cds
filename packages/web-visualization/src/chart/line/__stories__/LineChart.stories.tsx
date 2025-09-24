@@ -1777,7 +1777,6 @@ const Example: React.FC<
 };
 
 const GainLossChart = () => {
-  const [highlightedItem, setHighlightedItem] = useState<number | null>(null);
   const gradientId = useId();
 
   const data = [-40, -28, -21, -5, 48, -5, -28, 2, -29, -46, 16, -30, -29, 8];
@@ -1847,7 +1846,6 @@ const GainLossChart = () => {
     <Chart
       enableScrubbing
       height={250}
-      onScrubberPosChange={(dataIndex: number | null) => setHighlightedItem(dataIndex)}
       padding={{ top: 12, bottom: 12, left: 0, right: 0 }}
       series={[
         {

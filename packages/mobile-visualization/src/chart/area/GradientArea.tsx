@@ -109,33 +109,46 @@ export const GradientArea = memo<GradientAreaProps>(
             y1={gradientY1}
             y2={gradientY2}
           >
-            {baselinePosition !== undefined || baselinePercentage !== undefined ? (
-              /* Diverging gradient: peak opacity at extremes, baseline opacity at baseline */
-              [
-                <Stop key="0" offset="0%" stopColor={effectivePeakColor} stopOpacity={peakOpacity} />,
-                <Stop
-                  key="1"
-                  offset={
-                    baselinePercentage ??
-                    `${((baselinePosition! - yRange![1]) / (yRange![0] - yRange![1])) * 100}%`
-                  }
-                  stopColor={effectiveBaselineColor}
-                  stopOpacity={baselineOpacity}
-                />,
-                <Stop key="2" offset="100%" stopColor={effectivePeakColor} stopOpacity={peakOpacity} />,
-              ]
-            ) : (
-              /* Simple gradient from peak to baseline */
-              [
-                <Stop key="0" offset="0%" stopColor={effectivePeakColor} stopOpacity={peakOpacity} />,
-                <Stop
-                  key="1"
-                  offset="100%"
-                  stopColor={effectiveBaselineColor}
-                  stopOpacity={baselineOpacity}
-                />,
-              ]
-            )}
+            {baselinePosition !== undefined || baselinePercentage !== undefined
+              ? /* Diverging gradient: peak opacity at extremes, baseline opacity at baseline */
+                [
+                  <Stop
+                    key="0"
+                    offset="0%"
+                    stopColor={effectivePeakColor}
+                    stopOpacity={peakOpacity}
+                  />,
+                  <Stop
+                    key="1"
+                    offset={
+                      baselinePercentage ??
+                      `${((baselinePosition! - yRange![1]) / (yRange![0] - yRange![1])) * 100}%`
+                    }
+                    stopColor={effectiveBaselineColor}
+                    stopOpacity={baselineOpacity}
+                  />,
+                  <Stop
+                    key="2"
+                    offset="100%"
+                    stopColor={effectivePeakColor}
+                    stopOpacity={peakOpacity}
+                  />,
+                ]
+              : /* Simple gradient from peak to baseline */
+                [
+                  <Stop
+                    key="0"
+                    offset="0%"
+                    stopColor={effectivePeakColor}
+                    stopOpacity={peakOpacity}
+                  />,
+                  <Stop
+                    key="1"
+                    offset="100%"
+                    stopColor={effectiveBaselineColor}
+                    stopOpacity={baselineOpacity}
+                  />,
+                ]}
           </LinearGradient>
         </Defs>
         <Path clipRect={clipRect} d={d} fill={`url(#${patternIdRef.current})`} {...pathProps} />
