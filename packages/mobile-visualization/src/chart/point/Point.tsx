@@ -31,33 +31,33 @@ const styles = StyleSheet.create({
  */
 function calculateLabelAlignment(
   position: PointLabelConfig['position'],
-): Pick<ChartTextProps, 'textAnchor' | 'dominantBaseline'> {
+): Pick<ChartTextProps, 'textAnchor' | 'alignmentBaseline'> {
   switch (position) {
     case 'top':
       return {
         textAnchor: 'middle',
-        dominantBaseline: 'baseline',
+        alignmentBaseline: 'baseline',
       };
     case 'bottom':
       return {
         textAnchor: 'middle',
-        dominantBaseline: 'hanging',
+        alignmentBaseline: 'hanging',
       };
     case 'left':
       return {
         textAnchor: 'end',
-        dominantBaseline: 'central',
+        alignmentBaseline: 'central',
       };
     case 'right':
       return {
         textAnchor: 'start',
-        dominantBaseline: 'central',
+        alignmentBaseline: 'central',
       };
     case 'center':
     default:
       return {
         textAnchor: 'middle',
-        dominantBaseline: 'central',
+        alignmentBaseline: 'central',
       };
   }
 }
@@ -109,7 +109,7 @@ export type PointLabelConfig = Pick<
   | 'disableRepositioning'
   | 'bounds'
   | 'styles'
-  | 'dominantBaseline'
+  | 'alignmentBaseline'
   | 'textAnchor'
 > & {
   /**

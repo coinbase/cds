@@ -24,7 +24,7 @@ export type ChartTextProps = SharedProps &
   Pick<
     React.SVGProps<SVGTextElement>,
     | 'textAnchor'
-    | 'dominantBaseline'
+    | 'alignmentBaseline'
     | 'dx'
     | 'dy'
     | 'fontSize'
@@ -96,7 +96,7 @@ export const ChartText = memo<ChartTextProps>(
     x,
     y,
     textAnchor = 'middle',
-    dominantBaseline = 'central',
+    alignmentBaseline = 'central',
     dx,
     dy,
     disableRepositioning = false,
@@ -195,11 +195,7 @@ export const ChartText = memo<ChartTextProps>(
     }, [reportedRect, onDimensionsChange]);
 
     return (
-      <G
-        opacity={isDimensionsReady ? opacity : 0}
-        testID={testID}
-        transform={`translate(${overflowAmount.x}, ${overflowAmount.y})`}
-      >
+      <G opacity={isDimensionsReady ? opacity : 0} testID={testID}>
         {backgroundRectDimensions && effectiveBackground !== 'transparent' && (
           <SvgRect
             fill={effectiveBackground}
@@ -212,6 +208,7 @@ export const ChartText = memo<ChartTextProps>(
           />
         )}
         <Text
+          alignmentBaseline={alignmentBaseline as any}
           dx={dx}
           dy={dy}
           fill={effectiveColor}

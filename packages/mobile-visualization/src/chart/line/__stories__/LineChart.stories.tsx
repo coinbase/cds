@@ -1,14 +1,10 @@
-import { forwardRef, useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { G } from 'react-native-svg';
 import { assets } from '@coinbase/cds-common/internal/data/assets';
 import { prices } from '@coinbase/cds-common/internal/data/prices';
 import { sparklineInteractiveData } from '@coinbase/cds-common/internal/visualizations/SparklineInteractiveData';
 import type { TabValue } from '@coinbase/cds-common/tabs/useTabs';
-import {
-  projectPoint,
-  useChartContext,
-  useChartDrawingAreaContext,
-} from '@coinbase/cds-common/visualizations/charts';
+import { projectPoint, useChartContext } from '@coinbase/cds-common/visualizations/charts';
 import type { ChartAxisScaleType } from '@coinbase/cds-common/visualizations/charts/scale';
 import { Example, ExampleScreen } from '@coinbase/cds-mobile/examples/ExampleScreen';
 import { Box, HStack, VStack } from '@coinbase/cds-mobile/layout';
@@ -146,7 +142,6 @@ export const BasicLineChartWithPoints = () => {
 
   return (
     <LineChart
-      // disableHighlighting
       showYAxis
       height={defaultChartHeight}
       renderPoints={() => true}

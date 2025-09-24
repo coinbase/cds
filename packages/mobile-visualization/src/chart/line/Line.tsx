@@ -190,7 +190,6 @@ export const Line = memo<LineProps>(
           <Area
             AreaComponent={AreaComponent}
             curve={curve}
-            disableAnimations={disableAnimations}
             fill={stroke}
             fillOpacity={opacity}
             seriesId={seriesId}

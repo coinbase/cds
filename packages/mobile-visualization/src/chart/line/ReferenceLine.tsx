@@ -32,7 +32,7 @@ export type ReferenceLineLabelConfig = Pick<
   | 'disableRepositioning'
   | 'bounds'
   | 'styles'
-  | 'dominantBaseline'
+  | 'alignmentBaseline'
   | 'textAnchor'
 >;
 
