@@ -396,7 +396,7 @@ export const Box = memo(
       );
 
       return (
-        <Component ref={ref} style={styles} testID={testID} {...props}>
+        <Component ref={ref} style={styles as any} testID={testID} {...props}>
           {children}
         </Component>
       );

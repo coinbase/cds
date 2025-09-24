@@ -1,0 +1,65 @@
+diff --git a/dist/createDevMiddleware.js b/dist/createDevMiddleware.js
+index 93c54060734bfe351d82c3d4c9fc4816bdadbc95..15ebfafefb9a6f483ede01ceac13b9fc1b6ada66 100644
+--- a/dist/createDevMiddleware.js
++++ b/dist/createDevMiddleware.js
+@@ -85,15 +85,15 @@ function createWrappedEventReporter(reporter, logger) {
+     logEvent(event) {
+       switch (event.type) {
+         case "fusebox_console_notice":
+-          logger?.info(
+-            "\n" +
+-              "\u001B[7m" +
+-              " \u001B[1m💡 JavaScript logs have moved!\u001B[22m They can now be " +
+-              "viewed in React Native DevTools. Tip: Type \u001B[1mj\u001B[22m in " +
+-              "the terminal to open (requires Google Chrome or Microsoft Edge)." +
+-              "\u001B[27m" +
+-              "\n"
+-          );
++          // logger?.info(
++          //   "\n" +
++          //     "\u001B[7m" +
++          //     " \u001B[1m💡 JavaScript logs have moved!\u001B[22m They can now be " +
++          //     "viewed in React Native DevTools. Tip: Type \u001B[1mj\u001B[22m in " +
++          //     "the terminal to open (requires Google Chrome or Microsoft Edge)." +
++          //     "\u001B[27m" +
++          //     "\n"
++          // );
+           break;
+       }
+       reporter?.logEvent(event);
+diff --git a/dist/middleware/openDebuggerMiddleware.js b/dist/middleware/openDebuggerMiddleware.js
+index b6d85ecbcfd477ff91c34be1cd7a9a7b78a7cfca..890392d7bca110eda15ddfcf6a7c850eae4ee901 100644
+--- a/dist/middleware/openDebuggerMiddleware.js
++++ b/dist/middleware/openDebuggerMiddleware.js
+@@ -49,9 +49,9 @@ function openDebuggerMiddleware({
+         target = targets.find(
+           (_target) =>
+             (targetId == null || _target.id === targetId) &&
+-            (appId == null ||
+-              (_target.appId === appId &&
+-                _target.title === LEGACY_SYNTHETIC_PAGE_TITLE)) &&
++            // (appId == null ||
++            //   (_target.appId === appId &&
++            //     _target.title === LEGACY_SYNTHETIC_PAGE_TITLE)) &&
+             (device == null || _target.reactNative.logicalDeviceId === device)
+         );
+       } else if (targets.length > 0) {
+diff --git a/dist/utils/DefaultBrowserLauncher.js b/dist/utils/DefaultBrowserLauncher.js
+index 3306b7cb08d2cb8d3b4af5b7fd632720f44d6a39..73d8a7a3e5ec5e0cb47782cde9f4b67c2cc53ea5 100644
+--- a/dist/utils/DefaultBrowserLauncher.js
++++ b/dist/utils/DefaultBrowserLauncher.js
+@@ -20,7 +20,13 @@ const DefaultBrowserLauncher = {
+       await open(url);
+       return;
+     }
+-    const chromeFlags = [`--app=${url}`, "--window-size=1200,600"];
++    const chromeFlags = [
++      `--app=${url}`,
++      "--window-size=1200,600",
++      // For some reason React Native DevTools doesn't work with the default user data dir.
++      // I was able to figure this out by validating that it does work in incognito mode.
++      `--user-data-dir=${require('os').tmpdir()}/chrome-debug-${Date.now()}`
++    ];
+     return new Promise((resolve, reject) => {
+       const childProcess = spawn(chromePath, chromeFlags, {
+         detached: true,

@@ -139,9 +139,9 @@ export const GeneratedColorStates = () => {
         <Text font="display1">Disabled</Text>
       </Interactable>
 
-      <VStack background="bgAlternate" borderRadius={300} padding={2}>
+      <Text background="bgAlternate" borderRadius={300} padding={2}>
         <pre>{JSON.stringify(data, null, 2)}</pre>
-      </VStack>
+      </Text>
     </VStack>
   );
 };

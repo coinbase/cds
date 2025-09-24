@@ -1,0 +1,22 @@
+diff --git a/build/plugins/unversioned/expo-splash-screen/withIosSplashAssets.js b/build/plugins/unversioned/expo-splash-screen/withIosSplashAssets.js
+index e8d2f290b876f2d5b2ee4d718548722eff38d760..eecbdd8119c6fd4cbdf3ecea7038b975fa940178 100644
+--- a/build/plugins/unversioned/expo-splash-screen/withIosSplashAssets.js
++++ b/build/plugins/unversioned/expo-splash-screen/withIosSplashAssets.js
+@@ -127,7 +127,7 @@ async function copyImageFiles({
+ }) {
+   await generateImagesAssetsAsync({
+     async generateImageAsset(item, fileName) {
+-      [{
++      await Promise.all([{
+         ratio: 1,
+         suffix: ''
+       }, {
+@@ -156,7 +156,7 @@ async function copyImageFiles({
+         // Write image buffer to the file system.
+         // const assetPath = join(iosNamedProjectRoot, IMAGESET_PATH, filename);
+         await _fsExtra().default.writeFile(_path().default.resolve(iosNamedProjectRoot, IMAGESET_PATH, `${fileName}${suffix}.png`), source);
+-      });
++      }));
+     },
+     anyItem: image,
+     darkItem: darkImage,

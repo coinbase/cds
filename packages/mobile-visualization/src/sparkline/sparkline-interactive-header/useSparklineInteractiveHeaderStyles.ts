@@ -137,7 +137,7 @@ export function useSparklineInteractiveHeaderStyles() {
           {
             color: theme.color[variantColorMap[color]],
           },
-        ] as TextStyle,
+        ] as any,
       subHeadAccessory: (): StyleProp<TextStyle> => [
         typography.label2,
         styles.inputReset,

@@ -1,0 +1,19 @@
+diff --git a/build/serializer/environmentVariableSerializerPlugin.js b/build/serializer/environmentVariableSerializerPlugin.js
+index 6f8f966bf32b420435d0fdb320a32f5ae06a4121..ce14965e6126c29784521bb34cf59a52d8d684fd 100644
+--- a/build/serializer/environmentVariableSerializerPlugin.js
++++ b/build/serializer/environmentVariableSerializerPlugin.js
+@@ -15,6 +15,14 @@ exports.getTransformEnvironment = getTransformEnvironment;
+ function getAllExpoPublicEnvVars(inputEnv = process.env) {
+     // Create an object containing all environment variables that start with EXPO_PUBLIC_
+     const env = {};
++
++    if (inputEnv._ENV_VARS_FOR_APP) {
++        const keys = JSON.parse(inputEnv._ENV_VARS_FOR_APP);
++        for (const key of keys) {
++            env[key] = inputEnv[key];
++        }
++    }
++
+     for (const key in inputEnv) {
+         if (key.startsWith('EXPO_PUBLIC_')) {
+             // @ts-expect-error: TS doesn't know that the key starts with EXPO_PUBLIC_

@@ -61,26 +61,24 @@
     "regenerate-icons-code-connect": "node scripts/regenerate-icons-code-connect.mjs"
   },
   "resolutions": {
+    "@expo/cli": "patch:@expo/cli@npm:0.22.24#.yarn/patches/@expo-cli-npm-0.22.24-17e5ffb97d.patch",
+    "@expo/prebuild-config": "patch:@expo/prebuild-config@npm:~8.2.0#.yarn/patches/@expo-prebuild-config-npm-8.2.0-4934a2c7e3.patch",
+    "@react-native/dev-middleware": "patch:@react-native/dev-middleware@npm:0.77.2#.yarn/patches/@react-native-dev-middleware-npm-0.77.2-fb589ba9b2.patch",
     "@testing-library/user-event@^14.0.4": "patch:@testing-library/user-event@npm:14.0.4#.yarn/patches/@testing-library-user-event-npm-14.0.4-109d618170",
+    "expo-dev-launcher": "patch:expo-dev-launcher@npm:5.0.35#.yarn/patches/expo-dev-launcher-npm-5.0.35-f14c68849a.patch",
     "framer-motion@^10.18.0": "patch:framer-motion@npm:10.18.0#.yarn/patches/framer-motion-npm-10.18.0-ae9ea02138",
-    "@expo/cli": "patch:@expo/cli@npm:0.18.29#.yarn/patches/@expo-cli-npm-0.18.29-f58906fdfb.patch",
-    "react-native": "patch:react-native@npm:0.74.5#.yarn/patches/react-native-npm-0.74.5-db5164f47b.patch",
-    "react-native-gesture-handler": "patch:react-native-gesture-handler@npm:2.16.2#.yarn/patches/react-native-gesture-handler-npm-2.16.2-c16529326b.patch",
-    "expo-splash-screen": "patch:expo-splash-screen@npm:0.27.5#.yarn/patches/expo-splash-screen-npm-0.27.5-f91e0b41df.patch",
-    "react-native-navigation-bar-color": "patch:react-native-navigation-bar-color@npm:2.0.2#.yarn/patches/react-native-navigation-bar-color-npm-2.0.2-9a2ea3aaf6.patch",
-    "expo-dev-launcher": "patch:expo-dev-launcher@npm:4.0.27#.yarn/patches/expo-dev-launcher-npm-4.0.27-c2ab5dd4a5.patch",
-    "react-helmet-async": "^2.0.5"
+    "react-helmet-async": "^2.0.5",
+    "react-native-navigation-bar-color": "patch:react-native-navigation-bar-color@npm:2.0.2#.yarn/patches/react-native-navigation-bar-color-npm-2.0.2-9a2ea3aaf6.patch"
   },
   "resolutionComments": {
-    "@testing-library/user-event@^14.0.4": "Create subpath export for types.",
-    "framer-motion@^10.18.0": "Export missing types",
     "@expo/cli": "[Managed by CMR] Necessary to use the proper appId when opening the app via Expo CLI shortcuts `i` or `a`",
-    "react-native": "[Managed by CMR] Fixes bug presenting a modal on iOS.",
-    "react-native-gesture-handler": "[Managed by CMR] Fix performance regression. Can remove once upgrading to version 2.18.0",
-    "expo-splash-screen": "[Managed by CMR] Adds support for transitions and bottom images in the splash screen. We aim to upstream some of those improvements to Expo.",
-    "react-native-navigation-bar-color": "[Managed by CMR] Promisify react-native-navigation-bar-color.",
-    "expo-dev-launcher": "[Managed by CMR] Necessary to install the Expo network inspector for the Android `development` build type. Issue tracked internally by Expo.",
-    "react-helmet-async": "Working around Nx graph resolution issue"
+    "@expo/prebuild-config": "[Managed by CMR] Override version coming from expo-splash-screen to fix race condition when generating iOS splashscreen assets.",
+    "@react-native/dev-middleware": "[Managed by CMR] Fixes bug opening the React Native DevTools",
+    "@testing-library/user-event@^14.0.4": "Create subpath export for types.",
+    "expo-dev-launcher": "[Managed by CMR] Patching BundleDownloader to fix OOMs on Android due to large bundles",
+    "framer-motion@^10.18.0": "Export missing types",
+    "react-helmet-async": "Working around Nx graph resolution issue",
+    "react-native-navigation-bar-color": "[Managed by CMR] Promisify react-native-navigation-bar-color"
   },
   "workspaces": [
     "actions/*",
