@@ -1499,14 +1499,17 @@ export const AssetPriceDotted = () => {
   const [scrubIndex, setScrubIndex] = useState<number | null>(null);
   const currentPrice =
     sparklineInteractiveData.hour[sparklineInteractiveData.hour.length - 1].value;
-  const tabs = [
-    { id: 'hour', label: '1H' },
-    { id: 'day', label: '1D' },
-    { id: 'week', label: '1W' },
-    { id: 'month', label: '1M' },
-    { id: 'year', label: '1Y' },
-    { id: 'all', label: 'All' },
-  ];
+  const tabs = useMemo(
+    () => [
+      { id: 'hour', label: '1H' },
+      { id: 'day', label: '1D' },
+      { id: 'week', label: '1W' },
+      { id: 'month', label: '1M' },
+      { id: 'year', label: '1Y' },
+      { id: 'all', label: 'All' },
+    ],
+    [],
+  );
   const [timePeriod, setTimePeriod] = useState<TabValue>(tabs[0]);
 
   const sparklineTimePeriodData = useMemo(() => {
