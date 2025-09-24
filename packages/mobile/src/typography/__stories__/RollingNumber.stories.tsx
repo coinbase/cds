@@ -277,10 +277,12 @@ export const ColorAndTransition = () => {
         format={{ style: 'currency', currency: 'USD' }}
         transition={{
           color: {
+            type: 'timing',
             duration: durations.moderate3,
             easing: Easing.inOut(Easing.quad),
           },
           y: {
+            type: 'timing',
             duration: durations.moderate3,
             easing: Easing.in(Easing.quad),
           },
@@ -295,10 +297,12 @@ export const ColorAndTransition = () => {
         format={{ style: 'currency', currency: 'USD' }}
         transition={{
           color: {
+            type: 'timing',
             duration: durations.slow4,
             easing: Easing.inOut(Easing.quad),
           },
           y: {
+            type: 'timing',
             duration: durations.slow4,
             easing: Easing.in(Easing.quad),
           },
@@ -323,10 +327,12 @@ export const ColorAndTransition = () => {
         format={{ style: 'currency', currency: 'EUR' }}
         transition={{
           y: {
+            type: 'timing',
             duration: durations.fast1,
             easing: Easing.bezier(...curves.enterFunctional),
           },
           color: {
+            type: 'timing',
             duration: 5000,
             easing: Easing.bezier(...curves.global),
           },
@@ -352,10 +358,12 @@ export const ColorAndTransition = () => {
         format={{ style: 'currency', currency: 'USD' }}
         transition={{
           y: {
+            type: 'timing',
             duration: durations.moderate2,
             easing: Easing.bezier(...curves.enterExpressive),
           },
           color: {
+            type: 'timing',
             duration: durations.slow1,
             easing: Easing.bezier(...curves.exitFunctional),
           },
