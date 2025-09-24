@@ -11,6 +11,10 @@ import type { Rect } from '@coinbase/cds-common/types';
 import {
   type AxisConfig,
   type AxisConfigProps,
+  ChartContext,
+  type ChartContextValue,
+  ChartDrawingAreaContext,
+  type ChartDrawingAreaContextValue,
   type ChartPadding,
   type ChartScaleFunction,
   defaultAxisId,
@@ -22,19 +26,13 @@ import {
   getPadding,
   getStackedSeriesData as calculateStackedSeriesData,
   isBandScale,
+  type RegisteredAxis,
   type Series,
 } from '@coinbase/cds-common/visualizations/charts';
 import { cx } from '@coinbase/cds-web';
 import { useDimensions } from '@coinbase/cds-web/hooks/useDimensions';
 import { Box, type BoxBaseProps, type BoxProps } from '@coinbase/cds-web/layout';
 import { css } from '@linaria/core';
-
-import { ChartContext, type ChartContextValue } from './ChartContext';
-import {
-  ChartDrawingAreaContext,
-  type ChartDrawingAreaContextValue,
-  type RegisteredAxis,
-} from './ChartDrawingAreaContext';
 
 const focusStylesCss = css`
   &:focus {
@@ -128,7 +126,10 @@ export const Chart = memo(
     ) => {
       const { observe, width: chartWidth, height: chartHeight } = useDimensions();
 
-      const userPadding = useMemo(() => getPadding(paddingInput), [paddingInput]);
+      const userPadding = useMemo(
+        () => getPadding(paddingInput, defaultChartPadding),
+        [paddingInput],
+      );
 
       const xAxisConfig = useMemo(() => getAxisConfig('x', xAxisConfigInput), [xAxisConfigInput]);
       const yAxisConfig = useMemo(() => getAxisConfig('y', yAxisConfigInput), [yAxisConfigInput]);
@@ -438,27 +439,15 @@ export const Chart = memo(
       const getYAxis = useCallback((id?: string) => yAxes.get(id ?? defaultAxisId), [yAxes]);
       const getXScale = useCallback((id?: string) => xScales.get(id ?? defaultAxisId), [xScales]);
       const getYScale = useCallback((id?: string) => yScales.get(id ?? defaultAxisId), [yScales]);
-      const getDefaultXAxis = useCallback(() => xAxes.get(defaultAxisId), [xAxes]);
-      const getDefaultYAxis = useCallback(() => yAxes.get(defaultAxisId), [yAxes]);
       const getSeries = useCallback(
         (seriesId?: string) => series?.find((s) => s.id === seriesId),
         [series],
       );
 
-      // Compute stacked data for series with stack properties
       const stackedDataMap = useMemo(() => {
         if (!series) return new Map<string, Array<[number, number] | null>>();
         return calculateStackedSeriesData(series);
       }, [series]);
-
-      const getSeriesData = useCallback(
-        (seriesId?: string) => {
-          if (!seriesId) return undefined;
-          const s = series?.find((ser) => ser.id === seriesId);
-          return s?.data;
-        },
-        [series],
-      );
 
       const getStackedSeriesData = useCallback(
         (seriesId?: string) => {
@@ -470,48 +459,26 @@ export const Chart = memo(
 
       const contextValue: ChartContextValue = useMemo(
         () => ({
-          series,
-          stackedDataMap,
           getSeries,
-          getSeriesData,
-          getStackedSeriesData,
-          disableAnimations,
-          xAxes,
-          yAxes,
-          xScales,
-          yScales,
-          padding: userPadding,
-          rect: chartRect,
+          getSeriesData: getStackedSeriesData,
+          animate: !disableAnimations,
           width: chartWidth,
           height: chartHeight,
           getXAxis,
           getYAxis,
           getXScale,
           getYScale,
-          getDefaultXAxis,
-          getDefaultYAxis,
         }),
         [
-          series,
           getSeries,
-          getSeriesData,
           getStackedSeriesData,
-          stackedDataMap,
           disableAnimations,
-          xAxes,
-          yAxes,
-          xScales,
-          yScales,
-          userPadding,
-          chartRect,
           chartWidth,
           chartHeight,
           getXAxis,
           getYAxis,
           getXScale,
           getYScale,
-          getDefaultXAxis,
-          getDefaultYAxis,
         ],
       );
 
@@ -605,11 +572,12 @@ export const Chart = memo(
 
       const chartDrawingAreaContextValue: ChartDrawingAreaContextValue = useMemo(
         () => ({
+          drawingArea: chartRect,
           registerAxis,
           unregisterAxis,
           getAxisBounds,
         }),
-        [registerAxis, unregisterAxis, getAxisBounds], // These functions are stable
+        [chartRect, registerAxis, unregisterAxis, getAxisBounds],
       );
 
       return (

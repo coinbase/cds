@@ -2,7 +2,6 @@ export * from './area';
 export * from './axis';
 export * from './bar';
 export * from './Chart';
-export * from './ChartContext';
 export * from './ChartHeader';
 export * from './line';
 export * from './Path';

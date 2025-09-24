@@ -1,13 +1,15 @@
 import React, { memo, useEffect, useMemo, useRef, useState } from 'react';
 import type { ThemeVars } from '@coinbase/cds-common';
 import type { ElevationLevels, Rect, SharedProps } from '@coinbase/cds-common/types';
-import { type ChartPadding, getPadding } from '@coinbase/cds-common/visualizations/charts';
+import {
+  type ChartPadding,
+  getPadding,
+  useChartContext,
+} from '@coinbase/cds-common/visualizations/charts';
 import { useTheme } from '@coinbase/cds-web';
 import { Box, type BoxProps } from '@coinbase/cds-web/layout';
 import { Text } from '@coinbase/cds-web/typography';
 import { m as motion } from 'framer-motion';
-
-import { useChartContext } from '../ChartContext';
 
 // Define the valid SVG children for the <text> element.
 type ValidChartTextChildElements =

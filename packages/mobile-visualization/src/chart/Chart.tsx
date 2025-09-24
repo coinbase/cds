@@ -7,9 +7,12 @@ import type { Rect } from '@coinbase/cds-common/types';
 import {
   type AxisConfig,
   type AxisConfigProps,
+  ChartContext,
+  type ChartContextValue,
   type ChartPadding,
   type ChartScaleFunction,
   defaultAxisId,
+  defaultChartPadding,
   getAxisConfig,
   getAxisDomain,
   getAxisRange,
@@ -22,7 +25,6 @@ import {
 import { useLayout } from '@coinbase/cds-mobile/hooks/useLayout';
 import { Box } from '@coinbase/cds-mobile/layout';
 
-import { ChartContext, type ChartContextValue } from './ChartContext';
 import {
   ChartDrawingAreaContext,
   type ChartDrawingAreaContextValue,
@@ -129,7 +131,10 @@ export const Chart = memo<ChartProps>(
     const chartWidth = typeof width === 'number' ? width : containerLayout.width;
     const chartHeight = typeof height === 'number' ? height : containerLayout.height;
 
-    const userPadding = useMemo(() => getPadding(paddingInput), [paddingInput]);
+    const userPadding = useMemo(
+      () => getPadding(paddingInput, defaultChartPadding),
+      [paddingInput],
+    );
 
     const xAxisConfig = useMemo(() => getAxisConfig('x', xAxisConfigInput), [xAxisConfigInput]);
     const yAxisConfig = useMemo(() => getAxisConfig('y', yAxisConfigInput), [yAxisConfigInput]);
@@ -360,15 +365,6 @@ export const Chart = memo<ChartProps>(
       onHighlightChange?.(null);
     }, [disableHighlighting, onHighlightChange]);
 
-    // Legacy touch handlers (kept for compatibility, but pan gesture is preferred)
-    const handleTouchStart = useCallback(() => {
-      // Pan gesture handles all touch interactions now
-    }, []);
-
-    const handleTouchEnd = useCallback(() => {
-      // Pan gesture handles all touch interactions now
-    }, []);
-
     const highlightContextValue: HighlightContextValue = useMemo(
       () => ({
         highlightedIndex,
@@ -381,8 +377,6 @@ export const Chart = memo<ChartProps>(
     const getYAxis = useCallback((id?: string) => yAxes.get(id ?? defaultAxisId), [yAxes]);
     const getXScale = useCallback((id?: string) => xScales.get(id ?? defaultAxisId), [xScales]);
     const getYScale = useCallback((id?: string) => yScales.get(id ?? defaultAxisId), [yScales]);
-    const getDefaultXAxis = useCallback(() => xAxes.get(defaultAxisId), [xAxes]);
-    const getDefaultYAxis = useCallback(() => yAxes.get(defaultAxisId), [yAxes]);
     const getSeries = useCallback(
       (seriesId?: string) => series?.find((s) => s.id === seriesId),
       [series],
@@ -394,15 +388,6 @@ export const Chart = memo<ChartProps>(
       return calculateStackedSeriesData(series);
     }, [series]);
 
-    const getSeriesData = useCallback(
-      (seriesId?: string) => {
-        if (!seriesId) return undefined;
-        const s = series?.find((ser) => ser.id === seriesId);
-        return s?.data;
-      },
-      [series],
-    );
-
     const getStackedSeriesData = useCallback(
       (seriesId?: string) => {
         if (!seriesId) return undefined;
@@ -413,48 +398,26 @@ export const Chart = memo<ChartProps>(
 
     const contextValue: ChartContextValue = useMemo(
       () => ({
-        series,
-        stackedDataMap,
         getSeries,
-        getSeriesData,
-        getStackedSeriesData,
-        disableAnimations,
-        xAxes,
-        yAxes,
-        xScales,
-        yScales,
-        padding: userPadding,
-        rect: chartRect,
+        getSeriesData: getStackedSeriesData,
+        animate: !disableAnimations,
         width: chartWidth,
         height: chartHeight,
         getXAxis,
         getYAxis,
         getXScale,
         getYScale,
-        getDefaultXAxis,
-        getDefaultYAxis,
       }),
       [
-        series,
         getSeries,
-        getSeriesData,
         getStackedSeriesData,
-        stackedDataMap,
         disableAnimations,
-        xAxes,
-        yAxes,
-        xScales,
-        yScales,
-        userPadding,
-        chartRect,
         chartWidth,
         chartHeight,
         getXAxis,
         getYAxis,
         getXScale,
         getYScale,
-        getDefaultXAxis,
-        getDefaultYAxis,
       ],
     );
 

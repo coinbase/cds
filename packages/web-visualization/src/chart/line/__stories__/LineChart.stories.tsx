@@ -4,6 +4,7 @@ import { prices } from '@coinbase/cds-common/internal/data/prices';
 import { sparklineInteractiveData } from '@coinbase/cds-common/internal/visualizations/SparklineInteractiveData';
 import { useTabsContext } from '@coinbase/cds-common/tabs/TabsContext';
 import type { TabValue } from '@coinbase/cds-common/tabs/useTabs';
+import { useChartContext } from '@coinbase/cds-common/visualizations/charts';
 import { projectPoint } from '@coinbase/cds-common/visualizations/charts/getPoints';
 import type { ChartAxisScaleType } from '@coinbase/cds-common/visualizations/charts/scale';
 import { Box, HStack, VStack } from '@coinbase/cds-web/layout';
@@ -28,7 +29,6 @@ import {
   PeriodSelectorActiveIndicator,
   Scrubber,
   type ScrubberRef,
-  useChartContext,
 } from '../..';
 import { Area, type AreaComponentProps, DottedArea, GradientArea } from '../../area';
 import { XAxis } from '../../axis';
@@ -853,11 +853,11 @@ export const ReturnsChart = () => {
   const negativeColor = 'var(--color-fgMuted)';
 
   const ChartDefs = ({ threshold = 0 }) => {
-    const { height, series, rect, getYScale, getYAxis } = useChartContext();
+    const { height, getYScale, getYAxis } = useChartContext();
     const yScale = getYScale?.();
     const yAxis = getYAxis?.();
 
-    if (!series || !rect || !yScale) return null;
+    if (!yScale) return null;
 
     const thresholdPixel = projectPoint({ x: 0, y: threshold, xScale: (() => 0) as any, yScale });
     const thresholdY = thresholdPixel.y;

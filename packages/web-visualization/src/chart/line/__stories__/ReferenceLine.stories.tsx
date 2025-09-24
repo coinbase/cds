@@ -1,11 +1,14 @@
 import { memo, type RefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { assets } from '@coinbase/cds-common/internal/data/assets';
 import { sparklineInteractiveData } from '@coinbase/cds-common/internal/visualizations/SparklineInteractiveData';
+import {
+  useChartContext,
+  useChartDrawingAreaContext,
+} from '@coinbase/cds-common/visualizations/charts';
 import { useTheme } from '@coinbase/cds-web';
 import { VStack } from '@coinbase/cds-web/layout';
 import { TextHeadline } from '@coinbase/cds-web/typography';
 
-import { useChartContext } from '../../ChartContext';
 import { ChartText } from '../../text/ChartText';
 import { LineChart } from '../LineChart';
 import { ReferenceLine } from '../ReferenceLine';
@@ -95,7 +98,8 @@ const MovableReferenceLine = memo(
       })}`;
     }, []);
 
-    const { getYScale, rect } = useChartContext();
+    const { drawingArea } = useChartDrawingAreaContext();
+    const { getYScale } = useChartContext();
     const [amount, setAmount] = useState(startAmount);
     const [isDragging, setIsDragging] = useState(false);
     const [textDimensions, setTextDimensions] = useState({ width: 0, height: 0 });
@@ -123,7 +127,10 @@ const MovableReferenceLine = memo(
         const svgPoint = point.matrixTransform(element.getScreenCTM()?.inverse());
 
         // Clamp the Y position to the chart area
-        const clampedY = Math.max(rect.y, Math.min(rect.y + rect.height, svgPoint.y));
+        const clampedY = Math.max(
+          drawingArea.y,
+          Math.min(drawingArea.y + drawingArea.height, svgPoint.y),
+        );
 
         const rawAmount = yScale.invert(clampedY);
 
@@ -156,7 +163,7 @@ const MovableReferenceLine = memo(
         element.removeEventListener('mouseup', handleMouseUp);
         element.removeEventListener('mouseleave', handleMouseLeave);
       };
-    }, [isDragging, yScale, rect, chartRef, baselineAmount]);
+    }, [isDragging, yScale, chartRef, baselineAmount, drawingArea.y, drawingArea.height]);
 
     if (!yScale) return null;
 
@@ -213,14 +220,14 @@ const MovableReferenceLine = memo(
             rx={theme.borderRadius['400']}
             ry={theme.borderRadius['400']}
             width={rectWidth}
-            x={rect.x}
+            x={drawingArea.x}
             y={yPixel - 16}
           />
-          <DragIcon x={rect.x + padding} y={yPixel} />
+          <DragIcon x={drawingArea.x + padding} y={yPixel} />
           <TrendArrowIcon
             color={color}
             isPositive={isPositive}
-            x={rect.x + padding + dragIconSize + iconGap}
+            x={drawingArea.x + padding + dragIconSize + iconGap}
             y={yPixel}
           />
           <ChartText
@@ -230,7 +237,7 @@ const MovableReferenceLine = memo(
             font="label1"
             onDimensionsChange={(dimensions) => setTextDimensions(dimensions)}
             textAnchor="start"
-            x={rect.x + padding + dragIconSize + iconGap + trendArrowIconSize}
+            x={drawingArea.x + padding + dragIconSize + iconGap + trendArrowIconSize}
             y={yPixel + 1}
           >
             {percentageLabel}
