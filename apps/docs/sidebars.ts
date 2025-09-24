@@ -585,6 +585,11 @@ const sidebars: SidebarsConfig = {
             },
             {
               type: 'doc',
+              id: 'components/graphs/ReferenceLine/referenceLine',
+              label: 'ReferenceLine',
+            },
+            {
+              type: 'doc',
               id: 'components/graphs/Scrubber/scrubber',
               label: 'Scrubber',
             },

@@ -2,7 +2,6 @@ import React, { useCallback, useMemo, useRef, useState } from 'react';
 import type { ChartDataPoint, ChartScrubParams } from '@coinbase/cds-common';
 import {
   sparklineInteractiveData,
-  sparklineInteractiveHoverData,
 } from '@coinbase/cds-common/internal/visualizations/SparklineInteractiveData';
 import { Box, VStack } from '@coinbase/cds-web/layout';
 import { css } from '@linaria/core';
@@ -503,47 +502,6 @@ export const TimePeriodGutter = () => {
 
 TimePeriodGutter.bind({});
 TimePeriodGutter.parameters = {
-  percy: { enableJavaScript: true },
-  a11y: {
-    config: {
-      rules: [{ id: 'color-contrast', enabled: false }],
-    },
-  },
-};
-
-export const HoverData = () => {
-  return (
-    <SparklineInteractiveWrapper
-      data={sparklineInteractiveData}
-      hoverData={sparklineInteractiveHoverData}
-      strokeColor={strokeColor}
-    />
-  );
-};
-
-HoverData.bind({});
-HoverData.parameters = {
-  percy: { enableJavaScript: true },
-  a11y: {
-    config: {
-      rules: [{ id: 'color-contrast', enabled: false }],
-    },
-  },
-};
-
-export const HoverDataWithFill = () => {
-  return (
-    <SparklineInteractiveWrapper
-      fill
-      data={sparklineInteractiveData}
-      hoverData={sparklineInteractiveHoverData}
-      strokeColor={strokeColor}
-    />
-  );
-};
-
-HoverDataWithFill.bind({});
-HoverDataWithFill.parameters = {
   percy: { enableJavaScript: true },
   a11y: {
     config: {
