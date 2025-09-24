@@ -10,7 +10,6 @@ export const buildAnimation = ({
   toValue: any;
   transition?: TimingTransition | SpringTransition;
 }): any => {
-  'worklet';
   if (transition && transition.type === 'spring') {
     const { type: _omit, ...springConfig } = transition;
     return withSpring(toValue, springConfig);

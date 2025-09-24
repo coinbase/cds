@@ -1,7 +1,6 @@
-import { forwardRef, memo, useMemo, useRef, useState } from 'react';
+import { forwardRef, memo, useMemo, useState } from 'react';
 import {
   type LayoutChangeEvent,
-  type LayoutRectangle,
   type StyleProp,
   StyleSheet,
   type TextStyle,
@@ -59,8 +58,6 @@ const baseStylesheet = StyleSheet.create({
   },
 });
 
-export type LayoutMap = Record<string, LayoutRectangle>;
-
 export type TimingTransition = {
   // type timing is optional since it's the default
   type?: 'timing';
@@ -97,14 +94,13 @@ export type RollingNumberNodeSectionProps = HStackProps & {
 
 export type RollingNumberNumberSectionProps = HStackProps & {
   intlNumberParts: KeyedNumberPart[];
-  invisibleDigitMeasurements: LayoutMap;
+  digitHeight?: number;
   RollingNumberDigitComponent?: RollingNumberDigitComponent;
   RollingNumberSymbolComponent?: RollingNumberSymbolComponent;
   RollingNumberMaskComponent?: RollingNumberMaskComponent;
   formattedValue?: string;
   transitionConfig?: RollingNumberTransitionConfig;
   textProps?: TextProps;
-  measurementCompleted: boolean;
   styles?: {
     root?: StyleProp<ViewStyle>;
     text?:
@@ -120,7 +116,7 @@ export type RollingNumberDigitProps = ViewProps & {
   initialValue?: number;
   transitionConfig?: RollingNumberTransitionConfig;
   RollingNumberMaskComponent?: RollingNumberMaskComponent;
-  invisibleDigitMeasurements: LayoutMap;
+  digitHeight: number;
   textProps?: TextProps;
   styles?: {
     root?: StyleProp<ViewStyle>;
@@ -327,16 +323,11 @@ export const RollingNumber = memo(
     ) => {
       const { locale: defaultLocale } = useLocale();
       const locale = localeProp ?? defaultLocale;
-      const invisibleDigitMeasurements = useRef<LayoutMap>({});
-      const [measurementCompleted, setMeasurementCompleted] = useState(false);
+      const [digitHeight, setDigitHeight] = useState<number | undefined>();
 
-      const handleMeasure = (e: LayoutChangeEvent, v: number) => {
-        if (!invisibleDigitMeasurements.current) return;
+      const handleMeasure = (e: LayoutChangeEvent) => {
         const { layout } = e.nativeEvent;
-        invisibleDigitMeasurements.current[v] = layout;
-        if (Object.keys(invisibleDigitMeasurements.current).length === 10) {
-          setMeasurementCompleted(true);
-        }
+        setDigitHeight(layout.height);
       };
 
       const textProps = useMemo(
@@ -395,20 +386,19 @@ export const RollingNumber = memo(
       const rootStyle = useMemo(() => [style, styles?.root], [style, styles?.root]);
 
       const invisibleMeasuredDigits = useMemo(
-        () =>
-          digits.map((digit) => (
-            <Text
-              key={digit}
-              accessibilityElementsHidden
-              accessibilityLabel=""
-              importantForAccessibility="no-hide-descendants"
-              onLayout={(event: LayoutChangeEvent) => handleMeasure(event, digit)}
-              style={[baseStylesheet.hide, styles?.text]}
-              {...textProps}
-            >
-              {digit}
-            </Text>
-          )),
+        () => (
+          <Text
+            accessibilityElementsHidden
+            accessibilityLabel=""
+            importantForAccessibility="no-hide-descendants"
+            onLayout={handleMeasure}
+            style={[baseStylesheet.hide, styles?.text]}
+            {...textProps}
+          >
+            0
+          </Text>
+        ),
+
         [textProps, styles?.text],
       );
 
@@ -467,10 +457,9 @@ export const RollingNumber = memo(
               RollingNumberDigitComponent={RollingNumberDigitComponent}
               RollingNumberMaskComponent={RollingNumberMaskComponent}
               RollingNumberSymbolComponent={RollingNumberSymbolComponent}
+              digitHeight={digitHeight}
               intlNumberParts={pre}
-              invisibleDigitMeasurements={invisibleDigitMeasurements.current}
               justifyContent="flex-end"
-              measurementCompleted={measurementCompleted}
               style={styles?.i18nPrefix}
               styles={{ text: [animatedColorStyle, styles?.text] }}
               textProps={textProps}
@@ -480,10 +469,9 @@ export const RollingNumber = memo(
               RollingNumberDigitComponent={RollingNumberDigitComponent}
               RollingNumberMaskComponent={RollingNumberMaskComponent}
               RollingNumberSymbolComponent={RollingNumberSymbolComponent}
+              digitHeight={digitHeight}
               intlNumberParts={integer}
-              invisibleDigitMeasurements={invisibleDigitMeasurements.current}
               justifyContent="flex-end"
-              measurementCompleted={measurementCompleted}
               style={styles?.integer}
               styles={{ text: [animatedColorStyle, styles?.text] }}
               textProps={textProps}
@@ -493,10 +481,9 @@ export const RollingNumber = memo(
               RollingNumberDigitComponent={RollingNumberDigitComponent}
               RollingNumberMaskComponent={RollingNumberMaskComponent}
               RollingNumberSymbolComponent={RollingNumberSymbolComponent}
+              digitHeight={digitHeight}
               intlNumberParts={fraction}
-              invisibleDigitMeasurements={invisibleDigitMeasurements.current}
               justifyContent="flex-start"
-              measurementCompleted={measurementCompleted}
               style={styles?.fraction}
               styles={{ text: [animatedColorStyle, styles?.text] }}
               textProps={textProps}
@@ -507,10 +494,9 @@ export const RollingNumber = memo(
               RollingNumberDigitComponent={RollingNumberDigitComponent}
               RollingNumberMaskComponent={RollingNumberMaskComponent}
               RollingNumberSymbolComponent={RollingNumberSymbolComponent}
+              digitHeight={digitHeight}
               intlNumberParts={post}
-              invisibleDigitMeasurements={invisibleDigitMeasurements.current}
               justifyContent="flex-start"
-              measurementCompleted={measurementCompleted}
               style={styles?.i18nSuffix}
               styles={{ text: [animatedColorStyle, styles?.text] }}
               textProps={textProps}
@@ -531,7 +517,7 @@ export const RollingNumber = memo(
         RollingNumberDigitComponent,
         RollingNumberMaskComponent,
         RollingNumberSymbolComponent,
-        measurementCompleted,
+        digitHeight,
         animatedColorStyle,
         textProps,
         transitionConfig,
@@ -543,11 +529,10 @@ export const RollingNumber = memo(
             RollingNumberDigitComponent={RollingNumberDigitComponent}
             RollingNumberMaskComponent={RollingNumberMaskComponent}
             RollingNumberSymbolComponent={RollingNumberSymbolComponent}
+            digitHeight={digitHeight}
             formattedValue={formattedValue}
             intlNumberParts={[]}
-            invisibleDigitMeasurements={invisibleDigitMeasurements.current}
             justifyContent="flex-start"
-            measurementCompleted={measurementCompleted}
             style={styles?.formattedNumberSection}
             styles={{ text: [animatedColorStyle, styles?.text] }}
             textProps={textProps}
@@ -562,7 +547,7 @@ export const RollingNumber = memo(
           RollingNumberDigitComponent,
           RollingNumberSymbolComponent,
           formattedValue,
-          measurementCompleted,
+          digitHeight,
           animatedColorStyle,
           textProps,
           transitionConfig,

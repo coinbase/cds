@@ -34,7 +34,7 @@ export const DefaultRollingNumberDigit: RollingNumberDigitComponent = memo(
     (
       {
         value,
-        invisibleDigitMeasurements,
+        digitHeight,
         initialValue = value,
         textProps,
         style,
@@ -45,18 +45,17 @@ export const DefaultRollingNumberDigit: RollingNumberDigitComponent = memo(
       },
       ref,
     ) => {
-      const measurement = invisibleDigitMeasurements[value];
-      const position = useSharedValue(initialValue * measurement.height * -1);
+      const position = useSharedValue(initialValue * digitHeight * -1);
       const prevValue = useRef(initialValue);
 
       useEffect(() => {
         if (prevValue.current === value) return;
         position.value = buildAnimation({
-          toValue: value * measurement.height * -1,
+          toValue: value * digitHeight * -1,
           transition: transitionConfig?.y ?? defaultTransitionConfig.y,
         });
         prevValue.current = value;
-      }, [measurement.height, position, transitionConfig?.y, value]);
+      }, [digitHeight, position, transitionConfig?.y, value]);
 
       const animatedStyle = useAnimatedStyle(() => ({
         transform: [{ translateY: position.value }],
@@ -76,7 +75,7 @@ export const DefaultRollingNumberDigit: RollingNumberDigitComponent = memo(
                 style={[
                   {
                     position: digit === 0 ? 'relative' : 'absolute',
-                    top: digit * measurement.height,
+                    top: digit * digitHeight,
                   },
                   styles?.text,
                 ]}

@@ -25,8 +25,7 @@ export const DefaultRollingNumberNumberSection: RollingNumberNumberSectionCompon
       {
         intlNumberParts,
         textProps,
-        invisibleDigitMeasurements,
-        measurementCompleted,
+        digitHeight,
         formattedValue,
         RollingNumberDigitComponent = DefaultRollingNumberDigit,
         RollingNumberSymbolComponent = DefaultRollingNumberSymbol,
@@ -71,13 +70,13 @@ export const DefaultRollingNumberNumberSection: RollingNumberNumberSectionCompon
               );
             }
 
-            if (!measurementCompleted) return fallbackDigit(part.value, part.key);
+            if (!digitHeight) return fallbackDigit(part.value, part.key);
             return (
               <RollingNumberDigitComponent
                 key={part.key}
                 RollingNumberMaskComponent={RollingNumberMaskComponent}
+                digitHeight={digitHeight}
                 initialValue={numberSectionHasRendered ? 0 : undefined}
-                invisibleDigitMeasurements={invisibleDigitMeasurements}
                 onLayout={() => setNumberSectionHasRendered(true)}
                 styles={{ text: styles?.text }}
                 textProps={textProps}
@@ -90,11 +89,10 @@ export const DefaultRollingNumberNumberSection: RollingNumberNumberSectionCompon
           numberSectionHasRendered,
           setNumberSectionHasRendered,
           intlNumberParts,
-          measurementCompleted,
+          digitHeight,
           RollingNumberDigitComponent,
           RollingNumberSymbolComponent,
           styles?.text,
-          invisibleDigitMeasurements,
           textProps,
           fallbackDigit,
           justifyContent,
@@ -118,13 +116,13 @@ export const DefaultRollingNumberNumberSection: RollingNumberNumberSectionCompon
               );
             }
 
-            if (!measurementCompleted) return fallbackDigit(parseInt(char), index);
+            if (!digitHeight) return fallbackDigit(parseInt(char), index);
             return (
               <RollingNumberDigitComponent
                 key={index}
                 RollingNumberMaskComponent={RollingNumberMaskComponent}
+                digitHeight={digitHeight}
                 initialValue={numberSectionHasRendered ? 0 : undefined}
-                invisibleDigitMeasurements={invisibleDigitMeasurements}
                 onLayout={() => setNumberSectionHasRendered(true)}
                 styles={{ text: styles?.text }}
                 textProps={textProps}
@@ -137,11 +135,10 @@ export const DefaultRollingNumberNumberSection: RollingNumberNumberSectionCompon
           numberSectionHasRendered,
           setNumberSectionHasRendered,
           formattedValue,
-          measurementCompleted,
           RollingNumberDigitComponent,
           RollingNumberSymbolComponent,
           styles?.text,
-          invisibleDigitMeasurements,
+          digitHeight,
           textProps,
           fallbackDigit,
           justifyContent,
