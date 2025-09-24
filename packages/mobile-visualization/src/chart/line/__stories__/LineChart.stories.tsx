@@ -472,7 +472,7 @@ export const BTCPriceChart = () => {
 
   const AreaComponent = useMemo(
     () => (props: AreaComponentProps) => (
-      <GradientArea {...props} endColor="#ffffff" startColor="#ffffff" startOpacity={0.15} />
+      <GradientArea {...props} baselineColor="#ffffff" peakColor="#ffffff" peakOpacity={0.15} />
     ),
     [],
   );
@@ -1076,24 +1076,22 @@ const PeriodSelectorExample = () => {
   return <PeriodSelector activeTab={activeTab} onChange={(tab) => setActiveTab(tab)} tabs={tabs} />;
 };
 
+const sampleData = [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58];
+
 const LineChartStories = () => {
   return (
     <ExampleScreen>
-      <Example title="Basic Line Chart">
-        <BasicLineChart />
-      </Example>
-      <Example title="test">
+      <Example title="Basic">
         <LineChart
           enableScrubbing
           showArea
           showYAxis
           curve="monotone"
-          height={150}
-          padding={16}
+          height={250}
           series={[
             {
               id: 'prices',
-              data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+              data: sampleData,
             },
           ]}
           yAxis={{
@@ -1102,6 +1100,21 @@ const LineChartStories = () => {
         >
           <Scrubber />
         </LineChart>
+      </Example>
+      <Example title="Simple">
+        <LineChart
+          curve="monotone"
+          height={250}
+          series={[
+            {
+              id: 'prices',
+              data: sampleData,
+            },
+          ]}
+        />
+      </Example>
+      <Example title="Price Chart">
+        <PriceChart />
       </Example>
       {/*<Example title="Asset Price">
         <AssetPrice />
