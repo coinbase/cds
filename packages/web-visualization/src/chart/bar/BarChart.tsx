@@ -92,124 +92,124 @@ export const BarChart = memo(
       },
       ref,
     ) => {
-    const calculatedPadding = useMemo(
-      () => getPadding(userPadding, defaultChartPadding),
-      [userPadding],
-    );
-
-    // Convert BarSeries to Series for Chart context
-    const chartSeries = useMemo(() => {
-      return series?.map(
-        (s): Series => ({
-          id: s.id,
-          data: s.data,
-          label: s.label,
-          color: s.color,
-          xAxisId: s.xAxisId,
-          yAxisId: s.yAxisId,
-          stackId: s.stackId,
-        }),
+      const calculatedPadding = useMemo(
+        () => getPadding(userPadding, defaultChartPadding),
+        [userPadding],
       );
-    }, [series]);
 
-    const transformedSeries = useMemo(() => {
-      if (!stacked || !chartSeries) return chartSeries;
-      return chartSeries.map((s) => ({ ...s, stackId: s.stackId ?? defaultStackId }));
-    }, [chartSeries, stacked]);
+      // Convert BarSeries to Series for Chart context
+      const chartSeries = useMemo(() => {
+        return series?.map(
+          (s): Series => ({
+            id: s.id,
+            data: s.data,
+            label: s.label,
+            color: s.color,
+            xAxisId: s.xAxisId,
+            yAxisId: s.yAxisId,
+            stackId: s.stackId,
+          }),
+        );
+      }, [series]);
 
-    const seriesToRender = transformedSeries ?? chartSeries;
+      const transformedSeries = useMemo(() => {
+        if (!stacked || !chartSeries) return chartSeries;
+        return chartSeries.map((s) => ({ ...s, stackId: s.stackId ?? defaultStackId }));
+      }, [chartSeries, stacked]);
 
-    // Keep the original series with bar-specific props for BarPlot
-    const barSeriesToRender = useMemo(() => {
-      if (!stacked || !series) return series;
-      return series.map((s) => ({ ...s, stackId: s.stackId ?? defaultStackId }));
-    }, [series, stacked]);
+      const seriesToRender = transformedSeries ?? chartSeries;
 
-    // Split axis props into config props for Chart and visual props for axis components
-    const {
-      scaleType: xScaleType,
-      data: xData,
-      categoryPadding: xCategoryPadding,
-      domain: xDomain,
-      domainLimit: xDomainLimit,
-      range: xRange,
-      id: xAxisId,
-      ...xAxisVisualProps
-    } = xAxis || {};
-    const {
-      scaleType: yScaleType,
-      data: yData,
-      categoryPadding: yCategoryPadding,
-      domain: yDomain,
-      domainLimit: yDomainLimit,
-      range: yRange,
-      id: yAxisId,
-      ...yAxisVisualProps
-    } = yAxis || {};
+      // Keep the original series with bar-specific props for BarPlot
+      const barSeriesToRender = useMemo(() => {
+        if (!stacked || !series) return series;
+        return series.map((s) => ({ ...s, stackId: s.stackId ?? defaultStackId }));
+      }, [series, stacked]);
 
-    const xAxisConfig: Partial<AxisConfigProps> = {
-      scaleType: xScaleType ?? 'band',
-      data: xData,
-      categoryPadding: xCategoryPadding,
-      domain: xDomain,
-      domainLimit: xDomainLimit,
-      range: xRange,
-    };
+      // Split axis props into config props for Chart and visual props for axis components
+      const {
+        scaleType: xScaleType,
+        data: xData,
+        categoryPadding: xCategoryPadding,
+        domain: xDomain,
+        domainLimit: xDomainLimit,
+        range: xRange,
+        id: xAxisId,
+        ...xAxisVisualProps
+      } = xAxis || {};
+      const {
+        scaleType: yScaleType,
+        data: yData,
+        categoryPadding: yCategoryPadding,
+        domain: yDomain,
+        domainLimit: yDomainLimit,
+        range: yRange,
+        id: yAxisId,
+        ...yAxisVisualProps
+      } = yAxis || {};
 
-    // todo: see if we can get rid of this
-    const hasNegativeValues = useMemo(() => {
-      if (!series) return false;
-      return series.some((s) =>
-        s.data?.some(
-          (value: number | null | [number, number]) =>
-            (typeof value === 'number' && value < 0) ||
-            (Array.isArray(value) && value.some((v) => typeof v === 'number' && v < 0)),
-        ),
+      const xAxisConfig: Partial<AxisConfigProps> = {
+        scaleType: xScaleType ?? 'band',
+        data: xData,
+        categoryPadding: xCategoryPadding,
+        domain: xDomain,
+        domainLimit: xDomainLimit,
+        range: xRange,
+      };
+
+      // todo: see if we can get rid of this
+      const hasNegativeValues = useMemo(() => {
+        if (!series) return false;
+        return series.some((s) =>
+          s.data?.some(
+            (value: number | null | [number, number]) =>
+              (typeof value === 'number' && value < 0) ||
+              (Array.isArray(value) && value.some((v) => typeof v === 'number' && v < 0)),
+          ),
+        );
+      }, [series]);
+
+      // Set default min domain to 0 for area chart, but only if there are no negative values
+      const yAxisConfig: Partial<AxisConfigProps> = {
+        scaleType: yScaleType,
+        data: yData,
+        categoryPadding: yCategoryPadding,
+        domain: hasNegativeValues ? yDomain : { min: 0, ...yDomain },
+        domainLimit: yDomainLimit,
+        range: yRange,
+      };
+
+      return (
+        <Chart
+          ref={ref}
+          {...chartProps}
+          padding={calculatedPadding}
+          series={seriesToRender}
+          xAxis={xAxisConfig}
+          yAxis={yAxisConfig}
+        >
+          {showXAxis && (
+            <XAxis axisId={xAxisId} dataKey={dataKey} position="end" {...xAxisVisualProps} />
+          )}
+          {showYAxis && (
+            <YAxis axisId={yAxisId} dataKey={dataKey} position="end" {...yAxisVisualProps} />
+          )}
+          <BarPlot
+            BarComponent={BarComponent}
+            StackComponent={StackComponent}
+            barMinSize={barMinSize}
+            barPadding={barPadding}
+            borderRadius={borderRadius}
+            fillOpacity={fillOpacity}
+            roundBaseline={roundBaseline}
+            series={barSeriesToRender}
+            stackGap={stackGap}
+            stackMinSize={stackMinSize}
+            stroke={stroke}
+            strokeWidth={strokeWidth}
+          />
+          {children}
+        </Chart>
       );
-    }, [series]);
-
-    // Set default min domain to 0 for area chart, but only if there are no negative values
-    const yAxisConfig: Partial<AxisConfigProps> = {
-      scaleType: yScaleType,
-      data: yData,
-      categoryPadding: yCategoryPadding,
-      domain: hasNegativeValues ? yDomain : { min: 0, ...yDomain },
-      domainLimit: yDomainLimit,
-      range: yRange,
-    };
-
-    return (
-      <Chart
-        ref={ref}
-        {...chartProps}
-        padding={calculatedPadding}
-        series={seriesToRender}
-        xAxis={xAxisConfig}
-        yAxis={yAxisConfig}
-      >
-        {showXAxis && (
-          <XAxis axisId={xAxisId} dataKey={dataKey} position="end" {...xAxisVisualProps} />
-        )}
-        {showYAxis && (
-          <YAxis axisId={yAxisId} dataKey={dataKey} position="end" {...yAxisVisualProps} />
-        )}
-        <BarPlot
-          BarComponent={BarComponent}
-          StackComponent={StackComponent}
-          barMinSize={barMinSize}
-          barPadding={barPadding}
-          borderRadius={borderRadius}
-          fillOpacity={fillOpacity}
-          roundBaseline={roundBaseline}
-          series={barSeriesToRender}
-          stackGap={stackGap}
-          stackMinSize={stackMinSize}
-          stroke={stroke}
-          strokeWidth={strokeWidth}
-        />
-        {children}
-      </Chart>
-    );
     },
   ),
 );

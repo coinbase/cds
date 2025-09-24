@@ -153,8 +153,8 @@ export const DottedArea = memo<DottedAreaProps>(
             <circle cx={dotCenterPosition} cy={dotCenterPosition} fill={fill} r={dotSize} />
           </pattern>
           <linearGradient
-            id={gradientIdRef.current}
             gradientUnits={useUserSpaceUnits ? 'userSpaceOnUse' : 'objectBoundingBox'}
+            id={gradientIdRef.current}
             x1={useUserSpaceUnits ? 0 : '0%'}
             x2={useUserSpaceUnits ? 0 : '0%'}
             y1={gradientY1}
@@ -185,10 +185,10 @@ export const DottedArea = memo<DottedAreaProps>(
           <mask id={maskIdRef.current}>
             <Path
               d={d}
-              fill={`url(#${gradientIdRef.current})`}
               disableAnimations={
                 disableAnimations !== undefined ? disableAnimations : context.disableAnimations
               }
+              fill={`url(#${gradientIdRef.current})`}
             />
           </mask>
         </defs>
