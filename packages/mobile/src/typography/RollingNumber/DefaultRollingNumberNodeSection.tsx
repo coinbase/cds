@@ -36,7 +36,7 @@ export const DefaultRollingNumberNodeSection: RollingNumberNodeSectionComponent 
       );
       return (
         <HStack
-          ref={ref as any}
+          ref={ref}
           alignItems="center"
           justifyContent={justifyContent}
           style={containerStyle}
