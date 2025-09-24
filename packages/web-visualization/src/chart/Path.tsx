@@ -30,9 +30,9 @@ export type PathProps = SharedProps &
     | 'onDragStartCapture'
   > & {
     /**
-     * Whether to disable animations for this path.
+     * Whether to animate this path. Overrides the animate prop on the Chart component.
      */
-    disableAnimations?: boolean;
+    animate?: boolean;
     /**
      * Custom clip path rect. If provided, this overrides the default chart rect for clipping.
      */
@@ -44,13 +44,13 @@ export type PathProps = SharedProps &
   };
 
 export const Path = memo<PathProps>(
-  ({ disableAnimations, clipRect, clipOffset = 0, d = '', ...pathProps }) => {
+  ({ animate: animateProp, clipRect, clipOffset = 0, d = '', ...pathProps }) => {
     const pathRef = useRef<SVGPathElement>(null);
     const clipPathIdRef = useRef<string>(generateRandomId());
     const context = useChartContext();
     const { drawingArea: contextRect } = useChartDrawingAreaContext();
     const rect = clipRect ?? contextRect;
-    const animate = !disableAnimations && context.animate;
+    const animate = animateProp ?? context.animate;
 
     // todo: do we need useValueChanges?
     const {

@@ -24,13 +24,11 @@ export const DottedLine = memo<DottedLineProps>(
     strokeOpacity = 1,
     strokeWidth = 2,
     vectorEffect = 'non-scaling-stroke',
-    disableAnimations,
     ...props
   }) => {
     return (
       <Path
         clipOffset={strokeWidth}
-        disableAnimations={disableAnimations}
         fill={fill}
         stroke={stroke}
         strokeDasharray={strokeDasharray}

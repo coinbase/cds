@@ -57,7 +57,6 @@ export const GradientLine = memo<GradientLineProps>(
     strokeLinecap = 'round',
     strokeLinejoin = 'round',
     strokeWidth = 2,
-    disableAnimations,
     ...props
   }) => {
     const patternIdRef = useRef<string>(generateRandomId());
@@ -72,7 +71,6 @@ export const GradientLine = memo<GradientLineProps>(
         </defs>
         <Path
           clipOffset={strokeWidth}
-          disableAnimations={disableAnimations}
           fill={fill}
           stroke={`url(#${patternIdRef.current})`}
           strokeLinecap={strokeLinecap}

@@ -84,7 +84,7 @@ export const DottedArea = memo<DottedAreaProps>(
     yAxisId,
     classNames,
     styles,
-    disableAnimations,
+    animate,
     ...pathProps
   }) => {
     const context = useChartContext();
@@ -183,17 +183,13 @@ export const DottedArea = memo<DottedAreaProps>(
             )}
           </linearGradient>
           <mask id={maskIdRef.current}>
-            <Path
-              d={d}
-              disableAnimations={disableAnimations}
-              fill={`url(#${gradientIdRef.current})`}
-            />
+            <Path animate={animate} d={d} fill={`url(#${gradientIdRef.current})`} />
           </mask>
         </defs>
         <Path
+          animate={animate}
           className={classNames?.path}
           d={d}
-          disableAnimations={disableAnimations}
           fill={`url(#${patternIdRef.current})`}
           mask={`url(#${maskIdRef.current})`}
           style={styles?.path}

@@ -220,7 +220,7 @@ export const ReferenceLine = memo<ReferenceLineProps>(
       return (
         <g className={rootClassName} data-testid={testID} style={rootStyle}>
           <LineComponent
-            disableAnimations
+            animate={false}
             d={`M${drawingArea.x},${yPixel} L${drawingArea.x + drawingArea.width},${yPixel}`}
             stroke={lineStroke}
           />
@@ -268,7 +268,7 @@ export const ReferenceLine = memo<ReferenceLineProps>(
       return (
         <g className={rootClassName} data-testid={testID} style={rootStyle}>
           <LineComponent
-            disableAnimations
+            animate={false}
             d={`M${xPixel},${drawingArea.y} L${xPixel},${drawingArea.y + drawingArea.height}`}
             stroke={lineStroke}
           />

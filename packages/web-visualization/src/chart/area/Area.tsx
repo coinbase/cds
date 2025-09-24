@@ -14,7 +14,7 @@ export type AreaComponentProps = {
   stroke?: string;
   strokeWidth?: number;
   yAxisId?: string;
-  disableAnimations?: boolean;
+  animate?: boolean;
 };
 
 export type AreaComponent = React.FC<AreaComponentProps>;

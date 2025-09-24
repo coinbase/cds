@@ -23,13 +23,11 @@ export const SolidLine = memo<SolidLineProps>(
     strokeLinejoin = 'round',
     strokeOpacity = 1,
     strokeWidth = 2,
-    disableAnimations,
     ...props
   }) => {
     return (
       <Path
         clipOffset={strokeWidth}
-        disableAnimations={disableAnimations}
         fill={fill}
         stroke={stroke}
         strokeLinecap={strokeLinecap}
