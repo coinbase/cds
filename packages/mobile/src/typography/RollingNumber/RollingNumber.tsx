@@ -65,19 +65,9 @@ const baseStylesheet = StyleSheet.create({
   },
 });
 
-export type TimingTransition = {
-  // type timing is optional since it's the default
-  type: 'timing';
-} & WithTimingConfig;
-
-export type SpringTransition = {
-  // type spring is required since it's not the default
-  type: 'spring';
-} & WithSpringConfig;
-
 export type RollingNumberTransitionConfig = {
-  y?: TimingTransition | SpringTransition;
-  color?: TimingTransition | SpringTransition;
+  y?: ({ type: 'timing' } & WithTimingConfig) | ({ type: 'spring' } & WithSpringConfig);
+  color?: ({ type: 'timing' } & WithTimingConfig) | ({ type: 'spring' } & WithSpringConfig);
 };
 
 // Subcomponent prop and component type declarations
