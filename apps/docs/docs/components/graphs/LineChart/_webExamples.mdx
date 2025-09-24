@@ -25,7 +25,6 @@
 
 ```jsx live
 <LineChart
-  disableHighlighting
   height={250}
   series={[
     {
@@ -188,7 +187,6 @@ function PointsChart() {
   const keyMarketShiftIndices = [4, 6, 7, 9, 10];
   return (
     <Chart
-      disableHighlighting
       height={250}
       series={[
         {
@@ -252,7 +250,7 @@ function EmptyStateChart() {
             },
           ]}
           yAxis={{ domain: isLoading ? { min: -1, max: 3 } : undefined }}
-          disableHighlighting={isLoading}
+          enableScrubbing={!isLoading}
           height={300}
         />
       </m.div>
@@ -290,7 +288,6 @@ todo: move this to an axis doc
 
 ```jsx live
 <LineChart
-  disableHighlighting
   height={400}
   series={[
     {

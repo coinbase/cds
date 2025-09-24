@@ -1,4 +1,4 @@
-import { forwardRef, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { forwardRef, memo, useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
 import { assets } from '@coinbase/cds-common/internal/data/assets';
 import { prices } from '@coinbase/cds-common/internal/data/prices';
 import { sparklineInteractiveData } from '@coinbase/cds-common/internal/visualizations/SparklineInteractiveData';
@@ -142,34 +142,6 @@ const PeriodSelectorTab: TabComponent = memo(
     />
   )),
 );
-
-export const BasicLineChart = () => {
-  const chartData = [65, 78, 45, 88, 92, 73, 69];
-
-  return (
-    <LineChart
-      enableScrubbing
-      showYAxis
-      height={defaultChartHeight}
-      renderPoints={() => true}
-      series={[
-        {
-          id: 'monthly-growth',
-          data: chartData,
-          label: 'Monthly Growth',
-          color: '#2ca02c',
-        },
-      ]}
-      yAxis={{
-        requestedTickCount: 2,
-        tickLabelFormatter: (value) => `$${value}`,
-        showGrid: true,
-      }}
-    >
-      <Scrubber />
-    </LineChart>
-  );
-};
 
 export const BasicLineChartWithPoints = () => {
   const chartData = [65, 78, 45, 88, 92, 73, 69];
@@ -1803,5 +1775,153 @@ export const AvailabilityChart = () => {
         seriesId="availability"
       />
     </Chart>
+  );
+};
+
+const Example: React.FC<
+  React.PropsWithChildren<{ title: string; description?: string | React.ReactNode }>
+> = ({ children, title, description }) => {
+  return (
+    <VStack gap={2}>
+      <Text as="h2" display="block" font="title3">
+        {title}
+      </Text>
+      {description}
+      {children}
+    </VStack>
+  );
+};
+
+const GainLossChart = () => {
+  const [highlightedItem, setHighlightedItem] = useState<number | null>(null);
+  const gradientId = useId();
+
+  const data = [-40, -28, -21, -5, 48, -5, -28, 2, -29, -46, 16, -30, -29, 8];
+
+  const ChartDefs = ({ threshold = 0 }) => {
+    const { getYScale } = useChartContext();
+    // get the default y-axis scale
+    const yScale = getYScale?.();
+
+    if (yScale) {
+      const domain = yScale.domain();
+      const range = yScale.range();
+
+      const baselinePercentage = ((threshold - domain[0]) / (domain[1] - domain[0])) * 100;
+
+      const negativeColor = 'rgb(var(--gray15))';
+      const positiveColor = 'var(--color-fgPositive)';
+
+      return (
+        <defs>
+          <linearGradient
+            gradientUnits="userSpaceOnUse"
+            id={`${gradientId}-solid`}
+            x1="0%"
+            x2="0%"
+            y1={range[0]}
+            y2={range[1]}
+          >
+            <stop offset="0%" stopColor={negativeColor} />
+            <stop offset={`${baselinePercentage}%`} stopColor={negativeColor} />
+            <stop offset={`${baselinePercentage}%`} stopColor={positiveColor} />
+            <stop offset="100%" stopColor={positiveColor} />
+          </linearGradient>
+          <linearGradient
+            gradientUnits="userSpaceOnUse"
+            id={`${gradientId}-gradient`}
+            x1="0%"
+            x2="0%"
+            y1={range[0]}
+            y2={range[1]}
+          >
+            <stop offset="0%" stopColor={negativeColor} stopOpacity={0.3} />
+            <stop offset={`${baselinePercentage}%`} stopColor={negativeColor} stopOpacity={0} />
+            <stop offset={`${baselinePercentage}%`} stopColor={positiveColor} stopOpacity={0} />
+            <stop offset="100%" stopColor={positiveColor} stopOpacity={0.3} />
+          </linearGradient>
+        </defs>
+      );
+    }
+
+    return null;
+  };
+
+  const tickLabelFormatter = useCallback(
+    (value: number) =>
+      new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+        maximumFractionDigits: 0,
+      }).format(value),
+    [],
+  );
+
+  const solidColor = `url(#${gradientId}-solid)`;
+
+  return (
+    <Chart
+      enableScrubbing
+      height={250}
+      onScrubberPosChange={(dataIndex: number | null) => setHighlightedItem(dataIndex)}
+      padding={{ top: 12, bottom: 12, left: 0, right: 0 }}
+      series={[
+        {
+          id: 'prices',
+          data: data,
+          color: solidColor,
+        },
+      ]}
+    >
+      <ChartDefs />
+      <YAxis showGrid requestedTickCount={2} tickLabelFormatter={tickLabelFormatter} />
+      <Area curve="monotone" fill={`url(#${gradientId}-gradient)`} seriesId="prices" />
+      <Line curve="monotone" seriesId="prices" stroke={solidColor} strokeWidth={3} />
+      <Scrubber hideOverlay />
+    </Chart>
+  );
+};
+
+const sampleData = [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58];
+
+export const All = () => {
+  return (
+    <VStack gap={2}>
+      <Example title="Basic">
+        <LineChart
+          enableScrubbing
+          showArea
+          showYAxis
+          curve="monotone"
+          height={250}
+          series={[
+            {
+              id: 'prices',
+              data: sampleData,
+            },
+          ]}
+          yAxis={{
+            showGrid: true,
+          }}
+        >
+          <Scrubber />
+        </LineChart>
+      </Example>
+      <Example title="Simple">
+        <LineChart
+          curve="monotone"
+          height={250}
+          series={[
+            {
+              id: 'prices',
+              data: sampleData,
+            },
+          ]}
+        />
+      </Example>
+      <Example title="Gain/Loss">
+        <GainLossChart />
+      </Example>
+    </VStack>
   );
 };

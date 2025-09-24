@@ -27,23 +27,19 @@ function Test() {
 ## Simple
 
 ```jsx live
-function Test() {
-  return (
-    <AreaChart
-      height={250}
-      padding={0}
-      series={[
-        {
-          id: 'prices',
-          data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 2, 68, 20, 21, 58],
-        },
-      ]}
-      type="gradient"
-      showLines
-      curve="monotone"
-    />
-  );
-}
+<AreaChart
+  height={250}
+  padding={0}
+  series={[
+    {
+      id: 'prices',
+      data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 2, 68, 20, 21, 58],
+    },
+  ]}
+  type="gradient"
+  showLines
+  curve="monotone"
+/>
 ```
 
 ## Multiple Series
