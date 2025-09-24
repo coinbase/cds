@@ -29,7 +29,49 @@ ReferenceLine can be used to add important details to a chart, such as a referen
 
 ## Data Values
 
-Talk about dataX vs dataY
+ReferenceLine relies on `dataX` or `dataY` to position the line. Passing in `dataY` will create a horizontal line across the y axis at that value, and passing in `dataX` will do the same along the x axis.
+
+```jsx live
+<LineChart
+  showArea
+  curve="natural"
+  height={400}
+  series={[
+    {
+      id: 'growth',
+      data: [
+        2, 4, 8, 15, 30, 65, 140, 280, 580, 1200, 2400, 4800, 9500, 19000, 38000, 75000, 150000,
+      ],
+      color: 'var(--color-fgPositive)',
+    },
+  ]}
+>
+  <ReferenceLine
+    dataY={100}
+    label="100"
+    labelPosition="left"
+    labelConfig={{ dominantBaseline: 'end', dy: -4 }}
+  />
+  <ReferenceLine
+    dataY={10000}
+    label="10,000"
+    labelPosition="left"
+    labelConfig={{ dominantBaseline: 'end', dy: -4 }}
+  />
+  <ReferenceLine
+    dataY={100000}
+    label="100,000"
+    labelPosition="left"
+    labelConfig={{ dominantBaseline: 'end', dy: -4 }}
+  />
+  <ReferenceLine
+    dataY={1000000}
+    label="1,000,000"
+    labelPosition="left"
+    labelConfig={{ dominantBaseline: 'end', dy: -4 }}
+  />
+</LineChart>
+```
 
 ## Label
 
