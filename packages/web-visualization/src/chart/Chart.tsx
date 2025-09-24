@@ -25,7 +25,7 @@ import {
   getAxisScale,
   getPadding,
   getStackedSeriesData as calculateStackedSeriesData,
-  isBandScale,
+  isCategoricalScale,
   type RegisteredAxis,
   type Series,
 } from '@coinbase/cds-common/visualizations/charts';
@@ -289,7 +289,7 @@ export const Chart = memo(
 
           if (!defaultXScale || !defaultXAxis) return 0;
 
-          if (isBandScale(defaultXScale)) {
+          if (isCategoricalScale(defaultXScale)) {
             // todo: see where else we can simply rely on scale domain values
             const categories = defaultXScale.domain?.() ?? defaultXAxis.data ?? [];
             const bandwidth = defaultXScale.bandwidth?.() ?? 0;
@@ -377,7 +377,7 @@ export const Chart = memo(
 
           if (!defaultXScale || !defaultXAxis) return;
 
-          const isBand = isBandScale(defaultXScale as any);
+          const isBand = isCategoricalScale(defaultXScale as any);
           const categories = isBand
             ? (defaultXScale.domain?.() ?? (defaultXAxis.data as string[] | undefined))
             : (defaultXAxis.data as string[] | undefined);
@@ -459,6 +459,7 @@ export const Chart = memo(
 
       const contextValue: ChartContextValue = useMemo(
         () => ({
+          series: series ?? [],
           getSeries,
           getSeriesData: getStackedSeriesData,
           animate: !disableAnimations,
@@ -470,6 +471,7 @@ export const Chart = memo(
           getYScale,
         }),
         [
+          series,
           getSeries,
           getStackedSeriesData,
           disableAnimations,

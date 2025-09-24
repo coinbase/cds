@@ -1,10 +1,11 @@
 import React, { memo, useMemo, useRef } from 'react';
 import { ClipPath, Defs, G, Rect } from 'react-native-svg';
 import type { ThemeVars } from '@coinbase/cds-common';
-import { defaultAxisId } from '@coinbase/cds-common/visualizations/charts';
+import {
+  defaultAxisId,
+  useChartDrawingAreaContext,
+} from '@coinbase/cds-common/visualizations/charts';
 import { generateRandomId } from '@coinbase/cds-utils';
-
-import { useChartContext } from '../ChartContext';
 
 import type { BarComponent, BarProps } from './Bar';
 import type { BarSeries } from './BarChart';
@@ -103,15 +104,17 @@ export const BarPlot = memo<BarPlotProps>(
     barMinSize,
     stackMinSize,
   }) => {
-    const { series: allSeries, rect } = useChartContext();
+    const { drawingArea } = useChartDrawingAreaContext();
+    // TODO: This component needs to be refactored to receive series as props
+    const allSeries: any[] = [];
     const clipPathId = useRef(generateRandomId()).current;
 
     const targetSeries = useMemo(() => {
       const seriesToRender: BarSeries[] =
-        (series ?? allSeries)?.filter((s) => (s.xAxisId ?? defaultAxisId) === xAxisId) ?? [];
+        (series ?? [])?.filter((s: any) => (s.xAxisId ?? defaultAxisId) === xAxisId) ?? [];
 
       return seriesToRender;
-    }, [allSeries, series, xAxisId]);
+    }, [series, xAxisId]);
 
     const stackGroups = useMemo(() => {
       const groups = new Map<
@@ -146,7 +149,7 @@ export const BarPlot = memo<BarPlotProps>(
       return Array.from(groups.values());
     }, [targetSeries]);
 
-    if (!rect) {
+    if (!drawingArea) {
       return null;
     }
 
@@ -154,7 +157,12 @@ export const BarPlot = memo<BarPlotProps>(
       <>
         <Defs>
           <ClipPath id={clipPathId}>
-            <Rect height={rect.height} width={rect.width} x={rect.x} y={rect.y} />
+            <Rect
+              height={drawingArea.height}
+              width={drawingArea.width}
+              x={drawingArea.x}
+              y={drawingArea.y}
+            />
           </ClipPath>
         </Defs>
         <G clipPath={`url(#${clipPathId})`}>

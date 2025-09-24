@@ -1,9 +1,11 @@
 import React, { memo, useMemo, useRef } from 'react';
 import type { ThemeVars } from '@coinbase/cds-common';
-import { defaultAxisId } from '@coinbase/cds-common/visualizations/charts';
+import {
+  defaultAxisId,
+  useChartContext,
+  useChartDrawingAreaContext,
+} from '@coinbase/cds-common/visualizations/charts';
 import { generateRandomId } from '@coinbase/cds-utils';
-
-import { useChartContext } from '../ChartContext';
 
 import type { BarComponent, BarProps } from './Bar';
 import type { BarSeries } from './BarChart';
@@ -97,12 +99,13 @@ export const BarPlot = memo<BarPlotProps>(
     barMinSize,
     stackMinSize,
   }) => {
-    const { series: allSeries, rect } = useChartContext();
+    const { series: allSeries } = useChartContext();
+    const { drawingArea } = useChartDrawingAreaContext();
     const clipPathId = useRef(generateRandomId()).current;
 
     const targetSeries = useMemo(() => {
       const seriesToRender: BarSeries[] =
-        (series ?? allSeries)?.filter((s) => (s.xAxisId ?? defaultAxisId) === xAxisId) ?? [];
+        (series ?? allSeries)?.filter((s: any) => (s.xAxisId ?? defaultAxisId) === xAxisId) ?? [];
 
       return seriesToRender;
     }, [allSeries, series, xAxisId]);
@@ -140,7 +143,7 @@ export const BarPlot = memo<BarPlotProps>(
       return Array.from(groups.values());
     }, [targetSeries]);
 
-    if (!rect) {
+    if (!drawingArea) {
       return null;
     }
 
@@ -148,7 +151,12 @@ export const BarPlot = memo<BarPlotProps>(
       <>
         <defs>
           <clipPath id={clipPathId}>
-            <rect height={rect.height} width={rect.width} x={rect.x} y={rect.y} />
+            <rect
+              height={drawingArea.height}
+              width={drawingArea.width}
+              x={drawingArea.x}
+              y={drawingArea.y}
+            />
           </clipPath>
         </defs>
         <g clipPath={`url(#${clipPathId})`}>

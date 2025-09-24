@@ -1,7 +1,7 @@
 import React, { memo, useRef } from 'react';
+import { useChartContext } from '@coinbase/cds-common/visualizations/charts';
 import { generateRandomId } from '@coinbase/cds-utils';
 
-import { useChartContext } from '../ChartContext';
 import { Path, type PathProps } from '../Path';
 
 import type { AreaComponentProps } from './Area';
@@ -98,8 +98,8 @@ export const GradientArea = memo<GradientAreaProps>(
       <>
         <defs>
           <linearGradient
-            id={patternIdRef.current}
             gradientUnits={useUserSpaceUnits ? 'userSpaceOnUse' : 'objectBoundingBox'}
+            id={patternIdRef.current}
             x1={useUserSpaceUnits ? 0 : '0%'}
             x2={useUserSpaceUnits ? 0 : '0%'}
             y1={gradientY1}
@@ -134,9 +134,7 @@ export const GradientArea = memo<GradientAreaProps>(
         </defs>
         <Path
           d={d}
-          disableAnimations={
-            disableAnimations !== undefined ? disableAnimations : context.disableAnimations
-          }
+          disableAnimations={disableAnimations !== undefined ? disableAnimations : !context.animate}
           fill={`url(#${patternIdRef.current})`}
           {...pathProps}
         />

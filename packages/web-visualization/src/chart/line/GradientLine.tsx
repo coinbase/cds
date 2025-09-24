@@ -1,12 +1,15 @@
 import { memo, useRef } from 'react';
 import type { SharedProps } from '@coinbase/cds-common/types';
+import { useChartContext } from '@coinbase/cds-common/visualizations/charts';
 import { generateRandomId } from '@coinbase/cds-utils';
 
-import { useChartContext } from '../ChartContext';
 import { Path, type PathProps } from '../Path';
 
+import type { LineComponentProps } from './Line';
+
 export type GradientLineProps = SharedProps &
-  Omit<PathProps, 'stroke' | 'strokeOpacity'> & {
+  Omit<PathProps, 'stroke' | 'strokeOpacity' | 'strokeWidth'> &
+  Pick<LineComponentProps, 'strokeWidth'> & {
     /**
      * The color of the line.
      * @default 'var(--color-bgLine)'
@@ -70,9 +73,8 @@ export const GradientLine = memo<GradientLineProps>(
           </linearGradient>
         </defs>
         <Path
-          disableAnimations={
-            disableAnimations !== undefined ? disableAnimations : context.disableAnimations
-          }
+          clipOffset={strokeWidth}
+          disableAnimations={disableAnimations !== undefined ? disableAnimations : !context.animate}
           fill={fill}
           stroke={`url(#${patternIdRef.current})`}
           strokeLinecap={strokeLinecap}

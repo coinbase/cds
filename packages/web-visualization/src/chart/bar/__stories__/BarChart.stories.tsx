@@ -1,12 +1,11 @@
 import React, { memo, useRef } from 'react';
-import { isBandScale } from '@coinbase/cds-common/visualizations/charts';
+import { isCategoricalScale, useChartContext } from '@coinbase/cds-common/visualizations/charts';
 import { generateRandomId } from '@coinbase/cds-utils';
 import { VStack } from '@coinbase/cds-web/layout';
 import { Text } from '@coinbase/cds-web/typography';
 
 import { Chart, ScrubberContext } from '../..';
 import { XAxis, YAxis } from '../../axis';
-import { useChartContext } from '../../ChartContext';
 import { ReferenceLine, SolidLine, type SolidLineProps } from '../../line';
 import { PeriodSelector } from '../../PeriodSelector';
 import { Scrubber } from '../../scrubber';
@@ -259,7 +258,8 @@ const ScrubberRect = memo(() => {
   const xScale = getXScale?.();
   const yScale = getYScale?.();
 
-  if (!xScale || !yScale || highlightedIndex === undefined || !isBandScale(xScale)) return null;
+  if (!xScale || !yScale || highlightedIndex === undefined || !isCategoricalScale(xScale))
+    return null;
 
   const yScaleDomain = yScale.range();
   const [yMax, yMin] = yScaleDomain;

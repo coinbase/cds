@@ -1,8 +1,7 @@
 import React, { memo, useMemo } from 'react';
 import type { SVGProps } from 'react';
-import { getAreaPath, type ChartPathCurveType } from '@coinbase/cds-common/visualizations/charts';
-
-import { useChartContext } from '../ChartContext';
+import { type ChartPathCurveType, getAreaPath } from '@coinbase/cds-common/visualizations/charts';
+import { useChartContext } from '@coinbase/cds-common/visualizations/charts';
 
 import { DottedArea } from './DottedArea';
 import { GradientArea } from './GradientArea';
@@ -73,20 +72,19 @@ export const Area = memo<AreaProps>(
     stroke,
     strokeWidth,
   }) => {
-    const { getSeries, getSeriesData, getStackedSeriesData, getXScale, getYScale, getXAxis } =
-      useChartContext();
+    const { getSeries, getSeriesData, getXScale, getYScale, getXAxis } = useChartContext();
 
     // Get sourceData from series (using stacked data if available)
     const matchedSeries = useMemo(() => getSeries(seriesId), [seriesId, getSeries]);
 
     // Check for stacked data first, then fall back to raw data
     const sourceData = useMemo(() => {
-      const stackedData = getStackedSeriesData(seriesId);
+      const stackedData = getSeriesData(seriesId);
       if (stackedData) {
         return stackedData;
       }
       return getSeriesData(seriesId) || null;
-    }, [seriesId, getSeriesData, getStackedSeriesData]);
+    }, [seriesId, getSeriesData]);
 
     // Get scales and axes for this series
     const xScale = getXScale?.(matchedSeries?.xAxisId);

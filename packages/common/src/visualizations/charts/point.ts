@@ -1,4 +1,21 @@
-import { type ChartScaleFunction, isBandScale, isNumericScale } from './scale';
+import { type ChartScaleFunction, isCategoricalScale, isNumericScale } from './scale';
+
+/**
+ * Get a point from a data value and a scale.
+ * @note for categorical scales, the point will be centered within the band.
+ * @param data - the data value.
+ * @param scale - the scale function.
+ * @returns the pixel value (defaulting to 0 if data value is not defined in scale).
+ */
+export const getPointOnScale = (dataValue: number, scale: ChartScaleFunction): number => {
+  if (isCategoricalScale(scale)) {
+    const bandStart = scale(dataValue) ?? 0;
+    const bandwidth = scale.bandwidth() ?? 0;
+    return bandStart + bandwidth / 2;
+  }
+
+  return scale(dataValue) ?? 0;
+};
 
 /**
  * Projects a data point to pixel coordinates using the chart scale.
@@ -25,29 +42,7 @@ export const projectPoint = ({
   xScale: ChartScaleFunction;
   yScale: ChartScaleFunction;
 }): { x: number; y: number } => {
-  let pixelX: number;
-  let pixelY: number;
-
-  if (isNumericScale(xScale)) {
-    pixelX = xScale(x) ?? 0;
-  } else {
-    const bandStart = xScale(x) ?? 0;
-    const bandwidth = xScale.bandwidth?.() ?? 0;
-    // Center within the band
-    pixelX = bandStart + bandwidth / 2;
-  }
-
-  if (isNumericScale(yScale)) {
-    pixelY = yScale(y as number) ?? 0;
-  } else {
-    // Band scale - convert index to category if needed
-    pixelY = (yScale as any)(String(y)) ?? 0;
-    // Center within the band
-    const bandwidth = (yScale as any).bandwidth?.() ?? 0;
-    pixelY += bandwidth / 2;
-  }
-
-  return { x: pixelX, y: pixelY };
+  return { x: getPointOnScale(x, xScale), y: getPointOnScale(y, yScale) };
 };
 
 /**
@@ -97,7 +92,7 @@ export const projectPoints = ({
     let xValue: number = index;
 
     // For band scales, always use the index
-    if (!isBandScale(xScale)) {
+    if (!isCategoricalScale(xScale)) {
       // For numeric scales with axis data, use the axis data values instead of indices
       if (xData && Array.isArray(xData) && xData.length > 0) {
         // Check if it's numeric data

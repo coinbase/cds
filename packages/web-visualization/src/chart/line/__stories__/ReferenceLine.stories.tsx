@@ -79,7 +79,7 @@ const TrendArrowIcon = ({
   );
 };
 
-const MovableReferenceLine = memo(
+const DraggableReferenceLine = memo(
   ({
     baselineAmount,
     startAmount,
@@ -283,7 +283,7 @@ const PriceTargetChart = () => {
         label={formatPrice(priceData[priceData.length - 1])}
         labelConfig={{ dx: 16, textAnchor: 'start' }}
       />
-      <MovableReferenceLine
+      <DraggableReferenceLine
         baselineAmount={priceData[priceData.length - 1]}
         chartRef={chartRef}
         startAmount={priceData[priceData.length - 1] * 1.3}

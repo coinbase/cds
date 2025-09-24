@@ -4,7 +4,11 @@ import { assets } from '@coinbase/cds-common/internal/data/assets';
 import { prices } from '@coinbase/cds-common/internal/data/prices';
 import { sparklineInteractiveData } from '@coinbase/cds-common/internal/visualizations/SparklineInteractiveData';
 import type { TabValue } from '@coinbase/cds-common/tabs/useTabs';
-import { projectPoint } from '@coinbase/cds-common/visualizations/charts/getPoints';
+import {
+  projectPoint,
+  useChartContext,
+  useChartDrawingAreaContext,
+} from '@coinbase/cds-common/visualizations/charts';
 import type { ChartAxisScaleType } from '@coinbase/cds-common/visualizations/charts/scale';
 import { Example, ExampleScreen } from '@coinbase/cds-mobile/examples/ExampleScreen';
 import { Box, HStack, VStack } from '@coinbase/cds-mobile/layout';
@@ -15,8 +19,6 @@ import {
 } from '@coinbase/cds-mobile/tabs';
 import { Text } from '@coinbase/cds-mobile/typography/Text';
 
-// Removed framer-motion import for React Native compatibility
-import { useChartContext } from '../..';
 import { Area, type AreaComponentProps, DottedArea, GradientArea } from '../../area';
 import { XAxis } from '../../axis';
 import { Chart } from '../../Chart';
@@ -674,11 +676,11 @@ export const ReturnsChart = () => {
   const negativeColor = '#6b7280';
 
   const ChartDefs = ({ threshold = 0 }) => {
-    const { height, series, rect, getYScale, getYAxis } = useChartContext();
+    const { height, getYScale, getYAxis } = useChartContext();
     const yScale = getYScale?.();
     const yAxis = getYAxis?.();
 
-    if (!series || !rect || !yScale) return null;
+    if (!yScale) return null;
 
     const thresholdPixel = projectPoint({ x: 0, y: threshold, xScale: (() => 0) as any, yScale });
     const thresholdY = thresholdPixel.y;

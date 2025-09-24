@@ -1,9 +1,8 @@
 import React, { memo, useMemo } from 'react';
 import type { ThemeVars } from '@coinbase/cds-common';
 import type { Rect } from '@coinbase/cds-common/types';
+import { useChartContext } from '@coinbase/cds-common/visualizations/charts';
 import { useTheme } from '@coinbase/cds-web';
-
-import { useChartContext } from '../ChartContext';
 
 import { Bar, type BarComponent, type BarProps } from './Bar';
 import type { BarSeries } from './BarChart';
@@ -120,7 +119,7 @@ export const BarStack = memo<BarStackProps>(
     roundBaseline,
   }) => {
     const theme = useTheme();
-    const { getStackedSeriesData, getSeriesData, getXAxis } = useChartContext();
+    const { getSeriesData, getXAxis } = useChartContext();
 
     const stackGapPx = stackGap ? theme.space[stackGap] : 0;
     const barMinSizePx = barMinSize ? theme.space[barMinSize] : 0;
@@ -168,13 +167,13 @@ export const BarStack = memo<BarStackProps>(
 
       // Process each series in the stack
       series.forEach((s) => {
-        const data = getStackedSeriesData(s.id);
+        const data = getSeriesData(s.id);
         if (!data) return;
 
         const value = data[categoryIndex];
         if (value === null || value === undefined) return;
 
-        const originalData = getSeriesData(s.id);
+        const originalData = s.data;
         const originalValue = originalData?.[categoryIndex];
         // Only apply gap logic if the original data wasn't tuple format
         const shouldApplyGap = !Array.isArray(originalValue);
@@ -545,7 +544,6 @@ export const BarStack = memo<BarStackProps>(
       series,
       x,
       width,
-      getStackedSeriesData,
       getSeriesData,
       categoryIndex,
       roundBaseline,

@@ -9,6 +9,8 @@ import {
   type AxisConfigProps,
   ChartContext,
   type ChartContextValue,
+  ChartDrawingAreaContext,
+  type ChartDrawingAreaContextValue,
   type ChartPadding,
   type ChartScaleFunction,
   defaultAxisId,
@@ -19,17 +21,12 @@ import {
   getAxisScale,
   getPadding,
   getStackedSeriesData as calculateStackedSeriesData,
-  isBandScale,
+  isCategoricalScale,
+  type RegisteredAxis,
   type Series,
 } from '@coinbase/cds-common/visualizations/charts';
 import { useLayout } from '@coinbase/cds-mobile/hooks/useLayout';
 import { Box } from '@coinbase/cds-mobile/layout';
-
-import {
-  ChartDrawingAreaContext,
-  type ChartDrawingAreaContextValue,
-  type RegisteredAxis,
-} from './ChartDrawingAreaContext';
 
 const styles = StyleSheet.create({
   container: {
@@ -290,7 +287,7 @@ export const Chart = memo<ChartProps>(
 
         if (!defaultXScale || !defaultXAxis) return 0;
 
-        if (isBandScale(defaultXScale)) {
+        if (isCategoricalScale(defaultXScale)) {
           const categories = defaultXAxis.data ?? [];
           const bandwidth = defaultXScale.bandwidth?.() ?? 0;
           let closestIndex = 0;
@@ -398,6 +395,7 @@ export const Chart = memo<ChartProps>(
 
     const contextValue: ChartContextValue = useMemo(
       () => ({
+        series: series ?? [],
         getSeries,
         getSeriesData: getStackedSeriesData,
         animate: !disableAnimations,
@@ -409,6 +407,7 @@ export const Chart = memo<ChartProps>(
         getYScale,
       }),
       [
+        series,
         getSeries,
         getStackedSeriesData,
         disableAnimations,
@@ -511,11 +510,12 @@ export const Chart = memo<ChartProps>(
 
     const chartDrawingAreaContextValue: ChartDrawingAreaContextValue = useMemo(
       () => ({
+        drawingArea: chartRect,
         registerAxis,
         unregisterAxis,
         getAxisBounds,
       }),
-      [registerAxis, unregisterAxis, getAxisBounds], // These functions are stable
+      [chartRect, registerAxis, unregisterAxis, getAxisBounds], // These functions are stable
     );
 
     // Pan gesture for chart highlighting and scrubbing

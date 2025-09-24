@@ -1,12 +1,15 @@
 import { memo, type SVGProps } from 'react';
 import type { SharedProps } from '@coinbase/cds-common/types';
+import { useChartContext } from '@coinbase/cds-common/visualizations/charts';
 
-import { useChartContext } from '../ChartContext';
 import { Path, type PathProps } from '../Path';
+
+import type { LineComponentProps } from './Line';
 
 // todo: reuse shared props
 export type SolidLineProps = SharedProps &
-  Omit<PathProps, 'fill'> & {
+  Omit<PathProps, 'fill' | 'strokeWidth'> &
+  Pick<LineComponentProps, 'strokeWidth'> & {
     fill?: SVGProps<SVGPathElement>['fill'];
   };
 
@@ -28,9 +31,8 @@ export const SolidLine = memo<SolidLineProps>(
 
     return (
       <Path
-        disableAnimations={
-          disableAnimations !== undefined ? disableAnimations : context.disableAnimations
-        }
+        clipOffset={strokeWidth}
+        disableAnimations={disableAnimations !== undefined ? disableAnimations : !context.animate}
         fill={fill}
         stroke={stroke}
         strokeLinecap={strokeLinecap}

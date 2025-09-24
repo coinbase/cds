@@ -2,8 +2,10 @@ import React, { memo, useMemo } from 'react';
 import Reanimated, { useAnimatedProps, useSharedValue, withSpring } from 'react-native-reanimated';
 import { ClipPath, Defs, G, Path as SvgPath, Rect, type RectProps } from 'react-native-svg';
 import type { Rect as RectType, SharedProps } from '@coinbase/cds-common/types';
-
-import { useChartContext } from './ChartContext';
+import {
+  useChartContext,
+  useChartDrawingAreaContext,
+} from '@coinbase/cds-common/visualizations/charts';
 
 const AnimatedRect = Reanimated.createAnimatedComponent(Rect);
 
@@ -84,7 +86,9 @@ export const Path = memo<PathProps>(
     testID,
     ...pathProps
   }) => {
-    const { rect: contextRect } = useChartContext();
+    const { animate } = useChartContext();
+    const { drawingArea: contextRect } = useChartDrawingAreaContext();
+    const shouldAnimate = disableAnimations !== undefined ? !disableAnimations : animate;
     const rect = clipRect ?? contextRect;
 
     const clipPathId = useMemo(() => `clip-path-${Math.random().toString(36).substr(2, 9)}`, []);

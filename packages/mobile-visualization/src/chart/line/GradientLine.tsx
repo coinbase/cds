@@ -1,10 +1,10 @@
 import { memo, useRef } from 'react';
 import { Defs, LinearGradient, Stop } from 'react-native-svg';
 import type { SharedProps } from '@coinbase/cds-common/types';
+import { useChartContext } from '@coinbase/cds-common/visualizations/charts';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 import { generateRandomId } from '@coinbase/cds-utils';
 
-import { useChartContext } from '../ChartContext';
 import { Path, type PathProps } from '../Path';
 
 export type GradientLineProps = SharedProps &
@@ -79,9 +79,7 @@ export const GradientLine = memo<GradientLineProps>(
           </LinearGradient>
         </Defs>
         <Path
-          disableAnimations={
-            disableAnimations !== undefined ? disableAnimations : context.disableAnimations
-          }
+          disableAnimations={disableAnimations !== undefined ? disableAnimations : !context.animate}
           fill={fill}
           stroke={`url(#${patternIdRef.current})`}
           strokeLinecap={strokeLinecap}

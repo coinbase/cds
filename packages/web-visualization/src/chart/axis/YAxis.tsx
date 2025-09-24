@@ -1,13 +1,16 @@
 import React, { memo, useCallback, useEffect, useId, useMemo } from 'react';
 import type { ThemeVars } from '@coinbase/cds-common';
-import { getAxisTicksData, isBandScale } from '@coinbase/cds-common/visualizations/charts';
+import {
+  getAxisTicksData,
+  isCategoricalScale,
+  useChartContext,
+  useChartDrawingAreaContext,
+} from '@coinbase/cds-common/visualizations/charts';
 import { cx } from '@coinbase/cds-web';
 import { useTheme } from '@coinbase/cds-web/hooks/useTheme';
 import { css } from '@linaria/core';
 import { AnimatePresence, m as motion } from 'framer-motion';
 
-import { useChartContext } from '../ChartContext';
-import { useChartDrawingAreaContext } from '../ChartDrawingAreaContext';
 import { DottedLine } from '../line';
 import { ReferenceLine } from '../line/ReferenceLine';
 import { SmartChartTextGroup, type TextLabelData } from '../text/SmartChartTextGroup';
@@ -72,7 +75,7 @@ export const YAxis = memo<YAxisProps>(
     const yScale = getYScale?.(axisId);
     const yAxis = getYAxis?.(axisId);
 
-    const shouldDisableAnimations = disableAnimations ?? context.disableAnimations;
+    const shouldAnimate = disableAnimations !== undefined ? !disableAnimations : context.animate;
     const axisBounds = getAxisBounds(registrationId);
 
     useEffect(() => {
@@ -113,7 +116,7 @@ export const YAxis = memo<YAxisProps>(
       let categories: string[] | undefined;
       if (hasStringLabels) {
         categories = axisData as string[];
-      } else if (isBandScale(yScale)) {
+      } else if (isCategoricalScale(yScale)) {
         // For band scales without explicit string data, generate numeric categories
         // based on the domain of the scale
         const domain = yScale.domain();
@@ -189,7 +192,7 @@ export const YAxis = memo<YAxisProps>(
                 />
               );
 
-              return shouldDisableAnimations ? (
+              return !shouldAnimate ? (
                 <g key={`grid-${tick.tick}-${index}-${dataKey}`}>{horizontalLine}</g>
               ) : (
                 <motion.g
@@ -213,7 +216,7 @@ export const YAxis = memo<YAxisProps>(
               initial="initial"
               variants={
                 // TODO may not need this animation anymore since ChartText fades themselves in
-                shouldDisableAnimations ? undefined : axisTickLabelsInitialAnimationVariants
+                !shouldAnimate ? undefined : axisTickLabelsInitialAnimationVariants
               }
             >
               {/* TODO pass through styles */}

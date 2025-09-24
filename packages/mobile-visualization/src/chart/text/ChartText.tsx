@@ -3,10 +3,9 @@ import { G, Rect as SvgRect, Text } from 'react-native-svg';
 import type { ThemeVars } from '@coinbase/cds-common';
 import type { ElevationLevels, Rect, SharedProps } from '@coinbase/cds-common/types';
 import { type ChartPadding, getPadding } from '@coinbase/cds-common/visualizations/charts';
+import { useChartContext } from '@coinbase/cds-common/visualizations/charts';
 import { useLayout } from '@coinbase/cds-mobile/hooks/useLayout';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
-
-import { useChartContext } from '../ChartContext';
 
 // Define the valid SVG children for the <text> element.
 type ValidChartTextChildElements =

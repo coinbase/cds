@@ -1,10 +1,12 @@
 import React, { memo, useMemo } from 'react';
 import type { ThemeVars } from '@coinbase/cds-common';
-import { defaultAxisId } from '@coinbase/cds-common/visualizations/charts';
+import {
+  defaultAxisId,
+  useChartContext,
+  useChartDrawingAreaContext,
+} from '@coinbase/cds-common/visualizations/charts';
 import { getBarSizeAdjustment } from '@coinbase/cds-common/visualizations/charts/bar';
-import { isBandScale } from '@coinbase/cds-common/visualizations/charts/scale';
-
-import { useChartContext } from '../ChartContext';
+import { isCategoricalScale } from '@coinbase/cds-common/visualizations/charts/scale';
 
 import type { BarComponent, BarProps } from './Bar';
 import type { BarSeries } from './BarChart';
@@ -103,7 +105,8 @@ export const BarStackGroup = memo<BarStackGroupProps>(
     barPadding = 0.1,
     ...props
   }) => {
-    const { rect, getSeriesData, getXScale, getYScale } = useChartContext();
+    const { getSeriesData, getXScale, getYScale } = useChartContext();
+    const { drawingArea } = useChartDrawingAreaContext();
 
     const xScale = getXScale(xAxisId);
     const yScale = getYScale(yAxisId);
@@ -123,9 +126,9 @@ export const BarStackGroup = memo<BarStackGroupProps>(
     }, [series, getSeriesData]);
 
     const stackConfigs = useMemo(() => {
-      if (!xScale || !yScale || !rect || maxDataLength === 0) return [];
+      if (!xScale || !yScale || !drawingArea || maxDataLength === 0) return [];
 
-      if (!isBandScale(xScale)) {
+      if (!isCategoricalScale(xScale)) {
         return [];
       }
 
@@ -159,14 +162,14 @@ export const BarStackGroup = memo<BarStackGroupProps>(
       }
 
       return configs;
-    }, [xScale, yScale, rect, maxDataLength, stackIndex, totalStacks, barPadding]);
+    }, [xScale, yScale, drawingArea, maxDataLength, stackIndex, totalStacks, barPadding]);
 
-    if (xScale && !isBandScale(xScale)) {
+    if (xScale && !isCategoricalScale(xScale)) {
       console.error('BarStackGroup requires a band scale for x-axis');
       return null;
     }
 
-    if (!yScale || !rect || stackConfigs.length === 0) {
+    if (!yScale || !drawingArea || stackConfigs.length === 0) {
       return null;
     }
 
@@ -175,7 +178,7 @@ export const BarStackGroup = memo<BarStackGroupProps>(
         {...props}
         key={`stack-${stackIndex}-category-${categoryIndex}`}
         categoryIndex={categoryIndex}
-        rect={rect}
+        rect={drawingArea}
         series={series}
         width={width}
         x={x}

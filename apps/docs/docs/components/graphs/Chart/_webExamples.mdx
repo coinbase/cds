@@ -59,7 +59,7 @@ function EarningsHistory() {
     const xScale = getXScale?.(series?.xAxisId);
     const yScale = getYScale?.(series?.yAxisId);
 
-    if (!xScale || !yScale || !data || !rect || !isBandScale(xScale)) return null;
+    if (!xScale || !yScale || !data || !rect || !isCategoricalScale(xScale)) return null;
 
     const yScaleSize = Math.abs(yScale.range()[1] - yScale.range()[0]);
 

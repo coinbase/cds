@@ -1,8 +1,7 @@
 import React, { memo, useMemo } from 'react';
 import type { ThemeVars } from '@coinbase/cds-common';
+import { useChartContext } from '@coinbase/cds-common/visualizations/charts';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
-
-import { useChartContext } from '../ChartContext';
 
 import { Bar, type BarComponent, type BarProps } from './Bar';
 import type { BarSeries } from './BarChart';
@@ -112,7 +111,8 @@ export const BarStack = memo<BarStackProps>(
     roundBaseline,
   }) => {
     const theme = useTheme();
-    const { getStackedSeriesData, getSeriesData } = useChartContext();
+    const { getSeriesData } = useChartContext();
+    const getStackedSeriesData = getSeriesData; // getSeriesData now returns stacked data
 
     const stackGapPx = useMemo(() => {
       return stackGap ? theme.space[stackGap] : 0;

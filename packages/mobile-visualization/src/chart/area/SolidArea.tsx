@@ -1,6 +1,6 @@
 import { memo } from 'react';
+import { useChartContext } from '@coinbase/cds-common/visualizations/charts';
 
-import { useChartContext } from '../ChartContext';
 import { Path, type PathProps } from '../Path';
 
 import type { AreaComponentProps } from './Area';
@@ -17,9 +17,7 @@ export const SolidArea = memo<SolidAreaProps>(
       <Path
         clipRect={clipRect}
         d={d}
-        disableAnimations={
-          disableAnimations !== undefined ? disableAnimations : context.disableAnimations
-        }
+        disableAnimations={disableAnimations !== undefined ? disableAnimations : !context.animate}
         fill={fill}
         fillOpacity={fillOpacity}
         {...props}

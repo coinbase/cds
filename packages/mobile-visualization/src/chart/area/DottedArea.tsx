@@ -1,10 +1,10 @@
 import React, { memo, useRef } from 'react';
 import { Circle, Defs, G, Pattern } from 'react-native-svg';
+import { useChartContext } from '@coinbase/cds-common/visualizations/charts';
 import { useSparklineAreaOpacity } from '@coinbase/cds-common/visualizations/useSparklineAreaOpacity';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 import { generateRandomId } from '@coinbase/cds-utils';
 
-import { useChartContext } from '../ChartContext';
 import { Path, type PathProps } from '../Path';
 
 import type { AreaComponentProps } from './Area';
@@ -66,9 +66,7 @@ export const DottedArea = memo<DottedAreaProps>(
         <Path
           clipRect={clipRect}
           d={d}
-          disableAnimations={
-            disableAnimations !== undefined ? disableAnimations : context.disableAnimations
-          }
+          disableAnimations={disableAnimations !== undefined ? disableAnimations : !context.animate}
           fill={`url(#${patternIdRef.current})`}
           {...pathProps}
         />

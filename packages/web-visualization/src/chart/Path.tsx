@@ -4,12 +4,14 @@ import React, { memo, useCallback, useEffect, useRef } from 'react';
 import type { SVGProps } from 'react';
 import { useValueChanges } from '@coinbase/cds-common/hooks/useValueChanges';
 import type { Rect, SharedProps } from '@coinbase/cds-common/types';
+import {
+  useChartContext,
+  useChartDrawingAreaContext,
+} from '@coinbase/cds-common/visualizations/charts';
 import { generateRandomId } from '@coinbase/cds-utils';
 import { interpolatePath } from 'd3-interpolate-path';
 import { select } from 'd3-selection';
 import { m } from 'framer-motion';
-
-import { useChartContext } from './ChartContext';
 
 export type PathProps = SharedProps &
   Omit<
@@ -45,8 +47,10 @@ export const Path = memo<PathProps>(
   ({ disableAnimations, clipRect, clipOffset = 0, d = '', ...pathProps }) => {
     const pathRef = useRef<SVGPathElement>(null);
     const clipPathIdRef = useRef<string>(generateRandomId());
-    const { rect: contextRect } = useChartContext();
+    const { animate } = useChartContext();
+    const { drawingArea: contextRect } = useChartDrawingAreaContext();
     const rect = clipRect ?? contextRect;
+    const shouldAnimate = disableAnimations !== undefined ? !disableAnimations : animate;
 
     // todo: do we need useValueChanges?
     const {
@@ -70,10 +74,10 @@ export const Path = memo<PathProps>(
     useEffect(() => {
       addPreviousValue(newPath);
 
-      if (!disableAnimations && hasChanged && previousPath) {
+      if (shouldAnimate && hasChanged && previousPath) {
         morphPath();
       }
-    }, [addPreviousValue, newPath, disableAnimations, hasChanged, previousPath, morphPath]);
+    }, [addPreviousValue, newPath, shouldAnimate, hasChanged, previousPath, morphPath]);
 
     // The clip offset provides extra padding to prevent path from being cut off
     // Area charts typically use offset=0 for exact clipping, while lines use offset=2 for breathing room
@@ -83,7 +87,7 @@ export const Path = memo<PathProps>(
       <>
         <defs>
           <clipPath id={clipPathIdRef.current}>
-            {disableAnimations ? (
+            {!shouldAnimate ? (
               <rect
                 height={rect.height + totalOffset}
                 width={rect.width + totalOffset}

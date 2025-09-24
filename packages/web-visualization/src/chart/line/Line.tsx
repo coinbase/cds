@@ -1,10 +1,10 @@
 import React, { memo, useMemo } from 'react';
 import type { SVGProps } from 'react';
 import type { SharedProps } from '@coinbase/cds-common/types';
-import { getLinePath, type ChartPathCurveType } from '@coinbase/cds-common/visualizations/charts';
+import { type ChartPathCurveType, getLinePath } from '@coinbase/cds-common/visualizations/charts';
+import { useChartContext } from '@coinbase/cds-common/visualizations/charts';
 
 import { Area, type AreaComponent } from '../area';
-import { useChartContext } from '../ChartContext';
 import { Point, type PointConfig, type RenderPointsParams } from '../point/Point';
 
 import { DottedLine } from './DottedLine';
@@ -103,18 +103,17 @@ export const Line = memo<LineProps>(
     renderPoints,
     ...props
   }) => {
-    const { getSeries, getSeriesData, getXScale, getYScale, getXAxis, getStackedSeriesData } =
-      useChartContext();
+    const { getSeries, getSeriesData, getXScale, getYScale, getXAxis } = useChartContext();
 
     const matchedSeries = getSeries(seriesId);
 
     const sourceData = useMemo(() => {
-      const stackedData = getStackedSeriesData(seriesId);
+      const stackedData = getSeriesData(seriesId);
       if (stackedData) {
         return stackedData;
       }
       return getSeriesData(seriesId) || null;
-    }, [seriesId, getSeriesData, getStackedSeriesData]);
+    }, [seriesId, getSeriesData]);
 
     const xScale = getXScale?.(matchedSeries?.xAxisId);
     const yScale = getYScale?.(matchedSeries?.yAxisId);
@@ -126,10 +125,10 @@ export const Line = memo<LineProps>(
       if (!sourceData) return [];
 
       // Check if this is stacked data (array of tuples)
-      const firstNonNull = sourceData.find((d) => d !== null);
+      const firstNonNull = sourceData.find((d: any) => d !== null);
       if (Array.isArray(firstNonNull)) {
         // Extract actual values from [baseline, value] tuples
-        return sourceData.map((d) => {
+        return sourceData.map((d: any) => {
           if (d === null) return null;
           if (Array.isArray(d)) return d[1];
           return d as number;

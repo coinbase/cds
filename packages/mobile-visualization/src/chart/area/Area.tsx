@@ -1,9 +1,11 @@
 import React, { memo, useMemo } from 'react';
 import type { Rect } from '@coinbase/cds-common/types';
-import { getAreaPath, type ChartPathCurveType } from '@coinbase/cds-common/visualizations/charts';
+import { type ChartPathCurveType, getAreaPath } from '@coinbase/cds-common/visualizations/charts';
+import {
+  useChartContext,
+  useChartDrawingAreaContext,
+} from '@coinbase/cds-common/visualizations/charts';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
-
-import { useChartContext } from '../ChartContext';
 
 import { DottedArea } from './DottedArea';
 import { GradientArea } from './GradientArea';
@@ -75,7 +77,8 @@ export const Area = memo<AreaProps>(
     strokeWidth,
   }) => {
     const theme = useTheme();
-    const { rect, getSeries, getSeriesData, getXScale, getYScale, getXAxis } = useChartContext();
+    const { getSeries, getSeriesData, getXScale, getYScale, getXAxis } = useChartContext();
+    const { drawingArea } = useChartDrawingAreaContext();
 
     // Get sourceData from series (using stacked data if available)
     const matchedSeries = useMemo(() => getSeries(seriesId), [seriesId, getSeries]);
@@ -135,7 +138,7 @@ export const Area = memo<AreaProps>(
 
     return (
       <AreaComponent
-        clipRect={rect}
+        clipRect={drawingArea}
         d={area}
         disableAnimations={disableAnimations}
         fill={fill}

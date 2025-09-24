@@ -1,8 +1,8 @@
 import { forwardRef, memo, useImperativeHandle, useRef } from 'react';
 import type { SharedProps } from '@coinbase/cds-common/types';
+import { useChartContext } from '@coinbase/cds-common/visualizations/charts';
 
 import { useScrubberContext } from '../Chart';
-import { useChartContext } from '../ChartContext';
 import { Point, type PointProps, type PointRef } from '../point';
 
 export const dataKeyUpdateAnimationVariants = {
@@ -77,15 +77,14 @@ export const ScrubberHead = memo(
       },
       ref,
     ) => {
-      const { getSeries, getXScale, getYScale, getStackedSeriesData, getSeriesData } =
-        useChartContext();
+      const { getSeries, getXScale, getYScale, getSeriesData } = useChartContext();
       const pointRef = useRef<PointRef>(null);
 
       const { highlightedIndex } = useScrubberContext();
 
       // Find target series for color and data
       const targetSeries = getSeries(seriesId);
-      const sourceData = getStackedSeriesData(seriesId) || getSeriesData(seriesId);
+      const sourceData = getSeriesData(seriesId);
 
       // Get scales for this series
       const xScale = getXScale?.(targetSeries?.xAxisId);

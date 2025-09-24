@@ -8,6 +8,10 @@ import type { ChartScaleFunction } from './scale';
 
 export type ChartContextValue = {
   /**
+   * The series data for the chart.
+   */
+  series: Series[];
+  /**
    * Returns the series which matches the seriesId or undefined.
    * @param seriesId - A series' id
    */

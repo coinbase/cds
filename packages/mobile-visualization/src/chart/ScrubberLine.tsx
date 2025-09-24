@@ -1,12 +1,15 @@
 import React, { memo, useMemo } from 'react';
 import { G, Rect } from 'react-native-svg';
 import type { SharedProps } from '@coinbase/cds-common/types';
-import { projectPoint } from '@coinbase/cds-common/visualizations/charts';
+import {
+  getPointOnScale,
+  useChartContext,
+  useChartDrawingAreaContext,
+} from '@coinbase/cds-common/visualizations/charts';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 
 import { ReferenceLine, type ReferenceLineProps } from './line/ReferenceLine';
 import { useHighlightContext } from './Chart';
-import { useChartContext } from './ChartContext';
 import { DottedLine, type LineComponent } from './line';
 import type { ChartTextChildren } from './text';
 
@@ -63,13 +66,11 @@ export const ScrubberLine = memo<ScrubberLineProps>(
     labelConfig,
   }) => {
     const theme = useTheme();
-    const { rect, getXScale, getXAxis, getYScale } = useChartContext();
+    const { getXScale, getXAxis } = useChartContext();
+    const { drawingArea } = useChartDrawingAreaContext();
 
     const xScale = getXScale?.(xAxisId);
     const xAxis = getXAxis?.(xAxisId);
-    // We need a y scale for projectPoint, but we only care about the x coordinate
-    // so we can use any available y scale
-    const yScale = getYScale?.();
 
     const { highlightedIndex } = useHighlightContext();
 
@@ -86,7 +87,7 @@ export const ScrubberLine = memo<ScrubberLineProps>(
       return label;
     }, [label, highlightedIndex]);
 
-    if (!xScale || !yScale) {
+    if (!xScale) {
       return null;
     }
 
@@ -106,14 +107,7 @@ export const ScrubberLine = memo<ScrubberLineProps>(
       dataIndex = directX;
       xValue = directX;
 
-      // Use projectPoint to handle both numeric and band scales properly
-      const pixelCoord = projectPoint({
-        x: directX,
-        y: 0, // We only care about x, so y can be any value
-        xScale,
-        yScale,
-      });
-      pixelX = pixelCoord.x;
+      pixelX = getPointOnScale(directX, xScale);
     } else {
       // Use highlight data index
       if (highlightedIndex === undefined) {
@@ -131,14 +125,7 @@ export const ScrubberLine = memo<ScrubberLineProps>(
         xValue = highlightedIndex;
       }
 
-      // Use projectPoint to handle both numeric and band scales properly
-      const pixelCoord = projectPoint({
-        x: xValue,
-        y: 0, // We only care about x, so y can be any value
-        xScale,
-        yScale,
-      });
-      pixelX = pixelCoord.x;
+      pixelX = getPointOnScale(xValue, xScale);
     }
 
     if (pixelX === undefined) return null;
@@ -148,11 +135,11 @@ export const ScrubberLine = memo<ScrubberLineProps>(
         {!finalHideOverlay && (
           <Rect
             fill={effectiveOverlayColor}
-            height={rect.height}
+            height={drawingArea.height}
             opacity={0.8}
-            width={rect.x + rect.width - pixelX}
+            width={drawingArea.x + drawingArea.width - pixelX}
             x={pixelX}
-            y={rect.y}
+            y={drawingArea.y}
           />
         )}
         <ReferenceLine

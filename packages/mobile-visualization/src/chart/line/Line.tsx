@@ -1,10 +1,10 @@
 import React, { memo, useMemo } from 'react';
 import type { SharedProps } from '@coinbase/cds-common/types';
-import { getLinePath, type ChartPathCurveType } from '@coinbase/cds-common/visualizations/charts';
+import { type ChartPathCurveType, getLinePath } from '@coinbase/cds-common/visualizations/charts';
+import { useChartContext } from '@coinbase/cds-common/visualizations/charts';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 
 import { Area, type AreaComponent } from '../area';
-import { useChartContext } from '../ChartContext';
 import { Point, type PointConfig, type RenderPointsParams } from '../point/Point';
 
 import { DottedLine } from './DottedLine';

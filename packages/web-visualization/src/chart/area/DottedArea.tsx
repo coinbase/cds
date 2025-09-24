@@ -1,7 +1,7 @@
 import React, { memo, useRef } from 'react';
+import { useChartContext } from '@coinbase/cds-common/visualizations/charts';
 import { generateRandomId } from '@coinbase/cds-utils';
 
-import { useChartContext } from '../ChartContext';
 import { Path, type PathProps } from '../Path';
 
 import type { AreaComponentProps } from './Area';
@@ -186,7 +186,7 @@ export const DottedArea = memo<DottedAreaProps>(
             <Path
               d={d}
               disableAnimations={
-                disableAnimations !== undefined ? disableAnimations : context.disableAnimations
+                disableAnimations !== undefined ? disableAnimations : !context.animate
               }
               fill={`url(#${gradientIdRef.current})`}
             />
@@ -195,9 +195,7 @@ export const DottedArea = memo<DottedAreaProps>(
         <Path
           className={classNames?.path}
           d={d}
-          disableAnimations={
-            disableAnimations !== undefined ? disableAnimations : context.disableAnimations
-          }
+          disableAnimations={disableAnimations !== undefined ? disableAnimations : !context.animate}
           fill={`url(#${patternIdRef.current})`}
           mask={`url(#${maskIdRef.current})`}
           style={styles?.path}

@@ -11,8 +11,6 @@ import { getBarPath } from '@coinbase/cds-common/visualizations/charts';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 import { generateRandomId } from '@coinbase/cds-utils';
 
-import { useChartContext } from '../ChartContext';
-
 const AnimatedRect = Reanimated.createAnimatedComponent(Rect);
 
 export type BarComponentProps = {
@@ -175,7 +173,6 @@ export const Bar = memo<BarProps>(
     seriesId,
     yOrigin,
   }) => {
-    const { rect } = useChartContext();
     const theme = useTheme();
     const clipPathId = useRef(generateRandomId()).current;
 
@@ -230,7 +227,7 @@ export const Bar = memo<BarProps>(
           });
         }
       }
-    }, [height, y, baseY, disableAnimations]);
+    }, [height, y, baseY, disableAnimations, animatedHeight, animatedY, hasInitialized]);
 
     const animatedProps = useAnimatedProps(() => {
       return {

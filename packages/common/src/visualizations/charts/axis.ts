@@ -9,7 +9,7 @@ import {
   type ChartScaleFunction,
   getCategoricalScale,
   getNumericScale,
-  isBandScale,
+  isCategoricalScale,
   isNumericScale,
   isValidBounds,
   type NumericScale,
@@ -535,7 +535,7 @@ export const getAxisTicksData = ({
   tickInterval,
 }: GetAxisTicksDataProps): Array<{ tick: number; position: number }> => {
   // Handle band scales
-  if (isBandScale(scaleFunction)) {
+  if (isCategoricalScale(scaleFunction)) {
     // If explicit ticks are provided as array, use them
     if (Array.isArray(ticks)) {
       return ticks

@@ -2,7 +2,11 @@ import React, { forwardRef, memo, useCallback, useMemo, useState } from 'react';
 import { assets } from '@coinbase/cds-common/internal/data/assets';
 import { prices } from '@coinbase/cds-common/internal/data/prices';
 import type { TabValue } from '@coinbase/cds-common/tabs/useTabs';
-import { isBandScale } from '@coinbase/cds-common/visualizations/charts';
+import {
+  isCategoricalScale,
+  useChartContext,
+  useChartDrawingAreaContext,
+} from '@coinbase/cds-common/visualizations/charts';
 import { CellMedia, ListCell } from '@coinbase/cds-web/cells';
 import { Radio } from '@coinbase/cds-web/controls/Radio';
 import { Box, type BoxBaseProps, Divider, HStack, VStack } from '@coinbase/cds-web/layout';
@@ -16,7 +20,7 @@ import { SolidLine } from '../line';
 import { Line } from '../line/Line';
 import { LineChart } from '../line/LineChart';
 import { ReferenceLine } from '../line/ReferenceLine';
-import { Chart, type ChartTextChildren, PeriodSelector, Scrubber, useChartContext } from '../';
+import { Chart, type ChartTextChildren, PeriodSelector, Scrubber } from '../';
 
 export default {
   component: Chart,
@@ -280,13 +284,13 @@ export const CompactSparkline = () => {
 
 export const EarningsHistory = () => {
   const CirclePlot = memo(({ seriesId, opacity = 1 }: { seriesId: string; opacity?: number }) => {
-    const { getSeries, getSeriesData, getXScale, getYScale, rect } = useChartContext();
+    const { getSeries, getSeriesData, getXScale, getYScale } = useChartContext();
     const series = getSeries(seriesId);
     const data = getSeriesData(seriesId);
     const xScale = getXScale?.(series?.xAxisId);
     const yScale = getYScale?.(series?.yAxisId);
 
-    if (!xScale || !yScale || !data || !rect || !isBandScale(xScale)) return null;
+    if (!xScale || !yScale || !data || !isCategoricalScale(xScale)) return null;
 
     const yScaleSize = Math.abs(yScale.range()[1] - yScale.range()[0]);
 
@@ -295,7 +299,7 @@ export const EarningsHistory = () => {
 
     return (
       <g>
-        {data.map((value, index) => {
+        {data.map((value: any, index: any) => {
           if (value === null || value === undefined) return null;
 
           // Get x position from band scale - center of the band

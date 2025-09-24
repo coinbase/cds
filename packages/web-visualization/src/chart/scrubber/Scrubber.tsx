@@ -8,25 +8,28 @@ import React, {
   useRef,
   useState,
 } from 'react';
+import { useRefMap } from '@coinbase/cds-common/hooks/useRefMap';
 import type { SharedProps } from '@coinbase/cds-common/types';
 import { type ChartScaleFunction, projectPoint } from '@coinbase/cds-common/visualizations/charts';
+import {
+  useChartContext,
+  useChartDrawingAreaContext,
+} from '@coinbase/cds-common/visualizations/charts';
 import { useTheme } from '@coinbase/cds-web';
-import { useRefMap } from '@coinbase/cds-common/hooks/useRefMap';
-
 import { m } from 'framer-motion';
 
+import { axisTickLabelsInitialAnimationVariants } from '../axis';
 import { useScrubberContext } from '../Chart';
-import { useChartContext } from '../ChartContext';
+import { ReferenceLine, type ReferenceLineProps } from '../line';
+import type { PointProps } from '../point';
+
 import {
   ScrubberHead,
-  type ScrubberHeadProps,
-  type ScrubberHeadRef,
   ScrubberHeadLabel,
   type ScrubberHeadLabelProps,
+  type ScrubberHeadProps,
+  type ScrubberHeadRef,
 } from './';
-import { axisTickLabelsInitialAnimationVariants } from '../axis';
-import type { PointProps } from '../point';
-import { ReferenceLine, type ReferenceLineProps } from '../line';
 
 /**
  * Configuration for scrubber functionality across chart components.
@@ -128,16 +131,10 @@ export const Scrubber = memo(
       const scrubberHeadRefs = useRefMap<ScrubberHeadRef>();
 
       const { highlightedIndex } = useScrubberContext();
-      const {
-        series,
-        rect,
-        getXScale,
-        getYScale,
-        getStackedSeriesData,
-        getSeriesData,
-        getXAxis,
-        disableAnimations,
-      } = useChartContext();
+      const { getXScale, getYScale, getSeriesData, getXAxis, animate, series } = useChartContext();
+      const { drawingArea } = useChartDrawingAreaContext();
+      const getStackedSeriesData = getSeriesData; // getSeriesData now returns stacked data
+      const disableAnimations = !animate;
 
       // Track label dimensions for collision detection
       const [labelDimensions, setLabelDimensions] = useState<Map<string, LabelDimensions>>(
@@ -161,7 +158,7 @@ export const Scrubber = memo(
 
         // todo: can we store this in axis config?
         const maxDataLength =
-          series?.reduce((max, s) => {
+          series?.reduce((max: any, s: any) => {
             const seriesData = getStackedSeriesData(s.id) || getSeriesData(s.id);
             return Math.max(max, seriesData?.length ?? 0);
           }, 0) ?? 0;
@@ -178,7 +175,7 @@ export const Scrubber = memo(
         }
 
         return { dataX, dataIndex };
-      }, [getXScale, getXAxis, highlightedIndex]);
+      }, [getXScale, getXAxis, series, highlightedIndex, getStackedSeriesData, getSeriesData]);
 
       // TODO: forecast chart is broken
       const headPositions = useMemo(() => {
@@ -224,17 +221,17 @@ export const Scrubber = memo(
                 };
               }
             })
-            .filter((head) => head !== undefined) ?? []
+            .filter((head: any) => head !== undefined) ?? []
         );
       }, [
         getXScale,
-        getXAxis,
-        highlightedIndex,
+        dataX,
+        dataIndex,
         series,
+        seriesIds,
         getStackedSeriesData,
         getSeriesData,
         getYScale,
-        seriesIds,
       ]);
 
       // todo: the padding around the label shouldn't be needed for this collision calculation since the ChatText onDimensionsChange will report the bounding box that includes the padding
@@ -245,7 +242,7 @@ export const Scrubber = memo(
       const labelPositioning = useMemo(() => {
         // Get current head IDs that are actually being rendered
         const currentHeadIds = new Set(
-          headPositions.map((head) => head?.targetSeries.id).filter(Boolean),
+          headPositions.map((head: any) => head?.targetSeries.id).filter(Boolean),
         );
 
         // Only use dimensions for heads that are currently being rendered
@@ -269,14 +266,14 @@ export const Scrubber = memo(
         const bufferPx = 5; // Small buffer to prevent premature switching
 
         // Safety check for valid bounds
-        if (rect.width <= 0 || rect.height <= 0) {
+        if (drawingArea.width <= 0 || drawingArea.height <= 0) {
           globalSide = 'right'; // Default to right if bounds are invalid
         } else {
           // Check if labels would overflow when positioned on the right side
           // Account for anchor radius and padding when calculating right edge
           const wouldOverflow = sortedDimensions.some((dim) => {
             const labelRightEdge = dim.preferredX + anchorRadius + paddingPx + dim.width + bufferPx;
-            return labelRightEdge > rect.x + rect.width;
+            return labelRightEdge > drawingArea.x + drawingArea.width;
           });
 
           globalSide = wouldOverflow ? 'left' : 'right';
@@ -402,7 +399,7 @@ export const Scrubber = memo(
             const dim = sortedDimensions.find((d) => d.id === id)!;
             const labelTop = adjustment.y - dim.height / 2;
             const labelBottom = adjustment.y + dim.height / 2;
-            return labelTop < rect.y || labelBottom > rect.y + rect.height;
+            return labelTop < drawingArea.y || labelBottom > drawingArea.y + drawingArea.height;
           });
 
           if (groupOutOfBounds) {
@@ -421,13 +418,13 @@ export const Scrubber = memo(
             const totalGaps = (groupLabels.length - 1) * minGap;
             const totalNeeded = totalLabelHeight + totalGaps;
 
-            if (totalNeeded > rect.height) {
+            if (totalNeeded > drawingArea.height) {
               // Not enough space - use compressed equal spacing as fallback
               const compressedGap = Math.max(
                 2,
-                (rect.height - totalLabelHeight) / Math.max(1, groupLabels.length - 1),
+                (drawingArea.height - totalLabelHeight) / Math.max(1, groupLabels.length - 1),
               );
-              let currentY = rect.y + groupLabels[0].dim.height / 2;
+              let currentY = drawingArea.y + groupLabels[0].dim.height / 2;
 
               for (const label of groupLabels) {
                 adjustments.set(label.id, {
@@ -464,12 +461,12 @@ export const Scrubber = memo(
 
               let shiftAmount = 0;
 
-              if (groupTop < rect.y) {
+              if (groupTop < drawingArea.y) {
                 // Group is too high, shift down
-                shiftAmount = rect.y - groupTop;
-              } else if (groupBottom > rect.y + rect.height) {
+                shiftAmount = drawingArea.y - groupTop;
+              } else if (groupBottom > drawingArea.y + drawingArea.height) {
                 // Group is too low, shift up
-                shiftAmount = rect.y + rect.height - groupBottom;
+                shiftAmount = drawingArea.y + drawingArea.height - groupBottom;
               }
 
               // Apply final positions with shift only to this group
@@ -478,8 +475,8 @@ export const Scrubber = memo(
 
                 // Final bounds check for individual labels
                 const clampedY = Math.max(
-                  rect.y + label.dim.height / 2,
-                  Math.min(rect.y + rect.height - label.dim.height / 2, finalY),
+                  drawingArea.y + label.dim.height / 2,
+                  Math.min(drawingArea.y + drawingArea.height - label.dim.height / 2, finalY),
                 );
 
                 adjustments.set(label.id, {
@@ -492,7 +489,7 @@ export const Scrubber = memo(
         }
 
         return { strategy: globalSide, adjustments };
-      }, [headPositions, labelDimensions, theme.space, minLabelGap, rect]);
+      }, [headPositions, labelDimensions, theme.space, minLabelGap, drawingArea]);
 
       // Callback for labels to register their dimensions
       const registerLabelDimensions = useCallback(
@@ -535,7 +532,7 @@ export const Scrubber = memo(
       // synchronize label positioning state when the position of any scrubber heads change
       useEffect(() => {
         const currentHeadIds = new Set(
-          headPositions.map((head) => head?.targetSeries.id).filter(Boolean),
+          headPositions.map((head: any) => head?.targetSeries.id).filter(Boolean),
         );
 
         setLabelDimensions((prev) => {
@@ -586,24 +583,24 @@ export const Scrubber = memo(
             pixelX !== undefined && (
               <rect
                 fill="var(--color-bg)"
-                height={rect.height}
+                height={drawingArea.height}
                 opacity={0.8}
-                width={rect.x + rect.width - pixelX}
+                width={drawingArea.x + drawingArea.width - pixelX}
                 x={pixelX}
-                y={rect.y}
+                y={drawingArea.y}
               />
             )}
           {!hideScrubberLine && highlightedIndex !== undefined && dataX !== undefined && (
             <ScrubberLineComponent
-              labelPosition="top"
+              className={scrubberClassNames?.scrubberLine}
               dataX={dataX}
               label={scrubberLabel}
               labelConfig={scrubberLabelConfig}
+              labelPosition="top"
               style={scrubberStyles?.scrubberLine}
-              className={scrubberClassNames?.scrubberLine}
             />
           )}
-          {headPositions.map((scrubberHead) => {
+          {headPositions.map((scrubberHead: any) => {
             if (!scrubberHead) return null;
             const adjustment = labelPositioning.adjustments.get(scrubberHead.targetSeries.id);
             const dotStroke = scrubberHead.targetSeries?.color || 'var(--color-fgPrimary)';
@@ -613,14 +610,14 @@ export const Scrubber = memo(
                 {/* todo: fix this type cast, seems to be due to custom components */}
                 <ScrubberHeadComponent
                   ref={createScrubberHeadRef(scrubberHead.targetSeries.id) as any}
+                  className={scrubberClassNames?.scrubberHead}
                   color={scrubberHead.targetSeries?.color}
                   dataX={scrubberHead.x}
                   dataY={scrubberHead.y}
-                  seriesId={scrubberHead.targetSeries.id}
-                  testID={testID ? `${testID}-${scrubberHead.targetSeries.id}-dot` : undefined}
                   pulse={pulse}
+                  seriesId={scrubberHead.targetSeries.id}
                   style={scrubberStyles?.scrubberHead}
-                  className={scrubberClassNames?.scrubberHead}
+                  testID={testID ? `${testID}-${scrubberHead.targetSeries.id}-dot` : undefined}
                 />
                 {scrubberHead.label &&
                   (() => {
@@ -631,7 +628,8 @@ export const Scrubber = memo(
                     return (
                       <ScrubberHeadLabelComponent
                         background="var(--color-bg)"
-                        bounds={rect}
+                        bounds={drawingArea}
+                        className={scrubberClassNames?.scrubberHeadLabel}
                         color={dotStroke}
                         dx={16}
                         onDimensionsChange={({ width, height }) =>
@@ -645,13 +643,12 @@ export const Scrubber = memo(
                         }
                         padding={labelPadding}
                         preferredSide={finalSide}
+                        style={scrubberStyles?.scrubberHeadLabel}
                         testID={
                           testID ? `${testID}-${scrubberHead.targetSeries.id}-label` : undefined
                         }
                         x={finalAnchorX}
                         y={finalAnchorY}
-                        style={scrubberStyles?.scrubberHeadLabel}
-                        className={scrubberClassNames?.scrubberHeadLabel}
                       >
                         {scrubberHead.label}
                       </ScrubberHeadLabelComponent>
