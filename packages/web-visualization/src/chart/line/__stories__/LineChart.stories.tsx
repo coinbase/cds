@@ -4,7 +4,11 @@ import { prices } from '@coinbase/cds-common/internal/data/prices';
 import { sparklineInteractiveData } from '@coinbase/cds-common/internal/visualizations/SparklineInteractiveData';
 import { useTabsContext } from '@coinbase/cds-common/tabs/TabsContext';
 import type { TabValue } from '@coinbase/cds-common/tabs/useTabs';
-import { projectPoint, useChartContext } from '@coinbase/cds-common/visualizations/charts';
+import {
+  projectPoint,
+  useChartContext,
+  useChartDrawingAreaContext,
+} from '@coinbase/cds-common/visualizations/charts';
 import type { ChartAxisScaleType } from '@coinbase/cds-common/visualizations/charts/scale';
 import { Box, HStack, VStack } from '@coinbase/cds-web/layout';
 import { RemoteImage } from '@coinbase/cds-web/media';
@@ -30,7 +34,7 @@ import {
   type ScrubberRef,
 } from '../..';
 import { Area, type AreaComponentProps, DottedArea, GradientArea } from '../../area';
-import { XAxis } from '../../axis';
+import { XAxis, YAxis } from '../../axis';
 import { Chart } from '../../Chart';
 import { ChartHeader } from '../../ChartHeader';
 import { Point } from '../../point';
@@ -1676,5 +1680,128 @@ export const LiveAssetPrice = () => {
     >
       <Scrubber ref={scrubberRef} scrubberLabelConfig={{ elevation: 1 }} />
     </LineChart>
+  );
+};
+
+export const AvailabilityChart = () => {
+  const availabilityEvents = [
+    {
+      date: new Date('2022-01-01'),
+      availability: 79,
+    },
+    {
+      date: new Date('2022-01-03'),
+      availability: 81,
+    },
+    {
+      date: new Date('2022-01-04'),
+      availability: 82,
+    },
+    {
+      date: new Date('2022-01-06'),
+      availability: 91,
+    },
+    {
+      date: new Date('2022-01-07'),
+      availability: 92,
+    },
+    {
+      date: new Date('2022-01-10'),
+      availability: 86,
+    },
+  ];
+
+  const ChartDefs = memo(
+    ({
+      yellowThresholdPercentage = 85,
+      greenThresholdPercentage = 90,
+    }: {
+      yellowThresholdPercentage?: number;
+      greenThresholdPercentage?: number;
+    }) => {
+      const { drawingArea } = useChartDrawingAreaContext();
+      const { height, series, getYScale, getYAxis } = useChartContext();
+      const yScale = getYScale?.();
+      const yAxis = getYAxis?.();
+
+      if (!series || !drawingArea || !yScale) return null;
+
+      const rangeBounds = yAxis?.domain;
+      const rangeMin = rangeBounds?.min ?? 0;
+      const rangeMax = rangeBounds?.max ?? 100;
+
+      // Calculate the Y positions in the chart coordinate system
+      const yellowThresholdY = yScale(yellowThresholdPercentage) ?? 0;
+      const greenThresholdY = yScale(greenThresholdPercentage) ?? 0;
+      const minY = yScale(rangeMax) ?? 0; // Top of chart (max value)
+      const maxY = yScale(rangeMin) ?? drawingArea.height; // Bottom of chart (min value)
+
+      // Calculate percentages based on actual chart positions
+      const yellowThreshold = ((yellowThresholdY - minY) / (maxY - minY)) * 100;
+      const greenThreshold = ((greenThresholdY - minY) / (maxY - minY)) * 100;
+
+      return (
+        <defs>
+          <linearGradient
+            gradientUnits="userSpaceOnUse"
+            id="availabilityGradient"
+            x1="0%"
+            x2="0%"
+            y1={minY}
+            y2={maxY}
+          >
+            <stop offset="0%" stopColor="var(--color-fgPositive)" />
+            <stop offset={`${greenThreshold}%`} stopColor="var(--color-fgPositive)" />
+            <stop offset={`${greenThreshold}%`} stopColor="var(--color-fgWarning)" />
+            <stop offset={`${yellowThreshold}%`} stopColor="var(--color-fgWarning)" />
+            <stop offset={`${yellowThreshold}%`} stopColor="var(--color-fgNegative)" />
+            <stop offset="100%" stopColor="var(--color-fgNegative)" />
+          </linearGradient>
+        </defs>
+      );
+    },
+  );
+
+  return (
+    <Chart
+      height={300}
+      series={[
+        {
+          id: 'availability',
+          data: availabilityEvents.map((event) => event.availability),
+          color: 'url(#availabilityGradient)',
+        },
+      ]}
+      xAxis={{
+        data: availabilityEvents.map((event) => event.date.getTime()),
+      }}
+      yAxis={{
+        domain: ({ min, max }) => ({ min: Math.max(min - 2, 0), max: Math.min(max + 2, 100) }),
+      }}
+    >
+      <ChartDefs />
+      <XAxis
+        showGrid
+        showLine
+        showTickMarks
+        tickLabelFormatter={(value) => new Date(value).toLocaleDateString()}
+      />
+      <YAxis
+        showGrid
+        showLine
+        showTickMarks
+        position="start"
+        tickLabelFormatter={(value) => `${value}%`}
+      />
+      <Line
+        curve="stepAfter"
+        renderPoints={() => ({
+          fill: 'var(--color-bg)',
+          stroke: 'url(#availabilityGradient)',
+          strokeWidth: 2,
+        })}
+        seriesId="availability"
+      />
+    </Chart>
   );
 };

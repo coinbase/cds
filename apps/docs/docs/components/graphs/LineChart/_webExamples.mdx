@@ -722,11 +722,12 @@ function AvailabilityChart() {
   ];
 
   const ChartDefs = memo(({ yellowThresholdPercentage = 85, greenThresholdPercentage = 90 }) => {
-    const { height, series, rect, getYScale, getYAxis } = useChartContext();
+    const { drawingArea } = useChartDrawingAreaContext();
+    const { height, series, getYScale, getYAxis } = useChartContext();
     const yScale = getYScale?.();
     const yAxis = getYAxis?.();
 
-    if (!series || !rect || !yScale) return null;
+    if (!series || !drawingArea || !yScale) return null;
 
     const rangeBounds = yAxis?.domain;
     const rangeMin = rangeBounds?.min ?? 0;
@@ -736,7 +737,7 @@ function AvailabilityChart() {
     const yellowThresholdY = yScale(yellowThresholdPercentage) ?? 0;
     const greenThresholdY = yScale(greenThresholdPercentage) ?? 0;
     const minY = yScale(rangeMax) ?? 0; // Top of chart (max value)
-    const maxY = yScale(rangeMin) ?? rect.height; // Bottom of chart (min value)
+    const maxY = yScale(rangeMin) ?? drawingArea.height; // Bottom of chart (min value)
 
     // Calculate percentages based on actual chart positions
     const yellowThreshold = ((yellowThresholdY - minY) / (maxY - minY)) * 100;
@@ -745,12 +746,12 @@ function AvailabilityChart() {
     return (
       <defs>
         <linearGradient
+          gradientUnits="userSpaceOnUse"
           id="availabilityGradient"
           x1="0%"
           x2="0%"
           y1={minY}
           y2={maxY}
-          gradientUnits="userSpaceOnUse"
         >
           <stop offset="0%" stopColor="var(--color-fgPositive)" />
           <stop offset={`${greenThreshold}%`} stopColor="var(--color-fgPositive)" />
@@ -765,6 +766,7 @@ function AvailabilityChart() {
 
   return (
     <Chart
+      height={300}
       series={[
         {
           id: 'availability',
@@ -772,7 +774,6 @@ function AvailabilityChart() {
           color: 'url(#availabilityGradient)',
         },
       ]}
-      height={300}
       xAxis={{
         data: availabilityEvents.map((event) => event.date.getTime()),
       }}
@@ -782,26 +783,26 @@ function AvailabilityChart() {
     >
       <ChartDefs />
       <XAxis
+        showGrid
         showLine
         showTickMarks
-        showGrid
         tickLabelFormatter={(value) => new Date(value).toLocaleDateString()}
       />
       <YAxis
-        position="start"
+        showGrid
         showLine
         showTickMarks
-        showGrid
+        position="start"
         tickLabelFormatter={(value) => `${value}%`}
       />
       <Line
-        seriesId="availability"
         curve="stepAfter"
         renderPoints={() => ({
           fill: 'var(--color-bg)',
           stroke: 'url(#availabilityGradient)',
           strokeWidth: 2,
         })}
+        seriesId="availability"
       />
     </Chart>
   );
