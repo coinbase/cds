@@ -1,6 +1,5 @@
 import { memo, useRef } from 'react';
 import type { SharedProps } from '@coinbase/cds-common/types';
-import { useChartContext } from '@coinbase/cds-common/visualizations/charts';
 import { generateRandomId } from '@coinbase/cds-utils';
 
 import { Path, type PathProps } from '../Path';
@@ -61,7 +60,6 @@ export const GradientLine = memo<GradientLineProps>(
     disableAnimations,
     ...props
   }) => {
-    const context = useChartContext();
     const patternIdRef = useRef<string>(generateRandomId());
 
     return (
@@ -74,7 +72,7 @@ export const GradientLine = memo<GradientLineProps>(
         </defs>
         <Path
           clipOffset={strokeWidth}
-          disableAnimations={disableAnimations !== undefined ? disableAnimations : !context.animate}
+          disableAnimations={disableAnimations}
           fill={fill}
           stroke={`url(#${patternIdRef.current})`}
           strokeLinecap={strokeLinecap}

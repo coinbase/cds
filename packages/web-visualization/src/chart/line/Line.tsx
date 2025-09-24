@@ -17,6 +17,7 @@ export type LineComponentProps = {
   strokeOpacity?: number;
   strokeWidth?: number;
   testID?: string;
+  disableAnimations?: boolean;
 };
 
 export type LineComponent = React.FC<LineComponentProps>;

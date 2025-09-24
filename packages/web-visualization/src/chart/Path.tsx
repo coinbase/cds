@@ -47,10 +47,10 @@ export const Path = memo<PathProps>(
   ({ disableAnimations, clipRect, clipOffset = 0, d = '', ...pathProps }) => {
     const pathRef = useRef<SVGPathElement>(null);
     const clipPathIdRef = useRef<string>(generateRandomId());
-    const { animate } = useChartContext();
+    const context = useChartContext();
     const { drawingArea: contextRect } = useChartDrawingAreaContext();
     const rect = clipRect ?? contextRect;
-    const shouldAnimate = disableAnimations !== undefined ? !disableAnimations : animate;
+    const animate = !disableAnimations && context.animate;
 
     // todo: do we need useValueChanges?
     const {
@@ -74,10 +74,10 @@ export const Path = memo<PathProps>(
     useEffect(() => {
       addPreviousValue(newPath);
 
-      if (shouldAnimate && hasChanged && previousPath) {
+      if (animate && hasChanged && previousPath) {
         morphPath();
       }
-    }, [addPreviousValue, newPath, shouldAnimate, hasChanged, previousPath, morphPath]);
+    }, [addPreviousValue, newPath, animate, hasChanged, previousPath, morphPath]);
 
     // The clip offset provides extra padding to prevent path from being cut off
     // Area charts typically use offset=0 for exact clipping, while lines use offset=2 for breathing room
@@ -87,7 +87,7 @@ export const Path = memo<PathProps>(
       <>
         <defs>
           <clipPath id={clipPathIdRef.current}>
-            {!shouldAnimate ? (
+            {!animate ? (
               <rect
                 height={rect.height + totalOffset}
                 width={rect.width + totalOffset}

@@ -1,6 +1,5 @@
 import { memo, type SVGProps } from 'react';
 import type { SharedProps } from '@coinbase/cds-common/types';
-import { useChartContext } from '@coinbase/cds-common/visualizations/charts';
 
 import { Path, type PathProps } from '../Path';
 
@@ -28,12 +27,10 @@ export const DottedLine = memo<DottedLineProps>(
     disableAnimations,
     ...props
   }) => {
-    const context = useChartContext();
-
     return (
       <Path
         clipOffset={strokeWidth}
-        disableAnimations={disableAnimations !== undefined ? disableAnimations : !context.animate}
+        disableAnimations={disableAnimations}
         fill={fill}
         stroke={stroke}
         strokeDasharray={strokeDasharray}

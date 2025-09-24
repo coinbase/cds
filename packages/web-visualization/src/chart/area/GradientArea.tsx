@@ -43,6 +43,7 @@ export const GradientArea = memo<GradientAreaProps>(
     peakOpacity = 0.3,
     baselineOpacity = 0,
     yAxisId,
+    disableAnimations,
     ...pathProps
   }) => {
     const context = useChartContext();

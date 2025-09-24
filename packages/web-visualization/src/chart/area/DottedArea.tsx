@@ -185,9 +185,7 @@ export const DottedArea = memo<DottedAreaProps>(
           <mask id={maskIdRef.current}>
             <Path
               d={d}
-              disableAnimations={
-                disableAnimations !== undefined ? disableAnimations : !context.animate
-              }
+              disableAnimations={disableAnimations}
               fill={`url(#${gradientIdRef.current})`}
             />
           </mask>
@@ -195,7 +193,7 @@ export const DottedArea = memo<DottedAreaProps>(
         <Path
           className={classNames?.path}
           d={d}
-          disableAnimations={disableAnimations !== undefined ? disableAnimations : !context.animate}
+          disableAnimations={disableAnimations}
           fill={`url(#${patternIdRef.current})`}
           mask={`url(#${maskIdRef.current})`}
           style={styles?.path}
