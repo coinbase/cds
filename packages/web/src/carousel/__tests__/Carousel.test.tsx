@@ -12,47 +12,48 @@ import { Carousel } from '../Carousel';
 import { CarouselItem } from '../CarouselItem';
 
 // Mock framer-motion
-jest.mock('framer-motion', () => {
-  const realFramerMotion = jest.requireActual('framer-motion');
-  return {
-    ...realFramerMotion,
-    LazyMotion: ({ children }: { children: React.ReactNode }) => <>{children}</>,
-    domMax: {},
-    m: {
-      ...realFramerMotion.m,
-      div: jest.fn().mockImplementation(({ children, ...props }) => {
-        // Filter out framer-motion specific props that shouldn't be passed to DOM
-        const {
-          animate,
-          initial,
-          drag,
-          dragControls,
-          dragConstraints,
-          dragTransition,
-          whileDrag,
-          style,
-          ...domProps
-        } = props;
-        return (
-          <div {...domProps} style={style}>
-            {children}
-          </div>
-        );
-      }),
-    },
-    useAnimation: () => ({
-      start: jest.fn(),
-      stop: jest.fn(),
-    }),
-    useMotionValue: (initialValue: number) => ({
-      get: jest.fn(() => initialValue),
-      set: jest.fn(),
-    }),
-    useDragControls: () => ({
-      start: jest.fn(),
-    }),
-  };
-});
+// TODO: resolve the test warnings while make sure the 'm is not a function' failure does not happen for RollingNumber
+// jest.mock('framer-motion', () => {
+//   const realFramerMotion = jest.requireActual('framer-motion');
+//   return {
+//     ...realFramerMotion,
+//     LazyMotion: ({ children }: { children: React.ReactNode }) => <>{children}</>,
+//     domMax: {},
+//     m: {
+//       ...realFramerMotion.m,
+//       div: jest.fn().mockImplementation(({ children, ...props }) => {
+//         // Filter out framer-motion specific props that shouldn't be passed to DOM
+//         const {
+//           animate,
+//           initial,
+//           drag,
+//           dragControls,
+//           dragConstraints,
+//           dragTransition,
+//           whileDrag,
+//           style,
+//           ...domProps
+//         } = props;
+//         return (
+//           <div {...domProps} style={style}>
+//             {children}
+//           </div>
+//         );
+//       }),
+//     },
+//     useAnimation: () => ({
+//       start: jest.fn(),
+//       stop: jest.fn(),
+//     }),
+//     useMotionValue: (initialValue: number) => ({
+//       get: jest.fn(() => initialValue),
+//       set: jest.fn(),
+//     }),
+//     useDragControls: () => ({
+//       start: jest.fn(),
+//     }),
+//   };
+// });
 
 // Mock ResizeObserver with proper functionality
 const mockResizeObserver = jest.fn();
