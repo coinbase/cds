@@ -15,7 +15,6 @@ export type LineComponentProps = {
   d: SVGProps<SVGPathElement>['d'];
   stroke: string;
   strokeOpacity?: number;
-  disableAnimations?: boolean;
   strokeWidth?: number;
   testID?: string;
 };
@@ -71,11 +70,6 @@ export type LineProps = SharedProps & {
    */
   opacity?: number;
   /**
-   * Disable animations for the line.
-   * Overrides the disableAnimations prop on the Chart component.
-   */
-  disableAnimations?: boolean;
-  /**
    * Callback function to determine how to render points at each data point in the series.
    * Called for every entry in the data array.
    *
@@ -99,7 +93,6 @@ export const Line = memo<LineProps>(
     LineComponent: SelectedLineComponent,
     AreaComponent,
     opacity = 1,
-    disableAnimations,
     renderPoints,
     ...props
   }) => {
@@ -199,20 +192,13 @@ export const Line = memo<LineProps>(
           <Area
             AreaComponent={AreaComponent}
             curve={curve}
-            disableAnimations={disableAnimations}
             fill={stroke}
             fillOpacity={opacity}
             seriesId={seriesId}
             type={areaType}
           />
         )}
-        <LineComponent
-          d={path}
-          disableAnimations={disableAnimations}
-          stroke={stroke}
-          strokeOpacity={opacity}
-          {...props}
-        />
+        <LineComponent d={path} stroke={stroke} strokeOpacity={opacity} {...props} />
         {renderPoints &&
           chartData.map((value, index) => {
             if (value === null) {

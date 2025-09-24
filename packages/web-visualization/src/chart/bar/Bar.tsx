@@ -73,10 +73,6 @@ export type BarComponentProps = {
    * Stroke width for the bar outline.
    */
   strokeWidth?: number;
-  /**
-   * Whether to disable animations.
-   */
-  disableAnimations?: boolean;
 };
 
 export type BarComponent = React.FC<BarComponentProps>;
@@ -126,10 +122,6 @@ export type BarProps = {
    */
   fillOpacity?: number;
   /**
-   * Disable animations for the bar.
-   */
-  disableAnimations?: boolean;
-  /**
    * Stroke color for the bar outline.
    */
   stroke?: string;
@@ -170,7 +162,6 @@ export const Bar = memo<BarProps>(
     BarComponent = DefaultBar,
     fill = 'var(--color-fgPrimary)',
     fillOpacity = 1,
-    disableAnimations,
     stroke,
     strokeWidth,
     borderRadius = 100,
@@ -200,7 +191,6 @@ export const Bar = memo<BarProps>(
         d={barPath}
         dataX={dataX}
         dataY={dataY}
-        disableAnimations={disableAnimations}
         fill={fill}
         fillOpacity={fillOpacity}
         height={height}

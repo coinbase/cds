@@ -1,6 +1,6 @@
 import React, { memo, useMemo, useRef } from 'react';
 import type { ThemeVars } from '@coinbase/cds-common';
-import { getBarPath } from '@coinbase/cds-common/visualizations/charts';
+import { getBarPath, useChartContext } from '@coinbase/cds-common/visualizations/charts';
 import { generateRandomId } from '@coinbase/cds-utils';
 import { useTheme } from '@coinbase/cds-web';
 import { m } from 'framer-motion';
@@ -44,10 +44,6 @@ export type StackComponentBaseProps = {
    */
   roundBottom?: boolean;
   /**
-   * Disable animations for the stack.
-   */
-  disableAnimations?: boolean;
-  /**
    * The y-origin for animations (baseline position).
    */
   yOrigin?: number;
@@ -80,10 +76,10 @@ export const DefaultStackComponent = memo<StackComponentProps>(function DefaultS
   borderRadius = 100,
   roundTop = true,
   roundBottom = true,
-  disableAnimations,
   yOrigin,
 }) {
   const theme = useTheme();
+  const { animate } = useChartContext();
   const clipPathId = useRef(generateRandomId()).current;
 
   const clipPathData = useMemo(() => {
@@ -106,14 +102,14 @@ export const DefaultStackComponent = memo<StackComponentProps>(function DefaultS
     <>
       <defs>
         <clipPath id={clipPathId}>
-          {disableAnimations ? (
-            <path d={clipPathData} />
-          ) : (
+          {animate ? (
             <m.path
               animate={{ d: clipPathData }}
               initial={{ d: initialClipPathData }}
               transition={{ type: 'spring', duration: 1, bounce: 0 }}
             />
+          ) : (
+            <path d={clipPathData} />
           )}
         </clipPath>
       </defs>

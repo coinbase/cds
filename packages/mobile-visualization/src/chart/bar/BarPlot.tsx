@@ -3,6 +3,7 @@ import { ClipPath, Defs, G, Rect } from 'react-native-svg';
 import type { ThemeVars } from '@coinbase/cds-common';
 import {
   defaultAxisId,
+  useChartContext,
   useChartDrawingAreaContext,
 } from '@coinbase/cds-common/visualizations/charts';
 import { generateRandomId } from '@coinbase/cds-utils';
@@ -40,10 +41,6 @@ export type BarPlotProps = {
    * Default opacity of the bar.
    */
   fillOpacity?: number;
-  /**
-   * Disable animations for the bars.
-   */
-  disableAnimations?: boolean;
   /**
    * Default stroke color for the bar outline.
    */
@@ -94,7 +91,6 @@ export const BarPlot = memo<BarPlotProps>(
     BarComponent: defaultBarComponent,
     type: defaultType,
     fillOpacity: defaultFillOpacity,
-    disableAnimations,
     stroke: defaultStroke,
     strokeWidth: defaultStrokeWidth,
     borderRadius: defaultBorderRadius,
@@ -104,17 +100,16 @@ export const BarPlot = memo<BarPlotProps>(
     barMinSize,
     stackMinSize,
   }) => {
+    const { series: allSeries } = useChartContext();
     const { drawingArea } = useChartDrawingAreaContext();
-    // TODO: This component needs to be refactored to receive series as props
-    const allSeries: any[] = [];
     const clipPathId = useRef(generateRandomId()).current;
 
     const targetSeries = useMemo(() => {
       const seriesToRender: BarSeries[] =
-        (series ?? [])?.filter((s: any) => (s.xAxisId ?? defaultAxisId) === xAxisId) ?? [];
+        (series ?? allSeries)?.filter((s: any) => (s.xAxisId ?? defaultAxisId) === xAxisId) ?? [];
 
       return seriesToRender;
-    }, [series, xAxisId]);
+    }, [allSeries, series, xAxisId]);
 
     const stackGroups = useMemo(() => {
       const groups = new Map<
@@ -174,7 +169,6 @@ export const BarPlot = memo<BarPlotProps>(
               barMinSize={barMinSize}
               barPadding={barPadding}
               borderRadius={defaultBorderRadius}
-              disableAnimations={disableAnimations}
               fillOpacity={defaultFillOpacity}
               roundBaseline={roundBaseline}
               series={group.series}

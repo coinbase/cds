@@ -30,11 +30,9 @@ export const DottedArea = memo<DottedAreaProps>(
     // todo: fillOpacity, fix this opacity, default is normally 1 but we want useSparklineAreaOpacity
     patternSize = 4,
     dotSize = 1,
-    disableAnimations,
     clipRect,
     ...pathProps
   }) => {
-    const context = useChartContext();
     const { activeColorScheme } = useTheme();
     const patternIdRef = useRef<string>(generateRandomId());
 
@@ -63,13 +61,7 @@ export const DottedArea = memo<DottedAreaProps>(
             />
           </Pattern>
         </Defs>
-        <Path
-          clipRect={clipRect}
-          d={d}
-          disableAnimations={disableAnimations !== undefined ? disableAnimations : !context.animate}
-          fill={`url(#${patternIdRef.current})`}
-          {...pathProps}
-        />
+        <Path clipRect={clipRect} d={d} fill={`url(#${patternIdRef.current})`} {...pathProps} />
       </G>
     );
   },

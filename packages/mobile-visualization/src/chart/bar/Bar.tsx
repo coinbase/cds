@@ -7,7 +7,7 @@ import Reanimated, {
 } from 'react-native-reanimated';
 import { ClipPath, Defs, G, Path, Rect } from 'react-native-svg';
 import type { ThemeVars } from '@coinbase/cds-common';
-import { getBarPath } from '@coinbase/cds-common/visualizations/charts';
+import { getBarPath, useChartContext } from '@coinbase/cds-common/visualizations/charts';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 import { generateRandomId } from '@coinbase/cds-utils';
 
@@ -18,7 +18,6 @@ export type BarComponentProps = {
   fill: string;
   fillOpacity?: number;
   clipRect?: Rect;
-  disableAnimations?: boolean;
   stroke?: string;
   strokeWidth?: number;
   /**
@@ -99,10 +98,6 @@ export type BarProps = {
    */
   fillOpacity?: number;
   /**
-   * Disable animations for the bar.
-   */
-  disableAnimations?: boolean;
-  /**
    * Stroke color for the bar outline.
    */
   stroke?: string;
@@ -161,7 +156,6 @@ export const Bar = memo<BarProps>(
     BarComponent: SelectedBarComponent,
     fill,
     fillOpacity = 1,
-    disableAnimations,
     stroke,
     strokeWidth,
     borderRadius = 100,
@@ -174,6 +168,7 @@ export const Bar = memo<BarProps>(
     yOrigin,
   }) => {
     const theme = useTheme();
+    const { animate } = useChartContext();
     const clipPathId = useRef(generateRandomId()).current;
 
     // Use theme color as default if no fill is provided
@@ -191,7 +186,7 @@ export const Bar = memo<BarProps>(
     useEffect(() => {
       'worklet';
 
-      if (disableAnimations) {
+      if (!animate) {
         // Set values immediately when animations are disabled
         animatedHeight.value = height;
         animatedY.value = y;
@@ -227,7 +222,7 @@ export const Bar = memo<BarProps>(
           });
         }
       }
-    }, [height, y, baseY, disableAnimations, animatedHeight, animatedY, hasInitialized]);
+    }, [height, y, baseY, animate, animatedHeight, animatedY, hasInitialized]);
 
     const animatedProps = useAnimatedProps(() => {
       return {
@@ -253,7 +248,7 @@ export const Bar = memo<BarProps>(
     }
 
     // For bars with animations, use an animated rect with clipping
-    if (!disableAnimations) {
+    if (!animate) {
       return (
         <G>
           <Defs>

@@ -53,10 +53,6 @@ export type BarStackProps = {
    */
   fillOpacity?: number;
   /**
-   * Disable animations for the bars.
-   */
-  disableAnimations?: boolean;
-  /**
    * Default stroke color for the bar outline.
    */
   stroke?: string;
@@ -108,7 +104,6 @@ export const BarStack = memo<BarStackProps>(
     yAxisId,
     BarComponent: defaultBarComponent,
     fillOpacity: defaultFillOpacity,
-    disableAnimations,
     stroke: defaultStroke,
     strokeWidth: defaultStrokeWidth,
     borderRadius,
@@ -150,7 +145,6 @@ export const BarStack = memo<BarStackProps>(
         fillOpacity?: number;
         stroke?: string;
         strokeWidth?: number;
-        disableAnimations?: boolean;
         borderRadius?: BarProps['borderRadius'];
         roundTop?: boolean;
         roundBottom?: boolean;
@@ -236,7 +230,6 @@ export const BarStack = memo<BarStackProps>(
           fillOpacity: s.fillOpacity,
           stroke: s.stroke,
           strokeWidth: s.strokeWidth,
-          disableAnimations: s.disableAnimations,
           // Pass context data for custom components
           roundTop: roundBaseline || barTop !== baseline,
           roundBottom: roundBaseline || barBottom !== baseline,
@@ -566,7 +559,6 @@ export const BarStack = memo<BarStackProps>(
         borderRadius={borderRadius}
         dataX={dataX}
         dataY={bar.dataY}
-        disableAnimations={bar.disableAnimations ?? disableAnimations}
         fill={bar.fill}
         fillOpacity={bar.fillOpacity ?? defaultFillOpacity}
         height={bar.height}
@@ -588,7 +580,6 @@ export const BarStack = memo<BarStackProps>(
       <StackComponent
         borderRadius={borderRadius}
         categoryIndex={categoryIndex}
-        disableAnimations={disableAnimations}
         height={stackRect.height}
         roundBottom={stackRoundBottom}
         roundTop={stackRoundTop}

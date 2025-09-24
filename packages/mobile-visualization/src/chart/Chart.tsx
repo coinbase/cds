@@ -63,9 +63,10 @@ export type ChartBaseProps = {
    */
   children?: React.ReactNode;
   /**
-   * Prevents default animations on the chart.
+   * Whether to animate the chart.
+   * @default true
    */
-  disableAnimations?: boolean;
+  animate?: boolean;
   /**
    * Disables all highlighting interactions (pan gestures).
    * When true, no highlighting will occur and scrubber components won't be interactive.
@@ -110,7 +111,7 @@ export type ChartProps = ChartBaseProps;
 export const Chart = memo<ChartProps>(
   ({
     series,
-    disableAnimations,
+    animate = true,
     disableHighlighting,
     xAxis: xAxisConfigInput,
     yAxis: yAxisConfigInput,
@@ -398,7 +399,7 @@ export const Chart = memo<ChartProps>(
         series: series ?? [],
         getSeries,
         getSeriesData: getStackedSeriesData,
-        animate: !disableAnimations,
+        animate,
         width: chartWidth,
         height: chartHeight,
         getXAxis,
@@ -410,7 +411,7 @@ export const Chart = memo<ChartProps>(
         series,
         getSeries,
         getStackedSeriesData,
-        disableAnimations,
+        animate,
         chartWidth,
         chartHeight,
         getXAxis,

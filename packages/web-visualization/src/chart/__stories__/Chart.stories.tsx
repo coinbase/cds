@@ -209,11 +209,9 @@ export const PredictionMarket = () => {
         {seriesConfig.map((series) => (
           <Line
             key={series.id}
-            AreaComponent={(props) => <GradientArea {...props} disableAnimations />}
             curve="natural"
             opacity={getSeriesOpacity(series.id)}
             seriesId={series.id}
-            showArea={selectedSeriesId === series.id}
           />
         ))}
         <CustomYAxis />
@@ -379,7 +377,7 @@ export const EarningsHistory = () => {
   return (
     <VStack gap={0.5}>
       <Chart
-        disableAnimations
+        animate={false}
         height={250}
         padding={0}
         series={[

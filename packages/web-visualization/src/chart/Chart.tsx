@@ -72,9 +72,10 @@ export type ChartBaseProps = BoxBaseProps & {
    */
   series?: Array<Series>;
   /**
-   * Prevents default animations on the chart.
+   * Whether to animate the chart.
+   * @default true
    */
-  disableAnimations?: boolean;
+  animate?: boolean;
   /**
    * Enables scrubbing interactions (mouse and keyboard highlighting).
    * When true, allows highlighting and makes scrubber components interactive.
@@ -110,7 +111,7 @@ export const Chart = memo(
     (
       {
         series,
-        disableAnimations,
+        animate = true,
         enableScrubbing = false,
         xAxis: xAxisConfigInput,
         yAxis: yAxisConfigInput,
@@ -462,7 +463,7 @@ export const Chart = memo(
           series: series ?? [],
           getSeries,
           getSeriesData: getStackedSeriesData,
-          animate: !disableAnimations,
+          animate,
           width: chartWidth,
           height: chartHeight,
           getXAxis,
@@ -474,7 +475,7 @@ export const Chart = memo(
           series,
           getSeries,
           getStackedSeriesData,
-          disableAnimations,
+          animate,
           chartWidth,
           chartHeight,
           getXAxis,

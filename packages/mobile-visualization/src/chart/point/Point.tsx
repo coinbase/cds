@@ -219,11 +219,6 @@ export type PointProps = SharedProps &
      */
     hoverEffect?: 'scale' | 'pulse' | 'none';
     /**
-     * Whether to disable animations for this point.
-     * Overrides the chart context's disableAnimations setting.
-     */
-    disableAnimations?: boolean;
-    /**
      * Custom styles for the component.
      */
     styles?: {
@@ -258,7 +253,6 @@ export const Point = memo(
         onClick,
         onScrubberEnter,
         hoverEffect = onClick ? 'scale' : 'none',
-        disableAnimations: disableAnimationsProp,
         className,
         style,
         styles,
@@ -275,7 +269,7 @@ export const Point = memo(
       const theme = useTheme();
       const pulseOpacity = useRef(new Animated.Value(0)).current;
       const scaleValue = useRef(new Animated.Value(1)).current;
-      const { getXScale, getYScale, animate: animateContext } = useChartContext();
+      const { getXScale, getYScale, animate } = useChartContext();
       const { highlightedIndex } = useHighlightContext();
       const [isHovered, setIsHovered] = useState(false);
 
@@ -284,9 +278,6 @@ export const Point = memo(
 
       // Use theme color as default if no color is provided
       const effectiveColor = color ?? theme.color.fgPrimary;
-
-      const shouldAnimate =
-        disableAnimationsProp !== undefined ? !disableAnimationsProp : animateContext;
 
       // Point is interactive if onClick is provided or hoverEffect is set (and not 'none')
       const isInteractive = !!onClick || hoverEffect !== 'none';
@@ -334,8 +325,7 @@ export const Point = memo(
 
       const effectiveHover = isScrubbing ? isScrubberHighlighted : isHovered;
 
-      const shouldShowPulse =
-        shouldAnimate && (pulse || (hoverEffect === 'pulse' && effectiveHover));
+      const shouldShowPulse = animate && (pulse || (hoverEffect === 'pulse' && effectiveHover));
 
       // Set up pulse animation
       useEffect(() => {
@@ -367,14 +357,14 @@ export const Point = memo(
 
       // Set up scale animation for hover
       useEffect(() => {
-        if (hoverEffect === 'scale' && shouldAnimate) {
+        if (hoverEffect === 'scale' && animate) {
           Animated.timing(scaleValue, {
             toValue: effectiveHover ? 1.2 : 1,
             duration: 200,
             useNativeDriver: true,
           }).start();
         }
-      }, [effectiveHover, hoverEffect, shouldAnimate, scaleValue]);
+      }, [effectiveHover, hoverEffect, animate, scaleValue]);
 
       const LabelContent = useMemo(() => {
         // Custom render function takes precedence
@@ -409,7 +399,7 @@ export const Point = memo(
       const AnimatedCircle = useMemo(() => Animated.createAnimatedComponent(Circle), []);
 
       const PointContent = useMemo(() => {
-        if (!shouldAnimate) {
+        if (!animate) {
           // Simple non-animated version
           return (
             <G opacity={opacity}>
@@ -470,7 +460,7 @@ export const Point = memo(
         effectiveColor,
         pulseRadius,
         hoverEffect,
-        shouldAnimate,
+        animate,
         radius,
         onClick,
         strokeWidth,

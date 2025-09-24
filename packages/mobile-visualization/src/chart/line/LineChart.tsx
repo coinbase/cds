@@ -41,7 +41,6 @@ export type LineSeries = Omit<Series, 'data'> & {
       | 'AreaComponent'
       | 'stroke'
       | 'opacity'
-      | 'disableAnimations'
       | 'renderPoints'
     >
   >;

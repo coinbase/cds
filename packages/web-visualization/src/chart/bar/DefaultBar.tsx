@@ -1,6 +1,6 @@
 import React, { memo, useMemo } from 'react';
 import type { SVGProps } from 'react';
-import { getBarPath } from '@coinbase/cds-common/visualizations/charts';
+import { getBarPath, useChartContext } from '@coinbase/cds-common/visualizations/charts';
 import { m as motion, type MotionProps } from 'framer-motion';
 
 import type { BarComponentProps } from './Bar';
@@ -23,15 +23,15 @@ export const DefaultBar = memo<DefaultBarProps>(
     fillOpacity = 1,
     stroke,
     strokeWidth,
-    disableAnimations = false,
   }) => {
+    const { animate } = useChartContext();
     const initialPath = useMemo(() => {
-      if (disableAnimations) return undefined;
+      if (!animate) return undefined;
       // Need a minimum height to allow for animation
       const minHeight = 1;
       const initialY = originY - minHeight;
       return getBarPath(x, initialY, width, minHeight, borderRadius, roundTop, roundBottom);
-    }, [disableAnimations, x, originY, width, borderRadius, roundTop, roundBottom]);
+    }, [animate, x, originY, width, borderRadius, roundTop, roundBottom]);
 
     const pathProps: SVGProps<SVGPathElement> & MotionProps = {
       fill,
@@ -40,7 +40,7 @@ export const DefaultBar = memo<DefaultBarProps>(
       strokeWidth,
     };
 
-    if (!disableAnimations && initialPath) {
+    if (animate && initialPath) {
       return (
         <motion.path
           {...pathProps}

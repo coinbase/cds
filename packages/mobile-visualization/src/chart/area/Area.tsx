@@ -16,7 +16,6 @@ export type AreaComponentProps = {
   fill: string;
   fillOpacity?: number;
   clipRect?: Rect;
-  disableAnimations?: boolean;
   stroke?: string;
   strokeWidth?: number;
 };
@@ -55,11 +54,6 @@ export type AreaProps = {
    * @default 1
    */
   fillOpacity?: number;
-  /**
-   * Disable animations for the line.
-   * Overrides the disableAnimations prop on the Chart component.
-   */
-  disableAnimations?: boolean;
   stroke?: string;
   strokeWidth?: number;
 };
@@ -72,7 +66,6 @@ export const Area = memo<AreaProps>(
     AreaComponent: SelectedAreaComponent,
     fill: specifiedFill,
     fillOpacity = 1,
-    disableAnimations,
     stroke,
     strokeWidth,
   }) => {
@@ -140,7 +133,6 @@ export const Area = memo<AreaProps>(
       <AreaComponent
         clipRect={drawingArea}
         d={area}
-        disableAnimations={disableAnimations}
         fill={fill}
         fillOpacity={fillOpacity}
         stroke={stroke}

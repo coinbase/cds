@@ -56,7 +56,6 @@ export const XAxis = memo<XAxisProps>(
     classNames,
     GridLineComponent = DottedLine,
     tickMarkLabelGap = 0.25,
-    disableAnimations,
     dataKey,
     size = 32,
     minTickLabelGap = 0.5,
@@ -68,14 +67,12 @@ export const XAxis = memo<XAxisProps>(
   }) => {
     const theme = useTheme();
     const registrationId = useId();
-    const context = useChartContext();
+    const { animate, getXScale, getXAxis } = useChartContext();
     const { registerAxis, unregisterAxis, getAxisBounds } = useChartDrawingAreaContext();
-    const { getXScale, getXAxis } = context;
 
     const xScale = getXScale?.(axisId);
     const xAxis = getXAxis?.(axisId);
 
-    const shouldAnimate = disableAnimations !== undefined ? !disableAnimations : context.animate;
     const axisBounds = getAxisBounds(registrationId);
 
     useEffect(() => {
@@ -208,9 +205,7 @@ export const XAxis = memo<XAxisProps>(
                 />
               );
 
-              return !shouldAnimate ? (
-                <g key={`grid-${tick.tick}-${index}-${dataKey}`}>{verticalLine}</g>
-              ) : (
+              return animate ? (
                 <motion.g
                   key={`grid-${tick.tick}-${index}-${dataKey}`}
                   animate="animate"
@@ -220,6 +215,8 @@ export const XAxis = memo<XAxisProps>(
                 >
                   {verticalLine}
                 </motion.g>
+              ) : (
+                <g key={`grid-${tick.tick}-${index}-${dataKey}`}>{verticalLine}</g>
               );
             })}
           </AnimatePresence>
@@ -230,7 +227,7 @@ export const XAxis = memo<XAxisProps>(
               animate="animate"
               exit="exit"
               initial="initial"
-              variants={!shouldAnimate ? undefined : axisTickLabelsInitialAnimationVariants}
+              variants={animate ? axisTickLabelsInitialAnimationVariants : undefined}
             >
               {/* TODO pass through styles */}
               <SmartChartTextGroup

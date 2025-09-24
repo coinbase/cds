@@ -42,7 +42,6 @@ export const GradientArea = memo<GradientAreaProps>(
     endColor,
     startOpacity = 0.4 * fillOpacity,
     endOpacity = 0,
-    disableAnimations,
     clipRect,
     ...pathProps
   }) => {
@@ -60,13 +59,7 @@ export const GradientArea = memo<GradientAreaProps>(
             <Stop offset="100%" stopColor={endColor ?? effectiveFill} stopOpacity={endOpacity} />
           </LinearGradient>
         </Defs>
-        <Path
-          clipRect={clipRect}
-          d={d}
-          disableAnimations={disableAnimations !== undefined ? disableAnimations : !context.animate}
-          fill={`url(#${patternIdRef.current})`}
-          {...pathProps}
-        />
+        <Path clipRect={clipRect} d={d} fill={`url(#${patternIdRef.current})`} {...pathProps} />
       </>
     );
   },

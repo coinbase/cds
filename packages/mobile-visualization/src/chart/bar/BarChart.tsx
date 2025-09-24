@@ -19,16 +19,7 @@ import { BarPlot, type BarPlotProps } from './BarPlot';
  */
 export type BarSeries = Series &
   Partial<
-    Pick<
-      BarProps,
-      | 'BarComponent'
-      | 'type'
-      | 'fill'
-      | 'fillOpacity'
-      | 'stroke'
-      | 'strokeWidth'
-      | 'disableAnimations'
-    >
+    Pick<BarProps, 'BarComponent' | 'type' | 'fill' | 'fillOpacity' | 'stroke' | 'strokeWidth'>
   >;
 
 //  & Omit<ScrubberGroupProps, 'chartScale' | 'heads'>

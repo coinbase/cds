@@ -293,7 +293,7 @@ const Candlesticks = () => {
   ][];
 
   const CandlestickBarComponent = memo<BarComponentProps>(
-    ({ x, y, width, height, originY, disableAnimations, dataX, ...props }) => {
+    ({ x, y, width, height, originY, dataX, ...props }) => {
       const { getYScale } = useChartContext();
       const yScale = getYScale?.();
 
@@ -387,12 +387,12 @@ const Candlesticks = () => {
         <span ref={infoTextRef}>{initialInfo}</span>
       </Text>
       <BarChart
-        disableAnimations
         enableScrubbing
         showXAxis
         showYAxis
         BarComponent={CandlestickBarComponent}
         StackComponent={({ children, ...props }) => <g {...props}>{children}</g>}
+        animate={false}
         borderRadius={0}
         dataKey={timePeriod.id}
         height={400}

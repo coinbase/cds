@@ -69,12 +69,6 @@ export type AxisBaseProps = {
    */
   dataKey?: string | number;
   /**
-   * Disable animations for the axis.
-   * Overrides the disableAnimations prop on the Chart component.
-   * @todo switch to 'animate' prop to be consistent with other components
-   */
-  disableAnimations?: boolean;
-  /**
    * Component to render the grid lines.
    * @default DottedLine
    */

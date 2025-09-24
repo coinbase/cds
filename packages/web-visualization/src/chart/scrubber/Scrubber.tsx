@@ -134,7 +134,6 @@ export const Scrubber = memo(
       const { getXScale, getYScale, getSeriesData, getXAxis, animate, series } = useChartContext();
       const { drawingArea } = useChartDrawingAreaContext();
       const getStackedSeriesData = getSeriesData; // getSeriesData now returns stacked data
-      const disableAnimations = !animate;
 
       // Track label dimensions for collision detection
       const [labelDimensions, setLabelDimensions] = useState<Map<string, LabelDimensions>>(
@@ -568,14 +567,14 @@ export const Scrubber = memo(
           ref={scrubberGroupRef}
           data-component="scrubber-group"
           data-testid={testID}
-          {...(disableAnimations
-            ? {}
-            : {
+          {...(animate
+            ? {
                 animate: 'animate',
                 exit: 'exit',
                 initial: 'initial',
                 variants: axisTickLabelsInitialAnimationVariants,
-              })}
+              }
+            : {})}
         >
           {!hideOverlay &&
             dataX !== undefined &&

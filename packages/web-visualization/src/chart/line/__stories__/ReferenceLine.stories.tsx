@@ -263,8 +263,8 @@ const PriceTargetChart = () => {
   return (
     <LineChart
       ref={chartRef}
-      disableAnimations
       showArea
+      animate={false}
       curve="monotone"
       height={250}
       padding={{ top: 16, bottom: 16, left: 8, right: 80 }}

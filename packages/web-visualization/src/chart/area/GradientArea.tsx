@@ -42,7 +42,6 @@ export const GradientArea = memo<GradientAreaProps>(
     baselineColor,
     peakOpacity = 0.3,
     baselineOpacity = 0,
-    disableAnimations,
     yAxisId,
     ...pathProps
   }) => {
@@ -132,12 +131,7 @@ export const GradientArea = memo<GradientAreaProps>(
             )}
           </linearGradient>
         </defs>
-        <Path
-          d={d}
-          disableAnimations={disableAnimations !== undefined ? disableAnimations : !context.animate}
-          fill={`url(#${patternIdRef.current})`}
-          {...pathProps}
-        />
+        <Path d={d} fill={`url(#${patternIdRef.current})`} {...pathProps} />
       </>
     );
   },

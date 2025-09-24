@@ -39,7 +39,6 @@ export type ScrubberHeadProps = SharedProps &
     | 'dataX'
     | 'dataY'
     | 'hoverEffect'
-    | 'disableAnimations'
   > & {
     // make Point's coordinates optional for ScrubberHead
     dataX?: PointProps['dataX'];

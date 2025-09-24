@@ -18,12 +18,7 @@ import { BarPlot, type BarPlotProps } from './BarPlot';
  * and allows individual customization of Bar props per series.
  */
 export type BarSeries = Series &
-  Partial<
-    Pick<
-      BarProps,
-      'BarComponent' | 'fill' | 'fillOpacity' | 'stroke' | 'strokeWidth' | 'disableAnimations'
-    >
-  >;
+  Partial<Pick<BarProps, 'BarComponent' | 'fill' | 'fillOpacity' | 'stroke' | 'strokeWidth'>>;
 
 export type BarChartProps = Omit<ChartProps, 'xAxis' | 'yAxis' | 'series'> &
   Pick<

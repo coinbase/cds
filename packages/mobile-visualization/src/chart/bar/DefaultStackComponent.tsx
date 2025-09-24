@@ -44,10 +44,6 @@ export type StackComponentBaseProps = {
    */
   roundBottom?: boolean;
   /**
-   * Disable animations for the stack.
-   */
-  disableAnimations?: boolean;
-  /**
    * The y-origin for animations (baseline position).
    */
   yOrigin?: number;
@@ -80,7 +76,6 @@ export const DefaultStackComponent = memo<StackComponentProps>(function DefaultS
   borderRadius = 100,
   roundTop = true,
   roundBottom = true,
-  disableAnimations,
   yOrigin,
 }) {
   const theme = useTheme();

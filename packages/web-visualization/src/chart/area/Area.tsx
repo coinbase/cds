@@ -11,7 +11,6 @@ export type AreaComponentProps = {
   d: SVGProps<SVGPathElement>['d'];
   fill: string;
   fillOpacity?: number;
-  disableAnimations?: boolean;
   stroke?: string;
   strokeWidth?: number;
   yAxisId?: string;
@@ -51,11 +50,6 @@ export type AreaProps = {
    * @default 1
    */
   fillOpacity?: number;
-  /**
-   * Disable animations for the line.
-   * Overrides the disableAnimations prop on the Chart component.
-   */
-  disableAnimations?: boolean;
   stroke?: string;
   strokeWidth?: number;
 };
@@ -68,7 +62,6 @@ export const Area = memo<AreaProps>(
     AreaComponent: SelectedAreaComponent,
     fill: specifiedFill,
     fillOpacity = 1,
-    disableAnimations,
     stroke,
     strokeWidth,
   }) => {
@@ -137,7 +130,6 @@ export const Area = memo<AreaProps>(
     return (
       <AreaComponent
         d={area}
-        disableAnimations={disableAnimations}
         fill={fill}
         fillOpacity={fillOpacity}
         stroke={stroke}

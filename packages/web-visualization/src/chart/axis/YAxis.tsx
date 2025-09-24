@@ -1,5 +1,4 @@
-import React, { memo, useCallback, useEffect, useId, useMemo } from 'react';
-import type { ThemeVars } from '@coinbase/cds-common';
+import { memo, useCallback, useEffect, useId, useMemo } from 'react';
 import {
   getAxisTicksData,
   isCategoricalScale,
@@ -55,7 +54,6 @@ export const YAxis = memo<YAxisProps>(
     classNames,
     GridLineComponent = DottedLine,
     tickMarkLabelGap = 1,
-    disableAnimations,
     dataKey,
     size = 44,
     minTickLabelGap = 0,
@@ -68,14 +66,12 @@ export const YAxis = memo<YAxisProps>(
     const theme = useTheme();
     // todo: probably switch to our own id generator, use id seems to be for accessibility
     const registrationId = useId();
-    const context = useChartContext();
+    const { animate, getYScale, getYAxis } = useChartContext();
     const { registerAxis, unregisterAxis, getAxisBounds } = useChartDrawingAreaContext();
-    const { getYScale, getYAxis } = context;
 
     const yScale = getYScale?.(axisId);
     const yAxis = getYAxis?.(axisId);
 
-    const shouldAnimate = disableAnimations !== undefined ? !disableAnimations : context.animate;
     const axisBounds = getAxisBounds(registrationId);
 
     useEffect(() => {
@@ -192,9 +188,7 @@ export const YAxis = memo<YAxisProps>(
                 />
               );
 
-              return !shouldAnimate ? (
-                <g key={`grid-${tick.tick}-${index}-${dataKey}`}>{horizontalLine}</g>
-              ) : (
+              return animate ? (
                 <motion.g
                   key={`grid-${tick.tick}-${index}-${dataKey}`}
                   animate="animate"
@@ -204,6 +198,8 @@ export const YAxis = memo<YAxisProps>(
                 >
                   {horizontalLine}
                 </motion.g>
+              ) : (
+                <g key={`grid-${tick.tick}-${index}-${dataKey}`}>{horizontalLine}</g>
               );
             })}
           </AnimatePresence>
@@ -214,10 +210,7 @@ export const YAxis = memo<YAxisProps>(
               animate="animate"
               exit="exit"
               initial="initial"
-              variants={
-                // TODO may not need this animation anymore since ChartText fades themselves in
-                !shouldAnimate ? undefined : axisTickLabelsInitialAnimationVariants
-              }
+              variants={animate ? axisTickLabelsInitialAnimationVariants : undefined}
             >
               {/* TODO pass through styles */}
               <SmartChartTextGroup

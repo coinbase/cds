@@ -221,11 +221,6 @@ export type PointProps = SharedProps &
      */
     hoverEffect?: 'scale' | 'pulse' | 'none';
     /**
-     * Whether to disable animations for this point.
-     * Overrides the chart context's disableAnimations setting.
-     */
-    disableAnimations?: boolean;
-    /**
      * Custom class names for the component.
      */
     classNames?: {
@@ -285,7 +280,6 @@ export const Point = memo(
         onClick,
         onScrubberEnter,
         hoverEffect = onClick ? 'scale' : 'none',
-        disableAnimations: disableAnimationsProp,
         className,
         style,
         classNames,
@@ -307,9 +301,6 @@ export const Point = memo(
 
       const xScale = getXScale(xAxisId);
       const yScale = getYScale(yAxisId);
-
-      const shouldAnimate =
-        disableAnimationsProp !== undefined ? !disableAnimationsProp : animateContext;
 
       // Point is interactive if onClick is provided or hoverEffect is set (and not 'none')
       const isInteractive = !!onClick || hoverEffect !== 'none';
@@ -353,7 +344,7 @@ export const Point = memo(
       const effectiveHover = isScrubbing ? isScrubberHighlighted : isHovered;
 
       const shouldShowPulse =
-        shouldAnimate && (pulse || (hoverEffect === 'pulse' && effectiveHover));
+        animateContext && (pulse || (hoverEffect === 'pulse' && effectiveHover));
 
       const containerStyle = {
         ...styles?.container,
@@ -396,7 +387,7 @@ export const Point = memo(
           ...styles?.innerPoint,
         };
 
-        return hoverEffect === 'scale' && shouldAnimate ? (
+        return hoverEffect === 'scale' && animateContext ? (
           <motion.circle
             animate={
               effectiveHover
@@ -455,7 +446,7 @@ export const Point = memo(
         pixelCoordinate.y,
         color,
         hoverEffect,
-        shouldAnimate,
+        animateContext,
         effectiveHover,
         radius,
         className,
@@ -479,7 +470,7 @@ export const Point = memo(
             data-testid={testID}
             opacity={opacity}
             style={containerStyle}
-            whileTap={shouldAnimate ? { scale: 0.9 } : undefined}
+            whileTap={animateContext ? { scale: 0.9 } : undefined}
           >
             {/* pulse ring */}
             <motion.circle

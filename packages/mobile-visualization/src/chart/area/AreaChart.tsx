@@ -18,15 +18,8 @@ import { Area, type AreaProps } from './Area';
  * and allows individual customization of Area and Line props per series.
  */
 export type AreaSeries = Series &
-  Partial<
-    Pick<
-      AreaProps,
-      'AreaComponent' | 'curve' | 'fillOpacity' | 'type' | 'fill' | 'disableAnimations'
-    >
-  > &
-  Partial<
-    Pick<LineProps, 'LineComponent' | 'strokeWidth' | 'stroke' | 'opacity' | 'disableAnimations'>
-  >;
+  Partial<Pick<AreaProps, 'AreaComponent' | 'curve' | 'fillOpacity' | 'type' | 'fill'>> &
+  Partial<Pick<LineProps, 'LineComponent' | 'strokeWidth' | 'stroke' | 'opacity'>>;
 
 export type AreaChartProps = Omit<ChartProps, 'xAxis' | 'yAxis' | 'series'> &
   Pick<AreaProps, 'AreaComponent' | 'curve' | 'fillOpacity' | 'type'> &

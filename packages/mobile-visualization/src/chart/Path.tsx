@@ -54,11 +54,6 @@ export type PathProps = SharedProps & {
    */
   fillOpacity?: number;
   /**
-   * Whether to disable animations for this path.
-   * @note Animations require approval
-   */
-  disableAnimations?: boolean;
-  /**
    * Custom clip path rect. If provided, this overrides the default chart rect for clipping.
    */
   clipRect?: RectType;
@@ -74,7 +69,6 @@ export type PathProps = SharedProps & {
 
 export const Path = memo<PathProps>(
   ({
-    disableAnimations,
     clipRect,
     d = '',
     fill,
@@ -88,7 +82,6 @@ export const Path = memo<PathProps>(
   }) => {
     const { animate } = useChartContext();
     const { drawingArea: contextRect } = useChartDrawingAreaContext();
-    const shouldAnimate = disableAnimations !== undefined ? !disableAnimations : animate;
     const rect = clipRect ?? contextRect;
 
     const clipPathId = useMemo(() => `clip-path-${Math.random().toString(36).substr(2, 9)}`, []);
@@ -101,13 +94,13 @@ export const Path = memo<PathProps>(
       <G>
         <Defs>
           <ClipPath id={clipPathId}>
-            {disableAnimations ? (
-              <Rect height={rect.height} width={rect.width} x={rect.x} y={rect.y} />
-            ) : (
+            {animate ? (
               <AnimatedSvgRect
                 rectProps={{ height: rect.height, x: rect.x, y: rect.y }}
                 width={rect.width}
               />
+            ) : (
+              <Rect height={rect.height} width={rect.width} x={rect.x} y={rect.y} />
             )}
           </ClipPath>
         </Defs>

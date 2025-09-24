@@ -33,7 +33,6 @@ export const DottedBar = memo<DottedBarProps>(
     d,
     fill,
     fillOpacity = 1,
-    disableAnimations = true,
     stroke,
     strokeWidth,
     dotSize = 2,

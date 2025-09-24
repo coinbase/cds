@@ -43,7 +43,6 @@ export const GradientBar = memo<GradientBarProps>(
     d,
     fill,
     fillOpacity = 1,
-    disableAnimations = true,
     stroke,
     strokeWidth,
     startColor,

@@ -51,10 +51,6 @@ export type BarStackGroupProps = {
    */
   fillOpacity?: number;
   /**
-   * Disable animations for the bars.
-   */
-  disableAnimations?: boolean;
-  /**
    * Default stroke color for the bar outline.
    */
   stroke?: string;

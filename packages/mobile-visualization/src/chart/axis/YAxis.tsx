@@ -40,7 +40,6 @@ export const YAxis = memo<YAxisProps>(
     classNames,
     GridLineComponent = DottedLine,
     tickMarkLabelGap = 1,
-    disableAnimations,
     dataKey,
     size = 44,
     minTickLabelGap = 0,
@@ -53,14 +52,12 @@ export const YAxis = memo<YAxisProps>(
     const theme = useTheme();
     // todo: probably switch to our own id generator, use id seems to be for accessibility
     const registrationId = useId();
-    const context = useChartContext();
+    const { animate, getYScale, getYAxis } = useChartContext();
     const { registerAxis, unregisterAxis, getAxisBounds } = useChartDrawingAreaContext();
-    const { getYScale, getYAxis } = context;
 
     const yScale = getYScale?.(axisId);
     const yAxis = getYAxis?.(axisId);
 
-    const shouldAnimate = disableAnimations !== undefined ? !disableAnimations : context.animate;
     const axisBounds = getAxisBounds(registrationId);
 
     // Define axis styling using theme

@@ -37,10 +37,6 @@ export type BarPlotProps = {
    */
   fillOpacity?: number;
   /**
-   * Disable animations for the bars.
-   */
-  disableAnimations?: boolean;
-  /**
    * Default stroke color for the bar outline.
    */
   stroke?: string;
@@ -89,7 +85,6 @@ export const BarPlot = memo<BarPlotProps>(
     barPadding = 0.1,
     BarComponent: defaultBarComponent,
     fillOpacity: defaultFillOpacity,
-    disableAnimations,
     stroke: defaultStroke,
     strokeWidth: defaultStrokeWidth,
     borderRadius: defaultBorderRadius,
@@ -168,7 +163,6 @@ export const BarPlot = memo<BarPlotProps>(
               barMinSize={barMinSize}
               barPadding={barPadding}
               borderRadius={defaultBorderRadius}
-              disableAnimations={disableAnimations}
               fillOpacity={defaultFillOpacity}
               roundBaseline={roundBaseline}
               series={group.series}

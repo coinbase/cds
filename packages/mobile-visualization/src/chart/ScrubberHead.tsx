@@ -77,11 +77,6 @@ export type ScrubberHeadProps = /*Omit<SVGProps<SVGCircleElement>, 'r' | 'opacit
      */
     labelPadding?: ThemeVars.Space;
     /**
-     * Whether to disable animations for this scrubber head.
-     * Overrides the chart context's disableAnimations setting.
-     */
-    disableAnimations?: boolean;
-    /**
      * Label text color
      * If not set, will default to the stroke for the scrubber head
      */
@@ -116,7 +111,6 @@ export const ScrubberHead = memo(
         labelBounds,
         labelSide = 'auto',
         labelPadding = 2,
-        disableAnimations: disableAnimationsProp,
         labelTextColor,
         labelBackgroundColor = 'var(--color-bg)',
         dataKey,
@@ -124,18 +118,9 @@ export const ScrubberHead = memo(
       },
       ref,
     ) => {
-      const {
-        getSeries,
-        animate: animateContext,
-        getXScale,
-        getYScale,
-        getXAxis,
-        getYAxis,
-        getSeriesData,
-      } = useChartContext();
+      const { getSeries, animate, getXScale, getYScale, getXAxis, getYAxis, getSeriesData } =
+        useChartContext();
       const pointRef = useRef<PointRef>(null);
-      const shouldAnimate =
-        disableAnimationsProp !== undefined ? !disableAnimationsProp : animateContext;
 
       const { highlightedIndex } = useHighlightContext();
 
