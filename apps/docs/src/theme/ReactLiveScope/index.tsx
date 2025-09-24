@@ -71,6 +71,7 @@ import { Spinner } from '@coinbase/cds-web/loaders/Spinner';
 import * as CDSMedia from '@coinbase/cds-web/media';
 import { MultiContentModule } from '@coinbase/cds-web/multi-content-module/MultiContentModule';
 import * as CDSNavigation from '@coinbase/cds-web/navigation';
+import * as CDSNumbers from '@coinbase/cds-web/numbers';
 import * as CDSOverlays from '@coinbase/cds-web/overlays';
 import { useToast } from '@coinbase/cds-web/overlays/useToast';
 import { PageFooter } from '@coinbase/cds-web/page/PageFooter';
@@ -155,6 +156,8 @@ const ReactLiveScope: Record<string, unknown> = {
   useStepper,
   // typography
   ...CDSTypography,
+  // numbers
+  ...CDSNumbers,
   Tag,
   // input
   ...CDSButtons,
