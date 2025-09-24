@@ -1,6 +1,7 @@
 import { forwardRef, memo, useImperativeHandle, useRef } from 'react';
 import type { SharedProps } from '@coinbase/cds-common/types';
 import { useChartContext, useScrubberContext } from '@coinbase/cds-common/visualizations/charts';
+import { useTheme } from '@coinbase/cds-mobile';
 
 import { Point, type PointProps, type PointRef } from '../point';
 
@@ -75,6 +76,7 @@ export const ScrubberHead = memo(
       },
       ref,
     ) => {
+      const theme = useTheme();
       const { getSeries, getXScale, getYScale, getSeriesData } = useChartContext();
       const pointRef = useRef<PointRef>(null);
 
@@ -143,7 +145,7 @@ export const ScrubberHead = memo(
         }
       }
 
-      const pointColor = color || targetSeries?.color || 'var(--color-fgPrimary)';
+      const pointColor = color || targetSeries?.color || theme.color.fgPrimary;
 
       return (
         <Point
@@ -154,7 +156,7 @@ export const ScrubberHead = memo(
           opacity={opacity}
           pulse={pulse}
           radius={radius}
-          stroke="var(--color-bg)"
+          stroke={theme.color.bg}
           strokeWidth={2}
           {...props}
         />

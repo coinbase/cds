@@ -10,10 +10,13 @@ import React, {
 import { Animated, StyleSheet } from 'react-native';
 import { Circle, G } from 'react-native-svg';
 import type { SharedProps } from '@coinbase/cds-common/types';
-import { projectPoint, useChartContext } from '@coinbase/cds-common/visualizations/charts';
+import {
+  projectPoint,
+  useChartContext,
+  useScrubberContext,
+} from '@coinbase/cds-common/visualizations/charts';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 
-import { useHighlightContext } from '../Chart';
 import { ChartText, type ChartTextProps } from '../text';
 import type { ChartTextChildren } from '../text/ChartText';
 
@@ -270,7 +273,7 @@ export const Point = memo(
       const pulseOpacity = useRef(new Animated.Value(0)).current;
       const scaleValue = useRef(new Animated.Value(1)).current;
       const { getXScale, getYScale, animate } = useChartContext();
-      const { highlightedIndex } = useHighlightContext();
+      const { highlightedIndex } = useScrubberContext();
       const [isHovered, setIsHovered] = useState(false);
 
       const xScale = getXScale(xAxisId);

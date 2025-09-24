@@ -88,7 +88,7 @@ export const BarChart = memo<BarChartProps>(
     stackGap,
     barMinSize,
     stackMinSize,
-    disableHighlighting = true,
+    enableScrubbing = false,
     ...chartProps
   }) => {
     const calculatedPadding = useMemo(
@@ -179,7 +179,7 @@ export const BarChart = memo<BarChartProps>(
 
     return (
       <Chart
-        disableHighlighting={disableHighlighting}
+        enableScrubbing={enableScrubbing}
         {...chartProps}
         padding={calculatedPadding}
         series={seriesToRender}

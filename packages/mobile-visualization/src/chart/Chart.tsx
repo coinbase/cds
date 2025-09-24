@@ -1,8 +1,8 @@
-import React, { createContext, memo, useCallback, useContext, useMemo, useState } from 'react';
+import React, { memo, useCallback, useMemo, useState } from 'react';
 import { StyleSheet, type ViewStyle } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import { runOnJS } from 'react-native-reanimated';
-import { Svg } from 'react-native-svg';
+import { Svg, Text } from 'react-native-svg';
 import type { Rect } from '@coinbase/cds-common/types';
 import {
   type AxisConfig,
@@ -23,6 +23,8 @@ import {
   getStackedSeriesData as calculateStackedSeriesData,
   isCategoricalScale,
   type RegisteredAxis,
+  ScrubberContext,
+  type ScrubberContextValue,
   type Series,
 } from '@coinbase/cds-common/visualizations/charts';
 import { useLayout } from '@coinbase/cds-mobile/hooks/useLayout';
@@ -33,24 +35,6 @@ const styles = StyleSheet.create({
     overflow: 'visible',
   },
 });
-
-// Chart highlighting context
-export type HighlightContextValue = {
-  /** The currently highlighted data index, or undefined if nothing is highlighted */
-  highlightedIndex?: number;
-  /** Update the highlighted data index */
-  updateHighlightedIndex: (index: number | undefined) => void;
-};
-
-export const HighlightContext = createContext<HighlightContextValue | undefined>(undefined);
-
-export const useHighlightContext = (): HighlightContextValue => {
-  const context = useContext(HighlightContext);
-  if (!context) {
-    throw new Error('useHighlightContext must be used within a Chart component');
-  }
-  return context;
-};
 
 export type ChartBaseProps = {
   /**
@@ -68,10 +52,10 @@ export type ChartBaseProps = {
    */
   animate?: boolean;
   /**
-   * Disables all highlighting interactions (pan gestures).
-   * When true, no highlighting will occur and scrubber components won't be interactive.
+   * Enables scrubbing interactions (pan gestures for highlighting).
+   * When true, allows highlighting and makes scrubber components interactive.
    */
-  disableHighlighting?: boolean;
+  enableScrubbing?: boolean;
   /**
    * Configuration for x-axis(es). Can be a single config or array of configs.
    * If array, first axis becomes default if no id is specified.
@@ -91,7 +75,7 @@ export type ChartBaseProps = {
    * Callback fired when the highlighted item changes.
    * Receives the dataIndex of the highlighted item or null when no item is highlighted.
    */
-  onHighlightChange?: (dataIndex: number | null) => void;
+  onScrubberPosChange?: (dataIndex: number | null) => void;
   /**
    * Chart width. If not provided, will use the container's measured width.
    */
@@ -112,11 +96,11 @@ export const Chart = memo<ChartProps>(
   ({
     series,
     animate = true,
-    disableHighlighting,
+    enableScrubbing = false,
     xAxis: xAxisConfigInput,
     yAxis: yAxisConfigInput,
     padding: paddingInput,
-    onHighlightChange,
+    onScrubberPosChange,
     children,
     width = '100%',
     height = '100%',
@@ -336,39 +320,32 @@ export const Chart = memo<ChartProps>(
       [xScales, xAxes],
     );
 
-    // Unified touch/pan handling
     const handlePositionUpdate = useCallback(
       (x: number) => {
-        if (disableHighlighting || !series || series.length === 0 || xScales.size === 0) return;
+        if (!enableScrubbing || !series || series.length === 0 || xScales.size === 0) return;
 
         const dataIndex = getDataIndexFromX(x);
         if (dataIndex !== highlightedIndex) {
           setHighlightedIndex(dataIndex);
-          onHighlightChange?.(dataIndex);
+          onScrubberPosChange?.(dataIndex);
         }
       },
-      [
-        disableHighlighting,
-        series,
-        xScales,
-        getDataIndexFromX,
-        highlightedIndex,
-        onHighlightChange,
-      ],
+      [enableScrubbing, series, xScales, getDataIndexFromX, highlightedIndex, onScrubberPosChange],
     );
 
     const handleInteractionEnd = useCallback(() => {
-      if (disableHighlighting) return;
+      if (!enableScrubbing) return;
       setHighlightedIndex(undefined);
-      onHighlightChange?.(null);
-    }, [disableHighlighting, onHighlightChange]);
+      onScrubberPosChange?.(null);
+    }, [enableScrubbing, onScrubberPosChange]);
 
-    const highlightContextValue: HighlightContextValue = useMemo(
+    const scrubberContextValue: ScrubberContextValue = useMemo(
       () => ({
+        scrubbingEnabled: enableScrubbing,
         highlightedIndex,
         updateHighlightedIndex: setHighlightedIndex,
       }),
-      [highlightedIndex],
+      [enableScrubbing, highlightedIndex],
     );
 
     const getXAxis = useCallback((id?: string) => xAxes.get(id ?? defaultAxisId), [xAxes]);
@@ -519,9 +496,8 @@ export const Chart = memo<ChartProps>(
       [chartRect, registerAxis, unregisterAxis, getAxisBounds], // These functions are stable
     );
 
-    // Pan gesture for chart highlighting and scrubbing
     const panGesture = useMemo(() => {
-      if (disableHighlighting) return null;
+      if (!enableScrubbing) return;
 
       return Gesture.Pan()
         .activateAfterLongPress(110)
@@ -537,7 +513,7 @@ export const Chart = memo<ChartProps>(
         .onTouchesCancelled(() => {
           runOnJS(handleInteractionEnd)();
         });
-    }, [disableHighlighting, handlePositionUpdate, handleInteractionEnd]);
+    }, [enableScrubbing, handlePositionUpdate, handleInteractionEnd]);
 
     const containerStyles = useMemo(() => {
       const dynamicStyles: any = {};
@@ -564,13 +540,13 @@ export const Chart = memo<ChartProps>(
     return (
       <ChartDrawingAreaContext.Provider value={chartDrawingAreaContextValue}>
         <ChartContext.Provider value={contextValue}>
-          <HighlightContext.Provider value={highlightContextValue}>
+          <ScrubberContext.Provider value={scrubberContextValue}>
             {panGesture ? (
               <GestureDetector gesture={panGesture}>{chartContent}</GestureDetector>
             ) : (
               chartContent
             )}
-          </HighlightContext.Provider>
+          </ScrubberContext.Provider>
         </ChartContext.Provider>
       </ChartDrawingAreaContext.Provider>
     );

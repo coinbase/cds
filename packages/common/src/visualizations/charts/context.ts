@@ -103,3 +103,23 @@ export const useChartDrawingAreaContext = (): ChartDrawingAreaContextValue => {
   }
   return context;
 };
+
+// Chart highlighting context
+export type ScrubberContextValue = {
+  /** Whether scrubbing is enabled on the parent Chart component */
+  scrubbingEnabled: boolean;
+  /** The currently highlighted data index, or undefined if nothing is highlighted */
+  highlightedIndex?: number;
+  /** Update the highlighted data index */
+  updateHighlightedIndex: (index: number | undefined) => void;
+};
+
+export const ScrubberContext = createContext<ScrubberContextValue | undefined>(undefined);
+
+export const useScrubberContext = (): ScrubberContextValue => {
+  const context = useContext(ScrubberContext);
+  if (!context) {
+    throw new Error('useScrubberContext must be used within a Chart component');
+  }
+  return context;
+};

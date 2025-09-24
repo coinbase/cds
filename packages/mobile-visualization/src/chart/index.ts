@@ -5,5 +5,5 @@ export * from './Chart';
 export * from './line';
 export * from './Path';
 export * from './point';
-export * from './ScrubberLine';
+export * from './scrubber';
 export * from './text';

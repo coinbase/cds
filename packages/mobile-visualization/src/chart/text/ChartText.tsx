@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useMemo } from 'react';
+import React, { memo, useEffect, useMemo, useState } from 'react';
 import { G, Rect as SvgRect, Text, type TextProps } from 'react-native-svg';
 import type { ThemeVars } from '@coinbase/cds-common';
 import type { ElevationLevels, Rect, SharedProps } from '@coinbase/cds-common/types';
@@ -128,7 +128,8 @@ export const ChartText = memo<ChartTextProps>(
       [chartWidth, chartHeight],
     );
 
-    const [textBBox, onTextLayout] = useLayout();
+    const [textLayoutRect, onTextLayout] = useLayout();
+    const [textBBox, setTextBBox] = useState<Rect | null>(null);
     const isDimensionsReady = disableRepositioning || textBBox !== null;
 
     const backgroundRectDimensions = useMemo(() => {
@@ -178,14 +179,31 @@ export const ChartText = memo<ChartTextProps>(
 
     // Compose the final reported rect including any overflow translation applied
     const reportedRect = useMemo(() => {
-      if (!textBBox) return null;
+      if (!backgroundRectDimensions) return null;
       return {
-        x: textBBox.x + overflowAmount.x,
-        y: textBBox.y + overflowAmount.y,
-        width: textBBox.width,
-        height: textBBox.height,
+        x: backgroundRectDimensions.x + overflowAmount.x,
+        y: backgroundRectDimensions.y + overflowAmount.y,
+        width: backgroundRectDimensions.width,
+        height: backgroundRectDimensions.height,
       };
-    }, [textBBox, overflowAmount.x, overflowAmount.y]);
+    }, [backgroundRectDimensions, overflowAmount.x, overflowAmount.y]);
+
+    // Convert layout rect to bbox format when text layout changes
+    useEffect(() => {
+      if (textLayoutRect.width > 0 && textLayoutRect.height > 0) {
+        // The layout rect already has the correct position based on text anchor and alignment
+        // We just need to apply any dx/dy offsets
+        const bboxX = textLayoutRect.x + (dx ? Number(dx) : 0);
+        const bboxY = textLayoutRect.y + (dy ? Number(dy) : 0);
+
+        setTextBBox({
+          x: bboxX,
+          y: bboxY,
+          width: textLayoutRect.width,
+          height: textLayoutRect.height,
+        });
+      }
+    }, [textLayoutRect, dx, dy]);
 
     // send latest calculated dimensions (adjusted for translation) to parent
     useEffect(() => {
@@ -203,19 +221,36 @@ export const ChartText = memo<ChartTextProps>(
             rx={borderRadius ? theme.borderRadius[borderRadius] : undefined}
             ry={borderRadius ? theme.borderRadius[borderRadius] : undefined}
             width={backgroundRectDimensions.width}
-            x={backgroundRectDimensions.x}
-            y={backgroundRectDimensions.y}
+            x={backgroundRectDimensions.x + overflowAmount.x}
+            y={backgroundRectDimensions.y + overflowAmount.y}
           />
         )}
+        <G transform={`translate(${overflowAmount.x}, ${overflowAmount.y})`}>
+          <Text
+            alignmentBaseline={alignmentBaseline}
+            dx={dx}
+            dy={dy}
+            fill={effectiveColor}
+            fontFamily={fontFamily}
+            fontSize={fontSize}
+            fontWeight={fontWeight}
+            textAnchor={textAnchor}
+            x={x}
+            y={y}
+          >
+            {children}
+          </Text>
+        </G>
         <Text
           alignmentBaseline={alignmentBaseline}
           dx={dx}
           dy={dy}
-          fill={effectiveColor}
+          fill="transparent"
           fontFamily={fontFamily}
           fontSize={fontSize}
           fontWeight={fontWeight}
           onLayout={onTextLayout}
+          opacity={0}
           textAnchor={textAnchor}
           x={x}
           y={y}

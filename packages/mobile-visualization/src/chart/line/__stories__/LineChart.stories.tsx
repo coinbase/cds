@@ -20,8 +20,7 @@ import { XAxis } from '../../axis';
 import { Chart } from '../../Chart';
 import { PeriodSelector } from '../../PeriodSelector';
 import { Point } from '../../point';
-import { ScrubberHead } from '../../ScrubberHead';
-import { ScrubberLine } from '../../ScrubberLine';
+import { Scrubber } from '../../scrubber';
 import { DottedLine, GradientLine, Line, LineChart, ReferenceLine, SolidLine } from '..';
 
 const defaultChartHeight = 250;
@@ -115,6 +114,7 @@ export const BasicLineChart = () => {
 
   return (
     <LineChart
+      enableScrubbing
       showYAxis
       height={defaultChartHeight}
       renderPoints={() => true}
@@ -132,7 +132,7 @@ export const BasicLineChart = () => {
         showGrid: true,
       }}
     >
-      <ScrubberLine />
+      <Scrubber />
     </LineChart>
   );
 };
@@ -222,7 +222,7 @@ export const AssetPrice = () => {
     });
   }, []);
 
-  const onHighlightChange = useCallback((highlightedIndex: number | null) => {
+  const onScrubberPosChange = useCallback((highlightedIndex: number | null) => {
     setHighlightedItemIndex(highlightedIndex ?? null);
   }, []);
 
@@ -267,7 +267,7 @@ export const AssetPrice = () => {
       <LineChart
         showArea
         height={defaultChartHeight}
-        onHighlightChange={onHighlightChange}
+        onScrubberPosChange={onScrubberPosChange}
         padding={{ top: 24, bottom: 52, left: 0, right: 0 }}
         series={[
           {
@@ -431,7 +431,7 @@ export const BTCPriceChart = () => {
     };
   }, [currentData]);
 
-  const onHighlightChange = useCallback((item: number | null) => {
+  const onScrubberPosChange = useCallback((item: number | null) => {
     setHighlightedItem(item);
     setIsHovering(!!item);
   }, []);
@@ -487,7 +487,7 @@ export const BTCPriceChart = () => {
       <VStack gap={3} width="100%">
         <Chart
           height={defaultChartHeight}
-          onHighlightChange={onHighlightChange}
+          onScrubberPosChange={onScrubberPosChange}
           padding={{ left: 0, right: 20, bottom: 0, top: 40 }}
           series={[
             {
@@ -569,7 +569,7 @@ export const ColorShiftChart = () => {
     };
   }, [currentData]);
 
-  const onHighlightChange = useCallback((item: number | null) => {
+  const onScrubberPosChange = useCallback((item: number | null) => {
     setHighlightedItem(item);
     setIsHovering(!!item);
   }, []);
@@ -630,7 +630,7 @@ export const ColorShiftChart = () => {
         showXAxis
         dataKey={dataKey}
         height={defaultChartHeight}
-        onHighlightChange={onHighlightChange}
+        onScrubberPosChange={onScrubberPosChange}
         padding={{ top: 48, left: 0, right: 0, bottom: 0 }}
         series={[
           {
@@ -847,7 +847,7 @@ export const PriceChart = () => {
     };
   }, [currentData]);
 
-  const onHighlightChange = useCallback((item: number | null) => {
+  const onScrubberPosChange = useCallback((item: number | null) => {
     setIsHovering(item !== null);
   }, []);
 
@@ -919,7 +919,7 @@ export const PriceChart = () => {
         showArea
         dataKey={dataKey}
         height={defaultChartHeight}
-        onHighlightChange={onHighlightChange}
+        onScrubberPosChange={onScrubberPosChange}
         padding={{ left: 0, right: 24, bottom: 24, top: 24 }}
         series={[
           {
@@ -952,19 +952,7 @@ export const PriceChart = () => {
           },
         ]}
         yAxis={{ domainLimit: 'strict' }}
-      >
-        <ScrubberLine
-          label={(dataIndex: number | null) => {
-            if (dataIndex === null) return null;
-            const date = currentTimestamps[dataIndex];
-            return new Date(date).toLocaleDateString('en-US', {
-              month: 'long',
-              year: 'numeric',
-            });
-          }}
-        />
-        <ScrubberHead seriesId="price" x={latestPriceCoords.x} y={latestPriceCoords.y} />
-      </LineChart>
+      ></LineChart>
       <PeriodSelector activeTab={activeTab} onChange={(tab) => setActiveTab(tab)} tabs={tabs} />
     </VStack>
   );
@@ -1068,20 +1056,7 @@ export const ForecastChart = () => {
         tickLabelFormatter: formatXAxisLabel,
         tickInterval: 4,
       }}
-    >
-      <ScrubberLine
-        label={(dataIndex: number | null) => {
-          if (dataIndex === null) return null;
-          const date = allDataPoints[dataIndex].date;
-          return new Date(date).toLocaleDateString('en-US', {
-            month: 'long',
-            year: 'numeric',
-          });
-        }}
-      />
-      <ScrubberHead seriesId="historical" />
-      <ScrubberHead seriesId="forecast" />
-    </LineChart>
+    ></LineChart>
   );
 };
 
@@ -1103,6 +1078,27 @@ const LineChartStories = () => {
     <ExampleScreen>
       <Example title="Basic Line Chart">
         <BasicLineChart />
+      </Example>
+      <Example title="test">
+        <LineChart
+          enableScrubbing
+          showArea
+          showYAxis
+          curve="monotone"
+          height={150}
+          padding={16}
+          series={[
+            {
+              id: 'prices',
+              data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+            },
+          ]}
+          yAxis={{
+            showGrid: true,
+          }}
+        >
+          <Scrubber />
+        </LineChart>
       </Example>
       <Example title="Asset Price">
         <AssetPrice />

@@ -1,12 +1,15 @@
 import React, { forwardRef, memo, useEffect, useImperativeHandle, useMemo, useState } from 'react';
 import type { SVGProps } from 'react';
 import type { SharedProps } from '@coinbase/cds-common/types';
-import { projectPoint, useChartContext } from '@coinbase/cds-common/visualizations/charts';
+import {
+  projectPoint,
+  useChartContext,
+  useScrubberContext,
+} from '@coinbase/cds-common/visualizations/charts';
 import { cx } from '@coinbase/cds-web';
 import { css } from '@linaria/core';
 import { m as motion, useAnimate } from 'framer-motion';
 
-import { useScrubberContext } from '../Chart';
 import { ChartText, type ChartTextProps } from '../text';
 import type { ChartTextChildren } from '../text/ChartText';
 

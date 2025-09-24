@@ -8,6 +8,7 @@ import React, {
   useRef,
   useState,
 } from 'react';
+import { G, Rect } from 'react-native-svg';
 import { useRefMap } from '@coinbase/cds-common/hooks/useRefMap';
 import type { SharedProps } from '@coinbase/cds-common/types';
 import {
@@ -19,10 +20,8 @@ import {
   useChartContext,
   useChartDrawingAreaContext,
 } from '@coinbase/cds-common/visualizations/charts';
-import { useTheme } from '@coinbase/cds-web';
-import { m } from 'framer-motion';
+import { useTheme } from '@coinbase/cds-mobile';
 
-import { axisTickLabelsInitialAnimationVariants } from '../axis';
 import { ReferenceLine, type ReferenceLineProps } from '../line';
 import type { PointProps } from '../point';
 
@@ -69,26 +68,6 @@ export type ScrubberProps = SharedProps &
     scrubberLabelConfig?: ReferenceLineProps['labelConfig'];
 
     /**
-     * Custom styles for scrubber elements.
-     */
-    scrubberStyles?: {
-      scrubberHead?: React.CSSProperties;
-      scrubberLine?: React.CSSProperties;
-      scrubberLabel?: React.CSSProperties;
-      scrubberHeadLabel?: React.CSSProperties;
-    };
-
-    /**
-     * Custom class names for scrubber elements.
-     */
-    scrubberClassNames?: {
-      scrubberHead?: string;
-      scrubberLine?: string;
-      scrubberLabel?: string;
-      scrubberHeadLabel?: string;
-    };
-
-    /**
      * Custom component replacements.
      */
     scrubberComponents?: {
@@ -124,13 +103,11 @@ export const Scrubber = memo(
         hideOverlay,
         testID,
         pulse,
-        scrubberStyles,
-        scrubberClassNames,
       },
       ref,
     ) => {
       const theme = useTheme();
-      const scrubberGroupRef = useRef<SVGGElement>(null);
+      const scrubberGroupRef = useRef<React.ComponentRef<typeof G>>(null);
       const scrubberHeadRefs = useRefMap<ScrubberHeadRef>();
 
       const { highlightedIndex } = useScrubberContext();
@@ -566,25 +543,13 @@ export const Scrubber = memo(
 
       // todo: figure out if we should disable 'pulse' animation when scrubbing
       return (
-        <m.g
-          ref={scrubberGroupRef}
-          data-component="scrubber-group"
-          data-testid={testID}
-          {...(animate
-            ? {
-                animate: 'animate',
-                exit: 'exit',
-                initial: 'initial',
-                variants: axisTickLabelsInitialAnimationVariants,
-              }
-            : {})}
-        >
+        <G ref={scrubberGroupRef} data-component="scrubber-group" data-testid={testID}>
           {!hideOverlay &&
             dataX !== undefined &&
             highlightedIndex !== undefined &&
             pixelX !== undefined && (
-              <rect
-                fill="var(--color-bg)"
+              <Rect
+                fill={theme.color.bg}
                 height={drawingArea.height}
                 opacity={0.8}
                 width={drawingArea.x + drawingArea.width - pixelX}
@@ -594,31 +559,26 @@ export const Scrubber = memo(
             )}
           {!hideScrubberLine && highlightedIndex !== undefined && dataX !== undefined && (
             <ScrubberLineComponent
-              className={scrubberClassNames?.scrubberLine}
               dataX={dataX}
               label={scrubberLabel}
               labelConfig={scrubberLabelConfig}
               labelPosition="top"
-              style={scrubberStyles?.scrubberLine}
             />
           )}
           {headPositions.map((scrubberHead: any) => {
             if (!scrubberHead) return null;
             const adjustment = labelPositioning.adjustments.get(scrubberHead.targetSeries.id);
-            const dotStroke = scrubberHead.targetSeries?.color || 'var(--color-fgPrimary)';
+            const dotStroke = scrubberHead.targetSeries?.color || theme.color.fgPrimary;
 
             return (
-              <g key={scrubberHead.targetSeries.id} data-component="scrubber-head">
-                {/* todo: fix this type cast, seems to be due to custom components */}
+              <G key={scrubberHead.targetSeries.id} data-component="scrubber-head">
                 <ScrubberHeadComponent
-                  ref={createScrubberHeadRef(scrubberHead.targetSeries.id) as any}
-                  className={scrubberClassNames?.scrubberHead}
+                  ref={createScrubberHeadRef(scrubberHead.targetSeries.id)}
                   color={scrubberHead.targetSeries?.color}
                   dataX={scrubberHead.x}
                   dataY={scrubberHead.y}
                   pulse={pulse}
                   seriesId={scrubberHead.targetSeries.id}
-                  style={scrubberStyles?.scrubberHead}
                   testID={testID ? `${testID}-${scrubberHead.targetSeries.id}-dot` : undefined}
                 />
                 {scrubberHead.label &&
@@ -629,9 +589,8 @@ export const Scrubber = memo(
 
                     return (
                       <ScrubberHeadLabelComponent
-                        background="var(--color-bg)"
+                        background={theme.color.bg}
                         bounds={drawingArea}
-                        className={scrubberClassNames?.scrubberHeadLabel}
                         color={dotStroke}
                         dx={16}
                         onDimensionsChange={({ width, height }) =>
@@ -645,7 +604,6 @@ export const Scrubber = memo(
                         }
                         padding={labelPadding}
                         preferredSide={finalSide}
-                        style={scrubberStyles?.scrubberHeadLabel}
                         testID={
                           testID ? `${testID}-${scrubberHead.targetSeries.id}-label` : undefined
                         }
@@ -656,10 +614,10 @@ export const Scrubber = memo(
                       </ScrubberHeadLabelComponent>
                     );
                   })()}
-              </g>
+              </G>
             );
           })}
-        </m.g>
+        </G>
       );
     },
   ),
