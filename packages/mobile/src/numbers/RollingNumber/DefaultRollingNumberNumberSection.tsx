@@ -4,7 +4,7 @@ import type { View } from 'react-native';
 import Animated from 'react-native-reanimated';
 
 import { HStack } from '../../layout';
-import { Text } from '../Text';
+import { Text } from '../../typography/Text';
 
 import { DefaultRollingNumberDigit } from './DefaultRollingNumberDigit';
 import { DefaultRollingNumberMask } from './DefaultRollingNumberMask';

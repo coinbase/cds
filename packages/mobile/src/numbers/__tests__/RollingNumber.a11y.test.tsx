@@ -1,9 +1,9 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react-native';
 
-import { DefaultThemeProvider } from '../../../utils/testHelpers';
-import { Text } from '../../Text';
-import { RollingNumber } from '../RollingNumber';
+import { Text } from '../../typography/Text';
+import { DefaultThemeProvider } from '../../utils/testHelpers';
+import { RollingNumber } from '../RollingNumber/RollingNumber';
 
 const getSrOnlyText = (live: 'polite' | 'assertive') => {
   const nodes = screen.UNSAFE_queryAllByType(Text);

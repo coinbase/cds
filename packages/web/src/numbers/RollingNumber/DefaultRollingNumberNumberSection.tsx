@@ -4,7 +4,7 @@ import { m } from 'framer-motion';
 
 import { cx } from '../../cx';
 import { useHasMounted } from '../../hooks/useHasMounted';
-import { Text } from '../Text';
+import { Text } from '../../typography/Text';
 
 import { DefaultRollingNumberDigit } from './DefaultRollingNumberDigit';
 import { DefaultRollingNumberMask } from './DefaultRollingNumberMask';

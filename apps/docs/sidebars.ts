@@ -99,9 +99,15 @@ const sidebars: SidebarsConfig = {
             { type: 'doc', id: 'components/typography/Link/link', label: 'Link' },
             { type: 'doc', id: 'components/typography/Tag/tag', label: 'Tag' },
             { type: 'doc', id: 'components/typography/Text/text', label: 'Text' },
+          ],
+        },
+        {
+          type: 'category',
+          label: 'Numbers',
+          items: [
             {
               type: 'doc',
-              id: 'components/typography/RollingNumber/rollingNumber',
+              id: 'components/numbers/RollingNumber/rollingNumber',
               label: 'RollingNumber',
             },
           ],

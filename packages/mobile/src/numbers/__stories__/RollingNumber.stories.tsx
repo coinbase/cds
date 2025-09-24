@@ -9,10 +9,10 @@ import { useTheme } from '../../hooks/useTheme';
 import { Icon } from '../../icons/Icon';
 import { HStack } from '../../layout/HStack';
 import { VStack } from '../../layout/VStack';
-import { RollingNumber } from '../../typography/RollingNumber';
+import { Text } from '../../typography/Text';
 import { ProgressBar } from '../../visualizations/ProgressBar';
+import { RollingNumber } from '../RollingNumber';
 import { DefaultRollingNumberNodeSection } from '../RollingNumber/DefaultRollingNumberNodeSection';
-import { Text } from '../Text';
 
 const fonts = [
   'display1',

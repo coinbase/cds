@@ -7,7 +7,7 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 
-import { Text } from '../Text';
+import { Text } from '../../typography/Text';
 
 import { DefaultRollingNumberMask } from './DefaultRollingNumberMask';
 import {

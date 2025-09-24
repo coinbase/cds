@@ -4,7 +4,7 @@ import { css } from '@linaria/core';
 import { animate, m, type ValueAnimationOptions } from 'framer-motion';
 
 import { cx } from '../../cx';
-import { Text } from '../Text';
+import { Text } from '../../typography/Text';
 
 import { DefaultRollingNumberMask } from './DefaultRollingNumberMask';
 import {

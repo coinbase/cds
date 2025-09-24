@@ -6,9 +6,9 @@ import { Button } from '../../buttons/Button';
 import { Icon } from '../../icons';
 import { HStack } from '../../layout';
 import { VStack } from '../../layout/VStack';
+import { Text } from '../../typography/Text';
 import { ProgressBar } from '../../visualizations/ProgressBar';
 import { RollingNumber } from '../RollingNumber/RollingNumber';
-import { Text } from '../Text';
 
 export default {
   title: 'Components/RollingNumber',

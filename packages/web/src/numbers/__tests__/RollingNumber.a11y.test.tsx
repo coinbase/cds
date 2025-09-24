@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 
-import { DefaultThemeProvider } from '../../../utils/test';
-import { RollingNumber } from '../RollingNumber';
+import { DefaultThemeProvider } from '../../utils/test';
+import { RollingNumber } from '../RollingNumber/RollingNumber';
 
 describe('RollingNumber accessibility (screen reader only content)', () => {
   it('renders hidden aria-live region with composed prefix + formatted + suffix by default', () => {

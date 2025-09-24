@@ -3,7 +3,7 @@ import { css } from '@linaria/core';
 import { m } from 'framer-motion';
 
 import { cx } from '../../cx';
-import { Text } from '../Text';
+import { Text } from '../../typography/Text';
 
 import type { RollingNumberSymbolComponent, RollingNumberSymbolProps } from './RollingNumber';
 
