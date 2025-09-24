@@ -53,6 +53,11 @@ const baseStylesheet = StyleSheet.create({
   },
   screenReaderOnly: {
     position: 'absolute',
+    // Snap to parent size so a11y hit area matches visible content
+    top: 0,
+    right: 0,
+    bottom: 0,
+    left: 0,
     // Use color: transparent instead of opacity: 0 to avoid issues with screen readers
     color: 'transparent',
   },
