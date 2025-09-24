@@ -145,9 +145,20 @@ You can customize the number color and its animation transitions. Configure `y` 
 
 #### `transition` prop:
 
-- Type: `{ y?: WithTimingConfig | WithSpringConfig; color?: WithTimingConfig | WithSpringConfig }`
-- Optional `type`: `'timing' | 'spring'` on `y` and `color`; when omitted, defaults to `'timing'`
-- Default: `{ y: { duration: durations.moderate3, easing: Easing.bezier(...curves.global) }, color: { duration: durations.slow4, easing: Easing.bezier(...curves.global) } }`
+- Type: `y?: ({ type: 'timing' } & WithTimingConfig) | ({ type: 'spring' } & WithSpringConfig);
+color?: ({ type: 'timing' } & WithTimingConfig) | ({ type: 'spring' } & WithSpringConfig);`
+- Default: `{
+  y: {
+    type: 'timing',
+    duration: durations.moderate3,
+    easing: Easing.bezier(...curves.global),
+  },
+  color: {
+    type: 'timing',
+    duration: durations.slow4,
+    easing: Easing.bezier(...curves.global),
+  },
+}`
 
 ```tsx
 function ColorAndTransition() {
@@ -609,7 +620,7 @@ High-level anatomy of RollingNumber (mobile) and its sections:
 
 ```text
 RollingNumber (root: HStack)
-  ├── invisibleMeasuredDigits <Text x10>  (offscreen, used for measurements)
+  ├── invisibleMeasuredDigits <Text>0</Text>  (offscreen, used for measuring digit height)
   ├── screenReaderOnly <Text accessibilityLiveRegion>  (hidden a11y text)
   └── HStack (visibleContent)
        ├── NodeSection (prefix)               ← your ReactNode prefix
@@ -627,9 +638,8 @@ Per-digit rendering inside a NumberSection:
 NumberSection
   ├── Symbol(s)     (e.g., currency, group, decimal)
   └── Digit(s)
-       └── Mask (RollingNumberMaskComponent)
-            └── Animated.View (digit container)
-                 ├── non-active digits above
-                 ├── active digit
-                 └── non-active digits below
+       ├── Fallback <Text> (rendered until digitHeight is measured)
+       └── Measured
+            └── Mask (RollingNumberMaskComponent)
+                 └── Animated.View (digit container): vertical stack of digits 0-9 (use translateY to position the current digit)
 ```
