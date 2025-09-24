@@ -28,13 +28,11 @@ export const SolidLine = memo<SolidLineProps>(
     const context = useChartContext();
     const theme = useTheme();
 
-    const effectiveStroke = stroke ?? theme.color.bgLine;
-
     return (
       <Path
         disableAnimations={disableAnimations !== undefined ? disableAnimations : !context.animate}
         fill={fill}
-        stroke={effectiveStroke}
+        stroke={stroke ?? theme.color.bgLine}
         strokeLinecap={strokeLinecap}
         strokeLinejoin={strokeLinejoin}
         strokeOpacity={strokeOpacity}

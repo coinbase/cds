@@ -64,18 +64,20 @@ export const GradientLine = memo<GradientLineProps>(
     const theme = useTheme();
     const patternIdRef = useRef<string>(generateRandomId());
 
-    const effectiveStroke = stroke ?? theme.color.bgLine;
-
     return (
       <>
         <Defs>
           <LinearGradient id={patternIdRef.current} x1="0%" x2="0%" y1="0%" y2="100%">
             <Stop
               offset="0%"
-              stopColor={startColor ?? effectiveStroke}
+              stopColor={startColor ?? stroke ?? theme.color.bgLine}
               stopOpacity={startOpacity}
             />
-            <Stop offset="100%" stopColor={endColor ?? effectiveStroke} stopOpacity={endOpacity} />
+            <Stop
+              offset="100%"
+              stopColor={endColor ?? stroke ?? theme.color.bgLine}
+              stopOpacity={endOpacity}
+            />
           </LinearGradient>
         </Defs>
         <Path
