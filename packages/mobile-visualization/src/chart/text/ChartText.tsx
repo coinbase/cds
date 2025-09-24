@@ -1,5 +1,5 @@
 import React, { memo, useEffect, useMemo } from 'react';
-import { G, Rect as SvgRect, Text } from 'react-native-svg';
+import { G, Rect as SvgRect, Text, type TextProps } from 'react-native-svg';
 import type { ThemeVars } from '@coinbase/cds-common';
 import type { ElevationLevels, Rect, SharedProps } from '@coinbase/cds-common/types';
 import { type ChartPadding, getPadding } from '@coinbase/cds-common/visualizations/charts';
@@ -22,7 +22,7 @@ export type ChartTextChildren =
 
 export type ChartTextProps = SharedProps &
   Pick<
-    React.SVGProps<SVGTextElement>,
+    TextProps,
     | 'textAnchor'
     | 'alignmentBaseline'
     | 'dx'
@@ -208,7 +208,7 @@ export const ChartText = memo<ChartTextProps>(
           />
         )}
         <Text
-          alignmentBaseline={alignmentBaseline as any}
+          alignmentBaseline={alignmentBaseline}
           dx={dx}
           dy={dy}
           fill={effectiveColor}
@@ -216,7 +216,7 @@ export const ChartText = memo<ChartTextProps>(
           fontSize={fontSize}
           fontWeight={fontWeight}
           onLayout={onTextLayout}
-          textAnchor={textAnchor as any}
+          textAnchor={textAnchor}
           x={x}
           y={y}
         >
