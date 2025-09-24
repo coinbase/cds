@@ -66,16 +66,3 @@ function generateTimeseriesList(data: ChartDataPoint[]) {
 
   return timeseries;
 }
-
-export const sparklineInteractiveHoverData: Record<SparklinePeriod, ChartTimeseries[]> = (() => {
-  const { asset } = assetJSON.data.viewer.assetByUuid;
-
-  return {
-    hour: generateTimeseriesList(transformAndFilterPrices(asset.priceDataForHour.quotes)),
-    day: generateTimeseriesList(transformAndFilterPrices(asset.priceDataForDay.quotes)),
-    week: generateTimeseriesList(transformAndFilterPrices(asset.priceDataForWeek.quotes)),
-    month: generateTimeseriesList(transformAndFilterPrices(asset.priceDataForMonth.quotes)),
-    year: generateTimeseriesList(transformAndFilterPrices(asset.priceDataForYear.quotes)),
-    all: generateTimeseriesList(transformAndFilterPrices(asset.priceDataForAll.quotes)),
-  };
-})();

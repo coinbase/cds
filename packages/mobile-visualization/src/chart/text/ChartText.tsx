@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useMemo, useState } from 'react';
+import React, { memo, useEffect, useMemo } from 'react';
 import { G, Rect as SvgRect, Text } from 'react-native-svg';
 import type { ThemeVars } from '@coinbase/cds-common';
 import type { ElevationLevels, Rect, SharedProps } from '@coinbase/cds-common/types';
@@ -123,14 +123,13 @@ export const ChartText = memo<ChartTextProps>(
     const effectiveBackground =
       background === 'transparent'
         ? 'transparent'
-        : background ?? (elevation && elevation > 0 ? theme.color.bg : 'transparent');
+        : (background ?? (elevation && elevation > 0 ? theme.color.bg : 'transparent'));
     const fullChartBounds = useMemo(
       () => ({ x: 0, y: 0, width: chartWidth, height: chartHeight }),
       [chartWidth, chartHeight],
     );
 
-    const [textBBox, setTextBBox] = useState<Rect | null>(null);
-    const [textLayout, onTextLayout] = useLayout();
+    const [textBBox, onTextLayout] = useLayout();
     const isDimensionsReady = disableRepositioning || textBBox !== null;
 
     const backgroundRectDimensions = useMemo(() => {
@@ -177,10 +176,6 @@ export const ChartText = memo<ChartTextProps>(
 
       return { x, y };
     }, [textBBox, fullChartBounds, bounds, disableRepositioning]);
-
-    if (textLayout && (!textBBox || (overflowAmount.x === 0 && overflowAmount.y === 0))) {
-      if (textBBox?.x !== textLayout.x || textBBox?.y !== textLayout.y) setTextBBox(textLayout);
-    }
 
     // Compose the final reported rect including any overflow translation applied
     const reportedRect = useMemo(() => {

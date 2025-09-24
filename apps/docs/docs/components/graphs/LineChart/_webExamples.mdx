@@ -327,89 +327,75 @@ todo: move this to an axis doc
 ## Live Data
 
 ```jsx live
-function LiveLineChartNoSnap() {
-  function randBetween(min, max) {
-    return Math.random() * (max - min) + min;
-  }
+function LiveAssetPrice() {
+  const scrubberRef = useRef(null);
 
-  const dataPoints = 120;
+  const initialData = useMemo(() => {
+    return sparklineInteractiveData.hour.map((d) => d.value);
+  }, []);
 
-  // Generate initial data with blue line between 65-85%
-  const generateInitialData = () => {
-    const blueData = Array.from({ length: dataPoints }, () => randBetween(65, 85));
-    const greenData = blueData.map((value) => 100 - value);
-    return { blueData, greenData };
-  };
+  const [priceData, setPriceData] = useState(initialData);
 
-  const initialData = generateInitialData();
-  const [running, setRunning] = React.useState(false);
-  const [blueData, setBlueData] = React.useState(initialData.blueData);
-  const [greenData, setGreenData] = React.useState(initialData.greenData);
+  const lastDataPointTimeRef = useRef(Date.now());
+  const updateCountRef = useRef(0);
 
-  React.useEffect(() => {
-    if (!running) {
-      return undefined;
-    }
+  const intervalSeconds = 3600 / initialData.length;
 
-    const intervalId = setInterval(() => {
-      // Generate new value between 65-85% for blue
-      const newBlueValue = randBetween(65, 85);
-      const newGreenValue = 100 - newBlueValue;
+  const maxPercentChange = Math.abs(initialData[initialData.length - 1] - initialData[0]) * 0.05;
 
-      // Shift arrays and add new values
-      setBlueData((prev) => [...prev.slice(1), newBlueValue]);
-      setGreenData((prev) => [...prev.slice(1), newGreenValue]);
-    }, 125); // Update every 1/2 second
+  useEffect(() => {
+    const priceUpdateInterval = setInterval(
+      () => {
+        setPriceData((currentData) => {
+          const newData = [...currentData];
+          const lastPrice = newData[newData.length - 1];
 
-    return () => {
-      clearInterval(intervalId);
-    };
-  }, [running]);
+          const priceChange = (Math.random() - 0.5) * maxPercentChange;
+          const newPrice = Math.round((lastPrice + priceChange) * 100) / 100;
+
+          // Check if we should roll over to a new data point
+          const currentTime = Date.now();
+          const timeSinceLastPoint = (currentTime - lastDataPointTimeRef.current) / 1000;
+
+          if (timeSinceLastPoint >= intervalSeconds) {
+            // Time for a new data point - remove first, add new at end
+            lastDataPointTimeRef.current = currentTime;
+            newData.shift(); // Remove oldest data point
+            newData.push(newPrice); // Add new data point
+            updateCountRef.current = 0;
+          } else {
+            // Just update the last data point
+            newData[newData.length - 1] = newPrice;
+            updateCountRef.current++;
+          }
+
+          return newData;
+        });
+
+        // Pulse the scrubber on each update
+        scrubberRef.current?.pulse();
+      },
+      2000 + Math.random() * 1000,
+    );
+
+    return () => clearInterval(priceUpdateInterval);
+  }, [intervalSeconds, maxPercentChange]);
 
   return (
-    <VStack gap={1}>
-      <HStack gap={2} justifyContent="flex-end">
-        <IconButton
-          onClick={() => setRunning((p) => !p)}
-          name={running ? 'pause' : 'play'}
-          active
-        />
-        <IconButton
-          onClick={() => {
-            const newData = generateInitialData();
-            setBlueData(newData.blueData);
-            setGreenData(newData.greenData);
-          }}
-          name="refresh"
-        />
-      </HStack>
-      <LineChart
-        height={300}
-        series={[
-          {
-            id: 'primary',
-            data: blueData,
-            color: 'var(--color-accentBoldBlue)',
-            curve: 'natural',
-          },
-          {
-            id: 'secondary',
-            data: greenData,
-            color: 'var(--color-accentBoldGreen)',
-            curve: 'natural',
-          },
-        ]}
-        showYAxis
-        yAxis={{
-          domain: { min: 0, max: 100 },
-          showGrid: true,
-          ticks: [0, 20, 40, 60, 80, 100],
-          tickLabelFormatter: (value) => `${value}%`,
-        }}
-        disableAnimations
-        hideScrubberHeads={false}
-      />
-    </VStack>
+    <LineChart
+      enableScrubbing
+      showArea
+      height={300}
+      series={[
+        {
+          id: 'btc',
+          data: priceData,
+          color: assets.btc.color,
+        },
+      ]}
+    >
+      <Scrubber ref={scrubberRef} scrubberLabelConfig={{ elevation: 1 }} />
+    </LineChart>
   );
 }
 ```

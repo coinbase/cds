@@ -6,6 +6,7 @@ import {
   type ChartPadding,
   type ChartScaleFunction,
   defaultAxisId,
+  defaultChartPadding,
   getAxisConfig,
   getAxisDomain,
   getAxisRange,
@@ -108,7 +109,6 @@ export const Chart = memo<ChartProps>(
     padding: paddingInput,
     onScrubberPosChange,
     children,
-    overflow = 'visible',
     width = '100%',
     height = '100%',
     className,
@@ -604,7 +604,6 @@ export const Chart = memo<ChartProps>(
               onKeyDown={enableScrubbing ? handleKeyDown : undefined}
               onMouseLeave={enableScrubbing ? handleMouseLeave : undefined}
               onMouseMove={enableScrubbing ? handleMouseMove : undefined}
-              overflow={overflow}
               tabIndex={enableScrubbing ? 0 : undefined}
               width={width}
               {...props}

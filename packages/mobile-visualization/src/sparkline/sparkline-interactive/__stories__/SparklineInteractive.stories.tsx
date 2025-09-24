@@ -2,7 +2,6 @@ import React, { memo, useCallback, useMemo, useRef, useState } from 'react';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import {
   sparklineInteractiveData,
-  sparklineInteractiveHoverData,
   type SparklinePeriod,
   strokeColor,
 } from '@coinbase/cds-common/internal/visualizations/SparklineInteractiveData';
@@ -419,18 +418,6 @@ const SparklineInteractiveScreen = () => {
             data={sparklineInteractiveData}
             gutter={6}
             strokeColor="#F7931A"
-          />
-        </Box>
-      </Example>
-      <Example padding={0}>
-        <Box>
-          <TextTitle3 paddingX={3} paddingY={3}>
-            Hover data
-          </TextTitle3>
-          <SparklineInteractiveBuild
-            data={sparklineInteractiveData}
-            hoverData={sparklineInteractiveHoverData}
-            strokeColor={strokeColor}
           />
         </Box>
       </Example>

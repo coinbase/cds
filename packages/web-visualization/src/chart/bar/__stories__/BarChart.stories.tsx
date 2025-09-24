@@ -1,7 +1,7 @@
-import React, { memo, useCallback, useMemo, useRef, useState } from 'react';
+import React, { memo, useRef } from 'react';
 import { isBandScale } from '@coinbase/cds-common/visualizations/charts';
 import { generateRandomId } from '@coinbase/cds-utils';
-import { HStack, VStack } from '@coinbase/cds-web/layout';
+import { VStack } from '@coinbase/cds-web/layout';
 import { Text } from '@coinbase/cds-web/typography';
 
 import { Chart, ScrubberContext } from '../..';
