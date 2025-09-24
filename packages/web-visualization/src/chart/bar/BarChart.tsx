@@ -1,4 +1,4 @@
-import React, { memo, useMemo } from 'react';
+import React, { forwardRef, memo, useMemo } from 'react';
 import {
   type AxisConfigProps,
   defaultChartPadding,
@@ -64,30 +64,34 @@ export type BarChartProps = Omit<ChartProps, 'xAxis' | 'yAxis' | 'series'> &
     yAxis?: Partial<AxisConfigProps> & YAxisProps;
   };
 
-export const BarChart = memo<BarChartProps>(
-  ({
-    series,
-    stacked,
-    showXAxis,
-    showYAxis,
-    dataKey,
-    xAxis,
-    yAxis,
-    padding: userPadding,
-    children,
-    barPadding,
-    BarComponent,
-    fillOpacity,
-    stroke,
-    strokeWidth,
-    borderRadius,
-    roundBaseline,
-    StackComponent,
-    stackGap,
-    barMinSize,
-    stackMinSize,
-    ...chartProps
-  }) => {
+export const BarChart = memo(
+  forwardRef<SVGSVGElement, BarChartProps>(
+    (
+      {
+        series,
+        stacked,
+        showXAxis,
+        showYAxis,
+        dataKey,
+        xAxis,
+        yAxis,
+        padding: userPadding,
+        children,
+        barPadding,
+        BarComponent,
+        fillOpacity,
+        stroke,
+        strokeWidth,
+        borderRadius,
+        roundBaseline,
+        StackComponent,
+        stackGap,
+        barMinSize,
+        stackMinSize,
+        ...chartProps
+      },
+      ref,
+    ) => {
     const calculatedPadding = useMemo(
       () => getPadding(userPadding, defaultChartPadding),
       [userPadding],
@@ -176,6 +180,7 @@ export const BarChart = memo<BarChartProps>(
 
     return (
       <Chart
+        ref={ref}
         {...chartProps}
         padding={calculatedPadding}
         series={seriesToRender}
@@ -205,5 +210,6 @@ export const BarChart = memo<BarChartProps>(
         {children}
       </Chart>
     );
-  },
+    },
+  ),
 );

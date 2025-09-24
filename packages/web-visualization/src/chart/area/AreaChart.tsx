@@ -1,4 +1,4 @@
-import React, { memo, useMemo } from 'react';
+import React, { forwardRef, memo, useMemo } from 'react';
 import {
   type AxisConfigProps,
   defaultChartPadding,
@@ -75,28 +75,32 @@ export type AreaChartProps = Omit<ChartProps, 'xAxis' | 'yAxis' | 'series'> &
     yAxis?: Partial<AxisConfigProps> & YAxisProps;
   };
 
-export const AreaChart = memo<AreaChartProps>(
-  ({
-    series,
-    stacked,
-    AreaComponent,
-    curve,
-    fillOpacity,
-    type,
-    LineComponent,
-    strokeWidth,
-    showXAxis,
-    showYAxis,
-    showLines = false,
-    lineType = 'solid',
-    dataKey,
-    xAxis,
-    yAxis,
-    padding: userPadding,
-    children,
-    enableScrubbing,
-    ...chartProps
-  }) => {
+export const AreaChart = memo(
+  forwardRef<SVGSVGElement, AreaChartProps>(
+    (
+      {
+        series,
+        stacked,
+        AreaComponent,
+        curve,
+        fillOpacity,
+        type,
+        LineComponent,
+        strokeWidth,
+        showXAxis,
+        showYAxis,
+        showLines = false,
+        lineType = 'solid',
+        dataKey,
+        xAxis,
+        yAxis,
+        padding: userPadding,
+        children,
+        enableScrubbing,
+        ...chartProps
+      },
+      ref,
+    ) => {
     const calculatedPadding = useMemo(
       () => getPadding(userPadding, defaultChartPadding),
       [userPadding],
@@ -179,6 +183,7 @@ export const AreaChart = memo<AreaChartProps>(
 
     return (
       <Chart
+        ref={ref}
         {...chartProps}
         enableScrubbing={enableScrubbing}
         padding={calculatedPadding}
@@ -247,5 +252,6 @@ export const AreaChart = memo<AreaChartProps>(
         {children}
       </Chart>
     );
-  },
+    },
+  ),
 );
