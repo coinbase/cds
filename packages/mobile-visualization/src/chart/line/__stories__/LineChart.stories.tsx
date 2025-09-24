@@ -1028,6 +1028,7 @@ export const ForecastChart = () => {
 
   return (
     <LineChart
+      enableScrubbing
       showArea
       showXAxis
       areaType="dotted"
@@ -1056,7 +1057,9 @@ export const ForecastChart = () => {
         tickLabelFormatter: formatXAxisLabel,
         tickInterval: 4,
       }}
-    ></LineChart>
+    >
+      <Scrubber />
+    </LineChart>
   );
 };
 
@@ -1100,7 +1103,7 @@ const LineChartStories = () => {
           <Scrubber />
         </LineChart>
       </Example>
-      <Example title="Asset Price">
+      {/*<Example title="Asset Price">
         <AssetPrice />
       </Example>
       <Example title="Line Styles">
@@ -1123,7 +1126,7 @@ const LineChartStories = () => {
       </Example>
       <Example title="Period Selector">
         <PeriodSelectorExample />
-      </Example>
+      </Example>*/}
     </ExampleScreen>
   );
 };
