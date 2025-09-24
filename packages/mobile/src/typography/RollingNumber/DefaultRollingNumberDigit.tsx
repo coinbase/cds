@@ -1,10 +1,14 @@
 import { forwardRef, memo, useEffect, useMemo, useRef } from 'react';
 import { StyleSheet, type View } from 'react-native';
-import Animated, { useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+  withTiming,
+} from 'react-native-reanimated';
 
 import { Text } from '../Text';
 
-import { buildAnimation } from './buildAnimation';
 import { DefaultRollingNumberMask } from './DefaultRollingNumberMask';
 import {
   defaultTransitionConfig,
@@ -50,10 +54,15 @@ export const DefaultRollingNumberDigit: RollingNumberDigitComponent = memo(
 
       useEffect(() => {
         if (prevValue.current === value) return;
-        position.value = buildAnimation({
-          toValue: value * digitHeight * -1,
-          transition: transitionConfig?.y ?? defaultTransitionConfig.y,
-        });
+        const newPosition = value * digitHeight * -1;
+        if (transitionConfig?.y?.type === 'spring') {
+          position.value = withSpring(newPosition, transitionConfig?.y);
+        } else {
+          position.value = withTiming(
+            newPosition,
+            transitionConfig?.y ?? defaultTransitionConfig.y,
+          );
+        }
         prevValue.current = value;
       }, [digitHeight, position, transitionConfig?.y, value]);
 

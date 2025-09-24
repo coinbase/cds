@@ -5,12 +5,13 @@ import {
   cancelAnimation,
   useAnimatedStyle,
   useSharedValue,
+  withSpring,
+  withTiming,
 } from 'react-native-reanimated';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 
 import { useTheme } from '../../hooks/useTheme';
 
-import { buildAnimation } from './buildAnimation';
 import type { RollingNumberTransitionConfig } from './RollingNumber';
 import { defaultTransitionConfig } from './RollingNumber';
 
@@ -60,10 +61,14 @@ export function useColorPulse({
     if (hasMeaningfulChange && pulseColor) {
       cancelAnimation(animatedColor);
       animatedColor.value = pulseColor;
-      animatedColor.value = buildAnimation({
-        toValue: baseColor,
-        transition: transitionConfig?.color ?? defaultTransitionConfig.color,
-      });
+      if (transitionConfig?.color?.type === 'spring') {
+        animatedColor.value = withSpring(baseColor, transitionConfig?.color);
+      } else {
+        animatedColor.value = withTiming(
+          baseColor,
+          transitionConfig?.color ?? defaultTransitionConfig.color,
+        );
+      }
     }
 
     previousValue.current = next;

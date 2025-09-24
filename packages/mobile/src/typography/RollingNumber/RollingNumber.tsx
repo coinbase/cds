@@ -33,10 +33,12 @@ import { useColorPulse } from './useColorPulse';
 
 export const defaultTransitionConfig = {
   y: {
+    type: 'timing',
     duration: durations.moderate3,
     easing: Easing.bezier(...curves.global),
   },
   color: {
+    type: 'timing',
     duration: durations.slow4,
     easing: Easing.bezier(...curves.global),
   },
@@ -65,7 +67,7 @@ const baseStylesheet = StyleSheet.create({
 
 export type TimingTransition = {
   // type timing is optional since it's the default
-  type?: 'timing';
+  type: 'timing';
 } & WithTimingConfig;
 
 export type SpringTransition = {
