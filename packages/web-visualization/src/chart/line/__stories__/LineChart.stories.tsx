@@ -36,7 +36,6 @@ import {
 import { Area, type AreaComponentProps, DottedArea, GradientArea } from '../../area';
 import { XAxis, YAxis } from '../../axis';
 import { Chart } from '../../Chart';
-import { ChartHeader } from '../../ChartHeader';
 import { Point } from '../../point';
 import { ScrubberHead } from '../../scrubber/ScrubberHead';
 import { DottedLine, GradientLine, Line, LineChart, ReferenceLine, SolidLine } from '..';
@@ -274,11 +273,10 @@ export const AssetPrice = () => {
 
   return (
     <VStack gap={2}>
-      <ChartHeader
-        description={highlightedPrice}
-        title="Price"
-        trend={trendInfo.text}
-        trendDirection={trendInfo.direction}
+      <SectionHeader
+        balance={<Text font="title2">{highlightedPrice}</Text>}
+        style={{ padding: 0 }}
+        title={<Text font="title1">Price</Text>}
       />
       <LineChart
         enableScrubbing
@@ -513,13 +511,16 @@ export const BTCPriceChart = () => {
       <VStack gap={3} width="100%">
         <HStack alignItems="flex-start" gap={3} justifyContent="space-between" padding={4}>
           {/* todo: set trend to black */}
-          <ChartHeader
-            description={formattedPrice}
-            title={<Text font="headline">Coinbase Wrapped BTC</Text>}
-            trend={formattedPriceChange}
-            trendDirection={trendDirection as 'up' | 'down' | 'neutral'}
+          <SectionHeader
+            balance={<Text font="title2">{formattedPrice}</Text>}
+            end={
+              <VStack justifyContent="center">
+                <RemoteImage shape="circle" size="xxl" source={assets.btc.imageUrl} />
+              </VStack>
+            }
+            style={{ padding: 0 }}
+            title={<Text font="title1">Coinbase Wrapped BTC</Text>}
           />
-          <RemoteImage alt="Bitcoin" shape="circle" size="xxxl" src={assets.btc.imageUrl} />
         </HStack>
         <Chart
           enableScrubbing
@@ -745,15 +746,6 @@ export const ColorShiftChart = () => {
       transition={{ duration: 0.3 }}
     >
       <VStack gap={3} width="100%">
-        <HStack alignItems="flex-start" gap={3} justifyContent="space-between" padding={4}>
-          <ChartHeader
-            description={formattedPrice}
-            title={<Text font="headline">XRP</Text>}
-            trend={formattedPriceChange}
-            trendDirection={trendDirection as 'up' | 'down' | 'neutral'}
-          />
-          <RemoteImage alt="XRP" shape="circle" size="xxxl" src={assets.xrp.imageUrl} />
-        </HStack>
         <LineChart
           enableScrubbing
           showArea
@@ -1062,14 +1054,6 @@ export const PriceChart = () => {
 
   return (
     <VStack gap={3} width="100%">
-      <HStack alignItems="flex-start" gap={3} justifyContent="space-between" padding={4}>
-        <ChartHeader
-          description={formattedPrice}
-          title={<Text font="headline">Ethereum</Text>}
-          trend={formattedPriceChange}
-          trendDirection={trendDirection as 'up' | 'down' | 'neutral'}
-        />
-      </HStack>
       <LineChart
         enableScrubbing
         showArea
