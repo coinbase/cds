@@ -70,7 +70,7 @@ export type ChartBaseProps = {
    * Padding around the entire chart (outside the axes).
    * This creates space outside of axes rather than between axes and the drawing area.
    */
-  padding?: number | ChartPadding;
+  padding?: number | Partial<ChartPadding>;
   /**
    * Callback fired when the highlighted item changes.
    * Receives the dataIndex of the highlighted item or null when no item is highlighted.

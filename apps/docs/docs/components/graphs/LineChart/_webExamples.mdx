@@ -162,8 +162,8 @@ You can add multiple series to a line chart.
   xAxis={{
     data: ['Page A', 'Page B', 'Page C', 'Page D', 'Page E', 'Page F', 'Page G'],
     ticks: true,
-    scaleType: 'band',
   }}
+  padding={{ left: 12 }}
   showYAxis
   yAxis={{
     domain: {
@@ -365,6 +365,7 @@ function LiveAssetPrice() {
           color: assets.btc.color,
         },
       ]}
+      padding={{ right: 64 }}
     >
       <Scrubber ref={scrubberRef} scrubberLabelConfig={{ elevation: 1 }} />
     </LineChart>
@@ -401,8 +402,9 @@ todo: we need to handle showing points for any spot in the axis.
     showTickMarks: true,
     showGrid: true,
   }}
+  padding={16}
 >
-  <Scrubber />
+  <Scrubber hideOverlay />
 </LineChart>
 ```
 
@@ -543,7 +545,7 @@ const BTCActiveIndicator = memo(({ style, ...props }: TabsActiveIndicatorProps) 
         height={300}
         style={{ outlineColor: assets.btc.color }}
         accessibilityLabel={scrubberLabel}
-        aria
+        padding={{ left: 16, right: 16 }}
       >
         <Scrubber scrubberLabel={scrubberLabel} scrubberLabelConfig={{ elevation: 1 }} pulse />
       </LineChart>
@@ -633,8 +635,8 @@ function ForecastAssetPrice() {
       height={350}
       padding={{
         top: 24,
-        left: 0,
-        right: 0,
+        left: 16,
+        right: 16,
         bottom: 0,
       }}
       series={[
@@ -658,7 +660,7 @@ function ForecastAssetPrice() {
             year: 'numeric',
           });
         },
-        tickInterval: 4,
+        tickInterval: 2,
       }}
       AreaComponent={(props) => <DottedArea {...props} peakOpacity={0.4} baselineOpacity={0.4} />}
         style={{ outlineColor: assets.btc.color }}
