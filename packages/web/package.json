@@ -32,6 +32,10 @@
       "types": "./dts/cards/index.d.ts",
       "default": "./esm/cards/index.js"
     },
+    "./cards/ContentCard": {
+      "types": "./dts/cards/ContentCard/index.d.ts",
+      "default": "./esm/cards/ContentCard/index.js"
+    },
     "./carousel": {
       "types": "./dts/carousel/index.d.ts",
       "default": "./esm/carousel/index.js"
@@ -87,6 +91,10 @@
     "./numbers": {
       "types": "./dts/numbers/index.d.ts",
       "default": "./esm/numbers/index.js"
+    },
+    "./numbers/RollingNumber": {
+      "types": "./dts/numbers/RollingNumber/index.d.ts",
+      "default": "./esm/numbers/RollingNumber/index.js"
     },
     "./overlays": {
       "types": "./dts/overlays/index.d.ts",
