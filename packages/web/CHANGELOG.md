@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.13.0 (9/25/2025 PST)
+
+#### 🚀 Updates
+
+- Added RollingNumber component.
+
 ## 8.12.2 (9/25/2025 PST)
 
 #### 🐞 Fixes
