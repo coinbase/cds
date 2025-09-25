@@ -5173,6 +5173,91 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@formatjs/ecma402-abstract@npm:2.3.4":
+  version: 2.3.4
+  resolution: "@formatjs/ecma402-abstract@npm:2.3.4"
+  dependencies:
+    "@formatjs/fast-memoize": "npm:2.2.7"
+    "@formatjs/intl-localematcher": "npm:0.6.1"
+    decimal.js: "npm:^10.4.3"
+    tslib: "npm:^2.8.0"
+  checksum: 10c0/2644bc618a34dc610ef9691281eeb45ae6175e6982cf19f1bd140672fc95c748747ce3c85b934649ea7e4a304f7ae0060625fd53d5df76f92ca3acf743e1eb0a
+  languageName: node
+  linkType: hard
+
+"@formatjs/fast-memoize@npm:2.2.7":
+  version: 2.2.7
+  resolution: "@formatjs/fast-memoize@npm:2.2.7"
+  dependencies:
+    tslib: "npm:^2.8.0"
+  checksum: 10c0/f5eabb0e4ab7162297df8252b4cfde194b23248120d9df267592eae2be2d2f7c4f670b5a70523d91b4ecdc35d40e65823bb8eeba8dd79fbf8601a972bf3b8866
+  languageName: node
+  linkType: hard
+
+"@formatjs/intl-enumerator@npm:1.8.10":
+  version: 1.8.10
+  resolution: "@formatjs/intl-enumerator@npm:1.8.10"
+  dependencies:
+    "@formatjs/ecma402-abstract": "npm:2.3.4"
+    tslib: "npm:^2.8.0"
+  checksum: 10c0/6c801131669a0b0962a7f3e63a7722a3ebb52a7c6aedf725e8ab601a77616c4896a26b81852bfda89bd83eed298f6b85e701349f15b8b7e5fdd8c79eb2209d96
+  languageName: node
+  linkType: hard
+
+"@formatjs/intl-getcanonicallocales@npm:2.5.5, @formatjs/intl-getcanonicallocales@npm:^2.5.5":
+  version: 2.5.5
+  resolution: "@formatjs/intl-getcanonicallocales@npm:2.5.5"
+  dependencies:
+    tslib: "npm:^2.8.0"
+  checksum: 10c0/c7693c0823eeaf96bd1af32f84ec0c18db451862135205ccc671cf1e4250e162da31b57220d2bcc0754c55433a92e92e7b59ab42458fc0ff6a1d62312f8ddc54
+  languageName: node
+  linkType: hard
+
+"@formatjs/intl-locale@npm:^4.2.11":
+  version: 4.2.11
+  resolution: "@formatjs/intl-locale@npm:4.2.11"
+  dependencies:
+    "@formatjs/ecma402-abstract": "npm:2.3.4"
+    "@formatjs/intl-enumerator": "npm:1.8.10"
+    "@formatjs/intl-getcanonicallocales": "npm:2.5.5"
+    tslib: "npm:^2.8.0"
+  checksum: 10c0/072aa50fcf8bc1baba1cf16f1bc80f46999d030ce12aef53f08cdb946177e75e59f7f329de7dfca8223c2bac80d3713ec8492e36c15d537ffad0e730e566dc3b
+  languageName: node
+  linkType: hard
+
+"@formatjs/intl-localematcher@npm:0.6.1":
+  version: 0.6.1
+  resolution: "@formatjs/intl-localematcher@npm:0.6.1"
+  dependencies:
+    tslib: "npm:^2.8.0"
+  checksum: 10c0/bacbedd508519c1bb5ca2620e89dc38f12101be59439aa14aa472b222915b462cb7d679726640f6dcf52a05dd218b5aa27ccd60f2e5010bb96f1d4929848cde0
+  languageName: node
+  linkType: hard
+
+"@formatjs/intl-numberformat@npm:^8.15.4":
+  version: 8.15.4
+  resolution: "@formatjs/intl-numberformat@npm:8.15.4"
+  dependencies:
+    "@formatjs/ecma402-abstract": "npm:2.3.4"
+    "@formatjs/intl-localematcher": "npm:0.6.1"
+    decimal.js: "npm:^10.4.3"
+    tslib: "npm:^2.8.0"
+  checksum: 10c0/11a628bc298e7bf5e46f2c33b04a3d62dd0726d076bfcda000b22095c5c464c1434ee1d0731048983f24d86aeac7d5c159254003a9f929cbdeb8ed4b7ecc381b
+  languageName: node
+  linkType: hard
+
+"@formatjs/intl-pluralrules@npm:^5.4.4":
+  version: 5.4.4
+  resolution: "@formatjs/intl-pluralrules@npm:5.4.4"
+  dependencies:
+    "@formatjs/ecma402-abstract": "npm:2.3.4"
+    "@formatjs/intl-localematcher": "npm:0.6.1"
+    decimal.js: "npm:^10.4.3"
+    tslib: "npm:^2.8.0"
+  checksum: 10c0/8a8ec9f2fad40d9fa654a68de06fb18aaa6f0eafa908f41397f057366740625c12da627c6de68e0396fcd67ceaaa2c5c20a4b102f71ac8694abd9e76cceca949
+  languageName: node
+  linkType: hard
+
 "@gar/promisify@npm:^1.0.1":
   version: 1.1.2
   resolution: "@gar/promisify@npm:1.1.2"
@@ -28397,6 +28482,10 @@ __metadata:
     "@expo-google-fonts/source-code-pro": "npm:^0.3.0"
     "@expo/config": "npm:~9.0.0"
     "@expo/config-types": "npm:~51.0.2"
+    "@formatjs/intl-getcanonicallocales": "npm:^2.5.5"
+    "@formatjs/intl-locale": "npm:^4.2.11"
+    "@formatjs/intl-numberformat": "npm:^8.15.4"
+    "@formatjs/intl-pluralrules": "npm:^5.4.4"
     "@react-native/metro-config": "npm:^0.72.9"
     "@react-navigation/core": "npm:^6.4.16"
     "@react-navigation/native": "npm:^6.1.6"
@@ -37030,7 +37119,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tslib@npm:^2, tslib@npm:^2.0.0, tslib@npm:^2.0.1, tslib@npm:^2.0.3, tslib@npm:^2.1.0, tslib@npm:^2.3.0, tslib@npm:^2.4.0, tslib@npm:^2.5.3, tslib@npm:^2.6.0":
+"tslib@npm:^2, tslib@npm:^2.0.0, tslib@npm:^2.0.1, tslib@npm:^2.0.3, tslib@npm:^2.1.0, tslib@npm:^2.3.0, tslib@npm:^2.4.0, tslib@npm:^2.5.3, tslib@npm:^2.6.0, tslib@npm:^2.8.0":
   version: 2.8.1
   resolution: "tslib@npm:2.8.1"
   checksum: 10c0/9c4759110a19c53f992d9aae23aac5ced636e99887b51b9e61def52611732872ff7668757d4e4c61f19691e36f4da981cd9485e869b4a7408d689f6bf1f14e62
