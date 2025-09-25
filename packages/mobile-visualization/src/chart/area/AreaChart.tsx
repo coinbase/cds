@@ -1,4 +1,5 @@
-import React, { memo, useMemo } from 'react';
+import React, { forwardRef, memo, useMemo } from 'react';
+import type { View } from 'react-native';
 import {
   type AxisConfigProps,
   defaultChartPadding,
@@ -68,147 +69,127 @@ export type AreaChartProps = Omit<ChartProps, 'xAxis' | 'yAxis' | 'series'> &
     yAxis?: Partial<AxisConfigProps> & YAxisProps;
   };
 
-export const AreaChart = memo<AreaChartProps>(
-  ({
-    series,
-    stacked,
-    AreaComponent,
-    curve,
-    fillOpacity,
-    type,
-    LineComponent,
-    strokeWidth,
-    showXAxis,
-    showYAxis,
-    showLines = false,
-    lineType = 'solid',
-    dataKey,
-    xAxis,
-    yAxis,
-    padding: userPadding,
-    children,
-    ...chartProps
-  }) => {
-    const calculatedPadding = useMemo(
-      () => getPadding(userPadding, defaultChartPadding),
-      [userPadding],
-    );
-
-    // Convert AreaSeries to Series for Chart context
-    const chartSeries = useMemo(() => {
-      return series?.map(
-        (s): Series => ({
-          id: s.id,
-          data: s.data,
-          label: s.label,
-          color: s.color,
-          xAxisId: s.xAxisId,
-          yAxisId: s.yAxisId,
-          stackId: s.stackId,
-        }),
+export const AreaChart = memo(
+  forwardRef<View, AreaChartProps>(
+    (
+      {
+        series,
+        stacked,
+        AreaComponent,
+        curve,
+        fillOpacity,
+        type,
+        LineComponent,
+        strokeWidth,
+        showXAxis,
+        showYAxis,
+        showLines = false,
+        lineType = 'solid',
+        dataKey,
+        xAxis,
+        yAxis,
+        padding: userPadding,
+        children,
+        ...chartProps
+      },
+      ref,
+    ) => {
+      const calculatedPadding = useMemo(
+        () => getPadding(userPadding, defaultChartPadding),
+        [userPadding],
       );
-    }, [series]);
 
-    const transformedSeries = useMemo(() => {
-      if (!stacked || !chartSeries) return chartSeries;
-      return chartSeries.map((s) => ({ ...s, stackId: s.stackId ?? defaultStackId }));
-    }, [chartSeries, stacked]);
+      // Convert AreaSeries to Series for Chart context
+      const chartSeries = useMemo(() => {
+        return series?.map(
+          (s): Series => ({
+            id: s.id,
+            data: s.data,
+            label: s.label,
+            color: s.color,
+            xAxisId: s.xAxisId,
+            yAxisId: s.yAxisId,
+            stackId: s.stackId,
+          }),
+        );
+      }, [series]);
 
-    const seriesToRender = transformedSeries ?? chartSeries;
+      const transformedSeries = useMemo(() => {
+        if (!stacked || !chartSeries) return chartSeries;
+        return chartSeries.map((s) => ({ ...s, stackId: s.stackId ?? defaultStackId }));
+      }, [chartSeries, stacked]);
 
-    // Split axis props into config props for Chart and visual props for axis components
-    const {
-      scaleType: xScaleType,
-      data: xData,
-      categoryPadding: xCategoryPadding,
-      domain: xDomain,
-      domainLimit: xDomainLimit,
-      range: xRange,
-      id: xAxisId,
-      ...xAxisVisualProps
-    } = xAxis || {};
-    const {
-      scaleType: yScaleType,
-      data: yData,
-      categoryPadding: yCategoryPadding,
-      domain: yDomain,
-      domainLimit: yDomainLimit,
-      range: yRange,
-      id: yAxisId,
-      ...yAxisVisualProps
-    } = yAxis || {};
+      const seriesToRender = transformedSeries ?? chartSeries;
 
-    const xAxisConfig: Partial<AxisConfigProps> = {
-      scaleType: xScaleType,
-      data: xData,
-      categoryPadding: xCategoryPadding,
-      domain: xDomain,
-      domainLimit: xDomainLimit,
-      range: xRange,
-    };
+      // Split axis props into config props for Chart and visual props for axis components
+      const {
+        scaleType: xScaleType,
+        data: xData,
+        categoryPadding: xCategoryPadding,
+        domain: xDomain,
+        domainLimit: xDomainLimit,
+        range: xRange,
+        id: xAxisId,
+        ...xAxisVisualProps
+      } = xAxis || {};
+      const {
+        scaleType: yScaleType,
+        data: yData,
+        categoryPadding: yCategoryPadding,
+        domain: yDomain,
+        domainLimit: yDomainLimit,
+        range: yRange,
+        id: yAxisId,
+        ...yAxisVisualProps
+      } = yAxis || {};
 
-    // todo: see if we can get rid of this
-    const hasNegativeValues = useMemo(() => {
-      if (!series) return false;
-      return series.some((s) =>
-        s.data?.some(
-          (value: number | null | [number, number]) =>
-            (typeof value === 'number' && value < 0) ||
-            (Array.isArray(value) && value.some((v) => typeof v === 'number' && v < 0)),
-        ),
-      );
-    }, [series]);
+      const xAxisConfig: Partial<AxisConfigProps> = {
+        scaleType: xScaleType,
+        data: xData,
+        categoryPadding: xCategoryPadding,
+        domain: xDomain,
+        domainLimit: xDomainLimit,
+        range: xRange,
+      };
 
-    // Set default min domain to 0 for area chart, but only if there are no negative values
-    const yAxisConfig: Partial<AxisConfigProps> = {
-      scaleType: yScaleType,
-      data: yData,
-      categoryPadding: yCategoryPadding,
-      domain: hasNegativeValues ? yDomain : { min: 0, ...yDomain },
-      domainLimit: yDomainLimit,
-      range: yRange,
-    };
-
-    return (
-      <Chart
-        {...chartProps}
-        padding={calculatedPadding}
-        series={seriesToRender}
-        xAxis={xAxisConfig}
-        yAxis={yAxisConfig}
-      >
-        {showXAxis && (
-          <XAxis axisId={xAxisId} dataKey={dataKey} position="end" {...xAxisVisualProps} />
-        )}
-        {showYAxis && (
-          <YAxis axisId={yAxisId} dataKey={dataKey} position="end" {...yAxisVisualProps} />
-        )}
-        {series?.map(
-          ({
-            id,
-            data,
-            label,
-            color,
-            xAxisId,
-            yAxisId,
-            opacity,
-            LineComponent,
-            stackId,
-            ...areaPropsFromSeries
-          }) => (
-            <Area
-              key={id}
-              AreaComponent={AreaComponent}
-              curve={curve}
-              fillOpacity={fillOpacity}
-              seriesId={id}
-              type={type}
-              {...areaPropsFromSeries}
-            />
+      // todo: see if we can get rid of this
+      const hasNegativeValues = useMemo(() => {
+        if (!series) return false;
+        return series.some((s) =>
+          s.data?.some(
+            (value: number | null | [number, number]) =>
+              (typeof value === 'number' && value < 0) ||
+              (Array.isArray(value) && value.some((v) => typeof v === 'number' && v < 0)),
           ),
-        )}
-        {showLines &&
-          series?.map(
+        );
+      }, [series]);
+
+      // Set default min domain to 0 for area chart, but only if there are no negative values
+      const yAxisConfig: Partial<AxisConfigProps> = {
+        scaleType: yScaleType,
+        data: yData,
+        categoryPadding: yCategoryPadding,
+        domain: hasNegativeValues ? yDomain : { min: 0, ...yDomain },
+        domainLimit: yDomainLimit,
+        range: yRange,
+      };
+
+      return (
+        <Chart
+          {...chartProps}
+          ref={ref}
+          padding={calculatedPadding}
+          series={seriesToRender}
+          xAxis={xAxisConfig}
+          yAxis={yAxisConfig}
+        >
+          {showXAxis && (
+            <XAxis axisId={xAxisId} dataKey={dataKey} position="end" {...xAxisVisualProps} />
+          )}
+          {showYAxis && (
+            <YAxis axisId={yAxisId} dataKey={dataKey} position="end" {...yAxisVisualProps} />
+          )}
+          {series?.map(
             ({
               id,
               data,
@@ -216,27 +197,53 @@ export const AreaChart = memo<AreaChartProps>(
               color,
               xAxisId,
               yAxisId,
-              fill,
-              fillOpacity,
+              opacity,
+              LineComponent,
               stackId,
-              ...linePropsFromSeries
-            }) => {
-              return (
-                <Line
-                  key={`${id}-line`}
-                  LineComponent={LineComponent}
-                  curve={curve}
-                  seriesId={id} // Line component now handles stacked data automatically
-                  stroke={color} // Default to series color
-                  strokeWidth={strokeWidth}
-                  type={lineType}
-                  {...linePropsFromSeries}
-                />
-              );
-            },
+              ...areaPropsFromSeries
+            }) => (
+              <Area
+                key={id}
+                AreaComponent={AreaComponent}
+                curve={curve}
+                fillOpacity={fillOpacity}
+                seriesId={id}
+                type={type}
+                {...areaPropsFromSeries}
+              />
+            ),
           )}
-        {children}
-      </Chart>
-    );
-  },
+          {showLines &&
+            series?.map(
+              ({
+                id,
+                data,
+                label,
+                color,
+                xAxisId,
+                yAxisId,
+                fill,
+                fillOpacity,
+                stackId,
+                ...linePropsFromSeries
+              }) => {
+                return (
+                  <Line
+                    key={`${id}-line`}
+                    LineComponent={LineComponent}
+                    curve={curve}
+                    seriesId={id} // Line component now handles stacked data automatically
+                    stroke={color} // Default to series color
+                    strokeWidth={strokeWidth}
+                    type={lineType}
+                    {...linePropsFromSeries}
+                  />
+                );
+              },
+            )}
+          {children}
+        </Chart>
+      );
+    },
+  ),
 );

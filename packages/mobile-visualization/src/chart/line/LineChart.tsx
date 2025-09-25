@@ -1,15 +1,14 @@
-import React, { memo, useMemo } from 'react';
+import React, { forwardRef, memo, useMemo } from 'react';
+import type { View } from 'react-native';
 import {
   type AxisConfigProps,
   defaultChartPadding,
   getPadding,
   type Series,
 } from '@coinbase/cds-common/visualizations/charts';
-import { chartFallbackNegative, chartFallbackPositive } from '@coinbase/cds-lottie-files';
 
 import { XAxis, type XAxisProps, YAxis, type YAxisProps } from '../axis';
 import { Chart, type ChartProps } from '../Chart';
-import type { RenderPointsParams } from '../point/Point';
 
 import { Line, type LineProps } from './Line';
 
@@ -85,125 +84,131 @@ export type LineChartProps = Omit<ChartProps, 'xAxis' | 'yAxis' | 'series'> &
     disableFallback?: boolean;
   };
 
-export const LineChart = memo<LineChartProps>(
-  ({
-    series,
-    showArea,
-    areaType,
-    type,
-    LineComponent,
-    AreaComponent,
-    curve,
-    renderPoints,
-    showXAxis,
-    showYAxis,
-    dataKey,
-    xAxis,
-    yAxis,
-    padding: userPadding,
-    children,
-    enableScrubbing,
-    fallback,
-    fallbackType = 'positive',
-    disableFallback,
-    ...chartProps
-  }) => {
-    const calculatedPadding = useMemo(
-      () => getPadding(userPadding, defaultChartPadding),
-      [userPadding],
-    );
-
-    // Check if we have valid data across all series
-    const hasData = useMemo(() => {
-      if (!series || series.length === 0) return false;
-      return series.some((s) => s.data && s.data.length > 0);
-    }, [series]);
-
-    // Convert LineSeries to Series for Chart context
-    const chartSeries = useMemo(() => {
-      return series?.map(
-        (s): Series => ({
-          id: s.id,
-          data: s.data,
-          label: s.label,
-          color: s.color,
-        }),
+export const LineChart = memo(
+  forwardRef<View, LineChartProps>(
+    (
+      {
+        series,
+        showArea,
+        areaType,
+        type,
+        LineComponent,
+        AreaComponent,
+        curve,
+        renderPoints,
+        showXAxis,
+        showYAxis,
+        dataKey,
+        xAxis,
+        yAxis,
+        padding: userPadding,
+        children,
+        enableScrubbing,
+        fallback,
+        fallbackType = 'positive',
+        disableFallback,
+        ...chartProps
+      },
+      ref,
+    ) => {
+      const calculatedPadding = useMemo(
+        () => getPadding(userPadding, defaultChartPadding),
+        [userPadding],
       );
-    }, [series]);
 
-    // Split axis props into config props for Chart and visual props for axis components
-    const {
-      scaleType: xScaleType,
-      data: xData,
-      categoryPadding: xCategoryPadding,
-      domain: xDomain,
-      domainLimit: xDomainLimit,
-      range: xRange,
-      id: xAxisId,
-      ...xAxisVisualProps
-    } = xAxis || {};
-    const {
-      scaleType: yScaleType,
-      data: yData,
-      categoryPadding: yCategoryPadding,
-      domain: yDomain,
-      domainLimit: yDomainLimit,
-      range: yRange,
-      id: yAxisId,
-      ...yAxisVisualProps
-    } = yAxis || {};
+      // Check if we have valid data across all series
+      const hasData = useMemo(() => {
+        if (!series || series.length === 0) return false;
+        return series.some((s) => s.data && s.data.length > 0);
+      }, [series]);
 
-    const xAxisConfig: Partial<AxisConfigProps> = {
-      scaleType: xScaleType,
-      data: xData,
-      categoryPadding: xCategoryPadding,
-      domain: xDomain,
-      domainLimit: xDomainLimit,
-      range: xRange,
-    };
+      // Convert LineSeries to Series for Chart context
+      const chartSeries = useMemo(() => {
+        return series?.map(
+          (s): Series => ({
+            id: s.id,
+            data: s.data,
+            label: s.label,
+            color: s.color,
+          }),
+        );
+      }, [series]);
 
-    const yAxisConfig: Partial<AxisConfigProps> = {
-      scaleType: yScaleType,
-      data: yData,
-      categoryPadding: yCategoryPadding,
-      domain: yDomain,
-      domainLimit: yDomainLimit,
-      range: yRange,
-    };
+      // Split axis props into config props for Chart and visual props for axis components
+      const {
+        scaleType: xScaleType,
+        data: xData,
+        categoryPadding: xCategoryPadding,
+        domain: xDomain,
+        domainLimit: xDomainLimit,
+        range: xRange,
+        id: xAxisId,
+        ...xAxisVisualProps
+      } = xAxis || {};
+      const {
+        scaleType: yScaleType,
+        data: yData,
+        categoryPadding: yCategoryPadding,
+        domain: yDomain,
+        domainLimit: yDomainLimit,
+        range: yRange,
+        id: yAxisId,
+        ...yAxisVisualProps
+      } = yAxis || {};
 
-    return (
-      <Chart
-        {...chartProps}
-        enableScrubbing={enableScrubbing}
-        padding={calculatedPadding}
-        series={chartSeries}
-        xAxis={xAxisConfig}
-        yAxis={yAxisConfig}
-      >
-        {/* Render axes first for grid lines to appear behind everything else */}
-        {showXAxis && (
-          <XAxis axisId={xAxisId} dataKey={dataKey} position="end" {...xAxisVisualProps} />
-        )}
-        {showYAxis && (
-          <YAxis axisId={yAxisId} dataKey={dataKey} position="end" {...yAxisVisualProps} />
-        )}
-        {hasData &&
-          series?.map(({ id, data, label, color, xAxisId, yAxisId, ...linePropsFromSeries }) => (
-            <Line
-              key={id}
-              AreaComponent={AreaComponent}
-              LineComponent={LineComponent}
-              areaType={areaType}
-              curve={curve}
-              renderPoints={renderPoints}
-              seriesId={id}
-              showArea={showArea}
-              type={type}
-              {...linePropsFromSeries}
-            />
-          ))}
-        {children}
-      </Chart>
-    );
-  },
+      const xAxisConfig: Partial<AxisConfigProps> = {
+        scaleType: xScaleType,
+        data: xData,
+        categoryPadding: xCategoryPadding,
+        domain: xDomain,
+        domainLimit: xDomainLimit,
+        range: xRange,
+      };
+
+      const yAxisConfig: Partial<AxisConfigProps> = {
+        scaleType: yScaleType,
+        data: yData,
+        categoryPadding: yCategoryPadding,
+        domain: yDomain,
+        domainLimit: yDomainLimit,
+        range: yRange,
+      };
+
+      return (
+        <Chart
+          {...chartProps}
+          ref={ref}
+          enableScrubbing={enableScrubbing}
+          padding={calculatedPadding}
+          series={chartSeries}
+          xAxis={xAxisConfig}
+          yAxis={yAxisConfig}
+        >
+          {/* Render axes first for grid lines to appear behind everything else */}
+          {showXAxis && (
+            <XAxis axisId={xAxisId} dataKey={dataKey} position="end" {...xAxisVisualProps} />
+          )}
+          {showYAxis && (
+            <YAxis axisId={yAxisId} dataKey={dataKey} position="end" {...yAxisVisualProps} />
+          )}
+          {hasData &&
+            series?.map(({ id, data, label, color, xAxisId, yAxisId, ...linePropsFromSeries }) => (
+              <Line
+                key={id}
+                AreaComponent={AreaComponent}
+                LineComponent={LineComponent}
+                areaType={areaType}
+                curve={curve}
+                renderPoints={renderPoints}
+                seriesId={id}
+                showArea={showArea}
+                type={type}
+                {...linePropsFromSeries}
+              />
+            ))}
+          {children}
+        </Chart>
+      );
+    },
+  ),
 );
