@@ -613,6 +613,16 @@ const sidebars: SidebarsConfig = {
               id: 'components/graphs/SparklineInteractiveHeader/sparklineInteractiveHeader',
               label: 'SparklineInteractiveHeader',
             },
+            {
+              type: 'doc',
+              id: 'components/graphs/XAxis/xAxis',
+              label: 'XAxis',
+            },
+            {
+              type: 'doc',
+              id: 'components/graphs/YAxis/yAxis',
+              label: 'YAxis',
+            },
           ],
         },
         {
