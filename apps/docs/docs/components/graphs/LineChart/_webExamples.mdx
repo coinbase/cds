@@ -219,41 +219,19 @@ function PointsChart() {
 
 This example shows how to use an empty state for a line chart.
 
-Todo: figure out if we can handle this without knowing the # of data points in advance.
-
-Can we also handle color change animations for customers?
-
 ```jsx live
-function EmptyStateChart() {
-  const [isLoading, setIsLoading] = useState(true);
-  return (
-    <VStack gap={2}>
-      <Button onClick={() => setIsLoading((loading) => !loading)}>
-        {isLoading ? 'Load Data' : 'Reset'}
-      </Button>
-      <m.div
-        animate={{ '--chartActiveColor': isLoading ? '#717886' : assets.btc.color }}
-        transition={{ duration: 0.3 }}
-      >
-        <LineChart
-          series={[
-            {
-              id: 'line',
-              color: 'var(--chartActiveColor)',
-              data: isLoading
-                ? sparklineInteractiveData.hour.map((price) => 1)
-                : sparklineInteractiveData.hour.map((price) => parseFloat(price.value)),
-              showArea: true,
-            },
-          ]}
-          yAxis={{ domain: isLoading ? { min: -1, max: 3 } : undefined }}
-          enableScrubbing={!isLoading}
-          height={300}
-        />
-      </m.div>
-    </VStack>
-  );
-}
+<LineChart
+  series={[
+    {
+      id: 'line',
+      color: 'rgb(var(--gray50))',
+      data: [1, 1],
+      showArea: true,
+    },
+  ]}
+  yAxis={{ domain: { min: -1, max: 3 } }}
+  height={300}
+/>
 ```
 
 ## Multiple Axes
