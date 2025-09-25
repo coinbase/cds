@@ -202,6 +202,7 @@ export const Scrubber = memo(
             })
             ?.map((s) => {
               const sourceData = getStackedSeriesData(s.id) || getSeriesData(s.id);
+
               // Use dataIndex to get the y value from the series data array
               const stuff = sourceData?.[dataIndex];
               let dataY: number | undefined;
@@ -213,6 +214,10 @@ export const Scrubber = memo(
 
               if (dataY !== undefined) {
                 const yScale = getYScale(s.yAxisId) as ChartScaleFunction;
+                if (!yScale) {
+                  return undefined;
+                }
+
                 const pixelPosition = projectPoint({
                   x: dataX,
                   y: dataY,
@@ -557,10 +562,9 @@ export const Scrubber = memo(
         });
       }, [headPositions]);
 
-      // Check if we have at least the default scales
+      // Check if we have at least the default X scale
       const defaultXScale = getXScale?.();
-      const defaultYScale = getYScale?.();
-      if (!defaultXScale || !defaultYScale) return null;
+      if (!defaultXScale) return null;
 
       // Use custom components if provided
       const ScrubberLineComponent = scrubberComponents?.ScrubberLineComponent ?? ReferenceLine;
@@ -571,7 +575,8 @@ export const Scrubber = memo(
       // todo: figure out why scrubber heads across dataKey values isn't working anymore
       // for animations
 
-      const pixelX = dataX !== undefined ? getPointOnScale(dataX, defaultXScale) : undefined;
+      const pixelX =
+        dataX !== undefined && defaultXScale ? getPointOnScale(dataX, defaultXScale) : undefined;
 
       // todo: figure out if we should disable 'pulse' animation when scrubbing
       return (

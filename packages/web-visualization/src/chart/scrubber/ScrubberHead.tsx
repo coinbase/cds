@@ -156,6 +156,8 @@ export const ScrubberHead = memo(
           radius={radius}
           stroke="var(--color-bg)"
           strokeWidth={2}
+          xAxisId={targetSeries?.xAxisId}
+          yAxisId={targetSeries?.yAxisId}
           {...props}
         />
       );
