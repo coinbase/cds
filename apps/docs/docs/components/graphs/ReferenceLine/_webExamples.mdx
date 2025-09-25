@@ -201,7 +201,6 @@ function DraggablePriceTarget() {
 
       const yScale = getYScale();
 
-      // Set up persistent event listeners on the chart SVG element
       useEffect(() => {
         const element = chartRef.current;
 
@@ -214,39 +213,27 @@ function DraggablePriceTarget() {
             return;
           }
 
-          const point = element.createSVGPoint();
-          point.x = event.clientX;
-          point.y = event.clientY;
-
-          const svgPoint = point.matrixTransform(element.getScreenCTM()?.inverse());
-
           // Clamp the Y position to the chart area
           const clampedY = Math.max(
             drawingArea.y,
-            Math.min(drawingArea.y + drawingArea.height, svgPoint.y),
+            Math.min(drawingArea.y + drawingArea.height, event.offsetY),
           );
 
+          // Round change to nearest whole %
           const rawAmount = yScale.invert(clampedY);
-
           const rawPercentage = ((rawAmount - baselineAmount) / baselineAmount) * 100;
-
           let targetPercentage = Math.round(rawPercentage);
 
-          if (targetPercentage === 0) {
-            targetPercentage = rawPercentage >= 0 ? 1 : -1;
-          }
+          // Cannot select current price
+          if (targetPercentage === 0) targetPercentage = rawPercentage >= 0 ? 1 : -1
 
           const newAmount = baselineAmount * (1 + targetPercentage / 100);
           setAmount(newAmount);
         };
 
-        const handleMouseUp = () => {
-          setIsDragging(false);
-        };
+        const handleMouseUp = () => setIsDragging(false);
 
-        const handleMouseLeave = () => {
-          setIsDragging(false);
-        };
+        const handleMouseLeave = () => setIsDragging(false);
 
         element.addEventListener('mousemove', handleMouseMove);
         element.addEventListener('mouseup', handleMouseUp);
