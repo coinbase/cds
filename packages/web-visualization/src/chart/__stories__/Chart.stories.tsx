@@ -1,5 +1,6 @@
-import React, { forwardRef, memo, useCallback, useMemo, useState } from 'react';
+import React, { forwardRef, memo, useCallback, useId, useMemo, useState } from 'react';
 import { assets } from '@coinbase/cds-common/internal/data/assets';
+import { candles as btcCandles } from '@coinbase/cds-common/internal/data/candles';
 import { prices } from '@coinbase/cds-common/internal/data/prices';
 import type { TabValue } from '@coinbase/cds-common/tabs/useTabs';
 import {
@@ -10,16 +11,18 @@ import {
 import { CellMedia, ListCell } from '@coinbase/cds-web/cells';
 import { Radio } from '@coinbase/cds-web/controls/Radio';
 import { Box, type BoxBaseProps, Divider, HStack, VStack } from '@coinbase/cds-web/layout';
+import { RemoteImage } from '@coinbase/cds-web/media';
+import { SectionHeader } from '@coinbase/cds-web/section-header/SectionHeader';
 import { Pressable } from '@coinbase/cds-web/system';
 import { Text } from '@coinbase/cds-web/typography';
 
 import { Area } from '../area/Area';
 import { XAxis, YAxis } from '../axis';
-import { SolidLine } from '../line';
+import { SolidLine, type SolidLineProps } from '../line';
 import { Line } from '../line/Line';
 import { LineChart } from '../line/LineChart';
 import { ReferenceLine } from '../line/ReferenceLine';
-import { Chart, type ChartTextChildren, PeriodSelector, Scrubber } from '../';
+import { BarPlot, Chart, type ChartTextChildren, PeriodSelector, Scrubber } from '../';
 
 export default {
   component: Chart,
@@ -211,6 +214,7 @@ export const PredictionMarket = () => {
             curve="natural"
             opacity={getSeriesOpacity(series.id)}
             seriesId={series.id}
+            showArea={selectedSeriesId !== null && selectedSeriesId === series.id}
           />
         ))}
         <CustomYAxis />
@@ -507,6 +511,121 @@ export const EarningsHistory = () => {
         <LegendItem label="Estimated EPS" opacity={0.5} />
         <LegendItem label="Actual EPS" />
       </HStack>
+    </VStack>
+  );
+};
+
+export const PriceWithVolume = () => {
+  const [scrubIndex, setScrubIndex] = useState<number | null>(null);
+  const btcData = btcCandles.slice(0, 180).reverse();
+
+  const btcPrices = btcData.map((candle) => parseFloat(candle.close));
+  const btcVolumes = btcData.map((candle) => parseFloat(candle.volume));
+  const btcDates = btcData.map((candle) => new Date(parseInt(candle.start) * 1000));
+
+  const formatPrice = useCallback((price: number) => {
+    return `$${price.toLocaleString('en-US', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    })}`;
+  }, []);
+
+  const formatPriceInThousands = useCallback((price: number) => {
+    return `$${(price / 1000).toLocaleString('en-US', {
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 2,
+    })}k`;
+  }, []);
+
+  const formatVolume = useCallback((volume: number) => {
+    return `${(volume / 1000).toFixed(2)}K`;
+  }, []);
+
+  const formatDate = useCallback((date: Date) => {
+    return date.toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+    });
+  }, []);
+
+  const displayIndex = scrubIndex ?? btcPrices.length - 1;
+  const currentPrice = btcPrices[displayIndex];
+  const currentVolume = btcVolumes[displayIndex];
+  const currentDate = btcDates[displayIndex];
+
+  const accessibilityLabel = useMemo(() => {
+    if (scrubIndex === null)
+      return `Current Bitcoin price: ${formatPrice(currentPrice)}, Volume: ${formatVolume(currentVolume)}`;
+    return `Bitcoin price at ${formatDate(currentDate)}: ${formatPrice(currentPrice)}, Volume: ${formatVolume(currentVolume)}`;
+  }, [scrubIndex, currentPrice, currentVolume, currentDate, formatPrice, formatVolume, formatDate]);
+
+  const ThinSolidLine = memo((props: SolidLineProps) => <SolidLine {...props} strokeWidth={1} />);
+
+  const headerId = useId();
+
+  return (
+    <VStack gap={2}>
+      <SectionHeader
+        balance={<Text font="title2">{formatPrice(currentPrice)}</Text>}
+        end={
+          <HStack gap={2}>
+            <VStack alignItems="flex-end" justifyContent="center">
+              <Text font="label1">{formatDate(currentDate)}</Text>
+              <Text font="label2">{formatVolume(currentVolume)}</Text>
+            </VStack>
+            <VStack justifyContent="center">
+              <RemoteImage shape="circle" size="xl" source={assets.btc.imageUrl} />
+            </VStack>
+          </HStack>
+        }
+        id={headerId}
+        style={{ padding: 0 }}
+        title={<Text font="title1">Bitcoin</Text>}
+      />
+      <Chart
+        enableScrubbing
+        accessibilityLabel={accessibilityLabel}
+        aria-labelledby={headerId}
+        height={250}
+        onScrubberPosChange={setScrubIndex}
+        series={[
+          {
+            id: 'prices',
+            data: btcPrices,
+            color: assets.btc.color,
+            yAxisId: 'price',
+          },
+          {
+            id: 'volume',
+            data: btcVolumes,
+            color: 'var(--color-fgMuted)',
+            yAxisId: 'volume',
+          },
+        ]}
+        style={{ outlineColor: assets.btc.color }}
+        xAxis={{ scaleType: 'band' }}
+        yAxis={[
+          {
+            id: 'price',
+            domain: ({ min, max }) => ({ min: min * 0.9, max }),
+          },
+          {
+            id: 'volume',
+            range: ({ min, max }) => ({ min: max - 32, max }),
+          },
+        ]}
+      >
+        <YAxis
+          showGrid
+          GridLineComponent={ThinSolidLine}
+          axisId="price"
+          size={80}
+          tickLabelFormatter={formatPriceInThousands}
+        />
+        <BarPlot seriesIds={['volume']} />
+        <Line showArea curve="monotone" seriesId="prices" />
+        <Scrubber seriesIds={['prices']} />
+      </Chart>
     </VStack>
   );
 };

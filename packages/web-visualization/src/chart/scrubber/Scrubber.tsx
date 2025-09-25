@@ -71,6 +71,11 @@ export type ScrubberProps = SharedProps &
     scrubberLabelConfig?: ReferenceLineProps['labelConfig'];
 
     /**
+     * Stroke color for the scrubber line.
+     */
+    scrubberLineStroke?: ReferenceLineProps['stroke'];
+
+    /**
      * Custom styles for scrubber elements.
      */
     scrubberStyles?: {
@@ -78,6 +83,7 @@ export type ScrubberProps = SharedProps &
       scrubberLine?: React.CSSProperties;
       scrubberLabel?: React.CSSProperties;
       scrubberHeadLabel?: React.CSSProperties;
+      overlay?: React.CSSProperties;
     };
 
     /**
@@ -88,6 +94,7 @@ export type ScrubberProps = SharedProps &
       scrubberLine?: string;
       scrubberLabel?: string;
       scrubberHeadLabel?: string;
+      overlay?: string;
     };
 
     /**
@@ -122,6 +129,7 @@ export const Scrubber = memo(
         hideScrubberLine,
         scrubberLabel,
         scrubberLabelConfig,
+        scrubberLineStroke,
         scrubberComponents,
         hideOverlay,
         overlayOffset = 2,
@@ -591,9 +599,11 @@ export const Scrubber = memo(
             highlightedIndex !== undefined &&
             pixelX !== undefined && (
               <rect
+                className={scrubberClassNames?.overlay}
                 fill="var(--color-bg)"
                 height={drawingArea.height + overlayOffset * 2}
                 opacity={0.8}
+                style={scrubberStyles?.overlay}
                 width={drawingArea.x + drawingArea.width - pixelX + overlayOffset}
                 x={pixelX}
                 y={drawingArea.y - overlayOffset}
@@ -606,6 +616,7 @@ export const Scrubber = memo(
               label={scrubberLabel}
               labelConfig={scrubberLabelConfig}
               labelPosition="top"
+              stroke={scrubberLineStroke}
               style={scrubberStyles?.scrubberLine}
             />
           )}
