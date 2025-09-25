@@ -49,6 +49,7 @@ type MockDropdownProps = {
   | 'disabled'
   | 'value'
   | 'maxHeight'
+  | 'enableMobileModal'
 >;
 
 export const Default = ({
@@ -57,6 +58,7 @@ export const Default = ({
   disabled,
   subjectTestID,
   customAriaControlsID,
+  enableMobileModal,
   ...props
 }: MockDropdownProps) => {
   const [value, setValue] = useState('');
@@ -105,6 +107,7 @@ export const Default = ({
         content={content}
         controlledElementAccessibilityProps={controlledElementAccessibilityProps}
         disabled={disabled}
+        enableMobileModal={enableMobileModal}
         onChange={setValue}
         onCloseMenu={handleCloseMenu}
         onOpenMenu={handleOpenMenu}
@@ -353,6 +356,10 @@ export const LongText = () => {
     </Dropdown>
   );
 };
+
+export const WithMobileModal = () => (
+  <Default enableMobileModal options={defaultOptions.slice(0, 5)} />
+);
 
 export const WithMaxHeightHigherThanContent = () => (
   <Default maxHeight={400} options={defaultOptions.slice(0, 5)} />

@@ -5,6 +5,7 @@ import {
   animateDropdownTransformInConfig,
   animateDropdownTransformOutConfig,
 } from '@coinbase/cds-common/animation/dropdown';
+import { zIndex } from '@coinbase/cds-common/tokens/zIndex';
 import type { DimensionValue } from '@coinbase/cds-common/types';
 import type { Placement } from '@popperjs/core';
 import { m as motion } from 'framer-motion';
@@ -53,7 +54,7 @@ export const DropdownContent = memo(
           overflow="auto"
           role="menu"
           tabIndex={0}
-          zIndex="dropdown"
+          zIndex={zIndex.dropdown}
           {...props}
           {...motionProps}
         >
