@@ -28,6 +28,7 @@ export const DefaultRollingNumberAffixSection: RollingNumberAffixSectionComponen
         justifyContent = 'flex-start',
         className,
         styles,
+        style,
         classNames,
         ...props
       },
@@ -39,7 +40,7 @@ export const DefaultRollingNumberAffixSection: RollingNumberAffixSectionComponen
           className={cx(containerCss, className, classNames?.root, classNames?.text)}
           color={color}
           justifyContent={justifyContent}
-          style={{ ...styles?.root, ...styles?.text }}
+          style={{ ...style, ...styles?.root, ...styles?.text }}
           {...props}
         >
           {children}

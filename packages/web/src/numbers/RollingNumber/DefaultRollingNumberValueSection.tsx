@@ -38,6 +38,7 @@ export const DefaultRollingNumberValueSection: RollingNumberValueSectionComponen
         transitionConfig,
         styles,
         classNames,
+        style,
         ...props
       },
       ref,
@@ -122,9 +123,10 @@ export const DefaultRollingNumberValueSection: RollingNumberValueSectionComponen
       return (
         <MotionText
           ref={ref}
-          className={cx(containerCss, className)}
+          className={cx(containerCss, className, classNames?.root, classNames?.text)}
           color={color}
           justifyContent={justifyContent}
+          style={{ ...style, ...styles?.root, ...styles?.text }}
           {...props}
         >
           {formattedValue ? formattedValueDigits : intlPartsDigits}

@@ -61,6 +61,7 @@ export const DefaultRollingNumberDigit: RollingNumberDigitComponent = memo(
         color = 'inherit',
         className,
         styles,
+        style,
         classNames,
         ...props
       },
@@ -110,7 +111,7 @@ export const DefaultRollingNumberDigit: RollingNumberDigitComponent = memo(
             ref={internalRef}
             className={cx(digitContainerCss, className, classNames?.root, classNames?.text)}
             color={color}
-            style={{ ...styles?.root, ...styles?.text }}
+            style={{ ...style, ...styles?.root, ...styles?.text }}
             {...props}
           >
             {value !== 0 && (
