@@ -92,7 +92,7 @@ const exampleProps = {
   ),
   end2: (
     <HStack alignItems="center" gap={2}>
-      <Link href="https://cds.coinbase.com/components/link">
+      <Link href="https://cds.cbhq.net/components/link">
         <Text as="p" color="fgPrimary" display="block" font="headline">
           Help
         </Text>

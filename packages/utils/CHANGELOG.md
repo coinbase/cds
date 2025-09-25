@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 2.3.1 (9/23/2025 PST)
+
+### 🐞 Fixes
+
+- Fix v7 subpath issue.
+
 ## 2.3.0 (9/18/2025 PST)
 
 - Prepare for open source release.

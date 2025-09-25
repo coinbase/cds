@@ -21,7 +21,7 @@ export type ColorSchemePreference = ColorScheme | 'system';
  * @danger You probably don't want to use this namespace directly, unless you are
  * referring explicitly to ONLY the default CDS variables. Otherwise, you probably
  * want to use the ThemeVars namespace instead, which inherits from this namespace.
- * @docs http://cds.coinbase.com/getting-started/theming/#themevars-namespace
+ * @docs http://cds.cbhq.net/getting-started/theming/#themevars-namespace
  */
 export namespace ThemeVarsDefault {
   export interface SpectrumHue {
@@ -230,7 +230,7 @@ declare module '@cbhq/cds-common/core/theme' {
    * @danger Only use this namespace for overriding. Once overridden, you should
    * prefer to read from the ThemeVars namespace instead, which inherits from this
    * namespace.
-   * @docs http://cds.coinbase.com/getting-started/theming/#extending-the-theme
+   * @docs http://cds.cbhq.net/getting-started/theming/#extending-the-theme
    */
   export namespace ThemeVarsExtended {
     export interface SpectrumHue {}
@@ -260,7 +260,7 @@ declare module '@cbhq/cds-common/core/theme' {
  * namespaces. You can use this namespace to read all available Theme variables.
  * You can use the ThemeVarsExtended namespace to extend this namespace with new
  * variables.
- * @docs http://cds.coinbase.com/getting-started/theming/#themevars-namespace
+ * @docs http://cds.cbhq.net/getting-started/theming/#themevars-namespace
  */
 export namespace ThemeVars {
   export type SpectrumHue = Prettify<

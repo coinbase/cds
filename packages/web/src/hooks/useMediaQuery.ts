@@ -10,7 +10,7 @@ export const useMediaQuery = (query: string): boolean => {
   if (!context) throw Error('useMediaQuery must be used within a MediaQueryProvider');
   if (isDevelopment() && complexQueryCharacters.some((char) => query.includes(char))) {
     console.warn(
-      `useMediaQuery received a complex query which may return an incorrect result for server renders: "${query}". See the docs at https://cds.coinbase.com/hooks/useMediaQuery/#ssr-support`,
+      `useMediaQuery received a complex query which may return an incorrect result for server renders: "${query}". See the docs at https://cds.cbhq.net/hooks/useMediaQuery/#ssr-support`,
     );
   }
   const { subscribe, getSnapshot, getServerSnapshot } = context;

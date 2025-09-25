@@ -12,7 +12,7 @@ import pkg from '../package.json' with { type: 'json' };
 import { postMetric } from './analytics.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const DOCS_PATH = path.join(__dirname, '../../mcp-docs');
+const DOCS_PATH = path.join(__dirname, '../mcp-docs');
 
 const log = (...message: string[]) => {
   // Using console.error to prevent conflicts with the mcp server which uses stdio to communicate with the client

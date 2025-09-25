@@ -4,6 +4,7 @@ secure:
   branches:
     - master
   auto_assign_reviewers: true
+  upstream_repository: coinbase/cds
 build:
   engines:
     # Apps
