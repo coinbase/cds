@@ -49,8 +49,17 @@ const screenReaderOnlyCss = css`
   border: 0;
 `;
 
+/**
+ * Defines transition overrides for RollingNumber animations.
+ */
 type RollingNumberTransitionConfig = {
+  /**
+   * Transition override applied to the vertical translation animation.
+   */
   y?: Transition;
+  /**
+   * Transition override applied to the color interpolation animation.
+   */
   color?: Transition;
 };
 
@@ -61,67 +70,193 @@ export const defaultTransitionConfig = {
 
 // Subcomponent prop and component type declarations
 export type RollingNumberMaskProps = TextProps<TextDefaultElement> & {
+  /**
+   * Content rendered inside the mask container.
+   */
   children?: React.ReactNode;
+  /**
+   * Ref forwarded to the mask element.
+   */
   ref?: React.Ref<HTMLSpanElement>;
 };
 
 export type RollingNumberAffixSectionProps = TextProps<TextDefaultElement> & {
+  /**
+   * Content rendered inside the affix section.
+   */
   children?: React.ReactNode;
+  /**
+   * Ref forwarded to the affix section wrapper element.
+   */
   ref?: React.Ref<HTMLSpanElement>;
+  /**
+   * Inline style overrides applied to the affix section.
+   */
   styles?: {
+    /**
+     * Inline style override applied to the affix section container.
+     */
     root?: React.CSSProperties;
+    /**
+     * Inline style override applied to the text within the section.
+     */
     text?: React.CSSProperties;
   };
+  /**
+   * Class name overrides applied to the affix section.
+   */
   classNames?: {
+    /**
+     * Class name override applied to the affix section container.
+     */
     root?: string;
+    /**
+     * Class name override applied to the text within the section.
+     */
     text?: string;
   };
 };
 
 export type RollingNumberValueSectionProps = TextProps<TextDefaultElement> & {
+  /**
+   * Parts provided by Intl.NumberFormat used to render the formatted value.
+   */
   intlNumberParts: KeyedNumberPart[];
+  /**
+   * Component used to render numeric digits within the section.
+   */
   RollingNumberDigitComponent?: RollingNumberDigitComponent;
+  /**
+   * Component used to render non-digit symbols within the section.
+   */
   RollingNumberSymbolComponent?: RollingNumberSymbolComponent;
+  /**
+   * Component used to mask and animate digit transitions.
+   */
   RollingNumberMaskComponent?: RollingNumberMaskComponent;
+  /**
+   * Preformatted string rendered instead of intlNumberParts when provided.
+   */
   formattedValue?: string;
+  /**
+   * Transition overrides applied to digit and symbol animations.
+   */
   transitionConfig?: RollingNumberTransitionConfig;
+  /**
+   * Inline style overrides applied to the value section.
+   */
   styles?: {
+    /**
+     * Inline style override applied to the section container.
+     */
     root?: React.CSSProperties;
+    /**
+     * Inline style override applied to text within the section.
+     */
     text?: React.CSSProperties;
   };
+  /**
+   * Class name overrides applied to the value section.
+   */
   classNames?: {
+    /**
+     * Class name override applied to the section container.
+     */
     root?: string;
+    /**
+     * Class name override applied to text within the section.
+     */
     text?: string;
   };
+  /**
+   * Ref forwarded to the section container element.
+   */
   ref?: React.Ref<HTMLSpanElement>;
 };
 
 export type RollingNumberDigitProps = TextProps<TextDefaultElement> & {
+  /**
+   * Digit currently displayed in the animated column.
+   */
   value: number;
+  /**
+   * Digit displayed during the initial render.
+   */
   initialValue?: number;
+  /**
+   * Transition overrides applied to the digit animation.
+   */
   transitionConfig?: RollingNumberTransitionConfig;
+  /**
+   * Component used to mask the digit column.
+   */
   RollingNumberMaskComponent?: RollingNumberMaskComponent;
+  /**
+   * Inline style overrides applied to the digit component.
+   */
   styles?: {
+    /**
+     * Inline style override applied to the digit container.
+     */
     root?: React.CSSProperties;
+    /**
+     * Inline style override applied to the digit text.
+     */
     text?: React.CSSProperties;
   };
+  /**
+   * Class name overrides applied to the digit component.
+   */
   classNames?: {
+    /**
+     * Class name override applied to the digit container.
+     */
     root?: string;
+    /**
+     * Class name override applied to the digit text.
+     */
     text?: string;
   };
+  /**
+   * Ref forwarded to the digit container element.
+   */
   ref?: React.Ref<HTMLSpanElement>;
 };
 
 export type RollingNumberSymbolProps = TextProps<TextDefaultElement> & {
+  /**
+   * Literal symbol rendered within the number stream.
+   */
   value: string;
+  /**
+   * Inline style overrides applied to the symbol component.
+   */
   styles?: {
+    /**
+     * Inline style override applied to the symbol container.
+     */
     root?: React.CSSProperties;
+    /**
+     * Inline style override applied to the symbol text.
+     */
     text?: React.CSSProperties;
   };
+  /**
+   * Class name overrides applied to the symbol component.
+   */
   classNames?: {
+    /**
+     * Class name override applied to the symbol container.
+     */
     root?: string;
+    /**
+     * Class name override applied to the symbol text.
+     */
     text?: string;
   };
+  /**
+   * Ref forwarded to the symbol container element.
+   */
   ref?: React.Ref<HTMLSpanElement>;
 };
 
@@ -138,102 +273,89 @@ export type RollingNumberValueSectionComponent = React.FC<RollingNumberValueSect
 export type RollingNumberBaseProps = SharedProps &
   TextBaseProps & {
     /**
-     * Number to display
+     * Number to display.
      */
     value: number;
     /**
-     * Format configuration to apply to the value. Uses the JS's Intl.NumberFormat API.
-     * Scientific and engineering notation are not supported.
+     * Intl.NumberFormat options applied when formatting the value. Scientific and engineering notation are not supported.
      */
     format?: Omit<Intl.NumberFormatOptions, 'notation'> & {
       notation?: Extract<Intl.NumberFormatOptions['notation'], 'standard' | 'compact'>;
     };
     /**
-     * Formatted number to display. If provided, we will render this instead of using value and format.
-     * We will still need to use value to determine increase or decrease.
+     * Preformatted value rendered instead of formatting {@link value}. {@link value} is still used to determine numeric deltas.
      */
     formattedValue?: string;
     /**
-     * Prefix to display before the number.
+     * Content rendered before the formatted value.
      */
     prefix?: React.ReactNode;
     /**
-     * Suffix to display after the number.
+     * Content rendered after the formatted value.
      */
     suffix?: React.ReactNode;
     /**
-     * Override mask component
+     * Component used to render the mask container.
      */
     RollingNumberMaskComponent?: RollingNumberMaskComponent;
     /**
-     * Override node section component
+     * Component used to render prefix and suffix sections.
      */
     RollingNumberAffixSectionComponent?: RollingNumberAffixSectionComponent;
     /**
-     * Override number section component
+     * Component used to render the numeric sections.
      */
     RollingNumberValueSectionComponent?: RollingNumberValueSectionComponent;
     /**
-     * Override number digit component
+     * Component used to render individual digits.
      */
     RollingNumberDigitComponent?: RollingNumberDigitComponent;
     /**
-     * Override number symbol component
+     * Component used to render separators and other symbols.
      */
     RollingNumberSymbolComponent?: RollingNumberSymbolComponent;
     /**
-     * Locale to use for formatting. If not provided, will use the locale provided in LocaleProvider.
+     * Locale used for formatting. Defaults to the locale from {@link LocaleProvider}.
      */
     locale?: Intl.LocalesArgument;
     /**
-     * Base text color token.
-     * When {@link colorPulseOnUpdate} is true, the color will briefly pulse to a
-     * positive/negative mid color based on numeric change before returning to this base color.
-     * @default 'fg'
+     * Base text color token. When {@link colorPulseOnUpdate} is true, the color briefly pulses to a positive or negative mid color before returning to this base color. Defaults to {@code 'fg'}.
      */
     color?: ThemeVars.Color;
     /**
-     * Enable color pulse on numeric changes (positive/negative).
-     * @default false
+     * Enables color pulsing on positive or negative changes. Defaults to {@code false}.
      */
     colorPulseOnUpdate?: boolean;
     /**
-     * Color to use for positive numeric changes.
-     * @default 'fgPositive'
+     * Color token used for positive numeric changes. Defaults to {@code 'fgPositive'}.
      */
     positivePulseColor?: ThemeVars.Color;
     /**
-     * Color to use for negative numeric changes.
-     * @default 'fgNegative'
+     * Color token used for negative numeric changes. Defaults to {@code 'fgNegative'}.
      */
     negativePulseColor?: ThemeVars.Color;
     /**
-     * Enable subscript notation for leading zeros in the fractional part.
-     * Example: 0.00009 => 0.0₄9
+     * Enables subscript notation for leading zeros in the fractional part (for example, {@code 0.00009 => 0.0₄9}).
      */
     enableSubscriptNotation?: boolean;
     /**
-     * framer-motion transition config.
-     * Only allow per-property transitions like { y: { duration: 1 }, color: { duration: 1 } } instead of {{ duration: 1 }}
-     * Only allow customization of 'y' and 'color' properties.
+     * Framer Motion transition overrides. Supports per-property overrides for {@code y} and {@code color} only.
      */
     transition?: RollingNumberTransitionConfig;
     /**
-     * Accessibility prefix to announce before.
+     * Accessibility label prefix announced before the value.
      */
     accessibilityLabelPrefix?: string;
     /**
-     * Accessibility suffix to announce after.
+     * Accessibility label suffix announced after the value.
      */
     accessibilityLabelSuffix?: string;
     /**
-     * Aria-live attribute value.
-     * @default 'polite'
+     * aria-live politeness level. Defaults to {@code 'polite'}.
      */
     ariaLive?: React.AriaAttributes['aria-live'];
     /**
-     * Enable tabular numbers.
-     * @default true
+     * Enables tabular figures on the underlying {@link Text}. Defaults to {@code true}.
      */
     tabularNumbers?: boolean;
   };
@@ -242,13 +364,28 @@ export type RollingNumberProps<AsComponent extends React.ElementType> = Polymorp
   AsComponent,
   RollingNumberBaseProps & {
     /**
-     * Custom class names for the component.
+     * Class name overrides applied to RollingNumber slots.
      */
     classNames?: {
+      /**
+       * Class override applied to the outer container element.
+       */
       root?: string;
+      /**
+       * Class override applied to the animated content wrapper that is visually rendered.
+       */
       visibleContent?: string;
+      /**
+       * Class override applied to the wrapper for the formatted numeric value.
+       */
       formattedValueSection?: string;
+      /**
+       * Class override applied to the prefix section rendered from props.
+       */
       prefix?: string;
+      /**
+       * Class override applied to the suffix section rendered from props.
+       */
       suffix?: string;
       /**
        * The prefix generated by Intl.NumberFormat, for example, the "$" in "$1,000".
@@ -258,21 +395,42 @@ export type RollingNumberProps<AsComponent extends React.ElementType> = Polymorp
        * The suffix generated by Intl.NumberFormat, for example, the "K" in "100K".
        */
       i18nSuffix?: string;
+      /**
+       * Class override applied to the integer portion of the formatted value.
+       */
       integer?: string;
+      /**
+       * Class override applied to the fractional portion of the formatted value.
+       */
       fraction?: string;
       /**
-       * The text to display.
+       * Class override applied to the Text component rendering digits and symbols.
        */
       text?: string;
     };
     /**
-     * Custom styles for the component.
+     * Inline style overrides applied to RollingNumber slots.
      */
     styles?: {
+      /**
+       * Inline style override applied to the outer container element.
+       */
       root?: React.CSSProperties;
+      /**
+       * Inline style override applied to the animated content wrapper that is visually rendered.
+       */
       visibleContent?: React.CSSProperties;
+      /**
+       * Inline style override applied to the wrapper for the formatted numeric value.
+       */
       formattedValueSection?: React.CSSProperties;
+      /**
+       * Inline style override applied to the prefix section rendered from props.
+       */
       prefix?: React.CSSProperties;
+      /**
+       * Inline style override applied to the suffix section rendered from props.
+       */
       suffix?: React.CSSProperties;
       /**
        * The prefix generated by Intl.NumberFormat, for example, the "$" in "$1,000".
@@ -282,10 +440,16 @@ export type RollingNumberProps<AsComponent extends React.ElementType> = Polymorp
        * The suffix generated by Intl.NumberFormat, for example, the "K" in "100K".
        */
       i18nSuffix?: React.CSSProperties;
+      /**
+       * Inline styles applied to the integer portion of the formatted value.
+       */
       integer?: React.CSSProperties;
+      /**
+       * Inline styles applied to the fractional portion of the formatted value.
+       */
       fraction?: React.CSSProperties;
       /**
-       * The text to display.
+       * Inline styles applied to the Text component rendering digits and symbols.
        */
       text?: React.CSSProperties;
     };
