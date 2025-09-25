@@ -42,7 +42,7 @@ export const GradientArea = memo<GradientAreaProps>(
     fillOpacity = 1,
     peakColor,
     baselineColor,
-    peakOpacity = 0.3,
+    peakOpacity = 0.4 * fillOpacity,
     baselineOpacity = 0,
     yAxisId,
     clipRect,
