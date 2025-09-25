@@ -1,0 +1,13 @@
+{
+  "import": "import { XAxis } from '@coinbase/cds-web-visualization'",
+  "relatedComponents": [
+    {
+      "label": "LineChart",
+      "url": "/components/graphs/LineChart/"
+    },
+    {
+      "label": "SparklineInteractive",
+      "url": "/components/graphs/SparklineInteractive/"
+    }
+  ]
+}

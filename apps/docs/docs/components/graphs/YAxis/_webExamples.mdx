@@ -1,0 +1,431 @@
+## Basic Example
+
+The YAxis component provides a vertical axis for charts with automatic tick generation and labeling.
+
+```jsx live
+<Chart
+  enableScrubbing
+  height={250}
+  series={[
+    {
+      id: 'prices',
+      data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+    },
+  ]}
+>
+  <YAxis position="end" showGrid />
+  <Line seriesId="prices" curve="monotone" showArea />
+  <Scrubber />
+</Chart>
+```
+
+## Axis Config
+
+Properties related to the scale of an axis are set on the Chart component. This includes `scaleType`, `domain`, `domainLimit`, `range`, `data`, and `categoryPadding`.
+
+### Scale Type
+
+YAxis supports `linear` (default) and `log` scale types. Both `linear` and `log` are numeric scales.
+
+```jsx live
+<Chart
+  height={400}
+  series={[
+    {
+      id: 'growthExponential',
+      data: [
+        1, 2, 4, 8, 15, 30, 65, 140, 280, 580, 1200, 2400, 4800, 9500, 19000, 38000, 75000, 150000,
+      ],
+      color: 'var(--color-fgPositive)',
+    },
+  ]}
+  yAxis={{
+    scaleType: 'log',
+  }}
+>
+  <Line seriesId="growthExponential" />
+  <YAxis
+    showGrid
+    showLine
+    showTickMarks
+    position="end"
+    requestedTickCount={6}
+    size={70}
+    tickLabelFormatter={(value) => value.toLocaleString()}
+  />
+</Chart>
+```
+
+### Domain
+
+An axis's domain is the range of values that the axis will display.
+You can pass in either an object (AxisBounds) with `min` and `max` properties (both optional), or a function that receives initial `AxisBounds` and returns an adjusted `AxisBounds`.
+
+```jsx live
+<Chart
+  height={250}
+  series={[
+    {
+      id: 'prices',
+      data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+    },
+  ]}
+  yAxis={{
+    domain: ({ min, max }) => ({ min: min - 50, max: max + 50 }),
+  }}
+>
+  <YAxis position="end" showGrid />
+  <Line seriesId="prices" curve="monotone" showArea />
+</Chart>
+```
+
+#### Domain Limit
+
+You can set the domain limit to `nice` (default for YAxis) or `strict`. `nice` will round the domain to human-friendly values, while `strict` will use the exact min/max values from the data. See [d3-scale](https://d3js.org/d3-scale/linear#linear_nice) for more details.
+
+### Range
+
+An axis's range is the range of values that the axis will display in pixels. This is most useful for adjusting the sizing of the data inside of the chart's drawing area.
+
+You can pass in either an object (AxisBounds) with `min` and `max` properties (both optional), or a function that receives initial `AxisBounds` and returns an adjusted `AxisBounds`.
+
+```jsx live
+<Chart
+  height={250}
+  series={[
+    {
+      id: 'prices',
+      data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+    },
+  ]}
+  yAxis={{
+    range: ({ min, max }) => ({ min: min + 96, max: max - 96 }),
+  }}
+>
+  <Line seriesId="prices" curve="monotone" showArea />
+</Chart>
+```
+
+## Axis Props
+
+Properties related to the visual appearance of the YAxis are set on the component itself. This includes `position`, `showGrid`, `showLine`, `showTickMarks`, `size`, `tickInterval`, `ticks`, `tickLabelFormatter`, and `tickMarkSize`.
+
+### Position
+
+You can set the position of an axis to `start` or `end`. The default is `end`.
+
+```jsx live
+<Chart
+  enableScrubbing
+  height={512}
+  series={[
+    {
+      id: 'linear',
+      yAxisId: 'linearAxis',
+      data: [1, 10, 30, 50, 70, 90, 100],
+      label: 'linear',
+    },
+    { id: 'log', yAxisId: 'logAxis', data: [1, 10, 30, 50, 70, 90, 100], label: 'log' },
+  ]}
+  xAxis={[{ data: [1, 10, 30, 50, 70, 90, 100] }]}
+  yAxis={[
+    { id: 'linearAxis', scaleType: 'linear' },
+    { id: 'logAxis', scaleType: 'log' },
+  ]}
+>
+  <YAxis showLine showTickMarks axisId="logAxis" position="start" />
+  <YAxis showLine showTickMarks axisId="linearAxis" position="end" />
+  <Line curve="natural" seriesId="linear" />
+  <Line curve="natural" seriesId="log" />
+  <Scrubber />
+</Chart>
+```
+
+### Grid
+
+You can show grid lines at each tick position using the `showGrid` prop.
+
+```jsx live
+function YAxisGridExample() {
+  const [showGrid, setShowGrid] = useState(true);
+  return (
+    <VStack gap={2}>
+      <HStack gap={2} style={{ flexWrap: 'wrap' }}>
+        <Switch checked={showGrid} onChange={() => setShowGrid(!showGrid)}>
+          Show Grid
+        </Switch>
+      </HStack>
+      <Chart
+        enableScrubbing
+        height={250}
+        series={[
+          {
+            id: 'prices',
+            data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+          },
+        ]}
+      >
+        <YAxis position="end" showGrid={showGrid} />
+        <Line seriesId="prices" curve="monotone" showArea />
+        <Scrubber />
+      </Chart>
+    </VStack>
+  );
+}
+```
+
+You can also customize the grid lines using the `GridLineComponent` prop.
+
+```jsx live
+function CustomGridLineExample() {
+  const ThinSolidLine = memo((props: SolidLineProps) => <SolidLine {...props} strokeWidth={1} />);
+
+  const categories = Array.from({ length: 31 }, (_, i) => `3/${i + 1}`);
+  const gains = [
+    5, 0, 6, 18, 0, 5, 12, 0, 12, 22, 28, 18, 0, 12, 6, 0, 0, 24, 0, 0, 4, 0, 18, 0, 0, 14, 10, 16,
+    0, 0, 0,
+  ];
+  const losses = [
+    -4, 0, -8, -12, -6, 0, 0, 0, -18, 0, -12, 0, -9, -6, 0, 0, 0, 0, -22, -8, 0, 0, -10, -14, 0, 0,
+    0, 0, 0, -12, -10,
+  ];
+  const series = [
+    { id: 'gains', data: gains, color: 'var(--color-fgPositive)', stackId: 'bars' },
+    { id: 'losses', data: losses, color: 'var(--color-fgNegative)', stackId: 'bars' },
+  ];
+
+  return (
+    <Chart
+      height={420}
+      padding={32}
+      series={series}
+      xAxis={{ data: categories, scaleType: 'band' }}
+    >
+      <XAxis />
+      <YAxis
+        showGrid
+        GridLineComponent={ThinSolidLine}
+        tickLabelFormatter={(value) => `$${value}M`}
+      />
+      <BarPlot />
+      <ReferenceLine LineComponent={SolidLine} dataY={0} />
+    </Chart>
+  );
+};
+```
+
+### Line
+
+You can show the axis line using the `showLine` prop.
+
+```jsx live
+function YAxisLineExample() {
+  const [showLine, setShowLine] = useState(true);
+  return (
+    <VStack gap={2}>
+      <HStack gap={2} style={{ flexWrap: 'wrap' }}>
+        <Switch checked={showLine} onChange={() => setShowLine(!showLine)}>
+          Show Line
+        </Switch>
+      </HStack>
+      <Chart
+        enableScrubbing
+        height={250}
+        series={[
+          {
+            id: 'prices',
+            data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+          },
+        ]}
+      >
+        <YAxis position="end" showLine={showLine} />
+        <Line seriesId="prices" curve="monotone" showArea />
+        <Scrubber />
+      </Chart>
+    </VStack>
+  );
+}
+```
+
+You can also customize the axis line using the `classNames` and `styles` props.
+
+```jsx live
+function YAxisLineStylesExample() {
+  const [showLine, setShowLine] = useState(true);
+  return (
+    <VStack gap={2}>
+      <HStack gap={2} style={{ flexWrap: 'wrap' }}>
+        <Switch checked={showLine} onChange={() => setShowLine(!showLine)}>
+          Show Line
+        </Switch>
+      </HStack>
+      <Chart
+        enableScrubbing
+        height={250}
+        series={[
+          {
+            id: 'prices',
+            data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+          },
+        ]}
+      >
+        <YAxis
+          position="end"
+          showLine={showLine}
+          showGrid
+          styles={{ line: { stroke: 'var(--color-accentBoldGreen)', strokeWidth: 4 } }}
+        />
+        <Line seriesId="prices" curve="monotone" showArea />
+        <Scrubber />
+      </Chart>
+    </VStack>
+  );
+}
+```
+
+### Size
+
+The `size` prop sets the size of the axis in pixels. The default is 44 for YAxis, but can be adjusted to fit the size of your data.
+
+```jsx live
+<Chart
+  height={400}
+  series={[
+    {
+      id: 'growthExponential',
+      data: [
+        1, 2, 4, 8, 15, 30, 65, 140, 280, 580, 1200, 2400, 4800, 9500, 19000, 38000, 75000, 150000,
+      ],
+      color: 'var(--color-fgPositive)',
+    },
+  ]}
+>
+  <Line curve="natural" showArea seriesId="growthExponential" />
+  <YAxis
+    showGrid
+    showLine
+    showTickMarks
+    position="end"
+    requestedTickCount={6}
+    size={70}
+    tickLabelFormatter={(value) => value.toLocaleString()}
+  />
+</Chart>
+```
+
+### Ticks
+
+You can use the `ticks`, `requestedTickCount` (default for YAxis), and `tickInterval` props to control the number and placement of ticks on the YAxis.
+
+`ticks` accepts an array of numbers, which corresponds to the values of that axis that you would like to display ticks for.
+
+```jsx live
+<Chart
+  enableScrubbing
+  height={250}
+  series={[
+    {
+      id: 'prices',
+      data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+    },
+  ]}
+>
+  <YAxis position="end" showLine showTickMarks showGrid ticks={[34, 56, 80]} />
+  <Line seriesId="prices" curve="monotone" showArea />
+  <Scrubber />
+</Chart>
+```
+
+Using `requestedTickCount` will use [D3's ticks function](https://d3js.org/d3-array/ticks#ticks) to determine the number and placement of ticks. Note that this count is not guaranteed to be respected.
+
+This is the default behavior for YAxis, and defaults to `5`.
+
+```jsx live
+<Chart
+  enableScrubbing
+  height={250}
+  series={[
+    {
+      id: 'prices',
+      data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+    },
+  ]}
+>
+  <YAxis position="end" showLine showTickMarks showGrid requestedTickCount={5} />
+  <Line seriesId="prices" curve="monotone" showArea />
+  <Scrubber />
+</Chart>
+```
+
+`tickInterval`, which accepts `ThemeVars.Space`, will measure the available space and try to create evenly spaced ticks. It will always include the first and last values of the domain.
+
+```jsx live
+<Chart
+  enableScrubbing
+  height={250}
+  series={[
+    {
+      id: 'prices',
+      data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+    },
+  ]}
+>
+  <YAxis position="end" showLine showTickMarks showGrid tickInterval={1} />
+  <Line seriesId="prices" curve="monotone" showArea />
+  <Scrubber />
+</Chart>
+```
+
+### Tick Marks
+
+You can show tick marks on the axis using the `showTickMarks` prop. You can also customize the tick mark size using the `tickMarkSize` prop, which accepts `ThemeVars.Space`.
+
+```jsx live
+function YAxisTickMarksExample() {
+  const [showTickMarks, setShowTickMarks] = useState(true);
+  return (
+    <VStack gap={2}>
+      <HStack gap={2} style={{ flexWrap: 'wrap' }}>
+        <Switch checked={showTickMarks} onChange={() => setShowTickMarks(!showTickMarks)}>
+          Show Tick Marks
+        </Switch>
+      </HStack>
+      <Chart
+        enableScrubbing
+        height={250}
+        series={[
+          {
+            id: 'prices',
+            data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+          },
+        ]}
+      >
+        <YAxis position="end" showLine showTickMarks={showTickMarks} tickMarkSize={2} showGrid />
+        <Line seriesId="prices" curve="monotone" showArea />
+        <Scrubber />
+      </Chart>
+    </VStack>
+  );
+}
+```
+
+### Tick Labels
+
+You can customize the tick labels using the `tickLabelFormatter` prop.
+
+```jsx live
+<Chart
+  enableScrubbing
+  height={250}
+  series={[
+    {
+      id: 'prices',
+      data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+    },
+  ]}
+>
+  <YAxis position="end" showGrid tickLabelFormatter={(value) => `$${value}`} />
+  <Line seriesId="prices" curve="monotone" showArea />
+  <Scrubber />
+</Chart>
+```
