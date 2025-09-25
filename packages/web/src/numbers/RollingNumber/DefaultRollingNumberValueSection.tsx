@@ -36,6 +36,8 @@ export const DefaultRollingNumberValueSection: RollingNumberValueSectionComponen
         RollingNumberMaskComponent = DefaultRollingNumberMask,
         formattedValue,
         transitionConfig,
+        styles,
+        classNames,
         ...props
       },
       ref,
@@ -49,14 +51,18 @@ export const DefaultRollingNumberValueSection: RollingNumberValueSectionComponen
             typeof part.value !== 'number' ? (
               <RollingNumberSymbolComponent
                 key={part.type === 'literal' ? `${part.key}:${part.value}` : part.key}
+                classNames={{ text: classNames?.text }}
                 justifyContent={justifyContent}
+                styles={{ text: styles?.text }}
                 value={String(part.value)}
               />
             ) : (
               <RollingNumberDigitComponent
                 key={part.key}
                 RollingNumberMaskComponent={RollingNumberMaskComponent}
+                classNames={{ text: classNames?.text }}
                 initialValue={hasMounted ? 0 : undefined}
+                styles={{ text: styles?.text }}
                 transitionConfig={transitionConfig}
                 value={part.value}
               />
@@ -70,6 +76,8 @@ export const DefaultRollingNumberValueSection: RollingNumberValueSectionComponen
           hasMounted,
           transitionConfig,
           RollingNumberMaskComponent,
+          styles?.text,
+          classNames?.text,
         ],
       );
 
@@ -82,14 +90,18 @@ export const DefaultRollingNumberValueSection: RollingNumberValueSectionComponen
                 <RollingNumberDigitComponent
                   key={index}
                   RollingNumberMaskComponent={RollingNumberMaskComponent}
+                  classNames={{ text: classNames?.text }}
                   initialValue={hasMounted ? 0 : undefined}
+                  styles={{ text: styles?.text }}
                   transitionConfig={transitionConfig}
                   value={parseInt(char)}
                 />
               ) : (
                 <RollingNumberSymbolComponent
                   key={index}
+                  classNames={{ text: classNames?.text }}
                   justifyContent={justifyContent}
+                  styles={{ text: styles?.text }}
                   value={char}
                 />
               ),
@@ -102,6 +114,8 @@ export const DefaultRollingNumberValueSection: RollingNumberValueSectionComponen
           justifyContent,
           RollingNumberMaskComponent,
           transitionConfig,
+          styles?.text,
+          classNames?.text,
         ],
       );
 

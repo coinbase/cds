@@ -17,9 +17,15 @@ const containerCss = css`
 
 export const DefaultRollingNumberSymbol: RollingNumberSymbolComponent = memo(
   forwardRef<HTMLSpanElement, RollingNumberSymbolProps>(
-    ({ value, color = 'inherit', className, ...props }, ref) => {
+    ({ value, color = 'inherit', className, styles, classNames, ...props }, ref) => {
       return (
-        <MotionText ref={ref} className={cx(containerCss, className)} color={color} {...props}>
+        <MotionText
+          ref={ref}
+          className={cx(containerCss, className, classNames?.root, classNames?.text)}
+          color={color}
+          style={{ ...styles?.root, ...styles?.text }}
+          {...props}
+        >
           {value}
         </MotionText>
       );
