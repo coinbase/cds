@@ -44,6 +44,7 @@ export type LineSeries = Omit<Series, 'data'> & {
       | 'onPointClick'
       | 'showArea'
       | 'areaType'
+      | 'areaBaseline'
       | 'type'
       | 'type'
       | 'LineComponent'

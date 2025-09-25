@@ -1,4 +1,4 @@
-import React, { memo, useRef } from 'react';
+import React, { memo } from 'react';
 import { candles as btcCandles } from '@coinbase/cds-common/internal/data/candles';
 import {
   isCategoricalScale,
@@ -183,63 +183,6 @@ const MonthlyRewards = () => {
         },
         categoryPadding: 0.27,
       }}
-    />
-  );
-};
-
-const GradientBars = () => {
-  const GradientBarComponent = memo<BarComponentProps>(({ fill, ...props }) => {
-    const { getYScale } = useChartContext();
-    const yScale = getYScale?.();
-
-    const gradientId = useRef(generateRandomId()).current;
-
-    let linearGradient = null;
-
-    if (yScale) {
-      const range = yScale.range();
-
-      linearGradient = (
-        <defs>
-          <linearGradient
-            gradientUnits="userSpaceOnUse"
-            id={gradientId}
-            x1="0%"
-            x2="0%"
-            y1={range[0]}
-            y2={range[1]}
-          >
-            <stop offset="0%" stopColor={fill} stopOpacity={0} />
-            <stop offset="100%" stopColor={fill} stopOpacity={1} />
-          </linearGradient>
-        </defs>
-      );
-    }
-
-    return (
-      <>
-        {linearGradient}
-        <DefaultBar {...props} fill={`url(#${gradientId})`} />
-      </>
-    );
-  });
-
-  // todo: figure out why our domain function wasn't working
-  // yAxis={{ domain: (bounds) => ({ min: bounds.min, max: bounds.max * 2 }) }}
-  return (
-    <BarChart
-      BarComponent={GradientBarComponent}
-      height={400}
-      padding={0}
-      series={[
-        {
-          id: 'pageViews',
-          data: [58, 49, 98, 85, 48, 38, 43],
-          color: 'rgb(var(--light-gray0))',
-        },
-      ]}
-      style={{ backgroundColor: 'rgb(var(--purple60))', borderRadius: 'var(--borderRadius-300)' }}
-      yAxis={{ domain: { max: 125 } }}
     />
   );
 };
@@ -533,9 +476,6 @@ export const All = () => {
           />
           <BarPlot />
         </Chart>
-      </Example>
-      <Example title="Gradient Bars">
-        <GradientBars />
       </Example>
       <Example title="Candlestick Chart">
         <Candlesticks />

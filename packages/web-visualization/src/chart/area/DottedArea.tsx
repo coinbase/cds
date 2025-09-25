@@ -81,6 +81,7 @@ export const DottedArea = memo<DottedAreaProps>(
     dotSize = 1,
     peakOpacity = 1,
     baselineOpacity = 0,
+    baseline,
     yAxisId,
     classNames,
     styles,
@@ -109,28 +110,27 @@ export const DottedArea = memo<DottedAreaProps>(
     if (yScale && yDomain) {
       const [minValue, maxValue] = yDomain;
 
-      // Determine baseline: 0 if in domain, else closest edge to 0
-      let baseline: number;
+      let dataBaseline: number;
       if (minValue >= 0) {
         // All positive: baseline at min
-        baseline = minValue;
+        dataBaseline = minValue;
       } else if (maxValue <= 0) {
         // All negative: baseline at max
-        baseline = maxValue;
+        dataBaseline = maxValue;
       } else {
         // Crosses zero: baseline at 0
-        baseline = 0;
+        dataBaseline = 0;
       }
 
       if (useUserSpaceUnits) {
         // Get the actual y coordinate for the baseline
-        const scaledValue = yScale(baseline);
+        const scaledValue = yScale(baseline ?? dataBaseline);
         if (typeof scaledValue === 'number') {
           baselinePosition = scaledValue;
         }
       } else {
         // Calculate percentage position
-        baselinePercentage = `${((maxValue - baseline) / (maxValue - minValue)) * 100}%`;
+        baselinePercentage = `${((maxValue - (baseline ?? dataBaseline)) / (maxValue - minValue)) * 100}%`;
       }
     }
 

@@ -9,19 +9,31 @@ import { SolidArea } from './SolidArea';
 
 export type AreaComponentProps = {
   d: SVGProps<SVGPathElement>['d'];
+  /**
+   * The color of the area.
+   * @default color of the series or 'var(--color-fgPrimary)'
+   */
   fill: string;
   fillOpacity?: number;
   stroke?: string;
   strokeWidth?: number;
   yAxisId?: string;
   animate?: boolean;
+  /**
+   * Baseline value for the gradient.
+   * When set, overrides the default baseline.
+   */
+  baseline?: number;
 };
 
 export type AreaComponent = React.FC<AreaComponentProps>;
 
 // todo: pull as many props as possible
 // todo: checkout https://mui.com/x/react-charts/lines/#baseline
-export type AreaProps = {
+export type AreaProps = Pick<
+  AreaComponentProps,
+  'fill' | 'fillOpacity' | 'stroke' | 'strokeWidth' | 'baseline'
+> & {
   /**
    * The ID of the series to render. Will be used to find the data from the chart context.
    */
@@ -41,18 +53,6 @@ export type AreaProps = {
    * Takes precedence over the type prop if provided.
    */
   AreaComponent?: AreaComponent;
-  /**
-   * The color of the area.
-   * @default color of the series or 'var(--color-fgPrimary)'
-   */
-  fill?: string;
-  /**
-   * Opacity of the area.
-   * @default 1
-   */
-  fillOpacity?: number;
-  stroke?: string;
-  strokeWidth?: number;
 };
 
 export const Area = memo<AreaProps>(
@@ -65,6 +65,7 @@ export const Area = memo<AreaProps>(
     fillOpacity = 1,
     stroke,
     strokeWidth,
+    baseline,
   }) => {
     const { getSeries, getSeriesData, getXScale, getYScale, getXAxis } = useChartContext();
 
@@ -130,6 +131,7 @@ export const Area = memo<AreaProps>(
 
     return (
       <AreaComponent
+        baseline={baseline}
         d={area}
         fill={fill}
         fillOpacity={fillOpacity}

@@ -188,7 +188,7 @@ export const SparklineInteractive = memo(
     hidePeriodSelector = false,
     disableScrubbing = false,
     fill = true,
-    fillType,
+    fillType = 'dotted',
     yAxisScalingFactor = 1.0,
     compact,
     formatHoverDate,
@@ -293,16 +293,6 @@ export const SparklineInteractive = memo(
       };
     }, [dataForPeriod]);
 
-    const series = useMemo((): LineSeries[] => {
-      return [
-        {
-          id: 'main',
-          data: values,
-          color,
-        },
-      ];
-    }, [values, color]);
-
     // Calculate y-axis bounds based on scaling factor
     // A scaling factor < 1 reduces variance (zooms out), > 1 increases variance (zooms in)
     const yAxisBounds = useMemo(() => {
@@ -321,6 +311,22 @@ export const SparklineInteractive = memo(
         max: center + scaledRange / 2,
       };
     }, [values, yAxisScalingFactor]);
+
+    const series = useMemo((): LineSeries[] => {
+      // If we have custom y-axis bounds (from scaling), pass tuple data
+      // so the area extends to the scaled minimum, not just the data minimum
+      const seriesData =
+        yAxisBounds && fill ? values.map((v) => [yAxisBounds.min, v] as [number, number]) : values;
+
+      return [
+        {
+          id: 'main',
+          data: seriesData,
+          color,
+          areaBaseline: yAxisBounds?.min,
+        },
+      ];
+    }, [values, color, yAxisBounds, fill]);
 
     const formatAxisDate = useCallback(
       (index: number) => {
