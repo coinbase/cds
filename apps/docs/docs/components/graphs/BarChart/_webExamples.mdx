@@ -509,11 +509,13 @@ function MonthlyRewards() {
 };
 ```
 
+## Accessibility
+
 ## Customization
 
 ### Bar Spacing
 
-There are two ways to control the spacing between bars. You can set the `barPadding` prop to control the spacing between bars within a series. You can also set the `stackGap` prop to control the spacing between stacks of bars.
+There are two ways to control the spacing between bars. You can set the `barPadding` prop to control the spacing between bars within a series. You can also set the `categoryPadding` prop to control the spacing between stacks of bars.
 
 ```jsx live
 <BarChart
@@ -545,10 +547,69 @@ There are two ways to control the spacing between bars. You can set the `barPadd
 ### Minimum Size
 
 To better emphasize small values, you can set the `stackMinSize` or `barMinSize` prop to control the minimum size for entire stacks or individual bar.
+It is recommended to only use `stackMinSize` for stacked charts and `barMinSize` for non-stacked charts.
+Both properties accept `ThemeVars.Space` values.
 
-### Minimum Stack Size
+#### Minimum Stack Size
 
-### Minimum Bar Size
+You can set the `stackMinSize` prop to control the minimum size for entire stacks. This will only apply to stacks that have a value that is not `null` or `0`. It will proportionally scale the values of each bar in the stack to reach the minimum size.
+
+```jsx live
+<BarChart
+  height={400}
+  series={[
+    {
+      id: 'pageViews',
+      data: [24, 3, 98, null, 48, null, 43],
+      color: 'var(--color-fgPositive)',
+    },
+    {
+      id: 'uniqueVisitors',
+      data: [12, 1, 18, null, 24, 1, 30],
+      color: 'var(--color-fgNegative)',
+    },
+  ]}
+  stackMinSize={2}
+  stacked
+  showYAxis
+  yAxis={{
+    showGrid: true,
+  }}
+/>
+```
+
+#### Minimum Bar Size
+
+You can also set the `barMinSize` prop to control the minimum size for individual bars. This will only apply to bars that have a value that is not `null` or `0`.
+
+```jsx live
+<BarChart
+  showXAxis
+  showYAxis
+  height={400}
+  series={[
+    {
+      id: 'weekly-data',
+      data: [45, 52, 0, 45, null, 1, 32],
+    },
+  ]}
+  xAxis={{
+    data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+    showTickMarks: true,
+    showLine: true,
+  }}
+  yAxis={{
+    requestedTickCount: 5,
+    tickLabelFormatter: (value) => `$${value}k`,
+    showGrid: true,
+    showTickMarks: true,
+    showLine: true,
+    tickMarkSize: 1.5,
+    domain: { max: 50 },
+  }}
+  barMinSize={4}
+/>
+```
 
 ### Multiple Y Axes
 
@@ -631,7 +692,158 @@ You can render bars from separate y axes in one `BarPlot`, however they aren't a
 </VStack>
 ```
 
-### Stack Outline
+### Custom Components
+
+#### Candlesticks
+
+You can set the `BarComponent` prop to render a custom component for bars.
+
+```jsx live
+function Candlesticks() {
+  const infoTextId = useId();
+  const infoTextRef = React.useRef<HTMLSpanElement>(null);
+  const selectedIndexRef = React.useRef<number | null>(null);
+  const stockData = btcCandles.slice(0, 90)
+    .reverse();
+  const min = Math.min(...stockData.map((data) => parseFloat(data.low)));
+
+  const ThinSolidLine = memo((props: SolidLineProps) => <SolidLine {...props} strokeWidth={1} />);
+
+  const candlesData = stockData.map((data) => [parseFloat(data.low), parseFloat(data.high)]) as [
+    number,
+    number,
+  ][];
+
+  const CandlestickBarComponent = memo<BarComponentProps>(
+    ({ x, y, width, height, originY, dataX, ...props }) => {
+      const { getYScale } = useChartContext();
+      const yScale = getYScale?.();
+
+      const wickX = x + width / 2;
+
+      const timePeriodValue = stockData[dataX as number];
+
+      const open = parseFloat(timePeriodValue.open);
+      const close = parseFloat(timePeriodValue.close);
+
+      const bullish = open < close;
+      const color = bullish ? 'var(--color-fgPositive)' : 'var(--color-fgNegative)';
+      const openY = yScale?.(open) ?? 0;
+      const closeY = yScale?.(close) ?? 0;
+
+      const bodyHeight = Math.abs(openY - closeY);
+      const bodyY = openY < closeY ? openY : closeY;
+
+      return (
+        <g>
+          <line stroke={color} strokeWidth={1} x1={wickX} x2={wickX} y1={y} y2={y + height} />
+          <rect fill={color} height={bodyHeight} width={width} x={x} y={bodyY} />
+        </g>
+      );
+    },
+  );
+
+  const formatPrice = React.useCallback((price: string) => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+    }).format(parseFloat(price));
+  }, []);
+
+  const formatVolume = React.useCallback((volume: string) => {
+    const volumeInThousands = parseFloat(volume) / 1000;
+    return (
+      new Intl.NumberFormat('en-US', {
+        style: 'decimal',
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 2,
+      }).format(volumeInThousands) + 'k'
+    );
+  }, []);
+
+  const formatTime = React.useCallback(
+    (index: number | null) => {
+      if (index === null || index >= stockData.length) return '';
+      const ts = parseInt(stockData[index].start);
+      return new Date(ts * 1000).toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
+      });
+    },
+    [stockData],
+  );
+
+  const updateInfoText = React.useCallback(
+    (index: number | null) => {
+      if (!infoTextRef.current) return;
+
+      const text =
+        index !== null
+          ? `Open: ${formatPrice(stockData[index].open)}, Close: ${formatPrice(
+              stockData[index].close,
+            )}, Volume: ${formatVolume(stockData[index].volume)}`
+          : formatPrice(stockData[stockData.length - 1].close);
+
+      infoTextRef.current.textContent = text;
+      selectedIndexRef.current = index;
+    },
+    [stockData, formatPrice, formatVolume],
+  );
+  const initialInfo = formatPrice(stockData[stockData.length - 1].close);
+
+  React.useEffect(() => {
+    updateInfoText(selectedIndexRef.current);
+  }, [stockData, updateInfoText]);
+
+  return (
+    <VStack gap={2}>
+      <Text font="headline" id={infoTextId} aria-live="polite">
+        <span ref={infoTextRef}>{initialInfo}</span>
+      </Text>
+      <BarChart
+        enableScrubbing
+        showXAxis
+        showYAxis
+        BarComponent={CandlestickBarComponent}
+        StackComponent={({ children, ...props }) => <g {...props}>{children}</g>}
+        animate={false}
+        borderRadius={0}
+        height={400}
+        onScrubberPosChange={updateInfoText}
+        series={[
+          {
+            id: 'stock-prices',
+            data: candlesData,
+          },
+        ]}
+        xAxis={{
+          tickLabelFormatter: formatTime,
+        }}
+        yAxis={{
+          domain: { min },
+          tickLabelFormatter: formatPrice,
+          size: 80,
+          showGrid: true,
+          GridLineComponent: ThinSolidLine,
+        }}
+        aria-labelledby={infoTextId}
+      >
+        <Scrubber
+            hideOverlay
+            scrubberComponents={{
+              ScrubberLineComponent: (props) => (
+                <ReferenceLine {...props} LineComponent={ThinSolidLine} />
+              ),
+            }}
+            seriesIds={[]}
+          />
+      </BarChart>
+    </VStack>
+  );
+};
+```
+
+#### Outlined Stacks
 
 You can set the `StackComponent` prop to render a custom component for stacks.
 
@@ -692,7 +904,3 @@ function MonthlyRewards() {
   );
 }
 ```
-
-### Interaction
-
-### Candlestick
