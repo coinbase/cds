@@ -266,6 +266,11 @@ export const routes = [
     getComponent: () => require('@cbhq/cds-mobile/typography/__stories__/Link.stories').default,
   },
   {
+    key: 'RollingNumber',
+    getComponent: () =>
+      require('@cbhq/cds-mobile/typography/__stories__/RollingNumber.stories').default,
+  },
+  {
     key: 'ListCell',
     getComponent: () => require('@cbhq/cds-mobile/cells/__stories__/ListCell.stories').default,
   },
