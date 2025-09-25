@@ -13,7 +13,6 @@ import { Box, type BoxBaseProps, Divider, HStack, VStack } from '@coinbase/cds-w
 import { Pressable } from '@coinbase/cds-web/system';
 import { Text } from '@coinbase/cds-web/typography';
 
-import { GradientArea } from '../area';
 import { Area } from '../area/Area';
 import { XAxis, YAxis } from '../axis';
 import { SolidLine } from '../line';
@@ -246,37 +245,140 @@ export const PredictionMarket = () => {
 
 export const CompactSparkline = () => {
   const dimensions = { width: 62, height: 18 };
+
+  const sparklineData = prices
+    .map((price) => parseFloat(price))
+    .filter((price, index) => index % 10 === 0);
+  const positiveFloor = Math.min(...sparklineData) - 10;
+
+  const negativeData = sparklineData.map((price) => -1 * price).reverse();
+  const negativeCeiling = Math.max(...negativeData) + 10;
+
+  const formatPrice = useCallback((price: number) => {
+    return `$${price.toLocaleString('en-US', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    })}`;
+  }, []);
+
   return (
-    <ListCell
-      description={assets.btc.symbol}
-      detail={prices[0]}
-      intermediary={
-        <Box style={{ padding: 1 }}>
-          <LineChart
-            {...dimensions}
-            enableScrubbing={false}
-            overflow="visible"
-            padding={0}
-            series={[
-              {
-                id: 'btc',
-                data: prices
-                  .map((price) => parseFloat(price))
-                  .filter((price, index) => index % 10 === 0),
-                color: assets.btc.color,
-              },
-            ]}
-          >
-            <ReferenceLine dataY={parseFloat(prices[Math.floor(prices.length / 4)])} />
-          </LineChart>
-        </Box>
-      }
-      media={<CellMedia source={assets.btc.imageUrl} title="BTC" type="image" />}
-      onClick={() => console.log('clicked')}
-      subdetail="+4.55%"
-      title={assets.btc.name}
-      variant="positive"
-    />
+    <VStack gap={2}>
+      <ListCell
+        description={assets.btc.symbol}
+        detail={formatPrice(parseFloat(prices[0]))}
+        intermediary={
+          <Box style={{ padding: 1 }}>
+            <LineChart
+              {...dimensions}
+              enableScrubbing={false}
+              overflow="visible"
+              padding={0}
+              series={[
+                {
+                  id: 'btc',
+                  data: sparklineData,
+                  color: assets.btc.color,
+                },
+              ]}
+            >
+              <ReferenceLine dataY={parseFloat(prices[Math.floor(prices.length / 4)])} />
+            </LineChart>
+          </Box>
+        }
+        media={<CellMedia source={assets.btc.imageUrl} title="BTC" type="image" />}
+        onClick={() => console.log('clicked')}
+        subdetail="-4.55%"
+        title={assets.btc.name}
+        variant="negative"
+      />
+      <ListCell
+        description={assets.btc.symbol}
+        detail={formatPrice(parseFloat(prices[0]))}
+        intermediary={
+          <Box style={{ padding: 1 }}>
+            <LineChart
+              {...dimensions}
+              showArea
+              enableScrubbing={false}
+              overflow="visible"
+              padding={0}
+              series={[
+                {
+                  id: 'btc',
+                  data: sparklineData,
+                  color: assets.btc.color,
+                },
+              ]}
+            >
+              <ReferenceLine dataY={parseFloat(prices[Math.floor(prices.length / 4)])} />
+            </LineChart>
+          </Box>
+        }
+        media={<CellMedia source={assets.btc.imageUrl} title="BTC" type="image" />}
+        onClick={() => console.log('clicked')}
+        subdetail="-4.55%"
+        title={assets.btc.name}
+        variant="negative"
+      />
+      <ListCell
+        description={assets.btc.symbol}
+        detail={formatPrice(parseFloat(prices[0]))}
+        intermediary={
+          <Box style={{ padding: 1 }}>
+            <LineChart
+              {...dimensions}
+              showArea
+              enableScrubbing={false}
+              overflow="visible"
+              padding={0}
+              series={[
+                {
+                  id: 'btc',
+                  data: sparklineData,
+                  color: 'var(--color-fgPositive)',
+                },
+              ]}
+            >
+              <ReferenceLine dataY={positiveFloor} />
+            </LineChart>
+          </Box>
+        }
+        media={<CellMedia source={assets.btc.imageUrl} title="BTC" type="image" />}
+        onClick={() => console.log('clicked')}
+        subdetail="+0.25%"
+        title={assets.btc.name}
+        variant="positive"
+      />
+      <ListCell
+        description={assets.btc.symbol}
+        detail={formatPrice(parseFloat(prices[0]))}
+        intermediary={
+          <Box style={{ padding: 1 }}>
+            <LineChart
+              {...dimensions}
+              showArea
+              enableScrubbing={false}
+              overflow="visible"
+              padding={0}
+              series={[
+                {
+                  id: 'btc',
+                  data: negativeData,
+                  color: 'var(--color-fgNegative)',
+                },
+              ]}
+            >
+              <ReferenceLine dataY={negativeCeiling} />
+            </LineChart>
+          </Box>
+        }
+        media={<CellMedia source={assets.btc.imageUrl} title="BTC" type="image" />}
+        onClick={() => console.log('clicked')}
+        subdetail="-4.55%"
+        title={assets.btc.name}
+        variant="negative"
+      />
+    </VStack>
   );
 };
 

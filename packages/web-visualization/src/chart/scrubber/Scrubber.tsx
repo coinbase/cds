@@ -60,6 +60,13 @@ export type ScrubberProps = SharedProps &
     hideOverlay?: boolean;
 
     /**
+     * Offset of the overlay rect relative to the drawing area.
+     * Useful for when scrubbing over lines, where the stroke width would cause part of the line to be visible.
+     * @default 2
+     */
+    overlayOffset?: number;
+
+    /**
      * Label content for scrubber (shows above the scrubber line).
      */
     scrubberLabel?: ReferenceLineProps['label'];
@@ -123,6 +130,7 @@ export const Scrubber = memo(
         scrubberLabelConfig,
         scrubberComponents,
         hideOverlay,
+        overlayOffset = 2,
         testID,
         pulse,
         scrubberStyles,
@@ -586,11 +594,11 @@ export const Scrubber = memo(
             pixelX !== undefined && (
               <rect
                 fill="var(--color-bg)"
-                height={drawingArea.height}
+                height={drawingArea.height + overlayOffset * 2}
                 opacity={0.8}
-                width={drawingArea.x + drawingArea.width - pixelX}
+                width={drawingArea.x + drawingArea.width - pixelX + overlayOffset}
                 x={pixelX}
-                y={drawingArea.y}
+                y={drawingArea.y - overlayOffset}
               />
             )}
           {!hideScrubberLine && highlightedIndex !== undefined && dataX !== undefined && (

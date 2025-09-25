@@ -13,7 +13,7 @@ export type AreaComponentProps = {
    * The color of the area.
    * @default color of the series or 'var(--color-fgPrimary)'
    */
-  fill: string;
+  fill?: string;
   fillOpacity?: number;
   stroke?: string;
   strokeWidth?: number;
