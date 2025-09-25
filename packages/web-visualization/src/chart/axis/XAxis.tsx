@@ -1,5 +1,4 @@
 import React, { memo, useCallback, useEffect, useId, useMemo } from 'react';
-import type { ThemeVars } from '@coinbase/cds-common';
 import {
   getAxisTicksData,
   isCategoricalScale,

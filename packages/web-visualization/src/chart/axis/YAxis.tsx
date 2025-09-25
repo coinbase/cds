@@ -45,7 +45,7 @@ export const YAxis = memo<YAxisProps>(
     axisId,
     position = 'end',
     showGrid,
-    requestedTickCount = 5,
+    requestedTickCount,
     ticks,
     tickLabelFormatter,
     style,
@@ -123,7 +123,7 @@ export const YAxis = memo<YAxisProps>(
       return getAxisTicksData({
         scaleFunction: yScale as any,
         ticks,
-        requestedTickCount,
+        requestedTickCount: (requestedTickCount ?? tickInterval === undefined) ? 5 : undefined,
         categories,
         tickInterval: tickInterval ? theme.space[tickInterval] : undefined,
       });
