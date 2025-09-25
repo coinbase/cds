@@ -14,10 +14,10 @@ import type { StackComponent } from './DefaultStackComponent';
 
 export type BarPlotProps = {
   /**
-   * Array of series configurations to render.
+   * Array of series IDs to render.
    * If not provided, renders all series in the chart that matches the xAxisId.
    */
-  series?: BarSeries[];
+  seriesIds?: string[];
   /**
    * X axis ID to use for all series.
    * If not provided, defaults to the default axis id.
@@ -80,7 +80,7 @@ export type BarPlotProps = {
  */
 export const BarPlot = memo<BarPlotProps>(
   ({
-    series,
+    seriesIds,
     xAxisId = defaultAxisId,
     barPadding = 0.1,
     BarComponent: defaultBarComponent,
@@ -99,11 +99,17 @@ export const BarPlot = memo<BarPlotProps>(
     const clipPathId = useRef(generateRandomId()).current;
 
     const targetSeries = useMemo(() => {
-      const seriesToRender: BarSeries[] =
-        (series ?? allSeries)?.filter((s: any) => (s.xAxisId ?? defaultAxisId) === xAxisId) ?? [];
+      // First filter by xAxisId
+      const filteredByAxis: BarSeries[] =
+        allSeries?.filter((s: any) => (s.xAxisId ?? defaultAxisId) === xAxisId) ?? [];
 
-      return seriesToRender;
-    }, [allSeries, series, xAxisId]);
+      // Then filter by seriesIds if provided
+      if (seriesIds !== undefined) {
+        return filteredByAxis.filter((s: any) => seriesIds.includes(s.id));
+      }
+
+      return filteredByAxis;
+    }, [allSeries, seriesIds, xAxisId]);
 
     const stackGroups = useMemo(() => {
       const groups = new Map<
@@ -154,7 +160,7 @@ export const BarPlot = memo<BarPlotProps>(
             />
           </clipPath>
         </defs>
-        <g clipPath={`url(#${clipPathId})`}>
+        <g clipPath={`url(#${clipPathId})`} data-testid="whoa">
           {stackGroups.map((group, stackIndex) => (
             <BarStackGroup
               key={group.stackId}

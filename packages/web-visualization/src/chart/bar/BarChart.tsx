@@ -196,7 +196,7 @@ export const BarChart = memo(
             borderRadius={borderRadius}
             fillOpacity={fillOpacity}
             roundBaseline={roundBaseline}
-            series={barSeriesToRender}
+            seriesIds={barSeriesToRender?.map((s) => s.id)}
             stackGap={stackGap}
             stackMinSize={stackMinSize}
             stroke={stroke}
