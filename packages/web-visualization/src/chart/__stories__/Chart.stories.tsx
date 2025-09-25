@@ -1,27 +1,20 @@
-import React, { forwardRef, memo, useCallback, useId, useMemo, useState } from 'react';
+import React, { memo, useCallback, useId, useMemo, useState } from 'react';
 import { assets } from '@coinbase/cds-common/internal/data/assets';
 import { candles as btcCandles } from '@coinbase/cds-common/internal/data/candles';
-import { prices } from '@coinbase/cds-common/internal/data/prices';
 import type { TabValue } from '@coinbase/cds-common/tabs/useTabs';
-import {
-  isCategoricalScale,
-  useChartContext,
-  useChartDrawingAreaContext,
-} from '@coinbase/cds-common/visualizations/charts';
-import { CellMedia, ListCell } from '@coinbase/cds-web/cells';
+import { isCategoricalScale, useChartContext } from '@coinbase/cds-common/visualizations/charts';
 import { Radio } from '@coinbase/cds-web/controls/Radio';
 import { Box, type BoxBaseProps, Divider, HStack, VStack } from '@coinbase/cds-web/layout';
 import { RemoteImage } from '@coinbase/cds-web/media';
 import { SectionHeader } from '@coinbase/cds-web/section-header/SectionHeader';
 import { Pressable } from '@coinbase/cds-web/system';
-import { Text } from '@coinbase/cds-web/typography';
+import { Text, TextHeadline } from '@coinbase/cds-web/typography';
 
 import { Area } from '../area/Area';
 import { XAxis, YAxis } from '../axis';
 import { SolidLine, type SolidLineProps } from '../line';
 import { Line } from '../line/Line';
 import { LineChart } from '../line/LineChart';
-import { ReferenceLine } from '../line/ReferenceLine';
 import { BarPlot, Chart, type ChartTextChildren, PeriodSelector, Scrubber } from '../';
 
 export default {
@@ -29,7 +22,7 @@ export default {
   title: 'Components/Chart',
 };
 
-export const MultipleChart = () => {
+const MultipleChart = () => {
   // todo: make a line chart with a bar chart underneath
   const barData = [1, 2, 3, 2, 1];
   const lineData = [4, 3, 1, 3, 4];
@@ -37,7 +30,6 @@ export const MultipleChart = () => {
   return (
     <VStack gap={3}>
       <Chart
-        enableScrubbing
         height={350}
         series={[
           { id: 'bar', data: barData },
@@ -46,7 +38,6 @@ export const MultipleChart = () => {
       >
         <Area seriesId="bar" type="dotted" />
         <Line curve="natural" seriesId="line" />
-        <Scrubber />
       </Chart>
     </VStack>
   );
@@ -102,7 +93,7 @@ const CustomYAxis = memo(() => {
   );
 });
 
-export const PredictionMarket = () => {
+const PredictionMarket = () => {
   const tabs = [
     { id: '1H', label: '1H' },
     { id: '1D', label: '1D' },
@@ -247,146 +238,7 @@ export const PredictionMarket = () => {
   );
 };
 
-export const CompactSparkline = () => {
-  const dimensions = { width: 62, height: 18 };
-
-  const sparklineData = prices
-    .map((price) => parseFloat(price))
-    .filter((price, index) => index % 10 === 0);
-  const positiveFloor = Math.min(...sparklineData) - 10;
-
-  const negativeData = sparklineData.map((price) => -1 * price).reverse();
-  const negativeCeiling = Math.max(...negativeData) + 10;
-
-  const formatPrice = useCallback((price: number) => {
-    return `$${price.toLocaleString('en-US', {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    })}`;
-  }, []);
-
-  return (
-    <VStack gap={2}>
-      <ListCell
-        description={assets.btc.symbol}
-        detail={formatPrice(parseFloat(prices[0]))}
-        intermediary={
-          <Box style={{ padding: 1 }}>
-            <LineChart
-              {...dimensions}
-              enableScrubbing={false}
-              overflow="visible"
-              padding={0}
-              series={[
-                {
-                  id: 'btc',
-                  data: sparklineData,
-                  color: assets.btc.color,
-                },
-              ]}
-            >
-              <ReferenceLine dataY={parseFloat(prices[Math.floor(prices.length / 4)])} />
-            </LineChart>
-          </Box>
-        }
-        media={<CellMedia source={assets.btc.imageUrl} title="BTC" type="image" />}
-        onClick={() => console.log('clicked')}
-        subdetail="-4.55%"
-        title={assets.btc.name}
-        variant="negative"
-      />
-      <ListCell
-        description={assets.btc.symbol}
-        detail={formatPrice(parseFloat(prices[0]))}
-        intermediary={
-          <Box style={{ padding: 1 }}>
-            <LineChart
-              {...dimensions}
-              showArea
-              enableScrubbing={false}
-              overflow="visible"
-              padding={0}
-              series={[
-                {
-                  id: 'btc',
-                  data: sparklineData,
-                  color: assets.btc.color,
-                },
-              ]}
-            >
-              <ReferenceLine dataY={parseFloat(prices[Math.floor(prices.length / 4)])} />
-            </LineChart>
-          </Box>
-        }
-        media={<CellMedia source={assets.btc.imageUrl} title="BTC" type="image" />}
-        onClick={() => console.log('clicked')}
-        subdetail="-4.55%"
-        title={assets.btc.name}
-        variant="negative"
-      />
-      <ListCell
-        description={assets.btc.symbol}
-        detail={formatPrice(parseFloat(prices[0]))}
-        intermediary={
-          <Box style={{ padding: 1 }}>
-            <LineChart
-              {...dimensions}
-              showArea
-              enableScrubbing={false}
-              overflow="visible"
-              padding={0}
-              series={[
-                {
-                  id: 'btc',
-                  data: sparklineData,
-                  color: 'var(--color-fgPositive)',
-                },
-              ]}
-            >
-              <ReferenceLine dataY={positiveFloor} />
-            </LineChart>
-          </Box>
-        }
-        media={<CellMedia source={assets.btc.imageUrl} title="BTC" type="image" />}
-        onClick={() => console.log('clicked')}
-        subdetail="+0.25%"
-        title={assets.btc.name}
-        variant="positive"
-      />
-      <ListCell
-        description={assets.btc.symbol}
-        detail={formatPrice(parseFloat(prices[0]))}
-        intermediary={
-          <Box style={{ padding: 1 }}>
-            <LineChart
-              {...dimensions}
-              showArea
-              enableScrubbing={false}
-              overflow="visible"
-              padding={0}
-              series={[
-                {
-                  id: 'btc',
-                  data: negativeData,
-                  color: 'var(--color-fgNegative)',
-                },
-              ]}
-            >
-              <ReferenceLine dataY={negativeCeiling} />
-            </LineChart>
-          </Box>
-        }
-        media={<CellMedia source={assets.btc.imageUrl} title="BTC" type="image" />}
-        onClick={() => console.log('clicked')}
-        subdetail="-4.55%"
-        title={assets.btc.name}
-        variant="negative"
-      />
-    </VStack>
-  );
-};
-
-export const EarningsHistory = () => {
+const EarningsHistory = () => {
   const CirclePlot = memo(({ seriesId, opacity = 1 }: { seriesId: string; opacity?: number }) => {
     const { getSeries, getSeriesData, getXScale, getYScale } = useChartContext();
     const series = getSeries(seriesId);
@@ -485,6 +337,7 @@ export const EarningsHistory = () => {
       <Chart
         animate={false}
         height={250}
+        overflow="visible"
         padding={0}
         series={[
           {
@@ -515,7 +368,7 @@ export const EarningsHistory = () => {
   );
 };
 
-export const PriceWithVolume = () => {
+const PriceWithVolume = () => {
   const [scrubIndex, setScrubIndex] = useState<number | null>(null);
   const btcData = btcCandles.slice(0, 180).reverse();
 
@@ -626,6 +479,37 @@ export const PriceWithVolume = () => {
         <Line showArea curve="monotone" seriesId="prices" />
         <Scrubber seriesIds={['prices']} />
       </Chart>
+    </VStack>
+  );
+};
+
+const Example: React.FC<
+  React.PropsWithChildren<{ title: string; description?: string | React.ReactNode }>
+> = ({ children, title, description }) => {
+  return (
+    <VStack gap={2}>
+      <TextHeadline>{title}</TextHeadline>
+      {description}
+      {children}
+    </VStack>
+  );
+};
+
+export const Miscellaneous = () => {
+  return (
+    <VStack gap={2}>
+      <Example title="Multiple Types">
+        <MultipleChart />
+      </Example>
+      <Example title="Earnings History">
+        <EarningsHistory />
+      </Example>
+      <Example title="Price With Volume">
+        <PriceWithVolume />
+      </Example>
+      <Example title="Prediction Market">
+        <PredictionMarket />
+      </Example>
     </VStack>
   );
 };
