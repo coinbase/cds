@@ -173,7 +173,6 @@ You can add multiple series to a line chart.
     tickLabelFormatter: (value) => value.toLocaleString(),
   }}
 >
-  {' '}
   <Scrubber />
 </LineChart>
 ```
@@ -565,6 +564,9 @@ const BTCActiveIndicator = memo(({ style, ...props }: TabsActiveIndicatorProps) 
         showArea
         areaType="dotted"
         height={300}
+        style={{ outlineColor: assets.btc.color }}
+        accessibilityLabel={scrubberLabel}
+        aria
       >
         <Scrubber scrubberLabel={scrubberLabel} scrubberLabelConfig={{ elevation: 1 }} pulse />
       </LineChart>
@@ -682,6 +684,7 @@ function ForecastAssetPrice() {
         tickInterval: 4,
       }}
       AreaComponent={(props) => <DottedArea {...props} peakOpacity={0.4} baselineOpacity={0.4} />}
+        style={{ outlineColor: assets.btc.color }}
     >
       <Scrubber />
     </LineChart>

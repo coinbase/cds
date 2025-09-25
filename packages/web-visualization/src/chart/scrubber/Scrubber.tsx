@@ -12,6 +12,7 @@ import { useRefMap } from '@coinbase/cds-common/hooks/useRefMap';
 import type { SharedProps } from '@coinbase/cds-common/types';
 import {
   type ChartScaleFunction,
+  getPointOnScale,
   projectPoint,
   useScrubberContext,
 } from '@coinbase/cds-common/visualizations/charts';
@@ -562,7 +563,7 @@ export const Scrubber = memo(
       // todo: figure out why scrubber heads across dataKey values isn't working anymore
       // for animations
 
-      const pixelX = dataX !== undefined ? defaultXScale(dataX) : undefined;
+      const pixelX = dataX !== undefined ? getPointOnScale(dataX, defaultXScale) : undefined;
 
       // todo: figure out if we should disable 'pulse' animation when scrubbing
       return (

@@ -1455,6 +1455,7 @@ const BTCActiveIndicator = memo(({ style, ...props }: TabsActiveIndicatorProps) 
 ));
 
 export const AssetPriceDotted = () => {
+  const currentPriceId = useId();
   const [scrubIndex, setScrubIndex] = useState<number | null>(null);
   const currentPrice =
     sparklineInteractiveData.hour[sparklineInteractiveData.hour.length - 1].value;
@@ -1514,6 +1515,16 @@ export const AssetPriceDotted = () => {
     return `${dayOfWeek}, ${monthDay}, ${time}`;
   }, []);
 
+  const accessibilityLabel: string | undefined = useMemo(() => {
+    if (scrubIndex === null) return undefined;
+    const price = new Intl.NumberFormat('en-US', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }).format(sparklineTimePeriodDataValues[scrubIndex]);
+    const date = formatDate(sparklineTimePeriodDataTimestamps[scrubIndex]);
+    return `${price} USD ${date}`;
+  }, [scrubIndex, sparklineTimePeriodDataValues, formatDate, sparklineTimePeriodDataTimestamps]);
+
   const scrubberLabel: ChartTextChildren = useMemo(() => {
     if (scrubIndex === null) return null;
     const price = new Intl.NumberFormat('en-US', {
@@ -1531,7 +1542,11 @@ export const AssetPriceDotted = () => {
   return (
     <VStack gap={2}>
       <SectionHeader
-        balance={<Text font="title2">{formatPrice(currentPrice)}</Text>}
+        balance={
+          <Text font="title2" id={currentPriceId}>
+            {formatPrice(currentPrice)}
+          </Text>
+        }
         end={
           <VStack justifyContent="center">
             <RemoteImage shape="circle" size="xl" source={assets.btc.imageUrl} />
@@ -1543,7 +1558,9 @@ export const AssetPriceDotted = () => {
       <LineChart
         enableScrubbing
         showArea
+        accessibilityLabel={accessibilityLabel}
         areaType="dotted"
+        aria-labelledby={!accessibilityLabel ? currentPriceId : undefined}
         height={300}
         onScrubberPosChange={setScrubIndex}
         series={[
