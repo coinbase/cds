@@ -71,6 +71,7 @@ import { Spinner } from '@cbhq/cds-web/loaders/Spinner';
 import * as CDSMedia from '@cbhq/cds-web/media';
 import { MultiContentModule } from '@cbhq/cds-web/multi-content-module/MultiContentModule';
 import * as CDSNavigation from '@cbhq/cds-web/navigation';
+import * as CDSNumbers from '@cbhq/cds-web/numbers';
 import * as CDSOverlays from '@cbhq/cds-web/overlays';
 import { useToast } from '@cbhq/cds-web/overlays/useToast';
 import { PageFooter } from '@cbhq/cds-web/page/PageFooter';
@@ -155,6 +156,8 @@ const ReactLiveScope: Record<string, unknown> = {
   useStepper,
   // typography
   ...CDSTypography,
+  // numbers
+  ...CDSNumbers,
   Tag,
   // input
   ...CDSButtons,

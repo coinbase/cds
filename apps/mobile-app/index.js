@@ -1,4 +1,5 @@
 import 'react-native-gesture-handler';
+import './src/polyfills/intl';
 
 import { registerRootComponent } from 'expo';
 import * as SplashScreen from 'expo-splash-screen';
