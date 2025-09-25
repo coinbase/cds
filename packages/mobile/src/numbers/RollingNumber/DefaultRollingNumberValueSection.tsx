@@ -10,8 +10,8 @@ import { DefaultRollingNumberDigit } from './DefaultRollingNumberDigit';
 import { DefaultRollingNumberMask } from './DefaultRollingNumberMask';
 import { DefaultRollingNumberSymbol } from './DefaultRollingNumberSymbol';
 import type {
-  RollingNumberNumberSectionComponent,
-  RollingNumberNumberSectionProps,
+  RollingNumberValueSectionComponent,
+  RollingNumberValueSectionProps,
 } from './RollingNumber';
 import { digits } from './RollingNumber';
 
@@ -19,8 +19,8 @@ const AnimatedText = Animated.createAnimatedComponent(Text);
 
 const isDigit = (char: string) => digits.includes(parseInt(char));
 
-export const DefaultRollingNumberNumberSection: RollingNumberNumberSectionComponent = memo(
-  forwardRef<View, RollingNumberNumberSectionProps>(
+export const DefaultRollingNumberValueSection: RollingNumberValueSectionComponent = memo(
+  forwardRef<View, RollingNumberValueSectionProps>(
     (
       {
         intlNumberParts,
@@ -35,10 +35,10 @@ export const DefaultRollingNumberNumberSection: RollingNumberNumberSectionCompon
         justifyContent = 'flex-start',
         transitionConfig,
         ...props
-      }: RollingNumberNumberSectionProps,
+      }: RollingNumberValueSectionProps,
       ref,
     ) => {
-      const [numberSectionHasRendered, setNumberSectionHasRendered] = useState(false);
+      const [numberSectionHasRendered, setValueSectionHasRendered] = useState(false);
 
       const containerStyle = useMemo(() => [style, styles?.root], [style, styles?.root]);
 
@@ -77,7 +77,7 @@ export const DefaultRollingNumberNumberSection: RollingNumberNumberSectionCompon
                 RollingNumberMaskComponent={RollingNumberMaskComponent}
                 digitHeight={digitHeight}
                 initialValue={numberSectionHasRendered ? 0 : undefined}
-                onLayout={() => setNumberSectionHasRendered(true)}
+                onLayout={() => setValueSectionHasRendered(true)}
                 styles={{ text: styles?.text }}
                 textProps={textProps}
                 transitionConfig={transitionConfig}
@@ -87,7 +87,7 @@ export const DefaultRollingNumberNumberSection: RollingNumberNumberSectionCompon
           }),
         [
           numberSectionHasRendered,
-          setNumberSectionHasRendered,
+          setValueSectionHasRendered,
           intlNumberParts,
           digitHeight,
           RollingNumberDigitComponent,
@@ -123,7 +123,7 @@ export const DefaultRollingNumberNumberSection: RollingNumberNumberSectionCompon
                 RollingNumberMaskComponent={RollingNumberMaskComponent}
                 digitHeight={digitHeight}
                 initialValue={numberSectionHasRendered ? 0 : undefined}
-                onLayout={() => setNumberSectionHasRendered(true)}
+                onLayout={() => setValueSectionHasRendered(true)}
                 styles={{ text: styles?.text }}
                 textProps={textProps}
                 transitionConfig={transitionConfig}
@@ -133,7 +133,7 @@ export const DefaultRollingNumberNumberSection: RollingNumberNumberSectionCompon
           }),
         [
           numberSectionHasRendered,
-          setNumberSectionHasRendered,
+          setValueSectionHasRendered,
           formattedValue,
           RollingNumberDigitComponent,
           RollingNumberSymbolComponent,

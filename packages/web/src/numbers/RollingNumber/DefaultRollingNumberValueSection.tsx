@@ -10,8 +10,8 @@ import { DefaultRollingNumberDigit } from './DefaultRollingNumberDigit';
 import { DefaultRollingNumberMask } from './DefaultRollingNumberMask';
 import { DefaultRollingNumberSymbol } from './DefaultRollingNumberSymbol';
 import type {
-  RollingNumberNumberSectionComponent,
-  RollingNumberNumberSectionProps,
+  RollingNumberValueSectionComponent,
+  RollingNumberValueSectionProps,
 } from './RollingNumber';
 
 const MotionText = m(Text);
@@ -23,8 +23,8 @@ const containerCss = css`
 
 const isDigit = (char: string) => /^\d$/.test(char);
 
-export const DefaultRollingNumberNumberSection: RollingNumberNumberSectionComponent = memo(
-  forwardRef<HTMLSpanElement, RollingNumberNumberSectionProps>(
+export const DefaultRollingNumberValueSection: RollingNumberValueSectionComponent = memo(
+  forwardRef<HTMLSpanElement, RollingNumberValueSectionProps>(
     (
       {
         intlNumberParts,

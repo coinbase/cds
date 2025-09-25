@@ -12,7 +12,7 @@ import { VStack } from '../../layout/VStack';
 import { Text } from '../../typography/Text';
 import { ProgressBar } from '../../visualizations/ProgressBar';
 import { RollingNumber } from '../RollingNumber';
-import { DefaultRollingNumberNodeSection } from '../RollingNumber/DefaultRollingNumberNodeSection';
+import { DefaultRollingNumberAffixSection } from '../RollingNumber/DefaultRollingNumberAffixSection';
 
 const fonts = [
   'display1',
@@ -588,8 +588,8 @@ const SubscriptionPriceExample = () => {
     <VStack gap={1}>
       <RollingNumber
         colorPulseOnUpdate
-        RollingNumberNodeSectionComponent={(props) => (
-          <DefaultRollingNumberNodeSection {...props} textProps={{ font: 'title1' }} />
+        RollingNumberAffixSectionComponent={(props) => (
+          <DefaultRollingNumberAffixSection {...props} textProps={{ font: 'title1' }} />
         )}
         accessibilityLabel={`$${price} ${suffix === '/yr' ? 'yearly' : 'monthly'}`}
         font="display1"

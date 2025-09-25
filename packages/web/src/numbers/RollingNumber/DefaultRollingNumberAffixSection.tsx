@@ -6,8 +6,8 @@ import { cx } from '../../cx';
 import { Text } from '../../typography/Text';
 
 import type {
-  RollingNumberNodeSectionComponent,
-  RollingNumberNodeSectionProps,
+  RollingNumberAffixSectionComponent,
+  RollingNumberAffixSectionProps,
 } from './RollingNumber';
 
 const MotionText = m(Text);
@@ -19,8 +19,8 @@ const containerCss = css`
   white-space: pre;
 `;
 
-export const DefaultRollingNumberNodeSection: RollingNumberNodeSectionComponent = memo(
-  forwardRef<HTMLSpanElement, RollingNumberNodeSectionProps>(
+export const DefaultRollingNumberAffixSection: RollingNumberAffixSectionComponent = memo(
+  forwardRef<HTMLSpanElement, RollingNumberAffixSectionProps>(
     ({ children, color = 'inherit', justifyContent = 'flex-start', className, ...props }, ref) => {
       return (
         <MotionText

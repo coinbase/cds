@@ -24,11 +24,11 @@ import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 import { HStack, type HStackProps } from '../../layout/HStack';
 import { Text, type TextBaseProps, type TextProps } from '../../typography/Text';
 
+import { DefaultRollingNumberAffixSection } from './DefaultRollingNumberAffixSection';
 import { DefaultRollingNumberDigit } from './DefaultRollingNumberDigit';
 import { DefaultRollingNumberMask } from './DefaultRollingNumberMask';
-import { DefaultRollingNumberNodeSection } from './DefaultRollingNumberNodeSection';
-import { DefaultRollingNumberNumberSection } from './DefaultRollingNumberNumberSection';
 import { DefaultRollingNumberSymbol } from './DefaultRollingNumberSymbol';
+import { DefaultRollingNumberValueSection } from './DefaultRollingNumberValueSection';
 import { useColorPulse } from './useColorPulse';
 
 export const digits = new Array(10).fill(null).map((_, digit) => digit);
@@ -76,7 +76,7 @@ export type RollingNumberMaskProps = HStackProps & {
   ref?: React.Ref<View>;
 };
 
-export type RollingNumberNodeSectionProps = HStackProps & {
+export type RollingNumberAffixSectionProps = HStackProps & {
   children?: React.ReactNode;
   textProps?: TextProps;
   styles?: {
@@ -89,7 +89,7 @@ export type RollingNumberNodeSectionProps = HStackProps & {
   ref?: React.Ref<View>;
 };
 
-export type RollingNumberNumberSectionProps = HStackProps & {
+export type RollingNumberValueSectionProps = HStackProps & {
   intlNumberParts: KeyedNumberPart[];
   digitHeight?: number;
   RollingNumberDigitComponent?: RollingNumberDigitComponent;
@@ -140,9 +140,9 @@ export type RollingNumberSymbolProps = HStackProps & {
 
 export type RollingNumberMaskComponent = React.FC<RollingNumberMaskProps>;
 
-export type RollingNumberNodeSectionComponent = React.FC<RollingNumberNodeSectionProps>;
+export type RollingNumberAffixSectionComponent = React.FC<RollingNumberAffixSectionProps>;
 
-export type RollingNumberNumberSectionComponent = React.FC<RollingNumberNumberSectionProps>;
+export type RollingNumberValueSectionComponent = React.FC<RollingNumberValueSectionProps>;
 
 export type RollingNumberDigitComponent = React.FC<RollingNumberDigitProps>;
 
@@ -159,7 +159,7 @@ export type RollingNumberBaseProps = SharedProps &
      * Scientific and engineering notation are not supported.
      */
     format?: Omit<Intl.NumberFormatOptions, 'notation'> & {
-      notation?: Exclude<Intl.NumberFormatOptions['notation'], 'scientific' | 'engineering'>;
+      notation?: Extract<Intl.NumberFormatOptions['notation'], 'standard' | 'compact'>;
     };
     /**
      * Formatted number to display. If provided, we will render this instead of using value and format.
@@ -181,11 +181,11 @@ export type RollingNumberBaseProps = SharedProps &
     /**
      * Override node section component (wrapping prefix/suffix ReactNodes)
      */
-    RollingNumberNodeSectionComponent?: RollingNumberNodeSectionComponent;
+    RollingNumberAffixSectionComponent?: RollingNumberAffixSectionComponent;
     /**
      * Override number section component (renders Intl intlNumberParts or formatted override)
      */
-    RollingNumberNumberSectionComponent?: RollingNumberNumberSectionComponent;
+    RollingNumberValueSectionComponent?: RollingNumberValueSectionComponent;
     /**
      * Override number digit component (per-digit scroller)
      */
@@ -260,7 +260,7 @@ export type RollingNumberProps = TextProps &
     styles?: {
       root?: StyleProp<ViewStyle>;
       visibleContent?: StyleProp<ViewStyle>;
-      formattedNumberSection?: StyleProp<ViewStyle>;
+      formattedValueSection?: StyleProp<ViewStyle>;
       prefix?: StyleProp<ViewStyle>;
       suffix?: StyleProp<ViewStyle>;
       /**
@@ -311,8 +311,8 @@ export const RollingNumber = memo(
         accessibilityLabelPrefix,
         accessibilityLabelSuffix,
         RollingNumberMaskComponent = DefaultRollingNumberMask,
-        RollingNumberNodeSectionComponent = DefaultRollingNumberNodeSection,
-        RollingNumberNumberSectionComponent = DefaultRollingNumberNumberSection,
+        RollingNumberAffixSectionComponent = DefaultRollingNumberAffixSection,
+        RollingNumberValueSectionComponent = DefaultRollingNumberValueSection,
         RollingNumberDigitComponent = DefaultRollingNumberDigit,
         RollingNumberSymbolComponent = DefaultRollingNumberSymbol,
         ...restTextProps
@@ -403,17 +403,17 @@ export const RollingNumber = memo(
       const prefixSection = useMemo(
         () => (
           // prefix from props
-          <RollingNumberNodeSectionComponent
+          <RollingNumberAffixSectionComponent
             justifyContent="flex-end"
             style={styles?.prefix}
             styles={{ text: [animatedColorStyle, styles?.text] }}
             textProps={textProps}
           >
             {prefix}
-          </RollingNumberNodeSectionComponent>
+          </RollingNumberAffixSectionComponent>
         ),
         [
-          RollingNumberNodeSectionComponent,
+          RollingNumberAffixSectionComponent,
           animatedColorStyle,
           styles?.prefix,
           textProps,
@@ -425,17 +425,17 @@ export const RollingNumber = memo(
       const suffixSection = useMemo(
         () => (
           // suffix from props
-          <RollingNumberNodeSectionComponent
+          <RollingNumberAffixSectionComponent
             justifyContent="flex-start"
             style={styles?.suffix}
             styles={{ text: [animatedColorStyle, styles?.text] }}
             textProps={textProps}
           >
             {suffix}
-          </RollingNumberNodeSectionComponent>
+          </RollingNumberAffixSectionComponent>
         ),
         [
-          RollingNumberNodeSectionComponent,
+          RollingNumberAffixSectionComponent,
           animatedColorStyle,
           styles?.suffix,
           textProps,
@@ -444,14 +444,14 @@ export const RollingNumber = memo(
         ],
       );
 
-      const intlPartsNumberSection = useMemo(() => {
+      const intlPartsValueSection = useMemo(() => {
         const { pre, integer, fraction, post } = intlNumberFormatter.formatToParts({
           enableSubscriptNotation,
         });
         return (
-          <HStack style={styles?.formattedNumberSection}>
+          <HStack style={styles?.formattedValueSection}>
             {/* Prefix generated by Intl.NumberFormat */}
-            <RollingNumberNumberSectionComponent
+            <RollingNumberValueSectionComponent
               RollingNumberDigitComponent={RollingNumberDigitComponent}
               RollingNumberMaskComponent={RollingNumberMaskComponent}
               RollingNumberSymbolComponent={RollingNumberSymbolComponent}
@@ -463,7 +463,7 @@ export const RollingNumber = memo(
               textProps={textProps}
               transitionConfig={transitionConfig}
             />
-            <RollingNumberNumberSectionComponent
+            <RollingNumberValueSectionComponent
               RollingNumberDigitComponent={RollingNumberDigitComponent}
               RollingNumberMaskComponent={RollingNumberMaskComponent}
               RollingNumberSymbolComponent={RollingNumberSymbolComponent}
@@ -475,7 +475,7 @@ export const RollingNumber = memo(
               textProps={textProps}
               transitionConfig={transitionConfig}
             />
-            <RollingNumberNumberSectionComponent
+            <RollingNumberValueSectionComponent
               RollingNumberDigitComponent={RollingNumberDigitComponent}
               RollingNumberMaskComponent={RollingNumberMaskComponent}
               RollingNumberSymbolComponent={RollingNumberSymbolComponent}
@@ -488,7 +488,7 @@ export const RollingNumber = memo(
               transitionConfig={transitionConfig}
             />
             {/* Suffix generated by Intl.NumberFormat */}
-            <RollingNumberNumberSectionComponent
+            <RollingNumberValueSectionComponent
               RollingNumberDigitComponent={RollingNumberDigitComponent}
               RollingNumberMaskComponent={RollingNumberMaskComponent}
               RollingNumberSymbolComponent={RollingNumberSymbolComponent}
@@ -505,13 +505,13 @@ export const RollingNumber = memo(
       }, [
         intlNumberFormatter,
         enableSubscriptNotation,
-        styles?.formattedNumberSection,
+        styles?.formattedValueSection,
         styles?.i18nPrefix,
         styles?.text,
         styles?.integer,
         styles?.fraction,
         styles?.i18nSuffix,
-        RollingNumberNumberSectionComponent,
+        RollingNumberValueSectionComponent,
         RollingNumberDigitComponent,
         RollingNumberMaskComponent,
         RollingNumberSymbolComponent,
@@ -521,9 +521,9 @@ export const RollingNumber = memo(
         transitionConfig,
       ]);
 
-      const formattedValueNumberSection = useMemo(
+      const formattedValueValueSection = useMemo(
         () => (
-          <RollingNumberNumberSectionComponent
+          <RollingNumberValueSectionComponent
             RollingNumberDigitComponent={RollingNumberDigitComponent}
             RollingNumberMaskComponent={RollingNumberMaskComponent}
             RollingNumberSymbolComponent={RollingNumberSymbolComponent}
@@ -531,7 +531,7 @@ export const RollingNumber = memo(
             formattedValue={formattedValue}
             intlNumberParts={[]}
             justifyContent="flex-start"
-            style={styles?.formattedNumberSection}
+            style={styles?.formattedValueSection}
             styles={{ text: [animatedColorStyle, styles?.text] }}
             textProps={textProps}
             transitionConfig={transitionConfig}
@@ -539,9 +539,9 @@ export const RollingNumber = memo(
         ),
         [
           RollingNumberMaskComponent,
-          styles?.formattedNumberSection,
+          styles?.formattedValueSection,
           styles?.text,
-          RollingNumberNumberSectionComponent,
+          RollingNumberValueSectionComponent,
           RollingNumberDigitComponent,
           RollingNumberSymbolComponent,
           formattedValue,
@@ -594,7 +594,7 @@ export const RollingNumber = memo(
             style={styles?.visibleContent}
           >
             {prefixSection}
-            {formattedValue ? formattedValueNumberSection : intlPartsNumberSection}
+            {formattedValue ? formattedValueValueSection : intlPartsValueSection}
             {suffixSection}
           </HStack>
         </HStack>
