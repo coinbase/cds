@@ -3,7 +3,7 @@
  * Do not change the order of these imports or everything will break.
  */
 
-/* eslint-disable no-restricted-imports, @typescript-eslint/no-unused-expressions */
+/* eslint-disable simple-import-sort/imports, no-restricted-imports, @typescript-eslint/no-unused-expressions */
 
 import * as booleanStyles from './booleanStyles';
 import * as baseStyles from './responsive/base';

@@ -12,7 +12,7 @@ addons.register('cds-docs-link', (api) => {
       <IconButton
         key="cds-docs-link/tool"
         active={false}
-        onClick={() => window.open('https://cds.coinbase.com', '_blank')}
+        onClick={() => window.open('https://cds.cbhq.net', '_blank')}
         title="Go to CDS Docs"
       >
         <LinkIcon /> CDS Docs

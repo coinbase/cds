@@ -28,7 +28,7 @@ type CellMediaOtherProps = {
   /**
    * @deprecated This prop will be removed in v6.0.0
    * If required, use `accessibilityLabel` and `accessibilityHint` instead to set accessible labels.
-   * Refer to https://cds.coinbase.com/components/cell-media/ for updated accessibility guidance.
+   * Refer to https://cds.cbhq.net/components/cell-media/ for updated accessibility guidance.
    */
   title?: string;
   source: string | number;

@@ -26,22 +26,22 @@ export const ThemeProvider = ({ theme, activeColorScheme, children }: ThemeProvi
 
     if (!theme[activeColorKey])
       throw Error(
-        `ThemeProvider activeColorScheme is ${activeColorScheme} but no ${activeColorScheme} colors are defined for the theme. See the docs at https://cds.coinbase.com/getting-started/theming/#creating-a-theme`,
+        `ThemeProvider activeColorScheme is ${activeColorScheme} but no ${activeColorScheme} colors are defined for the theme. See the docs at https://cds.cbhq.net/getting-started/theming/#creating-a-theme`,
       );
 
     if (!theme[activeSpectrumKey])
       throw Error(
-        `ThemeProvider activeColorScheme is ${activeColorScheme} but no ${activeSpectrumKey} values are defined for the theme. See the docs at https://cds.coinbase.com/getting-started/theming/#creating-a-theme`,
+        `ThemeProvider activeColorScheme is ${activeColorScheme} but no ${activeSpectrumKey} values are defined for the theme. See the docs at https://cds.cbhq.net/getting-started/theming/#creating-a-theme`,
       );
 
     if (theme[inverseSpectrumKey] && !theme[inverseColorKey])
       throw Error(
-        `ThemeProvider theme has ${inverseSpectrumKey} values defined but no ${inverseColorKey} colors are defined for the theme. See the docs at https://cds.coinbase.com/getting-started/theming/#creating-a-theme`,
+        `ThemeProvider theme has ${inverseSpectrumKey} values defined but no ${inverseColorKey} colors are defined for the theme. See the docs at https://cds.cbhq.net/getting-started/theming/#creating-a-theme`,
       );
 
     if (theme[inverseColorKey] && !theme[inverseSpectrumKey])
       throw Error(
-        `ThemeProvider theme has ${inverseColorKey} colors defined but no ${inverseSpectrumKey} values are defined for the theme. See the docs at https://cds.coinbase.com/getting-started/theming/#creating-a-theme`,
+        `ThemeProvider theme has ${inverseColorKey} colors defined but no ${inverseSpectrumKey} values are defined for the theme. See the docs at https://cds.cbhq.net/getting-started/theming/#creating-a-theme`,
       );
 
     return {

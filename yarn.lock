@@ -2292,6 +2292,27 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@cds/codegen@workspace:libs/codegen":
+  version: 0.0.0-use.local
+  resolution: "@cds/codegen@workspace:libs/codegen"
+  dependencies:
+    "@babel/core": "npm:^7.28.0"
+    "@babel/preset-env": "npm:^7.28.0"
+    "@babel/preset-react": "npm:^7.27.1"
+    "@babel/preset-typescript": "npm:^7.27.1"
+    "@cbhq/cds-utils": "workspace:^"
+    "@k-vyn/coloralgorithm": "npm:^1.0.0"
+    chalk: "npm:^4.1.2"
+    ejs: "npm:^3.1.7"
+    enquirer: "npm:^2.3.6"
+    fast-glob: "npm:^3.2.11"
+    hygen: "patch:hygen@^6.2.0#./patches/hygen.patch"
+    semver: "npm:^7.5.4"
+    yargs: "npm:^17.5.1"
+    yargs-parser: "npm:^21.0.1"
+  languageName: unknown
+  linkType: soft
+
 "@cbhq/cds-common@workspace:^, @cbhq/cds-common@workspace:packages/common":
   version: 0.0.0-use.local
   resolution: "@cbhq/cds-common@workspace:packages/common"
@@ -2770,27 +2791,6 @@ __metadata:
     "@cbhq/cds-mobile": "workspace:^"
     "@cbhq/cds-mobile-visualization": "workspace:^"
     detox: ^20.14.8
-  languageName: unknown
-  linkType: soft
-
-"@cds/codegen@workspace:libs/codegen":
-  version: 0.0.0-use.local
-  resolution: "@cds/codegen@workspace:libs/codegen"
-  dependencies:
-    "@babel/core": "npm:^7.28.0"
-    "@babel/preset-env": "npm:^7.28.0"
-    "@babel/preset-react": "npm:^7.27.1"
-    "@babel/preset-typescript": "npm:^7.27.1"
-    "@cbhq/cds-utils": "workspace:^"
-    "@k-vyn/coloralgorithm": "npm:^1.0.0"
-    chalk: "npm:^4.1.2"
-    ejs: "npm:^3.1.7"
-    enquirer: "npm:^2.3.6"
-    fast-glob: "npm:^3.2.11"
-    hygen: "patch:hygen@^6.2.0#./patches/hygen.patch"
-    semver: "npm:^7.5.4"
-    yargs: "npm:^17.5.1"
-    yargs-parser: "npm:^21.0.1"
   languageName: unknown
   linkType: soft
 

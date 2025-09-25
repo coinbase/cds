@@ -58,7 +58,7 @@ const exampleProps = {
   ),
   end2: (
     <HStack alignItems="center" gap={1}>
-      <Link to="https://cds.coinbase.com/components/link">
+      <Link to="https://cds.cbhq.net/components/link">
         <Text color="fgPrimary" font="headline">
           Help
         </Text>
