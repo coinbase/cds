@@ -3,6 +3,7 @@ import { assets } from '@coinbase/cds-common/internal/data/assets';
 import { useTabsContext } from '@coinbase/cds-common/tabs/TabsContext';
 import type { TabValue } from '@coinbase/cds-common/tabs/useTabs';
 import { IconButton } from '@coinbase/cds-web/buttons';
+import { useTheme } from '@coinbase/cds-web/hooks/useTheme';
 import { Box, HStack, VStack } from '@coinbase/cds-web/layout';
 import {
   SegmentedTab,
@@ -202,11 +203,14 @@ const BTCTab: TabComponent = memo(
   forwardRef(
     ({ label, ...props }: SegmentedTabProps, ref: React.ForwardedRef<HTMLButtonElement>) => {
       const { activeTab } = useTabsContext();
+      const theme = useTheme();
       const isActive = activeTab?.id === props.id;
 
-      // todo: see if there is a simpler way for us to transition colors here
-      // previous attempt included adding styles and classNames props which didn't work with MotionText
-      // Another option is to create a new periodselectortab component
+      const btcThemeColor = useMemo(() => {
+        if (!isActive) return undefined;
+        return theme.activeColorScheme === 'light' ? '#593203' : btcColor;
+      }, [isActive, theme.activeColorScheme]);
+
       return (
         <SegmentedTab
           ref={ref}
@@ -214,7 +218,7 @@ const BTCTab: TabComponent = memo(
             <TextLabel1
               style={{
                 transition: 'color 0.2s ease',
-                color: isActive ? btcColor : undefined,
+                color: btcThemeColor,
               }}
             >
               {label}
@@ -228,8 +232,12 @@ const BTCTab: TabComponent = memo(
 );
 
 const ColoredPeriodSelectorExample = () => {
+  const theme = useTheme();
+
+  const liveLabelColor = theme.activeColorScheme === 'light' ? '#593203' : btcColor;
+
   const tabs = [
-    { id: '1H', label: <LiveTabLabel style={{ color: btcColor }} /> },
+    { id: '1H', label: <LiveTabLabel style={{ color: liveLabelColor }} /> },
     { id: '1D', label: '1D' },
     { id: '1W', label: '1W' },
     { id: '1M', label: '1M' },
