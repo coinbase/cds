@@ -4,7 +4,7 @@ Charts are highly customizable, SVG based components that can be used to display
 
 You can use `AreaChart`, `BarChart`, or `LineChart` to have default functionality for your chart.
 
-```jsx
+```jsx live
 function BasicExample() {
   const [scrubIndex, setScrubIndex] = useState(null);
   const data = [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58];
@@ -54,6 +54,7 @@ function BasicExample() {
 
   const btcPrices = btcData.map((candle) => parseFloat(candle.close));
   const btcVolumes = btcData.map((candle) => parseFloat(candle.volume));
+  const btcDates = btcData.map((candle) => new Date(parseInt(candle.start) * 1000));
 
   const formatPrice = useCallback((price: number) => {
     return `$${price.toLocaleString('en-US', {
@@ -62,16 +63,60 @@ function BasicExample() {
     })}`;
   }, []);
 
+  const formatPriceInThousands = useCallback((price: number) => {
+    return `$${(price / 1000).toLocaleString('en-US', {
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 2,
+    })}k`;
+  }, []);
+
+  const formatVolume = useCallback((volume: number) => {
+    return `${(volume / 1000).toFixed(2)}K`;
+  }, []);
+
+  const formatDate = useCallback((date: Date) => {
+    return date.toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+    });
+  }, []);
+
+  const displayIndex = scrubIndex ?? btcPrices.length - 1;
+  const currentPrice = btcPrices[displayIndex];
+  const currentVolume = btcVolumes[displayIndex];
+  const currentDate = btcDates[displayIndex];
+  const priceChange = displayIndex > 0
+    ? ((currentPrice - btcPrices[displayIndex - 1]) / btcPrices[displayIndex - 1])
+    : 0;
+
   const accessibilityLabel = useMemo(() => {
-    if (scrubIndex === null) return undefined;
-    return `Value: ${formatPrice(btcPrices[scrubIndex])} at index ${scrubIndex}`;
-  }, [scrubIndex, btcPrices]);
+    if (scrubIndex === null) return `Current Bitcoin price: ${formatPrice(currentPrice)}, Volume: ${formatVolume(currentVolume)}`;
+    return `Bitcoin price at ${formatDate(currentDate)}: ${formatPrice(currentPrice)}, Volume: ${formatVolume(currentVolume)}`;
+  }, [scrubIndex, currentPrice, currentVolume, currentDate, formatPrice, formatVolume, formatDate]);
 
-    const ThinSolidLine = memo((props: SolidLineProps) => <SolidLine {...props} strokeWidth={1} />);
+  const ThinSolidLine = memo((props: SolidLineProps) => <SolidLine {...props} strokeWidth={1} />);
 
+  const headerId = useId();
 
   return (
     <VStack gap={2}>
+     <SectionHeader
+        id={headerId}
+        style={{ padding: 0 }}
+        title={<Text font="title1">Bitcoin</Text>}
+        balance={<Text font="title2">{formatPrice(currentPrice)}</Text>}
+        end={
+          <HStack gap={2}>
+            <VStack justifyContent="center" alignItems="flex-end">
+              <Text font="label1">{formatDate(currentDate)}</Text>
+              <Text font="label2">{formatVolume(currentVolume)}</Text>
+            </VStack>
+            <VStack justifyContent="center">
+              <RemoteImage source={assets.btc.imageUrl} size="xl" shape="circle" />
+            </VStack>
+          </HStack>
+        }
+      />
       <Chart
         enableScrubbing
         onScrubberPosChange={setScrubIndex}
@@ -90,6 +135,7 @@ function BasicExample() {
             yAxisId: 'volume',
           },
         ]}
+        style={{ outlineColor: assets.btc.color }}
         xAxis={{ scaleType: 'band' }}
         yAxis={[
           {
@@ -102,8 +148,9 @@ function BasicExample() {
           },
         ]}
         accessibilityLabel={accessibilityLabel}
+        aria-labelledby={headerId}
       >
-        <YAxis axisId="price" showGrid tickLabelFormatter={formatPrice} size={80} GridLineComponent={ThinSolidLine} />
+        <YAxis axisId="price" showGrid tickLabelFormatter={formatPriceInThousands} size={80} GridLineComponent={ThinSolidLine} />
         <BarPlot seriesIds={['volume']} />
         <Line seriesId="prices" curve="monotone" showArea />
         <Scrubber seriesIds={['prices']} />
@@ -117,7 +164,7 @@ function BasicExample() {
 
 You can also create your own type of cartesian chart by using `getSeriesData`, `getXScale`, and `getYScale` directly.
 
-```jsx
+```jsx live
 function EarningsHistory() {
   const CirclePlot = memo(({ seriesId, opacity = 1 }: { seriesId: string, opacity?: number }) => {
     const { drawingArea } = useChartDrawingAreaContext();
