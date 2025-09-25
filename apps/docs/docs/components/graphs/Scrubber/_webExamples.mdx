@@ -1,6 +1,6 @@
 ## Basic Example
 
-Scrubber can be used to provide horizontal interaction with a chart. As your mouse hovers over the chart, you will see a vertical reference line and scrubber head following your cursor.
+Scrubber can be used to provide horizontal interaction with a chart. As your mouse hovers over the chart, you will see a reference line and scrubber head following your cursor.
 
 ```jsx live
 <LineChart
@@ -18,6 +18,7 @@ Scrubber can be used to provide horizontal interaction with a chart. As your mou
   yAxis={{
     showGrid: true,
   }}
+  padding={{ left: 16, right: 16 }}
 >
   <Scrubber />
 </LineChart>
@@ -25,15 +26,95 @@ Scrubber can be used to provide horizontal interaction with a chart. As your mou
 
 ## Multiple Series
 
+All series will be scrubbed by default. You can set the `seriesIds` prop to restrict the scrubbing to specific series.
+
+```jsx live
+<LineChart
+  enableScrubbing
+  height={400}
+  padding={{ left: 16, right: 16 }}
+  series={[
+    {
+      id: 'top',
+      data: [15, 28, 32, 44, 46, 36, 40, 45, 48, 38],
+    },
+    {
+      id: 'upperMiddle',
+      data: [12, 23, 21, 29, 34, 28, 31, 38, 42, 35],
+      color: '#ef4444',
+      type: 'dotted',
+    },
+    {
+      id: 'lowerMiddle',
+      data: [8, 15, 14, 25, 20, 18, 22, 28, 24, 30],
+      color: '#f59e0b',
+      curve: 'natural',
+      LineComponent: (props) => (
+        <GradientLine {...props} endColor="#F7931A" startColor="#E3D74D" strokeWidth={4} />
+      ),
+    },
+    {
+      id: 'bottom',
+      data: [4, 8, 11, 15, 16, 14, 16, 10, 12, 14],
+      color: '#800080',
+      curve: 'step',
+      AreaComponent: DottedArea,
+      showArea: true,
+    },
+  ]}
+>
+  <Scrubber seriesIds={['top', 'lowerMiddle']} />
+</LineChart>
+```
+
 ## Labels
 
-### Reference Line Label
+Setting the `label` prop for a series will display a label above the scrubber head.
 
-### Scrubber Head Labels
+```jsx live
+<LineChart
+  enableScrubbing
+  height={250}
+  series={[
+    {
+      id: 'prices',
+      data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+      label: 'Price',
+    },
+  ]}
+  curve="monotone"
+  showArea
+  padding={{ left: 16, right: 16 }}
+>
+  <Scrubber />
+</LineChart>
+```
 
 ## Pulsing
 
+Setting the `pulse` prop will cause the scrubber heads to pulse when the user is not actively scrubbing.
+
+```jsx live
+<LineChart
+  enableScrubbing
+  height={250}
+  series={[
+    {
+      id: 'prices',
+      data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+    },
+  ]}
+  curve="monotone"
+  showArea
+  padding={{ left: 16, right: 16 }}
+>
+  <Scrubber pulse />
+</LineChart>
+```
+
 ### With Imperative Handle
+
+You can also use the imperative handle to pulse the scrubber heads programmatically.
 
 ```jsx live
 function ImperativeHandle() {
@@ -84,6 +165,7 @@ function ImperativeHandle() {
           showGrid: true,
           tickLabelFormatter: (value) => value.toLocaleString(),
         }}
+        padding={{ left: 16, right: 16 }}
       >
         <Scrubber ref={scrubberRef} />
       </LineChart>
@@ -93,9 +175,7 @@ function ImperativeHandle() {
 }
 ```
 
-### Customization
-
-### Disable Overlay When Scrubbing
+## Disable Overlay When Scrubbing
 
 By default, the scrubber will show an overlay to de-emphasize future data. You can hide this by setting the `hideOverlay` prop to `true`.
 
@@ -115,17 +195,8 @@ By default, the scrubber will show an overlay to de-emphasize future data. You c
   yAxis={{
     showGrid: true,
   }}
+  padding={{ left: 16, right: 16 }}
 >
   <Scrubber hideOverlay />
 </LineChart>
 ```
-
-### Colors
-
-Talk about howe you can customize the colors of the scrubber heads.
-
-### Partial Series
-
-Showcase an example where we only scrub a subset of series.
-
-You can even use this to show no scrubber heads at all.

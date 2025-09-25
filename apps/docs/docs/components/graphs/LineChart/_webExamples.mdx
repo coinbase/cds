@@ -379,31 +379,6 @@ This example shows how to use an empty state for a line chart.
 />
 ```
 
-## Multiple Axes
-
-todo: move this to an axis doc
-
-```jsx live
-<Chart
-  xAxis={[{ data: [1, 10, 30, 50, 70, 90, 100] }]}
-  yAxis={[
-    { id: 'linearAxis', scaleType: 'linear' },
-    { id: 'logAxis', scaleType: 'log' },
-  ]}
-  series={[
-    { id: 'linear', yAxisId: 'linearAxis', data: [1, 10, 30, 50, 70, 90, 100], label: 'linear' },
-    { id: 'log', yAxisId: 'logAxis', data: [1, 10, 30, 50, 70, 90, 100], label: 'log' },
-  ]}
-  height={512}
->
-  <XAxis position="end" showLine showTickMarks />
-  <YAxis axisId="linearAxis" position="start" showLine showTickMarks />
-  <YAxis axisId="logAxis" position="end" showLine showTickMarks />
-  <Line seriesId="linear" curve="natural" />
-  <Line seriesId="log" curve="natural" />
-</Chart>
-```
-
 ## Line Styles
 
 ```jsx live
@@ -518,11 +493,9 @@ function LiveAssetPrice() {
 }
 ```
 
-## Data Formats
+## Data Format
 
 You can adjust the y values for a series of data by setting the `data` prop on the xAxis.
-
-todo: we need to handle showing points for any spot in the axis.
 
 ```jsx live
 <LineChart
@@ -552,6 +525,10 @@ todo: we need to handle showing points for any spot in the axis.
   <Scrubber hideOverlay />
 </LineChart>
 ```
+
+## Accessibility
+
+todo
 
 ## Customization
 
@@ -773,6 +750,7 @@ function ForecastAssetPrice() {
 
   return (
     <LineChart
+      animate={false}
       enableScrubbing
       showArea
       showXAxis
@@ -1018,13 +996,3 @@ function BitcoinChartWithScrubberHead() {
   );
 };
 ```
-
-## A11y
-
-Todo: talk about how to handle this
-
-Also look at some sort of way to 'enable' highlighting so that people cannot tab into chart when unnecessary.
-
-## Padding
-
-talk about how this can be adjusted
