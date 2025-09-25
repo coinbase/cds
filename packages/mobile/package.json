@@ -29,17 +29,21 @@
       "types": "./dts/buttons/index.d.ts",
       "default": "./esm/buttons/index.js"
     },
-    "./cards/ContentCard": {
-      "types": "./dts/cards/ContentCard/index.d.ts",
-      "default": "./esm/cards/ContentCard/index.js"
-    },
     "./cards": {
       "types": "./dts/cards/index.d.ts",
       "default": "./esm/cards/index.js"
     },
+    "./carousel": {
+      "types": "./dts/carousel/index.d.ts",
+      "default": "./esm/carousel/index.js"
+    },
     "./cells": {
       "types": "./dts/cells/index.d.ts",
       "default": "./esm/cells/index.js"
+    },
+    "./chips": {
+      "types": "./dts/chips/index.d.ts",
+      "default": "./esm/chips/index.js"
     },
     "./collapsible": {
       "types": "./dts/collapsible/index.d.ts",
@@ -69,13 +73,17 @@
       "types": "./dts/loaders/index.d.ts",
       "default": "./esm/loaders/index.js"
     },
-    "./media/Carousel": {
-      "types": "./dts/media/Carousel/index.d.ts",
-      "default": "./esm/media/Carousel/index.js"
-    },
     "./media": {
       "types": "./dts/media/index.d.ts",
       "default": "./esm/media/index.js"
+    },
+    "./navigation": {
+      "types": "./dts/navigation/index.d.ts",
+      "default": "./esm/navigation/index.js"
+    },
+    "./numbers": {
+      "types": "./dts/numbers/index.d.ts",
+      "default": "./esm/numbers/index.js"
     },
     "./overlays": {
       "types": "./dts/overlays/index.d.ts",

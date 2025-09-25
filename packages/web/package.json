@@ -28,10 +28,6 @@
       "types": "./dts/buttons/index.d.ts",
       "default": "./esm/buttons/index.js"
     },
-    "./cards/ContentCard": {
-      "types": "./dts/cards/ContentCard/index.d.ts",
-      "default": "./esm/cards/ContentCard/index.js"
-    },
     "./cards": {
       "types": "./dts/cards/index.d.ts",
       "default": "./esm/cards/index.js"
@@ -88,6 +84,10 @@
       "types": "./dts/navigation/index.d.ts",
       "default": "./esm/navigation/index.js"
     },
+    "./numbers": {
+      "types": "./dts/numbers/index.d.ts",
+      "default": "./esm/numbers/index.js"
+    },
     "./overlays": {
       "types": "./dts/overlays/index.d.ts",
       "default": "./esm/overlays/index.js"
@@ -115,10 +115,6 @@
     "./visualizations": {
       "types": "./dts/visualizations/index.d.ts",
       "default": "./esm/visualizations/index.js"
-    },
-    "./numbers": {
-      "types": "./dts/numbers/index.d.ts",
-      "default": "./esm/numbers/index.js"
     },
     "./*": {
       "types": "./dts/*.d.ts",

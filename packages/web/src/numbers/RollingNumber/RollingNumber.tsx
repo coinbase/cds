@@ -62,12 +62,12 @@ export const defaultTransitionConfig = {
 // Subcomponent prop and component type declarations
 export type RollingNumberMaskProps = TextProps<TextDefaultElement> & {
   children?: React.ReactNode;
-  ref?: React.Ref<TextDefaultElement>;
+  ref?: React.Ref<HTMLSpanElement>;
 };
 
 export type RollingNumberNodeSectionProps = TextProps<TextDefaultElement> & {
   children?: React.ReactNode;
-  ref?: React.Ref<TextDefaultElement>;
+  ref?: React.Ref<HTMLSpanElement>;
 };
 
 export type RollingNumberNumberSectionProps = TextProps<TextDefaultElement> & {
@@ -77,7 +77,7 @@ export type RollingNumberNumberSectionProps = TextProps<TextDefaultElement> & {
   RollingNumberMaskComponent?: RollingNumberMaskComponent;
   formattedValue?: string;
   transitionConfig?: RollingNumberTransitionConfig;
-  ref?: React.Ref<TextDefaultElement>;
+  ref?: React.Ref<HTMLSpanElement>;
 };
 
 export type RollingNumberDigitProps = TextProps<TextDefaultElement> & {
@@ -85,12 +85,12 @@ export type RollingNumberDigitProps = TextProps<TextDefaultElement> & {
   initialValue?: number;
   transitionConfig?: RollingNumberTransitionConfig;
   RollingNumberMaskComponent?: RollingNumberMaskComponent;
-  ref?: React.Ref<TextDefaultElement>;
+  ref?: React.Ref<HTMLSpanElement>;
 };
 
 export type RollingNumberSymbolProps = TextProps<TextDefaultElement> & {
   value: string;
-  ref?: React.Ref<TextDefaultElement>;
+  ref?: React.Ref<HTMLSpanElement>;
 };
 
 export type RollingNumberMaskComponent = React.FC<RollingNumberMaskProps>;
