@@ -70,10 +70,6 @@ const PositiveAndNegativeCashFlow = () => {
     { id: 'losses', data: losses, color: 'var(--color-fgNegative)', stackId: 'bars' },
   ];
 
-  const CustomReferenceLine = memo((props: SolidLineProps) => (
-    <SolidLine {...props} stroke="var(--color-bgTertiary)" />
-  ));
-
   return (
     <Chart
       height={420}

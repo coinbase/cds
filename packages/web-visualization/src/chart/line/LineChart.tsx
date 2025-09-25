@@ -33,9 +33,10 @@ const DefaultFallback = memo(({ fallbackType = 'positive' }: LineChartDefaultFal
 export type LineSeries = Omit<Series, 'data'> & {
   /**
    * The data array for this series. Use null values to create gaps in the line.
-   * Must be single numbers only for line charts.
+   * - Single numbers: Area (if shown) will extend from the y-axis minimum to the value
+   * - Tuples [baseline, value]: Area will extend from baseline to value (line still shows at value)
    */
-  data?: Array<number | null>;
+  data?: Array<number | null> | Array<[number, number] | null>;
 } & Partial<
     Pick<
       LineProps,
