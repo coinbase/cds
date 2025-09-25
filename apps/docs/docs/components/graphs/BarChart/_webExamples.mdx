@@ -336,6 +336,42 @@ Stacks will only round the top corners of touching bars.
 />
 ```
 
+### Round Baseline
+
+You can also round the baseline of the bars by setting the `roundBaseline` prop on the chart.
+
+```jsx live
+<BarChart
+  roundBaseline
+  stacked
+  borderRadius={1000}
+  height={300}
+  maxWidth={400}
+  padding={0}
+  series={[
+    { id: 'purple', data: [null, 6, 8, 10, 7, 6, 6, 8, 9, 12, 10, 4], color: '#b399ff' },
+    { id: 'blue', data: [null, 10, 12, 11, 10, 9, 10, 11, 7, 4, 12, 18], color: '#4f7cff' },
+    { id: 'cyan', data: [null, 7, 10, 12, 11, 10, 8, 11, 5, 12, 2, 9], color: '#00c2df' },
+    {
+      id: 'green',
+      data: [10, null, null, null, 1, null, null, 6, null, null, null, null],
+      color: '#33c481',
+    },
+  ]}
+  showXAxis
+  xAxis={{
+    data: ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'],
+    tickLabelFormatter: (value) => {
+      if (value === 'D') {
+        return <tspan style={{ fontWeight: 'bold' }}>{value}</tspan>;
+      }
+      return value;
+    },
+  }}
+  style={{ margin: '0 auto' }}
+/>
+```
+
 ## Negative Data
 
 ```jsx live
@@ -376,45 +412,102 @@ function PositiveAndNegativeCashFlow() {
 }
 ```
 
-### Round Baseline
+## Missing Bars
 
-You can also round the baseline of the bars by setting the `roundBaseline` prop on the chart.
+You can pass in `null` or `0` values to not render a bar for that data point.
 
 ```jsx live
 <BarChart
-  roundBaseline
-  stacked
-  borderRadius={1000}
-  height={300}
-  maxWidth={400}
-  padding={0}
+  showXAxis
+  showYAxis
+  height={400}
   series={[
-    { id: 'purple', data: [null, 6, 8, 10, 7, 6, 6, 8, 9, 12, 10, 4], color: '#b399ff' },
-    { id: 'blue', data: [null, 10, 12, 11, 10, 9, 10, 11, 7, 4, 12, 18], color: '#4f7cff' },
-    { id: 'cyan', data: [null, 7, 10, 12, 11, 10, 8, 11, 5, 12, 2, 9], color: '#00c2df' },
     {
-      id: 'green',
-      data: [10, null, null, null, 1, null, null, 6, null, null, null, null],
-      color: '#33c481',
+      id: 'weekly-data',
+      data: [45, null, 38, 0, 19, null, 32],
     },
   ]}
-  showXAxis
   xAxis={{
-    data: ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'],
-    tickLabelFormatter: (value) => {
-      if (value === 'D') {
-        return <tspan style={{ fontWeight: 'bold' }}>{value}</tspan>;
-      }
-      return value;
-    },
+    data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+    showTickMarks: true,
+    showLine: true,
   }}
-  style={{ margin: '0 auto' }}
+  yAxis={{
+    requestedTickCount: 5,
+    tickLabelFormatter: (value) => `$${value}k`,
+    showGrid: true,
+    showTickMarks: true,
+    showLine: true,
+    tickMarkSize: 1.5,
+    domain: { max: 50 },
+  }}
 />
 ```
 
-## Missing Bars
+You can also use the `StackComponent` prop to render an empty circle for zero values.
 
-todo: showcase an example with missing bars and how to do this.
+```jsx live
+function MonthlyRewards() {
+  const months = ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'];
+  const currentMonth = 7;
+  const purple = [null, 6, 8, 10, 7, 6, 6, 8, null, null, null, null];
+  const blue = [null, 10, 12, 11, 10, 9, 10, 11, null, null, null, null];
+  const cyan = [null, 7, 10, 12, 11, 10, 8, 11, null, null, null, null];
+  const green = [10, null, null, null, 1, null, null, 6, null, null, null, null];
+
+  const series = [
+    { id: 'purple', data: purple, color: '#b399ff' },
+    { id: 'blue', data: blue, color: '#4f7cff' },
+    { id: 'cyan', data: cyan, color: '#00c2df' },
+    { id: 'green', data: green, color: '#33c481' },
+  ];
+
+  const CustomStackComponent = ({ children, ...props }: StackComponentProps) => {
+    if (props.height === 0) {
+      const diameter = props.width;
+      return (
+        <Bar
+          roundBottom
+          roundTop
+          borderRadius={1000}
+          fill="var(--color-bgTertiary)"
+          height={diameter}
+          width={diameter}
+          x={props.x}
+          y={props.y - diameter}
+        />
+      );
+    }
+
+    return <DefaultStackComponent {...props}>{children}</DefaultStackComponent>;
+  };
+
+  return (
+    <BarChart
+      roundBaseline
+      showXAxis
+      stacked
+      StackComponent={CustomStackComponent}
+      borderRadius={1000}
+      height={300}
+      padding={0}
+      series={series}
+      showYAxis={false}
+      stackMinSize={3}
+      width={403}
+      xAxis={{
+        tickLabelFormatter: (index) => {
+          if (index == currentMonth) {
+            return <tspan style={{ fontWeight: 'bold' }}>{months[index]}</tspan>;
+          }
+          return months[index];
+        },
+        categoryPadding: 0.27,
+      }}
+    />
+  );
+};
+```
 
 ## Customization
 
@@ -451,4 +544,155 @@ There are two ways to control the spacing between bars. You can set the `barPadd
 
 ### Minimum Size
 
-talk about how to set minimum size for bars and stacks.
+To better emphasize small values, you can set the `stackMinSize` or `barMinSize` prop to control the minimum size for entire stacks or individual bar.
+
+### Minimum Stack Size
+
+### Minimum Bar Size
+
+### Multiple Y Axes
+
+You can render bars from separate y axes in one `BarPlot`, however they aren't able to be stack.
+
+```jsx live
+<VStack gap={2}>
+  <Chart
+    height={400}
+    series={[
+      {
+        id: 'revenue',
+        data: [455, 520, 380, 455, 285, 235],
+        yAxisId: 'revenue',
+        color: 'var(--color-accentBoldYellow)',
+      },
+      {
+        id: 'profitMargin',
+        data: [23, 20, 16, 38, 12, 9],
+        yAxisId: 'profitMargin',
+        color: 'var(--color-fgPositive)',
+      },
+    ]}
+    xAxis={{
+      data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+      scaleType: 'band',
+    }}
+    yAxis={[
+      {
+        id: 'revenue',
+        domain: { min: 0 },
+      },
+      {
+        id: 'profitMargin',
+        domain: { min: 0, max: 100 },
+      },
+    ]}
+  >
+    <XAxis showLine showTickMarks />
+    <YAxis
+      showGrid
+      showLine
+      showTickMarks
+      axisId="revenue"
+      position="start"
+      requestedTickCount={5}
+      size={60}
+      tickLabelFormatter={(value) => `$${value}k`}
+    />
+    <YAxis
+      showLine
+      showTickMarks
+      axisId="profitMargin"
+      position="end"
+      requestedTickCount={5}
+      tickLabelFormatter={(value) => `${value}%`}
+    />
+    <BarPlot />
+  </Chart>
+  <HStack justifyContent="center" gap={2}>
+    <Box alignItems="center" gap={0.5}>
+      <Box
+        borderRadius={1000}
+        width={10}
+        height={10}
+        style={{ background: 'var(--color-accentBoldYellow)' }}
+      />
+      <Text font="label2">Revenue ($)</Text>
+    </Box>
+    <Box alignItems="center" gap={0.5}>
+      <Box
+        borderRadius={1000}
+        width={10}
+        height={10}
+        style={{ background: 'var(--color-fgPositive)' }}
+      />
+      <Text font="label2">Profit Margin (%)</Text>
+    </Box>
+  </HStack>
+</VStack>
+```
+
+### Stack Outline
+
+You can set the `StackComponent` prop to render a custom component for stacks.
+
+```jsx live
+function MonthlyRewards() {
+  const CustomStackComponent = ({ children, ...props }: StackComponentProps) => {
+    return (
+      <>
+        <Bar
+          roundBottom
+          roundTop
+          borderRadius={1000}
+          stroke="var(--color-fg)"
+          strokeWidth={4}
+          height={props.height}
+          width={props.width}
+          x={props.x}
+          y={props.y}
+          clip
+        />
+        <DefaultStackComponent {...props}>{children}</DefaultStackComponent>
+      </>
+    );
+  };
+
+  return (
+    <BarChart
+      roundBaseline
+      stacked
+      StackComponent={CustomStackComponent}
+      borderRadius={1000}
+      height={300}
+      maxWidth={400}
+      padding={0}
+      series={[
+        { id: 'purple', data: [null, 6, 8, 10, 7, 6, 6, 8, 9, 12, 10, 4], color: '#b399ff' },
+        { id: 'blue', data: [null, 10, 12, 11, 10, 9, 10, 11, 7, 4, 12, 18], color: '#4f7cff' },
+        { id: 'cyan', data: [null, 7, 10, 12, 11, 10, 8, 11, 5, 12, 2, 9], color: '#00c2df' },
+        {
+          id: 'green',
+          data: [10, null, null, null, 1, null, null, 6, null, null, null, null],
+          color: '#33c481',
+        },
+      ]}
+      showXAxis
+      xAxis={{
+        data: ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'],
+        tickLabelFormatter: (value) => {
+          if (value === 'D') {
+            return <tspan style={{ fontWeight: 'bold' }}>{value}</tspan>;
+          }
+          return value;
+        },
+      }}
+      yAxis={{ range: ({ min, max }) => ({ min, max: max - 4 }) }}
+      style={{ margin: '0 auto' }}
+    />
+  );
+}
+```
+
+### Interaction
+
+### Candlestick

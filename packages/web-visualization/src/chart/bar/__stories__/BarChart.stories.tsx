@@ -5,7 +5,6 @@ import {
   ScrubberContext,
   useChartContext,
 } from '@coinbase/cds-common/visualizations/charts';
-import { generateRandomId } from '@coinbase/cds-utils';
 import { VStack } from '@coinbase/cds-web/layout';
 import { Text } from '@coinbase/cds-web/typography';
 
@@ -17,7 +16,7 @@ import { Scrubber } from '../../scrubber';
 import { BarChart } from '../BarChart';
 import { BarPlot } from '../BarPlot';
 import { DefaultStackComponent, type StackComponentProps } from '../DefaultStackComponent';
-import { Bar, type BarComponentProps, DefaultBar } from '..';
+import { Bar, type BarComponentProps } from '..';
 
 export default {
   title: 'Components/Chart/BarChart',
