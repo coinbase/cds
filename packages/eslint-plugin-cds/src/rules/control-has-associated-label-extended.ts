@@ -81,8 +81,8 @@ export const controlHasAssociatedLabelExtended = ruleCreator({
     messages: {
       missingAccessibilityLabel: `Missing 'accessibilityLabel' on <{{componentName}}>.`,
       missingAccessibilityLabelSuggestion: `Add missing accessibility label`,
-      missingControlledElementAccessibilityProps: `Missing 'controlledElementAccessibilityProps' on <{{componentName}}>. More info: https://cds.cbhq.net/components/collapsible#[object%20Object],Accessibility%20tip%20(web)`,
-      missingControlledElementAccessibilityPropsDropdown: `Missing 'controlledElementAccessibilityProps' on <{{componentName}}>. More info: https://cds.cbhq.net/components/dropdown#page=implementation`,
+      missingControlledElementAccessibilityProps: `Missing 'controlledElementAccessibilityProps' on <{{componentName}}>. More info: https://cds.coinbase.com/components/collapsible#[object%20Object],Accessibility%20tip%20(web)`,
+      missingControlledElementAccessibilityPropsDropdown: `Missing 'controlledElementAccessibilityProps' on <{{componentName}}>. More info: https://cds.coinbase.com/components/dropdown#page=implementation`,
       missingHelperTextErrorIconAccessibilityLabel: `Missing 'helperTextErrorIconAccessibilityLabel' on <{{componentName}}>.`,
       missingCalendarIconButtonAccessibilityLabel: `Missing 'calendarIconButtonAccessibilityLabel' on <{{componentName}}>.`,
       missingNextArrowAccessibilityLabel: `Missing 'nextArrowAccessibilityLabel' on <{{componentName}}>.`,
