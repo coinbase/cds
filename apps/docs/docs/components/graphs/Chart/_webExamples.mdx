@@ -1,56 +1,123 @@
 ## Basic Example
 
-todo: talk about how charts work. Talk about how they are an SVG with helpful components / functions to be used.
+Charts are highly customizable, SVG based components that can be used to display a variety of data. The underlying logic is handled by D3.
 
-```jsx live
-<LineChart
-  height={400}
-  series={[
-    {
-      id: 'pageViews',
-      data: [24, 13, 98, 39, 48, 38, 43],
-    },
-  ]}
-  showYAxis
-  yAxis={{
-    showGrid: true,
-  }}
-/>
+You can use `AreaChart`, `BarChart`, or `LineChart` to have default functionality for your chart.
+
+```jsx
+function BasicExample() {
+  const [scrubIndex, setScrubIndex] = useState(null);
+  const data = [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58];
+
+  const accessibilityLabel = useMemo(() => {
+    if (scrubIndex === null) return undefined;
+    return `Value: ${data[scrubIndex]} at index ${scrubIndex}`;
+  }, [scrubIndex, data]);
+
+  return (
+    <LineChart
+      enableScrubbing
+      onScrubberPosChange={setScrubIndex}
+      height={250}
+      series={[
+        {
+          id: 'prices',
+          data: data,
+        },
+      ]}
+      curve="monotone"
+      showYAxis
+      showArea
+      yAxis={{
+        showGrid: true,
+      }}
+      accessibilityLabel={accessibilityLabel}
+    >
+      <Scrubber />
+    </LineChart>
+  );
+}
 ```
-
-## Multiple Series
-
-## Axes
-
-### X-Axis Data
-
-todo: should we limit this prop to x axis only for this release?
-
-talk about how to render
-
-### Axis Ticks
-
-### Axis Labels
-
-Talk about how setting xData will result in interpolation when given numbers.
-
-### Axis Scales
 
 ## Customization
 
-### Dynamic Size
-
-todo: test this out
-
-### Volume
+When you desire a more custom chart, you can use the `Chart` component and build your own chart from scratch.
 
 ### Price with Volume
 
+```jsx live
+function BasicExample() {
+  const [scrubIndex, setScrubIndex] = useState(null);
+  const btcData = btcCandles
+    .slice(0, 180)
+    .reverse()
+
+  const btcPrices = btcData.map((candle) => parseFloat(candle.close));
+  const btcVolumes = btcData.map((candle) => parseFloat(candle.volume));
+
+  const formatPrice = useCallback((price: number) => {
+    return `$${price.toLocaleString('en-US', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    })}`;
+  }, []);
+
+  const accessibilityLabel = useMemo(() => {
+    if (scrubIndex === null) return undefined;
+    return `Value: ${formatPrice(btcPrices[scrubIndex])} at index ${scrubIndex}`;
+  }, [scrubIndex, btcPrices]);
+
+    const ThinSolidLine = memo((props: SolidLineProps) => <SolidLine {...props} strokeWidth={1} />);
+
+
+  return (
+    <VStack gap={2}>
+      <Chart
+        enableScrubbing
+        onScrubberPosChange={setScrubIndex}
+        height={250}
+        series={[
+          {
+            id: 'prices',
+            data: btcPrices,
+            color: assets.btc.color,
+            yAxisId: 'price',
+          },
+          {
+            id: 'volume',
+            data: btcVolumes,
+            color: 'var(--color-fgMuted)',
+            yAxisId: 'volume',
+          },
+        ]}
+        xAxis={{ scaleType: 'band' }}
+        yAxis={[
+          {
+            id: 'price',
+            domain: ({ min, max }) => ({ min: min * 0.9, max }),
+          },
+          {
+            id: 'volume',
+            range: ({ min, max }) => ({ min: max - 32, max }),
+          },
+        ]}
+        accessibilityLabel={accessibilityLabel}
+      >
+        <YAxis axisId="price" showGrid tickLabelFormatter={formatPrice} size={80} GridLineComponent={ThinSolidLine} />
+        <BarPlot seriesIds={['volume']} />
+        <Line seriesId="prices" curve="monotone" showArea />
+        <Scrubber seriesIds={['prices']} />
+      </Chart>
+    </VStack>
+  );
+}
+```
+
 ### Earnings History
 
-You can use the scale functions to create a custom chart.
+You can also create your own type of cartesian chart by using `getSeriesData`, `getXScale`, and `getYScale` directly.
 
-```jsx live
+```jsx
 function EarningsHistory() {
   const CirclePlot = memo(({ seriesId, opacity = 1 }: { seriesId: string, opacity?: number }) => {
     const { drawingArea } = useChartDrawingAreaContext();
