@@ -1,4 +1,4 @@
-import { type AriaAttributes, forwardRef, memo, useMemo } from 'react';
+import { forwardRef, memo, useMemo } from 'react';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import { curves, durations } from '@coinbase/cds-common/motion/tokens';
 import {
@@ -27,11 +27,6 @@ import { DefaultRollingNumberNumberSection } from './DefaultRollingNumberNumberS
 import { DefaultRollingNumberSymbol } from './DefaultRollingNumberSymbol';
 import { useColorPulse } from './useColorPulse';
 
-export const defaultTransitionConfig = {
-  y: { duration: durations.moderate3 / 1000, ease: curves.global },
-  color: { duration: durations.slow4 / 1000, ease: curves.global },
-} as const;
-
 const tickerCss = css`
   display: inline-flex;
   white-space: nowrap;
@@ -59,15 +54,20 @@ type RollingNumberTransitionConfig = {
   color?: Transition;
 };
 
+export const defaultTransitionConfig = {
+  y: { duration: durations.moderate3 / 1000, ease: curves.global },
+  color: { duration: durations.slow4 / 1000, ease: curves.global },
+} as const satisfies RollingNumberTransitionConfig;
+
 // Subcomponent prop and component type declarations
 export type RollingNumberMaskProps = TextProps<TextDefaultElement> & {
   children?: React.ReactNode;
-  ref?: React.Ref<HTMLSpanElement>;
+  ref?: React.Ref<TextDefaultElement>;
 };
 
 export type RollingNumberNodeSectionProps = TextProps<TextDefaultElement> & {
   children?: React.ReactNode;
-  ref?: React.Ref<HTMLSpanElement>;
+  ref?: React.Ref<TextDefaultElement>;
 };
 
 export type RollingNumberNumberSectionProps = TextProps<TextDefaultElement> & {
@@ -77,7 +77,7 @@ export type RollingNumberNumberSectionProps = TextProps<TextDefaultElement> & {
   RollingNumberMaskComponent?: RollingNumberMaskComponent;
   formattedValue?: string;
   transitionConfig?: RollingNumberTransitionConfig;
-  ref?: React.Ref<HTMLSpanElement>;
+  ref?: React.Ref<TextDefaultElement>;
 };
 
 export type RollingNumberDigitProps = TextProps<TextDefaultElement> & {
@@ -85,12 +85,12 @@ export type RollingNumberDigitProps = TextProps<TextDefaultElement> & {
   initialValue?: number;
   transitionConfig?: RollingNumberTransitionConfig;
   RollingNumberMaskComponent?: RollingNumberMaskComponent;
-  ref?: React.Ref<HTMLSpanElement>;
+  ref?: React.Ref<TextDefaultElement>;
 };
 
 export type RollingNumberSymbolProps = TextProps<TextDefaultElement> & {
   value: string;
-  ref?: React.Ref<HTMLSpanElement>;
+  ref?: React.Ref<TextDefaultElement>;
 };
 
 export type RollingNumberMaskComponent = React.FC<RollingNumberMaskProps>;
@@ -114,7 +114,7 @@ export type RollingNumberBaseProps = SharedProps &
      * Scientific and engineering notation are not supported.
      */
     format?: Omit<Intl.NumberFormatOptions, 'notation'> & {
-      notation?: Exclude<Intl.NumberFormatOptions['notation'], 'scientific' | 'engineering'>;
+      notation?: Extract<Intl.NumberFormatOptions['notation'], 'standard' | 'compact'>;
     };
     /**
      * Formatted number to display. If provided, we will render this instead of using value and format.
@@ -198,7 +198,7 @@ export type RollingNumberBaseProps = SharedProps &
      * Aria-live attribute value.
      * @default 'polite'
      */
-    ariaLive?: AriaAttributes['aria-live'];
+    ariaLive?: React.AriaAttributes['aria-live'];
     /**
      * Enable tabular numbers.
      * @default true
