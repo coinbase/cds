@@ -437,37 +437,39 @@ todo: we need to handle showing points for any spot in the axis.
 ```jsx live
 function AssetPriceWithDottedArea() {
   const BTCTab: TabComponent = memo(
-  forwardRef(
-    ({ label, ...props }: SegmentedTabProps, ref: React.ForwardedRef<HTMLButtonElement>) => {
-      const { activeTab } = useTabsContext();
-      const isActive = activeTab?.id === props.id;
+    forwardRef(
+      ({ label, ...props }: SegmentedTabProps, ref: React.ForwardedRef<HTMLButtonElement>) => {
+        const { activeTab } = useTabsContext();
+        const isActive = activeTab?.id === props.id;
 
-      return (
-        <SegmentedTab
-          ref={ref}
-          label={
-            <TextLabel1
-              style={{
-                transition: 'color 0.2s ease',
-                color: isActive ? assets.btc.color : undefined,
-              }}
-            >
-              {label}
-            </TextLabel1>
-          }
-          {...props}
-        />
-      );
-    },
-  ),
-);
+        return (
+          <SegmentedTab
+            ref={ref}
+            label={
+              <TextLabel1
+                style={{
+                  transition: 'color 0.2s ease',
+                  color: isActive ? assets.btc.color : undefined,
+                }}
+              >
+                {label}
+              </TextLabel1>
+            }
+            {...props}
+          />
+        );
+      },
+    ),
+  );
 
 const BTCActiveIndicator = memo(({ style, ...props }: TabsActiveIndicatorProps) => (
-  <PeriodSelectorActiveIndicator
-    {...props}
-    style={{ ...style, backgroundColor: `${assets.btc.color}1A` }}
-  />
-));
+    <PeriodSelectorActiveIndicator
+      {...props}
+      style={{ ...style, backgroundColor: `${assets.btc.color}1A` }}
+    />
+  ));
+
+  const AssetPriceDotted = memo(() => {
   const [scrubIndex, setScrubIndex] = useState<number | null>(null);
   const currentPrice =
     sparklineInteractiveData.hour[sparklineInteractiveData.hour.length - 1].value;
@@ -574,7 +576,9 @@ const BTCActiveIndicator = memo(({ style, ...props }: TabsActiveIndicatorProps) 
         onChange={onPeriodChange}
       />
     </VStack>
-  );
+  )});
+
+  return <AssetPriceDotted />;
 };
 ```
 
