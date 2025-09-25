@@ -466,6 +466,12 @@ export const routes = [
       require('@coinbase/cds-mobile/media/__stories__/RemoteImage.stories').default,
   },
   {
+    key: 'ReferenceLine',
+    getComponent: () =>
+      require('@coinbase/cds-mobile-visualization/chart/line/__stories__/ReferenceLine.stories')
+        .default,
+  },
+  {
     key: 'RemoteImageGroup',
     getComponent: () =>
       require('@coinbase/cds-mobile/media/__stories__/RemoteImageGroup.stories').default,

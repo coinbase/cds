@@ -1,4 +1,4 @@
-export const btcCandles = [
+export const candles = [
   {
     start: '1758412800',
     low: '115614.22',

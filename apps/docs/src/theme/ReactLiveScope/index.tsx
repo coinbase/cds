@@ -8,6 +8,7 @@ import { useSort } from '@coinbase/cds-common/hooks/useSort';
 import { accounts } from '@coinbase/cds-common/internal/data/accounts';
 import * as CDSDataAccounts from '@coinbase/cds-common/internal/data/accounts';
 import * as CDSDataAssets from '@coinbase/cds-common/internal/data/assets';
+import { candles as btcCandles } from '@coinbase/cds-common/internal/data/candles';
 import { loremIpsum } from '@coinbase/cds-common/internal/data/loremIpsum';
 import { prices } from '@coinbase/cds-common/internal/data/prices';
 import { product } from '@coinbase/cds-common/internal/data/product';
@@ -174,6 +175,7 @@ const ReactLiveScope: Record<string, unknown> = {
   UpsellCard,
   ...ContentCardComponents,
   // visualizations
+  btcCandles,
   ...CDSChartComponents,
   ...CDSChartsCommon,
   ...CDSVisualizations,

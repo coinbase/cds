@@ -1,13 +1,17 @@
-import { useCallback, useMemo, useState } from 'react';
-import { G } from 'react-native-svg';
+import { useCallback, useId, useMemo, useState } from 'react';
+import { Defs, G, LinearGradient, Stop } from 'react-native-svg';
 import { assets } from '@coinbase/cds-common/internal/data/assets';
+import { candles as btcCandles } from '@coinbase/cds-common/internal/data/candles';
 import { prices } from '@coinbase/cds-common/internal/data/prices';
 import { sparklineInteractiveData } from '@coinbase/cds-common/internal/visualizations/SparklineInteractiveData';
 import type { TabValue } from '@coinbase/cds-common/tabs/useTabs';
 import { projectPoint, useChartContext } from '@coinbase/cds-common/visualizations/charts';
 import type { ChartAxisScaleType } from '@coinbase/cds-common/visualizations/charts/scale';
+import { useTheme } from '@coinbase/cds-mobile';
 import { Example, ExampleScreen } from '@coinbase/cds-mobile/examples/ExampleScreen';
 import { Box, HStack, VStack } from '@coinbase/cds-mobile/layout';
+import { RemoteImage } from '@coinbase/cds-mobile/media';
+import { SectionHeader } from '@coinbase/cds-mobile/section-header/SectionHeader';
 import {
   SegmentedTabs,
   TabsActiveIndicator,
@@ -16,14 +20,15 @@ import {
 import { Text } from '@coinbase/cds-mobile/typography/Text';
 
 import { Area, type AreaComponentProps, DottedArea, GradientArea } from '../../area';
-import { XAxis } from '../../axis';
+import { XAxis, YAxis } from '../../axis';
 import { Chart } from '../../Chart';
 import { PeriodSelector } from '../../PeriodSelector';
 import { Point } from '../../point';
 import { Scrubber } from '../../scrubber';
+import type { ChartTextChildren } from '../../text';
 import { DottedLine, GradientLine, Line, LineChart, ReferenceLine, SolidLine } from '..';
 
-const defaultChartHeight = 250;
+const defaultChartHeight = 200;
 
 const formatChartDate = (timestamp: string, timeframe: string): string => {
   const date = new Date(timestamp);
@@ -1076,9 +1081,268 @@ const PeriodSelectorExample = () => {
   return <PeriodSelector activeTab={activeTab} onChange={(tab) => setActiveTab(tab)} tabs={tabs} />;
 };
 
+const AssetPriceDotted = () => {
+  const [scrubIndex, setScrubIndex] = useState<number | null>(null);
+  const currentPrice =
+    sparklineInteractiveData.hour[sparklineInteractiveData.hour.length - 1].value;
+  const tabs = useMemo(
+    () => [
+      { id: 'hour', label: '1H' },
+      { id: 'day', label: '1D' },
+      { id: 'week', label: '1W' },
+      { id: 'month', label: '1M' },
+      { id: 'year', label: '1Y' },
+      { id: 'all', label: 'All' },
+    ],
+    [],
+  );
+  const [timePeriod, setTimePeriod] = useState<TabValue>(tabs[0]);
+
+  const sparklineTimePeriodData = useMemo(() => {
+    return sparklineInteractiveData[timePeriod.id as keyof typeof sparklineInteractiveData];
+  }, [timePeriod]);
+
+  const sparklineTimePeriodDataValues = useMemo(() => {
+    return sparklineTimePeriodData.map((d) => d.value);
+  }, [sparklineTimePeriodData]);
+
+  const sparklineTimePeriodDataTimestamps = useMemo(() => {
+    return sparklineTimePeriodData.map((d) => d.date);
+  }, [sparklineTimePeriodData]);
+
+  const onPeriodChange = useCallback(
+    (period: TabValue | null) => {
+      setTimePeriod(period || tabs[0]);
+    },
+    [tabs, setTimePeriod],
+  );
+
+  const formatPrice = useCallback((price: number) => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+    }).format(price);
+  }, []);
+
+  const formatDate = useCallback((date: Date) => {
+    const dayOfWeek = date.toLocaleDateString('en-US', { weekday: 'short' });
+
+    const monthDay = date.toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+    });
+
+    const time = date.toLocaleTimeString('en-US', {
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true,
+    });
+
+    return `${dayOfWeek}, ${monthDay}, ${time}`;
+  }, []);
+
+  const scrubberLabel: ChartTextChildren = useMemo(() => {
+    if (scrubIndex === null) return null;
+    const price = new Intl.NumberFormat('en-US', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }).format(sparklineTimePeriodDataValues[scrubIndex]);
+    const date = formatDate(sparklineTimePeriodDataTimestamps[scrubIndex]);
+    return `${price} USD ${date}`;
+  }, [scrubIndex, sparklineTimePeriodDataValues, formatDate, sparklineTimePeriodDataTimestamps]);
+
+  return (
+    <VStack gap={2}>
+      <SectionHeader
+        balance={<Text font="title2">{formatPrice(currentPrice)}</Text>}
+        end={
+          <VStack justifyContent="center">
+            <RemoteImage shape="circle" size="xl" source={assets.btc.imageUrl} />
+          </VStack>
+        }
+        padding={0}
+        title={<Text font="title1">Bitcoin</Text>}
+      />
+      <LineChart
+        enableScrubbing
+        showArea
+        areaType="dotted"
+        height={defaultChartHeight}
+        onScrubberPosChange={setScrubIndex}
+        series={[
+          {
+            id: 'btc',
+            data: sparklineTimePeriodDataValues,
+            color: assets.btc.color,
+          },
+        ]}
+      >
+        <Scrubber pulse scrubberLabel={scrubberLabel} />
+      </LineChart>
+      <PeriodSelector activeTab={timePeriod} onChange={onPeriodChange} tabs={tabs} />
+    </VStack>
+  );
+};
+
+const GainLossChart = () => {
+  const theme = useTheme();
+  const gradientId = useId();
+
+  const data = [-40, -28, -21, -5, 48, -5, -28, 2, -29, -46, 16, -30, -29, 8];
+
+  const ChartDefs = ({ threshold = 0 }) => {
+    const { getYScale } = useChartContext();
+    // get the default y-axis scale
+    const yScale = getYScale?.();
+
+    if (yScale) {
+      const domain = yScale.domain();
+      const range = yScale.range();
+
+      const baselinePercentage = ((threshold - domain[0]) / (domain[1] - domain[0])) * 100;
+
+      const negativeColor = `rgb(${theme.spectrum.gray15})`;
+      const positiveColor = theme.color.fgPositive;
+
+      return (
+        <Defs>
+          <LinearGradient
+            gradientUnits="userSpaceOnUse"
+            id={`${gradientId}-solid`}
+            x1="0%"
+            x2="0%"
+            y1={range[0]}
+            y2={range[1]}
+          >
+            <Stop offset="0%" stopColor={negativeColor} />
+            <Stop offset={`${baselinePercentage}%`} stopColor={negativeColor} />
+            <Stop offset={`${baselinePercentage}%`} stopColor={positiveColor} />
+            <Stop offset="100%" stopColor={positiveColor} />
+          </LinearGradient>
+          <LinearGradient
+            gradientUnits="userSpaceOnUse"
+            id={`${gradientId}-gradient`}
+            x1="0%"
+            x2="0%"
+            y1={range[0]}
+            y2={range[1]}
+          >
+            <Stop offset="0%" stopColor={negativeColor} stopOpacity={0.3} />
+            <Stop offset={`${baselinePercentage}%`} stopColor={negativeColor} stopOpacity={0} />
+            <Stop offset={`${baselinePercentage}%`} stopColor={positiveColor} stopOpacity={0} />
+            <Stop offset="100%" stopColor={positiveColor} stopOpacity={0.3} />
+          </LinearGradient>
+        </Defs>
+      );
+    }
+
+    return null;
+  };
+
+  const tickLabelFormatter = useCallback(
+    (value: number) =>
+      new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+        maximumFractionDigits: 0,
+      }).format(value),
+    [],
+  );
+
+  const solidColor = `url(#${gradientId}-solid)`;
+
+  return (
+    <Chart
+      enableScrubbing
+      height={defaultChartHeight}
+      padding={{ top: 12, bottom: 12, left: 0, right: 0 }}
+      series={[
+        {
+          id: 'prices',
+          data: data,
+          color: solidColor,
+        },
+      ]}
+    >
+      <ChartDefs />
+      <YAxis showGrid requestedTickCount={2} tickLabelFormatter={tickLabelFormatter} />
+      <Area curve="monotone" fill={`url(#${gradientId}-gradient)`} seriesId="prices" />
+      <Line curve="monotone" seriesId="prices" stroke={solidColor} strokeWidth={3} />
+      <Scrubber hideOverlay />
+    </Chart>
+  );
+};
+
+const BitcoinChartWithScrubberHead = () => {
+  const theme = useTheme();
+  const prices = [...btcCandles].reverse().map((candle) => parseFloat(candle.close));
+  const latestPrice = prices[prices.length - 1];
+
+  const formatPrice = (price: number) => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+    }).format(price);
+  };
+
+  const formatPercentChange = (price: number) => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'percent',
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }).format(price);
+  };
+
+  const percentChange = (latestPrice - prices[0]) / prices[0];
+
+  return (
+    <Box borderRadius={300} overflow="hidden" style={{ backgroundColor: '#ED702F' }}>
+      {/* Semi-transparent black overlay */}
+      <VStack style={{ backgroundColor: 'rgba(0, 0, 0, 0.80)' }}>
+        <HStack alignItems="center" gap={2} padding={2} paddingBottom={0}>
+          <RemoteImage shape="circle" size="xxl" source={assets.btc.imageUrl} />
+          <VStack flexGrow={1} gap={0.25}>
+            <Text font="title1" style={{ color: 'white' }}>
+              BTC
+            </Text>
+            <Text color="fgMuted" font="label1">
+              Bitcoin
+            </Text>
+          </VStack>
+          <VStack alignItems="flex-end" gap={0.25}>
+            <Text font="title1" style={{ color: 'white' }}>
+              {formatPrice(latestPrice)}
+            </Text>
+            <Text color="fgPositive" font="label1">
+              +{formatPercentChange(percentChange)}
+            </Text>
+          </VStack>
+        </HStack>
+        <LineChart
+          showArea
+          height={64}
+          padding={{ left: 0, right: 24, bottom: 0, top: 15 }}
+          series={[
+            {
+              id: 'btcPrice',
+              data: prices,
+              color: assets.btc.color,
+            },
+          ]}
+          width="100%"
+        >
+          <Scrubber pulse />
+        </LineChart>
+      </VStack>
+    </Box>
+  );
+};
+
 const sampleData = [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58];
 
 const LineChartStories = () => {
+  const theme = useTheme();
+
   return (
     <ExampleScreen>
       <Example title="Basic">
@@ -1087,7 +1351,7 @@ const LineChartStories = () => {
           showArea
           showYAxis
           curve="monotone"
-          height={250}
+          height={defaultChartHeight}
           series={[
             {
               id: 'prices',
@@ -1104,7 +1368,7 @@ const LineChartStories = () => {
       <Example title="Simple">
         <LineChart
           curve="monotone"
-          height={250}
+          height={defaultChartHeight}
           series={[
             {
               id: 'prices',
@@ -1113,8 +1377,108 @@ const LineChartStories = () => {
           ]}
         />
       </Example>
+      <Example title="Gain/Loss">
+        <GainLossChart />
+      </Example>
       <Example title="Price Chart">
         <PriceChart />
+      </Example>
+      <Example title="Asset Price Dotted">
+        <AssetPriceDotted />
+      </Example>
+      <Example title="Multiple Series">
+        <LineChart
+          enableScrubbing
+          showXAxis
+          showYAxis
+          height={defaultChartHeight}
+          series={[
+            {
+              id: 'pageViews',
+              data: [2400, 1398, 9800, 3908, 4800, 3800, 4300],
+              label: 'Page Views',
+              color: theme.color.accentBoldBlue,
+              curve: 'natural',
+            },
+            {
+              id: 'uniqueVisitors',
+              data: [4000, 3000, 2000, 2780, 1890, 2390, 3490],
+              label: 'Unique Visitors',
+              color: theme.color.accentBoldGreen,
+              curve: 'natural',
+            },
+          ]}
+          xAxis={{
+            data: ['Page A', 'Page B', 'Page C', 'Page D', 'Page E', 'Page F', 'Page G'],
+            ticks: true,
+            scaleType: 'band',
+          }}
+          yAxis={{
+            domain: {
+              min: 0,
+            },
+            showGrid: true,
+            tickLabelFormatter: (value) => value.toLocaleString(),
+          }}
+        />
+      </Example>
+      <Example title="Points">
+        <Chart
+          height={defaultChartHeight}
+          series={[
+            {
+              id: 'prices',
+              data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+            },
+          ]}
+        >
+          <Area curve="monotone" fill={`rgb(${theme.spectrum.blue5})`} seriesId="prices" />
+          <Line
+            curve="monotone"
+            renderPoints={({ dataX, ...props }) =>
+              [4, 6, 7, 9, 10].includes(dataX)
+                ? {
+                    ...props,
+                    strokeWidth: 2,
+                    stroke: theme.color.bg,
+                    radius: 5,
+                    onClick: () => alert('You have clicked a key market shift!'),
+                  }
+                : false
+            }
+            seriesId="prices"
+          />
+        </Chart>
+      </Example>
+      <Example title="Data Formats">
+        <LineChart
+          enableScrubbing
+          showArea
+          showXAxis
+          showYAxis
+          curve="natural"
+          height={defaultChartHeight}
+          renderPoints={() => true}
+          series={[
+            {
+              id: 'line',
+              data: [2, 5.5, 2, 8.5, 1.5, 5],
+            },
+          ]}
+          xAxis={{ data: [1, 2, 3, 5, 8, 10], showLine: true, showTickMarks: true, showGrid: true }}
+          yAxis={{
+            domain: { min: 0 },
+            position: 'start',
+            showLine: true,
+            showTickMarks: true,
+            showGrid: true,
+          }}
+        >
+          <Scrubber />
+        </LineChart>
+      </Example>
+      <Example title="Bitcoin Chart with Scrubber Head">
+        <BitcoinChartWithScrubberHead />
       </Example>
       {/*<Example title="Asset Price">
         <AssetPrice />
