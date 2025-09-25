@@ -6,11 +6,13 @@ import type { CellPriority } from '@coinbase/cds-common/types/CellBaseProps';
 import { Button, IconButton } from '../../buttons';
 import type { CellSpacing } from '../../cells/Cell';
 import { Checkbox } from '../../controls/Checkbox';
+import { Icon } from '../../icons';
 import { Pictogram } from '../../illustrations/Pictogram';
 import { VStack } from '../../layout';
 import { CellHelperText } from '../CellHelperText';
 import { CellMedia } from '../CellMedia';
 import { ListCell } from '../ListCell';
+import { ListCellAlpha } from '../ListCellAlpha';
 
 const parameters = {
   percy: { enableJavaScript: true },
@@ -628,7 +630,83 @@ const WithHelperText = () => (
   </VStack>
 );
 
+const AlphaListCell = () => {
+  return (
+    <VStack width="320px">
+      <ListCellAlpha
+        accessory="more"
+        description="Description"
+        detail="Detail"
+        media={<CellMedia source={assets.eth.imageUrl} type="avatar" />}
+        onClick={onClickConsole}
+        subdetail="Subdetail"
+        title="Title"
+      />
+      <ListCellAlpha
+        accessory="more"
+        description="Description"
+        detail="Detail"
+        helperText={
+          <CellHelperText variant="information">
+            This is helpful information to guide the user
+          </CellHelperText>
+        }
+        media={<CellMedia source={assets.eth.imageUrl} type="avatar" />}
+        onClick={onClickConsole}
+        subdetail="Subdetail"
+        title="Title"
+      />
+      <ListCellAlpha
+        multiline
+        accessory="more"
+        description="Long description with multiple lines. This section can be arbitrarily long and occupy many many lines."
+        detail="Detail"
+        media={<CellMedia source={assets.eth.imageUrl} type="avatar" />}
+        onClick={onClickConsole}
+        subdetail="Subdetail"
+        title="Title"
+      />
+      <ListCellAlpha
+        accessory="more"
+        description="Description"
+        detail="Detail"
+        onClick={onClickConsole}
+        subdetail="Subdetail"
+        title="Title"
+      />
+      <ListCellAlpha
+        accessory="more"
+        description="Description"
+        detail="Detail"
+        media={<Icon name="heart" size="l" />}
+        onClick={onClickConsole}
+        subdetail="Subdetail"
+        title="Title"
+      />
+      <ListCellAlpha
+        accessory="more"
+        description="Description"
+        detail="Detail"
+        media={<Icon name="heart" size="s" />}
+        onClick={onClickConsole}
+        subdetail="Subdetail"
+        title="Title"
+      />
+      <ListCellAlpha
+        accessory="more"
+        description="Description"
+        detail="Detail"
+        media={<Icon name="heart" size="xs" />}
+        onClick={onClickConsole}
+        subdetail="Subdetail"
+        title="Title"
+      />
+    </VStack>
+  );
+};
+
 export {
+  AlphaListCell,
   CompactContent,
   CompactPressableContent,
   Content,
