@@ -59,6 +59,14 @@ export type ListCellBaseProps = Polymorphic.ExtendableProps<
       accessory?: string;
       media?: string;
       intermediary?: string;
+      /**
+       * Applied to detail or action
+       */
+      end?: string;
+      helperText?: string;
+      contentContainer?: string;
+      mainContent?: string;
+      pressable?: string;
     };
     styles?: {
       root?: React.CSSProperties;
@@ -67,6 +75,14 @@ export type ListCellBaseProps = Polymorphic.ExtendableProps<
       accessory?: React.CSSProperties;
       media?: React.CSSProperties;
       intermediary?: React.CSSProperties;
+      /**
+       * Applied to detail or action
+       */
+      end?: React.CSSProperties;
+      helperText?: React.CSSProperties;
+      contentContainer?: React.CSSProperties;
+      mainContent?: React.CSSProperties;
+      pressable?: React.CSSProperties;
     };
   }
 >;
@@ -104,7 +120,7 @@ export const ListCell: ListCellComponent = memo(
         intermediary,
         priority,
         borderRadius = 0,
-        detailWidth,
+        endWidth,
         alignItems,
         style,
         className,
@@ -144,24 +160,36 @@ export const ListCell: ListCellComponent = memo(
           borderRadius={borderRadius}
           bottomContent={helperText}
           className={cx(className, classNames?.root)}
-          detail={end}
-          detailWidth={detailWidth}
+          classNames={{
+            start: classNames?.media,
+            intermediary: classNames?.intermediary,
+            end: classNames?.end,
+            accessory: classNames?.accessory,
+            topContent: classNames?.mainContent,
+            bottomContent: classNames?.helperText,
+            contentContainer: classNames?.contentContainer,
+            pressable: classNames?.pressable,
+          }}
           disabled={disabled}
-          intermediary={
-            <Box className={classNames?.intermediary} style={styles?.intermediary}>
-              {intermediary}
-            </Box>
-          }
-          media={
-            <Box className={classNames?.media} style={styles?.media}>
-              {media}
-            </Box>
-          }
+          end={end}
+          endWidth={endWidth}
+          intermediary={intermediary}
           paddingX={2}
           paddingY={0.5}
           priority={priority}
           selected={selected}
+          start={media}
           style={{ ...style, ...styles?.root }}
+          styles={{
+            start: styles?.media,
+            intermediary: styles?.intermediary,
+            end: styles?.end,
+            accessory: styles?.accessory,
+            topContent: styles?.mainContent,
+            bottomContent: styles?.helperText,
+            contentContainer: styles?.contentContainer,
+            pressable: styles?.pressable,
+          }}
           {...props}
         >
           <VStack>

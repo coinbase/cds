@@ -507,35 +507,35 @@ const WithIntermediary = () => (
     <ListCell
       description="Description"
       detail="$1,230"
-      detailWidth={100}
+      endWidth={100}
       intermediary={<CellMedia name="chartLine" type="icon" />}
       title="Title"
     />
     <ListCell
       description="Description"
       detail="$44,130"
-      detailWidth={100}
+      endWidth={100}
       intermediary={<CellMedia name="chartLine" type="icon" />}
       title="Title"
     />
     <ListCell
       description="Description"
       detail="$942,103"
-      detailWidth={100}
+      endWidth={100}
       intermediary={<CellMedia name="chartLine" type="icon" />}
       title="Title"
     />
     <ListCell
       description="Description"
       detail="$530"
-      detailWidth={100}
+      endWidth={100}
       intermediary={<CellMedia name="chartLine" type="icon" />}
       title="Title"
     />
     <ListCell
       description="Description"
       detail="$123K"
-      detailWidth={100}
+      endWidth={100}
       intermediary={<CellMedia name="chartLine" type="icon" />}
       title="Title"
     />
@@ -605,7 +605,7 @@ const WithHelperText = () => (
 
 const AlphaListCellTest = () => {
   return (
-    <VStack width="320px">
+    <VStack width="360px">
       <ListCell
         accessory="more"
         description="Description"
@@ -697,6 +697,7 @@ const AlphaListCellTest = () => {
         accessory="more"
         description="Description"
         detail="Detail"
+        intermediary={<RemoteImage shape="squircle" size="l" source={squareAssets.human6} />}
         media={<RemoteImage shape="squircle" size="l" source={squareAssets.human1} />}
         onClick={onClickConsole}
         subdetail={

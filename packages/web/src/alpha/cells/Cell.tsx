@@ -55,20 +55,20 @@ export type CellDefaultElement = typeof cellDefaultElement;
 export type CellBaseProps = Polymorphic.ExtendableProps<
   BoxBaseProps,
   Pick<PressableProps<'a'>, 'href' | 'target'> & {
-    contentClassName?: string;
     onKeyDown?: React.KeyboardEventHandler;
     onKeyUp?: React.KeyboardEventHandler;
     onClick?: React.MouseEventHandler;
     accessory?: React.ReactElement<CellAccessoryProps>;
     children: React.ReactNode;
-    detail?: React.ReactNode;
+    end?: React.ReactNode;
     intermediary?: React.ReactNode;
-    media?: React.ReactElement;
+    start?: React.ReactElement;
     // TODO: consider renaming this to shouldTruncate. Since overflow gives people the sense that it will overflow and overlap with other content
     shouldOverflow?: boolean;
     borderRadius?: ThemeVars.BorderRadius;
-    /** Apply a fixed width to the detail (end). */
-    detailWidth?: number | string;
+    // TODO: consider removing this since we have styles.end
+    /** Apply a fixed width to the end (end). */
+    endWidth?: number | string;
     /** Is the cell disabled? Will apply opacity and disable interaction. */
     disabled?: boolean;
     /** Which piece of content has the highest priority in regards to text truncation, growing, and shrinking. */
@@ -77,6 +77,28 @@ export type CellBaseProps = Polymorphic.ExtendableProps<
     selected?: boolean;
     /** The content to display below the main cell content */
     bottomContent?: React.ReactNode;
+    styles?: {
+      root?: React.CSSProperties;
+      contentContainer?: React.CSSProperties;
+      topContent?: React.CSSProperties;
+      bottomContent?: React.CSSProperties;
+      pressable?: React.CSSProperties;
+      start?: React.CSSProperties;
+      intermediary?: React.CSSProperties;
+      end?: React.CSSProperties;
+      accessory?: React.CSSProperties;
+    };
+    classNames?: {
+      root?: string;
+      contentContainer?: string;
+      topContent?: string;
+      bottomContent?: string;
+      pressable?: string;
+      start?: string;
+      intermediary?: string;
+      end?: string;
+      accessory?: string;
+    };
   }
 >;
 
@@ -100,15 +122,14 @@ export const Cell: CellComponent = memo(
         borderRadius = 200,
         children,
         className,
-        contentClassName,
-        detail,
-        detailWidth,
+        end,
+        endWidth,
         disabled,
         gap = 2,
         columnGap,
         rowGap = 1,
         intermediary,
-        media,
+        start,
         minHeight,
         maxHeight,
         onClick,
@@ -137,9 +158,10 @@ export const Cell: CellComponent = memo(
         accessibilityLabel,
         accessibilityLabelledBy,
         accessibilityHint,
-        innerSpacing: innerSpacingProp,
-        outerSpacing: outerSpacingProp,
         bottomContent: bottom,
+        classNames,
+        styles,
+        style,
         ...props
       }: CellProps<AsComponent>,
       ref?: Polymorphic.Ref<AsComponent>,
@@ -162,30 +184,33 @@ export const Cell: CellComponent = memo(
 
       const content = useMemo(() => {
         // props for the entire inner container that wraps the top content
-        // (media, children, intermediary, detail, accessory) and the bottom content
-        const innerContainerProps = {
+        // (start, children, intermediary, end, accessory) and the bottom content
+        const contentContainerProps = {
           borderRadius,
-          className: contentClassName,
           testID,
           ...(selected ? { background: 'bgAlternate' as const } : {}),
           // padding will be applied to the inner container so it is added to the pressable area
           ...paddingProps,
+          className: classNames?.contentContainer,
+          style: styles?.contentContainer,
         };
 
-        // props for the container of the top content only(media, children, intermediary, detail, accessory)
-        const topContentContainerProps = {
+        // props for the container of the top content only(start, children, intermediary, end, accessory)
+        const topContentProps = {
           alignItems: alignItems,
           flexGrow: 1,
           gap: columnGap || gap,
           width: '100%',
+          className: classNames?.topContent,
+          style: styles?.topContent,
         } as const;
 
         // content that is displayed horizontally above the bottom content
         const topContent = (
           <>
-            {media && (
-              <Box flexGrow={0} flexShrink={0}>
-                {media}
+            {start && (
+              <Box className={classNames?.start} flexGrow={0} flexShrink={0} style={styles?.start}>
+                {start}
               </Box>
             )}
 
@@ -200,31 +225,38 @@ export const Cell: CellComponent = memo(
 
             {!!intermediary && (
               <Box
-                className={contentTruncationStyle}
+                className={cx(contentTruncationStyle, classNames?.intermediary)}
                 flexGrow={0}
                 flexShrink={hasCellPriority('middle', priority) ? 0 : 1}
                 justifyContent="center"
+                style={styles?.intermediary}
               >
                 {intermediary}
               </Box>
             )}
 
-            {!!detail && (
+            {!!end && (
               <Box
                 alignItems="flex-end"
-                className={contentTruncationStyle}
+                className={cx(contentTruncationStyle, classNames?.end)}
                 flexDirection="column"
-                flexGrow={detailWidth ? undefined : 1}
-                flexShrink={detailWidth ? undefined : hasCellPriority('end', priority) ? 0 : 1}
+                flexGrow={endWidth ? undefined : 1}
+                flexShrink={endWidth ? undefined : hasCellPriority('end', priority) ? 0 : 1}
                 justifyContent="flex-end"
-                width={detailWidth}
+                style={styles?.end}
+                width={endWidth}
               >
-                {detail}
+                {end}
               </Box>
             )}
 
             {!!accessory && (
-              <Box flexGrow={0} flexShrink={0}>
+              <Box
+                className={classNames?.accessory}
+                flexGrow={0}
+                flexShrink={0}
+                style={styles?.accessory}
+              >
                 {accessory}
               </Box>
             )}
@@ -233,7 +265,7 @@ export const Cell: CellComponent = memo(
 
         if (!bottom) {
           return (
-            <HStack {...topContentContainerProps} {...innerContainerProps}>
+            <HStack {...topContentProps} {...contentContainerProps}>
               {topContent}
             </HStack>
           );
@@ -245,28 +277,43 @@ export const Cell: CellComponent = memo(
             flexGrow={1}
             gap={rowGap}
             width="100%"
-            {...innerContainerProps}
+            {...contentContainerProps}
           >
-            <HStack {...topContentContainerProps}>{topContent}</HStack>
-            <Box>{bottom}</Box>
+            <HStack {...topContentProps}>{topContent}</HStack>
+            <Box className={classNames?.bottomContent} style={styles?.bottomContent}>
+              {bottom}
+            </Box>
           </VStack>
         );
       }, [
         borderRadius,
-        contentClassName,
         testID,
         selected,
         paddingProps,
+        classNames?.contentContainer,
+        classNames?.topContent,
+        classNames?.start,
+        classNames?.intermediary,
+        classNames?.end,
+        classNames?.accessory,
+        classNames?.bottomContent,
+        styles?.contentContainer,
+        styles?.topContent,
+        styles?.start,
+        styles?.intermediary,
+        styles?.end,
+        styles?.accessory,
+        styles?.bottomContent,
         alignItems,
         columnGap,
         gap,
-        media,
+        start,
         contentTruncationStyle,
         priority,
         children,
         intermediary,
-        detail,
-        detailWidth,
+        end,
+        endWidth,
         accessory,
         bottom,
         rowGap,
@@ -281,13 +328,14 @@ export const Cell: CellComponent = memo(
           accessibilityLabelledBy,
           background: 'bg' as const,
           borderRadius,
-          className: cx(pressCss, insetFocusRingCss),
+          className: cx(pressCss, insetFocusRingCss, classNames?.pressable),
           disabled,
           onClick,
           onKeyDown,
           onKeyUp,
           tabIndex,
           testID: testID && `${testID}-cell-pressable`,
+          style: styles?.pressable,
         };
         if (isAnchor)
           return (
@@ -305,21 +353,23 @@ export const Cell: CellComponent = memo(
 
         return content;
       }, [
-        isButton,
         accessibilityHint,
         accessibilityLabel,
         accessibilityLabelledBy,
         borderRadius,
+        classNames?.pressable,
         disabled,
         onClick,
         onKeyDown,
         onKeyUp,
         tabIndex,
         testID,
-        content,
+        styles?.pressable,
         isAnchor,
         href,
         target,
+        content,
+        isButton,
       ]);
 
       return (
@@ -327,9 +377,10 @@ export const Cell: CellComponent = memo(
           ref={ref}
           alignItems="stretch"
           as={Component}
-          className={className}
+          className={cx(className, classNames?.root)}
           maxHeight={maxHeight}
           minHeight={minHeight}
+          style={{ ...style, ...styles?.root }}
           width="100%"
           {...props}
         >
