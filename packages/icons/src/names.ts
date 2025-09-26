@@ -416,5 +416,14 @@ export const names: IconName[] = [
   'grid',
   'commentPlus',
   'savingsBank',
-  'fscsProtection'
+  'fscsProtection',
+  'instantUnstakingClock',
+  'auto',
+  'creatorCoin',
+  'allocation',
+  'baseVerification',
+  'distribution',
+  'disabledPhone',
+  'config',
+  'location'
 ];
