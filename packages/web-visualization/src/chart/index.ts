@@ -2,6 +2,7 @@ export * from './area';
 export * from './axis';
 export * from './bar';
 export * from './Chart';
+export { type ChartContextValue, useChartContext } from './ChartProvider';
 export * from './line';
 export * from './Path';
 export * from './PeriodSelector';

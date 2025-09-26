@@ -1,9 +1,8 @@
-import React, { forwardRef, memo, useCallback, useMemo, useState } from 'react';
+import React, { forwardRef, memo, useCallback, useMemo, useRef } from 'react';
 import type { Rect } from '@coinbase/cds-common/types';
 import {
   type AxisConfig,
   type AxisConfigProps,
-  ChartContext,
   type ChartContextValue,
   type ChartPadding,
   type ChartScaleFunction,
@@ -15,37 +14,15 @@ import {
   getAxisScale,
   getPadding,
   getStackedSeriesData as calculateStackedSeriesData,
-  isCategoricalScale,
-  ScrubberContext,
-  type ScrubberContextValue,
   type Series,
   useTotalAxisPadding,
 } from '@coinbase/cds-common/visualizations/charts';
 import { cx } from '@coinbase/cds-web';
 import { useDimensions } from '@coinbase/cds-web/hooks/useDimensions';
 import { Box, type BoxBaseProps, type BoxProps } from '@coinbase/cds-web/layout';
-import { css } from '@linaria/core';
 
-/*
-
- axis configs at chart level: scale type (linear, log), data array, padding
-
- axis scale: provided by getX/YScale, created from axis config above and chart drawing area (stored in a JS Map object)
-
- registerAxis: reserves space in the chart for the axis - consequence of registering is the drawing area of chart changes
-
-*/
-
-const focusStylesCss = css`
-  &:focus {
-    outline: none;
-  }
-
-  &:focus-visible {
-    outline: 2px solid var(--color-bgPrimary);
-    outline-offset: 2px;
-  }
-`;
+import { ScrubberProvider } from './scrubber/ScrubberProvider';
+import { ChartProvider } from './ChartProvider';
 
 export type ChartBaseProps = BoxBaseProps & {
   /**
@@ -107,6 +84,7 @@ export const Chart = memo(
       ref,
     ) => {
       const { observe, width: chartWidth, height: chartHeight } = useDimensions();
+      const internalSvgRef = useRef<SVGSVGElement>(null);
 
       const userPadding = useMemo(
         () => getPadding(paddingInput, defaultChartPadding),
@@ -120,7 +98,6 @@ export const Chart = memo(
       );
       const yAxisConfig = useMemo(() => getAxisConfig('y', yAxisConfigInput), [yAxisConfigInput]);
 
-      const [highlightedIndex, setHighlightedIndex] = useState<number | undefined>(undefined);
       const { renderedAxes, registerAxis, unregisterAxis, axisPadding } = useTotalAxisPadding();
 
       const chartRect: Rect = useMemo(() => {
@@ -223,170 +200,6 @@ export const Chart = memo(
         return scales;
       }, [chartRect, yAxes]);
 
-      const getDataIndexFromX = useCallback(
-        (mouseX: number): number => {
-          if (!xScale || !xAxis) return 0;
-
-          if (isCategoricalScale(xScale)) {
-            // todo: see where else we can simply rely on scale domain values
-            const categories = xScale.domain?.() ?? xAxis.data ?? [];
-            const bandwidth = xScale.bandwidth?.() ?? 0;
-            let closestIndex = 0;
-            let closestDistance = Infinity;
-            for (let i = 0; i < categories.length; i++) {
-              const xPos = xScale(i);
-              if (xPos !== undefined) {
-                const distance = Math.abs(mouseX - (xPos + bandwidth / 2));
-                if (distance < closestDistance) {
-                  closestDistance = distance;
-                  closestIndex = i;
-                }
-              }
-            }
-            return closestIndex;
-          } else {
-            // For numeric scales with axis data, find the nearest data point
-            const axisData = xAxis.data;
-            if (axisData && Array.isArray(axisData) && typeof axisData[0] === 'number') {
-              // We have numeric axis data - find the closest data point
-              const numericData = axisData as number[];
-              let closestIndex = 0;
-              let closestDistance = Infinity;
-
-              for (let i = 0; i < numericData.length; i++) {
-                const xValue = numericData[i];
-                const xPos = xScale(xValue);
-                if (xPos !== undefined) {
-                  const distance = Math.abs(mouseX - xPos);
-                  if (distance < closestDistance) {
-                    closestDistance = distance;
-                    closestIndex = i;
-                  }
-                }
-              }
-              return closestIndex;
-            } else {
-              const xValue = xScale.invert(mouseX);
-              const dataIndex = Math.round(xValue);
-              const domain = xAxis.domain;
-              return Math.max(domain.min ?? 0, Math.min(dataIndex, domain.max ?? 0));
-            }
-          }
-        },
-        [xScale, xAxis],
-      );
-
-      // only capturing x-direction movements for now
-      const handleMouseMove = useCallback(
-        (event: React.MouseEvent<SVGSVGElement>) => {
-          if (!enableScrubbing || !series || series.length === 0) return;
-
-          const rect = event.currentTarget.getBoundingClientRect();
-          const mouseX = event.clientX - rect.left;
-
-          const dataIndex = getDataIndexFromX(mouseX);
-
-          if (dataIndex !== highlightedIndex) {
-            setHighlightedIndex(dataIndex);
-            onScrubberPosChange?.(dataIndex);
-          }
-        },
-        [enableScrubbing, series, getDataIndexFromX, highlightedIndex, onScrubberPosChange],
-      );
-
-      const handleMouseLeave = useCallback(() => {
-        if (!enableScrubbing) return;
-        setHighlightedIndex(undefined);
-        onScrubberPosChange?.(null);
-      }, [enableScrubbing, onScrubberPosChange]);
-
-      const handleKeyDown = useCallback(
-        (event: React.KeyboardEvent<SVGSVGElement>) => {
-          if (!enableScrubbing) return;
-
-          if (!xScale || !xAxis) return;
-
-          const isBand = isCategoricalScale(xScale);
-
-          // Determine the actual data indices we can navigate to
-          let minIndex: number;
-          let maxIndex: number;
-          let dataPoints: number | undefined;
-
-          if (isBand) {
-            // For categorical scales, use the categories
-            const categories = xScale.domain?.() ?? xAxis.data ?? [];
-            minIndex = 0;
-            maxIndex = Math.max(0, categories.length - 1);
-            dataPoints = categories.length;
-          } else {
-            // For numeric scales, check if we have specific data points
-            const axisData = xAxis.data;
-            if (axisData && Array.isArray(axisData)) {
-              // We have specific data points - use their indices
-              minIndex = 0;
-              maxIndex = Math.max(0, axisData.length - 1);
-              dataPoints = axisData.length;
-            } else {
-              // Fall back to domain-based navigation for continuous scales without specific data
-              const domain = xAxis.domain;
-              minIndex = domain.min ?? 0;
-              maxIndex = domain.max ?? 0;
-              dataPoints = maxIndex - minIndex + 1;
-            }
-          }
-
-          const currentIndex = highlightedIndex ?? minIndex;
-          const dataRange = maxIndex - minIndex;
-
-          // Multi-step jump when shift is held (10% of data range, minimum 1, maximum 10)
-          const multiSkip = event.shiftKey;
-          const stepSize = multiSkip ? Math.min(10, Math.max(1, Math.floor(dataRange * 0.1))) : 1;
-
-          let newIndex: number | undefined;
-
-          switch (event.key) {
-            case 'ArrowLeft':
-              event.preventDefault();
-              newIndex = Math.max(minIndex, currentIndex - stepSize);
-              break;
-            case 'ArrowRight':
-              event.preventDefault();
-              newIndex = Math.min(maxIndex, currentIndex + stepSize);
-              break;
-            case 'Home':
-              event.preventDefault();
-              newIndex = minIndex;
-              break;
-            case 'End':
-              event.preventDefault();
-              newIndex = maxIndex;
-              break;
-            case 'Escape':
-              event.preventDefault();
-              newIndex = undefined; // Clear highlighting
-              break;
-            default:
-              return; // Don't handle other keys
-          }
-
-          if (newIndex !== highlightedIndex) {
-            setHighlightedIndex(newIndex);
-            onScrubberPosChange?.(newIndex ?? null);
-          }
-        },
-        [enableScrubbing, xScale, xAxis, highlightedIndex, onScrubberPosChange],
-      );
-
-      const scrubberContextValue: ScrubberContextValue = useMemo(
-        () => ({
-          scrubbingEnabled: enableScrubbing,
-          highlightedIndex,
-          updateHighlightedIndex: setHighlightedIndex,
-        }),
-        [enableScrubbing, highlightedIndex],
-      );
-
       const getXAxis = useCallback(() => xAxis, [xAxis]);
       const getYAxis = useCallback((id?: string) => yAxes.get(id ?? defaultAxisId), [yAxes]);
       const getXScale = useCallback(() => xScale, [xScale]);
@@ -473,7 +286,7 @@ export const Chart = memo(
         [renderedAxes, chartRect, userPadding],
       );
 
-      const contextValue: ChartContextValue = useMemo(
+      const contextValue: ChartContextValue<SVGSVGElement> = useMemo(
         () => ({
           series: series ?? [],
           getSeries,
@@ -487,6 +300,7 @@ export const Chart = memo(
           getYScale,
           drawingArea: chartRect,
           registerAxis,
+          svgRef: internalSvgRef,
           unregisterAxis,
           getAxisBounds,
         }),
@@ -511,8 +325,12 @@ export const Chart = memo(
       return (
         <Box
           ref={(node) => {
-            // Handle both the internal observe ref and the forwarded ref
+            // Handle the observe ref, internal ref, and forwarded ref
             observe(node as unknown as HTMLElement);
+            if (internalSvgRef.current !== node) {
+              (internalSvgRef as React.MutableRefObject<SVGSVGElement | null>).current =
+                node as unknown as SVGSVGElement;
+            }
             if (ref) {
               if (typeof ref === 'function') {
                 ref(node as unknown as SVGSVGElement);
@@ -522,20 +340,20 @@ export const Chart = memo(
             }
           }}
           as="svg"
-          className={cx(enableScrubbing ? focusStylesCss : undefined, className)}
+          className={cx(className)}
           height={height}
-          onKeyDown={enableScrubbing ? handleKeyDown : undefined}
-          onMouseLeave={enableScrubbing ? handleMouseLeave : undefined}
-          onMouseMove={enableScrubbing ? handleMouseMove : undefined}
-          tabIndex={enableScrubbing ? 0 : undefined}
           width={width}
           {...props}
         >
-          <ChartContext.Provider value={contextValue}>
-            <ScrubberContext.Provider value={scrubberContextValue}>
+          <ChartProvider value={contextValue}>
+            <ScrubberProvider
+              enableScrubbing={enableScrubbing}
+              onScrubberPosChange={onScrubberPosChange}
+              svgRef={internalSvgRef}
+            >
               {children}
-            </ScrubberContext.Provider>
-          </ChartContext.Provider>
+            </ScrubberProvider>
+          </ChartProvider>
         </Box>
       );
     },

@@ -11,7 +11,7 @@ import {
 } from 'react-native-svg';
 import { useValueChanges } from '@coinbase/cds-common/hooks/useValueChanges';
 import type { Rect as RectType, SharedProps } from '@coinbase/cds-common/types';
-import { useChartContext } from '@coinbase/cds-common/visualizations/charts';
+import { useChartContext } from './ChartProvider';
 import * as interpolate from 'd3-interpolate-path';
 
 const AnimatedRect = Reanimated.createAnimatedComponent(Rect);

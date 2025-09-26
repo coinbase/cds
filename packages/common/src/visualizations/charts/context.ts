@@ -6,7 +6,11 @@ import type { AxisConfig } from './axis';
 import type { Series } from './chart';
 import type { ChartScaleFunction } from './scale';
 
-export type ChartContextValue = {
+export type ChartContextValue<TRef> = {
+  /**
+   * A reference to the root SVG element.
+   */
+  svgRef: React.RefObject<TRef> | null;
   /**
    * The series data for the chart.
    */
@@ -70,16 +74,6 @@ export type ChartContextValue = {
    * Computes the bounds of the axis based on the chart's drawing area chart/axis config, and axis position.
    */
   getAxisBounds: (id: string) => Rect | undefined;
-};
-
-export const ChartContext = createContext<ChartContextValue | undefined>(undefined);
-
-export const useChartContext = (): ChartContextValue => {
-  const context = useContext(ChartContext);
-  if (!context) {
-    throw new Error('useChartContext must be used within a Chart component');
-  }
-  return context;
 };
 
 // Chart highlighting context

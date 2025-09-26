@@ -16,11 +16,11 @@ import {
   projectPoint,
   useScrubberContext,
 } from '@coinbase/cds-common/visualizations/charts';
-import { useChartContext } from '@coinbase/cds-common/visualizations/charts';
 import { useTheme } from '@coinbase/cds-web';
 import { m } from 'framer-motion';
 
 import { axisTickLabelsInitialAnimationVariants } from '../axis';
+import { useChartContext } from '../ChartProvider';
 import { ReferenceLine, type ReferenceLineProps } from '../line';
 
 import { ScrubberHead, type ScrubberHeadProps, type ScrubberHeadRef } from './ScrubberHead';

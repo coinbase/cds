@@ -2,9 +2,9 @@ import React, { memo, useMemo } from 'react';
 import type { SVGProps } from 'react';
 import type { SharedProps } from '@coinbase/cds-common/types';
 import { type ChartPathCurveType, getLinePath } from '@coinbase/cds-common/visualizations/charts';
-import { useChartContext } from '@coinbase/cds-common/visualizations/charts';
 
 import { Area, type AreaComponent } from '../area';
+import { useChartContext } from '../ChartProvider';
 import { Point, type PointConfig, type RenderPointsParams } from '../point/Point';
 
 import { DottedLine } from './DottedLine';

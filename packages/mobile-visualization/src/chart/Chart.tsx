@@ -1,4 +1,4 @@
-import React, { forwardRef, memo, useCallback, useMemo, useState } from 'react';
+import React, { forwardRef, memo, useCallback, useMemo, useRef, useState } from 'react';
 import { StyleSheet, type View, type ViewStyle } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import { runOnJS } from 'react-native-reanimated';
@@ -7,7 +7,6 @@ import type { Rect } from '@coinbase/cds-common/types';
 import {
   type AxisConfig,
   type AxisConfigProps,
-  ChartContext,
   type ChartContextValue,
   type ChartPadding,
   type ChartScaleFunction,
@@ -30,6 +29,7 @@ import { Box } from '@coinbase/cds-mobile/layout';
 import { debounce } from '@coinbase/cds-mobile/utils/debounce';
 
 import { ChartPanGestureHandler } from './ChartPanGestureHandler';
+import { ChartProvider } from './ChartProvider';
 
 export type ChartBaseProps = {
   /**
@@ -106,6 +106,7 @@ export const Chart = memo(
       ref,
     ) => {
       const [containerLayout, onContainerLayout] = useLayout();
+      const internalSvgRef = useRef<Svg>(null);
 
       const chartWidth = typeof width === 'number' ? width : containerLayout.width;
       const chartHeight = typeof height === 'number' ? height : containerLayout.height;
@@ -396,10 +397,11 @@ export const Chart = memo(
         [renderedAxes, chartRect, userPadding],
       );
 
-      const contextValue: ChartContextValue = useMemo(
+      const contextValue: ChartContextValue<Svg> = useMemo(
         () => ({
           series: series ?? [],
           getSeries,
+          svgRef: internalSvgRef,
           getSeriesData: getStackedSeriesData,
           animate,
           width: chartWidth,
@@ -446,7 +448,15 @@ export const Chart = memo(
       const chartContent = (
         <Box ref={ref} onLayout={onContainerLayout} style={containerStyles} {...props}>
           {chartWidth > 0 && chartHeight > 0 && (
-            <Svg height={chartHeight} width={chartWidth}>
+            <Svg
+              ref={(node) => {
+                if (internalSvgRef.current !== node) {
+                  (internalSvgRef as React.MutableRefObject<Svg | null>).current = node;
+                }
+              }}
+              height={chartHeight}
+              width={chartWidth}
+            >
               {children}
             </Svg>
           )}
@@ -454,7 +464,7 @@ export const Chart = memo(
       );
 
       return (
-        <ChartContext.Provider value={contextValue}>
+        <ChartProvider value={contextValue}>
           <ScrubberContext.Provider value={scrubberContextValue}>
             {enableScrubbing ? (
               <ChartPanGestureHandler
@@ -468,7 +478,7 @@ export const Chart = memo(
               chartContent
             )}
           </ScrubberContext.Provider>
-        </ChartContext.Provider>
+        </ChartProvider>
       );
     },
   ),

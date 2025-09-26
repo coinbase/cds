@@ -1,8 +1,9 @@
 import React, { memo, useMemo } from 'react';
 import type { SharedProps } from '@coinbase/cds-common/types';
-import { getPointOnScale, useChartContext } from '@coinbase/cds-common/visualizations/charts';
+import { getPointOnScale } from '@coinbase/cds-common/visualizations/charts';
 import { cx } from '@coinbase/cds-web';
 
+import { useChartContext } from '../ChartProvider';
 import { ChartText } from '../text';
 import type { ChartTextChildren, ChartTextProps } from '../text/ChartText';
 

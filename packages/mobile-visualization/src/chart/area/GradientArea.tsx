@@ -1,6 +1,6 @@
 import React, { memo, useRef } from 'react';
 import { Defs, LinearGradient, Stop } from 'react-native-svg';
-import { useChartContext } from '@coinbase/cds-common/visualizations/charts';
+import { useChartContext } from '../ChartProvider';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 import { generateRandomId } from '@coinbase/cds-utils';
 

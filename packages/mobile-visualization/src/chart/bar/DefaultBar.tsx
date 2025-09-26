@@ -1,6 +1,7 @@
 import React, { memo, useMemo } from 'react';
 import type { SVGProps } from 'react';
-import { getBarPath, useChartContext } from '@coinbase/cds-common/visualizations/charts';
+import { getBarPath } from '@coinbase/cds-common/visualizations/charts';
+import { useChartContext } from '../ChartProvider';
 import { m as motion, type MotionProps } from 'framer-motion';
 
 import type { BarComponentProps } from './Bar';

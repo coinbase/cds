@@ -1,7 +1,8 @@
 import { memo, useMemo } from 'react';
 import { G } from 'react-native-svg';
 import type { SharedProps } from '@coinbase/cds-common/types';
-import { getPointOnScale, useChartContext } from '@coinbase/cds-common/visualizations/charts';
+import { getPointOnScale } from '@coinbase/cds-common/visualizations/charts';
+import { useChartContext } from '../ChartProvider';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 
 import { ChartText } from '../text';

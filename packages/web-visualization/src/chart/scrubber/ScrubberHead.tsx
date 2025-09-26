@@ -2,10 +2,10 @@ import { forwardRef, memo, useCallback, useImperativeHandle, useRef } from 'reac
 import type { SharedProps } from '@coinbase/cds-common/types';
 import {
   projectPoint,
-  useChartContext,
   useScrubberContext,
 } from '@coinbase/cds-common/visualizations/charts';
 
+import { useChartContext } from '../ChartProvider';
 import { Point, type PointProps, type PointRef } from '../point';
 
 export const dataKeyUpdateAnimationVariants = {

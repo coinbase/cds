@@ -1,7 +1,7 @@
 import { memo, useCallback, useState } from 'react';
 import type { Rect } from '@coinbase/cds-common/types';
-import { useChartContext } from '@coinbase/cds-common/visualizations/charts';
 
+import { useChartContext } from '../ChartProvider';
 import { ChartText, type ChartTextProps } from '../text';
 
 export type ScrubberHeadLabelProps = ChartTextProps & {

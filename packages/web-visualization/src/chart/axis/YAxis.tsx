@@ -1,14 +1,11 @@
 import { memo, useCallback, useEffect, useId, useMemo } from 'react';
-import {
-  getAxisTicksData,
-  isCategoricalScale,
-  useChartContext,
-} from '@coinbase/cds-common/visualizations/charts';
+import { getAxisTicksData, isCategoricalScale } from '@coinbase/cds-common/visualizations/charts';
 import { cx } from '@coinbase/cds-web';
 import { useTheme } from '@coinbase/cds-web/hooks/useTheme';
 import { css } from '@linaria/core';
 import { AnimatePresence, m as motion } from 'framer-motion';
 
+import { useChartContext } from '../ChartProvider';
 import { DottedLine } from '../line';
 import { ReferenceLine } from '../line/ReferenceLine';
 import { SmartChartTextGroup, type TextLabelData } from '../text/SmartChartTextGroup';

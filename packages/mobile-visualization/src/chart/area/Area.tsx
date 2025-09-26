@@ -1,8 +1,9 @@
 import React, { memo, useMemo } from 'react';
 import type { Rect } from '@coinbase/cds-common/types';
 import { type ChartPathCurveType, getAreaPath } from '@coinbase/cds-common/visualizations/charts';
-import { useChartContext } from '@coinbase/cds-common/visualizations/charts';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
+
+import { useChartContext } from '../ChartProvider';
 
 import { DottedArea } from './DottedArea';
 import { GradientArea } from './GradientArea';

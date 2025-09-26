@@ -1,7 +1,9 @@
 import React, { memo, useMemo, useRef } from 'react';
 import type { ThemeVars } from '@coinbase/cds-common';
-import { defaultAxisId, useChartContext } from '@coinbase/cds-common/visualizations/charts';
+import { defaultAxisId } from '@coinbase/cds-common/visualizations/charts';
 import { generateRandomId } from '@coinbase/cds-utils';
+
+import { useChartContext } from '../ChartProvider';
 
 import type { BarComponent, BarProps } from './Bar';
 import type { BarSeries } from './BarChart';

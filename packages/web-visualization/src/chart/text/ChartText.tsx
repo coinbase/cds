@@ -4,12 +4,13 @@ import type { ElevationLevels, Rect, SharedProps } from '@coinbase/cds-common/ty
 import {
   type ChartPadding,
   getPadding,
-  useChartContext,
 } from '@coinbase/cds-common/visualizations/charts';
 import { cx, useTheme } from '@coinbase/cds-web';
 import { Box, type BoxProps } from '@coinbase/cds-web/layout';
 import { Text } from '@coinbase/cds-web/typography';
 import { m as motion } from 'framer-motion';
+
+import { useChartContext } from '../ChartProvider';
 
 // Define the valid SVG children for the <text> element.
 type ValidChartTextChildElements =

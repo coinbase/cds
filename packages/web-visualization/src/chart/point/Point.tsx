@@ -3,13 +3,13 @@ import type { SVGProps } from 'react';
 import type { SharedProps } from '@coinbase/cds-common/types';
 import {
   projectPoint,
-  useChartContext,
   useScrubberContext,
 } from '@coinbase/cds-common/visualizations/charts';
 import { cx } from '@coinbase/cds-web';
 import { css } from '@linaria/core';
 import { m as motion, useAnimate } from 'framer-motion';
 
+import { useChartContext } from '../ChartProvider';
 import { ChartText, type ChartTextProps } from '../text';
 import type { ChartTextChildren } from '../text/ChartText';
 

@@ -3,9 +3,9 @@ import { Circle } from 'react-native-svg';
 import type { SharedProps } from '@coinbase/cds-common/types';
 import {
   projectPoint,
-  useChartContext,
   useScrubberContext,
 } from '@coinbase/cds-common/visualizations/charts';
+import { useChartContext } from '../ChartProvider';
 import { useTheme } from '@coinbase/cds-mobile';
 
 import { Point, type PointProps, type PointRef } from '../point';

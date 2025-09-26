@@ -1,11 +1,11 @@
 import { memo, type RefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { assets } from '@coinbase/cds-common/internal/data/assets';
 import { sparklineInteractiveData } from '@coinbase/cds-common/internal/visualizations/SparklineInteractiveData';
-import { useChartContext } from '@coinbase/cds-common/visualizations/charts';
 import { useTheme } from '@coinbase/cds-web';
 import { VStack } from '@coinbase/cds-web/layout';
 import { TextHeadline } from '@coinbase/cds-web/typography';
 
+import { useChartContext } from '../../ChartProvider';
 import { ChartText } from '../../text/ChartText';
 import { LineChart } from '../LineChart';
 import { ReferenceLine } from '../ReferenceLine';

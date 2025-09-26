@@ -16,7 +16,7 @@ import {
   projectPoint,
   useScrubberContext,
 } from '@coinbase/cds-common/visualizations/charts';
-import { useChartContext } from '@coinbase/cds-common/visualizations/charts';
+import { useChartContext } from '../ChartProvider';
 import { useTheme } from '@coinbase/cds-mobile';
 
 import { ReferenceLine, type ReferenceLineProps } from '../line';

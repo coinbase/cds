@@ -2,7 +2,7 @@ import React, { memo, useCallback, useId, useMemo, useState } from 'react';
 import { assets } from '@coinbase/cds-common/internal/data/assets';
 import { candles as btcCandles } from '@coinbase/cds-common/internal/data/candles';
 import type { TabValue } from '@coinbase/cds-common/tabs/useTabs';
-import { isCategoricalScale, useChartContext } from '@coinbase/cds-common/visualizations/charts';
+import { isCategoricalScale } from '@coinbase/cds-common/visualizations/charts';
 import { Radio } from '@coinbase/cds-web/controls/Radio';
 import { Box, type BoxBaseProps, Divider, HStack, VStack } from '@coinbase/cds-web/layout';
 import { RemoteImage } from '@coinbase/cds-web/media';
@@ -12,6 +12,7 @@ import { Text, TextHeadline } from '@coinbase/cds-web/typography';
 
 import { Area } from '../area/Area';
 import { XAxis, YAxis } from '../axis';
+import { useChartContext } from '../ChartProvider';
 import { SolidLine, type SolidLineProps } from '../line';
 import { Line } from '../line/Line';
 import { LineChart } from '../line/LineChart';

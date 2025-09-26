@@ -1,6 +1,7 @@
 import React, { memo, useMemo } from 'react';
 import type { ThemeVars } from '@coinbase/cds-common';
-import { defaultAxisId, useChartContext } from '@coinbase/cds-common/visualizations/charts';
+import { defaultAxisId } from '@coinbase/cds-common/visualizations/charts';
+import { useChartContext } from '../ChartProvider';
 import { getBarSizeAdjustment } from '@coinbase/cds-common/visualizations/charts/bar';
 import { isCategoricalScale } from '@coinbase/cds-common/visualizations/charts/scale';
 

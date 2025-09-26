@@ -1,9 +1,10 @@
 import React, { memo, useCallback, useEffect, useMemo, useRef } from 'react';
 import type { SVGProps } from 'react';
 import { useValueChanges } from '@coinbase/cds-common/hooks/useValueChanges';
-import { getBarPath, useChartContext } from '@coinbase/cds-common/visualizations/charts';
+import { getBarPath } from '@coinbase/cds-common/visualizations/charts';
 import * as interpolate from 'd3-interpolate-path';
 
+import { useChartContext } from '../ChartProvider';
 import type { BarComponentProps } from './Bar';
 
 export type DefaultBarProps = BarComponentProps;

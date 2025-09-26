@@ -4,11 +4,12 @@ import React, { memo, useCallback, useEffect, useRef } from 'react';
 import type { SVGProps } from 'react';
 import { useValueChanges } from '@coinbase/cds-common/hooks/useValueChanges';
 import type { Rect, SharedProps } from '@coinbase/cds-common/types';
-import { useChartContext } from '@coinbase/cds-common/visualizations/charts';
 import { generateRandomId } from '@coinbase/cds-utils';
 import { interpolatePath } from 'd3-interpolate-path';
 import { select } from 'd3-selection';
 import { m } from 'framer-motion';
+
+import { useChartContext } from './ChartProvider';
 
 export type PathProps = SharedProps &
   Omit<

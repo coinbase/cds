@@ -1,9 +1,11 @@
 import React, { memo, useMemo, useRef } from 'react';
 import type { ThemeVars } from '@coinbase/cds-common';
-import { getBarPath, useChartContext } from '@coinbase/cds-common/visualizations/charts';
+import { getBarPath } from '@coinbase/cds-common/visualizations/charts';
 import { generateRandomId } from '@coinbase/cds-utils';
 import { useTheme } from '@coinbase/cds-web';
 import { m } from 'framer-motion';
+
+import { useChartContext } from '../ChartProvider';
 
 export type StackComponentBaseProps = {
   /**
