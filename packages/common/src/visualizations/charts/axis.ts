@@ -1,3 +1,4 @@
+import { useCallback, useMemo, useState } from 'react';
 import type React from 'react';
 
 import type { Rect } from '../../types';
@@ -640,4 +641,72 @@ export const getAxisTicksData = ({
     tick,
     position: numericScale(tick),
   }));
+};
+
+export type RegisteredAxis = {
+  id: string;
+  type: 'x' | 'y';
+  position: 'start' | 'end';
+  size: number;
+};
+
+/**
+ * Calculates the total amount of padding needed to render a set of axes on the main drawing area of the chart.
+ * Returns the registed axes, an API for adding/removing axes as well as the total calculated padding that must be reserved in the drawing area.
+ */
+export const useTotalAxisPadding = () => {
+  const [renderedAxes, setRenderedAxes] = useState<Map<string, RegisteredAxis>>(new Map());
+
+  const registerAxis = useCallback(
+    (id: string, type: 'x' | 'y', position: 'start' | 'end', size: number) => {
+      setRenderedAxes((prev) => {
+        const newMap = new Map(prev);
+        newMap.set(id, {
+          id,
+          type,
+          position,
+          size,
+        });
+        return newMap;
+      });
+    },
+    [],
+  );
+
+  const unregisterAxis = useCallback((id: string) => {
+    setRenderedAxes((prev) => {
+      const newMap = new Map(prev);
+      newMap.delete(id);
+      return newMap;
+    });
+  }, []);
+
+  const axisPadding = useMemo(() => {
+    const padding = { top: 0, right: 0, bottom: 0, left: 0 };
+
+    renderedAxes.forEach((axis) => {
+      if (axis.type === 'x') {
+        if (axis.position === 'start') {
+          padding.top += axis.size;
+        } else if (axis.position === 'end') {
+          padding.bottom += axis.size;
+        }
+      } else if (axis.type === 'y') {
+        if (axis.position === 'start') {
+          padding.left += axis.size;
+        } else if (axis.position === 'end') {
+          padding.right += axis.size;
+        }
+      }
+    });
+
+    return padding;
+  }, [renderedAxes]);
+
+  return {
+    renderedAxes,
+    axisPadding,
+    registerAxis,
+    unregisterAxis,
+  };
 };

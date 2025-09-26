@@ -24,6 +24,7 @@ import {
   ScrubberContext,
   type ScrubberContextValue,
   type Series,
+  useTotalAxisPadding,
 } from '@coinbase/cds-common/visualizations/charts';
 import { useLayout } from '@coinbase/cds-mobile/hooks/useLayout';
 import { Box } from '@coinbase/cds-mobile/layout';
@@ -127,29 +128,7 @@ export const Chart = memo(
       const yAxisConfig = useMemo(() => getAxisConfig('y', yAxisConfigInput), [yAxisConfigInput]);
 
       const [highlightedIndex, setHighlightedIndex] = useState<number | undefined>(undefined);
-      const [renderedAxes, setRenderedAxes] = useState<Map<string, RegisteredAxis>>(new Map());
-
-      const axisPadding = useMemo(() => {
-        const padding = { top: 0, right: 0, bottom: 0, left: 0 };
-
-        renderedAxes.forEach((axis) => {
-          if (axis.type === 'x') {
-            if (axis.position === 'start') {
-              padding.top += axis.size;
-            } else if (axis.position === 'end') {
-              padding.bottom += axis.size;
-            }
-          } else if (axis.type === 'y') {
-            if (axis.position === 'start') {
-              padding.left += axis.size;
-            } else if (axis.position === 'end') {
-              padding.right += axis.size;
-            }
-          }
-        });
-
-        return padding;
-      }, [renderedAxes]);
+      const { renderedAxes, registerAxis, unregisterAxis, axisPadding } = useTotalAxisPadding();
 
       const totalPadding = useMemo(
         () => ({
@@ -382,30 +361,6 @@ export const Chart = memo(
         },
         [stackedDataMap],
       );
-
-      const registerAxis = useCallback(
-        (id: string, type: 'x' | 'y', position: 'start' | 'end', size: number) => {
-          setRenderedAxes((prev) => {
-            const newMap = new Map(prev);
-            newMap.set(id, {
-              id,
-              type,
-              position,
-              size,
-            });
-            return newMap;
-          });
-        },
-        [],
-      );
-
-      const unregisterAxis = useCallback((id: string) => {
-        setRenderedAxes((prev) => {
-          const newMap = new Map(prev);
-          newMap.delete(id);
-          return newMap;
-        });
-      }, []);
 
       const getAxisBounds = useCallback(
         (axisId: string): Rect | undefined => {

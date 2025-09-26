@@ -16,10 +16,10 @@ import {
   getPadding,
   getStackedSeriesData as calculateStackedSeriesData,
   isCategoricalScale,
-  type RegisteredAxis,
   ScrubberContext,
   type ScrubberContextValue,
   type Series,
+  useTotalAxisPadding,
 } from '@coinbase/cds-common/visualizations/charts';
 import { cx } from '@coinbase/cds-web';
 import { useDimensions } from '@coinbase/cds-web/hooks/useDimensions';
@@ -121,29 +121,7 @@ export const Chart = memo(
       const yAxisConfig = useMemo(() => getAxisConfig('y', yAxisConfigInput), [yAxisConfigInput]);
 
       const [highlightedIndex, setHighlightedIndex] = useState<number | undefined>(undefined);
-      const [renderedAxes, setRenderedAxes] = useState<Map<string, RegisteredAxis>>(new Map());
-
-      const axisPadding = useMemo(() => {
-        const padding = { top: 0, right: 0, bottom: 0, left: 0 };
-
-        renderedAxes.forEach((axis) => {
-          if (axis.type === 'x') {
-            if (axis.position === 'start') {
-              padding.top += axis.size;
-            } else if (axis.position === 'end') {
-              padding.bottom += axis.size;
-            }
-          } else if (axis.type === 'y') {
-            if (axis.position === 'start') {
-              padding.left += axis.size;
-            } else if (axis.position === 'end') {
-              padding.right += axis.size;
-            }
-          }
-        });
-
-        return padding;
-      }, [renderedAxes]);
+      const { renderedAxes, registerAxis, unregisterAxis, axisPadding } = useTotalAxisPadding();
 
       const chartRect: Rect = useMemo(() => {
         if (chartWidth <= 0 || chartHeight <= 0) return { x: 0, y: 0, width: 0, height: 0 };
@@ -454,30 +432,6 @@ export const Chart = memo(
         },
         [stackedDataMap],
       );
-
-      const registerAxis = useCallback(
-        (id: string, type: 'x' | 'y', position: 'start' | 'end', size: number) => {
-          setRenderedAxes((prev) => {
-            const newMap = new Map(prev);
-            newMap.set(id, {
-              id,
-              type,
-              position,
-              size,
-            });
-            return newMap;
-          });
-        },
-        [],
-      );
-
-      const unregisterAxis = useCallback((id: string) => {
-        setRenderedAxes((prev) => {
-          const newMap = new Map(prev);
-          newMap.delete(id);
-          return newMap;
-        });
-      }, []);
 
       const getAxisBounds = useCallback(
         (axisId: string): Rect | undefined => {

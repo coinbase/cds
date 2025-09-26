@@ -84,13 +84,6 @@ export const useChartContext = (): ChartContextValue => {
   return context;
 };
 
-export type RegisteredAxis = {
-  id: string;
-  type: 'x' | 'y';
-  position: 'start' | 'end';
-  size: number;
-};
-
 // Chart highlighting context
 export type ScrubberContextValue = {
   /** Whether scrubbing is enabled on the parent Chart component */
