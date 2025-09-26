@@ -134,7 +134,6 @@ const ChartTextVisible = memo<ChartTextVisibleProps>(
     const elevationSpacing = useMemo(() => {
       if (!elevation) return { top: 0, right: 0, bottom: 0, left: 0 };
 
-      // Calculate shadow space based on elevation level
       const spacing =
         elevation === 1
           ? { top: 12, right: 12, bottom: 20, left: 12 } // shadowRadius on sides, shadowOffset.height + shadowRadius on bottom
@@ -142,52 +141,6 @@ const ChartTextVisible = memo<ChartTextVisibleProps>(
 
       return spacing;
     }, [elevation]);
-
-    const backgroundRectDimensions = useMemo(() => {
-      return {
-        x: (textDimensions.x - padding.left - elevationSpacing.left + Number(dx ?? 0)) / 2,
-        y: (textDimensions.y - padding.top - elevationSpacing.top + Number(dy ?? 0)) / 2,
-        width:
-          textDimensions.width +
-          padding.left +
-          padding.right +
-          elevationSpacing.left +
-          elevationSpacing.right,
-        height:
-          textDimensions.height +
-          padding.top +
-          padding.bottom +
-          elevationSpacing.top +
-          elevationSpacing.bottom,
-      };
-    }, [
-      textDimensions.x,
-      textDimensions.y,
-      textDimensions.width,
-      textDimensions.height,
-      padding.left,
-      padding.top,
-      padding.right,
-      padding.bottom,
-      elevationSpacing.left,
-      elevationSpacing.top,
-      elevationSpacing.right,
-      elevationSpacing.bottom,
-      dx,
-      dy,
-    ]);
-
-    /*
-
-        <SvgRect
-          fill={background}
-          {...backgroundRectDimensions}
-          rx={borderRadius ? theme.borderRadius[borderRadius] : undefined}
-          ry={borderRadius ? theme.borderRadius[borderRadius] : undefined}
-          // TODO: Filter not supported in React Native SVG
-          // {...(filterId ? { filter: `url(#${filterId})` } : {})}
-        />
-    */
 
     const rectHeight = useMemo(
       () => textDimensions.height + padding.top + padding.bottom,
@@ -200,19 +153,41 @@ const ChartTextVisible = memo<ChartTextVisibleProps>(
 
     return (
       <G>
-        <ForeignObject {...backgroundRectDimensions}>
-          <Box
-            borderRadius={borderRadius}
-            elevation={elevation}
-            height={rectHeight}
-            style={{
-              marginLeft: elevationSpacing.left,
-              marginTop: elevationSpacing.top,
-              backgroundColor: background,
-            }}
-            width={rectWidth}
-          />
-        </ForeignObject>
+        {background !== 'transparent' && (
+          <ForeignObject
+            height={
+              textDimensions.height +
+              padding.top +
+              padding.bottom +
+              elevationSpacing.top +
+              elevationSpacing.bottom
+            }
+            width={
+              textDimensions.width +
+              padding.left +
+              padding.right +
+              elevationSpacing.left +
+              elevationSpacing.right
+            }
+            x={textDimensions.x - padding.left - elevationSpacing.left}
+            y={textDimensions.y - padding.top - elevationSpacing.top}
+          >
+            <Box height="100%" style={{ position: 'relative' }} width="100%">
+              <Box
+                borderRadius={borderRadius}
+                elevation={1}
+                height={rectHeight}
+                style={{
+                  position: 'absolute',
+                  top: elevationSpacing.top,
+                  left: elevationSpacing.left,
+                  backgroundColor: background,
+                }}
+                width={rectWidth}
+              />
+            </Box>
+          </ForeignObject>
+        )}
         <Text
           alignmentBaseline={alignmentBaseline}
           dx={dx}
@@ -371,16 +346,6 @@ export const ChartText = memo<ChartTextProps>(
       }
     }, [reportedRect, onDimensionsChange]);
 
-    const dimensionsRect = useMemo(() => {
-      if (!textSize || textSize.width === 0 || textSize.height === 0) return null;
-      return {
-        x: textSize.x + overflowAmount.x,
-        y: textSize.y + overflowAmount.y,
-        width: textSize.width,
-        height: textSize.height,
-      };
-    }, [textSize, overflowAmount.x, overflowAmount.y]);
-
     return (
       <G opacity={isDimensionsReady ? opacity : 0} testID={testID}>
         {textSize && (
@@ -403,12 +368,6 @@ export const ChartText = memo<ChartTextProps>(
               {children}
             </ChartTextVisible>
           </G>
-        )}
-        {textSize && (
-          <Text
-            x={0}
-            y={y - 30}
-          >{`${textSize.x} ${textSize.y} ${textSize.width} ${textSize.height}`}</Text>
         )}
         <Text
           alignmentBaseline={alignmentBaseline}

@@ -1,9 +1,11 @@
-import { useCallback, useId, useMemo, useState } from 'react';
+import { forwardRef, memo, useCallback, useId, useMemo, useState } from 'react';
+import type { View } from 'react-native';
 import { Defs, G, LinearGradient, Stop } from 'react-native-svg';
 import { assets } from '@coinbase/cds-common/internal/data/assets';
 import { candles as btcCandles } from '@coinbase/cds-common/internal/data/candles';
 import { prices } from '@coinbase/cds-common/internal/data/prices';
 import { sparklineInteractiveData } from '@coinbase/cds-common/internal/visualizations/SparklineInteractiveData';
+import { useTabsContext } from '@coinbase/cds-common/tabs/TabsContext';
 import type { TabValue } from '@coinbase/cds-common/tabs/useTabs';
 import { projectPoint, useChartContext } from '@coinbase/cds-common/visualizations/charts';
 import type { ChartAxisScaleType } from '@coinbase/cds-common/visualizations/charts/scale';
@@ -14,15 +16,18 @@ import { RemoteImage } from '@coinbase/cds-mobile/media';
 import { SectionHeader } from '@coinbase/cds-mobile/section-header/SectionHeader';
 import {
   SegmentedTabs,
+  type TabComponent,
   TabsActiveIndicator,
   type TabsActiveIndicatorProps,
 } from '@coinbase/cds-mobile/tabs';
+import { SegmentedTab, type SegmentedTabProps } from '@coinbase/cds-mobile/tabs/SegmentedTab';
+import { TextLabel1 } from '@coinbase/cds-mobile/typography';
 import { Text } from '@coinbase/cds-mobile/typography/Text';
 
 import { Area, type AreaComponentProps, DottedArea, GradientArea } from '../../area';
 import { XAxis, YAxis } from '../../axis';
 import { Chart } from '../../Chart';
-import { PeriodSelector } from '../../PeriodSelector';
+import { PeriodSelector, PeriodSelectorActiveIndicator } from '../../PeriodSelector';
 import { Point } from '../../point';
 import { Scrubber } from '../../scrubber';
 import type { ChartTextChildren } from '../../text';
@@ -388,135 +393,6 @@ export const ChartScale = () => {
   );
 };
 
-const UnderlineIndicator = (props: TabsActiveIndicatorProps) => (
-  <TabsActiveIndicator
-    {...props}
-    background="fg"
-    borderRadius={0}
-    bottom={0}
-    height={2}
-    top="auto"
-  />
-);
-
-export const BTCPriceChart = () => {
-  const tabs = [
-    { id: 'hour', label: '1H' },
-    { id: 'day', label: '1D' },
-    { id: 'week', label: '1W' },
-    { id: 'month', label: '1M' },
-    { id: 'year', label: '1Y' },
-    { id: 'all', label: 'All' },
-  ];
-  const [activeTab, setActiveTab] = useState<TabValue | null>(tabs[0]); // Data source for chart
-  const [selectedTab, setSelectedTab] = useState<TabValue | null>(tabs[0]); // UI state for PeriodSelector
-  const [isHovering, setIsHovering] = useState(false);
-  const [highlightedItem, setHighlightedItem] = useState<number | null>(null);
-
-  const currentPriceData = activeTab
-    ? sparklineInteractiveData[activeTab.id as keyof typeof sparklineInteractiveData]
-    : sparklineInteractiveData.hour;
-
-  const currentData = useMemo(
-    () => [...currentPriceData.map((price) => price.value)],
-    [currentPriceData],
-  );
-  const currentTimestamps = useMemo(
-    () => [...currentPriceData.map((price) => price.date.toISOString())],
-    [currentPriceData],
-  );
-  const currentPrice = currentData[currentData.length - 1];
-  const startPrice = currentData[0];
-
-  const latestPriceCoords = useMemo(() => {
-    if (currentData.length === 0) return {};
-    return {
-      x: currentData.length - 1,
-      y: currentData[currentData.length - 1],
-    };
-  }, [currentData]);
-
-  const onScrubberPosChange = useCallback((item: number | null) => {
-    setHighlightedItem(item);
-    setIsHovering(!!item);
-  }, []);
-
-  const displayPrice =
-    highlightedItem !== null && highlightedItem !== undefined
-      ? currentData[highlightedItem]
-      : currentPrice;
-
-  const btcAccentColor = '#F0A73C';
-
-  // Calculate trend based on current context (hovering vs current)
-  const { trendPrice, trendPreviousPrice, trendDirection, displayDate } = useMemo(() => {
-    return calculateTrendData(
-      highlightedItem,
-      currentData,
-      currentTimestamps,
-      startPrice,
-      currentPrice,
-      activeTab?.id || 'hour',
-    );
-  }, [highlightedItem, currentData, currentTimestamps, startPrice, currentPrice, activeTab]);
-
-  const calculatedPriceChange = trendPrice - trendPreviousPrice;
-  const calculatedPercentChange = (calculatedPriceChange / trendPreviousPrice) * 100;
-
-  const formattedPrice = `$${displayPrice.toLocaleString('en-US', {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  })}`;
-
-  const formattedPriceChange = `${calculatedPriceChange >= 0 ? '+' : ''}$${Math.abs(
-    calculatedPriceChange,
-  ).toLocaleString('en-US', {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  })} (${Math.abs(calculatedPercentChange).toFixed(2)}%)`;
-
-  const AreaComponent = useMemo(
-    () => (props: AreaComponentProps) => (
-      <GradientArea {...props} baselineColor="#ffffff" peakColor="#ffffff" peakOpacity={0.15} />
-    ),
-    [],
-  );
-
-  return (
-    <Box
-      borderRadius={200}
-      overflow="hidden"
-      style={{ backgroundColor: btcAccentColor }}
-      width="100%"
-    >
-      <VStack gap={3} width="100%">
-        <Chart
-          height={defaultChartHeight}
-          onScrubberPosChange={onScrubberPosChange}
-          padding={{ left: 0, right: 20, bottom: 0, top: 40 }}
-          series={[
-            {
-              id: 'price',
-              data: currentData,
-              color: '#000000',
-            },
-          ]}
-          width="100%"
-        >
-          {selectedTab === activeTab && (
-            <Line
-              key={activeTab?.id}
-              showArea
-              AreaComponent={AreaComponent}
-              seriesId="price"
-              strokeWidth={3}
-            />
-          )}
-        </Chart>
-      </VStack>
-    </Box>
-  );
-};
 export const ColorShiftChart = () => {
   const [activeTab, setActiveTab] = useState<TabValue | null>(null);
 
@@ -658,93 +534,6 @@ export const ColorShiftChart = () => {
         />
       </LineChart>
     </VStack>
-  );
-};
-
-export const ReturnsChart = () => {
-  const returnsData = [
-    0.0, -25.18, -60.45, -81.99, -55.12, -20.66, 35.11, 95.88, 160.43, 225.91, 285.17, 340.62,
-    385.49, 410.15, 405.88, 380.12, 340.77, 290.15, 230.84, 175.43, 115.99, 60.18, 10.44, -45.82,
-    -95.11, -140.67, -152.81, -130.49, -90.15, -45.72, -5.11, 45.88, 95.12, 140.67, 185.22, 220.98,
-    251.15, 240.66, 210.19, 170.83, 125.44, 80.91, 40.12, -15.77, -85.14, -160.99, -240.18, -320.67,
-    -390.41, -452.93, -410.11, -350.88, -280.15, -200.43, -150.11, -80.49, -45.18, -55.29, -30.15,
-    50.11, 120.88, 190.45, 260.12, 310.99, 280.43, 250.19, 350.88, 450.12, 550.93, 650.11, 720.84,
-    680.49, 630.15, 650.88, 750.19, 850.43, 950.91, 1050.22, 1110.75, 1080.15, 1050.92, 1150.48,
-    1250.19, 1350.77, 1450.21, 1510.29,
-  ];
-  const positiveColor = '#10b981';
-  const negativeColor = '#6b7280';
-
-  const ChartDefs = ({ threshold = 0 }) => {
-    const { height, getYScale, getYAxis } = useChartContext();
-    const yScale = getYScale?.();
-    const yAxis = getYAxis?.();
-
-    if (!yScale) return null;
-
-    const thresholdPixel = projectPoint({ x: 0, y: threshold, xScale: (() => 0) as any, yScale });
-    const thresholdY = thresholdPixel.y;
-
-    const rangeBounds = yAxis?.domain;
-    const rangeMin = rangeBounds?.min ?? 0;
-    const rangeMax = rangeBounds?.max ?? 1;
-    const thresholdPercent = ((threshold - rangeMin) / (rangeMax - rangeMin)) * 100;
-
-    return (
-      <defs>
-        <clipPath id="positiveClip">
-          <rect height={thresholdY} width="100%" x="0" y="0" />
-        </clipPath>
-        <clipPath id="negativeClip">
-          <rect height={height - thresholdY} width="100%" x="0" y={thresholdY} />
-        </clipPath>
-        <linearGradient id="conditionalGradient" x1="0%" x2="0%" y1="100%" y2="0%">
-          <stop offset="0%" stopColor={negativeColor} />
-          <stop offset={`${thresholdPercent}%`} stopColor={negativeColor} />
-          <stop offset={`${thresholdPercent}%`} stopColor={positiveColor} />
-          <stop offset="100%" stopColor={positiveColor} />
-        </linearGradient>
-      </defs>
-    );
-  };
-
-  return (
-    <Chart
-      height={defaultChartHeight}
-      series={[
-        {
-          id: 'returnsLine',
-          data: returnsData,
-        },
-        {
-          id: 'returnsArea',
-          data: returnsData.map((value) => [value, 0]) as [number, number][],
-        },
-      ]}
-    >
-      <ChartDefs threshold={0} />
-      <G clipPath="url(#positiveClip)">
-        <Area fill={positiveColor} seriesId="returnsArea" type="dotted" />
-      </G>
-      <G clipPath="url(#negativeClip)">
-        <Area fill={negativeColor} seriesId="returnsArea" type="dotted" />
-      </G>
-      <Line seriesId="returnsLine" stroke="url(#conditionalGradient)" />
-      <ReferenceLine
-        LineComponent={(props) => <SolidLine {...props} strokeWidth={8} />}
-        dataY={0}
-        disableAnimations={false}
-        stroke="#ffffff"
-      />
-      <ReferenceLine
-        LineComponent={(props) => (
-          <DottedLine {...props} strokeDasharray="0.01 6" strokeWidth={3} />
-        )}
-        dataY={0}
-        disableAnimations={false}
-        stroke="#6b7280"
-      />
-    </Chart>
   );
 };
 
@@ -957,7 +746,9 @@ export const PriceChart = () => {
           },
         ]}
         yAxis={{ domainLimit: 'strict' }}
-      ></LineChart>
+      >
+        <Scrubber idlePulse />
+      </LineChart>
       <PeriodSelector activeTab={activeTab} onChange={(tab) => setActiveTab(tab)} tabs={tabs} />
     </VStack>
   );
@@ -1081,6 +872,36 @@ const PeriodSelectorExample = () => {
   return <PeriodSelector activeTab={activeTab} onChange={(tab) => setActiveTab(tab)} tabs={tabs} />;
 };
 
+const BTCTab: TabComponent = memo(
+  forwardRef(({ label, ...props }: SegmentedTabProps, ref: React.ForwardedRef<View>) => {
+    const { activeTab } = useTabsContext();
+    const isActive = activeTab?.id === props.id;
+
+    return (
+      <SegmentedTab
+        ref={ref}
+        label={
+          <TextLabel1
+            style={{
+              color: isActive ? assets.btc.color : undefined,
+            }}
+          >
+            {label}
+          </TextLabel1>
+        }
+        {...props}
+      />
+    );
+  }),
+);
+
+const BTCActiveIndicator = memo(({ style, ...props }: TabsActiveIndicatorProps) => (
+  <PeriodSelectorActiveIndicator
+    {...props}
+    style={[style, { backgroundColor: `${assets.btc.color}1A` }]}
+  />
+));
+
 const AssetPriceDotted = () => {
   const [scrubIndex, setScrubIndex] = useState<number | null>(null);
   const currentPrice =
@@ -1169,6 +990,7 @@ const AssetPriceDotted = () => {
         areaType="dotted"
         height={defaultChartHeight}
         onScrubberPosChange={setScrubIndex}
+        padding={{ right: 16 }}
         series={[
           {
             id: 'btc',
@@ -1177,9 +999,15 @@ const AssetPriceDotted = () => {
           },
         ]}
       >
-        <Scrubber idlePulse scrubberLabel={scrubberLabel} />
+        <Scrubber idlePulse scrubberLabel={scrubberLabel} scrubberLabelProps={{ elevation: 1 }} />
       </LineChart>
-      <PeriodSelector activeTab={timePeriod} onChange={onPeriodChange} tabs={tabs} />
+      <PeriodSelector
+        TabComponent={BTCTab}
+        TabsActiveIndicatorComponent={BTCActiveIndicator}
+        activeTab={timePeriod}
+        onChange={onPeriodChange}
+        tabs={tabs}
+      />
     </VStack>
   );
 };
@@ -1482,7 +1310,7 @@ const LineChartStories = () => {
       <Example title="Bitcoin Chart with Scrubber Head">
         <BitcoinChartWithScrubberHead />
       </Example>
-      {/*<Example title="Asset Price">
+      <Example title="Asset Price">
         <AssetPrice />
       </Example>
       <Example title="Line Styles">
@@ -1490,9 +1318,6 @@ const LineChartStories = () => {
       </Example>
       <Example title="Chart Scale">
         <ChartScale />
-      </Example>
-      <Example title="BTC Price Chart">
-        <BTCPriceChart />
       </Example>
       <Example title="Color Shift Chart">
         <ColorShiftChart />
@@ -1505,7 +1330,7 @@ const LineChartStories = () => {
       </Example>
       <Example title="Period Selector">
         <PeriodSelectorExample />
-      </Example>*/}
+      </Example>
     </ExampleScreen>
   );
 };

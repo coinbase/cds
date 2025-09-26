@@ -175,7 +175,6 @@ export const ScrubberHead = memo(
       const pointColor = color || targetSeries?.color || theme.color.fgPrimary;
       const pulseRadius = radius * 4;
       const innerRingRadius = (radius + pulseRadius) / 2;
-      const shouldShowPulse = idlePulse && highlightedIndex === undefined;
 
       return (
         <>
@@ -192,7 +191,7 @@ export const ScrubberHead = memo(
             dataX={x}
             dataY={y}
             opacity={opacity}
-            pulse={shouldShowPulse}
+            pulse={idlePulse && highlightedIndex === undefined}
             pulseRadius={pulseRadius}
             radius={radius}
             stroke={theme.color.bg}
