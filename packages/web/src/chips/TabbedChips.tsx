@@ -24,9 +24,10 @@ const TabComponent = <T extends string = string>({ label = '', id, ...tabProps }
   const handleClick = useCallback(() => updateActiveTab(id), [id, updateActiveTab]);
   return (
     <Chip
-      aria-checked={isActive}
+      aria-selected={isActive}
       inverted={isActive}
       onClick={handleClick}
+      role="tab"
       width="max-content"
       {...tabProps}
     >
@@ -59,7 +60,7 @@ const TabbedChipsComponent = memo(
       testID,
       background = 'bg',
       gap = 1,
-      role = 'radiogroup',
+      role,
       previousArrowAccessibilityLabel = 'Previous',
       nextArrowAccessibilityLabel = 'Next',
       width = '100%',
