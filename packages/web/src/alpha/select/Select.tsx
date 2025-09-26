@@ -22,21 +22,37 @@ export const defaultAccessibilityRoles: SelectProps['accessibilityRoles'] = {
 };
 
 // TO DO: Should we allow more customization here?
+/**
+ * Configuration for a single option in the Select component
+ */
 export type SelectOption = {
+  /** The value associated with this option */
   value: string | null;
+  /** The label displayed for the option */
   label?: React.ReactNode;
+  /** Additional description text shown below the label */
   description?: React.ReactNode;
+  /** Whether this option is disabled and cannot be selected */
   disabled?: boolean;
 };
 
+/**
+ * Props for individual option components within the Select dropdown
+ */
 export type SelectOptionProps<Type extends 'single' | 'multi' = 'single'> = SelectOption &
   Pick<CellBaseProps, 'accessory' | 'media' | 'detail'> &
   Pick<SelectProps, 'compact' | 'style' | 'className'> & {
+    /** Click handler for the option */
     onClick?: (value: string | null) => void;
+    /** Whether this is for single or multi-select */
     type?: Type;
+    /** Whether this option is currently selected */
     selected?: boolean;
+    /** Whether to allow multiline text in the option */
     multiline?: boolean;
+    /** Blend styles for option interactivity */
     blendStyles?: InteractableBlendStyles;
+    /** ARIA role for the option element */
     accessibilityRole?: string;
   };
 
@@ -49,6 +65,9 @@ type SelectState<Type extends 'single' | 'multi' = 'single'> = {
   onChange: (value: Type extends 'multi' ? string | string[] : string | null) => void;
 };
 
+/**
+ * Props for the select control component (the clickable input that opens the dropdown)
+ */
 export type SelectControlProps<Type extends 'single' | 'multi' = 'single'> = Pick<
   InputStackBaseProps,
   'disabled' | 'startNode' | 'variant' | 'testID'
@@ -59,11 +78,17 @@ export type SelectControlProps<Type extends 'single' | 'multi' = 'single'> = Pic
     'options' | 'label' | 'placeholder' | 'helperText' | 'compact' | 'style' | 'className'
   > &
   SelectState<Type> & {
+    /** Whether this is for single or multi-select */
     type?: Type;
+    /** Whether the dropdown is currently open */
     open: boolean;
+    /** Function to update the dropdown open state */
     setOpen: (open: boolean | ((open: boolean) => boolean)) => void;
+    /** Maximum number of selected options to show before truncating */
     maxSelectedOptionsToShow?: number;
+    /** Blend styles for control interactivity */
     blendStyles?: InteractableBlendStyles;
+    /** ARIA haspopup attribute value */
     ariaHaspopup?: AriaHasPopupType;
   };
 
@@ -73,6 +98,9 @@ export type SelectControlComponent<Type extends 'single' | 'multi' = 'single'> =
   }
 >;
 
+/**
+ * Props for the dropdown component that contains the list of options
+ */
 export type SelectDropdownProps<Type extends 'single' | 'multi' = 'single'> = SelectState<Type> &
   Pick<SharedAccessibilityProps, 'accessibilityLabel'> &
   Pick<CellBaseProps, 'accessory' | 'media' | 'detail'> &
@@ -89,22 +117,36 @@ export type SelectDropdownProps<Type extends 'single' | 'multi' = 'single'> = Se
     | 'className'
     | 'compact'
   > & {
+    /** Whether this is for single or multi-select */
     type?: Type;
+    /** Array of options with their configuration and optional custom components */
     options: (SelectOption &
       Pick<CellBaseProps, 'accessory' | 'media'> & { Component?: SelectOptionComponent<Type> })[];
+    /** Whether the dropdown is currently open */
     open: boolean;
+    /** Function to update the dropdown open state */
     setOpen: (open: boolean | ((open: boolean) => boolean)) => void;
+    /** Reference to the control element for positioning */
     controlRef: React.MutableRefObject<HTMLElement | null>;
+    /** Custom styles for dropdown elements */
     styles?: {
+      /** Styles for the dropdown root container */
       root?: React.CSSProperties;
+      /** Styles for individual options */
       option?: React.CSSProperties;
+      /** Blend styles for option interactivity */
       optionBlendStyles?: InteractableBlendStyles;
     };
+    /** Custom class names for dropdown elements */
     classNames?: {
+      /** Class name for the dropdown root container */
       root?: string;
+      /** Class name for individual options */
       option?: string;
     };
+    /** Custom component to render individual options */
     SelectOptionComponent?: SelectOptionComponent<Type>;
+    /** Custom component to render the "Select All" option */
     SelectAllOptionComponent?: SelectOptionComponent<Type>;
   };
 
@@ -114,6 +156,9 @@ export type SelectDropdownComponent<Type extends 'single' | 'multi' = 'single'> 
   }
 >;
 
+/**
+ * Props for the Select component
+ */
 export type SelectProps<Type extends 'single' | 'multi' = 'single'> = Pick<
   InputStackBaseProps,
   'startNode' | 'variant' | 'disabled'
@@ -121,46 +166,84 @@ export type SelectProps<Type extends 'single' | 'multi' = 'single'> = Pick<
   Pick<CellBaseProps, 'accessory' | 'media' | 'detail'> &
   Pick<SharedAccessibilityProps, 'accessibilityLabel'> &
   SelectState<Type> & {
+    /** Whether the select allows single or multiple selections */
     type?: Type;
+    /** Array of options to display in the select dropdown */
     options: SelectOption[];
+    /** Controlled open state of the dropdown */
     open?: boolean;
+    /** Callback to update the open state */
     setOpen?: (open: boolean | ((open: boolean) => boolean)) => void;
+    /** Whether clicking outside the dropdown should close it */
     disableClickOutsideClose?: boolean;
+    /** Placeholder text displayed when no option is selected */
     placeholder?: React.ReactNode;
+    /** Helper text displayed below the select */
     helperText?: React.ReactNode;
+    /** Label for the "Select All" option in multi-select mode */
     selectAllLabel?: string;
+    /** Label displayed when there are no options available */
     emptyOptionsLabel?: string;
+    /** Label for the "Clear All" option in multi-select mode */
     clearAllLabel?: string;
+    /** Whether to hide the "Select All" option in multi-select mode */
     hideSelectAll?: boolean;
+    /** Label displayed above the select input */
     label?: React.ReactNode;
+    /** Accessibility roles for dropdown and option elements */
     accessibilityRoles?: {
+      /** ARIA role for the dropdown element */
       dropdown?: AriaHasPopupType;
+      /** ARIA role for option elements */
       option?: string;
     };
+    /** Whether to use compact styling for the select */
     compact?: boolean;
+    /** Initial open state when component mounts (uncontrolled mode) */
     defaultOpen?: boolean;
+    /** Maximum number of selected options to show before truncating */
     maxSelectedOptionsToShow?: number;
+    /** Custom component to render the dropdown container */
     SelectDropdownComponent?: SelectDropdownComponent<Type>;
+    /** Custom component to render the select control */
     SelectControlComponent?: SelectControlComponent<Type>;
+    /** Custom component to render individual options */
     SelectOptionComponent?: SelectOptionComponent<Type>;
+    /** Custom component to render the "Select All" option */
     SelectAllOptionComponent?: SelectOptionComponent<Type>;
+    /** Custom component to render when no options are available */
     SelectEmptyOptionsComponent?: React.ReactNode;
+    /** Inline styles for the root element */
     style?: React.CSSProperties;
+    /** CSS class name for the root element */
     className?: string;
+    /** Custom styles for different parts of the select */
     styles?: {
+      /** Styles for the root container */
       root?: React.CSSProperties;
+      /** Styles for the control element */
       control?: React.CSSProperties;
+      /** Styles for the dropdown container */
       dropdown?: React.CSSProperties;
+      /** Styles for individual options */
       option?: React.CSSProperties;
+      /** Blend styles for option interactivity */
       optionBlendStyles?: InteractableBlendStyles;
+      /** Blend styles for control interactivity */
       controlBlendStyles?: InteractableBlendStyles;
     };
+    /** Custom class names for different parts of the select */
     classNames?: {
+      /** Class name for the root container */
       root?: string;
+      /** Class name for the control element */
       control?: string;
+      /** Class name for the dropdown container */
       dropdown?: string;
+      /** Class name for individual options */
       option?: string;
     };
+    /** Test ID for the root element */
     testID?: string;
   };
 
