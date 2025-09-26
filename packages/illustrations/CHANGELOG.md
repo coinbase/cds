@@ -12,7 +12,7 @@ All notable changes to this project will be documented in this file.
 
 #### 🚀 Updates
 
-- Feat: Publish illustrations 09/25/2025. [[#17](https://github.com:coinbase/cds/pull/17)]
+- Feat: Publish illustrations 09/25/2025. [[#17](https://github.com/coinbase/cds/pull/20)]
 
 ### 🚀 Added
 
