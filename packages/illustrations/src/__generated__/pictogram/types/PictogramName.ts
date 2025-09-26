@@ -201,6 +201,7 @@ export type PictogramName =
   | 'coinbaseOneFiat'
   | 'coinbaseOneLogo'
   | 'coinbaseOneProductIcon'
+  | 'coinbaseOneProductInvestWeekly'
   | 'coinbaseOneRefreshed'
   | 'coinbaseOneShield'
   | 'coinbaseOneTrade'

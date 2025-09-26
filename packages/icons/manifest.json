@@ -1,6 +1,6 @@
 {
-  "lastUpdated": "2025-09-04T19:25:10.934Z",
-  "lastUnicode": 985512,
+  "lastUpdated": "2025-09-26T00:20:26.371Z",
+  "lastUnicode": 985566,
   "iconSets": [
     {
       "nodeId": "4:39245",
@@ -19363,6 +19363,429 @@
           "active": true,
           "size": 12,
           "unicode": 985501
+        }
+      ]
+    },
+    {
+      "nodeId": "5131:564",
+      "name": "instantUnstakingClock",
+      "description": "clock, unstack, instant, thunder",
+      "assetsHash": "+rTd7ack4AqfZ6eeMtjw49WQJMMJ2S4JHM4akwepTPI=",
+      "nameHash": "ZTLUKhNXik/45rJoVTE2xaIX8M/CZG5HEDHt9myOv34=",
+      "createdAt": "2025-09-24T21:44:02.648Z",
+      "lastUpdated": "2025-09-24T21:44:02.648Z",
+      "svgs": [
+        {
+          "name": "instantUnstakingClock-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 985560
+        },
+        {
+          "name": "instantUnstakingClock-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 985559
+        },
+        {
+          "name": "instantUnstakingClock-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 985558
+        },
+        {
+          "name": "instantUnstakingClock-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 985557
+        },
+        {
+          "name": "instantUnstakingClock-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 985556
+        },
+        {
+          "name": "instantUnstakingClock-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 985555
+        }
+      ]
+    },
+    {
+      "nodeId": "5131:616",
+      "name": "auto",
+      "description": "auto, play, gear",
+      "assetsHash": "S9eVXf8zWD/+I2wgsKPY8oII/IAjUiOs0lpTIy77oXA=",
+      "nameHash": "WMnZTqhZeGDCSLXscP8xFW2c9TpmNg147sIhWuXhG8M=",
+      "createdAt": "2025-09-24T21:44:02.657Z",
+      "lastUpdated": "2025-09-24T21:44:02.657Z",
+      "svgs": [
+        {
+          "name": "auto-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 985524
+        },
+        {
+          "name": "auto-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 985523
+        },
+        {
+          "name": "auto-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 985522
+        },
+        {
+          "name": "auto-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 985521
+        },
+        {
+          "name": "auto-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 985520
+        },
+        {
+          "name": "auto-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 985519
+        }
+      ]
+    },
+    {
+      "nodeId": "5131:577",
+      "name": "creatorCoin",
+      "description": "creator, coin, base, star",
+      "assetsHash": "r1msStm7e8IleN3D1QzV/BSqIIKm4tCrpqv8g2jxMYw=",
+      "nameHash": "ucAdnHMU7HDIQ1bHed86nz/XcEWZe5F6on+b4o8uNOU=",
+      "createdAt": "2025-09-24T21:44:02.663Z",
+      "lastUpdated": "2025-09-24T21:44:02.663Z",
+      "svgs": [
+        {
+          "name": "creatorCoin-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 985542
+        },
+        {
+          "name": "creatorCoin-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 985541
+        },
+        {
+          "name": "creatorCoin-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 985540
+        },
+        {
+          "name": "creatorCoin-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 985539
+        },
+        {
+          "name": "creatorCoin-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 985538
+        },
+        {
+          "name": "creatorCoin-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 985537
+        }
+      ]
+    },
+    {
+      "nodeId": "5131:655",
+      "name": "allocation",
+      "description": "allocation, piechart, data, circle",
+      "assetsHash": "Bl1LrtGg/LOFKKGZU5vFg7t4Dijgx1oqXPyIoy6SrCs=",
+      "nameHash": "9/4FXpUWBt7kqZX0HoR5gCVV3iaY6bCBg4mEH3KKkSI=",
+      "createdAt": "2025-09-24T21:44:02.668Z",
+      "lastUpdated": "2025-09-24T21:44:02.668Z",
+      "svgs": [
+        {
+          "name": "allocation-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 985518
+        },
+        {
+          "name": "allocation-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 985517
+        },
+        {
+          "name": "allocation-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 985516
+        },
+        {
+          "name": "allocation-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 985515
+        },
+        {
+          "name": "allocation-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 985514
+        },
+        {
+          "name": "allocation-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 985513
+        }
+      ]
+    },
+    {
+      "nodeId": "5131:590",
+      "name": "baseVerification",
+      "description": "base, Verification, check, badge",
+      "assetsHash": "ZJc6uLSm7s6BnfKbKumiRVxp+F5GJQ7J+LhRVdNdeog=",
+      "nameHash": "mENjqFyQ3c1ZTJuZFFFt5OPY/4bpQPp/8Q2WGEcFPVE=",
+      "createdAt": "2025-09-24T21:44:02.675Z",
+      "lastUpdated": "2025-09-24T21:44:02.675Z",
+      "svgs": [
+        {
+          "name": "baseVerification-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 985530
+        },
+        {
+          "name": "baseVerification-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 985529
+        },
+        {
+          "name": "baseVerification-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 985528
+        },
+        {
+          "name": "baseVerification-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 985527
+        },
+        {
+          "name": "baseVerification-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 985526
+        },
+        {
+          "name": "baseVerification-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 985525
+        }
+      ]
+    },
+    {
+      "nodeId": "5131:668",
+      "name": "distribution",
+      "description": "distribution, plus, coin, transfer",
+      "assetsHash": "Zvf8OS4EbBHSu3jszu3msyU+30UxnSNNBrSYES7LJX0=",
+      "nameHash": "Exd3E+9aISSICNLzOjRfZCLFruZHZWIwgHOjPPB8sJU=",
+      "createdAt": "2025-09-24T21:44:02.680Z",
+      "lastUpdated": "2025-09-24T21:44:02.680Z",
+      "svgs": [
+        {
+          "name": "distribution-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 985554
+        },
+        {
+          "name": "distribution-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 985553
+        },
+        {
+          "name": "distribution-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 985552
+        },
+        {
+          "name": "distribution-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 985551
+        },
+        {
+          "name": "distribution-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 985550
+        },
+        {
+          "name": "distribution-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 985549
+        }
+      ]
+    },
+    {
+      "nodeId": "5131:629",
+      "name": "disabledPhone",
+      "description": "phone, disabled, call, block, phone, call, device, communication, communicate, conversation, 📞, ☎️",
+      "assetsHash": "fvW+PGThzcGr9KzGO3BhmJb5mWMqk7UGyI5lbI9460M=",
+      "nameHash": "aTSVM69eX3QTaRnakOulFaVRw0HcO3QLJyI2VNvCk9s=",
+      "createdAt": "2025-09-24T21:44:02.688Z",
+      "lastUpdated": "2025-09-24T21:44:02.688Z",
+      "svgs": [
+        {
+          "name": "disabledPhone-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 985548
+        },
+        {
+          "name": "disabledPhone-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 985547
+        },
+        {
+          "name": "disabledPhone-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 985546
+        },
+        {
+          "name": "disabledPhone-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 985545
+        },
+        {
+          "name": "disabledPhone-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 985544
+        },
+        {
+          "name": "disabledPhone-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 985543
+        }
+      ]
+    },
+    {
+      "nodeId": "5131:603",
+      "name": "config",
+      "description": "config, gear, data,",
+      "assetsHash": "Sj9C3GgGx2YortvX0ji0TQWdREJDNByPyBdgaHiHJs4=",
+      "nameHash": "jitoxpkCIMdtVt6CHO/GVNTloI/WVinEj+wc//8EjVA=",
+      "createdAt": "2025-09-24T21:44:02.694Z",
+      "lastUpdated": "2025-09-24T21:44:02.694Z",
+      "svgs": [
+        {
+          "name": "config-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 985536
+        },
+        {
+          "name": "config-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 985535
+        },
+        {
+          "name": "config-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 985534
+        },
+        {
+          "name": "config-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 985533
+        },
+        {
+          "name": "config-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 985532
+        },
+        {
+          "name": "config-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 985531
+        }
+      ]
+    },
+    {
+      "nodeId": "5131:642",
+      "name": "location",
+      "description": "location, pin, map",
+      "assetsHash": "EcNPWgYOI0vefOsKPnyeWDEVtbbu8rVT0CyB59YFtGo=",
+      "nameHash": "NPEVUrqlqymjMTlcIGN3zM7KhbssbmYuC/irHk+w+90=",
+      "createdAt": "2025-09-24T21:44:02.699Z",
+      "lastUpdated": "2025-09-24T21:44:02.699Z",
+      "svgs": [
+        {
+          "name": "location-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 985566
+        },
+        {
+          "name": "location-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 985565
+        },
+        {
+          "name": "location-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 985564
+        },
+        {
+          "name": "location-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 985563
+        },
+        {
+          "name": "location-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 985562
+        },
+        {
+          "name": "location-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 985561
         }
       ]
     }

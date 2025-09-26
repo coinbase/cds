@@ -32,3 +32,4 @@ packages/icons/src/descriptionMap.ts
 packages/icons/src/fonts/web/icon-font.css
 packages/icons/src/glyphMap.ts
 packages/icons/src/names.ts
+packages/icons/manifest.json

@@ -713,7 +713,8 @@ export const descriptionMap: Record<string, IconName[]> = {
     'earn',
     'star',
     'crypto',
-    'peopleStar'
+    'peopleStar',
+    'creatorCoin'
   ],
   '🌕': [
     'moon'
@@ -972,7 +973,8 @@ export const descriptionMap: Record<string, IconName[]> = {
     'chatRequests',
     'leadChart',
     'grid',
-    'fscsProtection'
+    'fscsProtection',
+    'config'
   ],
   'profile': [
     'account',
@@ -1098,7 +1100,8 @@ export const descriptionMap: Record<string, IconName[]> = {
   'communication': [
     'support',
     'chatBubble',
-    'telephone'
+    'telephone',
+    'disabledPhone'
   ],
   'chat': [
     'support',
@@ -1153,11 +1156,13 @@ export const descriptionMap: Record<string, IconName[]> = {
   ],
   '📞': [
     'support',
-    'telephone'
+    'telephone',
+    'disabledPhone'
   ],
   '☎️': [
     'support',
-    'telephone'
+    'telephone',
+    'disabledPhone'
   ],
   'privacy': [
     'eye',
@@ -1219,7 +1224,8 @@ export const descriptionMap: Record<string, IconName[]> = {
     'directDeposit',
     'doubleChevronRight',
     'directDepositIcon',
-    'sendReceive'
+    'sendReceive',
+    'distribution'
   ],
   'payment': [
     'directDeposit',
@@ -1411,7 +1417,9 @@ export const descriptionMap: Record<string, IconName[]> = {
     'download',
     'dataMarketplaceProduct',
     'dataStack',
-    'beaker'
+    'beaker',
+    'allocation',
+    'config'
   ],
   'visualization': [
     'chartPie',
@@ -1754,7 +1762,9 @@ export const descriptionMap: Record<string, IconName[]> = {
     'crypto',
     'leadCoin',
     'leadChart',
-    'savingsBank'
+    'savingsBank',
+    'creatorCoin',
+    'distribution'
   ],
   'defi': [
     'defi'
@@ -1868,7 +1878,8 @@ export const descriptionMap: Record<string, IconName[]> = {
     'priceAlertsCheck',
     'bellCheck',
     'bellPlus',
-    'gitHubLogo'
+    'gitHubLogo',
+    'baseVerification'
   ],
   'copyedit': [
     'pencil'
@@ -2132,12 +2143,15 @@ export const descriptionMap: Record<string, IconName[]> = {
     'setPinCode',
     'laptop',
     'keyboard',
-    'telephone'
+    'telephone',
+    'disabledPhone'
   ],
   'phone': [
     'setPinCode',
     'phone',
-    'telephone'
+    'telephone',
+    'disabledPhone',
+    'disabledPhone'
   ],
   'laptop': [
     'setPinCode'
@@ -2585,7 +2599,8 @@ export const descriptionMap: Record<string, IconName[]> = {
   'clock': [
     'recurring',
     'clockOutline',
-    'clock'
+    'clock',
+    'instantUnstakingClock'
   ],
   'time': [
     'recurring',
@@ -3132,7 +3147,8 @@ export const descriptionMap: Record<string, IconName[]> = {
     'lightningBolt'
   ],
   'play': [
-    'play'
+    'play',
+    'auto'
   ],
   'continue': [
     'play'
@@ -3185,7 +3201,8 @@ export const descriptionMap: Record<string, IconName[]> = {
     'chainLink'
   ],
   'location': [
-    'pin'
+    'pin',
+    'location'
   ],
   'mark': [
     'pin',
@@ -3262,7 +3279,8 @@ export const descriptionMap: Record<string, IconName[]> = {
     'ultility'
   ],
   'block': [
-    'ultility'
+    'ultility',
+    'disabledPhone'
   ],
   'chain': [
     'ultility'
@@ -3701,7 +3719,9 @@ export const descriptionMap: Record<string, IconName[]> = {
     'sendReceive'
   ],
   'gear': [
-    'gear'
+    'gear',
+    'auto',
+    'config'
   ],
   'tool': [
     'gear',
@@ -4068,7 +4088,8 @@ export const descriptionMap: Record<string, IconName[]> = {
     'circleCross',
     'circleCheckmark',
     'cluster',
-    'mint'
+    'mint',
+    'allocation'
   ],
   'x': [
     'circleCross',
@@ -4332,13 +4353,15 @@ export const descriptionMap: Record<string, IconName[]> = {
   ],
   'conversation': [
     'discordLogo',
-    'telephone'
+    'telephone',
+    'disabledPhone'
   ],
   'lightning bolt': [
     'lightningBolt'
   ],
   'thunder': [
-    'lightningBolt'
+    'lightningBolt',
+    'instantUnstakingClock'
   ],
   'fast': [
     'lightningBolt'
@@ -4462,10 +4485,13 @@ export const descriptionMap: Record<string, IconName[]> = {
     'blockchain'
   ],
   'call': [
-    'telephone'
+    'telephone',
+    'disabledPhone',
+    'disabledPhone'
   ],
   'communicate': [
-    'telephone'
+    'telephone',
+    'disabledPhone'
   ],
   'negative': [
     'diagonalDownArrow'
@@ -4773,7 +4799,9 @@ export const descriptionMap: Record<string, IconName[]> = {
     'baseWallet',
     'baseApps',
     'baseSquare',
-    'baseTransact'
+    'baseTransact',
+    'creatorCoin',
+    'baseVerification'
   ],
   'product': [
     'commerceProduct',
@@ -5090,7 +5118,8 @@ export const descriptionMap: Record<string, IconName[]> = {
     'priceAlertsCheck',
     'bellCheck',
     'bellPlus',
-    'plusMinus'
+    'plusMinus',
+    'distribution'
   ],
   'folder': [
     'folderOpen'
@@ -5127,7 +5156,8 @@ export const descriptionMap: Record<string, IconName[]> = {
   ],
   'badge': [
     'verifiedBadge',
-    'gitHubLogo'
+    'gitHubLogo',
+    'baseVerification'
   ],
   'health': [
     'gaugeHigh',
@@ -5509,5 +5539,41 @@ export const descriptionMap: Record<string, IconName[]> = {
   ],
   'fscs': [
     'fscsProtection'
+  ],
+  'unstack': [
+    'instantUnstakingClock'
+  ],
+  'instant': [
+    'instantUnstakingClock'
+  ],
+  'auto': [
+    'auto'
+  ],
+  'creator': [
+    'creatorCoin'
+  ],
+  'allocation': [
+    'allocation'
+  ],
+  'piechart': [
+    'allocation'
+  ],
+  'Verification': [
+    'baseVerification'
+  ],
+  'distribution': [
+    'distribution'
+  ],
+  'disabled': [
+    'disabledPhone'
+  ],
+  'config': [
+    'config'
+  ],
+  'pin': [
+    'location'
+  ],
+  'map': [
+    'location'
   ]
 };

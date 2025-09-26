@@ -218,6 +218,7 @@ const versionMap: Record<SpotRectangleName, number> = {
   derivativesLoop: 1,
   leadingProtocolMorpho: 0,
   lendGraph: 0,
+  fiatInterest: 0,
 };
 
 export default versionMap;
