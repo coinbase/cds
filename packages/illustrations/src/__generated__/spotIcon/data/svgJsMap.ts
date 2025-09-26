@@ -178,6 +178,10 @@ const svgJsMap = {
     light: () => require('../svgJs/light/coinbaseOneProduct-1.js').content,
     dark: () => require('../svgJs/dark/coinbaseOneProduct-1.js').content,
   },
+  coinbaseOneProductInvestWeekly: {
+    light: () => require('../svgJs/light/coinbaseOneProductInvestWeekly-0.js').content,
+    dark: () => require('../svgJs/dark/coinbaseOneProductInvestWeekly-0.js').content,
+  },
   commerceProduct: {
     light: () => require('../svgJs/light/commerceProduct-3.js').content,
     dark: () => require('../svgJs/dark/commerceProduct-3.js').content,

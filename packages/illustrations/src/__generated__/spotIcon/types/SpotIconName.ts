@@ -47,6 +47,7 @@ export type SpotIconName =
   | 'coinbaseOneChart'
   | 'coinbaseOneEarn'
   | 'coinbaseOneProduct'
+  | 'coinbaseOneProductInvestWeekly'
   | 'commerceProduct'
   | 'contract'
   | 'creditCard'

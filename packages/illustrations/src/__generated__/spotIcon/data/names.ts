@@ -53,6 +53,7 @@ const names: SpotIconName[] = [
   'coinbaseOneChart',
   'coinbaseOneEarn',
   'coinbaseOneProduct',
+  'coinbaseOneProductInvestWeekly',
   'commerceProduct',
   'contract',
   'creditCard',
