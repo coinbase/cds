@@ -4,10 +4,7 @@ import React, { memo, useCallback, useEffect, useRef } from 'react';
 import type { SVGProps } from 'react';
 import { useValueChanges } from '@coinbase/cds-common/hooks/useValueChanges';
 import type { Rect, SharedProps } from '@coinbase/cds-common/types';
-import {
-  useChartContext,
-  useChartDrawingAreaContext,
-} from '@coinbase/cds-common/visualizations/charts';
+import { useChartContext } from '@coinbase/cds-common/visualizations/charts';
 import { generateRandomId } from '@coinbase/cds-utils';
 import { interpolatePath } from 'd3-interpolate-path';
 import { select } from 'd3-selection';
@@ -48,8 +45,7 @@ export const Path = memo<PathProps>(
     const pathRef = useRef<SVGPathElement>(null);
     const clipPathIdRef = useRef<string>(generateRandomId());
     const context = useChartContext();
-    const { drawingArea: contextRect } = useChartDrawingAreaContext();
-    const rect = clipRect ?? contextRect;
+    const rect = clipRect ?? context.drawingArea;
     const animate = animateProp ?? context.animate;
 
     // todo: do we need useValueChanges?

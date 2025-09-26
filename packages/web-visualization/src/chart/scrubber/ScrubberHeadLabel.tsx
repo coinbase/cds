@@ -1,9 +1,6 @@
 import { memo, useCallback, useState } from 'react';
 import type { Rect } from '@coinbase/cds-common/types';
-import {
-  useChartContext,
-  useChartDrawingAreaContext,
-} from '@coinbase/cds-common/visualizations/charts';
+import { useChartContext } from '@coinbase/cds-common/visualizations/charts';
 
 import { ChartText, type ChartTextProps } from '../text';
 
@@ -13,19 +10,6 @@ export type ScrubberHeadLabelProps = ChartTextProps & {
    * @default 'auto' - automatically chooses based on available space
    */
   preferredSide?: 'left' | 'right' | 'auto';
-  /**
-   * Opacity of the entire label.
-   * @default 1
-   */
-  opacity?: number;
-  /**
-   * Custom styles to apply to the label
-   */
-  style?: React.CSSProperties;
-  /**
-   * Custom className to apply to the label
-   */
-  className?: string;
 };
 
 /**
@@ -42,13 +26,11 @@ export const ScrubberHeadLabel = memo<ScrubberHeadLabelProps>(
     onDimensionsChange,
     elevation = background !== undefined ? 1 : undefined,
     borderRadius = background !== undefined ? 200 : undefined,
-    style,
-    className,
     testID,
     dx = 0,
     ...chartTextProps
   }) => {
-    const { drawingArea: chartRect } = useChartDrawingAreaContext();
+    const { drawingArea: chartRect } = useChartContext();
 
     // Track current side for auto placement
     const [currentSide, setCurrentSide] = useState<'left' | 'right'>('right');
@@ -77,21 +59,20 @@ export const ScrubberHeadLabel = memo<ScrubberHeadLabelProps>(
     );
 
     return (
-      <g className={className} data-testid={testID} opacity={opacity} style={style}>
-        <ChartText
-          background={background}
-          borderRadius={borderRadius}
-          color={color}
-          dominantBaseline="central"
-          dx={spacing}
-          elevation={elevation}
-          font="label1"
-          onDimensionsChange={handleDimensionsChange}
-          padding={padding}
-          textAnchor={side === 'right' ? 'start' : 'end'}
-          {...chartTextProps}
-        />
-      </g>
+      <ChartText
+        background={background}
+        borderRadius={borderRadius}
+        color={color}
+        dominantBaseline="central"
+        dx={spacing}
+        elevation={elevation}
+        font="label1"
+        onDimensionsChange={handleDimensionsChange}
+        padding={padding}
+        testID={testID}
+        textAnchor={side === 'right' ? 'start' : 'end'}
+        {...chartTextProps}
+      />
     );
   },
 );

@@ -980,7 +980,7 @@ function AvailabilityChart() {
   }, [scrubIndex, availabilityEvents]);
 
   const ChartDefs = memo(({ yellowThresholdPercentage = 85, greenThresholdPercentage = 90 }) => {
-    const { drawingArea } = useChartDrawingAreaContext();
+    const { drawingArea } = useChartContext();
     const { height, series, getYScale, getYAxis } = useChartContext();
     const yScale = getYScale?.();
     const yAxis = getYAxis?.();

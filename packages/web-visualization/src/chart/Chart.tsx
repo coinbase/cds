@@ -5,8 +5,6 @@ import {
   type AxisConfigProps,
   ChartContext,
   type ChartContextValue,
-  ChartDrawingAreaContext,
-  type ChartDrawingAreaContextValue,
   type ChartPadding,
   type ChartScaleFunction,
   defaultAxisId,
@@ -450,33 +448,6 @@ export const Chart = memo(
         [stackedDataMap],
       );
 
-      const contextValue: ChartContextValue = useMemo(
-        () => ({
-          series: series ?? [],
-          getSeries,
-          getSeriesData: getStackedSeriesData,
-          animate,
-          width: chartWidth,
-          height: chartHeight,
-          getXAxis,
-          getYAxis,
-          getXScale,
-          getYScale,
-        }),
-        [
-          series,
-          getSeries,
-          getStackedSeriesData,
-          animate,
-          chartWidth,
-          chartHeight,
-          getXAxis,
-          getYAxis,
-          getXScale,
-          getYScale,
-        ],
-      );
-
       const registerAxis = useCallback(
         (id: string, type: 'x' | 'y', position: 'start' | 'end', size: number) => {
           setRenderedAxes((prev) => {
@@ -565,47 +536,70 @@ export const Chart = memo(
         [renderedAxes, chartRect, userPadding],
       );
 
-      const chartDrawingAreaContextValue: ChartDrawingAreaContextValue = useMemo(
+      const contextValue: ChartContextValue = useMemo(
         () => ({
+          series: series ?? [],
+          getSeries,
+          getSeriesData: getStackedSeriesData,
+          animate,
+          width: chartWidth,
+          height: chartHeight,
+          getXAxis,
+          getYAxis,
+          getXScale,
+          getYScale,
           drawingArea: chartRect,
           registerAxis,
           unregisterAxis,
           getAxisBounds,
         }),
-        [chartRect, registerAxis, unregisterAxis, getAxisBounds],
+        [
+          series,
+          getSeries,
+          getStackedSeriesData,
+          animate,
+          chartWidth,
+          chartHeight,
+          getXAxis,
+          getYAxis,
+          getXScale,
+          getYScale,
+          chartRect,
+          registerAxis,
+          unregisterAxis,
+          getAxisBounds,
+        ],
       );
 
       return (
-        <ChartDrawingAreaContext.Provider value={chartDrawingAreaContextValue}>
-          <ChartContext.Provider value={contextValue}>
-            <ScrubberContext.Provider value={scrubberContextValue}>
-              <Box
-                ref={(node) => {
-                  // Handle both the internal observe ref and the forwarded ref
-                  observe(node as unknown as HTMLElement);
-                  if (ref) {
-                    if (typeof ref === 'function') {
-                      ref(node as unknown as SVGSVGElement);
-                    } else {
-                      ref.current = node as unknown as SVGSVGElement;
-                    }
+        <ChartContext.Provider value={contextValue}>
+          <ScrubberContext.Provider value={scrubberContextValue}>
+            <Box
+              ref={(node) => {
+                // Handle both the internal observe ref and the forwarded ref
+                observe(node as unknown as HTMLElement);
+                if (ref) {
+                  if (typeof ref === 'function') {
+                    ref(node as unknown as SVGSVGElement);
+                  } else {
+                    ref.current = node as unknown as SVGSVGElement;
                   }
-                }}
-                as="svg"
-                className={cx(enableScrubbing ? focusStylesCss : undefined, className)}
-                height={height}
-                onKeyDown={enableScrubbing ? handleKeyDown : undefined}
-                onMouseLeave={enableScrubbing ? handleMouseLeave : undefined}
-                onMouseMove={enableScrubbing ? handleMouseMove : undefined}
-                tabIndex={enableScrubbing ? 0 : undefined}
-                width={width}
-                {...props}
-              >
-                {children}
-              </Box>
-            </ScrubberContext.Provider>
-          </ChartContext.Provider>
-        </ChartDrawingAreaContext.Provider>
+                }
+              }}
+              as="svg"
+              className={cx(enableScrubbing ? focusStylesCss : undefined, className)}
+              height={height}
+              onKeyDown={enableScrubbing ? handleKeyDown : undefined}
+              onMouseLeave={enableScrubbing ? handleMouseLeave : undefined}
+              onMouseMove={enableScrubbing ? handleMouseMove : undefined}
+              tabIndex={enableScrubbing ? 0 : undefined}
+              width={width}
+              {...props}
+            >
+              {children}
+            </Box>
+          </ScrubberContext.Provider>
+        </ChartContext.Provider>
       );
     },
   ),

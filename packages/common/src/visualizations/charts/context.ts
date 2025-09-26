@@ -54,26 +54,6 @@ export type ChartContextValue = {
    * @param id - The axis ID. Defaults to defaultAxisId.
    */
   getYScale: (id?: string) => ChartScaleFunction | undefined;
-};
-
-export const ChartContext = createContext<ChartContextValue | undefined>(undefined);
-
-export const useChartContext = (): ChartContextValue => {
-  const context = useContext(ChartContext);
-  if (!context) {
-    throw new Error('useChartContext must be used within a Chart component');
-  }
-  return context;
-};
-
-export type RegisteredAxis = {
-  id: string;
-  type: 'x' | 'y';
-  position: 'start' | 'end';
-  size: number;
-};
-
-export type ChartDrawingAreaContextValue = {
   /**
    * Drawing area of the chart.
    */
@@ -92,16 +72,21 @@ export type ChartDrawingAreaContextValue = {
   getAxisBounds: (id: string) => Rect | undefined;
 };
 
-export const ChartDrawingAreaContext = createContext<ChartDrawingAreaContextValue | undefined>(
-  undefined,
-);
+export const ChartContext = createContext<ChartContextValue | undefined>(undefined);
 
-export const useChartDrawingAreaContext = (): ChartDrawingAreaContextValue => {
-  const context = useContext(ChartDrawingAreaContext);
+export const useChartContext = (): ChartContextValue => {
+  const context = useContext(ChartContext);
   if (!context) {
-    throw new Error('useChartDrawingAreaContext must be used within a Chart component');
+    throw new Error('useChartContext must be used within a Chart component');
   }
   return context;
+};
+
+export type RegisteredAxis = {
+  id: string;
+  type: 'x' | 'y';
+  position: 'start' | 'end';
+  size: number;
 };
 
 // Chart highlighting context

@@ -6,7 +6,7 @@ import {
   getPadding,
   useChartContext,
 } from '@coinbase/cds-common/visualizations/charts';
-import { useTheme } from '@coinbase/cds-web';
+import { cx, useTheme } from '@coinbase/cds-web';
 import { Box, type BoxProps } from '@coinbase/cds-web/layout';
 import { Text } from '@coinbase/cds-web/typography';
 import { m as motion } from 'framer-motion';
@@ -25,7 +25,7 @@ export type ChartTextChildren =
   | ValidChartTextChildElements[];
 
 export type ChartTextProps = SharedProps &
-  Pick<BoxProps<'g'>, 'font' | 'fontFamily' | 'fontSize' | 'fontWeight'> &
+  Pick<BoxProps<'g'>, 'font' | 'fontFamily' | 'fontSize' | 'fontWeight' | 'opacity'> &
   Pick<React.SVGProps<SVGTextElement>, 'textAnchor' | 'dominantBaseline'> & {
     /**
      * The text color.
@@ -33,7 +33,7 @@ export type ChartTextProps = SharedProps &
      */
     color?: string;
     /**
-     * The background color of the text's container element.
+     * The background color of the text's background rectangle.
      * @default 'transparent'
      */
     background?: string;
@@ -85,13 +85,17 @@ export type ChartTextProps = SharedProps &
      * Only affects the background, text position remains unchanged.
      */
     padding?: number | ChartPadding;
+    style?: React.CSSProperties;
     styles?: {
+      root?: React.CSSProperties;
       text?: React.CSSProperties;
-      rect?: React.CSSProperties;
+      backgroundRect?: React.CSSProperties;
     };
+    className?: string;
     classNames?: {
+      root?: string;
       text?: string;
-      rect?: string;
+      backgroundRect?: string;
     };
     // override box responsive style
     borderRadius?: ThemeVars.BorderRadius;
@@ -108,6 +112,7 @@ export const ChartText = memo<ChartTextProps>(
     dy,
     disableRepositioning = false,
     bounds,
+    opacity,
     testID,
     font = 'label2',
     fontFamily,
@@ -119,7 +124,9 @@ export const ChartText = memo<ChartTextProps>(
     borderRadius,
     padding: paddingInput,
     onDimensionsChange,
+    style,
     styles,
+    className,
     classNames,
   }) => {
     const theme = useTheme();
@@ -219,10 +226,21 @@ export const ChartText = memo<ChartTextProps>(
       }
     }, [textAnchor, dominantBaseline, dx, dy, x, y]);
 
+    const containerStyle = useMemo(
+      () => ({
+        ...style,
+        ...styles?.root,
+        transform: `translate(${overflowAmount.x}px, ${overflowAmount.y}px)`,
+      }),
+      [overflowAmount.x, overflowAmount.y, style, styles?.root],
+    );
+
     return (
       <Box
         as="g"
-        style={{ transform: `translate(${overflowAmount.x}px, ${overflowAmount.y}px)` }}
+        className={cx(className, classNames?.root)}
+        opacity={opacity}
+        style={containerStyle}
         testID={testID}
       >
         <motion.g
@@ -231,7 +249,7 @@ export const ChartText = memo<ChartTextProps>(
         >
           <Box
             as="rect"
-            className={classNames?.rect}
+            className={classNames?.backgroundRect}
             fill={background}
             filter={
               elevation && elevation > 0
@@ -241,7 +259,7 @@ export const ChartText = memo<ChartTextProps>(
             height={backgroundRectDimensions?.height}
             rx={borderRadius ? theme.borderRadius[borderRadius] : undefined}
             ry={borderRadius ? theme.borderRadius[borderRadius] : undefined}
-            style={styles?.rect}
+            style={styles?.backgroundRect}
             width={backgroundRectDimensions?.width}
             x={backgroundRectDimensions?.x}
             y={backgroundRectDimensions?.y}

@@ -5,7 +5,6 @@ import {
   getAxisTicksData,
   isCategoricalScale,
   useChartContext,
-  useChartDrawingAreaContext,
 } from '@coinbase/cds-common/visualizations/charts';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 
@@ -52,8 +51,8 @@ export const YAxis = memo<YAxisProps>(
     const theme = useTheme();
     // todo: probably switch to our own id generator, use id seems to be for accessibility
     const registrationId = useId();
-    const { animate, getYScale, getYAxis } = useChartContext();
-    const { registerAxis, unregisterAxis, getAxisBounds } = useChartDrawingAreaContext();
+    const { animate, getYScale, getYAxis, registerAxis, unregisterAxis, getAxisBounds } =
+      useChartContext();
 
     const yScale = getYScale?.(axisId);
     const yAxis = getYAxis?.(axisId);

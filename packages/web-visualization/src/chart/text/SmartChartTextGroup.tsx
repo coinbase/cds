@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useMemo, useState } from 'react';
+import { memo, useEffect, useMemo, useState } from 'react';
 import type { ThemeVars } from '@coinbase/cds-common';
 import type { Rect } from '@coinbase/cds-common/types';
 import { useTheme } from '@coinbase/cds-web';
@@ -247,9 +247,9 @@ export const SmartChartTextGroup = memo<SmartChartTextGroupProps>(
               ...(labelData.chartTextProps?.styles?.text ?? {}),
               ...(!isVisible ? { visibility: 'hidden', opacity: 0, pointerEvents: 'none' } : {}),
             },
-            rect: {
-              ...(restChartTextProps?.styles?.rect ?? {}),
-              ...(labelData.chartTextProps?.styles?.rect ?? {}),
+            backgroundRect: {
+              ...(restChartTextProps?.styles?.backgroundRect ?? {}),
+              ...(labelData.chartTextProps?.styles?.backgroundRect ?? {}),
               ...(!isVisible ? { display: 'none' } : {}),
             },
           };

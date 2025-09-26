@@ -1,11 +1,7 @@
 import React, { memo, useMemo, useRef } from 'react';
 import { ClipPath, Defs, G, Rect } from 'react-native-svg';
 import type { ThemeVars } from '@coinbase/cds-common';
-import {
-  defaultAxisId,
-  useChartContext,
-  useChartDrawingAreaContext,
-} from '@coinbase/cds-common/visualizations/charts';
+import { defaultAxisId, useChartContext } from '@coinbase/cds-common/visualizations/charts';
 import { generateRandomId } from '@coinbase/cds-utils';
 
 import type { BarComponent, BarProps } from './Bar';
@@ -100,8 +96,7 @@ export const BarPlot = memo<BarPlotProps>(
     barMinSize,
     stackMinSize,
   }) => {
-    const { series: allSeries } = useChartContext();
-    const { drawingArea } = useChartDrawingAreaContext();
+    const { series: allSeries, drawingArea } = useChartContext();
     const clipPathId = useRef(generateRandomId()).current;
 
     const targetSeries = useMemo(() => {

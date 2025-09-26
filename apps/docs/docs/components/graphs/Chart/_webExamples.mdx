@@ -167,7 +167,7 @@ You can also create your own type of cartesian chart by using `getSeriesData`, `
 ```jsx live
 function EarningsHistory() {
   const CirclePlot = memo(({ seriesId, opacity = 1 }: { seriesId: string, opacity?: number }) => {
-    const { drawingArea } = useChartDrawingAreaContext();
+    const { drawingArea } = useChartContext();
     const { getSeries, getSeriesData, getXScale, getYScale } = useChartContext();
     const series = getSeries(seriesId);
     const data = getSeriesData(seriesId);

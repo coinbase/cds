@@ -1,10 +1,7 @@
 import React, { memo, useMemo } from 'react';
 import type { Rect } from '@coinbase/cds-common/types';
 import { type ChartPathCurveType, getAreaPath } from '@coinbase/cds-common/visualizations/charts';
-import {
-  useChartContext,
-  useChartDrawingAreaContext,
-} from '@coinbase/cds-common/visualizations/charts';
+import { useChartContext } from '@coinbase/cds-common/visualizations/charts';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 
 import { DottedArea } from './DottedArea';
@@ -89,8 +86,8 @@ export const Area = memo<AreaProps>(
     baseline,
   }) => {
     const theme = useTheme();
-    const { getSeries, getSeriesData, getXScale, getYScale, getXAxis } = useChartContext();
-    const { drawingArea } = useChartDrawingAreaContext();
+    const { getSeries, getSeriesData, getXScale, getYScale, getXAxis, drawingArea } =
+      useChartContext();
 
     // Get sourceData from series (using stacked data if available)
     const matchedSeries = useMemo(() => getSeries(seriesId), [seriesId, getSeries]);

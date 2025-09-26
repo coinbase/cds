@@ -1,11 +1,7 @@
 import { memo, useMemo } from 'react';
 import { G } from 'react-native-svg';
 import type { SharedProps } from '@coinbase/cds-common/types';
-import {
-  getPointOnScale,
-  useChartContext,
-  useChartDrawingAreaContext,
-} from '@coinbase/cds-common/visualizations/charts';
+import { getPointOnScale, useChartContext } from '@coinbase/cds-common/visualizations/charts';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 
 import { ChartText } from '../text';
@@ -31,7 +27,6 @@ export type ReferenceLineLabelConfig = Pick<
   | 'borderRadius'
   | 'disableRepositioning'
   | 'bounds'
-  | 'styles'
   | 'alignmentBaseline'
   | 'textAnchor'
 >;
@@ -126,8 +121,7 @@ export const ReferenceLine = memo<ReferenceLineProps>(
     labelConfig,
   }) => {
     const theme = useTheme();
-    const { getXScale, getYScale } = useChartContext();
-    const { drawingArea } = useChartDrawingAreaContext();
+    const { getXScale, getYScale, drawingArea } = useChartContext();
 
     const effectiveLineStroke = stroke ?? theme.color.bgLine;
 

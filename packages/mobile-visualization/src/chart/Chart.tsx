@@ -9,8 +9,6 @@ import {
   type AxisConfigProps,
   ChartContext,
   type ChartContextValue,
-  ChartDrawingAreaContext,
-  type ChartDrawingAreaContextValue,
   type ChartPadding,
   type ChartScaleFunction,
   defaultAxisId,
@@ -383,33 +381,6 @@ export const Chart = memo(
         [stackedDataMap],
       );
 
-      const contextValue: ChartContextValue = useMemo(
-        () => ({
-          series: series ?? [],
-          getSeries,
-          getSeriesData: getStackedSeriesData,
-          animate,
-          width: chartWidth,
-          height: chartHeight,
-          getXAxis,
-          getYAxis,
-          getXScale,
-          getYScale,
-        }),
-        [
-          series,
-          getSeries,
-          getStackedSeriesData,
-          animate,
-          chartWidth,
-          chartHeight,
-          getXAxis,
-          getYAxis,
-          getXScale,
-          getYScale,
-        ],
-      );
-
       const registerAxis = useCallback(
         (id: string, type: 'x' | 'y', position: 'start' | 'end', size: number) => {
           setRenderedAxes((prev) => {
@@ -498,14 +469,39 @@ export const Chart = memo(
         [renderedAxes, chartRect, userPadding],
       );
 
-      const chartDrawingAreaContextValue: ChartDrawingAreaContextValue = useMemo(
+      const contextValue: ChartContextValue = useMemo(
         () => ({
+          series: series ?? [],
+          getSeries,
+          getSeriesData: getStackedSeriesData,
+          animate,
+          width: chartWidth,
+          height: chartHeight,
+          getXAxis,
+          getYAxis,
+          getXScale,
+          getYScale,
           drawingArea: chartRect,
           registerAxis,
           unregisterAxis,
           getAxisBounds,
         }),
-        [chartRect, registerAxis, unregisterAxis, getAxisBounds], // These functions are stable
+        [
+          series,
+          getSeries,
+          getStackedSeriesData,
+          animate,
+          chartWidth,
+          chartHeight,
+          getXAxis,
+          getYAxis,
+          getXScale,
+          getYScale,
+          chartRect,
+          registerAxis,
+          unregisterAxis,
+          getAxisBounds,
+        ],
       );
 
       const panGesture = useMemo(() => {
@@ -550,17 +546,15 @@ export const Chart = memo(
       );
 
       return (
-        <ChartDrawingAreaContext.Provider value={chartDrawingAreaContextValue}>
-          <ChartContext.Provider value={contextValue}>
-            <ScrubberContext.Provider value={scrubberContextValue}>
-              {panGesture ? (
-                <GestureDetector gesture={panGesture}>{chartContent}</GestureDetector>
-              ) : (
-                chartContent
-              )}
-            </ScrubberContext.Provider>
-          </ChartContext.Provider>
-        </ChartDrawingAreaContext.Provider>
+        <ChartContext.Provider value={contextValue}>
+          <ScrubberContext.Provider value={scrubberContextValue}>
+            {panGesture ? (
+              <GestureDetector gesture={panGesture}>{chartContent}</GestureDetector>
+            ) : (
+              chartContent
+            )}
+          </ScrubberContext.Provider>
+        </ChartContext.Provider>
       );
     },
   ),

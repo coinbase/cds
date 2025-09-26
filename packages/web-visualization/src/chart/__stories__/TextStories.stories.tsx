@@ -316,7 +316,7 @@ export const InteractiveChartText = () => {
             padding={chartTextPadding}
             styles={{
               text: hideWithDisplayNone ? { display: 'none' } : undefined,
-              rect: hideWithDisplayNone ? { display: 'none' } : undefined,
+              backgroundRect: hideWithDisplayNone ? { display: 'none' } : undefined,
             }}
             testID="test-text"
             textAnchor={textAnchor}

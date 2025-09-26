@@ -1,10 +1,6 @@
 import React, { memo, useMemo } from 'react';
 import type { ThemeVars } from '@coinbase/cds-common';
-import {
-  defaultAxisId,
-  useChartContext,
-  useChartDrawingAreaContext,
-} from '@coinbase/cds-common/visualizations/charts';
+import { defaultAxisId, useChartContext } from '@coinbase/cds-common/visualizations/charts';
 import { getBarSizeAdjustment } from '@coinbase/cds-common/visualizations/charts/bar';
 import { isCategoricalScale } from '@coinbase/cds-common/visualizations/charts/scale';
 
@@ -101,8 +97,7 @@ export const BarStackGroup = memo<BarStackGroupProps>(
     barPadding = 0.1,
     ...props
   }) => {
-    const { getSeriesData, getXScale, getYScale } = useChartContext();
-    const { drawingArea } = useChartDrawingAreaContext();
+    const { getSeriesData, getXScale, getYScale, drawingArea } = useChartContext();
 
     const xScale = getXScale(xAxisId);
     const yScale = getYScale(yAxisId);

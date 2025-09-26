@@ -3,10 +3,7 @@ import type { View } from 'react-native';
 import { Circle, type CircleProps, G, Path, Rect } from 'react-native-svg';
 import { assets } from '@coinbase/cds-common/internal/data/assets';
 import { sparklineInteractiveData } from '@coinbase/cds-common/internal/visualizations/SparklineInteractiveData';
-import {
-  useChartContext,
-  useChartDrawingAreaContext,
-} from '@coinbase/cds-common/visualizations/charts';
+import { useChartContext } from '@coinbase/cds-common/visualizations/charts';
 import { useTheme } from '@coinbase/cds-mobile';
 import { Example, ExampleScreen } from '@coinbase/cds-mobile/examples/ExampleScreen';
 
@@ -83,8 +80,7 @@ const DraggablePriceTarget = () => {
         })}`;
       }, []);
 
-      const { drawingArea } = useChartDrawingAreaContext();
-      const { getYScale } = useChartContext();
+      const { getYScale, drawingArea } = useChartContext();
       const [amount, setAmount] = useState(startAmount);
       const [isDragging, setIsDragging] = useState(false);
       const [textDimensions, setTextDimensions] = useState({ width: 0, height: 0 });

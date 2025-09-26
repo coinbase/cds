@@ -1,10 +1,7 @@
 import { memo, type RefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { assets } from '@coinbase/cds-common/internal/data/assets';
 import { sparklineInteractiveData } from '@coinbase/cds-common/internal/visualizations/SparklineInteractiveData';
-import {
-  useChartContext,
-  useChartDrawingAreaContext,
-} from '@coinbase/cds-common/visualizations/charts';
+import { useChartContext } from '@coinbase/cds-common/visualizations/charts';
 import { useTheme } from '@coinbase/cds-web';
 import { VStack } from '@coinbase/cds-web/layout';
 import { TextHeadline } from '@coinbase/cds-web/typography';
@@ -98,8 +95,7 @@ const DraggableReferenceLine = memo(
       })}`;
     }, []);
 
-    const { drawingArea } = useChartDrawingAreaContext();
-    const { getYScale } = useChartContext();
+    const { getYScale, drawingArea } = useChartContext();
     const [amount, setAmount] = useState(startAmount);
     const [isDragging, setIsDragging] = useState(false);
     const [textDimensions, setTextDimensions] = useState({ width: 0, height: 0 });

@@ -97,7 +97,6 @@ export type PointLabelConfig = Pick<
   | 'borderRadius'
   | 'disableRepositioning'
   | 'bounds'
-  | 'styles'
   | 'alignmentBaseline'
   | 'textAnchor'
 > & {

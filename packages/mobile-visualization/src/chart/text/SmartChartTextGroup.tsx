@@ -242,21 +242,10 @@ export const SmartChartTextGroup = memo<SmartChartTextGroupProps>(
       <G>
         {labelsWithKeys.map((labelData) => {
           const isVisible = !visibleKeySet || visibleKeySet.has(labelData.key);
-          const mergedStyles: ChartTextProps['styles'] = {
-            text: {
-              ...(restChartTextProps?.styles?.text ?? {}),
-              ...(labelData.chartTextProps?.styles?.text ?? {}),
-            },
-            rect: {
-              ...(restChartTextProps?.styles?.rect ?? {}),
-              ...(labelData.chartTextProps?.styles?.rect ?? {}),
-            },
-          };
           return (
             <ChartText
               key={labelData.key}
               opacity={isVisible ? 1 : 0}
-              styles={mergedStyles}
               x={labelData.x}
               y={labelData.y}
               {...restChartTextProps}

@@ -1,7 +1,6 @@
 import { memo, useCallback, useState } from 'react';
-import { G } from 'react-native-svg';
 import type { Rect } from '@coinbase/cds-common/types';
-import { useChartDrawingAreaContext } from '@coinbase/cds-common/visualizations/charts';
+import { useChartContext } from '@coinbase/cds-common/visualizations/charts';
 import { useTheme } from '@coinbase/cds-mobile';
 
 import { ChartText, type ChartTextProps } from '../text';
@@ -12,15 +11,6 @@ export type ScrubberHeadLabelProps = ChartTextProps & {
    * @default 'auto' - automatically chooses based on available space
    */
   preferredSide?: 'left' | 'right' | 'auto';
-  /**
-   * Opacity of the entire label.
-   * @default 1
-   */
-  opacity?: number;
-  /**
-   * Custom styles to apply to the label
-   */
-  style?: React.CSSProperties;
 };
 
 /**
@@ -32,25 +22,20 @@ export const ScrubberHeadLabel = memo<ScrubberHeadLabelProps>(
     preferredSide = 'auto',
     background,
     color,
-    opacity = 1,
     padding = 12,
     onDimensionsChange,
-    elevation,
-    borderRadius,
-    style,
+    elevation = background !== undefined ? 1 : undefined,
+    borderRadius = background !== undefined ? 200 : undefined,
     testID,
     dx = 0,
     ...chartTextProps
   }) => {
     const theme = useTheme();
-    const { drawingArea: chartRect } = useChartDrawingAreaContext();
+    const { drawingArea: chartRect } = useChartContext();
 
     // Use theme colors with defaults
     const resolvedBackground = background ?? theme.color.bg;
     const resolvedColor = color ?? theme.color.fgPrimary;
-    const resolvedElevation = elevation ?? (resolvedBackground !== undefined ? 1 : undefined);
-    const resolvedBorderRadius =
-      borderRadius ?? (resolvedBackground !== undefined ? 200 : undefined);
 
     // Track current side for auto placement
     const [currentSide, setCurrentSide] = useState<'left' | 'right'>('right');
@@ -79,20 +64,19 @@ export const ScrubberHeadLabel = memo<ScrubberHeadLabelProps>(
     );
 
     return (
-      <G data-testid={testID} opacity={opacity} style={style}>
-        <ChartText
-          alignmentBaseline="central"
-          background={resolvedBackground}
-          borderRadius={resolvedBorderRadius}
-          color={resolvedColor}
-          dx={spacing}
-          elevation={resolvedElevation}
-          onDimensionsChange={handleDimensionsChange}
-          padding={padding}
-          textAnchor={side === 'right' ? 'start' : 'end'}
-          {...chartTextProps}
-        />
-      </G>
+      <ChartText
+        alignmentBaseline="central"
+        background={resolvedBackground}
+        borderRadius={borderRadius}
+        color={resolvedColor}
+        dx={spacing}
+        elevation={elevation}
+        onDimensionsChange={handleDimensionsChange}
+        padding={padding}
+        testID={testID}
+        textAnchor={side === 'right' ? 'start' : 'end'}
+        {...chartTextProps}
+      />
     );
   },
 );

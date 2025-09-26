@@ -1,8 +1,6 @@
 import React, { memo, useEffect, useMemo, useRef, useState } from 'react';
 import {
-  Defs,
-  FeDropShadow,
-  Filter,
+  // Defs,
   G,
   Rect as SvgRect,
   Text,
@@ -16,7 +14,7 @@ import { useLayout } from '@coinbase/cds-mobile/hooks/useLayout';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 
 // Module-level counter for generating stable unique IDs
-let filterIdCounter = 0;
+// let filterIdCounter = 0;
 
 // Define the valid SVG children for the <text> element.
 type ValidChartTextChildElements =
@@ -93,10 +91,6 @@ export type ChartTextProps = SharedProps &
      * Only affects the background, text position remains unchanged.
      */
     padding?: number | ChartPadding;
-    styles?: {
-      text?: React.SVGProps<SVGTextElement>;
-      rect?: React.SVGProps<SVGRectElement>;
-    };
     // override box responsive style
     borderRadius?: ThemeVars.BorderRadius;
     /**
@@ -128,7 +122,6 @@ export const ChartText = memo<ChartTextProps>(
     borderRadius,
     padding: paddingInput,
     onDimensionsChange,
-    styles,
     opacity = 1,
     filter,
   }) => {
@@ -232,37 +225,39 @@ export const ChartText = memo<ChartTextProps>(
     }, [reportedRect, onDimensionsChange]);
 
     // Generate stable filter ID for this instance
-    const filterId = useMemo(() => {
-      if (!elevation && !filter) return undefined;
-      if (filter) return filter; // Use custom filter if provided
+    // TODO: React Native SVG doesn't support Filter/FeDropShadow - commenting out for now
+    // const filterId = useMemo(() => {
+    //   if (!elevation && !filter) return undefined;
+    //   if (filter) return filter; // Use custom filter if provided
 
-      // Generate a stable ID only once for this component instance
-      if (!filterIdRef.current) {
-        filterIdRef.current = `chart-text-shadow-${++filterIdCounter}`;
-      }
-      return filterIdRef.current;
-    }, [elevation, filter]);
+    //   // Generate a stable ID only once for this component instance
+    //   if (!filterIdRef.current) {
+    //     filterIdRef.current = `chart-text-shadow-${++filterIdCounter}`;
+    //   }
+    //   return filterIdRef.current;
+    // }, [elevation, filter]);
 
-    // Calculate shadow properties based on elevation
-    const shadowProps = useMemo(() => {
-      if (!elevation || filter) return null; // Skip if using custom filter
+    // // Calculate shadow properties based on elevation
+    // const shadowProps = useMemo(() => {
+    //   if (!elevation || filter) return null; // Skip if using custom filter
 
-      // Map elevation levels to shadow properties
-      const shadowMap = {
-        1: { dx: 0, dy: 1, stdDeviation: 2, floodOpacity: 0.1 },
-        2: { dx: 0, dy: 2, stdDeviation: 3, floodOpacity: 0.12 },
-        3: { dx: 0, dy: 3, stdDeviation: 4, floodOpacity: 0.14 },
-        4: { dx: 0, dy: 4, stdDeviation: 5, floodOpacity: 0.16 },
-        5: { dx: 0, dy: 5, stdDeviation: 6, floodOpacity: 0.18 },
-      };
+    //   // Map elevation levels to shadow properties
+    //   const shadowMap = {
+    //     1: { dx: 0, dy: 1, stdDeviation: 2, floodOpacity: 0.1 },
+    //     2: { dx: 0, dy: 2, stdDeviation: 3, floodOpacity: 0.12 },
+    //     3: { dx: 0, dy: 3, stdDeviation: 4, floodOpacity: 0.14 },
+    //     4: { dx: 0, dy: 4, stdDeviation: 5, floodOpacity: 0.16 },
+    //     5: { dx: 0, dy: 5, stdDeviation: 6, floodOpacity: 0.18 },
+    //   };
 
-      return shadowMap[elevation as keyof typeof shadowMap] || shadowMap[1];
-    }, [elevation, filter]);
+    //   return shadowMap[elevation as keyof typeof shadowMap] || shadowMap[1];
+    // }, [elevation, filter]);
 
     return (
       <G opacity={isDimensionsReady ? opacity : 0} testID={testID}>
         {/* Define filter for drop shadow if elevation is provided */}
-        {filterId && shadowProps && (
+        {/* TODO: React Native SVG doesn't support Filter/FeDropShadow - commenting out for now */}
+        {/* {filterId && shadowProps && (
           <Defs>
             <Filter id={filterId}>
               <FeDropShadow
@@ -274,17 +269,18 @@ export const ChartText = memo<ChartTextProps>(
               />
             </Filter>
           </Defs>
-        )}
+        )} */}
         {backgroundRectDimensions && effectiveBackground !== 'transparent' && (
           <SvgRect
             fill={effectiveBackground}
-            filter={filterId ? `url(#${filterId})` : undefined}
             height={backgroundRectDimensions.height}
             rx={borderRadius ? theme.borderRadius[borderRadius] : undefined}
             ry={borderRadius ? theme.borderRadius[borderRadius] : undefined}
             width={backgroundRectDimensions.width}
             x={backgroundRectDimensions.x + overflowAmount.x}
             y={backgroundRectDimensions.y + overflowAmount.y}
+            // TODO: Filter not supported in React Native SVG
+            // {...(filterId ? { filter: `url(#${filterId})` } : {})}
           />
         )}
         <G transform={`translate(${overflowAmount.x}, ${overflowAmount.y})`}>
