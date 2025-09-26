@@ -462,6 +462,7 @@ const versionMap: Record<PictogramName, number> = {
   idBlock: 0,
   idError: 0,
   instantUnstakingClock: 0,
+  coinbaseOneProductInvestWeekly: 0,
 };
 
 export default versionMap;

@@ -370,6 +370,10 @@ const svgJsMap = {
     light: () => require('../svgJs/light/faceId-1.js').content,
     dark: () => require('../svgJs/dark/faceId-1.js').content,
   },
+  fiatInterest: {
+    light: () => require('../svgJs/light/fiatInterest-0.js').content,
+    dark: () => require('../svgJs/dark/fiatInterest-0.js').content,
+  },
   fileYourCryptoTaxes: {
     light: () => require('../svgJs/light/fileYourCryptoTaxes-3.js').content,
     dark: () => require('../svgJs/dark/fileYourCryptoTaxes-3.js').content,

@@ -95,6 +95,7 @@ export type SpotRectangleName =
   | 'ethWrappedStakingRewards'
   | 'exploreDecentralizedApps'
   | 'faceId'
+  | 'fiatInterest'
   | 'fileYourCryptoTaxes'
   | 'fileYourCryptoTaxesCheck'
   | 'focusLimitOrders'
