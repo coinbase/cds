@@ -11,6 +11,7 @@ export const InputChip = memo(
       value,
       accessibilityLabel = typeof value === 'string' ? `Remove ${value}` : 'Remove option',
       testID = 'input-chip',
+      invertColorScheme = true,
       ...props
     }: InputChipProps,
     ref: React.ForwardedRef<HTMLButtonElement>,
@@ -29,6 +30,7 @@ export const InputChip = memo(
             testID={testID ? `${testID}-close-icon` : 'input-chip-close-icon'}
           />
         }
+        invertColorScheme={invertColorScheme}
         {...props}
       >
         {value}

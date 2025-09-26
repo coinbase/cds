@@ -17,6 +17,10 @@ export type FocusTrapProps = {
    */
   disableFocusTrap?: boolean;
   /**
+   * If `true`, the focus trap will include the trigger in the focus trap.
+   */
+  includeTriggerInFocusTrap?: boolean;
+  /**
    * If `true`, the focus trap will not automatically shift focus to itself when it opens, and
    * replace it to the last focused element when it closes.
    * @default false
@@ -81,6 +85,7 @@ export const FocusTrap = memo(function FocusTrap({
   onEscPress,
   disableTypeFocus,
   disableFocusTrap,
+  includeTriggerInFocusTrap,
   disableAutoFocus,
   respectNegativeTabIndex,
   focusTabIndexElements,
@@ -138,6 +143,9 @@ export const FocusTrap = memo(function FocusTrap({
           focusTabIndexElements ? FOCUSABLE_ELEMENTS_INCLUDING_TABINDEX : FOCUSABLE_ELEMENTS,
         ),
       );
+      if (includeTriggerInFocusTrap && previouslyFocusedElement.current) {
+        focusableElements = [previouslyFocusedElement.current, ...focusableElements];
+      }
       if (respectNegativeTabIndex) {
         focusableElements = focusableElements.filter(
           (element) => !((element as HTMLElement)?.tabIndex < 0),
@@ -145,15 +153,24 @@ export const FocusTrap = memo(function FocusTrap({
       }
 
       const menuItems = element.querySelectorAll('[role="menuitem"]');
-      const isMenuItem = activeElement && Array.from(menuItems).includes(activeElement);
+      const optionItems = element.querySelectorAll('[role="option"]');
+      const activeElementIsMenuItem =
+        activeElement && Array.from(menuItems).includes(activeElement);
+      const activeElementIsOption =
+        activeElement && Array.from(optionItems).includes(activeElement);
+      const activeElementIsMenuItemOrOption = activeElementIsMenuItem || activeElementIsOption;
 
       if (focusableElements.length === 0) return;
 
       const firstElement = focusableElements[0] as HTMLElement;
+      const secondElement = focusableElements[1] as HTMLElement;
       const lastElement = focusableElements[focusableElements.length - 1] as HTMLElement;
       const activeElementIndex = activeElement
         ? focusableElements.indexOf(activeElement)
         : undefined;
+
+      const secondElementIsMenuItemOrOption =
+        secondElement.role === 'menuitem' || secondElement.role === 'option';
 
       // bring focus inside modal
       if (
@@ -162,19 +179,24 @@ export const FocusTrap = memo(function FocusTrap({
         !focusableElements.includes(activeElement)
       ) {
         // don't focus if arrow keys are used, instead allow scroll via keyboard
-        if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+        if ((event.key === 'ArrowDown' || event.key === 'ArrowUp') && !includeTriggerInFocusTrap) {
           return;
         }
+        event.preventDefault();
         firstElement.focus();
         isFocused.current = true;
-        event.preventDefault();
       }
 
       if (event.key === 'Tab') {
         event.preventDefault();
       }
 
-      if (isMenuItem && (event.key === 'ArrowUp' || event.key === 'ArrowDown')) {
+      if (
+        activeElementIsMenuItemOrOption ||
+        secondElementIsMenuItemOrOption ||
+        event.key === 'ArrowUp' ||
+        event.key === 'ArrowDown'
+      ) {
         event.preventDefault();
       }
 
@@ -187,23 +209,37 @@ export const FocusTrap = memo(function FocusTrap({
 
       // force active element to loop back to beginning of list
       const handleLastElement = () => {
-        if ((!event.shiftKey && event.key === 'Tab') || (event.key === 'ArrowDown' && isMenuItem)) {
+        if (
+          (!event.shiftKey && event.key === 'Tab') ||
+          (event.key === 'ArrowDown' && activeElementIsMenuItemOrOption)
+        ) {
           firstElement.focus();
           return;
         }
-        if ((event.key === 'ArrowUp' && isMenuItem) || (event.shiftKey && event.key === 'Tab')) {
+        if (
+          (event.shiftKey && event.key === 'Tab') ||
+          (event.key === 'ArrowUp' && activeElementIsMenuItemOrOption)
+        ) {
           focusPrevElement();
         }
       };
 
       const handleFirstElement = () => {
         // force active element to loop back to end of list
-        if ((event.shiftKey && event.key === 'Tab') || (event.key === 'ArrowUp' && isMenuItem)) {
+        if (
+          (event.shiftKey && event.key === 'Tab') ||
+          (event.key === 'ArrowUp' &&
+            (activeElementIsMenuItemOrOption || secondElementIsMenuItemOrOption))
+        ) {
           lastElement.focus();
           return;
         }
-        if ((event.key === 'ArrowDown' && isMenuItem) || event.key === 'Tab') {
-          (focusableElements[1] as HTMLElement).focus();
+        if (
+          event.key === 'Tab' ||
+          (event.key === 'ArrowDown' &&
+            (activeElementIsMenuItemOrOption || secondElementIsMenuItemOrOption))
+        ) {
+          secondElement.focus();
         }
       };
 
@@ -219,7 +255,11 @@ export const FocusTrap = memo(function FocusTrap({
         return;
       }
 
-      if (!disableTypeFocus && isMenuItem && ALPHABET_KEYS.includes(event.key)) {
+      if (
+        !disableTypeFocus &&
+        activeElementIsMenuItemOrOption &&
+        ALPHABET_KEYS.includes(event.key)
+      ) {
         event.preventDefault();
 
         const elementWithMatchingFirstLetter = focusableElements.find((el: Element) => {
@@ -245,7 +285,7 @@ export const FocusTrap = memo(function FocusTrap({
       }
 
       if (
-        ((event.key === 'ArrowDown' && isMenuItem) || event.key === 'Tab') &&
+        ((event.key === 'ArrowDown' && activeElementIsMenuItemOrOption) || event.key === 'Tab') &&
         activeElementIndex
       ) {
         const nextElement = focusableElements[activeElementIndex + 1] as HTMLElement;
@@ -253,13 +293,14 @@ export const FocusTrap = memo(function FocusTrap({
       }
 
       if (
-        ((event.key === 'ArrowUp' && isMenuItem) || (event.key === 'Tab' && event.shiftKey)) &&
+        ((event.key === 'ArrowUp' && activeElementIsMenuItemOrOption) ||
+          (event.key === 'Tab' && event.shiftKey)) &&
         activeElementIndex
       ) {
         focusPrevElement();
       }
     },
-    [focusTabIndexElements, disableTypeFocus, respectNegativeTabIndex],
+    [focusTabIndexElements, disableTypeFocus, respectNegativeTabIndex, includeTriggerInFocusTrap],
   );
 
   const handleKeyDown = useCallback(
@@ -314,7 +355,7 @@ export const FocusTrap = memo(function FocusTrap({
       if (typeof autoFocusDelay !== 'number') elementToAutoFocus.focus();
       else setTimeout(() => elementToAutoFocus.focus(), autoFocusDelay);
     }
-  }, [disableAutoFocus, autoFocusDelay]);
+  }, [disableAutoFocus, autoFocusDelay, includeTriggerInFocusTrap]);
 
   // only works for single child
   const onlyChild = React.Children.only(children);
