@@ -17,6 +17,11 @@ const Demo = () => {
 };
 
 describe('TabbedChips', () => {
+  it('passes a11y', async () => {
+    render(<Demo />);
+    expect(screen.getByTestId(testID)).toBeAccessible();
+  });
+
   it('renders a custom tab label with injected testID', () => {
     render(<Demo />);
     expect(screen.getByTestId(sampleTabs[5].id)).toBeDefined();

@@ -15,7 +15,12 @@ const TabComponent = <T extends string = string>({ label = '', id, ...tabProps }
   const isActive = activeTab?.id === id;
   const handleClick = useCallback(() => updateActiveTab(id), [id, updateActiveTab]);
   return (
-    <Chip aria-checked={isActive} inverted={isActive} onPress={handleClick} {...tabProps}>
+    <Chip
+      accessibilityState={{ selected: isActive }}
+      inverted={isActive}
+      onPress={handleClick}
+      {...tabProps}
+    >
       {label}
     </Chip>
   );
@@ -89,7 +94,6 @@ const TabbedChipsComponent = memo(
             activeTab={activeTab || null}
             gap={1}
             onChange={handleChange}
-            role="radiogroup"
             tabs={tabs}
           />
         </ScrollView>
