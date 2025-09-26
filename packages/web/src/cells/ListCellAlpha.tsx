@@ -90,6 +90,7 @@ export const ListCellAlpha: ListCellComponent = memo(
         outerSpacing = { paddingX: 0, paddingY: 0, marginX: 0 },
         borderRadius = 0,
         detailWidth,
+        alignItems,
         ...props
       }: ListCellProps<AsComponent>,
       ref?: Polymorphic.Ref<AsComponent>,
@@ -110,14 +111,8 @@ export const ListCellAlpha: ListCellComponent = memo(
       return (
         <Cell
           ref={ref}
-          accessory={
-            accessoryType && (
-              <Box paddingTop={2}>
-                <CellAccessory type={accessoryType} />
-              </Box>
-            )
-          }
-          alignItems="flex-start"
+          accessory={accessoryType && <CellAccessory type={accessoryType} />}
+          alignItems={alignItems}
           as={Component}
           borderRadius={borderRadius}
           bottomContent={helperText}
@@ -126,7 +121,7 @@ export const ListCellAlpha: ListCellComponent = memo(
           disabled={disabled}
           innerSpacing={innerSpacing}
           intermediary={intermediary}
-          media={<Box paddingTop={1}>{media}</Box>}
+          media={media}
           outerSpacing={outerSpacing}
           priority={priority}
           selected={selected}

@@ -1,5 +1,5 @@
 import React from 'react';
-import { assets } from '@coinbase/cds-common/internal/data/assets';
+import { assets, squareAssets } from '@coinbase/cds-common/internal/data/assets';
 import { selectCellSpacingConfig } from '@coinbase/cds-common/tokens/select';
 import type { CellPriority } from '@coinbase/cds-common/types/CellBaseProps';
 
@@ -8,7 +8,9 @@ import type { CellSpacing } from '../../cells/Cell';
 import { Checkbox } from '../../controls/Checkbox';
 import { Icon } from '../../icons';
 import { Pictogram } from '../../illustrations/Pictogram';
-import { VStack } from '../../layout';
+import { HStack, VStack } from '../../layout';
+import { RemoteImage } from '../../media';
+import { Tag } from '../../tag/Tag';
 import { CellHelperText } from '../CellHelperText';
 import { CellMedia } from '../CellMedia';
 import { ListCell } from '../ListCell';
@@ -667,6 +669,17 @@ const AlphaListCell = () => {
         title="Title"
       />
       <ListCellAlpha
+        multiline
+        accessory="more"
+        alignItems="flex-start"
+        description="Long description with multiple lines. This section can be arbitrarily long and occupy many many lines."
+        detail="Detail"
+        media={<CellMedia source={assets.eth.imageUrl} type="avatar" />}
+        onClick={onClickConsole}
+        subdetail="Subdetail"
+        title="Title"
+      />
+      <ListCellAlpha
         accessory="more"
         description="Description"
         detail="Detail"
@@ -699,6 +712,22 @@ const AlphaListCell = () => {
         media={<Icon name="heart" size="xs" />}
         onClick={onClickConsole}
         subdetail="Subdetail"
+        title="Title"
+      />
+      <ListCellAlpha
+        accessory="more"
+        description="Description"
+        detail="Detail"
+        media={<RemoteImage shape="squircle" size="l" source={squareAssets.human1} />}
+        onClick={onClickConsole}
+        subdetail={
+          <Tag colorScheme="green">
+            <HStack alignItems="center" gap={0.5}>
+              <Icon color="fgPositive" name="diagonalUpArrow" size="xs" />
+              1.64%
+            </HStack>
+          </Tag>
+        }
         title="Title"
       />
     </VStack>
