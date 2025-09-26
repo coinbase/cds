@@ -410,11 +410,9 @@ function SubscriptionPriceExample() {
         }}
         value={price}
       />
-      <HStack gap={2}>
-        <Button alignSelf="flex-start" onClick={() => setYearly((v) => !v)}>
-          {yearly ? 'Switch to monthly' : 'Switch to yearly'}
-        </Button>
-      </HStack>
+      <Button alignSelf="flex-start" onClick={() => setYearly((v) => !v)}>
+        {yearly ? 'Switch to monthly' : 'Switch to yearly'}
+      </Button>
     </VStack>
   );
 }
@@ -636,12 +634,8 @@ function CountDownExample() {
     <VStack gap={1}>
       <RollingNumber font="display3" formattedValue={formatted} value={seconds} ariaLive="off" />
       <HStack gap={2}>
-        <Button alignSelf="flex-start" onClick={() => setRunning((r) => !r)}>
-          {running ? 'Pause' : 'Start'}
-        </Button>
-        <Button alignSelf="flex-start" onClick={onReset}>
-          Reset
-        </Button>
+        <Button onClick={() => setRunning((r) => !r)}>{running ? 'Pause' : 'Start'}</Button>
+        <Button onClick={onReset}>Reset</Button>
       </HStack>
 
       <Text font="label1">Countdown with percent</Text>
@@ -716,15 +710,9 @@ function LiveBiddingExample() {
         </HStack>
       </VStack>
       <HStack gap={1}>
-        <Button alignSelf="flex-start" onClick={() => placeBid(100)}>
-          +$100
-        </Button>
-        <Button alignSelf="flex-start" onClick={() => placeBid(500)}>
-          +$500
-        </Button>
-        <Button alignSelf="flex-start" onClick={() => placeBid(1000)}>
-          +$1000
-        </Button>
+        <Button onClick={() => placeBid(100)}>+$100</Button>
+        <Button onClick={() => placeBid(500)}>+$500</Button>
+        <Button onClick={() => placeBid(1000)}>+$1000</Button>
       </HStack>
     </VStack>
   );
