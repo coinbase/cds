@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import React, { memo, useId } from 'react';
 import { candles as btcCandles } from '@coinbase/cds-common/internal/data/candles';
 import {
   isCategoricalScale,
@@ -324,9 +324,11 @@ const Candlesticks = () => {
     updateInfoText(selectedIndexRef.current);
   }, [stockData, updateInfoText]);
 
+  const infoTextId = useId();
+
   return (
     <VStack gap={2}>
-      <Text font="headline">
+      <Text aria-live="polite" font="headline" id={infoTextId}>
         <span ref={infoTextRef}>{initialInfo}</span>
       </Text>
       <BarChart
@@ -336,6 +338,7 @@ const Candlesticks = () => {
         BarComponent={CandlestickBarComponent}
         StackComponent={({ children, ...props }) => <g {...props}>{children}</g>}
         animate={false}
+        aria-labelledby={infoTextId}
         borderRadius={0}
         dataKey={timePeriod.id}
         height={400}

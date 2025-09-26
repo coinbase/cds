@@ -1719,6 +1719,7 @@ const AssetPriceDotted = memo(() => {
         showArea
         accessibilityLabel={accessibilityLabel}
         areaType="dotted"
+        aria-live="polite"
         height={300}
         onScrubberPosChange={setScrubIndex}
         overflow="visible"
