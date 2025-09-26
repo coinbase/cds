@@ -68,8 +68,8 @@ export const YAxis = memo<YAxisProps>(
     const { animate, getYScale, getYAxis, registerAxis, unregisterAxis, getAxisBounds } =
       useChartContext();
 
-    const yScale = getYScale?.(axisId);
-    const yAxis = getYAxis?.(axisId);
+    const yScale = getYScale(axisId);
+    const yAxis = getYAxis(axisId);
 
     const axisBounds = getAxisBounds(registrationId);
 

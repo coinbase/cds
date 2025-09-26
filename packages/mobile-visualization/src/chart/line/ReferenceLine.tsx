@@ -127,7 +127,7 @@ export const ReferenceLine = memo<ReferenceLineProps>(
     );
     // Horizontal reference line logic
     if (dataY !== undefined) {
-      const yScale = getYScale?.(yAxisId);
+      const yScale = getYScale(yAxisId);
 
       // Don't render if we don't have a scale
       if (!yScale) {
@@ -175,7 +175,7 @@ export const ReferenceLine = memo<ReferenceLineProps>(
 
     // Vertical reference line logic
     if (dataX !== undefined) {
-      const xScale = getXScale?.();
+      const xScale = getXScale();
 
       // Don't render if we don't have scales
       if (!xScale) {

@@ -93,8 +93,8 @@ export const ScrubberHead = memo(
       const sourceData = getSeriesData(seriesId);
 
       // Get scales for this series
-      const xScale = getXScale?.();
-      const yScale = getYScale?.(targetSeries?.yAxisId);
+      const xScale = getXScale();
+      const yScale = getYScale(targetSeries?.yAxisId);
 
       const getPixelCoordinate = useCallback(
         (dataX: number, dataY: number) => {

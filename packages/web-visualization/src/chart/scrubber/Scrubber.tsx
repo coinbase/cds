@@ -565,7 +565,7 @@ export const Scrubber = memo(
       }, [headPositions]);
 
       // Check if we have at least the default X scale
-      const defaultXScale = getXScale?.();
+      const defaultXScale = getXScale();
       if (!defaultXScale) return null;
 
       // Use custom components if provided

@@ -471,7 +471,7 @@ export const InteractiveSmartChartTextGroup = () => {
     const [bboxMap, setBboxMap] = useState<
       Map<number, { x: number; y: number; width: number; height: number }>
     >(new Map());
-    const xScale = getXScale?.();
+    const xScale = getXScale();
 
     const labelsData = useMemo((): TextLabelData[] => {
       if (!xScale) return [];

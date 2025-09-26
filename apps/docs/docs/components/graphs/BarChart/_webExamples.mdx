@@ -717,7 +717,7 @@ function Candlesticks() {
   const CandlestickBarComponent = memo<BarComponentProps>(
     ({ x, y, width, height, originY, dataX, ...props }) => {
       const { getYScale } = useChartContext();
-      const yScale = getYScale?.();
+      const yScale = getYScale();
 
       const wickX = x + width / 2;
 

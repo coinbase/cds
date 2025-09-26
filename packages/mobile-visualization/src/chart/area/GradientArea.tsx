@@ -54,7 +54,7 @@ export const GradientArea = memo<GradientAreaProps>(
     const patternIdRef = useRef<string>(generateRandomId());
 
     // Get the y-scale for the specified axis (or default)
-    const yScale = context.getYScale?.(yAxisId);
+    const yScale = context.getYScale(yAxisId);
     const yRange = yScale?.range();
     const yDomain = yScale?.domain();
 

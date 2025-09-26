@@ -1021,7 +1021,7 @@ const GainLossChart = () => {
   const ChartDefs = ({ threshold = 0 }) => {
     const { getYScale } = useChartContext();
     // get the default y-axis scale
-    const yScale = getYScale?.();
+    const yScale = getYScale();
 
     if (yScale) {
       const domain = yScale.domain();

@@ -243,8 +243,8 @@ const EarningsHistory = () => {
     const { getSeries, getSeriesData, getXScale, getYScale } = useChartContext();
     const series = getSeries(seriesId);
     const data = getSeriesData(seriesId);
-    const xScale = getXScale?.();
-    const yScale = getYScale?.(series?.yAxisId);
+    const xScale = getXScale();
+    const yScale = getYScale(series?.yAxisId);
 
     if (!xScale || !yScale || !data || !isCategoricalScale(xScale)) return null;
 

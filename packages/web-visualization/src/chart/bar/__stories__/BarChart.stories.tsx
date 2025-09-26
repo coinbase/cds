@@ -198,8 +198,8 @@ const tabs: TimePeriodTab[] = [
 const ScrubberRect = memo(() => {
   const { getXScale, getYScale } = useChartContext();
   const { highlightedIndex } = React.useContext(ScrubberContext) ?? {};
-  const xScale = getXScale?.();
-  const yScale = getYScale?.();
+  const xScale = getXScale();
+  const yScale = getYScale();
 
   if (!xScale || !yScale || highlightedIndex === undefined || !isCategoricalScale(xScale))
     return null;
@@ -238,7 +238,7 @@ const Candlesticks = () => {
   const CandlestickBarComponent = memo<BarComponentProps>(
     ({ x, y, width, height, originY, dataX, ...props }) => {
       const { getYScale } = useChartContext();
-      const yScale = getYScale?.();
+      const yScale = getYScale();
 
       const wickX = x + width / 2;
 

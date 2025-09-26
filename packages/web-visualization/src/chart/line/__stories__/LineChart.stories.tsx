@@ -1137,8 +1137,8 @@ const AvailabilityChart = () => {
       greenThresholdPercentage?: number;
     }) => {
       const { height, series, getYScale, getYAxis, drawingArea } = useChartContext();
-      const yScale = getYScale?.();
-      const yAxis = getYAxis?.();
+      const yScale = getYScale();
+      const yAxis = getYAxis();
 
       if (!series || !drawingArea || !yScale) return null;
 
@@ -1249,7 +1249,7 @@ const GainLossChart = () => {
   const ChartDefs = ({ threshold = 0 }) => {
     const { getYScale } = useChartContext();
     // get the default y-axis scale
-    const yScale = getYScale?.();
+    const yScale = getYScale();
 
     if (yScale) {
       const domain = yScale.domain();

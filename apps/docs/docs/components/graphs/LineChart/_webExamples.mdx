@@ -228,7 +228,7 @@ function GainLossChart() {
   const ChartDefs = ({ threshold = 0 }) => {
     const { getYScale } = useChartContext();
     // get the default y-axis scale
-    const yScale = getYScale?.();
+    const yScale = getYScale();
 
     if (yScale) {
       const domain = yScale.domain();
@@ -982,8 +982,8 @@ function AvailabilityChart() {
   const ChartDefs = memo(({ yellowThresholdPercentage = 85, greenThresholdPercentage = 90 }) => {
     const { drawingArea } = useChartContext();
     const { height, series, getYScale, getYAxis } = useChartContext();
-    const yScale = getYScale?.();
-    const yAxis = getYAxis?.();
+    const yScale = getYScale();
+    const yAxis = getYAxis();
 
     if (!series || !drawingArea || !yScale) return null;
 

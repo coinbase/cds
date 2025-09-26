@@ -60,8 +60,8 @@ export const XAxis = memo<XAxisProps>(
     const { animate, getXScale, getXAxis, registerAxis, unregisterAxis, getAxisBounds } =
       useChartContext();
 
-    const xScale = getXScale?.();
-    const xAxis = getXAxis?.();
+    const xScale = getXScale();
+    const xAxis = getXAxis();
 
     const axisBounds = getAxisBounds(registrationId);
 
