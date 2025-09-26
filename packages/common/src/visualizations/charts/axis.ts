@@ -91,7 +91,8 @@ export type AxisConfigProps = Omit<AxisConfig, 'domain' | 'range'> & {
  * or "strict" (exact min/max). Range can be customized using function-based configuration.
  *
  * @param params - Scale parameters
- * @returns The D3 scale function or undefined if bounds are invalid
+ * @returns The D3 scale function
+ * @throws An Error if bounds are invalid
  */
 export const getAxisScale = ({
   config,
@@ -103,7 +104,7 @@ export const getAxisScale = ({
   type: 'x' | 'y';
   range: AxisBounds;
   dataDomain: AxisBounds;
-}): ChartScaleFunction | undefined => {
+}): ChartScaleFunction => {
   const scaleType = config?.scaleType ?? 'linear';
 
   let adjustedRange = range;
@@ -122,7 +123,7 @@ export const getAxisScale = ({
     };
   }
 
-  if (!isValidBounds(adjustedDomain)) return undefined;
+  if (!isValidBounds(adjustedDomain)) throw new Error('Invalid domain bounds');
 
   if (scaleType === 'band') {
     return getCategoricalScale({

@@ -217,7 +217,7 @@ const TimeOfDayAxesExample = () => {
   );
 };
 
-const MultipleStartXAxesExample = () => (
+const MultipleYAxesExample = () => (
   <Chart
     enableScrubbing
     height={512}
@@ -230,7 +230,7 @@ const MultipleStartXAxesExample = () => (
       },
       { id: 'log', yAxisId: 'logAxis', data: [1, 10, 30, 50, 70, 90, 100], label: 'log' },
     ]}
-    xAxis={[{ data: [1, 10, 30, 50, 70, 90, 100] }]}
+    xAxis={{ data: [1, 10, 30, 50, 70, 90, 100] }}
     yAxis={[
       { id: 'linearAxis', scaleType: 'linear' },
       { id: 'logAxis', scaleType: 'log' },
@@ -316,7 +316,7 @@ export const All = () => {
         <TimeOfDayAxesExample />
       </Example>
       <Example title="Multiple Axes on Same Side">
-        <MultipleStartXAxesExample />
+        <MultipleYAxesExample />
       </Example>
       <Example title="Strict Domain Limit">
         <DomainLimitType limit="strict" />

@@ -35,20 +35,18 @@ export type ChartContextValue = {
    */
   height: number;
   /**
-   * Get x-axis configuration by ID.
-   * @param id - The axis ID. Defaults to defaultAxisId.
+   * Get x-axis configuration.
    */
-  getXAxis: (id?: string) => AxisConfig | undefined;
+  getXAxis: () => AxisConfig | undefined;
   /**
    * Get y-axis configuration by ID.
    * @param id - The axis ID. Defaults to defaultAxisId.
    */
   getYAxis: (id?: string) => AxisConfig | undefined;
   /**
-   * Get x-axis scale function by ID.
-   * @param id - The axis ID. Defaults to defaultAxisId.
+   * Get x-axis scale function.
    */
-  getXScale: (id?: string) => ChartScaleFunction | undefined;
+  getXScale: () => ChartScaleFunction | undefined;
   /**
    * Get y-axis scale function by ID.
    * @param id - The axis ID. Defaults to defaultAxisId.
