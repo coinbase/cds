@@ -35,20 +35,18 @@ export type ChartContextValue = {
    */
   height: number;
   /**
-   * Get x-axis configuration by ID.
-   * @param id - The axis ID. Defaults to defaultAxisId.
+   * Get x-axis configuration.
    */
-  getXAxis: (id?: string) => AxisConfig | undefined;
+  getXAxis: () => AxisConfig | undefined;
   /**
    * Get y-axis configuration by ID.
    * @param id - The axis ID. Defaults to defaultAxisId.
    */
   getYAxis: (id?: string) => AxisConfig | undefined;
   /**
-   * Get x-axis scale function by ID.
-   * @param id - The axis ID. Defaults to defaultAxisId.
+   * Get x-axis scale function.
    */
-  getXScale: (id?: string) => ChartScaleFunction | undefined;
+  getXScale: () => ChartScaleFunction | undefined;
   /**
    * Get y-axis scale function by ID.
    * @param id - The axis ID. Defaults to defaultAxisId.
@@ -59,15 +57,17 @@ export type ChartContextValue = {
    */
   drawingArea: Rect;
   /**
-   * Register an axis. Used by axis components to register space to prevent overlap with drawing area.
+   * Registers an axis.
+   * Used by axis components to reserve space in the chart, preventing overlap with the drawing area.
    */
   registerAxis: (id: string, type: 'x' | 'y', position: 'start' | 'end', size: number) => void;
   /**
-   * Unregister an axis.
+   * Unregisters an axis.
    */
   unregisterAxis: (id: string) => void;
   /**
-   * Get the bounds of an axis.
+   * Gets the rectangle bounds of a requested axis.
+   * Computes the bounds of the axis based on the chart's drawing area chart/axis config, and axis position.
    */
   getAxisBounds: (id: string) => Rect | undefined;
 };
@@ -80,13 +80,6 @@ export const useChartContext = (): ChartContextValue => {
     throw new Error('useChartContext must be used within a Chart component');
   }
   return context;
-};
-
-export type RegisteredAxis = {
-  id: string;
-  type: 'x' | 'y';
-  position: 'start' | 'end';
-  size: number;
 };
 
 // Chart highlighting context

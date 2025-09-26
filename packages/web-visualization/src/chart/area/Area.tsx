@@ -82,9 +82,9 @@ export const Area = memo<AreaProps>(
     }, [seriesId, getSeriesData]);
 
     // Get scales and axes for this series
-    const xScale = getXScale?.(matchedSeries?.xAxisId);
+    const xAxis = getXAxis?.();
+    const xScale = getXScale?.();
     const yScale = getYScale?.(matchedSeries?.yAxisId);
-    const xAxis = getXAxis?.(matchedSeries?.xAxisId);
 
     const area = useMemo(() => {
       if (!sourceData || sourceData.length === 0 || !xScale || !yScale) return '';

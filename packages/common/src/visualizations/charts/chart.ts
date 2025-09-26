@@ -26,11 +26,6 @@ export type Series = {
    */
   color?: string;
   /**
-   * The ID of the x-axis this series uses.
-   * Defaults to defaultAxisId if not specified.
-   */
-  xAxisId?: string;
-  /**
    * The ID of the y-axis this series uses.
    * Defaults to defaultAxisId if not specified.
    */

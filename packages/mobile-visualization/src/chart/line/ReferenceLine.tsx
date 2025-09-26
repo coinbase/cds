@@ -78,7 +78,6 @@ type HorizontalReferenceLineProps = BaseReferenceLineProps & {
    */
   labelPosition?: 'left' | 'center' | 'right';
   dataX?: never;
-  xAxisId?: never;
 };
 
 type VerticalReferenceLineProps = BaseReferenceLineProps & {
@@ -86,11 +85,6 @@ type VerticalReferenceLineProps = BaseReferenceLineProps & {
    * X-value for vertical reference line (data index).
    */
   dataX: number;
-  /**
-   * The ID of the x-axis to use for positioning.
-   * Defaults to defaultAxisId if not specified.
-   */
-  xAxisId?: string;
   /**
    * Position of the label along the vertical line.
    * @default 'top'
@@ -106,7 +100,6 @@ export const ReferenceLine = memo<ReferenceLineProps>(
   ({
     dataX,
     dataY,
-    xAxisId,
     yAxisId,
     label,
     labelPosition,
@@ -182,7 +175,7 @@ export const ReferenceLine = memo<ReferenceLineProps>(
 
     // Vertical reference line logic
     if (dataX !== undefined) {
-      const xScale = getXScale?.(xAxisId);
+      const xScale = getXScale?.();
 
       // Don't render if we don't have scales
       if (!xScale) {

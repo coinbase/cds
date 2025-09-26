@@ -152,7 +152,6 @@ export const LineChart = memo(
         domain: xDomain,
         domainLimit: xDomainLimit,
         range: xRange,
-        id: xAxisId,
         ...xAxisVisualProps
       } = xAxis || {};
       const {
@@ -196,29 +195,25 @@ export const LineChart = memo(
             yAxis={yAxisConfig}
           >
             {/* Render axes first for grid lines to appear behind everything else */}
-            {showXAxis && (
-              <XAxis axisId={xAxisId} dataKey={dataKey} position="end" {...xAxisVisualProps} />
-            )}
+            {showXAxis && <XAxis dataKey={dataKey} position="end" {...xAxisVisualProps} />}
             {showYAxis && (
               <YAxis axisId={yAxisId} dataKey={dataKey} position="end" {...yAxisVisualProps} />
             )}
             {hasData &&
-              series?.map(
-                ({ id, data, label, color, xAxisId, yAxisId, ...linePropsFromSeries }) => (
-                  <Line
-                    key={id}
-                    AreaComponent={AreaComponent}
-                    LineComponent={LineComponent}
-                    areaType={areaType}
-                    curve={curve}
-                    renderPoints={renderPoints}
-                    seriesId={id}
-                    showArea={showArea}
-                    type={type}
-                    {...linePropsFromSeries}
-                  />
-                ),
-              )}
+              series?.map(({ id, data, label, color, yAxisId, ...linePropsFromSeries }) => (
+                <Line
+                  key={id}
+                  AreaComponent={AreaComponent}
+                  LineComponent={LineComponent}
+                  areaType={areaType}
+                  curve={curve}
+                  renderPoints={renderPoints}
+                  seriesId={id}
+                  showArea={showArea}
+                  type={type}
+                  {...linePropsFromSeries}
+                />
+              ))}
             {children}
           </Chart>
           {!hasData && !disableFallback && (

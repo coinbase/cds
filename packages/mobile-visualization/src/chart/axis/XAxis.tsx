@@ -16,18 +16,10 @@ import { type AxisBaseProps, type AxisProps } from './Axis';
 
 export type XAxisBaseProps = AxisBaseProps;
 
-export type XAxisProps = AxisProps &
-  XAxisBaseProps & {
-    /**
-     * The ID of the axis to render.
-     * Defaults to defaultAxisId if not specified.
-     */
-    axisId?: string;
-  };
+export type XAxisProps = AxisProps & XAxisBaseProps;
 
 export const XAxis = memo<XAxisProps>(
   ({
-    axisId,
     position = 'end',
     showGrid,
     requestedTickCount,
@@ -53,8 +45,8 @@ export const XAxis = memo<XAxisProps>(
     const { animate, getXScale, getXAxis, registerAxis, unregisterAxis, getAxisBounds } =
       useChartContext();
 
-    const xScale = getXScale?.(axisId);
-    const xAxis = getXAxis?.(axisId);
+    const xScale = getXScale?.();
+    const xAxis = getXAxis?.();
     const axisBounds = getAxisBounds(registrationId);
 
     // Define axis styling using theme
@@ -183,11 +175,7 @@ export const XAxis = memo<XAxisProps>(
           <G>
             {ticksData.map((tick, index) => {
               const verticalLine = (
-                <ReferenceLine
-                  LineComponent={GridLineComponent}
-                  dataX={tick.tick}
-                  xAxisId={axisId}
-                />
+                <ReferenceLine LineComponent={GridLineComponent} dataX={tick.tick} />
               );
 
               return <G key={`grid-${tick.tick}-${index}-${dataKey}`}>{verticalLine}</G>;

@@ -100,7 +100,6 @@ export const BarChart = memo(
             data: s.data,
             label: s.label,
             color: s.color,
-            xAxisId: s.xAxisId,
             yAxisId: s.yAxisId,
             stackId: s.stackId,
           }),
@@ -128,7 +127,6 @@ export const BarChart = memo(
         domain: xDomain,
         domainLimit: xDomainLimit,
         range: xRange,
-        id: xAxisId,
         ...xAxisVisualProps
       } = xAxis || {};
       const {
@@ -182,9 +180,7 @@ export const BarChart = memo(
           xAxis={xAxisConfig}
           yAxis={yAxisConfig}
         >
-          {showXAxis && (
-            <XAxis axisId={xAxisId} dataKey={dataKey} position="end" {...xAxisVisualProps} />
-          )}
+          {showXAxis && <XAxis dataKey={dataKey} position="end" {...xAxisVisualProps} />}
           {showYAxis && (
             <YAxis axisId={yAxisId} dataKey={dataKey} position="end" {...yAxisVisualProps} />
           )}

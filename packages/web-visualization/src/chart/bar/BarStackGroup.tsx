@@ -16,11 +16,6 @@ export type BarStackGroupProps = {
    */
   series: BarSeries[];
   /**
-   * X axis ID to use.
-   * If not provided, defaults to the default axis id.
-   */
-  xAxisId?: string;
-  /**
    * Y axis ID to use.
    * If not provided, defaults to the default axis id.
    */
@@ -84,18 +79,10 @@ export type BarStackGroupProps = {
  * Delegates the actual stacking logic to BarStack for each category.
  */
 export const BarStackGroup = memo<BarStackGroupProps>(
-  ({
-    series,
-    xAxisId = defaultAxisId,
-    yAxisId = defaultAxisId,
-    stackIndex,
-    totalStacks,
-    barPadding = 0.1,
-    ...props
-  }) => {
+  ({ series, yAxisId, stackIndex, totalStacks, barPadding = 0.1, ...props }) => {
     const { getSeriesData, getXScale, getYScale, drawingArea } = useChartContext();
 
-    const xScale = getXScale(xAxisId);
+    const xScale = getXScale();
     const yScale = getYScale(yAxisId);
 
     const maxDataLength = useMemo(() => {
@@ -169,7 +156,6 @@ export const BarStackGroup = memo<BarStackGroupProps>(
         series={series}
         width={width}
         x={x}
-        xAxisId={xAxisId}
         yAxisId={yAxisId}
         yScale={yScale}
       />

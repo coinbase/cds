@@ -115,9 +115,9 @@ export const Line = memo<LineProps>(
       return getSeriesData(seriesId) || null;
     }, [seriesId, getSeriesData]);
 
-    const xScale = getXScale?.(matchedSeries?.xAxisId);
+    const xAxis = getXAxis?.();
+    const xScale = getXScale?.();
     const yScale = getYScale?.(matchedSeries?.yAxisId);
-    const xAxis = getXAxis?.(matchedSeries?.xAxisId);
 
     // Convert sourceData to number array (line only supports numbers, not tuples)
     // If data is stacked (tuples), extract the actual values from [baseline, actualValue] format

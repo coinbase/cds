@@ -11,14 +11,9 @@ import type { StackComponent } from './DefaultStackComponent';
 export type BarPlotProps = {
   /**
    * Array of series IDs to render.
-   * If not provided, renders all series in the chart that matches the xAxisId.
+   * If not provided, renders all series in the chart.
    */
   seriesIds?: string[];
-  /**
-   * X axis ID to use for all series.
-   * If not provided, defaults to the default axis id.
-   */
-  xAxisId?: string;
   /**
    * Padding between bar groups (0-1).
    * @default 0.1
@@ -77,7 +72,6 @@ export type BarPlotProps = {
 export const BarPlot = memo<BarPlotProps>(
   ({
     seriesIds,
-    xAxisId = defaultAxisId,
     barPadding = 0.1,
     BarComponent: defaultBarComponent,
     fillOpacity: defaultFillOpacity,
@@ -94,17 +88,13 @@ export const BarPlot = memo<BarPlotProps>(
     const clipPathId = useRef(generateRandomId()).current;
 
     const targetSeries = useMemo(() => {
-      // First filter by xAxisId
-      const filteredByAxis: BarSeries[] =
-        allSeries?.filter((s: any) => (s.xAxisId ?? defaultAxisId) === xAxisId) ?? [];
-
       // Then filter by seriesIds if provided
       if (seriesIds !== undefined) {
-        return filteredByAxis.filter((s: any) => seriesIds.includes(s.id));
+        return allSeries.filter((s: any) => seriesIds.includes(s.id));
       }
 
-      return filteredByAxis;
-    }, [allSeries, seriesIds, xAxisId]);
+      return allSeries;
+    }, [allSeries, seriesIds]);
 
     const stackGroups = useMemo(() => {
       const groups = new Map<
@@ -112,7 +102,6 @@ export const BarPlot = memo<BarPlotProps>(
         {
           stackId: string;
           series: BarSeries[];
-          xAxisId?: string;
           yAxisId?: string;
         }
       >();
@@ -127,7 +116,6 @@ export const BarPlot = memo<BarPlotProps>(
           groups.set(stackKey, {
             stackId: stackKey,
             series: [],
-            xAxisId: series.xAxisId,
             yAxisId: series.yAxisId,
           });
         }
@@ -173,7 +161,6 @@ export const BarPlot = memo<BarPlotProps>(
               stroke={defaultStroke}
               strokeWidth={defaultStrokeWidth}
               totalStacks={stackGroups.length}
-              xAxisId={xAxisId}
               yAxisId={group.yAxisId}
             />
           ))}

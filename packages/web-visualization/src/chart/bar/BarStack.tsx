@@ -35,11 +35,6 @@ export type BarStackProps = {
    */
   rect: { x: number; y: number; width: number; height: number };
   /**
-   * X axis ID to use for getting axis data.
-   * If not provided, will use the xAxisId from the first series.
-   */
-  xAxisId?: string;
-  /**
    * Y axis ID to use.
    * If not provided, will use the yAxisId from the first series.
    */
@@ -100,8 +95,6 @@ export const BarStack = memo<BarStackProps>(
     width,
     yScale,
     rect,
-    xAxisId,
-    yAxisId,
     BarComponent: defaultBarComponent,
     fillOpacity: defaultFillOpacity,
     stroke: defaultStroke,
@@ -120,7 +113,7 @@ export const BarStack = memo<BarStackProps>(
     const barMinSizePx = barMinSize ? theme.space[barMinSize] : 0;
     const stackMinSizePx = stackMinSize ? theme.space[stackMinSize] : 0;
 
-    const xAxis = getXAxis(xAxisId);
+    const xAxis = getXAxis();
 
     const baseline = useMemo(() => {
       const domain = yScale.domain();

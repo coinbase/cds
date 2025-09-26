@@ -107,7 +107,6 @@ export const AreaChart = memo(
             data: s.data,
             label: s.label,
             color: s.color,
-            xAxisId: s.xAxisId,
             yAxisId: s.yAxisId,
             stackId: s.stackId,
           }),
@@ -129,7 +128,6 @@ export const AreaChart = memo(
         domain: xDomain,
         domainLimit: xDomainLimit,
         range: xRange,
-        id: xAxisId,
         ...xAxisVisualProps
       } = xAxis || {};
       const {
@@ -183,9 +181,7 @@ export const AreaChart = memo(
           xAxis={xAxisConfig}
           yAxis={yAxisConfig}
         >
-          {showXAxis && (
-            <XAxis axisId={xAxisId} dataKey={dataKey} position="end" {...xAxisVisualProps} />
-          )}
+          {showXAxis && <XAxis dataKey={dataKey} position="end" {...xAxisVisualProps} />}
           {showYAxis && (
             <YAxis axisId={yAxisId} dataKey={dataKey} position="end" {...yAxisVisualProps} />
           )}
@@ -195,7 +191,6 @@ export const AreaChart = memo(
               data,
               label,
               color,
-              xAxisId,
               yAxisId,
               opacity,
               LineComponent,
@@ -220,7 +215,6 @@ export const AreaChart = memo(
                 data,
                 label,
                 color,
-                xAxisId,
                 yAxisId,
                 fill,
                 fillOpacity,

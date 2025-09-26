@@ -36,7 +36,6 @@ export type ScrubberHeadProps = SharedProps &
     PointProps,
     | 'pulse'
     | 'yAxisId'
-    | 'xAxisId'
     | 'onClick'
     | 'onScrubberEnter'
     | 'label'
@@ -97,7 +96,7 @@ export const ScrubberHead = memo(
       const sourceData = getSeriesData(seriesId);
 
       // Get scales for this series
-      const xScale = getXScale?.(targetSeries?.xAxisId);
+      const xScale = getXScale?.();
       const yScale = getYScale?.(targetSeries?.yAxisId);
 
       const getPixelCoordinate = useCallback(
@@ -196,7 +195,6 @@ export const ScrubberHead = memo(
             radius={radius}
             stroke={theme.color.bg}
             strokeWidth={2}
-            xAxisId={targetSeries?.xAxisId}
             yAxisId={targetSeries?.yAxisId}
             {...props}
           />

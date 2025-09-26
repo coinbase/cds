@@ -118,11 +118,6 @@ export type PointConfig = {
    */
   color?: string;
   /**
-   * Optional X-axis id to specify which axis to plot along.
-   * Defaults to the first x-axis
-   */
-  xAxisId?: string;
-  /**
    * Optional Y-axis id to specify which axis to plot along.
    * Defaults to the first y-axis
    */
@@ -201,7 +196,6 @@ export const Point = memo(
       {
         dataX,
         dataY,
-        xAxisId,
         yAxisId,
         color,
         pulse = false,
@@ -226,7 +220,7 @@ export const Point = memo(
       const { getXScale, getYScale, animate: animationEnabled } = useChartContext();
       const { highlightedIndex } = useScrubberContext();
 
-      const xScale = getXScale(xAxisId);
+      const xScale = getXScale();
       const yScale = getYScale(yAxisId);
 
       // Use theme color as default if no color is provided
