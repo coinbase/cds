@@ -541,7 +541,7 @@ function LiveAssetPrice() {
       padding={{ right: 64 }}
       accessibilityLabel={accessibilityLabel}
     >
-      <Scrubber ref={scrubberRef} scrubberLabelConfig={{ elevation: 1 }} />
+      <Scrubber ref={scrubberRef} scrubberLabelProps={{ elevation: 1 }} />
     </LineChart>
   );
 }
@@ -752,7 +752,7 @@ const BTCActiveIndicator = memo(({ style, ...props }: TabsActiveIndicatorProps) 
         accessibilityLabel={scrubberLabel}
         padding={{ left: 16, right: 16 }}
       >
-        <Scrubber scrubberLabel={scrubberLabel} scrubberLabelConfig={{ elevation: 1 }} pulse />
+        <Scrubber scrubberLabel={scrubberLabel} scrubberLabelProps={{ elevation: 1 }} pulse />
       </LineChart>
       <PeriodSelector
         TabComponent={BTCTab}
@@ -926,7 +926,7 @@ function ForecastAssetPrice() {
       AreaComponent={(props) => <DottedArea {...props} peakOpacity={0.4} baselineOpacity={0.4} />}
       style={{ outlineColor: assets.btc.color }}
     >
-      <Scrubber scrubberLabel={scrubberLabel} scrubberLabelConfig={{ elevation: 1 }} />
+      <Scrubber scrubberLabel={scrubberLabel} scrubberLabelProps={{ elevation: 1 }} />
     </LineChart>
   );
 };
@@ -1148,7 +1148,7 @@ function BitcoinChartWithScrubberHead() {
           width="100%"
           height={92}
         >
-          <Scrubber pulse scrubberStyles={{ scrubberHead: { stroke: 'white' } }} />
+          <Scrubber pulse styles={{ scrubberHead: { stroke: 'white' } }} />
         </LineChart>
       </div>
     </VStack>
