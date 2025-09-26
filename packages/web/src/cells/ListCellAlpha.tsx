@@ -2,6 +2,7 @@ import React, { forwardRef, memo, useMemo } from 'react';
 import { css } from '@linaria/core';
 
 import type { Polymorphic } from '../core/polymorphism';
+import { cx } from '../cx';
 import { Box } from '../layout/Box';
 import { VStack } from '../layout/VStack';
 import { Text } from '../typography/Text';
@@ -50,6 +51,23 @@ export type ListCellBaseProps = Polymorphic.ExtendableProps<
     multiline?: boolean;
     /** Title of content. Max 1 line (with description) or 2 lines (without), otherwise will truncate. */
     title?: React.ReactNode;
+    className?: string;
+    classNames?: {
+      root?: string;
+      title?: string;
+      description?: string;
+      accessory?: string;
+      media?: string;
+      intermediary?: string;
+    };
+    styles?: {
+      root?: React.CSSProperties;
+      title?: React.CSSProperties;
+      description?: React.CSSProperties;
+      accessory?: React.CSSProperties;
+      media?: React.CSSProperties;
+      intermediary?: React.CSSProperties;
+    };
   }
 >;
 
@@ -91,6 +109,10 @@ export const ListCellAlpha: ListCellComponent = memo(
         borderRadius = 0,
         detailWidth,
         alignItems,
+        style,
+        className,
+        classNames,
+        styles,
         ...props
       }: ListCellProps<AsComponent>,
       ref?: Polymorphic.Ref<AsComponent>,
@@ -111,30 +133,50 @@ export const ListCellAlpha: ListCellComponent = memo(
       return (
         <Cell
           ref={ref}
-          accessory={accessoryType && <CellAccessory type={accessoryType} />}
+          accessory={
+            accessoryType && (
+              <CellAccessory
+                className={classNames?.accessory}
+                style={styles?.accessory}
+                type={accessoryType}
+              />
+            )
+          }
           alignItems={alignItems}
           as={Component}
           borderRadius={borderRadius}
           bottomContent={helperText}
+          className={cx(className, classNames?.root)}
           detail={end}
           detailWidth={detailWidth}
           disabled={disabled}
           innerSpacing={innerSpacing}
-          intermediary={intermediary}
-          media={media}
+          intermediary={
+            <Box className={classNames?.intermediary} style={styles?.intermediary}>
+              {intermediary}
+            </Box>
+          }
+          media={
+            <Box className={classNames?.media} style={styles?.media}>
+              {media}
+            </Box>
+          }
           outerSpacing={outerSpacing}
           priority={priority}
           selected={selected}
+          style={{ ...style, ...styles?.root }}
           {...props}
         >
           <VStack>
             {!!title && (
               <Text
                 as="div"
+                className={classNames?.title}
                 display="block"
                 font="headline"
                 numberOfLines={disableMultilineTitle ? 1 : 2}
                 overflow="wrap"
+                style={styles?.title}
               >
                 {title}
               </Text>
@@ -143,11 +185,12 @@ export const ListCellAlpha: ListCellComponent = memo(
             {!!description && (
               <Text
                 as="div"
-                className={multiline ? overflowCss : undefined}
+                className={cx(multiline ? overflowCss : undefined, classNames?.description)}
                 color="fgMuted"
                 display="block"
                 font="label2"
                 overflow={multiline ? undefined : 'truncate'}
+                style={styles?.description}
               >
                 {description}
               </Text>

@@ -676,6 +676,14 @@ const AlphaListCell = () => {
         detail="Detail"
         media={<CellMedia source={assets.eth.imageUrl} type="avatar" />}
         onClick={onClickConsole}
+        styles={{
+          accessory: {
+            marginTop: 'var(--space-1)',
+          },
+          media: {
+            marginTop: 'var(--space-1)',
+          },
+        }}
         subdetail="Subdetail"
         title="Title"
       />
