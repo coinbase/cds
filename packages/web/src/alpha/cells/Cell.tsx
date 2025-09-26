@@ -7,7 +7,6 @@ import { css } from '@linaria/core';
 import type { CellAccessoryProps } from '../../cells/CellAccessory';
 import type { Polymorphic } from '../../core/polymorphism';
 import { cx } from '../../cx';
-import { useCellSpacing } from '../../hooks/useCellSpacing';
 import { Box, type BoxBaseProps } from '../../layout/Box';
 import { HStack } from '../../layout/HStack';
 import { VStack } from '../../layout/VStack';
@@ -53,24 +52,6 @@ export const cellDefaultElement = 'div';
 
 export type CellDefaultElement = typeof cellDefaultElement;
 
-export type CellSpacing = Pick<
-  BoxBaseProps,
-  | 'padding'
-  | 'paddingX'
-  | 'paddingY'
-  | 'paddingTop'
-  | 'paddingEnd'
-  | 'paddingBottom'
-  | 'paddingStart'
-  | 'margin'
-  | 'marginX'
-  | 'marginY'
-  | 'marginTop'
-  | 'marginEnd'
-  | 'marginBottom'
-  | 'marginStart'
->;
-
 export type CellBaseProps = Polymorphic.ExtendableProps<
   BoxBaseProps,
   Pick<PressableProps<'a'>, 'href' | 'target'> & {
@@ -83,6 +64,7 @@ export type CellBaseProps = Polymorphic.ExtendableProps<
     detail?: React.ReactNode;
     intermediary?: React.ReactNode;
     media?: React.ReactElement;
+    // TODO: consider renaming this to shouldTruncate. Since overflow gives people the sense that it will overflow and overlap with other content
     shouldOverflow?: boolean;
     borderRadius?: ThemeVars.BorderRadius;
     /** Apply a fixed width to the detail (end). */
@@ -93,10 +75,6 @@ export type CellBaseProps = Polymorphic.ExtendableProps<
     priority?: CellPriority | CellPriority[];
     /** Is the cell selected? Will apply a background and selected accessory. */
     selected?: boolean;
-    /** The spacing to use on the parent wrapper of Cell */
-    outerSpacing?: CellSpacing;
-    /** The spacing to use on the inner content of Cell */
-    innerSpacing?: CellSpacing;
     /** The content to display below the main cell content */
     bottomContent?: React.ReactNode;
   }
@@ -142,6 +120,13 @@ export const Cell: CellComponent = memo(
         target,
         href,
         tabIndex,
+        paddingX,
+        paddingY,
+        paddingTop,
+        paddingEnd,
+        paddingBottom,
+        paddingStart,
+        padding,
         /**
          * For TableCell, we don't want to apply an
          * overflow class unless we've defined overflow
@@ -160,16 +145,21 @@ export const Cell: CellComponent = memo(
       ref?: Polymorphic.Ref<AsComponent>,
     ) => {
       const Component = (as ?? cellDefaultElement) satisfies React.ElementType;
-
-      const { inner: innerSpacing, outer: outerSpacing } = useCellSpacing({
-        innerSpacing: innerSpacingProp,
-        outerSpacing: outerSpacingProp,
-      });
-      const { marginX: innerSpacingMarginX, ...innerSpacingWithoutMarginX } = innerSpacing;
       const isAnchor = Boolean(href);
       const isButton = Boolean(onClick ?? onKeyDown ?? onKeyUp);
-      const linkable = isAnchor || isButton;
       const contentTruncationStyle = cx(baseCss, !shouldOverflow && truncationCss);
+      const paddingProps = useMemo(() => {
+        return {
+          paddingX,
+          paddingY,
+          paddingTop,
+          paddingEnd,
+          paddingBottom,
+          paddingStart,
+          padding,
+        };
+      }, [paddingX, paddingY, paddingTop, paddingEnd, paddingBottom, paddingStart, padding]);
+
       const content = useMemo(() => {
         // props for the entire inner container that wraps the top content
         // (media, children, intermediary, detail, accessory) and the bottom content
@@ -178,7 +168,8 @@ export const Cell: CellComponent = memo(
           className: contentClassName,
           testID,
           ...(selected ? { background: 'bgAlternate' as const } : {}),
-          ...(linkable ? innerSpacingWithoutMarginX : innerSpacing),
+          // padding will be applied to the inner container so it is added to the pressable area
+          ...paddingProps,
         };
 
         // props for the container of the top content only(media, children, intermediary, detail, accessory)
@@ -265,9 +256,7 @@ export const Cell: CellComponent = memo(
         contentClassName,
         testID,
         selected,
-        linkable,
-        innerSpacingWithoutMarginX,
-        innerSpacing,
+        paddingProps,
         alignItems,
         columnGap,
         gap,
@@ -283,7 +272,7 @@ export const Cell: CellComponent = memo(
         rowGap,
       ]);
 
-      const wrappedContent = useMemo(() => {
+      const pressableWrappedContent = useMemo(() => {
         const pressableSharedProps = {
           noScaleOnPress: true,
           transparentWhileInactive: true,
@@ -294,7 +283,6 @@ export const Cell: CellComponent = memo(
           borderRadius,
           className: cx(pressCss, insetFocusRingCss),
           disabled,
-          marginX: innerSpacingMarginX,
           onClick,
           onKeyDown,
           onKeyUp,
@@ -323,7 +311,6 @@ export const Cell: CellComponent = memo(
         accessibilityLabelledBy,
         borderRadius,
         disabled,
-        innerSpacingMarginX,
         onClick,
         onKeyDown,
         onKeyUp,
@@ -344,10 +331,9 @@ export const Cell: CellComponent = memo(
           maxHeight={maxHeight}
           minHeight={minHeight}
           width="100%"
-          {...outerSpacing}
           {...props}
         >
-          {wrappedContent}
+          {pressableWrappedContent}
         </Box>
       );
     },

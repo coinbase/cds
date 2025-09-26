@@ -103,9 +103,6 @@ export const ListCell: ListCellComponent = memo(
         variant,
         intermediary,
         priority,
-        innerSpacing = { paddingX: 2, paddingY: 0.5, marginX: 0 },
-        // no padding outside of the pressable area
-        outerSpacing = { paddingX: 0, paddingY: 0, marginX: 0 },
         borderRadius = 0,
         detailWidth,
         alignItems,
@@ -150,7 +147,6 @@ export const ListCell: ListCellComponent = memo(
           detail={end}
           detailWidth={detailWidth}
           disabled={disabled}
-          innerSpacing={innerSpacing}
           intermediary={
             <Box className={classNames?.intermediary} style={styles?.intermediary}>
               {intermediary}
@@ -161,7 +157,8 @@ export const ListCell: ListCellComponent = memo(
               {media}
             </Box>
           }
-          outerSpacing={outerSpacing}
+          paddingX={2}
+          paddingY={0.5}
           priority={priority}
           selected={selected}
           style={{ ...style, ...styles?.root }}

@@ -169,7 +169,6 @@ const PressableContent = () => (
     <ListCell
       description="Description"
       detail="Detail"
-      innerSpacing={innerSpacingConfig}
       onClick={onClickConsole}
       subdetail="Neutral"
       title="Title"
@@ -188,7 +187,6 @@ const PressableContent = () => (
       disabled
       description="Description"
       detail="Detail"
-      innerSpacing={innerSpacingConfig}
       onClick={onClickConsole}
       subdetail="Neutral"
       title="Title"
@@ -259,7 +257,6 @@ const CompactPressableContent = () => (
     <ListCell
       description="Description"
       detail="Detail"
-      innerSpacing={innerSpacingConfig}
       onClick={onClickConsole}
       subdetail="Neutral"
       title="Title"
@@ -278,7 +275,6 @@ const CompactPressableContent = () => (
       disabled
       description="Description"
       detail="Detail"
-      innerSpacing={innerSpacingConfig}
       onClick={onClickConsole}
       subdetail="Neutral"
       title="Title"
