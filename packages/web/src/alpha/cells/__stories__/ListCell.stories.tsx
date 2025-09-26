@@ -1,14 +1,17 @@
 import React from 'react';
-import { assets } from '@coinbase/cds-common/internal/data/assets';
+import { assets, squareAssets } from '@coinbase/cds-common/internal/data/assets';
 import type { CellPriority } from '@coinbase/cds-common/types/CellBaseProps';
 
-import { Button, IconButton } from '../../buttons';
-import type { CellSpacing } from '../../cells/Cell';
-import { Checkbox } from '../../controls/Checkbox';
-import { Pictogram } from '../../illustrations/Pictogram';
-import { VStack } from '../../layout';
-import { CellHelperText } from '../CellHelperText';
-import { CellMedia } from '../CellMedia';
+import { Button, IconButton } from '../../../buttons';
+import type { CellSpacing } from '../../../cells/Cell';
+import { CellHelperText } from '../../../cells/CellHelperText';
+import { CellMedia } from '../../../cells/CellMedia';
+import { Checkbox } from '../../../controls/Checkbox';
+import { Icon } from '../../../icons';
+import { Pictogram } from '../../../illustrations/Pictogram';
+import { HStack, VStack } from '../../../layout';
+import { RemoteImage } from '../../../media';
+import { Tag } from '../../../tag/Tag';
 import { ListCell } from '../ListCell';
 
 const parameters = {
@@ -21,7 +24,7 @@ const parameters = {
 };
 
 export default {
-  title: 'Components/Cells/ListCell',
+  title: 'Components/alpha/Cells/ListCell',
   component: ListCell,
   parameters: {
     ...parameters,
@@ -82,26 +85,19 @@ const Content = () => {
 const CompactContent = () => {
   return (
     <>
-      <ListCell compact title="Title" />
+      <ListCell title="Title" />
 
-      <ListCell compact detail="Detail" title="Title" />
+      <ListCell detail="Detail" title="Title" />
 
-      <ListCell compact description="Description" title="Title" />
+      <ListCell description="Description" title="Title" />
 
-      <ListCell compact description="Description" detail="Detail" title="Title" />
+      <ListCell description="Description" detail="Detail" title="Title" />
 
-      <ListCell
-        compact
-        description="Description"
-        detail="Detail"
-        subdetail="Neutral"
-        title="Title"
-      />
+      <ListCell description="Description" detail="Detail" subdetail="Neutral" title="Title" />
 
-      <ListCell compact detail="Detail" subdetail="Neutral" title="Title" />
+      <ListCell detail="Detail" subdetail="Neutral" title="Title" />
 
       <ListCell
-        compact
         description="Description"
         detail="Detail"
         subdetail="+Positive"
@@ -109,10 +105,9 @@ const CompactContent = () => {
         variant="positive"
       />
 
-      <ListCell compact subdetail="+Positive" title="Title" variant="positive" />
+      <ListCell subdetail="+Positive" title="Title" variant="positive" />
 
       <ListCell
-        compact
         description="Description"
         detail="Detail"
         subdetail="-Negative"
@@ -120,9 +115,9 @@ const CompactContent = () => {
         variant="negative"
       />
 
-      <ListCell compact detail="Detail" subdetail="-Negative" title="Title" variant="negative" />
+      <ListCell detail="Detail" subdetail="-Negative" title="Title" variant="negative" />
 
-      <ListCell compact detail="Detail" subdetail="Warning" title="Title" variant="warning" />
+      <ListCell detail="Detail" subdetail="Warning" title="Title" variant="warning" />
     </>
   );
 };
@@ -225,12 +220,11 @@ const PressableContent = () => (
 
 const CompactPressableContent = () => (
   <>
-    <ListCell compact onClick={onClickConsole} title="Title" />
+    <ListCell onClick={onClickConsole} title="Title" />
 
-    <ListCell compact onClick={onClickConsole} subdetail="Neutral" title="Title" />
+    <ListCell onClick={onClickConsole} subdetail="Neutral" title="Title" />
 
     <ListCell
-      compact
       multiline
       description="Multi-line description"
       onClick={onClickConsole}
@@ -238,7 +232,6 @@ const CompactPressableContent = () => (
     />
 
     <ListCell
-      compact
       multiline
       selected
       description="Multi-line description"
@@ -247,7 +240,6 @@ const CompactPressableContent = () => (
     />
 
     <ListCell
-      compact
       multiline
       description="Multi-line description goes here with really long text"
       onClick={onClickConsole}
@@ -255,7 +247,6 @@ const CompactPressableContent = () => (
     />
 
     <ListCell
-      compact
       multiline
       selected
       description="Multi-line description goes here with really long text"
@@ -263,16 +254,9 @@ const CompactPressableContent = () => (
       title="Title"
     />
 
-    <ListCell
-      compact
-      description="Description"
-      detail="Detail"
-      onClick={onClickConsole}
-      title="Title"
-    />
+    <ListCell description="Description" detail="Detail" onClick={onClickConsole} title="Title" />
 
     <ListCell
-      compact
       description="Description"
       detail="Detail"
       innerSpacing={innerSpacingConfig}
@@ -282,7 +266,6 @@ const CompactPressableContent = () => (
     />
 
     <ListCell
-      compact
       selected
       description="Description"
       detail="Detail"
@@ -292,7 +275,6 @@ const CompactPressableContent = () => (
     />
 
     <ListCell
-      compact
       disabled
       description="Description"
       detail="Detail"
@@ -303,7 +285,6 @@ const CompactPressableContent = () => (
     />
 
     <ListCell
-      compact
       disabled
       selected
       description="Description"
@@ -315,7 +296,6 @@ const CompactPressableContent = () => (
     />
 
     <ListCell
-      compact
       disabled
       selected
       description="Description"
@@ -627,7 +607,118 @@ const WithHelperText = () => (
   </VStack>
 );
 
+const AlphaListCellTest = () => {
+  return (
+    <VStack width="320px">
+      <ListCell
+        accessory="more"
+        description="Description"
+        detail="Detail"
+        media={<CellMedia source={assets.eth.imageUrl} type="avatar" />}
+        onClick={onClickConsole}
+        subdetail="Subdetail"
+        title="Title"
+      />
+      <ListCell
+        accessory="more"
+        description="Description"
+        detail="Detail"
+        helperText={
+          <CellHelperText variant="information">
+            This is helpful information to guide the user
+          </CellHelperText>
+        }
+        media={<CellMedia source={assets.eth.imageUrl} type="avatar" />}
+        onClick={onClickConsole}
+        subdetail="Subdetail"
+        title="Title"
+      />
+      <ListCell
+        multiline
+        accessory="more"
+        description="Long description with multiple lines. This section can be arbitrarily long and occupy many many lines."
+        detail="Detail"
+        media={<CellMedia source={assets.eth.imageUrl} type="avatar" />}
+        onClick={onClickConsole}
+        subdetail="Subdetail"
+        title="Title"
+      />
+      <ListCell
+        multiline
+        accessory="more"
+        alignItems="flex-start"
+        description="Long description with multiple lines. This section can be arbitrarily long and occupy many many lines."
+        detail="Detail"
+        media={<CellMedia source={assets.eth.imageUrl} type="avatar" />}
+        onClick={onClickConsole}
+        styles={{
+          accessory: {
+            marginTop: 'var(--space-1)',
+          },
+          media: {
+            marginTop: 'var(--space-1)',
+          },
+        }}
+        subdetail="Subdetail"
+        title="Title"
+      />
+      <ListCell
+        accessory="more"
+        description="Description"
+        detail="Detail"
+        onClick={onClickConsole}
+        subdetail="Subdetail"
+        title="Title"
+      />
+      <ListCell
+        accessory="more"
+        description="Description"
+        detail="Detail"
+        media={<Icon name="heart" size="l" />}
+        onClick={onClickConsole}
+        subdetail="Subdetail"
+        title="Title"
+      />
+      <ListCell
+        accessory="more"
+        description="Description"
+        detail="Detail"
+        media={<Icon name="heart" size="s" />}
+        onClick={onClickConsole}
+        subdetail="Subdetail"
+        title="Title"
+      />
+      <ListCell
+        accessory="more"
+        description="Description"
+        detail="Detail"
+        media={<Icon name="heart" size="xs" />}
+        onClick={onClickConsole}
+        subdetail="Subdetail"
+        title="Title"
+      />
+      <ListCell
+        accessory="more"
+        description="Description"
+        detail="Detail"
+        media={<RemoteImage shape="squircle" size="l" source={squareAssets.human1} />}
+        onClick={onClickConsole}
+        subdetail={
+          <Tag colorScheme="green">
+            <HStack alignItems="center" gap={0.5}>
+              <Icon color="fgPositive" name="diagonalUpArrow" size="xs" />
+              1.64%
+            </HStack>
+          </Tag>
+        }
+        title="Title"
+      />
+    </VStack>
+  );
+};
+
 export {
+  AlphaListCellTest,
   CompactContent,
   CompactPressableContent,
   Content,
