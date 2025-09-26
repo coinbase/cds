@@ -266,11 +266,6 @@ export const routes = [
     getComponent: () => require('@coinbase/cds-mobile/typography/__stories__/Link.stories').default,
   },
   {
-    key: 'RollingNumber',
-    getComponent: () =>
-      require('@coinbase/cds-mobile/typography/__stories__/RollingNumber.stories').default,
-  },
-  {
     key: 'ListCell',
     getComponent: () => require('@coinbase/cds-mobile/cells/__stories__/ListCell.stories').default,
   },
@@ -452,6 +447,11 @@ export const routes = [
     key: 'RemoteImageGroup',
     getComponent: () =>
       require('@coinbase/cds-mobile/media/__stories__/RemoteImageGroup.stories').default,
+  },
+  {
+    key: 'RollingNumber',
+    getComponent: () =>
+      require('@coinbase/cds-mobile/numbers/__stories__/RollingNumber.stories').default,
   },
   {
     key: 'SearchInput',
