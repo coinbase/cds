@@ -121,7 +121,6 @@ export const ListCell: ListCellComponent = memo(
         priority,
         borderRadius = 0,
         endWidth,
-        alignItems,
         style,
         className,
         classNames,
@@ -146,16 +145,7 @@ export const ListCell: ListCellComponent = memo(
       return (
         <Cell
           ref={ref}
-          accessory={
-            accessoryType && (
-              <CellAccessory
-                className={classNames?.accessory}
-                style={styles?.accessory}
-                type={accessoryType}
-              />
-            )
-          }
-          alignItems={alignItems}
+          accessory={accessoryType && <CellAccessory type={accessoryType} />}
           as={Component}
           borderRadius={borderRadius}
           bottomContent={helperText}
