@@ -15,7 +15,6 @@ export type AreaComponentProps = {
   clipRect?: Rect;
   stroke?: string;
   strokeWidth?: number;
-  disableAnimations?: boolean;
   /**
    * ID of the y-axis to use.
    * If not provided, defaults to the default y-axis.
@@ -64,7 +63,6 @@ export type AreaProps = {
   fillOpacity?: number;
   stroke?: string;
   strokeWidth?: number;
-  disableAnimations?: boolean;
   /**
    * Baseline value for the gradient.
    * When set, overrides the default baseline.
@@ -82,7 +80,6 @@ export const Area = memo<AreaProps>(
     fillOpacity = 1,
     stroke,
     strokeWidth,
-    disableAnimations,
     baseline,
   }) => {
     const theme = useTheme();
@@ -150,7 +147,6 @@ export const Area = memo<AreaProps>(
         baseline={baseline}
         clipRect={drawingArea}
         d={area}
-        disableAnimations={disableAnimations}
         fill={fill}
         fillOpacity={fillOpacity}
         stroke={stroke}

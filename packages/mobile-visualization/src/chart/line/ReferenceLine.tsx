@@ -56,10 +56,6 @@ type BaseReferenceLineProps = SharedProps & {
    */
   stroke?: string;
   /**
-   * Disable animation for the line.
-   */
-  disableAnimations?: boolean;
-  /**
    * Configuration for the label rendering.
    * Consolidates styling and positioning options for the ChartText component.
    */
@@ -117,7 +113,6 @@ export const ReferenceLine = memo<ReferenceLineProps>(
     testID,
     LineComponent = DottedLine,
     stroke,
-    disableAnimations = true,
     labelConfig,
   }) => {
     const theme = useTheme();
@@ -165,8 +160,8 @@ export const ReferenceLine = memo<ReferenceLineProps>(
       return (
         <G data-testid={testID}>
           <LineComponent
+            animate={false}
             d={`M${drawingArea.x},${yPixel} L${drawingArea.x + drawingArea.width},${yPixel}`}
-            disableAnimations={disableAnimations}
             stroke={effectiveLineStroke}
           />
           {label && (
@@ -213,8 +208,8 @@ export const ReferenceLine = memo<ReferenceLineProps>(
       return (
         <G data-testid={testID}>
           <LineComponent
+            animate={false}
             d={`M${xPixel},${drawingArea.y} L${xPixel},${drawingArea.y + drawingArea.height}`}
-            disableAnimations={disableAnimations}
             stroke={effectiveLineStroke}
           />
           {label && (

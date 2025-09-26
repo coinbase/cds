@@ -104,7 +104,7 @@ export const DefaultStackComponent = memo<StackComponentProps>(function DefaultS
           <Path d={clipPathData} />
         </ClipPath>
       </Defs>
-      <G clipPath={`url(#${clipPathId})`}>{children}</G>
+      <G>{children}</G>
     </>
   );
 });

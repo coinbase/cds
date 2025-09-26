@@ -1,6 +1,5 @@
 import { memo } from 'react';
 import type { SharedProps } from '@coinbase/cds-common/types';
-import { useChartContext } from '@coinbase/cds-common/visualizations/charts';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 
 import { Path, type PathProps } from '../Path';
@@ -23,10 +22,8 @@ export const DottedLine = memo<DottedLineProps>(
     strokeOpacity = 1,
     strokeWidth = 2,
     vectorEffect = 'non-scaling-stroke',
-    disableAnimations,
     ...props
   }) => {
-    const context = useChartContext();
     const theme = useTheme();
 
     return (

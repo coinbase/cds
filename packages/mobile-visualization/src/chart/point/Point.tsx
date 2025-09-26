@@ -223,7 +223,7 @@ export const Point = memo(
       const theme = useTheme();
       const effectiveStroke = stroke ?? theme.color.bg;
       const pulseOpacity = useRef(new Animated.Value(0)).current;
-      const { getXScale, getYScale } = useChartContext();
+      const { getXScale, getYScale, animate: animationEnabled } = useChartContext();
       const { highlightedIndex } = useScrubberContext();
 
       const xScale = getXScale(xAxisId);
@@ -274,8 +274,10 @@ export const Point = memo(
       }, [isScrubberHighlighted, onScrubberEnter, pixelCoordinate.x, pixelCoordinate.y]);
 
       // Set up pulse animation
+      const shouldPulse = animationEnabled && pulse;
+
       useEffect(() => {
-        if (pulse) {
+        if (shouldPulse) {
           const pulseAnimation = Animated.loop(
             Animated.sequence([
               Animated.timing(pulseOpacity, {
@@ -299,7 +301,7 @@ export const Point = memo(
             useNativeDriver: true,
           }).start();
         }
-      }, [pulse, pulseOpacity]);
+      }, [shouldPulse, pulseOpacity]);
 
       const LabelContent = useMemo(() => {
         // Custom render function takes precedence
@@ -341,13 +343,15 @@ export const Point = memo(
         <>
           <G opacity={opacity} testID={testID}>
             {/* pulse ring */}
-            <AnimatedCircle
-              cx={pixelCoordinate.x}
-              cy={pixelCoordinate.y}
-              fill={effectiveColor}
-              opacity={pulse ? pulseOpacity : 0}
-              r={pulseRadius}
-            />
+            {shouldPulse && (
+              <AnimatedCircle
+                cx={pixelCoordinate.x}
+                cy={pixelCoordinate.y}
+                fill={effectiveColor}
+                opacity={pulseOpacity}
+                r={pulseRadius}
+              />
+            )}
             {/* inner point */}
             <Circle
               cx={pixelCoordinate.x}

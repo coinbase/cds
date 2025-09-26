@@ -57,12 +57,14 @@ export const GradientLine = memo<GradientLineProps>(
     strokeLinecap = 'round',
     strokeLinejoin = 'round',
     strokeWidth = 2,
-    disableAnimations,
+    animate,
     ...props
   }) => {
     const context = useChartContext();
     const theme = useTheme();
     const patternIdRef = useRef<string>(generateRandomId());
+
+    const shouldAnimate = animate ?? context.animate;
 
     return (
       <>
@@ -81,7 +83,7 @@ export const GradientLine = memo<GradientLineProps>(
           </LinearGradient>
         </Defs>
         <Path
-          disableAnimations={disableAnimations !== undefined ? disableAnimations : !context.animate}
+          animate={shouldAnimate}
           fill={fill}
           stroke={`url(#${patternIdRef.current})`}
           strokeLinecap={strokeLinecap}

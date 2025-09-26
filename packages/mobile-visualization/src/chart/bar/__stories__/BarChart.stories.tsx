@@ -1,7 +1,9 @@
-import React, { memo } from 'react';
+import React, { memo, useState } from 'react';
 import { TSpan } from 'react-native-svg';
+import { Button } from '@coinbase/cds-mobile/buttons';
 import { Example, ExampleScreen } from '@coinbase/cds-mobile/examples/ExampleScreen';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
+import { VStack } from '@coinbase/cds-mobile/layout';
 
 import { XAxis, YAxis } from '../../axis';
 import { Chart } from '../../Chart';
@@ -220,36 +222,47 @@ const MultipleYAxes = () => {
   );
 };
 
+const UpdatingChartValues = () => {
+  const [data, setData] = useState([45, 52, 38, 45, 19, 23, 32]);
+
+  return (
+    <VStack gap={2}>
+      <BarChart
+        showXAxis
+        showYAxis
+        height={defaultChartProps}
+        series={[
+          {
+            id: 'weekly-data',
+            data: data,
+          },
+        ]}
+        xAxis={{
+          data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+          showTickMarks: true,
+          showLine: true,
+        }}
+        yAxis={{
+          requestedTickCount: 5,
+          tickLabelFormatter: (value) => `$${value}k`,
+          showGrid: true,
+          showTickMarks: true,
+          showLine: true,
+          tickMarkSize: 1.5,
+        }}
+      />
+      <Button onPress={() => setData((data) => data.map((d) => d + 10))}>Update Data</Button>
+    </VStack>
+  );
+};
+
 const BarChartStories = () => {
   return (
     <ExampleScreen>
       <Example title="Basic">
-        <BarChart
-          showXAxis
-          showYAxis
-          height={defaultChartProps}
-          series={[
-            {
-              id: 'weekly-data',
-              data: [45, 52, 38, 45, 19, 23, 32],
-            },
-          ]}
-          xAxis={{
-            data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-            showTickMarks: true,
-            showLine: true,
-          }}
-          yAxis={{
-            requestedTickCount: 5,
-            tickLabelFormatter: (value) => `$${value}k`,
-            showGrid: true,
-            showTickMarks: true,
-            showLine: true,
-            tickMarkSize: 1.5,
-          }}
-        />
+        <UpdatingChartValues />
       </Example>
-      <Example title="Positive and Negative Cash Flow">
+      {/*<Example title="Positive and Negative Cash Flow">
         <PositiveAndNegativeCashFlow />
       </Example>
       <Example title="Fiat & Stablecoin Balance">
@@ -260,7 +273,7 @@ const BarChartStories = () => {
       </Example>
       <Example title="Multiple Y Axes">
         <MultipleYAxes />
-      </Example>
+      </Example>*/}
     </ExampleScreen>
   );
 };

@@ -1,19 +1,9 @@
-import React, { memo, useEffect, useMemo, useRef } from 'react';
-import Reanimated, {
-  Easing,
-  useAnimatedProps,
-  useSharedValue,
-  withTiming,
-} from 'react-native-reanimated';
-import { ClipPath, Defs, G, Path, Rect } from 'react-native-svg';
+import React, { memo, useMemo } from 'react';
 import type { ThemeVars } from '@coinbase/cds-common';
-import { getBarPath, useChartContext } from '@coinbase/cds-common/visualizations/charts';
+import { getBarPath } from '@coinbase/cds-common/visualizations/charts';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
-import { generateRandomId } from '@coinbase/cds-utils';
 
 import { DefaultBar } from './';
-
-const AnimatedRect = Reanimated.createAnimatedComponent(Rect);
 
 export type BarComponentProps = {
   /**
@@ -48,8 +38,7 @@ export type BarComponentProps = {
    */
   roundBottom: boolean;
   /**
-   * Y coordinate of the baseline/origin for animations.
-   * Used to calculate initial animation state.
+   * Y coordinate of the baseline/origin.
    * @todo: make this optional
    */
   originY: number;
@@ -104,8 +93,7 @@ export type BarProps = {
    */
   height: number;
   /**
-   * Y coordinate of the baseline/origin for animations.
-   * Used to calculate initial animation state.
+   * Y coordinate of the baseline/origin.
    */
   originY?: number;
   /**
@@ -150,7 +138,7 @@ export type BarProps = {
 /**
  * Simple bar component that renders a single bar at the specified position.
  *
- * This component is intentionally kept simple - it just renders a bar at the given
+ * This component is intentionally kept simple - it just renders a static bar at the given
  * x, y, width, height coordinates. Complex positioning logic (like handling stacks,
  * groups, gaps, etc.) should be handled by parent components like BarChart or BarStack.
  *
@@ -178,8 +166,6 @@ export const Bar = memo<BarProps>(
     roundBottom = true,
   }) => {
     const theme = useTheme();
-    const { animate } = useChartContext();
-    const clipPathId = useRef(generateRandomId()).current;
 
     // Use theme color as default if no fill is provided
     const effectiveFill = fill ?? theme.color.fgPrimary;
@@ -195,91 +181,11 @@ export const Bar = memo<BarProps>(
 
     const effectiveOriginY = originY ?? y + height;
 
-    // Animation values
-    const baseY = effectiveOriginY;
-
-    // Initialize shared values
-    const animatedHeight = useSharedValue(0);
-    const animatedY = useSharedValue(baseY);
-    const hasInitialized = useSharedValue(false);
-
-    // Set up animation with proper worklet
-    useEffect(() => {
-      'worklet';
-
-      if (!animate) {
-        // Set values immediately when animations are disabled
-        animatedHeight.value = height;
-        animatedY.value = y;
-        hasInitialized.value = true;
-      } else {
-        // Determine if this is initial mount or update
-        const isInitialMount = !hasInitialized.value;
-        hasInitialized.value = true;
-
-        if (isInitialMount) {
-          // Initial animation: start from near-zero height at bottom
-          animatedHeight.value = 0.01;
-          animatedY.value = baseY;
-
-          // Animate to full size
-          animatedHeight.value = withTiming(height, {
-            duration: 600,
-            easing: Easing.out(Easing.cubic),
-          });
-          animatedY.value = withTiming(y, {
-            duration: 600,
-            easing: Easing.out(Easing.cubic),
-          });
-        } else {
-          // Update animation: smoothly transition to new values
-          animatedHeight.value = withTiming(height, {
-            duration: 300,
-            easing: Easing.inOut(Easing.cubic),
-          });
-          animatedY.value = withTiming(y, {
-            duration: 300,
-            easing: Easing.inOut(Easing.cubic),
-          });
-        }
-      }
-    }, [height, y, baseY, animate, animatedHeight, animatedY, hasInitialized]);
-
-    const animatedProps = useAnimatedProps(() => {
-      return {
-        y: animatedY.value,
-        height: animatedHeight.value,
-      };
-    });
-
     if (!barPath) {
       return null;
     }
 
-    // For bars with animations, use an animated rect with clipping
-    if (animate) {
-      return (
-        <G>
-          <Defs>
-            <ClipPath id={clipPathId}>
-              <Path d={barPath} />
-            </ClipPath>
-          </Defs>
-          <AnimatedRect
-            animatedProps={animatedProps}
-            clipPath={`url(#${clipPathId})`}
-            fill={effectiveFill}
-            fillOpacity={fillOpacity}
-            stroke={stroke}
-            strokeWidth={strokeWidth}
-            width={width}
-            x={x}
-          />
-        </G>
-      );
-    }
-
-    // For static bars, use the BarComponent
+    // Always use the BarComponent for rendering
     return (
       <BarComponent
         borderRadius={borderRadiusPixels}
@@ -301,5 +207,3 @@ export const Bar = memo<BarProps>(
     );
   },
 );
-
-Bar.displayName = 'Bar';
