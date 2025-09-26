@@ -88,7 +88,6 @@ export type ScrubberProps = SharedProps &
       scrubberHead?: React.CSSProperties;
       scrubberLine?: React.CSSProperties;
       scrubberHeadLabel?: React.CSSProperties;
-      overlay?: React.CSSProperties;
     };
 
     /**
@@ -99,7 +98,6 @@ export type ScrubberProps = SharedProps &
       scrubberHead?: string;
       scrubberLine?: string;
       scrubberHeadLabel?: string;
-      overlay?: string;
     };
 
     scrubberComponents?: {
@@ -601,7 +599,7 @@ export const Scrubber = memo(
             highlightedIndex !== undefined &&
             pixelX !== undefined && (
               <rect
-                className={classNames?.overlay}
+                className={classNames?.scrubberOverlay}
                 fill="var(--color-bg)"
                 height={drawingArea.height + overlayOffset * 2}
                 opacity={0.8}

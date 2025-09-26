@@ -329,7 +329,7 @@ const BTCPriceChart = () => {
               scrubberHead: {
                 stroke: btcAccentColor,
               },
-              overlay: {
+              scrubberOverlay: {
                 fill: btcAccentColor,
               },
             }}
