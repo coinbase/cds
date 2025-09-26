@@ -30,10 +30,6 @@ export type BarPlotProps = {
    */
   BarComponent?: BarComponent;
   /**
-   * Default bar type.
-   */
-  type?: BarProps['type'];
-  /**
    * Default opacity of the bar.
    */
   fillOpacity?: number;
@@ -85,7 +81,6 @@ export const BarPlot = memo<BarPlotProps>(
     xAxisId = defaultAxisId,
     barPadding = 0.1,
     BarComponent: defaultBarComponent,
-    type: defaultType,
     fillOpacity: defaultFillOpacity,
     stroke: defaultStroke,
     strokeWidth: defaultStrokeWidth,
@@ -173,7 +168,6 @@ export const BarPlot = memo<BarPlotProps>(
               stroke={defaultStroke}
               strokeWidth={defaultStrokeWidth}
               totalStacks={stackGroups.length}
-              type={defaultType}
               xAxisId={xAxisId}
               yAxisId={group.yAxisId}
             />

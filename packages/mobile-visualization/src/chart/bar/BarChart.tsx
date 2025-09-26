@@ -19,9 +19,7 @@ import { BarPlot, type BarPlotProps } from './BarPlot';
  * and allows individual customization of Bar props per series.
  */
 export type BarSeries = Series &
-  Partial<
-    Pick<BarProps, 'BarComponent' | 'type' | 'fill' | 'fillOpacity' | 'stroke' | 'strokeWidth'>
-  >;
+  Partial<Pick<BarProps, 'BarComponent' | 'fill' | 'fillOpacity' | 'stroke' | 'strokeWidth'>>;
 
 //  & Omit<ScrubberGroupProps, 'chartScale' | 'heads'>
 export type BarChartProps = Omit<ChartProps, 'xAxis' | 'yAxis' | 'series'> &
@@ -29,10 +27,7 @@ export type BarChartProps = Omit<ChartProps, 'xAxis' | 'yAxis' | 'series'> &
     BarPlotProps,
     'barPadding' | 'StackComponent' | 'roundBaseline' | 'stackGap' | 'barMinSize' | 'stackMinSize'
   > &
-  Pick<
-    BarProps,
-    'BarComponent' | 'type' | 'fillOpacity' | 'stroke' | 'strokeWidth' | 'borderRadius'
-  > & {
+  Pick<BarProps, 'BarComponent' | 'fillOpacity' | 'stroke' | 'strokeWidth' | 'borderRadius'> & {
     /**
      * Configuration objects that define how to visualize the data.
      * Each series supports Bar component props for individual customization.
@@ -81,7 +76,6 @@ export const BarChart = memo(
         children,
         barPadding,
         BarComponent,
-        type,
         fillOpacity,
         stroke,
         strokeWidth,
@@ -211,7 +205,6 @@ export const BarChart = memo(
             stackMinSize={stackMinSize}
             stroke={stroke}
             strokeWidth={strokeWidth}
-            type={type}
           />
           {children}
         </Chart>

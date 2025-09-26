@@ -128,10 +128,10 @@ const MonthlyRewards = () => {
           borderRadius={1000}
           fill={theme.color.bgTertiary}
           height={diameter}
+          originY={props.y}
           width={diameter}
           x={props.x}
           y={props.y - diameter}
-          yOrigin={props.y}
         />
       );
     }
