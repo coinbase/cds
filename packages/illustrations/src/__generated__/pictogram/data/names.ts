@@ -209,6 +209,7 @@ const names: PictogramName[] = [
   'coinbaseOneFiat',
   'coinbaseOneLogo',
   'coinbaseOneProductIcon',
+  'coinbaseOneProductInvestWeekly',
   'coinbaseOneRefreshed',
   'coinbaseOneShield',
   'coinbaseOneTrade',

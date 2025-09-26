@@ -8,6 +8,28 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 4.22.0 (9/25/2025 PST)
+
+#### 🚀 Updates
+
+- Feat: Publish illustrations 09/25/2025. [[#17](https://github.com/coinbase/cds/pull/20)]
+
+### 🚀 Added
+
+Generated with `yarn nx run illustrations:sync-illustrations`
+
+#### Pictogram
+
+- coinbaseOneProductInvestWeekly
+
+#### Spot Icon
+
+- coinbaseOneProductInvestWeekly
+
+#### Spot Rectangle
+
+- fiatInterest
+
 ## 4.21.1 (9/23/2025 PST)
 
 #### 🐞 Fixes
