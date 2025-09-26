@@ -16,6 +16,7 @@ function Example() {
         onClick={() => {
           setValIdx((prev) => (prev + 1) % values.length);
         }}
+        alignSelf="flex-start"
       >
         Next
       </Button>
@@ -89,7 +90,9 @@ function Examples() {
           value={price / 150_000}
         />
       </HStack>
-      <Button onClick={onNext}>Next</Button>
+      <Button alignSelf="flex-start" onClick={onNext}>
+        Next
+      </Button>
     </VStack>
   );
 }
@@ -121,7 +124,9 @@ function Example() {
           value={value}
         />
       </h1>
-      <Button onClick={onNext}>Next</Button>
+      <Button alignSelf="flex-start" onClick={onNext}>
+        Next
+      </Button>
       <Text as="p" display="block" font="label1">
         Number without grouping
       </Text>
@@ -192,7 +197,9 @@ function Example() {
         format={{ style: 'currency', currency: 'USD' }}
         value={price}
       />
-      <Button onClick={onNext}>Next</Button>
+      <Button alignSelf="flex-start" onClick={onNext}>
+        Next
+      </Button>
     </VStack>
   );
 }
@@ -302,7 +309,9 @@ function Example() {
         }}
         value={price}
       />
-      <Button onClick={onNext}>Next</Button>
+      <Button alignSelf="flex-start" onClick={onNext}>
+        Next
+      </Button>
     </VStack>
   );
 }
@@ -362,7 +371,9 @@ function Example() {
         value={value}
       />
 
-      <Button onClick={onNext}>Next</Button>
+      <Button alignSelf="flex-start" onClick={onNext}>
+        Next
+      </Button>
     </VStack>
   );
 }
@@ -399,11 +410,9 @@ function SubscriptionPriceExample() {
         }}
         value={price}
       />
-      <HStack gap={2}>
-        <Button onClick={() => setYearly((v) => !v)}>
-          {yearly ? 'Switch to monthly' : 'Switch to yearly'}
-        </Button>
-      </HStack>
+      <Button alignSelf="flex-start" onClick={() => setYearly((v) => !v)}>
+        {yearly ? 'Switch to monthly' : 'Switch to yearly'}
+      </Button>
     </VStack>
   );
 }
@@ -455,7 +464,9 @@ function Example() {
         suffix="BTC"
         value={price}
       />
-      <Button onClick={onNext}>Next</Button>
+      <Button alignSelf="flex-start" onClick={onNext}>
+        Next
+      </Button>
     </VStack>
   );
 }
@@ -492,7 +503,9 @@ function Example() {
           value={value}
         />
       ))}
-      <Button onClick={() => setIdx((i) => (i + 1) % values.length)}>Next</Button>
+      <Button alignSelf="flex-start" onClick={() => setIdx((i) => (i + 1) % values.length)}>
+        Next
+      </Button>
     </VStack>
   );
 }
@@ -549,7 +562,9 @@ function Example() {
         formattedValue={subscripts[idx].formattedValue}
         value={subscripts[idx].value}
       />
-      <Button onClick={onNext}>Next</Button>
+      <Button alignSelf="flex-start" onClick={onNext}>
+        Next
+      </Button>
     </VStack>
   );
 }
@@ -774,7 +789,9 @@ function StatisticsExample() {
           </Text>
         </VStack>
       </HStack>
-      <Button onClick={simulateActivity}>Simulate Activity</Button>
+      <Button alignSelf="flex-start" onClick={simulateActivity}>
+        Simulate Activity
+      </Button>
     </VStack>
   );
 }
@@ -823,7 +840,7 @@ Use `classNames` to target specific parts for CSS styling (Linaria or your own c
 
 ### Style overrides
 
-Use `styles` to inline style specific parts (same keys as `classNames` plus `root`, `visibleContent`, and `text`):
+Use `styles` to inline style specific parts:
 
 - **root**, **visibleContent**, **formattedValueSection**, **i18nPrefix**, **integer**, **fraction**, **i18nSuffix**, **prefix**, **suffix**, **text**
 
