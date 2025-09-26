@@ -10,7 +10,6 @@ import { UpsellCard } from '@coinbase/cds-web/cards/UpsellCard';
 
 import { ComponentHeader } from '@site/src/components/page/ComponentHeader';
 import { ComponentTabsContainer } from '@site/src/components/page/ComponentTabsContainer';
-import { DefaultBanner } from '@site/src/components/page/ComponentBanner/DefaultBanner';
 
 import webPropsToc from ':docgen/web/cards/UpsellCard/toc-props';
 import mobilePropsToc from ':docgen/mobile/cards/UpsellCard/toc-props';
@@ -24,12 +23,7 @@ import webMetadata from './webMetadata.json';
 import mobileMetadata from './mobileMetadata.json';
 
 <VStack gap={5}>
-  <ComponentHeader
-    title="UpsellCard"
-    banner={<DefaultBanner />}
-    webMetadata={webMetadata}
-    mobileMetadata={mobileMetadata}
-  />
+  <ComponentHeader title="UpsellCard" webMetadata={webMetadata} mobileMetadata={mobileMetadata} />
   <ComponentTabsContainer
     webPropsTable={<WebPropsTable />}
     webExamples={<WebExamples />}

@@ -10,7 +10,6 @@ import { NudgeCard } from '@coinbase/cds-web/cards/NudgeCard';
 
 import { ComponentHeader } from '@site/src/components/page/ComponentHeader';
 import { ComponentTabsContainer } from '@site/src/components/page/ComponentTabsContainer';
-import { DefaultBanner } from '@site/src/components/page/ComponentBanner/DefaultBanner';
 
 import webPropsToc from ':docgen/web/cards/NudgeCard/toc-props';
 import mobilePropsToc from ':docgen/mobile/cards/NudgeCard/toc-props';
@@ -24,12 +23,7 @@ import webMetadata from './webMetadata.json';
 import mobileMetadata from './mobileMetadata.json';
 
 <VStack gap={5}>
-  <ComponentHeader
-    title="NudgeCard"
-    banner={<DefaultBanner />}
-    webMetadata={webMetadata}
-    mobileMetadata={mobileMetadata}
-  />
+  <ComponentHeader title="NudgeCard" webMetadata={webMetadata} mobileMetadata={mobileMetadata} />
   <ComponentTabsContainer
     webPropsTable={<WebPropsTable />}
     webExamples={<WebExamples />}

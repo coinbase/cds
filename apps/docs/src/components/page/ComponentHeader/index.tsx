@@ -6,7 +6,6 @@ import { VStack } from '@coinbase/cds-web/layout/VStack';
 import { Link } from '@coinbase/cds-web/typography/Link';
 import { Text } from '@coinbase/cds-web/typography/Text';
 import DocusaurusLink from '@docusaurus/Link';
-import { DefaultBanner } from '@site/src/components/page/ComponentBanner/DefaultBanner';
 import { VersionLabel } from '@site/src/components/page/VersionLabel';
 import { useDocsTheme } from '@site/src/theme/Layout/Provider/UnifiedThemeContext';
 import { usePlatformContext } from '@site/src/utils/PlatformContext';
@@ -55,7 +54,6 @@ type ContentHeaderProps = {
    * Banner to display at the top of the header.
    * Can be either a React node or image URL string.
    * Used for light mode and as fallback for dark mode if bannerDark is not provided.
-   * Defaults to <DefaultBanner /> if not provided.
    */
   banner?: React.ReactNode;
   /**
@@ -79,14 +77,7 @@ const MetadataItem = ({ label, children }: MetadataItemProps) => (
 );
 
 export const ComponentHeader = memo(
-  ({
-    title,
-    description,
-    webMetadata,
-    mobileMetadata,
-    banner = <DefaultBanner />,
-    bannerDark,
-  }: ContentHeaderProps) => {
+  ({ title, description, webMetadata, mobileMetadata, banner, bannerDark }: ContentHeaderProps) => {
     const { platform } = usePlatformContext();
     const { colorScheme } = useDocsTheme();
 
@@ -110,17 +101,19 @@ export const ComponentHeader = memo(
 
     return (
       <VStack background="bgAlternate" borderRadius={600} overflow="hidden" width="100%">
-        <VStack height={200} width="100%">
-          {typeof activeBanner === 'string' ? (
-            <img
-              alt={`${title} banner`}
-              src={activeBanner}
-              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-            />
-          ) : (
-            activeBanner
-          )}
-        </VStack>
+        {activeBanner && (
+          <VStack height={200} width="100%">
+            {typeof activeBanner === 'string' ? (
+              <img
+                alt={`${title} banner`}
+                src={activeBanner}
+                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+              />
+            ) : (
+              activeBanner
+            )}
+          </VStack>
+        )}
         <VStack gap={4} padding={4} paddingTop={4}>
           <VStack gap={3}>
             <HStack alignItems="center" flexWrap="wrap" gap={2} justifyContent="space-between">
