@@ -1,5 +1,7 @@
-import React, { memo, useEffect, useMemo, useRef, useState } from 'react';
+import React, { memo, useEffect, useMemo, useState } from 'react';
 import {
+  Circle,
+  ForeignObject,
   // Defs,
   G,
   Rect as SvgRect,
@@ -12,9 +14,7 @@ import { type ChartPadding, getPadding } from '@coinbase/cds-common/visualizatio
 import { useChartContext } from '@coinbase/cds-common/visualizations/charts';
 import { useLayout } from '@coinbase/cds-mobile/hooks/useLayout';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
-
-// Module-level counter for generating stable unique IDs
-// let filterIdCounter = 0;
+import { Box } from '@coinbase/cds-mobile/layout';
 
 // Define the valid SVG children for the <text> element.
 type ValidChartTextChildElements =
@@ -93,13 +93,142 @@ export type ChartTextProps = SharedProps &
     padding?: number | ChartPadding;
     // override box responsive style
     borderRadius?: ThemeVars.BorderRadius;
-    /**
-     * Apply a filter to the background rect (e.g., drop shadow).
-     * When using elevation, a default drop shadow filter is applied.
-     * You can override this with a custom filter ID.
-     */
-    filter?: string;
   };
+
+type ChartTextVisibleProps = {
+  children: ChartTextChildren;
+  background: string;
+  elevation?: ElevationLevels;
+  textAnchor: TextProps['textAnchor'];
+  alignmentBaseline: TextProps['alignmentBaseline'];
+  fontFamily: TextProps['fontFamily'];
+  fontSize: TextProps['fontSize'];
+  fontWeight: TextProps['fontWeight'];
+  textDimensions: Rect;
+  fill: string;
+  borderRadius?: ThemeVars.BorderRadius;
+  padding?: number | ChartPadding;
+  dx?: TextProps['dx'];
+  dy?: TextProps['dy'];
+};
+
+const ChartTextVisible = memo<ChartTextVisibleProps>(
+  ({
+    children,
+    background,
+    elevation = 0,
+    textAnchor,
+    alignmentBaseline,
+    fontFamily,
+    fontSize,
+    fontWeight,
+    fill,
+    borderRadius,
+    padding: paddingInput,
+    textDimensions,
+    dx,
+    dy,
+  }) => {
+    const padding = useMemo(() => getPadding(paddingInput), [paddingInput]);
+
+    const elevationSpacing = useMemo(() => {
+      if (!elevation) return { top: 0, right: 0, bottom: 0, left: 0 };
+
+      // Calculate shadow space based on elevation level
+      const spacing =
+        elevation === 1
+          ? { top: 12, right: 12, bottom: 20, left: 12 } // shadowRadius on sides, shadowOffset.height + shadowRadius on bottom
+          : { top: 24, right: 24, bottom: 32, left: 24 }; // elevation 2 spacing
+
+      return spacing;
+    }, [elevation]);
+
+    const backgroundRectDimensions = useMemo(() => {
+      return {
+        x: (textDimensions.x - padding.left - elevationSpacing.left + Number(dx ?? 0)) / 2,
+        y: (textDimensions.y - padding.top - elevationSpacing.top + Number(dy ?? 0)) / 2,
+        width:
+          textDimensions.width +
+          padding.left +
+          padding.right +
+          elevationSpacing.left +
+          elevationSpacing.right,
+        height:
+          textDimensions.height +
+          padding.top +
+          padding.bottom +
+          elevationSpacing.top +
+          elevationSpacing.bottom,
+      };
+    }, [
+      textDimensions.x,
+      textDimensions.y,
+      textDimensions.width,
+      textDimensions.height,
+      padding.left,
+      padding.top,
+      padding.right,
+      padding.bottom,
+      elevationSpacing.left,
+      elevationSpacing.top,
+      elevationSpacing.right,
+      elevationSpacing.bottom,
+      dx,
+      dy,
+    ]);
+
+    /*
+
+        <SvgRect
+          fill={background}
+          {...backgroundRectDimensions}
+          rx={borderRadius ? theme.borderRadius[borderRadius] : undefined}
+          ry={borderRadius ? theme.borderRadius[borderRadius] : undefined}
+          // TODO: Filter not supported in React Native SVG
+          // {...(filterId ? { filter: `url(#${filterId})` } : {})}
+        />
+    */
+
+    const rectHeight = useMemo(
+      () => textDimensions.height + padding.top + padding.bottom,
+      [textDimensions, padding],
+    );
+    const rectWidth = useMemo(
+      () => textDimensions.width + padding.left + padding.right,
+      [textDimensions, padding],
+    );
+
+    return (
+      <G>
+        <ForeignObject {...backgroundRectDimensions}>
+          <Box
+            borderRadius={borderRadius}
+            elevation={elevation}
+            height={rectHeight}
+            style={{
+              marginLeft: elevationSpacing.left,
+              marginTop: elevationSpacing.top,
+              backgroundColor: background,
+            }}
+            width={rectWidth}
+          />
+        </ForeignObject>
+        <Text
+          alignmentBaseline={alignmentBaseline}
+          dx={dx}
+          dy={dy}
+          fill={fill}
+          fontFamily={fontFamily}
+          fontSize={fontSize}
+          fontWeight={fontWeight}
+          textAnchor={textAnchor}
+        >
+          {children}
+        </Text>
+      </G>
+    );
+  },
+);
 
 export const ChartText = memo<ChartTextProps>(
   ({
@@ -123,27 +252,47 @@ export const ChartText = memo<ChartTextProps>(
     padding: paddingInput,
     onDimensionsChange,
     opacity = 1,
-    filter,
   }) => {
     const theme = useTheme();
     const { width: chartWidth, height: chartHeight } = useChartContext();
-    const filterIdRef = useRef<string>();
 
-    // Use theme-based default color
-    const effectiveColor = color ?? theme.color.fgMuted;
-    const effectiveBackground =
-      background === 'transparent'
-        ? 'transparent'
-        : (background ?? (elevation && elevation > 0 ? theme.color.bg : 'transparent'));
     const fullChartBounds = useMemo(
       () => ({ x: 0, y: 0, width: chartWidth, height: chartHeight }),
       [chartWidth, chartHeight],
     );
 
-    const [textLayoutRect, onTextLayout] = useLayout();
-    const [textBBox, setTextBBox] = useState<Rect | null>(null);
+    const [_textSize, onTextSizeLayout] = useLayout();
+    const [textSize, setTextSize] = useState<Rect | null>(null);
+
+    // Sometimes dimensions will be incorrect and report 0, so we update each time they are non zero
+    // todo: we could move the size logic into separate function which only reports then
+    useEffect(() => {
+      if (_textSize && _textSize.width > 0 && _textSize.height > 0) {
+        setTextSize({
+          x: _textSize.x,
+          y: _textSize.y,
+          width: _textSize.width,
+          height: _textSize.height,
+        });
+      }
+    }, [_textSize]);
+
+    const textBBox = useMemo(() => {
+      if (!textSize) {
+        return null;
+      }
+
+      return {
+        x: x + textSize.x,
+        y: y + textSize.y,
+        width: textSize.width,
+        height: textSize.height,
+      };
+    }, [x, y, textSize]);
+
     const isDimensionsReady = disableRepositioning || textBBox !== null;
 
+    // todo: make sure this works with chart text children
     const backgroundRectDimensions = useMemo(() => {
       if (!textBBox) {
         return null;
@@ -165,7 +314,12 @@ export const ChartText = memo<ChartTextProps>(
 
       const parentBounds = bounds ?? fullChartBounds;
       // TODO: it might be more clear to allow chartRect to be null until it has been measured after first render
-      if (!textBBox || !parentBounds || parentBounds.width <= 0 || parentBounds.height <= 0) {
+      if (
+        !backgroundRectDimensions ||
+        !parentBounds ||
+        parentBounds.width <= 0 ||
+        parentBounds.height <= 0
+      ) {
         return { x: 0, y: 0 };
       }
 
@@ -173,23 +327,34 @@ export const ChartText = memo<ChartTextProps>(
       let y = 0;
 
       // X-axis overflow
-      if (textBBox.x < parentBounds.x) {
-        x = parentBounds.x - textBBox.x; // positive = shift right
-      } else if (textBBox.x + textBBox.width > parentBounds.x + parentBounds.width) {
-        x = parentBounds.x + parentBounds.width - (textBBox.x + textBBox.width); // negative = shift left
+      if (backgroundRectDimensions.x < parentBounds.x) {
+        x = parentBounds.x - backgroundRectDimensions.x; // positive = shift right
+      } else if (
+        backgroundRectDimensions.x + backgroundRectDimensions.width >
+        parentBounds.x + parentBounds.width
+      ) {
+        x =
+          parentBounds.x +
+          parentBounds.width -
+          (backgroundRectDimensions.x + backgroundRectDimensions.width); // negative = shift left
       }
 
       // Y-axis overflow
-      if (textBBox.y < parentBounds.y) {
-        y = parentBounds.y - textBBox.y; // positive = shift down
-      } else if (textBBox.y + textBBox.height > parentBounds.y + parentBounds.height) {
-        y = parentBounds.y + parentBounds.height - (textBBox.y + textBBox.height); // negative = shift up
+      if (backgroundRectDimensions.y < parentBounds.y) {
+        y = parentBounds.y - backgroundRectDimensions.y; // positive = shift down
+      } else if (
+        backgroundRectDimensions.y + backgroundRectDimensions.height >
+        parentBounds.y + parentBounds.height
+      ) {
+        y =
+          parentBounds.y +
+          parentBounds.height -
+          (backgroundRectDimensions.y + backgroundRectDimensions.height); // negative = shift up
       }
 
       return { x, y };
-    }, [textBBox, fullChartBounds, bounds, disableRepositioning]);
+    }, [backgroundRectDimensions, fullChartBounds, bounds, disableRepositioning]);
 
-    // Compose the final reported rect including any overflow translation applied
     const reportedRect = useMemo(() => {
       if (!backgroundRectDimensions) return null;
       return {
@@ -200,105 +365,51 @@ export const ChartText = memo<ChartTextProps>(
       };
     }, [backgroundRectDimensions, overflowAmount.x, overflowAmount.y]);
 
-    // Convert layout rect to bbox format when text layout changes
-    useEffect(() => {
-      if (textLayoutRect.width > 0 && textLayoutRect.height > 0) {
-        // The layout rect already has the correct position based on text anchor and alignment
-        // We just need to apply any dx/dy offsets
-        const bboxX = textLayoutRect.x + (dx ? Number(dx) : 0);
-        const bboxY = textLayoutRect.y + (dy ? Number(dy) : 0);
-
-        setTextBBox({
-          x: bboxX,
-          y: bboxY,
-          width: textLayoutRect.width,
-          height: textLayoutRect.height,
-        });
-      }
-    }, [textLayoutRect, dx, dy]);
-
-    // send latest calculated dimensions (adjusted for translation) to parent
     useEffect(() => {
       if (onDimensionsChange && reportedRect !== null) {
         onDimensionsChange(reportedRect);
       }
     }, [reportedRect, onDimensionsChange]);
 
-    // Generate stable filter ID for this instance
-    // TODO: React Native SVG doesn't support Filter/FeDropShadow - commenting out for now
-    // const filterId = useMemo(() => {
-    //   if (!elevation && !filter) return undefined;
-    //   if (filter) return filter; // Use custom filter if provided
-
-    //   // Generate a stable ID only once for this component instance
-    //   if (!filterIdRef.current) {
-    //     filterIdRef.current = `chart-text-shadow-${++filterIdCounter}`;
-    //   }
-    //   return filterIdRef.current;
-    // }, [elevation, filter]);
-
-    // // Calculate shadow properties based on elevation
-    // const shadowProps = useMemo(() => {
-    //   if (!elevation || filter) return null; // Skip if using custom filter
-
-    //   // Map elevation levels to shadow properties
-    //   const shadowMap = {
-    //     1: { dx: 0, dy: 1, stdDeviation: 2, floodOpacity: 0.1 },
-    //     2: { dx: 0, dy: 2, stdDeviation: 3, floodOpacity: 0.12 },
-    //     3: { dx: 0, dy: 3, stdDeviation: 4, floodOpacity: 0.14 },
-    //     4: { dx: 0, dy: 4, stdDeviation: 5, floodOpacity: 0.16 },
-    //     5: { dx: 0, dy: 5, stdDeviation: 6, floodOpacity: 0.18 },
-    //   };
-
-    //   return shadowMap[elevation as keyof typeof shadowMap] || shadowMap[1];
-    // }, [elevation, filter]);
+    const dimensionsRect = useMemo(() => {
+      if (!textSize || textSize.width === 0 || textSize.height === 0) return null;
+      return {
+        x: textSize.x + overflowAmount.x,
+        y: textSize.y + overflowAmount.y,
+        width: textSize.width,
+        height: textSize.height,
+      };
+    }, [textSize, overflowAmount.x, overflowAmount.y]);
 
     return (
       <G opacity={isDimensionsReady ? opacity : 0} testID={testID}>
-        {/* Define filter for drop shadow if elevation is provided */}
-        {/* TODO: React Native SVG doesn't support Filter/FeDropShadow - commenting out for now */}
-        {/* {filterId && shadowProps && (
-          <Defs>
-            <Filter id={filterId}>
-              <FeDropShadow
-                dx={shadowProps.dx}
-                dy={shadowProps.dy}
-                floodColor="black"
-                floodOpacity={shadowProps.floodOpacity}
-                stdDeviation={shadowProps.stdDeviation}
-              />
-            </Filter>
-          </Defs>
-        )} */}
-        {backgroundRectDimensions && effectiveBackground !== 'transparent' && (
-          <SvgRect
-            fill={effectiveBackground}
-            height={backgroundRectDimensions.height}
-            rx={borderRadius ? theme.borderRadius[borderRadius] : undefined}
-            ry={borderRadius ? theme.borderRadius[borderRadius] : undefined}
-            width={backgroundRectDimensions.width}
-            x={backgroundRectDimensions.x + overflowAmount.x}
-            y={backgroundRectDimensions.y + overflowAmount.y}
-            // TODO: Filter not supported in React Native SVG
-            // {...(filterId ? { filter: `url(#${filterId})` } : {})}
-          />
+        {textSize && (
+          <G transform={`translate(${x + overflowAmount.x}, ${y + overflowAmount.y})`}>
+            <ChartTextVisible
+              alignmentBaseline={alignmentBaseline}
+              background={background}
+              borderRadius={borderRadius}
+              dx={dx}
+              dy={dy}
+              elevation={elevation}
+              fill={color ?? theme.color.fgMuted}
+              fontFamily={fontFamily}
+              fontSize={fontSize}
+              fontWeight={fontWeight}
+              padding={paddingInput}
+              textAnchor={textAnchor}
+              textDimensions={textSize}
+            >
+              {children}
+            </ChartTextVisible>
+          </G>
         )}
-        <G transform={`translate(${overflowAmount.x}, ${overflowAmount.y})`}>
+        {textSize && (
           <Text
-            alignmentBaseline={alignmentBaseline}
-            dx={dx}
-            dy={dy}
-            fill={effectiveColor}
-            fontFamily={fontFamily}
-            fontSize={fontSize}
-            fontWeight={fontWeight}
-            textAnchor={textAnchor}
-            x={x}
-            y={y}
-          >
-            {children}
-          </Text>
-        </G>
+            x={0}
+            y={y - 30}
+          >{`${textSize.x} ${textSize.y} ${textSize.width} ${textSize.height}`}</Text>
+        )}
         <Text
           alignmentBaseline={alignmentBaseline}
           dx={dx}
@@ -307,11 +418,9 @@ export const ChartText = memo<ChartTextProps>(
           fontFamily={fontFamily}
           fontSize={fontSize}
           fontWeight={fontWeight}
-          onLayout={onTextLayout}
+          onLayout={onTextSizeLayout}
           opacity={0}
           textAnchor={textAnchor}
-          x={x}
-          y={y}
         >
           {children}
         </Text>
