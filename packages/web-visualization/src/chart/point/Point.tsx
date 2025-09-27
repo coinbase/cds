@@ -223,6 +223,11 @@ export type PointProps = SharedProps &
      */
     dataY: number;
     /**
+     * Coordinates in SVG pixel space.
+     * Overrides dataX and dataY for pixel coordinate calculation.
+     */
+    pixelCoordinates?: { x: number; y: number };
+    /**
      * Whether to animate the point with a pulsing effect.
      * @default false
      */
@@ -287,6 +292,7 @@ export const Point = memo(
         labelConfig,
         renderLabel,
         testID,
+        pixelCoordinates,
         ...svgProps
       },
       ref,
@@ -304,6 +310,10 @@ export const Point = memo(
 
       // Project the point to pixel coordinates
       const pixelCoordinate = useMemo(() => {
+        if (pixelCoordinates) {
+          return pixelCoordinates;
+        }
+
         if (!xScale || !yScale) {
           return { x: 0, y: 0 };
         }
@@ -314,7 +324,7 @@ export const Point = memo(
           xScale,
           yScale,
         });
-      }, [xScale, yScale, dataX, dataY]);
+      }, [xScale, yScale, dataX, dataY, pixelCoordinates]);
 
       useImperativeHandle(ref, () => ({
         pulse: () => {
