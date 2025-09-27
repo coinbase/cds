@@ -752,7 +752,7 @@ const BTCActiveIndicator = memo(({ style, ...props }: TabsActiveIndicatorProps) 
         accessibilityLabel={scrubberLabel}
         padding={{ left: 2, right: 2 }}
       >
-        <Scrubber scrubberLabel={scrubberLabel} scrubberLabelProps={{ elevation: 1 }} pulse />
+        <Scrubber scrubberLabel={scrubberLabel} scrubberLabelProps={{ elevation: 1 }} idlePulse />
       </LineChart>
       <PeriodSelector
         TabComponent={BTCTab}
@@ -1148,7 +1148,7 @@ function BitcoinChartWithScrubberHead() {
           width="100%"
           height={92}
         >
-          <Scrubber pulse styles={{ scrubberHead: { stroke: 'white' } }} />
+          <Scrubber idlePulse styles={{ scrubberHead: { stroke: 'white' } }} />
         </LineChart>
       </div>
     </VStack>

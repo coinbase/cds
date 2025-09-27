@@ -253,7 +253,7 @@ export const Scrubber = memo(
       ]);
 
       // todo: the padding around the label shouldn't be needed for this collision calculation since the ChatText onDimensionsChange will report the bounding box that includes the padding
-      const labelPadding = 4;
+      const labelPadding = 0.5;
       const minLabelGap = 0.25;
 
       // Calculate optimal label positioning strategy

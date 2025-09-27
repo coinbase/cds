@@ -22,7 +22,7 @@ export const ScrubberHeadLabel = memo<ScrubberHeadLabelProps>(
     background = 'white',
     color = 'var(--color-fgPrimary)',
     opacity = 1,
-    padding = 1.5,
+    padding = 1,
     onDimensionsChange,
     elevation = background !== undefined ? 1 : undefined,
     borderRadius = background !== undefined ? 200 : undefined,

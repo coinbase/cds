@@ -143,14 +143,20 @@ export const ChartText = memo<ChartTextProps>(
         return null;
       }
 
-      const padding = getPadding(paddingInput);
+      const paddingWithTheme = getPadding(paddingInput);
+      const padding = {
+        top: theme.space[paddingWithTheme.top],
+        right: theme.space[paddingWithTheme.right],
+        bottom: theme.space[paddingWithTheme.bottom],
+        left: theme.space[paddingWithTheme.left],
+      };
       return {
         x: textBBox.x - padding.left,
         y: textBBox.y - padding.top,
         width: textBBox.width + padding.left + padding.right,
         height: textBBox.height + padding.top + padding.bottom,
       };
-    }, [textBBox, paddingInput]);
+    }, [textBBox, paddingInput, theme.space]);
 
     const overflowAmount = useMemo(() => {
       if (disableRepositioning) {

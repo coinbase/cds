@@ -91,6 +91,7 @@ export const ScrubberHead = memo(
         null,
       );
       const wasScrubbingRef = useRef(false);
+      const previousScalesRef = useRef<{ xScale: any; yScale: any } | null>(null);
 
       const targetSeries = getSeries(seriesId);
       const sourceData = getSeriesData(seriesId);
@@ -148,14 +149,16 @@ export const ScrubberHead = memo(
         [dataX, dataY, xScale, yScale],
       );
 
-      const pointColor = color || targetSeries?.color || 'var(--color-fgPrimary)';
-      const pulseRadius = radius * 4;
-      const innerRingRadius = (radius + pulseRadius) / 2;
-
       useEffect(() => {
         if (!pixelCoordinate) return;
 
         const isIdleState = highlightedIndex === undefined;
+        
+        // Check if scales have changed (resize)
+        const scalesChanged = previousScalesRef.current && 
+          (previousScalesRef.current.xScale !== xScale || 
+           previousScalesRef.current.yScale !== yScale);
+        previousScalesRef.current = { xScale, yScale };
 
         // Initialize on first render
         if (!animatedPosition) {
@@ -173,7 +176,10 @@ export const ScrubberHead = memo(
           setAnimatedPosition(pixelCoordinate);
         };
 
-        if (!isIdleState) {
+        // If scales changed (resize), always update immediately
+        if (scalesChanged) {
+          updatePositionImmediately();
+        } else if (!isIdleState) {
           // Scrubbing - always update immediately
           updatePositionImmediately();
           wasScrubbingRef.current = true;
@@ -197,7 +203,7 @@ export const ScrubberHead = memo(
           // Animation disabled
           updatePositionImmediately();
         }
-      }, [pixelCoordinate, highlightedIndex, animate, animatedPosition, controls]);
+      }, [pixelCoordinate, highlightedIndex, animate, animatedPosition, controls, xScale, yScale]);
 
       useImperativeHandle(ref, () => ({
         pulse: () => {
@@ -208,6 +214,10 @@ export const ScrubberHead = memo(
       if (!pixelCoordinate || dataX === undefined || dataY === undefined) return null;
 
       const displayPosition = animatedPosition || pixelCoordinate;
+
+      const pointColor = color ?? targetSeries?.color ?? 'var(--color-fgPrimary)';
+      const pulseRadius = radius * 4;
+      const innerRingRadius = (radius + pulseRadius) / 2;
 
       return (
         <m.g animate={controls} initial={{ x: 0, y: 0 }}>
