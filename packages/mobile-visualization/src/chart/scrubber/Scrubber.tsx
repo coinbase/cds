@@ -8,6 +8,12 @@ import React, {
   useRef,
   useState,
 } from 'react';
+import Reanimated, {
+  useAnimatedProps,
+  useSharedValue,
+  withDelay,
+  withTiming,
+} from 'react-native-reanimated';
 import { G, Rect } from 'react-native-svg';
 import { useRefMap } from '@coinbase/cds-common/hooks/useRefMap';
 import type { SharedProps } from '@coinbase/cds-common/types';
@@ -23,6 +29,8 @@ import { ReferenceLine, type ReferenceLineProps } from '../line';
 
 import { ScrubberHead, type ScrubberHeadProps, type ScrubberHeadRef } from './ScrubberHead';
 import { ScrubberHeadLabel, type ScrubberHeadLabelProps } from './ScrubberHeadLabel';
+
+const AnimatedG = Reanimated.createAnimatedComponent(G);
 
 /**
  * Configuration for scrubber functionality across chart components.
@@ -65,6 +73,11 @@ export type ScrubberProps = SharedProps &
     scrubberLabelProps?: ReferenceLineProps['labelConfig'];
 
     /**
+     * Stroke color for the scrubber line.
+     */
+    scrubberLineStroke?: ReferenceLineProps['stroke'];
+
+    /**
      * Props passed to each scrubber head's label.
      */
     scrubberHeadLabelProps?: Omit<
@@ -103,6 +116,7 @@ export const Scrubber = memo(
         seriesIds,
         hideScrubberLine,
         scrubberLabel,
+        scrubberLineStroke,
         scrubberLabelProps,
         scrubberComponents,
         hideOverlay,
@@ -117,10 +131,33 @@ export const Scrubber = memo(
       const scrubberGroupRef = useRef<React.ComponentRef<typeof G>>(null);
       const scrubberHeadRefs = useRefMap<ScrubberHeadRef>();
 
+      // Animation for initial fade-in
+      const opacity = useSharedValue(0);
+
       const { highlightedIndex } = useScrubberContext();
       const { getXScale, getYScale, getSeriesData, getXAxis, animate, series, drawingArea } =
         useChartContext();
       const getStackedSeriesData = getSeriesData; // getSeriesData now returns stacked data
+
+      // Animated props for fade-in effect
+      const animatedProps = useAnimatedProps(() => ({
+        opacity: opacity.value,
+      }));
+
+      // Trigger initial fade-in animation
+      useEffect(() => {
+        if (animate) {
+          // Match web's timing: 850ms delay, 150ms fade-in
+          opacity.value = withDelay(
+            850,
+            withTiming(1, {
+              duration: 150,
+            }),
+          );
+        } else {
+          opacity.value = 1;
+        }
+      }, [animate, opacity]);
 
       // Track label dimensions for collision detection
       const [labelDimensions, setLabelDimensions] = useState<Map<string, LabelDimensions>>(
@@ -548,8 +585,9 @@ export const Scrubber = memo(
 
       const pixelX = dataX !== undefined ? defaultXScale(dataX) : undefined;
 
-      return (
-        <G ref={scrubberGroupRef} data-component="scrubber-group" data-testid={testID}>
+      // Wrap content in AnimatedG only if animation is enabled
+      const content = (
+        <>
           {!hideOverlay &&
             dataX !== undefined &&
             highlightedIndex !== undefined &&
@@ -569,6 +607,7 @@ export const Scrubber = memo(
               label={scrubberLabel}
               labelConfig={scrubberLabelProps}
               labelPosition="top"
+              stroke={scrubberLineStroke}
             />
           )}
           {headPositions.map((scrubberHead: any) => {
@@ -624,6 +663,12 @@ export const Scrubber = memo(
               </G>
             );
           })}
+        </>
+      );
+
+      return (
+        <G ref={scrubberGroupRef} data-testid={testID}>
+          {animate ? <AnimatedG animatedProps={animatedProps}>{content}</AnimatedG> : content}
         </G>
       );
     },

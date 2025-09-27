@@ -185,6 +185,11 @@ export type PointProps = SharedProps &
      * @default false
      */
     pulse?: boolean;
+    /**
+     * Optional pixel coordinates to use instead of calculating from dataX/dataY.
+     * Useful for performance when coordinates are already calculated.
+     */
+    pixelCoordinates?: { x: number; y: number };
   };
 
 export const Point = memo(
@@ -206,6 +211,7 @@ export const Point = memo(
         label,
         labelConfig,
         renderLabel,
+        pixelCoordinates,
         testID,
         ...props
       },
@@ -227,8 +233,12 @@ export const Point = memo(
       const isScrubbing = highlightedIndex !== undefined;
       const isScrubberHighlighted = isScrubbing && highlightedIndex === dataX;
 
-      // Project the point to pixel coordinates
+      // Use provided pixelCoordinates or calculate from data coordinates
       const pixelCoordinate = useMemo(() => {
+        if (pixelCoordinates) {
+          return pixelCoordinates;
+        }
+
         if (!xScale || !yScale) {
           return { x: 0, y: 0 };
         }
@@ -239,7 +249,7 @@ export const Point = memo(
           xScale,
           yScale,
         });
-      }, [xScale, yScale, dataX, dataY]);
+      }, [pixelCoordinates, xScale, yScale, dataX, dataY]);
 
       useImperativeHandle(ref, () => ({
         pulse: () => {

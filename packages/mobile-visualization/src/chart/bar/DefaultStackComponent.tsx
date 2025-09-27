@@ -49,16 +49,7 @@ export type StackComponentBaseProps = {
   yOrigin?: number;
 };
 
-export type StackComponentProps = StackComponentBaseProps & {
-  /**
-   * Custom class name for the stack group.
-   */
-  className?: string;
-  /**
-   * Custom styles for the stack group.
-   */
-  style?: React.CSSProperties;
-};
+export type StackComponentProps = StackComponentBaseProps;
 
 export type StackComponent = React.FC<StackComponentProps>;
 
@@ -67,8 +58,6 @@ export type StackComponent = React.FC<StackComponentProps>;
  */
 export const DefaultStackComponent = memo<StackComponentProps>(function DefaultStackComponent({
   children,
-  className,
-  style,
   width,
   height,
   x,

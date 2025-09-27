@@ -1,11 +1,14 @@
-import { forwardRef, memo, useCallback, useImperativeHandle, useRef } from 'react';
-import { Circle } from 'react-native-svg';
+import { forwardRef, memo, useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react';
+import Reanimated, { useAnimatedProps, useSharedValue, withSpring } from 'react-native-reanimated';
+import { Circle, G } from 'react-native-svg';
 import type { SharedProps } from '@coinbase/cds-common/types';
 import { projectPoint, useScrubberContext } from '@coinbase/cds-common/visualizations/charts';
 import { useTheme } from '@coinbase/cds-mobile';
 
 import { useChartContext } from '../ChartProvider';
 import { Point, type PointProps, type PointRef } from '../point';
+
+const AnimatedG = Reanimated.createAnimatedComponent(G);
 
 export const dataKeyUpdateAnimationVariants = {
   initial: {
@@ -85,109 +88,178 @@ export const ScrubberHead = memo(
     ) => {
       const theme = useTheme();
       const pointRef = useRef<PointRef>(null);
-      const { getSeries, getXScale, getYScale, getSeriesData } = useChartContext();
+      const { getSeries, getXScale, getYScale, getSeriesData, animate } = useChartContext();
       const { highlightedIndex } = useScrubberContext();
 
-      // Find target series for color and data
       const targetSeries = getSeries(seriesId);
       const sourceData = getSeriesData(seriesId);
-
-      // Get scales for this series
       const xScale = getXScale();
       const yScale = getYScale(targetSeries?.yAxisId);
 
-      const getPixelCoordinate = useCallback(
-        (dataX: number, dataY: number) => {
-          if (!xScale || !yScale) {
-            return { x: 0, y: 0 };
-          }
+      const isIdleState = highlightedIndex === undefined;
 
-          return projectPoint({
-            x: dataX,
-            y: dataY,
-            xScale,
-            yScale,
-          });
-        },
-        [xScale, yScale],
+      // Animation values
+      const animatedX = useSharedValue(0);
+      const animatedY = useSharedValue(0);
+      const previousPositionRef = useRef<{ x: number; y: number } | undefined>(undefined);
+      const [isInitialized, setIsInitialized] = useState(false);
+
+      // Calculate data coordinates
+      const { dataX, dataY } = useMemo(() => {
+        let x: number | undefined;
+        let y: number | undefined;
+
+        if (xScale && yScale) {
+          if (
+            directX !== undefined &&
+            directY !== undefined &&
+            !isNaN(directY) &&
+            !isNaN(directX)
+          ) {
+            // Use direct coordinates if provided
+            x = directX;
+            y = directY;
+          } else if (
+            sourceData &&
+            highlightedIndex != null &&
+            highlightedIndex >= 0 &&
+            highlightedIndex < sourceData.length
+          ) {
+            // Use series data at highlight index
+            x = highlightedIndex;
+            const dataValue = sourceData[highlightedIndex];
+
+            if (typeof dataValue === 'number') {
+              y = dataValue;
+            } else if (Array.isArray(dataValue)) {
+              const validValues = dataValue.filter((val): val is number => val !== null);
+              if (validValues.length >= 2) {
+                y = validValues[1];
+              }
+            }
+          }
+        }
+
+        return { dataX: x, dataY: y };
+      }, [directX, directY, sourceData, highlightedIndex, xScale, yScale]);
+
+      // Calculate target pixel coordinates
+      const targetPosition = useMemo(
+        () =>
+          dataX !== undefined && dataY !== undefined && xScale && yScale
+            ? projectPoint({
+                x: dataX,
+                y: dataY,
+                xScale,
+                yScale,
+              })
+            : undefined,
+        [dataX, dataY, xScale, yScale],
       );
 
+      // Animated props for the G element
+      const animatedProps = useAnimatedProps(() => {
+        // React Native SVG expects transforms as an array of objects
+        return {
+          transform: [{ translateX: animatedX.value }, { translateY: animatedY.value }],
+        };
+      });
+
+      // Effect for animations
+      useEffect(() => {
+        if (!targetPosition) return;
+
+        const positionChanged =
+          !previousPositionRef.current ||
+          previousPositionRef.current.x !== targetPosition.x ||
+          previousPositionRef.current.y !== targetPosition.y;
+
+        if (!positionChanged) return;
+
+        // For first render or scrubbing - update immediately without animation
+        if (!previousPositionRef.current || !isIdleState) {
+          animatedX.value = targetPosition.x;
+          animatedY.value = targetPosition.y;
+          if (!isInitialized) {
+            setIsInitialized(true);
+          }
+        } else if (isIdleState) {
+          // For idle state - animate if enabled and not first render
+          if (animate) {
+            animatedX.value = withSpring(targetPosition.x, {
+              damping: 20,
+              stiffness: 300,
+            });
+            animatedY.value = withSpring(targetPosition.y, {
+              damping: 20,
+              stiffness: 300,
+            });
+          } else {
+            animatedX.value = targetPosition.x;
+            animatedY.value = targetPosition.y;
+          }
+        }
+
+        // Update previous position
+        previousPositionRef.current = targetPosition;
+      }, [targetPosition, isIdleState, animate, animatedX, animatedY, isInitialized]);
+
       useImperativeHandle(ref, () => ({
-        pulse: () => pointRef.current?.pulse(),
+        pulse: () => {
+          if (isIdleState) pointRef.current?.pulse();
+        },
       }));
 
-      if (!xScale || !yScale) {
+      // Don't render until we have a position and it's been initialized
+      if (!targetPosition || dataX === undefined || dataY === undefined || !isInitialized)
         return null;
-      }
-
-      let x: number;
-      let y: number;
-
-      // Use direct coordinates if provided
-      if (directX !== undefined && directY !== undefined) {
-        // ensures that both directX/Y are specified and real numbers
-        if (directY === null || directY === undefined || isNaN(directY) || isNaN(directX)) {
-          return null;
-        }
-
-        x = directX;
-        y = directY;
-      } else {
-        // Use series data and highlight (i.e scrubber) index to plot the Point
-        if (!sourceData || highlightedIndex === undefined) {
-          return null;
-        }
-
-        // edge case: ignore potential out of bounds scrubber positions
-        if (highlightedIndex < 0 || highlightedIndex >= sourceData.length) {
-          return null;
-        }
-
-        x = highlightedIndex;
-        const highlightedYValue = sourceData[highlightedIndex];
-
-        // If dataPoint is null, don't render
-        if (highlightedYValue === null) {
-          return null;
-        }
-
-        if (typeof highlightedYValue === 'number') {
-          y = highlightedYValue;
-        } else if (Array.isArray(highlightedYValue)) {
-          const validValues = highlightedYValue.filter((val): val is number => val !== null);
-          // If all values in the array are null, don't render
-          if (validValues.length < 2) {
-            return null;
-          }
-
-          y = validValues[1];
-        } else {
-          // Fallback case - shouldn't happen with proper typing
-          return null;
-        }
-      }
-
-      const pixelCoordinate = getPixelCoordinate(x, y);
-      const pointColor = color || targetSeries?.color || theme.color.fgPrimary;
+      const pointColor = color ?? targetSeries?.color ?? theme.color.fgPrimary;
       const pulseRadius = radius * 4;
       const innerRingRadius = (radius + pulseRadius) / 2;
 
+      // When scrubbing - render without animation wrapper
+      if (!isIdleState) {
+        return (
+          <G>
+            <Circle
+              cx={targetPosition.x}
+              cy={targetPosition.y}
+              fill={pointColor}
+              opacity={0.15}
+              r={innerRingRadius}
+            />
+            <Point
+              ref={pointRef}
+              color={pointColor}
+              dataX={dataX}
+              dataY={dataY}
+              opacity={opacity}
+              pixelCoordinates={targetPosition}
+              pulse={false}
+              pulseRadius={pulseRadius}
+              radius={radius}
+              stroke={theme.color.bg}
+              strokeWidth={2}
+              yAxisId={targetSeries?.yAxisId}
+              {...props}
+            />
+          </G>
+        );
+      }
+
+      // When idle - render with animation wrapper for smooth data updates
+      // Render at origin (0,0) and use transform to position
       return (
-        <>
-          <Circle
-            cx={pixelCoordinate.x}
-            cy={pixelCoordinate.y}
-            fill={pointColor}
-            opacity={0.15}
-            r={innerRingRadius}
-          />
+        <AnimatedG animatedProps={animatedProps}>
+          <Circle cx={0} cy={0} fill={pointColor} opacity={0.15} r={innerRingRadius} />
           <Point
             ref={pointRef}
             color={pointColor}
-            dataX={x}
-            dataY={y}
+            dataX={dataX}
+            dataY={dataY}
             opacity={opacity}
-            pulse={idlePulse && highlightedIndex === undefined}
+            pixelCoordinates={{ x: 0, y: 0 }}
+            pulse={idlePulse}
             pulseRadius={pulseRadius}
             radius={radius}
             stroke={theme.color.bg}
@@ -195,7 +267,7 @@ export const ScrubberHead = memo(
             yAxisId={targetSeries?.yAxisId}
             {...props}
           />
-        </>
+        </AnimatedG>
       );
     },
   ),

@@ -1,4 +1,4 @@
-import { forwardRef, memo, useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react';
+import { forwardRef, memo, useEffect, useImperativeHandle, useMemo, useRef } from 'react';
 import type { SharedProps } from '@coinbase/cds-common/types';
 import { projectPoint, useScrubberContext } from '@coinbase/cds-common/visualizations/charts';
 import { m, useAnimation } from 'framer-motion';
@@ -145,55 +145,57 @@ export const ScrubberHead = memo(
         [dataX, dataY, xScale, yScale],
       );
 
-      const [currentPosition, setCurrentPosition] = useState<{ x: number; y: number } | null>(
-        targetPosition ?? null,
-      );
+      const previousPositionRef = useRef<{ x: number; y: number } | undefined>(undefined);
+      const isInitializedRef = useRef(false);
+      const wasScrubbing = useRef(false);
 
       const isIdleState = highlightedIndex === undefined;
 
-      // Effect for idle state animations
+      // Effect for animations
       useEffect(() => {
         if (!targetPosition) return;
 
-        // Set the current position to the target position when we don't have a current position
-        if (!currentPosition) {
-          controls.set({ x: 0, y: 0 });
-          setCurrentPosition(targetPosition);
-          return;
-        }
-
-        // If the user is scrubbing, we don't want to animate the position
-        if (!isIdleState) {
-          controls.set({ x: 0, y: 0 });
-          setCurrentPosition(null);
+        // Initialize on first render
+        if (!isInitializedRef.current) {
+          controls.set({ x: targetPosition.x, y: targetPosition.y });
+          previousPositionRef.current = targetPosition;
+          isInitializedRef.current = true;
           return;
         }
 
         const positionChanged =
-          currentPosition.x !== targetPosition.x || currentPosition.y !== targetPosition.y;
+          !previousPositionRef.current ||
+          previousPositionRef.current.x !== targetPosition.x ||
+          previousPositionRef.current.y !== targetPosition.y;
+
         if (!positionChanged) return;
 
-        const updatePosition = () => {
-          controls.set({ x: 0, y: 0 });
-          setCurrentPosition(targetPosition);
-        };
-
-        if (animate) {
-          // Animate to new position
-          const deltaX = targetPosition.x - currentPosition.x;
-          const deltaY = targetPosition.y - currentPosition.y;
-
-          controls
-            .start({
-              x: deltaX,
-              y: deltaY,
-              transition: { duration: 0.3, ease: 'easeInOut' },
-            })
-            .then(() => updatePosition());
+        if (!isIdleState) {
+          // When scrubbing - track that we're scrubbing but don't update controls
+          // The scrubbing render doesn't use the animation controls
+          wasScrubbing.current = true;
         } else {
-          updatePosition();
+          // When idle
+          if (wasScrubbing.current) {
+            // Just stopped scrubbing - snap to position without animation
+            controls.set({ x: targetPosition.x, y: targetPosition.y });
+            wasScrubbing.current = false;
+          } else if (animate) {
+            // Idle state with data update - animate to new position
+            controls.start({
+              x: targetPosition.x,
+              y: targetPosition.y,
+              transition: { duration: 0.3, ease: 'easeInOut' },
+            });
+          } else {
+            // Idle but no animation - snap to position
+            controls.set({ x: targetPosition.x, y: targetPosition.y });
+          }
         }
-      }, [targetPosition, isIdleState, animate, currentPosition, controls]);
+
+        // Update previous position
+        previousPositionRef.current = targetPosition;
+      }, [targetPosition, isIdleState, animate, controls]);
 
       useImperativeHandle(ref, () => ({
         pulse: () => {
@@ -201,7 +203,14 @@ export const ScrubberHead = memo(
         },
       }));
 
-      if (!targetPosition || dataX === undefined || dataY === undefined) return null;
+      // Don't render until we have a position and it's been initialized
+      if (
+        !targetPosition ||
+        dataX === undefined ||
+        dataY === undefined ||
+        !isInitializedRef.current
+      )
+        return null;
 
       const pointColor = color ?? targetSeries?.color ?? 'var(--color-fgPrimary)';
       const pulseRadius = radius * 4;
@@ -237,24 +246,18 @@ export const ScrubberHead = memo(
         );
       }
 
-      const displayPosition = currentPosition ?? targetPosition;
-
+      // When idle - render with animation wrapper for smooth data updates
+      // Render at origin (0,0) and use transform to position
       return (
-        <m.g animate={controls} initial={{ x: 0, y: 0 }}>
-          <circle
-            cx={displayPosition.x}
-            cy={displayPosition.y}
-            fill={pointColor}
-            opacity={0.15}
-            r={innerRingRadius}
-          />
+        <m.g animate={controls} initial={{ x: targetPosition.x, y: targetPosition.y }}>
+          <circle cx={0} cy={0} fill={pointColor} opacity={0.15} r={innerRingRadius} />
           <Point
             ref={pointRef}
             color={pointColor}
             dataX={dataX}
             dataY={dataY}
             opacity={opacity}
-            pixelCoordinates={displayPosition}
+            pixelCoordinates={{ x: 0, y: 0 }}
             pulse={idlePulse}
             pulseRadius={pulseRadius}
             radius={radius}

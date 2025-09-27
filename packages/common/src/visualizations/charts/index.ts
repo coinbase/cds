@@ -1,4 +1,5 @@
 export * from './axis';
+export * from './bar';
 export * from './chart';
 export * from './context';
 export * from './getPadding';
