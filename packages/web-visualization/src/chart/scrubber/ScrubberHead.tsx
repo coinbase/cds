@@ -1,13 +1,4 @@
-import {
-  forwardRef,
-  memo,
-  useCallback,
-  useEffect,
-  useImperativeHandle,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import { forwardRef, memo, useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react';
 import type { SharedProps } from '@coinbase/cds-common/types';
 import { projectPoint, useScrubberContext } from '@coinbase/cds-common/visualizations/charts';
 import { m, useAnimation } from 'framer-motion';
@@ -79,8 +70,8 @@ export const ScrubberHead = memo(
     (
       {
         seriesId,
-        dataX: directX,
-        dataY: directY,
+        dataX: dataXProp,
+        dataY: dataYProp,
         color,
         radius = 4,
         testID,
@@ -101,88 +92,72 @@ export const ScrubberHead = memo(
       );
       const wasScrubbingRef = useRef(false);
 
-      // Find target series for color and data
       const targetSeries = getSeries(seriesId);
       const sourceData = getSeriesData(seriesId);
-
-      // Get scales for this series
       const xScale = getXScale();
       const yScale = getYScale(targetSeries?.yAxisId);
 
-      const getPixelCoordinate = useCallback(
-        (dataX: number, dataY: number) => {
-          if (!xScale || !yScale) {
-            return { x: 0, y: 0 };
-          }
+      const { dataX, dataY } = useMemo(() => {
+        let x: number | undefined;
+        let y: number | undefined;
 
-          return projectPoint({
-            x: dataX,
-            y: dataY,
-            xScale,
-            yScale,
-          });
-        },
-        [xScale, yScale],
-      );
-
-      // Calculate coordinates (may be invalid)
-      let x: number | undefined;
-      let y: number | undefined;
-      let isValid = false;
-
-      if (xScale && yScale) {
-        // Use direct coordinates if provided
-        if (directX !== undefined && directY !== undefined) {
-          // ensures that both directX/Y are specified and real numbers
-          if (directY !== null && directY !== undefined && !isNaN(directY) && !isNaN(directX)) {
-            x = directX;
-            y = directY;
-            isValid = true;
-          }
-        } else {
-          // Use series data and highlight (i.e scrubber) index to plot the Point
+        if (xScale && yScale) {
           if (
+            dataXProp !== undefined &&
+            dataYProp !== undefined &&
+            !isNaN(dataYProp) &&
+            !isNaN(dataXProp)
+          ) {
+            // Use direct coordinates if provided
+            x = dataXProp;
+            y = dataYProp;
+          } else if (
             sourceData &&
-            highlightedIndex != null && // not null or undefined
+            highlightedIndex != null &&
             highlightedIndex >= 0 &&
             highlightedIndex < sourceData.length
           ) {
+            // Use series data at highlight index
             x = highlightedIndex;
-            const highlightedYValue = sourceData[highlightedIndex];
+            const dataValue = sourceData[highlightedIndex];
 
-            // If dataPoint is not null, extract y value
-            if (highlightedYValue !== null) {
-              if (typeof highlightedYValue === 'number') {
-                y = highlightedYValue;
-                isValid = true;
-              } else if (Array.isArray(highlightedYValue)) {
-                const validValues = highlightedYValue.filter((val): val is number => val !== null);
-                if (validValues.length >= 2) {
-                  y = validValues[1];
-                  isValid = true;
-                }
+            if (typeof dataValue === 'number') {
+              y = dataValue;
+            } else if (Array.isArray(dataValue)) {
+              const validValues = dataValue.filter((val): val is number => val !== null);
+              if (validValues.length >= 2) {
+                y = validValues[1];
               }
             }
           }
         }
-      }
+
+        return { dataX: x, dataY: y };
+      }, [dataXProp, dataYProp, sourceData, highlightedIndex, xScale, yScale]);
 
       const pixelCoordinate = useMemo(
-        () => (x !== undefined && y !== undefined ? getPixelCoordinate(x, y) : { x: 0, y: 0 }),
-        [x, y, getPixelCoordinate],
+        () =>
+          dataX !== undefined && dataY !== undefined && xScale && yScale
+            ? projectPoint({
+                x: dataX,
+                y: dataY,
+                xScale,
+                yScale,
+              })
+            : undefined,
+        [dataX, dataY, xScale, yScale],
       );
 
       const pointColor = color || targetSeries?.color || 'var(--color-fgPrimary)';
       const pulseRadius = radius * 4;
       const innerRingRadius = (radius + pulseRadius) / 2;
 
-      // Animate position changes when highlightedIndex is null (idle state)
       useEffect(() => {
-        if (!isValid) return;
+        if (!pixelCoordinate) return;
 
-        const isIdleState = highlightedIndex == null; // true for both null and undefined, but not 0
+        const isIdleState = highlightedIndex === undefined;
 
-        // Initialize position on first render
+        // Initialize on first render
         if (!animatedPosition) {
           setAnimatedPosition(pixelCoordinate);
           controls.set({ x: 0, y: 0 });
@@ -190,64 +165,48 @@ export const ScrubberHead = memo(
           return;
         }
 
-        if (isIdleState) {
-          // We're in idle state
-          if (wasScrubbingRef.current) {
-            // Just transitioned from scrubbing to idle - immediately reset without animation
-            controls.set({ x: 0, y: 0 });
-            setAnimatedPosition(pixelCoordinate);
-            wasScrubbingRef.current = false;
-          } else if (animate) {
-            // We were already idle and position changed - animate the change
-            if (
-              animatedPosition.x !== pixelCoordinate.x ||
-              animatedPosition.y !== pixelCoordinate.y
-            ) {
-              // Calculate the translation delta from current animated position
-              const deltaX = pixelCoordinate.x - animatedPosition.x;
-              const deltaY = pixelCoordinate.y - animatedPosition.y;
+        const positionChanged =
+          animatedPosition.x !== pixelCoordinate.x || animatedPosition.y !== pixelCoordinate.y;
 
-              // Animate using transform translate
-              controls
-                .start({
-                  x: deltaX,
-                  y: deltaY,
-                  transition: {
-                    duration: 0.3, // 300ms as requested
-                    ease: 'easeInOut',
-                  },
-                })
-                .then(() => {
-                  // After animation completes, reset transform and update position
-                  controls.set({ x: 0, y: 0 });
-                  setAnimatedPosition(pixelCoordinate);
-                });
-            }
-          } else {
-            // Animation disabled, just update position
-            controls.set({ x: 0, y: 0 });
-            setAnimatedPosition(pixelCoordinate);
-          }
-        } else {
-          // We're scrubbing - immediately update position (no animation)
+        const updatePositionImmediately = () => {
           controls.set({ x: 0, y: 0 });
           setAnimatedPosition(pixelCoordinate);
+        };
+
+        if (!isIdleState) {
+          // Scrubbing - always update immediately
+          updatePositionImmediately();
           wasScrubbingRef.current = true;
+        } else if (wasScrubbingRef.current) {
+          // Just stopped scrubbing - reset immediately
+          updatePositionImmediately();
+          wasScrubbingRef.current = false;
+        } else if (animate && positionChanged) {
+          // Idle state with animation enabled - animate the change
+          const deltaX = pixelCoordinate.x - animatedPosition.x;
+          const deltaY = pixelCoordinate.y - animatedPosition.y;
+
+          controls
+            .start({
+              x: deltaX,
+              y: deltaY,
+              transition: { duration: 0.3, ease: 'easeInOut' },
+            })
+            .then(() => updatePositionImmediately());
+        } else if (!animate) {
+          // Animation disabled
+          updatePositionImmediately();
         }
-      }, [pixelCoordinate, highlightedIndex, animate, animatedPosition, controls, isValid]);
+      }, [pixelCoordinate, highlightedIndex, animate, animatedPosition, controls]);
 
       useImperativeHandle(ref, () => ({
-        pulse: () => pointRef.current?.pulse(),
+        pulse: () => {
+          if (highlightedIndex === undefined) pointRef.current?.pulse();
+        },
       }));
 
-      // Early return if invalid coordinates
-      if (!isValid || !xScale || !yScale || x === undefined || y === undefined) {
-        return null;
-      }
+      if (!pixelCoordinate || dataX === undefined || dataY === undefined) return null;
 
-      const isIdleState = highlightedIndex == null; // true for both null and undefined, but not 0
-
-      // Use the animated position if available, otherwise use current pixel coordinate
       const displayPosition = animatedPosition || pixelCoordinate;
 
       return (
@@ -262,11 +221,11 @@ export const ScrubberHead = memo(
           <Point
             ref={pointRef}
             color={pointColor}
-            dataX={x}
-            dataY={y}
+            dataX={dataX}
+            dataY={dataY}
             opacity={opacity}
             pixelCoordinates={displayPosition}
-            pulse={idlePulse && isIdleState}
+            pulse={idlePulse && highlightedIndex === undefined}
             pulseRadius={pulseRadius}
             radius={radius}
             stroke="var(--color-bg)"
