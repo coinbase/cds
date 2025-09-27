@@ -87,15 +87,6 @@ export const ScrubberHead = memo(
       const { highlightedIndex } = useScrubberContext();
 
       const controls = useAnimation();
-      const [animatedPosition, setAnimatedPosition] = useState<{ x: number; y: number } | null>(
-        null,
-      );
-      const wasScrubbingRef = useRef(false);
-      const previousScalesRef = useRef<{ xScale: any; yScale: any } | null>(null);
-      const previousDataRef = useRef<{ dataX: number | undefined; dataY: number | undefined }>({
-        dataX: undefined,
-        dataY: undefined,
-      });
 
       const targetSeries = getSeries(seriesId);
       const sourceData = getSeriesData(seriesId);
@@ -140,7 +131,8 @@ export const ScrubberHead = memo(
         return { dataX: x, dataY: y };
       }, [dataXProp, dataYProp, sourceData, highlightedIndex, xScale, yScale]);
 
-      const pixelCoordinate = useMemo(
+      // Calculate the target position
+      const targetPosition = useMemo(
         () =>
           dataX !== undefined && dataY !== undefined && xScale && yScale
             ? projectPoint({
@@ -153,59 +145,43 @@ export const ScrubberHead = memo(
         [dataX, dataY, xScale, yScale],
       );
 
+      const [currentPosition, setCurrentPosition] = useState<{ x: number; y: number } | null>(
+        targetPosition ?? null,
+      );
+
+      const isIdleState = highlightedIndex === undefined;
+
+      // Effect for idle state animations
       useEffect(() => {
-        if (!pixelCoordinate) return;
+        if (!targetPosition) return;
 
-        const isIdleState = highlightedIndex === undefined;
-
-        // Check if scales have changed (resize)
-        const scalesChanged =
-          previousScalesRef.current &&
-          (previousScalesRef.current.xScale !== xScale ||
-            previousScalesRef.current.yScale !== yScale);
-
-        // Check if data values have changed
-        const dataChanged =
-          previousDataRef.current.dataX !== dataX || previousDataRef.current.dataY !== dataY;
-
-        // Update refs
-        previousScalesRef.current = { xScale, yScale };
-        previousDataRef.current = { dataX, dataY };
-
-        // Initialize on first render
-        if (!animatedPosition) {
-          setAnimatedPosition(pixelCoordinate);
+        // Set the current position to the target position when we don't have a current position
+        if (!currentPosition) {
           controls.set({ x: 0, y: 0 });
-          wasScrubbingRef.current = !isIdleState;
+          setCurrentPosition(targetPosition);
+          return;
+        }
+
+        // If the user is scrubbing, we don't want to animate the position
+        if (!isIdleState) {
+          controls.set({ x: 0, y: 0 });
+          setCurrentPosition(null);
           return;
         }
 
         const positionChanged =
-          animatedPosition.x !== pixelCoordinate.x || animatedPosition.y !== pixelCoordinate.y;
+          currentPosition.x !== targetPosition.x || currentPosition.y !== targetPosition.y;
+        if (!positionChanged) return;
 
-        const updatePositionImmediately = () => {
+        const updatePosition = () => {
           controls.set({ x: 0, y: 0 });
-          setAnimatedPosition(pixelCoordinate);
+          setCurrentPosition(targetPosition);
         };
 
-        // Determine if position changed due to resize or data change
-        const isResizeUpdate = scalesChanged && !dataChanged;
-
-        if (isResizeUpdate) {
-          // Position changed due to resize only - update immediately
-          updatePositionImmediately();
-        } else if (!isIdleState) {
-          // Scrubbing - always update immediately
-          updatePositionImmediately();
-          wasScrubbingRef.current = true;
-        } else if (wasScrubbingRef.current) {
-          // Just stopped scrubbing - reset immediately
-          updatePositionImmediately();
-          wasScrubbingRef.current = false;
-        } else if (animate && positionChanged && dataChanged) {
-          // Idle state with data change - animate the change
-          const deltaX = pixelCoordinate.x - animatedPosition.x;
-          const deltaY = pixelCoordinate.y - animatedPosition.y;
+        if (animate) {
+          // Animate to new position
+          const deltaX = targetPosition.x - currentPosition.x;
+          const deltaY = targetPosition.y - currentPosition.y;
 
           controls
             .start({
@@ -213,36 +189,55 @@ export const ScrubberHead = memo(
               y: deltaY,
               transition: { duration: 0.3, ease: 'easeInOut' },
             })
-            .then(() => updatePositionImmediately());
-        } else if (!animate) {
-          // Animation disabled
-          updatePositionImmediately();
+            .then(() => updatePosition());
+        } else {
+          updatePosition();
         }
-      }, [
-        pixelCoordinate,
-        highlightedIndex,
-        animate,
-        animatedPosition,
-        controls,
-        xScale,
-        yScale,
-        dataX,
-        dataY,
-      ]);
+      }, [targetPosition, isIdleState, animate, currentPosition, controls]);
 
       useImperativeHandle(ref, () => ({
         pulse: () => {
-          if (highlightedIndex === undefined) pointRef.current?.pulse();
+          if (isIdleState) pointRef.current?.pulse();
         },
       }));
 
-      if (!pixelCoordinate || dataX === undefined || dataY === undefined) return null;
-
-      const displayPosition = animatedPosition || pixelCoordinate;
+      if (!targetPosition || dataX === undefined || dataY === undefined) return null;
 
       const pointColor = color ?? targetSeries?.color ?? 'var(--color-fgPrimary)';
       const pulseRadius = radius * 4;
       const innerRingRadius = (radius + pulseRadius) / 2;
+
+      // When scrubbing - render without animation wrapper
+      if (!isIdleState) {
+        return (
+          <g>
+            <circle
+              cx={targetPosition.x}
+              cy={targetPosition.y}
+              fill={pointColor}
+              opacity={0.15}
+              r={innerRingRadius}
+            />
+            <Point
+              ref={pointRef}
+              color={pointColor}
+              dataX={dataX}
+              dataY={dataY}
+              opacity={opacity}
+              pixelCoordinates={targetPosition}
+              pulse={false}
+              pulseRadius={pulseRadius}
+              radius={radius}
+              stroke="var(--color-bg)"
+              strokeWidth={2}
+              yAxisId={targetSeries?.yAxisId}
+              {...props}
+            />
+          </g>
+        );
+      }
+
+      const displayPosition = currentPosition ?? targetPosition;
 
       return (
         <m.g animate={controls} initial={{ x: 0, y: 0 }}>
@@ -260,7 +255,7 @@ export const ScrubberHead = memo(
             dataY={dataY}
             opacity={opacity}
             pixelCoordinates={displayPosition}
-            pulse={idlePulse && highlightedIndex === undefined}
+            pulse={idlePulse}
             pulseRadius={pulseRadius}
             radius={radius}
             stroke="var(--color-bg)"

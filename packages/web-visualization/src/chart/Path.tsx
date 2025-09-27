@@ -2,7 +2,6 @@ import 'd3-transition';
 
 import React, { memo, useCallback, useEffect, useRef } from 'react';
 import type { SVGProps } from 'react';
-import { useHasMounted } from '@coinbase/cds-common/hooks/useHasMounted';
 import { useValueChanges } from '@coinbase/cds-common/hooks/useValueChanges';
 import type { Rect, SharedProps } from '@coinbase/cds-common/types';
 import { generateRandomId } from '@coinbase/cds-utils';
@@ -49,7 +48,6 @@ export const Path = memo<PathProps>(
     const context = useChartContext();
     const rect = clipRect ?? context.drawingArea;
     const animate = animateProp ?? context.animate;
-    const hasMounted = useHasMounted();
 
     // todo: do we need useValueChanges?
     const {
@@ -86,7 +84,7 @@ export const Path = memo<PathProps>(
       <>
         <defs>
           <clipPath id={clipPathIdRef.current}>
-            {!animate || hasMounted ? (
+            {!animate ? (
               <rect
                 height={rect.height + totalOffset}
                 width={rect.width + totalOffset}
