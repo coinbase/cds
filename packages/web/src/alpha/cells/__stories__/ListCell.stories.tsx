@@ -5,12 +5,11 @@ import type { CellPriority } from '@coinbase/cds-common/types/CellBaseProps';
 import { Button, IconButton } from '../../../buttons';
 import type { CellSpacing } from '../../../cells/Cell';
 import { CellHelperText } from '../../../cells/CellHelperText';
-import { CellMedia } from '../../../cells/CellMedia';
 import { Checkbox } from '../../../controls/Checkbox';
 import { Icon } from '../../../icons';
 import { Pictogram } from '../../../illustrations/Pictogram';
 import { HStack, VStack } from '../../../layout';
-import { RemoteImage } from '../../../media';
+import { Avatar } from '../../../media';
 import { Tag } from '../../../tag/Tag';
 import { ListCell } from '../ListCell';
 
@@ -81,48 +80,6 @@ const Content = () => {
     </>
   );
 };
-
-const CompactContent = () => {
-  return (
-    <>
-      <ListCell title="Title" />
-
-      <ListCell detail="Detail" title="Title" />
-
-      <ListCell description="Description" title="Title" />
-
-      <ListCell description="Description" detail="Detail" title="Title" />
-
-      <ListCell description="Description" detail="Detail" subdetail="Neutral" title="Title" />
-
-      <ListCell detail="Detail" subdetail="Neutral" title="Title" />
-
-      <ListCell
-        description="Description"
-        detail="Detail"
-        subdetail="+Positive"
-        title="Title"
-        variant="positive"
-      />
-
-      <ListCell subdetail="+Positive" title="Title" variant="positive" />
-
-      <ListCell
-        description="Description"
-        detail="Detail"
-        subdetail="-Negative"
-        title="Title"
-        variant="negative"
-      />
-
-      <ListCell detail="Detail" subdetail="-Negative" title="Title" variant="negative" />
-
-      <ListCell detail="Detail" subdetail="Warning" title="Title" variant="warning" />
-    </>
-  );
-};
-
-const innerSpacingConfig: CellSpacing = { paddingX: 1 };
 
 const PressableContent = () => (
   <>
@@ -216,109 +173,22 @@ const PressableContent = () => (
   </>
 );
 
-const CompactPressableContent = () => (
-  <>
-    <ListCell onClick={onClickConsole} title="Title" />
-
-    <ListCell onClick={onClickConsole} subdetail="Neutral" title="Title" />
-
-    <ListCell
-      multiline
-      description="Multi-line description"
-      onClick={onClickConsole}
-      title="Title"
-    />
-
-    <ListCell
-      multiline
-      selected
-      description="Multi-line description"
-      onClick={onClickConsole}
-      title="Title"
-    />
-
-    <ListCell
-      multiline
-      description="Multi-line description goes here with really long text"
-      onClick={onClickConsole}
-      title="Title"
-    />
-
-    <ListCell
-      multiline
-      selected
-      description="Multi-line description goes here with really long text"
-      onClick={onClickConsole}
-      title="Title"
-    />
-
-    <ListCell description="Description" detail="Detail" onClick={onClickConsole} title="Title" />
-
-    <ListCell
-      description="Description"
-      detail="Detail"
-      onClick={onClickConsole}
-      subdetail="Neutral"
-      title="Title"
-    />
-
-    <ListCell
-      selected
-      description="Description"
-      detail="Detail"
-      onClick={onClickConsole}
-      subdetail="Neutral"
-      title="Title"
-    />
-
-    <ListCell
-      disabled
-      description="Description"
-      detail="Detail"
-      onClick={onClickConsole}
-      subdetail="Neutral"
-      title="Title"
-    />
-
-    <ListCell
-      disabled
-      selected
-      description="Description"
-      detail="Detail"
-      onClick={onClickConsole}
-      subdetail="+Postive"
-      title="Title"
-      variant="positive"
-    />
-
-    <ListCell
-      disabled
-      selected
-      description="Description"
-      detail="Detail"
-      onClick={onClickConsole}
-      subdetail="Warning"
-      title="Title"
-      variant="warning"
-    />
-  </>
-);
-
 const LongContent = () => (
   <>
     <ListCell
-      description="Description also has a very long length that will wrap to 2 lines maximum. This is different from subtitle that only supports 1 line."
+      disableMultilineTitle
+      description="Description also has a very long length that can go as many lines as possible when multipline is turned on."
       detail="Detail also has a very long string"
       subdetail="Neutral also does too"
-      title="Title with a very long length that should wrap to 2 lines when there is no subtitle or description"
+      title="Title with a very long length that should wrap to 2 lines unless disableMultilineTitle is turned on"
     />
     <ListCell
       multiline
       selected
-      description="Description also has a very long length that will wrap to 2 lines maximum. This is different from subtitle that only supports 1 line."
+      description="Description also has a very long length that can go as many lines as possible when multipline is turned on."
       detail="Detail also has a very long string"
       subdetail="Neutral also does too"
-      title="Title with a very long length that should wrap to 2 lines when there is no subtitle or description"
+      title="Title with a very long length that should wrap to 2 lines unless disableMultilineTitle is turned on"
     />
   </>
 );
@@ -330,7 +200,7 @@ const PriorityContent = () => (
     <ListCell
       description="Some description of the asset"
       detail="$334,239.03"
-      intermediary={<CellMedia name="chartLine" type="icon" />}
+      intermediary={<Icon name="chartLine" size="m" />}
       priority="start"
       subdetail="+4.06%"
       title="Asset with a really long name"
@@ -339,7 +209,7 @@ const PriorityContent = () => (
     <ListCell
       description="Some description of the asset"
       detail="$334,239.03"
-      intermediary={<CellMedia name="chartLine" type="icon" />}
+      intermediary={<Icon name="chartLine" size="m" />}
       priority="middle"
       subdetail="+4.06%"
       title="Asset with a really long name"
@@ -348,7 +218,7 @@ const PriorityContent = () => (
     <ListCell
       description="Some description of the asset"
       detail="$334,239.03"
-      intermediary={<CellMedia name="chartLine" type="icon" />}
+      intermediary={<Icon name="chartLine" size="m" />}
       priority="end"
       subdetail="+4.06%"
       title="Asset with a really long name"
@@ -357,7 +227,7 @@ const PriorityContent = () => (
     <ListCell
       description="Some description of the asset"
       detail="$334,239.03"
-      intermediary={<CellMedia name="chartLine" type="icon" />}
+      intermediary={<Icon name="chartLine" size="m" />}
       priority={cellPriorities}
       subdetail="+4.06%"
       title="Asset with a really long name"
@@ -366,7 +236,7 @@ const PriorityContent = () => (
     <ListCell
       description="Some description of the asset"
       detail="$334,239.03"
-      intermediary={<CellMedia name="chartLine" type="icon" />}
+      intermediary={<Icon name="chartLine" size="m" />}
       priority={cellPriorities}
       subdetail="+4.06%"
       title="Asset with a really long name"
@@ -435,46 +305,42 @@ const WithAccessory = () => (
 
 const WithMedia = () => (
   <>
-    <ListCell media={<CellMedia active name="email" type="icon" />} title="Icon" />
+    <ListCell media={<Icon active color="fg" name="email" size="s" />} title="Icon" />
 
     <ListCell
-      media={<CellMedia active name="email" type="icon" />}
+      media={<Icon active color="fg" name="email" size="s" />}
       onClick={onClickConsole}
       title="Icon (pressable)"
     />
 
     <ListCell
       description="Description"
-      media={<CellMedia name="phone" type="icon" />}
+      media={<Icon color="fg" name="phone" size="s" />}
       title="Icon"
     />
 
     <ListCell
       description="Description"
       detail="Detail"
-      media={<CellMedia source={assets.eth.imageUrl} type="avatar" />}
+      media={<Avatar shape="circle" size="l" src={assets.eth.imageUrl} />}
       title="Avatar"
     />
 
     <ListCell
       description="Description"
       detail="Detail"
-      media={<CellMedia source={assets.eth.imageUrl} type="asset" />}
+      media={<Avatar shape="circle" size="l" src={assets.eth.imageUrl} />}
       subdetail="Neutral"
       title="Asset"
     />
 
     <ListCell
       detail="Detail"
-      media={<CellMedia source={assets.eth.imageUrl} type="image" />}
+      media={<Avatar shape="circle" size="l" src={assets.eth.imageUrl} />}
       title="Image"
     />
 
-    <ListCell
-      description="Description"
-      media={<CellMedia illustration={<Pictogram name="shield" />} type="pictogram" />}
-      title="Pictogram"
-    />
+    <ListCell description="Description" media={<Pictogram name="shield" />} title="Pictogram" />
   </>
 );
 
@@ -508,35 +374,35 @@ const WithIntermediary = () => (
       description="Description"
       detail="$1,230"
       endWidth={100}
-      intermediary={<CellMedia name="chartLine" type="icon" />}
+      intermediary={<Icon name="chartLine" size="m" />}
       title="Title"
     />
     <ListCell
       description="Description"
       detail="$44,130"
       endWidth={100}
-      intermediary={<CellMedia name="chartLine" type="icon" />}
+      intermediary={<Icon name="chartLine" size="m" />}
       title="Title"
     />
     <ListCell
       description="Description"
       detail="$942,103"
       endWidth={100}
-      intermediary={<CellMedia name="chartLine" type="icon" />}
+      intermediary={<Icon name="chartLine" size="m" />}
       title="Title"
     />
     <ListCell
       description="Description"
       detail="$530"
       endWidth={100}
-      intermediary={<CellMedia name="chartLine" type="icon" />}
+      intermediary={<Icon name="chartLine" size="m" />}
       title="Title"
     />
     <ListCell
       description="Description"
       detail="$123K"
       endWidth={100}
-      intermediary={<CellMedia name="chartLine" type="icon" />}
+      intermediary={<Icon name="chartLine" size="m" />}
       title="Title"
     />
   </>
@@ -566,7 +432,7 @@ const WithHelperText = () => (
           Please review this information carefully before proceeding
         </CellHelperText>
       }
-      media={<CellMedia source={assets.eth.imageUrl} type="asset" />}
+      media={<Avatar shape="circle" size="l" src={assets.eth.imageUrl} />}
       priority="end"
       title="With Media and Helper Text"
     />
@@ -581,7 +447,7 @@ const WithHelperText = () => (
           This field contains an error that needs to be corrected
         </CellHelperText>
       }
-      media={<CellMedia source={assets.eth.imageUrl} type="asset" />}
+      media={<Avatar shape="circle" size="l" src={assets.eth.imageUrl} />}
       priority="end"
       title="With Detail and Helper Text"
       variant="negative"
@@ -596,7 +462,7 @@ const WithHelperText = () => (
           This action cannot be undone.
         </CellHelperText>
       }
-      media={<CellMedia source={assets.eth.imageUrl} type="asset" />}
+      media={<Avatar shape="circle" size="l" src={assets.eth.imageUrl} />}
       priority="end"
       title="With Media and Action"
     />
@@ -610,7 +476,7 @@ const AlphaListCellTest = () => {
         accessory="more"
         description="Description"
         detail="Detail"
-        media={<CellMedia source={assets.eth.imageUrl} type="avatar" />}
+        media={<Avatar shape="circle" size="l" src={assets.eth.imageUrl} />}
         onClick={onClickConsole}
         subdetail="Subdetail"
         title="Title"
@@ -624,7 +490,7 @@ const AlphaListCellTest = () => {
             This is helpful information to guide the user
           </CellHelperText>
         }
-        media={<CellMedia source={assets.eth.imageUrl} type="avatar" />}
+        media={<Avatar shape="circle" size="l" src={assets.eth.imageUrl} />}
         onClick={onClickConsole}
         subdetail="Subdetail"
         title="Title"
@@ -634,7 +500,7 @@ const AlphaListCellTest = () => {
         accessory="more"
         description="Long description with multiple lines. This section can be arbitrarily long and occupy many many lines."
         detail="Detail"
-        media={<CellMedia source={assets.eth.imageUrl} type="avatar" />}
+        media={<Avatar shape="circle" size="l" src={assets.eth.imageUrl} />}
         onClick={onClickConsole}
         subdetail="Subdetail"
         title="Title"
@@ -645,7 +511,7 @@ const AlphaListCellTest = () => {
         alignItems="flex-start"
         description="Long description with multiple lines. This section can be arbitrarily long and occupy many many lines."
         detail="Detail"
-        media={<CellMedia source={assets.eth.imageUrl} type="avatar" />}
+        media={<Avatar shape="circle" size="l" src={assets.eth.imageUrl} />}
         onClick={onClickConsole}
         styles={{
           accessory: {
@@ -697,8 +563,8 @@ const AlphaListCellTest = () => {
         accessory="more"
         description="Description"
         detail="Detail"
-        intermediary={<RemoteImage shape="squircle" size="l" source={squareAssets.human6} />}
-        media={<RemoteImage shape="squircle" size="l" source={squareAssets.human1} />}
+        intermediary={<Avatar shape="square" size="l" src={squareAssets.human6} />}
+        media={<Avatar shape="square" size="l" src={squareAssets.human1} />}
         onClick={onClickConsole}
         subdetail={
           <Tag colorScheme="green">
@@ -716,8 +582,6 @@ const AlphaListCellTest = () => {
 
 export {
   AlphaListCellTest,
-  CompactContent,
-  CompactPressableContent,
   Content,
   LongContent,
   PressableContent,
