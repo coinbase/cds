@@ -92,6 +92,10 @@ export const ScrubberHead = memo(
       );
       const wasScrubbingRef = useRef(false);
       const previousScalesRef = useRef<{ xScale: any; yScale: any } | null>(null);
+      const previousDataRef = useRef<{ dataX: number | undefined; dataY: number | undefined }>({
+        dataX: undefined,
+        dataY: undefined,
+      });
 
       const targetSeries = getSeries(seriesId);
       const sourceData = getSeriesData(seriesId);
@@ -153,12 +157,20 @@ export const ScrubberHead = memo(
         if (!pixelCoordinate) return;
 
         const isIdleState = highlightedIndex === undefined;
-        
+
         // Check if scales have changed (resize)
-        const scalesChanged = previousScalesRef.current && 
-          (previousScalesRef.current.xScale !== xScale || 
-           previousScalesRef.current.yScale !== yScale);
+        const scalesChanged =
+          previousScalesRef.current &&
+          (previousScalesRef.current.xScale !== xScale ||
+            previousScalesRef.current.yScale !== yScale);
+
+        // Check if data values have changed
+        const dataChanged =
+          previousDataRef.current.dataX !== dataX || previousDataRef.current.dataY !== dataY;
+
+        // Update refs
         previousScalesRef.current = { xScale, yScale };
+        previousDataRef.current = { dataX, dataY };
 
         // Initialize on first render
         if (!animatedPosition) {
@@ -176,8 +188,11 @@ export const ScrubberHead = memo(
           setAnimatedPosition(pixelCoordinate);
         };
 
-        // If scales changed (resize), always update immediately
-        if (scalesChanged) {
+        // Determine if position changed due to resize or data change
+        const isResizeUpdate = scalesChanged && !dataChanged;
+
+        if (isResizeUpdate) {
+          // Position changed due to resize only - update immediately
           updatePositionImmediately();
         } else if (!isIdleState) {
           // Scrubbing - always update immediately
@@ -187,8 +202,8 @@ export const ScrubberHead = memo(
           // Just stopped scrubbing - reset immediately
           updatePositionImmediately();
           wasScrubbingRef.current = false;
-        } else if (animate && positionChanged) {
-          // Idle state with animation enabled - animate the change
+        } else if (animate && positionChanged && dataChanged) {
+          // Idle state with data change - animate the change
           const deltaX = pixelCoordinate.x - animatedPosition.x;
           const deltaY = pixelCoordinate.y - animatedPosition.y;
 
@@ -203,7 +218,17 @@ export const ScrubberHead = memo(
           // Animation disabled
           updatePositionImmediately();
         }
-      }, [pixelCoordinate, highlightedIndex, animate, animatedPosition, controls, xScale, yScale]);
+      }, [
+        pixelCoordinate,
+        highlightedIndex,
+        animate,
+        animatedPosition,
+        controls,
+        xScale,
+        yScale,
+        dataX,
+        dataY,
+      ]);
 
       useImperativeHandle(ref, () => ({
         pulse: () => {
