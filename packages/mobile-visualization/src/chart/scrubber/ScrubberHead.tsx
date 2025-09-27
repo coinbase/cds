@@ -103,6 +103,7 @@ export const ScrubberHead = memo(
       const animatedY = useSharedValue(0);
       const previousPositionRef = useRef<{ x: number; y: number } | undefined>(undefined);
       const [isInitialized, setIsInitialized] = useState(false);
+      const wasScrubbing = useRef(false);
 
       // Calculate data coordinates
       const { dataX, dataY } = useMemo(() => {
@@ -176,16 +177,30 @@ export const ScrubberHead = memo(
 
         if (!positionChanged) return;
 
-        // For first render or scrubbing - update immediately without animation
-        if (!previousPositionRef.current || !isIdleState) {
+        if (!isIdleState) {
+          // When scrubbing - update immediately and track that we're scrubbing
           animatedX.value = targetPosition.x;
           animatedY.value = targetPosition.y;
+          wasScrubbing.current = true;
           if (!isInitialized) {
             setIsInitialized(true);
           }
-        } else if (isIdleState) {
-          // For idle state - animate if enabled and not first render
-          if (animate) {
+        } else {
+          // When idle
+          if (!previousPositionRef.current) {
+            // First render - set position immediately
+            animatedX.value = targetPosition.x;
+            animatedY.value = targetPosition.y;
+            if (!isInitialized) {
+              setIsInitialized(true);
+            }
+          } else if (wasScrubbing.current) {
+            // Just stopped scrubbing - snap to position without animation
+            animatedX.value = targetPosition.x;
+            animatedY.value = targetPosition.y;
+            wasScrubbing.current = false;
+          } else if (animate) {
+            // Idle state with data update - animate to new position
             animatedX.value = withSpring(targetPosition.x, {
               damping: 20,
               stiffness: 300,
@@ -195,6 +210,7 @@ export const ScrubberHead = memo(
               stiffness: 300,
             });
           } else {
+            // Idle but no animation - snap to position
             animatedX.value = targetPosition.x;
             animatedY.value = targetPosition.y;
           }
