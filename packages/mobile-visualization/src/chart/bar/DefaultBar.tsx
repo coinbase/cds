@@ -1,7 +1,13 @@
 import React, { memo, useCallback, useEffect, useMemo, useRef } from 'react';
-import { Animated, Easing } from 'react-native';
+import {
+  Easing,
+  runOnJS,
+  useAnimatedReaction,
+  useSharedValue,
+  withTiming,
+} from 'react-native-reanimated';
 import { Path } from 'react-native-svg';
-import { animatedPathConfig } from '@coinbase/cds-common/animation/sparkline';
+import { usePreviousValue } from '@coinbase/cds-common/hooks/usePreviousValue';
 import { getBarPath } from '@coinbase/cds-common/visualizations/charts';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 import * as interpolate from 'd3-interpolate-path';
@@ -34,28 +40,34 @@ export const DefaultBar = memo<DefaultBarProps>(
     const pathRef = useRef<Path | null>(null);
     const { animate } = useChartContext();
     const theme = useTheme();
-    const animationProgress = useRef(new Animated.Value(0)).current;
 
-    const initialPath = useMemo(() => {
-      if (!animate) return d;
-      // Need a minimum height to allow for animation
-      const minHeight = 1;
-      const initialY = originY ? originY - minHeight : y + height - minHeight;
-      return getBarPath(x, initialY, width, minHeight, borderRadius, roundTop, roundBottom);
-    }, [animate, x, y, height, originY, width, borderRadius, roundTop, roundBottom, d]);
+    const animationProgress = useSharedValue(0);
 
     const targetPath = useMemo(() => {
       return d || getBarPath(x, y, width, height, borderRadius, roundTop, roundBottom);
     }, [d, x, y, width, height, borderRadius, roundTop, roundBottom]);
 
+    const previousPath = usePreviousValue(targetPath);
+
+    const baselinePath = useMemo(() => {
+      const minHeight = 1;
+      const initialY = originY ? originY - minHeight : y + height - minHeight;
+      return getBarPath(x, initialY, width, minHeight, borderRadius, roundTop, roundBottom);
+    }, [x, originY, y, height, width, borderRadius, roundTop, roundBottom]);
+
+    const fromPath = useMemo(() => {
+      if (!animate) return targetPath;
+      return previousPath || baselinePath;
+    }, [animate, previousPath, baselinePath, targetPath]);
+
     const pathInterpolator = useMemo(
-      () => interpolate.interpolatePath(initialPath, targetPath),
-      [initialPath, targetPath],
+      () => interpolate.interpolatePath(fromPath, targetPath),
+      [fromPath, targetPath],
     );
 
-    const animationListener = useCallback(
-      ({ value }: { value: number }) => {
-        const val = Number(value.toFixed(4));
+    const updatePath = useCallback(
+      (progress: number) => {
+        const val = Number(progress.toFixed(4));
         pathRef.current?.setNativeProps({
           d: pathInterpolator(val),
         });
@@ -65,43 +77,37 @@ export const DefaultBar = memo<DefaultBarProps>(
 
     const defaultFill = fill || theme.color.fgPrimary;
 
+    useAnimatedReaction(
+      () => animationProgress.value,
+      (progress) => {
+        'worklet';
+        runOnJS(updatePath)(progress);
+      },
+      [updatePath],
+    );
+
     useEffect(() => {
-      if (!animate || !pathRef.current) {
-        // If not animating, just set the target path
-        pathRef.current?.setNativeProps({
+      if (!pathRef.current) return;
+
+      if (!animate) {
+        pathRef.current.setNativeProps({
           d: targetPath,
         });
+        animationProgress.value = 1;
         return;
       }
 
-      // Reset animation progress
-      animationProgress.setValue(0);
-
-      // Add listener for animation updates
-      const listenerId = animationProgress.addListener(animationListener);
-
-      // Start the animation immediately
-      Animated.timing(animationProgress, {
-        toValue: 1,
-        duration: animatedPathConfig.duration,
-        easing: animatedPathConfig.easing,
-        useNativeDriver: false, // Path animation can't use native driver
-      }).start(() => {
-        // Clean up listener when animation completes
-        animationProgress.removeListener(listenerId);
+      animationProgress.value = 0;
+      animationProgress.value = withTiming(1, {
+        duration: 1000,
+        easing: Easing.out(Easing.quad),
       });
-
-      // Cleanup on unmount or when dependencies change
-      return () => {
-        animationProgress.removeListener(listenerId);
-        animationProgress.stopAnimation();
-      };
-    }, [animate, animationListener, animationProgress, targetPath]);
+    }, [animate, animationProgress, targetPath]);
 
     return (
       <Path
         ref={pathRef}
-        d={animate ? initialPath : targetPath}
+        d={fromPath}
         fill={defaultFill}
         fillOpacity={fillOpacity}
         stroke={stroke}
@@ -110,5 +116,3 @@ export const DefaultBar = memo<DefaultBarProps>(
     );
   },
 );
-
-DefaultBar.displayName = 'DefaultBar';
