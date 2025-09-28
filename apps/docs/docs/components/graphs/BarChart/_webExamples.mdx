@@ -617,7 +617,7 @@ You can render bars from separate y axes in one `BarPlot`, however they aren't a
 
 ```jsx live
 <VStack gap={2}>
-  <Chart
+  <CartesianChart
     height={400}
     series={[
       {
@@ -668,7 +668,7 @@ You can render bars from separate y axes in one `BarPlot`, however they aren't a
       tickLabelFormatter={(value) => `${value}%`}
     />
     <BarPlot />
-  </Chart>
+  </CartesianChart>
   <HStack justifyContent="center" gap={2}>
     <Box alignItems="center" gap={0.5}>
       <Box

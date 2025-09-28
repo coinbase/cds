@@ -3,7 +3,7 @@
 The YAxis component provides a vertical axis for charts with automatic tick generation and labeling.
 
 ```jsx live
-<Chart
+<CartesianChart
   enableScrubbing
   height={250}
   series={[
@@ -16,7 +16,7 @@ The YAxis component provides a vertical axis for charts with automatic tick gene
   <YAxis position="end" showGrid />
   <Line seriesId="prices" curve="monotone" showArea />
   <Scrubber />
-</Chart>
+</CartesianChart>
 ```
 
 ## Axis Config
@@ -28,7 +28,7 @@ Properties related to the scale of an axis are set on the Chart component. This 
 YAxis supports `linear` (default) and `log` scale types. Both `linear` and `log` are numeric scales.
 
 ```jsx live
-<Chart
+<CartesianChart
   height={400}
   series={[
     {
@@ -53,7 +53,7 @@ YAxis supports `linear` (default) and `log` scale types. Both `linear` and `log`
     size={70}
     tickLabelFormatter={(value) => value.toLocaleString()}
   />
-</Chart>
+</CartesianChart>
 ```
 
 ### Domain
@@ -62,7 +62,7 @@ An axis's domain is the range of values that the axis will display.
 You can pass in either an object (AxisBounds) with `min` and `max` properties (both optional), or a function that receives initial `AxisBounds` and returns an adjusted `AxisBounds`.
 
 ```jsx live
-<Chart
+<CartesianChart
   height={250}
   series={[
     {
@@ -76,7 +76,7 @@ You can pass in either an object (AxisBounds) with `min` and `max` properties (b
 >
   <YAxis position="end" showGrid />
   <Line seriesId="prices" curve="monotone" showArea />
-</Chart>
+</CartesianChart>
 ```
 
 #### Domain Limit
@@ -90,7 +90,7 @@ An axis's range is the range of values that the axis will display in pixels. Thi
 You can pass in either an object (AxisBounds) with `min` and `max` properties (both optional), or a function that receives initial `AxisBounds` and returns an adjusted `AxisBounds`.
 
 ```jsx live
-<Chart
+<CartesianChart
   height={250}
   series={[
     {
@@ -103,7 +103,7 @@ You can pass in either an object (AxisBounds) with `min` and `max` properties (b
   }}
 >
   <Line seriesId="prices" curve="monotone" showArea />
-</Chart>
+</CartesianChart>
 ```
 
 ## Axis Props
@@ -115,7 +115,7 @@ Properties related to the visual appearance of the YAxis are set on the componen
 You can set the position of an axis to `start` or `end`. The default is `end`.
 
 ```jsx live
-<Chart
+<CartesianChart
   enableScrubbing
   height={512}
   series={[
@@ -138,7 +138,7 @@ You can set the position of an axis to `start` or `end`. The default is `end`.
   <Line curve="natural" seriesId="linear" />
   <Line curve="natural" seriesId="log" />
   <Scrubber />
-</Chart>
+</CartesianChart>
 ```
 
 ### Grid
@@ -155,7 +155,7 @@ function YAxisGridExample() {
           Show Grid
         </Switch>
       </HStack>
-      <Chart
+      <CartesianChart
         enableScrubbing
         height={250}
         series={[
@@ -168,7 +168,7 @@ function YAxisGridExample() {
         <YAxis position="end" showGrid={showGrid} />
         <Line seriesId="prices" curve="monotone" showArea />
         <Scrubber />
-      </Chart>
+      </CartesianChart>
     </VStack>
   );
 }
@@ -195,7 +195,7 @@ function CustomGridLineExample() {
   ];
 
   return (
-    <Chart
+    <CartesianChart
       height={420}
       padding={4}
       series={series}
@@ -209,7 +209,7 @@ function CustomGridLineExample() {
       />
       <BarPlot />
       <ReferenceLine LineComponent={SolidLine} dataY={0} />
-    </Chart>
+    </CartesianChart>
   );
 };
 ```
@@ -228,7 +228,7 @@ function YAxisLineExample() {
           Show Line
         </Switch>
       </HStack>
-      <Chart
+      <CartesianChart
         enableScrubbing
         height={250}
         series={[
@@ -241,7 +241,7 @@ function YAxisLineExample() {
         <YAxis position="end" showLine={showLine} />
         <Line seriesId="prices" curve="monotone" showArea />
         <Scrubber />
-      </Chart>
+      </CartesianChart>
     </VStack>
   );
 }
@@ -259,7 +259,7 @@ function YAxisLineStylesExample() {
           Show Line
         </Switch>
       </HStack>
-      <Chart
+      <CartesianChart
         enableScrubbing
         height={250}
         series={[
@@ -277,7 +277,7 @@ function YAxisLineStylesExample() {
         />
         <Line seriesId="prices" curve="monotone" showArea />
         <Scrubber />
-      </Chart>
+      </CartesianChart>
     </VStack>
   );
 }
@@ -288,7 +288,7 @@ function YAxisLineStylesExample() {
 The `size` prop sets the size of the axis in pixels. The default is 44 for YAxis, but can be adjusted to fit the size of your data.
 
 ```jsx live
-<Chart
+<CartesianChart
   height={400}
   series={[
     {
@@ -310,7 +310,7 @@ The `size` prop sets the size of the axis in pixels. The default is 44 for YAxis
     size={70}
     tickLabelFormatter={(value) => value.toLocaleString()}
   />
-</Chart>
+</CartesianChart>
 ```
 
 ### Ticks
@@ -320,7 +320,7 @@ You can use the `ticks`, `requestedTickCount` (default for YAxis), and `tickInte
 `ticks` accepts an array of numbers, which corresponds to the values of that axis that you would like to display ticks for.
 
 ```jsx live
-<Chart
+<CartesianChart
   enableScrubbing
   height={250}
   series={[
@@ -333,7 +333,7 @@ You can use the `ticks`, `requestedTickCount` (default for YAxis), and `tickInte
   <YAxis position="end" showLine showTickMarks showGrid ticks={[34, 56, 80]} />
   <Line seriesId="prices" curve="monotone" showArea />
   <Scrubber />
-</Chart>
+</CartesianChart>
 ```
 
 Using `requestedTickCount` will use [D3's ticks function](https://d3js.org/d3-array/ticks#ticks) to determine the number and placement of ticks. Note that this count is not guaranteed to be respected.
@@ -341,7 +341,7 @@ Using `requestedTickCount` will use [D3's ticks function](https://d3js.org/d3-ar
 This is the default behavior for YAxis, and defaults to `5`.
 
 ```jsx live
-<Chart
+<CartesianChart
   enableScrubbing
   height={250}
   series={[
@@ -354,13 +354,13 @@ This is the default behavior for YAxis, and defaults to `5`.
   <YAxis position="end" showLine showTickMarks showGrid requestedTickCount={5} />
   <Line seriesId="prices" curve="monotone" showArea />
   <Scrubber />
-</Chart>
+</CartesianChart>
 ```
 
 `tickInterval`, which accepts `ThemeVars.Space`, will measure the available space and try to create evenly spaced ticks. It will always include the first and last values of the domain.
 
 ```jsx live
-<Chart
+<CartesianChart
   enableScrubbing
   height={250}
   series={[
@@ -373,7 +373,7 @@ This is the default behavior for YAxis, and defaults to `5`.
   <YAxis position="end" showLine showTickMarks showGrid tickInterval={1} />
   <Line seriesId="prices" curve="monotone" showArea />
   <Scrubber />
-</Chart>
+</CartesianChart>
 ```
 
 ### Tick Marks
@@ -390,7 +390,7 @@ function YAxisTickMarksExample() {
           Show Tick Marks
         </Switch>
       </HStack>
-      <Chart
+      <CartesianChart
         enableScrubbing
         height={250}
         series={[
@@ -403,7 +403,7 @@ function YAxisTickMarksExample() {
         <YAxis position="end" showLine showTickMarks={showTickMarks} tickMarkSize={2} showGrid />
         <Line seriesId="prices" curve="monotone" showArea />
         <Scrubber />
-      </Chart>
+      </CartesianChart>
     </VStack>
   );
 }
@@ -414,7 +414,7 @@ function YAxisTickMarksExample() {
 You can customize the tick labels using the `tickLabelFormatter` prop.
 
 ```jsx live
-<Chart
+<CartesianChart
   enableScrubbing
   height={250}
   series={[
@@ -427,5 +427,5 @@ You can customize the tick labels using the `tickLabelFormatter` prop.
   <YAxis position="end" showGrid tickLabelFormatter={(value) => `$${value}`} />
   <Line seriesId="prices" curve="monotone" showArea />
   <Scrubber />
-</Chart>
+</CartesianChart>
 ```

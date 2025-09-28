@@ -67,7 +67,9 @@ export type ScrubberProps = SharedProps &
     /**
      * Label text displayed above the scrubber line.
      */
-    scrubberLabel?: ReferenceLineProps['label'];
+    scrubberLabel?:
+      | ReferenceLineProps['label']
+      | ((dataIndex: number) => ReferenceLineProps['label']);
 
     /**
      * Props passed to the scrubber line's label.
@@ -594,6 +596,14 @@ export const Scrubber = memo(
 
       const pixelX = dataX !== undefined && defaultXScale ? defaultXScale(dataX) : undefined;
 
+      const memoizedScrubberLabel: ReferenceLineProps['label'] = useMemo(() => {
+        if (typeof scrubberLabel === 'function') {
+          if (dataIndex === undefined) return undefined;
+          return scrubberLabel(dataIndex);
+        }
+        return scrubberLabel;
+      }, [scrubberLabel, dataIndex]);
+
       // Update scrubber line and overlay positions using animated values
       useEffect(() => {
         if (pixelX !== undefined) {
@@ -630,7 +640,7 @@ export const Scrubber = memo(
           {!hideScrubberLine && scrubberPosition !== undefined && dataX !== undefined && (
             <ScrubberLineComponent
               dataX={dataX}
-              label={scrubberLabel}
+              label={memoizedScrubberLabel}
               labelConfig={scrubberLabelProps}
               labelPosition="top"
               stroke={scrubberLineStroke}

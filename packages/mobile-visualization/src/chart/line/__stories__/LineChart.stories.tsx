@@ -893,7 +893,120 @@ const BTCActiveIndicator = memo(({ style, ...props }: TabsActiveIndicatorProps) 
   />
 ));
 
-const AssetPriceMultipleDotted = () => {
+const AssetPriceDotted = () => {
+  const currentPrice =
+    sparklineInteractiveData.hour[sparklineInteractiveData.hour.length - 1].value;
+  const tabs = useMemo(
+    () => [
+      { id: 'hour', label: '1H' },
+      { id: 'day', label: '1D' },
+      { id: 'week', label: '1W' },
+      { id: 'month', label: '1M' },
+      { id: 'year', label: '1Y' },
+      { id: 'all', label: 'All' },
+    ],
+    [],
+  );
+  const [timePeriod, setTimePeriod] = useState<TabValue>(tabs[0]);
+
+  const sparklineTimePeriodData = useMemo(() => {
+    return sparklineInteractiveData[timePeriod.id as keyof typeof sparklineInteractiveData];
+  }, [timePeriod]);
+
+  const sparklineTimePeriodDataValues = useMemo(() => {
+    return sparklineTimePeriodData.map((d) => d.value);
+  }, [sparklineTimePeriodData]);
+
+  const sparklineTimePeriodDataTimestamps = useMemo(() => {
+    return sparklineTimePeriodData.map((d) => d.date);
+  }, [sparklineTimePeriodData]);
+
+  const onPeriodChange = useCallback(
+    (period: TabValue | null) => {
+      setTimePeriod(period || tabs[0]);
+    },
+    [tabs, setTimePeriod],
+  );
+
+  const formatPrice = useCallback((price: number) => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+    }).format(price);
+  }, []);
+
+  const formatDate = useCallback((date: Date) => {
+    const dayOfWeek = date.toLocaleDateString('en-US', { weekday: 'short' });
+
+    const monthDay = date.toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+    });
+
+    const time = date.toLocaleTimeString('en-US', {
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true,
+    });
+
+    return `${dayOfWeek}, ${monthDay}, ${time}`;
+  }, []);
+
+  const scrubberLabel = useCallback(
+    (dataIndex: number) => {
+      const price = new Intl.NumberFormat('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      }).format(sparklineTimePeriodDataValues[dataIndex]);
+      const date = formatDate(sparklineTimePeriodDataTimestamps[dataIndex]);
+      return `${price} USD ${date}`;
+    },
+    [sparklineTimePeriodDataValues, formatDate, sparklineTimePeriodDataTimestamps],
+  );
+
+  return (
+    <VStack gap={2}>
+      <SectionHeader
+        balance={
+          <Text font="title2">
+            {formatPrice(currentPrice)} {sparklineTimePeriodDataValues.length}
+          </Text>
+        }
+        end={
+          <VStack justifyContent="center">
+            <RemoteImage shape="circle" size="xl" source={assets.btc.imageUrl} />
+          </VStack>
+        }
+        padding={0}
+        title={<Text font="title1">Bitcoin</Text>}
+      />
+      <LineChart
+        enableScrubbing
+        showArea
+        areaType="dotted"
+        height={defaultChartHeight}
+        series={[
+          {
+            id: 'btc',
+            data: sparklineTimePeriodDataValues,
+            color: assets.btc.color,
+          },
+        ]}
+      >
+        <Scrubber scrubberLabel={scrubberLabel} />
+      </LineChart>
+      <PeriodSelector
+        TabComponent={BTCTab}
+        TabsActiveIndicatorComponent={BTCActiveIndicator}
+        activeTab={timePeriod}
+        onChange={onPeriodChange}
+        tabs={tabs}
+      />
+    </VStack>
+  );
+};
+
+const AssetPriceDottedNonMemoized = () => {
   const [scrubIndex, setScrubIndex] = useState<number | undefined>(undefined);
   const currentPrice =
     sparklineInteractiveData.hour[sparklineInteractiveData.hour.length - 1].value;
@@ -993,7 +1106,7 @@ const AssetPriceMultipleDotted = () => {
           },
         ]}
       >
-        <Scrubber />
+        <Scrubber scrubberLabel={scrubberLabel} />
       </LineChart>
       <PeriodSelector
         TabComponent={BTCTab}
@@ -1006,7 +1119,7 @@ const AssetPriceMultipleDotted = () => {
   );
 };
 
-const AssetPriceDotted = () => {
+const AssetPriceMultipleDotted = () => {
   const [scrubIndex, setScrubIndex] = useState<number | undefined>(undefined);
   const currentPrice =
     sparklineInteractiveData.hour[sparklineInteractiveData.hour.length - 1].value;
@@ -1478,11 +1591,14 @@ const AssetPriceScreen = () => {
           <Scrubber />
         </LineChart>
       </Example>
-      <Example title="Asset Price Multiple Dotted">
-        <AssetPriceMultipleDotted />
+      <Example title="Asset Price Dotted Memoized">
+        <AssetPriceDotted />
       </Example>
       <Example title="Asset Price Dotted">
-        <AssetPriceDotted />
+        <AssetPriceDottedNonMemoized />
+      </Example>
+      <Example title="Asset Price Multiple Dotted">
+        <AssetPriceMultipleDotted />
       </Example>
     </ExampleScreen>
   );
