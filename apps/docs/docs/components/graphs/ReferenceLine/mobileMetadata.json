@@ -1,0 +1,19 @@
+{
+  "import": "import { ReferenceLine } from '@coinbase/cds-mobile-visualization'",
+  "source": "https://github.com/coinbase/cds-staging/blob/master/packages/mobile-visualization/src/chart/line/ReferenceLine.tsx",
+  "description": "A horizontal or vertical reference line to mark important values on a chart",
+  "relatedComponents": [
+    {
+      "label": "LineChart",
+      "url": "/components/graphs/LineChart/"
+    },
+    {
+      "label": "BarChart",
+      "url": "/components/graphs/BarChart/"
+    },
+    {
+      "label": "AreaChart",
+      "url": "/components/graphs/AreaChart/"
+    }
+  ]
+}

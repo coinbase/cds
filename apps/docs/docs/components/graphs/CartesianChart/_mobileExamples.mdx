@@ -1,0 +1,401 @@
+## Basic Example
+
+CartesianChart provides a flexible foundation for building custom chart visualizations with cartesian coordinates.
+
+```jsx
+<CartesianChart
+  height={250}
+  series={[
+    {
+      id: 'data',
+      data: [10, 25, 30, 45, 55, 40, 60],
+    },
+  ]}
+>
+  {({ xScale, yScale, series }) => (
+    <>
+      {series[0].data.map((value, index) => (
+        <Circle
+          key={index}
+          cx={xScale(index)}
+          cy={yScale(value)}
+          r={4}
+          fill="rgb(59, 130, 246)"
+        />
+      ))}
+    </>
+  )}
+</CartesianChart>
+```
+
+## With Axes
+
+Add X and Y axes for better data context.
+
+```jsx
+<CartesianChart
+  height={250}
+  series={[
+    {
+      id: 'values',
+      data: [20, 35, 28, 45, 50, 42, 55],
+    },
+  ]}
+  showXAxis
+  showYAxis
+  yAxis={{
+    showGrid: true,
+  }}
+>
+  {({ xScale, yScale, series }) => (
+    <>
+      {series[0].data.map((value, index) => (
+        <Rect
+          key={index}
+          x={xScale(index) - 10}
+          y={yScale(value)}
+          width={20}
+          height={yScale(0) - yScale(value)}
+          fill="rgb(34, 197, 94)"
+        />
+      ))}
+    </>
+  )}
+</CartesianChart>
+```
+
+## Custom Line Chart
+
+Build a custom line chart using path elements.
+
+```jsx
+function CustomLineChart() {
+  const generatePath = (data, xScale, yScale) => {
+    return data
+      .map((value, index) => {
+        const x = xScale(index);
+        const y = yScale(value);
+        return index === 0 ? `M ${x} ${y}` : `L ${x} ${y}`;
+      })
+      .join(' ');
+  };
+
+  return (
+    <CartesianChart
+      height={250}
+      series={[
+        {
+          id: 'line',
+          data: [10, 22, 18, 35, 30, 45, 38, 50],
+        },
+      ]}
+      showYAxis
+      yAxis={{
+        showGrid: true,
+      }}
+    >
+      {({ xScale, yScale, series }) => (
+        <>
+          <Path
+            d={generatePath(series[0].data, xScale, yScale)}
+            stroke="rgb(239, 68, 68)"
+            strokeWidth={2}
+            fill="none"
+          />
+          {series[0].data.map((value, index) => (
+            <Circle
+              key={index}
+              cx={xScale(index)}
+              cy={yScale(value)}
+              r={4}
+              fill="rgb(239, 68, 68)"
+            />
+          ))}
+        </>
+      )}
+    </CartesianChart>
+  );
+}
+```
+
+## Multiple Series
+
+Handle multiple data series with different visual representations.
+
+```jsx
+<CartesianChart
+  height={250}
+  series={[
+    {
+      id: 'series1',
+      data: [30, 45, 35, 50, 40, 55, 45],
+    },
+    {
+      id: 'series2',
+      data: [20, 35, 25, 40, 30, 45, 35],
+    },
+  ]}
+  showYAxis
+  showXAxis
+  yAxis={{
+    showGrid: true,
+  }}
+>
+  {({ xScale, yScale, series }) => (
+    <>
+      {series.map((s, seriesIndex) => (
+        <G key={s.id}>
+          {s.data.map((value, index) => (
+            <Circle
+              key={`${s.id}-${index}`}
+              cx={xScale(index)}
+              cy={yScale(value)}
+              r={5}
+              fill={seriesIndex === 0 ? 'rgb(59, 130, 246)' : 'rgb(239, 68, 68)'}
+              opacity={0.8}
+            />
+          ))}
+        </G>
+      ))}
+    </>
+  )}
+</CartesianChart>
+```
+
+## With Custom Scales
+
+Customize the scale domains for precise data mapping.
+
+```jsx
+<CartesianChart
+  height={250}
+  series={[
+    {
+      id: 'scaled',
+      data: [100, 250, 180, 320, 280, 410, 350],
+    },
+  ]}
+  yDomain={[0, 500]}
+  showYAxis
+  showXAxis
+  yAxis={{
+    showGrid: true,
+    ticks: [0, 100, 200, 300, 400, 500],
+  }}
+>
+  {({ xScale, yScale, series }) => (
+    <>
+      {series[0].data.map((value, index) => {
+        const barWidth = 30;
+        const x = xScale(index) - barWidth / 2;
+        const height = yScale(0) - yScale(value);
+        
+        return (
+          <Rect
+            key={index}
+            x={x}
+            y={yScale(value)}
+            width={barWidth}
+            height={height}
+            fill="rgb(168, 85, 247)"
+            rx={4}
+          />
+        );
+      })}
+    </>
+  )}
+</CartesianChart>
+```
+
+## Interactive Chart
+
+Add interactivity with touch handlers.
+
+```jsx
+function InteractiveChart() {
+  const [selectedIndex, setSelectedIndex] = useState(null);
+  
+  return (
+    <CartesianChart
+      height={250}
+      series={[
+        {
+          id: 'interactive',
+          data: [25, 40, 30, 55, 45, 60, 50],
+        },
+      ]}
+      showYAxis
+      yAxis={{
+        showGrid: true,
+      }}
+    >
+      {({ xScale, yScale, series }) => (
+        <>
+          {series[0].data.map((value, index) => (
+            <G key={index}>
+              <Circle
+                cx={xScale(index)}
+                cy={yScale(value)}
+                r={selectedIndex === index ? 8 : 5}
+                fill={selectedIndex === index ? 'rgb(239, 68, 68)' : 'rgb(59, 130, 246)'}
+                onPress={() => setSelectedIndex(index)}
+              />
+              {selectedIndex === index && (
+                <Text
+                  x={xScale(index)}
+                  y={yScale(value) - 15}
+                  textAnchor="middle"
+                  fill="black"
+                  fontSize={12}
+                >
+                  {value}
+                </Text>
+              )}
+            </G>
+          ))}
+        </>
+      )}
+    </CartesianChart>
+  );
+}
+```
+
+## Combined Visualizations
+
+Combine different chart types in a single visualization.
+
+```jsx
+function CombinedChart() {
+  return (
+    <CartesianChart
+      height={250}
+      series={[
+        {
+          id: 'bars',
+          data: [30, 45, 35, 50, 40, 55, 45],
+        },
+        {
+          id: 'line',
+          data: [35, 40, 38, 45, 42, 48, 46],
+        },
+      ]}
+      showYAxis
+      showXAxis
+      yAxis={{
+        showGrid: true,
+      }}
+    >
+      {({ xScale, yScale, series, width, height }) => {
+        const barSeries = series[0];
+        const lineSeries = series[1];
+        const barWidth = width / barSeries.data.length * 0.5;
+        
+        // Generate line path
+        const linePath = lineSeries.data
+          .map((value, index) => {
+            const x = xScale(index);
+            const y = yScale(value);
+            return index === 0 ? `M ${x} ${y}` : `L ${x} ${y}`;
+          })
+          .join(' ');
+        
+        return (
+          <>
+            {/* Bars */}
+            {barSeries.data.map((value, index) => (
+              <Rect
+                key={`bar-${index}`}
+                x={xScale(index) - barWidth / 2}
+                y={yScale(value)}
+                width={barWidth}
+                height={yScale(0) - yScale(value)}
+                fill="rgba(59, 130, 246, 0.5)"
+              />
+            ))}
+            
+            {/* Line */}
+            <Path
+              d={linePath}
+              stroke="rgb(239, 68, 68)"
+              strokeWidth={2}
+              fill="none"
+            />
+            
+            {/* Line points */}
+            {lineSeries.data.map((value, index) => (
+              <Circle
+                key={`point-${index}`}
+                cx={xScale(index)}
+                cy={yScale(value)}
+                r={4}
+                fill="rgb(239, 68, 68)"
+              />
+            ))}
+          </>
+        );
+      }}
+    </CartesianChart>
+  );
+}
+```
+
+## With Animation
+
+Add smooth animations to chart elements.
+
+```jsx
+function AnimatedChart() {
+  const animatedValues = useRef(
+    [25, 40, 30, 55, 45, 60, 50].map(() => useSharedValue(0))
+  ).current;
+  
+  useEffect(() => {
+    [25, 40, 30, 55, 45, 60, 50].forEach((value, index) => {
+      animatedValues[index].value = withDelay(
+        index * 50,
+        withSpring(value, {
+          damping: 15,
+          stiffness: 150,
+        })
+      );
+    });
+  }, []);
+  
+  return (
+    <CartesianChart
+      height={250}
+      series={[
+        {
+          id: 'animated',
+          data: [25, 40, 30, 55, 45, 60, 50],
+        },
+      ]}
+      showYAxis
+      yAxis={{
+        showGrid: true,
+      }}
+    >
+      {({ xScale, yScale }) => (
+        <>
+          {animatedValues.map((animatedValue, index) => {
+            const AnimatedCircle = Animated.createAnimatedComponent(Circle);
+            const animatedProps = useAnimatedProps(() => ({
+              cy: yScale(animatedValue.value),
+            }));
+            
+            return (
+              <AnimatedCircle
+                key={index}
+                cx={xScale(index)}
+                r={5}
+                fill="rgb(168, 85, 247)"
+                animatedProps={animatedProps}
+              />
+            );
+          })}
+        </>
+      )}
+    </CartesianChart>
+  );
+}
+```

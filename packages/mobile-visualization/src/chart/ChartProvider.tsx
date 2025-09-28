@@ -1,17 +1,17 @@
 import { createContext, useContext } from 'react';
 import type { Svg } from 'react-native-svg';
-import type { ChartContextValue as BaseChartContextValue } from '@coinbase/cds-common/visualizations/charts/context';
+import type { CartesianChartContextValue as BaseCartesianChartContextValue } from '@coinbase/cds-common/visualizations/charts/context';
 
-export type ChartContextValue = BaseChartContextValue<Svg>;
+export type CartesianChartContextValue = BaseCartesianChartContextValue<Svg>;
 
-const ChartContext = createContext<ChartContextValue | undefined>(undefined);
+const CartesianChartContext = createContext<CartesianChartContextValue | undefined>(undefined);
 
-export const useChartContext = (): ChartContextValue => {
-  const context = useContext(ChartContext);
+export const useCartesianChartContext = (): CartesianChartContextValue => {
+  const context = useContext(CartesianChartContext);
   if (!context) {
-    throw new Error('useChartContext must be used within a Chart component');
+    throw new Error('useCartesianChartContext must be used within a CartesianChart component');
   }
   return context;
 };
 
-export const ChartProvider = ChartContext.Provider;
+export const CartesianChartProvider = CartesianChartContext.Provider;

@@ -6,7 +6,7 @@ import { m } from 'framer-motion';
 
 import { Area, type AreaComponent } from '../area/Area';
 import { axisTickLabelsInitialAnimationVariants } from '../axis';
-import { useChartContext } from '../ChartProvider';
+import { useCartesianChartContext } from '../ChartProvider';
 import { Point, type PointConfig, type RenderPointsParams } from '../point/Point';
 
 import { DottedLine } from './DottedLine';
@@ -105,7 +105,7 @@ export const Line = memo<LineProps>(
     renderPoints,
     ...props
   }) => {
-    const { animate, getSeries, getSeriesData, getXScale, getYScale, getXAxis } = useChartContext();
+    const { animate, getSeries, getSeriesData, getXScale, getYScale, getXAxis } = useCartesianChartContext();
 
     const matchedSeries = getSeries(seriesId);
 

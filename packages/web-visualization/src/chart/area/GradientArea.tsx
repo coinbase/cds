@@ -1,7 +1,7 @@
 import React, { memo, useRef } from 'react';
 import { generateRandomId } from '@coinbase/cds-utils';
 
-import { useChartContext } from '../ChartProvider';
+import { useCartesianChartContext } from '../ChartProvider';
 import { Path, type PathProps } from '../Path';
 
 import type { AreaComponentProps } from './Area';
@@ -46,7 +46,7 @@ export const GradientArea = memo<GradientAreaProps>(
     yAxisId,
     ...pathProps
   }) => {
-    const context = useChartContext();
+    const context = useCartesianChartContext();
     const patternIdRef = useRef<string>(generateRandomId());
 
     // Get the y-scale for the specified axis (or default)

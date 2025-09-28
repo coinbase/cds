@@ -5,7 +5,7 @@ import { generateRandomId } from '@coinbase/cds-utils';
 import { useTheme } from '@coinbase/cds-web';
 import { m } from 'framer-motion';
 
-import { useChartContext } from '../ChartProvider';
+import { useCartesianChartContext } from '../ChartProvider';
 
 export type StackComponentBaseProps = {
   /**
@@ -81,7 +81,7 @@ export const DefaultStackComponent = memo<StackComponentProps>(function DefaultS
   yOrigin,
 }) {
   const theme = useTheme();
-  const { animate } = useChartContext();
+  const { animate } = useCartesianChartContext();
   const clipPathId = useRef(generateRandomId()).current;
 
   const clipPathData = useMemo(() => {

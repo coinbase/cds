@@ -18,7 +18,7 @@ import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 import { convertMotionConfigs } from '@coinbase/cds-mobile/motion/convertMotionConfig';
 import { withMotionTiming } from '@coinbase/cds-mobile/motion/withMotionTiming';
 
-import { useChartContext } from '../ChartProvider';
+import { useCartesianChartContext } from '../ChartProvider';
 import { DottedLine } from '../line/DottedLine';
 import { ReferenceLine } from '../line/ReferenceLine';
 import { SmartChartTextGroup, type TextLabelData } from '../text/SmartChartTextGroup';
@@ -65,7 +65,7 @@ export const YAxis = memo<YAxisProps>(
     // todo: probably switch to our own id generator, use id seems to be for accessibility
     const registrationId = useId();
     const { animate, getYScale, getYAxis, registerAxis, unregisterAxis, getAxisBounds } =
-      useChartContext();
+      useCartesianChartContext();
 
     const yScale = getYScale(axisId);
     const yAxis = getYAxis(axisId);
@@ -220,7 +220,7 @@ export const YAxis = memo<YAxisProps>(
         tickLabelsOpacity.value = withMotionTiming(tickLabelsInitialAnimateIn) as number;
         isInitialMount.value = false;
       }
-    }, [animate]);
+    }, [animate, isInitialMount, tickLabelsInitialAnimateIn, tickLabelsOpacity]);
 
     const gridAnimatedStyle = useAnimatedStyle(() => ({
       opacity: gridOpacity.value,

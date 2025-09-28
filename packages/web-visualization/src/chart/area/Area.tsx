@@ -2,7 +2,8 @@ import React, { memo, useMemo } from 'react';
 import type { SVGProps } from 'react';
 import { type ChartPathCurveType, getAreaPath } from '@coinbase/cds-common/visualizations/charts';
 
-import { useChartContext } from '../ChartProvider';
+import { useCartesianChartContext } from '../ChartProvider';
+
 import { DottedArea } from './DottedArea';
 import { GradientArea } from './GradientArea';
 import { SolidArea } from './SolidArea';
@@ -67,7 +68,7 @@ export const Area = memo<AreaProps>(
     strokeWidth,
     baseline,
   }) => {
-    const { getSeries, getSeriesData, getXScale, getYScale, getXAxis } = useChartContext();
+    const { getSeries, getSeriesData, getXScale, getYScale, getXAxis } = useCartesianChartContext();
 
     // Get sourceData from series (using stacked data if available)
     const matchedSeries = useMemo(() => getSeries(seriesId), [seriesId, getSeries]);

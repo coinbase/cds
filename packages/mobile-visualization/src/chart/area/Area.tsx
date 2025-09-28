@@ -3,7 +3,7 @@ import type { Rect } from '@coinbase/cds-common/types';
 import { type ChartPathCurveType, getAreaPath } from '@coinbase/cds-common/visualizations/charts';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 
-import { useChartContext } from '../ChartProvider';
+import { useCartesianChartContext } from '../ChartProvider';
 
 import { DottedArea } from './DottedArea';
 import { GradientArea } from './GradientArea';
@@ -85,7 +85,7 @@ export const Area = memo<AreaProps>(
   }) => {
     const theme = useTheme();
     const { getSeries, getSeriesData, getXScale, getYScale, getXAxis, drawingArea } =
-      useChartContext();
+      useCartesianChartContext();
 
     // Get sourceData from series (using stacked data if available)
     const matchedSeries = useMemo(() => getSeries(seriesId), [seriesId, getSeries]);

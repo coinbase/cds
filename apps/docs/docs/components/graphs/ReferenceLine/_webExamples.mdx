@@ -182,8 +182,7 @@ function DraggablePriceTarget() {
         })}`;
       }, []);
 
-      const { drawingArea } = useChartContext();
-      const { getYScale } = useChartContext();
+      const { drawingArea, getYScale } = useCartesianChartContext();
       const [amount, setAmount] = useState(startAmount);
       const [isDragging, setIsDragging] = useState(false);
       const [textDimensions, setTextDimensions] = useState({ width: 0, height: 0 });

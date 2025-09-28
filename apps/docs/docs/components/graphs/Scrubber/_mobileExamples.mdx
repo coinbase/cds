@@ -1,0 +1,403 @@
+## Basic Example
+
+Scrubber provides an interactive way to explore individual data points in a chart through touch gestures.
+
+```jsx
+<LineChart
+  enableScrubbing
+  height={250}
+  series={[
+    {
+      id: 'prices',
+      data: [100, 120, 115, 140, 135, 150, 145, 160, 175, 170],
+    },
+  ]}
+  curve="monotone"
+  showYAxis
+  yAxis={{
+    showGrid: true,
+  }}
+>
+  <Scrubber />
+</LineChart>
+```
+
+## With Custom Styling
+
+Customize the appearance of the scrubber line and point.
+
+```jsx
+<LineChart
+  enableScrubbing
+  height={250}
+  series={[
+    {
+      id: 'custom',
+      data: [30, 45, 40, 55, 50, 65, 60, 75, 70, 80],
+    },
+  ]}
+  curve="monotone"
+  showYAxis
+  showArea
+  yAxis={{
+    showGrid: true,
+  }}
+>
+  <Scrubber
+    lineColor="rgb(239, 68, 68)"
+    lineWidth={2}
+    pointRadius={8}
+    pointColor="rgb(239, 68, 68)"
+  />
+</LineChart>
+```
+
+## With Value Display
+
+Show the current value being scrubbed.
+
+```jsx
+function ScrubberWithValue() {
+  const [scrubbedValue, setScrubbedValue] = useState(null);
+  
+  return (
+    <VStack gap={2}>
+      {scrubbedValue && (
+        <Text style={{ textAlign: 'center', fontSize: 18, fontWeight: 'bold' }}>
+          Value: ${scrubbedValue.toFixed(2)}
+        </Text>
+      )}
+      <LineChart
+        enableScrubbing
+        height={250}
+        series={[
+          {
+            id: 'portfolio',
+            data: [1000, 1200, 1150, 1400, 1350, 1500, 1450, 1600, 1750, 1700],
+          },
+        ]}
+        curve="monotone"
+        showYAxis
+        yAxis={{
+          showGrid: true,
+          formatValue: (v) => `$${v}`,
+        }}
+        onScrub={(datum) => {
+          setScrubbedValue(datum?.value || null);
+        }}
+      >
+        <Scrubber />
+      </LineChart>
+    </VStack>
+  );
+}
+```
+
+## Multiple Series Scrubbing
+
+Scrub across multiple data series simultaneously.
+
+```jsx
+function MultiSeriesScrubber() {
+  const [scrubData, setScrubData] = useState(null);
+  
+  return (
+    <VStack gap={2}>
+      {scrubData && (
+        <HStack gap={3}>
+          <Text>Revenue: ${scrubData.revenue}</Text>
+          <Text>Costs: ${scrubData.costs}</Text>
+          <Text>Profit: ${scrubData.profit}</Text>
+        </HStack>
+      )}
+      <LineChart
+        enableScrubbing
+        height={250}
+        series={[
+          {
+            id: 'revenue',
+            data: [100, 120, 130, 125, 140, 150, 145, 160],
+            stroke: 'rgb(59, 130, 246)',
+          },
+          {
+            id: 'costs',
+            data: [60, 70, 75, 72, 80, 85, 82, 90],
+            stroke: 'rgb(239, 68, 68)',
+          },
+          {
+            id: 'profit',
+            data: [40, 50, 55, 53, 60, 65, 63, 70],
+            stroke: 'rgb(34, 197, 94)',
+          },
+        ]}
+        showYAxis
+        yAxis={{
+          showGrid: true,
+        }}
+        onScrub={(datum, index, allSeries) => {
+          if (allSeries) {
+            setScrubData({
+              revenue: allSeries[0].data[index],
+              costs: allSeries[1].data[index],
+              profit: allSeries[2].data[index],
+            });
+          } else {
+            setScrubData(null);
+          }
+        }}
+      >
+        <Scrubber />
+      </LineChart>
+    </VStack>
+  );
+}
+```
+
+## With Tooltip
+
+Display a tooltip at the scrubber position.
+
+```jsx
+function ScrubberWithTooltip() {
+  const [scrubInfo, setScrubInfo] = useState(null);
+  
+  return (
+    <View style={{ position: 'relative' }}>
+      <AreaChart
+        enableScrubbing
+        height={250}
+        series={[
+          {
+            id: 'sales',
+            data: [45, 52, 48, 61, 58, 65, 62, 70],
+          },
+        ]}
+        curve="monotone"
+        showYAxis
+        yAxis={{
+          showGrid: true,
+        }}
+        onScrub={(datum, index) => {
+          setScrubInfo(datum ? { value: datum.value, index } : null);
+        }}
+      >
+        <Scrubber />
+      </AreaChart>
+      {scrubInfo && (
+        <View
+          style={{
+            position: 'absolute',
+            top: 10,
+            left: 10,
+            backgroundColor: 'white',
+            padding: 8,
+            borderRadius: 4,
+            shadowColor: '#000',
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.1,
+            shadowRadius: 4,
+          }}
+        >
+          <Text style={{ fontWeight: 'bold' }}>Day {scrubInfo.index + 1}</Text>
+          <Text>Sales: {scrubInfo.value}k</Text>
+        </View>
+      )}
+    </View>
+  );
+}
+```
+
+## Haptic Feedback
+
+Add haptic feedback when scrubbing for better user experience.
+
+```jsx
+import { Haptics } from 'expo-haptics';
+
+function ScrubberWithHaptics() {
+  return (
+    <LineChart
+      enableScrubbing
+      height={250}
+      series={[
+        {
+          id: 'tactile',
+          data: [20, 35, 30, 45, 40, 55, 50, 65, 60, 70],
+        },
+      ]}
+      curve="monotone"
+      showYAxis
+      yAxis={{
+        showGrid: true,
+      }}
+      onScrub={(datum) => {
+        if (datum) {
+          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+        }
+      }}
+    >
+      <Scrubber />
+    </LineChart>
+  );
+}
+```
+
+## Scrubber with Snap Points
+
+Make the scrubber snap to actual data points.
+
+```jsx
+<LineChart
+  enableScrubbing
+  height={250}
+  series={[
+    {
+      id: 'snap',
+      data: [15, 30, 25, 40, 35, 50, 45, 60],
+    },
+  ]}
+  curve="monotone"
+  showYAxis
+  yAxis={{
+    showGrid: true,
+  }}
+  renderPoints={() => true}
+>
+  <Scrubber snapToPoints />
+</LineChart>
+```
+
+## Bar Chart Scrubbing
+
+Use scrubber with bar charts for value inspection.
+
+```jsx
+<BarChart
+  enableScrubbing
+  height={250}
+  series={[
+    {
+      id: 'monthly',
+      data: [45, 52, 48, 61, 58, 65, 62, 70, 68, 75],
+    },
+  ]}
+  showYAxis
+  yAxis={{
+    showGrid: true,
+  }}
+>
+  <Scrubber />
+</BarChart>
+```
+
+## Custom Scrubber Component
+
+Create a custom scrubber with unique behavior.
+
+```jsx
+function CustomScrubberChart() {
+  const [activeIndex, setActiveIndex] = useState(null);
+  const data = [30, 45, 35, 50, 40, 55, 45, 60];
+  
+  return (
+    <LineChart
+      enableScrubbing
+      height={250}
+      series={[
+        {
+          id: 'custom',
+          data: data,
+        },
+      ]}
+      curve="monotone"
+      showYAxis
+      yAxis={{
+        showGrid: true,
+      }}
+      onScrub={(datum, index) => {
+        setActiveIndex(index);
+      }}
+    >
+      <Scrubber>
+        {activeIndex !== null && (
+          <G>
+            <Circle
+              cx={0}
+              cy={0}
+              r={10}
+              fill="rgba(59, 130, 246, 0.2)"
+            />
+            <Circle
+              cx={0}
+              cy={0}
+              r={5}
+              fill="rgb(59, 130, 246)"
+            />
+            <Text
+              x={0}
+              y={-20}
+              textAnchor="middle"
+              fill="black"
+              fontSize={12}
+            >
+              {data[activeIndex]}
+            </Text>
+          </G>
+        )}
+      </Scrubber>
+    </LineChart>
+  );
+}
+```
+
+## Time Series Scrubbing
+
+Display time information when scrubbing time series data.
+
+```jsx
+function TimeSeriesScrubber() {
+  const [selectedDate, setSelectedDate] = useState(null);
+  
+  const dates = Array.from({ length: 10 }, (_, i) => {
+    const date = new Date();
+    date.setDate(date.getDate() - (9 - i));
+    return date;
+  });
+  
+  const data = [100, 105, 103, 108, 106, 110, 108, 112, 115, 118];
+  
+  return (
+    <VStack gap={2}>
+      {selectedDate && (
+        <Text style={{ textAlign: 'center' }}>
+          {selectedDate.toLocaleDateString('en', { month: 'short', day: 'numeric' })}
+        </Text>
+      )}
+      <LineChart
+        enableScrubbing
+        height={250}
+        series={[
+          {
+            id: 'timeseries',
+            data: data,
+          },
+        ]}
+        curve="monotone"
+        showYAxis
+        showXAxis
+        yAxis={{
+          showGrid: true,
+        }}
+        xAxis={{
+          data: dates,
+          formatValue: (date) => date.getDate().toString(),
+        }}
+        onScrub={(datum, index) => {
+          setSelectedDate(index !== null ? dates[index] : null);
+        }}
+      >
+        <Scrubber />
+      </LineChart>
+    </VStack>
+  );
+}

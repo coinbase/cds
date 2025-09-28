@@ -3,7 +3,7 @@ import { Circle, Defs, G, LinearGradient, Mask, Pattern, Stop } from 'react-nati
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 import { generateRandomId } from '@coinbase/cds-utils';
 
-import { useChartContext } from '../ChartProvider';
+import { useCartesianChartContext } from '../ChartProvider';
 import { Path, type PathProps } from '../Path';
 
 import type { AreaComponentProps } from './Area';
@@ -47,7 +47,7 @@ export const DottedArea = memo<DottedAreaProps>(
     ...pathProps
   }) => {
     const theme = useTheme();
-    const context = useChartContext();
+    const context = useCartesianChartContext();
     const patternIdRef = useRef<string>(generateRandomId());
     const gradientIdRef = useRef<string>(generateRandomId());
     const maskIdRef = useRef<string>(generateRandomId());

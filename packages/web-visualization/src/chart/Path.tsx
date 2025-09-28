@@ -9,7 +9,7 @@ import { interpolatePath } from 'd3-interpolate-path';
 import { select } from 'd3-selection';
 import { m } from 'framer-motion';
 
-import { useChartContext } from './ChartProvider';
+import { useCartesianChartContext } from './ChartProvider';
 
 export type PathProps = SharedProps &
   Omit<
@@ -45,7 +45,7 @@ export const Path = memo<PathProps>(
   ({ animate: animateProp, clipRect, clipOffset = 0, d = '', ...pathProps }) => {
     const pathRef = useRef<SVGPathElement>(null);
     const clipPathIdRef = useRef<string>(generateRandomId());
-    const context = useChartContext();
+    const context = useCartesianChartContext();
     const rect = clipRect ?? context.drawingArea;
     const animate = animateProp ?? context.animate;
 

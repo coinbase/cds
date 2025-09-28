@@ -1,0 +1,15 @@
+{
+  "import": "import { PeriodSelector } from '@coinbase/cds-mobile-visualization'",
+  "source": "https://github.com/coinbase/cds-staging/blob/master/packages/mobile-visualization/src/chart/PeriodSelector.tsx",
+  "description": "A selector component for choosing time periods in charts",
+  "relatedComponents": [
+    {
+      "label": "LineChart",
+      "url": "/components/graphs/LineChart/"
+    },
+    {
+      "label": "SparklineInteractive",
+      "url": "/components/graphs/SparklineInteractive/"
+    }
+  ]
+}

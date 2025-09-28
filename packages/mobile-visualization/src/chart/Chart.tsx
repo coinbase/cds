@@ -6,7 +6,7 @@ import type { Rect } from '@coinbase/cds-common/types';
 import {
   type AxisConfig,
   type AxisConfigProps,
-  type ChartContextValue,
+  type CartesianChartContextValue,
   type ChartPadding,
   type ChartScaleFunction,
   defaultAxisId,
@@ -25,7 +25,7 @@ import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 import { Box } from '@coinbase/cds-mobile/layout';
 
 import { ScrubberProvider, type ScrubberProviderProps } from './scrubber/ScrubberProvider';
-import { ChartProvider } from './ChartProvider';
+import { CartesianChartProvider } from './ChartProvider';
 
 export type CartesianChartBaseProps = Pick<
   ScrubberProviderProps,
@@ -311,7 +311,7 @@ export const CartesianChart = memo(
         [renderedAxes, chartRect, userPadding],
       );
 
-      const contextValue: ChartContextValue<Svg> = useMemo(
+      const contextValue: CartesianChartContextValue<Svg> = useMemo(
         () => ({
           series: series ?? [],
           getSeries,
@@ -360,7 +360,7 @@ export const CartesianChart = memo(
       }, [style, width, height]);
 
       return (
-        <ChartProvider value={contextValue}>
+        <CartesianChartProvider value={contextValue}>
           <ScrubberProvider
             enableScrubbing={enableScrubbing}
             onScrubberPositionChange={onScrubberPositionChange}
@@ -381,7 +381,7 @@ export const CartesianChart = memo(
               )}
             </Box>
           </ScrubberProvider>
-        </ChartProvider>
+        </CartesianChartProvider>
       );
     },
   ),

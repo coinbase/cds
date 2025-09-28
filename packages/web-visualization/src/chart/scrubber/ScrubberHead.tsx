@@ -3,7 +3,7 @@ import type { SharedProps } from '@coinbase/cds-common/types';
 import { projectPoint, useScrubberContext } from '@coinbase/cds-common/visualizations/charts';
 import { m, useAnimation } from 'framer-motion';
 
-import { useChartContext } from '../ChartProvider';
+import { useCartesianChartContext } from '../ChartProvider';
 import { Point, type PointProps, type PointRef } from '../point';
 
 export type ScrubberHeadRef = PointRef;
@@ -57,7 +57,7 @@ export const ScrubberHead = memo(
       ref,
     ) => {
       const pointRef = useRef<PointRef>(null);
-      const { getSeries, getXScale, getYScale, getSeriesData, animate } = useChartContext();
+      const { getSeries, getXScale, getYScale, getSeriesData, animate } = useCartesianChartContext();
       const { scrubberPosition } = useScrubberContext();
 
       const controls = useAnimation();

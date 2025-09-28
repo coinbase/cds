@@ -32,7 +32,7 @@ import {
 import { Area, type AreaComponentProps, DottedArea, GradientArea } from '../../area';
 import { XAxis, YAxis } from '../../axis';
 import { CartesianChart } from '../../CartesianChart';
-import { useChartContext } from '../../ChartProvider';
+import { useCartesianChartContext } from '../../ChartProvider';
 import { Point } from '../../point';
 import { DottedLine, GradientLine, Line, LineChart, ReferenceLine, SolidLine } from '..';
 
@@ -1127,7 +1127,7 @@ const AvailabilityChart = () => {
       yellowThresholdPercentage?: number;
       greenThresholdPercentage?: number;
     }) => {
-      const { height, series, getYScale, getYAxis, drawingArea } = useChartContext();
+      const { height, series, getYScale, getYAxis, drawingArea } = useCartesianChartContext();
       const yScale = getYScale();
       const yAxis = getYAxis();
 
@@ -1240,7 +1240,7 @@ const GainLossChart = () => {
   const data = [-40, -28, -21, -5, 48, -5, -28, 2, -29, -46, 16, -30, -29, 8];
 
   const ChartDefs = ({ threshold = 0 }) => {
-    const { getYScale } = useChartContext();
+    const { getYScale } = useCartesianChartContext();
     // get the default y-axis scale
     const yScale = getYScale();
 

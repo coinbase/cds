@@ -2,7 +2,7 @@ import React, { memo, useMemo } from 'react';
 import type { ThemeVars } from '@coinbase/cds-common';
 import { useTheme } from '@coinbase/cds-web';
 
-import { useChartContext } from '../ChartProvider';
+import { useCartesianChartContext } from '../ChartProvider';
 
 import { Bar, type BarComponent, type BarProps } from './Bar';
 import type { BarSeries } from './BarChart';
@@ -107,7 +107,7 @@ export const BarStack = memo<BarStackProps>(
     roundBaseline,
   }) => {
     const theme = useTheme();
-    const { getSeriesData, getXAxis } = useChartContext();
+    const { getSeriesData, getXAxis } = useCartesianChartContext();
 
     const stackGapPx = stackGap ? theme.space[stackGap] : 0;
     const barMinSizePx = barMinSize ? theme.space[barMinSize] : 0;

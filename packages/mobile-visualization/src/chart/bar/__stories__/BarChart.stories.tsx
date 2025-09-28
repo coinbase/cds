@@ -262,10 +262,10 @@ const BarChartStories = () => {
       <Example title="Basic">
         <UpdatingChartValues />
       </Example>
-      {/*<Example title="Positive and Negative Cash Flow">
+      <Example title="Positive and Negative Cash Flow">
         <PositiveAndNegativeCashFlow />
       </Example>
-      <Example title="Fiat & Stablecoin Balance">
+      {/*<Example title="Fiat & Stablecoin Balance">
         <FiatAndStablecoinBalance />
       </Example>
       <Example title="Monthly Rewards">

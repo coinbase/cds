@@ -5,7 +5,7 @@ import {
   type ScrubberContextValue,
 } from '@coinbase/cds-common/visualizations/charts';
 
-import { useChartContext } from '../ChartProvider';
+import { useCartesianChartContext } from '../ChartProvider';
 
 export type ScrubberProviderProps = Partial<
   Pick<ScrubberContextValue, 'enableScrubbing' | 'onScrubberPositionChange'>
@@ -27,7 +27,7 @@ export const ScrubberProvider: React.FC<ScrubberProviderProps> = ({
   enableScrubbing,
   onScrubberPositionChange,
 }) => {
-  const chartContext = useChartContext();
+  const chartContext = useCartesianChartContext();
 
   if (!chartContext) {
     throw new Error('ScrubberProvider must be used within a ChartContext');

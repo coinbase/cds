@@ -16,7 +16,7 @@ import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 import { convertMotionConfigs } from '@coinbase/cds-mobile/motion/convertMotionConfig';
 import { withMotionTiming } from '@coinbase/cds-mobile/motion/withMotionTiming';
 
-import { useChartContext } from '../ChartProvider';
+import { useCartesianChartContext } from '../ChartProvider';
 import { DottedLine } from '../line/DottedLine';
 import { ReferenceLine } from '../line/ReferenceLine';
 import { SmartChartTextGroup, type TextLabelData } from '../text/SmartChartTextGroup';
@@ -54,7 +54,7 @@ export const XAxis = memo<XAxisProps>(
     const theme = useTheme();
     const registrationId = useId();
     const { animate, getXScale, getXAxis, registerAxis, unregisterAxis, getAxisBounds } =
-      useChartContext();
+      useCartesianChartContext();
 
     const xScale = getXScale();
     const xAxis = getXAxis();
@@ -219,7 +219,7 @@ export const XAxis = memo<XAxisProps>(
         tickLabelsOpacity.value = withMotionTiming(tickLabelsInitialAnimateIn) as number;
         isInitialMount.value = false;
       }
-    }, [animate]);
+    }, [animate, isInitialMount, tickLabelsInitialAnimateIn, tickLabelsOpacity]);
 
     const gridAnimatedStyle = useAnimatedStyle(() => ({
       opacity: gridOpacity.value,

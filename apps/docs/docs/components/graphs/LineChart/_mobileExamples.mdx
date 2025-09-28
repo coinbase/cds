@@ -1,0 +1,321 @@
+## Basic Example
+
+Line charts display data points connected by straight line segments, ideal for showing trends over time.
+
+```jsx
+<LineChart
+  height={250}
+  series={[
+    {
+      id: 'prices',
+      data: [10, 25, 20, 35, 30, 45, 40, 50, 48, 55],
+    },
+  ]}
+/>
+```
+
+## Multiple Lines
+
+Display multiple data series for comparison.
+
+```jsx
+<LineChart
+  height={250}
+  series={[
+    {
+      id: 'revenue',
+      data: [30, 45, 40, 55, 50, 65, 60, 70],
+      stroke: 'rgb(59, 130, 246)',
+    },
+    {
+      id: 'costs',
+      data: [20, 30, 28, 35, 33, 40, 38, 45],
+      stroke: 'rgb(239, 68, 68)',
+    },
+    {
+      id: 'profit',
+      data: [10, 15, 12, 20, 17, 25, 22, 25],
+      stroke: 'rgb(34, 197, 94)',
+    },
+  ]}
+  showYAxis
+  yAxis={{
+    showGrid: true,
+  }}
+/>
+```
+
+## Curved Lines
+
+Apply different curve types for smoother line transitions.
+
+```jsx
+<LineChart
+  height={250}
+  curve="monotone"
+  series={[
+    {
+      id: 'smooth',
+      data: [10, 22, 18, 35, 30, 45, 38, 50, 46, 58],
+    },
+  ]}
+  showYAxis
+  yAxis={{
+    showGrid: true,
+  }}
+/>
+```
+
+## With Points
+
+Show data points along the line for emphasis.
+
+```jsx
+<LineChart
+  height={250}
+  series={[
+    {
+      id: 'with-points',
+      data: [15, 28, 22, 38, 35, 48, 42, 55, 50, 62],
+    },
+  ]}
+  renderPoints={() => true}
+  showYAxis
+  yAxis={{
+    showGrid: true,
+  }}
+/>
+```
+
+## Area Fill
+
+Add area fill beneath the line for visual impact.
+
+```jsx
+<LineChart
+  height={250}
+  showArea
+  series={[
+    {
+      id: 'filled',
+      data: [20, 35, 30, 45, 40, 55, 50, 65, 60, 70],
+    },
+  ]}
+  curve="monotone"
+  showYAxis
+  yAxis={{
+    showGrid: true,
+  }}
+/>
+```
+
+## Interactive with Scrubber
+
+Enable scrubbing for detailed value inspection.
+
+```jsx
+<LineChart
+  enableScrubbing
+  height={250}
+  series={[
+    {
+      id: 'portfolio',
+      data: [1000, 1200, 1150, 1400, 1380, 1500, 1450, 1600, 1750, 1700, 1850, 2000],
+    },
+  ]}
+  curve="monotone"
+  showYAxis
+  showArea
+  yAxis={{
+    showGrid: true,
+    formatValue: (value) => `$${value.toLocaleString()}`,
+  }}
+  renderPoints={() => true}
+>
+  <Scrubber />
+</LineChart>
+```
+
+## Different Line Styles
+
+Customize line appearance with different styles.
+
+```jsx
+<LineChart
+  height={250}
+  series={[
+    {
+      id: 'solid',
+      data: [30, 45, 40, 55, 50, 60],
+      type: 'solid',
+      stroke: 'rgb(59, 130, 246)',
+    },
+    {
+      id: 'dotted',
+      data: [20, 35, 30, 45, 40, 50],
+      type: 'dotted',
+      stroke: 'rgb(239, 68, 68)',
+    },
+    {
+      id: 'gradient',
+      data: [25, 40, 35, 50, 45, 55],
+      type: 'gradient',
+      stroke: 'rgb(168, 85, 247)',
+    },
+  ]}
+  showYAxis
+  yAxis={{
+    showGrid: true,
+  }}
+/>
+```
+
+## Conditional Points
+
+Show points conditionally based on data characteristics.
+
+```jsx
+function ConditionalPointsChart() {
+  const data = [20, 35, 15, 45, 40, 55, 30, 65, 60, 70];
+  const maxValue = Math.max(...data);
+  const minValue = Math.min(...data);
+  
+  return (
+    <LineChart
+      height={250}
+      series={[
+        {
+          id: 'conditional',
+          data: data,
+        },
+      ]}
+      curve="monotone"
+      renderPoints={(datum) => {
+        // Show points only for min and max values
+        return datum.value === maxValue || datum.value === minValue;
+      }}
+      showYAxis
+      yAxis={{
+        showGrid: true,
+      }}
+    />
+  );
+}
+```
+
+## Time Series
+
+Display time series data with proper formatting.
+
+```jsx
+function TimeSeriesLineChart() {
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug'];
+  const data = [45, 52, 48, 61, 58, 65, 70, 68];
+  
+  return (
+    <LineChart
+      height={250}
+      series={[
+        {
+          id: 'monthly-sales',
+          data: data,
+        },
+      ]}
+      curve="monotone"
+      showYAxis
+      showXAxis
+      yAxis={{
+        showGrid: true,
+        formatValue: (v) => `${v}k`,
+      }}
+      xAxis={{
+        data: months,
+      }}
+      showArea
+    />
+  );
+}
+```
+
+## Negative Values
+
+Handle negative values for displaying profit/loss or temperature data.
+
+```jsx
+<LineChart
+  height={250}
+  series={[
+    {
+      id: 'temperature',
+      data: [5, 2, -3, -1, 4, 8, 6, 3, -2, 1],
+    },
+  ]}
+  curve="monotone"
+  showYAxis
+  showXAxis
+  yAxis={{
+    showGrid: true,
+    formatValue: (v) => `${v}°C`,
+  }}
+  renderPoints={() => true}
+/>
+```
+
+## Multiple Series with Different Curves
+
+Combine different curve types in a single chart.
+
+```jsx
+<LineChart
+  height={250}
+  series={[
+    {
+      id: 'actual',
+      data: [30, 38, 35, 42, 40, 48, 45, 52],
+      curve: 'linear',
+      stroke: 'rgb(59, 130, 246)',
+      strokeWidth: 2,
+    },
+    {
+      id: 'forecast',
+      data: [30, 35, 37, 40, 42, 45, 47, 50],
+      curve: 'monotone',
+      stroke: 'rgb(239, 68, 68)',
+      strokeWidth: 1,
+      opacity: 0.6,
+    },
+  ]}
+  showYAxis
+  showXAxis
+  yAxis={{
+    showGrid: true,
+  }}
+/>
+```
+
+## Animated Entry
+
+Add smooth entry animations to your line charts.
+
+```jsx
+function AnimatedLineChart() {
+  return (
+    <LineChart
+      height={250}
+      animate
+      series={[
+        {
+          id: 'animated',
+          data: [25, 40, 35, 50, 45, 60, 55, 70],
+        },
+      ]}
+      curve="monotone"
+      showYAxis
+      showArea
+      yAxis={{
+        showGrid: true,
+      }}
+      renderPoints={() => true}
+    />
+  );
+}

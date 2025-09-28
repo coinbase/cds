@@ -14,7 +14,7 @@ import { useLayout } from '@coinbase/cds-mobile/hooks/useLayout';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 import { Box } from '@coinbase/cds-mobile/layout';
 
-import { useChartContext } from '../ChartProvider';
+import { useCartesianChartContext } from '../ChartProvider';
 
 // Define the valid SVG children for the <text> element.
 type ValidChartTextChildElements =
@@ -229,7 +229,7 @@ export const ChartText = memo<ChartTextProps>(
     opacity = 1,
   }) => {
     const theme = useTheme();
-    const { width: chartWidth, height: chartHeight } = useChartContext();
+    const { width: chartWidth, height: chartHeight } = useCartesianChartContext();
 
     const fullChartBounds = useMemo(
       () => ({ x: 0, y: 0, width: chartWidth, height: chartHeight }),

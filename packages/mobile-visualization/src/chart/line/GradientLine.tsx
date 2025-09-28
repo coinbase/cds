@@ -4,7 +4,7 @@ import type { SharedProps } from '@coinbase/cds-common/types';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 import { generateRandomId } from '@coinbase/cds-utils';
 
-import { useChartContext } from '../ChartProvider';
+import { useCartesianChartContext } from '../ChartProvider';
 import { Path, type PathProps } from '../Path';
 
 export type GradientLineProps = SharedProps &
@@ -60,7 +60,7 @@ export const GradientLine = memo<GradientLineProps>(
     animate,
     ...props
   }) => {
-    const context = useChartContext();
+    const context = useCartesianChartContext();
     const theme = useTheme();
     const patternIdRef = useRef<string>(generateRandomId());
 

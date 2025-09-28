@@ -12,7 +12,7 @@ import { getBarPath } from '@coinbase/cds-common/visualizations/charts';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 import * as interpolate from 'd3-interpolate-path';
 
-import { useChartContext } from '../ChartProvider';
+import { useCartesianChartContext } from '../ChartProvider';
 
 import type { BarComponentProps } from './Bar';
 
@@ -38,7 +38,7 @@ export const DefaultBar = memo<DefaultBarProps>(
     strokeWidth,
   }) => {
     const pathRef = useRef<Path | null>(null);
-    const { animate } = useChartContext();
+    const { animate } = useCartesianChartContext();
     const theme = useTheme();
 
     const animationProgress = useSharedValue(0);

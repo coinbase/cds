@@ -6,7 +6,7 @@ import { Text } from '@coinbase/cds-web/typography';
 
 import { CartesianChart } from '../..';
 import { XAxis, YAxis } from '../../axis';
-import { useChartContext } from '../../ChartProvider';
+import { useCartesianChartContext } from '../../ChartProvider';
 import { ReferenceLine, SolidLine, type SolidLineProps } from '../../line';
 import { PeriodSelector } from '../../PeriodSelector';
 import { Scrubber } from '../../scrubber';
@@ -193,7 +193,7 @@ const tabs: TimePeriodTab[] = [
 ];
 
 const ScrubberRect = memo(() => {
-  const { getXScale, getYScale } = useChartContext();
+  const { getXScale, getYScale } = useCartesianChartContext();
   const { scrubberPosition } = React.useContext(ScrubberContext) ?? {};
   const xScale = getXScale();
   const yScale = getYScale();
@@ -234,7 +234,7 @@ const Candlesticks = () => {
 
   const CandlestickBarComponent = memo<BarComponentProps>(
     ({ x, y, width, height, originY, dataX, ...props }) => {
-      const { getYScale } = useChartContext();
+      const { getYScale } = useCartesianChartContext();
       const yScale = getYScale();
 
       const wickX = x + width / 2;

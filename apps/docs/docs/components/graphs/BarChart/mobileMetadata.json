@@ -1,0 +1,14 @@
+{
+  "import": "import { BarChart } from '@coinbase/cds-mobile-visualization'",
+  "source": "https://github.com/coinbase/cds-staging/blob/master/packages/mobile-visualization/src/chart/bar/BarChart.tsx",
+  "relatedComponents": [
+    {
+      "label": "CartesianChart",
+      "url": "/components/graphs/CartesianChart/"
+    },
+    {
+      "label": "LineChart",
+      "url": "/components/graphs/LineChart/"
+    }
+  ]
+}

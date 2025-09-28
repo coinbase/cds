@@ -1,0 +1,19 @@
+{
+  "import": "import { Scrubber } from '@coinbase/cds-mobile-visualization'",
+  "source": "https://github.com/coinbase/cds-staging/blob/master/packages/mobile-visualization/src/chart/scrubber/Scrubber.tsx",
+  "description": "An interactive scrubber for exploring data points in charts",
+  "relatedComponents": [
+    {
+      "label": "LineChart",
+      "url": "/components/graphs/LineChart/"
+    },
+    {
+      "label": "AreaChart",
+      "url": "/components/graphs/AreaChart/"
+    },
+    {
+      "label": "BarChart",
+      "url": "/components/graphs/BarChart/"
+    }
+  ]
+}

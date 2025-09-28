@@ -6,7 +6,11 @@ import type { AxisConfig } from './axis';
 import type { Series } from './chart';
 import type { ChartScaleFunction } from './scale';
 
-export type ChartContextValue<TRef> = {
+/**
+ * Context value for Cartesian (X/Y) coordinate charts.
+ * Contains axis-specific methods and properties for rectangular coordinate systems.
+ */
+export type CartesianChartContextValue<TRef> = {
   /**
    * A reference to the root SVG element.
    */

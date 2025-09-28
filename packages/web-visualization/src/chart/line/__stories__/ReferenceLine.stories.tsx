@@ -5,7 +5,7 @@ import { useTheme } from '@coinbase/cds-web';
 import { VStack } from '@coinbase/cds-web/layout';
 import { TextHeadline } from '@coinbase/cds-web/typography';
 
-import { useChartContext } from '../../ChartProvider';
+import { useCartesianChartContext } from '../../ChartProvider';
 import { ChartText } from '../../text/ChartText';
 import { LineChart } from '../LineChart';
 import { ReferenceLine } from '../ReferenceLine';
@@ -95,7 +95,7 @@ const DraggableReferenceLine = memo(
       })}`;
     }, []);
 
-    const { getYScale, drawingArea } = useChartContext();
+    const { getYScale, drawingArea } = useCartesianChartContext();
     const [amount, setAmount] = useState(startAmount);
     const [isDragging, setIsDragging] = useState(false);
     const [textDimensions, setTextDimensions] = useState({ width: 0, height: 0 });

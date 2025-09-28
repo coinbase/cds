@@ -1,0 +1,19 @@
+{
+  "import": "import { CartesianChart } from '@coinbase/cds-mobile-visualization'",
+  "source": "https://github.com/coinbase/cds-staging/blob/master/packages/mobile-visualization/src/chart/CartesianChart.tsx",
+  "description": "A flexible foundation for building custom chart visualizations with cartesian coordinates",
+  "relatedComponents": [
+    {
+      "label": "LineChart",
+      "url": "/components/graphs/LineChart/"
+    },
+    {
+      "label": "BarChart",
+      "url": "/components/graphs/BarChart/"
+    },
+    {
+      "label": "AreaChart",
+      "url": "/components/graphs/AreaChart/"
+    }
+  ]
+}

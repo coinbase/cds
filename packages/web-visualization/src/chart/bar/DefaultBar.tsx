@@ -3,7 +3,7 @@ import type { SVGProps } from 'react';
 import { getBarPath } from '@coinbase/cds-common/visualizations/charts';
 import { m as motion, type MotionProps } from 'framer-motion';
 
-import { useChartContext } from '../ChartProvider';
+import { useCartesianChartContext } from '../ChartProvider';
 
 import type { BarComponentProps } from './Bar';
 
@@ -26,7 +26,7 @@ export const DefaultBar = memo<DefaultBarProps>(
     stroke,
     strokeWidth,
   }) => {
-    const { animate } = useChartContext();
+    const { animate } = useCartesianChartContext();
     const initialPath = useMemo(() => {
       if (!animate) return undefined;
       // Need a minimum height to allow for animation

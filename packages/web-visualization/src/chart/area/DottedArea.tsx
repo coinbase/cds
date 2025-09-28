@@ -1,7 +1,7 @@
 import React, { memo, useRef } from 'react';
 import { generateRandomId } from '@coinbase/cds-utils';
 
-import { useChartContext } from '../ChartProvider';
+import { useCartesianChartContext } from '../ChartProvider';
 import { Path, type PathProps } from '../Path';
 
 import type { AreaComponentProps } from './Area';
@@ -88,7 +88,7 @@ export const DottedArea = memo<DottedAreaProps>(
     animate,
     ...pathProps
   }) => {
-    const context = useChartContext();
+    const context = useCartesianChartContext();
     const patternIdRef = useRef<string>(generateRandomId());
     const gradientIdRef = useRef<string>(generateRandomId());
     const maskIdRef = useRef<string>(generateRandomId());

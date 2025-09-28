@@ -1,0 +1,15 @@
+{
+  "import": "import { Point } from '@coinbase/cds-mobile-visualization'",
+  "source": "https://github.com/coinbase/cds-staging/blob/master/packages/mobile-visualization/src/chart/point/Point.tsx",
+  "description": "Points are visual markers that highlight specific data values on a chart",
+  "relatedComponents": [
+    {
+      "label": "LineChart",
+      "url": "/components/graphs/LineChart/"
+    },
+    {
+      "label": "Scrubber",
+      "url": "/components/graphs/Scrubber/"
+    }
+  ]
+}

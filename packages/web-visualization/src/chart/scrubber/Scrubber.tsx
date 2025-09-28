@@ -20,7 +20,7 @@ import { useTheme } from '@coinbase/cds-web';
 import { m as motion } from 'framer-motion';
 
 import { axisTickLabelsInitialAnimationVariants } from '../axis';
-import { useChartContext } from '../ChartProvider';
+import { useCartesianChartContext } from '../ChartProvider';
 import { ReferenceLine, type ReferenceLineProps } from '../line';
 
 import { ScrubberHead, type ScrubberHeadProps, type ScrubberHeadRef } from './ScrubberHead';
@@ -153,7 +153,7 @@ export const Scrubber = memo(
 
       const { scrubberPosition } = useScrubberContext();
       const { getXScale, getYScale, getSeriesData, getXAxis, animate, series, drawingArea } =
-        useChartContext();
+        useCartesianChartContext();
       const getStackedSeriesData = getSeriesData; // getSeriesData now returns stacked data
 
       // Track label dimensions for collision detection

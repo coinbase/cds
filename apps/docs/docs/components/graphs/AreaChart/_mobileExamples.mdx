@@ -1,0 +1,255 @@
+## Basic Example
+
+Area charts display quantitative data over time or categories, with the area between the line and axis filled with color.
+
+```jsx
+<AreaChart
+  height={250}
+  series={[
+    {
+      id: 'revenue',
+      data: [10, 25, 30, 45, 55, 40, 60, 75, 85, 80],
+    },
+  ]}
+  showYAxis
+  yAxis={{
+    showGrid: true,
+  }}
+/>
+```
+
+## Multiple Series
+
+You can display multiple data series on the same chart for comparison.
+
+```jsx
+<AreaChart
+  height={250}
+  series={[
+    {
+      id: 'revenue',
+      data: [10, 25, 30, 45, 55, 40, 60, 75, 85, 80],
+      fill: 'rgba(59, 130, 246, 0.3)',
+      stroke: 'rgb(59, 130, 246)',
+    },
+    {
+      id: 'costs',
+      data: [5, 15, 18, 22, 28, 25, 32, 38, 42, 45],
+      fill: 'rgba(239, 68, 68, 0.3)',
+      stroke: 'rgb(239, 68, 68)',
+    },
+  ]}
+  showYAxis
+  showLines
+  yAxis={{
+    showGrid: true,
+  }}
+/>
+```
+
+## Stacked Areas
+
+Stack multiple series to show cumulative totals.
+
+```jsx
+<AreaChart
+  height={250}
+  stacked
+  series={[
+    {
+      id: 'product-a',
+      data: [10, 20, 15, 25, 30, 35, 28, 40, 45, 50],
+    },
+    {
+      id: 'product-b',
+      data: [5, 10, 12, 15, 18, 20, 22, 25, 28, 30],
+    },
+    {
+      id: 'product-c',
+      data: [8, 12, 10, 18, 15, 22, 20, 30, 32, 35],
+    },
+  ]}
+  showYAxis
+  showLines
+  yAxis={{
+    showGrid: true,
+  }}
+/>
+```
+
+## Curved Areas
+
+Apply different curve types for smoother transitions between data points.
+
+```jsx
+<AreaChart
+  height={250}
+  curve="monotone"
+  series={[
+    {
+      id: 'sales',
+      data: [10, 22, 29, 45, 38, 45, 52, 48, 58, 65],
+    },
+  ]}
+  showYAxis
+  yAxis={{
+    showGrid: true,
+  }}
+/>
+```
+
+## Interactive with Scrubber
+
+Add a scrubber for interactive data exploration.
+
+```jsx
+<AreaChart
+  enableScrubbing
+  height={250}
+  series={[
+    {
+      id: 'portfolio',
+      data: [1000, 1200, 1150, 1400, 1380, 1500, 1450, 1600, 1750, 1700],
+    },
+  ]}
+  curve="monotone"
+  showYAxis
+  yAxis={{
+    showGrid: true,
+    formatValue: (value) => `$${value.toLocaleString()}`,
+  }}
+>
+  <Scrubber />
+</AreaChart>
+```
+
+## Custom Fill Patterns
+
+Customize the appearance of areas with different fill types.
+
+```jsx
+function CustomAreaChart() {
+  return (
+    <AreaChart
+      height={250}
+      series={[
+        {
+          id: 'gradient',
+          data: [20, 35, 45, 30, 50, 60, 48, 70, 65, 75],
+          type: 'gradient',
+        },
+        {
+          id: 'dotted',
+          data: [10, 20, 25, 18, 30, 35, 28, 40, 38, 45],
+          type: 'dotted',
+        },
+      ]}
+      showYAxis
+      showLines
+      yAxis={{
+        showGrid: true,
+      }}
+    />
+  );
+}
+```
+
+## With Baseline Values
+
+Display areas with custom baseline values for showing ranges or confidence intervals.
+
+```jsx
+<AreaChart
+  height={250}
+  series={[
+    {
+      id: 'range',
+      // Array of [baseline, value] tuples
+      data: [
+        [5, 15],
+        [8, 22],
+        [10, 28],
+        [12, 35],
+        [15, 42],
+        [18, 38],
+        [20, 45],
+        [22, 50],
+        [25, 55],
+        [28, 60],
+      ],
+      fillOpacity: 0.3,
+    },
+  ]}
+  showYAxis
+  showLines
+  yAxis={{
+    showGrid: true,
+  }}
+/>
+```
+
+## Negative Values
+
+Area charts can handle negative values, useful for showing profit/loss or temperature variations.
+
+```jsx
+<AreaChart
+  height={250}
+  series={[
+    {
+      id: 'profit-loss',
+      data: [10, 5, -3, 8, 12, -5, 15, 20, -8, 25],
+      fill: (d) => (d.value >= 0 ? 'rgba(34, 197, 94, 0.3)' : 'rgba(239, 68, 68, 0.3)'),
+      stroke: (d) => (d.value >= 0 ? 'rgb(34, 197, 94)' : 'rgb(239, 68, 68)'),
+    },
+  ]}
+  showYAxis
+  showXAxis
+  yAxis={{
+    showGrid: true,
+  }}
+  xAxis={{
+    showGrid: false,
+  }}
+/>
+```
+
+## Time Series Data
+
+Display time series data with proper date formatting.
+
+```jsx
+function TimeSeriesAreaChart() {
+  const data = [
+    { date: new Date('2024-01-01'), value: 100 },
+    { date: new Date('2024-02-01'), value: 120 },
+    { date: new Date('2024-03-01'), value: 115 },
+    { date: new Date('2024-04-01'), value: 140 },
+    { date: new Date('2024-05-01'), value: 135 },
+    { date: new Date('2024-06-01'), value: 160 },
+  ];
+
+  return (
+    <AreaChart
+      height={250}
+      series={[
+        {
+          id: 'monthly-revenue',
+          data: data.map(d => d.value),
+        },
+      ]}
+      curve="monotone"
+      showYAxis
+      showXAxis
+      yAxis={{
+        showGrid: true,
+        formatValue: (v) => `$${v}k`,
+      }}
+      xAxis={{
+        data: data.map(d => d.date),
+        formatValue: (date) => date.toLocaleDateString('en', { month: 'short' }),
+      }}
+    />
+  );
+}
+```

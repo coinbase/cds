@@ -4,7 +4,7 @@ import { type ChartPadding, isCategoricalScale } from '@coinbase/cds-common/visu
 import { Switch } from '@coinbase/cds-web/controls';
 
 import { XAxis, YAxis } from '../axis';
-import { useChartContext } from '../ChartProvider';
+import { useCartesianChartContext } from '../ChartProvider';
 import { LineChart } from '../line/LineChart';
 import { ChartText, SmartChartTextGroup, type TextLabelData } from '../text';
 
@@ -471,7 +471,7 @@ export const InteractiveSmartChartTextGroup = () => {
 
   // Inline helper to align labels to the chart's x-scale
   const ScaleAlignedLabels = ({ labels }: { labels: string[] }) => {
-    const { getXScale, height } = useChartContext();
+    const { getXScale, height } = useCartesianChartContext();
     const [bboxMap, setBboxMap] = useState<
       Map<number, { x: number; y: number; width: number; height: number }>
     >(new Map());

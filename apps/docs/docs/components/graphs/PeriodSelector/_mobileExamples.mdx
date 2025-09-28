@@ -1,0 +1,216 @@
+## Basic Example
+
+PeriodSelector provides a simple way for users to switch between different time periods in charts.
+
+```jsx
+function BasicPeriodSelector() {
+  const [selectedPeriod, setSelectedPeriod] = useState('1D');
+  
+  const periods = [
+    { label: '1D', value: '1D' },
+    { label: '1W', value: '1W' },
+    { label: '1M', value: '1M' },
+    { label: '3M', value: '3M' },
+    { label: '1Y', value: '1Y' },
+    { label: 'ALL', value: 'ALL' },
+  ];
+  
+  return (
+    <PeriodSelector
+      periods={periods}
+      selectedPeriod={selectedPeriod}
+      onPeriodChange={setSelectedPeriod}
+    />
+  );
+}
+```
+
+## With Chart Integration
+
+Integrate PeriodSelector with a chart to dynamically update the displayed data.
+
+```jsx
+function ChartWithPeriodSelector() {
+  const [selectedPeriod, setSelectedPeriod] = useState('1M');
+  
+  const dataByPeriod = {
+    '1D': [100, 105, 103, 108, 106, 110],
+    '1W': [100, 102, 105, 103, 108, 106, 110, 108, 112],
+    '1M': [100, 98, 102, 105, 103, 108, 106, 110, 108, 112, 115, 113, 118],
+    '3M': [90, 95, 92, 98, 100, 102, 105, 103, 108, 106, 110, 108, 112, 115, 113, 118, 120, 122],
+    '1Y': [80, 85, 88, 90, 92, 95, 98, 100, 105, 110, 108, 112, 115, 118, 120, 125, 130],
+    'ALL': [50, 60, 70, 80, 85, 88, 90, 92, 95, 98, 100, 105, 110, 115, 120, 125, 130, 135],
+  };
+  
+  const periods = Object.keys(dataByPeriod).map(key => ({ label: key, value: key }));
+  
+  return (
+    <VStack gap={3}>
+      <PeriodSelector
+        periods={periods}
+        selectedPeriod={selectedPeriod}
+        onPeriodChange={setSelectedPeriod}
+      />
+      <LineChart
+        height={250}
+        series={[
+          {
+            id: 'price',
+            data: dataByPeriod[selectedPeriod],
+          },
+        ]}
+        curve="monotone"
+        showYAxis
+        yAxis={{
+          showGrid: true,
+        }}
+      />
+    </VStack>
+  );
+}
+```
+
+## Custom Styling
+
+Customize the appearance of the PeriodSelector.
+
+```jsx
+<PeriodSelector
+  periods={[
+    { label: '1H', value: '1H' },
+    { label: '24H', value: '24H' },
+    { label: '7D', value: '7D' },
+    { label: '30D', value: '30D' },
+  ]}
+  selectedPeriod="24H"
+  onPeriodChange={(period) => console.log('Selected:', period)}
+  activeColor="rgb(59, 130, 246)"
+  inactiveColor="rgb(156, 163, 175)"
+  fontSize={14}
+/>
+```
+
+## Compact Mode
+
+Use compact mode for smaller spaces.
+
+```jsx
+<PeriodSelector
+  compact
+  periods={[
+    { label: 'D', value: 'day' },
+    { label: 'W', value: 'week' },
+    { label: 'M', value: 'month' },
+    { label: 'Y', value: 'year' },
+  ]}
+  selectedPeriod="month"
+  onPeriodChange={(period) => console.log('Selected:', period)}
+/>
+```
+
+## With Disabled Options
+
+Disable certain period options that aren't available.
+
+```jsx
+<PeriodSelector
+  periods={[
+    { label: '1D', value: '1D', disabled: false },
+    { label: '1W', value: '1W', disabled: false },
+    { label: '1M', value: '1M', disabled: false },
+    { label: '3M', value: '3M', disabled: true },
+    { label: '1Y', value: '1Y', disabled: true },
+    { label: 'ALL', value: 'ALL', disabled: false },
+  ]}
+  selectedPeriod="1W"
+  onPeriodChange={(period) => console.log('Selected:', period)}
+/>
+```
+
+## Custom Period Labels
+
+Use custom labels for different contexts.
+
+```jsx
+function CustomLabelSelector() {
+  const [selectedView, setSelectedView] = useState('overview');
+  
+  const views = [
+    { label: 'Overview', value: 'overview' },
+    { label: 'Details', value: 'details' },
+    { label: 'Analytics', value: 'analytics' },
+    { label: 'History', value: 'history' },
+  ];
+  
+  return (
+    <PeriodSelector
+      periods={views}
+      selectedPeriod={selectedView}
+      onPeriodChange={setSelectedView}
+    />
+  );
+}
+```
+
+## With Loading State
+
+Show loading state while fetching new data for a period.
+
+```jsx
+function LoadingPeriodSelector() {
+  const [selectedPeriod, setSelectedPeriod] = useState('1D');
+  const [isLoading, setIsLoading] = useState(false);
+  
+  const handlePeriodChange = async (period) => {
+    setIsLoading(true);
+    setSelectedPeriod(period);
+    
+    // Simulate data fetching
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    setIsLoading(false);
+  };
+  
+  return (
+    <VStack gap={3}>
+      <PeriodSelector
+        periods={[
+          { label: '1D', value: '1D' },
+          { label: '1W', value: '1W' },
+          { label: '1M', value: '1M' },
+        ]}
+        selectedPeriod={selectedPeriod}
+        onPeriodChange={handlePeriodChange}
+        disabled={isLoading}
+      />
+      {isLoading && <Text>Loading data...</Text>}
+    </VStack>
+  );
+}
+```
+
+## Horizontal Scrollable
+
+For many period options, enable horizontal scrolling.
+
+```jsx
+<ScrollView horizontal showsHorizontalScrollIndicator={false}>
+  <PeriodSelector
+    periods={[
+      { label: '1H', value: '1H' },
+      { label: '4H', value: '4H' },
+      { label: '12H', value: '12H' },
+      { label: '1D', value: '1D' },
+      { label: '3D', value: '3D' },
+      { label: '1W', value: '1W' },
+      { label: '2W', value: '2W' },
+      { label: '1M', value: '1M' },
+      { label: '3M', value: '3M' },
+      { label: '6M', value: '6M' },
+      { label: '1Y', value: '1Y' },
+      { label: 'ALL', value: 'ALL' },
+    ]}
+    selectedPeriod="1D"
+    onPeriodChange={(period) => console.log('Selected:', period)}
+  />
+</ScrollView>
+```

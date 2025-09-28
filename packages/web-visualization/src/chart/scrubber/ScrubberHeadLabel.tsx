@@ -1,7 +1,7 @@
 import { memo, useCallback, useState } from 'react';
 import type { Rect } from '@coinbase/cds-common/types';
 
-import { useChartContext } from '../ChartProvider';
+import { useCartesianChartContext } from '../ChartProvider';
 import { ChartText, type ChartTextProps } from '../text';
 
 export type ScrubberHeadLabelProps = ChartTextProps & {
@@ -30,7 +30,7 @@ export const ScrubberHeadLabel = memo<ScrubberHeadLabelProps>(
     dx = 0,
     ...chartTextProps
   }) => {
-    const { drawingArea: chartRect } = useChartContext();
+    const { drawingArea: chartRect } = useCartesianChartContext();
 
     // Track current side for auto placement
     const [currentSide, setCurrentSide] = useState<'left' | 'right'>('right');

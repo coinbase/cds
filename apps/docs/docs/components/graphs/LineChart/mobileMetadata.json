@@ -1,0 +1,22 @@
+{
+  "import": "import { LineChart } from '@coinbase/cds-mobile-visualization'",
+  "source": "https://github.com/coinbase/cds-staging/blob/master/packages/mobile-visualization/src/chart/line/LineChart.tsx",
+  "relatedComponents": [
+    {
+      "label": "AreaChart",
+      "url": "/components/graphs/AreaChart/"
+    },
+    {
+      "label": "CartesianChart",
+      "url": "/components/graphs/CartesianChart/"
+    },
+    {
+      "label": "Point",
+      "url": "/components/graphs/Point/"
+    },
+    {
+      "label": "Scrubber",
+      "url": "/components/graphs/Scrubber/"
+    }
+  ]
+}

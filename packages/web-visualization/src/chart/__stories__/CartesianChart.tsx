@@ -12,7 +12,7 @@ import { Text, TextHeadline } from '@coinbase/cds-web/typography';
 
 import { Area } from '../area/Area';
 import { XAxis, YAxis } from '../axis';
-import { useChartContext } from '../ChartProvider';
+import { useCartesianChartContext } from '../ChartProvider';
 import { SolidLine, type SolidLineProps } from '../line';
 import { Line } from '../line/Line';
 import { LineChart } from '../line/LineChart';
@@ -241,7 +241,7 @@ const PredictionMarket = () => {
 
 const EarningsHistory = () => {
   const CirclePlot = memo(({ seriesId, opacity = 1 }: { seriesId: string; opacity?: number }) => {
-    const { getSeries, getSeriesData, getXScale, getYScale } = useChartContext();
+    const { getSeries, getSeriesData, getXScale, getYScale } = useCartesianChartContext();
     const series = getSeries(seriesId);
     const data = getSeriesData(seriesId);
     const xScale = getXScale();

@@ -4,7 +4,7 @@ import type { ThemeVars } from '@coinbase/cds-common';
 import { defaultAxisId } from '@coinbase/cds-common/visualizations/charts';
 import { generateRandomId } from '@coinbase/cds-utils';
 
-import { useChartContext } from '../ChartProvider';
+import { useCartesianChartContext } from '../ChartProvider';
 
 import type { BarComponent, BarProps } from './Bar';
 import type { BarSeries } from './BarChart';
@@ -87,7 +87,7 @@ export const BarPlot = memo<BarPlotProps>(
     barMinSize,
     stackMinSize,
   }) => {
-    const { series: allSeries, drawingArea } = useChartContext();
+    const { series: allSeries, drawingArea } = useCartesianChartContext();
     const clipPathId = useRef(generateRandomId()).current;
 
     const targetSeries = useMemo(() => {

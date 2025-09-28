@@ -3,7 +3,7 @@ import { Defs, LinearGradient, Stop } from 'react-native-svg';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 import { generateRandomId } from '@coinbase/cds-utils';
 
-import { useChartContext } from '../ChartProvider';
+import { useCartesianChartContext } from '../ChartProvider';
 import { Path, type PathProps } from '../Path';
 
 import type { AreaComponentProps } from './Area';
@@ -49,7 +49,7 @@ export const GradientArea = memo<GradientAreaProps>(
     clipRect,
     ...pathProps
   }) => {
-    const context = useChartContext();
+    const context = useCartesianChartContext();
     const theme = useTheme();
     const patternIdRef = useRef<string>(generateRandomId());
 

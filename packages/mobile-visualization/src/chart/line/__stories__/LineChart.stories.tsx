@@ -25,7 +25,7 @@ import { Text } from '@coinbase/cds-mobile/typography/Text';
 import { Area, DottedArea } from '../../area';
 import { XAxis, YAxis } from '../../axis';
 import { CartesianChart } from '../../CartesianChart';
-import { useChartContext } from '../../ChartProvider';
+import { useCartesianChartContext } from '../../ChartProvider';
 import { PeriodSelector, PeriodSelectorActiveIndicator } from '../../PeriodSelector';
 import { Point } from '../../point';
 import { Scrubber } from '../../scrubber';
@@ -993,7 +993,7 @@ const AssetPriceDotted = () => {
           },
         ]}
       >
-        <Scrubber scrubberLabel={scrubberLabel} />
+        <Scrubber />
       </LineChart>
       <PeriodSelector
         TabComponent={BTCTab}
@@ -1207,10 +1207,7 @@ const AssetPriceMultipleDotted = () => {
       />
       <LineChart
         enableScrubbing
-        showArea
-        areaType="dotted"
         height={defaultChartHeight}
-        onScrubberPositionChange={setScrubIndex}
         series={[
           {
             id: 'btc',
@@ -1225,7 +1222,7 @@ const AssetPriceMultipleDotted = () => {
           },
         ]}
       >
-        <Scrubber seriesIds={[]} />
+        <Scrubber />
       </LineChart>
       <PeriodSelector
         TabComponent={BTCTab}
@@ -1245,7 +1242,7 @@ const GainLossChart = () => {
   const data = [-40, -28, -21, -5, 48, -5, -28, 2, -29, -46, 16, -30, -29, 8];
 
   const ChartDefs = ({ threshold = 0 }) => {
-    const { getYScale } = useChartContext();
+    const { getYScale } = useCartesianChartContext();
     // get the default y-axis scale
     const yScale = getYScale();
 

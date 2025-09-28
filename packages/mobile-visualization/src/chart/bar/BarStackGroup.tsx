@@ -6,7 +6,7 @@ import {
   isCategoricalScale,
 } from '@coinbase/cds-common/visualizations/charts';
 
-import { useChartContext } from '../ChartProvider';
+import { useCartesianChartContext } from '../ChartProvider';
 
 import type { BarComponent, BarProps } from './Bar';
 import type { BarSeries } from './BarChart';
@@ -84,7 +84,7 @@ export type BarStackGroupProps = {
  */
 export const BarStackGroup = memo<BarStackGroupProps>(
   ({ series, yAxisId = defaultAxisId, stackIndex, totalStacks, barPadding = 0.1, ...props }) => {
-    const { getSeriesData, getXScale, getYScale, drawingArea } = useChartContext();
+    const { getSeriesData, getXScale, getYScale, drawingArea } = useCartesianChartContext();
 
     const xScale = getXScale();
     const yScale = getYScale(yAxisId);

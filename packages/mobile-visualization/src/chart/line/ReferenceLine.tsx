@@ -4,7 +4,7 @@ import type { SharedProps } from '@coinbase/cds-common/types';
 import { getPointOnScale } from '@coinbase/cds-common/visualizations/charts';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 
-import { useChartContext } from '../ChartProvider';
+import { useCartesianChartContext } from '../ChartProvider';
 import { ChartText } from '../text';
 import type { ChartTextChildren, ChartTextProps } from '../text/ChartText';
 
@@ -110,7 +110,7 @@ export const ReferenceLine = memo<ReferenceLineProps>(
     labelConfig,
   }) => {
     const theme = useTheme();
-    const { getXScale, getYScale, drawingArea } = useChartContext();
+    const { getXScale, getYScale, drawingArea } = useCartesianChartContext();
 
     const effectiveLineStroke = stroke ?? theme.color.bgLine;
 

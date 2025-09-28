@@ -6,7 +6,7 @@ import { sparklineInteractiveData } from '@coinbase/cds-common/internal/visualiz
 import { useTheme } from '@coinbase/cds-mobile';
 import { Example, ExampleScreen } from '@coinbase/cds-mobile/examples/ExampleScreen';
 
-import { useChartContext } from '../../ChartProvider';
+import { useCartesianChartContext } from '../../ChartProvider';
 import { ChartText } from '../../text';
 import { LineChart } from '../LineChart';
 import { ReferenceLine } from '../ReferenceLine';
@@ -80,7 +80,7 @@ const DraggablePriceTarget = () => {
         })}`;
       }, []);
 
-      const { getYScale, drawingArea } = useChartContext();
+      const { getYScale, drawingArea } = useCartesianChartContext();
       const [amount, setAmount] = useState(startAmount);
       const [isDragging, setIsDragging] = useState(false);
       const [textDimensions, setTextDimensions] = useState({ width: 0, height: 0 });

@@ -13,7 +13,7 @@ import {
 import type { Rect as RectType, SharedProps } from '@coinbase/cds-common/types';
 import * as interpolate from 'd3-interpolate-path';
 
-import { useChartContext } from './ChartProvider';
+import { useCartesianChartContext } from './ChartProvider';
 
 const AnimatedRect = Reanimated.createAnimatedComponent(Rect);
 
@@ -90,7 +90,7 @@ export const Path = memo<PathProps>(
     animate: animateProp,
     ...pathProps
   }) => {
-    const { animate: animateContext, drawingArea: contextRect } = useChartContext();
+    const { animate: animateContext, drawingArea: contextRect } = useCartesianChartContext();
     const rect = clipRect ?? contextRect;
     const animate = animateProp ?? animateContext;
 

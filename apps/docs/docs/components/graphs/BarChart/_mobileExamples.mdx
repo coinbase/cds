@@ -1,0 +1,281 @@
+## Basic Example
+
+Bar charts display categorical data with rectangular bars, with heights proportional to the values they represent.
+
+```jsx
+<BarChart
+  height={250}
+  series={[
+    {
+      id: 'sales',
+      data: [40, 30, 70, 50, 90, 60, 80],
+    },
+  ]}
+  showYAxis
+  yAxis={{
+    showGrid: true,
+  }}
+/>
+```
+
+## Multiple Series
+
+Display multiple data series side by side for comparison.
+
+```jsx
+<BarChart
+  height={250}
+  series={[
+    {
+      id: 'q1',
+      data: [40, 45, 50, 35, 60],
+      fill: 'rgb(59, 130, 246)',
+    },
+    {
+      id: 'q2',
+      data: [35, 50, 45, 40, 55],
+      fill: 'rgb(239, 68, 68)',
+    },
+    {
+      id: 'q3',
+      data: [45, 40, 55, 50, 65],
+      fill: 'rgb(34, 197, 94)',
+    },
+  ]}
+  showYAxis
+  showXAxis
+  yAxis={{
+    showGrid: true,
+  }}
+/>
+```
+
+## Stacked Bars
+
+Stack bars to show cumulative totals across categories.
+
+```jsx
+<BarChart
+  height={250}
+  stacked
+  series={[
+    {
+      id: 'desktop',
+      data: [30, 35, 40, 38, 45, 50, 48],
+    },
+    {
+      id: 'mobile',
+      data: [20, 25, 30, 32, 35, 40, 42],
+    },
+    {
+      id: 'tablet',
+      data: [10, 12, 15, 18, 20, 22, 25],
+    },
+  ]}
+  showYAxis
+  showXAxis
+  yAxis={{
+    showGrid: true,
+  }}
+/>
+```
+
+## Horizontal Bar Chart
+
+Display bars horizontally by setting the orientation.
+
+```jsx
+<BarChart
+  height={250}
+  orientation="horizontal"
+  series={[
+    {
+      id: 'performance',
+      data: [85, 70, 90, 65, 75, 88],
+    },
+  ]}
+  showYAxis
+  showXAxis
+  xAxis={{
+    showGrid: true,
+  }}
+/>
+```
+
+## Negative Values
+
+Bar charts can handle negative values, useful for showing profit/loss or temperature variations.
+
+```jsx
+<BarChart
+  height={250}
+  series={[
+    {
+      id: 'profit-loss',
+      data: [20, -15, 30, -5, 25, -10, 35, 40, -8, 45],
+      fill: (d) => (d.value >= 0 ? 'rgb(34, 197, 94)' : 'rgb(239, 68, 68)'),
+    },
+  ]}
+  showYAxis
+  showXAxis
+  yAxis={{
+    showGrid: true,
+  }}
+/>
+```
+
+## Custom Bar Width
+
+Adjust the width of bars for different visual emphasis.
+
+```jsx
+<BarChart
+  height={250}
+  barWidth={20}
+  series={[
+    {
+      id: 'narrow',
+      data: [30, 45, 35, 50, 40, 55, 45],
+    },
+  ]}
+  showYAxis
+  yAxis={{
+    showGrid: true,
+  }}
+/>
+```
+
+## With Labels
+
+Add labels to bars for direct value display.
+
+```jsx
+function LabeledBarChart() {
+  const data = [65, 85, 72, 90, 78, 88, 95];
+  
+  return (
+    <BarChart
+      height={250}
+      series={[
+        {
+          id: 'scores',
+          data: data,
+        },
+      ]}
+      showYAxis
+      showXAxis
+      yAxis={{
+        showGrid: true,
+      }}
+      xAxis={{
+        data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+      }}
+      renderBarLabel={(value) => `${value}%`}
+    />
+  );
+}
+```
+
+## Interactive with Scrubber
+
+Add interactivity with a scrubber for detailed value inspection.
+
+```jsx
+<BarChart
+  enableScrubbing
+  height={250}
+  series={[
+    {
+      id: 'revenue',
+      data: [1200, 1900, 1500, 2100, 1800, 2300, 2500],
+    },
+  ]}
+  showYAxis
+  yAxis={{
+    showGrid: true,
+    formatValue: (value) => `$${(value / 1000).toFixed(1)}k`,
+  }}
+>
+  <Scrubber />
+</BarChart>
+```
+
+## Grouped and Stacked
+
+Combine grouped and stacked bars for complex comparisons.
+
+```jsx
+function GroupedStackedBarChart() {
+  return (
+    <BarChart
+      height={300}
+      stackGroups={[
+        { ids: ['online', 'store'], stackId: 'sales' },
+        { ids: ['new', 'returning'], stackId: 'customers' },
+      ]}
+      series={[
+        {
+          id: 'online',
+          data: [30, 35, 40, 45, 50],
+          fill: 'rgb(59, 130, 246)',
+        },
+        {
+          id: 'store',
+          data: [20, 25, 30, 35, 40],
+          fill: 'rgb(96, 165, 250)',
+        },
+        {
+          id: 'new',
+          data: [15, 18, 22, 25, 28],
+          fill: 'rgb(239, 68, 68)',
+        },
+        {
+          id: 'returning',
+          data: [25, 30, 35, 40, 45],
+          fill: 'rgb(248, 113, 113)',
+        },
+      ]}
+      showYAxis
+      showXAxis
+      yAxis={{
+        showGrid: true,
+      }}
+      xAxis={{
+        data: ['Q1', 'Q2', 'Q3', 'Q4', 'Q5'],
+      }}
+    />
+  );
+}
+```
+
+## Time Series Bar Chart
+
+Display time-based data with proper formatting.
+
+```jsx
+function TimeSeriesBarChart() {
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
+  const data = [45, 52, 48, 61, 58, 65];
+  
+  return (
+    <BarChart
+      height={250}
+      series={[
+        {
+          id: 'monthly-sales',
+          data: data,
+          fill: 'rgb(59, 130, 246)',
+        },
+      ]}
+      showYAxis
+      showXAxis
+      yAxis={{
+        showGrid: true,
+        formatValue: (v) => `${v}k`,
+      }}
+      xAxis={{
+        data: months,
+      }}
+    />
+  );
+}

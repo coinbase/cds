@@ -6,7 +6,7 @@ import { cx } from '@coinbase/cds-web';
 import { css } from '@linaria/core';
 import { m as motion, useAnimate } from 'framer-motion';
 
-import { useChartContext } from '../ChartProvider';
+import { useCartesianChartContext } from '../ChartProvider';
 import { ChartText, type ChartTextProps } from '../text';
 import type { ChartTextChildren } from '../text/ChartText';
 
@@ -304,7 +304,7 @@ export const Point = memo(
       ref,
     ) => {
       const [scope, animate] = useAnimate();
-      const { getXScale, getYScale, animate: animationEnabled } = useChartContext();
+      const { getXScale, getYScale, animate: animationEnabled } = useCartesianChartContext();
       const { scrubberPosition } = useScrubberContext();
 
       const xScale = getXScale();

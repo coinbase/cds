@@ -7,7 +7,7 @@ import { Box, type BoxProps } from '@coinbase/cds-web/layout';
 import { Text } from '@coinbase/cds-web/typography';
 import { m as motion } from 'framer-motion';
 
-import { useChartContext } from '../ChartProvider';
+import { useCartesianChartContext } from '../ChartProvider';
 
 // Define the valid SVG children for the <text> element.
 type ValidChartTextChildElements =
@@ -128,7 +128,7 @@ export const ChartText = memo<ChartTextProps>(
     classNames,
   }) => {
     const theme = useTheme();
-    const { width: chartWidth, height: chartHeight } = useChartContext();
+    const { width: chartWidth, height: chartHeight } = useCartesianChartContext();
     const fullChartBounds = useMemo(
       () => ({ x: 0, y: 0, width: chartWidth, height: chartHeight }),
       [chartWidth, chartHeight],

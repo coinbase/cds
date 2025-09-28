@@ -226,7 +226,7 @@ function GainLossChart() {
   }, [highlightedItem, data]);
 
   const ChartDefs = ({ threshold = 0 }) => {
-    const { getYScale } = useChartContext();
+    const { getYScale } = useCartesianChartContext();
     // get the default y-axis scale
     const yScale = getYScale();
 
@@ -981,8 +981,7 @@ function AvailabilityChart() {
   }, [scrubIndex, availabilityEvents]);
 
   const ChartDefs = memo(({ yellowThresholdPercentage = 85, greenThresholdPercentage = 90 }) => {
-    const { drawingArea } = useChartContext();
-    const { height, series, getYScale, getYAxis } = useChartContext();
+    const { drawingArea, height, series, getYScale, getYAxis } = useCartesianChartContext();
     const yScale = getYScale();
     const yAxis = getYAxis();
 

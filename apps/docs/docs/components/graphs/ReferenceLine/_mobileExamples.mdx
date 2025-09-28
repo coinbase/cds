@@ -1,0 +1,311 @@
+## Basic Example
+
+ReferenceLine adds horizontal or vertical lines to charts to mark important values like averages, thresholds, or targets.
+
+```jsx
+<LineChart
+  height={250}
+  series={[
+    {
+      id: 'data',
+      data: [30, 45, 35, 50, 40, 55, 45, 60, 55, 65],
+    },
+  ]}
+  showYAxis
+  yAxis={{
+    showGrid: true,
+  }}
+>
+  <ReferenceLine y={50} stroke="rgb(239, 68, 68)" strokeWidth={2} />
+</LineChart>
+```
+
+## Multiple Reference Lines
+
+Add multiple reference lines to show different thresholds or ranges.
+
+```jsx
+function MultipleReferenceLines() {
+  const data = [20, 35, 25, 45, 30, 55, 40, 65, 50, 70];
+  const average = data.reduce((a, b) => a + b, 0) / data.length;
+  const max = Math.max(...data);
+  const min = Math.min(...data);
+  
+  return (
+    <LineChart
+      height={250}
+      series={[
+        {
+          id: 'performance',
+          data: data,
+        },
+      ]}
+      curve="monotone"
+      showYAxis
+      yAxis={{
+        showGrid: true,
+      }}
+    >
+      <ReferenceLine y={average} stroke="rgb(59, 130, 246)" strokeWidth={2} label="Average" />
+      <ReferenceLine y={max} stroke="rgb(34, 197, 94)" strokeWidth={1} label="Max" />
+      <ReferenceLine y={min} stroke="rgb(239, 68, 68)" strokeWidth={1} label="Min" />
+    </LineChart>
+  );
+}
+```
+
+## Dashed Reference Lines
+
+Use dashed lines for visual distinction.
+
+```jsx
+<BarChart
+  height={250}
+  series={[
+    {
+      id: 'sales',
+      data: [40, 55, 45, 60, 50, 65, 55, 70],
+    },
+  ]}
+  showYAxis
+  yAxis={{
+    showGrid: true,
+  }}
+>
+  <ReferenceLine 
+    y={50} 
+    stroke="rgb(156, 163, 175)" 
+    strokeDasharray="5,5" 
+    label="Target"
+  />
+</BarChart>
+```
+
+## Vertical Reference Lines
+
+Mark specific x-axis positions with vertical lines.
+
+```jsx
+<LineChart
+  height={250}
+  series={[
+    {
+      id: 'timeline',
+      data: [30, 35, 40, 45, 55, 50, 45, 40, 35, 30],
+    },
+  ]}
+  curve="monotone"
+  showYAxis
+  showXAxis
+  yAxis={{
+    showGrid: true,
+  }}
+>
+  <ReferenceLine x={5} stroke="rgb(239, 68, 68)" strokeWidth={2} label="Event" />
+</LineChart>
+```
+
+## Reference Lines with Labels
+
+Add labels to reference lines for clarity.
+
+```jsx
+<AreaChart
+  height={250}
+  series={[
+    {
+      id: 'revenue',
+      data: [100, 120, 110, 130, 125, 140, 135, 150],
+    },
+  ]}
+  showYAxis
+  yAxis={{
+    showGrid: true,
+    formatValue: (v) => `$${v}k`,
+  }}
+>
+  <ReferenceLine 
+    y={125} 
+    stroke="rgb(59, 130, 246)" 
+    strokeWidth={2}
+    label="Q1 Target"
+    labelPosition="left"
+  />
+  <ReferenceLine 
+    y={100} 
+    stroke="rgb(239, 68, 68)" 
+    strokeWidth={2}
+    label="Minimum"
+    labelPosition="right"
+  />
+</AreaChart>
+```
+
+## Dynamic Reference Lines
+
+Update reference lines based on data or user interaction.
+
+```jsx
+function DynamicReferenceLine() {
+  const [threshold, setThreshold] = useState(50);
+  const data = [30, 45, 35, 60, 40, 75, 50, 85, 55, 70];
+  
+  return (
+    <VStack gap={3}>
+      <HStack gap={2}>
+        <Text>Threshold: {threshold}</Text>
+        <Slider
+          value={threshold}
+          onValueChange={setThreshold}
+          minimumValue={20}
+          maximumValue={100}
+          style={{ flex: 1 }}
+        />
+      </HStack>
+      <LineChart
+        height={250}
+        series={[
+          {
+            id: 'data',
+            data: data,
+          },
+        ]}
+        curve="monotone"
+        showYAxis
+        yAxis={{
+          showGrid: true,
+        }}
+        renderPoints={(datum) => datum.value >= threshold}
+      >
+        <ReferenceLine 
+          y={threshold} 
+          stroke="rgb(168, 85, 247)" 
+          strokeWidth={2}
+          strokeDasharray="3,3"
+        />
+      </LineChart>
+    </VStack>
+  );
+}
+```
+
+## Reference Zones
+
+Create zones using multiple reference lines.
+
+```jsx
+function ReferenceZones() {
+  return (
+    <LineChart
+      height={250}
+      series={[
+        {
+          id: 'monitoring',
+          data: [45, 52, 48, 55, 50, 58, 53, 60, 56, 62],
+        },
+      ]}
+      curve="monotone"
+      showYAxis
+      yAxis={{
+        showGrid: true,
+      }}
+    >
+      {/* Danger zone */}
+      <ReferenceLine y={60} stroke="rgba(239, 68, 68, 0.3)" strokeWidth={30} />
+      <ReferenceLine y={60} stroke="rgb(239, 68, 68)" strokeWidth={1} label="Critical" />
+      
+      {/* Warning zone */}
+      <ReferenceLine y={55} stroke="rgba(251, 191, 36, 0.3)" strokeWidth={20} />
+      <ReferenceLine y={55} stroke="rgb(251, 191, 36)" strokeWidth={1} label="Warning" />
+      
+      {/* Safe zone */}
+      <ReferenceLine y={50} stroke="rgb(34, 197, 94)" strokeWidth={1} label="Normal" />
+    </LineChart>
+  );
+}
+```
+
+## Animated Reference Lines
+
+Animate reference lines for emphasis.
+
+```jsx
+function AnimatedReferenceLine() {
+  const animatedY = useSharedValue(30);
+  
+  useEffect(() => {
+    animatedY.value = withRepeat(
+      withSequence(
+        withTiming(70, { duration: 2000 }),
+        withTiming(30, { duration: 2000 })
+      ),
+      -1,
+      false
+    );
+  }, []);
+  
+  const AnimatedRef = Animated.createAnimatedComponent(ReferenceLine);
+  
+  return (
+    <LineChart
+      height={250}
+      series={[
+        {
+          id: 'static',
+          data: [40, 45, 50, 45, 50, 55, 50, 55, 60, 55],
+        },
+      ]}
+      showYAxis
+      yAxis={{
+        showGrid: true,
+        domain: [20, 80],
+      }}
+    >
+      <AnimatedRef 
+        y={animatedY} 
+        stroke="rgb(168, 85, 247)" 
+        strokeWidth={2}
+      />
+    </LineChart>
+  );
+}
+```
+
+## Statistical Reference Lines
+
+Show statistical measures as reference lines.
+
+```jsx
+function StatisticalReferences() {
+  const data = [32, 45, 38, 52, 41, 58, 46, 62, 49, 55];
+  
+  const mean = data.reduce((a, b) => a + b, 0) / data.length;
+  const sorted = [...data].sort((a, b) => a - b);
+  const median = sorted[Math.floor(sorted.length / 2)];
+  const stdDev = Math.sqrt(
+    data.reduce((sq, n) => sq + Math.pow(n - mean, 2), 0) / data.length
+  );
+  
+  return (
+    <LineChart
+      height={250}
+      series={[
+        {
+          id: 'distribution',
+          data: data,
+        },
+      ]}
+      curve="monotone"
+      showYAxis
+      yAxis={{
+        showGrid: true,
+      }}
+      renderPoints={() => true}
+    >
+      <ReferenceLine y={mean} stroke="rgb(59, 130, 246)" strokeWidth={2} label={`Mean: ${mean.toFixed(1)}`} />
+      <ReferenceLine y={median} stroke="rgb(168, 85, 247)" strokeWidth={1} strokeDasharray="5,5" label={`Median: ${median}`} />
+      <ReferenceLine y={mean + stdDev} stroke="rgba(59, 130, 246, 0.5)" strokeWidth={1} label="+1σ" />
+      <ReferenceLine y={mean - stdDev} stroke="rgba(59, 130, 246, 0.5)" strokeWidth={1} label="-1σ" />
+    </LineChart>
+  );
+}

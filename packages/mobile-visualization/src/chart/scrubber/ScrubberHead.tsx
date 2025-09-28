@@ -5,7 +5,7 @@ import type { SharedProps } from '@coinbase/cds-common/types';
 import { projectPoint, useScrubberContext } from '@coinbase/cds-common/visualizations/charts';
 import { useTheme } from '@coinbase/cds-mobile';
 
-import { useChartContext } from '../ChartProvider';
+import { useCartesianChartContext } from '../ChartProvider';
 import { Point, type PointProps, type PointRef } from '../point';
 
 const AnimatedG = Reanimated.createAnimatedComponent(G);
@@ -62,7 +62,7 @@ export const ScrubberHead = memo(
     ) => {
       const theme = useTheme();
       const pointRef = useRef<PointRef>(null);
-      const { getSeries, getXScale, getYScale, getSeriesData, animate } = useChartContext();
+      const { getSeries, getXScale, getYScale, getSeriesData, animate } = useCartesianChartContext();
       const { scrubberPosition: scrubberPosition } = useScrubberContext();
 
       const targetSeries = getSeries(seriesId);

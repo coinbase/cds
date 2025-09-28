@@ -4,7 +4,7 @@ import type { Rect } from '@coinbase/cds-common/types';
 import {
   type AxisConfig,
   type AxisConfigProps,
-  type ChartContextValue,
+  type CartesianChartContextValue,
   type ChartPadding,
   type ChartScaleFunction,
   defaultAxisId,
@@ -25,7 +25,7 @@ import { Box, type BoxBaseProps, type BoxProps } from '@coinbase/cds-web/layout'
 import { css } from '@linaria/core';
 
 import { ScrubberProvider, type ScrubberProviderProps } from './scrubber/ScrubberProvider';
-import { ChartProvider } from './ChartProvider';
+import { CartesianChartProvider } from './ChartProvider';
 
 const focusStylesCss = css`
   &:focus {
@@ -308,7 +308,7 @@ export const CartesianChart = memo(
         [renderedAxes, chartRect, userPadding],
       );
 
-      const contextValue: ChartContextValue<SVGSVGElement> = useMemo(
+      const contextValue: CartesianChartContextValue<SVGSVGElement> = useMemo(
         () => ({
           series: series ?? [],
           getSeries,
@@ -369,7 +369,7 @@ export const CartesianChart = memo(
           width={width}
           {...props}
         >
-          <ChartProvider value={contextValue}>
+          <CartesianChartProvider value={contextValue}>
             <ScrubberProvider
               enableScrubbing={!!enableScrubbing}
               onScrubberPositionChange={onScrubberPositionChange}
@@ -377,7 +377,7 @@ export const CartesianChart = memo(
             >
               {children}
             </ScrubberProvider>
-          </ChartProvider>
+          </CartesianChartProvider>
         </Box>
       );
     },

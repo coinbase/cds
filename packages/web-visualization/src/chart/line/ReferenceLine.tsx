@@ -3,7 +3,7 @@ import type { SharedProps } from '@coinbase/cds-common/types';
 import { getPointOnScale } from '@coinbase/cds-common/visualizations/charts';
 import { cx } from '@coinbase/cds-web';
 
-import { useChartContext } from '../ChartProvider';
+import { useCartesianChartContext } from '../ChartProvider';
 import { ChartText } from '../text';
 import type { ChartTextChildren, ChartTextProps } from '../text/ChartText';
 
@@ -151,7 +151,7 @@ export const ReferenceLine = memo<ReferenceLineProps>(
     classNames,
     styles,
   }) => {
-    const { getXScale, getYScale, drawingArea } = useChartContext();
+    const { getXScale, getYScale, drawingArea } = useCartesianChartContext();
 
     // Merge default config with user provided config, including text-specific styles and classNames
     const finalLabelConfig: ReferenceLineLabelConfig = useMemo(

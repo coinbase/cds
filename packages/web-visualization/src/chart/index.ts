@@ -1,3 +1,4 @@
+// codegen:start {preset: barrel, include: [./*.tsx, ./*/index.ts]}
 export * from './area';
 export * from './axis';
 export * from './bar';
@@ -9,3 +10,4 @@ export * from './PeriodSelector';
 export * from './point';
 export * from './scrubber';
 export * from './text';
+// codegen:end

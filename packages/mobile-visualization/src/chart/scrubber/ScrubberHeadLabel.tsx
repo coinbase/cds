@@ -2,7 +2,7 @@ import { memo, useCallback, useState } from 'react';
 import type { Rect } from '@coinbase/cds-common/types';
 import { useTheme } from '@coinbase/cds-mobile';
 
-import { useChartContext } from '../ChartProvider';
+import { useCartesianChartContext } from '../ChartProvider';
 import { ChartText, type ChartTextProps } from '../text';
 
 export type ScrubberHeadLabelProps = ChartTextProps & {
@@ -31,7 +31,7 @@ export const ScrubberHeadLabel = memo<ScrubberHeadLabelProps>(
     ...chartTextProps
   }) => {
     const theme = useTheme();
-    const { drawingArea: chartRect } = useChartContext();
+    const { drawingArea: chartRect } = useCartesianChartContext();
 
     // Use theme colors with defaults
     const resolvedBackground = background ?? theme.color.bg;

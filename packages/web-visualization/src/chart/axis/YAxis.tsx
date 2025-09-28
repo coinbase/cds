@@ -5,7 +5,7 @@ import { useTheme } from '@coinbase/cds-web/hooks/useTheme';
 import { css } from '@linaria/core';
 import { AnimatePresence, m as motion } from 'framer-motion';
 
-import { useChartContext } from '../ChartProvider';
+import { useCartesianChartContext } from '../ChartProvider';
 import { DottedLine } from '../line/DottedLine';
 import { ReferenceLine } from '../line/ReferenceLine';
 import { SmartChartTextGroup, type TextLabelData } from '../text/SmartChartTextGroup';
@@ -62,7 +62,7 @@ export const YAxis = memo<YAxisProps>(
     // todo: probably switch to our own id generator, use id seems to be for accessibility
     const registrationId = useId();
     const { animate, getYScale, getYAxis, registerAxis, unregisterAxis, getAxisBounds } =
-      useChartContext();
+      useCartesianChartContext();
 
     const yScale = getYScale(axisId);
     const yAxis = getYAxis(axisId);

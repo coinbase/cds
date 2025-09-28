@@ -13,7 +13,7 @@ import type { SharedProps } from '@coinbase/cds-common/types';
 import { projectPoint, useScrubberContext } from '@coinbase/cds-common/visualizations/charts';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 
-import { useChartContext } from '../ChartProvider';
+import { useCartesianChartContext } from '../ChartProvider';
 import { ChartText, type ChartTextProps } from '../text';
 import type { ChartTextChildren } from '../text/ChartText';
 
@@ -235,7 +235,7 @@ export const Point = memo(
       const pulseOpacity = useSharedValue(0);
       const pulseScale = useSharedValue(1);
 
-      const { getXScale, getYScale, animate: animationEnabled } = useChartContext();
+      const { getXScale, getYScale, animate: animationEnabled } = useCartesianChartContext();
       const { scrubberPosition: scrubberPosition } = useScrubberContext();
 
       const xScale = getXScale();
