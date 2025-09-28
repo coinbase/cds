@@ -1,19 +1,14 @@
-import React, { memo, useEffect, useMemo } from 'react';
-import Reanimated, {
-  interpolate,
-  useAnimatedProps,
-  useSharedValue,
-  withSpring,
-} from 'react-native-reanimated';
+import React, { memo, useCallback, useEffect, useMemo, useRef } from 'react';
+import { Animated, Easing } from 'react-native';
 import { Path } from 'react-native-svg';
+import { animatedPathConfig } from '@coinbase/cds-common/animation/sparkline';
 import { getBarPath } from '@coinbase/cds-common/visualizations/charts';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
+import * as interpolate from 'd3-interpolate-path';
 
 import { useChartContext } from '../ChartProvider';
 
 import type { BarComponentProps } from './Bar';
-
-const AnimatedPath = Reanimated.createAnimatedComponent(Path);
 
 export type DefaultBarProps = BarComponentProps;
 
@@ -36,9 +31,10 @@ export const DefaultBar = memo<DefaultBarProps>(
     stroke,
     strokeWidth,
   }) => {
+    const pathRef = useRef<Path | null>(null);
     const { animate } = useChartContext();
     const theme = useTheme();
-    const animationProgress = useSharedValue(animate ? 0 : 1);
+    const animationProgress = useRef(new Animated.Value(0)).current;
 
     const initialPath = useMemo(() => {
       if (!animate) return d;
@@ -52,45 +48,60 @@ export const DefaultBar = memo<DefaultBarProps>(
       return d || getBarPath(x, y, width, height, borderRadius, roundTop, roundBottom);
     }, [d, x, y, width, height, borderRadius, roundTop, roundBottom]);
 
-    // Animate on mount or when target changes
-    useEffect(() => {
-      if (animate) {
-        animationProgress.value = withSpring(1, {
-          damping: 20,
-          stiffness: 300,
+    const pathInterpolator = useMemo(
+      () => interpolate.interpolatePath(initialPath, targetPath),
+      [initialPath, targetPath],
+    );
+
+    const animationListener = useCallback(
+      ({ value }: { value: number }) => {
+        const val = Number(value.toFixed(4));
+        pathRef.current?.setNativeProps({
+          d: pathInterpolator(val),
         });
-      } else {
-        animationProgress.value = 1;
+      },
+      [pathInterpolator],
+    );
+
+    const defaultFill = fill || theme.color.fgPrimary;
+
+    useEffect(() => {
+      if (!animate || !pathRef.current) {
+        // If not animating, just set the target path
+        pathRef.current?.setNativeProps({
+          d: targetPath,
+        });
+        return;
       }
-    }, [animate, animationProgress, targetPath]);
 
-    const animatedProps = useAnimatedProps(() => {
-      // For path morphing, we need to interpolate between paths
-      // Since React Native doesn't have built-in path interpolation,
-      // we'll use the progress to control visibility/scale
-      return {
-        d: animationProgress.value === 1 ? targetPath : initialPath,
-        opacity: interpolate(animationProgress.value, [0, 0.1, 1], [0, 1, 1]),
+      // Reset animation progress
+      animationProgress.setValue(0);
+
+      // Add listener for animation updates
+      const listenerId = animationProgress.addListener(animationListener);
+
+      // Start the animation immediately
+      Animated.timing(animationProgress, {
+        toValue: 1,
+        duration: animatedPathConfig.duration,
+        easing: animatedPathConfig.easing,
+        useNativeDriver: false, // Path animation can't use native driver
+      }).start(() => {
+        // Clean up listener when animation completes
+        animationProgress.removeListener(listenerId);
+      });
+
+      // Cleanup on unmount or when dependencies change
+      return () => {
+        animationProgress.removeListener(listenerId);
+        animationProgress.stopAnimation();
       };
-    });
-
-    const defaultFill = fill || theme?.color?.fgPrimary || '#000000';
-
-    if (animate) {
-      return (
-        <AnimatedPath
-          animatedProps={animatedProps}
-          fill={defaultFill}
-          fillOpacity={fillOpacity}
-          stroke={stroke}
-          strokeWidth={strokeWidth}
-        />
-      );
-    }
+    }, [animate, animationListener, animationProgress, targetPath]);
 
     return (
       <Path
-        d={targetPath}
+        ref={pathRef}
+        d={animate ? initialPath : targetPath}
         fill={defaultFill}
         fillOpacity={fillOpacity}
         stroke={stroke}
@@ -99,3 +110,5 @@ export const DefaultBar = memo<DefaultBarProps>(
     );
   },
 );
+
+DefaultBar.displayName = 'DefaultBar';
