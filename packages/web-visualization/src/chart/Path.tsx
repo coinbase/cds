@@ -49,7 +49,6 @@ export const Path = memo<PathProps>(
     const rect = clipRect ?? context.drawingArea;
     const animate = animateProp ?? context.animate;
 
-    // todo: do we need useValueChanges?
     const {
       previousValue: previousPath,
       newValue: newPath,

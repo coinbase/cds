@@ -194,6 +194,11 @@ export type PointConfig = {
    */
   style?: React.CSSProperties;
   /**
+   * Accessibility label for screen readers to describe the point.
+   * If not provided, a default label will be generated using the data coordinates.
+   */
+  accessibilityLabel?: string;
+  /**
    * Simple text label to display at the point position.
    * If provided, a ChartText will be automatically rendered.
    */
@@ -288,6 +293,7 @@ export const Point = memo(
         styles,
         stroke = 'var(--color-bg)',
         strokeWidth = 2,
+        accessibilityLabel,
         label,
         labelConfig,
         renderLabel,
@@ -407,6 +413,7 @@ export const Point = memo(
 
         return (
           <motion.circle
+            aria-label={accessibilityLabel}
             className={cx(innerPointCss, className, classNames?.point)}
             cx={pixelCoordinate.x}
             cy={pixelCoordinate.y}
@@ -419,6 +426,7 @@ export const Point = memo(
             }
             onKeyDown={handleKeyDown}
             r={radius}
+            role={onClick ? 'button' : undefined}
             stroke={stroke}
             strokeWidth={strokeWidth}
             style={mergedStyles}
@@ -446,6 +454,7 @@ export const Point = memo(
         svgProps,
         dataX,
         dataY,
+        accessibilityLabel,
       ]);
 
       if (!xScale || !yScale) {

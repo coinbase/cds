@@ -590,6 +590,11 @@ const sidebars: SidebarsConfig = {
             },
             {
               type: 'doc',
+              id: 'components/graphs/Point/point',
+              label: 'Point',
+            },
+            {
+              type: 'doc',
               id: 'components/graphs/Scrubber/scrubber',
               label: 'Scrubber',
             },

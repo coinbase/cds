@@ -1,0 +1,202 @@
+## Basic Example
+
+Points are visual markers that highlight specific data values on a chart. They can be used to emphasize important data points, show discrete values, or provide interactive elements.
+
+```jsx live
+<LineChart
+  enableScrubbing
+  height={250}
+  series={[
+    {
+      id: 'prices',
+      data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+    },
+  ]}
+  curve="monotone"
+  showYAxis
+  showArea
+  yAxis={{
+    showGrid: true,
+  }}
+  renderPoints={() => true}
+>
+  <Scrubber />
+</LineChart>
+```
+
+## Conditional Points
+
+You can conditionally render points to highlight specific values in your data, such as maximum/minimum values or outliers.
+
+```jsx live
+function AssetPriceWithMinMax() {
+  const data = sparklineInteractiveData.hour.map((d) => d.value);
+
+  const minPrice = Math.min(...data);
+  const maxPrice = Math.max(...data);
+
+  const formatPrice = useCallback((price: number) => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+    }).format(price);
+  }, []);
+
+  return (
+    <LineChart
+      series={[
+        {
+          id: 'btc',
+          data: data,
+          color: assets.btc.color,
+        },
+      ]}
+      showArea
+      areaType="dotted"
+      height={300}
+      style={{ outlineColor: assets.btc.color }}
+      renderPoints={({ dataX, dataY }) => {
+        const isMin = dataY === minPrice;
+        const isMax = dataY === maxPrice;
+
+        if (isMin) {
+          return { label: formatPrice(dataY), labelConfig: {  dy: 12, position: 'bottom' } };
+        }
+
+        if (isMax) {
+          return { label: formatPrice(dataY), labelConfig: { dy: -12 , position: 'top' } };
+        }
+      }}
+    />
+  );
+};
+```
+
+## Interactive Points
+
+Points can be made interactive by adding click handlers, allowing users to explore data in more detail.
+
+```jsx live
+<LineChart
+  height={250}
+  series={[
+    {
+      id: 'sales',
+      data: [120, 132, 101, 134, 90, 230, 210, 120, 180, 190, 210, 176],
+    },
+  ]}
+  curve="monotone"
+  showYAxis
+  showArea
+  yAxis={{
+    showGrid: true,
+    label: 'Sales (units)',
+  }}
+  renderPoints={({ dataX, dataY }) => {
+    const months = [
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
+    ];
+    return {
+      radius: 4,
+      onClick: () => alert(`${months[dataX]}: ${dataY} units sold`),
+      accessibilityLabel: `${months[dataX]} sales: ${dataY} units`,
+    };
+  }}
+/>
+```
+
+## Customization
+
+Points support extensive customization through various properties including colors, sizes, animations, and labels.
+
+```jsx live
+<LineChart
+  height={300}
+  series={[
+    {
+      id: 'performance',
+      data: [65, 70, 72, 85, 88, 92, 78, 82, 90, 95, 91, 94],
+    },
+  ]}
+  curve="monotone"
+  showYAxis
+  showArea
+  yAxis={{
+    showGrid: true,
+    label: 'Performance Score',
+  }}
+  renderPoints={({ dataX, dataY }) => {
+    const isHighPerformance = dataY >= 90;
+    const isLowPerformance = dataY < 75;
+
+    return {
+      color: isHighPerformance
+        ? 'var(--color-bgPositive)'
+        : isLowPerformance
+          ? 'var(--color-bgNegative)'
+          : 'var(--color-fgPrimary)',
+      radius: isHighPerformance ? 6 : 4,
+      pulse: isHighPerformance,
+      pulseRadius: 20,
+      strokeWidth: 2,
+      stroke: 'var(--color-bg)',
+      label: isHighPerformance || isLowPerformance ? `${dataY}%` : undefined,
+      labelConfig: {
+        position: isHighPerformance ? 'top' : 'bottom',
+        dy: isHighPerformance ? -10 : 10,
+        color: isHighPerformance
+          ? 'var(--color-fgPositive)'
+          : isLowPerformance
+            ? 'var(--color-fgNegative)'
+            : undefined,
+      },
+    };
+  }}
+/>
+```
+
+## Multiple Series with Points
+
+When working with multiple series, points can help distinguish between different data lines:
+
+```jsx live
+<LineChart
+  height={300}
+  series={[
+    {
+      id: 'revenue',
+      data: [100, 120, 140, 130, 160, 180, 190],
+      color: 'var(--color-fgPositive)',
+    },
+    {
+      id: 'expenses',
+      data: [80, 85, 90, 95, 100, 105, 110],
+      color: 'var(--color-fgNegative)',
+    },
+  ]}
+  curve="monotone"
+  showYAxis
+  showLegend
+  yAxis={{
+    showGrid: true,
+    label: 'Amount ($k)',
+  }}
+  xAxis={{
+    data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+  }}
+  renderPoints={({ dataX, dataY }) => true}
+>
+  <Scrubber />
+</LineChart>
+```
