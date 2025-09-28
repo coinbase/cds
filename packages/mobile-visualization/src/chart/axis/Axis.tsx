@@ -4,8 +4,49 @@ import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import { type LineComponent } from '../line';
 import type { ChartTextChildren } from '../text/ChartText';
 
-// Note: CSS variable styles removed for React Native compatibility
-// Axis styling is now handled directly in XAxis and YAxis components using useTheme()
+/**
+ * Animation variants for grouped axis tick labels - initial mount
+ */
+export const axisTickLabelsInitialAnimationVariants = {
+  initial: {
+    opacity: 0,
+  },
+  animate: {
+    opacity: 1,
+    transition: {
+      duration: 0.15,
+      delay: 0.85, // Initial animation: wait 850ms then fade in over 150ms
+    },
+  },
+  exit: {
+    opacity: 0,
+    transition: {
+      duration: 0.15,
+    },
+  },
+};
+
+/**
+ * Animation variants for axis elements - updates (used for both grid lines and tick labels)
+ */
+export const axisUpdateAnimationVariants = {
+  initial: {
+    opacity: 0,
+  },
+  animate: {
+    opacity: 1,
+    transition: {
+      duration: 0.15,
+      delay: 0.15, // For updates: fade out 150ms, then fade in 150ms
+    },
+  },
+  exit: {
+    opacity: 0,
+    transition: {
+      duration: 0.15,
+    },
+  },
+};
 
 export type AxisBaseProps = {
   /**

@@ -6,7 +6,7 @@ import { css } from '@linaria/core';
 import { AnimatePresence, m as motion } from 'framer-motion';
 
 import { useChartContext } from '../ChartProvider';
-import { DottedLine } from '../line';
+import { DottedLine } from '../line/DottedLine';
 import { ReferenceLine } from '../line/ReferenceLine';
 import { SmartChartTextGroup, type TextLabelData } from '../text/SmartChartTextGroup';
 

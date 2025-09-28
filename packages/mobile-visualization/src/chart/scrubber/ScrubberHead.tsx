@@ -89,14 +89,14 @@ export const ScrubberHead = memo(
       const theme = useTheme();
       const pointRef = useRef<PointRef>(null);
       const { getSeries, getXScale, getYScale, getSeriesData, animate } = useChartContext();
-      const { highlightedIndex } = useScrubberContext();
+      const { scrubberPosition: scrubberPosition } = useScrubberContext();
 
       const targetSeries = getSeries(seriesId);
       const sourceData = getSeriesData(seriesId);
       const xScale = getXScale();
       const yScale = getYScale(targetSeries?.yAxisId);
 
-      const isIdleState = highlightedIndex === undefined;
+      const isIdleState = scrubberPosition === undefined;
 
       // Animation values
       const animatedX = useSharedValue(0);
@@ -122,13 +122,13 @@ export const ScrubberHead = memo(
             y = directY;
           } else if (
             sourceData &&
-            highlightedIndex != null &&
-            highlightedIndex >= 0 &&
-            highlightedIndex < sourceData.length
+            scrubberPosition != null &&
+            scrubberPosition >= 0 &&
+            scrubberPosition < sourceData.length
           ) {
             // Use series data at highlight index
-            x = highlightedIndex;
-            const dataValue = sourceData[highlightedIndex];
+            x = scrubberPosition;
+            const dataValue = sourceData[scrubberPosition];
 
             if (typeof dataValue === 'number') {
               y = dataValue;
@@ -142,7 +142,7 @@ export const ScrubberHead = memo(
         }
 
         return { dataX: x, dataY: y };
-      }, [directX, directY, sourceData, highlightedIndex, xScale, yScale]);
+      }, [directX, directY, sourceData, scrubberPosition, xScale, yScale]);
 
       // Calculate target pixel coordinates
       const targetPosition = useMemo(
@@ -236,7 +236,7 @@ export const ScrubberHead = memo(
       // When scrubbing - render without animation wrapper
       if (!isIdleState) {
         return (
-          <G>
+          <G testID={testID}>
             <Circle
               cx={targetPosition.x}
               cy={targetPosition.y}
@@ -266,7 +266,7 @@ export const ScrubberHead = memo(
       // When idle - render with animation wrapper for smooth data updates
       // Render at origin (0,0) and use transform to position
       return (
-        <AnimatedG animatedProps={animatedProps}>
+        <AnimatedG animatedProps={animatedProps} testID={testID}>
           <Circle cx={0} cy={0} fill={pointColor} opacity={0.15} r={innerRingRadius} />
           <Point
             ref={pointRef}

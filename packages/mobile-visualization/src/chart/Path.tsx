@@ -1,6 +1,6 @@
 import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Animated, Easing } from 'react-native';
-import Reanimated, { useAnimatedProps, useSharedValue, withSpring } from 'react-native-reanimated';
+import Reanimated, { useAnimatedProps, useSharedValue, withTiming } from 'react-native-reanimated';
 import {
   ClipPath,
   Defs,
@@ -17,7 +17,7 @@ import { useChartContext } from './ChartProvider';
 
 const AnimatedRect = Reanimated.createAnimatedComponent(Rect);
 
-const AnimatedSvgRect = ({ width, rectProps }: { width: number; rectProps: RectProps }) => {
+const AnimatedSvgRect = memo(({ width, rectProps }: { width: number; rectProps: RectProps }) => {
   const animatedWidth = useSharedValue(0);
 
   const animatedProps = useAnimatedProps(() => {
@@ -27,14 +27,13 @@ const AnimatedSvgRect = ({ width, rectProps }: { width: number; rectProps: RectP
   });
 
   React.useEffect(() => {
-    animatedWidth.value = withSpring(width + 4, {
-      damping: 25,
-      stiffness: 120,
+    animatedWidth.value = withTiming(width + 4, {
+      duration: 1000,
     });
   }, [animatedWidth, width]);
 
   return <AnimatedRect animatedProps={animatedProps} {...rectProps} />;
-};
+});
 
 export type PathProps = SharedProps &
   SvgPathProps & {
@@ -195,9 +194,16 @@ export const Path = memo<PathProps>(
         pathRef.current?.setNativeProps({ d });
         currentPathRef.current = d;
       }
-    }, [d, animate, isInitialized, animationProgress, animationListener, onFinishAnimation]);
+    }, [
+      d,
+      animate,
+      isInitialized,
+      animationProgress,
+      animationListener,
+      onFinishAnimation,
+      springEasing,
+    ]);
 
-    // Clean up listeners on unmount
     useEffect(() => {
       return () => {
         animationProgress.removeAllListeners();
@@ -214,16 +220,14 @@ export const Path = memo<PathProps>(
     return (
       <G>
         <Defs>
-          <ClipPath id={clipPathId}>
-            {animate && !isInitialized ? (
+          {animate && (
+            <ClipPath id={clipPathId}>
               <AnimatedSvgRect
                 rectProps={{ height: rect.height, x: rect.x, y: rect.y }}
                 width={rect.width}
               />
-            ) : (
-              <Rect height={rect.height} width={rect.width} x={rect.x} y={rect.y} />
-            )}
-          </ClipPath>
+            </ClipPath>
+          )}
         </Defs>
         <SvgPath
           ref={pathRef}

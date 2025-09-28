@@ -14,7 +14,7 @@ import Reanimated, {
   withDelay,
   withTiming,
 } from 'react-native-reanimated';
-import { G, Rect } from 'react-native-svg';
+import { G, Line, Rect } from 'react-native-svg';
 import { useRefMap } from '@coinbase/cds-common/hooks/useRefMap';
 import type { SharedProps } from '@coinbase/cds-common/types';
 import {
@@ -31,6 +31,8 @@ import { ScrubberHead, type ScrubberHeadProps, type ScrubberHeadRef } from './Sc
 import { ScrubberHeadLabel, type ScrubberHeadLabelProps } from './ScrubberHeadLabel';
 
 const AnimatedG = Reanimated.createAnimatedComponent(G);
+const AnimatedRect = Reanimated.createAnimatedComponent(Rect);
+const AnimatedLine = Reanimated.createAnimatedComponent(Line);
 
 /**
  * Configuration for scrubber functionality across chart components.
@@ -134,7 +136,12 @@ export const Scrubber = memo(
       // Animation for initial fade-in
       const opacity = useSharedValue(0);
 
-      const { highlightedIndex } = useScrubberContext();
+      // Animated values for scrubber line and overlay positions
+      const scrubberLineX = useSharedValue(0);
+      const overlayX = useSharedValue(0);
+      const overlayWidth = useSharedValue(0);
+
+      const { scrubberPosition: scrubberPosition } = useScrubberContext();
       const { getXScale, getYScale, getSeriesData, getXAxis, animate, series, drawingArea } =
         useChartContext();
       const getStackedSeriesData = getSeriesData; // getSeriesData now returns stacked data
@@ -142,6 +149,18 @@ export const Scrubber = memo(
       // Animated props for fade-in effect
       const animatedProps = useAnimatedProps(() => ({
         opacity: opacity.value,
+      }));
+
+      // Animated props for scrubber line
+      const scrubberLineAnimatedProps = useAnimatedProps(() => ({
+        x1: scrubberLineX.value,
+        x2: scrubberLineX.value,
+      }));
+
+      // Animated props for overlay rect
+      const overlayAnimatedProps = useAnimatedProps(() => ({
+        x: overlayX.value,
+        width: overlayWidth.value,
       }));
 
       // Trigger initial fade-in animation
@@ -186,7 +205,7 @@ export const Scrubber = memo(
             return Math.max(max, seriesData?.length ?? 0);
           }, 0) ?? 0;
 
-        const dataIndex = highlightedIndex ?? Math.max(0, maxDataLength - 1);
+        const dataIndex = scrubberPosition ?? Math.max(0, maxDataLength - 1);
 
         // Convert index to actual x value if axis has data
         let dataX: number;
@@ -198,7 +217,7 @@ export const Scrubber = memo(
         }
 
         return { dataX, dataIndex };
-      }, [getXScale, getXAxis, series, highlightedIndex, getStackedSeriesData, getSeriesData]);
+      }, [getXScale, getXAxis, series, scrubberPosition, getStackedSeriesData, getSeriesData]);
 
       // TODO: forecast chart is broken
       const headPositions = useMemo(() => {
@@ -572,6 +591,19 @@ export const Scrubber = memo(
       // Check if we have at least the default scales
       const defaultXScale = getXScale();
       const defaultYScale = getYScale();
+
+      const pixelX = dataX !== undefined && defaultXScale ? defaultXScale(dataX) : undefined;
+
+      // Update scrubber line and overlay positions using animated values
+      useEffect(() => {
+        if (pixelX !== undefined) {
+          // Update animated values for responsive scrubbing
+          scrubberLineX.value = pixelX;
+          overlayX.value = pixelX;
+          overlayWidth.value = drawingArea.x + drawingArea.width - pixelX + overlayOffset;
+        }
+      }, [pixelX, drawingArea, overlayOffset, scrubberLineX, overlayX, overlayWidth]);
+
       if (!defaultXScale || !defaultYScale) return null;
 
       // Use custom components if provided
@@ -583,25 +615,22 @@ export const Scrubber = memo(
       // todo: figure out why scrubber heads across dataKey values isn't working anymore
       // for animations
 
-      const pixelX = dataX !== undefined ? defaultXScale(dataX) : undefined;
-
       // Wrap content in AnimatedG only if animation is enabled
       const content = (
         <>
           {!hideOverlay &&
             dataX !== undefined &&
-            highlightedIndex !== undefined &&
+            scrubberPosition !== undefined &&
             pixelX !== undefined && (
-              <Rect
+              <AnimatedRect
+                animatedProps={overlayAnimatedProps}
                 fill={theme.color.bg}
                 height={drawingArea.height + overlayOffset * 2}
                 opacity={0.8}
-                width={drawingArea.x + drawingArea.width - pixelX + overlayOffset}
-                x={pixelX}
                 y={drawingArea.y - overlayOffset}
               />
             )}
-          {!hideScrubberLine && highlightedIndex !== undefined && dataX !== undefined && (
+          {!hideScrubberLine && scrubberPosition !== undefined && dataX !== undefined && (
             <ScrubberLineComponent
               dataX={dataX}
               label={scrubberLabel}

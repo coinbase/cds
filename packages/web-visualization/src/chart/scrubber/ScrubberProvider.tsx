@@ -7,23 +7,14 @@ import {
 
 import { useChartContext } from '../ChartProvider';
 
-export type ScrubberProviderProps = {
+export type ScrubberProviderProps = Partial<
+  Pick<ScrubberContextValue, 'enableScrubbing' | 'onScrubberPositionChange'>
+> & {
   children: React.ReactNode;
   /**
    * A reference to the root SVG element, where interaction event handlers will be attached.
    */
   svgRef: React.RefObject<SVGSVGElement> | null;
-  /**
-   * Enables scrubbing interactions (mouse and keyboard highlighting).
-   * When true, allows highlighting and makes scrubber components interactive.
-   * @default false
-   */
-  enableScrubbing?: boolean;
-  /**
-   * Callback fired when the highlighted item changes.
-   * Receives the dataIndex of the highlighted item or null when no item is highlighted.
-   */
-  onScrubberPosChange?: (dataIndex: number | null) => void;
 };
 
 /**
@@ -33,8 +24,8 @@ export type ScrubberProviderProps = {
 export const ScrubberProvider: React.FC<ScrubberProviderProps> = ({
   children,
   svgRef,
-  enableScrubbing = false,
-  onScrubberPosChange,
+  enableScrubbing,
+  onScrubberPositionChange,
 }) => {
   const chartContext = useChartContext();
 
@@ -43,7 +34,7 @@ export const ScrubberProvider: React.FC<ScrubberProviderProps> = ({
   }
 
   const { getXScale, getXAxis, series } = chartContext;
-  const [highlightedIndex, setHighlightedIndex] = useState<number | undefined>(undefined);
+  const [scrubberPosition, setScrubberPosition] = useState<number | undefined>(undefined);
 
   const getDataIndexFromX = useCallback(
     (mouseX: number): number => {
@@ -100,29 +91,62 @@ export const ScrubberProvider: React.FC<ScrubberProviderProps> = ({
     [getXScale, getXAxis],
   );
 
-  const handleMouseMove = useCallback(
-    (event: MouseEvent) => {
+  const handlePointerMove = useCallback(
+    (clientX: number, target: SVGSVGElement) => {
       if (!enableScrubbing || !series || series.length === 0) return;
 
-      const target = event.currentTarget as SVGSVGElement;
       const rect = target.getBoundingClientRect();
-      const mouseX = event.clientX - rect.left;
+      const x = clientX - rect.left;
 
-      const dataIndex = getDataIndexFromX(mouseX);
+      const dataIndex = getDataIndexFromX(x);
 
-      if (dataIndex !== highlightedIndex) {
-        setHighlightedIndex(dataIndex);
-        onScrubberPosChange?.(dataIndex);
+      if (dataIndex !== scrubberPosition) {
+        setScrubberPosition(dataIndex);
+        onScrubberPositionChange?.(dataIndex);
       }
     },
-    [enableScrubbing, series, getDataIndexFromX, highlightedIndex, onScrubberPosChange],
+    [enableScrubbing, series, getDataIndexFromX, scrubberPosition, onScrubberPositionChange],
   );
 
-  const handleMouseLeave = useCallback(() => {
+  const handleMouseMove = useCallback(
+    (event: MouseEvent) => {
+      const target = event.currentTarget as SVGSVGElement;
+      handlePointerMove(event.clientX, target);
+    },
+    [handlePointerMove],
+  );
+
+  const handleTouchMove = useCallback(
+    (event: TouchEvent) => {
+      if (!event.touches.length) return;
+      // Prevent scrolling while scrubbing
+      event.preventDefault();
+      const touch = event.touches[0];
+      const target = event.currentTarget as SVGSVGElement;
+      handlePointerMove(touch.clientX, target);
+    },
+    [handlePointerMove],
+  );
+
+  const handleTouchStart = useCallback(
+    (event: TouchEvent) => {
+      if (!enableScrubbing || !event.touches.length) return;
+      // Handle initial touch
+      const touch = event.touches[0];
+      const target = event.currentTarget as SVGSVGElement;
+      handlePointerMove(touch.clientX, target);
+    },
+    [enableScrubbing, handlePointerMove],
+  );
+
+  const handlePointerLeave = useCallback(() => {
     if (!enableScrubbing) return;
-    setHighlightedIndex(undefined);
-    onScrubberPosChange?.(null);
-  }, [enableScrubbing, onScrubberPosChange]);
+    setScrubberPosition(undefined);
+    onScrubberPositionChange?.(undefined);
+  }, [enableScrubbing, onScrubberPositionChange]);
+
+  const handleMouseLeave = handlePointerLeave;
+  const handleTouchEnd = handlePointerLeave;
 
   const handleKeyDown = useCallback(
     (event: KeyboardEvent) => {
@@ -163,7 +187,7 @@ export const ScrubberProvider: React.FC<ScrubberProviderProps> = ({
         }
       }
 
-      const currentIndex = highlightedIndex ?? minIndex;
+      const currentIndex = scrubberPosition ?? minIndex;
       const dataRange = maxIndex - minIndex;
 
       // Multi-step jump when shift is held (10% of data range, minimum 1, maximum 10)
@@ -197,13 +221,19 @@ export const ScrubberProvider: React.FC<ScrubberProviderProps> = ({
           return; // Don't handle other keys
       }
 
-      if (newIndex !== highlightedIndex) {
-        setHighlightedIndex(newIndex);
-        onScrubberPosChange?.(newIndex ?? null);
+      if (newIndex !== scrubberPosition) {
+        setScrubberPosition(newIndex);
+        onScrubberPositionChange?.(newIndex);
       }
     },
-    [enableScrubbing, getXScale, getXAxis, highlightedIndex, onScrubberPosChange],
+    [enableScrubbing, getXScale, getXAxis, scrubberPosition, onScrubberPositionChange],
   );
+
+  const handleBlur = useCallback(() => {
+    if (!enableScrubbing || scrubberPosition === undefined) return;
+    setScrubberPosition(undefined);
+    onScrubberPositionChange?.(undefined);
+  }, [enableScrubbing, onScrubberPositionChange, scrubberPosition]);
 
   // Attach event listeners to SVG element
   useEffect(() => {
@@ -214,22 +244,42 @@ export const ScrubberProvider: React.FC<ScrubberProviderProps> = ({
     // Add event listeners
     svg.addEventListener('mousemove', handleMouseMove);
     svg.addEventListener('mouseleave', handleMouseLeave);
+    svg.addEventListener('touchstart', handleTouchStart, { passive: false });
+    svg.addEventListener('touchmove', handleTouchMove, { passive: false });
+    svg.addEventListener('touchend', handleTouchEnd);
+    svg.addEventListener('touchcancel', handleTouchEnd);
     svg.addEventListener('keydown', handleKeyDown);
+    svg.addEventListener('blur', handleBlur);
 
     return () => {
       svg.removeEventListener('mousemove', handleMouseMove);
       svg.removeEventListener('mouseleave', handleMouseLeave);
+      svg.removeEventListener('touchstart', handleTouchStart);
+      svg.removeEventListener('touchmove', handleTouchMove);
+      svg.removeEventListener('touchend', handleTouchEnd);
+      svg.removeEventListener('touchcancel', handleTouchEnd);
       svg.removeEventListener('keydown', handleKeyDown);
+      svg.removeEventListener('blur', handleBlur);
     };
-  }, [svgRef, enableScrubbing, handleMouseMove, handleMouseLeave, handleKeyDown]);
+  }, [
+    svgRef,
+    enableScrubbing,
+    handleMouseMove,
+    handleMouseLeave,
+    handleTouchStart,
+    handleTouchMove,
+    handleTouchEnd,
+    handleKeyDown,
+    handleBlur,
+  ]);
 
   const contextValue: ScrubberContextValue = useMemo(
     () => ({
-      scrubbingEnabled: enableScrubbing,
-      highlightedIndex,
-      updateHighlightedIndex: setHighlightedIndex,
+      enableScrubbing: !!enableScrubbing,
+      scrubberPosition,
+      onScrubberPositionChange: setScrubberPosition,
     }),
-    [enableScrubbing, highlightedIndex],
+    [enableScrubbing, scrubberPosition],
   );
 
   return <ScrubberContext.Provider value={contextValue}>{children}</ScrubberContext.Provider>;

@@ -12,8 +12,8 @@ import {
   line as d3Line,
 } from 'd3-shape';
 
+import { projectPoint, projectPoints } from './point';
 import { type ChartScaleFunction, isCategoricalScale } from './scale';
-import { projectPoint, projectPoints } from './';
 
 // todo: see if we can support basis, basisClosed, and basisOpen
 

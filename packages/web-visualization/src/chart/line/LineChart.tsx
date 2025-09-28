@@ -9,7 +9,8 @@ import { chartFallbackNegative, chartFallbackPositive } from '@coinbase/cds-lott
 import { Lottie } from '@coinbase/cds-web/animation';
 import { Box } from '@coinbase/cds-web/layout';
 
-import { XAxis, type XAxisProps, YAxis, type YAxisProps } from '../axis';
+import { XAxis, type XAxisProps } from '../axis/XAxis';
+import { YAxis, type YAxisProps } from '../axis/YAxis';
 import { Chart, type ChartProps } from '../Chart';
 
 import { Line, type LineProps } from './Line';

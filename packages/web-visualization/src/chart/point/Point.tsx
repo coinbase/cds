@@ -299,14 +299,14 @@ export const Point = memo(
     ) => {
       const [scope, animate] = useAnimate();
       const { getXScale, getYScale, animate: animationEnabled } = useChartContext();
-      const { highlightedIndex } = useScrubberContext();
+      const { scrubberPosition } = useScrubberContext();
 
       const xScale = getXScale();
       const yScale = getYScale(yAxisId);
 
       // Scrubber detection: check if this point is highlighted by the scrubber
-      const isScrubbing = highlightedIndex !== undefined;
-      const isScrubberHighlighted = isScrubbing && highlightedIndex === dataX;
+      const isScrubbing = scrubberPosition !== undefined;
+      const isScrubberHighlighted = isScrubbing && scrubberPosition === dataX;
 
       // Project the point to pixel coordinates
       const pixelCoordinate = useMemo(() => {
@@ -346,11 +346,6 @@ export const Point = memo(
 
       const shouldShowPulse = animationEnabled && pulse;
 
-      const containerStyle = {
-        ...styles?.container,
-        cursor: onClick !== undefined ? 'pointer' : undefined,
-      };
-
       const LabelContent = useMemo(() => {
         // Custom render function takes precedence
         if (renderLabel) {
@@ -383,6 +378,7 @@ export const Point = memo(
 
       const innerPoint = useMemo(() => {
         const mergedStyles = {
+          cursor: onClick !== undefined ? 'pointer' : undefined,
           ...style,
           ...styles?.point,
         };
@@ -462,7 +458,7 @@ export const Point = memo(
             className={cx(containerCss, classNames?.container)}
             data-testid={testID}
             opacity={opacity}
-            style={containerStyle}
+            style={styles?.container}
           >
             {/* pulse ring */}
             <motion.circle
@@ -483,15 +479,11 @@ export const Point = memo(
               r={pulseRadius}
               style={styles?.pulseRing}
             />
-            {/* point */}
             {innerPoint}
           </g>
-          {/* point label */}
           {LabelContent}
         </>
       );
     },
   ),
 );
-
-Point.displayName = 'Point';

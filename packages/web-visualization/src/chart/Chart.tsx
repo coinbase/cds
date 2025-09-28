@@ -24,7 +24,7 @@ import { useTheme } from '@coinbase/cds-web/hooks/useTheme';
 import { Box, type BoxBaseProps, type BoxProps } from '@coinbase/cds-web/layout';
 import { css } from '@linaria/core';
 
-import { ScrubberProvider } from './scrubber/ScrubberProvider';
+import { ScrubberProvider, type ScrubberProviderProps } from './scrubber/ScrubberProvider';
 import { ChartProvider } from './ChartProvider';
 
 const focusStylesCss = css`
@@ -37,60 +37,60 @@ const focusStylesCss = css`
   }
 `;
 
-export type ChartBaseProps = BoxBaseProps & {
-  /**
-   * Configuration objects that define how to visualize the data.
-   * Each series contains its own data array.
-   */
-  series?: Array<Series>;
-  /**
-   * Whether to animate the chart.
-   * @default true
-   */
-  animate?: boolean;
-  /**
-   * Enables scrubbing interactions (mouse and keyboard highlighting).
-   * When true, allows highlighting and makes scrubber components interactive.
-   * @default false
-   */
-  enableScrubbing?: boolean;
-  /**
-   * Configuration for x-axis.
-   */
-  xAxis?: Partial<Omit<AxisConfigProps, 'id'>>;
-  /**
-   * Configuration for y-axis(es). Can be a single config or array of configs.
-   * If array, first axis becomes default if no id is specified.
-   */
-  yAxis?: Partial<AxisConfigProps> | Partial<AxisConfigProps>[];
-  /**
-   * Padding around the entire chart (outside the axes).
-   */
-  padding?: ThemeVars.Space | Partial<ChartPadding>;
-  /**
-   * Callback fired when the highlighted item changes.
-   * Receives the dataIndex of the highlighted item or null when no item is highlighted.
-   */
-  onScrubberPosChange?: (dataIndex: number | null) => void;
-};
+export type ChartBaseProps = BoxBaseProps &
+  Pick<ScrubberProviderProps, 'enableScrubbing' | 'onScrubberPositionChange'> & {
+    /**
+     * Configuration objects that define how to visualize the data.
+     * Each series contains its own data array.
+     */
+    series?: Array<Series>;
+    /**
+     * Whether to animate the chart.
+     * @default true
+     */
+    animate?: boolean;
+    /**
+     * Configuration for x-axis.
+     */
+    xAxis?: Partial<Omit<AxisConfigProps, 'id'>>;
+    /**
+     * Configuration for y-axis(es). First defined axis becomes default.
+     */
+    yAxis?: Partial<Omit<AxisConfigProps, 'data'>> | Partial<Omit<AxisConfigProps, 'data'>>[];
+    /**
+     * Padding around the entire chart (outside the axes).
+     */
+    padding?: ThemeVars.Space | Partial<ChartPadding>;
+  };
 
-export type ChartProps = Omit<BoxProps<'svg'>, 'padding'> & ChartBaseProps;
+export type ChartProps = Omit<
+  BoxProps<'svg'>,
+  | 'padding'
+  | 'paddingInline'
+  | 'paddingBlock'
+  | 'paddingTop'
+  | 'paddingBottom'
+  | 'paddingStart'
+  | 'paddingEnd'
+> &
+  ChartBaseProps;
 
 export const Chart = memo(
   forwardRef<SVGSVGElement, ChartProps>(
     (
       {
         series,
+        children,
         animate = true,
-        enableScrubbing = false,
         xAxis: xAxisConfigInput,
         yAxis: yAxisConfigInput,
         padding: paddingInput,
-        onScrubberPosChange,
-        children,
+        enableScrubbing,
+        onScrubberPositionChange,
         width = '100%',
         height = '100%',
         className,
+        style,
         ...props
       },
       ref,
@@ -109,7 +109,8 @@ export const Chart = memo(
         };
       }, [paddingInput, theme.space]);
 
-      // there can only be one x axis but the helper function always returns an array
+      // Axis configs store the properties of each axis, such as id, scale type, domain limit, etc.
+      // We only support 1 x axis but allow for multiple y axes.
       const xAxisConfig = useMemo(
         () => getAxisConfig('x', xAxisConfigInput)[0],
         [xAxisConfigInput],
@@ -139,6 +140,7 @@ export const Chart = memo(
         };
       }, [chartHeight, chartWidth, userPadding, axisPadding]);
 
+      // Axes contain the config along with domain and range, which get calculated here.
       const xAxis = useMemo(() => {
         if (!chartRect || chartRect.width <= 0 || chartRect.height <= 0) return undefined;
 
@@ -156,8 +158,6 @@ export const Chart = memo(
 
         return axisConfig;
       }, [xAxisConfig, series, chartRect]);
-
-      // todo: do we need to worry about axis being set but scale being undefined?
       const yAxes = useMemo(() => {
         const axes = new Map<string, AxisConfig>();
         if (!chartRect || chartRect.width <= 0 || chartRect.height <= 0) return axes;
@@ -186,6 +186,8 @@ export const Chart = memo(
         return axes;
       }, [yAxisConfig, series, chartRect]);
 
+      // Scales are the functions that convert data values to visual positions.
+      // They are calculated here based on the above axes.
       const xScale = useMemo(() => {
         if (!chartRect || chartRect.width <= 0 || chartRect.height <= 0 || xAxis === undefined)
           return undefined;
@@ -218,6 +220,9 @@ export const Chart = memo(
         return scales;
       }, [chartRect, yAxes]);
 
+      // todo: should these be hooks which call the context under the hood?
+      // such as import { useXAxis } from './CartesianChart'
+      // useXAxis calls CartesianChartContext under the hood
       const getXAxis = useCallback(() => xAxis, [xAxis]);
       const getYAxis = useCallback((id?: string) => yAxes.get(id ?? defaultAxisId), [yAxes]);
       const getXScale = useCallback(() => xScale, [xScale]);
@@ -245,7 +250,6 @@ export const Chart = memo(
           const axis = renderedAxes.get(axisId);
           if (!axis || !chartRect) return;
 
-          // todo: should we keep some sort of ordering here for axes?
           const axesAtPosition = Array.from(renderedAxes.values())
             .filter((a) => a.type === axis.type && a.position === axis.position)
             .sort((a, b) => a.id.localeCompare(b.id));
@@ -360,14 +364,15 @@ export const Chart = memo(
           as="svg"
           className={cx(enableScrubbing && focusStylesCss, className)}
           height={height}
+          style={style}
           tabIndex={enableScrubbing ? 0 : undefined}
           width={width}
           {...props}
         >
           <ChartProvider value={contextValue}>
             <ScrubberProvider
-              enableScrubbing={enableScrubbing}
-              onScrubberPosChange={onScrubberPosChange}
+              enableScrubbing={!!enableScrubbing}
+              onScrubberPositionChange={onScrubberPositionChange}
               svgRef={internalSvgRef}
             >
               {children}

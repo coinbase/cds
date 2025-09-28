@@ -154,15 +154,15 @@ const PredictionMarket = () => {
 
   const [scrubberLabel, setScrubberLabel] = useState<string | null>(null);
   const updateScrubberLabel = useCallback(
-    (highlightedIndex: number | null) => {
+    (scrubberPosition: number | undefined) => {
       if (
-        highlightedIndex === null ||
-        highlightedIndex === undefined ||
-        highlightedIndex >= eaglesData.length
+        scrubberPosition === null ||
+        scrubberPosition === undefined ||
+        scrubberPosition >= eaglesData.length
       )
         return null;
 
-      const timestamp = Date.now() - (eaglesData.length - 1 - highlightedIndex) * 60000;
+      const timestamp = Date.now() - (eaglesData.length - 1 - scrubberPosition) * 60000;
       const date = new Date(timestamp);
       setScrubberLabel(
         date.toLocaleTimeString('en-US', {
@@ -188,7 +188,7 @@ const PredictionMarket = () => {
       <Chart
         enableScrubbing
         height={300}
-        onScrubberPosChange={updateScrubberLabel}
+        onScrubberPositionChange={updateScrubberLabel}
         padding={{ top: 5, right: 0, bottom: 4, left: 0 }}
         paddingEnd={2}
         series={seriesConfig}
@@ -370,7 +370,7 @@ const EarningsHistory = () => {
 };
 
 const PriceWithVolume = () => {
-  const [scrubIndex, setScrubIndex] = useState<number | null>(null);
+  const [scrubIndex, setScrubIndex] = useState<number | undefined>(undefined);
   const btcData = btcCandles.slice(0, 180).reverse();
 
   const btcPrices = btcData.map((candle) => parseFloat(candle.close));
@@ -408,7 +408,7 @@ const PriceWithVolume = () => {
   const currentDate = btcDates[displayIndex];
 
   const accessibilityLabel = useMemo(() => {
-    if (scrubIndex === null)
+    if (scrubIndex === undefined)
       return `Current Bitcoin price: ${formatPrice(currentPrice)}, Volume: ${formatVolume(currentVolume)}`;
     return `Bitcoin price at ${formatDate(currentDate)}: ${formatPrice(currentPrice)}, Volume: ${formatVolume(currentVolume)}`;
   }, [scrubIndex, currentPrice, currentVolume, currentDate, formatPrice, formatVolume, formatDate]);
@@ -441,7 +441,7 @@ const PriceWithVolume = () => {
         accessibilityLabel={accessibilityLabel}
         aria-labelledby={headerId}
         height={250}
-        onScrubberPosChange={setScrubIndex}
+        onScrubberPositionChange={setScrubIndex}
         series={[
           {
             id: 'prices',

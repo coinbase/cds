@@ -84,7 +84,7 @@ export const ScrubberHead = memo(
     ) => {
       const pointRef = useRef<PointRef>(null);
       const { getSeries, getXScale, getYScale, getSeriesData, animate } = useChartContext();
-      const { highlightedIndex } = useScrubberContext();
+      const { scrubberPosition } = useScrubberContext();
 
       const controls = useAnimation();
 
@@ -109,13 +109,13 @@ export const ScrubberHead = memo(
             y = dataYProp;
           } else if (
             sourceData &&
-            highlightedIndex != null &&
-            highlightedIndex >= 0 &&
-            highlightedIndex < sourceData.length
+            scrubberPosition != null &&
+            scrubberPosition >= 0 &&
+            scrubberPosition < sourceData.length
           ) {
             // Use series data at highlight index
-            x = highlightedIndex;
-            const dataValue = sourceData[highlightedIndex];
+            x = scrubberPosition;
+            const dataValue = sourceData[scrubberPosition];
 
             if (typeof dataValue === 'number') {
               y = dataValue;
@@ -129,7 +129,7 @@ export const ScrubberHead = memo(
         }
 
         return { dataX: x, dataY: y };
-      }, [dataXProp, dataYProp, sourceData, highlightedIndex, xScale, yScale]);
+      }, [dataXProp, dataYProp, sourceData, scrubberPosition, xScale, yScale]);
 
       // Calculate the target position
       const targetPosition = useMemo(
@@ -149,7 +149,7 @@ export const ScrubberHead = memo(
       const isInitializedRef = useRef(false);
       const wasScrubbing = useRef(false);
 
-      const isIdleState = highlightedIndex === undefined;
+      const isIdleState = scrubberPosition === undefined;
 
       // Effect for animations
       useEffect(() => {

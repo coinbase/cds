@@ -2,8 +2,10 @@ import React, { memo, useMemo } from 'react';
 import type { SVGProps } from 'react';
 import type { SharedProps } from '@coinbase/cds-common/types';
 import { type ChartPathCurveType, getLinePath } from '@coinbase/cds-common/visualizations/charts';
+import { m } from 'framer-motion';
 
-import { Area, type AreaComponent } from '../area';
+import { Area, type AreaComponent } from '../area/Area';
+import { axisTickLabelsInitialAnimationVariants } from '../axis';
 import { useChartContext } from '../ChartProvider';
 import { Point, type PointConfig, type RenderPointsParams } from '../point/Point';
 
@@ -103,7 +105,7 @@ export const Line = memo<LineProps>(
     renderPoints,
     ...props
   }) => {
-    const { getSeries, getSeriesData, getXScale, getYScale, getXAxis } = useChartContext();
+    const { animate, getSeries, getSeriesData, getXScale, getYScale, getXAxis } = useChartContext();
 
     const matchedSeries = getSeries(seriesId);
 
@@ -207,39 +209,52 @@ export const Line = memo<LineProps>(
           />
         )}
         <LineComponent d={path} stroke={stroke} strokeOpacity={opacity} {...props} />
-        {renderPoints &&
-          chartData.map((value, index) => {
-            if (value === null) {
-              return null;
-            }
+        {renderPoints && (
+          <m.g
+            data-component="line-points-group"
+            {...(animate
+              ? {
+                  animate: 'animate',
+                  exit: 'exit',
+                  initial: 'initial',
+                  variants: axisTickLabelsInitialAnimationVariants,
+                }
+              : {})}
+          >
+            {chartData.map((value, index) => {
+              if (value === null) {
+                return null;
+              }
 
-            const xValue = xData && xData[index] !== undefined ? xData[index] : index;
+              const xValue = xData && xData[index] !== undefined ? xData[index] : index;
 
-            const pointResult = renderPoints({
-              dataY: value,
-              dataX: xValue,
-              x: xScale?.(xValue) ?? 0,
-              y: yScale?.(value) ?? 0,
-            });
+              const pointResult = renderPoints({
+                dataY: value,
+                dataX: xValue,
+                x: xScale?.(xValue) ?? 0,
+                y: yScale?.(value) ?? 0,
+              });
 
-            if (pointResult === false || pointResult === null || pointResult === undefined) {
-              return null;
-            }
+              if (pointResult === false || pointResult === null || pointResult === undefined) {
+                return null;
+              }
 
-            const pointConfig = pointResult === true ? {} : pointResult;
+              const pointConfig = pointResult === true ? {} : pointResult;
 
-            return (
-              <Point
-                key={`${seriesId}-renderpoint-${index}`}
-                dataX={xValue}
-                dataY={value}
-                {...pointConfig}
-                color={pointConfig.color ?? stroke}
-                onClick={pointConfig.onClick ?? onPointClick}
-                opacity={pointConfig.opacity ?? opacity}
-              />
-            );
-          })}
+              return (
+                <Point
+                  key={`${seriesId}-renderpoint-${index}`}
+                  dataX={xValue}
+                  dataY={value}
+                  {...pointConfig}
+                  color={pointConfig.color ?? stroke}
+                  onClick={pointConfig.onClick ?? onPointClick}
+                  opacity={pointConfig.opacity ?? opacity}
+                />
+              );
+            })}
+          </m.g>
+        )}
       </>
     );
   },

@@ -1,7 +1,5 @@
-import React, { forwardRef, memo, useCallback, useMemo, useRef, useState } from 'react';
-import { StyleSheet, type View, type ViewStyle } from 'react-native';
-import { Gesture, GestureDetector } from 'react-native-gesture-handler';
-import { runOnJS } from 'react-native-reanimated';
+import React, { forwardRef, memo, useCallback, useMemo, useRef } from 'react';
+import { type View, type ViewStyle } from 'react-native';
 import { Svg } from 'react-native-svg';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import type { Rect } from '@coinbase/cds-common/types';
@@ -19,21 +17,20 @@ import {
   getAxisScale,
   getPadding,
   getStackedSeriesData as calculateStackedSeriesData,
-  isCategoricalScale,
-  ScrubberContext,
-  type ScrubberContextValue,
   type Series,
   useTotalAxisPadding,
 } from '@coinbase/cds-common/visualizations/charts';
 import { useLayout } from '@coinbase/cds-mobile/hooks/useLayout';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 import { Box } from '@coinbase/cds-mobile/layout';
-import { debounce } from '@coinbase/cds-mobile/utils/debounce';
 
-import { ChartPanGestureHandler } from './ChartPanGestureHandler';
+import { ScrubberProvider, type ScrubberProviderProps } from './scrubber/ScrubberProvider';
 import { ChartProvider } from './ChartProvider';
 
-export type ChartBaseProps = {
+export type ChartBaseProps = Pick<
+  ScrubberProviderProps,
+  'enableScrubbing' | 'onScrubberPositionChange'
+> & {
   /**
    * Configuration objects that define how to visualize the data.
    * Each series contains its own data array.
@@ -49,11 +46,6 @@ export type ChartBaseProps = {
    */
   animate?: boolean;
   /**
-   * Enables scrubbing interactions (pan gestures for highlighting).
-   * When true, allows highlighting and makes scrubber components interactive.
-   */
-  enableScrubbing?: boolean;
-  /**
    * Configuration for x-axis.
    */
   xAxis?: Partial<Omit<AxisConfigProps, 'id'>>;
@@ -66,11 +58,6 @@ export type ChartBaseProps = {
    * Padding around the entire chart (outside the axes).
    */
   padding?: ThemeVars.Space | Partial<ChartPadding>;
-  /**
-   * Callback fired when the highlighted item changes.
-   * Receives the dataIndex of the highlighted item or null when no item is highlighted.
-   */
-  onScrubberPosChange?: (dataIndex: number | null) => void;
   /**
    * Chart width. If not provided, will use the container's measured width.
    */
@@ -93,11 +80,11 @@ export const Chart = memo(
       {
         series,
         animate = true,
-        enableScrubbing = false,
+        enableScrubbing,
         xAxis: xAxisConfigInput,
         yAxis: yAxisConfigInput,
         padding: paddingInput,
-        onScrubberPosChange,
+        onScrubberPositionChange,
         children,
         width = '100%',
         height = '100%',
@@ -130,7 +117,6 @@ export const Chart = memo(
       );
       const yAxisConfig = useMemo(() => getAxisConfig('y', yAxisConfigInput), [yAxisConfigInput]);
 
-      const [highlightedIndex, setHighlightedIndex] = useState<number | undefined>(undefined);
       const { renderedAxes, registerAxis, unregisterAxis, axisPadding } = useTotalAxisPadding();
 
       const totalPadding = useMemo(
@@ -235,87 +221,6 @@ export const Chart = memo(
 
         return scales;
       }, [chartRect, yAxes]);
-
-      const getDataIndexFromX = useCallback(
-        (mouseX: number): number => {
-          if (!xScale || !xAxis) return 0;
-
-          if (isCategoricalScale(xScale)) {
-            // todo: see where else we can simply rely on scale domain values
-            const categories = xScale.domain?.() ?? xAxis.data ?? [];
-            const bandwidth = xScale.bandwidth?.() ?? 0;
-            let closestIndex = 0;
-            let closestDistance = Infinity;
-            for (let i = 0; i < categories.length; i++) {
-              const xPos = xScale(i);
-              if (xPos !== undefined) {
-                const distance = Math.abs(mouseX - (xPos + bandwidth / 2));
-                if (distance < closestDistance) {
-                  closestDistance = distance;
-                  closestIndex = i;
-                }
-              }
-            }
-            return closestIndex;
-          } else {
-            // For numeric scales with axis data, find the nearest data point
-            const axisData = xAxis.data;
-            if (axisData && Array.isArray(axisData) && typeof axisData[0] === 'number') {
-              // We have numeric axis data - find the closest data point
-              const numericData = axisData as number[];
-              let closestIndex = 0;
-              let closestDistance = Infinity;
-
-              for (let i = 0; i < numericData.length; i++) {
-                const xValue = numericData[i];
-                const xPos = xScale(xValue);
-                if (xPos !== undefined) {
-                  const distance = Math.abs(mouseX - xPos);
-                  if (distance < closestDistance) {
-                    closestDistance = distance;
-                    closestIndex = i;
-                  }
-                }
-              }
-              return closestIndex;
-            } else {
-              const xValue = xScale.invert(mouseX);
-              const dataIndex = Math.round(xValue);
-              const domain = xAxis.domain;
-              return Math.max(domain.min ?? 0, Math.min(dataIndex, domain.max ?? 0));
-            }
-          }
-        },
-        [xScale, xAxis],
-      );
-
-      const handlePositionUpdate = useCallback(
-        (x: number) => {
-          if (!enableScrubbing || !series || series.length === 0) return;
-
-          const dataIndex = getDataIndexFromX(x);
-          if (dataIndex !== highlightedIndex) {
-            setHighlightedIndex(dataIndex);
-            onScrubberPosChange?.(dataIndex);
-          }
-        },
-        [enableScrubbing, series, getDataIndexFromX, highlightedIndex, onScrubberPosChange],
-      );
-
-      const handleInteractionEnd = useCallback(() => {
-        if (!enableScrubbing) return;
-        setHighlightedIndex(undefined);
-        onScrubberPosChange?.(null);
-      }, [enableScrubbing, onScrubberPosChange]);
-
-      const scrubberContextValue: ScrubberContextValue = useMemo(
-        () => ({
-          scrubbingEnabled: enableScrubbing,
-          highlightedIndex,
-          updateHighlightedIndex: setHighlightedIndex,
-        }),
-        [enableScrubbing, highlightedIndex],
-      );
 
       const getXAxis = useCallback(() => xAxis, [xAxis]);
       const getYAxis = useCallback((id?: string) => yAxes.get(id ?? defaultAxisId), [yAxes]);
@@ -452,39 +357,28 @@ export const Chart = memo(
         return [style, dynamicStyles];
       }, [style, width, height]);
 
-      const chartContent = (
-        <Box ref={ref} onLayout={onContainerLayout} style={containerStyles} {...props}>
-          {chartWidth > 0 && chartHeight > 0 && (
-            <Svg
-              ref={(node) => {
-                if (internalSvgRef.current !== node) {
-                  (internalSvgRef as React.MutableRefObject<Svg | null>).current = node;
-                }
-              }}
-              height={chartHeight}
-              width={chartWidth}
-            >
-              {children}
-            </Svg>
-          )}
-        </Box>
-      );
-
       return (
         <ChartProvider value={contextValue}>
-          <ScrubberContext.Provider value={scrubberContextValue}>
-            {enableScrubbing ? (
-              <ChartPanGestureHandler
-                allowOverflowGestures
-                onScrub={handlePositionUpdate}
-                onScrubEnd={handleInteractionEnd}
-              >
-                {chartContent}
-              </ChartPanGestureHandler>
-            ) : (
-              chartContent
-            )}
-          </ScrubberContext.Provider>
+          <ScrubberProvider
+            enableScrubbing={enableScrubbing}
+            onScrubberPositionChange={onScrubberPositionChange}
+          >
+            <Box ref={ref} onLayout={onContainerLayout} style={containerStyles} {...props}>
+              {chartWidth > 0 && chartHeight > 0 && (
+                <Svg
+                  ref={(node) => {
+                    if (internalSvgRef.current !== node) {
+                      (internalSvgRef as React.MutableRefObject<Svg | null>).current = node;
+                    }
+                  }}
+                  height={chartHeight}
+                  width={chartWidth}
+                >
+                  {children}
+                </Svg>
+              )}
+            </Box>
+          </ScrubberProvider>
         </ChartProvider>
       );
     },

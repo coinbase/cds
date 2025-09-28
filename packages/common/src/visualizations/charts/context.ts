@@ -76,14 +76,21 @@ export type ChartContextValue<TRef> = {
   getAxisBounds: (id: string) => Rect | undefined;
 };
 
-// Chart highlighting context
 export type ScrubberContextValue = {
-  /** Whether scrubbing is enabled on the parent Chart component */
-  scrubbingEnabled: boolean;
-  /** The currently highlighted data index, or undefined if nothing is highlighted */
-  highlightedIndex?: number;
-  /** Update the highlighted data index */
-  updateHighlightedIndex: (index: number | undefined) => void;
+  /**
+   * Enables scrubbing interactions.
+   * When true, allows scrubbing and makes scrubber components interactive.
+   */
+  enableScrubbing: boolean;
+  /**
+   * The current position of the scrubber.
+   */
+  scrubberPosition?: number;
+  /**
+   * Callback fired when the scrubber position changes.
+   * Receives the dataIndex of the scrubber or undefined when not scrubbing.
+   */
+  onScrubberPositionChange: (index: number | undefined) => void;
 };
 
 export const ScrubberContext = createContext<ScrubberContextValue | undefined>(undefined);

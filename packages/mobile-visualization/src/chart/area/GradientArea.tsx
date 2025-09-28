@@ -1,9 +1,9 @@
 import React, { memo, useRef } from 'react';
 import { Defs, LinearGradient, Stop } from 'react-native-svg';
-import { useChartContext } from '../ChartProvider';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 import { generateRandomId } from '@coinbase/cds-utils';
 
+import { useChartContext } from '../ChartProvider';
 import { Path, type PathProps } from '../Path';
 
 import type { AreaComponentProps } from './Area';

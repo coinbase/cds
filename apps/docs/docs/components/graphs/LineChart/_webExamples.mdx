@@ -2,18 +2,18 @@
 
 ```jsx live
 function BasicExample() {
-  const [scrubIndex, setScrubIndex] = useState(null);
+  const [scrubIndex, setScrubIndex] = useState(undefined);
   const data = [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58];
 
   const accessibilityLabel = useMemo(() => {
-    if (scrubIndex === null) return undefined;
+    if (scrubIndex === undefined) return undefined;
     return `Value: ${data[scrubIndex]} at index ${scrubIndex}`;
   }, [scrubIndex, data]);
 
   return (
     <LineChart
       enableScrubbing
-      onScrubberPosChange={setScrubIndex}
+      onScrubberPositionChange={setScrubIndex}
       height={250}
       series={[
         {
@@ -203,7 +203,7 @@ todo: we can't seem to do strokeWidth={4} at LineChart level (had to switch this
 
 ```jsx live
 function GainLossChart() {
-  const [highlightedItem, setHighlightedItem] = useState(null);
+  const [highlightedItem, setHighlightedItem] = useState(undefined);
   const gradientId = useId();
 
   const data = [-40, -28, -21, -5, 48, -5, -28, 2, -29, -46, 16, -30, -29, 8];
@@ -219,7 +219,7 @@ function GainLossChart() {
   );
 
   const accessibilityLabel = useMemo(() => {
-    if (highlightedItem === null) return undefined;
+    if (highlightedItem === undefined) return undefined;
     const value = data[highlightedItem];
     const formattedValue = priceFormatter(value);
     return `${formattedValue} at ${highlightedItem + 1}`;
@@ -307,21 +307,21 @@ You can add multiple series to a line chart.
 
 ```jsx live
 function MultipleSeriesChart() {
-  const [scrubIndex, setScrubIndex] = useState(null);
+  const [scrubIndex, setScrubIndex] = useState(undefined);
 
   const pageViews = [2400, 1398, 9800, 3908, 4800, 3800, 4300];
   const uniqueVisitors = [4000, 3000, 2000, 2780, 1890, 2390, 3490];
   const pages = ['Page A', 'Page B', 'Page C', 'Page D', 'Page E', 'Page F', 'Page G'];
 
   const accessibilityLabel = useMemo(() => {
-    if (scrubIndex === null) return undefined;
+    if (scrubIndex === undefined) return undefined;
     return `${pages[scrubIndex]}: Page Views ${pageViews[scrubIndex].toLocaleString()}, Unique Visitors ${uniqueVisitors[scrubIndex].toLocaleString()}`;
   }, [scrubIndex, pages, pageViews, uniqueVisitors]);
 
   return (
     <LineChart
       enableScrubbing
-      onScrubberPosChange={setScrubIndex}
+      onScrubberPositionChange={setScrubIndex}
       height={400}
       series={[
         {
@@ -466,7 +466,7 @@ This example shows how to use an empty state for a line chart.
 ```jsx live
 function LiveAssetPrice() {
   const scrubberRef = useRef(null);
-  const [scrubIndex, setScrubIndex] = useState(null);
+  const [scrubIndex, setScrubIndex] = useState(undefined);
 
   const initialData = useMemo(() => {
     return sparklineInteractiveData.hour.map((d) => d.value);
@@ -520,7 +520,8 @@ function LiveAssetPrice() {
   }, [intervalSeconds, maxPercentChange]);
 
   const accessibilityLabel = useMemo(() => {
-    if (scrubIndex === null) return `Bitcoin Price: $${priceData[priceData.length - 1].toFixed(2)}`;
+    if (scrubIndex === undefined)
+      return `Bitcoin Price: $${priceData[priceData.length - 1].toFixed(2)}`;
     const price = priceData[scrubIndex];
     return `Bitcoin Price: $${price.toFixed(2)} at position ${scrubIndex + 1}`;
   }, [scrubIndex, priceData]);
@@ -528,7 +529,7 @@ function LiveAssetPrice() {
   return (
     <LineChart
       enableScrubbing
-      onScrubberPosChange={setScrubIndex}
+      onScrubberPositionChange={setScrubIndex}
       showArea
       height={300}
       series={[
@@ -553,20 +554,20 @@ You can adjust the y values for a series of data by setting the `data` prop on t
 
 ```jsx live
 function DataFormatChart() {
-  const [scrubIndex, setScrubIndex] = useState(null);
+  const [scrubIndex, setScrubIndex] = useState(undefined);
 
   const yData = [2, 5.5, 2, 8.5, 1.5, 5];
   const xData = [1, 2, 3, 5, 8, 10];
 
   const accessibilityLabel = useMemo(() => {
-    if (scrubIndex === null) return undefined;
+    if (scrubIndex === undefined) return undefined;
     return `X: ${xData[scrubIndex]}, Y: ${yData[scrubIndex]} at point ${scrubIndex + 1}`;
   }, [scrubIndex, xData, yData]);
 
   return (
     <LineChart
       enableScrubbing
-      onScrubberPosChange={setScrubIndex}
+      onScrubberPositionChange={setScrubIndex}
       series={[
         {
           id: 'line',
@@ -640,7 +641,7 @@ const BTCActiveIndicator = memo(({ style, ...props }: TabsActiveIndicatorProps) 
   ));
 
   const AssetPriceDotted = memo(() => {
-  const [scrubIndex, setScrubIndex] = useState<number | null>(null);
+  const [scrubIndex, setScrubIndex] = useState<number | undefined>(undefined);
   const currentPrice =
     sparklineInteractiveData.hour[sparklineInteractiveData.hour.length - 1].value;
   const tabs = [
@@ -697,7 +698,7 @@ const BTCActiveIndicator = memo(({ style, ...props }: TabsActiveIndicatorProps) 
   }, []);
 
   const scrubberLabel: ChartTextChildren = useMemo(() => {
-    if (scrubIndex === null) return null;
+    if (scrubIndex === undefined) return null;
     const price = new Intl.NumberFormat('en-US', {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
@@ -711,7 +712,7 @@ const BTCActiveIndicator = memo(({ style, ...props }: TabsActiveIndicatorProps) 
   }, [sparklineTimePeriodDataValues, scrubIndex]);
 
   const accessibilityLabel: string | undefined = useMemo(() => {
-    if (scrubIndex === null) return;
+    if (scrubIndex === undefined) return;
     const price = new Intl.NumberFormat('en-US', {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
@@ -737,7 +738,7 @@ const BTCActiveIndicator = memo(({ style, ...props }: TabsActiveIndicatorProps) 
       <LineChart
         overflow="visible"
         enableScrubbing
-        onScrubberPosChange={setScrubIndex}
+        onScrubberPositionChange={setScrubIndex}
         series={[
           {
             id: 'btc',
@@ -772,7 +773,7 @@ const BTCActiveIndicator = memo(({ style, ...props }: TabsActiveIndicatorProps) 
 
 ```jsx live
 function ForecastAssetPrice() {
-  const [scrubIndex, setScrubIndex] = useState<number | null>(null);
+  const [scrubIndex, setScrubIndex] = useState<number | undefined>(undefined);
   const getDataFromSparkline = (startDate: Date) => {
     const allData = sparklineInteractiveData.all;
     if (!allData || allData.length === 0) return [];
@@ -857,7 +858,7 @@ function ForecastAssetPrice() {
   );
 
   const scrubberLabel: ChartTextChildren = useMemo(() => {
-    if (scrubIndex === null) return null;
+    if (scrubIndex === undefined) return null;
     const price = new Intl.NumberFormat('en-US', {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
@@ -872,7 +873,7 @@ function ForecastAssetPrice() {
 
 
   const accessibilityLabel: string | undefined = useMemo(() => {
-    if (scrubIndex === null) return;
+    if (scrubIndex === undefined) return;
     const price = new Intl.NumberFormat('en-US', {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
@@ -888,7 +889,7 @@ function ForecastAssetPrice() {
       overflow="visible"
       animate={false}
       enableScrubbing
-      onScrubberPosChange={setScrubIndex}
+      onScrubberPositionChange={setScrubIndex}
       showArea
       showXAxis
       AreaComponent={AreaComponent}
@@ -936,7 +937,7 @@ function ForecastAssetPrice() {
 
 ```jsx live
 function AvailabilityChart() {
-  const [scrubIndex, setScrubIndex] = useState(null);
+  const [scrubIndex, setScrubIndex] = useState(undefined);
 
   const availabilityEvents = [
     {
@@ -966,7 +967,7 @@ function AvailabilityChart() {
   ];
 
   const accessibilityLabel = useMemo(() => {
-    if (scrubIndex === null) return undefined;
+    if (scrubIndex === undefined) return undefined;
     const event = availabilityEvents[scrubIndex];
     const formattedDate = event.date.toLocaleDateString('en-US', {
       weekday: 'short',
@@ -1025,7 +1026,7 @@ function AvailabilityChart() {
   return (
     <Chart
       enableScrubbing
-      onScrubberPosChange={setScrubIndex}
+      onScrubberPositionChange={setScrubIndex}
       height={300}
       series={[
         {

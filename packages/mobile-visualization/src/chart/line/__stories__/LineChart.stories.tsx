@@ -16,14 +16,13 @@ import { SectionHeader } from '@coinbase/cds-mobile/section-header/SectionHeader
 import {
   SegmentedTabs,
   type TabComponent,
-  TabsActiveIndicator,
   type TabsActiveIndicatorProps,
 } from '@coinbase/cds-mobile/tabs';
 import { SegmentedTab, type SegmentedTabProps } from '@coinbase/cds-mobile/tabs/SegmentedTab';
 import { TextLabel1 } from '@coinbase/cds-mobile/typography';
 import { Text } from '@coinbase/cds-mobile/typography/Text';
 
-import { Area, type AreaComponentProps, DottedArea, GradientArea } from '../../area';
+import { Area, DottedArea } from '../../area';
 import { XAxis, YAxis } from '../../axis';
 import { Chart } from '../../Chart';
 import { useChartContext } from '../../ChartProvider';
@@ -31,7 +30,7 @@ import { PeriodSelector, PeriodSelectorActiveIndicator } from '../../PeriodSelec
 import { Point } from '../../point';
 import { Scrubber } from '../../scrubber';
 import type { ChartTextChildren } from '../../text';
-import { DottedLine, GradientLine, Line, LineChart, ReferenceLine, SolidLine } from '..';
+import { GradientLine, Line, LineChart, ReferenceLine } from '..';
 
 const defaultChartHeight = 200;
 
@@ -85,16 +84,16 @@ type TrendData = {
 };
 
 const calculateTrendData = (
-  highlightedIndex: number | null,
+  scrubberPosition: number | undefined,
   currentData: number[],
   currentTimestamps: string[],
   startPrice: number,
   currentPrice: number,
   activeTimeframe: string,
 ): TrendData => {
-  if (highlightedIndex !== null && highlightedIndex !== undefined) {
+  if (scrubberPosition !== undefined) {
     // When hovering, show trend relative to START of time period (not previous point)
-    const hoverIndex = highlightedIndex;
+    const hoverIndex = scrubberPosition;
     const hoverPrice = currentData[hoverIndex];
     const hoverPriceChange = hoverPrice - startPrice; // Fixed: relative to start price
     const hoverTimestamp = currentTimestamps[hoverIndex];
@@ -214,7 +213,7 @@ export const AssetPrice = () => {
     () => prices.slice(0, pricePointsToShow).map((price) => parseFloat(price)),
     [pricePointsToShow],
   );
-  const [highlightedItemIndex, setHighlightedItemIndex] = useState<number | null>(null);
+  const [highlightedItemIndex, setHighlightedItemIndex] = useState<number | undefined>(undefined);
 
   const isHovering = useMemo(
     () => typeof highlightedItemIndex === 'number' && highlightedItemIndex < pricePointsToShow,
@@ -232,8 +231,8 @@ export const AssetPrice = () => {
     });
   }, []);
 
-  const onScrubberPosChange = useCallback((highlightedIndex: number | null) => {
-    setHighlightedItemIndex(highlightedIndex ?? null);
+  const onScrubberPositionChange = useCallback((scrubberPosition: number | undefined) => {
+    setHighlightedItemIndex(scrubberPosition);
   }, []);
 
   const highlightedPrice = useMemo(() => {
@@ -277,7 +276,7 @@ export const AssetPrice = () => {
       <LineChart
         showArea
         height={defaultChartHeight}
-        onScrubberPosChange={onScrubberPosChange}
+        onScrubberPositionChange={onScrubberPositionChange}
         padding={{ top: 3, bottom: 7, left: 0, right: 0 }}
         series={[
           {
@@ -414,7 +413,7 @@ export const ColorShiftChart = () => {
   }
 
   const [isHovering, setIsHovering] = useState(false);
-  const [highlightedItem, setHighlightedItem] = useState<number | null>(null);
+  const [highlightedItem, setHighlightedItem] = useState<number | undefined>(undefined);
 
   const tabConversion = {
     '1H': 'hour',
@@ -450,7 +449,7 @@ export const ColorShiftChart = () => {
     };
   }, [currentData]);
 
-  const onScrubberPosChange = useCallback((item: number | null) => {
+  const onScrubberPositionChange = useCallback((item: number | undefined) => {
     setHighlightedItem(item);
     setIsHovering(!!item);
   }, []);
@@ -511,7 +510,7 @@ export const ColorShiftChart = () => {
         showXAxis
         dataKey={dataKey}
         height={defaultChartHeight}
-        onScrubberPosChange={onScrubberPosChange}
+        onScrubberPositionChange={onScrubberPositionChange}
         padding={{ top: 6, left: 0, right: 0, bottom: 0 }}
         series={[
           {
@@ -641,13 +640,13 @@ export const PriceChart = () => {
     };
   }, [currentData]);
 
-  const onScrubberPosChange = useCallback((item: number | null) => {
-    setIsHovering(item !== null);
+  const onScrubberPositionChange = useCallback((item: number | undefined) => {
+    setIsHovering(item !== undefined);
   }, []);
 
   const { trendPrice, trendPreviousPrice, trendDirection } = useMemo(() => {
     return calculateTrendData(
-      null,
+      undefined,
       currentData,
       currentTimestamps,
       startPrice,
@@ -668,8 +667,8 @@ export const PriceChart = () => {
   })}%)`;
 
   const scrubberLabel = useCallback(
-    (item: number | null) => {
-      if (item === null) return null;
+    (item: number | undefined) => {
+      if (item === undefined) return null;
       const timestamp = currentTimestamps[item];
       const price = currentData[item];
       const formattedPrice =
@@ -713,7 +712,7 @@ export const PriceChart = () => {
         showArea
         dataKey={dataKey}
         height={defaultChartHeight}
-        onScrubberPosChange={onScrubberPosChange}
+        onScrubberPositionChange={onScrubberPositionChange}
         padding={{ left: 0, right: 3, bottom: 3, top: 3 }}
         series={[
           {
@@ -747,7 +746,7 @@ export const PriceChart = () => {
         ]}
         yAxis={{ domainLimit: 'strict' }}
       >
-        <Scrubber idlePulse />
+        <Scrubber />
       </LineChart>
       <PeriodSelector activeTab={activeTab} onChange={(tab) => setActiveTab(tab)} tabs={tabs} />
     </VStack>
@@ -902,8 +901,8 @@ const BTCActiveIndicator = memo(({ style, ...props }: TabsActiveIndicatorProps) 
   />
 ));
 
-const AssetPriceDotted = () => {
-  const [scrubIndex, setScrubIndex] = useState<number | null>(null);
+const AssetPriceMultipleDotted = () => {
+  const [scrubIndex, setScrubIndex] = useState<number | undefined>(undefined);
   const currentPrice =
     sparklineInteractiveData.hour[sparklineInteractiveData.hour.length - 1].value;
   const tabs = useMemo(
@@ -963,7 +962,7 @@ const AssetPriceDotted = () => {
   }, []);
 
   const scrubberLabel: ChartTextChildren = useMemo(() => {
-    if (scrubIndex === null) return null;
+    if (scrubIndex === undefined) return null;
     const price = new Intl.NumberFormat('en-US', {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
@@ -975,7 +974,11 @@ const AssetPriceDotted = () => {
   return (
     <VStack gap={2}>
       <SectionHeader
-        balance={<Text font="title2">{formatPrice(currentPrice)}</Text>}
+        balance={
+          <Text font="title2">
+            {formatPrice(currentPrice)} {sparklineTimePeriodDataValues.length}
+          </Text>
+        }
         end={
           <VStack justifyContent="center">
             <RemoteImage shape="circle" size="xl" source={assets.btc.imageUrl} />
@@ -989,7 +992,7 @@ const AssetPriceDotted = () => {
         showArea
         areaType="dotted"
         height={defaultChartHeight}
-        onScrubberPosChange={setScrubIndex}
+        onScrubberPositionChange={setScrubIndex}
         series={[
           {
             id: 'btc',
@@ -998,7 +1001,126 @@ const AssetPriceDotted = () => {
           },
         ]}
       >
-        <Scrubber idlePulse scrubberLabel={scrubberLabel} scrubberLabelProps={{ elevation: 1 }} />
+        <Scrubber />
+      </LineChart>
+      <PeriodSelector
+        TabComponent={BTCTab}
+        TabsActiveIndicatorComponent={BTCActiveIndicator}
+        activeTab={timePeriod}
+        onChange={onPeriodChange}
+        tabs={tabs}
+      />
+    </VStack>
+  );
+};
+
+const AssetPriceDotted = () => {
+  const [scrubIndex, setScrubIndex] = useState<number | undefined>(undefined);
+  const currentPrice =
+    sparklineInteractiveData.hour[sparklineInteractiveData.hour.length - 1].value;
+  const tabs = useMemo(
+    () => [
+      { id: 'hour', label: '1H' },
+      { id: 'day', label: '1D' },
+      { id: 'week', label: '1W' },
+      { id: 'month', label: '1M' },
+      { id: 'year', label: '1Y' },
+      { id: 'all', label: 'All' },
+    ],
+    [],
+  );
+  const [timePeriod, setTimePeriod] = useState<TabValue>(tabs[0]);
+
+  const sparklineTimePeriodData = useMemo(() => {
+    return sparklineInteractiveData[timePeriod.id as keyof typeof sparklineInteractiveData];
+  }, [timePeriod]);
+
+  const sparklineTimePeriodDataValues = useMemo(() => {
+    return sparklineTimePeriodData.map((d) => d.value);
+  }, [sparklineTimePeriodData]);
+
+  const sparklineTimePeriodDataTimestamps = useMemo(() => {
+    return sparklineTimePeriodData.map((d) => d.date);
+  }, [sparklineTimePeriodData]);
+
+  const onPeriodChange = useCallback(
+    (period: TabValue | null) => {
+      setTimePeriod(period || tabs[0]);
+    },
+    [tabs, setTimePeriod],
+  );
+
+  const formatPrice = useCallback((price: number) => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+    }).format(price);
+  }, []);
+
+  const formatDate = useCallback((date: Date) => {
+    const dayOfWeek = date.toLocaleDateString('en-US', { weekday: 'short' });
+
+    const monthDay = date.toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+    });
+
+    const time = date.toLocaleTimeString('en-US', {
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true,
+    });
+
+    return `${dayOfWeek}, ${monthDay}, ${time}`;
+  }, []);
+
+  const scrubberLabel: ChartTextChildren = useMemo(() => {
+    if (scrubIndex === undefined) return null;
+    const price = new Intl.NumberFormat('en-US', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }).format(sparklineTimePeriodDataValues[scrubIndex]);
+    const date = formatDate(sparklineTimePeriodDataTimestamps[scrubIndex]);
+    return `${price} USD ${date}`;
+  }, [scrubIndex, sparklineTimePeriodDataValues, formatDate, sparklineTimePeriodDataTimestamps]);
+
+  return (
+    <VStack gap={2}>
+      <SectionHeader
+        balance={
+          <Text font="title2">
+            {formatPrice(currentPrice)} {sparklineTimePeriodDataValues.length}
+          </Text>
+        }
+        end={
+          <VStack justifyContent="center">
+            <RemoteImage shape="circle" size="xl" source={assets.btc.imageUrl} />
+          </VStack>
+        }
+        padding={0}
+        title={<Text font="title1">Bitcoin</Text>}
+      />
+      <LineChart
+        enableScrubbing
+        showArea
+        areaType="dotted"
+        height={defaultChartHeight}
+        onScrubberPositionChange={setScrubIndex}
+        series={[
+          {
+            id: 'btc',
+            data: sparklineTimePeriodDataValues,
+            color: assets.btc.color,
+          },
+
+          {
+            id: 'eth',
+            data: sparklineTimePeriodDataValues.map((d) => d * 0.75),
+            color: assets.eth.color,
+          },
+        ]}
+      >
+        <Scrubber seriesIds={[]} />
       </LineChart>
       <PeriodSelector
         TabComponent={BTCTab}
@@ -1158,7 +1280,7 @@ const BitcoinChartWithScrubberHead = () => {
           ]}
           width="100%"
         >
-          <Scrubber idlePulse />
+          <Scrubber />
         </LineChart>
       </VStack>
     </Box>
@@ -1334,4 +1456,44 @@ const LineChartStories = () => {
   );
 };
 
-export default LineChartStories;
+const AssetPriceScreen = () => {
+  return (
+    <ExampleScreen>
+      <Example title="Data Formats">
+        <LineChart
+          enableScrubbing
+          showArea
+          showXAxis
+          showYAxis
+          curve="natural"
+          height={defaultChartHeight}
+          renderPoints={() => true}
+          series={[
+            {
+              id: 'line',
+              data: [2, 5.5, 2, 8.5, 1.5, 5],
+            },
+          ]}
+          xAxis={{ data: [1, 2, 3, 5, 8, 10], showLine: true, showTickMarks: true, showGrid: true }}
+          yAxis={{
+            domain: { min: 0 },
+            position: 'start',
+            showLine: true,
+            showTickMarks: true,
+            showGrid: true,
+          }}
+        >
+          <Scrubber />
+        </LineChart>
+      </Example>
+      <Example title="Asset Price Multiple Dotted">
+        <AssetPriceMultipleDotted />
+      </Example>
+      <Example title="Asset Price Dotted">
+        <AssetPriceDotted />
+      </Example>
+    </ExampleScreen>
+  );
+};
+
+export default AssetPriceScreen;

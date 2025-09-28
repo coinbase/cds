@@ -145,7 +145,7 @@ export const Scrubber = memo(
       const scrubberGroupRef = useRef<SVGGElement>(null);
       const scrubberHeadRefs = useRefMap<ScrubberHeadRef>();
 
-      const { highlightedIndex } = useScrubberContext();
+      const { scrubberPosition } = useScrubberContext();
       const { getXScale, getYScale, getSeriesData, getXAxis, animate, series, drawingArea } =
         useChartContext();
       const getStackedSeriesData = getSeriesData; // getSeriesData now returns stacked data
@@ -177,7 +177,7 @@ export const Scrubber = memo(
             return Math.max(max, seriesData?.length ?? 0);
           }, 0) ?? 0;
 
-        const dataIndex = highlightedIndex ?? Math.max(0, maxDataLength - 1);
+        const dataIndex = scrubberPosition ?? Math.max(0, maxDataLength - 1);
 
         // Convert index to actual x value if axis has data
         let dataX: number;
@@ -189,7 +189,7 @@ export const Scrubber = memo(
         }
 
         return { dataX, dataIndex };
-      }, [getXScale, getXAxis, series, highlightedIndex, getStackedSeriesData, getSeriesData]);
+      }, [getXScale, getXAxis, series, scrubberPosition, getStackedSeriesData, getSeriesData]);
 
       const headPositions = useMemo(() => {
         const xScale = getXScale() as ChartScaleFunction;
@@ -596,7 +596,7 @@ export const Scrubber = memo(
         >
           {!hideOverlay &&
             dataX !== undefined &&
-            highlightedIndex !== undefined &&
+            scrubberPosition !== undefined &&
             pixelX !== undefined && (
               <rect
                 className={classNames?.scrubberOverlay}
@@ -609,7 +609,7 @@ export const Scrubber = memo(
                 y={drawingArea.y - overlayOffset}
               />
             )}
-          {!hideScrubberLine && highlightedIndex !== undefined && dataX !== undefined && (
+          {!hideScrubberLine && scrubberPosition !== undefined && dataX !== undefined && (
             <ScrubberLineComponent
               className={classNames?.scrubberLine}
               dataX={dataX}

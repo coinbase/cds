@@ -174,7 +174,7 @@ export const getAxisConfig = (
     }
 
     return axes.map(({ id, ...axis }) => ({
-      // defaults the axis id if onlly a single axis is provided
+      // defaults the axis id if only a single axis is provided
       id: axesLength > 1 ? (id ?? defaultAxisId) : (id as string),
       scaleType: defaultScaleType,
       domainLimit: defaultDomainLimit,

@@ -116,7 +116,7 @@ For interactive elements like scrubbers:
 
 ```typescript
 // 1. Track state (idle vs active)
-const isIdleState = highlightedIndex === undefined;
+const isIdleState = scrubberPosition === undefined;
 
 // 2. Different behavior per state
 useEffect(() => {
@@ -386,7 +386,7 @@ For interactive elements like scrubbers:
 
 ```typescript
 // 1. Track state (idle vs active)
-const isIdleState = highlightedIndex === undefined;
+const isIdleState = scrubberPosition === undefined;
 
 // 2. Different behavior per state
 useEffect(() => {

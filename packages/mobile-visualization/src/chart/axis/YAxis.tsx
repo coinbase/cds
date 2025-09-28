@@ -1,18 +1,32 @@
 import React, { memo, useCallback, useEffect, useId, useMemo } from 'react';
+import Animated, {
+  runOnJS,
+  useAnimatedReaction,
+  useAnimatedStyle,
+  useSharedValue,
+} from 'react-native-reanimated';
 import { G, Line } from 'react-native-svg';
 import type { ThemeVars } from '@coinbase/cds-common';
 import {
-  getAxisTicksData,
-  isCategoricalScale,
-} from '@coinbase/cds-common/visualizations/charts';
-import { useChartContext } from '../ChartProvider';
+  axisTickLabelsInitialAnimateInConfig,
+  axisTickLabelsInitialAnimateOutConfig,
+  axisUpdateAnimateInConfig,
+  axisUpdateAnimateOutConfig,
+} from '@coinbase/cds-common/animation/axis';
+import { getAxisTicksData, isCategoricalScale } from '@coinbase/cds-common/visualizations/charts';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
+import { convertMotionConfigs } from '@coinbase/cds-mobile/motion/convertMotionConfig';
+import { withMotionTiming } from '@coinbase/cds-mobile/motion/withMotionTiming';
 
-import { DottedLine } from '../line';
+import { useChartContext } from '../ChartProvider';
+import { DottedLine } from '../line/DottedLine';
 import { ReferenceLine } from '../line/ReferenceLine';
 import { SmartChartTextGroup, type TextLabelData } from '../text/SmartChartTextGroup';
 
 import type { AxisBaseProps, AxisProps } from './Axis';
+
+// Create animated components
+const AnimatedG = Animated.createAnimatedComponent(G);
 
 export type YAxisBaseProps = AxisBaseProps;
 
@@ -58,6 +72,28 @@ export const YAxis = memo<YAxisProps>(
     const yAxis = getYAxis(axisId);
 
     const axisBounds = getAxisBounds(registrationId);
+
+    // Animation configs
+    const [
+      tickLabelsInitialAnimateIn,
+      tickLabelsInitialAnimateOut,
+      updateAnimateIn,
+      updateAnimateOut,
+    ] = useMemo(
+      () =>
+        convertMotionConfigs([
+          axisTickLabelsInitialAnimateInConfig,
+          axisTickLabelsInitialAnimateOutConfig,
+          axisUpdateAnimateInConfig,
+          axisUpdateAnimateOutConfig,
+        ]),
+      [],
+    );
+
+    // Animation shared values
+    const gridOpacity = useSharedValue(1);
+    const tickLabelsOpacity = useSharedValue(animate ? 0 : 1);
+    const isInitialMount = useSharedValue(true);
 
     // Define axis styling using theme
     const axisLineProps = useMemo(
@@ -127,7 +163,8 @@ export const YAxis = memo<YAxisProps>(
       return getAxisTicksData({
         scaleFunction: yScale as any,
         ticks,
-        requestedTickCount,
+        requestedTickCount:
+          (requestedTickCount ?? tickInterval === undefined) ? 5 : requestedTickCount,
         categories,
         possibleTickValues:
           axisData && Array.isArray(axisData) && typeof axisData[0] === 'number'
@@ -176,12 +213,50 @@ export const YAxis = memo<YAxisProps>(
       styles?.tickLabel,
     ]);
 
+    // Handle animations when dataKey changes
+    const prevDataKey = useSharedValue(dataKey);
+
+    useAnimatedReaction(
+      () => dataKey,
+      (currentDataKey) => {
+        'worklet';
+        if (!animate) return;
+
+        if (isInitialMount.value) {
+          // Initial mount animation
+          tickLabelsOpacity.value = withMotionTiming(tickLabelsInitialAnimateIn) as number;
+          isInitialMount.value = false;
+        } else if (prevDataKey.value !== currentDataKey) {
+          // Data update animation - fade out old data
+          gridOpacity.value = withMotionTiming(updateAnimateOut) as number;
+          tickLabelsOpacity.value = withMotionTiming({
+            ...updateAnimateOut,
+            delay: 0,
+          }) as number;
+
+          // Animate in with new data after fade out completes
+          gridOpacity.value = withMotionTiming(updateAnimateIn) as number;
+          tickLabelsOpacity.value = withMotionTiming(updateAnimateIn) as number;
+        }
+        prevDataKey.value = currentDataKey;
+      },
+      [dataKey],
+    );
+
+    const gridAnimatedStyle = useAnimatedStyle(() => ({
+      opacity: gridOpacity.value,
+    }));
+
+    const tickLabelsAnimatedStyle = useAnimatedStyle(() => ({
+      opacity: tickLabelsOpacity.value,
+    }));
+
     if (!yScale) return;
 
     return (
       <G data-axis="y" data-position={position} {...props}>
         {showGrid && (
-          <G>
+          <AnimatedG animatedProps={animate ? gridAnimatedStyle : undefined}>
             {ticksData.map((tick, index) => {
               const horizontalLine = (
                 <ReferenceLine
@@ -193,17 +268,17 @@ export const YAxis = memo<YAxisProps>(
 
               return <G key={`grid-${tick.tick}-${index}-${dataKey}`}>{horizontalLine}</G>;
             })}
-          </G>
+          </AnimatedG>
         )}
         {chartTextData && (
-          <G>
+          <AnimatedG animatedProps={animate ? tickLabelsAnimatedStyle : undefined}>
             {/* TODO pass through styles */}
             <SmartChartTextGroup
               prioritizeEndLabels
               labels={chartTextData}
               minGap={minTickLabelGap}
             />
-          </G>
+          </AnimatedG>
         )}
         {axisBounds && showTickMarks && (
           <G data-testid="tick-marks">

@@ -189,11 +189,11 @@ const tabs: TimePeriodTab[] = [
 
 const ScrubberRect = memo(() => {
   const { getXScale, getYScale } = useChartContext();
-  const { highlightedIndex } = React.useContext(ScrubberContext) ?? {};
+  const { scrubberPosition } = React.useContext(ScrubberContext) ?? {};
   const xScale = getXScale();
   const yScale = getYScale();
 
-  if (!xScale || !yScale || highlightedIndex === undefined || !isCategoricalScale(xScale))
+  if (!xScale || !yScale || scrubberPosition === undefined || !isCategoricalScale(xScale))
     return null;
 
   const yScaleDomain = yScale.range();
@@ -206,7 +206,7 @@ const ScrubberRect = memo(() => {
       fill="var(--color-bgLine)"
       height={yMax - yMin}
       width={barWidth}
-      x={xScale(highlightedIndex)}
+      x={xScale(scrubberPosition)}
       y={yMin}
     />
   );
@@ -215,7 +215,7 @@ const ScrubberRect = memo(() => {
 // todo: show a 31 day example on the doc site and explain how bearish vs bullish candles work
 const Candlesticks = () => {
   const infoTextRef = React.useRef<HTMLSpanElement>(null);
-  const selectedIndexRef = React.useRef<number | null>(null);
+  const selectedIndexRef = React.useRef<number | undefined>(undefined);
   const [timePeriod, setTimePeriod] = React.useState<TimePeriodTab>(tabs[0]);
   const stockData = btcCandles
     .slice(0, timePeriod.id === 'week' ? 7 : timePeriod.id === 'month' ? 30 : btcCandles.length)
@@ -288,11 +288,11 @@ const Candlesticks = () => {
 
   // Memoize the update function to avoid recreation on each render
   const updateInfoText = React.useCallback(
-    (index: number | null) => {
+    (index: number | undefined) => {
       if (!infoTextRef.current) return;
 
       const text =
-        index !== null
+        index !== undefined
           ? `Open: ${formatPrice(stockData[index].open)}, Close: ${formatPrice(
               stockData[index].close,
             )}, Volume: ${formatVolume(stockData[index].volume)}`
@@ -334,7 +334,7 @@ const Candlesticks = () => {
         borderRadius={0}
         dataKey={timePeriod.id}
         height={400}
-        onScrubberPosChange={updateInfoText}
+        onScrubberPositionChange={updateInfoText}
         series={[
           {
             id: 'stock-prices',
