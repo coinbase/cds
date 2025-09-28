@@ -3,16 +3,14 @@ import type React from 'react';
 
 import type { Rect } from '../../types';
 
-import { getChartDomain, getChartRange, type Series } from './chart';
+import { getChartDomain, getChartRange, isValidBounds, type AxisBounds, type Series } from './chart';
 import {
-  type AxisBounds,
   type ChartAxisScaleType,
   type ChartScaleFunction,
   getCategoricalScale,
   getNumericScale,
   isCategoricalScale,
   isNumericScale,
-  isValidBounds,
   type NumericScale,
 } from './scale';
 

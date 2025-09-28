@@ -1,21 +1,10 @@
 import type { ScaleBand, ScaleLinear, ScaleLogarithmic } from 'd3-scale';
 import { scaleBand, scaleLinear, scaleLog } from 'd3-scale';
 
+import type { AxisBounds } from './chart';
+
 // https://d3js.org/d3-scale - ideal next scale would be time
 export type ChartAxisScaleType = 'linear' | 'log' | 'band';
-
-export type AxisBounds = {
-  min: number;
-  max: number;
-};
-
-/**
- * Type guard to check if bounds are complete with both min and max values.
- * @param bounds - The bounds to validate
- * @returns True if bounds has both min and max defined
- */
-export const isValidBounds = (bounds: Partial<AxisBounds>): bounds is AxisBounds =>
-  bounds.min !== undefined && bounds.max !== undefined;
 
 export type NumericScale =
   | ScaleLinear<number, number, never>

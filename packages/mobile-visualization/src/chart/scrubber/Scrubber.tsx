@@ -612,9 +612,6 @@ export const Scrubber = memo(
       const ScrubberHeadLabelComponent =
         scrubberComponents?.ScrubberHeadLabelComponent ?? ScrubberHeadLabel;
 
-      // todo: figure out why scrubber heads across dataKey values isn't working anymore
-      // for animations
-
       // Wrap content in AnimatedG only if animation is enabled
       const content = (
         <>

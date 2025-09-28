@@ -272,7 +272,7 @@ function DraggablePriceTarget() {
               color: 'white',
               dx: -8,
               font: 'label1',
-              padding: { top: 5, bottom: 5, left: 10, right: 10 },
+              padding: { top: 0.5, bottom: 0.5, left: 1, right: 1 },
               textAnchor: 'end',
             }}
             labelPosition="right"
@@ -336,8 +336,8 @@ function DraggablePriceTarget() {
         ref={chartRef}
         showArea
         curve="monotone"
-        height={250}
-        padding={{ top: 10, bottom: 0.5, left: 0.5, right: 10 }}
+        height={300}
+        padding={{ top: 10, bottom: 4, left: 0.5, right: 10 }}
         series={[
           {
             id: 'prices',

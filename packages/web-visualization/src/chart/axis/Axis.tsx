@@ -62,13 +62,6 @@ export const axisUpdateAnimationVariants = {
 
 export type AxisBaseProps = {
   /**
-   * Key that identifies the current dataset.
-   * When this changes, triggers a fade-out/fade-in transition animation.
-   * Useful for distinguishing between live updates vs complete dataset changes.
-   * todo: @deprecate this
-   */
-  dataKey?: string | number;
-  /**
    * Component to render the grid lines.
    * @default DottedLine
    */

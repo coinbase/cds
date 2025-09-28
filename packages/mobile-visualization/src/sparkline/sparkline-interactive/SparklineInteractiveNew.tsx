@@ -450,7 +450,6 @@ export const SparklineInteractive = memo(
         )}
         <LineChart
           areaType={fillType}
-          dataKey={selectedPeriod}
           enableScrubbing={!disableScrubbing}
           fallback={fallback}
           fallbackType={fallbackType}

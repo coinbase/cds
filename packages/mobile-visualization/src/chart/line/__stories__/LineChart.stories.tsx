@@ -500,15 +500,11 @@ export const ColorShiftChart = () => {
     [currentTimestamps, activeTab],
   );
 
-  // todo: add this to chart context?
-  const dataKey = activeTab?.id ?? '1H';
-
   return (
     <VStack gap={3} width="100%">
       <LineChart
         showArea
         showXAxis
-        dataKey={dataKey}
         height={defaultChartHeight}
         onScrubberPositionChange={onScrubberPositionChange}
         padding={{ top: 6, left: 0, right: 0, bottom: 0 }}
@@ -695,9 +691,6 @@ export const PriceChart = () => {
     })}`;
   }, []);
 
-  // todo: add this to chart context?
-  const dataKey = activeTab?.id ?? '1H';
-
   return (
     <VStack gap={3} width="100%">
       {/*<HStack alignItems="flex-start" gap={3} justifyContent="space-between" padding={4}>
@@ -710,7 +703,6 @@ export const PriceChart = () => {
       </HStack>*/}
       <LineChart
         showArea
-        dataKey={dataKey}
         height={defaultChartHeight}
         onScrubberPositionChange={onScrubberPositionChange}
         padding={{ left: 0, right: 3, bottom: 3, top: 3 }}

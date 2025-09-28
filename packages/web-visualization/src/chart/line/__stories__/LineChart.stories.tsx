@@ -459,9 +459,6 @@ const ColorShiftChart = () => {
     [currentTimestamps, activeTab],
   );
 
-  // todo: add this to chart context?
-  const dataKey = activeTab?.id ?? '1H';
-
   return (
     <motion.div
       // @ts-expect-error we're using a custom color variable here
@@ -474,7 +471,6 @@ const ColorShiftChart = () => {
           enableScrubbing
           showArea
           showXAxis
-          dataKey={dataKey}
           height={350}
           onScrubberPositionChange={onScrubberPositionChange}
           overflow="visible"
@@ -679,15 +675,11 @@ const PriceChart = () => {
     })}`;
   }, []);
 
-  // todo: add this to chart context?
-  const dataKey = activeTab?.id ?? '1H';
-
   return (
     <VStack gap={3} width="100%">
       <LineChart
         enableScrubbing
         showArea
-        dataKey={dataKey}
         height={372}
         onScrubberPositionChange={onScrubberPositionChange}
         overflow="visible"

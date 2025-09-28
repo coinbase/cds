@@ -43,7 +43,6 @@ export const XAxis = memo<XAxisProps>(
     classNames,
     GridLineComponent = DottedLine,
     tickMarkLabelGap = 0.25,
-    dataKey,
     size = 32,
     minTickLabelGap = 0.5,
     showTickMarks,
@@ -212,35 +211,15 @@ export const XAxis = memo<XAxisProps>(
       styles?.tickLabel,
     ]);
 
-    // Handle animations when dataKey changes
-    const prevDataKey = useSharedValue(dataKey);
+    // Handle initial mount animation
+    useEffect(() => {
+      if (!animate) return;
 
-    useAnimatedReaction(
-      () => dataKey,
-      (currentDataKey) => {
-        'worklet';
-        if (!animate) return;
-
-        if (isInitialMount.value) {
-          // Initial mount animation
-          tickLabelsOpacity.value = withMotionTiming(tickLabelsInitialAnimateIn) as number;
-          isInitialMount.value = false;
-        } else if (prevDataKey.value !== currentDataKey) {
-          // Data update animation - fade out old data
-          gridOpacity.value = withMotionTiming(updateAnimateOut) as number;
-          tickLabelsOpacity.value = withMotionTiming({
-            ...updateAnimateOut,
-            delay: 0,
-          }) as number;
-
-          // Animate in with new data after fade out completes
-          gridOpacity.value = withMotionTiming(updateAnimateIn) as number;
-          tickLabelsOpacity.value = withMotionTiming(updateAnimateIn) as number;
-        }
-        prevDataKey.value = currentDataKey;
-      },
-      [dataKey],
-    );
+      if (isInitialMount.value) {
+        tickLabelsOpacity.value = withMotionTiming(tickLabelsInitialAnimateIn) as number;
+        isInitialMount.value = false;
+      }
+    }, [animate]);
 
     const gridAnimatedStyle = useAnimatedStyle(() => ({
       opacity: gridOpacity.value,
@@ -261,7 +240,7 @@ export const XAxis = memo<XAxisProps>(
                 <ReferenceLine LineComponent={GridLineComponent} dataX={tick.tick} />
               );
 
-              return <G key={`grid-${tick.tick}-${index}-${dataKey}`}>{verticalLine}</G>;
+              return <G key={`grid-${tick.tick}-${index}`}>{verticalLine}</G>;
             })}
           </AnimatedG>
         )}

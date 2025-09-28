@@ -337,7 +337,6 @@ const Candlesticks = () => {
         animate={false}
         aria-labelledby={infoTextId}
         borderRadius={0}
-        dataKey={timePeriod.id}
         height={400}
         onScrubberPositionChange={updateInfoText}
         series={[

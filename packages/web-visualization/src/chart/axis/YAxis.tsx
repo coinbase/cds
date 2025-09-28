@@ -50,7 +50,6 @@ export const YAxis = memo<YAxisProps>(
     classNames,
     GridLineComponent = DottedLine,
     tickMarkLabelGap = 1,
-    dataKey,
     size = 44,
     minTickLabelGap = 0,
     showTickMarks,
@@ -186,7 +185,7 @@ export const YAxis = memo<YAxisProps>(
 
               return animate ? (
                 <motion.g
-                  key={`grid-${tick.tick}-${index}-${dataKey}`}
+                  key={`grid-${tick.tick}-${index}`}
                   animate="animate"
                   exit="exit"
                   initial="initial"
@@ -195,7 +194,7 @@ export const YAxis = memo<YAxisProps>(
                   {horizontalLine}
                 </motion.g>
               ) : (
-                <g key={`grid-${tick.tick}-${index}-${dataKey}`}>{horizontalLine}</g>
+                <g key={`grid-${tick.tick}-${index}`}>{horizontalLine}</g>
               );
             })}
           </AnimatePresence>

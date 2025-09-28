@@ -58,12 +58,6 @@ export type AreaChartProps = Omit<CartesianChartProps, 'xAxis' | 'yAxis' | 'seri
      * @default 'solid'
      */
     lineType?: 'solid' | 'dotted' | 'gradient';
-    /**
-     * Key that identifies the current dataset.
-     * When this changes, triggers fade-out/fade-in transitions for axes and scrubber heads.
-     * Useful for distinguishing between live updates vs complete dataset changes.
-     */
-    dataKey?: string | number;
 
     xAxis?: Partial<AxisConfigProps> & XAxisProps;
     yAxis?: Partial<AxisConfigProps> & YAxisProps;
@@ -85,7 +79,6 @@ export const AreaChart = memo(
         showYAxis,
         showLines = false,
         lineType = 'solid',
-        dataKey,
         xAxis,
         yAxis,
         padding: userPadding,
@@ -181,10 +174,8 @@ export const AreaChart = memo(
           xAxis={xAxisConfig}
           yAxis={yAxisConfig}
         >
-          {showXAxis && <XAxis dataKey={dataKey} position="end" {...xAxisVisualProps} />}
-          {showYAxis && (
-            <YAxis axisId={yAxisId} dataKey={dataKey} position="end" {...yAxisVisualProps} />
-          )}
+          {showXAxis && <XAxis position="end" {...xAxisVisualProps} />}
+          {showYAxis && <YAxis axisId={yAxisId} position="end" {...yAxisVisualProps} />}
           {series?.map(
             ({
               id,

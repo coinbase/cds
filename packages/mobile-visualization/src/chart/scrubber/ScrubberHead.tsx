@@ -10,25 +10,6 @@ import { Point, type PointProps, type PointRef } from '../point';
 
 const AnimatedG = Reanimated.createAnimatedComponent(G);
 
-export const dataKeyUpdateAnimationVariants = {
-  initial: {
-    opacity: 0,
-  },
-  animate: {
-    opacity: 1,
-    transition: {
-      duration: 0.15,
-      delay: 0.3,
-    },
-  },
-  exit: {
-    opacity: 0,
-    transition: {
-      duration: 0.05,
-    },
-  },
-};
-
 export type ScrubberHeadRef = PointRef;
 
 export type ScrubberHeadProps = SharedProps &
@@ -57,12 +38,6 @@ export type ScrubberHeadProps = SharedProps &
      * Filter to only show dot for specific series (used for hover-based positioning).
      */
     seriesId?: string;
-    /**
-     * Key that identifies the current dataset.
-     * When this changes, triggers a fade-out/fade-in transition animation.
-     * Useful for distinguishing between live updates vs complete dataset changes.
-     */
-    dataKey?: string | number;
   };
 
 /**
@@ -81,7 +56,6 @@ export const ScrubberHead = memo(
         testID,
         idlePulse = false,
         opacity = 1,
-        dataKey,
         ...props
       },
       ref,

@@ -43,7 +43,6 @@ export const XAxis = memo<XAxisProps>(
     classNames,
     GridLineComponent = DottedLine,
     tickMarkLabelGap = 0.25,
-    dataKey,
     size = 32,
     minTickLabelGap = 0.5,
     showTickMarks,
@@ -190,7 +189,7 @@ export const XAxis = memo<XAxisProps>(
 
               return animate ? (
                 <motion.g
-                  key={`grid-${tick.tick}-${index}-${dataKey}`}
+                  key={`grid-${tick.tick}-${index}`}
                   animate="animate"
                   exit="exit"
                   initial="initial"
@@ -199,7 +198,7 @@ export const XAxis = memo<XAxisProps>(
                   {verticalLine}
                 </motion.g>
               ) : (
-                <g key={`grid-${tick.tick}-${index}-${dataKey}`}>{verticalLine}</g>
+                <g key={`grid-${tick.tick}-${index}`}>{verticalLine}</g>
               );
             })}
           </AnimatePresence>

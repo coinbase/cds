@@ -579,9 +579,6 @@ export const Scrubber = memo(
       const ScrubberHeadComponent = HeadComponent ?? ScrubberHead;
       const ScrubberHeadLabelComponent = HeadLabelComponent ?? ScrubberHeadLabel;
 
-      // todo: figure out why scrubber heads across dataKey values isn't working anymore
-      // for animations
-
       const pixelX =
         dataX !== undefined && defaultXScale ? getPointOnScale(dataX, defaultXScale) : undefined;
 

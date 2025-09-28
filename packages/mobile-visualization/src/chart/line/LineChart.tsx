@@ -73,12 +73,6 @@ export type LineChartProps = Omit<CartesianChartProps, 'xAxis' | 'yAxis' | 'seri
      * Whether to show the Y axis.
      */
     showYAxis?: boolean;
-    /**
-     * Key that identifies the current dataset.
-     * When this changes, triggers fade-out/fade-in transitions for axes and scrubber heads.
-     * Useful for distinguishing between live updates vs complete dataset changes.
-     */
-    dataKey?: string | number;
     xAxis?: Partial<AxisConfigProps> & XAxisProps;
     yAxis?: Partial<AxisConfigProps> & YAxisProps;
     /**
@@ -109,7 +103,6 @@ export const LineChart = memo(
         renderPoints,
         showXAxis,
         showYAxis,
-        dataKey,
         xAxis,
         yAxis,
         padding: userPadding,
@@ -196,10 +189,8 @@ export const LineChart = memo(
             yAxis={yAxisConfig}
           >
             {/* Render axes first for grid lines to appear behind everything else */}
-            {showXAxis && <XAxis dataKey={dataKey} position="end" {...xAxisVisualProps} />}
-            {showYAxis && (
-              <YAxis axisId={yAxisId} dataKey={dataKey} position="end" {...yAxisVisualProps} />
-            )}
+            {showXAxis && <XAxis position="end" {...xAxisVisualProps} />}
+            {showYAxis && <YAxis axisId={yAxisId} position="end" {...yAxisVisualProps} />}
             {hasData &&
               series?.map(({ id, data, label, color, yAxisId, ...linePropsFromSeries }) => (
                 <Line
