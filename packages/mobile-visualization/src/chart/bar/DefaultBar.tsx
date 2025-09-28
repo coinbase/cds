@@ -99,10 +99,9 @@ export const DefaultBar = memo<DefaultBarProps>(
 
       animationProgress.value = 0;
       animationProgress.value = withTiming(1, {
-        duration: 1000,
-        easing: Easing.out(Easing.quad),
+        duration: 300,
       });
-    }, [animate, animationProgress, targetPath]);
+    }, [animate, animationProgress, targetPath, baselinePath]);
 
     return (
       <Path

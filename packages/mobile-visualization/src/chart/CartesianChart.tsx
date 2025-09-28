@@ -366,19 +366,17 @@ export const CartesianChart = memo(
             onScrubberPositionChange={onScrubberPositionChange}
           >
             <Box ref={ref} onLayout={onContainerLayout} style={containerStyles} {...props}>
-              {chartWidth > 0 && chartHeight > 0 && (
-                <Svg
-                  ref={(node) => {
-                    if (internalSvgRef.current !== node) {
-                      (internalSvgRef as React.MutableRefObject<Svg | null>).current = node;
-                    }
-                  }}
-                  height={chartHeight}
-                  width={chartWidth}
-                >
-                  {children}
-                </Svg>
-              )}
+              <Svg
+                ref={(node) => {
+                  if (internalSvgRef.current !== node) {
+                    (internalSvgRef as React.MutableRefObject<Svg | null>).current = node;
+                  }
+                }}
+                height={chartHeight}
+                width={chartWidth}
+              >
+                {children}
+              </Svg>
             </Box>
           </ScrubberProvider>
         </ChartProvider>
