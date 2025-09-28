@@ -4,7 +4,7 @@ import { isCategoricalScale, ScrubberContext } from '@coinbase/cds-common/visual
 import { VStack } from '@coinbase/cds-web/layout';
 import { Text } from '@coinbase/cds-web/typography';
 
-import { Chart } from '../..';
+import { CartesianChart } from '../..';
 import { XAxis, YAxis } from '../../axis';
 import { useChartContext } from '../../ChartProvider';
 import { ReferenceLine, SolidLine, type SolidLineProps } from '../../line';
@@ -67,7 +67,12 @@ const PositiveAndNegativeCashFlow = () => {
   ];
 
   return (
-    <Chart height={420} padding={4} series={series} xAxis={{ data: categories, scaleType: 'band' }}>
+    <CartesianChart
+      height={420}
+      padding={4}
+      series={series}
+      xAxis={{ data: categories, scaleType: 'band' }}
+    >
       <XAxis />
       <YAxis
         showGrid
@@ -76,7 +81,7 @@ const PositiveAndNegativeCashFlow = () => {
       />
       <BarPlot />
       <ReferenceLine LineComponent={SolidLine} dataY={0} />
-    </Chart>
+    </CartesianChart>
   );
 };
 
@@ -355,11 +360,7 @@ const Candlesticks = () => {
         {timePeriod.id === 'year' ? (
           <Scrubber
             hideOverlay
-            scrubberComponents={{
-              ScrubberLineComponent: (props) => (
-                <ReferenceLine {...props} LineComponent={ThinSolidLine} />
-              ),
-            }}
+            LineComponent={(props) => <ReferenceLine {...props} LineComponent={ThinSolidLine} />}
             seriesIds={[]}
           />
         ) : (
@@ -420,7 +421,7 @@ export const All = () => {
         <MonthlyRewards />
       </Example>
       <Example title="Multiple Y Axes">
-        <Chart
+        <CartesianChart
           height={400}
           series={[
             {
@@ -469,7 +470,7 @@ export const All = () => {
             tickLabelFormatter={(value) => `$${value}k`}
           />
           <BarPlot />
-        </Chart>
+        </CartesianChart>
       </Example>
       <Example title="Candlestick Chart">
         <Candlesticks />

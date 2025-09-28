@@ -277,7 +277,7 @@ function GainLossChart() {
   const solidColor = `url(#${gradientId}-solid)`;
 
   return (
-    <Chart
+    <CartesianChart
       enableScrubbing
       height={250}
       series={[
@@ -296,7 +296,7 @@ function GainLossChart() {
       <Area seriesId="prices" curve="monotone" fill={`url(#${gradientId}-gradient)`} />
       <Line strokeWidth={3} curve="monotone" seriesId="prices" stroke={solidColor} />
       <Scrubber hideOverlay />
-    </Chart>
+    </CartesianChart>
   );
 }
 ```
@@ -371,7 +371,7 @@ function PointsChart() {
   const data = [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58];
 
   return (
-    <Chart
+    <CartesianChart
       height={250}
       series={[
         {
@@ -400,7 +400,7 @@ function PointsChart() {
         }
         curve="monotone"
       />
-    </Chart>
+    </CartesianChart>
   );
 }
 ```
@@ -753,7 +753,7 @@ const BTCActiveIndicator = memo(({ style, ...props }: TabsActiveIndicatorProps) 
         accessibilityLabel={scrubberLabel}
         padding={{ left: 2, right: 2 }}
       >
-        <Scrubber scrubberLabel={scrubberLabel} scrubberLabelProps={{ elevation: 1 }} idlePulse />
+        <Scrubber label={scrubberLabel} scrubberLabelProps={{ elevation: 1 }} idlePulse />
       </LineChart>
       <PeriodSelector
         TabComponent={BTCTab}
@@ -927,7 +927,7 @@ function ForecastAssetPrice() {
       AreaComponent={(props) => <DottedArea {...props} peakOpacity={0.4} baselineOpacity={0.4} />}
       style={{ outlineColor: assets.btc.color }}
     >
-      <Scrubber scrubberLabel={scrubberLabel} scrubberLabelProps={{ elevation: 1 }} />
+      <Scrubber label={scrubberLabel} scrubberLabelProps={{ elevation: 1 }} />
     </LineChart>
   );
 };
@@ -1024,7 +1024,7 @@ function AvailabilityChart() {
   });
 
   return (
-    <Chart
+    <CartesianChart
       enableScrubbing
       onScrubberPositionChange={setScrubIndex}
       height={300}
@@ -1068,7 +1068,7 @@ function AvailabilityChart() {
         seriesId="availability"
       />
       <Scrubber overlayOffset={10} />
-    </Chart>
+    </CartesianChart>
   );
 }
 ```

@@ -31,7 +31,7 @@ import {
 } from '../..';
 import { Area, type AreaComponentProps, DottedArea, GradientArea } from '../../area';
 import { XAxis, YAxis } from '../../axis';
-import { Chart } from '../../Chart';
+import { CartesianChart } from '../../CartesianChart';
 import { useChartContext } from '../../ChartProvider';
 import { Point } from '../../point';
 import { DottedLine, GradientLine, Line, LineChart, ReferenceLine, SolidLine } from '..';
@@ -300,7 +300,7 @@ const BTCPriceChart = () => {
             title={<Text font="title1">Coinbase Wrapped BTC</Text>}
           />
         </HStack>
-        <Chart
+        <CartesianChart
           enableScrubbing
           height={350}
           onScrubberPositionChange={onScrubberPositionChange}
@@ -319,21 +319,21 @@ const BTCPriceChart = () => {
           <Line showArea AreaComponent={AreaComponent} seriesId="price" strokeWidth={3} />
           <Scrubber
             idlePulse
-            scrubberLabel={displayDate}
+            label={displayDate}
+            lineStroke="black"
             scrubberLabelProps={{
               color: 'black',
             }}
-            scrubberLineStroke="black"
             styles={{
-              scrubberHead: {
+              head: {
                 stroke: btcAccentColor,
               },
-              scrubberOverlay: {
+              overlay: {
                 fill: btcAccentColor,
               },
             }}
           />
-        </Chart>
+        </CartesianChart>
         <Box paddingX={{ phone: 2, tablet: 4, desktop: 4 }}>
           <PeriodSelector
             TabComponent={PeriodSelectorTab}
@@ -490,7 +490,7 @@ const ColorShiftChart = () => {
             tickLabelFormatter: indexToTime,
           }}
         >
-          <Scrubber scrubberLabel={scrubberLabel} />
+          <Scrubber label={scrubberLabel} />
           <ReferenceLine
             dataY={startPrice}
             label={`$${startPrice}`}
@@ -728,7 +728,7 @@ const PriceChart = () => {
         ]}
         yAxis={{ domainLimit: 'strict' }}
       >
-        <Scrubber scrubberLabel={scrubberLabel} scrubberLabelProps={{ elevation: 1 }} />
+        <Scrubber label={scrubberLabel} scrubberLabelProps={{ elevation: 1 }} />
       </LineChart>
       <Box paddingX={{ phone: 2, tablet: 4, desktop: 4 }}>
         <PeriodSelector
@@ -891,7 +891,7 @@ function ForecastAssetPrice() {
         tickInterval: 2,
       }}
     >
-      <Scrubber scrubberLabel={scrubberLabel} scrubberLabelProps={{ elevation: 1 }} />
+      <Scrubber label={scrubberLabel} scrubberLabelProps={{ elevation: 1 }} />
     </LineChart>
   );
 }
@@ -971,7 +971,7 @@ const BitcoinChartWithScrubberHead = () => {
           ]}
           width="100%"
         >
-          <Scrubber idlePulse styles={{ scrubberHead: { stroke: 'white' } }} />
+          <Scrubber idlePulse styles={{ head: { stroke: 'white' } }} />
         </LineChart>
       </div>
     </VStack>
@@ -1178,7 +1178,7 @@ const AvailabilityChart = () => {
   );
 
   return (
-    <Chart
+    <CartesianChart
       enableScrubbing
       accessibilityLabel={accessibilityLabel}
       height={300}
@@ -1194,7 +1194,10 @@ const AvailabilityChart = () => {
         data: availabilityEvents.map((event) => event.date.getTime()),
       }}
       yAxis={{
-        domain: ({ min, max }) => ({ min: Math.max(min - 2, 0), max: Math.min(max + 2, 100) }),
+        domain: ({ min, max }: { min: number; max: number }) => ({
+          min: Math.max(min - 2, 0),
+          max: Math.min(max + 2, 100),
+        }),
       }}
     >
       <ChartDefs />
@@ -1221,7 +1224,7 @@ const AvailabilityChart = () => {
         seriesId="availability"
       />
       <Scrubber overlayOffset={10} />
-    </Chart>
+    </CartesianChart>
   );
 };
 
@@ -1306,7 +1309,7 @@ const GainLossChart = () => {
   const solidColor = `url(#${gradientId}-solid)`;
 
   return (
-    <Chart
+    <CartesianChart
       enableScrubbing
       height={250}
       padding={{ top: 1.5, bottom: 1.5, left: 0, right: 0 }}
@@ -1323,7 +1326,7 @@ const GainLossChart = () => {
       <Area curve="monotone" fill={`url(#${gradientId}-gradient)`} seriesId="prices" />
       <Line curve="monotone" seriesId="prices" stroke={solidColor} strokeWidth={3} />
       <Scrubber hideOverlay />
-    </Chart>
+    </CartesianChart>
   );
 };
 
@@ -1525,7 +1528,7 @@ const PointsChart = () => {
   const data = [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58];
 
   return (
-    <Chart
+    <CartesianChart
       height={250}
       series={[
         {
@@ -1554,7 +1557,7 @@ const PointsChart = () => {
         }
         seriesId="prices"
       />
-    </Chart>
+    </CartesianChart>
   );
 };
 
@@ -1671,7 +1674,7 @@ const AssetPriceDotted = memo(() => {
         ]}
         style={{ outlineColor: assets.btc.color }}
       >
-        <Scrubber idlePulse scrubberLabel={scrubberLabel} scrubberLabelProps={{ elevation: 1 }} />
+        <Scrubber idlePulse label={scrubberLabel} scrubberLabelProps={{ elevation: 1 }} />
       </LineChart>
       <PeriodSelector
         TabComponent={BTCTab}

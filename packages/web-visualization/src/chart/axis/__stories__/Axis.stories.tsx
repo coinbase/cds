@@ -2,7 +2,7 @@ import React, { memo, useCallback, useMemo } from 'react';
 import { VStack } from '@coinbase/cds-web/layout';
 import { Text } from '@coinbase/cds-web/typography';
 
-import { Chart } from '../../Chart';
+import { CartesianChart } from '../../CartesianChart';
 import { LineChart, SolidLine, type SolidLineProps } from '../../line';
 import { Line } from '../../line/Line';
 import { Scrubber } from '../../scrubber/Scrubber';
@@ -218,7 +218,7 @@ const TimeOfDayAxesExample = () => {
 };
 
 const MultipleYAxesExample = () => (
-  <Chart
+  <CartesianChart
     enableScrubbing
     height={512}
     series={[
@@ -242,7 +242,7 @@ const MultipleYAxesExample = () => (
     <Line curve="natural" seriesId="linear" />
     <Line curve="natural" seriesId="log" />
     <Scrubber />
-  </Chart>
+  </CartesianChart>
 );
 
 const DomainLimitType = ({ limit }: { limit: 'nice' | 'strict' }) => {
@@ -251,7 +251,7 @@ const DomainLimitType = ({ limit }: { limit: 'nice' | 'strict' }) => {
   ];
 
   return (
-    <Chart
+    <CartesianChart
       enableScrubbing
       height={400}
       series={[
@@ -302,7 +302,7 @@ const DomainLimitType = ({ limit }: { limit: 'nice' | 'strict' }) => {
         tickLabelFormatter={(value) => value.toLocaleString()}
       />
       <Scrubber />
-    </Chart>
+    </CartesianChart>
   );
 };
 

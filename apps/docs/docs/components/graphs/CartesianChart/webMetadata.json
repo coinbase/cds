@@ -1,5 +1,5 @@
 {
-  "import": "import { Chart } from '@coinbase/cds-web-visualization'",
+  "import": "import { CartesianChart } from '@coinbase/cds-web-visualization'",
   "description": "A composable chart component that can be used to display data in a variety of ways.",
   "relatedComponents": [
     {

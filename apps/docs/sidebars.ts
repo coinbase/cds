@@ -575,8 +575,8 @@ const sidebars: SidebarsConfig = {
             },
             {
               type: 'doc',
-              id: 'components/graphs/Chart/chart',
-              label: 'Chart',
+              id: 'components/graphs/CartesianChart/cartesianChart',
+              label: 'CartesianChart',
             },
             {
               type: 'doc',
@@ -587,6 +587,11 @@ const sidebars: SidebarsConfig = {
               type: 'doc',
               id: 'components/graphs/ReferenceLine/referenceLine',
               label: 'ReferenceLine',
+            },
+            {
+              type: 'doc',
+              id: 'components/graphs/PeriodSelector/periodSelector',
+              label: 'PeriodSelector',
             },
             {
               type: 'doc',

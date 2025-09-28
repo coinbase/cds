@@ -11,7 +11,7 @@ import { Box } from '@coinbase/cds-web/layout';
 
 import { XAxis, type XAxisProps } from '../axis/XAxis';
 import { YAxis, type YAxisProps } from '../axis/YAxis';
-import { Chart, type ChartProps } from '../Chart';
+import { CartesianChart, type CartesianChartProps } from '../CartesianChart';
 
 import { Line, type LineProps } from './Line';
 
@@ -56,7 +56,7 @@ export type LineSeries = Omit<Series, 'data'> & {
     >
   >;
 
-export type LineChartProps = Omit<ChartProps, 'xAxis' | 'yAxis' | 'series'> &
+export type LineChartProps = Omit<CartesianChartProps, 'xAxis' | 'yAxis' | 'series'> &
   Pick<
     LineProps,
     | 'showArea'
@@ -197,7 +197,7 @@ export const LineChart = memo(
 
       return (
         <Box position="relative">
-          <Chart
+          <CartesianChart
             ref={ref}
             {...chartProps}
             enableScrubbing={enableScrubbing}
@@ -228,7 +228,7 @@ export const LineChart = memo(
                 />
               ))}
             {children}
-          </Chart>
+          </CartesianChart>
           {!hasData && !disableFallback && (
             <Box
               alignItems="center"

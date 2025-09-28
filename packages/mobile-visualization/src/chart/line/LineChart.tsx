@@ -12,7 +12,7 @@ import { Box } from '@coinbase/cds-mobile/layout';
 
 import { XAxis, type XAxisProps } from '../axis/XAxis';
 import { YAxis, type YAxisProps } from '../axis/YAxis';
-import { Chart, type ChartProps } from '../Chart';
+import { CartesianChart, type CartesianChartProps } from '../CartesianChart';
 
 import { Line, type LineProps } from './Line';
 
@@ -55,7 +55,7 @@ export type LineSeries = Omit<Series, 'data'> & {
     >
   >;
 
-export type LineChartProps = Omit<ChartProps, 'xAxis' | 'yAxis' | 'series'> &
+export type LineChartProps = Omit<CartesianChartProps, 'xAxis' | 'yAxis' | 'series'> &
   Pick<
     LineProps,
     'showArea' | 'areaType' | 'type' | 'LineComponent' | 'AreaComponent' | 'curve' | 'renderPoints'
@@ -186,7 +186,7 @@ export const LineChart = memo(
 
       return (
         <View style={{ position: 'relative' }}>
-          <Chart
+          <CartesianChart
             {...chartProps}
             ref={ref}
             enableScrubbing={enableScrubbing}
@@ -216,7 +216,7 @@ export const LineChart = memo(
                 />
               ))}
             {children}
-          </Chart>
+          </CartesianChart>
           {!hasData && !disableFallback && (
             <Box
               alignItems="center"

@@ -448,7 +448,7 @@ export const SparklineInteractive = memo(
             tickLabelFormatter={formatAxisDate}
           />
           {children}
-          <Scrubber scrubberLabel={scrubberLabel} seriesIds={[]} />
+          <Scrubber label={scrubberLabel} seriesIds={[]} />
         </LineChart>
         {showBottomPeriodSelector && (
           <Box

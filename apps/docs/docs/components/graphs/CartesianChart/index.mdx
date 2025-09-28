@@ -1,6 +1,6 @@
 ---
-id: chart
-title: Chart
+id: cartesianChart
+title: CartesianChart
 platform_switcher_options: { web: true, mobile: false }
 hide_title: true
 ---
@@ -10,14 +10,14 @@ import { VStack } from '@coinbase/cds-web/layout';
 import { ComponentHeader } from '@site/src/components/page/ComponentHeader';
 import { ComponentTabsContainer } from '@site/src/components/page/ComponentTabsContainer';
 
-import webPropsToc from ':docgen/web-visualization/chart/Chart/toc-props';
+import webPropsToc from ':docgen/web-visualization/chart/CartesianChart/toc-props';
 
 import WebPropsTable from './_webPropsTable.mdx';
 import WebExamples, { toc as webExamplesToc } from './_webExamples.mdx';
 import webMetadata from './webMetadata.json';
 
 <VStack gap={5}>
-  <ComponentHeader title="Chart" webMetadata={webMetadata} />
+  <ComponentHeader title="CartesianChart" webMetadata={webMetadata} />
   <ComponentTabsContainer
     webPropsTable={<WebPropsTable />}
     webExamples={<WebExamples />}

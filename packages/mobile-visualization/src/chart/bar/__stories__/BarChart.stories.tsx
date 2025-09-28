@@ -6,7 +6,7 @@ import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 import { VStack } from '@coinbase/cds-mobile/layout';
 
 import { XAxis, YAxis } from '../../axis';
-import { Chart } from '../../Chart';
+import { CartesianChart } from '../../CartesianChart';
 import { ReferenceLine, SolidLine, type SolidLineProps } from '../../line';
 import { Bar } from '../Bar';
 import { BarChart } from '../BarChart';
@@ -49,7 +49,12 @@ const PositiveAndNegativeCashFlow = () => {
   ];
 
   return (
-    <Chart height={420} padding={4} series={series} xAxis={{ data: categories, scaleType: 'band' }}>
+    <CartesianChart
+      height={420}
+      padding={4}
+      series={series}
+      xAxis={{ data: categories, scaleType: 'band' }}
+    >
       <XAxis />
       <YAxis
         showGrid
@@ -58,7 +63,7 @@ const PositiveAndNegativeCashFlow = () => {
       />
       <BarPlot />
       <ReferenceLine LineComponent={SolidLine} dataY={0} />
-    </Chart>
+    </CartesianChart>
   );
 };
 
@@ -164,7 +169,7 @@ const MonthlyRewards = () => {
 const MultipleYAxes = () => {
   const theme = useTheme();
   return (
-    <Chart
+    <CartesianChart
       height={defaultChartProps}
       series={[
         {
@@ -213,7 +218,7 @@ const MultipleYAxes = () => {
         tickLabelFormatter={(value) => `$${value}k`}
       />
       <BarPlot />
-    </Chart>
+    </CartesianChart>
   );
 };
 

@@ -8,7 +8,7 @@ import {
 } from '@coinbase/cds-common/visualizations/charts';
 
 import { XAxis, type XAxisProps, YAxis, type YAxisProps } from '../axis';
-import { Chart, type ChartProps } from '../Chart';
+import { CartesianChart, type CartesianChartProps } from '../CartesianChart';
 import { Line, type LineProps } from '../line/Line';
 
 import { Area, type AreaProps } from './Area';
@@ -21,7 +21,7 @@ export type AreaSeries = Series &
   Partial<Pick<AreaProps, 'AreaComponent' | 'curve' | 'fillOpacity' | 'type' | 'fill'>> &
   Partial<Pick<LineProps, 'LineComponent' | 'strokeWidth' | 'stroke' | 'opacity'>>;
 
-export type AreaChartProps = Omit<ChartProps, 'xAxis' | 'yAxis' | 'series'> &
+export type AreaChartProps = Omit<CartesianChartProps, 'xAxis' | 'yAxis' | 'series'> &
   Pick<AreaProps, 'AreaComponent' | 'curve' | 'fillOpacity' | 'type'> &
   Pick<LineProps, 'LineComponent' | 'strokeWidth'> & {
     /**
@@ -173,7 +173,7 @@ export const AreaChart = memo(
       };
 
       return (
-        <Chart
+        <CartesianChart
           ref={ref}
           {...chartProps}
           enableScrubbing={enableScrubbing}
@@ -237,7 +237,7 @@ export const AreaChart = memo(
               },
             )}
           {children}
-        </Chart>
+        </CartesianChart>
       );
     },
   ),

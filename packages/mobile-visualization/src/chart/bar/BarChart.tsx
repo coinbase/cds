@@ -9,7 +9,7 @@ import {
 } from '@coinbase/cds-common/visualizations/charts';
 
 import { XAxis, type XAxisProps, YAxis, type YAxisProps } from '../axis';
-import { Chart, type ChartProps } from '../Chart';
+import { CartesianChart, type CartesianChartProps } from '../CartesianChart';
 
 import { type BarProps } from './Bar';
 import { BarPlot, type BarPlotProps } from './BarPlot';
@@ -22,7 +22,7 @@ export type BarSeries = Series &
   Partial<Pick<BarProps, 'BarComponent' | 'fill' | 'fillOpacity' | 'stroke' | 'strokeWidth'>>;
 
 //  & Omit<ScrubberGroupProps, 'chartScale' | 'heads'>
-export type BarChartProps = Omit<ChartProps, 'xAxis' | 'yAxis' | 'series'> &
+export type BarChartProps = Omit<CartesianChartProps, 'xAxis' | 'yAxis' | 'series'> &
   Pick<
     BarPlotProps,
     'barPadding' | 'StackComponent' | 'roundBaseline' | 'stackGap' | 'barMinSize' | 'stackMinSize'
@@ -175,7 +175,7 @@ export const BarChart = memo(
       };
 
       return (
-        <Chart
+        <CartesianChart
           enableScrubbing={enableScrubbing}
           {...chartProps}
           ref={ref}
@@ -203,7 +203,7 @@ export const BarChart = memo(
             strokeWidth={strokeWidth}
           />
           {children}
-        </Chart>
+        </CartesianChart>
       );
     },
   ),

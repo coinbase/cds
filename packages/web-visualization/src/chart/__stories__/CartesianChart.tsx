@@ -16,11 +16,11 @@ import { useChartContext } from '../ChartProvider';
 import { SolidLine, type SolidLineProps } from '../line';
 import { Line } from '../line/Line';
 import { LineChart } from '../line/LineChart';
-import { BarPlot, Chart, type ChartTextChildren, PeriodSelector, Scrubber } from '../';
+import { BarPlot, CartesianChart, type ChartTextChildren, PeriodSelector, Scrubber } from '../';
 
 export default {
-  component: Chart,
-  title: 'Components/Chart',
+  component: CartesianChart,
+  title: 'Components/Chart/CartesianChart',
 };
 
 const MultipleChart = () => {
@@ -30,7 +30,7 @@ const MultipleChart = () => {
 
   return (
     <VStack gap={3}>
-      <Chart
+      <CartesianChart
         height={350}
         series={[
           { id: 'bar', data: barData },
@@ -39,7 +39,7 @@ const MultipleChart = () => {
       >
         <Area seriesId="bar" type="dotted" />
         <Line curve="natural" seriesId="line" />
-      </Chart>
+      </CartesianChart>
     </VStack>
   );
 };
@@ -185,7 +185,7 @@ const PredictionMarket = () => {
           Eagles vs. Ravens
         </Text>
       </VStack>
-      <Chart
+      <CartesianChart
         enableScrubbing
         height={300}
         onScrubberPositionChange={updateScrubberLabel}
@@ -210,8 +210,8 @@ const PredictionMarket = () => {
           />
         ))}
         <CustomYAxis />
-        <Scrubber scrubberLabel={scrubberLabel} seriesIds={scrubbedSeries} />
-      </Chart>
+        <Scrubber label={scrubberLabel} seriesIds={scrubbedSeries} />
+      </CartesianChart>
       <Box paddingX={2}>
         <PeriodSelector activeTab={activeTab} onChange={setActiveTab} tabs={tabs} />
       </Box>
@@ -335,7 +335,7 @@ const EarningsHistory = () => {
 
   return (
     <VStack gap={0.5}>
-      <Chart
+      <CartesianChart
         animate={false}
         height={250}
         overflow="visible"
@@ -360,7 +360,7 @@ const EarningsHistory = () => {
         <XAxis size={20} tickLabelFormatter={surprisePercentage} />
         <CirclePlot opacity={0.5} seriesId="estimatedEPS" />
         <CirclePlot seriesId="actualEPS" />
-      </Chart>
+      </CartesianChart>
       <HStack gap={2} justifyContent="flex-end">
         <LegendItem label="Estimated EPS" opacity={0.5} />
         <LegendItem label="Actual EPS" />
@@ -436,7 +436,7 @@ const PriceWithVolume = () => {
         style={{ padding: 0 }}
         title={<Text font="title1">Bitcoin</Text>}
       />
-      <Chart
+      <CartesianChart
         enableScrubbing
         accessibilityLabel={accessibilityLabel}
         aria-labelledby={headerId}
@@ -479,7 +479,7 @@ const PriceWithVolume = () => {
         <BarPlot seriesIds={['volume']} />
         <Line showArea curve="monotone" seriesId="prices" />
         <Scrubber seriesIds={['prices']} />
-      </Chart>
+      </CartesianChart>
     </VStack>
   );
 };

@@ -830,11 +830,9 @@ function Candlesticks() {
       >
         <Scrubber
             hideOverlay
-            scrubberComponents={{
-              ScrubberLineComponent: (props) => (
-                <ReferenceLine {...props} LineComponent={ThinSolidLine} />
-              ),
-            }}
+            LineComponent={(props) => (
+              <ReferenceLine {...props} LineComponent={ThinSolidLine} />
+            )}
             seriesIds={[]}
           />
       </BarChart>

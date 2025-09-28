@@ -41,7 +41,7 @@ function BasicExample() {
 
 ## Customization
 
-When you desire a more custom chart, you can use the `Chart` component and build your own chart from scratch.
+When you desire a more custom chart, you can use the `CartesianChart` component and build your own chart from scratch.
 
 ### Price with Volume
 
@@ -117,7 +117,7 @@ function PriceWithVolume() {
           </HStack>
         }
       />
-      <Chart
+      <CartesianChart
         enableScrubbing
         onScrubberPositionChange={setScrubIndex}
         height={250}
@@ -154,7 +154,7 @@ function PriceWithVolume() {
         <BarPlot seriesIds={['volume']} />
         <Line seriesId="prices" curve="monotone" showArea />
         <Scrubber seriesIds={['prices']} />
-      </Chart>
+      </CartesianChart>
     </VStack>
   );
 }
@@ -262,7 +262,7 @@ function EarningsHistory() {
 
   return (
     <VStack gap={0.5}>
-      <Chart
+      <CartesianChart
         overflow="visible"
         animate={false}
         height={250}
@@ -287,7 +287,7 @@ function EarningsHistory() {
         <XAxis size={20} tickLabelFormatter={surprisePercentage} />
         <CirclePlot opacity={0.5} seriesId="estimatedEPS" />
         <CirclePlot seriesId="actualEPS" />
-      </Chart>
+      </CartesianChart>
       <HStack justifyContent="flex-end" gap={2}>
         <LegendItem opacity={0.5} label="Estimated EPS" />
         <LegendItem label="Actual EPS" />

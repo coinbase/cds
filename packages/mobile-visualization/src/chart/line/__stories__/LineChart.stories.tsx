@@ -24,7 +24,7 @@ import { Text } from '@coinbase/cds-mobile/typography/Text';
 
 import { Area, DottedArea } from '../../area';
 import { XAxis, YAxis } from '../../axis';
-import { Chart } from '../../Chart';
+import { CartesianChart } from '../../CartesianChart';
 import { useChartContext } from '../../ChartProvider';
 import { PeriodSelector, PeriodSelectorActiveIndicator } from '../../PeriodSelector';
 import { Point } from '../../point';
@@ -305,7 +305,7 @@ export const LineStyles = () => {
   const bottomChartData = [4, 8, 11, 15, 16, 14, 16, 10, 12, 14];
 
   return (
-    <Chart
+    <CartesianChart
       height={defaultChartHeight}
       series={[
         {
@@ -339,7 +339,7 @@ export const LineStyles = () => {
         seriesId="lowerMiddle"
       />
       <Line showArea AreaComponent={DottedArea} curve="step" seriesId="bottom" />
-    </Chart>
+    </CartesianChart>
   );
 };
 
@@ -701,7 +701,7 @@ export const PriceChart = () => {
   return (
     <VStack gap={3} width="100%">
       {/*<HStack alignItems="flex-start" gap={3} justifyContent="space-between" padding={4}>
-        <ChartHeader
+        <CartesianChartHeader
           description={formattedPrice}
           title={<Text font="headline">Ethereum</Text>}
           trend={formattedPriceChange}
@@ -1201,7 +1201,7 @@ const GainLossChart = () => {
   const solidColor = `url(#${gradientId}-solid)`;
 
   return (
-    <Chart
+    <CartesianChart
       enableScrubbing
       height={defaultChartHeight}
       padding={{ top: 1.5, bottom: 1.5, left: 0, right: 0 }}
@@ -1218,7 +1218,7 @@ const GainLossChart = () => {
       <Area curve="monotone" fill={`url(#${gradientId}-gradient)`} seriesId="prices" />
       <Line curve="monotone" seriesId="prices" stroke={solidColor} strokeWidth={3} />
       <Scrubber hideOverlay />
-    </Chart>
+    </CartesianChart>
   );
 };
 
@@ -1374,7 +1374,7 @@ const LineChartStories = () => {
         </LineChart>
       </Example>
       <Example title="Points">
-        <Chart
+        <CartesianChart
           height={defaultChartHeight}
           series={[
             {
@@ -1399,7 +1399,7 @@ const LineChartStories = () => {
             }
             seriesId="prices"
           />
-        </Chart>
+        </CartesianChart>
       </Example>
       <Example title="Data Formats">
         <LineChart

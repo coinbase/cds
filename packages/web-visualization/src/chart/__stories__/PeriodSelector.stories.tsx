@@ -162,7 +162,6 @@ const TooManyPeriodsSelectorExample = () => {
           }}
         />
       </Box>
-      {/* todo - better way to handle height? https://www.figma.com/design/sbeD5oRL9OL5hbIzaqzL7T/Line-Charts----Sparkline?node-id=5947-13669&t=7esgu5dzBls0bZNV-4 */}
       <IconButton
         compact
         accessibilityLabel="Configure chart"
