@@ -58,21 +58,23 @@ export type ChartBaseProps = Pick<
    * Padding around the entire chart (outside the axes).
    */
   padding?: ThemeVars.Space | Partial<ChartPadding>;
-  /**
-   * Chart width. If not provided, will use the container's measured width.
-   */
-  width?: number | string;
-  /**
-   * Chart height. If not provided, will use the container's measured height.
-   */
-  height?: number | string;
-  /**
-   * Additional styles for the chart container.
-   */
-  style?: ViewStyle;
 };
 
-export type ChartProps = ChartBaseProps;
+export type ChartProps = ChartBaseProps &
+  Pick<ScrubberProviderProps, 'allowOverflowGestures'> & {
+    /**
+     * Chart width. If not provided, will use the container's measured width.
+     */
+    width?: number | string;
+    /**
+     * Chart height. If not provided, will use the container's measured height.
+     */
+    height?: number | string;
+    /**
+     * Additional styles for the chart container.
+     */
+    style?: ViewStyle;
+  };
 
 export const Chart = memo(
   forwardRef<View, ChartProps>(

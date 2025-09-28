@@ -2,7 +2,6 @@ import React, { useCallback, useMemo, useState } from 'react';
 import { Platform } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import { runOnJS } from 'react-native-reanimated';
-import type { Svg } from 'react-native-svg';
 import {
   isCategoricalScale,
   ScrubberContext,
@@ -16,6 +15,10 @@ export type ScrubberProviderProps = Partial<
   Pick<ScrubberContextValue, 'enableScrubbing' | 'onScrubberPositionChange'>
 > & {
   children: React.ReactNode;
+  /**
+   * Allows continuous gestures on the chart to continue outside the bounds of the chart element.
+   */
+  allowOverflowGestures?: boolean;
 };
 
 /**
@@ -26,6 +29,7 @@ export const ScrubberProvider: React.FC<ScrubberProviderProps> = ({
   children,
   enableScrubbing,
   onScrubberPositionChange,
+  allowOverflowGestures,
 }) => {
   const chartContext = useChartContext();
 
@@ -137,7 +141,7 @@ export const ScrubberProvider: React.FC<ScrubberProviderProps> = ({
     () =>
       Gesture.Pan()
         .activateAfterLongPress(110)
-        .shouldCancelWhenOutside(false) // Allow overflow gestures
+        .shouldCancelWhenOutside(!allowOverflowGestures)
         .onStart(function onStart(event) {
           runOnJS(handleOnStartJsThread)();
 
@@ -156,6 +160,7 @@ export const ScrubberProvider: React.FC<ScrubberProviderProps> = ({
           runOnJS(handleOnEndOrCancelledJsThread)();
         }),
     [
+      allowOverflowGestures,
       handleOnStartJsThread,
       handleOnUpdateJsThread,
       handleOnEndJsThread,
