@@ -53,6 +53,7 @@ export async function getRemoteRepoUrl(): Promise<string> {
   return url
     .replace('git@', 'https://')
     .replace('net:', 'net/')
+    .replace('com:', 'com/')
     .replace(/\.git$/, '');
 }
 
