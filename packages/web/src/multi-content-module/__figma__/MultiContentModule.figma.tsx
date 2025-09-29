@@ -25,6 +25,8 @@ figma.connect(
         none: undefined,
       }),
     },
-    example: ({ pictogram, ...props }) => <MultiContentModule pictogram={pictogram.name} {...props} />,
+    example: ({ pictogram, ...props }) => (
+      <MultiContentModule pictogram={pictogram.name} {...props} />
+    ),
   },
 );

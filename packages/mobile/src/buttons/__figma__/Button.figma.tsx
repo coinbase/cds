@@ -50,6 +50,10 @@ figma.connect(
         flush: 'start',
       }),
     },
-    example: ({ startIcon, endIcon, ...props }) => <Button endIcon={endIcon.name} startIcon={startIcon.name} {...props}>Button</Button>,
+    example: ({ startIcon, endIcon, ...props }) => (
+      <Button endIcon={endIcon.name} startIcon={startIcon.name} {...props}>
+        Button
+      </Button>
+    ),
   },
 );
