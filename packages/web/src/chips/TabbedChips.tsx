@@ -20,7 +20,7 @@ const scrollContainerCss = css`
 
 const TabComponent = <T extends string = string>({ label = '', id, ...tabProps }: TabValue<T>) => {
   const { activeTab, updateActiveTab } = useTabsContext();
-  const isActive = activeTab?.id === id;
+  const isActive = useMemo(() => activeTab?.id === id, [activeTab, id]);
   const handleClick = useCallback(() => updateActiveTab(id), [id, updateActiveTab]);
   return (
     <Chip
