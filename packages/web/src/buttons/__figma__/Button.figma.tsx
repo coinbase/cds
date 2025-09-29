@@ -1,4 +1,5 @@
 import React from 'react';
+import type { IconName } from '@coinbase/cds-icons';
 import { figma } from '@figma/code-connect';
 
 import { Button } from '../Button';
@@ -15,28 +16,41 @@ figma.connect(
         negative: 'negative',
       }),
       transparent: figma.boolean('transparent'),
-      loading: figma.boolean('loading'),
-      disabled: figma.boolean('disabled'),
+      loading: figma.enum('state', {
+        loading: true,
+        default: false,
+        hover: false,
+        pressed: false,
+        disabled: false,
+      }),
+      disabled: figma.enum('state', {
+        disabled: true,
+        default: false,
+        hover: false,
+        pressed: false,
+        loading: false,
+      }),
       compact: figma.boolean('compact'),
-      block: figma.boolean('block'),
-      startIcon: figma.boolean('show startIcon', {
-        true: figma.instance('↳ start icon'),
-        false: undefined,
+      block: figma.enum('width', {
+        hug: false,
+        full: true,
+        flush: false,
       }),
-      endIcon: figma.boolean('show endIcon', {
-        true: figma.instance('↳ end icon'),
-        false: undefined,
+      startIcon: figma.enum('icon', {
+        leading: figma.instance('↳ icon') as IconName,
+        trailing: undefined,
+        none: undefined,
       }),
-      flush: figma.boolean('flush', {
-        true: 'start',
-        false: undefined,
+      endIcon: figma.enum('icon', {
+        trailing: figma.instance('↳ icon') as IconName,
+        leading: undefined,
+        none: undefined,
       }),
-      // state: figma.enum('state', {
-      //   default: 'default',
-      //   hover: 'hover',
-      //   pressed: 'pressed',
-      // }), // TODO: Is this even possible?
-      // children: figma.string('string'), TODO: fix, Mele to deprecate string library
+      flush: figma.enum('width', {
+        hug: undefined,
+        full: undefined,
+        flush: 'start',
+      }),
     },
     example: ({ ...props }) => <Button {...props}>Button</Button>,
   },

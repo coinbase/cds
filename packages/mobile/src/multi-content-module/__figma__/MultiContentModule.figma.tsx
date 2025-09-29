@@ -21,9 +21,11 @@ figma.connect(
         false: undefined,
       }),
       children: figma.instance('↳ content type'),
-      action: figma.boolean('show action', {
-        true: figma.instance('↳ action type'),
-        false: undefined,
+      action: figma.enum('action type', {
+        button: figma.instance('action type'),
+        'button group': figma.instance('action type'),
+        'button + secondary content': figma.instance('action type'),
+        none: undefined,
       }),
     },
     example: ({ ...props }) => <MultiContentModule {...props} />,

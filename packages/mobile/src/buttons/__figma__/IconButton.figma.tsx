@@ -8,20 +8,19 @@ figma.connect(
   {
     imports: ["import {IconButton} from '@coinbase/cds-mobile/buttons/IconButton';"],
     props: {
-      // name: figma.instance('icon'),
       variant: figma.enum('variant', {
         primary: 'primary',
         secondary: 'secondary',
       }),
-      disabled: figma.boolean('disabled'),
+      disabled: figma.enum('state', {
+        disabled: true,
+        default: false,
+        hover: false,
+        pressed: false,
+        loading: false,
+      }),
       compact: figma.boolean('compact'),
       transparent: figma.boolean('transparent'),
-      // state: figma.enum('state', {
-      //   default: 'default',
-      //   hover: 'hover',
-      //   pressed: 'pressed',
-      //   loading: 'loading', // TODO: Is this even possible?
-      // }),
     },
     example: ({ ...props }) => <IconButton name="add" {...props} />,
   },
