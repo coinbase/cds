@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.13.1 (9/26/2025 PST)
+
+#### 🐞 Fixes
+
+- Update ARIA attributes for TabbedChips and Tabs. [[#27](https://github.com/coinbase/cds/pull/27)]
+
 ## 8.13.0 (9/25/2025 PST)
 
 #### 🚀 Updates
