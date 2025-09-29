@@ -2,7 +2,6 @@ import React, { forwardRef, memo, useMemo } from 'react';
 import { css } from '@linaria/core';
 
 import { CellAccessory, type CellAccessoryType } from '../../cells/CellAccessory';
-import { CellDetail, type CellDetailProps } from '../../cells/CellDetail';
 import type { Polymorphic } from '../../core/polymorphism';
 import { cx } from '../../cx';
 import { Box } from '../../layout/Box';
@@ -10,6 +9,7 @@ import { VStack } from '../../layout/VStack';
 import { Text } from '../../typography/Text';
 
 import { Cell, type CellBaseProps } from './Cell';
+import { CellDetail, type CellDetailProps } from './CellDetail';
 
 const overflowCss = css`
   overflow: auto;
