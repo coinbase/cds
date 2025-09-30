@@ -22,13 +22,13 @@ export const listCellDefaultElement = 'div';
 
 export type ListCellDefaultElement = typeof listCellDefaultElement;
 
-const denseInnerSpacing = {
+export const hugInnerSpacing = {
   paddingX: 2 as const,
   paddingY: 0.5 as const,
   marginX: 0 as const,
 } satisfies CellSpacing;
 // no padding outside of the pressable area
-const denseOuterSpacing = {
+export const hugOuterSpacing = {
   paddingX: 0 as const,
   paddingY: 0 as const,
   marginX: 0 as const,
@@ -218,11 +218,11 @@ export const ListCell: ListCellComponent = memo(
           className={cx(className, classNames?.root)}
           detail={end}
           disabled={disabled}
-          innerSpacing={innerSpacing ?? (layoutSpacing === 'hug' ? denseInnerSpacing : undefined)}
+          innerSpacing={innerSpacing ?? (layoutSpacing === 'hug' ? hugInnerSpacing : undefined)}
           intermediary={intermediary}
           media={media}
           minHeight={minHeight}
-          outerSpacing={outerSpacing ?? (layoutSpacing === 'hug' ? denseOuterSpacing : undefined)}
+          outerSpacing={outerSpacing ?? (layoutSpacing === 'hug' ? hugOuterSpacing : undefined)}
           priority={priority}
           selected={selected}
           style={{ ...style, ...styles?.root }}

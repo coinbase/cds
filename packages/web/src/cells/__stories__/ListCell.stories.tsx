@@ -665,7 +665,7 @@ const HugListCell = () => {
         description="Description"
         detail="Detail"
         helperText={
-          <CellHelperText variant="information">
+          <CellHelperText font="label2" variant="information">
             This is helpful information to guide the user
           </CellHelperText>
         }
