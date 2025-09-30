@@ -84,8 +84,9 @@ export type CellBaseProps = Polymorphic.ExtendableProps<
     detail?: React.ReactNode;
     intermediary?: React.ReactNode;
     media?: React.ReactElement;
+    // TODO: consider renaming this to shouldTruncate in next breaking change release. Since overflow gives people the sense that it will overflow and overlap with other content
     shouldOverflow?: boolean;
-    borderRadius?: ThemeVars.BorderRadius;
+    // TODO: consider removing this in next breaking change release. Since we have styles.detail
     /** Apply a fixed width to the detail (end). */
     detailWidth?: number | string;
     /** Is the cell disabled? Will apply opacity and disable interaction. */
