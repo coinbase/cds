@@ -1,10 +1,3 @@
-A cell row is divided into the following 4 columns:
-
-- Start: A type of [media](/components/media/CellMedia), like icon or avatar.
-- Middle: The primary content; a title and description.
-- End: Detailed information in neutral, negative, and positive variants.
-- Accessory: A whitelisted icon displayed at the end.
-
 :::warning
 
 The `title`, `description`, `detail` and `subdetail` props are only intended to accept a string or `Text` component. Other use cases, while allowed, are not supported and may result in unexpected behavior.
@@ -124,3 +117,78 @@ The ListCellFallback component provides loading state representations of ListCel
   />
 </VStack>
 ```
+
+### Anatomy
+
+A ListCell row is divided into the following 5 columns:
+
+- Media
+- Title & description
+- Intermediary
+- End (detail or action)
+- Accessory
+
+Without helper text (top-only layout):
+
+```text
+┌───────────────────────────────────────────────────────────────────────────┐
+│                               root (Box)                                  │
+│┌─────────────────────────────────────────────────────────────────────────┐│
+││                              pressable                                  ││
+││┌───────────────────────────────────────────────────────────────────────┐││
+│││                contentContainer & mainContent (HStack)                │││
+│││  ┌─────┐ ┌────────────────┐ ┌────────────┐ ┌────────────┐ ┌─────────┐ │││
+│││  │media│ │  VStack        │ │intermediary│ │    end     │ │accessory│ │││
+│││  │     │ │ ┌──────────┐   │ │ (optional) │ │ (detail    │ │         │ │││
+│││  │     │ │ │  title   │   │ │            │ │    or      │ │         │ │││
+│││  │     │ │ └──────────┘   │ │            │ │  action)   │ │         │ │││
+│││  │     │ │ ┌────────────┐ │ │            │ │            │ │         │ │││
+│││  │     │ │ │ description│ │ │            │ │            │ │         │ │││
+│││  │     │ │ └────────────┘ │ │            │ │            │ │         │ │││
+│││  └─────┘ └────────────────┘ └────────────┘ └────────────┘ └─────────┘ │││
+││└───────────────────────────────────────────────────────────────────────┘││
+│└─────────────────────────────────────────────────────────────────────────┘│
+└───────────────────────────────────────────────────────────────────────────┘
+```
+
+With helper text (top + bottom layout):
+
+```text
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                                 root (Box)                                  │
+│┌───────────────────────────────────────────────────────────────────────────┐│
+││                                pressable                                  ││
+││┌─────────────────────────────────────────────────────────────────────────┐││
+│││                        contentContainer (VStack)                        │││
+│││┌───────────────────────────────────────────────────────────────────────┐│││
+││││                          mainContent (HStack)                         ││││
+││││  ┌─────┐ ┌────────────────┐ ┌────────────┐ ┌────────────┐ ┌─────────┐ ││││
+││││  │media│ │  VStack        │ │intermediary│ │    end     │ │accessory│ ││││
+││││  │     │ │ ┌──────────┐   │ │ (optional) │ │ (detail    │ │         │ ││││
+││││  │     │ │ │  title   │   │ │            │ │    or      │ │         │ ││││
+││││  │     │ │ └──────────┘   │ │            │ │  action)   │ │         │ ││││
+││││  │     │ │ ┌────────────┐ │ │            │ │            │ │         │ ││││
+││││  │     │ │ │ description│ │ │            │ │            │ │         │ ││││
+││││  │     │ │ └────────────┘ │ │            │ │            │ │         │ ││││
+││││  └─────┘ └────────────────┘ └────────────┘ └────────────┘ └─────────┘ ││││
+│││└───────────────────────────────────────────────────────────────────────┘│││
+│││┌───────────────────────────────────────────────────────────────────────┐│││
+││││                              helperText                               ││││
+│││└───────────────────────────────────────────────────────────────────────┘│││
+││└─────────────────────────────────────────────────────────────────────────┘││
+│└───────────────────────────────────────────────────────────────────────────┘│
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+Mapping to `styles` / `classNames` keys:
+
+- root: outer `Box` wrapping the entire cell
+- pressable: interactive overlay when `href`/`onClick`/keyboard handlers are present
+- contentContainer: container around top and optional bottom content
+- mainContent: inner horizontal layout that holds the main pieces
+- title/description: stacked text column within `topContent`
+- media: leading media container
+- intermediary: middle container between main and end
+- end: container for `detail` or `action` (maps to `Cell`'s `detail`)
+- accessory: trailing accessory container
+- helperText: container below main content to display helper text
