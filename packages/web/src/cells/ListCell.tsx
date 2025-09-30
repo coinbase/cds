@@ -6,7 +6,7 @@ import type { Polymorphic } from '../core/polymorphism';
 import { cx } from '../cx';
 import { Box } from '../layout/Box';
 import { VStack } from '../layout/VStack';
-import { Text } from '../typography/Text';
+import { Text, type TextProps } from '../typography/Text';
 
 import { Cell, type CellBaseProps, type CellSpacing } from './Cell';
 import { CellAccessory, type CellAccessoryType } from './CellAccessory';
@@ -99,6 +99,12 @@ export type ListCellBaseProps = Polymorphic.ExtendableProps<
     multiline?: boolean;
     /** Title of content. Max 1 line (with description) or 2 lines (without), otherwise will truncate. */
     title?: React.ReactNode;
+    textProps?: {
+      title?: TextProps<'div'>;
+      description?: TextProps<'div'>;
+      detail?: TextProps<'div'>;
+      subdetail?: TextProps<'div'>;
+    };
     /** Class names for the components */
     classNames?: Pick<
       CellClassNames,
@@ -165,6 +171,7 @@ export const ListCell: ListCellComponent = memo(
         classNames,
         styles,
         style,
+        textProps,
         ...props
       }: ListCellProps<AsComponent>,
       ref?: Polymorphic.Ref<AsComponent>,
@@ -190,12 +197,16 @@ export const ListCell: ListCellComponent = memo(
               detail={detail}
               layoutSpacing={layoutSpacing}
               subdetail={subdetail}
+              textProps={{
+                detail: textProps?.detail,
+                subdetail: textProps?.subdetail,
+              }}
               variant={variant}
             />
           );
         }
         return undefined;
-      }, [action, detail, subdetail, variant, layoutSpacing]);
+      }, [action, detail, subdetail, variant, layoutSpacing, textProps]);
 
       return (
         <Cell
@@ -237,6 +248,7 @@ export const ListCell: ListCellComponent = memo(
                 numberOfLines={description || disableMultilineTitle ? 1 : 2}
                 overflow="wrap"
                 style={styles?.title}
+                {...textProps?.title}
               >
                 {title}
               </Text>
@@ -251,6 +263,7 @@ export const ListCell: ListCellComponent = memo(
                 font={layoutSpacing === 'hug' ? 'label2' : 'body'}
                 overflow={multiline ? undefined : 'truncate'}
                 style={styles?.description}
+                {...textProps?.description}
               >
                 {description}
               </Text>
