@@ -1,43 +1,8 @@
-export const toc = [
-  {
-    value: 'usage',
-    id: 'usage',
-    level: 2,
-  },
-  {
-    value: 'single-select',
-    id: 'single-select',
-    level: 3,
-  },
-  {
-    value: 'multi-select',
-    id: 'multi-select',
-    level: 3,
-  },
-  {
-    value: 'accessibility-props',
-    id: 'accessibility-props',
-    level: 3,
-  },
-  {
-    value: 'variant-props',
-    id: 'variant-props',
-    level: 3,
-  },
-];
-
-## Usage
-
-The SelectAlpha component for mobile provides a touch-optimized interface for both single and multi-selection scenarios with comprehensive accessibility support.
-
-### Single Select
+## Single Select
 
 Basic single selection with predefined options for mobile interfaces.
 
 ```jsx
-import { useState } from 'react';
-import { Select } from '@coinbase/cds-mobile/alpha/select';
-
 function SingleSelectExample() {
   const [value, setValue] = useState('option1');
 
@@ -60,15 +25,11 @@ function SingleSelectExample() {
 }
 ```
 
-### Multi Select
+## Multi Select
 
 Multi-selection mode allows users to select multiple options from the list with touch-friendly controls.
 
 ```jsx
-import { useState } from 'react';
-import { useMultiSelect } from '@coinbase/cds-common/select/useMultiSelect';
-import { Select } from '@coinbase/cds-mobile/alpha/select';
-
 function MultiSelectExample() {
   const { value, onChange } = useMultiSelect({
     initialValue: ['option1', 'option3'],
@@ -97,14 +58,11 @@ function MultiSelectExample() {
 }
 ```
 
-### Accessibility Props
+## Accessibility Props
 
 The mobile Select component supports comprehensive accessibility features including custom labels, hints, and roles.
 
 ```jsx
-import { useState } from 'react';
-import { Select } from '@coinbase/cds-mobile/alpha/select';
-
 function AccessibilityExample() {
   const [value, setValue] = useState('option2');
 
@@ -123,7 +81,7 @@ function AccessibilityExample() {
       accessibilityLabel="Select task priority level"
       accessibilityHint="Choose the appropriate priority for this task"
       accessibilityRoles={{
-        option: 'button'
+        option: 'button',
       }}
       placeholder="Choose priority level"
       helperText="Select the appropriate priority for this task"
@@ -132,15 +90,11 @@ function AccessibilityExample() {
 }
 ```
 
-### Variant Props
+## Variant Props
 
 The mobile Select component supports different visual variants for various states and contexts.
 
 ```jsx
-import { useState } from 'react';
-import { Select } from '@coinbase/cds-mobile/alpha/select';
-import { VStack } from '@coinbase/cds-mobile/layout';
-
 function VariantExample() {
   const [positiveValue, setPositiveValue] = useState('success');
   const [negativeValue, setNegativeValue] = useState('');
