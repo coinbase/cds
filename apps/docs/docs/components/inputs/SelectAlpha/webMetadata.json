@@ -1,0 +1,17 @@
+{
+  "import": "import { Select } from '@coinbase/cds-web/alpha/select'",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/web/src/alpha/select/Select.tsx",
+  "storybook": "https://cds-storybook.coinbase.com/?path=/story/components-alpha-select-singleselect--default",
+  "description": "A flexible select component for both single and multi-selection, built for web applications with comprehensive accessibility support.",
+  "relatedComponents": [
+    {
+      "label": "Select",
+      "url": "/components/inputs/Select/"
+    },
+    {
+      "label": "SelectOption",
+      "url": "/components/inputs/SelectOption/"
+    }
+  ],
+  "dependencies": []
+}

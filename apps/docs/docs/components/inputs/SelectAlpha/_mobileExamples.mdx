@@ -1,0 +1,184 @@
+export const toc = [
+  {
+    value: 'usage',
+    id: 'usage',
+    level: 2,
+  },
+  {
+    value: 'single-select',
+    id: 'single-select',
+    level: 3,
+  },
+  {
+    value: 'multi-select',
+    id: 'multi-select',
+    level: 3,
+  },
+  {
+    value: 'accessibility-props',
+    id: 'accessibility-props',
+    level: 3,
+  },
+  {
+    value: 'variant-props',
+    id: 'variant-props',
+    level: 3,
+  },
+];
+
+## Usage
+
+The SelectAlpha component for mobile provides a touch-optimized interface for both single and multi-selection scenarios with comprehensive accessibility support.
+
+### Single Select
+
+Basic single selection with predefined options for mobile interfaces.
+
+```jsx
+import { useState } from 'react';
+import { Select } from '@coinbase/cds-mobile/alpha/select';
+
+function SingleSelectExample() {
+  const [value, setValue] = useState('option1');
+
+  const options = [
+    { value: 'option1', label: 'Option 1' },
+    { value: 'option2', label: 'Option 2' },
+    { value: 'option3', label: 'Option 3' },
+    { value: 'option4', label: 'Option 4' },
+  ];
+
+  return (
+    <Select
+      label="Choose an option"
+      value={value}
+      onChange={setValue}
+      options={options}
+      placeholder="Select an option"
+    />
+  );
+}
+```
+
+### Multi Select
+
+Multi-selection mode allows users to select multiple options from the list with touch-friendly controls.
+
+```jsx
+import { useState } from 'react';
+import { useMultiSelect } from '@coinbase/cds-common/select/useMultiSelect';
+import { Select } from '@coinbase/cds-mobile/alpha/select';
+
+function MultiSelectExample() {
+  const { value, onChange } = useMultiSelect({
+    initialValue: ['option1', 'option3'],
+  });
+
+  const options = [
+    { value: 'option1', label: 'Option 1' },
+    { value: 'option2', label: 'Option 2' },
+    { value: 'option3', label: 'Option 3' },
+    { value: 'option4', label: 'Option 4' },
+    { value: 'option5', label: 'Option 5' },
+  ];
+
+  return (
+    <Select
+      type="multi"
+      label="Choose multiple options"
+      value={value}
+      onChange={onChange}
+      options={options}
+      placeholder="Select options"
+      selectAllLabel="Select all options"
+      clearAllLabel="Clear all selections"
+    />
+  );
+}
+```
+
+### Accessibility Props
+
+The mobile Select component supports comprehensive accessibility features including custom labels, hints, and roles.
+
+```jsx
+import { useState } from 'react';
+import { Select } from '@coinbase/cds-mobile/alpha/select';
+
+function AccessibilityExample() {
+  const [value, setValue] = useState('option2');
+
+  const options = [
+    { value: 'option1', label: 'High Priority' },
+    { value: 'option2', label: 'Medium Priority' },
+    { value: 'option3', label: 'Low Priority' },
+  ];
+
+  return (
+    <Select
+      label="Task Priority"
+      value={value}
+      onChange={setValue}
+      options={options}
+      accessibilityLabel="Select task priority level"
+      accessibilityHint="Choose the appropriate priority for this task"
+      accessibilityRoles={{
+        option: 'button'
+      }}
+      placeholder="Choose priority level"
+      helperText="Select the appropriate priority for this task"
+    />
+  );
+}
+```
+
+### Variant Props
+
+The mobile Select component supports different visual variants for various states and contexts.
+
+```jsx
+import { useState } from 'react';
+import { Select } from '@coinbase/cds-mobile/alpha/select';
+import { VStack } from '@coinbase/cds-mobile/layout';
+
+function VariantExample() {
+  const [positiveValue, setPositiveValue] = useState('success');
+  const [negativeValue, setNegativeValue] = useState('');
+
+  const positiveOptions = [
+    { value: 'success', label: 'Success' },
+    { value: 'completed', label: 'Completed' },
+    { value: 'approved', label: 'Approved' },
+  ];
+
+  const negativeOptions = [
+    { value: 'error', label: 'Error' },
+    { value: 'failed', label: 'Failed' },
+    { value: 'rejected', label: 'Rejected' },
+  ];
+
+  return (
+    <VStack gap={4}>
+      <Select
+        label="Positive Status"
+        value={positiveValue}
+        onChange={setPositiveValue}
+        options={positiveOptions}
+        variant="positive"
+        helperText="This shows a positive state"
+        placeholder="Select positive status"
+      />
+
+      <Select
+        label="Negative Status"
+        value={negativeValue}
+        onChange={setNegativeValue}
+        options={negativeOptions}
+        variant="negative"
+        helperText="This shows an error state"
+        placeholder="Select negative status"
+      />
+    </VStack>
+  );
+}
+```

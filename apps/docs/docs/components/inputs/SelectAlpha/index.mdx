@@ -1,0 +1,40 @@
+---
+id: select-alpha
+title: Select (Alpha)
+platform_switcher_options: { web: true, mobile: true }
+hide_title: true
+---
+
+import { ComponentHeader } from '@site/src/components/page/ComponentHeader';
+import { ComponentTabsContainer } from '@site/src/components/page/ComponentTabsContainer';
+import { VStack } from '@coinbase/cds-web/layout';
+
+import MobilePropsTable from './_mobilePropsTable.mdx';
+import mobilePropsToc from ':docgen/mobile/alpha/select/Select/toc-props';
+import WebPropsTable from './_webPropsTable.mdx';
+import webPropsToc from ':docgen/web/alpha/select/Select/toc-props';
+
+import MobileExamples, { toc as mobileExamplesToc } from './_mobileExamples.mdx';
+import WebExamples, { toc as webExamplesToc } from './_webExamples.mdx';
+
+import webMetadata from './webMetadata.json';
+import mobileMetadata from './mobileMetadata.json';
+
+<VStack gap={5}>
+  <ComponentHeader
+    title="Select (Alpha)"
+    webMetadata={webMetadata}
+    mobileMetadata={mobileMetadata}
+  />
+
+  <ComponentTabsContainer
+    webPropsTable={<WebPropsTable />}
+    webExamples={<WebExamples />}
+    mobilePropsTable={<MobilePropsTable />}
+    mobileExamples={<MobileExamples />}
+    webExamplesToc={webExamplesToc}
+    mobileExamplesToc={mobileExamplesToc}
+    webPropsToc={webPropsToc}
+    mobilePropsToc={mobilePropsToc}
+  />
+</VStack>
