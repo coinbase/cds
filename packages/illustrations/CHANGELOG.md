@@ -8,6 +8,39 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+### 🚀 Added
+
+#### Spot Rectangle
+
+- calendar
+- coinGateway
+- graphChartTrading
+- tokenSales
+
+#### Hero Square
+
+- graphChartTrading
+- stakingMissedReturnsUsdc
+
+#### Pictogram
+
+- coinbaseLogoAdvancedBrand
+- tokenSales
+
+### 🐞 Updated
+
+#### Hero Square
+
+- baseConnectLarge
+
+#### Pictogram
+
+- futures
+
+#### Spot Rectangle
+
+- fiatInterest
+
 ## 4.22.0 (9/25/2025 PST)
 
 #### 🚀 Updates
