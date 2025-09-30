@@ -34,7 +34,7 @@ import { useSparklinePath } from '@coinbase/cds-common/visualizations/useSparkli
 import * as CDSLottie from '@coinbase/cds-lottie-files';
 import { Accordion } from '@coinbase/cds-web/accordion/Accordion';
 import { AccordionItem } from '@coinbase/cds-web/accordion/AccordionItem';
-import { Select as SelectAlpha } from '@coinbase/cds-web/alpha/select';
+import { Select as SelectAlpha } from '@coinbase/cds-web/alpha/select/Select';
 import { Lottie, LottieStatusAnimation } from '@coinbase/cds-web/animation';
 import { Banner } from '@coinbase/cds-web/banner/Banner';
 import * as CDSButtons from '@coinbase/cds-web/buttons';
