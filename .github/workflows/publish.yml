@@ -182,7 +182,7 @@ jobs:
       needs.detect-changes.outputs.packages != '[]' &&
       github.event_name == 'workflow_dispatch' &&
       github.event.inputs.dry-run != 'true'
-    environment: npm
+    environment: production
     permissions:
       contents: read
       actions: read
@@ -219,7 +219,7 @@ jobs:
 
           PACKAGE_NAME=$(node -p "require('./package.json').name")
           echo "📦 Package name from package.json: $PACKAGE_NAME"
-          npm publish --provenance --access public \
+          npm publish --access public \
             --registry https://registry.npmjs.org
           echo "✅ Successfully published ${{ matrix.package }} ($PACKAGE_NAME)"
 
