@@ -37,15 +37,12 @@ export const DefaultSelectControl: SelectControlComponent<'single' | 'multi'> = 
         variant,
         helperText,
         label,
+        labelVariant,
         startNode,
         compact,
-        style,
         blendStyles,
-        className,
         maxSelectedOptionsToShow = 6,
-        accessibilityLabel,
         ariaHaspopup,
-        testID,
         ...props
       },
       ref: React.Ref<HTMLElement>,
@@ -112,6 +109,18 @@ export const DefaultSelectControl: SelectControlComponent<'single' | 'multi'> = 
             helperText
           ),
         [helperText, variant],
+      );
+
+      const labelNode = useMemo(
+        () =>
+          typeof label === 'string' && labelVariant === 'inside' ? (
+            <InputLabel color="fg" paddingBottom={0} paddingTop={1} paddingX={2}>
+              {label}
+            </InputLabel>
+          ) : (
+            label
+          ),
+        [label, labelVariant],
       );
 
       const valueNode = useMemo(() => {
@@ -213,48 +222,53 @@ export const DefaultSelectControl: SelectControlComponent<'single' | 'multi'> = 
                 height="100%"
                 justifyContent={shouldShowCompactLabel ? 'flex-end' : 'flex-start'}
                 overflow="auto"
+                paddingTop={labelVariant === 'inside' ? 0 : compact ? 1 : 2}
                 paddingX={1}
-                paddingY={compact ? 1 : 2}
+                paddingY={compact || labelVariant === 'inside' ? 1 : 2}
               >
                 {valueNode}
-              </HStack>
-              <HStack alignItems="center" paddingX={2}>
-                <AnimatedCaret
-                  color={open ? (variant ? variantColor[variant] : 'fgPrimary') : 'fg'}
-                  rotate={open ? 0 : 180}
-                />
               </HStack>
             </HStack>
           </Pressable>
         ),
         [
-          blendStyles,
           ariaHaspopup,
+          blendStyles,
           disabled,
           isMultiSelect,
           startNode,
           shouldShowCompactLabel,
           label,
+          labelVariant,
           compact,
           valueNode,
-          open,
-          variant,
           setOpen,
         ],
+      );
+
+      const animatedCaretNode = useMemo(
+        () => (
+          <HStack alignItems="center" paddingX={2}>
+            <AnimatedCaret
+              color={open ? (variant ? variantColor[variant] : 'fgPrimary') : 'fg'}
+              rotate={open ? 0 : 180}
+            />
+          </HStack>
+        ),
+        [open, variant],
       );
 
       return (
         <InputStack
           ref={ref as React.Ref<HTMLDivElement>}
-          accessibilityLabel={accessibilityLabel}
-          className={className}
           disabled={disabled}
+          endNode={animatedCaretNode}
           helperTextNode={helperTextNode}
           inputNode={inputNode}
-          labelNode={shouldShowCompactLabel ? null : label}
-          style={style}
-          testID={testID}
+          labelNode={shouldShowCompactLabel ? null : labelNode}
+          labelVariant={labelVariant}
           variant={variant}
+          {...props}
         />
       );
     },

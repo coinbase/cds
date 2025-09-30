@@ -255,6 +255,21 @@ export const NoLabel = () => {
   );
 };
 
+export const LabelVariant = () => {
+  const [value, setValue] = useState<string | null>('1');
+
+  return (
+    <Select
+      label="Single select - label variant"
+      labelVariant="inside"
+      onChange={setValue}
+      options={exampleOptions}
+      placeholder="Empty value"
+      value={value}
+    />
+  );
+};
+
 export const Disabled = () => {
   const [value, setValue] = useState<string | null>('1');
 
