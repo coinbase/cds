@@ -182,7 +182,7 @@ jobs:
       needs.detect-changes.outputs.packages != '[]' &&
       github.event_name == 'workflow_dispatch' &&
       github.event.inputs.dry-run != 'true'
-    environment: npm
+    environment: production
     permissions:
       contents: read
       actions: read
