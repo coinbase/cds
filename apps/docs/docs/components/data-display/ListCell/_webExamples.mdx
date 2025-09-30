@@ -12,16 +12,21 @@ The `title`, `description`, `detail` and `subdetail` props are only intended to 
 
 :::
 
+:::note
+Prefer `layoutSpacing="hug"` for the new ListCell design. The `spacious` and `compact` values exist for backward compatibility and may be removed in a future major release.
+:::
+
 ### Basic usage
 
 ```tsx live
-<ListCell title="Basic List Cell" description="A simple example of ListCell" />
+<ListCell layoutSpacing="hug" title="Basic List Cell" description="A simple example of ListCell" />
 ```
 
 ### With Leading Icon
 
 ```tsx live
 <ListCell
+  layoutSpacing="hug"
   title="List Cell with Icon"
   description="Shows usage with a leading icon"
   media={<Icon active name="info" />}
@@ -32,6 +37,7 @@ The `title`, `description`, `detail` and `subdetail` props are only intended to 
 
 ```tsx live
 <ListCell
+  layoutSpacing="hug"
   title="List Cell with Details"
   description="Shows usage with detail and subdetail"
   detail="Primary detail"
@@ -43,6 +49,7 @@ The `title`, `description`, `detail` and `subdetail` props are only intended to 
 
 ```tsx live
 <ListCell
+  layoutSpacing="hug"
   title="Interactive List Cell"
   description="Click or tap to interact"
   accessory="arrow"
@@ -55,32 +62,39 @@ The `title`, `description`, `detail` and `subdetail` props are only intended to 
 ```tsx live
 <VStack gap={3}>
   <ListCell
+    layoutSpacing="hug"
     title="List Cell with Helper Text"
     description="Shows usage with helper text below the cell"
-    helperText={<CellHelperText paddingStart={6}>This is a default helper message.</CellHelperText>}
-    media={<CellMedia type="asset" source={assets.btc.imageUrl} />}
+    helperText={
+      <CellHelperText font="label2" paddingStart={6}>
+        This is a default helper message.
+      </CellHelperText>
+    }
+    media={<Avatar src={assets.btc.imageUrl} />}
     action={<Button compact>Action</Button>}
   />
   <ListCell
+    layoutSpacing="hug"
     title="List Cell with Warning"
     description="Shows usage with a warning message"
     helperText={
-      <CellHelperText variant="warning" paddingStart={6}>
+      <CellHelperText font="label2" variant="warning" paddingStart={6}>
         This is a warning message.
       </CellHelperText>
     }
-    media={<CellMedia type="asset" source={assets.btc.imageUrl} />}
+    media={<Avatar src={assets.btc.imageUrl} />}
     action={<Button compact>Action</Button>}
   />
   <ListCell
+    layoutSpacing="hug"
     title="List Cell with Error"
     description="Shows usage with an error message"
     helperText={
-      <CellHelperText variant="error" paddingStart={6}>
+      <CellHelperText font="label2" variant="error" paddingStart={6}>
         This is an error message.
       </CellHelperText>
     }
-    media={<CellMedia type="asset" source={assets.btc.imageUrl} />}
+    media={<Avatar src={assets.btc.imageUrl} />}
     action={<Button compact>Action</Button>}
   />
 </VStack>
@@ -90,6 +104,7 @@ The `title`, `description`, `detail` and `subdetail` props are only intended to 
 
 ```tsx live
 <ListCell
+  layoutSpacing="hug"
   title="Multiline Description"
   description="This is a longer description that demonstrates how the text wraps when the multiline prop is enabled. It can span multiple lines without truncating."
   multiline
@@ -103,16 +118,17 @@ The ListCellFallback component provides loading state representations of ListCel
 ```tsx live
 <VStack gap={3}>
   {/* Basic loading state */}
-  <ListCellFallback title description />
+  <ListCellFallback title description layoutSpacing="hug" />
 
   {/* Loading state with media */}
-  <ListCellFallback title description media="icon" />
+  <ListCellFallback title description media="icon" layoutSpacing="hug" />
 
   {/* Loading state with details */}
-  <ListCellFallback title description detail subdetail />
+  <ListCellFallback title description detail subdetail layoutSpacing="hug" />
 
   {/* Full loading state with custom widths */}
   <ListCellFallback
+    layoutSpacing="hug"
     title
     description
     detail

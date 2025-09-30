@@ -108,10 +108,8 @@ export type ListCellBaseProps = Polymorphic.ExtendableProps<
     /** Class names for the components */
     classNames?: Pick<
       CellClassNames,
-      'root' | 'media' | 'intermediary' | 'accessory' | 'contentContainer' | 'pressable'
+      'root' | 'media' | 'intermediary' | 'end' | 'accessory' | 'contentContainer' | 'pressable'
     > & {
-      /** Applied to the container of detail or action */
-      end?: CellClassNames['detail'];
       mainContent?: CellClassNames['topContent'];
       helperText?: CellClassNames['bottomContent'];
       title?: string;
@@ -120,10 +118,8 @@ export type ListCellBaseProps = Polymorphic.ExtendableProps<
     /** Styles for the components */
     styles?: Pick<
       CellStyles,
-      'root' | 'media' | 'intermediary' | 'accessory' | 'contentContainer' | 'pressable'
+      'root' | 'media' | 'intermediary' | 'end' | 'accessory' | 'contentContainer' | 'pressable'
     > & {
-      /** Applied to the container of detail or action */
-      end?: CellStyles['detail'];
       mainContent?: CellStyles['topContent'];
       helperText?: CellStyles['bottomContent'];
       title?: React.CSSProperties;
@@ -229,7 +225,7 @@ export const ListCell: ListCellComponent = memo(
           styles={{
             media: styles?.media,
             intermediary: styles?.intermediary,
-            detail: styles?.end,
+            end: styles?.end,
             accessory: styles?.accessory,
             topContent: styles?.mainContent,
             bottomContent: styles?.helperText,

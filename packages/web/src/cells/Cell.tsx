@@ -91,7 +91,7 @@ export type CellBaseProps = Polymorphic.ExtendableProps<
     // TODO: consider renaming this to shouldTruncate in next breaking change release. Since overflow gives people the sense that it will overflow and overlap with other content
     shouldOverflow?: boolean;
     /**
-     * @deprecated Use `styles.detail.width` instead. This prop is kept for backward
+     * @deprecated Use `styles.detail.end` instead. This prop is kept for backward
      * compatibility and will be removed in a future major release.
      */
     detailWidth?: number | string;
@@ -116,7 +116,8 @@ export type CellBaseProps = Polymorphic.ExtendableProps<
       pressable?: React.CSSProperties;
       media?: React.CSSProperties;
       intermediary?: React.CSSProperties;
-      detail?: React.CSSProperties;
+      /** Applied to the container of detail or action */
+      end?: React.CSSProperties;
       accessory?: React.CSSProperties;
     };
     /** Class names for the components */
@@ -128,7 +129,8 @@ export type CellBaseProps = Polymorphic.ExtendableProps<
       pressable?: string;
       media?: string;
       intermediary?: string;
-      detail?: string;
+      /** Applied to the container of detail or action */
+      end?: string;
       accessory?: string;
     };
   }
@@ -260,18 +262,18 @@ export const Cell: CellComponent = memo(
             {!!detail && (
               <Box
                 alignItems="flex-end"
-                className={cx(contentTruncationStyle, classNames?.detail)}
+                className={cx(contentTruncationStyle, classNames?.end)}
                 flexDirection="column"
-                flexGrow={styles?.detail?.width || detailWidth ? undefined : 1}
+                flexGrow={styles?.end?.width || detailWidth ? undefined : 1}
                 flexShrink={
-                  styles?.detail?.width || detailWidth
+                  styles?.end?.width || detailWidth
                     ? undefined
                     : hasCellPriority('end', priority)
                       ? 0
                       : 1
                 }
                 justifyContent="flex-end"
-                style={styles?.detail}
+                style={styles?.end}
                 width={detailWidth}
               >
                 {detail}
@@ -320,7 +322,7 @@ export const Cell: CellComponent = memo(
         classNames?.topContent,
         classNames?.media,
         classNames?.intermediary,
-        classNames?.detail,
+        classNames?.end,
         classNames?.accessory,
         classNames?.bottomContent,
         testID,
@@ -332,7 +334,7 @@ export const Cell: CellComponent = memo(
         styles?.topContent,
         styles?.media,
         styles?.intermediary,
-        styles?.detail,
+        styles?.end,
         styles?.accessory,
         styles?.bottomContent,
         alignItems,
