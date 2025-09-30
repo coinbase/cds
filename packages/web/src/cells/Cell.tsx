@@ -75,6 +75,10 @@ export type CellSpacing = Pick<
 export type CellBaseProps = Polymorphic.ExtendableProps<
   BoxBaseProps,
   Pick<PressableProps<'a'>, 'href' | 'target'> & {
+    /**
+     * @deprecated Use `classNames.contentContainer` instead. This prop is kept for backward
+     * compatibility and will be removed in a future major release.
+     */
     contentClassName?: string;
     onKeyDown?: React.KeyboardEventHandler;
     onKeyUp?: React.KeyboardEventHandler;
