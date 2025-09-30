@@ -4,13 +4,13 @@ Basic single selection with predefined options for mobile interfaces.
 
 ```jsx
 function SingleSelectExample() {
-  const [value, setValue] = useState('option1');
+  const [value, setValue] = useState('1');
 
   const options = [
-    { value: 'option1', label: 'Option 1' },
-    { value: 'option2', label: 'Option 2' },
-    { value: 'option3', label: 'Option 3' },
-    { value: 'option4', label: 'Option 4' },
+    { value: '1', label: 'Option 1' },
+    { value: '2', label: 'Option 2' },
+    { value: '3', label: 'Option 3' },
+    { value: '4', label: 'Option 4' },
   ];
 
   return (
@@ -32,15 +32,15 @@ Multi-selection mode allows users to select multiple options from the list with 
 ```jsx
 function MultiSelectExample() {
   const { value, onChange } = useMultiSelect({
-    initialValue: ['option1', 'option3'],
+    initialValue: ['1', '3'],
   });
 
   const options = [
-    { value: 'option1', label: 'Option 1' },
-    { value: 'option2', label: 'Option 2' },
-    { value: 'option3', label: 'Option 3' },
-    { value: 'option4', label: 'Option 4' },
-    { value: 'option5', label: 'Option 5' },
+    { value: '1', label: 'Option 1' },
+    { value: '2', label: 'Option 2' },
+    { value: '3', label: 'Option 3' },
+    { value: '4', label: 'Option 4' },
+    { value: '5', label: 'Option 5' },
   ];
 
   return (
@@ -64,12 +64,12 @@ The mobile Select component supports comprehensive accessibility features includ
 
 ```jsx
 function AccessibilityExample() {
-  const [value, setValue] = useState('option2');
+  const [value, setValue] = useState('2');
 
   const options = [
-    { value: 'option1', label: 'High Priority' },
-    { value: 'option2', label: 'Medium Priority' },
-    { value: 'option3', label: 'Low Priority' },
+    { value: '1', label: 'High Priority' },
+    { value: '2', label: 'Medium Priority' },
+    { value: '3', label: 'Low Priority' },
   ];
 
   return (
