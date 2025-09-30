@@ -3,6 +3,7 @@ import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 
 import { Text } from '../typography/Text';
 
+// TODO: update this CellDetailVariant in the next breaking change release.
 export type CellDetailVariant = 'foregroundMuted' | 'negative' | 'positive' | 'warning';
 
 export type CellDetailProps = {
@@ -18,6 +19,8 @@ export type CellDetailProps = {
   subdetail?: React.ReactNode;
   /** Variant color to apply to the subdetail text. */
   variant?: CellDetailVariant;
+  /** Layout spacing configuration. */
+  layoutSpacing?: 'spacious' | 'compact' | 'hug';
 };
 
 const variantColorMap: Record<CellDetailVariant, ThemeVars.Color> = {
@@ -31,6 +34,7 @@ export const CellDetail = memo(function CellDetail({
   detail,
   subdetail,
   variant = 'foregroundMuted',
+  layoutSpacing,
 }: CellDetailProps) {
   return (
     <>
@@ -45,7 +49,7 @@ export const CellDetail = memo(function CellDetail({
           as="div"
           color={variantColorMap[variant]}
           display="block"
-          font="body"
+          font={layoutSpacing === 'hug' ? 'label2' : 'body'}
           overflow="truncate"
           textAlign="end"
         >

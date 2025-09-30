@@ -54,7 +54,7 @@ export type ListCellBaseProps = Polymorphic.ExtendableProps<
      * Deprecated values: 'spacious' and 'compact'. Prefer 'hug'.
      * This prop will be removed in the next major release, new list cell will only have 'hug' spacing.
      *
-     * When 'sparse' is set, the cell will have the following behavior:
+     * When 'spacious' is set, the cell will have the following behavior:
      * 1. min-height is 80px
      * 2. Effective padding is '16px 24px' with 8px padding around the pressable area
      * 3. border radius is 8px for pressable area
@@ -185,10 +185,17 @@ export const ListCell: ListCellComponent = memo(
           return <Box justifyContent="flex-end">{action}</Box>;
         }
         if (detail || subdetail) {
-          return <CellDetail detail={detail} subdetail={subdetail} variant={variant} />;
+          return (
+            <CellDetail
+              detail={detail}
+              layoutSpacing={layoutSpacing}
+              subdetail={subdetail}
+              variant={variant}
+            />
+          );
         }
         return undefined;
-      }, [action, detail, subdetail, variant]);
+      }, [action, detail, subdetail, variant, layoutSpacing]);
 
       return (
         <Cell
