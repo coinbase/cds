@@ -50,14 +50,32 @@ export type ListCellBaseProps = Polymorphic.ExtendableProps<
      */
     compact?: boolean;
     /**
-     * When 'dense' is set, the cell will have the following behavior:
+     * Layout spacing configuration.
+     * Deprecated values: 'spacious' and 'compact'. Prefer 'hug'.
+     * This prop will be removed in the next major release, new list cell will only have 'hug' spacing.
+     *
+     * When 'sparse' is set, the cell will have the following behavior:
+     * 1. min-height is 80px
+     * 2. Effective padding is '16px 24px' with 8px padding around the pressable area
+     * 3. border radius is 8px for pressable area
+     * 4. Title always cap at 1 line when there is no description, cap at 2 lines when there is description
+     * 5. Description and subdetail have font 'body'
+     *
+     * When 'compact' is set, the cell will have the following behavior:
+     * 1. min-height is 40px
+     * 2. Effective padding is '16px 24px' with 8px padding around the pressable area
+     * 3. border radius is 8px for pressable area
+     * 4. Title always cap at 1 line when there is no description, cap at 2 lines when there is description
+     * 5. Description and subdetail have font 'body'
+     *
+     * When 'hug' is set, the cell will have the following behavior:
      * 1. No min-height, height is determined by the content
-     * 2. smaller padding, no extra padding around the pressable area
-     * 3. 0 border radius for pressable shade
+     * 2. Padding is '4px 16px', no extra padding around the pressable area
+     * 3. 0 border radius for pressable area
      * 4. Title always cap at 2 lines
-     * 5. Description and subdetail have smaller font
+     * 5. Description and subdetail have font 'label2'
      */
-    layoutDensity?: 'sparse' | 'compact' | 'dense';
+    layoutSpacing?: 'spacious' | 'compact' | 'hug';
     /** Description of content. Max 1 line (with title) or 2 lines (without), otherwise will truncate. */
     description?: React.ReactNode;
     /**
@@ -142,7 +160,7 @@ export const ListCell: ListCellComponent = memo(
         priority,
         innerSpacing,
         outerSpacing,
-        layoutDensity = compact ? 'compact' : 'sparse',
+        layoutSpacing = compact ? 'compact' : 'spacious',
         className,
         classNames,
         styles,
@@ -154,9 +172,9 @@ export const ListCell: ListCellComponent = memo(
       const Component = (as ?? listCellDefaultElement) satisfies React.ElementType;
 
       const minHeight =
-        layoutDensity === 'compact'
+        layoutSpacing === 'compact'
           ? compactListHeight
-          : layoutDensity === 'sparse'
+          : layoutSpacing === 'spacious'
             ? listHeight
             : undefined;
 
@@ -177,16 +195,16 @@ export const ListCell: ListCellComponent = memo(
           ref={ref}
           accessory={accessoryType && <CellAccessory type={accessoryType} />}
           as={Component}
-          borderRadius={props.borderRadius ?? (layoutDensity === 'dense' ? 0 : undefined)}
+          borderRadius={props.borderRadius ?? (layoutSpacing === 'hug' ? 0 : undefined)}
           bottomContent={helperText}
           className={cx(className, classNames?.root)}
           detail={end}
           disabled={disabled}
-          innerSpacing={innerSpacing ?? (layoutDensity === 'dense' ? denseInnerSpacing : undefined)}
+          innerSpacing={innerSpacing ?? (layoutSpacing === 'hug' ? denseInnerSpacing : undefined)}
           intermediary={intermediary}
           media={media}
           minHeight={minHeight}
-          outerSpacing={outerSpacing ?? (layoutDensity === 'dense' ? denseOuterSpacing : undefined)}
+          outerSpacing={outerSpacing ?? (layoutSpacing === 'hug' ? denseOuterSpacing : undefined)}
           priority={priority}
           selected={selected}
           style={{ ...style, ...styles?.root }}
@@ -223,7 +241,7 @@ export const ListCell: ListCellComponent = memo(
                 className={cx(multiline ? overflowCss : undefined, classNames?.description)}
                 color="fgMuted"
                 display="block"
-                font={layoutDensity === 'dense' ? 'label2' : 'body'}
+                font={layoutSpacing === 'hug' ? 'label2' : 'body'}
                 overflow={multiline ? undefined : 'truncate'}
                 style={styles?.description}
               >

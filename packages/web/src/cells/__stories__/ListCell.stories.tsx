@@ -85,47 +85,59 @@ const Content = () => {
 const CompactContent = () => {
   return (
     <>
-      <ListCell compact title="Title" />
+      <ListCell layoutSpacing="compact" title="Title" />
 
-      <ListCell compact detail="Detail" title="Title" />
+      <ListCell detail="Detail" layoutSpacing="compact" title="Title" />
 
-      <ListCell compact description="Description" title="Title" />
+      <ListCell description="Description" layoutSpacing="compact" title="Title" />
 
-      <ListCell compact description="Description" detail="Detail" title="Title" />
+      <ListCell description="Description" detail="Detail" layoutSpacing="compact" title="Title" />
 
       <ListCell
-        compact
         description="Description"
         detail="Detail"
+        layoutSpacing="compact"
         subdetail="Neutral"
         title="Title"
       />
 
-      <ListCell compact detail="Detail" subdetail="Neutral" title="Title" />
+      <ListCell detail="Detail" layoutSpacing="compact" subdetail="Neutral" title="Title" />
 
       <ListCell
-        compact
         description="Description"
         detail="Detail"
+        layoutSpacing="compact"
         subdetail="+Positive"
         title="Title"
         variant="positive"
       />
 
-      <ListCell compact subdetail="+Positive" title="Title" variant="positive" />
+      <ListCell layoutSpacing="compact" subdetail="+Positive" title="Title" variant="positive" />
 
       <ListCell
-        compact
         description="Description"
         detail="Detail"
+        layoutSpacing="compact"
         subdetail="-Negative"
         title="Title"
         variant="negative"
       />
 
-      <ListCell compact detail="Detail" subdetail="-Negative" title="Title" variant="negative" />
+      <ListCell
+        detail="Detail"
+        layoutSpacing="compact"
+        subdetail="-Negative"
+        title="Title"
+        variant="negative"
+      />
 
-      <ListCell compact detail="Detail" subdetail="Warning" title="Title" variant="warning" />
+      <ListCell
+        detail="Detail"
+        layoutSpacing="compact"
+        subdetail="Warning"
+        title="Title"
+        variant="warning"
+      />
     </>
   );
 };
@@ -228,89 +240,89 @@ const PressableContent = () => (
 
 const CompactPressableContent = () => (
   <>
-    <ListCell compact onClick={onClickConsole} title="Title" />
+    <ListCell layoutSpacing="compact" onClick={onClickConsole} title="Title" />
 
-    <ListCell compact onClick={onClickConsole} subdetail="Neutral" title="Title" />
+    <ListCell layoutSpacing="compact" onClick={onClickConsole} subdetail="Neutral" title="Title" />
 
     <ListCell
-      compact
       multiline
       description="Multi-line description"
+      layoutSpacing="compact"
       onClick={onClickConsole}
       title="Title"
     />
 
     <ListCell
-      compact
       multiline
       selected
       description="Multi-line description"
+      layoutSpacing="compact"
       onClick={onClickConsole}
       title="Title"
     />
 
     <ListCell
-      compact
       multiline
       description="Multi-line description goes here with really long text"
+      layoutSpacing="compact"
       onClick={onClickConsole}
       title="Title"
     />
 
     <ListCell
-      compact
       multiline
       selected
       description="Multi-line description goes here with really long text"
+      layoutSpacing="compact"
       onClick={onClickConsole}
       title="Title"
     />
 
     <ListCell
-      compact
       description="Description"
       detail="Detail"
+      layoutSpacing="compact"
       onClick={onClickConsole}
       title="Title"
     />
 
     <ListCell
-      compact
       description="Description"
       detail="Detail"
       innerSpacing={innerSpacingConfig}
+      layoutSpacing="compact"
       onClick={onClickConsole}
       subdetail="Neutral"
       title="Title"
     />
 
     <ListCell
-      compact
       selected
       description="Description"
       detail="Detail"
+      layoutSpacing="compact"
       onClick={onClickConsole}
       subdetail="Neutral"
       title="Title"
     />
 
     <ListCell
-      compact
       disabled
       description="Description"
       detail="Detail"
       innerSpacing={innerSpacingConfig}
+      layoutSpacing="compact"
       onClick={onClickConsole}
       subdetail="Neutral"
       title="Title"
     />
 
     <ListCell
-      compact
       disabled
       selected
       description="Description"
       detail="Detail"
+      layoutSpacing="compact"
       onClick={onClickConsole}
       subdetail="+Postive"
       title="Title"
@@ -318,11 +330,11 @@ const CompactPressableContent = () => (
     />
 
     <ListCell
-      compact
       disabled
       selected
       description="Description"
       detail="Detail"
+      layoutSpacing="compact"
       onClick={onClickConsole}
       subdetail="Warning"
       title="Title"
@@ -635,14 +647,14 @@ const WithHelperText = () => (
   </VStack>
 );
 
-const NewListCellTest = () => {
+const HugListCell = () => {
   return (
     <VStack width="360px">
       <ListCell
         accessory="more"
         description="Description"
         detail="Detail"
-        layoutDensity="dense"
+        layoutSpacing="hug"
         media={<Avatar shape="circle" size="l" src={assets.eth.imageUrl} />}
         onClick={onClickConsole}
         subdetail="Subdetail"
@@ -657,7 +669,7 @@ const NewListCellTest = () => {
             This is helpful information to guide the user
           </CellHelperText>
         }
-        layoutDensity="dense"
+        layoutSpacing="hug"
         media={<Avatar shape="circle" size="l" src={assets.eth.imageUrl} />}
         onClick={onClickConsole}
         subdetail="Subdetail"
@@ -668,7 +680,7 @@ const NewListCellTest = () => {
         accessory="more"
         description="Long description with multiple lines. This section can be arbitrarily long and occupy many many lines."
         detail="Detail"
-        layoutDensity="dense"
+        layoutSpacing="hug"
         media={<Avatar shape="circle" size="l" src={assets.eth.imageUrl} />}
         onClick={onClickConsole}
         subdetail="Subdetail"
@@ -679,7 +691,7 @@ const NewListCellTest = () => {
         accessory="more"
         description="Long description with multiple lines. This section can be arbitrarily long and occupy many many lines."
         detail="Detail"
-        layoutDensity="dense"
+        layoutSpacing="hug"
         media={<Avatar shape="circle" size="l" src={assets.eth.imageUrl} />}
         onClick={onClickConsole}
         styles={{
@@ -695,7 +707,7 @@ const NewListCellTest = () => {
         accessory="more"
         description="Description"
         detail="Detail"
-        layoutDensity="dense"
+        layoutSpacing="hug"
         onClick={onClickConsole}
         subdetail="Subdetail"
         title="Title"
@@ -704,7 +716,7 @@ const NewListCellTest = () => {
         accessory="more"
         description="Description"
         detail="Detail"
-        layoutDensity="dense"
+        layoutSpacing="hug"
         media={<Icon name="heart" size="l" />}
         onClick={onClickConsole}
         subdetail="Subdetail"
@@ -714,7 +726,7 @@ const NewListCellTest = () => {
         accessory="more"
         description="Description"
         detail="Detail"
-        layoutDensity="dense"
+        layoutSpacing="hug"
         media={<Icon name="heart" size="s" />}
         onClick={onClickConsole}
         subdetail="Subdetail"
@@ -725,7 +737,7 @@ const NewListCellTest = () => {
         action={<Button compact>Action</Button>}
         description="Description"
         detail="Detail"
-        layoutDensity="dense"
+        layoutSpacing="hug"
         media={<Icon name="heart" size="xs" />}
         onClick={onClickConsole}
         subdetail="Subdetail"
@@ -736,7 +748,7 @@ const NewListCellTest = () => {
         description="Description"
         detail="Detail"
         intermediary={<Avatar shape="square" size="l" src={squareAssets.human6} />}
-        layoutDensity="dense"
+        layoutSpacing="hug"
         media={<Avatar shape="square" size="l" src={squareAssets.human1} />}
         onClick={onClickConsole}
         subdetail={
@@ -758,7 +770,7 @@ export {
   CompactPressableContent,
   Content,
   LongContent,
-  NewListCellTest,
+  HugListCell as NewListCellTest,
   PressableContent,
   PriorityContent,
   WithAccessory,
