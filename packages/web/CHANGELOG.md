@@ -10,7 +10,7 @@ All notable changes to this project will be documented in this file.
 
 #### 📘 Misc
 
-- Update Code Connect forv Button, IconButton, TabbedChips, MultiContentModule.
+- Update Code Connect for Button, IconButton, TabbedChips, MultiContentModule.
 
 ## 8.13.1 (9/26/2025 PST)
 
