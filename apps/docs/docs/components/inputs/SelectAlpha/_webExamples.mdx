@@ -14,7 +14,7 @@ function SingleSelectExample() {
   ];
 
   return (
-    <Select
+    <SelectAlpha
       label="Choose an option"
       value={value}
       onChange={setValue}
@@ -30,8 +30,6 @@ function SingleSelectExample() {
 Multi-selection mode allows users to select multiple options from the list.
 
 ```jsx live
-import { useMultiSelect } from '@coinbase/cds-common/select/useMultiSelect';
-
 function MultiSelectExample() {
   const { value, onChange } = useMultiSelect({
     initialValue: ['option1', 'option3'],
@@ -46,7 +44,7 @@ function MultiSelectExample() {
   ];
 
   return (
-    <Select
+    <SelectAlpha
       type="multi"
       label="Choose multiple options"
       value={value}
@@ -75,7 +73,7 @@ function AccessibilityExample() {
   ];
 
   return (
-    <Select
+    <SelectAlpha
       label="Task Priority"
       value={value}
       onChange={setValue}
@@ -115,7 +113,7 @@ function VariantExample() {
 
   return (
     <VStack gap={4}>
-      <Select
+      <SelectAlpha
         label="Positive Status"
         value={positiveValue}
         onChange={setPositiveValue}
@@ -125,7 +123,7 @@ function VariantExample() {
         placeholder="Select positive status"
       />
 
-      <Select
+      <SelectAlpha
         label="Negative Status"
         value={negativeValue}
         onChange={setNegativeValue}

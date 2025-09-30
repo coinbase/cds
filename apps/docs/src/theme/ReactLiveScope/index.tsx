@@ -23,6 +23,7 @@ import {
 } from '@coinbase/cds-common/overlays/OverlayContentContext';
 import { useAlert } from '@coinbase/cds-common/overlays/useAlert';
 import { useModal } from '@coinbase/cds-common/overlays/useModal';
+import { useMultiSelect } from '@coinbase/cds-common/select/useMultiSelect';
 import { useStepper } from '@coinbase/cds-common/stepper/useStepper';
 import { LocaleProvider } from '@coinbase/cds-common/system/LocaleProvider';
 import { useTabsContext } from '@coinbase/cds-common/tabs/TabsContext';
@@ -33,6 +34,7 @@ import { useSparklinePath } from '@coinbase/cds-common/visualizations/useSparkli
 import * as CDSLottie from '@coinbase/cds-lottie-files';
 import { Accordion } from '@coinbase/cds-web/accordion/Accordion';
 import { AccordionItem } from '@coinbase/cds-web/accordion/AccordionItem';
+import { Select as SelectAlpha } from '@coinbase/cds-web/alpha/select';
 import { Lottie, LottieStatusAnimation } from '@coinbase/cds-web/animation';
 import { Banner } from '@coinbase/cds-web/banner/Banner';
 import * as CDSButtons from '@coinbase/cds-web/buttons';
@@ -164,6 +166,8 @@ const ReactLiveScope: Record<string, unknown> = {
   // input
   ...CDSButtons,
   ...CDSControls,
+  SelectAlpha,
+  useMultiSelect,
   ...CDSSystem,
   MediaQueryProvider,
   ...CDSChips,
