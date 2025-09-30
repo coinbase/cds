@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## Unreleased
+
+#### 📘 Misc
+
+- Update analytics event types.
+
 ## 8.13.1 ((9/26/2025, 01:47 PM PST))
 
 This is an artificial version bump with no new change.
