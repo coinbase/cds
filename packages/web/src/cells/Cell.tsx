@@ -86,8 +86,10 @@ export type CellBaseProps = Polymorphic.ExtendableProps<
     media?: React.ReactElement;
     // TODO: consider renaming this to shouldTruncate in next breaking change release. Since overflow gives people the sense that it will overflow and overlap with other content
     shouldOverflow?: boolean;
-    // TODO: consider removing this in next breaking change release. Since we have styles.detail
-    /** Apply a fixed width to the detail (end). */
+    /**
+     * @deprecated Use `styles.detail.width` instead. This prop is kept for backward
+     * compatibility and will be removed in a future major release.
+     */
     detailWidth?: number | string;
     /** Is the cell disabled? Will apply opacity and disable interaction. */
     disabled?: boolean;
@@ -256,8 +258,14 @@ export const Cell: CellComponent = memo(
                 alignItems="flex-end"
                 className={cx(contentTruncationStyle, classNames?.detail)}
                 flexDirection="column"
-                flexGrow={detailWidth ? undefined : 1}
-                flexShrink={detailWidth ? undefined : hasCellPriority('end', priority) ? 0 : 1}
+                flexGrow={styles?.detail?.width || detailWidth ? undefined : 1}
+                flexShrink={
+                  styles?.detail?.width || detailWidth
+                    ? undefined
+                    : hasCellPriority('end', priority)
+                      ? 0
+                      : 1
+                }
                 justifyContent="flex-end"
                 style={styles?.detail}
                 width={detailWidth}

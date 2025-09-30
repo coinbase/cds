@@ -334,18 +334,23 @@ const CompactPressableContent = () => (
 const LongContent = () => (
   <>
     <ListCell
-      description="Description also has a very long length that will wrap to 2 lines maximum. This is different from subtitle that only supports 1 line."
       detail="Detail also has a very long string"
       subdetail="Neutral also does too"
-      title="Title with a very long length that should wrap to 2 lines when there is no subtitle or description"
+      title="Title with a very long length that should wrap to 2 lines when there is no description provided"
+    />
+    <ListCell
+      description="Description also has a very long length that will wrap to 2 lines maximum, unless 'multiline' is turned on and the description can go as many lines as needed."
+      detail="Detail also has a very long string"
+      subdetail="Neutral also does too"
+      title="Title with a very long length that should wrap to 2 lines when there is no description provided"
     />
     <ListCell
       multiline
       selected
-      description="Description also has a very long length that will wrap to 2 lines maximum. This is different from subtitle that only supports 1 line."
+      description="Description also has a very long length that will wrap to 2 lines maximum, unless 'multiline' is turned on and the description can go as many lines as needed."
       detail="Detail also has a very long string"
       subdetail="Neutral also does too"
-      title="Title with a very long length that should wrap to 2 lines when there is no subtitle or description"
+      title="Title with a very long length that should wrap to 2 lines when there is no description provided"
     />
   </>
 );
@@ -672,18 +677,15 @@ const NewListCellTest = () => {
       <ListCell
         multiline
         accessory="more"
-        alignItems="flex-start"
         description="Long description with multiple lines. This section can be arbitrarily long and occupy many many lines."
         detail="Detail"
         layoutDensity="dense"
         media={<Avatar shape="circle" size="l" src={assets.eth.imageUrl} />}
         onClick={onClickConsole}
         styles={{
-          accessory: {
-            marginTop: 'var(--space-1)',
-          },
           media: {
             marginTop: 'var(--space-1)',
+            alignSelf: 'flex-start',
           },
         }}
         subdetail="Subdetail"

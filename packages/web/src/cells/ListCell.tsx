@@ -34,6 +34,9 @@ const denseOuterSpacing = {
   marginX: 0 as const,
 } satisfies CellSpacing;
 
+type CellStyles = NonNullable<CellBaseProps['styles']>;
+type CellClassNames = NonNullable<CellBaseProps['classNames']>;
+
 export type ListCellBaseProps = Polymorphic.ExtendableProps<
   Omit<CellBaseProps, 'children'>,
   CellDetailProps & {
@@ -79,38 +82,28 @@ export type ListCellBaseProps = Polymorphic.ExtendableProps<
     /** Title of content. Max 1 line (with description) or 2 lines (without), otherwise will truncate. */
     title?: React.ReactNode;
     /** Class names for the components */
-    classNames?: {
-      root?: string;
+    classNames?: Pick<
+      CellClassNames,
+      'root' | 'media' | 'intermediary' | 'accessory' | 'contentContainer' | 'pressable'
+    > & {
+      /** Applied to the container of detail or action */
+      end?: CellClassNames['detail'];
+      mainContent?: CellClassNames['topContent'];
+      helperText?: CellClassNames['bottomContent'];
       title?: string;
       description?: string;
-      accessory?: string;
-      media?: string;
-      intermediary?: string;
-      /**
-       * Applied to detail or action
-       */
-      end?: string;
-      helperText?: string;
-      contentContainer?: string;
-      mainContent?: string;
-      pressable?: string;
     };
     /** Styles for the components */
-    styles?: {
-      root?: React.CSSProperties;
+    styles?: Pick<
+      CellStyles,
+      'root' | 'media' | 'intermediary' | 'accessory' | 'contentContainer' | 'pressable'
+    > & {
+      /** Applied to the container of detail or action */
+      end?: CellStyles['detail'];
+      mainContent?: CellStyles['topContent'];
+      helperText?: CellStyles['bottomContent'];
       title?: React.CSSProperties;
       description?: React.CSSProperties;
-      accessory?: React.CSSProperties;
-      media?: React.CSSProperties;
-      intermediary?: React.CSSProperties;
-      /**
-       * Applied to detail or action
-       */
-      end?: React.CSSProperties;
-      helperText?: React.CSSProperties;
-      contentContainer?: React.CSSProperties;
-      mainContent?: React.CSSProperties;
-      pressable?: React.CSSProperties;
     };
   }
 >;
@@ -149,7 +142,6 @@ export const ListCell: ListCellComponent = memo(
         priority,
         innerSpacing,
         outerSpacing,
-        detailWidth,
         layoutDensity = compact ? 'compact' : 'sparse',
         className,
         classNames,
@@ -189,7 +181,6 @@ export const ListCell: ListCellComponent = memo(
           bottomContent={helperText}
           className={cx(className, classNames?.root)}
           detail={end}
-          detailWidth={detailWidth}
           disabled={disabled}
           innerSpacing={innerSpacing ?? (layoutDensity === 'dense' ? denseInnerSpacing : undefined)}
           intermediary={intermediary}
