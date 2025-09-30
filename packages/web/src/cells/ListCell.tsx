@@ -3,11 +3,12 @@ import { compactListHeight, listHeight } from '@coinbase/cds-common/tokens/cell'
 import { css } from '@linaria/core';
 
 import type { Polymorphic } from '../core/polymorphism';
+import { cx } from '../cx';
 import { Box } from '../layout/Box';
 import { VStack } from '../layout/VStack';
 import { Text } from '../typography/Text';
 
-import { Cell, type CellBaseProps } from './Cell';
+import { Cell, type CellBaseProps, type CellSpacing } from './Cell';
 import { CellAccessory, type CellAccessoryType } from './CellAccessory';
 import { CellDetail, type CellDetailProps } from './CellDetail';
 
@@ -21,6 +22,18 @@ export const listCellDefaultElement = 'div';
 
 export type ListCellDefaultElement = typeof listCellDefaultElement;
 
+const denseInnerSpacing = {
+  paddingX: 2 as const,
+  paddingY: 0.5 as const,
+  marginX: 0 as const,
+} satisfies CellSpacing;
+// no padding outside of the pressable area
+const denseOuterSpacing = {
+  paddingX: 0 as const,
+  paddingY: 0 as const,
+  marginX: 0 as const,
+} satisfies CellSpacing;
+
 export type ListCellBaseProps = Polymorphic.ExtendableProps<
   Omit<CellBaseProps, 'children'>,
   CellDetailProps & {
@@ -28,8 +41,20 @@ export type ListCellBaseProps = Polymorphic.ExtendableProps<
     accessory?: CellAccessoryType;
     /** Interactive action, like a CTA or form element. Cannot be used alongside `onPress`. */
     action?: React.ReactNode;
-    /** enables compact spacing */
+    /**
+     * @deprecated Use `layoutDensity="compact"` instead. This prop is kept for backward
+     * compatibility and will be removed in a future major release.
+     */
     compact?: boolean;
+    /**
+     * When 'dense' is set, the cell will have the following behavior:
+     * 1. No min-height, height is determined by the content
+     * 2. smaller padding, no extra padding around the pressable area
+     * 3. 0 border radius for pressable shade
+     * 4. Title always cap at 2 lines
+     * 5. Description and subdetail have smaller font
+     */
+    layoutDensity?: 'sparse' | 'compact' | 'dense';
     /** Description of content. Max 1 line (with title) or 2 lines (without), otherwise will truncate. */
     description?: React.ReactNode;
     /**
@@ -53,6 +78,40 @@ export type ListCellBaseProps = Polymorphic.ExtendableProps<
     multiline?: boolean;
     /** Title of content. Max 1 line (with description) or 2 lines (without), otherwise will truncate. */
     title?: React.ReactNode;
+    /** Class names for the components */
+    classNames?: {
+      root?: string;
+      title?: string;
+      description?: string;
+      accessory?: string;
+      media?: string;
+      intermediary?: string;
+      /**
+       * Applied to detail or action
+       */
+      end?: string;
+      helperText?: string;
+      contentContainer?: string;
+      mainContent?: string;
+      pressable?: string;
+    };
+    /** Styles for the components */
+    styles?: {
+      root?: React.CSSProperties;
+      title?: React.CSSProperties;
+      description?: React.CSSProperties;
+      accessory?: React.CSSProperties;
+      media?: React.CSSProperties;
+      intermediary?: React.CSSProperties;
+      /**
+       * Applied to detail or action
+       */
+      end?: React.CSSProperties;
+      helperText?: React.CSSProperties;
+      contentContainer?: React.CSSProperties;
+      mainContent?: React.CSSProperties;
+      pressable?: React.CSSProperties;
+    };
   }
 >;
 
@@ -91,13 +150,24 @@ export const ListCell: ListCellComponent = memo(
         innerSpacing,
         outerSpacing,
         detailWidth,
+        layoutDensity = compact ? 'compact' : 'sparse',
+        className,
+        classNames,
+        styles,
+        style,
         ...props
       }: ListCellProps<AsComponent>,
       ref?: Polymorphic.Ref<AsComponent>,
     ) => {
       const Component = (as ?? listCellDefaultElement) satisfies React.ElementType;
 
-      const minHeight = compact ? compactListHeight : listHeight;
+      const minHeight =
+        layoutDensity === 'compact'
+          ? compactListHeight
+          : layoutDensity === 'sparse'
+            ? listHeight
+            : undefined;
+
       const accessoryType = selected && !disableSelectionAccessory ? 'selected' : accessory;
 
       const end = useMemo(() => {
@@ -115,17 +185,30 @@ export const ListCell: ListCellComponent = memo(
           ref={ref}
           accessory={accessoryType && <CellAccessory type={accessoryType} />}
           as={Component}
+          borderRadius={props.borderRadius ?? (layoutDensity === 'dense' ? 0 : undefined)}
           bottomContent={helperText}
+          className={cx(className, classNames?.root)}
           detail={end}
           detailWidth={detailWidth}
           disabled={disabled}
-          innerSpacing={innerSpacing}
+          innerSpacing={innerSpacing ?? (layoutDensity === 'dense' ? denseInnerSpacing : undefined)}
           intermediary={intermediary}
           media={media}
           minHeight={minHeight}
-          outerSpacing={outerSpacing}
+          outerSpacing={outerSpacing ?? (layoutDensity === 'dense' ? denseOuterSpacing : undefined)}
           priority={priority}
           selected={selected}
+          style={{ ...style, ...styles?.root }}
+          styles={{
+            media: styles?.media,
+            intermediary: styles?.intermediary,
+            detail: styles?.end,
+            accessory: styles?.accessory,
+            topContent: styles?.mainContent,
+            bottomContent: styles?.helperText,
+            contentContainer: styles?.contentContainer,
+            pressable: styles?.pressable,
+          }}
           {...props}
         >
           <VStack>
@@ -134,8 +217,10 @@ export const ListCell: ListCellComponent = memo(
                 as="div"
                 display="block"
                 font="headline"
+                // TODO: confirm with design if making it always 2 lines as the new approach is intentional
                 numberOfLines={description || disableMultilineTitle ? 1 : 2}
                 overflow="wrap"
+                style={styles?.title}
               >
                 {title}
               </Text>
@@ -144,11 +229,12 @@ export const ListCell: ListCellComponent = memo(
             {!!description && (
               <Text
                 as="div"
-                className={multiline ? overflowCss : undefined}
+                className={cx(multiline ? overflowCss : undefined, classNames?.description)}
                 color="fgMuted"
                 display="block"
-                font="body"
+                font={layoutDensity === 'dense' ? 'label2' : 'body'}
                 overflow={multiline ? undefined : 'truncate'}
+                style={styles?.description}
               >
                 {description}
               </Text>

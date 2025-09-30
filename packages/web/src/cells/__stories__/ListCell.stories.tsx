@@ -1,12 +1,15 @@
 import React from 'react';
-import { assets } from '@coinbase/cds-common/internal/data/assets';
+import { assets, squareAssets } from '@coinbase/cds-common/internal/data/assets';
 import type { CellPriority } from '@coinbase/cds-common/types/CellBaseProps';
 
 import { Button, IconButton } from '../../buttons';
 import type { CellSpacing } from '../../cells/Cell';
 import { Checkbox } from '../../controls/Checkbox';
+import { Icon } from '../../icons/Icon';
 import { Pictogram } from '../../illustrations/Pictogram';
-import { VStack } from '../../layout';
+import { HStack, VStack } from '../../layout';
+import { Avatar } from '../../media/Avatar';
+import { Tag } from '../../tag/Tag';
 import { CellHelperText } from '../CellHelperText';
 import { CellMedia } from '../CellMedia';
 import { ListCell } from '../ListCell';
@@ -627,11 +630,133 @@ const WithHelperText = () => (
   </VStack>
 );
 
+const NewListCellTest = () => {
+  return (
+    <VStack width="360px">
+      <ListCell
+        accessory="more"
+        description="Description"
+        detail="Detail"
+        layoutDensity="dense"
+        media={<Avatar shape="circle" size="l" src={assets.eth.imageUrl} />}
+        onClick={onClickConsole}
+        subdetail="Subdetail"
+        title="Title"
+      />
+      <ListCell
+        accessory="more"
+        description="Description"
+        detail="Detail"
+        helperText={
+          <CellHelperText variant="information">
+            This is helpful information to guide the user
+          </CellHelperText>
+        }
+        layoutDensity="dense"
+        media={<Avatar shape="circle" size="l" src={assets.eth.imageUrl} />}
+        onClick={onClickConsole}
+        subdetail="Subdetail"
+        title="Title"
+      />
+      <ListCell
+        multiline
+        accessory="more"
+        description="Long description with multiple lines. This section can be arbitrarily long and occupy many many lines."
+        detail="Detail"
+        layoutDensity="dense"
+        media={<Avatar shape="circle" size="l" src={assets.eth.imageUrl} />}
+        onClick={onClickConsole}
+        subdetail="Subdetail"
+        title="Title"
+      />
+      <ListCell
+        multiline
+        accessory="more"
+        alignItems="flex-start"
+        description="Long description with multiple lines. This section can be arbitrarily long and occupy many many lines."
+        detail="Detail"
+        layoutDensity="dense"
+        media={<Avatar shape="circle" size="l" src={assets.eth.imageUrl} />}
+        onClick={onClickConsole}
+        styles={{
+          accessory: {
+            marginTop: 'var(--space-1)',
+          },
+          media: {
+            marginTop: 'var(--space-1)',
+          },
+        }}
+        subdetail="Subdetail"
+        title="Title"
+      />
+      <ListCell
+        accessory="more"
+        description="Description"
+        detail="Detail"
+        layoutDensity="dense"
+        onClick={onClickConsole}
+        subdetail="Subdetail"
+        title="Title"
+      />
+      <ListCell
+        accessory="more"
+        description="Description"
+        detail="Detail"
+        layoutDensity="dense"
+        media={<Icon name="heart" size="l" />}
+        onClick={onClickConsole}
+        subdetail="Subdetail"
+        title="Title"
+      />
+      <ListCell
+        accessory="more"
+        description="Description"
+        detail="Detail"
+        layoutDensity="dense"
+        media={<Icon name="heart" size="s" />}
+        onClick={onClickConsole}
+        subdetail="Subdetail"
+        title="Title"
+      />
+      <ListCell
+        accessory="more"
+        action={<Button compact>Action</Button>}
+        description="Description"
+        detail="Detail"
+        layoutDensity="dense"
+        media={<Icon name="heart" size="xs" />}
+        onClick={onClickConsole}
+        subdetail="Subdetail"
+        title="Title"
+      />
+      <ListCell
+        accessory="more"
+        description="Description"
+        detail="Detail"
+        intermediary={<Avatar shape="square" size="l" src={squareAssets.human6} />}
+        layoutDensity="dense"
+        media={<Avatar shape="square" size="l" src={squareAssets.human1} />}
+        onClick={onClickConsole}
+        subdetail={
+          <Tag colorScheme="green">
+            <HStack alignItems="center" gap={0.5}>
+              <Icon color="fgPositive" name="diagonalUpArrow" size="xs" />
+              1.64%
+            </HStack>
+          </Tag>
+        }
+        title="Title"
+      />
+    </VStack>
+  );
+};
+
 export {
   CompactContent,
   CompactPressableContent,
   Content,
   LongContent,
+  NewListCellTest,
   PressableContent,
   PriorityContent,
   WithAccessory,

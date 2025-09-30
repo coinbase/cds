@@ -100,6 +100,30 @@ export type CellBaseProps = Polymorphic.ExtendableProps<
     innerSpacing?: CellSpacing;
     /** The content to display below the main cell content */
     bottomContent?: React.ReactNode;
+    /** Styles for the components */
+    styles?: {
+      root?: React.CSSProperties;
+      contentContainer?: React.CSSProperties;
+      topContent?: React.CSSProperties;
+      bottomContent?: React.CSSProperties;
+      pressable?: React.CSSProperties;
+      media?: React.CSSProperties;
+      intermediary?: React.CSSProperties;
+      detail?: React.CSSProperties;
+      accessory?: React.CSSProperties;
+    };
+    /** Class names for the components */
+    classNames?: {
+      root?: string;
+      contentContainer?: string;
+      topContent?: string;
+      bottomContent?: string;
+      pressable?: string;
+      media?: string;
+      intermediary?: string;
+      detail?: string;
+      accessory?: string;
+    };
   }
 >;
 
@@ -122,6 +146,9 @@ export const Cell: CellComponent = memo(
         alignItems = 'center',
         borderRadius = 200,
         children,
+        style,
+        styles,
+        classNames,
         className,
         contentClassName,
         detail,
@@ -174,27 +201,30 @@ export const Cell: CellComponent = memo(
       const content = useMemo(() => {
         // props for the entire inner container that wraps the top content
         // (media, children, intermediary, detail, accessory) and the bottom content
-        const innerContainerProps = {
+        const contentContainerProps = {
           borderRadius,
-          className: contentClassName,
+          className: cx(contentClassName, classNames?.contentContainer),
           testID,
           ...(selected ? { background: 'bgAlternate' as const } : {}),
           ...(linkable ? innerSpacingWithoutMarginX : innerSpacing),
+          style: styles?.contentContainer,
         };
 
         // props for the container of the top content only(media, children, intermediary, detail, accessory)
-        const topContentContainerProps = {
+        const topContentProps = {
           alignItems: alignItems,
           flexGrow: 1,
           gap: columnGap || gap,
           width: '100%',
+          className: classNames?.topContent,
+          style: styles?.topContent,
         } as const;
 
         // content that is displayed horizontally above the bottom content
         const topContent = (
           <>
             {media && (
-              <Box flexGrow={0} flexShrink={0}>
+              <Box className={classNames?.media} flexGrow={0} flexShrink={0} style={styles?.media}>
                 {media}
               </Box>
             )}
@@ -210,10 +240,11 @@ export const Cell: CellComponent = memo(
 
             {!!intermediary && (
               <Box
-                className={contentTruncationStyle}
+                className={cx(contentTruncationStyle, classNames?.intermediary)}
                 flexGrow={0}
                 flexShrink={hasCellPriority('middle', priority) ? 0 : 1}
                 justifyContent="center"
+                style={styles?.intermediary}
               >
                 {intermediary}
               </Box>
@@ -222,11 +253,12 @@ export const Cell: CellComponent = memo(
             {!!detail && (
               <Box
                 alignItems="flex-end"
-                className={contentTruncationStyle}
+                className={cx(contentTruncationStyle, classNames?.detail)}
                 flexDirection="column"
                 flexGrow={detailWidth ? undefined : 1}
                 flexShrink={detailWidth ? undefined : hasCellPriority('end', priority) ? 0 : 1}
                 justifyContent="flex-end"
+                style={styles?.detail}
                 width={detailWidth}
               >
                 {detail}
@@ -234,7 +266,12 @@ export const Cell: CellComponent = memo(
             )}
 
             {!!accessory && (
-              <Box flexGrow={0} flexShrink={0}>
+              <Box
+                className={classNames?.accessory}
+                flexGrow={0}
+                flexShrink={0}
+                style={styles?.accessory}
+              >
                 {accessory}
               </Box>
             )}
@@ -243,7 +280,7 @@ export const Cell: CellComponent = memo(
 
         if (!bottom) {
           return (
-            <HStack {...topContentContainerProps} {...innerContainerProps}>
+            <HStack {...topContentProps} {...contentContainerProps}>
               {topContent}
             </HStack>
           );
@@ -255,20 +292,36 @@ export const Cell: CellComponent = memo(
             flexGrow={1}
             gap={rowGap}
             width="100%"
-            {...innerContainerProps}
+            {...contentContainerProps}
           >
-            <HStack {...topContentContainerProps}>{topContent}</HStack>
-            <Box>{bottom}</Box>
+            <HStack {...topContentProps}>{topContent}</HStack>
+            <Box className={classNames?.bottomContent} style={styles?.bottomContent}>
+              {bottom}
+            </Box>
           </VStack>
         );
       }, [
         borderRadius,
         contentClassName,
+        classNames?.contentContainer,
+        classNames?.topContent,
+        classNames?.media,
+        classNames?.intermediary,
+        classNames?.detail,
+        classNames?.accessory,
+        classNames?.bottomContent,
         testID,
         selected,
         linkable,
         innerSpacingWithoutMarginX,
         innerSpacing,
+        styles?.contentContainer,
+        styles?.topContent,
+        styles?.media,
+        styles?.intermediary,
+        styles?.detail,
+        styles?.accessory,
+        styles?.bottomContent,
         alignItems,
         columnGap,
         gap,
@@ -284,7 +337,7 @@ export const Cell: CellComponent = memo(
         rowGap,
       ]);
 
-      const wrappedContent = useMemo(() => {
+      const pressableWrappedContent = useMemo(() => {
         const pressableSharedProps = {
           noScaleOnPress: true,
           transparentWhileInactive: true,
@@ -293,7 +346,7 @@ export const Cell: CellComponent = memo(
           accessibilityLabelledBy,
           background: 'bg' as const,
           borderRadius,
-          className: cx(pressCss, insetFocusRingCss),
+          className: cx(pressCss, insetFocusRingCss, classNames?.pressable),
           disabled,
           marginX: innerSpacingMarginX,
           onClick,
@@ -301,6 +354,7 @@ export const Cell: CellComponent = memo(
           onKeyUp,
           tabIndex,
           testID: testID && `${testID}-cell-pressable`,
+          style: styles?.pressable,
         };
         if (isAnchor)
           return (
@@ -318,11 +372,11 @@ export const Cell: CellComponent = memo(
 
         return content;
       }, [
-        isButton,
         accessibilityHint,
         accessibilityLabel,
         accessibilityLabelledBy,
         borderRadius,
+        classNames?.pressable,
         disabled,
         innerSpacingMarginX,
         onClick,
@@ -330,10 +384,12 @@ export const Cell: CellComponent = memo(
         onKeyUp,
         tabIndex,
         testID,
-        content,
+        styles?.pressable,
         isAnchor,
         href,
         target,
+        content,
+        isButton,
       ]);
 
       return (
@@ -341,14 +397,15 @@ export const Cell: CellComponent = memo(
           ref={ref}
           alignItems="stretch"
           as={Component}
-          className={className}
+          className={cx(className, classNames?.root)}
           maxHeight={maxHeight}
           minHeight={minHeight}
+          style={{ ...style, ...styles?.root }}
           width="100%"
           {...outerSpacing}
           {...props}
         >
-          {wrappedContent}
+          {pressableWrappedContent}
         </Box>
       );
     },
