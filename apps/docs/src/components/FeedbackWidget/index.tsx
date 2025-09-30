@@ -44,7 +44,7 @@ export function FeedbackWidget() {
 
         // Track the feedback event with Coinbase analytics
         postMetric('cdsDocs', {
-          command: 'doc_feedback',
+          command: 'feedback',
           arguments: type ?? 'unknown',
           context: location.pathname,
         });
