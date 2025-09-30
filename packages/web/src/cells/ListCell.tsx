@@ -74,6 +74,8 @@ export type ListCellBaseProps = Polymorphic.ExtendableProps<
      * 3. 0 border radius for pressable area
      * 4. Title always cap at 2 lines
      * 5. Description and subdetail have font 'label2'
+     *
+     * @default 'spacious'
      */
     layoutSpacing?: 'spacious' | 'compact' | 'hug';
     /** Description of content. Max 1 line (with title) or 2 lines (without), otherwise will truncate. */
