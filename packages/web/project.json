@@ -15,8 +15,7 @@
         "prod": {
           "commands": [
             "rm -rf esm && babel ./src --out-dir esm --extensions .ts,.tsx,.js,.jsx --copy-files --no-copy-ignored",
-            "tsx ./optimize-css.ts",
-            "node ../../add-cds7-exports.js @coinbase/cds-web"
+            "tsx ./optimize-css.ts"
           ],
           "parallel": false
         }

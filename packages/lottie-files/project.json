@@ -10,12 +10,11 @@
       "defaultConfiguration": "dev",
       "configurations": {
         "dev": {
-          "command": "rm -rf esm && babel ./src --out-dir esm --extensions .ts,.tsx,.js,.jsx --copy-files --no-copy-ignored",
+          "command": "rm -rf esm && babel ./src --out-dir esm --extensions .ts,.tsx,.js,.jsx --copy-files --no-copy-ignored"
         },
-        "prod":  {
+        "prod": {
           "commands": [
-            "rm -rf esm && babel ./src --out-dir esm --extensions .ts,.tsx,.js,.jsx --copy-files --no-copy-ignored",
-            "node ../../add-cds7-exports.js @coinbase/cds-lottie-files"
+            "rm -rf esm && babel ./src --out-dir esm --extensions .ts,.tsx,.js,.jsx --copy-files --no-copy-ignored"
           ],
           "parallel": false
         }
