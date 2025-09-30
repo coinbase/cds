@@ -60,6 +60,7 @@ describe('Select', () => {
     // Due to the Clear All button in the multi-select dropdown,
     // there's an a11y violation.
     // TODO: Implement new markup for the Clear All button.
+    // eslint-disable-next-line jest/no-commented-out-tests
     // it('passes accessibility when open', async () => {
     //   expect(
     //     await renderA11y(
