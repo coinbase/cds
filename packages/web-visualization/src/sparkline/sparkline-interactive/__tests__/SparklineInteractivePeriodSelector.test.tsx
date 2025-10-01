@@ -1,76 +1,57 @@
-import type { SparklineInteractivePeriodSelectorProps } from '../SparklineInteractivePeriodSelector';
+import { DefaultThemeProvider } from '@coinbase/cds-web/utils/test';
+import { fireEvent, render, screen } from '@testing-library/react';
 
-const mockTabs = [
+import { SparklineInteractivePeriodSelector } from '../SparklineInteractivePeriodSelector';
+
+const periods = [
   {
-    id: '1h',
     label: '1H',
+    value: '1h',
   },
   {
-    id: '1d',
     label: '1D',
+    value: '1d',
   },
   {
-    id: '1w',
     label: '1W',
+    value: '1w',
   },
 ];
 
-const mockActiveTab = { id: '1d', label: '1D' };
-const mockOnChange = jest.fn();
+const setSelectedPeriodSpy = jest.fn();
+
+const SparklineInteractivePeriodSelectorExample = () => {
+  return (
+    <DefaultThemeProvider>
+      <SparklineInteractivePeriodSelector
+        color="blue"
+        periods={periods}
+        selectedPeriod="1d"
+        setSelectedPeriod={setSelectedPeriodSpy}
+      />
+    </DefaultThemeProvider>
+  );
+};
 
 describe('SparklineInteractivePeriodSelector', () => {
   afterEach(() => {
-    mockOnChange.mockClear();
+    setSelectedPeriodSpy.mockClear();
   });
 
-  it('accepts correct props structure', () => {
-    // Test that the component accepts the updated API props
-    const validProps: SparklineInteractivePeriodSelectorProps = {
-      activeTab: mockActiveTab,
-      color: 'blue',
-      onChange: mockOnChange,
-      tabs: mockTabs,
-    };
+  it('renders period buttons', () => {
+    render(<SparklineInteractivePeriodSelectorExample />);
 
-    // Verify the props structure matches expected API
-    expect(validProps.activeTab).toEqual({ id: '1d', label: '1D' });
-    expect(validProps.color).toBe('blue');
-    expect(typeof validProps.onChange).toBe('function');
-    expect(validProps.tabs).toHaveLength(3);
-    expect(validProps.tabs[0]).toEqual({ id: '1h', label: '1H' });
+    expect(screen.getAllByRole('button')).toHaveLength(periods.length);
+    expect(screen.getByText('1H')).toBeTruthy();
+    expect(screen.getByText('1D')).toBeTruthy();
+    expect(screen.getByText('1D')).toBeTruthy();
   });
 
-  it('supports optional color prop', () => {
-    const propsWithoutColor: SparklineInteractivePeriodSelectorProps = {
-      activeTab: mockActiveTab,
-      onChange: mockOnChange,
-      tabs: mockTabs,
-    };
+  it('calls setSelectedPeriod when period button is pressed', () => {
+    render(<SparklineInteractivePeriodSelectorExample />);
 
-    expect(propsWithoutColor.color).toBeUndefined();
-    expect(propsWithoutColor.activeTab).toBeDefined();
-    expect(propsWithoutColor.onChange).toBeDefined();
-    expect(propsWithoutColor.tabs).toBeDefined();
-  });
+    fireEvent.click(screen.getAllByRole('button')[0]);
 
-  it('validates tab structure', () => {
-    mockTabs.forEach((tab) => {
-      expect(tab).toHaveProperty('id');
-      expect(tab).toHaveProperty('label');
-      expect(typeof tab.id).toBe('string');
-    });
-  });
-
-  it('validates activeTab structure', () => {
-    expect(mockActiveTab).toHaveProperty('id');
-    expect(mockActiveTab).toHaveProperty('label');
-    expect(typeof mockActiveTab.id).toBe('string');
-  });
-
-  it('onChange callback accepts tab parameter', () => {
-    const testTab = { id: 'test', label: 'Test' };
-    mockOnChange(testTab);
-
-    expect(mockOnChange).toHaveBeenCalledWith(testTab);
+    expect(setSelectedPeriodSpy).toHaveBeenCalledTimes(1);
   });
 });

@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useMemo, useState } from 'react';
+import React, { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import { gutter } from '@coinbase/cds-common/tokens/sizing';
 import { chartCompactHeight, chartHeight } from '@coinbase/cds-common/tokens/sparkline';
@@ -6,19 +6,41 @@ import type {
   ChartData,
   ChartFormatDate,
   ChartScrubParams,
+  ChartTimeseries,
   Placement,
 } from '@coinbase/cds-common/types';
+import { debounce } from '@coinbase/cds-common/utils/debounce';
 import { getAccessibleColor } from '@coinbase/cds-common/utils/getAccessibleColor';
-import { defaultChartPadding } from '@coinbase/cds-common/visualizations/charts';
-import { emptyArray, noop } from '@coinbase/cds-utils';
+import { useSparklineCoordinates } from '@coinbase/cds-common/visualizations/useSparklineCoordinates';
+import { chartFallbackNegative, chartFallbackPositive } from '@coinbase/cds-lottie-files';
+import { emptyArray, isStorybook, noop } from '@coinbase/cds-utils';
 import { cx, useTheme } from '@coinbase/cds-web';
+import { Lottie } from '@coinbase/cds-web/animation';
 import { useDimensions } from '@coinbase/cds-web/hooks/useDimensions';
-import { HStack } from '@coinbase/cds-web/layout';
+import { HStack, VStack } from '@coinbase/cds-web/layout';
 import { Box } from '@coinbase/cds-web/layout/Box';
+import { getBrowserGlobals } from '@coinbase/cds-web/utils/browser';
+import {
+  VisualizationContainer,
+  type VisualizationContainerDimension,
+} from '@coinbase/cds-web/visualizations/VisualizationContainer';
+import isEqual from 'lodash/isEqual';
+import isObject from 'lodash/isObject';
 
-import { type ChartTextChildren, LineChart, type LineSeries, Scrubber, XAxis } from '../../chart';
-
+import { InnerSparklineInteractiveProvider } from './InnerSparklineInteractiveProvider';
+import { SparklineInteractiveHoverDate } from './SparklineInteractiveHoverDate';
+import { SparklineInteractiveHoverPrice } from './SparklineInteractiveHoverPrice';
+import { SparklineInteractiveLineVertical } from './SparklineInteractiveLineVertical';
+import { SparklineInteractiveMarkerDates } from './SparklineInteractiveMarkerDates';
+import { SparklineInteractivePaths } from './SparklineInteractivePaths';
 import { SparklineInteractivePeriodSelector } from './SparklineInteractivePeriodSelector';
+import {
+  SparklineInteractiveProvider,
+  useSparklineInteractiveContext,
+} from './SparklineInteractiveProvider';
+import { SparklineInteractiveScrubHandler } from './SparklineInteractiveScrubHandler';
+import { SparklineInteractiveScrubProvider } from './SparklineInteractiveScrubProvider';
+import { useSparklineInteractiveConstants } from './useSparklineInteractiveConstants';
 
 export * from '@coinbase/cds-common/types/Chart';
 
@@ -27,9 +49,15 @@ export type SparklineInteractiveDefaultFallback = Pick<
   'fallbackType' | 'compact'
 >;
 
+const DefaultFallback = memo(({ fallbackType }: SparklineInteractiveDefaultFallback) => {
+  // don't show lottie animation in story book
+  const skipLottie = isStorybook();
+
+  const source = fallbackType === 'negative' ? chartFallbackNegative : chartFallbackPositive;
+  return !skipLottie && <Lottie autoplay loop height="100%" source={source} width="100%" />;
+});
+
 const mobileLayoutBreakpoint = 650;
-const axisSize = 52;
-const chartPaddingTop = defaultChartPadding.top;
 
 export type SparklineInteractiveBaseProps<Period extends string> = {
   /**
@@ -39,7 +67,7 @@ export type SparklineInteractiveBaseProps<Period extends string> = {
   /**
    * A list of periods that the chart will use. label is what is shown in the bottom of the chart and the value is the key.
    */
-  periods: { label: React.ReactNode; value: Period }[];
+  periods: { label: string; value: Period }[];
   /**
    * default period value that the chart will use
    */
@@ -62,6 +90,8 @@ export type SparklineInteractiveBaseProps<Period extends string> = {
   onScrub?: (params: ChartScrubParams<Period>) => void;
   /**
    * Disables the scrub user interaction from the chart
+   *
+   * @default false
    */
   disableScrubbing?: boolean;
   /**
@@ -73,11 +103,6 @@ export type SparklineInteractiveBaseProps<Period extends string> = {
    */
   strokeColor: string;
   /**
-   * The type of line to render.
-   * @default 'solid'
-   */
-  lineType?: 'solid' | 'dotted' | 'gradient';
-  /**
    * Fallback shown in the chart when data is not available. This is usually a loading state.
    */
   fallback?: React.ReactNode;
@@ -87,10 +112,14 @@ export type SparklineInteractiveBaseProps<Period extends string> = {
   fallbackType?: 'positive' | 'negative';
   /**
    * Show the chart in compact height
+   *
+   * @default false
    */
   compact?: boolean;
   /**
-   * Hides the period selector
+   * Hides the period selector at the bottom of the chart
+   *
+   * @default false
    */
   hidePeriodSelector?: boolean;
   /**
@@ -99,11 +128,6 @@ export type SparklineInteractiveBaseProps<Period extends string> = {
    * @default true
    */
   fill?: boolean;
-  /**
-   * The type of area fill to add to the Sparkline
-   * @default 'gradient'
-   */
-  fillType?: 'gradient' | 'solid' | 'dotted';
   /**
    Formats the date above the chart as you scrub. Omit this if you don't want to show the date as the user scrubs
    */
@@ -116,6 +140,12 @@ export type SparklineInteractiveBaseProps<Period extends string> = {
    * Adds a header node above the chart. It will be placed next to the period selector on web.
    */
   headerNode?: React.ReactNode;
+  /**
+   *  Optional data to show on hover/scrub instead of the original sparkline. This allows multiple timeseries lines.
+   *
+   *  Period => timeseries list
+   */
+  hoverData?: Record<Period, ChartTimeseries[]>;
   /**
    * Optional gutter to add to the Period selector. This is useful if you choose to use the full screen width for the chart
    */
@@ -166,312 +196,281 @@ export type SparklineInteractiveProps<Period extends string> =
     };
     /** Test ID for the header */
     headerTestID?: string;
-    /**
-     * Children to render inside the chart.
-     */
-    children?: React.ReactNode;
   };
 
-export const SparklineInteractive = memo(
-  <Period extends string>({
-    data,
-    periods,
-    defaultPeriod,
-    onPeriodChanged,
-    strokeColor,
-    lineType,
-    onScrub = noop,
-    onScrubStart = noop,
-    onScrubEnd = noop,
-    formatDate,
-    fallback = null,
-    hidePeriodSelector = false,
-    disableScrubbing = false,
-    fill = true,
-    fillType,
-    yAxisScalingFactor = 1.0,
-    compact,
-    formatHoverDate,
-    formatHoverPrice,
-    headerNode,
-    fallbackType = 'positive',
-    timePeriodGutter,
-    periodSelectorPlacement = 'above',
-    className,
-    classNames,
-    style,
-    styles,
-    headerTestID,
-    children,
-  }: SparklineInteractiveProps<Period>) => {
-    const theme = useTheme();
-    const [isScrubbing, setIsScrubbing] = useState(false);
-    const [selectedPeriod, setSelectedPeriod] = useState(defaultPeriod);
-    const { observe: containerRef, width: containerWidth } = useDimensions();
+function SparklineInteractiveContentWithGeneric<Period extends string>({
+  data,
+  periods,
+  defaultPeriod,
+  onPeriodChanged,
+  strokeColor,
+  onScrub = noop,
+  onScrubStart = noop,
+  onScrubEnd = noop,
+  formatDate,
+  fallback = null,
+  hidePeriodSelector = false,
+  disableScrubbing = false,
+  fill = true,
+  yAxisScalingFactor = 1.0,
+  compact,
+  formatHoverDate,
+  formatHoverPrice,
+  headerNode,
+  fallbackType = 'positive',
+  timePeriodGutter,
+  hoverData,
+  periodSelectorPlacement = 'above',
+  className,
+  classNames,
+  style,
+  styles,
+  headerTestID,
+}: SparklineInteractiveProps<Period>) {
+  const [isScrubbing, setIsScrubbing] = useState(false);
+  const [isMarkerDateVisible, setIsMarkerDateVisible] = useState(false);
+  const innerSparklineInteractiveHeight = compact ? chartCompactHeight : chartHeight;
+  const { isFallbackVisible, showFallback } = useSparklineInteractiveContext();
+  const { observe: containerRef, width: containerWidth } = useDimensions();
 
-    const { showHeaderPeriodSelector, showBottomPeriodSelector } = useMemo(
-      () => ({
-        showHeaderPeriodSelector: periodSelectorPlacement === 'above' && !hidePeriodSelector,
-        showBottomPeriodSelector: periodSelectorPlacement === 'below' && !hidePeriodSelector,
-      }),
-      [periodSelectorPlacement, hidePeriodSelector],
-    );
+  const isMobileLayout = containerWidth > 0 && containerWidth < mobileLayoutBreakpoint;
+  const showHeaderPeriodSelector = periodSelectorPlacement === 'above' && !hidePeriodSelector;
+  const showBottomMarkerDates = useMemo(
+    () =>
+      periodSelectorPlacement === 'above' ||
+      (periodSelectorPlacement === 'below' && hidePeriodSelector) ||
+      isMarkerDateVisible,
+    [isMarkerDateVisible, periodSelectorPlacement, hidePeriodSelector],
+  );
 
-    const sparklineInteractiveHeight = useMemo(() => {
-      const innerHeight = compact ? chartCompactHeight : chartHeight;
-      return innerHeight + chartPaddingTop + axisSize;
-    }, [compact]);
+  const color = strokeColor;
+  const [selectedPeriod, setSelectedPeriod] = useState(defaultPeriod);
 
-    const isMobileLayout = containerWidth > 0 && containerWidth < mobileLayoutBreakpoint;
-
-    const color =
-      strokeColor && strokeColor !== 'auto'
-        ? strokeColor
+  const theme = useTheme();
+  const lineVerticalColor = useMemo(() => {
+    const lineColor =
+      color !== 'auto'
+        ? color
         : getAccessibleColor({
             background: theme.color.bg,
             foreground: 'auto',
             usage: 'graphic',
           });
+    return hoverData ? 'var(--color-bgLineHeavy)' : lineColor;
+  }, [hoverData, color, theme.color.bg]);
 
-    const dataForPeriod = useMemo(() => {
-      if (!data) {
-        return emptyArray;
-      }
-      return data[selectedPeriod] ?? emptyArray;
-    }, [data, selectedPeriod]);
+  const dataForPeriod = useMemo(() => {
+    if (!data) {
+      return emptyArray;
+    }
+    return data[selectedPeriod] ?? emptyArray;
+  }, [data, selectedPeriod]);
 
-    const [scrubberLabel, setScrubberLabel] = useState<ChartTextChildren | null>(null);
-    const handleHighlightChange = useCallback(
-      (index: number | undefined) => {
-        if (index !== undefined && dataForPeriod[index]) {
-          const point = dataForPeriod[index];
-
-          if (!isScrubbing) {
-            setIsScrubbing(true);
-            onScrubStart();
-          }
-
-          onScrub({
-            period: selectedPeriod,
-            point,
-          });
-
-          if (formatHoverDate && formatHoverPrice) {
-            setScrubberLabel(
-              <>
-                <tspan style={{ fontWeight: 'bold' }}>{formatHoverPrice(point.value)}</tspan>
-                <tspan> {formatHoverDate(point.date, selectedPeriod)}</tspan>
-              </>,
-            );
-          } else if (formatHoverDate) {
-            setScrubberLabel(formatHoverDate(point.date, selectedPeriod));
-          } else if (formatHoverPrice) {
-            setScrubberLabel(formatHoverPrice(point.value));
-          }
-        } else if (isScrubbing) {
-          setIsScrubbing(false);
-          onScrubEnd();
-        }
-      },
-      [
-        dataForPeriod,
-        isScrubbing,
-        onScrub,
-        selectedPeriod,
-        onScrubStart,
-        onScrubEnd,
-        formatHoverDate,
-        formatHoverPrice,
-      ],
-    );
-
-    // Extract values and dates once to avoid repeated mapping
-    const { values, dates } = useMemo(() => {
-      return {
-        values: dataForPeriod.map((d) => d.value),
-        dates: dataForPeriod.map((d) => d.date),
-      };
-    }, [dataForPeriod]);
-
-    // Calculate y-axis bounds based on scaling factor
-    // A scaling factor < 1 reduces variance (zooms out), > 1 increases variance (zooms in)
-    const yAxisBounds = useMemo(() => {
-      if (!values.length || yAxisScalingFactor === undefined) return undefined;
-
-      const min = Math.min(...values);
-      const max = Math.max(...values);
-      const range = max - min;
-      const center = (min + max) / 2;
-
-      // Apply scaling factor: < 1 expands range (less variance), > 1 shrinks range (more variance)
-      const scaledRange = range / yAxisScalingFactor;
-
-      return {
-        min: center - scaledRange / 2,
-        max: center + scaledRange / 2,
-      };
-    }, [values, yAxisScalingFactor]);
-
-    const series = useMemo((): LineSeries[] => {
-      // If we have custom y-axis bounds (from scaling), pass tuple data
-      // so the area extends to the scaled minimum, not just the data minimum
-      const seriesData =
-        yAxisBounds && fill ? values.map((v) => [yAxisBounds.min, v] as [number, number]) : values;
-
-      return [
-        {
-          id: 'main',
-          data: seriesData,
-          color,
-          areaBaseline: yAxisBounds?.min,
-        },
-      ];
-    }, [values, color, yAxisBounds, fill]);
-
-    const formatAxisDate = useCallback(
-      (index: number) => {
-        if (!dates[index]) return '';
-        return formatDate(dates[index], selectedPeriod);
-      },
-      [dates, formatDate, selectedPeriod],
-    );
-
-    let header;
-    if (headerNode) {
-      header = (
-        <Box
-          className={classNames?.header}
-          flexGrow={1}
-          paddingX={!isMobileLayout ? gutter : 0}
-          style={styles?.header}
-          testID={headerTestID}
-        >
-          {headerNode}
-        </Box>
-      );
+  const handleScrubStart = useCallback(() => {
+    if (hoverData) {
+      setIsScrubbing(true);
     }
 
-    const handlePeriodChange = useCallback(
-      (tab: { id: string } | null) => {
-        if (tab && tab.id) {
-          const period = tab.id as Period;
+    setIsMarkerDateVisible(true);
+    onScrubStart?.();
+  }, [hoverData, onScrubStart]);
 
-          if (data && typeof data === 'object' && period !== selectedPeriod) {
-            setSelectedPeriod(period);
-            onPeriodChanged?.(period);
-          }
+  const handleScrubEnd = useCallback(() => {
+    if (hoverData) {
+      setIsScrubbing(false);
+    }
+
+    setIsMarkerDateVisible(false);
+    onScrubEnd?.();
+  }, [hoverData, onScrubEnd]);
+
+  // If dataForPeriod is empty we know that we are either loading
+  // or backend returned bad data and we should show fallback UI.
+  const hasData = dataForPeriod.length > 0;
+  useEffect(() => {
+    // If there is no data for selected period show fallback loader
+    if (isObject(data) && !data[selectedPeriod]?.length && !isFallbackVisible) {
+      showFallback();
+    }
+  }, [data, isFallbackVisible, selectedPeriod, showFallback]);
+
+  const updatePeriod = useCallback(
+    (period: Period) => {
+      if (isObject(data) && period !== selectedPeriod) {
+        // This can sometimes happen for newer assets which
+        // will have their 'all' chart data be the same as
+        // their 'year' chart data. In those cases we don't
+        // want to animate out the min/max since we rely on
+        // AnimatedSparklineInteractivePath to animate those components back in -
+        // and AnimatedSparklineInteractivePath will not trigger an animation
+        // if it's chartData is the same between re-renders
+        if (!isEqual(data[period], data[selectedPeriod])) {
+          // minMaxOpacity.setValue(0);
         }
-      },
-      [data, selectedPeriod, onPeriodChanged],
+        setSelectedPeriod(period);
+        onPeriodChanged?.(period);
+      }
+    },
+    [data, selectedPeriod, onPeriodChanged /* , minMaxOpacity */],
+  );
+
+  const { chartWidth } = useSparklineInteractiveConstants();
+
+  const { path, area, getMarker } = useSparklineCoordinates({
+    data: dataForPeriod,
+    width: chartWidth,
+    height: innerSparklineInteractiveHeight,
+    yAxisScalingFactor,
+  });
+
+  let header;
+  if (headerNode) {
+    header = (
+      <Box
+        className={classNames?.header}
+        flexGrow={1}
+        paddingX={!isMobileLayout ? gutter : 0}
+        style={styles?.header}
+        testID={headerTestID}
+      >
+        {headerNode}
+      </Box>
     );
+  }
 
-    const { tabs, activeTab } = useMemo(() => {
-      const tabsArray = periods.map((period) => ({
-        id: period.value,
-        label: period.label,
-      }));
+  const periodSelector = (
+    <SparklineInteractivePeriodSelector
+      color={color}
+      periods={periods}
+      selectedPeriod={selectedPeriod}
+      setSelectedPeriod={updatePeriod}
+    />
+  );
 
-      return {
-        tabs: tabsArray,
-        activeTab: tabsArray.find((tab) => tab.id === selectedPeriod) || null,
-      };
-    }, [periods, selectedPeriod]);
+  const rootStyles = useMemo(
+    () => ({
+      width: '100%',
+      ...style,
+      ...styles?.root,
+    }),
+    [style, styles?.root],
+  );
 
-    const periodSelector = (
-      <SparklineInteractivePeriodSelector
-        activeTab={activeTab}
-        color={color}
-        onChange={handlePeriodChange}
-        tabs={tabs}
-        width={isMobileLayout || showBottomPeriodSelector ? '100%' : 'auto'}
-      />
-    );
-
-    const rootStyles = useMemo(
-      () =>
-        ({
-          width: '100%',
-          position: 'relative',
-          ...style,
-          ...styles?.root,
-        }) as const,
-      [style, styles?.root],
-    );
-
-    return (
-      <div ref={containerRef} className={cx(className, classNames?.root)} style={rootStyles}>
-        {isMobileLayout && showHeaderPeriodSelector && (
-          <Box paddingBottom={2} width="100%">
-            {periodSelector}
-          </Box>
-        )}
-        {(!!headerNode || (!isMobileLayout && showHeaderPeriodSelector)) && (
-          <Box alignItems="center" justifyContent="space-between" paddingBottom={2}>
-            {header ?? <div />}
-            {!isMobileLayout && showHeaderPeriodSelector && (
-              <Box flexGrow={0}>{periodSelector}</Box>
-            )}
-          </Box>
-        )}
-        <LineChart
-          areaType={fillType}
-          enableScrubbing={!disableScrubbing}
-          fallback={fallback}
-          fallbackType={fallbackType}
-          height={sparklineInteractiveHeight}
-          onScrubberPositionChange={handleHighlightChange}
-          padding={{ left: 0, right: 0, top: chartPaddingTop, bottom: 0 }}
-          series={series}
-          showArea={fill}
-          style={{
-            // used when user is navigating with keyboard
-            outlineColor: color,
-          }}
-          type={lineType}
-          width="100%"
-          xAxis={{
-            domainLimit: 'strict',
-          }}
-          yAxis={{
-            domain: yAxisBounds,
-            domainLimit: 'strict',
-          }}
-        >
-          <XAxis
-            position="end"
-            size={axisSize}
-            style={{
-              opacity: isScrubbing || !showBottomPeriodSelector ? 1 : 0,
-              transition: 'opacity 0.2s ease-in-out',
-            }}
-            tickLabelFormatter={formatAxisDate}
+  return (
+    <div ref={containerRef} className={cx(className, classNames?.root)} style={rootStyles}>
+      {isMobileLayout && showHeaderPeriodSelector && (
+        <Box paddingBottom={2} width="100%">
+          {periodSelector}
+        </Box>
+      )}
+      {(!!headerNode || (!isMobileLayout && showHeaderPeriodSelector)) && (
+        <Box alignItems="center" justifyContent="space-between" paddingBottom={2}>
+          {header ?? <div />}
+          {!isMobileLayout && showHeaderPeriodSelector && <Box flexGrow={0}>{periodSelector}</Box>}
+        </Box>
+      )}
+      <SparklineInteractiveScrubProvider>
+        <VStack paddingBottom={(formatHoverDate || formatHoverPrice) && 1}>
+          {!!formatHoverDate && <SparklineInteractiveHoverDate />}
+          {!!formatHoverPrice && <SparklineInteractiveHoverPrice />}
+        </VStack>
+        <VisualizationContainer height={innerSparklineInteractiveHeight} width="100%">
+          {({ width, height }: VisualizationContainerDimension) => (
+            <InnerSparklineInteractiveProvider height={height} width={width}>
+              <SparklineInteractiveScrubHandler
+                disabled={disableScrubbing}
+                formatHoverDate={formatHoverDate}
+                formatHoverPrice={formatHoverPrice}
+                getMarker={getMarker}
+                onScrub={onScrub}
+                onScrubEnd={handleScrubEnd}
+                onScrubStart={handleScrubStart}
+                selectedPeriod={selectedPeriod}
+              >
+                <Box height={height} position="relative" width={width}>
+                  {!!isFallbackVisible && (
+                    <Box height="100%" justifyContent="center" position="absolute" width="100%">
+                      {fallback ?? <DefaultFallback fallbackType={fallbackType} />}
+                    </Box>
+                  )}
+                  <Box height="100%" width="100%">
+                    {!!hasData && !!path && (
+                      <>
+                        <SparklineInteractivePaths
+                          area={area}
+                          compact={compact}
+                          fill={fill}
+                          hoverData={hoverData}
+                          path={path}
+                          selectedPeriod={selectedPeriod}
+                          showHoverData={isScrubbing}
+                          strokeColor={color}
+                          yAxisScalingFactor={yAxisScalingFactor}
+                        />
+                        <SparklineInteractiveLineVertical color={lineVerticalColor} />
+                      </>
+                    )}
+                  </Box>
+                </Box>
+              </SparklineInteractiveScrubHandler>
+            </InnerSparklineInteractiveProvider>
+          )}
+        </VisualizationContainer>
+      </SparklineInteractiveScrubProvider>
+      <HStack alignItems="flex-end" minHeight={50} width="100%">
+        {showBottomMarkerDates && (
+          <SparklineInteractiveMarkerDates
+            formatDate={formatDate}
+            getMarker={getMarker}
+            selectedPeriod={selectedPeriod}
+            timePeriodGutter={timePeriodGutter}
           />
-          {children}
-          <Scrubber label={scrubberLabel} seriesIds={[]} />
-        </LineChart>
-        {showBottomPeriodSelector && (
-          <Box
-            position="absolute"
-            style={{
-              bottom: 0,
-              left: 0,
-              right: 0,
-              opacity: isScrubbing ? 0 : 1,
-              transition: 'opacity 0.2s ease-in-out',
-            }}
-          >
-            <HStack
-              alignItems="center"
-              justifyContent="center"
-              paddingTop={2}
-              paddingX={timePeriodGutter}
-              width="100%"
-            >
-              {periodSelector}
-            </HStack>
-          </Box>
         )}
-      </div>
-    );
-  },
-);
+        {periodSelectorPlacement === 'below' &&
+          !isMarkerDateVisible &&
+          !hidePeriodSelector &&
+          periodSelector}
+      </HStack>
+    </div>
+  );
+}
+
+// typescript doesn't understand the memo with the generic so it gets casted to a base react component
+export const SparklineInteractiveContent = memo(
+  SparklineInteractiveContentWithGeneric,
+) as typeof SparklineInteractiveContentWithGeneric;
+
+function SparklineInteractiveWithGeneric<Period extends string>({
+  compact,
+  ...props
+}: SparklineInteractiveProps<Period>) {
+  const [resizeKey, setResizeKey] = useState(0);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const resizeHandler = useCallback(
+    debounce(() => {
+      // no resizing on percy
+      if (!isStorybook()) {
+        setResizeKey((prev) => prev + 1);
+      }
+    }, 300),
+    [],
+  );
+
+  useEffect(() => {
+    getBrowserGlobals()?.window?.addEventListener('resize', resizeHandler);
+    return () => {
+      getBrowserGlobals()?.window?.removeEventListener('resize', resizeHandler);
+    };
+  }, [resizeHandler]);
+
+  return (
+    <SparklineInteractiveProvider key={resizeKey} compact={compact}>
+      <SparklineInteractiveContent compact={compact} {...props} />
+    </SparklineInteractiveProvider>
+  );
+}
+
+// typescript doesn't understand the memo with the generic so it gets casted to a base react component
+export const SparklineInteractive = memo(
+  SparklineInteractiveWithGeneric,
+) as typeof SparklineInteractiveWithGeneric;

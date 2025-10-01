@@ -2,6 +2,7 @@ import React, { useCallback, useMemo, useRef, useState } from 'react';
 import type { ChartDataPoint, ChartScrubParams } from '@coinbase/cds-common';
 import {
   sparklineInteractiveData,
+  sparklineInteractiveHoverData,
 } from '@coinbase/cds-common/internal/visualizations/SparklineInteractiveData';
 import { Box, VStack } from '@coinbase/cds-web/layout';
 import { css } from '@linaria/core';
@@ -30,7 +31,7 @@ const periods = [
   { label: 'All', value: 'all' as const },
 ];
 
-const getFormattingConfigForPeriod = (period: string) => {
+const getFormattingConfigForPeriod = (period: SparklinePeriod) => {
   switch (period) {
     case 'hour':
     case 'day':
@@ -60,7 +61,7 @@ const getFormattingConfigForPeriod = (period: string) => {
   }
 };
 
-const getDateHoverOptions = (period: string) => {
+const getDateHoverOptions = (period: SparklinePeriod) => {
   switch (period) {
     case 'hour':
     case 'day':
@@ -91,10 +92,10 @@ function numToLocaleString(num: number) {
 
 function generateSubHead(
   point: ChartDataPoint,
-  period: string,
+  period: SparklinePeriod,
   sparklineInteractiveData: Record<SparklinePeriod, ChartDataPoint[]>,
 ): SparklineInteractiveSubHead {
-  const data = sparklineInteractiveData[period as SparklinePeriod];
+  const data = sparklineInteractiveData[period];
   const firstPoint = data[0];
 
   const increase = point.value > firstPoint.value;
@@ -120,7 +121,7 @@ const SparklineInteractiveWrapper = (props: any) => {
   const timezoneObj = useMemo(() => ({ timeZone: 'America/New_York' }), []);
 
   const formatDateWithConfig = useCallback(
-    (value: Date, period: string) => {
+    (value: Date, period: SparklinePeriod) => {
       const config = getFormattingConfigForPeriod(period);
       return value.toLocaleString('en-US', {
         ...timezoneObj,
@@ -131,7 +132,7 @@ const SparklineInteractiveWrapper = (props: any) => {
   );
 
   const formatHoverDate = useCallback(
-    (date: Date, period: string) => {
+    (date: Date, period: SparklinePeriod) => {
       return date.toLocaleString('en-US', {
         ...timezoneObj,
         ...getDateHoverOptions(period),
@@ -403,14 +404,14 @@ NoHoverDate.parameters = {
 };
 
 export const WithHeaderNode = () => {
-  const [currentPeriod, setCurrentPeriod] = useState<string>(DEFAULT_PERIOD);
+  const [currentPeriod, setCurrentPeriod] = useState<SparklinePeriod>(DEFAULT_PERIOD);
   const headerRef = useRef<SparklineInteractiveHeaderRef>(null);
-  const data = sparklineInteractiveData[currentPeriod as SparklinePeriod];
+  const data = sparklineInteractiveData[currentPeriod];
   const lastPoint = data[data.length - 1];
   const timezoneObj = useMemo(() => ({ timeZone: 'America/New_York' }), []);
 
   const formatDateWithConfig = useCallback(
-    (value: Date, period: string) => {
+    (value: Date, period: SparklinePeriod) => {
       const config = getFormattingConfigForPeriod(period);
       return value.toLocaleString('en-US', {
         ...timezoneObj,
@@ -421,7 +422,7 @@ export const WithHeaderNode = () => {
   );
 
   const formatHoverDate = useCallback(
-    (date: Date, period: string) => {
+    (date: Date, period: SparklinePeriod) => {
       return date.toLocaleString('en-US', {
         ...timezoneObj,
         ...getDateHoverOptions(period),
@@ -430,7 +431,7 @@ export const WithHeaderNode = () => {
     [timezoneObj],
   );
 
-  const handleScrub = useCallback(({ point, period }: ChartScrubParams<string>) => {
+  const handleScrub = useCallback(({ point, period }: ChartScrubParams<SparklinePeriod>) => {
     headerRef.current?.update({
       title: `$${point.value.toLocaleString('en-US')}`,
       subHead: generateSubHead(point, period, sparklineInteractiveData),
@@ -444,9 +445,9 @@ export const WithHeaderNode = () => {
     });
   }, [currentPeriod, lastPoint]);
 
-  const handleOnPeriodChanged = useCallback((period: string) => {
+  const handleOnPeriodChanged = useCallback((period: SparklinePeriod) => {
     setCurrentPeriod(period);
-    const newData = sparklineInteractiveData[period as SparklinePeriod];
+    const newData = sparklineInteractiveData[period];
     const newLastPoint = newData[newData.length - 1];
 
     headerRef.current?.update({
@@ -502,6 +503,47 @@ export const TimePeriodGutter = () => {
 
 TimePeriodGutter.bind({});
 TimePeriodGutter.parameters = {
+  percy: { enableJavaScript: true },
+  a11y: {
+    config: {
+      rules: [{ id: 'color-contrast', enabled: false }],
+    },
+  },
+};
+
+export const HoverData = () => {
+  return (
+    <SparklineInteractiveWrapper
+      data={sparklineInteractiveData}
+      hoverData={sparklineInteractiveHoverData}
+      strokeColor={strokeColor}
+    />
+  );
+};
+
+HoverData.bind({});
+HoverData.parameters = {
+  percy: { enableJavaScript: true },
+  a11y: {
+    config: {
+      rules: [{ id: 'color-contrast', enabled: false }],
+    },
+  },
+};
+
+export const HoverDataWithFill = () => {
+  return (
+    <SparklineInteractiveWrapper
+      fill
+      data={sparklineInteractiveData}
+      hoverData={sparklineInteractiveHoverData}
+      strokeColor={strokeColor}
+    />
+  );
+};
+
+HoverDataWithFill.bind({});
+HoverDataWithFill.parameters = {
   percy: { enableJavaScript: true },
   a11y: {
     config: {
@@ -578,14 +620,14 @@ const customPaddingCss = css`
 `;
 
 export const WithCustomStyles = () => {
-  const [currentPeriod, setCurrentPeriod] = useState<string>(DEFAULT_PERIOD);
+  const [currentPeriod, setCurrentPeriod] = useState<SparklinePeriod>(DEFAULT_PERIOD);
   const headerRef = useRef<SparklineInteractiveHeaderRef>(null);
-  const data = sparklineInteractiveData[currentPeriod as SparklinePeriod];
+  const data = sparklineInteractiveData[currentPeriod];
   const lastPoint = data[data.length - 1];
   const timezoneObj = useMemo(() => ({ timeZone: 'America/New_York' }), []);
 
   const formatDateWithConfig = useCallback(
-    (value: Date, period: string) => {
+    (value: Date, period: SparklinePeriod) => {
       const config = getFormattingConfigForPeriod(period);
       return value.toLocaleString('en-US', {
         ...timezoneObj,
@@ -596,7 +638,7 @@ export const WithCustomStyles = () => {
   );
 
   const formatHoverDate = useCallback(
-    (date: Date, period: string) => {
+    (date: Date, period: SparklinePeriod) => {
       return date.toLocaleString('en-US', {
         ...timezoneObj,
         ...getDateHoverOptions(period),
@@ -605,7 +647,7 @@ export const WithCustomStyles = () => {
     [timezoneObj],
   );
 
-  const handleScrub = useCallback(({ point, period }: ChartScrubParams<string>) => {
+  const handleScrub = useCallback(({ point, period }: ChartScrubParams<SparklinePeriod>) => {
     headerRef.current?.update({
       title: `$${point.value.toLocaleString('en-US')}`,
       subHead: generateSubHead(point, period, sparklineInteractiveData),
@@ -619,9 +661,9 @@ export const WithCustomStyles = () => {
     });
   }, [currentPeriod, lastPoint]);
 
-  const handleOnPeriodChanged = useCallback((period: string) => {
+  const handleOnPeriodChanged = useCallback((period: SparklinePeriod) => {
     setCurrentPeriod(period);
-    const newData = sparklineInteractiveData[period as SparklinePeriod];
+    const newData = sparklineInteractiveData[period];
     const newLastPoint = newData[newData.length - 1];
 
     headerRef.current?.update({
