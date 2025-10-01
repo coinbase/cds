@@ -5,5 +5,5 @@ export * from './BarPlot';
 export * from './BarStack';
 export * from './BarStackGroup';
 export * from './DefaultBar';
-export * from './DefaultStackComponent';
+export * from './DefaultBarStack';
 // codegen:end

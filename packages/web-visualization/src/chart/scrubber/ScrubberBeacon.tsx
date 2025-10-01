@@ -6,9 +6,9 @@ import { m, useAnimation } from 'framer-motion';
 import { useCartesianChartContext } from '../ChartProvider';
 import { Point, type PointProps, type PointRef } from '../point';
 
-export type ScrubberHeadRef = PointRef;
+export type ScrubberBeaconRef = PointRef;
 
-export type ScrubberHeadProps = SharedProps &
+export type ScrubberBeaconProps = SharedProps &
   Omit<
     PointProps,
     | 'pulse'
@@ -27,7 +27,7 @@ export type ScrubberHeadProps = SharedProps &
      * @default false
      */
     idlePulse?: boolean;
-    // make Point's coordinates optional for ScrubberHead
+    // make Point's coordinates optional for ScrubberBeacon
     dataX?: PointProps['dataX'];
     dataY?: PointProps['dataY'];
     /**
@@ -37,11 +37,11 @@ export type ScrubberHeadProps = SharedProps &
   };
 
 /**
- * The ScrubberHead is a special instance of a Point used to mark the scrubber's position on a specific series.
- * It optionally labels the Point with an instance of ScrubberHeadLabel.
+ * The ScrubberBeacon is a special instance of a Point used to mark the scrubber's position on a specific series.
+ * It optionally labels the Point with an instance of ScrubberBeaconLabel.
  */
-export const ScrubberHead = memo(
-  forwardRef<ScrubberHeadRef, ScrubberHeadProps>(
+export const ScrubberBeacon = memo(
+  forwardRef<ScrubberBeaconRef, ScrubberBeaconProps>(
     (
       {
         seriesId,
@@ -57,7 +57,8 @@ export const ScrubberHead = memo(
       ref,
     ) => {
       const pointRef = useRef<PointRef>(null);
-      const { getSeries, getXScale, getYScale, getSeriesData, animate } = useCartesianChartContext();
+      const { getSeries, getXScale, getYScale, getSeriesData, animate } =
+        useCartesianChartContext();
       const { scrubberPosition } = useScrubberContext();
 
       const controls = useAnimation();

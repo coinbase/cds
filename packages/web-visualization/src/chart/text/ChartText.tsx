@@ -1,7 +1,6 @@
 import React, { memo, useEffect, useMemo, useRef, useState } from 'react';
-import type { ThemeVars } from '@coinbase/cds-common';
 import type { ElevationLevels, Rect, SharedProps } from '@coinbase/cds-common/types';
-import { type ChartInset, getPadding } from '@coinbase/cds-common/visualizations/charts';
+import { type ChartInset, getChartInset } from '@coinbase/cds-common/visualizations/charts';
 import { cx, useTheme } from '@coinbase/cds-web';
 import { Box, type BoxProps } from '@coinbase/cds-web/layout';
 import { Text } from '@coinbase/cds-web/typography';
@@ -22,9 +21,18 @@ export type ChartTextChildren =
   | ValidChartTextChildElements
   | ValidChartTextChildElements[];
 
+/**
+ * Horizontal alignment options for chart text.
+ */
+export type TextHorizontalAlignment = 'left' | 'center' | 'right';
+
+/**
+ * Vertical alignment options for chart text.
+ */
+export type TextVerticalAlignment = 'top' | 'middle' | 'bottom';
+
 export type ChartTextProps = SharedProps &
-  Pick<BoxProps<'g'>, 'font' | 'fontFamily' | 'fontSize' | 'fontWeight' | 'opacity'> &
-  Pick<React.SVGProps<SVGTextElement>, 'textAnchor' | 'dominantBaseline'> & {
+  Pick<BoxProps<'g'>, 'font' | 'fontFamily' | 'fontSize' | 'fontWeight' | 'opacity'> & {
     /**
      * The text color.
      * @default 'var(--color-fgMuted)'
@@ -63,6 +71,16 @@ export type ChartTextProps = SharedProps &
      */
     y: number;
     /**
+     * Horizontal alignment of the text.
+     * @default 'center'
+     */
+    horizontalAlignment?: TextHorizontalAlignment;
+    /**
+     * Vertical alignment of the text.
+     * @default 'middle'
+     */
+    verticalAlignment?: TextVerticalAlignment;
+    /**
      * When true, disables automatic repositioning to fit within bounds.
      * @default false
      */
@@ -79,10 +97,10 @@ export type ChartTextProps = SharedProps &
      */
     onDimensionsChange?: (rect: Rect) => void;
     /**
-     * Padding around the text content for the background rect.
+     * Inset around the text content for the background rect.
      * Only affects the background, text position remains unchanged.
      */
-    padding?: ThemeVars.Space | ChartInset;
+    inset?: number | ChartInset;
     style?: React.CSSProperties;
     styles?: {
       root?: React.CSSProperties;
@@ -95,17 +113,52 @@ export type ChartTextProps = SharedProps &
       text?: string;
       backgroundRect?: string;
     };
-    // override box responsive style
-    borderRadius?: ThemeVars.BorderRadius;
+    /**
+     * Border radius for the background rectangle.
+     * @default 4
+     */
+    borderRadius?: number;
   };
+
+/**
+ * Get text anchor based on horizontal alignment.
+ */
+const getTextAnchor = (
+  alignment: TextHorizontalAlignment,
+): React.SVGProps<SVGTextElement>['textAnchor'] => {
+  switch (alignment) {
+    case 'left':
+      return 'start';
+    case 'center':
+      return 'middle';
+    case 'right':
+      return 'end';
+  }
+};
+
+/**
+ * Get dominant baseline based on vertical alignment.
+ */
+const getDominantBaseline = (
+  alignment: TextVerticalAlignment,
+): React.SVGProps<SVGTextElement>['dominantBaseline'] => {
+  switch (alignment) {
+    case 'top':
+      return 'ideographic';
+    case 'middle':
+      return 'central';
+    case 'bottom':
+      return 'hanging';
+  }
+};
 
 export const ChartText = memo<ChartTextProps>(
   ({
     children,
     x,
     y,
-    textAnchor = 'middle',
-    dominantBaseline = 'central',
+    horizontalAlignment = 'center',
+    verticalAlignment = 'middle',
     dx,
     dy,
     disableRepositioning = false,
@@ -120,7 +173,7 @@ export const ChartText = memo<ChartTextProps>(
     color = 'var(--color-fgMuted)',
     background = elevation && elevation > 0 ? 'var(--color-bg)' : 'transparent',
     borderRadius,
-    padding: paddingInput,
+    inset: insetInput,
     onDimensionsChange,
     style,
     styles,
@@ -143,20 +196,14 @@ export const ChartText = memo<ChartTextProps>(
         return null;
       }
 
-      const paddingWithTheme = getPadding(paddingInput);
-      const padding = {
-        top: theme.space[paddingWithTheme.top],
-        right: theme.space[paddingWithTheme.right],
-        bottom: theme.space[paddingWithTheme.bottom],
-        left: theme.space[paddingWithTheme.left],
-      };
+      const inset = getChartInset(insetInput);
       return {
-        x: textBBox.x - padding.left,
-        y: textBBox.y - padding.top,
-        width: textBBox.width + padding.left + padding.right,
-        height: textBBox.height + padding.top + padding.bottom,
+        x: textBBox.x - inset.left,
+        y: textBBox.y - inset.top,
+        width: textBBox.width + inset.left + inset.right,
+        height: textBBox.height + inset.top + inset.bottom,
       };
-    }, [textBBox, paddingInput, theme.space]);
+    }, [textBBox, insetInput]);
 
     const overflowAmount = useMemo(() => {
       if (disableRepositioning) {
@@ -224,6 +271,12 @@ export const ChartText = memo<ChartTextProps>(
       }
     }, []);
 
+    const textAnchor = useMemo(() => getTextAnchor(horizontalAlignment), [horizontalAlignment]);
+    const dominantBaseline = useMemo(
+      () => getDominantBaseline(verticalAlignment),
+      [verticalAlignment],
+    );
+
     useEffect(() => {
       if (textRef.current) {
         setTextBBox(textRef.current.getBBox());
@@ -241,6 +294,7 @@ export const ChartText = memo<ChartTextProps>(
 
     return (
       <Box
+        aria-hidden="true"
         as="g"
         className={cx(className, classNames?.root)}
         opacity={opacity}
@@ -261,8 +315,8 @@ export const ChartText = memo<ChartTextProps>(
                 : undefined
             }
             height={backgroundRectDimensions?.height}
-            rx={borderRadius ? theme.borderRadius[borderRadius] : undefined}
-            ry={borderRadius ? theme.borderRadius[borderRadius] : undefined}
+            rx={borderRadius}
+            ry={borderRadius}
             style={styles?.backgroundRect}
             width={backgroundRectDimensions?.width}
             x={backgroundRectDimensions?.x}
@@ -285,7 +339,7 @@ export const ChartText = memo<ChartTextProps>(
             x={x}
             y={y}
           >
-            {children}
+            <tspan>{children}</tspan>
           </Text>
         </motion.g>
       </Box>

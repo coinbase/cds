@@ -23,15 +23,15 @@ import { axisTickLabelsInitialAnimationVariants } from '../axis';
 import { useCartesianChartContext } from '../ChartProvider';
 import { ReferenceLine, type ReferenceLineProps } from '../line';
 
-import { ScrubberHead, type ScrubberHeadProps, type ScrubberHeadRef } from './ScrubberHead';
-import { ScrubberHeadLabel, type ScrubberHeadLabelProps } from './ScrubberHeadLabel';
+import { ScrubberBeacon, type ScrubberBeaconProps, type ScrubberBeaconRef } from './ScrubberBeacon';
+import { ScrubberBeaconLabel, type ScrubberBeaconLabelProps } from './ScrubberBeaconLabel';
 
 /**
  * Configuration for scrubber functionality across chart components.
  * Provides consistent API with smart defaults and component customization.
  */
 export type ScrubberProps = SharedProps &
-  Pick<ScrubberHeadProps, 'idlePulse'> & {
+  Pick<ScrubberBeaconProps, 'idlePulse'> & {
     /**
      * An array of series IDs that will receive visual emphasis as the user scrubs through the chart.
      * Use this prop to restrict the scrubbing visual behavior to specific series.
@@ -62,13 +62,13 @@ export type ScrubberProps = SharedProps &
     /**
      * Props passed to the scrubber line's label.
      */
-    scrubberLabelProps?: ReferenceLineProps['labelConfig'];
+    scrubberLabelProps?: ReferenceLineProps['labelProps'];
 
     /**
      * Props passed to each scrubber head's label.
      */
-    scrubberHeadLabelProps?: Omit<
-      ScrubberHeadLabelProps,
+    ScrubberBeaconLabelProps?: Omit<
+      ScrubberBeaconLabelProps,
       'children' | 'x' | 'y' | 'disableRepositioning' | 'bounds' | 'onDimensionsChange'
     >;
 
@@ -100,11 +100,11 @@ export type ScrubberProps = SharedProps &
     /**
      * Custom component for the scrubber head.
      */
-    HeadComponent?: React.ComponentType<ScrubberHeadProps>;
+    HeadComponent?: React.ComponentType<ScrubberBeaconProps>;
     /**
      * Custom component for the scrubber head label.
      */
-    HeadLabelComponent?: React.ComponentType<ScrubberHeadLabelProps>;
+    HeadLabelComponent?: React.ComponentType<ScrubberBeaconLabelProps>;
     /**
      * Custom component for the scrubber line.
      */
@@ -119,7 +119,7 @@ type LabelDimensions = {
   preferredY: number;
 };
 
-export type ScrubberRef = ScrubberHeadRef;
+export type ScrubberRef = ScrubberBeaconRef;
 
 /**
  * Unified component that manages all scrubber elements (heads, line, labels)
@@ -143,13 +143,13 @@ export const Scrubber = memo(
         idlePulse,
         styles,
         classNames,
-        scrubberHeadLabelProps,
+        ScrubberBeaconLabelProps,
       },
       ref,
     ) => {
       const theme = useTheme();
       const scrubberGroupRef = useRef<SVGGElement>(null);
-      const scrubberHeadRefs = useRefMap<ScrubberHeadRef>();
+      const ScrubberBeaconRefs = useRefMap<ScrubberBeaconRef>();
 
       const { scrubberPosition } = useScrubberContext();
       const { getXScale, getYScale, getSeriesData, getXAxis, animate, series, drawingArea } =
@@ -165,7 +165,7 @@ export const Scrubber = memo(
       useImperativeHandle(ref, () => ({
         pulse: () => {
           // Pulse all registered scrubber heads
-          Object.values(scrubberHeadRefs.refs).forEach((headRef) => {
+          Object.values(ScrubberBeaconRefs.refs).forEach((headRef) => {
             headRef?.pulse();
           });
         },
@@ -259,7 +259,7 @@ export const Scrubber = memo(
       ]);
 
       // todo: the padding around the label shouldn't be needed for this collision calculation since the ChatText onDimensionsChange will report the bounding box that includes the padding
-      const labelPadding = 0.5;
+      const labelInset = 4;
       const minLabelGap = 0.25;
 
       // Calculate optimal label positioning strategy
@@ -284,9 +284,7 @@ export const Scrubber = memo(
         // Determine if we need to switch sides globally based on overflow
         let globalSide: 'left' | 'right' = 'right';
 
-        // Check if any labels would overflow on the right side
-        const paddingPx = theme.space[labelPadding];
-        const anchorRadius = 10; // Same as used in ScrubberHeadLabel
+        const anchorRadius = 10; // Same as used in ScrubberBeaconLabel
         const bufferPx = 5; // Small buffer to prevent premature switching
 
         // Safety check for valid bounds
@@ -296,7 +294,8 @@ export const Scrubber = memo(
           // Check if labels would overflow when positioned on the right side
           // Account for anchor radius and padding when calculating right edge
           const wouldOverflow = sortedDimensions.some((dim) => {
-            const labelRightEdge = dim.preferredX + anchorRadius + paddingPx + dim.width + bufferPx;
+            const labelRightEdge =
+              dim.preferredX + anchorRadius + labelInset + dim.width + bufferPx;
             return labelRightEdge > drawingArea.x + drawingArea.width;
           });
 
@@ -542,15 +541,15 @@ export const Scrubber = memo(
       );
 
       // Callback to create ref handlers for scrubber heads
-      const createScrubberHeadRef = useCallback(
+      const createScrubberBeaconRef = useCallback(
         (seriesId: string) => {
-          return (headRef: ScrubberHeadRef | null) => {
+          return (headRef: ScrubberBeaconRef | null) => {
             if (headRef) {
-              scrubberHeadRefs.registerRef(seriesId, headRef);
+              ScrubberBeaconRefs.registerRef(seriesId, headRef);
             }
           };
         },
-        [scrubberHeadRefs],
+        [ScrubberBeaconRefs],
       );
 
       // synchronize label positioning state when the position of any scrubber heads change
@@ -576,8 +575,8 @@ export const Scrubber = memo(
 
       // Use custom components if provided
       const ScrubberLineComponent = LineComponent ?? ReferenceLine;
-      const ScrubberHeadComponent = HeadComponent ?? ScrubberHead;
-      const ScrubberHeadLabelComponent = HeadLabelComponent ?? ScrubberHeadLabel;
+      const ScrubberBeaconComponent = HeadComponent ?? ScrubberBeacon;
+      const ScrubberBeaconLabelComponent = HeadLabelComponent ?? ScrubberBeaconLabel;
 
       const pixelX =
         dataX !== undefined && defaultXScale ? getPointOnScale(dataX, defaultXScale) : undefined;
@@ -616,65 +615,65 @@ export const Scrubber = memo(
               className={classNames?.line}
               dataX={dataX}
               label={label}
-              labelConfig={scrubberLabelProps}
               labelPosition="top"
+              labelProps={scrubberLabelProps}
               stroke={lineStroke}
               style={styles?.line}
             />
           )}
-          {headPositions.map((scrubberHead: any) => {
-            if (!scrubberHead) return null;
-            const adjustment = labelPositioning.adjustments.get(scrubberHead.targetSeries.id);
-            const dotStroke = scrubberHead.targetSeries?.color || 'var(--color-fgPrimary)';
+          {headPositions.map((ScrubberBeacon: any) => {
+            if (!ScrubberBeacon) return null;
+            const adjustment = labelPositioning.adjustments.get(ScrubberBeacon.targetSeries.id);
+            const dotStroke = ScrubberBeacon.targetSeries?.color || 'var(--color-fgPrimary)';
 
             return (
-              <g key={scrubberHead.targetSeries.id} data-component="scrubber-head">
-                <ScrubberHeadComponent
+              <g key={ScrubberBeacon.targetSeries.id} data-component="scrubber-head">
+                <ScrubberBeaconComponent
                   // todo: fix this type cast, seems to be due to custom components
-                  ref={createScrubberHeadRef(scrubberHead.targetSeries.id) as any}
+                  ref={createScrubberBeaconRef(ScrubberBeacon.targetSeries.id) as any}
                   className={classNames?.head}
-                  color={scrubberHead.targetSeries?.color}
-                  dataX={scrubberHead.x}
-                  dataY={scrubberHead.y}
+                  color={ScrubberBeacon.targetSeries?.color}
+                  dataX={ScrubberBeacon.x}
+                  dataY={ScrubberBeacon.y}
                   idlePulse={idlePulse}
-                  seriesId={scrubberHead.targetSeries.id}
+                  seriesId={ScrubberBeacon.targetSeries.id}
                   style={styles?.head}
-                  testID={testID ? `${testID}-${scrubberHead.targetSeries.id}-dot` : undefined}
+                  testID={testID ? `${testID}-${ScrubberBeacon.targetSeries.id}-dot` : undefined}
                 />
-                {scrubberHead.label &&
+                {ScrubberBeacon.label &&
                   (() => {
-                    const finalAnchorX = adjustment?.x ?? scrubberHead.pixelX;
-                    const finalAnchorY = adjustment?.y ?? scrubberHead.pixelY;
+                    const finalAnchorX = adjustment?.x ?? ScrubberBeacon.pixelX;
+                    const finalAnchorY = adjustment?.y ?? ScrubberBeacon.pixelY;
                     const finalSide = adjustment?.side ?? labelPositioning.strategy;
 
                     return (
-                      <ScrubberHeadLabelComponent
+                      <ScrubberBeaconLabelComponent
                         background="var(--color-bg)"
                         bounds={drawingArea}
                         className={classNames?.headLabel}
                         color={dotStroke}
                         dx={16}
+                        inset={labelInset}
                         onDimensionsChange={({ width, height }) =>
                           registerLabelDimensions(
-                            scrubberHead.targetSeries.id,
+                            ScrubberBeacon.targetSeries.id,
                             width,
                             height,
-                            scrubberHead.pixelX,
-                            scrubberHead.pixelY,
+                            ScrubberBeacon.pixelX,
+                            ScrubberBeacon.pixelY,
                           )
                         }
-                        padding={labelPadding}
                         preferredSide={finalSide}
                         style={styles?.headLabel}
                         testID={
-                          testID ? `${testID}-${scrubberHead.targetSeries.id}-label` : undefined
+                          testID ? `${testID}-${ScrubberBeacon.targetSeries.id}-label` : undefined
                         }
                         x={finalAnchorX}
                         y={finalAnchorY}
-                        {...scrubberHeadLabelProps}
+                        {...ScrubberBeaconLabelProps}
                       >
-                        {scrubberHead.label}
-                      </ScrubberHeadLabelComponent>
+                        {ScrubberBeacon.label}
+                      </ScrubberBeaconLabelComponent>
                     );
                   })()}
               </g>

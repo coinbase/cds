@@ -1,5 +1,4 @@
 import React, { forwardRef, memo, useCallback, useMemo, useRef } from 'react';
-import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import type { Rect } from '@coinbase/cds-common/types';
 import {
   type AxisConfig,
@@ -13,14 +12,13 @@ import {
   getAxisDomain,
   getAxisRange,
   getAxisScale,
-  getPadding,
+  getChartInset,
   getStackedSeriesData as calculateStackedSeriesData,
   type Series,
   useTotalAxisPadding,
 } from '@coinbase/cds-common/visualizations/charts';
 import { cx } from '@coinbase/cds-web';
 import { useDimensions } from '@coinbase/cds-web/hooks/useDimensions';
-import { useTheme } from '@coinbase/cds-web/hooks/useTheme';
 import { Box, type BoxBaseProps, type BoxProps } from '@coinbase/cds-web/layout';
 import { css } from '@linaria/core';
 
@@ -58,22 +56,12 @@ export type CartesianChartBaseProps = BoxBaseProps &
      */
     yAxis?: Partial<Omit<AxisConfigProps, 'data'>> | Partial<Omit<AxisConfigProps, 'data'>>[];
     /**
-     * Padding around the entire chart (outside the axes).
+     * Inset around the entire chart (outside the axes).
      */
-    padding?: ThemeVars.Space | Partial<ChartInset>;
+    inset?: number | Partial<ChartInset>;
   };
 
-export type CartesianChartProps = Omit<
-  BoxProps<'svg'>,
-  | 'padding'
-  | 'paddingInline'
-  | 'paddingBlock'
-  | 'paddingTop'
-  | 'paddingBottom'
-  | 'paddingStart'
-  | 'paddingEnd'
-> &
-  CartesianChartBaseProps;
+export type CartesianChartProps = BoxProps<'svg'> & CartesianChartBaseProps;
 
 export const CartesianChart = memo(
   forwardRef<SVGSVGElement, CartesianChartProps>(
@@ -84,7 +72,7 @@ export const CartesianChart = memo(
         animate = true,
         xAxis: xAxisConfigInput,
         yAxis: yAxisConfigInput,
-        padding: paddingInput,
+        inset: insetInput,
         enableScrubbing,
         onScrubberPositionChange,
         width = '100%',
@@ -95,19 +83,12 @@ export const CartesianChart = memo(
       },
       ref,
     ) => {
-      const theme = useTheme();
       const { observe, width: chartWidth, height: chartHeight } = useDimensions();
       const internalSvgRef = useRef<SVGSVGElement>(null);
 
-      const userPadding = useMemo(() => {
-        const paddingWithDefaults = getPadding(paddingInput, defaultChartInset);
-        return {
-          top: theme.space[paddingWithDefaults.top],
-          right: theme.space[paddingWithDefaults.right],
-          bottom: theme.space[paddingWithDefaults.bottom],
-          left: theme.space[paddingWithDefaults.left],
-        };
-      }, [paddingInput, theme.space]);
+      const userInset = useMemo(() => {
+        return getChartInset(insetInput, defaultChartInset);
+      }, [insetInput]);
 
       // Axis configs store the properties of each axis, such as id, scale type, domain limit, etc.
       // We only support 1 x axis but allow for multiple y axes.
@@ -122,23 +103,23 @@ export const CartesianChart = memo(
       const chartRect: Rect = useMemo(() => {
         if (chartWidth <= 0 || chartHeight <= 0) return { x: 0, y: 0, width: 0, height: 0 };
 
-        const totalPadding = {
-          top: userPadding.top + axisPadding.top,
-          right: userPadding.right + axisPadding.right,
-          bottom: userPadding.bottom + axisPadding.bottom,
-          left: userPadding.left + axisPadding.left,
+        const totalInset = {
+          top: userInset.top + axisPadding.top,
+          right: userInset.right + axisPadding.right,
+          bottom: userInset.bottom + axisPadding.bottom,
+          left: userInset.left + axisPadding.left,
         };
 
-        const availableWidth = chartWidth - totalPadding.left - totalPadding.right;
-        const availableHeight = chartHeight - totalPadding.top - totalPadding.bottom;
+        const availableWidth = chartWidth - totalInset.left - totalInset.right;
+        const availableHeight = chartHeight - totalInset.top - totalInset.bottom;
 
         return {
-          x: totalPadding.left,
-          y: totalPadding.top,
+          x: totalInset.left,
+          y: totalInset.top,
           width: availableWidth > 0 ? availableWidth : 0,
           height: availableHeight > 0 ? availableHeight : 0,
         };
-      }, [chartHeight, chartWidth, userPadding, axisPadding]);
+      }, [chartHeight, chartWidth, userInset, axisPadding]);
 
       // Axes contain the config along with domain and range, which get calculated here.
       const xAxis = useMemo(() => {
@@ -220,9 +201,6 @@ export const CartesianChart = memo(
         return scales;
       }, [chartRect, yAxes]);
 
-      // todo: should these be hooks which call the context under the hood?
-      // such as import { useXAxis } from './CartesianChart'
-      // useXAxis calls CartesianChartContext under the hood
       const getXAxis = useCallback(() => xAxis, [xAxis]);
       const getYAxis = useCallback((id?: string) => yAxes.get(id ?? defaultAxisId), [yAxes]);
       const getXScale = useCallback(() => xScale, [xScale]);
@@ -264,8 +242,8 @@ export const CartesianChart = memo(
 
           if (axis.type === 'x') {
             if (axis.position === 'start') {
-              // Position above the chart rect, accounting for user padding
-              const startY = userPadding.top + offsetFromPreviousAxes;
+              // Position above the chart rect, accounting for user inset
+              const startY = userInset.top + offsetFromPreviousAxes;
               return {
                 x: chartRect.x,
                 y: startY,
@@ -273,7 +251,7 @@ export const CartesianChart = memo(
                 height: axis.size,
               };
             } else {
-              // end - position below the chart rect, accounting for user padding
+              // end - position below the chart rect, accounting for user inset
               const startY = chartRect.y + chartRect.height + offsetFromPreviousAxes;
               return {
                 x: chartRect.x,
@@ -285,8 +263,8 @@ export const CartesianChart = memo(
           } else {
             // y axis
             if (axis.position === 'start') {
-              // Position to the left of the chart rect, accounting for user padding
-              const startX = userPadding.left + offsetFromPreviousAxes;
+              // Position to the left of the chart rect, accounting for user inset
+              const startX = userInset.left + offsetFromPreviousAxes;
               return {
                 x: startX,
                 y: chartRect.y,
@@ -294,7 +272,7 @@ export const CartesianChart = memo(
                 height: chartRect.height,
               };
             } else {
-              // right - position to the right of the chart rect, accounting for user padding
+              // right - position to the right of the chart rect, accounting for user inset
               const startX = chartRect.x + chartRect.width + offsetFromPreviousAxes;
               return {
                 x: startX,
@@ -305,7 +283,7 @@ export const CartesianChart = memo(
             }
           }
         },
-        [renderedAxes, chartRect, userPadding],
+        [renderedAxes, chartRect, userInset],
       );
 
       const contextValue: CartesianChartContextValue<SVGSVGElement> = useMemo(
@@ -361,9 +339,11 @@ export const CartesianChart = memo(
               }
             }
           }}
+          aria-live="polite"
           as="svg"
           className={cx(enableScrubbing && focusStylesCss, className)}
           height={height}
+          role="figure"
           style={style}
           tabIndex={enableScrubbing ? 0 : undefined}
           width={width}

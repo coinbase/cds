@@ -1,8 +1,6 @@
 import React, { memo, useMemo } from 'react';
 import type { SVGProps } from 'react';
-import type { ThemeVars } from '@coinbase/cds-common';
 import { getBarPath } from '@coinbase/cds-common/visualizations/charts';
-import { useTheme } from '@coinbase/cds-web';
 
 import { DefaultBar } from './';
 
@@ -24,33 +22,28 @@ export type BarComponentProps = {
    */
   height: number;
   /**
-   * Border radius in pixels.
-   * @todo: make this be themevars.borderRadius
+   * Border radius of the bar.
    */
-  borderRadius: number;
+  borderRadius?: number;
   /**
    * Whether to round the top of the bar.
-   * @todo: make this optional
    */
-  roundTop: boolean;
+  roundTop?: boolean;
   /**
    * Whether to round the bottom of the bar.
-   * @todo: make this optional
    */
-  roundBottom: boolean;
+  roundBottom?: boolean;
   /**
    * Y coordinate of the baseline/origin for animations.
    * Used to calculate initial animation state.
-   * @todo: make this optional
    */
-  originY: number;
+  originY?: number;
   /**
-   * The x-axis data value for this bar
-   * @todo: pull this from x axis types
+   * The x-axis data value for this bar.
    */
   dataX?: number | string;
   /**
-   * The y-axis data value for this bar
+   * The y-axis data value for this bar.
    */
   dataY?: number | [number, number] | null;
   /**
@@ -77,65 +70,16 @@ export type BarComponentProps = {
 
 export type BarComponent = React.FC<BarComponentProps>;
 
-export type BarProps = {
+export type BarProps = Omit<BarComponentProps, 'd'> & {
   /**
-   * X coordinate of the bar (left edge).
+   * Border radius for the bar.
+   * @default 4
    */
-  x: number;
-  /**
-   * Y coordinate of the bar (top edge).
-   */
-  y: number;
-  /**
-   * Width of the bar.
-   */
-  width: number;
-  /**
-   * Height of the bar.
-   */
-  height: number;
-  /**
-   * Y coordinate of the baseline/origin for animations.
-   * Used to calculate initial animation state.
-   */
-  originY?: number;
-  /**
-   * The x-axis data value for this bar.
-   */
-  dataX?: number | string;
-  /**
-   * The y-axis data value for this bar.
-   */
-  dataY?: number | [number, number] | null;
+  borderRadius?: BarComponentProps['borderRadius'];
   /**
    * Component to render the bar.
    */
   BarComponent?: BarComponent;
-  /**
-   * The color of the bar.
-   * @default 'var(--color-fgPrimary)'
-   */
-  fill?: string;
-  /**
-   * Opacity of the bar.
-   * @default 1
-   */
-  fillOpacity?: number;
-  /**
-   * Stroke color for the bar outline.
-   */
-  stroke?: string;
-  /**
-   * Stroke width for the bar outline.
-   */
-  strokeWidth?: number;
-  /**
-   * Border radius from theme (e.g., 100, 200, etc.).
-   * @default 100
-   */
-  borderRadius?: ThemeVars.BorderRadius;
-  roundTop?: boolean;
-  roundBottom?: boolean;
 };
 
 /**
@@ -164,20 +108,13 @@ export const Bar = memo<BarProps>(
     fillOpacity = 1,
     stroke,
     strokeWidth,
-    borderRadius = 100,
+    borderRadius = 4,
     roundTop = true,
     roundBottom = true,
   }) => {
-    const theme = useTheme();
-
-    const borderRadiusPixels = useMemo(
-      () => (borderRadius ? theme.borderRadius[borderRadius] : 0),
-      [borderRadius, theme.borderRadius],
-    );
-
     const barPath = useMemo(() => {
-      return getBarPath(x, y, width, height, borderRadiusPixels, roundTop, roundBottom);
-    }, [x, y, width, height, borderRadiusPixels, roundTop, roundBottom]);
+      return getBarPath(x, y, width, height, borderRadius, roundTop, roundBottom);
+    }, [x, y, width, height, borderRadius, roundTop, roundBottom]);
 
     const effectiveOriginY = originY ?? y + height;
 
@@ -187,7 +124,7 @@ export const Bar = memo<BarProps>(
 
     return (
       <BarComponent
-        borderRadius={borderRadiusPixels}
+        borderRadius={borderRadius}
         d={barPath}
         dataX={dataX}
         dataY={dataY}

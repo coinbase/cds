@@ -23,10 +23,10 @@ export const InteractiveChartText = () => {
   const [textY, setTextY] = useState(CHART_HEIGHT / 2);
   const [offsetX, setOffsetX] = useState(0);
   const [offsetY, setOffsetY] = useState(0);
-  const [textAnchor, setTextAnchor] = useState<'start' | 'middle' | 'end'>('middle');
-  const [dominantBaseline, setDominantBaseline] = useState<
-    'auto' | 'baseline' | 'middle' | 'central' | 'hanging' | 'ideographic' | 'alphabetic'
-  >('central');
+  const [horizontalAlignment, setHorizontalAlignment] = useState<'left' | 'center' | 'right'>(
+    'center',
+  );
+  const [verticalAlignment, setVerticalAlignment] = useState<'top' | 'middle' | 'bottom'>('middle');
   const [showDebug, setShowDebug] = useState(false);
   const [bbox, setBbox] = useState<Rect | null>(null);
   const [hideWithDisplayNone, setHideWithDisplayNone] = useState(false);
@@ -65,8 +65,8 @@ export const InteractiveChartText = () => {
     [isChartFocused],
   );
 
-  const chartTextPadding: ChartInset = useMemo(
-    () => ({ top: 1, right: 1.5, bottom: 1, left: 1.5 }),
+  const chartTextInset: ChartInset = useMemo(
+    () => ({ top: 8, right: 12, bottom: 8, left: 12 }),
     [],
   );
 
@@ -203,37 +203,10 @@ export const InteractiveChartText = () => {
         {/* Alignment Controls */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <label style={{ fontWeight: 'bold' }}>Text Anchor:</label>
-            <select
-              onChange={(e) => setTextAnchor(e.target.value as 'start' | 'middle' | 'end')}
-              style={{
-                padding: '4px 8px',
-                border: '1px solid #ccc',
-                borderRadius: '4px',
-                fontSize: '14px',
-                minWidth: '100px',
-              }}
-              value={textAnchor}
-            >
-              <option value="start">start</option>
-              <option value="middle">middle</option>
-              <option value="end">end</option>
-            </select>
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <label style={{ fontWeight: 'bold' }}>Dominant Baseline:</label>
+            <label style={{ fontWeight: 'bold' }}>Horizontal Alignment:</label>
             <select
               onChange={(e) =>
-                setDominantBaseline(
-                  e.target.value as
-                    | 'auto'
-                    | 'baseline'
-                    | 'middle'
-                    | 'central'
-                    | 'hanging'
-                    | 'ideographic'
-                    | 'alphabetic',
-                )
+                setHorizontalAlignment(e.target.value as 'left' | 'center' | 'right')
               }
               style={{
                 padding: '4px 8px',
@@ -242,15 +215,29 @@ export const InteractiveChartText = () => {
                 fontSize: '14px',
                 minWidth: '100px',
               }}
-              value={dominantBaseline}
+              value={horizontalAlignment}
             >
-              <option value="auto">auto</option>
-              <option value="baseline">baseline</option>
+              <option value="left">left</option>
+              <option value="center">center</option>
+              <option value="right">right</option>
+            </select>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <label style={{ fontWeight: 'bold' }}>Vertical Alignment:</label>
+            <select
+              onChange={(e) => setVerticalAlignment(e.target.value as 'top' | 'middle' | 'bottom')}
+              style={{
+                padding: '4px 8px',
+                border: '1px solid #ccc',
+                borderRadius: '4px',
+                fontSize: '14px',
+                minWidth: '100px',
+              }}
+              value={verticalAlignment}
+            >
+              <option value="top">top</option>
               <option value="middle">middle</option>
-              <option value="central">central</option>
-              <option value="hanging">hanging</option>
-              <option value="ideographic">ideographic</option>
-              <option value="alphabetic">alphabetic</option>
+              <option value="bottom">bottom</option>
             </select>
           </div>
         </div>
@@ -306,24 +293,24 @@ export const InteractiveChartText = () => {
           }}
           width={CHART_WIDTH}
         >
-          <XAxis position="end" showGrid={true} showLine={true} showTickMarks={true} />
-          <YAxis position="start" showGrid={true} showLine={true} showTickMarks={true} />
+          <XAxis showGrid showLine showTickMarks />
+          <YAxis showGrid showLine showTickMarks position="left" />
           <ChartText
             borderRadius={200}
             color="var(--color-fgPrimary)"
-            dominantBaseline={dominantBaseline}
             dx={offsetX}
             dy={offsetY}
             elevation={1}
             font="label1"
+            horizontalAlignment={horizontalAlignment}
+            inset={chartTextInset}
             onDimensionsChange={(rect) => setBbox(rect)}
-            padding={chartTextPadding}
             styles={{
               text: hideWithDisplayNone ? { display: 'none' } : undefined,
               backgroundRect: hideWithDisplayNone ? { display: 'none' } : undefined,
             }}
             testID="test-text"
-            textAnchor={textAnchor}
+            verticalAlignment={verticalAlignment}
             x={textX}
             y={textY}
           >
@@ -642,14 +629,14 @@ export const InteractiveSmartChartTextGroup = () => {
         >
           {/* Axes with grid lines but no labels */}
           <XAxis
-            position="end"
+            position="bottom"
             showGrid={true}
             showLine={true}
             showTickMarks={false}
             tickLabelFormatter={() => ''} // Hide axis labels
           />
           <YAxis
-            position="start"
+            position="left"
             showGrid={true}
             showLine={true}
             showTickMarks={false}

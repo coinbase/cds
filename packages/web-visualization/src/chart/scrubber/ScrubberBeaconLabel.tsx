@@ -4,7 +4,7 @@ import type { Rect } from '@coinbase/cds-common/types';
 import { useCartesianChartContext } from '../ChartProvider';
 import { ChartText, type ChartTextProps } from '../text';
 
-export type ScrubberHeadLabelProps = ChartTextProps & {
+export type ScrubberBeaconLabelProps = ChartTextProps & {
   /**
    * Preferred side for label placement.
    * @default 'auto' - automatically chooses based on available space
@@ -13,19 +13,19 @@ export type ScrubberHeadLabelProps = ChartTextProps & {
 };
 
 /**
- * The ScrubberHeadLabel is a special instance of ChartText used to label a series' scrubber head (i.e. a point on the series pinned to the scrubber position).
+ * The ScrubberBeaconLabel is a special instance of ChartText used to label a series' scrubber beacon (i.e. a point on the series pinned to the scrubber position).
  * It contains logic to automatically change the ChartText's textAnchor based on it's proximity to the chart's bounds.
  */
-export const ScrubberHeadLabel = memo<ScrubberHeadLabelProps>(
+export const ScrubberBeaconLabel = memo<ScrubberBeaconLabelProps>(
   ({
     preferredSide = 'auto',
     background = 'white',
     color = 'var(--color-fgPrimary)',
     opacity = 1,
-    padding = 1,
+    inset = 1,
     onDimensionsChange,
     elevation = background !== undefined ? 1 : undefined,
-    borderRadius = background !== undefined ? 200 : undefined,
+    borderRadius = background !== undefined ? 4 : undefined,
     testID,
     dx = 0,
     ...chartTextProps
@@ -63,14 +63,14 @@ export const ScrubberHeadLabel = memo<ScrubberHeadLabelProps>(
         background={background}
         borderRadius={borderRadius}
         color={color}
-        dominantBaseline="central"
         dx={spacing}
         elevation={elevation}
         font="label1"
+        horizontalAlignment={side === 'right' ? 'left' : 'right'}
+        inset={inset}
         onDimensionsChange={handleDimensionsChange}
-        padding={padding}
         testID={testID}
-        textAnchor={side === 'right' ? 'start' : 'end'}
+        verticalAlignment="middle"
         {...chartTextProps}
       />
     );
