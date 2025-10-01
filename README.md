@@ -65,4 +65,4 @@ For information about reporting security vulnerabilities, please see our [Securi
 
 ## License
 
-This project is licensed under the terms described in [LICENSE.md](LICENSE.md).
+This project is licensed under the terms described in [LICENSE](LICENSE).
