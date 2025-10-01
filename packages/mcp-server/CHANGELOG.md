@@ -8,7 +8,11 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
-## Unreleased
+## 8.13.2 (10/1/2025 PST)
+
+#### 🐞 Fixes
+
+- Update links for new repo. [[#42](https://github.com/coinbase/cds/pull/42)]
 
 #### 📘 Misc
 

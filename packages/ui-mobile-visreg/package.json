@@ -5,7 +5,7 @@
   "description": "Visreg Helpers",
   "repository": {
     "type": "git",
-    "url": "git@github.com:coinbase/cds-staging.git",
+    "url": "git@github.com:coinbase/cds.git",
     "directory": "packages/ui-mobile-visreg"
   },
   "type": "module",
