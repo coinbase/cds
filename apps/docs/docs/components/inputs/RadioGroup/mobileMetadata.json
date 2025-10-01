@@ -1,6 +1,6 @@
 {
   "import": "import { RadioGroup } from '@coinbase/cds-mobile/controls/RadioGroup'",
-  "source": "https://github.com/coinbase/cds-staging/blob/master/packages/mobile/src/controls/RadioGroup.tsx",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/mobile/src/controls/RadioGroup.tsx",
   "figma": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/%E2%9C%A8-CDS-Components?m=auto&node-id=465-13782",
   "description": "Radio is a control component that allows users to select one option from a set.",
   "relatedComponents": [

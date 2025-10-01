@@ -197,7 +197,7 @@ const config: Config = {
           label: 'Blog',
         },
         {
-          href: 'https://github.com/coinbase/cds-staging',
+          href: 'https://github.com/coinbase/cds',
           label: 'GitHub',
         },
       ],
@@ -210,7 +210,7 @@ const config: Config = {
         },
         {
           label: 'Github',
-          href: 'https://github.com/coinbase/cds-staging/tree/master',
+          href: 'https://github.com/coinbase/cds/tree/master',
         },
         {
           label: 'Blog',

@@ -1,6 +1,6 @@
 {
   "import": "import { Avatar } from '@coinbase/cds-mobile/media/Avatar'",
-  "source": "https://github.com/coinbase/cds-staging/blob/master/packages/mobile/src/media/Avatar.tsx",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/mobile/src/media/Avatar.tsx",
   "description": "Avatar is a visual representation of a user, company, or entity.",
   "relatedComponents": [
     {

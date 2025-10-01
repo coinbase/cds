@@ -1,6 +1,6 @@
 {
   "import": "import { useBreakpoints } from '@coinbase/cds-web/hooks/useBreakpoints'",
-  "source": "https://github.com/coinbase/cds-staging/blob/master/packages/web/src/hooks/useBreakpoints.ts",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/web/src/hooks/useBreakpoints.ts",
   "description": "Returns an object with a boolean for each breakpoint of the window. Useful for conditionally rendering components or component trees based on the current window breakpoint.",
   "relatedComponents": [
     {

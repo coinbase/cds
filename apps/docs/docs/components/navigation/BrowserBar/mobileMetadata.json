@@ -1,6 +1,6 @@
 {
   "import": "import { BrowserBar } from '@coinbase/cds-mobile/navigation/BrowserBar'",
-  "source": "https://github.com/coinbase/cds-staging/blob/master/packages/mobile/src/navigation/BrowserBar.tsx",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/mobile/src/navigation/BrowserBar.tsx",
   "description": "A navigation bar designed for browser-like interfaces, featuring slots for start, end, and central content. It provides a structured layout for controls and information within a browser context.",
   "figma": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/%E2%9C%A8-CDS-Components?node-id=49598-4025&t=HVdVREeFwcWeSo2R-4",
   "relatedComponents": [

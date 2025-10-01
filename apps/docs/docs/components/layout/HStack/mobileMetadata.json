@@ -1,6 +1,6 @@
 {
   "import": "import { HStack } from '@coinbase/cds-mobile/layout/HStack'",
-  "source": "https://github.com/coinbase/cds-staging/blob/master/packages/mobile/src/layout/HStack.tsx",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/mobile/src/layout/HStack.tsx",
   "figma": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/%E2%9C%A8-CDS-Components?node-id=68-975",
   "description": "A Box with flexDirection=\"row\" set by default.",
   "relatedComponents": [

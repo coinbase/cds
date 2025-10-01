@@ -1,6 +1,6 @@
 {
   "import": "import { Interactable } from '@coinbase/cds-mobile/system/Interactable'",
-  "source": "https://github.com/coinbase/cds-staging/blob/master/packages/mobile/src/system/Interactable.tsx",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/mobile/src/system/Interactable.tsx",
   "description": "A generic component for creating interactable elements. Provides dynamic styling for hovered, pressed, and disabled states.",
   "relatedComponents": [
     {

@@ -1,6 +1,6 @@
 {
   "import": "import { Sparkline } from '@coinbase/cds-mobile-visualization'",
-  "source": "https://github.com/coinbase/cds-staging/blob/master/packages/mobile-visualization/src/sparkline/Sparkline.tsx",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/mobile-visualization/src/sparkline/Sparkline.tsx",
   "description": "A small line chart component for displaying data trends.",
   "relatedComponents": [
     {

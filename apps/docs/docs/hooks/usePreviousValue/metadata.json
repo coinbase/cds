@@ -1,5 +1,5 @@
 {
   "import": "import { usePreviousValue } from '@coinbase/cds-common/hooks/usePreviousValue'",
-  "source": "https://github.com/coinbase/cds-staging/blob/master/packages/common/src/hooks/usePreviousValue.ts",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/common/src/hooks/usePreviousValue.ts",
   "description": "Returns the previous value of a given variable, useful for comparing current and previous states in effects or for tracking changes over time."
 }

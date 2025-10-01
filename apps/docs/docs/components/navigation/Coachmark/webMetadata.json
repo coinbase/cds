@@ -1,6 +1,6 @@
 {
   "import": "import { Coachmark } from '@coinbase/cds-web/coachmark/Coachmark'",
-  "source": "https://github.com/coinbase/cds-staging/blob/master/packages/web/src/coachmark/Coachmark.tsx",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/web/src/coachmark/Coachmark.tsx",
   "description": "Coachmark is a flexible, accessible overlay component for onboarding, feature tours, and contextual help. It supports custom content, actions, and media.",
   "storybook": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/%E2%9C%A8-CDS-Components?node-id=25128-9889&t=7bpcjquwgXNk9lnN-4",
   "relatedComponents": [

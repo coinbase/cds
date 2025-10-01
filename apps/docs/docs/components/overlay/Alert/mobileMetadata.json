@@ -1,6 +1,6 @@
 {
   "import": "import { Alert } from '@coinbase/cds-mobile/overlays/Alert'",
-  "source": "https://github.com/coinbase/cds-staging/blob/master/packages/mobile/src/overlays/Alert.tsx",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/mobile/src/overlays/Alert.tsx",
   "figma": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/%E2%9C%A8-CDS-Components?node-id=7-6",
   "description": "A dialog that communicates critical information and blocks user interaction.",
   "relatedComponents": [

@@ -14,7 +14,7 @@ import { getSimpleNameFromJSX } from '../utils/getSimpleNameFromJSX';
 
 const ruleCreator = ESLintUtils.RuleCreator(
   (name) =>
-    `https://github.com/coinbase/cds-staging/blob/master/packages/eslint-plugin-cds/README.md#${name}`,
+    `https://github.com/coinbase/cds/blob/master/packages/eslint-plugin-cds/README.md#${name}`,
 );
 
 type MessageIds =

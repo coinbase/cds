@@ -1,6 +1,6 @@
 {
   "import": "import { DotCount } from '@coinbase/cds-mobile/dots/DotCount'",
-  "source": "https://github.com/coinbase/cds-staging/blob/master/packages/mobile/src/dots/DotCount.tsx",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/mobile/src/dots/DotCount.tsx",
   "figma": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/%E2%9C%A8-CDS-Components?node-id=155-10245",
   "description": "Dots are component adornments, typically used to communicate a numerical value or indicate the status or identity of a component to the end-user.",
   "relatedComponents": [

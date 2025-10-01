@@ -1,6 +1,6 @@
 {
   "import": "import { Spacer } from '@coinbase/cds-web/layout/Spacer'",
-  "source": "https://github.com/coinbase/cds-staging/blob/master/packages/web/src/layout/Spacer.tsx",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/web/src/layout/Spacer.tsx",
   "description": "Creates space between elements.",
   "relatedComponents": [
     {

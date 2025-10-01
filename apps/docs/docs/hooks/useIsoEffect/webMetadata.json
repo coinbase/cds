@@ -1,5 +1,5 @@
 {
   "import": "import { useIsoEffect } from '@coinbase/cds-web/hooks/useIsoEffect'",
-  "source": "https://github.com/coinbase/cds-staging/blob/master/packages/web/src/hooks/useIsoEffect.ts",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/web/src/hooks/useIsoEffect.ts",
   "description": "A safe way of calling useLayoutEffect only on the client. Does nothing on the server."
 }

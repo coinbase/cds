@@ -1,6 +1,6 @@
 {
   "import": "import { NavigationTitleSelect } from '@coinbase/cds-mobile/navigation/NavigationTitleSelect'",
-  "source": "https://github.com/coinbase/cds-staging/blob/master/packages/mobile/src/navigation/NavigationTitleSelect.tsx",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/mobile/src/navigation/NavigationTitleSelect.tsx",
   "description": "A select component styled as a navigation title, allowing users to switch between different views or contexts from the header. It opens a Tray on mobile.",
   "relatedComponents": [
     {

@@ -1,6 +1,6 @@
 {
   "import": "import { LottieStatusAnimation } from '@coinbase/cds-mobile/animation/LottieStatusAnimation'",
-  "source": "https://github.com/coinbase/cds-staging/blob/master/packages/mobile/src/animation/LottieStatusAnimation.tsx",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/mobile/src/animation/LottieStatusAnimation.tsx",
   "description": "A specialized component for displaying trade status animations.",
   "relatedComponents": [
     {

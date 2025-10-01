@@ -113,7 +113,7 @@ apps/docs/docs/components/[docs-category]/[ComponentName]/
 ```json
 {
   "import": "import { ComponentName } from '@coinbase/cds-web/[source-category]/[ComponentName]'",
-  "source": "https://github.com/coinbase/cds-staging/blob/master/packages/web/src/[source-category]/[ComponentName].tsx",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/web/src/[source-category]/[ComponentName].tsx",
   "description": "[Component description]",
   "figma": "[figma link]", // only add if provided
   "storybook": "[storybook link]", // only add if provided
@@ -129,7 +129,7 @@ apps/docs/docs/components/[docs-category]/[ComponentName]/
 ```json
 {
   "import": "import { ComponentName } from '@coinbase/cds-mobile/[source-category]/[ComponentName]'",
-  "source": "https://github.com/coinbase/cds-staging/blob/master/packages/mobile/src/[source-category]/[ComponentName].tsx",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/mobile/src/[source-category]/[ComponentName].tsx",
   "description": "[Component description]",
   "figma": "[figma link]", // only add if provided
   "relatedComponents": [

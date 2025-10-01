@@ -4,7 +4,7 @@
   "description": "Coinbase Design System - Mobile Visualization Native",
   "repository": {
     "type": "git",
-    "url": "git@github.com:coinbase/cds-staging.git",
+    "url": "git@github.com:coinbase/cds.git",
     "directory": "packages/mobile-visualization"
   },
   "type": "module",

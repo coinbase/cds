@@ -1,6 +1,6 @@
 {
   "import": "import { MediaQueryProvider } from '@coinbase/cds-web/system/MediaQueryProvider'",
-  "source": "https://github.com/coinbase/cds-staging/blob/master/packages/web/src/system/MediaQueryProvider.tsx",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/web/src/system/MediaQueryProvider.tsx",
   "description": "Manages window.matchMedia subscriptions with SSR support.",
   "storybook": "https://cds-storybook.coinbase.com/?path=/story/core-components-themeprovider--theme-provider-test",
   "relatedComponents": [

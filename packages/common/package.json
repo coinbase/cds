@@ -4,7 +4,7 @@
   "description": "Coinbase Design System - Common",
   "repository": {
     "type": "git",
-    "url": "git@github.com:coinbase/cds-staging.git",
+    "url": "git@github.com:coinbase/cds.git",
     "directory": "packages/common"
   },
   "react-native": "./src/index.ts",

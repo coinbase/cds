@@ -1,6 +1,6 @@
 {
   "import": "import { LogoWordmark } from '@coinbase/cds-mobile/icons/LogoWordmark'",
-  "source": "https://github.com/coinbase/cds-staging/blob/master/packages/mobile/src/icons/LogoWordmark.tsx",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/mobile/src/icons/LogoWordmark.tsx",
   "description": "The full Coinbase logo with text for branding.",
   "relatedComponents": [
     {

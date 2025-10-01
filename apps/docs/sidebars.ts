@@ -770,7 +770,7 @@ const sidebars: SidebarsConfig = {
       items: [
         {
           type: 'link',
-          href: 'https://github.com/coinbase/cds-staging/blob/master/packages/common/CHANGELOG.md',
+          href: 'https://github.com/coinbase/cds/blob/master/packages/common/CHANGELOG.md',
           label: '@coinbase/cds-common',
           customProps: {
             kbar: {
@@ -780,7 +780,7 @@ const sidebars: SidebarsConfig = {
         },
         {
           type: 'link',
-          href: 'https://github.com/coinbase/cds-staging/blob/master/packages/mobile/CHANGELOG.md',
+          href: 'https://github.com/coinbase/cds/blob/master/packages/mobile/CHANGELOG.md',
           label: '@coinbase/cds-mobile',
           customProps: {
             kbar: {
@@ -790,7 +790,7 @@ const sidebars: SidebarsConfig = {
         },
         {
           type: 'link',
-          href: 'https://github.com/coinbase/cds-staging/blob/master/packages/web/CHANGELOG.md',
+          href: 'https://github.com/coinbase/cds/blob/master/packages/web/CHANGELOG.md',
           label: '@coinbase/cds-web',
           customProps: {
             kbar: {
@@ -800,7 +800,7 @@ const sidebars: SidebarsConfig = {
         },
         {
           type: 'link',
-          href: 'https://github.com/coinbase/cds-staging/blob/master/packages/icons/CHANGELOG.md',
+          href: 'https://github.com/coinbase/cds/blob/master/packages/icons/CHANGELOG.md',
           label: '@coinbase/cds-icons',
           customProps: {
             kbar: {
@@ -810,7 +810,7 @@ const sidebars: SidebarsConfig = {
         },
         {
           type: 'link',
-          href: 'https://github.com/coinbase/cds-staging/blob/master/packages/illustrations/CHANGELOG.md',
+          href: 'https://github.com/coinbase/cds/blob/master/packages/illustrations/CHANGELOG.md',
           label: '@coinbase/cds-illustrations',
           customProps: {
             kbar: {
@@ -820,7 +820,7 @@ const sidebars: SidebarsConfig = {
         },
         {
           type: 'link',
-          href: 'https://github.com/coinbase/cds-staging/blob/master/packages/mobile-visualization/CHANGELOG.md',
+          href: 'https://github.com/coinbase/cds/blob/master/packages/mobile-visualization/CHANGELOG.md',
           label: '@coinbase/cds-mobile-visualization',
           customProps: {
             kbar: {
@@ -830,7 +830,7 @@ const sidebars: SidebarsConfig = {
         },
         {
           type: 'link',
-          href: 'https://github.com/coinbase/cds-staging/blob/master/packages/web-visualization/CHANGELOG.md',
+          href: 'https://github.com/coinbase/cds/blob/master/packages/web-visualization/CHANGELOG.md',
           label: '@coinbase/cds-web-visualization',
           customProps: {
             kbar: {

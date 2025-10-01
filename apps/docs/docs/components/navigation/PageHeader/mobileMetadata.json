@@ -1,6 +1,6 @@
 {
   "import": "import { PageHeader } from '@coinbase/cds-mobile/page/PageHeader'",
-  "source": "https://github.com/coinbase/cds-staging/blob/master/packages/mobile/src/page/PageHeader.tsx",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/mobile/src/page/PageHeader.tsx",
   "figma": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/%E2%9C%A8-CDS-Components?node-id=17685-3212&t=pR950kABXn1ahUj4-0",
   "description": "Page Header is a flexible header component.",
   "relatedComponents": [

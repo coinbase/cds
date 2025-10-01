@@ -1,5 +1,5 @@
 {
   "import": "import { useDimensions } from '@coinbase/cds-mobile/hooks/useDimensions'",
-  "source": "https://github.com/coinbase/cds-staging/blob/master/packages/mobile/src/hooks/useDimensions.ts",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/mobile/src/hooks/useDimensions.ts",
   "description": "Measures the screen dimensions and status bar height."
 }

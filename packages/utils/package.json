@@ -4,7 +4,7 @@
   "description": "Coinbase Design System - Utils",
   "repository": {
     "type": "git",
-    "url": "git@github.com:coinbase/cds-staging.git",
+    "url": "git@github.com:coinbase/cds.git",
     "directory": "packages/utils"
   },
   "react-native": "./src/index.ts",

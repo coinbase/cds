@@ -1,6 +1,6 @@
 {
   "import": "import { SubBrandLogoMark } from '@coinbase/cds-mobile/icons/SubBrandLogoMark'",
-  "source": "https://github.com/coinbase/cds-staging/blob/master/packages/mobile/src/icons/SubBrandLogoMark.tsx",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/mobile/src/icons/SubBrandLogoMark.tsx",
   "description": "Coinbase sub-brand logo marks for specialized branding.",
   "relatedComponents": [
     {
