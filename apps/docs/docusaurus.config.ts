@@ -193,7 +193,7 @@ const config: Config = {
           label: 'Storybook',
         },
         {
-          href: '/blog',
+          href: 'https://coinbase.com/blog',
           label: 'Blog',
         },
         {
@@ -214,7 +214,7 @@ const config: Config = {
         },
         {
           label: 'Blog',
-          href: '/blog',
+          href: 'https://coinbase.com/blog',
         },
         {
           label: 'Careers',
