@@ -33,6 +33,7 @@ import {
 } from '../..';
 import { Area, type AreaComponentProps, DottedArea, GradientArea } from '../../area';
 import { XAxis, YAxis } from '../../axis';
+import { BarPlot } from '../../bar';
 import { CartesianChart } from '../../CartesianChart';
 import { DottedLine, GradientLine, Line, LineChart, ReferenceLine, SolidLine } from '..';
 
@@ -1835,6 +1836,95 @@ export const All = () => {
       </Example>
       <Example title="Bitcoin Chart With Scrubber Beacon">
         <BitcoinChartWithScrubberBeacon />
+      </Example>
+      <Example title="">
+        <VStack alignItems="center" gap={1}>
+          <Text font="title2">Component releases per quarter w/ max headcount</Text>
+          <HStack gap={2}>
+            <HStack alignItems="center" gap={1}>
+              <Box background="bgLinePrimarySubtle" height={10} width={40} />
+              <Text font="label2">{'Headcount < 6 months'}</Text>
+            </HStack>
+            <HStack alignItems="center" gap={1}>
+              <Box background="bgPrimary" height={10} width={40} />
+              <Text font="label2">{'Headcount > 6 months'}</Text>
+            </HStack>
+            <HStack alignItems="center" gap={1}>
+              <Box background="accentBoldYellow" height={10} width={40} />
+              <Text font="label2">{'Component Releases'}</Text>
+            </HStack>
+          </HStack>
+        </VStack>
+        <CartesianChart
+          height={500}
+          padding={0}
+          series={[
+            {
+              id: 'headcountLong',
+              data: [4, 5, 4, 5, 4, 7, 4, 4, 3, 4, 3],
+              stackId: 'headcount',
+              color: 'var(--color-bgPrimary)',
+            },
+            {
+              id: 'headcountShort',
+              data: [0, 1, 3, 2, 3, 0, 1, 2, 4, 3, 4],
+              stackId: 'headcount',
+              color: 'var(--color-bgLinePrimarySubtle)',
+            },
+            {
+              id: 'components',
+              data: [null, null, null, 4, 5, 4, 4, 0, 0, 7, 8],
+              color: 'var(--color-accentBoldYellow)',
+            },
+          ]}
+          xAxis={{
+            scaleType: 'band',
+          }}
+          yAxis={{
+            domain: { min: 0, max: 10 },
+          }}
+        >
+          <YAxis showGrid showLine showTickMarks position="start" />
+          <XAxis
+            showLine
+            showTickMarks
+            tickLabelFormatter={(value) => {
+              const quarters = [
+                'Q1 2023',
+                'Q2 2023',
+                'Q3 2023',
+                'Q4 2023',
+                'Q1 2024',
+                'Q2 2024',
+                'Q3 2024',
+                'Q4 2024',
+                'Q1 2025',
+                'Q2 2025',
+                'Q3 2025',
+              ];
+              return quarters[value];
+            }}
+          />
+          <BarPlot borderRadius={400} seriesIds={['headcountLong', 'headcountShort']} />
+          <Line
+            renderPoints={({ dataY }) => {
+              return {
+                label: `${dataY}`,
+                radius: 8,
+                labelConfig: {
+                  position: 'top',
+                  dy: -24,
+                  color: 'var(--color-fg)',
+                  padding: 0.5,
+                  background: 'var(--color-bg)',
+                  borderRadius: 200,
+                },
+              };
+            }}
+            seriesId="components"
+            strokeWidth={4}
+          />
+        </CartesianChart>
       </Example>
     </VStack>
   );
