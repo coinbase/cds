@@ -203,8 +203,7 @@ const TourComponent = <T extends string = string>({
   const RenderedTourStep = activeTourStep?.Component;
   const RenderedTourStepArrow = activeTourStep?.ArrowComponent ?? TourStepArrowComponent;
 
-  // This ref is used to store the active tour step target element.
-  // We use a state instead of a ref because we want to avoid re-rendering the component
+  // This state is used to store the active tour step target element.
   const [activeTourStepTarget, setActiveTourStepTarget] = useState<HTMLElement | null>(null);
 
   const blockScroll = useScrollBlocker();

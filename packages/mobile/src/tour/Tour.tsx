@@ -98,15 +98,6 @@ export type TourProps<T extends string = string> = TourOptions<T> & {
 
 type TourFC = <T extends string = string>(props: TourProps<T>) => React.ReactNode;
 
-export type TourRefContextValue = {
-  setActiveTourStepTarget: (target: View | null) => void;
-};
-
-// This context is used to update the ref to the tour step target element.
-export const TourRefContext = createContext<TourRefContextValue>({
-  setActiveTourStepTarget: () => {},
-});
-
 const TourComponent = <T extends string = string>({
   steps,
   activeTourStep,
@@ -132,8 +123,7 @@ const TourComponent = <T extends string = string>({
   const RenderedTourStep = activeTourStep?.Component;
   const RenderedTourStepArrow = activeTourStep?.ArrowComponent ?? TourStepArrowComponent;
 
-  // This ref is used to store the active tour step target element.
-  // We use a ref instead of a state because we want to avoid re-rendering the component
+  // This state is used to store the active tour step target element.
   const [activeTourStepTarget, setActiveTourStepTarget] = useState<View | null>(null);
 
   const [animation, animationApi] = useSpring(
@@ -202,9 +192,6 @@ const TourComponent = <T extends string = string>({
 
   return (
     <OverlayContentContext.Provider value={overlayContentContextValue}>
-      {/* <TourRefContext.Provider
-        value={{ setActiveTourStepTarget: handleActiveTourStepTargetChange }}
-      > */}
       <TourContext.Provider
         value={
           { ...api, setActiveTourStepTarget: handleActiveTourStepTargetChange } as TourContextValue
