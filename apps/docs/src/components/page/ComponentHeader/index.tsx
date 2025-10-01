@@ -110,7 +110,7 @@ export const ComponentHeader = memo(
 
     return (
       <VStack background="bgAlternate" borderRadius={600} overflow="hidden" width="100%">
-        <VStack height={200} width="100%">
+        <VStack display={{ base: 'flex', phone: 'none' }} height={200} width="100%">
           {typeof activeBanner === 'string' ? (
             <img
               alt={`${title} banner`}
