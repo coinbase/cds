@@ -1,4 +1,4 @@
-import React, { createContext, useCallback, useEffect, useRef } from 'react';
+import React, { createContext, useCallback, useRef, useState } from 'react';
 import { Modal, View } from 'react-native';
 import type { SharedProps } from '@coinbase/cds-common';
 import {
@@ -134,7 +134,7 @@ const TourComponent = <T extends string = string>({
 
   // This ref is used to store the active tour step target element.
   // We use a ref instead of a state because we want to avoid re-rendering the component
-  const activeTourStepTargetRef = useRef<View | null>(null);
+  const [activeTourStepTarget, setActiveTourStepTarget] = useState<View | null>(null);
 
   const [animation, animationApi] = useSpring(
     () => ({ from: { opacity: 0 }, config: springConfig.slow }),
@@ -195,60 +195,55 @@ const TourComponent = <T extends string = string>({
         });
       });
 
-      activeTourStepTargetRef.current = target;
+      setActiveTourStepTarget(target);
     },
     [animationApi, refs],
   );
 
-  // Resets the active tour step target when the tour is no longer active.
-  useEffect(() => {
-    if (!activeTourStep) {
-      activeTourStepTargetRef.current = null;
-    }
-  }, [activeTourStep]);
-
   return (
     <OverlayContentContext.Provider value={overlayContentContextValue}>
-      <TourRefContext.Provider
+      {/* <TourRefContext.Provider
         value={{ setActiveTourStepTarget: handleActiveTourStepTargetChange }}
+      > */}
+      <TourContext.Provider
+        value={
+          { ...api, setActiveTourStepTarget: handleActiveTourStepTargetChange } as TourContextValue
+        }
       >
-        <TourContext.Provider value={api as TourContextValue}>
-          {children}
-          {!!RenderedTourStep && (
-            <Modal
-              transparent
-              accessibilityLabel={accessibilityLabel}
-              accessibilityLabelledBy={accessibilityLabelledBy}
-              animationType="none"
-              id={id}
-              presentationStyle="overFullScreen"
-              testID={testID}
-            >
-              {!(activeTourStep.hideOverlay ?? hideOverlay) &&
-                !!activeTourStepTargetRef.current && (
-                  <animated.View style={animation}>
-                    <TourMaskComponent
-                      activeTourStepTarget={activeTourStepTargetRef.current}
-                      borderRadius={activeTourStep.tourMaskBorderRadius ?? tourMaskBorderRadius}
-                      padding={activeTourStep.tourMaskPadding ?? tourMaskPadding}
-                    />
-                  </animated.View>
-                )}
-              <View ref={refs.setFloating} collapsable={false} style={floatingStyles}>
-                <animated.View style={animation}>
-                  <RenderedTourStepArrow
-                    ref={tourStepArrowRef}
-                    arrow={arrow}
-                    placement={placement}
-                    style={activeTourStep?.arrowStyle}
-                  />
-                  <RenderedTourStep {...activeTourStep} />
-                </animated.View>
-              </View>
-            </Modal>
-          )}
-        </TourContext.Provider>
-      </TourRefContext.Provider>
+        {children}
+        {!!RenderedTourStep && (
+          <Modal
+            transparent
+            accessibilityLabel={accessibilityLabel}
+            accessibilityLabelledBy={accessibilityLabelledBy}
+            animationType="none"
+            id={id}
+            presentationStyle="overFullScreen"
+            testID={testID}
+          >
+            {!(activeTourStep.hideOverlay ?? hideOverlay) && !!activeTourStepTarget && (
+              <animated.View style={animation}>
+                <TourMaskComponent
+                  activeTourStepTarget={activeTourStepTarget}
+                  borderRadius={activeTourStep.tourMaskBorderRadius ?? tourMaskBorderRadius}
+                  padding={activeTourStep.tourMaskPadding ?? tourMaskPadding}
+                />
+              </animated.View>
+            )}
+            <View ref={refs.setFloating} collapsable={false} style={floatingStyles}>
+              <animated.View style={animation}>
+                <RenderedTourStepArrow
+                  ref={tourStepArrowRef}
+                  arrow={arrow}
+                  placement={placement}
+                  style={activeTourStep?.arrowStyle}
+                />
+                <RenderedTourStep {...activeTourStep} />
+              </animated.View>
+            </View>
+          </Modal>
+        )}
+      </TourContext.Provider>
     </OverlayContentContext.Provider>
   );
 };

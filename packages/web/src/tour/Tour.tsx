@@ -1,4 +1,4 @@
-import React, { createContext, useCallback, useEffect, useRef } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
   OverlayContentContext,
   type OverlayContentContextValue,
@@ -175,15 +175,6 @@ const scrollIntoView = async (element: HTMLElement | null, scrollOptions?: TourS
 
 export type TourFC = <T extends string = string>(props: TourProps<T>) => React.ReactNode;
 
-export type TourRefContextValue = {
-  setActiveTourStepTarget: (target: HTMLElement | null) => void;
-};
-
-// This context is used to update the ref to the tour step target element.
-export const TourRefContext = createContext<TourRefContextValue>({
-  setActiveTourStepTarget: () => {},
-});
-
 const defaultTourStepOffset = 24;
 const defaultTourStepShiftPadding = 32;
 
@@ -213,8 +204,8 @@ const TourComponent = <T extends string = string>({
   const RenderedTourStepArrow = activeTourStep?.ArrowComponent ?? TourStepArrowComponent;
 
   // This ref is used to store the active tour step target element.
-  // We use a ref instead of a state because we want to avoid re-rendering the component
-  const activeTourStepTargetRef = useRef<HTMLElement | null>(null);
+  // We use a state instead of a ref because we want to avoid re-rendering the component
+  const [activeTourStepTarget, setActiveTourStepTarget] = useState<HTMLElement | null>(null);
 
   const blockScroll = useScrollBlocker();
   const [animation, animationApi] = useSpring(
@@ -268,15 +259,12 @@ const TourComponent = <T extends string = string>({
   const handleActiveTourStepTargetChange = useCallback(
     (target: HTMLElement | null) => {
       refs.setReference(target);
-      activeTourStepTargetRef.current = target;
+      setActiveTourStepTarget(target);
 
       const revealTourStep = async () => {
         // Scroll the new target into view.
         if (!disableAutoScroll && !activeTourStep?.disableAutoScroll) {
-          await scrollIntoView(
-            activeTourStepTargetRef.current,
-            activeTourStep?.scrollOptions ?? scrollOptions,
-          );
+          await scrollIntoView(target, activeTourStep?.scrollOptions ?? scrollOptions);
         }
         void animationApi.start({ to: { opacity: 1 }, config: springConfig.slow });
       };
@@ -291,8 +279,6 @@ const TourComponent = <T extends string = string>({
   useEffect(() => {
     if (activeTourStep?.id) {
       blockScroll(true);
-    } else {
-      activeTourStepTargetRef.current = null;
     }
 
     return () => {
@@ -300,7 +286,6 @@ const TourComponent = <T extends string = string>({
     };
   }, [
     activeTourStep,
-    activeTourStepTargetRef,
     animationApi,
     blockScroll,
     disableAutoScroll,
@@ -309,50 +294,49 @@ const TourComponent = <T extends string = string>({
 
   return (
     <OverlayContentContext.Provider value={overlayContentContextValue}>
-      <TourRefContext.Provider
-        value={{ setActiveTourStepTarget: handleActiveTourStepTargetChange }}
+      <TourContext.Provider
+        value={
+          { ...api, setActiveTourStepTarget: handleActiveTourStepTargetChange } as TourContextValue
+        }
       >
-        <TourContext.Provider value={api as TourContextValue}>
-          {children}
-          {!!RenderedTourStep && (
-            <Portal containerId={modalContainerId} disablePortal={disablePortal}>
-              <div
-                aria-label={accessibilityLabel}
-                aria-labelledby={accessibilityLabelledBy}
-                aria-modal="true"
-                className={containerCss}
-                data-testid={testID}
-                id={id}
-                role="dialog"
-              >
-                {!(activeTourStep.hideOverlay ?? hideOverlay) &&
-                  activeTourStepTargetRef.current && (
-                    <animated.div style={animation}>
-                      <TourMaskComponent
-                        activeTourStepTargetRect={activeTourStepTargetRef.current.getBoundingClientRect()}
-                        borderRadius={activeTourStep.tourMaskBorderRadius ?? tourMaskBorderRadius}
-                        padding={activeTourStep.tourMaskPadding ?? tourMaskPadding}
-                      />
-                    </animated.div>
-                  )}
-                <div ref={refs.setFloating} style={floatingStyles}>
-                  <FocusTrap>
-                    <animated.div style={animation}>
-                      <RenderedTourStepArrow
-                        ref={tourStepArrowRef}
-                        arrow={arrow}
-                        placement={placement}
-                        style={activeTourStep?.arrowStyle}
-                      />
-                      <RenderedTourStep {...activeTourStep} />
-                    </animated.div>
-                  </FocusTrap>
-                </div>
+        {children}
+        {!!RenderedTourStep && (
+          <Portal containerId={modalContainerId} disablePortal={disablePortal}>
+            <div
+              aria-label={accessibilityLabel}
+              aria-labelledby={accessibilityLabelledBy}
+              aria-modal="true"
+              className={containerCss}
+              data-testid={testID}
+              id={id}
+              role="dialog"
+            >
+              {!(activeTourStep.hideOverlay ?? hideOverlay) && activeTourStepTarget && (
+                <animated.div style={animation}>
+                  <TourMaskComponent
+                    activeTourStepTargetRect={activeTourStepTarget.getBoundingClientRect()}
+                    borderRadius={activeTourStep.tourMaskBorderRadius ?? tourMaskBorderRadius}
+                    padding={activeTourStep.tourMaskPadding ?? tourMaskPadding}
+                  />
+                </animated.div>
+              )}
+              <div ref={refs.setFloating} style={floatingStyles}>
+                <FocusTrap>
+                  <animated.div style={animation}>
+                    <RenderedTourStepArrow
+                      ref={tourStepArrowRef}
+                      arrow={arrow}
+                      placement={placement}
+                      style={activeTourStep?.arrowStyle}
+                    />
+                    <RenderedTourStep {...activeTourStep} />
+                  </animated.div>
+                </FocusTrap>
               </div>
-            </Portal>
-          )}
-        </TourContext.Provider>
-      </TourRefContext.Provider>
+            </div>
+          </Portal>
+        )}
+      </TourContext.Provider>
     </OverlayContentContext.Provider>
   );
 };

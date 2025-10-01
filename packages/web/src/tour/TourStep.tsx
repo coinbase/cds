@@ -1,7 +1,5 @@
-import React, { useCallback, useContext } from 'react';
+import React, { useCallback } from 'react';
 import { useTourContext } from '@coinbase/cds-common/tour/TourContext';
-
-import { TourRefContext } from './Tour';
 
 type TourStepProps = {
   /** The id of the corresponding tour step data */
@@ -15,8 +13,7 @@ type TourStepProps = {
  * is rendered.
  */
 export const TourStep = ({ id, children }: TourStepProps) => {
-  const { setActiveTourStepTarget } = useContext(TourRefContext);
-  const { activeTourStep } = useTourContext();
+  const { activeTourStep, setActiveTourStepTarget } = useTourContext();
   const refCallback = useCallback(
     (ref: HTMLDivElement) => activeTourStep?.id === id && ref && setActiveTourStepTarget(ref),
     [activeTourStep, id, setActiveTourStepTarget],

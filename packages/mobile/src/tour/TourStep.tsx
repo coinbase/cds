@@ -1,4 +1,4 @@
-import React, { useCallback, useContext } from 'react';
+import React, { useCallback } from 'react';
 import { View } from 'react-native';
 import { useTourContext } from '@coinbase/cds-common/tour/TourContext';
 
@@ -16,8 +16,7 @@ type TourStepProps = {
  * is rendered.
  */
 export const TourStep = ({ id, children }: TourStepProps) => {
-  const { setActiveTourStepTarget } = useContext(TourRefContext);
-  const { activeTourStep } = useTourContext();
+  const { activeTourStep, setActiveTourStepTarget } = useTourContext();
   const refCallback = useCallback(
     (ref: View) => activeTourStep?.id === id && ref && setActiveTourStepTarget(ref),
     [activeTourStep, id, setActiveTourStepTarget],
