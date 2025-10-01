@@ -18,10 +18,11 @@ export type CellDetailProps = {
   subdetail?: React.ReactNode;
   /** Variant color to apply to the subdetail text. */
   variant?: CellDetailVariant;
+  /** Specifies whether font should be scaled down automatically to fit given style constraints. */
   adjustsFontSizeToFit?: boolean;
   /** Layout spacing configuration. */
   layoutSpacing?: 'spacious' | 'compact' | 'hug';
-  /** Optional props to spread onto the Text elements for detail and subdetail. */
+  /** Text props to spread onto the Text elements. */
   textProps?: {
     detail?: TextProps;
     subdetail?: TextProps;

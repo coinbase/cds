@@ -34,10 +34,15 @@ export type CellSpacing = Pick<
 
 export type CellBaseProps = SharedProps &
   LinkableProps & {
+    /** Accessory element rendered at the end of the cell (e.g., chevron). */
     accessory?: React.ReactElement<CellAccessoryProps>;
+    /** Main content of the cell; typically title/description content. */
     children: React.ReactNode;
+    /** End-aligned detail content (e.g., value, status). */
     detail?: React.ReactNode;
+    /** Middle content between main content and detail. */
     intermediary?: React.ReactNode;
+    /** Media rendered at the start of the cell (icon, avatar, image, etc). */
     media?: React.ReactElement;
     borderRadius?: ThemeVars.BorderRadius;
     /**
@@ -132,7 +137,7 @@ export const Cell = memo(function Cell({
       style: styles?.topContent,
     } as const;
 
-    const computedEndWidth = StyleSheet.flatten(styles?.end)?.width ?? detailWidth;
+    const endWidth = StyleSheet.flatten(styles?.end)?.width ?? detailWidth;
 
     const topContent = (
       <>
@@ -164,8 +169,8 @@ export const Cell = memo(function Cell({
         {!!detail && (
           <Box
             alignItems="flex-end"
-            flexGrow={computedEndWidth ? undefined : 1}
-            flexShrink={computedEndWidth ? undefined : hasCellPriority('end', priority) ? 0 : 1}
+            flexGrow={endWidth ? undefined : 1}
+            flexShrink={endWidth ? undefined : hasCellPriority('end', priority) ? 0 : 1}
             justifyContent="flex-end"
             style={styles?.end}
             width={detailWidth}

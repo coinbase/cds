@@ -76,7 +76,7 @@ export type ListCellBaseProps = CellDetailProps &
      * the title will take up a single line truncating with ellipses.
      */
     disableMultilineTitle?: boolean;
-    /** Assitive message to display below the cell content */
+    /** Assistive message to display below the cell content. */
     helperText?: React.ReactNode;
     /** For internal use only. */
     intermediary?: React.ReactNode;
@@ -86,7 +86,7 @@ export type ListCellBaseProps = CellDetailProps &
     multiline?: boolean;
     /** Title of content. Max 1 line (with description) or 2 lines (without), otherwise will truncate. */
     title?: React.ReactNode;
-    /** Optional props to spread onto the Text elements for title/description and forwarded to CellDetail. */
+    /** Text props to spread onto the Text elements. */
     textProps?: {
       title?: TextProps;
       description?: TextProps;

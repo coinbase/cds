@@ -101,6 +101,7 @@ export type ListCellBaseProps = Polymorphic.ExtendableProps<
     multiline?: boolean;
     /** Title of content. Max 1 line (with description) or 2 lines (without), otherwise will truncate. */
     title?: React.ReactNode;
+    /** Text props to spread onto the Text elements */
     textProps?: {
       title?: TextProps<'div'>;
       description?: TextProps<'div'>;

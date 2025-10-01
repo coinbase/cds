@@ -22,6 +22,7 @@ export type CellDetailProps = {
   variant?: CellDetailVariant;
   /** Layout spacing configuration. */
   layoutSpacing?: 'spacious' | 'compact' | 'hug';
+  /** Text props to spread onto the Text elements */
   textProps?: {
     detail?: TextProps<'div'>;
     subdetail?: TextProps<'div'>;

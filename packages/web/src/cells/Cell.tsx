@@ -79,13 +79,21 @@ export type CellBaseProps = Polymorphic.ExtendableProps<
      * compatibility and will be removed in a future major release.
      */
     contentClassName?: string;
+    /** Key down handler for keyboard interaction. */
     onKeyDown?: React.KeyboardEventHandler;
+    /** Key up handler for keyboard interaction. */
     onKeyUp?: React.KeyboardEventHandler;
+    /** Click handler. */
     onClick?: React.MouseEventHandler;
+    /** Accessory element rendered at the end of the cell (e.g., chevron). */
     accessory?: React.ReactElement<CellAccessoryProps>;
+    /** Main content of the cell; typically title/description content. */
     children: React.ReactNode;
+    /** End-aligned detail content (e.g., value, status). */
     detail?: React.ReactNode;
+    /** Middle content between main content and detail. */
     intermediary?: React.ReactNode;
+    /** Media rendered at the start of the cell (icon, avatar, image, etc). */
     media?: React.ReactElement;
     // TODO: consider renaming this to shouldTruncate in next breaking change release. Since overflow gives people the sense that it will overflow and overlap with other content
     shouldOverflow?: boolean;
@@ -229,6 +237,8 @@ export const Cell: CellComponent = memo(
           style: styles?.topContent,
         } as const;
 
+        const endWidth = styles?.end?.width ?? detailWidth;
+
         // content that is displayed horizontally above the bottom content
         const topContent = (
           <>
@@ -264,14 +274,8 @@ export const Cell: CellComponent = memo(
                 alignItems="flex-end"
                 className={cx(contentTruncationStyle, classNames?.end)}
                 flexDirection="column"
-                flexGrow={styles?.end?.width || detailWidth ? undefined : 1}
-                flexShrink={
-                  styles?.end?.width || detailWidth
-                    ? undefined
-                    : hasCellPriority('end', priority)
-                      ? 0
-                      : 1
-                }
+                flexGrow={endWidth ? undefined : 1}
+                flexShrink={endWidth ? undefined : hasCellPriority('end', priority) ? 0 : 1}
                 justifyContent="flex-end"
                 style={styles?.end}
                 width={detailWidth}
