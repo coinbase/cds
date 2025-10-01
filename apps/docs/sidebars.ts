@@ -103,17 +103,6 @@ const sidebars: SidebarsConfig = {
         },
         {
           type: 'category',
-          label: 'Numbers',
-          items: [
-            {
-              type: 'doc',
-              id: 'components/numbers/RollingNumber/rollingNumber',
-              label: 'RollingNumber',
-            },
-          ],
-        },
-        {
-          type: 'category',
           label: 'Inputs',
           items: [
             {
@@ -593,6 +582,17 @@ const sidebars: SidebarsConfig = {
               type: 'doc',
               id: 'components/graphs/SparklineInteractiveHeader/sparklineInteractiveHeader',
               label: 'SparklineInteractiveHeader',
+            },
+          ],
+        },
+        {
+          type: 'category',
+          label: 'Numbers',
+          items: [
+            {
+              type: 'doc',
+              id: 'components/numbers/RollingNumber/rollingNumber',
+              label: 'RollingNumber',
             },
           ],
         },
