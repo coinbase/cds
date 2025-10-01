@@ -12,6 +12,7 @@ import { Icon } from '../../icons/Icon';
 import { Pictogram } from '../../illustrations/Pictogram';
 import { HStack, VStack } from '../../layout';
 import { Avatar } from '../../media/Avatar';
+import { RollingNumber } from '../../numbers';
 import { Tag } from '../../tag/Tag';
 import { Text } from '../../typography/Text';
 import { CellHelperText } from '../CellHelperText';
@@ -856,6 +857,215 @@ const LayoutSpacing = () => (
   </VStack>
 );
 
+const UseCaseShowcase = () => {
+  const format = {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  } as const;
+
+  // State for prices and amounts to enable simulation updates
+  const [btcPrice, setBtcPrice] = React.useState(8407.9);
+  const [btcAmt, setBtcAmt] = React.useState(0.1246);
+  const [ethPrice, setEthPrice] = React.useState(2381.86);
+  const [ethAmt, setEthAmt] = React.useState(0.5);
+  const [adaPrice, setAdaPrice] = React.useState(0.84);
+  const [adaAmt, setAdaAmt] = React.useState(1);
+
+  const [ltcPrice, setLtcPrice] = React.useState(145.32);
+  const [ltcAmt, setLtcAmt] = React.useState(2.3);
+  const [daiPrice, setDaiPrice] = React.useState(1);
+  const [daiAmt, setDaiAmt] = React.useState(100);
+
+  const simulate = React.useCallback(() => {
+    const jitter = (value: number, pct = 0.03) => {
+      const delta = (Math.random() * 2 - 1) * pct;
+      return Math.max(0, value * (1 + delta));
+    };
+
+    setBtcPrice((v) => jitter(v));
+    setBtcAmt((v) => jitter(v, 0.05));
+    setEthPrice((v) => jitter(v));
+    setEthAmt((v) => jitter(v, 0.05));
+    setAdaPrice((v) => jitter(v));
+    setAdaAmt((v) => jitter(v, 0.05));
+    setLtcPrice((v) => jitter(v));
+    setLtcAmt((v) => jitter(v, 0.05));
+    setDaiPrice((v) => jitter(v));
+    setDaiAmt((v) => jitter(v, 0.05));
+  }, []);
+
+  return (
+    <VStack width="360px">
+      <ListCell
+        // If you need to pass non-string values to the detail or subdetail,
+        // you can use the action prop to pass in a VStack, which can be anything you want.
+        action={
+          <VStack alignItems="flex-end">
+            <RollingNumber
+              colorPulseOnUpdate
+              font="body"
+              format={format}
+              style={{ alignSelf: 'flex-end' }}
+              value={btcPrice}
+            />
+            <RollingNumber
+              color="fgMuted"
+              font="label2"
+              style={{ alignSelf: 'flex-end' }}
+              suffix=" BTC"
+              value={btcAmt}
+            />
+          </VStack>
+        }
+        intermediary={<Icon name="chartLine" />}
+        layoutSpacing="hug"
+        media={<Avatar src={assets.btc.imageUrl} />}
+        onPress={onPressConsole}
+        priority="middle"
+        styles={{
+          end: {
+            width: 100,
+          },
+        }}
+        title="BTC"
+      />
+      <ListCell
+        // If you need to pass non-string values to the detail or subdetail,
+        // you can use the action prop to pass in a VStack, which can be anything you want.
+        action={
+          <VStack alignItems="flex-end">
+            <RollingNumber
+              colorPulseOnUpdate
+              font="body"
+              format={format}
+              style={{ alignSelf: 'flex-end' }}
+              value={ethPrice}
+            />
+            <RollingNumber
+              color="fgMuted"
+              font="label2"
+              style={{ alignSelf: 'flex-end' }}
+              suffix=" ETH"
+              value={ethAmt}
+            />
+          </VStack>
+        }
+        description="25% staked"
+        intermediary={<Icon name="chartLine" />}
+        layoutSpacing="hug"
+        media={<Avatar src={assets.eth.imageUrl} />}
+        onPress={onPressConsole}
+        styles={{
+          end: {
+            width: 100,
+          },
+        }}
+        title="ETH"
+      />
+      <ListCell
+        // If you need to pass non-string values to the detail or subdetail,
+        // you can use the action prop to pass in a VStack, which can be anything you want.
+        action={
+          <VStack alignItems="flex-end">
+            <RollingNumber
+              colorPulseOnUpdate
+              font="body"
+              format={format}
+              style={{ alignSelf: 'flex-end' }}
+              value={adaPrice}
+            />
+            <RollingNumber
+              color="fgMuted"
+              font="label2"
+              style={{ alignSelf: 'flex-end' }}
+              suffix=" ADA"
+              value={adaAmt}
+            />
+          </VStack>
+        }
+        description="51% staked"
+        intermediary={<Icon name="chartLine" />}
+        layoutSpacing="hug"
+        media={<Avatar src={assets.ada.imageUrl} />}
+        onPress={onPressConsole}
+        styles={{
+          end: {
+            width: 100,
+          },
+        }}
+        title="ADA"
+      />
+
+      {/* Additional examples */}
+      <ListCell
+        action={
+          <VStack alignItems="flex-end">
+            <RollingNumber
+              colorPulseOnUpdate
+              font="body"
+              format={format}
+              style={{ alignSelf: 'flex-end' }}
+              value={ltcPrice}
+            />
+            <RollingNumber
+              color="fgMuted"
+              font="label2"
+              style={{ alignSelf: 'flex-end' }}
+              suffix=" LTC"
+              value={ltcAmt}
+            />
+          </VStack>
+        }
+        intermediary={<Icon name="chartLine" />}
+        layoutSpacing="hug"
+        media={<Avatar src={assets.ltc.imageUrl} />}
+        onPress={onPressConsole}
+        styles={{
+          end: {
+            width: 100,
+          },
+        }}
+        title="LTC"
+      />
+      <ListCell
+        action={
+          <VStack alignItems="flex-end">
+            <RollingNumber
+              colorPulseOnUpdate
+              font="body"
+              format={format}
+              style={{ alignSelf: 'flex-end' }}
+              value={daiPrice}
+            />
+            <RollingNumber
+              color="fgMuted"
+              font="label2"
+              style={{ alignSelf: 'flex-end' }}
+              suffix=" DAI"
+              value={daiAmt}
+            />
+          </VStack>
+        }
+        description="Stablecoin"
+        intermediary={<Icon name="chartLine" />}
+        layoutSpacing="hug"
+        media={<Avatar src={assets.dai.imageUrl} />}
+        onPress={onPressConsole}
+        styles={{
+          end: {
+            width: 100,
+          },
+        }}
+        title="DAI"
+      />
+
+      <Button onPress={simulate}>Simulate</Button>
+    </VStack>
+  );
+};
+
 const ListCellScreen = () => {
   return (
     <ExampleScreen>
@@ -905,6 +1115,9 @@ const ListCellScreen = () => {
       </Example>
       <Example inline paddingX={0} title="LayoutSpacing" titlePadding={titlePadding}>
         <LayoutSpacing />
+      </Example>
+      <Example inline paddingX={0} title="UseCaseShowcase" titlePadding={titlePadding}>
+        <UseCaseShowcase />
       </Example>
     </ExampleScreen>
   );
