@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.13.4 (10/1/2025 PST)
+
+#### 🐞 Fixes
+
+- Fix tour position flickering issue.
+
 ## 8.13.3 (10/1/2025 PST)
 
 #### 🐞 Fixes
