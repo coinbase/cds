@@ -1,6 +1,12 @@
 # Coinbase Design System
 
-Welcome to the Coinbase Design System (CDS). Please visit our website https://cds.coinbase.com for the latest documentation.
+<p align="center">
+  <img src="apps/docs/static/img/docusaurus-social-card.jpg" alt="Coinbase Design System" width="800">
+</p>
+
+Welcome to the Coinbase Design System (CDS)!
+
+Please visit our website https://cds.coinbase.com for the latest documentation.
 
 ## Setup
 
