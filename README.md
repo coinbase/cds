@@ -1,7 +1,7 @@
 # Coinbase Design System
 
 <p align="center">
-  <img src="apps/docs/static/img/docusaurus-social-card.jpg" alt="Coinbase Design System" width="800">
+  <img src="apps/docs/static/img/docusaurus-social-card.jpg" alt="Coinbase Design System">
 </p>
 
 Welcome to the Coinbase Design System (CDS)!
