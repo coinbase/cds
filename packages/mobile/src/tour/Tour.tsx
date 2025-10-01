@@ -1,4 +1,4 @@
-import React, { createContext, useCallback, useRef, useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import { Modal, View } from 'react-native';
 import type { SharedProps } from '@coinbase/cds-common';
 import {
