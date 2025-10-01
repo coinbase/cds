@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 5.4.1 (10/1/2025 PST)
+
+#### 🐞 Fixes
+
+- Update links for new repo. [[#42](https://github.com/coinbase/cds/pull/42)]
+
 ## 5.4.0 (9/25/2025 PST)
 
 #### 🚀 Updates
