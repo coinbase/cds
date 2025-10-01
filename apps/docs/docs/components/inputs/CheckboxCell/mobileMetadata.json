@@ -1,6 +1,6 @@
 {
   "import": "import { CheckboxCell } from '@coinbase/cds-mobile/controls/CheckboxCell'",
-  "source": "https://github.com/coinbase/cds-staging/blob/master/packages/mobile/src/controls/CheckboxCell.tsx",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/mobile/src/controls/CheckboxCell.tsx",
   "description": "A selectable cell that pairs a checkbox with a title and description for multi-choice selections.",
   "figma": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/%E2%9C%A8-CDS-Components?node-id=54927-2771",
   "relatedComponents": [

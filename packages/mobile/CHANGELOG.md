@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.13.2 (10/1/2025 PST)
+
+#### 🐞 Fixes
+
+- Update links for new repo. [[#42](https://github.com/coinbase/cds/pull/42)]
+
 #### 📘 Misc
 
 - Update Code Connect for Button, IconButton, TabbedChips, MultiContentModule.
@@ -17,8 +23,6 @@ All notable changes to this project will be documented in this file.
 #### 🐞 Fixes
 
 - Update ARIA attributes for TabbedChips and Tabs. [[#27](https://github.com/coinbase/cds/pull/27)]
-
-## Unreleased
 
 ## 8.13.0 (9/25/2025 PST)
 

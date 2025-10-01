@@ -1,6 +1,6 @@
 {
   "import": "import { OverlayContentContext, useOverlayContentContext } from '@coinbase/cds-common/overlays/OverlayContentContext'",
-  "source": "https://github.com/coinbase/cds-staging/blob/master/packages/common/src/overlays/OverlayContentContext.tsx",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/common/src/overlays/OverlayContentContext.tsx",
   "description": "A React context and hook for detecting if components are rendered inside overlay containers like modals, drawers, tours, and trays.",
   "relatedComponents": [
     {

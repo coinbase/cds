@@ -1,5 +1,5 @@
 {
   "import": "import { useEventHandler } from '@coinbase/cds-common/hooks/useEventHandler'",
-  "source": "https://github.com/coinbase/cds-staging/blob/master/packages/common/src/hooks/useEventHandler.ts",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/common/src/hooks/useEventHandler.ts",
   "description": "Creates event handlers for components based on the EventHandlerProvider configuration. It enables centralized event handling and analytics tracking by mapping component actions to configured handlers."
 }

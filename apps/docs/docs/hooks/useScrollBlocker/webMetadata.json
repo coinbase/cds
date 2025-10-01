@@ -1,5 +1,5 @@
 {
   "import": "import { useScrollBlocker } from '@coinbase/cds-web/hooks/useScrollBlocker'",
-  "source": "https://github.com/coinbase/cds-staging/blob/master/packages/web/src/hooks/useScrollBlocker.ts",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/web/src/hooks/useScrollBlocker.ts",
   "description": "Block and unblock page scrolling."
 }

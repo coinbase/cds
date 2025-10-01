@@ -1,6 +1,6 @@
 {
   "import": "import { VStack } from '@coinbase/cds-web/layout/VStack'",
-  "source": "https://github.com/coinbase/cds-staging/blob/master/packages/web/src/layout/VStack.tsx",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/web/src/layout/VStack.tsx",
   "description": "A Box with flexDirection=\"column\" set by default.",
   "relatedComponents": [
     {

@@ -1,7 +1,7 @@
 {
   "import": "import { Pictogram } from '@coinbase/cds-mobile/illustrations/Pictogram'",
-  "changelog": "https://github.com/coinbase/cds-staging/blob/master/packages/illustrations/CHANGELOG.md",
-  "source": "https://github.com/coinbase/cds-staging/blob/master/packages/mobile/src/illustrations/Pictogram.tsx",
+  "changelog": "https://github.com/coinbase/cds/blob/master/packages/illustrations/CHANGELOG.md",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/mobile/src/illustrations/Pictogram.tsx",
   "figma": "https://www.figma.com/design/LmkJatvMRVzNgfiIkJDb99/%E2%9C%A8-Illustrations?node-id=2-401&m=dev",
   "description": "Displays elevated product icons.",
   "relatedComponents": [

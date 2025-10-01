@@ -1,6 +1,6 @@
 {
   "import": "import { Lottie } from '@coinbase/cds-mobile/animation/Lottie'",
-  "source": "https://github.com/coinbase/cds-staging/blob/master/packages/mobile/src/animation/Lottie.tsx",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/mobile/src/animation/Lottie.tsx",
   "description": "Renders After Effects animations as vectors.",
   "relatedComponents": [
     {

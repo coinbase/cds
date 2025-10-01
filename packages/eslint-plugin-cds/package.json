@@ -1,10 +1,10 @@
 {
   "name": "@coinbase/eslint-plugin-cds",
-  "version": "3.2.0",
+  "version": "3.2.1",
   "description": "ESLint plugin for CDS",
   "repository": {
     "type": "git",
-    "url": "git@github.com:coinbase/cds-staging.git",
+    "url": "git@github.com:coinbase/cds.git",
     "directory": "packages/eslint-plugin-cds"
   },
   "scripts": {

@@ -9,7 +9,6 @@ import { VStack } from '@coinbase/cds-web/layout';
 
 import { ComponentHeader } from '@site/src/components/page/ComponentHeader';
 import { ComponentTabsContainer } from '@site/src/components/page/ComponentTabsContainer';
-import { DefaultBanner } from '@site/src/components/page/ComponentBanner/DefaultBanner';
 
 import webPropsToc from ':docgen/web/cards/ContentCard/ContentCardFooter/toc-props';
 import mobilePropsToc from ':docgen/mobile/cards/ContentCard/ContentCardFooter/toc-props';
@@ -25,7 +24,6 @@ import mobileMetadata from './mobileMetadata.json';
 <VStack gap={5}>
   <ComponentHeader
     title="ContentCardFooter"
-    banner={<DefaultBanner />}
     webMetadata={webMetadata}
     mobileMetadata={mobileMetadata}
   />

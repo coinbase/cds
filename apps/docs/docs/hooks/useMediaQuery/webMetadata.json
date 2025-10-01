@@ -1,6 +1,6 @@
 {
   "import": "import { useMediaQuery } from '@coinbase/cds-web/hooks/useMediaQuery'",
-  "source": "https://github.com/coinbase/cds-staging/blob/master/packages/web/src/hooks/useMediaQuery.ts",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/web/src/hooks/useMediaQuery.ts",
   "description": "Subscribes to window.matchMedia changes with SSR support.",
   "storybook": "https://cds-storybook.coinbase.com/?path=/story/hooks-usemediaquery--default-to-device",
   "relatedComponents": [

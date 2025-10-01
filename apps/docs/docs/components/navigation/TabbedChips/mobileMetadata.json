@@ -1,6 +1,6 @@
 {
   "import": "import { TabbedChips } from '@coinbase/cds-mobile/chips/TabbedChips'",
-  "source": "https://github.com/coinbase/cds-staging/blob/master/packages/mobile/src/chips/TabbedChips.tsx",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/mobile/src/chips/TabbedChips.tsx",
   "figma": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/%E2%9C%A8-CDS-Components?node-id=10177-4851&t=CBAoZQsuZ7YFfLxB-0",
   "description": "Tab chips are to be used in a filter setting where the user is given the ability to refine the data source they are accessing.",
   "relatedComponents": [

@@ -1,5 +1,5 @@
 {
   "import": "import { useMergeRefs } from '@coinbase/cds-common/hooks/useMergeRefs'",
-  "source": "https://github.com/coinbase/cds-staging/blob/master/packages/common/src/hooks/useMergeRefs.ts",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/common/src/hooks/useMergeRefs.ts",
   "description": "Combines multiple refs into a single ref callback, allowing a component to work with multiple ref instances simultaneously. Useful when you need to combine refs from different sources, such as forwarded refs and internal component state."
 }

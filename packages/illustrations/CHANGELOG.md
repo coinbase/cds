@@ -45,6 +45,12 @@ All notable changes to this project will be documented in this file.
 
 - fiatInterest
 
+## 4.22.1 (10/1/2025 PST)
+
+#### 🐞 Fixes
+
+- Update links for new repo. [[#42](https://github.com/coinbase/cds/pull/42)]
+
 ## 4.22.0 (9/25/2025 PST)
 
 #### 🚀 Updates

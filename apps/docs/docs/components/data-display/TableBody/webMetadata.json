@@ -1,6 +1,6 @@
 {
   "import": "import { TableBody } from '@coinbase/cds-web/tables/TableBody'",
-  "source": "https://github.com/coinbase/cds-staging/blob/master/packages/web/src/tables/TableBody.tsx",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/web/src/tables/TableBody.tsx",
   "description": "Defines the body section of Table.",
   "relatedComponents": [
     {

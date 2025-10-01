@@ -1,7 +1,7 @@
 {
   "import": "import { SpotRectangle } from '@coinbase/cds-web/illustratations/SpotRectangle'",
-  "changelog": "https://github.com/coinbase/cds-staging/blob/master/packages/illustrations/CHANGELOG.md",
-  "source": "https://github.com/coinbase/cds-staging/blob/master/packages/web/src/illustrations/SpotRectangle.tsx",
+  "changelog": "https://github.com/coinbase/cds/blob/master/packages/illustrations/CHANGELOG.md",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/web/src/illustrations/SpotRectangle.tsx",
   "storybook": "https://cds-storybook.coinbase.com/?path=/story/illustrations--spot-rectangle",
   "figma": "https://www.figma.com/design/LmkJatvMRVzNgfiIkJDb99/%E2%9C%A8-Illustrations?node-id=3668-22&m=dev",
   "description": "A rectangular illustration component for displaying spot graphics.",

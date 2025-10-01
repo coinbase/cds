@@ -1,6 +1,6 @@
 {
   "import": "import { Tray } from '@coinbase/cds-mobile/overlays/tray/Tray'",
-  "source": "https://github.com/coinbase/cds-staging/blob/master/packages/mobile/src/overlays/Tray/Tray.tsx",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/mobile/src/overlays/Tray/Tray.tsx",
   "description": "An elevated container pinned to the bottom of the screen.",
   "figma": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/%E2%9C%A8-CDS-Components?node-id=14729-33579&t=5pZ4dbOI84gxHyrY-4",
   "relatedComponents": [

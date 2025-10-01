@@ -1,6 +1,6 @@
 {
   "import": "import { Button } from '@coinbase/cds-mobile/buttons/Button'",
-  "source": "https://github.com/coinbase/cds-staging/blob/master/packages/mobile/src/buttons/Button.tsx",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/mobile/src/buttons/Button.tsx",
   "figma": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/%E2%9C%A8-CDS-Components?m=auto&node-id=50-618&t=K73gadcWiDv2aYlS-1",
   "description": "A pressable button element.",
   "relatedComponents": [

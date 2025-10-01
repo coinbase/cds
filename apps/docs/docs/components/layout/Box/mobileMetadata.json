@@ -1,6 +1,6 @@
 {
   "import": "import { Box } from '@coinbase/cds-mobile/layout/Box'",
-  "source": "https://github.com/coinbase/cds-staging/blob/master/packages/mobile/src/layout/Box.tsx",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/mobile/src/layout/Box.tsx",
   "description": "A generic container, like a supercharged View.",
   "relatedComponents": [
     {

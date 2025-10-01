@@ -1,6 +1,6 @@
 {
   "import": "import { ProgressBarWithFixedLabels } from '@coinbase/cds-web/visualizations/ProgressBarWithFixedLabels'",
-  "source": "https://github.com/coinbase/cds-staging/blob/master/packages/web/src/visualizations/ProgressBarWithFixedLabels.tsx",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/web/src/visualizations/ProgressBarWithFixedLabels.tsx",
   "description": "A ProgressBar with fixed labels at defined positions.",
   "relatedComponents": [
     {

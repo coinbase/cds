@@ -1,6 +1,6 @@
 {
   "import": "import { ContentCardHeader } from '@coinbase/cds-mobile/cards/ContentCard'",
-  "source": "https://github.com/coinbase/cds-staging/blob/master/packages/mobile/src/cards/ContentCard/ContentCardHeader.tsx",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/mobile/src/cards/ContentCard/ContentCardHeader.tsx",
   "figma": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/%E2%9C%A8-CDS-Components?m=auto&node-id=14705-22947&t=0Jp3mDHvq7E1V7wc-1",
   "description": "ContentCardHeader is a subcomponent of ContentCard that provides the header section of the card, typically used for the title and subtitle.",
   "relatedComponents": [
