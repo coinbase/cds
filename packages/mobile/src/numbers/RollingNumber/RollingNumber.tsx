@@ -694,7 +694,7 @@ export const RollingNumber = memo(
       ]);
 
       return (
-        <HStack ref={ref} alignSelf="flex-start" style={rootStyle} testID={testID}>
+        <HStack ref={ref} style={rootStyle} testID={testID}>
           {/* render invisible measured digits for measuring the digits height */}
           {invisibleMeasuredDigits}
           {/* render screen reader only section for accessibility */}
