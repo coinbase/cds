@@ -205,14 +205,16 @@ jobs:
       - name: Build package
         run: |
           echo "🔍 Running typecheck for ${{ matrix.package }}..."
-          yarn nx run ${{ matrix.package }}:typecheck
+          yarn nx run ${{ matrix.package }}:typecheck:prod
           echo "🏗️ Building ${{ matrix.package }}..."
-          yarn nx run ${{ matrix.package }}:build
+          yarn nx run ${{ matrix.package }}:build:prod
           echo "✅ Build completed for ${{ matrix.package }}"
 
       - name: Publish package
         run: |
           cd packages/${{ matrix.package }}
+          echo "📦 Packing ${{ matrix.package }}..."
+          yarn pack
           echo "🚀 Publishing ${{ matrix.package }} to NPM..."
 
           # Safety check: verify package.json exists and has correct name
@@ -223,7 +225,7 @@ jobs:
 
           PACKAGE_NAME=$(node -p "require('./package.json').name")
           echo "📦 Package name from package.json: $PACKAGE_NAME"
-          npm publish --access public \
+          npm publish ./package.tgz --access public \
             --registry https://registry.npmjs.org
           echo "✅ Successfully published ${{ matrix.package }} ($PACKAGE_NAME)"
 
