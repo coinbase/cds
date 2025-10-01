@@ -176,6 +176,15 @@ const config: Config = {
     image: 'img/docusaurus-social-card.jpg',
     metadata: [
       {
+        property: 'og:title',
+        content: 'Coinbase Design System',
+      },
+      {
+        property: 'og:description',
+        content:
+          'Documentation for the Coinbase Design System - A comprehensive collection of components, patterns, and guidelines for building crypto products.',
+      },
+      {
         name: 'description',
         content:
           'Documentation for the Coinbase Design System - A comprehensive collection of components, patterns, and guidelines for building crypto products.',
