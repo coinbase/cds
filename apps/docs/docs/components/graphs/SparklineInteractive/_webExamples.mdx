@@ -6,6 +6,16 @@
 </Box>
 ```
 
+### Fill
+
+The fill will be added by default
+
+```jsx live
+<Box padding={3} width="100%">
+  <SparklineInteractivePrice data={sparklineInteractiveData} fill strokeColor="#F7931A" />
+</Box>
+```
+
 ### Compact
 
 ```jsx live
@@ -45,6 +55,19 @@ The scaling factor is usually used when you want to show less variance in the ch
 ```jsx live
 <Box padding={3} width="100%">
   <SparklineInteractivePriceWithHeader data={sparklineInteractiveData} fill strokeColor="#F7931A" />
+</Box>
+```
+
+### Custom hover data
+
+```jsx live
+<Box padding={3} width="100%">
+  <SparklineInteractivePrice
+    fill
+    data={sparklineInteractiveData}
+    hoverData={sparklineInteractiveHoverData}
+    strokeColor="#F7931A"
+  />
 </Box>
 ```
 
