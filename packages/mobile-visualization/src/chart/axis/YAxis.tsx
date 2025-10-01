@@ -28,21 +28,30 @@ import type { AxisBaseProps, AxisProps } from './Axis';
 // Create animated components
 const AnimatedG = Animated.createAnimatedComponent(G);
 
-export type YAxisBaseProps = AxisBaseProps;
-
-export type YAxisProps = AxisProps & {
+export type YAxisBaseProps = AxisBaseProps & {
   /**
    * The ID of the axis to render.
    * Defaults to defaultAxisId if not specified.
    */
   axisId?: string;
+  /**
+   * The position of the axis relative to the chart's drawing area.
+   * @default 'right'
+   */
+  position?: 'left' | 'right';
+  /**
+   * Width of the axis. This value is inclusive of the padding.
+   * @default 44
+   */
+  width?: number;
 };
 
-// todo: see if we can have x and y axis be the same component
+export type YAxisProps = AxisProps & YAxisBaseProps;
+
 export const YAxis = memo<YAxisProps>(
   ({
     axisId,
-    position = 'end',
+    position = 'right',
     showGrid,
     requestedTickCount = 5,
     ticks,
@@ -52,12 +61,12 @@ export const YAxis = memo<YAxisProps>(
     styles,
     classNames,
     GridLineComponent = DottedLine,
-    tickMarkLabelGap = 1,
-    size = 44,
+    tickMarkLabelGap = 8,
+    width = 44,
     minTickLabelGap = 0,
     showTickMarks,
     showLine,
-    tickMarkSize = 0.5,
+    tickMarkSize = 4,
     tickInterval,
     ...props
   }) => {
@@ -114,10 +123,12 @@ export const YAxis = memo<YAxisProps>(
     );
 
     useEffect(() => {
-      registerAxis(registrationId, 'y', position, size);
+      // Map left/right to start/end for internal use
+      const internalPosition = position === 'right' ? 'end' : 'start';
+      registerAxis(registrationId, 'y', internalPosition, width);
 
       return () => unregisterAxis(registrationId);
-    }, [registrationId, registerAxis, unregisterAxis, position, size]);
+    }, [registrationId, registerAxis, unregisterAxis, position, width]);
 
     const formatTick = useCallback(
       (value: number) => {
@@ -169,39 +180,37 @@ export const YAxis = memo<YAxisProps>(
           axisData && Array.isArray(axisData) && typeof axisData[0] === 'number'
             ? (axisData as number[])
             : undefined,
-        tickInterval: tickInterval ? theme.space[tickInterval] : undefined,
+        tickInterval: tickInterval,
       });
-    }, [ticks, yScale, requestedTickCount, tickInterval, theme.space, yAxis?.data]);
+    }, [ticks, yScale, requestedTickCount, tickInterval, yAxis?.data]);
 
     const chartTextData: TextLabelData[] | null = useMemo(() => {
       if (!axisBounds) return null;
 
       return ticksData.map((tick) => {
-        const tickOffset =
-          theme.space[tickMarkLabelGap] + (showTickMarks ? theme.space[tickMarkSize] : 0);
+        const tickOffset = tickMarkLabelGap + (showTickMarks ? tickMarkSize : 0);
 
         const labelX =
-          position === 'start'
+          position === 'left'
             ? axisBounds.x + axisBounds.width - tickOffset
             : axisBounds.x + tickOffset;
 
         return {
           x: labelX,
           y: tick.position,
-          label: formatTick(tick.tick),
+          label: String(formatTick(tick.tick)),
           chartTextProps: {
             className: classNames?.tickLabel,
             color: theme.color.fgMuted,
-            dominantBaseline: 'central',
+            verticalAlignment: 'middle',
             style: styles?.tickLabel,
-            textAnchor: position === 'start' ? 'end' : 'start',
+            horizontalAlignment: position === 'left' ? 'right' : 'left',
           },
         };
       });
     }, [
       axisBounds,
       ticksData,
-      theme.space,
       theme.color.fgMuted,
       tickMarkLabelGap,
       showTickMarks,
@@ -262,10 +271,10 @@ export const YAxis = memo<YAxisProps>(
         {axisBounds && showTickMarks && (
           <G data-testid="tick-marks">
             {ticksData.map((tick, index) => {
-              const tickX = position === 'start' ? axisBounds.x + axisBounds.width : axisBounds.x;
-              const tickMarkSizePixels = theme.space[tickMarkSize];
+              const tickX = position === 'left' ? axisBounds.x + axisBounds.width : axisBounds.x;
+              const tickMarkSizePixels = tickMarkSize;
               const tickX2 =
-                position === 'start'
+                position === 'left'
                   ? axisBounds.x + axisBounds.width - tickMarkSizePixels
                   : axisBounds.x + tickMarkSizePixels;
 
@@ -285,8 +294,8 @@ export const YAxis = memo<YAxisProps>(
         {axisBounds && showLine && (
           <Line
             {...axisLineProps}
-            x1={position === 'start' ? axisBounds.x + axisBounds.width : axisBounds.x}
-            x2={position === 'start' ? axisBounds.x + axisBounds.width : axisBounds.x}
+            x1={position === 'left' ? axisBounds.x + axisBounds.width : axisBounds.x}
+            x2={position === 'left' ? axisBounds.x + axisBounds.width : axisBounds.x}
             y1={axisBounds.y}
             y2={axisBounds.y + axisBounds.height}
           />

@@ -1,7 +1,7 @@
 import React, { forwardRef, memo, useMemo } from 'react';
 import {
   type AxisConfigProps,
-  defaultChartPadding,
+  defaultChartInset,
   defaultStackId,
   getPadding,
   type Series,
@@ -81,7 +81,7 @@ export const BarChart = memo(
       ref,
     ) => {
       const calculatedPadding = useMemo(
-        () => getPadding(userPadding, defaultChartPadding),
+        () => getPadding(userPadding, defaultChartInset),
         [userPadding],
       );
 

@@ -1,7 +1,7 @@
 import React, { forwardRef, memo, useMemo } from 'react';
 import {
   type AxisConfigProps,
-  defaultChartPadding,
+  defaultChartInset,
   getPadding,
   type Series,
 } from '@coinbase/cds-common/visualizations/charts';
@@ -126,7 +126,7 @@ export const LineChart = memo(
       ref,
     ) => {
       const calculatedPadding = useMemo(
-        () => getPadding(userPadding, defaultChartPadding),
+        () => getPadding(userPadding, defaultChartInset),
         [userPadding],
       );
 

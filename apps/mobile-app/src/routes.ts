@@ -101,9 +101,10 @@ export const routes = [
       require('@coinbase/cds-mobile/media/__stories__/CarouselMedia.stories').default,
   },
   {
-    key: 'Chart',
+    key: 'CartesianChart',
     getComponent: () =>
-      require('@coinbase/cds-mobile-visualization/chart/__stories__/Chart.stories').default,
+      require('@coinbase/cds-mobile-visualization/chart/__stories__/CartesianChart.stories')
+        .default,
   },
   {
     key: 'Checkbox',

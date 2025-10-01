@@ -1,35 +1,28 @@
-import React, { memo, useState } from 'react';
-import { TSpan } from 'react-native-svg';
+import React, { memo, useContext, useState } from 'react';
+import { G, Line as SvgLine, Rect as SvgRect } from 'react-native-svg';
+import { candles as btcCandles } from '@coinbase/cds-common/internal/data/candles';
+import { isCategoricalScale, ScrubberContext } from '@coinbase/cds-common/visualizations/charts';
 import { Button } from '@coinbase/cds-mobile/buttons';
 import { Example, ExampleScreen } from '@coinbase/cds-mobile/examples/ExampleScreen';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 import { VStack } from '@coinbase/cds-mobile/layout';
+import { Text } from '@coinbase/cds-mobile/typography/Text';
 
 import { XAxis, YAxis } from '../../axis';
 import { CartesianChart } from '../../CartesianChart';
+import { useCartesianChartContext } from '../../ChartProvider';
 import { ReferenceLine, SolidLine, type SolidLineProps } from '../../line';
-import { Bar } from '../Bar';
+import { PeriodSelector } from '../../PeriodSelector';
+import { Scrubber } from '../../scrubber';
+import { Bar, type BarComponentProps } from '../Bar';
 import { BarChart } from '../BarChart';
 import { BarPlot } from '../BarPlot';
-import { DefaultStackComponent, type StackComponentProps } from '../DefaultStackComponent';
+import type { BarStackComponentProps } from '../BarStack';
+import { DefaultBarStack } from '../DefaultBarStack';
 
 const ThinSolidLine = memo((props: SolidLineProps) => <SolidLine {...props} strokeWidth={1} />);
 
-const defaultChartProps = 250;
-
-/**
- * todo examples
- * simple
- * have an outline on stacks
- * have a custom stripe pattern for a bar with outline
- * dotted with outline
- * bar chart with lines on top
- * stack gap and all related examples with border radius
- * Showcase example legend and even a popover would be great
- * Showcase a highlighted background maybe even that
- * handle bar plot needing to know about x and/or y scale so we can only render those
- * ignore any series that aren't in that scale and only factor in the series provided when handling # of different stacks per category
- */
+const defaultChartHeight = 250;
 
 const PositiveAndNegativeCashFlow = () => {
   const theme = useTheme();
@@ -51,7 +44,7 @@ const PositiveAndNegativeCashFlow = () => {
   return (
     <CartesianChart
       height={420}
-      padding={4}
+      inset={32}
       series={series}
       xAxis={{ data: categories, scaleType: 'band' }}
     >
@@ -68,6 +61,7 @@ const PositiveAndNegativeCashFlow = () => {
 };
 
 const FiatAndStablecoinBalance = () => {
+  const theme = useTheme();
   const categories = Array.from({ length: 31 }, (_, i) => `3/${i + 1}`);
 
   const usd = [
@@ -84,8 +78,8 @@ const FiatAndStablecoinBalance = () => {
   ];
 
   const series = [
-    { id: 'BRL', data: brl, color: '#10b981' },
-    { id: 'USDC', data: usdc, color: '#3b82f6' },
+    { id: 'BRL', data: brl, color: theme.color.accentBoldGreen },
+    { id: 'USDC', data: usdc, color: theme.color.accentBoldBlue },
     { id: 'USD', data: usd, color: '#5b6cff' },
   ];
 
@@ -93,12 +87,12 @@ const FiatAndStablecoinBalance = () => {
     <BarChart
       showXAxis
       stacked
-      barMinSize={1}
-      height={defaultChartProps}
-      padding={4}
+      barMinSize={8}
+      height={420}
+      inset={32}
       series={series}
-      stackGap={0.25}
-      stackMinSize={2}
+      stackGap={2}
+      stackMinSize={16}
       xAxis={{ data: categories }}
     />
   );
@@ -107,7 +101,6 @@ const FiatAndStablecoinBalance = () => {
 const MonthlyRewards = () => {
   const theme = useTheme();
   const months = ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'];
-  const currentMonth = 7;
   const purple = [null, 6, 8, 10, 7, 6, 6, 8, null, null, null, null];
   const blue = [null, 10, 12, 11, 10, 9, 10, 11, null, null, null, null];
   const cyan = [null, 7, 10, 12, 11, 10, 8, 11, null, null, null, null];
@@ -120,7 +113,7 @@ const MonthlyRewards = () => {
     { id: 'green', data: green, color: '#33c481' },
   ];
 
-  const CustomStackComponent = ({ children, ...props }: StackComponentProps) => {
+  const CustomBarStackComponent = ({ children, ...props }: BarStackComponentProps) => {
     if (props.height === 0) {
       const diameter = props.width;
       return (
@@ -138,7 +131,7 @@ const MonthlyRewards = () => {
       );
     }
 
-    return <DefaultStackComponent {...props}>{children}</DefaultStackComponent>;
+    return <DefaultBarStack {...props}>{children}</DefaultBarStack>;
   };
 
   return (
@@ -146,18 +139,15 @@ const MonthlyRewards = () => {
       roundBaseline
       showXAxis
       stacked
-      StackComponent={CustomStackComponent}
+      BarStackComponent={CustomBarStackComponent}
       borderRadius={1000}
-      height={defaultChartProps}
-      padding={0}
+      height={300}
+      inset={0}
       series={series}
       showYAxis={false}
-      stackMinSize={3}
+      stackMinSize={24}
       xAxis={{
         tickLabelFormatter: (index) => {
-          if (index == currentMonth) {
-            return <TSpan fontWeight="bold">{months[index]}</TSpan>;
-          }
           return months[index];
         },
         categoryPadding: 0.27,
@@ -170,7 +160,7 @@ const MultipleYAxes = () => {
   const theme = useTheme();
   return (
     <CartesianChart
-      height={defaultChartProps}
+      height={defaultChartHeight}
       series={[
         {
           id: 'revenue',
@@ -204,16 +194,15 @@ const MultipleYAxes = () => {
         showLine
         showTickMarks
         axisId="revenue"
-        position="start"
+        position="left"
         requestedTickCount={5}
-        size={60}
         tickLabelFormatter={(value) => `$${value}k`}
+        width={60}
       />
       <YAxis
         showLine
         showTickMarks
         axisId="profit"
-        position="end"
         requestedTickCount={5}
         tickLabelFormatter={(value) => `$${value}k`}
       />
@@ -230,7 +219,7 @@ const UpdatingChartValues = () => {
       <BarChart
         showXAxis
         showYAxis
-        height={defaultChartProps}
+        height={defaultChartHeight}
         series={[
           {
             id: 'weekly-data',
@@ -248,13 +237,48 @@ const UpdatingChartValues = () => {
           showGrid: true,
           showTickMarks: true,
           showLine: true,
-          tickMarkSize: 1.5,
+          tickMarkSize: 12,
         }}
       />
       <Button onPress={() => setData((data) => data.map((d) => d + 10))}>Update Data</Button>
     </VStack>
   );
 };
+
+type TimePeriod = 'week' | 'month' | 'year';
+type TimePeriodTab = { id: TimePeriod; label: string };
+
+const tabs: TimePeriodTab[] = [
+  { id: 'week', label: '1W' },
+  { id: 'month', label: '1M' },
+  { id: 'year', label: '1Y' },
+];
+
+const ScrubberRect = memo(() => {
+  const theme = useTheme();
+  const { getXScale, getYScale } = useCartesianChartContext();
+  const { scrubberPosition } = useContext(ScrubberContext) ?? {};
+  const xScale = getXScale();
+  const yScale = getYScale();
+
+  if (!xScale || !yScale || scrubberPosition === undefined || !isCategoricalScale(xScale))
+    return null;
+
+  const yScaleDomain = yScale.range();
+  const [yMax, yMin] = yScaleDomain;
+
+  const barWidth = xScale.bandwidth();
+
+  return (
+    <SvgRect
+      fill={theme.color.bgLine}
+      height={yMax - yMin}
+      width={barWidth}
+      x={xScale(scrubberPosition)}
+      y={yMin}
+    />
+  );
+});
 
 const BarChartStories = () => {
   return (
@@ -273,6 +297,9 @@ const BarChartStories = () => {
       </Example>
       <Example title="Multiple Y Axes">
         <MultipleYAxes />
+      </Example>
+      <Example title="Candlestick Chart">
+        <Candlesticks />
       </Example>*/}
     </ExampleScreen>
   );

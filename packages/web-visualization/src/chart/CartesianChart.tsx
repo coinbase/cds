@@ -5,10 +5,10 @@ import {
   type AxisConfig,
   type AxisConfigProps,
   type CartesianChartContextValue,
-  type ChartPadding,
+  type ChartInset,
   type ChartScaleFunction,
   defaultAxisId,
-  defaultChartPadding,
+  defaultChartInset,
   getAxisConfig,
   getAxisDomain,
   getAxisRange,
@@ -60,7 +60,7 @@ export type CartesianChartBaseProps = BoxBaseProps &
     /**
      * Padding around the entire chart (outside the axes).
      */
-    padding?: ThemeVars.Space | Partial<ChartPadding>;
+    padding?: ThemeVars.Space | Partial<ChartInset>;
   };
 
 export type CartesianChartProps = Omit<
@@ -100,7 +100,7 @@ export const CartesianChart = memo(
       const internalSvgRef = useRef<SVGSVGElement>(null);
 
       const userPadding = useMemo(() => {
-        const paddingWithDefaults = getPadding(paddingInput, defaultChartPadding);
+        const paddingWithDefaults = getPadding(paddingInput, defaultChartInset);
         return {
           top: theme.space[paddingWithDefaults.top],
           right: theme.space[paddingWithDefaults.right],

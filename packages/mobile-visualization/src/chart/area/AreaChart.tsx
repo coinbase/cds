@@ -2,9 +2,9 @@ import React, { forwardRef, memo, useMemo } from 'react';
 import type { View } from 'react-native';
 import {
   type AxisConfigProps,
-  defaultChartPadding,
+  defaultChartInset,
   defaultStackId,
-  getPadding,
+  getChartInset,
   type Series,
 } from '@coinbase/cds-common/visualizations/charts';
 
@@ -81,15 +81,15 @@ export const AreaChart = memo(
         lineType = 'solid',
         xAxis,
         yAxis,
-        padding: userPadding,
+        inset: userInset,
         children,
         ...chartProps
       },
       ref,
     ) => {
-      const calculatedPadding = useMemo(
-        () => getPadding(userPadding, defaultChartPadding),
-        [userPadding],
+      const calculatedInset = useMemo(
+        () => getChartInset(userInset, defaultChartInset),
+        [userInset],
       );
 
       // Convert AreaSeries to Series for Chart context
@@ -169,13 +169,13 @@ export const AreaChart = memo(
         <CartesianChart
           {...chartProps}
           ref={ref}
-          padding={calculatedPadding}
+          inset={calculatedInset}
           series={seriesToRender}
           xAxis={xAxisConfig}
           yAxis={yAxisConfig}
         >
-          {showXAxis && <XAxis position="end" {...xAxisVisualProps} />}
-          {showYAxis && <YAxis axisId={yAxisId} position="end" {...yAxisVisualProps} />}
+          {showXAxis && <XAxis {...xAxisVisualProps} />}
+          {showYAxis && <YAxis axisId={yAxisId} {...yAxisVisualProps} />}
           {series?.map(
             ({
               id,

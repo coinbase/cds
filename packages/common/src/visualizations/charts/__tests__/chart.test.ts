@@ -1,11 +1,11 @@
 import {
   type AxisBounds,
-  type ChartPadding,
-  defaultChartPadding,
+  type ChartInset,
+  defaultChartInset,
   defaultStackId,
   getChartDomain,
+  getChartInset,
   getChartRange,
-  getPadding,
   getStackedSeriesData,
   isValidBounds,
   type Series,
@@ -370,21 +370,21 @@ describe('isValidBounds', () => {
   });
 });
 
-describe('defaultChartPadding', () => {
+describe('defaultChartInset', () => {
   it('should have correct default values', () => {
-    expect(defaultChartPadding).toEqual({
-      top: 4,
-      left: 2,
-      bottom: 2,
-      right: 2,
+    expect(defaultChartInset).toEqual({
+      top: 32,
+      left: 16,
+      bottom: 16,
+      right: 16,
     });
   });
 });
 
-describe('getPadding', () => {
-  describe('with numeric padding', () => {
+describe('getChartInset', () => {
+  describe('with numeric inset', () => {
     it('should apply same value to all sides when given a number', () => {
-      const result = getPadding(4);
+      const result = getChartInset(4);
       expect(result).toEqual({
         top: 4,
         left: 4,
@@ -393,8 +393,8 @@ describe('getPadding', () => {
       });
     });
 
-    it('should handle zero padding', () => {
-      const result = getPadding(0);
+    it('should handle zero inset', () => {
+      const result = getChartInset(0);
       expect(result).toEqual({
         top: 0,
         left: 0,
@@ -403,8 +403,8 @@ describe('getPadding', () => {
       });
     });
 
-    it('should handle fractional padding', () => {
-      const result = getPadding(1.5);
+    it('should handle fractional inset', () => {
+      const result = getChartInset(1.5);
       expect(result).toEqual({
         top: 1.5,
         left: 1.5,
@@ -414,9 +414,9 @@ describe('getPadding', () => {
     });
   });
 
-  describe('with object padding', () => {
+  describe('with object inset', () => {
     it('should use provided values and fill missing with zero defaults', () => {
-      const result = getPadding({
+      const result = getChartInset({
         top: 4,
         right: 2,
       });
@@ -429,7 +429,7 @@ describe('getPadding', () => {
     });
 
     it('should handle all sides specified', () => {
-      const result = getPadding({
+      const result = getChartInset({
         top: 1,
         left: 2,
         bottom: 3,
@@ -444,7 +444,7 @@ describe('getPadding', () => {
     });
 
     it('should handle empty object', () => {
-      const result = getPadding({});
+      const result = getChartInset({});
       expect(result).toEqual({
         top: 0,
         left: 0,
@@ -454,7 +454,7 @@ describe('getPadding', () => {
     });
 
     it('should handle only one side specified', () => {
-      const result = getPadding({ bottom: 8 });
+      const result = getChartInset({ bottom: 8 });
       expect(result).toEqual({
         top: 0,
         left: 0,
@@ -466,14 +466,14 @@ describe('getPadding', () => {
 
   describe('with defaults parameter', () => {
     it('should use provided defaults instead of zero', () => {
-      const customDefaults: ChartPadding = {
+      const customDefaults: ChartInset = {
         top: 5,
         left: 6,
         bottom: 7,
         right: 8,
       };
 
-      const result = getPadding(
+      const result = getChartInset(
         {
           top: 2,
           right: 3,
@@ -490,26 +490,26 @@ describe('getPadding', () => {
     });
 
     it('should use defaults for all missing values', () => {
-      const customDefaults: ChartPadding = {
+      const customDefaults: ChartInset = {
         top: 1,
         left: 2,
         bottom: 3,
         right: 4,
       };
 
-      const result = getPadding({}, customDefaults);
+      const result = getChartInset({}, customDefaults);
       expect(result).toEqual(customDefaults);
     });
 
     it('should override defaults when values are provided', () => {
-      const customDefaults: ChartPadding = {
+      const customDefaults: ChartInset = {
         top: 5,
         left: 5,
         bottom: 5,
         right: 5,
       };
 
-      const result = getPadding(
+      const result = getChartInset(
         {
           top: 1,
           left: 2,
@@ -527,15 +527,15 @@ describe('getPadding', () => {
       });
     });
 
-    it('should handle numeric padding with defaults (defaults should be ignored)', () => {
-      const customDefaults: ChartPadding = {
+    it('should handle numeric inset with defaults (defaults should be ignored)', () => {
+      const customDefaults: ChartInset = {
         top: 9,
         left: 9,
         bottom: 9,
         right: 9,
       };
 
-      const result = getPadding(5, customDefaults);
+      const result = getChartInset(5, customDefaults);
       expect(result).toEqual({
         top: 5,
         left: 5,
@@ -545,9 +545,9 @@ describe('getPadding', () => {
     });
   });
 
-  describe('with undefined padding', () => {
-    it('should use zero defaults when padding is undefined', () => {
-      const result = getPadding(undefined);
+  describe('with undefined inset', () => {
+    it('should use zero defaults when inset is undefined', () => {
+      const result = getChartInset(undefined);
       expect(result).toEqual({
         top: 0,
         left: 0,
@@ -556,22 +556,22 @@ describe('getPadding', () => {
       });
     });
 
-    it('should use provided defaults when padding is undefined', () => {
-      const customDefaults: ChartPadding = {
+    it('should use provided defaults when inset is undefined', () => {
+      const customDefaults: ChartInset = {
         top: 5,
         left: 6,
         bottom: 7,
         right: 8,
       };
 
-      const result = getPadding(undefined, customDefaults);
+      const result = getChartInset(undefined, customDefaults);
       expect(result).toEqual(customDefaults);
     });
   });
 
   describe('edge cases', () => {
-    it('should handle zero values in object padding', () => {
-      const result = getPadding({
+    it('should handle zero values in object inset', () => {
+      const result = getChartInset({
         top: 0,
         left: 5,
         bottom: 0,
@@ -586,7 +586,7 @@ describe('getPadding', () => {
     });
 
     it('should handle fractional values in object', () => {
-      const result = getPadding({
+      const result = getChartInset({
         top: 1.5,
         left: 0.75,
         bottom: 0.25,

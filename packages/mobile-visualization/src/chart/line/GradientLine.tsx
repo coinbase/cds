@@ -8,7 +8,7 @@ import { useCartesianChartContext } from '../ChartProvider';
 import { Path, type PathProps } from '../Path';
 
 export type GradientLineProps = SharedProps &
-  Omit<PathProps, 'stroke' | 'strokeOpacity'> & {
+  Omit<PathProps, 'stroke' | 'strokeOpacity' | 'strokeWidth'> & {
     /**
      * The color of the line.
      * @default theme.color.bgLine
@@ -19,6 +19,11 @@ export type GradientLineProps = SharedProps &
      * @default 1
      */
     strokeOpacity?: number;
+    /**
+     * Path stroke width
+     * @default 2
+     */
+    strokeWidth?: number;
     /**
      * The color of the start of the gradient.
      * @default stroke or theme.color.bgLine
@@ -84,6 +89,7 @@ export const GradientLine = memo<GradientLineProps>(
         </Defs>
         <Path
           animate={shouldAnimate}
+          clipOffset={strokeWidth}
           fill={fill}
           stroke={`url(#${patternIdRef.current})`}
           strokeLinecap={strokeLinecap}

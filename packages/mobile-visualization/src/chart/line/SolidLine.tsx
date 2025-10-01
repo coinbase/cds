@@ -5,8 +5,9 @@ import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 import { Path, type PathProps } from '../Path';
 
 export type SolidLineProps = SharedProps &
-  Omit<PathProps, 'fill'> & {
+  Omit<PathProps, 'fill' | 'strokeWidth'> & {
     fill?: string;
+    strokeWidth?: number;
   };
 
 /**
@@ -26,6 +27,7 @@ export const SolidLine = memo<SolidLineProps>(
 
     return (
       <Path
+        clipOffset={strokeWidth}
         fill={fill}
         stroke={stroke ?? theme.color.bgLine}
         strokeLinecap={strokeLinecap}

@@ -99,38 +99,38 @@ const PulseCircle = memo(
 /**
  * Calculate text alignment props based on position preset.
  */
-function calculateLabelAlignment(
+const calculateLabelAlignment = (
   position: PointLabelConfig['position'],
-): Pick<ChartTextProps, 'textAnchor' | 'alignmentBaseline'> {
+): Pick<ChartTextProps, 'horizontalAlignment' | 'verticalAlignment'> => {
   switch (position) {
     case 'top':
       return {
-        textAnchor: 'middle',
-        alignmentBaseline: 'baseline',
+        horizontalAlignment: 'center',
+        verticalAlignment: 'bottom',
       };
     case 'bottom':
       return {
-        textAnchor: 'middle',
-        alignmentBaseline: 'hanging',
+        horizontalAlignment: 'center',
+        verticalAlignment: 'top',
       };
     case 'left':
       return {
-        textAnchor: 'end',
-        alignmentBaseline: 'central',
+        horizontalAlignment: 'right',
+        verticalAlignment: 'middle',
       };
     case 'right':
       return {
-        textAnchor: 'start',
-        alignmentBaseline: 'central',
+        horizontalAlignment: 'left',
+        verticalAlignment: 'middle',
       };
     case 'center':
     default:
       return {
-        textAnchor: 'middle',
-        alignmentBaseline: 'central',
+        horizontalAlignment: 'center',
+        verticalAlignment: 'middle',
       };
   }
-}
+};
 
 export type PointRef = {
   /**
@@ -168,21 +168,20 @@ export type PointLabelConfig = Pick<
   ChartTextProps,
   | 'dx'
   | 'dy'
-  | 'fontFamily'
   | 'fontSize'
   | 'fontWeight'
   | 'color'
-  | 'padding'
+  | 'inset'
   | 'background'
   | 'borderRadius'
   | 'disableRepositioning'
   | 'bounds'
-  | 'alignmentBaseline'
-  | 'textAnchor'
+  | 'horizontalAlignment'
+  | 'verticalAlignment'
 > & {
   /**
    * Preset position relative to point center.
-   * Automatically calculates textAnchor/dominantBaseline.
+   * Automatically calculates horizontalAlignment/verticalAlignment.
    * Can be combined with dx/dy for fine-tuning.
    */
   position?: 'top' | 'bottom' | 'left' | 'right' | 'center';

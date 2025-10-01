@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { Rect } from '@coinbase/cds-common/types';
-import { type ChartPadding, isCategoricalScale } from '@coinbase/cds-common/visualizations/charts';
+import { type ChartInset, isCategoricalScale } from '@coinbase/cds-common/visualizations/charts';
 import { Switch } from '@coinbase/cds-web/controls';
 
 import { XAxis, YAxis } from '../axis';
@@ -65,7 +65,7 @@ export const InteractiveChartText = () => {
     [isChartFocused],
   );
 
-  const chartTextPadding: ChartPadding = useMemo(
+  const chartTextPadding: ChartInset = useMemo(
     () => ({ top: 1, right: 1.5, bottom: 1, left: 1.5 }),
     [],
   );

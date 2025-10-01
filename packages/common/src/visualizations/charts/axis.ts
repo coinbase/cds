@@ -3,7 +3,13 @@ import type React from 'react';
 
 import type { Rect } from '../../types';
 
-import { getChartDomain, getChartRange, isValidBounds, type AxisBounds, type Series } from './chart';
+import {
+  type AxisBounds,
+  getChartDomain,
+  getChartRange,
+  isValidBounds,
+  type Series,
+} from './chart';
 import {
   type ChartAxisScaleType,
   type ChartScaleFunction,
@@ -168,6 +174,7 @@ export const getAxisConfig = (
     const axesLength = axes.length;
     // forces id to be defined on every input config when there are multiple axes
     if (axesLength > 1 && axes.some(({ id }) => id === undefined)) {
+      // todo: link to doc site (cds.coinbase.com/...)
       throw new Error('When defining multiple axes, each must have a unique id');
     }
 
@@ -330,14 +337,14 @@ export type GetAxisTicksDataProps = {
    * Only applies to numeric scales and overrides requestedTickCount.
    *
    * @example
-   * // For a chart with 400px width, tickInterval: 80 would generate ~5 ticks
+   * // For a chart with 400px width, tickInterval: 64 would generate ~6 ticks
    * // evenly distributed across the data range, always including first and last values
    * getAxisTicksData({
    *   scaleFunction: numericScale,
-   *   tickInterval: 80,
+   *   tickInterval: 32,
    *   possibleTickValues: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
    * });
-   * // Result: ticks at indices [0, 2, 5, 7, 10] with their corresponding positions
+   * // Result: ticks at indices [0, 2, 4, 6, 8, 10] with their corresponding positions
    */
   tickInterval?: number;
 };

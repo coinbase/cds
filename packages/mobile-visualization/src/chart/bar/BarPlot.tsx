@@ -1,69 +1,33 @@
 import React, { memo, useMemo, useRef } from 'react';
 import { ClipPath, Defs, G, Rect } from 'react-native-svg';
-import type { ThemeVars } from '@coinbase/cds-common';
 import { defaultAxisId } from '@coinbase/cds-common/visualizations/charts';
 import { generateRandomId } from '@coinbase/cds-utils';
 
 import { useCartesianChartContext } from '../ChartProvider';
 
-import type { BarComponent, BarProps } from './Bar';
 import type { BarSeries } from './BarChart';
+import type { BarStackGroupProps } from './BarStackGroup';
 import { BarStackGroup } from './BarStackGroup';
-import type { StackComponent } from './DefaultStackComponent';
 
-export type BarPlotProps = {
+export type BarPlotProps = Pick<
+  BarStackGroupProps,
+  | 'barPadding'
+  | 'BarComponent'
+  | 'fillOpacity'
+  | 'stroke'
+  | 'strokeWidth'
+  | 'borderRadius'
+  | 'roundBaseline'
+  | 'stackGap'
+  | 'barMinSize'
+  | 'stackMinSize'
+  | 'BarStackComponent'
+> & {
   /**
    * Array of series IDs to render.
    * If not provided, renders all series in the chart.
    */
   seriesIds?: string[];
-  /**
-   * Padding between bar groups (0-1).
-   * @default 0.1
-   */
-  barPadding?: number;
-  /**
-   * Default component to render individual bars.
-   */
-  BarComponent?: BarComponent;
-  /**
-   * Default opacity of the bar.
-   */
-  fillOpacity?: number;
-  /**
-   * Default stroke color for the bar outline.
-   */
-  stroke?: string;
-  /**
-   * Default stroke width for the bar outline.
-   */
-  strokeWidth?: number;
-  /**
-   * Default border radius from theme.
-   */
-  borderRadius?: BarProps['borderRadius'];
-  /**
-   * Whether to round the baseline of a bar (where the value is 0).
-   */
-  roundBaseline?: boolean;
-  /**
-   * Gap between bars in the stack.
-   */
-  stackGap?: ThemeVars.Space;
-  /**
-   * Minimum size for individual bars in the stack.
-   */
-  barMinSize?: ThemeVars.Space;
-  /**
-   * Minimum size for the entire stack.
-   */
-  stackMinSize?: ThemeVars.Space;
-  /**
-   * Custom component to render the stack container.
-   * Can be used to add clip paths, outlines, or other custom styling.
-   * @default DefaultStackComponent
-   */
-  StackComponent?: StackComponent;
 };
 
 /**
@@ -82,7 +46,7 @@ export const BarPlot = memo<BarPlotProps>(
     strokeWidth: defaultStrokeWidth,
     borderRadius: defaultBorderRadius,
     roundBaseline,
-    StackComponent,
+    BarStackComponent,
     stackGap,
     barMinSize,
     stackMinSize,
@@ -151,7 +115,7 @@ export const BarPlot = memo<BarPlotProps>(
             <BarStackGroup
               key={group.stackId}
               BarComponent={defaultBarComponent}
-              StackComponent={StackComponent}
+              BarStackComponent={BarStackComponent}
               barMinSize={barMinSize}
               barPadding={barPadding}
               borderRadius={defaultBorderRadius}
