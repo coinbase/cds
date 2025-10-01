@@ -284,13 +284,7 @@ const TourComponent = <T extends string = string>({
     return () => {
       blockScroll(false);
     };
-  }, [
-    activeTourStep,
-    animationApi,
-    blockScroll,
-    disableAutoScroll,
-    scrollOptions,
-  ]);
+  }, [activeTourStep, animationApi, blockScroll, disableAutoScroll, scrollOptions]);
 
   return (
     <OverlayContentContext.Provider value={overlayContentContextValue}>
