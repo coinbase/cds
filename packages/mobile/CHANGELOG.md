@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.13.3 (10/1/2025 PST)
+
+#### 🐞 Fixes
+
+- Remove alignSelf="start" from mobile RollingNumber, keeping it the same behavior with web. [[#55](https://github.com/coinbase/cds/pull/55)]
+
 ## 8.13.2 (10/1/2025 PST)
 
 #### 🐞 Fixes
