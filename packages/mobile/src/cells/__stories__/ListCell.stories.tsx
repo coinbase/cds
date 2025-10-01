@@ -801,9 +801,9 @@ const HugListCell = () => {
         onPress={onPressConsole}
         subdetail={
           <Tag colorScheme="green">
-            <HStack alignItems="center" gap={0.5}>
+            <HStack alignItems="center" gap={0.5} justifyContent="flex-end" paddingTop={1}>
               <Icon color="fgPositive" name="diagonalUpArrow" size="xs" />
-              <Text>1.64%</Text>
+              <Text color="fgPositive">1.64%</Text>
             </HStack>
           </Tag>
         }
