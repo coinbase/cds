@@ -27,7 +27,7 @@ export default function Footer(): JSX.Element | null {
       borderRadius={500}
       flexDirection={{ base: 'column', tablet: 'row', desktop: 'row' }}
       gap={{ base: 3, tablet: 0, desktop: 0 }}
-      padding={3}
+      padding={{ base: 3, phone: 2 }}
     >
       <Box
         flexShrink={0}

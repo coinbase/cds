@@ -3,7 +3,7 @@ import type { PropsTableProps } from './types';
 
 function PropsTable({ props, sharedTypeAliases, searchTerm }: PropsTableProps) {
   return (
-    <table>
+    <table style={{ marginBottom: 0 }}>
       <thead>
         <tr>
           <th style={{ width: '40%' }}>Name</th>
