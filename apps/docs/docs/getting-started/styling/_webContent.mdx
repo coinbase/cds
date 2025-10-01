@@ -95,6 +95,14 @@ Some complex components support passing inline styles to subcomponents with the 
 />
 ```
 
+Styles are merged together as objects in order of specificity.
+
+```jsx
+<PageHeader style={{ backgroundColor: 'red' }} styles={{ root: { backgroundColor: 'blue' } }} />
+```
+
+In the example above, `backgroundColor` will be blue.
+
 :::note
 We will continue to add the `styles` prop to more components over time. Please feel free to request specific components that you think would benefit from this API.
 :::
