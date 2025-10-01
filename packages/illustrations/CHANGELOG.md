@@ -8,6 +8,43 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 4.23.0 (9/25/2025 PST)
+
+- Feat: Publish illustrations 09/30/2025. [[#38](https://github.com/coinbase/cds/pull/38)]
+
+### 🚀 Added
+
+#### Spot Rectangle
+
+- calendar
+- coinGateway
+- graphChartTrading
+- tokenSales
+
+#### Hero Square
+
+- graphChartTrading
+- stakingMissedReturnsUsdc
+
+#### Pictogram
+
+- coinbaseLogoAdvancedBrand
+- tokenSales
+
+### 🐞 Updated
+
+#### Hero Square
+
+- baseConnectLarge
+
+#### Pictogram
+
+- futures
+
+#### Spot Rectangle
+
+- fiatInterest
+
 ## 4.22.1 (10/1/2025 PST)
 
 #### 🐞 Fixes

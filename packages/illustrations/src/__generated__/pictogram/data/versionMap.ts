@@ -292,7 +292,7 @@ const versionMap: Record<PictogramName, number> = {
   standWithCryptoLogoNavigation: 3,
   learningRewardsProduct: 1,
   lightningNetworkSend: 1,
-  futures: 3,
+  futures: 4,
   outage: 2,
   internationalExchangeNavigation: 1,
   developerPlatformNavigation: 2,
@@ -463,6 +463,8 @@ const versionMap: Record<PictogramName, number> = {
   idError: 0,
   instantUnstakingClock: 0,
   coinbaseOneProductInvestWeekly: 0,
+  coinbaseLogoAdvancedBrand: 0,
+  tokenSales: 0,
 };
 
 export default versionMap;

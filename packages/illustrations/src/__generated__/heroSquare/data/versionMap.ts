@@ -381,7 +381,7 @@ const versionMap: Record<HeroSquareName, number> = {
   cbltc: 0,
   cbdoge: 0,
   baseErrorButterfly: 0,
-  baseConnectLarge: 0,
+  baseConnectLarge: 1,
   baseRewardsCalmLarge: 0,
   baseLoadingLarge: 1,
   baseNetworkLarge: 0,
@@ -407,6 +407,8 @@ const versionMap: Record<HeroSquareName, number> = {
   baseCreatorCoin: 0,
   baseCreatorCoinEmpty: 0,
   baseSocial: 0,
+  graphChartTrading: 0,
+  stakingMissedReturnsUsdc: 0,
 };
 
 export default versionMap;
