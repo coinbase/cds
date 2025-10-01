@@ -1,24 +1,20 @@
 import { memo, useMemo } from 'react';
-import type { CSSProperties } from 'react';
 import type { StyleProp, ViewStyle } from 'react-native';
-import { imageSize, mediaSize } from '@coinbase/cds-common/tokens/cell';
 import type { FallbackRectWidthProps, SharedProps } from '@coinbase/cds-common/types';
 import { getRectWidthVariant } from '@coinbase/cds-common/utils/getRectWidthVariant';
 
 import { useTheme } from '../hooks/useTheme';
 import { VStack } from '../layout';
-import { Box } from '../layout/Box';
 import { Fallback } from '../layout/Fallback';
-import { HStack } from '../layout/HStack';
 
 import { Cell } from './Cell';
 import type { CellMediaType } from './CellMedia';
-import { ListCell, type ListCellBaseProps } from './ListCell';
+import { hugInnerSpacing, hugOuterSpacing, type ListCellBaseProps } from './ListCell';
 import { MediaFallback } from './MediaFallback';
 
 export type ListCellFallbackBaseProps = SharedProps &
   FallbackRectWidthProps &
-  Pick<ListCellBaseProps, 'compact' | 'innerSpacing' | 'outerSpacing'> & {
+  Pick<ListCellBaseProps, 'compact' | 'innerSpacing' | 'outerSpacing' | 'layoutSpacing'> & {
     /** Display description shimmer. */
     description?: boolean;
     /** Display detail shimmer. */
@@ -59,6 +55,10 @@ export const ListCellFallback = memo(function ListCellFallback({
   rectWidthVariant,
   helperText,
   styles,
+  compact,
+  layoutSpacing = compact ? 'compact' : 'spacious',
+  innerSpacing,
+  outerSpacing,
   ...props
 }: ListCellFallbackProps) {
   const theme = useTheme();
@@ -177,7 +177,9 @@ export const ListCellFallback = memo(function ListCellFallback({
     <Cell
       bottomContent={helperTextFallback}
       detail={detailFallback}
+      innerSpacing={innerSpacing ?? (layoutSpacing === 'hug' ? hugInnerSpacing : undefined)}
       media={mediaFallback}
+      outerSpacing={outerSpacing ?? (layoutSpacing === 'hug' ? hugOuterSpacing : undefined)}
       {...props}
     >
       <VStack gap={0.5}>

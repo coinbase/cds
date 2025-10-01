@@ -1,5 +1,4 @@
 import React, { forwardRef, memo, useMemo } from 'react';
-import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import type { CellPriority } from '@coinbase/cds-common/types';
 import { hasCellPriority } from '@coinbase/cds-common/utils/cell';
 import { css } from '@linaria/core';
@@ -91,6 +90,7 @@ export type CellBaseProps = Polymorphic.ExtendableProps<
     // TODO: consider renaming this to shouldTruncate in next breaking change release. Since overflow gives people the sense that it will overflow and overlap with other content
     shouldOverflow?: boolean;
     /**
+     * Apply a fixed width to the detail (end).
      * @deprecated Use `styles.detail.end` instead. This prop is kept for backward
      * compatibility and will be removed in a future major release.
      */

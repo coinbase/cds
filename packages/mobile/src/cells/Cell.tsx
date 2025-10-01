@@ -1,5 +1,5 @@
 import React, { memo, useMemo } from 'react';
-import type { ViewProps } from 'react-native';
+import { type StyleProp, StyleSheet, type ViewProps, type ViewStyle } from 'react-native';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import type { CellPriority, SharedProps } from '@coinbase/cds-common/types';
 import { hasCellPriority } from '@coinbase/cds-common/utils/cell';
@@ -40,7 +40,11 @@ export type CellBaseProps = SharedProps &
     intermediary?: React.ReactNode;
     media?: React.ReactElement;
     borderRadius?: ThemeVars.BorderRadius;
-    /** Apply a fixed width to the detail (end). */
+    /**
+     * Apply a fixed width to the detail (end).
+     * @deprecated Use `styles.detail.end` instead. This prop is kept for backward
+     * compatibility and will be removed in a future major release.
+     */
     detailWidth?: number | string;
     /** Is the cell disabled? Will apply opacity and disable interaction. */
     disabled?: boolean;
@@ -56,6 +60,19 @@ export type CellBaseProps = SharedProps &
     bottomContent?: React.ReactNode;
     /** Measure the dimensions of the cell. */
     onLayout?: ViewProps['onLayout'];
+    /** Styles for the components */
+    styles?: {
+      root?: StyleProp<ViewStyle>;
+      contentContainer?: StyleProp<ViewStyle>;
+      topContent?: StyleProp<ViewStyle>;
+      bottomContent?: StyleProp<ViewStyle>;
+      pressable?: StyleProp<ViewStyle>;
+      media?: StyleProp<ViewStyle>;
+      intermediary?: StyleProp<ViewStyle>;
+      /** Applied to the container of detail or action */
+      end?: StyleProp<ViewStyle>;
+      accessory?: StyleProp<ViewStyle>;
+    };
   };
 
 export type CellProps = BoxProps & CellBaseProps;
@@ -65,6 +82,7 @@ export const Cell = memo(function Cell({
   alignItems = 'center',
   borderRadius = 200,
   children,
+  styles,
   detail,
   detailWidth,
   disabled,
@@ -85,6 +103,7 @@ export const Cell = memo(function Cell({
   innerSpacing: innerSpacingProp,
   outerSpacing: outerSpacingProp,
   bottomContent,
+  style,
   ...props
 }: CellProps) {
   const theme = useTheme();
@@ -102,19 +121,23 @@ export const Cell = memo(function Cell({
       renderToHardwareTextureAndroid: disabled,
       ...(selected ? { background: 'bgAlternate' as const } : {}),
       ...(onPress ? innerSpacingWithoutMarginX : innerSpacing),
+      style: styles?.contentContainer,
     };
 
-    const topContentContainerProps = {
+    const topContentProps = {
       alignItems,
       flexGrow: 1,
       gap: columnGap || gap,
       width: '100%',
+      style: styles?.topContent,
     } as const;
+
+    const computedEndWidth = StyleSheet.flatten(styles?.end)?.width ?? detailWidth;
 
     const topContent = (
       <>
         {!!media && (
-          <Box flexGrow={0} flexShrink={0}>
+          <Box flexGrow={0} flexShrink={0} style={styles?.media}>
             {media}
           </Box>
         )}
@@ -132,6 +155,7 @@ export const Cell = memo(function Cell({
             flexGrow={0}
             flexShrink={hasCellPriority('middle', priority) ? 0 : 1}
             justifyContent="center"
+            style={styles?.intermediary}
           >
             {intermediary}
           </Box>
@@ -140,9 +164,10 @@ export const Cell = memo(function Cell({
         {!!detail && (
           <Box
             alignItems="flex-end"
-            flexGrow={detailWidth ? undefined : 1}
-            flexShrink={detailWidth ? undefined : hasCellPriority('end', priority) ? 0 : 1}
+            flexGrow={computedEndWidth ? undefined : 1}
+            flexShrink={computedEndWidth ? undefined : hasCellPriority('end', priority) ? 0 : 1}
             justifyContent="flex-end"
+            style={styles?.end}
             width={detailWidth}
           >
             {detail}
@@ -150,7 +175,7 @@ export const Cell = memo(function Cell({
         )}
 
         {!!accessory && (
-          <Box flexGrow={0} flexShrink={0}>
+          <Box flexGrow={0} flexShrink={0} style={styles?.accessory}>
             {accessory}
           </Box>
         )}
@@ -158,7 +183,7 @@ export const Cell = memo(function Cell({
     );
     if (!bottomContent) {
       return (
-        <HStack {...topContentContainerProps} {...contentContainerProps}>
+        <HStack {...topContentProps} {...contentContainerProps}>
           {topContent}
         </HStack>
       );
@@ -171,8 +196,8 @@ export const Cell = memo(function Cell({
         width="100%"
         {...contentContainerProps}
       >
-        <HStack {...topContentContainerProps}>{topContent}</HStack>
-        <Box>{bottomContent}</Box>
+        <HStack {...topContentProps}>{topContent}</HStack>
+        <Box style={styles?.bottomContent}>{bottomContent}</Box>
       </VStack>
     );
   }, [
@@ -187,17 +212,24 @@ export const Cell = memo(function Cell({
     columnGap,
     gap,
     media,
+    styles?.media,
     priority,
     children,
     intermediary,
+    styles?.intermediary,
     detail,
     detailWidth,
+    styles?.end,
     accessory,
+    styles?.accessory,
     bottomContent,
+    styles?.contentContainer,
+    styles?.topContent,
+    styles?.bottomContent,
     rowGap,
   ]);
 
-  const wrappedContent = useMemo(() => {
+  const pressableWrappedContent = useMemo(() => {
     if (onPress) {
       const offsetStyle = {
         marginHorizontal: -theme.space[(innerSpacingMarginX * -1) as ThemeVars.Space],
@@ -215,7 +247,7 @@ export const Cell = memo(function Cell({
           contentStyle={pressStyles}
           disabled={disabled}
           onPress={onPress}
-          style={[offsetStyle, pressStyles]}
+          style={[offsetStyle, pressStyles, styles?.pressable]}
         >
           {content}
         </Pressable>
@@ -231,6 +263,7 @@ export const Cell = memo(function Cell({
     onPress,
     innerSpacingMarginX,
     theme.space,
+    styles?.pressable,
   ]);
 
   return (
@@ -240,11 +273,12 @@ export const Cell = memo(function Cell({
       maxHeight={maxHeight}
       minHeight={minHeight}
       onLayout={onLayout}
+      style={[styles?.root, style]}
       width="100%"
       {...outerSpacing}
       {...props}
     >
-      {wrappedContent}
+      {pressableWrappedContent}
     </Box>
   );
 });

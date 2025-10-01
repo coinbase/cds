@@ -1,16 +1,21 @@
+:::note
+Prefer `layoutSpacing="hug"` for the new ListCell design. The `spacious` and `compact` values exist for backward compatibility and may be removed in a future major release.
+:::
+
 ### Basic usage
 
 ```tsx
-<ListCell title="Basic List Cell" description="A simple example of ListCell" />
+<ListCell layoutSpacing="hug" title="Basic List Cell" description="A simple example of ListCell" />
 ```
 
 ### With Media
 
 ```tsx
 <ListCell
+  layoutSpacing="hug"
   title="List Cell with Media"
   description="Shows usage with media"
-  media={<CellMedia active name="info" type="icon" />}
+  media={<Icon active name="info" />}
 />
 ```
 
@@ -18,6 +23,7 @@
 
 ```tsx
 <ListCell
+  layoutSpacing="hug"
   title="List Cell with Details"
   description="Shows usage with detail and subdetail"
   detail="$1,234.56"
@@ -30,6 +36,7 @@
 
 ```tsx
 <ListCell
+  layoutSpacing="hug"
   title="List Cell with Accessory"
   description="Shows usage with accessory"
   accessory="arrow"
@@ -40,9 +47,10 @@
 
 ```tsx
 <ListCell
+  layoutSpacing="hug"
   title="Interactive List Cell"
   description="Tap to interact"
-  media={<CellMedia active name="info" type="icon" />}
+  media={<Icon active name="info" />}
   accessory="arrow"
   onPress={() => alert('Cell pressed!')}
 />
@@ -53,24 +61,27 @@
 ```tsx
 <VStack gap={3}>
   <ListCell
+    layoutSpacing="hug"
     title="List Cell with Helper Text"
     description="Shows usage with helper text below the cell"
     helperText={<CellHelperText>This is a default helper message.</CellHelperText>}
-    media={<CellMedia srouce={assets.btc.imageUrl} type="asset" />}
+    media={<Avatar src={assets.btc.imageUrl} />}
     action={<Button compact>Action</Button>}
   />
   <ListCell
+    layoutSpacing="hug"
     title="List Cell with Warning"
     description="Shows usage with a warning message"
     helperText={<CellHelperText variant="warning">This is a warning message.</CellHelperText>}
-    media={<CellMedia source={assets.btc.imageUrl} type="asset" />}
+    media={<Avatar src={assets.btc.imageUrl} />}
     action={<Button compact>Action</Button>}
   />
   <ListCell
+    layoutSpacing="hug"
     title="List Cell with Error"
     description="Shows usage with an error message"
     helperText={<CellHelperText variant="error">This is an error message.</CellHelperText>}
-    media={<CellMedia source={assets.btc.imageUrl} type="asset" />}
+    media={<Avatar src={assets.btc.imageUrl} />}
     action={<Button compact>Action</Button>}
   />
 </VStack>
@@ -80,10 +91,10 @@
 
 ```tsx
 <ListCell
-  compact
+  layoutSpacing="compact"
   title="Compact List Cell"
   description="Shows compact variant"
-  media={<CellMedia active name="info" type="icon" />}
+  media={<Icon active name="info" />}
 />
 ```
 
@@ -91,10 +102,11 @@
 
 ```tsx
 <ListCell
+  layoutSpacing="hug"
   selected
   title="Selected List Cell"
   description="Shows selected state"
-  media={<CellMedia active name="info" type="icon" />}
+  media={<Icon active name="info" />}
 />
 ```
 
@@ -105,16 +117,17 @@ The ListCellFallback component provides loading state representations of ListCel
 ```tsx
 <VStack gap={3}>
   {/* Basic loading state */}
-  <ListCellFallback title description />
+  <ListCellFallback layoutSpacing="hug" title description />
 
   {/* Loading state with media */}
-  <ListCellFallback title description media="icon" />
+  <ListCellFallback layoutSpacing="hug" title description media="icon" />
 
   {/* Loading state with details */}
-  <ListCellFallback title description detail subdetail />
+  <ListCellFallback layoutSpacing="hug" title description detail subdetail />
 
   {/* Full loading state with custom widths */}
   <ListCellFallback
+    layoutSpacing="hug"
     title
     description
     detail

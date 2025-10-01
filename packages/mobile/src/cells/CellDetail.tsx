@@ -2,7 +2,7 @@ import React, { memo } from 'react';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 
 import { VStack } from '../layout/VStack';
-import { Text } from '../typography/Text';
+import { Text, type TextProps } from '../typography/Text';
 
 export type CellDetailVariant = 'foregroundMuted' | 'negative' | 'positive' | 'warning';
 export type CellDetailProps = {
@@ -19,6 +19,13 @@ export type CellDetailProps = {
   /** Variant color to apply to the subdetail text. */
   variant?: CellDetailVariant;
   adjustsFontSizeToFit?: boolean;
+  /** Layout spacing configuration. */
+  layoutSpacing?: 'spacious' | 'compact' | 'hug';
+  /** Optional props to spread onto the Text elements for detail and subdetail. */
+  textProps?: {
+    detail?: TextProps;
+    subdetail?: TextProps;
+  };
 };
 
 const variantColorMap: Record<CellDetailVariant, ThemeVars.Color> = {
@@ -33,11 +40,18 @@ export const CellDetail = memo(function CellDetail({
   detail,
   subdetail,
   variant = 'foregroundMuted',
+  layoutSpacing,
+  textProps,
 }: CellDetailProps) {
   return (
     <VStack alignContent="flex-end" alignItems="flex-end" justifyContent="center">
       {!!detail && (
-        <Text adjustsFontSizeToFit={adjustsFontSizeToFit} font="body" numberOfLines={1}>
+        <Text
+          adjustsFontSizeToFit={adjustsFontSizeToFit}
+          font="body"
+          numberOfLines={1}
+          {...textProps?.detail}
+        >
           {detail}
         </Text>
       )}
@@ -46,8 +60,9 @@ export const CellDetail = memo(function CellDetail({
         <Text
           adjustsFontSizeToFit={adjustsFontSizeToFit}
           color={variantColorMap[variant]}
-          font="body"
+          font={layoutSpacing === 'hug' ? 'label2' : 'body'}
           numberOfLines={1}
+          {...textProps?.subdetail}
         >
           {subdetail}
         </Text>

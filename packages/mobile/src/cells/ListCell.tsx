@@ -1,12 +1,27 @@
-import React, { memo } from 'react';
+import React, { memo, useMemo } from 'react';
+import type { StyleProp, TextStyle } from 'react-native';
 import { compactListHeight, listHeight } from '@coinbase/cds-common/tokens/cell';
 
 import { VStack } from '../layout/VStack';
-import { Text } from '../typography/Text';
+import { Text, type TextProps } from '../typography/Text';
 
-import { Cell, type CellBaseProps, type CellProps } from './Cell';
+import { Cell, type CellBaseProps, type CellProps, type CellSpacing } from './Cell';
 import { CellAccessory, type CellAccessoryType } from './CellAccessory';
 import { CellDetail, type CellDetailProps } from './CellDetail';
+
+export const hugInnerSpacing: CellSpacing = {
+  paddingX: 2 as const,
+  paddingY: 0.5 as const,
+  marginX: 0 as const,
+};
+// no padding outside of the pressable area
+export const hugOuterSpacing: CellSpacing = {
+  paddingX: 0 as const,
+  paddingY: 0 as const,
+  marginX: 0 as const,
+};
+
+type CellStyles = NonNullable<CellBaseProps['styles']>;
 
 export type ListCellBaseProps = CellDetailProps &
   Omit<CellBaseProps, 'accessory' | 'children'> & {
@@ -14,8 +29,39 @@ export type ListCellBaseProps = CellDetailProps &
     accessory?: CellAccessoryType;
     /** Interactive action, like a CTA or form element. Cannot be used alongside `onPress`. */
     action?: React.ReactNode;
-    /** Enables compact spacing */
+    /**
+     * @deprecated Use `layoutSpacing="compact"`. Kept for backward compatibility.
+     */
     compact?: boolean;
+    /**
+     * Layout spacing configuration.
+     * Deprecated values: 'spacious' and 'compact'. Prefer 'hug'.
+     * This prop will be removed in the next major release, new list cell will only have 'hug' spacing.
+     *
+     * When 'spacious' is set, the cell will have the following behavior:
+     * 1. min-height is 80px
+     * 2. Effective padding is '16px 24px' with 8px padding around the pressable area
+     * 3. border radius is 8px for pressable area
+     * 4. Title always cap at 1 line when there is no description, cap at 2 lines when there is description
+     * 5. Description and subdetail have font 'body'
+     *
+     * When 'compact' is set, the cell will have the following behavior:
+     * 1. min-height is 40px
+     * 2. Effective padding is '16px 24px' with 8px padding around the pressable area
+     * 3. border radius is 8px for pressable area
+     * 4. Title always cap at 1 line when there is no description, cap at 2 lines when there is description
+     * 5. Description and subdetail have font 'body'
+     *
+     * When 'hug' is set, the cell will have the following behavior:
+     * 1. No min-height, height is determined by the content
+     * 2. Padding is '4px 16px', no extra padding around the pressable area
+     * 3. 0 border radius for pressable area
+     * 4. Title always cap at 2 lines
+     * 5. Description and subdetail have font 'label2'
+     *
+     * @default 'spacious'
+     */
+    layoutSpacing?: 'spacious' | 'compact' | 'hug';
     /** Description of content. Max 1 line (with title) or 2 lines (without), otherwise will truncate. */
     description?: React.ReactNode;
     /**
@@ -40,6 +86,23 @@ export type ListCellBaseProps = CellDetailProps &
     multiline?: boolean;
     /** Title of content. Max 1 line (with description) or 2 lines (without), otherwise will truncate. */
     title?: React.ReactNode;
+    /** Optional props to spread onto the Text elements for title/description and forwarded to CellDetail. */
+    textProps?: {
+      title?: TextProps;
+      description?: TextProps;
+      detail?: TextProps;
+      subdetail?: TextProps;
+    };
+    /** Styles for the components */
+    styles?: Pick<
+      CellStyles,
+      'root' | 'media' | 'intermediary' | 'end' | 'accessory' | 'contentContainer' | 'pressable'
+    > & {
+      mainContent?: CellStyles['topContent'];
+      helperText?: CellStyles['bottomContent'];
+      title?: StyleProp<TextStyle>;
+      description?: StyleProp<TextStyle>;
+    };
   };
 
 export type ListCellProps = ListCellBaseProps & Omit<CellProps, 'accessory' | 'children'>;
@@ -66,37 +129,71 @@ export const ListCell = memo(function ListCell({
   subdetail,
   variant,
   onPress,
+  layoutSpacing = compact ? 'compact' : 'spacious',
+  style,
+  styles,
+  textProps,
   ...props
 }: ListCellProps) {
-  const minHeight = compact ? compactListHeight : listHeight;
+  const minHeight =
+    layoutSpacing === 'compact'
+      ? compactListHeight
+      : layoutSpacing === 'spacious'
+        ? listHeight
+        : undefined;
   const accessoryType = selected && !disableSelectionAccessory ? 'selected' : accessory;
   const hasDetails = Boolean(detail || subdetail);
+
+  const end = useMemo(
+    () =>
+      action ||
+      (hasDetails && (
+        <CellDetail
+          adjustsFontSizeToFit={!!detailWidth}
+          detail={detail}
+          layoutSpacing={layoutSpacing}
+          subdetail={subdetail}
+          textProps={{
+            detail: textProps?.detail,
+            subdetail: textProps?.subdetail,
+          }}
+          variant={variant}
+        />
+      )),
+    [action, hasDetails, detail, subdetail, detailWidth, layoutSpacing, textProps, variant],
+  );
 
   return (
     <Cell
       accessory={accessoryType ? <CellAccessory type={accessoryType} /> : undefined}
+      borderRadius={props.borderRadius ?? (layoutSpacing === 'hug' ? 0 : undefined)}
       bottomContent={helperText}
-      detail={
-        action ||
-        (hasDetails && (
-          <CellDetail
-            adjustsFontSizeToFit={!!detailWidth}
-            detail={detail}
-            subdetail={subdetail}
-            variant={variant}
-          />
-        ))
-      }
+      detail={end}
       detailWidth={detailWidth}
       disabled={disabled}
-      innerSpacing={innerSpacing}
+      innerSpacing={innerSpacing ?? (layoutSpacing === 'hug' ? hugInnerSpacing : undefined)}
       intermediary={intermediary}
       media={media}
       minHeight={minHeight}
       onPress={onPress}
-      outerSpacing={outerSpacing}
+      outerSpacing={outerSpacing ?? (layoutSpacing === 'hug' ? hugOuterSpacing : undefined)}
       priority={priority}
       selected={selected}
+      style={[style, styles?.root]}
+      styles={{
+        media: styles?.media,
+        intermediary: styles?.intermediary,
+        end: styles?.end,
+        accessory: styles?.accessory,
+        topContent: styles?.mainContent,
+        bottomContent: styles?.helperText,
+        contentContainer: styles?.contentContainer,
+        pressable: [
+          // for the hug spacing, we need to offset the margin vertical to remove the strange gap between the pressable area
+          layoutSpacing === 'hug' && !!onPress && { marginVertical: -1 },
+          styles?.pressable,
+        ],
+      }}
       {...props}
     >
       <VStack justifyContent="center">
@@ -105,6 +202,8 @@ export const ListCell = memo(function ListCell({
             ellipsize="tail"
             font="headline"
             numberOfLines={description || disableMultilineTitle ? 1 : 2}
+            style={styles?.title}
+            {...textProps?.title}
           >
             {title}
           </Text>
@@ -114,8 +213,10 @@ export const ListCell = memo(function ListCell({
           <Text
             color="fgMuted"
             ellipsize={multiline ? undefined : 'tail'}
-            font="body"
+            font={layoutSpacing === 'hug' ? 'label2' : 'body'}
             numberOfLines={multiline ? undefined : title ? 1 : 2}
+            style={styles?.description}
+            {...textProps?.description}
           >
             {description}
           </Text>
