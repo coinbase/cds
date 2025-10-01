@@ -1,7 +1,7 @@
 {
   "import": "import { PortalProvider } from '@coinbase/cds-web/overlays/PortalProvider'",
   "source": "https://github.com/coinbase/cds-staging/blob/master/packages/web/src/overlays/PortalProvider.tsx",
-  "description": "PortalProvider is a convenient way for adding anything to the CDS portal. The CDS portal is what CDS uses to centralize all elements that need a portal and handles the zIndex of those pieces. It also enables you to programmatically control the components using hooks like [useModal](/hooks/useModal/) and [useAlert](/hooks/useAlert/).",
+  "description": "A component that manages the rendering of portals for overlay components.",
   "storybook": "https://cds-storybook.coinbase.com/?path=/story/core-components-portalprovider--with-portal-nodes",
   "relatedComponents": [
     {

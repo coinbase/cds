@@ -9,7 +9,6 @@ import { VStack } from '@coinbase/cds-web/layout';
 
 import { ComponentHeader } from '@site/src/components/page/ComponentHeader';
 import { ComponentTabsContainer } from '@site/src/components/page/ComponentTabsContainer';
-import { DefaultBanner } from '@site/src/components/page/ComponentBanner/DefaultBanner';
 
 import webPropsToc from ':docgen/web/controls/Checkbox/toc-props';
 import mobilePropsToc from ':docgen/mobile/controls/Checkbox/toc-props';
@@ -23,12 +22,7 @@ import webMetadata from './webMetadata.json';
 import mobileMetadata from './mobileMetadata.json';
 
 <VStack gap={5}>
-  <ComponentHeader
-    title="Checkbox"
-    webMetadata={webMetadata}
-    mobileMetadata={mobileMetadata}
-    banner={<DefaultBanner />}
-  />
+  <ComponentHeader title="Checkbox" webMetadata={webMetadata} mobileMetadata={mobileMetadata} />
   <ComponentTabsContainer
     webPropsTable={<WebPropsTable />}
     webExamples={<WebExamples />}
