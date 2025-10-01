@@ -1028,8 +1028,6 @@ const UseCaseShowcase = () => {
         }}
         title="ADA"
       />
-
-      {/* Additional examples */}
       <ListCell
         action={
           <VStack alignItems="flex-end">

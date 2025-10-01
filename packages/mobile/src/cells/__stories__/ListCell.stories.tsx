@@ -903,20 +903,8 @@ const UseCaseShowcase = () => {
         // you can use the action prop to pass in a VStack, which can be anything you want.
         action={
           <VStack alignItems="flex-end">
-            <RollingNumber
-              colorPulseOnUpdate
-              font="body"
-              format={format}
-              style={{ alignSelf: 'flex-end' }}
-              value={btcPrice}
-            />
-            <RollingNumber
-              color="fgMuted"
-              font="label2"
-              style={{ alignSelf: 'flex-end' }}
-              suffix=" BTC"
-              value={btcAmt}
-            />
+            <RollingNumber colorPulseOnUpdate font="body" format={format} value={btcPrice} />
+            <RollingNumber color="fgMuted" font="label2" suffix=" BTC" value={btcAmt} />
           </VStack>
         }
         intermediary={<Icon name="chartLine" />}
@@ -936,20 +924,8 @@ const UseCaseShowcase = () => {
         // you can use the action prop to pass in a VStack, which can be anything you want.
         action={
           <VStack alignItems="flex-end">
-            <RollingNumber
-              colorPulseOnUpdate
-              font="body"
-              format={format}
-              style={{ alignSelf: 'flex-end' }}
-              value={ethPrice}
-            />
-            <RollingNumber
-              color="fgMuted"
-              font="label2"
-              style={{ alignSelf: 'flex-end' }}
-              suffix=" ETH"
-              value={ethAmt}
-            />
+            <RollingNumber colorPulseOnUpdate font="body" format={format} value={ethPrice} />
+            <RollingNumber color="fgMuted" font="label2" suffix=" ETH" value={ethAmt} />
           </VStack>
         }
         description="25% staked"
@@ -969,20 +945,8 @@ const UseCaseShowcase = () => {
         // you can use the action prop to pass in a VStack, which can be anything you want.
         action={
           <VStack alignItems="flex-end">
-            <RollingNumber
-              colorPulseOnUpdate
-              font="body"
-              format={format}
-              style={{ alignSelf: 'flex-end' }}
-              value={adaPrice}
-            />
-            <RollingNumber
-              color="fgMuted"
-              font="label2"
-              style={{ alignSelf: 'flex-end' }}
-              suffix=" ADA"
-              value={adaAmt}
-            />
+            <RollingNumber colorPulseOnUpdate font="body" format={format} value={adaPrice} />
+            <RollingNumber color="fgMuted" font="label2" suffix=" ADA" value={adaAmt} />
           </VStack>
         }
         description="51% staked"
@@ -997,25 +961,11 @@ const UseCaseShowcase = () => {
         }}
         title="ADA"
       />
-
-      {/* Additional examples */}
       <ListCell
         action={
           <VStack alignItems="flex-end">
-            <RollingNumber
-              colorPulseOnUpdate
-              font="body"
-              format={format}
-              style={{ alignSelf: 'flex-end' }}
-              value={ltcPrice}
-            />
-            <RollingNumber
-              color="fgMuted"
-              font="label2"
-              style={{ alignSelf: 'flex-end' }}
-              suffix=" LTC"
-              value={ltcAmt}
-            />
+            <RollingNumber colorPulseOnUpdate font="body" format={format} value={ltcPrice} />
+            <RollingNumber color="fgMuted" font="label2" suffix=" LTC" value={ltcAmt} />
           </VStack>
         }
         intermediary={<Icon name="chartLine" />}
@@ -1032,20 +982,8 @@ const UseCaseShowcase = () => {
       <ListCell
         action={
           <VStack alignItems="flex-end">
-            <RollingNumber
-              colorPulseOnUpdate
-              font="body"
-              format={format}
-              style={{ alignSelf: 'flex-end' }}
-              value={daiPrice}
-            />
-            <RollingNumber
-              color="fgMuted"
-              font="label2"
-              style={{ alignSelf: 'flex-end' }}
-              suffix=" DAI"
-              value={daiAmt}
-            />
+            <RollingNumber colorPulseOnUpdate font="body" format={format} value={daiPrice} />
+            <RollingNumber color="fgMuted" font="label2" suffix=" DAI" value={daiAmt} />
           </VStack>
         }
         description="Stablecoin"
