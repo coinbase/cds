@@ -185,7 +185,7 @@ export const ComponentHeader = memo(
               <HStack
                 as="ul"
                 flexWrap="wrap"
-                gap={1}
+                gap={{ base: 1, phone: 0 }}
                 margin={0}
                 padding={0}
                 style={{
@@ -220,7 +220,7 @@ export const ComponentHeader = memo(
               <HStack
                 as="ul"
                 flexWrap="wrap"
-                gap={1}
+                gap={{ base: 1, phone: 0 }}
                 margin={0}
                 padding={0}
                 style={{
