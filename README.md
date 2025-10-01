@@ -53,6 +53,10 @@ yarn nx run mobile-app:start
 
 We welcome contributions to the Coinbase Design System! Please read our [Contributing Guide](CONTRIBUTING.md) for details on our development process, coding standards, and how to submit pull requests.
 
+## Security
+
+For information about reporting security vulnerabilities, please see our [Security Policy](SECURITY.md).
+
 ## License
 
 This project is licensed under the terms described in [LICENSE.md](LICENSE.md).
