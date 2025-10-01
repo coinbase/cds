@@ -381,25 +381,43 @@ const LongContent = () => (
   <>
     <ListCell
       detail="Detail also has a very long string"
-      layoutSpacing="hug"
       subdetail="Neutral also does too"
-      title="Title with a very long length that should wrap to 2 lines when there is no description provided"
+      title="(Deprecated behavior) Title with a very long length that should be capped at 2 lines when there is no description provided"
     />
     <ListCell
-      description="Description also has a very long length that will wrap to 2 lines maximum, unless 'multiline' is turned on and the description can go as many lines as needed."
+      description="Description"
+      detail="Detail also has a very long string"
+      subdetail="Neutral also does too"
+      title="(Deprecated behavior) Title with a very long length that should be capped at 1 line when there is description provided"
+    />
+    <ListCell
       detail="Detail also has a very long string"
       layoutSpacing="hug"
       subdetail="Neutral also does too"
-      title="Title with a very long length that should wrap to 2 lines when there is no description provided"
+      title="Title with a very long length that should be capped at 2 lines"
+    />
+    <ListCell
+      disableMultilineTitle
+      detail="Detail also has a very long string"
+      layoutSpacing="hug"
+      subdetail="Neutral also does too"
+      title="Title with a very long length that should be capped at 1 line when 'disableMultilineTitle' is turned on"
+    />
+    <ListCell
+      description="Description also has a very long length that will be capped at 1 line, unless 'multiline' is turned on and the description can go as many lines as needed."
+      detail="Detail also has a very long string"
+      layoutSpacing="hug"
+      subdetail="Neutral also does too"
+      title="Title with a very long length that should be capped at 2 lines"
     />
     <ListCell
       multiline
       selected
-      description="Description also has a very long length that will wrap to 2 lines maximum, unless 'multiline' is turned on and the description can go as many lines as needed."
+      description="Description also has a very long length that will be capped at 1 line, unless 'multiline' is turned on and the description can go as many lines as needed."
       detail="Detail also has a very long string"
       layoutSpacing="hug"
       subdetail="Neutral also does too"
-      title="Title with a very long length that should wrap to 2 lines when there is no description provided"
+      title="Title with a very long length that should be capped at 2 lines"
     />
   </>
 );

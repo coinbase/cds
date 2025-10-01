@@ -243,8 +243,16 @@ export const ListCell: ListCellComponent = memo(
                 as="div"
                 display="block"
                 font="headline"
-                // TODO: confirm with design if making it always 2 lines as the new approach is intentional
-                numberOfLines={description || disableMultilineTitle ? 1 : 2}
+                numberOfLines={
+                  disableMultilineTitle
+                    ? 1
+                    : // wrap at 2 lines in hug layoutSpacing regardless of description
+                      layoutSpacing === 'hug'
+                      ? 2
+                      : description
+                        ? 1
+                        : 2
+                }
                 overflow="wrap"
                 style={styles?.title}
                 {...textProps?.title}

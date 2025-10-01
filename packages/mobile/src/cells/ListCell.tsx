@@ -201,7 +201,16 @@ export const ListCell = memo(function ListCell({
           <Text
             ellipsize="tail"
             font="headline"
-            numberOfLines={description || disableMultilineTitle ? 1 : 2}
+            numberOfLines={
+              disableMultilineTitle
+                ? 1
+                : // wrap at 2 lines in hug layoutSpacing regardless of description
+                  layoutSpacing === 'hug'
+                  ? 2
+                  : description
+                    ? 1
+                    : 2
+            }
             style={styles?.title}
             {...textProps?.title}
           >
