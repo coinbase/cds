@@ -114,7 +114,7 @@ export const ComponentHeader = memo(
             )}
           </VStack>
         )}
-        <VStack gap={4} padding={4} paddingTop={4}>
+        <VStack gap={4} padding={{ base: 4, phone: 2 }}>
           <VStack gap={3}>
             <HStack alignItems="center" flexWrap="wrap" gap={2} justifyContent="space-between">
               <Text font="display2">{title}</Text>
@@ -126,9 +126,9 @@ export const ComponentHeader = memo(
             <Grid
               alignItems="center"
               columnGap={2}
-              columns={2}
-              gridTemplateColumns="100px 1fr"
-              rowGap={1.5}
+              gridTemplateColumns={{ base: '100px 1fr', phone: 'minmax(0, 1fr)' }}
+              overflow="hidden"
+              rowGap={{ base: 1.5, phone: 1 }}
             >
               {importText && (
                 <MetadataItem label="Import">
@@ -180,12 +180,12 @@ export const ComponentHeader = memo(
         {dependencies && dependencies.length > 0 && (
           <>
             <Divider />
-            <VStack gap={1} paddingX={4} paddingY={2}>
+            <VStack gap={{ base: 1, phone: 0 }} paddingX={{ base: 4, phone: 2 }} paddingY={2}>
               <Text font="label1">Peer dependencies</Text>
               <HStack
                 as="ul"
                 flexWrap="wrap"
-                gap={1}
+                gap={{ base: 1, phone: 0 }}
                 margin={0}
                 padding={0}
                 style={{
@@ -215,12 +215,12 @@ export const ComponentHeader = memo(
         {relatedComponents && relatedComponents.length > 0 && (
           <>
             <Divider />
-            <VStack gap={1} paddingX={4} paddingY={2}>
+            <VStack gap={{ base: 1, phone: 0 }} paddingX={{ base: 4, phone: 2 }} paddingY={2}>
               <Text font="label1">Related components</Text>
               <HStack
                 as="ul"
                 flexWrap="wrap"
-                gap={1}
+                gap={{ base: 1, phone: 0 }}
                 margin={0}
                 padding={0}
                 style={{

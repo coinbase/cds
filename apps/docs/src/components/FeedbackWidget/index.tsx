@@ -80,8 +80,8 @@ export function FeedbackWidget() {
           aria-labelledby="feedback-heading"
           background="bgAlternate"
           borderRadius={500}
-          gap={3}
-          padding={4}
+          gap={{ base: 3, phone: 1 }}
+          padding={{ base: 4, phone: 2 }}
           role="region"
         >
           <Text as="h3" font="title3" id="feedback-heading">

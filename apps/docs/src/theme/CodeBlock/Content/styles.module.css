@@ -27,10 +27,12 @@
     white-space: pre-wrap;
   }
 }
+
 .buttonGroup button {
   transition: opacity var(--ifm-transition-fast) ease-in-out;
   opacity: 0;
 }
+
 .codeBlock:hover .buttonGroup button {
   opacity: 0.4;
 }
@@ -43,5 +45,9 @@
 @media screen and (max-width: 768px) {
   .codeBlock {
     margin-bottom: var(--space-2);
+  }
+
+  .buttonGroup button {
+    opacity: 1;
   }
 }
