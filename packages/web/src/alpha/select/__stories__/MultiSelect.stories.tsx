@@ -246,7 +246,7 @@ export const Disabled = () => {
   );
 };
 
-export const WithDisabledOptions = () => {
+export const DisabledOptions = () => {
   const { value, onChange } = useMultiSelect({
     initialValue: ['1', '2', '3', '4', '5', '6', '7', '8'],
   });
@@ -263,7 +263,7 @@ export const WithDisabledOptions = () => {
   );
 };
 
-export const WithCustomAccessory = () => {
+export const CustomAccessory = () => {
   const { value, onChange } = useMultiSelect({
     initialValue: ['1'],
   });
@@ -281,7 +281,7 @@ export const WithCustomAccessory = () => {
   );
 };
 
-export const WithCustomMedia = () => {
+export const CustomMedia = () => {
   const { value, onChange } = useMultiSelect({
     initialValue: ['1'],
   });
@@ -342,7 +342,7 @@ export const MaxSelectedOptions = () => {
   );
 };
 
-export const WithDescriptions = () => {
+export const Descriptions = () => {
   const { value, onChange } = useMultiSelect({
     initialValue: ['1'],
   });
