@@ -3,9 +3,7 @@ import type { View } from 'react-native';
 
 import type { TourApi } from './useTour';
 
-export type TourContextValue<T extends string = string> = TourApi<T> & {
-  setActiveTourStepTarget: (target: HTMLElement | View | null) => void;
-};
+export type TourContextValue<T extends string = string> = TourApi<T>;
 
 export const TourContext = createContext<TourContextValue | undefined>(undefined);
 

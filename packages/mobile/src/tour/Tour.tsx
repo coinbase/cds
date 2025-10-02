@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useRef } from 'react';
 import { Modal, View } from 'react-native';
 import type { SharedProps } from '@coinbase/cds-common';
 import {
@@ -123,9 +123,6 @@ const TourComponent = <T extends string = string>({
   const RenderedTourStep = activeTourStep?.Component;
   const RenderedTourStepArrow = activeTourStep?.ArrowComponent ?? TourStepArrowComponent;
 
-  // This state is used to store the active tour step target element.
-  const [activeTourStepTarget, setActiveTourStepTarget] = useState<View | null>(null);
-
   const [animation, animationApi] = useSpring(
     () => ({ from: { opacity: 0 }, config: springConfig.slow }),
     [],
@@ -159,6 +156,7 @@ const TourComponent = <T extends string = string>({
   );
 
   const api = useTour<T>({ steps, activeTourStep, onChange: handleChange });
+  const { activeTourStepTarget, setActiveTourStepTarget } = api;
 
   // Component Lifecycle & Side Effects
   // ---------------------------------------------------------------------------
@@ -187,7 +185,7 @@ const TourComponent = <T extends string = string>({
 
       setActiveTourStepTarget(target);
     },
-    [animationApi, refs],
+    [animationApi, refs, setActiveTourStepTarget],
   );
 
   return (
@@ -211,7 +209,7 @@ const TourComponent = <T extends string = string>({
             {!(activeTourStep.hideOverlay ?? hideOverlay) && !!activeTourStepTarget && (
               <animated.View style={animation}>
                 <TourMaskComponent
-                  activeTourStepTarget={activeTourStepTarget}
+                  activeTourStepTarget={activeTourStepTarget as View}
                   borderRadius={activeTourStep.tourMaskBorderRadius ?? tourMaskBorderRadius}
                   padding={activeTourStep.tourMaskPadding ?? tourMaskPadding}
                 />

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import {
   OverlayContentContext,
   type OverlayContentContextValue,
@@ -204,7 +204,7 @@ const TourComponent = <T extends string = string>({
   const RenderedTourStepArrow = activeTourStep?.ArrowComponent ?? TourStepArrowComponent;
 
   // This state is used to store the active tour step target element.
-  const [activeTourStepTarget, setActiveTourStepTarget] = useState<HTMLElement | null>(null);
+  // const [activeTourStepTarget, setActiveTourStepTarget] = useState<HTMLElement | null>(null);
 
   const blockScroll = useScrollBlocker();
   const [animation, animationApi] = useSpring(
@@ -239,6 +239,7 @@ const TourComponent = <T extends string = string>({
   );
 
   const api = useTour<T>({ steps, activeTourStep, onChange: handleChange });
+  const { activeTourStepTarget, setActiveTourStepTarget } = api;
 
   // Component Lifecycle & Side Effects
   // ---------------------------------------------------------------------------
@@ -270,7 +271,15 @@ const TourComponent = <T extends string = string>({
 
       void revealTourStep();
     },
-    [refs, disableAutoScroll, scrollOptions, animationApi, activeTourStep],
+    [
+      refs,
+      setActiveTourStepTarget,
+      disableAutoScroll,
+      activeTourStep?.disableAutoScroll,
+      activeTourStep?.scrollOptions,
+      animationApi,
+      scrollOptions,
+    ],
   );
 
   // Manages scroll locking for the tour's duration. `useEffect` is used to
@@ -307,7 +316,9 @@ const TourComponent = <T extends string = string>({
               {!(activeTourStep.hideOverlay ?? hideOverlay) && activeTourStepTarget && (
                 <animated.div style={animation}>
                   <TourMaskComponent
-                    activeTourStepTargetRect={activeTourStepTarget.getBoundingClientRect()}
+                    activeTourStepTargetRect={(
+                      activeTourStepTarget as HTMLElement
+                    ).getBoundingClientRect()}
                     borderRadius={activeTourStep.tourMaskBorderRadius ?? tourMaskBorderRadius}
                     padding={activeTourStep.tourMaskPadding ?? tourMaskPadding}
                   />
