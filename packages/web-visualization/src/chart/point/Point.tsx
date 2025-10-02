@@ -215,12 +215,6 @@ export type PointProps = SharedProps &
      */
     animate?: boolean;
     /**
-     * Child elements to render behind the point (lower z-order).
-     * Useful for adding glow effects, rings, or other decorative elements.
-     * Children are positioned at (0,0) within the group, which is transformed to the point's location.
-     */
-    children?: React.ReactNode;
-    /**
      * Custom class names for the component.
      */
     classNames?: {
@@ -271,7 +265,6 @@ export const Point = memo<PointProps>(
     testID,
     pixelCoordinates,
     animate,
-    children,
     ...svgProps
   }) => {
     const { getXScale, getYScale, animate: animationEnabled } = useCartesianChartContext();
@@ -366,14 +359,24 @@ export const Point = memo<PointProps>(
 
       // Use the animate prop if provided, otherwise fall back to chart context
       const shouldAnimateInteractions = animate ?? animationEnabled;
+      const shouldAnimatePosition = animate ?? animationEnabled;
 
       return (
         <motion.circle
+          animate={
+            shouldAnimatePosition
+              ? {
+                  cx: pixelCoordinate.x,
+                  cy: pixelCoordinate.y,
+                }
+              : undefined
+          }
           aria-label={accessibilityLabel}
           className={cx(innerPointCss, className, classNames?.point)}
-          cx={0}
-          cy={0}
+          cx={pixelCoordinate.x}
+          cy={pixelCoordinate.y}
           fill={color}
+          initial={false}
           onClick={
             onClick
               ? (event: any) =>
@@ -387,7 +390,7 @@ export const Point = memo<PointProps>(
           strokeWidth={strokeWidth}
           style={mergedStyles}
           tabIndex={onClick ? 0 : -1}
-          transition={{ duration: 0.2, ease: 'easeOut' }}
+          transition={{ duration: 0.3, ease: 'easeInOut' }}
           variants={variants}
           whileHover={shouldAnimateInteractions && onClick ? 'hovered' : 'default'}
           whileTap={shouldAnimateInteractions && onClick ? 'pressed' : 'default'}
@@ -418,39 +421,16 @@ export const Point = memo<PointProps>(
       return null;
     }
 
-    // Use the animate prop if provided, otherwise fall back to chart context
-    const shouldAnimate = animate ?? animationEnabled;
-
     return (
       <>
-        {shouldAnimate ? (
-          <motion.g
-            animate={{
-              x: pixelCoordinate.x,
-              y: pixelCoordinate.y,
-            }}
-            className={cx(containerCss, classNames?.container)}
-            data-testid={testID}
-            initial={false}
-            opacity={opacity}
-            style={styles?.container}
-            transition={{ duration: 0.3, ease: 'easeInOut' }}
-          >
-            {children}
-            {innerPoint}
-          </motion.g>
-        ) : (
-          <g
-            className={cx(containerCss, classNames?.container)}
-            data-testid={testID}
-            opacity={opacity}
-            style={styles?.container}
-            transform={`translate(${pixelCoordinate.x}, ${pixelCoordinate.y})`}
-          >
-            {children}
-            {innerPoint}
-          </g>
-        )}
+        <g
+          className={cx(containerCss, classNames?.container)}
+          data-testid={testID}
+          opacity={opacity}
+          style={styles?.container}
+        >
+          {innerPoint}
+        </g>
         {LabelContent}
       </>
     );

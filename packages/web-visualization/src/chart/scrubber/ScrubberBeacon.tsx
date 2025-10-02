@@ -1,10 +1,9 @@
 import { forwardRef, memo, useImperativeHandle, useMemo } from 'react';
 import type { SharedProps } from '@coinbase/cds-common/types';
-import { useScrubberContext } from '@coinbase/cds-common/visualizations/charts';
+import { projectPoint, useScrubberContext } from '@coinbase/cds-common/visualizations/charts';
 import { m as motion, useAnimate } from 'framer-motion';
 
 import { useCartesianChartContext } from '../ChartProvider';
-import { Point, type PointProps } from '../point';
 
 const pulseTransitionConfig = {
   duration: 2,
@@ -29,33 +28,44 @@ const radius = 5;
 const glowRadius = 10;
 const pulseRadius = 15;
 
-export type ScrubberBeaconProps = SharedProps &
-  Omit<
-    PointProps,
-    | 'yAxisId'
-    | 'onClick'
-    | 'onScrubberEnter'
-    | 'label'
-    | 'labelConfig'
-    | 'renderLabel'
-    | 'dataX'
-    | 'dataY'
-    | 'children'
-    | 'hoverEffect'
-    | 'radius'
-  > & {
-    /**
-     * Pulse the scrubber beacon while it is at rest.
-     */
-    idlePulse?: boolean;
-    // make Point's coordinates optional for ScrubberBeacon
-    dataX?: PointProps['dataX'];
-    dataY?: PointProps['dataY'];
-    /**
-     * Filter to only show dot for specific series (used for hover-based positioning).
-     */
-    seriesId?: string;
-  };
+export type ScrubberBeaconProps = SharedProps & {
+  /**
+   * Optional data X coordinate to position the beacon.
+   * If not provided, uses the scrubber position from context.
+   */
+  dataX?: number;
+  /**
+   * Optional data Y coordinate to position the beacon.
+   * If not provided, looks up the Y value from series data at scrubber position.
+   */
+  dataY?: number;
+  /**
+   * Filter to only show dot for specific series (used for hover-based positioning).
+   */
+  seriesId?: string;
+  /**
+   * Color of the beacon point.
+   * If not provided, uses the series color.
+   */
+  color?: string;
+  /**
+   * Opacity of the beacon.
+   * @default 1
+   */
+  opacity?: number;
+  /**
+   * Pulse the scrubber beacon while it is at rest.
+   */
+  idlePulse?: boolean;
+  /**
+   * Custom className for styling.
+   */
+  className?: string;
+  /**
+   * Custom inline styles.
+   */
+  style?: React.CSSProperties;
+};
 
 /**
  * The ScrubberBeacon is a special instance of a Point used to mark the scrubber's position on a specific series.
@@ -72,7 +82,8 @@ export const ScrubberBeacon = memo(
         testID,
         idlePulse,
         opacity = 1,
-        ...props
+        className,
+        style,
       },
       ref,
     ) => {
@@ -147,47 +158,102 @@ export const ScrubberBeacon = memo(
         return { dataX: x, dataY: y };
       }, [dataXProp, dataYProp, sourceData, scrubberPosition, xScale, yScale]);
 
-      if (dataX === undefined || dataY === undefined) {
+      const pixelCoordinate = useMemo(() => {
+        if (!xScale || !yScale || dataX === undefined || dataY === undefined) {
+          return null;
+        }
+
+        return projectPoint({
+          x: dataX,
+          y: dataY,
+          xScale,
+          yScale,
+        });
+      }, [xScale, yScale, dataX, dataY]);
+
+      if (!pixelCoordinate) {
         return null;
       }
 
       const pointColor = color ?? targetSeries?.color ?? 'var(--color-fgPrimary)';
-
       const shouldPulse = animationEnabled && isIdleState && idlePulse;
 
+      if (animationEnabled && isIdleState) {
+        return (
+          <g className={className} data-testid={testID} opacity={opacity} style={style}>
+            <motion.circle
+              animate={{
+                cx: pixelCoordinate.x,
+                cy: pixelCoordinate.y,
+              }}
+              cx={pixelCoordinate.x}
+              cy={pixelCoordinate.y}
+              fill={pointColor}
+              initial={false}
+              opacity={0.15}
+              r={glowRadius}
+              transition={{ duration: 0.3, ease: 'easeInOut' }}
+            />
+            <motion.g
+              animate={{
+                x: pixelCoordinate.x,
+                y: pixelCoordinate.y,
+              }}
+              initial={false}
+              transition={{ duration: 0.3, ease: 'easeInOut' }}
+            >
+              <motion.circle
+                ref={scope}
+                animate={
+                  shouldPulse
+                    ? {
+                        opacity: [0.1, 0, 0.1],
+                        transition: pulseTransitionConfig,
+                      }
+                    : { opacity: 0 }
+                }
+                cx={0}
+                cy={0}
+                fill={pointColor}
+                initial={{ opacity: shouldPulse ? 0.1 : 0 }}
+                r={pulseRadius}
+              />
+            </motion.g>
+            <motion.circle
+              animate={{
+                cx: pixelCoordinate.x,
+                cy: pixelCoordinate.y,
+              }}
+              cx={pixelCoordinate.x}
+              cy={pixelCoordinate.y}
+              fill={pointColor}
+              initial={false}
+              r={radius}
+              stroke="var(--color-bg)"
+              strokeWidth={2}
+              transition={{ duration: 0.3, ease: 'easeInOut' }}
+            />
+          </g>
+        );
+      }
       return (
-        <Point
-          key={animationEnabled ? 'animated' : 'static'}
-          animate={isIdleState}
-          color={pointColor}
-          dataX={dataX}
-          dataY={dataY}
-          opacity={opacity}
-          radius={radius}
-          stroke="var(--color-bg)"
-          strokeWidth={2}
-          testID={testID}
-          yAxisId={targetSeries?.yAxisId}
-          {...props}
-        >
-          <circle cx={0} cy={0} fill={pointColor} opacity={0.15} r={glowRadius} />
-          <motion.circle
-            ref={scope}
-            animate={
-              shouldPulse
-                ? {
-                    opacity: [0.1, 0, 0.1],
-                    transition: pulseTransitionConfig,
-                  }
-                : { opacity: 0 }
-            }
-            cx={0}
-            cy={0}
+        <g className={className} data-testid={testID} opacity={opacity} style={style}>
+          <circle
+            cx={pixelCoordinate.x}
+            cy={pixelCoordinate.y}
             fill={pointColor}
-            initial={{ opacity: shouldPulse ? 0.1 : 0 }}
-            r={pulseRadius}
+            opacity={0.15}
+            r={glowRadius}
           />
-        </Point>
+          <circle
+            cx={pixelCoordinate.x}
+            cy={pixelCoordinate.y}
+            fill={pointColor}
+            r={radius}
+            stroke="var(--color-bg)"
+            strokeWidth={2}
+          />
+        </g>
       );
     },
   ),
