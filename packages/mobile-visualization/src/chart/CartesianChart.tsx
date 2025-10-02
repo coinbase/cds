@@ -1,4 +1,4 @@
-import React, { forwardRef, memo, useCallback, useMemo, useRef } from 'react';
+import React, { forwardRef, memo, useCallback, useMemo } from 'react';
 import { type View, type ViewStyle } from 'react-native';
 import { Svg } from 'react-native-svg';
 import type { Rect } from '@coinbase/cds-common/types';
@@ -97,7 +97,6 @@ export const CartesianChart = memo(
       ref,
     ) => {
       const [containerLayout, onContainerLayout] = useLayout();
-      const internalSvgRef = useRef<Svg>(null);
 
       const chartWidth = typeof width === 'number' ? width : containerLayout.width;
       const chartHeight = typeof height === 'number' ? height : containerLayout.height;
@@ -299,11 +298,10 @@ export const CartesianChart = memo(
         [renderedAxes, chartRect, userInset],
       );
 
-      const contextValue: CartesianChartContextValue<Svg> = useMemo(
+      const contextValue: CartesianChartContextValue = useMemo(
         () => ({
           series: series ?? [],
           getSeries,
-          svgRef: internalSvgRef,
           getSeriesData: getStackedSeriesData,
           animate,
           width: chartWidth,
@@ -355,15 +353,7 @@ export const CartesianChart = memo(
             onScrubberPositionChange={onScrubberPositionChange}
           >
             <Box ref={ref} onLayout={onContainerLayout} style={containerStyles} {...props}>
-              <Svg
-                ref={(node) => {
-                  if (internalSvgRef.current !== node) {
-                    (internalSvgRef as React.MutableRefObject<Svg | null>).current = node;
-                  }
-                }}
-                height={chartHeight}
-                width={chartWidth}
-              >
+              <Svg height={chartHeight} width={chartWidth}>
                 {children}
               </Svg>
             </Box>

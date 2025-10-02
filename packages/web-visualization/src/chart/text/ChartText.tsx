@@ -1,7 +1,7 @@
 import React, { memo, useEffect, useMemo, useRef, useState } from 'react';
 import type { ElevationLevels, Rect, SharedProps } from '@coinbase/cds-common/types';
 import { type ChartInset, getChartInset } from '@coinbase/cds-common/visualizations/charts';
-import { cx, useTheme } from '@coinbase/cds-web';
+import { cx } from '@coinbase/cds-web';
 import { Box, type BoxProps } from '@coinbase/cds-web/layout';
 import { Text } from '@coinbase/cds-web/typography';
 import { m as motion } from 'framer-motion';
@@ -276,6 +276,7 @@ export const ChartText = memo<ChartTextProps>(
       [verticalAlignment],
     );
 
+    // forces state update the bounding box when any properties that can affect the bounding box change
     useEffect(() => {
       if (textRef.current) {
         setTextBBox(textRef.current.getBBox());

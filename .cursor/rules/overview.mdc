@@ -6,7 +6,7 @@ alwaysApply: true
 
 # Coinbase Design System
 
-The Coinbase Design System (CDS) is a component library built with TypeScript. It uses React for web components and React Native for mobile components. CDS provides a set of consistent, reusable UI components that follow Coinbase's design principles and guidelines across web and mobile applications.
+The Coinbase Design System (CDS) is a component library built with TypeScript. CDS provides a set of reusable React components that follow Coinbase's design principles and guidelines across web and mobile applications.
 
 ## Core Packages
 
@@ -17,6 +17,8 @@ The design system is organized into several core packages in the monorepo:
 - Shared utilities: import from the package.json exports defined in `@coinbase/cds-common` [package.json](mdc:packages/common/package.json)
 - Illustrations: import from the package.json exports defined in `@coinbase/illustrations` [package.json](mdc:packages/illustrations/package.json)
 - Icons: import from the package.json exports defined in `@coinbase/icons` [package.json](mdc:packages/icons/package.json)
+- Web Visualization: import from the package.json exports defined in `@coinbase/cds-web-visualization` [package.json](mdc:packages/web-visualization/package.json)
+- Mobile Visualization: import from the package.json exports defined in `@coinbase/cds-mobile-visualization` [package.json](mdc:packages/mobile-visualization/package.json)
 
 ## Apps
 
