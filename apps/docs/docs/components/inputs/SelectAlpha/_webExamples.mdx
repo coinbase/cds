@@ -314,36 +314,21 @@ function EmptyStateExample() {
   const [searchTerm, setSearchTerm] = useState('');
   const [value, setValue] = useState(null);
 
-  const allOptions = [
-    { value: '1', label: 'Apple' },
-    { value: '2', label: 'Banana' },
-    { value: '3', label: 'Cherry' },
-    { value: '4', label: 'Date' },
-  ];
+  const allOptions = [];
 
   const filteredOptions = searchTerm
     ? allOptions.filter((opt) => opt.label.toLowerCase().includes(searchTerm.toLowerCase()))
     : allOptions;
 
   return (
-    <VStack gap={4}>
-      <input
-        type="text"
-        placeholder="Filter options..."
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-        style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ccc' }}
-      />
-
-      <Select
-        label="Filtered Select"
-        value={value}
-        onChange={setValue}
-        options={filteredOptions}
-        emptyOptionsLabel="No matching options found"
-        placeholder="Select an option"
-      />
-    </VStack>
+    <Select
+      label="Filtered Select"
+      value={value}
+      onChange={setValue}
+      options={filteredOptions}
+      emptyOptionsLabel="No matching options found"
+      placeholder="Select an option"
+    />
   );
 }
 ```
@@ -481,6 +466,419 @@ function LabelVariantExample() {
         placeholder="Select an option"
       />
     </VStack>
+  );
+}
+```
+
+## Very Long Labels
+
+Handle extremely long option labels that may need special treatment.
+
+```jsx live
+function VeryLongLabelsExample() {
+  const [value, setValue] = useState('1');
+
+  const longOptions = [
+    {
+      value: '1',
+      label:
+        'This is an extremely long option label that should test how the component handles very long text content that might overflow or wrap',
+    },
+    {
+      value: '2',
+      label:
+        'Another super long option label with even more text to see how it wraps or truncates in the UI when space is limited',
+    },
+    {
+      value: '3',
+      label: 'Short',
+    },
+    {
+      value: '4',
+      label: 'A moderately long label that is somewhere between short and extremely long',
+    },
+  ];
+
+  return (
+    <Select
+      label="Options with Very Long Labels"
+      value={value}
+      onChange={setValue}
+      options={longOptions}
+      placeholder="Select an option"
+    />
+  );
+}
+```
+
+## Custom Long Placeholder
+
+Use extended placeholder text for more descriptive empty states.
+
+```jsx live
+function LongPlaceholderExample() {
+  const [value, setValue] = useState(null);
+
+  const options = [
+    { value: '1', label: 'Option 1' },
+    { value: '2', label: 'Option 2' },
+    { value: '3', label: 'Option 3' },
+  ];
+
+  return (
+    <Select
+      label="Select with Long Placeholder"
+      value={value}
+      onChange={setValue}
+      options={options}
+      placeholder="This is a very long placeholder text that provides detailed instructions about what the user should select"
+    />
+  );
+}
+```
+
+## Mixed Options
+
+Options with and without descriptions in the same select.
+
+```jsx live
+function MixedOptionsExample() {
+  const [value, setValue] = useState('1');
+
+  const mixedOptions = [
+    { value: '1', label: 'Bitcoin', description: 'The original cryptocurrency' },
+    { value: '2', label: 'Ethereum' },
+    { value: '3', label: 'USDC', description: 'USD-backed stablecoin' },
+    { value: '4', label: 'Solana' },
+    { value: '5', label: 'Polygon', description: 'Layer 2 scaling solution' },
+  ];
+
+  return (
+    <Select
+      label="Mixed Option Types"
+      value={value}
+      onChange={setValue}
+      options={mixedOptions}
+      placeholder="Choose an asset"
+    />
+  );
+}
+```
+
+## Options with Only Accessory
+
+Add accessories without media for cleaner layouts.
+
+```jsx live
+function OnlyAccessoryExample() {
+  const [value, setValue] = useState('1');
+
+  const optionsWithAccessory = [
+    {
+      value: '1',
+      label: 'Favorites',
+      accessory: <Icon color="fg" name="star" />,
+    },
+    {
+      value: '2',
+      label: 'Verified',
+      accessory: <Icon color="fg" name="checkmark" />,
+    },
+    {
+      value: '3',
+      label: 'Premium',
+      accessory: <Icon color="fg" name="search" />,
+    },
+  ];
+
+  return (
+    <Select
+      label="Options with Accessories Only"
+      value={value}
+      onChange={setValue}
+      options={optionsWithAccessory}
+      placeholder="Select an option"
+    />
+  );
+}
+```
+
+## Options with Only Media
+
+Add media icons without accessories for visual identification.
+
+```jsx live
+function OnlyMediaExample() {
+  const [value, setValue] = useState('1');
+
+  const optionsWithMedia = [
+    {
+      value: '1',
+      label: 'Home',
+      media: <Icon color="fg" name="home" />,
+    },
+    {
+      value: '2',
+      label: 'Profile',
+      media: <Icon color="fg" name="search" />,
+    },
+    {
+      value: '3',
+      label: 'Settings',
+      media: <Icon color="fg" name="gear" />,
+    },
+  ];
+
+  return (
+    <Select
+      label="Options with Media Only"
+      value={value}
+      onChange={setValue}
+      options={optionsWithMedia}
+      placeholder="Navigate to..."
+    />
+  );
+}
+```
+
+## Variants with Additional Props
+
+Combine variants with other properties for complex states.
+
+```jsx live
+function VariantCombinationsExample() {
+  const [value1, setValue1] = useState('1');
+  const [value2, setValue2] = useState('2');
+
+  const options = [
+    { value: '1', label: 'Option 1' },
+    { value: '2', label: 'Option 2' },
+    { value: '3', label: 'Option 3' },
+  ];
+
+  return (
+    <VStack gap={4}>
+      <Select
+        compact
+        variant="positive"
+        startNode={<Icon color="fg" name="checkmark" />}
+        label="Compact + Positive + Icon"
+        value={value1}
+        onChange={setValue1}
+        options={options}
+        helperText="Multiple props combined"
+      />
+
+      <Select
+        disabled
+        variant="negative"
+        label="Disabled + Negative"
+        value={value2}
+        onChange={setValue2}
+        options={options}
+        helperText="Error state but disabled"
+      />
+    </VStack>
+  );
+}
+```
+
+## Long Helper Text
+
+Extended helper text for detailed instructions.
+
+```jsx live
+function LongHelperTextExample() {
+  const [value, setValue] = useState('1');
+
+  const options = [
+    { value: '1', label: 'Option 1' },
+    { value: '2', label: 'Option 2' },
+    { value: '3', label: 'Option 3' },
+  ];
+
+  return (
+    <Select
+      label="Select with Extended Helper"
+      value={value}
+      onChange={setValue}
+      options={options}
+      helperText="This is a very long helper text that provides extensive guidance about what the user should select. It might wrap to multiple lines depending on the container width and should remain readable."
+      placeholder="Select an option"
+    />
+  );
+}
+```
+
+## No Label
+
+Select without a visible label (accessibility label still required).
+
+```jsx live
+function NoLabelExample() {
+  const [value, setValue] = useState('1');
+
+  const options = [
+    { value: '1', label: 'Option 1' },
+    { value: '2', label: 'Option 2' },
+    { value: '3', label: 'Option 3' },
+  ];
+
+  return (
+    <Select
+      accessibilityLabel="Hidden label select"
+      value={value}
+      onChange={setValue}
+      options={options}
+      placeholder="Select without visible label"
+    />
+  );
+}
+```
+
+## Complex Nested Options
+
+Options with special characters, emojis, and complex content.
+
+```jsx live
+function ComplexOptionsExample() {
+  const [value, setValue] = useState('1');
+
+  const complexOptions = [
+    {
+      value: '1',
+      label: 'USD $100.00',
+      description: 'United States Dollar',
+      accessory: '🇺🇸',
+    },
+    {
+      value: '2',
+      label: 'EUR €85.50',
+      description: 'Euro (€)',
+      accessory: '🇪🇺',
+    },
+    {
+      value: '3',
+      label: 'GBP £73.25',
+      description: 'British Pound Sterling',
+      accessory: '🇬🇧',
+    },
+    {
+      value: '4',
+      label: 'JPY ¥11,050',
+      description: '日本円 (Japanese Yen)',
+      accessory: '🇯🇵',
+    },
+  ];
+
+  return (
+    <Select
+      label="Currency Selection"
+      value={value}
+      onChange={setValue}
+      options={complexOptions}
+      placeholder="Choose currency"
+    />
+  );
+}
+```
+
+## Stress Test
+
+Many options with various configurations for performance testing.
+
+```jsx live
+function StressTestExample() {
+  const [value, setValue] = useState('1');
+
+  const stressOptions = Array.from({ length: 50 }, (_, i) => ({
+    value: (i + 1).toString(),
+    label: `Option ${i + 1}`,
+    description: i % 3 === 0 ? `Description for option ${i + 1}` : undefined,
+    disabled: i % 7 === 0,
+    accessory: i % 5 === 0 ? <Icon color="fg" name="star" /> : undefined,
+    media: i % 8 === 0 ? <Icon color="fg" name="heart" /> : undefined,
+  }));
+
+  return (
+    <Select
+      label="Stress Test - Many Options"
+      value={value}
+      onChange={setValue}
+      options={stressOptions}
+      placeholder="Choose from many options"
+    />
+  );
+}
+```
+
+## Value Display
+
+Show the selected value in another component.
+
+```jsx live
+function ValueDisplayExample() {
+  const [value, setValue] = useState('btc');
+
+  const cryptoOptions = [
+    { value: 'btc', label: 'Bitcoin', description: 'BTC' },
+    { value: 'eth', label: 'Ethereum', description: 'ETH' },
+    { value: 'usdc', label: 'USD Coin', description: 'USDC' },
+  ];
+
+  const selectedOption = cryptoOptions.find((opt) => opt.value === value);
+
+  return (
+    <VStack gap={4}>
+      <div
+        style={{
+          padding: '16px',
+          borderRadius: '8px',
+          backgroundColor: '#f0f0f0',
+        }}
+      >
+        <Text font="headline">Selected Asset:</Text>
+        <Text font="title2">{selectedOption?.label || 'None'}</Text>
+        <Text font="body" color="fgSecondary">
+          {selectedOption?.description || 'No selection'}
+        </Text>
+      </div>
+
+      <Select
+        label="Choose Cryptocurrency"
+        value={value}
+        onChange={setValue}
+        options={cryptoOptions}
+        placeholder="Select an asset"
+      />
+    </VStack>
+  );
+}
+```
+
+## Options with Only Description
+
+Options that only have descriptions without labels.
+
+```jsx live
+function OnlyDescriptionExample() {
+  const [value, setValue] = useState('1');
+
+  const descriptionOnlyOptions = [
+    { value: '1', description: 'First description without a label' },
+    { value: '2', description: 'Second description only' },
+    { value: '3', description: 'Third item with just description' },
+    { value: '4', description: 'Fourth description-only option' },
+  ];
+
+  return (
+    <Select
+      label="Description-Only Options"
+      value={value}
+      onChange={setValue}
+      options={descriptionOnlyOptions}
+      placeholder="Select by description"
+    />
   );
 }
 ```

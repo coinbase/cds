@@ -277,7 +277,7 @@ function CustomIconsExample() {
       value: '2',
       label: 'Verified',
       accessory: <Icon color="fg" name="checkmark" />,
-      media: <Icon color="fg" name="shield" />,
+      media: <Icon color="fg" name="search" />,
     },
     {
       value: '3',
@@ -487,13 +487,13 @@ function CombinedFeaturesExample() {
       label: 'Premium Account',
       description: 'Access to all features',
       accessory: <Icon color="fg" name="star" />,
-      media: <Icon color="fg" name="crown" />,
+      media: <Icon color="fg" name="search" />,
     },
     {
       value: '2',
       label: 'Standard Account',
       description: 'Basic features included',
-      media: <Icon color="fg" name="user" />,
+      media: <Icon color="fg" name="search" />,
     },
     {
       value: '3',
@@ -514,6 +514,478 @@ function CombinedFeaturesExample() {
       variant="positive"
       helperText="Choose your account type"
       placeholder="Select account"
+    />
+  );
+}
+```
+
+## Options with Only Description
+
+Options that display only descriptions without labels.
+
+```jsx
+function OnlyDescriptionExample() {
+  const [value, setValue] = useState('1');
+
+  const descriptionOnlyOptions = [
+    { value: '1', description: 'First description without a label' },
+    { value: '2', description: 'Second description only' },
+    { value: '3', description: 'Third item with just description' },
+    { value: '4', description: 'Fourth description-only option' },
+  ];
+
+  return (
+    <Select
+      label="Description-Only Options"
+      value={value}
+      onChange={setValue}
+      options={descriptionOnlyOptions}
+      placeholder="Select by description"
+    />
+  );
+}
+```
+
+## No Visible Label
+
+Select without a visible label (accessibility label/hint still required).
+
+```jsx
+function NoLabelExample() {
+  const [value, setValue] = useState('1');
+
+  const options = [
+    { value: '1', label: 'Option 1' },
+    { value: '2', label: 'Option 2' },
+    { value: '3', label: 'Option 3' },
+  ];
+
+  return (
+    <Select
+      accessibilityLabel="Hidden label select"
+      accessibilityHint="This select has no visible label"
+      value={value}
+      onChange={setValue}
+      options={options}
+      placeholder="Select without visible label"
+    />
+  );
+}
+```
+
+## Mixed Option Types
+
+Options with varying properties in the same select.
+
+```jsx
+function MixedOptionsExample() {
+  const [value, setValue] = useState('1');
+
+  const mixedOptions = [
+    { value: '1', label: 'Bitcoin', description: 'The original cryptocurrency' },
+    { value: '2', label: 'Ethereum' },
+    { value: '3', label: 'USDC', description: 'USD-backed stablecoin' },
+    { value: '4', label: 'Solana' },
+    { value: '5', label: 'Polygon', description: 'Layer 2 scaling solution' },
+  ];
+
+  return (
+    <Select
+      label="Mixed Option Types"
+      value={value}
+      onChange={setValue}
+      options={mixedOptions}
+      placeholder="Choose an asset"
+    />
+  );
+}
+```
+
+## Variant Combinations
+
+Combine compact mode with different variants.
+
+```jsx
+function VariantCombinationsExample() {
+  const [value1, setValue1] = useState('1');
+  const [value2, setValue2] = useState('2');
+
+  const options = [
+    { value: '1', label: 'Option 1' },
+    { value: '2', label: 'Option 2' },
+    { value: '3', label: 'Option 3' },
+  ];
+
+  return (
+    <VStack gap={4}>
+      <Select
+        compact
+        variant="positive"
+        label="Compact + Positive"
+        value={value1}
+        onChange={setValue1}
+        options={options}
+        helperText="Success state in compact mode"
+      />
+
+      <Select
+        compact
+        variant="negative"
+        label="Compact + Negative"
+        value={value2}
+        onChange={setValue2}
+        options={options}
+        helperText="Error state in compact mode"
+      />
+    </VStack>
+  );
+}
+```
+
+## Multi-Select with Descriptions
+
+Multi-select mode with descriptive options.
+
+```jsx
+function MultiSelectWithDescriptionsExample() {
+  const { value, onChange } = useMultiSelect({
+    initialValue: ['1', '2'],
+  });
+
+  const optionsWithDescriptions = [
+    { value: '1', label: 'Push Notifications', description: 'Get alerts on your device' },
+    { value: '2', label: 'Email Updates', description: 'Weekly newsletter' },
+    { value: '3', label: 'SMS Alerts', description: 'Text message notifications' },
+    { value: '4', label: 'In-App Messages', description: 'Messages within the app' },
+  ];
+
+  return (
+    <Select
+      type="multi"
+      label="Notification Preferences"
+      value={value}
+      onChange={onChange}
+      options={optionsWithDescriptions}
+      placeholder="Select notification types"
+    />
+  );
+}
+```
+
+## Custom Styles
+
+Apply custom styles to the Select component.
+
+```jsx
+function CustomStylesExample() {
+  const [value, setValue] = useState('1');
+
+  const options = [
+    { value: '1', label: 'Custom Style 1' },
+    { value: '2', label: 'Custom Style 2' },
+    { value: '3', label: 'Custom Style 3' },
+  ];
+
+  return (
+    <Select
+      label="Custom Styled Select"
+      value={value}
+      onChange={setValue}
+      options={options}
+      styles={{
+        control: {
+          backgroundColor: '#e8f4fd',
+          borderRadius: 12,
+          padding: 16,
+        },
+        option: {
+          backgroundColor: '#f0f8ff',
+        },
+        optionBlendStyles: {
+          pressedBackground: '#0066cc',
+        },
+      }}
+      placeholder="Styled select"
+    />
+  );
+}
+```
+
+## Custom Long Placeholder
+
+Extended placeholder text for mobile screens.
+
+```jsx
+function LongPlaceholderExample() {
+  const [value, setValue] = useState(null);
+
+  const options = [
+    { value: '1', label: 'Option 1' },
+    { value: '2', label: 'Option 2' },
+    { value: '3', label: 'Option 3' },
+  ];
+
+  return (
+    <Select
+      label="Select with Long Placeholder"
+      value={value}
+      onChange={setValue}
+      options={options}
+      placeholder="This is a very long placeholder text that provides detailed instructions"
+    />
+  );
+}
+```
+
+## Options with Only Accessory
+
+Options with accessory icons only.
+
+```jsx
+function OnlyAccessoryExample() {
+  const [value, setValue] = useState('1');
+
+  const optionsWithAccessory = [
+    {
+      value: '1',
+      label: 'Starred',
+      accessory: <Icon color="fg" name="star" />,
+    },
+    {
+      value: '2',
+      label: 'Verified',
+      accessory: <Icon color="fg" name="checkmark" />,
+    },
+    {
+      value: '3',
+      label: 'Premium',
+      accessory: <Icon color="fg" name="search" />,
+    },
+  ];
+
+  return (
+    <Select
+      label="Options with Accessories"
+      value={value}
+      onChange={setValue}
+      options={optionsWithAccessory}
+      placeholder="Select an option"
+    />
+  );
+}
+```
+
+## Options with Only Media
+
+Options with media icons only.
+
+```jsx
+function OnlyMediaExample() {
+  const [value, setValue] = useState('1');
+
+  const optionsWithMedia = [
+    {
+      value: '1',
+      label: 'Home',
+      media: <Icon color="fg" name="home" />,
+    },
+    {
+      value: '2',
+      label: 'Profile',
+      media: <Icon color="fg" name="user" />,
+    },
+    {
+      value: '3',
+      label: 'Settings',
+      media: <Icon color="fg" name="gear" />,
+    },
+  ];
+
+  return (
+    <Select
+      label="Navigation Options"
+      value={value}
+      onChange={setValue}
+      options={optionsWithMedia}
+      placeholder="Navigate to..."
+    />
+  );
+}
+```
+
+## Options as React Nodes
+
+Options with custom React node labels and descriptions.
+
+```jsx
+function ReactNodeOptionsExample() {
+  const [value, setValue] = useState('1');
+
+  const reactNodeOptions = [
+    {
+      value: '1',
+      label: (
+        <Text font="title3" color="fgPrimary">
+          Bold Title 1
+        </Text>
+      ),
+      description: (
+        <Text font="caption" color="fgSecondary">
+          Subtitle text 1
+        </Text>
+      ),
+    },
+    {
+      value: '2',
+      label: (
+        <Text font="title3" color="fgPrimary">
+          Bold Title 2
+        </Text>
+      ),
+      description: (
+        <Text font="caption" color="fgSecondary">
+          Subtitle text 2
+        </Text>
+      ),
+    },
+    {
+      value: '3',
+      label: (
+        <Text font="title3" color="fgPrimary">
+          Bold Title 3
+        </Text>
+      ),
+      description: (
+        <Text font="caption" color="fgSecondary">
+          Subtitle text 3
+        </Text>
+      ),
+    },
+  ];
+
+  return (
+    <Select
+      label="Custom Formatted Options"
+      value={value}
+      onChange={setValue}
+      options={reactNodeOptions}
+      placeholder="Select styled option"
+    />
+  );
+}
+```
+
+## Custom Select All Option
+
+Customize the select all option component in multi-select.
+
+```jsx
+function CustomSelectAllOptionExample() {
+  const { value, onChange } = useMultiSelect({
+    initialValue: ['1'],
+  });
+
+  const CustomSelectAllOption = ({ onChange, selected, disabled, label, style }) => {
+    return (
+      <Pressable
+        background={selected ? 'bgPositive' : 'bg'}
+        disabled={disabled}
+        onPress={() => onChange('select-all')}
+        paddingX={3}
+        paddingY={4}
+        style={style}
+      >
+        <HStack gap={2} alignItems="center">
+          <Icon
+            color={selected ? 'fgPositive' : 'fg'}
+            name={selected ? 'circleCheckmark' : 'circle'}
+          />
+          <Text color={selected ? 'fgPositive' : 'fg'} font="headline">
+            {String(label || 'Select Everything')}
+          </Text>
+        </HStack>
+      </Pressable>
+    );
+  };
+
+  const options = [
+    { value: '1', label: 'Option 1' },
+    { value: '2', label: 'Option 2' },
+    { value: '3', label: 'Option 3' },
+    { value: '4', label: 'Option 4' },
+  ];
+
+  return (
+    <Select
+      type="multi"
+      SelectAllOptionComponent={CustomSelectAllOption}
+      label="Custom Select All"
+      value={value}
+      onChange={onChange}
+      options={options}
+      placeholder="Select options"
+      selectAllLabel="Pick All Items"
+    />
+  );
+}
+```
+
+## Edge Case Labels
+
+Handle edge cases with empty or special character labels.
+
+```jsx
+function EdgeCaseLabelsExample() {
+  const [value, setValue] = useState('3');
+
+  const edgeOptions = [
+    { value: '1', label: '' },
+    { value: '2', label: ' ' },
+    { value: '3', label: 'Normal Label' },
+    { value: '4', label: '\t\n' },
+    { value: '5', label: '🚀🌟💫' },
+    { value: '6', label: '©™®' },
+  ];
+
+  return (
+    <Select
+      label="Edge Case Labels"
+      value={value}
+      onChange={setValue}
+      options={edgeOptions}
+      placeholder="Select an option"
+    />
+  );
+}
+```
+
+## Stress Test Many Options
+
+Test performance with many options on mobile.
+
+```jsx
+function StressTestExample() {
+  const { value, onChange } = useMultiSelect({
+    initialValue: ['1', '5', '10'],
+  });
+
+  const manyOptions = Array.from({ length: 100 }, (_, i) => ({
+    value: (i + 1).toString(),
+    label: `Option ${i + 1}`,
+    description: i % 3 === 0 ? `Description for ${i + 1}` : undefined,
+    disabled: i % 15 === 0,
+    accessory: i % 10 === 0 ? <Icon color="fg" name="star" /> : undefined,
+  }));
+
+  return (
+    <Select
+      type="multi"
+      label="Stress Test - 100 Options"
+      value={value}
+      onChange={onChange}
+      options={manyOptions}
+      maxSelectedOptionsToShow={5}
+      placeholder="Select from many"
     />
   );
 }
