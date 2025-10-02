@@ -1,17 +1,7 @@
-import {
-  forwardRef,
-  memo,
-  useCallback,
-  useEffect,
-  useImperativeHandle,
-  useMemo,
-  useRef,
-} from 'react';
+import { forwardRef, memo, useEffect, useImperativeHandle, useMemo } from 'react';
 import Reanimated, {
   cancelAnimation,
-  runOnJS,
   useAnimatedProps,
-  useAnimatedReaction,
   useSharedValue,
   withRepeat,
   withSequence,
@@ -134,43 +124,24 @@ export const ScrubberBeacon = memo(
       const previousIdleState = usePreviousValue(!!isIdleState);
 
       const pixelCoordinate = useMemo(() => {
-        if (!xScale || !yScale || dataX === undefined || dataY === undefined) return;
+        if (!xScale || !yScale || dataX === undefined || dataY === undefined) return undefined;
 
-        return projectPoint({
+        const point = projectPoint({
           x: dataX,
           y: dataY,
           xScale,
           yScale,
         });
+
+        // Return undefined if coordinates are invalid
+        if (!point || isNaN(point.x) || isNaN(point.y)) return undefined;
+
+        return point;
       }, [xScale, yScale, dataX, dataY]);
 
-      const animatedX = useSharedValue(0);
-      const animatedY = useSharedValue(0);
+      const animatedX = useSharedValue(pixelCoordinate?.x ?? 0);
+      const animatedY = useSharedValue(pixelCoordinate?.y ?? 0);
       const pulseOpacity = useSharedValue(0);
-
-      // Refs for circles to use setNativeProps
-      const glowCircleRef = useRef<Circle>(null);
-      const pointCircleRef = useRef<Circle>(null);
-
-      // Update circle positions using setNativeProps
-      const updateGlowPosition = useCallback((x: number, y: number) => {
-        glowCircleRef.current?.setNativeProps({ cx: x, cy: y });
-      }, []);
-
-      const updatePointPosition = useCallback((x: number, y: number) => {
-        pointCircleRef.current?.setNativeProps({ cx: x, cy: y });
-      }, []);
-
-      // React to animated value changes
-      useAnimatedReaction(
-        () => ({ x: animatedX.value, y: animatedY.value }),
-        (coords) => {
-          'worklet';
-          runOnJS(updateGlowPosition)(coords.x, coords.y);
-          runOnJS(updatePointPosition)(coords.x, coords.y);
-        },
-        [updateGlowPosition, updatePointPosition],
-      );
 
       useImperativeHandle(ref, () => ({
         pulse: () => {
@@ -205,6 +176,9 @@ export const ScrubberBeacon = memo(
 
         // When scrubbing or animations disabled: snap immediately
         if (!isIdleState || !animate || !previousIdleState) {
+          // Cancel any ongoing animations before snapping
+          cancelAnimation(animatedX);
+          cancelAnimation(animatedY);
           animatedX.value = pixelCoordinate.x;
           animatedY.value = pixelCoordinate.y;
         } else {
@@ -212,18 +186,19 @@ export const ScrubberBeacon = memo(
           animatedX.value = withTiming(pixelCoordinate.x, { duration: 300 });
           animatedY.value = withTiming(pixelCoordinate.y, { duration: 300 });
         }
-      }, [
-        pixelCoordinate,
-        dataX,
-        dataY,
-        isIdleState,
-        animate,
-        animatedX,
-        animatedY,
-        previousIdleState,
-      ]);
+      }, [pixelCoordinate, isIdleState, animate, previousIdleState, animatedX, animatedY]);
 
-      // Animated props for pulse (still using AnimatedCircle)
+      // Animated props for all circles in idle state
+      const glowAnimatedProps = useAnimatedProps(() => ({
+        cx: animatedX.value,
+        cy: animatedY.value,
+      }));
+
+      const pointAnimatedProps = useAnimatedProps(() => ({
+        cx: animatedX.value,
+        cy: animatedY.value,
+      }));
+
       const pulseAnimatedProps = useAnimatedProps(() => ({
         cx: animatedX.value,
         cy: animatedY.value,
@@ -258,19 +233,15 @@ export const ScrubberBeacon = memo(
 
       return (
         <G opacity={opacity} testID={testID}>
-          <Circle
-            ref={glowCircleRef}
-            cx={pixelCoordinate.x}
-            cy={pixelCoordinate.y}
+          <AnimatedCircle
+            animatedProps={glowAnimatedProps}
             fill={pointColor}
             opacity={0.15}
             r={glowRadius}
           />
           <AnimatedCircle animatedProps={pulseAnimatedProps} fill={pointColor} r={pulseRadius} />
-          <Circle
-            ref={pointCircleRef}
-            cx={pixelCoordinate.x}
-            cy={pixelCoordinate.y}
+          <AnimatedCircle
+            animatedProps={pointAnimatedProps}
             fill={pointColor}
             r={radius}
             stroke={theme.color.bg}
