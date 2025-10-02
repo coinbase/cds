@@ -1,7 +1,6 @@
 import { memo, useCallback, useEffect, useId, useMemo } from 'react';
 import { getAxisTicksData, isCategoricalScale } from '@coinbase/cds-common/visualizations/charts';
 import { cx } from '@coinbase/cds-web';
-import { useTheme } from '@coinbase/cds-web/hooks/useTheme';
 import { css } from '@linaria/core';
 import { AnimatePresence, m as motion } from 'framer-motion';
 
@@ -67,7 +66,6 @@ export const YAxis = memo<YAxisProps>(
     tickInterval,
     ...props
   }) => {
-    const theme = useTheme();
     // todo: probably switch to our own id generator, use id seems to be for accessibility
     const registrationId = useId();
     const { animate, getYScale, getYAxis, registerAxis, unregisterAxis, getAxisBounds } =

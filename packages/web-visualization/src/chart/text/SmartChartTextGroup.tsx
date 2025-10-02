@@ -75,8 +75,6 @@ const EPSILON_PX = 0.5;
  */
 export const SmartChartTextGroup = memo<SmartChartTextGroupProps>(
   ({ labels, minGap = 8, prioritizeEndLabels = true, chartTextProps }) => {
-    const theme = useTheme();
-    const minGapPx = minGap;
     const [boundingBoxes, setBoundingBoxes] = useState<Map<string, Rect>>(new Map());
     const { onDimensionsChange: propsOnDimensionsChange, ...restChartTextProps } =
       chartTextProps ?? {};
@@ -161,7 +159,7 @@ export const SmartChartTextGroup = memo<SmartChartTextGroupProps>(
       if (n === 2) {
         const a = orderedWithRects[0];
         const b = orderedWithRects[1];
-        const overlap = doRectsOverlapWithGap(a.rect, b.rect, minGapPx);
+        const overlap = doRectsOverlapWithGap(a.rect, b.rect, minGap);
         if (overlap) {
           const firstOriginal = labelsWithKeys[0]?.key;
           return new Set<string>([firstOriginal ?? a.key]);
@@ -174,7 +172,7 @@ export const SmartChartTextGroup = memo<SmartChartTextGroupProps>(
         for (let i = 0; i < keysOrdered.length - 1; i++) {
           const ra = boundingBoxes.get(keysOrdered[i])!;
           const rb = boundingBoxes.get(keysOrdered[i + 1])!;
-          if (doRectsOverlapWithGap(ra, rb, minGapPx)) return true;
+          if (doRectsOverlapWithGap(ra, rb, minGap)) return true;
         }
         return false;
       };
@@ -217,7 +215,7 @@ export const SmartChartTextGroup = memo<SmartChartTextGroupProps>(
         const prevKey = greedy[greedy.length - 1];
         const ra = boundingBoxes.get(prevKey)!;
         const rb = boundingBoxes.get(k)!;
-        if (!doRectsOverlapWithGap(ra, rb, minGapPx)) {
+        if (!doRectsOverlapWithGap(ra, rb, minGap)) {
           greedy.push(k);
         }
       }
@@ -226,7 +224,7 @@ export const SmartChartTextGroup = memo<SmartChartTextGroupProps>(
         const lastIncluded = greedy[greedy.length - 1];
         const ra = boundingBoxes.get(lastIncluded)!;
         const rb = boundingBoxes.get(lastKey)!;
-        if (doRectsOverlapWithGap(ra, rb, minGapPx)) {
+        if (doRectsOverlapWithGap(ra, rb, minGap)) {
           // Replace the last conflicting with the lastKey
           greedy[greedy.length - 1] = lastKey;
         } else if (lastIncluded !== lastKey) {
@@ -235,7 +233,7 @@ export const SmartChartTextGroup = memo<SmartChartTextGroupProps>(
       }
 
       return new Set<string>(greedy);
-    }, [isReady, boundingBoxes, minGapPx, prioritizeEndLabels, labelsWithKeys]);
+    }, [isReady, boundingBoxes, minGap, prioritizeEndLabels, labelsWithKeys]);
 
     return (
       <g>

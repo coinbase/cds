@@ -180,8 +180,7 @@ export const ChartText = memo<ChartTextProps>(
     className,
     classNames,
   }) => {
-    const theme = useTheme();
-    const { width: chartWidth, height: chartHeight } = useCartesianChartContext();
+    const { animate, width: chartWidth, height: chartHeight } = useCartesianChartContext();
     const fullChartBounds = useMemo(
       () => ({ x: 0, y: 0, width: chartWidth, height: chartHeight }),
       [chartWidth, chartHeight],
@@ -303,7 +302,7 @@ export const ChartText = memo<ChartTextProps>(
       >
         <motion.g
           animate={{ opacity: isDimensionsReady ? 1 : 0 }}
-          transition={{ duration: 0.2, ease: 'easeOut' }}
+          transition={animate ? { duration: 0.2, ease: 'easeOut' } : undefined}
         >
           <Box
             as="rect"

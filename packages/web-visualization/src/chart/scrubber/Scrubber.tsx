@@ -26,6 +26,8 @@ import { ReferenceLine, type ReferenceLineProps } from '../line';
 import { ScrubberBeacon, type ScrubberBeaconProps, type ScrubberBeaconRef } from './ScrubberBeacon';
 import { ScrubberBeaconLabel, type ScrubberBeaconLabelProps } from './ScrubberBeaconLabel';
 
+const minGap = 2;
+
 /**
  * Configuration for scrubber functionality across chart components.
  * Provides consistent API with smart defaults and component customization.
@@ -251,7 +253,6 @@ export const Scrubber = memo(
       // todo: we shouldn't need this since it should be included in ChartText dimensions - double check
       const labelVerticalInset = 2;
       const labelHorizontalInset = 4;
-      const minLabelGap = 0.25;
 
       // Calculate optimal label positioning strategy
       const labelPositioning = useMemo(() => {
@@ -292,9 +293,6 @@ export const Scrubber = memo(
 
           globalSide = wouldOverflow ? 'left' : 'right';
         }
-
-        // Natural positioning with collision detection
-        const minGap = theme.space[minLabelGap];
 
         // Initialize all labels at their preferred positions
         for (const dim of sortedDimensions) {
@@ -503,7 +501,7 @@ export const Scrubber = memo(
         }
 
         return { strategy: globalSide, adjustments };
-      }, [headPositions, labelDimensions, theme.space, minLabelGap, drawingArea]);
+      }, [headPositions, labelDimensions, drawingArea]);
 
       // Callback for labels to register their dimensions
       const registerLabelDimensions = useCallback(
