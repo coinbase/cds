@@ -176,7 +176,6 @@ export const Line = memo<LineProps>(
       }
     }, [SelectedLineComponent, type]);
 
-    // Get series color for stroke
     const stroke = specifiedStroke ?? matchedSeries?.color ?? theme.color.fgPrimary;
 
     const xData = useMemo(() => {

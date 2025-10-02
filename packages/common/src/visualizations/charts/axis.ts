@@ -127,7 +127,10 @@ export const getAxisScale = ({
     };
   }
 
-  if (!isValidBounds(adjustedDomain)) throw new Error('Invalid domain bounds');
+  if (!isValidBounds(adjustedDomain))
+    throw new Error(
+      'Invalid domain bounds. See https://cds.coinbase.com/http://localhost:3000/components/graphs/XAxis/#domain',
+    );
 
   if (scaleType === 'band') {
     return getCategoricalScale({
@@ -174,8 +177,9 @@ export const getAxisConfig = (
     const axesLength = axes.length;
     // forces id to be defined on every input config when there are multiple axes
     if (axesLength > 1 && axes.some(({ id }) => id === undefined)) {
-      // todo: link to doc site (cds.coinbase.com/...)
-      throw new Error('When defining multiple axes, each must have a unique id');
+      throw new Error(
+        'When defining multiple axes, each must have a unique id. See https://cds.coinbase.com/components/graphs/YAxis/#multiple-y-axes.',
+      );
     }
 
     return axes.map(({ id, ...axis }) => ({

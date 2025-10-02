@@ -13,7 +13,7 @@ The YAxis component provides a vertical axis for charts with automatic tick gene
     },
   ]}
 >
-  <YAxis position="end" showGrid />
+  <YAxis showGrid />
   <Line seriesId="prices" curve="monotone" showArea />
   <Scrubber />
 </CartesianChart>
@@ -48,7 +48,6 @@ YAxis supports `linear` (default) and `log` scale types. Both `linear` and `log`
     showGrid
     showLine
     showTickMarks
-    position="end"
     requestedTickCount={6}
     width={70}
     tickLabelFormatter={(value) => value.toLocaleString()}
@@ -74,7 +73,7 @@ You can pass in either an object (AxisBounds) with `min` and `max` properties (b
     domain: ({ min, max }) => ({ min: min - 50, max: max + 50 }),
   }}
 >
-  <YAxis position="end" showGrid />
+  <YAxis showGrid />
   <Line seriesId="prices" curve="monotone" showArea />
 </CartesianChart>
 ```
@@ -112,7 +111,7 @@ Properties related to the visual appearance of the YAxis are set on the componen
 
 ### Position
 
-You can set the position of an axis to `start` or `end`. The default is `end`.
+You can set the position of an axis to `left` or `right` (default).
 
 ```jsx live
 <CartesianChart
@@ -133,8 +132,8 @@ You can set the position of an axis to `start` or `end`. The default is `end`.
     { id: 'logAxis', scaleType: 'log' },
   ]}
 >
-  <YAxis showLine showTickMarks axisId="logAxis" position="start" />
-  <YAxis showLine showTickMarks axisId="linearAxis" position="end" />
+  <YAxis showLine showTickMarks axisId="logAxis" position="left" />
+  <YAxis showLine showTickMarks axisId="linearAxis" />
   <Line curve="natural" seriesId="linear" />
   <Line curve="natural" seriesId="log" />
   <Scrubber />
@@ -165,7 +164,7 @@ function YAxisGridExample() {
           },
         ]}
       >
-        <YAxis position="end" showGrid={showGrid} />
+        <YAxis showGrid={showGrid} />
         <Line seriesId="prices" curve="monotone" showArea />
         <Scrubber />
       </CartesianChart>
@@ -238,7 +237,7 @@ function YAxisLineExample() {
           },
         ]}
       >
-        <YAxis position="end" showLine={showLine} />
+        <YAxis showLine={showLine} />
         <Line seriesId="prices" curve="monotone" showArea />
         <Scrubber />
       </CartesianChart>
@@ -270,7 +269,6 @@ function YAxisLineStylesExample() {
         ]}
       >
         <YAxis
-          position="end"
           showLine={showLine}
           showGrid
           styles={{ line: { stroke: 'var(--color-accentBoldGreen)', strokeWidth: 4 } }}
@@ -305,7 +303,6 @@ The `size` prop sets the size of the axis in pixels. The default is 44 for YAxis
     showGrid
     showLine
     showTickMarks
-    position="end"
     requestedTickCount={6}
     width={70}
     tickLabelFormatter={(value) => value.toLocaleString()}
@@ -330,7 +327,7 @@ You can use the `ticks`, `requestedTickCount` (default for YAxis), and `tickInte
     },
   ]}
 >
-  <YAxis position="end" showLine showTickMarks showGrid ticks={[34, 56, 80]} />
+  <YAxis showLine showTickMarks showGrid ticks={[34, 56, 80]} />
   <Line seriesId="prices" curve="monotone" showArea />
   <Scrubber />
 </CartesianChart>
@@ -351,13 +348,13 @@ This is the default behavior for YAxis, and defaults to `5`.
     },
   ]}
 >
-  <YAxis position="end" showLine showTickMarks showGrid requestedTickCount={5} />
+  <YAxis showLine showTickMarks showGrid requestedTickCount={5} />
   <Line seriesId="prices" curve="monotone" showArea />
   <Scrubber />
 </CartesianChart>
 ```
 
-`tickInterval`, which accepts `ThemeVars.Space`, will measure the available space and try to create evenly spaced ticks. It will always include the first and last values of the domain.
+`tickInterval`, which accepts a number for the gap between ticks in pixels, will measure the available space and try to create evenly spaced ticks. It will always include the first and last values of the domain.
 
 ```jsx live
 <CartesianChart
@@ -370,7 +367,7 @@ This is the default behavior for YAxis, and defaults to `5`.
     },
   ]}
 >
-  <YAxis position="end" showLine showTickMarks showGrid tickInterval={1} />
+  <YAxis showLine showTickMarks showGrid tickInterval={8} />
   <Line seriesId="prices" curve="monotone" showArea />
   <Scrubber />
 </CartesianChart>
@@ -378,7 +375,8 @@ This is the default behavior for YAxis, and defaults to `5`.
 
 ### Tick Marks
 
-You can show tick marks on the axis using the `showTickMarks` prop. You can also customize the tick mark size using the `tickMarkSize` prop, which accepts `ThemeVars.Space`.
+You can show tick marks on the axis using the `showTickMarks` prop.
+You can also customize the tick mark size using the `tickMarkSize` prop.
 
 ```jsx live
 function YAxisTickMarksExample() {
@@ -400,7 +398,7 @@ function YAxisTickMarksExample() {
           },
         ]}
       >
-        <YAxis position="end" showLine showTickMarks={showTickMarks} tickMarkSize={2} showGrid />
+        <YAxis showLine showTickMarks={showTickMarks} tickMarkSize={16} showGrid />
         <Line seriesId="prices" curve="monotone" showArea />
         <Scrubber />
       </CartesianChart>
@@ -424,8 +422,88 @@ You can customize the tick labels using the `tickLabelFormatter` prop.
     },
   ]}
 >
-  <YAxis position="end" showGrid tickLabelFormatter={(value) => `$${value}`} />
+  <YAxis showGrid tickLabelFormatter={(value) => `$${value}`} />
   <Line seriesId="prices" curve="monotone" showArea />
   <Scrubber />
 </CartesianChart>
+```
+
+## Customization
+
+### Multiple Y Axes
+
+```jsx live
+<VStack gap={2}>
+  <CartesianChart
+    height={400}
+    series={[
+      {
+        id: 'revenue',
+        data: [455, 520, 380, 455, 285, 235],
+        yAxisId: 'revenue',
+        color: 'var(--color-accentBoldYellow)',
+      },
+      {
+        id: 'profitMargin',
+        data: [23, 20, 16, 38, 12, 9],
+        yAxisId: 'profitMargin',
+        color: 'var(--color-fgPositive)',
+      },
+    ]}
+    xAxis={{
+      data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+      scaleType: 'band',
+    }}
+    yAxis={[
+      {
+        id: 'revenue',
+        domain: { min: 0 },
+      },
+      {
+        id: 'profitMargin',
+        domain: { min: 0, max: 100 },
+      },
+    ]}
+  >
+    <XAxis showLine showTickMarks />
+    <YAxis
+      showGrid
+      showLine
+      showTickMarks
+      axisId="revenue"
+      position="left"
+      requestedTickCount={5}
+      size={60}
+      tickLabelFormatter={(value) => `$${value}k`}
+    />
+    <YAxis
+      showLine
+      showTickMarks
+      axisId="profitMargin"
+      requestedTickCount={5}
+      tickLabelFormatter={(value) => `${value}%`}
+    />
+    <BarPlot />
+  </CartesianChart>
+  <HStack justifyContent="center" gap={2}>
+    <Box alignItems="center" gap={0.5}>
+      <Box
+        borderRadius={1000}
+        width={10}
+        height={10}
+        style={{ background: 'var(--color-accentBoldYellow)' }}
+      />
+      <Text font="label2">Revenue ($)</Text>
+    </Box>
+    <Box alignItems="center" gap={0.5}>
+      <Box
+        borderRadius={1000}
+        width={10}
+        height={10}
+        style={{ background: 'var(--color-fgPositive)' }}
+      />
+      <Text font="label2">Profit Margin (%)</Text>
+    </Box>
+  </HStack>
+</VStack>
 ```

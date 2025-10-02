@@ -101,13 +101,12 @@ export const BarStackGroup = memo<BarStackGroupProps>(
     }, [xScale, yScale, drawingArea, maxDataLength, stackIndex, totalStacks, barPadding]);
 
     if (xScale && !isCategoricalScale(xScale)) {
-      console.error('BarStackGroup requires a band scale for x-axis');
-      return null;
+      throw new Error(
+        'BarStackGroup requires a band scale for x-axis. See https://cds.coinbase.com/components/graphs/XAxis/#scale-type',
+      );
     }
 
-    if (!yScale || !drawingArea || stackConfigs.length === 0) {
-      return null;
-    }
+    if (!yScale || !drawingArea || stackConfigs.length === 0) return;
 
     return stackConfigs.map(({ categoryIndex, x, width }) => (
       <BarStack
