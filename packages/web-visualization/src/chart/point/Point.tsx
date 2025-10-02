@@ -1,25 +1,14 @@
-import React, { forwardRef, memo, useEffect, useImperativeHandle, useMemo } from 'react';
+import React, { memo, useEffect, useMemo } from 'react';
 import type { SVGProps } from 'react';
 import type { SharedProps } from '@coinbase/cds-common/types';
 import { projectPoint, useScrubberContext } from '@coinbase/cds-common/visualizations/charts';
 import { cx } from '@coinbase/cds-web';
 import { css } from '@linaria/core';
-import { m as motion, useAnimate } from 'framer-motion';
+import { m as motion } from 'framer-motion';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import { ChartText, type ChartTextProps } from '../text';
 import type { ChartTextChildren } from '../text/ChartText';
-
-export const singlePulseTransitionConfig = {
-  duration: 1,
-  ease: 'easeInOut',
-} as const;
-
-export const pulseTransitionConfig = {
-  duration: 2,
-  repeat: Infinity,
-  ease: 'easeInOut',
-} as const;
 
 const containerCss = css`
   outline: none;
@@ -73,13 +62,6 @@ const calculateLabelAlignment = (
         verticalAlignment: 'middle',
       };
   }
-};
-
-export type PointRef = {
-  /**
-   * Triggers a single pulse animation.
-   */
-  pulse: () => void;
 };
 
 /**
@@ -155,11 +137,6 @@ export type PointConfig = {
    */
   radius?: number;
   /**
-   * Radius of the pulse ring. Only used when pulse is enabled.
-   * @default 16
-   */
-  pulseRadius?: number;
-  /**
    * Opacity of the point.
    */
   opacity?: number;
@@ -233,10 +210,16 @@ export type PointProps = SharedProps &
      */
     pixelCoordinates?: { x: number; y: number };
     /**
-     * Whether to animate the point with a pulsing effect.
-     * @default false
+     * Override the chart's animation setting for this specific point.
+     * When undefined, uses the chart context's animation setting.
      */
-    pulse?: boolean;
+    animate?: boolean;
+    /**
+     * Child elements to render behind the point (lower z-order).
+     * Useful for adding glow effects, rings, or other decorative elements.
+     * Children are positioned at (0,0) within the group, which is transformed to the point's location.
+     */
+    children?: React.ReactNode;
     /**
      * Custom class names for the component.
      */
@@ -245,10 +228,6 @@ export type PointProps = SharedProps &
        * Custom class name for the point container element.
        */
       container?: string;
-      /**
-       * Custom class name for the pulse circle element.
-       */
-      pulseRing?: string;
       /**
        * Custom class name for the inner circle element.
        */
@@ -263,236 +242,217 @@ export type PointProps = SharedProps &
        */
       container?: React.CSSProperties;
       /**
-       * Custom styles for the pulse circle element.
-       */
-      pulseRing?: React.CSSProperties;
-      /**
        * Custom styles for the inner circle element.
        */
       point?: React.CSSProperties;
     };
   };
 
-export const Point = memo(
-  forwardRef<PointRef, PointProps>(
-    (
-      {
-        dataX,
-        dataY,
-        yAxisId,
-        color = 'var(--color-fgPrimary)',
-        pulse = false,
-        radius = 4,
-        pulseRadius = 16,
-        opacity,
-        onClick,
-        onScrubberEnter,
-        className,
-        style,
-        classNames,
-        styles,
-        stroke = 'var(--color-bg)',
-        strokeWidth = 2,
-        accessibilityLabel,
-        label,
-        labelConfig,
-        renderLabel,
-        testID,
-        pixelCoordinates,
-        ...svgProps
-      },
-      ref,
-    ) => {
-      const [scope, animate] = useAnimate();
-      const { getXScale, getYScale, animate: animationEnabled } = useCartesianChartContext();
-      const { scrubberPosition } = useScrubberContext();
+export const Point = memo<PointProps>(
+  ({
+    dataX,
+    dataY,
+    yAxisId,
+    color = 'var(--color-fgPrimary)',
+    radius = 4,
+    opacity,
+    onClick,
+    onScrubberEnter,
+    className,
+    style,
+    classNames,
+    styles,
+    stroke = 'var(--color-bg)',
+    strokeWidth = 2,
+    accessibilityLabel,
+    label,
+    labelConfig,
+    renderLabel,
+    testID,
+    pixelCoordinates,
+    animate,
+    children,
+    ...svgProps
+  }) => {
+    const { getXScale, getYScale, animate: animationEnabled } = useCartesianChartContext();
+    const { scrubberPosition } = useScrubberContext();
 
-      const xScale = getXScale();
-      const yScale = getYScale(yAxisId);
+    const xScale = getXScale();
+    const yScale = getYScale(yAxisId);
 
-      // Scrubber detection: check if this point is highlighted by the scrubber
-      const isScrubbing = scrubberPosition !== undefined;
-      const isScrubberHighlighted = isScrubbing && scrubberPosition === dataX;
+    const isScrubberHighlighted = scrubberPosition !== undefined && scrubberPosition === dataX;
 
-      // Project the point to pixel coordinates
-      const pixelCoordinate = useMemo(() => {
-        if (pixelCoordinates) {
-          return pixelCoordinates;
-        }
-
-        if (!xScale || !yScale) {
-          return { x: 0, y: 0 };
-        }
-
-        return projectPoint({
-          x: dataX,
-          y: dataY,
-          xScale,
-          yScale,
-        });
-      }, [xScale, yScale, dataX, dataY, pixelCoordinates]);
-
-      useImperativeHandle(ref, () => ({
-        pulse: () => {
-          animate(
-            scope.current,
-            {
-              opacity: [0.1, 0],
-            },
-            singlePulseTransitionConfig,
-          );
-        },
-      }));
-
-      useEffect(() => {
-        if (isScrubberHighlighted && onScrubberEnter) {
-          onScrubberEnter({ x: pixelCoordinate.x, y: pixelCoordinate.y });
-        }
-      }, [isScrubberHighlighted, onScrubberEnter, pixelCoordinate.x, pixelCoordinate.y]);
-
-      const shouldShowPulse = animationEnabled && pulse;
-
-      const LabelContent = useMemo(() => {
-        // Custom render function takes precedence
-        if (renderLabel) {
-          return renderLabel({
-            x: pixelCoordinate.x,
-            y: pixelCoordinate.y,
-            dataX,
-            dataY,
-          });
-        }
-
-        if (label) {
-          const alignment = labelConfig?.position
-            ? calculateLabelAlignment(labelConfig.position)
-            : {};
-
-          const chartTextProps: ChartTextProps = {
-            x: pixelCoordinate.x,
-            y: pixelCoordinate.y,
-            ...alignment,
-            ...labelConfig, // labelConfig overrides alignment if provided
-            children: label,
-          };
-
-          return <ChartText {...chartTextProps} />;
-        }
-
-        return null;
-      }, [renderLabel, label, labelConfig, pixelCoordinate.x, pixelCoordinate.y, dataX, dataY]);
-
-      const innerPoint = useMemo(() => {
-        const mergedStyles = {
-          cursor: onClick !== undefined ? 'pointer' : undefined,
-          ...style,
-          ...styles?.point,
-        };
-
-        // interaction animations to scale radius of point
-        const variants = {
-          hovered: {
-            r: radius * 1.2,
-          },
-          pressed: {
-            r: radius * 0.9,
-          },
-          default: {
-            r: radius,
-          },
-        };
-
-        const handleKeyDown = onClick
-          ? (event: React.KeyboardEvent) => {
-              if (event.key === 'Enter' || event.key === ' ') {
-                event.preventDefault();
-                onClick(event as any, { dataX, dataY, x: pixelCoordinate.x, y: pixelCoordinate.y });
-              }
-            }
-          : undefined;
-
-        return (
-          <motion.circle
-            aria-label={accessibilityLabel}
-            className={cx(innerPointCss, className, classNames?.point)}
-            cx={pixelCoordinate.x}
-            cy={pixelCoordinate.y}
-            fill={color}
-            onClick={
-              onClick
-                ? (event: any) =>
-                    onClick(event, { dataX, dataY, x: pixelCoordinate.x, y: pixelCoordinate.y })
-                : undefined
-            }
-            onKeyDown={handleKeyDown}
-            r={radius}
-            role={onClick ? 'button' : undefined}
-            stroke={stroke}
-            strokeWidth={strokeWidth}
-            style={mergedStyles}
-            tabIndex={onClick ? 0 : -1}
-            transition={{ duration: 0.2, ease: 'easeOut' }}
-            variants={variants}
-            whileHover={animationEnabled && onClick ? 'hovered' : 'default'}
-            whileTap={animationEnabled && onClick ? 'pressed' : 'default'}
-            {...(svgProps as any)}
-          />
-        );
-      }, [
-        style,
-        styles?.point,
-        classNames?.point,
-        pixelCoordinate.x,
-        pixelCoordinate.y,
-        color,
-        animationEnabled,
-        radius,
-        className,
-        onClick,
-        stroke,
-        strokeWidth,
-        svgProps,
-        dataX,
-        dataY,
-        accessibilityLabel,
-      ]);
-
-      if (!xScale || !yScale) {
-        return null;
+    const pixelCoordinate = useMemo(() => {
+      if (pixelCoordinates) {
+        return pixelCoordinates;
       }
 
+      if (!xScale || !yScale) {
+        return { x: 0, y: 0 };
+      }
+
+      return projectPoint({
+        x: dataX,
+        y: dataY,
+        xScale,
+        yScale,
+      });
+    }, [xScale, yScale, dataX, dataY, pixelCoordinates]);
+
+    useEffect(() => {
+      if (isScrubberHighlighted && onScrubberEnter) {
+        onScrubberEnter({ x: pixelCoordinate.x, y: pixelCoordinate.y });
+      }
+    }, [isScrubberHighlighted, onScrubberEnter, pixelCoordinate.x, pixelCoordinate.y]);
+
+    const LabelContent = useMemo(() => {
+      // Custom render function takes precedence
+      if (renderLabel) {
+        return renderLabel({
+          x: pixelCoordinate.x,
+          y: pixelCoordinate.y,
+          dataX,
+          dataY,
+        });
+      }
+
+      if (label) {
+        const alignment = labelConfig?.position
+          ? calculateLabelAlignment(labelConfig.position)
+          : {};
+
+        const chartTextProps: ChartTextProps = {
+          x: pixelCoordinate.x,
+          y: pixelCoordinate.y,
+          ...alignment,
+          ...labelConfig, // labelConfig overrides alignment if provided
+          children: label,
+        };
+
+        return <ChartText {...chartTextProps} />;
+      }
+
+      return null;
+    }, [renderLabel, label, labelConfig, pixelCoordinate.x, pixelCoordinate.y, dataX, dataY]);
+
+    const innerPoint = useMemo(() => {
+      const mergedStyles = {
+        cursor: onClick !== undefined ? 'pointer' : undefined,
+        ...style,
+        ...styles?.point,
+      };
+
+      // interaction animations to scale radius of point
+      const variants = {
+        hovered: {
+          r: radius * 1.2,
+        },
+        pressed: {
+          r: radius * 0.9,
+        },
+        default: {
+          r: radius,
+        },
+      };
+
+      const handleKeyDown = onClick
+        ? (event: React.KeyboardEvent) => {
+            if (event.key === 'Enter' || event.key === ' ') {
+              event.preventDefault();
+              onClick(event as any, { dataX, dataY, x: pixelCoordinate.x, y: pixelCoordinate.y });
+            }
+          }
+        : undefined;
+
+      // Use the animate prop if provided, otherwise fall back to chart context
+      const shouldAnimateInteractions = animate ?? animationEnabled;
+
       return (
-        <>
+        <motion.circle
+          aria-label={accessibilityLabel}
+          className={cx(innerPointCss, className, classNames?.point)}
+          cx={0}
+          cy={0}
+          fill={color}
+          onClick={
+            onClick
+              ? (event: any) =>
+                  onClick(event, { dataX, dataY, x: pixelCoordinate.x, y: pixelCoordinate.y })
+              : undefined
+          }
+          onKeyDown={handleKeyDown}
+          r={radius}
+          role={onClick ? 'button' : undefined}
+          stroke={stroke}
+          strokeWidth={strokeWidth}
+          style={mergedStyles}
+          tabIndex={onClick ? 0 : -1}
+          transition={{ duration: 0.2, ease: 'easeOut' }}
+          variants={variants}
+          whileHover={shouldAnimateInteractions && onClick ? 'hovered' : 'default'}
+          whileTap={shouldAnimateInteractions && onClick ? 'pressed' : 'default'}
+          {...(svgProps as any)}
+        />
+      );
+    }, [
+      style,
+      styles?.point,
+      classNames?.point,
+      color,
+      animate,
+      animationEnabled,
+      radius,
+      className,
+      onClick,
+      stroke,
+      strokeWidth,
+      svgProps,
+      dataX,
+      dataY,
+      pixelCoordinate.x,
+      pixelCoordinate.y,
+      accessibilityLabel,
+    ]);
+
+    if (!xScale || !yScale) {
+      return null;
+    }
+
+    // Use the animate prop if provided, otherwise fall back to chart context
+    const shouldAnimate = animate ?? animationEnabled;
+
+    return (
+      <>
+        {shouldAnimate ? (
+          <motion.g
+            animate={{
+              x: pixelCoordinate.x,
+              y: pixelCoordinate.y,
+            }}
+            className={cx(containerCss, classNames?.container)}
+            data-testid={testID}
+            initial={false}
+            opacity={opacity}
+            style={styles?.container}
+            transition={{ duration: 0.3, ease: 'easeInOut' }}
+          >
+            {children}
+            {innerPoint}
+          </motion.g>
+        ) : (
           <g
             className={cx(containerCss, classNames?.container)}
             data-testid={testID}
             opacity={opacity}
             style={styles?.container}
+            transform={`translate(${pixelCoordinate.x}, ${pixelCoordinate.y})`}
           >
-            {/* pulse ring */}
-            <motion.circle
-              ref={scope}
-              animate={
-                shouldShowPulse
-                  ? {
-                      opacity: [0.1, 0, 0.1],
-                      transition: pulseTransitionConfig,
-                    }
-                  : { opacity: 0 }
-              }
-              className={classNames?.pulseRing}
-              cx={pixelCoordinate.x}
-              cy={pixelCoordinate.y}
-              fill={color}
-              initial={{ opacity: shouldShowPulse ? 0.1 : 0 }}
-              r={pulseRadius}
-              style={styles?.pulseRing}
-            />
+            {children}
             {innerPoint}
           </g>
-          {LabelContent}
-        </>
-      );
-    },
-  ),
+        )}
+        {LabelContent}
+      </>
+    );
+  },
 );

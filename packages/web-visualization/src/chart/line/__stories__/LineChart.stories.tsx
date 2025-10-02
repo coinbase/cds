@@ -29,12 +29,11 @@ import {
   PeriodSelectorActiveIndicator,
   Scrubber,
   type ScrubberRef,
+  useCartesianChartContext,
 } from '../..';
 import { Area, type AreaComponentProps, DottedArea, GradientArea } from '../../area';
 import { XAxis, YAxis } from '../../axis';
 import { CartesianChart } from '../../CartesianChart';
-import { useCartesianChartContext } from '../../ChartProvider';
-import { Point } from '../../point';
 import { DottedLine, GradientLine, Line, LineChart, ReferenceLine, SolidLine } from '..';
 
 export default {
@@ -481,6 +480,7 @@ const ColorShiftChart = () => {
               id: 'price',
               data: currentData,
               color: 'var(--chartActiveColor)',
+              label: 'Price',
             },
           ]}
           xAxis={{
@@ -1127,7 +1127,7 @@ const AvailabilityChart = () => {
       yellowThresholdPercentage?: number;
       greenThresholdPercentage?: number;
     }) => {
-      const { height, series, getYScale, getYAxis, drawingArea } = useCartesianChartContext();
+      const { series, getYScale, getYAxis, drawingArea } = useCartesianChartContext();
       const yScale = getYScale();
       const yAxis = getYAxis();
 

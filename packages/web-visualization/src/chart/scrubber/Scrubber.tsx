@@ -28,6 +28,8 @@ import { ScrubberBeaconLabel, type ScrubberBeaconLabelProps } from './ScrubberBe
 
 const minGap = 2;
 
+export type ScrubberRef = ScrubberBeaconRef;
+
 /**
  * Configuration for scrubber functionality across chart components.
  * Provides consistent API with smart defaults and component customization.
@@ -111,8 +113,6 @@ type LabelDimensions = {
   preferredX: number;
   preferredY: number;
 };
-
-export type ScrubberRef = ScrubberBeaconRef;
 
 /**
  * Unified component that manages all scrubber elements (heads, line, labels)
