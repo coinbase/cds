@@ -14,7 +14,7 @@ function SingleSelectExample() {
   ];
 
   return (
-    <SelectAlpha
+    <Select
       label="Choose an option"
       value={value}
       onChange={setValue}
@@ -49,7 +49,7 @@ function MultiSelectExample() {
   ];
 
   return (
-    <SelectAlpha
+    <Select
       type="multi"
       label="Choose multiple options"
       value={value}
@@ -79,7 +79,7 @@ function AccessibilityExample() {
   ];
 
   return (
-    <SelectAlpha
+    <Select
       label="Task Priority"
       value={value}
       onChange={setValue}
@@ -119,7 +119,7 @@ function VariantExample() {
 
   return (
     <VStack gap={4}>
-      <SelectAlpha
+      <Select
         label="Positive Status"
         value={positiveValue}
         onChange={setPositiveValue}
@@ -129,7 +129,7 @@ function VariantExample() {
         placeholder="Select positive status"
       />
 
-      <SelectAlpha
+      <Select
         label="Negative Status"
         value={negativeValue}
         onChange={setNegativeValue}

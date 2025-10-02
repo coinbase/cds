@@ -34,7 +34,7 @@ import { useSparklinePath } from '@coinbase/cds-common/visualizations/useSparkli
 import * as CDSLottie from '@coinbase/cds-lottie-files';
 import { Accordion } from '@coinbase/cds-web/accordion/Accordion';
 import { AccordionItem } from '@coinbase/cds-web/accordion/AccordionItem';
-import { Select as SelectAlpha } from '@coinbase/cds-web/alpha/select/Select';
+import { Select } from '@coinbase/cds-web/alpha/select/Select';
 import { Lottie, LottieStatusAnimation } from '@coinbase/cds-web/animation';
 import { Banner } from '@coinbase/cds-web/banner/Banner';
 import * as CDSButtons from '@coinbase/cds-web/buttons';
@@ -54,6 +54,7 @@ import * as CDSChips from '@coinbase/cds-web/chips';
 import { Coachmark } from '@coinbase/cds-web/coachmark/Coachmark';
 import { Collapsible } from '@coinbase/cds-web/collapsible/Collapsible';
 import * as CDSControls from '@coinbase/cds-web/controls';
+import { Select as OldSelect } from '@coinbase/cds-web/controls/Select';
 import { Calendar } from '@coinbase/cds-web/dates/Calendar';
 import { DatePicker } from '@coinbase/cds-web/dates/DatePicker';
 import * as CDSDots from '@coinbase/cds-web/dots';
@@ -166,7 +167,8 @@ const ReactLiveScope: Record<string, unknown> = {
   // input
   ...CDSButtons,
   ...CDSControls,
-  SelectAlpha,
+  Select,
+  OldSelect,
   useMultiSelect,
   ...CDSSystem,
   MediaQueryProvider,
