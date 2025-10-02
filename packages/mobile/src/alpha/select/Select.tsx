@@ -64,7 +64,7 @@ type SelectState<Type extends 'single' | 'multi' = 'single'> = {
  */
 export type SelectControlProps<Type extends 'single' | 'multi' = 'single'> = Pick<
   InputStackBaseProps,
-  'disabled' | 'startNode' | 'variant'
+  'disabled' | 'startNode' | 'variant' | 'labelVariant'
 > &
   Pick<SharedAccessibilityProps, 'accessibilityLabel' | 'accessibilityHint'> &
   SelectState<Type> &
@@ -152,7 +152,7 @@ export type SelectDropdownComponent<Type extends 'single' | 'multi' = 'single'> 
  */
 export type SelectProps<Type extends 'single' | 'multi' = 'single'> = Pick<
   InputStackBaseProps,
-  'startNode' | 'variant'
+  'startNode' | 'variant' | 'labelVariant'
 > &
   Pick<CellBaseProps, 'accessory' | 'media' | 'detail'> &
   Pick<SharedAccessibilityProps, 'accessibilityLabel' | 'accessibilityHint'> &
@@ -249,6 +249,7 @@ const SelectBase = memo(
         helperText,
         compact,
         label,
+        labelVariant,
         clearAllLabel,
         selectAllLabel,
         emptyOptionsLabel,
@@ -319,6 +320,7 @@ const SelectBase = memo(
             disabled={disabled}
             helperText={helperText}
             label={label}
+            labelVariant={labelVariant}
             maxSelectedOptionsToShow={maxSelectedOptionsToShow}
             onChange={onChange}
             open={open}

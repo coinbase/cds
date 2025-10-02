@@ -45,10 +45,10 @@ export const DefaultSelectControl: SelectControlComponent = memo(
         variant = 'foregroundMuted',
         helperText,
         label,
+        labelVariant,
         startNode,
         compact,
         style,
-        className,
         maxSelectedOptionsToShow = 3,
         accessibilityLabel,
         accessibilityHint,
@@ -80,8 +80,20 @@ export const DefaultSelectControl: SelectControlComponent = memo(
       );
 
       const labelNode = useMemo(
-        () => (typeof label === 'string' ? <InputLabel color="fg">{label}</InputLabel> : label),
-        [label],
+        () =>
+          typeof label === 'string' ? (
+            <InputLabel
+              alignSelf={labelVariant === 'inside' ? 'flex-start' : undefined}
+              color="fg"
+              paddingX={labelVariant === 'inside' ? 2 : 0}
+              paddingY={shouldShowCompactLabel || labelVariant === 'inside' ? 0 : 0.5}
+            >
+              {label}
+            </InputLabel>
+          ) : (
+            label
+          ),
+        [label, labelVariant, shouldShowCompactLabel],
       );
 
       const valueNode = useMemo(() => {
@@ -158,7 +170,7 @@ export const DefaultSelectControl: SelectControlComponent = memo(
               justifyContent="space-between"
               minHeight={isMultiSelect ? 76 : undefined}
               paddingStart={startNode ? 0 : 2}
-              paddingY={compact ? 1 : 2}
+              paddingY={labelVariant === 'inside' ? 0 : compact ? 1 : 2}
             >
               <HStack alignItems="center" flexGrow={1} flexShrink={1}>
                 {!!startNode && (
@@ -166,20 +178,12 @@ export const DefaultSelectControl: SelectControlComponent = memo(
                     {startNode}
                   </HStack>
                 )}
-                {shouldShowCompactLabel && (
+                {shouldShowCompactLabel ? (
                   <HStack alignItems="center" maxWidth="40%" paddingEnd={1}>
                     {labelNode}
                   </HStack>
-                )}
-                <VStack flexGrow={1} flexShrink={1} justifyContent="center">
-                  {valueNode}
-                </VStack>
-              </HStack>
-              <HStack alignItems="center" paddingX={2}>
-                <AnimatedCaret
-                  color={open ? variantColor[variant] : 'fg'}
-                  rotate={open ? 0 : 180}
-                />
+                ) : null}
+                <VStack justifyContent="center">{valueNode}</VStack>
               </HStack>
             </HStack>
           </TouchableOpacity>
@@ -193,14 +197,22 @@ export const DefaultSelectControl: SelectControlComponent = memo(
           props,
           isMultiSelect,
           startNode,
+          labelVariant,
           compact,
           shouldShowCompactLabel,
           labelNode,
           valueNode,
-          open,
-          variant,
           setOpen,
         ],
+      );
+
+      const animatedCaretNode = useMemo(
+        () => (
+          <HStack alignItems="center" paddingX={2}>
+            <AnimatedCaret color={open ? variantColor[variant] : 'fg'} rotate={open ? 0 : 180} />
+          </HStack>
+        ),
+        [open, variant],
       );
 
       return (
@@ -208,11 +220,14 @@ export const DefaultSelectControl: SelectControlComponent = memo(
           borderFocusedStyle={borderFocusedStyle}
           borderStyle={borderUnfocusedStyle}
           disabled={disabled}
+          endNode={animatedCaretNode}
           focused={open}
           helperTextNode={helperTextNode}
           inputNode={inputNode}
           labelNode={shouldShowCompactLabel ? null : labelNode}
+          labelVariant={labelVariant}
           variant={variant}
+          {...props}
         />
       );
     },
