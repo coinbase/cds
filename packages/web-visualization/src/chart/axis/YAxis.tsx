@@ -79,9 +79,7 @@ export const YAxis = memo<YAxisProps>(
     const axisBounds = getAxisBounds(registrationId);
 
     useEffect(() => {
-      // Map left/right to start/end for internal use
-      const internalPosition = position === 'right' ? 'end' : 'start';
-      registerAxis(registrationId, 'y', internalPosition, width);
+      registerAxis(registrationId, position, width);
 
       return () => unregisterAxis(registrationId);
     }, [registrationId, registerAxis, unregisterAxis, position, width]);

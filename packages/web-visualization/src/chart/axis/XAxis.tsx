@@ -71,9 +71,7 @@ export const XAxis = memo<XAxisProps>(
     const axisBounds = getAxisBounds(registrationId);
 
     useEffect(() => {
-      // Map top/bottom to start/end for internal use
-      const internalPosition = position === 'top' ? 'start' : 'end';
-      registerAxis(registrationId, 'x', internalPosition, height);
+      registerAxis(registrationId, position, height);
 
       return () => unregisterAxis(registrationId);
     }, [registrationId, registerAxis, unregisterAxis, position, height]);

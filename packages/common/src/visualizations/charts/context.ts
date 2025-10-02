@@ -67,8 +67,11 @@ export type CartesianChartContextValue<TRef> = {
   /**
    * Registers an axis.
    * Used by axis components to reserve space in the chart, preventing overlap with the drawing area.
+   * @param id - The axis ID
+   * @param position - The axis position ('top'/'bottom' for x-axis, 'left'/'right' for y-axis)
+   * @param size - The size of the axis in pixels
    */
-  registerAxis: (id: string, type: 'x' | 'y', position: 'start' | 'end', size: number) => void;
+  registerAxis: (id: string, position: 'top' | 'bottom' | 'left' | 'right', size: number) => void;
   /**
    * Unregisters an axis.
    */

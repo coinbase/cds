@@ -229,7 +229,7 @@ export const CartesianChart = memo(
           if (!axis || !chartRect) return;
 
           const axesAtPosition = Array.from(renderedAxes.values())
-            .filter((a) => a.type === axis.type && a.position === axis.position)
+            .filter((a) => a.position === axis.position)
             .sort((a, b) => a.id.localeCompare(b.id));
 
           const axisIndex = axesAtPosition.findIndex((a) => a.id === axisId);
@@ -240,47 +240,42 @@ export const CartesianChart = memo(
             .slice(0, axisIndex)
             .reduce((sum, a) => sum + a.size, 0);
 
-          if (axis.type === 'x') {
-            if (axis.position === 'start') {
-              // Position above the chart rect, accounting for user inset
-              const startY = userInset.top + offsetFromPreviousAxes;
-              return {
-                x: chartRect.x,
-                y: startY,
-                width: chartRect.width,
-                height: axis.size,
-              };
-            } else {
-              // end - position below the chart rect, accounting for user inset
-              const startY = chartRect.y + chartRect.height + offsetFromPreviousAxes;
-              return {
-                x: chartRect.x,
-                y: startY,
-                width: chartRect.width,
-                height: axis.size,
-              };
-            }
+          if (axis.position === 'top') {
+            // Position above the chart rect, accounting for user inset
+            const startY = userInset.top + offsetFromPreviousAxes;
+            return {
+              x: chartRect.x,
+              y: startY,
+              width: chartRect.width,
+              height: axis.size,
+            };
+          } else if (axis.position === 'bottom') {
+            // Position below the chart rect, accounting for user inset
+            const startY = chartRect.y + chartRect.height + offsetFromPreviousAxes;
+            return {
+              x: chartRect.x,
+              y: startY,
+              width: chartRect.width,
+              height: axis.size,
+            };
+          } else if (axis.position === 'left') {
+            // Position to the left of the chart rect, accounting for user inset
+            const startX = userInset.left + offsetFromPreviousAxes;
+            return {
+              x: startX,
+              y: chartRect.y,
+              width: axis.size,
+              height: chartRect.height,
+            };
           } else {
-            // y axis
-            if (axis.position === 'start') {
-              // Position to the left of the chart rect, accounting for user inset
-              const startX = userInset.left + offsetFromPreviousAxes;
-              return {
-                x: startX,
-                y: chartRect.y,
-                width: axis.size,
-                height: chartRect.height,
-              };
-            } else {
-              // right - position to the right of the chart rect, accounting for user inset
-              const startX = chartRect.x + chartRect.width + offsetFromPreviousAxes;
-              return {
-                x: startX,
-                y: chartRect.y,
-                width: axis.size,
-                height: chartRect.height,
-              };
-            }
+            // right - position to the right of the chart rect, accounting for user inset
+            const startX = chartRect.x + chartRect.width + offsetFromPreviousAxes;
+            return {
+              x: startX,
+              y: chartRect.y,
+              width: axis.size,
+              height: chartRect.height,
+            };
           }
         },
         [renderedAxes, chartRect, userInset],

@@ -108,9 +108,7 @@ export const XAxis = memo<XAxisProps>(
     );
 
     useEffect(() => {
-      // todo: allow register axis to accept 'top' and 'bottom'
-      const internalPosition = position === 'top' ? 'start' : 'end';
-      registerAxis(registrationId, 'x', internalPosition, height);
+      registerAxis(registrationId, position, height);
 
       return () => unregisterAxis(registrationId);
     }, [registrationId, registerAxis, unregisterAxis, position, height]);
