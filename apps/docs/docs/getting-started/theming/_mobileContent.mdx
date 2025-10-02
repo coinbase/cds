@@ -141,9 +141,9 @@ Use the `ThemeConfig` type when creating a theme, or when passing to the `theme`
 
 Use the `Theme` type for the return value of the `useTheme` hook. The `Theme` type includes all the properties of `ThemeConfig` - plus the `activeColorScheme`, `color`, and `spectrum` properties.
 
-[See the `ThemeConfig` type definition here &rarr;](https://github.com/coinbase/cds-staging/blob/master/packages/mobile/src/core/theme.ts#L11)
+[See the `ThemeConfig` type definition here &rarr;](https://github.com/coinbase/cds/blob/master/packages/mobile/src/core/theme.ts#L11)
 
-[See the `Theme` type definition here &rarr;](https://github.com/coinbase/cds-staging/blob/master/packages/mobile/src/core/theme.ts#L50)
+[See the `Theme` type definition here &rarr;](https://github.com/coinbase/cds/blob/master/packages/mobile/src/core/theme.ts#L50)
 
 :::tip
 Although the `Theme` type includes extra properties, you can still pass the `useTheme` return value directly to the ThemeProvider `theme` prop as shown in the [theme inheritence section.](#theme-inheritence)
@@ -272,7 +272,7 @@ Use the `ThemeConfig` type with TypeScript's `satisfies` keyword to enforce type
 
 The `defaultTheme` is a good example of a complete `ThemeConfig`. You can use it as an example when developing your own themes.
 
-[See the `defaultTheme` source code here &rarr;](https://github.com/coinbase/cds-staging/blob/master/packages/mobile/src/themes/defaultTheme.ts)
+[See the `defaultTheme` source code here &rarr;](https://github.com/coinbase/cds/blob/master/packages/mobile/src/themes/defaultTheme.ts)
 
 <JSONCodeBlock json={defaultTheme} />
 

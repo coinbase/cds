@@ -758,6 +758,10 @@ const svgJsMap = {
     light: () => require('../svgJs/light/cloudNavigation-5.js').content,
     dark: () => require('../svgJs/dark/cloudNavigation-5.js').content,
   },
+  coinbaseLogoAdvancedBrand: {
+    light: () => require('../svgJs/light/coinbaseLogoAdvancedBrand-0.js').content,
+    dark: () => require('../svgJs/dark/coinbaseLogoAdvancedBrand-0.js').content,
+  },
   coinbaseLogoNavigation: {
     light: () => require('../svgJs/light/coinbaseLogoNavigation-4.js').content,
     dark: () => require('../svgJs/dark/coinbaseLogoNavigation-4.js').content,
@@ -1067,8 +1071,8 @@ const svgJsMap = {
     dark: () => require('../svgJs/dark/formDownload-2.js').content,
   },
   futures: {
-    light: () => require('../svgJs/light/futures-3.js').content,
-    dark: () => require('../svgJs/dark/futures-3.js').content,
+    light: () => require('../svgJs/light/futures-4.js').content,
+    dark: () => require('../svgJs/dark/futures-4.js').content,
   },
   futuresCoinbaseOne: {
     light: () => require('../svgJs/light/futuresCoinbaseOne-0.js').content,
@@ -1641,6 +1645,10 @@ const svgJsMap = {
   tokenBaskets: {
     light: () => require('../svgJs/light/tokenBaskets-4.js').content,
     dark: () => require('../svgJs/dark/tokenBaskets-4.js').content,
+  },
+  tokenSales: {
+    light: () => require('../svgJs/light/tokenSales-0.js').content,
+    dark: () => require('../svgJs/dark/tokenSales-0.js').content,
   },
   trading: {
     light: () => require('../svgJs/light/trading-2.js').content,

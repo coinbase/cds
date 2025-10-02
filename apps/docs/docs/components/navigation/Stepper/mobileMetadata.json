@@ -1,5 +1,5 @@
 {
   "import": "import { Stepper } from '@coinbase/cds-mobile/stepper/Stepper'",
-  "source": "https://github.com/coinbase/cds-staging/blob/master/packages/mobile/src/stepper/Stepper.tsx",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/mobile/src/stepper/Stepper.tsx",
   "description": "A component that visualizes states within a multi-step process."
 }

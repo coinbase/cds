@@ -1,6 +1,6 @@
 {
   "import": "import { Tabs } from '@coinbase/cds-mobile/tabs/Tabs'",
-  "source": "https://github.com/coinbase/cds-staging/blob/master/packages/mobile/src/tabs/Tabs.tsx",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/mobile/src/tabs/Tabs.tsx",
   "description": "Tabs is a flexible, accessible tab navigation component for React Native, supporting animated indicators, custom tab components, and full accessibility.",
   "figma": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/%E2%9C%A8-CDS-Components?node-id=25128-9889&t=7bpcjquwgXNk9lnN-4",
   "relatedComponents": [

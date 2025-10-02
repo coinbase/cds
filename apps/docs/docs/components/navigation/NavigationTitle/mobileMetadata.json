@@ -1,6 +1,6 @@
 {
   "import": "import { NavigationTitle } from '@coinbase/cds-mobile/navigation/NavigationTitle'",
-  "source": "https://github.com/coinbase/cds-staging/blob/master/packages/mobile/src/navigation/NavigationTitle.tsx",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/mobile/src/navigation/NavigationTitle.tsx",
   "description": "A component used to display a title within a navigation bar, with default styling for headlines.",
   "relatedComponents": [
     {

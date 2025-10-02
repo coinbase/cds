@@ -1,6 +1,6 @@
 {
   "import": "import { Tour, TourStep } from '@coinbase/cds-mobile/tour'",
-  "source": "https://github.com/coinbase/cds-staging/blob/master/packages/mobile/src/tour/Tour.tsx",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/mobile/src/tour/Tour.tsx",
   "description": "Creates guided tours of a user interface.",
   "relatedComponents": [
     {

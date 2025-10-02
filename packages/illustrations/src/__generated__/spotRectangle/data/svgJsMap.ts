@@ -86,6 +86,10 @@ const svgJsMap = {
     light: () => require('../svgJs/light/browserHistory-3.js').content,
     dark: () => require('../svgJs/dark/browserHistory-3.js').content,
   },
+  calendar: {
+    light: () => require('../svgJs/light/calendar-0.js').content,
+    dark: () => require('../svgJs/dark/calendar-0.js').content,
+  },
   cardBoosted: {
     light: () => require('../svgJs/light/cardBoosted-3.js').content,
     dark: () => require('../svgJs/dark/cardBoosted-3.js').content,
@@ -141,6 +145,10 @@ const svgJsMap = {
   coinbaseOneSavingFunds: {
     light: () => require('../svgJs/light/coinbaseOneSavingFunds-3.js').content,
     dark: () => require('../svgJs/dark/coinbaseOneSavingFunds-3.js').content,
+  },
+  coinGateway: {
+    light: () => require('../svgJs/light/coinGateway-0.js').content,
+    dark: () => require('../svgJs/dark/coinGateway-0.js').content,
   },
   collectingNfts: {
     light: () => require('../svgJs/light/collectingNfts-5.js').content,
@@ -371,8 +379,8 @@ const svgJsMap = {
     dark: () => require('../svgJs/dark/faceId-1.js').content,
   },
   fiatInterest: {
-    light: () => require('../svgJs/light/fiatInterest-0.js').content,
-    dark: () => require('../svgJs/dark/fiatInterest-0.js').content,
+    light: () => require('../svgJs/light/fiatInterest-1.js').content,
+    dark: () => require('../svgJs/dark/fiatInterest-1.js').content,
   },
   fileYourCryptoTaxes: {
     light: () => require('../svgJs/light/fileYourCryptoTaxes-3.js').content,
@@ -417,6 +425,10 @@ const svgJsMap = {
   governance: {
     light: () => require('../svgJs/light/governance-4.js').content,
     dark: () => require('../svgJs/dark/governance-4.js').content,
+  },
+  graphChartTrading: {
+    light: () => require('../svgJs/light/graphChartTrading-0.js').content,
+    dark: () => require('../svgJs/dark/graphChartTrading-0.js').content,
   },
   hardwareWallets: {
     light: () => require('../svgJs/light/hardwareWallets-4.js').content,
@@ -729,6 +741,10 @@ const svgJsMap = {
   taxesDetails: {
     light: () => require('../svgJs/light/taxesDetails-5.js').content,
     dark: () => require('../svgJs/dark/taxesDetails-5.js').content,
+  },
+  tokenSales: {
+    light: () => require('../svgJs/light/tokenSales-0.js').content,
+    dark: () => require('../svgJs/dark/tokenSales-0.js').content,
   },
   trade: {
     light: () => require('../svgJs/light/trade-3.js').content,

@@ -1,6 +1,6 @@
 {
   "import": "import { UpsellCard } from '@coinbase/cds-mobile/cards/UpsellCard'",
-  "source": "https://github.com/coinbase/cds-staging/blob/master/packages/mobile/src/cards/UpsellCard.tsx",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/mobile/src/cards/UpsellCard.tsx",
   "figma": "https://www.figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/%E2%9C%A8-Normal-Components?type=design&node-id=10085%3A6246&mode=design&t=CXWB883JGKycJnlr-1",
   "description": "Upsell Cards are used to promote new features, products, or actions within the app. They are part of the upsell framework and aim to drive user engagement and revenue.",
   "relatedComponents": [

@@ -1,6 +1,6 @@
 {
   "import": "import { ModalHeader } from '@coinbase/cds-mobile/overlays/modal/ModalHeader'",
-  "source": "https://github.com/coinbase/cds-staging/blob/master/packages/mobile/src/overlays/Modal/ModalHeader.tsx",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/mobile/src/overlays/Modal/ModalHeader.tsx",
   "figma": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/%E2%9C%A8-CDS-Components?node-id=68-1053",
   "description": "A component that provides a consistent header section for Modal.",
   "relatedComponents": [

@@ -8,6 +8,28 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.13.3 (10/1/2025 PST)
+
+#### 🐞 Fixes
+
+- Remove alignSelf="start" from mobile RollingNumber, keeping it the same behavior with web. [[#55](https://github.com/coinbase/cds/pull/55)]
+
+## 8.13.2 (10/1/2025 PST)
+
+#### 🐞 Fixes
+
+- Update links for new repo. [[#42](https://github.com/coinbase/cds/pull/42)]
+
+#### 📘 Misc
+
+- Update Code Connect for Button, IconButton, TabbedChips, MultiContentModule.
+
+## 8.13.1 (9/26/2025 PST)
+
+#### 🐞 Fixes
+
+- Update ARIA attributes for TabbedChips and Tabs. [[#27](https://github.com/coinbase/cds/pull/27)]
+
 ## 8.13.0 (9/25/2025 PST)
 
 #### 🚀 Updates

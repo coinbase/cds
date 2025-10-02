@@ -16,16 +16,17 @@ figma.connect(
         true: figma.string('description'),
         false: undefined,
       }),
-      pictogram: figma.boolean('show illustration', {
-        true: figma.instance('↳ illustration type'),
-        false: undefined,
-      }),
+      pictogram: figma.instance('↳ illustration type').getProps(),
       children: figma.instance('↳ content type'),
-      action: figma.boolean('show action', {
-        true: figma.instance('↳ action type'),
-        false: undefined,
+      action: figma.enum('action type', {
+        button: figma.instance('action type'),
+        'button group': figma.instance('action type'),
+        'button + secondary content': figma.instance('action type'),
+        none: undefined,
       }),
     },
-    example: ({ ...props }) => <MultiContentModule {...props} />,
+    example: ({ pictogram, ...props }) => (
+      <MultiContentModule pictogram={pictogram.name} {...props} />
+    ),
   },
 );

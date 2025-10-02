@@ -1,6 +1,6 @@
 {
   "import": "import { Tag } from '@coinbase/cds-mobile/tag/Tag'",
-  "source": "https://github.com/coinbase/cds-staging/blob/master/packages/mobile/src/tag/Tag.tsx",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/mobile/src/tag/Tag.tsx",
   "figma": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/%E2%9C%A8-CDS-Components?node-id=68-975",
   "description": "A small label for categorizing or labeling content.",
   "relatedComponents": [

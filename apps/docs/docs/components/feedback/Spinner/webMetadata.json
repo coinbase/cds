@@ -1,6 +1,6 @@
 {
   "import": "import { Spinner } from '@coinbase/cds-web/loaders/Spinner'",
-  "source": "https://github.com/coinbase/cds-staging/blob/master/packages/web/src/loaders/Spinner.tsx",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/web/src/loaders/Spinner.tsx",
   "storybook": "https://cds-storybook.coinbase.com/?path=/story/core-components-loaders-spinner--spinner-default",
   "description": "A component that displays a spinning animation.",
   "relatedComponents": [

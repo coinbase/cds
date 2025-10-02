@@ -1,6 +1,6 @@
 {
   "import": "import { Chip } from '@coinbase/cds-mobile/chips/Chip'",
-  "source": "https://github.com/coinbase/cds-staging/blob/master/packages/mobile/src/chips/Chip.tsx",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/mobile/src/chips/Chip.tsx",
   "description": "A compact, interactive content element.",
   "relatedComponents": [
     {

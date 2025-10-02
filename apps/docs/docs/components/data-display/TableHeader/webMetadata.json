@@ -1,6 +1,6 @@
 {
   "import": "import { TableHeader } from '@coinbase/cds-web/tables/TableHeader'",
-  "source": "https://github.com/coinbase/cds-staging/blob/master/packages/web/src/tables/TableHeader.tsx",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/web/src/tables/TableHeader.tsx",
   "description": "Defines the header section of Table.",
   "relatedComponents": [
     {

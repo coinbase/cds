@@ -1,4 +1,4 @@
-<!-- Please ensure your pull request title adheres to our [Commit Message Conventions](https://github.com/coinbase/cds-staging/blob/develop/docs/misc.md#commit-message-conventions). -->
+<!-- Please ensure your pull request title adheres to our [Commit Message Conventions](https://github.com/coinbase/cds/blob/develop/docs/misc.md#commit-message-conventions). -->
 
 ## What changed? Why?
 

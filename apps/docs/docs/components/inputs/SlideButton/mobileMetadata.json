@@ -1,6 +1,6 @@
 {
   "import": "import { SlideButton } from '@coinbase/cds-mobile/buttons/SlideButton'",
-  "source": "https://github.com/coinbase/cds-staging/blob/master/packages/mobile/src/buttons/SlideButton.tsx",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/mobile/src/buttons/SlideButton.tsx",
   "figma": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/%E2%9C%A8-CDS-Components?m=auto&node-id=49607-5650&t=VzGX5hnRKveOrhnl-1",
   "description": "A button that slides to confirm an action.",
   "relatedComponents": [

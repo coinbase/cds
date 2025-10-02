@@ -83,7 +83,7 @@ const InputScreen = () => {
           label="Username"
           placeholder="john.doe@coinbase.com"
           textAlign="unset"
-          value="https://github.com/coinbase/cds-staging/blob/master/docs/commands.md!-|?/"
+          value="https://github.com/coinbase/cds/blob/master/docs/commands.md!-|?/"
           variant="foregroundMuted"
         />
       </Example>

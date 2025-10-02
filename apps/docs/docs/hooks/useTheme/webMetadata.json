@@ -1,6 +1,6 @@
 {
   "import": "import { useTheme } from '@coinbase/cds-web'",
-  "source": "https://github.com/coinbase/cds-staging/blob/master/packages/web/src/hooks/useTheme.ts",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/web/src/hooks/useTheme.ts",
   "description": "Returns the currently active theme including color schemes, spacing, typography, and other design tokens.",
   "relatedComponents": [
     {

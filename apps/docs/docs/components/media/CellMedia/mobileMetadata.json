@@ -1,6 +1,6 @@
 {
   "import": "import { CellMedia } from '@coinbase/cds-mobile/cells/CellMedia'",
-  "source": "https://github.com/coinbase/cds-staging/blob/master/packages/mobile/src/cells/CellMedia.tsx",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/mobile/src/cells/CellMedia.tsx",
   "description": "Displays media within cells.",
   "relatedComponents": [
     {

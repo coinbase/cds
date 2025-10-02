@@ -1,6 +1,6 @@
 {
   "import": "import { SparklineInteractiveHeader } from '@coinbase/cds-mobile-visualization'",
-  "source": "https://github.com/coinbase/cds-staging/blob/master/packages/mobile-visualization/src/sparkline/sparkline-interactive-header/SparklineInteractiveHeader.tsx",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/mobile-visualization/src/sparkline/sparkline-interactive-header/SparklineInteractiveHeader.tsx",
   "figma": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/%E2%9C%A8-CDS-Components?node-id=155-12194",
   "description": "The SparklineInteractiveHeader is used to display chart information that changes over time",
   "relatedComponents": [

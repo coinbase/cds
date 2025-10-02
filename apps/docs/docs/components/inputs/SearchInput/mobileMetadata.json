@@ -1,6 +1,6 @@
 {
   "import": "import { SearchInput } from '@coinbase/cds-mobile/controls/SearchInput'",
-  "source": "https://github.com/coinbase/cds-staging/blob/master/packages/mobile/src/controls/SearchInput.tsx",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/mobile/src/controls/SearchInput.tsx",
   "description": "A control for searching a dataset.",
   "figma": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/%E2%9C%A8-CDS-Components?node-id=67-974&t=qPs9YwJiJSNpJUR1-4",
   "relatedComponents": [

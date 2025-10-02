@@ -1,6 +1,6 @@
 {
   "import": "import { ProgressCircle } from '@coinbase/cds-mobile/visualizations/ProgressCircle'",
-  "source": "https://github.com/coinbase/cds-staging/blob/master/packages/mobile/src/visualizations/ProgressCircle.tsx",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/mobile/src/visualizations/ProgressCircle.tsx",
   "description": "A circular visual indicator of completion progress.",
   "relatedComponents": [
     {

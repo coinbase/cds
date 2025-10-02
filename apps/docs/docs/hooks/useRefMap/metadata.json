@@ -1,5 +1,5 @@
 {
   "import": "import { useRefMap } from '@coinbase/cds-common/hooks/useRefMap'",
-  "source": "https://github.com/coinbase/cds-staging/blob/master/packages/common/src/hooks/useRefMap.ts",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/common/src/hooks/useRefMap.ts",
   "description": "Manages a collection of refs using a key-value map structure, allowing dynamic registration and retrieval of refs by their unique identifiers. Commonly used in components that need to track multiple DOM elements, such as tabs, tours, or complex navigation systems."
 }

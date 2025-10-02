@@ -176,6 +176,15 @@ const config: Config = {
     image: 'img/docusaurus-social-card.jpg',
     metadata: [
       {
+        property: 'og:title',
+        content: 'Coinbase Design System',
+      },
+      {
+        property: 'og:description',
+        content:
+          'Documentation for the Coinbase Design System - A comprehensive collection of components, patterns, and guidelines for building crypto products.',
+      },
+      {
         name: 'description',
         content:
           'Documentation for the Coinbase Design System - A comprehensive collection of components, patterns, and guidelines for building crypto products.',
@@ -193,11 +202,11 @@ const config: Config = {
           label: 'Storybook',
         },
         {
-          href: '/blog',
+          href: 'https://coinbase.com/blog',
           label: 'Blog',
         },
         {
-          href: 'https://github.com/coinbase/cds-staging',
+          href: 'https://github.com/coinbase/cds',
           label: 'GitHub',
         },
       ],
@@ -210,11 +219,11 @@ const config: Config = {
         },
         {
           label: 'Github',
-          href: 'https://github.com/coinbase/cds-staging/tree/master',
+          href: 'https://github.com/coinbase/cds/tree/master',
         },
         {
           label: 'Blog',
-          href: '/blog',
+          href: 'https://coinbase.com/blog',
         },
         {
           label: 'Careers',

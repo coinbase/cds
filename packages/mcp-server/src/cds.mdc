@@ -3,7 +3,7 @@ description:
 globs: *.tsx,*.jsx
 alwaysApply: false
 ---
-source: https://github.com/coinbase/cds-staging/blob/master/packages/mcp-server/src/cds.mdc
+source: https://github.com/coinbase/cds/blob/master/packages/mcp-server/src/cds.mdc
 
 # CDS Component Priority Rules
 

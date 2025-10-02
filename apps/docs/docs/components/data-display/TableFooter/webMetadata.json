@@ -1,6 +1,6 @@
 {
   "import": "import { TableFooter } from '@coinbase/cds-web/tables/TableFooter'",
-  "source": "https://github.com/coinbase/cds-staging/blob/master/packages/web/src/tables/TableFooter.tsx",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/web/src/tables/TableFooter.tsx",
   "description": "Defines the footer section of Table.",
   "relatedComponents": [
     {

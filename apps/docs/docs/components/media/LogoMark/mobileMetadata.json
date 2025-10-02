@@ -1,6 +1,6 @@
 {
   "import": "import { LogoMark } from '@coinbase/cds-mobile/icons/LogoMark'",
-  "source": "https://github.com/coinbase/cds-staging/blob/master/packages/mobile/src/icons/LogoMark.tsx",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/mobile/src/icons/LogoMark.tsx",
   "description": "The Coinbase logo mark for branding.",
   "relatedComponents": [
     {

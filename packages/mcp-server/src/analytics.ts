@@ -9,7 +9,7 @@ const sessionId = `session_${Date.now()}_${Math.random().toString(36).substring(
 
 const ANALYTICS_URL = 'https://api.developer.coinbase.com/analytics';
 
-type CdsEventType = 'cdsCli' | 'cdsMcp';
+type CdsEventType = 'cdsCli' | 'cdsMcp' | 'cdsDocs';
 
 type CdsEventData = {
   version: string;

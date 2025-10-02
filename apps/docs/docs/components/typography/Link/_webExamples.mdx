@@ -6,16 +6,6 @@ Default Link text will inherit parent text styles.
 <Link>Default is inherited text</Link>
 ```
 
-### Links inside a paragraph
-
-```jsx live
-<TextBody as="p">
-  Links rendered inside a paragraph tag will automatically display with an{' '}
-  <Link href="https://webaim.org/techniques/hypertext/link_text#underlining">underline</Link>. This
-  can be overridden by setting underline to <b>false</b>, but it's not advised.
-</TextBody>
-```
-
 ### Styling your link
 
 To style a `<Link />` component, simply wrap the `Link` node in the desired `Text` component, using the `as` prop for your usecase (for example, `p` for body text, `h1`/`h2`/`h3` for titles, etc). However, there may be times when a rendering a span is exactly what you want. In those cases, providing a font prop makes sense.

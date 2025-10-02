@@ -1,5 +1,5 @@
 {
   "import": "import { useHasMounted } from '@coinbase/cds-web/hooks/useHasMounted'",
-  "source": "https://github.com/coinbase/cds-staging/blob/master/packages/web/src/hooks/useHasMounted.ts",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/web/src/hooks/useHasMounted.ts",
   "description": "Returns a boolean indicating if the component has mounted."
 }

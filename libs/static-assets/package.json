@@ -5,7 +5,7 @@
   "private": true,
   "repository": {
     "type": "git",
-    "url": "git@github.com:coinbase/cds-staging.git",
+    "url": "git@github.com:coinbase/cds.git",
     "directory": "libs/static-assets"
   }
 }

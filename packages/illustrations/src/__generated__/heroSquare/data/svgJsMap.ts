@@ -91,8 +91,8 @@ const svgJsMap = {
     dark: () => require('../svgJs/dark/baseCoinNetworkLarge-0.js').content,
   },
   baseConnectLarge: {
-    light: () => require('../svgJs/light/baseConnectLarge-0.js').content,
-    dark: () => require('../svgJs/dark/baseConnectLarge-0.js').content,
+    light: () => require('../svgJs/light/baseConnectLarge-1.js').content,
+    dark: () => require('../svgJs/dark/baseConnectLarge-1.js').content,
   },
   baseCreatorCoin: {
     light: () => require('../svgJs/light/baseCreatorCoin-0.js').content,
@@ -838,6 +838,10 @@ const svgJsMap = {
     light: () => require('../svgJs/light/governanceMallet-1.js').content,
     dark: () => require('../svgJs/dark/governanceMallet-1.js').content,
   },
+  graphChartTrading: {
+    light: () => require('../svgJs/light/graphChartTrading-0.js').content,
+    dark: () => require('../svgJs/dark/graphChartTrading-0.js').content,
+  },
   hardwareWallets: {
     light: () => require('../svgJs/light/hardwareWallets-4.js').content,
     dark: () => require('../svgJs/dark/hardwareWallets-4.js').content,
@@ -1385,6 +1389,10 @@ const svgJsMap = {
   stakingMissedReturns: {
     light: () => require('../svgJs/light/stakingMissedReturns-3.js').content,
     dark: () => require('../svgJs/dark/stakingMissedReturns-3.js').content,
+  },
+  stakingMissedReturnsUsdc: {
+    light: () => require('../svgJs/light/stakingMissedReturnsUsdc-0.js').content,
+    dark: () => require('../svgJs/dark/stakingMissedReturnsUsdc-0.js').content,
   },
   startToday: {
     light: () => require('../svgJs/light/startToday-3.js').content,
