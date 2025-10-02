@@ -31,6 +31,12 @@ export function IconSheetScreen() {
             const sourceSize = getIconSourceSize(size);
             const key = `${iconName}-${sourceSize}-inactive`;
 
+            if (!(key in svgMap)) {
+              throw new Error(
+                `Icon ${key} not found in iconSvgMap. You probably need to run the generateIconSvgMap script to update it.`,
+              );
+            }
+
             return (
               <SvgXml
                 key={`${iconName}-${iconSize}`}
