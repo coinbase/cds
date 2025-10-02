@@ -5,8 +5,10 @@ import React, {
   useEffect,
   useImperativeHandle,
   useMemo,
+  useRef,
   useState,
 } from 'react';
+import { Animated } from 'react-native';
 import Reanimated, {
   useAnimatedProps,
   useSharedValue,
@@ -29,7 +31,7 @@ import { ReferenceLine, type ReferenceLineProps } from '../line';
 import { ScrubberBeacon, type ScrubberBeaconProps, type ScrubberBeaconRef } from './ScrubberBeacon';
 
 const AnimatedG = Reanimated.createAnimatedComponent(G);
-const AnimatedRect = Reanimated.createAnimatedComponent(Rect);
+const AnimatedRect = Animated.createAnimatedComponent(Rect);
 
 type FadeInGroupProps = {
   children: React.ReactNode;
@@ -159,28 +161,22 @@ export const Scrubber = memo(
       const theme = useTheme();
       const ScrubberBeaconRefs = useRefMap<ScrubberBeaconRef>();
 
-      // Animated values for scrubber line and overlay positions
+      // Animated values for overlay positions (using react-native Animated)
+      const overlayX = useRef(new Animated.Value(0)).current;
+      const overlayWidth = useRef(new Animated.Value(0)).current;
+
+      // Reanimated shared value for scrubber line
       const scrubberLineX = useSharedValue(0);
-      const overlayX = useSharedValue(0);
-      const overlayWidth = useSharedValue(0);
 
       const { scrubberPosition: scrubberPosition } = useScrubberContext();
       const { getXScale, getYScale, getSeriesData, getXAxis, series, drawingArea } =
         useCartesianChartContext();
       const getStackedSeriesData = getSeriesData; // getSeriesData now returns stacked data
 
-      // Animated props for fade-in effect
-
       // Animated props for scrubber line
       const scrubberLineAnimatedProps = useAnimatedProps(() => ({
         x1: scrubberLineX.value,
         x2: scrubberLineX.value,
-      }));
-
-      // Animated props for overlay rect
-      const overlayAnimatedProps = useAnimatedProps(() => ({
-        x: overlayX.value,
-        width: overlayWidth.value,
       }));
 
       // Track label dimensions for collision detection
@@ -609,10 +605,12 @@ export const Scrubber = memo(
       // Update scrubber line and overlay positions using animated values
       useEffect(() => {
         if (pixelX !== undefined) {
-          // Update animated values for responsive scrubbing
+          // Update Reanimated value for scrubber line
           scrubberLineX.value = pixelX;
-          overlayX.value = pixelX;
-          overlayWidth.value = drawingArea.x + drawingArea.width - pixelX + overlayOffset;
+
+          // Update react-native Animated values for overlay (immediate, no animation)
+          overlayX.setValue(pixelX);
+          overlayWidth.setValue(drawingArea.x + drawingArea.width - pixelX + overlayOffset);
         }
       }, [pixelX, drawingArea, overlayOffset, scrubberLineX, overlayX, overlayWidth]);
 
@@ -626,10 +624,11 @@ export const Scrubber = memo(
             scrubberPosition !== undefined &&
             pixelX !== undefined && (
               <AnimatedRect
-                animatedProps={overlayAnimatedProps}
                 fill={theme.color.bg}
                 height={drawingArea.height + overlayOffset * 2}
                 opacity={0.8}
+                width={overlayWidth}
+                x={overlayX}
                 y={drawingArea.y - overlayOffset}
               />
             )}
