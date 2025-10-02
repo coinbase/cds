@@ -1,0 +1,26 @@
+diff --git a/build/src/start/platforms/android/AndroidAppIdResolver.js b/build/src/start/platforms/android/AndroidAppIdResolver.js
+index f4b217c5d71fb62179160cdbf8e02276abd06a6d..74d58fee13c7dbb5144b6c77d6e12917dc62958d 100644
+--- a/build/src/start/platforms/android/AndroidAppIdResolver.js
++++ b/build/src/start/platforms/android/AndroidAppIdResolver.js
+@@ -31,7 +31,7 @@ class AndroidAppIdResolver extends _appIdResolver.AppIdResolver {
+     async resolveAppIdFromNativeAsync() {
+         const applicationIdFromGradle = await _configPlugins().AndroidConfig.Package.getApplicationIdAsync(this.projectRoot).catch(()=>null);
+         if (applicationIdFromGradle) {
+-            return applicationIdFromGradle;
++            return `${applicationIdFromGradle}.development`;
+         }
+         try {
+             var ref, ref1;
+diff --git a/build/src/start/platforms/ios/AppleAppIdResolver.js b/build/src/start/platforms/ios/AppleAppIdResolver.js
+index 06d6d1e11802ed88388444b10acd83834e079f50..c4409c566377897eacdb78aea4a8fd78d5aeca03 100644
+--- a/build/src/start/platforms/ios/AppleAppIdResolver.js
++++ b/build/src/start/platforms/ios/AppleAppIdResolver.js
+@@ -50,7 +50,7 @@ class AppleAppIdResolver extends _appIdResolver.AppIdResolver {
+     async resolveAppIdFromNativeAsync() {
+         // Check xcode project
+         try {
+-            const bundleId = _configPlugins().IOSConfig.BundleIdentifier.getBundleIdentifierFromPbxproj(this.projectRoot);
++            const bundleId = _configPlugins().IOSConfig.BundleIdentifier.getBundleIdentifierFromPbxproj(this.projectRoot, {'buildConfiguration': 'Debug'});
+             if (bundleId) {
+                 return bundleId;
+             }
