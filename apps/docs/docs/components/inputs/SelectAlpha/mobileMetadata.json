@@ -3,15 +3,6 @@
   "source": "https://github.com/coinbase/cds/blob/master/packages/mobile/src/alpha/select/Select.tsx",
   "storybook": "",
   "description": "A flexible select component for both single and multi-selection, built for mobile applications with comprehensive accessibility support.",
-  "relatedComponents": [
-    {
-      "label": "Select",
-      "url": "/components/inputs/Select/"
-    },
-    {
-      "label": "SelectOption",
-      "url": "/components/inputs/SelectOption/"
-    }
-  ],
+  "relatedComponents": [],
   "dependencies": []
 }

@@ -6,6 +6,10 @@
   "description": "A Dropdown control for selecting from a list of options.",
   "relatedComponents": [
     {
+      "label": "SelectAlpha",
+      "url": "/components/inputs/SelectAlpha/"
+    },
+    {
       "label": "Dropdown",
       "url": "/components/layout/Dropdown/"
     },
