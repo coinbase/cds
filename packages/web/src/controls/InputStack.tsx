@@ -12,7 +12,7 @@ import { type BoxBaseProps, type BoxDefaultElement, type BoxProps } from '../lay
 import { HStack } from '../layout/HStack';
 import { VStack } from '../layout/VStack';
 import { ColorSurge } from '../motion/ColorSurge';
-import { Interactable } from '../system/Interactable';
+import { Interactable, type InteractableBaseProps } from '../system/Interactable';
 
 import { InputLabel } from './InputLabel';
 
@@ -65,69 +65,70 @@ const variantColorMap: Record<InputVariant, ThemeVars.Color> = {
   secondary: 'bgSecondary',
 };
 
-export type InputStackBaseProps = SharedProps & {
-  /** Width of the border.
-   * @default 100
-   */
-  borderWidth?: ThemeVars.BorderWidth;
-  /**
-   * Determines the sentiment of the input. Because
-   * we allow startContent and endContent to be custom ReactNode,
-   * the content placed inside these slots will not change colors according
-   * to the variant. You will have to add that yourself
-   * @default foregroundMuted
-   */
-  variant?: InputVariant;
-  /**
-   * Width of input as a percentage string.
-   * @default 100%
-   * */
-  width?: BoxBaseProps['width'];
-  /**
-   * Height of input
-   */
-  height?: BoxBaseProps['height'];
-  /**
-   * Toggles input interactability and opacity
-   * @default false
-   */
-  disabled?: boolean;
-  /** Prepends custom content to the start. Content is not part of input */
-  prependNode?: React.ReactNode;
-  /** Adds content to the start of the inner input. Refer to diagram for location of startNode in InputStack component */
-  startNode?: React.ReactNode;
-  /** Appends custom content to the end. Content is not part of input */
-  appendNode?: React.ReactNode;
-  /** Adds content to the end of the inner input. Refer to diagram for location of endNode in InputStack component */
-  endNode?: React.ReactNode;
-  /** Editable area of the Input */
-  inputNode: React.ReactNode;
-  /** Text shown below input. Used for when label is not enough to indicate what this input does */
-  helperTextNode?: React.ReactNode;
-  /** A message indicating the purpose of this input */
-  labelNode?: React.ReactNode;
-  /** This should only be used when focused styles need to be persisted */
-  focused?: boolean;
-  /**
-   * Leverage one of the borderRadius styles we offer to round the corners of the input.
-   * @default 200
-   */
-  borderRadius?: BoxBaseProps['borderRadius'];
-  /**
-   * Disable default focus styles
-   * @default false
-   */
-  disableFocusedStyle?: boolean;
-  /**
-   * Enable Color Surge motion
-   */
-  enableColorSurge?: boolean;
-  /**
-   * The variant of the label. Only used when compact is not true.
-   * @default 'outside'
-   */
-  labelVariant?: 'inside' | 'outside';
-};
+export type InputStackBaseProps = SharedProps &
+  Pick<InteractableBaseProps, 'blendStyles'> & {
+    /** Width of the border.
+     * @default 100
+     */
+    borderWidth?: ThemeVars.BorderWidth;
+    /**
+     * Determines the sentiment of the input. Because
+     * we allow startContent and endContent to be custom ReactNode,
+     * the content placed inside these slots will not change colors according
+     * to the variant. You will have to add that yourself
+     * @default foregroundMuted
+     */
+    variant?: InputVariant;
+    /**
+     * Width of input as a percentage string.
+     * @default 100%
+     * */
+    width?: BoxBaseProps['width'];
+    /**
+     * Height of input
+     */
+    height?: BoxBaseProps['height'];
+    /**
+     * Toggles input interactability and opacity
+     * @default false
+     */
+    disabled?: boolean;
+    /** Prepends custom content to the start. Content is not part of input */
+    prependNode?: React.ReactNode;
+    /** Adds content to the start of the inner input. Refer to diagram for location of startNode in InputStack component */
+    startNode?: React.ReactNode;
+    /** Appends custom content to the end. Content is not part of input */
+    appendNode?: React.ReactNode;
+    /** Adds content to the end of the inner input. Refer to diagram for location of endNode in InputStack component */
+    endNode?: React.ReactNode;
+    /** Editable area of the Input */
+    inputNode: React.ReactNode;
+    /** Text shown below input. Used for when label is not enough to indicate what this input does */
+    helperTextNode?: React.ReactNode;
+    /** A message indicating the purpose of this input */
+    labelNode?: React.ReactNode;
+    /** This should only be used when focused styles need to be persisted */
+    focused?: boolean;
+    /**
+     * Leverage one of the borderRadius styles we offer to round the corners of the input.
+     * @default 200
+     */
+    borderRadius?: BoxBaseProps['borderRadius'];
+    /**
+     * Disable default focus styles
+     * @default false
+     */
+    disableFocusedStyle?: boolean;
+    /**
+     * Enable Color Surge motion
+     */
+    enableColorSurge?: boolean;
+    /**
+     * The variant of the label. Only used when compact is not true.
+     * @default 'outside'
+     */
+    labelVariant?: 'inside' | 'outside';
+  };
 
 export type InputStackProps = Omit<
   BoxProps<BoxDefaultElement>,
@@ -157,6 +158,7 @@ export const InputStack = memo(
         disableFocusedStyle = false,
         enableColorSurge,
         labelVariant = 'outside',
+        blendStyles,
         ...props
       },
       ref,
@@ -231,6 +233,7 @@ export const InputStack = memo(
                 ref={ref}
                 as="span"
                 background={variant === 'secondary' ? 'bgSecondary' : 'bg'}
+                blendStyles={blendStyles}
                 borderRadius={borderRadius}
                 borderWidth={borderWidth}
                 className={cx(baseCss, focused && persistedFocusCss)}

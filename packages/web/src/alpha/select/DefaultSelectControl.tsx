@@ -10,6 +10,7 @@ import { HStack } from '../../layout/HStack';
 import { AnimatedCaret } from '../../motion/AnimatedCaret';
 import { Pressable } from '../../system/Pressable';
 import { Text } from '../../typography/Text';
+import { findClosestNonDisabledNodeIndex } from '../../utils/findClosestNoneDisabledNodeIndex';
 
 import type { SelectControlComponent } from './Select';
 
@@ -65,36 +66,15 @@ export const DefaultSelectControl: SelectControlComponent<'single' | 'multi'> = 
           // Shift focus from the valueNode that will be removed
           // If there will be no values left after removing, focus the control
           if (currentValue.length === 1) return controlPressableRef.current?.focus();
+          if (!valueNodeContainerRef.current) return;
           // Otherwise focus the next value
           const valueNodes = Array.from(
-            valueNodeContainerRef.current?.querySelectorAll('button') ?? [],
-          );
-          valueNodes.splice(index, 1);
-          // Handle edge case where index mapped to the valueNode that will be removed
-          if (index >= valueNodes.length) {
-            index = valueNodes.length - 1;
-          }
+            valueNodeContainerRef.current.querySelectorAll('[data-selected-value]'),
+          ) as HTMLElement[];
 
-          let nextValueNodeToFocus = valueNodes[index];
-          let endOfValueNodesReachedByIndex = false;
-          // Loop up through the valueNodes to find the next enabled valueNode
-          // If end of valueNodes is reached, loop back to the beginning
-          while (nextValueNodeToFocus && nextValueNodeToFocus.disabled) {
-            if (index >= valueNodes.length - 1) {
-              endOfValueNodesReachedByIndex = true;
-            }
-            if (endOfValueNodesReachedByIndex) {
-              index -= 1;
-            } else {
-              index += 1;
-            }
-            nextValueNodeToFocus = valueNodes[index];
-          }
-          if (nextValueNodeToFocus) {
-            nextValueNodeToFocus?.focus();
-          } else {
-            controlPressableRef.current?.focus();
-          }
+          const focusIndex = findClosestNonDisabledNodeIndex(valueNodes, index);
+          if (focusIndex === null) return controlPressableRef.current?.focus();
+          (valueNodes[focusIndex] as HTMLElement)?.focus();
         },
         [onChange, value],
       );
@@ -123,6 +103,18 @@ export const DefaultSelectControl: SelectControlComponent<'single' | 'multi'> = 
         [label, labelVariant],
       );
 
+      const interactableBlendStyles = useMemo(
+        () =>
+          isMultiSelect
+            ? {
+                hoveredBackground: 'rgba(0, 0, 0, 0)',
+                hoveredOpacity: 1,
+                ...blendStyles,
+              }
+            : blendStyles,
+        [isMultiSelect, blendStyles],
+      );
+
       const valueNode = useMemo(() => {
         if (hasValue && isMultiSelect) {
           const renderedValues =
@@ -138,6 +130,7 @@ export const DefaultSelectControl: SelectControlComponent<'single' | 'multi'> = 
               {renderedValues.map((v, index) => (
                 <InputChip
                   key={v}
+                  data-selected-value
                   disabled={disabledOptionsIndexes.includes(index)}
                   invertColorScheme={false}
                   maxWidth={200}
@@ -180,7 +173,7 @@ export const DefaultSelectControl: SelectControlComponent<'single' | 'multi'> = 
             noScaleOnPress
             aria-haspopup={ariaHaspopup}
             background="transparent"
-            blendStyles={blendStyles}
+            blendStyles={interactableBlendStyles}
             disabled={disabled}
             minHeight={isMultiSelect ? 76 : undefined}
             onClick={() => setOpen((s) => !s)}
@@ -233,7 +226,6 @@ export const DefaultSelectControl: SelectControlComponent<'single' | 'multi'> = 
         ),
         [
           ariaHaspopup,
-          blendStyles,
           disabled,
           isMultiSelect,
           startNode,
@@ -243,6 +235,7 @@ export const DefaultSelectControl: SelectControlComponent<'single' | 'multi'> = 
           compact,
           valueNode,
           setOpen,
+          interactableBlendStyles,
         ],
       );
 
@@ -261,6 +254,7 @@ export const DefaultSelectControl: SelectControlComponent<'single' | 'multi'> = 
       return (
         <InputStack
           ref={ref as React.Ref<HTMLDivElement>}
+          blendStyles={interactableBlendStyles}
           disabled={disabled}
           endNode={animatedCaretNode}
           helperTextNode={helperTextNode}
