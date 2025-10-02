@@ -615,8 +615,12 @@ export const Scrubber = memo(
               className={classNames?.line}
               dataX={dataX}
               label={label}
-              labelPosition="top"
-              labelProps={scrubberLabelProps}
+              labelProps={{
+                verticalAlignment: 'middle',
+                // Place in the middle vertically by default
+                dy: -0.5 * drawingArea.y,
+                ...scrubberLabelProps,
+              }}
               stroke={lineStroke}
               style={styles?.line}
             />

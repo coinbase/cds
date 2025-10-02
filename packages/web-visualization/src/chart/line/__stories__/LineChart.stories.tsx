@@ -298,7 +298,7 @@ const BTCPriceChart = () => {
               </VStack>
             }
             style={{ padding: 0, flexGrow: 1 }}
-            title={<Text font="title1">Coinbase Wrapped BTC</Text>}
+            title={<Text font="title1">BTC</Text>}
           />
         </HStack>
         <CartesianChart
@@ -473,7 +473,7 @@ const ColorShiftChart = () => {
           showArea
           showXAxis
           height={350}
-          inset={{ top: 48, left: 0, right: 0, bottom: 0 }}
+          inset={{ left: 0, right: 0, bottom: 0 }}
           onScrubberPositionChange={onScrubberPositionChange}
           overflow="visible"
           series={[
@@ -681,7 +681,7 @@ const PriceChart = () => {
         enableScrubbing
         showArea
         height={372}
-        inset={{ left: 0, right: 18, bottom: 18, top: 18 }}
+        inset={{ left: 0, right: 18, bottom: 18, top: 56 }}
         onScrubberPositionChange={onScrubberPositionChange}
         overflow="visible"
         series={[
@@ -1658,6 +1658,7 @@ const AssetPriceDotted = memo(() => {
         areaType="dotted"
         aria-live="polite"
         height={300}
+        inset={{ top: 56 }}
         onScrubberPositionChange={setScrubIndex}
         overflow="visible"
         series={[

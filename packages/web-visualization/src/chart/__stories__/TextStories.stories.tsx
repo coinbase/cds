@@ -296,7 +296,7 @@ export const InteractiveChartText = () => {
           <XAxis showGrid showLine showTickMarks />
           <YAxis showGrid showLine showTickMarks position="left" />
           <ChartText
-            borderRadius={200}
+            borderRadius={8}
             color="var(--color-fgPrimary)"
             dx={offsetX}
             dy={offsetY}

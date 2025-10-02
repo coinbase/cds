@@ -145,7 +145,7 @@ export const ReferenceLine = memo<ReferenceLineProps>(
     dataY,
     yAxisId,
     label,
-    labelPosition,
+    labelPosition = dataY !== undefined ? 'right' : 'top',
     testID,
     LineComponent = DottedLine,
     stroke = 'var(--color-bgLine)',
@@ -268,7 +268,6 @@ export const ReferenceLine = memo<ReferenceLineProps>(
       );
     }
 
-    // Should not reach here if types are correct
-    return null;
+    return;
   },
 );

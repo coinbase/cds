@@ -195,10 +195,11 @@ const DraggableReferenceLine = memo(
           labelPosition="right"
           labelProps={{
             background: color,
-            borderRadius: 100,
+            borderRadius: 4,
             color: 'white',
-            dx: -8,
+            dx: -12,
             font: 'label1',
+            horizontalAlignment: 'right',
             inset: { top: 5, bottom: 5, left: 10, right: 10 },
           }}
         />
@@ -262,7 +263,7 @@ const PriceTargetChart = () => {
       animate={false}
       curve="monotone"
       height={250}
-      inset={{ top: 2, bottom: 2, left: 1, right: 10 }}
+      inset={{ top: 16, bottom: 16, left: 8, right: 80 }}
       series={[
         {
           id: 'prices',
@@ -276,7 +277,7 @@ const PriceTargetChart = () => {
         LineComponent={SolidLine}
         dataY={priceData[priceData.length - 1]}
         label={formatPrice(priceData[priceData.length - 1])}
-        labelProps={{ dx: 16, horizontalAlignment: 'left' }}
+        labelProps={{ dx: 8, horizontalAlignment: 'left' }}
       />
       <DraggableReferenceLine
         baselineAmount={priceData[priceData.length - 1]}
@@ -295,7 +296,7 @@ export const All = () => {
           showArea
           curve="monotone"
           height={250}
-          inset={{ right: 4 }}
+          inset={{ right: 32 }}
           series={[
             {
               id: 'prices',
@@ -315,7 +316,7 @@ export const All = () => {
           showArea
           curve="monotone"
           height={250}
-          inset={{ right: 4 }}
+          inset={{ right: 32 }}
           series={[
             {
               id: 'prices',
@@ -329,7 +330,7 @@ export const All = () => {
             labelPosition="right"
             labelProps={{
               dx: -16,
-              borderRadius: 400,
+              borderRadius: 8,
               color: 'white',
               background: 'var(--color-bgPositive)',
             }}
@@ -353,8 +354,9 @@ export const All = () => {
             label="Liquidation"
             labelPosition="left"
             labelProps={{
-              dx: 4,
-              borderRadius: 100,
+              horizontalAlignment: 'left',
+              dx: 12,
+              borderRadius: 4,
               inset: { top: 4, bottom: 4, left: 8, right: 8 },
               color: 'rgb(var(--yellow70))',
               background: 'var(--color-accentSubtleYellow)',
@@ -367,8 +369,9 @@ export const All = () => {
             label="$25"
             labelPosition="right"
             labelProps={{
-              dx: -4,
-              borderRadius: 100,
+              horizontalAlignment: 'right',
+              dx: -12,
+              borderRadius: 4,
               inset: { top: 2, bottom: 2, left: 4, right: 4 },
               color: 'rgb(var(--yellow70))',
               background: 'var(--color-bg)',
