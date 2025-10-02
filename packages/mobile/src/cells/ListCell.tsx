@@ -27,7 +27,15 @@ export type ListCellBaseProps = CellDetailProps &
   Omit<CellBaseProps, 'accessory' | 'children'> & {
     /** Accessory to display at the end of the cell. */
     accessory?: CellAccessoryType;
-    /** Interactive action, like a CTA or form element. Cannot be used alongside `onPress`. */
+    /**
+     * End-aligned content (e.g., CTA, form element, metric). Replaces the deprecated `action` prop.
+     * If the content is a action (like button, link, etc), we recommand avoid using alongside `onPress`.
+     */
+    end?: React.ReactNode;
+    /**
+     * Interactive action, like a CTA or form element. Cannot be used alongside `onPress`.
+     * @deprecated Use `end` instead. Maintained for backward compatibility.
+     */
     action?: React.ReactNode;
     /**
      * @deprecated Use `layoutSpacing="compact"`. Kept for backward compatibility.
@@ -109,6 +117,7 @@ export type ListCellProps = ListCellBaseProps & Omit<CellProps, 'accessory' | 'c
 
 export const ListCell = memo(function ListCell({
   accessory,
+  end: endProp,
   action,
   compact,
   title,
@@ -146,6 +155,7 @@ export const ListCell = memo(function ListCell({
 
   const end = useMemo(
     () =>
+      endProp ||
       action ||
       (hasDetails && (
         <CellDetail
@@ -160,7 +170,17 @@ export const ListCell = memo(function ListCell({
           variant={variant}
         />
       )),
-    [action, hasDetails, detail, subdetail, detailWidth, layoutSpacing, textProps, variant],
+    [
+      endProp,
+      action,
+      hasDetails,
+      detail,
+      subdetail,
+      detailWidth,
+      layoutSpacing,
+      textProps,
+      variant,
+    ],
   );
 
   return (
@@ -168,9 +188,9 @@ export const ListCell = memo(function ListCell({
       accessory={accessoryType ? <CellAccessory type={accessoryType} /> : undefined}
       borderRadius={props.borderRadius ?? (layoutSpacing === 'hug' ? 0 : undefined)}
       bottomContent={helperText}
-      detail={end}
       detailWidth={detailWidth}
       disabled={disabled}
+      end={end}
       innerSpacing={innerSpacing ?? (layoutSpacing === 'hug' ? hugInnerSpacing : undefined)}
       intermediary={intermediary}
       media={media}

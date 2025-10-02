@@ -38,7 +38,15 @@ export type CellBaseProps = SharedProps &
     accessory?: React.ReactElement<CellAccessoryProps>;
     /** Main content of the cell; typically title/description content. */
     children: React.ReactNode;
-    /** End-aligned detail content (e.g., value, status). */
+    /**
+     * End-aligned content (e.g., value, status).
+     * Replaces the deprecated `detail` prop.
+     */
+    end?: React.ReactNode;
+    /**
+     * End-aligned detail content (e.g., value, status).
+     * @deprecated Use `end` instead. Maintained for backward compatibility.
+     */
     detail?: React.ReactNode;
     /** Middle content between main content and detail. */
     intermediary?: React.ReactNode;
@@ -47,7 +55,7 @@ export type CellBaseProps = SharedProps &
     borderRadius?: ThemeVars.BorderRadius;
     /**
      * Apply a fixed width to the detail (end).
-     * @deprecated Use `styles.detail.end` instead. This prop is kept for backward
+     * @deprecated Use `styles.end` instead. This prop is kept for backward
      * compatibility and will be removed in a future major release.
      */
     detailWidth?: number | string;
@@ -88,6 +96,7 @@ export const Cell = memo(function Cell({
   borderRadius = 200,
   children,
   styles,
+  end,
   detail,
   detailWidth,
   disabled,
@@ -139,6 +148,8 @@ export const Cell = memo(function Cell({
 
     const endWidth = StyleSheet.flatten(styles?.end)?.width ?? detailWidth;
 
+    const endContent = end ?? detail;
+
     const topContent = (
       <>
         {!!media && (
@@ -166,7 +177,7 @@ export const Cell = memo(function Cell({
           </Box>
         )}
 
-        {!!detail && (
+        {!!endContent && (
           <Box
             alignItems="flex-end"
             flexGrow={endWidth ? undefined : 1}
@@ -175,7 +186,7 @@ export const Cell = memo(function Cell({
             style={styles?.end}
             width={detailWidth}
           >
-            {detail}
+            {endContent}
           </Box>
         )}
 
@@ -222,6 +233,7 @@ export const Cell = memo(function Cell({
     children,
     intermediary,
     styles?.intermediary,
+    end,
     detail,
     detailWidth,
     styles?.end,

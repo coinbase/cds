@@ -66,7 +66,7 @@ Prefer `layoutSpacing="hug"` for the new ListCell design. The `spacious` and `co
     description="Shows usage with helper text below the cell"
     helperText={<CellHelperText>This is a default helper message.</CellHelperText>}
     media={<Avatar src={assets.btc.imageUrl} />}
-    action={<Button compact>Action</Button>}
+    end={<Button compact>Action</Button>}
   />
   <ListCell
     layoutSpacing="hug"
@@ -74,7 +74,7 @@ Prefer `layoutSpacing="hug"` for the new ListCell design. The `spacious` and `co
     description="Shows usage with a warning message"
     helperText={<CellHelperText variant="warning">This is a warning message.</CellHelperText>}
     media={<Avatar src={assets.btc.imageUrl} />}
-    action={<Button compact>Action</Button>}
+    end={<Button compact>Action</Button>}
   />
   <ListCell
     layoutSpacing="hug"
@@ -82,7 +82,7 @@ Prefer `layoutSpacing="hug"` for the new ListCell design. The `spacious` and `co
     description="Shows usage with an error message"
     helperText={<CellHelperText variant="error">This is an error message.</CellHelperText>}
     media={<Avatar src={assets.btc.imageUrl} />}
-    action={<Button compact>Action</Button>}
+    end={<Button compact>Action</Button>}
   />
 </VStack>
 ```
@@ -207,6 +207,6 @@ Mapping to `styles` / `classNames` keys:
 - title/description: stacked text column within `topContent`
 - media: leading media container
 - intermediary: middle container between main and end
-- end: container for `detail` or `action` (maps to `Cell`'s `detail`)
+- end: container for `detail`/`subdetail` or `end` prop you pass in
 - accessory: trailing accessory container
 - helperText: container below main content to display helper text

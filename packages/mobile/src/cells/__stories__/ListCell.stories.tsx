@@ -528,21 +528,21 @@ const WithMedia = () => (
 
 const WithActions = () => (
   <>
-    <ListCell action={<Button>Action</Button>} detail="Detail" layoutSpacing="hug" title="Title" />
+    <ListCell detail="Detail" end={<Button>Action</Button>} layoutSpacing="hug" title="Title" />
     <ListCell
-      action={
+      description="Description"
+      end={
         <Button compact variant="negative">
           Action
         </Button>
       }
-      description="Description"
       layoutSpacing="hug"
       title="Title"
     />
     <ListCell
-      action={<IconButton accessibilityLabel="External link" name="externalLink" />}
       description="Description"
       detail="Detail"
+      end={<IconButton accessibilityLabel="External link" name="externalLink" />}
       layoutSpacing="hug"
       title="Title"
     />
@@ -645,16 +645,16 @@ const WithHelperText = () => (
       title="Title"
     />
     <ListCell
-      action={<Button compact>Action</Button>}
       description="Description"
+      end={<Button compact>Action</Button>}
       helperText={<CellHelperText variant="warning">Helper text with action</CellHelperText>}
       layoutSpacing="hug"
       title="Title"
     />
     <ListCell
       accessory="more"
-      action={<Button compact>Action</Button>}
       description="Description also has a very long length that will wrap to 2 lines maximum. This is different from subtitle that only supports 1 line."
+      end={<Button compact>Action</Button>}
       helperText={
         <CellHelperText paddingStart={6} variant="error">
           Helper text with media, action, and accessory and very long text
@@ -782,9 +782,9 @@ const HugListCell = () => {
       />
       <ListCell
         accessory="more"
-        action={<Button compact>Action</Button>}
         description="Description"
         detail="Detail"
+        end={<Button compact>Action</Button>}
         layoutSpacing="hug"
         media={<Icon name="heart" size="xs" />}
         onPress={onPressConsole}
@@ -900,8 +900,8 @@ const UseCaseShowcase = () => {
     <VStack width="360px">
       <ListCell
         // If you need to pass non-string values to the detail or subdetail,
-        // you can use the action prop to pass in a VStack, which can be anything you want.
-        action={
+        // you can use the end prop to pass in a VStack, which can be anything you want.
+        end={
           <VStack alignItems="flex-end">
             <RollingNumber colorPulseOnUpdate font="body" format={format} value={btcPrice} />
             <RollingNumber color="fgMuted" font="label2" suffix=" BTC" value={btcAmt} />
@@ -921,14 +921,14 @@ const UseCaseShowcase = () => {
       />
       <ListCell
         // If you need to pass non-string values to the detail or subdetail,
-        // you can use the action prop to pass in a VStack, which can be anything you want.
-        action={
+        // you can use the end prop to pass in a VStack, which can be anything you want.
+        description="25% staked"
+        end={
           <VStack alignItems="flex-end">
             <RollingNumber colorPulseOnUpdate font="body" format={format} value={ethPrice} />
             <RollingNumber color="fgMuted" font="label2" suffix=" ETH" value={ethAmt} />
           </VStack>
         }
-        description="25% staked"
         intermediary={<Icon name="chartLine" />}
         layoutSpacing="hug"
         media={<Avatar src={assets.eth.imageUrl} />}
@@ -942,14 +942,14 @@ const UseCaseShowcase = () => {
       />
       <ListCell
         // If you need to pass non-string values to the detail or subdetail,
-        // you can use the action prop to pass in a VStack, which can be anything you want.
-        action={
+        // you can use the end prop to pass in a VStack, which can be anything you want.
+        description="51% staked"
+        end={
           <VStack alignItems="flex-end">
             <RollingNumber colorPulseOnUpdate font="body" format={format} value={adaPrice} />
             <RollingNumber color="fgMuted" font="label2" suffix=" ADA" value={adaAmt} />
           </VStack>
         }
-        description="51% staked"
         intermediary={<Icon name="chartLine" />}
         layoutSpacing="hug"
         media={<Avatar src={assets.ada.imageUrl} />}
@@ -962,7 +962,7 @@ const UseCaseShowcase = () => {
         title="ADA"
       />
       <ListCell
-        action={
+        end={
           <VStack alignItems="flex-end">
             <RollingNumber colorPulseOnUpdate font="body" format={format} value={ltcPrice} />
             <RollingNumber color="fgMuted" font="label2" suffix=" LTC" value={ltcAmt} />
@@ -980,13 +980,13 @@ const UseCaseShowcase = () => {
         title="LTC"
       />
       <ListCell
-        action={
+        description="Stablecoin"
+        end={
           <VStack alignItems="flex-end">
             <RollingNumber colorPulseOnUpdate font="body" format={format} value={daiPrice} />
             <RollingNumber color="fgMuted" font="label2" suffix=" DAI" value={daiAmt} />
           </VStack>
         }
-        description="Stablecoin"
         intermediary={<Icon name="chartLine" />}
         layoutSpacing="hug"
         media={<Avatar src={assets.dai.imageUrl} />}

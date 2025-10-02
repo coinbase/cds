@@ -42,7 +42,15 @@ export type ListCellBaseProps = Polymorphic.ExtendableProps<
   CellDetailProps & {
     /** Accessory to display at the end of the cell. */
     accessory?: CellAccessoryType;
-    /** Interactive action, like a CTA or form element. Cannot be used alongside `onPress`. */
+    /**
+     * End-aligned content (e.g., CTA, form element, metric). Replaces the deprecated `action` prop.
+     * If the content is an action (like button, link, etc), we recommend avoiding use alongside `onClick`.
+     */
+    end?: React.ReactNode;
+    /**
+     * Interactive action, like a CTA or form element. Cannot be used alongside `onClick`.
+     * @deprecated Use `end` instead. Maintained for backward compatibility.
+     */
     action?: React.ReactNode;
     /**
      * @deprecated Use `layoutDensity="compact"` instead. This prop is kept for backward
@@ -147,6 +155,7 @@ export const ListCell: ListCellComponent = memo(
       {
         as,
         accessory,
+        end: endProp,
         action,
         compact,
         title,
@@ -187,6 +196,9 @@ export const ListCell: ListCellComponent = memo(
       const accessoryType = selected && !disableSelectionAccessory ? 'selected' : accessory;
 
       const end = useMemo(() => {
+        if (endProp) {
+          return <Box justifyContent="flex-end">{endProp}</Box>;
+        }
         if (action) {
           return <Box justifyContent="flex-end">{action}</Box>;
         }
@@ -205,7 +217,7 @@ export const ListCell: ListCellComponent = memo(
           );
         }
         return undefined;
-      }, [action, detail, subdetail, variant, layoutSpacing, textProps]);
+      }, [endProp, action, detail, subdetail, variant, layoutSpacing, textProps]);
 
       return (
         <Cell
@@ -215,8 +227,8 @@ export const ListCell: ListCellComponent = memo(
           borderRadius={props.borderRadius ?? (layoutSpacing === 'hug' ? 0 : undefined)}
           bottomContent={helperText}
           className={cx(className, classNames?.root)}
-          detail={end}
           disabled={disabled}
+          end={end}
           innerSpacing={innerSpacing ?? (layoutSpacing === 'hug' ? hugInnerSpacing : undefined)}
           intermediary={intermediary}
           media={media}

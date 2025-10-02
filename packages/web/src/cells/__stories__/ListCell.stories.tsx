@@ -3,8 +3,6 @@ import { assets, squareAssets } from '@coinbase/cds-common/internal/data/assets'
 import type { CellPriority } from '@coinbase/cds-common/types/CellBaseProps';
 
 import { Button, IconButton } from '../../buttons';
-import type { CellSpacing } from '../../cells/Cell';
-import { Checkbox } from '../../controls/Checkbox';
 import { Icon } from '../../icons/Icon';
 import { Pictogram } from '../../illustrations/Pictogram';
 import { HStack, VStack } from '../../layout';
@@ -609,23 +607,23 @@ const WithMedia = () => (
 
 const WithActions = () => (
   <>
-    <ListCell action={<Button>Action</Button>} detail="Detail" layoutSpacing="hug" title="Title" />
+    <ListCell detail="Detail" end={<Button>Action</Button>} layoutSpacing="hug" title="Title" />
 
     <ListCell
-      action={
+      description="Description"
+      end={
         <Button compact variant="negative">
           Action
         </Button>
       }
-      description="Description"
       layoutSpacing="hug"
       title="Title"
     />
 
     <ListCell
-      action={<IconButton accessibilityLabel="External link" name="externalLink" />}
       description="Description"
       detail="Detail"
+      end={<IconButton accessibilityLabel="External link" name="externalLink" />}
       layoutSpacing="hug"
       title="Title"
     />
@@ -715,8 +713,8 @@ const WithHelperText = () => (
     <ListCell
       multiline
       accessory="more"
-      action={<Button compact>Action</Button>}
       description="Action required"
+      end={<Button compact>Action</Button>}
       helperText={
         <CellHelperText paddingStart={6} variant="warning">
           Please review this information carefully before proceeding
@@ -731,8 +729,8 @@ const WithHelperText = () => (
     <ListCell
       multiline
       accessory="more"
-      action={<Button compact>Action</Button>}
       description="Perform an action based on this information"
+      end={<Button compact>Action</Button>}
       helperText={
         <CellHelperText paddingStart={6} variant="error">
           This field contains an error that needs to be corrected
@@ -747,8 +745,8 @@ const WithHelperText = () => (
     <ListCell
       multiline
       accessory="more"
-      action={<Button compact>Action</Button>}
       description="Perform an action based on this information."
+      end={<Button compact>Action</Button>}
       helperText={
         <CellHelperText paddingStart={6} variant="information">
           This action cannot be undone.
@@ -893,9 +891,9 @@ const HugListCell = () => {
       />
       <ListCell
         accessory="more"
-        action={<Button compact>Action</Button>}
         description="Description"
         detail="Detail"
+        end={<Button compact>Action</Button>}
         layoutSpacing="hug"
         media={<Icon name="heart" size="xs" />}
         onClick={onClickConsole}
@@ -967,8 +965,8 @@ const UseCaseShowcase = () => {
     <VStack width="360px">
       <ListCell
         // If you need to pass non-string values to the detail or subdetail,
-        // you can use the action prop to pass in a VStack, which can be anything you want.
-        action={
+        // you can use the end prop to pass in a VStack, which can be anything you want.
+        end={
           <VStack alignItems="flex-end">
             <RollingNumber colorPulseOnUpdate font="body" format={format} value={btcPrice} />
             <RollingNumber color="fgMuted" font="label2" suffix=" BTC" value={btcAmt} />
@@ -988,14 +986,14 @@ const UseCaseShowcase = () => {
       />
       <ListCell
         // If you need to pass non-string values to the detail or subdetail,
-        // you can use the action prop to pass in a VStack, which can be anything you want.
-        action={
+        // you can use the end prop to pass in a VStack, which can be anything you want.
+        description="25% staked"
+        end={
           <VStack alignItems="flex-end">
             <RollingNumber colorPulseOnUpdate font="body" format={format} value={ethPrice} />
             <RollingNumber color="fgMuted" font="label2" suffix=" ETH" value={ethAmt} />
           </VStack>
         }
-        description="25% staked"
         intermediary={<Icon name="chartLine" />}
         layoutSpacing="hug"
         media={<Avatar src={assets.eth.imageUrl} />}
@@ -1009,14 +1007,14 @@ const UseCaseShowcase = () => {
       />
       <ListCell
         // If you need to pass non-string values to the detail or subdetail,
-        // you can use the action prop to pass in a VStack, which can be anything you want.
-        action={
+        // you can use the end prop to pass in a VStack, which can be anything you want.
+        description="51% staked"
+        end={
           <VStack alignItems="flex-end">
             <RollingNumber colorPulseOnUpdate font="body" format={format} value={adaPrice} />
             <RollingNumber color="fgMuted" font="label2" suffix=" ADA" value={adaAmt} />
           </VStack>
         }
-        description="51% staked"
         intermediary={<Icon name="chartLine" />}
         layoutSpacing="hug"
         media={<Avatar src={assets.ada.imageUrl} />}
@@ -1029,7 +1027,7 @@ const UseCaseShowcase = () => {
         title="ADA"
       />
       <ListCell
-        action={
+        end={
           <VStack alignItems="flex-end">
             <RollingNumber colorPulseOnUpdate font="body" format={format} value={ltcPrice} />
             <RollingNumber color="fgMuted" font="label2" suffix=" LTC" value={ltcAmt} />
@@ -1047,13 +1045,13 @@ const UseCaseShowcase = () => {
         title="LTC"
       />
       <ListCell
-        action={
+        description="Stablecoin"
+        end={
           <VStack alignItems="flex-end">
             <RollingNumber colorPulseOnUpdate font="body" format={format} value={daiPrice} />
             <RollingNumber color="fgMuted" font="label2" suffix=" DAI" value={daiAmt} />
           </VStack>
         }
-        description="Stablecoin"
         intermediary={<Icon name="chartLine" />}
         layoutSpacing="hug"
         media={<Avatar src={assets.dai.imageUrl} />}
