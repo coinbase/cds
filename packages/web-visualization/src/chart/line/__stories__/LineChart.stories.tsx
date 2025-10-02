@@ -186,7 +186,7 @@ const PeriodSelectorTab: TabComponent = memo(
           requestedTickCount: 5,
           tickLabelFormatter: (value) => value.toLocaleString(),
           showGrid: true,
-          size: 70,
+          width: 70,
         }}
       >
         <Scrubber />

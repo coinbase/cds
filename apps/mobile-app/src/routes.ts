@@ -107,6 +107,11 @@ export const routes = [
         .default,
   },
   {
+    key: 'ChartAxis',
+    getComponent: () =>
+      require('@coinbase/cds-mobile-visualization/chart/axis/__stories__/Axis.stories').default,
+  },
+  {
     key: 'Checkbox',
     getComponent: () =>
       require('@coinbase/cds-mobile/controls/__stories__/Checkbox.stories').default,
