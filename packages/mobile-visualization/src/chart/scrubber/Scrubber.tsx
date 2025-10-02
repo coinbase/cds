@@ -14,12 +14,11 @@ import Reanimated, {
   withDelay,
   withTiming,
 } from 'react-native-reanimated';
-import { G, Rect } from 'react-native-svg';
+import { G, Rect, Text } from 'react-native-svg';
 import { useRefMap } from '@coinbase/cds-common/hooks/useRefMap';
 import type { SharedProps } from '@coinbase/cds-common/types';
 import {
   type ChartScaleFunction,
-  projectPoint,
   useScrubberContext,
 } from '@coinbase/cds-common/visualizations/charts';
 import { useTheme } from '@coinbase/cds-mobile';
@@ -229,40 +228,20 @@ export const Scrubber = memo(
               }
 
               if (dataY !== undefined) {
-                const yScale = getYScale(s.yAxisId) as ChartScaleFunction;
-                const pixelPosition = projectPoint({
-                  x: dataX,
-                  y: dataY,
-                  xScale,
-                  yScale,
-                });
-
                 const resolvedLabel = typeof s.label === 'function' ? s.label(dataIndex) : s.label;
 
                 return {
                   x: dataX,
                   y: dataY,
                   label: resolvedLabel,
-                  pixelX: pixelPosition.x,
-                  pixelY: pixelPosition.y,
                   targetSeries: s,
                 };
               }
             })
             .filter((beacon: any) => beacon !== undefined) ?? []
         );
-      }, [
-        getXScale,
-        dataX,
-        dataIndex,
-        series,
-        seriesIds,
-        getStackedSeriesData,
-        getSeriesData,
-        getYScale,
-      ]);
+      }, [getXScale, dataX, dataIndex, series, seriesIds, getStackedSeriesData, getSeriesData]);
 
-      // Callback to create ref handlers for scrubber beacons
       const createScrubberBeaconRef = useCallback(
         (seriesId: string) => {
           return (beaconRef: ScrubberBeaconRef | null) => {
@@ -274,7 +253,6 @@ export const Scrubber = memo(
         [ScrubberBeaconRefs],
       );
 
-      // Check if we have at least the default X scale
       const defaultXScale = getXScale();
 
       const pixelX = dataX !== undefined && defaultXScale ? defaultXScale(dataX) : undefined;
@@ -287,13 +265,9 @@ export const Scrubber = memo(
         return label;
       }, [label, dataIndex]);
 
-      // Update scrubber line and overlay positions using animated values
       useEffect(() => {
         if (pixelX !== undefined) {
-          // Update Reanimated value for scrubber line
           scrubberLineX.value = pixelX;
-
-          // Update react-native Animated values for overlay (immediate, no animation)
           overlayX.setValue(pixelX);
           overlayWidth.setValue(drawingArea.x + drawingArea.width - pixelX + overlayOffset);
         }

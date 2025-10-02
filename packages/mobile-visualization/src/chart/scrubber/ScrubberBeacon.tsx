@@ -1,4 +1,4 @@
-import { forwardRef, memo, useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react';
+import { forwardRef, memo, useEffect, useImperativeHandle, useMemo } from 'react';
 import Reanimated, {
   cancelAnimation,
   useAnimatedProps,
@@ -7,7 +7,8 @@ import Reanimated, {
   withSequence,
   withTiming,
 } from 'react-native-reanimated';
-import { Circle, G } from 'react-native-svg';
+import { Circle, G, Text as SvgText } from 'react-native-svg';
+import { usePreviousValue } from '@coinbase/cds-common/hooks/usePreviousValue';
 import type { SharedProps } from '@coinbase/cds-common/types';
 import { projectPoint, useScrubberContext } from '@coinbase/cds-common/visualizations/charts';
 import { useTheme } from '@coinbase/cds-mobile';
@@ -71,13 +72,8 @@ export const ScrubberBeacon = memo(
       ref,
     ) => {
       const theme = useTheme();
-      const {
-        getSeries,
-        getXScale,
-        getYScale,
-        getSeriesData,
-        animate: animationEnabled,
-      } = useCartesianChartContext();
+      const { getSeries, getXScale, getYScale, getSeriesData, animate } =
+        useCartesianChartContext();
       const { scrubberPosition } = useScrubberContext();
 
       const targetSeries = getSeries(seriesId);
@@ -87,15 +83,6 @@ export const ScrubberBeacon = memo(
 
       const isIdleState = scrubberPosition === undefined;
 
-      // Shared values for animations
-      const animatedX = useSharedValue(0);
-      const animatedY = useSharedValue(0);
-      const pulseOpacity = useSharedValue(0);
-      const previousPositionRef = useRef<{ x: number; y: number } | undefined>(undefined);
-      const [isInitialized, setIsInitialized] = useState(false);
-      const wasScrubbing = useRef(false);
-
-      // Calculate data coordinates
       const { dataX, dataY } = useMemo(() => {
         let x: number | undefined;
         let y: number | undefined;
@@ -134,33 +121,39 @@ export const ScrubberBeacon = memo(
         return { dataX: x, dataY: y };
       }, [dataXProp, dataYProp, sourceData, scrubberPosition, xScale, yScale]);
 
-      // Calculate target pixel coordinates
-      const pixelCoordinate = useMemo(() => {
-        if (!xScale || !yScale || dataX === undefined || dataY === undefined) {
-          return null;
-        }
+      const previousIdleState = usePreviousValue(!!isIdleState);
 
-        return projectPoint({
+      const pixelCoordinate = useMemo(() => {
+        if (!xScale || !yScale || dataX === undefined || dataY === undefined) return undefined;
+
+        const point = projectPoint({
           x: dataX,
           y: dataY,
           xScale,
           yScale,
         });
+
+        // Return undefined if coordinates are invalid
+        if (!point || isNaN(point.x) || isNaN(point.y)) return undefined;
+
+        return point;
       }, [xScale, yScale, dataX, dataY]);
 
-      // Imperative handle for pulse
+      const animatedX = useSharedValue(pixelCoordinate?.x ?? 0);
+      const animatedY = useSharedValue(pixelCoordinate?.y ?? 0);
+      const pulseOpacity = useSharedValue(0);
+
       useImperativeHandle(ref, () => ({
         pulse: () => {
-          if (isIdleState && animationEnabled) {
+          if (isIdleState && animate) {
             pulseOpacity.value = 0.1;
             pulseOpacity.value = withTiming(0, { duration: singlePulseDuration });
           }
         },
       }));
 
-      // Pulse opacity animation
       useEffect(() => {
-        const shouldPulse = animationEnabled && isIdleState && idlePulse;
+        const shouldPulse = animate && isIdleState && idlePulse;
 
         if (shouldPulse) {
           pulseOpacity.value = withRepeat(
@@ -168,90 +161,54 @@ export const ScrubberBeacon = memo(
               withTiming(0.1, { duration: pulseDuration / 2 }),
               withTiming(0, { duration: pulseDuration / 2 }),
             ),
-            -1, // infinite repeat
+            -1, // loop
             false,
           );
         } else {
           cancelAnimation(pulseOpacity);
           pulseOpacity.value = withTiming(0, { duration: 200 });
         }
-      }, [animationEnabled, isIdleState, idlePulse, pulseOpacity]);
+      }, [animate, isIdleState, idlePulse, pulseOpacity]);
 
-      // Position animation
+      // Update position when data coordinates change
       useEffect(() => {
         if (!pixelCoordinate) return;
 
-        const positionChanged =
-          !previousPositionRef.current ||
-          previousPositionRef.current.x !== pixelCoordinate.x ||
-          previousPositionRef.current.y !== pixelCoordinate.y;
-
-        if (!positionChanged) return;
-
-        if (!isIdleState) {
-          // When scrubbing - update immediately
+        // When scrubbing or animations disabled: snap immediately
+        if (!isIdleState || !animate || !previousIdleState) {
+          // Cancel any ongoing animations before snapping
+          cancelAnimation(animatedX);
+          cancelAnimation(animatedY);
           animatedX.value = pixelCoordinate.x;
           animatedY.value = pixelCoordinate.y;
-          wasScrubbing.current = true;
-          if (!isInitialized) {
-            setIsInitialized(true);
-          }
         } else {
-          // When idle
-          if (!previousPositionRef.current) {
-            // First render - set position immediately
-            animatedX.value = pixelCoordinate.x;
-            animatedY.value = pixelCoordinate.y;
-            if (!isInitialized) {
-              setIsInitialized(true);
-            }
-          } else if (wasScrubbing.current) {
-            // Just stopped scrubbing - snap to position
-            animatedX.value = pixelCoordinate.x;
-            animatedY.value = pixelCoordinate.y;
-            wasScrubbing.current = false;
-          } else if (animationEnabled) {
-            // Idle state with data update - animate to new position
-            animatedX.value = withTiming(pixelCoordinate.x, { duration: 300 });
-            animatedY.value = withTiming(pixelCoordinate.y, { duration: 300 });
-          } else {
-            // Idle but no animation - snap to position
-            animatedX.value = pixelCoordinate.x;
-            animatedY.value = pixelCoordinate.y;
-          }
+          // When idle with animations enabled: animate smoothly
+          animatedX.value = withTiming(pixelCoordinate.x, { duration: 300 });
+          animatedY.value = withTiming(pixelCoordinate.y, { duration: 300 });
         }
+      }, [pixelCoordinate, isIdleState, animate, previousIdleState, animatedX, animatedY]);
 
-        previousPositionRef.current = pixelCoordinate;
-      }, [pixelCoordinate, isIdleState, animationEnabled, animatedX, animatedY, isInitialized]);
-
-      // Animated props - MUST be called unconditionally (hooks rule)
-      // Animate cx/cy for glow ring
+      // Animated props for all circles in idle state
       const glowAnimatedProps = useAnimatedProps(() => ({
         cx: animatedX.value,
         cy: animatedY.value,
       }));
 
-      // Animate cx/cy and opacity for pulse ring
+      const pointAnimatedProps = useAnimatedProps(() => ({
+        cx: animatedX.value,
+        cy: animatedY.value,
+      }));
+
       const pulseAnimatedProps = useAnimatedProps(() => ({
         cx: animatedX.value,
         cy: animatedY.value,
         opacity: pulseOpacity.value,
       }));
 
-      // Animate cx/cy for main point
-      const pointAnimatedProps = useAnimatedProps(() => ({
-        cx: animatedX.value,
-        cy: animatedY.value,
-      }));
-
-      // Don't render until initialized
-      if (!pixelCoordinate || !isInitialized) {
-        return null;
-      }
+      if (!pixelCoordinate) return;
 
       const pointColor = color ?? targetSeries?.color ?? theme.color.fgPrimary;
 
-      // When scrubbing - render without animation (regular SVG elements)
       if (!isIdleState) {
         return (
           <G opacity={opacity} testID={testID}>
@@ -274,7 +231,6 @@ export const ScrubberBeacon = memo(
         );
       }
 
-      // When idle - animate each circle's cx/cy independently
       return (
         <G opacity={opacity} testID={testID}>
           <AnimatedCircle

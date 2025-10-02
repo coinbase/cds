@@ -1838,6 +1838,11 @@ const PredictionChart = () => {
     [candidate1Data.length],
   );
 
+  // Update legend when data length changes
+  useEffect(() => {
+    legendRef.current?.updateSelectedIndex(candidate1Data.length - 1);
+  }, [candidate1Data.length]);
+
   const onPeriodChange = useCallback(
     (period: TabValue | null) => {
       setTimePeriod(period || tabs[0]);
