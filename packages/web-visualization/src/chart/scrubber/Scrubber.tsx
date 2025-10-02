@@ -13,7 +13,6 @@ import type { SharedProps } from '@coinbase/cds-common/types';
 import {
   type ChartScaleFunction,
   getPointOnScale,
-  projectPoint,
   useScrubberContext,
 } from '@coinbase/cds-common/visualizations/charts';
 import { useTheme } from '@coinbase/cds-web';
@@ -218,12 +217,7 @@ export const Scrubber = memo(
                   return undefined;
                 }
 
-                const pixelPosition = projectPoint({
-                  x: dataX,
-                  y: dataY,
-                  xScale,
-                  yScale,
-                });
+                const pixelY = getPointOnScale(dataY, yScale);
 
                 const resolvedLabel = typeof s.label === 'function' ? s.label(dataIndex) : s.label;
 
@@ -231,8 +225,7 @@ export const Scrubber = memo(
                   x: dataX,
                   y: dataY,
                   label: resolvedLabel,
-                  pixelX: pixelPosition.x,
-                  pixelY: pixelPosition.y,
+                  pixelY,
                   targetSeries: s,
                 };
               }
@@ -629,15 +622,14 @@ export const Scrubber = memo(
                   dataX={beacon.x}
                   dataY={beacon.y}
                   idlePulse={idlePulse}
-                  pixelX={beacon.pixelX}
-                  pixelY={beacon.pixelY}
                   seriesId={beacon.targetSeries.id}
                   style={styles?.beacon}
                   testID={testID ? `${testID}-${beacon.targetSeries.id}-dot` : undefined}
                 />
                 {beacon.label &&
+                  pixelX !== undefined &&
                   (() => {
-                    const finalAnchorX = adjustment?.x ?? beacon.pixelX;
+                    const finalAnchorX = adjustment?.x ?? pixelX;
                     const finalAnchorY = adjustment?.y ?? beacon.pixelY;
                     const finalSide = adjustment?.side ?? labelPositioning.strategy;
 
@@ -660,7 +652,7 @@ export const Scrubber = memo(
                             beacon.targetSeries.id,
                             width,
                             height,
-                            beacon.pixelX,
+                            pixelX,
                             beacon.pixelY,
                           )
                         }
