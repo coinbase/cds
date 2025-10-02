@@ -109,6 +109,7 @@ export const DefaultSelectControl: SelectControlComponent<'single' | 'multi'> = 
             ? {
                 hoveredBackground: 'rgba(0, 0, 0, 0)',
                 hoveredOpacity: 1,
+                pressedBackground: 'rgba(0, 0, 0, 0)',
                 ...blendStyles,
               }
             : blendStyles,
