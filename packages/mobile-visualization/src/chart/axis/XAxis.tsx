@@ -221,10 +221,12 @@ export const XAxis = memo<XAxisProps>(
 
     // Handle initial mount animation
     useEffect(() => {
-      if (!animate) return;
-
       if (isInitialMount.value) {
-        tickLabelsOpacity.value = withMotionTiming(tickLabelsInitialAnimateIn) as number;
+        if (animate) {
+          tickLabelsOpacity.value = withMotionTiming(tickLabelsInitialAnimateIn) as number;
+        } else {
+          tickLabelsOpacity.value = 1;
+        }
         isInitialMount.value = false;
       }
     }, [animate, isInitialMount, tickLabelsInitialAnimateIn, tickLabelsOpacity]);
@@ -242,7 +244,7 @@ export const XAxis = memo<XAxisProps>(
     return (
       <G data-axis="x" data-position={position} {...props}>
         {showGrid && (
-          <AnimatedG animatedProps={animate ? gridAnimatedStyle : undefined}>
+          <AnimatedG animatedProps={gridAnimatedStyle}>
             {ticksData.map((tick, index) => {
               const verticalLine = (
                 <ReferenceLine LineComponent={GridLineComponent} dataX={tick.tick} />
@@ -253,7 +255,7 @@ export const XAxis = memo<XAxisProps>(
           </AnimatedG>
         )}
         {chartTextData && (
-          <AnimatedG animatedProps={animate ? tickLabelsAnimatedStyle : undefined}>
+          <AnimatedG animatedProps={tickLabelsAnimatedStyle}>
             {/* TODO pass through styles */}
             <SmartChartTextGroup
               prioritizeEndLabels
