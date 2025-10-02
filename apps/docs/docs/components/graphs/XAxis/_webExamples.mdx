@@ -16,7 +16,7 @@ The XAxis component provides a horizontal axis for charts with automatic tick ge
     data: ['April 1', 'April 2', 'April 3', 'April 4', 'April 5', 'April 6', 'April 7'],
   }}
 >
-  <XAxis position="end" showLine showTickMarks showGrid />
+  <XAxis showLine showTickMarks showGrid />
   <Line seriesId="prices" curve="monotone" showArea />
   <Scrubber />
 </CartesianChart>
@@ -29,7 +29,8 @@ Properties related to the scale of an axis are set on the Chart component. This 
 ### Scale Type
 
 XAxis supports `linear` (default), `log`, and `band` scale types.
-`linear` and `log` are numeric scales while `band` is a categorical scale. `band` is most commonly used for bar charts.
+`linear` and `log` are numeric scales while `band` is a categorical scale.
+`band` scale is required for bar charts.
 
 ```jsx live
 <CartesianChart
@@ -44,7 +45,7 @@ XAxis supports `linear` (default), `log`, and `band` scale types.
     scaleType: 'band',
   }}
 >
-  <XAxis position="end" showLine showTickMarks showGrid />
+  <XAxis showLine showTickMarks showGrid />
   <Line seriesId="prices" curve="monotone" showArea />
 </CartesianChart>
 ```
@@ -67,7 +68,7 @@ You can pass in either an object (AxisBounds) with `min` and `max` properties (b
     domain: ({ min, max }) => ({ min: min - 5, max: max + 5 }),
   }}
 >
-  <XAxis position="end" showLine showTickMarks showGrid tickInterval={2} />
+  <XAxis showLine showTickMarks showGrid tickInterval={2} />
   <Line seriesId="prices" curve="monotone" showArea />
 </CartesianChart>
 ```
@@ -120,7 +121,7 @@ Using string data will allow you to set string x values for each data point.
     data: ['April 1', 'April 2', 'April 3', 'April 4', 'April 5', 'April 6', 'April 7'],
   }}
 >
-  <XAxis position="end" showLine showTickMarks showGrid />
+  <XAxis showLine showTickMarks showGrid />
   <Line seriesId="prices" curve="monotone" showArea />
 </CartesianChart>
 ```
@@ -186,7 +187,7 @@ Properties related to the visual appearance of the XAxis are set on the componen
 
 ### Position
 
-You can set the position of an axis to `start` or `end`. The default is `end`.
+You can set the position of an axis to `top` or `bottom` (default).
 
 ```jsx live
 function XAxisPositionExample() {
@@ -260,7 +261,7 @@ function XAxisPositionExample() {
       <XAxis
         showLine
         showTickMarks
-        position="start"
+        position="top"
         tickLabelFormatter={dateFormatter}
         ticks={dateTicks}
       />
@@ -268,7 +269,6 @@ function XAxisPositionExample() {
         showGrid
         showLine
         showTickMarks
-        position="end"
         tickLabelFormatter={timeOfDayFormatter}
         ticks={timeOfDayTicks}
       />
@@ -305,7 +305,7 @@ function XAxisGridExample() {
           data: ['April 1', 'April 2', 'April 3', 'April 4', 'April 5', 'April 6', 'April 7'],
         }}
       >
-        <XAxis position="end" showLine showTickMarks showGrid={showGrid} />
+        <XAxis showLine showTickMarks showGrid={showGrid} />
         <Line seriesId="prices" curve="monotone" showArea />
         <Scrubber />
       </CartesianChart>
@@ -334,7 +334,7 @@ function CustomGridLineExample() {
         data: ['April 1', 'April 2', 'April 3', 'April 4', 'April 5', 'April 6', 'April 7'],
       }}
     >
-      <XAxis position="end" showLine showTickMarks showGrid GridLineComponent={ThinSolidLine} />
+      <XAxis showLine showTickMarks showGrid GridLineComponent={ThinSolidLine} />
       <Line seriesId="prices" curve="monotone" showArea />
       <Scrubber />
     </CartesianChart>
@@ -369,7 +369,7 @@ function XAxisLineExample() {
           data: ['April 1', 'April 2', 'April 3', 'April 4', 'April 5', 'April 6', 'April 7'],
         }}
       >
-        <XAxis position="end" showLine={showLine} showTickMarks showGrid />
+        <XAxis showLine={showLine} showTickMarks showGrid />
         <Line seriesId="prices" curve="monotone" showArea />
         <Scrubber />
       </CartesianChart>
@@ -401,7 +401,6 @@ function XAxisLineStylesExample() {
         ]}
       >
         <XAxis
-          position="end"
           showLine={showLine}
           showGrid
           styles={{ line: { stroke: 'var(--color-accentBoldGreen)', strokeWidth: 4 } }}
@@ -432,7 +431,7 @@ The `size` prop sets the size of the axis in pixels. The default is 32 for XAxis
     data: ['April 1', 'April 2', 'April 3', 'April 4', 'April 5', 'April 6', 'April 7'],
   }}
 >
-  <XAxis position="end" showLine showTickMarks showGrid size={64} />
+  <XAxis showLine showTickMarks showGrid size={64} />
   <Line seriesId="prices" curve="monotone" showArea />
   <Scrubber />
 </CartesianChart>
@@ -455,7 +454,7 @@ You can use the `ticks`, `requestedTickCount`, and `tickInterval` (default for X
     },
   ]}
 >
-  <XAxis position="end" showLine showTickMarks showGrid ticks={[0, 2, 4, 6]} />
+  <XAxis showLine showTickMarks showGrid ticks={[0, 2, 4, 6]} />
   <Line seriesId="prices" curve="monotone" showArea />
   <Scrubber />
 </CartesianChart>
@@ -474,13 +473,13 @@ Using `requestedTickCount` will use [D3's ticks function](https://d3js.org/d3-ar
     },
   ]}
 >
-  <XAxis position="end" showLine showTickMarks showGrid requestedTickCount={4} />
+  <XAxis showLine showTickMarks showGrid requestedTickCount={4} />
   <Line seriesId="prices" curve="monotone" showArea />
   <Scrubber />
 </CartesianChart>
 ```
 
-`tickInterval`, which accepts `ThemeVars.Space`, will measure the available space and try to create evenly spaced ticks. It will always include the first and last values of the domain.
+`tickInterval`, which accepts a number for the gap between ticks in pixels, will measure the available space and try to create evenly spaced ticks. It will always include the first and last values of the domain.
 
 ```jsx live
 <CartesianChart
@@ -493,7 +492,7 @@ Using `requestedTickCount` will use [D3's ticks function](https://d3js.org/d3-ar
     },
   ]}
 >
-  <XAxis position="end" showLine showTickMarks showGrid tickInterval={2} />
+  <XAxis showLine showTickMarks showGrid tickInterval={16} />
   <Line seriesId="prices" curve="monotone" showArea />
   <Scrubber />
 </CartesianChart>
@@ -501,7 +500,7 @@ Using `requestedTickCount` will use [D3's ticks function](https://d3js.org/d3-ar
 
 ### Tick Marks
 
-You can show tick marks on the axis using the `showTickMarks` prop. You can also customize the tick mark size using the `tickMarkSize` prop, which accepts `ThemeVars.Space`.
+You can show tick marks on the axis using the `showTickMarks` prop. You can also customize the tick mark size using the `tickMarkSize` prop.
 
 ```jsx live
 function XAxisTickMarksExample() {
@@ -526,7 +525,7 @@ function XAxisTickMarksExample() {
           data: ['April 1', 'April 2', 'April 3', 'April 4', 'April 5', 'April 6', 'April 7'],
         }}
       >
-        <XAxis position="end" showLine showTickMarks={showTickMarks} tickMarkSize={2} showGrid />
+        <XAxis showLine showTickMarks={showTickMarks} tickMarkSize={16} showGrid />
         <Line seriesId="prices" curve="monotone" showArea />
         <Scrubber />
       </CartesianChart>
@@ -553,7 +552,7 @@ You can customize the tick labels using the `tickLabelFormatter` prop. It will r
     data: ['April 1', 'April 2', 'April 3', 'April 4', 'April 5', 'April 6', 'April 7'],
   }}
 >
-  <XAxis position="end" showGrid tickLabelFormatter={(value) => `Day of ${value}`} />
+  <XAxis showGrid tickLabelFormatter={(value) => `Day of ${value}`} />
   <Line seriesId="prices" curve="monotone" showArea />
   <Scrubber />
 </CartesianChart>
@@ -575,7 +574,7 @@ If no data is set for the axis, it will receive the regular number value of the 
     domain: { min: -4, max: 16 },
   }}
 >
-  <XAxis position="end" showGrid tickLabelFormatter={(value) => value * 2} />
+  <XAxis showGrid tickLabelFormatter={(value) => value * 2} />
   <Line seriesId="prices" curve="monotone" showArea />
   <Scrubber />
 </CartesianChart>

@@ -616,7 +616,6 @@ export const Scrubber = memo(
 
       if (!defaultXScale || !defaultYScale) return null;
 
-      // Wrap content in AnimatedG only if animation is enabled
       const content = (
         <>
           {!hideOverlay &&

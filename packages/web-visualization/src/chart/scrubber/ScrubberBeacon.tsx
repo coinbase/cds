@@ -1,44 +1,87 @@
-import { forwardRef, memo, useEffect, useImperativeHandle, useMemo, useRef } from 'react';
+import { forwardRef, memo, useImperativeHandle, useMemo } from 'react';
 import type { SharedProps } from '@coinbase/cds-common/types';
 import { projectPoint, useScrubberContext } from '@coinbase/cds-common/visualizations/charts';
-import { m, useAnimation } from 'framer-motion';
+import { m as motion, useAnimate } from 'framer-motion';
 
 import { useCartesianChartContext } from '../ChartProvider';
-import { Point, type PointProps, type PointRef } from '../point';
 
-export type ScrubberBeaconRef = PointRef;
+const pulseTransitionConfig = {
+  duration: 2,
+  repeat: Infinity,
+  ease: 'easeInOut',
+} as const;
 
-export type ScrubberBeaconProps = SharedProps &
-  Omit<
-    PointProps,
-    | 'pulse'
-    | 'yAxisId'
-    | 'onClick'
-    | 'onScrubberEnter'
-    | 'label'
-    | 'labelConfig'
-    | 'renderLabel'
-    | 'dataX'
-    | 'dataY'
-    | 'hoverEffect'
-  > & {
-    /**
-     * Applies the Point's pulse effect to the scrubber head while it is at rest.
-     * @default false
-     */
-    idlePulse?: boolean;
-    // make Point's coordinates optional for ScrubberBeacon
-    dataX?: PointProps['dataX'];
-    dataY?: PointProps['dataY'];
-    /**
-     * Filter to only show dot for specific series (used for hover-based positioning).
-     */
-    seriesId?: string;
-  };
+const singlePulseTransitionConfig = {
+  duration: 1,
+  ease: 'easeInOut',
+} as const;
+
+export type ScrubberBeaconRef = {
+  /**
+   * Triggers a single pulse animation.
+   * Only works when the scrubber is in idle state (not actively scrubbing).
+   */
+  pulse: () => void;
+};
+
+const radius = 5;
+const glowRadius = 10;
+const pulseRadius = 15;
+
+export type ScrubberBeaconProps = SharedProps & {
+  /**
+   * Optional data X coordinate to position the beacon.
+   * If not provided, uses the scrubber position from context.
+   */
+  dataX?: number;
+  /**
+   * Optional data Y coordinate to position the beacon.
+   * If not provided, looks up the Y value from series data at scrubber position.
+   */
+  dataY?: number;
+  /**
+   * Pre-calculated pixel X coordinate (optimization).
+   * If provided, skips internal projectPoint calculation.
+   * Takes precedence over dataX/dataY when both are provided.
+   */
+  pixelX?: number;
+  /**
+   * Pre-calculated pixel Y coordinate (optimization).
+   * If provided, skips internal projectPoint calculation.
+   * Takes precedence over dataX/dataY when both are provided.
+   */
+  pixelY?: number;
+  /**
+   * Filter to only show dot for specific series (used for hover-based positioning).
+   */
+  seriesId?: string;
+  /**
+   * Color of the beacon point.
+   * If not provided, uses the series color.
+   */
+  color?: string;
+  /**
+   * Opacity of the beacon.
+   * @default 1
+   */
+  opacity?: number;
+  /**
+   * Pulse the scrubber beacon while it is at rest.
+   */
+  idlePulse?: boolean;
+  /**
+   * Custom className for styling.
+   */
+  className?: string;
+  /**
+   * Custom inline styles.
+   */
+  style?: React.CSSProperties;
+};
 
 /**
  * The ScrubberBeacon is a special instance of a Point used to mark the scrubber's position on a specific series.
- * It optionally labels the Point with an instance of ScrubberBeaconLabel.
+ * It renders a glow effect around the point to highlight the scrubber position.
  */
 export const ScrubberBeacon = memo(
   forwardRef<ScrubberBeaconRef, ScrubberBeaconProps>(
@@ -47,26 +90,49 @@ export const ScrubberBeacon = memo(
         seriesId,
         dataX: dataXProp,
         dataY: dataYProp,
+        pixelX: pixelXProp,
+        pixelY: pixelYProp,
         color,
-        radius = 4,
         testID,
-        idlePulse = false,
+        idlePulse,
         opacity = 1,
-        ...props
+        className,
+        style,
       },
       ref,
     ) => {
-      const pointRef = useRef<PointRef>(null);
-      const { getSeries, getXScale, getYScale, getSeriesData, animate } =
-        useCartesianChartContext();
+      const [scope, animate] = useAnimate();
+      const {
+        getSeries,
+        getXScale,
+        getYScale,
+        getSeriesData,
+        animate: animationEnabled,
+      } = useCartesianChartContext();
       const { scrubberPosition } = useScrubberContext();
-
-      const controls = useAnimation();
 
       const targetSeries = getSeries(seriesId);
       const sourceData = getSeriesData(seriesId);
       const xScale = getXScale();
       const yScale = getYScale(targetSeries?.yAxisId);
+
+      const isIdleState = scrubberPosition === undefined;
+
+      // Expose imperative handle for triggering pulse animations
+      useImperativeHandle(ref, () => ({
+        pulse: () => {
+          // Only pulse when idle
+          if (isIdleState && scope.current) {
+            animate(
+              scope.current,
+              {
+                opacity: [0.1, 0],
+              },
+              singlePulseTransitionConfig,
+            );
+          }
+        },
+      }));
 
       const { dataX, dataY } = useMemo(() => {
         let x: number | undefined;
@@ -106,142 +172,108 @@ export const ScrubberBeacon = memo(
         return { dataX: x, dataY: y };
       }, [dataXProp, dataYProp, sourceData, scrubberPosition, xScale, yScale]);
 
-      // Calculate the target position
-      const targetPosition = useMemo(
-        () =>
-          dataX !== undefined && dataY !== undefined && xScale && yScale
-            ? projectPoint({
-                x: dataX,
-                y: dataY,
-                xScale,
-                yScale,
-              })
-            : undefined,
-        [dataX, dataY, xScale, yScale],
-      );
-
-      const previousPositionRef = useRef<{ x: number; y: number } | undefined>(undefined);
-      const isInitializedRef = useRef(false);
-      const wasScrubbing = useRef(false);
-
-      const isIdleState = scrubberPosition === undefined;
-
-      // Effect for animations
-      useEffect(() => {
-        if (!targetPosition) return;
-
-        // Initialize on first render
-        if (!isInitializedRef.current) {
-          controls.set({ x: targetPosition.x, y: targetPosition.y });
-          previousPositionRef.current = targetPosition;
-          isInitializedRef.current = true;
-          return;
+      const pixelCoordinate = useMemo(() => {
+        // Use pre-calculated pixel coordinates if provided (optimization)
+        if (pixelXProp !== undefined && pixelYProp !== undefined) {
+          return { x: pixelXProp, y: pixelYProp };
         }
 
-        const positionChanged =
-          !previousPositionRef.current ||
-          previousPositionRef.current.x !== targetPosition.x ||
-          previousPositionRef.current.y !== targetPosition.y;
-
-        if (!positionChanged) return;
-
-        if (!isIdleState) {
-          // When scrubbing - track that we're scrubbing but don't update controls
-          // The scrubbing render doesn't use the animation controls
-          wasScrubbing.current = true;
-        } else {
-          // When idle
-          if (wasScrubbing.current) {
-            // Just stopped scrubbing - snap to position without animation
-            controls.set({ x: targetPosition.x, y: targetPosition.y });
-            wasScrubbing.current = false;
-          } else if (animate) {
-            // Idle state with data update - animate to new position
-            controls.start({
-              x: targetPosition.x,
-              y: targetPosition.y,
-              transition: { duration: 0.3, ease: 'easeInOut' },
-            });
-          } else {
-            // Idle but no animation - snap to position
-            controls.set({ x: targetPosition.x, y: targetPosition.y });
-          }
+        // Fall back to calculating from data coordinates
+        if (!xScale || !yScale || dataX === undefined || dataY === undefined) {
+          return null;
         }
 
-        // Update previous position
-        previousPositionRef.current = targetPosition;
-      }, [targetPosition, isIdleState, animate, controls]);
+        return projectPoint({
+          x: dataX,
+          y: dataY,
+          xScale,
+          yScale,
+        });
+      }, [pixelXProp, pixelYProp, xScale, yScale, dataX, dataY]);
 
-      useImperativeHandle(ref, () => ({
-        pulse: () => {
-          if (isIdleState) pointRef.current?.pulse();
-        },
-      }));
-
-      // Don't render until we have a position and it's been initialized
-      if (
-        !targetPosition ||
-        dataX === undefined ||
-        dataY === undefined ||
-        !isInitializedRef.current
-      )
+      if (!pixelCoordinate) {
         return null;
+      }
 
       const pointColor = color ?? targetSeries?.color ?? 'var(--color-fgPrimary)';
-      const pulseRadius = radius * 4;
-      const innerRingRadius = (radius + pulseRadius) / 2;
+      const shouldPulse = animationEnabled && isIdleState && idlePulse;
 
-      // When scrubbing - render without animation wrapper
-      if (!isIdleState) {
+      if (animationEnabled && isIdleState) {
         return (
-          <g>
-            <circle
-              cx={targetPosition.x}
-              cy={targetPosition.y}
+          <g className={className} data-testid={testID} opacity={opacity} style={style}>
+            <motion.circle
+              animate={{
+                cx: pixelCoordinate.x,
+                cy: pixelCoordinate.y,
+              }}
+              cx={pixelCoordinate.x}
+              cy={pixelCoordinate.y}
               fill={pointColor}
+              initial={false}
               opacity={0.15}
-              r={innerRingRadius}
+              r={glowRadius}
+              transition={{ duration: 0.3, ease: 'easeInOut' }}
             />
-            <Point
-              ref={pointRef}
-              color={pointColor}
-              dataX={dataX}
-              dataY={dataY}
-              opacity={opacity}
-              pixelCoordinates={targetPosition}
-              pulse={false}
-              pulseRadius={pulseRadius}
-              radius={radius}
+            <motion.g
+              animate={{
+                x: pixelCoordinate.x,
+                y: pixelCoordinate.y,
+              }}
+              initial={false}
+              transition={{ duration: 0.3, ease: 'easeInOut' }}
+            >
+              <motion.circle
+                ref={scope}
+                animate={
+                  shouldPulse
+                    ? {
+                        opacity: [0.1, 0, 0.1],
+                        transition: pulseTransitionConfig,
+                      }
+                    : { opacity: 0 }
+                }
+                cx={0}
+                cy={0}
+                fill={pointColor}
+                initial={{ opacity: shouldPulse ? 0.1 : 0 }}
+                r={pulseRadius}
+              />
+            </motion.g>
+            <motion.circle
+              animate={{
+                cx: pixelCoordinate.x,
+                cy: pixelCoordinate.y,
+              }}
+              cx={pixelCoordinate.x}
+              cy={pixelCoordinate.y}
+              fill={pointColor}
+              initial={false}
+              r={radius}
               stroke="var(--color-bg)"
               strokeWidth={2}
-              yAxisId={targetSeries?.yAxisId}
-              {...props}
+              transition={{ duration: 0.3, ease: 'easeInOut' }}
             />
           </g>
         );
       }
-
-      // When idle - render with animation wrapper for smooth data updates
-      // Render at origin (0,0) and use transform to position
       return (
-        <m.g animate={controls} initial={{ x: targetPosition.x, y: targetPosition.y }}>
-          <circle cx={0} cy={0} fill={pointColor} opacity={0.15} r={innerRingRadius} />
-          <Point
-            ref={pointRef}
-            color={pointColor}
-            dataX={dataX}
-            dataY={dataY}
-            opacity={opacity}
-            pixelCoordinates={{ x: 0, y: 0 }}
-            pulse={idlePulse}
-            pulseRadius={pulseRadius}
-            radius={radius}
+        <g className={className} data-testid={testID} opacity={opacity} style={style}>
+          <circle
+            cx={pixelCoordinate.x}
+            cy={pixelCoordinate.y}
+            fill={pointColor}
+            opacity={0.15}
+            r={glowRadius}
+          />
+          <circle
+            cx={pixelCoordinate.x}
+            cy={pixelCoordinate.y}
+            fill={pointColor}
+            r={radius}
             stroke="var(--color-bg)"
             strokeWidth={2}
-            yAxisId={targetSeries?.yAxisId}
-            {...props}
           />
-        </m.g>
+        </g>
       );
     },
   ),

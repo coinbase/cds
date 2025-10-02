@@ -28,6 +28,8 @@ import { ScrubberBeaconLabel, type ScrubberBeaconLabelProps } from './ScrubberBe
 
 const minGap = 2;
 
+export type ScrubberRef = ScrubberBeaconRef;
+
 /**
  * Configuration for scrubber functionality across chart components.
  * Provides consistent API with smart defaults and component customization.
@@ -111,8 +113,6 @@ type LabelDimensions = {
   preferredX: number;
   preferredY: number;
 };
-
-export type ScrubberRef = ScrubberBeaconRef;
 
 /**
  * Unified component that manages all scrubber elements (heads, line, labels)
@@ -629,6 +629,8 @@ export const Scrubber = memo(
                   dataX={ScrubberBeacon.x}
                   dataY={ScrubberBeacon.y}
                   idlePulse={idlePulse}
+                  pixelX={ScrubberBeacon.pixelX}
+                  pixelY={ScrubberBeacon.pixelY}
                   seriesId={ScrubberBeacon.targetSeries.id}
                   style={styles?.beacon}
                   testID={testID ? `${testID}-${ScrubberBeacon.targetSeries.id}-dot` : undefined}
@@ -645,7 +647,8 @@ export const Scrubber = memo(
                         bounds={drawingArea}
                         className={classNames?.beaconLabel}
                         color={dotStroke}
-                        dx={16}
+                        dx={finalSide === 'right' ? 16 : -16}
+                        horizontalAlignment={finalSide === 'right' ? 'left' : 'right'}
                         inset={{
                           left: labelHorizontalInset,
                           right: labelHorizontalInset,
@@ -661,7 +664,6 @@ export const Scrubber = memo(
                             ScrubberBeacon.pixelY,
                           )
                         }
-                        preferredSide={finalSide}
                         style={styles?.beaconLabel}
                         testID={
                           testID ? `${testID}-${ScrubberBeacon.targetSeries.id}-label` : undefined
