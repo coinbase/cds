@@ -68,7 +68,7 @@ You can pass in either an object (AxisBounds) with `min` and `max` properties (b
     domain: ({ min, max }) => ({ min: min - 5, max: max + 5 }),
   }}
 >
-  <XAxis showLine showTickMarks showGrid tickInterval={2} />
+  <XAxis showLine showTickMarks showGrid tickInterval={16} />
   <Line seriesId="prices" curve="monotone" showArea />
 </CartesianChart>
 ```
@@ -148,7 +148,7 @@ Using number data with a numeric scale will allow you to adjust the x values for
   showYAxis
   yAxis={{
     domain: { min: 0 },
-    position: 'start',
+    position: 'left',
     showLine: true,
     showTickMarks: true,
     showGrid: true,

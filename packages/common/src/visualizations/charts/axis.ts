@@ -375,71 +375,20 @@ export const formatAxisTick = (
  * Generates evenly distributed tick values.
  * Uses space-between distribution: first and last positions are prioritized,
  * with remaining ticks evenly distributed between them.
- * Selects from actual data points (possibleTickValues) or generates whole integers from domain.
+ * Selects from actual data points (possibleTickValues) or uses D3's nice tick generation.
  *
  * @param scale - The numeric scale function
  * @param tickInterval - Space between ticks (in pixels)
- * @param possibleTickValues - Optional array of possible tick values to select from (e.g., data indices). If not provided, generates evenly spaced values from scale domain.
+ * @param possibleTickValues - Optional array of possible tick values to select from (e.g., data indices). If not provided, uses D3's tick generation for nice round numbers.
  * @param minTickCount - Minimum number of ticks to generate (default is 4)
- * @param maxTickCount - Maximum number of possible tick values to generate when creating from domain (default is 1000)
- * @returns Array of tick values selected from possibleTickValues or generated from domain
+ * @returns Array of tick values selected from possibleTickValues or generated using D3's tick algorithm
  */
 const generateEvenlyDistributedTicks = (
   scale: NumericScale,
   tickInterval: number,
   possibleTickValues?: number[],
   minTickCount: number = 4,
-  maxTickCount: number = 100,
 ): number[] => {
-  // If no possibleTickValues provided, generate evenly spaced values from domain
-  let tickValuesList: number[];
-  if (!possibleTickValues || possibleTickValues.length === 0) {
-    const [domainMin, domainMax] = scale.domain();
-    const min = Math.ceil(domainMin);
-    const max = Math.floor(domainMax);
-
-    if (min > max) {
-      return [];
-    }
-
-    if (min === max) {
-      return [min];
-    }
-
-    const range = max - min;
-    tickValuesList = [];
-
-    // If the range is small enough, use every integer
-    if (range <= maxTickCount) {
-      for (let i = min; i <= max; i++) {
-        tickValuesList.push(i);
-      }
-    } else {
-      // Otherwise, generate evenly spaced values
-      const step = range / (maxTickCount - 1);
-      let currentValue = min;
-      let count = 0;
-
-      while (count < maxTickCount - 1 && currentValue < max) {
-        tickValuesList.push(Math.round(currentValue));
-        count++;
-        currentValue = min + step * count;
-      }
-
-      tickValuesList.push(max);
-    }
-
-    if (tickValuesList.length === 0) {
-      tickValuesList = [min, max];
-    }
-  } else {
-    tickValuesList = possibleTickValues;
-  }
-
-  if (tickValuesList.length === 0) {
-    return [];
-  }
-
   const [rangeMin, rangeMax] = scale.range();
   const range = Math.abs(rangeMax - rangeMin);
 
@@ -450,17 +399,24 @@ const generateEvenlyDistributedTicks = (
     return [];
   }
 
-  // Limit tick count to available values
-  const finalTickCount = Math.min(tickCount, tickValuesList.length);
+  // If we have possibleTickValues, select evenly from them
+  if (possibleTickValues && possibleTickValues.length > 0) {
+    // Limit tick count to available values
+    const finalTickCount = Math.min(tickCount, possibleTickValues.length);
 
-  const tickValues: number[] = [];
-  const step = (tickValuesList.length - 1) / (finalTickCount - 1);
-  for (let i = 0; i < finalTickCount; i++) {
-    const index = i === finalTickCount - 1 ? tickValuesList.length - 1 : Math.round(step * i);
-    tickValues.push(tickValuesList[index]);
+    const tickValues: number[] = [];
+    const step = (possibleTickValues.length - 1) / (finalTickCount - 1);
+    for (let i = 0; i < finalTickCount; i++) {
+      const index = i === finalTickCount - 1 ? possibleTickValues.length - 1 : Math.round(step * i);
+      tickValues.push(possibleTickValues[index]);
+    }
+
+    return tickValues;
   }
 
-  return tickValues;
+  // Otherwise, use D3's tick generation for nice round numbers
+  // D3's ticks() method generates human-friendly values like 0, 2, 4, 6 or 0, 0.2, 0.4, 0.6
+  return scale.ticks(tickCount);
 };
 
 /**
