@@ -6,45 +6,20 @@ They are helpful for highlighting trends to users or allowing them to compare pr
 To start, pass in a series of data to the chart.
 
 ```jsx live
-function MonthlyReturns() {
-  const ThinSolidLine = memo((props: SolidLineProps) => <SolidLine {...props} strokeWidth={1} />);
-
-  const tickFormatter = useCallback(
-    (amount: number) =>
-      new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'USD',
-      }).format(amount),
-    [],
-  );
-
-  return (
-    <BarChart
-      height={400}
-      series={[
-        {
-          id: 'monthlyReturns',
-          data: [
-            1237.3, 1891.51, 1132.6, 2506.95, 2328.0, 1411.89, 1727.17, 2751.08, 2566.36, 2831.8,
-            2868.5, 2007.23,
-          ],
-          color: 'var(--color-fgPositive)',
-        },
-      ]}
-      showXAxis
-      xAxis={{
-        data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-      }}
-      showYAxis
-      yAxis={{
-        showGrid: true,
-        GridLineComponent: ThinSolidLine,
-        tickLabelFormatter: tickFormatter,
-        size: 62,
-      }}
-    />
-  );
-}
+<BarChart
+  height={250}
+  series={[
+    {
+      id: 'prices',
+      data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+    },
+  ]}
+  curve="monotone"
+  showYAxis
+  yAxis={{
+    showGrid: true,
+  }}
+/>
 ```
 
 ## Multiple Series

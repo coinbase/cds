@@ -309,51 +309,35 @@ You can add multiple series to a line chart.
 function MultipleSeriesChart() {
   const [scrubIndex, setScrubIndex] = useState(undefined);
 
-  const pageViews = [2400, 1398, 9800, 3908, 4800, 3800, 4300];
-  const uniqueVisitors = [4000, 3000, 2000, 2780, 1890, 2390, 3490];
-  const pages = ['Page A', 'Page B', 'Page C', 'Page D', 'Page E', 'Page F', 'Page G'];
-
-  const accessibilityLabel = useMemo(() => {
-    if (scrubIndex === undefined) return undefined;
-    return `${pages[scrubIndex]}: Page Views ${pageViews[scrubIndex].toLocaleString()}, Unique Visitors ${uniqueVisitors[scrubIndex].toLocaleString()}`;
-  }, [scrubIndex, pages, pageViews, uniqueVisitors]);
+  const prices = [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58];
+  const volume = [4, 8, 11, 15, 16, 14, 16, 10, 12, 14, 16, 14, 16, 10];
 
   return (
     <LineChart
       enableScrubbing
-      onScrubberPositionChange={setScrubIndex}
       height={400}
       series={[
         {
-          id: 'pageViews',
-          data: pageViews,
-          label: 'Page Views',
+          id: 'prices',
+          data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+          label: 'Prices',
           color: 'var(--color-accentBoldBlue)',
-          curve: 'natural',
         },
         {
-          id: 'uniqueVisitors',
-          data: uniqueVisitors,
-          label: 'Unique Visitors',
+          id: 'volume',
+          data: [4, 8, 11, 15, 16, 14, 16, 10, 12, 14, 16, 14, 16, 10],
+          label: 'Volume',
           color: 'var(--color-accentBoldGreen)',
-          curve: 'natural',
         },
       ]}
-      showXAxis
-      xAxis={{
-        data: pages,
-        ticks: true,
-      }}
-      padding={{ left: 1.5 }}
       showYAxis
       yAxis={{
         domain: {
           min: 0,
         },
         showGrid: true,
-        tickLabelFormatter: (value) => value.toLocaleString(),
       }}
-      accessibilityLabel={accessibilityLabel}
+      curve="monotone"
     >
       <Scrubber />
     </LineChart>
@@ -583,7 +567,7 @@ function DataFormatChart() {
       showYAxis
       yAxis={{
         domain: { min: 0 },
-        position: 'start',
+        position: 'left',
         showLine: true,
         showTickMarks: true,
         showGrid: true,
@@ -1054,7 +1038,7 @@ function AvailabilityChart() {
         showGrid
         showLine
         showTickMarks
-        position="start"
+        position="left"
         tickLabelFormatter={(value) => `${value}%`}
       />
       <Line

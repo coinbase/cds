@@ -248,8 +248,9 @@ export const Scrubber = memo(
         getYScale,
       ]);
 
-      // todo: the padding around the label shouldn't be needed for this collision calculation since the ChatText onDimensionsChange will report the bounding box that includes the padding
-      const labelInset = 4;
+      // todo: we shouldn't need this since it should be included in ChartText dimensions - double check
+      const labelVerticalInset = 2;
+      const labelHorizontalInset = 4;
       const minLabelGap = 0.25;
 
       // Calculate optimal label positioning strategy
@@ -285,7 +286,7 @@ export const Scrubber = memo(
           // Account for anchor radius and padding when calculating right edge
           const wouldOverflow = sortedDimensions.some((dim) => {
             const labelRightEdge =
-              dim.preferredX + anchorRadius + labelInset + dim.width + bufferPx;
+              dim.preferredX + anchorRadius + labelHorizontalInset + dim.width + bufferPx;
             return labelRightEdge > drawingArea.x + drawingArea.width;
           });
 
@@ -647,7 +648,12 @@ export const Scrubber = memo(
                         className={classNames?.beaconLabel}
                         color={dotStroke}
                         dx={16}
-                        inset={labelInset}
+                        inset={{
+                          left: labelHorizontalInset,
+                          right: labelHorizontalInset,
+                          top: labelVerticalInset,
+                          bottom: labelVerticalInset,
+                        }}
                         onDimensionsChange={({ width, height }) =>
                           registerLabelDimensions(
                             ScrubberBeacon.targetSeries.id,
