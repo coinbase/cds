@@ -5,8 +5,9 @@ import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 import { Path, type PathProps } from '../Path';
 
 export type DottedLineProps = SharedProps &
-  Omit<PathProps, 'fill'> & {
+  Omit<PathProps, 'fill' | 'strokeWidth'> & {
     fill?: string;
+    strokeWidth?: number;
   };
 
 /**
@@ -28,6 +29,7 @@ export const DottedLine = memo<DottedLineProps>(
 
     return (
       <Path
+        clipOffset={strokeWidth}
         fill={fill}
         stroke={stroke ?? theme.color.bgLine}
         strokeDasharray={strokeDasharray}

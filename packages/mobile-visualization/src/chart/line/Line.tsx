@@ -186,7 +186,7 @@ export const Line = memo<LineProps>(
         : null;
     }, [xAxis?.data]);
 
-    // todo: if we keep it, figure out the best way to handle opacity
+    if (!xScale || !yScale) return;
 
     return (
       <>

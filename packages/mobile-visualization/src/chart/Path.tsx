@@ -23,23 +23,33 @@ import { useCartesianChartContext } from './ChartProvider';
 
 const AnimatedRect = Reanimated.createAnimatedComponent(Rect);
 
-const AnimatedSvgRect = memo(({ width, rectProps }: { width: number; rectProps: RectProps }) => {
-  const animatedWidth = useSharedValue(0);
+const AnimatedSvgRect = memo(
+  ({
+    width,
+    totalOffset,
+    rectProps,
+  }: {
+    width: number;
+    totalOffset: number;
+    rectProps: RectProps;
+  }) => {
+    const animatedWidth = useSharedValue(width + totalOffset);
 
-  const animatedProps = useAnimatedProps(() => {
-    return {
-      width: animatedWidth.value,
-    };
-  });
-
-  useEffect(() => {
-    animatedWidth.value = withTiming(width + 4, {
-      duration: 1000,
+    const animatedProps = useAnimatedProps(() => {
+      return {
+        width: animatedWidth.value,
+      };
     });
-  }, [animatedWidth, width]);
 
-  return <AnimatedRect animatedProps={animatedProps} {...rectProps} />;
-});
+    useEffect(() => {
+      animatedWidth.value = withTiming(width + totalOffset, {
+        duration: 1000,
+      });
+    }, [animatedWidth, width, totalOffset]);
+
+    return <AnimatedRect animatedProps={animatedProps} {...rectProps} />;
+  },
+);
 
 export type PathProps = SharedProps &
   SvgPathProps & {
@@ -80,11 +90,16 @@ export type PathProps = SharedProps &
      * Overrides the animate prop on the Chart component.
      */
     animate?: boolean;
+    /**
+     * The offset to add to the clip rect boundaries.
+     */
+    clipOffset?: number;
   };
 
 export const Path = memo<PathProps>(
   ({
     clipRect,
+    clipOffset,
     d = '',
     fill,
     stroke,
@@ -110,7 +125,7 @@ export const Path = memo<PathProps>(
 
     const fromPath = useMemo(() => {
       if (!animate) return targetPath;
-      return previousPath || '';
+      return previousPath ?? targetPath;
     }, [animate, previousPath, targetPath]);
 
     const pathInterpolator = useMemo(
@@ -151,22 +166,38 @@ export const Path = memo<PathProps>(
 
       animationProgress.value = 0;
       animationProgress.value = withTiming(1, {
-        duration: 300,
+        duration: 200,
       });
     }, [animate, animationProgress, targetPath, pathInterpolator]);
 
-    if (!d || !rect) {
-      return null;
-    }
+    if (!d || !rect) return;
+
+    // The clip offset provides extra padding to prevent path from being cut off
+    // Area charts typically use offset=0 for exact clipping, while lines use offset=2 for breathing room
+    const totalOffset = (clipOffset ?? 0) * 2; // Applied on both sides
 
     return (
       <G>
         <Defs>
-          {animate && (
+          {animate ? (
             <ClipPath id={clipPathId}>
               <AnimatedSvgRect
-                rectProps={{ height: rect.height, x: rect.x, y: rect.y }}
+                rectProps={{
+                  height: rect.height + totalOffset,
+                  x: rect.x - (clipOffset ?? 0),
+                  y: rect.y - (clipOffset ?? 0),
+                }}
+                totalOffset={totalOffset}
                 width={rect.width}
+              />
+            </ClipPath>
+          ) : (
+            <ClipPath id={clipPathId}>
+              <Rect
+                height={contextRect.height + totalOffset}
+                width={contextRect.width + totalOffset}
+                x={contextRect.x - (clipOffset ?? 0)}
+                y={contextRect.y - (clipOffset ?? 0)}
               />
             </ClipPath>
           )}

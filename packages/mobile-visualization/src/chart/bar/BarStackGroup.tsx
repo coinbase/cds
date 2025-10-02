@@ -1,5 +1,4 @@
 import React, { memo, useMemo } from 'react';
-import type { ThemeVars } from '@coinbase/cds-common';
 import {
   defaultAxisId,
   getBarSizeAdjustment,
@@ -8,75 +7,36 @@ import {
 
 import { useCartesianChartContext } from '../ChartProvider';
 
-import type { BarComponent, BarProps } from './Bar';
-import type { BarSeries } from './BarChart';
-import { BarStack } from './BarStack';
-import type { StackComponent } from './DefaultStackComponent';
+import { BarStack, type BarStackProps } from './BarStack';
 
-// todo: simplify props by reusing from other types
-export type BarStackGroupProps = {
-  /**
-   * Array of series configurations that belong to this stack group.
-   */
-  series: BarSeries[];
-  /**
-   * Y axis ID to use.
-   * If not provided, defaults to the default axis id.
-   */
-  yAxisId?: string;
-  /**
-   * Index of this stack within the category (0-based).
-   */
-  stackIndex: number;
-  /**
-   * Total number of stacks per category.
-   */
-  totalStacks: number;
-  /**
-   * Padding between bar groups (0-1).
-   * @default 0.1
-   */
-  barPadding?: number;
-  /**
-   * Default component to render individual bars.
-   */
-  BarComponent?: BarComponent;
-  /**
-   * Default opacity of the bar.
-   */
-  fillOpacity?: number;
-  /**
-   * Default stroke color for the bar outline.
-   */
-  stroke?: string;
-  /**
-   * Default stroke width for the bar outline.
-   */
-  strokeWidth?: number;
-  /**
-   * Default border radius from theme.
-   */
-  borderRadius?: BarProps['borderRadius'];
-  /**
-   * Whether to round the baseline of a bar (where the value is 0).
-   */
-  roundBaseline?: boolean;
-  stackGap?: ThemeVars.Space;
-  /**
-   * Minimum size for individual bars in the stack.
-   */
-  barMinSize?: ThemeVars.Space;
-  /**
-   * Minimum size for the entire stack.
-   */
-  stackMinSize?: ThemeVars.Space;
-  /**
-   * Custom component to render the stack container.
-   * Can be used to add clip paths, outlines, or other custom styling.
-   * @default DefaultStackComponent
-   */
-  StackComponent?: StackComponent;
-};
+export type BarStackGroupProps = Pick<
+  BarStackProps,
+  | 'BarComponent'
+  | 'fillOpacity'
+  | 'stroke'
+  | 'strokeWidth'
+  | 'borderRadius'
+  | 'roundBaseline'
+  | 'stackGap'
+  | 'barMinSize'
+  | 'stackMinSize'
+  | 'BarStackComponent'
+> &
+  Pick<BarStackProps, 'series' | 'yAxisId'> & {
+    /**
+     * Index of this stack within the category (0-based).
+     */
+    stackIndex: number;
+    /**
+     * Total number of stacks per category.
+     */
+    totalStacks: number;
+    /**
+     * Padding between bar groups (0-1).
+     * @default 0.1
+     */
+    barPadding?: number;
+  };
 
 /**
  * BarStackGroup component that renders a group of stacks across all categories.

@@ -70,8 +70,8 @@ const PredictionRow = ({
       curve="natural"
       enableScrubbing={false}
       height={6}
+      inset={0}
       overflow="visible"
-      padding={0}
       series={[seriesData]}
       width={60}
     />
@@ -87,7 +87,6 @@ const CustomYAxis = memo(() => {
     <YAxis
       showGrid
       GridLineComponent={SolidLine}
-      position="end"
       requestedTickCount={2}
       tickLabelFormatter={(value) => `${Math.round(value)}%`}
     />
@@ -188,8 +187,8 @@ const PredictionMarket = () => {
       <CartesianChart
         enableScrubbing
         height={300}
+        inset={{ top: 40, right: 0, bottom: 32, left: 0 }}
         onScrubberPositionChange={updateScrubberLabel}
-        padding={{ top: 5, right: 0, bottom: 4, left: 0 }}
         paddingEnd={2}
         series={seriesConfig}
         xAxis={{
@@ -338,8 +337,8 @@ const EarningsHistory = () => {
       <CartesianChart
         animate={false}
         height={250}
+        inset={0}
         overflow="visible"
-        padding={0}
         series={[
           {
             id: 'estimatedEPS',
@@ -352,12 +351,12 @@ const EarningsHistory = () => {
       >
         <YAxis
           showGrid
-          position="start"
+          position="left"
           requestedTickCount={3}
           tickLabelFormatter={formatEarningAmount}
         />
-        <XAxis size={20} tickLabelFormatter={(index) => quarters[index]} />
-        <XAxis size={20} tickLabelFormatter={surprisePercentage} />
+        <XAxis height={20} tickLabelFormatter={(index) => quarters[index]} />
+        <XAxis height={20} tickLabelFormatter={surprisePercentage} />
         <CirclePlot opacity={0.5} seriesId="estimatedEPS" />
         <CirclePlot seriesId="actualEPS" />
       </CartesianChart>
@@ -473,8 +472,8 @@ const PriceWithVolume = () => {
           showGrid
           GridLineComponent={ThinSolidLine}
           axisId="price"
-          size={80}
           tickLabelFormatter={formatPriceInThousands}
+          width={80}
         />
         <BarPlot seriesIds={['volume']} />
         <Line showArea curve="monotone" seriesId="prices" />

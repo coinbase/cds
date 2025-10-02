@@ -304,9 +304,9 @@ const BTCPriceChart = () => {
         <CartesianChart
           enableScrubbing
           height={350}
+          inset={{ left: 0, bottom: 0 }}
           onScrubberPositionChange={onScrubberPositionChange}
           overflow="visible"
-          padding={{ left: 0, right: 2, bottom: 0, top: 4 }}
           series={[
             {
               id: 'price',
@@ -473,9 +473,9 @@ const ColorShiftChart = () => {
           showArea
           showXAxis
           height={350}
+          inset={{ top: 48, left: 0, right: 0, bottom: 0 }}
           onScrubberPositionChange={onScrubberPositionChange}
           overflow="visible"
-          padding={{ top: 6, left: 0, right: 0, bottom: 0 }}
           series={[
             {
               id: 'price',
@@ -491,16 +491,15 @@ const ColorShiftChart = () => {
           <ReferenceLine
             dataY={startPrice}
             label={`$${startPrice}`}
-            labelConfig={{
+            labelPosition="right"
+            labelProps={{
               elevation: 1,
               color: 'var(--color-fgInverse)',
-              textAnchor: 'start',
               background:
                 currentPrice - startPrice > 0
                   ? 'var(--color-bgPositive)'
                   : 'var(--color-bgNegative)',
             }}
-            labelPosition="right"
             stroke={
               currentPrice - startPrice > 0 ? 'var(--color-bgPositive)' : 'var(--color-bgNegative)'
             }
@@ -682,9 +681,9 @@ const PriceChart = () => {
         enableScrubbing
         showArea
         height={372}
+        inset={{ left: 0, right: 18, bottom: 18, top: 18 }}
         onScrubberPositionChange={onScrubberPositionChange}
         overflow="visible"
-        padding={{ left: 0, right: 3, bottom: 3, top: 3 }}
         series={[
           {
             id: 'price',
@@ -851,14 +850,14 @@ function ForecastAssetPrice() {
       accessibilityLabel={accessibilityLabel}
       animate={false}
       height={350}
-      onScrubberPositionChange={setScrubIndex}
-      overflow="visible"
-      padding={{
-        top: 5,
-        left: 2,
-        right: 2,
+      inset={{
+        top: 30,
+        left: 16,
+        right: 16,
         bottom: 0,
       }}
+      onScrubberPositionChange={setScrubIndex}
+      overflow="visible"
       series={[
         {
           id: 'historical',
@@ -954,7 +953,7 @@ const BitcoinChartWithScrubberHead = () => {
         <LineChart
           showArea
           height={92}
-          padding={{ left: 0, right: 3, bottom: 0, top: 0 }}
+          inset={{ left: 0, right: 18, bottom: 0, top: 0 }}
           series={[
             {
               id: 'btcPrice',
@@ -1204,7 +1203,7 @@ const AvailabilityChart = () => {
         showGrid
         showLine
         showTickMarks
-        position="start"
+        position="left"
         tickLabelFormatter={(value) => `${value}%`}
       />
       <Line
@@ -1305,7 +1304,7 @@ const GainLossChart = () => {
     <CartesianChart
       enableScrubbing
       height={250}
-      padding={{ top: 1.5, bottom: 1.5, left: 0, right: 0 }}
+      inset={{ top: 12, bottom: 12, left: 0, right: 0 }}
       series={[
         {
           id: 'prices',
@@ -1351,8 +1350,8 @@ const CompactLineChart = () => {
             <LineChart
               {...dimensions}
               enableScrubbing={false}
+              inset={0}
               overflow="visible"
-              padding={0}
               series={[
                 {
                   id: 'btc',
@@ -1380,8 +1379,8 @@ const CompactLineChart = () => {
               {...dimensions}
               showArea
               enableScrubbing={false}
+              inset={0}
               overflow="visible"
-              padding={0}
               series={[
                 {
                   id: 'btc',
@@ -1409,8 +1408,8 @@ const CompactLineChart = () => {
               {...dimensions}
               showArea
               enableScrubbing={false}
+              inset={0}
               overflow="visible"
-              padding={0}
               series={[
                 {
                   id: 'btc',
@@ -1438,8 +1437,8 @@ const CompactLineChart = () => {
               {...dimensions}
               showArea
               enableScrubbing={false}
+              inset={0}
               overflow="visible"
-              padding={0}
               series={[
                 {
                   id: 'btc',
@@ -1481,8 +1480,8 @@ const MultipleSeriesChart = () => {
       showYAxis
       accessibilityLabel={accessibilityLabel}
       height={400}
+      inset={{ left: 12 }}
       onScrubberPositionChange={setScrubIndex}
-      padding={{ left: 1.5 }}
       series={[
         {
           id: 'pageViews',
@@ -1806,7 +1805,7 @@ export const All = () => {
           }}
           yAxis={{
             domain: { min: 0 },
-            position: 'start',
+            position: 'left',
             showLine: true,
             showTickMarks: true,
             showGrid: true,

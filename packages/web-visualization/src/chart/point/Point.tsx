@@ -42,38 +42,38 @@ const innerPointCss = css`
 /**
  * Calculate text alignment props based on position preset.
  */
-function calculateLabelAlignment(
+const calculateLabelAlignment = (
   position: PointLabelConfig['position'],
-): Pick<ChartTextProps, 'textAnchor' | 'dominantBaseline'> {
+): Pick<ChartTextProps, 'horizontalAlignment' | 'verticalAlignment'> => {
   switch (position) {
     case 'top':
       return {
-        textAnchor: 'middle',
-        dominantBaseline: 'baseline',
+        horizontalAlignment: 'center',
+        verticalAlignment: 'bottom',
       };
     case 'bottom':
       return {
-        textAnchor: 'middle',
-        dominantBaseline: 'hanging',
+        horizontalAlignment: 'center',
+        verticalAlignment: 'top',
       };
     case 'left':
       return {
-        textAnchor: 'end',
-        dominantBaseline: 'central',
+        horizontalAlignment: 'right',
+        verticalAlignment: 'middle',
       };
     case 'right':
       return {
-        textAnchor: 'start',
-        dominantBaseline: 'central',
+        horizontalAlignment: 'left',
+        verticalAlignment: 'middle',
       };
     case 'center':
     default:
       return {
-        textAnchor: 'middle',
-        dominantBaseline: 'central',
+        horizontalAlignment: 'center',
+        verticalAlignment: 'middle',
       };
   }
-}
+};
 
 export type PointRef = {
   /**
@@ -117,19 +117,19 @@ export type PointLabelConfig = Pick<
   | 'fontWeight'
   | 'color'
   | 'elevation'
-  | 'padding'
+  | 'inset'
   | 'background'
   | 'borderRadius'
   | 'disableRepositioning'
   | 'bounds'
   | 'styles'
   | 'classNames'
-  | 'dominantBaseline'
-  | 'textAnchor'
+  | 'horizontalAlignment'
+  | 'verticalAlignment'
 > & {
   /**
    * Preset position relative to point center.
-   * Automatically calculates textAnchor/dominantBaseline.
+   * Automatically calculates horizontalAlignment/verticalAlignment.
    * Can be combined with dx/dy for fine-tuning.
    */
   position?: 'top' | 'bottom' | 'left' | 'right' | 'center';

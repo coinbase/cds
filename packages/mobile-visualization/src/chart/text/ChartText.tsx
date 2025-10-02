@@ -1,46 +1,29 @@
-import React, { memo, useCallback, useEffect, useMemo, useState } from 'react';
-import type { LayoutChangeEvent } from 'react-native';
-import {
-  ForeignObject,
-  // Defs,
-  G,
-  Text,
-  type TextProps,
-} from 'react-native-svg';
-import type { ThemeVars } from '@coinbase/cds-common';
-import type { ElevationLevels, Rect, SharedProps } from '@coinbase/cds-common/types';
-import { type ChartPadding, getPadding } from '@coinbase/cds-common/visualizations/charts';
-import { useLayout } from '@coinbase/cds-mobile/hooks/useLayout';
+import { memo, useCallback, useEffect, useMemo, useState } from 'react';
+import { type LayoutChangeEvent } from 'react-native';
+import { G, Rect as SvgRect, Text, type TextProps } from 'react-native-svg';
+import type { Rect, SharedProps } from '@coinbase/cds-common/types';
+import { type ChartInset, getChartInset } from '@coinbase/cds-common/visualizations/charts';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
-import { Box } from '@coinbase/cds-mobile/layout';
 
 import { useCartesianChartContext } from '../ChartProvider';
 
-// Define the valid SVG children for the <text> element.
-type ValidChartTextChildElements =
-  | React.ReactElement<React.SVGProps<SVGTSpanElement>, 'tspan'>
-  | React.ReactElement<React.SVGProps<SVGTextPathElement>, 'textPath'>;
+/**
+ * The supported content types for ChartText.
+ */
+export type ChartTextChildren = string | null | undefined;
 
-export type ChartTextChildren =
-  | string
-  | number
-  | null
-  | undefined
-  | ValidChartTextChildElements
-  | ValidChartTextChildElements[];
+/**
+ * Horizontal alignment options for chart text.
+ */
+export type TextHorizontalAlignment = 'left' | 'center' | 'right';
+
+/**
+ * Vertical alignment options for chart text.
+ */
+export type TextVerticalAlignment = 'top' | 'middle' | 'bottom';
 
 export type ChartTextProps = SharedProps &
-  Pick<
-    TextProps,
-    | 'textAnchor'
-    | 'alignmentBaseline'
-    | 'dx'
-    | 'dy'
-    | 'fontSize'
-    | 'fontFamily'
-    | 'fontWeight'
-    | 'opacity'
-  > & {
+  Pick<TextProps, 'dx' | 'dy' | 'fontSize' | 'fontWeight' | 'opacity'> & {
     /**
      * The text color.
      * @default theme.color.fgMuted
@@ -52,10 +35,6 @@ export type ChartTextProps = SharedProps &
      */
     background?: string;
     // override box responsive style
-    /**
-     * The elevation for the background.
-     */
-    elevation?: ElevationLevels;
     /**
      * The text content to display.
      */
@@ -71,8 +50,17 @@ export type ChartTextProps = SharedProps &
      */
     y: number;
     /**
+     * Horizontal alignment of the text.
+     * @default 'center'
+     */
+    horizontalAlignment?: TextHorizontalAlignment;
+    /**
+     * Vertical alignment of the text.
+     * @default 'middle'
+     */
+    verticalAlignment?: TextVerticalAlignment;
+    /**
      * When true, disables automatic repositioning to fit within bounds.
-     * @default false
      */
     disableRepositioning?: boolean;
     /**
@@ -87,27 +75,60 @@ export type ChartTextProps = SharedProps &
      */
     onDimensionsChange?: (rect: Rect) => void;
     /**
-     * Padding around the text content for the background rect.
+     * Inset around the text content for the background rect.
      * Only affects the background, text position remains unchanged.
      */
-    padding?: ThemeVars.Space | ChartPadding;
-    // override box responsive style
-    borderRadius?: ThemeVars.BorderRadius;
+    inset?: number | ChartInset;
+    /**
+     * Border radius for the background rectangle.
+     * @default 4
+     */
+    borderRadius?: number;
   };
+
+/**
+ * Maps horizontal alignment to SVG textAnchor.
+ * This abstraction allows us to provide a consistent alignment API across web and mobile platforms,
+ * hiding the platform-specific SVG property differences.
+ */
+const getTextAnchor = (alignment: TextHorizontalAlignment): TextProps['textAnchor'] => {
+  switch (alignment) {
+    case 'left':
+      return 'start';
+    case 'center':
+      return 'middle';
+    case 'right':
+      return 'end';
+  }
+};
+
+/**
+ * Maps vertical alignment to SVG alignmentBaseline.
+ * This abstraction allows us to provide a consistent alignment API across web and mobile platforms,
+ * hiding the platform-specific SVG property differences.
+ */
+const getAlignmentBaseline = (alignment: TextVerticalAlignment): TextProps['alignmentBaseline'] => {
+  switch (alignment) {
+    case 'top':
+      return 'ideographic';
+    case 'middle':
+      return 'central';
+    case 'bottom':
+      return 'hanging';
+  }
+};
 
 type ChartTextVisibleProps = {
   children: ChartTextChildren;
   background: string;
-  elevation?: ElevationLevels;
   textAnchor: TextProps['textAnchor'];
   alignmentBaseline: TextProps['alignmentBaseline'];
-  fontFamily: TextProps['fontFamily'];
   fontSize: TextProps['fontSize'];
   fontWeight: TextProps['fontWeight'];
   textDimensions: Rect;
-  fill: string;
-  borderRadius?: ThemeVars.BorderRadius;
-  padding?: ThemeVars.Space | ChartPadding;
+  fill?: string;
+  borderRadius?: number;
+  inset?: number | ChartInset;
   dx?: TextProps['dx'];
   dy?: TextProps['dy'];
 };
@@ -116,84 +137,47 @@ const ChartTextVisible = memo<ChartTextVisibleProps>(
   ({
     children,
     background,
-    elevation = 0,
     textAnchor,
     alignmentBaseline,
-    fontFamily,
     fontSize,
     fontWeight,
     fill,
     borderRadius,
-    padding: paddingInput,
+    inset: insetInput,
     textDimensions,
     dx,
     dy,
   }) => {
-    const padding = useMemo(() => getPadding(paddingInput), [paddingInput]);
-
-    const elevationSpacing = useMemo(() => {
-      if (!elevation) return { top: 0, right: 0, bottom: 0, left: 0 };
-
-      const spacing =
-        elevation === 1
-          ? { top: 12, right: 12, bottom: 20, left: 12 } // shadowRadius on sides, shadowOffset.height + shadowRadius on bottom
-          : { top: 24, right: 24, bottom: 32, left: 24 }; // elevation 2 spacing
-
-      return spacing;
-    }, [elevation]);
+    const theme = useTheme();
+    const inset = useMemo(() => getChartInset(insetInput), [insetInput]);
 
     const rectHeight = useMemo(
-      () => textDimensions.height + padding.top + padding.bottom,
-      [textDimensions, padding],
+      () => textDimensions.height + inset.top + inset.bottom,
+      [textDimensions, inset],
     );
     const rectWidth = useMemo(
-      () => textDimensions.width + padding.left + padding.right,
-      [textDimensions, padding],
+      () => textDimensions.width + inset.left + inset.right,
+      [textDimensions, inset],
     );
 
     return (
       <G>
         {background !== 'transparent' && (
-          <ForeignObject
-            height={
-              textDimensions.height +
-              padding.top +
-              padding.bottom +
-              elevationSpacing.top +
-              elevationSpacing.bottom
-            }
-            width={
-              textDimensions.width +
-              padding.left +
-              padding.right +
-              elevationSpacing.left +
-              elevationSpacing.right
-            }
-            x={textDimensions.x - padding.left - elevationSpacing.left}
-            y={textDimensions.y - padding.top - elevationSpacing.top}
-          >
-            <Box height="100%" style={{ position: 'relative' }} width="100%">
-              <Box
-                borderRadius={borderRadius}
-                elevation={1}
-                height={rectHeight}
-                style={{
-                  position: 'absolute',
-                  top: elevationSpacing.top,
-                  left: elevationSpacing.left,
-                  backgroundColor: background,
-                }}
-                width={rectWidth}
-              />
-            </Box>
-          </ForeignObject>
+          <SvgRect
+            fill={background}
+            height={rectHeight}
+            rx={borderRadius}
+            ry={borderRadius}
+            width={rectWidth}
+            x={textDimensions.x - inset.left}
+            y={textDimensions.y - inset.top}
+          />
         )}
         <Text
           alignmentBaseline={alignmentBaseline}
           dx={dx}
           dy={dy}
-          fill={fill}
-          fontFamily={fontFamily}
+          fill={fill ?? theme.color.fgMuted}
           fontSize={fontSize}
           fontWeight={fontWeight}
           textAnchor={textAnchor}
@@ -210,26 +194,29 @@ export const ChartText = memo<ChartTextProps>(
     children,
     x,
     y,
-    textAnchor = 'middle',
-    alignmentBaseline = 'central',
+    horizontalAlignment = 'center',
+    verticalAlignment = 'middle',
     dx,
     dy,
     disableRepositioning = false,
     bounds,
     testID,
-    fontFamily,
     fontSize = 12,
     fontWeight,
-    elevation,
     color,
     background = 'transparent',
     borderRadius,
-    padding: paddingInput,
+    inset: insetInput,
     onDimensionsChange,
     opacity = 1,
   }) => {
-    const theme = useTheme();
     const { width: chartWidth, height: chartHeight } = useCartesianChartContext();
+
+    const textAnchor = useMemo(() => getTextAnchor(horizontalAlignment), [horizontalAlignment]);
+    const alignmentBaseline = useMemo(
+      () => getAlignmentBaseline(verticalAlignment),
+      [verticalAlignment],
+    );
 
     const fullChartBounds = useMemo(
       () => ({ x: 0, y: 0, width: chartWidth, height: chartHeight }),
@@ -259,14 +246,14 @@ export const ChartText = memo<ChartTextProps>(
         return null;
       }
 
-      const padding = getPadding(paddingInput);
+      const inset = getChartInset(insetInput);
       return {
-        x: textBBox.x - padding.left,
-        y: textBBox.y - padding.top,
-        width: textBBox.width + padding.left + padding.right,
-        height: textBBox.height + padding.top + padding.bottom,
+        x: textBBox.x - inset.left,
+        y: textBBox.y - inset.top,
+        width: textBBox.width + inset.left + inset.right,
+        height: textBBox.height + inset.top + inset.bottom,
       };
-    }, [textBBox, paddingInput]);
+    }, [textBBox, insetInput]);
 
     const overflowAmount = useMemo(() => {
       if (disableRepositioning) {
@@ -339,21 +326,21 @@ export const ChartText = memo<ChartTextProps>(
     }, []);
 
     return (
-      <G opacity={isDimensionsReady ? opacity : 0} testID={testID}>
+      <G opacity={isDimensionsReady ? opacity : 0}>
         {textSize && (
-          <G transform={`translate(${x + overflowAmount.x}, ${y + overflowAmount.y})`}>
+          <G
+            transform={[{ translateX: x + overflowAmount.x }, { translateY: y + overflowAmount.y }]}
+          >
             <ChartTextVisible
               alignmentBaseline={alignmentBaseline}
               background={background}
               borderRadius={borderRadius}
               dx={dx}
               dy={dy}
-              elevation={elevation}
-              fill={color ?? theme.color.fgMuted}
-              fontFamily={fontFamily}
+              fill={color}
               fontSize={fontSize}
               fontWeight={fontWeight}
-              padding={paddingInput}
+              inset={insetInput}
               textAnchor={textAnchor}
               textDimensions={textSize}
             >
@@ -366,7 +353,6 @@ export const ChartText = memo<ChartTextProps>(
           dx={dx}
           dy={dy}
           fill="transparent"
-          fontFamily={fontFamily}
           fontSize={fontSize}
           fontWeight={fontWeight}
           onLayout={onLayout}

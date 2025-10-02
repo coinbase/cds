@@ -1,15 +1,63 @@
 import React, { memo, useMemo } from 'react';
-import type { ThemeVars } from '@coinbase/cds-common';
-import { useTheme } from '@coinbase/cds-web';
+import type { Rect } from '@coinbase/cds-common';
+import type { ChartScaleFunction } from '@coinbase/cds-common/visualizations/charts';
 
 import { useCartesianChartContext } from '../ChartProvider';
 
 import { Bar, type BarComponent, type BarProps } from './Bar';
 import type { BarSeries } from './BarChart';
-import { DefaultStackComponent, type StackComponent } from './DefaultStackComponent';
+import { DefaultBarStack } from './DefaultBarStack';
 
-// todo: simplify props by reusing from other types
-export type BarStackProps = {
+export type BarStackComponentProps = {
+  /**
+   * The x position of the stack.
+   */
+  x: number;
+  /**
+   * The y position of the stack.
+   */
+  y: number;
+  /**
+   * The width of the stack.
+   */
+  width: number;
+  /**
+   * The height of the stack.
+   */
+  height: number;
+  /**
+   * The bar elements to render within the stack.
+   */
+  children: React.ReactNode;
+  /**
+   * The index of the category this stack belongs to.
+   */
+  categoryIndex: number;
+  /**
+   * Border radius for the bar.
+   * @default 4
+   */
+  borderRadius?: number;
+  /**
+   * Whether to round the top corners.
+   */
+  roundTop?: boolean;
+  /**
+   * Whether to round the bottom corners.
+   */
+  roundBottom?: boolean;
+  /**
+   * The y-origin for animations (baseline position).
+   */
+  yOrigin?: number;
+};
+
+export type BarStackComponent = React.FC<BarStackComponentProps>;
+
+export type BarStackProps = Pick<
+  BarProps,
+  'BarComponent' | 'fillOpacity' | 'stroke' | 'strokeWidth' | 'borderRadius'
+> & {
   /**
    * Array of series configurations that belong to this stack.
    */
@@ -29,42 +77,22 @@ export type BarStackProps = {
   /**
    * Y scale function.
    */
-  yScale: any; // TODO: proper d3-scale type
+  yScale: ChartScaleFunction;
   /**
    * Chart rect for bounds.
    */
-  rect: { x: number; y: number; width: number; height: number };
+  rect: Rect;
   /**
    * Y axis ID to use.
    * If not provided, will use the yAxisId from the first series.
    */
   yAxisId?: string;
   /**
-   * Default component to render individual bars.
-   */
-  BarComponent?: BarComponent;
-  /**
-   * Default opacity of the bar.
-   */
-  fillOpacity?: number;
-  /**
-   * Default stroke color for the bar outline.
-   */
-  stroke?: string;
-  /**
-   * Default stroke width for the bar outline.
-   */
-  strokeWidth?: number;
-  /**
-   * Default border radius from theme.
-   */
-  borderRadius?: BarProps['borderRadius'];
-  /**
    * Custom component to render the stack container.
    * Can be used to add clip paths, outlines, or other custom styling.
-   * @default DefaultStackComponent
+   * @default DefaultBarStack
    */
-  StackComponent?: StackComponent;
+  BarStackComponent?: BarStackComponent;
   /**
    * Whether to round the baseline of a bar (where the value is 0).
    */
@@ -72,15 +100,15 @@ export type BarStackProps = {
   /**
    * Gap between bars in the stack.
    */
-  stackGap?: ThemeVars.Space;
+  stackGap?: number;
   /**
    * Minimum size for individual bars in the stack.
    */
-  barMinSize?: ThemeVars.Space;
+  barMinSize?: number;
   /**
    * Minimum size for the entire stack.
    */
-  stackMinSize?: ThemeVars.Space;
+  stackMinSize?: number;
 };
 
 /**
@@ -100,18 +128,17 @@ export const BarStack = memo<BarStackProps>(
     stroke: defaultStroke,
     strokeWidth: defaultStrokeWidth,
     borderRadius,
-    StackComponent = DefaultStackComponent,
+    BarStackComponent = DefaultBarStack,
     stackGap,
     barMinSize,
     stackMinSize,
     roundBaseline,
   }) => {
-    const theme = useTheme();
     const { getSeriesData, getXAxis } = useCartesianChartContext();
 
-    const stackGapPx = stackGap ? theme.space[stackGap] : 0;
-    const barMinSizePx = barMinSize ? theme.space[barMinSize] : 0;
-    const stackMinSizePx = stackMinSize ? theme.space[stackMinSize] : 0;
+    const stackGapPx = stackGap;
+    const barMinSizePx = barMinSize;
+    const stackMinSizePx = stackMinSize;
 
     const xAxis = getXAxis();
 
@@ -217,7 +244,7 @@ export const BarStack = memo<BarStackProps>(
       });
 
       // Apply proportional gap distribution to maintain total stack height
-      if (stackGapPx > 0 && allBars.length > 1) {
+      if (stackGapPx && allBars.length > 1) {
         // Separate bars by baseline side
         const barsAboveBaseline = allBars.filter((bar) => {
           const [bottom, top] = (bar.dataY as [number, number]).sort((a, b) => a - b);
@@ -295,7 +322,7 @@ export const BarStack = memo<BarStackProps>(
       }
 
       // Apply barMinSize constraints
-      if (barMinSizePx > 0) {
+      if (barMinSizePx) {
         // First, expand bars that need it and track the expansion
         const expandedBars = allBars.map((bar, index) => {
           if (bar.height < barMinSizePx) {
@@ -309,7 +336,7 @@ export const BarStack = memo<BarStackProps>(
             let newBottom = bottom;
             let newTop = top;
 
-            const scaleUnit = Math.abs(yScale(1) - yScale(0));
+            const scaleUnit = Math.abs((yScale(1) ?? 0) - (yScale(0) ?? 0));
 
             if (bottom === 0) {
               // Expand away from baseline (upward for positive)
@@ -426,12 +453,12 @@ export const BarStack = memo<BarStackProps>(
 
             const shouldRoundTop =
               index === bars.length - 1 ||
-              (a.shouldApplyGap && stackGapPx > 0) ||
+              (a.shouldApplyGap && stackGapPx) ||
               (!a.shouldApplyGap && barAfter && barAfter.y + barAfter.height !== a.y);
 
             const shouldRoundBottom =
               index === 0 ||
-              (a.shouldApplyGap && stackGapPx > 0) ||
+              (a.shouldApplyGap && stackGapPx) ||
               (!a.shouldApplyGap && barBefore && barBefore.y !== a.y + a.height);
 
             return {
@@ -453,7 +480,7 @@ export const BarStack = memo<BarStackProps>(
       };
 
       // Apply stackMinSize constraints
-      if (stackMinSizePx > 0) {
+      if (stackMinSizePx) {
         if (allBars.length === 1 && stackBounds.height < stackMinSizePx) {
           // For single bars (non-stacked), treat stackMinSize like barMinSize
 
@@ -468,7 +495,7 @@ export const BarStack = memo<BarStackProps>(
           let newBottom = bottom;
           let newTop = top;
 
-          const scaleUnit = Math.abs(yScale(1) - yScale(0));
+          const scaleUnit = Math.abs((yScale(1) ?? 0) - (yScale(0) ?? 0));
 
           if (bottom === 0) {
             // Expand away from baseline (upward for positive)
@@ -563,7 +590,8 @@ export const BarStack = memo<BarStackProps>(
 
           // Apply new positions to all bars
           allBars = allBars.map((bar) => {
-            const newPos = newPositions.get(bar.seriesId)!;
+            const newPos = newPositions.get(bar.seriesId);
+            if (!newPos) return bar;
             return {
               ...bar,
               height: newPos.height,
@@ -604,10 +632,11 @@ export const BarStack = memo<BarStackProps>(
       yScale,
     ]);
 
-    // Use the same baseline for yOrigin (animations)
-    const yOrigin = baseline;
-
-    const dataX = xAxis?.data?.[categoryIndex] ?? categoryIndex;
+    const xData =
+      xAxis?.data && Array.isArray(xAxis.data) && typeof xAxis.data[0] === 'number'
+        ? (xAxis.data as number[])
+        : undefined;
+    const dataX = xData ? xData[categoryIndex] : categoryIndex;
 
     const barElements = bars.map((bar, index) => (
       <Bar
@@ -619,7 +648,7 @@ export const BarStack = memo<BarStackProps>(
         fill={bar.fill}
         fillOpacity={bar.fillOpacity ?? defaultFillOpacity}
         height={bar.height}
-        originY={yOrigin}
+        originY={baseline}
         roundBottom={bar.roundBottom}
         roundTop={bar.roundTop}
         stroke={bar.stroke ?? defaultStroke}
@@ -634,8 +663,8 @@ export const BarStack = memo<BarStackProps>(
     const stackRoundTop = roundBaseline || stackRect.y !== baseline;
 
     return (
-      <StackComponent
-        borderRadius={borderRadius}
+      <BarStackComponent
+        borderRadius={borderRadius ?? 4}
         categoryIndex={categoryIndex}
         height={stackRect.height}
         roundBottom={stackRoundBottom}
@@ -643,10 +672,10 @@ export const BarStack = memo<BarStackProps>(
         width={stackRect.width}
         x={stackRect.x}
         y={stackRect.y}
-        yOrigin={yOrigin}
+        yOrigin={baseline}
       >
         {barElements}
-      </StackComponent>
+      </BarStackComponent>
     );
   },
 );

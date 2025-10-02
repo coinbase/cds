@@ -14,22 +14,20 @@ import type { LineComponent } from './Line';
 /**
  * Configuration for ReferenceLine label rendering using ChartText.
  */
-export type ReferenceLineLabelConfig = Pick<
+export type ReferenceLineLabelProps = Pick<
   ChartTextProps,
   | 'dx'
   | 'dy'
-  | 'fontFamily'
   | 'fontSize'
   | 'fontWeight'
   | 'color'
-  | 'elevation'
-  | 'padding'
+  | 'inset'
   | 'background'
   | 'borderRadius'
   | 'disableRepositioning'
   | 'bounds'
-  | 'alignmentBaseline'
-  | 'textAnchor'
+  | 'horizontalAlignment'
+  | 'verticalAlignment'
 >;
 
 type BaseReferenceLineProps = SharedProps & {
@@ -57,10 +55,11 @@ type BaseReferenceLineProps = SharedProps & {
    */
   stroke?: string;
   /**
-   * Configuration for the label rendering.
+   * Props for the label rendering.
    * Consolidates styling and positioning options for the ChartText component.
+   * Alignment defaults are set based on line orientation and can be overridden here.
    */
-  labelConfig?: ReferenceLineLabelConfig;
+  labelProps?: ReferenceLineLabelProps;
 };
 
 type HorizontalReferenceLineProps = BaseReferenceLineProps & {
@@ -73,11 +72,6 @@ type HorizontalReferenceLineProps = BaseReferenceLineProps & {
    * Defaults to defaultAxisId if not specified.
    */
   yAxisId?: string;
-  /**
-   * Position of the label along the horizontal line.
-   * @default 'right'
-   */
-  labelPosition?: 'left' | 'center' | 'right';
   dataX?: never;
 };
 
@@ -86,11 +80,6 @@ type VerticalReferenceLineProps = BaseReferenceLineProps & {
    * X-value for vertical reference line (data index).
    */
   dataX: number;
-  /**
-   * Position of the label along the vertical line.
-   * @default 'top'
-   */
-  labelPosition?: 'top' | 'center' | 'bottom';
   dataY?: never;
   yAxisId?: never;
 };
@@ -98,33 +87,25 @@ type VerticalReferenceLineProps = BaseReferenceLineProps & {
 export type ReferenceLineProps = HorizontalReferenceLineProps | VerticalReferenceLineProps;
 
 export const ReferenceLine = memo<ReferenceLineProps>(
-  ({
-    dataX,
-    dataY,
-    yAxisId,
-    label,
-    labelPosition,
-    testID,
-    LineComponent = DottedLine,
-    stroke,
-    labelConfig,
-  }) => {
+  ({ dataX, dataY, yAxisId, label, testID, LineComponent = DottedLine, stroke, labelProps }) => {
     const theme = useTheme();
     const { getXScale, getYScale, drawingArea } = useCartesianChartContext();
 
     const effectiveLineStroke = stroke ?? theme.color.bgLine;
 
-    // Merge default config with user provided config
-    const finalLabelConfig: ReferenceLineLabelConfig = useMemo(
+    // Merge default props with user provided props
+    const finalLabelProps: ReferenceLineLabelProps = useMemo(
       () => ({
-        dominantBaseline: 'central',
-        borderRadius: 200,
+        borderRadius: 8,
         color: theme.color.fgMuted,
-        elevation: 0,
-        padding: { top: 1, bottom: 1, left: 1.5, right: 1.5 },
-        ...labelConfig,
+        inset: { top: 8, bottom: 8, left: 12, right: 12 },
+        // Set default alignment based on orientation
+        ...(dataY !== undefined
+          ? { verticalAlignment: 'middle' as const }
+          : { horizontalAlignment: 'center' as const }),
+        ...labelProps,
       }),
-      [labelConfig, theme.color.fgMuted],
+      [dataY, labelProps, theme.color.fgMuted],
     );
     // Horizontal reference line logic
     if (dataY !== undefined) {
@@ -137,19 +118,10 @@ export const ReferenceLine = memo<ReferenceLineProps>(
 
       const yPixel = yScale(dataY);
 
-      const getLabelX = () => {
-        switch (labelPosition as 'left' | 'center' | 'right') {
-          case 'left':
-            return drawingArea.x + 8;
-          case 'center':
-            return drawingArea.x + drawingArea.width / 2;
-          case 'right':
-          default:
-            return drawingArea.x + drawingArea.width - 5;
-        }
-      };
-
       if (yPixel === undefined) return null;
+
+      // Default label position at right edge of drawing area
+      const labelX = drawingArea.x + drawingArea.width;
 
       return (
         <G data-testid={testID}>
@@ -159,14 +131,7 @@ export const ReferenceLine = memo<ReferenceLineProps>(
             stroke={effectiveLineStroke}
           />
           {label && (
-            <ChartText
-              textAnchor={
-                labelPosition === 'left' ? 'start' : labelPosition === 'center' ? 'middle' : 'end'
-              }
-              {...finalLabelConfig}
-              x={getLabelX()}
-              y={yPixel}
-            >
+            <ChartText {...finalLabelProps} x={labelX} y={yPixel}>
               {label}
             </ChartText>
           )}
@@ -185,19 +150,10 @@ export const ReferenceLine = memo<ReferenceLineProps>(
 
       const xPixel = getPointOnScale(dataX, xScale);
 
-      const getLabelY = () => {
-        switch (labelPosition as 'top' | 'center' | 'bottom') {
-          case 'top':
-            return 24;
-          case 'center':
-            return drawingArea.y + drawingArea.height / 2;
-          case 'bottom':
-          default:
-            return drawingArea.y + drawingArea.height - 24;
-        }
-      };
-
       if (xPixel === undefined) return null;
+
+      // Default label position at top edge of drawing area
+      const labelY = drawingArea.y;
 
       return (
         <G data-testid={testID}>
@@ -207,7 +163,7 @@ export const ReferenceLine = memo<ReferenceLineProps>(
             stroke={effectiveLineStroke}
           />
           {label && (
-            <ChartText textAnchor="middle" {...finalLabelConfig} x={xPixel} y={getLabelY()}>
+            <ChartText {...finalLabelProps} x={xPixel} y={labelY}>
               {label}
             </ChartText>
           )}

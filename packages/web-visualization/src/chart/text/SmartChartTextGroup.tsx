@@ -35,10 +35,10 @@ export type SmartChartTextGroupProps = {
    */
   labels: TextLabelData[];
   /**
-   * Minimum gap between labels
-   * @default 1
+   * Minimum gap between labels in pixels
+   * @default 8
    */
-  minGap?: ThemeVars.Space;
+  minGap?: number;
   /**
    * Whether to always show first and last labels
    * @default true
@@ -74,9 +74,9 @@ const EPSILON_PX = 0.5;
  * The component focuses solely on overlap prevention logic for better separation of concerns.
  */
 export const SmartChartTextGroup = memo<SmartChartTextGroupProps>(
-  ({ labels, minGap = 1, prioritizeEndLabels = true, chartTextProps }) => {
+  ({ labels, minGap = 8, prioritizeEndLabels = true, chartTextProps }) => {
     const theme = useTheme();
-    const minGapPx = theme.space[minGap];
+    const minGapPx = minGap;
     const [boundingBoxes, setBoundingBoxes] = useState<Map<string, Rect>>(new Map());
     const { onDimensionsChange: propsOnDimensionsChange, ...restChartTextProps } =
       chartTextProps ?? {};

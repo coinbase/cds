@@ -192,16 +192,15 @@ const DraggableReferenceLine = memo(
         <ReferenceLine
           dataY={amount}
           label={dollarLabel}
-          labelConfig={{
+          labelPosition="right"
+          labelProps={{
             background: color,
             borderRadius: 100,
             color: 'white',
             dx: -8,
             font: 'label1',
-            padding: { top: 5, bottom: 5, left: 10, right: 10 },
-            textAnchor: 'end',
+            inset: { top: 5, bottom: 5, left: 10, right: 10 },
           }}
-          labelPosition="right"
         />
         <g
           onMouseDown={handleMouseDown}
@@ -229,10 +228,10 @@ const DraggableReferenceLine = memo(
           <ChartText
             disableRepositioning
             color={color}
-            dominantBaseline="middle"
             font="label1"
+            horizontalAlignment="left"
             onDimensionsChange={(dimensions) => setTextDimensions(dimensions)}
-            textAnchor="start"
+            verticalAlignment="middle"
             x={drawingArea.x + padding + dragIconSize + iconGap + trendArrowIconSize}
             y={yPixel + 1}
           >
@@ -263,7 +262,7 @@ const PriceTargetChart = () => {
       animate={false}
       curve="monotone"
       height={250}
-      padding={{ top: 2, bottom: 2, left: 1, right: 10 }}
+      inset={{ top: 2, bottom: 2, left: 1, right: 10 }}
       series={[
         {
           id: 'prices',
@@ -277,7 +276,7 @@ const PriceTargetChart = () => {
         LineComponent={SolidLine}
         dataY={priceData[priceData.length - 1]}
         label={formatPrice(priceData[priceData.length - 1])}
-        labelConfig={{ dx: 16, textAnchor: 'start' }}
+        labelProps={{ dx: 16, horizontalAlignment: 'left' }}
       />
       <DraggableReferenceLine
         baselineAmount={priceData[priceData.length - 1]}
@@ -296,7 +295,7 @@ export const All = () => {
           showArea
           curve="monotone"
           height={250}
-          padding={{ right: 4 }}
+          inset={{ right: 4 }}
           series={[
             {
               id: 'prices',
@@ -304,7 +303,11 @@ export const All = () => {
             },
           ]}
         >
-          <ReferenceLine dataY={50} label="$50" labelConfig={{ dx: 16, textAnchor: 'start' }} />
+          <ReferenceLine
+            dataY={50}
+            label="$50"
+            labelProps={{ dx: 16, horizontalAlignment: 'left' }}
+          />
         </LineChart>
       </Example>
       <Example title="Price Reference Line">
@@ -312,7 +315,7 @@ export const All = () => {
           showArea
           curve="monotone"
           height={250}
-          padding={{ right: 4 }}
+          inset={{ right: 4 }}
           series={[
             {
               id: 'prices',
@@ -323,10 +326,10 @@ export const All = () => {
           <ReferenceLine
             dataY={75}
             label="$75"
-            labelConfig={{
+            labelPosition="right"
+            labelProps={{
               dx: -16,
               borderRadius: 400,
-              textAnchor: 'end',
               color: 'white',
               background: 'var(--color-bgPositive)',
             }}
@@ -337,7 +340,7 @@ export const All = () => {
         <LineChart
           curve="monotone"
           height={250}
-          padding={{ right: 4 }}
+          inset={{ right: 4 }}
           series={[
             {
               id: 'prices',
@@ -348,31 +351,29 @@ export const All = () => {
           <ReferenceLine
             dataY={25}
             label="Liquidation"
-            labelConfig={{
+            labelPosition="left"
+            labelProps={{
               dx: 4,
               borderRadius: 100,
-              padding: { top: 4, bottom: 4, left: 8, right: 8 },
-              textAnchor: 'start',
+              inset: { top: 4, bottom: 4, left: 8, right: 8 },
               color: 'rgb(var(--yellow70))',
               background: 'var(--color-accentSubtleYellow)',
               font: 'label1',
             }}
-            labelPosition="left"
             stroke="var(--color-bgWarning)"
           />
           <ReferenceLine
             dataY={25}
             label="$25"
-            labelConfig={{
+            labelPosition="right"
+            labelProps={{
               dx: -4,
               borderRadius: 100,
-              padding: { top: 2, bottom: 2, left: 4, right: 4 },
-              textAnchor: 'end',
+              inset: { top: 2, bottom: 2, left: 4, right: 4 },
               color: 'rgb(var(--yellow70))',
               background: 'var(--color-bg)',
               font: 'label1',
             }}
-            labelPosition="right"
             stroke="transparent"
           />
         </LineChart>

@@ -54,10 +54,12 @@ const expo: ExpoConfig = {
     [
       'expo-build-properties',
       {
-        newArchEnabled,
+        ios: {
+          newArchEnabled,
+        },
         android: {
-          kotlinVersion: '2.0.21',
-          kspVersion: '2.0.0-1.0.23',
+          kotlinVersion: '1.8.0',
+          newArchEnabled,
           /**
            * https://docs.expo.dev/build-reference/e2e-tests/#51-patch-buildgradle
            * Temporary patch required until detox integration is first class

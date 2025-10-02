@@ -2,9 +2,9 @@ import React, { forwardRef, memo, useMemo } from 'react';
 import type { View } from 'react-native';
 import {
   type AxisConfigProps,
-  defaultChartPadding,
+  defaultChartInset,
   defaultStackId,
-  getPadding,
+  getChartInset,
   type Series,
 } from '@coinbase/cds-common/visualizations/charts';
 
@@ -21,13 +21,22 @@ import { BarPlot, type BarPlotProps } from './BarPlot';
 export type BarSeries = Series &
   Partial<Pick<BarProps, 'BarComponent' | 'fill' | 'fillOpacity' | 'stroke' | 'strokeWidth'>>;
 
-//  & Omit<ScrubberGroupProps, 'chartScale' | 'heads'>
+//  & Omit<ScrubberGroupProps, 'chartScale' | 'beacons'>
 export type BarChartProps = Omit<CartesianChartProps, 'xAxis' | 'yAxis' | 'series'> &
   Pick<
     BarPlotProps,
-    'barPadding' | 'StackComponent' | 'roundBaseline' | 'stackGap' | 'barMinSize' | 'stackMinSize'
-  > &
-  Pick<BarProps, 'BarComponent' | 'fillOpacity' | 'stroke' | 'strokeWidth' | 'borderRadius'> & {
+    | 'barPadding'
+    | 'BarComponent'
+    | 'fillOpacity'
+    | 'stroke'
+    | 'strokeWidth'
+    | 'borderRadius'
+    | 'BarStackComponent'
+    | 'roundBaseline'
+    | 'stackGap'
+    | 'barMinSize'
+    | 'stackMinSize'
+  > & {
     /**
      * Configuration objects that define how to visualize the data.
      * Each series supports Bar component props for individual customization.
@@ -65,7 +74,7 @@ export const BarChart = memo(
         showYAxis,
         xAxis,
         yAxis,
-        padding: userPadding,
+        inset: userInset,
         children,
         barPadding,
         BarComponent,
@@ -74,7 +83,7 @@ export const BarChart = memo(
         strokeWidth,
         borderRadius,
         roundBaseline,
-        StackComponent,
+        BarStackComponent,
         stackGap,
         barMinSize,
         stackMinSize,
@@ -83,9 +92,9 @@ export const BarChart = memo(
       },
       ref,
     ) => {
-      const calculatedPadding = useMemo(
-        () => getPadding(userPadding, defaultChartPadding),
-        [userPadding],
+      const calculatedInset = useMemo(
+        () => getChartInset(userInset, defaultChartInset),
+        [userInset],
       );
 
       // Convert BarSeries to Series for Chart context
@@ -172,16 +181,16 @@ export const BarChart = memo(
           enableScrubbing={enableScrubbing}
           {...chartProps}
           ref={ref}
-          padding={calculatedPadding}
+          inset={calculatedInset}
           series={seriesToRender}
           xAxis={xAxisConfig}
           yAxis={yAxisConfig}
         >
-          {showXAxis && <XAxis position="end" {...xAxisVisualProps} />}
-          {showYAxis && <YAxis axisId={yAxisId} position="end" {...yAxisVisualProps} />}
+          {showXAxis && <XAxis {...xAxisVisualProps} />}
+          {showYAxis && <YAxis axisId={yAxisId} {...yAxisVisualProps} />}
           <BarPlot
             BarComponent={BarComponent}
-            StackComponent={StackComponent}
+            BarStackComponent={BarStackComponent}
             barMinSize={barMinSize}
             barPadding={barPadding}
             borderRadius={borderRadius}

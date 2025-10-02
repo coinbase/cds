@@ -1,0 +1,126 @@
+diff --git a/android/src/main/java/expo/modules/splashscreen/SplashScreenView.kt b/android/src/main/java/expo/modules/splashscreen/SplashScreenView.kt
+index f5ac5483aa3f34ae59830a9da16afe52ccc8ba0e..e2bdef4296b1aeecae41681adf43fe6e7fcc3b89 100644
+--- a/android/src/main/java/expo/modules/splashscreen/SplashScreenView.kt
++++ b/android/src/main/java/expo/modules/splashscreen/SplashScreenView.kt
+@@ -8,6 +8,11 @@ import android.view.ViewGroup
+ import android.widget.ImageView
+ import android.widget.RelativeLayout
+ 
++import androidx.core.content.ContextCompat
++import android.view.Gravity
++import android.widget.TextView
++import android.graphics.Color
++
+ // this needs to stay for versioning to work
+ 
+ @SuppressLint("ViewConstructor")
+@@ -15,16 +20,44 @@ class SplashScreenView(
+   context: Context
+ ) : RelativeLayout(context) {
+   val imageView: ImageView = ImageView(context).also { view ->
+-    view.layoutParams = LayoutParams(
++    val params = LayoutParams(
+       LayoutParams.MATCH_PARENT,
+       LayoutParams.MATCH_PARENT
+     )
++    params.addRule(CENTER_IN_PARENT)  // Center align
++    view.layoutParams = params
+   }
+ 
+   init {
+     layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+ 
+     addView(imageView)
++
++    // context comes from the application level.
++    val packageName = context.packageName
++
++    val resId = context.resources.getIdentifier("splashscreen_bottom_image", "drawable", packageName)
++
++    // If bottom image is provided, add it to the view
++    // Otherwise we keep only the main, centered, image
++    if (resId != 0) {
++      val bottomImageView = ImageView(context).apply {
++        val params = LayoutParams(
++            LayoutParams.WRAP_CONTENT,
++            LayoutParams.WRAP_CONTENT
++        )
++        params.addRule(ALIGN_PARENT_BOTTOM)
++        params.addRule(CENTER_HORIZONTAL)
++        layoutParams = params
++        setPadding(0, 0, 0, 40)
++        val resId = context.resources.getIdentifier("splashscreen_bottom_image", "drawable", packageName)
++        if (resId != 0) {
++            setImageResource(resId)
++        }
++        scaleType = ImageView.ScaleType.CENTER
++      }
++      addView(bottomImageView)
++    }
+   }
+ 
+   fun configureImageViewResizeMode(resizeMode: SplashScreenImageResizeMode) {
+diff --git a/android/src/main/java/expo/modules/splashscreen/SplashScreenViewController.kt b/android/src/main/java/expo/modules/splashscreen/SplashScreenViewController.kt
+index 23e8d4b416bb12192a3fe517f02e0945ccd8c347..16fd58a80216f49d8b9eeaa3a7a27ba8567760b3 100644
+--- a/android/src/main/java/expo/modules/splashscreen/SplashScreenViewController.kt
++++ b/android/src/main/java/expo/modules/splashscreen/SplashScreenViewController.kt
+@@ -7,6 +7,7 @@ import android.view.View
+ import android.view.ViewGroup
+ import expo.modules.splashscreen.exceptions.NoContentViewException
+ import java.lang.ref.WeakReference
++import android.view.animation.AlphaAnimation
+ 
+ const val SEARCH_FOR_ROOT_VIEW_INTERVAL = 20L
+ 
+@@ -63,12 +64,19 @@ open class SplashScreenViewController(
+       return failureCallback("Cannot hide native splash screen on activity that is already destroyed (application is already closed).")
+     }
+ 
+-    Handler(activity.mainLooper).post {
+-      contentView.removeView(splashScreenView)
+-      autoHideEnabled = true
+-      splashScreenShown = false
+-      successCallback(true)
++    val fadeOutDuration = 300L
++    val fadeOutAnimation = AlphaAnimation(1f, 0f).apply {
++      duration = fadeOutDuration
++      fillAfter = true
+     }
++
++    Handler(activity.mainLooper).postDelayed({
++      contentView.removeView(splashScreenView)
++    }, fadeOutDuration)
++    splashScreenView.startAnimation(fadeOutAnimation)
++    autoHideEnabled = true
++    splashScreenShown = false
++    successCallback(true)
+   }
+ 
+   // endregion
+diff --git a/ios/EXSplashScreen/EXSplashScreenViewController.m b/ios/EXSplashScreen/EXSplashScreenViewController.m
+index 3f1226e3867c7b3ef663a3b56787975006d60ddf..3361283632abc49143e59f93c8e57b57324f1708 100644
+--- a/ios/EXSplashScreen/EXSplashScreenViewController.m
++++ b/ios/EXSplashScreen/EXSplashScreenViewController.m
+@@ -72,12 +72,16 @@ - (void)hideWithCallback:(nullable void(^)(BOOL))successCallback
+   EX_WEAKIFY(self);
+   dispatch_async(dispatch_get_main_queue(), ^{
+     EX_ENSURE_STRONGIFY(self);
+-    [self.splashScreenView removeFromSuperview];
+-    self.splashScreenShown = NO;
+-    self.autoHideEnabled = YES;
+-    if (successCallback) {
+-      successCallback(YES);
+-    }
++    [UIView animateWithDuration:0.2 // 200ms fade-out animation
++          animations:^{self.splashScreenView.alpha = 0.0;}
++          completion:^(BOOL finished){
++        [self.splashScreenView removeFromSuperview];
++        self.splashScreenShown = NO;
++        self.autoHideEnabled = YES;
++        if (successCallback) {
++          successCallback(YES);
++        }
++    }];
+   });
+ }
+ 

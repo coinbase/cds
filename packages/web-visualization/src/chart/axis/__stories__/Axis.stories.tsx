@@ -85,7 +85,7 @@ const Simple = () => {
       showXAxis
       showYAxis
       height={400}
-      padding={4}
+      inset={32}
       series={[
         {
           id: 'pageViews',
@@ -108,7 +108,7 @@ const Simple = () => {
         showGrid: true,
         showTickMarks: true,
         GridLineComponent: ThinSolidLine,
-        position: 'end',
+        position: 'bottom',
         requestedTickCount: 5,
         ticks: () => true,
       }}
@@ -120,7 +120,7 @@ const Simple = () => {
         showLine: true,
         showTickMarks: true,
         GridLineComponent: ThinSolidLine,
-        position: 'start',
+        position: 'left',
         requestedTickCount: 5,
       }}
     >
@@ -200,7 +200,7 @@ const TimeOfDayAxesExample = () => {
       <XAxis
         showLine
         showTickMarks
-        position="start"
+        position="top"
         tickLabelFormatter={dateFormatter}
         ticks={dateTicks}
       />
@@ -208,7 +208,6 @@ const TimeOfDayAxesExample = () => {
         showGrid
         showLine
         showTickMarks
-        position="end"
         tickLabelFormatter={timeOfDayFormatter}
         ticks={timeOfDayTicks}
       />
@@ -236,9 +235,9 @@ const MultipleYAxesExample = () => (
       { id: 'logAxis', scaleType: 'log' },
     ]}
   >
-    <XAxis showLine showTickMarks position="end" />
-    <YAxis showLine showTickMarks axisId="logAxis" position="start" />
-    <YAxis showLine showTickMarks axisId="linearAxis" position="start" />
+    <XAxis showLine showTickMarks />
+    <YAxis showLine showTickMarks axisId="logAxis" position="left" />
+    <YAxis showLine showTickMarks axisId="linearAxis" position="left" />
     <Line curve="natural" seriesId="linear" />
     <Line curve="natural" seriesId="log" />
     <Scrubber />
@@ -283,23 +282,22 @@ const DomainLimitType = ({ limit }: { limit: 'nice' | 'strict' }) => {
     >
       <Line showArea curve="natural" seriesId="growthLinear" />
       <Line showArea curve="natural" seriesId="growthExponential" />
-      <XAxis showLine position="end" />
+      <XAxis showLine />
       <YAxis
         showLine
         showTickMarks
         axisId="exponential"
-        position="start"
+        position="left"
         requestedTickCount={6}
-        size={70}
         tickLabelFormatter={(value) => value.toLocaleString()}
+        width={70}
       />
       <YAxis
         showLine
         showTickMarks
         axisId="linear"
-        position="end"
-        size={70}
         tickLabelFormatter={(value) => value.toLocaleString()}
+        width={70}
       />
       <Scrubber />
     </CartesianChart>

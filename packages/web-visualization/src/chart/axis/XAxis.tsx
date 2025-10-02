@@ -1,7 +1,6 @@
 import React, { memo, useCallback, useEffect, useId, useMemo } from 'react';
 import { getAxisTicksData, isCategoricalScale } from '@coinbase/cds-common/visualizations/charts';
 import { cx } from '@coinbase/cds-web';
-import { useTheme } from '@coinbase/cds-web/hooks/useTheme';
 import { css } from '@linaria/core';
 import { AnimatePresence, m as motion } from 'framer-motion';
 
@@ -26,13 +25,24 @@ const axisLineCss = css`
   ${axisLineStyles}
 `;
 
-export type XAxisBaseProps = AxisBaseProps;
+export type XAxisBaseProps = AxisBaseProps & {
+  /**
+   * The position of the axis relative to the chart's drawing area.
+   * @default 'bottom'
+   */
+  position?: 'top' | 'bottom';
+  /**
+   * Height of the axis. This value is inclusive of the padding.
+   * @default 32
+   */
+  height?: number;
+};
 
 export type XAxisProps = AxisProps & XAxisBaseProps;
 
 export const XAxis = memo<XAxisProps>(
   ({
-    position = 'end',
+    position = 'bottom',
     showGrid,
     requestedTickCount,
     ticks,
@@ -42,16 +52,15 @@ export const XAxis = memo<XAxisProps>(
     styles,
     classNames,
     GridLineComponent = DottedLine,
-    tickMarkLabelGap = 0.25,
-    size = 32,
-    minTickLabelGap = 0.5,
+    tickMarkLabelGap = 2,
+    height = 32,
+    minTickLabelGap = 4,
     showTickMarks,
     showLine,
-    tickMarkSize = 0.5,
-    tickInterval = 8,
+    tickMarkSize = 4,
+    tickInterval = 32,
     ...props
   }) => {
-    const theme = useTheme();
     const registrationId = useId();
     const { animate, getXScale, getXAxis, registerAxis, unregisterAxis, getAxisBounds } =
       useCartesianChartContext();
@@ -62,10 +71,12 @@ export const XAxis = memo<XAxisProps>(
     const axisBounds = getAxisBounds(registrationId);
 
     useEffect(() => {
-      registerAxis(registrationId, 'x', position, size);
+      // Map top/bottom to start/end for internal use
+      const internalPosition = position === 'top' ? 'start' : 'end';
+      registerAxis(registrationId, 'x', internalPosition, height);
 
       return () => unregisterAxis(registrationId);
-    }, [registrationId, registerAxis, unregisterAxis, position, size]);
+    }, [registrationId, registerAxis, unregisterAxis, position, height]);
 
     const formatTick = useCallback(
       (value: any) => {
@@ -126,21 +137,20 @@ export const XAxis = memo<XAxisProps>(
           axisData && Array.isArray(axisData) && typeof axisData[0] === 'string'
             ? Array.from({ length: axisData.length }, (_, i) => i)
             : undefined,
-        tickInterval: theme.space[tickInterval],
+        tickInterval: tickInterval,
       });
-    }, [ticks, xScale, requestedTickCount, tickInterval, theme.space, xAxis?.data]);
+    }, [ticks, xScale, requestedTickCount, tickInterval, xAxis?.data]);
 
     const chartTextData: TextLabelData[] | null = useMemo(() => {
       if (!axisBounds) return null;
 
       return ticksData.map((tick) => {
-        const tickOffset =
-          theme.space[tickMarkLabelGap] + (showTickMarks ? theme.space[tickMarkSize] : 0);
+        const tickOffset = tickMarkLabelGap + (showTickMarks ? tickMarkSize : 0);
 
         const availableSpace = axisBounds.height - tickOffset;
         const labelOffset = availableSpace / 2;
         const labelY =
-          position === 'start'
+          position === 'top'
             ? axisBounds.y + labelOffset - tickOffset
             : axisBounds.y + labelOffset + tickOffset;
 
@@ -151,16 +161,15 @@ export const XAxis = memo<XAxisProps>(
           chartTextProps: {
             className: classNames?.tickLabel,
             color: 'var(--color-fgMuted)',
-            dominantBaseline: 'central',
+            verticalAlignment: 'middle',
             style: styles?.tickLabel,
-            textAnchor: 'middle',
+            horizontalAlignment: 'center',
           },
         };
       });
     }, [
       axisBounds,
       ticksData,
-      theme.space,
       tickMarkLabelGap,
       showTickMarks,
       tickMarkSize,
@@ -223,10 +232,10 @@ export const XAxis = memo<XAxisProps>(
         {axisBounds && showTickMarks && (
           <g data-testid="tick-marks">
             {ticksData.map((tick, index) => {
-              const tickY = position === 'end' ? axisBounds.y : axisBounds.y + axisBounds.height;
-              const tickMarkSizePixels = theme.space[tickMarkSize];
+              const tickY = position === 'bottom' ? axisBounds.y : axisBounds.y + axisBounds.height;
+              const tickMarkSizePixels = tickMarkSize;
               const tickY2 =
-                position === 'end'
+                position === 'bottom'
                   ? axisBounds.y + tickMarkSizePixels
                   : axisBounds.y + axisBounds.height - tickMarkSizePixels;
 
@@ -250,8 +259,8 @@ export const XAxis = memo<XAxisProps>(
             style={styles?.line}
             x1={axisBounds.x}
             x2={axisBounds.x + axisBounds.width}
-            y1={position === 'end' ? axisBounds.y : axisBounds.y + axisBounds.height}
-            y2={position === 'end' ? axisBounds.y : axisBounds.y + axisBounds.height}
+            y1={position === 'bottom' ? axisBounds.y : axisBounds.y + axisBounds.height}
+            y2={position === 'bottom' ? axisBounds.y : axisBounds.y + axisBounds.height}
           />
         )}
       </g>
