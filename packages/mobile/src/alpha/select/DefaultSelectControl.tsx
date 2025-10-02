@@ -1,5 +1,5 @@
 import { forwardRef, memo, useMemo } from 'react';
-import { TouchableOpacity } from 'react-native';
+import { Pressable, TouchableOpacity } from 'react-native';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import { useInputVariant } from '@coinbase/cds-common/hooks/useInputVariant';
 import type { SharedAccessibilityProps } from '@coinbase/cds-common/types';
@@ -82,18 +82,20 @@ export const DefaultSelectControl: SelectControlComponent = memo(
       const labelNode = useMemo(
         () =>
           typeof label === 'string' ? (
-            <InputLabel
-              alignSelf={labelVariant === 'inside' ? 'flex-start' : undefined}
-              color="fg"
-              paddingX={labelVariant === 'inside' ? 2 : 0}
-              paddingY={shouldShowCompactLabel || labelVariant === 'inside' ? 0 : 0.5}
-            >
-              {label}
-            </InputLabel>
+            <Pressable disabled={disabled} onPress={() => setOpen((s) => !s)}>
+              <InputLabel
+                alignSelf={labelVariant === 'inside' ? 'flex-start' : undefined}
+                color="fg"
+                paddingX={labelVariant === 'inside' ? 2 : 0}
+                paddingY={shouldShowCompactLabel || labelVariant === 'inside' ? 0 : 0.5}
+              >
+                {label}
+              </InputLabel>
+            </Pressable>
           ) : (
             label
           ),
-        [label, labelVariant, shouldShowCompactLabel],
+        [disabled, label, labelVariant, setOpen, shouldShowCompactLabel],
       );
 
       const valueNode = useMemo(() => {
@@ -162,7 +164,7 @@ export const DefaultSelectControl: SelectControlComponent = memo(
             accessibilityRole="button"
             disabled={disabled}
             onPress={() => setOpen((s) => !s)}
-            style={[{ width: '100%' }, style]}
+            style={[{ flexGrow: 1 }, style]}
             {...props}
           >
             <HStack
