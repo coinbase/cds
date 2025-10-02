@@ -647,8 +647,8 @@ export const Scrubber = memo(
                         bounds={drawingArea}
                         className={classNames?.beaconLabel}
                         color={dotStroke}
-                        dx={16}
-                        idlePulse={idlePulse}
+                        dx={finalSide === 'right' ? 16 : -16}
+                        horizontalAlignment={finalSide === 'right' ? 'left' : 'right'}
                         inset={{
                           left: labelHorizontalInset,
                           right: labelHorizontalInset,
@@ -664,7 +664,6 @@ export const Scrubber = memo(
                             ScrubberBeacon.pixelY,
                           )
                         }
-                        preferredSide={finalSide}
                         style={styles?.beaconLabel}
                         testID={
                           testID ? `${testID}-${ScrubberBeacon.targetSeries.id}-label` : undefined
