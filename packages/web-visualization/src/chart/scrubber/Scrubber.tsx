@@ -629,6 +629,8 @@ export const Scrubber = memo(
                   dataX={ScrubberBeacon.x}
                   dataY={ScrubberBeacon.y}
                   idlePulse={idlePulse}
+                  pixelX={ScrubberBeacon.pixelX}
+                  pixelY={ScrubberBeacon.pixelY}
                   seriesId={ScrubberBeacon.targetSeries.id}
                   style={styles?.beacon}
                   testID={testID ? `${testID}-${ScrubberBeacon.targetSeries.id}-dot` : undefined}
@@ -646,6 +648,7 @@ export const Scrubber = memo(
                         className={classNames?.beaconLabel}
                         color={dotStroke}
                         dx={16}
+                        idlePulse={idlePulse}
                         inset={{
                           left: labelHorizontalInset,
                           right: labelHorizontalInset,

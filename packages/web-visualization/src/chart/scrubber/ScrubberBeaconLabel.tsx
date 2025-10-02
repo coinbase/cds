@@ -1,8 +1,16 @@
 import { memo, useCallback, useState } from 'react';
 import type { Rect } from '@coinbase/cds-common/types';
+import { useScrubberContext } from '@coinbase/cds-common/visualizations/charts';
+import { m as motion } from 'framer-motion';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import { ChartText, type ChartTextProps } from '../text';
+
+const idlePulseTransitionConfig = {
+  duration: 2,
+  repeat: Infinity,
+  ease: 'easeInOut',
+} as const;
 
 export type ScrubberBeaconLabelProps = ChartTextProps & {
   /**
@@ -10,6 +18,10 @@ export type ScrubberBeaconLabelProps = ChartTextProps & {
    * @default 'auto' - automatically chooses based on available space
    */
   preferredSide?: 'left' | 'right' | 'auto';
+  /**
+   * Pulse the label while at rest (no active scrubbing).
+   */
+  idlePulse?: boolean;
 };
 
 /**
@@ -28,15 +40,20 @@ export const ScrubberBeaconLabel = memo<ScrubberBeaconLabelProps>(
     borderRadius = background !== undefined ? 4 : undefined,
     testID,
     dx = 0,
+    idlePulse,
     ...chartTextProps
   }) => {
-    const { drawingArea: chartRect } = useCartesianChartContext();
+    const { drawingArea: chartRect, animate: animationEnabled } = useCartesianChartContext();
+    const { scrubberPosition } = useScrubberContext();
 
     // Track current side for auto placement
     const [currentSide, setCurrentSide] = useState<'left' | 'right'>('right');
     const side = preferredSide === 'auto' ? currentSide : preferredSide;
     // invert value of dx depending on the side the label is going to be placed on
     const spacing = Math.abs(dx) * (side === 'right' ? 1 : -1);
+
+    const isIdleState = scrubberPosition === undefined;
+    const shouldPulse = animationEnabled && isIdleState && idlePulse;
 
     // Collision detection callback for automatic side switching
     const handleDimensionsChange = useCallback(
@@ -58,7 +75,8 @@ export const ScrubberBeaconLabel = memo<ScrubberBeaconLabelProps>(
       [chartRect, preferredSide, currentSide, onDimensionsChange],
     );
 
-    return (
+    // Wrap ChartText in a motion group for idle pulse animation
+    const chartTextElement = (
       <ChartText
         background={background}
         borderRadius={borderRadius}
@@ -74,5 +92,21 @@ export const ScrubberBeaconLabel = memo<ScrubberBeaconLabelProps>(
         {...chartTextProps}
       />
     );
+
+    if (shouldPulse) {
+      return (
+        <motion.g
+          animate={{
+            opacity: [1, 0.5, 1],
+          }}
+          initial={{ opacity: 1 }}
+          transition={idlePulseTransitionConfig}
+        >
+          {chartTextElement}
+        </motion.g>
+      );
+    }
+
+    return chartTextElement;
   },
 );

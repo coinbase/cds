@@ -1,13 +1,4 @@
-import React, { forwardRef, memo, useEffect, useImperativeHandle, useMemo } from 'react';
-import Reanimated, {
-  cancelAnimation,
-  Easing,
-  useAnimatedProps,
-  useSharedValue,
-  withRepeat,
-  withSequence,
-  withTiming,
-} from 'react-native-reanimated';
+import { memo, useEffect, useMemo } from 'react';
 import { Circle, G } from 'react-native-svg';
 import type { SharedProps } from '@coinbase/cds-common/types';
 import { projectPoint, useScrubberContext } from '@coinbase/cds-common/visualizations/charts';
@@ -16,85 +7,6 @@ import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 import { useCartesianChartContext } from '../ChartProvider';
 import { ChartText, type ChartTextProps } from '../text';
 import type { ChartTextChildren } from '../text/ChartText';
-
-export const singlePulseDuration = 1000; // 1 second
-export const pulseDuration = 2000; // 2 seconds
-
-const AnimatedCircle = Reanimated.createAnimatedComponent(Circle);
-
-export type PulseCircleRef = {
-  /**
-   * Triggers a single pulse animation.
-   */
-  pulse: () => void;
-};
-
-type PulseCircleProps = {
-  /**
-   * Whether to animate the point with a pulsing effect.
-   */
-  pulse: boolean;
-  /**
-   * Radius of the pulse ring.
-   */
-  pulseRadius: number;
-  /**
-   * The color of the pulse circle.
-   */
-  color: string;
-};
-
-/**
- * Memoized animated pulse circle component.
- * Handles all pulse animation logic internally.
- */
-const PulseCircle = memo(
-  forwardRef<PulseCircleRef, PulseCircleProps>(({ pulse, pulseRadius, color }, ref) => {
-    const { animate } = useCartesianChartContext();
-    const pulseOpacity = useSharedValue(0);
-
-    const pulseAnimatedProps = useAnimatedProps(() => {
-      return {
-        opacity: pulseOpacity.value,
-      };
-    });
-
-    useImperativeHandle(ref, () => ({
-      pulse: () => {
-        pulseOpacity.value = 0.1;
-        pulseOpacity.value = withTiming(0, { duration: singlePulseDuration });
-      },
-    }));
-
-    const shouldPulse = animate && pulse;
-
-    useEffect(() => {
-      if (shouldPulse) {
-        pulseOpacity.value = withRepeat(
-          withSequence(
-            withTiming(0.1, { duration: pulseDuration / 2 }),
-            withTiming(0, { duration: pulseDuration / 2 }),
-          ),
-          -1, // infinite repeat
-          false, // don't reverse
-        );
-      } else {
-        cancelAnimation(pulseOpacity);
-        pulseOpacity.value = withTiming(0, { duration: 200 });
-      }
-    }, [shouldPulse, pulseOpacity]);
-
-    return (
-      <AnimatedCircle
-        animatedProps={pulseAnimatedProps}
-        cx={0}
-        cy={0}
-        fill={color}
-        r={pulseRadius}
-      />
-    );
-  }),
-);
 
 /**
  * Calculate text alignment props based on position preset.
@@ -130,13 +42,6 @@ const calculateLabelAlignment = (
         verticalAlignment: 'middle',
       };
   }
-};
-
-export type PointRef = {
-  /**
-   * Triggers a single pulse animation.
-   */
-  pulse: () => void;
 };
 
 /**
@@ -207,11 +112,6 @@ export type PointConfig = {
    */
   radius?: number;
   /**
-   * Radius of the pulse ring. Only used when pulse is enabled.
-   * @default 16
-   */
-  pulseRadius?: number;
-  /**
    * Opacity of the point.
    */
   opacity?: number;
@@ -268,158 +168,132 @@ export type PointProps = SharedProps &
      */
     dataY: number;
     /**
-     * Whether to animate the point with a pulsing effect.
-     */
-    pulse?: boolean;
-    /**
      * Optional pixel coordinates to use instead of calculating from dataX/dataY.
      * Useful for performance when coordinates are already calculated.
      */
     pixelCoordinates?: { x: number; y: number };
   };
 
-export const Point = memo(
-  forwardRef<PointRef, PointProps>(
-    (
-      {
-        dataX,
-        dataY,
-        yAxisId,
-        color,
-        pulse,
-        radius = 4,
-        pulseRadius = 16,
-        opacity,
-        onPress,
-        onScrubberEnter,
-        stroke,
-        strokeWidth = 2,
-        accessibilityLabel,
-        label,
-        labelConfig,
-        renderLabel,
-        pixelCoordinates,
-        testID,
-        ...props
-      },
-      ref,
-    ) => {
-      const theme = useTheme();
-      const effectiveStroke = stroke ?? theme.color.bg;
+export const Point = memo<PointProps>(
+  ({
+    dataX,
+    dataY,
+    yAxisId,
+    color,
+    radius = 4,
+    opacity,
+    onPress,
+    onScrubberEnter,
+    stroke,
+    strokeWidth = 2,
+    accessibilityLabel,
+    label,
+    labelConfig,
+    renderLabel,
+    pixelCoordinates,
+    testID,
+    ...props
+  }) => {
+    const theme = useTheme();
+    const effectiveStroke = stroke ?? theme.color.bg;
 
-      const pulseCircleRef = React.useRef<PulseCircleRef>(null);
+    const { getXScale, getYScale } = useCartesianChartContext();
+    const { scrubberPosition } = useScrubberContext();
 
-      const { getXScale, getYScale } = useCartesianChartContext();
-      const { scrubberPosition: scrubberPosition } = useScrubberContext();
+    const xScale = getXScale();
+    const yScale = getYScale(yAxisId);
 
-      const xScale = getXScale();
-      const yScale = getYScale(yAxisId);
+    // Use theme color as default if no color is provided
+    const effectiveColor = color ?? theme.color.fgPrimary;
 
-      // Use theme color as default if no color is provided
-      const effectiveColor = color ?? theme.color.fgPrimary;
+    // Scrubber detection: check if this point is highlighted by the scrubber
+    const isScrubberHighlighted = scrubberPosition !== undefined && scrubberPosition === dataX;
 
-      // Scrubber detection: check if this point is highlighted by the scrubber
-      const isScrubbing = scrubberPosition !== undefined;
-      const isScrubberHighlighted = isScrubbing && scrubberPosition === dataX;
-
-      // Use provided pixelCoordinates or calculate from data coordinates
-      const pixelCoordinate = useMemo(() => {
-        if (pixelCoordinates) {
-          return pixelCoordinates;
-        }
-
-        if (!xScale || !yScale) {
-          return { x: 0, y: 0 };
-        }
-
-        return projectPoint({
-          x: dataX,
-          y: dataY,
-          xScale,
-          yScale,
-        });
-      }, [pixelCoordinates, xScale, yScale, dataX, dataY]);
-
-      useImperativeHandle(ref, () => ({
-        pulse: () => {
-          pulseCircleRef.current?.pulse();
-        },
-      }));
-
-      useEffect(() => {
-        if (isScrubberHighlighted && onScrubberEnter) {
-          onScrubberEnter({ x: pixelCoordinate.x, y: pixelCoordinate.y });
-        }
-      }, [isScrubberHighlighted, onScrubberEnter, pixelCoordinate.x, pixelCoordinate.y]);
-
-      const LabelContent = useMemo(() => {
-        // Custom render function takes precedence
-        if (renderLabel) {
-          return renderLabel({
-            x: pixelCoordinate.x,
-            y: pixelCoordinate.y,
-            dataX,
-            dataY,
-          });
-        }
-
-        if (label) {
-          const alignment = labelConfig?.position
-            ? calculateLabelAlignment(labelConfig.position)
-            : {};
-
-          const chartTextProps: ChartTextProps = {
-            x: pixelCoordinate.x,
-            y: pixelCoordinate.y,
-            ...alignment,
-            ...labelConfig, // labelConfig overrides alignment if provided
-            children: label,
-          };
-
-          return <ChartText {...chartTextProps} />;
-        }
-
-        return null;
-      }, [renderLabel, label, labelConfig, pixelCoordinate.x, pixelCoordinate.y, dataX, dataY]);
-
-      if (!xScale || !yScale) {
-        return null;
+    // Use provided pixelCoordinates or calculate from data coordinates
+    const pixelCoordinate = useMemo(() => {
+      if (pixelCoordinates) {
+        return pixelCoordinates;
       }
 
-      return (
-        <>
-          <G
-            opacity={opacity}
-            testID={testID}
-            transform={[{ translateX: pixelCoordinate.x }, { translateY: pixelCoordinate.y }]}
-          >
-            <PulseCircle
-              ref={pulseCircleRef}
-              color={effectiveColor}
-              pulse={!!pulse}
-              pulseRadius={pulseRadius}
-            />
-            <Circle
-              accessibilityLabel={accessibilityLabel}
-              cx={0}
-              cy={0}
-              fill={effectiveColor}
-              onPress={
-                onPress
-                  ? (event: any) =>
-                      onPress({ dataX, dataY, x: pixelCoordinate.x, y: pixelCoordinate.y })
-                  : undefined
-              }
-              r={radius}
-              stroke={effectiveStroke}
-              strokeWidth={strokeWidth}
-            />
-          </G>
-          {LabelContent}
-        </>
-      );
-    },
-  ),
+      if (!xScale || !yScale) {
+        return { x: 0, y: 0 };
+      }
+
+      return projectPoint({
+        x: dataX,
+        y: dataY,
+        xScale,
+        yScale,
+      });
+    }, [pixelCoordinates, xScale, yScale, dataX, dataY]);
+
+    useEffect(() => {
+      if (isScrubberHighlighted && onScrubberEnter) {
+        onScrubberEnter({ x: pixelCoordinate.x, y: pixelCoordinate.y });
+      }
+    }, [isScrubberHighlighted, onScrubberEnter, pixelCoordinate.x, pixelCoordinate.y]);
+
+    const LabelContent = useMemo(() => {
+      // Custom render function takes precedence
+      if (renderLabel) {
+        return renderLabel({
+          x: pixelCoordinate.x,
+          y: pixelCoordinate.y,
+          dataX,
+          dataY,
+        });
+      }
+
+      if (label) {
+        const alignment = labelConfig?.position
+          ? calculateLabelAlignment(labelConfig.position)
+          : {};
+
+        const chartTextProps: ChartTextProps = {
+          x: pixelCoordinate.x,
+          y: pixelCoordinate.y,
+          ...alignment,
+          ...labelConfig, // labelConfig overrides alignment if provided
+          children: label,
+        };
+
+        return <ChartText {...chartTextProps} />;
+      }
+
+      return null;
+    }, [renderLabel, label, labelConfig, pixelCoordinate.x, pixelCoordinate.y, dataX, dataY]);
+
+    if (!xScale || !yScale) {
+      return null;
+    }
+
+    return (
+      <>
+        <G
+          opacity={opacity}
+          testID={testID}
+          transform={[{ translateX: pixelCoordinate.x }, { translateY: pixelCoordinate.y }]}
+        >
+          <Circle
+            accessibilityLabel={accessibilityLabel}
+            cx={0}
+            cy={0}
+            fill={effectiveColor}
+            onPress={
+              onPress
+                ? (event: any) =>
+                    onPress({ dataX, dataY, x: pixelCoordinate.x, y: pixelCoordinate.y })
+                : undefined
+            }
+            r={radius}
+            stroke={effectiveStroke}
+            strokeWidth={strokeWidth}
+          />
+        </G>
+        {LabelContent}
+      </>
+    );
+  },
 );
 
 Point.displayName = 'Point';

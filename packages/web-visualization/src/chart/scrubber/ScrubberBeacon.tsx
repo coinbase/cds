@@ -40,6 +40,18 @@ export type ScrubberBeaconProps = SharedProps & {
    */
   dataY?: number;
   /**
+   * Pre-calculated pixel X coordinate (optimization).
+   * If provided, skips internal projectPoint calculation.
+   * Takes precedence over dataX/dataY when both are provided.
+   */
+  pixelX?: number;
+  /**
+   * Pre-calculated pixel Y coordinate (optimization).
+   * If provided, skips internal projectPoint calculation.
+   * Takes precedence over dataX/dataY when both are provided.
+   */
+  pixelY?: number;
+  /**
    * Filter to only show dot for specific series (used for hover-based positioning).
    */
   seriesId?: string;
@@ -78,6 +90,8 @@ export const ScrubberBeacon = memo(
         seriesId,
         dataX: dataXProp,
         dataY: dataYProp,
+        pixelX: pixelXProp,
+        pixelY: pixelYProp,
         color,
         testID,
         idlePulse,
@@ -159,6 +173,12 @@ export const ScrubberBeacon = memo(
       }, [dataXProp, dataYProp, sourceData, scrubberPosition, xScale, yScale]);
 
       const pixelCoordinate = useMemo(() => {
+        // Use pre-calculated pixel coordinates if provided (optimization)
+        if (pixelXProp !== undefined && pixelYProp !== undefined) {
+          return { x: pixelXProp, y: pixelYProp };
+        }
+
+        // Fall back to calculating from data coordinates
         if (!xScale || !yScale || dataX === undefined || dataY === undefined) {
           return null;
         }
@@ -169,7 +189,7 @@ export const ScrubberBeacon = memo(
           xScale,
           yScale,
         });
-      }, [xScale, yScale, dataX, dataY]);
+      }, [pixelXProp, pixelYProp, xScale, yScale, dataX, dataY]);
 
       if (!pixelCoordinate) {
         return null;
