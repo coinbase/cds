@@ -128,22 +128,49 @@ export const DefaultSelectControl: SelectControlComponent<'single' | 'multi'> = 
             .map((option) => renderedValues.indexOf(option.value ?? ''));
           return (
             <>
-              {renderedValues.map((v, index) => (
-                <InputChip
-                  key={v}
-                  data-selected-value
-                  disabled={disabledOptionsIndexes.includes(index)}
-                  invertColorScheme={false}
-                  maxWidth={200}
-                  onClick={(event) => handleUnselectValue(event, index)}
-                  value={v}
-                />
-              ))}
+              {renderedValues.map((renderedValue, index) => {
+                const valueOptionData = options.find((option) => option.value === renderedValue);
+                let valueToShow = renderedValue;
+                if (
+                  typeof valueOptionData?.label === 'string' &&
+                  valueOptionData.label.trim() !== ''
+                ) {
+                  valueToShow = valueOptionData.label;
+                } else if (
+                  typeof valueOptionData?.description === 'string' &&
+                  valueOptionData.description.trim() !== ''
+                ) {
+                  valueToShow = valueOptionData.description;
+                }
+
+                return (
+                  <InputChip
+                    key={renderedValue}
+                    data-selected-value
+                    disabled={disabledOptionsIndexes.includes(index)}
+                    invertColorScheme={false}
+                    maxWidth={200}
+                    onClick={(event) => handleUnselectValue(event, index)}
+                    value={valueToShow}
+                  />
+                );
+              })}
               {value.length - maxSelectedOptionsToShow > 0 && (
                 <Chip>{`+${value.length - maxSelectedOptionsToShow} more`}</Chip>
               )}
             </>
           );
+        }
+
+        const valueOptionData = options.find((option) => option.value === value);
+        let valueToShow = value;
+        if (typeof valueOptionData?.label === 'string' && valueOptionData.label.trim() !== '') {
+          valueToShow = valueOptionData.label;
+        } else if (
+          typeof valueOptionData?.description === 'string' &&
+          valueOptionData.description.trim() !== ''
+        ) {
+          valueToShow = valueOptionData.description;
         }
         return (
           <Text
@@ -153,7 +180,7 @@ export const DefaultSelectControl: SelectControlComponent<'single' | 'multi'> = 
             font="body"
             overflow="truncate"
           >
-            {hasValue ? value : placeholder}
+            {hasValue ? valueToShow : placeholder}
           </Text>
         );
       }, [

@@ -48,6 +48,14 @@ const exampleOptionsWithDescription = [
   { value: '8', label: 'Option 8', description: 'Description 8' },
 ];
 
+const exampleOptionsWithOnlyDescription = [
+  { value: null, label: 'Remove selection' },
+  { value: '1', description: 'Description 1' },
+  { value: '2', description: 'Description 2' },
+  { value: '3', description: 'Description 3' },
+  { value: '4', description: 'Description 4' },
+];
+
 const exampleOptionsWithSomeDisabled = [
   { value: null, label: 'Remove selection' },
   { value: '1', label: 'Option 1', disabled: true },
@@ -359,6 +367,23 @@ export const Descriptions = () => {
   );
 };
 
+export const DescriptionsOnly = () => {
+  const { value, onChange } = useMultiSelect({
+    initialValue: ['1'],
+  });
+
+  return (
+    <Select
+      label="Multi select - with descriptions only"
+      onChange={onChange}
+      options={exampleOptionsWithOnlyDescription}
+      placeholder="Empty value"
+      type="multi"
+      value={value}
+    />
+  );
+};
+
 export const MixedAccessoriesMedia = () => {
   const { value, onChange } = useMultiSelect({
     initialValue: ['1'],
@@ -394,6 +419,29 @@ export const AllCombinedFeatures = () => {
       type="multi"
       value={value}
       variant="positive"
+    />
+  );
+};
+
+export const EdgeCaseEmptyLabels = () => {
+  const edgeOptions = [
+    { value: '1', label: '' },
+    { value: '2', label: ' ' },
+    { value: '3', label: 'Normal Label' },
+    { value: '4', label: '\t\n' },
+  ];
+  const { value, onChange } = useMultiSelect({
+    initialValue: ['3'],
+  });
+
+  return (
+    <Select
+      label="Multi select - edge case empty labels"
+      onChange={onChange}
+      options={edgeOptions}
+      placeholder="Empty value"
+      type="multi"
+      value={value}
     />
   );
 };

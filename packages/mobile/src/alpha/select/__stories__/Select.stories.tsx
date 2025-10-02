@@ -40,6 +40,14 @@ const exampleOptionsWithOnlyDescription = [
   { value: '4', description: 'Description 4' },
 ];
 
+const exampleOptionsWithNoLabelOrDescription = [
+  { value: null, label: 'Remove selection' },
+  { value: '1' },
+  { value: '2' },
+  { value: '3' },
+  { value: '4' },
+];
+
 const exampleOptionsWithSomeDisabled = [
   { value: null, label: 'Remove selection' },
   { value: '1', label: 'Option 1', disabled: true },
@@ -202,6 +210,20 @@ const WithOnlyDescriptionExample = () => {
       label="Single select - options with only description"
       onChange={setValue}
       options={exampleOptionsWithOnlyDescription}
+      placeholder="Empty value"
+      value={value}
+    />
+  );
+};
+
+const WithNoLabelOrDescriptionExample = () => {
+  const [value, setValue] = useState<string | null>('1');
+
+  return (
+    <Select
+      label="Single select - options with no label or description"
+      onChange={setValue}
+      options={exampleOptionsWithNoLabelOrDescription}
       placeholder="Empty value"
       value={value}
     />
@@ -856,6 +878,9 @@ const SelectV3Screen = () => {
       </Example>
       <Example title="With Only Description">
         <WithOnlyDescriptionExample />
+      </Example>
+      <Example title="With No Label or Description">
+        <WithNoLabelOrDescriptionExample />
       </Example>
       <Example title="Accessibility Label">
         <AccessibilityLabelExample />

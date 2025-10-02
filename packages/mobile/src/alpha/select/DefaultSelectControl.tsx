@@ -110,19 +110,35 @@ export const DefaultSelectControl: SelectControlComponent = memo(
             .map((option) => renderedValues.indexOf(option.value ?? ''));
           return (
             <HStack flexWrap="wrap" gap={1}>
-              {renderedValues.map((v, index) => (
-                <InputChip
-                  key={v}
-                  disabled={disabledOptionsIndexes.includes(index)}
-                  invertColorScheme={false}
-                  maxWidth={200}
-                  onPress={(e) => {
-                    e?.stopPropagation();
-                    onChange?.(v);
-                  }}
-                  value={v}
-                />
-              ))}
+              {renderedValues.map((renderedValue, index) => {
+                const valueOptionData = options.find((option) => option.value === renderedValue);
+                let valueToShow = renderedValue;
+                if (
+                  typeof valueOptionData?.label === 'string' &&
+                  valueOptionData.label.trim() !== ''
+                ) {
+                  valueToShow = valueOptionData.label;
+                } else if (
+                  typeof valueOptionData?.description === 'string' &&
+                  valueOptionData.description.trim() !== ''
+                ) {
+                  valueToShow = valueOptionData.description;
+                }
+
+                return (
+                  <InputChip
+                    key={renderedValue}
+                    disabled={disabledOptionsIndexes.includes(index)}
+                    invertColorScheme={false}
+                    maxWidth={200}
+                    onPress={(e) => {
+                      e?.stopPropagation();
+                      onChange?.(renderedValue);
+                    }}
+                    value={valueToShow}
+                  />
+                );
+              })}
               {value.length - maxSelectedOptionsToShow > 0 && (
                 <Chip>
                   <Text font="headline">{`+${value.length - maxSelectedOptionsToShow} more`}</Text>
@@ -131,7 +147,18 @@ export const DefaultSelectControl: SelectControlComponent = memo(
             </HStack>
           );
         }
-        const content = hasValue ? value : placeholder;
+
+        const valueOptionData = options.find((option) => option.value === value);
+        let valueToShow = value;
+        if (typeof valueOptionData?.label === 'string' && valueOptionData.label.trim() !== '') {
+          valueToShow = valueOptionData.label;
+        } else if (
+          typeof valueOptionData?.description === 'string' &&
+          valueOptionData.description.trim() !== ''
+        ) {
+          valueToShow = valueOptionData.description;
+        }
+        const content = hasValue ? valueToShow : placeholder;
         return typeof content === 'string' ? (
           <Text
             color={hasValue ? 'fg' : 'fgMuted'}
