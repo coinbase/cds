@@ -321,12 +321,12 @@ const BTCPriceChart = () => {
           <Scrubber
             idlePulse
             label={displayDate}
-            lineStroke="black"
-            scrubberLabelProps={{
+            labelProps={{
               color: 'black',
             }}
+            lineStroke="black"
             styles={{
-              head: {
+              beacon: {
                 stroke: btcAccentColor,
               },
               overlay: {
@@ -720,7 +720,7 @@ const PriceChart = () => {
         ]}
         yAxis={{ domainLimit: 'strict' }}
       >
-        <Scrubber label={scrubberLabel} scrubberLabelProps={{ elevation: 1 }} />
+        <Scrubber label={scrubberLabel} labelProps={{ elevation: 1 }} />
       </LineChart>
       <Box paddingX={{ phone: 2, tablet: 4, desktop: 4 }}>
         <PeriodSelector
@@ -883,12 +883,12 @@ function ForecastAssetPrice() {
         tickInterval: 2,
       }}
     >
-      <Scrubber label={scrubberLabel} scrubberLabelProps={{ elevation: 1 }} />
+      <Scrubber label={scrubberLabel} labelProps={{ elevation: 1 }} />
     </LineChart>
   );
 }
 
-const BitcoinChartWithScrubberHead = () => {
+const BitcoinChartWithScrubberBeacon = () => {
   const prices = [...btcCandles].reverse().map((candle) => parseFloat(candle.close));
   const latestPrice = prices[prices.length - 1];
 
@@ -963,7 +963,7 @@ const BitcoinChartWithScrubberHead = () => {
           ]}
           width="100%"
         >
-          <Scrubber idlePulse styles={{ head: { stroke: 'white' } }} />
+          <Scrubber idlePulse styles={{ beacon: { stroke: 'white' } }} />
         </LineChart>
       </div>
     </VStack>
@@ -1070,7 +1070,7 @@ const LiveAssetPrice = () => {
         },
       ]}
     >
-      <Scrubber ref={scrubberRef} scrubberLabelProps={{ elevation: 1 }} />
+      <Scrubber ref={scrubberRef} labelProps={{ elevation: 1 }} />
     </LineChart>
   );
 };
@@ -1670,7 +1670,7 @@ const AssetPriceDotted = memo(() => {
         ]}
         style={{ outlineColor: assets.btc.color }}
       >
-        <Scrubber idlePulse label={scrubberLabel} scrubberLabelProps={{ elevation: 1 }} />
+        <Scrubber idlePulse label={scrubberLabel} labelProps={{ elevation: 1 }} />
       </LineChart>
       <PeriodSelector
         TabComponent={BTCTab}
@@ -1833,8 +1833,8 @@ export const All = () => {
       <Example title="BTC Price Chart">
         <BTCPriceChart />
       </Example>
-      <Example title="Bitcoin Chart With Scrubber Head">
-        <BitcoinChartWithScrubberHead />
+      <Example title="Bitcoin Chart With Scrubber Beacon">
+        <BitcoinChartWithScrubberBeacon />
       </Example>
     </VStack>
   );

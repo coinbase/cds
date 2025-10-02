@@ -542,7 +542,7 @@ function LiveAssetPrice() {
       padding={{ right: 8 }}
       accessibilityLabel={accessibilityLabel}
     >
-      <Scrubber ref={scrubberRef} scrubberLabelProps={{ elevation: 1 }} />
+      <Scrubber ref={scrubberRef} labelProps={{ elevation: 1 }} />
     </LineChart>
   );
 }
@@ -753,7 +753,7 @@ const BTCActiveIndicator = memo(({ style, ...props }: TabsActiveIndicatorProps) 
         accessibilityLabel={scrubberLabel}
         padding={{ left: 2, right: 2 }}
       >
-        <Scrubber label={scrubberLabel} scrubberLabelProps={{ elevation: 1 }} idlePulse />
+        <Scrubber label={scrubberLabel} labelProps={{ elevation: 1 }} idlePulse />
       </LineChart>
       <PeriodSelector
         TabComponent={BTCTab}
@@ -927,7 +927,7 @@ function ForecastAssetPrice() {
       AreaComponent={(props) => <DottedArea {...props} peakOpacity={0.4} baselineOpacity={0.4} />}
       style={{ outlineColor: assets.btc.color }}
     >
-      <Scrubber label={scrubberLabel} scrubberLabelProps={{ elevation: 1 }} />
+      <Scrubber label={scrubberLabel} labelProps={{ elevation: 1 }} />
     </LineChart>
   );
 };
@@ -1077,7 +1077,7 @@ function AvailabilityChart() {
 You can coordinate LineChart with custom styles to create a custom card that shows the latest price and percent change.
 
 ```jsx live
-function BitcoinChartWithScrubberHead() {
+function BitcoinChartWithScrubberBeacon() {
   const prices = [...btcCandles].reverse().map((candle) => parseFloat(candle.close));
   const latestPrice = prices[prices.length - 1];
 
@@ -1148,7 +1148,7 @@ function BitcoinChartWithScrubberHead() {
           width="100%"
           height={92}
         >
-          <Scrubber idlePulse styles={{ scrubberHead: { stroke: 'white' } }} />
+          <Scrubber idlePulse styles={{ beacon: { stroke: 'white' } }} />
         </LineChart>
       </div>
     </VStack>

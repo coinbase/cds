@@ -62,16 +62,7 @@ export type ScrubberProps = SharedProps &
     /**
      * Props passed to the scrubber line's label.
      */
-    scrubberLabelProps?: ReferenceLineProps['labelProps'];
-
-    /**
-     * Props passed to each scrubber head's label.
-     */
-    ScrubberBeaconLabelProps?: Omit<
-      ScrubberBeaconLabelProps,
-      'children' | 'x' | 'y' | 'disableRepositioning' | 'bounds' | 'onDimensionsChange'
-    >;
-
+    labelProps?: ReferenceLineProps['labelProps'];
     /**
      * Stroke color for the scrubber line.
      */
@@ -82,9 +73,9 @@ export type ScrubberProps = SharedProps &
      */
     styles?: {
       overlay?: React.CSSProperties;
-      head?: React.CSSProperties;
+      beacon?: React.CSSProperties;
       line?: React.CSSProperties;
-      headLabel?: React.CSSProperties;
+      beaconLabel?: React.CSSProperties;
     };
 
     /**
@@ -92,9 +83,9 @@ export type ScrubberProps = SharedProps &
      */
     classNames?: {
       overlay?: string;
-      head?: string;
+      beacon?: string;
       line?: string;
-      headLabel?: string;
+      beaconLabel?: string;
     };
 
     /**
@@ -133,7 +124,7 @@ export const Scrubber = memo(
         hideLine,
         label,
         lineStroke,
-        scrubberLabelProps,
+        labelProps,
         HeadComponent,
         HeadLabelComponent,
         LineComponent,
@@ -143,7 +134,6 @@ export const Scrubber = memo(
         idlePulse,
         styles,
         classNames,
-        ScrubberBeaconLabelProps,
       },
       ref,
     ) => {
@@ -619,7 +609,7 @@ export const Scrubber = memo(
                 verticalAlignment: 'middle',
                 // Place in the middle vertically by default
                 dy: -0.5 * drawingArea.y,
-                ...scrubberLabelProps,
+                ...labelProps,
               }}
               stroke={lineStroke}
               style={styles?.line}
@@ -635,13 +625,13 @@ export const Scrubber = memo(
                 <ScrubberBeaconComponent
                   // todo: fix this type cast, seems to be due to custom components
                   ref={createScrubberBeaconRef(ScrubberBeacon.targetSeries.id) as any}
-                  className={classNames?.head}
+                  className={classNames?.beacon}
                   color={ScrubberBeacon.targetSeries?.color}
                   dataX={ScrubberBeacon.x}
                   dataY={ScrubberBeacon.y}
                   idlePulse={idlePulse}
                   seriesId={ScrubberBeacon.targetSeries.id}
-                  style={styles?.head}
+                  style={styles?.beacon}
                   testID={testID ? `${testID}-${ScrubberBeacon.targetSeries.id}-dot` : undefined}
                 />
                 {ScrubberBeacon.label &&
@@ -654,7 +644,7 @@ export const Scrubber = memo(
                       <ScrubberBeaconLabelComponent
                         background="var(--color-bg)"
                         bounds={drawingArea}
-                        className={classNames?.headLabel}
+                        className={classNames?.beaconLabel}
                         color={dotStroke}
                         dx={16}
                         inset={labelInset}
@@ -668,13 +658,12 @@ export const Scrubber = memo(
                           )
                         }
                         preferredSide={finalSide}
-                        style={styles?.headLabel}
+                        style={styles?.beaconLabel}
                         testID={
                           testID ? `${testID}-${ScrubberBeacon.targetSeries.id}-label` : undefined
                         }
                         x={finalAnchorX}
                         y={finalAnchorY}
-                        {...ScrubberBeaconLabelProps}
                       >
                         {ScrubberBeacon.label}
                       </ScrubberBeaconLabelComponent>
