@@ -162,8 +162,6 @@ export const XAxis = memo<XAxisProps>(
           (typeof axisData[0] === 'number' && isCategoricalScale(xScale)))
       ) {
         possibleTickValues = Array.from({ length: axisData.length }, (_, i) => i);
-      } else if (axisData && Array.isArray(axisData) && typeof axisData[0] === 'number') {
-        possibleTickValues = axisData as number[];
       }
 
       return getAxisTicksData({
