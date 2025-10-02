@@ -1,5 +1,4 @@
 import React, { memo, useEffect, useMemo, useRef, useState } from 'react';
-import { usePreviousValue } from '@coinbase/cds-common/hooks/usePreviousValue';
 import type { ElevationLevels, Rect, SharedProps } from '@coinbase/cds-common/types';
 import { type ChartInset, getChartInset } from '@coinbase/cds-common/visualizations/charts';
 import { cx } from '@coinbase/cds-web';
@@ -247,11 +246,12 @@ export const ChartText = memo<ChartTextProps>(
       };
     }, [backgroundRectDimensions, overflowAmount.x, overflowAmount.y]);
 
-    // send bounding rect changes to the parent
-    const previousRect = usePreviousValue(reportedRect);
-    if (previousRect !== reportedRect && reportedRect !== null) {
-      onDimensionsChange?.(reportedRect);
-    }
+    // send latest calculated dimensions (adjusted for translation) to parent
+    useEffect(() => {
+      if (onDimensionsChange && reportedRect !== null) {
+        onDimensionsChange(reportedRect);
+      }
+    }, [reportedRect, onDimensionsChange]);
 
     useEffect(() => {
       if (textRef.current) {

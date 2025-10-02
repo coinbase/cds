@@ -1,7 +1,6 @@
-import { memo, useCallback, useMemo, useState } from 'react';
+import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { type LayoutChangeEvent } from 'react-native';
 import { G, Rect as SvgRect, Text, type TextProps } from 'react-native-svg';
-import { usePreviousValue } from '@coinbase/cds-common/hooks/usePreviousValue';
 import type { Rect, SharedProps } from '@coinbase/cds-common/types';
 import { type ChartInset, getChartInset } from '@coinbase/cds-common/visualizations/charts';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
@@ -314,10 +313,11 @@ export const ChartText = memo<ChartTextProps>(
       };
     }, [backgroundRectDimensions, overflowAmount.x, overflowAmount.y]);
 
-    const previousRect = usePreviousValue(reportedRect);
-    if (previousRect !== reportedRect && reportedRect !== null) {
-      onDimensionsChange?.(reportedRect);
-    }
+    useEffect(() => {
+      if (onDimensionsChange && reportedRect !== null) {
+        onDimensionsChange(reportedRect);
+      }
+    }, [reportedRect, onDimensionsChange]);
 
     const onLayout = useCallback((event: LayoutChangeEvent) => {
       if (event.nativeEvent.layout.width > 0 && event.nativeEvent.layout.height > 0) {
