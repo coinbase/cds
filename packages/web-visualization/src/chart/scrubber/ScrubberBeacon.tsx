@@ -200,7 +200,7 @@ export const ScrubberBeacon = memo(
 
       if (animationEnabled && isIdleState) {
         return (
-          <g className={className} data-testid={testID} opacity={opacity} style={style}>
+          <g data-testid={testID} opacity={opacity}>
             <motion.circle
               animate={{
                 cx: pixelCoordinate.x,
@@ -244,6 +244,7 @@ export const ScrubberBeacon = memo(
                 cx: pixelCoordinate.x,
                 cy: pixelCoordinate.y,
               }}
+              className={className}
               cx={pixelCoordinate.x}
               cy={pixelCoordinate.y}
               fill={pointColor}
@@ -251,13 +252,14 @@ export const ScrubberBeacon = memo(
               r={radius}
               stroke="var(--color-bg)"
               strokeWidth={2}
+              style={style}
               transition={{ duration: 0.3, ease: 'easeInOut' }}
             />
           </g>
         );
       }
       return (
-        <g className={className} data-testid={testID} opacity={opacity} style={style}>
+        <g data-testid={testID} opacity={opacity}>
           <circle
             cx={pixelCoordinate.x}
             cy={pixelCoordinate.y}
@@ -266,12 +268,14 @@ export const ScrubberBeacon = memo(
             r={glowRadius}
           />
           <circle
+            className={className}
             cx={pixelCoordinate.x}
             cy={pixelCoordinate.y}
             fill={pointColor}
             r={radius}
             stroke="var(--color-bg)"
             strokeWidth={2}
+            style={style}
           />
         </g>
       );

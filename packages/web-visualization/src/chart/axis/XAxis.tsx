@@ -59,6 +59,8 @@ export const XAxis = memo<XAxisProps>(
     showLine,
     tickMarkSize = 4,
     tickInterval = 32,
+    tickMinStep = 1,
+    tickMaxStep,
     ...props
   }) => {
     const registrationId = useId();
@@ -136,8 +138,12 @@ export const XAxis = memo<XAxisProps>(
             ? Array.from({ length: axisData.length }, (_, i) => i)
             : undefined,
         tickInterval: tickInterval,
+        options: {
+          minStep: tickMinStep,
+          maxStep: tickMaxStep,
+        },
       });
-    }, [ticks, xScale, requestedTickCount, tickInterval, xAxis?.data]);
+    }, [ticks, xScale, requestedTickCount, tickInterval, tickMinStep, tickMaxStep, xAxis?.data]);
 
     const chartTextData: TextLabelData[] | null = useMemo(() => {
       if (!axisBounds) return null;

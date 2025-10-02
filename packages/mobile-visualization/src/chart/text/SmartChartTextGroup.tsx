@@ -81,10 +81,9 @@ export const SmartChartTextGroup = memo<SmartChartTextGroupProps>(
 
     // Generate a unique key to reference each label with.
     const labelsWithKeys: Array<TextLabelDataWithKey> = useMemo(() => {
-      return labels.map((labelData) => ({
+      return labels.map((labelData, index) => ({
         ...labelData,
-        // TODO what about ReactNode?
-        key: `${labelData.label}-${labelData.x}-${labelData.y}`,
+        key: `${labelData.label}-${index}`,
       }));
     }, [labels]);
 
@@ -131,7 +130,7 @@ export const SmartChartTextGroup = memo<SmartChartTextGroupProps>(
       return map;
     }, [labelsWithKeys, propsOnDimensionsChange]);
 
-    // Determine readiness: all current labels have measured, non-zero boxes
+    // Determine readiness: all current labels have measured bounding boxes
     const isReady = useMemo(
       () => labelsWithKeys.every((l) => boundingBoxes.has(l.key)),
       [labelsWithKeys, boundingBoxes],
@@ -238,7 +237,9 @@ export const SmartChartTextGroup = memo<SmartChartTextGroupProps>(
     return (
       <G>
         {labelsWithKeys.map((labelData) => {
-          const isVisible = !visibleKeySet || visibleKeySet.has(labelData.key);
+          const hasMeasurement = boundingBoxes.has(labelData.key);
+          const isVisible = hasMeasurement && isReady && visibleKeySet?.has(labelData.key);
+
           return (
             <ChartText
               key={labelData.key}

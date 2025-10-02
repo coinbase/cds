@@ -135,6 +135,17 @@ export type AxisBaseProps = {
    * @default 32 (for x-axis)
    */
   tickInterval?: number;
+  /**
+   * Minimum step size for tick generation.
+   * Prevents the step from being smaller than this value.
+   * @default 1
+   */
+  tickMinStep?: number;
+  /**
+   * Maximum step size for tick generation.
+   * Prevents the step from being larger than this value.
+   */
+  tickMaxStep?: number;
 };
 
 export type AxisProps = AxisBaseProps & {

@@ -304,6 +304,29 @@ export const getAxisRange = (
   }
 };
 
+/**
+ * Options for tick generation behavior
+ */
+type TickGenerationOptions = {
+  /**
+   * Minimum step size allowed for ticks.
+   * Prevents the step from being smaller than this value.
+   * @example 1 // Prevents fractional steps like 0.5
+   */
+  minStep?: number;
+  /**
+   * Maximum step size allowed for ticks.
+   * Prevents the step from being larger than this value.
+   * @example 100 // Prevents steps larger than 100
+   */
+  maxStep?: number;
+  /**
+   * Minimum number of ticks to generate when using tickInterval.
+   * @default 4
+   */
+  minTickCount?: number;
+};
+
 export type GetAxisTicksDataProps = {
   /**
    * Custom tick configuration for the axis.
@@ -351,6 +374,10 @@ export type GetAxisTicksDataProps = {
    * // Result: ticks at indices [0, 2, 4, 6, 8, 10] with their corresponding positions
    */
   tickInterval?: number;
+  /**
+   * Options for tick generation behavior
+   */
+  options?: TickGenerationOptions;
 };
 
 /**
@@ -376,26 +403,38 @@ export const formatAxisTick = (
  * Chooses from multiples of 1, 2, or 5 (scaled by powers of 10).
  *
  * @param roughStep - The approximate step size needed
- * @returns rounded step size
+ * @param minStep - Optional minimum step size constraint
+ * @param maxStep - Optional maximum step size constraint
+ * @returns rounded step size within the specified constraints
  */
-const calculateNiceStep = (roughStep: number): number => {
-  if (roughStep <= 0) return 1;
+const calculateNiceStep = (roughStep: number, minStep?: number, maxStep?: number): number => {
+  if (roughStep <= 0) return minStep ?? 1;
 
   const magnitude = Math.pow(10, Math.floor(Math.log10(roughStep)));
   const residual = roughStep / magnitude;
 
-  let niceResidual: number;
+  let roundResidual: number;
   if (residual <= 1) {
-    niceResidual = 1;
+    roundResidual = 1;
   } else if (residual <= 2) {
-    niceResidual = 2;
+    roundResidual = 2;
   } else if (residual <= 5) {
-    niceResidual = 5;
+    roundResidual = 5;
   } else {
-    niceResidual = 10;
+    roundResidual = 10;
   }
 
-  return niceResidual * magnitude;
+  let niceStep = roundResidual * magnitude;
+
+  if (minStep !== undefined && niceStep < minStep) {
+    niceStep = minStep;
+  }
+
+  if (maxStep !== undefined && niceStep > maxStep) {
+    niceStep = maxStep;
+  }
+
+  return niceStep;
 };
 
 /**
@@ -406,15 +445,16 @@ const calculateNiceStep = (roughStep: number): number => {
  * @param scale - The numeric scale function
  * @param tickInterval - Space between ticks (in pixels)
  * @param possibleTickValues - Optional array of possible tick values to select from (e.g., data indices). If not provided, generates nice round numbers with guaranteed first/last inclusion.
- * @param minTickCount - Minimum number of ticks to generate (default is 4)
+ * @param options - Options for tick generation behavior
  * @returns Array of tick values, always including first and last domain values
  */
 const generateEvenlyDistributedTicks = (
   scale: NumericScale,
   tickInterval: number,
   possibleTickValues?: number[],
-  minTickCount: number = 4,
+  options?: TickGenerationOptions,
 ): number[] => {
+  const minTickCount = options?.minTickCount ?? 4;
   const [rangeMin, rangeMax] = scale.range();
   const range = Math.abs(rangeMax - rangeMin);
 
@@ -454,7 +494,7 @@ const generateEvenlyDistributedTicks = (
   // Calculate a nice step size
   const domainRange = domainMax - domainMin;
   const roughStep = domainRange / (tickCount - 1);
-  const niceStep = calculateNiceStep(roughStep);
+  const niceStep = calculateNiceStep(roughStep, options?.minStep, options?.maxStep);
 
   // Generate ticks starting from domainMin and stepping by niceStep
   const tickValues: number[] = [domainMin];
@@ -582,6 +622,7 @@ export const getAxisTicksData = ({
   categories = [],
   possibleTickValues,
   tickInterval,
+  options,
 }: GetAxisTicksDataProps): Array<{ tick: number; position: number }> => {
   // Handle band scales
   if (isCategoricalScale(scaleFunction)) {
@@ -668,7 +709,12 @@ export const getAxisTicksData = ({
     // Use scale-generated ticks
     tickValues = numericScale.ticks(requestedTickCount);
   } else if (tickInterval !== undefined) {
-    tickValues = generateEvenlyDistributedTicks(numericScale, tickInterval, possibleTickValues);
+    tickValues = generateEvenlyDistributedTicks(
+      numericScale,
+      tickInterval,
+      possibleTickValues,
+      options,
+    );
   }
 
   // Map values to positions using the scale function
