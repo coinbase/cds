@@ -930,6 +930,8 @@ const UseCaseShowcase = () => {
     maximumFractionDigits: 2,
   } as const;
 
+  const currency = new Intl.NumberFormat(undefined, format);
+
   // State for prices and amounts to enable simulation updates
   const [btcPrice, setBtcPrice] = React.useState(8407.9);
   const [btcAmt, setBtcAmt] = React.useState(0.1246);
@@ -964,6 +966,7 @@ const UseCaseShowcase = () => {
   return (
     <VStack width="360px">
       <ListCell
+        accessibilityLabel={`BTC, value ${currency.format(btcPrice)}, amount ${btcAmt.toLocaleString()} BTC`}
         // If you need to pass non-string values to the detail or subdetail,
         // you can use the end prop to pass in a VStack, which can be anything you want.
         end={
@@ -985,6 +988,7 @@ const UseCaseShowcase = () => {
         title="BTC"
       />
       <ListCell
+        accessibilityLabel={`ETH, 25% staked, value ${currency.format(ethPrice)}, amount ${ethAmt.toLocaleString()} ETH`}
         // If you need to pass non-string values to the detail or subdetail,
         // you can use the end prop to pass in a VStack, which can be anything you want.
         description="25% staked"
@@ -1006,6 +1010,7 @@ const UseCaseShowcase = () => {
         title="ETH"
       />
       <ListCell
+        accessibilityLabel={`ADA, 51% staked, value ${currency.format(adaPrice)}, amount ${adaAmt.toLocaleString()} ADA`}
         // If you need to pass non-string values to the detail or subdetail,
         // you can use the end prop to pass in a VStack, which can be anything you want.
         description="51% staked"
@@ -1027,6 +1032,7 @@ const UseCaseShowcase = () => {
         title="ADA"
       />
       <ListCell
+        accessibilityLabel={`LTC, value ${currency.format(ltcPrice)}, amount ${ltcAmt.toLocaleString()} LTC`}
         end={
           <VStack alignItems="flex-end">
             <RollingNumber colorPulseOnUpdate font="body" format={format} value={ltcPrice} />
@@ -1045,6 +1051,7 @@ const UseCaseShowcase = () => {
         title="LTC"
       />
       <ListCell
+        accessibilityLabel={`DAI, Stablecoin, value ${currency.format(daiPrice)}, amount ${daiAmt.toLocaleString()} DAI`}
         description="Stablecoin"
         end={
           <VStack alignItems="flex-end">
