@@ -1,7 +1,8 @@
 import React, { memo, useEffect, useMemo, useRef, useState } from 'react';
+import { usePreviousValue } from '@coinbase/cds-common/hooks/usePreviousValue';
 import type { ElevationLevels, Rect, SharedProps } from '@coinbase/cds-common/types';
 import { type ChartInset, getChartInset } from '@coinbase/cds-common/visualizations/charts';
-import { cx, useTheme } from '@coinbase/cds-web';
+import { cx } from '@coinbase/cds-web';
 import { Box, type BoxProps } from '@coinbase/cds-web/layout';
 import { Text } from '@coinbase/cds-web/typography';
 import { m as motion } from 'framer-motion';
@@ -246,12 +247,11 @@ export const ChartText = memo<ChartTextProps>(
       };
     }, [backgroundRectDimensions, overflowAmount.x, overflowAmount.y]);
 
-    // send latest calculated dimensions (adjusted for translation) to parent
-    useEffect(() => {
-      if (onDimensionsChange && reportedRect !== null) {
-        onDimensionsChange(reportedRect);
-      }
-    }, [reportedRect, onDimensionsChange]);
+    // send bounding rect changes to the parent
+    const previousRect = usePreviousValue(reportedRect);
+    if (previousRect !== reportedRect && reportedRect !== null) {
+      onDimensionsChange?.(reportedRect);
+    }
 
     useEffect(() => {
       if (textRef.current) {
@@ -276,6 +276,7 @@ export const ChartText = memo<ChartTextProps>(
       [verticalAlignment],
     );
 
+    // forces state update the bounding box when any properties that can affect the bounding box change
     useEffect(() => {
       if (textRef.current) {
         setTextBBox(textRef.current.getBBox());
