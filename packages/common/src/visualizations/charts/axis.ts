@@ -384,7 +384,6 @@ const calculateNiceStep = (roughStep: number): number => {
   const magnitude = Math.pow(10, Math.floor(Math.log10(roughStep)));
   const residual = roughStep / magnitude;
 
-  // Choose nice step: 1, 2, or 5 (times the magnitude)
   let niceResidual: number;
   if (residual <= 1) {
     niceResidual = 1;
