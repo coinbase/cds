@@ -155,7 +155,7 @@ export const Icon = memo(function Icon({
         accessibilityRole="image"
         accessible={!!accessibilityLabel}
         allowFontScaling={false}
-        style={iconStyle as any}
+        style={iconStyle}
       >
         {glyph}
       </TextComponent>

@@ -45,14 +45,15 @@ export const TextIcon = memo(function TextIcon({
   const iconColor = theme.color[color];
 
   const styles = useMemo(
-    () => [
-      {
-        fontFamily: 'CoinbaseIcons',
-        fontSize: iconSize,
-        color: iconColor,
-      },
-      style,
-    ],
+    () =>
+      [
+        {
+          fontFamily: 'CoinbaseIcons',
+          fontSize: iconSize,
+          color: iconColor,
+        },
+        style,
+      ] as TextStyle,
     [style, iconColor, iconSize],
   );
 
@@ -67,7 +68,7 @@ export const TextIcon = memo(function TextIcon({
   }
 
   return (
-    <Component accessibilityRole="image" style={styles as any} testID={testID}>
+    <Component accessibilityRole="image" style={styles} testID={testID}>
       {glyph}
     </Component>
   );

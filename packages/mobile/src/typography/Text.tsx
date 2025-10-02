@@ -371,7 +371,7 @@ export const Text = memo(
           ref={ref}
           ellipsizeMode={ellipsize}
           numberOfLines={computedNumberOfLines}
-          style={memoizedStyles as any}
+          style={memoizedStyles}
           testID={testID}
           {...props}
         >
