@@ -372,16 +372,43 @@ export const formatAxisTick = (
 };
 
 /**
+ * Calculates a rounded step size for tick generation.
+ * Chooses from multiples of 1, 2, or 5 (scaled by powers of 10).
+ *
+ * @param roughStep - The approximate step size needed
+ * @returns rounded step size
+ */
+const calculateNiceStep = (roughStep: number): number => {
+  if (roughStep <= 0) return 1;
+
+  const magnitude = Math.pow(10, Math.floor(Math.log10(roughStep)));
+  const residual = roughStep / magnitude;
+
+  // Choose nice step: 1, 2, or 5 (times the magnitude)
+  let niceResidual: number;
+  if (residual <= 1) {
+    niceResidual = 1;
+  } else if (residual <= 2) {
+    niceResidual = 2;
+  } else if (residual <= 5) {
+    niceResidual = 5;
+  } else {
+    niceResidual = 10;
+  }
+
+  return niceResidual * magnitude;
+};
+
+/**
  * Generates evenly distributed tick values.
- * Uses space-between distribution: first and last positions are prioritized,
- * with remaining ticks evenly distributed between them.
- * Selects from actual data points (possibleTickValues) or uses D3's nice tick generation.
+ * Always includes first and last domain values, with intermediate ticks evenly distributed using nice step sizes.
+ * Selects from actual data points (possibleTickValues) or generates nice round numbers.
  *
  * @param scale - The numeric scale function
  * @param tickInterval - Space between ticks (in pixels)
- * @param possibleTickValues - Optional array of possible tick values to select from (e.g., data indices). If not provided, uses D3's tick generation for nice round numbers.
+ * @param possibleTickValues - Optional array of possible tick values to select from (e.g., data indices). If not provided, generates nice round numbers with guaranteed first/last inclusion.
  * @param minTickCount - Minimum number of ticks to generate (default is 4)
- * @returns Array of tick values selected from possibleTickValues or generated using D3's tick algorithm
+ * @returns Array of tick values, always including first and last domain values
  */
 const generateEvenlyDistributedTicks = (
   scale: NumericScale,
@@ -414,9 +441,52 @@ const generateEvenlyDistributedTicks = (
     return tickValues;
   }
 
-  // Otherwise, use D3's tick generation for nice round numbers
-  // D3's ticks() method generates human-friendly values like 0, 2, 4, 6 or 0, 0.2, 0.4, 0.6
-  return scale.ticks(tickCount);
+  // Generate nice round numbers that always include first and last domain values
+  const [domainMin, domainMax] = scale.domain();
+
+  if (tickCount === 1) {
+    return [domainMin];
+  }
+
+  if (tickCount === 2) {
+    return [domainMin, domainMax];
+  }
+
+  // Calculate a nice step size
+  const domainRange = domainMax - domainMin;
+  const roughStep = domainRange / (tickCount - 1);
+  const niceStep = calculateNiceStep(roughStep);
+
+  // Generate ticks starting from domainMin and stepping by niceStep
+  const tickValues: number[] = [domainMin];
+
+  // Generate intermediate ticks using the nice step, starting from domainMin
+  let currentTick = domainMin + niceStep;
+  while (currentTick < domainMax) {
+    // Avoid floating point precision issues
+    const roundedTick = Number(currentTick.toFixed(10));
+    tickValues.push(roundedTick);
+    currentTick += niceStep;
+  }
+
+  // Only include domainMax if it naturally falls on a step (or very close due to floating point)
+  // or if the last tick is far enough away that including max provides useful context
+  const lastTick = tickValues[tickValues.length - 1];
+  const distanceToMax = domainMax - lastTick;
+
+  // Include max if:
+  // 1. It naturally falls on a step (within floating point tolerance)
+  // 2. Or the last tick is more than half a step away (provides meaningful context)
+  const tolerance = niceStep * 0.0001; // Floating point tolerance
+  const shouldIncludeMax =
+    Math.abs(distanceToMax - niceStep) < tolerance || // Natural step
+    distanceToMax > niceStep * 0.5; // Far enough to provide context
+
+  if (shouldIncludeMax && domainMax !== lastTick) {
+    tickValues.push(domainMax);
+  }
+
+  return tickValues;
 };
 
 /**
