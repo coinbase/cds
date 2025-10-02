@@ -125,7 +125,7 @@ export const YAxis = memo<YAxisProps>(
       return getAxisTicksData({
         scaleFunction: yScale as any,
         ticks,
-        requestedTickCount: (requestedTickCount ?? tickInterval === undefined) ? 5 : undefined,
+        requestedTickCount: tickInterval !== undefined ? undefined : (requestedTickCount ?? 5),
         categories,
         tickInterval: tickInterval,
       });
