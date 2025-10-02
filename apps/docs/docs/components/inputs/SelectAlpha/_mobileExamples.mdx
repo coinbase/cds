@@ -136,3 +136,385 @@ function VariantExample() {
   );
 }
 ```
+
+## Compact Mode
+
+The Select component can be rendered in a compact size for denser mobile UIs.
+
+```jsx
+function CompactExample() {
+  const [value, setValue] = useState('1');
+
+  const options = [
+    { value: '1', label: 'Small Option 1' },
+    { value: '2', label: 'Small Option 2' },
+    { value: '3', label: 'Small Option 3' },
+  ];
+
+  return (
+    <Select
+      compact
+      label="Compact Select"
+      value={value}
+      onChange={setValue}
+      options={options}
+      placeholder="Select an option"
+      helperText="This is a compact select component"
+    />
+  );
+}
+```
+
+## Disabled States
+
+Components can be disabled entirely or have individual options disabled.
+
+```jsx
+function DisabledExample() {
+  const [value1, setValue1] = useState('2');
+  const [value2, setValue2] = useState('2');
+
+  const optionsWithDisabled = [
+    { value: '1', label: 'Option 1', disabled: true },
+    { value: '2', label: 'Option 2' },
+    { value: '3', label: 'Option 3' },
+    { value: '4', label: 'Option 4', disabled: true },
+  ];
+
+  return (
+    <VStack gap={4}>
+      <Select
+        label="Disabled Select"
+        value={value1}
+        onChange={setValue1}
+        options={optionsWithDisabled}
+        disabled
+        placeholder="This select is disabled"
+      />
+
+      <Select
+        label="Select with Disabled Options"
+        value={value2}
+        onChange={setValue2}
+        options={optionsWithDisabled}
+        placeholder="Some options are disabled"
+      />
+    </VStack>
+  );
+}
+```
+
+## Options with Descriptions
+
+Options can include descriptions for additional context, perfect for mobile interfaces.
+
+```jsx
+function DescriptionExample() {
+  const [value, setValue] = useState('1');
+
+  const optionsWithDescriptions = [
+    { value: '1', label: 'Bitcoin', description: 'The first cryptocurrency' },
+    { value: '2', label: 'Ethereum', description: 'Smart contract platform' },
+    { value: '3', label: 'USDC', description: 'USD-backed stablecoin' },
+    { value: '4', label: 'Solana', description: 'High-performance blockchain' },
+  ];
+
+  return (
+    <Select
+      label="Select Cryptocurrency"
+      value={value}
+      onChange={setValue}
+      options={optionsWithDescriptions}
+      placeholder="Choose a cryptocurrency"
+    />
+  );
+}
+```
+
+## Start Node
+
+Add an icon or element at the start of the select control for better visual context.
+
+```jsx
+function StartNodeExample() {
+  const [value, setValue] = useState('1');
+
+  const options = [
+    { value: '1', label: 'Search Result 1' },
+    { value: '2', label: 'Search Result 2' },
+    { value: '3', label: 'Search Result 3' },
+  ];
+
+  return (
+    <Select
+      label="Search"
+      value={value}
+      onChange={setValue}
+      options={options}
+      startNode={<Icon color="fg" name="search" />}
+      placeholder="Search for options"
+    />
+  );
+}
+```
+
+## Custom Icons
+
+Add custom icons as accessories or media to options for enhanced visual hierarchy.
+
+```jsx
+function CustomIconsExample() {
+  const [value, setValue] = useState('1');
+
+  const optionsWithIcons = [
+    {
+      value: '1',
+      label: 'Favorites',
+      accessory: <Icon color="fg" name="star" />,
+      media: <Icon color="fg" name="heart" />,
+    },
+    {
+      value: '2',
+      label: 'Verified',
+      accessory: <Icon color="fg" name="checkmark" />,
+      media: <Icon color="fg" name="shield" />,
+    },
+    {
+      value: '3',
+      label: 'Settings',
+      accessory: <Icon color="fg" name="caretRight" />,
+      media: <Icon color="fg" name="gear" />,
+    },
+  ];
+
+  return (
+    <Select
+      label="Choose Action"
+      value={value}
+      onChange={setValue}
+      options={optionsWithIcons}
+      placeholder="Select an action"
+    />
+  );
+}
+```
+
+## Empty State
+
+Handle empty option lists with custom messages optimized for mobile screens.
+
+```jsx
+function EmptyStateExample() {
+  const [value, setValue] = useState(null);
+
+  return (
+    <VStack gap={4}>
+      <Select
+        label="Empty Options"
+        value={value}
+        onChange={setValue}
+        options={[]}
+        emptyOptionsLabel="No options available at this time"
+        placeholder="No options"
+      />
+
+      <Select
+        label="Custom Empty Component"
+        value={value}
+        onChange={setValue}
+        options={[]}
+        SelectEmptyOptionsComponent={
+          <Text background="fgWarning" font="headline" padding={4}>
+            No items found. Try refreshing!
+          </Text>
+        }
+        placeholder="No options"
+      />
+    </VStack>
+  );
+}
+```
+
+## Long Labels
+
+Handle very long option labels that may wrap on smaller mobile screens.
+
+```jsx
+function LongLabelsExample() {
+  const [value, setValue] = useState('1');
+
+  const longOptions = [
+    {
+      value: '1',
+      label:
+        'This is an extremely long option label that should test how the component handles very long text content on mobile devices',
+    },
+    {
+      value: '2',
+      label:
+        'Another super long option label with even more text to see how it wraps or truncates in the mobile UI',
+    },
+    {
+      value: '3',
+      label: 'Short',
+    },
+    {
+      value: '4',
+      label: 'A moderately long label that is somewhere between short and extremely long',
+    },
+  ];
+
+  return (
+    <Select
+      label="Select with Long Labels"
+      value={value}
+      onChange={setValue}
+      options={longOptions}
+      placeholder="Choose an option"
+    />
+  );
+}
+```
+
+## Multi-Select with Max Display
+
+Limit the number of selected items shown when using multi-select on mobile.
+
+```jsx
+function MaxDisplayExample() {
+  const { value, onChange } = useMultiSelect({
+    initialValue: ['1', '2', '3', '4', '5'],
+  });
+
+  const options = Array.from({ length: 20 }, (_, i) => ({
+    value: (i + 1).toString(),
+    label: `Option ${i + 1}`,
+  }));
+
+  return (
+    <Select
+      type="multi"
+      label="Select Multiple Items"
+      value={value}
+      onChange={onChange}
+      options={options}
+      maxSelectedOptionsToShow={3}
+      placeholder="Select options"
+      helperText="Showing first 3 selected items"
+    />
+  );
+}
+```
+
+## Custom Select All labels
+
+Customize the select all functionality in multi-select mode for mobile.
+
+```jsx
+function CustomSelectAllExample() {
+  const { value, onChange } = useMultiSelect({
+    initialValue: ['1'],
+  });
+
+  const options = [
+    { value: '1', label: 'Monday' },
+    { value: '2', label: 'Tuesday' },
+    { value: '3', label: 'Wednesday' },
+    { value: '4', label: 'Thursday' },
+    { value: '5', label: 'Friday' },
+    { value: '6', label: 'Saturday' },
+    { value: '7', label: 'Sunday' },
+  ];
+
+  return (
+    <Select
+      type="multi"
+      label="Select Days"
+      value={value}
+      onChange={onChange}
+      options={options}
+      selectAllLabel="Select all days of the week"
+      clearAllLabel="Clear all days"
+      placeholder="Choose days"
+    />
+  );
+}
+```
+
+## Hide Select All
+
+Hide the select all option for simpler multi-select interfaces.
+
+```jsx
+function HideSelectAllExample() {
+  const { value, onChange } = useMultiSelect({
+    initialValue: ['1', '2'],
+  });
+
+  const options = [
+    { value: '1', label: 'Option 1' },
+    { value: '2', label: 'Option 2' },
+    { value: '3', label: 'Option 3' },
+    { value: '4', label: 'Option 4' },
+    { value: '5', label: 'Option 5' },
+  ];
+
+  return (
+    <Select
+      type="multi"
+      hideSelectAll
+      label="Multi-Select without Select All"
+      value={value}
+      onChange={onChange}
+      options={options}
+      placeholder="Choose options"
+    />
+  );
+}
+```
+
+## Combined Features
+
+Example combining multiple features for a rich mobile experience.
+
+```jsx
+function CombinedFeaturesExample() {
+  const [value, setValue] = useState('1');
+
+  const options = [
+    {
+      value: '1',
+      label: 'Premium Account',
+      description: 'Access to all features',
+      accessory: <Icon color="fg" name="star" />,
+      media: <Icon color="fg" name="crown" />,
+    },
+    {
+      value: '2',
+      label: 'Standard Account',
+      description: 'Basic features included',
+      media: <Icon color="fg" name="user" />,
+    },
+    {
+      value: '3',
+      label: 'Trial Account',
+      description: 'Limited time access',
+      disabled: true,
+      media: <Icon color="fg" name="clock" />,
+    },
+  ];
+
+  return (
+    <Select
+      label="Account Type"
+      value={value}
+      onChange={setValue}
+      options={options}
+      startNode={<Icon color="fg" name="filter" />}
+      variant="positive"
+      helperText="Choose your account type"
+      placeholder="Select account"
+    />
+  );
+}
+```

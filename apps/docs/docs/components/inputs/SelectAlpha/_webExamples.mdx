@@ -142,3 +142,345 @@ function VariantExample() {
   );
 }
 ```
+
+## Compact Mode
+
+The Select component can be rendered in a compact size for denser UIs.
+
+```jsx live
+function CompactExample() {
+  const [value, setValue] = useState('1');
+
+  const options = [
+    { value: '1', label: 'Small Option 1' },
+    { value: '2', label: 'Small Option 2' },
+    { value: '3', label: 'Small Option 3' },
+  ];
+
+  return (
+    <Select
+      compact
+      label="Compact Select"
+      value={value}
+      onChange={setValue}
+      options={options}
+      placeholder="Select an option"
+      helperText="This is a compact select component"
+    />
+  );
+}
+```
+
+## Disabled States
+
+Components can be disabled entirely or have individual options disabled.
+
+```jsx live
+function DisabledExample() {
+  const [value1, setValue1] = useState('2');
+  const [value2, setValue2] = useState('2');
+
+  const optionsWithDisabled = [
+    { value: '1', label: 'Option 1', disabled: true },
+    { value: '2', label: 'Option 2' },
+    { value: '3', label: 'Option 3' },
+    { value: '4', label: 'Option 4', disabled: true },
+  ];
+
+  return (
+    <VStack gap={4}>
+      <Select
+        label="Disabled Select"
+        value={value1}
+        onChange={setValue1}
+        options={optionsWithDisabled}
+        disabled
+        placeholder="This select is disabled"
+      />
+
+      <Select
+        label="Select with Disabled Options"
+        value={value2}
+        onChange={setValue2}
+        options={optionsWithDisabled}
+        placeholder="Some options are disabled"
+      />
+    </VStack>
+  );
+}
+```
+
+## Options with Descriptions
+
+Options can include descriptions for additional context.
+
+```jsx live
+function DescriptionExample() {
+  const [value, setValue] = useState('1');
+
+  const optionsWithDescriptions = [
+    { value: '1', label: 'Bitcoin', description: 'The first cryptocurrency' },
+    { value: '2', label: 'Ethereum', description: 'Smart contract platform' },
+    { value: '3', label: 'USDC', description: 'USD-backed stablecoin' },
+    { value: '4', label: 'Solana', description: 'High-performance blockchain' },
+  ];
+
+  return (
+    <Select
+      label="Select Cryptocurrency"
+      value={value}
+      onChange={setValue}
+      options={optionsWithDescriptions}
+      placeholder="Choose a cryptocurrency"
+    />
+  );
+}
+```
+
+## Start Node
+
+Add an icon or element at the start of the select control.
+
+```jsx live
+function StartNodeExample() {
+  const [value, setValue] = useState('1');
+
+  const options = [
+    { value: '1', label: 'Search Result 1' },
+    { value: '2', label: 'Search Result 2' },
+    { value: '3', label: 'Search Result 3' },
+  ];
+
+  return (
+    <Select
+      label="Search"
+      value={value}
+      onChange={setValue}
+      options={options}
+      startNode={<Icon color="fg" name="search" />}
+      placeholder="Search for options"
+    />
+  );
+}
+```
+
+## Custom Icons
+
+Add custom icons as accessories or media to options.
+
+```jsx live
+function CustomIconsExample() {
+  const [value, setValue] = useState('1');
+
+  const optionsWithIcons = [
+    {
+      value: '1',
+      label: 'Favorites',
+      accessory: <Icon color="fg" name="star" />,
+      media: <Icon color="fg" name="heart" />,
+    },
+    {
+      value: '2',
+      label: 'Verified',
+      accessory: <Icon color="fg" name="checkmark" />,
+      media: <Icon color="fg" name="shield" />,
+    },
+    {
+      value: '3',
+      label: 'Settings',
+      accessory: <Icon color="fg" name="caretRight" />,
+      media: <Icon color="fg" name="gear" />,
+    },
+  ];
+
+  return (
+    <Select
+      label="Choose Action"
+      value={value}
+      onChange={setValue}
+      options={optionsWithIcons}
+      placeholder="Select an action"
+    />
+  );
+}
+```
+
+## Empty State
+
+Handle empty option lists with custom messages or components.
+
+```jsx live
+function EmptyStateExample() {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [value, setValue] = useState(null);
+
+  const allOptions = [
+    { value: '1', label: 'Apple' },
+    { value: '2', label: 'Banana' },
+    { value: '3', label: 'Cherry' },
+    { value: '4', label: 'Date' },
+  ];
+
+  const filteredOptions = searchTerm
+    ? allOptions.filter((opt) => opt.label.toLowerCase().includes(searchTerm.toLowerCase()))
+    : allOptions;
+
+  return (
+    <VStack gap={4}>
+      <input
+        type="text"
+        placeholder="Filter options..."
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ccc' }}
+      />
+
+      <Select
+        label="Filtered Select"
+        value={value}
+        onChange={setValue}
+        options={filteredOptions}
+        emptyOptionsLabel="No matching options found"
+        placeholder="Select an option"
+      />
+    </VStack>
+  );
+}
+```
+
+## Controlled Open State
+
+Control the open/closed state of the dropdown programmatically.
+
+```jsx live
+function ControlledOpenExample() {
+  const [value, setValue] = useState('1');
+  const [open, setOpen] = useState(false);
+
+  const options = [
+    { value: '1', label: 'Option 1' },
+    { value: '2', label: 'Option 2' },
+    { value: '3', label: 'Option 3' },
+  ];
+
+  return (
+    <VStack gap={4}>
+      <Button onClick={() => setOpen(!open)}>{open ? 'Close Dropdown' : 'Open Dropdown'}</Button>
+
+      <Select
+        label="Controlled Select"
+        value={value}
+        onChange={setValue}
+        options={options}
+        open={open}
+        setOpen={setOpen}
+        placeholder="Select an option"
+        disableClickOutsideClose
+      />
+    </VStack>
+  );
+}
+```
+
+## Multi-Select with Max Display
+
+Limit the number of selected items shown when using multi-select.
+
+```jsx live
+function MaxDisplayExample() {
+  const { value, onChange } = useMultiSelect({
+    initialValue: ['1', '2', '3', '4', '5'],
+  });
+
+  const options = Array.from({ length: 20 }, (_, i) => ({
+    value: (i + 1).toString(),
+    label: `Option ${i + 1}`,
+  }));
+
+  return (
+    <Select
+      type="multi"
+      label="Select Multiple Items"
+      value={value}
+      onChange={onChange}
+      options={options}
+      maxSelectedOptionsToShow={3}
+      placeholder="Select options"
+      helperText="Only showing first 3 selected items"
+    />
+  );
+}
+```
+
+## Custom Select All labels
+
+Customize the select all functionality in multi-select mode.
+
+```jsx live
+function CustomSelectAllExample() {
+  const { value, onChange } = useMultiSelect({
+    initialValue: ['1'],
+  });
+
+  const options = [
+    { value: '1', label: 'Monday' },
+    { value: '2', label: 'Tuesday' },
+    { value: '3', label: 'Wednesday' },
+    { value: '4', label: 'Thursday' },
+    { value: '5', label: 'Friday' },
+    { value: '6', label: 'Saturday' },
+    { value: '7', label: 'Sunday' },
+  ];
+
+  return (
+    <Select
+      type="multi"
+      label="Select Days"
+      value={value}
+      onChange={onChange}
+      options={options}
+      selectAllLabel="Select all days of the week"
+      clearAllLabel="Clear all days"
+      placeholder="Choose days"
+    />
+  );
+}
+```
+
+## Label Variants
+
+Different label positioning options for the Select component.
+
+```jsx live
+function LabelVariantExample() {
+  const [value1, setValue1] = useState('');
+  const [value2, setValue2] = useState('');
+
+  const options = [
+    { value: '1', label: 'Option 1' },
+    { value: '2', label: 'Option 2' },
+    { value: '3', label: 'Option 3' },
+  ];
+
+  return (
+    <VStack gap={4}>
+      <Select
+        label="Default Label Position"
+        value={value1}
+        onChange={setValue1}
+        options={options}
+        placeholder="Select an option"
+      />
+
+      <Select
+        label="Inside Label"
+        labelVariant="inside"
+        value={value2}
+        onChange={setValue2}
+        options={options}
+        placeholder="Select an option"
+      />
+    </VStack>
+  );
+}
+```
