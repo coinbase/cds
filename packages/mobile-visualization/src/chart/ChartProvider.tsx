@@ -1,8 +1,5 @@
 import { createContext, useContext } from 'react';
-import type { Svg } from 'react-native-svg';
-import type { CartesianChartContextValue as BaseCartesianChartContextValue } from '@coinbase/cds-common/visualizations/charts/context';
-
-export type CartesianChartContextValue = BaseCartesianChartContextValue<Svg>;
+import type { CartesianChartContextValue } from '@coinbase/cds-common/visualizations/charts/context';
 
 const CartesianChartContext = createContext<CartesianChartContextValue | undefined>(undefined);
 

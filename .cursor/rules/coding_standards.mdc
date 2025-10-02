@@ -15,12 +15,6 @@ This section outlines the coding standards and best practices for contributing t
 - Use meaningful names: variables and functions should reveal their purpose, and you should avoid abbreviations unless similar ones are used elsewhere already
 - Code is self-documenting: code shouldn't need comments unless it is complex or you need to explain why something is done in a specific way
 
-## Components
-
-- CDS's components are defined in both cds-web (packages/web) and cds-mobile (packages/mobile).
-  In most cases, components will have an implementation in each package.
-- Always memoize components with `memo`
-
 ### Component Organization
 
 - Each component gets its own folder under `src/[category]/`
@@ -41,7 +35,6 @@ This section outlines the coding standards and best practices for contributing t
 - Every property of a component's props API must have JSDoc comments
 - Components must export their prop types: a `BaseProps` and `Props` (e.g. `ButtonBaseProps`, `ButtonProps`). For most cases, `BaseProps` will contain all the properties while `Props` will be assigned to `BaseProps`.
 - React component files should follow the same basic structure:
-
   1. Imports: define imports at the top of the file
   2. Static Styles: define component default styles using the platform-appropriate method
   3. Type definitions: define TypeScript types for the component's props
@@ -68,10 +61,26 @@ This section outlines the coding standards and best practices for contributing t
     };
   ```
 
-## React Hooks & Utility Functions
+## React Practices
 
-Ensure best React practices are followed at all times.
-
+- Always memoize CDS components with `memo`
 - Use `useMemo` for expensive computations or for computed/conditional styles
-- Use `useCallback` for event handlers passed as props
+- Use `useCallback` for event handlers passed as props to other components
 - Use `useEffect` only for side effects: this means you can use it for API calls, subscriptions, or dom manipulation (with external libraries) as needed, but avoid using it solely as a "watcher" for dependency changes; prefer deriving state directly during render when applicable
+
+### `useEffect` example
+
+```tsx
+// DO THIS
+const previousRect = usePreviousValue(reportedRect);
+if (previousRect !== reportedRect && reportedRect !== null) {
+  onDimensionsChange?.(reportedRect);
+}
+
+// DON'T DO THIS
+useEffect(() => {
+  if (onDimensionsChange && reportedRect !== null) {
+    onDimensionsChange(reportedRect);
+  }
+}, [reportedRect, onDimensionsChange]);
+```

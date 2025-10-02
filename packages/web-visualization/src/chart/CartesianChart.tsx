@@ -281,7 +281,7 @@ export const CartesianChart = memo(
         [renderedAxes, chartRect, userInset],
       );
 
-      const contextValue: CartesianChartContextValue<SVGSVGElement> = useMemo(
+      const contextValue: CartesianChartContextValue = useMemo(
         () => ({
           series: series ?? [],
           getSeries,
@@ -295,7 +295,6 @@ export const CartesianChart = memo(
           getYScale,
           drawingArea: chartRect,
           registerAxis,
-          svgRef: internalSvgRef,
           unregisterAxis,
           getAxisBounds,
         }),
