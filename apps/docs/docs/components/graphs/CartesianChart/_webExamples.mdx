@@ -1,28 +1,123 @@
 ## Basic Example
 
-Charts are highly customizable, SVG based components that can be used to display a variety of data. The underlying logic is handled by D3.
+CartesianChart is a customizable, SVG based component that can be used to display a variety of data in a x/y coordinate space. The underlying logic is handled by D3.
 
-You can use `AreaChart`, `BarChart`, or `LineChart` to have default functionality for your chart.
+`AreaChart`, `BarChart`, and `LineChart` are built on top of CartesianChart and have default functionality for your chart.
 
 ```jsx live
-function BasicExample() {
-  const [scrubIndex, setScrubIndex] = useState(null);
-  const data = [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58];
+<VStack gap={2}>
+  <AreaChart
+    enableScrubbing
+    height={250}
+    series={[
+      {
+        id: 'prices',
+        data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+      },
+    ]}
+    curve="monotone"
+    showYAxis
+    yAxis={{
+      showGrid: true,
+    }}
+  >
+    <Scrubber />
+  </AreaChart>
+  <BarChart
+    enableScrubbing
+    height={250}
+    series={[
+      {
+        id: 'prices',
+        data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+      },
+    ]}
+    showYAxis
+    yAxis={{
+      showGrid: true,
+    }}
+  >
+    <Scrubber hideOverlay seriesIds={[]} />
+  </BarChart>
+  <LineChart
+    enableScrubbing
+    height={250}
+    series={[
+      {
+        id: 'prices',
+        data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+      },
+    ]}
+    curve="monotone"
+    showYAxis
+    showArea
+    yAxis={{
+      showGrid: true,
+    }}
+  >
+    <Scrubber />
+  </LineChart>
+</VStack>
+```
 
-  const accessibilityLabel = useMemo(() => {
-    if (scrubIndex === null) return undefined;
-    return `Value: ${data[scrubIndex]} at index ${scrubIndex}`;
-  }, [scrubIndex, data]);
+## Series
 
+Series are the data that will be displayed on the chart. Each series must have a defined `id`.
+
+### Series Data
+
+You can pass in an array of numbers or an array of tuples for the `data` prop. Passing in null values is equivalent to no data at that index.
+
+```jsx live
+function ForecastedPrice() {
+  const ForecastRect = memo(({ startIndex, endIndex }) => {
+    const { drawingArea, getXScale } = useCartesianChartContext();
+
+    const xScale = getXScale();
+
+    if (!xScale) return;
+
+    const startX = xScale(startIndex);
+    const endX = xScale(endIndex);
+    return (
+      <rect
+        x={startX}
+        y={drawingArea.y}
+        width={endX - startX}
+        height={drawingArea.height}
+        fill="var(--color-accentSubtleBlue)"
+      />
+    );
+  });
   return (
-    <LineChart
+    <CartesianChart
       enableScrubbing
-      onScrubberPositionChange={setScrubIndex}
       height={250}
       series={[
         {
           id: 'prices',
-          data: data,
+          data: [10, 22, 29, 45, 98, 45, 22, 52, 54, 60, 64, 68, 72, 76],
+          color: 'var(--color-accentBoldBlue)',
+        },
+        {
+          id: 'variance',
+          data: [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            [52, 52],
+            [50, 57],
+            [52, 63],
+            [55, 75],
+            [57, 77],
+            [59, 79],
+            [60, 80],
+          ],
+          color: 'var(--color-accentBoldBlue)',
         },
       ]}
       curve="monotone"
@@ -31,19 +126,257 @@ function BasicExample() {
       yAxis={{
         showGrid: true,
       }}
-      accessibilityLabel={accessibilityLabel}
     >
-      <Scrubber />
-    </LineChart>
+      <ForecastRect startIndex={7} endIndex={13} />
+      <Area seriesId="variance" type="solid" curve="monotone" fillOpacity={0.3} />
+      <Line seriesId="prices" curve="monotone" />
+    </CartesianChart>
+  );
+}
+```
+
+### Series Axis IDs
+
+Each series can have a different `yAxisId`, allowing you to compare data from different contexts.
+
+```jsx live
+<CartesianChart
+  height={250}
+  series={[
+    {
+      id: 'revenue',
+      data: [455, 520, 380, 455, 190, 235],
+      yAxisId: 'revenue',
+      color: 'var(--color-accentBoldYellow)',
+    },
+    {
+      id: 'profit',
+      data: [23, 15, 30, 56, 4, 12],
+      yAxisId: 'profit',
+      color: 'var(--color-fgPositive)',
+    },
+  ]}
+  xAxis={{
+    data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+    scaleType: 'band',
+  }}
+  yAxis={[
+    {
+      id: 'revenue',
+    },
+    {
+      id: 'profit',
+    },
+  ]}
+>
+  <XAxis showLine showTickMarks />
+  <YAxis
+    showGrid
+    showLine
+    showTickMarks
+    axisId="revenue"
+    position="left"
+    requestedTickCount={5}
+    tickLabelFormatter={(value) => `$${value}k`}
+    width={60}
+  />
+  <YAxis
+    showLine
+    showTickMarks
+    axisId="profit"
+    requestedTickCount={5}
+    tickLabelFormatter={(value) => `$${value}k`}
+  />
+  <BarPlot />
+</CartesianChart>
+```
+
+### Series Stacks
+
+You can provide a `stackId` to stack series together.
+
+```jsx live
+<AreaChart
+  enableScrubbing
+  height={250}
+  series={[
+    {
+      id: 'pricesA',
+      data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+      stackId: 'prices',
+      color: 'var(--color-accentBoldGreen)',
+    },
+    {
+      id: 'pricesB',
+      data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+      stackId: 'prices',
+      color: 'var(--color-accentBoldPurple)',
+    },
+  ]}
+  curve="monotone"
+  showYAxis
+  showArea
+  yAxis={{
+    showGrid: true,
+  }}
+>
+  <Scrubber />
+</LineChart>
+```
+
+## Axes
+
+You can configure your x and y axes with the `xAxis` and `yAxis` props. `xAxis` accepts an object while `yAxis` accepts an object or array.
+
+```jsx live
+<CartesianChart
+  height={250}
+  series={[
+    {
+      id: 'prices',
+      data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+    },
+  ]}
+  xAxis={{
+    scaleType: 'band',
+  }}
+  yAxis={{
+    domain: { min: 0 },
+  }}
+>
+  <YAxis showLine showTickMarks showGrid />
+  <XAxis showLine showTickMarks />
+  <BarPlot />
+</CartesianChart>
+```
+
+For more info, learn about [XAxis](/components/graphs/XAxis/#axis-config) and [YAxis](/components/graphs/YAxis/#axis-config) configuration.
+
+## Inset
+
+You can adjust the inset around the entire chart (outside the axes) with the `inset` prop. This is useful for when you want to have components that are outside of the drawing area of the data but still within the chart svg.
+
+You can also remove the default inset, such as to have a compact line chart.
+
+```jsx live
+function Insets() {
+  const data = [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58];
+
+const formatPrice = useCallback((dataIndex: number) => {
+  const price = data[dataIndex];
+  return `$${price.toLocaleString('en-US', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  })}`;
+}, []);
+
+  return (
+    <HStack gap={2}>
+      <VStack gap={1}>
+        <Text font="label1">No inset</Text>
+        <LineChart
+          height={100}
+          inset={0}
+          series={[
+            {
+              id: 'prices',
+              data,
+            },
+          ]}
+          yAxis={{ domainLimit: 'strict' }}
+          curve="monotone"
+          showArea
+          style={{ border: '2px solid var(--color-fgPrimary)' }}
+        />
+      </VStack>
+      <VStack gap={1}>
+        <Text font="label1">Custom inset</Text>
+        <LineChart
+          enableScrubbing
+          height={100}
+          inset={{ left: 10, top: 16, right: 10, bottom: 10 }}
+          series={[
+            {
+              id: 'prices',
+              data,
+            },
+          ]}
+          yAxis={{ domainLimit: 'strict' }}
+          curve="monotone"
+          showArea
+          style={{ border: '2px solid var(--color-fgPrimary)' }}
+        >
+          <Scrubber label={formatPrice} />
+        </LineChart>
+      </VStack>
+      <VStack gap={1}>
+        <Text font="label1">Default inset</Text>
+        <LineChart
+          enableScrubbing
+          height={100}
+          series={[
+            {
+              id: 'prices',
+              data,
+            },
+          ]}
+          yAxis={{ domainLimit: 'strict' }}
+          curve="monotone"
+          showArea
+          style={{ border: '2px solid var(--color-fgPrimary)' }}
+        >
+          <Scrubber label={formatPrice} />
+        </LineChart>
+      </VStack>
+    </HStack>
+  );
+}
+```
+
+## Scrubbing
+
+CartesianChart has built-in scrubbing functionality that can be enabled with the `enableScrubbing` prop. This will then enable the usage of `onScrubberPositionChange` to get the current position of the scrubber as the user interacts with the chart.
+
+```jsx live
+function Scrubbing() {
+  const [scrubIndex, setScrubIndex] = useState(undefined);
+
+  const onScrubberPositionChange = useCallback((index: number | undefined) => {
+    setScrubIndex(index);
+  }, []);
+
+  return (
+    <VStack gap={2}>
+    <Text font="label1">Scrubber index: {scrubIndex ?? 'none'}</Text>
+      <LineChart
+        enableScrubbing
+        onScrubberPositionChange={onScrubberPositionChange}
+        height={250}
+        series={[
+          {
+            id: 'prices',
+            data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+          },
+        ]}
+        curve="monotone"
+        showYAxis
+        showArea
+        yAxis={{
+          showGrid: true,
+        }}
+      >
+        <Scrubber />
+      </LineChart>
+    </VStack>
   );
 }
 ```
 
 ## Customization
 
-When you desire a more custom chart, you can use the `CartesianChart` component and build your own chart from scratch.
-
 ### Price with Volume
+
+You can showcase the price and volume of an asset over time within one chart.
 
 ```jsx live
 function PriceWithVolume() {
@@ -292,6 +625,51 @@ function EarningsHistory() {
         <LegendItem label="Actual EPS" />
       </HStack>
     </VStack>
+  );
+}
+```
+
+### Trading Trends
+
+You can have multiple axes with different domains and ranges to showcase different pieces of data over the time time period.
+
+```jsx live
+function TradingTrends() {
+  const profitData = [34, 24, 28, -4, 8, -16, -3, 12, 24, 18, 20, 28];
+  const gains = profitData.map((value) => (value > 0 ? value : 0));
+  const losses = profitData.map((value) => (value < 0 ? value : 0));
+
+  const renderProfit = useCallback((value: number) => {
+    return `$${value}M`;
+  }, []);
+
+  const ThinSolidLine = memo((props: SolidLineProps) => <SolidLine {...props} strokeWidth={1} />);
+
+  return (
+    <CartesianChart
+      height={250}
+      series={[
+        { id: 'gains', data: gains, yAxisId: 'profit', color: 'var(--color-bgPositive)', stackId: 'bars' },
+        { id: 'losses', data: losses, yAxisId: 'profit', color: 'var(--color-bgNegative)', stackId: 'bars' },
+        {
+          id: 'revenue',
+          data: [128, 118, 122, 116, 120, 114, 118, 122, 126, 130, 134, 138],
+          yAxisId: 'revenue',
+          color: 'var(--color-fgMuted)',
+        },
+      ]}
+      xAxis={{ scaleType: 'band', data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'] }}
+      yAxis={[
+        { id: 'profit', range: ({ min, max }) => ({ min: min, max: max - 64 }), domain: { min: -40, max: 40 } },
+        { id: 'revenue', range: ({ min, max }) => ({ min: max - 64, max }), domain: { min: 100 } },
+      ]}
+    >
+      <YAxis axisId="profit" position="left" showGrid tickLabelFormatter={renderProfit} GridLineComponent={ThinSolidLine} />
+      <XAxis />
+      <ReferenceLine LineComponent={SolidLine} dataY={0} yAxisId="profit" strokeWidth={4} />
+      <BarPlot seriesIds={['gains', 'losses']} yAxisId="profit" />
+      <Line seriesId="revenue" curve="monotone" showArea />
+    </CartesianChart>
   );
 }
 ```

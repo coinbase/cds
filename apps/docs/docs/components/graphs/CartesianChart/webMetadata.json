@@ -1,14 +1,19 @@
 {
   "import": "import { CartesianChart } from '@coinbase/cds-web-visualization'",
-  "description": "A composable chart component that can be used to display data in a variety of ways.",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/web/src/chart/CartesianChart.tsx",
+  "description": "A flexible chart component that can be used to display data in a x/y coordinate space.",
   "relatedComponents": [
+    {
+      "label": "AreaChart",
+      "url": "/components/graphs/AreaChart/"
+    },
+    {
+      "label": "BarChart",
+      "url": "/components/graphs/BarChart/"
+    },
     {
       "label": "LineChart",
       "url": "/components/graphs/LineChart/"
-    },
-    {
-      "label": "SparklineInteractive",
-      "url": "/components/graphs/SparklineInteractive/"
     }
   ]
 }

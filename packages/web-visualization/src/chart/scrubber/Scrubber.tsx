@@ -15,7 +15,6 @@ import {
   getPointOnScale,
   useScrubberContext,
 } from '@coinbase/cds-common/visualizations/charts';
-import { useTheme } from '@coinbase/cds-web';
 import { m as motion } from 'framer-motion';
 
 import { axisTickLabelsInitialAnimationVariants } from '../axis';
@@ -60,7 +59,7 @@ export type ScrubberProps = SharedProps &
     /**
      * Label text displayed above the scrubber line.
      */
-    label?: ReferenceLineProps['label'];
+    label?: ReferenceLineProps['label'] | ((dataIndex: number) => ReferenceLineProps['label']);
 
     /**
      * Props passed to the scrubber line's label.
@@ -138,7 +137,6 @@ export const Scrubber = memo(
       },
       ref,
     ) => {
-      const theme = useTheme();
       const scrubberGroupRef = useRef<SVGGElement>(null);
       const ScrubberBeaconRefs = useRefMap<ScrubberBeaconRef>();
 
@@ -596,7 +594,7 @@ export const Scrubber = memo(
             <ScrubberLineComponent
               className={classNames?.line}
               dataX={dataX}
-              label={label}
+              label={typeof label === 'function' ? label(dataIndex) : label}
               labelProps={{
                 verticalAlignment: 'middle',
                 // Place in the middle vertically by default
