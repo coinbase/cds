@@ -74,7 +74,7 @@ const componentCardLinks = {
   typography: '/components/typography/Text/',
   inputs: '/components/inputs/Button/',
   media: '/components/media/Icon/',
-  overlay: '/components/overlays/Modal/',
+  overlay: '/components/overlay/Modal/',
 };
 
 export default function Home() {
