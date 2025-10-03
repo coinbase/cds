@@ -13,7 +13,7 @@ import { Text, TextHeadline } from '@coinbase/cds-web/typography';
 import { Area } from '../area/Area';
 import { XAxis, YAxis } from '../axis';
 import { useCartesianChartContext } from '../ChartProvider';
-import { SolidLine, type SolidLineProps } from '../line';
+import { ReferenceLine, SolidLine, type SolidLineProps } from '../line';
 import { Line } from '../line/Line';
 import { LineChart } from '../line/LineChart';
 import { BarPlot, CartesianChart, type ChartTextChildren, PeriodSelector, Scrubber } from '../';
@@ -483,6 +483,71 @@ const PriceWithVolume = () => {
   );
 };
 
+function TradingTrends() {
+  const profitData = [34, 24, 28, -4, 8, -16, -3, 12, 24, 18, 20, 28];
+  const gains = profitData.map((value) => (value > 0 ? value : 0));
+  const losses = profitData.map((value) => (value < 0 ? value : 0));
+
+  const renderProfit = useCallback((value: number) => {
+    return `$${value}M`;
+  }, []);
+
+  const ThinSolidLine = memo((props: SolidLineProps) => <SolidLine {...props} strokeWidth={1} />);
+  const ThickSolidLine = memo((props: SolidLineProps) => <SolidLine {...props} strokeWidth={4} />);
+
+  return (
+    <CartesianChart
+      height={250}
+      series={[
+        {
+          id: 'gains',
+          data: gains,
+          yAxisId: 'profit',
+          color: 'var(--color-bgPositive)',
+          stackId: 'bars',
+        },
+        {
+          id: 'losses',
+          data: losses,
+          yAxisId: 'profit',
+          color: 'var(--color-bgNegative)',
+          stackId: 'bars',
+        },
+        {
+          id: 'revenue',
+          data: [128, 118, 122, 116, 120, 114, 118, 122, 126, 130, 134, 138],
+          yAxisId: 'revenue',
+          color: 'var(--color-fgMuted)',
+        },
+      ]}
+      xAxis={{
+        scaleType: 'band',
+        data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+      }}
+      yAxis={[
+        {
+          id: 'profit',
+          range: ({ min, max }) => ({ min: min, max: max - 64 }),
+          domain: { min: -40, max: 40 },
+        },
+        { id: 'revenue', range: ({ min, max }) => ({ min: max - 64, max }), domain: { min: 100 } },
+      ]}
+    >
+      <YAxis
+        showGrid
+        GridLineComponent={ThinSolidLine}
+        axisId="profit"
+        position="left"
+        tickLabelFormatter={renderProfit}
+      />
+      <XAxis />
+      <ReferenceLine LineComponent={ThickSolidLine} dataY={0} yAxisId="profit" />
+      <BarPlot seriesIds={['gains', 'losses']} />
+      <Line showArea curve="monotone" seriesId="revenue" />
+    </CartesianChart>
+  );
+}
+
 const Example: React.FC<
   React.PropsWithChildren<{ title: string; description?: string | React.ReactNode }>
 > = ({ children, title, description }) => {
@@ -509,6 +574,9 @@ export const Miscellaneous = () => {
       </Example>
       <Example title="Prediction Market">
         <PredictionMarket />
+      </Example>
+      <Example title="Trading Trends">
+        <TradingTrends />
       </Example>
     </VStack>
   );

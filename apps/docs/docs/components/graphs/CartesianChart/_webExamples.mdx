@@ -644,6 +644,7 @@ function TradingTrends() {
   }, []);
 
   const ThinSolidLine = memo((props: SolidLineProps) => <SolidLine {...props} strokeWidth={1} />);
+  const ThickSolidLine = memo((props: SolidLineProps) => <SolidLine {...props} strokeWidth={4} />);
 
   return (
     <CartesianChart
@@ -666,8 +667,8 @@ function TradingTrends() {
     >
       <YAxis axisId="profit" position="left" showGrid tickLabelFormatter={renderProfit} GridLineComponent={ThinSolidLine} />
       <XAxis />
-      <ReferenceLine LineComponent={SolidLine} dataY={0} yAxisId="profit" strokeWidth={4} />
-      <BarPlot seriesIds={['gains', 'losses']} yAxisId="profit" />
+      <ReferenceLine LineComponent={ThickSolidLine} dataY={0} yAxisId="profit" />
+      <BarPlot seriesIds={['gains', 'losses']} />
       <Line seriesId="revenue" curve="monotone" showArea />
     </CartesianChart>
   );

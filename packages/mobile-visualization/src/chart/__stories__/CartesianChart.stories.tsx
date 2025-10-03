@@ -4,28 +4,25 @@ import { Circle, G } from 'react-native-svg';
 import { assets } from '@coinbase/cds-common/internal/data/assets';
 import { candles as btcCandles } from '@coinbase/cds-common/internal/data/candles';
 import { isCategoricalScale } from '@coinbase/cds-common/visualizations/charts';
-import { Radio } from '@coinbase/cds-mobile/controls/Radio';
 import { Example, ExampleScreen } from '@coinbase/cds-mobile/examples/ExampleScreen';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 import { Box, HStack, VStack } from '@coinbase/cds-mobile/layout';
-import { Pressable } from '@coinbase/cds-mobile/system';
-import {
-  TextHeadline,
-  TextLabel1,
-  TextLabel2,
-  TextTitle1,
-  TextTitle2,
-  TextTitle4,
-} from '@coinbase/cds-mobile/typography';
+import { TextLabel1, TextLabel2, TextTitle1, TextTitle2 } from '@coinbase/cds-mobile/typography';
 
 import { Area } from '../area/Area';
 import { XAxis, YAxis } from '../axis';
 import { BarPlot } from '../bar/BarPlot';
 import { useCartesianChartContext } from '../ChartProvider';
 import { Line } from '../line/Line';
-import { LineChart } from '../line/LineChart';
 import { Scrubber } from '../scrubber/Scrubber';
-import { CartesianChart, DottedArea, GradientLine } from '../';
+import {
+  CartesianChart,
+  DottedArea,
+  GradientLine,
+  ReferenceLine,
+  SolidLine,
+  type SolidLineProps,
+} from '../';
 
 const defaultChartHeight = 250;
 
@@ -341,6 +338,73 @@ const PriceWithVolume = () => {
   );
 };
 
+function TradingTrends() {
+  const theme = useTheme();
+
+  const profitData = [34, 24, 28, -4, 8, -16, -3, 12, 24, 18, 20, 28];
+  const gains = profitData.map((value) => (value > 0 ? value : 0));
+  const losses = profitData.map((value) => (value < 0 ? value : 0));
+
+  const renderProfit = useCallback((value: number) => {
+    return `$${value}M`;
+  }, []);
+
+  const ThinSolidLine = memo((props: SolidLineProps) => <SolidLine {...props} strokeWidth={1} />);
+  const ThickSolidLine = memo((props: SolidLineProps) => <SolidLine {...props} strokeWidth={2} />);
+
+  return (
+    <CartesianChart
+      height={250}
+      series={[
+        {
+          id: 'gains',
+          data: gains,
+          yAxisId: 'profit',
+          color: theme.color.bgPositive,
+          stackId: 'bars',
+        },
+        {
+          id: 'losses',
+          data: losses,
+          yAxisId: 'profit',
+          color: theme.color.bgNegative,
+          stackId: 'bars',
+        },
+        {
+          id: 'revenue',
+          data: [128, 118, 122, 116, 120, 114, 118, 122, 126, 130, 134, 138],
+          yAxisId: 'revenue',
+          color: theme.color.fgMuted,
+        },
+      ]}
+      xAxis={{
+        scaleType: 'band',
+        data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+      }}
+      yAxis={[
+        {
+          id: 'profit',
+          range: ({ min, max }) => ({ min: min, max: max - 64 }),
+          domain: { min: -40, max: 40 },
+        },
+        { id: 'revenue', range: ({ min, max }) => ({ min: max - 64, max }), domain: { min: 100 } },
+      ]}
+    >
+      <YAxis
+        showGrid
+        GridLineComponent={ThinSolidLine}
+        axisId="profit"
+        position="left"
+        tickLabelFormatter={renderProfit}
+      />
+      <XAxis />
+      <ReferenceLine LineComponent={ThickSolidLine} dataY={0} yAxisId="profit" />
+      <BarPlot seriesIds={['gains', 'losses']} />
+      <Line showArea curve="monotone" seriesId="revenue" />
+    </CartesianChart>
+  );
+}
+
 const ChartStories = () => {
   return (
     <ScrollView>
@@ -356,6 +420,9 @@ const ChartStories = () => {
         </Example>
         <Example title="Price With Volume">
           <PriceWithVolume />
+        </Example>
+        <Example title="Trading Trends">
+          <TradingTrends />
         </Example>
       </ExampleScreen>
     </ScrollView>
