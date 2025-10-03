@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useMemo } from 'react';
+import { memo, useCallback, useMemo } from 'react';
 import { Image, ScrollView, StyleSheet } from 'react-native';
 import { Circle, G } from 'react-native-svg';
 import { assets } from '@coinbase/cds-common/internal/data/assets';

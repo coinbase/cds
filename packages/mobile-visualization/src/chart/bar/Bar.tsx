@@ -2,7 +2,7 @@ import React, { memo, useMemo } from 'react';
 import { getBarPath } from '@coinbase/cds-common/visualizations/charts';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 
-import { DefaultBar } from './';
+import { DefaultBar } from './DefaultBar';
 
 export type BarComponentProps = {
   /**

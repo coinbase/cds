@@ -1,6 +1,5 @@
-import React, { memo, useEffect, useMemo, useState } from 'react';
+import { memo, useEffect, useMemo, useState } from 'react';
 import { G } from 'react-native-svg';
-import type { ThemeVars } from '@coinbase/cds-common';
 import type { Rect } from '@coinbase/cds-common/types';
 
 import { ChartText, type ChartTextChildren, type ChartTextProps } from './ChartText';

@@ -5,7 +5,7 @@ import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 
 import { useCartesianChartContext } from '../ChartProvider';
 
-import { Bar, type BarComponent, type BarComponentProps, type BarProps } from './Bar';
+import { Bar, type BarComponent, type BarProps } from './Bar';
 import type { BarSeries } from './BarChart';
 import { DefaultBarStack } from './DefaultBarStack';
 

@@ -1,22 +1,6 @@
-import React from 'react';
-import { StyleSheet, View } from 'react-native';
 import { Example, ExampleScreen } from '@coinbase/cds-mobile/examples/ExampleScreen';
-import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
-import { HStack, VStack } from '@coinbase/cds-mobile/layout';
-import { TextLabel1, TextLabel2, TextTitle3 } from '@coinbase/cds-mobile/typography';
 
-import {
-  CartesianChart,
-  ChartText,
-  DottedArea,
-  DottedLine,
-  GradientLine,
-  Line,
-  LineChart,
-  Path,
-  XAxis,
-  YAxis,
-} from '../';
+import { CartesianChart, DottedArea, GradientLine, Line, LineChart } from '../';
 
 const defaultChartHeight = 250;
 

@@ -1,11 +1,5 @@
-import React, { memo, useCallback, useEffect, useMemo, useRef } from 'react';
-import {
-  Easing,
-  runOnJS,
-  useAnimatedReaction,
-  useSharedValue,
-  withTiming,
-} from 'react-native-reanimated';
+import { memo, useCallback, useEffect, useMemo, useRef } from 'react';
+import { runOnJS, useAnimatedReaction, useSharedValue, withTiming } from 'react-native-reanimated';
 import { Path } from 'react-native-svg';
 import { usePreviousValue } from '@coinbase/cds-common/hooks/usePreviousValue';
 import { getBarPath } from '@coinbase/cds-common/visualizations/charts';

@@ -1,20 +1,16 @@
-import React, { memo, useContext, useState } from 'react';
-import { G, Line as SvgLine, Rect as SvgRect } from 'react-native-svg';
-import { candles as btcCandles } from '@coinbase/cds-common/internal/data/candles';
+import { memo, useContext, useState } from 'react';
+import { Rect as SvgRect } from 'react-native-svg';
 import { isCategoricalScale, ScrubberContext } from '@coinbase/cds-common/visualizations/charts';
 import { Button } from '@coinbase/cds-mobile/buttons';
 import { Example, ExampleScreen } from '@coinbase/cds-mobile/examples/ExampleScreen';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 import { VStack } from '@coinbase/cds-mobile/layout';
-import { Text } from '@coinbase/cds-mobile/typography/Text';
 
 import { XAxis, YAxis } from '../../axis';
 import { CartesianChart } from '../../CartesianChart';
 import { useCartesianChartContext } from '../../ChartProvider';
 import { ReferenceLine, SolidLine, type SolidLineProps } from '../../line';
-import { PeriodSelector } from '../../PeriodSelector';
-import { Scrubber } from '../../scrubber';
-import { Bar, type BarComponentProps } from '../Bar';
+import { Bar } from '../Bar';
 import { BarChart } from '../BarChart';
 import { BarPlot } from '../BarPlot';
 import type { BarStackComponentProps } from '../BarStack';
