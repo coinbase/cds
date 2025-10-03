@@ -41,6 +41,11 @@ export * from '@coinbase/cds-common/types/Chart';
 
 export type SparklineInteractiveBaseProps<Period extends string> = {
   /**
+   * Type of fill to use for the area
+   * @default 'gradient'
+   */
+  fillType?: 'dotted' | 'gradient';
+  /**
    * Chart data bucketed by Period. Period is a string key
    */
   data?: Record<Period, ChartData>;
@@ -226,6 +231,7 @@ function SparklineInteractiveContentWithGeneric<Period extends string>({
   hidePeriodSelector = false,
   disableScrubbing = false,
   fill = true,
+  fillType = 'gradient',
   yAxisScalingFactor = 1.0,
   formatHoverDate,
   headerNode,
@@ -403,6 +409,7 @@ function SparklineInteractiveContentWithGeneric<Period extends string>({
                   area={area}
                   compact={compact}
                   fill={fill}
+                  fillType={fillType}
                   hoverData={hoverData}
                   path={path}
                   selectedPeriod={selectedPeriod}
@@ -506,7 +513,9 @@ function SparklineInteractiveWithGeneric<Period extends string>({
   );
 }
 
-// typescript doesn't understand the memo with the generic so it gets casted to a base react component
+/**
+ * @deprecated Use LineChart instead.
+ */
 export const SparklineInteractive = memo(
   SparklineInteractiveWithGeneric,
 ) as typeof SparklineInteractiveWithGeneric;

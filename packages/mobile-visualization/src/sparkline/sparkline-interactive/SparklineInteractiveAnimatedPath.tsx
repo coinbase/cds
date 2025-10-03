@@ -3,8 +3,8 @@ import type { Path } from 'react-native-svg';
 import { useValueChanges } from '@coinbase/cds-common/hooks/useValueChanges';
 import * as interpolate from 'd3-interpolate-path';
 
+import { Sparkline, type SparklineFillType } from '../Sparkline';
 import { SparklineArea } from '../SparklineArea';
-import { SparklineGradient } from '../SparklineGradient';
 
 import { useSparklineInteractiveContext } from './SparklineInteractiveProvider';
 import { useInterruptiblePathAnimation } from './useInterruptiblePathAnimation';
@@ -15,6 +15,7 @@ export type SparklineInteractiveAnimatedPathProps = {
   color: string;
   area?: string;
   selectedPeriod: string;
+  fillType?: SparklineFillType;
   yAxisScalingFactor?: number;
   initialPath?: string;
   initialArea?: string;
@@ -26,6 +27,7 @@ export const SparklineInteractiveAnimatedPath = memo(
     color,
     selectedPeriod,
     area,
+    fillType = 'gradient',
     yAxisScalingFactor,
     initialPath,
     initialArea,
@@ -129,16 +131,18 @@ export const SparklineInteractiveAnimatedPath = memo(
     const { chartWidth, chartHeight } = useSparklineInteractiveConstants({ compact });
 
     return (
-      <SparklineGradient
+      <Sparkline
         ref={pathRef}
         color={color}
+        fillType={fillType}
         height={chartHeight}
         path={initialPath}
+        strokeType="solid"
         width={chartWidth}
         yAxisScalingFactor={yAxisScalingFactor}
       >
         {!!area && <SparklineArea ref={areaRef} area={initialArea} />}
-      </SparklineGradient>
+      </Sparkline>
     );
   },
 );
