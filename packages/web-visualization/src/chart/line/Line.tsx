@@ -85,7 +85,6 @@ export type LineProps = SharedProps & {
    * @returns true for default point, false/null/undefined for no point, or PointConfig for custom point
    */
   renderPoints?: (params: RenderPointsParams) => boolean | null | undefined | PointConfig;
-  // todo: import all other line props that we could spread
   strokeWidth?: number;
 };
 
@@ -105,7 +104,8 @@ export const Line = memo<LineProps>(
     renderPoints,
     ...props
   }) => {
-    const { animate, getSeries, getSeriesData, getXScale, getYScale, getXAxis } = useCartesianChartContext();
+    const { animate, getSeries, getSeriesData, getXScale, getYScale, getXAxis } =
+      useCartesianChartContext();
 
     const matchedSeries = getSeries(seriesId);
 
@@ -192,8 +192,6 @@ export const Line = memo<LineProps>(
         ? (data as number[])
         : null;
     }, [xAxis?.data]);
-
-    // todo: if we keep it, figure out the best way to handle opacity
 
     return (
       <>

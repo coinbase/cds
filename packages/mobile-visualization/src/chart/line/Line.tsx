@@ -82,7 +82,6 @@ export type LineProps = SharedProps & {
    * @returns true for default point, false/null/undefined for no point, or PointConfig for custom point
    */
   renderPoints?: (params: RenderPointsParams) => boolean | null | undefined | PointConfig;
-  // todo: import all other line props that we could spread
   strokeWidth?: number;
 };
 

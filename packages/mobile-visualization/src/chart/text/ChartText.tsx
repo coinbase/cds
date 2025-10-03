@@ -257,7 +257,6 @@ export const ChartText = memo<ChartTextProps>(
 
     const isDimensionsReady = disableRepositioning || textBBox !== null;
 
-    // todo: make sure this works with chart text children
     const backgroundRectDimensions = useMemo(() => {
       if (!textBBox) {
         return null;
@@ -278,7 +277,6 @@ export const ChartText = memo<ChartTextProps>(
       }
 
       const parentBounds = bounds ?? fullChartBounds;
-      // TODO: it might be more clear to allow chartRect to be null until it has been measured after first render
       if (
         !backgroundRectDimensions ||
         !parentBounds ||

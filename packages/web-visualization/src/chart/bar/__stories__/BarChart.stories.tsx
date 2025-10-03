@@ -204,7 +204,6 @@ const ScrubberRect = memo(() => {
   );
 });
 
-// todo: show a 31 day example on the doc site and explain how bearish vs bullish candles work
 const Candlesticks = () => {
   const infoTextRef = React.useRef<HTMLSpanElement>(null);
   const selectedIndexRef = React.useRef<number | undefined>(undefined);

@@ -325,8 +325,7 @@ export const BarStack = memo<BarStackProps>(
         const expandedBars = allBars.map((bar, index) => {
           if (bar.height < barMinSize) {
             const heightIncrease = barMinSize - bar.height;
-            // For now, skip minimum size expansion logic
-            // TODO: Implement minimum size expansion without storing dataValue
+
             const bottom = 0;
             const top = 0;
 
@@ -484,8 +483,7 @@ export const BarStack = memo<BarStackProps>(
 
           const bar = allBars[0];
           const heightIncrease = stackMinSize - bar.height;
-          // For now, skip minimum size expansion logic
-          // TODO: Implement minimum size expansion without storing dataValue
+
           const bottom = 0;
           const top = 0;
 

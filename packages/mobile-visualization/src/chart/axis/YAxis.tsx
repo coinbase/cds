@@ -258,7 +258,6 @@ export const YAxis = memo<YAxisProps>(
         )}
         {chartTextData && (
           <AnimatedG animatedProps={tickLabelsAnimatedStyle}>
-            {/* TODO pass through styles */}
             <SmartChartTextGroup
               prioritizeEndLabels
               labels={chartTextData}

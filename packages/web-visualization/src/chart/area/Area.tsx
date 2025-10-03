@@ -29,8 +29,6 @@ export type AreaComponentProps = {
 
 export type AreaComponent = React.FC<AreaComponentProps>;
 
-// todo: pull as many props as possible
-// todo: checkout https://mui.com/x/react-charts/lines/#baseline
 export type AreaProps = Pick<
   AreaComponentProps,
   'fill' | 'fillOpacity' | 'stroke' | 'strokeWidth' | 'baseline'
@@ -126,9 +124,6 @@ export const Area = memo<AreaProps>(
     }
 
     const fill = specifiedFill ?? matchedSeries?.color ?? 'var(--color-fgPrimary)';
-
-    // todo: should we drop fillOpacity? if we keep it, figure out the best way to handle opacity
-    // Such as DottedArea, where they are set by light / dark theme
 
     return (
       <AreaComponent

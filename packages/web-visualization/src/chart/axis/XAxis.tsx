@@ -224,7 +224,6 @@ export const XAxis = memo<XAxisProps>(
               initial="initial"
               variants={animate ? axisTickLabelsInitialAnimationVariants : undefined}
             >
-              {/* TODO pass through styles */}
               <SmartChartTextGroup
                 prioritizeEndLabels
                 labels={chartTextData}
