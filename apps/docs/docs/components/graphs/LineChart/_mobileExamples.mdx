@@ -79,7 +79,7 @@ Show data points along the line for emphasis.
       data: [15, 28, 22, 38, 35, 48, 42, 55, 50, 62],
     },
   ]}
-  renderPoints={() => true}
+  renderPoints
   showYAxis
   yAxis={{
     showGrid: true,
@@ -130,7 +130,7 @@ Enable scrubbing for detailed value inspection.
     showGrid: true,
     formatValue: (value) => `$${value.toLocaleString()}`,
   }}
-  renderPoints={() => true}
+  renderPoints
 >
   <Scrubber />
 </LineChart>
@@ -179,7 +179,7 @@ function ConditionalPointsChart() {
   const data = [20, 35, 15, 45, 40, 55, 30, 65, 60, 70];
   const maxValue = Math.max(...data);
   const minValue = Math.min(...data);
-  
+
   return (
     <LineChart
       height={250}
@@ -211,7 +211,7 @@ Display time series data with proper formatting.
 function TimeSeriesLineChart() {
   const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug'];
   const data = [45, 52, 48, 61, 58, 65, 70, 68];
-  
+
   return (
     <LineChart
       height={250}
@@ -257,7 +257,7 @@ Handle negative values for displaying profit/loss or temperature data.
     showGrid: true,
     formatValue: (v) => `${v}°C`,
   }}
-  renderPoints={() => true}
+  renderPoints
 />
 ```
 
@@ -315,7 +315,8 @@ function AnimatedLineChart() {
       yAxis={{
         showGrid: true,
       }}
-      renderPoints={() => true}
+      renderPoints
     />
   );
 }
+```
