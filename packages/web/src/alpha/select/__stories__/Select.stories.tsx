@@ -18,12 +18,14 @@ export default {
 };
 
 const paddingCss = css`
+  /* stylelint-disable-next-line color-named */
   background-color: pink;
   padding: 20px;
 `;
 
 const hoveredBackgroundCss = css`
   &:hover {
+    /* stylelint-disable-next-line color-named */
     background-color: lightblue;
   }
 `;
