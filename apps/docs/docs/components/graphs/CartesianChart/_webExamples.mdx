@@ -479,7 +479,7 @@ function PriceWithVolume() {
         accessibilityLabel={accessibilityLabel}
         aria-labelledby={headerId}
       >
-        <YAxis axisId="price" showGrid tickLabelFormatter={formatPriceInThousands} size={80} GridLineComponent={ThinSolidLine} />
+        <YAxis axisId="price" showGrid tickLabelFormatter={formatPriceInThousands} width={80} GridLineComponent={ThinSolidLine} />
         <BarPlot seriesIds={['volume']} />
         <Line seriesId="prices" curve="monotone" showArea />
         <Scrubber seriesIds={['prices']} />
@@ -611,8 +611,8 @@ function EarningsHistory() {
           requestedTickCount={3}
           tickLabelFormatter={formatEarningAmount}
         />
-        <XAxis size={20} tickLabelFormatter={(index) => quarters[index]} />
-        <XAxis size={20} tickLabelFormatter={surprisePercentage} />
+        <XAxis height={20} tickLabelFormatter={(index) => quarters[index]} />
+        <XAxis height={20} tickLabelFormatter={surprisePercentage} />
         <CirclePlot opacity={0.5} seriesId="estimatedEPS" />
         <CirclePlot seriesId="actualEPS" />
       </CartesianChart>
