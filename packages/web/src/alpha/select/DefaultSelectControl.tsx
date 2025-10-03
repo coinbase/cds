@@ -94,13 +94,20 @@ export const DefaultSelectControl: SelectControlComponent<'single' | 'multi'> = 
       const labelNode = useMemo(
         () =>
           typeof label === 'string' && labelVariant === 'inside' ? (
-            <InputLabel color="fg" paddingBottom={0} paddingTop={1} paddingX={2}>
-              {label}
-            </InputLabel>
+            <Pressable
+              noScaleOnPress
+              disabled={disabled}
+              onClick={() => setOpen((s) => !s)}
+              tabIndex={-1}
+            >
+              <InputLabel color="fg" paddingBottom={0} paddingTop={1} paddingX={2}>
+                {label}
+              </InputLabel>
+            </Pressable>
           ) : (
             label
           ),
-        [label, labelVariant],
+        [label, labelVariant, disabled, setOpen],
       );
 
       const interactableBlendStyles = useMemo(
