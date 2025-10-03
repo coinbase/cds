@@ -155,7 +155,6 @@ const TooManyPeriodsSelectorExample = () => {
         </Box>
         <View pointerEvents="none" style={gradientOverlayStyles} />
       </Box>
-      {/* todo - better way to handle height? https://www.figma.com/design/sbeD5oRL9OL5hbIzaqzL7T/Line-Charts----Sparkline?node-id=5947-13669&t=7esgu5dzBls0bZNV-4 */}
       <IconButton
         compact
         accessibilityLabel="Configure chart"
@@ -194,9 +193,6 @@ const BTCTab: TabComponent = memo(
 
     const textColor = isActive ? btcColor : undefined;
 
-    // todo: see if there is a simpler way for us to transition colors here
-    // previous attempt included adding styles and classNames props which didn't work with MotionText
-    // Another option is to create a new periodselectortab component
     return (
       <SegmentedTab
         ref={ref}

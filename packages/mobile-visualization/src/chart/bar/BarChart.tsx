@@ -154,7 +154,6 @@ export const BarChart = memo(
         range: xRange,
       };
 
-      // todo: see if we can get rid of this
       const hasNegativeValues = useMemo(() => {
         if (!series) return false;
         return series.some((s) =>

@@ -81,8 +81,6 @@ export type AxisBaseProps = {
   requestedTickCount?: number;
   /**
    * Whether to show grid lines at each tick position.
-   * @todo see if we can move to separate Grid component
-   * Remaining issue is that this needs to line up with 'ticks'
    */
   showGrid?: boolean;
   /**

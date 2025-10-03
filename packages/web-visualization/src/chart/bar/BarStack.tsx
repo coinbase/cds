@@ -127,7 +127,7 @@ export const BarStack = memo<BarStackProps>(
     fillOpacity: defaultFillOpacity,
     stroke: defaultStroke,
     strokeWidth: defaultStrokeWidth,
-    borderRadius,
+    borderRadius = 4,
     BarStackComponent = DefaultBarStack,
     stackGap,
     barMinSize,
@@ -664,7 +664,7 @@ export const BarStack = memo<BarStackProps>(
 
     return (
       <BarStackComponent
-        borderRadius={borderRadius ?? 4}
+        borderRadius={borderRadius}
         categoryIndex={categoryIndex}
         height={stackRect.height}
         roundBottom={stackRoundBottom}

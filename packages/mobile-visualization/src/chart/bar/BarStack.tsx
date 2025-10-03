@@ -1,5 +1,6 @@
 import React, { memo, useMemo } from 'react';
-import type { Rect } from '@coinbase/cds-common/types';
+import type { Rect } from '@coinbase/cds-common';
+import type { ChartScaleFunction } from '@coinbase/cds-common/visualizations/charts';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 
 import { useCartesianChartContext } from '../ChartProvider';
@@ -77,11 +78,11 @@ export type BarStackProps = Pick<
   /**
    * Y scale function.
    */
-  yScale: any; // TODO: proper d3-scale type
+  yScale: ChartScaleFunction;
   /**
    * Chart rect for bounds.
    */
-  rect: { x: number; y: number; width: number; height: number };
+  rect: Rect;
   /**
    * Y axis ID to use.
    * If not provided, will use the yAxisId from the first series.
@@ -123,12 +124,11 @@ export const BarStack = memo<BarStackProps>(
     width,
     yScale,
     rect,
-    yAxisId,
     BarComponent: defaultBarComponent,
     fillOpacity: defaultFillOpacity,
     stroke: defaultStroke,
     strokeWidth: defaultStrokeWidth,
-    borderRadius,
+    borderRadius = 4,
     BarStackComponent = DefaultBarStack,
     stackGap,
     barMinSize,
@@ -137,10 +137,6 @@ export const BarStack = memo<BarStackProps>(
   }) => {
     const theme = useTheme();
     const { getSeriesData, getXAxis } = useCartesianChartContext();
-
-    const stackGapPx = stackGap ?? 0;
-    const barMinSizePx = barMinSize ?? 0;
-    const stackMinSizePx = stackMinSize ?? 0;
 
     const xAxis = getXAxis();
 
@@ -246,7 +242,7 @@ export const BarStack = memo<BarStackProps>(
       });
 
       // Apply proportional gap distribution to maintain total stack height
-      if (stackGapPx > 0 && allBars.length > 1) {
+      if (stackGap && allBars.length > 1) {
         // Separate bars by baseline side
         const barsAboveBaseline = allBars.filter((bar) => {
           const [bottom, top] = (bar.dataY as [number, number]).sort((a, b) => a - b);
@@ -259,7 +255,7 @@ export const BarStack = memo<BarStackProps>(
 
         // Apply proportional gaps to bars above baseline
         if (barsAboveBaseline.length > 1) {
-          const totalGapSpace = stackGapPx * (barsAboveBaseline.length - 1);
+          const totalGapSpace = stackGap * (barsAboveBaseline.length - 1);
           const totalDataHeight = barsAboveBaseline.reduce((sum, bar) => sum + bar.height, 0);
           const heightReduction = totalGapSpace / totalDataHeight;
 
@@ -283,13 +279,13 @@ export const BarStack = memo<BarStackProps>(
             }
 
             // Move to next position (include gap for next bar)
-            currentY = newY - (index < sortedBars.length - 1 ? stackGapPx : 0);
+            currentY = newY - (index < sortedBars.length - 1 ? stackGap : 0);
           });
         }
 
         // Apply proportional gaps to bars below baseline
         if (barsBelowBaseline.length > 1) {
-          const totalGapSpace = stackGapPx * (barsBelowBaseline.length - 1);
+          const totalGapSpace = stackGap * (barsBelowBaseline.length - 1);
           const totalDataHeight = barsBelowBaseline.reduce((sum, bar) => sum + bar.height, 0);
           const heightReduction = totalGapSpace / totalDataHeight;
 
@@ -312,7 +308,7 @@ export const BarStack = memo<BarStackProps>(
             }
 
             // Move to next position (include gap for next bar)
-            currentY = currentY + newHeight + (index < sortedBars.length - 1 ? stackGapPx : 0);
+            currentY = currentY + newHeight + (index < sortedBars.length - 1 ? stackGap : 0);
           });
         }
 
@@ -324,11 +320,11 @@ export const BarStack = memo<BarStackProps>(
       }
 
       // Apply barMinSize constraints
-      if (barMinSizePx > 0) {
+      if (barMinSize) {
         // First, expand bars that need it and track the expansion
         const expandedBars = allBars.map((bar, index) => {
-          if (bar.height < barMinSizePx) {
-            const heightIncrease = barMinSizePx - bar.height;
+          if (bar.height < barMinSize) {
+            const heightIncrease = barMinSize - bar.height;
             // For now, skip minimum size expansion logic
             // TODO: Implement minimum size expansion without storing dataValue
             const bottom = 0;
@@ -338,7 +334,7 @@ export const BarStack = memo<BarStackProps>(
             let newBottom = bottom;
             let newTop = top;
 
-            const scaleUnit = Math.abs(yScale(1) - yScale(0));
+            const scaleUnit = Math.abs((yScale(1) ?? 0) - (yScale(0) ?? 0));
 
             if (bottom === 0) {
               // Expand away from baseline (upward for positive)
@@ -455,12 +451,12 @@ export const BarStack = memo<BarStackProps>(
 
             const shouldRoundTop =
               index === bars.length - 1 ||
-              (a.shouldApplyGap && stackGapPx > 0) ||
+              (a.shouldApplyGap && stackGap) ||
               (!a.shouldApplyGap && barAfter && barAfter.y + barAfter.height !== a.y);
 
             const shouldRoundBottom =
               index === 0 ||
-              (a.shouldApplyGap && stackGapPx > 0) ||
+              (a.shouldApplyGap && stackGap) ||
               (!a.shouldApplyGap && barBefore && barBefore.y !== a.y + a.height);
 
             return {
@@ -482,12 +478,12 @@ export const BarStack = memo<BarStackProps>(
       };
 
       // Apply stackMinSize constraints
-      if (stackMinSizePx > 0) {
-        if (allBars.length === 1 && stackBounds.height < stackMinSizePx) {
+      if (stackMinSize) {
+        if (allBars.length === 1 && stackBounds.height < stackMinSize) {
           // For single bars (non-stacked), treat stackMinSize like barMinSize
 
           const bar = allBars[0];
-          const heightIncrease = stackMinSizePx - bar.height;
+          const heightIncrease = stackMinSize - bar.height;
           // For now, skip minimum size expansion logic
           // TODO: Implement minimum size expansion without storing dataValue
           const bottom = 0;
@@ -497,7 +493,7 @@ export const BarStack = memo<BarStackProps>(
           let newBottom = bottom;
           let newTop = top;
 
-          const scaleUnit = Math.abs(yScale(1) - yScale(0));
+          const scaleUnit = Math.abs((yScale(1) ?? 0) - (yScale(0) ?? 0));
 
           if (bottom === 0) {
             // Expand away from baseline (upward for positive)
@@ -531,7 +527,7 @@ export const BarStack = memo<BarStackProps>(
             width,
             height: newHeight,
           };
-        } else if (allBars.length > 1 && stackBounds.height < stackMinSizePx) {
+        } else if (allBars.length > 1 && stackBounds.height < stackMinSize) {
           // For multiple bars (stacked), scale heights while preserving gaps
 
           // Calculate total bar height (excluding gaps)
@@ -539,7 +535,7 @@ export const BarStack = memo<BarStackProps>(
           const totalGapHeight = stackBounds.height - totalBarHeight;
 
           // Calculate how much we need to increase bar heights
-          const requiredBarHeight = stackMinSizePx - totalGapHeight;
+          const requiredBarHeight = stackMinSize - totalGapHeight;
           const barScaleFactor = requiredBarHeight / totalBarHeight;
 
           // Sort bars by position to maintain order
@@ -614,7 +610,7 @@ export const BarStack = memo<BarStackProps>(
         }
 
         // Reapply border radius logic only if we actually scaled
-        if (stackBounds.height < stackMinSizePx) {
+        if (stackBounds.height < stackMinSize) {
           allBars = applyBorderRadiusLogic(allBars);
         }
       }
@@ -628,9 +624,9 @@ export const BarStack = memo<BarStackProps>(
       categoryIndex,
       roundBaseline,
       baseline,
-      stackGapPx,
-      barMinSizePx,
-      stackMinSizePx,
+      stackGap,
+      barMinSize,
+      stackMinSize,
       yScale,
       theme.color.fgPrimary,
     ]);

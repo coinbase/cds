@@ -1884,7 +1884,7 @@ export const All = () => {
             domain: { min: 0, max: 10 },
           }}
         >
-          <YAxis showGrid showLine showTickMarks position="start" />
+          <YAxis showGrid showLine showTickMarks position="left" />
           <XAxis
             showLine
             showTickMarks

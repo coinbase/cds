@@ -199,8 +199,6 @@ function CompactLineChart() {
 
 You can use the y-axis scale and a [linearGradient](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/linearGradient) to create a gain/loss chart.
 
-todo: we can't seem to do strokeWidth={4} at LineChart level (had to switch this to Chart anyways but should fix this)
-
 ```jsx live
 function GainLossChart() {
   const [highlightedItem, setHighlightedItem] = useState(undefined);

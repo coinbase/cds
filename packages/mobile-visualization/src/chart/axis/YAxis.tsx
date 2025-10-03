@@ -71,7 +71,6 @@ export const YAxis = memo<YAxisProps>(
     ...props
   }) => {
     const theme = useTheme();
-    // todo: probably switch to our own id generator, use id seems to be for accessibility
     const registrationId = useId();
     const { animate, getYScale, getYAxis, registerAxis, unregisterAxis, getAxisBounds } =
       useCartesianChartContext();
@@ -141,7 +140,7 @@ export const YAxis = memo<YAxisProps>(
         }
 
         // Otherwise use the formatter (if provided) or the value itself
-        return tickLabelFormatter?.(value) ?? value; // TODO the boolean condition above is really weird ... should it be ORs? When we can remove the nullish check on the function call here
+        return tickLabelFormatter?.(value) ?? value;
       },
       [yAxis?.data, tickLabelFormatter],
     );

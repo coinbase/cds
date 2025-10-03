@@ -24,7 +24,6 @@ export default {
 };
 
 const MultipleChart = () => {
-  // todo: make a line chart with a bar chart underneath
   const barData = [1, 2, 3, 2, 1];
   const lineData = [4, 3, 1, 3, 4];
 

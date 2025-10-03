@@ -184,7 +184,6 @@ export const Scrubber = memo(
         const xAxis = getXAxis();
         if (!xScale) return { dataX: undefined, dataIndex: undefined };
 
-        // todo: can we store this in axis config?
         const maxDataLength =
           series?.reduce((max: any, s: any) => {
             const seriesData = getStackedSeriesData(s.id) || getSeriesData(s.id);

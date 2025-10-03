@@ -35,7 +35,6 @@ export const PeriodSelectorActiveIndicator = memo(
 
     if (!width) return null;
 
-    // todo: see if we can match the transition length or something for this going forward
     return (
       <MotionBox
         animate={activeAnimation}

@@ -37,20 +37,6 @@ const Example: React.FC<
 
 const ThinSolidLine = memo((props: SolidLineProps) => <SolidLine {...props} strokeWidth={1} />);
 
-/**
- * todo examples
- * simple
- * have an outline on stacks
- * have a custom stripe pattern for a bar with outline
- * dotted with outline
- * bar chart with lines on top
- * stack gap and all related examples with border radius
- * Showcase example legend and even a popover would be great
- * Showcase a highlighted background maybe even that
- * handle bar plot needing to know about x and/or y scale so we can only render those
- * ignore any series that aren't in that scale and only factor in the series provided when handling # of different stacks per category
- */
-
 const PositiveAndNegativeCashFlow = () => {
   const categories = Array.from({ length: 31 }, (_, i) => `3/${i + 1}`);
   const gains = [
