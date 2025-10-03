@@ -8,7 +8,11 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
-## Unreleased
+## 8.13.6 (10/3/2025 PST)
+
+#### 🐞 Fixes
+
+- Fix getDotSize logic. [[#68](https://github.com/coinbase/cds/pull/68)] [DX-4971]
 
 #### 📘 Misc
 
