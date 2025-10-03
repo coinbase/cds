@@ -117,6 +117,7 @@ module.exports = {
     'page/PageFooter',
     'media/Avatar',
     'media/RemoteImage',
+    'media/RemoteImageGroup',
     'navigation/BrowserBar',
     'navigation/NavigationBar',
     'navigation/NavigationTitle',

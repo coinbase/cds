@@ -249,6 +249,11 @@ const sidebars: SidebarsConfig = {
             },
             {
               type: 'doc',
+              id: 'components/media/RemoteImageGroup/remoteImageGroup',
+              label: 'RemoteImageGroup',
+            },
+            {
+              type: 'doc',
               id: 'components/media/SpotIcon/spotIcon',
               label: 'SpotIcon',
             },
