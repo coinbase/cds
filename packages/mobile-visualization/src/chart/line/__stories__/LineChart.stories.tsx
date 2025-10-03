@@ -2062,7 +2062,7 @@ const AvailabilityChart = () => {
       <Line
         curve="stepAfter"
         renderPoints={() => ({
-          fill: theme.color.bg,
+          color: theme.color.bg,
           stroke: 'url(#availabilityGradient)',
           strokeWidth: 2,
         })}
@@ -2257,7 +2257,7 @@ const LineChartStories = () => {
 const AssetPriceScreen = () => {
   return (
     <ExampleScreen>
-      {/*<Example title="Scrubber with Imperative Handle">
+      <Example title="Scrubber with Imperative Handle">
         <ScrubberWithImperativeHandle />
       </Example>
       <Example title="Basic">
@@ -2300,7 +2300,6 @@ const AssetPriceScreen = () => {
           showYAxis
           curve="natural"
           height={defaultChartHeight}
-          renderPoints={() => true}
           series={[
             {
               id: 'line',
@@ -2333,19 +2332,19 @@ const AssetPriceScreen = () => {
       </Example>
       <Example title="BTC Price Chart">
         <BTCPriceChart />
-      </Example>*/}
+      </Example>
       <Example title="Gain/Loss">
         <GainLossChart />
       </Example>
-      {/*<Example title="Live Asset Price">
+      <Example title="Live Asset Price">
         <LiveAssetPrice />
-      </Example>*/}
+      </Example>
       <Example title="Prediction Chart">
         <PredictionChart />
       </Example>
-      {/*<Example title="Availability Chart">
+      <Example title="Availability Chart">
         <AvailabilityChart />
-      </Example>*/}
+      </Example>
     </ExampleScreen>
   );
 };

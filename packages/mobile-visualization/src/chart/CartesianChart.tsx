@@ -20,48 +20,42 @@ import {
   useTotalAxisPadding,
 } from '@coinbase/cds-common/visualizations/charts';
 import { useLayout } from '@coinbase/cds-mobile/hooks/useLayout';
-import type { BoxProps } from '@coinbase/cds-mobile/layout';
+import type { BoxBaseProps, BoxProps } from '@coinbase/cds-mobile/layout';
 import { Box } from '@coinbase/cds-mobile/layout';
 
 import { ScrubberProvider, type ScrubberProviderProps } from './scrubber/ScrubberProvider';
 import { CartesianChartProvider } from './ChartProvider';
 
-export type CartesianChartBaseProps = Pick<
-  ScrubberProviderProps,
-  'enableScrubbing' | 'onScrubberPositionChange'
-> & {
-  /**
-   * Configuration objects that define how to visualize the data.
-   * Each series contains its own data array.
-   */
-  series?: Array<Series>;
-  /**
-   * Chart content (axes, lines, etc.)
-   */
-  children?: React.ReactNode;
-  /**
-   * Whether to animate the chart.
-   * @default true
-   */
-  animate?: boolean;
-  /**
-   * Configuration for x-axis.
-   */
-  xAxis?: Partial<Omit<AxisConfigProps, 'id'>>;
-  /**
-   * Configuration for y-axis(es). Can be a single config or array of configs.
-   * If array, first axis becomes default if no id is specified.
-   */
-  yAxis?: Partial<AxisConfigProps> | Partial<AxisConfigProps>[];
-  /**
-   * Inset around the entire chart (outside the axes).
-   */
-  inset?: number | Partial<ChartInset>;
-};
+export type CartesianChartBaseProps = BoxBaseProps &
+  Pick<ScrubberProviderProps, 'enableScrubbing' | 'onScrubberPositionChange'> & {
+    /**
+     * Configuration objects that define how to visualize the data.
+     * Each series contains its own data array.
+     */
+    series?: Array<Series>;
+    /**
+     * Whether to animate the chart.
+     * @default true
+     */
+    animate?: boolean;
+    /**
+     * Configuration for x-axis.
+     */
+    xAxis?: Partial<Omit<AxisConfigProps, 'id'>>;
+    /**
+     * Configuration for y-axis(es). Can be a single config or array of configs.
+     * If array, first axis becomes default if no id is specified.
+     */
+    yAxis?: Partial<AxisConfigProps> | Partial<AxisConfigProps>[];
+    /**
+     * Inset around the entire chart (outside the axes).
+     */
+    inset?: number | Partial<ChartInset>;
+  };
 
 export type CartesianChartProps = CartesianChartBaseProps &
   Pick<ScrubberProviderProps, 'allowOverflowGestures'> &
-  Omit<BoxProps, 'children' | 'style'> & {
+  BoxProps & {
     /**
      * Chart width. If not provided, will use the container's measured width.
      */
@@ -70,10 +64,6 @@ export type CartesianChartProps = CartesianChartBaseProps &
      * Chart height. If not provided, will use the container's measured height.
      */
     height?: number | string;
-    /**
-     * Additional styles for the chart container.
-     */
-    style?: ViewStyle;
   };
 
 export const CartesianChart = memo(
@@ -351,7 +341,14 @@ export const CartesianChart = memo(
             enableScrubbing={enableScrubbing}
             onScrubberPositionChange={onScrubberPositionChange}
           >
-            <Box ref={ref} onLayout={onContainerLayout} style={containerStyles} {...props}>
+            <Box
+              ref={ref}
+              accessibilityLiveRegion="polite"
+              accessibilityRole="image"
+              onLayout={onContainerLayout}
+              style={containerStyles}
+              {...props}
+            >
               <Svg height={chartHeight} width={chartWidth}>
                 {children}
               </Svg>

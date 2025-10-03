@@ -8,11 +8,13 @@ import { m as motion } from 'framer-motion';
 
 import { useCartesianChartContext } from '../ChartProvider';
 
-// Define the valid SVG children for the <text> element.
 type ValidChartTextChildElements =
   | React.ReactElement<React.SVGProps<SVGTSpanElement>, 'tspan'>
   | React.ReactElement<React.SVGProps<SVGTextPathElement>, 'textPath'>;
 
+/**
+ * The supported content types for ChartText.
+ */
 export type ChartTextChildren =
   | string
   | number
@@ -40,7 +42,7 @@ export type ChartTextProps = SharedProps &
     color?: string;
     /**
      * The background color of the text's background rectangle.
-     * @default 'transparent'
+     * @default 'transparent' if not elevated, 'var(--color-bg)' if elevated
      */
     background?: string;
     /**
@@ -82,7 +84,6 @@ export type ChartTextProps = SharedProps &
     verticalAlignment?: TextVerticalAlignment;
     /**
      * When true, disables automatic repositioning to fit within bounds.
-     * @default false
      */
     disableRepositioning?: boolean;
     /**
@@ -161,7 +162,7 @@ export const ChartText = memo<ChartTextProps>(
     verticalAlignment = 'middle',
     dx,
     dy,
-    disableRepositioning = false,
+    disableRepositioning,
     bounds,
     opacity,
     testID,
