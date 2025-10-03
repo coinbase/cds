@@ -127,7 +127,15 @@ const Playground = memo(function Playground({
           {...props}
         >
           {!hidePreview && (
-            <VStack background="bg" borderRadius={400} color="fg" font="body" padding={3}>
+            <VStack
+              background="bg"
+              borderRadius={400}
+              color="fg"
+              font="body"
+              padding={3}
+              position="relative"
+              zIndex={0}
+            >
               <BrowserOnly fallback={<div>Loading...</div>}>{previewComponent}</BrowserOnly>
             </VStack>
           )}

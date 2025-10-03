@@ -1,0 +1,11 @@
+{
+  "import": "import { RemoteImageGroup } from '@coinbase/cds-mobile/media/RemoteImageGroup'",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/mobile/src/media/RemoteImageGroup.tsx",
+  "description": "A component to display a group of RemoteImage components in a stack.",
+  "relatedComponents": [
+    {
+      "label": "RemoteImage",
+      "url": "/components/media/RemoteImage"
+    }
+  ]
+}
