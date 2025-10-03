@@ -49,33 +49,40 @@ import { GettingStartedBanner } from '@site/src/components/page/ComponentBanner/
 
 <MDXSection>
 <MDXArticle>
-## Constraints
+## Developer experience
 
-Coinbase apps have unique performance and build requirements that necessitate specific constraints in CDS.
+CDS is designed to make your development workflow as smooth as possible.
 
-:::tip
-**All of these constraints can be removed by compiling the CDS source code yourself.**
-:::
+- **TypeScript first** - Full type safety with excellent IDE autocomplete for props, theme values, and style props. Most mistakes are caught at compile time.
 
-If you find CDS too limiting, you may want to compile it from the source to remove these constraints, or you may still find CDS valuable as a fork or reference.
+- **Flexible styling** - Use the StyleProps API for rapid development with theme-aware values, or drop down to className and style props for full control. Mix and match approaches as needed.
 
-</MDXArticle>
-<MDXArticle>
-### Web styles are compiled at library build time
+- **Component composition** - Build complex UIs by composing simple primitives. Most components expose subcomponents that can be customized or replaced entirely.
 
-Web styles are compiled at library build time, not at app build time.
+- **Performance optimized** - All web components use atomic CSS with zero runtime overhead. CSS is generated at build time and styles are applied via static classnames.
 
-Compiling CSS at application build time adds significant latency to the build process. Instead, building CSS when we publish the CDS library keeps our app builds extremely fast. However, this means that you can't customize the responsive breakpoints without compiling CDS yourself.
+- **Extensive documentation** - Every component includes Storybook stories, interactive examples, detailed prop tables, and usage guidelines.
 
-</MDXArticle>
-<MDXArticle>
-### Automatic management of CSS imports
+```jsx
+import { ThemeProvider } from '@cbhq/cds-web';
+import { defaultTheme } from '@cbhq/cds-web/themes/defaultTheme';
+import { Box } from '@cbhq/cds-web/layout';
+import { Text } from '@cbhq/cds-web/typography';
+import { Button } from '@cbhq/cds-web/buttons';
 
-Static CSS imports are automatically managed by CDS components.
-
-The order of CSS imports is important and changes the specificity of styles. If you manually import CSS files in each component, you can easily break the specificity of the styles - or cause non-deterministic styles when using Suspense. If you manually import CSS files all in one place, component styles can't be tree shaken when not in use.
-
-CDS components will always automatically import the necessary static CSS in the correct order. This is done to ensure style specificity is deterministic and always correct, and enables CSS tree shaking based on component usage. However, this means that you can't tree shake the default styles for a component at app build time if you've overridden them.
+const App = () => (
+  <ThemeProvider theme={defaultTheme} activeColorScheme="light">
+    <Box padding={4} background="bgPrimary" borderRadius={200}>
+      <Text font="title1" color="fg">
+        Welcome to CDS
+      </Text>
+      <Button variant="positive" marginTop={2}>
+        Get started
+      </Button>
+    </Box>
+  </ThemeProvider>
+);
+```
 
 </MDXArticle>
 </MDXSection>
