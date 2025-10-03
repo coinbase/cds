@@ -990,3 +990,136 @@ function StressTestExample() {
   );
 }
 ```
+
+## Custom styles
+
+You can use custom styles on the various subcomponents in Select
+
+```jsx
+function CustomStylesExample() {
+  const exampleOptions = [
+    { value: null, label: 'Remove selection' },
+    { value: '1', label: 'Option 1' },
+    { value: '2', label: 'Option 2' },
+    { value: '3', label: 'Option 3' },
+    { value: '4', label: 'Option 4' },
+  ];
+  const [value, setValue] = useState('1');
+
+  return (
+    <Select
+      label="Single select - custom styles"
+      onChange={setValue}
+      options={exampleOptions}
+      styles={{
+        control: {
+          backgroundColor: 'lightgray',
+          padding: 10,
+        },
+        option: {
+          backgroundColor: 'lightblue',
+        },
+        optionBlendStyles: {
+          pressedBackground: 'darkgreen',
+        },
+      }}
+      value={value}
+    />
+  );
+}
+```
+
+## Custom class names
+
+You can use custom class names on the various subcomponents in Select
+
+```jsx
+function CustomClassNamesExamples() {
+  const exampleOptions = [
+    { value: null, label: 'Remove selection' },
+    { value: '1', label: 'Option 1' },
+    { value: '2', label: 'Option 2' },
+    { value: '3', label: 'Option 3' },
+    { value: '4', label: 'Option 4' },
+  ];
+  const [value, setValue] = useState('1');
+
+  return (
+    <Select
+      classNames={{
+        control: customControlStyles,
+        option: customOptionStyles,
+      }}
+      label="Single select - class names"
+      onChange={setValue}
+      options={exampleOptions}
+      placeholder="Empty value"
+      value={value}
+    />
+  );
+}
+```
+
+## Custom components
+
+Select is highly customizable. Use the _Component_ props to customize the various subcomponents in Select.
+
+### Customizable subcomponents
+
+- **SelectControlComponent**: Trigger component used to open and close the Select.
+- **SelectDropdownComponent**: Component which renders the dropdown menu and SelectOptionComponents.
+- **SelectOptionComponent**: Component which renders the content of an option in the select.
+
+Below is a diagram to help visualize the Select anatomy.
+
+```text
+Select
+├── SelectControlComponent (trigger to open/close)
+└── SelectDropdownComponent (dropdown menu)
+    ├── SelectOptionComponent (option 1)
+    ├── SelectOptionComponent (option 2)
+    ├── SelectOptionComponent (option 3)
+    └── SelectOptionComponent (option N...)
+```
+
+### Example
+
+```jsx
+function CustomComponentExamples() {
+  const exampleOptions = [
+    { value: null, label: 'Remove selection' },
+    { value: '1', label: 'Option 1' },
+    { value: '2', label: 'Option 2' },
+    { value: '3', label: 'Option 3' },
+    { value: '4', label: 'Option 4' },
+  ];
+  const [value, setValue] = useState('1');
+
+  const CustomControlComponent: SelectControlComponent = ({ value, setOpen }) => {
+    return <Button onPress={() => setOpen(true)}>{value ?? 'Empty value'}</Button>;
+  };
+
+  const CustomOptionComponent: SelectOptionComponent = ({ value, onPress }) => {
+    return (
+      <HStack justifyContent="center">
+        <Spinner size={4} />
+        <Button transparent onPress={() => onPress?.(value)} width="80%">
+          <Text>{value ?? 'Empty value'}</Text>
+        </Button>
+        <Spinner size={4} />
+      </HStack>
+    );
+  };
+
+  return (
+    <Select
+      SelectOptionComponent={CustomOptionComponent}
+      label="Single select - custom option component"
+      onChange={setValue}
+      options={exampleOptions}
+      placeholder="Empty value"
+      value={value}
+    />
+  );
+}
+```
