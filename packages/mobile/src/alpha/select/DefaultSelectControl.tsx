@@ -201,7 +201,7 @@ export const DefaultSelectControl: SelectControlComponent = memo(
               paddingStart={startNode ? 0 : 2}
               paddingY={labelVariant === 'inside' ? 0 : compact ? 1 : 2}
             >
-              <HStack alignItems="center" flexGrow={1} flexShrink={1}>
+              <HStack alignItems="center" flexGrow={1}>
                 {!!startNode && (
                   <HStack alignItems="center" paddingX={2}>
                     {startNode}
@@ -212,7 +212,9 @@ export const DefaultSelectControl: SelectControlComponent = memo(
                     {labelNode}
                   </HStack>
                 ) : null}
-                <VStack justifyContent="center">{valueNode}</VStack>
+                <VStack justifyContent="center" maxWidth={startNode ? '70%' : '85%'}>
+                  {valueNode}
+                </VStack>
               </HStack>
             </HStack>
           </TouchableOpacity>

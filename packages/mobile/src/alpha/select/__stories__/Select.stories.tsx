@@ -698,6 +698,24 @@ const MultiSelectMaxSelectedOptionsExample = () => {
   );
 };
 
+const MutliSelectStartNodeExample = () => {
+  const { value, onChange } = useMultiSelect({
+    initialValue: ['1'],
+  });
+
+  return (
+    <Select
+      label="Multi select - start node"
+      onChange={onChange}
+      options={exampleOptions}
+      placeholder="Empty value"
+      startNode={<Icon color="fg" name="star" />}
+      type="multi"
+      value={value}
+    />
+  );
+};
+
 const VeryLongLabelsExample = () => {
   const longOptions = [
     { value: null, label: 'Remove selection' },
@@ -962,6 +980,9 @@ const SelectV3Screen = () => {
       </Example>
       <Example title="Multi Select Max Selected Options">
         <MultiSelectMaxSelectedOptionsExample />
+      </Example>
+      <Example title="Multi Select Start Node">
+        <MutliSelectStartNodeExample />
       </Example>
       <Example title="Very Long Option Labels">
         <VeryLongLabelsExample />
