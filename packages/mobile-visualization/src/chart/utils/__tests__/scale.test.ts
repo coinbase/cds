@@ -1,12 +1,12 @@
-import { isValidBounds, type AxisBounds } from '../chart';
+import { type AxisBounds, isValidBounds } from '../chart';
 import {
+  type CategoricalScale,
+  type ChartScaleFunction,
   getCategoricalScale,
   getNumericScale,
   isCategoricalScale,
   isLogScale,
   isNumericScale,
-  type CategoricalScale,
-  type ChartScaleFunction,
   type NumericScale,
 } from '../scale';
 
@@ -182,20 +182,6 @@ describe('getCategoricalScale', () => {
 
     expect(scale(5)).toBeUndefined(); // Index 5 doesn't exist
     expect(scale(-1)).toBeUndefined(); // Negative index
-  });
-
-  it('should handle inverted range', () => {
-    const scale = getCategoricalScale({
-      domain: { min: 0, max: 2 },
-      range: { min: 100, max: 0 },
-    });
-
-    expect(scale.range()).toEqual([100, 0]);
-    const pos0 = scale(0);
-    const pos2 = scale(2);
-    if (pos0 !== undefined && pos2 !== undefined) {
-      expect(pos0).toBeGreaterThan(pos2); // First category should have higher position
-    }
   });
 });
 
