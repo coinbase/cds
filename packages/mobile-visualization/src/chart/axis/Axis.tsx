@@ -101,7 +101,7 @@ export type AxisBaseProps = {
    * // Show every 12th data point on x-axis
    * ticks: (index) => index % 12 === 0
    */
-  ticks?: boolean | number[] | ((value: number) => boolean);
+  ticks?: number[] | ((value: number) => boolean);
   /**
    * Formatter function for axis tick values.
    * Tick values will be wrapped in ChartText component.

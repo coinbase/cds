@@ -11,11 +11,9 @@
  * ```typescript
  * // For 3 bars with 12px gaps, each bar should be reduced by 8px
  * const adjustment = getBarSizeAdjustment(3, 12);
- * console.log(adjustment); // 8
  *
  * // Single bar needs no adjustment
  * const singleBarAdjustment = getBarSizeAdjustment(1, 10);
- * console.log(singleBarAdjustment); // 0
  * ```
  */
 export function getBarSizeAdjustment(barCount: number, gapSize: number): number {

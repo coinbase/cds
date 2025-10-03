@@ -1501,7 +1501,6 @@ const MultipleSeriesChart = () => {
       ]}
       xAxis={{
         data: pages,
-        ticks: true,
       }}
       yAxis={{
         domain: {

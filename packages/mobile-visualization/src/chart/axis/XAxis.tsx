@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useEffect, useId, useMemo } from 'react';
+import { memo, useCallback, useEffect, useId, useMemo } from 'react';
 import Animated, { useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
 import { G, Line } from 'react-native-svg';
 import {

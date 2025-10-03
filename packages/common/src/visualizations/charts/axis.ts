@@ -337,7 +337,7 @@ export type GetAxisTicksDataProps = {
    *   - For numeric scales: filters generated tick values
    *   - For band scales: filters category indices
    */
-  ticks?: boolean | number[] | ((value: number) => boolean);
+  ticks?: number[] | ((value: number) => boolean);
   /**
    * The scale function to use for positioning and tick generation.
    * Can be either a numeric scale or a band scale.
@@ -703,8 +703,6 @@ export const getAxisTicksData = ({
       const generatedTicks = numericScale.ticks(requestedTickCount);
       tickValues = generatedTicks.filter(ticks);
     }
-  } else if (typeof ticks === 'boolean') {
-    tickValues = ticks && possibleTickValues ? possibleTickValues : [];
   } else if (requestedTickCount !== undefined) {
     // Use scale-generated ticks
     tickValues = numericScale.ticks(requestedTickCount);

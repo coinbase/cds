@@ -2147,7 +2147,6 @@ const LineChartStories = () => {
           ]}
           xAxis={{
             data: ['Page A', 'Page B', 'Page C', 'Page D', 'Page E', 'Page F', 'Page G'],
-            ticks: true,
             scaleType: 'band',
           }}
           yAxis={{

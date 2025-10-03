@@ -93,7 +93,6 @@ const Simple = () => {
         GridLineComponent: ThinSolidLine,
         position: 'bottom',
         requestedTickCount: 5,
-        ticks: () => true,
       }}
       yAxis={{
         domain: {
