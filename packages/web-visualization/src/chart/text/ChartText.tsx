@@ -145,11 +145,11 @@ const getDominantBaseline = (
 ): React.SVGProps<SVGTextElement>['dominantBaseline'] => {
   switch (alignment) {
     case 'top':
-      return 'ideographic';
+      return 'hanging';
     case 'middle':
       return 'central';
     case 'bottom':
-      return 'hanging';
+      return 'ideographic';
   }
 };
 

@@ -184,8 +184,8 @@ export const BasicLineChartWithPoints = () => {
         dataY={60}
         fill="purple"
         label="hello world im on a point!"
-        labelConfig={{
-          position: 'top',
+        labelProps={{
+          verticalAlignment: 'bottom',
           // why does this go in the opposite direction than what i would expect?
           dy: -16,
         }}
@@ -713,7 +713,7 @@ export const PriceChart = () => {
                 return {
                   opacity: 0,
                   label: formatPrice(currentData[index]),
-                  labelConfig: {
+                  labelProps: {
                     position: 'top',
                     dy: -16,
                   },
@@ -724,7 +724,7 @@ export const PriceChart = () => {
                 return {
                   opacity: 0,
                   label: formatPrice(currentData[index]),
-                  labelConfig: {
+                  labelProps: {
                     position: 'bottom',
                     dy: 16,
                   },

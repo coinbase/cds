@@ -29,42 +29,6 @@ const innerPointCss = css`
 `;
 
 /**
- * Calculate text alignment props based on position preset.
- */
-const calculateLabelAlignment = (
-  position: PointLabelConfig['position'],
-): Pick<ChartTextProps, 'horizontalAlignment' | 'verticalAlignment'> => {
-  switch (position) {
-    case 'top':
-      return {
-        horizontalAlignment: 'center',
-        verticalAlignment: 'bottom',
-      };
-    case 'bottom':
-      return {
-        horizontalAlignment: 'center',
-        verticalAlignment: 'top',
-      };
-    case 'left':
-      return {
-        horizontalAlignment: 'right',
-        verticalAlignment: 'middle',
-      };
-    case 'right':
-      return {
-        horizontalAlignment: 'left',
-        verticalAlignment: 'middle',
-      };
-    case 'center':
-    default:
-      return {
-        horizontalAlignment: 'center',
-        verticalAlignment: 'middle',
-      };
-  }
-};
-
-/**
  * Parameters passed to renderPoints callback function.
  */
 export type RenderPointsParams = {
@@ -84,37 +48,6 @@ export type RenderPointsParams = {
    * Y coordinate in data space (same as value).
    */
   dataY: number;
-};
-
-/**
- * Configuration for Point label rendering using ChartText.
- */
-export type PointLabelConfig = Pick<
-  ChartTextProps,
-  | 'dx'
-  | 'dy'
-  | 'font'
-  | 'fontFamily'
-  | 'fontSize'
-  | 'fontWeight'
-  | 'color'
-  | 'elevation'
-  | 'inset'
-  | 'background'
-  | 'borderRadius'
-  | 'disableRepositioning'
-  | 'bounds'
-  | 'styles'
-  | 'classNames'
-  | 'horizontalAlignment'
-  | 'verticalAlignment'
-> & {
-  /**
-   * Preset position relative to point center.
-   * Automatically calculates horizontalAlignment/verticalAlignment.
-   * Can be combined with dx/dy for fine-tuning.
-   */
-  position?: 'top' | 'bottom' | 'left' | 'right' | 'center';
 };
 
 /**
@@ -184,13 +117,7 @@ export type PointConfig = {
    * Configuration for the automatically rendered label.
    * Only used when `label` prop is provided.
    */
-  labelConfig?: PointLabelConfig;
-  /**
-   * Full control over label rendering.
-   * Receives point's pixel coordinates and data values.
-   * If provided, overrides `label` and `labelConfig`.
-   */
-  renderLabel?: (params: { x: number; y: number; dataX: number; dataY: number }) => React.ReactNode;
+  labelProps?: Omit<ChartTextProps, 'x' | 'y' | 'children'>;
 };
 
 export type PointProps = SharedProps &
@@ -260,8 +187,7 @@ export const Point = memo<PointProps>(
     strokeWidth = 2,
     accessibilityLabel,
     label,
-    labelConfig,
-    renderLabel,
+    labelProps,
     testID,
     pixelCoordinates,
     animate,
@@ -297,36 +223,6 @@ export const Point = memo<PointProps>(
         onScrubberEnter({ x: pixelCoordinate.x, y: pixelCoordinate.y });
       }
     }, [isScrubberHighlighted, onScrubberEnter, pixelCoordinate.x, pixelCoordinate.y]);
-
-    const LabelContent = useMemo(() => {
-      // Custom render function takes precedence
-      if (renderLabel) {
-        return renderLabel({
-          x: pixelCoordinate.x,
-          y: pixelCoordinate.y,
-          dataX,
-          dataY,
-        });
-      }
-
-      if (label) {
-        const alignment = labelConfig?.position
-          ? calculateLabelAlignment(labelConfig.position)
-          : {};
-
-        const chartTextProps: ChartTextProps = {
-          x: pixelCoordinate.x,
-          y: pixelCoordinate.y,
-          ...alignment,
-          ...labelConfig, // labelConfig overrides alignment if provided
-          children: label,
-        };
-
-        return <ChartText {...chartTextProps} />;
-      }
-
-      return null;
-    }, [renderLabel, label, labelConfig, pixelCoordinate.x, pixelCoordinate.y, dataX, dataY]);
 
     const innerPoint = useMemo(() => {
       const mergedStyles = {
@@ -431,7 +327,11 @@ export const Point = memo<PointProps>(
         >
           {innerPoint}
         </g>
-        {LabelContent}
+        {label && (
+          <ChartText x={pixelCoordinate.x} y={pixelCoordinate.y} {...labelProps}>
+            {label}
+          </ChartText>
+        )}
       </>
     );
   },

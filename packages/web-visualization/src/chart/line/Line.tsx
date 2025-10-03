@@ -226,18 +226,16 @@ export const Line = memo<LineProps>(
 
               const xValue = xData && xData[index] !== undefined ? xData[index] : index;
 
-              const pointResult = renderPoints({
+              const point = renderPoints({
                 dataY: value,
                 dataX: xValue,
                 x: xScale?.(xValue) ?? 0,
                 y: yScale?.(value) ?? 0,
               });
 
-              if (pointResult === false || pointResult === null || pointResult === undefined) {
-                return null;
-              }
+              if (!point) return;
 
-              const pointConfig = pointResult === true ? {} : pointResult;
+              const pointConfig = typeof point === 'object' ? point : {};
 
               return (
                 <Point

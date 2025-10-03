@@ -127,11 +127,11 @@ const getTextAnchor = (alignment: TextHorizontalAlignment): TextProps['textAncho
 const getAlignmentBaseline = (alignment: TextVerticalAlignment): TextProps['alignmentBaseline'] => {
   switch (alignment) {
     case 'top':
-      return 'ideographic';
+      return 'hanging';
     case 'middle':
       return 'central';
     case 'bottom':
-      return 'hanging';
+      return 'ideographic';
   }
 };
 

@@ -60,11 +60,11 @@ function AssetPriceWithMinMax() {
         const isMax = dataY === maxPrice;
 
         if (isMin) {
-          return { label: formatPrice(dataY), labelConfig: {  dy: 12, position: 'bottom' } };
+          return { label: formatPrice(dataY), labelProps: {  dy: 6, verticalAlignment: 'top' } };
         }
 
         if (isMax) {
-          return { label: formatPrice(dataY), labelConfig: { dy: -12 , position: 'top' } };
+          return { label: formatPrice(dataY), labelProps: { dy: -6, verticalAlignment: 'bottom' } };
         }
       }}
     />
@@ -150,8 +150,8 @@ Points support extensive customization through various properties including colo
       strokeWidth: 2,
       stroke: 'var(--color-bg)',
       label: isHighPerformance || isLowPerformance ? `${dataY}%` : undefined,
-      labelConfig: {
-        position: isHighPerformance ? 'top' : 'bottom',
+      labelProps: {
+        verticalAlignment: isHighPerformance ? 'bottom' : 'top',
         dy: isHighPerformance ? -10 : 10,
         color: isHighPerformance
           ? 'var(--color-fgPositive)'
@@ -162,38 +162,4 @@ Points support extensive customization through various properties including colo
     };
   }}
 />
-```
-
-## Multiple Series with Points
-
-When working with multiple series, points can help distinguish between different data lines:
-
-```jsx live
-<LineChart
-  height={300}
-  series={[
-    {
-      id: 'revenue',
-      data: [100, 120, 140, 130, 160, 180, 190],
-      color: 'var(--color-fgPositive)',
-    },
-    {
-      id: 'expenses',
-      data: [80, 85, 90, 95, 100, 105, 110],
-      color: 'var(--color-fgNegative)',
-    },
-  ]}
-  curve="monotone"
-  showYAxis
-  yAxis={{
-    showGrid: true,
-    label: 'Amount ($k)',
-  }}
-  xAxis={{
-    data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
-  }}
-  renderPoints={({ dataX, dataY }) => true}
->
-  <Scrubber />
-</LineChart>
 ```

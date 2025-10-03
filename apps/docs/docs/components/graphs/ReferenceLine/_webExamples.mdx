@@ -11,18 +11,19 @@ ReferenceLine can be used to add important details to a chart, such as a referen
       data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
     },
   ]}
+  inset={0}
   curve="monotone"
   showArea
 >
   <ReferenceLine
     dataX={4}
     label="Vertical Reference Line"
-    labelProps={{ horizontalAlignment: 'left', dx: 4 }}
+    labelProps={{ horizontalAlignment: 'left', dx: 8 }}
   />
   <ReferenceLine
     dataY={70}
     label="Horizontal Reference Line"
-    labelProps={{ verticalAlignment: 'top', dy: -4, horizontalAlignment: 'right' }}
+    labelProps={{ verticalAlignment: 'bottom', dy: -8, horizontalAlignment: 'right' }}
   />
 </LineChart>
 ```
@@ -50,25 +51,25 @@ ReferenceLine relies on `dataX` or `dataY` to position the line. Passing in `dat
     dataY={100}
     label="100"
     labelPosition="left"
-    labelProps={{ verticalAlignment: 'top', dy: -4 }}
+    labelProps={{ verticalAlignment: 'bottom', dy: -4 }}
   />
   <ReferenceLine
     dataY={10000}
     label="10,000"
     labelPosition="left"
-    labelProps={{ verticalAlignment: 'top', dy: -4 }}
+    labelProps={{ verticalAlignment: 'bottom', dy: -4 }}
   />
   <ReferenceLine
     dataY={100000}
     label="100,000"
     labelPosition="left"
-    labelProps={{ verticalAlignment: 'top', dy: -4 }}
+    labelProps={{ verticalAlignment: 'bottom', dy: -4 }}
   />
   <ReferenceLine
     dataY={1000000}
     label="1,000,000"
     labelPosition="left"
-    labelProps={{ verticalAlignment: 'top', dy: -4 }}
+    labelProps={{ verticalAlignment: 'bottom', dy: -4 }}
   />
 </LineChart>
 ```
