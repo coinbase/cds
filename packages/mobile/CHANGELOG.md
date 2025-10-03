@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.13.5 (10/3/2025 PST)
+
+#### 🐞 Fixes
+
+- Support custom font in SegmentedTab. [[#65](https://github.com/coinbase/cds/pull/65)]
+
 ## 8.13.4 (10/1/2025 PST)
 
 #### 🐞 Fixes

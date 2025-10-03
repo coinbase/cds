@@ -15,26 +15,27 @@ import { accessibleOpacityDisabled } from '@cbhq/cds-common/tokens/interactable'
 
 import { useTheme } from '../hooks/useTheme';
 import { Box } from '../layout';
-import { Text } from '../typography/Text';
+import { Text, type TextBaseProps } from '../typography/Text';
 
 import { tabsSpringConfig } from './Tabs';
 
-export type SegmentedTabProps<T extends string = string> = {
-  /**
-   * Text color when the SegmentedTab is active.
-   * @default negativeForeground
-   */
-  activeColor?: ThemeVars.Color;
-  /**
-   * Text color when the SegmentedTab is inactive.
-   * @default foreground
-   */
-  color?: ThemeVars.Color;
-  /** Callback that is fired when the SegmentedTab is pressed. */
-  onPress?: (id: string, event: GestureResponderEvent) => void;
-  style?: StyleProp<ViewStyle>;
-} & TabValue<T> &
-  Omit<PressableProps, 'children' | 'disabled' | 'onPress' | 'style'>;
+export type SegmentedTabProps<T extends string = string> = TabValue<T> &
+  Pick<TextBaseProps, 'font' | 'fontFamily' | 'fontSize' | 'fontWeight' | 'lineHeight'> &
+  Omit<PressableProps, 'children' | 'disabled' | 'onPress' | 'style'> & {
+    /**
+     * Text color when the SegmentedTab is active.
+     * @default negativeForeground
+     */
+    activeColor?: ThemeVars.Color;
+    /**
+     * Text color when the SegmentedTab is inactive.
+     * @default foreground
+     */
+    color?: ThemeVars.Color;
+    /** Callback that is fired when the SegmentedTab is pressed. */
+    onPress?: (id: string, event: GestureResponderEvent) => void;
+    style?: StyleProp<ViewStyle>;
+  };
 
 const AnimatedTextHeadline = Animated.createAnimatedComponent(Text);
 
@@ -56,6 +57,11 @@ const SegmentedTabComponent = memo(
         'aria-selected': ariaSelected,
         accessibilityRole = 'button',
         testID,
+        font = 'headline',
+        fontFamily,
+        fontSize,
+        fontWeight,
+        lineHeight,
         ...props
       }: SegmentedTabProps<T>,
       ref: React.ForwardedRef<View>,
@@ -112,7 +118,11 @@ const SegmentedTabComponent = memo(
             {typeof label === 'string' ? (
               <AnimatedTextHeadline
                 animated
-                font="headline"
+                font={font}
+                fontFamily={fontFamily}
+                fontSize={fontSize}
+                fontWeight={fontWeight}
+                lineHeight={lineHeight}
                 style={animatedTextStyles}
                 testID={`${testID}-label`}
               >
