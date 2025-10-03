@@ -69,6 +69,14 @@ const quickStartCards: QuickStartLinkProps[] = [
   },
 ];
 
+const componentCardLinks = {
+  layout: '/components/layout/Box/',
+  typography: '/components/typography/Text/',
+  inputs: '/components/inputs/Button/',
+  media: '/components/media/Icon/',
+  overlay: '/components/overlay/Modal/',
+};
+
 export default function Home() {
   const { items } = useDocsSidebar() || {};
   const componentCards: ComponentCardProps[] = useMemo(() => {
@@ -89,7 +97,9 @@ export default function Home() {
             bannerLightOverlaySrc: `/img/componentCardBanners/${categoryName}_light_hover.svg`,
             bannerDarkSrc: `/img/componentCardBanners/${categoryName}_dark.svg`,
             bannerDarkOverlaySrc: `/img/componentCardBanners/${categoryName}_dark_hover.svg`,
-            to: firstItem?.href,
+            to:
+              componentCardLinks[categoryName as keyof typeof componentCardLinks] ??
+              firstItem?.href,
           };
         }
         return null;

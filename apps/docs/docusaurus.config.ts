@@ -159,7 +159,7 @@ const config: Config = {
         },
         blog: {
           blogTitle: 'CDS Blog',
-          blogDescription: 'Coinbase Design System news and updates',
+          blogDescription: 'Coinbase Design System Blog',
           blogSidebarCount: 0, // Disable blog left sidebar
           showReadingTime: true,
         },
@@ -202,7 +202,7 @@ const config: Config = {
           label: 'Storybook',
         },
         {
-          href: 'https://coinbase.com/blog',
+          href: 'https://coinbase.com/blog/Coinbase-has-open-sourced-its-design-system',
           label: 'Blog',
         },
         {
@@ -223,7 +223,7 @@ const config: Config = {
         },
         {
           label: 'Blog',
-          href: 'https://coinbase.com/blog',
+          href: 'https://coinbase.com/blog/Coinbase-has-open-sourced-its-design-system',
         },
         {
           label: 'Careers',

@@ -11,54 +11,82 @@ import { GettingStartedBanner } from '@site/src/components/page/ComponentBanner/
 
 <ContentHeader
   title="Introduction"
-  description="CDS is a cross-platform component library designed to streamline the development of React and React Native applications. It empowers developers with consistent, reusable, and accessible components that adhere to Coinbase's engineering principles."
+  description="Coinbase Design System is a cross-platform component library for React and React Native. CDS has high adoption in every product at Coinbase, accelerating development and ensuring a consistent user experience across all platforms."
   banner={<GettingStartedBanner />}
 />
 
 <MDXSection>
 <MDXArticle>
-## What is CDS?
-CDS is a unified component library that supports both web and mobile platforms, ensuring a cohesive user experience across devices. By using CDS, you can:
-
-- **Accelerate Development**: Use pre-built, customizable components to focus on building features instead of reinventing UI elements.
-- **Ensure Consistency**: Maintain a uniform look and feel across your application by leveraging Coinbase's design language.
-- **Improve Performance**: Optimized for speed and scalability, with static CSS for the web and efficient styling for React Native.
-- **Streamline Theming**: Easily apply consistent theming across your app with CDS's ThemeProvider and theme variables.
-- **Enhance Accessibility**: Benefit from accessible components designed with inclusive user experiences in mind.
-
-</MDXArticle>
-
-<MDXArticle hideDivider>
 ## Key features
 
-### Cross-platform compatibility
+- **Cross-platform** - CDS provides components for both React DOM and React Native. We go to great lengths to ensure that the source code is as identical as possible across React and React Native without compromising on platform-specific features.
 
-CDS provides components for both React (web) and React Native (mobile), ensuring your application delivers a consistent experience regardless of platform. Web components are imported from `@coinbase/cds-web`, and React Native components are imported from `@coinbase/cds-mobile`.
+- **Powerful theming** - The ThemeProvider can be used to define a custom theme for your application supporting light and dark mode.
 
-### Powerful theming
+- **Rich styling capabilities** - Components are designed to integrate with third-party libraries like styled-components, and to be customizable via theming, props, StyleProps, classnames, and inline styles.
 
-The CDS ThemeProvider allows you to define a custom theme for your application. On the web, CDS utilizes CSS Variables for high-performance styling, while React Native components use a theme Context for dynamic theming. With a unified theming system, you can:
+- **Subcomponent composition** - Components are built using smaller subcomponents that can be fully customized or replaced via props.
 
-- Customize colors, spacing, typography, and more.
-- Create light and dark themes effortlessly.
-- Ensure design fidelity across platforms.
+- **Accessibility** - Components are accessible out of the box, and can be customized to different accessibility standards.
 
-### Comprehensive component library
+</MDXArticle>
+</MDXSection>
 
-CDS includes a wide variety of components, from layout primitives like `Box`, `HStack`, and `Grid` to stateful, interactive components like `Accordion`, `Modal`, and `Dropdown`. These components are:
+<MDXSection>
+<MDXArticle>
+## Web-only features
 
-- Fully customizable via props and theming.
-- Designed to meet modern accessibility standards.
-- Tested and optimized for performance.
+- **Atomic static CSS** - CSS is compiled to atomic static classnames at library build time.
 
-### Responsive design
+- **Responsive styles** - Components support responsive styles out of the box. Use the responsive syntax to adjust layouts and styles based on device breakpoints without writing custom media queries.
 
-On the web, CDS components support responsive styles out of the box. Use the responsive syntax to adjust layouts and styles based on device breakpoints without writing custom media queries.
+- **CSS layers** - All CSS is added to the `cds` layer. This allows you to easily override CDS styles with your own styles.
 
-### Built for performance
+- **Polymorphic components** - Components can be rendered as different HTML elements or as other components.
 
-- **Static CSS for Web**: Linaria generates static CSS, ensuring small HTML diffs for server-side rendering (SSR) and fast client-side rendering.
-- **Optimized Native Styling**: React Native components leverage the `StyleSheet` API for performant rendering on mobile devices.
+</MDXArticle>
+</MDXSection>
+
+<MDXSection>
+<MDXArticle>
+## Constraints
+
+Coinbase apps have unique performance and build requirements that necessitate specific constraints in CDS.
+
+:::tip
+**All of these constraints can be removed by compiling the CDS source code yourself.**
+:::
+
+If you find CDS too limiting, you may want to compile it from the source to remove these constraints, or you may still find CDS valuable as a fork or reference.
+
+</MDXArticle>
+<MDXArticle>
+### Web styles are compiled at library build time
+
+Web styles are compiled at library build time, not at app build time.
+
+Compiling CSS at application build time adds significant latency to the build process. Instead, building CSS when we publish the CDS library keeps our app builds extremely fast. However, this means that you can't customize the responsive breakpoints without compiling CDS yourself.
+
+</MDXArticle>
+<MDXArticle>
+### Automatic management of CSS imports
+
+Static CSS imports are automatically managed by CDS components.
+
+The order of CSS imports is important and changes the specificity of styles. If you manually import CSS files in each component, you can easily break the specificity of the styles - or cause non-deterministic styles when using Suspense. If you manually import CSS files all in one place, component styles can't be tree shaken when not in use.
+
+CDS components will always automatically import the necessary static CSS in the correct order. This is done to ensure style specificity is deterministic and always correct, and enables CSS tree shaking based on component usage. However, this means that you can't tree shake the default styles for a component at app build time if you've overridden them.
+
+</MDXArticle>
+</MDXSection>
+
+<MDXSection>
+<MDXArticle>
+## Next steps
+
+Learn how to install and use CDS.
+
+[See the installation docs here →](/getting-started/installation)
 
 </MDXArticle>
 </MDXSection>
