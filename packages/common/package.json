@@ -21,10 +21,6 @@
       "types": "./dts/types/index.d.ts",
       "default": "./esm/types/index.js"
     },
-    "./visualizations/charts": {
-      "types": "./dts/visualizations/charts/index.d.ts",
-      "default": "./esm/visualizations/charts/index.js"
-    },
     "./*": {
       "types": "./dts/*.d.ts",
       "default": "./esm/*.js"
