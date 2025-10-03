@@ -1,13 +1,13 @@
 // codegen:start {preset: barrel, include: [./*.tsx, ./*/index.ts]}
-export * from './area/index';
-export * from './axis/index';
-export * from './bar/index';
+export * from './area';
+export * from './axis';
+export * from './bar';
 export * from './CartesianChart';
 export * from './ChartProvider';
-export * from './line/index';
+export * from './line';
 export * from './Path';
 export * from './PeriodSelector';
-export * from './point/index';
-export * from './scrubber/index';
-export * from './text/index';
+export * from './Point';
+export * from './scrubber';
+export * from './text';
 // codegen:end

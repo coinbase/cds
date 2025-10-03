@@ -7,7 +7,7 @@ export * from './ChartProvider';
 export * from './line';
 export * from './Path';
 export * from './PeriodSelector';
-export * from './point';
+export * from './Point';
 export * from './scrubber';
 export * from './text';
 // codegen:end

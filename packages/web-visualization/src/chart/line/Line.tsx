@@ -7,7 +7,7 @@ import { m } from 'framer-motion';
 import { Area, type AreaComponent } from '../area/Area';
 import { axisTickLabelsInitialAnimationVariants } from '../axis';
 import { useCartesianChartContext } from '../ChartProvider';
-import { Point, type PointConfig, type RenderPointsParams } from '../point/Point';
+import { Point, type PointConfig, type RenderPointsParams } from '../Point';
 
 import { DottedLine } from './DottedLine';
 import { GradientLine } from './GradientLine';
@@ -245,7 +245,7 @@ export const Line = memo<LineProps>(
                   dataX={xValue}
                   dataY={value}
                   {...pointConfig}
-                  color={pointConfig.color ?? stroke}
+                  fill={pointConfig.fill ?? stroke}
                   onClick={pointConfig.onClick ?? onPointClick}
                   opacity={pointConfig.opacity ?? opacity}
                 />

@@ -5,7 +5,7 @@ import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 
 import { Area, type AreaComponent } from '../area/Area';
 import { useCartesianChartContext } from '../ChartProvider';
-import { Point, type PointConfig, type RenderPointsParams } from '../point/Point';
+import { Point, type PointConfig, type RenderPointsParams } from '../Point';
 
 import { DottedLine } from './DottedLine';
 import { GradientLine } from './GradientLine';
@@ -227,7 +227,7 @@ export const Line = memo<LineProps>(
                 dataX={xValue}
                 dataY={value}
                 {...pointConfig}
-                color={pointConfig.color ?? stroke}
+                fill={pointConfig.fill ?? stroke}
                 opacity={pointConfig.opacity ?? opacity}
               />
             );

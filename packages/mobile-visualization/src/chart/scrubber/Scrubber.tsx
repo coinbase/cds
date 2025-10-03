@@ -66,8 +66,6 @@ const FadeInGroup = memo(
   }),
 );
 
-FadeInGroup.displayName = 'FadeInGroup';
-
 /**
  * Configuration for scrubber functionality across chart components.
  * Provides consistent API with smart defaults and component customization.

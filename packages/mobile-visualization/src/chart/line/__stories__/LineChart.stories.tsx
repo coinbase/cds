@@ -38,9 +38,8 @@ import { XAxis, YAxis } from '../../axis';
 import { CartesianChart } from '../../CartesianChart';
 import { useCartesianChartContext } from '../../ChartProvider';
 import { PeriodSelector, PeriodSelectorActiveIndicator } from '../../PeriodSelector';
-import { Point } from '../../point';
+import { Point } from '../../Point';
 import { Scrubber, type ScrubberRef } from '../../scrubber';
-import { ScrubberBeacon } from '../../scrubber/ScrubberBeacon';
 import type { ChartTextChildren } from '../../text';
 import { GradientLine, Line, LineChart, ReferenceLine } from '..';
 
@@ -181,9 +180,9 @@ export const BasicLineChartWithPoints = () => {
       }}
     >
       <Point
-        color="purple"
         dataX={2}
         dataY={60}
+        fill="purple"
         label="hello world im on a point!"
         labelConfig={{
           position: 'top',
@@ -205,7 +204,7 @@ export const BasicLineChartWithPoints = () => {
         }}
       />
       <ReferenceLine dataY={60} label="testing 123" labelProps={{ horizontalAlignment: 'left' }} />
-      <Point color="orange" dataX={5} dataY={50} radius={5} />
+      <Point dataX={5} dataY={50} fill="orange" radius={5} />
     </LineChart>
   );
 };
@@ -2062,7 +2061,7 @@ const AvailabilityChart = () => {
       <Line
         curve="stepAfter"
         renderPoints={() => ({
-          color: theme.color.bg,
+          fill: theme.color.bg,
           stroke: 'url(#availabilityGradient)',
           strokeWidth: 2,
         })}
