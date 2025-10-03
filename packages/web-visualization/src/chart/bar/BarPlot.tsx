@@ -1,6 +1,5 @@
-import React, { memo, useMemo, useRef } from 'react';
+import { memo, useId, useMemo } from 'react';
 import { defaultAxisId } from '@coinbase/cds-common/visualizations/charts';
-import { generateRandomId } from '@coinbase/cds-utils';
 
 import { useCartesianChartContext } from '../ChartProvider';
 
@@ -51,7 +50,7 @@ export const BarPlot = memo<BarPlotProps>(
     stackMinSize,
   }) => {
     const { series: allSeries, drawingArea } = useCartesianChartContext();
-    const clipPathId = useRef(generateRandomId()).current;
+    const clipPathId = useId();
 
     const targetSeries = useMemo(() => {
       // Then filter by seriesIds if provided

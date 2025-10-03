@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useEffect, useMemo, useRef } from 'react';
+import { memo, useCallback, useEffect, useId, useMemo, useRef } from 'react';
 import Reanimated, {
   runOnJS,
   useAnimatedProps,
@@ -116,7 +116,7 @@ export const Path = memo<PathProps>(
     const rect = clipRect ?? contextRect;
     const animate = animateProp ?? animateContext;
 
-    const clipPathId = useMemo(() => `clip-path-${Math.random().toString(36).substr(2, 9)}`, []);
+    const clipPathId = useId();
 
     const animationProgress = useSharedValue(0);
 

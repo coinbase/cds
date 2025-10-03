@@ -1,5 +1,4 @@
-import React, { memo, useRef } from 'react';
-import { generateRandomId } from '@coinbase/cds-utils';
+import { memo, useId } from 'react';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import { Path, type PathProps } from '../Path';
@@ -89,9 +88,9 @@ export const DottedArea = memo<DottedAreaProps>(
     ...pathProps
   }) => {
     const context = useCartesianChartContext();
-    const patternIdRef = useRef<string>(generateRandomId());
-    const gradientIdRef = useRef<string>(generateRandomId());
-    const maskIdRef = useRef<string>(generateRandomId());
+    const patternId = useId();
+    const gradientId = useId();
+    const maskId = useId();
 
     const dotCenterPosition = patternSize / 2;
 
@@ -143,7 +142,7 @@ export const DottedArea = memo<DottedAreaProps>(
           <pattern
             className={classNames?.pattern}
             height={patternSize}
-            id={patternIdRef.current}
+            id={patternId}
             patternUnits="userSpaceOnUse"
             style={styles?.pattern}
             width={patternSize}
@@ -154,7 +153,7 @@ export const DottedArea = memo<DottedAreaProps>(
           </pattern>
           <linearGradient
             gradientUnits={useUserSpaceUnits ? 'userSpaceOnUse' : 'objectBoundingBox'}
-            id={gradientIdRef.current}
+            id={gradientId}
             x1={useUserSpaceUnits ? 0 : '0%'}
             x2={useUserSpaceUnits ? 0 : '0%'}
             y1={gradientY1}
@@ -182,16 +181,16 @@ export const DottedArea = memo<DottedAreaProps>(
               </>
             )}
           </linearGradient>
-          <mask id={maskIdRef.current}>
-            <Path animate={animate} d={d} fill={`url(#${gradientIdRef.current})`} />
+          <mask id={maskId}>
+            <Path animate={animate} d={d} fill={`url(#${gradientId})`} />
           </mask>
         </defs>
         <Path
           animate={animate}
           className={classNames?.path}
           d={d}
-          fill={`url(#${patternIdRef.current})`}
-          mask={`url(#${maskIdRef.current})`}
+          fill={`url(#${patternId})`}
+          mask={`url(#${maskId})`}
           style={styles?.path}
           {...pathProps}
         />

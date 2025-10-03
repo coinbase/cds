@@ -1,10 +1,9 @@
 import 'd3-transition';
 
-import React, { memo, useCallback, useEffect, useRef } from 'react';
+import { memo, useCallback, useEffect, useId, useRef } from 'react';
 import type { SVGProps } from 'react';
 import { useValueChanges } from '@coinbase/cds-common/hooks/useValueChanges';
 import type { Rect, SharedProps } from '@coinbase/cds-common/types';
-import { generateRandomId } from '@coinbase/cds-utils';
 import { interpolatePath } from 'd3-interpolate-path';
 import { select } from 'd3-selection';
 import { m } from 'framer-motion';
@@ -44,7 +43,7 @@ export type PathProps = SharedProps &
 export const Path = memo<PathProps>(
   ({ animate: animateProp, clipRect, clipOffset = 0, d = '', ...pathProps }) => {
     const pathRef = useRef<SVGPathElement>(null);
-    const clipPathIdRef = useRef<string>(generateRandomId());
+    const clipPathId = useId();
     const context = useCartesianChartContext();
     const rect = clipRect ?? context.drawingArea;
     const animate = animateProp ?? context.animate;
@@ -82,7 +81,7 @@ export const Path = memo<PathProps>(
     return (
       <>
         <defs>
-          <clipPath id={clipPathIdRef.current}>
+          <clipPath id={clipPathId}>
             {!animate ? (
               <rect
                 height={rect.height + totalOffset}
@@ -108,7 +107,7 @@ export const Path = memo<PathProps>(
             )}
           </clipPath>
         </defs>
-        <path ref={pathRef} clipPath={`url(#${clipPathIdRef.current})`} d={d} {...pathProps} />
+        <path ref={pathRef} clipPath={`url(#${clipPathId})`} d={d} {...pathProps} />
       </>
     );
   },

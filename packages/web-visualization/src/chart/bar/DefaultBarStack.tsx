@@ -1,6 +1,5 @@
-import React, { memo, useMemo, useRef } from 'react';
+import { memo, useId, useMemo } from 'react';
 import { getBarPath } from '@coinbase/cds-common/visualizations/charts';
-import { generateRandomId } from '@coinbase/cds-utils';
 import { m } from 'framer-motion';
 
 import { useCartesianChartContext } from '../ChartProvider';
@@ -36,7 +35,7 @@ export const DefaultBarStack = memo<DefaultBarStackProps>(
     yOrigin,
   }) => {
     const { animate } = useCartesianChartContext();
-    const clipPathId = useRef(generateRandomId()).current;
+    const clipPathId = useId();
 
     const clipPathData = useMemo(() => {
       return getBarPath(x, y, width, height, borderRadius, roundTop, roundBottom);

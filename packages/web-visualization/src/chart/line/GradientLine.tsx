@@ -1,6 +1,5 @@
-import { memo, useRef } from 'react';
+import { memo, useId } from 'react';
 import type { SharedProps } from '@coinbase/cds-common/types';
-import { generateRandomId } from '@coinbase/cds-utils';
 
 import { Path, type PathProps } from '../Path';
 
@@ -58,12 +57,12 @@ export const GradientLine = memo<GradientLineProps>(
     strokeWidth = 2,
     ...props
   }) => {
-    const patternIdRef = useRef<string>(generateRandomId());
+    const patternId = useId();
 
     return (
       <>
         <defs>
-          <linearGradient id={patternIdRef.current} x1="0%" x2="0%" y1="0%" y2="100%">
+          <linearGradient id={patternId} x1="0%" x2="0%" y1="0%" y2="100%">
             <stop offset="0%" stopColor={startColor ?? stroke} stopOpacity={startOpacity} />
             <stop offset="100%" stopColor={endColor ?? stroke} stopOpacity={endOpacity} />
           </linearGradient>
@@ -71,7 +70,7 @@ export const GradientLine = memo<GradientLineProps>(
         <Path
           clipOffset={strokeWidth}
           fill={fill}
-          stroke={`url(#${patternIdRef.current})`}
+          stroke={`url(#${patternId})`}
           strokeLinecap={strokeLinecap}
           strokeLinejoin={strokeLinejoin}
           strokeOpacity={strokeOpacity}

@@ -1,7 +1,6 @@
-import React, { memo, useRef } from 'react';
+import { memo, useId } from 'react';
 import { Defs, LinearGradient, Stop } from 'react-native-svg';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
-import { generateRandomId } from '@coinbase/cds-utils';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import { Path, type PathProps } from '../Path';
@@ -51,7 +50,7 @@ export const GradientArea = memo<GradientAreaProps>(
   }) => {
     const context = useCartesianChartContext();
     const theme = useTheme();
-    const patternIdRef = useRef<string>(generateRandomId());
+    const patternId = useId();
 
     // Get the y-scale for the specified axis (or default)
     const yScale = context.getYScale(yAxisId);
@@ -103,7 +102,7 @@ export const GradientArea = memo<GradientAreaProps>(
         <Defs>
           <LinearGradient
             gradientUnits={useUserSpaceUnits ? 'userSpaceOnUse' : 'objectBoundingBox'}
-            id={patternIdRef.current}
+            id={patternId}
             x1={useUserSpaceUnits ? '0' : '0%'}
             x2={useUserSpaceUnits ? '0' : '0%'}
             y1={gradientY1}
@@ -151,7 +150,7 @@ export const GradientArea = memo<GradientAreaProps>(
                 ]}
           </LinearGradient>
         </Defs>
-        <Path clipRect={clipRect} d={d} fill={`url(#${patternIdRef.current})`} {...pathProps} />
+        <Path clipRect={clipRect} d={d} fill={`url(#${patternId})`} {...pathProps} />
       </>
     );
   },

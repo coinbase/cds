@@ -1,8 +1,7 @@
-import { memo, useRef } from 'react';
+import { memo, useId } from 'react';
 import { Defs, LinearGradient, Stop } from 'react-native-svg';
 import type { SharedProps } from '@coinbase/cds-common/types';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
-import { generateRandomId } from '@coinbase/cds-utils';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import { Path, type PathProps } from '../Path';
@@ -66,14 +65,14 @@ export const GradientLine = memo<GradientLineProps>(
   }) => {
     const context = useCartesianChartContext();
     const theme = useTheme();
-    const patternIdRef = useRef<string>(generateRandomId());
+    const patternId = useId();
 
     const shouldAnimate = animate ?? context.animate;
 
     return (
       <>
         <Defs>
-          <LinearGradient id={patternIdRef.current} x1="0%" x2="0%" y1="0%" y2="100%">
+          <LinearGradient id={patternId} x1="0%" x2="0%" y1="0%" y2="100%">
             <Stop
               offset="0%"
               stopColor={startColor ?? stroke ?? theme.color.bgLine}
@@ -90,7 +89,7 @@ export const GradientLine = memo<GradientLineProps>(
           animate={shouldAnimate}
           clipOffset={strokeWidth}
           fill={fill}
-          stroke={`url(#${patternIdRef.current})`}
+          stroke={`url(#${patternId})`}
           strokeLinecap={strokeLinecap}
           strokeLinejoin={strokeLinejoin}
           strokeOpacity={strokeOpacity}

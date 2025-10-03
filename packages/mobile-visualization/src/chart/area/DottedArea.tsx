@@ -1,7 +1,6 @@
-import React, { memo, useRef } from 'react';
+import { memo, useId } from 'react';
 import { Circle, Defs, G, LinearGradient, Mask, Pattern, Stop } from 'react-native-svg';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
-import { generateRandomId } from '@coinbase/cds-utils';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import { Path, type PathProps } from '../Path';
@@ -48,9 +47,9 @@ export const DottedArea = memo<DottedAreaProps>(
   }) => {
     const theme = useTheme();
     const context = useCartesianChartContext();
-    const patternIdRef = useRef<string>(generateRandomId());
-    const gradientIdRef = useRef<string>(generateRandomId());
-    const maskIdRef = useRef<string>(generateRandomId());
+    const patternId = useId();
+    const gradientId = useId();
+    const maskId = useId();
 
     const dotCenterPosition = patternSize / 2;
 
@@ -103,7 +102,7 @@ export const DottedArea = memo<DottedAreaProps>(
         <Defs>
           <Pattern
             height={patternSize}
-            id={patternIdRef.current}
+            id={patternId}
             patternUnits="userSpaceOnUse"
             width={patternSize}
             x="0"
@@ -118,7 +117,7 @@ export const DottedArea = memo<DottedAreaProps>(
           </Pattern>
           <LinearGradient
             gradientUnits={useUserSpaceUnits ? 'userSpaceOnUse' : 'objectBoundingBox'}
-            id={gradientIdRef.current}
+            id={gradientId}
             x1={useUserSpaceUnits ? '0' : '0%'}
             x2={useUserSpaceUnits ? '0' : '0%'}
             y1={gradientY1}
@@ -145,15 +144,15 @@ export const DottedArea = memo<DottedAreaProps>(
                   <Stop key="1" offset="100%" stopColor="white" stopOpacity={baselineOpacity} />,
                 ]}
           </LinearGradient>
-          <Mask id={maskIdRef.current}>
-            <Path d={d} fill={`url(#${gradientIdRef.current})`} />
+          <Mask id={maskId}>
+            <Path d={d} fill={`url(#${gradientId})`} />
           </Mask>
         </Defs>
         <Path
           clipRect={clipRect}
           d={d}
-          fill={`url(#${patternIdRef.current})`}
-          mask={`url(#${maskIdRef.current})`}
+          fill={`url(#${patternId})`}
+          mask={`url(#${maskId})`}
           {...pathProps}
         />
       </G>

@@ -1,9 +1,8 @@
-import React, { memo, useCallback, useEffect, useMemo, useRef } from 'react';
+import { memo, useCallback, useEffect, useId, useMemo, useRef } from 'react';
 import { runOnJS, useAnimatedReaction, useSharedValue, withTiming } from 'react-native-reanimated';
 import { ClipPath, Defs, G, Path } from 'react-native-svg';
 import { usePreviousValue } from '@coinbase/cds-common/hooks/usePreviousValue';
 import { getBarPath } from '@coinbase/cds-common/visualizations/charts';
-import { generateRandomId } from '@coinbase/cds-utils';
 import * as interpolate from 'd3-interpolate-path';
 
 import { useCartesianChartContext } from '../ChartProvider';
@@ -29,7 +28,7 @@ export const DefaultBarStack = memo<DefaultBarStackProps>(
   }) => {
     const pathRef = useRef<Path | null>(null);
     const { animate } = useCartesianChartContext();
-    const clipPathId = useRef(generateRandomId()).current;
+    const clipPathId = useId();
 
     const animationProgress = useSharedValue(0);
 

@@ -1,5 +1,4 @@
-import React, { memo, useRef } from 'react';
-import { generateRandomId } from '@coinbase/cds-utils';
+import { memo, useId } from 'react';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import { Path, type PathProps } from '../Path';
@@ -47,7 +46,7 @@ export const GradientArea = memo<GradientAreaProps>(
     ...pathProps
   }) => {
     const context = useCartesianChartContext();
-    const patternIdRef = useRef<string>(generateRandomId());
+    const patternId = useId();
 
     // Get the y-scale for the specified axis (or default)
     const yScale = context.getYScale(yAxisId);
@@ -98,7 +97,7 @@ export const GradientArea = memo<GradientAreaProps>(
         <defs>
           <linearGradient
             gradientUnits={useUserSpaceUnits ? 'userSpaceOnUse' : 'objectBoundingBox'}
-            id={patternIdRef.current}
+            id={patternId}
             x1={useUserSpaceUnits ? 0 : '0%'}
             x2={useUserSpaceUnits ? 0 : '0%'}
             y1={gradientY1}
@@ -131,7 +130,7 @@ export const GradientArea = memo<GradientAreaProps>(
             )}
           </linearGradient>
         </defs>
-        <Path d={d} fill={`url(#${patternIdRef.current})`} {...pathProps} />
+        <Path d={d} fill={`url(#${patternId})`} {...pathProps} />
       </>
     );
   },
