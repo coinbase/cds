@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import { useRefMapContext } from '@coinbase/cds-common/system/RefMapContext';
+import { useTourContext } from '@coinbase/cds-common/tour/TourContext';
 
 type TourStepProps = {
   /** The id of the corresponding tour step data */
@@ -13,10 +13,10 @@ type TourStepProps = {
  * is rendered.
  */
 export const TourStep = ({ id, children }: TourStepProps) => {
-  const { registerRef } = useRefMapContext();
+  const { activeTourStep, setActiveTourStepTarget } = useTourContext();
   const refCallback = useCallback(
-    (ref: HTMLDivElement) => ref && registerRef(id, ref),
-    [registerRef, id],
+    (ref: HTMLDivElement) => activeTourStep?.id === id && ref && setActiveTourStepTarget(ref),
+    [activeTourStep, id, setActiveTourStepTarget],
   );
   return <div ref={refCallback}>{children}</div>;
 };
