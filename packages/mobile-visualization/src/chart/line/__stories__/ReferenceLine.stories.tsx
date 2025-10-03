@@ -13,6 +13,7 @@ const ReferenceLineStories = () => {
           showArea
           curve="monotone"
           height={250}
+          inset={0}
           series={[
             {
               id: 'prices',
@@ -23,12 +24,17 @@ const ReferenceLineStories = () => {
           <ReferenceLine
             dataX={4}
             label="Vertical Reference Line"
-            labelProps={{ horizontalAlignment: 'left', dx: 4, inset: 0 }}
+            labelProps={{ horizontalAlignment: 'left', dx: 6, inset: 0 }}
           />
           <ReferenceLine
             dataY={70}
             label="Horizontal Reference Line"
-            labelProps={{ verticalAlignment: 'bottom', dy: -4, inset: 0 }}
+            labelProps={{
+              verticalAlignment: 'bottom',
+              dy: -6,
+              horizontalAlignment: 'right',
+              inset: 0,
+            }}
           />
         </LineChart>
       </Example>
@@ -47,6 +53,7 @@ const ReferenceLineStories = () => {
           <ReferenceLine
             dataY={25}
             label="Liquidation"
+            labelPosition="left"
             labelProps={{
               dx: 4,
               borderRadius: 100,

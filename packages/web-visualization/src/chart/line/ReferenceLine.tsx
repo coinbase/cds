@@ -1,6 +1,5 @@
 import React, { memo, useMemo } from 'react';
 import type { SharedProps } from '@coinbase/cds-common/types';
-import { getPointOnScale } from '../utils';
 import { cx } from '@coinbase/cds-web';
 
 import { useCartesianChartContext } from '../ChartProvider';
@@ -11,6 +10,7 @@ import type {
   TextHorizontalAlignment,
   TextVerticalAlignment,
 } from '../text/ChartText';
+import { getPointOnScale } from '../utils';
 
 import { DottedLine } from './DottedLine';
 import type { LineComponent } from './Line';

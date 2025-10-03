@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## Unreleased
+
+#### 📘 Misc
+
+- Add sample data for charts. [[#58](https://github.com/coinbase/cds/pull/58)]
+
 ## 8.13.5 ((10/3/2025, 8:29 AM PST))
 
 This is an artificial version bump with no new change.

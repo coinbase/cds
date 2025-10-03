@@ -5,7 +5,12 @@ import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import { ChartText } from '../text';
-import type { ChartTextChildren, ChartTextProps } from '../text/ChartText';
+import type {
+  ChartTextChildren,
+  ChartTextProps,
+  TextHorizontalAlignment,
+  TextVerticalAlignment,
+} from '../text/ChartText';
 import { getPointOnScale } from '../utils';
 
 import { DottedLine } from './DottedLine';
@@ -72,6 +77,11 @@ type HorizontalReferenceLineProps = BaseReferenceLineProps & {
    * Defaults to defaultAxisId if not specified.
    */
   yAxisId?: string;
+  /**
+   * Position of the label along the horizontal line.
+   * @default 'right'
+   */
+  labelPosition?: TextHorizontalAlignment;
   dataX?: never;
 };
 
@@ -80,6 +90,11 @@ type VerticalReferenceLineProps = BaseReferenceLineProps & {
    * X-value for vertical reference line (data index).
    */
   dataX: number;
+  /**
+   * Position of the label along the vertical line.
+   * @default 'top'
+   */
+  labelPosition?: TextVerticalAlignment;
   dataY?: never;
   yAxisId?: never;
 };
@@ -87,7 +102,17 @@ type VerticalReferenceLineProps = BaseReferenceLineProps & {
 export type ReferenceLineProps = HorizontalReferenceLineProps | VerticalReferenceLineProps;
 
 export const ReferenceLine = memo<ReferenceLineProps>(
-  ({ dataX, dataY, yAxisId, label, testID, LineComponent = DottedLine, stroke, labelProps }) => {
+  ({
+    dataX,
+    dataY,
+    yAxisId,
+    label,
+    labelPosition = dataY !== undefined ? 'right' : 'top',
+    testID,
+    LineComponent = DottedLine,
+    stroke,
+    labelProps,
+  }) => {
     const theme = useTheme();
     const { getXScale, getYScale, drawingArea } = useCartesianChartContext();
 
@@ -120,8 +145,14 @@ export const ReferenceLine = memo<ReferenceLineProps>(
 
       if (yPixel === undefined) return null;
 
-      // Default label position at right edge of drawing area
-      const labelX = drawingArea.x + drawingArea.width;
+      let labelX: number;
+      if (labelPosition === 'left') {
+        labelX = drawingArea.x;
+      } else if (labelPosition === 'center') {
+        labelX = drawingArea.x + drawingArea.width / 2;
+      } else {
+        labelX = drawingArea.x + drawingArea.width;
+      }
 
       return (
         <G data-testid={testID}>
@@ -152,8 +183,14 @@ export const ReferenceLine = memo<ReferenceLineProps>(
 
       if (xPixel === undefined) return null;
 
-      // Default label position at top edge of drawing area
-      const labelY = drawingArea.y;
+      let labelY: number;
+      if (labelPosition === 'top') {
+        labelY = drawingArea.y;
+      } else if (labelPosition === 'middle') {
+        labelY = drawingArea.y + drawingArea.height / 2;
+      } else {
+        labelY = drawingArea.y + drawingArea.height;
+      }
 
       return (
         <G data-testid={testID}>
