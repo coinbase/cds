@@ -1,5 +1,6 @@
 import { createContext, useContext } from 'react';
-import type { CartesianChartContextValue } from '@coinbase/cds-common/visualizations/charts/context';
+
+import type { CartesianChartContextValue } from './utils';
 
 const CartesianChartContext = createContext<CartesianChartContextValue | undefined>(undefined);
 

@@ -1,6 +1,6 @@
 import React, { memo, useMemo } from 'react';
 import type { SharedProps } from '@coinbase/cds-common/types';
-import { getPointOnScale } from '@coinbase/cds-common/visualizations/charts';
+import { getPointOnScale } from '../utils';
 import { cx } from '@coinbase/cds-web';
 
 import { useCartesianChartContext } from '../ChartProvider';

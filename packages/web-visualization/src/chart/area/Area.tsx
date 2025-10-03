@@ -1,8 +1,8 @@
 import React, { memo, useMemo } from 'react';
 import type { SVGProps } from 'react';
-import { type ChartPathCurveType, getAreaPath } from '@coinbase/cds-common/visualizations/charts';
 
 import { useCartesianChartContext } from '../ChartProvider';
+import { type ChartPathCurveType, getAreaPath } from '../utils';
 
 import { DottedArea } from './DottedArea';
 import { GradientArea } from './GradientArea';

@@ -1,6 +1,5 @@
 import React, { memo, useId } from 'react';
 import { candles as btcCandles } from '@coinbase/cds-common/internal/data/candles';
-import { isCategoricalScale, ScrubberContext } from '@coinbase/cds-common/visualizations/charts';
 import { VStack } from '@coinbase/cds-web/layout';
 import { Text } from '@coinbase/cds-web/typography';
 
@@ -10,6 +9,7 @@ import { useCartesianChartContext } from '../../ChartProvider';
 import { ReferenceLine, SolidLine, type SolidLineProps } from '../../line';
 import { PeriodSelector } from '../../PeriodSelector';
 import { Scrubber } from '../../scrubber';
+import { isCategoricalScale, ScrubberContext } from '../../utils';
 import { BarChart } from '../BarChart';
 import { BarPlot } from '../BarPlot';
 import { type BarStackComponentProps } from '../BarStack';

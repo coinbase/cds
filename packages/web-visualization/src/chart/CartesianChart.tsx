@@ -1,5 +1,12 @@
 import React, { forwardRef, memo, useCallback, useMemo, useRef } from 'react';
 import type { Rect } from '@coinbase/cds-common/types';
+import { cx } from '@coinbase/cds-web';
+import { useDimensions } from '@coinbase/cds-web/hooks/useDimensions';
+import { Box, type BoxBaseProps, type BoxProps } from '@coinbase/cds-web/layout';
+import { css } from '@linaria/core';
+
+import { ScrubberProvider, type ScrubberProviderProps } from './scrubber/ScrubberProvider';
+import { CartesianChartProvider } from './ChartProvider';
 import {
   type AxisConfig,
   type AxisConfigProps,
@@ -16,14 +23,7 @@ import {
   getStackedSeriesData as calculateStackedSeriesData,
   type Series,
   useTotalAxisPadding,
-} from '@coinbase/cds-common/visualizations/charts';
-import { cx } from '@coinbase/cds-web';
-import { useDimensions } from '@coinbase/cds-web/hooks/useDimensions';
-import { Box, type BoxBaseProps, type BoxProps } from '@coinbase/cds-web/layout';
-import { css } from '@linaria/core';
-
-import { ScrubberProvider, type ScrubberProviderProps } from './scrubber/ScrubberProvider';
-import { CartesianChartProvider } from './ChartProvider';
+} from './utils';
 
 const focusStylesCss = css`
   &:focus {

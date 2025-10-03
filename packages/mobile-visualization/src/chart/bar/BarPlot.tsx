@@ -1,8 +1,8 @@
 import { memo, useId, useMemo } from 'react';
 import { ClipPath, Defs, G, Rect } from 'react-native-svg';
-import { defaultAxisId } from '@coinbase/cds-common/visualizations/charts';
 
 import { useCartesianChartContext } from '../ChartProvider';
+import { defaultAxisId } from '../utils';
 
 import type { BarSeries } from './BarChart';
 import type { BarStackGroupProps } from './BarStackGroup';

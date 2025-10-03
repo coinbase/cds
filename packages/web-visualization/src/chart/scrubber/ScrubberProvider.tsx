@@ -1,9 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import {
-  isCategoricalScale,
-  ScrubberContext,
-  type ScrubberContextValue,
-} from '@coinbase/cds-common/visualizations/charts';
+import { isCategoricalScale, ScrubberContext, type ScrubberContextValue } from '../utils';
 
 import { useCartesianChartContext } from '../ChartProvider';
 

@@ -1,10 +1,5 @@
 import { forwardRef, memo, useMemo } from 'react';
-import {
-  type AxisConfigProps,
-  defaultChartInset,
-  getChartInset,
-  type Series,
-} from '@coinbase/cds-common/visualizations/charts';
+import { type AxisConfigProps, defaultChartInset, getChartInset, type Series } from '../utils';
 
 import { XAxis, type XAxisProps } from '../axis/XAxis';
 import { YAxis, type YAxisProps } from '../axis/YAxis';

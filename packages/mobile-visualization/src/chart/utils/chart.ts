@@ -1,7 +1,5 @@
 import { stack as d3Stack, stackOffsetDiverging, stackOrderNone } from 'd3-shape';
 
-import type { ThemeVars } from '../../core/theme';
-
 export const defaultStackId = 'DEFAULT_STACK_ID';
 
 export type AxisBounds = {

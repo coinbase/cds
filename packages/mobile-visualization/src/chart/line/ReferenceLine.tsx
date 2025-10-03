@@ -1,12 +1,12 @@
 import { memo, useMemo } from 'react';
 import { G } from 'react-native-svg';
 import type { SharedProps } from '@coinbase/cds-common/types';
-import { getPointOnScale } from '@coinbase/cds-common/visualizations/charts';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import { ChartText } from '../text';
 import type { ChartTextChildren, ChartTextProps } from '../text/ChartText';
+import { getPointOnScale } from '../utils';
 
 import { DottedLine } from './DottedLine';
 import type { LineComponent } from './Line';

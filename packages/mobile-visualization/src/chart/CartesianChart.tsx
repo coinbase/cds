@@ -2,6 +2,12 @@ import React, { forwardRef, memo, useCallback, useMemo } from 'react';
 import { type View, type ViewStyle } from 'react-native';
 import { Svg } from 'react-native-svg';
 import type { Rect } from '@coinbase/cds-common/types';
+import { useLayout } from '@coinbase/cds-mobile/hooks/useLayout';
+import type { BoxBaseProps, BoxProps } from '@coinbase/cds-mobile/layout';
+import { Box } from '@coinbase/cds-mobile/layout';
+
+import { ScrubberProvider, type ScrubberProviderProps } from './scrubber/ScrubberProvider';
+import { CartesianChartProvider } from './ChartProvider';
 import {
   type AxisConfig,
   type AxisConfigProps,
@@ -18,13 +24,7 @@ import {
   getStackedSeriesData as calculateStackedSeriesData,
   type Series,
   useTotalAxisPadding,
-} from '@coinbase/cds-common/visualizations/charts';
-import { useLayout } from '@coinbase/cds-mobile/hooks/useLayout';
-import type { BoxBaseProps, BoxProps } from '@coinbase/cds-mobile/layout';
-import { Box } from '@coinbase/cds-mobile/layout';
-
-import { ScrubberProvider, type ScrubberProviderProps } from './scrubber/ScrubberProvider';
-import { CartesianChartProvider } from './ChartProvider';
+} from './utils';
 
 export type CartesianChartBaseProps = BoxBaseProps &
   Pick<ScrubberProviderProps, 'enableScrubbing' | 'onScrubberPositionChange'> & {

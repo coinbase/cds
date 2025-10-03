@@ -1,5 +1,5 @@
 import { memo, useId, useMemo } from 'react';
-import { getBarPath } from '@coinbase/cds-common/visualizations/charts';
+import { getBarPath } from '../utils';
 import { m as motion } from 'framer-motion';
 
 import { useCartesianChartContext } from '../ChartProvider';

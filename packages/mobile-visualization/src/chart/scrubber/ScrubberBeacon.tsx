@@ -10,10 +10,10 @@ import Reanimated, {
 import { Circle, G } from 'react-native-svg';
 import { usePreviousValue } from '@coinbase/cds-common/hooks/usePreviousValue';
 import type { SharedProps } from '@coinbase/cds-common/types';
-import { projectPoint, useScrubberContext } from '@coinbase/cds-common/visualizations/charts';
 import { useTheme } from '@coinbase/cds-mobile';
 
 import { useCartesianChartContext } from '../ChartProvider';
+import { projectPoint, useScrubberContext } from '../utils';
 
 const AnimatedCircle = Reanimated.createAnimatedComponent(Circle);
 

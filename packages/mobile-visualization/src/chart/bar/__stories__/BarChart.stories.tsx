@@ -1,6 +1,5 @@
 import { memo, useContext, useState } from 'react';
 import { Rect as SvgRect } from 'react-native-svg';
-import { isCategoricalScale, ScrubberContext } from '@coinbase/cds-common/visualizations/charts';
 import { Button } from '@coinbase/cds-mobile/buttons';
 import { Example, ExampleScreen } from '@coinbase/cds-mobile/examples/ExampleScreen';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
@@ -10,6 +9,7 @@ import { XAxis, YAxis } from '../../axis';
 import { CartesianChart } from '../../CartesianChart';
 import { useCartesianChartContext } from '../../ChartProvider';
 import { ReferenceLine, SolidLine, type SolidLineProps } from '../../line';
+import { isCategoricalScale, ScrubberContext } from '../../utils';
 import { Bar } from '../Bar';
 import { BarChart } from '../BarChart';
 import { BarPlot } from '../BarPlot';

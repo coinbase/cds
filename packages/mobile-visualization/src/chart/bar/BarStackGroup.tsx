@@ -1,11 +1,7 @@
 import { memo, useMemo } from 'react';
-import {
-  defaultAxisId,
-  getBarSizeAdjustment,
-  isCategoricalScale,
-} from '@coinbase/cds-common/visualizations/charts';
 
 import { useCartesianChartContext } from '../ChartProvider';
+import { defaultAxisId, getBarSizeAdjustment, isCategoricalScale } from '../utils';
 
 import { BarStack, type BarStackProps } from './BarStack';
 

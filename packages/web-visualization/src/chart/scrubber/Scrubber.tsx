@@ -10,11 +10,7 @@ import React, {
 } from 'react';
 import { useRefMap } from '@coinbase/cds-common/hooks/useRefMap';
 import type { SharedProps } from '@coinbase/cds-common/types';
-import {
-  type ChartScaleFunction,
-  getPointOnScale,
-  useScrubberContext,
-} from '@coinbase/cds-common/visualizations/charts';
+import { type ChartScaleFunction, getPointOnScale, useScrubberContext } from '../utils';
 import { m as motion } from 'framer-motion';
 
 import { axisTickLabelsInitialAnimationVariants } from '../axis';

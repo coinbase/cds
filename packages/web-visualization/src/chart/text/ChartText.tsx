@@ -1,12 +1,12 @@
 import React, { memo, useEffect, useMemo, useRef, useState } from 'react';
 import type { ElevationLevels, Rect, SharedProps } from '@coinbase/cds-common/types';
-import { type ChartInset, getChartInset } from '@coinbase/cds-common/visualizations/charts';
 import { cx } from '@coinbase/cds-web';
 import { Box, type BoxProps } from '@coinbase/cds-web/layout';
 import { Text } from '@coinbase/cds-web/typography';
 import { m as motion } from 'framer-motion';
 
 import { useCartesianChartContext } from '../ChartProvider';
+import { type ChartInset, getChartInset } from '../utils';
 
 type ValidChartTextChildElements =
   | React.ReactElement<React.SVGProps<SVGTSpanElement>, 'tspan'>

@@ -10,4 +10,5 @@ export * from './PeriodSelector';
 export * from './Point';
 export * from './scrubber';
 export * from './text';
+export * from './utils';
 // codegen:end

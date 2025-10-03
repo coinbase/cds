@@ -1,5 +1,4 @@
 import { memo, useCallback, useEffect, useId, useMemo } from 'react';
-import { getAxisTicksData, isCategoricalScale } from '@coinbase/cds-common/visualizations/charts';
 import { cx } from '@coinbase/cds-web';
 import { css } from '@linaria/core';
 import { AnimatePresence, m as motion } from 'framer-motion';
@@ -8,6 +7,7 @@ import { useCartesianChartContext } from '../ChartProvider';
 import { DottedLine } from '../line/DottedLine';
 import { ReferenceLine } from '../line/ReferenceLine';
 import { SmartChartTextGroup, type TextLabelData } from '../text/SmartChartTextGroup';
+import { getAxisTicksData, isCategoricalScale } from '../utils';
 
 import type { AxisBaseProps, AxisProps } from './Axis';
 import {

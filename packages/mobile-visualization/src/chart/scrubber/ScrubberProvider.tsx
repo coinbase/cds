@@ -2,14 +2,10 @@ import React, { useCallback, useMemo, useState } from 'react';
 import { Platform } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import { runOnJS } from 'react-native-reanimated';
-import {
-  isCategoricalScale,
-  ScrubberContext,
-  type ScrubberContextValue,
-} from '@coinbase/cds-common/visualizations/charts';
 import { Haptics } from '@coinbase/cds-mobile/utils/haptics';
 
 import { useCartesianChartContext } from '../ChartProvider';
+import { isCategoricalScale, ScrubberContext, type ScrubberContextValue } from '../utils';
 
 export type ScrubberProviderProps = Partial<
   Pick<ScrubberContextValue, 'enableScrubbing' | 'onScrubberPositionChange'>

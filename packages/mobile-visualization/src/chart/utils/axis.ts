@@ -1,7 +1,6 @@
 import { useCallback, useMemo, useState } from 'react';
 import type React from 'react';
-
-import type { Rect } from '../../types';
+import type { Rect } from '@coinbase/cds-common/types';
 
 import {
   type AxisBounds,

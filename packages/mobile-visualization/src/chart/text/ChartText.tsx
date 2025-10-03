@@ -9,10 +9,10 @@ import {
   type TSpanProps,
 } from 'react-native-svg';
 import type { Rect, SharedProps } from '@coinbase/cds-common/types';
-import { type ChartInset, getChartInset } from '@coinbase/cds-common/visualizations/charts';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 
 import { useCartesianChartContext } from '../ChartProvider';
+import { type ChartInset, getChartInset } from '../utils';
 
 type ValidChartTextChildElements =
   | React.ReactElement<TSpanProps, 'TSpan'>

@@ -1,6 +1,7 @@
 import React, { memo, useMemo } from 'react';
 import type { SVGProps } from 'react';
-import { getBarPath } from '@coinbase/cds-common/visualizations/charts';
+
+import { getBarPath } from '../utils';
 
 import { DefaultBar } from './';
 

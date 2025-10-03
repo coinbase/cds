@@ -1,7 +1,6 @@
 import React, { memo, useEffect, useMemo } from 'react';
 import type { SVGProps } from 'react';
 import type { SharedProps } from '@coinbase/cds-common/types';
-import { projectPoint, useScrubberContext } from '@coinbase/cds-common/visualizations/charts';
 import { cx } from '@coinbase/cds-web';
 import { css } from '@linaria/core';
 import { m as motion } from 'framer-motion';
@@ -9,6 +8,7 @@ import { m as motion } from 'framer-motion';
 import type { ChartTextChildren } from './text/ChartText';
 import { useCartesianChartContext } from './ChartProvider';
 import { ChartText, type ChartTextProps } from './text';
+import { projectPoint, useScrubberContext } from './utils';
 
 const containerCss = css`
   outline: none;

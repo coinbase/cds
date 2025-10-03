@@ -1,7 +1,7 @@
 import { memo, useId, useMemo } from 'react';
-import { defaultAxisId } from '@coinbase/cds-common/visualizations/charts';
 
 import { useCartesianChartContext } from '../ChartProvider';
+import { defaultAxisId } from '../utils';
 
 import type { BarSeries } from './BarChart';
 import type { BarStackGroupProps } from './BarStackGroup';

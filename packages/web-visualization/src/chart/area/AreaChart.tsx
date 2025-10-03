@@ -1,15 +1,15 @@
 import { forwardRef, memo, useMemo } from 'react';
+
+import { XAxis, type XAxisProps, YAxis, type YAxisProps } from '../axis';
+import { CartesianChart, type CartesianChartProps } from '../CartesianChart';
+import { Line, type LineProps } from '../line/Line';
 import {
   type AxisConfigProps,
   defaultChartInset,
   defaultStackId,
   getChartInset,
   type Series,
-} from '@coinbase/cds-common/visualizations/charts';
-
-import { XAxis, type XAxisProps, YAxis, type YAxisProps } from '../axis';
-import { CartesianChart, type CartesianChartProps } from '../CartesianChart';
-import { Line, type LineProps } from '../line/Line';
+} from '../utils';
 
 import { Area, type AreaProps } from './Area';
 

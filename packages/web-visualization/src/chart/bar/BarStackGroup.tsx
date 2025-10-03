@@ -1,6 +1,6 @@
 import { memo, useMemo } from 'react';
-import { getBarSizeAdjustment } from '@coinbase/cds-common/visualizations/charts/bar';
-import { isCategoricalScale } from '@coinbase/cds-common/visualizations/charts/scale';
+import { getBarSizeAdjustment } from '../utils/bar';
+import { isCategoricalScale } from '../utils/scale';
 
 import { useCartesianChartContext } from '../ChartProvider';
 

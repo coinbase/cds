@@ -1,14 +1,14 @@
-import React, { forwardRef, memo, useMemo } from 'react';
+import { forwardRef, memo, useMemo } from 'react';
+
+import { XAxis, type XAxisProps, YAxis, type YAxisProps } from '../axis';
+import { CartesianChart, type CartesianChartProps } from '../CartesianChart';
 import {
   type AxisConfigProps,
   defaultChartInset,
   defaultStackId,
   getChartInset,
   type Series,
-} from '@coinbase/cds-common/visualizations/charts';
-
-import { XAxis, type XAxisProps, YAxis, type YAxisProps } from '../axis';
-import { CartesianChart, type CartesianChartProps } from '../CartesianChart';
+} from '../utils';
 
 import { type BarProps } from './Bar';
 import { BarPlot, type BarPlotProps } from './BarPlot';

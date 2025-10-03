@@ -1,12 +1,12 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { Rect } from '@coinbase/cds-common/types';
-import { type ChartInset, isCategoricalScale } from '@coinbase/cds-common/visualizations/charts';
 import { Switch } from '@coinbase/cds-web/controls';
 
 import { XAxis, YAxis } from '../axis';
 import { useCartesianChartContext } from '../ChartProvider';
 import { LineChart } from '../line/LineChart';
 import { ChartText, SmartChartTextGroup, type TextLabelData } from '../text';
+import { type ChartInset, isCategoricalScale } from '../utils';
 
 const CHART_WIDTH = 500;
 const CHART_HEIGHT = 300;

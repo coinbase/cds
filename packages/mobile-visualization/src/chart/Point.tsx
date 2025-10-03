@@ -1,12 +1,12 @@
 import { memo, useEffect, useMemo } from 'react';
 import { Circle, G } from 'react-native-svg';
 import type { SharedProps } from '@coinbase/cds-common/types';
-import { projectPoint, useScrubberContext } from '@coinbase/cds-common/visualizations/charts';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 
 import type { ChartTextChildren } from './text/ChartText';
 import { useCartesianChartContext } from './ChartProvider';
 import { ChartText, type ChartTextProps } from './text';
+import { projectPoint, useScrubberContext } from './utils';
 
 /**
  * Parameters passed to renderPoints callback function.

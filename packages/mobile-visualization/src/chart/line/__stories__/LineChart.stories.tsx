@@ -17,7 +17,6 @@ import { prices } from '@coinbase/cds-common/internal/data/prices';
 import { sparklineInteractiveData } from '@coinbase/cds-common/internal/visualizations/SparklineInteractiveData';
 import { useTabsContext } from '@coinbase/cds-common/tabs/TabsContext';
 import type { TabValue } from '@coinbase/cds-common/tabs/useTabs';
-import type { ChartAxisScaleType } from '@coinbase/cds-common/visualizations/charts/scale';
 import { useTheme } from '@coinbase/cds-mobile';
 import { Button } from '@coinbase/cds-mobile/buttons';
 import { Example, ExampleScreen } from '@coinbase/cds-mobile/examples/ExampleScreen';
@@ -41,6 +40,7 @@ import { PeriodSelector, PeriodSelectorActiveIndicator } from '../../PeriodSelec
 import { Point } from '../../Point';
 import { Scrubber, type ScrubberRef } from '../../scrubber';
 import type { ChartTextChildren } from '../../text';
+import type { ChartAxisScaleType } from '../../utils/scale';
 import { GradientLine, Line, LineChart, ReferenceLine } from '..';
 
 const defaultChartHeight = 200;

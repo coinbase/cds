@@ -2,11 +2,11 @@ import { memo, useCallback, useEffect, useMemo, useRef } from 'react';
 import { runOnJS, useAnimatedReaction, useSharedValue, withTiming } from 'react-native-reanimated';
 import { Path } from 'react-native-svg';
 import { usePreviousValue } from '@coinbase/cds-common/hooks/usePreviousValue';
-import { getBarPath } from '@coinbase/cds-common/visualizations/charts';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 import * as interpolate from 'd3-interpolate-path';
 
 import { useCartesianChartContext } from '../ChartProvider';
+import { getBarPath } from '../utils';
 
 import type { BarComponentProps } from './Bar';
 

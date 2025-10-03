@@ -3,7 +3,6 @@ import { Image, ScrollView, StyleSheet } from 'react-native';
 import { Circle, G } from 'react-native-svg';
 import { assets } from '@coinbase/cds-common/internal/data/assets';
 import { candles as btcCandles } from '@coinbase/cds-common/internal/data/candles';
-import { isCategoricalScale } from '@coinbase/cds-common/visualizations/charts';
 import { Example, ExampleScreen } from '@coinbase/cds-mobile/examples/ExampleScreen';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 import { Box, HStack, VStack } from '@coinbase/cds-mobile/layout';
@@ -15,6 +14,7 @@ import { BarPlot } from '../bar/BarPlot';
 import { useCartesianChartContext } from '../ChartProvider';
 import { Line } from '../line/Line';
 import { Scrubber } from '../scrubber/Scrubber';
+import { isCategoricalScale } from '../utils';
 import {
   CartesianChart,
   DottedArea,
