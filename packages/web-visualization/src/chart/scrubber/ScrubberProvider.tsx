@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { isCategoricalScale, ScrubberContext, type ScrubberContextValue } from '../utils';
 
 import { useCartesianChartContext } from '../ChartProvider';
+import { isCategoricalScale, ScrubberContext, type ScrubberContextValue } from '../utils';
 
 export type ScrubberProviderProps = Partial<
   Pick<ScrubberContextValue, 'enableScrubbing' | 'onScrubberPositionChange'>

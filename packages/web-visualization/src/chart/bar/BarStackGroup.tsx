@@ -1,8 +1,8 @@
 import { memo, useMemo } from 'react';
-import { getBarSizeAdjustment } from '../utils/bar';
-import { isCategoricalScale } from '../utils/scale';
 
 import { useCartesianChartContext } from '../ChartProvider';
+import { getBarSizeAdjustment } from '../utils/bar';
+import { isCategoricalScale } from '../utils/scale';
 
 import type { BarStackProps } from './BarStack';
 import { BarStack } from './BarStack';

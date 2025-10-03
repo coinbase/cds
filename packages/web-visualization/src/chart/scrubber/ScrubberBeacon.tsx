@@ -1,9 +1,9 @@
 import { forwardRef, memo, useImperativeHandle, useMemo } from 'react';
 import type { SharedProps } from '@coinbase/cds-common/types';
-import { projectPoint, useScrubberContext } from '../utils';
 import { m as motion, useAnimate } from 'framer-motion';
 
 import { useCartesianChartContext } from '../ChartProvider';
+import { projectPoint, useScrubberContext } from '../utils';
 
 const pulseTransitionConfig = {
   duration: 2,

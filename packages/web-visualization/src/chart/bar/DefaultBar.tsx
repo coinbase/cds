@@ -1,8 +1,8 @@
 import React, { memo, useMemo } from 'react';
-import { getBarPath } from '../utils';
 import { m as motion } from 'framer-motion';
 
 import { useCartesianChartContext } from '../ChartProvider';
+import { getBarPath } from '../utils';
 
 import type { BarComponentProps } from './Bar';
 
