@@ -13,7 +13,10 @@ import { loremIpsum } from '@coinbase/cds-common/internal/data/loremIpsum';
 import { prices } from '@coinbase/cds-common/internal/data/prices';
 import { product } from '@coinbase/cds-common/internal/data/product';
 import { users } from '@coinbase/cds-common/internal/data/users';
-import { sparklineInteractiveData } from '@coinbase/cds-common/internal/visualizations/SparklineInteractiveData';
+import {
+  sparklineInteractiveData,
+  sparklineInteractiveHoverData,
+} from '@coinbase/cds-common/internal/visualizations/SparklineInteractiveData';
 import {
   OverlayContentContext,
   useOverlayContentContext,
@@ -188,6 +191,7 @@ const ReactLiveScope: Record<string, unknown> = {
   SparklineInteractivePrice,
   SparklineInteractivePriceWithHeader,
   sparklineInteractiveData,
+  sparklineInteractiveHoverData,
   // other
   ...CDSDots,
   DatePicker,

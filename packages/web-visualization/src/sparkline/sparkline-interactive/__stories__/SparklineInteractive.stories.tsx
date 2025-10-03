@@ -714,3 +714,44 @@ WithCustomStyles.parameters = {
     },
   },
 };
+
+export const DottedFillType = () => (
+  <React.StrictMode>
+    <SparklineInteractiveWrapper
+      data={sparklineInteractiveData}
+      fillType="dotted"
+      strokeColor={strokeColor}
+    />
+  </React.StrictMode>
+);
+
+DottedFillType.bind({});
+DottedFillType.parameters = {
+  percy: { enableJavaScript: true },
+  a11y: {
+    config: {
+      rules: [{ id: 'color-contrast', enabled: false }],
+    },
+  },
+};
+
+export const YScaleCustom = () => (
+  <React.StrictMode>
+    <SparklineInteractiveWrapper
+      data={sparklineInteractiveData}
+      fillType="dotted"
+      strokeColor={strokeColor}
+      yAxisScalingFactor={0.1}
+    />
+  </React.StrictMode>
+);
+
+YScaleCustom.bind({});
+YScaleCustom.parameters = {
+  percy: { enableJavaScript: true },
+  a11y: {
+    config: {
+      rules: [{ id: 'color-contrast', enabled: false }],
+    },
+  },
+};

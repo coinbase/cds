@@ -6,11 +6,17 @@ import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 export type SparklineAreaPatternBaseProps = {
   color: string;
   id: string;
+  /**
+   * Opacity for the pattern. If not provided, uses theme-based opacity from useSparklineAreaOpacity.
+   */
+  opacity?: number;
 };
 
-export const SparklineAreaPattern = ({ color, id }: SparklineAreaPatternBaseProps) => {
+export const SparklineAreaPattern = ({ color, id, opacity }: SparklineAreaPatternBaseProps) => {
   const { activeColorScheme } = useTheme();
-  const fillOpacity = useSparklineAreaOpacity(activeColorScheme);
+  const themeOpacity = useSparklineAreaOpacity(activeColorScheme);
+  const fillOpacity = opacity ?? themeOpacity;
+
   return (
     <Pattern height="4" id={id} patternUnits="userSpaceOnUse" width="4" x="0" y="0">
       <G>
