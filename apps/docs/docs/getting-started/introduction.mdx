@@ -17,7 +17,6 @@ import { GettingStartedBanner } from '@site/src/components/page/ComponentBanner/
 
 <MDXSection>
 <MDXArticle>
-
 ## Key features
 
 - **Cross-platform** - CDS provides components for both React DOM and React Native. We go to great lengths to ensure that the source code is as identical as possible across React and React Native without compromising on platform-specific features.
@@ -50,7 +49,6 @@ import { GettingStartedBanner } from '@site/src/components/page/ComponentBanner/
 
 <MDXSection>
 <MDXArticle>
-
 ## Constraints
 
 Coinbase apps have unique performance and build requirements that necessitate specific constraints in CDS.
@@ -61,12 +59,16 @@ Coinbase apps have unique performance and build requirements that necessitate sp
 
 If you find CDS too limiting, you may want to compile it from the source to remove these constraints, or you may still find CDS valuable as a fork or reference.
 
+</MDXArticle>
+<MDXArticle>
 ### Web styles are compiled at library build time
 
 Web styles are compiled at library build time, not at app build time.
 
 Compiling CSS at application build time adds significant latency to the build process. Instead, building CSS when we publish the CDS library keeps our app builds extremely fast. However, this means that you can't customize the responsive breakpoints without compiling CDS yourself.
 
+</MDXArticle>
+<MDXArticle>
 ### Automatic management of CSS imports
 
 Static CSS imports are automatically managed by CDS components.
@@ -80,7 +82,6 @@ CDS components will always automatically import the necessary static CSS in the 
 
 <MDXSection>
 <MDXArticle>
-
 ## Next steps
 
 Learn how to install and use CDS.
