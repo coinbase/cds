@@ -83,7 +83,7 @@ export const DefaultSelectDropdown: SelectDropdownComponent<'single' | 'multi'> 
                 selectAllLabel + ' (' + options.filter((o) => o.value !== null).length + ')',
               )}
               media={media}
-              onChange={toggleSelectAll}
+              onPress={toggleSelectAll}
               selected={isAllOptionsSelected}
               style={styles?.option}
               type={type}
@@ -117,7 +117,7 @@ export const DefaultSelectDropdown: SelectDropdownComponent<'single' | 'multi'> 
                     />
                   )
                 }
-                onChange={toggleSelectAll}
+                onPress={toggleSelectAll}
                 selected={isAllOptionsSelected}
                 type={type}
                 value="select-all"
@@ -205,7 +205,7 @@ export const DefaultSelectDropdown: SelectDropdownComponent<'single' | 'multi'> 
                                 <Radio checked={selected} />
                               ))
                             }
-                            onChange={(newVal) => {
+                            onPress={(newVal) => {
                               onChange(newVal);
                               if (!isMultiSelect) setOpen(false);
                             }}

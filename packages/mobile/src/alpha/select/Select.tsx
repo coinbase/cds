@@ -36,8 +36,8 @@ export type SelectOptionProps<Type extends 'single' | 'multi' = 'single'> = Sele
     selected: boolean;
     /** Whether the option is in an indeterminate state (for multi-select) */
     indeterminate?: boolean;
-    /** Handler for when the option selection changes */
-    onChange: (value: string | null) => void;
+    /** Press handler for the option */
+    onPress: (value: string | null) => void;
     /** Whether to allow multiline text in the option */
     multiline?: boolean;
     /** Style object for the option */

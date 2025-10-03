@@ -1,12 +1,15 @@
 import { useState } from 'react';
 import { useMultiSelect } from '@coinbase/cds-common/select/useMultiSelect';
 
+import { Button } from '../../../buttons';
 import { Example, ExampleScreen } from '../../../examples/ExampleScreen';
 import { Icon } from '../../../icons';
+import { HStack } from '../../../layout/HStack';
 import { VStack } from '../../../layout/VStack';
+import { Spinner } from '../../../loaders';
 import { Pressable } from '../../../system';
 import { Text } from '../../../typography/Text';
-import { Select, type SelectOptionComponent } from '../Select';
+import { Select, type SelectControlComponent, type SelectOptionComponent } from '../Select';
 
 const exampleOptions = [
   { value: null, label: 'Remove selection' },
@@ -424,6 +427,52 @@ const WithOptionsAsReactNodesExample = () => {
   );
 };
 
+const CustomControlComponent = () => {
+  const [value, setValue] = useState<string | null>('1');
+
+  const CustomControlComponent: SelectControlComponent = ({ value, setOpen }) => {
+    return <Button onPress={() => setOpen(true)}>{value ?? 'Empty value'}</Button>;
+  };
+
+  return (
+    <Select
+      SelectControlComponent={CustomControlComponent}
+      label="Single select - custom control component"
+      onChange={setValue}
+      options={exampleOptions}
+      placeholder="Empty value"
+      value={value}
+    />
+  );
+};
+
+const CustomOptionComponent = () => {
+  const [value, setValue] = useState<string | null>('1');
+
+  const CustomOptionComponent: SelectOptionComponent = ({ value, onPress }) => {
+    return (
+      <HStack justifyContent="center">
+        <Spinner size={4} />
+        <Button transparent onPress={() => onPress?.(value)} width="80%">
+          <Text>{value ?? 'Empty value'}</Text>
+        </Button>
+        <Spinner size={4} />
+      </HStack>
+    );
+  };
+
+  return (
+    <Select
+      SelectOptionComponent={CustomOptionComponent}
+      label="Single select - custom option component"
+      onChange={setValue}
+      options={exampleOptions}
+      placeholder="Empty value"
+      value={value}
+    />
+  );
+};
+
 const WithUniqueAccessoryAndMediaExample = () => {
   const [value, setValue] = useState<string | null>('1');
 
@@ -547,19 +596,17 @@ const MultiSelectCustomSelectAllOptionExample = () => {
   });
 
   const CustomSelectAllOption: SelectOptionComponent<'multi'> = ({
-    onChange,
+    onPress,
     selected,
     disabled,
     label,
-    blendStyles,
-    className,
     style,
   }) => {
     return (
       <Pressable
         background={selected ? 'bgSecondary' : 'bg'}
         disabled={disabled}
-        onPress={() => onChange('select-all')}
+        onPress={() => onPress('select-all')}
         paddingX={2}
         paddingY={3}
         style={style}
@@ -938,6 +985,12 @@ const SelectV3Screen = () => {
       </Example>
       <Example title="With Options as React Nodes">
         <WithOptionsAsReactNodesExample />
+      </Example>
+      <Example title="With Custom Control Component">
+        <CustomControlComponent />
+      </Example>
+      <Example title="With Custom Option Component">
+        <CustomOptionComponent />
       </Example>
       <Example title="With Unique Accessory and Media">
         <WithUniqueAccessoryAndMediaExample />
