@@ -1,12 +1,10 @@
-import React, { useCallback, useEffect, useRef } from 'react';
+import React, { useCallback, useRef } from 'react';
 import { Modal, View } from 'react-native';
 import type { SharedProps } from '@coinbase/cds-common';
-import { useRefMap } from '@coinbase/cds-common/hooks/useRefMap';
 import {
   OverlayContentContext,
   type OverlayContentContextValue,
 } from '@coinbase/cds-common/overlays/OverlayContentContext';
-import { RefMapContext } from '@coinbase/cds-common/system/RefMapContext';
 import { TourContext, type TourContextValue } from '@coinbase/cds-common/tour/TourContext';
 import type {
   TourOptions,
@@ -118,13 +116,17 @@ const TourComponent = <T extends string = string>({
   testID,
 }: TourProps<T>) => {
   const theme = useTheme();
-  const refMap = useRefMap<View>();
+  const defaultTourStepOffset = theme.space[3];
+  const defaultTourStepShiftPadding = theme.space[4];
+
   const tourStepArrowRef = useRef<View>(null);
   const RenderedTourStep = activeTourStep?.Component;
   const RenderedTourStepArrow = activeTourStep?.ArrowComponent ?? TourStepArrowComponent;
-  const activeTourStepTarget = activeTourStep ? refMap.getRef(activeTourStep.id) : null;
-  const defaultTourStepOffset = theme.space[3];
-  const defaultTourStepShiftPadding = theme.space[4];
+
+  const [animation, animationApi] = useSpring(
+    () => ({ from: { opacity: 0 }, config: springConfig.slow }),
+    [],
+  );
 
   const {
     refs,
@@ -140,81 +142,93 @@ const TourComponent = <T extends string = string>({
     ],
   });
 
-  const [animation, animationApi] = useSpring(
-    () => ({ from: { opacity: 0 }, config: springConfig.slow }),
-    [],
-  );
-
   const handleChange = useCallback(
     (tourStep: TourStepValue<T> | null) => {
-      // If the opacity is already 0, animating it to 0 does not trigger `onRest`
-      if (animation.opacity.get() === 0) return onChange(tourStep);
       void animationApi.start({
         to: { opacity: 0 },
         config: springConfig.stiff,
-        onRest: () => onChange(tourStep),
-      });
-    },
-    [animation.opacity, animationApi, onChange],
-  );
-
-  const revealTourStep = useCallback(() => {
-    activeTourStepTarget?.measureInWindow((x, y, width, height) => {
-      refs.setReference({
-        measure: (callback: (x: number, y: number, width: number, height: number) => void) => {
-          callback(x, y, width, height);
-          void animationApi.start({ to: { opacity: 1 }, config: springConfig.slow });
+        onResolve: () => {
+          onChange(tourStep);
         },
       });
-    });
-  }, [activeTourStepTarget, animationApi, refs]);
+    },
+    [animationApi, onChange],
+  );
 
   const api = useTour<T>({ steps, activeTourStep, onChange: handleChange });
+  const { activeTourStepTarget, setActiveTourStepTarget } = api;
 
-  useEffect(() => {
-    if (!activeTourStep) return;
-    revealTourStep();
-  }, [activeTourStep, revealTourStep]);
+  // Component Lifecycle & Side Effects
+  // ---------------------------------------------------------------------------
+  // This component's visual side effects (animations) are driven by a single
+  // callback, `handleSetActiveTourStepTarget`.
+  //
+  // This function is called from the `TourStep` component's ref callback
+  // whenever the active step changes. Because the ref callback is tied to the
+  // lifecycle of the `TourStep`, it reliably fires whenever a new step becomes
+  // active.
+  //
+  // This centralizes the logic for revealing a step: when the callback fires,
+  // we measure the target element's position on screen and then kick off the
+  // fade-in animation, all in one sequential, event-driven flow.
+
+  const handleActiveTourStepTargetChange = useCallback(
+    (target: View | null) => {
+      target?.measureInWindow((x, y, width, height) => {
+        refs.setReference({
+          measure: (callback: (x: number, y: number, width: number, height: number) => void) => {
+            callback(x, y, width, height);
+            void animationApi.start({ to: { opacity: 1 }, config: springConfig.slow });
+          },
+        });
+      });
+
+      setActiveTourStepTarget(target);
+    },
+    [animationApi, refs, setActiveTourStepTarget],
+  );
 
   return (
     <OverlayContentContext.Provider value={overlayContentContextValue}>
-      <RefMapContext.Provider value={refMap}>
-        <TourContext.Provider value={api as TourContextValue}>
-          {children}
-          {!!RenderedTourStep && (
-            <Modal
-              transparent
-              accessibilityLabel={accessibilityLabel}
-              accessibilityLabelledBy={accessibilityLabelledBy}
-              animationType="none"
-              id={id}
-              presentationStyle="overFullScreen"
-              testID={testID}
-            >
-              {!(activeTourStep.hideOverlay ?? hideOverlay) && !!activeTourStepTarget && (
-                <animated.View style={animation}>
-                  <TourMaskComponent
-                    activeTourStepTarget={activeTourStepTarget}
-                    borderRadius={activeTourStep.tourMaskBorderRadius ?? tourMaskBorderRadius}
-                    padding={activeTourStep.tourMaskPadding ?? tourMaskPadding}
-                  />
-                </animated.View>
-              )}
-              <View ref={refs.setFloating} collapsable={false} style={floatingStyles}>
-                <animated.View style={animation}>
-                  <RenderedTourStepArrow
-                    ref={tourStepArrowRef}
-                    arrow={arrow}
-                    placement={placement}
-                    style={activeTourStep?.arrowStyle}
-                  />
-                  <RenderedTourStep {...activeTourStep} />
-                </animated.View>
-              </View>
-            </Modal>
-          )}
-        </TourContext.Provider>
-      </RefMapContext.Provider>
+      <TourContext.Provider
+        value={
+          { ...api, setActiveTourStepTarget: handleActiveTourStepTargetChange } as TourContextValue
+        }
+      >
+        {children}
+        {!!RenderedTourStep && (
+          <Modal
+            transparent
+            accessibilityLabel={accessibilityLabel}
+            accessibilityLabelledBy={accessibilityLabelledBy}
+            animationType="none"
+            id={id}
+            presentationStyle="overFullScreen"
+            testID={testID}
+          >
+            {!(activeTourStep.hideOverlay ?? hideOverlay) && !!activeTourStepTarget && (
+              <animated.View style={animation}>
+                <TourMaskComponent
+                  activeTourStepTarget={activeTourStepTarget as View}
+                  borderRadius={activeTourStep.tourMaskBorderRadius ?? tourMaskBorderRadius}
+                  padding={activeTourStep.tourMaskPadding ?? tourMaskPadding}
+                />
+              </animated.View>
+            )}
+            <View ref={refs.setFloating} collapsable={false} style={floatingStyles}>
+              <animated.View style={animation}>
+                <RenderedTourStepArrow
+                  ref={tourStepArrowRef}
+                  arrow={arrow}
+                  placement={placement}
+                  style={activeTourStep?.arrowStyle}
+                />
+                <RenderedTourStep {...activeTourStep} />
+              </animated.View>
+            </View>
+          </Modal>
+        )}
+      </TourContext.Provider>
     </OverlayContentContext.Provider>
   );
 };

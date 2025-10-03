@@ -8,6 +8,18 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.13.5 (10/3/2025 PST)
+
+#### 🐞 Fixes
+
+- Support custom font in SegmentedTab. [[#65](https://github.com/coinbase/cds/pull/65)]
+
+## 8.13.4 (10/1/2025 PST)
+
+#### 🐞 Fixes
+
+- Fix tour position flickering issue.
+
 ## 8.13.3 ((10/1/2025, 03:05 PM PST))
 
 This is an artificial version bump with no new change.

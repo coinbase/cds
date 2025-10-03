@@ -4,6 +4,7 @@ import { renderA11y } from '@coinbase/cds-web-utils';
 import { fireEvent, render, screen } from '@testing-library/react';
 
 import { Text } from '../../typography/Text';
+import { DefaultThemeProvider } from '../../utils/test';
 import type { SegmentedTabProps } from '../SegmentedTab';
 import { SegmentedTab } from '../SegmentedTab';
 
@@ -29,18 +30,22 @@ describe('SegmentedTab', () => {
   it('passes accessibility', async () => {
     expect(
       await renderA11y(
-        <TabsContext.Provider value={mockApi}>
-          <SegmentedTab {...exampleProps} />
-        </TabsContext.Provider>,
+        <DefaultThemeProvider>
+          <TabsContext.Provider value={mockApi}>
+            <SegmentedTab {...exampleProps} />
+          </TabsContext.Provider>
+        </DefaultThemeProvider>,
       ),
     ).toHaveNoViolations();
   });
 
   it('renders SegmentedTab correctly', () => {
     render(
-      <TabsContext.Provider value={mockApi}>
-        <SegmentedTab {...exampleProps} />
-      </TabsContext.Provider>,
+      <DefaultThemeProvider>
+        <TabsContext.Provider value={mockApi}>
+          <SegmentedTab {...exampleProps} />
+        </TabsContext.Provider>
+      </DefaultThemeProvider>,
     );
     const buyTab = screen.getByText('Buy');
     expect(buyTab).toBeInTheDocument();
@@ -49,18 +54,22 @@ describe('SegmentedTab', () => {
 
   it('renders SegmentedTab correctly when disabled', () => {
     render(
-      <TabsContext.Provider value={mockApi}>
-        <SegmentedTab {...exampleProps} disabled />
-      </TabsContext.Provider>,
+      <DefaultThemeProvider>
+        <TabsContext.Provider value={mockApi}>
+          <SegmentedTab {...exampleProps} disabled />
+        </TabsContext.Provider>
+      </DefaultThemeProvider>,
     );
     expect(screen.getByTestId(TEST_ID)).toHaveAttribute('disabled');
   });
 
   it('renders with custom classNames', () => {
     render(
-      <TabsContext.Provider value={mockApi}>
-        <SegmentedTab {...exampleProps} className="custom-class" />
-      </TabsContext.Provider>,
+      <DefaultThemeProvider>
+        <TabsContext.Provider value={mockApi}>
+          <SegmentedTab {...exampleProps} className="custom-class" />
+        </TabsContext.Provider>
+      </DefaultThemeProvider>,
     );
     expect(screen.getByTestId(TEST_ID)).toHaveClass('custom-class');
   });
@@ -68,9 +77,11 @@ describe('SegmentedTab', () => {
   it('does not call onClick when disabled and clicked', () => {
     const onClick = jest.fn();
     render(
-      <TabsContext.Provider value={mockApi}>
-        <SegmentedTab {...exampleProps} disabled onClick={onClick} />
-      </TabsContext.Provider>,
+      <DefaultThemeProvider>
+        <TabsContext.Provider value={mockApi}>
+          <SegmentedTab {...exampleProps} disabled onClick={onClick} />
+        </TabsContext.Provider>
+      </DefaultThemeProvider>,
     );
     fireEvent.click(screen.getByTestId(TEST_ID));
     expect(onClick).not.toHaveBeenCalled();
@@ -79,9 +90,11 @@ describe('SegmentedTab', () => {
   it('triggers onClick when clicking the tab', () => {
     const onClick = jest.fn();
     render(
-      <TabsContext.Provider value={mockApi}>
-        <SegmentedTab {...exampleProps} onClick={onClick} />
-      </TabsContext.Provider>,
+      <DefaultThemeProvider>
+        <TabsContext.Provider value={mockApi}>
+          <SegmentedTab {...exampleProps} onClick={onClick} />
+        </TabsContext.Provider>
+      </DefaultThemeProvider>,
     );
     fireEvent.click(screen.getByTestId(TEST_ID));
 
@@ -95,9 +108,11 @@ describe('SegmentedTab', () => {
       </Text>
     );
     render(
-      <TabsContext.Provider value={mockApi}>
-        <SegmentedTab {...exampleProps} label={label} />
-      </TabsContext.Provider>,
+      <DefaultThemeProvider>
+        <TabsContext.Provider value={mockApi}>
+          <SegmentedTab {...exampleProps} label={label} />
+        </TabsContext.Provider>
+      </DefaultThemeProvider>,
     );
     expect(screen.getByTestId('custom-label')).toBeInTheDocument();
   });
@@ -105,9 +120,11 @@ describe('SegmentedTab', () => {
   it('forwards ref correctly', () => {
     const ref = React.createRef<HTMLButtonElement>();
     render(
-      <TabsContext.Provider value={mockApi}>
-        <SegmentedTab {...exampleProps} ref={ref} />
-      </TabsContext.Provider>,
+      <DefaultThemeProvider>
+        <TabsContext.Provider value={mockApi}>
+          <SegmentedTab {...exampleProps} ref={ref} />
+        </TabsContext.Provider>
+      </DefaultThemeProvider>,
     );
     expect(ref.current).not.toBeNull();
   });
