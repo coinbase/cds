@@ -103,8 +103,17 @@ export type CellBaseProps = Polymorphic.ExtendableProps<
     intermediary?: React.ReactNode;
     /** Media rendered at the start of the cell (icon, avatar, image, etc). */
     media?: React.ReactElement;
-    // TODO: consider renaming this to shouldTruncate in next breaking change release. Since overflow gives people the sense that it will overflow and overlap with other content
+    /**
+     * @deprecated Use `shouldTruncate` instead. Maintained for backward compatibility.
+     * When true, content will not be truncated. When false/undefined, content is truncated.
+     */
     shouldOverflow?: boolean;
+    /**
+     * Controls whether the main content should truncate with an ellipsis.
+     * Defaults to true (truncates) when not provided.
+     * @default true
+     */
+    shouldTruncate?: boolean;
     /**
      * Apply a fixed width to the detail (end).
      * @deprecated Use `styles.end` instead. This prop is kept for backward
@@ -203,6 +212,7 @@ export const Cell: CellComponent = memo(
          *
          * */
         shouldOverflow,
+        shouldTruncate = !shouldOverflow,
         accessibilityLabel,
         accessibilityLabelledBy,
         accessibilityHint,
@@ -223,7 +233,7 @@ export const Cell: CellComponent = memo(
       const isAnchor = Boolean(href);
       const isButton = Boolean(onClick ?? onKeyDown ?? onKeyUp);
       const linkable = isAnchor || isButton;
-      const contentTruncationStyle = cx(baseCss, !shouldOverflow && truncationCss);
+      const contentTruncationStyle = cx(baseCss, shouldTruncate && truncationCss);
       const content = useMemo(() => {
         // props for the entire inner container that wraps the top content
         // (media, children, intermediary, detail, accessory) and the bottom content
