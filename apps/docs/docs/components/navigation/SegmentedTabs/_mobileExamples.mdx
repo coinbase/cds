@@ -125,15 +125,20 @@ You can customize individual tabs by providing a custom `Component` for specific
 
 ```jsx
 function Example() {
-  const CustomSegmentedTab = useCallback(
-    (props) => <SegmentedTab {...props} activeColor="fgWarning" color="bgPrimary" />,
+  const CustomSegmentedTabColor = useCallback(
+    (props) => <SegmentedTab {...props} activeColor="fgWarning" color="bgPrimary" font="label2" />,
+    [],
+  );
+
+  const CustomSegmentedTabFont = useCallback(
+    (props) => <SegmentedTab {...props} font="label2" />,
     [],
   );
 
   const tabs = [
-    { id: 'buy', label: 'Buy', Component: CustomSegmentedTab },
-    { id: 'sell', label: 'Sell' },
-    { id: 'convert', label: 'Convert' },
+    { id: 'buy', label: 'Buy', Component: CustomSegmentedTabColor },
+    { id: 'sell', label: 'Sell', Component: CustomSegmentedTabFont },
+    { id: 'convert', label: 'Convert', Component: CustomSegmentedTabColor },
   ];
   const [activeTab, updateActiveTab] = useState(tabs[0]);
   const handleChange = useCallback((activeTab) => updateActiveTab(activeTab), []);

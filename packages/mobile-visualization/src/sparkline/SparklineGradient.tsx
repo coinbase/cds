@@ -11,6 +11,9 @@ import { generateSparklineAreaWithId } from './generateSparklineWithId';
 import type { SparklineBaseProps } from './Sparkline';
 import { SparklineAreaPattern } from './SparklineAreaPattern';
 
+/**
+ * @deprecated Use LineChart instead.
+ */
 export const SparklineGradient = memo(
   forwardRef<Path | null, SparklineBaseProps>(
     ({ background, color, path, height, width, yAxisScalingFactor, children }, ref) => {

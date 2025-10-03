@@ -62,7 +62,7 @@ const getCommits = () => {
           const prMatch = prRegex.exec(commitMessage);
           if (prMatch) {
             const prNumber = prMatch[1];
-            const prLink = `[[PR](https://github.com/coinbase/cds-staging/pull/${prNumber})]`;
+            const prLink = `[[PR](https://github.com/coinbase/cds/pull/${prNumber})]`;
             return `- ${prLink} - ${commitMessage.replace(prRegex, '')} - ${authorTime}`;
           }
         }

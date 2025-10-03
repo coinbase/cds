@@ -8,6 +8,7 @@ import { m as motion } from 'framer-motion';
 
 import { cx } from '../cx';
 import { Box } from '../layout/Box';
+import { Pressable, type PressableBaseProps } from '../system/Pressable';
 import { Text } from '../typography/Text';
 
 import { tabsTransitionConfig } from './Tabs';
@@ -41,22 +42,21 @@ const buttonDisabledCss = css`
   touch-action: none;
 `;
 
-export type SegmentedTabProps<T extends string = string> = {
-  /**
-   * Text color when the SegmentedTab is active.
-   * @default negativeForeground
-   */
-  activeColor?: ThemeVars.Color;
-  /**
-   * Text color when the SegmentedTab is inactive.
-   * @default foreground
-   */
-  color?: ThemeVars.Color;
-  /** Callback that is fired when the SegmentedTab is clicked. */
-  onClick?: (id: T, event: React.MouseEvent) => void;
-} & TabValue<T> &
-  Omit<React.ComponentProps<'button'>, 'ref'> &
-  SharedProps;
+export type SegmentedTabProps<T extends string = string> = PressableBaseProps &
+  TabValue<T> & {
+    /**
+     * Text color when the SegmentedTab is active.
+     * @default negativeForeground
+     */
+    activeColor?: ThemeVars.Color;
+    /**
+     * Text color when the SegmentedTab is inactive.
+     * @default foreground
+     */
+    color?: ThemeVars.Color;
+    /** Callback that is fired when the SegmentedTab is clicked. */
+    onClick?: (id: T, event: React.MouseEvent) => void;
+  };
 
 const disabledCss = css`
   opacity: 0.5;
@@ -78,6 +78,13 @@ const SegmentedTabComponent = memo(
         activeColor = 'fgInverse',
         className,
         testID,
+        font = 'headline',
+        fontFamily,
+        fontSize,
+        fontWeight,
+        lineHeight,
+        textAlign,
+        textTransform,
         ...props
       }: SegmentedTabProps<T>,
       ref: React.ForwardedRef<HTMLButtonElement>,
@@ -104,7 +111,7 @@ const SegmentedTabComponent = memo(
       );
 
       return (
-        <button
+        <Pressable
           ref={ref}
           aria-checked={isActive}
           className={cx(
@@ -116,22 +123,38 @@ const SegmentedTabComponent = memo(
           )}
           data-testid={testID}
           disabled={isDisabled}
+          font={font}
+          fontFamily={fontFamily}
+          fontSize={fontSize}
+          fontWeight={fontWeight}
           id={id}
+          lineHeight={lineHeight}
           onClick={handlePress}
           role="radio"
+          textAlign={textAlign}
+          textTransform={textTransform}
           type="button"
           {...props}
         >
           <Box as="span" justifyContent="center" paddingX={2} paddingY={1}>
             {typeof label === 'string' ? (
-              <MotionText font="headline" {...motionProps}>
+              <MotionText
+                font={font}
+                fontFamily={fontFamily}
+                fontSize={fontSize}
+                fontWeight={fontWeight}
+                lineHeight={lineHeight}
+                textAlign={textAlign}
+                textTransform={textTransform}
+                {...motionProps}
+              >
                 {label}
               </MotionText>
             ) : (
               label
             )}
           </Box>
-        </button>
+        </Pressable>
       );
     },
   ),

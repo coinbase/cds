@@ -1,4 +1,5 @@
 import { type Context, createContext, useContext } from 'react';
+import type { View } from 'react-native';
 
 import type { TourApi } from './useTour';
 

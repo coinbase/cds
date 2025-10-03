@@ -1,11 +1,16 @@
 {
   "import": "import { Sparkline } from '@cbhq/cds-mobile-visualization'",
-  "source": "https://github.com/coinbase/cds-staging/blob/master/packages/mobile-visualization/src/sparkline/Sparkline.tsx",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/mobile-visualization/src/sparkline/Sparkline.tsx",
   "description": "A small line chart component for displaying data trends.",
+  "warning": "Sparkline components are deprecated. Please use LineChart instead.",
   "relatedComponents": [
     {
       "label": "SparklineGradient",
       "url": "/components/graphs/SparklineGradient/"
+    },
+    {
+      "label": "LineChart",
+      "url": "/components/graphs/LineChart/"
     }
   ],
   "dependencies": []

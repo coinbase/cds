@@ -106,7 +106,7 @@ export const ComponentTabsContainer: React.FC<ComponentMetaContainerProps> = ({
           borderTopLeftRadius={500}
           borderTopRightRadius={500}
           paddingTop={1}
-          paddingX={4}
+          paddingX={{ base: 4, phone: 2 }}
         >
           <Tabs
             TabComponent={CustomTab}
@@ -129,9 +129,8 @@ export const ComponentTabsContainer: React.FC<ComponentMetaContainerProps> = ({
         gap={3}
         id="tabpanel--examples-tab"
         paddingBottom={2}
-        paddingEnd={4}
-        paddingStart={4}
-        paddingTop={5}
+        paddingTop={{ base: 5, phone: 2 }}
+        paddingX={{ base: 4, phone: 2 }}
         role="tabpanel"
       >
         {shouldRenderExamples && <TOCUpdater toc={isWeb ? webExamplesToc : mobileExamplesToc} />}

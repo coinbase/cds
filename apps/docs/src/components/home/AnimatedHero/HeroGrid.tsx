@@ -1,4 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
+import type { IconSize } from '@cbhq/cds-common';
+import { useBreakpoints } from '@cbhq/cds-web/hooks/useBreakpoints';
 import { Icon } from '@cbhq/cds-web/icons';
 import { Box } from '@cbhq/cds-web/layout';
 import { Grid } from '@cbhq/cds-web/layout/Grid';
@@ -129,6 +131,8 @@ export const AnimatedHeroGrid = () => {
   );
 
   const gridRef = useRef<HTMLDivElement>(null);
+  const { isPhone } = useBreakpoints();
+  const pauseIconSize: IconSize = isPhone ? 'xs' : 'm';
 
   const animateMessage = useCallback(
     (clickedCellIndex?: number) => {
@@ -293,7 +297,12 @@ export const AnimatedHeroGrid = () => {
           justifyContent="center"
           onClick={isPeriodicUpdatePaused ? handleResumeButtonClick : handlePauseButtonClick}
         >
-          <Icon active color="fgMuted" name={isPeriodicUpdatePaused ? 'play' : 'pause'} size="m" />
+          <Icon
+            active
+            color="fgMuted"
+            name={isPeriodicUpdatePaused ? 'play' : 'pause'}
+            size={pauseIconSize}
+          />
         </Pressable>
       </Grid>
     </Box>

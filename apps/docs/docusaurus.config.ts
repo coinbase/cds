@@ -159,7 +159,7 @@ const config: Config = {
         },
         blog: {
           blogTitle: 'CDS Blog',
-          blogDescription: 'Coinbase Design System news and updates',
+          blogDescription: 'Coinbase Design System Blog',
           blogSidebarCount: 0, // Disable blog left sidebar
           showReadingTime: true,
         },
@@ -175,6 +175,15 @@ const config: Config = {
     // Replace with your project's social card
     image: 'img/docusaurus-social-card.jpg',
     metadata: [
+      {
+        property: 'og:title',
+        content: 'Coinbase Design System',
+      },
+      {
+        property: 'og:description',
+        content:
+          'Documentation for the Coinbase Design System - A comprehensive collection of components, patterns, and guidelines for building crypto products.',
+      },
       {
         name: 'description',
         content:
@@ -193,11 +202,11 @@ const config: Config = {
           label: 'Storybook',
         },
         {
-          href: '/blog',
+          href: 'https://coinbase.com/blog/Coinbase-has-open-sourced-its-design-system',
           label: 'Blog',
         },
         {
-          href: 'https://github.com/coinbase/cds-staging',
+          href: 'https://github.com/coinbase/cds',
           label: 'GitHub',
         },
       ],
@@ -210,11 +219,11 @@ const config: Config = {
         },
         {
           label: 'Github',
-          href: 'https://github.com/coinbase/cds-staging/tree/master',
+          href: 'https://github.com/coinbase/cds/tree/master',
         },
         {
           label: 'Blog',
-          href: '/blog',
+          href: 'https://coinbase.com/blog/Coinbase-has-open-sourced-its-design-system',
         },
         {
           label: 'Careers',

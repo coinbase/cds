@@ -38,7 +38,7 @@ function getRepoUrl(repository: PackageJson['repository']) {
   if (repoUrl) {
     /** We need to change to https url */
     if (repoUrl.includes('.git')) {
-      /** git@github.com:coinbase/cds-staging.git */
+      /** git@github.com:coinbase/cds.git */
       const [domain, project] = repoUrl.replace('git@', '').split(':');
       const [user, repo] = project.replace('.git', '').split('/');
       return `https://${domain}/${user}/${repo}`;

@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "description": "CDS Docusaurus app",
   "private": true,
-  "repository": "git@github.com:coinbase/cds-staging.git",
+  "repository": "git@github.com:coinbase/cds.git",
   "scripts": {
     "docusaurus": "docusaurus",
     "start": "docusaurus start",

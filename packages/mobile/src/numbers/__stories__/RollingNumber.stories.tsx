@@ -407,6 +407,7 @@ const StyleOverrides = () => {
             paddingHorizontal: 8,
             borderRadius: 8,
             backgroundColor: theme.color.bgSecondaryWash,
+            alignSelf: 'flex-start',
           },
           fraction: {
             opacity: 0.2,

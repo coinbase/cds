@@ -252,7 +252,9 @@ export const TourNoOverlay = () => {
 
 export const TourDefaultActive = () => {
   const [activeTourStep, setActiveTourStep] = useState<TourStepValue | null>(null);
-  useEffect(() => setActiveTourStep(tourSteps[1]), []);
+  useEffect(() => {
+    setActiveTourStep(tourSteps[1]);
+  }, []);
   return (
     <Tour activeTourStep={activeTourStep} onChange={setActiveTourStep} steps={tourSteps}>
       <TourExample stagger ids={['step1', 'step2', 'step3', 'step4']} />

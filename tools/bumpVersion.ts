@@ -44,15 +44,16 @@ export async function getRemoteRepoUrl(): Promise<string> {
   }
   const url = (await execa('git', ['config', '--get', 'remote.origin.url'])).stdout.trim();
 
-  // https://github.com/coinbase/cds-staging.git -> https://github.com/coinbase/cds-staging
+  // https://github.com/coinbase/cds.git -> https://github.com/coinbase/cds
   if (url.startsWith('https://')) {
     return url.replace(/\.git$/, '');
   }
 
-  // git@github.com:coinbase/cds-staging.git ->  https://github.com/coinbase/cds-staging
+  // git@github.com:coinbase/cds.git ->  https://github.com/coinbase/cds
   return url
     .replace('git@', 'https://')
     .replace('net:', 'net/')
+    .replace('com:', 'com/')
     .replace(/\.git$/, '');
 }
 

@@ -8,6 +8,24 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 4.5.3 (10/3/2025 PST)
+
+#### 🐞 Fixes
+
+- Update icon map.
+
+## 4.5.2 (10/2/2025 PST)
+
+#### 🐞 Fixes
+
+- Chore: add clear error message when icon is missing from icon<>svg map file.
+
+## 4.5.1 (10/1/2025 PST)
+
+#### 🐞 Fixes
+
+- Update links for new repo. [[#42](https://github.com/coinbase/cds/pull/42)]
+
 ## 4.5.0 (9/18/2025 PST)
 
 - Prepare for open source release.

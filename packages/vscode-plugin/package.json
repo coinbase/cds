@@ -6,7 +6,7 @@
   "description": "VSCode Plugin for building with the Coinbase Design System",
   "repository": {
     "type": "git",
-    "url": "git@github.com:coinbase/cds-staging.git",
+    "url": "git@github.com:coinbase/cds.git",
     "directory": "packages/vscode-plugin"
   },
   "scripts": {

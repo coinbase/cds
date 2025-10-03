@@ -1,9 +1,9 @@
 .importText {
   display: block;
-  max-width: calc(100% - 40px - var(--space-2));
   min-width: 0;
   margin: 0;
-  overflow: auto;
+  display: flex;
+  overflow: hidden;
   white-space: nowrap;
   scrollbar-width: none;
   -webkit-overflow-scrolling: touch;
