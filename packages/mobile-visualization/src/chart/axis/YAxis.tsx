@@ -1,12 +1,6 @@
 import React, { memo, useCallback, useEffect, useId, useMemo } from 'react';
-import Animated, {
-  runOnJS,
-  useAnimatedReaction,
-  useAnimatedStyle,
-  useSharedValue,
-} from 'react-native-reanimated';
+import Animated, { useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
 import { G, Line } from 'react-native-svg';
-import type { ThemeVars } from '@coinbase/cds-common';
 import {
   axisTickLabelsInitialAnimateInConfig,
   axisTickLabelsInitialAnimateOutConfig,

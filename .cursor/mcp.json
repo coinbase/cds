@@ -7,6 +7,9 @@
         "mcp-remote",
         "https://mcp.linear.app/sse"
       ]
+    },
+    "nx-mcp": {
+      "url": "http://localhost:9437/sse"
     }
   }
 }

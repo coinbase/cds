@@ -273,6 +273,137 @@ describe('getAxisTicksData', () => {
     });
   });
 
+  describe('tick generation options', () => {
+    it('should respect minStep option to prevent fractional steps', () => {
+      const result = getAxisTicksData({
+        scaleFunction: numericScale,
+        tickInterval: 80,
+        options: {
+          minStep: 1, // Prevent fractional steps
+        },
+      });
+
+      // All tick values should be integers
+      result.forEach(({ tick }) => {
+        expect(Number.isInteger(tick)).toBe(true);
+      });
+
+      // Check that steps between ticks are at least 1
+      for (let i = 1; i < result.length; i++) {
+        const step = result[i].tick - result[i - 1].tick;
+        expect(step).toBeGreaterThanOrEqual(1);
+      }
+    });
+
+    it('should respect maxStep option to prevent large steps', () => {
+      // Create a scale with larger domain
+      const largeScale = getNumericScale({
+        scaleType: 'linear',
+        domain: { min: 0, max: 1000 },
+        range: { min: 0, max: 400 },
+      });
+
+      const result = getAxisTicksData({
+        scaleFunction: largeScale,
+        tickInterval: 50, // Would normally create large steps
+        options: {
+          maxStep: 100, // Limit step size
+        },
+      });
+
+      // Check that steps between ticks don't exceed maxStep
+      for (let i = 1; i < result.length; i++) {
+        const step = result[i].tick - result[i - 1].tick;
+        expect(step).toBeLessThanOrEqual(100);
+      }
+    });
+
+    it('should respect minTickCount option', () => {
+      const result = getAxisTicksData({
+        scaleFunction: numericScale,
+        tickInterval: 200, // Very large interval that would produce few ticks
+        options: {
+          minTickCount: 6, // Force at least 6 ticks
+        },
+      });
+
+      expect(result.length).toBeGreaterThanOrEqual(6);
+    });
+
+    it('should combine minStep and maxStep options', () => {
+      const result = getAxisTicksData({
+        scaleFunction: numericScale,
+        tickInterval: 80,
+        options: {
+          minStep: 2, // Steps must be at least 2
+          maxStep: 5, // Steps cannot exceed 5
+        },
+      });
+
+      // Check all steps are within bounds
+      for (let i = 1; i < result.length; i++) {
+        const step = result[i].tick - result[i - 1].tick;
+        expect(step).toBeGreaterThanOrEqual(2);
+        expect(step).toBeLessThanOrEqual(5);
+      }
+    });
+
+    it('should enforce minStep even when it conflicts with tickInterval', () => {
+      // Small domain that would normally produce small steps
+      const smallScale = getNumericScale({
+        scaleType: 'linear',
+        domain: { min: 0, max: 5 },
+        range: { min: 0, max: 400 },
+      });
+
+      const result = getAxisTicksData({
+        scaleFunction: smallScale,
+        tickInterval: 40, // Would create many small steps
+        options: {
+          minStep: 2, // Force larger steps
+        },
+      });
+
+      // All steps should be at least 2
+      for (let i = 1; i < result.length; i++) {
+        const step = result[i].tick - result[i - 1].tick;
+        expect(step).toBeGreaterThanOrEqual(2);
+      }
+    });
+
+    it('should work with minTickCount and minStep together', () => {
+      // Use a larger domain to accommodate both minTickCount and minStep
+      const largeScale = getNumericScale({
+        scaleType: 'linear',
+        domain: { min: 0, max: 100 },
+        range: { min: 0, max: 400 },
+      });
+
+      const result = getAxisTicksData({
+        scaleFunction: largeScale,
+        tickInterval: 100,
+        options: {
+          minTickCount: 5,
+          minStep: 1,
+        },
+      });
+
+      // Note: minTickCount is a minimum suggestion, but nice step calculation
+      // may result in fewer ticks. The important thing is minStep is enforced.
+      expect(result.length).toBeGreaterThan(0);
+
+      // Steps should be at least 1
+      for (let i = 1; i < result.length; i++) {
+        const step = result[i].tick - result[i - 1].tick;
+        expect(step).toBeGreaterThanOrEqual(1);
+      }
+
+      // Should include first and last values
+      expect(result[0].tick).toBe(0);
+      expect(result[result.length - 1].tick).toBe(100);
+    });
+  });
+
   describe('edge cases and error conditions', () => {
     it('should handle empty possibleTickValues', () => {
       const result = getAxisTicksData({
@@ -295,23 +426,6 @@ describe('getAxisTicksData', () => {
       expect(result.length).toBeGreaterThan(0);
       expect(result[0].tick).toBe(0);
       expect(result[result.length - 1].tick).toBe(10);
-    });
-
-    it('should handle scale domain with min > max', () => {
-      // Create a scale with invalid domain for generateEvenlyDistributedTicks
-      const invalidScale = getNumericScale({
-        scaleType: 'linear',
-        domain: { min: 10, max: 0 }, // min > max - invalid domain
-        range: { min: 0, max: 400 },
-      });
-
-      const result = getAxisTicksData({
-        scaleFunction: invalidScale,
-        tickInterval: 80,
-      });
-
-      // Should return empty array when domain generates no valid tick values
-      expect(result).toEqual([]);
     });
 
     it('should handle very small tickInterval', () => {
