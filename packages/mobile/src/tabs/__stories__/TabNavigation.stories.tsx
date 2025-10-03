@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { sampleTabs } from '@coinbase/cds-common/internal/data/tabs';
 import { gutter } from '@coinbase/cds-common/tokens/sizing';
 import sample from 'lodash/sample';
@@ -49,11 +49,20 @@ const TabNavigationScreen = () => {
   const [currentTabThree, setCurrentTabThree] = useState<TabNavigationProps['value']>();
   const [currentTabFour, setCurrentTabFour] = useState<TabNavigationProps['value']>();
   const [currentTabFive, setCurrentTabFive] = useState<TransactionType>(enumTabs[0].id);
+  const [currentTabSix, setCurrentTabSix] = useState<TabNavigationProps['value']>();
+  const [dotCount, setDotCount] = useState(0);
+  const tabsWithDot = useMemo(
+    () => sampleTabs.map((tab) => ({ ...tab, count: dotCount })),
+    [dotCount],
+  );
   const randomizeCurrentTabOne = useCallback(() => {
     const randomTabItem = sample(sampleTabs);
 
     setCurrentTabOne(randomTabItem?.id);
   }, []);
+  const randomizeDotCount = useCallback(() => {
+    setDotCount(Number(dotCount ? 0 : sample([2, 14, 99, 100])));
+  }, [dotCount]);
 
   return (
     <ExampleScreen>
@@ -93,6 +102,10 @@ const TabNavigationScreen = () => {
           tabs={someCustomTabs}
           value={currentTabFour}
         />
+      </Example>
+      <Example overflow="visible" padding={gutter} title="Tab Navigation with dot count change">
+        <TabNavigation onChange={setCurrentTabSix} tabs={tabsWithDot} value={currentTabSix} />
+        <Button onPress={randomizeDotCount}>Randomize dot count</Button>
       </Example>
       <Example overflow="visible" padding={gutter} title="Tab Navigation with disabled tab">
         <TabNavigation
