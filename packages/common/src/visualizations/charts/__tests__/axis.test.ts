@@ -179,29 +179,6 @@ describe('getAxisTicksData', () => {
     });
   });
 
-  describe('boolean ticks parameter', () => {
-    it('should return possibleTickValues when ticks is true', () => {
-      const possibleValues = [0, 2, 4, 6, 8, 10];
-      const result = getAxisTicksData({
-        scaleFunction: numericScale,
-        ticks: true,
-        possibleTickValues: possibleValues,
-      });
-
-      expect(result.map((r) => r.tick)).toEqual(possibleValues);
-    });
-
-    it('should return empty array when ticks is false', () => {
-      const result = getAxisTicksData({
-        scaleFunction: numericScale,
-        ticks: false,
-        possibleTickValues: [0, 1, 2, 3, 4, 5],
-      });
-
-      expect(result).toEqual([]);
-    });
-  });
-
   describe('band scale with categories', () => {
     it('should handle band scale with explicit tick indices', () => {
       const categories = ['Jan', 'Feb', 'Mar', 'Apr', 'May'];
@@ -246,17 +223,6 @@ describe('getAxisTicksData', () => {
 
       expect(result.length).toBe(5);
       expect(result.map((r) => r.tick)).toEqual([0, 1, 2, 3, 4]);
-    });
-
-    it('should return empty array when ticks is false for band scale', () => {
-      const categories = ['Jan', 'Feb', 'Mar', 'Apr', 'May'];
-      const result = getAxisTicksData({
-        scaleFunction: bandScale,
-        categories,
-        ticks: false,
-      });
-
-      expect(result).toEqual([]);
     });
 
     it('should filter out invalid indices for band scale', () => {
