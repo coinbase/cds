@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.14.0 (10/3/2025 PST)
+
+#### 🚀 Updates
+
+- Feat: New web & mobile visualization package utils.
+
 ## 8.13.3 ((10/1/2025, 03:05 PM PST))
 
 This is an artificial version bump with no new change.
