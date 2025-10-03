@@ -6,8 +6,8 @@ import { useValueChanges } from '@coinbase/cds-common/hooks/useValueChanges';
 import { interpolatePath } from 'd3-interpolate-path';
 import { select } from 'd3-selection';
 
+import { Sparkline, type SparklineFillType } from '../Sparkline';
 import { SparklineArea } from '../SparklineArea';
-import { SparklineGradient } from '../SparklineGradient';
 
 import { useSparklineInteractiveContext } from './SparklineInteractiveProvider';
 import { useSparklineInteractiveConstants } from './useSparklineInteractiveConstants';
@@ -19,6 +19,7 @@ export type SparklineInteractiveAnimatedPathProps = {
   color: string;
   area?: string;
   selectedPeriod: string;
+  fillType?: SparklineFillType;
   yAxisScalingFactor?: number;
   initialPath?: string;
   initialArea?: string;
@@ -30,6 +31,7 @@ export const SparklineInteractiveAnimatedPath = memo(
     color,
     selectedPeriod,
     area,
+    fillType = 'gradient',
     yAxisScalingFactor,
     initialPath,
     initialArea,
@@ -133,15 +135,17 @@ export const SparklineInteractiveAnimatedPath = memo(
     ]);
 
     return (
-      <SparklineGradient
+      <Sparkline
         ref={pathRef}
         color={color}
+        fillType={fillType}
         height={chartHeight}
+        strokeType="solid"
         width={chartWidth}
         yAxisScalingFactor={yAxisScalingFactor}
       >
         {!!area && <SparklineArea ref={areaRef} />}
-      </SparklineGradient>
+      </Sparkline>
     );
   },
 );

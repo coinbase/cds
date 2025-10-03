@@ -41,10 +41,6 @@ export type SparklineBaseProps = SharedProps & {
   strokeType?: SparklineStrokeType;
   /**
    * Type of fill to use for the area
-   * - 'dotted': Simple dotted pattern with theme opacity
-   * - 'gradient': Solid gradient fill with opacity fade
-   * - 'gradientDotted': Dotted pattern with gradient opacity fade
-   *
    * @default 'dotted'
    */
   fillType?: SparklineFillType;
