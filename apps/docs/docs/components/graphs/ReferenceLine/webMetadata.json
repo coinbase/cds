@@ -1,9 +1,11 @@
 {
   "import": "import { ReferenceLine } from '@coinbase/cds-web-visualization'",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/web-visualization/src/chart/line/ReferenceLine.tsx",
+  "description": "A horizontal or vertical reference line to mark important values on a chart.",
   "relatedComponents": [
     {
-      "label": "LineChart",
-      "url": "/components/graphs/LineChart/"
+      "label": "CartesianChart",
+      "url": "/components/graphs/CartesianChart"
     }
   ]
 }

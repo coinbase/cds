@@ -17,12 +17,12 @@ ReferenceLine can be used to add important details to a chart, such as a referen
   <ReferenceLine
     dataX={4}
     label="Vertical Reference Line"
-    labelConfig={{ textAnchor: 'start', dx: 4 }}
+    labelProps={{ horizontalAlignment: 'left', dx: 4 }}
   />
   <ReferenceLine
     dataY={70}
     label="Horizontal Reference Line"
-    labelConfig={{ dominantBaseline: 'end', dy: -4 }}
+    labelProps={{ verticalAlignment: 'top', dy: -4, horizontalAlignment: 'right' }}
   />
 </LineChart>
 ```
@@ -50,25 +50,25 @@ ReferenceLine relies on `dataX` or `dataY` to position the line. Passing in `dat
     dataY={100}
     label="100"
     labelPosition="left"
-    labelConfig={{ dominantBaseline: 'end', dy: -4 }}
+    labelProps={{ verticalAlignment: 'top', dy: -4 }}
   />
   <ReferenceLine
     dataY={10000}
     label="10,000"
     labelPosition="left"
-    labelConfig={{ dominantBaseline: 'end', dy: -4 }}
+    labelProps={{ verticalAlignment: 'top', dy: -4 }}
   />
   <ReferenceLine
     dataY={100000}
     label="100,000"
     labelPosition="left"
-    labelConfig={{ dominantBaseline: 'end', dy: -4 }}
+    labelProps={{ verticalAlignment: 'top', dy: -4 }}
   />
   <ReferenceLine
     dataY={1000000}
     label="1,000,000"
     labelPosition="left"
-    labelConfig={{ dominantBaseline: 'end', dy: -4 }}
+    labelProps={{ verticalAlignment: 'top', dy: -4 }}
   />
 </LineChart>
 ```
@@ -77,13 +77,13 @@ ReferenceLine relies on `dataX` or `dataY` to position the line. Passing in `dat
 
 ### Label Style
 
-You can adjust the style of the label using the `labelConfig` prop.
+You can adjust the style of the label using the `labelProps` prop.
 
 ```jsx live
 <LineChart
   curve="monotone"
   height={250}
-  padding={{ right: 0.5 }}
+  inset={{ right: 4 }}
   series={[
     {
       id: 'prices',
@@ -94,17 +94,32 @@ You can adjust the style of the label using the `labelConfig` prop.
   <ReferenceLine
     dataY={25}
     label="Liquidation"
-    labelConfig={{
-      dx: 4,
-      borderRadius: 100,
-      padding: { top: 0.5, bottom: 0.5, left: 1, right: 1 },
-      textAnchor: 'start',
+    labelPosition="left"
+    labelProps={{
+      horizontalAlignment: 'left',
+      dx: 12,
+      borderRadius: 4,
+      inset: { top: 4, bottom: 4, left: 8, right: 8 },
       color: 'rgb(var(--yellow70))',
       background: 'var(--color-accentSubtleYellow)',
       font: 'label1',
     }}
-    labelPosition="left"
-    lineStroke="var(--color-bgWarning)"
+    stroke="var(--color-bgWarning)"
+  />
+  <ReferenceLine
+    dataY={25}
+    label="$25"
+    labelPosition="right"
+    labelProps={{
+      horizontalAlignment: 'right',
+      dx: -12,
+      borderRadius: 4,
+      inset: { top: 2, bottom: 2, left: 4, right: 4 },
+      color: 'rgb(var(--yellow70))',
+      background: 'var(--color-bg)',
+      font: 'label1',
+    }}
+    stroke="transparent"
   />
 </LineChart>
 ```
@@ -182,7 +197,7 @@ function DraggablePriceTarget() {
         })}`;
       }, []);
 
-      const { drawingArea, getYScale } = useCartesianChartContext();
+      const { getYScale, drawingArea } = useCartesianChartContext();
       const [amount, setAmount] = useState(startAmount);
       const [isDragging, setIsDragging] = useState(false);
       const [textDimensions, setTextDimensions] = useState({ width: 0, height: 0 });
@@ -190,6 +205,7 @@ function DraggablePriceTarget() {
 
       const yScale = getYScale();
 
+      // Set up persistent event listeners on the chart SVG element
       useEffect(() => {
         const element = chartRef.current;
 
@@ -202,26 +218,39 @@ function DraggablePriceTarget() {
             return;
           }
 
+          const point = element.createSVGPoint();
+          point.x = event.clientX;
+          point.y = event.clientY;
+
+          const svgPoint = point.matrixTransform(element.getScreenCTM()?.inverse());
+
           // Clamp the Y position to the chart area
           const clampedY = Math.max(
             drawingArea.y,
-            Math.min(drawingArea.y + drawingArea.height, event.offsetY),
+            Math.min(drawingArea.y + drawingArea.height, svgPoint.y),
           );
 
-          // Round change to nearest whole %
           const rawAmount = yScale.invert(clampedY);
+
           const rawPercentage = ((rawAmount - baselineAmount) / baselineAmount) * 100;
+
           let targetPercentage = Math.round(rawPercentage);
 
-          // Cannot select current price
-          if (targetPercentage === 0) targetPercentage = rawPercentage >= 0 ? 1 : -1
+          if (targetPercentage === 0) {
+            targetPercentage = rawPercentage >= 0 ? 1 : -1;
+          }
 
           const newAmount = baselineAmount * (1 + targetPercentage / 100);
           setAmount(newAmount);
         };
 
-        const handleMouseUp = () => setIsDragging(false);
-        const handleMouseLeave = () => setIsDragging(false);
+        const handleMouseUp = () => {
+          setIsDragging(false);
+        };
+
+        const handleMouseLeave = () => {
+          setIsDragging(false);
+        };
 
         element.addEventListener('mousemove', handleMouseMove);
         element.addEventListener('mouseup', handleMouseUp);
@@ -265,16 +294,16 @@ function DraggablePriceTarget() {
           <ReferenceLine
             dataY={amount}
             label={dollarLabel}
-            labelConfig={{
-              background: color,
-              borderRadius: 100,
-              color: 'white',
-              dx: -8,
-              font: 'label1',
-              padding: { top: 0.5, bottom: 0.5, left: 1, right: 1 },
-              textAnchor: 'end',
-            }}
             labelPosition="right"
+            labelProps={{
+              background: color,
+              borderRadius: 4,
+              color: 'white',
+              dx: -12,
+              font: 'label1',
+              horizontalAlignment: 'right',
+              inset: { top: 5, bottom: 5, left: 10, right: 10 },
+            }}
           />
           <g
             onMouseDown={handleMouseDown}
@@ -302,10 +331,10 @@ function DraggablePriceTarget() {
             <ChartText
               disableRepositioning
               color={color}
-              dominantBaseline="middle"
               font="label1"
+              horizontalAlignment="left"
               onDimensionsChange={(dimensions) => setTextDimensions(dimensions)}
-              textAnchor="start"
+              verticalAlignment="middle"
               x={drawingArea.x + padding + dragIconSize + iconGap + trendArrowIconSize}
               y={yPixel + 1}
             >
@@ -317,7 +346,7 @@ function DraggablePriceTarget() {
     },
   );
 
-  const DraggablePriceTargetChart = () => {
+  const PriceTargetChart = () => {
     const priceData = useMemo(() => sparklineInteractiveData.year.map((d) => d.value), []);
 
     const chartRef = useRef<SVGSVGElement>(null);
@@ -331,12 +360,12 @@ function DraggablePriceTarget() {
 
     return (
       <LineChart
-        animate={false}
         ref={chartRef}
         showArea
+        animate={false}
         curve="monotone"
-        height={300}
-        padding={{ top: 10, bottom: 4, left: 0.5, right: 10 }}
+        height={250}
+        inset={{ top: 16, bottom: 16, left: 8, right: 80 }}
         series={[
           {
             id: 'prices',
@@ -350,7 +379,7 @@ function DraggablePriceTarget() {
           LineComponent={SolidLine}
           dataY={priceData[priceData.length - 1]}
           label={formatPrice(priceData[priceData.length - 1])}
-          labelConfig={{ dx: 16, textAnchor: 'start' }}
+          labelProps={{ dx: 8, horizontalAlignment: 'left' }}
         />
         <DraggableReferenceLine
           baselineAmount={priceData[priceData.length - 1]}
@@ -360,7 +389,6 @@ function DraggablePriceTarget() {
       </LineChart>
     );
   };
-
-  return <DraggablePriceTargetChart />
+  return <PriceTargetChart />
 }
 ```
