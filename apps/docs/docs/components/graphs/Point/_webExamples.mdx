@@ -147,8 +147,6 @@ Points support extensive customization through various properties including colo
           ? 'var(--color-bgNegative)'
           : 'var(--color-fgPrimary)',
       radius: isHighPerformance ? 6 : 4,
-      pulse: isHighPerformance,
-      pulseRadius: 20,
       strokeWidth: 2,
       stroke: 'var(--color-bg)',
       label: isHighPerformance || isLowPerformance ? `${dataY}%` : undefined,
@@ -187,7 +185,6 @@ When working with multiple series, points can help distinguish between different
   ]}
   curve="monotone"
   showYAxis
-  showLegend
   yAxis={{
     showGrid: true,
     label: 'Amount ($k)',
