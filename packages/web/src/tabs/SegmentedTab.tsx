@@ -54,6 +54,11 @@ export type SegmentedTabProps<T extends string = string> = {
   color?: ThemeVars.Color;
   /** Callback that is fired when the SegmentedTab is clicked. */
   onClick?: (id: T, event: React.MouseEvent) => void;
+  /**
+   * Text font for the SegmentedTab, used when passing in a string for label.
+   * @default headline
+   */
+  font?: ThemeVars.Font;
 } & TabValue<T> &
   Omit<React.ComponentProps<'button'>, 'ref'> &
   SharedProps;
@@ -78,6 +83,7 @@ const SegmentedTabComponent = memo(
         activeColor = 'fgInverse',
         className,
         testID,
+        font = 'headline',
         ...props
       }: SegmentedTabProps<T>,
       ref: React.ForwardedRef<HTMLButtonElement>,
@@ -124,7 +130,7 @@ const SegmentedTabComponent = memo(
         >
           <Box as="span" justifyContent="center" paddingX={2} paddingY={1}>
             {typeof label === 'string' ? (
-              <MotionText font="headline" {...motionProps}>
+              <MotionText font={font} {...motionProps}>
                 {label}
               </MotionText>
             ) : (

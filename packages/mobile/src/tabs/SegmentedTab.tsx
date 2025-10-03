@@ -33,6 +33,11 @@ export type SegmentedTabProps<T extends string = string> = {
   /** Callback that is fired when the SegmentedTab is pressed. */
   onPress?: (id: string, event: GestureResponderEvent) => void;
   style?: StyleProp<ViewStyle>;
+  /**
+   * Text font for the SegmentedTab, used when passing in a string for label.
+   * @default headline
+   */
+  font?: ThemeVars.Font;
 } & TabValue<T> &
   Omit<PressableProps, 'children' | 'disabled' | 'onPress' | 'style'>;
 
@@ -56,6 +61,7 @@ const SegmentedTabComponent = memo(
         'aria-selected': ariaSelected,
         accessibilityRole = 'button',
         testID,
+        font = 'headline',
         ...props
       }: SegmentedTabProps<T>,
       ref: React.ForwardedRef<View>,
@@ -112,7 +118,7 @@ const SegmentedTabComponent = memo(
             {typeof label === 'string' ? (
               <AnimatedTextHeadline
                 animated
-                font="headline"
+                font={font}
                 style={animatedTextStyles}
                 testID={`${testID}-label`}
               >
