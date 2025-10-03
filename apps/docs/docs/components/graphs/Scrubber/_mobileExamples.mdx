@@ -59,7 +59,7 @@ Show the current value being scrubbed.
 ```jsx
 function ScrubberWithValue() {
   const [scrubbedValue, setScrubbedValue] = useState(null);
-  
+
   return (
     <VStack gap={2}>
       {scrubbedValue && (
@@ -100,7 +100,7 @@ Scrub across multiple data series simultaneously.
 ```jsx
 function MultiSeriesScrubber() {
   const [scrubData, setScrubData] = useState(null);
-  
+
   return (
     <VStack gap={2}>
       {scrubData && (
@@ -160,7 +160,7 @@ Display a tooltip at the scrubber position.
 ```jsx
 function ScrubberWithTooltip() {
   const [scrubInfo, setScrubInfo] = useState(null);
-  
+
   return (
     <View style={{ position: 'relative' }}>
       <AreaChart
@@ -298,7 +298,7 @@ Create a custom scrubber with unique behavior.
 function CustomScrubberChart() {
   const [activeIndex, setActiveIndex] = useState(null);
   const data = [30, 45, 35, 50, 40, 55, 45, 60];
-  
+
   return (
     <LineChart
       enableScrubbing
@@ -321,25 +321,9 @@ function CustomScrubberChart() {
       <Scrubber>
         {activeIndex !== null && (
           <G>
-            <Circle
-              cx={0}
-              cy={0}
-              r={10}
-              fill="rgba(59, 130, 246, 0.2)"
-            />
-            <Circle
-              cx={0}
-              cy={0}
-              r={5}
-              fill="rgb(59, 130, 246)"
-            />
-            <Text
-              x={0}
-              y={-20}
-              textAnchor="middle"
-              fill="black"
-              fontSize={12}
-            >
+            <Circle cx={0} cy={0} r={10} fill="rgba(59, 130, 246, 0.2)" />
+            <Circle cx={0} cy={0} r={5} fill="rgb(59, 130, 246)" />
+            <Text x={0} y={-20} textAnchor="middle" fill="black" fontSize={12}>
               {data[activeIndex]}
             </Text>
           </G>
@@ -357,15 +341,15 @@ Display time information when scrubbing time series data.
 ```jsx
 function TimeSeriesScrubber() {
   const [selectedDate, setSelectedDate] = useState(null);
-  
+
   const dates = Array.from({ length: 10 }, (_, i) => {
     const date = new Date();
     date.setDate(date.getDate() - (9 - i));
     return date;
   });
-  
+
   const data = [100, 105, 103, 108, 106, 110, 108, 112, 115, 118];
-  
+
   return (
     <VStack gap={2}>
       {selectedDate && (
@@ -401,3 +385,4 @@ function TimeSeriesScrubber() {
     </VStack>
   );
 }
+```

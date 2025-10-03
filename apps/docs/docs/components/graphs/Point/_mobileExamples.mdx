@@ -31,10 +31,10 @@ You can conditionally render points to highlight specific values in your data, s
 ```jsx
 function AssetPriceWithMinMax() {
   const data = [100, 120, 115, 140, 138, 150, 145, 160, 175, 170];
-  
+
   const minPrice = Math.min(...data);
   const maxPrice = Math.max(...data);
-  
+
   return (
     <LineChart
       series={[
@@ -94,7 +94,7 @@ Make points interactive with touch handlers.
 function InteractivePointChart() {
   const [selectedPoint, setSelectedPoint] = useState(null);
   const data = [20, 35, 30, 45, 40, 55, 50, 65];
-  
+
   return (
     <LineChart
       height={250}
@@ -182,14 +182,14 @@ Add smooth animations to points on data changes.
 ```jsx
 function AnimatedPointsChart() {
   const [data, setData] = useState([20, 35, 30, 45, 40]);
-  
+
   const updateData = () => {
-    const newData = Array(5).fill(0).map(() => 
-      Math.floor(Math.random() * 50) + 20
-    );
+    const newData = Array(5)
+      .fill(0)
+      .map(() => Math.floor(Math.random() * 50) + 20);
     setData(newData);
   };
-  
+
   return (
     <VStack gap={3}>
       <Button onPress={updateData}>Update Data</Button>
@@ -229,14 +229,14 @@ function PointsWithTooltips() {
     { value: 135, label: 'May' },
     { value: 160, label: 'Jun' },
   ];
-  
+
   return (
     <LineChart
       height={250}
       series={[
         {
           id: 'monthly',
-          data: data.map(d => d.value),
+          data: data.map((d) => d.value),
         },
       ]}
       curve="monotone"
@@ -250,8 +250,18 @@ function PointsWithTooltips() {
       }}
     >
       {selectedIndex !== null && (
-        <View style={{ position: 'absolute', top: 10, right: 10, padding: 10, backgroundColor: 'white' }}>
-          <Text>{data[selectedIndex].label}: ${data[selectedIndex].value}</Text>
+        <View
+          style={{
+            position: 'absolute',
+            top: 10,
+            right: 10,
+            padding: 10,
+            backgroundColor: 'white',
+          }}
+        >
+          <Text>
+            {data[selectedIndex].label}: ${data[selectedIndex].value}
+          </Text>
         </View>
       )}
     </LineChart>
@@ -267,7 +277,7 @@ Show points only when values cross certain thresholds.
 function ThresholdPoints() {
   const data = [30, 45, 35, 60, 40, 75, 50, 85, 55, 70];
   const threshold = 50;
-  
+
   return (
     <LineChart
       height={250}
@@ -294,3 +304,4 @@ function ThresholdPoints() {
     </LineChart>
   );
 }
+```

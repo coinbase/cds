@@ -5,7 +5,7 @@ PeriodSelector provides a simple way for users to switch between different time 
 ```jsx
 function BasicPeriodSelector() {
   const [selectedPeriod, setSelectedPeriod] = useState('1D');
-  
+
   const periods = [
     { label: '1D', value: '1D' },
     { label: '1W', value: '1W' },
@@ -14,7 +14,7 @@ function BasicPeriodSelector() {
     { label: '1Y', value: '1Y' },
     { label: 'ALL', value: 'ALL' },
   ];
-  
+
   return (
     <PeriodSelector
       periods={periods}
@@ -32,18 +32,18 @@ Integrate PeriodSelector with a chart to dynamically update the displayed data.
 ```jsx
 function ChartWithPeriodSelector() {
   const [selectedPeriod, setSelectedPeriod] = useState('1M');
-  
+
   const dataByPeriod = {
     '1D': [100, 105, 103, 108, 106, 110],
     '1W': [100, 102, 105, 103, 108, 106, 110, 108, 112],
     '1M': [100, 98, 102, 105, 103, 108, 106, 110, 108, 112, 115, 113, 118],
     '3M': [90, 95, 92, 98, 100, 102, 105, 103, 108, 106, 110, 108, 112, 115, 113, 118, 120, 122],
     '1Y': [80, 85, 88, 90, 92, 95, 98, 100, 105, 110, 108, 112, 115, 118, 120, 125, 130],
-    'ALL': [50, 60, 70, 80, 85, 88, 90, 92, 95, 98, 100, 105, 110, 115, 120, 125, 130, 135],
+    ALL: [50, 60, 70, 80, 85, 88, 90, 92, 95, 98, 100, 105, 110, 115, 120, 125, 130, 135],
   };
-  
-  const periods = Object.keys(dataByPeriod).map(key => ({ label: key, value: key }));
-  
+
+  const periods = Object.keys(dataByPeriod).map((key) => ({ label: key, value: key }));
+
   return (
     <VStack gap={3}>
       <PeriodSelector
@@ -134,14 +134,14 @@ Use custom labels for different contexts.
 ```jsx
 function CustomLabelSelector() {
   const [selectedView, setSelectedView] = useState('overview');
-  
+
   const views = [
     { label: 'Overview', value: 'overview' },
     { label: 'Details', value: 'details' },
     { label: 'Analytics', value: 'analytics' },
     { label: 'History', value: 'history' },
   ];
-  
+
   return (
     <PeriodSelector
       periods={views}
@@ -160,16 +160,16 @@ Show loading state while fetching new data for a period.
 function LoadingPeriodSelector() {
   const [selectedPeriod, setSelectedPeriod] = useState('1D');
   const [isLoading, setIsLoading] = useState(false);
-  
+
   const handlePeriodChange = async (period) => {
     setIsLoading(true);
     setSelectedPeriod(period);
-    
+
     // Simulate data fetching
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    await new Promise((resolve) => setTimeout(resolve, 1000));
     setIsLoading(false);
   };
-  
+
   return (
     <VStack gap={3}>
       <PeriodSelector

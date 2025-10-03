@@ -30,7 +30,7 @@ function MultipleReferenceLines() {
   const average = data.reduce((a, b) => a + b, 0) / data.length;
   const max = Math.max(...data);
   const min = Math.min(...data);
-  
+
   return (
     <LineChart
       height={250}
@@ -72,12 +72,7 @@ Use dashed lines for visual distinction.
     showGrid: true,
   }}
 >
-  <ReferenceLine 
-    y={50} 
-    stroke="rgb(156, 163, 175)" 
-    strokeDasharray="5,5" 
-    label="Target"
-  />
+  <ReferenceLine y={50} stroke="rgb(156, 163, 175)" strokeDasharray="5,5" label="Target" />
 </BarChart>
 ```
 
@@ -124,16 +119,16 @@ Add labels to reference lines for clarity.
     formatValue: (v) => `$${v}k`,
   }}
 >
-  <ReferenceLine 
-    y={125} 
-    stroke="rgb(59, 130, 246)" 
+  <ReferenceLine
+    y={125}
+    stroke="rgb(59, 130, 246)"
     strokeWidth={2}
     label="Q1 Target"
     labelPosition="left"
   />
-  <ReferenceLine 
-    y={100} 
-    stroke="rgb(239, 68, 68)" 
+  <ReferenceLine
+    y={100}
+    stroke="rgb(239, 68, 68)"
     strokeWidth={2}
     label="Minimum"
     labelPosition="right"
@@ -149,7 +144,7 @@ Update reference lines based on data or user interaction.
 function DynamicReferenceLine() {
   const [threshold, setThreshold] = useState(50);
   const data = [30, 45, 35, 60, 40, 75, 50, 85, 55, 70];
-  
+
   return (
     <VStack gap={3}>
       <HStack gap={2}>
@@ -177,9 +172,9 @@ function DynamicReferenceLine() {
         }}
         renderPoints={(datum) => datum.value >= threshold}
       >
-        <ReferenceLine 
-          y={threshold} 
-          stroke="rgb(168, 85, 247)" 
+        <ReferenceLine
+          y={threshold}
+          stroke="rgb(168, 85, 247)"
           strokeWidth={2}
           strokeDasharray="3,3"
         />
@@ -213,11 +208,11 @@ function ReferenceZones() {
       {/* Danger zone */}
       <ReferenceLine y={60} stroke="rgba(239, 68, 68, 0.3)" strokeWidth={30} />
       <ReferenceLine y={60} stroke="rgb(239, 68, 68)" strokeWidth={1} label="Critical" />
-      
+
       {/* Warning zone */}
       <ReferenceLine y={55} stroke="rgba(251, 191, 36, 0.3)" strokeWidth={20} />
       <ReferenceLine y={55} stroke="rgb(251, 191, 36)" strokeWidth={1} label="Warning" />
-      
+
       {/* Safe zone */}
       <ReferenceLine y={50} stroke="rgb(34, 197, 94)" strokeWidth={1} label="Normal" />
     </LineChart>
@@ -232,20 +227,17 @@ Animate reference lines for emphasis.
 ```jsx
 function AnimatedReferenceLine() {
   const animatedY = useSharedValue(30);
-  
+
   useEffect(() => {
     animatedY.value = withRepeat(
-      withSequence(
-        withTiming(70, { duration: 2000 }),
-        withTiming(30, { duration: 2000 })
-      ),
+      withSequence(withTiming(70, { duration: 2000 }), withTiming(30, { duration: 2000 })),
       -1,
-      false
+      false,
     );
   }, []);
-  
+
   const AnimatedRef = Animated.createAnimatedComponent(ReferenceLine);
-  
+
   return (
     <LineChart
       height={250}
@@ -261,11 +253,7 @@ function AnimatedReferenceLine() {
         domain: [20, 80],
       }}
     >
-      <AnimatedRef 
-        y={animatedY} 
-        stroke="rgb(168, 85, 247)" 
-        strokeWidth={2}
-      />
+      <AnimatedRef y={animatedY} stroke="rgb(168, 85, 247)" strokeWidth={2} />
     </LineChart>
   );
 }
@@ -278,14 +266,12 @@ Show statistical measures as reference lines.
 ```jsx
 function StatisticalReferences() {
   const data = [32, 45, 38, 52, 41, 58, 46, 62, 49, 55];
-  
+
   const mean = data.reduce((a, b) => a + b, 0) / data.length;
   const sorted = [...data].sort((a, b) => a - b);
   const median = sorted[Math.floor(sorted.length / 2)];
-  const stdDev = Math.sqrt(
-    data.reduce((sq, n) => sq + Math.pow(n - mean, 2), 0) / data.length
-  );
-  
+  const stdDev = Math.sqrt(data.reduce((sq, n) => sq + Math.pow(n - mean, 2), 0) / data.length);
+
   return (
     <LineChart
       height={250}
@@ -302,10 +288,32 @@ function StatisticalReferences() {
       }}
       renderPoints={() => true}
     >
-      <ReferenceLine y={mean} stroke="rgb(59, 130, 246)" strokeWidth={2} label={`Mean: ${mean.toFixed(1)}`} />
-      <ReferenceLine y={median} stroke="rgb(168, 85, 247)" strokeWidth={1} strokeDasharray="5,5" label={`Median: ${median}`} />
-      <ReferenceLine y={mean + stdDev} stroke="rgba(59, 130, 246, 0.5)" strokeWidth={1} label="+1σ" />
-      <ReferenceLine y={mean - stdDev} stroke="rgba(59, 130, 246, 0.5)" strokeWidth={1} label="-1σ" />
+      <ReferenceLine
+        y={mean}
+        stroke="rgb(59, 130, 246)"
+        strokeWidth={2}
+        label={`Mean: ${mean.toFixed(1)}`}
+      />
+      <ReferenceLine
+        y={median}
+        stroke="rgb(168, 85, 247)"
+        strokeWidth={1}
+        strokeDasharray="5,5"
+        label={`Median: ${median}`}
+      />
+      <ReferenceLine
+        y={mean + stdDev}
+        stroke="rgba(59, 130, 246, 0.5)"
+        strokeWidth={1}
+        label="+1σ"
+      />
+      <ReferenceLine
+        y={mean - stdDev}
+        stroke="rgba(59, 130, 246, 0.5)"
+        strokeWidth={1}
+        label="-1σ"
+      />
     </LineChart>
   );
 }
+```
