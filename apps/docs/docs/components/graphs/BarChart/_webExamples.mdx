@@ -31,7 +31,7 @@ function MonthlyGainsByAsset() {
   const ThinSolidLine = memo((props: SolidLineProps) => <SolidLine {...props} strokeWidth={1} />);
 
   const tickFormatter = useCallback(
-    (amount: number) =>
+    (amount) =>
       new Intl.NumberFormat('en-US', {
         style: 'currency',
         currency: 'USD',
@@ -81,7 +81,7 @@ function MonthlyGainsByAsset() {
   const ThinSolidLine = memo((props: SolidLineProps) => <SolidLine {...props} strokeWidth={1} />);
 
   const tickFormatter = useCallback(
-    (amount: number) =>
+    (amount) =>
       new Intl.NumberFormat('en-US', {
         style: 'currency',
         currency: 'USD',
@@ -146,7 +146,7 @@ function MonthlyGainsMultipleStacks() {
   const ThinSolidLine = memo((props: SolidLineProps) => <SolidLine {...props} strokeWidth={1} />);
 
   const tickFormatter = useCallback(
-    (amount: number) =>
+    (amount) =>
       new Intl.NumberFormat('en-US', {
         style: 'currency',
         currency: 'USD',
@@ -215,7 +215,7 @@ function MonthlyGainsByAsset() {
   const ThinSolidLine = memo((props: SolidLineProps) => <SolidLine {...props} strokeWidth={1} />);
 
   const tickFormatter = useCallback(
-    (amount: number) =>
+    (amount) =>
       new Intl.NumberFormat('en-US', {
         style: 'currency',
         currency: 'USD',
@@ -485,8 +485,6 @@ function MonthlyRewards() {
 };
 ```
 
-## Accessibility
-
 ## Customization
 
 ### Bar Spacing
@@ -524,7 +522,6 @@ There are two ways to control the spacing between bars. You can set the `barPadd
 
 To better emphasize small values, you can set the `stackMinSize` or `barMinSize` prop to control the minimum size for entire stacks or individual bar.
 It is recommended to only use `stackMinSize` for stacked charts and `barMinSize` for non-stacked charts.
-Both properties accept `ThemeVars.Space` values.
 
 #### Minimum Stack Size
 
@@ -738,8 +735,8 @@ function Candlesticks() {
   }, []);
 
   const formatTime = React.useCallback(
-    (index: number | null) => {
-      if (index === null || index >= stockData.length) return '';
+    (index) => {
+      if (index === null || index === undefined || index >= stockData.length) return '';
       const ts = parseInt(stockData[index].start);
       return new Date(ts * 1000).toLocaleDateString('en-US', {
         month: 'short',
@@ -750,11 +747,11 @@ function Candlesticks() {
   );
 
   const updateInfoText = React.useCallback(
-    (index: number | null) => {
+    (index) => {
       if (!infoTextRef.current) return;
 
       const text =
-        index !== null
+        index !== null && index !== undefined
           ? `Open: ${formatPrice(stockData[index].open)}, Close: ${formatPrice(
               stockData[index].close,
             )}, Volume: ${formatVolume(stockData[index].volume)}`
