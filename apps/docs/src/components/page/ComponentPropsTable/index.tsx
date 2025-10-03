@@ -61,7 +61,7 @@ function ComponentPropsTable({
         id="component-props-table-search-bar-container"
         paddingBottom={1}
         paddingTop={2}
-        paddingX={4}
+        paddingX={{ base: 4, phone: 2 }}
         position={{ desktop: 'sticky', tablet: 'sticky' }}
         top={{
           desktop: `calc(var(--ifm-navbar-height) + ${tabsHeight}px - var(--space-3))`,
@@ -82,7 +82,7 @@ function ComponentPropsTable({
         />
       </VStack>
       {filteredProps.length > 0 ? (
-        <Box maxWidth="100%" paddingBottom={4} paddingX={4}>
+        <Box maxWidth="100%" paddingBottom={{ base: 4, phone: 2 }} paddingX={{ base: 4, phone: 2 }}>
           <PropsTable
             props={filteredProps}
             searchTerm={searchValue}

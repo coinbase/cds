@@ -14,6 +14,10 @@ const config = {
   testMatch: ['**//**/*.test.(ts|tsx)'],
   testTimeout: 10000,
   transformIgnorePatterns: [`node_modules/(?!(${esModules.join('|')}))`],
+  moduleNameMapper: {
+    '^@cbhq/cds-common/visualizations/charts$':
+      '<rootDir>/../common/src/visualizations/charts/index.ts',
+  },
 };
 
 if (isCI) config.maxWorkers = Math.floor(os.availableParallelism() / 2);

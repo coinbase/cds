@@ -10,7 +10,7 @@ figma.connect(
   {
     imports: ["import { TabbedChips } from '@cbhq/cds-mobile/chips/TabbedChips';"],
     props: {
-      overflow15050: figma.boolean('overflow'),
+      overflow: figma.boolean('overflowing'),
       platform: figma.enum('platform', {
         mobile: 'mobile',
         desktop: 'desktop',

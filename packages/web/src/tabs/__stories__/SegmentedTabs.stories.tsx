@@ -25,6 +25,12 @@ const CustomSegmentedTab: TabComponent = (props) => (
   <SegmentedTab {...props} activeColor="fgWarning" color="bgPrimary" />
 );
 
+const CustomSegmentedTabColor: TabComponent = (props) => (
+  <SegmentedTab {...props} activeColor="fgWarning" color="bgPrimary" font="label2" />
+);
+
+const CustomSegmentedTabFont: TabComponent = (props) => <SegmentedTab {...props} font="label2" />;
+
 const buttonCss = css`
   border-radius: 0;
 `;
@@ -75,6 +81,12 @@ const customSegments = [
   { id: 'buy', label: 'Buy', Component: CustomSegmentedTab },
   { id: 'sell', label: 'Sell' },
   { id: 'convert', label: 'Convert' },
+];
+
+const mixedCustomSegments = [
+  { id: 'buy', label: 'Buy', Component: CustomSegmentedTabColor },
+  { id: 'sell', label: 'Sell', Component: CustomSegmentedTabFont },
+  { id: 'convert', label: 'Convert', Component: CustomSegmentedTabColor },
 ];
 
 type SegmentedTabsExampleProps<T extends string> = {
@@ -143,6 +155,11 @@ export const All = () => {
         defaultActiveTab={customSegments[0]}
         tabs={customSegments}
         title="Custom Single Segment"
+      />
+      <SegmentedTabsExample
+        defaultActiveTab={mixedCustomSegments[0]}
+        tabs={mixedCustomSegments}
+        title="Mixed Custom Segments"
       />
       <SegmentedTabsExample
         TabComponent={AnotherCustomSegmentedTab}

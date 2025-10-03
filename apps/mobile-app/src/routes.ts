@@ -59,6 +59,11 @@ export const routes = [
     getComponent: () => require('@cbhq/cds-mobile/banner/__stories__/Banner.stories').default,
   },
   {
+    key: 'BarChart',
+    getComponent: () =>
+      require('@cbhq/cds-mobile-visualization/chart/bar/__stories__/BarChart.stories').default,
+  },
+  {
     key: 'Box',
     getComponent: () => require('@cbhq/cds-mobile/layout/__stories__/Box.stories').default,
   },
@@ -94,6 +99,17 @@ export const routes = [
     key: 'CarouselMedia',
     getComponent: () =>
       require('@cbhq/cds-mobile/media/__stories__/CarouselMedia.stories').default,
+  },
+  {
+    key: 'CartesianChart',
+    getComponent: () =>
+      require('@cbhq/cds-mobile-visualization/chart/__stories__/CartesianChart.stories')
+        .default,
+  },
+  {
+    key: 'ChartAxis',
+    getComponent: () =>
+      require('@cbhq/cds-mobile-visualization/chart/axis/__stories__/Axis.stories').default,
   },
   {
     key: 'Checkbox',
@@ -262,13 +278,14 @@ export const routes = [
       require('@cbhq/cds-mobile/gradients/__stories__/LinearGradient.stories').default,
   },
   {
-    key: 'Link',
-    getComponent: () => require('@cbhq/cds-mobile/typography/__stories__/Link.stories').default,
+    key: 'LineChart',
+    getComponent: () =>
+      require('@cbhq/cds-mobile-visualization/chart/line/__stories__/LineChart.stories')
+        .default,
   },
   {
-    key: 'RollingNumber',
-    getComponent: () =>
-      require('@cbhq/cds-mobile/typography/__stories__/RollingNumber.stories').default,
+    key: 'Link',
+    getComponent: () => require('@cbhq/cds-mobile/typography/__stories__/Link.stories').default,
   },
   {
     key: 'ListCell',
@@ -409,6 +426,12 @@ export const routes = [
       require('@cbhq/cds-mobile/system/__stories__/PatternError.stories').default,
   },
   {
+    key: 'PeriodSelector',
+    getComponent: () =>
+      require('@cbhq/cds-mobile-visualization/chart/__stories__/PeriodSelector.stories')
+        .default,
+  },
+  {
     key: 'Pictogram',
     getComponent: () =>
       require('@cbhq/cds-mobile/illustrations/__stories__/Pictogram.stories').default,
@@ -449,9 +472,20 @@ export const routes = [
       require('@cbhq/cds-mobile/media/__stories__/RemoteImage.stories').default,
   },
   {
+    key: 'ReferenceLine',
+    getComponent: () =>
+      require('@cbhq/cds-mobile-visualization/chart/line/__stories__/ReferenceLine.stories')
+        .default,
+  },
+  {
     key: 'RemoteImageGroup',
     getComponent: () =>
       require('@cbhq/cds-mobile/media/__stories__/RemoteImageGroup.stories').default,
+  },
+  {
+    key: 'RollingNumber',
+    getComponent: () =>
+      require('@cbhq/cds-mobile/numbers/__stories__/RollingNumber.stories').default,
   },
   {
     key: 'SearchInput',

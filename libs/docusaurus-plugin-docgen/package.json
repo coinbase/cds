@@ -5,7 +5,7 @@
   "description": "Docusaurus plugin for generating api documentation from Typescript files",
   "repository": {
     "type": "git",
-    "url": "git@github.com:coinbase/cds-staging.git",
+    "url": "git@github.com:coinbase/cds.git",
     "directory": "libs/docusaurus-plugin-docgen"
   },
   "type": "commonjs",

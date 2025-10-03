@@ -12,7 +12,7 @@ const maxWidthConfig = {
 } as const;
 const paddingBottomConfig = { base: 4, tablet: 6 } as const;
 const paddingTopConfig = { phone: 2, base: 3 } as const;
-const paddingXConfig = { desktop: 5, tablet: 4, base: 3 } as const;
+const paddingXConfig = { desktop: 5, tablet: 4, base: 2 } as const;
 
 export default function DocRootLayoutMain({ children }: Props): JSX.Element {
   return (

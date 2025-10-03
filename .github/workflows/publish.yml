@@ -44,7 +44,7 @@ jobs:
         run: |
           # Define all publishable packages (those with publish.Dockerfile
           # and not private: true)
-          ALL_PACKAGES="common,eslint-plugin-cds,icons,illustrations,lottie-files,mobile,mobile-visualization,ui-mobile-playground,utils,web,web-visualization"
+          ALL_PACKAGES="common,eslint-plugin-cds,icons,illustrations,lottie-files,mcp-server,mobile,mobile-visualization,ui-mobile-playground,utils,web,web-visualization"
 
           # Function to convert comma-separated list to JSON array
           csv_to_json() {
@@ -182,7 +182,7 @@ jobs:
       needs.detect-changes.outputs.packages != '[]' &&
       github.event_name == 'workflow_dispatch' &&
       github.event.inputs.dry-run != 'true'
-    environment: npm
+    environment: production
     permissions:
       contents: read
       actions: read
@@ -198,17 +198,23 @@ jobs:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
       - uses: ./.github/actions/setup
 
+      - name: Update npm
+        run: |
+          npm install -g npm@latest
+
       - name: Build package
         run: |
           echo "🔍 Running typecheck for ${{ matrix.package }}..."
-          yarn nx run ${{ matrix.package }}:typecheck
+          yarn nx run ${{ matrix.package }}:typecheck:prod
           echo "🏗️ Building ${{ matrix.package }}..."
-          yarn nx run ${{ matrix.package }}:build
+          yarn nx run ${{ matrix.package }}:build:prod
           echo "✅ Build completed for ${{ matrix.package }}"
 
       - name: Publish package
         run: |
           cd packages/${{ matrix.package }}
+          echo "📦 Packing ${{ matrix.package }}..."
+          yarn pack
           echo "🚀 Publishing ${{ matrix.package }} to NPM..."
 
           # Safety check: verify package.json exists and has correct name
@@ -219,7 +225,7 @@ jobs:
 
           PACKAGE_NAME=$(node -p "require('./package.json').name")
           echo "📦 Package name from package.json: $PACKAGE_NAME"
-          npm publish --provenance --access public \
+          npm publish ./package.tgz --access public \
             --registry https://registry.npmjs.org
           echo "✅ Successfully published ${{ matrix.package }} ($PACKAGE_NAME)"
 

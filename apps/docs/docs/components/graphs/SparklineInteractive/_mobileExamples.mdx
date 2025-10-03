@@ -6,13 +6,18 @@
 </Box>
 ```
 
-### Fill
+### Fill Type
 
-The fill will be added by default
+The fill will be added by default with a gradient style. You can set `fillType="dotted"` to get a dotted gradient fill.
 
 ```jsx
 <Box padding={3} width="100%">
-  <SparklineInteractivePrice data={sparklineInteractiveData} fill strokeColor="#F7931A" />
+  <SparklineInteractivePrice
+    fill
+    data={sparklineInteractiveData}
+    fillType="dotted"
+    strokeColor="#F7931A"
+  />
 </Box>
 ```
 

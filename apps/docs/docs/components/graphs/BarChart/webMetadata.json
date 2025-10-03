@@ -1,0 +1,10 @@
+{
+  "import": "import { BarChart } from '@cbhq/cds-web-visualization'",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/web-visualization/src/chart/bar/BarChart.tsx",
+  "relatedComponents": [
+    {
+      "label": "SparklineInteractive",
+      "url": "/components/graphs/SparklineInteractive/"
+    }
+  ]
+}

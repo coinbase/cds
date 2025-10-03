@@ -129,6 +129,11 @@ export type SparklineInteractiveBaseProps<Period extends string> = {
    */
   fill?: boolean;
   /**
+   * Type of fill to use for the area
+   * @default 'gradient'
+   */
+  fillType?: 'dotted' | 'gradient';
+  /**
    Formats the date above the chart as you scrub. Omit this if you don't want to show the date as the user scrubs
    */
   formatHoverDate?: (date: Date, period: Period) => string;
@@ -212,6 +217,7 @@ function SparklineInteractiveContentWithGeneric<Period extends string>({
   hidePeriodSelector = false,
   disableScrubbing = false,
   fill = true,
+  fillType = 'gradient',
   yAxisScalingFactor = 1.0,
   compact,
   formatHoverDate,
@@ -400,6 +406,7 @@ function SparklineInteractiveContentWithGeneric<Period extends string>({
                           area={area}
                           compact={compact}
                           fill={fill}
+                          fillType={fillType}
                           hoverData={hoverData}
                           path={path}
                           selectedPeriod={selectedPeriod}
@@ -470,7 +477,9 @@ function SparklineInteractiveWithGeneric<Period extends string>({
   );
 }
 
-// typescript doesn't understand the memo with the generic so it gets casted to a base react component
+/**
+ * @deprecated Use LineChart instead.
+ */
 export const SparklineInteractive = memo(
   SparklineInteractiveWithGeneric,
 ) as typeof SparklineInteractiveWithGeneric;

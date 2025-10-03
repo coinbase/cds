@@ -87,7 +87,7 @@ const TabsComponent = memo(
         activeTab,
         disabled,
         onChange,
-        role = 'group',
+        role = 'tablist',
         position = 'relative',
         alignSelf = 'flex-start',
         opacity,

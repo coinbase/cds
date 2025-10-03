@@ -3,6 +3,8 @@ import { renderHook } from '@testing-library/react-hooks';
 import { TourContext, type TourContextValue, useTourContext } from '../TourContext';
 
 const MOCK_API: TourContextValue = {
+  activeTourStepTarget: null,
+  setActiveTourStepTarget: jest.fn(),
   steps: [],
   activeTourStep: null,
   setActiveTourStep: jest.fn(),

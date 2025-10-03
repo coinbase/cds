@@ -1,0 +1,307 @@
+## Basic Example
+
+Points are visual markers that highlight specific data values on a chart. They can be used to emphasize important data points, show discrete values, or provide interactive elements.
+
+```jsx
+<LineChart
+  enableScrubbing
+  height={250}
+  series={[
+    {
+      id: 'prices',
+      data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+    },
+  ]}
+  curve="monotone"
+  showYAxis
+  showArea
+  yAxis={{
+    showGrid: true,
+  }}
+  renderPoints={() => true}
+>
+  <Scrubber />
+</LineChart>
+```
+
+## Conditional Points
+
+You can conditionally render points to highlight specific values in your data, such as maximum/minimum values or outliers.
+
+```jsx
+function AssetPriceWithMinMax() {
+  const data = [100, 120, 115, 140, 138, 150, 145, 160, 175, 170];
+
+  const minPrice = Math.min(...data);
+  const maxPrice = Math.max(...data);
+
+  return (
+    <LineChart
+      series={[
+        {
+          id: 'btc',
+          data: data,
+        },
+      ]}
+      curve="monotone"
+      height={250}
+      showYAxis
+      yAxis={{
+        showGrid: true,
+        formatValue: (value) => `$${value}`,
+      }}
+      renderPoints={(datum) => {
+        return datum.value === minPrice || datum.value === maxPrice;
+      }}
+    />
+  );
+}
+```
+
+## Custom Point Styles
+
+Customize the appearance of points with different sizes and colors.
+
+```jsx
+<LineChart
+  height={250}
+  series={[
+    {
+      id: 'performance',
+      data: [30, 45, 35, 50, 40, 55, 45, 60, 55, 65],
+    },
+  ]}
+  curve="monotone"
+  showYAxis
+  yAxis={{
+    showGrid: true,
+  }}
+  renderPoints={() => true}
+  pointProps={{
+    r: 6,
+    fill: 'rgb(239, 68, 68)',
+    stroke: 'white',
+    strokeWidth: 2,
+  }}
+/>
+```
+
+## Interactive Points
+
+Make points interactive with touch handlers.
+
+```jsx
+function InteractivePointChart() {
+  const [selectedPoint, setSelectedPoint] = useState(null);
+  const data = [20, 35, 30, 45, 40, 55, 50, 65];
+
+  return (
+    <LineChart
+      height={250}
+      series={[
+        {
+          id: 'interactive',
+          data: data,
+        },
+      ]}
+      curve="monotone"
+      showYAxis
+      yAxis={{
+        showGrid: true,
+      }}
+      renderPoints={() => true}
+      onPointPress={(datum, index) => {
+        setSelectedPoint({ value: datum.value, index });
+      }}
+    >
+      {selectedPoint && (
+        <Text style={{ textAlign: 'center', marginTop: 10 }}>
+          Selected: Value {selectedPoint.value} at index {selectedPoint.index}
+        </Text>
+      )}
+    </LineChart>
+  );
+}
+```
+
+## Points with Labels
+
+Display labels next to points for direct value display.
+
+```jsx
+<LineChart
+  height={250}
+  series={[
+    {
+      id: 'labeled',
+      data: [25, 40, 35, 50, 45, 60],
+    },
+  ]}
+  showYAxis
+  yAxis={{
+    showGrid: true,
+  }}
+  renderPoints={() => true}
+  renderPointLabel={(datum) => datum.value.toString()}
+/>
+```
+
+## Multiple Series with Different Point Styles
+
+Show different point styles for multiple data series.
+
+```jsx
+<LineChart
+  height={250}
+  series={[
+    {
+      id: 'series1',
+      data: [30, 45, 40, 55, 50, 65],
+      stroke: 'rgb(59, 130, 246)',
+      pointStyle: { r: 4, fill: 'rgb(59, 130, 246)' },
+    },
+    {
+      id: 'series2',
+      data: [20, 35, 30, 45, 40, 55],
+      stroke: 'rgb(239, 68, 68)',
+      pointStyle: { r: 6, fill: 'rgb(239, 68, 68)' },
+    },
+  ]}
+  showYAxis
+  yAxis={{
+    showGrid: true,
+  }}
+  renderPoints={() => true}
+/>
+```
+
+## Animated Points
+
+Add smooth animations to points on data changes.
+
+```jsx
+function AnimatedPointsChart() {
+  const [data, setData] = useState([20, 35, 30, 45, 40]);
+
+  const updateData = () => {
+    const newData = Array(5)
+      .fill(0)
+      .map(() => Math.floor(Math.random() * 50) + 20);
+    setData(newData);
+  };
+
+  return (
+    <VStack gap={3}>
+      <Button onPress={updateData}>Update Data</Button>
+      <LineChart
+        height={250}
+        series={[
+          {
+            id: 'animated',
+            data: data,
+          },
+        ]}
+        curve="monotone"
+        showYAxis
+        yAxis={{
+          showGrid: true,
+        }}
+        renderPoints={() => true}
+        animate
+      />
+    </VStack>
+  );
+}
+```
+
+## Points with Tooltips
+
+Show tooltips when points are selected.
+
+```jsx
+function PointsWithTooltips() {
+  const [selectedIndex, setSelectedIndex] = useState(null);
+  const data = [
+    { value: 100, label: 'Jan' },
+    { value: 120, label: 'Feb' },
+    { value: 115, label: 'Mar' },
+    { value: 140, label: 'Apr' },
+    { value: 135, label: 'May' },
+    { value: 160, label: 'Jun' },
+  ];
+
+  return (
+    <LineChart
+      height={250}
+      series={[
+        {
+          id: 'monthly',
+          data: data.map((d) => d.value),
+        },
+      ]}
+      curve="monotone"
+      showYAxis
+      yAxis={{
+        showGrid: true,
+      }}
+      renderPoints={() => true}
+      onPointPress={(datum, index) => {
+        setSelectedIndex(index);
+      }}
+    >
+      {selectedIndex !== null && (
+        <View
+          style={{
+            position: 'absolute',
+            top: 10,
+            right: 10,
+            padding: 10,
+            backgroundColor: 'white',
+          }}
+        >
+          <Text>
+            {data[selectedIndex].label}: ${data[selectedIndex].value}
+          </Text>
+        </View>
+      )}
+    </LineChart>
+  );
+}
+```
+
+## Threshold-based Points
+
+Show points only when values cross certain thresholds.
+
+```jsx
+function ThresholdPoints() {
+  const data = [30, 45, 35, 60, 40, 75, 50, 85, 55, 70];
+  const threshold = 50;
+
+  return (
+    <LineChart
+      height={250}
+      series={[
+        {
+          id: 'threshold',
+          data: data,
+        },
+      ]}
+      curve="monotone"
+      showYAxis
+      yAxis={{
+        showGrid: true,
+      }}
+      renderPoints={(datum) => {
+        return datum.value >= threshold;
+      }}
+      pointProps={(datum) => ({
+        r: 5,
+        fill: datum.value >= threshold ? 'rgb(34, 197, 94)' : 'rgb(239, 68, 68)',
+      })}
+    >
+      <ReferenceLine y={threshold} stroke="rgb(156, 163, 175)" strokeDasharray="5,5" />
+    </LineChart>
+  );
+}
+```

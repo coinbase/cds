@@ -1,0 +1,15 @@
+{
+  "import": "import { AreaChart } from '@cbhq/cds-mobile-visualization'",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/mobile-visualization/src/chart/area/AreaChart.tsx",
+  "description": "A cartesian chart variant that allows for easy visualization of stacked data.",
+  "relatedComponents": [
+    {
+      "label": "CartesianChart",
+      "url": "/components/graphs/CartesianChart/"
+    },
+    {
+      "label": "LineChart",
+      "url": "/components/graphs/LineChart/"
+    }
+  ]
+}

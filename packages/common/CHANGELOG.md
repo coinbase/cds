@@ -8,6 +8,41 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.13.6 (10/3/2025 PST)
+
+#### 🐞 Fixes
+
+- Fix getDotSize logic. [[#68](https://github.com/coinbase/cds/pull/68)] [DX-4971]
+
+#### 📘 Misc
+
+- Add sample data for charts. [[#58](https://github.com/coinbase/cds/pull/58)]
+- Update mock data.
+
+## 8.13.5 ((10/3/2025, 8:29 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.13.4 (10/1/2025 PST)
+
+#### 🐞 Fixes
+
+- Fix tour position flickering issue.
+
+## 8.13.3 ((10/1/2025, 03:05 PM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.13.2 (10/1/2025 PST)
+
+#### 🐞 Fixes
+
+- Update links for new repo. [[#42](https://github.com/coinbase/cds/pull/42)]
+
+## 8.13.1 ((9/26/2025, 01:47 PM PST))
+
+This is an artificial version bump with no new change.
+
 ## 8.13.0 (9/25/2025 PST)
 
 #### 🚀 Updates

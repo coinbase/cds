@@ -8,6 +8,36 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.13.6 ((10/3/2025, 01:54 PM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.13.5 ((10/3/2025, 9:59 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.13.4 ((10/1/2025, 03:52 PM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.13.3 ((10/1/2025, 03:05 PM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.13.2 (10/1/2025 PST)
+
+#### 🐞 Fixes
+
+- Update links for new repo. [[#42](https://github.com/coinbase/cds/pull/42)]
+
+#### 📘 Misc
+
+- Update analytics event types.
+
+## 8.13.1 ((9/26/2025, 01:47 PM PST))
+
+This is an artificial version bump with no new change.
+
 ## 8.13.0 ((9/25/2025, 11:04 AM PST))
 
 This is an artificial version bump with no new change.

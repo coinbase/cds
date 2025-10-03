@@ -59,8 +59,8 @@ export default function DocItemLayout({ children }: Props): JSX.Element {
         <ContentVisibility metadata={metadata} />
         <DocVersionBanner />
         <VStack>
-          <VStack gap={10}>
-            <VStack as="article" gap={5}>
+          <VStack gap={{ base: 10, phone: 4 }}>
+            <VStack as="article" gap={{ base: 5, phone: 2 }}>
               <DocBreadcrumbs />
               <DocVersionBadge />
               {isMobile && shouldRenderPlatformSwitcher && <PlatformSwitcher />}

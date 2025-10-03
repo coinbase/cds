@@ -1,0 +1,19 @@
+{
+  "import": "import { CartesianChart } from '@cbhq/cds-mobile-visualization'",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/mobile-visualization/src/chart/CartesianChart.tsx",
+  "description": "A flexible chart component that can be used to display data in a x/y coordinate space.",
+  "relatedComponents": [
+    {
+      "label": "AreaChart",
+      "url": "/components/graphs/AreaChart/"
+    },
+    {
+      "label": "BarChart",
+      "url": "/components/graphs/BarChart/"
+    },
+    {
+      "label": "LineChart",
+      "url": "/components/graphs/LineChart/"
+    }
+  ]
+}
