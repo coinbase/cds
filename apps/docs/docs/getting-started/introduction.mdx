@@ -49,33 +49,8 @@ import { GettingStartedBanner } from '@site/src/components/page/ComponentBanner/
 
 <MDXSection>
 <MDXArticle>
-## Constraints
 
-Coinbase apps have unique performance and build requirements that necessitate specific constraints in CDS.
-
-:::tip
-**All of these constraints can be removed by compiling the CDS source code yourself.**
-:::
-
-If you find CDS too limiting, you may want to compile it from the source to remove these constraints, or you may still find CDS valuable as a fork or reference.
-
-</MDXArticle>
-<MDXArticle>
-### Web styles are compiled at library build time
-
-Web styles are compiled at library build time, not at app build time.
-
-Compiling CSS at application build time adds significant latency to the build process. Instead, building CSS when we publish the CDS library keeps our app builds extremely fast. However, this means that you can't customize the responsive breakpoints without compiling CDS yourself.
-
-</MDXArticle>
-<MDXArticle>
-### Automatic management of CSS imports
-
-Static CSS imports are automatically managed by CDS components.
-
-The order of CSS imports is important and changes the specificity of styles. If you manually import CSS files in each component, you can easily break the specificity of the styles - or cause non-deterministic styles when using Suspense. If you manually import CSS files all in one place, component styles can't be tree shaken when not in use.
-
-CDS components will always automatically import the necessary static CSS in the correct order. This is done to ensure style specificity is deterministic and always correct, and enables CSS tree shaking based on component usage. However, this means that you can't tree shake the default styles for a component at app build time if you've overridden them.
+// TO DO: Add a section here
 
 </MDXArticle>
 </MDXSection>
