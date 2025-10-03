@@ -606,22 +606,22 @@ const sidebars: SidebarsConfig = {
             {
               type: 'doc',
               id: 'components/graphs/Sparkline/sparkline',
-              label: 'Sparkline',
+              label: 'Sparkline (Deprecated)',
             },
             {
               type: 'doc',
               id: 'components/graphs/SparklineGradient/sparklineGradient',
-              label: 'SparklineGradient',
+              label: 'SparklineGradient (Deprecated)',
             },
             {
               type: 'doc',
               id: 'components/graphs/SparklineInteractive/sparklineInteractive',
-              label: 'SparklineInteractive',
+              label: 'SparklineInteractive (Deprecated)',
             },
             {
               type: 'doc',
               id: 'components/graphs/SparklineInteractiveHeader/sparklineInteractiveHeader',
-              label: 'SparklineInteractiveHeader',
+              label: 'SparklineInteractiveHeader (Deprecated)',
             },
             {
               type: 'doc',

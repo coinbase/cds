@@ -22,7 +22,11 @@ import webMetadata from './webMetadata.json';
 import mobileMetadata from './mobileMetadata.json';
 
 <VStack gap={5}>
-  <ComponentHeader title="Sparkline" webMetadata={webMetadata} mobileMetadata={mobileMetadata} />
+  <ComponentHeader
+    title="Sparkline (Deprecated)"
+    webMetadata={webMetadata}
+    mobileMetadata={mobileMetadata}
+  />
   <ComponentTabsContainer
     webPropsTable={<WebPropsTable />}
     webExamples={<WebExamples />}

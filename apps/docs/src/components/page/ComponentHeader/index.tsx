@@ -1,4 +1,5 @@
 import React, { memo } from 'react';
+import { Banner } from '@coinbase/cds-web/banner/Banner';
 import { Grid } from '@coinbase/cds-web/layout';
 import { Divider } from '@coinbase/cds-web/layout/Divider';
 import { HStack } from '@coinbase/cds-web/layout/HStack';
@@ -36,6 +37,7 @@ type MetadataType = {
   storybook?: string;
   figma?: string;
   description?: string;
+  warning?: string;
   relatedComponents?: RelatedComponent[];
   /** Dependencies required by this component */
   dependencies?: Dependency[];
@@ -92,6 +94,7 @@ export const ComponentHeader = memo(
       figma,
       relatedComponents,
       dependencies,
+      warning,
     } = activeMetadata ?? {};
 
     const descriptionText = activeMetadata?.description ?? description;
@@ -121,6 +124,11 @@ export const ComponentHeader = memo(
               <VersionLabel packageName={packageName} />
             </HStack>
             {descriptionText && <Text font="title4">{descriptionText}</Text>}
+            {warning && (
+              <Banner startIcon="warning" variant="warning">
+                {warning}
+              </Banner>
+            )}
           </VStack>
           {activeMetadata && (
             <Grid

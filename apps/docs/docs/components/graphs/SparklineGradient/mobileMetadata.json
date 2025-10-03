@@ -2,10 +2,15 @@
   "import": "import { SparklineGradient } from '@coinbase/cds-mobile-visualization'",
   "source": "https://github.com/coinbase/cds/blob/master/packages/mobile-visualization/src/sparkline/SparklineGradient.tsx",
   "description": "A small line chart component with gradient fill below the line.",
+  "warning": "Sparkline components are deprecated. Please use LineChart instead.",
   "relatedComponents": [
     {
       "label": "Sparkline",
       "url": "/components/graphs/Sparkline/"
+    },
+    {
+      "label": "LineChart",
+      "url": "/components/graphs/LineChart/"
     }
   ],
   "dependencies": []
