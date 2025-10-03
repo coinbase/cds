@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useEffect, useId, useMemo } from 'react';
+import { memo, useCallback, useEffect, useId, useMemo } from 'react';
 import { getAxisTicksData, isCategoricalScale } from '@coinbase/cds-common/visualizations/charts';
 import { cx } from '@coinbase/cds-web';
 import { css } from '@linaria/core';

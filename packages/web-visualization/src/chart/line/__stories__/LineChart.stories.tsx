@@ -14,13 +14,12 @@ import { SectionHeader } from '@coinbase/cds-web/section-header/SectionHeader';
 import {
   SegmentedTab,
   type SegmentedTabProps,
-  SegmentedTabs,
   type TabComponent,
   TabsActiveIndicator,
   type TabsActiveIndicatorProps,
 } from '@coinbase/cds-web/tabs';
 import { Text, TextLabel1 } from '@coinbase/cds-web/typography';
-import { AnimatePresence, m as motion } from 'framer-motion';
+import { m as motion } from 'framer-motion';
 
 import {
   type ChartTextChildren,

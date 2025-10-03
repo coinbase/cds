@@ -2,7 +2,7 @@ import React, { memo, useMemo } from 'react';
 import type { SVGProps } from 'react';
 import type { SharedProps } from '@coinbase/cds-common/types';
 import { type ChartPathCurveType, getLinePath } from '@coinbase/cds-common/visualizations/charts';
-import { m } from 'framer-motion';
+import { m as motion } from 'framer-motion';
 
 import { Area, type AreaComponent } from '../area/Area';
 import { axisTickLabelsInitialAnimationVariants } from '../axis';
@@ -208,7 +208,7 @@ export const Line = memo<LineProps>(
         )}
         <LineComponent d={path} stroke={stroke} strokeOpacity={opacity} {...props} />
         {renderPoints && (
-          <m.g
+          <motion.g
             data-component="line-points-group"
             {...(animate
               ? {
@@ -251,7 +251,7 @@ export const Line = memo<LineProps>(
                 />
               );
             })}
-          </m.g>
+          </motion.g>
         )}
       </>
     );

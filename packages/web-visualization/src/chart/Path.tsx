@@ -6,7 +6,7 @@ import { useValueChanges } from '@coinbase/cds-common/hooks/useValueChanges';
 import type { Rect, SharedProps } from '@coinbase/cds-common/types';
 import { interpolatePath } from 'd3-interpolate-path';
 import { select } from 'd3-selection';
-import { m } from 'framer-motion';
+import { m as motion } from 'framer-motion';
 
 import { useCartesianChartContext } from './ChartProvider';
 
@@ -90,7 +90,7 @@ export const Path = memo<PathProps>(
                 y={rect.y - clipOffset}
               />
             ) : (
-              <m.rect
+              <motion.rect
                 animate="visible"
                 height={rect.height + totalOffset}
                 initial="hidden"

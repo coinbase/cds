@@ -1,7 +1,5 @@
 import { memo, useEffect, useMemo, useState } from 'react';
-import type { ThemeVars } from '@coinbase/cds-common';
 import type { Rect } from '@coinbase/cds-common/types';
-import { useTheme } from '@coinbase/cds-web';
 
 import { ChartText, type ChartTextChildren, type ChartTextProps } from './ChartText';
 

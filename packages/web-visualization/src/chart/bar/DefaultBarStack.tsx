@@ -1,6 +1,6 @@
 import { memo, useId, useMemo } from 'react';
 import { getBarPath } from '@coinbase/cds-common/visualizations/charts';
-import { m } from 'framer-motion';
+import { m as motion } from 'framer-motion';
 
 import { useCartesianChartContext } from '../ChartProvider';
 
@@ -50,7 +50,7 @@ export const DefaultBarStack = memo<DefaultBarStackProps>(
         <defs>
           <clipPath id={clipPathId}>
             {animate ? (
-              <m.path
+              <motion.path
                 animate={{ d: clipPathData }}
                 initial={{ d: initialClipPathData }}
                 transition={{ type: 'spring', duration: 1, bounce: 0 }}

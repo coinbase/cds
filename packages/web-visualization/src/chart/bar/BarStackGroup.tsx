@@ -1,4 +1,4 @@
-import React, { memo, useMemo } from 'react';
+import { memo, useMemo } from 'react';
 import { getBarSizeAdjustment } from '@coinbase/cds-common/visualizations/charts/bar';
 import { isCategoricalScale } from '@coinbase/cds-common/visualizations/charts/scale';
 
