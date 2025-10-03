@@ -1,5 +1,5 @@
 import React, { forwardRef, memo, useMemo } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, type ViewStyle } from 'react-native';
 import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 import {
@@ -12,7 +12,6 @@ import { SegmentedTab, type SegmentedTabProps } from '@coinbase/cds-mobile/tabs/
 import { tabsSpringConfig } from '@coinbase/cds-mobile/tabs/Tabs';
 import { Text, type TextBaseProps } from '@coinbase/cds-mobile/typography/Text';
 
-// todo: apply this to normal segmented tabs?
 // Animated active indicator to support smooth transition of background color
 export const PeriodSelectorActiveIndicator = ({
   activeTabRect,
@@ -61,8 +60,7 @@ export const PeriodSelectorActiveIndicator = ({
     <Animated.View
       style={[
         {
-          // todo: fix this
-          position: position as any,
+          position: position as ViewStyle['position'],
           height,
           borderRadius,
         },

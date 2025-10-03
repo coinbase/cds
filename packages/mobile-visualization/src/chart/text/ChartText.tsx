@@ -1,16 +1,33 @@
-import { memo, useCallback, useEffect, useMemo, useState } from 'react';
+import React, { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { type LayoutChangeEvent } from 'react-native';
-import { G, Rect as SvgRect, Text, type TextProps } from 'react-native-svg';
+import {
+  G,
+  Rect as SvgRect,
+  Text,
+  type TextPathProps,
+  type TextProps,
+  type TSpanProps,
+} from 'react-native-svg';
 import type { Rect, SharedProps } from '@coinbase/cds-common/types';
 import { type ChartInset, getChartInset } from '@coinbase/cds-common/visualizations/charts';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 
 import { useCartesianChartContext } from '../ChartProvider';
 
+type ValidChartTextChildElements =
+  | React.ReactElement<TSpanProps, 'TSpan'>
+  | React.ReactElement<TextPathProps, 'TextPath'>;
+
 /**
  * The supported content types for ChartText.
  */
-export type ChartTextChildren = string | null | undefined;
+export type ChartTextChildren =
+  | string
+  | number
+  | null
+  | undefined
+  | ValidChartTextChildElements
+  | ValidChartTextChildElements[];
 
 /**
  * Horizontal alignment options for chart text.

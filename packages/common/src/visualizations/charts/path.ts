@@ -15,8 +15,6 @@ import {
 import { projectPoint, projectPoints } from './point';
 import { type ChartScaleFunction, isCategoricalScale } from './scale';
 
-// todo: see if we can support basis, basisClosed, and basisOpen
-
 export type ChartPathCurveType =
   | 'bump'
   | 'catmullRom'
@@ -38,7 +36,7 @@ export const getPathCurveFunction = (curve: ChartPathCurveType = 'linear') => {
   switch (curve) {
     case 'catmullRom':
       return curveCatmullRom;
-    case 'monotone': // todo: when we support layout="vertical" this should dynamically switch to curveMonotoneY
+    case 'monotone': // When we support layout="vertical" this should dynamically switch to curveMonotoneY
       return curveMonotoneX;
     case 'natural':
       return curveNatural;
@@ -48,7 +46,7 @@ export const getPathCurveFunction = (curve: ChartPathCurveType = 'linear') => {
       return curveStepBefore;
     case 'stepAfter':
       return curveStepAfter;
-    case 'bump': // todo: when we support layout="vertical" this should dynamically switch to curveBumpY
+    case 'bump': // When we support layout="vertical" this should dynamically switch to curveBumpY
       return curveBumpX;
     case 'linearClosed':
       return curveLinearClosed;
@@ -94,7 +92,6 @@ export const getLinePath = ({
     .curve(curveFunction)
     .defined((d) => d !== null); // Only draw lines where point is not null
 
-  // todo: is it fine that 1 data point = a dot vs a flat line?
   return pathGenerator(dataPoints) ?? '';
 };
 

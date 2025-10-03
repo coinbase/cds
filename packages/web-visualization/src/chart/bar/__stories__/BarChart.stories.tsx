@@ -311,9 +311,6 @@ const Candlesticks = () => {
     [stockData, formatPrice, formatVolume],
   );
 
-  // todo: see if we can support a bar chart for volume
-  // todo: see if we can have this toggle between line candlestick for price
-
   // Initial value for the info text
   const initialInfo = formatPrice(stockData[stockData.length - 1].close);
 

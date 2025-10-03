@@ -5,7 +5,6 @@ import { Path, type PathProps } from '../Path';
 
 import type { LineComponentProps } from './Line';
 
-// todo: reuse shared props
 export type SolidLineProps = SharedProps &
   Omit<PathProps, 'fill' | 'strokeWidth'> &
   Pick<LineComponentProps, 'strokeWidth'> & {

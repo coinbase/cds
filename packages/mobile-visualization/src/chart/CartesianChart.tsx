@@ -156,7 +156,6 @@ export const CartesianChart = memo(
         return axisConfig;
       }, [xAxisConfig, series, chartRect]);
 
-      // todo: do we need to worry about axis being set but scale being undefined?
       const yAxes = useMemo(() => {
         const axes = new Map<string, AxisConfig>();
         if (!chartRect || chartRect.width <= 0 || chartRect.height <= 0) return axes;

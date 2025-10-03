@@ -165,7 +165,6 @@ export const Scrubber = memo(
         const xAxis = getXAxis();
         if (!xScale) return { dataX: undefined, dataIndex: undefined };
 
-        // todo: can we store this in axis config?
         const maxDataLength =
           series?.reduce((max: any, s: any) => {
             const seriesData = getStackedSeriesData(s.id) || getSeriesData(s.id);
@@ -241,7 +240,6 @@ export const Scrubber = memo(
         getYScale,
       ]);
 
-      // todo: we shouldn't need this since it should be included in ChartText dimensions - double check
       const labelVerticalInset = 2;
       const labelHorizontalInset = 4;
 
@@ -613,7 +611,6 @@ export const Scrubber = memo(
             return (
               <g key={beacon.targetSeries.id} data-component="scrubber-beacon">
                 <ScrubberBeaconComponent
-                  // todo: fix this type cast, seems to be due to custom components
                   ref={createScrubberBeaconRef(beacon.targetSeries.id) as any}
                   className={classNames?.beacon}
                   color={beacon.targetSeries?.color}

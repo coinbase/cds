@@ -1,9 +1,15 @@
 {
   "import": "import { AreaChart } from '@coinbase/cds-web-visualization'",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/web-visualization/src/chart/area/AreaChart.tsx",
+  "description": "A cartesian chart variant that allows for easy visualization of stacked data.",
   "relatedComponents": [
     {
-      "label": "SparklineInteractive",
-      "url": "/components/graphs/SparklineInteractive/"
+      "label": "CartesianChart",
+      "url": "/components/graphs/CartesianChart/"
+    },
+    {
+      "label": "LineChart",
+      "url": "/components/graphs/LineChart/"
     }
   ]
 }

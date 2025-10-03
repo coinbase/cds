@@ -43,7 +43,6 @@ export type GradientLineProps = SharedProps &
 
 /**
  * A gradient line component which uses path element.
- * todo: should we rely on getAccessibleForegroundGradient or just use the startColor and endColor props?
  */
 export const GradientLine = memo<GradientLineProps>(
   ({

@@ -1,27 +1,25 @@
+AreaChart is a cartesian chart variant that allows for easy visualization of stacked data.
+
 ## Basic Example
 
 ```jsx live
-function Test() {
-  return (
-    <AreaChart
-      height={250}
-      padding={0}
-      series={[
-        {
-          id: 'prices',
-          data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 2, 68, 20, 21, 58],
-        },
-      ]}
-      type="gradient"
-      showLines
-      curve="monotone"
-      showYAxis
-      yAxis={{
-        showGrid: true,
-      }}
-    />
-  );
-}
+<AreaChart
+  height={250}
+  padding={0}
+  series={[
+    {
+      id: 'prices',
+      data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 2, 68, 20, 21, 58],
+    },
+  ]}
+  type="gradient"
+  showLines
+  curve="monotone"
+  showYAxis
+  yAxis={{
+    showGrid: true,
+  }}
+/>
 ```
 
 ## Simple
@@ -42,7 +40,9 @@ function Test() {
 />
 ```
 
-## Multiple Series
+## Stacking
+
+You can use the `stacked` prop to stack all areas on top of each other. You can also use the `stackId` prop on a series to create different stack groups. See [CartesianChart](/components/graphs/CartesianChart/#series-stacks) for more details.
 
 ```jsx live
 <AreaChart

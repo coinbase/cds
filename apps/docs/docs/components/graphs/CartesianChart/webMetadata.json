@@ -1,6 +1,6 @@
 {
   "import": "import { CartesianChart } from '@coinbase/cds-web-visualization'",
-  "source": "https://github.com/coinbase/cds/blob/master/packages/web/src/chart/CartesianChart.tsx",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/web-visualization/src/chart/CartesianChart.tsx",
   "description": "A flexible chart component that can be used to display data in a x/y coordinate space.",
   "relatedComponents": [
     {

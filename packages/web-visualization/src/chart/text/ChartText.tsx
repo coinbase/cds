@@ -210,7 +210,6 @@ export const ChartText = memo<ChartTextProps>(
       }
 
       const parentBounds = bounds ?? fullChartBounds;
-      // TODO: it might be more clear to allow chartRect to be null until it has been measured after first render
       if (!textBBox || !parentBounds || parentBounds.width <= 0 || parentBounds.height <= 0) {
         return { x: 0, y: 0 };
       }

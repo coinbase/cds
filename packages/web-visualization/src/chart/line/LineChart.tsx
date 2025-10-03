@@ -50,7 +50,6 @@ export type LineChartProps = Omit<CartesianChartProps, 'xAxis' | 'yAxis' | 'seri
     | 'LineComponent'
     | 'AreaComponent'
     | 'curve'
-    // TODO: what does renderPoints on LineChart mean? what x and y values is it called with?
     | 'renderPoints'
   > & {
     /**
