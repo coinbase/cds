@@ -420,7 +420,7 @@ You can pass in `null` or `0` values to not render a bar for that data point.
 />
 ```
 
-You can also use the `StackComponent` prop to render an empty circle for zero values.
+You can also use the `BarStackComponent` prop to render an empty circle for zero values.
 
 ```jsx live
 function MonthlyRewards() {
@@ -438,7 +438,7 @@ function MonthlyRewards() {
     { id: 'green', data: green, color: '#33c481' },
   ];
 
-  const CustomStackComponent = ({ children, ...props }: StackComponentProps) => {
+  const CustomBarStackComponent = ({ children, ...props }: BarStackComponentProps) => {
     if (props.height === 0) {
       const diameter = props.width;
       return (
@@ -455,7 +455,7 @@ function MonthlyRewards() {
       );
     }
 
-    return <DefaultStackComponent {...props}>{children}</DefaultStackComponent>;
+    return <DefaultBarStack {...props}>{children}</DefaultBarStack>;
   };
 
   return (
@@ -463,7 +463,7 @@ function MonthlyRewards() {
       roundBaseline
       showXAxis
       stacked
-      StackComponent={CustomStackComponent}
+      BarStackComponent={CustomBarStackComponent}
       borderRadius={1000}
       height={300}
       padding={0}
@@ -778,7 +778,7 @@ function Candlesticks() {
         showXAxis
         showYAxis
         BarComponent={CandlestickBarComponent}
-        StackComponent={({ children, ...props }) => <g {...props}>{children}</g>}
+        BarStackComponent={({ children, ...props }) => <g {...props}>{children}</g>}
         animate={false}
         borderRadius={0}
         height={400}
@@ -816,11 +816,11 @@ function Candlesticks() {
 
 #### Outlined Stacks
 
-You can set the `StackComponent` prop to render a custom component for stacks.
+You can set the `BarStackComponent` prop to render a custom component for stacks.
 
 ```jsx live
 function MonthlyRewards() {
-  const CustomStackComponent = ({ children, ...props }: StackComponentProps) => {
+  const CustomBarStackComponent = ({ children, ...props }: BarStackComponentProps) => {
     return (
       <>
         <Bar
@@ -835,7 +835,7 @@ function MonthlyRewards() {
           y={props.y}
           clip
         />
-        <DefaultStackComponent {...props}>{children}</DefaultStackComponent>
+        <DefaultBarStack {...props}>{children}</DefaultBarStack>
       </>
     );
   };
@@ -844,7 +844,7 @@ function MonthlyRewards() {
     <BarChart
       roundBaseline
       stacked
-      StackComponent={CustomStackComponent}
+      BarStackComponent={CustomBarStackComponent}
       borderRadius={1000}
       height={300}
       maxWidth={400}

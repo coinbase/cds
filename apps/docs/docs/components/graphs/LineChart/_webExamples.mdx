@@ -201,7 +201,6 @@ You can use the y-axis scale and a [linearGradient](https://developer.mozilla.or
 
 ```jsx live
 function GainLossChart() {
-  const [highlightedItem, setHighlightedItem] = useState(undefined);
   const gradientId = useId();
 
   const data = [-40, -28, -21, -5, 48, -5, -28, 2, -29, -46, 16, -30, -29, 8];
@@ -215,13 +214,6 @@ function GainLossChart() {
       }).format(value),
     [],
   );
-
-  const accessibilityLabel = useMemo(() => {
-    if (highlightedItem === undefined) return undefined;
-    const value = data[highlightedItem];
-    const formattedValue = priceFormatter(value);
-    return `${formattedValue} at ${highlightedItem + 1}`;
-  }, [highlightedItem, data]);
 
   const ChartDefs = ({ threshold = 0 }) => {
     const { getYScale } = useCartesianChartContext();
@@ -286,8 +278,6 @@ function GainLossChart() {
         },
       ]}
       padding={{ top: 1.5, bottom: 1.5, left: 2, right: 0 }}
-      onHighlightChange={(dataIndex) => setHighlightedItem(dataIndex)}
-      accessibilityLabel={accessibilityLabel}
     >
       <ChartDefs />
       <YAxis requestedTickCount={2} showGrid tickLabelFormatter={priceFormatter} />
