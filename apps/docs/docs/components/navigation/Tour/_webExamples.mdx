@@ -12,7 +12,7 @@ function Example() {
     return (
       <Coachmark
         action={
-          <Button compact onClick={goNextTourStep} variant="secondary">
+          <Button compact onClick={goNextTourStep}>
             Next
           </Button>
         }
@@ -29,13 +29,18 @@ function Example() {
   };
 
   const StepTwo = () => {
-    const { goNextTourStep, stopTour } = useTourContext();
+    const { goNextTourStep, goPreviousTourStep, stopTour } = useTourContext();
     return (
       <Coachmark
         action={
-          <Button compact onClick={goNextTourStep} variant="secondary">
-            Next
-          </Button>
+          <HStack gap={1}>
+            <Button compact onClick={goPreviousTourStep} variant="secondary">
+              Back
+            </Button>
+            <Button compact onClick={goNextTourStep}>
+              Next
+            </Button>
+          </HStack>
         }
         content={
           <VStack gap={2}>
@@ -64,10 +69,7 @@ function Example() {
             <Button compact onClick={goPreviousTourStep} variant="secondary">
               Back
             </Button>
-            <Button compact onClick={goNextTourStep} variant="secondary">
-              Next
-            </Button>
-            <Button compact onClick={stopTour} variant="secondary">
+            <Button compact onClick={stopTour}>
               Done
             </Button>
           </HStack>
@@ -108,7 +110,7 @@ function Example() {
           Start tour
         </Button>
         <TourStep id="step1">
-          <Box backgroundColor="secondary" padding={4}>
+          <Box background="bgAlternate" padding={4}>
             <TextBody as="p">This is step 1</TextBody>
           </Box>
         </TourStep>
@@ -116,7 +118,7 @@ function Example() {
         <HStack justifyContent="flex-end">
           <Box flexShrink={0} width={spacerWidthIncrement} />
           <TourStep id="step2">
-            <Box backgroundColor="secondary" padding={4} width={150}>
+            <Box background="bgAlternate" padding={4} width={150}>
               <TextBody as="p">This is step 2</TextBody>
             </Box>
           </TourStep>
@@ -125,7 +127,7 @@ function Example() {
         <HStack>
           <Box flexShrink={0} width={spacerWidthIncrement * 2} />
           <TourStep id="step3">
-            <VStack backgroundColor="secondary" padding={4} width={150}>
+            <VStack background="bgAlternate" padding={4} width={150}>
               <TextBody as="p">This is step 3</TextBody>
             </VStack>
           </TourStep>

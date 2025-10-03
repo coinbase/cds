@@ -1,5 +1,6 @@
-import { useCallback, useMemo } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import type React from 'react';
+import type { View } from 'react-native';
 import { type Coords, type Placement } from '@floating-ui/react-dom';
 
 export type TourStepArrowComponentProps = {
@@ -100,6 +101,10 @@ export type TourOptions<T extends string = string> = {
 };
 
 export type TourApi<T extends string = string> = Omit<TourOptions<T>, 'onChange'> & {
+  /* The target element of the currently active tour step. */
+  activeTourStepTarget: HTMLElement | View | null;
+  /* Set the target element of the currently active tour step. */
+  setActiveTourStepTarget: (target: HTMLElement | View | null) => void;
   /* Jumps to a specified step of the tour. */
   setActiveTourStep: (tourStepId: T | null) => void;
   /* Starts the tour; can optionally start at a specified step ID. */
@@ -118,6 +123,7 @@ export const useTour = <T extends string = string>({
   activeTourStep,
   onChange,
 }: TourOptions<T>): TourApi<T> => {
+  const [activeTourStepTarget, setActiveTourStepTarget] = useState<HTMLElement | View | null>(null);
   const startTour = useCallback(
     async (tourStepId?: T | null) => {
       if (typeof tourStepId === 'undefined') return onChange(steps[0]);
@@ -187,6 +193,8 @@ export const useTour = <T extends string = string>({
       steps,
       activeTourStep,
       setActiveTourStep,
+      activeTourStepTarget,
+      setActiveTourStepTarget,
       startTour,
       stopTour,
       goNextTourStep,
@@ -196,6 +204,8 @@ export const useTour = <T extends string = string>({
       steps,
       activeTourStep,
       setActiveTourStep,
+      activeTourStepTarget,
+      setActiveTourStepTarget,
       startTour,
       stopTour,
       goNextTourStep,
