@@ -8,12 +8,7 @@ import React, {
   useRef,
 } from 'react';
 import { Animated } from 'react-native';
-import Reanimated, {
-  useAnimatedProps,
-  useSharedValue,
-  withDelay,
-  withTiming,
-} from 'react-native-reanimated';
+import Reanimated, { useAnimatedProps, useSharedValue } from 'react-native-reanimated';
 import { G, Rect } from 'react-native-svg';
 import { useRefMap } from '@coinbase/cds-common/hooks/useRefMap';
 import type { SharedProps } from '@coinbase/cds-common/types';
@@ -28,43 +23,7 @@ import { ReferenceLine, type ReferenceLineProps } from '../line';
 
 import { ScrubberBeacon, type ScrubberBeaconProps, type ScrubberBeaconRef } from './ScrubberBeacon';
 
-const AnimatedG = Reanimated.createAnimatedComponent(G);
 const AnimatedRect = Animated.createAnimatedComponent(Rect);
-
-type FadeInGroupProps = {
-  children: React.ReactNode;
-};
-
-const FadeInGroup = memo(
-  forwardRef<React.ComponentRef<typeof G>, FadeInGroupProps>(({ children }, ref) => {
-    const { animate } = useCartesianChartContext();
-
-    const opacity = useSharedValue(0);
-
-    const animatedProps = useAnimatedProps(() => ({
-      opacity: opacity.value,
-    }));
-
-    useEffect(() => {
-      if (animate) {
-        opacity.value = withDelay(
-          850,
-          withTiming(1, {
-            duration: 150,
-          }),
-        );
-      } else {
-        opacity.value = 1;
-      }
-    }, [animate, opacity]);
-
-    return (
-      <AnimatedG ref={ref} animatedProps={animatedProps}>
-        {children}
-      </AnimatedG>
-    );
-  }),
-);
 
 /**
  * Configuration for scrubber functionality across chart components.
@@ -272,7 +231,7 @@ export const Scrubber = memo(
 
       if (!defaultXScale) return null;
 
-      const content = (
+      return (
         <>
           {!hideOverlay &&
             dataX !== undefined &&
@@ -312,8 +271,6 @@ export const Scrubber = memo(
             ))}
         </>
       );
-
-      return <FadeInGroup>{content}</FadeInGroup>;
     },
   ),
 );

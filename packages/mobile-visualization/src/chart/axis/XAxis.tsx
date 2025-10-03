@@ -1,16 +1,8 @@
 import { memo, useCallback, useEffect, useId, useMemo } from 'react';
 import Animated, { useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
 import { G, Line } from 'react-native-svg';
-import {
-  axisTickLabelsInitialAnimateInConfig,
-  axisTickLabelsInitialAnimateOutConfig,
-  axisUpdateAnimateInConfig,
-  axisUpdateAnimateOutConfig,
-} from '@coinbase/cds-common/animation/axis';
 import { getAxisTicksData, isCategoricalScale } from '@coinbase/cds-common/visualizations/charts';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
-import { convertMotionConfigs } from '@coinbase/cds-mobile/motion/convertMotionConfig';
-import { withMotionTiming } from '@coinbase/cds-mobile/motion/withMotionTiming';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import { DottedLine } from '../line/DottedLine';
@@ -68,29 +60,8 @@ export const XAxis = memo<XAxisProps>(
     const xAxis = getXAxis();
     const axisBounds = getAxisBounds(registrationId);
 
-    // Animation configs
-    const [
-      tickLabelsInitialAnimateIn,
-      tickLabelsInitialAnimateOut,
-      updateAnimateIn,
-      updateAnimateOut,
-    ] = useMemo(
-      () =>
-        convertMotionConfigs([
-          axisTickLabelsInitialAnimateInConfig,
-          axisTickLabelsInitialAnimateOutConfig,
-          axisUpdateAnimateInConfig,
-          axisUpdateAnimateOutConfig,
-        ]),
-      [],
-    );
-
-    // Animation shared values
     const gridOpacity = useSharedValue(1);
-    const tickLabelsOpacity = useSharedValue(animate ? 0 : 1);
-    const isInitialMount = useSharedValue(true);
 
-    // Define axis styling using theme
     const axisLineProps = useMemo(
       () => ({
         stroke: theme.color.fg,
@@ -219,24 +190,8 @@ export const XAxis = memo<XAxisProps>(
       styles?.tickLabel,
     ]);
 
-    // Handle initial mount animation
-    useEffect(() => {
-      if (isInitialMount.value) {
-        if (animate) {
-          tickLabelsOpacity.value = withMotionTiming(tickLabelsInitialAnimateIn) as number;
-        } else {
-          tickLabelsOpacity.value = 1;
-        }
-        isInitialMount.value = false;
-      }
-    }, [animate, isInitialMount, tickLabelsInitialAnimateIn, tickLabelsOpacity]);
-
     const gridAnimatedStyle = useAnimatedStyle(() => ({
       opacity: gridOpacity.value,
-    }));
-
-    const tickLabelsAnimatedStyle = useAnimatedStyle(() => ({
-      opacity: tickLabelsOpacity.value,
     }));
 
     if (!xScale) return;
@@ -255,13 +210,11 @@ export const XAxis = memo<XAxisProps>(
           </AnimatedG>
         )}
         {chartTextData && (
-          <AnimatedG animatedProps={tickLabelsAnimatedStyle}>
-            <SmartChartTextGroup
-              prioritizeEndLabels
-              labels={chartTextData}
-              minGap={minTickLabelGap}
-            />
-          </AnimatedG>
+          <SmartChartTextGroup
+            prioritizeEndLabels
+            labels={chartTextData}
+            minGap={minTickLabelGap}
+          />
         )}
         {axisBounds && showTickMarks && (
           <G data-testid="tick-marks">
