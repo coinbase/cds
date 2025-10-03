@@ -4,8 +4,20 @@
   "description": "A horizontal or vertical reference line to mark important values on a chart.",
   "relatedComponents": [
     {
+      "label": "AreaChart",
+      "url": "/components/graphs/AreaChart/"
+    },
+    {
+      "label": "BarChart",
+      "url": "/components/graphs/BarChart/"
+    },
+    {
       "label": "CartesianChart",
       "url": "/components/graphs/CartesianChart"
+    },
+    {
+      "label": "LineChart",
+      "url": "/components/graphs/LineChart/"
     }
   ]
 }

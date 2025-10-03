@@ -1,6 +1,6 @@
 {
   "import": "import { LineChart } from '@coinbase/cds-mobile-visualization'",
-  "source": "https://github.com/coinbase/cds-staging/blob/master/packages/mobile-visualization/src/chart/line/LineChart.tsx",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/mobile-visualization/src/chart/line/LineChart.tsx",
   "relatedComponents": [
     {
       "label": "AreaChart",

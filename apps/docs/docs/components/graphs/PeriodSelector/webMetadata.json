@@ -1,5 +1,6 @@
 {
   "import": "import { PeriodSelector } from '@coinbase/cds-web-visualization'",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/web-visualization/src/chart/PeriodSelector.tsx",
   "relatedComponents": [
     {
       "label": "LineChart",

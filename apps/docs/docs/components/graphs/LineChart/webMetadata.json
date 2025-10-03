@@ -1,5 +1,6 @@
 {
   "import": "import { LineChart } from '@coinbase/cds-web-visualization'",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/web-visualization/src/chart/line/LineChart.tsx",
   "relatedComponents": [
     {
       "label": "SparklineInteractive",

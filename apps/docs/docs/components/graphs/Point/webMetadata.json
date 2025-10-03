@@ -1,5 +1,6 @@
 {
   "import": "import { Point } from '@coinbase/cds-web-visualization'",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/web-visualization/src/chart/Point.tsx",
   "relatedComponents": [
     {
       "label": "LineChart",
