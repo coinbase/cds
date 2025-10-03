@@ -4,10 +4,15 @@
   "storybook": "https://cds-storybook.coinbase.com/?path=/story/visualization-sparkline--sparkline-gradient",
   "figma": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/%E2%9C%A8-CDS-Components?node-id=155-12194",
   "description": "A small line chart component with gradient fill below the line.",
+  "warning": "Sparkline components are deprecated. Please use LineChart instead.",
   "relatedComponents": [
     {
       "label": "Sparkline",
       "url": "/components/graphs/Sparkline/"
+    },
+    {
+      "label": "LineChart",
+      "url": "/components/graphs/LineChart/"
     }
   ],
   "dependencies": []

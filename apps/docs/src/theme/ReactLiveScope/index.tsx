@@ -8,6 +8,7 @@ import { useSort } from '@cbhq/cds-common/hooks/useSort';
 import { accounts } from '@cbhq/cds-common/internal/data/accounts';
 import * as CDSDataAccounts from '@cbhq/cds-common/internal/data/accounts';
 import * as CDSDataAssets from '@cbhq/cds-common/internal/data/assets';
+import { candles as btcCandles } from '@cbhq/cds-common/internal/data/candles';
 import { loremIpsum } from '@cbhq/cds-common/internal/data/loremIpsum';
 import { prices } from '@cbhq/cds-common/internal/data/prices';
 import { product } from '@cbhq/cds-common/internal/data/product';
@@ -92,6 +93,7 @@ import { Tour } from '@cbhq/cds-web/tour/Tour';
 import { TourStep } from '@cbhq/cds-web/tour/TourStep';
 import * as CDSTypography from '@cbhq/cds-web/typography';
 import * as CDSVisualizations from '@cbhq/cds-web/visualizations';
+import * as CDSChartComponents from '@cbhq/cds-web-visualization/chart';
 import * as CDSSparklineComponents from '@cbhq/cds-web-visualization/sparkline';
 import { JSONCodeBlock } from '@site/src/components/page/JSONCodeBlock';
 import * as motion from 'framer-motion';
@@ -178,6 +180,8 @@ const ReactLiveScope: Record<string, unknown> = {
   UpsellCard,
   ...ContentCardComponents,
   // visualizations
+  btcCandles,
+  ...CDSChartComponents,
   ...CDSVisualizations,
   ...CDSSparklineComponents,
   useSparklinePath,

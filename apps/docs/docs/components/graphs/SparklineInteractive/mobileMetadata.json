@@ -3,10 +3,15 @@
   "source": "https://github.com/coinbase/cds/blob/master/packages/mobile-visualization/src/sparkline/sparkline-interactive/SparklineInteractive.tsx",
   "figma": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/%E2%9C%A8-CDS-Components?node-id=155-12194",
   "description": "The SparklineInteractive is used to display a Sparkline that has multiple time periods",
+  "warning": "Sparkline components are deprecated. Please use LineChart instead.",
   "relatedComponents": [
     {
       "label": "SparklineInteractiveHeader",
       "url": "/components/graphs/SparklineInteractiveHeader/"
+    },
+    {
+      "label": "LineChart",
+      "url": "/components/graphs/LineChart/"
     }
   ]
 }

@@ -570,23 +570,73 @@ const sidebars: SidebarsConfig = {
           items: [
             {
               type: 'doc',
+              id: 'components/graphs/AreaChart/areaChart',
+              label: 'AreaChart',
+            },
+            {
+              type: 'doc',
+              id: 'components/graphs/BarChart/barChart',
+              label: 'BarChart',
+            },
+            {
+              type: 'doc',
+              id: 'components/graphs/CartesianChart/cartesianChart',
+              label: 'CartesianChart',
+            },
+            {
+              type: 'doc',
+              id: 'components/graphs/LineChart/lineChart',
+              label: 'LineChart',
+            },
+            {
+              type: 'doc',
+              id: 'components/graphs/ReferenceLine/referenceLine',
+              label: 'ReferenceLine',
+            },
+            {
+              type: 'doc',
+              id: 'components/graphs/PeriodSelector/periodSelector',
+              label: 'PeriodSelector',
+            },
+            {
+              type: 'doc',
+              id: 'components/graphs/Point/point',
+              label: 'Point',
+            },
+            {
+              type: 'doc',
+              id: 'components/graphs/Scrubber/scrubber',
+              label: 'Scrubber',
+            },
+            {
+              type: 'doc',
               id: 'components/graphs/Sparkline/sparkline',
-              label: 'Sparkline',
+              label: 'Sparkline (Deprecated)',
             },
             {
               type: 'doc',
               id: 'components/graphs/SparklineGradient/sparklineGradient',
-              label: 'SparklineGradient',
+              label: 'SparklineGradient (Deprecated)',
             },
             {
               type: 'doc',
               id: 'components/graphs/SparklineInteractive/sparklineInteractive',
-              label: 'SparklineInteractive',
+              label: 'SparklineInteractive (Deprecated)',
             },
             {
               type: 'doc',
               id: 'components/graphs/SparklineInteractiveHeader/sparklineInteractiveHeader',
-              label: 'SparklineInteractiveHeader',
+              label: 'SparklineInteractiveHeader (Deprecated)',
+            },
+            {
+              type: 'doc',
+              id: 'components/graphs/XAxis/xAxis',
+              label: 'XAxis',
+            },
+            {
+              type: 'doc',
+              id: 'components/graphs/YAxis/yAxis',
+              label: 'YAxis',
             },
           ],
         },

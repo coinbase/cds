@@ -12,6 +12,7 @@ All notable changes to this project will be documented in this file.
 
 #### 📘 Misc
 
+- Add sample data for charts. [[#58](https://github.com/coinbase/cds/pull/58)]
 - Update mock data.
 
 ## 8.13.5 ((10/3/2025, 8:29 AM PST))

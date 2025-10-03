@@ -503,6 +503,31 @@ const SparklineInteractiveScreen = () => {
           />
         </Box>
       </Example>
+      <Example padding={0}>
+        <Box>
+          <TextTitle3 paddingX={3} paddingY={3}>
+            Dotted Fill Type
+          </TextTitle3>
+          <SparklineInteractiveBuild
+            data={sparklineInteractiveData}
+            fillType="dotted"
+            strokeColor={strokeColor}
+          />
+        </Box>
+      </Example>
+      <Example padding={0}>
+        <Box>
+          <TextTitle3 paddingX={3} paddingY={3}>
+            Y Scale Custom
+          </TextTitle3>
+          <SparklineInteractiveBuild
+            data={sparklineInteractiveData}
+            fillType="dotted"
+            strokeColor={strokeColor}
+            yAxisScalingFactor={0.1}
+          />
+        </Box>
+      </Example>
     </ExampleScreen>
   );
 };

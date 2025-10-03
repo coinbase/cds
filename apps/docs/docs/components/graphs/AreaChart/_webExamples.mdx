@@ -1,0 +1,129 @@
+AreaChart is a cartesian chart variant that allows for easy visualization of stacked data.
+
+## Basic Example
+
+```jsx live
+<AreaChart
+  height={250}
+  padding={0}
+  series={[
+    {
+      id: 'prices',
+      data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 2, 68, 20, 21, 58],
+    },
+  ]}
+  type="gradient"
+  showLines
+  curve="monotone"
+  showYAxis
+  yAxis={{
+    showGrid: true,
+  }}
+/>
+```
+
+## Simple
+
+```jsx live
+<AreaChart
+  height={250}
+  padding={0}
+  series={[
+    {
+      id: 'prices',
+      data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 2, 68, 20, 21, 58],
+    },
+  ]}
+  type="gradient"
+  showLines
+  curve="monotone"
+/>
+```
+
+## Stacking
+
+You can use the `stacked` prop to stack all areas on top of each other. You can also use the `stackId` prop on a series to create different stack groups. See [CartesianChart](/components/graphs/CartesianChart/#series-stacks) for more details.
+
+```jsx live
+<AreaChart
+  showLines
+  stacked
+  curve="natural"
+  height={256}
+  series={[
+    {
+      id: 'currentRewards',
+      data: [
+        100, 150, 200, 280, 380, 500, 650, 820, 1020, 1250, 1510, 1800, 2120, 2470, 2850, 3260,
+        3700, 4170,
+      ],
+      color: 'var(--color-fg)',
+    },
+    {
+      id: 'potentialRewards',
+      data: [
+        150, 220, 300, 400, 520, 660, 820, 1000, 1200, 1420, 1660, 1920, 2200, 2500, 2820, 3160,
+        3520, 3900,
+      ],
+      color: 'var(--color-fgPositive)',
+      LineComponent: DottedLine,
+    },
+  ]}
+  AreaComponent={(props) => <DottedArea {...props} peakOpacity={0.4} baselineOpacity={0.4} />}
+  type="dotted"
+/>
+```
+
+## Negative Values
+
+When an area chart contains negative values, the baseline automatically adjusts to zero instead of the bottom of the chart. The area fills from the data line to the zero baseline, properly showing both positive and negative regions.
+
+```jsx live
+<AreaChart
+  showLines
+  height={400}
+  series={[
+    {
+      id: 'pageViews',
+      data: [24, 13, -98, 39, 48, 38, 43],
+    },
+  ]}
+  AreaComponent={(props) => <SolidArea {...props} opacity={0.4} />}
+  showYAxis
+  yAxis={{
+    showGrid: true,
+  }}
+/>
+```
+
+## Area Styles
+
+You can have different area styles for each series.
+
+```jsx live
+<AreaChart
+  height={350}
+  series={[
+    {
+      id: 'visitors',
+      data: [450, 520, 480, 600, 750, 680, 590],
+      label: 'Weekly Visitors',
+      color: '#fb4d3d',
+      type: 'dotted',
+    },
+    {
+      id: 'repeatVisitors',
+      data: [250, 200, 150, 140, 100, 80, 50],
+      label: 'Weekly Repeat Visitors',
+      color: '#16a34a',
+    },
+    {
+      id: 'signups',
+      data: [45, 62, 55, 250, 380, 400, 450],
+      label: 'Weekly Signups',
+      color: '#2563eb',
+      type: 'gradient',
+    },
+  ]}
+/>
+```

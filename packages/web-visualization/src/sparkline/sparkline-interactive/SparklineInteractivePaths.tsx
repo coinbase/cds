@@ -12,7 +12,7 @@ import { useSparklineInteractiveConstants } from './useSparklineInteractiveConst
 
 export type SparklineInteractivePathsProps<Period extends string> = Pick<
   SparklineInteractiveBaseProps<Period>,
-  'fill' | 'yAxisScalingFactor' | 'strokeColor' | 'hoverData' | 'compact'
+  'fill' | 'fillType' | 'yAxisScalingFactor' | 'strokeColor' | 'hoverData' | 'compact'
 > & {
   showHoverData: boolean;
   path: string;
@@ -23,6 +23,7 @@ export type SparklineInteractivePathsProps<Period extends string> = Pick<
 function SparklineInteractivePathsWithGeneric<Period extends string>({
   showHoverData,
   fill,
+  fillType = 'gradient',
   path,
   area,
   selectedPeriod,
@@ -31,6 +32,8 @@ function SparklineInteractivePathsWithGeneric<Period extends string>({
   hoverData,
   compact,
 }: SparklineInteractivePathsProps<Period>) {
+  // Map 'dotted' to 'gradientDotted' for Sparkline
+  const sparklineFillType = fillType === 'dotted' ? 'gradientDotted' : 'gradient';
   const hoverPathRef = useRef<string | undefined>(undefined);
   const hoverAreaRef = useRef<string | undefined>(undefined);
   const shouldShowFill = !!fill;
@@ -53,6 +56,7 @@ function SparklineInteractivePathsWithGeneric<Period extends string>({
           area={shouldShowFill ? area : undefined}
           color={strokeColor}
           d={path}
+          fillType={sparklineFillType}
           initialArea={hoverAreaRef.current}
           initialPath={hoverPathRef.current}
           selectedPeriod={selectedPeriod}
