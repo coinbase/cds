@@ -6,9 +6,11 @@ import { Button } from '../../../buttons/Button';
 import { UpsellCard } from '../../../cards/UpsellCard';
 import { cx } from '../../../cx';
 import { Icon } from '../../../icons/Icon';
+import { HStack } from '../../../layout/HStack';
 import { VStack } from '../../../layout/VStack';
+import { Spinner } from '../../../loaders';
 import { Text } from '../../../typography/Text';
-import { Select, type SelectControlComponent } from '../Select';
+import { Select, type SelectControlComponent, type SelectOptionComponent } from '../Select';
 
 export default {
   title: 'Components/Alpha/Select/SingleSelect',
@@ -967,6 +969,33 @@ export const CustomControlComponent = () => {
     <Select
       SelectControlComponent={CustomControlComponent}
       label="Single select - custom control component"
+      onChange={setValue}
+      options={exampleOptions}
+      placeholder="Empty value"
+      value={value}
+    />
+  );
+};
+
+export const CustomOptionComponent = () => {
+  const [value, setValue] = useState<string | null>('1');
+
+  const CustomOptionComponent: SelectOptionComponent = ({ value, onClick }) => {
+    return (
+      <HStack justifyContent="center">
+        <Spinner size={4} />
+        <Button transparent onClick={() => onClick?.(value)} width="80%">
+          {value ?? 'Empty value'}
+        </Button>
+        <Spinner size={4} />
+      </HStack>
+    );
+  };
+
+  return (
+    <Select
+      SelectOptionComponent={CustomOptionComponent}
+      label="Single select - custom option component"
       onChange={setValue}
       options={exampleOptions}
       placeholder="Empty value"
