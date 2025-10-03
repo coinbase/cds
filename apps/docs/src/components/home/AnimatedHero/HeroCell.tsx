@@ -29,8 +29,18 @@ export const HeroCell = ({
   const character = characterSet[throttledCharSetIndex % characterSet.length];
   const isColor = character.startsWith('#') && character !== '#';
 
-  const handleHoverStart = useCallback(() => onHoverStart(cellIndex), [onHoverStart, cellIndex]);
-  const handleHoverEnd = useCallback(() => onHoverEnd(cellIndex), [onHoverEnd, cellIndex]);
+  const handleHoverStart = useCallback(
+    (event: React.PointerEvent<HTMLButtonElement> | React.FocusEvent<HTMLButtonElement>) => {
+      if ('pointerType' in event && event.pointerType === 'mouse') onHoverStart(cellIndex);
+    },
+    [onHoverStart, cellIndex],
+  );
+  const handleHoverEnd = useCallback(
+    (event: React.PointerEvent<HTMLButtonElement> | React.FocusEvent<HTMLButtonElement>) => {
+      if ('pointerType' in event && event.pointerType === 'mouse') onHoverEnd(cellIndex);
+    },
+    [onHoverEnd, cellIndex],
+  );
   const handleClick = useCallback(
     (event: React.MouseEvent<HTMLButtonElement>) => {
       event.stopPropagation();
@@ -48,8 +58,8 @@ export const HeroCell = ({
       onBlur={handleHoverEnd}
       onClick={handleClick}
       onFocus={handleHoverStart}
-      onMouseEnter={handleHoverStart}
-      onMouseLeave={handleHoverEnd}
+      onPointerEnter={handleHoverStart}
+      onPointerLeave={handleHoverEnd}
       overflow="hidden"
       tabIndex={-1}
     >
