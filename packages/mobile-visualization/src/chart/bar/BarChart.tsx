@@ -21,7 +21,6 @@ import { BarPlot, type BarPlotProps } from './BarPlot';
 export type BarSeries = Series &
   Partial<Pick<BarProps, 'BarComponent' | 'fill' | 'fillOpacity' | 'stroke' | 'strokeWidth'>>;
 
-//  & Omit<ScrubberGroupProps, 'chartScale' | 'beacons'>
 export type BarChartProps = Omit<CartesianChartProps, 'xAxis' | 'yAxis' | 'series'> &
   Pick<
     BarPlotProps,
@@ -87,7 +86,6 @@ export const BarChart = memo(
         stackGap,
         barMinSize,
         stackMinSize,
-        enableScrubbing = false,
         ...chartProps
       },
       ref,
@@ -177,7 +175,6 @@ export const BarChart = memo(
 
       return (
         <CartesianChart
-          enableScrubbing={enableScrubbing}
           {...chartProps}
           ref={ref}
           inset={calculatedInset}

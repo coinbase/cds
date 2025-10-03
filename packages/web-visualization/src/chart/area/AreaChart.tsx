@@ -13,10 +13,6 @@ import { Line, type LineProps } from '../line/Line';
 
 import { Area, type AreaProps } from './Area';
 
-/**
- * Series type specifically for area charts - supports both single numbers and [baseline, value] tuples,
- * and allows individual customization of Area and Line props per series.
- */
 export type AreaSeries = Series &
   Partial<Pick<AreaProps, 'AreaComponent' | 'curve' | 'fillOpacity' | 'type' | 'fill'>> &
   Partial<Pick<LineProps, 'LineComponent' | 'strokeWidth' | 'stroke' | 'opacity'>>;
@@ -49,7 +45,6 @@ export type AreaChartProps = Omit<CartesianChartProps, 'xAxis' | 'yAxis' | 'seri
     /**
      * Whether to show lines on top of the areas.
      * Useful for stacked contexts to show the outline of each area.
-     * @default false
      */
     showLines?: boolean;
     /**
@@ -76,13 +71,12 @@ export const AreaChart = memo(
         strokeWidth,
         showXAxis,
         showYAxis,
-        showLines = false,
+        showLines,
         lineType = 'solid',
         xAxis,
         yAxis,
         inset: userInset,
         children,
-        enableScrubbing,
         ...chartProps
       },
       ref,
@@ -166,9 +160,8 @@ export const AreaChart = memo(
 
       return (
         <CartesianChart
-          ref={ref}
           {...chartProps}
-          enableScrubbing={enableScrubbing}
+          ref={ref}
           inset={calculatedInset}
           series={seriesToRender}
           xAxis={xAxisConfig}

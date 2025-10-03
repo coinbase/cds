@@ -13,10 +13,6 @@ import { CartesianChart, type CartesianChartProps } from '../CartesianChart';
 import { type BarProps } from './Bar';
 import { BarPlot, type BarPlotProps } from './BarPlot';
 
-/**
- * Series type specifically for bar charts - supports both single numbers and tuples,
- * and allows individual customization of Bar props per series.
- */
 export type BarSeries = Series &
   Partial<Pick<BarProps, 'BarComponent' | 'fill' | 'fillOpacity' | 'stroke' | 'strokeWidth'>>;
 
@@ -174,8 +170,8 @@ export const BarChart = memo(
 
       return (
         <CartesianChart
-          ref={ref}
           {...chartProps}
+          ref={ref}
           inset={calculatedInset}
           series={seriesToRender}
           xAxis={xAxisConfig}

@@ -12,17 +12,8 @@ import { CartesianChart, type CartesianChartProps } from '../CartesianChart';
 
 import { Line, type LineProps } from './Line';
 
-/**
- * Series type specifically for line charts - enforces single number arrays and supports Line props
- */
-export type LineSeries = Omit<Series, 'data'> & {
-  /**
-   * The data array for this series. Use null values to create gaps in the line.
-   * - Single numbers: Area (if shown) will extend from the y-axis minimum to the value
-   * - Tuples [baseline, value]: Area will extend from baseline to value (line still shows at value)
-   */
-  data?: Array<number | null> | Array<[number, number] | null>;
-} & Partial<
+export type LineSeries = Series &
+  Partial<
     Pick<
       LineProps,
       | 'curve'
@@ -37,6 +28,7 @@ export type LineSeries = Omit<Series, 'data'> & {
       | 'stroke'
       | 'opacity'
       | 'renderPoints'
+      | 'strokeWidth'
     >
   >;
 
@@ -51,6 +43,7 @@ export type LineChartProps = Omit<CartesianChartProps, 'xAxis' | 'yAxis' | 'seri
     | 'AreaComponent'
     | 'curve'
     | 'renderPoints'
+    | 'strokeWidth'
   > & {
     /**
      * Configuration objects that define how to visualize the data.
@@ -81,14 +74,14 @@ export const LineChart = memo(
         LineComponent,
         AreaComponent,
         curve,
+        renderPoints,
+        strokeWidth,
         showXAxis,
         showYAxis,
         xAxis,
         yAxis,
         inset: userInset,
         children,
-        enableScrubbing,
-        renderPoints,
         ...chartProps
       },
       ref,
@@ -152,9 +145,8 @@ export const LineChart = memo(
 
       return (
         <CartesianChart
-          ref={ref}
           {...chartProps}
-          enableScrubbing={enableScrubbing}
+          ref={ref}
           inset={calculatedInset}
           series={chartSeries}
           xAxis={xAxisConfig}
@@ -174,6 +166,7 @@ export const LineChart = memo(
               renderPoints={renderPoints}
               seriesId={id}
               showArea={showArea}
+              strokeWidth={strokeWidth}
               type={type}
               {...linePropsFromSeries}
             />
