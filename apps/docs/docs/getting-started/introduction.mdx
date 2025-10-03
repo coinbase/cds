@@ -49,8 +49,40 @@ import { GettingStartedBanner } from '@site/src/components/page/ComponentBanner/
 
 <MDXSection>
 <MDXArticle>
+## Developer experience
 
-// TO DO: Add a section here
+CDS is designed to make your development workflow as smooth as possible.
+
+- **TypeScript first** - Full type safety with excellent IDE autocomplete for props, theme values, and style props. Most mistakes are caught at compile time.
+
+- **Flexible styling** - Use the StyleProps API for rapid development with theme-aware values, or drop down to className and style props for full control. Mix and match approaches as needed.
+
+- **Component composition** - Build complex UIs by composing simple primitives. Most components expose subcomponents that can be customized or replaced entirely.
+
+- **Performance optimized** - All web components use atomic CSS with zero runtime overhead. CSS is generated at build time and styles are applied via static classnames.
+
+- **Extensive documentation** - Every component includes Storybook stories, interactive examples, detailed prop tables, and usage guidelines.
+
+```jsx
+import { ThemeProvider } from '@coinbase/cds-web';
+import { defaultTheme } from '@coinbase/cds-web/themes/defaultTheme';
+import { Box } from '@coinbase/cds-web/layout';
+import { Text } from '@coinbase/cds-web/typography';
+import { Button } from '@coinbase/cds-web/buttons';
+
+const App = () => (
+  <ThemeProvider theme={defaultTheme} activeColorScheme="light">
+    <Box padding={4} background="bgPrimary" borderRadius={200}>
+      <Text font="title1" color="fg">
+        Welcome to CDS
+      </Text>
+      <Button variant="positive" marginTop={2}>
+        Get started
+      </Button>
+    </Box>
+  </ThemeProvider>
+);
+```
 
 </MDXArticle>
 </MDXSection>
