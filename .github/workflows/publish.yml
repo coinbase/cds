@@ -224,10 +224,24 @@ jobs:
           fi
 
           PACKAGE_NAME=$(node -p "require('./package.json').name")
+          PACKAGE_VERSION=$(node -p "require('./package.json').version")
           echo "📦 Package name from package.json: $PACKAGE_NAME"
-          npm publish ./package.tgz --access public \
-            --registry https://registry.npmjs.org
-          echo "✅ Successfully published ${{ matrix.package }} ($PACKAGE_NAME)"
+          echo "📦 Package version: $PACKAGE_VERSION"
+
+          # Detect prerelease version and extract tag
+          if echo "$PACKAGE_VERSION" | grep -qE '\-'; then
+            # Extract prerelease tag (e.g., "beta" from "1.0.0-beta.1")
+            PRERELEASE_TAG=$(echo "$PACKAGE_VERSION" | sed -E 's/.*-([^.]+).*/\1/')
+            echo "🏷️  Detected prerelease version, using tag: $PRERELEASE_TAG"
+            npm publish ./package.tgz --access public \
+              --tag "$PRERELEASE_TAG" \
+              --registry https://registry.npmjs.org
+          else
+            echo "🏷️  Publishing as latest"
+            npm publish ./package.tgz --access public \
+              --registry https://registry.npmjs.org
+          fi
+          echo "✅ Successfully published ${{ matrix.package }} ($PACKAGE_NAME@$PACKAGE_VERSION)"
 
   # Summary job
   summary:
