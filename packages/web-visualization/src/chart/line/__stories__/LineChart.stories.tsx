@@ -8,7 +8,7 @@ import type { TabValue } from '@coinbase/cds-common/tabs/useTabs';
 import { useTheme } from '@coinbase/cds-web';
 import { CellMedia, ListCell } from '@coinbase/cds-web/cells';
 import { Box, HStack, VStack } from '@coinbase/cds-web/layout';
-import { RemoteImage } from '@coinbase/cds-web/media';
+import { Avatar, RemoteImage } from '@coinbase/cds-web/media';
 import { RollingNumber } from '@coinbase/cds-web/numbers';
 import { SectionHeader } from '@coinbase/cds-web/section-header/SectionHeader';
 import {
@@ -1341,7 +1341,7 @@ const CompactLineChart = () => {
   }, []);
 
   return (
-    <VStack gap={2}>
+    <VStack>
       <ListCell
         description={assets.btc.symbol}
         detail={formatPrice(parseFloat(prices[0]))}
@@ -1364,7 +1364,8 @@ const CompactLineChart = () => {
             </LineChart>
           </Box>
         }
-        media={<CellMedia source={assets.btc.imageUrl} title="BTC" type="image" />}
+        layoutSpacing="hug"
+        media={<Avatar src={assets.btc.imageUrl} />}
         onClick={() => console.log('clicked')}
         subdetail="-4.55%"
         title={assets.btc.name}
@@ -1393,7 +1394,8 @@ const CompactLineChart = () => {
             </LineChart>
           </Box>
         }
-        media={<CellMedia source={assets.btc.imageUrl} title="BTC" type="image" />}
+        layoutSpacing="hug"
+        media={<Avatar src={assets.btc.imageUrl} />}
         onClick={() => console.log('clicked')}
         subdetail="-4.55%"
         title={assets.btc.name}
@@ -1422,7 +1424,8 @@ const CompactLineChart = () => {
             </LineChart>
           </Box>
         }
-        media={<CellMedia source={assets.btc.imageUrl} title="BTC" type="image" />}
+        layoutSpacing="hug"
+        media={<Avatar src={assets.btc.imageUrl} />}
         onClick={() => console.log('clicked')}
         subdetail="+0.25%"
         title={assets.btc.name}
@@ -1451,7 +1454,8 @@ const CompactLineChart = () => {
             </LineChart>
           </Box>
         }
-        media={<CellMedia source={assets.btc.imageUrl} title="BTC" type="image" />}
+        layoutSpacing="hug"
+        media={<Avatar src={assets.btc.imageUrl} />}
         onClick={() => console.log('clicked')}
         subdetail="-4.55%"
         title={assets.btc.name}
