@@ -5,7 +5,7 @@ Points are visual markers that highlight specific data values on a chart. They c
 ```jsx live
 <LineChart
   enableScrubbing
-  height={250}
+  height={{ base: 150, tablet: 200, desktop: 250 }}
   series={[
     {
       id: 'prices',
@@ -53,7 +53,7 @@ function AssetPriceWithMinMax() {
       ]}
       showArea
       areaType="dotted"
-      height={300}
+      height={{ base: 150, tablet: 200, desktop: 250 }}
       style={{ outlineColor: assets.btc.color }}
       renderPoints={({ dataX, dataY }) => {
         const isMin = dataY === minPrice;
@@ -78,7 +78,7 @@ Points can be made interactive by adding click handlers, allowing users to explo
 
 ```jsx live
 <LineChart
-  height={250}
+  height={{ base: 150, tablet: 200, desktop: 250 }}
   series={[
     {
       id: 'sales',
@@ -122,7 +122,7 @@ Points support extensive customization through various properties including colo
 
 ```jsx live
 <LineChart
-  height={300}
+  height={{ base: 150, tablet: 200, desktop: 250 }}
   series={[
     {
       id: 'performance',

@@ -14,7 +14,7 @@ function BasicExample() {
     <LineChart
       enableScrubbing
       onScrubberPositionChange={setScrubIndex}
-      height={250}
+      height={{ base: 150, tablet: 200, desktop: 250 }}
       series={[
         {
           id: 'prices',
@@ -39,7 +39,7 @@ function BasicExample() {
 
 ```jsx live
 <LineChart
-  height={250}
+  height={{ base: 150, tablet: 200, desktop: 250 }}
   series={[
     {
       id: 'prices',
@@ -73,121 +73,78 @@ function CompactLineChart() {
     })}`;
   }, []);
 
+  const CompactChart = memo(({ data, showArea, color, referenceY }) => (
+    <Box style={{ padding: 1 }}>
+      <LineChart
+        {...dimensions}
+        enableScrubbing={false}
+        overflow="visible"
+        inset={0}
+        showArea={showArea}
+        series={[
+          {
+            id: 'btc',
+            data,
+            color,
+          },
+        ]}
+      >
+        <ReferenceLine dataY={referenceY} />
+      </LineChart>
+    </Box>
+  ));
+
+  const ChartCell = memo(({ data, showArea, color, referenceY, subdetail, variant }) => {
+    const { isPhone } = useBreakpoints();
+
+    return (
+      <ListCell
+        description={isPhone ? undefined : assets.btc.symbol}
+        detail={formatPrice(parseFloat(prices[0]))}
+        intermediary={
+          <CompactChart data={data} showArea={showArea} color={color} referenceY={referenceY} />
+        }
+        media={<CellMedia source={assets.btc.imageUrl} title="BTC" type="image" />}
+        onClick={() => console.log('clicked')}
+        subdetail={subdetail}
+        title={isPhone ? undefined : assets.btc.name}
+        variant={variant}
+        style={{ padding: 0 }}
+      />
+    );
+  });
+
   return (
     <VStack gap={2}>
-      <ListCell
-        description={assets.btc.symbol}
-        detail={formatPrice(parseFloat(prices[0]))}
-        intermediary={
-          <Box style={{ padding: 1 }}>
-            <LineChart
-              {...dimensions}
-              enableScrubbing={false}
-              overflow="visible"
-              inset={0}
-              series={[
-                {
-                  id: 'btc',
-                  data: sparklineData,
-                  color: assets.btc.color,
-                },
-              ]}
-            >
-              <ReferenceLine dataY={parseFloat(prices[Math.floor(prices.length / 4)])} />
-            </LineChart>
-          </Box>
-        }
-        media={<CellMedia source={assets.btc.imageUrl} title="BTC" type="image" />}
-        onClick={() => console.log('clicked')}
+      <ChartCell
+        data={sparklineData}
+        color={assets.btc.color}
+        referenceY={parseFloat(prices[Math.floor(prices.length / 4)])}
         subdetail="-4.55%"
-        title={assets.btc.name}
         variant="negative"
       />
-      <ListCell
-        description={assets.btc.symbol}
-        detail={formatPrice(parseFloat(prices[0]))}
-        intermediary={
-          <Box style={{ padding: 1 }}>
-            <LineChart
-              {...dimensions}
-              showArea
-              enableScrubbing={false}
-              overflow="visible"
-              inset={0}
-              series={[
-                {
-                  id: 'btc',
-                  data: sparklineData,
-                  color: assets.btc.color,
-                },
-              ]}
-            >
-              <ReferenceLine dataY={parseFloat(prices[Math.floor(prices.length / 4)])} />
-            </LineChart>
-          </Box>
-        }
-        media={<CellMedia source={assets.btc.imageUrl} title="BTC" type="image" />}
-        onClick={() => console.log('clicked')}
+      <ChartCell
+        data={sparklineData}
+        showArea
+        color={assets.btc.color}
+        referenceY={parseFloat(prices[Math.floor(prices.length / 4)])}
         subdetail="-4.55%"
-        title={assets.btc.name}
         variant="negative"
       />
-      <ListCell
-        description={assets.btc.symbol}
-        detail={formatPrice(parseFloat(prices[0]))}
-        intermediary={
-          <Box style={{ padding: 1 }}>
-            <LineChart
-              {...dimensions}
-              showArea
-              enableScrubbing={false}
-              overflow="visible"
-              inset={0}
-              series={[
-                {
-                  id: 'btc',
-                  data: sparklineData,
-                  color: 'var(--color-fgPositive)',
-                },
-              ]}
-            >
-              <ReferenceLine dataY={positiveFloor} />
-            </LineChart>
-          </Box>
-        }
-        media={<CellMedia source={assets.btc.imageUrl} title="BTC" type="image" />}
-        onClick={() => console.log('clicked')}
+      <ChartCell
+        data={sparklineData}
+        showArea
+        color="var(--color-fgPositive)"
+        referenceY={positiveFloor}
         subdetail="+0.25%"
-        title={assets.btc.name}
         variant="positive"
       />
-      <ListCell
-        description={assets.btc.symbol}
-        detail={formatPrice(parseFloat(prices[0]))}
-        intermediary={
-          <Box style={{ padding: 1 }}>
-            <LineChart
-              {...dimensions}
-              showArea
-              enableScrubbing={false}
-              overflow="visible"
-              inset={0}
-              series={[
-                {
-                  id: 'btc',
-                  data: negativeData,
-                  color: 'var(--color-fgNegative)',
-                },
-              ]}
-            >
-              <ReferenceLine dataY={negativeCeiling} />
-            </LineChart>
-          </Box>
-        }
-        media={<CellMedia source={assets.btc.imageUrl} title="BTC" type="image" />}
-        onClick={() => console.log('clicked')}
+      <ChartCell
+        data={negativeData}
+        showArea
+        color="var(--color-fgNegative)"
+        referenceY={negativeCeiling}
         subdetail="-4.55%"
-        title={assets.btc.name}
         variant="negative"
       />
     </VStack>
@@ -269,7 +226,7 @@ function GainLossChart() {
   return (
     <CartesianChart
       enableScrubbing
-      height={250}
+      height={{ base: 150, tablet: 200, desktop: 250 }}
       series={[
         {
           id: 'prices',
@@ -303,7 +260,7 @@ function MultipleSeriesChart() {
   return (
     <LineChart
       enableScrubbing
-      height={400}
+      height={{ base: 150, tablet: 200, desktop: 250 }}
       series={[
         {
           id: 'prices',
@@ -344,7 +301,7 @@ function PointsChart() {
 
   return (
     <CartesianChart
-      height={250}
+      height={{ base: 150, tablet: 200, desktop: 250 }}
       series={[
         {
           id: 'prices',
@@ -392,7 +349,7 @@ This example shows how to use an empty state for a line chart.
     },
   ]}
   yAxis={{ domain: { min: -1, max: 3 } }}
-  height={300}
+  height={{ base: 150, tablet: 200, desktop: 250 }}
 />
 ```
 
@@ -400,7 +357,7 @@ This example shows how to use an empty state for a line chart.
 
 ```jsx live
 <LineChart
-  height={400}
+  height={{ base: 150, tablet: 200, desktop: 250 }}
   series={[
     {
       id: 'top',
@@ -503,7 +460,7 @@ function LiveAssetPrice() {
       enableScrubbing
       onScrubberPositionChange={setScrubIndex}
       showArea
-      height={300}
+      height={{ base: 150, tablet: 200, desktop: 250 }}
       series={[
         {
           id: 'btc',
@@ -511,7 +468,7 @@ function LiveAssetPrice() {
           color: assets.btc.color,
         },
       ]}
-      padding={{ right: 8 }}
+      inset={{ right: 64 }}
       accessibilityLabel={accessibilityLabel}
     >
       <Scrubber ref={scrubberRef} labelProps={{ elevation: 1 }} />
@@ -546,7 +503,7 @@ function DataFormatChart() {
           data: yData,
         },
       ]}
-      height={300}
+      height={{ base: 150, tablet: 200, desktop: 250 }}
       showArea
       renderPoints={() => true}
       curve="natural"
@@ -560,7 +517,7 @@ function DataFormatChart() {
         showTickMarks: true,
         showGrid: true,
       }}
-      padding={2}
+      inset={{ top: 16, right: 16, bottom: 0, left: 0 }}
       accessibilityLabel={accessibilityLabel}
     >
       <Scrubber hideOverlay />
@@ -731,7 +688,7 @@ const BTCActiveIndicator = memo(({ style, ...props }: TabsActiveIndicatorProps) 
         ]}
         showArea
         areaType="dotted"
-        height={300}
+        height={{ base: 150, tablet: 200, desktop: 250 }}
         style={{ outlineColor: assets.btc.color }}
         accessibilityLabel={scrubberLabel}
         padding={{ left: 2, right: 2 }}
@@ -889,7 +846,7 @@ function ForecastAssetPrice() {
         showArea
         showXAxis
         AreaComponent={ForecastAreaComponent}
-        height={350}
+        height={{ base: 150, tablet: 200, desktop: 250 }}
         padding={{
           top: 4,
           left: 2,
@@ -1024,7 +981,7 @@ function AvailabilityChart() {
     <CartesianChart
       enableScrubbing
       onScrubberPositionChange={setScrubIndex}
-      height={300}
+      height={{ base: 150, tablet: 200, desktop: 250 }}
       series={[
         {
           id: 'availability',
@@ -1064,7 +1021,7 @@ function AvailabilityChart() {
         })}
         seriesId="availability"
       />
-      <Scrubber overlayOffset={10} />
+      <Scrubber hideOverlay />
     </CartesianChart>
   );
 }
@@ -1076,6 +1033,7 @@ You can coordinate LineChart with custom styles to create a custom card that sho
 
 ```jsx live
 function BitcoinChartWithScrubberBeacon() {
+  const { isPhone } = useBreakpoints();
   const prices = [...btcCandles].reverse().map((candle) => parseFloat(candle.close));
   const latestPrice = prices[prices.length - 1];
 
@@ -1110,15 +1068,17 @@ function BitcoinChartWithScrubberBeacon() {
     >
       <HStack gap={2} alignItems="center">
         <RemoteImage source={assets.btc.imageUrl} size="xxl" shape="circle" aria-hidden />
-        <VStack gap={0.25} flexGrow={1}>
-          <Text font="title1" style={{ color: 'white' }} aria-hidden>
-            BTC
-          </Text>
-          <Text font="label1" color="fgMuted">
-            Bitcoin
-          </Text>
-        </VStack>
-        <VStack gap={0.25} alignItems="flex-end">
+        {!isPhone && (
+          <VStack gap={0.25} flexGrow={1}>
+            <Text font="title1" style={{ color: 'white' }} aria-hidden>
+              BTC
+            </Text>
+            <Text font="label1" color="fgMuted">
+              Bitcoin
+            </Text>
+          </VStack>
+        )}
+        <VStack gap={0.25} alignItems="flex-end" flexGrow={isPhone ? 1 : undefined}>
           <Text font="title1" style={{ color: 'white' }}>
             {formatPrice(latestPrice)}
           </Text>
