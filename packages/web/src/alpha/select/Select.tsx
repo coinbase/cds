@@ -345,16 +345,6 @@ const SelectBase = memo(
         }),
       );
 
-      // Sort order of value array to match options array order
-      const sortedValue = useMemo(() => {
-        if (!isMultiSelect) return value;
-        return (value as string[]).sort((a, b) => {
-          const aIndex = options.findIndex((o) => o.value === a);
-          const bIndex = options.findIndex((o) => o.value === b);
-          return aIndex - bIndex;
-        });
-      }, [isMultiSelect, value, options]) as Type extends 'multi' ? string[] : string | null;
-
       return (
         <div
           ref={containerRef as React.RefObject<HTMLDivElement>}
@@ -382,7 +372,7 @@ const SelectBase = memo(
             startNode={startNode}
             style={styles?.control}
             type={type}
-            value={sortedValue}
+            value={value}
             variant={variant}
           />
           <Portal containerId={modalContainerId}>
@@ -417,7 +407,7 @@ const SelectBase = memo(
                 optionBlendStyles: styles?.optionBlendStyles,
               }}
               type={type}
-              value={sortedValue}
+              value={value}
             />
           </Portal>
         </div>

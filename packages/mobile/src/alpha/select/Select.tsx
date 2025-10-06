@@ -1,4 +1,4 @@
-import React, { forwardRef, memo, useImperativeHandle, useMemo, useRef, useState } from 'react';
+import React, { forwardRef, memo, useImperativeHandle, useRef, useState } from 'react';
 import type { AccessibilityRole, StyleProp, ViewStyle } from 'react-native';
 import type { SharedAccessibilityProps } from '@coinbase/cds-common/types';
 
@@ -302,16 +302,6 @@ const SelectBase = memo(
         }),
       );
 
-      // Sort order of value array to match options array order
-      const sortedValue = useMemo(() => {
-        if (!isMultiSelect) return value;
-        return (value as string[]).sort((a, b) => {
-          const aIndex = options.findIndex((o) => o.value === a);
-          const bIndex = options.findIndex((o) => o.value === b);
-          return aIndex - bIndex;
-        });
-      }, [isMultiSelect, value, options]) as Type extends 'multi' ? string[] : string | null;
-
       return (
         <>
           <SelectControlComponent
@@ -333,7 +323,7 @@ const SelectBase = memo(
             startNode={startNode}
             style={styles?.control}
             type={type}
-            value={sortedValue}
+            value={value}
             variant={variant}
           />
           <SelectDropdownComponent
@@ -366,7 +356,7 @@ const SelectBase = memo(
               optionBlendStyles: styles?.optionBlendStyles,
             }}
             type={type}
-            value={sortedValue}
+            value={value}
           />
         </>
       );
