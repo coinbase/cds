@@ -49,6 +49,19 @@ export const Heavy = () => {
   );
 };
 
+export const Thin = () => {
+  return (
+    <ProgressContainerWithButtons>
+      {({ calculateProgress }) => (
+        <HStack gap={2}>
+          <ProgressCircle progress={calculateProgress(0)} size={100} weight="thin" />
+          <ProgressCircle progress={calculateProgress(0.2)} size={100} weight="thin" />
+        </HStack>
+      )}
+    </ProgressContainerWithButtons>
+  );
+};
+
 export const NoText = () => {
   return (
     <ProgressContainerWithButtons>
