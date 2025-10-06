@@ -8,7 +8,7 @@ import type { SelectOptionProps } from '../Select';
 const defaultProps: SelectOptionProps = {
   value: 'option1',
   label: 'Option 1',
-  onChange: jest.fn(),
+  onPress: jest.fn(),
   selected: false,
   disabled: false,
   compact: false,
@@ -280,7 +280,7 @@ describe('DefaultSelectOption', () => {
       const onChange = jest.fn();
       render(
         <DefaultThemeProvider>
-          <DefaultSelectOption {...defaultProps} onChange={onChange} />
+          <DefaultSelectOption {...defaultProps} onPress={onChange} />
         </DefaultThemeProvider>,
       );
 
@@ -294,7 +294,7 @@ describe('DefaultSelectOption', () => {
       const onChange = jest.fn();
       render(
         <DefaultThemeProvider>
-          <DefaultSelectOption {...defaultProps} disabled onChange={onChange} />
+          <DefaultSelectOption {...defaultProps} disabled onPress={onChange} />
         </DefaultThemeProvider>,
       );
 
@@ -308,7 +308,7 @@ describe('DefaultSelectOption', () => {
       const onChange = jest.fn();
       render(
         <DefaultThemeProvider>
-          <DefaultSelectOption {...defaultProps} onChange={onChange} />
+          <DefaultSelectOption {...defaultProps} onPress={onChange} />
         </DefaultThemeProvider>,
       );
 
@@ -442,7 +442,7 @@ describe('DefaultSelectOption', () => {
     it('handles undefined onChange', () => {
       render(
         <DefaultThemeProvider>
-          <DefaultSelectOption {...defaultProps} onChange={(() => {}) as any} />
+          <DefaultSelectOption {...defaultProps} onPress={(() => {}) as any} />
         </DefaultThemeProvider>,
       );
 
