@@ -6,6 +6,7 @@ import type { CellBaseProps } from '../../cells/Cell';
 import type { InputStackBaseProps } from '../../controls/InputStack';
 import type { InteractableBlendStyles } from '../../system/Interactable';
 
+import { DefaultSelectAllOption } from './DefaultSelectAllOption';
 import { DefaultSelectControl } from './DefaultSelectControl';
 import { DefaultSelectDropdown } from './DefaultSelectDropdown';
 import { DefaultSelectEmptyDropdownContents } from './DefaultSelectEmptyDropdownContents';
@@ -265,7 +266,7 @@ const SelectBase = memo(
         media,
         detail,
         SelectOptionComponent = DefaultSelectOption as SelectOptionComponent<Type>,
-        SelectAllOptionComponent,
+        SelectAllOptionComponent = DefaultSelectAllOption as SelectOptionComponent<Type>,
         SelectDropdownComponent = DefaultSelectDropdown as SelectDropdownComponent<Type>,
         SelectControlComponent = DefaultSelectControl as SelectControlComponent<Type>,
         SelectEmptyDropdownContentsComponent = DefaultSelectEmptyDropdownContents as SelectEmptyDropdownContentComponent,

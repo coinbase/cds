@@ -4,10 +4,10 @@ import { type GestureResponderEvent, ScrollView } from 'react-native';
 import { Button } from '../../buttons';
 import { Checkbox } from '../../controls/Checkbox';
 import { Radio } from '../../controls/Radio';
-import { Divider } from '../../layout';
 import { VStack } from '../../layout/VStack';
 import { Tray } from '../../overlays/tray/Tray';
 
+import { DefaultSelectAllOption } from './DefaultSelectAllOption';
 import { DefaultSelectEmptyDropdownContents } from './DefaultSelectEmptyDropdownContents';
 import { DefaultSelectOption } from './DefaultSelectOption';
 import type { SelectDropdownComponent } from './Select';
@@ -36,7 +36,7 @@ export const DefaultSelectDropdown: SelectDropdownComponent<'single' | 'multi'> 
         accessory,
         media,
         SelectOptionComponent = DefaultSelectOption,
-        SelectAllOptionComponent,
+        SelectAllOptionComponent = DefaultSelectAllOption,
         SelectEmptyDropdownContentsComponent = DefaultSelectEmptyDropdownContents,
         accessibilityRoles,
         ...props
@@ -67,64 +67,42 @@ export const DefaultSelectDropdown: SelectDropdownComponent<'single' | 'multi'> 
       }, [isAllOptionsSelected, isSomeOptionsSelected]);
 
       const SelectAllOption = useMemo(
-        () =>
-          SelectAllOptionComponent ? (
-            <SelectAllOptionComponent
-              key="select-all"
-              accessibilityRole={accessibilityRoles?.option}
-              accessory={accessory}
-              blendStyles={styles?.optionBlendStyles}
-              className={classNames?.option}
-              compact={compact}
-              detail={detail}
-              disabled={disabled}
-              indeterminate={indeterminate}
-              label={String(
-                selectAllLabel + ' (' + options.filter((o) => o.value !== null).length + ')',
-              )}
-              media={media}
-              onPress={toggleSelectAll}
-              selected={isAllOptionsSelected}
-              style={styles?.option}
-              type={type}
-              value="select-all"
-            />
-          ) : (
-            <>
-              <SelectOptionComponent
-                key="select-all"
-                accessibilityRole={accessibilityRoles?.option}
-                accessory={accessory}
-                blendStyles={styles?.optionBlendStyles}
-                className={classNames?.option}
-                compact={compact}
-                detail={
-                  <Button compact transparent onPress={handleClearAll}>
-                    {clearAllLabel}
-                  </Button>
-                }
-                disabled={disabled}
-                indeterminate={indeterminate}
-                label={String(
-                  selectAllLabel + ' (' + options.filter((o) => o.value !== null).length + ')',
-                )}
-                media={
-                  media ?? (
-                    <Checkbox
-                      checked={isAllOptionsSelected}
-                      indeterminate={indeterminate}
-                      value={isAllOptionsSelected ? 'true' : 'false'}
-                    />
-                  )
-                }
-                onPress={toggleSelectAll}
-                selected={isAllOptionsSelected}
-                type={type}
-                value="select-all"
-              />
-              <Divider paddingX={2} />
-            </>
-          ),
+        () => (
+          <SelectAllOptionComponent
+            key="select-all"
+            accessibilityRole={accessibilityRoles?.option}
+            accessory={accessory}
+            blendStyles={styles?.optionBlendStyles}
+            className={classNames?.option}
+            compact={compact}
+            detail={
+              detail ?? (
+                <Button compact transparent onPress={handleClearAll} role="option">
+                  {clearAllLabel}
+                </Button>
+              )
+            }
+            disabled={disabled}
+            indeterminate={indeterminate}
+            label={String(
+              selectAllLabel + ' (' + options.filter((o) => o.value !== null).length + ')',
+            )}
+            media={
+              media ?? (
+                <Checkbox
+                  checked={isAllOptionsSelected}
+                  indeterminate={!isAllOptionsSelected && isSomeOptionsSelected ? true : false}
+                  tabIndex={-1}
+                />
+              )
+            }
+            onPress={toggleSelectAll}
+            selected={isAllOptionsSelected}
+            style={styles?.option}
+            type={type}
+            value="select-all"
+          />
+        ),
         [
           SelectAllOptionComponent,
           accessibilityRoles?.option,
@@ -134,17 +112,17 @@ export const DefaultSelectDropdown: SelectDropdownComponent<'single' | 'multi'> 
           classNames?.option,
           compact,
           detail,
+          handleClearAll,
+          clearAllLabel,
           disabled,
           indeterminate,
           selectAllLabel,
           options,
           media,
-          toggleSelectAll,
           isAllOptionsSelected,
+          isSomeOptionsSelected,
+          toggleSelectAll,
           type,
-          SelectOptionComponent,
-          handleClearAll,
-          clearAllLabel,
         ],
       );
 
