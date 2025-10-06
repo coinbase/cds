@@ -1,4 +1,4 @@
-import React, { memo, useMemo } from 'react';
+import { memo, useMemo } from 'react';
 import { StyleSheet, View } from 'react-native';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 
@@ -10,7 +10,7 @@ import { Box } from './Box';
 export type DividerBaseProps = {
   /**
    * Color of the divider line.
-   * @default line
+   * @default bgLine
    */
   color?: ThemeVars.Color;
   /**

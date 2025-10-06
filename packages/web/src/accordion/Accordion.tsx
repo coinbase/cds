@@ -6,7 +6,6 @@ import {
 import type { SharedProps } from '@coinbase/cds-common/types';
 import { join } from '@coinbase/cds-common/utils/join';
 
-import { useTheme } from '../hooks/useTheme';
 import { Divider, VStack } from '../layout';
 
 export type AccordionBaseProps = SharedProps & AccordionProviderProps;
@@ -22,9 +21,6 @@ export const Accordion = ({
   testID,
   style,
 }: AccordionProps) => {
-  const { activeColorScheme } = useTheme();
-  const dividerColor = activeColorScheme === 'light' ? 'bgLine' : 'bgLineHeavy';
-
   return (
     <AccordionProvider
       activeKey={activeKey}
@@ -33,7 +29,7 @@ export const Accordion = ({
       setActiveKey={setActiveKey}
     >
       <VStack style={style} testID={testID} width="100%">
-        {join(Children.toArray(children), <Divider color={dividerColor} />)}
+        {join(Children.toArray(children), <Divider />)}
       </VStack>
     </AccordionProvider>
   );

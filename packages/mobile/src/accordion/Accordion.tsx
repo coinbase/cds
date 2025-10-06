@@ -1,4 +1,4 @@
-import React, { Children, memo } from 'react';
+import { Children, memo } from 'react';
 import type { ViewProps } from 'react-native';
 import {
   AccordionProvider,
@@ -31,7 +31,7 @@ export const Accordion = memo(
         setActiveKey={setActiveKey}
       >
         <VStack style={style} testID={testID} width="100%">
-          {join(Children.toArray(children), <Divider color="bgLineHeavy" />)}
+          {join(Children.toArray(children), <Divider />)}
         </VStack>
       </AccordionProvider>
     );
