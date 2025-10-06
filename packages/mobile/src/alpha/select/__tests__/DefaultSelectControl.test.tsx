@@ -85,7 +85,7 @@ describe('DefaultSelectControl', () => {
         </DefaultThemeProvider>,
       );
 
-      expect(screen.getByText('option1')).toBeTruthy(); // Shows the selected value
+      expect(screen.getByText('Option 1')).toBeTruthy(); // Shows the selected value
       expect(screen.getByText('Test Select Control')).toBeTruthy();
       expect(screen.getByRole('button')).toBeTruthy();
     });
@@ -97,7 +97,7 @@ describe('DefaultSelectControl', () => {
         </DefaultThemeProvider>,
       );
 
-      expect(screen.getByText('option1')).toBeTruthy();
+      expect(screen.getByText('Option 1')).toBeTruthy();
     });
 
     it('shows placeholder when no value selected', () => {
@@ -162,8 +162,8 @@ describe('DefaultSelectControl', () => {
         </DefaultThemeProvider>,
       );
 
-      expect(screen.getByText('option1')).toBeTruthy();
-      expect(screen.getByText('option2')).toBeTruthy();
+      expect(screen.getByText('Option 1')).toBeTruthy();
+      expect(screen.getByText('Option 2')).toBeTruthy();
     });
 
     it('handles chip removal', () => {
@@ -179,7 +179,7 @@ describe('DefaultSelectControl', () => {
         </DefaultThemeProvider>,
       );
 
-      const chip = screen.getByText('option1');
+      const chip = screen.getByText('Option 1');
       fireEvent.press(chip);
 
       expect(onChange).toHaveBeenCalledWith('option1');

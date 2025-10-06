@@ -70,7 +70,7 @@ describe('DefaultSelectControl', () => {
       );
 
       expect(screen.getByText('Test Select Control')).toBeInTheDocument();
-      expect(screen.getByText('option1')).toBeInTheDocument();
+      expect(screen.getByText('Option 1')).toBeInTheDocument();
       expect(screen.getByRole('button')).toBeInTheDocument();
     });
 
@@ -85,7 +85,7 @@ describe('DefaultSelectControl', () => {
         </DefaultThemeProvider>,
       );
 
-      expect(screen.getByText('option1')).toBeInTheDocument();
+      expect(screen.getByText('Option 1')).toBeInTheDocument();
     });
 
     it('shows placeholder when no value selected', () => {
@@ -166,8 +166,8 @@ describe('DefaultSelectControl', () => {
         </DefaultThemeProvider>,
       );
 
-      expect(screen.getByRole('button', { name: 'Remove option1' })).toBeInTheDocument();
-      expect(screen.getByRole('button', { name: 'Remove option2' })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: 'Remove Option 1' })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: 'Remove Option 2' })).toBeInTheDocument();
     });
 
     it('handles chip removal', async () => {
@@ -184,7 +184,7 @@ describe('DefaultSelectControl', () => {
         </DefaultThemeProvider>,
       );
 
-      const chipButton = screen.getByRole('button', { name: 'Remove option1' });
+      const chipButton = screen.getByRole('button', { name: 'Remove Option 1' });
       await user.click(chipButton);
       expect(onChange).toHaveBeenCalledWith('option1');
     });
@@ -215,8 +215,8 @@ describe('DefaultSelectControl', () => {
         </DefaultThemeProvider>,
       );
 
-      const chip1 = screen.getByRole('button', { name: 'Remove option1' });
-      const chip3 = screen.getByRole('button', { name: 'Remove option3' });
+      const chip1 = screen.getByRole('button', { name: 'Remove Option 1' });
+      const chip3 = screen.getByRole('button', { name: 'Remove Option 3' });
 
       expect(chip1).not.toHaveAttribute('disabled');
       expect(chip3).toHaveAttribute('disabled');
@@ -315,7 +315,7 @@ describe('DefaultSelectControl', () => {
         </DefaultThemeProvider>,
       );
 
-      const chip = screen.getByRole('button', { name: 'Remove option1' });
+      const chip = screen.getByRole('button', { name: 'Remove Option 1' });
       await user.click(chip);
       const control = screen.getByTestId('select-control-test');
       const controlInputNode = control.querySelector('button');
@@ -337,7 +337,7 @@ describe('DefaultSelectControl', () => {
       );
 
       // Remove the middle chip (option2)
-      const chip2 = screen.getByRole('button', { name: 'Remove option2' });
+      const chip2 = screen.getByRole('button', { name: 'Remove Option 2' });
       await user.click(chip2);
       expect(onChange).toHaveBeenCalledWith('option2');
     });

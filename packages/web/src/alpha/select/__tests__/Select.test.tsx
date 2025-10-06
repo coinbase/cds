@@ -164,7 +164,7 @@ describe('Select', () => {
         </DefaultThemeProvider>,
       );
 
-      expect(screen.getByText('option1')).toBeInTheDocument();
+      expect(screen.getByText('Option 1')).toBeInTheDocument();
     });
 
     it('shows placeholder when no value is selected', () => {
@@ -218,8 +218,8 @@ describe('Select', () => {
         </DefaultThemeProvider>,
       );
 
-      expect(screen.getByRole('button', { name: 'Remove option1' })).toBeInTheDocument();
-      expect(screen.getByRole('button', { name: 'Remove option2' })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: 'Remove Option 1' })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: 'Remove Option 2' })).toBeInTheDocument();
     });
 
     it('handles option selection in multi mode', async () => {
@@ -381,7 +381,7 @@ describe('Select', () => {
         </DefaultThemeProvider>,
       );
 
-      expect(screen.getByText('option1')).toBeInTheDocument();
+      expect(screen.getByText('Option 1')).toBeInTheDocument();
 
       rerender(
         <DefaultThemeProvider>
@@ -395,7 +395,7 @@ describe('Select', () => {
         </DefaultThemeProvider>,
       );
 
-      expect(screen.getByText('option2')).toBeInTheDocument();
+      expect(screen.getByText('Option 2')).toBeInTheDocument();
     });
 
     it('throws error for partially controlled component', () => {
