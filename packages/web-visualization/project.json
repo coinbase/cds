@@ -13,7 +13,8 @@
         },
         "prod": {
           "commands": [
-            "rm -rf esm && babel ./src --out-dir esm --extensions .ts,.tsx,.js,.jsx --copy-files --no-copy-ignored"
+            "rm -rf esm && babel ./src --out-dir esm --extensions .ts,.tsx,.js,.jsx --copy-files --no-copy-ignored",
+            "node ../../add-cds7-exports.js @cbhq/cds-web-visualization"
           ],
           "parallel": false
         }
