@@ -4,11 +4,11 @@ import { type GestureResponderEvent, ScrollView } from 'react-native';
 import { Button } from '../../buttons';
 import { Checkbox } from '../../controls/Checkbox';
 import { Radio } from '../../controls/Radio';
-import { Box, Divider } from '../../layout';
+import { Divider } from '../../layout';
 import { VStack } from '../../layout/VStack';
 import { Tray } from '../../overlays/tray/Tray';
-import { Text } from '../../typography/Text';
 
+import { DefaultSelectEmptyDropdownContents } from './DefaultSelectEmptyDropdownContents';
 import { DefaultSelectOption } from './DefaultSelectOption';
 import type { SelectDropdownComponent } from './Select';
 
@@ -37,7 +37,7 @@ export const DefaultSelectDropdown: SelectDropdownComponent<'single' | 'multi'> 
         media,
         SelectOptionComponent = DefaultSelectOption,
         SelectAllOptionComponent,
-        SelectEmptyOptionsComponent,
+        SelectEmptyDropdownContentsComponent = DefaultSelectEmptyDropdownContents,
         accessibilityRoles,
         ...props
       },
@@ -148,16 +148,6 @@ export const DefaultSelectDropdown: SelectDropdownComponent<'single' | 'multi'> 
         ],
       );
 
-      const EmptyOptions = useMemo(
-        () =>
-          SelectEmptyOptionsComponent ?? (
-            <Box padding={2}>
-              <Text font="body">{emptyOptionsLabel}</Text>
-            </Box>
-          ),
-        [SelectEmptyOptionsComponent, emptyOptionsLabel],
-      );
-
       if (!open) return null;
 
       return (
@@ -174,50 +164,47 @@ export const DefaultSelectDropdown: SelectDropdownComponent<'single' | 'multi'> 
             <ScrollView showsVerticalScrollIndicator={true}>
               <VStack>
                 {!hideSelectAll && isMultiSelect && SelectAllOption}
-                {options.length > 0
-                  ? options.map(
-                      ({
-                        Component,
-                        media: optionMedia,
-                        accessory: optionAccessory,
-                        ...option
-                      }) => {
-                        const RenderedSelectOption = Component ?? SelectOptionComponent;
-                        const selected =
-                          option.value !== null && isMultiSelect
-                            ? (value as string[]).includes(option.value)
-                            : value === option.value;
-                        return (
-                          <RenderedSelectOption
-                            key={option.value}
-                            accessibilityRole={accessibilityRoles?.option}
-                            accessory={optionAccessory ?? accessory}
-                            blendStyles={styles?.optionBlendStyles}
-                            className={classNames?.option}
-                            compact={compact}
-                            disabled={option.disabled || disabled}
-                            media={
-                              optionMedia ??
-                              media ??
-                              (isMultiSelect ? (
-                                <Checkbox checked={selected} />
-                              ) : (
-                                <Radio checked={selected} />
-                              ))
-                            }
-                            onPress={(newVal) => {
-                              onChange(newVal);
-                              if (!isMultiSelect) setOpen(false);
-                            }}
-                            selected={selected}
-                            style={styles?.option}
-                            type={type}
-                            {...option}
-                          />
-                        );
-                      },
-                    )
-                  : EmptyOptions}
+                {options.length > 0 ? (
+                  options.map(
+                    ({ Component, media: optionMedia, accessory: optionAccessory, ...option }) => {
+                      const RenderedSelectOption = Component ?? SelectOptionComponent;
+                      const selected =
+                        option.value !== null && isMultiSelect
+                          ? (value as string[]).includes(option.value)
+                          : value === option.value;
+                      return (
+                        <RenderedSelectOption
+                          key={option.value}
+                          accessibilityRole={accessibilityRoles?.option}
+                          accessory={optionAccessory ?? accessory}
+                          blendStyles={styles?.optionBlendStyles}
+                          className={classNames?.option}
+                          compact={compact}
+                          disabled={option.disabled || disabled}
+                          media={
+                            optionMedia ??
+                            media ??
+                            (isMultiSelect ? (
+                              <Checkbox checked={selected} />
+                            ) : (
+                              <Radio checked={selected} />
+                            ))
+                          }
+                          onPress={(newVal) => {
+                            onChange(newVal);
+                            if (!isMultiSelect) setOpen(false);
+                          }}
+                          selected={selected}
+                          style={styles?.option}
+                          type={type}
+                          {...option}
+                        />
+                      );
+                    },
+                  )
+                ) : (
+                  <SelectEmptyDropdownContentsComponent label={emptyOptionsLabel} />
+                )}
               </VStack>
             </ScrollView>
           </VStack>

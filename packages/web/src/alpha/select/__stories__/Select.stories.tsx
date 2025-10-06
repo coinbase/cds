@@ -557,14 +557,15 @@ export const EmptyOptionsWithCustomLabel = () => {
 
 export const EmptyOptionsWithCustomComponent = () => {
   const [value, setValue] = useState<string | null>(null);
+  const CustomEmpty = () => (
+    <Text background="fgWarning" font="headline" padding={4}>
+      Custom component! No choices to choose from
+    </Text>
+  );
 
   return (
     <Select
-      SelectEmptyOptionsComponent={
-        <Text background="fgWarning" font="headline" padding={4}>
-          Custom component! No choices to choose from
-        </Text>
-      }
+      SelectEmptyDropdownContentsComponent={CustomEmpty}
       label="Single select - empty options with custom component"
       onChange={setValue}
       options={[]}

@@ -14,6 +14,7 @@ import type { InteractableBlendStyles } from '../../system/Interactable';
 
 import { DefaultSelectControl } from './DefaultSelectControl';
 import { DefaultSelectDropdown } from './DefaultSelectDropdown';
+import { DefaultSelectEmptyDropdownContents } from './DefaultSelectEmptyDropdownContents';
 import { DefaultSelectOption } from './DefaultSelectOption';
 
 export const defaultAccessibilityRoles: SelectProps['accessibilityRoles'] = {
@@ -59,6 +60,8 @@ export type SelectOptionProps<Type extends 'single' | 'multi' = 'single'> = Sele
 export type SelectOptionComponent<Type extends 'single' | 'multi' = 'single'> = React.FC<
   SelectOptionProps<Type>
 >;
+
+export type SelectEmptyDropdownContentComponent = React.FC<{ label: string }>;
 
 type SelectState<Type extends 'single' | 'multi' = 'single'> = {
   value: Type extends 'multi' ? string[] : string | null;
@@ -109,7 +112,7 @@ export type SelectDropdownProps<Type extends 'single' | 'multi' = 'single'> = Se
     | 'selectAllLabel'
     | 'emptyOptionsLabel'
     | 'clearAllLabel'
-    | 'SelectEmptyOptionsComponent'
+    | 'SelectEmptyDropdownContentsComponent'
     | 'disabled'
     | 'hideSelectAll'
     | 'accessibilityRoles'
@@ -212,7 +215,7 @@ export type SelectProps<Type extends 'single' | 'multi' = 'single'> = Pick<
     /** Custom component to render the "Select All" option */
     SelectAllOptionComponent?: SelectOptionComponent<Type>;
     /** Custom component to render when no options are available */
-    SelectEmptyOptionsComponent?: React.ReactNode;
+    SelectEmptyDropdownContentsComponent?: SelectEmptyDropdownContentComponent;
     /** Inline styles for the root element */
     style?: React.CSSProperties;
     /** CSS class name for the root element */
@@ -290,7 +293,7 @@ const SelectBase = memo(
         SelectAllOptionComponent,
         SelectDropdownComponent = DefaultSelectDropdown as SelectDropdownComponent<Type>,
         SelectControlComponent = DefaultSelectControl as SelectControlComponent<Type>,
-        SelectEmptyOptionsComponent,
+        SelectEmptyDropdownContentsComponent = DefaultSelectEmptyDropdownContents as SelectEmptyDropdownContentComponent,
         style,
         styles,
         className,
@@ -386,7 +389,7 @@ const SelectBase = memo(
             <SelectDropdownComponent
               ref={refs.setFloating}
               SelectAllOptionComponent={SelectAllOptionComponent}
-              SelectEmptyOptionsComponent={SelectEmptyOptionsComponent}
+              SelectEmptyDropdownContentsComponent={SelectEmptyDropdownContentsComponent}
               SelectOptionComponent={SelectOptionComponent}
               accessibilityLabel={accessibilityLabel}
               accessibilityRoles={accessibilityRoles}

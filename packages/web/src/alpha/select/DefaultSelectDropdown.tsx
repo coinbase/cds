@@ -7,8 +7,8 @@ import { Radio } from '../../controls/Radio';
 import { Box } from '../../layout/Box';
 import { Divider } from '../../layout/Divider';
 import { FocusTrap } from '../../overlays/FocusTrap';
-import { Text } from '../../typography/Text';
 
+import { DefaultSelectEmptyDropdownContents } from './DefaultSelectEmptyDropdownContents';
 import { DefaultSelectOption } from './DefaultSelectOption';
 import type { SelectDropdownComponent } from './Select';
 import { defaultAccessibilityRoles } from './Select';
@@ -42,7 +42,7 @@ export const DefaultSelectDropdown: SelectDropdownComponent<'single' | 'multi'> 
         detail,
         SelectOptionComponent = DefaultSelectOption,
         SelectAllOptionComponent,
-        SelectEmptyOptionsComponent,
+        SelectEmptyDropdownContentsComponent = DefaultSelectEmptyDropdownContents,
         accessibilityLabel = 'Select dropdown',
         accessibilityRoles = defaultAccessibilityRoles,
         ...props
@@ -174,16 +174,6 @@ export const DefaultSelectDropdown: SelectDropdownComponent<'single' | 'multi'> 
         ],
       );
 
-      const EmptyOptions = useMemo(
-        () =>
-          SelectEmptyOptionsComponent ?? (
-            <Box padding={2}>
-              <Text font="body">{emptyOptionsLabel}</Text>
-            </Box>
-          ),
-        [SelectEmptyOptionsComponent, emptyOptionsLabel],
-      );
-
       return (
         <AnimatePresence>
           {open && (
@@ -213,63 +203,65 @@ export const DefaultSelectDropdown: SelectDropdownComponent<'single' | 'multi'> 
                     overflow="auto"
                   >
                     {!hideSelectAll && isMultiSelect && SelectAllOption}
-                    {options.length > 0
-                      ? options.map(
-                          ({
-                            Component,
-                            media: optionMedia,
-                            accessory: optionAccessory,
-                            ...option
-                          }) => {
-                            const RenderedSelectOption = Component ?? SelectOptionComponent;
-                            const selected =
-                              option.value !== null && isMultiSelect
-                                ? (value as string[]).includes(option.value)
-                                : value === option.value;
-                            return (
-                              <RenderedSelectOption
-                                key={option.value}
-                                accessibilityRole={accessibilityRoles?.option}
-                                accessory={optionAccessory ?? accessory}
-                                blendStyles={styles?.optionBlendStyles}
-                                className={classNames?.option}
-                                compact={compact}
-                                detail={detail}
-                                disabled={option.disabled || disabled}
-                                media={
-                                  optionMedia ??
-                                  media ??
-                                  (isMultiSelect ? (
-                                    <Checkbox
-                                      aria-hidden
-                                      readOnly
-                                      checked={selected}
-                                      iconStyle={{ opacity: 1 }}
-                                      tabIndex={-1}
-                                    />
-                                  ) : (
-                                    <Radio
-                                      aria-hidden
-                                      readOnly
-                                      checked={selected}
-                                      iconStyle={{ opacity: 1 }}
-                                      tabIndex={-1}
-                                    />
-                                  ))
-                                }
-                                onClick={(newVal) => {
-                                  onChange(newVal);
-                                  if (!isMultiSelect) setOpen(false);
-                                }}
-                                selected={selected}
-                                style={styles?.option}
-                                type={type}
-                                {...option}
-                              />
-                            );
-                          },
-                        )
-                      : EmptyOptions}
+                    {options.length > 0 ? (
+                      options.map(
+                        ({
+                          Component,
+                          media: optionMedia,
+                          accessory: optionAccessory,
+                          ...option
+                        }) => {
+                          const RenderedSelectOption = Component ?? SelectOptionComponent;
+                          const selected =
+                            option.value !== null && isMultiSelect
+                              ? (value as string[]).includes(option.value)
+                              : value === option.value;
+                          return (
+                            <RenderedSelectOption
+                              key={option.value}
+                              accessibilityRole={accessibilityRoles?.option}
+                              accessory={optionAccessory ?? accessory}
+                              blendStyles={styles?.optionBlendStyles}
+                              className={classNames?.option}
+                              compact={compact}
+                              detail={detail}
+                              disabled={option.disabled || disabled}
+                              media={
+                                optionMedia ??
+                                media ??
+                                (isMultiSelect ? (
+                                  <Checkbox
+                                    aria-hidden
+                                    readOnly
+                                    checked={selected}
+                                    iconStyle={{ opacity: 1 }}
+                                    tabIndex={-1}
+                                  />
+                                ) : (
+                                  <Radio
+                                    aria-hidden
+                                    readOnly
+                                    checked={selected}
+                                    iconStyle={{ opacity: 1 }}
+                                    tabIndex={-1}
+                                  />
+                                ))
+                              }
+                              onClick={(newVal) => {
+                                onChange(newVal);
+                                if (!isMultiSelect) setOpen(false);
+                              }}
+                              selected={selected}
+                              style={styles?.option}
+                              type={type}
+                              {...option}
+                            />
+                          );
+                        },
+                      )
+                    ) : (
+                      <SelectEmptyDropdownContentsComponent label={emptyOptionsLabel} />
+                    )}
                   </Box>
                 </motion.div>
               </FocusTrap>

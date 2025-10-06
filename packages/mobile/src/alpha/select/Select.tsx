@@ -8,6 +8,7 @@ import type { InteractableBlendStyles } from '../../system/Interactable';
 
 import { DefaultSelectControl } from './DefaultSelectControl';
 import { DefaultSelectDropdown } from './DefaultSelectDropdown';
+import { DefaultSelectEmptyDropdownContents } from './DefaultSelectEmptyDropdownContents';
 import { DefaultSelectOption } from './DefaultSelectOption';
 
 /**
@@ -54,6 +55,8 @@ export type SelectOptionComponent<Type extends 'single' | 'multi' = 'single'> = 
   SelectOptionProps<Type>
 >;
 
+export type SelectEmptyDropdownContentComponent = React.FC<{ label: string }>;
+
 type SelectState<Type extends 'single' | 'multi' = 'single'> = {
   value: Type extends 'multi' ? string[] : string | null;
   onChange: (value: Type extends 'multi' ? string | string[] : string | null) => void;
@@ -99,7 +102,7 @@ export type SelectDropdownProps<Type extends 'single' | 'multi' = 'single'> = Se
     | 'selectAllLabel'
     | 'emptyOptionsLabel'
     | 'clearAllLabel'
-    | 'SelectEmptyOptionsComponent'
+    | 'SelectEmptyDropdownContentsComponent'
     | 'label'
     | 'disabled'
     | 'compact'
@@ -198,7 +201,7 @@ export type SelectProps<Type extends 'single' | 'multi' = 'single'> = Pick<
     /** Custom component to render the "Select All" option */
     SelectAllOptionComponent?: SelectOptionComponent<Type>;
     /** Custom component to render when no options are available */
-    SelectEmptyOptionsComponent?: React.ReactNode;
+    SelectEmptyDropdownContentsComponent?: SelectEmptyDropdownContentComponent;
     /** Custom styles for different parts of the select */
     styles?: {
       /** Styles for the control element */
@@ -265,7 +268,7 @@ const SelectBase = memo(
         SelectAllOptionComponent,
         SelectDropdownComponent = DefaultSelectDropdown as SelectDropdownComponent<Type>,
         SelectControlComponent = DefaultSelectControl as SelectControlComponent<Type>,
-        SelectEmptyOptionsComponent,
+        SelectEmptyDropdownContentsComponent = DefaultSelectEmptyDropdownContents as SelectEmptyDropdownContentComponent,
         styles,
         classNames,
         accessibilityLabel,
@@ -336,7 +339,7 @@ const SelectBase = memo(
           <SelectDropdownComponent
             ref={() => {}}
             SelectAllOptionComponent={SelectAllOptionComponent}
-            SelectEmptyOptionsComponent={SelectEmptyOptionsComponent}
+            SelectEmptyDropdownContentsComponent={SelectEmptyDropdownContentsComponent}
             SelectOptionComponent={SelectOptionComponent}
             accessibilityRoles={accessibilityRoles}
             accessory={accessory}

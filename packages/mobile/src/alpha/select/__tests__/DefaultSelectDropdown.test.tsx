@@ -301,7 +301,7 @@ describe('DefaultSelectDropdown', () => {
           <DefaultSelectDropdown
             {...defaultProps}
             ref={React.createRef<any>()}
-            SelectEmptyOptionsComponent={<CustomEmpty />}
+            SelectEmptyDropdownContentsComponent={CustomEmpty}
             options={[]}
           />
         </DefaultThemeProvider>,

@@ -340,7 +340,7 @@ describe('Select', () => {
           <Select
             {...defaultProps}
             defaultOpen
-            SelectEmptyOptionsComponent={<CustomEmpty />}
+            SelectEmptyDropdownContentsComponent={CustomEmpty}
             options={[]}
           />
         </DefaultThemeProvider>,
