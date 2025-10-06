@@ -4,7 +4,7 @@ ReferenceLine can be used to add important details to a chart, such as a referen
 
 ```jsx live
 <LineChart
-  height={250}
+  height={{ base: 150, tablet: 200, desktop: 250 }}
   series={[
     {
       id: 'prices',
@@ -16,12 +16,12 @@ ReferenceLine can be used to add important details to a chart, such as a referen
   showArea
 >
   <ReferenceLine
-    dataX={4}
+    dataX={5}
     label="Vertical Reference Line"
     labelProps={{ horizontalAlignment: 'left', dx: 8 }}
   />
   <ReferenceLine
-    dataY={70}
+    dataY={50}
     label="Horizontal Reference Line"
     labelProps={{ verticalAlignment: 'bottom', dy: -8, horizontalAlignment: 'right' }}
   />
@@ -36,7 +36,7 @@ ReferenceLine relies on `dataX` or `dataY` to position the line. Passing in `dat
 <LineChart
   showArea
   curve="natural"
-  height={400}
+  height={{ base: 150, tablet: 200, desktop: 250 }}
   series={[
     {
       id: 'growth',
@@ -48,12 +48,6 @@ ReferenceLine relies on `dataX` or `dataY` to position the line. Passing in `dat
   ]}
 >
   <ReferenceLine
-    dataY={100}
-    label="100"
-    labelPosition="left"
-    labelProps={{ verticalAlignment: 'bottom', dy: -4 }}
-  />
-  <ReferenceLine
     dataY={10000}
     label="10,000"
     labelPosition="left"
@@ -62,12 +56,6 @@ ReferenceLine relies on `dataX` or `dataY` to position the line. Passing in `dat
   <ReferenceLine
     dataY={100000}
     label="100,000"
-    labelPosition="left"
-    labelProps={{ verticalAlignment: 'bottom', dy: -4 }}
-  />
-  <ReferenceLine
-    dataY={1000000}
-    label="1,000,000"
     labelPosition="left"
     labelProps={{ verticalAlignment: 'bottom', dy: -4 }}
   />
@@ -83,7 +71,7 @@ You can adjust the style of the label using the `labelProps` prop.
 ```jsx live
 <LineChart
   curve="monotone"
-  height={250}
+  height={{ base: 150, tablet: 200, desktop: 250 }}
   inset={{ right: 4 }}
   series={[
     {
@@ -190,6 +178,7 @@ function DraggablePriceTarget() {
       chartRef: RefObject<SVGSVGElement>;
     }) => {
       const theme = useTheme();
+      const { isPhone } = useBreakpoints();
 
       const formatPrice = useCallback((value: number) => {
         return `$${value.toLocaleString('en-US', {
@@ -214,14 +203,10 @@ function DraggablePriceTarget() {
           return;
         }
 
-        const handleMouseMove = (event: MouseEvent) => {
-          if (!isDragging) {
-            return;
-          }
-
+        const updatePosition = (clientX: number, clientY: number) => {
           const point = element.createSVGPoint();
-          point.x = event.clientX;
-          point.y = event.clientY;
+          point.x = clientX;
+          point.y = clientY;
 
           const svgPoint = point.matrixTransform(element.getScreenCTM()?.inverse());
 
@@ -245,7 +230,26 @@ function DraggablePriceTarget() {
           setAmount(newAmount);
         };
 
+        const handleMouseMove = (event: MouseEvent) => {
+          if (!isDragging) {
+            return;
+          }
+          updatePosition(event.clientX, event.clientY);
+        };
+
+        const handleTouchMove = (event: TouchEvent) => {
+          if (!isDragging || event.touches.length === 0) {
+            return;
+          }
+          const touch = event.touches[0];
+          updatePosition(touch.clientX, touch.clientY);
+        };
+
         const handleMouseUp = () => {
+          setIsDragging(false);
+        };
+
+        const handleTouchEnd = () => {
           setIsDragging(false);
         };
 
@@ -256,11 +260,17 @@ function DraggablePriceTarget() {
         element.addEventListener('mousemove', handleMouseMove);
         element.addEventListener('mouseup', handleMouseUp);
         element.addEventListener('mouseleave', handleMouseLeave);
+        element.addEventListener('touchmove', handleTouchMove);
+        element.addEventListener('touchend', handleTouchEnd);
+        element.addEventListener('touchcancel', handleTouchEnd);
 
         return () => {
           element.removeEventListener('mousemove', handleMouseMove);
           element.removeEventListener('mouseup', handleMouseUp);
           element.removeEventListener('mouseleave', handleMouseLeave);
+          element.removeEventListener('touchmove', handleTouchMove);
+          element.removeEventListener('touchend', handleTouchEnd);
+          element.removeEventListener('touchcancel', handleTouchEnd);
         };
       }, [isDragging, yScale, chartRef, baselineAmount, drawingArea.y, drawingArea.height]);
 
@@ -274,10 +284,17 @@ function DraggablePriceTarget() {
       const percentageChange = Math.round((difference / baselineAmount) * 100);
       const isPositive = difference > 0;
 
-      const percentageLabel = `${Math.abs(percentageChange)}% (${formatPrice(Math.abs(difference))})`;
+      const percentageLabel = isPhone
+        ? `${Math.abs(percentageChange)}%`
+        : `${Math.abs(percentageChange)}% (${formatPrice(Math.abs(difference))})`;
       const dollarLabel = formatPrice(amount);
 
       const handleMouseDown = (e: React.MouseEvent) => {
+        e.preventDefault();
+        setIsDragging(true);
+      };
+
+      const handleTouchStart = (e: React.TouchEvent) => {
         e.preventDefault();
         setIsDragging(true);
       };
@@ -308,6 +325,7 @@ function DraggablePriceTarget() {
           />
           <g
             onMouseDown={handleMouseDown}
+            onTouchStart={handleTouchStart}
             style={{
               cursor: isDragging ? 'grabbing' : 'grab',
               opacity: textDimensions.width === 0 ? 0 : 1,
@@ -349,6 +367,7 @@ function DraggablePriceTarget() {
 
   const PriceTargetChart = () => {
     const priceData = useMemo(() => sparklineInteractiveData.year.map((d) => d.value), []);
+    const { isPhone } = useBreakpoints();
 
     const chartRef = useRef<SVGSVGElement>(null);
 
@@ -366,7 +385,7 @@ function DraggablePriceTarget() {
         animate={false}
         curve="monotone"
         height={250}
-        inset={{ top: 16, bottom: 16, left: 8, right: 80 }}
+        inset={isPhone ? { top: 16, bottom: 16, left: 0, right: 0 } : { top: 16, bottom: 16, left: 8, right: 80 }}
         series={[
           {
             id: 'prices',
@@ -376,12 +395,14 @@ function DraggablePriceTarget() {
         ]}
         yAxis={{ domain: ({ min, max }) => ({ min: min * 0.7, max: max * 1.3 }) }}
       >
-        <ReferenceLine
-          LineComponent={SolidLine}
-          dataY={priceData[priceData.length - 1]}
-          label={formatPrice(priceData[priceData.length - 1])}
-          labelProps={{ dx: 8, horizontalAlignment: 'left' }}
-        />
+        {!isPhone && (
+          <ReferenceLine
+            LineComponent={SolidLine}
+            dataY={priceData[priceData.length - 1]}
+            label={formatPrice(priceData[priceData.length - 1])}
+            labelProps={{ dx: 8, horizontalAlignment: 'left' }}
+          />
+        )}
         <DraggableReferenceLine
           baselineAmount={priceData[priceData.length - 1]}
           chartRef={chartRef}

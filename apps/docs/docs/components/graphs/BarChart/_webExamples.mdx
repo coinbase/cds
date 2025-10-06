@@ -7,7 +7,8 @@ To start, pass in a series of data to the chart.
 
 ```jsx live
 <BarChart
-  height={250}
+  height={{ base: 150, tablet: 200, desktop: 250 }}
+  inset={{ top: 8, bottom: 8, left: 0, right: 0 }}
   series={[
     {
       id: 'prices',
@@ -41,7 +42,8 @@ function MonthlyGainsByAsset() {
 
   return (
     <BarChart
-      height={400}
+      height={{ base: 150, tablet: 200, desktop: 250 }}
+      inset={{ top: 8, bottom: 8, left: 0, right: 0 }}
       series={[
         {
           id: 'btc',
@@ -65,7 +67,7 @@ function MonthlyGainsByAsset() {
         showGrid: true,
         GridLineComponent: ThinSolidLine,
         tickLabelFormatter: tickFormatter,
-        width: 62,
+        width: 70,
       }}
     />
   );
@@ -91,7 +93,8 @@ function MonthlyGainsByAsset() {
 
   return (
     <BarChart
-      height={400}
+      height={{ base: 150, tablet: 200, desktop: 250 }}
+      inset={{ top: 8, bottom: 8, left: 0, right: 0 }}
       series={[
         {
           id: 'xrp',
@@ -132,7 +135,7 @@ function MonthlyGainsByAsset() {
         showGrid: true,
         GridLineComponent: ThinSolidLine,
         tickLabelFormatter: tickFormatter,
-        width: 62,
+        width: 70,
       }}
     />
   );
@@ -156,7 +159,8 @@ function MonthlyGainsMultipleStacks() {
 
   return (
     <BarChart
-      height={400}
+      height={{ base: 150, tablet: 200, desktop: 250 }}
+      inset={{ top: 8, bottom: 8, left: 0, right: 0 }}
       series={[
         {
           id: 'xrp',
@@ -201,7 +205,7 @@ function MonthlyGainsMultipleStacks() {
         showGrid: true,
         GridLineComponent: ThinSolidLine,
         tickLabelFormatter: tickFormatter,
-        width: 62,
+        width: 70,
       }}
     />
   );
@@ -225,7 +229,8 @@ function MonthlyGainsByAsset() {
 
   return (
     <BarChart
-      height={400}
+      height={{ base: 150, tablet: 200, desktop: 250 }}
+      inset={{ top: 8, bottom: 8, left: 0, right: 0 }}
       series={[
         {
           id: 'xrp',
@@ -267,7 +272,7 @@ function MonthlyGainsByAsset() {
         showGrid: true,
         GridLineComponent: ThinSolidLine,
         tickLabelFormatter: tickFormatter,
-        width: 62,
+        width: 70,
         domainLimit: 'strict'
       }}
     />
@@ -371,8 +376,8 @@ function PositiveAndNegativeCashFlow() {
 
   return (
     <BarChart
-      height={420}
-      padding={4}
+      height={{ base: 150, tablet: 200, desktop: 250 }}
+      inset={{ top: 8, bottom: 8, left: 0, right: 0 }}
       series={series}
       xAxis={{ data: categories }}
       stacked
@@ -396,7 +401,8 @@ You can pass in `null` or `0` values to not render a bar for that data point.
 <BarChart
   showXAxis
   showYAxis
-  height={400}
+  height={{ base: 150, tablet: 200, desktop: 250 }}
+  inset={{ top: 8, bottom: 8, left: 0, right: 0 }}
   series={[
     {
       id: 'weekly-data',
@@ -466,7 +472,7 @@ function MonthlyRewards() {
       BarStackComponent={CustomBarStackComponent}
       borderRadius={1000}
       height={300}
-      padding={0}
+      inset={0}
       series={series}
       showYAxis={false}
       stackMinSize={3}
@@ -493,7 +499,8 @@ There are two ways to control the spacing between bars. You can set the `barPadd
 
 ```jsx live
 <BarChart
-  height={400}
+  height={{ base: 150, tablet: 200, desktop: 250 }}
+  inset={{ top: 8, bottom: 8, left: 0, right: 0 }}
   series={[
     {
       id: 'pageViews',
@@ -529,7 +536,8 @@ You can set the `stackMinSize` prop to control the minimum size for entire stack
 
 ```jsx live
 <BarChart
-  height={400}
+  height={{ base: 150, tablet: 200, desktop: 250 }}
+  inset={{ top: 8, bottom: 8, left: 0, right: 0 }}
   series={[
     {
       id: 'pageViews',
@@ -559,7 +567,8 @@ You can also set the `barMinSize` prop to control the minimum size for individua
 <BarChart
   showXAxis
   showYAxis
-  height={400}
+  height={{ base: 150, tablet: 200, desktop: 250 }}
+  inset={{ top: 8, bottom: 8, left: 0, right: 0 }}
   series={[
     {
       id: 'weekly-data',
@@ -591,7 +600,8 @@ You can render bars from separate y axes in one `BarPlot`, however they aren't a
 ```jsx live
 <VStack gap={2}>
   <CartesianChart
-    height={400}
+    height={{ base: 150, tablet: 200, desktop: 250 }}
+    inset={{ top: 8, bottom: 8, left: 0, right: 0 }}
     series={[
       {
         id: 'revenue',
@@ -781,7 +791,8 @@ function Candlesticks() {
         BarStackComponent={({ children }) => <g>{children}</g>}
         animate={false}
         borderRadius={0}
-        height={400}
+        height={{ base: 150, tablet: 200, desktop: 250 }}
+        inset={{ top: 8, bottom: 8, left: 0, right: 0 }}
         onScrubberPositionChange={updateInfoText}
         series={[
           {
@@ -795,7 +806,7 @@ function Candlesticks() {
         yAxis={{
           domain: { min },
           tickLabelFormatter: formatPrice,
-          width: 80,
+          width: 92,
           showGrid: true,
           GridLineComponent: ThinSolidLine,
         }}

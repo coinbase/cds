@@ -645,12 +645,27 @@ const BTCActiveIndicator = memo(({ style, ...props }: TabsActiveIndicatorProps) 
     [tabs, setTimePeriod],
   );
 
+  const priceFormatter = useMemo(
+    () =>
+      new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+      }),
+    [],
+  );
+
+  const scrubberPriceFormatter = useMemo(
+    () =>
+      new Intl.NumberFormat('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      }),
+    [],
+  );
+
   const formatPrice = useCallback((price: number) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-    }).format(price);
-  }, []);
+    return priceFormatter.format(price);
+  }, [priceFormatter]);
 
   const formatDate = useCallback((date: Date) => {
     const dayOfWeek = date.toLocaleDateString('en-US', { weekday: 'short' });
@@ -669,31 +684,27 @@ const BTCActiveIndicator = memo(({ style, ...props }: TabsActiveIndicatorProps) 
     return `${dayOfWeek}, ${monthDay}, ${time}`;
   }, []);
 
-  const scrubberLabel: ChartTextChildren = useMemo(() => {
-    if (scrubIndex === undefined) return null;
-    const price = new Intl.NumberFormat('en-US', {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    }).format(sparklineTimePeriodDataValues[scrubIndex]);
-    const date = formatDate(sparklineTimePeriodDataTimestamps[scrubIndex]);
-    return (
-      <>
-        <tspan style={{ fontWeight: 'bold' }}>{price} USD</tspan> {date}
-      </>
-    );
-  }, [sparklineTimePeriodDataValues, scrubIndex]);
+  const scrubberLabel = useCallback(
+    (index: number) => {
+      const price = scrubberPriceFormatter.format(sparklineTimePeriodDataValues[index]);
+      const date = formatDate(sparklineTimePeriodDataTimestamps[index]);
+      return (
+        <>
+          <tspan style={{ fontWeight: 'bold' }}>{price} USD</tspan> {date}
+        </>
+      );
+    },
+    [scrubberPriceFormatter, sparklineTimePeriodDataValues, sparklineTimePeriodDataTimestamps, formatDate],
+  );
 
-  const accessibilityLabel: string | undefined = useMemo(() => {
-    if (scrubIndex === undefined) return;
-    const price = new Intl.NumberFormat('en-US', {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    }).format(sparklineTimePeriodDataValues[scrubIndex]);
-    const date = formatDate(sparklineTimePeriodDataTimestamps[scrubIndex]);
-    return (
-      `${price} USD ${date}`
-    );
-  }, [sparklineTimePeriodDataValues, scrubIndex]);
+  const accessibilityLabel = useCallback(
+    (index: number) => {
+      const price = scrubberPriceFormatter.format(sparklineTimePeriodDataValues[index]);
+      const date = formatDate(sparklineTimePeriodDataTimestamps[index]);
+      return `${price} USD ${date}`;
+    },
+    [scrubberPriceFormatter, sparklineTimePeriodDataValues, sparklineTimePeriodDataTimestamps, formatDate],
+  );
 
   return (
     <VStack gap={2}>
@@ -745,163 +756,178 @@ const BTCActiveIndicator = memo(({ style, ...props }: TabsActiveIndicatorProps) 
 
 ```jsx live
 function ForecastAssetPrice() {
-  const [scrubIndex, setScrubIndex] = useState<number | undefined>(undefined);
-  const getDataFromSparkline = (startDate: Date) => {
-    const allData = sparklineInteractiveData.all;
-    if (!allData || allData.length === 0) return [];
-
-    const timelineData = allData.filter((point) => point.date >= startDate);
-
-    return timelineData.map((point) => ({
-      date: point.date,
-      value: point.value,
-    }));
-  };
-
-  const historicalData = useMemo(() => getDataFromSparkline(new Date('2019-01-01')), []);
-
-  const annualGrowthRate = 10;
-
-  const generateForecastData = useCallback(
-    (lastDate: Date, lastPrice: number, growthRate: number) => {
-      const dailyGrowthRate = Math.pow(1 + growthRate / 100, 1 / 365) - 1;
-      const forecastData = [];
-      const fiveYearsFromNow = new Date(lastDate);
-      fiveYearsFromNow.setFullYear(fiveYearsFromNow.getFullYear() + 5);
-
-      // Generate daily forecast points for 5 years
-      const currentDate = new Date(lastDate);
-      let currentPrice = lastPrice;
-
-      while (currentDate <= fiveYearsFromNow) {
-        currentPrice = currentPrice * (1 + dailyGrowthRate * 10);
-        forecastData.push({
-          date: new Date(currentDate),
-          value: Math.round(currentPrice),
-        });
-        currentDate.setDate(currentDate.getDate() + 10);
-      }
-
-      return forecastData;
-    },
-    [],
-  );
-
-  const formatPrice = useCallback((price: number) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-    }).format(price);
-  }, []);
-
-  const formatDate = useCallback((date: Date) => {
-    const dayOfWeek = date.toLocaleDateString('en-US', { weekday: 'short' });
-
-    const monthDay = date.toLocaleDateString('en-US', {
-      month: 'short',
-      day: 'numeric',
-    });
-
-    const time = date.toLocaleTimeString('en-US', {
-      hour: 'numeric',
-      minute: '2-digit',
-      hour12: true,
-    });
-
-    return `${dayOfWeek}, ${monthDay}, ${time}`;
-  }, []);
-
-  const forecastData = useMemo(() => {
-    if (historicalData.length === 0) return [];
-    const lastPoint = historicalData[historicalData.length - 1];
-    return generateForecastData(lastPoint.date, lastPoint.value, annualGrowthRate);
-  }, [generateForecastData, historicalData, annualGrowthRate]);
-
-  // Combine all data points with dates converted to timestamps for x-axis
-  const allDataPoints = useMemo(
-    () => [...historicalData, ...forecastData],
-    [historicalData, forecastData],
-  );
-
-  const AreaComponent = memo(
+  const ForecastAreaComponent = memo(
     (props: AreaComponentProps) => (
       <DottedArea {...props} peakOpacity={0.4} baselineOpacity={0.4} />
     ),
   );
 
-  const scrubberLabel: ChartTextChildren = useMemo(() => {
-    if (scrubIndex === undefined) return null;
-    const price = new Intl.NumberFormat('en-US', {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    }).format(allDataPoints[scrubIndex].value);
-    const date = formatDate(allDataPoints[scrubIndex].date);
-    return (
-      <>
-        <tspan style={{ fontWeight: 'bold' }}>{price} USD</tspan> {date}
-      </>
-    );
-  }, [allDataPoints, scrubIndex]);
+  const ForecastChart = memo(() => {
+    const [scrubIndex, setScrubIndex] = useState<number | undefined>(undefined);
 
+    const getDataFromSparkline = useCallback((startDate: Date) => {
+      const allData = sparklineInteractiveData.all;
+      if (!allData || allData.length === 0) return [];
 
-  const accessibilityLabel: string | undefined = useMemo(() => {
-    if (scrubIndex === undefined) return;
-    const price = new Intl.NumberFormat('en-US', {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    }).format(allDataPoints[scrubIndex].value);
-    const date = formatDate(allDataPoints[scrubIndex].date);
-    return (
-      `${price} USD ${date}`
-    );
-  }, [allDataPoints, scrubIndex]);
+      const timelineData = allData.filter((point) => point.date >= startDate);
 
-  return (
-    <LineChart
-      overflow="visible"
-      animate={false}
-      enableScrubbing
-      onScrubberPositionChange={setScrubIndex}
-      showArea
-      showXAxis
-      AreaComponent={AreaComponent}
-      height={350}
-      padding={{
-        top: 4,
-        left: 2,
-        right: 2,
-        bottom: 0,
-      }}
-      series={[
-        {
-          id: 'historical',
-          data: historicalData.map((d) => d.value),
-          color: assets.btc.color,
-        },
-        {
-          id: 'forecast',
-          data: [...historicalData.map((d) => null), ...forecastData.map((d) => d.value)],
-          color: assets.btc.color,
-          type: 'dotted',
-        },
-      ]}
-      xAxis={{
-        data: allDataPoints.map((d) => d.date.getTime()),
-        tickLabelFormatter: (value: number) => {
-          return new Date(value).toLocaleDateString('en-US', {
-            month: 'numeric',
-            year: 'numeric',
+      return timelineData.map((point) => ({
+        date: point.date,
+        value: point.value,
+      }));
+    }, []);
+
+    const historicalData = useMemo(() => getDataFromSparkline(new Date('2019-01-01')), [getDataFromSparkline]);
+
+    const annualGrowthRate = 10;
+
+    const generateForecastData = useCallback(
+      (lastDate: Date, lastPrice: number, growthRate: number) => {
+        const dailyGrowthRate = Math.pow(1 + growthRate / 100, 1 / 365) - 1;
+        const forecastData = [];
+        const fiveYearsFromNow = new Date(lastDate);
+        fiveYearsFromNow.setFullYear(fiveYearsFromNow.getFullYear() + 5);
+
+        // Generate daily forecast points for 5 years
+        const currentDate = new Date(lastDate);
+        let currentPrice = lastPrice;
+
+        while (currentDate <= fiveYearsFromNow) {
+          currentPrice = currentPrice * (1 + dailyGrowthRate * 10);
+          forecastData.push({
+            date: new Date(currentDate),
+            value: Math.round(currentPrice),
           });
-        },
-        tickInterval: 2,
-      }}
-      accessibilityLabel={scrubberLabel}
-      AreaComponent={(props) => <DottedArea {...props} peakOpacity={0.4} baselineOpacity={0.4} />}
-      style={{ outlineColor: assets.btc.color }}
-    >
-      <Scrubber label={scrubberLabel} labelProps={{ elevation: 1 }} />
-    </LineChart>
-  );
+          currentDate.setDate(currentDate.getDate() + 10);
+        }
+
+        return forecastData;
+      },
+      [],
+    );
+
+    const priceFormatter = useMemo(
+      () =>
+        new Intl.NumberFormat('en-US', {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        }),
+      [],
+    );
+
+    const formatDate = useCallback((date: Date) => {
+      const dayOfWeek = date.toLocaleDateString('en-US', { weekday: 'short' });
+
+      const monthDay = date.toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
+      });
+
+      const time = date.toLocaleTimeString('en-US', {
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: true,
+      });
+
+      return `${dayOfWeek}, ${monthDay}, ${time}`;
+    }, []);
+
+    const forecastData = useMemo(() => {
+      if (historicalData.length === 0) return [];
+      const lastPoint = historicalData[historicalData.length - 1];
+      return generateForecastData(lastPoint.date, lastPoint.value, annualGrowthRate);
+    }, [generateForecastData, historicalData, annualGrowthRate]);
+
+    // Combine all data points with dates converted to timestamps for x-axis
+    const allDataPoints = useMemo(
+      () => [...historicalData, ...forecastData],
+      [historicalData, forecastData],
+    );
+
+    const historicalDataValues = useMemo(
+      () => historicalData.map((d) => d.value),
+      [historicalData],
+    );
+
+    const forecastDataValues = useMemo(
+      () => [...historicalData.map((d) => null), ...forecastData.map((d) => d.value)],
+      [historicalData, forecastData],
+    );
+
+    const xAxisData = useMemo(
+      () => allDataPoints.map((d) => d.date.getTime()),
+      [allDataPoints],
+    );
+
+    const scrubberLabel = useCallback(
+      (index: number) => {
+        const price = priceFormatter.format(allDataPoints[index].value);
+        const date = formatDate(allDataPoints[index].date);
+        return (
+          <>
+            <tspan style={{ fontWeight: 'bold' }}>{price} USD</tspan> {date}
+          </>
+        );
+      },
+      [priceFormatter, allDataPoints, formatDate],
+    );
+
+    const accessibilityLabel = useCallback(
+      (index: number) => {
+        const price = priceFormatter.format(allDataPoints[index].value);
+        const date = formatDate(allDataPoints[index].date);
+        return `${price} USD ${date}`;
+      },
+      [priceFormatter, allDataPoints, formatDate],
+    );
+
+    return (
+      <LineChart
+        overflow="visible"
+        animate={false}
+        enableScrubbing
+        showArea
+        showXAxis
+        AreaComponent={ForecastAreaComponent}
+        height={350}
+        padding={{
+          top: 4,
+          left: 2,
+          right: 2,
+          bottom: 0,
+        }}
+        series={[
+          {
+            id: 'historical',
+            data: historicalDataValues,
+            color: assets.btc.color,
+          },
+          {
+            id: 'forecast',
+            data: forecastDataValues,
+            color: assets.btc.color,
+            type: 'dotted',
+          },
+        ]}
+        xAxis={{
+          data: xAxisData,
+          tickLabelFormatter: (value: number) => {
+            return new Date(value).toLocaleDateString('en-US', {
+              month: 'numeric',
+              year: 'numeric',
+            });
+          },
+          tickInterval: 2,
+        }}
+        accessibilityLabel={accessibilityLabel}
+        style={{ outlineColor: assets.btc.color }}
+      >
+        <Scrubber label={scrubberLabel} labelProps={{ elevation: 1 }} />
+      </LineChart>
+    );
+  });
+
+  return <ForecastChart />;
 };
 ```
 
@@ -1108,7 +1134,7 @@ function BitcoinChartWithScrubberBeacon() {
         }}
       >
         <LineChart
-          padding={{ left: 0, right: 3, bottom: 0, top: 0 }}
+          inset={{ left: 0, right: 18, bottom: 0, top: 0 }}
           series={[
             {
               id: 'btcPrice',

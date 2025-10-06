@@ -8,7 +8,7 @@ CartesianChart is a customizable, SVG based component that can be used to displa
 <VStack gap={2}>
   <AreaChart
     enableScrubbing
-    height={250}
+    height={{ base: 150, tablet: 200, desktop: 250 }}
     series={[
       {
         id: 'prices',
@@ -25,7 +25,7 @@ CartesianChart is a customizable, SVG based component that can be used to displa
   </AreaChart>
   <BarChart
     enableScrubbing
-    height={250}
+    height={{ base: 150, tablet: 200, desktop: 250 }}
     series={[
       {
         id: 'prices',
@@ -41,7 +41,7 @@ CartesianChart is a customizable, SVG based component that can be used to displa
   </BarChart>
   <LineChart
     enableScrubbing
-    height={250}
+    height={{ base: 150, tablet: 200, desktop: 250 }}
     series={[
       {
         id: 'prices',
@@ -92,7 +92,7 @@ function ForecastedPrice() {
   return (
     <CartesianChart
       enableScrubbing
-      height={250}
+      height={{ base: 150, tablet: 200, desktop: 250 }}
       series={[
         {
           id: 'prices',
@@ -138,7 +138,7 @@ Each series can have a different `yAxisId`, allowing you to compare data from di
 
 ```jsx live
 <CartesianChart
-  height={250}
+  height={{ base: 150, tablet: 200, desktop: 250 }}
   series={[
     {
       id: 'revenue',
@@ -195,7 +195,7 @@ You can provide a `stackId` to stack series together.
 ```jsx live
 <AreaChart
   enableScrubbing
-  height={250}
+  height={{ base: 150, tablet: 200, desktop: 250 }}
   series={[
     {
       id: 'pricesA',
@@ -226,7 +226,7 @@ You can configure your x and y axes with the `xAxis` and `yAxis` props. `xAxis` 
 
 ```jsx live
 <CartesianChart
-  height={250}
+  height={{ base: 150, tablet: 200, desktop: 250 }}
   series={[
     {
       id: 'prices',
@@ -347,7 +347,7 @@ function Scrubbing() {
       <LineChart
         enableScrubbing
         onScrubberPositionChange={onScrubberPositionChange}
-        height={250}
+        height={{ base: 150, tablet: 200, desktop: 250 }}
         series={[
           {
             id: 'prices',
@@ -359,7 +359,9 @@ function Scrubbing() {
         showArea
         yAxis={{
           showGrid: true,
+          width: 32
         }}
+        inset={{ right: 0 }}
       >
         <Scrubber />
       </LineChart>
@@ -465,7 +467,7 @@ function PriceWithVolume() {
           },
         ]}
         style={{ outlineColor: assets.btc.color }}
-        xAxis={{ scaleType: 'band' }}
+        xAxis={{ scaleType: 'band', range: ({ min, max }) => ({ min, max: max - 16 }) }}
         yAxis={[
           {
             id: 'price',
@@ -478,8 +480,9 @@ function PriceWithVolume() {
         ]}
         accessibilityLabel={accessibilityLabel}
         aria-labelledby={headerId}
+        inset={{ top: 8, left: 8, right: 0, bottom: 0 }}
       >
-        <YAxis axisId="price" showGrid tickLabelFormatter={formatPriceInThousands} width={80} GridLineComponent={ThinSolidLine} />
+        <YAxis axisId="price" showGrid tickLabelFormatter={formatPriceInThousands} width={48} GridLineComponent={ThinSolidLine} />
         <BarPlot seriesIds={['volume']} />
         <Line seriesId="prices" curve="monotone" showArea />
         <Scrubber seriesIds={['prices']} />
@@ -639,8 +642,8 @@ function TradingTrends() {
     return `$${value}M`;
   }, []);
 
-  const ThinSolidLine = memo((props: SolidLineProps) => <SolidLine {...props} strokeWidth={1} />);
-  const ThickSolidLine = memo((props: SolidLineProps) => <SolidLine {...props} strokeWidth={4} />);
+  const ThinSolidLine = memo((props: SolidLineProps) => <SolidLine {...props} strokeWidth={1} strokeLinecap="butt" />);
+  const ThickSolidLine = memo((props: SolidLineProps) => <SolidLine {...props} strokeWidth={2} strokeLinecap="butt" />);
 
   return (
     <CartesianChart
@@ -663,7 +666,7 @@ function TradingTrends() {
     >
       <YAxis axisId="profit" position="left" showGrid tickLabelFormatter={renderProfit} GridLineComponent={ThinSolidLine} />
       <XAxis />
-      <ReferenceLine LineComponent={ThickSolidLine} dataY={0} yAxisId="profit" />
+      <ReferenceLine LineComponent={ThickSolidLine} dataY={0} yAxisId="profit" stroke="rgb(var(--gray15))" />
       <BarPlot seriesIds={['gains', 'losses']} />
       <Line seriesId="revenue" curve="monotone" showArea />
     </CartesianChart>
