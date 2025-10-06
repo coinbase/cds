@@ -6,7 +6,7 @@ import { sparklineInteractiveData } from '@coinbase/cds-common/internal/visualiz
 import { useTabsContext } from '@coinbase/cds-common/tabs/TabsContext';
 import type { TabValue } from '@coinbase/cds-common/tabs/useTabs';
 import { useTheme } from '@coinbase/cds-web';
-import { CellMedia, ListCell } from '@coinbase/cds-web/cells';
+import { ListCell } from '@coinbase/cds-web/cells';
 import { Box, HStack, VStack } from '@coinbase/cds-web/layout';
 import { Avatar, RemoteImage } from '@coinbase/cds-web/media';
 import { RollingNumber } from '@coinbase/cds-web/numbers';
