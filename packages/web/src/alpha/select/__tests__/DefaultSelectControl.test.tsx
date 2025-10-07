@@ -33,7 +33,6 @@ describe('DefaultSelectControl', () => {
         <DefaultThemeProvider>
           <DefaultSelectControl
             {...defaultProps}
-            ref={React.createRef<HTMLElement>()}
             accessibilityLabel="Custom accessibility label"
             ariaHaspopup="listbox"
             testID="select-control-test"
@@ -51,7 +50,7 @@ describe('DefaultSelectControl', () => {
       const user = userEvent.setup();
       render(
         <DefaultThemeProvider>
-          <DefaultSelectControl {...defaultProps} ref={React.createRef<HTMLElement>()} />
+          <DefaultSelectControl {...defaultProps} />
         </DefaultThemeProvider>,
       );
 
@@ -65,7 +64,7 @@ describe('DefaultSelectControl', () => {
     it('renders single select control correctly', () => {
       render(
         <DefaultThemeProvider>
-          <DefaultSelectControl {...defaultProps} ref={React.createRef<HTMLElement>()} />
+          <DefaultSelectControl {...defaultProps} />
         </DefaultThemeProvider>,
       );
 
@@ -77,11 +76,7 @@ describe('DefaultSelectControl', () => {
     it('displays selected value', () => {
       render(
         <DefaultThemeProvider>
-          <DefaultSelectControl
-            {...defaultProps}
-            ref={React.createRef<HTMLElement>()}
-            value="option1"
-          />
+          <DefaultSelectControl {...defaultProps} value="option1" />
         </DefaultThemeProvider>,
       );
 
@@ -91,11 +86,7 @@ describe('DefaultSelectControl', () => {
     it('shows placeholder when no value selected', () => {
       render(
         <DefaultThemeProvider>
-          <DefaultSelectControl
-            {...defaultProps}
-            ref={React.createRef<HTMLElement>()}
-            value={null}
-          />
+          <DefaultSelectControl {...defaultProps} value={null} />
         </DefaultThemeProvider>,
       );
 
@@ -107,11 +98,7 @@ describe('DefaultSelectControl', () => {
       const user = userEvent.setup();
       render(
         <DefaultThemeProvider>
-          <DefaultSelectControl
-            {...defaultProps}
-            ref={React.createRef<HTMLElement>()}
-            setOpen={setOpen}
-          />
+          <DefaultSelectControl {...defaultProps} setOpen={setOpen} />
         </DefaultThemeProvider>,
       );
 
@@ -126,7 +113,6 @@ describe('DefaultSelectControl', () => {
         <DefaultThemeProvider>
           <DefaultSelectControl
             {...defaultProps}
-            ref={React.createRef<HTMLElement>()}
             startNode={<div data-testid="start-node">Start</div>}
           />
         </DefaultThemeProvider>,
@@ -147,7 +133,7 @@ describe('DefaultSelectControl', () => {
     it('renders multi select control correctly', () => {
       render(
         <DefaultThemeProvider>
-          <DefaultSelectControl {...multiSelectProps} ref={React.createRef<HTMLElement>()} />
+          <DefaultSelectControl {...multiSelectProps} />
         </DefaultThemeProvider>,
       );
 
@@ -158,11 +144,7 @@ describe('DefaultSelectControl', () => {
     it('displays selected values as chips', () => {
       render(
         <DefaultThemeProvider>
-          <DefaultSelectControl
-            {...multiSelectProps}
-            ref={React.createRef<HTMLElement>()}
-            value={['option1', 'option2']}
-          />
+          <DefaultSelectControl {...multiSelectProps} value={['option1', 'option2']} />
         </DefaultThemeProvider>,
       );
 
@@ -177,7 +159,6 @@ describe('DefaultSelectControl', () => {
         <DefaultThemeProvider>
           <DefaultSelectControl
             {...multiSelectProps}
-            ref={React.createRef<HTMLElement>()}
             onChange={onChange}
             value={['option1', 'option2']}
           />
@@ -194,7 +175,6 @@ describe('DefaultSelectControl', () => {
         <DefaultThemeProvider>
           <DefaultSelectControl
             {...multiSelectProps}
-            ref={React.createRef<HTMLElement>()}
             maxSelectedOptionsToShow={2}
             value={['option1', 'option2', 'option3', 'option4']}
           />
@@ -209,7 +189,6 @@ describe('DefaultSelectControl', () => {
         <DefaultThemeProvider>
           <DefaultSelectControl
             {...multiSelectProps}
-            ref={React.createRef<HTMLElement>()}
             value={['option1', 'option3']} // option3 is disabled
           />
         </DefaultThemeProvider>,
@@ -227,7 +206,7 @@ describe('DefaultSelectControl', () => {
     it('renders disabled state correctly', () => {
       render(
         <DefaultThemeProvider>
-          <DefaultSelectControl {...defaultProps} ref={React.createRef<HTMLElement>()} disabled />
+          <DefaultSelectControl {...defaultProps} disabled />
         </DefaultThemeProvider>,
       );
 
@@ -238,11 +217,7 @@ describe('DefaultSelectControl', () => {
     it('renders with helper text', () => {
       render(
         <DefaultThemeProvider>
-          <DefaultSelectControl
-            {...defaultProps}
-            ref={React.createRef<HTMLElement>()}
-            helperText="This is helper text"
-          />
+          <DefaultSelectControl {...defaultProps} helperText="This is helper text" />
         </DefaultThemeProvider>,
       );
 
@@ -256,11 +231,7 @@ describe('DefaultSelectControl', () => {
       const user = userEvent.setup();
       render(
         <DefaultThemeProvider>
-          <DefaultSelectControl
-            {...defaultProps}
-            ref={React.createRef<HTMLElement>()}
-            setOpen={setOpen}
-          />
+          <DefaultSelectControl {...defaultProps} setOpen={setOpen} />
         </DefaultThemeProvider>,
       );
 
@@ -276,11 +247,7 @@ describe('DefaultSelectControl', () => {
       const user = userEvent.setup();
       render(
         <DefaultThemeProvider>
-          <DefaultSelectControl
-            {...defaultProps}
-            ref={React.createRef<HTMLElement>()}
-            setOpen={setOpen}
-          />
+          <DefaultSelectControl {...defaultProps} setOpen={setOpen} />
         </DefaultThemeProvider>,
       );
 
@@ -307,7 +274,6 @@ describe('DefaultSelectControl', () => {
         <DefaultThemeProvider>
           <DefaultSelectControl
             {...multiSelectProps}
-            ref={React.createRef<HTMLElement>()}
             onChange={onChange}
             testID="select-control-test"
             value={['option1']}
@@ -329,7 +295,6 @@ describe('DefaultSelectControl', () => {
         <DefaultThemeProvider>
           <DefaultSelectControl
             {...multiSelectProps}
-            ref={React.createRef<HTMLElement>()}
             onChange={onChange}
             value={['option1', 'option2', 'option3']}
           />
@@ -345,7 +310,7 @@ describe('DefaultSelectControl', () => {
 
   describe('Ref Forwarding', () => {
     it('forwards ref correctly', () => {
-      const ref = React.createRef<HTMLElement>();
+      const ref = React.createRef<HTMLDivElement>();
       render(
         <DefaultThemeProvider>
           <DefaultSelectControl {...defaultProps} ref={ref} />
