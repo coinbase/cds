@@ -82,7 +82,7 @@ function ForecastedPrice() {
     const startX = xScale(startIndex);
     const endX = xScale(endIndex);
     return (
-      <rect
+      <Rect
         x={startX}
         y={drawingArea.y}
         width={endX - startX}
@@ -349,13 +349,20 @@ function Insets() {
 
 CartesianChart has built-in scrubbing functionality that can be enabled with the `enableScrubbing` prop. This will then enable the usage of `onScrubberPositionChange` to get the current position of the scrubber as the user interacts with the chart.
 
+One example of using the scrubber is to provide haptic feedback when the user interacts with the chart. You can trigger a light impact each time the scrubber position changes or even do a dynamic impact depending on the value change, such as a heavy impact when the user crosses a significant boundary of time or reaches a significant market event.
+
 ```jsx
 function Scrubbing() {
   const [scrubIndex, setScrubIndex] = useState(undefined);
 
   const onScrubberPositionChange = useCallback((index: number | undefined) => {
+    // Do a light impact when the scrubber position changes
+    // An initial and final impact is already configured by the chart
+    if (scrubIndex !== undefined && index !== undefined) {
+     void Haptics.lightImpact();
+    }
     setScrubIndex(index);
-  }, []);
+  }, [scrubIndex]);
 
   return (
     <VStack gap={2}>
@@ -532,7 +539,7 @@ function EarningsHistory() {
     const diameter = Math.min(xScale.bandwidth(), yScaleSize / 10);
 
     return (
-      <g>
+      <G>
         {data.map((value, index) => {
           if (value === null || value === undefined) return null;
 
@@ -548,7 +555,7 @@ function EarningsHistory() {
           if (centerY === undefined) return null;
 
           return (
-            <circle
+            <Circle
               key={`${seriesId}-${index}`}
               cx={centerX}
               cy={centerY}
@@ -558,7 +565,7 @@ function EarningsHistory() {
             />
           );
         })}
-      </g>
+      </G>
     );
   });
 

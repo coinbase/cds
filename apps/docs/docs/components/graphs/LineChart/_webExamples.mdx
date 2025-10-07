@@ -528,7 +528,89 @@ function DataFormatChart() {
 
 ## Accessibility
 
-You can use the `accessibilityLabel` and `aria-labelledby` props to provide a label for the chart.
+You can use `accessibilityLabel` to provide a descriptive label for the chart. This is especially important for charts with scrubbing enabled, where the label should update dynamically to reflect the current data point.
+
+```jsx live
+function AccessibleBasicChart() {
+  const [scrubIndex, setScrubIndex] = useState(undefined);
+  const data = [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58];
+
+  const accessibilityLabel = useMemo(() => {
+    if (scrubIndex === undefined) {
+      return `Current price: ${data[data.length - 1]}`;
+    }
+    return `Price at position ${scrubIndex + 1}: ${data[scrubIndex]}`;
+  }, [scrubIndex, data]);
+
+  return (
+    <LineChart
+      enableScrubbing
+      onScrubberPositionChange={setScrubIndex}
+      height={{ base: 150, tablet: 200, desktop: 250 }}
+      series={[
+        {
+          id: 'prices',
+          data: data,
+        },
+      ]}
+      curve="monotone"
+      showYAxis
+      showArea
+      yAxis={{
+        showGrid: true,
+      }}
+      accessibilityLabel={accessibilityLabel}
+    >
+      <Scrubber />
+    </LineChart>
+  );
+}
+```
+
+When a chart has a visible header or title, you can use `aria-labelledby` to reference it.
+
+```jsx live
+function AccessibleChartWithHeader() {
+  const headerId = useId();
+  const [scrubIndex, setScrubIndex] = useState(undefined);
+  const data = [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58];
+
+  const accessibilityLabel = useMemo(() => {
+    if (scrubIndex === undefined) {
+      return `Line chart showing price trend. Current value: ${data[data.length - 1]}`;
+    }
+    return `Value: ${data[scrubIndex]} at position ${scrubIndex + 1}`;
+  }, [scrubIndex, data]);
+
+  return (
+    <VStack gap={2}>
+      <Text id={headerId} font="label1">
+        {accessibilityLabel}
+      </Text>
+      <LineChart
+        enableScrubbing
+        onScrubberPositionChange={setScrubIndex}
+        height={{ base: 150, tablet: 200, desktop: 250 }}
+        series={[
+          {
+            id: 'revenue',
+            data: data,
+          },
+        ]}
+        curve="monotone"
+        showYAxis
+        showArea
+        yAxis={{
+          showGrid: true,
+        }}
+        aria-labelledby={headerId}
+      >
+        <Scrubber />
+      </LineChart>
+    </VStack>
+  );
+}
+```
 
 ## Customization
 
