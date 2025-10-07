@@ -251,14 +251,14 @@ export const DefaultSelectControl: SelectControlComponent<'single' | 'multi'> = 
 
       const animatedCaretNode = useMemo(
         () => (
-          <HStack alignItems="center" paddingX={2}>
+          <Pressable alignItems="center" onClick={() => setOpen((s) => !s)} paddingX={2}>
             <AnimatedCaret
               color={!open ? 'fg' : variant ? variantColor[variant] : 'fgPrimary'}
               rotate={open ? 0 : 180}
             />
-          </HStack>
+          </Pressable>
         ),
-        [open, variant],
+        [open, variant, setOpen],
       );
 
       return (
