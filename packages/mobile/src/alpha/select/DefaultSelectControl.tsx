@@ -15,7 +15,7 @@ import { VStack } from '../../layout/VStack';
 import { AnimatedCaret } from '../../motion/AnimatedCaret';
 import { Text } from '../../typography/Text';
 
-import type { SelectControlComponent } from './Select';
+import type { SelectControlComponent, SelectOption } from './Select';
 
 const variantColor: Record<string, ThemeVars.Color> = {
   foreground: 'fg',
@@ -100,45 +100,28 @@ export const DefaultSelectControl: SelectControlComponent = memo(
 
       const valueNode = useMemo(() => {
         if (hasValue && isMultiSelect) {
-          const renderedValues =
+          const valuesToShow =
             value.length <= maxSelectedOptionsToShow
-              ? value
+              ? (value as string[])
               : (value as string[]).slice(0, maxSelectedOptionsToShow);
-          // Optimization to avoid mapping through options array for every <InputChip> rendered
-          const disabledOptionsIndexes = options
-            .filter((option) => option.disabled)
-            .map((option) => renderedValues.indexOf(option.value ?? ''));
+          const optionsToShow = valuesToShow
+            .map((value) => options.find((option) => option.value === value))
+            .filter(Boolean) as SelectOption[];
           return (
             <HStack flexWrap="wrap" gap={1}>
-              {renderedValues.map((renderedValue, index) => {
-                const valueOptionData = options.find((option) => option.value === renderedValue);
-                let valueToShow = renderedValue;
-                if (
-                  typeof valueOptionData?.label === 'string' &&
-                  valueOptionData.label.trim() !== ''
-                ) {
-                  valueToShow = valueOptionData.label;
-                } else if (
-                  typeof valueOptionData?.description === 'string' &&
-                  valueOptionData.description.trim() !== ''
-                ) {
-                  valueToShow = valueOptionData.description;
-                }
-
-                return (
-                  <InputChip
-                    key={renderedValue}
-                    disabled={disabledOptionsIndexes.includes(index)}
-                    invertColorScheme={false}
-                    maxWidth={200}
-                    onPress={(e) => {
-                      e?.stopPropagation();
-                      onChange?.(renderedValue);
-                    }}
-                    value={valueToShow}
-                  />
-                );
-              })}
+              {optionsToShow.map((option) => (
+                <InputChip
+                  key={option.value}
+                  disabled={option.disabled}
+                  invertColorScheme={false}
+                  label={option.label ?? option.description ?? option.value ?? ''}
+                  maxWidth={200}
+                  onPress={(event) => {
+                    event?.stopPropagation();
+                    onChange?.(option.value);
+                  }}
+                />
+              ))}
               {value.length - maxSelectedOptionsToShow > 0 && (
                 <Chip>
                   <Text font="headline">{`+${value.length - maxSelectedOptionsToShow} more`}</Text>
@@ -148,17 +131,9 @@ export const DefaultSelectControl: SelectControlComponent = memo(
           );
         }
 
-        const valueOptionData = options.find((option) => option.value === value);
-        let valueToShow = value;
-        if (typeof valueOptionData?.label === 'string' && valueOptionData.label.trim() !== '') {
-          valueToShow = valueOptionData.label;
-        } else if (
-          typeof valueOptionData?.description === 'string' &&
-          valueOptionData.description.trim() !== ''
-        ) {
-          valueToShow = valueOptionData.description;
-        }
-        const content = hasValue ? valueToShow : placeholder;
+        const option = options.find((option) => option.value === value);
+        const label = option?.label ?? option?.description ?? option?.value ?? placeholder;
+        const content = hasValue ? label : placeholder;
         return typeof content === 'string' ? (
           <Text
             color={hasValue ? 'fg' : 'fgMuted'}
@@ -240,7 +215,10 @@ export const DefaultSelectControl: SelectControlComponent = memo(
       const animatedCaretNode = useMemo(
         () => (
           <HStack alignItems="center" paddingX={2}>
-            <AnimatedCaret color={open ? variantColor[variant] : 'fg'} rotate={open ? 0 : 180} />
+            <AnimatedCaret
+              color={!open ? 'fg' : variant ? variantColor[variant] : 'fgPrimary'}
+              rotate={open ? 0 : 180}
+            />
           </HStack>
         ),
         [open, variant],
