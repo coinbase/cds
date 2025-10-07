@@ -1,33 +1,23 @@
 import { forwardRef, memo, useMemo, useState } from 'react';
-import { View } from 'react-native';
+import { ScrollView, View } from 'react-native';
 import { assets } from '@coinbase/cds-common/internal/data/assets';
 import { useTabsContext } from '@coinbase/cds-common/tabs/TabsContext';
 import type { TabValue } from '@coinbase/cds-common/tabs/useTabs';
 import { IconButton } from '@coinbase/cds-mobile/buttons';
+import { Example, ExampleScreen } from '@coinbase/cds-mobile/examples/ExampleScreen';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
-import { Box, HStack, VStack } from '@coinbase/cds-mobile/layout';
+import { Box, HStack } from '@coinbase/cds-mobile/layout';
 import { type TabComponent, type TabsActiveIndicatorProps } from '@coinbase/cds-mobile/tabs';
 import { SegmentedTab, type SegmentedTabProps } from '@coinbase/cds-mobile/tabs/SegmentedTab';
-import { TextHeadline, TextLabel1 } from '@coinbase/cds-mobile/typography';
+import { TextLabel1 } from '@coinbase/cds-mobile/typography';
+import { Text } from '@coinbase/cds-mobile/typography/Text';
 
-import { LiveTabLabel, PeriodSelector, PeriodSelectorActiveIndicator } from '../PeriodSelector';
-
-export default {
-  component: PeriodSelector,
-  title: 'Components/Chart/PeriodSelector',
-};
-
-const Example: React.FC<
-  React.PropsWithChildren<{ title: string; description?: string | React.ReactNode }>
-> = ({ children, title, description }) => {
-  return (
-    <VStack gap={2}>
-      <TextHeadline>{title}</TextHeadline>
-      {description}
-      {children}
-    </VStack>
-  );
-};
+import {
+  LiveTabLabel,
+  type LiveTabLabelProps,
+  PeriodSelector,
+  PeriodSelectorActiveIndicator,
+} from '../PeriodSelector';
 
 const PeriodSelectorExample = () => {
   const tabs = [
@@ -55,7 +45,7 @@ const MinWidthPeriodSelectorExample = () => {
   return (
     <PeriodSelector
       activeTab={activeTab}
-      gap={2}
+      gap={0.5}
       onChange={(tab) => setActiveTab(tab)}
       tabs={tabs}
       width="fit-content"
@@ -95,7 +85,6 @@ const LivePeriodSelectorExample = () => {
 };
 
 const TooManyPeriodsSelectorExample = () => {
-  const theme = useTheme();
   const tabs = useMemo(
     () => [
       {
@@ -118,48 +107,27 @@ const TooManyPeriodsSelectorExample = () => {
 
   const activeBackground = useMemo(() => (!isLive ? 'bgPrimaryWash' : 'bgNegativeWash'), [isLive]);
 
-  const gradientOverlayStyles = useMemo(
-    () => [
-      {
-        position: 'absolute' as const,
-        right: 0,
-        bottom: 0,
-        top: 0,
-        width: theme.space[4],
-        backgroundColor: theme.color.bgPrimary,
-        opacity: 0.8,
-      },
-    ],
-    [theme.space, theme.color.bgPrimary],
-  );
-
   return (
-    <HStack
-      alignItems="center"
-      justifyContent="space-between"
-      maxWidth="100%"
-      overflow="hidden"
-      width="100%"
-    >
-      <Box flexGrow={1} overflow="hidden" position="relative">
-        <Box overflow="scroll" paddingEnd={2}>
-          <PeriodSelector
-            activeBackground={activeBackground}
-            activeTab={activeTab}
-            gap={1}
-            justifyContent="flex-start"
-            onChange={setActiveTab}
-            tabs={tabs}
-            width="fit-content"
-          />
-        </Box>
-        <View pointerEvents="none" style={gradientOverlayStyles} />
-      </Box>
+    <HStack alignItems="center" justifyContent="space-between" maxWidth="100%" width="100%">
+      <ScrollView
+        horizontal
+        contentContainerStyle={{ paddingEnd: 8, flexGrow: 1 }}
+        showsHorizontalScrollIndicator={false}
+      >
+        <PeriodSelector
+          activeBackground={activeBackground}
+          activeTab={activeTab}
+          gap={1}
+          justifyContent="flex-start"
+          onChange={setActiveTab}
+          tabs={tabs}
+          width="fit-content"
+        />
+      </ScrollView>
       <IconButton
         compact
         accessibilityLabel="Configure chart"
         flexShrink={0}
-        height={36}
         name="filter"
         variant="secondary"
       />
@@ -169,9 +137,18 @@ const TooManyPeriodsSelectorExample = () => {
 
 const btcColor = assets.btc.color;
 
-const BTCActiveIndicator = memo((props: TabsActiveIndicatorProps) => (
-  <PeriodSelectorActiveIndicator {...props} background={`${btcColor}1A` as any} />
-));
+const BTCActiveIndicator = memo((props: TabsActiveIndicatorProps) => {
+  const theme = useTheme();
+  const { activeTab } = useTabsContext();
+  const isLive = useMemo(() => activeTab?.id === '1H', [activeTab]);
+
+  const backgroundColor = useMemo(
+    () => (isLive ? theme.color.bgNegativeWash : `${btcColor}1A`),
+    [isLive, theme.color.bgNegativeWash],
+  );
+
+  return <PeriodSelectorActiveIndicator {...props} background={backgroundColor as any} />;
+});
 
 const BTCActiveExcludingLiveIndicator = memo((props: TabsActiveIndicatorProps) => {
   const theme = useTheme();
@@ -190,22 +167,61 @@ const BTCTab: TabComponent = memo(
   forwardRef(({ label, ...props }: SegmentedTabProps, ref: React.ForwardedRef<any>) => {
     const { activeTab } = useTabsContext();
     const isActive = activeTab?.id === props.id;
+    const theme = useTheme();
 
-    const textColor = isActive ? btcColor : undefined;
+    // If label is already a React element (like LiveTabLabel), pass it through directly
+    // For string labels, wrap with custom BTC color when active
+    const wrappedLabel =
+      typeof label === 'string' ? (
+        <TextLabel1 dangerouslySetColor={isActive ? btcColor : theme.color.fg}>{label}</TextLabel1>
+      ) : (
+        label
+      );
 
-    return (
-      <SegmentedTab
-        ref={ref}
-        label={<TextLabel1 dangerouslySetColor={textColor}>{label}</TextLabel1>}
-        {...props}
-      />
-    );
+    return <SegmentedTab ref={ref} label={wrappedLabel} {...props} />;
   }),
+);
+
+const BTCLiveLabel = memo(
+  forwardRef<View, LiveTabLabelProps>(
+    ({ label = 'LIVE', font = 'label1', hideDot, style, ...props }, ref) => {
+      const theme = useTheme();
+
+      const dotStyle = useMemo(
+        () => ({
+          width: theme.space[1],
+          height: theme.space[1],
+          borderRadius: 1000,
+          marginRight: theme.space[0.75],
+          backgroundColor: btcColor,
+        }),
+        [theme.space],
+      );
+
+      return (
+        <View
+          ref={ref}
+          style={[
+            {
+              flexDirection: 'row',
+              alignItems: 'center',
+            },
+            style,
+          ]}
+        >
+          {!hideDot && <View style={dotStyle} />}
+          <Text font={font} style={{ color: btcColor }} {...props}>
+            {label}
+          </Text>
+        </View>
+      );
+    },
+  ),
 );
 
 const ColoredPeriodSelectorExample = () => {
   const tabs = [
-    { id: '1H', label: <LiveTabLabel dangerouslySetColor={btcColor} /> },
+    { id: '1H', label: <BTCLiveLabel /> },
     { id: '1D', label: '1D' },
     { id: '1W', label: '1W' },
     { id: '1M', label: '1M' },
@@ -247,12 +263,27 @@ const ColoredExcludingLivePeriodSelectorExample = () => {
   );
 };
 
-export const All = () => {
+export default function All() {
   return (
-    <VStack gap={2}>
-      <Example title="Basic Example">
+    <ExampleScreen>
+      <Example title="Basic">
         <PeriodSelectorExample />
       </Example>
-    </VStack>
+      <Example title="Min Width">
+        <MinWidthPeriodSelectorExample />
+      </Example>
+      <Example title="Live Period">
+        <LivePeriodSelectorExample />
+      </Example>
+      <Example title="Too Many Periods">
+        <TooManyPeriodsSelectorExample />
+      </Example>
+      <Example title="Colored (BTC)">
+        <ColoredPeriodSelectorExample />
+      </Example>
+      <Example title="Colored Excluding Live">
+        <ColoredExcludingLivePeriodSelectorExample />
+      </Example>
+    </ExampleScreen>
   );
-};
+}
