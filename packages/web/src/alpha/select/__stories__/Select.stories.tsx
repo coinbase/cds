@@ -346,6 +346,21 @@ export const StartNode = () => {
   );
 };
 
+export const CustomEndNode = () => {
+  const [value, setValue] = useState<string | null>('1');
+
+  return (
+    <Select
+      endNode={<Icon alignItems="center" color="fg" name="search" />}
+      label="Single select - end node"
+      onChange={setValue}
+      options={exampleOptions}
+      placeholder="Empty value"
+      value={value}
+    />
+  );
+};
+
 export const CustomAccessory = () => {
   const [value, setValue] = useState<string | null>('1');
 

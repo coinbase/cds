@@ -83,7 +83,10 @@ export type SelectControlProps<Type extends 'single' | 'multi' = 'single'> = Pic
   'accessibilityLabel'
 > &
   Omit<BoxProps<BoxDefaultElement>, 'borderWidth' | 'onChange'> &
-  Pick<InputStackBaseProps, 'disabled' | 'startNode' | 'variant' | 'labelVariant' | 'testID'> &
+  Pick<
+    InputStackBaseProps,
+    'disabled' | 'startNode' | 'variant' | 'labelVariant' | 'testID' | 'endNode'
+  > &
   SelectState<Type> & {
     /** Array of options to display in the select dropdown */
     options: SelectOption[];
@@ -200,14 +203,21 @@ export type SelectDropdownComponent<Type extends 'single' | 'multi' = 'single'> 
  * Props for the Select component
  */
 export type SelectProps<Type extends 'single' | 'multi' = 'single'> = Pick<
-  InputStackBaseProps,
-  'startNode' | 'variant' | 'disabled' | 'labelVariant'
+  SharedAccessibilityProps,
+  'accessibilityLabel'
 > &
-  Pick<SharedAccessibilityProps, 'accessibilityLabel'> &
   SelectState<Type> &
   Pick<
     SelectControlProps<Type>,
-    'label' | 'placeholder' | 'helperText' | 'hiddenSelectedOptionsLabel'
+    | 'label'
+    | 'placeholder'
+    | 'helperText'
+    | 'hiddenSelectedOptionsLabel'
+    | 'startNode'
+    | 'variant'
+    | 'disabled'
+    | 'labelVariant'
+    | 'endNode'
   > &
   Pick<SelectOptionProps<Type>, 'accessory' | 'media' | 'detail'> &
   Pick<
@@ -325,6 +335,7 @@ const SelectBase = memo(
         hideSelectAll,
         defaultOpen,
         startNode,
+        endNode,
         variant,
         maxSelectedOptionsToShow,
         accessory,
@@ -345,7 +356,6 @@ const SelectBase = memo(
       ref: React.Ref<SelectRef>,
     ) => {
       const hasMounted = useHasMounted();
-      const isMultiSelect = type === 'multi';
       const [openInternal, setOpenInternal] = useState(defaultOpen ?? false);
       const open = openProp ?? openInternal;
       const setOpen = setOpenProp ?? setOpenInternal;
@@ -401,6 +411,7 @@ const SelectBase = memo(
             className={classNames?.control}
             compact={compact}
             disabled={disabled}
+            endNode={endNode}
             helperText={helperText}
             hiddenSelectedOptionsLabel={hiddenSelectedOptionsLabel}
             label={label}

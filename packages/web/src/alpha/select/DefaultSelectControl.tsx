@@ -40,6 +40,7 @@ export const DefaultSelectControl: SelectControlComponent<'single' | 'multi'> = 
         label,
         labelVariant,
         startNode,
+        endNode: customEndNode,
         compact,
         blendStyles,
         maxSelectedOptionsToShow = 6,
@@ -251,16 +252,22 @@ export const DefaultSelectControl: SelectControlComponent<'single' | 'multi'> = 
         ],
       );
 
-      const animatedCaretNode = useMemo(
+      const endNode = useMemo(
         () => (
-          <Pressable alignItems="center" onClick={() => setOpen((s) => !s)} paddingX={2}>
-            <AnimatedCaret
-              color={!open ? 'fg' : variant ? variantColor[variant] : 'fgPrimary'}
-              rotate={open ? 0 : 180}
-            />
-          </Pressable>
+          <HStack alignItems="center" paddingX={2}>
+            <Pressable onClick={() => setOpen((s) => !s)}>
+              {customEndNode ? (
+                customEndNode
+              ) : (
+                <AnimatedCaret
+                  color={!open ? 'fg' : variant ? variantColor[variant] : 'fgPrimary'}
+                  rotate={open ? 0 : 180}
+                />
+              )}
+            </Pressable>
+          </HStack>
         ),
-        [open, variant, setOpen],
+        [open, variant, setOpen, customEndNode],
       );
 
       return (
@@ -268,7 +275,7 @@ export const DefaultSelectControl: SelectControlComponent<'single' | 'multi'> = 
           ref={ref as React.Ref<HTMLDivElement>}
           blendStyles={interactableBlendStyles}
           disabled={disabled}
-          endNode={animatedCaretNode}
+          endNode={endNode}
           helperTextNode={helperTextNode}
           inputNode={inputNode}
           labelNode={shouldShowCompactLabel ? null : labelNode}

@@ -48,6 +48,7 @@ export const DefaultSelectControl: SelectControlComponent = memo(
         label,
         labelVariant,
         startNode,
+        endNode: customEndNode,
         compact,
         style,
         maxSelectedOptionsToShow = 3,
@@ -214,18 +215,22 @@ export const DefaultSelectControl: SelectControlComponent = memo(
         ],
       );
 
-      const animatedCaretNode = useMemo(
+      const endNode = useMemo(
         () => (
           <HStack alignItems="center" paddingX={2}>
             <Pressable onPress={() => setOpen((s) => !s)}>
-              <AnimatedCaret
-                color={!open ? 'fg' : variant ? variantColor[variant] : 'fgPrimary'}
-                rotate={open ? 0 : 180}
-              />
+              {customEndNode ? (
+                customEndNode
+              ) : (
+                <AnimatedCaret
+                  color={!open ? 'fg' : variant ? variantColor[variant] : 'fgPrimary'}
+                  rotate={open ? 0 : 180}
+                />
+              )}
             </Pressable>
           </HStack>
         ),
-        [open, variant, setOpen],
+        [open, variant, setOpen, customEndNode],
       );
 
       return (
@@ -233,7 +238,7 @@ export const DefaultSelectControl: SelectControlComponent = memo(
           borderFocusedStyle={borderFocusedStyle}
           borderStyle={borderUnfocusedStyle}
           disabled={disabled}
-          endNode={animatedCaretNode}
+          endNode={endNode}
           focused={open}
           helperTextNode={helperTextNode}
           inputNode={inputNode}

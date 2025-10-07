@@ -264,6 +264,27 @@ function StartNodeExample() {
 }
 ```
 
+## End Node
+
+Add an icon or element at the end of the select control.
+
+```jsx live
+function EndNodeExample() {
+  const [value, setValue] = (useState < string) | (null > '1');
+
+  return (
+    <Select
+      endNode={<Icon alignItems="center" color="fg" name="search" />}
+      label="Single select - end node"
+      onChange={setValue}
+      options={exampleOptions}
+      placeholder="Empty value"
+      value={value}
+    />
+  );
+}
+```
+
 ## Custom Icons
 
 Add custom icons as accessories or media to options.

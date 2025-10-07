@@ -384,6 +384,21 @@ const WithStartNodeExample = () => {
   );
 };
 
+const WithCustomEndNodeExample = () => {
+  const [value, setValue] = useState<string | null>('1');
+
+  return (
+    <Select
+      endNode={<Icon color="fg" name="search" />}
+      label="Single select - custom end node"
+      onChange={setValue}
+      options={exampleOptions}
+      placeholder="Empty value"
+      value={value}
+    />
+  );
+};
+
 const WithCustomAccessoryExample = () => {
   const [value, setValue] = useState<string | null>('1');
 
@@ -1000,6 +1015,9 @@ const SelectV3Screen = () => {
       </Example>
       <Example title="With Start Node">
         <WithStartNodeExample />
+      </Example>
+      <Example title="With Custom End Node">
+        <WithCustomEndNodeExample />
       </Example>
       <Example title="With Custom Accessory">
         <WithCustomAccessoryExample />
