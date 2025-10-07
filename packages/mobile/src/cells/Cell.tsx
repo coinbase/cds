@@ -44,8 +44,7 @@ export type CellBaseProps = SharedProps &
      */
     end?: React.ReactNode;
     /**
-     * End-aligned detail content (e.g., value, status).
-     * @deprecated Use `end` instead. Maintained for backward compatibility.
+     * @deprecated Use `end` instead. `detail` will be removed in a release.
      */
     detail?: React.ReactNode;
     /** Middle content between main content and detail. */
@@ -54,9 +53,7 @@ export type CellBaseProps = SharedProps &
     media?: React.ReactElement;
     borderRadius?: ThemeVars.BorderRadius;
     /**
-     * Apply a fixed width to the detail (end).
-     * @deprecated Use `styles.end` instead. This prop is kept for backward
-     * compatibility and will be removed in a future major release.
+     * @deprecated Use `styles.end` instead. `detailWidth` will be removed in a release.
      */
     detailWidth?: number | string;
     /** Is the cell disabled? Will apply opacity and disable interaction. */

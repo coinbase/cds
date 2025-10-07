@@ -12,14 +12,50 @@ The `title`, `description`, `detail` and `subdetail` props are only intended to 
 
 :::
 
-:::note
-Prefer `layoutSpacing="hug"` for the new ListCell design. The `spacious` and `compact` values exist for backward compatibility and may be removed in a future major release.
-:::
-
 ### Basic usage
 
 ```tsx live
 <ListCell layoutSpacing="hug" title="Basic List Cell" description="A simple example of ListCell" />
+```
+
+:::note
+Prefer `layoutSpacing="hug"` for the new ListCell design. The `spacious` and `compact` values exist for backward compatibility and may be removed in a future major release.
+:::
+
+```tsx live
+<VStack>
+  {/* Preferred (new design) */}
+  <ListCell
+    accessory="arrow"
+    description="New design (hug)"
+    detail="$12,345.00"
+    layoutSpacing="hug"
+    media={<Avatar src={assets.eth.imageUrl} size="m" />}
+    onClick={console.log}
+    title="Hug"
+    variant="positive"
+  />
+
+  {/* Deprecated options kept for backward compatibility */}
+  <ListCell
+    accessory="arrow"
+    detail="$12,345.00"
+    layoutSpacing="compact"
+    media={<Avatar src={assets.eth.imageUrl} size="m" />}
+    onClick={console.log}
+    title="Compact (deprecated)"
+    variant="positive"
+  />
+  <ListCell
+    accessory="arrow"
+    detail="$12,345.00"
+    layoutSpacing="spacious"
+    media={<Avatar src={assets.eth.imageUrl} size="m" />}
+    onClick={console.log}
+    title="Spacious (deprecated)"
+    variant="positive"
+  />
+</VStack>
 ```
 
 ### With Leading Icon

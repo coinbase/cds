@@ -20,8 +20,6 @@ export type CellDetailProps = {
   variant?: CellDetailVariant;
   /** Specifies whether font should be scaled down automatically to fit given style constraints. */
   adjustsFontSizeToFit?: boolean;
-  /** Layout spacing configuration. */
-  layoutSpacing?: 'spacious' | 'compact' | 'hug';
   /** Text props to spread onto the Text elements. */
   textProps?: {
     detail?: TextProps;
@@ -41,7 +39,6 @@ export const CellDetail = memo(function CellDetail({
   detail,
   subdetail,
   variant = 'foregroundMuted',
-  layoutSpacing,
   textProps,
 }: CellDetailProps) {
   return (
@@ -61,7 +58,7 @@ export const CellDetail = memo(function CellDetail({
         <Text
           adjustsFontSizeToFit={adjustsFontSizeToFit}
           color={variantColorMap[variant]}
-          font={layoutSpacing === 'hug' ? 'label2' : 'body'}
+          font="body"
           numberOfLines={1}
           {...textProps?.subdetail}
         >

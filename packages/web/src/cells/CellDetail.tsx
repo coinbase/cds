@@ -20,8 +20,6 @@ export type CellDetailProps = {
   subdetail?: React.ReactNode;
   /** Variant color to apply to the subdetail text. */
   variant?: CellDetailVariant;
-  /** Layout spacing configuration. */
-  layoutSpacing?: 'spacious' | 'compact' | 'hug';
   /** Text props to spread onto the Text elements */
   textProps?: {
     detail?: TextProps<'div'>;
@@ -40,7 +38,6 @@ export const CellDetail = memo(function CellDetail({
   detail,
   subdetail,
   variant = 'foregroundMuted',
-  layoutSpacing,
   textProps,
 }: CellDetailProps) {
   return (
@@ -63,7 +60,7 @@ export const CellDetail = memo(function CellDetail({
           as="div"
           color={variantColorMap[variant]}
           display="block"
-          font={layoutSpacing === 'hug' ? 'label2' : 'body'}
+          font="body"
           overflow="truncate"
           textAlign="end"
           {...textProps?.subdetail}

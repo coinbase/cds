@@ -75,8 +75,7 @@ export type CellBaseProps = Polymorphic.ExtendableProps<
   BoxBaseProps,
   Pick<PressableProps<'a'>, 'href' | 'target'> & {
     /**
-     * @deprecated Use `classNames.contentContainer` instead. This prop is kept for backward
-     * compatibility and will be removed in a future major release.
+     * @deprecated Use `classNames.contentContainer` instead. `contentClassName` will be removed in a future major release.
      */
     contentClassName?: string;
     /** Key down handler for keyboard interaction. */
@@ -95,8 +94,7 @@ export type CellBaseProps = Polymorphic.ExtendableProps<
      */
     end?: React.ReactNode;
     /**
-     * End-aligned detail content (e.g., value, status).
-     * @deprecated Use `end` instead. Maintained for backward compatibility.
+     * @deprecated Use `end` instead. `detail` will be removed in a future major release.
      */
     detail?: React.ReactNode;
     /** Middle content between main content and detail. */
@@ -104,8 +102,7 @@ export type CellBaseProps = Polymorphic.ExtendableProps<
     /** Media rendered at the start of the cell (icon, avatar, image, etc). */
     media?: React.ReactElement;
     /**
-     * @deprecated Use `shouldTruncate` instead. Maintained for backward compatibility.
-     * When true, content will not be truncated. When false/undefined, content is truncated.
+     * @deprecated Use `shouldTruncate` instead. `shouldOverflow` will be removed in a future release.
      */
     shouldOverflow?: boolean;
     /**
@@ -115,9 +112,7 @@ export type CellBaseProps = Polymorphic.ExtendableProps<
      */
     shouldTruncate?: boolean;
     /**
-     * Apply a fixed width to the detail (end).
-     * @deprecated Use `styles.end` instead. This prop is kept for backward
-     * compatibility and will be removed in a future major release.
+     * @deprecated Use `styles.end` instead. `detailWidth` will be removed in a future major release.
      */
     detailWidth?: number | string;
     /** Is the cell disabled? Will apply opacity and disable interaction. */

@@ -43,18 +43,17 @@ export type ListCellBaseProps = Polymorphic.ExtendableProps<
     /** Accessory to display at the end of the cell. */
     accessory?: CellAccessoryType;
     /**
-     * End-aligned content (e.g., CTA, form element, metric). Replaces the deprecated `action` prop.
+     * End-aligned content (e.g., CTA, form element, metric). Replacement for the deprecated action prop, and takes precedence over it.
      * If the content is an action (like button, link, etc), we recommend avoiding use alongside `onClick`.
+     * If used alongside `onClick`, the end action is triggered first and then the `onClick` handler.
      */
     end?: React.ReactNode;
     /**
-     * Interactive action, like a CTA or form element. Cannot be used alongside `onClick`.
-     * @deprecated Use `end` instead. Maintained for backward compatibility.
+     * @deprecated Use `end` instead. `action` will be removed in a future major release.
      */
     action?: React.ReactNode;
     /**
-     * @deprecated Use `layoutDensity="compact"` instead. This prop is kept for backward
-     * compatibility and will be removed in a future major release.
+     * @deprecated Use `layoutDensity="compact"` instead. `compact` will be removed in a future major release.
      */
     compact?: boolean;
     /**
@@ -206,11 +205,13 @@ export const ListCell: ListCellComponent = memo(
           return (
             <CellDetail
               detail={detail}
-              layoutSpacing={layoutSpacing}
               subdetail={subdetail}
               textProps={{
                 detail: textProps?.detail,
-                subdetail: textProps?.subdetail,
+                subdetail: {
+                  font: layoutSpacing === 'hug' ? 'label2' : 'body',
+                  ...textProps?.subdetail,
+                },
               }}
               variant={variant}
             />
