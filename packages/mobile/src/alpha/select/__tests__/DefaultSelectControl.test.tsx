@@ -42,7 +42,7 @@ describe('DefaultSelectControl', () => {
     it('passes a11y', () => {
       render(
         <DefaultThemeProvider>
-          <DefaultSelectControl {...defaultProps} ref={React.createRef<any>()} />
+          <DefaultSelectControl {...defaultProps} />
         </DefaultThemeProvider>,
       );
       expect(screen.getByRole('button')).toBeAccessible();
@@ -53,7 +53,6 @@ describe('DefaultSelectControl', () => {
         <DefaultThemeProvider>
           <DefaultSelectControl
             {...defaultProps}
-            ref={React.createRef<any>()}
             accessibilityHint="Custom accessibility hint"
             accessibilityLabel="Custom accessibility label"
           />
@@ -68,7 +67,7 @@ describe('DefaultSelectControl', () => {
     it('has correct accessibility role', () => {
       render(
         <DefaultThemeProvider>
-          <DefaultSelectControl {...defaultProps} ref={React.createRef<any>()} />
+          <DefaultSelectControl {...defaultProps} />
         </DefaultThemeProvider>,
       );
 
@@ -81,7 +80,7 @@ describe('DefaultSelectControl', () => {
     it('renders single select control correctly', () => {
       render(
         <DefaultThemeProvider>
-          <DefaultSelectControl {...defaultProps} ref={React.createRef<any>()} />
+          <DefaultSelectControl {...defaultProps} />
         </DefaultThemeProvider>,
       );
 
@@ -93,7 +92,7 @@ describe('DefaultSelectControl', () => {
     it('displays selected value', () => {
       render(
         <DefaultThemeProvider>
-          <DefaultSelectControl {...defaultProps} ref={React.createRef<any>()} value="option1" />
+          <DefaultSelectControl {...defaultProps} value="option1" />
         </DefaultThemeProvider>,
       );
 
@@ -103,7 +102,7 @@ describe('DefaultSelectControl', () => {
     it('shows placeholder when no value selected', () => {
       render(
         <DefaultThemeProvider>
-          <DefaultSelectControl {...defaultProps} ref={React.createRef<any>()} value={null} />
+          <DefaultSelectControl {...defaultProps} value={null} />
         </DefaultThemeProvider>,
       );
 
@@ -114,7 +113,7 @@ describe('DefaultSelectControl', () => {
       const setOpen = jest.fn();
       render(
         <DefaultThemeProvider>
-          <DefaultSelectControl {...defaultProps} ref={React.createRef<any>()} setOpen={setOpen} />
+          <DefaultSelectControl {...defaultProps} setOpen={setOpen} />
         </DefaultThemeProvider>,
       );
 
@@ -127,11 +126,7 @@ describe('DefaultSelectControl', () => {
     it('renders with start node', () => {
       render(
         <DefaultThemeProvider>
-          <DefaultSelectControl
-            {...defaultProps}
-            ref={React.createRef<any>()}
-            startNode={<View testID="start-node" />}
-          />
+          <DefaultSelectControl {...defaultProps} startNode={<View testID="start-node" />} />
         </DefaultThemeProvider>,
       );
 
@@ -143,7 +138,7 @@ describe('DefaultSelectControl', () => {
     it('renders multi select control correctly', () => {
       render(
         <DefaultThemeProvider>
-          <DefaultSelectControl {...(multiSelectProps as any)} ref={React.createRef<any>()} />
+          <DefaultSelectControl {...(multiSelectProps as any)} />
         </DefaultThemeProvider>,
       );
 
@@ -154,11 +149,7 @@ describe('DefaultSelectControl', () => {
     it('displays selected values as chips', () => {
       render(
         <DefaultThemeProvider>
-          <DefaultSelectControl
-            {...(multiSelectProps as any)}
-            ref={React.createRef<any>()}
-            value={['option1', 'option2']}
-          />
+          <DefaultSelectControl {...(multiSelectProps as any)} value={['option1', 'option2']} />
         </DefaultThemeProvider>,
       );
 
@@ -172,7 +163,6 @@ describe('DefaultSelectControl', () => {
         <DefaultThemeProvider>
           <DefaultSelectControl
             {...(multiSelectProps as any)}
-            ref={React.createRef<any>()}
             onChange={onChange}
             value={['option1', 'option2']}
           />
@@ -190,7 +180,6 @@ describe('DefaultSelectControl', () => {
         <DefaultThemeProvider>
           <DefaultSelectControl
             {...(multiSelectProps as any)}
-            ref={React.createRef<any>()}
             maxSelectedOptionsToShow={2}
             value={['option1', 'option2', 'option3', 'option4']}
           />
@@ -205,7 +194,7 @@ describe('DefaultSelectControl', () => {
     it('renders disabled state correctly', () => {
       render(
         <DefaultThemeProvider>
-          <DefaultSelectControl {...defaultProps} ref={React.createRef<any>()} disabled />
+          <DefaultSelectControl {...defaultProps} disabled />
         </DefaultThemeProvider>,
       );
 
@@ -216,11 +205,7 @@ describe('DefaultSelectControl', () => {
     it('renders with helper text', () => {
       render(
         <DefaultThemeProvider>
-          <DefaultSelectControl
-            {...defaultProps}
-            ref={React.createRef<any>()}
-            helperText="This is helper text"
-          />
+          <DefaultSelectControl {...defaultProps} helperText="This is helper text" />
         </DefaultThemeProvider>,
       );
 
@@ -230,11 +215,7 @@ describe('DefaultSelectControl', () => {
     it('uses default variant when none provided', () => {
       render(
         <DefaultThemeProvider>
-          <DefaultSelectControl
-            {...defaultProps}
-            ref={React.createRef<any>()}
-            variant={undefined}
-          />
+          <DefaultSelectControl {...defaultProps} variant={undefined} />
         </DefaultThemeProvider>,
       );
 
@@ -248,7 +229,6 @@ describe('DefaultSelectControl', () => {
         <DefaultThemeProvider>
           <DefaultSelectControl
             {...defaultProps}
-            ref={React.createRef<any>()}
             placeholder={<View testID="react-node-placeholder" />}
             value={null}
           />
@@ -263,11 +243,7 @@ describe('DefaultSelectControl', () => {
     it('renders ReactNode helper text', () => {
       render(
         <DefaultThemeProvider>
-          <DefaultSelectControl
-            {...defaultProps}
-            ref={React.createRef<any>()}
-            helperText={<View testID="custom-helper" />}
-          />
+          <DefaultSelectControl {...defaultProps} helperText={<View testID="custom-helper" />} />
         </DefaultThemeProvider>,
       );
 
@@ -279,11 +255,7 @@ describe('DefaultSelectControl', () => {
     it('renders string label', () => {
       render(
         <DefaultThemeProvider>
-          <DefaultSelectControl
-            {...defaultProps}
-            ref={React.createRef<any>()}
-            label="String Label"
-          />
+          <DefaultSelectControl {...defaultProps} label="String Label" />
         </DefaultThemeProvider>,
       );
 
@@ -293,11 +265,7 @@ describe('DefaultSelectControl', () => {
     it('renders ReactNode label', () => {
       render(
         <DefaultThemeProvider>
-          <DefaultSelectControl
-            {...defaultProps}
-            ref={React.createRef<any>()}
-            label={<View testID="custom-label" />}
-          />
+          <DefaultSelectControl {...defaultProps} label={<View testID="custom-label" />} />
         </DefaultThemeProvider>,
       );
 
@@ -323,7 +291,7 @@ describe('DefaultSelectControl', () => {
       const setOpen = jest.fn();
       render(
         <DefaultThemeProvider>
-          <DefaultSelectControl {...defaultProps} ref={React.createRef<any>()} setOpen={setOpen} />
+          <DefaultSelectControl {...defaultProps} setOpen={setOpen} />
         </DefaultThemeProvider>,
       );
 
@@ -338,11 +306,7 @@ describe('DefaultSelectControl', () => {
     it('handles empty value array in multi-select', () => {
       render(
         <DefaultThemeProvider>
-          <DefaultSelectControl
-            {...(multiSelectProps as any)}
-            ref={React.createRef<any>()}
-            value={[]}
-          />
+          <DefaultSelectControl {...(multiSelectProps as any)} value={[]} />
         </DefaultThemeProvider>,
       );
 
@@ -352,12 +316,7 @@ describe('DefaultSelectControl', () => {
     it('handles undefined/null placeholder', () => {
       render(
         <DefaultThemeProvider>
-          <DefaultSelectControl
-            {...defaultProps}
-            ref={React.createRef<any>()}
-            placeholder={undefined}
-            value={null}
-          />
+          <DefaultSelectControl {...defaultProps} placeholder={undefined} value={null} />
         </DefaultThemeProvider>,
       );
 
@@ -368,12 +327,7 @@ describe('DefaultSelectControl', () => {
     it('handles missing options array', () => {
       render(
         <DefaultThemeProvider>
-          <DefaultSelectControl
-            {...(multiSelectProps as any)}
-            ref={React.createRef<any>()}
-            options={[]}
-            value={['option1']}
-          />
+          <DefaultSelectControl {...(multiSelectProps as any)} options={[]} value={['option1']} />
         </DefaultThemeProvider>,
       );
 
