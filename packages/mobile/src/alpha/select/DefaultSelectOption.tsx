@@ -60,7 +60,7 @@ export const DefaultSelectOption: SelectOptionComponent<'single' | 'multi'> = me
       [description, multiline, label],
     );
 
-    const handlePress = useCallback(() => onPress(value), [onPress, value]);
+    const handlePress = useCallback(() => onPress?.(value), [onPress, value]);
 
     const multiSelectCheckedAccessibilityState = useMemo(() => {
       if (selected) return true;

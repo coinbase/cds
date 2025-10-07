@@ -39,6 +39,7 @@ export const DefaultSelectDropdown: SelectDropdownComponent<'single' | 'multi'> 
         hideSelectAll,
         accessory,
         media,
+        label,
         detail,
         SelectOptionComponent = DefaultSelectOption,
         SelectAllOptionComponent = DefaultSelectAllOption,

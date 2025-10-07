@@ -607,7 +607,7 @@ const MultiSelectCustomSelectAllOptionExample = () => {
       <Pressable
         background={selected ? 'bgSecondary' : 'bg'}
         disabled={disabled}
-        onPress={() => onPress('select-all')}
+        onPress={() => onPress?.('select-all')}
         paddingX={2}
         paddingY={3}
         style={style}

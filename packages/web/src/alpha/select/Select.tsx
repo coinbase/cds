@@ -138,6 +138,8 @@ export type SelectDropdownProps<Type extends 'single' | 'multi' = 'single'> = Se
     open: boolean;
     /** Function to update the dropdown open state */
     setOpen: (open: boolean | ((open: boolean) => boolean)) => void;
+    /** Label displayed above the dropdown */
+    label?: React.ReactNode;
     /** Whether the dropdown is disabled */
     disabled?: boolean;
     /** Label for the "Select All" option in multi-select mode */
@@ -417,6 +419,7 @@ const SelectBase = memo(
               disabled={disabled}
               emptyOptionsLabel={emptyOptionsLabel}
               hideSelectAll={hideSelectAll}
+              label={label}
               media={media}
               onChange={onChange}
               open={hasMounted && open}

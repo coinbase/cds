@@ -30,33 +30,38 @@ export type SelectOption = {
  * Props for individual option components within the Select dropdown
  */
 export type SelectOptionProps<Type extends 'single' | 'multi' = 'single'> = SelectOption &
-  Pick<CellBaseProps, 'accessory' | 'media' | 'detail'> &
-  Pick<SelectProps, 'compact'> & {
+  Pick<CellBaseProps, 'accessory' | 'media' | 'detail'> & {
+    /** Press handler for the option */
+    onPress?: (value: string | null) => void;
     /** Whether this is for single or multi-select */
     type?: Type;
     /** Whether this option is currently selected */
     selected: boolean;
     /** Whether the option is in an indeterminate state (for multi-select) */
     indeterminate?: boolean;
-    /** Press handler for the option */
-    onPress: (value: string | null) => void;
     /** Whether to allow multiline text in the option */
     multiline?: boolean;
-    /** Style object for the option */
-    style?: StyleProp<ViewStyle>;
     /** Blend styles for option interactivity */
     blendStyles?: InteractableBlendStyles;
-    /** CSS class name for the option */
-    className?: string;
     /** Accessibility role for the option element */
     accessibilityRole?: AccessibilityRole;
+    /** Whether to use compact styling for the option */
+    compact?: boolean;
+    /** Style object for the option */
+    style?: StyleProp<ViewStyle>;
+    /** CSS class name for the option */
+    className?: string;
   };
 
 export type SelectOptionComponent<Type extends 'single' | 'multi' = 'single'> = React.FC<
   SelectOptionProps<Type>
 >;
 
-export type SelectEmptyDropdownContentComponent = React.FC<{ label: string }>;
+export type SelectEmptyDropdownContentProps = {
+  label: string;
+};
+
+export type SelectEmptyDropdownContentComponent = React.FC<SelectEmptyDropdownContentProps>;
 
 type SelectState<Type extends 'single' | 'multi' = 'single'> = {
   value: Type extends 'multi' ? string[] : string | null;
@@ -67,24 +72,35 @@ type SelectState<Type extends 'single' | 'multi' = 'single'> = {
  * Props for the select control component (the clickable input that opens the dropdown)
  */
 export type SelectControlProps<Type extends 'single' | 'multi' = 'single'> = Pick<
-  InputStackBaseProps,
-  'disabled' | 'startNode' | 'variant' | 'labelVariant'
+  SharedAccessibilityProps,
+  'accessibilityLabel' | 'accessibilityHint'
 > &
-  Pick<SharedAccessibilityProps, 'accessibilityLabel' | 'accessibilityHint'> &
-  SelectState<Type> &
-  Pick<SelectProps, 'options' | 'label' | 'placeholder' | 'helperText' | 'compact'> & {
+  Pick<InputStackBaseProps, 'disabled' | 'startNode' | 'variant' | 'labelVariant'> &
+  SelectState<Type> & {
+    /** Array of options to display in the select dropdown */
+    options: SelectOption[];
+    /** Label displayed above the control */
+    label?: React.ReactNode;
+    /** Placeholder text displayed when no option is selected */
+    placeholder?: React.ReactNode;
+    /** Helper text displayed below the select */
+    helperText?: React.ReactNode;
     /** Whether this is for single or multi-select */
     type?: Type;
     /** Whether the dropdown is currently open */
     open: boolean;
     /** Function to update the dropdown open state */
     setOpen: (open: boolean | ((open: boolean) => boolean)) => void;
+    /** Maximum number of selected options to show before truncating */
+    maxSelectedOptionsToShow?: number;
+    /** Blend styles for control interactivity */
+    blendStyles?: InteractableBlendStyles;
+    /** Whether to use compact styling for the control */
+    compact?: boolean;
     /** CSS class name for the control */
     className?: string;
     /** Style object for the control */
     style?: StyleProp<ViewStyle>;
-    /** Maximum number of selected options to show before truncating */
-    maxSelectedOptionsToShow?: number;
   };
 
 export type SelectControlComponent<Type extends 'single' | 'multi' = 'single'> = React.FC<
@@ -97,29 +113,35 @@ export type SelectControlComponent<Type extends 'single' | 'multi' = 'single'> =
  * Props for the dropdown component that contains the list of options
  */
 export type SelectDropdownProps<Type extends 'single' | 'multi' = 'single'> = SelectState<Type> &
-  Pick<CellBaseProps, 'accessory' | 'media' | 'detail'> &
-  Pick<
-    SelectProps,
-    | 'selectAllLabel'
-    | 'emptyOptionsLabel'
-    | 'clearAllLabel'
-    | 'SelectEmptyDropdownContentsComponent'
-    | 'label'
-    | 'disabled'
-    | 'compact'
-    | 'hideSelectAll'
-  > & {
+  Pick<SharedAccessibilityProps, 'accessibilityLabel'> &
+  Pick<SelectOptionProps<Type>, 'accessory' | 'media' | 'detail'> & {
     /** Whether this is for single or multi-select */
     type?: Type;
     /** Array of options with their configuration and optional custom components */
     options: (SelectOption &
-      Pick<CellBaseProps, 'accessory' | 'media'> & { Component?: SelectOptionComponent<Type> })[];
+      Pick<SelectOptionProps<Type>, 'accessory' | 'media'> & {
+        Component?: SelectOptionComponent<Type>;
+      })[];
     /** Whether the dropdown is currently open */
     open: boolean;
     /** Function to update the dropdown open state */
     setOpen: (open: boolean | ((open: boolean) => boolean)) => void;
+    /** Label displayed above the dropdown */
+    label?: React.ReactNode;
+    /** Whether the dropdown is disabled */
+    disabled?: boolean;
+    /** Label for the "Select All" option in multi-select mode */
+    selectAllLabel?: string;
+    /** Label displayed when there are no options available */
+    emptyOptionsLabel?: string;
+    /** Label for the "Clear All" option in multi-select mode */
+    clearAllLabel?: string;
+    /** Whether to hide the "Select All" option in multi-select mode */
+    hideSelectAll?: boolean;
     /** Reference to the control element for positioning */
     controlRef: React.MutableRefObject<any>;
+    /** Style object for the dropdown */
+    style?: StyleProp<ViewStyle>;
     /** Custom styles for dropdown elements */
     styles?: {
       /** Styles for the dropdown container */
@@ -129,15 +151,21 @@ export type SelectDropdownProps<Type extends 'single' | 'multi' = 'single'> = Se
       /** Blend styles for option interactivity */
       optionBlendStyles?: InteractableBlendStyles;
     };
+    /** CSS class name for the dropdown */
+    className?: string;
     /** Custom class names for dropdown elements */
     classNames?: {
       /** Class name for individual options */
       option?: string;
     };
+    /** Whether to use compact styling for the dropdown */
+    compact?: boolean;
     /** Custom component to render individual options */
     SelectOptionComponent?: SelectOptionComponent<Type>;
     /** Custom component to render the "Select All" option */
     SelectAllOptionComponent?: SelectOptionComponent<Type>;
+    /** Custom component to render when no options are available */
+    SelectEmptyDropdownContentsComponent?: SelectEmptyDropdownContentComponent;
     /** Accessibility roles for dropdown elements */
     accessibilityRoles?: {
       /** Accessibility role for option elements */
@@ -151,16 +179,29 @@ export type SelectDropdownComponent<Type extends 'single' | 'multi' = 'single'> 
   }
 >;
 
+export const defaultAccessibilityRoles: SelectDropdownProps['accessibilityRoles'] = {
+  option: 'menuitem',
+};
+
 /**
  * Props for the Select component
  */
 export type SelectProps<Type extends 'single' | 'multi' = 'single'> = Pick<
   InputStackBaseProps,
-  'startNode' | 'variant' | 'labelVariant'
+  'startNode' | 'variant' | 'disabled' | 'labelVariant'
 > &
-  Pick<CellBaseProps, 'accessory' | 'media' | 'detail'> &
   Pick<SharedAccessibilityProps, 'accessibilityLabel' | 'accessibilityHint'> &
-  SelectState<Type> & {
+  SelectState<Type> &
+  Pick<SelectControlProps<Type>, 'label' | 'placeholder' | 'helperText'> &
+  Pick<SelectOptionProps<Type>, 'accessory' | 'media' | 'detail'> &
+  Pick<
+    SelectDropdownProps<Type>,
+    | 'selectAllLabel'
+    | 'emptyOptionsLabel'
+    | 'clearAllLabel'
+    | 'hideSelectAll'
+    | 'accessibilityRoles'
+  > & {
     /** Whether the select allows single or multiple selections */
     type?: Type;
     /** Array of options to display in the select dropdown */
@@ -169,24 +210,8 @@ export type SelectProps<Type extends 'single' | 'multi' = 'single'> = Pick<
     open?: boolean;
     /** Callback to update the open state */
     setOpen?: (open: boolean | ((open: boolean) => boolean)) => void;
-    /** Whether the select is disabled */
-    disabled?: boolean;
     /** Whether clicking outside the dropdown should close it */
     disableClickOutsideClose?: boolean;
-    /** Placeholder text displayed when no option is selected */
-    placeholder?: React.ReactNode;
-    /** Helper text displayed below the select */
-    helperText?: React.ReactNode;
-    /** Label for the "Select All" option in multi-select mode */
-    selectAllLabel?: string;
-    /** Label displayed when there are no options available */
-    emptyOptionsLabel?: string;
-    /** Whether to hide the "Select All" option in multi-select mode */
-    hideSelectAll?: boolean;
-    /** Label for the "Clear All" option in multi-select mode */
-    clearAllLabel?: string;
-    /** Label displayed above the select input */
-    label?: React.ReactNode;
     /** Whether to use compact styling for the select */
     compact?: boolean;
     /** Initial open state when component mounts (uncontrolled mode) */
@@ -220,11 +245,6 @@ export type SelectProps<Type extends 'single' | 'multi' = 'single'> = Pick<
       control?: string;
       /** Class name for individual options */
       option?: string;
-    };
-    /** Accessibility roles for option elements */
-    accessibilityRoles?: {
-      /** Accessibility role for option elements */
-      option?: AccessibilityRole;
     };
   };
 
