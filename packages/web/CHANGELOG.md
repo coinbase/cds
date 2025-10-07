@@ -8,11 +8,17 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
-## 8.13.8 (10/7/2025 PST)
+## 8.14.1 (10/7/2025 PST)
 
 #### 🐞 Fixes
 
 - Feat: drop specified color for accordion divider. [[#75](https://github.com/coinbase/cds/pull/75)]
+
+## 8.14.0 (10/6/2025 PST)
+
+#### 🚀 Updates
+
+- Add display, style and className props to ThemeProvider and InvertedThemeProvider.
 
 ## 8.13.7 (10/6/2025 PST)
 

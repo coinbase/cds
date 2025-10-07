@@ -20,6 +20,8 @@ export const ThemeContext = createContext<ThemeContextValue | undefined>(undefin
 
 type ThemeManagerProps = {
   display?: React.CSSProperties['display'];
+  className?: string;
+  style?: React.CSSProperties;
   children?: React.ReactNode;
   theme: Theme;
 };
@@ -29,17 +31,20 @@ export const useThemeProviderStyles = (theme: Theme) => {
   return style;
 };
 
-const ThemeManager = ({ display, children, theme }: ThemeManagerProps) => {
-  const style = useThemeProviderStyles(theme);
-  const styles = useMemo(() => ({ ...style, display }), [style, display]);
+const ThemeManager = ({ display, className, style, children, theme }: ThemeManagerProps) => {
+  const themeStyles = useThemeProviderStyles(theme);
+  const styles = useMemo(
+    () => ({ ...themeStyles, display, ...style }),
+    [themeStyles, display, style],
+  );
   return (
-    <div className={cx(theme.id, theme.activeColorScheme)} style={styles}>
+    <div className={cx(theme.id, theme.activeColorScheme, className)} style={styles}>
       {children}
     </div>
   );
 };
 
-export type ThemeProviderProps = Pick<ThemeManagerProps, 'display'> &
+export type ThemeProviderProps = Pick<ThemeManagerProps, 'display' | 'className' | 'style'> &
   Pick<FramerMotionProviderProps, 'motionFeatures'> & {
     theme: ThemeConfig;
     activeColorScheme: ColorScheme;
@@ -50,7 +55,9 @@ export const ThemeProvider = ({
   theme,
   activeColorScheme,
   children,
+  className,
   display,
+  style,
   motionFeatures,
 }: ThemeProviderProps) => {
   const themeApi = useMemo(() => {
@@ -91,7 +98,7 @@ export const ThemeProvider = ({
   return (
     <FramerMotionProvider motionFeatures={motionFeatures}>
       <ThemeContext.Provider value={themeApi}>
-        <ThemeManager display={display} theme={themeApi}>
+        <ThemeManager className={className} display={display} style={style} theme={themeApi}>
           {children}
         </ThemeManager>
       </ThemeContext.Provider>
@@ -99,12 +106,20 @@ export const ThemeProvider = ({
   );
 };
 
-export type InvertedThemeProviderProps = {
+export type InvertedThemeProviderProps = Pick<
+  ThemeManagerProps,
+  'display' | 'className' | 'style'
+> & {
   children?: React.ReactNode;
 };
 
 /** Falls back to the currently active colorScheme if the inverse colors are not defined in the theme.  */
-export const InvertedThemeProvider = ({ children }: InvertedThemeProviderProps) => {
+export const InvertedThemeProvider = ({
+  children,
+  display,
+  className,
+  style,
+}: InvertedThemeProviderProps) => {
   const context = useContext(ThemeContext);
   if (!context) throw Error('InvertedThemeProvider must be used within a ThemeProvider');
   const inverseColorScheme = context.activeColorScheme === 'dark' ? 'light' : 'dark';
@@ -112,7 +127,13 @@ export const InvertedThemeProvider = ({ children }: InvertedThemeProviderProps) 
   const newColorScheme = context[inverseColorKey] ? inverseColorScheme : context.activeColorScheme;
 
   return (
-    <ThemeProvider activeColorScheme={newColorScheme} theme={context}>
+    <ThemeProvider
+      activeColorScheme={newColorScheme}
+      className={className}
+      display={display}
+      style={style}
+      theme={context}
+    >
       {children}
     </ThemeProvider>
   );
