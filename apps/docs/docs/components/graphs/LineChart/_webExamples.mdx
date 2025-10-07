@@ -14,7 +14,7 @@ function BasicExample() {
     <LineChart
       enableScrubbing
       onScrubberPositionChange={setScrubIndex}
-      height={250}
+      height={{ base: 150, tablet: 200, desktop: 250 }}
       series={[
         {
           id: 'prices',
@@ -39,7 +39,7 @@ function BasicExample() {
 
 ```jsx live
 <LineChart
-  height={250}
+  height={{ base: 150, tablet: 200, desktop: 250 }}
   series={[
     {
       id: 'prices',
@@ -73,121 +73,78 @@ function CompactLineChart() {
     })}`;
   }, []);
 
+  const CompactChart = memo(({ data, showArea, color, referenceY }) => (
+    <Box style={{ padding: 1 }}>
+      <LineChart
+        {...dimensions}
+        enableScrubbing={false}
+        overflow="visible"
+        inset={0}
+        showArea={showArea}
+        series={[
+          {
+            id: 'btc',
+            data,
+            color,
+          },
+        ]}
+      >
+        <ReferenceLine dataY={referenceY} />
+      </LineChart>
+    </Box>
+  ));
+
+  const ChartCell = memo(({ data, showArea, color, referenceY, subdetail, variant }) => {
+    const { isPhone } = useBreakpoints();
+
+    return (
+      <ListCell
+        description={isPhone ? undefined : assets.btc.symbol}
+        detail={formatPrice(parseFloat(prices[0]))}
+        intermediary={
+          <CompactChart data={data} showArea={showArea} color={color} referenceY={referenceY} />
+        }
+        media={<CellMedia source={assets.btc.imageUrl} title="BTC" type="image" />}
+        onClick={() => console.log('clicked')}
+        subdetail={subdetail}
+        title={isPhone ? undefined : assets.btc.name}
+        variant={variant}
+        style={{ padding: 0 }}
+      />
+    );
+  });
+
   return (
     <VStack gap={2}>
-      <ListCell
-        description={assets.btc.symbol}
-        detail={formatPrice(parseFloat(prices[0]))}
-        intermediary={
-          <Box style={{ padding: 1 }}>
-            <LineChart
-              {...dimensions}
-              enableScrubbing={false}
-              overflow="visible"
-              inset={0}
-              series={[
-                {
-                  id: 'btc',
-                  data: sparklineData,
-                  color: assets.btc.color,
-                },
-              ]}
-            >
-              <ReferenceLine dataY={parseFloat(prices[Math.floor(prices.length / 4)])} />
-            </LineChart>
-          </Box>
-        }
-        media={<CellMedia source={assets.btc.imageUrl} title="BTC" type="image" />}
-        onClick={() => console.log('clicked')}
+      <ChartCell
+        data={sparklineData}
+        color={assets.btc.color}
+        referenceY={parseFloat(prices[Math.floor(prices.length / 4)])}
         subdetail="-4.55%"
-        title={assets.btc.name}
         variant="negative"
       />
-      <ListCell
-        description={assets.btc.symbol}
-        detail={formatPrice(parseFloat(prices[0]))}
-        intermediary={
-          <Box style={{ padding: 1 }}>
-            <LineChart
-              {...dimensions}
-              showArea
-              enableScrubbing={false}
-              overflow="visible"
-              inset={0}
-              series={[
-                {
-                  id: 'btc',
-                  data: sparklineData,
-                  color: assets.btc.color,
-                },
-              ]}
-            >
-              <ReferenceLine dataY={parseFloat(prices[Math.floor(prices.length / 4)])} />
-            </LineChart>
-          </Box>
-        }
-        media={<CellMedia source={assets.btc.imageUrl} title="BTC" type="image" />}
-        onClick={() => console.log('clicked')}
+      <ChartCell
+        data={sparklineData}
+        showArea
+        color={assets.btc.color}
+        referenceY={parseFloat(prices[Math.floor(prices.length / 4)])}
         subdetail="-4.55%"
-        title={assets.btc.name}
         variant="negative"
       />
-      <ListCell
-        description={assets.btc.symbol}
-        detail={formatPrice(parseFloat(prices[0]))}
-        intermediary={
-          <Box style={{ padding: 1 }}>
-            <LineChart
-              {...dimensions}
-              showArea
-              enableScrubbing={false}
-              overflow="visible"
-              inset={0}
-              series={[
-                {
-                  id: 'btc',
-                  data: sparklineData,
-                  color: 'var(--color-fgPositive)',
-                },
-              ]}
-            >
-              <ReferenceLine dataY={positiveFloor} />
-            </LineChart>
-          </Box>
-        }
-        media={<CellMedia source={assets.btc.imageUrl} title="BTC" type="image" />}
-        onClick={() => console.log('clicked')}
+      <ChartCell
+        data={sparklineData}
+        showArea
+        color="var(--color-fgPositive)"
+        referenceY={positiveFloor}
         subdetail="+0.25%"
-        title={assets.btc.name}
         variant="positive"
       />
-      <ListCell
-        description={assets.btc.symbol}
-        detail={formatPrice(parseFloat(prices[0]))}
-        intermediary={
-          <Box style={{ padding: 1 }}>
-            <LineChart
-              {...dimensions}
-              showArea
-              enableScrubbing={false}
-              overflow="visible"
-              inset={0}
-              series={[
-                {
-                  id: 'btc',
-                  data: negativeData,
-                  color: 'var(--color-fgNegative)',
-                },
-              ]}
-            >
-              <ReferenceLine dataY={negativeCeiling} />
-            </LineChart>
-          </Box>
-        }
-        media={<CellMedia source={assets.btc.imageUrl} title="BTC" type="image" />}
-        onClick={() => console.log('clicked')}
+      <ChartCell
+        data={negativeData}
+        showArea
+        color="var(--color-fgNegative)"
+        referenceY={negativeCeiling}
         subdetail="-4.55%"
-        title={assets.btc.name}
         variant="negative"
       />
     </VStack>
@@ -269,7 +226,7 @@ function GainLossChart() {
   return (
     <CartesianChart
       enableScrubbing
-      height={250}
+      height={{ base: 150, tablet: 200, desktop: 250 }}
       series={[
         {
           id: 'prices',
@@ -303,7 +260,7 @@ function MultipleSeriesChart() {
   return (
     <LineChart
       enableScrubbing
-      height={400}
+      height={{ base: 150, tablet: 200, desktop: 250 }}
       series={[
         {
           id: 'prices',
@@ -344,7 +301,7 @@ function PointsChart() {
 
   return (
     <CartesianChart
-      height={250}
+      height={{ base: 150, tablet: 200, desktop: 250 }}
       series={[
         {
           id: 'prices',
@@ -392,7 +349,7 @@ This example shows how to use an empty state for a line chart.
     },
   ]}
   yAxis={{ domain: { min: -1, max: 3 } }}
-  height={300}
+  height={{ base: 150, tablet: 200, desktop: 250 }}
 />
 ```
 
@@ -400,7 +357,7 @@ This example shows how to use an empty state for a line chart.
 
 ```jsx live
 <LineChart
-  height={400}
+  height={{ base: 150, tablet: 200, desktop: 250 }}
   series={[
     {
       id: 'top',
@@ -503,7 +460,7 @@ function LiveAssetPrice() {
       enableScrubbing
       onScrubberPositionChange={setScrubIndex}
       showArea
-      height={300}
+      height={{ base: 150, tablet: 200, desktop: 250 }}
       series={[
         {
           id: 'btc',
@@ -511,7 +468,7 @@ function LiveAssetPrice() {
           color: assets.btc.color,
         },
       ]}
-      padding={{ right: 8 }}
+      inset={{ right: 64 }}
       accessibilityLabel={accessibilityLabel}
     >
       <Scrubber ref={scrubberRef} labelProps={{ elevation: 1 }} />
@@ -546,7 +503,7 @@ function DataFormatChart() {
           data: yData,
         },
       ]}
-      height={300}
+      height={{ base: 150, tablet: 200, desktop: 250 }}
       showArea
       renderPoints={() => true}
       curve="natural"
@@ -560,7 +517,7 @@ function DataFormatChart() {
         showTickMarks: true,
         showGrid: true,
       }}
-      padding={2}
+      inset={{ top: 16, right: 16, bottom: 0, left: 0 }}
       accessibilityLabel={accessibilityLabel}
     >
       <Scrubber hideOverlay />
@@ -571,7 +528,89 @@ function DataFormatChart() {
 
 ## Accessibility
 
-You can use the `accessibilityLabel` and `aria-labelledby` props to provide a label for the chart.
+You can use `accessibilityLabel` to provide a descriptive label for the chart. This is especially important for charts with scrubbing enabled, where the label should update dynamically to reflect the current data point.
+
+```jsx live
+function AccessibleBasicChart() {
+  const [scrubIndex, setScrubIndex] = useState(undefined);
+  const data = [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58];
+
+  const accessibilityLabel = useMemo(() => {
+    if (scrubIndex === undefined) {
+      return `Current price: ${data[data.length - 1]}`;
+    }
+    return `Price at position ${scrubIndex + 1}: ${data[scrubIndex]}`;
+  }, [scrubIndex, data]);
+
+  return (
+    <LineChart
+      enableScrubbing
+      onScrubberPositionChange={setScrubIndex}
+      height={{ base: 150, tablet: 200, desktop: 250 }}
+      series={[
+        {
+          id: 'prices',
+          data: data,
+        },
+      ]}
+      curve="monotone"
+      showYAxis
+      showArea
+      yAxis={{
+        showGrid: true,
+      }}
+      accessibilityLabel={accessibilityLabel}
+    >
+      <Scrubber />
+    </LineChart>
+  );
+}
+```
+
+When a chart has a visible header or title, you can use `aria-labelledby` to reference it.
+
+```jsx live
+function AccessibleChartWithHeader() {
+  const headerId = useId();
+  const [scrubIndex, setScrubIndex] = useState(undefined);
+  const data = [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58];
+
+  const accessibilityLabel = useMemo(() => {
+    if (scrubIndex === undefined) {
+      return `Line chart showing price trend. Current value: ${data[data.length - 1]}`;
+    }
+    return `Value: ${data[scrubIndex]} at position ${scrubIndex + 1}`;
+  }, [scrubIndex, data]);
+
+  return (
+    <VStack gap={2}>
+      <Text id={headerId} font="label1">
+        {accessibilityLabel}
+      </Text>
+      <LineChart
+        enableScrubbing
+        onScrubberPositionChange={setScrubIndex}
+        height={{ base: 150, tablet: 200, desktop: 250 }}
+        series={[
+          {
+            id: 'revenue',
+            data: data,
+          },
+        ]}
+        curve="monotone"
+        showYAxis
+        showArea
+        yAxis={{
+          showGrid: true,
+        }}
+        aria-labelledby={headerId}
+      >
+        <Scrubber />
+      </LineChart>
+    </VStack>
+  );
+}
+```
 
 ## Customization
 
@@ -645,12 +684,27 @@ const BTCActiveIndicator = memo(({ style, ...props }: TabsActiveIndicatorProps) 
     [tabs, setTimePeriod],
   );
 
+  const priceFormatter = useMemo(
+    () =>
+      new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+      }),
+    [],
+  );
+
+  const scrubberPriceFormatter = useMemo(
+    () =>
+      new Intl.NumberFormat('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      }),
+    [],
+  );
+
   const formatPrice = useCallback((price: number) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-    }).format(price);
-  }, []);
+    return priceFormatter.format(price);
+  }, [priceFormatter]);
 
   const formatDate = useCallback((date: Date) => {
     const dayOfWeek = date.toLocaleDateString('en-US', { weekday: 'short' });
@@ -669,31 +723,27 @@ const BTCActiveIndicator = memo(({ style, ...props }: TabsActiveIndicatorProps) 
     return `${dayOfWeek}, ${monthDay}, ${time}`;
   }, []);
 
-  const scrubberLabel: ChartTextChildren = useMemo(() => {
-    if (scrubIndex === undefined) return null;
-    const price = new Intl.NumberFormat('en-US', {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    }).format(sparklineTimePeriodDataValues[scrubIndex]);
-    const date = formatDate(sparklineTimePeriodDataTimestamps[scrubIndex]);
-    return (
-      <>
-        <tspan style={{ fontWeight: 'bold' }}>{price} USD</tspan> {date}
-      </>
-    );
-  }, [sparklineTimePeriodDataValues, scrubIndex]);
+  const scrubberLabel = useCallback(
+    (index: number) => {
+      const price = scrubberPriceFormatter.format(sparklineTimePeriodDataValues[index]);
+      const date = formatDate(sparklineTimePeriodDataTimestamps[index]);
+      return (
+        <>
+          <tspan style={{ fontWeight: 'bold' }}>{price} USD</tspan> {date}
+        </>
+      );
+    },
+    [scrubberPriceFormatter, sparklineTimePeriodDataValues, sparklineTimePeriodDataTimestamps, formatDate],
+  );
 
-  const accessibilityLabel: string | undefined = useMemo(() => {
-    if (scrubIndex === undefined) return;
-    const price = new Intl.NumberFormat('en-US', {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    }).format(sparklineTimePeriodDataValues[scrubIndex]);
-    const date = formatDate(sparklineTimePeriodDataTimestamps[scrubIndex]);
-    return (
-      `${price} USD ${date}`
-    );
-  }, [sparklineTimePeriodDataValues, scrubIndex]);
+  const accessibilityLabel = useCallback(
+    (index: number) => {
+      const price = scrubberPriceFormatter.format(sparklineTimePeriodDataValues[index]);
+      const date = formatDate(sparklineTimePeriodDataTimestamps[index]);
+      return `${price} USD ${date}`;
+    },
+    [scrubberPriceFormatter, sparklineTimePeriodDataValues, sparklineTimePeriodDataTimestamps, formatDate],
+  );
 
   return (
     <VStack gap={2}>
@@ -720,7 +770,7 @@ const BTCActiveIndicator = memo(({ style, ...props }: TabsActiveIndicatorProps) 
         ]}
         showArea
         areaType="dotted"
-        height={300}
+        height={{ base: 150, tablet: 200, desktop: 250 }}
         style={{ outlineColor: assets.btc.color }}
         accessibilityLabel={scrubberLabel}
         padding={{ left: 2, right: 2 }}
@@ -745,163 +795,178 @@ const BTCActiveIndicator = memo(({ style, ...props }: TabsActiveIndicatorProps) 
 
 ```jsx live
 function ForecastAssetPrice() {
-  const [scrubIndex, setScrubIndex] = useState<number | undefined>(undefined);
-  const getDataFromSparkline = (startDate: Date) => {
-    const allData = sparklineInteractiveData.all;
-    if (!allData || allData.length === 0) return [];
-
-    const timelineData = allData.filter((point) => point.date >= startDate);
-
-    return timelineData.map((point) => ({
-      date: point.date,
-      value: point.value,
-    }));
-  };
-
-  const historicalData = useMemo(() => getDataFromSparkline(new Date('2019-01-01')), []);
-
-  const annualGrowthRate = 10;
-
-  const generateForecastData = useCallback(
-    (lastDate: Date, lastPrice: number, growthRate: number) => {
-      const dailyGrowthRate = Math.pow(1 + growthRate / 100, 1 / 365) - 1;
-      const forecastData = [];
-      const fiveYearsFromNow = new Date(lastDate);
-      fiveYearsFromNow.setFullYear(fiveYearsFromNow.getFullYear() + 5);
-
-      // Generate daily forecast points for 5 years
-      const currentDate = new Date(lastDate);
-      let currentPrice = lastPrice;
-
-      while (currentDate <= fiveYearsFromNow) {
-        currentPrice = currentPrice * (1 + dailyGrowthRate * 10);
-        forecastData.push({
-          date: new Date(currentDate),
-          value: Math.round(currentPrice),
-        });
-        currentDate.setDate(currentDate.getDate() + 10);
-      }
-
-      return forecastData;
-    },
-    [],
-  );
-
-  const formatPrice = useCallback((price: number) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-    }).format(price);
-  }, []);
-
-  const formatDate = useCallback((date: Date) => {
-    const dayOfWeek = date.toLocaleDateString('en-US', { weekday: 'short' });
-
-    const monthDay = date.toLocaleDateString('en-US', {
-      month: 'short',
-      day: 'numeric',
-    });
-
-    const time = date.toLocaleTimeString('en-US', {
-      hour: 'numeric',
-      minute: '2-digit',
-      hour12: true,
-    });
-
-    return `${dayOfWeek}, ${monthDay}, ${time}`;
-  }, []);
-
-  const forecastData = useMemo(() => {
-    if (historicalData.length === 0) return [];
-    const lastPoint = historicalData[historicalData.length - 1];
-    return generateForecastData(lastPoint.date, lastPoint.value, annualGrowthRate);
-  }, [generateForecastData, historicalData, annualGrowthRate]);
-
-  // Combine all data points with dates converted to timestamps for x-axis
-  const allDataPoints = useMemo(
-    () => [...historicalData, ...forecastData],
-    [historicalData, forecastData],
-  );
-
-  const AreaComponent = memo(
+  const ForecastAreaComponent = memo(
     (props: AreaComponentProps) => (
       <DottedArea {...props} peakOpacity={0.4} baselineOpacity={0.4} />
     ),
   );
 
-  const scrubberLabel: ChartTextChildren = useMemo(() => {
-    if (scrubIndex === undefined) return null;
-    const price = new Intl.NumberFormat('en-US', {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    }).format(allDataPoints[scrubIndex].value);
-    const date = formatDate(allDataPoints[scrubIndex].date);
-    return (
-      <>
-        <tspan style={{ fontWeight: 'bold' }}>{price} USD</tspan> {date}
-      </>
-    );
-  }, [allDataPoints, scrubIndex]);
+  const ForecastChart = memo(() => {
+    const [scrubIndex, setScrubIndex] = useState<number | undefined>(undefined);
 
+    const getDataFromSparkline = useCallback((startDate: Date) => {
+      const allData = sparklineInteractiveData.all;
+      if (!allData || allData.length === 0) return [];
 
-  const accessibilityLabel: string | undefined = useMemo(() => {
-    if (scrubIndex === undefined) return;
-    const price = new Intl.NumberFormat('en-US', {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    }).format(allDataPoints[scrubIndex].value);
-    const date = formatDate(allDataPoints[scrubIndex].date);
-    return (
-      `${price} USD ${date}`
-    );
-  }, [allDataPoints, scrubIndex]);
+      const timelineData = allData.filter((point) => point.date >= startDate);
 
-  return (
-    <LineChart
-      overflow="visible"
-      animate={false}
-      enableScrubbing
-      onScrubberPositionChange={setScrubIndex}
-      showArea
-      showXAxis
-      AreaComponent={AreaComponent}
-      height={350}
-      padding={{
-        top: 4,
-        left: 2,
-        right: 2,
-        bottom: 0,
-      }}
-      series={[
-        {
-          id: 'historical',
-          data: historicalData.map((d) => d.value),
-          color: assets.btc.color,
-        },
-        {
-          id: 'forecast',
-          data: [...historicalData.map((d) => null), ...forecastData.map((d) => d.value)],
-          color: assets.btc.color,
-          type: 'dotted',
-        },
-      ]}
-      xAxis={{
-        data: allDataPoints.map((d) => d.date.getTime()),
-        tickLabelFormatter: (value: number) => {
-          return new Date(value).toLocaleDateString('en-US', {
-            month: 'numeric',
-            year: 'numeric',
+      return timelineData.map((point) => ({
+        date: point.date,
+        value: point.value,
+      }));
+    }, []);
+
+    const historicalData = useMemo(() => getDataFromSparkline(new Date('2019-01-01')), [getDataFromSparkline]);
+
+    const annualGrowthRate = 10;
+
+    const generateForecastData = useCallback(
+      (lastDate: Date, lastPrice: number, growthRate: number) => {
+        const dailyGrowthRate = Math.pow(1 + growthRate / 100, 1 / 365) - 1;
+        const forecastData = [];
+        const fiveYearsFromNow = new Date(lastDate);
+        fiveYearsFromNow.setFullYear(fiveYearsFromNow.getFullYear() + 5);
+
+        // Generate daily forecast points for 5 years
+        const currentDate = new Date(lastDate);
+        let currentPrice = lastPrice;
+
+        while (currentDate <= fiveYearsFromNow) {
+          currentPrice = currentPrice * (1 + dailyGrowthRate * 10);
+          forecastData.push({
+            date: new Date(currentDate),
+            value: Math.round(currentPrice),
           });
-        },
-        tickInterval: 2,
-      }}
-      accessibilityLabel={scrubberLabel}
-      AreaComponent={(props) => <DottedArea {...props} peakOpacity={0.4} baselineOpacity={0.4} />}
-      style={{ outlineColor: assets.btc.color }}
-    >
-      <Scrubber label={scrubberLabel} labelProps={{ elevation: 1 }} />
-    </LineChart>
-  );
+          currentDate.setDate(currentDate.getDate() + 10);
+        }
+
+        return forecastData;
+      },
+      [],
+    );
+
+    const priceFormatter = useMemo(
+      () =>
+        new Intl.NumberFormat('en-US', {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        }),
+      [],
+    );
+
+    const formatDate = useCallback((date: Date) => {
+      const dayOfWeek = date.toLocaleDateString('en-US', { weekday: 'short' });
+
+      const monthDay = date.toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
+      });
+
+      const time = date.toLocaleTimeString('en-US', {
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: true,
+      });
+
+      return `${dayOfWeek}, ${monthDay}, ${time}`;
+    }, []);
+
+    const forecastData = useMemo(() => {
+      if (historicalData.length === 0) return [];
+      const lastPoint = historicalData[historicalData.length - 1];
+      return generateForecastData(lastPoint.date, lastPoint.value, annualGrowthRate);
+    }, [generateForecastData, historicalData, annualGrowthRate]);
+
+    // Combine all data points with dates converted to timestamps for x-axis
+    const allDataPoints = useMemo(
+      () => [...historicalData, ...forecastData],
+      [historicalData, forecastData],
+    );
+
+    const historicalDataValues = useMemo(
+      () => historicalData.map((d) => d.value),
+      [historicalData],
+    );
+
+    const forecastDataValues = useMemo(
+      () => [...historicalData.map((d) => null), ...forecastData.map((d) => d.value)],
+      [historicalData, forecastData],
+    );
+
+    const xAxisData = useMemo(
+      () => allDataPoints.map((d) => d.date.getTime()),
+      [allDataPoints],
+    );
+
+    const scrubberLabel = useCallback(
+      (index: number) => {
+        const price = priceFormatter.format(allDataPoints[index].value);
+        const date = formatDate(allDataPoints[index].date);
+        return (
+          <>
+            <tspan style={{ fontWeight: 'bold' }}>{price} USD</tspan> {date}
+          </>
+        );
+      },
+      [priceFormatter, allDataPoints, formatDate],
+    );
+
+    const accessibilityLabel = useCallback(
+      (index: number) => {
+        const price = priceFormatter.format(allDataPoints[index].value);
+        const date = formatDate(allDataPoints[index].date);
+        return `${price} USD ${date}`;
+      },
+      [priceFormatter, allDataPoints, formatDate],
+    );
+
+    return (
+      <LineChart
+        overflow="visible"
+        animate={false}
+        enableScrubbing
+        showArea
+        showXAxis
+        AreaComponent={ForecastAreaComponent}
+        height={{ base: 150, tablet: 200, desktop: 250 }}
+        padding={{
+          top: 4,
+          left: 2,
+          right: 2,
+          bottom: 0,
+        }}
+        series={[
+          {
+            id: 'historical',
+            data: historicalDataValues,
+            color: assets.btc.color,
+          },
+          {
+            id: 'forecast',
+            data: forecastDataValues,
+            color: assets.btc.color,
+            type: 'dotted',
+          },
+        ]}
+        xAxis={{
+          data: xAxisData,
+          tickLabelFormatter: (value: number) => {
+            return new Date(value).toLocaleDateString('en-US', {
+              month: 'numeric',
+              year: 'numeric',
+            });
+          },
+          tickInterval: 2,
+        }}
+        accessibilityLabel={accessibilityLabel}
+        style={{ outlineColor: assets.btc.color }}
+      >
+        <Scrubber label={scrubberLabel} labelProps={{ elevation: 1 }} />
+      </LineChart>
+    );
+  });
+
+  return <ForecastChart />;
 };
 ```
 
@@ -998,7 +1063,7 @@ function AvailabilityChart() {
     <CartesianChart
       enableScrubbing
       onScrubberPositionChange={setScrubIndex}
-      height={300}
+      height={{ base: 150, tablet: 200, desktop: 250 }}
       series={[
         {
           id: 'availability',
@@ -1038,7 +1103,7 @@ function AvailabilityChart() {
         })}
         seriesId="availability"
       />
-      <Scrubber overlayOffset={10} />
+      <Scrubber hideOverlay />
     </CartesianChart>
   );
 }
@@ -1050,6 +1115,7 @@ You can coordinate LineChart with custom styles to create a custom card that sho
 
 ```jsx live
 function BitcoinChartWithScrubberBeacon() {
+  const { isPhone } = useBreakpoints();
   const prices = [...btcCandles].reverse().map((candle) => parseFloat(candle.close));
   const latestPrice = prices[prices.length - 1];
 
@@ -1084,15 +1150,17 @@ function BitcoinChartWithScrubberBeacon() {
     >
       <HStack gap={2} alignItems="center">
         <RemoteImage source={assets.btc.imageUrl} size="xxl" shape="circle" aria-hidden />
-        <VStack gap={0.25} flexGrow={1}>
-          <Text font="title1" style={{ color: 'white' }} aria-hidden>
-            BTC
-          </Text>
-          <Text font="label1" color="fgMuted">
-            Bitcoin
-          </Text>
-        </VStack>
-        <VStack gap={0.25} alignItems="flex-end">
+        {!isPhone && (
+          <VStack gap={0.25} flexGrow={1}>
+            <Text font="title1" style={{ color: 'white' }} aria-hidden>
+              BTC
+            </Text>
+            <Text font="label1" color="fgMuted">
+              Bitcoin
+            </Text>
+          </VStack>
+        )}
+        <VStack gap={0.25} alignItems="flex-end" flexGrow={isPhone ? 1 : undefined}>
           <Text font="title1" style={{ color: 'white' }}>
             {formatPrice(latestPrice)}
           </Text>
@@ -1108,7 +1176,7 @@ function BitcoinChartWithScrubberBeacon() {
         }}
       >
         <LineChart
-          padding={{ left: 0, right: 3, bottom: 0, top: 0 }}
+          inset={{ left: 0, right: 18, bottom: 0, top: 0 }}
           series={[
             {
               id: 'btcPrice',

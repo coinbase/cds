@@ -5,9 +5,10 @@ They are helpful for highlighting trends to users or allowing them to compare pr
 
 To start, pass in a series of data to the chart.
 
-```jsx live
+```jsx
 <BarChart
-  height={250}
+  height={150}
+  inset={{ top: 8, bottom: 8, left: 0, right: 0 }}
   series={[
     {
       id: 'prices',
@@ -26,7 +27,7 @@ To start, pass in a series of data to the chart.
 
 You can also provide multiple series of data to the chart. Series will have their bars for each data point rendered side by side.
 
-```jsx live
+```jsx
 function MonthlyGainsByAsset() {
   const ThinSolidLine = memo((props: SolidLineProps) => <SolidLine {...props} strokeWidth={1} />);
 
@@ -41,7 +42,8 @@ function MonthlyGainsByAsset() {
 
   return (
     <BarChart
-      height={400}
+      height={150}
+      inset={{ top: 8, bottom: 8, left: 0, right: 0 }}
       series={[
         {
           id: 'btc',
@@ -65,7 +67,7 @@ function MonthlyGainsByAsset() {
         showGrid: true,
         GridLineComponent: ThinSolidLine,
         tickLabelFormatter: tickFormatter,
-        width: 62,
+        width: 70,
       }}
     />
   );
@@ -76,7 +78,7 @@ function MonthlyGainsByAsset() {
 
 You can also configure stacking for your chart using the `stacked` prop.
 
-```jsx live
+```jsx
 function MonthlyGainsByAsset() {
   const ThinSolidLine = memo((props: SolidLineProps) => <SolidLine {...props} strokeWidth={1} />);
 
@@ -91,7 +93,8 @@ function MonthlyGainsByAsset() {
 
   return (
     <BarChart
-      height={400}
+      height={150}
+      inset={{ top: 8, bottom: 8, left: 0, right: 0 }}
       series={[
         {
           id: 'xrp',
@@ -132,7 +135,7 @@ function MonthlyGainsByAsset() {
         showGrid: true,
         GridLineComponent: ThinSolidLine,
         tickLabelFormatter: tickFormatter,
-        width: 62,
+        width: 70,
       }}
     />
   );
@@ -141,7 +144,7 @@ function MonthlyGainsByAsset() {
 
 You can also configure multiple stacks by setting the `stackId` prop on each series.
 
-```jsx live
+```jsx
 function MonthlyGainsMultipleStacks() {
   const ThinSolidLine = memo((props: SolidLineProps) => <SolidLine {...props} strokeWidth={1} />);
 
@@ -156,7 +159,8 @@ function MonthlyGainsMultipleStacks() {
 
   return (
     <BarChart
-      height={400}
+      height={150}
+      inset={{ top: 8, bottom: 8, left: 0, right: 0 }}
       series={[
         {
           id: 'xrp',
@@ -201,7 +205,7 @@ function MonthlyGainsMultipleStacks() {
         showGrid: true,
         GridLineComponent: ThinSolidLine,
         tickLabelFormatter: tickFormatter,
-        width: 62,
+        width: 70,
       }}
     />
   );
@@ -210,7 +214,7 @@ function MonthlyGainsMultipleStacks() {
 
 ### Stack Gap
 
-```jsx live
+```jsx
 function MonthlyGainsByAsset() {
   const ThinSolidLine = memo((props: SolidLineProps) => <SolidLine {...props} strokeWidth={1} />);
 
@@ -225,7 +229,8 @@ function MonthlyGainsByAsset() {
 
   return (
     <BarChart
-      height={400}
+      height={150}
+      inset={{ top: 8, bottom: 8, left: 0, right: 0 }}
       series={[
         {
           id: 'xrp',
@@ -267,7 +272,7 @@ function MonthlyGainsByAsset() {
         showGrid: true,
         GridLineComponent: ThinSolidLine,
         tickLabelFormatter: tickFormatter,
-        width: 62,
+        width: 70,
         domainLimit: 'strict'
       }}
     />
@@ -281,7 +286,7 @@ Bars have a default border radius of `100`. You can change this by setting the `
 
 Stacks will only round the top corners of touching bars.
 
-```jsx live
+```jsx
 <BarChart
   stacked
   borderRadius={1000}
@@ -303,7 +308,7 @@ Stacks will only round the top corners of touching bars.
     data: ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'],
     tickLabelFormatter: (value) => {
       if (value === 'D') {
-        return <tspan style={{ fontWeight: 'bold' }}>{value}</tspan>;
+        return <Tspan style={{ fontWeight: 'bold' }}>{value}</TSpan>;
       }
       return value;
     },
@@ -316,7 +321,7 @@ Stacks will only round the top corners of touching bars.
 
 You can also round the baseline of the bars by setting the `roundBaseline` prop on the chart.
 
-```jsx live
+```jsx
 <BarChart
   roundBaseline
   stacked
@@ -339,7 +344,7 @@ You can also round the baseline of the bars by setting the `roundBaseline` prop 
     data: ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'],
     tickLabelFormatter: (value) => {
       if (value === 'D') {
-        return <tspan style={{ fontWeight: 'bold' }}>{value}</tspan>;
+        return <TSpan style={{ fontWeight: 'bold' }}>{value}</TSpan>;
       }
       return value;
     },
@@ -350,10 +355,8 @@ You can also round the baseline of the bars by setting the `roundBaseline` prop 
 
 ## Negative Data
 
-```jsx live
+```jsx
 function PositiveAndNegativeCashFlow() {
-  const theme = useTheme();
-
   const ThinSolidLine = memo((props: SolidLineProps) => <SolidLine {...props} strokeWidth={1} />);
 
   const categories = Array.from({ length: 31 }, (_, i) => `3/${i + 1}`);
@@ -367,14 +370,14 @@ function PositiveAndNegativeCashFlow() {
     0, 0, 0, -12, -10,
   ];
   const series = [
-    { id: 'gains', data: gains, color: theme.color.fgPositive },
-    { id: 'losses', data: losses, color: theme.color.fgNegative },
+    { id: 'gains', data: gains, color: 'var(--color-fgPositive)' },
+    { id: 'losses', data: losses, color: 'var(--color-fgNegative)' },
   ];
 
   return (
     <BarChart
-      height={420}
-      padding={4}
+      height={150}
+      inset={{ top: 8, bottom: 8, left: 0, right: 0 }}
       series={series}
       xAxis={{ data: categories }}
       stacked
@@ -394,11 +397,12 @@ function PositiveAndNegativeCashFlow() {
 
 You can pass in `null` or `0` values to not render a bar for that data point.
 
-```jsx live
+```jsx
 <BarChart
   showXAxis
   showYAxis
-  height={400}
+  height={150}
+  inset={{ top: 8, bottom: 8, left: 0, right: 0 }}
   series={[
     {
       id: 'weekly-data',
@@ -422,9 +426,9 @@ You can pass in `null` or `0` values to not render a bar for that data point.
 />
 ```
 
-You can also use the `StackComponent` prop to render an empty circle for zero values.
+You can also use the `BarStackComponent` prop to render an empty circle for zero values.
 
-```jsx live
+```jsx
 function MonthlyRewards() {
   const months = ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'];
   const currentMonth = 7;
@@ -440,8 +444,7 @@ function MonthlyRewards() {
     { id: 'green', data: green, color: '#33c481' },
   ];
 
-  const CustomStackComponent = ({ children, ...props }: StackComponentProps) => {
-    const theme = useTheme();
+  const CustomBarStackComponent = ({ children, ...props }: BarStackComponentProps) => {
     if (props.height === 0) {
       const diameter = props.width;
       return (
@@ -449,7 +452,7 @@ function MonthlyRewards() {
           roundBottom
           roundTop
           borderRadius={1000}
-          fill={theme.color.bgTertiary}
+          fill="var(--color-bgTertiary)"
           height={diameter}
           width={diameter}
           x={props.x}
@@ -458,7 +461,7 @@ function MonthlyRewards() {
       );
     }
 
-    return <DefaultStackComponent {...props}>{children}</DefaultStackComponent>;
+    return <DefaultBarStack {...props}>{children}</DefaultBarStack>;
   };
 
   return (
@@ -466,10 +469,10 @@ function MonthlyRewards() {
       roundBaseline
       showXAxis
       stacked
-      StackComponent={CustomStackComponent}
+      BarStackComponent={CustomBarStackComponent}
       borderRadius={1000}
       height={300}
-      padding={0}
+      inset={0}
       series={series}
       showYAxis={false}
       stackMinSize={3}
@@ -477,7 +480,7 @@ function MonthlyRewards() {
       xAxis={{
         tickLabelFormatter: (index) => {
           if (index == currentMonth) {
-            return <tspan style={{ fontWeight: 'bold' }}>{months[index]}</tspan>;
+            return <TSpan style={{ fontWeight: 'bold' }}>{months[index]}</TSpan>;
           }
           return months[index];
         },
@@ -494,36 +497,32 @@ function MonthlyRewards() {
 
 There are two ways to control the spacing between bars. You can set the `barPadding` prop to control the spacing between bars within a series. You can also set the `categoryPadding` prop to control the spacing between stacks of bars.
 
-```jsx live
-function BarSpacing() {
-  const theme = useTheme();
-  return (
-    <BarChart
-      height={400}
-      series={[
-        {
-          id: 'pageViews',
-          data: [24, 13, 98, 39, 48, 38, 43],
-          color: theme.color.fgPositive,
-        },
-        {
-          id: 'uniqueVisitors',
-          data: [12, 15, 18, 21, 24, 27, 30],
-          color: theme.color.fgNegative,
-        },
-      ]}
-      borderRadius={0}
-      barPadding={0}
-      showYAxis
-      yAxis={{
-        showGrid: true,
-      }}
-      xAxis={{
-        categoryPadding: 0.2,
-      }}
-    />
-  );
-}
+```jsx
+<BarChart
+  height={150}
+  inset={{ top: 8, bottom: 8, left: 0, right: 0 }}
+  series={[
+    {
+      id: 'pageViews',
+      data: [24, 13, 98, 39, 48, 38, 43],
+      color: 'var(--color-fgPositive)',
+    },
+    {
+      id: 'uniqueVisitors',
+      data: [12, 15, 18, 21, 24, 27, 30],
+      color: 'var(--color-fgNegative)',
+    },
+  ]}
+  borderRadius={0}
+  barPadding={0}
+  showYAxis
+  yAxis={{
+    showGrid: true,
+  }}
+  xAxis={{
+    categoryPadding: 0.2,
+  }}
+/>
 ```
 
 ### Minimum Size
@@ -535,45 +534,41 @@ It is recommended to only use `stackMinSize` for stacked charts and `barMinSize`
 
 You can set the `stackMinSize` prop to control the minimum size for entire stacks. This will only apply to stacks that have a value that is not `null` or `0`. It will proportionally scale the values of each bar in the stack to reach the minimum size.
 
-```jsx live
-function MinimumStackSize() {
-  const theme = useTheme();
-
-  return (
-    <BarChart
-      height={400}
-      series={[
-        {
-          id: 'pageViews',
-          data: [24, 3, 98, null, 48, null, 43],
-          color: theme.color.fgPositive,
-        },
-        {
-          id: 'uniqueVisitors',
-          data: [12, 1, 18, null, 24, 1, 30],
-          color: theme.color.fgNegative,
-        },
-      ]}
-      stackMinSize={2}
-      stacked
-      showYAxis
-      yAxis={{
-        showGrid: true,
-      }}
-    />
-  );
-}
+```jsx
+<BarChart
+  height={150}
+  inset={{ top: 8, bottom: 8, left: 0, right: 0 }}
+  series={[
+    {
+      id: 'pageViews',
+      data: [24, 3, 98, null, 48, null, 43],
+      color: 'var(--color-fgPositive)',
+    },
+    {
+      id: 'uniqueVisitors',
+      data: [12, 1, 18, null, 24, 1, 30],
+      color: 'var(--color-fgNegative)',
+    },
+  ]}
+  stackMinSize={2}
+  stacked
+  showYAxis
+  yAxis={{
+    showGrid: true,
+  }}
+/>
 ```
 
 #### Minimum Bar Size
 
 You can also set the `barMinSize` prop to control the minimum size for individual bars. This will only apply to bars that have a value that is not `null` or `0`.
 
-```jsx live
+```jsx
 <BarChart
   showXAxis
   showYAxis
-  height={400}
+  height={150}
+  inset={{ top: 8, bottom: 8, left: 0, right: 0 }}
   series={[
     {
       id: 'weekly-data',
@@ -605,10 +600,12 @@ You can render bars from separate y axes in one `BarPlot`, however they aren't a
 ```jsx
 function MultipleYAxes() {
   const theme = useTheme();
+
   return (
     <VStack gap={2}>
       <CartesianChart
-        height={400}
+        height={150}
+        inset={{ top: 8, bottom: 8, left: 0, right: 0 }}
         series={[
           {
             id: 'revenue',
