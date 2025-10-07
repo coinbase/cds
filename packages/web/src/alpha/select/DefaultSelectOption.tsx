@@ -114,10 +114,7 @@ export const DefaultSelectOption: SelectOptionComponent<'single' | 'multi'> = me
       [description, multiline],
     );
 
-    const handleClick = useCallback(
-      (event: React.MouseEvent) => onClick?.(value, event),
-      [onClick, value],
-    );
+    const handleClick = useCallback(() => onClick?.(value), [onClick, value]);
 
     return (
       <Pressable

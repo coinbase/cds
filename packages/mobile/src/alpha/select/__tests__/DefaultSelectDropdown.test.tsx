@@ -60,7 +60,7 @@ describe('DefaultSelectDropdown', () => {
     it('renders tray when open', () => {
       render(
         <DefaultThemeProvider>
-          <DefaultSelectDropdown {...defaultProps} ref={React.createRef<any>()} />
+          <DefaultSelectDropdown {...defaultProps} />
         </DefaultThemeProvider>,
       );
 
@@ -72,7 +72,7 @@ describe('DefaultSelectDropdown', () => {
     it('does not render when closed', () => {
       render(
         <DefaultThemeProvider>
-          <DefaultSelectDropdown {...defaultProps} ref={React.createRef<any>()} open={false} />
+          <DefaultSelectDropdown {...defaultProps} open={false} />
         </DefaultThemeProvider>,
       );
 
@@ -82,11 +82,7 @@ describe('DefaultSelectDropdown', () => {
     it('shows tray title when label is provided', () => {
       render(
         <DefaultThemeProvider>
-          <DefaultSelectDropdown
-            {...defaultProps}
-            ref={React.createRef<any>()}
-            label="Custom Title"
-          />
+          <DefaultSelectDropdown {...defaultProps} label="Custom Title" />
         </DefaultThemeProvider>,
       );
 
@@ -100,12 +96,7 @@ describe('DefaultSelectDropdown', () => {
       const setOpen = jest.fn();
       render(
         <DefaultThemeProvider>
-          <DefaultSelectDropdown
-            {...defaultProps}
-            ref={React.createRef<any>()}
-            onChange={onChange}
-            setOpen={setOpen}
-          />
+          <DefaultSelectDropdown {...defaultProps} onChange={onChange} setOpen={setOpen} />
         </DefaultThemeProvider>,
       );
 
@@ -120,11 +111,7 @@ describe('DefaultSelectDropdown', () => {
       const onChange = jest.fn();
       render(
         <DefaultThemeProvider>
-          <DefaultSelectDropdown
-            {...defaultProps}
-            ref={React.createRef<any>()}
-            onChange={onChange}
-          />
+          <DefaultSelectDropdown {...defaultProps} onChange={onChange} />
         </DefaultThemeProvider>,
       );
 
@@ -137,7 +124,7 @@ describe('DefaultSelectDropdown', () => {
     it('displays selected option correctly', () => {
       render(
         <DefaultThemeProvider>
-          <DefaultSelectDropdown {...defaultProps} ref={React.createRef<any>()} value="option1" />
+          <DefaultSelectDropdown {...defaultProps} value="option1" />
         </DefaultThemeProvider>,
       );
 
@@ -157,7 +144,7 @@ describe('DefaultSelectDropdown', () => {
     it('renders select all option by default', () => {
       render(
         <DefaultThemeProvider>
-          <DefaultSelectDropdown {...multiSelectProps} ref={React.createRef<any>()} />
+          <DefaultSelectDropdown {...multiSelectProps} />
         </DefaultThemeProvider>,
       );
 
@@ -167,7 +154,7 @@ describe('DefaultSelectDropdown', () => {
     it('hides select all when hideSelectAll is true', () => {
       render(
         <DefaultThemeProvider>
-          <DefaultSelectDropdown {...multiSelectProps} ref={React.createRef<any>()} hideSelectAll />
+          <DefaultSelectDropdown {...multiSelectProps} hideSelectAll />
         </DefaultThemeProvider>,
       );
 
@@ -178,11 +165,7 @@ describe('DefaultSelectDropdown', () => {
       const onChange = jest.fn();
       render(
         <DefaultThemeProvider>
-          <DefaultSelectDropdown
-            {...multiSelectProps}
-            ref={React.createRef<any>()}
-            onChange={onChange}
-          />
+          <DefaultSelectDropdown {...multiSelectProps} onChange={onChange} />
         </DefaultThemeProvider>,
       );
 
@@ -198,7 +181,6 @@ describe('DefaultSelectDropdown', () => {
         <DefaultThemeProvider>
           <DefaultSelectDropdown
             {...multiSelectProps}
-            ref={React.createRef<any>()}
             onChange={onChange}
             value={['option1', 'option2']}
           />
@@ -214,11 +196,7 @@ describe('DefaultSelectDropdown', () => {
     it('shows correct select all state when all options selected', () => {
       render(
         <DefaultThemeProvider>
-          <DefaultSelectDropdown
-            {...multiSelectProps}
-            ref={React.createRef<any>()}
-            value={['option1', 'option2', 'option4']}
-          />
+          <DefaultSelectDropdown {...multiSelectProps} value={['option1', 'option2', 'option4']} />
         </DefaultThemeProvider>,
       );
 
@@ -231,12 +209,7 @@ describe('DefaultSelectDropdown', () => {
       const setOpen = jest.fn();
       render(
         <DefaultThemeProvider>
-          <DefaultSelectDropdown
-            {...multiSelectProps}
-            ref={React.createRef<any>()}
-            onChange={onChange}
-            setOpen={setOpen}
-          />
+          <DefaultSelectDropdown {...multiSelectProps} onChange={onChange} setOpen={setOpen} />
         </DefaultThemeProvider>,
       );
 
@@ -250,11 +223,7 @@ describe('DefaultSelectDropdown', () => {
     it('displays multiple selected options correctly', () => {
       render(
         <DefaultThemeProvider>
-          <DefaultSelectDropdown
-            {...multiSelectProps}
-            ref={React.createRef<any>()}
-            value={['option1', 'option2']}
-          />
+          <DefaultSelectDropdown {...multiSelectProps} value={['option1', 'option2']} />
         </DefaultThemeProvider>,
       );
 
@@ -274,7 +243,6 @@ describe('DefaultSelectDropdown', () => {
         <DefaultThemeProvider>
           <DefaultSelectDropdown
             {...defaultProps}
-            ref={React.createRef<any>()}
             emptyOptionsLabel="No options found"
             options={[]}
           />
@@ -287,7 +255,7 @@ describe('DefaultSelectDropdown', () => {
     it('uses default empty options message when no custom label is set', () => {
       render(
         <DefaultThemeProvider>
-          <DefaultSelectDropdown {...defaultProps} ref={React.createRef<any>()} options={[]} />
+          <DefaultSelectDropdown {...defaultProps} options={[]} />
         </DefaultThemeProvider>,
       );
 
@@ -300,7 +268,6 @@ describe('DefaultSelectDropdown', () => {
         <DefaultThemeProvider>
           <DefaultSelectDropdown
             {...defaultProps}
-            ref={React.createRef<any>()}
             SelectEmptyDropdownContentsComponent={CustomEmpty}
             options={[]}
           />
@@ -321,11 +288,7 @@ describe('DefaultSelectDropdown', () => {
 
       render(
         <DefaultThemeProvider>
-          <DefaultSelectDropdown
-            {...defaultProps}
-            ref={React.createRef<any>()}
-            SelectOptionComponent={CustomOption}
-          />
+          <DefaultSelectDropdown {...defaultProps} SelectOptionComponent={CustomOption} />
         </DefaultThemeProvider>,
       );
 
@@ -339,7 +302,6 @@ describe('DefaultSelectDropdown', () => {
         <DefaultThemeProvider>
           <DefaultSelectDropdown
             {...defaultProps}
-            ref={React.createRef<any>()}
             SelectAllOptionComponent={CustomSelectAllOption}
             type="multi"
             value={[]}
@@ -353,12 +315,7 @@ describe('DefaultSelectDropdown', () => {
     it('renders default SelectAllOption when no custom component provided', () => {
       render(
         <DefaultThemeProvider>
-          <DefaultSelectDropdown
-            {...defaultProps}
-            ref={React.createRef<any>()}
-            type="multi"
-            value={[]}
-          />
+          <DefaultSelectDropdown {...defaultProps} type="multi" value={[]} />
         </DefaultThemeProvider>,
       );
 
@@ -371,12 +328,7 @@ describe('DefaultSelectDropdown', () => {
     it('renders checkboxes for multi-select options', () => {
       render(
         <DefaultThemeProvider>
-          <DefaultSelectDropdown
-            {...defaultProps}
-            ref={React.createRef<any>()}
-            type="multi"
-            value={['option1']}
-          />
+          <DefaultSelectDropdown {...defaultProps} type="multi" value={['option1']} />
         </DefaultThemeProvider>,
       );
 
@@ -386,7 +338,7 @@ describe('DefaultSelectDropdown', () => {
     it('renders radio buttons for single-select options', () => {
       render(
         <DefaultThemeProvider>
-          <DefaultSelectDropdown {...defaultProps} ref={React.createRef<any>()} value="option1" />
+          <DefaultSelectDropdown {...defaultProps} value="option1" />
         </DefaultThemeProvider>,
       );
 
@@ -400,7 +352,6 @@ describe('DefaultSelectDropdown', () => {
         <DefaultThemeProvider>
           <DefaultSelectDropdown
             {...defaultProps}
-            ref={React.createRef<any>()}
             accessory={<View testID="accessory-content" />}
             media={<View testID="media-content" />}
           />
@@ -424,7 +375,6 @@ describe('DefaultSelectDropdown', () => {
         <DefaultThemeProvider>
           <DefaultSelectDropdown
             {...defaultProps}
-            ref={React.createRef<any>()}
             media={<View testID="global-media" />}
             options={optionsWithMedia}
           />
@@ -442,7 +392,6 @@ describe('DefaultSelectDropdown', () => {
         <DefaultThemeProvider>
           <DefaultSelectDropdown
             {...defaultProps}
-            ref={React.createRef<any>()}
             clearAllLabel="Custom Clear All"
             emptyOptionsLabel="Custom Empty Message"
             selectAllLabel="Custom Select All"
@@ -474,7 +423,7 @@ describe('DefaultSelectDropdown', () => {
     it('configures tray with correct props', () => {
       render(
         <DefaultThemeProvider>
-          <DefaultSelectDropdown {...defaultProps} ref={React.createRef<any>()} />
+          <DefaultSelectDropdown {...defaultProps} />
         </DefaultThemeProvider>,
       );
 

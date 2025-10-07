@@ -1,5 +1,5 @@
 import React, { forwardRef, memo, useImperativeHandle, useRef, useState } from 'react';
-import type { AccessibilityRole, StyleProp, ViewStyle } from 'react-native';
+import type { AccessibilityRole, GestureResponderEvent, StyleProp, ViewStyle } from 'react-native';
 import type { SharedAccessibilityProps } from '@coinbase/cds-common/types';
 
 import type { CellBaseProps } from '../../cells/Cell';
@@ -105,7 +105,7 @@ export type SelectControlProps<Type extends 'single' | 'multi' = 'single'> = Pic
 
 export type SelectControlComponent<Type extends 'single' | 'multi' = 'single'> = React.FC<
   SelectControlProps<Type> & {
-    ref: React.Ref<any>;
+    ref?: React.Ref<any>;
   }
 >;
 
@@ -175,7 +175,7 @@ export type SelectDropdownProps<Type extends 'single' | 'multi' = 'single'> = Se
 
 export type SelectDropdownComponent<Type extends 'single' | 'multi' = 'single'> = React.FC<
   SelectDropdownProps<Type> & {
-    ref: React.Ref<any>;
+    ref?: React.Ref<any>;
   }
 >;
 

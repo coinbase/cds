@@ -47,7 +47,7 @@ export type SelectOptionProps<Type extends 'single' | 'multi' = 'single'> = Sele
   Pick<CellBaseProps, 'accessory' | 'media' | 'detail'> &
   Omit<PressableProps<PressableDefaultElement>, 'value' | 'type' | 'onClick'> & {
     /** Click handler for the option */
-    onClick?: (value: string | null, event: React.MouseEvent) => void;
+    onClick?: (value: string | null) => void;
     /** Whether this is for single or multi-select */
     type?: Type;
     /** Whether this option is currently selected */
@@ -115,7 +115,7 @@ export type SelectControlProps<Type extends 'single' | 'multi' = 'single'> = Pic
 
 export type SelectControlComponent<Type extends 'single' | 'multi' = 'single'> = React.FC<
   SelectControlProps<Type> & {
-    ref: React.Ref<HTMLElement>;
+    ref?: React.Ref<HTMLElement>;
   }
 >;
 
@@ -190,7 +190,7 @@ export type SelectDropdownProps<Type extends 'single' | 'multi' = 'single'> = Se
 
 export type SelectDropdownComponent<Type extends 'single' | 'multi' = 'single'> = React.FC<
   SelectDropdownProps<Type> & {
-    ref: React.Ref<HTMLElement>;
+    ref?: React.Ref<HTMLElement>;
   }
 >;
 
@@ -257,6 +257,12 @@ export type SelectProps<Type extends 'single' | 'multi' = 'single'> = Pick<
       optionBlendStyles?: InteractableBlendStyles;
       /** Blend styles for control interactivity */
       controlBlendStyles?: InteractableBlendStyles;
+      /** Styles for the media element in an option */
+      optionMedia?: React.CSSProperties;
+      /** Styles for the label element in an option */
+      optionLabel?: React.CSSProperties;
+      /** Styles for the description element in an option */
+      optionDescription?: React.CSSProperties;
     };
     /** Custom class names for different parts of the select */
     classNames?: {
@@ -268,6 +274,12 @@ export type SelectProps<Type extends 'single' | 'multi' = 'single'> = Pick<
       dropdown?: string;
       /** Class name for individual options */
       option?: string;
+      /** Class name for the media element in an option */
+      optionMedia?: string;
+      /** Class name for the label element in an option */
+      optionLabel?: string;
+      /** Class name for the description element in an option */
+      optionDescription?: string;
     };
     /** Test ID for the root element */
     testID?: string;

@@ -150,6 +150,11 @@ export const DefaultSelectDropdown: SelectDropdownComponent<'single' | 'multi'> 
                         option.value !== null && isMultiSelect
                           ? (value as string[]).includes(option.value)
                           : value === option.value;
+                      const defaultMedia = isMultiSelect ? (
+                        <Checkbox checked={selected} />
+                      ) : (
+                        <Radio checked={selected} />
+                      );
                       return (
                         <RenderedSelectOption
                           key={option.value}
@@ -159,17 +164,9 @@ export const DefaultSelectDropdown: SelectDropdownComponent<'single' | 'multi'> 
                           className={classNames?.option}
                           compact={compact}
                           disabled={option.disabled || disabled}
-                          media={
-                            optionMedia ??
-                            media ??
-                            (isMultiSelect ? (
-                              <Checkbox checked={selected} />
-                            ) : (
-                              <Radio checked={selected} />
-                            ))
-                          }
-                          onPress={(newVal) => {
-                            onChange(newVal);
+                          media={optionMedia ?? media ?? defaultMedia}
+                          onPress={(newValue) => {
+                            onChange(newValue);
                             if (!isMultiSelect) setOpen(false);
                           }}
                           selected={selected}
