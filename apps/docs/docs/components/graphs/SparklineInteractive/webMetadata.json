@@ -14,5 +14,11 @@
       "label": "LineChart",
       "url": "/components/graphs/LineChart/"
     }
+  ],
+  "dependencies": [
+    {
+      "name": "framer-motion",
+      "version": "^10.18.0"
+    }
   ]
 }

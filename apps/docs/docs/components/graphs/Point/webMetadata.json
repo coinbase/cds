@@ -11,5 +11,11 @@
       "label": "Scrubber",
       "url": "/components/graphs/Scrubber/"
     }
+  ],
+  "dependencies": [
+    {
+      "name": "framer-motion",
+      "version": "^10.18.0"
+    }
   ]
 }

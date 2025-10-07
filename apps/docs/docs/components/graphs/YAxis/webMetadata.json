@@ -11,5 +11,11 @@
       "label": "XAxis",
       "url": "/components/graphs/XAxis/"
     }
+  ],
+  "dependencies": [
+    {
+      "name": "framer-motion",
+      "version": "^10.18.0"
+    }
   ]
 }

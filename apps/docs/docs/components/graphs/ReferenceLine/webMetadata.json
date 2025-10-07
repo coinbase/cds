@@ -7,5 +7,11 @@
       "label": "CartesianChart",
       "url": "/components/graphs/CartesianChart/"
     }
+  ],
+  "dependencies": [
+    {
+      "name": "framer-motion",
+      "version": "^10.18.0"
+    }
   ]
 }

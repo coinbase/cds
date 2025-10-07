@@ -11,5 +11,11 @@
       "label": "Point",
       "url": "/components/graphs/Point/"
     }
+  ],
+  "dependencies": [
+    {
+      "name": "framer-motion",
+      "version": "^10.18.0"
+    }
   ]
 }
