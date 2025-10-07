@@ -93,6 +93,8 @@ export type SelectControlProps<Type extends 'single' | 'multi' = 'single'> = Pic
     setOpen: (open: boolean | ((open: boolean) => boolean)) => void;
     /** Maximum number of selected options to show before truncating */
     maxSelectedOptionsToShow?: number;
+    /** Label to show for showcasing count of hidden selected options */
+    hiddenSelectedOptionsLabel?: string;
     /** Blend styles for control interactivity */
     blendStyles?: InteractableBlendStyles;
     /** Whether to use compact styling for the control */
@@ -192,7 +194,10 @@ export type SelectProps<Type extends 'single' | 'multi' = 'single'> = Pick<
 > &
   Pick<SharedAccessibilityProps, 'accessibilityLabel' | 'accessibilityHint'> &
   SelectState<Type> &
-  Pick<SelectControlProps<Type>, 'label' | 'placeholder' | 'helperText'> &
+  Pick<
+    SelectControlProps<Type>,
+    'label' | 'placeholder' | 'helperText' | 'hiddenSelectedOptionsLabel'
+  > &
   Pick<SelectOptionProps<Type>, 'accessory' | 'media' | 'detail'> &
   Pick<
     SelectDropdownProps<Type>,
@@ -282,6 +287,7 @@ const SelectBase = memo(
         startNode,
         variant,
         maxSelectedOptionsToShow,
+        hiddenSelectedOptionsLabel,
         accessory,
         media,
         detail,
@@ -333,6 +339,7 @@ const SelectBase = memo(
             compact={compact}
             disabled={disabled}
             helperText={helperText}
+            hiddenSelectedOptionsLabel={hiddenSelectedOptionsLabel}
             label={label}
             labelVariant={labelVariant}
             maxSelectedOptionsToShow={maxSelectedOptionsToShow}

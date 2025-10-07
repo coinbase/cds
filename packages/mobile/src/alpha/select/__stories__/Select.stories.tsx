@@ -746,6 +746,29 @@ const MultiSelectMaxSelectedOptionsExample = () => {
   );
 };
 
+const MultiSelectCustomHiddenSelectedOptionsLabelExample = () => {
+  const manyExampleOptions = Array.from({ length: 100 }, (_, i) => ({
+    value: (i + 1).toString(),
+    label: 'Option ' + String(i + 1),
+  }));
+  const { value, onChange } = useMultiSelect({
+    initialValue: manyExampleOptions.map((option) => option.value),
+  });
+
+  return (
+    <Select
+      hiddenSelectedOptionsLabel="custom label"
+      label="Multi select - custom hidden selected options label"
+      maxSelectedOptionsToShow={2}
+      onChange={onChange}
+      options={manyExampleOptions}
+      placeholder="Empty value"
+      type="multi"
+      value={value}
+    />
+  );
+};
+
 const MutliSelectStartNodeExample = () => {
   const { value, onChange } = useMultiSelect({
     initialValue: ['1'],
@@ -1034,6 +1057,9 @@ const SelectV3Screen = () => {
       </Example>
       <Example title="Multi Select Max Selected Options">
         <MultiSelectMaxSelectedOptionsExample />
+      </Example>
+      <Example title="Multi Select Custom Hidden Selected Options Label">
+        <MultiSelectCustomHiddenSelectedOptionsLabelExample />
       </Example>
       <Example title="Multi Select Start Node">
         <MutliSelectStartNodeExample />

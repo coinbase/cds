@@ -44,6 +44,7 @@ export const DefaultSelectControl: SelectControlComponent = memo(
         setOpen,
         variant = 'foregroundMuted',
         helperText,
+        hiddenSelectedOptionsLabel = 'more',
         label,
         labelVariant,
         startNode,
@@ -124,7 +125,7 @@ export const DefaultSelectControl: SelectControlComponent = memo(
               ))}
               {value.length - maxSelectedOptionsToShow > 0 && (
                 <Chip>
-                  <Text font="headline">{`+${value.length - maxSelectedOptionsToShow} more`}</Text>
+                  <Text font="headline">{`+${value.length - maxSelectedOptionsToShow} ${hiddenSelectedOptionsLabel}`}</Text>
                 </Chip>
               )}
             </HStack>
@@ -149,11 +150,12 @@ export const DefaultSelectControl: SelectControlComponent = memo(
       }, [
         hasValue,
         isMultiSelect,
-        value,
+        options,
         placeholder,
         shouldShowCompactLabel,
+        value,
         maxSelectedOptionsToShow,
-        options,
+        hiddenSelectedOptionsLabel,
         onChange,
       ]);
 

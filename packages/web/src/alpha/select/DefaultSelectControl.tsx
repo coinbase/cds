@@ -43,6 +43,7 @@ export const DefaultSelectControl: SelectControlComponent<'single' | 'multi'> = 
         compact,
         blendStyles,
         maxSelectedOptionsToShow = 6,
+        hiddenSelectedOptionsLabel = 'more',
         ariaHaspopup,
         ...props
       },
@@ -146,7 +147,7 @@ export const DefaultSelectControl: SelectControlComponent<'single' | 'multi'> = 
                 />
               ))}
               {value.length - maxSelectedOptionsToShow > 0 && (
-                <Chip>{`+${value.length - maxSelectedOptionsToShow} more`}</Chip>
+                <Chip>{`+${value.length - maxSelectedOptionsToShow} ${hiddenSelectedOptionsLabel}`}</Chip>
               )}
             </>
           );
@@ -168,10 +169,11 @@ export const DefaultSelectControl: SelectControlComponent<'single' | 'multi'> = 
       }, [
         hasValue,
         isMultiSelect,
-        value,
-        placeholder,
-        maxSelectedOptionsToShow,
         options,
+        placeholder,
+        value,
+        maxSelectedOptionsToShow,
+        hiddenSelectedOptionsLabel,
         handleUnselectValue,
       ]);
 

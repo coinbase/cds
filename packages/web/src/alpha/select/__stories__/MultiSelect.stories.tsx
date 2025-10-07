@@ -14,12 +14,14 @@ export default {
 };
 
 const paddingCss = css`
+  /* stylelint-disable-next-line color-named */
   background-color: pink;
   padding: 20px;
 `;
 
 const hoveredBackgroundCss = css`
   &:hover {
+    /* stylelint-disable-next-line color-named */
     background-color: lightblue;
   }
 `;
@@ -340,6 +342,29 @@ export const MaxSelectedOptions = () => {
   return (
     <Select
       label="Multi select - custom max num of selected options to show"
+      maxSelectedOptionsToShow={2}
+      onChange={onChange}
+      options={manyExampleOptions}
+      placeholder="Empty value"
+      type="multi"
+      value={value}
+    />
+  );
+};
+
+export const CustomHiddenSelectedOptionsLabel = () => {
+  const manyExampleOptions = Array.from({ length: 100 }, (_, i) => ({
+    value: (i + 1).toString(),
+    label: `Option ${i + 1}`,
+  }));
+  const { value, onChange } = useMultiSelect({
+    initialValue: manyExampleOptions.map((option) => option.value),
+  });
+
+  return (
+    <Select
+      hiddenSelectedOptionsLabel="custom label"
+      label="Multi select - custom hidden selected options label"
       maxSelectedOptionsToShow={2}
       onChange={onChange}
       options={manyExampleOptions}
