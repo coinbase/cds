@@ -10,7 +10,7 @@ import { HStack } from '../../layout/HStack';
 import { AnimatedCaret } from '../../motion/AnimatedCaret';
 import { Pressable } from '../../system/Pressable';
 import { Text } from '../../typography/Text';
-import { findClosestNonDisabledNodeIndex } from '../../utils/findClosestNoneDisabledNodeIndex';
+import { findClosestNonDisabledNodeIndex } from '../../utils/findClosestNonDisabledNodeIndex';
 
 import type { SelectControlComponent, SelectOption } from './Select';
 
