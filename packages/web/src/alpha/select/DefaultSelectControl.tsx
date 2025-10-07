@@ -12,7 +12,7 @@ import { Pressable } from '../../system/Pressable';
 import { Text } from '../../typography/Text';
 import { findClosestNonDisabledNodeIndex } from '../../utils/findClosestNoneDisabledNodeIndex';
 
-import type { SelectControlComponent } from './Select';
+import type { SelectControlComponent, SelectOption } from './Select';
 
 const variantColor: Record<string, ThemeVars.Color> = {
   foreground: 'fg',
@@ -125,43 +125,26 @@ export const DefaultSelectControl: SelectControlComponent<'single' | 'multi'> = 
 
       const valueNode = useMemo(() => {
         if (hasValue && isMultiSelect) {
-          const renderedValues =
+          const valuesToShow =
             value.length <= maxSelectedOptionsToShow
               ? (value as string[])
               : (value as string[]).slice(0, maxSelectedOptionsToShow);
-          // Optimization to avoid mapping through options array for every <InputChip> rendered
-          const disabledOptionsIndexes = options
-            .filter((option) => option.disabled)
-            .map((option) => renderedValues.indexOf(option.value ?? ''));
+          const optionsToShow = valuesToShow
+            .map((value) => options.find((option) => option.value === value))
+            .filter(Boolean) as SelectOption[];
           return (
             <>
-              {renderedValues.map((renderedValue, index) => {
-                const valueOptionData = options.find((option) => option.value === renderedValue);
-                let valueToShow = renderedValue;
-                if (
-                  typeof valueOptionData?.label === 'string' &&
-                  valueOptionData.label.trim() !== ''
-                ) {
-                  valueToShow = valueOptionData.label;
-                } else if (
-                  typeof valueOptionData?.description === 'string' &&
-                  valueOptionData.description.trim() !== ''
-                ) {
-                  valueToShow = valueOptionData.description;
-                }
-
-                return (
-                  <InputChip
-                    key={renderedValue}
-                    data-selected-value
-                    disabled={disabledOptionsIndexes.includes(index)}
-                    invertColorScheme={false}
-                    maxWidth={200}
-                    onClick={(event) => handleUnselectValue(event, index)}
-                    value={valueToShow}
-                  />
-                );
-              })}
+              {optionsToShow.map((option, index) => (
+                <InputChip
+                  key={option.value}
+                  data-selected-value
+                  disabled={option.disabled}
+                  invertColorScheme={false}
+                  label={option.label ?? option.description ?? option.value ?? ''}
+                  maxWidth={200}
+                  onClick={(event) => handleUnselectValue(event, index)}
+                />
+              ))}
               {value.length - maxSelectedOptionsToShow > 0 && (
                 <Chip>{`+${value.length - maxSelectedOptionsToShow} more`}</Chip>
               )}
@@ -169,16 +152,8 @@ export const DefaultSelectControl: SelectControlComponent<'single' | 'multi'> = 
           );
         }
 
-        const valueOptionData = options.find((option) => option.value === value);
-        let valueToShow = value;
-        if (typeof valueOptionData?.label === 'string' && valueOptionData.label.trim() !== '') {
-          valueToShow = valueOptionData.label;
-        } else if (
-          typeof valueOptionData?.description === 'string' &&
-          valueOptionData.description.trim() !== ''
-        ) {
-          valueToShow = valueOptionData.description;
-        }
+        const option = options.find((option) => option.value === value);
+        const label = option?.label ?? option?.description ?? option?.value ?? placeholder;
         return (
           <Text
             as="p"
@@ -187,7 +162,7 @@ export const DefaultSelectControl: SelectControlComponent<'single' | 'multi'> = 
             font="body"
             overflow="truncate"
           >
-            {hasValue ? valueToShow : placeholder}
+            {hasValue ? label : placeholder}
           </Text>
         );
       }, [
@@ -252,7 +227,7 @@ export const DefaultSelectControl: SelectControlComponent<'single' | 'multi'> = 
                 overflow="auto"
                 paddingTop={labelVariant === 'inside' ? 0 : compact ? 1 : 2}
                 paddingX={1}
-                paddingY={compact || labelVariant === 'inside' ? 1 : 2}
+                paddingY={labelVariant === 'inside' || compact ? 1 : 2}
               >
                 {valueNode}
               </HStack>
@@ -278,7 +253,7 @@ export const DefaultSelectControl: SelectControlComponent<'single' | 'multi'> = 
         () => (
           <HStack alignItems="center" paddingX={2}>
             <AnimatedCaret
-              color={open ? (variant ? variantColor[variant] : 'fgPrimary') : 'fg'}
+              color={!open ? 'fg' : variant ? variantColor[variant] : 'fgPrimary'}
               rotate={open ? 0 : 180}
             />
           </HStack>

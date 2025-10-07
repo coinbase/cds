@@ -57,8 +57,13 @@ export type ChipBaseProps = SharedProps &
 export type ChipProps = ChipBaseProps;
 
 export type InputChipProps = {
-  /** Value indicates what is currently selected */
-  value: string;
+  /** Label to display in the Chip */
+  label?: React.ReactNode;
+  /**
+   * Value indicates what is currently selected
+   * @deprecated Use the `label` prop instead
+   */
+  value?: string;
   /** Callback fired when Chip is pressed */
   onPress: PressableProps['onPress'];
 } & Omit<ChipProps, 'end' | 'children'>;
