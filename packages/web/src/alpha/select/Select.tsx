@@ -8,6 +8,7 @@ import { cx } from '../../cx';
 import type { AriaHasPopupType } from '../../hooks/useA11yControlledVisibility';
 import { useClickOutside } from '../../hooks/useClickOutside';
 import { useHasMounted } from '../../hooks/useHasMounted';
+import type { BoxDefaultElement, BoxProps } from '../../layout/Box';
 import { Portal } from '../../overlays/Portal';
 import { modalContainerId } from '../../overlays/PortalProvider';
 import type { InteractableBlendStyles } from '../../system/Interactable';
@@ -81,6 +82,7 @@ export type SelectControlProps<Type extends 'single' | 'multi' = 'single'> = Pic
   SharedAccessibilityProps,
   'accessibilityLabel'
 > &
+  Omit<BoxProps<BoxDefaultElement>, 'borderWidth' | 'onChange'> &
   Pick<InputStackBaseProps, 'disabled' | 'startNode' | 'variant' | 'labelVariant' | 'testID'> &
   SelectState<Type> & {
     /** Array of options to display in the select dropdown */
@@ -122,6 +124,7 @@ export type SelectControlComponent<Type extends 'single' | 'multi' = 'single'> =
  */
 export type SelectDropdownProps<Type extends 'single' | 'multi' = 'single'> = SelectState<Type> &
   Pick<SharedAccessibilityProps, 'accessibilityLabel'> &
+  Omit<BoxProps<BoxDefaultElement>, 'onChange'> &
   Pick<SelectOptionProps<Type>, 'accessory' | 'media' | 'detail'> & {
     /** Whether this is for single or multi-select */
     type?: Type;

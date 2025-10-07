@@ -158,13 +158,15 @@ export const DefaultSelectDropdown: SelectDropdownComponent<'single' | 'multi'> 
       return (
         <AnimatePresence>
           {open && (
-            <div
+            <Box
               ref={ref as React.Ref<HTMLDivElement>}
               aria-label={accessibilityLabel}
               aria-multiselectable={isMultiSelect}
               className={className}
+              display="block"
               role={accessibilityRoles?.dropdown}
               style={dropdownStyles}
+              {...props}
             >
               <FocusTrap
                 disableAutoFocus
@@ -243,7 +245,7 @@ export const DefaultSelectDropdown: SelectDropdownComponent<'single' | 'multi'> 
                   </Box>
                 </motion.div>
               </FocusTrap>
-            </div>
+            </Box>
           )}
         </AnimatePresence>
       );
