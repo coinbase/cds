@@ -1,4 +1,4 @@
-import { memo, useCallback, useMemo, useRef } from 'react';
+import { memo, useCallback, useMemo } from 'react';
 import { selectCellSpacingConfig } from '@coinbase/cds-common/tokens/select';
 import { css } from '@linaria/core';
 
@@ -12,6 +12,7 @@ import type { SelectOptionComponent } from './Select';
 
 const selectOptionCss = css`
   --bookendRadius: var(--borderRadius-400);
+  position: relative;
   /* overrides common user agent button defaults */
   padding: 0;
   /* overrides Safari user agent button defaults */
@@ -29,13 +30,13 @@ const selectOptionCss = css`
   }
 
   /* -- START focus ring styles */
-  position: relative;
   &:focus {
     outline: none;
   }
 
   &:focus-visible {
     outline: none;
+
     &::after {
       content: '';
       position: absolute;
@@ -44,18 +45,14 @@ const selectOptionCss = css`
       border: 2px solid var(--color-bgLinePrimary);
     }
 
-    &:first-child {
-      &::after {
-        border-top-right-radius: var(--bookendRadius);
-        border-top-left-radius: var(--bookendRadius);
-      }
+    &:first-child::after {
+      border-top-right-radius: var(--bookendRadius);
+      border-top-left-radius: var(--bookendRadius);
     }
 
-    &:last-child {
-      &::after {
-        border-bottom-right-radius: var(--bookendRadius);
-        border-bottom-left-radius: var(--bookendRadius);
-      }
+    &:last-child::after {
+      border-bottom-right-radius: var(--bookendRadius);
+      border-bottom-left-radius: var(--bookendRadius);
     }
   }
   /* -- END focus ring styles: */
@@ -77,18 +74,15 @@ export const DefaultSelectOption: SelectOptionComponent<'single' | 'multi'> = me
     compact,
     description,
     multiline,
-    style,
-    blendStyles,
     className,
     accessory,
     media,
     detail,
     type,
     accessibilityRole = 'option',
+    background = type === 'single' && selected && value !== null ? 'bgAlternate' : 'bg',
     ...props
   }) => {
-    const selectOptionRef = useRef<HTMLButtonElement>(null);
-
     const labelNode = useMemo(
       () =>
         typeof label === 'string' ? (
@@ -120,22 +114,24 @@ export const DefaultSelectOption: SelectOptionComponent<'single' | 'multi'> = me
       [description, multiline],
     );
 
-    const handleClick = useCallback(() => onClick?.(value), [onClick, value]);
+    const handleClick = useCallback(
+      (event: React.MouseEvent) => onClick?.(value, event),
+      [onClick, value],
+    );
 
     return (
       <Pressable
-        ref={selectOptionRef}
+        // TO DO: Do we need this Pressable? Cell can render as a Pressable when passed onClick...
         noScaleOnPress
         // On web, the option role doesn't work well with ara-checked and screen readers
         // so we use aria-selected regardless of the option type
         aria-selected={selected}
-        background="bg"
-        blendStyles={blendStyles}
+        background={background}
         className={cx(selectOptionCss, className)}
         disabled={disabled}
         onClick={handleClick}
         role={accessibilityRole}
-        style={style}
+        {...props}
       >
         <Cell
           accessory={accessory}

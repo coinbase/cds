@@ -11,6 +11,7 @@ import { useHasMounted } from '../../hooks/useHasMounted';
 import { Portal } from '../../overlays/Portal';
 import { modalContainerId } from '../../overlays/PortalProvider';
 import type { InteractableBlendStyles } from '../../system/Interactable';
+import type { PressableDefaultElement, PressableProps } from '../../system/Pressable';
 
 import { DefaultSelectAllOption } from './DefaultSelectAllOption';
 import { DefaultSelectControl } from './DefaultSelectControl';
@@ -42,25 +43,20 @@ export type SelectOption = {
  * Props for individual option components within the Select dropdown
  */
 export type SelectOptionProps<Type extends 'single' | 'multi' = 'single'> = SelectOption &
-  Pick<CellBaseProps, 'accessory' | 'media' | 'detail'> & {
+  Pick<CellBaseProps, 'accessory' | 'media' | 'detail'> &
+  Omit<PressableProps<PressableDefaultElement>, 'value' | 'type' | 'onClick'> & {
     /** Click handler for the option */
-    onClick?: (value: string | null) => void;
+    onClick?: (value: string | null, event: React.MouseEvent) => void;
     /** Whether this is for single or multi-select */
     type?: Type;
     /** Whether this option is currently selected */
     selected?: boolean;
     /** Whether to allow multiline text in the option */
     multiline?: boolean;
-    /** Blend styles for option interactivity */
-    blendStyles?: InteractableBlendStyles;
     /** ARIA role for the option element */
     accessibilityRole?: string;
     /** Whether to use compact styling for the option */
     compact?: boolean;
-    /** Inline styles for the option */
-    style?: React.CSSProperties;
-    /** CSS class name for the option */
-    className?: string;
   };
 
 export type SelectOptionComponent<Type extends 'single' | 'multi' = 'single'> = React.FC<

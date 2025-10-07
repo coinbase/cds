@@ -197,6 +197,23 @@ export const DefaultSelectDropdown: SelectDropdownComponent<'single' | 'multi'> 
                             option.value !== null && isMultiSelect
                               ? (value as string[]).includes(option.value)
                               : value === option.value;
+                          const defaultMedia = isMultiSelect ? (
+                            <Checkbox
+                              aria-hidden
+                              readOnly
+                              checked={selected}
+                              iconStyle={{ opacity: 1 }}
+                              tabIndex={-1}
+                            />
+                          ) : (
+                            <Radio
+                              aria-hidden
+                              readOnly
+                              checked={selected}
+                              iconStyle={{ opacity: 1 }}
+                              tabIndex={-1}
+                            />
+                          );
                           return (
                             <RenderedSelectOption
                               key={option.value}
@@ -207,29 +224,9 @@ export const DefaultSelectDropdown: SelectDropdownComponent<'single' | 'multi'> 
                               compact={compact}
                               detail={detail}
                               disabled={option.disabled || disabled}
-                              media={
-                                optionMedia ??
-                                media ??
-                                (isMultiSelect ? (
-                                  <Checkbox
-                                    aria-hidden
-                                    readOnly
-                                    checked={selected}
-                                    iconStyle={{ opacity: 1 }}
-                                    tabIndex={-1}
-                                  />
-                                ) : (
-                                  <Radio
-                                    aria-hidden
-                                    readOnly
-                                    checked={selected}
-                                    iconStyle={{ opacity: 1 }}
-                                    tabIndex={-1}
-                                  />
-                                ))
-                              }
-                              onClick={(newVal) => {
-                                onChange(newVal);
+                              media={optionMedia ?? media ?? defaultMedia}
+                              onClick={(newValue) => {
+                                onChange(newValue);
                                 if (!isMultiSelect) setOpen(false);
                               }}
                               selected={selected}
