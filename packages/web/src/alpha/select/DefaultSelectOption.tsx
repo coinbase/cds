@@ -81,18 +81,27 @@ export const DefaultSelectOption: SelectOptionComponent<'single' | 'multi'> = me
     type,
     accessibilityRole = 'option',
     background = type === 'single' && selected && value !== null ? 'bgAlternate' : 'bg',
+    styles,
+    classNames,
     ...props
   }) => {
     const labelNode = useMemo(
       () =>
         typeof label === 'string' ? (
-          <Text as="div" display="block" font="headline" overflow="truncate">
+          <Text
+            as="div"
+            className={classNames?.optionLabel}
+            display="block"
+            font="headline"
+            overflow="truncate"
+            style={styles?.optionLabel}
+          >
             {label}
           </Text>
         ) : (
           label
         ),
-      [label],
+      [label, classNames?.optionLabel, styles?.optionLabel],
     );
 
     const descriptionNode = useMemo(
@@ -100,18 +109,19 @@ export const DefaultSelectOption: SelectOptionComponent<'single' | 'multi'> = me
         typeof description === 'string' ? (
           <Text
             as="div"
-            className={multiline ? multilineTextCss : undefined}
+            className={cx(multiline ? multilineTextCss : undefined, classNames?.optionDescription)}
             color="fgMuted"
             display="block"
             font="body"
             overflow={multiline ? undefined : 'truncate'}
+            style={styles?.optionDescription}
           >
             {description}
           </Text>
         ) : (
           description
         ),
-      [description, multiline],
+      [description, multiline, classNames?.optionDescription, styles?.optionDescription],
     );
 
     const handleClick = useCallback(() => onClick?.(value), [onClick, value]);
@@ -135,7 +145,7 @@ export const DefaultSelectOption: SelectOptionComponent<'single' | 'multi'> = me
           // TO DO: Double check this
           background={type === 'multi' || disabled || value === null ? 'transparent' : undefined}
           borderRadius={0}
-          className={multiline ? multilineTextCss : undefined}
+          className={cx(multiline ? multilineTextCss : undefined, classNames?.optionCell)}
           detail={detail}
           detailWidth="fit-content"
           innerSpacing={selectCellSpacingConfig.innerSpacing}
@@ -145,8 +155,9 @@ export const DefaultSelectOption: SelectOptionComponent<'single' | 'multi'> = me
           outerSpacing={selectCellSpacingConfig.outerSpacing}
           priority="end"
           selected={selected}
+          style={styles?.optionCell}
         >
-          <VStack>
+          <VStack className={classNames?.optionContent} style={styles?.optionContent}>
             {labelNode}
             {descriptionNode}
           </VStack>

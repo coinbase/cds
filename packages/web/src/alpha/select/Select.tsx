@@ -58,6 +58,32 @@ export type SelectOptionProps<Type extends 'single' | 'multi' = 'single'> = Sele
     accessibilityRole?: string;
     /** Whether to use compact styling for the option */
     compact?: boolean;
+    /** Custom styles for different parts of the option */
+    styles?: {
+      /** Styles for the option cell element */
+      optionCell?: React.CSSProperties;
+      /** Styles for the option content wrapper */
+      optionContent?: React.CSSProperties;
+      /** Styles for the option label element */
+      optionLabel?: React.CSSProperties;
+      /** Styles for the option description element */
+      optionDescription?: React.CSSProperties;
+      /** Styles for the select all divider element */
+      selectAllDivider?: React.CSSProperties;
+    };
+    /** Custom class names for different parts of the option */
+    classNames?: {
+      /** Class name for the option cell element */
+      optionCell?: string;
+      /** Class name for the option content wrapper */
+      optionContent?: string;
+      /** Class name for the option label element */
+      optionLabel?: string;
+      /** Class name for the option description element */
+      optionDescription?: string;
+      /** Class name for the select all divider element */
+      selectAllDivider?: string;
+    };
   };
 
 export type SelectOptionComponent<Type extends 'single' | 'multi' = 'single'> = React.FC<
@@ -66,6 +92,20 @@ export type SelectOptionComponent<Type extends 'single' | 'multi' = 'single'> = 
 
 export type SelectEmptyDropdownContentProps = {
   label: string;
+  /** Custom styles for different parts of the empty dropdown content */
+  styles?: {
+    /** Styles for the container element */
+    emptyContentsContainer?: React.CSSProperties;
+    /** Styles for the text element */
+    emptyContentsText?: React.CSSProperties;
+  };
+  /** Custom class names for different parts of the empty dropdown content */
+  classNames?: {
+    /** Class name for the container element */
+    emptyContentsContainer?: string;
+    /** Class name for the text element */
+    emptyContentsText?: string;
+  };
 };
 
 export type SelectEmptyDropdownContentComponent = React.FC<SelectEmptyDropdownContentProps>;
@@ -196,6 +236,20 @@ export type SelectDropdownProps<Type extends 'single' | 'multi' = 'single'> = Se
       option?: React.CSSProperties;
       /** Blend styles for option interactivity */
       optionBlendStyles?: InteractableBlendStyles;
+      /** Styles for the option cell element */
+      optionCell?: React.CSSProperties;
+      /** Styles for the option content wrapper */
+      optionContent?: React.CSSProperties;
+      /** Styles for the option label element */
+      optionLabel?: React.CSSProperties;
+      /** Styles for the option description element */
+      optionDescription?: React.CSSProperties;
+      /** Styles for the select all divider element */
+      selectAllDivider?: React.CSSProperties;
+      /** Styles for the empty contents container element */
+      emptyContentsContainer?: React.CSSProperties;
+      /** Styles for the empty contents text element */
+      emptyContentsText?: React.CSSProperties;
     };
     /** CSS class name for the dropdown */
     className?: string;
@@ -205,6 +259,20 @@ export type SelectDropdownProps<Type extends 'single' | 'multi' = 'single'> = Se
       root?: string;
       /** Class name for individual options */
       option?: string;
+      /** Class name for the option cell element */
+      optionCell?: string;
+      /** Class name for the option content wrapper */
+      optionContent?: string;
+      /** Class name for the option label element */
+      optionLabel?: string;
+      /** Class name for the option description element */
+      optionDescription?: string;
+      /** Class name for the select all divider element */
+      selectAllDivider?: string;
+      /** Class name for the empty contents container element */
+      emptyContentsContainer?: string;
+      /** Class name for the empty contents text element */
+      emptyContentsText?: string;
     };
     /** Whether to use compact styling for the dropdown */
     compact?: boolean;
@@ -314,12 +382,20 @@ export type SelectProps<Type extends 'single' | 'multi' = 'single'> = Pick<
       option?: React.CSSProperties;
       /** Blend styles for option interactivity */
       optionBlendStyles?: InteractableBlendStyles;
-      /** Styles for the media element in an option */
-      optionMedia?: React.CSSProperties;
-      /** Styles for the label element in an option */
+      /** Styles for the option cell element */
+      optionCell?: React.CSSProperties;
+      /** Styles for the option content wrapper */
+      optionContent?: React.CSSProperties;
+      /** Styles for the option label element */
       optionLabel?: React.CSSProperties;
-      /** Styles for the description element in an option */
+      /** Styles for the option description element */
       optionDescription?: React.CSSProperties;
+      /** Styles for the select all divider element */
+      selectAllDivider?: React.CSSProperties;
+      /** Styles for the empty contents container element */
+      emptyContentsContainer?: React.CSSProperties;
+      /** Styles for the empty contents text element */
+      emptyContentsText?: React.CSSProperties;
     };
     /** Custom class names for different parts of the select */
     classNames?: {
@@ -343,12 +419,20 @@ export type SelectProps<Type extends 'single' | 'multi' = 'single'> = Pick<
       dropdown?: string;
       /** Class name for individual options */
       option?: string;
-      /** Class name for the media element in an option */
-      optionMedia?: string;
-      /** Class name for the label element in an option */
+      /** Class name for the option cell element */
+      optionCell?: string;
+      /** Class name for the option content wrapper */
+      optionContent?: string;
+      /** Class name for the option label element */
       optionLabel?: string;
-      /** Class name for the description element in an option */
+      /** Class name for the option description element */
       optionDescription?: string;
+      /** Class name for the select all divider element */
+      selectAllDivider?: string;
+      /** Class name for the empty contents container element */
+      emptyContentsContainer?: string;
+      /** Class name for the empty contents text element */
+      emptyContentsText?: string;
     };
     /** Test ID for the root element */
     testID?: string;
@@ -510,6 +594,13 @@ const SelectBase = memo(
               classNames={{
                 root: classNames?.dropdown,
                 option: classNames?.option,
+                optionCell: classNames?.optionCell,
+                optionContent: classNames?.optionContent,
+                optionLabel: classNames?.optionLabel,
+                optionDescription: classNames?.optionDescription,
+                selectAllDivider: classNames?.selectAllDivider,
+                emptyContentsContainer: classNames?.emptyContentsContainer,
+                emptyContentsText: classNames?.emptyContentsText,
               }}
               clearAllLabel={clearAllLabel}
               compact={compact}
@@ -529,6 +620,13 @@ const SelectBase = memo(
                 root: { ...floatingStyles, ...styles?.dropdown },
                 option: styles?.option,
                 optionBlendStyles: styles?.optionBlendStyles,
+                optionCell: styles?.optionCell,
+                optionContent: styles?.optionContent,
+                optionLabel: styles?.optionLabel,
+                optionDescription: styles?.optionDescription,
+                selectAllDivider: styles?.selectAllDivider,
+                emptyContentsContainer: styles?.emptyContentsContainer,
+                emptyContentsText: styles?.emptyContentsText,
               }}
               type={type}
               value={value}

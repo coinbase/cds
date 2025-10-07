@@ -20,6 +20,8 @@ export const DefaultSelectAllOption: SelectOptionComponent<'single' | 'multi'> =
     selected,
     style,
     type,
+    styles,
+    classNames,
   }) => {
     return (
       <>
@@ -28,6 +30,7 @@ export const DefaultSelectAllOption: SelectOptionComponent<'single' | 'multi'> =
           accessory={accessory}
           blendStyles={blendStyles}
           className={className}
+          classNames={classNames}
           compact={compact}
           detail={detail}
           disabled={disabled}
@@ -36,10 +39,11 @@ export const DefaultSelectAllOption: SelectOptionComponent<'single' | 'multi'> =
           onClick={onClick}
           selected={selected}
           style={style}
+          styles={styles}
           type={type}
           value="select-all"
         />
-        <Divider paddingX={2} />
+        <Divider className={classNames?.selectAllDivider} paddingX={2} style={styles?.selectAllDivider} />
       </>
     );
   },

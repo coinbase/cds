@@ -100,6 +100,13 @@ export const DefaultSelectDropdown: SelectDropdownComponent<'single' | 'multi'> 
             accessory={accessory}
             blendStyles={styles?.optionBlendStyles}
             className={classNames?.option}
+            classNames={{
+              optionCell: classNames?.optionCell,
+              optionContent: classNames?.optionContent,
+              optionLabel: classNames?.optionLabel,
+              optionDescription: classNames?.optionDescription,
+              selectAllDivider: classNames?.selectAllDivider,
+            }}
             compact={compact}
             detail={
               detail ?? (
@@ -130,6 +137,13 @@ export const DefaultSelectDropdown: SelectDropdownComponent<'single' | 'multi'> 
             onClick={toggleSelectAll}
             selected={isAllOptionsSelected || isSomeOptionsSelected}
             style={styles?.option}
+            styles={{
+              optionCell: styles?.optionCell,
+              optionContent: styles?.optionContent,
+              optionLabel: styles?.optionLabel,
+              optionDescription: styles?.optionDescription,
+              selectAllDivider: styles?.selectAllDivider,
+            }}
             type={type}
             value="select-all"
           />
@@ -139,7 +153,17 @@ export const DefaultSelectDropdown: SelectDropdownComponent<'single' | 'multi'> 
           accessory,
           styles?.optionBlendStyles,
           styles?.option,
+          styles?.optionCell,
+          styles?.optionContent,
+          styles?.optionLabel,
+          styles?.optionDescription,
+          styles?.selectAllDivider,
           classNames?.option,
+          classNames?.optionCell,
+          classNames?.optionContent,
+          classNames?.optionLabel,
+          classNames?.optionDescription,
+          classNames?.selectAllDivider,
           compact,
           detail,
           disabled,
@@ -223,6 +247,13 @@ export const DefaultSelectDropdown: SelectDropdownComponent<'single' | 'multi'> 
                               accessory={optionAccessory ?? accessory}
                               blendStyles={styles?.optionBlendStyles}
                               className={classNames?.option}
+                              classNames={{
+                                optionCell: classNames?.optionCell,
+                                optionContent: classNames?.optionContent,
+                                optionLabel: classNames?.optionLabel,
+                                optionDescription: classNames?.optionDescription,
+                                selectAllDivider: classNames?.selectAllDivider,
+                              }}
                               compact={compact}
                               detail={detail}
                               disabled={option.disabled || disabled}
@@ -233,6 +264,13 @@ export const DefaultSelectDropdown: SelectDropdownComponent<'single' | 'multi'> 
                               }}
                               selected={selected}
                               style={styles?.option}
+                              styles={{
+                                optionCell: styles?.optionCell,
+                                optionContent: styles?.optionContent,
+                                optionLabel: styles?.optionLabel,
+                                optionDescription: styles?.optionDescription,
+                                selectAllDivider: styles?.selectAllDivider,
+                              }}
                               type={type}
                               {...option}
                             />
@@ -240,7 +278,17 @@ export const DefaultSelectDropdown: SelectDropdownComponent<'single' | 'multi'> 
                         },
                       )
                     ) : (
-                      <SelectEmptyDropdownContentsComponent label={emptyOptionsLabel} />
+                      <SelectEmptyDropdownContentsComponent
+                        classNames={{
+                          emptyContentsContainer: classNames?.emptyContentsContainer,
+                          emptyContentsText: classNames?.emptyContentsText,
+                        }}
+                        label={emptyOptionsLabel}
+                        styles={{
+                          emptyContentsContainer: styles?.emptyContentsContainer,
+                          emptyContentsText: styles?.emptyContentsText,
+                        }}
+                      />
                     )}
                   </Box>
                 </motion.div>
