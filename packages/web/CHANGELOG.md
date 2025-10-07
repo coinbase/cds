@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.14.1 (10/7/2025 PST)
+
+#### 🐞 Fixes
+
+- Fixed web responsive styles.
+
 ## 8.14.0 (10/6/2025 PST)
 
 #### 🚀 Updates
