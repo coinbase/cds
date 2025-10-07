@@ -46,6 +46,8 @@ export const DefaultSelectControl: SelectControlComponent<'single' | 'multi'> = 
         maxSelectedOptionsToShow = 6,
         hiddenSelectedOptionsLabel = 'more',
         ariaHaspopup,
+        styles,
+        classNames,
         ...props
       },
       ref: React.Ref<HTMLElement>,
@@ -84,13 +86,18 @@ export const DefaultSelectControl: SelectControlComponent<'single' | 'multi'> = 
       const helperTextNode = useMemo(
         () =>
           typeof helperText === 'string' ? (
-            <HelperText color={variant ? variantColor[variant] : 'fgMuted'} overflow="truncate">
+            <HelperText
+              className={classNames?.controlHelperTextNode}
+              color={variant ? variantColor[variant] : 'fgMuted'}
+              overflow="truncate"
+              style={styles?.controlHelperTextNode}
+            >
               {helperText}
             </HelperText>
           ) : (
             helperText
           ),
-        [helperText, variant],
+        [helperText, variant, classNames?.controlHelperTextNode, styles?.controlHelperTextNode],
       );
 
       const labelNode = useMemo(
@@ -98,8 +105,10 @@ export const DefaultSelectControl: SelectControlComponent<'single' | 'multi'> = 
           typeof label === 'string' && labelVariant === 'inside' ? (
             <Pressable
               noScaleOnPress
+              className={classNames?.controlLabelNode}
               disabled={disabled}
               onClick={() => setOpen((s) => !s)}
+              style={styles?.controlLabelNode}
               tabIndex={-1}
             >
               <InputLabel color="fg" paddingBottom={0} paddingTop={1} paddingX={2}>
@@ -109,7 +118,14 @@ export const DefaultSelectControl: SelectControlComponent<'single' | 'multi'> = 
           ) : (
             label
           ),
-        [label, labelVariant, disabled, setOpen],
+        [
+          label,
+          labelVariant,
+          disabled,
+          setOpen,
+          classNames?.controlLabelNode,
+          styles?.controlLabelNode,
+        ],
       );
 
       const interactableBlendStyles = useMemo(
@@ -187,19 +203,23 @@ export const DefaultSelectControl: SelectControlComponent<'single' | 'multi'> = 
             aria-haspopup={ariaHaspopup}
             background="transparent"
             blendStyles={interactableBlendStyles}
+            className={classNames?.controlInputNode}
             disabled={disabled}
             minHeight={isMultiSelect ? 76 : undefined}
             onClick={() => setOpen((s) => !s)}
             paddingStart={1}
+            style={styles?.controlInputNode}
             width="100%"
           >
             {!!startNode && (
               <HStack
                 alignItems="center"
+                className={classNames?.controlStartNode}
                 height="100%"
                 justifyContent="center"
                 minWidth={0}
                 paddingX={1}
+                style={styles?.controlStartNode}
               >
                 {startNode}
               </HStack>
@@ -221,6 +241,7 @@ export const DefaultSelectControl: SelectControlComponent<'single' | 'multi'> = 
               <HStack
                 ref={valueNodeContainerRef}
                 alignItems="center"
+                className={classNames?.controlValueNode}
                 flexGrow={1}
                 flexShrink={1}
                 flexWrap="wrap"
@@ -231,6 +252,7 @@ export const DefaultSelectControl: SelectControlComponent<'single' | 'multi'> = 
                 paddingTop={labelVariant === 'inside' ? 0 : compact ? 1 : 2}
                 paddingX={1}
                 paddingY={labelVariant === 'inside' || compact ? 1 : 2}
+                style={styles?.controlValueNode}
               >
                 {valueNode}
               </HStack>
@@ -239,8 +261,15 @@ export const DefaultSelectControl: SelectControlComponent<'single' | 'multi'> = 
         ),
         [
           ariaHaspopup,
+          interactableBlendStyles,
+          classNames?.controlInputNode,
+          classNames?.controlStartNode,
+          classNames?.controlValueNode,
           disabled,
           isMultiSelect,
+          styles?.controlInputNode,
+          styles?.controlStartNode,
+          styles?.controlValueNode,
           startNode,
           shouldShowCompactLabel,
           label,
@@ -248,13 +277,17 @@ export const DefaultSelectControl: SelectControlComponent<'single' | 'multi'> = 
           compact,
           valueNode,
           setOpen,
-          interactableBlendStyles,
         ],
       );
 
       const endNode = useMemo(
         () => (
-          <HStack alignItems="center" paddingX={2}>
+          <HStack
+            alignItems="center"
+            className={classNames?.controlEndNode}
+            paddingX={2}
+            style={styles?.controlEndNode}
+          >
             <Pressable onClick={() => setOpen((s) => !s)}>
               {customEndNode ? (
                 customEndNode
@@ -267,7 +300,7 @@ export const DefaultSelectControl: SelectControlComponent<'single' | 'multi'> = 
             </Pressable>
           </HStack>
         ),
-        [open, variant, setOpen, customEndNode],
+        [open, variant, setOpen, customEndNode, classNames?.controlEndNode, styles?.controlEndNode],
       );
 
       return (

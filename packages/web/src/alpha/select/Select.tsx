@@ -116,6 +116,36 @@ export type SelectControlProps<Type extends 'single' | 'multi' = 'single'> = Pic
     className?: string;
     /** Inline styles for the control */
     style?: React.CSSProperties;
+    /** Custom styles for different parts of the control */
+    styles?: {
+      /** Styles for the start node element */
+      controlStartNode?: React.CSSProperties;
+      /** Styles for the input node element */
+      controlInputNode?: React.CSSProperties;
+      /** Styles for the value node element */
+      controlValueNode?: React.CSSProperties;
+      /** Styles for the label node element */
+      controlLabelNode?: React.CSSProperties;
+      /** Styles for the helper text node element */
+      controlHelperTextNode?: React.CSSProperties;
+      /** Styles for the end node element */
+      controlEndNode?: React.CSSProperties;
+    };
+    /** Custom class names for different parts of the control */
+    classNames?: {
+      /** Class name for the start node element */
+      controlStartNode?: string;
+      /** Class name for the input node element */
+      controlInputNode?: string;
+      /** Class name for the value node element */
+      controlValueNode?: string;
+      /** Class name for the label node element */
+      controlLabelNode?: string;
+      /** Class name for the helper text node element */
+      controlHelperTextNode?: string;
+      /** Class name for the end node element */
+      controlEndNode?: string;
+    };
   };
 
 export type SelectControlComponent<Type extends 'single' | 'multi' = 'single'> = React.FC<
@@ -264,14 +294,26 @@ export type SelectProps<Type extends 'single' | 'multi' = 'single'> = Pick<
       root?: React.CSSProperties;
       /** Styles for the control element */
       control?: React.CSSProperties;
+      /** Styles for the start node element */
+      controlStartNode?: React.CSSProperties;
+      /** Styles for the input node element */
+      controlInputNode?: React.CSSProperties;
+      /** Styles for the value node element */
+      controlValueNode?: React.CSSProperties;
+      /** Styles for the label node element */
+      controlLabelNode?: React.CSSProperties;
+      /** Styles for the helper text node element */
+      controlHelperTextNode?: React.CSSProperties;
+      /** Styles for the end node element */
+      controlEndNode?: React.CSSProperties;
+      /** Blend styles for control interactivity */
+      controlBlendStyles?: InteractableBlendStyles;
       /** Styles for the dropdown container */
       dropdown?: React.CSSProperties;
       /** Styles for individual options */
       option?: React.CSSProperties;
       /** Blend styles for option interactivity */
       optionBlendStyles?: InteractableBlendStyles;
-      /** Blend styles for control interactivity */
-      controlBlendStyles?: InteractableBlendStyles;
       /** Styles for the media element in an option */
       optionMedia?: React.CSSProperties;
       /** Styles for the label element in an option */
@@ -285,6 +327,18 @@ export type SelectProps<Type extends 'single' | 'multi' = 'single'> = Pick<
       root?: string;
       /** Class name for the control element */
       control?: string;
+      /** Class name for the start node element */
+      controlStartNode?: string;
+      /** Class name for the input node element */
+      controlInputNode?: string;
+      /** Class name for the value node element */
+      controlValueNode?: string;
+      /** Class name for the label node element */
+      controlLabelNode?: string;
+      /** Class name for the helper text node element */
+      controlHelperTextNode?: string;
+      /** Class name for the end node element */
+      controlEndNode?: string;
       /** Class name for the dropdown container */
       dropdown?: string;
       /** Class name for individual options */
@@ -409,6 +463,14 @@ const SelectBase = memo(
             ariaHaspopup={accessibilityRoles?.dropdown}
             blendStyles={styles?.controlBlendStyles}
             className={classNames?.control}
+            classNames={{
+              controlStartNode: classNames?.controlStartNode,
+              controlInputNode: classNames?.controlInputNode,
+              controlValueNode: classNames?.controlValueNode,
+              controlLabelNode: classNames?.controlLabelNode,
+              controlHelperTextNode: classNames?.controlHelperTextNode,
+              controlEndNode: classNames?.controlEndNode,
+            }}
             compact={compact}
             disabled={disabled}
             endNode={endNode}
@@ -424,6 +486,14 @@ const SelectBase = memo(
             setOpen={setOpen}
             startNode={startNode}
             style={styles?.control}
+            styles={{
+              controlStartNode: styles?.controlStartNode,
+              controlInputNode: styles?.controlInputNode,
+              controlValueNode: styles?.controlValueNode,
+              controlLabelNode: styles?.controlLabelNode,
+              controlHelperTextNode: styles?.controlHelperTextNode,
+              controlEndNode: styles?.controlEndNode,
+            }}
             type={type}
             value={value}
             variant={variant}

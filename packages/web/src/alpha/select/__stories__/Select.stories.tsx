@@ -90,23 +90,23 @@ const exampleOptionsWithReactNodes = [
   },
   {
     value: '2',
-    label: <Text font="title3">Option 2</Text>,
-    description: <Text font="title3">Description 2</Text>,
+    label: 'Option 2',
+    description: 'Not a react node',
   },
   {
     value: '3',
-    label: <Text font="title3">Option 3</Text>,
-    description: <Text font="title3">Description 3</Text>,
+    label: <Text font="title4">Option 3</Text>,
+    description: <Text font="title4">Description 3</Text>,
   },
   {
     value: '4',
-    label: <Text font="title3">Option 4</Text>,
-    description: <Text font="title3">Description 4</Text>,
+    label: 'Option 4',
+    description: 'Not a react node',
   },
   {
     value: '5',
-    label: <Text font="title3">Option 5</Text>,
-    description: <Text font="title3">Description 5</Text>,
+    label: <Text font="legal">Option 5</Text>,
+    description: <Text font="legal">Description 5</Text>,
   },
 ];
 
@@ -322,6 +322,7 @@ export const OptionsAsReactNodes = () => {
 
   return (
     <Select
+      helperText="Options are displayed as react nodes"
       label="Single select - options as react nodes"
       onChange={setValue}
       options={exampleOptionsWithReactNodes}
