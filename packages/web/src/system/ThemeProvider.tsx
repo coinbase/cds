@@ -31,17 +31,11 @@ export const useThemeProviderStyles = (theme: Theme) => {
   return style;
 };
 
-const ThemeManager = ({
-  display,
-  className,
-  style: customStyle,
-  children,
-  theme,
-}: ThemeManagerProps) => {
-  const themeVarStyles = useThemeProviderStyles(theme);
+const ThemeManager = ({ display, className, style, children, theme }: ThemeManagerProps) => {
+  const themeStyles = useThemeProviderStyles(theme);
   const styles = useMemo(
-    () => ({ ...themeVarStyles, display, ...customStyle }),
-    [themeVarStyles, display, customStyle],
+    () => ({ ...themeStyles, display, ...style }),
+    [themeStyles, display, style],
   );
   return (
     <div className={cx(theme.id, theme.activeColorScheme, className)} style={styles}>
