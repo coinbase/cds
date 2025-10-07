@@ -6,6 +6,10 @@
     {
       "label": "CartesianChart",
       "url": "/components/graphs/CartesianChart/"
+    },
+    {
+      "label": "SegmentedTabs",
+      "url": "/components/navigation/SegmentedTabs/"
     }
   ]
 }

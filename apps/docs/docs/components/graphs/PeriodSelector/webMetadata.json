@@ -9,11 +9,7 @@
     },
     {
       "label": "SegmentedTabs",
-      "url": "/components/tabs/SegmentedTabs/"
-    },
-    {
-      "label": "SegmentedTab",
-      "url": "/components/tabs/SegmentedTab/"
+      "url": "/components/navigation/SegmentedTabs/"
     }
   ]
 }

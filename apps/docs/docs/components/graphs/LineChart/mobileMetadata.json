@@ -18,6 +18,14 @@
     {
       "label": "Scrubber",
       "url": "/components/graphs/Scrubber/"
+    },
+    {
+      "label": "XAxis",
+      "url": "/components/graphs/XAxis/"
+    },
+    {
+      "label": "YAxis",
+      "url": "/components/graphs/YAxis/"
     }
   ]
 }

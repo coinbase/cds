@@ -4,6 +4,10 @@
   "description": "A flexible, low-level chart component for displaying data in an x/y coordinate space. Provides a foundation for building custom chart visualizations with full control over rendering.",
   "relatedComponents": [
     {
+      "label": "Point",
+      "url": "/components/graphs/Point/"
+    },
+    {
       "label": "ReferenceLine",
       "url": "/components/graphs/ReferenceLine/"
     },
@@ -12,8 +16,12 @@
       "url": "/components/graphs/Scrubber/"
     },
     {
-      "label": "Point",
-      "url": "/components/graphs/Point/"
+      "label": "XAxis",
+      "url": "/components/graphs/XAxis/"
+    },
+    {
+      "label": "YAxis",
+      "url": "/components/graphs/YAxis/"
     }
   ]
 }
