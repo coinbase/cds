@@ -1,19 +1,37 @@
 {
   "import": "import { CartesianChart } from '@coinbase/cds-mobile-visualization'",
   "source": "https://github.com/coinbase/cds/blob/master/packages/mobile-visualization/src/chart/CartesianChart.tsx",
-  "description": "A flexible chart component that can be used to display data in a x/y coordinate space.",
+  "description": "A flexible, low-level chart component for displaying data in an x/y coordinate space. Provides a foundation for building custom chart visualizations with full control over rendering.",
   "relatedComponents": [
     {
-      "label": "AreaChart",
-      "url": "/components/graphs/AreaChart/"
+      "label": "Point",
+      "url": "/components/graphs/Point/"
     },
     {
-      "label": "BarChart",
-      "url": "/components/graphs/BarChart/"
+      "label": "ReferenceLine",
+      "url": "/components/graphs/ReferenceLine/"
     },
     {
-      "label": "LineChart",
-      "url": "/components/graphs/LineChart/"
+      "label": "Scrubber",
+      "url": "/components/graphs/Scrubber/"
+    },
+    {
+      "label": "XAxis",
+      "url": "/components/graphs/XAxis/"
+    },
+    {
+      "label": "YAxis",
+      "url": "/components/graphs/YAxis/"
+    }
+  ],
+  "dependencies": [
+    {
+      "name": "react-native-svg",
+      "version": "^14.1.0"
+    },
+    {
+      "name": "react-native-reanimated",
+      "version": "^3.14.0"
     }
   ]
 }

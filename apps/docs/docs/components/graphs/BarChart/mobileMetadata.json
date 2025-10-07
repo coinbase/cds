@@ -1,14 +1,29 @@
 {
   "import": "import { BarChart } from '@coinbase/cds-mobile-visualization'",
   "source": "https://github.com/coinbase/cds/blob/master/packages/mobile-visualization/src/chart/bar/BarChart.tsx",
+  "description": "A bar chart component for comparing values across categories. Supports horizontal and vertical orientations, stacked bars, and grouped series.",
   "relatedComponents": [
     {
       "label": "CartesianChart",
       "url": "/components/graphs/CartesianChart/"
     },
     {
-      "label": "LineChart",
-      "url": "/components/graphs/LineChart/"
+      "label": "XAxis",
+      "url": "/components/graphs/XAxis/"
+    },
+    {
+      "label": "YAxis",
+      "url": "/components/graphs/YAxis/"
+    }
+  ],
+  "dependencies": [
+    {
+      "name": "react-native-svg",
+      "version": "^14.1.0"
+    },
+    {
+      "name": "react-native-reanimated",
+      "version": "^3.14.0"
     }
   ]
 }

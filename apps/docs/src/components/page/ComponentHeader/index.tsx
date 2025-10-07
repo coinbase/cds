@@ -176,7 +176,7 @@ export const ComponentHeader = memo(
                 <MetadataItem label="Figma">
                   <Text font="body">
                     <Link as={DocusaurusLink} target="_blank" to={figma}>
-                      View Figma
+                      View Figma (internal only)
                     </Link>
                   </Text>
                 </MetadataItem>

@@ -1,13 +1,21 @@
 {
   "import": "import { XAxis } from '@coinbase/cds-web-visualization'",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/web-visualization/src/chart/axis/XAxis.tsx",
+  "description": "A horizontal axis component for CartesianChart. Displays tick marks, labels, gridlines, and supports custom formatting and data domains.",
   "relatedComponents": [
     {
-      "label": "LineChart",
-      "url": "/components/graphs/LineChart/"
+      "label": "CartesianChart",
+      "url": "/components/graphs/CartesianChart/"
     },
     {
-      "label": "SparklineInteractive",
-      "url": "/components/graphs/SparklineInteractive/"
+      "label": "YAxis",
+      "url": "/components/graphs/YAxis/"
+    }
+  ],
+  "dependencies": [
+    {
+      "name": "framer-motion",
+      "version": "^10.18.0"
     }
   ]
 }

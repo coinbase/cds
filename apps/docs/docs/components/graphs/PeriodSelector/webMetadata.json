@@ -1,10 +1,21 @@
 {
   "import": "import { PeriodSelector } from '@coinbase/cds-web-visualization'",
   "source": "https://github.com/coinbase/cds/blob/master/packages/web-visualization/src/chart/PeriodSelector.tsx",
+  "description": "A selector component for choosing time periods in charts.",
   "relatedComponents": [
     {
-      "label": "LineChart",
-      "url": "/components/graphs/LineChart/"
+      "label": "CartesianChart",
+      "url": "/components/graphs/CartesianChart/"
+    },
+    {
+      "label": "SegmentedTabs",
+      "url": "/components/navigation/SegmentedTabs/"
+    }
+  ],
+  "dependencies": [
+    {
+      "name": "framer-motion",
+      "version": "^10.18.0"
     }
   ]
 }

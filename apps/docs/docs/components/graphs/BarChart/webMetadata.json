@@ -1,10 +1,25 @@
 {
   "import": "import { BarChart } from '@coinbase/cds-web-visualization'",
   "source": "https://github.com/coinbase/cds/blob/master/packages/web-visualization/src/chart/bar/BarChart.tsx",
+  "description": "A bar chart component for comparing values across categories. Supports horizontal and vertical orientations, stacked bars, and grouped series.",
   "relatedComponents": [
     {
-      "label": "SparklineInteractive",
-      "url": "/components/graphs/SparklineInteractive/"
+      "label": "CartesianChart",
+      "url": "/components/graphs/CartesianChart/"
+    },
+    {
+      "label": "XAxis",
+      "url": "/components/graphs/XAxis/"
+    },
+    {
+      "label": "YAxis",
+      "url": "/components/graphs/YAxis/"
+    }
+  ],
+  "dependencies": [
+    {
+      "name": "framer-motion",
+      "version": "^10.18.0"
     }
   ]
 }

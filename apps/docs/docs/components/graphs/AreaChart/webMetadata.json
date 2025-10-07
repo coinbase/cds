@@ -1,15 +1,33 @@
 {
   "import": "import { AreaChart } from '@coinbase/cds-web-visualization'",
   "source": "https://github.com/coinbase/cds/blob/master/packages/web-visualization/src/chart/area/AreaChart.tsx",
-  "description": "A cartesian chart variant that allows for easy visualization of stacked data.",
+  "description": "A chart component that displays data as filled areas beneath lines. Ideal for showing cumulative values, stacked data, or emphasizing volume over time.",
   "relatedComponents": [
     {
       "label": "CartesianChart",
       "url": "/components/graphs/CartesianChart/"
     },
     {
-      "label": "LineChart",
-      "url": "/components/graphs/LineChart/"
+      "label": "ReferenceLine",
+      "url": "/components/graphs/ReferenceLine/"
+    },
+    {
+      "label": "Scrubber",
+      "url": "/components/graphs/Scrubber/"
+    },
+    {
+      "label": "XAxis",
+      "url": "/components/graphs/XAxis/"
+    },
+    {
+      "label": "YAxis",
+      "url": "/components/graphs/YAxis/"
+    }
+  ],
+  "dependencies": [
+    {
+      "name": "framer-motion",
+      "version": "^10.18.0"
     }
   ]
 }

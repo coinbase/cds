@@ -1,10 +1,37 @@
 {
   "import": "import { LineChart } from '@coinbase/cds-web-visualization'",
   "source": "https://github.com/coinbase/cds/blob/master/packages/web-visualization/src/chart/line/LineChart.tsx",
+  "description": "A flexible line chart component for displaying data trends over time. Supports multiple series, custom curves, areas, scrubbing, and interactive data exploration.",
   "relatedComponents": [
     {
-      "label": "SparklineInteractive",
-      "url": "/components/graphs/SparklineInteractive/"
+      "label": "CartesianChart",
+      "url": "/components/graphs/CartesianChart/"
+    },
+    {
+      "label": "Point",
+      "url": "/components/graphs/Point/"
+    },
+    {
+      "label": "ReferenceLine",
+      "url": "/components/graphs/ReferenceLine/"
+    },
+    {
+      "label": "Scrubber",
+      "url": "/components/graphs/Scrubber/"
+    },
+    {
+      "label": "XAxis",
+      "url": "/components/graphs/XAxis/"
+    },
+    {
+      "label": "YAxis",
+      "url": "/components/graphs/YAxis/"
+    }
+  ],
+  "dependencies": [
+    {
+      "name": "framer-motion",
+      "version": "^10.18.0"
     }
   ]
 }

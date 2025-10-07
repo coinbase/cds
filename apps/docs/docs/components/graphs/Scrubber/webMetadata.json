@@ -1,18 +1,21 @@
 {
   "import": "import { Scrubber } from '@coinbase/cds-web-visualization'",
   "source": "https://github.com/coinbase/cds/blob/master/packages/web-visualization/src/chart/scrubber/Scrubber.tsx",
+  "description": "An interactive scrubber component for exploring individual data points in charts. Displays values on hover or drag and supports custom labels and formatting.",
   "relatedComponents": [
-    {
-      "label": "AreaChart",
-      "url": "/components/graphs/AreaChart/"
-    },
     {
       "label": "CartesianChart",
       "url": "/components/graphs/CartesianChart/"
     },
     {
-      "label": "LineChart",
-      "url": "/components/graphs/LineChart/"
+      "label": "Point",
+      "url": "/components/graphs/Point/"
+    }
+  ],
+  "dependencies": [
+    {
+      "name": "framer-motion",
+      "version": "^10.18.0"
     }
   ]
 }
