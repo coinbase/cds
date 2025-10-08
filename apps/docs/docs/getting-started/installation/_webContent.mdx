@@ -8,13 +8,13 @@ import { MDXArticle } from '@site/src/components/page/MDXArticle';
 To install the CDS library for React web applications, run the following command:
 
 ```bash
-npm install @coinbase/cds-web
+npm install @coinbase/cds-web framer-motion@^10
 ```
 
 Alternatively, if you are using Yarn:
 
 ```bash
-yarn add @coinbase/cds-web
+yarn add @coinbase/cds-web framer-motion@^10
 ```
 
 </MDXArticle>
@@ -56,21 +56,20 @@ import { ThemeProvider, MediaQueryProvider } from '@coinbase/cds-web/system';
 import { defaultTheme } from '@coinbase/cds-web/themes/defaultTheme';
 import App from './App';
 
-const Index = () => {
-  return (
-    <MediaQueryProvider>
-      <ThemeProvider theme={defaultTheme} activeColorScheme="light">
-        <App />
-      </ThemeProvider>
-    </MediaQueryProvider>
-  );
-};
+const Index = () => (
+  <MediaQueryProvider>
+    <ThemeProvider theme={defaultTheme} activeColorScheme="light">
+      <App />
+    </ThemeProvider>
+  </MediaQueryProvider>
+);
 
 export default Index;
 ```
 
 :::tip
-The MediaQueryProvider prevents issues with `window.matchMedia()` in SSR environments. [Read more here](/components/other/MediaQueryProvider#server-side-rendering)
+The MediaQueryProvider prevents issues with `window.matchMedia()` in SSR environments.
+[Read more here &rarr;](/components/other/MediaQueryProvider#server-side-rendering)
 :::
 
 </MDXArticle>
@@ -82,9 +81,7 @@ Try importing and rendering a simple CDS component.
 ```tsx
 import { Button } from '@coinbase/cds-web/buttons';
 
-const Test = () => {
-  return <Button>Click Me</Button>;
-};
+const Test = () => <Button>Click Me</Button>;
 ```
 
 </MDXArticle>
