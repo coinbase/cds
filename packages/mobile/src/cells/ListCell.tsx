@@ -94,13 +94,6 @@ export type ListCellBaseProps = CellDetailProps &
     multiline?: boolean;
     /** Title of content. Max 1 line (with description) or 2 lines (without), otherwise will truncate. */
     title?: React.ReactNode;
-    /** Text props to spread onto the Text elements. */
-    textProps?: {
-      title?: TextProps;
-      description?: TextProps;
-      detail?: TextProps;
-      subdetail?: TextProps;
-    };
     /** Styles for the components */
     styles?: Pick<
       CellStyles,
@@ -141,7 +134,6 @@ export const ListCell = memo(function ListCell({
   layoutSpacing = compact ? 'compact' : 'spacious',
   style,
   styles,
-  textProps,
   ...props
 }: ListCellProps) {
   const minHeight =
@@ -162,27 +154,11 @@ export const ListCell = memo(function ListCell({
           adjustsFontSizeToFit={!!detailWidth}
           detail={detail}
           subdetail={subdetail}
-          textProps={{
-            detail: textProps?.detail,
-            subdetail: {
-              font: layoutSpacing === 'hug' ? 'label2' : 'body',
-              ...textProps?.subdetail,
-            },
-          }}
+          subdetailFont={layoutSpacing === 'hug' ? 'label2' : 'body'}
           variant={variant}
         />
       )),
-    [
-      endProp,
-      action,
-      hasDetails,
-      detail,
-      subdetail,
-      detailWidth,
-      layoutSpacing,
-      textProps,
-      variant,
-    ],
+    [endProp, action, hasDetails, detail, subdetail, detailWidth, layoutSpacing, variant],
   );
 
   return (
@@ -234,7 +210,6 @@ export const ListCell = memo(function ListCell({
                     : 2
             }
             style={styles?.title}
-            {...textProps?.title}
           >
             {title}
           </Text>
@@ -247,7 +222,6 @@ export const ListCell = memo(function ListCell({
             font={layoutSpacing === 'hug' ? 'label2' : 'body'}
             numberOfLines={multiline ? undefined : title ? 1 : 2}
             style={styles?.description}
-            {...textProps?.description}
           >
             {description}
           </Text>

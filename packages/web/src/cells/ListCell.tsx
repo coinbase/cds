@@ -108,13 +108,6 @@ export type ListCellBaseProps = Polymorphic.ExtendableProps<
     multiline?: boolean;
     /** Title of content. Max 1 line (with description) or 2 lines (without), otherwise will truncate. */
     title?: React.ReactNode;
-    /** Text props to spread onto the Text elements */
-    textProps?: {
-      title?: TextProps<'div'>;
-      description?: TextProps<'div'>;
-      detail?: TextProps<'div'>;
-      subdetail?: TextProps<'div'>;
-    };
     /** Class names for the components */
     classNames?: Pick<
       CellClassNames,
@@ -178,7 +171,6 @@ export const ListCell: ListCellComponent = memo(
         classNames,
         styles,
         style,
-        textProps,
         ...props
       }: ListCellProps<AsComponent>,
       ref?: Polymorphic.Ref<AsComponent>,
@@ -206,19 +198,13 @@ export const ListCell: ListCellComponent = memo(
             <CellDetail
               detail={detail}
               subdetail={subdetail}
-              textProps={{
-                detail: textProps?.detail,
-                subdetail: {
-                  font: layoutSpacing === 'hug' ? 'label2' : 'body',
-                  ...textProps?.subdetail,
-                },
-              }}
+              subdetailFont={layoutSpacing === 'hug' ? 'label2' : 'body'}
               variant={variant}
             />
           );
         }
         return undefined;
-      }, [endProp, action, detail, subdetail, variant, layoutSpacing, textProps]);
+      }, [endProp, action, detail, subdetail, variant, layoutSpacing]);
 
       return (
         <Cell
@@ -268,7 +254,6 @@ export const ListCell: ListCellComponent = memo(
                 }
                 overflow="wrap"
                 style={styles?.title}
-                {...textProps?.title}
               >
                 {title}
               </Text>
@@ -283,7 +268,6 @@ export const ListCell: ListCellComponent = memo(
                 font={layoutSpacing === 'hug' ? 'label2' : 'body'}
                 overflow={multiline ? undefined : 'truncate'}
                 style={styles?.description}
-                {...textProps?.description}
               >
                 {description}
               </Text>
