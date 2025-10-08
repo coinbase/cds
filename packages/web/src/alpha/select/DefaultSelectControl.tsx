@@ -58,6 +58,7 @@ function DefaultSelectControlComponent<Type extends SelectType, T extends string
     blendStyles,
     maxSelectedOptionsToShow = 6,
     hiddenSelectedOptionsLabel = 'more',
+    removeSelectedOptionAccessibilityLabel = 'Remove',
     ariaHaspopup,
     styles,
     classNames,
@@ -169,6 +170,7 @@ function DefaultSelectControlComponent<Type extends SelectType, T extends string
             <InputChip
               key={option.value}
               data-selected-value
+              accessibilityLabel={`${removeSelectedOptionAccessibilityLabel} ${option.label ?? option.description ?? option.value ?? ''}`}
               disabled={option.disabled}
               invertColorScheme={false}
               label={option.label ?? option.description ?? option.value ?? ''}
@@ -204,6 +206,7 @@ function DefaultSelectControlComponent<Type extends SelectType, T extends string
     value,
     maxSelectedOptionsToShow,
     hiddenSelectedOptionsLabel,
+    removeSelectedOptionAccessibilityLabel,
     handleUnselectValue,
   ]);
 
@@ -302,7 +305,7 @@ function DefaultSelectControlComponent<Type extends SelectType, T extends string
         paddingX={2}
         style={styles?.controlEndNode}
       >
-        <Pressable onClick={() => setOpen((s) => !s)} tabIndex={-1}>
+        <Pressable aria-hidden onClick={() => setOpen((s) => !s)} tabIndex={-1}>
           {customEndNode ? (
             customEndNode
           ) : (

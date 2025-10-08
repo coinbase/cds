@@ -152,6 +152,8 @@ export type SelectControlProps<
     maxSelectedOptionsToShow?: number;
     /** Label to show for showcasing count of hidden selected options */
     hiddenSelectedOptionsLabel?: string;
+    /** Accessibility label for each chip in a multi-select */
+    removeSelectedOptionAccessibilityLabel?: string;
     /** Blend styles for control interactivity */
     blendStyles?: InteractableBlendStyles;
     /** ARIA haspopup attribute value */
@@ -326,6 +328,7 @@ export type SelectProps<Type extends SelectType = 'single', T extends string = s
     | 'placeholder'
     | 'helperText'
     | 'hiddenSelectedOptionsLabel'
+    | 'removeSelectedOptionAccessibilityLabel'
     | 'startNode'
     | 'variant'
     | 'disabled'
@@ -477,6 +480,7 @@ const SelectBase = memo(
         placeholder,
         helperText,
         hiddenSelectedOptionsLabel,
+        removeSelectedOptionAccessibilityLabel,
         compact,
         label,
         labelVariant,
@@ -582,6 +586,7 @@ const SelectBase = memo(
             open={open}
             options={options}
             placeholder={placeholder}
+            removeSelectedOptionAccessibilityLabel={removeSelectedOptionAccessibilityLabel}
             setOpen={setOpen}
             startNode={startNode}
             style={styles?.control}
