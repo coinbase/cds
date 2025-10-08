@@ -1,11 +1,13 @@
 import React, { forwardRef, memo, useCallback, useMemo, useRef } from 'react';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
+import { css } from '@linaria/core';
 
 import { Chip } from '../../chips/Chip';
 import { InputChip } from '../../chips/InputChip';
 import { HelperText } from '../../controls/HelperText';
 import { InputLabel } from '../../controls/InputLabel';
 import { InputStack } from '../../controls/InputStack';
+import { cx } from '../../cx';
 import { HStack } from '../../layout/HStack';
 import { AnimatedCaret } from '../../motion/AnimatedCaret';
 import { Pressable } from '../../system/Pressable';
@@ -13,6 +15,14 @@ import { Text } from '../../typography/Text';
 import { findClosestNonDisabledNodeIndex } from '../../utils/findClosestNonDisabledNodeIndex';
 
 import type { SelectControlComponent, SelectOption } from './Select';
+
+const noFocusOutlineCss = css`
+  &:focus,
+  &:focus-visible,
+  &:focus-within {
+    outline: none;
+  }
+`;
 
 const variantColor: Record<string, ThemeVars.Color> = {
   foreground: 'fg',
@@ -203,8 +213,9 @@ export const DefaultSelectControl: SelectControlComponent<'single' | 'multi'> = 
             aria-haspopup={ariaHaspopup}
             background="transparent"
             blendStyles={interactableBlendStyles}
-            className={classNames?.controlInputNode}
+            className={cx(noFocusOutlineCss, classNames?.controlInputNode)}
             disabled={disabled}
+            focusable={false}
             minHeight={isMultiSelect ? 76 : undefined}
             onClick={() => setOpen((s) => !s)}
             paddingStart={1}
@@ -288,7 +299,7 @@ export const DefaultSelectControl: SelectControlComponent<'single' | 'multi'> = 
             paddingX={2}
             style={styles?.controlEndNode}
           >
-            <Pressable onClick={() => setOpen((s) => !s)}>
+            <Pressable onClick={() => setOpen((s) => !s)} tabIndex={-1}>
               {customEndNode ? (
                 customEndNode
               ) : (
