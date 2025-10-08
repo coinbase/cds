@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.14.2 (10/7/2025 PST)
+
+#### 🐞 Fixes
+
+- Update Accordion Divider color to match default Divider. [[#75](https://github.com/coinbase/cds/pull/75)]
+
 ## 8.14.1 ((10/7/2025, 12:59 PM PST))
 
 This is an artificial version bump with no new change.
