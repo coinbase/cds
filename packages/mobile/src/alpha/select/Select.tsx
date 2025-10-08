@@ -12,6 +12,8 @@ import { DefaultSelectDropdown } from './DefaultSelectDropdown';
 import { DefaultSelectEmptyDropdownContents } from './DefaultSelectEmptyDropdownContents';
 import { DefaultSelectOption } from './DefaultSelectOption';
 
+export type SelectType = 'single' | 'multi';
+
 /**
  * Configuration for a single option in the Select component
  */
@@ -29,7 +31,7 @@ export type SelectOption = {
 /**
  * Props for individual option components within the Select dropdown
  */
-export type SelectOptionProps<Type extends 'single' | 'multi' = 'single'> = SelectOption &
+export type SelectOptionProps<Type extends SelectType = 'single'> = SelectOption &
   Pick<CellBaseProps, 'accessory' | 'media' | 'detail'> & {
     /** Press handler for the option */
     onPress?: (value: string | null) => void;
@@ -64,7 +66,7 @@ export type SelectOptionProps<Type extends 'single' | 'multi' = 'single'> = Sele
     };
   };
 
-export type SelectOptionComponent<Type extends 'single' | 'multi' = 'single'> = React.FC<
+export type SelectOptionComponent<Type extends SelectType = 'single'> = React.FC<
   SelectOptionProps<Type>
 >;
 
@@ -81,7 +83,7 @@ export type SelectEmptyDropdownContentProps = {
 
 export type SelectEmptyDropdownContentComponent = React.FC<SelectEmptyDropdownContentProps>;
 
-type SelectState<Type extends 'single' | 'multi' = 'single'> = {
+type SelectState<Type extends SelectType = 'single'> = {
   value: Type extends 'multi' ? string[] : string | null;
   onChange: (value: Type extends 'multi' ? string | string[] : string | null) => void;
 };
@@ -89,7 +91,7 @@ type SelectState<Type extends 'single' | 'multi' = 'single'> = {
 /**
  * Props for the select control component (the clickable input that opens the dropdown)
  */
-export type SelectControlProps<Type extends 'single' | 'multi' = 'single'> = Pick<
+export type SelectControlProps<Type extends SelectType = 'single'> = Pick<
   SharedAccessibilityProps,
   'accessibilityLabel' | 'accessibilityHint'
 > &
@@ -136,7 +138,7 @@ export type SelectControlProps<Type extends 'single' | 'multi' = 'single'> = Pic
     };
   };
 
-export type SelectControlComponent<Type extends 'single' | 'multi' = 'single'> = React.FC<
+export type SelectControlComponent<Type extends SelectType = 'single'> = React.FC<
   SelectControlProps<Type> & {
     ref?: React.Ref<any>;
   }
@@ -145,7 +147,7 @@ export type SelectControlComponent<Type extends 'single' | 'multi' = 'single'> =
 /**
  * Props for the dropdown component that contains the list of options
  */
-export type SelectDropdownProps<Type extends 'single' | 'multi' = 'single'> = SelectState<Type> &
+export type SelectDropdownProps<Type extends SelectType = 'single'> = SelectState<Type> &
   Pick<SharedAccessibilityProps, 'accessibilityLabel'> &
   Pick<SelectOptionProps<Type>, 'accessory' | 'media' | 'detail'> & {
     /** Whether this is for single or multi-select */
@@ -213,7 +215,7 @@ export type SelectDropdownProps<Type extends 'single' | 'multi' = 'single'> = Se
     };
   };
 
-export type SelectDropdownComponent<Type extends 'single' | 'multi' = 'single'> = React.FC<
+export type SelectDropdownComponent<Type extends SelectType = 'single'> = React.FC<
   SelectDropdownProps<Type> & {
     ref?: React.Ref<any>;
   }
@@ -226,7 +228,7 @@ export const defaultAccessibilityRoles: SelectDropdownProps['accessibilityRoles'
 /**
  * Props for the Select component
  */
-export type SelectProps<Type extends 'single' | 'multi' = 'single'> = Pick<
+export type SelectProps<Type extends SelectType = 'single'> = Pick<
   SharedAccessibilityProps,
   'accessibilityLabel' | 'accessibilityHint'
 > &
@@ -322,13 +324,13 @@ export type SelectRef = any &
     refs: any;
   };
 
-type SelectComponent = <Type extends 'single' | 'multi' = 'single'>(
+type SelectComponent = <Type extends SelectType = 'single'>(
   props: SelectProps<Type> & { ref?: React.Ref<SelectRef> },
 ) => React.ReactElement;
 
 const SelectBase = memo(
   forwardRef(
-    <Type extends 'single' | 'multi' = 'single'>(
+    <Type extends SelectType = 'single'>(
       {
         value,
         type = 'single' as Type,
