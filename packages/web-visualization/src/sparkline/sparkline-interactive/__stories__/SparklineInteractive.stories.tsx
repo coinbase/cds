@@ -714,3 +714,39 @@ WithCustomStyles.parameters = {
     },
   },
 };
+const centeredContainerCss = css`
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  max-width: 100vw;
+  background-color: var(--color-bgSecondary);
+  padding: var(--space-4);
+`;
+
+const narrowSparklineCss = css`
+  max-width: 750px;
+  width: 100%;
+  background-color: var(--color-bg);
+  padding: var(--space-4);
+  border-radius: var(--borderRadius-200);
+`;
+
+export const CenteredNarrowOnWideScreen = () => (
+  <React.StrictMode>
+    <div className={centeredContainerCss}>
+      <div className={narrowSparklineCss}>
+        <SparklineInteractiveWrapper data={sparklineInteractiveData} strokeColor={strokeColor} />
+      </div>
+    </div>
+  </React.StrictMode>
+);
+
+CenteredNarrowOnWideScreen.bind({});
+CenteredNarrowOnWideScreen.parameters = {
+  percy: { enableJavaScript: true },
+  a11y: {
+    config: {
+      rules: [{ id: 'color-contrast', enabled: false }],
+    },
+  },
+};
