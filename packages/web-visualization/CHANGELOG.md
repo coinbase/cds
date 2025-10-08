@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 3.3.2 (10/1/2025 PST)
+
+#### 🐞 Fixes
+
+- Factor sparkline container offset in axis label calculations. [[#87](https://github.com/coinbase/cds/pull/87)]
+
 ## 3.3.1 (10/1/2025 PST)
 
 #### 🐞 Fixes

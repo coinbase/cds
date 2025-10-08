@@ -1,6 +1,6 @@
 {
   "name": "@coinbase/cds-web-visualization",
-  "version": "3.3.1",
+  "version": "3.3.2",
   "description": "Coinbase Design System - Web Sparkline",
   "repository": {
     "type": "git",
