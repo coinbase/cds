@@ -9,12 +9,12 @@ import type { ComponentCardProps } from '@site/src/components/home/ComponentCard
 import { ComponentCard } from '@site/src/components/home/ComponentCard';
 import type { QuickStartLinkProps } from '@site/src/components/home/QuickStartCampaignCard';
 import { QuickStartCampaignCard } from '@site/src/components/home/QuickStartCampaignCard';
-import ApiOverviewBannerLight from '@site/static/img/campaignCardBanners/api_overview.svg';
-import ApiOverviewBannerDark from '@site/static/img/campaignCardBanners/api_overview_dark.svg';
 import InstallationBannerLight from '@site/static/img/campaignCardBanners/installation.svg';
 import InstallationBannerDark from '@site/static/img/campaignCardBanners/installation_dark.svg';
 import IntroductionBannerLight from '@site/static/img/campaignCardBanners/introduction.svg';
 import IntroductionBannerDark from '@site/static/img/campaignCardBanners/introduction_dark.svg';
+import StylingBannerLight from '@site/static/img/campaignCardBanners/styling.svg';
+import StylingBannerDark from '@site/static/img/campaignCardBanners/styling_dark.svg';
 import ThemingBannerLight from '@site/static/img/campaignCardBanners/theming.svg';
 import ThemingBannerDark from '@site/static/img/campaignCardBanners/theming_dark.svg';
 
@@ -48,16 +48,6 @@ const quickStartCards: QuickStartLinkProps[] = [
     BannerComponentDark: InstallationBannerDark,
   },
   {
-    title: 'API Overview',
-    description: 'Discover the core building blocks and how to integrate them seamlessly.',
-    link: {
-      label: 'Go to API Overview',
-      to: '/getting-started/api-overview',
-    },
-    BannerComponentLight: ApiOverviewBannerLight,
-    BannerComponentDark: ApiOverviewBannerDark,
-  },
-  {
     title: 'Theming',
     description: 'Customize your designs with our powerful theming options and guidelines.',
     link: {
@@ -66,6 +56,16 @@ const quickStartCards: QuickStartLinkProps[] = [
     },
     BannerComponentLight: ThemingBannerLight,
     BannerComponentDark: ThemingBannerDark,
+  },
+  {
+    title: 'Styling',
+    description: 'Discover the core styling APIs and learn how to combine them seamlessly.',
+    link: {
+      label: 'Go to Styling',
+      to: '/getting-started/styling',
+    },
+    BannerComponentLight: StylingBannerLight,
+    BannerComponentDark: StylingBannerDark,
   },
 ];
 
