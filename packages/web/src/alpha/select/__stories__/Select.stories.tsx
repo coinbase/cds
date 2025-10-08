@@ -10,7 +10,13 @@ import { HStack } from '../../../layout/HStack';
 import { VStack } from '../../../layout/VStack';
 import { Spinner } from '../../../loaders';
 import { Text } from '../../../typography/Text';
-import { Select, type SelectControlComponent, type SelectOptionComponent } from '../Select';
+import {
+  Select,
+  type SelectControlComponent,
+  type SelectOption,
+  type SelectOptionComponent,
+  type SelectType,
+} from '../Select';
 
 export default {
   title: 'Components/Alpha/Select/SingleSelect',
@@ -483,6 +489,34 @@ export const CustomClassNames = () => {
       label="Single select - class names"
       onChange={setValue}
       options={exampleOptions}
+      placeholder="Empty value"
+      value={value}
+    />
+  );
+};
+
+export const Typed = () => {
+  type TestValue = '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9';
+
+  const typedOptions: SelectOption<TestValue>[] = [
+    { value: null, label: 'Remove selection' },
+    { value: '1', label: 'Option 1' },
+    { value: '2', label: 'Option 2' },
+    { value: '3', label: 'Option 3' },
+    { value: '4', label: 'Option 4' },
+    { value: '5', label: 'Option 5' },
+    { value: '6', label: 'Option 6' },
+    { value: '7', label: 'Option 7' },
+    { value: '8', label: 'Option 8' },
+    { value: '9', label: 'Option 9' },
+  ];
+
+  const [value, setValue] = useState<TestValue | null>('1');
+  return (
+    <Select
+      label="Typed select"
+      onChange={(value) => setValue(value as TestValue | null)}
+      options={typedOptions}
       placeholder="Empty value"
       value={value}
     />

@@ -10,46 +10,44 @@ import { FocusTrap } from '../../overlays/FocusTrap';
 import { DefaultSelectAllOption } from './DefaultSelectAllOption';
 import { DefaultSelectEmptyDropdownContents } from './DefaultSelectEmptyDropdownContents';
 import { DefaultSelectOption } from './DefaultSelectOption';
-import type { SelectDropdownComponent } from './Select';
+import type { SelectDropdownComponent, SelectDropdownProps, SelectType } from './Select';
 import { defaultAccessibilityRoles } from './Select';
 
 const initialStyle = { opacity: 0, y: 0 };
 const animateStyle = { opacity: 1, y: 4 };
 
-export const DefaultSelectDropdown: SelectDropdownComponent<'single' | 'multi'> = memo(
-  forwardRef(
-    (
-      {
-        type,
-        options,
-        value,
-        onChange,
-        open,
-        setOpen,
-        controlRef,
-        disabled,
-        style,
-        styles,
-        className,
-        classNames,
-        compact,
-        selectAllLabel = 'Select all',
-        emptyOptionsLabel = 'No options available',
-        clearAllLabel = 'Clear all',
-        hideSelectAll,
-        accessory,
-        media,
-        label,
-        detail,
-        SelectOptionComponent = DefaultSelectOption,
-        SelectAllOptionComponent = DefaultSelectAllOption,
-        SelectEmptyDropdownContentsComponent = DefaultSelectEmptyDropdownContents,
-        accessibilityLabel = 'Select dropdown',
-        accessibilityRoles = defaultAccessibilityRoles,
-        ...props
-      },
-      ref: React.Ref<HTMLElement>,
-    ) => {
+function DefaultSelectDropdownComponent<Type extends SelectType, T extends string = string>(
+  {
+    type,
+    options,
+    value,
+    onChange,
+    open,
+    setOpen,
+    controlRef,
+    disabled,
+    style,
+    styles,
+    className,
+    classNames,
+    compact,
+    selectAllLabel = 'Select all',
+    emptyOptionsLabel = 'No options available',
+    clearAllLabel = 'Clear all',
+    hideSelectAll,
+    accessory,
+    media,
+    label,
+    detail,
+    SelectOptionComponent = DefaultSelectOption,
+    SelectAllOptionComponent = DefaultSelectAllOption,
+    SelectEmptyDropdownContentsComponent = DefaultSelectEmptyDropdownContents,
+    accessibilityLabel = 'Select dropdown',
+    accessibilityRoles = defaultAccessibilityRoles,
+    ...props
+  }: SelectDropdownProps<Type, T>,
+  ref: React.Ref<HTMLElement>,
+) {
       const isMultiSelect = type === 'multi';
       const [containerWidth, setContainerWidth] = useState<number | null>(null);
 
@@ -80,13 +78,18 @@ export const DefaultSelectDropdown: SelectDropdownComponent<'single' | 'multi'> 
       const isSomeOptionsSelected = isMultiSelect ? (value as string[]).length > 0 : false;
 
       const toggleSelectAll = useCallback(() => {
-        if (isAllOptionsSelected) onChange(null);
-        else onChange(options.map((o) => o.value).filter((o) => o !== null));
+        if (isAllOptionsSelected) onChange(null as Type extends 'multi' ? T | T[] : T | null);
+        else
+          onChange(
+            options.map((o) => o.value).filter((o) => o !== null) as Type extends 'multi'
+              ? T | T[]
+              : T | null,
+          );
       }, [isAllOptionsSelected, onChange, options]);
       const handleClearAll = useCallback(
         (e: React.MouseEvent<HTMLButtonElement>) => {
           e.stopPropagation();
-          onChange(null);
+          onChange(null as Type extends 'multi' ? T | T[] : T | null);
         },
         [onChange],
       );
@@ -145,7 +148,7 @@ export const DefaultSelectDropdown: SelectDropdownComponent<'single' | 'multi'> 
               selectAllDivider: styles?.selectAllDivider,
             }}
             type={type}
-            value="select-all"
+            value={'select-all' as T}
           />
         ),
         [
@@ -259,7 +262,7 @@ export const DefaultSelectDropdown: SelectDropdownComponent<'single' | 'multi'> 
                               disabled={option.disabled || disabled}
                               media={optionMedia ?? media ?? defaultMedia}
                               onClick={(newValue) => {
-                                onChange(newValue);
+                                onChange(newValue as Type extends 'multi' ? T | T[] : T | null);
                                 if (!isMultiSelect) setOpen(false);
                               }}
                               selected={selected}
@@ -295,8 +298,12 @@ export const DefaultSelectDropdown: SelectDropdownComponent<'single' | 'multi'> 
               </FocusTrap>
             </Box>
           )}
-        </AnimatePresence>
-      );
-    },
-  ),
-);
+    </AnimatePresence>
+  );
+}
+
+export const DefaultSelectDropdown = memo(
+  forwardRef(DefaultSelectDropdownComponent),
+) as <Type extends SelectType, T extends string = string>(
+  props: SelectDropdownProps<Type, T> & { ref?: React.Ref<HTMLElement> },
+) => ReturnType<SelectDropdownComponent<Type, T>>;
