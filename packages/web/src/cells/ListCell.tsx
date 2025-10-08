@@ -3,11 +3,12 @@ import { compactListHeight, listHeight } from '@cbhq/cds-common/tokens/cell';
 import { css } from '@linaria/core';
 
 import type { Polymorphic } from '../core/polymorphism';
+import { cx } from '../cx';
 import { Box } from '../layout/Box';
 import { VStack } from '../layout/VStack';
-import { Text } from '../typography/Text';
+import { Text, type TextProps } from '../typography/Text';
 
-import { Cell, type CellBaseProps } from './Cell';
+import { Cell, type CellBaseProps, type CellSpacing } from './Cell';
 import { CellAccessory, type CellAccessoryType } from './CellAccessory';
 import { CellDetail, type CellDetailProps } from './CellDetail';
 
@@ -21,15 +22,69 @@ export const listCellDefaultElement = 'div';
 
 export type ListCellDefaultElement = typeof listCellDefaultElement;
 
+export const hugInnerSpacing = {
+  paddingX: 2 as const,
+  paddingY: 0.5 as const,
+  marginX: 0 as const,
+} satisfies CellSpacing;
+// no padding outside of the pressable area
+export const hugOuterSpacing = {
+  paddingX: 0 as const,
+  paddingY: 0 as const,
+  marginX: 0 as const,
+} satisfies CellSpacing;
+
+type CellStyles = NonNullable<CellBaseProps['styles']>;
+type CellClassNames = NonNullable<CellBaseProps['classNames']>;
+
 export type ListCellBaseProps = Polymorphic.ExtendableProps<
   Omit<CellBaseProps, 'children'>,
   CellDetailProps & {
     /** Accessory to display at the end of the cell. */
     accessory?: CellAccessoryType;
-    /** Interactive action, like a CTA or form element. Cannot be used alongside `onPress`. */
+    /**
+     * End-aligned content (e.g., CTA, form element, metric). Replacement for the deprecated action prop, and takes precedence over it.
+     * If the content is an action (like button, link, etc), we recommend avoiding use alongside `onClick`.
+     * If used alongside `onClick`, the end action is triggered first and then the `onClick` handler.
+     */
+    end?: React.ReactNode;
+    /**
+     * @deprecated Use `end` instead. `action` will be removed in a future major release.
+     */
     action?: React.ReactNode;
-    /** enables compact spacing */
+    /**
+     * @deprecated Use `layoutDensity="compact"` instead. `compact` will be removed in a future major release.
+     */
     compact?: boolean;
+    /**
+     * Layout spacing configuration.
+     * Deprecated values: 'spacious' and 'compact'. Prefer 'hug'.
+     * This prop will be removed in the next major release, new list cell will only have 'hug' spacing.
+     *
+     * When 'spacious' is set, the cell will have the following behavior:
+     * 1. min-height is 80px
+     * 2. Effective padding is '16px 24px' with 8px padding around the pressable area
+     * 3. border radius is 8px for pressable area
+     * 4. Title always cap at 1 line when there is no description, cap at 2 lines when there is description
+     * 5. Description and subdetail have font 'body'
+     *
+     * When 'compact' is set, the cell will have the following behavior:
+     * 1. min-height is 40px
+     * 2. Effective padding is '16px 24px' with 8px padding around the pressable area
+     * 3. border radius is 8px for pressable area
+     * 4. Title always cap at 1 line when there is no description, cap at 2 lines when there is description
+     * 5. Description and subdetail have font 'body'
+     *
+     * When 'hug' is set, the cell will have the following behavior:
+     * 1. No min-height, height is determined by the content
+     * 2. Padding is '4px 16px', no extra padding around the pressable area
+     * 3. 0 border radius for pressable area
+     * 4. Title always cap at 2 lines
+     * 5. Description and subdetail have font 'label2'
+     *
+     * @default 'spacious'
+     */
+    layoutSpacing?: 'spacious' | 'compact' | 'hug';
     /** Description of content. Max 1 line (with title) or 2 lines (without), otherwise will truncate. */
     description?: React.ReactNode;
     /**
@@ -53,6 +108,26 @@ export type ListCellBaseProps = Polymorphic.ExtendableProps<
     multiline?: boolean;
     /** Title of content. Max 1 line (with description) or 2 lines (without), otherwise will truncate. */
     title?: React.ReactNode;
+    /** Class names for the components */
+    classNames?: Pick<
+      CellClassNames,
+      'root' | 'media' | 'intermediary' | 'end' | 'accessory' | 'contentContainer' | 'pressable'
+    > & {
+      mainContent?: CellClassNames['topContent'];
+      helperText?: CellClassNames['bottomContent'];
+      title?: string;
+      description?: string;
+    };
+    /** Styles for the components */
+    styles?: Pick<
+      CellStyles,
+      'root' | 'media' | 'intermediary' | 'end' | 'accessory' | 'contentContainer' | 'pressable'
+    > & {
+      mainContent?: CellStyles['topContent'];
+      helperText?: CellStyles['bottomContent'];
+      title?: React.CSSProperties;
+      description?: React.CSSProperties;
+    };
   }
 >;
 
@@ -72,6 +147,7 @@ export const ListCell: ListCellComponent = memo(
       {
         as,
         accessory,
+        end: endProp,
         action,
         compact,
         title,
@@ -90,42 +166,74 @@ export const ListCell: ListCellComponent = memo(
         priority,
         innerSpacing,
         outerSpacing,
-        detailWidth,
+        layoutSpacing = compact ? 'compact' : 'spacious',
+        className,
+        classNames,
+        styles,
+        style,
         ...props
       }: ListCellProps<AsComponent>,
       ref?: Polymorphic.Ref<AsComponent>,
     ) => {
       const Component = (as ?? listCellDefaultElement) satisfies React.ElementType;
 
-      const minHeight = compact ? compactListHeight : listHeight;
+      const minHeight =
+        layoutSpacing === 'compact'
+          ? compactListHeight
+          : layoutSpacing === 'spacious'
+            ? listHeight
+            : undefined;
+
       const accessoryType = selected && !disableSelectionAccessory ? 'selected' : accessory;
 
       const end = useMemo(() => {
+        if (endProp) {
+          return <Box justifyContent="flex-end">{endProp}</Box>;
+        }
         if (action) {
           return <Box justifyContent="flex-end">{action}</Box>;
         }
         if (detail || subdetail) {
-          return <CellDetail detail={detail} subdetail={subdetail} variant={variant} />;
+          return (
+            <CellDetail
+              detail={detail}
+              subdetail={subdetail}
+              subdetailFont={layoutSpacing === 'hug' ? 'label2' : 'body'}
+              variant={variant}
+            />
+          );
         }
         return undefined;
-      }, [action, detail, subdetail, variant]);
+      }, [endProp, action, detail, subdetail, variant, layoutSpacing]);
 
       return (
         <Cell
           ref={ref}
           accessory={accessoryType && <CellAccessory type={accessoryType} />}
           as={Component}
+          borderRadius={props.borderRadius ?? (layoutSpacing === 'hug' ? 0 : undefined)}
           bottomContent={helperText}
-          detail={end}
-          detailWidth={detailWidth}
+          className={cx(className, classNames?.root)}
           disabled={disabled}
-          innerSpacing={innerSpacing}
+          end={end}
+          innerSpacing={innerSpacing ?? (layoutSpacing === 'hug' ? hugInnerSpacing : undefined)}
           intermediary={intermediary}
           media={media}
           minHeight={minHeight}
-          outerSpacing={outerSpacing}
+          outerSpacing={outerSpacing ?? (layoutSpacing === 'hug' ? hugOuterSpacing : undefined)}
           priority={priority}
           selected={selected}
+          style={{ ...style, ...styles?.root }}
+          styles={{
+            media: styles?.media,
+            intermediary: styles?.intermediary,
+            end: styles?.end,
+            accessory: styles?.accessory,
+            topContent: styles?.mainContent,
+            bottomContent: styles?.helperText,
+            contentContainer: styles?.contentContainer,
+            pressable: styles?.pressable,
+          }}
           {...props}
         >
           <VStack>
@@ -134,8 +242,18 @@ export const ListCell: ListCellComponent = memo(
                 as="div"
                 display="block"
                 font="headline"
-                numberOfLines={description || disableMultilineTitle ? 1 : 2}
+                numberOfLines={
+                  disableMultilineTitle
+                    ? 1
+                    : // wrap at 2 lines in hug layoutSpacing regardless of description
+                      layoutSpacing === 'hug'
+                      ? 2
+                      : description
+                        ? 1
+                        : 2
+                }
                 overflow="wrap"
+                style={styles?.title}
               >
                 {title}
               </Text>
@@ -144,11 +262,12 @@ export const ListCell: ListCellComponent = memo(
             {!!description && (
               <Text
                 as="div"
-                className={multiline ? overflowCss : undefined}
+                className={cx(multiline ? overflowCss : undefined, classNames?.description)}
                 color="fgMuted"
                 display="block"
-                font="body"
+                font={layoutSpacing === 'hug' ? 'label2' : 'body'}
                 overflow={multiline ? undefined : 'truncate'}
+                style={styles?.description}
               >
                 {description}
               </Text>

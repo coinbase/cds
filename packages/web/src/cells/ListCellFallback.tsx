@@ -7,6 +7,7 @@ import { Fallback } from '../layout/Fallback';
 
 import { Cell, type CellBaseProps } from './Cell';
 import type { CellMediaType } from './CellMedia';
+import { hugInnerSpacing, hugOuterSpacing } from './ListCell';
 import { MediaFallback } from './MediaFallback';
 
 export type ListCellFallbackBaseProps = SharedProps &
@@ -24,6 +25,8 @@ export type ListCellFallbackBaseProps = SharedProps &
     subdetail?: boolean;
     /** Display title shimmer. */
     title?: boolean;
+    /** Layout spacing configuration. */
+    layoutSpacing?: 'spacious' | 'compact' | 'hug';
   };
 
 export type ListCellFallbackProps = ListCellFallbackBaseProps & {
@@ -66,6 +69,9 @@ export const ListCellFallback = memo(function ListCellFallback({
   disableRandomRectWidth,
   rectWidthVariant,
   helperText,
+  layoutSpacing,
+  innerSpacing,
+  outerSpacing,
   ...props
 }: ListCellFallbackProps) {
   // We cant use ListCell here as we need to account for percentage based widths.
@@ -197,7 +203,9 @@ export const ListCellFallback = memo(function ListCellFallback({
     <Cell
       bottomContent={bottomContentFallback}
       detail={detailFallback}
+      innerSpacing={innerSpacing ?? (layoutSpacing === 'hug' ? hugInnerSpacing : undefined)}
       media={mediaFallback}
+      outerSpacing={outerSpacing ?? (layoutSpacing === 'hug' ? hugOuterSpacing : undefined)}
       {...props}
     >
       <VStack gap={0.5}>

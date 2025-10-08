@@ -99,12 +99,13 @@ function CompactLineChart() {
 
     return (
       <ListCell
+        layoutSpacing="hug"
         description={isPhone ? undefined : assets.btc.symbol}
         detail={formatPrice(parseFloat(prices[0]))}
         intermediary={
           <CompactChart data={data} showArea={showArea} color={color} referenceY={referenceY} />
         }
-        media={<CellMedia source={assets.btc.imageUrl} title="BTC" type="image" />}
+        media={<Avatar src={assets.btc.imageUrl} />}
         onClick={() => console.log('clicked')}
         subdetail={subdetail}
         title={isPhone ? undefined : assets.btc.name}
@@ -115,7 +116,7 @@ function CompactLineChart() {
   });
 
   return (
-    <VStack gap={2}>
+    <VStack>
       <ChartCell
         data={sparklineData}
         color={assets.btc.color}

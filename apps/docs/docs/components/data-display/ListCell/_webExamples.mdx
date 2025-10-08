@@ -1,9 +1,10 @@
-A cell row is divided into the following 4 columns:
+A ListCell row is divided into the following 5 columns:
 
-- Start: A type of [media](/components/media/CellMedia), like icon or avatar.
-- Middle: The primary content; a title and description.
-- End: Detailed information in neutral, negative, and positive variants.
-- Accessory: A whitelisted icon displayed at the end.
+- Media
+- Title & description
+- Intermediary
+- End (detail & subdetail or action)
+- Accessory
 
 :::warning
 
@@ -14,13 +15,54 @@ The `title`, `description`, `detail` and `subdetail` props are only intended to 
 ### Basic usage
 
 ```tsx live
-<ListCell title="Basic List Cell" description="A simple example of ListCell" />
+<ListCell layoutSpacing="hug" title="Basic List Cell" description="A simple example of ListCell" />
+```
+
+:::note
+Prefer `layoutSpacing="hug"` for the new ListCell design. The `spacious` and `compact` values exist for backward compatibility and may be removed in a future major release.
+:::
+
+```tsx live
+<VStack>
+  {/* Preferred (new design) */}
+  <ListCell
+    accessory="arrow"
+    description="New design (hug)"
+    detail="$12,345.00"
+    layoutSpacing="hug"
+    media={<Avatar src={assets.eth.imageUrl} size="m" />}
+    onClick={console.log}
+    title="Hug"
+    variant="positive"
+  />
+
+  {/* Deprecated options kept for backward compatibility */}
+  <ListCell
+    accessory="arrow"
+    detail="$12,345.00"
+    layoutSpacing="compact"
+    media={<Avatar src={assets.eth.imageUrl} size="m" />}
+    onClick={console.log}
+    title="Compact (deprecated)"
+    variant="positive"
+  />
+  <ListCell
+    accessory="arrow"
+    detail="$12,345.00"
+    layoutSpacing="spacious"
+    media={<Avatar src={assets.eth.imageUrl} size="m" />}
+    onClick={console.log}
+    title="Spacious (deprecated)"
+    variant="positive"
+  />
+</VStack>
 ```
 
 ### With Leading Icon
 
 ```tsx live
 <ListCell
+  layoutSpacing="hug"
   title="List Cell with Icon"
   description="Shows usage with a leading icon"
   media={<Icon active name="info" />}
@@ -31,6 +73,7 @@ The `title`, `description`, `detail` and `subdetail` props are only intended to 
 
 ```tsx live
 <ListCell
+  layoutSpacing="hug"
   title="List Cell with Details"
   description="Shows usage with detail and subdetail"
   detail="Primary detail"
@@ -42,6 +85,7 @@ The `title`, `description`, `detail` and `subdetail` props are only intended to 
 
 ```tsx live
 <ListCell
+  layoutSpacing="hug"
   title="Interactive List Cell"
   description="Click or tap to interact"
   accessory="arrow"
@@ -54,33 +98,40 @@ The `title`, `description`, `detail` and `subdetail` props are only intended to 
 ```tsx live
 <VStack gap={3}>
   <ListCell
+    layoutSpacing="hug"
     title="List Cell with Helper Text"
     description="Shows usage with helper text below the cell"
-    helperText={<CellHelperText paddingStart={6}>This is a default helper message.</CellHelperText>}
-    media={<CellMedia type="asset" source={assets.btc.imageUrl} />}
-    action={<Button compact>Action</Button>}
+    helperText={
+      <CellHelperText font="label2" paddingStart={6}>
+        This is a default helper message.
+      </CellHelperText>
+    }
+    media={<Avatar src={assets.btc.imageUrl} />}
+    end={<Button compact>Action</Button>}
   />
   <ListCell
+    layoutSpacing="hug"
     title="List Cell with Warning"
     description="Shows usage with a warning message"
     helperText={
-      <CellHelperText variant="warning" paddingStart={6}>
+      <CellHelperText font="label2" variant="warning" paddingStart={6}>
         This is a warning message.
       </CellHelperText>
     }
-    media={<CellMedia type="asset" source={assets.btc.imageUrl} />}
-    action={<Button compact>Action</Button>}
+    media={<Avatar src={assets.btc.imageUrl} />}
+    end={<Button compact>Action</Button>}
   />
   <ListCell
+    layoutSpacing="hug"
     title="List Cell with Error"
     description="Shows usage with an error message"
     helperText={
-      <CellHelperText variant="error" paddingStart={6}>
+      <CellHelperText font="label2" variant="error" paddingStart={6}>
         This is an error message.
       </CellHelperText>
     }
-    media={<CellMedia type="asset" source={assets.btc.imageUrl} />}
-    action={<Button compact>Action</Button>}
+    media={<Avatar src={assets.btc.imageUrl} />}
+    end={<Button compact>Action</Button>}
   />
 </VStack>
 ```
@@ -89,6 +140,7 @@ The `title`, `description`, `detail` and `subdetail` props are only intended to 
 
 ```tsx live
 <ListCell
+  layoutSpacing="hug"
   title="Multiline Description"
   description="This is a longer description that demonstrates how the text wraps when the multiline prop is enabled. It can span multiple lines without truncating."
   multiline
@@ -102,16 +154,17 @@ The ListCellFallback component provides loading state representations of ListCel
 ```tsx live
 <VStack gap={3}>
   {/* Basic loading state */}
-  <ListCellFallback title description />
+  <ListCellFallback title description layoutSpacing="hug" />
 
   {/* Loading state with media */}
-  <ListCellFallback title description media="icon" />
+  <ListCellFallback title description media="icon" layoutSpacing="hug" />
 
   {/* Loading state with details */}
-  <ListCellFallback title description detail subdetail />
+  <ListCellFallback title description detail subdetail layoutSpacing="hug" />
 
   {/* Full loading state with custom widths */}
   <ListCellFallback
+    layoutSpacing="hug"
     title
     description
     detail
@@ -124,3 +177,70 @@ The ListCellFallback component provides loading state representations of ListCel
   />
 </VStack>
 ```
+
+### Anatomy
+
+Without helper text (top-only layout):
+
+```text
+┌───────────────────────────────────────────────────────────────────────────┐
+│                               root (Box)                                  │
+│┌─────────────────────────────────────────────────────────────────────────┐│
+││                              pressable                                  ││
+││┌───────────────────────────────────────────────────────────────────────┐││
+│││                contentContainer & mainContent (HStack)                │││
+│││  ┌─────┐ ┌────────────────┐ ┌────────────┐ ┌────────────┐ ┌─────────┐ │││
+│││  │media│ │  VStack        │ │intermediary│ │    end     │ │accessory│ │││
+│││  │     │ │ ┌──────────┐   │ │            │ │ (detail    │ │         │ │││
+│││  │     │ │ │  title   │   │ │            │ │    or      │ │         │ │││
+│││  │     │ │ └──────────┘   │ │            │ │  action)   │ │         │ │││
+│││  │     │ │ ┌────────────┐ │ │            │ │            │ │         │ │││
+│││  │     │ │ │ description│ │ │            │ │            │ │         │ │││
+│││  │     │ │ └────────────┘ │ │            │ │            │ │         │ │││
+│││  └─────┘ └────────────────┘ └────────────┘ └────────────┘ └─────────┘ │││
+││└───────────────────────────────────────────────────────────────────────┘││
+│└─────────────────────────────────────────────────────────────────────────┘│
+└───────────────────────────────────────────────────────────────────────────┘
+```
+
+With helper text (top + bottom layout):
+
+```text
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                                 root (Box)                                  │
+│┌───────────────────────────────────────────────────────────────────────────┐│
+││                                pressable                                  ││
+││┌─────────────────────────────────────────────────────────────────────────┐││
+│││                        contentContainer (VStack)                        │││
+│││┌───────────────────────────────────────────────────────────────────────┐│││
+││││                          mainContent (HStack)                         ││││
+││││  ┌─────┐ ┌────────────────┐ ┌────────────┐ ┌────────────┐ ┌─────────┐ ││││
+││││  │media│ │  VStack        │ │intermediary│ │    end     │ │accessory│ ││││
+││││  │     │ │ ┌──────────┐   │ │            │ │ (detail    │ │         │ ││││
+││││  │     │ │ │  title   │   │ │            │ │    or      │ │         │ ││││
+││││  │     │ │ └──────────┘   │ │            │ │  action)   │ │         │ ││││
+││││  │     │ │ ┌────────────┐ │ │            │ │            │ │         │ ││││
+││││  │     │ │ │ description│ │ │            │ │            │ │         │ ││││
+││││  │     │ │ └────────────┘ │ │            │ │            │ │         │ ││││
+││││  └─────┘ └────────────────┘ └────────────┘ └────────────┘ └─────────┘ ││││
+│││└───────────────────────────────────────────────────────────────────────┘│││
+│││┌───────────────────────────────────────────────────────────────────────┐│││
+││││                              helperText                               ││││
+│││└───────────────────────────────────────────────────────────────────────┘│││
+││└─────────────────────────────────────────────────────────────────────────┘││
+│└───────────────────────────────────────────────────────────────────────────┘│
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+Mapping to `styles` / `classNames` keys:
+
+- root: outer `Box` wrapping the entire cell
+- pressable: interactive overlay when `href`/`onClick`/keyboard handlers are present
+- contentContainer: container around top and optional bottom content
+- mainContent: inner horizontal layout that holds the main pieces
+- title/description: stacked text column within `topContent`
+- media: leading media container
+- intermediary: middle container between main and end
+- end: container for `detail`/`subdetail` or `end` prop you pass in
+- accessory: trailing accessory container
+- helperText: container below main content to display helper text
