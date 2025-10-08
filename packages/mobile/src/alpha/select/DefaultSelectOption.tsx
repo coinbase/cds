@@ -19,11 +19,11 @@ export const DefaultSelectOption: SelectOptionComponent<'single' | 'multi'> = me
     description,
     multiline,
     style,
-    className,
     accessory,
     media,
     type,
     accessibilityRole,
+    styles,
     ...props
   }) => {
     const labelNode = useMemo(
@@ -33,13 +33,14 @@ export const DefaultSelectOption: SelectOptionComponent<'single' | 'multi'> = me
             ellipsize={description ? 'tail' : multiline ? undefined : 'tail'}
             font="headline"
             numberOfLines={description ? 1 : multiline ? undefined : 2}
+            style={styles?.optionLabel}
           >
             {label}
           </Text>
         ) : (
           label
         ),
-      [label, description, multiline],
+      [label, description, multiline, styles?.optionLabel],
     );
 
     const descriptionNode = useMemo(
@@ -51,13 +52,14 @@ export const DefaultSelectOption: SelectOptionComponent<'single' | 'multi'> = me
             ellipsize={multiline ? undefined : 'tail'}
             font="body"
             numberOfLines={multiline ? undefined : description && label ? 1 : 2}
+            style={styles?.optionDescription}
           >
             {description}
           </Text>
         ) : (
           description
         )),
-      [description, multiline, label],
+      [description, multiline, label, styles?.optionDescription],
     );
 
     const handlePress = useCallback(() => onPress?.(value), [onPress, value]);
@@ -88,10 +90,10 @@ export const DefaultSelectOption: SelectOptionComponent<'single' | 'multi'> = me
         onPress={handlePress}
         priority="end"
         selected={selected}
-        style={style}
+        style={[style, styles?.optionCell]}
         {...props}
       >
-        <VStack justifyContent="center">
+        <VStack justifyContent="center" style={styles?.optionContent}>
           {labelNode}
           {descriptionNode}
         </VStack>

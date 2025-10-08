@@ -49,8 +49,19 @@ export type SelectOptionProps<Type extends 'single' | 'multi' = 'single'> = Sele
     compact?: boolean;
     /** Style object for the option */
     style?: StyleProp<ViewStyle>;
-    /** CSS class name for the option */
-    className?: string;
+    /** Custom styles for different parts of the option */
+    styles?: {
+      /** Styles for the option cell element */
+      optionCell?: StyleProp<ViewStyle>;
+      /** Styles for the option content wrapper */
+      optionContent?: StyleProp<ViewStyle>;
+      /** Styles for the option label element */
+      optionLabel?: StyleProp<ViewStyle>;
+      /** Styles for the option description element */
+      optionDescription?: StyleProp<ViewStyle>;
+      /** Styles for the select all divider element */
+      selectAllDivider?: StyleProp<ViewStyle>;
+    };
   };
 
 export type SelectOptionComponent<Type extends 'single' | 'multi' = 'single'> = React.FC<
@@ -59,6 +70,13 @@ export type SelectOptionComponent<Type extends 'single' | 'multi' = 'single'> = 
 
 export type SelectEmptyDropdownContentProps = {
   label: string;
+  /** Custom styles for different parts of the empty dropdown content */
+  styles?: {
+    /** Styles for the container element */
+    emptyContentsContainer?: StyleProp<ViewStyle>;
+    /** Styles for the text element */
+    emptyContentsText?: StyleProp<ViewStyle>;
+  };
 };
 
 export type SelectEmptyDropdownContentComponent = React.FC<SelectEmptyDropdownContentProps>;
@@ -99,10 +117,23 @@ export type SelectControlProps<Type extends 'single' | 'multi' = 'single'> = Pic
     blendStyles?: InteractableBlendStyles;
     /** Whether to use compact styling for the control */
     compact?: boolean;
-    /** CSS class name for the control */
-    className?: string;
     /** Style object for the control */
     style?: StyleProp<ViewStyle>;
+    /** Custom styles for different parts of the control */
+    styles?: {
+      /** Styles for the start node element */
+      controlStartNode?: StyleProp<ViewStyle>;
+      /** Styles for the input node element */
+      controlInputNode?: StyleProp<ViewStyle>;
+      /** Styles for the value node element */
+      controlValueNode?: StyleProp<ViewStyle>;
+      /** Styles for the label node element */
+      controlLabelNode?: StyleProp<ViewStyle>;
+      /** Styles for the helper text node element */
+      controlHelperTextNode?: StyleProp<ViewStyle>;
+      /** Styles for the end node element */
+      controlEndNode?: StyleProp<ViewStyle>;
+    };
   };
 
 export type SelectControlComponent<Type extends 'single' | 'multi' = 'single'> = React.FC<
@@ -152,13 +183,20 @@ export type SelectDropdownProps<Type extends 'single' | 'multi' = 'single'> = Se
       option?: StyleProp<ViewStyle>;
       /** Blend styles for option interactivity */
       optionBlendStyles?: InteractableBlendStyles;
-    };
-    /** CSS class name for the dropdown */
-    className?: string;
-    /** Custom class names for dropdown elements */
-    classNames?: {
-      /** Class name for individual options */
-      option?: string;
+      /** Styles for the option cell element */
+      optionCell?: StyleProp<ViewStyle>;
+      /** Styles for the option content wrapper */
+      optionContent?: StyleProp<ViewStyle>;
+      /** Styles for the option label element */
+      optionLabel?: StyleProp<ViewStyle>;
+      /** Styles for the option description element */
+      optionDescription?: StyleProp<ViewStyle>;
+      /** Styles for the select all divider element */
+      selectAllDivider?: StyleProp<ViewStyle>;
+      /** Styles for the empty contents container element */
+      emptyContentsContainer?: StyleProp<ViewStyle>;
+      /** Styles for the empty contents text element */
+      emptyContentsText?: StyleProp<ViewStyle>;
     };
     /** Whether to use compact styling for the dropdown */
     compact?: boolean;
@@ -244,19 +282,38 @@ export type SelectProps<Type extends 'single' | 'multi' = 'single'> = Pick<
     styles?: {
       /** Styles for the control element */
       control?: StyleProp<ViewStyle>;
+      /** Styles for the start node element */
+      controlStartNode?: StyleProp<ViewStyle>;
+      /** Styles for the input node element */
+      controlInputNode?: StyleProp<ViewStyle>;
+      /** Styles for the value node element */
+      controlValueNode?: StyleProp<ViewStyle>;
+      /** Styles for the label node element */
+      controlLabelNode?: StyleProp<ViewStyle>;
+      /** Styles for the helper text node element */
+      controlHelperTextNode?: StyleProp<ViewStyle>;
+      /** Styles for the end node element */
+      controlEndNode?: StyleProp<ViewStyle>;
       /** Styles for the dropdown container */
       dropdown?: StyleProp<ViewStyle>;
       /** Styles for individual options */
       option?: StyleProp<ViewStyle>;
       /** Blend styles for option interactivity */
       optionBlendStyles?: InteractableBlendStyles;
-    };
-    /** Custom class names for different parts of the select */
-    classNames?: {
-      /** Class name for the control element */
-      control?: string;
-      /** Class name for individual options */
-      option?: string;
+      /** Styles for the option cell element */
+      optionCell?: StyleProp<ViewStyle>;
+      /** Styles for the option content wrapper */
+      optionContent?: StyleProp<ViewStyle>;
+      /** Styles for the option label element */
+      optionLabel?: StyleProp<ViewStyle>;
+      /** Styles for the option description element */
+      optionDescription?: StyleProp<ViewStyle>;
+      /** Styles for the select all divider element */
+      selectAllDivider?: StyleProp<ViewStyle>;
+      /** Styles for the empty contents container element */
+      emptyContentsContainer?: StyleProp<ViewStyle>;
+      /** Styles for the empty contents text element */
+      emptyContentsText?: StyleProp<ViewStyle>;
     };
   };
 
@@ -305,7 +362,6 @@ const SelectBase = memo(
         SelectControlComponent = DefaultSelectControl as SelectControlComponent<Type>,
         SelectEmptyDropdownContentsComponent = DefaultSelectEmptyDropdownContents as SelectEmptyDropdownContentComponent,
         styles,
-        classNames,
         accessibilityLabel,
         accessibilityHint,
         accessibilityRoles,
@@ -341,7 +397,6 @@ const SelectBase = memo(
             ref={controlRef}
             accessibilityHint={accessibilityHint}
             accessibilityLabel={accessibilityLabel}
-            className={classNames?.control}
             compact={compact}
             disabled={disabled}
             endNode={endNode}
@@ -357,6 +412,14 @@ const SelectBase = memo(
             setOpen={setOpen}
             startNode={startNode}
             style={styles?.control}
+            styles={{
+              controlStartNode: styles?.controlStartNode,
+              controlInputNode: styles?.controlInputNode,
+              controlValueNode: styles?.controlValueNode,
+              controlLabelNode: styles?.controlLabelNode,
+              controlHelperTextNode: styles?.controlHelperTextNode,
+              controlEndNode: styles?.controlEndNode,
+            }}
             type={type}
             value={value}
             variant={variant}
@@ -368,9 +431,6 @@ const SelectBase = memo(
             SelectOptionComponent={SelectOptionComponent}
             accessibilityRoles={accessibilityRoles}
             accessory={accessory}
-            classNames={{
-              option: classNames?.option,
-            }}
             clearAllLabel={clearAllLabel}
             compact={compact}
             controlRef={controlRef}
@@ -389,6 +449,13 @@ const SelectBase = memo(
               dropdown: styles?.dropdown,
               option: styles?.option,
               optionBlendStyles: styles?.optionBlendStyles,
+              optionCell: styles?.optionCell,
+              optionContent: styles?.optionContent,
+              optionLabel: styles?.optionLabel,
+              optionDescription: styles?.optionDescription,
+              selectAllDivider: styles?.selectAllDivider,
+              emptyContentsContainer: styles?.emptyContentsContainer,
+              emptyContentsText: styles?.emptyContentsText,
             }}
             type={type}
             value={value}

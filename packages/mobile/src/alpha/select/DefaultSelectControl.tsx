@@ -54,6 +54,7 @@ export const DefaultSelectControl: SelectControlComponent = memo(
         maxSelectedOptionsToShow = 3,
         accessibilityLabel,
         accessibilityHint,
+        styles,
         ...props
       },
       ref,
@@ -72,19 +73,26 @@ export const DefaultSelectControl: SelectControlComponent = memo(
       const helperTextNode = useMemo(
         () =>
           typeof helperText === 'string' ? (
-            <HelperText color={variant ? variantColor[variant] : 'fgMuted'}>
+            <HelperText
+              color={variant ? variantColor[variant] : 'fgMuted'}
+              style={styles?.controlHelperTextNode}
+            >
               {helperText}
             </HelperText>
           ) : (
             helperText
           ),
-        [helperText, variant],
+        [helperText, variant, styles?.controlHelperTextNode],
       );
 
       const labelNode = useMemo(
         () =>
           typeof label === 'string' ? (
-            <Pressable disabled={disabled} onPress={() => setOpen((s) => !s)}>
+            <Pressable
+              disabled={disabled}
+              onPress={() => setOpen((s) => !s)}
+              style={styles?.controlLabelNode}
+            >
               <InputLabel
                 alignSelf={labelVariant === 'inside' ? 'flex-start' : undefined}
                 color="fg"
@@ -97,7 +105,7 @@ export const DefaultSelectControl: SelectControlComponent = memo(
           ) : (
             label
           ),
-        [disabled, label, labelVariant, setOpen, shouldShowCompactLabel],
+        [disabled, label, labelVariant, setOpen, shouldShowCompactLabel, styles?.controlLabelNode],
       );
 
       const valueNode = useMemo(() => {
@@ -169,7 +177,7 @@ export const DefaultSelectControl: SelectControlComponent = memo(
             accessibilityRole="button"
             disabled={disabled}
             onPress={() => setOpen((s) => !s)}
-            style={[{ flexGrow: 1 }, style]}
+            style={[{ flexGrow: 1 }, style, styles?.controlInputNode]}
             {...props}
           >
             <HStack
@@ -181,7 +189,7 @@ export const DefaultSelectControl: SelectControlComponent = memo(
             >
               <HStack alignItems="center" flexGrow={1}>
                 {!!startNode && (
-                  <HStack alignItems="center" paddingX={2}>
+                  <HStack alignItems="center" paddingX={2} style={styles?.controlStartNode}>
                     {startNode}
                   </HStack>
                 )}
@@ -190,7 +198,11 @@ export const DefaultSelectControl: SelectControlComponent = memo(
                     {labelNode}
                   </HStack>
                 ) : null}
-                <VStack justifyContent="center" maxWidth={startNode ? '70%' : '85%'}>
+                <VStack
+                  justifyContent="center"
+                  maxWidth={startNode ? '70%' : '85%'}
+                  style={styles?.controlValueNode}
+                >
                   {valueNode}
                 </VStack>
               </HStack>
@@ -203,6 +215,9 @@ export const DefaultSelectControl: SelectControlComponent = memo(
           accessibilityLabel,
           disabled,
           style,
+          styles?.controlInputNode,
+          styles?.controlStartNode,
+          styles?.controlValueNode,
           props,
           isMultiSelect,
           startNode,
@@ -217,7 +232,7 @@ export const DefaultSelectControl: SelectControlComponent = memo(
 
       const endNode = useMemo(
         () => (
-          <HStack alignItems="center" paddingX={2}>
+          <HStack alignItems="center" paddingX={2} style={styles?.controlEndNode}>
             <Pressable onPress={() => setOpen((s) => !s)}>
               {customEndNode ? (
                 customEndNode
@@ -230,7 +245,7 @@ export const DefaultSelectControl: SelectControlComponent = memo(
             </Pressable>
           </HStack>
         ),
-        [open, variant, setOpen, customEndNode],
+        [open, variant, setOpen, customEndNode, styles?.controlEndNode],
       );
 
       return (

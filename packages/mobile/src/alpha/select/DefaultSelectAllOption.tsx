@@ -9,7 +9,6 @@ export const DefaultSelectAllOption: SelectOptionComponent<'single' | 'multi'> =
   ({
     accessory,
     blendStyles,
-    className,
     compact,
     detail,
     disabled,
@@ -19,6 +18,7 @@ export const DefaultSelectAllOption: SelectOptionComponent<'single' | 'multi'> =
     selected,
     style,
     type,
+    styles,
   }) => {
     return (
       <>
@@ -26,7 +26,6 @@ export const DefaultSelectAllOption: SelectOptionComponent<'single' | 'multi'> =
           key="select-all"
           accessory={accessory}
           blendStyles={blendStyles}
-          className={className}
           compact={compact}
           detail={detail}
           disabled={disabled}
@@ -35,10 +34,11 @@ export const DefaultSelectAllOption: SelectOptionComponent<'single' | 'multi'> =
           onPress={onPress}
           selected={selected}
           style={style}
+          styles={styles}
           type={type}
           value="select-all"
         />
-        <Divider paddingX={2} />
+        <Divider paddingX={2} style={styles?.selectAllDivider} />
       </>
     );
   },

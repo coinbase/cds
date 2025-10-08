@@ -25,7 +25,6 @@ export const DefaultSelectDropdown: SelectDropdownComponent<'single' | 'multi'> 
         controlRef,
         disabled,
         styles,
-        classNames,
         compact,
         label,
         detail,
@@ -73,7 +72,6 @@ export const DefaultSelectDropdown: SelectDropdownComponent<'single' | 'multi'> 
             accessibilityRole={accessibilityRoles?.option}
             accessory={accessory}
             blendStyles={styles?.optionBlendStyles}
-            className={classNames?.option}
             compact={compact}
             detail={
               detail ?? (
@@ -99,6 +97,13 @@ export const DefaultSelectDropdown: SelectDropdownComponent<'single' | 'multi'> 
             onPress={toggleSelectAll}
             selected={isAllOptionsSelected}
             style={styles?.option}
+            styles={{
+              optionCell: styles?.optionCell,
+              optionContent: styles?.optionContent,
+              optionLabel: styles?.optionLabel,
+              optionDescription: styles?.optionDescription,
+              selectAllDivider: styles?.selectAllDivider,
+            }}
             type={type}
             value="select-all"
           />
@@ -109,7 +114,11 @@ export const DefaultSelectDropdown: SelectDropdownComponent<'single' | 'multi'> 
           accessory,
           styles?.optionBlendStyles,
           styles?.option,
-          classNames?.option,
+          styles?.optionCell,
+          styles?.optionContent,
+          styles?.optionLabel,
+          styles?.optionDescription,
+          styles?.selectAllDivider,
           compact,
           detail,
           handleClearAll,
@@ -161,7 +170,6 @@ export const DefaultSelectDropdown: SelectDropdownComponent<'single' | 'multi'> 
                           accessibilityRole={accessibilityRoles?.option}
                           accessory={optionAccessory ?? accessory}
                           blendStyles={styles?.optionBlendStyles}
-                          className={classNames?.option}
                           compact={compact}
                           disabled={option.disabled || disabled}
                           media={optionMedia ?? media ?? defaultMedia}
@@ -171,6 +179,13 @@ export const DefaultSelectDropdown: SelectDropdownComponent<'single' | 'multi'> 
                           }}
                           selected={selected}
                           style={styles?.option}
+                          styles={{
+                            optionCell: styles?.optionCell,
+                            optionContent: styles?.optionContent,
+                            optionLabel: styles?.optionLabel,
+                            optionDescription: styles?.optionDescription,
+                            selectAllDivider: styles?.selectAllDivider,
+                          }}
                           type={type}
                           {...option}
                         />
@@ -178,7 +193,13 @@ export const DefaultSelectDropdown: SelectDropdownComponent<'single' | 'multi'> 
                     },
                   )
                 ) : (
-                  <SelectEmptyDropdownContentsComponent label={emptyOptionsLabel} />
+                  <SelectEmptyDropdownContentsComponent
+                    label={emptyOptionsLabel}
+                    styles={{
+                      emptyContentsContainer: styles?.emptyContentsContainer,
+                      emptyContentsText: styles?.emptyContentsText,
+                    }}
+                  />
                 )}
               </VStack>
             </ScrollView>
