@@ -23,7 +23,6 @@ on:
   pull_request:
     paths:
       - 'packages/*/package.json'
-      - 'packages/*/src/**'
 
 jobs:
   # Determine which packages to build/publish
