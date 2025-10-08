@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.15.0 (10/8/2025 PST)
+
+### 🚀 Updates
+
+- Fix: drop unused useThemeContext. [[#86](https://github.com/coinbase/cds/pull/86)]
+
 ## 8.14.2 (10/7/2025 PST)
 
 #### 🐞 Fixes
