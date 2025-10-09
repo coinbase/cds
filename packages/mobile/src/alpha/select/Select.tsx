@@ -1,5 +1,6 @@
 import React, { forwardRef, memo, useImperativeHandle, useRef, useState } from 'react';
-import type { AccessibilityRole, GestureResponderEvent, StyleProp, ViewStyle } from 'react-native';
+import { View } from 'react-native';
+import type { AccessibilityRole, StyleProp, ViewStyle } from 'react-native';
 import type { SharedAccessibilityProps } from '@coinbase/cds-common/types';
 
 import type { CellBaseProps } from '../../cells/Cell';
@@ -119,6 +120,8 @@ export type SelectControlProps<
     maxSelectedOptionsToShow?: number;
     /** Label to show for showcasing count of hidden selected options */
     hiddenSelectedOptionsLabel?: string;
+    /** Accessibility label for each chip in a multi-select */
+    removeSelectedOptionAccessibilityLabel?: string;
     /** Blend styles for control interactivity */
     blendStyles?: InteractableBlendStyles;
     /** Whether to use compact styling for the control */
@@ -241,10 +244,10 @@ export const defaultAccessibilityRoles: SelectDropdownProps['accessibilityRoles'
 /**
  * Props for the Select component
  */
-export type SelectProps<
-  Type extends SelectType = 'single',
-  T extends string = string,
-> = Pick<SharedAccessibilityProps, 'accessibilityLabel' | 'accessibilityHint'> &
+export type SelectProps<Type extends SelectType = 'single', T extends string = string> = Pick<
+  SharedAccessibilityProps,
+  'accessibilityLabel' | 'accessibilityHint'
+> &
   SelectState<Type, T> &
   Pick<
     SelectControlProps<Type, T>,
@@ -252,6 +255,7 @@ export type SelectProps<
     | 'placeholder'
     | 'helperText'
     | 'hiddenSelectedOptionsLabel'
+    | 'removeSelectedOptionAccessibilityLabel'
     | 'startNode'
     | 'variant'
     | 'disabled'
@@ -330,6 +334,8 @@ export type SelectProps<
       /** Styles for the empty contents text element */
       emptyContentsText?: StyleProp<ViewStyle>;
     };
+    /** Test ID for the root element */
+    testID?: string;
   };
 
 export type SelectRef = any &
@@ -368,18 +374,26 @@ const SelectBase = memo(
         variant,
         maxSelectedOptionsToShow,
         hiddenSelectedOptionsLabel,
+        removeSelectedOptionAccessibilityLabel,
         accessory,
         media,
         detail,
         SelectOptionComponent = DefaultSelectOption as unknown as SelectOptionComponent<Type, T>,
-        SelectAllOptionComponent = DefaultSelectAllOption as unknown as SelectOptionComponent<Type, T>,
-        SelectDropdownComponent = DefaultSelectDropdown as unknown as SelectDropdownComponent<Type, T>,
+        SelectAllOptionComponent = DefaultSelectAllOption as unknown as SelectOptionComponent<
+          Type,
+          T
+        >,
+        SelectDropdownComponent = DefaultSelectDropdown as unknown as SelectDropdownComponent<
+          Type,
+          T
+        >,
         SelectControlComponent = DefaultSelectControl as unknown as SelectControlComponent<Type, T>,
         SelectEmptyDropdownContentsComponent = DefaultSelectEmptyDropdownContents as SelectEmptyDropdownContentComponent,
         styles,
         accessibilityLabel,
         accessibilityHint,
         accessibilityRoles,
+        testID,
         ...props
       }: SelectProps<Type, T>,
       ref: React.Ref<SelectRef>,
@@ -407,7 +421,7 @@ const SelectBase = memo(
       );
 
       return (
-        <>
+        <View testID={testID}>
           <SelectControlComponent
             ref={controlRef}
             accessibilityHint={accessibilityHint}
@@ -424,6 +438,7 @@ const SelectBase = memo(
             open={open}
             options={options}
             placeholder={placeholder}
+            removeSelectedOptionAccessibilityLabel={removeSelectedOptionAccessibilityLabel}
             setOpen={setOpen}
             startNode={startNode}
             style={styles?.control}
@@ -475,7 +490,7 @@ const SelectBase = memo(
             type={type}
             value={value}
           />
-        </>
+        </View>
       );
     },
   ),

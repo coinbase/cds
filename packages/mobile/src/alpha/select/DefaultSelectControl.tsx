@@ -45,6 +45,7 @@ export const DefaultSelectControl: SelectControlComponent = memo(
         variant = 'foregroundMuted',
         helperText,
         hiddenSelectedOptionsLabel = 'more',
+        removeSelectedOptionAccessibilityLabel = 'Remove',
         label,
         labelVariant,
         startNode,
@@ -122,6 +123,7 @@ export const DefaultSelectControl: SelectControlComponent = memo(
               {optionsToShow.map((option) => (
                 <InputChip
                   key={option.value}
+                  accessibilityLabel={`${removeSelectedOptionAccessibilityLabel} ${option.label ?? option.description ?? option.value ?? ''}`}
                   disabled={option.disabled}
                   invertColorScheme={false}
                   label={option.label ?? option.description ?? option.value ?? ''}
@@ -165,6 +167,7 @@ export const DefaultSelectControl: SelectControlComponent = memo(
         value,
         maxSelectedOptionsToShow,
         hiddenSelectedOptionsLabel,
+        removeSelectedOptionAccessibilityLabel,
         onChange,
       ]);
 
