@@ -1,0 +1,583 @@
+## Basic Example
+
+The XAxis component provides a horizontal axis for charts with automatic tick generation and labeling.
+
+```jsx
+<CartesianChart
+  enableScrubbing
+  height={250}
+  series={[
+    {
+      id: 'prices',
+      data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+    },
+  ]}
+  xAxis={{
+    data: ['April 1', 'April 2', 'April 3', 'April 4', 'April 5', 'April 6', 'April 7'],
+  }}
+>
+  <XAxis showLine showTickMarks showGrid />
+  <Line seriesId="prices" curve="monotone" showArea />
+  <Scrubber />
+</CartesianChart>
+```
+
+## Axis Config
+
+Properties related to the scale of an axis are set on the Chart component. This includes `scaleType`, `domain`, `domainLimit`, `range`, `data`, and `categoryPadding`.
+
+### Scale Type
+
+XAxis supports `linear` (default), `log`, and `band` scale types.
+`linear` and `log` are numeric scales while `band` is a categorical scale.
+`band` scale is required for bar charts.
+
+```jsx
+<CartesianChart
+  height={250}
+  series={[
+    {
+      id: 'prices',
+      data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+    },
+  ]}
+  xAxis={{
+    scaleType: 'band',
+  }}
+>
+  <XAxis showLine showTickMarks showGrid />
+  <Line seriesId="prices" curve="monotone" showArea />
+</CartesianChart>
+```
+
+### Domain
+
+An axis's domain is the range of values that the axis will display.
+You can pass in either an object (AxisBounds) with `min` and `max` properties (both optional), or a function that receives initial `AxisBounds` and returns an adjusted `AxisBounds`.
+
+```jsx
+<CartesianChart
+  height={250}
+  series={[
+    {
+      id: 'prices',
+      data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+    },
+  ]}
+  xAxis={{
+    domain: ({ min, max }) => ({ min: min - 5, max: max + 5 }),
+  }}
+>
+  <XAxis showLine showTickMarks showGrid tickInterval={16} />
+  <Line seriesId="prices" curve="monotone" showArea />
+</CartesianChart>
+```
+
+#### Domain Limit
+
+For numeric scales, you can set the domain limit to `nice` or `strict` (default for XAxis). `nice` will round the domain to human-friendly values, while `strict` will use the exact min/max values from the data. See [d3-scale](https://d3js.org/d3-scale/linear#linear_nice) for more details.
+
+### Range
+
+An axis's range is the range of values that the axis will display in pixels. This is most useful for adjusting the sizing of the data inside of the chart's drawing area.
+
+You can pass in either an object (AxisBounds) with `min` and `max` properties (both optional), or a function that receives initial `AxisBounds` and returns an adjusted `AxisBounds`.
+
+```jsx
+<CartesianChart
+  height={250}
+  series={[
+    {
+      id: 'prices',
+      data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+    },
+  ]}
+  xAxis={{
+    range: ({ min, max }) => ({ min, max: max - 64 }),
+  }}
+>
+  <Line seriesId="prices" curve="monotone" showArea />
+</CartesianChart>
+```
+
+### Data
+
+Data sets x values for the axis.
+
+#### String Data
+
+Using string data will allow you to set string x values for each data point.
+
+```jsx
+<CartesianChart
+  height={250}
+  series={[
+    {
+      id: 'prices',
+      data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+    },
+  ]}
+  xAxis={{
+    data: ['April 1', 'April 2', 'April 3', 'April 4', 'April 5', 'April 6', 'April 7'],
+  }}
+>
+  <XAxis showLine showTickMarks showGrid />
+  <Line seriesId="prices" curve="monotone" showArea />
+</CartesianChart>
+```
+
+#### Number Data
+
+Using number data with a numeric scale will allow you to adjust the x values for each data point.
+
+```jsx
+<LineChart
+  enableScrubbing
+  series={[
+    {
+      id: 'line',
+      data: [2, 5.5, 2, 8.5, 1.5, 5],
+    },
+  ]}
+  height={250}
+  showArea
+  renderPoints={() => true}
+  curve="natural"
+  showXAxis
+  xAxis={{ data: [1, 2, 3, 5, 8, 10], showLine: true, showTickMarks: true, showGrid: true }}
+  showYAxis
+  yAxis={{
+    domain: { min: 0 },
+    position: 'left',
+    showLine: true,
+    showTickMarks: true,
+    showGrid: true,
+  }}
+>
+  <Scrubber />
+</LineChart>
+```
+
+### Category Padding
+
+For band scales, you can set the category padding to adjust the spacing between categories. The default is 0.1. This is a value between 0 and 1, where 0.1 = 10% spacing.
+
+```jsx
+<BarChart
+  showXAxis
+  height={400}
+  series={[
+    {
+      id: 'weekly-data',
+      data: [45, 52, 38, 45, 19, 23, 32],
+    },
+  ]}
+  xAxis={{
+    data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+    showTickMarks: true,
+    showLine: true,
+    categoryPadding: 0.5,
+  }}
+/>
+```
+
+## Axis Props
+
+Properties related to the visual appearance of the XAxis are set on the component itself. This includes `position`, `showGrid`, `showLine`, `showTickMarks`, `size`, `tickInterval`, `ticks`, `tickLabelFormatter`, and `tickMarkSize`.
+
+### Position
+
+You can set the position of an axis to `top` or `bottom` (default).
+
+```jsx
+function XAxisPositionExample() {
+  const theme = useTheme();
+  const lineA = [5, 5, 10, 90, 85, 70, 30, 25, 25];
+  const lineB = [90, 85, 70, 25, 23, 40, 45, 40, 50];
+
+  const timeData = useMemo(
+    () =>
+      [
+        new Date(2023, 7, 31),
+        new Date(2023, 7, 31, 12),
+        new Date(2023, 8, 1),
+        new Date(2023, 8, 1, 12),
+        new Date(2023, 8, 2),
+        new Date(2023, 8, 2, 12),
+        new Date(2023, 8, 3),
+        new Date(2023, 8, 3, 12),
+        new Date(2023, 8, 4),
+      ].map((d) => d.getTime()),
+    [],
+  );
+
+  const dateFormatter = useCallback(
+    (index: number) => {
+      return new Date(timeData[index]).toLocaleDateString('en-US', {
+        month: '2-digit',
+        day: '2-digit',
+      });
+    },
+    [timeData],
+  );
+
+  const timeOfDayFormatter = useCallback(
+    (index: number) => {
+      return new Date(timeData[index]).toLocaleTimeString('en-US', {
+        hour: '2-digit',
+      });
+    },
+    [timeData],
+  );
+
+  const timeOfDayTicks = useMemo(() => {
+    return timeData.map((d, index) => index);
+  }, [timeData]);
+
+  const dateTicks = useMemo(() => {
+    return timeData.map((d, index) => index).filter((d) => d % 2 === 0);
+  }, [timeData]);
+
+  return (
+    <LineChart
+      enableScrubbing
+      curve="monotone"
+      height={400}
+      series={[
+        {
+          id: 'lineA',
+          data: lineA,
+          color: theme.color.accentBoldBlue,
+        },
+        {
+          id: 'lineB',
+          data: lineB,
+          color: theme.color.accentBoldGreen,
+        },
+      ]}
+      yAxis={{
+        domain: { min: 0, max: 100 },
+      }}
+    >
+      <XAxis
+        showLine
+        showTickMarks
+        position="top"
+        tickLabelFormatter={dateFormatter}
+        ticks={dateTicks}
+      />
+      <XAxis
+        showGrid
+        showLine
+        showTickMarks
+        tickLabelFormatter={timeOfDayFormatter}
+        ticks={timeOfDayTicks}
+      />
+      <Scrubber />
+    </LineChart>
+  );
+};
+```
+
+### Grid
+
+You can show grid lines at each tick position using the `showGrid` prop.
+
+```jsx
+function XAxisGridExample() {
+  const [showGrid, setShowGrid] = useState(true);
+  return (
+    <VStack gap={2}>
+      <HStack gap={2} style={{ flexWrap: 'wrap' }}>
+        <Switch checked={showGrid} onChange={() => setShowGrid(!showGrid)}>
+          Show Grid
+        </Switch>
+      </HStack>
+      <CartesianChart
+        enableScrubbing
+        height={250}
+        series={[
+          {
+            id: 'prices',
+            data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+          },
+        ]}
+        xAxis={{
+          data: ['April 1', 'April 2', 'April 3', 'April 4', 'April 5', 'April 6', 'April 7'],
+        }}
+      >
+        <XAxis showLine showTickMarks showGrid={showGrid} />
+        <Line seriesId="prices" curve="monotone" showArea />
+        <Scrubber />
+      </CartesianChart>
+    </VStack>
+  );
+}
+```
+
+You can also customize the grid lines using the `GridLineComponent` prop.
+
+```jsx
+function CustomGridLineExample() {
+  const ThinSolidLine = memo((props: SolidLineProps) => <SolidLine {...props} strokeWidth={1} />);
+
+  return (
+    <CartesianChart
+      enableScrubbing
+      height={250}
+      series={[
+        {
+          id: 'prices',
+          data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+        },
+      ]}
+      xAxis={{
+        data: ['April 1', 'April 2', 'April 3', 'April 4', 'April 5', 'April 6', 'April 7'],
+      }}
+    >
+      <XAxis showLine showTickMarks showGrid GridLineComponent={ThinSolidLine} />
+      <Line seriesId="prices" curve="monotone" showArea />
+      <Scrubber />
+    </CartesianChart>
+  );
+}
+```
+
+### Line
+
+You can show the axis line using the `showLine` prop.
+
+```jsx
+function XAxisLineExample() {
+  const [showLine, setShowLine] = useState(true);
+  return (
+    <VStack gap={2}>
+      <HStack gap={2} style={{ flexWrap: 'wrap' }}>
+        <Switch checked={showLine} onChange={() => setShowLine(!showLine)}>
+          Show Line
+        </Switch>
+      </HStack>
+      <CartesianChart
+        enableScrubbing
+        height={250}
+        series={[
+          {
+            id: 'prices',
+            data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+          },
+        ]}
+        xAxis={{
+          data: ['April 1', 'April 2', 'April 3', 'April 4', 'April 5', 'April 6', 'April 7'],
+        }}
+      >
+        <XAxis showLine={showLine} showTickMarks showGrid />
+        <Line seriesId="prices" curve="monotone" showArea />
+        <Scrubber />
+      </CartesianChart>
+    </VStack>
+  );
+}
+```
+
+You can also customize the axis line using the `styles` props.
+
+```jsx
+function XAxisLineStylesExample() {
+  const theme = useTheme();
+  const [showLine, setShowLine] = useState(true);
+  return (
+    <VStack gap={2}>
+      <HStack gap={2} style={{ flexWrap: 'wrap' }}>
+        <Switch checked={showLine} onChange={() => setShowLine(!showLine)}>
+          Show Line
+        </Switch>
+      </HStack>
+      <CartesianChart
+        enableScrubbing
+        height={250}
+        series={[
+          {
+            id: 'prices',
+            data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+          },
+        ]}
+      >
+        <XAxis
+          showLine={showLine}
+          showGrid
+          styles={{ line: { stroke: theme.color.accentBoldGreen, strokeWidth: 4 } }}
+        />
+        <Line seriesId="prices" curve="monotone" showArea />
+        <Scrubber />
+      </CartesianChart>
+    </VStack>
+  );
+}
+```
+
+### Size
+
+The `size` prop sets the size of the axis in pixels. The default is 32 for XAxis, but can be adjusted to fit the size of your data.
+
+```jsx
+<CartesianChart
+  enableScrubbing
+  height={250}
+  series={[
+    {
+      id: 'prices',
+      data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+    },
+  ]}
+  xAxis={{
+    data: ['April 1', 'April 2', 'April 3', 'April 4', 'April 5', 'April 6', 'April 7'],
+  }}
+>
+  <XAxis showLine showTickMarks showGrid height={64} />
+  <Line seriesId="prices" curve="monotone" showArea />
+  <Scrubber />
+</CartesianChart>
+```
+
+### Ticks
+
+You can use the `ticks`, `requestedTickCount`, and `tickInterval` (default for XAxis) props to control the number and placement of ticks on the XAxis.
+
+`ticks` accepts an array of numbers, which corresponds to the values of that axis that you would like to display ticks for.
+
+```jsx
+<CartesianChart
+  enableScrubbing
+  height={250}
+  series={[
+    {
+      id: 'prices',
+      data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+    },
+  ]}
+>
+  <XAxis showLine showTickMarks showGrid ticks={[0, 2, 4, 6]} />
+  <Line seriesId="prices" curve="monotone" showArea />
+  <Scrubber />
+</CartesianChart>
+```
+
+Using `requestedTickCount` will use [D3's ticks function](https://d3js.org/d3-array/ticks#ticks) to determine the number and placement of ticks. Note that this count is not guaranteed to be respected.
+
+```jsx
+<CartesianChart
+  enableScrubbing
+  height={250}
+  series={[
+    {
+      id: 'prices',
+      data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+    },
+  ]}
+>
+  <XAxis showLine showTickMarks showGrid requestedTickCount={4} />
+  <Line seriesId="prices" curve="monotone" showArea />
+  <Scrubber />
+</CartesianChart>
+```
+
+`tickInterval`, which accepts a number for the gap between ticks in pixels, will measure the available space and try to create evenly spaced ticks. It will always include the first and last values of the domain.
+
+```jsx
+<CartesianChart
+  enableScrubbing
+  height={250}
+  series={[
+    {
+      id: 'prices',
+      data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+    },
+  ]}
+>
+  <XAxis showLine showTickMarks showGrid tickInterval={16} />
+  <Line seriesId="prices" curve="monotone" showArea />
+  <Scrubber />
+</CartesianChart>
+```
+
+### Tick Marks
+
+You can show tick marks on the axis using the `showTickMarks` prop. You can also customize the tick mark size using the `tickMarkSize` prop.
+
+```jsx
+function XAxisTickMarksExample() {
+  const [showTickMarks, setShowTickMarks] = useState(true);
+  return (
+    <VStack gap={2}>
+      <HStack gap={2} style={{ flexWrap: 'wrap' }}>
+        <Switch checked={showTickMarks} onChange={() => setShowTickMarks(!showTickMarks)}>
+          Show Tick Marks
+        </Switch>
+      </HStack>
+      <CartesianChart
+        enableScrubbing
+        height={250}
+        series={[
+          {
+            id: 'prices',
+            data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+          },
+        ]}
+        xAxis={{
+          data: ['April 1', 'April 2', 'April 3', 'April 4', 'April 5', 'April 6', 'April 7'],
+        }}
+      >
+        <XAxis showLine showTickMarks={showTickMarks} tickMarkSize={16} showGrid />
+        <Line seriesId="prices" curve="monotone" showArea />
+        <Scrubber />
+      </CartesianChart>
+    </VStack>
+  );
+}
+```
+
+### Tick Labels
+
+You can customize the tick labels using the `tickLabelFormatter` prop. It will receive the x data value of the tick. Meaning, if data is provided for the axis, it will receive the string label for the tick.
+
+```jsx
+<CartesianChart
+  enableScrubbing
+  height={250}
+  series={[
+    {
+      id: 'prices',
+      data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+    },
+  ]}
+  xAxis={{
+    data: ['April 1', 'April 2', 'April 3', 'April 4', 'April 5', 'April 6', 'April 7'],
+  }}
+>
+  <XAxis showGrid tickLabelFormatter={(value) => `Day of ${value}`} />
+  <Line seriesId="prices" curve="monotone" showArea />
+  <Scrubber />
+</CartesianChart>
+```
+
+If no data is set for the axis, it will receive the regular number value of the tick, which is normally the index corresponding to each value in the series.
+
+```jsx
+<CartesianChart
+  enableScrubbing
+  height={250}
+  series={[
+    {
+      id: 'prices',
+      data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+    },
+  ]}
+  xAxis={{
+    domain: { min: -4, max: 16 },
+  }}
+>
+  <XAxis showGrid tickLabelFormatter={(value) => value * 2} />
+  <Line seriesId="prices" curve="monotone" showArea />
+  <Scrubber />
+</CartesianChart>
+```

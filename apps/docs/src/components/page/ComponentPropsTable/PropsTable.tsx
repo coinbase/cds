@@ -1,14 +1,19 @@
 import PropsTableRow from './PropsTableRow';
 import type { PropsTableProps } from './types';
 
+const tableStyle = { marginBottom: 0 };
+const theadStyle = { backgroundColor: 'transparent' };
+const th40Style = { width: '40%' };
+const th20Style = { width: '20%' };
+
 function PropsTable({ props, sharedTypeAliases, searchTerm }: PropsTableProps) {
   return (
-    <table style={{ marginBottom: 0 }}>
-      <thead>
+    <table style={tableStyle}>
+      <thead style={theadStyle}>
         <tr>
-          <th style={{ width: '40%' }}>Name</th>
-          <th style={{ width: '40%' }}>Type</th>
-          <th style={{ width: '20%' }}>Default</th>
+          <th style={th40Style}>Name</th>
+          <th style={th40Style}>Type</th>
+          <th style={th20Style}>Default</th>
         </tr>
       </thead>
       <tbody>
