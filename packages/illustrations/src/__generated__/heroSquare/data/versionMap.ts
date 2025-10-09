@@ -403,7 +403,7 @@ const versionMap: Record<HeroSquareName, number> = {
   baseTargetLarge: 0,
   predictionsMarkets: 0,
   options: 0,
-  instantUnstakingClock: 0,
+  instantUnstakingClock: 1,
   baseCreatorCoin: 0,
   baseCreatorCoinEmpty: 0,
   baseSocial: 0,

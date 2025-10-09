@@ -8,6 +8,32 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+### 🚀 Added
+
+Generated with `yarn nx run illustrations:sync-illustrations`
+
+#### Pictogram
+
+- coinbaseOneUnlimtedRewards
+- coinbaseUnlockOffers
+
+#### Spot Square
+
+- baseCreatorCoin
+- coinbaseUnlockOffers
+
+### 🐞 Updated
+
+Generated with `yarn nx run illustrations:sync-illustrations`
+
+#### Pictogram
+
+- instantUnstakingClock
+
+#### Hero Square
+
+- instantUnstakingClock
+
 ## 4.23.1 (10/6/2025 PST)
 
 This is an artificial version bump with no new change.

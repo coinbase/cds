@@ -818,6 +818,14 @@ const svgJsMap = {
     light: () => require('../svgJs/light/coinbaseOneTrusted-5.js').content,
     dark: () => require('../svgJs/dark/coinbaseOneTrusted-5.js').content,
   },
+  coinbaseOneUnlimtedRewards: {
+    light: () => require('../svgJs/light/coinbaseOneUnlimtedRewards-0.js').content,
+    dark: () => require('../svgJs/dark/coinbaseOneUnlimtedRewards-0.js').content,
+  },
+  coinbaseUnlockOffers: {
+    light: () => require('../svgJs/light/coinbaseUnlockOffers-0.js').content,
+    dark: () => require('../svgJs/dark/coinbaseUnlockOffers-0.js').content,
+  },
   coinbaseWalletApp: {
     light: () => require('../svgJs/light/coinbaseWalletApp-5.js').content,
     dark: () => require('../svgJs/dark/coinbaseWalletApp-5.js').content,
@@ -1155,8 +1163,8 @@ const svgJsMap = {
     dark: () => require('../svgJs/dark/increaseLimits-3.js').content,
   },
   instantUnstakingClock: {
-    light: () => require('../svgJs/light/instantUnstakingClock-0.js').content,
-    dark: () => require('../svgJs/dark/instantUnstakingClock-0.js').content,
+    light: () => require('../svgJs/light/instantUnstakingClock-1.js').content,
+    dark: () => require('../svgJs/dark/instantUnstakingClock-1.js').content,
   },
   institutionalNavigation: {
     light: () => require('../svgJs/light/institutionalNavigation-6.js').content,

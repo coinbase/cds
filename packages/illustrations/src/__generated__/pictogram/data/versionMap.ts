@@ -461,10 +461,12 @@ const versionMap: Record<PictogramName, number> = {
   bonusTwoPercent: 0,
   idBlock: 0,
   idError: 0,
-  instantUnstakingClock: 0,
+  instantUnstakingClock: 1,
   coinbaseOneProductInvestWeekly: 0,
   coinbaseLogoAdvancedBrand: 0,
   tokenSales: 0,
+  coinbaseOneUnlimtedRewards: 0,
+  coinbaseUnlockOffers: 0,
 };
 
 export default versionMap;

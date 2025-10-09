@@ -207,6 +207,8 @@ export type PictogramName =
   | 'coinbaseOneShield'
   | 'coinbaseOneTrade'
   | 'coinbaseOneTrusted'
+  | 'coinbaseOneUnlimtedRewards'
+  | 'coinbaseUnlockOffers'
   | 'coinbaseWalletApp'
   | 'coinFocus'
   | 'coinShare'
