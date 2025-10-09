@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.16.1 (10/9/2025 PST)
+
+#### 🐞 Fixes
+
+- Update createThemeCssVars to use String.prototype.replace instead of replaceAll. [[#90](https://github.com/coinbase/cds/pull/90)]
+
 ## 8.16.0 (10/8/2025 PST)
 
 #### 🚀 Updates
