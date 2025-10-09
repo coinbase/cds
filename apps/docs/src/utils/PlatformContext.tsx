@@ -1,4 +1,4 @@
-import React, { createContext, useCallback, useContext, useMemo } from 'react';
+import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import type { DocFrontMatter } from '@docusaurus/plugin-content-docs';
 import { useDoc } from '@docusaurus/plugin-content-docs/client';
 import { useHistory, useLocation } from '@docusaurus/router';
@@ -24,6 +24,8 @@ const PlatformContext = createContext<PlatformContextValue>({
 });
 
 const PLATFORM_SEARCH_PARAM_KEY = 'platform';
+const PLATFORM_STORAGE_KEY = 'cdsPlatform';
+const DEFAULT_PLATFORM = 'web';
 
 export const PlatformContextProvider = ({ children }: { children: React.ReactNode }) => {
   const history = useHistory();
@@ -33,36 +35,69 @@ export const PlatformContextProvider = ({ children }: { children: React.ReactNod
   const supportsWeb = typedFrontMatter.platform_switcher_options?.web || false;
   const supportsMobile = typedFrontMatter.platform_switcher_options?.mobile || false;
 
-  const platform = useMemo<Platform>(() => {
-    const platform = new URLSearchParams(search).get(PLATFORM_SEARCH_PARAM_KEY);
-    if (platform === 'web' || platform === 'mobile') {
-      return platform;
+  const getDefaultPlatform = useCallback((): Platform => {
+    const urlPlatform = new URLSearchParams(search).get(PLATFORM_SEARCH_PARAM_KEY);
+
+    if (urlPlatform) {
+      const isSupported =
+        (urlPlatform === 'web' && supportsWeb) || (urlPlatform === 'mobile' && supportsMobile);
+
+      if (isSupported) {
+        return urlPlatform as Platform;
+      }
     }
+
+    // Fall back to page defaults
     if (supportsWeb) {
       return 'web';
     }
     if (supportsMobile) {
       return 'mobile';
     }
-    return 'web';
+    return DEFAULT_PLATFORM;
   }, [search, supportsMobile, supportsWeb]);
+
+  const [platform, setPlatformState] = useState<Platform>(getDefaultPlatform);
 
   const setPlatform = useCallback(
     (platformUpdater: Platform | ((prevPlatform: Platform) => Platform)) => {
-      const searchParams = new URLSearchParams(search);
-      let currentPlatform = searchParams.get(PLATFORM_SEARCH_PARAM_KEY);
-      if (currentPlatform !== 'web' && currentPlatform !== 'mobile') {
-        currentPlatform = 'web';
-      }
-      const newPlatform =
-        typeof platformUpdater === 'function'
-          ? platformUpdater(currentPlatform as 'mobile' | 'web')
-          : platformUpdater;
-      searchParams.set(PLATFORM_SEARCH_PARAM_KEY, newPlatform);
-      history.push({ search: searchParams.toString() });
+      setPlatformState((currentPlatform) => {
+        const newPlatform =
+          typeof platformUpdater === 'function'
+            ? platformUpdater(currentPlatform)
+            : platformUpdater;
+
+        if (typeof window !== 'undefined') {
+          localStorage.setItem(PLATFORM_STORAGE_KEY, newPlatform);
+        }
+
+        const searchParams = new URLSearchParams(search);
+        searchParams.set(PLATFORM_SEARCH_PARAM_KEY, newPlatform);
+        history.push({ search: searchParams.toString() });
+
+        return newPlatform;
+      });
     },
     [history, search],
   );
+  useEffect(() => {
+    const urlPlatform = new URLSearchParams(search).get(PLATFORM_SEARCH_PARAM_KEY);
+
+    // Update platform if no URL param and localStorage is available
+    if (!urlPlatform && typeof window !== 'undefined') {
+      const savedPlatform = localStorage.getItem(PLATFORM_STORAGE_KEY);
+
+      if (savedPlatform) {
+        const isSupported =
+          (savedPlatform === 'web' && supportsWeb) ||
+          (savedPlatform === 'mobile' && supportsMobile);
+
+        if (isSupported) {
+          setPlatformState(savedPlatform as Platform);
+        }
+      }
+    }
+  }, [search, supportsMobile, supportsWeb]);
 
   const value = useMemo(
     () => ({ platform, setPlatform, supportsMobile, supportsWeb }),
