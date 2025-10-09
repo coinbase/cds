@@ -314,10 +314,7 @@ export type SelectDropdownComponent<
   }
 >;
 
-/**
- * Props for the Select component
- */
-export type SelectProps<Type extends SelectType = 'single', T extends string = string> = Pick<
+export type SelectBaseProps<Type extends SelectType = 'single', T extends string = string> = Pick<
   SharedAccessibilityProps,
   'accessibilityLabel'
 > &
@@ -374,87 +371,96 @@ export type SelectProps<Type extends SelectType = 'single', T extends string = s
     style?: React.CSSProperties;
     /** CSS class name for the root element */
     className?: string;
-    /** Custom styles for different parts of the select */
-    styles?: {
-      /** Styles for the root container */
-      root?: React.CSSProperties;
-      /** Styles for the control element */
-      control?: React.CSSProperties;
-      /** Styles for the start node element */
-      controlStartNode?: React.CSSProperties;
-      /** Styles for the input node element */
-      controlInputNode?: React.CSSProperties;
-      /** Styles for the value node element */
-      controlValueNode?: React.CSSProperties;
-      /** Styles for the label node element */
-      controlLabelNode?: React.CSSProperties;
-      /** Styles for the helper text node element */
-      controlHelperTextNode?: React.CSSProperties;
-      /** Styles for the end node element */
-      controlEndNode?: React.CSSProperties;
-      /** Blend styles for control interactivity */
-      controlBlendStyles?: InteractableBlendStyles;
-      /** Styles for the dropdown container */
-      dropdown?: React.CSSProperties;
-      /** Styles for individual options */
-      option?: React.CSSProperties;
-      /** Blend styles for option interactivity */
-      optionBlendStyles?: InteractableBlendStyles;
-      /** Styles for the option cell element */
-      optionCell?: React.CSSProperties;
-      /** Styles for the option content wrapper */
-      optionContent?: React.CSSProperties;
-      /** Styles for the option label element */
-      optionLabel?: React.CSSProperties;
-      /** Styles for the option description element */
-      optionDescription?: React.CSSProperties;
-      /** Styles for the select all divider element */
-      selectAllDivider?: React.CSSProperties;
-      /** Styles for the empty contents container element */
-      emptyContentsContainer?: React.CSSProperties;
-      /** Styles for the empty contents text element */
-      emptyContentsText?: React.CSSProperties;
-    };
-    /** Custom class names for different parts of the select */
-    classNames?: {
-      /** Class name for the root container */
-      root?: string;
-      /** Class name for the control element */
-      control?: string;
-      /** Class name for the start node element */
-      controlStartNode?: string;
-      /** Class name for the input node element */
-      controlInputNode?: string;
-      /** Class name for the value node element */
-      controlValueNode?: string;
-      /** Class name for the label node element */
-      controlLabelNode?: string;
-      /** Class name for the helper text node element */
-      controlHelperTextNode?: string;
-      /** Class name for the end node element */
-      controlEndNode?: string;
-      /** Class name for the dropdown container */
-      dropdown?: string;
-      /** Class name for individual options */
-      option?: string;
-      /** Class name for the option cell element */
-      optionCell?: string;
-      /** Class name for the option content wrapper */
-      optionContent?: string;
-      /** Class name for the option label element */
-      optionLabel?: string;
-      /** Class name for the option description element */
-      optionDescription?: string;
-      /** Class name for the select all divider element */
-      selectAllDivider?: string;
-      /** Class name for the empty contents container element */
-      emptyContentsContainer?: string;
-      /** Class name for the empty contents text element */
-      emptyContentsText?: string;
-    };
     /** Test ID for the root element */
     testID?: string;
   };
+
+/**
+ * Props for the Select component
+ */
+export type SelectProps<
+  Type extends SelectType = 'single',
+  T extends string = string,
+> = SelectBaseProps<Type, T> & {
+  /** Custom styles for different parts of the select */
+  styles?: {
+    /** Styles for the root container */
+    root?: React.CSSProperties;
+    /** Styles for the control element */
+    control?: React.CSSProperties;
+    /** Styles for the start node element */
+    controlStartNode?: React.CSSProperties;
+    /** Styles for the input node element */
+    controlInputNode?: React.CSSProperties;
+    /** Styles for the value node element */
+    controlValueNode?: React.CSSProperties;
+    /** Styles for the label node element */
+    controlLabelNode?: React.CSSProperties;
+    /** Styles for the helper text node element */
+    controlHelperTextNode?: React.CSSProperties;
+    /** Styles for the end node element */
+    controlEndNode?: React.CSSProperties;
+    /** Blend styles for control interactivity */
+    controlBlendStyles?: InteractableBlendStyles;
+    /** Styles for the dropdown container */
+    dropdown?: React.CSSProperties;
+    /** Styles for individual options */
+    option?: React.CSSProperties;
+    /** Blend styles for option interactivity */
+    optionBlendStyles?: InteractableBlendStyles;
+    /** Styles for the option cell element */
+    optionCell?: React.CSSProperties;
+    /** Styles for the option content wrapper */
+    optionContent?: React.CSSProperties;
+    /** Styles for the option label element */
+    optionLabel?: React.CSSProperties;
+    /** Styles for the option description element */
+    optionDescription?: React.CSSProperties;
+    /** Styles for the select all divider element */
+    selectAllDivider?: React.CSSProperties;
+    /** Styles for the empty contents container element */
+    emptyContentsContainer?: React.CSSProperties;
+    /** Styles for the empty contents text element */
+    emptyContentsText?: React.CSSProperties;
+  };
+  /** Custom class names for different parts of the select */
+  classNames?: {
+    /** Class name for the root container */
+    root?: string;
+    /** Class name for the control element */
+    control?: string;
+    /** Class name for the start node element */
+    controlStartNode?: string;
+    /** Class name for the input node element */
+    controlInputNode?: string;
+    /** Class name for the value node element */
+    controlValueNode?: string;
+    /** Class name for the label node element */
+    controlLabelNode?: string;
+    /** Class name for the helper text node element */
+    controlHelperTextNode?: string;
+    /** Class name for the end node element */
+    controlEndNode?: string;
+    /** Class name for the dropdown container */
+    dropdown?: string;
+    /** Class name for individual options */
+    option?: string;
+    /** Class name for the option cell element */
+    optionCell?: string;
+    /** Class name for the option content wrapper */
+    optionContent?: string;
+    /** Class name for the option label element */
+    optionLabel?: string;
+    /** Class name for the option description element */
+    optionDescription?: string;
+    /** Class name for the select all divider element */
+    selectAllDivider?: string;
+    /** Class name for the empty contents container element */
+    emptyContentsContainer?: string;
+    /** Class name for the empty contents text element */
+    emptyContentsText?: string;
+  };
+};
 
 export type SelectRef = HTMLElement &
   Pick<SelectProps, 'open' | 'setOpen'> & {

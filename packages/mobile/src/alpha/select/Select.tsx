@@ -228,10 +228,7 @@ export const defaultAccessibilityRoles: SelectDropdownProps['accessibilityRoles'
   option: 'menuitem',
 };
 
-/**
- * Props for the Select component
- */
-export type SelectProps<Type extends SelectType = 'single'> = Pick<
+export type SelectBaseProps<Type extends SelectType = 'single'> = Pick<
   SharedAccessibilityProps,
   'accessibilityLabel' | 'accessibilityHint'
 > &
@@ -284,46 +281,52 @@ export type SelectProps<Type extends SelectType = 'single'> = Pick<
     SelectAllOptionComponent?: SelectOptionComponent<Type>;
     /** Custom component to render when no options are available */
     SelectEmptyDropdownContentsComponent?: SelectEmptyDropdownContentComponent;
-    /** Custom styles for different parts of the select */
-    styles?: {
-      /** Styles for the control element */
-      control?: StyleProp<ViewStyle>;
-      /** Styles for the start node element */
-      controlStartNode?: StyleProp<ViewStyle>;
-      /** Styles for the input node element */
-      controlInputNode?: StyleProp<ViewStyle>;
-      /** Styles for the value node element */
-      controlValueNode?: StyleProp<ViewStyle>;
-      /** Styles for the label node element */
-      controlLabelNode?: StyleProp<ViewStyle>;
-      /** Styles for the helper text node element */
-      controlHelperTextNode?: StyleProp<ViewStyle>;
-      /** Styles for the end node element */
-      controlEndNode?: StyleProp<ViewStyle>;
-      /** Styles for the dropdown container */
-      dropdown?: StyleProp<ViewStyle>;
-      /** Styles for individual options */
-      option?: StyleProp<ViewStyle>;
-      /** Blend styles for option interactivity */
-      optionBlendStyles?: InteractableBlendStyles;
-      /** Styles for the option cell element */
-      optionCell?: StyleProp<ViewStyle>;
-      /** Styles for the option content wrapper */
-      optionContent?: StyleProp<ViewStyle>;
-      /** Styles for the option label element */
-      optionLabel?: StyleProp<ViewStyle>;
-      /** Styles for the option description element */
-      optionDescription?: StyleProp<ViewStyle>;
-      /** Styles for the select all divider element */
-      selectAllDivider?: StyleProp<ViewStyle>;
-      /** Styles for the empty contents container element */
-      emptyContentsContainer?: StyleProp<ViewStyle>;
-      /** Styles for the empty contents text element */
-      emptyContentsText?: StyleProp<ViewStyle>;
-    };
     /** Test ID for the root element */
     testID?: string;
   };
+
+/**
+ * Props for the Select component
+ */
+export type SelectProps<Type extends SelectType = 'single'> = SelectBaseProps<Type> & {
+  /** Custom styles for different parts of the select */
+  styles?: {
+    /** Styles for the control element */
+    control?: StyleProp<ViewStyle>;
+    /** Styles for the start node element */
+    controlStartNode?: StyleProp<ViewStyle>;
+    /** Styles for the input node element */
+    controlInputNode?: StyleProp<ViewStyle>;
+    /** Styles for the value node element */
+    controlValueNode?: StyleProp<ViewStyle>;
+    /** Styles for the label node element */
+    controlLabelNode?: StyleProp<ViewStyle>;
+    /** Styles for the helper text node element */
+    controlHelperTextNode?: StyleProp<ViewStyle>;
+    /** Styles for the end node element */
+    controlEndNode?: StyleProp<ViewStyle>;
+    /** Styles for the dropdown container */
+    dropdown?: StyleProp<ViewStyle>;
+    /** Styles for individual options */
+    option?: StyleProp<ViewStyle>;
+    /** Blend styles for option interactivity */
+    optionBlendStyles?: InteractableBlendStyles;
+    /** Styles for the option cell element */
+    optionCell?: StyleProp<ViewStyle>;
+    /** Styles for the option content wrapper */
+    optionContent?: StyleProp<ViewStyle>;
+    /** Styles for the option label element */
+    optionLabel?: StyleProp<ViewStyle>;
+    /** Styles for the option description element */
+    optionDescription?: StyleProp<ViewStyle>;
+    /** Styles for the select all divider element */
+    selectAllDivider?: StyleProp<ViewStyle>;
+    /** Styles for the empty contents container element */
+    emptyContentsContainer?: StyleProp<ViewStyle>;
+    /** Styles for the empty contents text element */
+    emptyContentsText?: StyleProp<ViewStyle>;
+  };
+};
 
 export type SelectRef = any &
   Pick<SelectProps, 'open' | 'setOpen'> & {
