@@ -48,7 +48,7 @@ export function TypeAliasModalContent({ typeAlias, type }: TypeAliasModalContent
       {isResponsiveProp && (
         <VStack gap={1}>
           <Divider />
-          <Link as={DocusaurusLink} to="/getting-started/styling#responsive-design">
+          <Link as={DocusaurusLink} to="/getting-started/styling#responsive-styles">
             Learn more about responsive props.
           </Link>
         </VStack>
