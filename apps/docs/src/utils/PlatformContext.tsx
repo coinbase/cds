@@ -1,4 +1,4 @@
-import React, { createContext, useCallback, useContext, useMemo, useState } from 'react';
+import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import type { DocFrontMatter } from '@docusaurus/plugin-content-docs';
 import { useDoc } from '@docusaurus/plugin-content-docs/client';
 import { useHistory, useLocation } from '@docusaurus/router';
@@ -35,23 +35,19 @@ export const PlatformContextProvider = ({ children }: { children: React.ReactNod
   const supportsWeb = typedFrontMatter.platform_switcher_options?.web || false;
   const supportsMobile = typedFrontMatter.platform_switcher_options?.mobile || false;
 
-  const getInitialPlatform = useCallback((): Platform => {
+  const getDefaultPlatform = useCallback((): Platform => {
     const urlPlatform = new URLSearchParams(search).get(PLATFORM_SEARCH_PARAM_KEY);
-    const savedPlatform = localStorage.getItem(PLATFORM_STORAGE_KEY);
 
-    const preferredPlatform = urlPlatform ?? savedPlatform;
-
-    if (preferredPlatform) {
+    if (urlPlatform) {
       const isSupported =
-        (preferredPlatform === 'web' && supportsWeb) ||
-        (preferredPlatform === 'mobile' && supportsMobile);
+        (urlPlatform === 'web' && supportsWeb) || (urlPlatform === 'mobile' && supportsMobile);
 
       if (isSupported) {
-        return preferredPlatform;
+        return urlPlatform as Platform;
       }
     }
 
-    // Fall back to page defaults when preferred platform isn't supported
+    // Fall back to page defaults
     if (supportsWeb) {
       return 'web';
     }
@@ -61,7 +57,7 @@ export const PlatformContextProvider = ({ children }: { children: React.ReactNod
     return DEFAULT_PLATFORM;
   }, [search, supportsMobile, supportsWeb]);
 
-  const [platform, setPlatformState] = useState<Platform>(getInitialPlatform);
+  const [platform, setPlatformState] = useState<Platform>(getDefaultPlatform);
 
   const setPlatform = useCallback(
     (platformUpdater: Platform | ((prevPlatform: Platform) => Platform)) => {
@@ -71,7 +67,9 @@ export const PlatformContextProvider = ({ children }: { children: React.ReactNod
             ? platformUpdater(currentPlatform)
             : platformUpdater;
 
-        localStorage.setItem(PLATFORM_STORAGE_KEY, newPlatform);
+        if (typeof window !== 'undefined') {
+          localStorage.setItem(PLATFORM_STORAGE_KEY, newPlatform);
+        }
 
         const searchParams = new URLSearchParams(search);
         searchParams.set(PLATFORM_SEARCH_PARAM_KEY, newPlatform);
@@ -82,6 +80,24 @@ export const PlatformContextProvider = ({ children }: { children: React.ReactNod
     },
     [history, search],
   );
+  useEffect(() => {
+    const urlPlatform = new URLSearchParams(search).get(PLATFORM_SEARCH_PARAM_KEY);
+
+    // Update platform if no URL param and localStorage is available
+    if (!urlPlatform && typeof window !== 'undefined') {
+      const savedPlatform = localStorage.getItem(PLATFORM_STORAGE_KEY);
+
+      if (savedPlatform) {
+        const isSupported =
+          (savedPlatform === 'web' && supportsWeb) ||
+          (savedPlatform === 'mobile' && supportsMobile);
+
+        if (isSupported) {
+          setPlatformState(savedPlatform as Platform);
+        }
+      }
+    }
+  }, [search, supportsMobile, supportsWeb]);
 
   const value = useMemo(
     () => ({ platform, setPlatform, supportsMobile, supportsWeb }),
