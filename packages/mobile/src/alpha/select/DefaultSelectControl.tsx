@@ -42,7 +42,7 @@ export const DefaultSelectControl: SelectControlComponent = memo(
         placeholder,
         disabled,
         setOpen,
-        variant = 'foregroundMuted',
+        variant,
         helperText,
         hiddenSelectedOptionsLabel = 'more',
         removeSelectedOptionAccessibilityLabel = 'Remove',
@@ -64,10 +64,13 @@ export const DefaultSelectControl: SelectControlComponent = memo(
       const hasValue = value !== null && !(Array.isArray(value) && value.length === 0);
       const isMultiSelect = Array.isArray(value);
 
-      const focusedVariant = useInputVariant(!!open, variant);
+      // Default to foregroundMuted if variant is not provided
+      // Prop value doesn't have default value because it affects the color of the
+      // animated caret
+      const focusedVariant = useInputVariant(!!open, variant ?? 'foregroundMuted');
       const { borderFocusedStyle, borderUnfocusedStyle } = useInputBorderStyle(
         !!open,
-        variant,
+        variant ?? 'foregroundMuted',
         focusedVariant,
       );
 
