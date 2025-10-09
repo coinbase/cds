@@ -42,7 +42,11 @@ function DefaultSelectAllOptionComponent<Type extends SelectType, T extends stri
         type={type}
         value={'select-all' as T}
       />
-      <Divider className={classNames?.selectAllDivider} paddingX={2} style={styles?.selectAllDivider} />
+      <Divider
+        className={classNames?.selectAllDivider}
+        paddingX={2}
+        style={styles?.selectAllDivider}
+      />
     </>
   );
 }
