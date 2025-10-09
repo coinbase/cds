@@ -32,14 +32,18 @@ const noPointerEvents = { pointerEvents: 'none' } as const;
 const SparklineInteractiveMarkerDate: React.FunctionComponent<
   React.PropsWithChildren<{
     getFormattedDate: (xPosition: number) => string;
+    containerOffsetLeft: number;
   }>
-> = memo(({ getFormattedDate }) => {
+> = memo(({ getFormattedDate, containerOffsetLeft }) => {
   const [xPos, setXPos] = useState<number>(0);
-  const setupRef = useCallback((ref: HTMLSpanElement | null) => {
-    if (ref) {
-      setXPos(ref.offsetLeft + ref.offsetWidth / 2);
-    }
-  }, []);
+  const setupRef = useCallback(
+    (ref: HTMLSpanElement | null) => {
+      if (ref) {
+        setXPos(ref.offsetLeft + ref.offsetWidth / 2 - containerOffsetLeft);
+      }
+    },
+    [containerOffsetLeft],
+  );
 
   const dateStr = getFormattedDate(xPos);
 
@@ -68,6 +72,7 @@ function SparklineInteractiveMarkerDatesWithGeneric<Period extends string>({
   timePeriodGutter = 2,
 }: SparklineInteractiveMarkerDatesProps<Period>) {
   const [numberOfLabels, setNumberOfLabels] = useState(0);
+  const [containerOffsetLeft, setContainerOffsetLeft] = useState(0);
   const getFormattedDate = useDateLookup({
     getMarker,
     formatDate,
@@ -78,14 +83,21 @@ function SparklineInteractiveMarkerDatesWithGeneric<Period extends string>({
     if (ref) {
       const numberOfLabelsFromWidth = Math.floor(ref.offsetWidth / labelWidth);
       setNumberOfLabels(Math.max(numberOfLabelsFromWidth, 4));
+      setContainerOffsetLeft(ref.offsetLeft);
     }
   }, []);
 
   const markers = useMemo(() => {
     return times(numberOfLabels).map((_, i) => {
-      return <SparklineInteractiveMarkerDate key={i} getFormattedDate={getFormattedDate} />;
+      return (
+        <SparklineInteractiveMarkerDate
+          key={i}
+          containerOffsetLeft={containerOffsetLeft}
+          getFormattedDate={getFormattedDate}
+        />
+      );
     });
-  }, [getFormattedDate, numberOfLabels]);
+  }, [containerOffsetLeft, getFormattedDate, numberOfLabels]);
 
   return (
     <HStack

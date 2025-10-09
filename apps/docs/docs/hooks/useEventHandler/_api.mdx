@@ -1,6 +1,14 @@
 import { MDXArticle } from '@site/src/components/page/MDXArticle';
 
 <MDXArticle>
+:::warning
+Must be used within an EventHandlerProvider. The provider's configuration determines which events are handled and how they are processed. The provider config should include:
+
+- `actionMapping?: Record<string, string>` - Optional mapping of CDS actions to handler actions
+- `handlers?: Record<EventHandlerComponent, Record<string, (eventData: EventCallbackProps) => void>>` - Event handlers for components
+
+:::
+
 ## Parameters
 
 ```tsx
@@ -59,12 +67,5 @@ Returns a callback function that when invoked will trigger the event handling. T
   - The handler for the component doesn't exist
   - The action is not listed in eventConfig actions (when using eventConfig)
   - The params object is empty
-
-:::note
-Must be used within an EventHandlerProvider. The provider's configuration determines which events are handled and how they are processed. The provider config should include:
-
-- `actionMapping?: Record<string, string>` - Optional mapping of CDS actions to handler actions
-- `handlers?: Record<EventHandlerComponent, Record<string, (eventData: EventCallbackProps) => void>>` - Event handlers for components
-  :::
 
 </MDXArticle>

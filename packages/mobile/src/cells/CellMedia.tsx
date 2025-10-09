@@ -47,6 +47,10 @@ export type CellMediaProps = SharedProps &
     cache?: ImageURISource['cache'];
   };
 
+/**
+ * @deprecated This component will be removed in a future release. Pass media directly via the `media` prop.
+ * For example: `<Avatar src={...} />`, `<Icon name={...} />`, `<RemoteImage source={...} />`, or a Pictogram.
+ */
 export const CellMedia = memo(function CellMedia(props: CellMediaProps) {
   let size = mediaSize;
   let content = null;

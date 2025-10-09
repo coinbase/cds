@@ -8,6 +8,42 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.16.1 (10/9/2025 PST)
+
+#### 🐞 Fixes
+
+- Update createThemeCssVars to use String.prototype.replace instead of replaceAll. [[#90](https://github.com/coinbase/cds/pull/90)]
+
+## 8.16.0 (10/8/2025 PST)
+
+#### 🚀 Updates
+
+- New ListCell in layoutSpacing variants. [[#31](https://github.com/coinbase/cds/pull/31)]
+
+## 8.15.0 (10/8/2025 PST)
+
+### 🚀 Updates
+
+- Fix: drop unused useThemeContext. [[#86](https://github.com/coinbase/cds/pull/86)]
+
+## 8.14.2 (10/7/2025 PST)
+
+#### 🐞 Fixes
+
+- Feat: drop specified color for accordion divider. [[#75](https://github.com/coinbase/cds/pull/75)]
+
+## 8.14.1 (10/7/2025 PST)
+
+#### 🐞 Fixes
+
+- Fixed web responsive styles.
+
+## 8.14.0 (10/6/2025 PST)
+
+#### 🚀 Updates
+
+- Add display, style and className props to ThemeProvider and InvertedThemeProvider.
+
 ## 8.13.7 (10/6/2025 PST)
 
 This is an artificial version bump with no new change.

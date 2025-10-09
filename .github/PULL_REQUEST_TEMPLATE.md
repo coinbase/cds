@@ -2,8 +2,6 @@
 
 ## What changed? Why?
 
-### JIRA ticket
-
 ### Root cause (required for bugfixes)
 
 ## UI changes

@@ -6,9 +6,9 @@ import { sparklineInteractiveData } from '@cbhq/cds-common/internal/visualizatio
 import { useTabsContext } from '@cbhq/cds-common/tabs/TabsContext';
 import type { TabValue } from '@cbhq/cds-common/tabs/useTabs';
 import { useTheme } from '@cbhq/cds-web';
-import { CellMedia, ListCell } from '@cbhq/cds-web/cells';
+import { ListCell } from '@cbhq/cds-web/cells';
 import { Box, HStack, VStack } from '@cbhq/cds-web/layout';
-import { RemoteImage } from '@cbhq/cds-web/media';
+import { Avatar, RemoteImage } from '@cbhq/cds-web/media';
 import { RollingNumber } from '@cbhq/cds-web/numbers';
 import { SectionHeader } from '@cbhq/cds-web/section-header/SectionHeader';
 import {
@@ -1341,7 +1341,7 @@ const CompactLineChart = () => {
   }, []);
 
   return (
-    <VStack gap={2}>
+    <VStack>
       <ListCell
         description={assets.btc.symbol}
         detail={formatPrice(parseFloat(prices[0]))}
@@ -1364,7 +1364,8 @@ const CompactLineChart = () => {
             </LineChart>
           </Box>
         }
-        media={<CellMedia source={assets.btc.imageUrl} title="BTC" type="image" />}
+        layoutSpacing="hug"
+        media={<Avatar src={assets.btc.imageUrl} />}
         onClick={() => console.log('clicked')}
         subdetail="-4.55%"
         title={assets.btc.name}
@@ -1393,7 +1394,8 @@ const CompactLineChart = () => {
             </LineChart>
           </Box>
         }
-        media={<CellMedia source={assets.btc.imageUrl} title="BTC" type="image" />}
+        layoutSpacing="hug"
+        media={<Avatar src={assets.btc.imageUrl} />}
         onClick={() => console.log('clicked')}
         subdetail="-4.55%"
         title={assets.btc.name}
@@ -1422,7 +1424,8 @@ const CompactLineChart = () => {
             </LineChart>
           </Box>
         }
-        media={<CellMedia source={assets.btc.imageUrl} title="BTC" type="image" />}
+        layoutSpacing="hug"
+        media={<Avatar src={assets.btc.imageUrl} />}
         onClick={() => console.log('clicked')}
         subdetail="+0.25%"
         title={assets.btc.name}
@@ -1451,7 +1454,8 @@ const CompactLineChart = () => {
             </LineChart>
           </Box>
         }
-        media={<CellMedia source={assets.btc.imageUrl} title="BTC" type="image" />}
+        layoutSpacing="hug"
+        media={<Avatar src={assets.btc.imageUrl} />}
         onClick={() => console.log('clicked')}
         subdetail="-4.55%"
         title={assets.btc.name}

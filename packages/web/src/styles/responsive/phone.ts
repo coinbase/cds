@@ -173,7 +173,7 @@ export const dynamic: Record<keyof DynamicStyleProps, LinariaClassName> = {
   `,
   zIndex: css`
     @media ${media.phone} {
-      z-index: var(--zIndex);
+      z-index: var(--phone-zIndex);
     }
   `,
 } as const;

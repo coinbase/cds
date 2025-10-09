@@ -2,7 +2,7 @@ import React, { memo } from 'react';
 import type { ThemeVars } from '@cbhq/cds-common/core/theme';
 
 import { VStack } from '../layout/VStack';
-import { Text } from '../typography/Text';
+import { Text, type TextProps } from '../typography/Text';
 
 export type CellDetailVariant = 'foregroundMuted' | 'negative' | 'positive' | 'warning';
 export type CellDetailProps = {
@@ -18,7 +18,10 @@ export type CellDetailProps = {
   subdetail?: React.ReactNode;
   /** Variant color to apply to the subdetail text. */
   variant?: CellDetailVariant;
+  /** Specifies whether font should be scaled down automatically to fit given style constraints. */
   adjustsFontSizeToFit?: boolean;
+  /** Font to apply to the subdetail text. */
+  subdetailFont?: TextProps['font'];
 };
 
 const variantColorMap: Record<CellDetailVariant, ThemeVars.Color> = {
@@ -33,6 +36,7 @@ export const CellDetail = memo(function CellDetail({
   detail,
   subdetail,
   variant = 'foregroundMuted',
+  subdetailFont = 'label2',
 }: CellDetailProps) {
   return (
     <VStack alignContent="flex-end" alignItems="flex-end" justifyContent="center">
@@ -46,7 +50,7 @@ export const CellDetail = memo(function CellDetail({
         <Text
           adjustsFontSizeToFit={adjustsFontSizeToFit}
           color={variantColorMap[variant]}
-          font="body"
+          font={subdetailFont}
           numberOfLines={1}
         >
           {subdetail}

@@ -21,7 +21,7 @@ Returns a `RefMapApi<RefValue>` object with the following properties:
 - `getRef: (id: string) => RefValue | null` - Function to retrieve a ref by its ID
 - `registerRef: (id: string, ref: RefValue) => void` - Function to register a new ref with an ID
 
-:::note
+:::tip
 This hook is particularly useful when working with components that need to manage multiple refs, such as in tour guides where elements need to be highlighted, or in tab systems where tab panels need to be referenced. The hook maintains a stable reference to the ref map and its utility functions across renders.
 :::
 

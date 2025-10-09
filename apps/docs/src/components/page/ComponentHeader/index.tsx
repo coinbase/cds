@@ -134,7 +134,7 @@ export const ComponentHeader = memo(
             <Grid
               alignItems="center"
               columnGap={2}
-              gridTemplateColumns={{ base: '100px 1fr', phone: 'minmax(0, 1fr)' }}
+              gridTemplateColumns={{ base: '100px minmax(0, 1fr)', phone: 'minmax(0, 1fr)' }}
               overflow="hidden"
               rowGap={{ base: 1.5, phone: 1 }}
             >
@@ -176,7 +176,7 @@ export const ComponentHeader = memo(
                 <MetadataItem label="Figma">
                   <Text font="body">
                     <Link as={DocusaurusLink} target="_blank" to={figma}>
-                      View Figma
+                      View Figma (internal only)
                     </Link>
                   </Text>
                 </MetadataItem>

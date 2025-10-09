@@ -14,7 +14,11 @@ function BasicExample() {
 
   const [activeTab, setActiveTab] = useState(tabs[0]);
 
-  return <PeriodSelector activeTab={activeTab} onChange={setActiveTab} tabs={tabs} />;
+  return (
+    <Box overflow="hidden" maxWidth="100%">
+      <PeriodSelector activeTab={activeTab} onChange={setActiveTab} tabs={tabs} />
+    </Box>
+  );
 }
 ```
 
@@ -78,6 +82,8 @@ function ManyPeriodsExample() {
           .scrollContainer {
             scrollbar-width: none;
             overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            touch-action: pan-x;
 
             &::-webkit-scrollbar {
               display: none;
@@ -142,12 +148,14 @@ function LiveExample() {
   const activeBackground = useMemo(() => (isLive ? 'bgNegativeWash' : 'bgPrimaryWash'), [isLive]);
 
   return (
-    <PeriodSelector
-      activeBackground={activeBackground}
-      activeTab={activeTab}
-      onChange={setActiveTab}
-      tabs={tabs}
-    />
+    <Box overflow="hidden" maxWidth="100%">
+      <PeriodSelector
+        activeBackground={activeBackground}
+        activeTab={activeTab}
+        onChange={setActiveTab}
+        tabs={tabs}
+      />
+    </Box>
   );
 }
 ```
@@ -176,12 +184,14 @@ function LiveExample() {
   const activeBackground = useMemo(() => (isLive ? 'bgNegativeWash' : 'bgPrimaryWash'), [isLive]);
 
   return (
-    <PeriodSelector
-      activeBackground={activeBackground}
-      activeTab={activeTab}
-      onChange={setActiveTab}
-      tabs={tabs}
-    />
+    <Box overflow="hidden" maxWidth="100%">
+      <PeriodSelector
+        activeBackground={activeBackground}
+        activeTab={activeTab}
+        onChange={setActiveTab}
+        tabs={tabs}
+      />
+    </Box>
   );
 }
 ```
@@ -247,6 +257,8 @@ function ColorShiftingExample() {
         animate={{ '--chartActiveColor': activeForegroundColor }}
         style={{ '--chartActiveColor': activeForegroundColor }}
         transition={{ duration: 0.3 }}
+        width="100%"
+        overflow="hidden"
       >
         <PeriodSelector
           activeBackground={activeBackground}
@@ -257,40 +269,6 @@ function ColorShiftingExample() {
       </m.div>
       <Button onClick={toggleColor}>Toggle Color</Button>
     </VStack>
-  );
-}
-```
-
-### Within Section Header
-
-```jsx live
-function SectionHeaderExample() {
-  const tabs = [
-    { id: '1D', label: '1D' },
-    { id: '1W', label: '1W' },
-    { id: '1M', label: '1M' },
-  ];
-
-  const [activeTab, setActiveTab] = useState(tabs[0]);
-  return (
-    <SectionHeader
-      end={
-        <HStack alignItems="center">
-          <PeriodSelector
-            activeTab={activeTab}
-            onChange={setActiveTab}
-            tabs={tabs}
-            width="fit-content"
-          />
-        </HStack>
-      }
-      title={<Text font="label1">Portfolio Balance</Text>}
-      balance={
-        <Text font="display3" color="fgMuted">
-          $10,023.82
-        </Text>
-      }
-    />
   );
 }
 ```
@@ -323,6 +301,8 @@ function CustomizableAssetPriceExample() {
           .scrollContainer {
             scrollbar-width: none;
             overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            touch-action: pan-x;
 
             &::-webkit-scrollbar {
               display: none;
@@ -371,13 +351,30 @@ function CustomizableAssetPriceExample() {
     const [scrubIndex, setScrubIndex] = useState();
     const breakpoints = useBreakpoints();
 
-
     const formatPrice = useCallback((price: number) => {
       return new Intl.NumberFormat('en-US', {
         style: 'currency',
         currency: 'USD',
       }).format(price);
     }, []);
+
+    const formatYAxisPrice = useCallback((price: number) => {
+      if (breakpoints.isPhone) {
+        // Compact format for mobile: $45k, $1.2M, etc.
+        if (price >= 1000000) {
+          return `$${(price / 1000000).toFixed(1)}M`;
+        } else if (price >= 1000) {
+          return `$${(price / 1000).toFixed(0)}k`;
+        }
+        return `$${price.toFixed(0)}`;
+      }
+      return new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0,
+      }).format(price);
+    }, [breakpoints.isPhone]);
     const toggleShowYAxis = useCallback(() => setShowYAxis((show) => !show), []);
     const toggleShowXAxis = useCallback(() => setShowXAxis((show) => !show), []);
 
@@ -481,14 +478,14 @@ function CustomizableAssetPriceExample() {
         />
         <LineChart
           enableScrubbing
-          height={300}
+          height={{ base: 200, tablet: 250, desktop: 300 }}
           onScrubberPositionChange={setScrubIndex}
           series={seriesData}
           yAxis={{
             domainLimit: 'strict',
             showGrid: true,
-            tickLabelFormatter: formatPrice,
-            width: 80
+            tickLabelFormatter: formatYAxisPrice,
+            width: breakpoints.isPhone ? 50 : 80
           }}
           xAxis={{
             tickLabelFormatter: formatXAxisDate,

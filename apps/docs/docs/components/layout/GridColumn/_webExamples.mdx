@@ -1,6 +1,6 @@
 GridColumns can be used to explicitly place children of a [Grid](/components/layout/Grid) between specified grid lines (the vertical and horizontal lines that make up a Grid).
 
-:::note
+:::warning
 GridColumn will _only_ work as a direct descendent of a Grid component.
 :::
 
@@ -13,7 +13,7 @@ You can see these grid lines if you inspect a Grid in your Dev Tools and click t
 
 You can specify `colStart` and/or `colEnd` which represent the grid lines where the column will start and end, respectively, eg: `colStart={1} colEnd={3}` which will span 2 columns in the parent Grid. Or you can use `gridColumn` which is shorthand for each property separated by a `/`, eg: `gridColumn="1 / -1"` where `-1` is shorthand for the last grid line in the row.
 
-:::note
+:::tip
 Grid grid lines are `1` indexed, so the last grid line in the row will be `numberOfColumns + 1`
 :::
 
