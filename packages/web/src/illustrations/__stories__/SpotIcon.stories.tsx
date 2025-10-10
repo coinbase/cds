@@ -19,24 +19,9 @@ export const spotIcon = () => (
   </IllustrationExample>
 );
 
-// single sheet is too large for Percy, need to split up in chunks to stay under resource limit
-export const SpotIconSheet1 = getIllustrationSheet({
+// single sheet is too large for Percy, need to split up in chunks of 240 to stay under resource limit
+export const spotIconSheet1 = getIllustrationSheet({
   type: 'spotIcon',
   startIndex: 0,
-  endIndex: 120,
-});
-export const SpotIconSheet2 = getIllustrationSheet({
-  type: 'spotIcon',
-  startIndex: 120,
   endIndex: 240,
-});
-export const SpotIconSheet3 = getIllustrationSheet({
-  type: 'spotIcon',
-  startIndex: 240,
-  endIndex: 360,
-});
-export const SpotIconSheet4 = getIllustrationSheet({
-  type: 'spotIcon',
-  startIndex: 360,
-  endIndex: 480,
 });
