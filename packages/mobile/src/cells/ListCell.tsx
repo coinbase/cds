@@ -1,5 +1,5 @@
 import React, { memo, useMemo } from 'react';
-import type { StyleProp, TextStyle } from 'react-native';
+import type { StyleProp, TextStyle, ViewStyle } from 'react-native';
 import { compactListHeight, listHeight } from '@coinbase/cds-common/tokens/cell';
 
 import { VStack } from '../layout/VStack';
@@ -9,19 +9,18 @@ import { Cell, type CellBaseProps, type CellProps, type CellSpacing } from './Ce
 import { CellAccessory, type CellAccessoryType } from './CellAccessory';
 import { CellDetail, type CellDetailProps } from './CellDetail';
 
-export const hugInnerSpacing: CellSpacing = {
-  paddingX: 2 as const,
-  paddingY: 0.5 as const,
-  marginX: 0 as const,
-};
-// no padding outside of the pressable area
-export const hugOuterSpacing: CellSpacing = {
-  paddingX: 0 as const,
-  paddingY: 0 as const,
-  marginX: 0 as const,
-};
+export const hugInnerSpacing = {
+  paddingX: 2,
+  paddingY: 0.5,
+  marginX: 0,
+} as const satisfies CellSpacing;
 
-type CellStyles = NonNullable<CellBaseProps['styles']>;
+// no padding outside of the pressable area
+export const hugOuterSpacing = {
+  paddingX: 0,
+  paddingY: 0,
+  marginX: 0,
+} as const satisfies CellSpacing;
 
 export type ListCellBaseProps = CellDetailProps &
   Omit<CellBaseProps, 'accessory' | 'children'> & {
@@ -46,30 +45,26 @@ export type ListCellBaseProps = CellDetailProps &
      * Deprecated values: 'spacious' and 'compact'. Prefer 'hug'.
      * This prop will be removed in the next major release, new list cell will only have 'hug' spacing.
      *
-     * When 'spacious' is set, the cell will have the following behavior:
-     * 1. min-height is 80px
-     * 2. Effective padding is '16px 24px' with 8px padding around the pressable area
-     * 3. border radius is 8px for pressable area
-     * 4. Title always cap at 1 line when there is no description, cap at 2 lines when there is description
-     * 5. Description and subdetail have font 'body'
+     * When `spacingVariant="normal"`:
+     * 1. `min-height` is `80px`
+     * 2. `padding` is `'var(--space-2) var(--space-3)'`
+     * 3. `border-radius` is `'var(--borderRadius-200)'`
+     * 4. when there is a description, title's `numberOfLines={1}` otherwise title's `numberOfLines={2}`
+     * 5. description and subdetail have font `body`
      *
-     * When 'compact' is set, the cell will have the following behavior:
-     * 1. min-height is 40px
-     * 2. Effective padding is '16px 24px' with 8px padding around the pressable area
-     * 3. border radius is 8px for pressable area
-     * 4. Title always cap at 1 line when there is no description, cap at 2 lines when there is description
-     * 5. Description and subdetail have font 'body'
+     * When `spacingVariant="compact"`:
+     * 1. same as `spacingVariant="normal"`, except `min-height` is `40px`
      *
-     * When 'hug' is set, the cell will have the following behavior:
-     * 1. No min-height, height is determined by the content
-     * 2. Padding is '4px 16px', no extra padding around the pressable area
-     * 3. 0 border radius for pressable area
-     * 4. Title always cap at 2 lines
-     * 5. Description and subdetail have font 'label2'
+     * When `spacingVariant="condensed"`:
+     * 1. `min-height` is undefined
+     * 2. `padding` is `'var(--space-1) var(--space-2)'`
+     * 3. `border-radius` is `--borderRadius-0`
+     * 4. title's `numberOfLines={2}`
+     * 5. description and subdetail have font `label2`
      *
-     * @default 'spacious'
+     * @default 'normal'
      */
-    layoutSpacing?: 'spacious' | 'compact' | 'hug';
+    spacingVariant?: 'normal' | 'compact' | 'condensed';
     /** Description of content. Max 1 line (with title) or 2 lines (without), otherwise will truncate. */
     description?: React.ReactNode;
     /**
@@ -95,12 +90,16 @@ export type ListCellBaseProps = CellDetailProps &
     /** Title of content. Max 1 line (with description) or 2 lines (without), otherwise will truncate. */
     title?: React.ReactNode;
     /** Styles for the components */
-    styles?: Pick<
-      CellStyles,
-      'root' | 'media' | 'intermediary' | 'end' | 'accessory' | 'contentContainer' | 'pressable'
-    > & {
-      mainContent?: CellStyles['topContent'];
-      helperText?: CellStyles['bottomContent'];
+    styles?: {
+      root?: StyleProp<ViewStyle>;
+      media?: StyleProp<ViewStyle>;
+      intermediary?: StyleProp<ViewStyle>;
+      end?: StyleProp<ViewStyle>;
+      accessory?: StyleProp<ViewStyle>;
+      contentContainer?: StyleProp<ViewStyle>;
+      pressable?: StyleProp<ViewStyle>;
+      mainContent?: StyleProp<ViewStyle>;
+      helperText?: StyleProp<ViewStyle>;
       title?: StyleProp<TextStyle>;
       description?: StyleProp<TextStyle>;
     };
