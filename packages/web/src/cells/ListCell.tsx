@@ -55,7 +55,7 @@ export type ListCellBaseProps = Polymorphic.ExtendableProps<
     compact?: boolean;
     /**
      * Layout variant configuration.
-     * Deprecated values: 'compact'. Prefer 'condensed'.
+     * Deprecated value: 'compact'. Prefer 'condensed'.
      *
      * When `spacingVariant="normal"`:
      * 1. `min-height` is `80px`
