@@ -1,4 +1,5 @@
 import React, { forwardRef, memo, useCallback, useMemo } from 'react';
+import type { KeyboardEvent } from 'react';
 import useMeasure from 'react-use-measure';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import { useMergeRefs } from '@coinbase/cds-common/hooks/useMergeRefs';
@@ -92,11 +93,11 @@ const TabsComponent = memo(
     ) => {
       const api = useTabs<T>({ tabs, activeTab, disabled, onChange });
 
-      const [tabsContainerRef, tabsContainerRect] = useMeasure({
+      const [tabsContainerRectRef, tabsContainerRect] = useMeasure({
         debounce: 20,
       });
 
-      const mergedContainerRefs = useMergeRefs(ref, tabsContainerRef);
+      const mergedContainerRefs = useMergeRefs(ref, tabsContainerRectRef);
 
       const refMap = useRefMap<HTMLElement>();
 
@@ -111,6 +112,77 @@ const TabsComponent = memo(
           height: activeTabRef.offsetHeight,
         };
       }, [activeTab, refMap, tabsContainerRect.width]);
+
+      const handleTabsContainerKeyDown = useCallback(
+        (e: KeyboardEvent<HTMLElement>) => {
+          if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+
+          // Find which tab is currently focused
+          const focusedElement = document.activeElement;
+          if (!focusedElement) return;
+
+          // Find the focused tab's container
+          let focusedTabId: T | null = null;
+          for (const tab of tabs) {
+            const tabRef = refMap.getRef(tab.id);
+            if (tabRef && tabRef.contains(focusedElement)) {
+              focusedTabId = tab.id;
+              break;
+            }
+          }
+
+          if (!focusedTabId) return;
+
+          const focusedTabIndex = tabs.findIndex((tab) => tab.id === focusedTabId);
+          if (focusedTabIndex === -1) return;
+
+          let targetIndex: number | null = null;
+
+          if (e.key === 'ArrowRight') {
+            e.preventDefault();
+            // Find next enabled tab
+            for (let i = focusedTabIndex + 1; i < tabs.length; i++) {
+              if (!tabs[i].disabled) {
+                targetIndex = i;
+                break;
+              }
+            }
+          } else if (e.key === 'ArrowLeft') {
+            e.preventDefault();
+            // Find previous enabled tab
+            for (let i = focusedTabIndex - 1; i >= 0; i--) {
+              if (!tabs[i].disabled) {
+                targetIndex = i;
+                break;
+              }
+            }
+          }
+
+          if (targetIndex !== null) {
+            const targetTab = tabs[targetIndex];
+            const targetRef = refMap.getRef(targetTab.id);
+            // Focus the first focusable element within the target tab
+            const focusableElement = targetRef?.querySelector<HTMLElement>(
+              'button, [tabindex]:not([tabindex="-1"])',
+            );
+            focusableElement?.focus();
+          }
+        },
+        [tabs, refMap],
+      );
+
+      const tabComponents = useMemo(
+        () =>
+          tabs.map(({ id, Component: CustomTabComponent, disabled: tabDisabled, ...props }) => {
+            const RenderedTab = CustomTabComponent ?? TabComponent;
+            return (
+              <TabContainer key={id} id={id} registerRef={refMap.registerRef}>
+                <RenderedTab disabled={tabDisabled} id={id} {...props} />
+              </TabContainer>
+            );
+          }),
+        [tabs, TabComponent, refMap.registerRef],
+      );
 
       const containerStyle = useMemo(
         () => ({ opacity: disabled ? accessibleOpacityDisabled : 1, ...style }),
@@ -130,6 +202,7 @@ const TabsComponent = memo(
       return (
         <HStack
           ref={mergedContainerRefs}
+          onKeyDown={handleTabsContainerKeyDown}
           position={position}
           role={role}
           style={containerStyle}
