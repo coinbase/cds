@@ -1,6 +1,6 @@
 {
   "executor": "sync-illustrations",
-  "lastUpdated": "2025-09-30T20:14:15.011Z",
+  "lastUpdated": "2025-10-10T15:39:11.748Z",
   "items": {
     "2:33979": {
       "type": "heroSquare",
@@ -290,7 +290,7 @@
       "height": 240,
       "description": "chain, blockchain, hexagon, blue, yellow, sequence",
       "createdAt": "2022-08-05T05:36:48.584Z",
-      "lastUpdated": "2025-06-25T20:21:40.424Z",
+      "lastUpdated": "2025-10-01T20:23:20.487Z",
       "outputs": {
         "svgLight": "./heroSquare/svg/light/blockchain-3.svg",
         "svgDark": "./heroSquare/svg/dark/blockchain-3.svg",
@@ -2010,7 +2010,7 @@
       "height": 240,
       "description": "clipboard, list, checkmark, confirmed, on, waiting, notify, document, paper, details, success state",
       "createdAt": "2022-08-05T05:37:08.694Z",
-      "lastUpdated": "2025-06-25T20:22:12.993Z",
+      "lastUpdated": "2025-10-02T18:32:56.075Z",
       "outputs": {
         "svgLight": "./heroSquare/svg/light/onTheList-4.svg",
         "svgDark": "./heroSquare/svg/dark/onTheList-4.svg",
@@ -14470,7 +14470,7 @@
       "height": 240,
       "description": "general, generic, error, warning, confirmation, negative, animation",
       "createdAt": "2023-01-18T02:30:49.620Z",
-      "lastUpdated": "2025-07-28T07:25:42.966Z",
+      "lastUpdated": "2025-10-01T15:53:03.962Z",
       "outputs": {
         "svgLight": "./heroSquare/svg/light/bigWarning-5.svg",
         "svgDark": "./heroSquare/svg/dark/bigWarning-5.svg",
@@ -27165,42 +27165,42 @@
     "21031:360": {
       "type": "heroSquare",
       "name": "instantUnstakingClock",
-      "hash": "kH4chaQ101QDEWqRS1HXbQos2HmfuUChjMF77ZgQ5ys=",
+      "hash": "4n4RtUNGGSTMGblsiEJ5hFKI9N52e2MUo4a49ZZFc3E=",
       "width": 240,
       "height": 240,
       "description": "",
       "createdAt": "2025-09-17T16:10:05.961Z",
-      "lastUpdated": "2025-09-17T16:10:05.961Z",
+      "lastUpdated": "2025-10-01T21:35:29.718Z",
       "outputs": {
-        "svgLight": "./heroSquare/svg/light/instantUnstakingClock-0.svg",
-        "svgDark": "./heroSquare/svg/dark/instantUnstakingClock-0.svg",
-        "svgThemed": "./heroSquare/svg/themeable/instantUnstakingClock-0.svg",
-        "svgJsLight": "./heroSquare/svgJs/light/instantUnstakingClock-0.js",
-        "svgJsDark": "./heroSquare/svgJs/dark/instantUnstakingClock-0.js",
-        "pngLight": "./heroSquare/png/light/instantUnstakingClock-0.png",
-        "pngDark": "./heroSquare/png/dark/instantUnstakingClock-0.png"
+        "svgLight": "./heroSquare/svg/light/instantUnstakingClock-1.svg",
+        "svgDark": "./heroSquare/svg/dark/instantUnstakingClock-1.svg",
+        "svgThemed": "./heroSquare/svg/themeable/instantUnstakingClock-1.svg",
+        "svgJsLight": "./heroSquare/svgJs/light/instantUnstakingClock-1.js",
+        "svgJsDark": "./heroSquare/svgJs/dark/instantUnstakingClock-1.js",
+        "pngLight": "./heroSquare/png/light/instantUnstakingClock-1.png",
+        "pngDark": "./heroSquare/png/dark/instantUnstakingClock-1.png"
       },
-      "version": 0
+      "version": 1
     },
     "21031:361": {
       "type": "pictogram",
       "name": "instantUnstakingClock",
-      "hash": "xSdktEFpVWUJLmMGC6HttvgNFQRRguhmFscj8fgF984=",
+      "hash": "6ptn4B576faHB9KuyzFTbxVlR0SOmgDKA2bna2GhhZ0=",
       "width": 48,
       "height": 48,
       "description": "",
       "createdAt": "2025-09-17T16:10:05.978Z",
-      "lastUpdated": "2025-09-17T16:10:05.978Z",
+      "lastUpdated": "2025-10-01T21:43:51.440Z",
       "outputs": {
-        "svgLight": "./pictogram/svg/light/instantUnstakingClock-0.svg",
-        "svgDark": "./pictogram/svg/dark/instantUnstakingClock-0.svg",
-        "svgThemed": "./pictogram/svg/themeable/instantUnstakingClock-0.svg",
-        "svgJsLight": "./pictogram/svgJs/light/instantUnstakingClock-0.js",
-        "svgJsDark": "./pictogram/svgJs/dark/instantUnstakingClock-0.js",
-        "pngLight": "./pictogram/png/light/instantUnstakingClock-0.png",
-        "pngDark": "./pictogram/png/dark/instantUnstakingClock-0.png"
+        "svgLight": "./pictogram/svg/light/instantUnstakingClock-1.svg",
+        "svgDark": "./pictogram/svg/dark/instantUnstakingClock-1.svg",
+        "svgThemed": "./pictogram/svg/themeable/instantUnstakingClock-1.svg",
+        "svgJsLight": "./pictogram/svgJs/light/instantUnstakingClock-1.js",
+        "svgJsDark": "./pictogram/svgJs/dark/instantUnstakingClock-1.js",
+        "pngLight": "./pictogram/png/light/instantUnstakingClock-1.png",
+        "pngDark": "./pictogram/png/dark/instantUnstakingClock-1.png"
       },
-      "version": 0
+      "version": 1
     },
     "21031:362": {
       "type": "spotSquare",
@@ -27639,6 +27639,86 @@
         "svgJsDark": "./pictogram/svgJs/dark/tokenSales-0.js",
         "pngLight": "./pictogram/png/light/tokenSales-0.png",
         "pngDark": "./pictogram/png/dark/tokenSales-0.png"
+      },
+      "version": 0
+    },
+    "21709:1890": {
+      "type": "pictogram",
+      "name": "coinbaseOneUnlimitedRewards",
+      "hash": "C8cDTjhD0XnJqhxzZgLeCqnIGXoqG97qwv3R9wGrQW4=",
+      "width": 64,
+      "height": 64,
+      "description": "usdc, USDCoin, coin, USD, coins, earn, interest, dollar, rewards, awards",
+      "createdAt": "2025-10-01T21:35:29.705Z",
+      "lastUpdated": "2025-10-10T01:14:12.160Z",
+      "outputs": {
+        "svgLight": "./pictogram/svg/light/coinbaseOneUnlimitedRewards-0.svg",
+        "svgDark": "./pictogram/svg/dark/coinbaseOneUnlimitedRewards-0.svg",
+        "svgThemed": "./pictogram/svg/themeable/coinbaseOneUnlimitedRewards-0.svg",
+        "svgJsLight": "./pictogram/svgJs/light/coinbaseOneUnlimitedRewards-0.js",
+        "svgJsDark": "./pictogram/svgJs/dark/coinbaseOneUnlimitedRewards-0.js",
+        "pngLight": "./pictogram/png/light/coinbaseOneUnlimitedRewards-0.png",
+        "pngDark": "./pictogram/png/dark/coinbaseOneUnlimitedRewards-0.png"
+      },
+      "version": 0
+    },
+    "21805:9": {
+      "type": "spotSquare",
+      "name": "baseCreatorCoin",
+      "hash": "l3WAFBVVllhntpBBJyPKZF8HN+RBbu/X4NR7ftvtWqw=",
+      "width": 96,
+      "height": 96,
+      "description": "",
+      "createdAt": "2025-10-08T16:39:31.620Z",
+      "lastUpdated": "2025-10-08T16:39:31.620Z",
+      "outputs": {
+        "svgLight": "./spotSquare/svg/light/baseCreatorCoin-0.svg",
+        "svgDark": "./spotSquare/svg/dark/baseCreatorCoin-0.svg",
+        "svgThemed": "./spotSquare/svg/themeable/baseCreatorCoin-0.svg",
+        "svgJsLight": "./spotSquare/svgJs/light/baseCreatorCoin-0.js",
+        "svgJsDark": "./spotSquare/svgJs/dark/baseCreatorCoin-0.js",
+        "pngLight": "./spotSquare/png/light/baseCreatorCoin-0.png",
+        "pngDark": "./spotSquare/png/dark/baseCreatorCoin-0.png"
+      },
+      "version": 0
+    },
+    "21926:80": {
+      "type": "spotSquare",
+      "name": "coinbaseUnlockOffers",
+      "hash": "nf5dvR35tuj62FSol0XZ8PSyYstc8Zvh+CfJxwMmgzg=",
+      "width": 96,
+      "height": 96,
+      "description": "",
+      "createdAt": "2025-10-08T16:39:31.613Z",
+      "lastUpdated": "2025-10-08T16:39:31.613Z",
+      "outputs": {
+        "svgLight": "./spotSquare/svg/light/coinbaseUnlockOffers-0.svg",
+        "svgDark": "./spotSquare/svg/dark/coinbaseUnlockOffers-0.svg",
+        "svgThemed": "./spotSquare/svg/themeable/coinbaseUnlockOffers-0.svg",
+        "svgJsLight": "./spotSquare/svgJs/light/coinbaseUnlockOffers-0.js",
+        "svgJsDark": "./spotSquare/svgJs/dark/coinbaseUnlockOffers-0.js",
+        "pngLight": "./spotSquare/png/light/coinbaseUnlockOffers-0.png",
+        "pngDark": "./spotSquare/png/dark/coinbaseUnlockOffers-0.png"
+      },
+      "version": 0
+    },
+    "21926:81": {
+      "type": "pictogram",
+      "name": "coinbaseUnlockOffers",
+      "hash": "ObZNheSgFaIO5PUUHsH8QpW920LikRgQfMV81HLy6hw=",
+      "width": 48,
+      "height": 48,
+      "description": "",
+      "createdAt": "2025-10-08T16:39:31.604Z",
+      "lastUpdated": "2025-10-08T16:39:31.604Z",
+      "outputs": {
+        "svgLight": "./pictogram/svg/light/coinbaseUnlockOffers-0.svg",
+        "svgDark": "./pictogram/svg/dark/coinbaseUnlockOffers-0.svg",
+        "svgThemed": "./pictogram/svg/themeable/coinbaseUnlockOffers-0.svg",
+        "svgJsLight": "./pictogram/svgJs/light/coinbaseUnlockOffers-0.js",
+        "svgJsDark": "./pictogram/svgJs/dark/coinbaseUnlockOffers-0.js",
+        "pngLight": "./pictogram/png/light/coinbaseUnlockOffers-0.png",
+        "pngDark": "./pictogram/png/dark/coinbaseUnlockOffers-0.png"
       },
       "version": 0
     }
