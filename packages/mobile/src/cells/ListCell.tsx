@@ -41,7 +41,7 @@ export type ListCellBaseProps = CellDetailProps &
      */
     compact?: boolean;
     /**
-     * Layout variant configuration.
+     * Spacing variant configuration.
      * Deprecated value: 'compact'. Prefer 'condensed'.
      *
      * When `spacingVariant="normal"`:

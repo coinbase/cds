@@ -54,7 +54,7 @@ export type ListCellBaseProps = Polymorphic.ExtendableProps<
      */
     compact?: boolean;
     /**
-     * Layout variant configuration.
+     * Spacing variant configuration.
      * Deprecated value: 'compact'. Prefer 'condensed'.
      *
      * When `spacingVariant="normal"`:
