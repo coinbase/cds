@@ -6,7 +6,7 @@ import type { Polymorphic } from '../core/polymorphism';
 import { cx } from '../cx';
 import { Box } from '../layout/Box';
 import { VStack } from '../layout/VStack';
-import { Text, type TextProps } from '../typography/Text';
+import { Text } from '../typography/Text';
 
 import { Cell, type CellBaseProps, type CellSpacing } from './Cell';
 import { CellAccessory, type CellAccessoryType } from './CellAccessory';
@@ -129,13 +129,6 @@ export type ListCellBaseProps = Polymorphic.ExtendableProps<
       title?: React.CSSProperties;
       description?: React.CSSProperties;
     };
-    /** Props to be spreaded into internal components */
-    props?: {
-      titleText?: TextProps<'div'>;
-      descriptionText?: TextProps<'div'>;
-      detailText?: TextProps<'div'>;
-      subdetailText?: TextProps<'div'>;
-    };
   }
 >;
 
@@ -179,7 +172,6 @@ export const ListCell: ListCellComponent = memo(
         classNames,
         styles,
         style,
-        props: propsProp,
         ...props
       }: ListCellProps<AsComponent>,
       ref?: Polymorphic.Ref<AsComponent>,
@@ -206,29 +198,14 @@ export const ListCell: ListCellComponent = memo(
           return (
             <CellDetail
               detail={detail}
-              props={{
-                detailText: propsProp?.detailText,
-                subdetailText: {
-                  font: spacingVariant === 'condensed' ? 'label2' : 'body',
-                  ...propsProp?.subdetailText,
-                },
-              }}
               subdetail={subdetail}
+              subdetailFont={spacingVariant === 'condensed' ? 'label2' : 'body'}
               variant={variant}
             />
           );
         }
         return undefined;
-      }, [
-        endProp,
-        action,
-        detail,
-        subdetail,
-        propsProp?.detailText,
-        propsProp?.subdetailText,
-        spacingVariant,
-        variant,
-      ]);
+      }, [endProp, action, detail, subdetail, variant, spacingVariant]);
 
       return (
         <Cell

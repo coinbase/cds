@@ -103,13 +103,6 @@ export type ListCellBaseProps = CellDetailProps &
       title?: StyleProp<TextStyle>;
       description?: StyleProp<TextStyle>;
     };
-    /** Props to be spreaded into internal components */
-    props?: {
-      titleText?: TextProps;
-      descriptionText?: TextProps;
-      detailText?: TextProps;
-      subdetailText?: TextProps;
-    };
   };
 
 export type ListCellProps = ListCellBaseProps & Omit<CellProps, 'accessory' | 'children'>;
@@ -140,7 +133,6 @@ export const ListCell = memo(function ListCell({
   spacingVariant = compact ? 'compact' : 'normal',
   style,
   styles,
-  props: propsProp,
   ...props
 }: ListCellProps) {
   const minHeight =
@@ -160,29 +152,12 @@ export const ListCell = memo(function ListCell({
         <CellDetail
           adjustsFontSizeToFit={!!detailWidth}
           detail={detail}
-          props={{
-            detailText: propsProp?.detailText,
-            subdetailText: {
-              font: spacingVariant === 'condensed' ? 'label2' : 'body',
-              ...propsProp?.subdetailText,
-            },
-          }}
           subdetail={subdetail}
+          subdetailFont={spacingVariant === 'condensed' ? 'label2' : 'body'}
           variant={variant}
         />
       )),
-    [
-      endProp,
-      action,
-      hasDetails,
-      detailWidth,
-      detail,
-      propsProp?.detailText,
-      propsProp?.subdetailText,
-      spacingVariant,
-      subdetail,
-      variant,
-    ],
+    [endProp, action, hasDetails, detail, subdetail, detailWidth, spacingVariant, variant],
   );
 
   return (
@@ -238,7 +213,6 @@ export const ListCell = memo(function ListCell({
                     : 2
             }
             style={styles?.title}
-            {...propsProp?.titleText}
           >
             {title}
           </Text>
@@ -251,7 +225,6 @@ export const ListCell = memo(function ListCell({
             font={spacingVariant === 'condensed' ? 'label2' : 'body'}
             numberOfLines={multiline ? undefined : title ? 1 : 2}
             style={styles?.description}
-            {...propsProp?.descriptionText}
           >
             {description}
           </Text>

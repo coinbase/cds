@@ -20,11 +20,8 @@ export type CellDetailProps = {
   variant?: CellDetailVariant;
   /** Specifies whether font should be scaled down automatically to fit given style constraints. */
   adjustsFontSizeToFit?: boolean;
-  /** Props to be spreaded into internal components */
-  props?: {
-    detailText?: TextProps;
-    subdetailText?: TextProps;
-  };
+  /** Font to apply to the subdetail text. */
+  subdetailFont?: TextProps['font'];
 };
 
 const variantColorMap: Record<CellDetailVariant, ThemeVars.Color> = {
@@ -39,17 +36,12 @@ export const CellDetail = memo(function CellDetail({
   detail,
   subdetail,
   variant = 'foregroundMuted',
-  props: propsProp,
+  subdetailFont = 'label2',
 }: CellDetailProps) {
   return (
     <VStack alignContent="flex-end" alignItems="flex-end" justifyContent="center">
       {!!detail && (
-        <Text
-          adjustsFontSizeToFit={adjustsFontSizeToFit}
-          font="body"
-          numberOfLines={1}
-          {...propsProp?.detailText}
-        >
+        <Text adjustsFontSizeToFit={adjustsFontSizeToFit} font="body" numberOfLines={1}>
           {detail}
         </Text>
       )}
@@ -58,8 +50,8 @@ export const CellDetail = memo(function CellDetail({
         <Text
           adjustsFontSizeToFit={adjustsFontSizeToFit}
           color={variantColorMap[variant]}
+          font={subdetailFont}
           numberOfLines={1}
-          {...propsProp?.subdetailText}
         >
           {subdetail}
         </Text>
