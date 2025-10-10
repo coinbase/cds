@@ -895,8 +895,8 @@ const svgJsMap = {
     dark: () => require('../svgJs/dark/innovation-2.js').content,
   },
   instantUnstakingClock: {
-    light: () => require('../svgJs/light/instantUnstakingClock-0.js').content,
-    dark: () => require('../svgJs/dark/instantUnstakingClock-0.js').content,
+    light: () => require('../svgJs/light/instantUnstakingClock-1.js').content,
+    dark: () => require('../svgJs/dark/instantUnstakingClock-1.js').content,
   },
   insufficientBalance: {
     light: () => require('../svgJs/light/insufficientBalance-5.js').content,

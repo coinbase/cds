@@ -8,6 +8,28 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+##### ⭐️ Added (4)
+
+###### Pictogram (2)
+
+- coinbaseUnlockOffers
+- coinbaseOneUnlimitedRewards
+
+###### SpotSquare (2)
+
+- coinbaseUnlockOffers
+- baseCreatorCoin
+
+##### ⭐️ Updated (2)
+
+###### Pictogram (1)
+
+- instantUnstakingClock
+
+###### HeroSquare (1)
+
+- instantUnstakingClock
+
 ## 4.23.1 (10/6/2025 PST)
 
 This is an artificial version bump with no new change.

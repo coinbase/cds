@@ -259,6 +259,8 @@ const versionMap: Record<SpotSquareName, number> = {
   baseRewardPlate: 0,
   baseRewardSun: 0,
   baseRewardTrophyStars: 0,
+  coinbaseUnlockOffers: 0,
+  baseCreatorCoin: 0,
 };
 
 export default versionMap;
