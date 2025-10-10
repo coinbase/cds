@@ -838,7 +838,7 @@ const SpacingVariant = () => (
     {/* Preferred (new design) */}
     <ListCell
       accessory="arrow"
-      description="New design (condensed)"
+      description="New design"
       detail="$12,345.00"
       intermediary={<Icon name="chartLine" />}
       media={<Avatar src={assets.eth.imageUrl} />}
@@ -864,7 +864,6 @@ const SpacingVariant = () => (
     />
     <ListCell
       accessory="arrow"
-      description="Deprecated (use condensed)"
       detail="$12,345.00"
       intermediary={<Icon name="chartLine" />}
       media={<Avatar src={assets.eth.imageUrl} />}

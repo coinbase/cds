@@ -42,8 +42,7 @@ export type ListCellBaseProps = CellDetailProps &
     compact?: boolean;
     /**
      * Layout variant configuration.
-     * Deprecated values: 'normal' and 'compact'. Prefer 'condensed'.
-     * This prop will be removed in the next major release, new list cell will only have 'condensed' spacing.
+     * Deprecated values: 'compact'. Prefer 'condensed'.
      *
      * When `spacingVariant="normal"`:
      * 1. `min-height` is `80px`

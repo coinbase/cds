@@ -23,7 +23,7 @@ The `title`, `description`, `detail` and `subdetail` props are only intended to 
 ```
 
 :::note
-Prefer `spacingVariant="condensed"` for the new ListCell design. The `normal` and `compact` values exist for backward compatibility and may be removed in a future major release.
+Prefer `spacingVariant="condensed"` for the new ListCell design. The `compact` may be removed in a future major release.
 :::
 
 ```tsx live
@@ -56,7 +56,7 @@ Prefer `spacingVariant="condensed"` for the new ListCell design. The `normal` an
     spacingVariant="normal"
     media={<Avatar src={assets.eth.imageUrl} size="m" />}
     onClick={console.log}
-    title="Normal (deprecated)"
+    title="Normal"
     variant="positive"
   />
 </VStack>
