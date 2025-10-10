@@ -113,7 +113,7 @@ const SegmentedTabComponent = memo(
       return (
         <Pressable
           ref={ref}
-          aria-checked={isActive}
+          aria-selected={isActive}
           className={cx(
             insetFocusRingCss,
             buttonCss,
@@ -130,7 +130,8 @@ const SegmentedTabComponent = memo(
           id={id}
           lineHeight={lineHeight}
           onClick={handlePress}
-          role="radio"
+          role="tab"
+          tabIndex={isActive || !activeTab ? 0 : -1}
           textAlign={textAlign}
           textTransform={textTransform}
           type="button"

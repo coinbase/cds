@@ -115,7 +115,7 @@ const TabsComponent = memo(
 
       const handleTabsContainerKeyDown = useCallback(
         (e: KeyboardEvent<HTMLElement>) => {
-          const keyEventsToHandle = ['ArrowRight', 'ArrowLeft', 'Home', 'End', 'Tab'];
+          const keyEventsToHandle = ['ArrowRight', 'ArrowLeft', 'Home', 'End'];
           if (!keyEventsToHandle.includes(e.key)) return;
 
           // Find which tab is currently focused
