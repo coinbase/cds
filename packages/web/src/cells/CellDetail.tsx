@@ -20,8 +20,11 @@ export type CellDetailProps = {
   subdetail?: React.ReactNode;
   /** Variant color to apply to the subdetail text. */
   variant?: CellDetailVariant;
-  /** Font to apply to the subdetail text. */
-  subdetailFont?: TextProps<'div'>['font'];
+  /** Props to be spreaded into internal components */
+  props?: {
+    detailText?: TextProps<'div'>;
+    subdetailText?: TextProps<'div'>;
+  };
 };
 
 const variantColorMap: Record<CellDetailVariant, ThemeVars.Color> = {
@@ -35,12 +38,19 @@ export const CellDetail = memo(function CellDetail({
   detail,
   subdetail,
   variant = 'foregroundMuted',
-  subdetailFont = 'label2',
+  props: propsProp,
 }: CellDetailProps) {
   return (
     <>
       {!!detail && (
-        <Text as="div" display="block" font="body" overflow="truncate" textAlign="end">
+        <Text
+          as="div"
+          display="block"
+          font="body"
+          overflow="truncate"
+          textAlign="end"
+          {...propsProp?.detailText}
+        >
           {detail}
         </Text>
       )}
@@ -50,9 +60,9 @@ export const CellDetail = memo(function CellDetail({
           as="div"
           color={variantColorMap[variant]}
           display="block"
-          font={subdetailFont}
           overflow="truncate"
           textAlign="end"
+          {...propsProp?.subdetailText}
         >
           {subdetail}
         </Text>
