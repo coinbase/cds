@@ -1,4 +1,4 @@
-import { memo, useCallback, useMemo } from 'react';
+import { forwardRef, memo, useCallback, useMemo } from 'react';
 import { selectCellSpacingConfig } from '@coinbase/cds-common/tokens/select';
 import { css } from '@linaria/core';
 
@@ -64,26 +64,29 @@ const multilineTextCss = css`
   white-space: normal;
 `;
 
-function DefaultSelectOptionComponent<Type extends SelectType, T extends string = string>({
-  value,
-  label,
-  onClick,
-  disabled,
-  selected,
-  compact,
-  description,
-  multiline,
-  className,
-  accessory,
-  media,
-  detail,
-  type,
-  accessibilityRole = 'option',
-  background = type === 'single' && selected && value !== null ? 'bgAlternate' : 'bg',
-  styles,
-  classNames,
-  ...props
-}: SelectOptionProps<Type, T>) {
+const DefaultSelectOptionComponent = <Type extends SelectType, T extends string = string>(
+  {
+    value,
+    label,
+    onClick,
+    disabled,
+    selected,
+    compact,
+    description,
+    multiline,
+    className,
+    accessory,
+    media,
+    detail,
+    type,
+    accessibilityRole = 'option',
+    background = type === 'single' && selected && value !== null ? 'bgAlternate' : 'bg',
+    styles,
+    classNames,
+    ...props
+  }: SelectOptionProps<Type, T>,
+  ref: React.Ref<HTMLButtonElement>,
+) => {
   const labelNode = useMemo(
     () =>
       typeof label === 'string' ? (
@@ -127,6 +130,7 @@ function DefaultSelectOptionComponent<Type extends SelectType, T extends string 
 
   return (
     <Pressable
+      ref={ref}
       // TO DO: Do we need this Pressable? Cell can render as a Pressable when passed onClick...
       noScaleOnPress
       // On web, the option role doesn't work well with ara-checked and screen readers
@@ -163,11 +167,11 @@ function DefaultSelectOptionComponent<Type extends SelectType, T extends string 
       </Cell>
     </Pressable>
   );
-}
+};
 
-export const DefaultSelectOption = memo(DefaultSelectOptionComponent) as <
+export const DefaultSelectOption = memo(forwardRef(DefaultSelectOptionComponent)) as <
   Type extends SelectType,
   T extends string = string,
 >(
-  props: SelectOptionProps<Type, T>,
+  props: SelectOptionProps<Type, T> & { ref?: React.Ref<HTMLButtonElement> },
 ) => ReturnType<SelectOptionComponent<Type, T>>;

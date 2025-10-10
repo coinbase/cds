@@ -38,7 +38,7 @@ const variantColor: Record<string, ThemeVars.Color> = {
   secondary: 'fgMuted',
 };
 
-function DefaultSelectControlComponent<Type extends SelectType, T extends string = string>(
+const DefaultSelectControlComponent = <Type extends SelectType, T extends string = string>(
   {
     type,
     options,
@@ -65,7 +65,7 @@ function DefaultSelectControlComponent<Type extends SelectType, T extends string
     ...props
   }: SelectControlProps<Type, T>,
   ref: React.Ref<HTMLElement>,
-) {
+) => {
   const shouldShowCompactLabel = compact && label;
   const isMultiSelect = type === 'multi';
   const hasValue = value !== null && value.length > 0;
@@ -334,7 +334,7 @@ function DefaultSelectControlComponent<Type extends SelectType, T extends string
       {...props}
     />
   );
-}
+};
 
 export const DefaultSelectControl = memo(forwardRef(DefaultSelectControlComponent)) as <
   Type extends SelectType,
