@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 4.24.0 (10/10/2025 PST)
+
+#### 🚀 Updates
+
+- Feat: Publish illustrations 2025-10-10. [[#94](https://github.com/coinbase/cds/pull/94)]
+
 ##### ⭐️ Added (4)
 
 ###### Pictogram (2)
@@ -38,36 +44,36 @@ This is an artificial version bump with no new change.
 
 - Feat: Publish illustrations 09/30/2025. [[#38](https://github.com/coinbase/cds/pull/38)]
 
-### 🚀 Added
+##### ⭐️ Added (8)
 
-#### Spot Rectangle
+###### Spot Rectangle (4)
 
 - calendar
 - coinGateway
 - graphChartTrading
 - tokenSales
 
-#### Hero Square
+###### Hero Square (2)
 
 - graphChartTrading
 - stakingMissedReturnsUsdc
 
-#### Pictogram
+###### Pictogram (2)
 
 - coinbaseLogoAdvancedBrand
 - tokenSales
 
-### 🐞 Updated
+##### ⭐️ Updated (3)
 
-#### Hero Square
+###### Hero Square (1)
 
 - baseConnectLarge
 
-#### Pictogram
+###### Pictogram (1)
 
 - futures
 
-#### Spot Rectangle
+###### Spot Rectangle (1)
 
 - fiatInterest
 
@@ -83,19 +89,17 @@ This is an artificial version bump with no new change.
 
 - Feat: Publish illustrations 09/25/2025. [[#17](https://github.com/coinbase/cds/pull/20)]
 
-### 🚀 Added
+##### ⭐️ Added (3)
 
-Generated with `yarn nx run illustrations:sync-illustrations`
-
-#### Pictogram
+###### Pictogram (1)
 
 - coinbaseOneProductInvestWeekly
 
-#### Spot Icon
+###### Spot Icon (1)
 
 - coinbaseOneProductInvestWeekly
 
-#### Spot Rectangle
+###### Spot Rectangle (1)
 
 - fiatInterest
 

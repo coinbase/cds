@@ -19,24 +19,14 @@ export const pictogram = () => (
   </IllustrationExample>
 );
 
-// single sheet is too large for Percy, need to split up in chunks to stay under resource limit
-export const PictogramSheet1 = getIllustrationSheet({
+// single sheet is too large for Percy, need to split up in chunks of 240 to stay under resource limit
+export const pictogramSheet1 = getIllustrationSheet({
   type: 'pictogram',
   startIndex: 0,
-  endIndex: 120,
-});
-export const PictogramSheet2 = getIllustrationSheet({
-  type: 'pictogram',
-  startIndex: 120,
   endIndex: 240,
 });
-export const PictogramSheet3 = getIllustrationSheet({
+export const pictogramSheet2 = getIllustrationSheet({
   type: 'pictogram',
   startIndex: 240,
-  endIndex: 360,
-});
-export const PictogramSheet4 = getIllustrationSheet({
-  type: 'pictogram',
-  startIndex: 360,
   endIndex: 480,
 });

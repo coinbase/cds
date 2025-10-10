@@ -19,24 +19,14 @@ export const heroSquare = () => (
   </IllustrationExample>
 );
 
-// single sheet is too large for Percy, need to split up in chunks to stay under resource limit
-export const HeroSquareSheet1 = getIllustrationSheet({
+// single sheet is too large for Percy, need to split up in chunks of 240 to stay under resource limit
+export const heroSquareSheet1 = getIllustrationSheet({
   type: 'heroSquare',
   startIndex: 0,
-  endIndex: 120,
-});
-export const HeroSquareSheet2 = getIllustrationSheet({
-  type: 'heroSquare',
-  startIndex: 120,
   endIndex: 240,
 });
-export const HeroSquareSheet3 = getIllustrationSheet({
+export const heroSquareSheet2 = getIllustrationSheet({
   type: 'heroSquare',
   startIndex: 240,
-  endIndex: 360,
-});
-export const HeroSquareSheet4 = getIllustrationSheet({
-  type: 'heroSquare',
-  startIndex: 360,
   endIndex: 480,
 });
