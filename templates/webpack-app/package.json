@@ -16,9 +16,9 @@
     "@coinbase/cds-illustrations": "^4",
     "@coinbase/cds-web": "^8",
     "@coinbase/cds-web-visualization": "^3",
-    "framer-motion": "^11",
-    "react": "^19.1.0",
-    "react-dom": "^19.1.0"
+    "framer-motion": "^10",
+    "react": "^18",
+    "react-dom": "^18"
   },
   "devDependencies": {
     "@babel/core": "^7.28.0",
