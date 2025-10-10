@@ -115,7 +115,8 @@ const TabsComponent = memo(
 
       const handleTabsContainerKeyDown = useCallback(
         (e: KeyboardEvent<HTMLElement>) => {
-          if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+          const keyEventsToHandle = ['ArrowRight', 'ArrowLeft', 'Home', 'End', 'Tab'];
+          if (!keyEventsToHandle.includes(e.key)) return;
 
           // Find which tab is currently focused
           const focusedElement = document.activeElement;
@@ -138,23 +139,46 @@ const TabsComponent = memo(
 
           let targetIndex: number | null = null;
 
-          if (e.key === 'ArrowRight') {
-            e.preventDefault();
-            // Find next enabled tab
-            for (let i = focusedTabIndex + 1; i < tabs.length; i++) {
-              if (!tabs[i].disabled) {
-                targetIndex = i;
-                break;
+          switch (e.key) {
+            case 'ArrowRight': {
+              e.preventDefault();
+              for (let i = focusedTabIndex + 1; i < tabs.length; i++) {
+                if (!tabs[i].disabled) {
+                  targetIndex = i;
+                  break;
+                }
               }
+              break;
             }
-          } else if (e.key === 'ArrowLeft') {
-            e.preventDefault();
-            // Find previous enabled tab
-            for (let i = focusedTabIndex - 1; i >= 0; i--) {
-              if (!tabs[i].disabled) {
-                targetIndex = i;
-                break;
+            case 'ArrowLeft': {
+              e.preventDefault();
+              for (let i = focusedTabIndex - 1; i >= 0; i--) {
+                if (!tabs[i].disabled) {
+                  targetIndex = i;
+                  break;
+                }
               }
+              break;
+            }
+            case 'Home': {
+              e.preventDefault();
+              for (let i = 0; i < tabs.length; i++) {
+                if (!tabs[i].disabled) {
+                  targetIndex = i;
+                  break;
+                }
+              }
+              break;
+            }
+            case 'End': {
+              e.preventDefault();
+              for (let i = tabs.length - 1; i >= 0; i--) {
+                if (!tabs[i].disabled) {
+                  targetIndex = i;
+                  break;
+                }
+              }
+              break;
             }
           }
 
