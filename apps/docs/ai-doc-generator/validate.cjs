@@ -2,15 +2,8 @@ const fs = require('fs');
 const path = require('path');
 const { globSync } = require('glob');
 
-/**
- * Validates that all expected LLM documentation files exist.
- * This ensures that the LLMDocButtons component won't link to missing files.
- */
-
-// Platforms to validate
 const PLATFORMS = ['web', 'mobile'];
 
-// Parse command line arguments
 const args = process.argv.slice(2);
 const pathArg = args[0];
 
@@ -95,25 +88,11 @@ function getExpectedLLMDocName(mdxFilePath) {
 }
 
 /**
- * Get the doc type (components, hooks, getting-started) from a file path
- */
-function getDocType(mdxFilePath) {
-  for (const [docType, pattern] of Object.entries(DOC_SECTIONS)) {
-    if (mdxFilePath.includes(`docs/${docType}/`)) {
-      return docType;
-    }
-  }
-  return null;
-}
-
-/**
  * Validate LLM docs for a given output path
  */
 function validateOutputPath(outputPath) {
-  console.log(`\nValidating LLM docs at: ${outputPath}`);
-
   if (!fs.existsSync(outputPath)) {
-    console.error(`❌ Output path does not exist: ${outputPath}`);
+    console.error(`Validation failed: output path does not exist: ${outputPath}`);
     return false;
   }
 
@@ -157,35 +136,25 @@ function validateOutputPath(outputPath) {
   }
 
   if (errors.length > 0) {
-    console.error(`\n❌ Found ${errors.length} missing LLM doc(s):\n`);
-    // Only show first 10 to avoid overwhelming output
-    errors.slice(0, 10).forEach(({ mdxFile, platform, docType, expectedName }) => {
+    console.error(`Validation failed: found ${errors.length} missing LLM doc(s):\n`);
+    errors.forEach(({ mdxFile, platform }) => {
       console.error(`  - ${mdxFile} (${platform})`);
     });
-    if (errors.length > 10) {
-      console.error(`  ... and ${errors.length - 10} more`);
-    }
-    console.error(`\n❌ These docs should be generated but are missing!`);
-
-    return false; // Always fail when docs are missing
+    return false;
   }
 
   return true;
 }
 
-/**
- * Main validation function
- */
 function validate() {
-  console.log('🔍 Validating LLM documentation files...\n');
+  console.log('Validating LLM documentation files...');
 
   const isValid = validateOutputPath(OUTPUT_PATH);
 
   if (!isValid) {
-    console.error('❌ LLM documentation validation failed!');
+    console.error('LLM documentation validation failed!');
     process.exit(1);
   }
 }
 
-// Run validation
 validate();
