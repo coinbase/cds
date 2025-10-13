@@ -35,8 +35,6 @@ export const HandleBar = ({ onAccessibilityPress, ...props }: HandleBarProps) =>
     <View
       accessible
       accessibilityActions={onAccessibilityPress ? [{ name: 'activate' }] : undefined}
-      collapsable={false}
-      importantForAccessibility="yes"
       onAccessibilityAction={handleAccessibilityAction}
       style={[styles.touchableArea, touchableAreaStyles]}
       testID="handleBar"
