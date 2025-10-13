@@ -138,46 +138,34 @@ const TabsComponent = memo(
 
           let targetIndex: number | null = null;
 
-          switch (event.key) {
-            case 'ArrowRight': {
-              event.preventDefault();
-              for (let i = focusedTabIndex + 1; i < tabs.length; i++) {
-                if (!tabs[i].disabled) {
-                  targetIndex = i;
-                  break;
-                }
+          event.preventDefault();
+          if (event.key === 'ArrowRight') {
+            for (let i = focusedTabIndex + 1; i < tabs.length; i++) {
+              if (!tabs[i].disabled) {
+                targetIndex = i;
+                break;
               }
-              break;
             }
-            case 'ArrowLeft': {
-              event.preventDefault();
-              for (let i = focusedTabIndex - 1; i >= 0; i--) {
-                if (!tabs[i].disabled) {
-                  targetIndex = i;
-                  break;
-                }
+          } else if (event.key === 'ArrowLeft') {
+            for (let i = focusedTabIndex - 1; i >= 0; i--) {
+              if (!tabs[i].disabled) {
+                targetIndex = i;
+                break;
               }
-              break;
             }
-            case 'Home': {
-              event.preventDefault();
-              for (let i = 0; i < tabs.length; i++) {
-                if (!tabs[i].disabled) {
-                  targetIndex = i;
-                  break;
-                }
+          } else if (event.key === 'Home') {
+            for (let i = 0; i < tabs.length; i++) {
+              if (!tabs[i].disabled) {
+                targetIndex = i;
+                break;
               }
-              break;
             }
-            case 'End': {
-              event.preventDefault();
-              for (let i = tabs.length - 1; i >= 0; i--) {
-                if (!tabs[i].disabled) {
-                  targetIndex = i;
-                  break;
-                }
+          } else if (event.key === 'End') {
+            for (let i = tabs.length - 1; i >= 0; i--) {
+              if (!tabs[i].disabled) {
+                targetIndex = i;
+                break;
               }
-              break;
             }
           }
 
