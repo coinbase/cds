@@ -730,16 +730,22 @@ export const RollingNumber: RollingNumberComponent = memo(
         accessibilityLabelSuffix,
       ]);
 
-      // Prevent copying of non-active digits and any return symbols
+      // Copy sanitizer for RollingNumber
+      // - Clones the current selection's DOM Range (index 0; browsers typically expose a single range)
+      // - Removes any nodes marked with data-copy-exclude (non-active digit stacks)
+      // - Joins the remaining text and strips newline characters to keep the copy single-line
+      // - Only overrides the clipboard when the sanitized text differs from the raw selection
       const handleCopySanitized = useCallback((e: React.ClipboardEvent) => {
         const selection = window.getSelection();
-        if (!selection || selection.rangeCount === 0) return;
-        const range = selection.getRangeAt(0);
+        if (!selection || selection.rangeCount === 0) return; // nothing selected
+        const range = selection.getRangeAt(0); // single contiguous selection range is the norm
         const container = document.createElement('div');
         container.appendChild(range.cloneContents());
+        // Drop non-active digit stacks from the cloned fragment so they aren't copied
         container.querySelectorAll('[data-copy-exclude]').forEach((node) => {
           node.parentNode?.removeChild(node);
         });
+        // Normalize to single line (remove CR/LF) after exclusions
         const text = (container.textContent || '').replace(/\r?\n/g, '');
         if (text !== selection.toString()) {
           e.preventDefault();
