@@ -8,6 +8,7 @@
     "dev": {
       "command": "docusaurus start --port 3000",
       "dependsOn": [
+        "validate-llm-docs-static",
         {
           "projects": [
             "docusaurus-plugin-docgen",
@@ -33,13 +34,11 @@
       }
     },
     "build": {
-      "executor": "nx:run-commands",
+      "command": "docusaurus build --out-dir dist",
+      "dependsOn": [
+        "validate-llm-docs-dist"
+      ],
       "options": {
-        "commands": [
-          "docusaurus build --out-dir dist",
-          "node ai-doc-generator/generator.cjs"
-        ],
-        "parallel": false,
         "cwd": "apps/docs"
       }
     },
@@ -64,6 +63,24 @@
     },
     "build-llm-docs": {
       "command": "node {projectRoot}/ai-doc-generator/generator.cjs",
+      "options": {
+        "cwd": "{workspaceRoot}"
+      }
+    },
+    "validate-llm-docs-static": {
+      "command": "node {projectRoot}/ai-doc-generator/validate.cjs static",
+      "dependsOn": [
+        "build-llm-docs"
+      ],
+      "options": {
+        "cwd": "{workspaceRoot}"
+      }
+    },
+    "validate-llm-docs-dist": {
+      "command": "node {projectRoot}/ai-doc-generator/validate.cjs dist",
+      "dependsOn": [
+        "build-llm-docs"
+      ],
       "options": {
         "cwd": "{workspaceRoot}"
       }

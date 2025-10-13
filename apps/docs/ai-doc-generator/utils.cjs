@@ -18,26 +18,39 @@ const writeSection = (sectionName, content) => {
 };
 
 const getMetadata = (dirPath, platform) => {
-  const metadataFilepath = path.join(dirPath, `${platform}Metadata.json`);
-  const metadata = fs.existsSync(metadataFilepath)
-    ? JSON.parse(fs.readFileSync(metadataFilepath, 'utf-8'))
-    : null;
-
-  if (!metadata) {
-    return null;
+  // Try platform-specific metadata first (webMetadata.json, mobileMetadata.json)
+  const platformMetadataFilepath = path.join(dirPath, `${platform}Metadata.json`);
+  if (fs.existsSync(platformMetadataFilepath)) {
+    return JSON.parse(fs.readFileSync(platformMetadataFilepath, 'utf-8'));
   }
 
-  return metadata;
+  // Fall back to shared metadata.json
+  const sharedMetadataFilepath = path.join(dirPath, 'metadata.json');
+  if (fs.existsSync(sharedMetadataFilepath)) {
+    return JSON.parse(fs.readFileSync(sharedMetadataFilepath, 'utf-8'));
+  }
+
+  return null;
 };
 
 const getExamples = (dirPath, platform) => {
-  const examplesFilepath = `${dirPath}/_${platform}Examples.mdx`;
-
-  if (!fs.existsSync(examplesFilepath)) {
-    return null;
+  // Try platform-specific examples first (_webExamples.mdx, _mobileExamples.mdx)
+  const platformExamplesFilepath = `${dirPath}/_${platform}Examples.mdx`;
+  if (fs.existsSync(platformExamplesFilepath)) {
+    return processExamplesContent(platformExamplesFilepath);
   }
 
-  let examplesContent = fs.readFileSync(examplesFilepath, 'utf-8');
+  // Fall back to shared examples (_examples.mdx)
+  const sharedExamplesFilepath = `${dirPath}/_examples.mdx`;
+  if (fs.existsSync(sharedExamplesFilepath)) {
+    return processExamplesContent(sharedExamplesFilepath);
+  }
+
+  return null;
+};
+
+const processExamplesContent = (filepath) => {
+  let examplesContent = fs.readFileSync(filepath, 'utf-8');
 
   if (examplesContent.match(/^## /gm)) {
     // Examples are by default starting on heading level 2

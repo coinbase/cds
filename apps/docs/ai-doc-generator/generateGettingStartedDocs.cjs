@@ -20,20 +20,31 @@ function generateGettingStartedDocs(docsPath, platform, outputPath) {
   const routes = [];
 
   for (const doc of docs) {
-    // Skip directories, only process files
+    let docFilePath;
+    let name;
+
     if (fs.statSync(doc).isDirectory()) {
-      continue;
+      // For directories, look for index.mdx
+      const indexPath = path.join(doc, 'index.mdx');
+      if (!fs.existsSync(indexPath)) {
+        continue;
+      }
+      docFilePath = indexPath;
+      name = path.basename(doc);
+    } else {
+      // For standalone files
+      docFilePath = doc;
+      name = path.parse(doc).name;
     }
 
-    const { name } = path.parse(doc);
-    const outputPath = path.join(docsOutputPath, `${name}.txt`);
-    const docContent = fs.readFileSync(doc, 'utf-8');
+    const outputFilePath = path.join(docsOutputPath, `${name}.txt`);
+    const docContent = fs.readFileSync(docFilePath, 'utf-8');
 
-    fs.writeFileSync(outputPath, docContent);
+    fs.writeFileSync(outputFilePath, docContent);
     routes.push({
       name,
       description: getDescription(docContent),
-      path: outputPath,
+      path: outputFilePath,
     });
   }
 

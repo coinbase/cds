@@ -26,7 +26,7 @@ const sidebars: SidebarsConfig = {
         'getting-started/styling/styling',
         // 'getting-started/templates',
         'getting-started/playground',
-        'getting-started/mcp-server',
+        'getting-started/ai-overview',
       ],
     },
     {

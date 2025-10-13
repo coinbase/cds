@@ -6,6 +6,7 @@ import { VStack } from '@coinbase/cds-web/layout/VStack';
 import { Link } from '@coinbase/cds-web/typography/Link';
 import { Text } from '@coinbase/cds-web/typography/Text';
 import DocusaurusLink from '@docusaurus/Link';
+import { LLMDocButtons } from '@site/src/components/page/LLMDocButton';
 import { usePlatformContext } from '@site/src/utils/PlatformContext';
 import CodeBlock from '@theme/CodeBlock';
 
@@ -106,7 +107,7 @@ export const ContentHeader = memo(
     return (
       <VStack background="bgAlternate" borderRadius={600} overflow="hidden" width="100%">
         {activeBanner && (
-          <VStack height={200} width="100%">
+          <VStack display={{ base: 'flex', phone: 'none' }} height={200} width="100%">
             {typeof activeBanner === 'string' ? (
               <img
                 alt={`${title} banner`}
@@ -242,6 +243,10 @@ export const ContentHeader = memo(
             </VStack>
           </>
         )}
+        <Divider />
+        <HStack paddingX={{ base: 2, phone: 1 }} paddingY={2}>
+          <LLMDocButtons />
+        </HStack>
       </VStack>
     );
   },

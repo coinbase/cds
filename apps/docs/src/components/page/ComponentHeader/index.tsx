@@ -7,6 +7,7 @@ import { VStack } from '@coinbase/cds-web/layout/VStack';
 import { Link } from '@coinbase/cds-web/typography/Link';
 import { Text } from '@coinbase/cds-web/typography/Text';
 import DocusaurusLink from '@docusaurus/Link';
+import { LLMDocButtons } from '@site/src/components/page/LLMDocButton';
 import { VersionLabel } from '@site/src/components/page/VersionLabel';
 import { useDocsTheme } from '@site/src/theme/Layout/Provider/UnifiedThemeContext';
 import { usePlatformContext } from '@site/src/utils/PlatformContext';
@@ -249,6 +250,10 @@ export const ComponentHeader = memo(
             </VStack>
           </>
         )}
+        <Divider />
+        <HStack paddingX={{ base: 2, phone: 1 }} paddingY={2}>
+          <LLMDocButtons />
+        </HStack>
       </VStack>
     );
   },

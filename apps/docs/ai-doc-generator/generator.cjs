@@ -12,7 +12,10 @@ const { generateRoutesDoc } = require('./generateRoutesDoc.cjs');
 const fs = require('node:fs');
 const path = require('node:path');
 
-const DEFAULT_OUTPUT_PATH = path.resolve(__dirname, '../dist/llms');
+const DEFAULT_OUTPUT_PATHS = [
+  path.resolve(__dirname, '../dist/llms'),
+  path.resolve(__dirname, '../static/llms'),
+];
 
 const docgenPath = path.resolve(
   __dirname,
@@ -44,7 +47,15 @@ const generateDocs = (outputPath) => {
   }
 };
 
-// Accept an output path as an argument
-const outputPath = path.resolve(process.cwd(), process.argv[2] || DEFAULT_OUTPUT_PATH);
-generateDocs(outputPath);
-console.log('LLM docs generated');
+// Accept an output path as an argument, or use defaults
+if (process.argv[2]) {
+  const outputPath = path.resolve(process.cwd(), process.argv[2]);
+  generateDocs(outputPath);
+  console.log(`LLM docs generated at ${outputPath}`);
+} else {
+  // Generate to both dist and static for development and production
+  for (const outputPath of DEFAULT_OUTPUT_PATHS) {
+    generateDocs(outputPath);
+    console.log(`LLM docs generated at ${outputPath}`);
+  }
+}
