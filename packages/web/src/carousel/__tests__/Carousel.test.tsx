@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { renderA11y } from '@coinbase/cds-web-utils';
-import { render, screen, waitFor } from '@testing-library/react';
+import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import { Box } from '../../layout/Box';
@@ -83,12 +83,14 @@ mockResizeObserver.mockImplementation((callback) => {
 
       // Trigger callback immediately to simulate dimensions being available
       setTimeout(() => {
-        callback([
-          {
-            target: element,
-            contentRect: { width: containerWidth, height: 400 },
-          },
-        ]);
+        act(() => {
+          callback([
+            {
+              target: element,
+              contentRect: { width: containerWidth, height: 400 },
+            },
+          ]);
+        });
       }, 0);
     }),
     unobserve: jest.fn(),
