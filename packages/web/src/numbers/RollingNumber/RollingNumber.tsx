@@ -1,4 +1,4 @@
-import { forwardRef, memo, useMemo } from 'react';
+import { forwardRef, memo, useCallback, useMemo } from 'react';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import { curves, durations } from '@coinbase/cds-common/motion/tokens';
 import {
@@ -730,6 +730,23 @@ export const RollingNumber: RollingNumberComponent = memo(
         accessibilityLabelSuffix,
       ]);
 
+      // Prevent copying of non-active digits and any return symbols
+      const handleCopySanitized = useCallback((e: React.ClipboardEvent) => {
+        const selection = window.getSelection();
+        if (!selection || selection.rangeCount === 0) return;
+        const range = selection.getRangeAt(0);
+        const container = document.createElement('div');
+        container.appendChild(range.cloneContents());
+        container.querySelectorAll('[data-copy-exclude]').forEach((node) => {
+          node.parentNode?.removeChild(node);
+        });
+        const text = (container.textContent || '').replace(/\r?\n/g, '');
+        if (text !== selection.toString()) {
+          e.preventDefault();
+          e.clipboardData.setData('text/plain', text);
+        }
+      }, []);
+
       return (
         <Text
           ref={ref}
@@ -741,6 +758,7 @@ export const RollingNumber: RollingNumberComponent = memo(
           fontSize={fontSize}
           fontWeight={fontWeight}
           lineHeight={lineHeight}
+          onCopy={handleCopySanitized}
           role={ariaLive === 'assertive' ? 'alert' : 'status'}
           style={rootStyle}
           tabularNumbers={tabularNumbers}

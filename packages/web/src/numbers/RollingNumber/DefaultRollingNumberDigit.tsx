@@ -118,13 +118,13 @@ export const DefaultRollingNumberDigit: RollingNumberDigitComponent = memo(
             {...props}
           >
             {value !== 0 && (
-              <span className={cx(digitNonActiveCss, topNonActiveCss)}>
+              <span data-copy-exclude className={cx(digitNonActiveCss, topNonActiveCss)}>
                 {new Array(value).fill(null).map((_, i) => renderDigit(i))}
               </span>
             )}
             {renderDigit(value)}
             {value !== 9 && (
-              <span className={cx(digitNonActiveCss, bottomNonActiveCss)}>
+              <span data-copy-exclude className={cx(digitNonActiveCss, bottomNonActiveCss)}>
                 {new Array(9 - value).fill(null).map((_, i) => renderDigit(value + i + 1))}
               </span>
             )}
