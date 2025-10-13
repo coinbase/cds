@@ -1,5 +1,4 @@
 import React, { forwardRef, memo, useCallback, useMemo } from 'react';
-import type { KeyboardEvent } from 'react';
 import useMeasure from 'react-use-measure';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import { useMergeRefs } from '@coinbase/cds-common/hooks/useMergeRefs';
@@ -114,9 +113,9 @@ const TabsComponent = memo(
       }, [activeTab, refMap, tabsContainerRect.width]);
 
       const handleTabsContainerKeyDown = useCallback(
-        (e: KeyboardEvent<HTMLElement>) => {
+        (event: React.KeyboardEvent<HTMLElement>) => {
           const keyEventsToHandle = ['ArrowRight', 'ArrowLeft', 'Home', 'End'];
-          if (!keyEventsToHandle.includes(e.key)) return;
+          if (!keyEventsToHandle.includes(event.key)) return;
 
           // Find which tab is currently focused
           const focusedElement = document.activeElement;
@@ -139,9 +138,9 @@ const TabsComponent = memo(
 
           let targetIndex: number | null = null;
 
-          switch (e.key) {
+          switch (event.key) {
             case 'ArrowRight': {
-              e.preventDefault();
+              event.preventDefault();
               for (let i = focusedTabIndex + 1; i < tabs.length; i++) {
                 if (!tabs[i].disabled) {
                   targetIndex = i;
@@ -151,7 +150,7 @@ const TabsComponent = memo(
               break;
             }
             case 'ArrowLeft': {
-              e.preventDefault();
+              event.preventDefault();
               for (let i = focusedTabIndex - 1; i >= 0; i--) {
                 if (!tabs[i].disabled) {
                   targetIndex = i;
@@ -161,7 +160,7 @@ const TabsComponent = memo(
               break;
             }
             case 'Home': {
-              e.preventDefault();
+              event.preventDefault();
               for (let i = 0; i < tabs.length; i++) {
                 if (!tabs[i].disabled) {
                   targetIndex = i;
@@ -171,7 +170,7 @@ const TabsComponent = memo(
               break;
             }
             case 'End': {
-              e.preventDefault();
+              event.preventDefault();
               for (let i = tabs.length - 1; i >= 0; i--) {
                 if (!tabs[i].disabled) {
                   targetIndex = i;
