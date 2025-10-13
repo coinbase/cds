@@ -170,7 +170,6 @@ function validateOutputPath(outputPath) {
     return false; // Always fail when docs are missing
   }
 
-  console.log(`✅ All LLM docs validated successfully!`);
   return true;
 }
 
@@ -183,11 +182,9 @@ function validate() {
   const isValid = validateOutputPath(OUTPUT_PATH);
 
   if (!isValid) {
-    console.error('\n❌ LLM documentation validation failed!');
+    console.error('❌ LLM documentation validation failed!');
     process.exit(1);
   }
-
-  console.log('\n✅ LLM documentation validation complete!');
 }
 
 // Run validation

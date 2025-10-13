@@ -80,6 +80,41 @@ const webpackPlugin = () => {
   return plugin;
 };
 
+// Build plugins array conditionally based on environment
+const plugins: Config['plugins'] = [
+  ['@docusaurus/plugin-sitemap', { id: 'sitemap' }],
+  [
+    '@docusaurus/theme-live-codeblock',
+    {
+      id: 'codeblock',
+    },
+  ],
+  [
+    '@coinbase/docusaurus-plugin-kbar',
+    {
+      docs: {
+        breadcrumbs: false,
+        routeBasePath: '/',
+        sidebarPath: require.resolve('./sidebars.ts'),
+        sidebarCollapsible: true,
+      },
+    },
+  ],
+  ['@coinbase/docusaurus-plugin-docgen', docgenConfig],
+];
+
+// Only add LLM dev server plugin in development mode
+if (process.env.NODE_ENV === 'development') {
+  plugins.push([
+    '@coinbase/docusaurus-plugin-llm-dev-server',
+    {
+      generatorPath: path.join(__dirname, 'ai-doc-generator'),
+    },
+  ]);
+}
+
+plugins.push(webpackPlugin);
+
 const config: Config = {
   title: 'Coinbase Design System',
   tagline: '',
@@ -238,34 +273,7 @@ const config: Config = {
     },
   },
 
-  plugins: [
-    ['@docusaurus/plugin-sitemap', { id: 'sitemap' }],
-    [
-      '@docusaurus/theme-live-codeblock',
-      {
-        id: 'codeblock',
-      },
-    ],
-    [
-      '@coinbase/docusaurus-plugin-kbar',
-      {
-        docs: {
-          breadcrumbs: false,
-          routeBasePath: '/',
-          sidebarPath: require.resolve('./sidebars.ts'),
-          sidebarCollapsible: true,
-        },
-      },
-    ],
-    ['@coinbase/docusaurus-plugin-docgen', docgenConfig],
-    [
-      '@coinbase/docusaurus-plugin-llm-dev-server',
-      {
-        generatorPath: path.join(__dirname, 'ai-doc-generator'),
-      },
-    ],
-    webpackPlugin,
-  ],
+  plugins,
 };
 
 export default config;

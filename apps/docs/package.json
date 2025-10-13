@@ -26,6 +26,7 @@
     "@coinbase/cds-web-visualization": "workspace:^",
     "@coinbase/docusaurus-plugin-docgen": "workspace:^",
     "@coinbase/docusaurus-plugin-kbar": "workspace:^",
+    "@coinbase/docusaurus-plugin-llm-dev-server": "workspace:^",
     "@docusaurus/core": "^3.7.0",
     "@docusaurus/faster": "^3.7.0",
     "@docusaurus/mdx-loader": "^3.7.0",

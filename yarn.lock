@@ -2699,6 +2699,18 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@coinbase/docusaurus-plugin-llm-dev-server@workspace:^, @coinbase/docusaurus-plugin-llm-dev-server@workspace:libs/docusaurus-plugin-llm-dev-server":
+  version: 0.0.0-use.local
+  resolution: "@coinbase/docusaurus-plugin-llm-dev-server@workspace:libs/docusaurus-plugin-llm-dev-server"
+  dependencies:
+    "@babel/core": "npm:^7.28.0"
+    "@babel/preset-env": "npm:^7.28.0"
+    "@babel/preset-react": "npm:^7.27.1"
+    "@babel/preset-typescript": "npm:^7.27.1"
+    "@docusaurus/types": "npm:^3.7.0"
+  languageName: unknown
+  linkType: soft
+
 "@coinbase/eslint-plugin-cds@workspace:packages/eslint-plugin-cds":
   version: 0.0.0-use.local
   resolution: "@coinbase/eslint-plugin-cds@workspace:packages/eslint-plugin-cds"
@@ -17943,6 +17955,7 @@ __metadata:
     "@coinbase/cds-web-visualization": "workspace:^"
     "@coinbase/docusaurus-plugin-docgen": "workspace:^"
     "@coinbase/docusaurus-plugin-kbar": "workspace:^"
+    "@coinbase/docusaurus-plugin-llm-dev-server": "workspace:^"
     "@docusaurus/core": "npm:^3.7.0"
     "@docusaurus/faster": "npm:^3.7.0"
     "@docusaurus/mdx-loader": "npm:^3.7.0"

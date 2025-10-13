@@ -120,12 +120,7 @@ const generateDocs = (outputPath) => {
   }
 };
 
-// Accept an output path as an argument, or use default based on environment
-if (process.argv[2]) {
-  const outputPath = path.resolve(process.cwd(), process.argv[2]);
-  generateDocs(outputPath);
-  console.log(`LLM docs generated at ${outputPath}`);
-} else {
-  generateDocs(DEFAULT_OUTPUT_PATH);
-  console.log(`LLM docs generated at ${DEFAULT_OUTPUT_PATH}`);
-}
+// Accept an output path as an argument
+const outputPath = path.resolve(process.cwd(), process.argv[2] || DEFAULT_OUTPUT_PATH);
+generateDocs(outputPath);
+console.log('LLM docs generated');

@@ -22,14 +22,11 @@
     "cjs",
     "dts"
   ],
-  "dependencies": {
-    "@docusaurus/types": "^3.7.0",
-    "webpack": "^5.94.0"
-  },
   "devDependencies": {
     "@babel/core": "^7.28.0",
     "@babel/preset-env": "^7.28.0",
     "@babel/preset-react": "^7.27.1",
-    "@babel/preset-typescript": "^7.27.1"
+    "@babel/preset-typescript": "^7.27.1",
+    "@docusaurus/types": "^3.7.0"
   }
 }
