@@ -7,12 +7,12 @@ import { Fallback } from '../layout/Fallback';
 
 import { Cell, type CellBaseProps } from './Cell';
 import type { CellMediaType } from './CellMedia';
-import { hugInnerSpacing, hugOuterSpacing } from './ListCell';
+import { condensedInnerSpacing, condensedOuterSpacing, type ListCellBaseProps } from './ListCell';
 import { MediaFallback } from './MediaFallback';
 
 export type ListCellFallbackBaseProps = SharedProps &
   FallbackRectWidthProps &
-  Pick<CellBaseProps, 'innerSpacing' | 'outerSpacing'> & {
+  Pick<ListCellBaseProps, 'innerSpacing' | 'outerSpacing' | 'spacingVariant'> & {
     /** Display description shimmer. */
     description?: boolean;
     /** Display detail shimmer. */
@@ -25,8 +25,6 @@ export type ListCellFallbackBaseProps = SharedProps &
     subdetail?: boolean;
     /** Display title shimmer. */
     title?: boolean;
-    /** Layout spacing configuration. */
-    layoutSpacing?: 'spacious' | 'compact' | 'hug';
   };
 
 export type ListCellFallbackProps = ListCellFallbackBaseProps & {
@@ -69,7 +67,7 @@ export const ListCellFallback = memo(function ListCellFallback({
   disableRandomRectWidth,
   rectWidthVariant,
   helperText,
-  layoutSpacing,
+  spacingVariant,
   innerSpacing,
   outerSpacing,
   ...props
@@ -203,9 +201,13 @@ export const ListCellFallback = memo(function ListCellFallback({
     <Cell
       bottomContent={bottomContentFallback}
       detail={detailFallback}
-      innerSpacing={innerSpacing ?? (layoutSpacing === 'hug' ? hugInnerSpacing : undefined)}
+      innerSpacing={
+        innerSpacing ?? (spacingVariant === 'condensed' ? condensedInnerSpacing : undefined)
+      }
       media={mediaFallback}
-      outerSpacing={outerSpacing ?? (layoutSpacing === 'hug' ? hugOuterSpacing : undefined)}
+      outerSpacing={
+        outerSpacing ?? (spacingVariant === 'condensed' ? condensedOuterSpacing : undefined)
+      }
       {...props}
     >
       <VStack gap={0.5}>
