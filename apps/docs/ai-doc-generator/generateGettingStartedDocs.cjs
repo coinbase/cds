@@ -37,14 +37,14 @@ function generateGettingStartedDocs(docsPath, platform, outputPath) {
       name = path.parse(doc).name;
     }
 
-    const outputFilePath = path.join(docsOutputPath, `${name}.txt`);
+    const outputPath = path.join(docsOutputPath, `${name}.txt`);
     const docContent = fs.readFileSync(docFilePath, 'utf-8');
 
-    fs.writeFileSync(outputFilePath, docContent);
+    fs.writeFileSync(outputPath, docContent);
     routes.push({
       name,
       description: getDescription(docContent),
-      path: outputFilePath,
+      path: outputPath,
     });
   }
 
