@@ -103,6 +103,7 @@ export const ContentHeader = memo(
     } = activeMetadata ?? {};
 
     const descriptionText = activeMetadata?.description ?? description;
+    const hasMetadataItems = importText || changelog || source || storybook || figma;
 
     return (
       <VStack background="bgAlternate" borderRadius={600} overflow="hidden" width="100%">
@@ -124,7 +125,7 @@ export const ContentHeader = memo(
             <Text font="display2">{title}</Text>
             {descriptionText && <Text font="title4">{descriptionText}</Text>}
           </VStack>
-          {activeMetadata && (
+          {hasMetadataItems && (
             <Grid
               alignItems="center"
               columnGap={2}
