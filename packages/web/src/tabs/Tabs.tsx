@@ -136,41 +136,31 @@ const TabsComponent = memo(
           const focusedTabIndex = tabs.findIndex((tab) => tab.id === focusedTabId);
           if (focusedTabIndex === -1) return;
 
-          let targetIndex: number | null = null;
-
           event.preventDefault();
+
+          // For ArrowLeft and End key events, we need to iterate backwards so a for loop is used
+          let targetTab;
           if (event.key === 'ArrowRight') {
-            for (let i = focusedTabIndex + 1; i < tabs.length; i++) {
-              if (!tabs[i].disabled) {
-                targetIndex = i;
-                break;
-              }
-            }
+            targetTab = tabs.slice(focusedTabIndex + 1).find((tab) => !tab.disabled);
           } else if (event.key === 'ArrowLeft') {
             for (let i = focusedTabIndex - 1; i >= 0; i--) {
               if (!tabs[i].disabled) {
-                targetIndex = i;
+                targetTab = tabs[i];
                 break;
               }
             }
           } else if (event.key === 'Home') {
-            for (let i = 0; i < tabs.length; i++) {
-              if (!tabs[i].disabled) {
-                targetIndex = i;
-                break;
-              }
-            }
+            targetTab = tabs.slice(0).find((tab) => !tab.disabled);
           } else if (event.key === 'End') {
             for (let i = tabs.length - 1; i >= 0; i--) {
               if (!tabs[i].disabled) {
-                targetIndex = i;
+                targetTab = tabs[i];
                 break;
               }
             }
           }
 
-          if (targetIndex !== null) {
-            const targetTab = tabs[targetIndex];
+          if (targetTab) {
             const targetRef = refMap.getRef(targetTab.id);
             // Focus the first focusable element within the target tab
             const focusableElement = targetRef?.querySelector<HTMLElement>(
