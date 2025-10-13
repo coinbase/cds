@@ -92,11 +92,11 @@ const TabsComponent = memo(
     ) => {
       const api = useTabs<T>({ tabs, activeTab, disabled, onChange });
 
-      const [tabsContainerRectRef, tabsContainerRect] = useMeasure({
+      const [tabsContainerRef, tabsContainerRect] = useMeasure({
         debounce: 20,
       });
 
-      const mergedContainerRefs = useMergeRefs(ref, tabsContainerRectRef);
+      const mergedContainerRefs = useMergeRefs(ref, tabsContainerRef);
 
       const refMap = useRefMap<HTMLElement>();
 
