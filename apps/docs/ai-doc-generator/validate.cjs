@@ -10,27 +10,21 @@ const { globSync } = require('glob');
 // Platforms to validate
 const PLATFORMS = ['web', 'mobile'];
 
-// Get output paths from command line args, or default to static (for dev)
-const DEFAULT_OUTPUT_PATHS = [path.resolve(__dirname, '../static/llms')];
-
 // Parse command line arguments
 const args = process.argv.slice(2);
 const pathArg = args[0];
 
-// Allow passing a specific path as argument (e.g., 'dist' or 'static')
-const getOutputPaths = () => {
+// Get output path from command line arg, or default to dist/llms
+const getOutputPath = () => {
   if (pathArg === 'dist') {
-    return [path.resolve(__dirname, '../dist/llms')];
-  } else if (pathArg === 'static') {
-    return [path.resolve(__dirname, '../static/llms')];
+    return path.resolve(__dirname, '../dist/llms');
   } else if (pathArg) {
-    return [path.resolve(__dirname, '..', pathArg)];
+    return path.resolve(__dirname, '..', pathArg);
   }
-
-  return DEFAULT_OUTPUT_PATHS;
+  return path.resolve(__dirname, '../dist/llms');
 };
 
-const OUTPUT_PATHS = getOutputPaths();
+const OUTPUT_PATH = getOutputPath();
 
 // Doc sections and their glob patterns
 const DOC_SECTIONS = {
@@ -186,16 +180,9 @@ function validateOutputPath(outputPath) {
 function validate() {
   console.log('🔍 Validating LLM documentation files...\n');
 
-  let allValid = true;
+  const isValid = validateOutputPath(OUTPUT_PATH);
 
-  for (const outputPath of OUTPUT_PATHS) {
-    const isValid = validateOutputPath(outputPath);
-    if (!isValid) {
-      allValid = false;
-    }
-  }
-
-  if (!allValid) {
+  if (!isValid) {
     console.error('\n❌ LLM documentation validation failed!');
     process.exit(1);
   }

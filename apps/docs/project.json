@@ -8,11 +8,11 @@
     "dev": {
       "command": "docusaurus start --port 3000",
       "dependsOn": [
-        "validate-llm-docs-static",
         {
           "projects": [
             "docusaurus-plugin-docgen",
-            "docusaurus-plugin-kbar"
+            "docusaurus-plugin-kbar",
+            "docusaurus-plugin-llm-dev-server"
           ],
           "target": "build"
         }
@@ -63,15 +63,6 @@
     },
     "build-llm-docs": {
       "command": "node {projectRoot}/ai-doc-generator/generator.cjs",
-      "options": {
-        "cwd": "{workspaceRoot}"
-      }
-    },
-    "validate-llm-docs-static": {
-      "command": "node {projectRoot}/ai-doc-generator/validate.cjs static",
-      "dependsOn": [
-        "build-llm-docs"
-      ],
       "options": {
         "cwd": "{workspaceRoot}"
       }
