@@ -1,66 +1,9 @@
 .cardWrapper {
-  cursor: pointer;
   transition: background-color ease-out 200ms;
-  border: 1px solid rgb(var(--gray15));
-}
-
-html[data-theme='dark'] .cardWrapper {
-  border-color: rgb(var(--gray5));
 }
 
 .cardWrapper:hover,
 .cardWrapper:active,
 .cardWrapper:focus {
-  background-color: rgb(var(--gray1));
-}
-
-html[data-theme='dark'] .cardWrapper:hover,
-html[data-theme='dark'] .cardWrapper:active,
-html[data-theme='dark'] .cardWrapper:focus {
-  background-color: rgb(var(--gray3));
-}
-
-.iconWrapper {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 32px;
-  flex-shrink: 0;
-  overflow: visible;
-}
-
-.iconWrapper svg {
-  width: 100%;
-  height: 100%;
-}
-
-.iconWrapper img,
-.iconWrapper picture,
-.iconWrapper picture img {
-  display: block;
-  height: 32px;
-  width: auto !important;
-  max-width: none;
-  object-fit: contain;
-}
-
-.templateName {
-  margin: 0;
-}
-
-.arrowIcon {
-  color: rgb(var(--gray10));
-  transition: all ease-out 200ms;
-  flex-shrink: 0;
-}
-
-html[data-theme='dark'] .arrowIcon {
-  color: rgb(var(--gray8));
-}
-
-.cardWrapper:hover .arrowIcon,
-.cardWrapper:active .arrowIcon,
-.cardWrapper:focus .arrowIcon {
-  color: var(--color-fgPrimary);
-  transform: translate(2px, -2px);
+  background-color: rgb(var(--gray0));
 }

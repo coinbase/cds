@@ -1,5 +1,6 @@
 import React from 'react';
-import { HStack, VStack } from '@coinbase/cds-web/layout';
+import { Icon } from '@coinbase/cds-web/icons';
+import { Box, HStack, VStack } from '@coinbase/cds-web/layout';
 import { Text } from '@coinbase/cds-web/typography';
 import Link from '@docusaurus/Link';
 
@@ -23,44 +24,26 @@ export const TemplateCard = ({ name, description, href, icon }: TemplateCardProp
       background="bgSecondary"
       borderRadius={400}
       className={styles.cardWrapper}
-      flexBasis={{ base: '100%', desktop: 'calc(33.333% - 16px)' }}
-      flexGrow={1}
-      flexShrink={0}
       gap={1}
       href={href}
-      minWidth={{ base: '100%', tablet: '280px' }}
-      paddingX={2}
-      paddingY={2}
+      padding={2}
       rel="noopener noreferrer"
       role="button"
+      style={{ border: '1px solid rgb(var(--gray15))' }}
       target="_blank"
       textDecoration="none"
+      width="100%"
     >
       <HStack alignItems="center" gap={1.5} justifyContent="space-between" width="full">
         <HStack alignItems="center" gap={1.5}>
-          <div className={styles.iconWrapper}>{icon}</div>
+          <Box height={48}>{icon}</Box>
           {name && (
-            <Text as="h3" className={styles.templateName} color="fg" font="title3">
+            <Text as="h3" color="fg" font="title3">
               {name}
             </Text>
           )}
         </HStack>
-        <div className={styles.arrowIcon}>
-          <svg
-            fill="none"
-            height="16"
-            stroke="currentColor"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            viewBox="0 0 24 24"
-            width="16"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path d="M7 7h10v10" />
-            <path d="M7 17 17 7" />
-          </svg>
-        </div>
+        <Icon name="externalLink" size="s" />
       </HStack>
       <Text color="fgMuted" font="body">
         {description}
