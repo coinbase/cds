@@ -6,18 +6,15 @@ import Link from '@docusaurus/Link';
 import styles from './styles.module.css';
 
 export type TemplateCardProps = {
-  /** Name of the template/framework */
-  name: string;
+  /** Name of the template/framework (optional if logo includes text) */
+  name?: string;
   /** Description of the template */
   description: string;
   /** GitHub URL for the template */
   href: string;
-  /** Icon or logo for the framework */
+  /** Icon or logo React node */
   icon: React.ReactNode;
 };
-
-const titleFontConfig = { base: 'title5', desktop: 'title5' } as const;
-const descriptionFontConfig = { base: 'body', desktop: 'body' } as const;
 
 export const TemplateCard = ({ name, description, href, icon }: TemplateCardProps) => {
   return (
@@ -42,17 +39,11 @@ export const TemplateCard = ({ name, description, href, icon }: TemplateCardProp
       <HStack alignItems="center" gap={1.5} justifyContent="space-between" width="full">
         <HStack alignItems="center" gap={1.5}>
           <div className={styles.iconWrapper}>{icon}</div>
-          <Text
-            as="h3"
-            className={styles.templateName}
-            color="fg"
-            fontFamily={titleFontConfig}
-            fontSize={titleFontConfig}
-            fontWeight={titleFontConfig}
-            lineHeight={titleFontConfig}
-          >
-            {name}
-          </Text>
+          {name && (
+            <Text as="h3" className={styles.templateName} color="fg" font="title3">
+              {name}
+            </Text>
+          )}
         </HStack>
         <div className={styles.arrowIcon}>
           <svg
@@ -71,13 +62,7 @@ export const TemplateCard = ({ name, description, href, icon }: TemplateCardProp
           </svg>
         </div>
       </HStack>
-      <Text
-        color="fgMuted"
-        fontFamily={descriptionFontConfig}
-        fontSize={descriptionFontConfig}
-        fontWeight={descriptionFontConfig}
-        lineHeight={descriptionFontConfig}
-      >
+      <Text color="fgMuted" font="body">
         {description}
       </Text>
     </VStack>

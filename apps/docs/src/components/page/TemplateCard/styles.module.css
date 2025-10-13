@@ -24,14 +24,24 @@ html[data-theme='dark'] .cardWrapper:focus {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
   height: 32px;
   flex-shrink: 0;
+  overflow: visible;
 }
 
 .iconWrapper svg {
   width: 100%;
   height: 100%;
+}
+
+.iconWrapper img,
+.iconWrapper picture,
+.iconWrapper picture img {
+  display: block;
+  height: 32px;
+  width: auto !important;
+  max-width: none;
+  object-fit: contain;
 }
 
 .templateName {

@@ -21,7 +21,7 @@ const sidebars: SidebarsConfig = {
       items: [
         'getting-started/introduction',
         'getting-started/installation/installation',
-        'getting-started/templates',
+        'getting-started/templates/templates',
         // 'getting-started/api-overview/api-overview',
         'getting-started/theming/theming',
         'getting-started/styling/styling',
