@@ -47,6 +47,9 @@ const screenReaderOnlyCss = css`
   clip: rect(0 0 0 0);
   white-space: nowrap;
   border: 0;
+  user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
 `;
 
 /**
@@ -714,7 +717,12 @@ export const RollingNumber: RollingNumberComponent = memo(
         const suffixString = typeof suffix === 'string' ? suffix : '';
         const formattedWithPrefixSuffix = `${prefixString}${formatted}${suffixString}`;
         return (
-          <span aria-atomic="true" aria-live={ariaLive} className={screenReaderOnlyCss}>{`
+          <span
+            data-copy-exclude
+            aria-atomic="true"
+            aria-live={ariaLive}
+            className={screenReaderOnlyCss}
+          >{`
             ${accessibilityLabelPrefix ?? ''}
             ${accessibilityLabel ?? formattedWithPrefixSuffix}
             ${accessibilityLabelSuffix ?? ''}
