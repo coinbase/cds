@@ -1,7 +1,7 @@
 {
   "import": "import { TabIndicator } from '@coinbase/cds-web/tabs/TabIndicator'",
   "source": "https://github.com/coinbase/cds/blob/master/packages/web/src/tabs/TabIndicator.tsx",
-  "storybook": "https://cds-storybook.coinbase.com/?path=/story/core-components-tabs-tabindicator--default",
+  "storybook": "https://cds-storybook.coinbase.com/?path=/story/components-tabs-tabindicator--default",
   "description": "A visual indicator that shows the active tab position.",
   "relatedComponents": [
     {

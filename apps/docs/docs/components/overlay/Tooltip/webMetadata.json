@@ -1,7 +1,7 @@
 {
   "import": "import { Tooltip } from '@coinbase/cds-web/overlays/Tooltip'",
   "source": "https://github.com/coinbase/cds/blob/master/packages/web/src/overlays/Tooltip/Tooltip.tsx",
-  "storybook": "https://cds-storybook.coinbase.com/?path=/story/core-components-tooltip-tooltip--default",
+  "storybook": "https://cds-storybook.coinbase.com/?path=/story/components-tooltip-tooltip--default",
   "figma": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/%E2%9C%A8-CDS-Components?m=auto&node-id=276-12450&t=DUt8mdNXuSP7tZkd-1",
   "description": "A component that displays additional information on hover.",
   "relatedComponents": [

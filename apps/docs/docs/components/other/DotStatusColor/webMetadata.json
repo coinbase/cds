@@ -1,7 +1,7 @@
 {
   "import": "import { DotStatusColor } from '@coinbase/cds-web/dots/DotStatusColor'",
   "source": "https://github.com/coinbase/cds/blob/master/packages/web/src/dots/DotStatusColor.tsx",
-  "storybook": "https://cds-storybook.coinbase.com/?path=/story/core-components-dots-dotstatuscolor--all-dot-status-color",
+  "storybook": "https://cds-storybook.coinbase.com/?path=/story/components-dots-dotstatuscolor--all-dot-status-color",
   "figma": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/%E2%9C%A8-CDS-Components?node-id=155-10245",
   "description": "Dots are component adornments, typically used to communicate a numerical value or indicate the status or identity of a component to the end-user.",
   "relatedComponents": [

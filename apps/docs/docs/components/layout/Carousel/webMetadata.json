@@ -1,7 +1,7 @@
 {
   "import": "import { Carousel } from '@coinbase/cds-web/carousel/Carousel'",
   "source": "https://github.com/coinbase/cds/blob/master/packages/web/src/carousel/Carousel.tsx",
-  "storybook": "https://cds-storybook.coinbase.com/?path=/story/core-components-carousel--all",
+  "storybook": "https://cds-storybook.coinbase.com/?path=/story/components-carousel--all",
   "figma": "https://www.figma.com/design/XRzGLH42ezSda4UYVfPMMO/Carousel?node-id=26293-2427",
   "description": "A flexible carousel component for displaying sequences of content with navigation and pagination options."
 }

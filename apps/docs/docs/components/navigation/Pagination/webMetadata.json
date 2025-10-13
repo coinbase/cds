@@ -1,7 +1,7 @@
 {
   "import": "import { Pagination } from '@coinbase/cds-web/pagination/Pagination'",
   "source": "https://github.com/coinbase/cds/blob/master/packages/web/src/pagination/Pagination.tsx",
-  "storybook": "https://cds-storybook.coinbase.com/?path=/story/core-components-pagination--pagination-examples",
+  "storybook": "https://cds-storybook.coinbase.com/?path=/story/components-pagination--pagination-examples",
   "figma": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/%E2%9C%A8-CDS-Components?m=auto&node-id=49607-6712&t=VzGX5hnRKveOrhnl-1",
   "description": "Pagination is used to navigate through a list of items.",
   "relatedComponents": [

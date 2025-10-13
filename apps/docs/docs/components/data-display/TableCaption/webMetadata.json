@@ -2,7 +2,7 @@
   "import": "import { TableCaption } from '@coinbase/cds-web/tables/TableCaption'",
   "source": "https://github.com/coinbase/cds/blob/master/packages/web/src/tables/TableCaption.tsx",
   "description": "Sets an accessible title or caption for Table.",
-  "storybook": "https://cds-storybook.coinbase.com/?path=/story/core-components-table-tablecaption--spacing-examples",
+  "storybook": "https://cds-storybook.coinbase.com/?path=/story/components-table-tablecaption--spacing-examples",
   "relatedComponents": [
     {
       "label": "Table",

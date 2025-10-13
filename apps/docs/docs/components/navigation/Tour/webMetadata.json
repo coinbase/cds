@@ -2,7 +2,7 @@
   "import": "import { Tour, TourStep } from '@coinbase/cds-web/tour'",
   "source": "https://github.com/coinbase/cds/blob/master/packages/web/src/tour/Tour.tsx",
   "description": "Creates guided tours of a user interface.",
-  "storybook": "https://cds-storybook.coinbase.com/?path=/story/core-components-tour--tour-default",
+  "storybook": "https://cds-storybook.coinbase.com/?path=/story/components-tour--tour-default",
   "relatedComponents": [
     {
       "label": "Coachmark",

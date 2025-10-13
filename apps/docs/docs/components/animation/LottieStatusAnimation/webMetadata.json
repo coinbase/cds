@@ -2,7 +2,7 @@
   "import": "import { LottieStatusAnimation } from '@coinbase/cds-web/animation/LottieStatusAnimation'",
   "source": "https://github.com/coinbase/cds/blob/master/packages/web/src/animation/LottieStatusAnimation.tsx",
   "description": "A specialized component for displaying trade status animations.",
-  "storybook": "https://cds-storybook.coinbase.com/?path=/story/core-components-lottiestatusanimation--default",
+  "storybook": "https://cds-storybook.coinbase.com/?path=/story/components-lottiestatusanimation--default",
   "relatedComponents": [
     {
       "label": "Lottie",

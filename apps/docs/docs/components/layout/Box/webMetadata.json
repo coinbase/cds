@@ -1,7 +1,7 @@
 {
   "import": "import { Box } from '@coinbase/cds-web/layout/Box'",
   "source": "https://github.com/coinbase/cds/blob/master/packages/web/src/layout/Box.tsx",
-  "storybook": "https://cds-storybook.coinbase.com/?path=/story/core-components-box-tsx--default",
+  "storybook": "https://cds-storybook.coinbase.com/?path=/story/components-box-tsx--default",
   "description": "A generic container, like a supercharged div.",
   "relatedComponents": [
     {
