@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.16.3 (10/14/2025 PST)
+
+#### 🐞 Fixes
+
+- Fix Stepper progress bars not rendering for initially set active step ID. [[#106](https://github.com/coinbase/cds/pull/106)]
+
 ## 8.16.2 (10/10/2025 PST)
 
 #### 🐞 Fixes

@@ -255,6 +255,10 @@ const StepperHorizontalScreen = () => {
         <NoActiveStep />
       </Example>
 
+      <Example title="Initial Active Step">
+        <Stepper activeStepId={basicSteps[1].id} direction="horizontal" steps={basicSteps} />
+      </Example>
+
       <Example title="No Label Text">
         <StepperHorizontalExample activeStepId={noLabelSteps[0].id} steps={noLabelSteps} />
       </Example>
