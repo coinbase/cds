@@ -467,8 +467,8 @@ export type SelectRef = HTMLElement &
     refs: UseFloatingReturn['refs'];
   };
 
-type SelectComponent = <Type extends SelectType = 'single'>(
-  props: SelectProps<Type> & { ref?: React.Ref<SelectRef> },
+type SelectComponent = <Type extends SelectType = 'single', T extends string = string>(
+  props: SelectProps<Type, T> & { ref?: React.Ref<SelectRef> },
 ) => React.ReactElement;
 
 const SelectBase = memo(

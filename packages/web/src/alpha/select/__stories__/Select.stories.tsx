@@ -515,7 +515,7 @@ export const Typed = () => {
   return (
     <Select
       label="Typed select"
-      onChange={(value) => setValue(value as TestValue | null)}
+      onChange={setValue}
       options={typedOptions}
       placeholder="Empty value"
       value={value}
