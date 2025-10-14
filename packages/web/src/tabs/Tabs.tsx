@@ -141,21 +141,17 @@ const TabsComponent = memo(
           if (event.key === 'ArrowRight') {
             targetTab = tabs.slice(focusedTabIndex + 1).find((tab) => !tab.disabled);
           } else if (event.key === 'ArrowLeft') {
-            for (let i = focusedTabIndex - 1; i >= 0; i--) {
-              if (!tabs[i].disabled) {
-                targetTab = tabs[i];
-                break;
-              }
-            }
+            targetTab = tabs
+              .slice(0, focusedTabIndex)
+              .reverse()
+              .find((tab) => !tab.disabled);
           } else if (event.key === 'Home') {
-            targetTab = tabs.slice(0).find((tab) => !tab.disabled);
+            targetTab = tabs.find((tab) => !tab.disabled);
           } else if (event.key === 'End') {
-            for (let i = tabs.length - 1; i >= 0; i--) {
-              if (!tabs[i].disabled) {
-                targetTab = tabs[i];
-                break;
-              }
-            }
+            targetTab = tabs
+              .slice(0)
+              .reverse()
+              .find((tab) => !tab.disabled);
           }
 
           if (targetTab) {
