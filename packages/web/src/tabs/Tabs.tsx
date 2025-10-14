@@ -117,11 +117,10 @@ const TabsComponent = memo(
           const keyEventsToHandle = ['ArrowRight', 'ArrowLeft', 'Home', 'End'];
           if (!keyEventsToHandle.includes(event.key)) return;
 
-          // Find which tab is currently focused
           const focusedElement = document.activeElement;
           if (!focusedElement) return;
 
-          // Find the focused tab's container
+          // Find the focused tab's index
           let focusedTabId: T | null = null;
           for (const tab of tabs) {
             const tabRef = refMap.getRef(tab.id);
@@ -130,7 +129,6 @@ const TabsComponent = memo(
               break;
             }
           }
-
           if (!focusedTabId) return;
 
           const focusedTabIndex = tabs.findIndex((tab) => tab.id === focusedTabId);
@@ -162,9 +160,8 @@ const TabsComponent = memo(
 
           if (targetTab) {
             const targetRef = refMap.getRef(targetTab.id);
-            // Focus the first focusable element within the target tab
             const focusableElement = targetRef?.querySelector<HTMLElement>(
-              'button, [tabindex]:not([tabindex="-1"])',
+              '[data-rendered-tab], [tabindex]:not([tabindex="-1"])',
             );
             focusableElement?.focus();
           }
@@ -178,7 +175,7 @@ const TabsComponent = memo(
             const RenderedTab = CustomTabComponent ?? TabComponent;
             return (
               <TabContainer key={id} id={id} registerRef={refMap.registerRef}>
-                <RenderedTab disabled={tabDisabled} id={id} {...props} />
+                <RenderedTab data-rendered-tab disabled={tabDisabled} id={id} {...props} />
               </TabContainer>
             );
           }),
