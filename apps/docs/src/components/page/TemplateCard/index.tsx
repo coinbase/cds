@@ -1,6 +1,6 @@
 import React from 'react';
 import { Icon } from '@cbhq/cds-web/icons';
-import { Box, HStack, VStack } from '@cbhq/cds-web/layout';
+import { HStack, VStack } from '@cbhq/cds-web/layout';
 import { Text } from '@cbhq/cds-web/typography';
 import Link from '@docusaurus/Link';
 
@@ -35,8 +35,8 @@ export const TemplateCard = ({ name, description, href, icon }: TemplateCardProp
       width="100%"
     >
       <HStack alignItems="center" gap={1.5} justifyContent="space-between" width="full">
-        <HStack alignItems="center" gap={1.5}>
-          <Box height={48}>{icon}</Box>
+        <HStack alignItems="center" gap={1.5} height={48}>
+          {icon}
           {name && (
             <Text as="h3" color="fg" font="title3">
               {name}
