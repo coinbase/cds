@@ -7,6 +7,7 @@ import { Text } from '../../typography/Text';
 import { DefaultThemeProvider } from '../../utils/test';
 import type { SegmentedTabProps } from '../SegmentedTab';
 import { SegmentedTab } from '../SegmentedTab';
+import { SegmentedTabs } from '../SegmentedTabs';
 
 const TEST_ID = 'mock-segmented-tab';
 const NoopFn = () => {};
@@ -32,7 +33,9 @@ describe('SegmentedTab', () => {
       await renderA11y(
         <DefaultThemeProvider>
           <TabsContext.Provider value={mockApi}>
-            <SegmentedTab {...exampleProps} />
+            <div role="tablist">
+              <SegmentedTab {...exampleProps} />
+            </div>
           </TabsContext.Provider>
         </DefaultThemeProvider>,
       ),
