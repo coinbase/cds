@@ -212,6 +212,27 @@ const NoActiveStep = () => {
 };
 
 // ------------------------------------------------------------
+// Initial active step
+// ------------------------------------------------------------
+const InitialActiveStep = () => {
+  const steps: StepperValue[] = [
+    {
+      id: 'first-step',
+      label: 'First step',
+    },
+    {
+      id: 'second-step',
+      label: 'Second step',
+    },
+    {
+      id: 'final-step',
+      label: 'Final step',
+    },
+  ];
+  return <Stepper activeStepId={steps[1].id} direction="vertical" steps={steps} />;
+};
+
+// ------------------------------------------------------------
 // Nested Steps
 // ------------------------------------------------------------
 const NestedSteps = () => {
@@ -602,6 +623,10 @@ const StepperVerticalScreen = () => {
 
       <Example title="No Active Step">
         <NoActiveStep />
+      </Example>
+
+      <Example title="Initial Active Step">
+        <InitialActiveStep />
       </Example>
 
       <Example title="Nested Steps">
