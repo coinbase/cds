@@ -10,10 +10,25 @@ export default function Root({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     if (window.location.hash) {
-      const element = document.getElementById(window.location.hash.slice(1));
+      const elementId = window.location.hash.slice(1);
+      const element = document.getElementById(elementId);
+
       if (element) {
         element.scrollIntoView();
+        return;
       }
+
+      // If not present, wait for the element to be added to the DOM
+      const observer = new MutationObserver(() => {
+        const element = document.getElementById(elementId);
+        if (element) {
+          element.scrollIntoView();
+          observer.disconnect();
+        }
+      });
+
+      observer.observe(document.body, { childList: true, subtree: true });
+      return () => observer.disconnect();
     }
   }, []);
 
