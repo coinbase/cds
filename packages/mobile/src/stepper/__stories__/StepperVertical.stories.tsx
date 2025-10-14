@@ -225,6 +225,10 @@ const InitialActiveStep = () => {
       label: 'Second step',
     },
     {
+      id: 'third-step',
+      label: 'Third step',
+    },
+    {
       id: 'final-step',
       label: 'Final step',
     },
