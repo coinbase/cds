@@ -1,5 +1,6 @@
 import React from 'react';
 import { Icon } from '@coinbase/cds-web/icons';
+import { HStack, VStack } from '@coinbase/cds-web/layout';
 import { Text } from '@coinbase/cds-web/typography';
 import Link from '@docusaurus/Link';
 
