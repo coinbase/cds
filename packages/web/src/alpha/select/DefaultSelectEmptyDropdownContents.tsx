@@ -3,7 +3,10 @@ import { forwardRef, memo } from 'react';
 import { Box } from '../../layout/Box';
 import { Text } from '../../typography/Text';
 
-import type { SelectEmptyDropdownContentComponent, SelectEmptyDropdownContentProps } from './Select';
+import type {
+  SelectEmptyDropdownContentComponent,
+  SelectEmptyDropdownContentProps,
+} from './Select';
 
 export const DefaultSelectEmptyDropdownContents: SelectEmptyDropdownContentComponent = memo(
   forwardRef<HTMLDivElement, SelectEmptyDropdownContentProps>(
@@ -15,7 +18,11 @@ export const DefaultSelectEmptyDropdownContents: SelectEmptyDropdownContentCompo
           padding={2}
           style={styles?.emptyContentsContainer}
         >
-          <Text className={classNames?.emptyContentsText} font="body" style={styles?.emptyContentsText}>
+          <Text
+            className={classNames?.emptyContentsText}
+            font="body"
+            style={styles?.emptyContentsText}
+          >
             {label}
           </Text>
         </Box>

@@ -66,6 +66,7 @@ const DefaultSelectControlComponent = <Type extends SelectType, T extends string
   }: SelectControlProps<Type, T>,
   ref: React.Ref<HTMLElement>,
 ) => {
+  type ValueType = Type extends 'multi' ? T | T[] : T | null;
   const shouldShowCompactLabel = compact && label;
   const isMultiSelect = type === 'multi';
   const hasValue = value !== null && value.length > 0;
@@ -79,7 +80,7 @@ const DefaultSelectControlComponent = <Type extends SelectType, T extends string
       e.stopPropagation();
       const currentValue = [...(value as T[])];
       const changedValue = currentValue[index];
-      onChange?.(changedValue as Type extends 'multi' ? T | T[] : T | null);
+      onChange?.(changedValue as ValueType);
 
       // Shift focus from the valueNode that will be removed
       // If there will be no values left after removing, focus the control

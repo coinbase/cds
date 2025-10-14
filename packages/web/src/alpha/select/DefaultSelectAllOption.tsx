@@ -1,6 +1,5 @@
 import { forwardRef, memo } from 'react';
 
-import { Checkbox } from '../../controls/Checkbox';
 import { Divider } from '../../layout/Divider';
 
 import { DefaultSelectOption } from './DefaultSelectOption';
@@ -28,8 +27,8 @@ const DefaultSelectAllOptionComponent = <Type extends SelectType, T extends stri
   return (
     <>
       <DefaultSelectOption
-        ref={ref}
         key="select-all"
+        ref={ref}
         accessory={accessory}
         blendStyles={blendStyles}
         className={className}

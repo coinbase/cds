@@ -473,7 +473,7 @@ type SelectComponent = <Type extends SelectType = 'single'>(
 
 const SelectBase = memo(
   forwardRef(
-    <Type extends SelectType = 'single'>(
+    <Type extends SelectType = 'single', T extends string = string>(
       {
         value,
         type = 'single' as Type,
@@ -504,10 +504,10 @@ const SelectBase = memo(
         accessory,
         media,
         detail,
-        SelectOptionComponent = DefaultSelectOption as SelectOptionComponent<Type>,
-        SelectAllOptionComponent = DefaultSelectAllOption as SelectOptionComponent<Type>,
-        SelectDropdownComponent = DefaultSelectDropdown as SelectDropdownComponent<Type>,
-        SelectControlComponent = DefaultSelectControl as SelectControlComponent<Type>,
+        SelectOptionComponent = DefaultSelectOption,
+        SelectAllOptionComponent = DefaultSelectAllOption,
+        SelectDropdownComponent = DefaultSelectDropdown,
+        SelectControlComponent = DefaultSelectControl,
         SelectEmptyDropdownContentsComponent = DefaultSelectEmptyDropdownContents as SelectEmptyDropdownContentComponent,
         style,
         styles,
@@ -515,7 +515,7 @@ const SelectBase = memo(
         classNames,
         testID,
         ...props
-      }: SelectProps<Type>,
+      }: SelectProps<Type, T>,
       ref: React.Ref<SelectRef>,
     ) => {
       const hasMounted = useHasMounted();

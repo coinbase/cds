@@ -48,6 +48,7 @@ function DefaultSelectDropdownComponent<Type extends SelectType, T extends strin
   }: SelectDropdownProps<Type, T>,
   ref: React.Ref<HTMLElement>,
 ) {
+  type ValueType = Type extends 'multi' ? T | T[] : T | null;
   const isMultiSelect = type === 'multi';
   const [containerWidth, setContainerWidth] = useState<number | null>(null);
 
@@ -78,18 +79,13 @@ function DefaultSelectDropdownComponent<Type extends SelectType, T extends strin
   const isSomeOptionsSelected = isMultiSelect ? (value as string[]).length > 0 : false;
 
   const toggleSelectAll = useCallback(() => {
-    if (isAllOptionsSelected) onChange(null as Type extends 'multi' ? T | T[] : T | null);
-    else
-      onChange(
-        options.map((o) => o.value).filter((o) => o !== null) as Type extends 'multi'
-          ? T | T[]
-          : T | null,
-      );
+    if (isAllOptionsSelected) onChange(null as ValueType);
+    else onChange(options.map((o) => o.value).filter((o) => o !== null) as ValueType);
   }, [isAllOptionsSelected, onChange, options]);
   const handleClearAll = useCallback(
     (e: React.MouseEvent<HTMLButtonElement>) => {
       e.stopPropagation();
-      onChange(null as Type extends 'multi' ? T | T[] : T | null);
+      onChange(null as ValueType);
     },
     [onChange],
   );
@@ -257,7 +253,7 @@ function DefaultSelectDropdownComponent<Type extends SelectType, T extends strin
                           disabled={option.disabled || disabled}
                           media={optionMedia ?? media ?? defaultMedia}
                           onClick={(newValue) => {
-                            onChange(newValue as Type extends 'multi' ? T | T[] : T | null);
+                            onChange(newValue as ValueType);
                             if (!isMultiSelect) setOpen(false);
                           }}
                           selected={selected}
