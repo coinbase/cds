@@ -95,19 +95,6 @@ const AvatarScreen = () => {
               />
             ))}
           </HStack>
-          <HStack alignItems="center" flexWrap="wrap" gap={2}>
-            {sizes.map((size) => (
-              <Avatar
-                key={size}
-                accessibilityLabel=""
-                alt=""
-                borderColor="bgPositive"
-                shape="hexagon"
-                size={size}
-                src={image}
-              />
-            ))}
-          </HStack>
         </VStack>
       </Example>
       <Example title="Fallback Image - Default">
@@ -150,18 +137,6 @@ const AvatarScreen = () => {
                 alt=""
                 borderColor="bgPositive"
                 shape="square"
-                size={size}
-              />
-            ))}
-          </HStack>
-          <HStack alignItems="center" flexWrap="wrap" gap={2}>
-            {sizes.map((size) => (
-              <Avatar
-                key={size}
-                accessibilityLabel=""
-                alt=""
-                borderColor="bgPositive"
-                shape="hexagon"
                 size={size}
               />
             ))}
