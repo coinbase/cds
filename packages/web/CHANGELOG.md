@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.16.2 (10/10/2025 PST)
+
+#### 🐞 Fixes
+
+- Change layoutSpacing to spacingVariant. [[#95](https://github.com/coinbase/cds/pull/95)]
+
 ## 8.16.1 (10/9/2025 PST)
 
 #### 🐞 Fixes

@@ -3,7 +3,7 @@ import { useState } from 'react';
 import type { ColorScheme } from '@coinbase/cds-common';
 import { ThemeProvider } from '@coinbase/cds-web';
 import { defaultTheme } from '@coinbase/cds-web/themes/defaultTheme';
-import { Box, Divider, Group, HStack, VStack } from '@coinbase/cds-web/layout';
+import { Box, Divider, HStack, VStack } from '@coinbase/cds-web/layout';
 import { Sidebar, SidebarItem } from '@coinbase/cds-web/navigation';
 import { MediaQueryProvider } from '@coinbase/cds-web/system';
 import { Navbar } from './components/Navbar';
@@ -69,11 +69,7 @@ const Home = () => {
           </Sidebar>
           <VStack width="100%" zIndex={0}>
             <Navbar title={activeNavItem.title} toggleColorScheme={toggleColorScheme} />
-            <Group
-              width="100%"
-              direction="horizontal"
-              divider={() => <Divider direction="vertical" />}
-            >
+            <HStack width="100%">
               <VStack width={{ base: 500, desktop: 660 }}>
                 <Box padding={2}>
                   <SearchInput
@@ -88,10 +84,11 @@ const Home = () => {
                   <AssetList pageSize={5} />
                 </Box>
               </VStack>
+              <Divider direction="vertical" />
               <Box paddingX={3} paddingY={2}>
                 <CardList />
               </Box>
-            </Group>
+            </HStack>
           </VStack>
         </HStack>
       </ThemeProvider>

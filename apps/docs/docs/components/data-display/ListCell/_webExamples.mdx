@@ -15,11 +15,15 @@ The `title`, `description`, `detail` and `subdetail` props are only intended to 
 ### Basic usage
 
 ```tsx live
-<ListCell layoutSpacing="hug" title="Basic List Cell" description="A simple example of ListCell" />
+<ListCell
+  spacingVariant="condensed"
+  title="Basic List Cell"
+  description="A simple example of ListCell"
+/>
 ```
 
 :::note
-Prefer `layoutSpacing="hug"` for the new ListCell design. The `spacious` and `compact` values exist for backward compatibility and may be removed in a future major release.
+Prefer `spacingVariant="condensed"` for the new ListCell design. The `compact` may be removed in a future major release.
 :::
 
 ```tsx live
@@ -27,12 +31,12 @@ Prefer `layoutSpacing="hug"` for the new ListCell design. The `spacious` and `co
   {/* Preferred (new design) */}
   <ListCell
     accessory="arrow"
-    description="New design (hug)"
+    description="New design (condensed)"
     detail="$12,345.00"
-    layoutSpacing="hug"
+    spacingVariant="condensed"
     media={<Avatar src={assets.eth.imageUrl} size="m" />}
     onClick={console.log}
-    title="Hug"
+    title="Condensed"
     variant="positive"
   />
 
@@ -40,7 +44,7 @@ Prefer `layoutSpacing="hug"` for the new ListCell design. The `spacious` and `co
   <ListCell
     accessory="arrow"
     detail="$12,345.00"
-    layoutSpacing="compact"
+    spacingVariant="compact"
     media={<Avatar src={assets.eth.imageUrl} size="m" />}
     onClick={console.log}
     title="Compact (deprecated)"
@@ -49,10 +53,10 @@ Prefer `layoutSpacing="hug"` for the new ListCell design. The `spacious` and `co
   <ListCell
     accessory="arrow"
     detail="$12,345.00"
-    layoutSpacing="spacious"
+    spacingVariant="normal"
     media={<Avatar src={assets.eth.imageUrl} size="m" />}
     onClick={console.log}
-    title="Spacious (deprecated)"
+    title="Normal"
     variant="positive"
   />
 </VStack>
@@ -62,7 +66,7 @@ Prefer `layoutSpacing="hug"` for the new ListCell design. The `spacious` and `co
 
 ```tsx live
 <ListCell
-  layoutSpacing="hug"
+  spacingVariant="condensed"
   title="List Cell with Icon"
   description="Shows usage with a leading icon"
   media={<Icon active name="info" />}
@@ -73,7 +77,7 @@ Prefer `layoutSpacing="hug"` for the new ListCell design. The `spacious` and `co
 
 ```tsx live
 <ListCell
-  layoutSpacing="hug"
+  spacingVariant="condensed"
   title="List Cell with Details"
   description="Shows usage with detail and subdetail"
   detail="Primary detail"
@@ -85,7 +89,7 @@ Prefer `layoutSpacing="hug"` for the new ListCell design. The `spacious` and `co
 
 ```tsx live
 <ListCell
-  layoutSpacing="hug"
+  spacingVariant="condensed"
   title="Interactive List Cell"
   description="Click or tap to interact"
   accessory="arrow"
@@ -98,7 +102,7 @@ Prefer `layoutSpacing="hug"` for the new ListCell design. The `spacious` and `co
 ```tsx live
 <VStack gap={3}>
   <ListCell
-    layoutSpacing="hug"
+    spacingVariant="condensed"
     title="List Cell with Helper Text"
     description="Shows usage with helper text below the cell"
     helperText={
@@ -110,7 +114,7 @@ Prefer `layoutSpacing="hug"` for the new ListCell design. The `spacious` and `co
     end={<Button compact>Action</Button>}
   />
   <ListCell
-    layoutSpacing="hug"
+    spacingVariant="condensed"
     title="List Cell with Warning"
     description="Shows usage with a warning message"
     helperText={
@@ -122,7 +126,7 @@ Prefer `layoutSpacing="hug"` for the new ListCell design. The `spacious` and `co
     end={<Button compact>Action</Button>}
   />
   <ListCell
-    layoutSpacing="hug"
+    spacingVariant="condensed"
     title="List Cell with Error"
     description="Shows usage with an error message"
     helperText={
@@ -140,7 +144,7 @@ Prefer `layoutSpacing="hug"` for the new ListCell design. The `spacious` and `co
 
 ```tsx live
 <ListCell
-  layoutSpacing="hug"
+  spacingVariant="condensed"
   title="Multiline Description"
   description="This is a longer description that demonstrates how the text wraps when the multiline prop is enabled. It can span multiple lines without truncating."
   multiline
@@ -154,17 +158,17 @@ The ListCellFallback component provides loading state representations of ListCel
 ```tsx live
 <VStack gap={3}>
   {/* Basic loading state */}
-  <ListCellFallback title description layoutSpacing="hug" />
+  <ListCellFallback title description spacingVariant="condensed" />
 
   {/* Loading state with media */}
-  <ListCellFallback title description media="icon" layoutSpacing="hug" />
+  <ListCellFallback title description media="icon" spacingVariant="condensed" />
 
   {/* Loading state with details */}
-  <ListCellFallback title description detail subdetail layoutSpacing="hug" />
+  <ListCellFallback title description detail subdetail spacingVariant="condensed" />
 
   {/* Full loading state with custom widths */}
   <ListCellFallback
-    layoutSpacing="hug"
+    spacingVariant="condensed"
     title
     description
     detail

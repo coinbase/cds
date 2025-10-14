@@ -25,45 +25,50 @@ const titlePadding = { paddingX: gutter } as const;
 const Content = () => {
   return (
     <>
-      <ListCell layoutSpacing="hug" title="Title" />
-      <ListCell detail="Detail" layoutSpacing="hug" title="Title" />
-      <ListCell description="Description" layoutSpacing="hug" title="Title" />
-      <ListCell description="Description" detail="Detail" layoutSpacing="hug" title="Title" />
+      <ListCell spacingVariant="condensed" title="Title" />
+      <ListCell detail="Detail" spacingVariant="condensed" title="Title" />
+      <ListCell description="Description" spacingVariant="condensed" title="Title" />
       <ListCell
         description="Description"
         detail="Detail"
-        layoutSpacing="hug"
+        spacingVariant="condensed"
+        title="Title"
+      />
+      <ListCell
+        description="Description"
+        detail="Detail"
+        spacingVariant="condensed"
         subdetail="Neutral"
         title="Title"
       />
-      <ListCell detail="Detail" layoutSpacing="hug" subdetail="Neutral" title="Title" />
+      <ListCell detail="Detail" spacingVariant="condensed" subdetail="Neutral" title="Title" />
       <ListCell
         description="Description"
         detail="Detail"
-        layoutSpacing="hug"
+        spacingVariant="condensed"
         subdetail="+Positive"
         title="Title"
         variant="positive"
       />
-      <ListCell layoutSpacing="hug" subdetail="+Positive" title="Title" variant="positive" />
+      <ListCell spacingVariant="condensed" subdetail="+Positive" title="Title" variant="positive" />
       <ListCell
         description="Description"
         detail="Detail"
-        layoutSpacing="hug"
+        spacingVariant="condensed"
         subdetail="-Negative"
         title="Title"
         variant="negative"
       />
       <ListCell
         detail="Detail"
-        layoutSpacing="hug"
+        spacingVariant="condensed"
         subdetail="-Negative"
         title="Title"
         variant="negative"
       />
       <ListCell
         detail="Detail"
-        layoutSpacing="hug"
+        spacingVariant="condensed"
         subdetail="Warning"
         title="Title"
         variant="warning"
@@ -75,45 +80,45 @@ const Content = () => {
 const CompactContent = () => {
   return (
     <>
-      <ListCell layoutSpacing="compact" title="Title" />
-      <ListCell detail="Detail" layoutSpacing="compact" title="Title" />
-      <ListCell description="Description" layoutSpacing="compact" title="Title" />
-      <ListCell description="Description" detail="Detail" layoutSpacing="compact" title="Title" />
+      <ListCell spacingVariant="compact" title="Title" />
+      <ListCell detail="Detail" spacingVariant="compact" title="Title" />
+      <ListCell description="Description" spacingVariant="compact" title="Title" />
+      <ListCell description="Description" detail="Detail" spacingVariant="compact" title="Title" />
       <ListCell
         description="Description"
         detail="Detail"
-        layoutSpacing="compact"
+        spacingVariant="compact"
         subdetail="Neutral"
         title="Title"
       />
-      <ListCell detail="Detail" layoutSpacing="compact" subdetail="Neutral" title="Title" />
+      <ListCell detail="Detail" spacingVariant="compact" subdetail="Neutral" title="Title" />
       <ListCell
         description="Description"
         detail="Detail"
-        layoutSpacing="compact"
+        spacingVariant="compact"
         subdetail="+Positive"
         title="Title"
         variant="positive"
       />
-      <ListCell layoutSpacing="compact" subdetail="+Positive" title="Title" variant="positive" />
+      <ListCell spacingVariant="compact" subdetail="+Positive" title="Title" variant="positive" />
       <ListCell
         description="Description"
         detail="Detail"
-        layoutSpacing="compact"
+        spacingVariant="compact"
         subdetail="-Negative"
         title="Title"
         variant="negative"
       />
       <ListCell
         detail="Detail"
-        layoutSpacing="compact"
+        spacingVariant="compact"
         subdetail="-Negative"
         title="Title"
         variant="negative"
       />
       <ListCell
         detail="Detail"
-        layoutSpacing="compact"
+        spacingVariant="compact"
         subdetail="Warning"
         title="Title"
         variant="warning"
@@ -124,20 +129,25 @@ const CompactContent = () => {
 
 const PressableContent = () => (
   <>
-    <ListCell layoutSpacing="hug" onPress={onPressConsole} title="Title" />
-    <ListCell layoutSpacing="hug" onPress={onPressConsole} subdetail="Neutral" title="Title" />
+    <ListCell onPress={onPressConsole} spacingVariant="condensed" title="Title" />
+    <ListCell
+      onPress={onPressConsole}
+      spacingVariant="condensed"
+      subdetail="Neutral"
+      title="Title"
+    />
     <ListCell
       description="Multi-line description"
-      layoutSpacing="hug"
       onPress={onPressConsole}
+      spacingVariant="condensed"
       title="Title"
     />
     <ListCell
       multiline
       selected
       description="Multi-line description"
-      layoutSpacing="hug"
       onPress={onPressConsole}
+      spacingVariant="condensed"
       title="Title"
     />
     <ListCell
@@ -145,37 +155,37 @@ const PressableContent = () => (
       multiline
       selected
       description="Multi-line description"
-      layoutSpacing="hug"
       onPress={onPressConsole}
+      spacingVariant="condensed"
       title="Title"
     />
     <ListCell
       multiline
       description="Multi-line description goes here with really long text"
-      layoutSpacing="hug"
       onPress={onPressConsole}
+      spacingVariant="condensed"
       title="Title"
     />
     <ListCell
       multiline
       selected
       description="Multi-line description goes here with really long text"
-      layoutSpacing="hug"
       onPress={onPressConsole}
+      spacingVariant="condensed"
       title="Title"
     />
     <ListCell
       description="Description"
       detail="Detail"
-      layoutSpacing="hug"
       onPress={onPressConsole}
+      spacingVariant="condensed"
       title="Title"
     />
     <ListCell
       description="Description"
       detail="Detail"
-      layoutSpacing="hug"
       onPress={onPressConsole}
+      spacingVariant="condensed"
       subdetail="Neutral"
       title="Title"
     />
@@ -183,8 +193,8 @@ const PressableContent = () => (
       selected
       description="Description"
       detail="Detail"
-      layoutSpacing="hug"
       onPress={onPressConsole}
+      spacingVariant="condensed"
       subdetail="Neutral"
       title="Title"
     />
@@ -192,8 +202,8 @@ const PressableContent = () => (
       disabled
       description="Description"
       detail="Detail"
-      layoutSpacing="hug"
       onPress={onPressConsole}
+      spacingVariant="condensed"
       subdetail="Neutral"
       title="Title"
     />
@@ -202,8 +212,8 @@ const PressableContent = () => (
       selected
       description="Description"
       detail="Detail"
-      layoutSpacing="hug"
       onPress={onPressConsole}
+      spacingVariant="condensed"
       subdetail="+Postive"
       title="Title"
       variant="positive"
@@ -213,8 +223,8 @@ const PressableContent = () => (
       selected
       description="Description"
       detail="Detail"
-      layoutSpacing="hug"
       onPress={onPressConsole}
+      spacingVariant="condensed"
       subdetail="Warning"
       title="Title"
       variant="warning"
@@ -224,50 +234,50 @@ const PressableContent = () => (
 
 const CompactPressableContent = () => (
   <>
-    <ListCell layoutSpacing="compact" onPress={onPressConsole} title="Title" />
-    <ListCell layoutSpacing="compact" onPress={onPressConsole} subdetail="Neutral" title="Title" />
+    <ListCell onPress={onPressConsole} spacingVariant="compact" title="Title" />
+    <ListCell onPress={onPressConsole} spacingVariant="compact" subdetail="Neutral" title="Title" />
     <ListCell
       multiline
       description="Multi-line description"
-      layoutSpacing="compact"
       onPress={onPressConsole}
+      spacingVariant="compact"
       title="Title"
     />
     <ListCell
       multiline
       selected
       description="Multi-line description"
-      layoutSpacing="compact"
       onPress={onPressConsole}
+      spacingVariant="compact"
       title="Title"
     />
     <ListCell
       multiline
       description="Multi-line description goes here with really long text"
-      layoutSpacing="compact"
       onPress={onPressConsole}
+      spacingVariant="compact"
       title="Title"
     />
     <ListCell
       multiline
       selected
       description="Multi-line description goes here with really long text"
-      layoutSpacing="compact"
       onPress={onPressConsole}
+      spacingVariant="compact"
       title="Title"
     />
     <ListCell
       description="Description"
       detail="Detail"
-      layoutSpacing="compact"
       onPress={onPressConsole}
+      spacingVariant="compact"
       title="Title"
     />
     <ListCell
       description="Description"
       detail="Detail"
-      layoutSpacing="compact"
       onPress={onPressConsole}
+      spacingVariant="compact"
       subdetail="Neutral"
       title="Title"
     />
@@ -275,8 +285,8 @@ const CompactPressableContent = () => (
       selected
       description="Description"
       detail="Detail"
-      layoutSpacing="compact"
       onPress={onPressConsole}
+      spacingVariant="compact"
       subdetail="Neutral"
       title="Title"
     />
@@ -284,8 +294,8 @@ const CompactPressableContent = () => (
       disabled
       description="Description"
       detail="Detail"
-      layoutSpacing="compact"
       onPress={onPressConsole}
+      spacingVariant="compact"
       subdetail="Neutral"
       title="Title"
     />
@@ -294,8 +304,8 @@ const CompactPressableContent = () => (
       selected
       description="Description"
       detail="Detail"
-      layoutSpacing="compact"
       onPress={onPressConsole}
+      spacingVariant="compact"
       subdetail="+Postive"
       title="Title"
       variant="positive"
@@ -305,8 +315,8 @@ const CompactPressableContent = () => (
       selected
       description="Description"
       detail="Detail"
-      layoutSpacing="compact"
       onPress={onPressConsole}
+      spacingVariant="compact"
       subdetail="Warning"
       title="Title"
       variant="warning"
@@ -329,21 +339,21 @@ const LongContent = () => (
     />
     <ListCell
       detail="Detail also has a very long string"
-      layoutSpacing="hug"
+      spacingVariant="condensed"
       subdetail="Neutral also does too"
       title="Title with a very long length that should be capped at 2 lines"
     />
     <ListCell
       disableMultilineTitle
       detail="Detail also has a very long string"
-      layoutSpacing="hug"
+      spacingVariant="condensed"
       subdetail="Neutral also does too"
       title="Title with a very long length that should be capped at 1 line when 'disableMultilineTitle' is turned on"
     />
     <ListCell
       description="Description also has a very long length that will be capped at 1 line, unless 'multiline' is turned on and the description can go as many lines as needed."
       detail="Detail also has a very long string"
-      layoutSpacing="hug"
+      spacingVariant="condensed"
       subdetail="Neutral also does too"
       title="Title with a very long length that should be capped at 2 lines"
     />
@@ -352,7 +362,7 @@ const LongContent = () => (
       selected
       description="Description also has a very long length that will be capped at 1 line, unless 'multiline' is turned on and the description can go as many lines as needed."
       detail="Detail also has a very long string"
-      layoutSpacing="hug"
+      spacingVariant="condensed"
       subdetail="Neutral also does too"
       title="Title with a very long length that should be capped at 2 lines"
     />
@@ -365,8 +375,8 @@ const PriorityContent = () => (
       description="Some description of the asset"
       detail="$334,239.03"
       intermediary={<Icon name="chartLine" />}
-      layoutSpacing="hug"
       priority="start"
+      spacingVariant="condensed"
       subdetail="+4.06%"
       title="Asset with a really long name"
       variant="positive"
@@ -375,8 +385,8 @@ const PriorityContent = () => (
       description="Some description of the asset"
       detail="$334,239.03"
       intermediary={<Icon name="chartLine" />}
-      layoutSpacing="hug"
       priority="middle"
+      spacingVariant="condensed"
       subdetail="+4.06%"
       title="Asset with a really long name"
       variant="positive"
@@ -385,8 +395,8 @@ const PriorityContent = () => (
       description="Some description of the asset"
       detail="$334,239.03"
       intermediary={<Icon name="chartLine" />}
-      layoutSpacing="hug"
       priority="end"
+      spacingVariant="condensed"
       subdetail="+4.06%"
       title="Asset with a really long name"
       variant="positive"
@@ -395,8 +405,8 @@ const PriorityContent = () => (
       description="Some description of the asset"
       detail="$334,239.03"
       intermediary={<Icon name="chartLine" />}
-      layoutSpacing="hug"
       priority={cellPriorities}
+      spacingVariant="condensed"
       subdetail="+4.06%"
       title="Asset with a really long name"
       variant="positive"
@@ -405,8 +415,8 @@ const PriorityContent = () => (
       description="Some description of the asset"
       detail="$334,239.03"
       intermediary={<Icon name="chartLine" />}
-      layoutSpacing="hug"
       priority={cellPriorities}
+      spacingVariant="condensed"
       subdetail="+4.06%"
       title="Asset with a really long name"
       variant="warning"
@@ -416,14 +426,19 @@ const PriorityContent = () => (
 
 const WithAccessory = () => (
   <>
-    <ListCell accessory="arrow" layoutSpacing="hug" title="Title" />
-    <ListCell accessory="more" detail="Detail" layoutSpacing="hug" title="Title" />
-    <ListCell accessory="selected" description="Description" layoutSpacing="hug" title="Title" />
+    <ListCell accessory="arrow" spacingVariant="condensed" title="Title" />
+    <ListCell accessory="more" detail="Detail" spacingVariant="condensed" title="Title" />
+    <ListCell
+      accessory="selected"
+      description="Description"
+      spacingVariant="condensed"
+      title="Title"
+    />
     <ListCell
       accessory="arrow"
       description="Description"
       detail="Detail"
-      layoutSpacing="hug"
+      spacingVariant="condensed"
       title="Title"
     />
     <ListCell
@@ -431,7 +446,7 @@ const WithAccessory = () => (
       accessory="arrow"
       description="Description"
       detail="Detail"
-      layoutSpacing="hug"
+      spacingVariant="condensed"
       title="Title"
     />
     <ListCell
@@ -440,14 +455,14 @@ const WithAccessory = () => (
       accessory="arrow"
       description="Description"
       detail="Detail"
-      layoutSpacing="hug"
+      spacingVariant="condensed"
       title="Title"
     />
     <ListCell
       accessory="more"
       description="Description"
       detail="Detail"
-      layoutSpacing="hug"
+      spacingVariant="condensed"
       subdetail="Neutral"
       title="Title"
     />
@@ -455,7 +470,7 @@ const WithAccessory = () => (
       accessory="selected"
       description="Description"
       detail="Detail"
-      layoutSpacing="hug"
+      spacingVariant="condensed"
       subdetail="+Positive"
       title="Title"
       variant="positive"
@@ -464,7 +479,7 @@ const WithAccessory = () => (
       accessory="arrow"
       description="Description"
       detail="Detail"
-      layoutSpacing="hug"
+      spacingVariant="condensed"
       subdetail="-Negative"
       title="Title"
       variant="negative"
@@ -473,7 +488,7 @@ const WithAccessory = () => (
       accessory="arrow"
       description="Description"
       detail="Detail"
-      layoutSpacing="hug"
+      spacingVariant="condensed"
       subdetail="Warning"
       title="Title"
       variant="warning"
@@ -483,44 +498,44 @@ const WithAccessory = () => (
 
 const WithMedia = () => (
   <>
-    <ListCell layoutSpacing="hug" media={<Icon active name="email" />} title="Icon" />
+    <ListCell media={<Icon active name="email" />} spacingVariant="condensed" title="Icon" />
     <ListCell
-      layoutSpacing="hug"
       media={<Icon active name="email" />}
       onPress={onPressConsole}
+      spacingVariant="condensed"
       title="Icon (pressable)"
     />
     <ListCell
       description="Description"
-      layoutSpacing="hug"
       media={<Icon name="phone" />}
+      spacingVariant="condensed"
       title="Icon"
     />
     <ListCell
       description="Description"
       detail="Detail"
-      layoutSpacing="hug"
       media={<Avatar src={assets.eth.imageUrl} />}
+      spacingVariant="condensed"
       title="Avatar"
     />
     <ListCell
       description="Description"
       detail="Detail"
-      layoutSpacing="hug"
       media={<Avatar src={assets.eth.imageUrl} />}
+      spacingVariant="condensed"
       subdetail="Neutral"
       title="Asset"
     />
     <ListCell
       detail="Detail"
-      layoutSpacing="hug"
       media={<Avatar src={assets.eth.imageUrl} />}
+      spacingVariant="condensed"
       title="Image"
     />
     <ListCell
       description="Description"
-      layoutSpacing="hug"
       media={<Pictogram name="shield" />}
+      spacingVariant="condensed"
       title="Pictogram"
     />
   </>
@@ -528,7 +543,12 @@ const WithMedia = () => (
 
 const WithActions = () => (
   <>
-    <ListCell detail="Detail" end={<Button>Action</Button>} layoutSpacing="hug" title="Title" />
+    <ListCell
+      detail="Detail"
+      end={<Button>Action</Button>}
+      spacingVariant="condensed"
+      title="Title"
+    />
     <ListCell
       description="Description"
       end={
@@ -536,14 +556,14 @@ const WithActions = () => (
           Action
         </Button>
       }
-      layoutSpacing="hug"
+      spacingVariant="condensed"
       title="Title"
     />
     <ListCell
       description="Description"
       detail="Detail"
       end={<IconButton accessibilityLabel="External link" name="externalLink" />}
-      layoutSpacing="hug"
+      spacingVariant="condensed"
       title="Title"
     />
   </>
@@ -556,7 +576,7 @@ const WithIntermediary = () => (
       detail="$1,230"
       detailWidth={100}
       intermediary={<Icon name="chartLine" />}
-      layoutSpacing="hug"
+      spacingVariant="condensed"
       title="Title"
     />
     <ListCell
@@ -564,7 +584,7 @@ const WithIntermediary = () => (
       detail="$44,130"
       detailWidth={100}
       intermediary={<Icon name="chartLine" />}
-      layoutSpacing="hug"
+      spacingVariant="condensed"
       title="Title"
     />
     <ListCell
@@ -572,7 +592,7 @@ const WithIntermediary = () => (
       detail="$942,103"
       detailWidth={100}
       intermediary={<Icon name="chartLine" />}
-      layoutSpacing="hug"
+      spacingVariant="condensed"
       title="Title"
     />
     <ListCell
@@ -580,7 +600,7 @@ const WithIntermediary = () => (
       detail="$530"
       detailWidth={100}
       intermediary={<Icon name="chartLine" />}
-      layoutSpacing="hug"
+      spacingVariant="condensed"
       title="Title"
     />
     <ListCell
@@ -588,7 +608,7 @@ const WithIntermediary = () => (
       detail="$123K"
       detailWidth={100}
       intermediary={<Icon name="chartLine" />}
-      layoutSpacing="hug"
+      spacingVariant="condensed"
       title="Title"
     />
   </>
@@ -598,31 +618,31 @@ const WithHelperText = () => (
   <>
     <ListCell
       helperText={<CellHelperText>Helper text</CellHelperText>}
-      layoutSpacing="hug"
       onPress={onPressConsole}
+      spacingVariant="condensed"
       title="Title"
     />
     <ListCell
       description="Description"
       helperText={<CellHelperText>Helper text</CellHelperText>}
-      layoutSpacing="hug"
       onPress={onPressConsole}
+      spacingVariant="condensed"
       title="Title"
     />
     <ListCell
       description="Description"
       detail="Detail"
       helperText={<CellHelperText variant="warning">Warning text</CellHelperText>}
-      layoutSpacing="hug"
       onPress={onPressConsole}
+      spacingVariant="condensed"
       title="Title"
     />
     <ListCell
       description="Description"
       detail="Detail"
       helperText={<CellHelperText variant="error">Error text</CellHelperText>}
-      layoutSpacing="hug"
       onPress={onPressConsole}
+      spacingVariant="condensed"
       subdetail="Subdetail"
       title="Title"
     />
@@ -631,24 +651,24 @@ const WithHelperText = () => (
       description="Description"
       detail="Detail"
       helperText={<CellHelperText variant="error">Disabled error text</CellHelperText>}
-      layoutSpacing="hug"
       onPress={onPressConsole}
+      spacingVariant="condensed"
       subdetail="Subdetail"
       title="Title"
     />
     <ListCell
       description="Description"
       helperText={<CellHelperText paddingStart={6}>Helper text with media</CellHelperText>}
-      layoutSpacing="hug"
       media={<Avatar src={assets.eth.imageUrl} />}
       onPress={onPressConsole}
+      spacingVariant="condensed"
       title="Title"
     />
     <ListCell
       description="Description"
       end={<Button compact>Action</Button>}
       helperText={<CellHelperText variant="warning">Helper text with action</CellHelperText>}
-      layoutSpacing="hug"
+      spacingVariant="condensed"
       title="Title"
     />
     <ListCell
@@ -660,9 +680,9 @@ const WithHelperText = () => (
           Helper text with media, action, and accessory and very long text
         </CellHelperText>
       }
-      layoutSpacing="hug"
       media={<Avatar src={assets.eth.imageUrl} />}
       priority="end"
+      spacingVariant="condensed"
       title="Title"
     />
   </>
@@ -676,8 +696,8 @@ const CustomSpacing = () => (
       description="Description"
       detail="$1,230"
       detailWidth={100}
-      layoutSpacing="hug"
       onPress={onPressConsole}
+      spacingVariant="condensed"
       title="Title"
       {...selectCellSpacingConfig}
     />
@@ -686,15 +706,15 @@ const CustomSpacing = () => (
       description="Description"
       detail="$1,230"
       detailWidth={100}
-      layoutSpacing="hug"
       onPress={onPressConsole}
+      spacingVariant="condensed"
       title="Title"
       {...selectCellSpacingConfig}
     />
   </>
 );
 
-const HugListCell = () => {
+const CondensedListCell = () => {
   const theme = useTheme();
   return (
     <VStack width="360px">
@@ -702,9 +722,9 @@ const HugListCell = () => {
         accessory="more"
         description="Description"
         detail="Detail"
-        layoutSpacing="hug"
         media={<Avatar shape="circle" size="l" src={assets.eth.imageUrl} />}
         onPress={onPressConsole}
+        spacingVariant="condensed"
         subdetail="Subdetail"
         title="Title"
       />
@@ -717,9 +737,9 @@ const HugListCell = () => {
             This is helpful information to guide the user
           </CellHelperText>
         }
-        layoutSpacing="hug"
         media={<Avatar shape="circle" size="l" src={assets.eth.imageUrl} />}
         onPress={onPressConsole}
+        spacingVariant="condensed"
         subdetail="Subdetail"
         title="Title"
       />
@@ -728,9 +748,9 @@ const HugListCell = () => {
         accessory="more"
         description="Long description with multiple lines. This section can be arbitrarily long and occupy many many lines."
         detail="Detail"
-        layoutSpacing="hug"
         media={<Avatar shape="circle" size="l" src={assets.eth.imageUrl} />}
         onPress={onPressConsole}
+        spacingVariant="condensed"
         subdetail="Subdetail"
         title="Title"
       />
@@ -739,9 +759,9 @@ const HugListCell = () => {
         accessory="more"
         description="Long description with multiple lines. This section can be arbitrarily long and occupy many many lines."
         detail="Detail"
-        layoutSpacing="hug"
         media={<Avatar shape="circle" size="l" src={assets.eth.imageUrl} />}
         onPress={onPressConsole}
+        spacingVariant="condensed"
         styles={{
           media: {
             marginTop: theme.space[1],
@@ -755,8 +775,8 @@ const HugListCell = () => {
         accessory="more"
         description="Description"
         detail="Detail"
-        layoutSpacing="hug"
         onPress={onPressConsole}
+        spacingVariant="condensed"
         subdetail="Subdetail"
         title="Title"
       />
@@ -764,9 +784,9 @@ const HugListCell = () => {
         accessory="more"
         description="Description"
         detail="Detail"
-        layoutSpacing="hug"
         media={<Icon name="heart" size="l" />}
         onPress={onPressConsole}
+        spacingVariant="condensed"
         subdetail="Subdetail"
         title="Title"
       />
@@ -774,9 +794,9 @@ const HugListCell = () => {
         accessory="more"
         description="Description"
         detail="Detail"
-        layoutSpacing="hug"
         media={<Icon name="heart" size="s" />}
         onPress={onPressConsole}
+        spacingVariant="condensed"
         subdetail="Subdetail"
         title="Title"
       />
@@ -785,9 +805,9 @@ const HugListCell = () => {
         description="Description"
         detail="Detail"
         end={<Button compact>Action</Button>}
-        layoutSpacing="hug"
         media={<Icon name="heart" size="xs" />}
         onPress={onPressConsole}
+        spacingVariant="condensed"
         subdetail="Subdetail"
         title="Title"
       />
@@ -796,9 +816,9 @@ const HugListCell = () => {
         description="Description"
         detail="Detail"
         intermediary={<Avatar shape="square" size="l" src={squareAssets.human6} />}
-        layoutSpacing="hug"
         media={<Avatar shape="square" size="l" src={squareAssets.human1} />}
         onPress={onPressConsole}
+        spacingVariant="condensed"
         subdetail={
           <Tag colorScheme="green">
             <HStack alignItems="center" gap={0.5} justifyContent="flex-end" paddingTop={1}>
@@ -813,45 +833,44 @@ const HugListCell = () => {
   );
 };
 
-const LayoutSpacing = () => (
+const SpacingVariant = () => (
   <VStack>
     {/* Preferred (new design) */}
     <ListCell
       accessory="arrow"
-      description="New design (hug)"
+      description="New design"
       detail="$12,345.00"
       intermediary={<Icon name="chartLine" />}
-      layoutSpacing="hug"
       media={<Avatar src={assets.eth.imageUrl} />}
       onPress={onPressConsole}
+      spacingVariant="condensed"
       subdetail="+1.23%"
-      title="Hug"
+      title="Condensed"
       variant="positive"
     />
 
     {/* Deprecated options kept for backward compatibility */}
     <ListCell
       accessory="arrow"
-      description="Deprecated (use hug)"
+      description="Deprecated (use condensed)"
       detail="$12,345.00"
       intermediary={<Icon name="chartLine" />}
-      layoutSpacing="compact"
       media={<Avatar src={assets.eth.imageUrl} />}
       onPress={onPressConsole}
+      spacingVariant="compact"
       subdetail="+1.23%"
       title="Compact"
       variant="positive"
     />
     <ListCell
       accessory="arrow"
-      description="Deprecated (use hug)"
       detail="$12,345.00"
       intermediary={<Icon name="chartLine" />}
-      layoutSpacing="spacious"
       media={<Avatar src={assets.eth.imageUrl} />}
       onPress={onPressConsole}
+      spacingVariant="normal"
       subdetail="+1.23%"
-      title="Spacious"
+      title="Normal"
       variant="positive"
     />
   </VStack>
@@ -911,10 +930,10 @@ const UseCaseShowcase = () => {
           </VStack>
         }
         intermediary={<Icon name="chartLine" />}
-        layoutSpacing="hug"
         media={<Avatar src={assets.btc.imageUrl} />}
         onPress={onPressConsole}
         priority="middle"
+        spacingVariant="condensed"
         styles={{
           end: {
             width: 100,
@@ -934,9 +953,9 @@ const UseCaseShowcase = () => {
           </VStack>
         }
         intermediary={<Icon name="chartLine" />}
-        layoutSpacing="hug"
         media={<Avatar src={assets.eth.imageUrl} />}
         onPress={onPressConsole}
+        spacingVariant="condensed"
         styles={{
           end: {
             width: 100,
@@ -956,9 +975,9 @@ const UseCaseShowcase = () => {
           </VStack>
         }
         intermediary={<Icon name="chartLine" />}
-        layoutSpacing="hug"
         media={<Avatar src={assets.ada.imageUrl} />}
         onPress={onPressConsole}
+        spacingVariant="condensed"
         styles={{
           end: {
             width: 100,
@@ -975,9 +994,9 @@ const UseCaseShowcase = () => {
           </VStack>
         }
         intermediary={<Icon name="chartLine" />}
-        layoutSpacing="hug"
         media={<Avatar src={assets.ltc.imageUrl} />}
         onPress={onPressConsole}
+        spacingVariant="condensed"
         styles={{
           end: {
             width: 100,
@@ -995,9 +1014,9 @@ const UseCaseShowcase = () => {
           </VStack>
         }
         intermediary={<Icon name="chartLine" />}
-        layoutSpacing="hug"
         media={<Avatar src={assets.dai.imageUrl} />}
         onPress={onPressConsole}
+        spacingVariant="condensed"
         styles={{
           end: {
             width: 100,
@@ -1055,11 +1074,11 @@ const ListCellScreen = () => {
       <Example inline paddingX={0} title="CustomSpacing" titlePadding={titlePadding}>
         <CustomSpacing />
       </Example>
-      <Example inline paddingX={0} title="HugListCell" titlePadding={titlePadding}>
-        <HugListCell />
+      <Example inline paddingX={0} title="CondensedListCell" titlePadding={titlePadding}>
+        <CondensedListCell />
       </Example>
-      <Example inline paddingX={0} title="LayoutSpacing" titlePadding={titlePadding}>
-        <LayoutSpacing />
+      <Example inline paddingX={0} title="SpacingVariant" titlePadding={titlePadding}>
+        <SpacingVariant />
       </Example>
       <Example inline paddingX={0} title="UseCaseShowcase" titlePadding={titlePadding}>
         <UseCaseShowcase />

@@ -1,0 +1,20 @@
+---
+id: templates
+title: Templates
+platform_switcher_options: { web: true, mobile: false }
+hide_title: true
+---
+
+import { VStack } from '@coinbase/cds-web/layout';
+
+import { ContentHeader } from '@site/src/components/page/ContentHeader';
+import { ContentPageContainer } from '@site/src/components/page/ContentPageContainer';
+
+import WebContent, { toc as webContentToc } from './_webContent.mdx';
+
+import webMetadata from './webMetadata.json';
+
+<VStack gap={5}>
+  <ContentHeader title="Templates" webMetadata={webMetadata} />
+  <ContentPageContainer webContent={<WebContent />} webContentToc={webContentToc} />
+</VStack>

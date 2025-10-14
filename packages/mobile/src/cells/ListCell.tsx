@@ -1,5 +1,5 @@
 import React, { memo, useMemo } from 'react';
-import type { StyleProp, TextStyle } from 'react-native';
+import type { StyleProp, TextStyle, ViewStyle } from 'react-native';
 import { compactListHeight, listHeight } from '@coinbase/cds-common/tokens/cell';
 
 import { VStack } from '../layout/VStack';
@@ -9,19 +9,18 @@ import { Cell, type CellBaseProps, type CellProps, type CellSpacing } from './Ce
 import { CellAccessory, type CellAccessoryType } from './CellAccessory';
 import { CellDetail, type CellDetailProps } from './CellDetail';
 
-export const hugInnerSpacing: CellSpacing = {
-  paddingX: 2 as const,
-  paddingY: 0.5 as const,
-  marginX: 0 as const,
-};
-// no padding outside of the pressable area
-export const hugOuterSpacing: CellSpacing = {
-  paddingX: 0 as const,
-  paddingY: 0 as const,
-  marginX: 0 as const,
-};
+export const condensedInnerSpacing = {
+  paddingX: 2,
+  paddingY: 0.5,
+  marginX: 0,
+} as const satisfies CellSpacing;
 
-type CellStyles = NonNullable<CellBaseProps['styles']>;
+// no padding outside of the pressable area
+export const condensedOuterSpacing = {
+  paddingX: 0,
+  paddingY: 0,
+  marginX: 0,
+} as const satisfies CellSpacing;
 
 export type ListCellBaseProps = CellDetailProps &
   Omit<CellBaseProps, 'accessory' | 'children'> & {
@@ -38,38 +37,33 @@ export type ListCellBaseProps = CellDetailProps &
      */
     action?: React.ReactNode;
     /**
-     * @deprecated Use `layoutSpacing="compact"`. `compact` will be removed in a release.
+     * @deprecated Use `spacingVariant="compact"`. `compact` will be removed in a release.
      */
     compact?: boolean;
     /**
-     * Layout spacing configuration.
-     * Deprecated values: 'spacious' and 'compact'. Prefer 'hug'.
-     * This prop will be removed in the next major release, new list cell will only have 'hug' spacing.
+     * Spacing variant configuration.
+     * Deprecated value: 'compact'. Prefer 'condensed'.
      *
-     * When 'spacious' is set, the cell will have the following behavior:
-     * 1. min-height is 80px
-     * 2. Effective padding is '16px 24px' with 8px padding around the pressable area
-     * 3. border radius is 8px for pressable area
-     * 4. Title always cap at 1 line when there is no description, cap at 2 lines when there is description
-     * 5. Description and subdetail have font 'body'
+     * When `spacingVariant="normal"`:
+     * 1. `min-height` is `80px`
+     * 2. `padding` is `'var(--space-2) var(--space-3)'`
+     * 3. `border-radius` is `'var(--borderRadius-200)'`
+     * 4. when there is a description, title's `numberOfLines={1}` otherwise title's `numberOfLines={2}`
+     * 5. description and subdetail have font `body`
      *
-     * When 'compact' is set, the cell will have the following behavior:
-     * 1. min-height is 40px
-     * 2. Effective padding is '16px 24px' with 8px padding around the pressable area
-     * 3. border radius is 8px for pressable area
-     * 4. Title always cap at 1 line when there is no description, cap at 2 lines when there is description
-     * 5. Description and subdetail have font 'body'
+     * When `spacingVariant="compact"`:
+     * 1. same as `spacingVariant="normal"`, except `min-height` is `40px`
      *
-     * When 'hug' is set, the cell will have the following behavior:
-     * 1. No min-height, height is determined by the content
-     * 2. Padding is '4px 16px', no extra padding around the pressable area
-     * 3. 0 border radius for pressable area
-     * 4. Title always cap at 2 lines
-     * 5. Description and subdetail have font 'label2'
+     * When `spacingVariant="condensed"`:
+     * 1. `min-height` is undefined
+     * 2. `padding` is `'var(--space-1) var(--space-2)'`
+     * 3. `border-radius` is `--borderRadius-0`
+     * 4. title's `numberOfLines={2}`
+     * 5. description and subdetail have font `label2`
      *
-     * @default 'spacious'
+     * @default 'normal'
      */
-    layoutSpacing?: 'spacious' | 'compact' | 'hug';
+    spacingVariant?: 'normal' | 'compact' | 'condensed';
     /** Description of content. Max 1 line (with title) or 2 lines (without), otherwise will truncate. */
     description?: React.ReactNode;
     /**
@@ -95,12 +89,16 @@ export type ListCellBaseProps = CellDetailProps &
     /** Title of content. Max 1 line (with description) or 2 lines (without), otherwise will truncate. */
     title?: React.ReactNode;
     /** Styles for the components */
-    styles?: Pick<
-      CellStyles,
-      'root' | 'media' | 'intermediary' | 'end' | 'accessory' | 'contentContainer' | 'pressable'
-    > & {
-      mainContent?: CellStyles['topContent'];
-      helperText?: CellStyles['bottomContent'];
+    styles?: {
+      root?: StyleProp<ViewStyle>;
+      media?: StyleProp<ViewStyle>;
+      intermediary?: StyleProp<ViewStyle>;
+      end?: StyleProp<ViewStyle>;
+      accessory?: StyleProp<ViewStyle>;
+      contentContainer?: StyleProp<ViewStyle>;
+      pressable?: StyleProp<ViewStyle>;
+      mainContent?: StyleProp<ViewStyle>;
+      helperText?: StyleProp<ViewStyle>;
       title?: StyleProp<TextStyle>;
       description?: StyleProp<TextStyle>;
     };
@@ -131,15 +129,15 @@ export const ListCell = memo(function ListCell({
   subdetail,
   variant,
   onPress,
-  layoutSpacing = compact ? 'compact' : 'spacious',
+  spacingVariant = compact ? 'compact' : 'normal',
   style,
   styles,
   ...props
 }: ListCellProps) {
   const minHeight =
-    layoutSpacing === 'compact'
+    spacingVariant === 'compact'
       ? compactListHeight
-      : layoutSpacing === 'spacious'
+      : spacingVariant === 'normal'
         ? listHeight
         : undefined;
   const accessoryType = selected && !disableSelectionAccessory ? 'selected' : accessory;
@@ -154,27 +152,31 @@ export const ListCell = memo(function ListCell({
           adjustsFontSizeToFit={!!detailWidth}
           detail={detail}
           subdetail={subdetail}
-          subdetailFont={layoutSpacing === 'hug' ? 'label2' : 'body'}
+          subdetailFont={spacingVariant === 'condensed' ? 'label2' : 'body'}
           variant={variant}
         />
       )),
-    [endProp, action, hasDetails, detail, subdetail, detailWidth, layoutSpacing, variant],
+    [endProp, action, hasDetails, detail, subdetail, detailWidth, spacingVariant, variant],
   );
 
   return (
     <Cell
       accessory={accessoryType ? <CellAccessory type={accessoryType} /> : undefined}
-      borderRadius={props.borderRadius ?? (layoutSpacing === 'hug' ? 0 : undefined)}
+      borderRadius={props.borderRadius ?? (spacingVariant === 'condensed' ? 0 : undefined)}
       bottomContent={helperText}
       detailWidth={detailWidth}
       disabled={disabled}
       end={end}
-      innerSpacing={innerSpacing ?? (layoutSpacing === 'hug' ? hugInnerSpacing : undefined)}
+      innerSpacing={
+        innerSpacing ?? (spacingVariant === 'condensed' ? condensedInnerSpacing : undefined)
+      }
       intermediary={intermediary}
       media={media}
       minHeight={minHeight}
       onPress={onPress}
-      outerSpacing={outerSpacing ?? (layoutSpacing === 'hug' ? hugOuterSpacing : undefined)}
+      outerSpacing={
+        outerSpacing ?? (spacingVariant === 'condensed' ? condensedOuterSpacing : undefined)
+      }
       priority={priority}
       selected={selected}
       style={[style, styles?.root]}
@@ -187,8 +189,8 @@ export const ListCell = memo(function ListCell({
         bottomContent: styles?.helperText,
         contentContainer: styles?.contentContainer,
         pressable: [
-          // for the hug spacing, we need to offset the margin vertical to remove the strange gap between the pressable area
-          layoutSpacing === 'hug' && !!onPress && { marginVertical: -1 },
+          // for the condensed spacing, we need to offset the margin vertical to remove the strange gap between the pressable area
+          spacingVariant === 'condensed' && !!onPress && { marginVertical: -1 },
           styles?.pressable,
         ],
       }}
@@ -202,8 +204,8 @@ export const ListCell = memo(function ListCell({
             numberOfLines={
               disableMultilineTitle
                 ? 1
-                : // wrap at 2 lines in hug layoutSpacing regardless of description
-                  layoutSpacing === 'hug'
+                : // wrap at 2 lines in condensed spacingVariant regardless of description
+                  spacingVariant === 'condensed'
                   ? 2
                   : description
                     ? 1
@@ -219,7 +221,7 @@ export const ListCell = memo(function ListCell({
           <Text
             color="fgMuted"
             ellipsize={multiline ? undefined : 'tail'}
-            font={layoutSpacing === 'hug' ? 'label2' : 'body'}
+            font={spacingVariant === 'condensed' ? 'label2' : 'body'}
             numberOfLines={multiline ? undefined : title ? 1 : 2}
             style={styles?.description}
           >
