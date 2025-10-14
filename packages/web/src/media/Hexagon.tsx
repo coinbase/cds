@@ -14,8 +14,8 @@ export const cdsHexagonTestId = 'cds-hexagon';
 export const hexagonClipPathContainerId = 'cds-hexagon-clipPath-container';
 export const hexagonAvatarClipId = 'cds-hexagon-avatar-clipper';
 
-const hexagonBorderWidth = 1.5;
-const hexagonBorderOffset = 0.5;
+const hexagonBorderWidth = 2;
+const hexagonBorderOffset = 0.25;
 
 /**
  * We need to mount this to the DOM one time
@@ -72,7 +72,7 @@ const hexagonBorderContainerCss = css`
   }
 
   &[data-offset='true'] {
-    inset: -${hexagonBorderWidth + hexagonBorderOffset}px;
+    inset: -${hexagonBorderWidth}px;
   }
 `;
 
