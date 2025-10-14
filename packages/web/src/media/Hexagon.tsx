@@ -15,7 +15,6 @@ export const hexagonClipPathContainerId = 'cds-hexagon-clipPath-container';
 export const hexagonAvatarClipId = 'cds-hexagon-avatar-clipper';
 
 const hexagonBorderWidth = 2;
-const hexagonBorderOffset = 0.25;
 
 /**
  * We need to mount this to the DOM one time
