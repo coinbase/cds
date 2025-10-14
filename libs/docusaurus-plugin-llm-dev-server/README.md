@@ -11,7 +11,12 @@ A Docusaurus plugin that serves LLM-friendly documentation on-the-fly during dev
 
 ## How It Works
 
-In development mode, this plugin adds Express middleware that intercepts requests to `/llms/:platform/:docType/:docName.txt` and generates the documentation content on-demand using the existing AI doc generator logic.
+In development mode, this plugin adds Express middleware that intercepts requests to:
+
+- `/llms/:platform/:docType/:docName.txt` - Individual doc pages
+- `/llms/:platform/routes.txt` - Routes index for all docs
+
+The documentation content is generated on-demand using the existing AI doc generator logic.
 
 In production, these requests are handled by static files in `dist/llms/` generated during the build process.
 

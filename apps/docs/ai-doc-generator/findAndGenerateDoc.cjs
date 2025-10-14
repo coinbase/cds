@@ -1,9 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const { globSync } = require('glob');
-const { generateComponentDoc } = require('./generateComponentDoc.cjs');
-const { generateHookDoc } = require('./generateHookDoc.cjs');
-const { generateGettingStartedDoc } = require('./generateGettingStartedDoc.cjs');
+const { generateDoc } = require('./generateDoc.cjs');
 
 /**
  * Find the file path for a doc and generate its content
@@ -20,17 +18,17 @@ function findAndGenerateDoc(platform, docType, docName, siteDir) {
     // Find the file path
     let docPath = null;
 
-    // Try direct file first (e.g., Button.mdx)
+    // Try direct file first (e.g., introduction.mdx, playground.mdx)
     const directFile = path.join(docsRoot, `${docName}.mdx`);
     if (fs.existsSync(directFile)) {
       docPath = directFile;
     }
 
-    // Try as directory with index.mdx (e.g., Button/index.mdx)
+    // Try as directory with index.mdx (e.g., Button/index.mdx, installation/index.mdx)
     if (!docPath) {
       const indexFile = path.join(docsRoot, docName, 'index.mdx');
       if (fs.existsSync(indexFile)) {
-        docPath = path.dirname(indexFile); // Use directory for components/hooks
+        docPath = path.dirname(indexFile); // Use directory path
       }
     }
 
@@ -39,7 +37,7 @@ function findAndGenerateDoc(platform, docType, docName, siteDir) {
       const pattern = `${docsRoot}/**/${docName}/index.mdx`;
       const matches = globSync(pattern);
       if (matches.length > 0) {
-        docPath = path.dirname(matches[0]); // Use directory for components/hooks
+        docPath = path.dirname(matches[0]); // Use directory path
       }
     }
 
@@ -56,25 +54,13 @@ function findAndGenerateDoc(platform, docType, docName, siteDir) {
       return null;
     }
 
-    // Generate content based on doc type
-    if (docType === 'getting-started') {
-      const result = generateGettingStartedDoc(platform, docPath);
-      return result?.content || null;
-    } else if (docType === 'hooks') {
-      // For hooks, we need the directory path
-      const hookDir = fs.statSync(docPath).isDirectory() ? docPath : path.dirname(docPath);
-      return generateHookDoc(platform, hookDir);
-    } else if (docType === 'components') {
-      // For components, we need the directory path and docgen path
-      const componentDir = fs.statSync(docPath).isDirectory() ? docPath : path.dirname(docPath);
-      const docgenPath = path.join(
-        siteDir,
-        '.docusaurus/@coinbase/docusaurus-plugin-docgen/default/',
-      );
-      return generateComponentDoc(platform, componentDir, docgenPath);
-    }
+    // Generate content using unified generator
+    const docgenPath =
+      docType === 'components'
+        ? path.join(siteDir, '.docusaurus/@coinbase/docusaurus-plugin-docgen/default/')
+        : null;
 
-    return null;
+    return generateDoc(platform, docPath, { docgenPath });
   } catch (error) {
     console.error(`Error generating doc for ${platform}/${docType}/${docName}:`, error);
     return null;

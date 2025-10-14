@@ -25,6 +25,35 @@ export default function plugin(context: LoadContext, options: PluginOptions = {}
                 return middlewares;
               }
 
+              // Add middleware to handle /llms/:platform/routes.txt
+              devServer.app.get('/llms/:platform/routes.txt', async (req: any, res: any) => {
+                try {
+                  const { platform } = req.params;
+
+                  // Validate platform
+                  if (!['web', 'mobile'].includes(platform)) {
+                    return res.status(404).send('Invalid platform');
+                  }
+
+                  // Generate the routes content on-the-fly
+                  const { generateRoutesContent } = require(
+                    path.join(generatorPath, 'generateRoutesContent.cjs'),
+                  );
+                  const content = await generateRoutesContent(platform, siteDir);
+
+                  if (!content) {
+                    return res.status(404).send('Routes not found');
+                  }
+
+                  // Return as plain text
+                  res.type('text/plain');
+                  res.send(content);
+                } catch (error) {
+                  console.error('Error generating routes:', error);
+                  res.status(500).send('Error generating routes');
+                }
+              });
+
               // Add middleware to handle /llms/* requests
               devServer.app.get('/llms/:platform/:docType/:docName', async (req: any, res: any) => {
                 try {

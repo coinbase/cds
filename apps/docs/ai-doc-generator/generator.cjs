@@ -8,11 +8,8 @@ const { globSync } = require('glob');
 const fs = require('node:fs');
 const path = require('node:path');
 
-const { generateComponentDoc } = require('./generateComponentDoc.cjs');
-const { generateHookDoc } = require('./generateHookDoc.cjs');
-const { generateGettingStartedDoc } = require('./generateGettingStartedDoc.cjs');
+const { generateDoc } = require('./generateDoc.cjs');
 const { generateRoutesDoc } = require('./generateRoutesDoc.cjs');
-const { getMetadata } = require('./utils.cjs');
 
 // Production: generate to dist/llms (will be deployed)
 // Dev: on-the-fly generation via docusaurus-plugin-llm-dev-server (no static files needed)
@@ -23,6 +20,25 @@ const docgenPath = path.resolve(
   __dirname,
   '../.docusaurus/@coinbase/docusaurus-plugin-docgen/default/',
 );
+
+/**
+ * Get metadata for a doc
+ */
+const getMetadata = (dirPath, platform) => {
+  // Try platform-specific metadata first
+  const platformMetadataFile = path.join(dirPath, `${platform}Metadata.json`);
+  if (fs.existsSync(platformMetadataFile)) {
+    return JSON.parse(fs.readFileSync(platformMetadataFile, 'utf-8'));
+  }
+
+  // Fall back to shared metadata
+  const sharedMetadataFile = path.join(dirPath, 'metadata.json');
+  if (fs.existsSync(sharedMetadataFile)) {
+    return JSON.parse(fs.readFileSync(sharedMetadataFile, 'utf-8'));
+  }
+
+  return null;
+};
 
 const getComponents = (categoriesDirs) => {
   const components = categoriesDirs
@@ -49,16 +65,18 @@ const generateDocs = (outputPath) => {
 
     const gettingStartedDocs = globSync(`${__dirname}/../docs/getting-started/*`);
     for (const docPath of gettingStartedDocs) {
-      const result = generateGettingStartedDoc(platform, docPath);
-      if (!result) continue;
+      const content = generateDoc(platform, docPath);
+      if (!content) continue;
 
       const name = path.basename(docPath, '.mdx');
       const outputFilePath = path.join(gettingStartedOutputPath, `${name}.txt`);
 
-      fs.writeFileSync(outputFilePath, result.content);
+      fs.writeFileSync(outputFilePath, content);
+
+      const metadata = getMetadata(docPath, platform);
       gettingStartedRoutes.push({
         name,
-        description: result.description,
+        description: metadata?.description,
         path: outputFilePath,
       });
     }
@@ -73,7 +91,7 @@ const generateDocs = (outputPath) => {
     const components = getComponents(categoriesDirs);
 
     for (const componentPath of components) {
-      const content = generateComponentDoc(platform, componentPath, docgenPath);
+      const content = generateDoc(platform, componentPath, { docgenPath });
       if (!content) continue;
 
       const name = path.basename(componentPath);
@@ -98,7 +116,7 @@ const generateDocs = (outputPath) => {
 
     const hooks = globSync(`${__dirname}/../docs/hooks/*`);
     for (const hookPath of hooks) {
-      const content = generateHookDoc(platform, hookPath);
+      const content = generateDoc(platform, hookPath);
       if (!content) continue;
 
       const name = path.basename(hookPath);
