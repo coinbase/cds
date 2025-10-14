@@ -335,7 +335,7 @@ function Example() {
   };
 
   return (
-    <HStack gap={2}>
+    <Box gap={2} flexDirection={{ base: 'column', tablet: 'column', desktop: 'row' }}>
       <DatePicker
         required
         date={startDate}
@@ -350,6 +350,7 @@ function Example() {
         onChangeDate={handleChangeDateStart}
         onErrorDate={setStartError}
         requiredError="This field is required"
+        style={{ width: '100%' }}
       />
       <DatePicker
         required
@@ -373,8 +374,9 @@ function Example() {
         onErrorDate={setEndError}
         requiredError="This field is required"
         variant={endError ? 'negative' : undefined}
+        style={{ width: '100%' }}
       />
-    </HStack>
+    </Box>
   );
 }
 ```
