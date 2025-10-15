@@ -41,7 +41,7 @@ export type StepperApi = {
  *
  * @param options - The options for the stepper.
  * @param options.steps - The array of steps data.
- * @param options.defaultActiveStepId - The default active step ID. If not provided, the first step will be used.
+ * @param options.defaultActiveStepId - The default active step ID.
  * @param options.skipParentSteps - If true, steps containing sub-steps will never be made active.
  * @returns A tuple where the first element is the stepper state and the second element is an API for manipulating the stepper state.
  */
