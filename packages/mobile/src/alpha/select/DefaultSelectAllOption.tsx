@@ -6,10 +6,7 @@ import { Divider } from '../../layout/Divider';
 import { DefaultSelectOption } from './DefaultSelectOption';
 import { type SelectOptionProps, type SelectType } from './Select';
 
-const DefaultSelectAllOptionComponent = <
-  Type extends SelectType,
-  T extends string = string,
->(
+const DefaultSelectAllOptionComponent = <Type extends SelectType, T extends string = string>(
   {
     accessory,
     blendStyles,
