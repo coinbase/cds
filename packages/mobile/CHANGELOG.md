@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.16.4 (10/15/2025 PST)
+
+#### 🐞 Fixes
+
+- Fix Android Tray handle bar unfocusable issue. [[#99](https://github.com/coinbase/cds/pull/99)] [DX-4932]
+
 ## 8.16.3 (10/14/2025 PST)
 
 #### 🐞 Fixes
