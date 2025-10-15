@@ -62,17 +62,9 @@ export const LLMDocButtons = memo(() => {
 
   return (
     <Box flexDirection={{ base: 'row', phone: 'column' }} gap={1}>
-      <Tooltip content="Copy page content for LLMs">
-        <Button
-          compact
-          transparent
-          aria-label="Copy LLM documentation"
-          onClick={handleCopy}
-          startIcon="copy"
-        >
-          Copy page
-        </Button>
-      </Tooltip>
+      <Button compact transparent onClick={handleCopy} startIcon="copy">
+        Copy for LLM
+      </Button>
       <Button
         compact
         transparent
@@ -82,7 +74,7 @@ export const LLMDocButtons = memo(() => {
         startIcon="externalLink"
         target="_blank"
       >
-        View as markdown
+        View as Markdown
       </Button>
     </Box>
   );

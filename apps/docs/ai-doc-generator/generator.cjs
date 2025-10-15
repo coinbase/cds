@@ -11,9 +11,6 @@ const path = require('node:path');
 const { generateDoc } = require('./generateDoc.cjs');
 const { generateRoutesDoc } = require('./generateRoutesDoc.cjs');
 
-// Production: generate to dist/llms (will be deployed)
-// Dev: on-the-fly generation via docusaurus-plugin-llm-dev-server (no static files needed)
-// This script is only run during production builds
 const DEFAULT_OUTPUT_PATH = path.resolve(__dirname, '../dist/llms');
 
 const docgenPath = path.resolve(
@@ -82,7 +79,6 @@ const generateDocs = (outputPath) => {
     }
     sections.push({ name: 'Getting Started', routes: gettingStartedRoutes });
 
-    // Generate Component docs
     const componentsOutputPath = path.join(platformOutputPath, 'components');
     fs.mkdirSync(componentsOutputPath, { recursive: true });
     const componentRoutes = [];
@@ -109,7 +105,6 @@ const generateDocs = (outputPath) => {
     }
     sections.push({ name: 'Components', routes: componentRoutes });
 
-    // Generate Hooks docs
     const hooksOutputPath = path.join(platformOutputPath, 'hooks');
     fs.mkdirSync(hooksOutputPath, { recursive: true });
     const hookRoutes = [];
@@ -138,7 +133,6 @@ const generateDocs = (outputPath) => {
   }
 };
 
-// Accept an output path as an argument
 const outputPath = path.resolve(process.cwd(), process.argv[2] || DEFAULT_OUTPUT_PATH);
 generateDocs(outputPath);
 console.log('LLM docs generated');

@@ -121,7 +121,8 @@ const generatePropsTableMarkdown = (propsData, docgenPath) => {
     return [`\`${name}\``, `\`${typeStr}\``, requiredStr, `\`${defaultStr}\``, descriptionStr];
   });
 
-  const escapeString = (str) => str.replace(/\|/g, '\\|').replace(/\n/g, ' ');
+  const escapeString = (str) =>
+    str.replace(/\\/g, '\\\\').replace(/\|/g, '\\|').replace(/\n/g, ' ');
   const headerRow = `| ${headers.join(' | ')} |\n`;
   const separatorRow = `| ${headers.map(() => '---').join(' | ')} |\n`;
   const dataRows = rows

@@ -34,7 +34,6 @@ const generateRoutesContent = (platform, siteDir) => {
   const docsDir = path.join(siteDir, 'docs');
   const docgenPath = path.join(siteDir, '.docusaurus/@coinbase/docusaurus-plugin-docgen/default/');
 
-  // Getting Started docs
   const gettingStartedRoutes = [];
   const gettingStartedDocs = globSync('getting-started/*', { cwd: docsDir });
 
@@ -57,7 +56,6 @@ const generateRoutesContent = (platform, siteDir) => {
     sections.push({ name: 'Getting Started', routes: gettingStartedRoutes });
   }
 
-  // Component docs
   const componentRoutes = [];
   const categoriesDirs = globSync('components/*', { cwd: docsDir });
   const components = categoriesDirs
@@ -83,7 +81,6 @@ const generateRoutesContent = (platform, siteDir) => {
     sections.push({ name: 'Components', routes: componentRoutes });
   }
 
-  // Hooks docs
   const hookRoutes = [];
   const hooks = globSync('hooks/*', { cwd: docsDir });
 
@@ -106,7 +103,6 @@ const generateRoutesContent = (platform, siteDir) => {
     sections.push({ name: 'Hooks', routes: hookRoutes });
   }
 
-  // Generate the markdown content
   const content = `# CDS Routes
 
 ${sections

@@ -4,7 +4,6 @@ import path from 'path';
 const PLUGIN_ID = '@coinbase/docusaurus-plugin-llm-dev-server';
 
 type PluginOptions = {
-  // Path to the AI doc generator directory
   generatorPath?: string;
 };
 
@@ -35,7 +34,6 @@ export default function plugin(context: LoadContext, options: PluginOptions = {}
                     return res.status(404).send('Invalid platform');
                   }
 
-                  // Generate the routes content on-the-fly
                   const { generateRoutesContent } = require(
                     path.join(generatorPath, 'generateRoutesContent.cjs'),
                   );
@@ -45,7 +43,6 @@ export default function plugin(context: LoadContext, options: PluginOptions = {}
                     return res.status(404).send('Routes not found');
                   }
 
-                  // Return as plain text
                   res.type('text/plain');
                   res.send(content);
                 } catch (error) {
@@ -68,11 +65,8 @@ export default function plugin(context: LoadContext, options: PluginOptions = {}
                     return res.status(404).send('Invalid doc type');
                   }
 
-                  // Generate the doc content on-the-fly
-                  const { findAndGenerateDoc } = require(
-                    path.join(generatorPath, 'findAndGenerateDoc.cjs'),
-                  );
-                  const content = await findAndGenerateDoc(
+                  const { resolveDoc } = require(path.join(generatorPath, 'resolveDoc.cjs'));
+                  const content = await resolveDoc(
                     platform,
                     docType,
                     docName.replace(/\.txt$/, ''),
@@ -83,7 +77,6 @@ export default function plugin(context: LoadContext, options: PluginOptions = {}
                     return res.status(404).send('Documentation not found');
                   }
 
-                  // Return as plain text
                   res.type('text/plain');
                   res.send(content);
                 } catch (error) {
