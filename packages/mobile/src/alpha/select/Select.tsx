@@ -344,60 +344,49 @@ export type SelectProps<
   };
 };
 
-export type SelectRef = any &
-  Pick<SelectProps, 'open' | 'setOpen'> & {
-    refs: any;
-  };
-
-type SelectComponent = <Type extends SelectType = 'single', T extends string = string>(
-  props: SelectProps<Type, T> & { ref?: React.Ref<SelectRef> },
-) => React.ReactElement;
-
-const SelectBase = memo(
-  forwardRef(
-    <Type extends SelectType = 'single', T extends string = string>(
-      {
-        value,
-        type = 'single' as Type,
-        options,
-        onChange,
-        open: openProp,
-        setOpen: setOpenProp,
-        disabled,
-        disableClickOutsideClose,
-        placeholder,
-        helperText,
-        compact,
-        label,
-        labelVariant,
-        clearAllLabel,
-        selectAllLabel,
-        emptyOptionsLabel,
-        hideSelectAll,
-        defaultOpen,
-        startNode,
-        endNode,
-        variant,
-        maxSelectedOptionsToShow,
-        hiddenSelectedOptionsLabel,
-        removeSelectedOptionAccessibilityLabel,
-        accessory,
-        media,
-        detail,
-        SelectOptionComponent = DefaultSelectOption,
-        SelectAllOptionComponent = DefaultSelectAllOption,
-        SelectDropdownComponent = DefaultSelectDropdown,
-        SelectControlComponent = DefaultSelectControl,
-        SelectEmptyDropdownContentsComponent = DefaultSelectEmptyDropdownContents as SelectEmptyDropdownContentComponent,
-        styles,
-        accessibilityLabel,
-        accessibilityHint,
-        accessibilityRoles,
-        testID,
-        ...props
-      }: SelectProps<Type, T>,
-      ref: React.Ref<SelectRef>,
-    ) => {
+const SelectInner = <Type extends SelectType = 'single', T extends string = string>(
+  {
+    value,
+    type = 'single' as Type,
+    options,
+    onChange,
+    open: openProp,
+    setOpen: setOpenProp,
+    disabled,
+    disableClickOutsideClose,
+    placeholder,
+    helperText,
+    compact,
+    label,
+    labelVariant,
+    clearAllLabel,
+    selectAllLabel,
+    emptyOptionsLabel,
+    hideSelectAll,
+    defaultOpen,
+    startNode,
+    endNode,
+    variant,
+    maxSelectedOptionsToShow,
+    hiddenSelectedOptionsLabel,
+    removeSelectedOptionAccessibilityLabel,
+    accessory,
+    media,
+    detail,
+    SelectOptionComponent = DefaultSelectOption,
+    SelectAllOptionComponent = DefaultSelectAllOption,
+    SelectDropdownComponent = DefaultSelectDropdown,
+    SelectControlComponent = DefaultSelectControl,
+    SelectEmptyDropdownContentsComponent = DefaultSelectEmptyDropdownContents as SelectEmptyDropdownContentComponent,
+    styles,
+    accessibilityLabel,
+    accessibilityHint,
+    accessibilityRoles,
+    testID,
+    ...props
+  }: SelectProps<Type, T>,
+  ref: React.Ref<View>,
+) => {
       const [openInternal, setOpenInternal] = useState(defaultOpen ?? false);
       const open = openProp ?? openInternal;
       const setOpen = setOpenProp ?? setOpenInternal;
@@ -492,8 +481,11 @@ const SelectBase = memo(
           />
         </View>
       );
-    },
-  ),
-);
+    };
 
-export const Select = SelectBase as SelectComponent;
+export const Select = memo(forwardRef(SelectInner)) as <
+  Type extends SelectType = 'single',
+  T extends string = string,
+>(
+  props: SelectProps<Type, T> & { ref?: React.Ref<View> },
+) => React.ReactElement;

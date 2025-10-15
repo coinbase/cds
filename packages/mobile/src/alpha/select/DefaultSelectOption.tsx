@@ -1,30 +1,34 @@
-import { memo, useCallback, useMemo } from 'react';
+import { forwardRef, memo, useCallback, useMemo } from 'react';
+import { type View } from 'react-native';
 import { selectCellMobileSpacingConfig } from '@coinbase/cds-common/tokens/select';
 
 import { Cell } from '../../cells/Cell';
 import { VStack } from '../../layout/VStack';
 import { Text } from '../../typography/Text';
 
-import type { SelectOptionComponent, SelectOptionProps, SelectType } from './Select';
+import type { SelectOptionProps, SelectType } from './Select';
 
-export const DefaultSelectOptionComponent = <Type extends SelectType, T extends string = string>({
-  value,
-  label,
-  onPress,
-  disabled,
-  selected,
-  indeterminate,
-  compact,
-  description,
-  multiline,
-  style,
-  accessory,
-  media,
-  type,
-  accessibilityRole,
-  styles,
-  ...props
-}: SelectOptionProps<Type, T>) => {
+const DefaultSelectOptionComponent = <Type extends SelectType, T extends string = string>(
+  {
+    value,
+    label,
+    onPress,
+    disabled,
+    selected,
+    indeterminate,
+    compact,
+    description,
+    multiline,
+    style,
+    accessory,
+    media,
+    type,
+    accessibilityRole,
+    styles,
+    ...props
+  }: SelectOptionProps<Type, T>,
+  ref: React.Ref<View>,
+) => {
   const labelNode = useMemo(
     () =>
       typeof label === 'string' ? (
@@ -69,6 +73,8 @@ export const DefaultSelectOptionComponent = <Type extends SelectType, T extends 
     return false;
   }, [selected, indeterminate]);
 
+  // Note: Cell component doesn't support ref forwarding yet, so we can't pass the ref
+  // TODO: Add ref support to Cell component and then pass ref here
   return (
     <Cell
       {...selectCellMobileSpacingConfig}
@@ -100,9 +106,9 @@ export const DefaultSelectOptionComponent = <Type extends SelectType, T extends 
   );
 };
 
-export const DefaultSelectOption = memo(DefaultSelectOptionComponent) as <
-  Type extends SelectType,
+export const DefaultSelectOption = memo(forwardRef(DefaultSelectOptionComponent)) as <
+  Type extends SelectType = 'single',
   T extends string = string,
 >(
-  props: SelectOptionProps<Type, T>,
-) => ReturnType<SelectOptionComponent<Type, T>>;
+  props: SelectOptionProps<Type, T> & { ref?: React.Ref<View> },
+) => React.ReactElement;

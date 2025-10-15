@@ -1,27 +1,33 @@
-import { memo } from 'react';
+import { forwardRef, memo } from 'react';
+import { type View } from 'react-native';
 
 import { Divider } from '../../layout/Divider';
 
 import { DefaultSelectOption } from './DefaultSelectOption';
-import { type SelectOptionComponent, type SelectOptionProps, type SelectType } from './Select';
+import { type SelectOptionProps, type SelectType } from './Select';
 
-export const DefaultSelectAllOptionComponent = <
+const DefaultSelectAllOptionComponent = <
   Type extends SelectType,
   T extends string = string,
->({
-  accessory,
-  blendStyles,
-  compact,
-  detail,
-  disabled,
-  label,
-  media,
-  onPress,
-  selected,
-  style,
-  type,
-  styles,
-}: SelectOptionProps<Type, T>) => {
+>(
+  {
+    accessory,
+    blendStyles,
+    compact,
+    detail,
+    disabled,
+    label,
+    media,
+    onPress,
+    selected,
+    style,
+    type,
+    styles,
+  }: SelectOptionProps<Type, T>,
+  ref: React.Ref<View>,
+) => {
+  // Note: DefaultSelectOption doesn't support ref yet because Cell doesn't support ref forwarding
+  // TODO: Pass ref when Cell component supports ref forwarding
   return (
     <>
       <DefaultSelectOption
@@ -45,9 +51,9 @@ export const DefaultSelectAllOptionComponent = <
   );
 };
 
-export const DefaultSelectAllOption = memo(DefaultSelectAllOptionComponent) as <
-  Type extends SelectType,
+export const DefaultSelectAllOption = memo(forwardRef(DefaultSelectAllOptionComponent)) as <
+  Type extends SelectType = 'single',
   T extends string = string,
 >(
-  props: SelectOptionProps<Type, T>,
-) => ReturnType<SelectOptionComponent<Type, T>>;
+  props: SelectOptionProps<Type, T> & { ref?: React.Ref<View> },
+) => React.ReactElement;
