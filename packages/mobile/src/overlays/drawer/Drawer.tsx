@@ -246,6 +246,8 @@ export const Drawer = memo(
             {...getPanGestureHandlers}
             animated
             onAccessibilityEscape={handleClose}
+            // close modal when user performs the "escape" accessibility gesture
+            // https://reactnative.dev/docs/accessibility#onaccessibilityescape-ios
             pin={pin}
             style={drawerAnimationStyles}
             width={isPinHorizontal ? horizontalDrawerWidth : '100%'}
@@ -263,8 +265,6 @@ export const Drawer = memo(
               elevation={2}
               maxHeight={!isPinHorizontal ? verticalDrawerMaxHeight : '100%'}
               style={[cardStyles.spacing, shouldShowHandleBar && cardStyles.overflowStyles]}
-              // close modal when user performs the "escape" accessibility gesture
-              // https://reactnative.dev/docs/accessibility#onaccessibilityescape-ios
             >
               {content}
             </Box>

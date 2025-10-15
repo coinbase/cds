@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 import type { AccessibilityActionEvent, ViewProps } from 'react-native';
 import { handleBarHeight } from '@coinbase/cds-common/tokens/drawer';
 
@@ -32,7 +32,7 @@ export const HandleBar = ({ onAccessibilityPress, ...props }: HandleBarProps) =>
   );
 
   return (
-    <View
+    <Pressable
       accessible
       accessibilityActions={onAccessibilityPress ? [{ name: 'activate' }] : undefined}
       onAccessibilityAction={handleAccessibilityAction}
@@ -41,7 +41,7 @@ export const HandleBar = ({ onAccessibilityPress, ...props }: HandleBarProps) =>
       {...props}
     >
       <View style={[styles.handleBar, handleBarStyles]} />
-    </View>
+    </Pressable>
   );
 };
 
