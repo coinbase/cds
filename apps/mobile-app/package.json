@@ -31,6 +31,7 @@
     "@react-navigation/native": "^6.1.6",
     "@react-navigation/native-stack": "^6.9.26",
     "@react-navigation/stack": "^6.3.16",
+    "@shopify/react-native-skia": "1.12.4",
     "expo": "~51.0.31",
     "expo-application": "~5.9.1",
     "expo-asset": "~10.0.10",

@@ -478,6 +478,11 @@ export const routes = [
         .default,
   },
   {
+    key: 'SkiaChart',
+    getComponent: () =>
+      require('@coinbase/cds-mobile-visualization/chart/__stories__/SkiaChart.stories').default,
+  },
+  {
     key: 'RemoteImageGroup',
     getComponent: () =>
       require('@coinbase/cds-mobile/media/__stories__/RemoteImageGroup.stories').default,

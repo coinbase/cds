@@ -9,6 +9,8 @@ export * from './Path';
 export * from './PeriodSelector';
 export * from './Point';
 export * from './scrubber';
+export * from './SkiaCartesianChart';
+export * from './SkiaPath';
 export * from './text';
 export * from './utils';
 // codegen:end

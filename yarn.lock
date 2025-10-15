@@ -2414,6 +2414,7 @@ __metadata:
     "@coinbase/cds-mobile": "workspace:^"
     "@coinbase/cds-utils": "workspace:^"
     "@figma/code-connect": "npm:^1.3.4"
+    "@shopify/react-native-skia": "npm:1.12.4"
     "@types/react": "npm:^18.3.12"
     d3-interpolate-path: "npm:^2.3.0"
     lodash: "npm:^4.17.21"
@@ -2427,6 +2428,7 @@ __metadata:
     "@coinbase/cds-lottie-files": "workspace:^"
     "@coinbase/cds-mobile": "workspace:^"
     "@coinbase/cds-utils": "workspace:^"
+    "@shopify/react-native-skia": 1.12.4
     react: ^18.3.1
     react-native: ^0.74.5
     react-native-gesture-handler: ^2.16.2
@@ -8350,6 +8352,27 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@shopify/react-native-skia@npm:1.12.4":
+  version: 1.12.4
+  resolution: "@shopify/react-native-skia@npm:1.12.4"
+  dependencies:
+    canvaskit-wasm: "npm:0.40.0"
+    react-reconciler: "npm:0.27.0"
+  peerDependencies:
+    react: ">=18.0 <19.0.0"
+    react-native: ">=0.64 <0.78.0"
+    react-native-reanimated: ">=2.0.0"
+  peerDependenciesMeta:
+    react-native:
+      optional: true
+    react-native-reanimated:
+      optional: true
+  bin:
+    setup-skia-web: scripts/setup-canvaskit.js
+  checksum: 10c0/479c8b2b5f83c497cc54a103f7365b505306e7a35f6eada93250a3ef2ae62533db13d1f96acacde3094980d34bf97cca3d34166a2308bba7e0565e8d40b43cf3
+  languageName: node
+  linkType: hard
+
 "@shopify/storybook-a11y-test@npm:^1.2.1":
   version: 1.2.1
   resolution: "@shopify/storybook-a11y-test@npm:1.2.1"
@@ -12509,6 +12532,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@webgpu/types@npm:0.1.21":
+  version: 0.1.21
+  resolution: "@webgpu/types@npm:0.1.21"
+  checksum: 10c0/74de9683b70064aeadcdd31381747650b323e7e2183fb38f90a35f1a79f80ad267c0a2ee5010c264befb3d31ad213dbdffa04897e2808f6b04feff8d66bc53e0
+  languageName: node
+  linkType: hard
+
 "@webpack-cli/configtest@npm:^3.0.1":
   version: 3.0.1
   resolution: "@webpack-cli/configtest@npm:3.0.1"
@@ -15105,6 +15135,15 @@ __metadata:
   version: 1.0.30001731
   resolution: "caniuse-lite@npm:1.0.30001731"
   checksum: 10c0/d8cddf817d5bec8e7c2106affdbf1bfc3923463ca16697c992b2efeb043e6a5d9dcb70cda913bc6acf9112fd66f9e80279316c08e7800359116925066a63fdfa
+  languageName: node
+  linkType: hard
+
+"canvaskit-wasm@npm:0.40.0":
+  version: 0.40.0
+  resolution: "canvaskit-wasm@npm:0.40.0"
+  dependencies:
+    "@webgpu/types": "npm:0.1.21"
+  checksum: 10c0/dde817c0ef979a67afad4ac3adf31c03133af2592efec17f715a98508fdf801104fbf05af29723fb39b4d8b2798ce5306bb3cb5c062209d9d90a750430f3361d
   languageName: node
   linkType: hard
 
@@ -28491,6 +28530,7 @@ __metadata:
     "@react-navigation/native": "npm:^6.1.6"
     "@react-navigation/native-stack": "npm:^6.9.26"
     "@react-navigation/stack": "npm:^6.3.16"
+    "@shopify/react-native-skia": "npm:1.12.4"
     "@types/react": "npm:^18.3.12"
     babel-plugin-transform-inline-environment-variables: "npm:^0.4.4"
     detox: "npm:^20.14.8"
@@ -32671,7 +32711,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-reconciler@npm:^0.27.0":
+"react-reconciler@npm:0.27.0, react-reconciler@npm:^0.27.0":
   version: 0.27.0
   resolution: "react-reconciler@npm:0.27.0"
   dependencies:

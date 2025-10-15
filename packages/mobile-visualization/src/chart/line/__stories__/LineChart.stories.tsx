@@ -10,7 +10,7 @@ import {
   useState,
 } from 'react';
 import type { View } from 'react-native';
-import { Defs, LinearGradient, Stop, TSpan } from 'react-native-svg';
+import { Defs, LinearGradient, Stop } from 'react-native-svg';
 import { assets } from '@coinbase/cds-common/internal/data/assets';
 import { prices } from '@coinbase/cds-common/internal/data/prices';
 import { sparklineInteractiveData } from '@coinbase/cds-common/internal/visualizations/SparklineInteractiveData';
