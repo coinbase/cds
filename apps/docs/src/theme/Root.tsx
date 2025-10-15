@@ -13,22 +13,23 @@ export default function Root({ children }: { children: React.ReactNode }) {
       const elementId = window.location.hash.slice(1);
       const element = document.getElementById(elementId);
 
-      if (element) {
-        element.scrollIntoView();
-        return;
-      }
+      const startTime = Date.now();
 
-      // If not present, wait for the element to be added to the DOM
-      const observer = new MutationObserver(() => {
+      const intervalId = setInterval(() => {
         const element = document.getElementById(elementId);
         if (element) {
-          element.scrollIntoView();
-          observer.disconnect();
+          element.scrollIntoView({ behavior: 'smooth' });
+          clearInterval(intervalId);
+          return;
         }
-      });
 
-      observer.observe(document.body, { childList: true, subtree: true });
-      return () => observer.disconnect();
+        // Give up after 5 seconds
+        if (Date.now() - startTime >= 5000) {
+          clearInterval(intervalId);
+        }
+      }, 100);
+
+      return () => clearInterval(intervalId);
     }
   }, []);
 
