@@ -61,7 +61,7 @@ export const LLMDocButtons = memo(() => {
   }, [llmDocUrl, toast]);
 
   return (
-    <Box flexDirection={{ base: 'row', phone: 'column' }} gap={1}>
+    <Box alignItems="flex-start" flexDirection={{ base: 'row', phone: 'column' }} gap={1}>
       <Button compact transparent onClick={handleCopy} startIcon="copy">
         Copy for LLM
       </Button>
