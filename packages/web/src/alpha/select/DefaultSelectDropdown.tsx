@@ -297,5 +297,5 @@ export const DefaultSelectDropdown = memo(forwardRef(DefaultSelectDropdownCompon
   Type extends SelectType,
   T extends string = string,
 >(
-  props: SelectDropdownProps<Type, T> & { ref?: React.Ref<HTMLElement> },
+  props: SelectDropdownProps<Type, T> & { ref?: React.Ref<HTMLDivElement> },
 ) => ReturnType<SelectDropdownComponent<Type, T>>;
