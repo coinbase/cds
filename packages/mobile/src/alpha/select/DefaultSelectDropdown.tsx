@@ -161,9 +161,20 @@ const DefaultSelectDropdownComponent = <
                       ? (value as string[]).includes(option.value)
                       : value === option.value;
                   const defaultMedia = isMultiSelect ? (
-                    <Checkbox checked={selected} />
+                    <Checkbox
+                      checked={selected}
+                      onPress={() => {
+                        onChange(option.value as ValueType);
+                      }}
+                    />
                   ) : (
-                    <Radio checked={selected} />
+                    <Radio
+                      checked={selected}
+                      onPress={() => {
+                        onChange(option.value as ValueType);
+                        setOpen(false);
+                      }}
+                    />
                   );
                   return (
                     <RenderedSelectOption
