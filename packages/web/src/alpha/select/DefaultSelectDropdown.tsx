@@ -46,7 +46,7 @@ function DefaultSelectDropdownComponent<Type extends SelectType, T extends strin
     accessibilityRoles = defaultAccessibilityRoles,
     ...props
   }: SelectDropdownProps<Type, T>,
-  ref: React.Ref<HTMLElement>,
+  ref: React.Ref<HTMLDivElement>,
 ) {
   type ValueType = Type extends 'multi' ? T | T[] : T | null;
   const isMultiSelect = type === 'multi';
@@ -182,7 +182,7 @@ function DefaultSelectDropdownComponent<Type extends SelectType, T extends strin
     <AnimatePresence>
       {open && (
         <Box
-          ref={ref as React.Ref<HTMLDivElement>}
+          ref={ref}
           aria-label={accessibilityLabel}
           aria-multiselectable={isMultiSelect}
           className={className}

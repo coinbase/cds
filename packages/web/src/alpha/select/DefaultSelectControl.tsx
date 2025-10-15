@@ -323,7 +323,7 @@ const DefaultSelectControlComponent = <Type extends SelectType, T extends string
 
   return (
     <InputStack
-      ref={ref as React.Ref<HTMLDivElement>}
+      ref={ref}
       blendStyles={interactableBlendStyles}
       disabled={disabled}
       endNode={endNode}
