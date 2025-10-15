@@ -34,12 +34,15 @@
       }
     },
     "build": {
-      "command": "docusaurus build --out-dir dist",
-      "dependsOn": [
-        "validate-llm-docs-dist"
-      ],
+      "executor": "nx:run-commands",
       "options": {
-        "cwd": "apps/docs"
+        "commands": [
+          "docusaurus build --out-dir dist",
+          "node ai-doc-generator/generator.cjs",
+          "node ai-doc-generator/validate.cjs dist"
+        ],
+        "cwd": "apps/docs",
+        "parallel": false
       }
     },
     "lint": {
