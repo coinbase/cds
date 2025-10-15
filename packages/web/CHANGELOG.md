@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.16.4 (10/14/2025 PST)
+
+#### 🐞 Fixes
+
+- Update tests. [[#107](https://github.com/coinbase/cds/pull/107)]
+
 ## 8.16.3 ((10/14/2025, 02:02 PM PST))
 
 This is an artificial version bump with no new change.

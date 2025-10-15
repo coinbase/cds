@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.16.4 (10/14/2025 PST)
+
+#### 🐞 Fixes
+
+- Fix avatar hexagon shape. [[#107](https://github.com/coinbase/cds/pull/107)]
+
 ## 8.16.3 (10/14/2025 PST)
 
 #### 🐞 Fixes
