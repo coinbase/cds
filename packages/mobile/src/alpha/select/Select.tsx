@@ -73,7 +73,12 @@ export type SelectOptionProps<
 export type SelectOptionComponent<
   Type extends SelectType = 'single',
   T extends string = string,
-> = React.FC<SelectOptionProps<Type, T>>;
+> = React.FC<
+  SelectOptionProps<Type, T> & {
+    /** Ref forwarding currently not supported. This will be updated once Cell supports ref forwarding. */
+    ref?: React.Ref<View>;
+  }
+>;
 
 export type SelectEmptyDropdownContentProps = {
   label: string;
