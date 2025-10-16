@@ -1,6 +1,7 @@
 import React from 'react';
 import { loremIpsum } from '@coinbase/cds-common/internal/data/loremIpsum';
 
+import { Button } from '../../buttons';
 import { VStack } from '../../layout/VStack';
 import { Link } from '../../typography/Link';
 import { Text } from '../../typography/Text';
@@ -96,6 +97,14 @@ const Banners = ({ title, props }: { title: string; props: BannerProps }) => {
         {title} with multiple Actions
       </Text>
       <Banner {...props} primaryAction={primaryAction} secondaryAction={secondaryAction} />
+      <Text as="h1" display="block" font="title1">
+        Primary Action is not a Link
+      </Text>
+      <Banner {...props} primaryAction={<Button compact>Primary Action</Button>} />
+      <Text as="h1" display="block" font="title1">
+        Secondary Action is not a Link
+      </Text>
+      <Banner {...props} secondaryAction={<Button compact>Secondary Action</Button>} />
       <Text as="h1" display="block" font="title1">
         {title} Long Text with Action
       </Text>
