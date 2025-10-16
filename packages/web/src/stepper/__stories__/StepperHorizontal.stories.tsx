@@ -71,13 +71,18 @@ const twoLevelSteps: StepperValue[] = [
   },
 ];
 
+type StepperHorizontalExampleProps = Omit<
+  Partial<StepperProps>,
+  'direction' | 'activeStep' | 'activeStepId'
+> & { title?: string; defaultActiveStepId?: string | null };
+
 const StepperHorizontalExample = ({
   steps = basicSteps,
-  activeStepId,
+  defaultActiveStepId,
   title,
   ...props
-}: Partial<StepperProps> & { title?: string }) => {
-  const [stepperState, stepperApi] = useStepper({ steps, defaultActiveStepId: activeStepId });
+}: StepperHorizontalExampleProps) => {
+  const [stepperState, stepperApi] = useStepper({ steps, defaultActiveStepId });
   const [complete, setComplete] = useState(props.complete ?? false);
 
   const activeIndex = stepperState.activeStepId
@@ -175,7 +180,7 @@ const StepperHorizontalExample = ({
 // Default
 // ------------------------------------------------------------
 export const Default = () => (
-  <StepperHorizontalExample activeStepId={basicSteps[0].id} steps={basicSteps} />
+  <StepperHorizontalExample defaultActiveStepId={basicSteps[0].id} steps={basicSteps} />
 );
 
 // ------------------------------------------------------------
@@ -183,13 +188,8 @@ export const Default = () => (
 // ------------------------------------------------------------
 export const NoActiveStep = () => (
   <VStack gap={4}>
-    <StepperHorizontalExample activeStepId={null} steps={basicSteps} title="No Active Step" />
-    <StepperHorizontalExample
-      activeStepId={null}
-      complete={true}
-      steps={basicSteps}
-      title="Initial Complete"
-    />
+    <StepperHorizontalExample steps={basicSteps} title="No Active Step" />
+    <StepperHorizontalExample complete={true} steps={basicSteps} title="Initial Complete" />
   </VStack>
 );
 
@@ -212,14 +212,14 @@ export const NoLabelText = () => {
     },
   ];
 
-  return <StepperHorizontalExample activeStepId={noLabels[0].id} steps={noLabels} />;
+  return <StepperHorizontalExample defaultActiveStepId={noLabels[0].id} steps={noLabels} />;
 };
 
 // ------------------------------------------------------------
 // Long Text
 // ------------------------------------------------------------
 export const LongText = () => (
-  <StepperHorizontalExample activeStepId={longLabelSteps[0].id} steps={longLabelSteps} />
+  <StepperHorizontalExample defaultActiveStepId={longLabelSteps[0].id} steps={longLabelSteps} />
 );
 
 // ------------------------------------------------------------
@@ -281,7 +281,7 @@ export const WithIcon = () => {
           size="s"
         />
       )}
-      activeStepId={basicSteps[0].id}
+      defaultActiveStepId={basicSteps[0].id}
       steps={basicSteps}
     />
   );
@@ -291,7 +291,7 @@ export const WithIcon = () => {
 // Nested Steps
 // ------------------------------------------------------------
 export const NestedSteps = () => (
-  <StepperHorizontalExample activeStepId={twoLevelSteps[0].id} steps={twoLevelSteps} />
+  <StepperHorizontalExample defaultActiveStepId={twoLevelSteps[0].id} steps={twoLevelSteps} />
 );
 
 // ------------------------------------------------------------
@@ -302,25 +302,25 @@ export const NullComponents = () => {
     <VStack gap={4}>
       <StepperHorizontalExample
         StepperLabelComponent={null}
-        activeStepId={basicSteps[0].id}
+        defaultActiveStepId={basicSteps[0].id}
         steps={basicSteps}
         title="StepperLabelComponent = null"
       />
       <StepperHorizontalExample
         StepperProgressComponent={null}
-        activeStepId={basicSteps[0].id}
+        defaultActiveStepId={basicSteps[0].id}
         steps={basicSteps}
         title="StepperProgressComponent = null"
       />
       <StepperHorizontalExample
         StepperIconComponent={null}
-        activeStepId={basicSteps[0].id}
+        defaultActiveStepId={basicSteps[0].id}
         steps={basicSteps}
         title="StepperIconComponent = null"
       />
       <StepperHorizontalExample
         StepperHeaderComponent={null}
-        activeStepId={basicSteps[0].id}
+        defaultActiveStepId={basicSteps[0].id}
         steps={basicSteps}
         title="StepperHeaderComponent = null"
       />

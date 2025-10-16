@@ -25,11 +25,11 @@ import {
 // and forwards props to the Stepper component. Similar to StepperHorizontalExample.
 type StepperVerticalExampleProps = Omit<
   Partial<StepperProps>,
-  'direction' | 'steps' | 'activeStep'
+  'direction' | 'steps' | 'activeStep' | 'activeStepId'
 > & {
   title?: string;
   steps: any[];
-  activeStepId: string | null;
+  defaultActiveStepId?: string | null;
   initialComplete?: boolean;
   skipParentSteps?: boolean;
   renderWithApi?: (args: {
@@ -40,7 +40,7 @@ type StepperVerticalExampleProps = Omit<
 
 const StepperVerticalExample = ({
   steps,
-  activeStepId = null,
+  defaultActiveStepId,
   title,
   initialComplete,
   skipParentSteps,
@@ -50,7 +50,7 @@ const StepperVerticalExample = ({
   const [renderKey, setRenderKey] = useState(0);
   const [stepperState, stepperApi] = useStepper({
     steps,
-    defaultActiveStepId: activeStepId,
+    defaultActiveStepId,
     skipParentSteps,
   });
   const [complete, setComplete] = useState(initialComplete || false);
@@ -180,7 +180,7 @@ export const Default = () => {
     },
   ];
 
-  return <StepperVerticalExample activeStepId={'third-step'} steps={steps} title="Default" />;
+  return <StepperVerticalExample defaultActiveStepId={steps[0].id} steps={steps} title="Default" />;
 };
 
 // ------------------------------------------------------------
@@ -208,13 +208,8 @@ export const NoActiveStep = () => {
 
   return (
     <VStack gap={4}>
-      <StepperVerticalExample activeStepId={null} steps={steps} title="No Active Step" />
-      <StepperVerticalExample
-        initialComplete
-        activeStepId={null}
-        steps={steps}
-        title="Initial Complete"
-      />
+      <StepperVerticalExample steps={steps} title="No Active Step" />
+      <StepperVerticalExample initialComplete steps={steps} title="Initial Complete" />
     </VStack>
   );
 };
@@ -295,14 +290,14 @@ export const NestedSteps = () => {
     <VStack gap={4}>
       <StepperVerticalExample
         accessibilityLabel="Stepper with substeps"
-        activeStepId={'first-step'}
+        defaultActiveStepId={'first-step'}
         steps={oneLevelSteps}
         title="One level steps"
       />
       <StepperVerticalExample
         skipParentSteps
         accessibilityLabel="Stepper with substeps"
-        activeStepId={'first-step'}
+        defaultActiveStepId={'first-step'}
         steps={twoLevelSteps}
         title="Two level steps (w/ skipParentSteps=true)"
       />
@@ -384,8 +379,8 @@ export const CustomIconsAndStyles = () => {
 
   return (
     <StepperVerticalExample
-      activeStepId={'first-step'}
       classNames={{ label: labelCss, progress: progressCss }}
+      defaultActiveStepId={'first-step'}
       steps={steps}
       title="Custom Icons & Styles"
     />
@@ -523,7 +518,7 @@ export const CustomComponents = () => {
     <VStack gap={4}>
       <StepperVerticalExample
         initialComplete
-        activeStepId={'first-step'}
+        defaultActiveStepId={'first-step'}
         renderWithApi={({ stepperState: { activeStepId, steps, complete }, stepperApi }) => {
           return (
             <Stepper
@@ -543,7 +538,7 @@ export const CustomComponents = () => {
       />
       <StepperVerticalExample
         StepperSubstepContainerComponent={CollapsibleSubsteps}
-        activeStepId={'first-step'}
+        defaultActiveStepId={'first-step'}
         steps={oneLevelSteps}
         title="Collapsible Substeps"
       />
@@ -572,7 +567,7 @@ export const NullComponents = () => {
 
   return (
     <StepperVerticalExample
-      activeStepId={'first-step'}
+      defaultActiveStepId={'first-step'}
       renderWithApi={({ stepperState: { activeStepId, steps, complete } }) => {
         return (
           <VStack gap={4}>
