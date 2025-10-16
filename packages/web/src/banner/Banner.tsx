@@ -163,45 +163,40 @@ export const Banner = memo(
         onClose?.();
       }, [onClose]);
 
-      // Ensure primaryActions are themed to match the variant
       const clonedPrimaryAction = useMemo(() => {
-        if (
-          isValidElement<LinkProps<LinkDefaultElement>>(primaryAction) &&
-          primaryAction.type === Link
-        ) {
+        if (!isValidElement<LinkProps<LinkDefaultElement>>(primaryAction)) return null;
+
+        if (primaryAction.type === Link) {
           return React.cloneElement(primaryAction, {
             font: 'label1',
             color: primaryActionColor,
             testID: `${testID}-action--primary`,
             ...primaryAction.props,
           });
+        } else {
+          return React.cloneElement(primaryAction, {
+            testID: `${testID}-action--primary`,
+            ...primaryAction.props,
+          });
         }
-
-        if (isValidElement(primaryAction) && isDevelopment()) {
-          console.error('Banner primaryAction needs to be a CDS Link component');
-        }
-
-        return primaryAction;
       }, [primaryAction, primaryActionColor, testID]);
 
       const clonedSecondaryAction = useMemo(() => {
-        if (
-          isValidElement<LinkProps<LinkDefaultElement>>(secondaryAction) &&
-          secondaryAction.type === Link
-        ) {
+        if (!isValidElement<LinkProps<LinkDefaultElement>>(secondaryAction)) return null;
+
+        if (secondaryAction.type === Link) {
           return React.cloneElement(secondaryAction, {
             font: 'label1',
             color: secondaryActionColor,
             testID: `${testID}-action--secondary`,
             ...secondaryAction.props,
           });
+        } else {
+          return React.cloneElement(secondaryAction, {
+            testID: `${testID}-action--secondary`,
+            ...secondaryAction.props,
+          });
         }
-
-        if (isValidElement(secondaryAction) && isDevelopment()) {
-          console.error('Banner secondaryAction needs to be a CDS Link component');
-        }
-
-        return secondaryAction;
       }, [secondaryAction, secondaryActionColor, testID]);
 
       const marginStyles = useMemo(
