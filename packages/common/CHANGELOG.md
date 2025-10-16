@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.17.0 (10/16/2025 PST)
+
+#### 🚀 Updates
+
+- Update useStepper to not set initialActiveId if not passed in. [[#109](https://github.com/coinbase/cds/pull/109)]
+
 ## 8.16.4 ((10/15/2025, 07:38 AM PST))
 
 This is an artificial version bump with no new change.
