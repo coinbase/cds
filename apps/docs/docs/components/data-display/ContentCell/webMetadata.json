@@ -3,7 +3,7 @@
   "source": "https://github.com/coinbase/cds/blob/master/packages/web/src/cells/ContentCell.tsx",
   "description": "A versatile cell component for displaying content with optional metadata.",
   "figma": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/%E2%9C%A8-CDS-Components?node-id=706-13790&t=ZW5vOloobAkzdwA7-4",
-  "storybook": "https://cds-storybook.coinbase.com/?path=/story/core-components-cells-contentcell--content",
+  "storybook": "https://cds-storybook.coinbase.com/?path=/story/components-cells-contentcell--content",
   "relatedComponents": [
     {
       "label": "ListCell",

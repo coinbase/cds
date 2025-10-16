@@ -5,10 +5,12 @@
 .codeBlockContent {
   /* rtl:ignore */
   direction: ltr;
+  overflow: hidden;
 }
 
 /* If you update these styles make sure to also change apps/docs/src/theme/Playground/styles.module.css */
 .codeBlockContent pre {
+  width: 100%;
   white-space: pre !important;
   scrollbar-width: thin;
   background-color: transparent !important;

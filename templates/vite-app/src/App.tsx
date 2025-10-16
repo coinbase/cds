@@ -2,7 +2,7 @@ import { useState } from 'react';
 import type { ColorScheme } from '@cbhq/cds-common';
 import { ThemeProvider } from '@cbhq/cds-web';
 import { defaultTheme } from '@cbhq/cds-web/themes/defaultTheme';
-import { Box, Divider, Group, HStack, VStack } from '@cbhq/cds-web/layout';
+import { Box, Divider, HStack, VStack } from '@cbhq/cds-web/layout';
 import { Sidebar, SidebarItem } from '@cbhq/cds-web/navigation';
 import { MediaQueryProvider } from '@cbhq/cds-web/system';
 import { Navbar } from './components/Navbar';
@@ -68,11 +68,7 @@ export const App = () => {
           </Sidebar>
           <VStack width="100%" zIndex={0}>
             <Navbar title={activeNavItem.title} toggleColorScheme={toggleColorScheme} />
-            <Group
-              width="100%"
-              direction="horizontal"
-              divider={() => <Divider direction="vertical" />}
-            >
+            <HStack width="100%">
               <VStack width={{ base: 500, desktop: 660 }}>
                 <Box padding={2}>
                   <SearchInput
@@ -87,10 +83,11 @@ export const App = () => {
                   <AssetList pageSize={5} />
                 </Box>
               </VStack>
+              <Divider direction="vertical" />
               <Box paddingX={3} paddingY={2}>
                 <CardList />
               </Box>
-            </Group>
+            </HStack>
           </VStack>
         </HStack>
       </ThemeProvider>

@@ -3,7 +3,7 @@
   "source": "https://github.com/coinbase/cds/blob/master/packages/web/src/controls/CheckboxGroup.tsx",
   "description": "CheckboxGroup is a control component that allows users to select multiple options from a set of choices. It manages the state and layout of multiple checkbox inputs as a cohesive group.",
   "figma": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/%E2%9C%A8-CDS-Components?m=auto&node-id=46131-65944&t=KXwhkpOj6fX2dGHU-1s",
-  "storybook": "https://cds-storybook.coinbase.com/?path=/story/core-components-checkboxgroup--normal",
+  "storybook": "https://cds-storybook.coinbase.com/?path=/story/components-checkboxgroup--normal",
   "relatedComponents": [
     {
       "label": "ControlGroup",
