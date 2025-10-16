@@ -47,6 +47,9 @@ const screenReaderOnlyCss = css`
   clip: rect(0 0 0 0);
   white-space: nowrap;
   border: 0;
+  user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
 `;
 
 /**

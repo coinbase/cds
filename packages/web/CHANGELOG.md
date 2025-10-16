@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.17.2 (10/16/2025 PST)
+
+#### 🐞 Fixes
+
+- Fix RollingNumber copy issue. [[#102](https://github.com/coinbase/cds/pull/102)]
+
 ## 8.17.1 (10/16/2025 PST)
 
 #### 🐞 Fixes
