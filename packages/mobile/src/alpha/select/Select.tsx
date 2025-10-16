@@ -344,148 +344,150 @@ export type SelectProps<
   };
 };
 
-const SelectInner = <Type extends SelectType = 'single', T extends string = string>(
-  {
-    value,
-    type = 'single' as Type,
-    options,
-    onChange,
-    open: openProp,
-    setOpen: setOpenProp,
-    disabled,
-    disableClickOutsideClose,
-    placeholder,
-    helperText,
-    compact,
-    label,
-    labelVariant,
-    clearAllLabel,
-    selectAllLabel,
-    emptyOptionsLabel,
-    hideSelectAll,
-    defaultOpen,
-    startNode,
-    endNode,
-    variant,
-    maxSelectedOptionsToShow,
-    hiddenSelectedOptionsLabel,
-    removeSelectedOptionAccessibilityLabel,
-    accessory,
-    media,
-    detail,
-    SelectOptionComponent = DefaultSelectOption,
-    SelectAllOptionComponent = DefaultSelectAllOption,
-    SelectDropdownComponent = DefaultSelectDropdown,
-    SelectControlComponent = DefaultSelectControl,
-    SelectEmptyDropdownContentsComponent = DefaultSelectEmptyDropdownContents as SelectEmptyDropdownContentComponent,
-    styles,
-    accessibilityLabel,
-    accessibilityHint,
-    accessibilityRoles,
-    testID,
-    ...props
-  }: SelectProps<Type, T>,
-  ref: React.Ref<View>,
-) => {
-  const [openInternal, setOpenInternal] = useState(defaultOpen ?? false);
-  const open = openProp ?? openInternal;
-  const setOpen = setOpenProp ?? setOpenInternal;
-
-  if (
-    (typeof openProp === 'undefined' && typeof setOpenProp !== 'undefined') ||
-    (typeof openProp !== 'undefined' && typeof setOpenProp === 'undefined')
-  )
-    throw Error(
-      'Select component must be fully controlled or uncontrolled: "open" and "setOpen" props must be provided together or not at all',
-    );
-
-  const controlRef = useRef<any>(null);
-
-  useImperativeHandle(ref, () =>
-    Object.assign(controlRef.current, {
-      open,
-      setOpen,
-      refs: { reference: controlRef, floating: null },
-    }),
-  );
-
-  return (
-    <View testID={testID}>
-      <SelectControlComponent
-        ref={controlRef}
-        accessibilityHint={accessibilityHint}
-        accessibilityLabel={accessibilityLabel}
-        compact={compact}
-        disabled={disabled}
-        endNode={endNode}
-        helperText={helperText}
-        hiddenSelectedOptionsLabel={hiddenSelectedOptionsLabel}
-        label={label}
-        labelVariant={labelVariant}
-        maxSelectedOptionsToShow={maxSelectedOptionsToShow}
-        onChange={onChange}
-        open={open}
-        options={options}
-        placeholder={placeholder}
-        removeSelectedOptionAccessibilityLabel={removeSelectedOptionAccessibilityLabel}
-        setOpen={setOpen}
-        startNode={startNode}
-        style={styles?.control}
-        styles={{
-          controlStartNode: styles?.controlStartNode,
-          controlInputNode: styles?.controlInputNode,
-          controlValueNode: styles?.controlValueNode,
-          controlLabelNode: styles?.controlLabelNode,
-          controlHelperTextNode: styles?.controlHelperTextNode,
-          controlEndNode: styles?.controlEndNode,
-        }}
-        type={type}
-        value={value}
-        variant={variant}
-      />
-      <SelectDropdownComponent
-        ref={() => {}}
-        SelectAllOptionComponent={SelectAllOptionComponent}
-        SelectEmptyDropdownContentsComponent={SelectEmptyDropdownContentsComponent}
-        SelectOptionComponent={SelectOptionComponent}
-        accessibilityRoles={accessibilityRoles}
-        accessory={accessory}
-        clearAllLabel={clearAllLabel}
-        compact={compact}
-        controlRef={controlRef}
-        detail={detail}
-        disabled={disabled}
-        emptyOptionsLabel={emptyOptionsLabel}
-        hideSelectAll={hideSelectAll}
-        label={label}
-        media={media}
-        onChange={onChange}
-        open={open}
-        options={options}
-        selectAllLabel={selectAllLabel}
-        setOpen={setOpen}
-        styles={{
-          dropdown: styles?.dropdown,
-          option: styles?.option,
-          optionBlendStyles: styles?.optionBlendStyles,
-          optionCell: styles?.optionCell,
-          optionContent: styles?.optionContent,
-          optionLabel: styles?.optionLabel,
-          optionDescription: styles?.optionDescription,
-          selectAllDivider: styles?.selectAllDivider,
-          emptyContentsContainer: styles?.emptyContentsContainer,
-          emptyContentsText: styles?.emptyContentsText,
-        }}
-        type={type}
-        value={value}
-      />
-    </View>
-  );
-};
-
-export const Select = memo(forwardRef(SelectInner)) as <
-  Type extends SelectType = 'single',
-  T extends string = string,
->(
+type SelectComponent = <Type extends SelectType = 'single', T extends string = string>(
   props: SelectProps<Type, T> & { ref?: React.Ref<View> },
 ) => React.ReactElement;
+
+const SelectBase = memo(
+  forwardRef(
+    <Type extends SelectType = 'single', T extends string = string>(
+      {
+        value,
+        type = 'single' as Type,
+        options,
+        onChange,
+        open: openProp,
+        setOpen: setOpenProp,
+        disabled,
+        disableClickOutsideClose,
+        placeholder,
+        helperText,
+        compact,
+        label,
+        labelVariant,
+        clearAllLabel,
+        selectAllLabel,
+        emptyOptionsLabel,
+        hideSelectAll,
+        defaultOpen,
+        startNode,
+        endNode,
+        variant,
+        maxSelectedOptionsToShow,
+        hiddenSelectedOptionsLabel,
+        removeSelectedOptionAccessibilityLabel,
+        accessory,
+        media,
+        detail,
+        SelectOptionComponent = DefaultSelectOption,
+        SelectAllOptionComponent = DefaultSelectAllOption,
+        SelectDropdownComponent = DefaultSelectDropdown,
+        SelectControlComponent = DefaultSelectControl,
+        SelectEmptyDropdownContentsComponent = DefaultSelectEmptyDropdownContents as SelectEmptyDropdownContentComponent,
+        styles,
+        accessibilityLabel,
+        accessibilityHint,
+        accessibilityRoles,
+        testID,
+        ...props
+      }: SelectProps<Type, T>,
+      ref: React.Ref<View>,
+    ) => {
+      const [openInternal, setOpenInternal] = useState(defaultOpen ?? false);
+      const open = openProp ?? openInternal;
+      const setOpen = setOpenProp ?? setOpenInternal;
+
+      if (
+        (typeof openProp === 'undefined' && typeof setOpenProp !== 'undefined') ||
+        (typeof openProp !== 'undefined' && typeof setOpenProp === 'undefined')
+      )
+        throw Error(
+          'Select component must be fully controlled or uncontrolled: "open" and "setOpen" props must be provided together or not at all',
+        );
+
+      const containerRef = useRef<any>(null);
+
+      useImperativeHandle(ref, () =>
+        Object.assign(containerRef.current, {
+          open,
+          setOpen,
+          refs: { reference: containerRef, floating: null },
+        }),
+      );
+
+      return (
+        <View ref={containerRef} testID={testID}>
+          <SelectControlComponent
+            accessibilityHint={accessibilityHint}
+            accessibilityLabel={accessibilityLabel}
+            compact={compact}
+            disabled={disabled}
+            endNode={endNode}
+            helperText={helperText}
+            hiddenSelectedOptionsLabel={hiddenSelectedOptionsLabel}
+            label={label}
+            labelVariant={labelVariant}
+            maxSelectedOptionsToShow={maxSelectedOptionsToShow}
+            onChange={onChange}
+            open={open}
+            options={options}
+            placeholder={placeholder}
+            removeSelectedOptionAccessibilityLabel={removeSelectedOptionAccessibilityLabel}
+            setOpen={setOpen}
+            startNode={startNode}
+            style={styles?.control}
+            styles={{
+              controlStartNode: styles?.controlStartNode,
+              controlInputNode: styles?.controlInputNode,
+              controlValueNode: styles?.controlValueNode,
+              controlLabelNode: styles?.controlLabelNode,
+              controlHelperTextNode: styles?.controlHelperTextNode,
+              controlEndNode: styles?.controlEndNode,
+            }}
+            type={type}
+            value={value}
+            variant={variant}
+          />
+          <SelectDropdownComponent
+            ref={() => {}}
+            SelectAllOptionComponent={SelectAllOptionComponent}
+            SelectEmptyDropdownContentsComponent={SelectEmptyDropdownContentsComponent}
+            SelectOptionComponent={SelectOptionComponent}
+            accessibilityRoles={accessibilityRoles}
+            accessory={accessory}
+            clearAllLabel={clearAllLabel}
+            compact={compact}
+            controlRef={containerRef}
+            detail={detail}
+            disabled={disabled}
+            emptyOptionsLabel={emptyOptionsLabel}
+            hideSelectAll={hideSelectAll}
+            label={label}
+            media={media}
+            onChange={onChange}
+            open={open}
+            options={options}
+            selectAllLabel={selectAllLabel}
+            setOpen={setOpen}
+            styles={{
+              dropdown: styles?.dropdown,
+              option: styles?.option,
+              optionBlendStyles: styles?.optionBlendStyles,
+              optionCell: styles?.optionCell,
+              optionContent: styles?.optionContent,
+              optionLabel: styles?.optionLabel,
+              optionDescription: styles?.optionDescription,
+              selectAllDivider: styles?.selectAllDivider,
+              emptyContentsContainer: styles?.emptyContentsContainer,
+              emptyContentsText: styles?.emptyContentsText,
+            }}
+            type={type}
+            value={value}
+          />
+        </View>
+      );
+    },
+  ),
+);
+
+export const Select = SelectBase as SelectComponent;
