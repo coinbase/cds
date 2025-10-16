@@ -1,21 +1,19 @@
 import { forwardRef, memo, useEffect, useImperativeHandle, useMemo } from 'react';
-import Reanimated, {
+import {
   cancelAnimation,
-  useAnimatedProps,
+  useDerivedValue,
   useSharedValue,
   withRepeat,
   withSequence,
   withTiming,
 } from 'react-native-reanimated';
-import { Circle, G } from 'react-native-svg';
 import { usePreviousValue } from '@coinbase/cds-common/hooks/usePreviousValue';
 import type { SharedProps } from '@coinbase/cds-common/types';
 import { useTheme } from '@coinbase/cds-mobile';
+import { Circle, Group } from '@shopify/react-native-skia';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import { projectPoint, useScrubberContext } from '../utils';
-
-const AnimatedCircle = Reanimated.createAnimatedComponent(Circle);
 
 const radius = 5;
 const glowRadius = 10;
@@ -188,66 +186,60 @@ export const ScrubberBeacon = memo(
         }
       }, [pixelCoordinate, isIdleState, animate, previousIdleState, animatedX, animatedY]);
 
-      // Animated props for all circles in idle state
-      const glowAnimatedProps = useAnimatedProps(() => ({
-        cx: animatedX.value,
-        cy: animatedY.value,
-      }));
+      // Create derived animated point for circles
+      const animatedPoint = useDerivedValue(() => {
+        return { x: animatedX.value, y: animatedY.value };
+      }, [animatedX, animatedY]);
 
-      const pointAnimatedProps = useAnimatedProps(() => ({
-        cx: animatedX.value,
-        cy: animatedY.value,
-      }));
-
-      const pulseAnimatedProps = useAnimatedProps(() => ({
-        cx: animatedX.value,
-        cy: animatedY.value,
-        opacity: pulseOpacity.value,
-      }));
-
-      if (!pixelCoordinate) return;
+      if (!pixelCoordinate) return null;
 
       const pointColor = color ?? targetSeries?.color ?? theme.color.fgPrimary;
 
       if (!isIdleState) {
         return (
-          <G opacity={opacity} testID={testID}>
+          <Group opacity={opacity}>
+            {/* Glow circle behind */}
             <Circle
-              cx={pixelCoordinate.x}
-              cy={pixelCoordinate.y}
-              fill={pointColor}
+              c={{ x: pixelCoordinate.x, y: pixelCoordinate.y }}
+              color={pointColor}
               opacity={0.15}
               r={glowRadius}
             />
+            {/* Filled circle */}
             <Circle
-              cx={pixelCoordinate.x}
-              cy={pixelCoordinate.y}
-              fill={pointColor}
+              c={{ x: pixelCoordinate.x, y: pixelCoordinate.y }}
+              color={pointColor}
               r={radius}
-              stroke={theme.color.bg}
-              strokeWidth={2}
             />
-          </G>
+            {/* Stroke circle (background color) */}
+            <Circle
+              c={{ x: pixelCoordinate.x, y: pixelCoordinate.y }}
+              color={theme.color.bg}
+              r={radius}
+              strokeWidth={2}
+              style="stroke"
+            />
+          </Group>
         );
       }
 
       return (
-        <G opacity={opacity} testID={testID}>
-          <AnimatedCircle
-            animatedProps={glowAnimatedProps}
-            fill={pointColor}
-            opacity={0.15}
-            r={glowRadius}
-          />
-          <AnimatedCircle animatedProps={pulseAnimatedProps} fill={pointColor} r={pulseRadius} />
-          <AnimatedCircle
-            animatedProps={pointAnimatedProps}
-            fill={pointColor}
+        <Group opacity={opacity}>
+          {/* Glow circle */}
+          <Circle c={animatedPoint} color={pointColor} opacity={0.15} r={glowRadius} />
+          {/* Pulse circle */}
+          <Circle c={animatedPoint} color={pointColor} opacity={pulseOpacity} r={pulseRadius} />
+          {/* Filled circle */}
+          <Circle c={animatedPoint} color={pointColor} r={radius} />
+          {/* Stroke circle (background color) */}
+          <Circle
+            c={animatedPoint}
+            color={theme.color.bg}
             r={radius}
-            stroke={theme.color.bg}
             strokeWidth={2}
+            style="stroke"
           />
-        </G>
+        </Group>
       );
     },
   ),

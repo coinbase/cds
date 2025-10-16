@@ -1,5 +1,4 @@
 import { memo, useMemo } from 'react';
-import { G } from 'react-native-svg';
 import type { SharedProps } from '@coinbase/cds-common/types';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 
@@ -21,10 +20,6 @@ import type { LineComponent } from './Line';
  */
 export type ReferenceLineLabelProps = Pick<
   ChartTextProps,
-  | 'dx'
-  | 'dy'
-  | 'fontSize'
-  | 'fontWeight'
   | 'color'
   | 'inset'
   | 'background'
@@ -33,6 +28,8 @@ export type ReferenceLineLabelProps = Pick<
   | 'bounds'
   | 'horizontalAlignment'
   | 'verticalAlignment'
+  | 'font'
+  | 'opacity'
 >;
 
 type BaseReferenceLineProps = SharedProps & {
@@ -155,7 +152,7 @@ export const ReferenceLine = memo<ReferenceLineProps>(
       }
 
       return (
-        <G data-testid={testID}>
+        <>
           <LineComponent
             animate={false}
             d={`M${drawingArea.x},${yPixel} L${drawingArea.x + drawingArea.width},${yPixel}`}
@@ -166,7 +163,7 @@ export const ReferenceLine = memo<ReferenceLineProps>(
               {label}
             </ChartText>
           )}
-        </G>
+        </>
       );
     }
 
@@ -193,7 +190,7 @@ export const ReferenceLine = memo<ReferenceLineProps>(
       }
 
       return (
-        <G data-testid={testID}>
+        <>
           <LineComponent
             animate={false}
             d={`M${xPixel},${drawingArea.y} L${xPixel},${drawingArea.y + drawingArea.height}`}
@@ -204,7 +201,7 @@ export const ReferenceLine = memo<ReferenceLineProps>(
               {label}
             </ChartText>
           )}
-        </G>
+        </>
       );
     }
 

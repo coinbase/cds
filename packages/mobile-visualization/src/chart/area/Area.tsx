@@ -88,7 +88,6 @@ export const Area = memo<AreaProps>(
     baseline,
     connectNulls = false,
   }) => {
-    const theme = useTheme();
     const { getSeries, getSeriesData, getXScale, getYScale, getXAxis, drawingArea } =
       useCartesianChartContext();
 
@@ -144,7 +143,7 @@ export const Area = memo<AreaProps>(
       return null;
     }
 
-    const fill = specifiedFill ?? matchedSeries?.color ?? theme.color.fgPrimary;
+    const fill = specifiedFill ?? matchedSeries?.color ?? 'red';
 
     return (
       <AreaComponent

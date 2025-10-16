@@ -1,6 +1,6 @@
 import React, { memo, useMemo } from 'react';
 import type { SharedProps } from '@coinbase/cds-common/types';
-import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
+import { useTheme } from '@coinbase/cds-mobile';
 
 import { Area, type AreaComponent } from '../area/Area';
 import { useCartesianChartContext } from '../ChartProvider';

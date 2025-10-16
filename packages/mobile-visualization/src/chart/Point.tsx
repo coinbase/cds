@@ -1,7 +1,7 @@
 import { memo, useEffect, useMemo } from 'react';
-import { Circle, G } from 'react-native-svg';
 import type { SharedProps } from '@coinbase/cds-common/types';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
+import { Circle as SkiaCircle, type Color, Group } from '@shopify/react-native-skia';
 
 import type { ChartTextChildren } from './text/ChartText';
 import { useCartesianChartContext } from './ChartProvider';
@@ -166,27 +166,22 @@ export const Point = memo<PointProps>(
 
     return (
       <>
-        <G
-          opacity={opacity}
-          testID={testID}
-          transform={[{ translateX: pixelCoordinate.x }, { translateY: pixelCoordinate.y }]}
-        >
-          <Circle
-            accessibilityLabel={accessibilityLabel}
-            cx={0}
-            cy={0}
-            fill={fill ?? theme.color.fgPrimary}
-            onPress={
-              onPress
-                ? (event: any) =>
-                    onPress({ dataX, dataY, x: pixelCoordinate.x, y: pixelCoordinate.y })
-                : undefined
-            }
+        <Group opacity={opacity}>
+          {/* Outer stroke circle */}
+          {strokeWidth > 0 && (
+            <SkiaCircle
+              c={{ x: pixelCoordinate.x, y: pixelCoordinate.y }}
+              color={effectiveStroke as Color}
+              r={radius + strokeWidth}
+            />
+          )}
+          {/* Inner fill circle */}
+          <SkiaCircle
+            c={{ x: pixelCoordinate.x, y: pixelCoordinate.y }}
+            color={(fill ?? theme.color.fgPrimary) as Color}
             r={radius}
-            stroke={effectiveStroke}
-            strokeWidth={strokeWidth}
           />
-        </G>
+        </Group>
         {label && (
           <ChartText x={pixelCoordinate.x} y={pixelCoordinate.y} {...labelProps}>
             {label}

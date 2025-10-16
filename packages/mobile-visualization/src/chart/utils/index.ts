@@ -7,3 +7,6 @@ export * from './path';
 export * from './point';
 export * from './scale';
 // codegen:end
+
+// Export Skia utilities
+export * from './skia';

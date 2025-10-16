@@ -1,9 +1,9 @@
-import { memo, useId } from 'react';
-import { Circle, Defs, G, LinearGradient, Mask, Pattern, Stop } from 'react-native-svg';
+import { memo, useMemo } from 'react';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
+import { Circle, type Color, Group, Skia } from '@shopify/react-native-skia';
 
 import { useCartesianChartContext } from '../ChartProvider';
-import { Path, type PathProps } from '../Path';
+import type { PathProps } from '../Path';
 
 import type { AreaComponentProps } from './Area';
 
@@ -20,17 +20,17 @@ export type DottedAreaProps = Omit<PathProps, 'd' | 'fill' | 'fillOpacity'> &
      */
     dotSize?: number;
     /**
-     * Opacity at the peak values (top/bottom of gradient).
+     * Opacity of the dots.
      * @default 0.3
      */
-    peakOpacity?: number;
-    /**
-     * Opacity at the baseline (0 or edge closest to 0).
-     * @default 0
-     */
-    baselineOpacity?: number;
+    dotOpacity?: number;
   };
 
+/**
+ * A dotted area component that creates a pattern of dots.
+ * Note: This is a simplified Skia implementation without gradient opacity.
+ * For gradient fills, use GradientArea instead.
+ */
 export const DottedArea = memo<DottedAreaProps>(
   ({
     d,
@@ -38,124 +38,56 @@ export const DottedArea = memo<DottedAreaProps>(
     fillOpacity = 1,
     patternSize = 4,
     dotSize = 1,
-    peakOpacity = 1,
-    baselineOpacity = 0,
-    baseline,
-    yAxisId,
+    dotOpacity = 0.3,
     clipRect,
     ...pathProps
   }) => {
     const theme = useTheme();
     const context = useCartesianChartContext();
-    const patternId = useId();
-    const gradientId = useId();
-    const maskId = useId();
 
-    const dotCenterPosition = patternSize / 2;
-
-    // Get the y-scale for the specified axis (or default)
-    const yScale = context.getYScale(yAxisId);
-    const yRange = yScale?.range();
-    const yDomain = yScale?.domain();
-
-    // Use chart range if available, otherwise fall back to percentage
-    const useUserSpaceUnits = yRange !== undefined;
-
-    // Auto-calculate baseline position based on domain
-    let baselinePosition: number | undefined;
-    let baselinePercentage: string | undefined;
-
-    if (yScale && yDomain) {
-      const [minValue, maxValue] = yDomain;
-
-      let dataBaseline: number;
-      if (minValue >= 0) {
-        // All positive: baseline at min
-        dataBaseline = minValue;
-      } else if (maxValue <= 0) {
-        // All negative: baseline at max
-        dataBaseline = maxValue;
-      } else {
-        // Crosses zero: baseline at 0
-        dataBaseline = 0;
-      }
-
-      if (useUserSpaceUnits && yRange) {
-        // Get the actual y coordinate for the baseline
-        const scaledValue = yScale(baseline ?? dataBaseline);
-        if (typeof scaledValue === 'number') {
-          baselinePosition = scaledValue;
-        }
-      } else {
-        // Calculate percentage position
-        baselinePercentage = `${((maxValue - (baseline ?? dataBaseline)) / (maxValue - minValue)) * 100}%`;
-      }
-    }
-
-    const gradientY1 = useUserSpaceUnits && yRange ? String(yRange[1]) : '0%';
-    const gradientY2 = useUserSpaceUnits && yRange ? String(yRange[0]) : '100%';
-
+    const drawingArea = clipRect ?? context.drawingArea;
     const effectiveFill = fill ?? theme.color.fgPrimary;
+    const effectiveOpacity = fillOpacity * dotOpacity;
+
+    // Generate dot grid positions
+    const dots = useMemo(() => {
+      if (!drawingArea) return [];
+
+      const positions: Array<{ x: number; y: number }> = [];
+      const startX = drawingArea.x;
+      const endX = drawingArea.x + drawingArea.width;
+      const startY = drawingArea.y;
+      const endY = drawingArea.y + drawingArea.height;
+
+      for (let x = startX; x <= endX; x += patternSize) {
+        for (let y = startY; y <= endY; y += patternSize) {
+          positions.push({ x: x + patternSize / 2, y: y + patternSize / 2 });
+        }
+      }
+
+      return positions;
+    }, [drawingArea, patternSize]);
+
+    // Convert SVG path to Skia clip path
+    const clipPath = useMemo(() => {
+      if (!d) return null;
+      return Skia.Path.MakeFromSVGString(d);
+    }, [d]);
+
+    if (!clipPath || !drawingArea) return null;
 
     return (
-      <G>
-        <Defs>
-          <Pattern
-            height={patternSize}
-            id={patternId}
-            patternUnits="userSpaceOnUse"
-            width={patternSize}
-            x="0"
-            y="0"
-          >
-            <Circle
-              cx={dotCenterPosition}
-              cy={dotCenterPosition}
-              fill={effectiveFill}
-              r={dotSize}
-            />
-          </Pattern>
-          <LinearGradient
-            gradientUnits={useUserSpaceUnits ? 'userSpaceOnUse' : 'objectBoundingBox'}
-            id={gradientId}
-            x1={useUserSpaceUnits ? '0' : '0%'}
-            x2={useUserSpaceUnits ? '0' : '0%'}
-            y1={gradientY1}
-            y2={gradientY2}
-          >
-            {baselinePosition !== undefined || baselinePercentage !== undefined
-              ? /* Diverging gradient: high opacity at extremes, low at baseline */
-                [
-                  <Stop key="0" offset="0%" stopColor="white" stopOpacity={peakOpacity} />,
-                  <Stop
-                    key="1"
-                    offset={
-                      baselinePercentage ??
-                      `${((baselinePosition! - yRange![1]) / (yRange![0] - yRange![1])) * 100}%`
-                    }
-                    stopColor="white"
-                    stopOpacity={baselineOpacity}
-                  />,
-                  <Stop key="2" offset="100%" stopColor="white" stopOpacity={peakOpacity} />,
-                ]
-              : /* Simple gradient from top to bottom */
-                [
-                  <Stop key="0" offset="0%" stopColor="white" stopOpacity={peakOpacity} />,
-                  <Stop key="1" offset="100%" stopColor="white" stopOpacity={baselineOpacity} />,
-                ]}
-          </LinearGradient>
-          <Mask id={maskId}>
-            <Path d={d} fill={`url(#${gradientId})`} />
-          </Mask>
-        </Defs>
-        <Path
-          clipRect={clipRect}
-          d={d}
-          fill={`url(#${patternId})`}
-          mask={`url(#${maskId})`}
-          {...pathProps}
-        />
-      </G>
+      <Group clip={clipPath}>
+        {dots.map((pos, index) => (
+          <Circle
+            key={index}
+            c={{ x: pos.x, y: pos.y }}
+            color={effectiveFill as Color}
+            opacity={effectiveOpacity}
+            r={dotSize}
+          />
+        ))}
+      </Group>
     );
   },
 );

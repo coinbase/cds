@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { Platform, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import { Easing, runOnJS, useSharedValue, withTiming } from 'react-native-reanimated';
 import { assets } from '@coinbase/cds-common/internal/data/assets';
@@ -13,7 +13,6 @@ import {
   Canvas,
   Circle,
   Group,
-  matchFont,
   Path,
   Rect,
   RoundedRect,
@@ -21,6 +20,8 @@ import {
   Skia,
   Text as SkiaText,
 } from '@shopify/react-native-skia';
+
+import { useChartFont } from '../utils/skia';
 
 const defaultChartHeight = 200;
 
@@ -399,15 +400,8 @@ export const PerformanceDemo = () => {
       runOnJS(clearTouchX)();
     });
 
-  // Fonts - use platform-specific system fonts
-  const labelFont = useMemo(() => {
-    const fontFamily = Platform.select({ ios: 'Helvetica', default: 'sans-serif' });
-    return matchFont({
-      fontFamily,
-      fontSize: 13,
-      fontWeight: 'bold',
-    });
-  }, []);
+  // Use theme-based font from our new utility!
+  const labelFont = useChartFont('label2');
 
   // Create vertical line path for touch indicator
   const verticalLinePath = useMemo(() => {

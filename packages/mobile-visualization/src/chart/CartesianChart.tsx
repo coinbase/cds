@@ -1,12 +1,12 @@
 import React, { forwardRef, memo, useCallback, useMemo } from 'react';
-import { type View, type ViewStyle } from 'react-native';
-import { Svg } from 'react-native-svg';
+import { type View } from 'react-native';
 import type { Rect } from '@coinbase/cds-common/types';
 import { useLayout } from '@coinbase/cds-mobile/hooks/useLayout';
 import type { BoxBaseProps, BoxProps } from '@coinbase/cds-mobile/layout';
 import { Box } from '@coinbase/cds-mobile/layout';
 
 import { ScrubberProvider, type ScrubberProviderProps } from './scrubber/ScrubberProvider';
+import { ChartCanvas } from './ChartCanvas';
 import { CartesianChartProvider } from './ChartProvider';
 import {
   type AxisConfig,
@@ -349,9 +349,9 @@ export const CartesianChart = memo(
               style={containerStyles}
               {...props}
             >
-              <Svg height={chartHeight} width={chartWidth}>
+              <ChartCanvas height={chartHeight} width={chartWidth}>
                 {children}
-              </Svg>
+              </ChartCanvas>
             </Box>
           </ScrubberProvider>
         </CartesianChartProvider>

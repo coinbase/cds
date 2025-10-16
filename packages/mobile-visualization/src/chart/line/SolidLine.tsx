@@ -1,6 +1,5 @@
 import { memo } from 'react';
 import type { SharedProps } from '@coinbase/cds-common/types';
-import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 
 import { Path, type PathProps } from '../Path';
 
@@ -23,13 +22,11 @@ export const SolidLine = memo<SolidLineProps>(
     strokeWidth = 2,
     ...props
   }) => {
-    const theme = useTheme();
-
     return (
       <Path
         clipOffset={strokeWidth}
         fill={fill}
-        stroke={stroke ?? theme.color.bgLine}
+        stroke={stroke ?? 'blue'}
         strokeLinecap={strokeLinecap}
         strokeLinejoin={strokeLinejoin}
         strokeOpacity={strokeOpacity}

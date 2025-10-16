@@ -3,6 +3,7 @@ export * from './area';
 export * from './axis';
 export * from './bar';
 export * from './CartesianChart';
+export * from './ChartCanvas';
 export * from './ChartProvider';
 export * from './line';
 export * from './Path';

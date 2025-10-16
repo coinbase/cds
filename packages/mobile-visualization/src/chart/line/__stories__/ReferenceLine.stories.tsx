@@ -24,14 +24,13 @@ const ReferenceLineStories = () => {
           <ReferenceLine
             dataX={4}
             label="Vertical Reference Line"
-            labelProps={{ horizontalAlignment: 'left', dx: 6, inset: 0 }}
+            labelProps={{ horizontalAlignment: 'left', inset: 0 }}
           />
           <ReferenceLine
             dataY={70}
             label="Horizontal Reference Line"
             labelProps={{
               verticalAlignment: 'bottom',
-              dy: -6,
               horizontalAlignment: 'right',
               inset: 0,
             }}
@@ -55,7 +54,6 @@ const ReferenceLineStories = () => {
             label="Liquidation"
             labelPosition="left"
             labelProps={{
-              dx: 4,
               borderRadius: 100,
               inset: { top: 4, bottom: 4, left: 8, right: 8 },
               horizontalAlignment: 'left',

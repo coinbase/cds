@@ -5,11 +5,9 @@ import React, {
   useEffect,
   useImperativeHandle,
   useMemo,
-  useRef,
 } from 'react';
-import { Animated } from 'react-native';
-import Reanimated, { useAnimatedProps, useSharedValue } from 'react-native-reanimated';
-import { G, Rect } from 'react-native-svg';
+import { useSharedValue } from 'react-native-reanimated';
+import { Group, Rect } from '@shopify/react-native-skia';
 import { useRefMap } from '@coinbase/cds-common/hooks/useRefMap';
 import type { SharedProps } from '@coinbase/cds-common/types';
 import { useTheme } from '@coinbase/cds-mobile';
@@ -19,8 +17,6 @@ import { ReferenceLine, type ReferenceLineProps } from '../line';
 import { type ChartScaleFunction, useScrubberContext } from '../utils';
 
 import { ScrubberBeacon, type ScrubberBeaconProps, type ScrubberBeaconRef } from './ScrubberBeacon';
-
-const AnimatedRect = Animated.createAnimatedComponent(Rect);
 
 /**
  * Configuration for scrubber functionality across chart components.
@@ -105,23 +101,15 @@ export const Scrubber = memo(
       const theme = useTheme();
       const ScrubberBeaconRefs = useRefMap<ScrubberBeaconRef>();
 
-      // Animated values for overlay positions (using react-native Animated)
-      const overlayX = useRef(new Animated.Value(0)).current;
-      const overlayWidth = useRef(new Animated.Value(0)).current;
-
-      // Reanimated shared value for scrubber line
+      // Shared values for overlay and scrubber line positions
+      const overlayX = useSharedValue(0);
+      const overlayWidth = useSharedValue(0);
       const scrubberLineX = useSharedValue(0);
 
       const { scrubberPosition: scrubberPosition } = useScrubberContext();
       const { getXScale, getYScale, getSeriesData, getXAxis, series, drawingArea } =
         useCartesianChartContext();
       const getStackedSeriesData = getSeriesData; // getSeriesData now returns stacked data
-
-      // Animated props for scrubber line
-      const scrubberLineAnimatedProps = useAnimatedProps(() => ({
-        x1: scrubberLineX.value,
-        x2: scrubberLineX.value,
-      }));
 
       // Expose imperative handle with pulse method
       useImperativeHandle(ref, () => ({
@@ -218,8 +206,8 @@ export const Scrubber = memo(
       useEffect(() => {
         if (pixelX !== undefined) {
           scrubberLineX.value = pixelX;
-          overlayX.setValue(pixelX);
-          overlayWidth.setValue(drawingArea.x + drawingArea.width - pixelX + overlayOffset);
+          overlayX.value = pixelX;
+          overlayWidth.value = drawingArea.x + drawingArea.width - pixelX + overlayOffset;
         }
       }, [pixelX, drawingArea, overlayOffset, scrubberLineX, overlayX, overlayWidth]);
 
@@ -231,8 +219,8 @@ export const Scrubber = memo(
             dataX !== undefined &&
             scrubberPosition !== undefined &&
             pixelX !== undefined && (
-              <AnimatedRect
-                fill={theme.color.bg}
+              <Rect
+                color={theme.color.bg}
                 height={drawingArea.height + overlayOffset * 2}
                 opacity={0.8}
                 width={overlayWidth}
@@ -246,8 +234,6 @@ export const Scrubber = memo(
               label={memoizedScrubberLabel}
               labelProps={{
                 verticalAlignment: 'middle',
-                // Place in the middle vertically by default
-                dy: -0.5 * drawingArea.y,
                 ...labelProps,
               }}
               stroke={lineStroke}
@@ -256,7 +242,7 @@ export const Scrubber = memo(
           {beaconPositions
             .filter((beacon) => beacon !== undefined)
             .map((beacon) => (
-              <G key={beacon.targetSeries.id} data-component="scrubber-beacon">
+              <Group key={beacon.targetSeries.id}>
                 <BeaconComponent
                   ref={createScrubberBeaconRef(beacon.targetSeries.id)}
                   color={beacon.targetSeries?.color}
@@ -266,7 +252,7 @@ export const Scrubber = memo(
                   seriesId={beacon.targetSeries.id}
                   testID={testID ? `${testID}-${beacon.targetSeries.id}-dot` : undefined}
                 />
-              </G>
+              </Group>
             ))}
         </>
       );

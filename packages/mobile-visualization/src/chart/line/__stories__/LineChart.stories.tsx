@@ -3,7 +3,6 @@ import {
   memo,
   useCallback,
   useEffect,
-  useId,
   useImperativeHandle,
   useMemo,
   useRef,
@@ -43,6 +42,8 @@ import type { ChartAxisScaleType } from '../../utils/scale';
 import { GradientLine, Line, LineChart, ReferenceLine } from '..';
 
 const defaultChartHeight = 200;
+
+const sampleData = [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58];
 
 const formatChartDate = (timestamp: string, timeframe: string): string => {
   const date = new Date(timestamp);
@@ -185,8 +186,6 @@ export const BasicLineChartWithPoints = () => {
         label="hello world im on a point!"
         labelProps={{
           verticalAlignment: 'bottom',
-          // why does this go in the opposite direction than what i would expect?
-          dy: -16,
         }}
         onPress={() => console.log('clicked')}
         radius={6}
@@ -509,7 +508,6 @@ export const ColorShiftChart = () => {
               horizontalAlignment: 'right',
               inset: 4,
               borderRadius: 4,
-              dx: -8,
               color: theme.color.fgInverse,
               background: priceChange >= 0 ? theme.color.bgPositive : theme.color.bgNegative,
             }}
@@ -689,14 +687,6 @@ export const PriceChart = () => {
 
   return (
     <VStack gap={3} width="100%">
-      {/*<HStack alignItems="flex-start" gap={3} justifyContent="space-between" inset={32}>
-        <CartesianChartHeader
-          description={formattedPrice}
-          title={<Text font="headline">Ethereum</Text>}
-          trend={formattedPriceChange}
-          trendDirection={trendDirection as 'up' | 'down' | 'neutral'}
-        />
-      </HStack>*/}
       <LineChart
         showArea
         height={defaultChartHeight}
@@ -712,10 +702,6 @@ export const PriceChart = () => {
                 return {
                   opacity: 0,
                   label: formatPrice(currentData[index]),
-                  labelProps: {
-                    position: 'top',
-                    dy: -16,
-                  },
                 };
               }
 
@@ -723,10 +709,6 @@ export const PriceChart = () => {
                 return {
                   opacity: 0,
                   label: formatPrice(currentData[index]),
-                  labelProps: {
-                    position: 'bottom',
-                    dy: 16,
-                  },
                 };
               }
             },
@@ -1265,58 +1247,7 @@ const AssetPriceMultipleDotted = () => {
 
 const GainLossChart = () => {
   const theme = useTheme();
-  const gradientId = useId();
-
   const data = [-40, -28, -21, -5, 48, -5, -28, 2, -29, -46, 16, -30, -29, 8];
-
-  const ChartDefs = ({ threshold = 0 }) => {
-    const { getYScale } = useCartesianChartContext();
-    // get the default y-axis scale
-    const yScale = getYScale();
-
-    if (yScale) {
-      const domain = yScale.domain();
-      const range = yScale.range();
-
-      const baselinePercentage = ((threshold - domain[0]) / (domain[1] - domain[0])) * 100;
-
-      const negativeColor = `rgb(${theme.spectrum.gray20})`;
-      const positiveColor = theme.color.fgPositive;
-
-      return (
-        <Defs>
-          <LinearGradient
-            gradientUnits="userSpaceOnUse"
-            id={`${gradientId}-solid`}
-            x1="0%"
-            x2="0%"
-            y1={range[0]}
-            y2={range[1]}
-          >
-            <Stop offset="0%" stopColor={negativeColor} />
-            <Stop offset={`${baselinePercentage}%`} stopColor={negativeColor} />
-            <Stop offset={`${baselinePercentage}%`} stopColor={positiveColor} />
-            <Stop offset="100%" stopColor={positiveColor} />
-          </LinearGradient>
-          <LinearGradient
-            gradientUnits="userSpaceOnUse"
-            id={`${gradientId}-gradient`}
-            x1="0%"
-            x2="0%"
-            y1={range[0]}
-            y2={range[1]}
-          >
-            <Stop offset="0%" stopColor={negativeColor} stopOpacity={0.3} />
-            <Stop offset={`${baselinePercentage}%`} stopColor={negativeColor} stopOpacity={0} />
-            <Stop offset={`${baselinePercentage}%`} stopColor={positiveColor} stopOpacity={0} />
-            <Stop offset="100%" stopColor={positiveColor} stopOpacity={0.3} />
-          </LinearGradient>
-        </Defs>
-      );
-    }
-
-    return null;
-  };
 
   const tickLabelFormatter = useCallback(
     (value: number) =>
@@ -1328,7 +1259,9 @@ const GainLossChart = () => {
     [],
   );
 
-  const solidColor = `url(#${gradientId}-solid)`;
+  // Threshold-based gradient: negative values use gray15, positive values use green
+  const negativeColor = `rgb(${theme.spectrum.gray15})`;
+  const positiveColor = theme.color.fgPositive;
 
   return (
     <CartesianChart
@@ -1339,14 +1272,38 @@ const GainLossChart = () => {
         {
           id: 'prices',
           data: data,
-          color: solidColor,
         },
       ]}
     >
-      <ChartDefs />
       <YAxis showGrid requestedTickCount={2} tickLabelFormatter={tickLabelFormatter} />
-      <Area curve="monotone" fill={`url(#${gradientId}-gradient)`} seriesId="prices" />
-      <Line curve="monotone" seriesId="prices" stroke={solidColor} strokeWidth={3} />
+      <Line
+        showArea
+        AreaComponent={(props) => (
+          <GradientArea
+            {...props}
+            stops={[
+              { threshold: -100, color: 'red', opacity: 0.3 },
+              { threshold: 0, color: 'red', opacity: 0 },
+              { threshold: 0, color: positiveColor, opacity: 0 },
+              { threshold: 100, color: positiveColor, opacity: 0.3 },
+            ]}
+          />
+        )}
+        LineComponent={(props) => (
+          <GradientLine
+            {...props}
+            stops={[
+              { threshold: -100, color: 'red' },
+              { threshold: 0, color: 'red' },
+              { threshold: 0, color: positiveColor },
+              { threshold: 100, color: positiveColor },
+            ]}
+            strokeWidth={3}
+          />
+        )}
+        curve="monotone"
+        seriesId="prices"
+      />
       <Scrubber hideOverlay />
     </CartesianChart>
   );
@@ -1385,6 +1342,9 @@ const ScrubberWithImperativeHandle = () => {
             curve: 'natural',
           },
         ]}
+        xAxis={{
+          range: ({ min, max }) => ({ min, max: max - 32 }),
+        }}
         yAxis={{
           domain: {
             min: 0,
@@ -1835,7 +1795,6 @@ const PredictionChart = () => {
   return (
     <Box accessibilityLabel={chartOverviewLabel} accessibilityLiveRegion="polite">
       <VStack gap={4}>
-        {/* Legend */}
         <PredictionLegend ref={legendRef} colors={colors} data={legendData} />
 
         <Box style={{ marginLeft: -16, marginRight: -16 }}>
@@ -1876,8 +1835,6 @@ const PredictionChart = () => {
             <Scrubber idlePulse label={scrubberLabel} />
           </LineChart>
         </Box>
-
-        {/* Period Selector */}
         <PeriodSelector
           accessibilityLabel="Select time period for prediction chart"
           activeTab={timePeriod}
@@ -1889,60 +1846,12 @@ const PredictionChart = () => {
   );
 };
 
+// TODO: Convert to Skia gradients - SVG gradients don't work with Skia Canvas
 const AvailabilityChart = () => {
   const theme = useTheme();
   const [scrubIndex, setScrubIndex] = useState<number | undefined>();
 
-  const ChartDefs = memo(
-    ({
-      yellowThresholdPercentage = 85,
-      greenThresholdPercentage = 90,
-    }: {
-      yellowThresholdPercentage?: number;
-      greenThresholdPercentage?: number;
-    }) => {
-      const { getYScale, getYAxis } = useCartesianChartContext();
-      const yScale = getYScale();
-      const yAxis = getYAxis();
-
-      if (!yScale) return null;
-
-      const rangeBounds = yAxis?.domain;
-      const rangeMin = rangeBounds?.min ?? 0;
-      const rangeMax = rangeBounds?.max ?? 100;
-
-      // Calculate the Y positions in the chart coordinate system
-      const yellowThresholdY = yScale(yellowThresholdPercentage) ?? 0;
-      const greenThresholdY = yScale(greenThresholdPercentage) ?? 0;
-      const minY = yScale(rangeMax) ?? 0; // Top of chart (max value)
-      const maxY = yScale(rangeMin) ?? 0; // Bottom of chart (min value)
-
-      // Calculate percentages based on actual chart positions
-      const yellowThreshold = ((yellowThresholdY - minY) / (maxY - minY)) * 100;
-      const greenThreshold = ((greenThresholdY - minY) / (maxY - minY)) * 100;
-
-      return (
-        <Defs>
-          <LinearGradient
-            gradientUnits="userSpaceOnUse"
-            id="availabilityGradient"
-            x1="0%"
-            x2="0%"
-            y1={minY}
-            y2={maxY}
-          >
-            <Stop offset="0%" stopColor={theme.color.fgPositive} />
-            <Stop offset={`${greenThreshold}%`} stopColor={theme.color.fgPositive} />
-            <Stop offset={`${greenThreshold}%`} stopColor={theme.color.fgWarning} />
-            <Stop offset={`${yellowThreshold}%`} stopColor={theme.color.fgWarning} />
-            <Stop offset={`${yellowThreshold}%`} stopColor={theme.color.fgNegative} />
-            <Stop offset="100%" stopColor={theme.color.fgNegative} />
-          </LinearGradient>
-        </Defs>
-      );
-    },
-  );
-
+  // Temporarily use a solid color until we implement Skia gradients
   return (
     <CartesianChart
       enableScrubbing
@@ -1952,7 +1861,7 @@ const AvailabilityChart = () => {
         {
           id: 'availability',
           data: availabilityEvents.map((event) => event.availability),
-          color: 'url(#availabilityGradient)',
+          color: theme.color.fgPositive,
         },
       ]}
       xAxis={{
@@ -1965,7 +1874,6 @@ const AvailabilityChart = () => {
         }),
       }}
     >
-      <ChartDefs />
       <XAxis
         showGrid
         showLine
@@ -1983,7 +1891,7 @@ const AvailabilityChart = () => {
         curve="stepAfter"
         renderPoints={() => ({
           fill: theme.color.bg,
-          stroke: 'url(#availabilityGradient)',
+          stroke: theme.color.fgPositive,
           strokeWidth: 2,
         })}
         seriesId="availability"
@@ -1992,8 +1900,6 @@ const AvailabilityChart = () => {
     </CartesianChart>
   );
 };
-
-const sampleData = [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58];
 
 const ConnectNullsChart = () => {
   const theme = useTheme();
@@ -2030,7 +1936,7 @@ const LineChartStories = () => {
       <Example title="Scrubber with Imperative Handle">
         <ScrubberWithImperativeHandle />
       </Example>
-      <Example title="Basic">
+      {/*<Example title="Basic">
         <LineChart
           enableScrubbing
           showArea
@@ -2049,7 +1955,7 @@ const LineChartStories = () => {
         >
           <Scrubber />
         </LineChart>
-      </Example>
+      </Example>*/}
       <Example title="Simple">
         <LineChart
           curve="monotone"
@@ -2060,6 +1966,7 @@ const LineChartStories = () => {
               data: sampleData,
             },
           ]}
+          type="dotted"
         />
       </Example>
       <Example title="Data Formats">
@@ -2068,8 +1975,10 @@ const LineChartStories = () => {
           showArea
           showXAxis
           showYAxis
+          areaType="gradient"
           curve="natural"
           height={defaultChartHeight}
+          renderPoints={() => true}
           series={[
             {
               id: 'line',
@@ -2085,14 +1994,20 @@ const LineChartStories = () => {
             showGrid: true,
           }}
         >
-          <Scrubber />
+          <Scrubber hideOverlay />
         </LineChart>
-      </Example>
-      <Example title="Color Shift Chart">
-        <ColorShiftChart />
       </Example>
       <Example title="Connect Nulls">
         <ConnectNullsChart />
+      </Example>
+      <Example title="Gain/Loss">
+        <GainLossChart />
+      </Example>
+      <Example title="Availability Chart">
+        <AvailabilityChart />
+      </Example>
+      {/*<Example title="Color Shift Chart">
+        <ColorShiftChart />
       </Example>
       <Example title="Asset Price Dotted">
         <AssetPriceDotted />
@@ -2114,10 +2029,7 @@ const LineChartStories = () => {
       </Example>
       <Example title="Prediction Chart">
         <PredictionChart />
-      </Example>
-      <Example title="Availability Chart">
-        <AvailabilityChart />
-      </Example>
+      </Example>*/}
     </ExampleScreen>
   );
 };

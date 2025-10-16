@@ -1,7 +1,6 @@
 import { memo, useCallback, useEffect, useId, useMemo } from 'react';
 import Animated, { useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
 import { Circle, G, Rect } from 'react-native-svg';
-import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import { DottedLine } from '../line/DottedLine';
@@ -60,7 +59,6 @@ export const YAxis = memo<YAxisProps>(
     width = label ? AXIS_WIDTH + LABEL_SIZE : AXIS_WIDTH,
     ...props
   }) => {
-    const theme = useTheme();
     const registrationId = useId();
     const { animate, getYScale, getYAxis, registerAxis, unregisterAxis, getAxisBounds } =
       useCartesianChartContext();
@@ -147,7 +145,7 @@ export const YAxis = memo<YAxisProps>(
           y: tick.position,
           label: String(formatTick(tick.tick)),
           chartTextProps: {
-            color: theme.color.fgMuted,
+            color: 'gray',
             verticalAlignment: 'middle',
             horizontalAlignment: position === 'left' ? 'right' : 'left',
           },
@@ -156,7 +154,6 @@ export const YAxis = memo<YAxisProps>(
     }, [
       axisBounds,
       ticksData,
-      theme.color.fgMuted,
       tickMarkLabelGap,
       showTickMarks,
       tickMarkSize,
@@ -215,7 +212,7 @@ export const YAxis = memo<YAxisProps>(
                   key={`tick-mark-${tick.tick}-${index}`}
                   clipPath={undefined}
                   d={lineToPath(tickX, tick.position, tickX2, tick.position)}
-                  stroke={theme.color.fg}
+                  stroke="black"
                   strokeLinecap="square"
                   strokeWidth={1}
                 />
@@ -231,19 +228,13 @@ export const YAxis = memo<YAxisProps>(
               position === 'left' ? axisBounds.x + axisBounds.width : axisBounds.x,
               axisBounds.y + axisBounds.height,
             )}
-            stroke={theme.color.fg}
+            stroke="black"
             strokeLinecap="square"
             strokeWidth={1}
           />
         )}
         {label && (
-          <ChartText
-            horizontalAlignment="center"
-            transform={`rotate(${position === 'left' ? -90 : 90})`}
-            verticalAlignment="middle"
-            x={labelX}
-            y={labelY}
-          >
+          <ChartText horizontalAlignment="center" verticalAlignment="middle" x={labelX} y={labelY}>
             {label}
           </ChartText>
         )}

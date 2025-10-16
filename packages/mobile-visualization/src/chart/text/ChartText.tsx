@@ -1,33 +1,18 @@
-import React, { memo, useCallback, useEffect, useMemo, useState } from 'react';
-import { type LayoutChangeEvent } from 'react-native';
-import {
-  G,
-  Rect as SvgRect,
-  Text,
-  type TextPathProps,
-  type TextProps,
-  type TSpanProps,
-} from 'react-native-svg';
+import React, { memo, useEffect, useMemo } from 'react';
+import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import type { Rect, SharedProps } from '@coinbase/cds-common/types';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
+import { type Color, Group, RoundedRect, Text as SkiaText } from '@shopify/react-native-skia';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import { type ChartInset, getChartInset } from '../utils';
-
-type ValidChartTextChildElements =
-  | React.ReactElement<TSpanProps, 'TSpan'>
-  | React.ReactElement<TextPathProps, 'TextPath'>;
+import { calculateTextPosition, useChartFont } from '../utils/skia';
 
 /**
  * The supported content types for ChartText.
+ * Note: Skia only supports simple string/number content, not complex SVG text elements.
  */
-export type ChartTextChildren =
-  | string
-  | number
-  | null
-  | undefined
-  | ValidChartTextChildElements
-  | ValidChartTextChildElements[];
+export type ChartTextChildren = string | number | null | undefined;
 
 /**
  * Horizontal alignment options for chart text.
@@ -39,174 +24,98 @@ export type TextHorizontalAlignment = 'left' | 'center' | 'right';
  */
 export type TextVerticalAlignment = 'top' | 'middle' | 'bottom';
 
-export type ChartTextProps = SharedProps &
-  Pick<TextProps, 'dx' | 'dy' | 'fontSize' | 'fontWeight' | 'opacity' | 'transform'> & {
-    /**
-     * The text color.
-     * @default theme.color.fgMuted
-     */
-    color?: string;
-    /**
-     * The background color of the text's container element.
-     * @default 'transparent'
-     */
-    background?: string;
-    // override box responsive style
-    /**
-     * The text content to display.
-     */
-    children: ChartTextChildren;
-    /**
-     * The desired x position in SVG pixels.
-     * @note Text will be automatically positioned to fit within bounds unless `disableRepositioning` is true.
-     */
-    x: number;
-    /**
-     * The desired y position in SVG pixels.
-     * @note Text will be automatically positioned to fit within bounds unless `disableRepositioning` is true.
-     */
-    y: number;
-    /**
-     * Horizontal alignment of the text.
-     * @default 'center'
-     */
-    horizontalAlignment?: TextHorizontalAlignment;
-    /**
-     * Vertical alignment of the text.
-     * @default 'middle'
-     */
-    verticalAlignment?: TextVerticalAlignment;
-    /**
-     * When true, disables automatic repositioning to fit within bounds.
-     */
-    disableRepositioning?: boolean;
-    /**
-     * Optional bounds rectangle to constrain the text within. If provided, text will be positioned
-     * to stay within these bounds. If not provided, defaults to the full chart bounds.
-     */
-    bounds?: Rect;
-    /**
-     * Callback fired when text dimensions change.
-     * Used for collision detection and smart positioning.
-     * Returns the adjusted position and dimensions.
-     */
-    onDimensionsChange?: (rect: Rect) => void;
-    /**
-     * Inset around the text content for the background rect.
-     * Only affects the background, text position remains unchanged.
-     */
-    inset?: number | ChartInset;
-    /**
-     * Border radius for the background rectangle.
-     * @default 4
-     */
-    borderRadius?: number;
-  };
+export type ChartTextProps = SharedProps & {
+  /**
+   * The text color.
+   * @default theme.color.fgMuted
+   */
+  color?: string;
+  /**
+   * The background color of the text's container element.
+   * @default 'transparent'
+   */
+  background?: string;
+  /**
+   * The text content to display.
+   */
+  children: ChartTextChildren;
+  /**
+   * The desired x position in pixels.
+   * @note Text will be automatically positioned to fit within bounds unless `disableRepositioning` is true.
+   */
+  x: number;
+  /**
+   * The desired y position in pixels.
+   * @note Text will be automatically positioned to fit within bounds unless `disableRepositioning` is true.
+   */
+  y: number;
+  /**
+   * Horizontal alignment of the text.
+   * @default 'center'
+   */
+  horizontalAlignment?: TextHorizontalAlignment;
+  /**
+   * Vertical alignment of the text.
+   * @default 'middle'
+   */
+  verticalAlignment?: TextVerticalAlignment;
+  /**
+   * When true, disables automatic repositioning to fit within bounds.
+   */
+  disableRepositioning?: boolean;
+  /**
+   * Optional bounds rectangle to constrain the text within. If provided, text will be positioned
+   * to stay within these bounds. If not provided, defaults to the full chart bounds.
+   */
+  bounds?: Rect;
+  /**
+   * Callback fired when text dimensions change.
+   * Used for collision detection and smart positioning.
+   * Returns the adjusted position and dimensions.
+   */
+  onDimensionsChange?: (rect: Rect) => void;
+  /**
+   * Inset around the text content for the background rect.
+   * Only affects the background, text position remains unchanged.
+   */
+  inset?: number | ChartInset;
+  /**
+   * Border radius for the background rectangle.
+   * @default 4
+   */
+  borderRadius?: number;
+  /**
+   * Font family from theme to use for text rendering.
+   * @default 'label2'
+   */
+  font?: ThemeVars.FontFamily;
+  /**
+   * Opacity of the text and background.
+   * @default 1
+   */
+  opacity?: number;
+};
 
 /**
- * Maps horizontal alignment to SVG textAnchor.
- * This abstraction allows us to provide a consistent alignment API across web and mobile platforms,
- * hiding the platform-specific SVG property differences.
+ * Maps horizontal alignment to Skia text alignment.
  */
-const getTextAnchor = (alignment: TextHorizontalAlignment): TextProps['textAnchor'] => {
+const mapHorizontalAlignment = (alignment: TextHorizontalAlignment): 'start' | 'center' | 'end' => {
   switch (alignment) {
     case 'left':
       return 'start';
     case 'center':
-      return 'middle';
+      return 'center';
     case 'right':
       return 'end';
   }
 };
 
 /**
- * Maps vertical alignment to SVG alignmentBaseline.
- * This abstraction allows us to provide a consistent alignment API across web and mobile platforms,
- * hiding the platform-specific SVG property differences.
+ * Maps vertical alignment to Skia text alignment.
  */
-const getAlignmentBaseline = (alignment: TextVerticalAlignment): TextProps['alignmentBaseline'] => {
-  switch (alignment) {
-    case 'top':
-      return 'hanging';
-    case 'middle':
-      return 'central';
-    case 'bottom':
-      return 'ideographic';
-  }
+const mapVerticalAlignment = (alignment: TextVerticalAlignment): 'top' | 'middle' | 'bottom' => {
+  return alignment;
 };
-
-type ChartTextVisibleProps = {
-  children: ChartTextChildren;
-  background: string;
-  textAnchor: TextProps['textAnchor'];
-  alignmentBaseline: TextProps['alignmentBaseline'];
-  fontSize: TextProps['fontSize'];
-  fontWeight: TextProps['fontWeight'];
-  textDimensions: Rect;
-  fill?: string;
-  borderRadius?: number;
-  inset?: number | ChartInset;
-  dx?: TextProps['dx'];
-  dy?: TextProps['dy'];
-  transform?: TextProps['transform'];
-};
-
-const ChartTextVisible = memo<ChartTextVisibleProps>(
-  ({
-    children,
-    background,
-    textAnchor,
-    alignmentBaseline,
-    fontSize,
-    fontWeight,
-    fill,
-    borderRadius,
-    inset: insetInput,
-    textDimensions,
-    dx,
-    dy,
-    transform,
-  }) => {
-    const theme = useTheme();
-    const inset = useMemo(() => getChartInset(insetInput), [insetInput]);
-
-    const rectHeight = useMemo(
-      () => textDimensions.height + inset.top + inset.bottom,
-      [textDimensions, inset],
-    );
-    const rectWidth = useMemo(
-      () => textDimensions.width + inset.left + inset.right,
-      [textDimensions, inset],
-    );
-
-    return (
-      <G transform={transform}>
-        {background !== 'transparent' && (
-          <SvgRect
-            fill={background}
-            height={rectHeight}
-            rx={borderRadius}
-            ry={borderRadius}
-            width={rectWidth}
-            x={textDimensions.x - inset.left}
-            y={textDimensions.y - inset.top}
-          />
-        )}
-        <Text
-          alignmentBaseline={alignmentBaseline}
-          dx={dx}
-          dy={dy}
-          fill={fill ?? theme.color.fgMuted}
-          fontSize={fontSize}
-          fontWeight={fontWeight}
-          textAnchor={textAnchor}
-        >
-          {children}
-        </Text>
-      </G>
-    );
-  },
-);
 
 export const ChartText = memo<ChartTextProps>(
   ({
@@ -215,64 +124,53 @@ export const ChartText = memo<ChartTextProps>(
     y,
     horizontalAlignment = 'center',
     verticalAlignment = 'middle',
-    dx,
-    dy,
     disableRepositioning = false,
     bounds,
     testID,
-    fontSize = 12,
-    fontWeight,
     color,
     background = 'transparent',
-    borderRadius,
+    borderRadius = 4,
     inset: insetInput,
     onDimensionsChange,
     opacity = 1,
-    transform,
+    font,
   }) => {
+    const theme = useTheme();
     const { width: chartWidth, height: chartHeight } = useCartesianChartContext();
+    const skiaFont = useChartFont(font);
 
-    const textAnchor = useMemo(() => getTextAnchor(horizontalAlignment), [horizontalAlignment]);
-    const alignmentBaseline = useMemo(
-      () => getAlignmentBaseline(verticalAlignment),
-      [verticalAlignment],
+    // Convert children to string
+    const text = useMemo(() => {
+      if (children === null || children === undefined) return '';
+      return String(children);
+    }, [children]);
+
+    // Calculate text position and dimensions using Skia font measurement
+    const textPosition = useMemo(() => {
+      return calculateTextPosition(x, y, skiaFont, text, {
+        horizontalAlign: mapHorizontalAlignment(horizontalAlignment),
+        verticalAlign: mapVerticalAlignment(verticalAlignment),
+      });
+    }, [x, y, skiaFont, text, horizontalAlignment, verticalAlignment]);
+
+    // Calculate background rectangle dimensions with inset
+    const inset = useMemo(() => getChartInset(insetInput), [insetInput]);
+
+    const backgroundRect = useMemo(
+      () => ({
+        x: textPosition.x - inset.left,
+        y: textPosition.y - inset.top,
+        width: textPosition.width + inset.left + inset.right,
+        height: textPosition.height + inset.top + inset.bottom,
+      }),
+      [textPosition, inset],
     );
 
+    // Calculate overflow and repositioning
     const fullChartBounds = useMemo(
       () => ({ x: 0, y: 0, width: chartWidth, height: chartHeight }),
       [chartWidth, chartHeight],
     );
-
-    const [textSize, setTextSize] = useState<Rect | null>(null);
-
-    const textBBox = useMemo(() => {
-      if (!textSize) {
-        return null;
-      }
-
-      return {
-        x: x + textSize.x,
-        y: y + textSize.y,
-        width: textSize.width,
-        height: textSize.height,
-      };
-    }, [x, y, textSize]);
-
-    const isDimensionsReady = disableRepositioning || textBBox !== null;
-
-    const backgroundRectDimensions = useMemo(() => {
-      if (!textBBox) {
-        return null;
-      }
-
-      const inset = getChartInset(insetInput);
-      return {
-        x: textBBox.x - inset.left,
-        y: textBBox.y - inset.top,
-        width: textBBox.width + inset.left + inset.right,
-        height: textBBox.height + inset.top + inset.bottom,
-      };
-    }, [textBBox, insetInput]);
 
     const overflowAmount = useMemo(() => {
       if (disableRepositioning) {
@@ -280,108 +178,80 @@ export const ChartText = memo<ChartTextProps>(
       }
 
       const parentBounds = bounds ?? fullChartBounds;
-      if (
-        !backgroundRectDimensions ||
-        !parentBounds ||
-        parentBounds.width <= 0 ||
-        parentBounds.height <= 0
-      ) {
+      if (!parentBounds || parentBounds.width <= 0 || parentBounds.height <= 0) {
         return { x: 0, y: 0 };
       }
 
-      let x = 0;
-      let y = 0;
+      let offsetX = 0;
+      let offsetY = 0;
 
       // X-axis overflow
-      if (backgroundRectDimensions.x < parentBounds.x) {
-        x = parentBounds.x - backgroundRectDimensions.x; // positive = shift right
-      } else if (
-        backgroundRectDimensions.x + backgroundRectDimensions.width >
-        parentBounds.x + parentBounds.width
-      ) {
-        x =
-          parentBounds.x +
-          parentBounds.width -
-          (backgroundRectDimensions.x + backgroundRectDimensions.width); // negative = shift left
+      if (backgroundRect.x < parentBounds.x) {
+        offsetX = parentBounds.x - backgroundRect.x;
+      } else if (backgroundRect.x + backgroundRect.width > parentBounds.x + parentBounds.width) {
+        offsetX = parentBounds.x + parentBounds.width - (backgroundRect.x + backgroundRect.width);
       }
 
       // Y-axis overflow
-      if (backgroundRectDimensions.y < parentBounds.y) {
-        y = parentBounds.y - backgroundRectDimensions.y; // positive = shift down
-      } else if (
-        backgroundRectDimensions.y + backgroundRectDimensions.height >
-        parentBounds.y + parentBounds.height
-      ) {
-        y =
-          parentBounds.y +
-          parentBounds.height -
-          (backgroundRectDimensions.y + backgroundRectDimensions.height); // negative = shift up
+      if (backgroundRect.y < parentBounds.y) {
+        offsetY = parentBounds.y - backgroundRect.y;
+      } else if (backgroundRect.y + backgroundRect.height > parentBounds.y + parentBounds.height) {
+        offsetY = parentBounds.y + parentBounds.height - (backgroundRect.y + backgroundRect.height);
       }
 
-      return { x, y };
-    }, [backgroundRectDimensions, fullChartBounds, bounds, disableRepositioning]);
+      return { x: offsetX, y: offsetY };
+    }, [backgroundRect, fullChartBounds, bounds, disableRepositioning]);
 
-    const reportedRect = useMemo(() => {
-      if (!backgroundRectDimensions) return null;
-      return {
-        x: backgroundRectDimensions.x + overflowAmount.x,
-        y: backgroundRectDimensions.y + overflowAmount.y,
-        width: backgroundRectDimensions.width,
-        height: backgroundRectDimensions.height,
-      };
-    }, [backgroundRectDimensions, overflowAmount.x, overflowAmount.y]);
+    // Final adjusted positions
+    const adjustedBackgroundRect = useMemo(
+      () => ({
+        x: backgroundRect.x + overflowAmount.x,
+        y: backgroundRect.y + overflowAmount.y,
+        width: backgroundRect.width,
+        height: backgroundRect.height,
+      }),
+      [backgroundRect, overflowAmount],
+    );
 
+    const adjustedTextPosition = useMemo(
+      () => ({
+        x: textPosition.x + overflowAmount.x,
+        y: textPosition.y + overflowAmount.y,
+      }),
+      [textPosition, overflowAmount],
+    );
+
+    // Report dimensions
     useEffect(() => {
-      if (onDimensionsChange && reportedRect !== null) {
-        onDimensionsChange(reportedRect);
+      if (onDimensionsChange) {
+        onDimensionsChange(adjustedBackgroundRect);
       }
-    }, [reportedRect, onDimensionsChange]);
+    }, [adjustedBackgroundRect, onDimensionsChange]);
 
-    const onLayout = useCallback((event: LayoutChangeEvent) => {
-      if (event.nativeEvent.layout.width > 0 && event.nativeEvent.layout.height > 0) {
-        setTextSize(event.nativeEvent.layout);
-      }
-    }, []);
+    if (!text) return null;
 
     return (
-      <G opacity={isDimensionsReady ? opacity : 0}>
-        {textSize && (
-          <G
-            transform={[{ translateX: x + overflowAmount.x }, { translateY: y + overflowAmount.y }]}
-          >
-            <ChartTextVisible
-              alignmentBaseline={alignmentBaseline}
-              background={background}
-              borderRadius={borderRadius}
-              dx={dx}
-              dy={dy}
-              fill={color}
-              fontSize={fontSize}
-              fontWeight={fontWeight}
-              inset={insetInput}
-              textAnchor={textAnchor}
-              textDimensions={textSize}
-              transform={transform}
-            >
-              {children}
-            </ChartTextVisible>
-          </G>
+      <Group opacity={opacity}>
+        {/* Background rectangle */}
+        {background !== 'transparent' && (
+          <RoundedRect
+            color={background as Color}
+            height={adjustedBackgroundRect.height}
+            r={borderRadius}
+            width={adjustedBackgroundRect.width}
+            x={adjustedBackgroundRect.x}
+            y={adjustedBackgroundRect.y}
+          />
         )}
-        <Text
-          alignmentBaseline={alignmentBaseline}
-          dx={dx}
-          dy={dy}
-          fill="transparent"
-          fontSize={fontSize}
-          fontWeight={fontWeight}
-          onLayout={onLayout}
-          opacity={0}
-          textAnchor={textAnchor}
-          transform={transform}
-        >
-          {children}
-        </Text>
-      </G>
+        {/* Text */}
+        <SkiaText
+          color={(color ?? theme.color.fgMuted) as Color}
+          font={skiaFont}
+          text={text}
+          x={adjustedTextPosition.x}
+          y={adjustedTextPosition.y}
+        />
+      </Group>
     );
   },
 );

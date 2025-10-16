@@ -11,6 +11,7 @@ import { Playground } from '@coinbase/ui-mobile-playground';
 import { NavigationContainer } from '@react-navigation/native';
 import * as Linking from 'expo-linking';
 import * as SplashScreen from 'expo-splash-screen';
+import { FiberProvider } from 'its-fine';
 
 import { useFonts } from './hooks/useFonts';
 import { routes as codegenRoutes } from './routes';
@@ -58,16 +59,18 @@ const App = memo(() => {
 
   return (
     <LocalStrictMode>
-      <ThemeProvider activeColorScheme={colorScheme} theme={defaultTheme}>
-        <CdsSafeAreaProvider>
-          <PortalProvider>
-            <StatusBar hidden={!__DEV__} />
-            <NavigationContainer linking={linking} onReady={handleOnReady}>
-              <Playground routes={codegenRoutes} setColorScheme={setColorScheme} />
-            </NavigationContainer>
-          </PortalProvider>
-        </CdsSafeAreaProvider>
-      </ThemeProvider>
+      <FiberProvider>
+        <ThemeProvider activeColorScheme={colorScheme} theme={defaultTheme}>
+          <CdsSafeAreaProvider>
+            <PortalProvider>
+              <StatusBar hidden={!__DEV__} />
+              <NavigationContainer linking={linking} onReady={handleOnReady}>
+                <Playground routes={codegenRoutes} setColorScheme={setColorScheme} />
+              </NavigationContainer>
+            </PortalProvider>
+          </CdsSafeAreaProvider>
+        </ThemeProvider>
+      </FiberProvider>
     </LocalStrictMode>
   );
 });
