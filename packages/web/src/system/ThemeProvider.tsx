@@ -71,6 +71,8 @@ export type ThemeProviderProps = Pick<ThemeManagerProps, 'display' | 'className'
     theme: ThemeConfig;
     activeColorScheme: ColorScheme;
     children?: React.ReactNode;
+    /** Force inject all theme CSS Variables into the DOM, even if the theme is the same as the parent theme. */
+    forceInjectThemeCss?: boolean;
   };
 
 export const ThemeProvider = memo(
@@ -82,6 +84,7 @@ export const ThemeProvider = memo(
     display,
     style,
     motionFeatures,
+    forceInjectThemeCss,
   }: ThemeProviderProps) => {
     const themeApi = useMemo(() => {
       const activeSpectrumKey = activeColorScheme === 'dark' ? 'darkSpectrum' : 'lightSpectrum';
@@ -119,7 +122,10 @@ export const ThemeProvider = memo(
 
     const parentTheme = useContext(ThemeContext);
 
-    const partialTheme = useMemo(() => diffThemes(themeApi, parentTheme), [themeApi, parentTheme]);
+    const partialTheme = useMemo(
+      () => (forceInjectThemeCss ? themeApi : diffThemes(themeApi, parentTheme)),
+      [themeApi, parentTheme, forceInjectThemeCss],
+    );
 
     return (
       <FramerMotionProvider motionFeatures={motionFeatures}>
