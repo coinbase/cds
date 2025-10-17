@@ -41,7 +41,7 @@ export type StepperApi = {
  *
  * @param options - The options for the stepper.
  * @param options.steps - The array of steps data.
- * @param options.defaultActiveStepId - The default active step ID. If not provided, the first step will be used.
+ * @param options.defaultActiveStepId - The default active step ID.
  * @param options.skipParentSteps - If true, steps containing sub-steps will never be made active.
  * @returns A tuple where the first element is the stepper state and the second element is an API for manipulating the stepper state.
  */
@@ -58,10 +58,8 @@ export const useStepper = <StepType extends BaseStepperValue = BaseStepperValue>
       for (let i = fromIndex; i < flatSteps.length; i++) {
         const step = flatSteps[i];
         const isParentStep = step.subSteps && step.subSteps.length > 0;
-        const canUseStep = !skipParentSteps || !isParentStep;
-        if (canUseStep) {
-          return step;
-        }
+        const invalidStep = skipParentSteps && isParentStep;
+        if (!invalidStep) return step;
       }
       return null;
     },
@@ -73,64 +71,28 @@ export const useStepper = <StepType extends BaseStepperValue = BaseStepperValue>
       for (let i = fromIndex; i >= 0; i--) {
         const step = flatSteps[i];
         const isParentStep = step.subSteps && step.subSteps.length > 0;
-        const canUseStep = !skipParentSteps || !isParentStep;
-        if (canUseStep) {
-          return step;
-        }
+        const invalidStep = skipParentSteps && isParentStep;
+        if (!invalidStep) return step;
       }
       return null;
     },
     [flatSteps, skipParentSteps],
   );
 
-  const getInitialActiveStepId = useCallback((): string | null => {
-    if (flatSteps.length === 0 || defaultActiveStepId === null) {
-      return null;
-    }
-
-    if (defaultActiveStepId) {
-      const defaultStepInFlat = flatSteps.find((step) => step.id === defaultActiveStepId);
-      if (defaultStepInFlat) {
-        const isParentStep = defaultStepInFlat.subSteps && defaultStepInFlat.subSteps.length > 0;
-        const canUseStep = !skipParentSteps || !isParentStep;
-
-        if (canUseStep) {
-          return defaultStepInFlat.id;
-        }
-
-        // If it's a parent step and we skip parent steps, find next valid step from this position
-        const defaultStepIndex = flatSteps.findIndex((step) => step.id === defaultActiveStepId);
-        const nextValidStep = findNextStep(defaultStepIndex);
-        if (nextValidStep) {
-          return nextValidStep.id;
-        }
-      }
-    }
-
-    // Fallback to first valid step
-    const firstValidStep = findNextStep(0);
-    return firstValidStep ? firstValidStep.id : null;
-  }, [defaultActiveStepId, flatSteps, skipParentSteps, findNextStep]);
-
-  const [activeStepId, setActiveStepId] = useState<string | null>(getInitialActiveStepId());
+  const [activeStepId, setActiveStepId] = useState<string | null>(defaultActiveStepId ?? null);
 
   const goToStep = useCallback(
     (stepId: string) => {
       const targetIndex = flatSteps.findIndex((step) => step.id === stepId);
-      if (targetIndex === -1) {
-        return;
-      }
-
+      if (targetIndex === -1) return;
       const targetStep = flatSteps[targetIndex];
-
       // If skipParentSteps is enabled, don't allow navigation to parent steps
       if (skipParentSteps && targetStep.subSteps && targetStep.subSteps.length > 0) {
         return;
       }
-
       setActiveStepId(targetStep.id);
     },
-    [flatSteps, setActiveStepId, skipParentSteps],
+    [flatSteps, skipParentSteps],
   );
 
   const goNextStep = useCallback(() => {
@@ -139,37 +101,27 @@ export const useStepper = <StepType extends BaseStepperValue = BaseStepperValue>
         const firstStep = findNextStep(0);
         return firstStep ? firstStep.id : null;
       }
-
       const activeStepIndex = flatSteps.findIndex((step) => step.id === currentActiveStepId);
       const nextStep = findNextStep(activeStepIndex + 1);
-
-      if (nextStep) {
-        return nextStep.id;
-      } else {
-        return currentActiveStepId;
-      }
+      if (nextStep) return nextStep.id;
+      return currentActiveStepId;
     });
-  }, [flatSteps, findNextStep]);
+  }, [findNextStep, flatSteps]);
 
   const goPreviousStep = useCallback(() => {
     setActiveStepId((currentActiveStepId) => {
-      if (currentActiveStepId === null) {
-        return null;
-      }
-
+      if (currentActiveStepId === null) return null;
       const activeStepIndex = flatSteps.findIndex((step) => step.id === currentActiveStepId);
       const previousStep = findPreviousStep(activeStepIndex - 1);
-
-      if (previousStep) {
-        return previousStep.id;
-      }
+      if (previousStep) return previousStep.id;
       return currentActiveStepId;
     });
-  }, [flatSteps, findPreviousStep]);
+  }, [findPreviousStep, flatSteps]);
 
-  const reset = useCallback(() => {
-    setActiveStepId(getInitialActiveStepId());
-  }, [getInitialActiveStepId, setActiveStepId]);
+  const reset = useCallback(
+    () => setActiveStepId(defaultActiveStepId ?? null),
+    [defaultActiveStepId, setActiveStepId],
+  );
 
   const state = useMemo(
     () => ({

@@ -1,11 +1,15 @@
 ### Basic usage
 
 ```tsx
-<ListCell layoutSpacing="hug" title="Basic List Cell" description="A simple example of ListCell" />
+<ListCell
+  spacingVariant="condensed"
+  title="Basic List Cell"
+  description="A simple example of ListCell"
+/>
 ```
 
 :::note
-Prefer `layoutSpacing="hug"` for the new ListCell design. The `spacious` and `compact` values exist for backward compatibility and may be removed in a future major release.
+Prefer `spacingVariant="condensed"` for the new ListCell design. The `compact` may be removed in a future major release.
 :::
 
 ```tsx
@@ -13,12 +17,12 @@ Prefer `layoutSpacing="hug"` for the new ListCell design. The `spacious` and `co
   {/* Preferred (new design) */}
   <ListCell
     accessory="arrow"
-    description="New design (hug)"
+    description="New design (condensed)"
     detail="$12,345.00"
-    layoutSpacing="hug"
+    spacingVariant="condensed"
     media={<Avatar src={assets.eth.imageUrl} size="m" />}
     onClick={console.log}
-    title="Hug"
+    title="Condensed"
     variant="positive"
   />
 
@@ -26,7 +30,7 @@ Prefer `layoutSpacing="hug"` for the new ListCell design. The `spacious` and `co
   <ListCell
     accessory="arrow"
     detail="$12,345.00"
-    layoutSpacing="compact"
+    spacingVariant="compact"
     media={<Avatar src={assets.eth.imageUrl} size="m" />}
     onClick={console.log}
     title="Compact (deprecated)"
@@ -35,10 +39,10 @@ Prefer `layoutSpacing="hug"` for the new ListCell design. The `spacious` and `co
   <ListCell
     accessory="arrow"
     detail="$12,345.00"
-    layoutSpacing="spacious"
+    spacingVariant="normal"
     media={<Avatar src={assets.eth.imageUrl} size="m" />}
     onClick={console.log}
-    title="Spacious (deprecated)"
+    title="Normal"
     variant="positive"
   />
 </VStack>
@@ -48,7 +52,7 @@ Prefer `layoutSpacing="hug"` for the new ListCell design. The `spacious` and `co
 
 ```tsx
 <ListCell
-  layoutSpacing="hug"
+  spacingVariant="condensed"
   title="List Cell with Media"
   description="Shows usage with media"
   media={<Icon active name="info" />}
@@ -59,7 +63,7 @@ Prefer `layoutSpacing="hug"` for the new ListCell design. The `spacious` and `co
 
 ```tsx
 <ListCell
-  layoutSpacing="hug"
+  spacingVariant="condensed"
   title="List Cell with Details"
   description="Shows usage with detail and subdetail"
   detail="$1,234.56"
@@ -72,7 +76,7 @@ Prefer `layoutSpacing="hug"` for the new ListCell design. The `spacious` and `co
 
 ```tsx
 <ListCell
-  layoutSpacing="hug"
+  spacingVariant="condensed"
   title="List Cell with Accessory"
   description="Shows usage with accessory"
   accessory="arrow"
@@ -83,7 +87,7 @@ Prefer `layoutSpacing="hug"` for the new ListCell design. The `spacious` and `co
 
 ```tsx
 <ListCell
-  layoutSpacing="hug"
+  spacingVariant="condensed"
   title="Interactive List Cell"
   description="Tap to interact"
   media={<Icon active name="info" />}
@@ -97,7 +101,7 @@ Prefer `layoutSpacing="hug"` for the new ListCell design. The `spacious` and `co
 ```tsx
 <VStack gap={3}>
   <ListCell
-    layoutSpacing="hug"
+    spacingVariant="condensed"
     title="List Cell with Helper Text"
     description="Shows usage with helper text below the cell"
     helperText={<CellHelperText>This is a default helper message.</CellHelperText>}
@@ -105,7 +109,7 @@ Prefer `layoutSpacing="hug"` for the new ListCell design. The `spacious` and `co
     end={<Button compact>Action</Button>}
   />
   <ListCell
-    layoutSpacing="hug"
+    spacingVariant="condensed"
     title="List Cell with Warning"
     description="Shows usage with a warning message"
     helperText={<CellHelperText variant="warning">This is a warning message.</CellHelperText>}
@@ -113,7 +117,7 @@ Prefer `layoutSpacing="hug"` for the new ListCell design. The `spacious` and `co
     end={<Button compact>Action</Button>}
   />
   <ListCell
-    layoutSpacing="hug"
+    spacingVariant="condensed"
     title="List Cell with Error"
     description="Shows usage with an error message"
     helperText={<CellHelperText variant="error">This is an error message.</CellHelperText>}
@@ -127,7 +131,7 @@ Prefer `layoutSpacing="hug"` for the new ListCell design. The `spacious` and `co
 
 ```tsx
 <ListCell
-  layoutSpacing="compact"
+  spacingVariant="compact"
   title="Compact List Cell"
   description="Shows compact variant"
   media={<Icon active name="info" />}
@@ -138,7 +142,7 @@ Prefer `layoutSpacing="hug"` for the new ListCell design. The `spacious` and `co
 
 ```tsx
 <ListCell
-  layoutSpacing="hug"
+  spacingVariant="condensed"
   selected
   title="Selected List Cell"
   description="Shows selected state"
@@ -153,17 +157,17 @@ The ListCellFallback component provides loading state representations of ListCel
 ```tsx
 <VStack gap={3}>
   {/* Basic loading state */}
-  <ListCellFallback layoutSpacing="hug" title description />
+  <ListCellFallback spacingVariant="condensed" title description />
 
   {/* Loading state with media */}
-  <ListCellFallback layoutSpacing="hug" title description media="icon" />
+  <ListCellFallback spacingVariant="condensed" title description media="icon" />
 
   {/* Loading state with details */}
-  <ListCellFallback layoutSpacing="hug" title description detail subdetail />
+  <ListCellFallback spacingVariant="condensed" title description detail subdetail />
 
   {/* Full loading state with custom widths */}
   <ListCellFallback
-    layoutSpacing="hug"
+    spacingVariant="condensed"
     title
     description
     detail

@@ -1,0 +1,9 @@
+.cardWrapper {
+  transition: background-color ease-out 200ms;
+}
+
+.cardWrapper:hover,
+.cardWrapper:active,
+.cardWrapper:focus {
+  background-color: rgb(var(--gray0));
+}

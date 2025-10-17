@@ -91,14 +91,19 @@ const twoLevelSteps: StepperValue[] = [
   },
 ];
 
+type StepperHorizontalExampleProps = Omit<
+  Partial<StepperProps>,
+  'direction' | 'activeStep' | 'activeStepId'
+> & { title?: string; defaultActiveStepId?: string | null };
+
 const StepperHorizontalExample = ({
   steps = basicSteps,
-  activeStepId,
+  defaultActiveStepId,
   title,
   ...props
-}: Partial<StepperProps> & { title?: string; activeStepId?: string | null }) => {
+}: StepperHorizontalExampleProps) => {
   const [renderKey, setRenderKey] = useState(0);
-  const [stepperState, stepperApi] = useStepper({ steps, defaultActiveStepId: activeStepId });
+  const [stepperState, stepperApi] = useStepper({ steps, defaultActiveStepId });
 
   const [complete, setComplete] = useState(false);
 
@@ -208,7 +213,7 @@ const StepperHorizontalExample = ({
 // No Active Step
 // ------------------------------------------------------------
 const NoActiveStep = () => {
-  return <StepperHorizontalExample activeStepId={null} steps={basicSteps} title="No Active Step" />;
+  return <StepperHorizontalExample steps={basicSteps} title="No Active Step" />;
 };
 
 // ------------------------------------------------------------
@@ -248,19 +253,26 @@ const StepperHorizontalScreen = () => {
   return (
     <ExampleScreen>
       <Example title="Default">
-        <StepperHorizontalExample activeStepId={basicSteps[2].id} steps={basicSteps} />
+        <StepperHorizontalExample defaultActiveStepId={basicSteps[2].id} steps={basicSteps} />
       </Example>
 
       <Example title="No Active Step">
         <NoActiveStep />
       </Example>
 
+      <Example title="Initial Active Step">
+        <Stepper activeStepId={basicSteps[1].id} direction="horizontal" steps={basicSteps} />
+      </Example>
+
       <Example title="No Label Text">
-        <StepperHorizontalExample activeStepId={noLabelSteps[0].id} steps={noLabelSteps} />
+        <StepperHorizontalExample defaultActiveStepId={noLabelSteps[0].id} steps={noLabelSteps} />
       </Example>
 
       <Example title="Long Text">
-        <StepperHorizontalExample activeStepId={longLabelSteps[0].id} steps={longLabelSteps} />
+        <StepperHorizontalExample
+          defaultActiveStepId={longLabelSteps[0].id}
+          steps={longLabelSteps}
+        />
       </Example>
 
       <Example title="Custom Progress Component">
@@ -278,38 +290,38 @@ const StepperHorizontalScreen = () => {
               {...props}
             />
           )}
-          activeStepId={basicSteps[0].id}
+          defaultActiveStepId={basicSteps[0].id}
           steps={basicSteps}
         />
       </Example>
 
       <Example title="Nested Steps">
-        <StepperHorizontalExample activeStepId={twoLevelSteps[0].id} steps={twoLevelSteps} />
+        <StepperHorizontalExample defaultActiveStepId={twoLevelSteps[0].id} steps={twoLevelSteps} />
       </Example>
 
       <Example title="Null Components">
         <VStack gap={4}>
           <StepperHorizontalExample
             StepperLabelComponent={null}
-            activeStepId={basicSteps[0].id}
+            defaultActiveStepId={basicSteps[0].id}
             steps={basicSteps}
             title="StepperLabelComponent = null"
           />
           <StepperHorizontalExample
             StepperProgressComponent={null}
-            activeStepId={basicSteps[0].id}
+            defaultActiveStepId={basicSteps[0].id}
             steps={basicSteps}
             title="StepperProgressComponent = null"
           />
           <StepperHorizontalExample
             StepperIconComponent={null}
-            activeStepId={basicSteps[0].id}
+            defaultActiveStepId={basicSteps[0].id}
             steps={basicSteps}
             title="StepperIconComponent = null"
           />
           <StepperHorizontalExample
             StepperHeaderComponent={null}
-            activeStepId={basicSteps[0].id}
+            defaultActiveStepId={basicSteps[0].id}
             steps={basicSteps}
             title="StepperHeaderComponent = null"
           />
