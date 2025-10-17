@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-empty-object-type */
-import React, { createContext, useContext, useMemo } from 'react';
+import React, { createContext, memo, useContext, useMemo } from 'react';
 import type { ColorScheme } from '@coinbase/cds-common/core/theme';
 
 import { createThemeCssVars } from '../core/createThemeCssVars';
@@ -23,15 +23,16 @@ type ThemeManagerProps = {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
-  theme: Theme;
+  theme: Partial<Theme>;
 };
 
-export const useThemeProviderStyles = (theme: Theme) => {
+export const useThemeProviderStyles = (theme: Partial<Theme>) => {
   const style = useMemo(() => createThemeCssVars(theme), [theme]);
   return style;
 };
 
-const ThemeManager = ({ display, className, style, children, theme }: ThemeManagerProps) => {
+/** Injects theme CSS variables into the DOM by calling `createThemeCssVars` via `useThemeProviderStyles`. */
+const ThemeManager = memo(({ display, className, style, children, theme }: ThemeManagerProps) => {
   const themeStyles = useThemeProviderStyles(theme);
   const styles = useMemo(
     () => ({ ...themeStyles, display, ...style }),
@@ -42,6 +43,27 @@ const ThemeManager = ({ display, className, style, children, theme }: ThemeManag
       {children}
     </div>
   );
+});
+
+/**
+ * Diff two themes and return a new partial theme with only the differences.
+ */
+export const diffThemes = (theme: Theme, parentTheme?: Theme) => {
+  if (!parentTheme) return theme;
+  const themeDiff = {
+    id: theme.id,
+    activeColorScheme: theme.activeColorScheme,
+  } as Record<keyof Theme, any>;
+  (Object.keys(theme) as (keyof Theme)[]).forEach((key) => {
+    if (key === 'id' || key === 'activeColorScheme') return;
+    themeDiff[key] = {};
+    Object.keys(theme[key] ?? {}).forEach((value) => {
+      if ((theme[key] as any)?.[value] !== (parentTheme[key] as any)?.[value]) {
+        themeDiff[key][value] = (theme[key] as any)[value];
+      }
+    });
+  });
+  return themeDiff as Partial<Theme>;
 };
 
 export type ThemeProviderProps = Pick<ThemeManagerProps, 'display' | 'className' | 'style'> &
@@ -51,60 +73,65 @@ export type ThemeProviderProps = Pick<ThemeManagerProps, 'display' | 'className'
     children?: React.ReactNode;
   };
 
-export const ThemeProvider = ({
-  theme,
-  activeColorScheme,
-  children,
-  className,
-  display,
-  style,
-  motionFeatures,
-}: ThemeProviderProps) => {
-  const themeApi = useMemo(() => {
-    const activeSpectrumKey = activeColorScheme === 'dark' ? 'darkSpectrum' : 'lightSpectrum';
-    const activeColorKey = activeColorScheme === 'dark' ? 'darkColor' : 'lightColor';
-    const inverseSpectrumKey = activeColorScheme === 'dark' ? 'lightSpectrum' : 'darkSpectrum';
-    const inverseColorKey = activeColorScheme === 'dark' ? 'lightColor' : 'darkColor';
+export const ThemeProvider = memo(
+  ({
+    theme,
+    activeColorScheme,
+    children,
+    className,
+    display,
+    style,
+    motionFeatures,
+  }: ThemeProviderProps) => {
+    const themeApi = useMemo(() => {
+      const activeSpectrumKey = activeColorScheme === 'dark' ? 'darkSpectrum' : 'lightSpectrum';
+      const activeColorKey = activeColorScheme === 'dark' ? 'darkColor' : 'lightColor';
+      const inverseSpectrumKey = activeColorScheme === 'dark' ? 'lightSpectrum' : 'darkSpectrum';
+      const inverseColorKey = activeColorScheme === 'dark' ? 'lightColor' : 'darkColor';
 
-    // TO DO: Link to color / theme docs in these error messages
-    if (!theme[activeColorKey])
-      throw Error(
-        `ThemeProvider activeColorScheme is ${activeColorScheme} but no ${activeColorScheme} colors are defined for the theme`,
-      );
+      if (!theme[activeColorKey])
+        throw Error(
+          `ThemeProvider activeColorScheme is ${activeColorScheme} but no ${activeColorScheme} colors are defined for the theme. See the docs https://cds.coinbase.com/getting-started/theming`,
+        );
 
-    if (!theme[activeSpectrumKey])
-      throw Error(
-        `ThemeProvider activeColorScheme is ${activeColorScheme} but no ${activeSpectrumKey} values are defined for the theme`,
-      );
+      if (!theme[activeSpectrumKey])
+        throw Error(
+          `ThemeProvider activeColorScheme is ${activeColorScheme} but no ${activeSpectrumKey} values are defined for the theme. See the docs https://cds.coinbase.com/getting-started/theming`,
+        );
 
-    if (theme[inverseSpectrumKey] && !theme[inverseColorKey])
-      throw Error(
-        `ThemeProvider theme has ${inverseSpectrumKey} values defined but no ${inverseColorKey} colors are defined for the theme`,
-      );
+      if (theme[inverseSpectrumKey] && !theme[inverseColorKey])
+        throw Error(
+          `ThemeProvider theme has ${inverseSpectrumKey} values defined but no ${inverseColorKey} colors are defined for the theme. See the docs https://cds.coinbase.com/getting-started/theming`,
+        );
 
-    if (theme[inverseColorKey] && !theme[inverseSpectrumKey])
-      throw Error(
-        `ThemeProvider theme has ${inverseColorKey} colors defined but no ${inverseSpectrumKey} values are defined for the theme`,
-      );
+      if (theme[inverseColorKey] && !theme[inverseSpectrumKey])
+        throw Error(
+          `ThemeProvider theme has ${inverseColorKey} colors defined but no ${inverseSpectrumKey} values are defined for the theme. See the docs https://cds.coinbase.com/getting-started/theming`,
+        );
 
-    return {
-      ...theme,
-      activeColorScheme: activeColorScheme,
-      spectrum: theme[activeSpectrumKey],
-      color: theme[activeColorKey],
-    };
-  }, [theme, activeColorScheme]);
+      return {
+        ...theme,
+        activeColorScheme: activeColorScheme,
+        spectrum: theme[activeSpectrumKey],
+        color: theme[activeColorKey],
+      };
+    }, [theme, activeColorScheme]);
 
-  return (
-    <FramerMotionProvider motionFeatures={motionFeatures}>
-      <ThemeContext.Provider value={themeApi}>
-        <ThemeManager className={className} display={display} style={style} theme={themeApi}>
-          {children}
-        </ThemeManager>
-      </ThemeContext.Provider>
-    </FramerMotionProvider>
-  );
-};
+    const parentTheme = useContext(ThemeContext);
+
+    const partialTheme = useMemo(() => diffThemes(themeApi, parentTheme), [themeApi, parentTheme]);
+
+    return (
+      <FramerMotionProvider motionFeatures={motionFeatures}>
+        <ThemeContext.Provider value={themeApi}>
+          <ThemeManager className={className} display={display} style={style} theme={partialTheme}>
+            {children}
+          </ThemeManager>
+        </ThemeContext.Provider>
+      </FramerMotionProvider>
+    );
+  },
+);
 
 export type InvertedThemeProviderProps = Pick<
   ThemeManagerProps,
@@ -114,27 +141,26 @@ export type InvertedThemeProviderProps = Pick<
 };
 
 /** Falls back to the currently active colorScheme if the inverse colors are not defined in the theme.  */
-export const InvertedThemeProvider = ({
-  children,
-  display,
-  className,
-  style,
-}: InvertedThemeProviderProps) => {
-  const context = useContext(ThemeContext);
-  if (!context) throw Error('InvertedThemeProvider must be used within a ThemeProvider');
-  const inverseColorScheme = context.activeColorScheme === 'dark' ? 'light' : 'dark';
-  const inverseColorKey = context.activeColorScheme === 'dark' ? 'lightColor' : 'darkColor';
-  const newColorScheme = context[inverseColorKey] ? inverseColorScheme : context.activeColorScheme;
+export const InvertedThemeProvider = memo(
+  ({ children, display, className, style }: InvertedThemeProviderProps) => {
+    const context = useContext(ThemeContext);
+    if (!context) throw Error('InvertedThemeProvider must be used within a ThemeProvider');
+    const inverseColorScheme = context.activeColorScheme === 'dark' ? 'light' : 'dark';
+    const inverseColorKey = context.activeColorScheme === 'dark' ? 'lightColor' : 'darkColor';
+    const newColorScheme = context[inverseColorKey]
+      ? inverseColorScheme
+      : context.activeColorScheme;
 
-  return (
-    <ThemeProvider
-      activeColorScheme={newColorScheme}
-      className={className}
-      display={display}
-      style={style}
-      theme={context}
-    >
-      {children}
-    </ThemeProvider>
-  );
-};
+    return (
+      <ThemeProvider
+        activeColorScheme={newColorScheme}
+        className={className}
+        display={display}
+        style={style}
+        theme={context}
+      >
+        {children}
+      </ThemeProvider>
+    );
+  },
+);
