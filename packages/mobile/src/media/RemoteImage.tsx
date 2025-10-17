@@ -43,7 +43,7 @@ type BaseRemoteImageProps = Omit<ImageProps, 'style' | 'width' | 'height' | 'sou
   /** Adds a custom border color */
   borderColor?: ThemeVars.Color;
   /**
-   * @deprecated This prop will be removed in a future version. Use darkModeEnhancementsApplied instead.
+   * @deprecated Use `darkModeEnhancementsApplied` instead. This prop will be removed in a future version.
    * Fill in transparent background with inverted background color and add border. This solves issue of transparent, stamped out asset icons not being visible on dark backgrounds.
    */
   shouldApplyDarkModeEnhacements?: boolean;

@@ -6,7 +6,7 @@ import { Box, type BoxProps } from '../layout';
 export type StickyFooterProps = BoxProps & {
   /**
    * Whether to apply a box shadow to the StickyFooter element.
-   * @deprecated Use elevation instead.
+   * @deprecated Use elevation instead. This prop will be removed in a future version.
    */
   elevated?: boolean;
 };
