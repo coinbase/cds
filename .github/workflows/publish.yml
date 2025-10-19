@@ -291,6 +291,11 @@ jobs:
           echo "🏗️ Building ${{ matrix.package }}..."
           yarn nx run ${{ matrix.package }}:build:prod
           echo "✅ Build completed for ${{ matrix.package }}"
+          if [ "${{ matrix.package }}" = "mcp-server" ]; then
+            echo "🔍 Generating MCP docs for ${{ matrix.package }}..."
+            yarn nx run ${{ matrix.package }}:generate-mcp-docs
+            echo "✅ MCP docs generated for ${{ matrix.package }}"
+          fi
 
       - name: Publish package
         if: steps.version-check.outputs.should-publish == 'true'
