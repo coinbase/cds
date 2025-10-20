@@ -149,7 +149,6 @@ const Playground = memo(function Playground({
 }: PlaygroundProps): JSX.Element {
   const [code, setCode] = useState((codeProp ?? children ?? '').replace(/\n$/, ''));
   const codeRef = useRef(code);
-
   const [collapsed, setIsCollapsed] = useState(!editorStartsExpanded);
   const toggleCollapsed = useCallback(() => setIsCollapsed((collapsed) => !collapsed), []);
   const toast = useToast();
@@ -165,12 +164,8 @@ const Playground = memo(function Playground({
   }, []);
 
   const handleTransformCode = useCallback(
-    (code: string) => {
-      const transformedCode = transformCode ? transformCode(code) : code;
-      codeRef.current = transformedCode;
-      setCode(transformedCode);
-    },
-    [transformCode],
+    (code: string) => handleCodeChange(transformCode ? transformCode(code) : code),
+    [handleCodeChange, transformCode],
   );
 
   const handleCopyToClipboard = useCallback(() => {
