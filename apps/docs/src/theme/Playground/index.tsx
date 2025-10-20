@@ -15,7 +15,6 @@ import { ErrorBoundaryErrorMessageFallback } from '@docusaurus/theme-common';
 import * as estreePlugin from 'prettier/plugins/estree.js';
 import * as typescriptPlugin from 'prettier/plugins/typescript.js';
 import { format } from 'prettier/standalone';
-import { themes as prismThemes } from 'prism-react-renderer';
 
 import { usePlaygroundTheme } from '../Layout/Provider/UnifiedThemeContext';
 
@@ -86,7 +85,16 @@ const useGetHeadingText = () => {
 const prettierOptions = {
   parser: 'typescript',
   plugins: [estreePlugin, typescriptPlugin] as any,
-};
+  arrowParens: 'always',
+  bracketSameLine: false,
+  jsxSingleQuote: false,
+  printWidth: 100,
+  semi: true,
+  singleQuote: true,
+  tabWidth: 2,
+  trailingComma: 'all',
+  useTabs: false,
+} as const;
 
 type PlaygroundControlsProps = {
   collapsed: boolean;
@@ -130,8 +138,9 @@ const PlaygroundControls = memo(
   },
 );
 
-type PlaygroundProps = Omit<React.ComponentProps<typeof LiveProvider>, 'transformCode'> & {
-  transformCode?: (val: string) => string;
+type LiveProviderProps = React.ComponentProps<typeof LiveProvider>;
+
+type PlaygroundProps = Omit<LiveProviderProps, 'transformCode'> & {
   children: string;
   hideControls?: boolean;
   hidePreview?: boolean;
@@ -140,21 +149,18 @@ type PlaygroundProps = Omit<React.ComponentProps<typeof LiveProvider>, 'transfor
 
 const Playground = memo(function Playground({
   children,
-  transformCode,
+  code: codeProp,
   hideControls,
   hidePreview,
   editorStartsExpanded,
-  code: codeProp,
   ...props
 }: PlaygroundProps): JSX.Element {
-  const [code, setCode] = useState((codeProp ?? children ?? '').replace(/\n$/, ''));
+  const [code, setCode] = useState(() => (codeProp ?? children ?? '').replace(/\n$/, ''));
   const codeRef = useRef(code);
   const [collapsed, setIsCollapsed] = useState(!editorStartsExpanded);
   const toggleCollapsed = useCallback(() => setIsCollapsed((collapsed) => !collapsed), []);
   const toast = useToast();
-  const { colorScheme, theme } = usePlaygroundTheme();
-  // If you update this you also need to update the prismThemes in apps/docs/docusaurus.config.ts and apps/docs/src/theme/CodeBlock/Content/String.tsx
-  const prismTheme = colorScheme === 'dark' ? prismThemes.nightOwl : prismThemes.github;
+  const { colorScheme, theme, prismTheme } = usePlaygroundTheme();
 
   const { editorRef, headingText } = useGetHeadingText();
 
@@ -162,11 +168,6 @@ const Playground = memo(function Playground({
     codeRef.current = code;
     setCode(code);
   }, []);
-
-  const handleTransformCode = useCallback(
-    (code: string) => handleCodeChange(transformCode ? transformCode(code) : code),
-    [handleCodeChange, transformCode],
-  );
 
   const handleCopyToClipboard = useCallback(() => {
     navigator.clipboard
@@ -179,12 +180,12 @@ const Playground = memo(function Playground({
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.code === 'KeyS' && (event.ctrlKey || event.metaKey)) {
         event.preventDefault();
-        format(codeRef.current, prettierOptions).then(handleTransformCode);
+        format(codeRef.current, prettierOptions).then(handleCodeChange);
       }
     };
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [handleTransformCode]);
+  }, [handleCodeChange]);
 
   return (
     <VStack ref={editorRef} paddingBottom={3} position="relative" zIndex={0}>

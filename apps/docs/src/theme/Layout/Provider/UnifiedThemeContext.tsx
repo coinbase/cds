@@ -5,6 +5,7 @@ import { defaultTheme } from '@coinbase/cds-web/themes/defaultTheme';
 import { useColorMode } from '@docusaurus/theme-common';
 import { docsTheme } from '@site/src/constants';
 import type { Property } from 'csstype';
+import { themes as prismThemes } from 'prism-react-renderer';
 
 export type ThemeOption = {
   id: string;
@@ -112,10 +113,12 @@ export const useDocsTheme = () => {
 
 export const usePlaygroundTheme = () => {
   const { playgroundColorScheme, setPlaygroundColorScheme, playgroundTheme } = useUnifiedTheme();
+  const prismTheme = playgroundColorScheme === 'dark' ? prismThemes.nightOwl : prismThemes.github;
   return {
     colorScheme: playgroundColorScheme,
     setColorScheme: setPlaygroundColorScheme,
     theme: playgroundTheme,
+    prismTheme,
   };
 };
 

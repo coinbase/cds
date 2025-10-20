@@ -4,10 +4,12 @@ title: MCP Server
 hide_title: true
 ---
 
+import { VStack } from '@coinbase/cds-web/layout';
 import { MDXSection } from '@site/src/components/page/MDXSection';
 import { MDXArticle } from '@site/src/components/page/MDXArticle';
 import { ContentHeader } from '@site/src/components/page/ContentHeader';
 
+<VStack gap={5}>
 <ContentHeader
   title="MCP Server"
   description="CDS includes an MCP Server that is automatically updated with each new version of our libraries."
@@ -92,3 +94,4 @@ npx @coinbase/cds-mcp-server
 
 </MDXArticle>
 </MDXSection>
+</VStack>

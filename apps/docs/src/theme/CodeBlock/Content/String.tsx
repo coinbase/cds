@@ -13,7 +13,7 @@ import {
 import type { Props } from '@theme/CodeBlock/Content/String';
 import CopyButton from '@theme/CodeBlock/CopyButton';
 import Line from '@theme/CodeBlock/Line';
-import { Highlight, themes as prismThemes } from 'prism-react-renderer';
+import { Highlight } from 'prism-react-renderer';
 
 import { usePlaygroundTheme } from '../../Layout/Provider/UnifiedThemeContext';
 
@@ -41,9 +41,7 @@ export default function CodeBlockString({
     languageProp ?? parseLanguage(blockClassName) ?? defaultLanguage,
   );
 
-  const { colorScheme, theme } = usePlaygroundTheme();
-  // If you update this you also need to update the prismThemes in apps/docs/docusaurus.config.ts and apps/docs/src/theme/Playground/index.tsx and apps/docs/src/components/page/ShareablePlayground/index.tsx
-  const prismTheme = colorScheme === 'dark' ? prismThemes.nightOwl : prismThemes.github;
+  const { colorScheme, theme, prismTheme } = usePlaygroundTheme();
 
   // We still parse the metastring in case we want to support more syntax in the
   // future. Note that MDX doesn't strip quotes when parsing metastring:
