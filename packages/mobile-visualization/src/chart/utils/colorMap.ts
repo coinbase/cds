@@ -1,9 +1,73 @@
 import { Skia } from '@shopify/react-native-skia';
 import type { ScaleLinear } from 'd3-scale';
 
-import type { ColorMap, ColorStop } from '../types';
-
 import { type ChartScaleFunction, isNumericScale, type NumericScale } from './scale';
+
+/**
+ * A color stop can be either:
+ * - A color string: 'red', '#FF0000', 'rgb(255, 0, 0)'
+ * - An object with color and optional opacity: { color: 'red', opacity: 0.5 }
+ */
+export type ColorStop = string | { color: string; opacity?: number };
+
+/**
+ * Unified color mapping configuration for chart visualizations.
+ */
+export type ColorMap = {
+  /**
+   * Type of color mapping.
+   * - 'continuous': Smooth interpolation between colors
+   * - 'discrete': Hard transitions at threshold boundaries
+   */
+  type: 'continuous' | 'discrete';
+
+  /**
+   * Which axis to map colors against.
+   * - 'y': Map colors based on y-values (high/low values) - most common
+   * - 'x': Map colors based on x-position (left/right, or time progression)
+   * @default 'y'
+   */
+  axis?: 'x' | 'y';
+
+  /**
+   * Colors to use in the mapping. At least 2 required.
+   *
+   * Can be:
+   * - Color strings: ['red', 'yellow', 'green']
+   * - Objects with opacity: [{ color: 'red', opacity: 1 }, { color: 'green', opacity: 0.5 }]
+   * - Mixed: ['red', { color: 'green', opacity: 0.5 }]
+   *
+   * **For continuous type:**
+   * Colors are interpolated smoothly between stops.
+   * If no stops provided, colors are evenly distributed.
+   *
+   * **For discrete type:**
+   * Each color represents a segment. Must have length stops.length + 1.
+   * Each segment has a distinct color with no interpolation.
+   */
+  colors: ColorStop[];
+
+  /**
+   * Stop positions that control color distribution.
+   * Must be in ascending order.
+   *
+   * **For continuous type (optional):**
+   * Normalized positions (0-1) for each color.
+   * Allows non-uniform color distribution.
+   * If provided, must match colors array length.
+   * @example [0, 0.3, 1] places colors at 0%, 30%, and 100%
+   *
+   * **For discrete type (optional):**
+   * Data value thresholds where colors change.
+   * Creates colors.length segments from stops.length thresholds.
+   * If not provided, creates single segment with first color.
+   * @example [0, 10] with colors ['red', 'yellow', 'green']
+   * - values < 0: red
+   * - values 0-10: yellow
+   * - values > 10: green
+   */
+  stops?: number[];
+};
 
 /**
  * Processed color information with normalized values
@@ -294,6 +358,64 @@ export const getColorMapScale = (
 };
 
 /**
+ * Parses a color string (hex, rgb, rgba) and returns RGB values with alpha.
+ */
+const parseColor = (colorStr: string): { r: number; g: number; b: number; a: number } | null => {
+  // Handle hex colors
+  if (colorStr.startsWith('#')) {
+    const hex = colorStr.slice(1);
+    if (hex.length === 3) {
+      return {
+        r: parseInt(hex[0] + hex[0], 16),
+        g: parseInt(hex[1] + hex[1], 16),
+        b: parseInt(hex[2] + hex[2], 16),
+        a: 1,
+      };
+    } else if (hex.length === 6) {
+      return {
+        r: parseInt(hex.slice(0, 2), 16),
+        g: parseInt(hex.slice(2, 4), 16),
+        b: parseInt(hex.slice(4, 6), 16),
+        a: 1,
+      };
+    }
+  }
+
+  // Handle rgb/rgba
+  const rgbaMatch = colorStr.match(/rgba?\(([^)]+)\)/);
+  if (rgbaMatch) {
+    const parts = rgbaMatch[1].split(',').map((s) => parseFloat(s.trim()));
+    return {
+      r: parts[0] || 0,
+      g: parts[1] || 0,
+      b: parts[2] || 0,
+      a: parts[3] !== undefined ? parts[3] : 1,
+    };
+  }
+
+  return null;
+};
+
+/**
+ * Interpolates between two colors based on a progress value (0-1).
+ */
+const interpolateColors = (color1: string, color2: string, progress: number): string => {
+  const c1 = parseColor(color1);
+  const c2 = parseColor(color2);
+
+  if (!c1 || !c2) {
+    return progress < 0.5 ? color1 : color2;
+  }
+
+  const r = Math.round(c1.r + (c2.r - c1.r) * progress);
+  const g = Math.round(c1.g + (c2.g - c1.g) * progress);
+  const b = Math.round(c1.b + (c2.b - c1.b) * progress);
+  const a = c1.a + (c2.a - c1.a) * progress;
+
+  return `rgba(${r}, ${g}, ${b}, ${a})`;
+};
+
+/**
  * Evaluates the color at a specific data value based on the colorMap configuration.
  * For discrete colorMaps, returns the appropriate color bucket.
  * For continuous colorMaps, interpolates between colors.
@@ -353,19 +475,33 @@ export const evaluateColorMapAtValue = (
       positions = colors.map((_, i) => i / (colors.length - 1));
     }
 
-    // Find which segment we're in
-    for (let i = 0; i < positions.length - 1; i++) {
-      if (normalizedValue >= positions[i] && normalizedValue <= positions[i + 1]) {
-        // For simplicity, we'll just return the closest color
-        // A more sophisticated approach would interpolate RGB values
+    // Account for Y-axis reversal to match gradient rendering
+    // In Skia, Y-axis gradients are reversed (high values at top, low at bottom)
+    const scaleRange = scale.range();
+    const isYAxisReversed = scaleRange[0] > scaleRange[1];
+
+    let orderedColors = processedColors;
+    let orderedPositions = positions;
+
+    if (isYAxisReversed) {
+      // Reverse to match the gradient rendering
+      orderedColors = [...processedColors].reverse();
+      orderedPositions = [...positions].reverse().map((pos) => 1 - pos);
+    }
+
+    // Find which segment we're in and interpolate
+    for (let i = 0; i < orderedPositions.length - 1; i++) {
+      if (normalizedValue >= orderedPositions[i] && normalizedValue <= orderedPositions[i + 1]) {
+        // Calculate progress within this segment (0-1)
         const segmentProgress =
-          (normalizedValue - positions[i]) / (positions[i + 1] - positions[i]);
-        return segmentProgress < 0.5 ? processedColors[i] : processedColors[i + 1];
+          (normalizedValue - orderedPositions[i]) / (orderedPositions[i + 1] - orderedPositions[i]);
+        // Interpolate between the two colors
+        return interpolateColors(orderedColors[i], orderedColors[i + 1], segmentProgress);
       }
     }
 
     // Fallback to last color
-    return processedColors[processedColors.length - 1];
+    return orderedColors[orderedColors.length - 1];
   }
 
   return null;

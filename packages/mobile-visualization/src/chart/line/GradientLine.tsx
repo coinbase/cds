@@ -5,8 +5,7 @@ import { LinearGradient, vec } from '@shopify/react-native-skia';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import { Path, type PathProps } from '../Path';
-import type { ColorMap } from '../types';
-import { getColorMapScale, processColorMap } from '../utils/colorMap';
+import { type ColorMap, getColorMapScale, processColorMap } from '../utils/colorMap';
 
 export type GradientLineProps = SharedProps &
   Omit<PathProps, 'stroke' | 'strokeOpacity' | 'strokeWidth'> & {

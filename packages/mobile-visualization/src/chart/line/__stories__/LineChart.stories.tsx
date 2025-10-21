@@ -1593,7 +1593,7 @@ const availabilityEvents = [
   },
   {
     date: new Date('2022-01-07'),
-    availability: 92,
+    availability: 90,
   },
   {
     date: new Date('2022-01-10'),

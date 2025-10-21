@@ -1,5 +1,7 @@
 import { stack as d3Stack, stackOffsetDiverging, stackOrderNone } from 'd3-shape';
 
+import type { ColorMap } from './colorMap';
+
 export const defaultStackId = 'DEFAULT_STACK_ID';
 
 export type AxisBounds = {
@@ -50,7 +52,7 @@ export type Series = {
    *   colors: ['red', 'green']
    * }
    */
-  colorMap?: import('../types').ColorMap;
+  colorMap?: ColorMap;
   /**
    * The ID of the y-axis this series uses.
    * Defaults to defaultAxisId if not specified.

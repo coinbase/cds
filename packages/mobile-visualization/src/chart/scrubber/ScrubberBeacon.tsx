@@ -13,9 +13,8 @@ import { useTheme } from '@coinbase/cds-mobile';
 import { Circle, Group } from '@shopify/react-native-skia';
 
 import { useCartesianChartContext } from '../ChartProvider';
-import type { ColorMap } from '../types';
 import { projectPoint, useScrubberContext } from '../utils';
-import { evaluateColorMapAtValue, getColorMapScale } from '../utils/colorMap';
+import { type ColorMap, evaluateColorMapAtValue, getColorMapScale } from '../utils/colorMap';
 
 const radius = 5;
 const glowRadius = 10;
@@ -210,7 +209,7 @@ export const ScrubberBeacon = memo(
       // Determine the beacon color (must be before conditional return to follow Rules of Hooks)
       const pointColor = useMemo(() => {
         // If colorMap is provided, evaluate color based on data value
-        if (colorMap && dataY !== undefined) {
+        if (colorMap && dataY !== undefined && xScale && yScale) {
           const colorMapScale = getColorMapScale(colorMap, xScale, yScale);
           if (colorMapScale) {
             const evaluatedColor = evaluateColorMapAtValue(colorMap, dataY, colorMapScale);
@@ -222,7 +221,7 @@ export const ScrubberBeacon = memo(
 
         // Fallback to provided color, series color, or theme color
         return color ?? targetSeries?.color ?? theme.color.fgPrimary;
-      }, [colorMap, dataY, xScale, yScale, color, targetSeries?.color, theme.color.fgPrimary]);
+      }, [colorMap, dataY, color, targetSeries?.color, theme.color.fgPrimary, xScale, yScale]);
 
       if (!pixelCoordinate) return null;
 

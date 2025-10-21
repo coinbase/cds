@@ -2,6 +2,7 @@
 export * from './axis';
 export * from './bar';
 export * from './chart';
+export * from './colorMap';
 export * from './context';
 export * from './path';
 export * from './point';

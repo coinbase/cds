@@ -6,7 +6,7 @@ import { Area, type AreaComponent } from '../area/Area';
 import { useCartesianChartContext } from '../ChartProvider';
 import { Point, type PointConfig, type RenderPointsParams } from '../Point';
 import { type ChartPathCurveType, getLinePath } from '../utils';
-import { evaluateColorMapAtValue, getColorMapScale } from '../utils/colorMap';
+import { type ColorMap, evaluateColorMapAtValue, getColorMapScale } from '../utils/colorMap';
 
 import { DottedLine } from './DottedLine';
 import { GradientLine } from './GradientLine';
@@ -28,7 +28,7 @@ export type LineComponentProps = {
    * Color mapping configuration.
    * When provided, creates gradient or threshold-based coloring.
    */
-  colorMap?: import('../types').ColorMap;
+  colorMap?: ColorMap;
 };
 
 export type LineComponent = React.FC<LineComponentProps>;
@@ -205,6 +205,12 @@ export const Line = memo<LineProps>(
         : null;
     }, [xAxis?.data]);
 
+    // Pre-compute colorMap scale once (memoized) to avoid recalculating in render loop
+    const colorMapScale = useMemo(() => {
+      if (!seriesColorMap || !xScale || !yScale) return null;
+      return getColorMapScale(seriesColorMap, xScale, yScale);
+    }, [seriesColorMap, xScale, yScale]);
+
     if (!xScale || !yScale) return;
 
     return (
@@ -251,27 +257,20 @@ export const Line = memo<LineProps>(
 
             const pointConfig = pointResult === true ? {} : pointResult;
 
-            // Evaluate colors from colorMap if available
+            // Evaluate colors from colorMap if available (only if not explicitly set)
             let pointFill = pointConfig.fill ?? stroke;
             let pointStroke = pointConfig.stroke;
 
-            if (seriesColorMap) {
-              const colorMapScale = getColorMapScale(seriesColorMap, xScale, yScale);
-              if (colorMapScale) {
-                const evaluatedColor = evaluateColorMapAtValue(
-                  seriesColorMap,
-                  value,
-                  colorMapScale,
-                );
-                if (evaluatedColor) {
-                  // Apply colorMap color to fill if not explicitly set
-                  if (!pointConfig.fill) {
-                    pointFill = evaluatedColor;
-                  }
-                  // Apply colorMap color to stroke if not explicitly set
-                  if (!pointConfig.stroke) {
-                    pointStroke = evaluatedColor;
-                  }
+            if (colorMapScale && seriesColorMap) {
+              const evaluatedColor = evaluateColorMapAtValue(seriesColorMap, value, colorMapScale);
+              if (evaluatedColor) {
+                // Apply colorMap color to fill if not explicitly set
+                if (!pointConfig.fill) {
+                  pointFill = evaluatedColor;
+                }
+                // Apply colorMap color to stroke if not explicitly set
+                if (!pointConfig.stroke) {
+                  pointStroke = evaluatedColor;
                 }
               }
             }

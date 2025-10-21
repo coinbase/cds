@@ -2,6 +2,7 @@ import { memo } from 'react';
 import type { SharedProps } from '@coinbase/cds-common/types';
 
 import { Path, type PathProps } from '../Path';
+import type { ColorMap } from '../utils/colorMap';
 
 export type SolidLineProps = SharedProps &
   Omit<PathProps, 'fill' | 'strokeWidth'> & {
@@ -11,7 +12,7 @@ export type SolidLineProps = SharedProps &
      * Color mapping configuration (not used by SolidLine, but accepted for API consistency).
      * SolidLine always uses solid `stroke` color.
      */
-    colorMap?: import('../types').ColorMap;
+    colorMap?: ColorMap;
   };
 
 /**

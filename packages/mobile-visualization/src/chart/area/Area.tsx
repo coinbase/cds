@@ -4,6 +4,7 @@ import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import { type ChartPathCurveType, getAreaPath } from '../utils';
+import type { ColorMap } from '../utils/colorMap';
 
 import { DottedArea } from './DottedArea';
 import { GradientArea } from './GradientArea';
@@ -30,7 +31,7 @@ export type AreaComponentProps = {
    * Color mapping configuration.
    * When provided, creates gradient or threshold-based coloring.
    */
-  colorMap?: import('../types').ColorMap;
+  colorMap?: ColorMap;
 };
 
 export type AreaComponent = React.FC<AreaComponentProps>;
@@ -76,7 +77,7 @@ export type AreaProps = {
    * Color mapping configuration.
    * When provided, creates gradient or threshold-based coloring.
    */
-  colorMap?: import('../types').ColorMap;
+  colorMap?: ColorMap;
   /**
    * When true, null values are skipped and the area connects across gaps.
    * When false, null values create gaps in the area.
