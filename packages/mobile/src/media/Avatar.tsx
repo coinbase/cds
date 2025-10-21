@@ -31,8 +31,9 @@ export type AvatarBaseProps = SharedProps &
     alt?: string;
     /** Absolute url to the image that should be shown in the Avatar. If no src is provided then a generic fallback image is used. */
     src?: string;
-    /** Shape of Avatar.
-     * Note: If the shape is a hexagon, do not use name.
+    /**
+     * Shape of Avatar.
+     * @note If the shape is a hexagon, do not use name.
      */
     shape?: AvatarShape;
     /** Size for a given avatar. */

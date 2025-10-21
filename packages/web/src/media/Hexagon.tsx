@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom';
 import type { SharedProps } from '@coinbase/cds-common/types';
 import { css } from '@linaria/core';
 
+import { cx } from '../cx';
 import { useIsBrowser } from '../hooks/useIsBrowser';
 import { Box } from '../layout/Box';
 import { getBrowserGlobals } from '../utils/browser';
@@ -13,24 +14,23 @@ export const cdsHexagonTestId = 'cds-hexagon';
 export const hexagonClipPathContainerId = 'cds-hexagon-clipPath-container';
 export const hexagonAvatarClipId = 'cds-hexagon-avatar-clipper';
 
+const hexagonBorderWidth = 2;
+
 /**
  * We need to mount this to the DOM one time
  * This is currently done in the PortalProvider
  */
 export const HexagonAvatarClipPath = () => {
-  // to get scale values use equation 1/x, where x is height or width
-  const xScale = 1 / 66;
-  const yScale = 1 / 62;
-
+  const viewBoxSize = 16;
   return (
-    <svg height="0" viewBox="0 0 66 62" width="0">
+    <svg height="0" viewBox={`0 0 ${viewBoxSize} ${viewBoxSize}`} width="0">
       <defs>
         <clipPath
           clipPathUnits="objectBoundingBox"
           id={hexagonAvatarClipId}
-          transform={`scale(${xScale} ${yScale})`}
+          transform={`scale(${1 / viewBoxSize} ${1 / viewBoxSize})`}
         >
-          <path d="M63.4372 22.8624C66.2475 27.781 66.2475 33.819 63.4372 38.7376L54.981 53.5376C52.1324 58.5231 46.8307 61.6 41.0887 61.6H24.4562C18.7142 61.6 13.4125 58.5231 10.564 53.5376L2.10774 38.7376C-0.702577 33.819 -0.702582 27.781 2.10774 22.8624L10.564 8.06243C13.4125 3.07687 18.7142 0 24.4562 0H41.0887C46.8307 0 52.1324 3.07686 54.981 8.06242L63.4372 22.8624Z" />
+          <path d="M15.4855 6.0242C16.1715 7.24852 16.1715 8.75148 15.4855 9.97581L13.4213 13.6598C12.7259 14.9008 11.4317 15.6667 10.0301 15.6667H5.96994C4.56828 15.6667 3.2741 14.9008 2.57874 13.6598L0.514515 9.97581C-0.171504 8.75148 -0.171505 7.24852 0.514514 6.0242L2.57874 2.34022C3.2741 1.09922 4.56828 0.333336 5.96994 0.333336H10.0301C11.4317 0.333336 12.7259 1.09922 13.4213 2.34022L15.4855 6.0242Z" />
         </clipPath>
       </defs>
     </svg>
@@ -39,8 +39,7 @@ export const HexagonAvatarClipPath = () => {
 HexagonAvatarClipPath.displayName = 'HexagonAvatarClipPath';
 
 /**
- * Because the hexagon is not symmetrical, we have to get all mathy to scale the border appropriately
- * Note: These values were manually set with my eyeballs
+ * @deprecated will be removed in a future version
  */
 export const hexagonSvgTransformStyles = {
   standard: {
@@ -61,6 +60,21 @@ export const hexagonSvgTransformStyles = {
   },
 } as const;
 
+const hexagonBorderContainerCss = css`
+  position: absolute;
+  inset: 0;
+
+  &[data-offset='false'] {
+    width: calc(100% - ${hexagonBorderWidth}px);
+    height: calc(100% - ${hexagonBorderWidth}px);
+    transform: translate(${hexagonBorderWidth / 2}px, ${hexagonBorderWidth / 2}px);
+  }
+
+  &[data-offset='true'] {
+    inset: -${hexagonBorderWidth}px;
+  }
+`;
+
 const pathElementCss = css`
   fill: none;
   stroke-linecap: round;
@@ -79,34 +93,25 @@ type HexagonBorderProps = SharedProps & {
    * Child path elements are programmed to use the currentColor CSS value to inherit this color.
    */
   className?: string;
+  computedSize?: string | number;
 };
 
 export const HexagonBorder = memo(
-  ({
-    strokeColor,
-    offset,
-    size = 'l',
-    testID = cdsHexagonTestId,
-    className,
-  }: HexagonBorderProps) => {
-    const svgTransformStyles = hexagonSvgTransformStyles[offset ? 'offset' : 'standard'][size];
-
+  ({ strokeColor, offset, testID = cdsHexagonTestId, className }: HexagonBorderProps) => {
     return (
       <Box
         aria-hidden
-        className={className}
+        className={cx(hexagonBorderContainerCss, className)}
+        data-offset={!!offset}
         data-testid={testID}
-        height="100%"
-        position="absolute"
-        width="100%"
       >
-        <svg data-testid={`${testID}-svg`} style={svgTransformStyles} viewBox="-2.25 0 70 62">
+        <svg data-testid={`${testID}-svg`} overflow="visible" viewBox="0 0 16 16">
           <path
             className={pathElementCss}
-            d="M63.4372 22.8624C66.2475 27.781 66.2475 33.819 63.4372 38.7376L54.981 53.5376C52.1324 58.5231 46.8307 61.6 41.0887 61.6H24.4562C18.7142 61.6 13.4125 58.5231 10.564 53.5376L2.10774 38.7376C-0.702577 33.819 -0.702582 27.781 2.10774 22.8624L10.564 8.06243C13.4125 3.07687 18.7142 0 24.4562 0H41.0887C46.8307 0 52.1324 3.07686 54.981 8.06242L63.4372 22.8624Z"
+            d="M15.4855 6.0242C16.1715 7.24852 16.1715 8.75148 15.4855 9.97581L13.4213 13.6598C12.7259 14.9008 11.4317 15.6667 10.0301 15.6667H5.96994C4.56828 15.6667 3.2741 14.9008 2.57874 13.6598L0.514515 9.97581C-0.171504 8.75148 -0.171505 7.24852 0.514514 6.0242L2.57874 2.34022C3.2741 1.09922 4.56828 0.333336 5.96994 0.333336H10.0301C11.4317 0.333336 12.7259 1.09922 13.4213 2.34022L15.4855 6.0242Z"
             data-testid={`${testID}-path`}
             stroke={strokeColor}
-            strokeWidth={1.5}
+            strokeWidth={hexagonBorderWidth}
             vectorEffect="non-scaling-stroke"
           />
         </svg>
