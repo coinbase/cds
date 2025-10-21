@@ -246,12 +246,14 @@ export const ChartText = memo<ChartTextProps>(
       };
     }, [backgroundRectDimensions, overflowAmount.x, overflowAmount.y]);
 
-    // send latest calculated dimensions (adjusted for translation) to parent
-    useEffect(() => {
-      if (onDimensionsChange && reportedRect !== null) {
-        onDimensionsChange(reportedRect);
+    const [reportedDimensionsRect, setReportedDimensionsRect] = useState<Rect | null>(null);
+
+    if (reportedDimensionsRect !== reportedRect) {
+      setReportedDimensionsRect(reportedRect);
+      if (reportedRect !== null) {
+        onDimensionsChange?.(reportedRect);
       }
-    }, [reportedRect, onDimensionsChange]);
+    }
 
     useEffect(() => {
       if (textRef.current) {

@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useMemo } from 'react';
+import React, { memo, useMemo, useState } from 'react';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import type { Rect, SharedProps } from '@coinbase/cds-common/types';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
@@ -221,12 +221,12 @@ export const ChartText = memo<ChartTextProps>(
       [textPosition, overflowAmount],
     );
 
-    // Report dimensions
-    useEffect(() => {
-      if (onDimensionsChange) {
-        onDimensionsChange(adjustedBackgroundRect);
-      }
-    }, [adjustedBackgroundRect, onDimensionsChange]);
+    const [reportedDimensionsRect, setReportedDimensionsRect] = useState<Rect | null>(null);
+
+    if (reportedDimensionsRect !== adjustedBackgroundRect) {
+      setReportedDimensionsRect(adjustedBackgroundRect);
+      onDimensionsChange?.(adjustedBackgroundRect);
+    }
 
     if (!text) return null;
 
