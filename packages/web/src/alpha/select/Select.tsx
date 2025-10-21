@@ -551,12 +551,15 @@ const SelectBase = memo(
 
       const containerRef = useRef<HTMLElement>(null);
 
-      useImperativeHandle(ref, () =>
-        Object.assign(containerRef.current as HTMLElement, {
-          open,
-          setOpen,
-          refs,
-        }),
+      useImperativeHandle(
+        ref,
+        () =>
+          ({
+            open,
+            setOpen,
+            refs,
+          }) as SelectRef,
+        [open, setOpen, refs],
       );
 
       return (
