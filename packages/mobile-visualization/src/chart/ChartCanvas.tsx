@@ -1,6 +1,6 @@
 import React, { type ReactNode } from 'react';
 import { Canvas } from '@shopify/react-native-skia';
-import { useContextBridge } from 'its-fine';
+import { useContextBridge } from '@coinbase/cds-mobile/system/context-bridge';
 
 export type ChartCanvasProps = {
   children: ReactNode;

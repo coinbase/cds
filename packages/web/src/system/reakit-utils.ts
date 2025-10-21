@@ -1,6 +1,6 @@
 /**
  * These utils are adapted from the reakit-utils source code and are not safe to run in an SSR environment
- * - https://github.com/ariakit/ariakit/tree/reakit/packages/reakit-utils
+ * https://github.com/ariakit/ariakit/blob/96f5dd52704444862d16167db3c82fb89838e3ae/packages/reakit-utils/src/index.ts
  */
 
 /**
