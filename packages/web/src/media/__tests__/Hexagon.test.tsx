@@ -11,7 +11,7 @@ describe('HexagonBorder', () => {
     expect(await renderA11y(<HexagonBorder strokeColor="blue" />)).toHaveNoViolations();
   });
 
-  it('renders with standard offset (not offset)', () => {
+  it('renders with no offset by default', () => {
     render(<HexagonBorder strokeColor="blue" testID={TEST_ID} />);
 
     const container = screen.getByTestId(TEST_ID);
