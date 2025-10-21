@@ -1,6 +1,6 @@
 {
-  "lastUpdated": "2025-09-26T00:20:26.371Z",
-  "lastUnicode": 985566,
+  "lastUpdated": "2025-10-21T21:08:20.392Z",
+  "lastUnicode": 985578,
   "iconSets": [
     {
       "nodeId": "4:39245",
@@ -19786,6 +19786,100 @@
           "active": true,
           "size": 12,
           "unicode": 985561
+        }
+      ]
+    },
+    {
+      "nodeId": "5180:22",
+      "name": "unfollowPeople",
+      "description": "unfollow, People",
+      "assetsHash": "eB6CUdul0kKpICu2EoMgeHRsbFnZwqPFKfH39vEgvIs=",
+      "nameHash": "sEfCSHjXq8FtM+CnmLkc9QDu+UsaxoZPMgzYCAQmK8I=",
+      "createdAt": "2025-10-21T19:15:05.631Z",
+      "lastUpdated": "2025-10-21T19:15:05.631Z",
+      "svgs": [
+        {
+          "name": "unfollowPeople-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 985578
+        },
+        {
+          "name": "unfollowPeople-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 985577
+        },
+        {
+          "name": "unfollowPeople-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 985576
+        },
+        {
+          "name": "unfollowPeople-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 985575
+        },
+        {
+          "name": "unfollowPeople-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 985574
+        },
+        {
+          "name": "unfollowPeople-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 985573
+        }
+      ]
+    },
+    {
+      "nodeId": "5240:63",
+      "name": "tokenSales",
+      "description": "token, sales",
+      "assetsHash": "1T83nB4tzQKhGenqqRdSllSd9NwcNUP7E9u1Tj/2QOQ=",
+      "nameHash": "jo2RHkMNvbCWdiVhWFMdA828pMxgwHo9KITipv23FwE=",
+      "createdAt": "2025-10-21T19:15:05.639Z",
+      "lastUpdated": "2025-10-21T21:05:09.288Z",
+      "svgs": [
+        {
+          "name": "tokenSales-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 985572
+        },
+        {
+          "name": "tokenSales-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 985571
+        },
+        {
+          "name": "tokenSales-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 985570
+        },
+        {
+          "name": "tokenSales-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 985569
+        },
+        {
+          "name": "tokenSales-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 985568
+        },
+        {
+          "name": "tokenSales-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 985567
         }
       ]
     }

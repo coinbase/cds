@@ -5575,5 +5575,17 @@ export const descriptionMap: Record<string, IconName[]> = {
   ],
   'map': [
     'location'
+  ],
+  'unfollow': [
+    'unfollowPeople'
+  ],
+  'People': [
+    'unfollowPeople'
+  ],
+  'token': [
+    'tokenSales'
+  ],
+  'sales': [
+    'tokenSales'
   ]
 };
