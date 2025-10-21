@@ -14,7 +14,12 @@ export type MultiSelectOptions = {
 export type MultiSelectApi<T extends string> = {
   /** Current array of selected values */
   value: T[];
-  /** Handler for toggling selection of one or more values */
+  /** Handler for toggling selection of one or more values.
+   * When a single value is passed, it will be added to the selection if it is not already selected.
+   * If the value is already selected, it will be removed from the selection.
+   * When an array of values is passed, all values will be added to the selection.
+   * When null is passed, all values will be removed from the selection.
+   */
   onChange: (value: string | string[] | null) => void;
   /** Add one or more values to the selection */
   addSelection: (value: string | string[]) => void;
