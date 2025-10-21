@@ -1,5 +1,5 @@
 /* stylelint-disable color-named */
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { css } from '@linaria/core';
 
 import { Button } from '../../../buttons/Button';
@@ -15,6 +15,7 @@ import {
   type SelectControlComponent,
   type SelectOption,
   type SelectOptionComponent,
+  type SelectRef,
   type SelectType,
 } from '../Select';
 
@@ -1065,6 +1066,35 @@ export const ValueDisplayed = () => {
       <UpsellCard description={value ?? 'Empty value'} title="Your selection"></UpsellCard>
       <Select
         label="Single select - value displayed"
+        onChange={setValue}
+        options={exampleOptions}
+        placeholder="Empty value"
+        value={value}
+      />
+    </VStack>
+  );
+};
+
+export const RefImperativeHandle = () => {
+  const [value, setValue] = useState<string | null>('1');
+  const selectRef = useRef<SelectRef>(null);
+
+  const handleOpenSelect = () => {
+    selectRef.current?.setOpen?.(true);
+  };
+  const handleCloseSelect = () => {
+    selectRef.current?.setOpen?.(false);
+  };
+
+  return (
+    <VStack gap={2}>
+      <HStack gap={2}>
+        <Button onClick={handleOpenSelect}>Open Select</Button>
+        <Button onClick={handleCloseSelect}>Close Select</Button>
+      </HStack>
+      <Select
+        ref={selectRef}
+        label="Single select - ref imperative handle"
         onChange={setValue}
         options={exampleOptions}
         placeholder="Empty value"

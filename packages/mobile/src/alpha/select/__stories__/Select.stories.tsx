@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { useMultiSelect } from '@coinbase/cds-common/select/useMultiSelect';
 
 import { Button } from '../../../buttons';
@@ -14,6 +14,7 @@ import {
   type SelectControlComponent,
   type SelectOption,
   type SelectOptionComponent,
+  type SelectRef,
 } from '../Select';
 
 const exampleOptions = [
@@ -988,6 +989,31 @@ const AllCombinedFeaturesExample = () => {
   );
 };
 
+const RefImperativeHandleExample = () => {
+  const [value, setValue] = useState<string | null>('1');
+  const selectRef = useRef<SelectRef>(null);
+
+  const handleOpenSelect = useCallback(() => {
+    selectRef.current?.setOpen?.(true);
+  }, []);
+
+  return (
+    <VStack gap={2}>
+      <HStack gap={2}>
+        <Button onPress={handleOpenSelect}>Open Select</Button>
+      </HStack>
+      <Select
+        ref={selectRef}
+        label="Single select - ref imperative handle"
+        onChange={setValue}
+        options={exampleOptions}
+        placeholder="Empty value"
+        value={value}
+      />
+    </VStack>
+  );
+};
+
 const SelectV3Screen = () => {
   return (
     <ExampleScreen>
@@ -1128,6 +1154,9 @@ const SelectV3Screen = () => {
       </Example>
       <Example title="All Combined Features">
         <AllCombinedFeaturesExample />
+      </Example>
+      <Example title="Ref Imperative Handle">
+        <RefImperativeHandleExample />
       </Example>
     </ExampleScreen>
   );
