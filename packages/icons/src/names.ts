@@ -425,5 +425,7 @@ export const names: IconName[] = [
   'distribution',
   'disabledPhone',
   'config',
-  'location'
+  'location',
+  'unfollowPeople',
+  'tokenSales'
 ];
