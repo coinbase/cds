@@ -9,7 +9,6 @@ import {
   useState,
 } from 'react';
 import type { View } from 'react-native';
-import { Defs, LinearGradient, Stop } from 'react-native-svg';
 import { assets } from '@coinbase/cds-common/internal/data/assets';
 import { prices } from '@coinbase/cds-common/internal/data/prices';
 import { sparklineInteractiveData } from '@coinbase/cds-common/internal/visualizations/SparklineInteractiveData';
@@ -32,6 +31,7 @@ import { Text } from '@coinbase/cds-mobile/typography/Text';
 
 import { Area, DottedArea, GradientArea } from '../../area';
 import { XAxis, YAxis } from '../../axis';
+import { BarChart } from '../../bar';
 import { CartesianChart } from '../../CartesianChart';
 import { useCartesianChartContext } from '../../ChartProvider';
 import { PeriodSelector, PeriodSelectorActiveIndicator } from '../../PeriodSelector';
@@ -1973,7 +1973,7 @@ const LineChartStories = () => {
       <Example title="Scrubber with Imperative Handle">
         <ScrubberWithImperativeHandle />
       </Example>
-      {/*<Example title="Basic">
+      <Example title="Basic">
         <LineChart
           enableScrubbing
           showArea
@@ -1992,7 +1992,7 @@ const LineChartStories = () => {
         >
           <Scrubber />
         </LineChart>
-      </Example>*/}
+      </Example>
       <Example title="Simple">
         <LineChart
           curve="monotone"
@@ -2143,4 +2143,64 @@ const LineChartStories = () => {
   );
 };
 
-export default LineChartStories;
+export default () => (
+  <ExampleScreen>
+    <Example title="Basic">
+      <LineChart
+        enableScrubbing
+        showArea
+        showYAxis
+        curve="monotone"
+        height={defaultChartHeight}
+        series={[
+          {
+            id: 'prices',
+            data: sampleData,
+          },
+        ]}
+        yAxis={{
+          showGrid: true,
+        }}
+      >
+        <Scrubber />
+      </LineChart>
+    </Example>
+    <Example title="Bar (default)">
+      <BarChart
+        enableScrubbing
+        showYAxis
+        height={defaultChartHeight}
+        series={[
+          {
+            id: 'prices',
+            data: sampleData,
+          },
+        ]}
+        yAxis={{
+          showGrid: true,
+        }}
+      >
+        <Scrubber />
+      </BarChart>
+    </Example>
+    <Example title="Bar (animate=false)">
+      <BarChart
+        enableScrubbing
+        showYAxis
+        animate={false}
+        height={defaultChartHeight}
+        series={[
+          {
+            id: 'prices',
+            data: sampleData,
+          },
+        ]}
+        yAxis={{
+          showGrid: true,
+        }}
+      >
+        <Scrubber />
+      </BarChart>
+    </Example>
+  </ExampleScreen>
+);

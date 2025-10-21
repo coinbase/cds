@@ -1,5 +1,5 @@
 import { memo, useId, useMemo } from 'react';
-import { ClipPath, Defs, G, Rect } from 'react-native-svg';
+import { Group } from '@shopify/react-native-skia';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import { defaultAxisId } from '../utils';
@@ -97,41 +97,30 @@ export const BarPlot = memo<BarPlotProps>(
       return null;
     }
 
+    // Note: Clipping is handled by the individual Path components using the drawing area
     return (
-      <>
-        <Defs>
-          <ClipPath id={clipPathId}>
-            <Rect
-              height={drawingArea.height}
-              width={drawingArea.width}
-              x={drawingArea.x}
-              y={drawingArea.y}
-            />
-          </ClipPath>
-        </Defs>
-        <G clipPath={`url(#${clipPathId})`}>
-          {stackGroups.map((group, stackIndex) => (
-            <BarStackGroup
-              key={group.stackId}
-              BarComponent={defaultBarComponent}
-              BarStackComponent={BarStackComponent}
-              barMinSize={barMinSize}
-              barPadding={barPadding}
-              borderRadius={defaultBorderRadius}
-              fillOpacity={defaultFillOpacity}
-              roundBaseline={roundBaseline}
-              series={group.series}
-              stackGap={stackGap}
-              stackIndex={stackIndex}
-              stackMinSize={stackMinSize}
-              stroke={defaultStroke}
-              strokeWidth={defaultStrokeWidth}
-              totalStacks={stackGroups.length}
-              yAxisId={group.yAxisId}
-            />
-          ))}
-        </G>
-      </>
+      <Group>
+        {stackGroups.map((group, stackIndex) => (
+          <BarStackGroup
+            key={group.stackId}
+            BarComponent={defaultBarComponent}
+            BarStackComponent={BarStackComponent}
+            barMinSize={barMinSize}
+            barPadding={barPadding}
+            borderRadius={defaultBorderRadius}
+            fillOpacity={defaultFillOpacity}
+            roundBaseline={roundBaseline}
+            series={group.series}
+            stackGap={stackGap}
+            stackIndex={stackIndex}
+            stackMinSize={stackMinSize}
+            stroke={defaultStroke}
+            strokeWidth={defaultStrokeWidth}
+            totalStacks={stackGroups.length}
+            yAxisId={group.yAxisId}
+          />
+        ))}
+      </Group>
     );
   },
 );

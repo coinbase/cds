@@ -30,7 +30,7 @@ export type ColorMap = {
   axis?: 'x' | 'y';
 
   /**
-   * Colors to use in the mapping. At least 2 required.
+   * Colors to use in the mapping.
    *
    * Can be:
    * - Color strings: ['red', 'yellow', 'green']
@@ -40,9 +40,10 @@ export type ColorMap = {
    * **For continuous type:**
    * Colors are interpolated smoothly between stops.
    * If no stops provided, colors are evenly distributed.
+   * If stops are provided, must have stops.length + 1.
    *
    * **For discrete type:**
-   * Each color represents a segment. Must have length stops.length + 1.
+   * Each color represents a segment. Must have stops.length + 1 colors.
    * Each segment has a distinct color with no interpolation.
    */
   colors: ColorStop[];
@@ -103,30 +104,48 @@ export const normalizeColorStop = (colorStop: ColorStop): ProcessedColor => {
 };
 
 /**
- * Converts a color string to rgba format with the specified opacity.
- * Uses Skia's color parsing for robustness.
+ * Parses a color string using Skia and returns RGBA values.
+ * Used internally for color manipulation and interpolation.
+ *
+ * @param colorStr - Color string to parse
+ * @returns Object with r, g, b (0-255) and a (0-1) values, or null if parsing fails
  */
-export const applyOpacityToColor = (color: string, opacity: number): string => {
-  if (opacity === 1) return color;
-
+const parseColorToRgba = (
+  colorStr: string,
+): { r: number; g: number; b: number; a: number } | null => {
   try {
-    // Use Skia to parse the color
-    const skColor = Skia.Color(color);
-    if (!skColor) {
-      console.warn(`Invalid color: ${color}`);
-      return color;
-    }
+    const skColor = Skia.Color(colorStr);
+    if (!skColor) return null;
 
     // skColor is a Float32Array [r, g, b, a] with values 0-1
-    const r = Math.round(skColor[0] * 255);
-    const g = Math.round(skColor[1] * 255);
-    const b = Math.round(skColor[2] * 255);
-
-    return `rgba(${r}, ${g}, ${b}, ${opacity})`;
+    return {
+      r: Math.round(skColor[0] * 255),
+      g: Math.round(skColor[1] * 255),
+      b: Math.round(skColor[2] * 255),
+      a: skColor[3],
+    };
   } catch (error) {
-    console.warn(`Error processing color: ${color}`, error);
+    return null;
+  }
+};
+
+/**
+ * Parses a color string and returns it as an rgba string with the specified opacity.
+ * Uses Skia's color parsing for robustness (handles hex, rgb, rgba, named colors, etc).
+ *
+ * @param color - Color string to parse
+ * @param opacity - Opacity value (0-1), defaults to 1
+ * @returns rgba color string
+ */
+export const parseColor = (color: string, opacity: number = 1): string => {
+  const parsed = parseColorToRgba(color);
+
+  if (!parsed) {
+    console.warn(`Invalid color: ${color}`);
     return color;
   }
+
+  return `rgba(${parsed.r}, ${parsed.g}, ${parsed.b}, ${opacity})`;
 };
 
 /**
@@ -147,7 +166,7 @@ const processContinuousColorMap = (
   // Process colors and apply opacities
   const processedColors = colors.map((colorStop) => {
     const { color, opacity } = normalizeColorStop(colorStop);
-    return applyOpacityToColor(color, opacity);
+    return parseColor(color, opacity);
   });
 
   // Determine positions
@@ -213,7 +232,7 @@ const processDiscreteColorMap = (
   // Process colors
   const processedColors = colors.map((colorStop) => {
     const { color, opacity } = normalizeColorStop(colorStop);
-    return applyOpacityToColor(color, opacity);
+    return parseColor(color, opacity);
   });
 
   // If no stops, use first color for entire range
@@ -358,50 +377,11 @@ export const getColorMapScale = (
 };
 
 /**
- * Parses a color string (hex, rgb, rgba) and returns RGB values with alpha.
- */
-const parseColor = (colorStr: string): { r: number; g: number; b: number; a: number } | null => {
-  // Handle hex colors
-  if (colorStr.startsWith('#')) {
-    const hex = colorStr.slice(1);
-    if (hex.length === 3) {
-      return {
-        r: parseInt(hex[0] + hex[0], 16),
-        g: parseInt(hex[1] + hex[1], 16),
-        b: parseInt(hex[2] + hex[2], 16),
-        a: 1,
-      };
-    } else if (hex.length === 6) {
-      return {
-        r: parseInt(hex.slice(0, 2), 16),
-        g: parseInt(hex.slice(2, 4), 16),
-        b: parseInt(hex.slice(4, 6), 16),
-        a: 1,
-      };
-    }
-  }
-
-  // Handle rgb/rgba
-  const rgbaMatch = colorStr.match(/rgba?\(([^)]+)\)/);
-  if (rgbaMatch) {
-    const parts = rgbaMatch[1].split(',').map((s) => parseFloat(s.trim()));
-    return {
-      r: parts[0] || 0,
-      g: parts[1] || 0,
-      b: parts[2] || 0,
-      a: parts[3] !== undefined ? parts[3] : 1,
-    };
-  }
-
-  return null;
-};
-
-/**
  * Interpolates between two colors based on a progress value (0-1).
  */
 const interpolateColors = (color1: string, color2: string, progress: number): string => {
-  const c1 = parseColor(color1);
-  const c2 = parseColor(color2);
+  const c1 = parseColorToRgba(color1);
+  const c2 = parseColorToRgba(color2);
 
   if (!c1 || !c2) {
     return progress < 0.5 ? color1 : color2;
@@ -437,7 +417,7 @@ export const evaluateColorMapAtValue = (
   // Process color stops to get actual color strings with opacity
   const processedColors = colors.map((colorStop) => {
     const { color, opacity } = normalizeColorStop(colorStop);
-    return applyOpacityToColor(color, opacity);
+    return parseColor(color, opacity);
   });
 
   if (type === 'discrete') {

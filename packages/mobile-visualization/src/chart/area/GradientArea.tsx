@@ -37,23 +37,28 @@ export const GradientArea = memo<GradientAreaProps>(
 
     // Calculate gradient colors and positions
     const gradientConfig = useMemo(() => {
-      if (!colorMap) {
-        console.warn('GradientArea requires a colorMap prop');
-        return null;
-      }
+      // Create default fade gradient if no colorMap is provided
+      const effectiveColorMap: ColorMap = colorMap ?? {
+        type: 'continuous',
+        axis: 'y',
+        colors: [
+          { color: fill || 'blue', opacity: 0.4 },
+          { color: fill || 'blue', opacity: 0 },
+        ],
+      };
 
-      const scale = getColorMapScale(colorMap, xScale, yScale);
+      const scale = getColorMapScale(effectiveColorMap, xScale, yScale);
       if (!scale) {
         console.warn('ColorMap requires a valid numeric scale');
         return null;
       }
 
-      const processed = processColorMap(colorMap, scale);
+      const processed = processColorMap(effectiveColorMap, scale);
       if (!processed) {
         return null;
       }
 
-      const axisType = colorMap.axis ?? 'y';
+      const axisType = effectiveColorMap.axis ?? 'y';
       const range = scale.range();
 
       // Apply fillOpacity to all colors if fillOpacity < 1
@@ -81,7 +86,7 @@ export const GradientArea = memo<GradientAreaProps>(
         colors,
         positions: processed.positions,
       };
-    }, [colorMap, xScale, yScale, fillOpacity]);
+    }, [colorMap, fill, xScale, yScale, fillOpacity]);
 
     if (!gradientConfig) return null;
 

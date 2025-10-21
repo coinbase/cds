@@ -1,7 +1,6 @@
 import { memo, useCallback, useEffect, useId, useMemo } from 'react';
-import Animated, { useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
-import { Circle, G, Rect } from 'react-native-svg';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
+import { Group } from '@shopify/react-native-skia';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import { DottedLine } from '../line/DottedLine';
@@ -12,8 +11,6 @@ import { SmartChartTextGroup, type TextLabelData } from '../text/SmartChartTextG
 import { getAxisTicksData, isCategoricalScale, lineToPath } from '../utils';
 
 import { type AxisBaseProps, type AxisProps } from './Axis';
-
-const AnimatedG = Animated.createAnimatedComponent(G);
 
 const AXIS_HEIGHT = 32;
 const LABEL_SIZE = 20;
@@ -65,7 +62,8 @@ export const XAxis = memo<XAxisProps>(
     const xAxis = getXAxis();
     const axisBounds = getAxisBounds(registrationId);
 
-    const gridOpacity = useSharedValue(1);
+    // Note: gridOpacity not currently used in Skia version
+    // const gridOpacity = useSharedValue(1);
 
     useEffect(() => {
       registerAxis(registrationId, position, height);
@@ -179,10 +177,6 @@ export const XAxis = memo<XAxisProps>(
       label,
     ]);
 
-    const gridAnimatedStyle = useAnimatedStyle(() => ({
-      opacity: gridOpacity.value,
-    }));
-
     if (!xScale || !axisBounds) return;
 
     const labelX = axisBounds.x + axisBounds.width / 2;
@@ -192,17 +186,17 @@ export const XAxis = memo<XAxisProps>(
         : axisBounds.y + LABEL_SIZE / 2;
 
     return (
-      <G data-axis="x" data-position={position} {...props}>
+      <Group>
         {showGrid && (
-          <AnimatedG animatedProps={gridAnimatedStyle}>
+          <Group>
             {ticksData.map((tick, index) => {
               const verticalLine = (
                 <ReferenceLine LineComponent={GridLineComponent} dataX={tick.tick} />
               );
 
-              return <G key={`grid-${tick.tick}-${index}`}>{verticalLine}</G>;
+              return <Group key={`grid-${tick.tick}-${index}`}>{verticalLine}</Group>;
             })}
-          </AnimatedG>
+          </Group>
         )}
         {chartTextData && (
           <SmartChartTextGroup
@@ -212,7 +206,7 @@ export const XAxis = memo<XAxisProps>(
           />
         )}
         {axisBounds && showTickMarks && (
-          <G data-testid="tick-marks">
+          <Group>
             {ticksData.map((tick, index) => {
               const tickY = position === 'bottom' ? axisBounds.y : axisBounds.y + axisBounds.height;
               const tickY2 =
@@ -231,7 +225,7 @@ export const XAxis = memo<XAxisProps>(
                 />
               );
             })}
-          </G>
+          </Group>
         )}
         {showLine && (
           <LineComponent
@@ -251,7 +245,7 @@ export const XAxis = memo<XAxisProps>(
             {label}
           </ChartText>
         )}
-      </G>
+      </Group>
     );
   },
 );

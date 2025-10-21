@@ -1,5 +1,5 @@
 import { memo, type ReactNode, useEffect, useMemo } from 'react';
-import { useSharedValue, withTiming } from 'react-native-reanimated';
+import { useDerivedValue, useSharedValue, withTiming, type SharedValue } from 'react-native-reanimated';
 import type { Rect as RectType, SharedProps } from '@coinbase/cds-common/types';
 import {
   type Color,
@@ -33,9 +33,9 @@ const parseDashArray = (dashArray?: string): number[] | undefined => {
 
 export type PathBaseProps = SharedProps & {
   /**
-   * The SVG path data string
+   * The SVG path data string (can be animated using SharedValue)
    */
-  d?: string;
+  d?: string | SharedValue<string>;
   /**
    * Children for declarative shaders (e.g., LinearGradient)
    */
@@ -153,8 +153,18 @@ export const Path = memo<PathProps>(
     // Animated progress for path trimming (Skia's native animation)
     const animationProgress = useSharedValue(animate ? 0 : 1);
 
+    // Check if d is a SharedValue or a plain string
+    const isAnimatedPath = typeof d === 'object' && d !== null && 'value' in d;
+
     // Convert SVG path string to Skia path
-    const skiaPath = useMemo(() => svgPathToSkiaPath(d), [d]);
+    // If d is animated, convert it in a derived value (worklet)
+    const skiaPath = useDerivedValue(() => {
+      'worklet';
+      const pathString = isAnimatedPath ? (d as SharedValue<string>).value : (d as string);
+      const path = svgPathToSkiaPath(pathString || '');
+      // Return a default empty path if null to satisfy Skia's type requirements
+      return path ?? Skia.Path.Make();
+    }, [d, isAnimatedPath]);
 
     // The clip offset provides extra padding to prevent path from being cut off
     // Area charts typically use offset=0 for exact clipping, while lines use offset=2 for breathing room
@@ -185,12 +195,12 @@ export const Path = memo<PathProps>(
 
       // Animate from 0 to 1 for path reveal
       animationProgress.value = 0;
-      animationProgress.value = withTiming(4, {
+      animationProgress.value = withTiming(1, {
         duration: 200,
       });
     }, [animate, animationProgress, d]);
 
-    if (!skiaPath || !rect) return null;
+    if (!rect) return null;
 
     // Determine if we should use children (declarative gradients) or traditional fill/stroke
     const hasDeclarativeShader = children !== undefined && children !== null;

@@ -6,6 +6,8 @@ import { Skia } from '@shopify/react-native-skia';
  * This allows us to reuse all existing path generation logic (getLinePath, getAreaPath, etc.)
  * which returns SVG path strings, and render them with Skia.
  *
+ * Marked as worklet so it can be called on the UI thread in animations.
+ *
  * @param svgPathString - SVG path data string (e.g., "M 0 0 L 10 10")
  * @returns Skia Path object ready for rendering, or null if conversion fails
  *
@@ -24,6 +26,7 @@ import { Skia } from '@shopify/react-native-skia';
  * ```
  */
 export const svgPathToSkiaPath = (svgPathString: string): SkPath | null => {
+  'worklet';
   if (!svgPathString || svgPathString.trim() === '') {
     return null;
   }

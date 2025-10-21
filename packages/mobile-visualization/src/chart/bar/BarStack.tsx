@@ -326,8 +326,7 @@ export const BarStack = memo<BarStackProps>(
           if (bar.height < barMinSize) {
             const heightIncrease = barMinSize - bar.height;
 
-            const bottom = 0;
-            const top = 0;
+            const [bottom, top] = (bar.dataY as [number, number]).sort((a, b) => a - b);
 
             // Determine how to expand the bar
             let newBottom = bottom;
@@ -484,8 +483,7 @@ export const BarStack = memo<BarStackProps>(
           const bar = allBars[0];
           const heightIncrease = stackMinSize - bar.height;
 
-          const bottom = 0;
-          const top = 0;
+          const [bottom, top] = (bar.dataY as [number, number]).sort((a, b) => a - b);
 
           // Determine how to expand the bar (same logic as barMinSize)
           let newBottom = bottom;

@@ -1,5 +1,5 @@
 import { memo, useEffect, useMemo, useState } from 'react';
-import { G } from 'react-native-svg';
+import { Group } from '@shopify/react-native-skia';
 import type { Rect } from '@coinbase/cds-common/types';
 
 import { ChartText, type ChartTextChildren, type ChartTextProps } from './ChartText';
@@ -234,7 +234,7 @@ export const SmartChartTextGroup = memo<SmartChartTextGroupProps>(
     }, [isReady, boundingBoxes, minGap, prioritizeEndLabels, labelsWithKeys]);
 
     return (
-      <G>
+      <Group>
         {labelsWithKeys.map((labelData) => {
           const hasMeasurement = boundingBoxes.has(labelData.key);
           const isVisible = hasMeasurement && isReady && visibleKeySet?.has(labelData.key);
@@ -253,7 +253,7 @@ export const SmartChartTextGroup = memo<SmartChartTextGroupProps>(
             </ChartText>
           );
         })}
-      </G>
+      </Group>
     );
   },
 );

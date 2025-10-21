@@ -1,9 +1,9 @@
 import { memo, useContext, useState } from 'react';
-import { Rect as SvgRect } from 'react-native-svg';
 import { Button } from '@coinbase/cds-mobile/buttons';
 import { Example, ExampleScreen } from '@coinbase/cds-mobile/examples/ExampleScreen';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 import { VStack } from '@coinbase/cds-mobile/layout';
+import { Rect } from '@shopify/react-native-skia';
 
 import { XAxis, YAxis } from '../../axis';
 import { CartesianChart } from '../../CartesianChart';
@@ -300,8 +300,8 @@ const ScrubberRect = memo(() => {
   const barWidth = xScale.bandwidth();
 
   return (
-    <SvgRect
-      fill={theme.color.bgLine}
+    <Rect
+      color={theme.color.bgLine}
       height={yMax - yMin}
       width={barWidth}
       x={xScale(scrubberPosition)}

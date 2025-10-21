@@ -1,6 +1,6 @@
 import { memo, useCallback, useMemo } from 'react';
 import { Image, ScrollView, StyleSheet } from 'react-native';
-import { Circle, G } from 'react-native-svg';
+import { Circle, Group } from '@shopify/react-native-skia';
 import { assets } from '@coinbase/cds-common/internal/data/assets';
 import { candles as btcCandles } from '@coinbase/cds-common/internal/data/candles';
 import { Example, ExampleScreen } from '@coinbase/cds-mobile/examples/ExampleScreen';
@@ -126,7 +126,7 @@ const EarningsHistory = () => {
     const diameter = Math.min(xScale.bandwidth(), yScaleSize / 10);
 
     return (
-      <G>
+      <Group>
         {data.map((value: any, index: any) => {
           if (value === null || value === undefined) return null;
 
@@ -146,13 +146,13 @@ const EarningsHistory = () => {
               key={`${seriesId}-${index}`}
               cx={centerX}
               cy={centerY}
-              fill={series?.color || theme.color.fgPrimary}
+              color={series?.color || theme.color.fgPrimary}
               opacity={opacity}
               r={diameter / 2}
             />
           );
         })}
-      </G>
+      </Group>
     );
   });
 
