@@ -1,7 +1,7 @@
 {
   "import": "import { Fallback } from '@coinbase/cds-web/layout/Fallback'",
   "source": "https://github.com/coinbase/cds/blob/master/packages/web/src/layout/Fallback.tsx",
-  "storybook": "https://cds-storybook.coinbase.com/?path=/story/core-components-feedback-fallback--fallback-default",
+  "storybook": "https://cds-storybook.coinbase.com/?path=/story/components-feedback-fallback--fallback-default",
   "figma": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/%E2%9C%A8-CDS-Components?node-id=731-14933",
   "description": "A component that displays a fallback animation.",
   "relatedComponents": [

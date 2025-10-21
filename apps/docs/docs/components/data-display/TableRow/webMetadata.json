@@ -2,7 +2,7 @@
   "import": "import { TableRow } from '@coinbase/cds-web/tables/TableRow'",
   "source": "https://github.com/coinbase/cds/blob/master/packages/web/src/tables/TableRow.tsx",
   "description": "Defines rows within a Table.",
-  "storybook": "https://cds-storybook.coinbase.com/?path=/story/core-components-table-tablerow--table-row-example",
+  "storybook": "https://cds-storybook.coinbase.com/?path=/story/components-table-tablerow--table-row-example",
   "relatedComponents": [
     {
       "label": "Table",

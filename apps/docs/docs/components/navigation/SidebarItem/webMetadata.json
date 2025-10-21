@@ -1,7 +1,7 @@
 {
   "import": "import { SidebarItem } from '@coinbase/cds-web/navigation/SidebarItem'",
   "source": "https://github.com/coinbase/cds/blob/master/packages/web/src/navigation/SidebarItem.tsx",
-  "storybook": "https://cds-storybook.coinbase.com/?path=/story/core-components-navigation-sidebaritem--sidebar-item-default",
+  "storybook": "https://cds-storybook.coinbase.com/?path=/story/components-navigation-sidebaritem--sidebar-item-default",
   "figma": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/%E2%9C%A8-CDS-Components?node-id=155-12187",
   "description": "SidebarItem represents a single navigation item within the Sidebar component.",
   "relatedComponents": [

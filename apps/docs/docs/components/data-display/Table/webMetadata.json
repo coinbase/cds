@@ -2,7 +2,7 @@
   "import": "import { Table } from '@coinbase/cds-web/tables/Table'",
   "source": "https://github.com/coinbase/cds/blob/master/packages/web/src/tables/Table.tsx",
   "description": "Displays data in rows and columns.",
-  "storybook": "https://cds-storybook.coinbase.com/?path=/story/core-components-table-table--sample-table",
+  "storybook": "https://cds-storybook.coinbase.com/?path=/story/components-table-table--sample-table",
   "relatedComponents": [
     {
       "label": "TableBody",

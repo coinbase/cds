@@ -1,7 +1,7 @@
 {
   "import": "import { Link } from '@coinbase/cds-web/typography/Link'",
   "source": "https://github.com/coinbase/cds/blob/master/packages/web/src/typography/Link.tsx",
-  "storybook": "https://cds-storybook.coinbase.com/?path=/story/core-components-link--default",
+  "storybook": "https://cds-storybook.coinbase.com/?path=/story/components-link--default",
   "figma": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/%E2%9C%A8-CDS-Components?node-id=324-14981",
   "description": "A pressable Text component.",
   "relatedComponents": [

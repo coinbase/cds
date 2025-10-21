@@ -2,7 +2,7 @@
   "import": "import { ThemeProvider } from '@coinbase/cds-web'",
   "source": "https://github.com/coinbase/cds/blob/master/packages/web/src/system/ThemeProvider.tsx",
   "description": "Provides the theme context to all child components, and automatically generates CSS Variables for dynamic theming.",
-  "storybook": "https://cds-storybook.coinbase.com/?path=/story/core-components-themeprovider--theme-provider-test",
+  "storybook": "https://cds-storybook.coinbase.com/?path=/story/components-themeprovider--theme-provider-test",
   "relatedComponents": [
     {
       "label": "useTheme",

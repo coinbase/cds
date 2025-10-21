@@ -137,7 +137,7 @@ The InvertedThemeProvider automatically inherits from its parent theme and flips
 <MDXArticle>
 ## `ThemeConfig` vs `Theme` type
 
-Use the `ThemeConfig` type when creating a theme, or when passing to the `theme` prop to the ThemeProvider.
+Use the `ThemeConfig` type when creating a theme, or when passing the `theme` prop to the ThemeProvider.
 
 Use the `Theme` type for the return value of the `useTheme` hook. The `Theme` type includes all the properties of `ThemeConfig` - plus the `activeColorScheme`, `color`, and `spectrum` properties.
 
@@ -268,7 +268,7 @@ Use the `ThemeConfig` type with TypeScript's `satisfies` keyword to enforce type
 
 <MDXSection>
 <MDXArticle>
-### `defaultTheme` config
+## `defaultTheme` config
 
 The `defaultTheme` is a good example of a complete `ThemeConfig`. You can use it as an example when developing your own themes.
 
@@ -283,7 +283,7 @@ The `defaultTheme` is a good example of a complete `ThemeConfig`. You can use it
 <MDXArticle>
 ## `ThemeVars` namespace
 
-The `ThemeVars` namespace contains type definitions for all themeable variable namess in CDS. It includes any custom theme variables added in `ThemeVarsExtended`.
+The `ThemeVars` namespace contains type definitions for all themeable variable names in CDS. It includes any custom theme variables added in `ThemeVarsExtended`.
 
 ```tsx
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';

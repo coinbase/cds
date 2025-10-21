@@ -2,7 +2,7 @@
   "import": "import { Lottie } from '@coinbase/cds-web/animation/Lottie'",
   "source": "https://github.com/coinbase/cds/blob/master/packages/web/src/animation/Lottie.tsx",
   "description": "Renders After Effects animations as vectors.",
-  "storybook": "https://cds-storybook.coinbase.com/?path=/story/core-components-lottie--default",
+  "storybook": "https://cds-storybook.coinbase.com/?path=/story/components-lottie--default",
   "relatedComponents": [
     {
       "label": "LottieStatusAnimation",

@@ -1,7 +1,7 @@
 {
   "import": "import { Toast } from '@coinbase/cds-web/overlays/Toast'",
   "source": "https://github.com/coinbase/cds/blob/master/packages/web/src/overlays/Toast.tsx",
-  "storybook": "https://cds-storybook.coinbase.com/?path=/story/core-components-toast--basic-toast",
+  "storybook": "https://cds-storybook.coinbase.com/?path=/story/components-toast--basic-toast",
   "figma": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/%E2%9C%A8-CDS-Components?node-id=155-12198",
   "description": "A temporary notification that appears at the bottom of the screen.",
   "relatedComponents": [

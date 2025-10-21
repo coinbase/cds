@@ -135,39 +135,40 @@ export const Banner = memo(
       borderColor,
     } = variants[variant];
 
-    // Ensure primaryActions are themed to match the variant
     const clonedPrimaryAction = useMemo(() => {
-      if (isValidElement(primaryAction) && primaryAction?.type === Link) {
+      if (!isValidElement(primaryAction)) return null;
+
+      if (primaryAction.type === Link) {
         return React.cloneElement(primaryAction, {
           font: 'label1',
           color: primaryActionColor,
           testID: `${testID}-action--primary`,
-          ...(primaryAction.props as LinkProps),
+          ...primaryAction.props,
+        });
+      } else {
+        return React.cloneElement(primaryAction, {
+          testID: `${testID}-action--primary`,
+          ...primaryAction.props,
         });
       }
-
-      // Throw warning in dev
-      if (isValidElement(primaryAction) && isDevelopment()) {
-        console.error('Banner primaryAction needs to be a CDS Link component');
-      }
-
-      return primaryAction;
     }, [primaryAction, primaryActionColor, testID]);
+
     const clonedSecondaryAction = useMemo(() => {
-      if (isValidElement(secondaryAction) && secondaryAction.type === Link) {
+      if (!isValidElement(secondaryAction)) return null;
+
+      if (secondaryAction.type === Link) {
         return React.cloneElement(secondaryAction, {
           font: 'label1',
           color: secondaryActionColor,
           testID: `${testID}-action--secondary`,
-          ...(secondaryAction.props as LinkProps),
+          ...secondaryAction.props,
+        });
+      } else {
+        return React.cloneElement(secondaryAction, {
+          testID: `${testID}-action--secondary`,
+          ...secondaryAction.props,
         });
       }
-
-      if (isValidElement(secondaryAction) && isDevelopment()) {
-        console.error('Banner secondaryAction needs to be a CDS Link component');
-      }
-
-      return secondaryAction;
     }, [secondaryAction, secondaryActionColor, testID]);
 
     const marginStyles = useMemo(

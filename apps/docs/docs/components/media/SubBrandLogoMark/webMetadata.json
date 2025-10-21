@@ -1,7 +1,7 @@
 {
   "import": "import { SubBrandLogoMark } from '@coinbase/cds-web/icons/SubBrandLogoMark'",
   "source": "https://github.com/coinbase/cds/blob/master/packages/web/src/icons/SubBrandLogoMark.tsx",
-  "storybook": "https://cds-storybook.coinbase.com/?path=/story/core-components-logo-sheet--logo-sheet",
+  "storybook": "https://cds-storybook.coinbase.com/?path=/story/components-logo-sheet--logo-sheet",
   "description": "Coinbase sub-brand logo marks for specialized branding.",
   "relatedComponents": [
     {

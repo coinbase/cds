@@ -1,7 +1,7 @@
 {
   "import": "import { NavigationBar } from '@coinbase/cds-web/navigation/NavigationBar'",
   "source": "https://github.com/coinbase/cds/blob/master/packages/web/src/navigation/NavigationBar.tsx",
-  "storybook": "https://cds-storybook.coinbase.com/?path=/story/core-components-navigation-navigationbar--navigation-bar-full-example-default",
+  "storybook": "https://cds-storybook.coinbase.com/?path=/story/components-navigation-navigationbar--navigation-bar-full-example-default",
   "figma": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/%E2%9C%A8-CDS-Components?node-id=155-12187",
   "description": "A universal header component for navigation and wayfinding.",
   "relatedComponents": [

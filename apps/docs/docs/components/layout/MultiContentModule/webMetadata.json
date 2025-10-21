@@ -1,7 +1,7 @@
 {
   "import": "import { MultiContentModule } from '@coinbase/cds-web/multi-content-module/MultiContentModule'",
   "source": "https://github.com/coinbase/cds/blob/master/packages/web/src/multi-content-module/MultiContentModule.tsx",
-  "storybook": "https://cds-storybook.coinbase.com/?path=/story/core-components-multicontentmodule--default",
+  "storybook": "https://cds-storybook.coinbase.com/?path=/story/components-multicontentmodule--default",
   "figma": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/%E2%9C%A8-CDS-Components?node-id=14437-7403",
   "description": "A versatile container designed to streamline user experiences across Critical User Journeys. Accommodates a range of content including an illustration, input fields (text inputs, list cells, etc.), and an action button.",
   "relatedComponents": [

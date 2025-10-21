@@ -123,6 +123,21 @@ describe('Drawer', () => {
 
     expect(screen.getByTestId('handleBar')).toBeTruthy();
   });
+  it('closes the drawer when HandleBar accessibility action is triggered', async () => {
+    const onCloseComplete = jest.fn();
+    render(<MockDrawerWithSafeArea onCloseComplete={onCloseComplete} pin="bottom" />);
+
+    fireEvent.press(screen.getByText('Open Drawer'));
+    expect(screen.getByText(loremIpsum)).toBeTruthy();
+
+    const handleBar = screen.getByTestId('handleBar');
+    fireEvent(handleBar, 'onAccessibilityAction', {
+      nativeEvent: { actionName: 'activate' },
+    });
+
+    // wait for animation to finish
+    await waitFor(() => expect(onCloseComplete).toHaveBeenCalledTimes(1));
+  });
   it('does not close the drawer on overlay press when preventDismissGestures is true', async () => {
     const onCloseComplete = jest.fn();
     render(<MockDrawerWithSafeArea preventDismissGestures onCloseComplete={onCloseComplete} />);

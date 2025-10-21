@@ -343,7 +343,7 @@ const StepperBase = memo(
       const previousActiveStepIndex = usePreviousValue(activeStepIndex) ?? -1;
 
       const [progressSprings, progressSpringsApi] = useSprings(steps.length, (index) => ({
-        progress: complete || (activeStepIndex >= 0 && index <= activeStepIndex) ? 1 : 0,
+        progress: complete ? 1 : 0,
         config: progressSpringConfig,
         immediate: !animate || (disableAnimateOnMount && !hasMounted),
       }));
@@ -354,7 +354,7 @@ const StepperBase = memo(
         let isAnimatingForward = false;
 
         // Case when going from not-complete to complete
-        if (complete !== previousComplete) {
+        if (Boolean(complete) !== previousComplete) {
           if (complete) {
             // Going to complete: animate from activeStepIndex+1 to end
             stepsToAnimate = Array.from(

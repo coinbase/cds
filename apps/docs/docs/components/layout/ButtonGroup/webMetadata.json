@@ -1,7 +1,7 @@
 {
   "import": "import { ButtonGroup } from '@coinbase/cds-web/buttons/ButtonGroup'",
   "source": "https://github.com/coinbase/cds/blob/master/packages/web/src/buttons/ButtonGroup.tsx",
-  "storybook": "https://cds-storybook.coinbase.com/?path=/story/core-components-buttons-buttongroup--default",
+  "storybook": "https://cds-storybook.coinbase.com/?path=/story/components-buttons-buttongroup--default",
   "figma": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/%E2%9C%A8-CDS-Components?m=auto&node-id=419-16096&t=K73gadcWiDv2aYlS-1",
   "description": "Groups buttons with consistent spacing.",
   "relatedComponents": [

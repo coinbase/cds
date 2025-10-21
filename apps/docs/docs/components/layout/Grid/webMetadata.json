@@ -1,7 +1,7 @@
 {
   "import": "import { Grid } from '@coinbase/cds-web/layout/Grid'",
   "source": "https://github.com/coinbase/cds/blob/master/packages/web/src/layout/Grid.tsx",
-  "storybook": "https://cds-storybook.coinbase.com/?path=/story/core-components-grid--grid-examples",
+  "storybook": "https://cds-storybook.coinbase.com/?path=/story/components-grid--grid-examples",
   "description": "A Box with extra props to make it easier to use the CSS grid API.",
   "relatedComponents": [
     {
