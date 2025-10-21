@@ -13,7 +13,9 @@ import { useTheme } from '@coinbase/cds-mobile';
 import { Circle, Group } from '@shopify/react-native-skia';
 
 import { useCartesianChartContext } from '../ChartProvider';
+import type { ColorMap } from '../types';
 import { projectPoint, useScrubberContext } from '../utils';
+import { evaluateColorMapAtValue, getColorMapScale } from '../utils/colorMap';
 
 const radius = 5;
 const glowRadius = 10;
@@ -50,6 +52,11 @@ export type ScrubberBeaconProps = SharedProps & {
    */
   color?: string;
   /**
+   * ColorMap configuration for the series.
+   * When provided, the beacon color is evaluated based on the data value.
+   */
+  colorMap?: ColorMap;
+  /**
    * Opacity of the beacon.
    * @default 1
    */
@@ -66,7 +73,16 @@ export type ScrubberBeaconProps = SharedProps & {
 export const ScrubberBeacon = memo(
   forwardRef<ScrubberBeaconRef, ScrubberBeaconProps>(
     (
-      { seriesId, dataX: dataXProp, dataY: dataYProp, color, testID, idlePulse, opacity = 1 },
+      {
+        seriesId,
+        dataX: dataXProp,
+        dataY: dataYProp,
+        color,
+        colorMap,
+        testID,
+        idlePulse,
+        opacity = 1,
+      },
       ref,
     ) => {
       const theme = useTheme();
@@ -191,9 +207,24 @@ export const ScrubberBeacon = memo(
         return { x: animatedX.value, y: animatedY.value };
       }, [animatedX, animatedY]);
 
-      if (!pixelCoordinate) return null;
+      // Determine the beacon color (must be before conditional return to follow Rules of Hooks)
+      const pointColor = useMemo(() => {
+        // If colorMap is provided, evaluate color based on data value
+        if (colorMap && dataY !== undefined) {
+          const colorMapScale = getColorMapScale(colorMap, xScale, yScale);
+          if (colorMapScale) {
+            const evaluatedColor = evaluateColorMapAtValue(colorMap, dataY, colorMapScale);
+            if (evaluatedColor) {
+              return evaluatedColor;
+            }
+          }
+        }
 
-      const pointColor = color ?? targetSeries?.color ?? theme.color.fgPrimary;
+        // Fallback to provided color, series color, or theme color
+        return color ?? targetSeries?.color ?? theme.color.fgPrimary;
+      }, [colorMap, dataY, xScale, yScale, color, targetSeries?.color, theme.color.fgPrimary]);
+
+      if (!pixelCoordinate) return null;
 
       if (!isIdleState) {
         return (

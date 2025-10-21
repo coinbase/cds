@@ -26,6 +26,11 @@ export type AreaComponentProps = {
    * When set, overrides the default baseline.
    */
   baseline?: number;
+  /**
+   * Color mapping configuration.
+   * When provided, creates gradient or threshold-based coloring.
+   */
+  colorMap?: import('../types').ColorMap;
 };
 
 export type AreaComponent = React.FC<AreaComponentProps>;
@@ -68,6 +73,11 @@ export type AreaProps = {
    */
   baseline?: number;
   /**
+   * Color mapping configuration.
+   * When provided, creates gradient or threshold-based coloring.
+   */
+  colorMap?: import('../types').ColorMap;
+  /**
    * When true, null values are skipped and the area connects across gaps.
    * When false, null values create gaps in the area.
    * @default false
@@ -86,6 +96,7 @@ export const Area = memo<AreaProps>(
     stroke,
     strokeWidth,
     baseline,
+    colorMap: propColorMap,
     connectNulls = false,
   }) => {
     const { getSeries, getSeriesData, getXScale, getYScale, getXAxis, drawingArea } =
@@ -93,6 +104,9 @@ export const Area = memo<AreaProps>(
 
     // Get sourceData from series (using stacked data if available)
     const matchedSeries = useMemo(() => getSeries(seriesId), [seriesId, getSeries]);
+    const seriesColorMap = matchedSeries?.colorMap;
+    // Use prop colorMap if provided, otherwise use series colorMap
+    const effectiveColorMap = propColorMap ?? seriesColorMap;
 
     // Check for stacked data first, then fall back to raw data
     const sourceData = useMemo(() => {
@@ -149,6 +163,7 @@ export const Area = memo<AreaProps>(
       <AreaComponent
         baseline={baseline}
         clipRect={drawingArea}
+        colorMap={effectiveColorMap}
         d={area}
         fill={fill}
         fillOpacity={fillOpacity}

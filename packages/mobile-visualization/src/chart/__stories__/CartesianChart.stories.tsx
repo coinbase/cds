@@ -62,11 +62,11 @@ const LineStyles = () => {
       <Line
         LineComponent={(lineProps) => (
           <GradientLine
-            d={lineProps.d}
-            endColor="#F7931A"
-            startColor="#E3D74D"
-            stroke={lineProps.stroke}
-            strokeOpacity={lineProps.strokeOpacity}
+            {...lineProps}
+            colorMap={{
+              type: 'continuous',
+              colors: ['#E3D74D', '#F7931A'],
+            }}
             strokeWidth={4}
           />
         )}

@@ -13,5 +13,6 @@ export * from './scrubber';
 export * from './SkiaCartesianChart';
 export * from './SkiaPath';
 export * from './text';
+export * from './types';
 export * from './utils';
 // codegen:end

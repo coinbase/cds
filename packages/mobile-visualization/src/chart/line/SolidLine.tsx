@@ -7,6 +7,11 @@ export type SolidLineProps = SharedProps &
   Omit<PathProps, 'fill' | 'strokeWidth'> & {
     fill?: string;
     strokeWidth?: number;
+    /**
+     * Color mapping configuration (not used by SolidLine, but accepted for API consistency).
+     * SolidLine always uses solid `stroke` color.
+     */
+    colorMap?: import('../types').ColorMap;
   };
 
 /**
@@ -20,6 +25,7 @@ export const SolidLine = memo<SolidLineProps>(
     strokeLinejoin = 'round',
     strokeOpacity = 1,
     strokeWidth = 2,
+    colorMap, // Ignored - for API consistency only
     ...props
   }) => {
     return (

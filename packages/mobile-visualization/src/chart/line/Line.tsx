@@ -6,6 +6,7 @@ import { Area, type AreaComponent } from '../area/Area';
 import { useCartesianChartContext } from '../ChartProvider';
 import { Point, type PointConfig, type RenderPointsParams } from '../Point';
 import { type ChartPathCurveType, getLinePath } from '../utils';
+import { evaluateColorMapAtValue, getColorMapScale } from '../utils/colorMap';
 
 import { DottedLine } from './DottedLine';
 import { GradientLine } from './GradientLine';
@@ -18,6 +19,16 @@ export type LineComponentProps = {
   strokeWidth?: number;
   testID?: string;
   clipPath?: string;
+  /**
+   * ID of the y-axis to use.
+   * Required for components that need to map data values to pixel positions (e.g., GradientLine with threshold stops).
+   */
+  yAxisId?: string;
+  /**
+   * Color mapping configuration.
+   * When provided, creates gradient or threshold-based coloring.
+   */
+  colorMap?: import('../types').ColorMap;
 };
 
 export type LineComponent = React.FC<LineComponentProps>;
@@ -112,6 +123,7 @@ export const Line = memo<LineProps>(
     const { getSeries, getSeriesData, getXScale, getYScale, getXAxis } = useCartesianChartContext();
 
     const matchedSeries = getSeries(seriesId);
+    const seriesColorMap = matchedSeries?.colorMap;
 
     const sourceData = useMemo(() => {
       return getSeriesData(seriesId) || null;
@@ -201,6 +213,7 @@ export const Line = memo<LineProps>(
           <Area
             AreaComponent={AreaComponent}
             baseline={areaBaseline}
+            colorMap={seriesColorMap}
             connectNulls={connectNulls}
             curve={curve}
             fill={stroke}
@@ -209,7 +222,14 @@ export const Line = memo<LineProps>(
             type={areaType}
           />
         )}
-        <LineComponent d={path} stroke={stroke} strokeOpacity={opacity} {...props} />
+        <LineComponent
+          colorMap={seriesColorMap}
+          d={path}
+          stroke={stroke}
+          strokeOpacity={opacity}
+          yAxisId={matchedSeries?.yAxisId}
+          {...props}
+        />
         {renderPoints &&
           chartData.map((value, index) => {
             if (value === null) {
@@ -231,14 +251,40 @@ export const Line = memo<LineProps>(
 
             const pointConfig = pointResult === true ? {} : pointResult;
 
+            // Evaluate colors from colorMap if available
+            let pointFill = pointConfig.fill ?? stroke;
+            let pointStroke = pointConfig.stroke;
+
+            if (seriesColorMap) {
+              const colorMapScale = getColorMapScale(seriesColorMap, xScale, yScale);
+              if (colorMapScale) {
+                const evaluatedColor = evaluateColorMapAtValue(
+                  seriesColorMap,
+                  value,
+                  colorMapScale,
+                );
+                if (evaluatedColor) {
+                  // Apply colorMap color to fill if not explicitly set
+                  if (!pointConfig.fill) {
+                    pointFill = evaluatedColor;
+                  }
+                  // Apply colorMap color to stroke if not explicitly set
+                  if (!pointConfig.stroke) {
+                    pointStroke = evaluatedColor;
+                  }
+                }
+              }
+            }
+
             return (
               <Point
                 key={`${seriesId}-renderpoint-${index}`}
                 dataX={xValue}
                 dataY={value}
                 {...pointConfig}
-                fill={pointConfig.fill ?? stroke}
+                fill={pointFill}
                 opacity={pointConfig.opacity ?? opacity}
+                stroke={pointStroke}
               />
             );
           })}

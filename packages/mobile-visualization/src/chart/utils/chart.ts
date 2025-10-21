@@ -33,9 +33,24 @@ export type Series = {
    */
   label?: string | ((dataIndex: number) => string);
   /**
-   * The color of the series.
+   * Solid color for the series.
+   * Used when colorMap is not provided.
+   * @example 'blue', '#FF0000', 'rgb(255, 0, 0)'
    */
   color?: string;
+  /**
+   * Color mapping configuration.
+   * When provided, creates gradient or threshold-based coloring.
+   * Takes precedence over solid `color`.
+   * Applies to all visualization components (line, area, bars, points).
+   * @example
+   * colorMap: {
+   *   type: 'discrete',
+   *   stops: [0],
+   *   colors: ['red', 'green']
+   * }
+   */
+  colorMap?: import('../types').ColorMap;
   /**
    * The ID of the y-axis this series uses.
    * Defaults to defaultAxisId if not specified.

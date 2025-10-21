@@ -63,7 +63,14 @@ const LineStyles = () => {
       <Line seriesId="upperMiddle" type="dotted" />
       <Line
         LineComponent={(props) => (
-          <GradientLine {...props} endColor="#F7931A" startColor="#E3D74D" strokeWidth={4} />
+          <GradientLine
+            {...props}
+            colorMap={{
+              type: 'continuous',
+              colors: ['#E3D74D', '#F7931A'],
+            }}
+            strokeWidth={4}
+          />
         )}
         curve="natural"
         seriesId="lowerMiddle"

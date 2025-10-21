@@ -37,9 +37,9 @@ import { useCartesianChartContext } from '../../ChartProvider';
 import { PeriodSelector, PeriodSelectorActiveIndicator } from '../../PeriodSelector';
 import { Point } from '../../Point';
 import { Scrubber, type ScrubberRef } from '../../scrubber';
-import type { ChartTextChildren } from '../../text';
+import { ChartText, type ChartTextChildren } from '../../text';
 import type { ChartAxisScaleType } from '../../utils/scale';
-import { GradientLine, Line, LineChart, ReferenceLine } from '..';
+import { GradientLine, Line, LineChart, type LineComponentProps, ReferenceLine } from '..';
 
 const defaultChartHeight = 200;
 
@@ -299,7 +299,7 @@ export const AssetPrice = () => {
   );
 };
 
-export const LineStyles = () => {
+const LineStyles = () => {
   const topChartData = [15, 28, 32, 44, 46, 36, 40, 45, 48, 38];
   const upperMiddleChartData = [12, 23, 21, 29, 34, 28, 31, 38, 42, 35];
   const lowerMiddleChartData = [8, 15, 14, 25, 20, 18, 22, 28, 24, 30];
@@ -334,7 +334,14 @@ export const LineStyles = () => {
       <Line seriesId="upperMiddle" type="dotted" />
       <Line
         LineComponent={(props) => (
-          <GradientLine {...props} endColor="#F7931A" startColor="#E3D74D" strokeWidth={4} />
+          <GradientLine
+            {...props}
+            colorMap={{
+              type: 'continuous',
+              colors: ['#E3D74D', '#F7931A'],
+            }}
+            strokeWidth={4}
+          />
         )}
         curve="natural"
         seriesId="lowerMiddle"
@@ -1245,9 +1252,50 @@ const AssetPriceMultipleDotted = () => {
   );
 };
 
+const TextComponent = memo(() => {
+  const { getYScale, drawingArea } = useCartesianChartContext();
+  const yScale = getYScale();
+
+  if (!yScale)
+    return (
+      <ChartText x={25} y={25}>
+        Testing thresholds
+      </ChartText>
+    );
+
+  const baselineY = yScale(0) ?? 0;
+
+  return (
+    <ChartText
+      x={25}
+      y={25}
+    >{`Testing thresholds: ${drawingArea.y} ${baselineY} ${drawingArea.height}`}</ChartText>
+  );
+});
+
+const GradientLineComponent = memo((props: LineComponentProps) => {
+  const theme = useTheme();
+  const negativeColor = `rgb(${theme.spectrum.gray15})`;
+  const positiveColor = theme.color.fgPositive;
+
+  return (
+    <GradientLine
+      {...props}
+      colorMap={{
+        type: 'discrete',
+        stops: [0],
+        colors: [positiveColor, negativeColor],
+      }}
+      strokeWidth={3}
+    />
+  );
+});
+
 const GainLossChart = () => {
   const theme = useTheme();
   const data = [-40, -28, -21, -5, 48, -5, -28, 2, -29, -46, 16, -30, -29, 8];
+  const negativeColor = `rgb(${theme.spectrum.gray15})`;
+  const positiveColor = theme.color.fgPositive;
 
   const tickLabelFormatter = useCallback(
     (value: number) =>
@@ -1259,10 +1307,6 @@ const GainLossChart = () => {
     [],
   );
 
-  // Threshold-based gradient: negative values use gray15, positive values use green
-  const negativeColor = `rgb(${theme.spectrum.gray15})`;
-  const positiveColor = theme.color.fgPositive;
-
   return (
     <CartesianChart
       enableScrubbing
@@ -1272,39 +1316,18 @@ const GainLossChart = () => {
         {
           id: 'prices',
           data: data,
+          colorMap: {
+            type: 'discrete',
+            stops: [0],
+            colors: [negativeColor, positiveColor],
+          },
         },
       ]}
     >
       <YAxis showGrid requestedTickCount={2} tickLabelFormatter={tickLabelFormatter} />
-      <Line
-        showArea
-        AreaComponent={(props) => (
-          <GradientArea
-            {...props}
-            stops={[
-              { threshold: -100, color: 'red', opacity: 0.3 },
-              { threshold: 0, color: 'red', opacity: 0 },
-              { threshold: 0, color: positiveColor, opacity: 0 },
-              { threshold: 100, color: positiveColor, opacity: 0.3 },
-            ]}
-          />
-        )}
-        LineComponent={(props) => (
-          <GradientLine
-            {...props}
-            stops={[
-              { threshold: -100, color: 'red' },
-              { threshold: 0, color: 'red' },
-              { threshold: 0, color: positiveColor },
-              { threshold: 100, color: positiveColor },
-            ]}
-            strokeWidth={3}
-          />
-        )}
-        curve="monotone"
-        seriesId="prices"
-      />
+      <Line curve="monotone" seriesId="prices" strokeWidth={3} type="gradient" />
       <Scrubber hideOverlay />
+      <TextComponent />
     </CartesianChart>
   );
 };
@@ -1415,7 +1438,18 @@ const BTCPriceChart = () => {
   })}`;
 
   const AreaComponent = useMemo(
-    () => (props: any) => <GradientArea {...props} peakOpacity={0.15} />,
+    () => (props: any) => (
+      <GradientArea
+        {...props}
+        colorMap={{
+          type: 'continuous',
+          colors: [
+            { color: 'black', opacity: 0.15 },
+            { color: 'black', opacity: 0 },
+          ],
+        }}
+      />
+    ),
     [],
   );
 
@@ -1846,12 +1880,10 @@ const PredictionChart = () => {
   );
 };
 
-// TODO: Convert to Skia gradients - SVG gradients don't work with Skia Canvas
 const AvailabilityChart = () => {
   const theme = useTheme();
   const [scrubIndex, setScrubIndex] = useState<number | undefined>();
 
-  // Temporarily use a solid color until we implement Skia gradients
   return (
     <CartesianChart
       enableScrubbing
@@ -1861,7 +1893,11 @@ const AvailabilityChart = () => {
         {
           id: 'availability',
           data: availabilityEvents.map((event) => event.availability),
-          color: theme.color.fgPositive,
+          colorMap: {
+            type: 'discrete',
+            stops: [85, 90],
+            colors: [theme.color.fgNegative, theme.color.fgWarning, theme.color.fgPositive],
+          },
         },
       ]}
       xAxis={{
@@ -1891,10 +1927,11 @@ const AvailabilityChart = () => {
         curve="stepAfter"
         renderPoints={() => ({
           fill: theme.color.bg,
-          stroke: theme.color.fgPositive,
           strokeWidth: 2,
+          // stroke will be automatically set from colorMap
         })}
         seriesId="availability"
+        type="gradient"
       />
       <Scrubber overlayOffset={10} />
     </CartesianChart>
@@ -1997,14 +2034,80 @@ const LineChartStories = () => {
           <Scrubber hideOverlay />
         </LineChart>
       </Example>
+      <Example title="ColorMap: Discrete (Positive/Negative)">
+        <LineChart
+          showArea
+          showXAxis
+          showYAxis
+          areaType="gradient"
+          height={defaultChartHeight}
+          series={[
+            {
+              id: 'balance',
+              data: [-20, -10, 5, 15, 20, 10, -5, -15],
+              colorMap: {
+                type: 'discrete',
+                stops: [0],
+                colors: ['red', 'green'],
+              },
+            },
+          ]}
+          type="gradient"
+        />
+      </Example>
+      <Example title="ColorMap: Continuous Gradient">
+        <LineChart
+          enableScrubbing
+          showArea
+          showXAxis
+          showYAxis
+          areaType="gradient"
+          height={defaultChartHeight}
+          series={[
+            {
+              id: 'temp',
+              data: [10, 25, 40, 60, 80, 95, 70, 50],
+              colorMap: {
+                type: 'continuous',
+                colors: ['blue', 'cyan', 'yellow', 'red'],
+              },
+            },
+          ]}
+          type="gradient"
+        >
+          <Scrubber />
+        </LineChart>
+      </Example>
+      <Example title="ColorMap: With Opacity">
+        <LineChart
+          showArea
+          showXAxis
+          showYAxis
+          height={defaultChartHeight}
+          series={[
+            {
+              id: 'data',
+              data: [30, 45, 60, 75, 60, 45, 30, 15],
+              colorMap: {
+                type: 'continuous',
+                colors: [
+                  { color: 'purple', opacity: 1 },
+                  { color: 'purple', opacity: 0.3 },
+                ],
+              },
+            },
+          ]}
+          type="gradient"
+        />
+      </Example>
       <Example title="Connect Nulls">
         <ConnectNullsChart />
       </Example>
-      <Example title="Gain/Loss">
-        <GainLossChart />
-      </Example>
       <Example title="Availability Chart">
         <AvailabilityChart />
+      </Example>
+      <Example title="BTC Price Chart">
+        <BTCPriceChart />
       </Example>
       {/*<Example title="Color Shift Chart">
         <ColorShiftChart />
@@ -2030,6 +2133,12 @@ const LineChartStories = () => {
       <Example title="Prediction Chart">
         <PredictionChart />
       </Example>*/}
+      <Example title="Gain/Loss">
+        <GainLossChart />
+      </Example>
+      <Example title="Line Styles">
+        <LineStyles />
+      </Example>
     </ExampleScreen>
   );
 };

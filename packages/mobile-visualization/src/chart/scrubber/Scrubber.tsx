@@ -7,10 +7,10 @@ import React, {
   useMemo,
 } from 'react';
 import { useSharedValue } from 'react-native-reanimated';
-import { Group, Rect } from '@shopify/react-native-skia';
 import { useRefMap } from '@coinbase/cds-common/hooks/useRefMap';
 import type { SharedProps } from '@coinbase/cds-common/types';
 import { useTheme } from '@coinbase/cds-mobile';
+import { Group, Rect } from '@shopify/react-native-skia';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import { ReferenceLine, type ReferenceLineProps } from '../line';
@@ -173,6 +173,7 @@ export const Scrubber = memo(
                   x: dataX,
                   y: dataY,
                   targetSeries: s,
+                  colorMap: s.colorMap,
                 };
               }
             })
@@ -246,6 +247,7 @@ export const Scrubber = memo(
                 <BeaconComponent
                   ref={createScrubberBeaconRef(beacon.targetSeries.id)}
                   color={beacon.targetSeries?.color}
+                  colorMap={beacon.colorMap}
                   dataX={beacon.x}
                   dataY={beacon.y}
                   idlePulse={idlePulse}

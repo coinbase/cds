@@ -196,7 +196,8 @@ export const Path = memo<PathProps>(
     const hasDeclarativeShader = children !== undefined && children !== null;
 
     // Determine rendering style
-    const isFilled = hasDeclarativeShader || (fill !== undefined && fill !== 'none');
+    // Note: Children can be used for both fill and stroke gradients, so we check the fill prop explicitly
+    const isFilled = fill !== undefined && fill !== 'none';
     const isStroked = (stroke !== undefined && stroke !== 'none') || color !== undefined;
 
     // Resolve color (stroke or color prop)
