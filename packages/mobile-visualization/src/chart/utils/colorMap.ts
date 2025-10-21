@@ -1,7 +1,13 @@
 import { Skia } from '@shopify/react-native-skia';
 import type { ScaleLinear } from 'd3-scale';
 
-import { type ChartScaleFunction, isNumericScale, type NumericScale } from './scale';
+import {
+  type CategoricalScale,
+  type ChartScaleFunction,
+  isCategoricalScale,
+  isNumericScale,
+  type NumericScale,
+} from './scale';
 
 /**
  * A color stop can be either:
@@ -87,6 +93,30 @@ export type GradientConfig = {
 };
 
 /**
+ * Type for scales that can be used with ColorMap.
+ * Band scales use numerical indices [0, 1, 2, ...] so they work with ColorMap.
+ */
+export type ColorMapScale = NumericScale | CategoricalScale;
+
+/**
+ * Extracts min/max domain values from any scale type.
+ * Handles both numeric scales ([min, max]) and band scales ([0, 1, 2, ...]).
+ */
+const getScaleDomainBounds = (scale: ColorMapScale): [number, number] => {
+  const domain = scale.domain();
+
+  if (isCategoricalScale(scale)) {
+    // Band scale domain is an array like [0, 1, 2, 3, ...]
+    // Extract the first and last values
+    const domainArray = domain as number[];
+    return [domainArray[0], domainArray[domainArray.length - 1]];
+  } else {
+    // Numeric scale domain is [min, max]
+    return domain as [number, number];
+  }
+};
+
+/**
  * Normalizes a ColorStop to a color string with opacity applied.
  * Returns an rgba color string.
  */
@@ -154,7 +184,7 @@ export const parseColor = (color: string, opacity: number = 1): string => {
  */
 const processContinuousColorMap = (
   colorMap: ColorMap,
-  scale: ScaleLinear<number, number, never>,
+  scale: ColorMapScale,
 ): GradientConfig | null => {
   const { colors, stops } = colorMap;
 
@@ -225,7 +255,7 @@ const processContinuousColorMap = (
  */
 const processDiscreteColorMap = (
   colorMap: ColorMap,
-  scale: ScaleLinear<number, number, never>,
+  scale: ColorMapScale,
 ): GradientConfig | null => {
   const { colors, stops } = colorMap;
 
@@ -260,8 +290,7 @@ const processDiscreteColorMap = (
   }
 
   // Get scale domain and range
-  const domain = scale.domain();
-  const [minValue, maxValue] = domain;
+  const [minValue, maxValue] = getScaleDomainBounds(scale);
   const range = maxValue - minValue;
 
   if (range === 0) {
@@ -324,23 +353,23 @@ const processDiscreteColorMap = (
 /**
  * Processes a ColorMap configuration into a gradient configuration for Skia.
  * Handles both continuous and discrete color mapping types.
+ * Supports both numeric scales (linear, log) and categorical scales (band).
  *
  * @param colorMap - The ColorMap configuration
  * @param scale - The d3 scale to use for mapping data values to positions
  * @returns Gradient configuration with colors and positions, or null if invalid
  */
-export const processColorMap = (colorMap: ColorMap, scale: NumericScale): GradientConfig | null => {
+export const processColorMap = (
+  colorMap: ColorMap,
+  scale: ColorMapScale,
+): GradientConfig | null => {
   if (!colorMap) return null;
-
-  // For discrete colorMaps, we need a linear scale
-  // For continuous, we use the scale for domain information
-  const linearScale = scale as ScaleLinear<number, number, never>;
 
   switch (colorMap.type) {
     case 'continuous':
-      return processContinuousColorMap(colorMap, linearScale);
+      return processContinuousColorMap(colorMap, scale);
     case 'discrete':
-      return processDiscreteColorMap(colorMap, linearScale);
+      return processDiscreteColorMap(colorMap, scale);
     default:
       console.warn(`Unknown colorMap type: ${(colorMap as ColorMap).type}`);
       return null;
@@ -349,17 +378,19 @@ export const processColorMap = (colorMap: ColorMap, scale: NumericScale): Gradie
 
 /**
  * Determines the appropriate scale to use based on ColorMap axis configuration.
- * ColorMaps only work with numeric scales (linear or log), not categorical (band) scales.
+ * ColorMaps work with numeric scales (linear, log) and categorical scales (band).
+ * Band scales use numerical indices [0, 1, 2, ...] which work for color mapping.
+ *
  * @param colorMap - The ColorMap configuration
  * @param xScale - The x-axis scale
  * @param yScale - The y-axis scale
- * @returns The numeric scale to use for color mapping, or null if not numeric
+ * @returns The scale to use for color mapping, or null if not supported
  */
 export const getColorMapScale = (
   colorMap: ColorMap | undefined,
   xScale: ChartScaleFunction | undefined,
   yScale: ChartScaleFunction | undefined,
-): NumericScale | null => {
+): ColorMapScale | null => {
   if (!colorMap) {
     return yScale && isNumericScale(yScale) ? yScale : null;
   }
@@ -367,13 +398,18 @@ export const getColorMapScale = (
   const axis = colorMap.axis ?? 'y';
   const targetScale = axis === 'x' ? xScale : yScale;
 
-  // ColorMap requires a numeric scale
-  if (!targetScale || !isNumericScale(targetScale)) {
-    console.warn(`ColorMap requires a numeric scale on the ${axis}-axis`);
+  // ColorMap requires either a numeric scale or a categorical (band) scale
+  if (!targetScale) {
+    console.warn(`ColorMap requires a scale on the ${axis}-axis`);
     return null;
   }
 
-  return targetScale;
+  if (!isNumericScale(targetScale) && !isCategoricalScale(targetScale)) {
+    console.warn(`ColorMap requires a numeric or categorical scale on the ${axis}-axis`);
+    return null;
+  }
+
+  return targetScale as ColorMapScale;
 };
 
 /**
@@ -401,14 +437,14 @@ const interpolateColors = (color1: string, color2: string, progress: number): st
  * For continuous colorMaps, interpolates between colors.
  *
  * @param colorMap - The ColorMap configuration
- * @param dataValue - The data value to evaluate
+ * @param dataValue - The data value to evaluate (for band scales, this is the index)
  * @param scale - The scale to use for mapping
  * @returns The color string at this data value, or null if invalid
  */
 export const evaluateColorMapAtValue = (
   colorMap: ColorMap,
   dataValue: number,
-  scale: NumericScale,
+  scale: ColorMapScale,
 ): string | null => {
   const { colors, stops, type } = colorMap;
 
@@ -437,14 +473,13 @@ export const evaluateColorMapAtValue = (
     return processedColors[processedColors.length - 1];
   } else if (type === 'continuous') {
     // For continuous: interpolate between colors based on normalized position
-    const domain = scale.domain();
-    const [minValue, maxValue] = domain;
+    const [minValue, maxValue] = getScaleDomainBounds(scale);
     const range = maxValue - minValue;
 
     if (range === 0) return processedColors[0];
 
-    // Normalize the value to 0-1
-    const normalizedValue = Math.max(0, Math.min(1, (dataValue - minValue) / range));
+    // Normalize the value to 0-1 in data space (0 = min, 1 = max)
+    let normalizedValue = Math.max(0, Math.min(1, (dataValue - minValue) / range));
 
     // Determine positions
     let positions: number[];
@@ -456,17 +491,22 @@ export const evaluateColorMapAtValue = (
     }
 
     // Account for Y-axis reversal to match gradient rendering
-    // In Skia, Y-axis gradients are reversed (high values at top, low at bottom)
+    // In Skia, Y-axis gradients are reversed (high pixel values at bottom, low at top)
+    // So high data values appear at the top (low pixel position)
     const scaleRange = scale.range();
     const isYAxisReversed = scaleRange[0] > scaleRange[1];
 
     let orderedColors = processedColors;
     let orderedPositions = positions;
 
-    if (isYAxisReversed) {
-      // Reverse to match the gradient rendering
+    if (isYAxisReversed && (colorMap.axis ?? 'y') === 'y') {
+      // Reverse the colors to match the gradient rendering
       orderedColors = [...processedColors].reverse();
       orderedPositions = [...positions].reverse().map((pos) => 1 - pos);
+      // Also flip the normalized value to match the reversed gradient
+      // High data values (1) should map to position 0 (top of gradient)
+      // Low data values (0) should map to position 1 (bottom of gradient)
+      normalizedValue = 1 - normalizedValue;
     }
 
     // Find which segment we're in and interpolate

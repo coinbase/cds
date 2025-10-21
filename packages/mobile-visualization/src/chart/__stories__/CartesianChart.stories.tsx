@@ -1,12 +1,12 @@
 import { memo, useCallback, useMemo } from 'react';
 import { Image, ScrollView, StyleSheet } from 'react-native';
-import { Circle, Group } from '@shopify/react-native-skia';
 import { assets } from '@coinbase/cds-common/internal/data/assets';
 import { candles as btcCandles } from '@coinbase/cds-common/internal/data/candles';
 import { Example, ExampleScreen } from '@coinbase/cds-mobile/examples/ExampleScreen';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 import { Box, HStack, VStack } from '@coinbase/cds-mobile/layout';
 import { TextLabel1, TextLabel2, TextTitle1, TextTitle2 } from '@coinbase/cds-mobile/typography';
+import { Circle, Group } from '@shopify/react-native-skia';
 
 import { Area } from '../area/Area';
 import { XAxis, YAxis } from '../axis';
@@ -144,9 +144,9 @@ const EarningsHistory = () => {
           return (
             <Circle
               key={`${seriesId}-${index}`}
+              color={series?.color || theme.color.fgPrimary}
               cx={centerX}
               cy={centerY}
-              color={series?.color || theme.color.fgPrimary}
               opacity={opacity}
               r={diameter / 2}
             />

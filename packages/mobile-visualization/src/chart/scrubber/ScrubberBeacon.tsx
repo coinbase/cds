@@ -1,4 +1,4 @@
-import { forwardRef, memo, useEffect, useImperativeHandle, useMemo } from 'react';
+import { forwardRef, memo, useEffect, useImperativeHandle, useMemo, useRef } from 'react';
 import {
   cancelAnimation,
   useDerivedValue,
@@ -13,6 +13,7 @@ import { useTheme } from '@coinbase/cds-mobile';
 import { Circle, Group } from '@shopify/react-native-skia';
 
 import { useCartesianChartContext } from '../ChartProvider';
+import { ChartText } from '../text/ChartText';
 import { projectPoint, useScrubberContext } from '../utils';
 import { type ColorMap, evaluateColorMapAtValue, getColorMapScale } from '../utils/colorMap';
 
@@ -84,6 +85,8 @@ export const ScrubberBeacon = memo(
       },
       ref,
     ) => {
+      const renderCount = useRef(0);
+      renderCount.current++;
       const theme = useTheme();
       const { getSeries, getXScale, getYScale, getSeriesData, animate } =
         useCartesianChartContext();
@@ -209,25 +212,43 @@ export const ScrubberBeacon = memo(
       // Determine the beacon color (must be before conditional return to follow Rules of Hooks)
       const pointColor = useMemo(() => {
         // If colorMap is provided, evaluate color based on data value
-        if (colorMap && dataY !== undefined && xScale && yScale) {
+        if (colorMap && xScale && yScale) {
           const colorMapScale = getColorMapScale(colorMap, xScale, yScale);
           if (colorMapScale) {
-            const evaluatedColor = evaluateColorMapAtValue(colorMap, dataY, colorMapScale);
-            if (evaluatedColor) {
-              return evaluatedColor;
+            // Use the appropriate data value based on colorMap axis
+            const axis = colorMap.axis ?? 'y';
+            const dataValue = axis === 'x' ? dataX : dataY;
+
+            if (dataValue !== undefined) {
+              const evaluatedColor = evaluateColorMapAtValue(colorMap, dataValue, colorMapScale);
+              if (evaluatedColor) {
+                return evaluatedColor;
+              }
             }
           }
         }
 
         // Fallback to provided color, series color, or theme color
         return color ?? targetSeries?.color ?? theme.color.fgPrimary;
-      }, [colorMap, dataY, color, targetSeries?.color, theme.color.fgPrimary, xScale, yScale]);
+      }, [
+        colorMap,
+        dataX,
+        dataY,
+        color,
+        targetSeries?.color,
+        theme.color.fgPrimary,
+        xScale,
+        yScale,
+      ]);
 
       if (!pixelCoordinate) return null;
 
       if (!isIdleState) {
         return (
           <Group opacity={opacity}>
+            <ChartText opacity={0} x={pixelCoordinate.x} y={pixelCoordinate.y - 20}>
+              {`${renderCount.current} renders`}
+            </ChartText>
             {/* Glow circle behind */}
             <Circle
               c={{ x: pixelCoordinate.x, y: pixelCoordinate.y }}
@@ -255,6 +276,9 @@ export const ScrubberBeacon = memo(
 
       return (
         <Group opacity={opacity}>
+          <ChartText opacity={0} x={pixelCoordinate.x} y={pixelCoordinate.y - 20}>
+            {`${renderCount.current} renders`}
+          </ChartText>
           {/* Glow circle */}
           <Circle c={animatedPoint} color={pointColor} opacity={0.15} r={glowRadius} />
           {/* Pulse circle */}

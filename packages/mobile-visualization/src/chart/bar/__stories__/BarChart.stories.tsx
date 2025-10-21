@@ -310,6 +310,210 @@ const ScrubberRect = memo(() => {
   );
 });
 
+const YAxisContinuousColorMap = () => {
+  const theme = useTheme();
+  return (
+    <BarChart
+      showXAxis
+      showYAxis
+      height={defaultChartHeight}
+      series={[
+        {
+          id: 'temperature',
+          data: [12, 25, 38, 52, 45, 30, 18],
+          // Continuous gradient from blue (cold) to red (hot)
+          colorMap: {
+            type: 'continuous',
+            axis: 'y',
+            colors: [
+              theme.color.accentBoldGreen,
+              theme.color.accentBoldYellow,
+              theme.color.accentBoldRed,
+            ],
+          },
+        },
+      ]}
+      xAxis={{
+        data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+      }}
+      yAxis={{
+        requestedTickCount: 5,
+        tickLabelFormatter: (value) => `${value}°C`,
+        showGrid: true,
+      }}
+    />
+  );
+};
+
+const YAxisDiscreteColorMap = () => {
+  const theme = useTheme();
+  return (
+    <BarChart
+      showXAxis
+      showYAxis
+      height={defaultChartHeight}
+      series={[
+        {
+          id: 'sales',
+          data: [15, 42, 58, 25, 78, 35, 62],
+          // Discrete colors based on performance thresholds
+          colorMap: {
+            type: 'discrete',
+            axis: 'y',
+            colors: [theme.color.fgNegative, theme.color.accentBoldYellow, theme.color.fgPositive],
+            stops: [30, 60], // Red: <30, Yellow: 30-60, Green: >60
+          },
+        },
+      ]}
+      xAxis={{
+        data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+      }}
+      yAxis={{
+        requestedTickCount: 5,
+        tickLabelFormatter: (value) => `$${value}k`,
+        showGrid: true,
+      }}
+    />
+  );
+};
+
+const XAxisContinuousColorMap = () => {
+  const theme = useTheme();
+  return (
+    <BarChart
+      showXAxis
+      showYAxis
+      height={defaultChartHeight}
+      series={[
+        {
+          id: 'weekly-trend',
+          data: [45, 52, 38, 45, 48, 50, 55],
+          // Gradient from left (start of week) to right (end of week)
+          colorMap: {
+            type: 'continuous',
+            axis: 'x',
+            colors: [theme.color.accentBoldPurple, theme.color.accentBoldBlue],
+          },
+        },
+      ]}
+      xAxis={{
+        data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+      }}
+      yAxis={{
+        requestedTickCount: 5,
+        tickLabelFormatter: (value) => `${value}`,
+        showGrid: true,
+      }}
+    />
+  );
+};
+
+const XAxisDiscreteColorMap = () => {
+  const theme = useTheme();
+  return (
+    <BarChart
+      showXAxis
+      showYAxis
+      height={defaultChartHeight}
+      series={[
+        {
+          id: 'workweek',
+          data: [45, 52, 38, 45, 48, 30, 25],
+          // Different colors for weekdays vs weekend (based on x-position/index)
+          colorMap: {
+            type: 'discrete',
+            axis: 'x',
+            colors: [
+              theme.color.accentBoldBlue, // Weekdays (indices 0-4)
+              theme.color.accentBoldYellow, // Weekend (indices 5-6)
+            ],
+            stops: [5], // Change color at index 5 (Saturday)
+          },
+        },
+      ]}
+      xAxis={{
+        data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+      }}
+      yAxis={{
+        requestedTickCount: 5,
+        tickLabelFormatter: (value) => `${value}h`,
+        showGrid: true,
+      }}
+    />
+  );
+};
+
+const XAxisMultiSegmentColorMap = () => {
+  const theme = useTheme();
+  return (
+    <BarChart
+      showXAxis
+      showYAxis
+      height={defaultChartHeight}
+      series={[
+        {
+          id: 'quarters',
+          data: [120, 135, 142, 128, 145, 158, 162, 155, 168, 175, 182, 190],
+          // Different color for each quarter
+          colorMap: {
+            type: 'discrete',
+            axis: 'x',
+            colors: [
+              theme.color.accentBoldBlue, // Q1 (Jan-Mar)
+              theme.color.accentBoldGreen, // Q2 (Apr-Jun)
+              theme.color.accentBoldYellow, // Q3 (Jul-Sep)
+              theme.color.accentBoldPurple, // Q4 (Oct-Dec)
+            ],
+            stops: [3, 6, 9], // Change colors at indices 3, 6, 9
+          },
+        },
+      ]}
+      xAxis={{
+        data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+      }}
+      yAxis={{
+        requestedTickCount: 5,
+        tickLabelFormatter: (value) => `$${value}k`,
+        showGrid: true,
+      }}
+    />
+  );
+};
+
+const ColorMapWithOpacity = () => {
+  const theme = useTheme();
+  return (
+    <BarChart
+      showXAxis
+      showYAxis
+      height={defaultChartHeight}
+      series={[
+        {
+          id: 'confidence',
+          data: [25, 35, 45, 55, 65, 75, 85],
+          // Gradient with opacity changes
+          colorMap: {
+            type: 'continuous',
+            axis: 'y',
+            colors: [
+              { color: theme.color.accentBoldBlue, opacity: 0.4 }, // Low values - more transparent
+              { color: theme.color.accentBoldBlue, opacity: 1.0 }, // High values - more opaque
+            ],
+          },
+        },
+      ]}
+      xAxis={{
+        data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+      }}
+      yAxis={{
+        requestedTickCount: 5,
+        tickLabelFormatter: (value) => `${value}%`,
+        showGrid: true,
+      }}
+    />
+  );
+};
+
 const BarChartStories = () => {
   return (
     <ExampleScreen>
@@ -330,6 +534,24 @@ const BarChartStories = () => {
       </Example>*/}
       <Example title="Multiple Y Axes">
         <MultipleYAxes />
+      </Example>
+      <Example title="Y-Axis Continuous ColorMap">
+        <YAxisContinuousColorMap />
+      </Example>
+      <Example title="Y-Axis Discrete ColorMap">
+        <YAxisDiscreteColorMap />
+      </Example>
+      <Example title="X-Axis Continuous ColorMap">
+        <XAxisContinuousColorMap />
+      </Example>
+      <Example title="X-Axis Discrete ColorMap">
+        <XAxisDiscreteColorMap />
+      </Example>
+      <Example title="X-Axis Multi-Segment ColorMap">
+        <XAxisMultiSegmentColorMap />
+      </Example>
+      <Example title="ColorMap with Opacity">
+        <ColorMapWithOpacity />
       </Example>
       {/*<Example title="Candlestick Chart">
         <Candlesticks />

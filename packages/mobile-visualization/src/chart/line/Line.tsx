@@ -205,7 +205,6 @@ export const Line = memo<LineProps>(
         : null;
     }, [xAxis?.data]);
 
-    // Pre-compute colorMap scale once (memoized) to avoid recalculating in render loop
     const colorMapScale = useMemo(() => {
       if (!seriesColorMap || !xScale || !yScale) return null;
       return getColorMapScale(seriesColorMap, xScale, yScale);
@@ -262,7 +261,15 @@ export const Line = memo<LineProps>(
             let pointStroke = pointConfig.stroke;
 
             if (colorMapScale && seriesColorMap) {
-              const evaluatedColor = evaluateColorMapAtValue(seriesColorMap, value, colorMapScale);
+              // Use the appropriate data value based on colorMap axis
+              const axis = seriesColorMap.axis ?? 'y';
+              const dataValue = axis === 'x' ? xValue : value;
+
+              const evaluatedColor = evaluateColorMapAtValue(
+                seriesColorMap,
+                dataValue,
+                colorMapScale,
+              );
               if (evaluatedColor) {
                 // Apply colorMap color to fill if not explicitly set
                 if (!pointConfig.fill) {

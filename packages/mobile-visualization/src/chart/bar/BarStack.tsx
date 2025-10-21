@@ -4,6 +4,7 @@ import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import type { ChartScaleFunction } from '../utils';
+import { evaluateColorMapAtValue, getColorMapScale } from '../utils/colorMap';
 
 import { Bar, type BarComponent, type BarProps } from './Bar';
 import type { BarSeries } from './BarChart';
@@ -136,9 +137,10 @@ export const BarStack = memo<BarStackProps>(
     roundBaseline,
   }) => {
     const theme = useTheme();
-    const { getSeriesData, getXAxis } = useCartesianChartContext();
+    const { getSeriesData, getXAxis, getXScale } = useCartesianChartContext();
 
     const xAxis = getXAxis();
+    const xScale = getXScale();
 
     const baseline = useMemo(() => {
       const domain = yScale.domain();
@@ -221,6 +223,25 @@ export const BarStack = memo<BarStackProps>(
         minY = Math.min(minY, y);
         maxY = Math.max(maxY, y + height);
 
+        // Determine fill color, respecting colorMap if present
+        let barFill = s.fill || s.color || theme.color.fgPrimary;
+
+        // Evaluate colorMap if provided
+        if (s.colorMap && xScale && yScale) {
+          const colorMapScale = getColorMapScale(s.colorMap, xScale, yScale);
+          if (colorMapScale) {
+            const axis = s.colorMap.axis ?? 'y';
+            // For x-axis colorMap, use the categoryIndex
+            // For y-axis colorMap, use the actual data value
+            const dataValue = axis === 'x' ? categoryIndex : top;
+            const evaluatedColor = evaluateColorMapAtValue(s.colorMap, dataValue, colorMapScale);
+            if (evaluatedColor && !s.fill) {
+              // Only apply colorMap color if fill is not explicitly set
+              barFill = evaluatedColor;
+            }
+          }
+        }
+
         allBars.push({
           seriesId: s.id,
           x,
@@ -230,7 +251,7 @@ export const BarStack = memo<BarStackProps>(
           dataY: value, // Store the actual data value
           // Use series-specific properties, falling back to defaults
           BarComponent: s.BarComponent,
-          fill: s.fill || s.color || theme.color.fgPrimary,
+          fill: barFill,
           fillOpacity: s.fillOpacity,
           stroke: s.stroke,
           strokeWidth: s.strokeWidth,
@@ -624,6 +645,7 @@ export const BarStack = memo<BarStackProps>(
       barMinSize,
       stackMinSize,
       yScale,
+      xScale,
       theme.color.fgPrimary,
     ]);
 

@@ -9,6 +9,7 @@ import {
   useState,
 } from 'react';
 import type { View } from 'react-native';
+import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import { assets } from '@coinbase/cds-common/internal/data/assets';
 import { prices } from '@coinbase/cds-common/internal/data/prices';
 import { sparklineInteractiveData } from '@coinbase/cds-common/internal/visualizations/SparklineInteractiveData';
@@ -276,7 +277,6 @@ export const AssetPrice = () => {
   return (
     <VStack gap={2}>
       <LineChart
-        showArea
         height={defaultChartHeight}
         inset={{ top: 4, bottom: 8, left: 0, right: 0 }}
         onScrubberPositionChange={onScrubberPositionChange}
@@ -321,7 +321,10 @@ const LineStyles = () => {
         {
           id: 'lowerMiddle',
           data: lowerMiddleChartData,
-          color: '#f59e0b',
+          colorMap: {
+            type: 'continuous',
+            colors: ['#E3D74D', '#F7931A'],
+          },
         },
         {
           id: 'bottom',
@@ -330,21 +333,14 @@ const LineStyles = () => {
         },
       ]}
     >
-      <Line seriesId="top" />
-      <Line seriesId="upperMiddle" type="dotted" />
+      <Line renderPoints={() => true} seriesId="top" />
+      <Line renderPoints={() => true} seriesId="upperMiddle" type="dotted" />
       <Line
-        LineComponent={(props) => (
-          <GradientLine
-            {...props}
-            colorMap={{
-              type: 'continuous',
-              colors: ['#E3D74D', '#F7931A'],
-            }}
-            strokeWidth={4}
-          />
-        )}
+        LineComponent={(props) => <GradientLine {...props} outlineColor="white" outlineWidth={1} />}
         curve="natural"
+        renderPoints={() => true}
         seriesId="lowerMiddle"
+        strokeWidth={4}
       />
       <Line showArea AreaComponent={DottedArea} curve="step" seriesId="bottom" />
     </CartesianChart>
@@ -377,7 +373,6 @@ export const ChartScale = () => {
         </HStack>
       </VStack>
       <LineChart
-        showArea
         showYAxis
         curve="natural"
         height={defaultChartHeight}
@@ -495,7 +490,6 @@ export const ColorShiftChart = () => {
       <VStack gap={3} width="100%">
         <LineChart
           enableScrubbing
-          showArea
           showXAxis
           height={defaultChartHeight}
           inset={{ left: 0, right: 24, bottom: 0 }}
@@ -695,7 +689,6 @@ export const PriceChart = () => {
   return (
     <VStack gap={3} width="100%">
       <LineChart
-        showArea
         height={defaultChartHeight}
         inset={{ left: 0, right: 3, bottom: 3, top: 3 }}
         onScrubberPositionChange={onScrubberPositionChange}
@@ -801,7 +794,6 @@ export const ForecastChart = () => {
   return (
     <LineChart
       enableScrubbing
-      showArea
       showXAxis
       areaType="dotted"
       height={defaultChartHeight}
@@ -931,7 +923,10 @@ const AssetPriceDotted = () => {
         maximumFractionDigits: 2,
       }).format(sparklineTimePeriodDataValues[dataIndex]);
       const date = formatDate(sparklineTimePeriodDataTimestamps[dataIndex]);
-      return `${price} USD ${date}`;
+      return [
+        { text: `${price} USD`, font: 'label1Emphasized' as ThemeVars.FontFamily },
+        { text: ` ${date}`, font: 'label2' as ThemeVars.FontFamily },
+      ];
     },
     [sparklineTimePeriodDataValues, formatDate, sparklineTimePeriodDataTimestamps],
   );
@@ -977,11 +972,7 @@ const AssetPriceDotted = () => {
       <VStack gap={2}>
         <SectionHeader
           aria-hidden="true"
-          balance={
-            <Text font="title2">
-              {formatPrice(currentPrice)} {sparklineTimePeriodDataValues.length}
-            </Text>
-          }
+          balance={<Text font="title2">{formatPrice(currentPrice)}</Text>}
           end={
             <VStack justifyContent="center">
               <RemoteImage shape="circle" size="xl" source={assets.btc.imageUrl} />
@@ -996,6 +987,7 @@ const AssetPriceDotted = () => {
           accessibilityLiveRegion="polite"
           areaType="dotted"
           height={defaultChartHeight}
+          inset={{ top: 56 }}
           series={[
             {
               id: 'btc',
@@ -1004,7 +996,14 @@ const AssetPriceDotted = () => {
             },
           ]}
         >
-          <Scrubber idlePulse label={scrubberLabel} />
+          <Scrubber
+            idlePulse
+            label={scrubberLabel}
+            labelProps={{
+              yOffset: -28, // Elevate label 16 pixels above the default position
+              elevation: 1, // Add drop shadow for depth
+            }}
+          />
         </LineChart>
         <PeriodSelector
           TabComponent={BTCTab}
@@ -1107,7 +1106,6 @@ const AssetPriceDottedNonMemoized = () => {
       />
       <LineChart
         enableScrubbing
-        showArea
         areaType="dotted"
         height={defaultChartHeight}
         onScrubberPositionChange={setScrubIndex}
@@ -1484,7 +1482,7 @@ const BTCPriceChart = () => {
           ]}
           width="100%"
         >
-          <Line showArea AreaComponent={AreaComponent} seriesId="price" strokeWidth={3} />
+          <Line AreaComponent={AreaComponent} seriesId="price" strokeWidth={3} />
           <Scrubber
             idlePulse
             label={displayDate}
@@ -1559,7 +1557,6 @@ const LiveAssetPrice = () => {
   return (
     <LineChart
       enableScrubbing
-      showArea
       height={defaultChartHeight}
       series={[
         {
@@ -1967,6 +1964,8 @@ const ConnectNullsChart = () => {
   );
 };
 
+const data = sparklineInteractiveData.all.map((d) => d.value);
+
 const LineChartStories = () => {
   return (
     <ExampleScreen>
@@ -1976,7 +1975,6 @@ const LineChartStories = () => {
       <Example title="Basic">
         <LineChart
           enableScrubbing
-          showArea
           showYAxis
           curve="monotone"
           height={defaultChartHeight}
@@ -2009,7 +2007,6 @@ const LineChartStories = () => {
       <Example title="Data Formats">
         <LineChart
           enableScrubbing
-          showArea
           showXAxis
           showYAxis
           areaType="gradient"
@@ -2034,72 +2031,6 @@ const LineChartStories = () => {
           <Scrubber hideOverlay />
         </LineChart>
       </Example>
-      <Example title="ColorMap: Discrete (Positive/Negative)">
-        <LineChart
-          showArea
-          showXAxis
-          showYAxis
-          areaType="gradient"
-          height={defaultChartHeight}
-          series={[
-            {
-              id: 'balance',
-              data: [-20, -10, 5, 15, 20, 10, -5, -15],
-              colorMap: {
-                type: 'discrete',
-                stops: [0],
-                colors: ['red', 'green'],
-              },
-            },
-          ]}
-          type="gradient"
-        />
-      </Example>
-      <Example title="ColorMap: Continuous Gradient">
-        <LineChart
-          enableScrubbing
-          showArea
-          showXAxis
-          showYAxis
-          areaType="gradient"
-          height={defaultChartHeight}
-          series={[
-            {
-              id: 'temp',
-              data: [10, 25, 40, 60, 80, 95, 70, 50],
-              colorMap: {
-                type: 'continuous',
-                colors: ['blue', 'cyan', 'yellow', 'red'],
-              },
-            },
-          ]}
-          type="gradient"
-        >
-          <Scrubber />
-        </LineChart>
-      </Example>
-      <Example title="ColorMap: With Opacity">
-        <LineChart
-          showArea
-          showXAxis
-          showYAxis
-          height={defaultChartHeight}
-          series={[
-            {
-              id: 'data',
-              data: [30, 45, 60, 75, 60, 45, 30, 15],
-              colorMap: {
-                type: 'continuous',
-                colors: [
-                  { color: 'purple', opacity: 1 },
-                  { color: 'purple', opacity: 0.3 },
-                ],
-              },
-            },
-          ]}
-          type="gradient"
-        />
-      </Example>
       <Example title="Connect Nulls">
         <ConnectNullsChart />
       </Example>
@@ -2109,13 +2040,13 @@ const LineChartStories = () => {
       <Example title="BTC Price Chart">
         <BTCPriceChart />
       </Example>
-      {/*<Example title="Color Shift Chart">
+      <Example title="Color Shift Chart">
         <ColorShiftChart />
       </Example>
       <Example title="Asset Price Dotted">
         <AssetPriceDotted />
       </Example>
-      <Example title="Asset Price Multiple Dotted">
+      {/*<Example title="Asset Price Multiple Dotted">
         <AssetPriceMultipleDotted />
       </Example>
       <Example title="Asset Price Dotted (Old)">
@@ -2139,68 +2070,31 @@ const LineChartStories = () => {
       <Example title="Line Styles">
         <LineStyles />
       </Example>
+      <Example title="Basic">
+        <CartesianChart
+          enableScrubbing
+          height={defaultChartHeight}
+          series={[
+            {
+              id: 'prices',
+              data: data,
+              colorMap: {
+                axis: 'x',
+                type: 'continuous',
+                colors: ['#ff0000', '#00ff00'],
+              },
+            },
+          ]}
+          yAxis={{
+            domain: { min: 0 },
+          }}
+        >
+          <Line curve="monotone" seriesId="prices" type="gradient" />
+          <Scrubber idlePulse />
+        </CartesianChart>
+      </Example>
     </ExampleScreen>
   );
 };
 
-export default () => (
-  <ExampleScreen>
-    <Example title="Basic">
-      <LineChart
-        enableScrubbing
-        showArea
-        showYAxis
-        curve="monotone"
-        height={defaultChartHeight}
-        series={[
-          {
-            id: 'prices',
-            data: sampleData,
-          },
-        ]}
-        yAxis={{
-          showGrid: true,
-        }}
-      >
-        <Scrubber />
-      </LineChart>
-    </Example>
-    <Example title="Bar (default)">
-      <BarChart
-        enableScrubbing
-        showYAxis
-        height={defaultChartHeight}
-        series={[
-          {
-            id: 'prices',
-            data: sampleData,
-          },
-        ]}
-        yAxis={{
-          showGrid: true,
-        }}
-      >
-        <Scrubber />
-      </BarChart>
-    </Example>
-    <Example title="Bar (animate=false)">
-      <BarChart
-        enableScrubbing
-        showYAxis
-        animate={false}
-        height={defaultChartHeight}
-        series={[
-          {
-            id: 'prices',
-            data: sampleData,
-          },
-        ]}
-        yAxis={{
-          showGrid: true,
-        }}
-      >
-        <Scrubber />
-      </BarChart>
-    </Example>
-  </ExampleScreen>
-);
+export default LineChartStories;

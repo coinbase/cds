@@ -44,6 +44,7 @@ type SkiaFontWeight =
 // TODO: Find a way to safely access theme values inside Skia rendering context
 const FONT_CONFIGS: Record<string, { fontSize: number; fontWeight: SkiaFontWeight }> = {
   label1: { fontSize: 17, fontWeight: '600' },
+  label1Emphasized: { fontSize: 17, fontWeight: '700' },
   label2: { fontSize: 15, fontWeight: '400' },
   body: { fontSize: 17, fontWeight: '400' },
   caption: { fontSize: 13, fontWeight: '400' },

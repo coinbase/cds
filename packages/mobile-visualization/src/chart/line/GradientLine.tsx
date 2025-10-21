@@ -40,6 +40,18 @@ export type GradientLineProps = SharedProps &
      * Only needed when using colorMap with multiple y-axes.
      */
     yAxisId?: string;
+    /**
+     * Color for the outline/border around the gradient line.
+     * When provided, renders a wider path underneath for the outline effect.
+     * @example 'white' or '#ffffff'
+     */
+    outlineColor?: string;
+    /**
+     * Width of the outline/border.
+     * Only used when outlineColor is provided.
+     * @default 1
+     */
+    outlineWidth?: number;
   };
 
 /**
@@ -56,6 +68,8 @@ export const GradientLine = memo<GradientLineProps>(
     animate,
     colorMap,
     yAxisId,
+    outlineColor,
+    outlineWidth = 1,
     ...props
   }) => {
     const context = useCartesianChartContext();
@@ -111,25 +125,44 @@ export const GradientLine = memo<GradientLineProps>(
       return null;
     }
 
+    const totalOutlineWidth = outlineColor ? outlineWidth * 2 : 0;
+
     return (
-      <Path
-        animate={false}
-        clipOffset={strokeWidth}
-        fill={fill}
-        stroke={stroke ?? theme.color.bgLine}
-        strokeLinecap={strokeLinecap}
-        strokeLinejoin={strokeLinejoin}
-        strokeOpacity={strokeOpacity}
-        strokeWidth={strokeWidth}
-        {...props}
-      >
-        <LinearGradient
-          colors={gradientConfig.colors}
-          end={gradientConfig.end}
-          positions={gradientConfig.positions ?? undefined}
-          start={gradientConfig.start}
-        />
-      </Path>
+      <>
+        {/* Render outline path first (if outlineColor is provided) */}
+        {outlineColor && (
+          <Path
+            animate={false}
+            clipOffset={strokeWidth + totalOutlineWidth}
+            d={props.d}
+            fill="none"
+            stroke={outlineColor}
+            strokeLinecap={strokeLinecap}
+            strokeLinejoin={strokeLinejoin}
+            strokeOpacity={strokeOpacity}
+            strokeWidth={strokeWidth + totalOutlineWidth}
+          />
+        )}
+        {/* Render gradient path on top */}
+        <Path
+          animate={false}
+          clipOffset={strokeWidth}
+          fill={fill}
+          stroke={stroke ?? theme.color.bgLine}
+          strokeLinecap={strokeLinecap}
+          strokeLinejoin={strokeLinejoin}
+          strokeOpacity={strokeOpacity}
+          strokeWidth={strokeWidth}
+          {...props}
+        >
+          <LinearGradient
+            colors={gradientConfig.colors}
+            end={gradientConfig.end}
+            positions={gradientConfig.positions ?? undefined}
+            start={gradientConfig.start}
+          />
+        </Path>
+      </>
     );
   },
 );

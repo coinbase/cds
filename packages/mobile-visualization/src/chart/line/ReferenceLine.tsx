@@ -30,6 +30,13 @@ export type ReferenceLineLabelProps = Pick<
   | 'verticalAlignment'
   | 'font'
   | 'opacity'
+  | 'xOffset'
+  | 'yOffset'
+  | 'elevation'
+  | 'shadowColor'
+  | 'shadowOffset'
+  | 'shadowBlur'
+  | 'shadowOpacity'
 >;
 
 type BaseReferenceLineProps = SharedProps & {
