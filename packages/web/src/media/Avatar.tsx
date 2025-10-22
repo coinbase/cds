@@ -249,7 +249,7 @@ export const Avatar = memo(
         {shape === 'hexagon' && selected && (
           <HexagonBorder offset size={size} strokeColor="currentColor" />
         )}
-        {shape === 'hexagon' && borderColor && (
+        {shape === 'hexagon' && shouldShowBorder && (
           <HexagonBorder size={size} strokeColor={`var(--color-${borderColor})`} />
         )}
       </Box>
