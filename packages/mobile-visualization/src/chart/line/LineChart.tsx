@@ -1,10 +1,9 @@
-import { forwardRef, memo, useMemo, useRef } from 'react';
+import { forwardRef, memo, useMemo } from 'react';
 import type { View } from 'react-native';
 
 import { XAxis, type XAxisProps } from '../axis/XAxis';
 import { YAxis, type YAxisProps } from '../axis/YAxis';
 import { CartesianChart, type CartesianChartProps } from '../CartesianChart';
-import { ChartText } from '../text';
 import { type AxisConfigProps, defaultChartInset, getChartInset, type Series } from '../utils';
 
 import { Line, type LineProps } from './Line';
@@ -82,8 +81,6 @@ export const LineChart = memo(
       },
       ref,
     ) => {
-      const renderCount = useRef(0);
-      renderCount.current++;
       const calculatedInset = useMemo(
         () => getChartInset(userInset, defaultChartInset),
         [userInset],
@@ -157,7 +154,6 @@ export const LineChart = memo(
           xAxis={xAxisConfig}
           yAxis={yAxisConfig}
         >
-          <ChartText x={16} y={16}>{`line chart ${renderCount.current} renders`}</ChartText>
           {/* Render axes first for grid lines to appear behind everything else */}
           {showXAxis && <XAxis {...xAxisVisualProps} />}
           {showYAxis && <YAxis axisId={yAxisId} {...yAxisVisualProps} />}

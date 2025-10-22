@@ -2044,11 +2044,12 @@ const LineChartStories = () => {
           series={[
             {
               id: 'line',
-              data: [2, 5.5, 2, -8.5, 1.5, 5],
+              data: [2, 5.5, 2, 8.5, 1.5, 5],
             },
           ]}
           xAxis={{ data: [1, 2, 3, 5, 8, 10], showLine: true, showTickMarks: true, showGrid: true }}
           yAxis={{
+            domain: { min: 0 },
             position: 'left',
             showLine: true,
             showTickMarks: true,

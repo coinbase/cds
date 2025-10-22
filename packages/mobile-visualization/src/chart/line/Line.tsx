@@ -1,11 +1,10 @@
-import React, { memo, useMemo, useRef } from 'react';
+import React, { memo, useMemo } from 'react';
 import type { SharedProps } from '@coinbase/cds-common/types';
 import { useTheme } from '@coinbase/cds-mobile';
 
 import { Area, type AreaComponent } from '../area/Area';
 import { useCartesianChartContext } from '../ChartProvider';
 import { Point, type PointConfig, type RenderPointsParams } from '../Point';
-import { ChartText } from '../text';
 import { type ChartPathCurveType, getLinePath } from '../utils';
 import { type ColorMap, evaluateColorMapAtValue, getColorMapScale } from '../utils/colorMap';
 
@@ -124,8 +123,6 @@ export const Line = memo<LineProps>(
     connectNulls = false,
     ...props
   }) => {
-    const renderCount = useRef(0);
-    renderCount.current++;
     const theme = useTheme();
     const { getSeries, getSeriesData, getXScale, getYScale, getXAxis } = useCartesianChartContext();
 
@@ -221,7 +218,6 @@ export const Line = memo<LineProps>(
 
     return (
       <>
-        <ChartText x={16} y={16 * 3}>{`line ${renderCount.current} renders`}</ChartText>
         {showArea && (
           <Area
             AreaComponent={AreaComponent}
