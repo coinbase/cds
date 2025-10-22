@@ -354,14 +354,18 @@ const YAxisDiscreteColorMap = () => {
       height={defaultChartHeight}
       series={[
         {
-          id: 'sales',
-          data: [15, 42, 58, 25, 78, 35, 62],
+          id: 'temperature',
+          data: [12, 25, 38, 52, 45, 30, 18],
           // Discrete colors based on performance thresholds
           colorMap: {
             type: 'discrete',
             axis: 'y',
-            colors: [theme.color.fgNegative, theme.color.accentBoldYellow, theme.color.fgPositive],
-            stops: [30, 60], // Red: <30, Yellow: 30-60, Green: >60
+            colors: [
+              theme.color.accentBoldGreen,
+              theme.color.accentBoldYellow,
+              theme.color.accentBoldRed,
+            ],
+            stops: [20, 40, 60], // Red: <20, Yellow: 20-40, Green: >40
           },
         },
       ]}
@@ -370,7 +374,7 @@ const YAxisDiscreteColorMap = () => {
       }}
       yAxis={{
         requestedTickCount: 5,
-        tickLabelFormatter: (value) => `$${value}k`,
+        tickLabelFormatter: (value) => `${value}°C`,
         showGrid: true,
       }}
     />
@@ -417,17 +421,17 @@ const XAxisDiscreteColorMap = () => {
       height={defaultChartHeight}
       series={[
         {
-          id: 'workweek',
-          data: [45, 52, 38, 45, 48, 30, 25],
-          // Different colors for weekdays vs weekend (based on x-position/index)
+          id: 'weekly-trend',
+          data: [45, 52, 38, 45, 48, 50, 55],
+          // Discrete color change from purple to blue at midweek
           colorMap: {
             type: 'discrete',
             axis: 'x',
             colors: [
-              theme.color.accentBoldBlue, // Weekdays (indices 0-4)
-              theme.color.accentBoldYellow, // Weekend (indices 5-6)
+              theme.color.accentBoldPurple, // First half of week
+              theme.color.accentBoldBlue, // Second half of week
             ],
-            stops: [5], // Change color at index 5 (Saturday)
+            stops: [4], // Change color at index 4 (Thursday)
           },
         },
       ]}
@@ -436,7 +440,7 @@ const XAxisDiscreteColorMap = () => {
       }}
       yAxis={{
         requestedTickCount: 5,
-        tickLabelFormatter: (value) => `${value}h`,
+        tickLabelFormatter: (value) => `${value}`,
         showGrid: true,
       }}
     />
@@ -496,7 +500,7 @@ const ColorMapWithOpacity = () => {
             type: 'continuous',
             axis: 'y',
             colors: [
-              { color: theme.color.accentBoldBlue, opacity: 0.4 }, // Low values - more transparent
+              { color: theme.color.accentBoldBlue, opacity: 0 }, // Low values - more transparent
               { color: theme.color.accentBoldBlue, opacity: 1.0 }, // High values - more opaque
             ],
           },
