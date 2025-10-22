@@ -234,7 +234,12 @@ export const BarStack = memo<BarStackProps>(
             // For x-axis colorMap, use the categoryIndex
             // For y-axis colorMap, use the actual data value
             const dataValue = axis === 'x' ? categoryIndex : top;
-            const evaluatedColor = evaluateColorMapAtValue(s.colorMap, dataValue, colorMapScale);
+            const evaluatedColor = evaluateColorMapAtValue(
+              s.colorMap,
+              dataValue,
+              colorMapScale,
+              true,
+            );
             if (evaluatedColor && !s.fill) {
               // Only apply colorMap color if fill is not explicitly set
               barFill = evaluatedColor;

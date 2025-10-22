@@ -274,6 +274,7 @@ export const Line = memo<LineProps>(
                 seriesColorMap,
                 dataValue,
                 colorMapScale,
+                true,
               );
               if (evaluatedColor) {
                 // Apply colorMap color to fill if not explicitly set

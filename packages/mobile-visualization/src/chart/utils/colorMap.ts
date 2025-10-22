@@ -452,12 +452,14 @@ const interpolateColors = (color1: string, color2: string, progress: number): st
  * @param colorMap - The ColorMap configuration
  * @param dataValue - The data value to evaluate (for band scales, this is the index)
  * @param scale - The scale to use for mapping
+ * @param includeAlpha - Whether to include alpha/opacity from the colorMap in the returned color (default: false)
  * @returns The color string at this data value, or null if invalid
  */
 export const evaluateColorMapAtValue = (
   colorMap: ColorMap,
   dataValue: number,
   scale: ColorMapScale,
+  includeAlpha: boolean = false,
 ): string | null => {
   const { colors, stops, type } = colorMap;
 
@@ -466,7 +468,8 @@ export const evaluateColorMapAtValue = (
   // Process color stops to get actual color strings with opacity
   const processedColors = colors.map((colorStop) => {
     const { color, opacity } = normalizeColorStop(colorStop);
-    return parseColor(color, opacity);
+    // If includeAlpha is false, always use full opacity
+    return parseColor(color, includeAlpha ? opacity : 1);
   });
 
   if (type === 'discrete') {

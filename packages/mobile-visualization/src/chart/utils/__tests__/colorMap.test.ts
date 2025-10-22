@@ -233,6 +233,112 @@ describe('evaluateColorMapAtValue with band scale', () => {
   });
 });
 
+describe('evaluateColorMapAtValue includeAlpha parameter', () => {
+  const linearScale = getNumericScale({
+    scaleType: 'linear',
+    domain: { min: 0, max: 100 },
+    range: { min: 0, max: 400 },
+  });
+
+  it('should exclude alpha by default (includeAlpha = false)', () => {
+    const colorMap: ColorMap = {
+      type: 'continuous',
+      colors: [
+        { color: 'red', opacity: 0.5 },
+        { color: 'blue', opacity: 0.3 },
+      ],
+    };
+
+    const color = evaluateColorMapAtValue(colorMap, 50, linearScale);
+    expect(color).toBeTruthy();
+    // Should have alpha of 1 (full opacity)
+    expect(color).toMatch(/rgba\(\s*\d+,\s*\d+,\s*\d+,\s*1\s*\)/);
+  });
+
+  it('should include alpha when includeAlpha = true', () => {
+    const colorMap: ColorMap = {
+      type: 'continuous',
+      colors: [
+        { color: 'red', opacity: 0.5 },
+        { color: 'blue', opacity: 0.5 },
+      ],
+    };
+
+    const color = evaluateColorMapAtValue(colorMap, 50, linearScale, true);
+    expect(color).toBeTruthy();
+    // Should have alpha of 0.5
+    expect(color).toMatch(/rgba\(\s*\d+,\s*\d+,\s*\d+,\s*0\.5\s*\)/);
+  });
+
+  it('should handle discrete colorMap with includeAlpha = false', () => {
+    const colorMap: ColorMap = {
+      type: 'discrete',
+      colors: [
+        { color: 'red', opacity: 0.3 },
+        { color: 'yellow', opacity: 0.6 },
+        { color: 'green', opacity: 0.9 },
+      ],
+      stops: [30, 70],
+    };
+
+    // Should return colors with full opacity
+    const color0 = evaluateColorMapAtValue(colorMap, 10, linearScale);
+    expect(color0).toMatch(/rgba\(\s*255,\s*0,\s*0,\s*1\s*\)/);
+
+    const color50 = evaluateColorMapAtValue(colorMap, 50, linearScale);
+    expect(color50).toMatch(/rgba\(\s*255,\s*255,\s*0,\s*1\s*\)/);
+
+    const color90 = evaluateColorMapAtValue(colorMap, 90, linearScale);
+    expect(color90).toMatch(/rgba\(\s*0,\s*255,\s*0,\s*1\s*\)/);
+  });
+
+  it('should handle discrete colorMap with includeAlpha = true', () => {
+    const colorMap: ColorMap = {
+      type: 'discrete',
+      colors: [
+        { color: 'red', opacity: 0.3 },
+        { color: 'yellow', opacity: 0.6 },
+        { color: 'green', opacity: 0.9 },
+      ],
+      stops: [30, 70],
+    };
+
+    // Should return colors with their specified opacity
+    const color0 = evaluateColorMapAtValue(colorMap, 10, linearScale, true);
+    expect(color0).toMatch(/rgba\(\s*255,\s*0,\s*0,\s*0\.3\s*\)/);
+
+    const color50 = evaluateColorMapAtValue(colorMap, 50, linearScale, true);
+    expect(color50).toMatch(/rgba\(\s*255,\s*255,\s*0,\s*0\.6\s*\)/);
+
+    const color90 = evaluateColorMapAtValue(colorMap, 90, linearScale, true);
+    expect(color90).toMatch(/rgba\(\s*0,\s*255,\s*0,\s*0\.9\s*\)/);
+  });
+
+  it('should handle string colors (no opacity specified) with includeAlpha = false', () => {
+    const colorMap: ColorMap = {
+      type: 'continuous',
+      colors: ['red', 'blue'],
+    };
+
+    const color = evaluateColorMapAtValue(colorMap, 50, linearScale);
+    expect(color).toBeTruthy();
+    // Should have alpha of 1 since no opacity was specified
+    expect(color).toMatch(/rgba\(\s*\d+,\s*\d+,\s*\d+,\s*1\s*\)/);
+  });
+
+  it('should handle string colors (no opacity specified) with includeAlpha = true', () => {
+    const colorMap: ColorMap = {
+      type: 'continuous',
+      colors: ['red', 'blue'],
+    };
+
+    const color = evaluateColorMapAtValue(colorMap, 50, linearScale, true);
+    expect(color).toBeTruthy();
+    // Should have alpha of 1 since no opacity was specified
+    expect(color).toMatch(/rgba\(\s*\d+,\s*\d+,\s*\d+,\s*1\s*\)/);
+  });
+});
+
 describe('processColorMap with numeric scale', () => {
   it('should process continuous colorMap with linear scale', () => {
     const linearScale = getNumericScale({
