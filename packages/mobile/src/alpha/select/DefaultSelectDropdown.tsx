@@ -51,7 +51,7 @@ const DefaultSelectDropdownBase = memo(
       ref: React.Ref<DrawerRefBaseProps>,
     ) => {
       type ValueType = Type extends 'multi'
-        ? SelectOptionValue | SelectOptionValue[]
+        ? SelectOptionValue | SelectOptionValue[] | null
         : SelectOptionValue | null;
       const isMultiSelect = type === 'multi';
 
@@ -61,13 +61,13 @@ const DefaultSelectDropdownBase = memo(
       const isSomeOptionsSelected = isMultiSelect ? (value as string[]).length > 0 : false;
 
       const toggleSelectAll = useCallback(() => {
-        if (isAllOptionsSelected) onChange(null as ValueType);
+        if (isAllOptionsSelected) onChange(null);
         else onChange(options.map((o) => o.value).filter((o) => o !== null) as ValueType);
       }, [isAllOptionsSelected, onChange, options]);
       const handleClearAll = useCallback(
         (e: GestureResponderEvent) => {
           e.stopPropagation();
-          onChange(null as ValueType);
+          onChange(null);
         },
         [onChange],
       );

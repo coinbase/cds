@@ -43,11 +43,9 @@ export const useMultiSelect = <T extends string>({
     if (value === null) return setValue([]);
     setValue((prev) => {
       if (Array.isArray(value)) {
-        const newValue = [...prev];
-        for (const v of value) {
-          if (!newValue.includes(v)) newValue.push(v);
-        }
-        return newValue;
+        const valuesToKeep = prev.filter((v) => !value.includes(v));
+        const valuesToAdd = value.filter((v) => !prev.includes(v));
+        return [...valuesToKeep, ...valuesToAdd];
       }
       if (!prev.includes(value)) return [...prev, value];
       return prev.filter((v) => v !== value);

@@ -58,9 +58,30 @@ const DefaultSelectDropdownBase = memo(
       ref: React.Ref<HTMLDivElement>,
     ) => {
       type ValueType = Type extends 'multi'
-        ? SelectOptionValue | SelectOptionValue[]
+        ? SelectOptionValue | SelectOptionValue[] | null
         : SelectOptionValue | null;
+
       const isMultiSelect = type === 'multi';
+      const isSomeOptionsSelected = isMultiSelect ? (value as string[]).length > 0 : false;
+      const isAllOptionsSelected = isMultiSelect
+        ? (value as string[]).length === options.filter((o) => o.value !== null).length
+        : false;
+
+      const toggleSelectAll = useCallback(() => {
+        if (isAllOptionsSelected) onChange(null);
+        else onChange(options.map((o) => o.value).filter((o) => o !== null) as ValueType);
+      }, [isAllOptionsSelected, onChange, options]);
+
+      const handleClearAll = useCallback(
+        (e: React.MouseEvent<HTMLButtonElement>) => {
+          e.stopPropagation();
+          onChange(null);
+        },
+        [onChange],
+      );
+
+      const handleEscPress = useCallback(() => setOpen(false), [setOpen]);
+
       const [containerWidth, setContainerWidth] = useState<number | null>(null);
 
       useEffect(() => {
@@ -84,24 +105,7 @@ const DefaultSelectDropdownBase = memo(
         [style, styles?.root, containerWidth, controlRef],
       );
 
-      const isAllOptionsSelected = isMultiSelect
-        ? (value as string[]).length === options.filter((o) => o.value !== null).length
-        : false;
-      const isSomeOptionsSelected = isMultiSelect ? (value as string[]).length > 0 : false;
-
-      const toggleSelectAll = useCallback(() => {
-        if (isAllOptionsSelected) onChange(null as ValueType);
-        else onChange(options.map((o) => o.value).filter((o) => o !== null) as ValueType);
-      }, [isAllOptionsSelected, onChange, options]);
-      const handleClearAll = useCallback(
-        (e: React.MouseEvent<HTMLButtonElement>) => {
-          e.stopPropagation();
-          onChange(null as ValueType);
-        },
-        [onChange],
-      );
-
-      const handleEscPress = useCallback(() => setOpen(false), [setOpen]);
+      const indeterminate = !isAllOptionsSelected && isSomeOptionsSelected ? true : false;
 
       const SelectAllOption = useMemo(
         () => (
@@ -132,6 +136,7 @@ const DefaultSelectDropdownBase = memo(
               )
             }
             disabled={disabled}
+            indeterminate={indeterminate}
             label={`${selectAllLabel} (${options.filter((o) => o.value !== null).length})`}
             media={
               media ?? (
@@ -139,7 +144,7 @@ const DefaultSelectDropdownBase = memo(
                   readOnly
                   checked={isAllOptionsSelected}
                   iconStyle={{ opacity: 1 }}
-                  indeterminate={!isAllOptionsSelected && isSomeOptionsSelected ? true : false}
+                  indeterminate={indeterminate}
                   tabIndex={-1}
                 />
               )

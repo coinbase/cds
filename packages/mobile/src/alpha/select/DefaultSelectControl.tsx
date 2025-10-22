@@ -63,7 +63,7 @@ export const DefaultSelectControlBase = memo(
       ref: React.Ref<TouchableOpacity>,
     ) => {
       type ValueType = Type extends 'multi'
-        ? SelectOptionValue | SelectOptionValue[]
+        ? SelectOptionValue | SelectOptionValue[] | null
         : SelectOptionValue | null;
       const shouldShowCompactLabel = compact && label;
       const hasValue = value !== null && !(Array.isArray(value) && value.length === 0);
@@ -128,20 +128,29 @@ export const DefaultSelectControlBase = memo(
             .filter(Boolean) as SelectOption<SelectOptionValue>[];
           return (
             <HStack flexWrap="wrap" gap={1}>
-              {optionsToShow.map((option) => (
-                <InputChip
-                  key={option.value}
-                  accessibilityLabel={`${removeSelectedOptionAccessibilityLabel} ${option.label ?? option.description ?? option.value ?? ''}`}
-                  disabled={option.disabled}
-                  invertColorScheme={false}
-                  label={option.label ?? option.description ?? option.value ?? ''}
-                  maxWidth={200}
-                  onPress={(event) => {
-                    event?.stopPropagation();
-                    onChange?.(option.value as ValueType);
-                  }}
-                />
-              ))}
+              {optionsToShow.map((option) => {
+                const accessibilityLabel =
+                  typeof option.label === 'string'
+                    ? option.label
+                    : typeof option.description === 'string'
+                      ? option.description
+                      : (option.value ?? '');
+                return (
+                  <InputChip
+                    key={option.value}
+                    accessibilityLabel={`${removeSelectedOptionAccessibilityLabel} ${accessibilityLabel}`}
+                    disabled={option.disabled}
+                    invertColorScheme={false}
+                    maxWidth={200}
+                    onPress={(event) => {
+                      event?.stopPropagation();
+                      onChange?.(option.value as ValueType);
+                    }}
+                  >
+                    {option.label ?? option.description ?? option.value ?? ''}
+                  </InputChip>
+                );
+              })}
               {value.length - maxSelectedOptionsToShow > 0 && (
                 <Chip>
                   <Text font="headline">{`+${value.length - maxSelectedOptionsToShow} ${hiddenSelectedOptionsLabel}`}</Text>

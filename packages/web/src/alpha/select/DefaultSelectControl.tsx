@@ -76,7 +76,7 @@ const DefaultSelectControlBase = memo(
       ref: React.Ref<HTMLElement>,
     ) => {
       type ValueType = Type extends 'multi'
-        ? SelectOptionValue | SelectOptionValue[]
+        ? SelectOptionValue | SelectOptionValue[] | null
         : SelectOptionValue | null;
       const shouldShowCompactLabel = compact && label;
       const isMultiSelect = type === 'multi';
@@ -178,18 +178,27 @@ const DefaultSelectControlBase = memo(
             .filter(Boolean) as SelectOption[];
           return (
             <>
-              {optionsToShow.map((option, index) => (
-                <InputChip
-                  key={option.value}
-                  data-selected-value
-                  accessibilityLabel={`${removeSelectedOptionAccessibilityLabel} ${option.label ?? option.description ?? option.value ?? ''}`}
-                  disabled={option.disabled}
-                  invertColorScheme={false}
-                  label={option.label ?? option.description ?? option.value ?? ''}
-                  maxWidth={200}
-                  onClick={(event) => handleUnselectValue(event, index)}
-                />
-              ))}
+              {optionsToShow.map((option, index) => {
+                const accessibilityLabel =
+                  typeof option.label === 'string'
+                    ? option.label
+                    : typeof option.description === 'string'
+                      ? option.description
+                      : (option.value ?? '');
+                return (
+                  <InputChip
+                    key={option.value}
+                    data-selected-value
+                    accessibilityLabel={`${removeSelectedOptionAccessibilityLabel} ${accessibilityLabel}`}
+                    disabled={option.disabled}
+                    invertColorScheme={false}
+                    maxWidth={200}
+                    onClick={(event) => handleUnselectValue(event, index)}
+                  >
+                    {option.label ?? option.description ?? option.value ?? ''}
+                  </InputChip>
+                );
+              })}
               {value.length - maxSelectedOptionsToShow > 0 && (
                 <Chip>{`+${value.length - maxSelectedOptionsToShow} ${hiddenSelectedOptionsLabel}`}</Chip>
               )}

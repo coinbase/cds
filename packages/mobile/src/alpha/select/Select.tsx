@@ -42,7 +42,7 @@ export type SelectOptionProps<
     /** Whether this is for single or multi-select */
     type?: Type;
     /** Whether this option is currently selected */
-    selected: boolean;
+    selected?: boolean;
     /** Whether the option is in an indeterminate state (for multi-select) */
     indeterminate?: boolean;
     /** Whether to allow multiline text in the option */
@@ -97,7 +97,7 @@ type SelectState<Type extends SelectType = 'single', SelectOptionValue extends s
   value: Type extends 'multi' ? SelectOptionValue[] : SelectOptionValue | null;
   onChange: (
     value: Type extends 'multi'
-      ? SelectOptionValue | SelectOptionValue[]
+      ? SelectOptionValue | SelectOptionValue[] | null
       : SelectOptionValue | null,
   ) => void;
 };

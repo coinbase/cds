@@ -27,7 +27,6 @@ export const defaultAccessibilityRoles: SelectDropdownProps['accessibilityRoles'
 
 export type SelectType = 'single' | 'multi';
 
-// TO DO: Should we allow more customization here?
 /**
  * Configuration for a single option in the Select component
  */
@@ -57,6 +56,8 @@ export type SelectOptionProps<
     type?: Type;
     /** Whether this option is currently selected */
     selected?: boolean;
+    /** Whether the option is in an indeterminate state (for multi-select) */
+    indeterminate?: boolean;
     /** Whether to allow multiline text in the option */
     multiline?: boolean;
     /** ARIA role for the option element */
@@ -120,7 +121,7 @@ type SelectState<Type extends SelectType = 'single', SelectOptionValue extends s
   value: Type extends 'multi' ? SelectOptionValue[] : SelectOptionValue | null;
   onChange: (
     value: Type extends 'multi'
-      ? SelectOptionValue | SelectOptionValue[]
+      ? SelectOptionValue | SelectOptionValue[] | null
       : SelectOptionValue | null,
   ) => void;
 };
@@ -348,7 +349,10 @@ export type SelectBaseProps<
     /** Whether the select allows single or multiple selections */
     type?: Type;
     /** Array of options to display in the select dropdown */
-    options: SelectOption<SelectOptionValue>[];
+    options: (SelectOption<SelectOptionValue> & {
+      /** Custom component to render the option */
+      Component?: SelectOptionComponent<Type, SelectOptionValue>;
+    })[];
     /** Controlled open state of the dropdown */
     open?: boolean;
     /** Callback to update the open state */
