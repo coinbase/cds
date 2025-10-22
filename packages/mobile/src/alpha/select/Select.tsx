@@ -280,7 +280,10 @@ export type SelectBaseProps<
     /** Whether the select allows single or multiple selections */
     type?: Type;
     /** Array of options to display in the select dropdown */
-    options: SelectOption<SelectOptionValue>[];
+    options: (SelectOption<SelectOptionValue> & {
+      /** Custom component to render the option */
+      Component?: SelectOptionComponent<Type, SelectOptionValue>;
+    })[];
     /** Controlled open state of the dropdown */
     open?: boolean;
     /** Callback to update the open state */

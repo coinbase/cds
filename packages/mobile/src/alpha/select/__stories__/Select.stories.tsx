@@ -469,6 +469,38 @@ const WithOptionsAsReactNodesExample = () => {
   );
 };
 
+const MixedDefaultAndCustomComponentOptions = () => {
+  const CustomOptionComponent: SelectOptionComponent = ({ value, onPress }) => {
+    return (
+      <HStack justifyContent="center">
+        <Spinner size={4} />
+        <Button transparent onPress={() => onPress?.(value)}>
+          {value ?? 'Empty value'}
+        </Button>
+        <Spinner size={4} />
+      </HStack>
+    );
+  };
+  const exampleOptionsWithCustomComponents = [
+    { value: null, label: 'Remove selection' },
+    { value: '1', label: 'Option 1', Component: CustomOptionComponent },
+    { value: '2', label: 'Option 2' },
+    { value: '3', label: 'Option 3', Component: CustomOptionComponent },
+    { value: '4', label: 'Option 4' },
+  ];
+  const [value, setValue] = useState<string | null>('1');
+
+  return (
+    <Select
+      label="Single select - mixed default and custom component options"
+      onChange={setValue}
+      options={exampleOptionsWithCustomComponents}
+      placeholder="Empty value"
+      value={value}
+    />
+  );
+};
+
 const CustomControlComponent = () => {
   const [value, setValue] = useState<string | null>('1');
 
@@ -495,7 +527,7 @@ const CustomOptionComponent = () => {
     return (
       <HStack justifyContent="center">
         <Spinner size={4} />
-        <Button transparent onPress={() => onPress?.(value)} width="80%">
+        <Button transparent onPress={() => onPress?.(value)}>
           <Text>{value ?? 'Empty value'}</Text>
         </Button>
         <Spinner size={4} />
@@ -1096,6 +1128,9 @@ const SelectV3Screen = () => {
       </Example>
       <Example title="With Options as React Nodes">
         <WithOptionsAsReactNodesExample />
+      </Example>
+      <Example title="With Mixed Default and Custom Component Options">
+        <MixedDefaultAndCustomComponentOptions />
       </Example>
       <Example title="With Custom Control Component">
         <CustomControlComponent />
