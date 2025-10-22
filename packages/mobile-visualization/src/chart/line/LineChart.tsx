@@ -100,6 +100,8 @@ export const LineChart = memo(
             data: s.data,
             label: s.label,
             color: s.color,
+            colorMap: s.colorMap,
+            yAxisId: s.yAxisId,
           }),
         );
       }, [series]);

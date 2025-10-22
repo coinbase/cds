@@ -98,6 +98,7 @@ export const AreaChart = memo(
             data: s.data,
             label: s.label,
             color: s.color,
+            colorMap: s.colorMap,
             yAxisId: s.yAxisId,
             stackId: s.stackId,
           }),

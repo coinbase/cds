@@ -1992,6 +1992,29 @@ const LineChartStories = () => {
           <Scrubber />
         </CartesianChart>
       </Example>
+      <Example title="Basic 4 Line">
+        <LineChart
+          enableScrubbing
+          curve="bump"
+          height={defaultChartHeight}
+          series={[
+            {
+              id: 'prices',
+              data: data,
+              color: theme.color.fgPositive,
+              colorMap: {
+                axis: 'x',
+                type: 'continuous',
+                colors: ['#ff0000', '#00ff00'],
+                stops: [15, data.length - 15],
+              },
+            },
+          ]}
+          type="gradient"
+        >
+          <Scrubber />
+        </LineChart>
+      </Example>
       {/* <Example title="Simple">
         <LineChart
           curve="monotone"
