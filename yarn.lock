@@ -2708,6 +2708,7 @@ __metadata:
     "@babel/preset-react": "npm:^7.27.1"
     "@babel/preset-typescript": "npm:^7.27.1"
     "@docusaurus/types": "npm:^3.7.0"
+    "@types/express": "npm:^4.17.21"
   languageName: unknown
   linkType: soft
 
