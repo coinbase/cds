@@ -97,6 +97,9 @@ export const LineChart = memo(
             data: s.data,
             label: s.label,
             color: s.color,
+            yAxisId: s.yAxisId,
+            stackId: s.stackId,
+            colorMap: s.colorMap,
           }),
         );
       }, [series]);

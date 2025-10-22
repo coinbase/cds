@@ -2072,6 +2072,30 @@ const LineChartStories = () => {
           type="dotted"
         />
       </Example>*/}
+      <Example title="ColorMap - Discrete Thresholds">
+        <LineChart
+          enableScrubbing
+          showArea
+          showXAxis
+          showYAxis
+          AreaComponent={(props) => <GradientArea {...props} opacity={0.5} />}
+          height={defaultChartHeight}
+          series={[
+            {
+              id: 'line',
+              data: [5, 10, 15, 25, 35, 45, 25, 15, 35],
+              type: 'gradient',
+              colorMap: {
+                type: 'discrete',
+                stops: [20, 30],
+                colors: ['#ef4444', '#f59e0b', '#10b981'],
+              },
+            },
+          ]}
+        >
+          <Scrubber />
+        </LineChart>
+      </Example>
       <Example title="Connect Nulls">
         <ConnectNullsChart />
       </Example>

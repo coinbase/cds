@@ -2,7 +2,7 @@ import React, { memo, useMemo } from 'react';
 import type { SVGProps } from 'react';
 
 import { useCartesianChartContext } from '../ChartProvider';
-import { type ChartPathCurveType, getAreaPath } from '../utils';
+import { type ChartPathCurveType, type ColorMap, getAreaPath } from '../utils';
 
 import { DottedArea } from './DottedArea';
 import { GradientArea } from './GradientArea';
@@ -25,6 +25,15 @@ export type AreaComponentProps = {
    * When set, overrides the default baseline.
    */
   baseline?: number;
+  /**
+   * Series ID - passed to area components that support colorMap.
+   */
+  seriesId?: string;
+  /**
+   * Color mapping configuration.
+   * When provided, creates gradient or threshold-based coloring.
+   */
+  colorMap?: ColorMap;
 };
 
 export type AreaComponent = React.FC<AreaComponentProps>;
@@ -57,6 +66,11 @@ export type AreaProps = Pick<
    * By default, null values create gaps in the area.
    */
   connectNulls?: boolean;
+  /**
+   * Color mapping configuration.
+   * When provided, overrides the series colorMap and creates gradient or threshold-based coloring.
+   */
+  colorMap?: ColorMap;
 };
 
 export const Area = memo<AreaProps>(
@@ -71,11 +85,15 @@ export const Area = memo<AreaProps>(
     strokeWidth,
     baseline,
     connectNulls,
+    colorMap: colorMapProp,
   }) => {
     const { getSeries, getSeriesData, getXScale, getYScale, getXAxis } = useCartesianChartContext();
 
     // Get sourceData from series (using stacked data if available)
     const matchedSeries = useMemo(() => getSeries(seriesId), [seriesId, getSeries]);
+    const seriesColorMap = matchedSeries?.colorMap;
+    // Use prop colorMap if provided, otherwise use series colorMap
+    const effectiveColorMap = colorMapProp ?? seriesColorMap;
 
     // Check for stacked data first, then fall back to raw data
     const sourceData = useMemo(() => {
@@ -135,9 +153,11 @@ export const Area = memo<AreaProps>(
     return (
       <AreaComponent
         baseline={baseline}
+        colorMap={effectiveColorMap}
         d={area}
         fill={fill}
         fillOpacity={fillOpacity}
+        seriesId={seriesId}
         stroke={stroke}
         strokeWidth={strokeWidth}
         yAxisId={matchedSeries?.yAxisId}

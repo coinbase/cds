@@ -1,4 +1,4 @@
-import { forwardRef, memo, useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
+import { forwardRef, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { assets } from '@coinbase/cds-common/internal/data/assets';
 import { candles as btcCandles } from '@coinbase/cds-common/internal/data/candles';
 import { prices } from '@coinbase/cds-common/internal/data/prices';
@@ -23,6 +23,7 @@ import { m as motion } from 'framer-motion';
 
 import {
   type ChartTextChildren,
+  type ColorMap,
   LiveTabLabel,
   PeriodSelector,
   PeriodSelectorActiveIndicator,
@@ -1235,58 +1236,9 @@ const Example: React.FC<
 };
 
 const GainLossChart = () => {
-  const gradientId = useId();
-
   const data = [-40, -28, -21, -5, 48, -5, -28, 2, -29, -46, 16, -30, -29, 8];
-
-  const ChartDefs = ({ threshold = 0 }) => {
-    const { getYScale } = useCartesianChartContext();
-    // get the default y-axis scale
-    const yScale = getYScale();
-
-    if (yScale) {
-      const domain = yScale.domain();
-      const range = yScale.range();
-
-      const baselinePercentage = ((threshold - domain[0]) / (domain[1] - domain[0])) * 100;
-
-      const negativeColor = 'rgb(var(--gray15))';
-      const positiveColor = 'var(--color-fgPositive)';
-
-      return (
-        <defs>
-          <linearGradient
-            gradientUnits="userSpaceOnUse"
-            id={`${gradientId}-solid`}
-            x1="0%"
-            x2="0%"
-            y1={range[0]}
-            y2={range[1]}
-          >
-            <stop offset="0%" stopColor={negativeColor} />
-            <stop offset={`${baselinePercentage}%`} stopColor={negativeColor} />
-            <stop offset={`${baselinePercentage}%`} stopColor={positiveColor} />
-            <stop offset="100%" stopColor={positiveColor} />
-          </linearGradient>
-          <linearGradient
-            gradientUnits="userSpaceOnUse"
-            id={`${gradientId}-gradient`}
-            x1="0%"
-            x2="0%"
-            y1={range[0]}
-            y2={range[1]}
-          >
-            <stop offset="0%" stopColor={negativeColor} stopOpacity={0.3} />
-            <stop offset={`${baselinePercentage}%`} stopColor={negativeColor} stopOpacity={0} />
-            <stop offset={`${baselinePercentage}%`} stopColor={positiveColor} stopOpacity={0} />
-            <stop offset="100%" stopColor={positiveColor} stopOpacity={0.3} />
-          </linearGradient>
-        </defs>
-      );
-    }
-
-    return null;
-  };
+  const negativeColor = `rgb(var(--gray15))`;
+  const positiveColor = 'var(--color-fgPositive)';
 
   const tickLabelFormatter = useCallback(
     (value: number) =>
@@ -1298,7 +1250,29 @@ const GainLossChart = () => {
     [],
   );
 
-  const solidColor = `url(#${gradientId}-solid)`;
+  // Calculate min/max for the area colorMap with opacity fade
+  const minValue = Math.min(...data);
+  const maxValue = Math.max(...data);
+
+  // Line colorMap: discrete color change at 0 (full opacity for line)
+  const lineColorMap = {
+    type: 'discrete' as const,
+    stops: [0],
+    colors: [negativeColor, positiveColor],
+  };
+
+  // Area colorMap: combines discrete color change with continuous opacity fade
+  // Creates a diverging gradient with proper colors on each side
+  const areaColorMap: ColorMap = {
+    type: 'continuous',
+    colors: [
+      { color: negativeColor, opacity: 0.3 }, // Peak negative (most opaque)
+      { color: negativeColor, opacity: 0 }, // Baseline negative
+      { color: positiveColor, opacity: 0 }, // Baseline positive
+      { color: positiveColor, opacity: 0.3 }, // Peak positive (most opaque)
+    ],
+    stops: [minValue, 0, 0, maxValue],
+  };
 
   return (
     <CartesianChart
@@ -1309,14 +1283,19 @@ const GainLossChart = () => {
         {
           id: 'prices',
           data: data,
-          color: solidColor,
+          colorMap: lineColorMap,
         },
       ]}
     >
-      <ChartDefs />
       <YAxis showGrid requestedTickCount={2} tickLabelFormatter={tickLabelFormatter} />
-      <Area curve="monotone" fill={`url(#${gradientId}-gradient)`} seriesId="prices" />
-      <Line curve="monotone" seriesId="prices" stroke={solidColor} strokeWidth={3} />
+      <Line
+        showArea
+        AreaComponent={(props) => <GradientArea {...props} colorMap={areaColorMap} />}
+        curve="monotone"
+        seriesId="prices"
+        strokeWidth={3}
+        type="gradient"
+      />
       <Scrubber hideOverlay />
     </CartesianChart>
   );
@@ -1716,10 +1695,238 @@ const ConnectNullsChart = () => {
   );
 };
 
+export const ColorMapStories = () => {
+  return (
+    <VStack gap={4}>
+      <Example
+        description={
+          <Text color="fgMuted" font="body">
+            Continuous colorMap with two colors. Should transition smoothly from red (low values) to
+            green (high values).
+          </Text>
+        }
+        title="ColorMap - Continuous (2 colors)"
+      >
+        <LineChart
+          enableScrubbing
+          showArea
+          showXAxis
+          showYAxis
+          height={300}
+          series={[
+            {
+              id: 'line',
+              data: [10, 25, 15, 35, 20, 40, 30, 45],
+              type: 'gradient',
+              colorMap: {
+                type: 'continuous',
+                colors: ['var(--color-fgNegative)', 'var(--color-fgPositive)'],
+              },
+            },
+          ]}
+        >
+          <Scrubber />
+        </LineChart>
+      </Example>
+      <Example
+        description={
+          <Text color="fgMuted" font="body">
+            Discrete colorMap with threshold at 20 and 30. Values &lt;20 should be red, 20-30 should
+            be yellow, &gt;30 should be green.
+          </Text>
+        }
+        title="ColorMap - Discrete Thresholds"
+      >
+        <LineChart
+          enableScrubbing
+          showArea
+          showXAxis
+          showYAxis
+          height={300}
+          series={[
+            {
+              id: 'line',
+              data: [5, 10, 15, 16.75, 17, 20, 25, 35, 45, 25, 15, 35],
+              type: 'gradient',
+              colorMap: {
+                type: 'discrete',
+                stops: [20, 30],
+                colors: ['#ef4444', '#f59e0b', '#10b981'],
+              },
+            },
+          ]}
+        >
+          <Scrubber />
+        </LineChart>
+      </Example>
+      <Example
+        description={
+          <Text color="fgMuted" font="body">
+            Continuous colorMap with custom stop positions. Blue at 10, purple at 40, pink at 80.
+          </Text>
+        }
+        title="ColorMap - Custom Stops"
+      >
+        <LineChart
+          enableScrubbing
+          showArea
+          showXAxis
+          showYAxis
+          height={300}
+          series={[
+            {
+              id: 'line',
+              data: [10, 20, 30, 40, 50, 60, 70, 80],
+              type: 'gradient',
+              colorMap: {
+                type: 'continuous',
+                colors: ['#3b82f6', '#8b5cf6', '#ec4899'],
+                stops: [10, 40, 80],
+              },
+            },
+          ]}
+        >
+          <Scrubber />
+        </LineChart>
+      </Example>
+      <Example
+        description={
+          <Text color="fgMuted" font="body">
+            Continuous colorMap with opacity values. Both colors have 80% opacity.
+          </Text>
+        }
+        title="ColorMap - With Opacity"
+      >
+        <LineChart
+          enableScrubbing
+          showArea
+          showXAxis
+          showYAxis
+          height={300}
+          series={[
+            {
+              id: 'line',
+              data: [10, 30, 20, 40, 35, 50, 45, 60],
+              type: 'gradient',
+              colorMap: {
+                type: 'continuous',
+                colors: [
+                  { color: 'var(--color-fgNegative)', opacity: 0.8 },
+                  { color: 'var(--color-fgPositive)', opacity: 0.8 },
+                ],
+              },
+            },
+          ]}
+        >
+          <Scrubber labelProps={{ elevation: 1 }} />
+        </LineChart>
+      </Example>
+      <Example
+        description={
+          <Text color="fgMuted" font="body">
+            Two series with different colorMaps. First series (red-yellow) and second series
+            (blue-green).
+          </Text>
+        }
+        title="ColorMap - Multiple Series"
+      >
+        <LineChart
+          enableScrubbing
+          showXAxis
+          showYAxis
+          height={300}
+          series={[
+            {
+              id: 'series1',
+              data: [20, 35, 25, 45, 30, 50, 40, 55],
+              type: 'gradient',
+              colorMap: {
+                type: 'continuous',
+                colors: ['#ef4444', '#f59e0b'],
+              },
+            },
+            {
+              id: 'series2',
+              data: [10, 25, 15, 35, 20, 40, 30, 45],
+              type: 'gradient',
+              colorMap: {
+                type: 'continuous',
+                colors: ['#3b82f6', '#10b981'],
+              },
+            },
+          ]}
+        >
+          <Scrubber />
+        </LineChart>
+      </Example>
+      <Example
+        description={
+          <Text color="fgMuted" font="body">
+            Using OKLCH color space for perceptually uniform gradients. Should show smoother
+            transition from red to blue.
+          </Text>
+        }
+        title="ColorMap - OKLCH Color Space"
+      >
+        <LineChart
+          enableScrubbing
+          showArea
+          showXAxis
+          showYAxis
+          height={300}
+          series={[
+            {
+              id: 'line',
+              data: [10, 25, 15, 35, 20, 40, 30, 45],
+              type: 'gradient',
+              colorMap: {
+                type: 'continuous',
+                colors: ['#ff0000', '#0000ff'],
+                colorSpace: 'oklch',
+              },
+            },
+          ]}
+        >
+          <Scrubber />
+        </LineChart>
+      </Example>
+      <Example
+        description={
+          <Text color="fgMuted" font="body">
+            Testing scrubber beacon colors with colorMap. The beacon should match the color of the
+            line at that position.
+          </Text>
+        }
+        title="ColorMap - Scrubber Beacon Test"
+      >
+        <LineChart
+          enableScrubbing
+          showXAxis
+          showYAxis
+          height={300}
+          series={[
+            {
+              id: 'line',
+              data: [-40, -28, -21, -5, 8, 15, 25, 35],
+              type: 'gradient',
+              colorMap: {
+                type: 'continuous',
+                colors: ['var(--color-fgNegative)', 'var(--color-fgPositive)'],
+              },
+            },
+          ]}
+        >
+          <Scrubber />
+        </LineChart>
+      </Example>
+    </VStack>
+  );
+};
+
 export const All = () => {
   return (
     <VStack gap={2}>
-      <Example title="Basic">
+      {/*<Example title="Basic">
         <LineChart
           enableScrubbing
           showArea
@@ -1753,11 +1960,11 @@ export const All = () => {
       </Example>
       <Example title="Compact">
         <CompactLineChart />
-      </Example>
+      </Example>*/}
       <Example title="Gain/Loss">
         <GainLossChart />
       </Example>
-      <Example title="Connect Nulls">
+      {/*<Example title="Connect Nulls">
         <ConnectNullsChart />
       </Example>
       <Example title="Multiple Series">
@@ -1870,6 +2077,148 @@ export const All = () => {
       <Example title="Bitcoin Chart With Scrubber Beacon">
         <BitcoinChartWithScrubberBeacon />
       </Example>
+      <Example title="ColorMap - Continuous">
+        <LineChart
+          enableScrubbing
+          showXAxis
+          showYAxis
+          height={300}
+          series={[
+            {
+              id: 'line',
+              data: [10, 25, 15, 35, 20, 40, 30, 45],
+              type: 'gradient',
+              colorMap: {
+                type: 'continuous',
+                colors: ['var(--color-fgNegative)', 'var(--color-fgPositive)'],
+              },
+            },
+          ]}
+        >
+          <Scrubber />
+        </LineChart>
+      </Example>
+      <Example title="ColorMap - Discrete Thresholds">
+        <LineChart
+          enableScrubbing
+          showXAxis
+          showYAxis
+          height={300}
+          series={[
+            {
+              id: 'line',
+              data: [5, 10, 15, 25, 35, 45, 25, 15, 35],
+              type: 'gradient',
+              colorMap: {
+                type: 'discrete',
+                stops: [20, 30],
+                colors: ['#ef4444', '#f59e0b', '#10b981'],
+              },
+            },
+          ]}
+        >
+          <Scrubber />
+        </LineChart>
+      </Example>
+      <Example title="ColorMap - Custom Stops">
+        <LineChart
+          enableScrubbing
+          showXAxis
+          showYAxis
+          height={300}
+          series={[
+            {
+              id: 'line',
+              data: [10, 20, 30, 40, 50, 60, 70, 80],
+              type: 'gradient',
+              colorMap: {
+                type: 'continuous',
+                colors: ['#3b82f6', '#8b5cf6', '#ec4899'],
+                stops: [10, 40, 80],
+              },
+            },
+          ]}
+        >
+          <Scrubber />
+        </LineChart>
+      </Example>
+      <Example title="ColorMap - With Opacity">
+        <LineChart
+          enableScrubbing
+          showArea
+          showXAxis
+          showYAxis
+          height={300}
+          series={[
+            {
+              id: 'line',
+              data: [10, 30, 20, 40, 35, 50, 45, 60],
+              type: 'gradient',
+              colorMap: {
+                type: 'continuous',
+                colors: [
+                  { color: 'var(--color-fgNegative)', opacity: 0.8 },
+                  { color: 'var(--color-fgPositive)', opacity: 0.8 },
+                ],
+              },
+            },
+          ]}
+        >
+          <Scrubber labelProps={{ elevation: 1 }} />
+        </LineChart>
+      </Example>
+      <Example title="ColorMap - Multiple Series">
+        <LineChart
+          enableScrubbing
+          showXAxis
+          showYAxis
+          height={300}
+          series={[
+            {
+              id: 'series1',
+              data: [20, 35, 25, 45, 30, 50, 40, 55],
+              type: 'gradient',
+              colorMap: {
+                type: 'continuous',
+                colors: ['#ef4444', '#f59e0b'],
+              },
+            },
+            {
+              id: 'series2',
+              data: [10, 25, 15, 35, 20, 40, 30, 45],
+              type: 'gradient',
+              colorMap: {
+                type: 'continuous',
+                colors: ['#3b82f6', '#10b981'],
+              },
+            },
+          ]}
+        >
+          <Scrubber />
+        </LineChart>
+      </Example>
+      <Example title="ColorMap - OKLCH Color Space">
+        <LineChart
+          enableScrubbing
+          showXAxis
+          showYAxis
+          height={300}
+          series={[
+            {
+              id: 'line',
+              data: [10, 25, 15, 35, 20, 40, 30, 45],
+              type: 'gradient',
+              colorMap: {
+                type: 'continuous',
+                colors: ['#ff0000', '#0000ff'],
+                colorSpace: 'oklch',
+              },
+            },
+          ]}
+        >
+          <Scrubber />
+        </LineChart>
+      </Example>*/}
     </VStack>
   );
 };

@@ -7,7 +7,7 @@ import { Area, type AreaComponent } from '../area/Area';
 import { axisTickLabelsInitialAnimationVariants } from '../axis';
 import { useCartesianChartContext } from '../ChartProvider';
 import { Point, type PointConfig, type RenderPointsParams } from '../Point';
-import { type ChartPathCurveType, getLinePath } from '../utils';
+import { type ChartPathCurveType, type ColorMap, getLinePath } from '../utils';
 
 import { DottedLine } from './DottedLine';
 import { GradientLine } from './GradientLine';
@@ -23,6 +23,20 @@ export type LineComponentProps = {
   className?: string;
   style?: React.CSSProperties;
   clipPath?: string;
+  /**
+   * Color mapping configuration.
+   * When provided, creates gradient or threshold-based coloring.
+   */
+  colorMap?: ColorMap;
+  /**
+   * Series ID - used to retrieve colorMap from series if not provided directly.
+   */
+  seriesId?: string;
+  /**
+   * Y-axis ID to use for calculating color positions.
+   * Only needed when using colorMap with multiple y-axes.
+   */
+  yAxisId?: string;
 };
 
 export type LineComponent = React.FC<LineComponentProps>;
@@ -117,6 +131,7 @@ export const Line = memo<LineProps>(
       useCartesianChartContext();
 
     const matchedSeries = getSeries(seriesId);
+    const seriesColorMap = matchedSeries?.colorMap;
 
     const sourceData = useMemo(() => {
       const stackedData = getSeriesData(seriesId);
@@ -209,6 +224,7 @@ export const Line = memo<LineProps>(
           <Area
             AreaComponent={AreaComponent}
             baseline={areaBaseline}
+            colorMap={seriesColorMap}
             connectNulls={connectNulls}
             curve={curve}
             fill={stroke}
@@ -217,7 +233,15 @@ export const Line = memo<LineProps>(
             type={areaType}
           />
         )}
-        <LineComponent d={path} stroke={stroke} strokeOpacity={opacity} {...props} />
+        <LineComponent
+          colorMap={seriesColorMap}
+          d={path}
+          seriesId={seriesId}
+          stroke={stroke}
+          strokeOpacity={opacity}
+          yAxisId={matchedSeries?.yAxisId}
+          {...props}
+        />
         {renderPoints && (
           <motion.g
             data-component="line-points-group"

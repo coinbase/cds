@@ -1,5 +1,7 @@
 import { stack as d3Stack, stackOffsetDiverging, stackOrderNone } from 'd3-shape';
 
+import type { ColorMap } from './colorMap';
+
 export const defaultStackId = 'DEFAULT_STACK_ID';
 
 export type AxisBounds = {
@@ -47,6 +49,11 @@ export type Series = {
    * If not specified, the series will not be stacked.
    */
   stackId?: string;
+  /**
+   * Color mapping configuration for the series.
+   * When provided, creates gradient or threshold-based coloring.
+   */
+  colorMap?: ColorMap;
 };
 
 /**

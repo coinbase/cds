@@ -515,6 +515,207 @@ export const All = () => {
       <Example title="Candlestick Chart">
         <Candlesticks />
       </Example>
+      <Example
+        description={
+          <Text color="fgMuted" font="body">
+            Simple gain/loss chart. Bars below zero are red (negative), bars at or above zero are
+            green (positive). Uses discrete colorMap with threshold at 0.
+          </Text>
+        }
+        title="ColorMap - Gain/Loss"
+      >
+        <BarChart
+          showXAxis
+          showYAxis
+          height={300}
+          series={[
+            {
+              id: 'profit',
+              data: [-40, -28, 15, -5, 48, -12, 22, -8, 35, -18, 42, -3],
+              colorMap: {
+                type: 'discrete',
+                axis: 'y',
+                stops: [0],
+                colors: ['var(--color-fgNegative)', 'var(--color-fgPositive)'],
+              },
+            },
+          ]}
+          xAxis={{
+            data: [
+              'Jan',
+              'Feb',
+              'Mar',
+              'Apr',
+              'May',
+              'Jun',
+              'Jul',
+              'Aug',
+              'Sep',
+              'Oct',
+              'Nov',
+              'Dec',
+            ],
+          }}
+          yAxis={{
+            requestedTickCount: 5,
+            tickLabelFormatter: (value) => `$${value}k`,
+            showGrid: true,
+          }}
+        />
+      </Example>
+      <Example
+        description={
+          <Text color="fgMuted" font="body">
+            Continuous colorMap applied to bars. Each bar&apos;s color is determined by its value,
+            transitioning smoothly from red (low) to yellow (mid) to green (high).
+          </Text>
+        }
+        title="ColorMap - Continuous (Y-Axis)"
+      >
+        <BarChart
+          showXAxis
+          showYAxis
+          height={300}
+          series={[
+            {
+              id: 'temperature',
+              data: [12, 25, 38, 52, 45, 30, 18],
+              colorMap: {
+                type: 'continuous',
+                axis: 'y',
+                colors: [
+                  'var(--color-accentBoldGreen)',
+                  'var(--color-accentBoldYellow)',
+                  'var(--color-accentBoldRed)',
+                ],
+              },
+            },
+          ]}
+          xAxis={{
+            data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+          }}
+          yAxis={{
+            requestedTickCount: 5,
+            tickLabelFormatter: (value) => `${value}°C`,
+            showGrid: true,
+          }}
+        />
+      </Example>
+      <Example
+        description={
+          <Text color="fgMuted" font="body">
+            Discrete colorMap with thresholds at 30 and 45. Bars below 30 are green (cool), 30-45
+            are yellow (warm), and above 45 are red (hot).
+          </Text>
+        }
+        title="ColorMap - Discrete Thresholds (Y-Axis)"
+      >
+        <BarChart
+          showXAxis
+          showYAxis
+          height={300}
+          series={[
+            {
+              id: 'temperature',
+              data: [25, 32, 48, 52, 29, 38, 22],
+              colorMap: {
+                type: 'discrete',
+                axis: 'y',
+                stops: [30, 45],
+                colors: [
+                  'var(--color-accentBoldGreen)',
+                  'var(--color-accentBoldYellow)',
+                  'var(--color-accentBoldRed)',
+                ],
+              },
+            },
+          ]}
+          xAxis={{
+            data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+          }}
+          yAxis={{
+            requestedTickCount: 5,
+            tickLabelFormatter: (value) => `${value}°C`,
+            showGrid: true,
+          }}
+        />
+      </Example>
+      <Example
+        description={
+          <Text color="fgMuted" font="body">
+            ColorMap applied on X-axis (category index). Each bar gets a color based on its position
+            in the chart, creating a rainbow effect.
+          </Text>
+        }
+        title="ColorMap - Continuous (X-Axis)"
+      >
+        <BarChart
+          showXAxis
+          showYAxis
+          height={300}
+          series={[
+            {
+              id: 'sales',
+              data: [50, 65, 45, 70, 55, 60, 52],
+              colorMap: {
+                type: 'continuous',
+                axis: 'x',
+                colors: ['#ef4444', '#f59e0b', '#10b981', '#3b82f6', '#8b5cf6'],
+              },
+            },
+          ]}
+          xAxis={{
+            data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+          }}
+          yAxis={{
+            requestedTickCount: 5,
+            showGrid: true,
+          }}
+        />
+      </Example>
+      <Example
+        description={
+          <Text color="fgMuted" font="body">
+            Stacked bars with colorMap. Each series can have its own colorMap configuration,
+            allowing for complex color compositions.
+          </Text>
+        }
+        title="ColorMap - Stacked Bars"
+      >
+        <BarChart
+          showXAxis
+          showYAxis
+          stacked
+          height={300}
+          series={[
+            {
+              id: 'category-a',
+              data: [20, 30, 25, 35, 28, 32, 27],
+              colorMap: {
+                type: 'continuous',
+                axis: 'y',
+                colors: ['#3b82f6', '#8b5cf6'],
+              },
+            },
+            {
+              id: 'category-b',
+              data: [15, 25, 20, 30, 22, 28, 23],
+              colorMap: {
+                type: 'continuous',
+                axis: 'y',
+                colors: ['#10b981', '#059669'],
+              },
+            },
+          ]}
+          xAxis={{
+            data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+          }}
+          yAxis={{
+            requestedTickCount: 5,
+            showGrid: true,
+          }}
+        />
+      </Example>
     </VStack>
   );
 };

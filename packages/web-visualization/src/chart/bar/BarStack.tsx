@@ -3,6 +3,7 @@ import type { Rect } from '@coinbase/cds-common';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import type { ChartScaleFunction } from '../utils';
+import { evaluateColorMapAtValue, getColorMapScale } from '../utils/colorMap';
 
 import { Bar, type BarComponent, type BarProps } from './Bar';
 import type { BarSeries } from './BarChart';
@@ -134,9 +135,10 @@ export const BarStack = memo<BarStackProps>(
     stackMinSize,
     roundBaseline,
   }) => {
-    const { getSeriesData, getXAxis } = useCartesianChartContext();
+    const { getSeriesData, getXAxis, getXScale, getSeries } = useCartesianChartContext();
 
     const stackGapPx = stackGap;
+    const xScale = getXScale();
     const barMinSizePx = barMinSize;
     const stackMinSizePx = stackMinSize;
 
@@ -223,6 +225,38 @@ export const BarStack = memo<BarStackProps>(
         minY = Math.min(minY, y);
         maxY = Math.max(maxY, y + height);
 
+        let barFill = s.fill || s.color || 'var(--color-fgPrimary)';
+
+        // Evaluate colorMap if provided
+        if (
+          s.colorMap &&
+          xScale &&
+          yScale &&
+          originalValue !== null &&
+          originalValue !== undefined
+        ) {
+          const colorMapScale = getColorMapScale(s.colorMap, xScale, yScale);
+          if (colorMapScale) {
+            const axis = s.colorMap.axis ?? 'y';
+            // For x-axis colorMap, use the categoryIndex
+            // For y-axis colorMap, use the ORIGINAL data value (not the processed top value)
+            // This is important for bar charts where originalValue might be a single number (e.g., -40, 15)
+            // or a tuple (e.g., [0, 10] for range bars)
+            let evalValue: number;
+            if (axis === 'x') {
+              evalValue = categoryIndex;
+            } else {
+              // Use original value for evaluation - handles both single numbers and tuples
+              evalValue = Array.isArray(originalValue) ? originalValue[1] : originalValue;
+            }
+            const evaluatedColor = evaluateColorMapAtValue(s.colorMap, evalValue, colorMapScale);
+            if (evaluatedColor && !s.fill) {
+              // Only apply colorMap color if fill is not explicitly set
+              barFill = evaluatedColor;
+            }
+          }
+        }
+
         allBars.push({
           seriesId: s.id,
           x,
@@ -232,7 +266,7 @@ export const BarStack = memo<BarStackProps>(
           dataY: value, // Store the actual data value
           // Use series-specific properties, falling back to defaults
           BarComponent: s.BarComponent,
-          fill: s.fill || s.color || 'var(--color-fgPrimary)',
+          fill: barFill,
           fillOpacity: s.fillOpacity,
           stroke: s.stroke,
           strokeWidth: s.strokeWidth,

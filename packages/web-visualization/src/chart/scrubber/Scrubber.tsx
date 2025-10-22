@@ -15,7 +15,13 @@ import { m as motion } from 'framer-motion';
 import { axisTickLabelsInitialAnimationVariants } from '../axis';
 import { useCartesianChartContext } from '../ChartProvider';
 import { ReferenceLine, type ReferenceLineProps } from '../line';
-import { type ChartScaleFunction, getPointOnScale, useScrubberContext } from '../utils';
+import {
+  type ChartScaleFunction,
+  evaluateColorMapAtValue,
+  getColorMapScale,
+  getPointOnScale,
+  useScrubberContext,
+} from '../utils';
 
 import { ScrubberBeacon, type ScrubberBeaconProps, type ScrubberBeaconRef } from './ScrubberBeacon';
 import { ScrubberBeaconLabel, type ScrubberBeaconLabelProps } from './ScrubberBeaconLabel';
@@ -221,12 +227,40 @@ export const Scrubber = memo(
 
                 const resolvedLabel = typeof s.label === 'function' ? s.label(dataIndex) : s.label;
 
+                // Evaluate colorMap at the current dataY value if series has a colorMap
+                let evaluatedColor: string | undefined = s.color;
+                if (s.colorMap) {
+                  const xScale = getXScale();
+                  const colorMapScale = getColorMapScale(s.colorMap, xScale, yScale);
+                  console.log('[Scrubber] Evaluating colorMap for beacon', {
+                    seriesId: s.id,
+                    dataY,
+                    hasColorMapScale: !!colorMapScale,
+                    colorMap: s.colorMap,
+                  });
+                  if (colorMapScale) {
+                    const colorResult = evaluateColorMapAtValue(s.colorMap, dataY, colorMapScale);
+                    console.log('[Scrubber] ColorMap evaluation result', {
+                      seriesId: s.id,
+                      dataY,
+                      colorResult,
+                    });
+                    if (colorResult) {
+                      evaluatedColor = colorResult;
+                    }
+                  } else {
+                    console.warn('[Scrubber] No colorMapScale available for beacon', {
+                      seriesId: s.id,
+                    });
+                  }
+                }
+
                 return {
                   x: dataX,
                   y: dataY,
                   label: resolvedLabel,
                   pixelY,
-                  targetSeries: s,
+                  targetSeries: { ...s, color: evaluatedColor },
                 };
               }
             })
