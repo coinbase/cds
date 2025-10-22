@@ -423,14 +423,12 @@ const SelectBase = memo(
         );
 
       const containerRef = useRef<View>(null);
-      useImperativeHandle(
-        ref,
-        () =>
-          ({
-            open,
-            setOpen,
-            refs: { reference: containerRef, floating: null },
-          }) as SelectRef,
+      useImperativeHandle(ref, () =>
+        Object.assign(containerRef.current as View, {
+          open,
+          setOpen,
+          refs: { reference: containerRef, floating: null },
+        }),
       );
 
       return (
