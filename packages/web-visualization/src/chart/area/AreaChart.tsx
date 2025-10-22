@@ -211,12 +211,11 @@ export const AreaChart = memo(
               }) => {
                 return (
                   <Line
-                    key={`${id}-line`}
+                    key={id}
                     LineComponent={LineComponent}
                     connectNulls={connectNulls}
                     curve={curve}
-                    seriesId={id} // Line component now handles stacked data automatically
-                    stroke={color} // Default to series color
+                    seriesId={id}
                     strokeWidth={strokeWidth}
                     type={lineType}
                     {...linePropsFromSeries}

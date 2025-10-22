@@ -88,7 +88,7 @@ export const ScrubberBeacon = memo(
       const renderCount = useRef(0);
       renderCount.current++;
       const theme = useTheme();
-      const { getSeries, getXScale, getYScale, getSeriesData, animate } =
+      const { getSeries, getXScale, getYScale, getSeriesData, animate, getSeriesColorMapScale } =
         useCartesianChartContext();
       const { scrubberPosition } = useScrubberContext();
 
@@ -96,6 +96,7 @@ export const ScrubberBeacon = memo(
       const sourceData = getSeriesData(seriesId);
       const xScale = getXScale();
       const yScale = getYScale(targetSeries?.yAxisId);
+      const colorMapScale = seriesId ? getSeriesColorMapScale(seriesId) : undefined;
 
       const isIdleState = scrubberPosition === undefined;
 
@@ -211,19 +212,21 @@ export const ScrubberBeacon = memo(
 
       // Determine the beacon color (must be before conditional return to follow Rules of Hooks)
       const pointColor = useMemo(() => {
-        // If colorMap is provided, evaluate color based on data value
-        if (colorMap && xScale && yScale) {
-          const colorMapScale = getColorMapScale(colorMap, xScale, yScale);
-          if (colorMapScale) {
-            // Use the appropriate data value based on colorMap axis
-            const axis = colorMap.axis ?? 'y';
-            const dataValue = axis === 'x' ? dataX : dataY;
+        // If colorMap is provided (either from prop or from series), evaluate color based on data value
+        const effectiveColorMap = colorMap ?? targetSeries?.colorMap;
+        if (effectiveColorMap && colorMapScale) {
+          // Use the appropriate data value based on colorMap axis
+          const axis = effectiveColorMap.axis ?? 'y';
+          const dataValue = axis === 'x' ? dataX : dataY;
 
-            if (dataValue !== undefined) {
-              const evaluatedColor = evaluateColorMapAtValue(colorMap, dataValue, colorMapScale);
-              if (evaluatedColor) {
-                return evaluatedColor;
-              }
+          if (dataValue !== undefined) {
+            const evaluatedColor = evaluateColorMapAtValue(
+              effectiveColorMap,
+              dataValue,
+              colorMapScale,
+            );
+            if (evaluatedColor) {
+              return evaluatedColor;
             }
           }
         }
@@ -232,13 +235,13 @@ export const ScrubberBeacon = memo(
         return color ?? targetSeries?.color ?? theme.color.fgPrimary;
       }, [
         colorMap,
+        targetSeries?.colorMap,
+        colorMapScale,
         dataX,
         dataY,
         color,
         targetSeries?.color,
         theme.color.fgPrimary,
-        xScale,
-        yScale,
       ]);
 
       if (!pixelCoordinate) return null;
@@ -246,7 +249,7 @@ export const ScrubberBeacon = memo(
       if (!isIdleState) {
         return (
           <Group opacity={opacity}>
-            <ChartText opacity={0} x={pixelCoordinate.x} y={pixelCoordinate.y - 20}>
+            <ChartText x={pixelCoordinate.x} y={pixelCoordinate.y - 20}>
               {`${renderCount.current} renders`}
             </ChartText>
             {/* Glow circle behind */}
@@ -276,7 +279,7 @@ export const ScrubberBeacon = memo(
 
       return (
         <Group opacity={opacity}>
-          <ChartText opacity={0} x={pixelCoordinate.x} y={pixelCoordinate.y - 20}>
+          <ChartText x={pixelCoordinate.x} y={pixelCoordinate.y - 20}>
             {`${renderCount.current} renders`}
           </ChartText>
           {/* Glow circle */}

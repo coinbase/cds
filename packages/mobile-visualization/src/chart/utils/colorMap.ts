@@ -526,6 +526,16 @@ export const evaluateColorMapAtValue = (
       normalizedValue = 1 - normalizedValue;
     }
 
+    // Handle values before the first position
+    if (normalizedValue <= orderedPositions[0]) {
+      return orderedColors[0];
+    }
+
+    // Handle values after the last position
+    if (normalizedValue >= orderedPositions[orderedPositions.length - 1]) {
+      return orderedColors[orderedColors.length - 1];
+    }
+
     // Find which segment we're in and interpolate
     for (let i = 0; i < orderedPositions.length - 1; i++) {
       if (normalizedValue >= orderedPositions[i] && normalizedValue <= orderedPositions[i + 1]) {
@@ -537,7 +547,7 @@ export const evaluateColorMapAtValue = (
       }
     }
 
-    // Fallback to last color
+    // Fallback to last color (should not reach here)
     return orderedColors[orderedColors.length - 1];
   }
 

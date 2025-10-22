@@ -1992,7 +1992,7 @@ const LineChartStories = () => {
           <Scrubber />
         </CartesianChart>
       </Example>
-      <Example title="Basic 4 Line">
+      <Example title="Basic Line">
         <LineChart
           enableScrubbing
           curve="bump"
@@ -2002,6 +2002,22 @@ const LineChartStories = () => {
               id: 'prices',
               data: data,
               color: theme.color.fgPositive,
+            },
+          ]}
+        >
+          <Scrubber />
+        </LineChart>
+      </Example>
+      <Example title="Basic 4 Line">
+        <LineChart
+          enableScrubbing
+          curve="bump"
+          height={defaultChartHeight}
+          series={[
+            {
+              id: 'prices',
+              data: data,
+              color: theme.color.fgPrimary,
               colorMap: {
                 axis: 'x',
                 type: 'continuous',
@@ -2015,19 +2031,6 @@ const LineChartStories = () => {
           <Scrubber />
         </LineChart>
       </Example>
-      {/* <Example title="Simple">
-        <LineChart
-          curve="monotone"
-          height={defaultChartHeight}
-          series={[
-            {
-              id: 'prices',
-              data: sampleData,
-            },
-          ]}
-          type="dotted"
-        />
-      </Example>*/}
       <Example title="Data Formats 4">
         <LineChart
           enableScrubbing
@@ -2055,6 +2058,19 @@ const LineChartStories = () => {
           <Scrubber hideOverlay />
         </LineChart>
       </Example>
+      {/* <Example title="Simple">
+        <LineChart
+          curve="monotone"
+          height={defaultChartHeight}
+          series={[
+            {
+              id: 'prices',
+              data: sampleData,
+            },
+          ]}
+          type="dotted"
+        />
+      </Example>*/}
       {/*<Example title="Connect Nulls">
         <ConnectNullsChart />
       </Example>
@@ -2094,7 +2110,7 @@ const LineChartStories = () => {
       <Example title="Line Styles">
         <LineStyles />
       </Example>*/}
-      <Example title="Gain/Loss">
+      {/*<Example title="Gain/Loss">
         <GainLossChart />
       </Example>
       <Example title="Basic">
@@ -2123,7 +2139,7 @@ const LineChartStories = () => {
           <Line curve="monotone" seriesId="prices" type="gradient" />
           <Scrubber idlePulse />
         </CartesianChart>
-      </Example>
+      </Example>*/}
     </ExampleScreen>
   );
 };

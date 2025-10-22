@@ -1,10 +1,11 @@
-import React, { memo, useMemo } from 'react';
+import React, { memo, useMemo, useRef } from 'react';
 import type { SharedProps } from '@coinbase/cds-common/types';
 import { useTheme } from '@coinbase/cds-mobile';
 
 import { Area, type AreaComponent } from '../area/Area';
 import { useCartesianChartContext } from '../ChartProvider';
 import { Point, type PointConfig, type RenderPointsParams } from '../Point';
+import { ChartText } from '../text';
 import { type ChartPathCurveType, getLinePath } from '../utils';
 import { type ColorMap, evaluateColorMapAtValue, getColorMapScale } from '../utils/colorMap';
 
@@ -19,6 +20,10 @@ export type LineComponentProps = {
   strokeWidth?: number;
   testID?: string;
   clipPath?: string;
+  /**
+   * Series ID - used to retrieve colorMap scale from context.
+   */
+  seriesId?: string;
   /**
    * ID of the y-axis to use.
    * Required for components that need to map data values to pixel positions (e.g., GradientLine with threshold stops).
@@ -119,6 +124,8 @@ export const Line = memo<LineProps>(
     connectNulls = false,
     ...props
   }) => {
+    const renderCount = useRef(0);
+    renderCount.current++;
     const theme = useTheme();
     const { getSeries, getSeriesData, getXScale, getYScale, getXAxis } = useCartesianChartContext();
 
@@ -214,6 +221,7 @@ export const Line = memo<LineProps>(
 
     return (
       <>
+        <ChartText x={16} y={16 * 3}>{`line ${renderCount.current} renders`}</ChartText>
         {showArea && (
           <Area
             AreaComponent={AreaComponent}
@@ -230,6 +238,7 @@ export const Line = memo<LineProps>(
         <LineComponent
           colorMap={seriesColorMap}
           d={path}
+          seriesId={seriesId}
           stroke={stroke}
           strokeOpacity={opacity}
           yAxisId={matchedSeries?.yAxisId}

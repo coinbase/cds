@@ -5,6 +5,7 @@ import React, {
   useEffect,
   useImperativeHandle,
   useMemo,
+  useRef,
 } from 'react';
 import { useSharedValue } from 'react-native-reanimated';
 import { useRefMap } from '@coinbase/cds-common/hooks/useRefMap';
@@ -14,6 +15,7 @@ import { Group, Rect } from '@shopify/react-native-skia';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import { ReferenceLine, type ReferenceLineProps } from '../line';
+import { ChartText } from '../text';
 import { type ChartScaleFunction, useScrubberContext } from '../utils';
 
 import { ScrubberBeacon, type ScrubberBeaconProps, type ScrubberBeaconRef } from './ScrubberBeacon';
@@ -98,6 +100,8 @@ export const Scrubber = memo(
       },
       ref,
     ) => {
+      const renderCount = useRef(0);
+      renderCount.current++;
       const theme = useTheme();
       const ScrubberBeaconRefs = useRefMap<ScrubberBeaconRef>();
 
@@ -216,6 +220,7 @@ export const Scrubber = memo(
 
       return (
         <>
+          <ChartText x={16} y={32}>{`scrubber ${renderCount.current} renders`}</ChartText>
           {!hideOverlay &&
             dataX !== undefined &&
             scrubberPosition !== undefined &&

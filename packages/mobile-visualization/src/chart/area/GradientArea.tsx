@@ -5,7 +5,7 @@ import { LinearGradient, vec } from '@shopify/react-native-skia';
 import { useCartesianChartContext } from '../ChartProvider';
 import { Path, type PathProps } from '../Path';
 import { ChartText } from '../text/ChartText';
-import { type ColorMap, getColorMapScale, processColorMap } from '../utils/colorMap';
+import { type ColorMap, processColorMap } from '../utils/colorMap';
 
 import type { AreaComponentProps } from './Area';
 
@@ -30,13 +30,26 @@ export type GradientAreaProps = Omit<PathProps, 'd' | 'fill' | 'fillOpacity'> &
  * A customizable gradient area component which uses Path with Skia linear gradient shader.
  */
 export const GradientArea = memo<GradientAreaProps>(
-  ({ d, fill: fillProp, fillOpacity = 1, colorMap, baseline, yAxisId, clipRect, ...pathProps }) => {
+  ({
+    d,
+    fill: fillProp,
+    fillOpacity = 1,
+    colorMap,
+    seriesId,
+    baseline,
+    yAxisId,
+    clipRect,
+    ...pathProps
+  }) => {
     const context = useCartesianChartContext();
     const theme = useTheme();
 
     const fill = fillProp ?? theme.color.fgPrimary;
 
-    // Get scales from context
+    // Get colorMap scale from context if seriesId is provided and has a colorMap
+    const colorMapScale = seriesId ? context.getSeriesColorMapScale(seriesId) : undefined;
+
+    // Get scales directly for default gradient when no colorMap is defined
     const xScale = context.getXScale();
     const yScale = context.getYScale(yAxisId);
 
@@ -52,7 +65,14 @@ export const GradientArea = memo<GradientAreaProps>(
         ],
       };
 
-      const scale = getColorMapScale(effectiveColorMap, xScale, yScale);
+      // Use colorMapScale if available (from series colorMap), otherwise calculate for default gradient
+      let scale = colorMapScale;
+      if (!scale && !colorMap) {
+        // For default gradient, get the appropriate scale based on axis
+        const axis = effectiveColorMap.axis ?? 'y';
+        scale = axis === 'x' ? xScale : yScale;
+      }
+
       if (!scale) {
         console.warn('ColorMap requires a valid numeric scale');
         return null;
@@ -79,7 +99,7 @@ export const GradientArea = memo<GradientAreaProps>(
         colors,
         positions: processed.positions,
       };
-    }, [colorMap, fill, xScale, yScale]);
+    }, [colorMap, fill, colorMapScale, xScale, yScale]);
 
     if (!gradientConfig)
       return (

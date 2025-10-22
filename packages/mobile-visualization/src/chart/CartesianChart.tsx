@@ -6,6 +6,7 @@ import type { BoxBaseProps, BoxProps } from '@coinbase/cds-mobile/layout';
 import { Box } from '@coinbase/cds-mobile/layout';
 
 import { ScrubberProvider, type ScrubberProviderProps } from './scrubber/ScrubberProvider';
+import { getColorMapScale } from './utils/colorMap';
 import { ChartCanvas } from './ChartCanvas';
 import { CartesianChartProvider } from './ChartProvider';
 import {
@@ -287,6 +288,18 @@ export const CartesianChart = memo(
         [renderedAxes, chartRect, userInset],
       );
 
+      const getSeriesColorMapScale = useCallback(
+        (seriesId: string) => {
+          const targetSeries = series?.find((s) => s.id === seriesId);
+          if (!targetSeries?.colorMap) return undefined;
+
+          const yScale = yScales.get(targetSeries.yAxisId ?? defaultAxisId);
+
+          return getColorMapScale(targetSeries.colorMap, xScale, yScale) ?? undefined;
+        },
+        [series, xScale, yScales],
+      );
+
       const contextValue: CartesianChartContextValue = useMemo(
         () => ({
           series: series ?? [],
@@ -303,6 +316,7 @@ export const CartesianChart = memo(
           registerAxis,
           unregisterAxis,
           getAxisBounds,
+          getSeriesColorMapScale,
         }),
         [
           series,
@@ -319,6 +333,7 @@ export const CartesianChart = memo(
           registerAxis,
           unregisterAxis,
           getAxisBounds,
+          getSeriesColorMapScale,
         ],
       );
 

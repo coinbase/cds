@@ -18,6 +18,10 @@ export type AreaComponentProps = {
   stroke?: string;
   strokeWidth?: number;
   /**
+   * Series ID - used to retrieve colorMap scale from context.
+   */
+  seriesId?: string;
+  /**
    * ID of the y-axis to use.
    * If not provided, defaults to the default y-axis.
    */
@@ -168,6 +172,7 @@ export const Area = memo<AreaProps>(
         d={area}
         fill={fill}
         fillOpacity={fillOpacity}
+        seriesId={seriesId}
         stroke={stroke}
         strokeWidth={strokeWidth}
         yAxisId={matchedSeries?.yAxisId}

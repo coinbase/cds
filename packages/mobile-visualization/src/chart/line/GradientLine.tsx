@@ -5,7 +5,7 @@ import { LinearGradient, vec } from '@shopify/react-native-skia';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import { Path, type PathProps } from '../Path';
-import { type ColorMap, getColorMapScale, processColorMap } from '../utils/colorMap';
+import { type ColorMap, processColorMap } from '../utils/colorMap';
 
 export type GradientLineProps = SharedProps &
   Omit<PathProps, 'stroke' | 'strokeOpacity' | 'strokeWidth'> & {
@@ -35,6 +35,11 @@ export type GradientLineProps = SharedProps &
      * }}
      */
     colorMap?: ColorMap;
+    /**
+     * Series ID to get the colorMap from if not provided directly.
+     * Used to retrieve the colorMap scale from context.
+     */
+    seriesId?: string;
     /**
      * Y-axis ID to use for calculating color positions.
      * Only needed when using colorMap with multiple y-axes.
@@ -67,6 +72,7 @@ export const GradientLine = memo<GradientLineProps>(
     strokeWidth = 2,
     animate,
     colorMap,
+    seriesId,
     yAxisId,
     outlineColor,
     outlineWidth = 1,
@@ -78,9 +84,15 @@ export const GradientLine = memo<GradientLineProps>(
     const shouldAnimate = animate ?? context.animate;
 
     // Get scales from context
-    const { height: chartHeight } = context;
-    const xScale = context.getXScale();
-    const yScale = context.getYScale(yAxisId);
+    const { height: chartHeight, getSeries } = context;
+
+    // Get colorMap from series if seriesId is provided and colorMap is not
+    const targetSeries = seriesId ? getSeries(seriesId) : undefined;
+    const effectiveColorMap = colorMap ?? targetSeries?.colorMap;
+    const effectiveYAxisId = yAxisId ?? targetSeries?.yAxisId;
+
+    const colorMapScale = seriesId ? context.getSeriesColorMapScale(seriesId) : undefined;
+    const yScale = context.getYScale(effectiveYAxisId);
 
     // Calculate gradient configuration
     const gradientConfig = useMemo(() => {
@@ -89,23 +101,23 @@ export const GradientLine = memo<GradientLineProps>(
         return null;
       }
 
-      if (!colorMap) {
-        console.warn('GradientLine requires a colorMap prop');
+      if (!effectiveColorMap) {
+        console.warn('GradientLine requires a colorMap prop or seriesId with colorMap');
         return null;
       }
 
-      const scale = getColorMapScale(colorMap, xScale, yScale);
+      const scale = colorMapScale;
       if (!scale) {
         console.warn('ColorMap requires a valid numeric scale');
         return null;
       }
 
-      const processed = processColorMap(colorMap, scale);
+      const processed = processColorMap(effectiveColorMap, scale);
       if (!processed) {
         return null;
       }
 
-      const axisType = colorMap.axis ?? 'y';
+      const axisType = effectiveColorMap.axis ?? 'y';
       const range = scale.range();
 
       // Determine gradient direction based on axis
@@ -118,7 +130,7 @@ export const GradientLine = memo<GradientLineProps>(
         colors: processed.colors,
         positions: processed.positions,
       };
-    }, [chartHeight, colorMap, xScale, yScale]);
+    }, [chartHeight, effectiveColorMap, colorMapScale]);
 
     // Don't render if gradient couldn't be created (chart not ready yet)
     if (!gradientConfig) {

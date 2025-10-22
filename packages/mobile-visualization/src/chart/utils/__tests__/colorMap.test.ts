@@ -281,11 +281,11 @@ describe('processColorMap with numeric scale', () => {
     const colorMap: ColorMap = {
       type: 'continuous',
       colors: ['red', 'yellow', 'green'],
-      stops: [0, 0.3, 1],
+      stops: [0, 30, 100], // Data domain values, not 0-1 normalized
     };
 
     const result = processColorMap(colorMap, linearScale);
     expect(result).not.toBeNull();
-    expect(result?.positions).toEqual([0, 0.3, 1]);
+    expect(result?.positions).toEqual([0, 0.3, 1]); // These get normalized to 0-1
   });
 });
