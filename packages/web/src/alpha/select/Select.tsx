@@ -542,6 +542,26 @@ const SelectBase = memo(
           'Select component must be fully controlled or uncontrolled: "open" and "setOpen" props must be provided together or not at all',
         );
 
+      const { refs, floatingStyles } = useFloating({
+        open,
+        middleware: [flip()],
+      });
+
+      useClickOutside(() => !disableClickOutsideClose && setOpen(false), {
+        ref: refs.floating,
+        excludeRefs: [refs.reference as React.MutableRefObject<HTMLElement>],
+      });
+
+      const containerRef = useRef<HTMLElement>(null);
+
+      useImperativeHandle(ref, () =>
+        Object.assign(containerRef.current as HTMLElement, {
+          open,
+          setOpen,
+          refs,
+        }),
+      );
+
       const rootStyles = useMemo(
         () => ({
           ...style,
@@ -615,7 +635,7 @@ const SelectBase = memo(
 
       const dropdownStyles = useMemo(
         () => ({
-          root: styles?.dropdown,
+          root: { ...floatingStyles, ...styles?.dropdown },
           option: styles?.option,
           optionBlendStyles: styles?.optionBlendStyles,
           optionCell: styles?.optionCell,
@@ -627,6 +647,7 @@ const SelectBase = memo(
           emptyContentsText: styles?.emptyContentsText,
         }),
         [
+          floatingStyles,
           styles?.dropdown,
           styles?.option,
           styles?.optionBlendStyles,
@@ -638,26 +659,6 @@ const SelectBase = memo(
           styles?.emptyContentsContainer,
           styles?.emptyContentsText,
         ],
-      );
-
-      const { refs, floatingStyles } = useFloating({
-        open,
-        middleware: [flip()],
-      });
-
-      useClickOutside(() => !disableClickOutsideClose && setOpen(false), {
-        ref: refs.floating,
-        excludeRefs: [refs.reference as React.MutableRefObject<HTMLElement>],
-      });
-
-      const containerRef = useRef<HTMLElement>(null);
-
-      useImperativeHandle(ref, () =>
-        Object.assign(containerRef.current as HTMLElement, {
-          open,
-          setOpen,
-          refs,
-        }),
       );
 
       return (
