@@ -87,8 +87,13 @@ const DefaultSelectDropdownComponent = memo(
 
       const toggleSelectAll = useCallback(() => {
         if (isAllOptionsSelected) onChange(null);
-        else onChange(options.map((o) => o.value).filter((o) => o !== null) as ValueType);
-      }, [isAllOptionsSelected, onChange, options]);
+        else
+          onChange(
+            options
+              .map((o) => o.value)
+              .filter((o) => o !== null && !value?.includes(o)) as ValueType,
+          );
+      }, [isAllOptionsSelected, onChange, options, value]);
 
       const handleClearAll = useCallback(
         (e: GestureResponderEvent) => {

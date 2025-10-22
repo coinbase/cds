@@ -56,14 +56,14 @@ describe('useMultiSelect', () => {
       expect(result.current.value).toEqual(['option1', 'option2', 'option3']);
     });
 
-    it('should not add duplicate values when array contains existing values', () => {
+    it('should add new values when array contains existing values and remove existing values', () => {
       const { result } = renderHook(() => useMultiSelect({ initialValue: ['option1', 'option2'] }));
 
       act(() => {
         result.current.onChange(['option2', 'option3']);
       });
 
-      expect(result.current.value).toEqual(['option1', 'option2', 'option3']);
+      expect(result.current.value).toEqual(['option1', 'option3']);
     });
 
     it('should clear value when null is passed', () => {
