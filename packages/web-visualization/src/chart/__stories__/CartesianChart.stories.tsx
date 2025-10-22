@@ -15,8 +15,15 @@ import { useCartesianChartContext } from '../ChartProvider';
 import { ReferenceLine, SolidLine, type SolidLineProps } from '../line';
 import { Line } from '../line/Line';
 import { LineChart } from '../line/LineChart';
-import { isCategoricalScale } from '../utils';
-import { BarPlot, CartesianChart, type ChartTextChildren, PeriodSelector, Scrubber } from '../';
+import { type ColorMap, isCategoricalScale } from '../utils';
+import {
+  BarPlot,
+  CartesianChart,
+  type ChartTextChildren,
+  PeriodSelector,
+  Point,
+  Scrubber,
+} from '../';
 
 export default {
   component: CartesianChart,
@@ -576,6 +583,140 @@ export const Miscellaneous = () => {
       </Example>
       <Example title="Trading Trends">
         <TradingTrends />
+      </Example>
+    </VStack>
+  );
+};
+
+const UVColorMap: ColorMap = {
+  type: 'continuous',
+  axis: 'y',
+  colors: ['green', 'yellow', 'orange', 'red', 'purple'],
+  stops: [0, 3, 5, 8, 10],
+};
+
+const PreviousData = memo(
+  ({
+    children,
+    currentHour,
+    clipOffset = 0,
+  }: {
+    children: React.ReactNode;
+    currentHour: number;
+    clipOffset?: number;
+  }) => {
+    // we will clip the data to the current hour
+    const { drawingArea, getXScale } = useCartesianChartContext();
+    const xScale = getXScale();
+    const clipId = useId();
+
+    if (!xScale) return;
+
+    const currentHourX = xScale(currentHour);
+
+    if (currentHourX === undefined) return;
+
+    // Create a rectangle from top-left of drawing area to currentHourX on the right
+    // Apply clipOffset to left, top, and bottom edges only (NOT to currentHourX)
+    const clipPath = `M ${drawingArea.x - clipOffset} ${drawingArea.y - clipOffset} L ${currentHourX} ${drawingArea.y - clipOffset} L ${currentHourX} ${drawingArea.y + drawingArea.height + clipOffset} L ${drawingArea.x - clipOffset} ${drawingArea.y + drawingArea.height + clipOffset} Z`;
+
+    return (
+      <>
+        <defs>
+          <clipPath id={clipId}>
+            <path d={clipPath} />
+          </clipPath>
+        </defs>
+        <g clipPath={`url(#${clipId})`} opacity={0.75}>
+          {children}
+        </g>
+      </>
+    );
+  },
+);
+
+const FutureData = memo(
+  ({
+    children,
+    currentHour,
+    clipOffset = 0,
+  }: {
+    children: React.ReactNode;
+    currentHour: number;
+    clipOffset?: number;
+  }) => {
+    // we will clip the data from the current hour to the right edge
+    const { drawingArea, getXScale } = useCartesianChartContext();
+    const xScale = getXScale();
+    const clipId = useId();
+
+    if (!xScale) return;
+
+    const currentHourX = xScale(currentHour);
+
+    if (currentHourX === undefined) return;
+
+    // Create a rectangle from currentHourX to right edge of drawing area
+    // Apply clipOffset to top, bottom, and right, but NOT left (currentHourX)
+    const clipPath = `M ${currentHourX} ${drawingArea.y - clipOffset} L ${drawingArea.x + drawingArea.width + clipOffset} ${drawingArea.y - clipOffset} L ${drawingArea.x + drawingArea.width + clipOffset} ${drawingArea.y + drawingArea.height + clipOffset} L ${currentHourX} ${drawingArea.y + drawingArea.height + clipOffset} Z`;
+
+    return (
+      <>
+        <defs>
+          <clipPath id={clipId}>
+            <path d={clipPath} />
+          </clipPath>
+        </defs>
+        <g clipPath={`url(#${clipId})`}>{children}</g>
+      </>
+    );
+  },
+);
+
+const UVIndexChart = () => {
+  const data = [0, 0, 0, 1, 2, 3, 4, 5, 6, 7, 8, 8, 9, 10, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0, 0, 0];
+
+  const currentHour = 14;
+
+  return (
+    <CartesianChart
+      height={{ base: 150, tablet: 200, desktop: 250 }}
+      series={[
+        {
+          id: 'uv',
+          data: data,
+          colorMap: UVColorMap,
+        },
+      ]}
+    >
+      <PreviousData clipOffset={8} currentHour={currentHour}>
+        <Area fillOpacity={0.25} seriesId="uv" type="gradient" />
+        {/* @ts-expect-error - strokeDasharray is not a valid prop for Line */}
+        <Line seriesId="uv" strokeDasharray="12 16" strokeWidth={8} type="dotted" />
+      </PreviousData>
+      <FutureData clipOffset={8} currentHour={currentHour}>
+        <Area fillOpacity={0.5} seriesId="uv" type="gradient" />
+        <Line seriesId="uv" strokeWidth={8} type="solid" />
+      </FutureData>
+      <ReferenceLine
+        LineComponent={(props) => <SolidLine {...props} stroke="var(--color-bg)" strokeWidth={2} />}
+        dataX={currentHour}
+      />
+      <Point
+        dataX={currentHour}
+        dataY={data[currentHour]}
+        fill="var(--color-fg)"
+        stroke="var(--color-bg)"
+      />
+    </CartesianChart>
+  );
+};
+
+export const Weather = () => {
+  return (
+    <VStack gap={2}>
+      <Example title="UV Index">
+        <UVIndexChart />
       </Example>
     </VStack>
   );
