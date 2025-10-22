@@ -8,7 +8,7 @@ import { cx } from '../../cx';
 import type { AriaHasPopupType } from '../../hooks/useA11yControlledVisibility';
 import { useClickOutside } from '../../hooks/useClickOutside';
 import { useHasMounted } from '../../hooks/useHasMounted';
-import type { BoxDefaultElement, BoxProps } from '../../layout/Box';
+import { Box, type BoxDefaultElement, type BoxProps } from '../../layout/Box';
 import { Portal } from '../../overlays/Portal';
 import { modalContainerId } from '../../overlays/PortalProvider';
 import type { InteractableBlendStyles } from '../../system/Interactable';
@@ -95,7 +95,11 @@ export type SelectOptionProps<
 export type SelectOptionComponent<
   Type extends SelectType = 'single',
   SelectOptionValue extends string = string,
-> = React.FC<SelectOptionProps<Type, SelectOptionValue>>;
+> = React.FC<
+  SelectOptionProps<Type, SelectOptionValue> & {
+    ref?: React.Ref<HTMLButtonElement>;
+  }
+>;
 
 export type SelectEmptyDropdownContentProps = {
   label: string;
@@ -165,8 +169,6 @@ export type SelectControlProps<
     ariaHaspopup?: AriaHasPopupType;
     /** Whether to use compact styling for the control */
     compact?: boolean;
-    /** CSS class name for the control */
-    className?: string;
     /** Inline styles for the control */
     style?: React.CSSProperties;
     /** Custom styles for different parts of the control */
@@ -184,6 +186,8 @@ export type SelectControlProps<
       /** Styles for the end node element */
       controlEndNode?: React.CSSProperties;
     };
+    /** CSS class name for the control */
+    className?: string;
     /** Custom class names for different parts of the control */
     classNames?: {
       /** Class name for the start node element */
@@ -414,8 +418,6 @@ export type SelectProps<
     dropdown?: React.CSSProperties;
     /** Styles for individual options */
     option?: React.CSSProperties;
-    /** Blend styles for option interactivity */
-    optionBlendStyles?: InteractableBlendStyles;
     /** Styles for the option cell element */
     optionCell?: React.CSSProperties;
     /** Styles for the option content wrapper */
@@ -424,6 +426,8 @@ export type SelectProps<
     optionLabel?: React.CSSProperties;
     /** Styles for the option description element */
     optionDescription?: React.CSSProperties;
+    /** Blend styles for option interactivity */
+    optionBlendStyles?: InteractableBlendStyles;
     /** Styles for the select all divider element */
     selectAllDivider?: React.CSSProperties;
     /** Styles for the empty contents container element */
@@ -496,8 +500,6 @@ const SelectBase = memo(
         disableClickOutsideClose,
         placeholder,
         helperText,
-        hiddenSelectedOptionsLabel,
-        removeSelectedOptionAccessibilityLabel,
         compact,
         label,
         labelVariant,
@@ -512,6 +514,8 @@ const SelectBase = memo(
         endNode,
         variant,
         maxSelectedOptionsToShow,
+        hiddenSelectedOptionsLabel,
+        removeSelectedOptionAccessibilityLabel,
         accessory,
         media,
         detail,
@@ -552,41 +556,12 @@ const SelectBase = memo(
         excludeRefs: [refs.reference as React.MutableRefObject<HTMLElement>],
       });
 
-      const containerRef = useRef<HTMLElement>(null);
-
-      useImperativeHandle(ref, () =>
-        Object.assign(containerRef.current as HTMLElement, {
-          open,
-          setOpen,
-          refs,
-        }),
-      );
-
       const rootStyles = useMemo(
         () => ({
           ...style,
           ...styles?.root,
         }),
         [style, styles?.root],
-      );
-
-      const controlClassNames = useMemo(
-        () => ({
-          controlStartNode: classNames?.controlStartNode,
-          controlInputNode: classNames?.controlInputNode,
-          controlValueNode: classNames?.controlValueNode,
-          controlLabelNode: classNames?.controlLabelNode,
-          controlHelperTextNode: classNames?.controlHelperTextNode,
-          controlEndNode: classNames?.controlEndNode,
-        }),
-        [
-          classNames?.controlStartNode,
-          classNames?.controlInputNode,
-          classNames?.controlValueNode,
-          classNames?.controlLabelNode,
-          classNames?.controlHelperTextNode,
-          classNames?.controlEndNode,
-        ],
       );
 
       const controlStyles = useMemo(
@@ -608,28 +583,22 @@ const SelectBase = memo(
         ],
       );
 
-      const dropdownClassNames = useMemo(
+      const controlClassNames = useMemo(
         () => ({
-          root: classNames?.dropdown,
-          option: classNames?.option,
-          optionCell: classNames?.optionCell,
-          optionContent: classNames?.optionContent,
-          optionLabel: classNames?.optionLabel,
-          optionDescription: classNames?.optionDescription,
-          selectAllDivider: classNames?.selectAllDivider,
-          emptyContentsContainer: classNames?.emptyContentsContainer,
-          emptyContentsText: classNames?.emptyContentsText,
+          controlStartNode: classNames?.controlStartNode,
+          controlInputNode: classNames?.controlInputNode,
+          controlValueNode: classNames?.controlValueNode,
+          controlLabelNode: classNames?.controlLabelNode,
+          controlHelperTextNode: classNames?.controlHelperTextNode,
+          controlEndNode: classNames?.controlEndNode,
         }),
         [
-          classNames?.dropdown,
-          classNames?.option,
-          classNames?.optionCell,
-          classNames?.optionContent,
-          classNames?.optionLabel,
-          classNames?.optionDescription,
-          classNames?.selectAllDivider,
-          classNames?.emptyContentsContainer,
-          classNames?.emptyContentsText,
+          classNames?.controlStartNode,
+          classNames?.controlInputNode,
+          classNames?.controlValueNode,
+          classNames?.controlLabelNode,
+          classNames?.controlHelperTextNode,
+          classNames?.controlEndNode,
         ],
       );
 
@@ -661,8 +630,42 @@ const SelectBase = memo(
         ],
       );
 
+      const dropdownClassNames = useMemo(
+        () => ({
+          root: classNames?.dropdown,
+          option: classNames?.option,
+          optionCell: classNames?.optionCell,
+          optionContent: classNames?.optionContent,
+          optionLabel: classNames?.optionLabel,
+          optionDescription: classNames?.optionDescription,
+          selectAllDivider: classNames?.selectAllDivider,
+          emptyContentsContainer: classNames?.emptyContentsContainer,
+          emptyContentsText: classNames?.emptyContentsText,
+        }),
+        [
+          classNames?.dropdown,
+          classNames?.option,
+          classNames?.optionCell,
+          classNames?.optionContent,
+          classNames?.optionLabel,
+          classNames?.optionDescription,
+          classNames?.selectAllDivider,
+          classNames?.emptyContentsContainer,
+          classNames?.emptyContentsText,
+        ],
+      );
+
+      const containerRef = useRef<HTMLElement>(null);
+      useImperativeHandle(ref, () =>
+        Object.assign(containerRef.current as HTMLElement, {
+          open,
+          setOpen,
+          refs,
+        }),
+      );
+
       return (
-        <div
+        <Box
           ref={containerRef as React.RefObject<HTMLDivElement>}
           className={cx(classNames?.root, className)}
           data-testid={testID}
@@ -725,7 +728,7 @@ const SelectBase = memo(
               value={value}
             />
           </Portal>
-        </div>
+        </Box>
       );
     },
   ),

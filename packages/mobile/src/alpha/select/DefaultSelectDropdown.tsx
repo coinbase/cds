@@ -168,7 +168,7 @@ const DefaultSelectDropdownBase = memo(
           disableCapturePanGestureToDismiss={true}
           onCloseComplete={() => setOpen(false)}
           onDismiss={() => setOpen(false)}
-          style={styles?.dropdown}
+          style={styles?.root}
           title={label}
           verticalDrawerPercentageOfView={0.9}
         >

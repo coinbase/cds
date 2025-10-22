@@ -1,17 +1,24 @@
 import React, { forwardRef, memo, useImperativeHandle, useMemo, useRef, useState } from 'react';
 import { View } from 'react-native';
-import type { AccessibilityRole, StyleProp, ViewStyle } from 'react-native';
+import type { AccessibilityRole, StyleProp, TouchableOpacity, ViewStyle } from 'react-native';
 import type { SharedAccessibilityProps } from '@coinbase/cds-common/types';
 
 import type { CellBaseProps } from '../../cells/Cell';
 import type { InputStackBaseProps } from '../../controls/InputStack';
+import type { BoxProps } from '../../layout';
+import type { DrawerRefBaseProps } from '../../overlays';
 import type { InteractableBlendStyles } from '../../system/Interactable';
+import type { PressableProps } from '../../system/Pressable';
 
 import { DefaultSelectAllOption } from './DefaultSelectAllOption';
 import { DefaultSelectControl } from './DefaultSelectControl';
 import { DefaultSelectDropdown } from './DefaultSelectDropdown';
 import { DefaultSelectEmptyDropdownContents } from './DefaultSelectEmptyDropdownContents';
 import { DefaultSelectOption } from './DefaultSelectOption';
+
+export const defaultAccessibilityRoles: SelectDropdownProps['accessibilityRoles'] = {
+  option: 'menuitem',
+};
 
 export type SelectType = 'single' | 'multi';
 
@@ -36,7 +43,8 @@ export type SelectOptionProps<
   Type extends SelectType = 'single',
   SelectOptionValue extends string = string,
 > = SelectOption<SelectOptionValue> &
-  Pick<CellBaseProps, 'accessory' | 'media' | 'detail'> & {
+  Pick<CellBaseProps, 'accessory' | 'media' | 'detail'> &
+  Omit<PressableProps, 'value' | 'type' | 'onClick'> & {
     /** Press handler for the option */
     onPress?: (value: SelectOptionValue | null) => void;
     /** Whether this is for single or multi-select */
@@ -47,8 +55,6 @@ export type SelectOptionProps<
     indeterminate?: boolean;
     /** Whether to allow multiline text in the option */
     multiline?: boolean;
-    /** Blend styles for option interactivity */
-    blendStyles?: InteractableBlendStyles;
     /** Accessibility role for the option element */
     accessibilityRole?: AccessibilityRole;
     /** Whether to use compact styling for the option */
@@ -109,7 +115,11 @@ export type SelectControlProps<
   Type extends SelectType = 'single',
   SelectOptionValue extends string = string,
 > = Pick<SharedAccessibilityProps, 'accessibilityLabel' | 'accessibilityHint'> &
-  Pick<InputStackBaseProps, 'disabled' | 'startNode' | 'variant' | 'labelVariant' | 'endNode'> &
+  Omit<BoxProps, 'borderWidth' | 'onChange'> &
+  Pick<
+    InputStackBaseProps,
+    'disabled' | 'startNode' | 'variant' | 'labelVariant' | 'testID' | 'endNode'
+  > &
   SelectState<Type, SelectOptionValue> & {
     /** Array of options to display in the select dropdown */
     options: SelectOption<SelectOptionValue>[];
@@ -159,7 +169,7 @@ export type SelectControlComponent<
   SelectOptionValue extends string = string,
 > = React.FC<
   SelectControlProps<Type, SelectOptionValue> & {
-    ref?: React.Ref<any>;
+    ref?: React.Ref<TouchableOpacity>;
   }
 >;
 
@@ -171,6 +181,7 @@ export type SelectDropdownProps<
   SelectOptionValue extends string = string,
 > = SelectState<Type, SelectOptionValue> &
   Pick<SharedAccessibilityProps, 'accessibilityLabel'> &
+  Omit<BoxProps, 'onChange'> &
   Pick<SelectOptionProps<Type, SelectOptionValue>, 'accessory' | 'media' | 'detail'> & {
     /** Whether this is for single or multi-select */
     type?: Type;
@@ -201,8 +212,8 @@ export type SelectDropdownProps<
     style?: StyleProp<ViewStyle>;
     /** Custom styles for dropdown elements */
     styles?: {
-      /** Styles for the dropdown container */
-      dropdown?: StyleProp<ViewStyle>;
+      /** Styles for the dropdown root container */
+      root?: StyleProp<ViewStyle>;
       /** Styles for individual options */
       option?: StyleProp<ViewStyle>;
       /** Blend styles for option interactivity */
@@ -242,13 +253,9 @@ export type SelectDropdownComponent<
   SelectOptionValue extends string = string,
 > = React.FC<
   SelectDropdownProps<Type, SelectOptionValue> & {
-    ref?: React.Ref<any>;
+    ref?: React.Ref<DrawerRefBaseProps>;
   }
 >;
-
-export const defaultAccessibilityRoles: SelectDropdownProps['accessibilityRoles'] = {
-  option: 'menuitem',
-};
 
 export type SelectBaseProps<
   Type extends SelectType = 'single',
@@ -306,6 +313,8 @@ export type SelectBaseProps<
     SelectAllOptionComponent?: SelectOptionComponent<Type, SelectOptionValue>;
     /** Custom component to render when no options are available */
     SelectEmptyDropdownContentsComponent?: SelectEmptyDropdownContentComponent;
+    /** Inline styles for the root element */
+    style?: StyleProp<ViewStyle>;
     /** Test ID for the root element */
     testID?: string;
   };
@@ -319,6 +328,8 @@ export type SelectProps<
 > = SelectBaseProps<Type, SelectOptionValue> & {
   /** Custom styles for different parts of the select */
   styles?: {
+    /** Styles for the root element */
+    root?: StyleProp<ViewStyle>;
     /** Styles for the control element */
     control?: StyleProp<ViewStyle>;
     /** Styles for the start node element */
@@ -333,12 +344,12 @@ export type SelectProps<
     controlHelperTextNode?: StyleProp<ViewStyle>;
     /** Styles for the end node element */
     controlEndNode?: StyleProp<ViewStyle>;
+    /** Blend styles for control interactivity */
+    controlBlendStyles?: InteractableBlendStyles;
     /** Styles for the dropdown container */
     dropdown?: StyleProp<ViewStyle>;
     /** Styles for individual options */
     option?: StyleProp<ViewStyle>;
-    /** Blend styles for option interactivity */
-    optionBlendStyles?: InteractableBlendStyles;
     /** Styles for the option cell element */
     optionCell?: StyleProp<ViewStyle>;
     /** Styles for the option content wrapper */
@@ -347,6 +358,8 @@ export type SelectProps<
     optionLabel?: StyleProp<ViewStyle>;
     /** Styles for the option description element */
     optionDescription?: StyleProp<ViewStyle>;
+    /** Blend styles for option interactivity */
+    optionBlendStyles?: InteractableBlendStyles;
     /** Styles for the select all divider element */
     selectAllDivider?: StyleProp<ViewStyle>;
     /** Styles for the empty contents container element */
@@ -385,9 +398,12 @@ const SelectBase = memo(
         compact,
         label,
         labelVariant,
-        clearAllLabel,
+        accessibilityLabel,
+        accessibilityHint,
+        accessibilityRoles = defaultAccessibilityRoles,
         selectAllLabel,
         emptyOptionsLabel,
+        clearAllLabel,
         hideSelectAll,
         defaultOpen,
         startNode,
@@ -404,10 +420,8 @@ const SelectBase = memo(
         SelectDropdownComponent = DefaultSelectDropdown,
         SelectControlComponent = DefaultSelectControl,
         SelectEmptyDropdownContentsComponent = DefaultSelectEmptyDropdownContents as SelectEmptyDropdownContentComponent,
+        style,
         styles,
-        accessibilityLabel,
-        accessibilityHint,
-        accessibilityRoles,
         testID,
         ...props
       }: SelectProps<Type, SelectOptionValue>,
@@ -424,6 +438,10 @@ const SelectBase = memo(
         throw Error(
           'Select component must be fully controlled or uncontrolled: "open" and "setOpen" props must be provided together or not at all',
         );
+
+      const rootStyles = useMemo(() => {
+        return [style, styles?.root];
+      }, [style, styles?.root]);
 
       const controlStyles = useMemo(
         () => ({
@@ -446,7 +464,7 @@ const SelectBase = memo(
 
       const dropdownStyles = useMemo(
         () => ({
-          dropdown: styles?.dropdown,
+          root: styles?.dropdown,
           option: styles?.option,
           optionBlendStyles: styles?.optionBlendStyles,
           optionCell: styles?.optionCell,
@@ -481,10 +499,11 @@ const SelectBase = memo(
       );
 
       return (
-        <View ref={containerRef} testID={testID}>
+        <View ref={containerRef} style={rootStyles} testID={testID}>
           <SelectControlComponent
             accessibilityHint={accessibilityHint}
             accessibilityLabel={accessibilityLabel}
+            blendStyles={styles?.controlBlendStyles}
             compact={compact}
             disabled={disabled}
             endNode={endNode}
@@ -507,7 +526,6 @@ const SelectBase = memo(
             variant={variant}
           />
           <SelectDropdownComponent
-            ref={() => {}}
             SelectAllOptionComponent={SelectAllOptionComponent}
             SelectEmptyDropdownContentsComponent={SelectEmptyDropdownContentsComponent}
             SelectOptionComponent={SelectOptionComponent}
