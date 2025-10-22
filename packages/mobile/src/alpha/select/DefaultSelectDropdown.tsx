@@ -53,17 +53,18 @@ const DefaultSelectDropdownBase = memo(
       type ValueType = Type extends 'multi'
         ? SelectOptionValue | SelectOptionValue[] | null
         : SelectOptionValue | null;
-      const isMultiSelect = type === 'multi';
 
+      const isMultiSelect = type === 'multi';
+      const isSomeOptionsSelected = isMultiSelect ? (value as string[]).length > 0 : false;
       const isAllOptionsSelected = isMultiSelect
         ? (value as string[]).length === options.filter((o) => o.value !== null).length
         : false;
-      const isSomeOptionsSelected = isMultiSelect ? (value as string[]).length > 0 : false;
 
       const toggleSelectAll = useCallback(() => {
         if (isAllOptionsSelected) onChange(null);
         else onChange(options.map((o) => o.value).filter((o) => o !== null) as ValueType);
       }, [isAllOptionsSelected, onChange, options]);
+
       const handleClearAll = useCallback(
         (e: GestureResponderEvent) => {
           e.stopPropagation();
@@ -72,9 +73,7 @@ const DefaultSelectDropdownBase = memo(
         [onChange],
       );
 
-      const indeterminate = useMemo(() => {
-        return !isAllOptionsSelected && isSomeOptionsSelected ? true : false;
-      }, [isAllOptionsSelected, isSomeOptionsSelected]);
+      const indeterminate = !isAllOptionsSelected && isSomeOptionsSelected ? true : false;
 
       const SelectAllOption = useMemo(
         () => (
