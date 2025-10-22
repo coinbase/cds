@@ -1,8 +1,10 @@
 import { memo, useMemo } from 'react';
+import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 import { LinearGradient, vec } from '@shopify/react-native-skia';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import { Path, type PathProps } from '../Path';
+import { ChartText } from '../text/ChartText';
 import { type ColorMap, getColorMapScale, processColorMap } from '../utils/colorMap';
 
 import type { AreaComponentProps } from './Area';
@@ -28,8 +30,11 @@ export type GradientAreaProps = Omit<PathProps, 'd' | 'fill' | 'fillOpacity'> &
  * A customizable gradient area component which uses Path with Skia linear gradient shader.
  */
 export const GradientArea = memo<GradientAreaProps>(
-  ({ d, fill, fillOpacity = 1, colorMap, baseline, yAxisId, clipRect, ...pathProps }) => {
+  ({ d, fill: fillProp, fillOpacity = 1, colorMap, baseline, yAxisId, clipRect, ...pathProps }) => {
     const context = useCartesianChartContext();
+    const theme = useTheme();
+
+    const fill = fillProp ?? theme.color.fgPrimary;
 
     // Get scales from context
     const xScale = context.getXScale();
@@ -42,8 +47,8 @@ export const GradientArea = memo<GradientAreaProps>(
         type: 'continuous',
         axis: 'y',
         colors: [
-          { color: fill || 'blue', opacity: 0.4 },
-          { color: fill || 'blue', opacity: 0 },
+          { color: fill, opacity: 0 },
+          { color: fill, opacity: 0.4 },
         ],
       };
 
@@ -62,19 +67,7 @@ export const GradientArea = memo<GradientAreaProps>(
       const range = scale.range();
 
       // Apply fillOpacity to all colors if fillOpacity < 1
-      const colors =
-        fillOpacity === 1
-          ? processed.colors
-          : processed.colors.map((color) => {
-              // Extract rgba values and multiply alpha
-              const match = color.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([\d.]+))?\)/);
-              if (match) {
-                const [, r, g, b, a = '1'] = match;
-                const newAlpha = parseFloat(a) * fillOpacity;
-                return `rgba(${r}, ${g}, ${b}, ${newAlpha})`;
-              }
-              return color;
-            });
+      const colors = processed.colors;
 
       // Determine gradient direction based on axis
       const gradientStart = axisType === 'x' ? vec(range[0], 0) : vec(0, range[1]);
@@ -86,12 +79,17 @@ export const GradientArea = memo<GradientAreaProps>(
         colors,
         positions: processed.positions,
       };
-    }, [colorMap, fill, xScale, yScale, fillOpacity]);
+    }, [colorMap, fill, xScale, yScale]);
 
-    if (!gradientConfig) return null;
+    if (!gradientConfig)
+      return (
+        <ChartText x={50} y={50}>
+          No gradient config
+        </ChartText>
+      );
 
     return (
-      <Path clipRect={clipRect} d={d} {...pathProps}>
+      <Path clipRect={clipRect} d={d} fill={fill} {...pathProps}>
         <LinearGradient
           colors={gradientConfig.colors}
           end={gradientConfig.end}

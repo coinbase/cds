@@ -1967,31 +1967,32 @@ const ConnectNullsChart = () => {
 const data = sparklineInteractiveData.all.map((d) => d.value);
 
 const LineChartStories = () => {
+  const theme = useTheme();
   return (
     <ExampleScreen>
-      <Example title="Scrubber with Imperative Handle">
-        <ScrubberWithImperativeHandle />
-      </Example>
-      <Example title="Basic">
-        <LineChart
+      <Example title="Basic 4">
+        <CartesianChart
           enableScrubbing
-          showYAxis
-          curve="monotone"
           height={defaultChartHeight}
           series={[
             {
               id: 'prices',
-              data: sampleData,
+              data: data,
+              color: theme.color.fgPositive,
+              colorMap: {
+                axis: 'x',
+                type: 'continuous',
+                colors: ['#ff0000', '#00ff00'],
+                stops: [15, data.length - 15],
+              },
             },
           ]}
-          yAxis={{
-            showGrid: true,
-          }}
         >
+          <Line curve="bump" seriesId="prices" type="gradient" />
           <Scrubber />
-        </LineChart>
+        </CartesianChart>
       </Example>
-      <Example title="Simple">
+      {/* <Example title="Simple">
         <LineChart
           curve="monotone"
           height={defaultChartHeight}
@@ -2003,10 +2004,11 @@ const LineChartStories = () => {
           ]}
           type="dotted"
         />
-      </Example>
-      <Example title="Data Formats">
+      </Example>*/}
+      <Example title="Data Formats 4">
         <LineChart
           enableScrubbing
+          showArea
           showXAxis
           showYAxis
           areaType="gradient"
@@ -2016,12 +2018,11 @@ const LineChartStories = () => {
           series={[
             {
               id: 'line',
-              data: [2, 5.5, 2, 8.5, 1.5, 5],
+              data: [2, 5.5, 2, -8.5, 1.5, 5],
             },
           ]}
           xAxis={{ data: [1, 2, 3, 5, 8, 10], showLine: true, showTickMarks: true, showGrid: true }}
           yAxis={{
-            domain: { min: 0 },
             position: 'left',
             showLine: true,
             showTickMarks: true,
@@ -2031,7 +2032,7 @@ const LineChartStories = () => {
           <Scrubber hideOverlay />
         </LineChart>
       </Example>
-      <Example title="Connect Nulls">
+      {/*<Example title="Connect Nulls">
         <ConnectNullsChart />
       </Example>
       <Example title="Availability Chart">
@@ -2046,7 +2047,7 @@ const LineChartStories = () => {
       <Example title="Asset Price Dotted">
         <AssetPriceDotted />
       </Example>
-      {/*<Example title="Asset Price Multiple Dotted">
+      <Example title="Asset Price Multiple Dotted">
         <AssetPriceMultipleDotted />
       </Example>
       <Example title="Asset Price Dotted (Old)">
@@ -2063,12 +2064,15 @@ const LineChartStories = () => {
       </Example>
       <Example title="Prediction Chart">
         <PredictionChart />
-      </Example>*/}
+      </Example>
       <Example title="Gain/Loss">
         <GainLossChart />
       </Example>
       <Example title="Line Styles">
         <LineStyles />
+      </Example>*/}
+      <Example title="Gain/Loss">
+        <GainLossChart />
       </Example>
       <Example title="Basic">
         <CartesianChart
@@ -2081,7 +2085,11 @@ const LineChartStories = () => {
               colorMap: {
                 axis: 'x',
                 type: 'continuous',
-                colors: ['#ff0000', '#00ff00'],
+                colors: [
+                  { color: assets.btc.color, opacity: 0 },
+                  { color: assets.btc.color, opacity: 1 },
+                ],
+                stops: [Math.floor(data.length / 2), Math.floor(data.length / 2 + 50)],
               },
             },
           ]}

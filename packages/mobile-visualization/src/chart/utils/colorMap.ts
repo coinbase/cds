@@ -59,10 +59,13 @@ export type ColorMap = {
    * Must be in ascending order.
    *
    * **For continuous type (optional):**
-   * Normalized positions (0-1) for each color.
-   * Allows non-uniform color distribution.
+   * Data domain values where each color is positioned.
+   * Values are automatically normalized to 0-1 based on the scale domain.
    * If provided, must match colors array length.
-   * @example [0, 0.3, 1] places colors at 0%, 30%, and 100%
+   * @example With x-axis domain [0, 100] and stops [0, 30, 100]:
+   * - First color at start (0%)
+   * - Second color at 30%
+   * - Third color at end (100%)
    *
    * **For discrete type (optional):**
    * Data value thresholds where colors change.
@@ -203,7 +206,7 @@ const processContinuousColorMap = (
   let positions: number[];
 
   if (stops && stops.length > 0) {
-    // Use provided stops (should be 0-1 normalized)
+    // Use provided stops (data domain values that need normalization)
     if (stops.length !== colors.length) {
       console.warn(
         `Continuous colorMap: stops length (${stops.length}) must match colors length (${colors.length})`,
@@ -211,19 +214,29 @@ const processContinuousColorMap = (
       return null;
     }
 
-    // Validate stops are in range [0, 1] and ascending
-    for (let i = 0; i < stops.length; i++) {
-      if (stops[i] < 0 || stops[i] > 1) {
-        console.warn(`Continuous colorMap: stops must be between 0 and 1, received: ${stops[i]}`);
-        return null;
-      }
-      if (i > 0 && stops[i] <= stops[i - 1]) {
+    // Validate stops are in ascending order
+    for (let i = 1; i < stops.length; i++) {
+      if (stops[i] <= stops[i - 1]) {
         console.warn(`Continuous colorMap: stops must be in ascending order`);
         return null;
       }
     }
 
-    positions = stops;
+    // Get scale domain and normalize stops to 0-1 range
+    const [minValue, maxValue] = getScaleDomainBounds(scale);
+    const range = maxValue - minValue;
+
+    if (range === 0) {
+      console.warn('Scale domain has zero range');
+      return null;
+    }
+
+    // Convert data value stops to normalized positions (0-1)
+    positions = stops.map((stop) => {
+      const normalized = (stop - minValue) / range;
+      // Clamp to [0, 1] to handle stops outside domain
+      return Math.max(0, Math.min(1, normalized));
+    });
   } else {
     // Evenly distribute colors
     positions = colors.map((_, i) => i / (colors.length - 1));
@@ -481,10 +494,14 @@ export const evaluateColorMapAtValue = (
     // Normalize the value to 0-1 in data space (0 = min, 1 = max)
     let normalizedValue = Math.max(0, Math.min(1, (dataValue - minValue) / range));
 
-    // Determine positions
+    // Determine positions (normalize data domain stops to 0-1)
     let positions: number[];
     if (stops && stops.length === colors.length) {
-      positions = stops;
+      // Normalize data domain stops to 0-1 positions
+      positions = stops.map((stop) => {
+        const normalized = (stop - minValue) / range;
+        return Math.max(0, Math.min(1, normalized));
+      });
     } else {
       // Evenly distribute
       positions = colors.map((_, i) => i / (colors.length - 1));
