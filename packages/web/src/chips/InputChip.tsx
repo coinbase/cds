@@ -9,7 +9,7 @@ export const InputChip = memo(
   forwardRef(function InputChip(
     {
       value,
-      label = value,
+      children = value,
       accessibilityLabel = typeof value === 'string' ? `Remove ${value}` : 'Remove option',
       invertColorScheme = true,
       testID = 'input-chip',
@@ -33,7 +33,7 @@ export const InputChip = memo(
         invertColorScheme={invertColorScheme}
         {...props}
       >
-        {value}
+        {children}
       </MediaChip>
     );
   }),

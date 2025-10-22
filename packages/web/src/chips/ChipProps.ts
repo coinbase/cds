@@ -16,6 +16,7 @@ export type ChipBaseProps = SharedProps &
     | 'accessibilityHint'
     | 'accessibilityLabelledBy'
     | 'onChange'
+    | 'value'
   > &
   Pick<SharedAccessibilityProps, 'accessibilityLabel'> & {
     /** ReactNode placed in the center of the Chip */
@@ -68,12 +69,10 @@ export type ChipBaseProps = SharedProps &
 
 export type ChipProps = ChipBaseProps;
 
-export type InputChipProps = {
-  /** Label to display in the Chip */
-  label?: React.ReactNode;
+export type InputChipProps = ChipProps & {
   /**
    * Value indicates what is currently selected
-   * @deprecated Use the `label` prop instead
+   * @deprecated Use the `children` prop instead
    */
-  value?: string & ChipProps['value'];
-} & Omit<ChipProps, 'end' | 'children' | 'noScaleOnPress' | 'value'>;
+  value?: string;
+};
