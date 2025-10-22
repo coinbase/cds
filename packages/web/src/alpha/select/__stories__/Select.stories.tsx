@@ -37,120 +37,19 @@ const hoveredBackgroundCss = css`
   }
 `;
 
-const exampleOptions = [
-  { value: null, label: 'Remove selection' },
-  { value: '1', label: 'Option 1' },
-  { value: '2', label: 'Option 2' },
-  { value: '3', label: 'Option 3' },
-  { value: '4', label: 'Option 4' },
-  { value: '5', label: 'Option 5' },
-  { value: '6', label: 'Option 6' },
-  { value: '7', label: 'Option 7' },
-  { value: '8', label: 'Option 8' },
-  { value: '9', label: 'Option 9' },
-];
-
-const exampleOptionsWithDescription = [
-  { value: null, label: 'Remove selection' },
-  { value: '1', label: 'Option 1', description: 'Description 1' },
-  { value: '2', label: 'Option 2', description: 'Description 2' },
-  { value: '3', label: 'Option 3', description: 'Description 3' },
-  { value: '4', label: 'Option 4', description: 'Description 4' },
-  { value: '5', label: 'Option 5', description: 'Description 5' },
-  { value: '6', label: 'Option 6', description: 'Description 6' },
-  { value: '7', label: 'Option 7', description: 'Description 7' },
-  { value: '8', label: 'Option 8', description: 'Description 8' },
-];
-
-const exampleOptionsWithOnlyDescription = [
-  { value: null, label: 'Remove selection' },
-  { value: '1', description: 'Description 1' },
-  { value: '2', description: 'Description 2' },
-  { value: '3', description: 'Description 3' },
-  { value: '4', description: 'Description 4' },
-];
-
-const exampleOptionsWithSomeDisabled = [
-  { value: null, label: 'Remove selection' },
-  { value: '1', label: 'Option 1', disabled: true },
-  { value: '2', label: 'Option 2' },
-  { value: '3', label: 'Option 3' },
-  { value: '4', label: 'Option 4', disabled: true },
-];
-
-const exampleOptionsWithoutNull = [
-  { value: '1', label: 'Option 1' },
-  { value: '2', label: 'Option 2' },
-  { value: '3', label: 'Option 3' },
-  { value: '4', label: 'Option 4' },
-  { value: '5', label: 'Option 5' },
-  { value: '6', label: 'Option 6' },
-  { value: '7', label: 'Option 7' },
-  { value: '8', label: 'Option 8' },
-];
-
-const exampleOptionsWithReactNodes = [
-  {
-    value: '1',
-    label: <Text font="title3">Option 1</Text>,
-    description: <Text font="title3">Description 1</Text>,
-  },
-  {
-    value: '2',
-    label: 'Option 2',
-    description: 'Not a react node',
-  },
-  {
-    value: '3',
-    label: <Text font="title4">Option 3</Text>,
-    description: <Text font="title4">Description 3</Text>,
-  },
-  {
-    value: '4',
-    label: 'Option 4',
-    description: 'Not a react node',
-  },
-  {
-    value: '5',
-    label: <Text font="legal">Option 5</Text>,
-    description: <Text font="legal">Description 5</Text>,
-  },
-];
-
-const exampleOptionsWithCustomAccessoriesAndMedia = [
-  {
-    value: '1',
-    label: 'Option 1',
-    accessory: <Icon color="fg" name="star" />,
-    media: <Icon color="fg" name="heart" />,
-  },
-  {
-    value: '2',
-    label: 'Option 2',
-    accessory: <Icon color="fg" name="checkmark" />,
-    media: <Icon color="fg" name="cross" />,
-  },
-  {
-    value: '3',
-    label: 'Option 3',
-    accessory: <Icon color="fg" name="add" />,
-    media: <Icon color="fg" name="minus" />,
-  },
-  {
-    value: '4',
-    label: 'Option 4',
-    accessory: <Icon color="fg" name="caretRight" />,
-    media: <Icon color="fg" name="caretLeft" />,
-  },
-  {
-    value: '5',
-    label: 'Option 5',
-    accessory: <Icon color="fg" name="arrowUp" />,
-    media: <Icon color="fg" name="home" />,
-  },
-];
-
 export const Default = () => {
+  const exampleOptions = [
+    { value: null, label: 'Remove selection' },
+    { value: '1', label: 'Option 1' },
+    { value: '2', label: 'Option 2' },
+    { value: '3', label: 'Option 3' },
+    { value: '4', label: 'Option 4' },
+    { value: '5', label: 'Option 5' },
+    { value: '6', label: 'Option 6' },
+    { value: '7', label: 'Option 7' },
+    { value: '8', label: 'Option 8' },
+    { value: '9', label: 'Option 9' },
+  ];
   const [value, setValue] = useState<string | null>('1');
 
   return (
@@ -165,6 +64,18 @@ export const Default = () => {
 };
 
 export const Compact = () => {
+  const exampleOptions = [
+    { value: null, label: 'Remove selection' },
+    { value: '1', label: 'Option 1' },
+    { value: '2', label: 'Option 2' },
+    { value: '3', label: 'Option 3' },
+    { value: '4', label: 'Option 4' },
+    { value: '5', label: 'Option 5' },
+    { value: '6', label: 'Option 6' },
+    { value: '7', label: 'Option 7' },
+    { value: '8', label: 'Option 8' },
+    { value: '9', label: 'Option 9' },
+  ];
   const [value, setValue] = useState<string | null>('1');
 
   return (
@@ -180,6 +91,18 @@ export const Compact = () => {
 };
 
 export const HelperText = () => {
+  const exampleOptions = [
+    { value: null, label: 'Remove selection' },
+    { value: '1', label: 'Option 1' },
+    { value: '2', label: 'Option 2' },
+    { value: '3', label: 'Option 3' },
+    { value: '4', label: 'Option 4' },
+    { value: '5', label: 'Option 5' },
+    { value: '6', label: 'Option 6' },
+    { value: '7', label: 'Option 7' },
+    { value: '8', label: 'Option 8' },
+    { value: '9', label: 'Option 9' },
+  ];
   const [value, setValue] = useState<string | null>('1');
 
   return (
@@ -195,6 +118,17 @@ export const HelperText = () => {
 };
 
 export const Description = () => {
+  const exampleOptionsWithDescription = [
+    { value: null, label: 'Remove selection' },
+    { value: '1', label: 'Option 1', description: 'Description 1' },
+    { value: '2', label: 'Option 2', description: 'Description 2' },
+    { value: '3', label: 'Option 3', description: 'Description 3' },
+    { value: '4', label: 'Option 4', description: 'Description 4' },
+    { value: '5', label: 'Option 5', description: 'Description 5' },
+    { value: '6', label: 'Option 6', description: 'Description 6' },
+    { value: '7', label: 'Option 7', description: 'Description 7' },
+    { value: '8', label: 'Option 8', description: 'Description 8' },
+  ];
   const [value, setValue] = useState<string | null>('1');
 
   return (
@@ -209,6 +143,13 @@ export const Description = () => {
 };
 
 export const OnlyDescription = () => {
+  const exampleOptionsWithOnlyDescription = [
+    { value: null, label: 'Remove selection' },
+    { value: '1', description: 'Description 1' },
+    { value: '2', description: 'Description 2' },
+    { value: '3', description: 'Description 3' },
+    { value: '4', description: 'Description 4' },
+  ];
   const [value, setValue] = useState<string | null>('1');
 
   return (
@@ -223,6 +164,18 @@ export const OnlyDescription = () => {
 };
 
 export const AccessibilityLabel = () => {
+  const exampleOptions = [
+    { value: null, label: 'Remove selection' },
+    { value: '1', label: 'Option 1' },
+    { value: '2', label: 'Option 2' },
+    { value: '3', label: 'Option 3' },
+    { value: '4', label: 'Option 4' },
+    { value: '5', label: 'Option 5' },
+    { value: '6', label: 'Option 6' },
+    { value: '7', label: 'Option 7' },
+    { value: '8', label: 'Option 8' },
+    { value: '9', label: 'Option 9' },
+  ];
   const [value, setValue] = useState<string | null>('1');
 
   return (
@@ -238,6 +191,18 @@ export const AccessibilityLabel = () => {
 };
 
 export const AccessibilityRoles = () => {
+  const exampleOptions = [
+    { value: null, label: 'Remove selection' },
+    { value: '1', label: 'Option 1' },
+    { value: '2', label: 'Option 2' },
+    { value: '3', label: 'Option 3' },
+    { value: '4', label: 'Option 4' },
+    { value: '5', label: 'Option 5' },
+    { value: '6', label: 'Option 6' },
+    { value: '7', label: 'Option 7' },
+    { value: '8', label: 'Option 8' },
+    { value: '9', label: 'Option 9' },
+  ];
   const [value, setValue] = useState<string | null>('1');
 
   return (
@@ -253,6 +218,18 @@ export const AccessibilityRoles = () => {
 };
 
 export const NoLabel = () => {
+  const exampleOptions = [
+    { value: null, label: 'Remove selection' },
+    { value: '1', label: 'Option 1' },
+    { value: '2', label: 'Option 2' },
+    { value: '3', label: 'Option 3' },
+    { value: '4', label: 'Option 4' },
+    { value: '5', label: 'Option 5' },
+    { value: '6', label: 'Option 6' },
+    { value: '7', label: 'Option 7' },
+    { value: '8', label: 'Option 8' },
+    { value: '9', label: 'Option 9' },
+  ];
   const [value, setValue] = useState<string | null>('1');
 
   return (
@@ -267,6 +244,18 @@ export const NoLabel = () => {
 };
 
 export const LabelVariant = () => {
+  const exampleOptions = [
+    { value: null, label: 'Remove selection' },
+    { value: '1', label: 'Option 1' },
+    { value: '2', label: 'Option 2' },
+    { value: '3', label: 'Option 3' },
+    { value: '4', label: 'Option 4' },
+    { value: '5', label: 'Option 5' },
+    { value: '6', label: 'Option 6' },
+    { value: '7', label: 'Option 7' },
+    { value: '8', label: 'Option 8' },
+    { value: '9', label: 'Option 9' },
+  ];
   const [value, setValue] = useState<string | null>('1');
 
   return (
@@ -282,6 +271,17 @@ export const LabelVariant = () => {
 };
 
 export const Disabled = () => {
+  const exampleOptionsWithDescription = [
+    { value: null, label: 'Remove selection' },
+    { value: '1', label: 'Option 1', description: 'Description 1' },
+    { value: '2', label: 'Option 2', description: 'Description 2' },
+    { value: '3', label: 'Option 3', description: 'Description 3' },
+    { value: '4', label: 'Option 4', description: 'Description 4' },
+    { value: '5', label: 'Option 5', description: 'Description 5' },
+    { value: '6', label: 'Option 6', description: 'Description 6' },
+    { value: '7', label: 'Option 7', description: 'Description 7' },
+    { value: '8', label: 'Option 8', description: 'Description 8' },
+  ];
   const [value, setValue] = useState<string | null>('1');
 
   return (
@@ -297,6 +297,13 @@ export const Disabled = () => {
 };
 
 export const DisabledOptions = () => {
+  const exampleOptionsWithSomeDisabled = [
+    { value: null, label: 'Remove selection' },
+    { value: '1', label: 'Option 1', disabled: true },
+    { value: '2', label: 'Option 2' },
+    { value: '3', label: 'Option 3' },
+    { value: '4', label: 'Option 4', disabled: true },
+  ];
   const [value, setValue] = useState<string | null>('1');
 
   return (
@@ -311,6 +318,16 @@ export const DisabledOptions = () => {
 };
 
 export const WithoutNull = () => {
+  const exampleOptionsWithoutNull = [
+    { value: '1', label: 'Option 1' },
+    { value: '2', label: 'Option 2' },
+    { value: '3', label: 'Option 3' },
+    { value: '4', label: 'Option 4' },
+    { value: '5', label: 'Option 5' },
+    { value: '6', label: 'Option 6' },
+    { value: '7', label: 'Option 7' },
+    { value: '8', label: 'Option 8' },
+  ];
   const [value, setValue] = useState<string | null>(null);
 
   return (
@@ -325,6 +342,33 @@ export const WithoutNull = () => {
 };
 
 export const OptionsAsReactNodes = () => {
+  const exampleOptionsWithReactNodes = [
+    {
+      value: '1',
+      label: <Text font="title3">Option 1</Text>,
+      description: <Text font="title3">Description 1</Text>,
+    },
+    {
+      value: '2',
+      label: 'Option 2',
+      description: 'Not a react node',
+    },
+    {
+      value: '3',
+      label: <Text font="title4">Option 3</Text>,
+      description: <Text font="title4">Description 3</Text>,
+    },
+    {
+      value: '4',
+      label: 'Option 4',
+      description: 'Not a react node',
+    },
+    {
+      value: '5',
+      label: <Text font="legal">Option 5</Text>,
+      description: <Text font="legal">Description 5</Text>,
+    },
+  ];
   const [value, setValue] = useState<string | null>('1');
 
   return (
@@ -339,7 +383,52 @@ export const OptionsAsReactNodes = () => {
   );
 };
 
+export const MixedDefaultAndCustomComponentOptions = () => {
+  const CustomOptionComponent: SelectOptionComponent = ({ value, onClick }) => {
+    return (
+      <HStack justifyContent="center">
+        <Spinner size={4} />
+        <Button transparent onClick={() => onClick?.(value)} width="80%">
+          {value ?? 'Empty value'}
+        </Button>
+        <Spinner size={4} />
+      </HStack>
+    );
+  };
+  const exampleOptions = [
+    { value: null, label: 'Remove selection' },
+    { value: '1', label: 'Option 1', Component: CustomOptionComponent },
+    { value: '2', label: 'Option 2' },
+    { value: '3', label: 'Option 3', Component: CustomOptionComponent },
+    { value: '4', label: 'Option 4' },
+  ];
+
+  const [value, setValue] = useState<string | null>('1');
+
+  return (
+    <Select
+      label="Single select - mixed default and custom component options"
+      onChange={setValue}
+      options={exampleOptions}
+      placeholder="Empty value"
+      value={value}
+    />
+  );
+};
+
 export const StartNode = () => {
+  const exampleOptions = [
+    { value: null, label: 'Remove selection' },
+    { value: '1', label: 'Option 1' },
+    { value: '2', label: 'Option 2' },
+    { value: '3', label: 'Option 3' },
+    { value: '4', label: 'Option 4' },
+    { value: '5', label: 'Option 5' },
+    { value: '6', label: 'Option 6' },
+    { value: '7', label: 'Option 7' },
+    { value: '8', label: 'Option 8' },
+    { value: '9', label: 'Option 9' },
+  ];
   const [value, setValue] = useState<string | null>('1');
 
   return (
@@ -355,6 +444,18 @@ export const StartNode = () => {
 };
 
 export const CustomEndNode = () => {
+  const exampleOptions = [
+    { value: null, label: 'Remove selection' },
+    { value: '1', label: 'Option 1' },
+    { value: '2', label: 'Option 2' },
+    { value: '3', label: 'Option 3' },
+    { value: '4', label: 'Option 4' },
+    { value: '5', label: 'Option 5' },
+    { value: '6', label: 'Option 6' },
+    { value: '7', label: 'Option 7' },
+    { value: '8', label: 'Option 8' },
+    { value: '9', label: 'Option 9' },
+  ];
   const [value, setValue] = useState<string | null>('1');
 
   return (
@@ -370,6 +471,18 @@ export const CustomEndNode = () => {
 };
 
 export const CustomAccessory = () => {
+  const exampleOptions = [
+    { value: null, label: 'Remove selection' },
+    { value: '1', label: 'Option 1' },
+    { value: '2', label: 'Option 2' },
+    { value: '3', label: 'Option 3' },
+    { value: '4', label: 'Option 4' },
+    { value: '5', label: 'Option 5' },
+    { value: '6', label: 'Option 6' },
+    { value: '7', label: 'Option 7' },
+    { value: '8', label: 'Option 8' },
+    { value: '9', label: 'Option 9' },
+  ];
   const [value, setValue] = useState<string | null>('1');
 
   return (
@@ -385,6 +498,18 @@ export const CustomAccessory = () => {
 };
 
 export const CustomMedia = () => {
+  const exampleOptions = [
+    { value: null, label: 'Remove selection' },
+    { value: '1', label: 'Option 1' },
+    { value: '2', label: 'Option 2' },
+    { value: '3', label: 'Option 3' },
+    { value: '4', label: 'Option 4' },
+    { value: '5', label: 'Option 5' },
+    { value: '6', label: 'Option 6' },
+    { value: '7', label: 'Option 7' },
+    { value: '8', label: 'Option 8' },
+    { value: '9', label: 'Option 9' },
+  ];
   const [value, setValue] = useState<string | null>('1');
 
   return (
@@ -400,6 +525,38 @@ export const CustomMedia = () => {
 };
 
 export const UniqueAccessoryAndMedia = () => {
+  const exampleOptionsWithCustomAccessoriesAndMedia = [
+    {
+      value: '1',
+      label: 'Option 1',
+      accessory: <Icon color="fg" name="star" />,
+      media: <Icon color="fg" name="heart" />,
+    },
+    {
+      value: '2',
+      label: 'Option 2',
+      accessory: <Icon color="fg" name="checkmark" />,
+      media: <Icon color="fg" name="cross" />,
+    },
+    {
+      value: '3',
+      label: 'Option 3',
+      accessory: <Icon color="fg" name="add" />,
+      media: <Icon color="fg" name="minus" />,
+    },
+    {
+      value: '4',
+      label: 'Option 4',
+      accessory: <Icon color="fg" name="caretRight" />,
+      media: <Icon color="fg" name="caretLeft" />,
+    },
+    {
+      value: '5',
+      label: 'Option 5',
+      accessory: <Icon color="fg" name="arrowUp" />,
+      media: <Icon color="fg" name="home" />,
+    },
+  ];
   const [value, setValue] = useState<string | null>('1');
 
   return (
@@ -414,6 +571,18 @@ export const UniqueAccessoryAndMedia = () => {
 };
 
 export const PositiveVariant = () => {
+  const exampleOptions = [
+    { value: null, label: 'Remove selection' },
+    { value: '1', label: 'Option 1' },
+    { value: '2', label: 'Option 2' },
+    { value: '3', label: 'Option 3' },
+    { value: '4', label: 'Option 4' },
+    { value: '5', label: 'Option 5' },
+    { value: '6', label: 'Option 6' },
+    { value: '7', label: 'Option 7' },
+    { value: '8', label: 'Option 8' },
+    { value: '9', label: 'Option 9' },
+  ];
   const [value, setValue] = useState<string | null>('1');
 
   return (
@@ -430,6 +599,18 @@ export const PositiveVariant = () => {
 };
 
 export const NegativeVariant = () => {
+  const exampleOptions = [
+    { value: null, label: 'Remove selection' },
+    { value: '1', label: 'Option 1' },
+    { value: '2', label: 'Option 2' },
+    { value: '3', label: 'Option 3' },
+    { value: '4', label: 'Option 4' },
+    { value: '5', label: 'Option 5' },
+    { value: '6', label: 'Option 6' },
+    { value: '7', label: 'Option 7' },
+    { value: '8', label: 'Option 8' },
+    { value: '9', label: 'Option 9' },
+  ];
   const [value, setValue] = useState<string | null>('1');
 
   return (
@@ -446,6 +627,18 @@ export const NegativeVariant = () => {
 };
 
 export const CustomStyles = () => {
+  const exampleOptions = [
+    { value: null, label: 'Remove selection' },
+    { value: '1', label: 'Option 1' },
+    { value: '2', label: 'Option 2' },
+    { value: '3', label: 'Option 3' },
+    { value: '4', label: 'Option 4' },
+    { value: '5', label: 'Option 5' },
+    { value: '6', label: 'Option 6' },
+    { value: '7', label: 'Option 7' },
+    { value: '8', label: 'Option 8' },
+    { value: '9', label: 'Option 9' },
+  ];
   const [value, setValue] = useState<string | null>('1');
 
   return (
@@ -479,6 +672,18 @@ export const CustomStyles = () => {
 };
 
 export const CustomClassNames = () => {
+  const exampleOptions = [
+    { value: null, label: 'Remove selection' },
+    { value: '1', label: 'Option 1' },
+    { value: '2', label: 'Option 2' },
+    { value: '3', label: 'Option 3' },
+    { value: '4', label: 'Option 4' },
+    { value: '5', label: 'Option 5' },
+    { value: '6', label: 'Option 6' },
+    { value: '7', label: 'Option 7' },
+    { value: '8', label: 'Option 8' },
+    { value: '9', label: 'Option 9' },
+  ];
   const [value, setValue] = useState<string | null>('1');
 
   return (
@@ -525,6 +730,18 @@ export const Typed = () => {
 };
 
 export const DefaultOpen = () => {
+  const exampleOptions = [
+    { value: null, label: 'Remove selection' },
+    { value: '1', label: 'Option 1' },
+    { value: '2', label: 'Option 2' },
+    { value: '3', label: 'Option 3' },
+    { value: '4', label: 'Option 4' },
+    { value: '5', label: 'Option 5' },
+    { value: '6', label: 'Option 6' },
+    { value: '7', label: 'Option 7' },
+    { value: '8', label: 'Option 8' },
+    { value: '9', label: 'Option 9' },
+  ];
   const [value, setValue] = useState<string | null>('1');
 
   return (
@@ -540,6 +757,18 @@ export const DefaultOpen = () => {
 };
 
 export const DisabledClickOutsideClose = () => {
+  const exampleOptions = [
+    { value: null, label: 'Remove selection' },
+    { value: '1', label: 'Option 1' },
+    { value: '2', label: 'Option 2' },
+    { value: '3', label: 'Option 3' },
+    { value: '4', label: 'Option 4' },
+    { value: '5', label: 'Option 5' },
+    { value: '6', label: 'Option 6' },
+    { value: '7', label: 'Option 7' },
+    { value: '8', label: 'Option 8' },
+    { value: '9', label: 'Option 9' },
+  ];
   const [value, setValue] = useState<string | null>('1');
 
   return (
@@ -555,6 +784,18 @@ export const DisabledClickOutsideClose = () => {
 };
 
 export const ControlledOpen = () => {
+  const exampleOptions = [
+    { value: null, label: 'Remove selection' },
+    { value: '1', label: 'Option 1' },
+    { value: '2', label: 'Option 2' },
+    { value: '3', label: 'Option 3' },
+    { value: '4', label: 'Option 4' },
+    { value: '5', label: 'Option 5' },
+    { value: '6', label: 'Option 6' },
+    { value: '7', label: 'Option 7' },
+    { value: '8', label: 'Option 8' },
+    { value: '9', label: 'Option 9' },
+  ];
   const [value, setValue] = useState<string | null>('1');
   const [open, setOpen] = useState(true);
 
@@ -746,6 +987,18 @@ export const OptionsWithOnlyMedia = () => {
 };
 
 export const CompactWithVariants = () => {
+  const exampleOptions = [
+    { value: null, label: 'Remove selection' },
+    { value: '1', label: 'Option 1' },
+    { value: '2', label: 'Option 2' },
+    { value: '3', label: 'Option 3' },
+    { value: '4', label: 'Option 4' },
+    { value: '5', label: 'Option 5' },
+    { value: '6', label: 'Option 6' },
+    { value: '7', label: 'Option 7' },
+    { value: '8', label: 'Option 8' },
+    { value: '9', label: 'Option 9' },
+  ];
   const [positiveValue, setPositiveValue] = useState<string | null>('1');
   const [negativeValue, setNegativeValue] = useState<string | null>('2');
 
@@ -776,6 +1029,18 @@ export const CompactWithVariants = () => {
 };
 
 export const DisabledWithVariants = () => {
+  const exampleOptions = [
+    { value: null, label: 'Remove selection' },
+    { value: '1', label: 'Option 1' },
+    { value: '2', label: 'Option 2' },
+    { value: '3', label: 'Option 3' },
+    { value: '4', label: 'Option 4' },
+    { value: '5', label: 'Option 5' },
+    { value: '6', label: 'Option 6' },
+    { value: '7', label: 'Option 7' },
+    { value: '8', label: 'Option 8' },
+    { value: '9', label: 'Option 9' },
+  ];
   const [positiveValue, setPositiveValue] = useState<string | null>('1');
   const [negativeValue, setNegativeValue] = useState<string | null>('2');
 
@@ -806,6 +1071,18 @@ export const DisabledWithVariants = () => {
 };
 
 export const StartNodeWithVariants = () => {
+  const exampleOptions = [
+    { value: null, label: 'Remove selection' },
+    { value: '1', label: 'Option 1' },
+    { value: '2', label: 'Option 2' },
+    { value: '3', label: 'Option 3' },
+    { value: '4', label: 'Option 4' },
+    { value: '5', label: 'Option 5' },
+    { value: '6', label: 'Option 6' },
+    { value: '7', label: 'Option 7' },
+    { value: '8', label: 'Option 8' },
+    { value: '9', label: 'Option 9' },
+  ];
   const [positiveValue, setPositiveValue] = useState<string | null>('1');
   const [negativeValue, setNegativeValue] = useState<string | null>('2');
 
@@ -836,6 +1113,18 @@ export const StartNodeWithVariants = () => {
 };
 
 export const LongHelperText = () => {
+  const exampleOptions = [
+    { value: null, label: 'Remove selection' },
+    { value: '1', label: 'Option 1' },
+    { value: '2', label: 'Option 2' },
+    { value: '3', label: 'Option 3' },
+    { value: '4', label: 'Option 4' },
+    { value: '5', label: 'Option 5' },
+    { value: '6', label: 'Option 6' },
+    { value: '7', label: 'Option 7' },
+    { value: '8', label: 'Option 8' },
+    { value: '9', label: 'Option 9' },
+  ];
   const [value, setValue] = useState<string | null>('1');
 
   return (
@@ -851,6 +1140,18 @@ export const LongHelperText = () => {
 };
 
 export const CustomLongPlaceholder = () => {
+  const exampleOptions = [
+    { value: null, label: 'Remove selection' },
+    { value: '1', label: 'Option 1' },
+    { value: '2', label: 'Option 2' },
+    { value: '3', label: 'Option 3' },
+    { value: '4', label: 'Option 4' },
+    { value: '5', label: 'Option 5' },
+    { value: '6', label: 'Option 6' },
+    { value: '7', label: 'Option 7' },
+    { value: '8', label: 'Option 8' },
+    { value: '9', label: 'Option 9' },
+  ];
   const [value, setValue] = useState<string | null>(null);
 
   return (
@@ -865,6 +1166,38 @@ export const CustomLongPlaceholder = () => {
 };
 
 export const AllCombinedFeatures = () => {
+  const exampleOptionsWithCustomAccessoriesAndMedia = [
+    {
+      value: '1',
+      label: 'Option 1',
+      accessory: <Icon color="fg" name="star" />,
+      media: <Icon color="fg" name="heart" />,
+    },
+    {
+      value: '2',
+      label: 'Option 2',
+      accessory: <Icon color="fg" name="checkmark" />,
+      media: <Icon color="fg" name="cross" />,
+    },
+    {
+      value: '3',
+      label: 'Option 3',
+      accessory: <Icon color="fg" name="add" />,
+      media: <Icon color="fg" name="minus" />,
+    },
+    {
+      value: '4',
+      label: 'Option 4',
+      accessory: <Icon color="fg" name="caretRight" />,
+      media: <Icon color="fg" name="caretLeft" />,
+    },
+    {
+      value: '5',
+      label: 'Option 5',
+      accessory: <Icon color="fg" name="arrowUp" />,
+      media: <Icon color="fg" name="home" />,
+    },
+  ];
   const [value, setValue] = useState<string | null>('1');
 
   return (
@@ -882,6 +1215,18 @@ export const AllCombinedFeatures = () => {
 };
 
 export const ComplexStyleCombinations = () => {
+  const exampleOptions = [
+    { value: null, label: 'Remove selection' },
+    { value: '1', label: 'Option 1' },
+    { value: '2', label: 'Option 2' },
+    { value: '3', label: 'Option 3' },
+    { value: '4', label: 'Option 4' },
+    { value: '5', label: 'Option 5' },
+    { value: '6', label: 'Option 6' },
+    { value: '7', label: 'Option 7' },
+    { value: '8', label: 'Option 8' },
+    { value: '9', label: 'Option 9' },
+  ];
   const [value, setValue] = useState<string | null>('1');
 
   return (
@@ -1013,6 +1358,18 @@ export const StressTestManyOptionsWithDescriptions = () => {
 };
 
 export const CustomControlComponent = () => {
+  const exampleOptions = [
+    { value: null, label: 'Remove selection' },
+    { value: '1', label: 'Option 1' },
+    { value: '2', label: 'Option 2' },
+    { value: '3', label: 'Option 3' },
+    { value: '4', label: 'Option 4' },
+    { value: '5', label: 'Option 5' },
+    { value: '6', label: 'Option 6' },
+    { value: '7', label: 'Option 7' },
+    { value: '8', label: 'Option 8' },
+    { value: '9', label: 'Option 9' },
+  ];
   const [value, setValue] = useState<string | null>('1');
 
   const CustomControlComponent: SelectControlComponent = ({ value, setOpen }) => {
@@ -1032,6 +1389,18 @@ export const CustomControlComponent = () => {
 };
 
 export const CustomOptionComponent = () => {
+  const exampleOptions = [
+    { value: null, label: 'Remove selection' },
+    { value: '1', label: 'Option 1' },
+    { value: '2', label: 'Option 2' },
+    { value: '3', label: 'Option 3' },
+    { value: '4', label: 'Option 4' },
+    { value: '5', label: 'Option 5' },
+    { value: '6', label: 'Option 6' },
+    { value: '7', label: 'Option 7' },
+    { value: '8', label: 'Option 8' },
+    { value: '9', label: 'Option 9' },
+  ];
   const [value, setValue] = useState<string | null>('1');
 
   const CustomOptionComponent: SelectOptionComponent = ({ value, onClick }) => {
@@ -1059,6 +1428,18 @@ export const CustomOptionComponent = () => {
 };
 
 export const ValueDisplayed = () => {
+  const exampleOptions = [
+    { value: null, label: 'Remove selection' },
+    { value: '1', label: 'Option 1' },
+    { value: '2', label: 'Option 2' },
+    { value: '3', label: 'Option 3' },
+    { value: '4', label: 'Option 4' },
+    { value: '5', label: 'Option 5' },
+    { value: '6', label: 'Option 6' },
+    { value: '7', label: 'Option 7' },
+    { value: '8', label: 'Option 8' },
+    { value: '9', label: 'Option 9' },
+  ];
   const [value, setValue] = useState<string | null>('1');
 
   return (
@@ -1076,6 +1457,18 @@ export const ValueDisplayed = () => {
 };
 
 export const RefImperativeHandle = () => {
+  const exampleOptions = [
+    { value: null, label: 'Remove selection' },
+    { value: '1', label: 'Option 1' },
+    { value: '2', label: 'Option 2' },
+    { value: '3', label: 'Option 3' },
+    { value: '4', label: 'Option 4' },
+    { value: '5', label: 'Option 5' },
+    { value: '6', label: 'Option 6' },
+    { value: '7', label: 'Option 7' },
+    { value: '8', label: 'Option 8' },
+    { value: '9', label: 'Option 9' },
+  ];
   const [value, setValue] = useState<string | null>('1');
   const selectRef = useRef<SelectRef>(null);
 

@@ -26,84 +26,18 @@ const hoveredBackgroundCss = css`
   }
 `;
 
-const exampleOptions = [
-  { value: null, label: 'Remove selection' },
-  { value: '1', label: 'Option 1' },
-  { value: '2', label: 'Option 2' },
-  { value: '3', label: 'Option 3' },
-  { value: '4', label: 'Option 4' },
-  { value: '5', label: 'Option 5' },
-  { value: '6', label: 'Option 6' },
-  { value: '7', label: 'Option 7' },
-  { value: '8', label: 'Option 8' },
-];
-
-const exampleOptionsWithDescription = [
-  { value: null, label: 'Remove selection' },
-  { value: '1', label: 'Option 1', description: 'Description 1' },
-  { value: '2', label: 'Option 2', description: 'Description 2' },
-  { value: '3', label: 'Option 3', description: 'Description 3' },
-  { value: '4', label: 'Option 4', description: 'Description 4' },
-  { value: '5', label: 'Option 5', description: 'Description 5' },
-  { value: '6', label: 'Option 6', description: 'Description 6' },
-  { value: '7', label: 'Option 7', description: 'Description 7' },
-  { value: '8', label: 'Option 8', description: 'Description 8' },
-];
-
-const exampleOptionsWithOnlyDescription = [
-  { value: null, label: 'Remove selection' },
-  { value: '1', description: 'Description 1' },
-  { value: '2', description: 'Description 2' },
-  { value: '3', description: 'Description 3' },
-  { value: '4', description: 'Description 4' },
-];
-
-const exampleOptionsWithSomeDisabled = [
-  { value: null, label: 'Remove selection' },
-  { value: '1', label: 'Option 1', disabled: true },
-  { value: '2', label: 'Option 2' },
-  { value: '3', label: 'Option 3' },
-  { value: '4', label: 'Option 4', disabled: true },
-  { value: '5', label: 'Option 5' },
-  { value: '6', label: 'Option 6', disabled: true },
-  { value: '7', label: 'Option 7', disabled: true },
-  { value: '8', label: 'Option 8' },
-];
-
-const exampleOptionsWithCustomAccessoriesAndMedia = [
-  {
-    value: '1',
-    label: 'Option 1',
-    accessory: <Icon color="fg" name="star" />,
-    media: <Icon color="fg" name="heart" />,
-  },
-  {
-    value: '2',
-    label: 'Option 2',
-    accessory: <Icon color="fg" name="checkmark" />,
-    media: <Icon color="fg" name="cross" />,
-  },
-  {
-    value: '3',
-    label: 'Option 3',
-    accessory: <Icon color="fg" name="add" />,
-    media: <Icon color="fg" name="minus" />,
-  },
-  {
-    value: '4',
-    label: 'Option 4',
-    accessory: <Icon color="fg" name="caretRight" />,
-    media: <Icon color="fg" name="caretLeft" />,
-  },
-  {
-    value: '5',
-    label: 'Option 5',
-    accessory: <Icon color="fg" name="arrowUp" />,
-    media: <Icon color="fg" name="home" />,
-  },
-];
-
 export const Default = () => {
+  const exampleOptions = [
+    { value: null, label: 'Remove selection' },
+    { value: '1', label: 'Option 1' },
+    { value: '2', label: 'Option 2' },
+    { value: '3', label: 'Option 3' },
+    { value: '4', label: 'Option 4' },
+    { value: '5', label: 'Option 5' },
+    { value: '6', label: 'Option 6' },
+    { value: '7', label: 'Option 7' },
+    { value: '8', label: 'Option 8' },
+  ];
   const { value, onChange } = useMultiSelect({
     initialValue: ['1', '2'],
   });
@@ -121,6 +55,17 @@ export const Default = () => {
 };
 
 export const Compact = () => {
+  const exampleOptions = [
+    { value: null, label: 'Remove selection' },
+    { value: '1', label: 'Option 1' },
+    { value: '2', label: 'Option 2' },
+    { value: '3', label: 'Option 3' },
+    { value: '4', label: 'Option 4' },
+    { value: '5', label: 'Option 5' },
+    { value: '6', label: 'Option 6' },
+    { value: '7', label: 'Option 7' },
+    { value: '8', label: 'Option 8' },
+  ];
   const { value, onChange } = useMultiSelect({
     initialValue: ['1', '2'],
   });
@@ -139,6 +84,17 @@ export const Compact = () => {
 };
 
 export const HideSelectAll = () => {
+  const exampleOptions = [
+    { value: null, label: 'Remove selection' },
+    { value: '1', label: 'Option 1' },
+    { value: '2', label: 'Option 2' },
+    { value: '3', label: 'Option 3' },
+    { value: '4', label: 'Option 4' },
+    { value: '5', label: 'Option 5' },
+    { value: '6', label: 'Option 6' },
+    { value: '7', label: 'Option 7' },
+    { value: '8', label: 'Option 8' },
+  ];
   const { value, onChange } = useMultiSelect({
     initialValue: ['1'],
   });
@@ -157,6 +113,17 @@ export const HideSelectAll = () => {
 };
 
 export const CustomSelectAllLabel = () => {
+  const exampleOptions = [
+    { value: null, label: 'Remove selection' },
+    { value: '1', label: 'Option 1' },
+    { value: '2', label: 'Option 2' },
+    { value: '3', label: 'Option 3' },
+    { value: '4', label: 'Option 4' },
+    { value: '5', label: 'Option 5' },
+    { value: '6', label: 'Option 6' },
+    { value: '7', label: 'Option 7' },
+    { value: '8', label: 'Option 8' },
+  ];
   const { value, onChange } = useMultiSelect({
     initialValue: ['1'],
   });
@@ -178,6 +145,17 @@ export const CustomClearAllLabel = () => {
   const { value, onChange } = useMultiSelect({
     initialValue: ['1'],
   });
+  const exampleOptions = [
+    { value: null, label: 'Remove selection' },
+    { value: '1', label: 'Option 1' },
+    { value: '2', label: 'Option 2' },
+    { value: '3', label: 'Option 3' },
+    { value: '4', label: 'Option 4' },
+    { value: '5', label: 'Option 5' },
+    { value: '6', label: 'Option 6' },
+    { value: '7', label: 'Option 7' },
+    { value: '8', label: 'Option 8' },
+  ];
 
   return (
     <Select
@@ -193,6 +171,17 @@ export const CustomClearAllLabel = () => {
 };
 
 export const CustomSelectAllOption = () => {
+  const exampleOptions = [
+    { value: null, label: 'Remove selection' },
+    { value: '1', label: 'Option 1' },
+    { value: '2', label: 'Option 2' },
+    { value: '3', label: 'Option 3' },
+    { value: '4', label: 'Option 4' },
+    { value: '5', label: 'Option 5' },
+    { value: '6', label: 'Option 6' },
+    { value: '7', label: 'Option 7' },
+    { value: '8', label: 'Option 8' },
+  ];
   const { value, onChange } = useMultiSelect({
     initialValue: ['1'],
   });
@@ -239,6 +228,17 @@ export const CustomSelectAllOption = () => {
 };
 
 export const Disabled = () => {
+  const exampleOptions = [
+    { value: null, label: 'Remove selection' },
+    { value: '1', label: 'Option 1' },
+    { value: '2', label: 'Option 2' },
+    { value: '3', label: 'Option 3' },
+    { value: '4', label: 'Option 4' },
+    { value: '5', label: 'Option 5' },
+    { value: '6', label: 'Option 6' },
+    { value: '7', label: 'Option 7' },
+    { value: '8', label: 'Option 8' },
+  ];
   const { value, onChange } = useMultiSelect({
     initialValue: ['1'],
   });
@@ -257,6 +257,17 @@ export const Disabled = () => {
 };
 
 export const DisabledOptions = () => {
+  const exampleOptions = [
+    { value: null, label: 'Remove selection' },
+    { value: '1', label: 'Option 1', disabled: true },
+    { value: '2', label: 'Option 2' },
+    { value: '3', label: 'Option 3' },
+    { value: '4', label: 'Option 4', disabled: true },
+    { value: '5', label: 'Option 5' },
+    { value: '6', label: 'Option 6', disabled: true },
+    { value: '7', label: 'Option 7', disabled: true },
+    { value: '8', label: 'Option 8' },
+  ];
   const { value, onChange } = useMultiSelect({
     initialValue: ['1', '2', '3', '4', '5', '6', '7', '8'],
   });
@@ -265,7 +276,7 @@ export const DisabledOptions = () => {
     <Select
       label="Multi select - disabled options"
       onChange={onChange}
-      options={exampleOptionsWithSomeDisabled}
+      options={exampleOptions}
       placeholder="Empty value"
       type="multi"
       value={value}
@@ -274,6 +285,17 @@ export const DisabledOptions = () => {
 };
 
 export const CustomAccessory = () => {
+  const exampleOptions = [
+    { value: null, label: 'Remove selection' },
+    { value: '1', label: 'Option 1' },
+    { value: '2', label: 'Option 2' },
+    { value: '3', label: 'Option 3' },
+    { value: '4', label: 'Option 4' },
+    { value: '5', label: 'Option 5' },
+    { value: '6', label: 'Option 6' },
+    { value: '7', label: 'Option 7' },
+    { value: '8', label: 'Option 8' },
+  ];
   const { value, onChange } = useMultiSelect({
     initialValue: ['1'],
   });
@@ -292,6 +314,17 @@ export const CustomAccessory = () => {
 };
 
 export const CustomMedia = () => {
+  const exampleOptions = [
+    { value: null, label: 'Remove selection' },
+    { value: '1', label: 'Option 1' },
+    { value: '2', label: 'Option 2' },
+    { value: '3', label: 'Option 3' },
+    { value: '4', label: 'Option 4' },
+    { value: '5', label: 'Option 5' },
+    { value: '6', label: 'Option 6' },
+    { value: '7', label: 'Option 7' },
+    { value: '8', label: 'Option 8' },
+  ];
   const { value, onChange } = useMultiSelect({
     initialValue: ['1'],
   });
@@ -376,6 +409,17 @@ export const CustomHiddenSelectedOptionsLabel = () => {
 };
 
 export const Descriptions = () => {
+  const exampleOptionsWithDescription = [
+    { value: null, label: 'Remove selection' },
+    { value: '1', label: 'Option 1', description: 'Description 1' },
+    { value: '2', label: 'Option 2', description: 'Description 2' },
+    { value: '3', label: 'Option 3', description: 'Description 3' },
+    { value: '4', label: 'Option 4', description: 'Description 4' },
+    { value: '5', label: 'Option 5', description: 'Description 5' },
+    { value: '6', label: 'Option 6', description: 'Description 6' },
+    { value: '7', label: 'Option 7', description: 'Description 7' },
+    { value: '8', label: 'Option 8', description: 'Description 8' },
+  ];
   const { value, onChange } = useMultiSelect({
     initialValue: ['1'],
   });
@@ -393,6 +437,13 @@ export const Descriptions = () => {
 };
 
 export const DescriptionsOnly = () => {
+  const exampleOptionsWithOnlyDescription = [
+    { value: null, label: 'Remove selection' },
+    { value: '1', description: 'Description 1' },
+    { value: '2', description: 'Description 2' },
+    { value: '3', description: 'Description 3' },
+    { value: '4', description: 'Description 4' },
+  ];
   const { value, onChange } = useMultiSelect({
     initialValue: ['1'],
   });
@@ -410,6 +461,39 @@ export const DescriptionsOnly = () => {
 };
 
 export const MixedAccessoriesMedia = () => {
+  const exampleOptions = [
+    { value: null, label: 'Remove selection' },
+    {
+      value: '1',
+      label: 'Option 1',
+      accessory: <Icon color="fg" name="star" />,
+      media: <Icon color="fg" name="heart" />,
+    },
+    {
+      value: '2',
+      label: 'Option 2',
+      accessory: <Icon color="fg" name="checkmark" />,
+      media: <Icon color="fg" name="cross" />,
+    },
+    {
+      value: '3',
+      label: 'Option 3',
+      accessory: <Icon color="fg" name="add" />,
+      media: <Icon color="fg" name="minus" />,
+    },
+    {
+      value: '4',
+      label: 'Option 4',
+      accessory: <Icon color="fg" name="caretRight" />,
+      media: <Icon color="fg" name="caretLeft" />,
+    },
+    {
+      value: '5',
+      label: 'Option 5',
+      accessory: <Icon color="fg" name="arrowUp" />,
+      media: <Icon color="fg" name="home" />,
+    },
+  ];
   const { value, onChange } = useMultiSelect({
     initialValue: ['1'],
   });
@@ -418,7 +502,7 @@ export const MixedAccessoriesMedia = () => {
     <Select
       label="Multi select - mixed unique accessories and media"
       onChange={onChange}
-      options={exampleOptionsWithCustomAccessoriesAndMedia}
+      options={exampleOptions}
       placeholder="Empty value"
       type="multi"
       value={value}
@@ -427,6 +511,39 @@ export const MixedAccessoriesMedia = () => {
 };
 
 export const AllCombinedFeatures = () => {
+  const exampleOptions = [
+    { value: null, label: 'Remove selection' },
+    {
+      value: '1',
+      label: 'Option 1',
+      accessory: <Icon color="fg" name="star" />,
+      media: <Icon color="fg" name="heart" />,
+    },
+    {
+      value: '2',
+      label: 'Option 2',
+      accessory: <Icon color="fg" name="checkmark" />,
+      media: <Icon color="fg" name="cross" />,
+    },
+    {
+      value: '3',
+      label: 'Option 3',
+      accessory: <Icon color="fg" name="add" />,
+      media: <Icon color="fg" name="minus" />,
+    },
+    {
+      value: '4',
+      label: 'Option 4',
+      accessory: <Icon color="fg" name="caretRight" />,
+      media: <Icon color="fg" name="caretLeft" />,
+    },
+    {
+      value: '5',
+      label: 'Option 5',
+      accessory: <Icon color="fg" name="arrowUp" />,
+      media: <Icon color="fg" name="home" />,
+    },
+  ];
   const { value, onChange } = useMultiSelect({
     initialValue: ['1'],
   });
@@ -437,7 +554,7 @@ export const AllCombinedFeatures = () => {
       label="Multi select - all combined features"
       maxSelectedOptionsToShow={3}
       onChange={onChange}
-      options={exampleOptionsWithCustomAccessoriesAndMedia}
+      options={exampleOptions}
       placeholder="Choose options"
       selectAllLabel="Select all these amazing options"
       startNode={<Icon color="fg" name="filter" />}
@@ -472,6 +589,17 @@ export const EdgeCaseEmptyLabels = () => {
 };
 
 export const ControlledOpen = () => {
+  const exampleOptions = [
+    { value: null, label: 'Remove selection' },
+    { value: '1', label: 'Option 1' },
+    { value: '2', label: 'Option 2' },
+    { value: '3', label: 'Option 3' },
+    { value: '4', label: 'Option 4' },
+    { value: '5', label: 'Option 5' },
+    { value: '6', label: 'Option 6' },
+    { value: '7', label: 'Option 7' },
+    { value: '8', label: 'Option 8' },
+  ];
   const { value, onChange } = useMultiSelect({
     initialValue: ['1'],
   });
@@ -498,6 +626,17 @@ export const ControlledOpen = () => {
 };
 
 export const PositiveVariant = () => {
+  const exampleOptions = [
+    { value: null, label: 'Remove selection' },
+    { value: '1', label: 'Option 1' },
+    { value: '2', label: 'Option 2' },
+    { value: '3', label: 'Option 3' },
+    { value: '4', label: 'Option 4' },
+    { value: '5', label: 'Option 5' },
+    { value: '6', label: 'Option 6' },
+    { value: '7', label: 'Option 7' },
+    { value: '8', label: 'Option 8' },
+  ];
   const { value, onChange } = useMultiSelect({
     initialValue: ['1'],
   });
@@ -517,6 +656,17 @@ export const PositiveVariant = () => {
 };
 
 export const NegativeVariant = () => {
+  const exampleOptions = [
+    { value: null, label: 'Remove selection' },
+    { value: '1', label: 'Option 1' },
+    { value: '2', label: 'Option 2' },
+    { value: '3', label: 'Option 3' },
+    { value: '4', label: 'Option 4' },
+    { value: '5', label: 'Option 5' },
+    { value: '6', label: 'Option 6' },
+    { value: '7', label: 'Option 7' },
+    { value: '8', label: 'Option 8' },
+  ];
   const { value, onChange } = useMultiSelect({
     initialValue: ['1'],
   });
@@ -536,6 +686,17 @@ export const NegativeVariant = () => {
 };
 
 export const StartNode = () => {
+  const exampleOptions = [
+    { value: null, label: 'Remove selection' },
+    { value: '1', label: 'Option 1' },
+    { value: '2', label: 'Option 2' },
+    { value: '3', label: 'Option 3' },
+    { value: '4', label: 'Option 4' },
+    { value: '5', label: 'Option 5' },
+    { value: '6', label: 'Option 6' },
+    { value: '7', label: 'Option 7' },
+    { value: '8', label: 'Option 8' },
+  ];
   const { value, onChange } = useMultiSelect({
     initialValue: ['1'],
   });
@@ -569,6 +730,17 @@ export const EmptyOptions = () => {
 };
 
 export const ComplexStyles = () => {
+  const exampleOptions = [
+    { value: null, label: 'Remove selection' },
+    { value: '1', label: 'Option 1' },
+    { value: '2', label: 'Option 2' },
+    { value: '3', label: 'Option 3' },
+    { value: '4', label: 'Option 4' },
+    { value: '5', label: 'Option 5' },
+    { value: '6', label: 'Option 6' },
+    { value: '7', label: 'Option 7' },
+    { value: '8', label: 'Option 8' },
+  ];
   const { value, onChange } = useMultiSelect({
     initialValue: ['1', '2'],
   });

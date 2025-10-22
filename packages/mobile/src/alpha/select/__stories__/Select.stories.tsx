@@ -137,7 +137,6 @@ const exampleOptionsWithCustomAccessoriesAndMedia = [
   },
 ];
 
-// Internal component helpers for the examples
 const DefaultExample = () => {
   const [value, setValue] = useState<string | null>('1');
 
@@ -1034,6 +1033,9 @@ const SelectV3Screen = () => {
     <ExampleScreen>
       <Example title="Default">
         <DefaultExample />
+      </Example>
+      <Example title="Typed">
+        <TypedSelectExample />
       </Example>
       <Example title="Compact">
         <CompactExample />
