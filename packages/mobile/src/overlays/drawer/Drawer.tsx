@@ -212,8 +212,6 @@ export const Drawer = memo(
       },
     });
 
-    const combinedStyles = [cardStyles.spacing, drawerAnimationStyles];
-
     useImperativeHandle(
       ref,
       () => ({
@@ -222,24 +220,10 @@ export const Drawer = memo(
       [handleClose],
     );
 
-    // this hack clips internal content from overflowing the borderRadius, but also make sure the handlebar still shows if handlebar is enabled
-    const content = useMemo(() => {
-      if (shouldShowHandleBar) {
-        return (
-          <View>
-            <HandleBar
-              accessibilityLabel={handleBarAccessibilityLabel}
-              accessibilityRole="button"
-              onAccessibilityTap={handleClose}
-            />
-            <Box borderRadius={400} style={shouldShowHandleBar && cardStyles.overflowStyles}>
-              {typeof children === 'function' ? children({ handleClose }) : children}
-            </Box>
-          </View>
-        );
-      }
-      return <View>{typeof children === 'function' ? children({ handleClose }) : children}</View>;
-    }, [shouldShowHandleBar, cardStyles, children, handleClose, handleBarAccessibilityLabel]);
+    const content = useMemo(
+      () => (typeof children === 'function' ? children({ handleClose }) : children),
+      [children, handleClose],
+    );
 
     return (
       <Modal
@@ -261,18 +245,29 @@ export const Drawer = memo(
           <Box
             {...getPanGestureHandlers}
             animated
-            borderRadius={isPinHorizontal ? 0 : 400}
-            bordered={activeColorScheme === 'dark'}
-            elevation={2}
-            maxHeight={!isPinHorizontal ? verticalDrawerMaxHeight : '100%'}
             onAccessibilityEscape={handleClose}
-            pin={pin}
-            style={combinedStyles}
             // close modal when user performs the "escape" accessibility gesture
             // https://reactnative.dev/docs/accessibility#onaccessibilityescape-ios
+            pin={pin}
+            style={drawerAnimationStyles}
             width={isPinHorizontal ? horizontalDrawerWidth : '100%'}
           >
-            {content}
+            {shouldShowHandleBar && (
+              <HandleBar
+                accessibilityLabel={handleBarAccessibilityLabel}
+                accessibilityRole="button"
+                onAccessibilityPress={handleClose}
+              />
+            )}
+            <Box
+              borderRadius={isPinHorizontal ? 0 : 400}
+              bordered={activeColorScheme === 'dark'}
+              elevation={2}
+              maxHeight={!isPinHorizontal ? verticalDrawerMaxHeight : '100%'}
+              style={[cardStyles.spacing, shouldShowHandleBar && cardStyles.overflowStyles]}
+            >
+              {content}
+            </Box>
           </Box>
         </OverlayContentContext.Provider>
       </Modal>

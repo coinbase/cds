@@ -10,10 +10,26 @@ export default function Root({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     if (window.location.hash) {
-      const element = document.getElementById(window.location.hash.slice(1));
-      if (element) {
-        element.scrollIntoView();
-      }
+      const elementId = window.location.hash.slice(1);
+      const element = document.getElementById(elementId);
+
+      const startTime = Date.now();
+
+      const intervalId = setInterval(() => {
+        const element = document.getElementById(elementId);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+          clearInterval(intervalId);
+          return;
+        }
+
+        // Give up after 5 seconds
+        if (Date.now() - startTime >= 5000) {
+          clearInterval(intervalId);
+        }
+      }, 100);
+
+      return () => clearInterval(intervalId);
     }
   }, []);
 

@@ -2,7 +2,7 @@
   "import": "import { TableCellFallback } from '@coinbase/cds-web/tables/TableCellFallback'",
   "source": "https://github.com/coinbase/cds/blob/master/packages/web/src/tables/TableCellFallback.tsx",
   "description": "Shows a loading state for Table cells.",
-  "storybook": "https://cds-storybook.coinbase.com/?path=/story/core-components-table-tablecellfallback--table-cell-fallback-example",
+  "storybook": "https://cds-storybook.coinbase.com/?path=/story/components-table-tablecellfallback--table-cell-fallback-example",
   "relatedComponents": [
     {
       "label": "Table",

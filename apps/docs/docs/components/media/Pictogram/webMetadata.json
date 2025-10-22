@@ -1,5 +1,5 @@
 {
-  "import": "import { Pictogram } from '@coinbase/cds-web/illustratations/Pictogram'",
+  "import": "import { Pictogram } from '@coinbase/cds-web/illustrations/Pictogram'",
   "changelog": "https://github.com/coinbase/cds/blob/master/packages/illustrations/CHANGELOG.md",
   "source": "https://github.com/coinbase/cds/blob/master/packages/web/src/illustrations/Pictogram.tsx",
   "storybook": "https://cds-storybook.coinbase.com/?path=/story/illustrations--pictogram",

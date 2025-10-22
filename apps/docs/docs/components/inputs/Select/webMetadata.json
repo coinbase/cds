@@ -1,7 +1,7 @@
 {
   "import": "import { Select } from '@coinbase/cds-web/controls/Select'",
   "source": "https://github.com/coinbase/cds/blob/master/packages/web/src/controls/Select.tsx",
-  "storybook": "https://cds-storybook.coinbase.com/?path=/story/core-components-select-select--asset-select",
+  "storybook": "https://cds-storybook.coinbase.com/?path=/story/components-select-select--asset-select",
   "figma": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/%E2%9C%A8-CDS-Components?m=auto&node-id=415-15061&t=6hbCJmIQxCsPCzeU-1",
   "description": "A Dropdown control for selecting from a list of options.",
   "relatedComponents": [

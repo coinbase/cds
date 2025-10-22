@@ -3,7 +3,7 @@
   "source": "https://github.com/coinbase/cds/blob/master/packages/web/src/controls/Radio.tsx",
   "description": "Radio is a control component that allows users to select one option from a set of mutually exclusive options.",
   "figma": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/%E2%9C%A8-CDS-Components?node-id=465-13782&t=DfwvmXdSSL0yIBag-0",
-  "storybook": "https://cds-storybook.coinbase.com/?path=/story/core-components-radiogroup--normal",
+  "storybook": "https://cds-storybook.coinbase.com/?path=/story/components-radiogroup--normal",
   "relatedComponents": [
     {
       "label": "Checkbox",

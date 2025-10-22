@@ -354,7 +354,7 @@ const StepperBase = memo(
         let isAnimatingForward = false;
 
         // Case when going from not-complete to complete
-        if (complete !== previousComplete) {
+        if (Boolean(complete) !== previousComplete) {
           if (complete) {
             // Going to complete: animate from activeStepIndex+1 to end
             stepsToAnimate = Array.from(

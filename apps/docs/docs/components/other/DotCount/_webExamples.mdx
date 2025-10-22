@@ -48,7 +48,7 @@ You can use the overlap prop to place the dot relative to the corner of the wrap
 ```jsx live
 function DottingRelativeToShapeOfChild() {
   return (
-    <HStack gap={2}>
+    <Box gap={2} flexWrap="wrap">
       <DotCount count={30} pin="top-end">
         <VStack bordered padding={2}>
           Child
@@ -69,7 +69,7 @@ function DottingRelativeToShapeOfChild() {
           Child
         </VStack>
       </DotCount>
-    </HStack>
+    </Box>
   );
 }
 ```

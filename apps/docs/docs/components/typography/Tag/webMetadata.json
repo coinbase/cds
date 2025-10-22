@@ -1,7 +1,7 @@
 {
   "import": "import { Tag } from '@coinbase/cds-web/tag/Tag'",
   "source": "https://github.com/coinbase/cds/blob/master/packages/web/src/tag/Tag.tsx",
-  "storybook": "https://cds-storybook.coinbase.com/?path=/story/core-components-tag--default",
+  "storybook": "https://cds-storybook.coinbase.com/?path=/story/components-tag--default",
   "figma": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/%E2%9C%A8-CDS-Components?node-id=68-975",
   "description": "A small label for categorizing or labeling content.",
   "relatedComponents": [

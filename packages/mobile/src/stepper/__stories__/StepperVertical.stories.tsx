@@ -25,11 +25,11 @@ import {
 // and forwards props to the Stepper component. Similar to StepperHorizontalExample.
 type StepperVerticalExampleProps = Omit<
   Partial<StepperProps>,
-  'direction' | 'steps' | 'activeStep'
+  'direction' | 'steps' | 'activeStep' | 'activeStepId'
 > & {
   title?: string;
   steps: any[];
-  activeStepId?: string | null;
+  defaultActiveStepId?: string | null;
   initialComplete?: boolean;
   skipParentSteps?: boolean;
   renderWithApi?: (args: {
@@ -40,7 +40,7 @@ type StepperVerticalExampleProps = Omit<
 
 const StepperVerticalExample = ({
   steps,
-  activeStepId,
+  defaultActiveStepId,
   title,
   initialComplete,
   skipParentSteps,
@@ -50,7 +50,7 @@ const StepperVerticalExample = ({
   const [renderKey, setRenderKey] = useState(0);
   const [stepperState, stepperApi] = useStepper({
     steps,
-    defaultActiveStepId: activeStepId,
+    defaultActiveStepId,
     skipParentSteps,
   });
   const [complete, setComplete] = useState(initialComplete || false);
@@ -182,7 +182,13 @@ const Default = () => {
     },
   ];
 
-  return <StepperVerticalExample completedStepAccessibilityLabel="Finished" steps={steps} />;
+  return (
+    <StepperVerticalExample
+      completedStepAccessibilityLabel="Finished"
+      defaultActiveStepId={steps[0].id}
+      steps={steps}
+    />
+  );
 };
 
 // ------------------------------------------------------------
@@ -208,7 +214,32 @@ const NoActiveStep = () => {
     },
   ];
 
-  return <StepperVerticalExample activeStepId={null} steps={steps} title="No Active Step" />;
+  return <StepperVerticalExample steps={steps} title="No Active Step" />;
+};
+
+// ------------------------------------------------------------
+// Initial active step
+// ------------------------------------------------------------
+const InitialActiveStep = () => {
+  const steps: StepperValue[] = [
+    {
+      id: 'first-step',
+      label: 'First step',
+    },
+    {
+      id: 'second-step',
+      label: 'Second step',
+    },
+    {
+      id: 'third-step',
+      label: 'Third step',
+    },
+    {
+      id: 'final-step',
+      label: 'Final step',
+    },
+  ];
+  return <Stepper activeStepId={steps[1].id} direction="vertical" steps={steps} />;
 };
 
 // ------------------------------------------------------------
@@ -343,7 +374,7 @@ const CustomIconsAndStyles = () => {
 
   return (
     <StepperVerticalExample
-      activeStepId={steps[0].id}
+      defaultActiveStepId={steps[0].id}
       steps={steps}
       styles={{
         progress: { width: 8 },
@@ -602,6 +633,10 @@ const StepperVerticalScreen = () => {
 
       <Example title="No Active Step">
         <NoActiveStep />
+      </Example>
+
+      <Example title="Initial Active Step">
+        <InitialActiveStep />
       </Example>
 
       <Example title="Nested Steps">

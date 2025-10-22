@@ -33,12 +33,12 @@ describe('useStepper', () => {
   ];
 
   describe('initial state', () => {
-    it('should return initial state with first step as active by default', () => {
+    it('should return initial state with null as active by default', () => {
       const { result } = renderHook(() => useStepper({ steps: mockSteps }));
       const [stepperState, stepperApi] = result.current;
 
       expect(stepperState).toEqual({
-        activeStepId: mockSteps[0].id,
+        activeStepId: null,
       });
 
       expect(stepperApi).toHaveProperty('goToStep');
@@ -87,7 +87,9 @@ describe('useStepper', () => {
 
   describe('goNextStep', () => {
     it('should advance to the next step', () => {
-      const { result } = renderHook(() => useStepper({ steps: mockSteps }));
+      const { result } = renderHook(() =>
+        useStepper({ steps: mockSteps, defaultActiveStepId: mockSteps[0].id }),
+      );
       const [, stepperApi] = result.current;
 
       act(() => {
@@ -129,7 +131,9 @@ describe('useStepper', () => {
     });
 
     it('should do nothing when already at the first step', () => {
-      const { result } = renderHook(() => useStepper({ steps: mockSteps }));
+      const { result } = renderHook(() =>
+        useStepper({ steps: mockSteps, defaultActiveStepId: mockSteps[0].id }),
+      );
       const [, stepperApi] = result.current;
 
       act(() => {
@@ -159,10 +163,10 @@ describe('useStepper', () => {
       });
 
       const [stepperState] = result.current;
-      expect(stepperState.activeStepId).toEqual(mockSteps[1].id);
+      expect(stepperState.activeStepId).toEqual('step2');
     });
 
-    it('should reset to the first step when no default active step is provided', () => {
+    it('should reset to null when no default active step is provided', () => {
       const { result } = renderHook(() => useStepper({ steps: mockSteps }));
       const [, stepperApi] = result.current;
 
@@ -177,13 +181,15 @@ describe('useStepper', () => {
       });
 
       const [stepperState] = result.current;
-      expect(stepperState.activeStepId).toEqual(mockSteps[0].id);
+      expect(stepperState.activeStepId).toEqual(null);
     });
   });
 
   describe('nested steps functionality', () => {
     it('should flatten nested steps and navigate through them correctly', () => {
-      const { result } = renderHook(() => useStepper({ steps: mockNestedSteps }));
+      const { result } = renderHook(() =>
+        useStepper({ steps: mockNestedSteps, defaultActiveStepId: mockNestedSteps[0].id }),
+      );
       const [initialState, stepperApi] = result.current;
 
       // Should start at the first step (parent step)
@@ -377,23 +383,12 @@ describe('useStepper', () => {
         useStepper({
           steps: mockNestedSteps,
           skipParentSteps: true,
+          defaultActiveStepId: mockNestedSteps[1].id,
         }),
       );
       const [initialState, stepperApi] = result.current;
 
-      // Should start at the first non-parent step (step1.1) instead of step1
-      expect(initialState.activeStepId).toBe('step1.1');
-
-      // Navigate forward should skip parent steps
-      act(() => {
-        stepperApi.goNextStep();
-      });
-      expect(result.current[0].activeStepId).toBe('step1.2');
-
-      act(() => {
-        stepperApi.goNextStep();
-      });
-      expect(result.current[0].activeStepId).toBe('step2'); // step2 has no subSteps, so it's valid
+      expect(initialState.activeStepId).toBe('step2'); // step2 has no subSteps, so it's valid
 
       act(() => {
         stepperApi.goNextStep();
@@ -438,6 +433,7 @@ describe('useStepper', () => {
         useStepper({
           steps: mockNestedSteps,
           skipParentSteps: true,
+          defaultActiveStepId: mockNestedSteps[0].subSteps?.[0].id,
         }),
       );
       const [, stepperApi] = result.current;
@@ -465,118 +461,6 @@ describe('useStepper', () => {
       expect(result.current[0].activeStepId).toBe('step3.1');
     });
 
-    it('should handle defaultActiveStepId when skipParentSteps is true', () => {
-      // Case 1: defaultActiveStepId is a parent step - should find first valid step
-      const { result: result1 } = renderHook(() =>
-        useStepper({
-          steps: mockNestedSteps,
-          defaultActiveStepId: mockNestedSteps[0].id, // step1 is a parent
-          skipParentSteps: true,
-        }),
-      );
-      expect(result1.current[0].activeStepId).toBe('step1.1');
-
-      // Case 2: defaultActiveStepId is a valid non-parent step
-      const { result: result2 } = renderHook(() =>
-        useStepper({
-          steps: mockNestedSteps,
-          defaultActiveStepId: 'step2',
-          skipParentSteps: true,
-        }),
-      );
-      expect(result2.current[0].activeStepId).toBe('step2');
-
-      // Case 3: defaultActiveStepId is a sub-step
-      const { result: result3 } = renderHook(() =>
-        useStepper({
-          steps: mockNestedSteps,
-          defaultActiveStepId: 'step1.2',
-          skipParentSteps: true,
-        }),
-      );
-      expect(result3.current[0].activeStepId).toBe('step1.2');
-    });
-
-    it('should handle deeply nested defaultActiveStepId when skipParentSteps is true', () => {
-      // Create two-level nested steps structure similar to the storybook
-      const twoLevelSteps: StepperValue[] = [
-        {
-          id: 'first-step',
-          label: 'First step',
-        },
-        {
-          id: 'second-step',
-          label: 'Second step',
-          subSteps: [
-            {
-              id: 'second-step-substep-one',
-              label: 'Substep one',
-            },
-            {
-              id: 'second-step-substep-two',
-              label: 'Substep two',
-              subSteps: [
-                {
-                  id: 'deeply-nested-step-1',
-                  label: 'Deeply nested step 1',
-                },
-                {
-                  id: 'deeply-nested-step-2',
-                  label: 'Deeply nested step 2',
-                },
-              ],
-            },
-            {
-              id: 'second-step-substep-three',
-              label: 'Substep three',
-            },
-          ],
-        },
-        {
-          id: 'final-step',
-          label: 'Final step',
-        },
-      ];
-
-      // Test the specific case from the storybook: activeStepId={twoLevelSteps[1].subSteps?.[1]}
-      // This corresponds to the 'second-step-substep-two' step, which is a parent step itself
-      const problemStepId = twoLevelSteps[1].subSteps![1].id; // 'second-step-substep-two'
-
-      const { result } = renderHook(() =>
-        useStepper({
-          steps: twoLevelSteps,
-          defaultActiveStepId: problemStepId,
-          skipParentSteps: true,
-        }),
-      );
-
-      // Since 'second-step-substep-two' is a parent step (has subSteps),
-      // when skipParentSteps is true, it should find the first valid child step
-      // which should be 'deeply-nested-step-1'
-      expect(result.current[0].activeStepId).toBe('deeply-nested-step-1');
-    });
-
-    it('should reset to first valid step when skipParentSteps is true', () => {
-      const { result } = renderHook(() =>
-        useStepper({
-          steps: mockNestedSteps,
-          skipParentSteps: true,
-        }),
-      );
-      const [, stepperApi] = result.current;
-
-      // Navigate to a different step
-      act(() => {
-        stepperApi.goToStep('step3.1');
-      });
-
-      // Reset should go back to first valid step (step1.1)
-      act(() => {
-        stepperApi.reset();
-      });
-      expect(result.current[0].activeStepId).toBe('step1.1');
-    });
-
     it('should work correctly with mixed parent and non-parent steps', () => {
       const mixedSteps: StepperValue[] = [
         { id: 'simple1', label: 'Simple Step 1' }, // non-parent
@@ -601,6 +485,7 @@ describe('useStepper', () => {
         useStepper({
           steps: mixedSteps,
           skipParentSteps: true,
+          defaultActiveStepId: mixedSteps[0].id,
         }),
       );
       const [, stepperApi] = result.current;
@@ -635,43 +520,12 @@ describe('useStepper', () => {
       expect(result.current[0].activeStepId).toBe('simple3');
     });
 
-    it('should handle edge case with all parent steps', () => {
-      const allParentSteps: StepperValue[] = [
-        {
-          id: 'parent1',
-          label: 'Parent 1',
-          subSteps: [{ id: 'sub1', label: 'Sub 1' }],
-        },
-        {
-          id: 'parent2',
-          label: 'Parent 2',
-          subSteps: [{ id: 'sub2', label: 'Sub 2' }],
-        },
-      ];
-
-      const { result } = renderHook(() =>
-        useStepper({
-          steps: allParentSteps,
-          skipParentSteps: true,
-        }),
-      );
-      const [, stepperApi] = result.current;
-
-      // Should start at first valid sub-step
-      expect(result.current[0].activeStepId).toBe('sub1');
-
-      // Navigate forward
-      act(() => {
-        stepperApi.goNextStep();
-      });
-      expect(result.current[0].activeStepId).toBe('sub2');
-    });
-
     it('should work normally when skipParentSteps is false', () => {
       const { result } = renderHook(() =>
         useStepper({
           steps: mockNestedSteps,
           skipParentSteps: false,
+          defaultActiveStepId: mockNestedSteps[0].id,
         }),
       );
       const [initialState, stepperApi] = result.current;

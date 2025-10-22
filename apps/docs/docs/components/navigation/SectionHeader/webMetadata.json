@@ -2,7 +2,7 @@
   "import": "import { SectionHeader } from '@coinbase/cds-web/section-header/SectionHeader'",
   "source": "https://github.com/coinbase/cds/blob/master/packages/web/src/section-header/SectionHeader.tsx",
   "description": "A header component used to organize and label sections of content, with support for icons, descriptions, and additional content.",
-  "storybook": "https://cds-storybook.coinbase.com/?path=/story/core-components-sectionheader--examples",
+  "storybook": "https://cds-storybook.coinbase.com/?path=/story/components-sectionheader--examples",
   "figma": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/%E2%9C%A8-CDS-Components?node-id=14010-2846&t=FEaHiLjNPeV1t8K2-4",
   "relatedComponents": [
     {

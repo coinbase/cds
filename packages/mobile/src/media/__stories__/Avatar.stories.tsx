@@ -1,7 +1,7 @@
 import React from 'react';
 import { getAvatarFallbackColor } from '@coinbase/cds-common/media/getAvatarFallbackColor';
 import { colorSchemeMap } from '@coinbase/cds-common/tokens/avatar';
-import type { AvatarFallbackColor } from '@coinbase/cds-common/types';
+import type { AvatarFallbackColor, AvatarSize } from '@coinbase/cds-common/types';
 
 import { Example, ExampleScreen } from '../../examples/ExampleScreen';
 import { HStack } from '../../layout/HStack';
@@ -10,6 +10,7 @@ import { Avatar } from '../Avatar';
 
 const image = 'https://avatars.slack-edge.com/2019-12-09/865473396980_e8c83b072b452e4d03f7_192.jpg';
 const names = ['Sneezy', 'Happy', 'Sleepy', 'Doc', 'Bashful', 'Grumpy', 'Dopey', 'Lilo', 'Stitch'];
+const sizes: AvatarSize[] = ['s', 'm', 'l', 'xl', 'xxl', 'xxxl'];
 
 const FallbackColored = () => {
   return (
@@ -34,34 +35,116 @@ const colorSchemes = Object.keys(colorSchemeMap) as AvatarFallbackColor[];
 const AvatarScreen = () => {
   return (
     <ExampleScreen>
-      <Example title="Normal">
-        <HStack alignItems="center" flexWrap="wrap" gap={2}>
-          <Avatar accessibilityLabel="" src={image} />
-          <Avatar accessibilityLabel="" name="Happy" shape="square" src={image} />
-          <Avatar accessibilityLabel="" name="Grumpy" shape="hexagon" src={image} />
-          <Avatar accessibilityLabel="" borderColor="bgPositive" name="Sleepy" src={image} />
-          <Avatar accessibilityLabel="" name="Bashful" size="m" src={image} />
-          <Avatar accessibilityLabel="" name="Grumpy" size="l" src={image} />
-          <Avatar accessibilityLabel="" name="Grumpy" size="xl" src={image} />
-          <Avatar accessibilityLabel="" name="Grumpy" size="xxl" src={image} />
-          <Avatar accessibilityLabel="" name="Grumpy" size="xxxl" src={image} />
-        </HStack>
+      <Example title="Normal - Default">
+        <VStack gap={2}>
+          <HStack alignItems="center" flexWrap="wrap" gap={2}>
+            {sizes.map((size) => (
+              <Avatar key={size} accessibilityLabel="" alt="" size={size} src={image} />
+            ))}
+          </HStack>
+          <HStack alignItems="center" flexWrap="wrap" gap={2}>
+            {sizes.map((size) => (
+              <Avatar
+                key={size}
+                accessibilityLabel=""
+                alt=""
+                shape="square"
+                size={size}
+                src={image}
+              />
+            ))}
+          </HStack>
+          <HStack alignItems="center" flexWrap="wrap" gap={2}>
+            {sizes.map((size) => (
+              <Avatar
+                key={size}
+                accessibilityLabel=""
+                alt=""
+                shape="hexagon"
+                size={size}
+                src={image}
+              />
+            ))}
+          </HStack>
+        </VStack>
       </Example>
-      <Example title="Fallback Image">
-        <HStack alignItems="center" flexWrap="wrap" gap={2}>
-          <Avatar accessibilityLabel="" />
-          <Avatar accessibilityLabel="" shape="square" />
-          <Avatar accessibilityLabel="" shape="hexagon" />
-          <Avatar accessibilityLabel="" borderColor="bgPositive" />
-          <Avatar accessibilityLabel="" size="m" />
-          <Avatar accessibilityLabel="" size="l" />
-          <Avatar accessibilityLabel="" size="xl" />
-          <Avatar accessibilityLabel="" size="xxl" />
-          <Avatar accessibilityLabel="" size="xxxl" />
-        </HStack>
+      <Example title="Normal - With borderColor">
+        <VStack gap={2}>
+          <HStack alignItems="center" flexWrap="wrap" gap={2}>
+            {sizes.map((size) => (
+              <Avatar
+                key={size}
+                accessibilityLabel=""
+                alt=""
+                borderColor="bgPositive"
+                size={size}
+                src={image}
+              />
+            ))}
+          </HStack>
+          <HStack alignItems="center" flexWrap="wrap" gap={2}>
+            {sizes.map((size) => (
+              <Avatar
+                key={size}
+                accessibilityLabel=""
+                alt=""
+                borderColor="bgPositive"
+                shape="square"
+                size={size}
+                src={image}
+              />
+            ))}
+          </HStack>
+        </VStack>
+      </Example>
+      <Example title="Fallback Image - Default">
+        <VStack gap={2}>
+          <HStack alignItems="center" flexWrap="wrap" gap={2}>
+            {sizes.map((size) => (
+              <Avatar key={size} accessibilityLabel="" alt="" size={size} />
+            ))}
+          </HStack>
+          <HStack alignItems="center" flexWrap="wrap" gap={2}>
+            {sizes.map((size) => (
+              <Avatar key={size} accessibilityLabel="" alt="" shape="square" size={size} />
+            ))}
+          </HStack>
+          <HStack alignItems="center" flexWrap="wrap" gap={2}>
+            {sizes.map((size) => (
+              <Avatar key={size} accessibilityLabel="" alt="" shape="hexagon" size={size} />
+            ))}
+          </HStack>
+        </VStack>
+      </Example>
+      <Example title="Fallback Image - With borderColor">
+        <VStack gap={2}>
+          <HStack alignItems="center" flexWrap="wrap" gap={2}>
+            {sizes.map((size) => (
+              <Avatar
+                key={size}
+                accessibilityLabel=""
+                alt=""
+                borderColor="bgPositive"
+                size={size}
+              />
+            ))}
+          </HStack>
+          <HStack alignItems="center" flexWrap="wrap" gap={2}>
+            {sizes.map((size) => (
+              <Avatar
+                key={size}
+                accessibilityLabel=""
+                alt=""
+                borderColor="bgPositive"
+                shape="square"
+                size={size}
+              />
+            ))}
+          </HStack>
+        </VStack>
       </Example>
       <Example title="Color Schemes">
-        <HStack gap={2}>
+        <HStack alignItems="center" flexWrap="wrap" gap={2}>
           {colorSchemes.map((colorScheme) => (
             <Avatar
               key={colorScheme}
@@ -74,9 +157,7 @@ const AvatarScreen = () => {
         </HStack>
       </Example>
       <Example title="Fallback Colored">
-        <VStack gap={2}>
-          <FallbackColored />
-        </VStack>
+        <FallbackColored />
       </Example>
     </ExampleScreen>
   );

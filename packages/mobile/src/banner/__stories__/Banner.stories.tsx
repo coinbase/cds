@@ -2,6 +2,7 @@ import React from 'react';
 import { loremIpsum } from '@coinbase/cds-common/internal/data/loremIpsum';
 import { NoopFn as noopFn } from '@coinbase/cds-common/utils/mockUtils';
 
+import { Button } from '../../buttons';
 import { Example, ExampleScreen } from '../../examples/ExampleScreen';
 import { Spacer, VStack } from '../../layout';
 import { Link } from '../../typography/Link';
@@ -90,6 +91,10 @@ const Banners = ({ title, props }: { title: string; props: MobileBannerProps }) 
       <Banner {...props} primaryAction={primaryAction} />
       <Text font="title1">{title} with multiple Actions</Text>
       <Banner {...props} primaryAction={primaryAction} secondaryAction={secondaryAction} />
+      <Text font="title1">Primary Action is not a Link</Text>
+      <Banner {...props} primaryAction={<Button compact>Primary Action</Button>} />
+      <Text font="title1">Secondary Action is not a Link</Text>
+      <Banner {...props} secondaryAction={<Button compact>Secondary Action</Button>} />
       <Text font="title1">{title} Long Text with Action</Text>
       <Banner
         {...props}

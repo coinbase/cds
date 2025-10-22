@@ -59,21 +59,23 @@ function ModalExample() {
         <ExampleComponent />
       </VStack>
 
-      <Button onClick={() => setIsModalOpen(true)}>Open Modal to See Context Change</Button>
+      <Button onClick={() => setIsModalOpen(true)}>Open Modal</Button>
 
       <Modal visible={isModalOpen} onRequestClose={() => setIsModalOpen(false)}>
-        <VStack gap={3} padding={4}>
-          <TextHeadline>Modal with Context Hook</TextHeadline>
-          <Text>
-            This content is rendered inside a modal. Notice how the context values change:
-          </Text>
-          <VStack gap={2} padding={3} background="bgAlternate" borderRadius={400}>
-            <ExampleComponent />
+        <ModalHeader closeAccessibilityLabel="Close" title="Modal with Context Hook" />
+        <ModalBody>
+          <VStack gap={3}>
+            <Text>
+              This content is rendered inside a modal. Notice how the context values change:
+            </Text>
+            <VStack gap={2} padding={3} background="bgAlternate" borderRadius={400}>
+              <ExampleComponent />
+            </VStack>
+            <Text color="fgMuted" font="caption">
+              The hook automatically detects it's inside a modal context!
+            </Text>
           </VStack>
-          <Text color="fgMuted" font="caption">
-            The hook automatically detects it's inside a modal context!
-          </Text>
-        </VStack>
+        </ModalBody>
       </Modal>
     </VStack>
   );
@@ -158,13 +160,13 @@ function ConditionalRenderingExample() {
         <ConditionalContent />
       </VStack>
 
-      <Button onClick={() => setIsModalOpen(true)}>Open Modal to See Different Content</Button>
+      <Button onClick={() => setIsModalOpen(true)}>Open Modal</Button>
 
       <Modal visible={isModalOpen} onRequestClose={() => setIsModalOpen(false)}>
-        <VStack gap={3} padding={4}>
-          <TextHeadline>Conditional Content Demo</TextHeadline>
+        <ModalHeader closeAccessibilityLabel="Close" title="Conditional Content Demo" />
+        <ModalBody>
           <ConditionalContent />
-        </VStack>
+        </ModalBody>
       </Modal>
     </VStack>
   );
@@ -203,7 +205,7 @@ function StylingExample() {
         <Text color="fgMuted" font="caption">
           Background color: {getBackgroundColor()}
         </Text>
-      </Box>
+      </VStack>
     );
   };
 
@@ -211,13 +213,13 @@ function StylingExample() {
     <VStack gap={3}>
       <StyledContent />
 
-      <Button onClick={() => setIsModalOpen(true)}>Open Modal to See Style Change</Button>
+      <Button onClick={() => setIsModalOpen(true)}>Open Modal</Button>
 
       <Modal visible={isModalOpen} onRequestClose={() => setIsModalOpen(false)}>
-        <VStack gap={3} padding={4}>
-          <TextHeadline>Dynamic Styling Demo</TextHeadline>
+        <ModalHeader closeAccessibilityLabel="Close" title="Dynamic Styling Demo" />
+        <ModalBody>
           <StyledContent />
-        </VStack>
+        </ModalBody>
       </Modal>
     </VStack>
   );

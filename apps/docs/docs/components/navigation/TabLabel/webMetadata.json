@@ -1,7 +1,7 @@
 {
   "import": "import { TabLabel } from '@coinbase/cds-web/tabs/TabLabel'",
   "source": "https://github.com/coinbase/cds/blob/master/packages/web/src/tabs/TabLabel.tsx",
-  "storybook": "https://cds-storybook.coinbase.com/?path=/story/core-components-tabs-tablabel--default",
+  "storybook": "https://cds-storybook.coinbase.com/?path=/story/components-tabs-tablabel--default",
   "description": "A text label component used within tab navigation.",
   "relatedComponents": [
     {

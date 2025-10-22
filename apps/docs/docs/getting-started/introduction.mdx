@@ -4,11 +4,13 @@ title: Introduction
 hide_title: true
 ---
 
+import { VStack } from '@coinbase/cds-web/layout';
 import { MDXSection } from '@site/src/components/page/MDXSection';
 import { MDXArticle } from '@site/src/components/page/MDXArticle';
 import { ContentHeader } from '@site/src/components/page/ContentHeader';
 import { GettingStartedBanner } from '@site/src/components/page/ComponentBanner/GettingStartedBanner';
 
+<VStack gap={5}>
 <ContentHeader
   title="Introduction"
   description="Coinbase Design System is a cross-platform component library for React and React Native. CDS has high adoption in every product at Coinbase, accelerating development and ensuring a consistent user experience across all platforms."
@@ -97,3 +99,4 @@ Learn how to install and use CDS.
 
 </MDXArticle>
 </MDXSection>
+</VStack>

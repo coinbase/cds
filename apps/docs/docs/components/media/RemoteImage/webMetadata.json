@@ -1,7 +1,7 @@
 {
   "import": "import { RemoteImage } from '@coinbase/cds-web/media/RemoteImage'",
   "source": "https://github.com/coinbase/cds/blob/master/packages/web/src/media/RemoteImage.tsx",
-  "storybook": "https://cds-storybook.coinbase.com/?path=/story/core-components-remoteimage--default",
+  "storybook": "https://cds-storybook.coinbase.com/?path=/story/components-remoteimage--default",
   "figma": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/%E2%9C%A8-CDS-Components?node-id=68-975",
   "description": "A React component for displaying different types of images, including network images, static resources, temporary local images, and images from local disk, such as the camera roll.",
   "relatedComponents": [

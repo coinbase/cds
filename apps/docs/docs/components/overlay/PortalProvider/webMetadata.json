@@ -2,7 +2,7 @@
   "import": "import { PortalProvider } from '@coinbase/cds-web/overlays/PortalProvider'",
   "source": "https://github.com/coinbase/cds/blob/master/packages/web/src/overlays/PortalProvider.tsx",
   "description": "A component that manages the rendering of portals for overlay components.",
-  "storybook": "https://cds-storybook.coinbase.com/?path=/story/core-components-portalprovider--with-portal-nodes",
+  "storybook": "https://cds-storybook.coinbase.com/?path=/story/components-portalprovider--with-portal-nodes",
   "relatedComponents": [
     {
       "label": "Modal",
