@@ -10,7 +10,7 @@ import { FocusTrap } from '../../overlays/FocusTrap';
 import { DefaultSelectAllOption } from './DefaultSelectAllOption';
 import { DefaultSelectEmptyDropdownContents } from './DefaultSelectEmptyDropdownContents';
 import { DefaultSelectOption } from './DefaultSelectOption';
-import type { SelectDropdownComponent, SelectDropdownProps, SelectType } from './Select';
+import type { SelectDropdownProps, SelectType } from './Select';
 import { defaultAccessibilityRoles } from './Select';
 
 const initialStyle = { opacity: 0, y: 0 };

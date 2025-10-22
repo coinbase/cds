@@ -3,7 +3,7 @@ import { forwardRef, memo } from 'react';
 import { Divider } from '../../layout/Divider';
 
 import { DefaultSelectOption } from './DefaultSelectOption';
-import { type SelectOptionComponent, type SelectOptionProps, type SelectType } from './Select';
+import { type SelectOptionProps, type SelectType } from './Select';
 
 type DefaultSelectAllOptionBase = <
   Type extends SelectType,

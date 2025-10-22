@@ -14,12 +14,7 @@ import { Pressable } from '../../system/Pressable';
 import { Text } from '../../typography/Text';
 import { findClosestNonDisabledNodeIndex } from '../../utils/findClosestNonDisabledNodeIndex';
 
-import type {
-  SelectControlComponent,
-  SelectControlProps,
-  SelectOption,
-  SelectType,
-} from './Select';
+import type { SelectControlProps, SelectOption, SelectType } from './Select';
 
 const noFocusOutlineCss = css`
   &:focus,
