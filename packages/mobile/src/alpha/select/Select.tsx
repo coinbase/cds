@@ -1,4 +1,4 @@
-import React, { forwardRef, memo, useImperativeHandle, useRef, useState } from 'react';
+import React, { forwardRef, memo, useImperativeHandle, useMemo, useRef, useState } from 'react';
 import { View } from 'react-native';
 import type { AccessibilityRole, StyleProp, ViewStyle } from 'react-native';
 import type { SharedAccessibilityProps } from '@coinbase/cds-common/types';
@@ -422,6 +422,52 @@ const SelectBase = memo(
           'Select component must be fully controlled or uncontrolled: "open" and "setOpen" props must be provided together or not at all',
         );
 
+      const controlStyles = useMemo(
+        () => ({
+          controlStartNode: styles?.controlStartNode,
+          controlInputNode: styles?.controlInputNode,
+          controlValueNode: styles?.controlValueNode,
+          controlLabelNode: styles?.controlLabelNode,
+          controlHelperTextNode: styles?.controlHelperTextNode,
+          controlEndNode: styles?.controlEndNode,
+        }),
+        [
+          styles?.controlStartNode,
+          styles?.controlInputNode,
+          styles?.controlValueNode,
+          styles?.controlLabelNode,
+          styles?.controlHelperTextNode,
+          styles?.controlEndNode,
+        ],
+      );
+
+      const dropdownStyles = useMemo(
+        () => ({
+          dropdown: styles?.dropdown,
+          option: styles?.option,
+          optionBlendStyles: styles?.optionBlendStyles,
+          optionCell: styles?.optionCell,
+          optionContent: styles?.optionContent,
+          optionLabel: styles?.optionLabel,
+          optionDescription: styles?.optionDescription,
+          selectAllDivider: styles?.selectAllDivider,
+          emptyContentsContainer: styles?.emptyContentsContainer,
+          emptyContentsText: styles?.emptyContentsText,
+        }),
+        [
+          styles?.dropdown,
+          styles?.option,
+          styles?.optionBlendStyles,
+          styles?.optionCell,
+          styles?.optionContent,
+          styles?.optionLabel,
+          styles?.optionDescription,
+          styles?.selectAllDivider,
+          styles?.emptyContentsContainer,
+          styles?.emptyContentsText,
+        ],
+      );
+
       const containerRef = useRef<View>(null);
       useImperativeHandle(ref, () =>
         Object.assign(containerRef.current as View, {
@@ -452,14 +498,7 @@ const SelectBase = memo(
             setOpen={setOpen}
             startNode={startNode}
             style={styles?.control}
-            styles={{
-              controlStartNode: styles?.controlStartNode,
-              controlInputNode: styles?.controlInputNode,
-              controlValueNode: styles?.controlValueNode,
-              controlLabelNode: styles?.controlLabelNode,
-              controlHelperTextNode: styles?.controlHelperTextNode,
-              controlEndNode: styles?.controlEndNode,
-            }}
+            styles={controlStyles}
             type={type}
             value={value}
             variant={variant}
@@ -485,18 +524,7 @@ const SelectBase = memo(
             options={options}
             selectAllLabel={selectAllLabel}
             setOpen={setOpen}
-            styles={{
-              dropdown: styles?.dropdown,
-              option: styles?.option,
-              optionBlendStyles: styles?.optionBlendStyles,
-              optionCell: styles?.optionCell,
-              optionContent: styles?.optionContent,
-              optionLabel: styles?.optionLabel,
-              optionDescription: styles?.optionDescription,
-              selectAllDivider: styles?.selectAllDivider,
-              emptyContentsContainer: styles?.emptyContentsContainer,
-              emptyContentsText: styles?.emptyContentsText,
-            }}
+            styles={dropdownStyles}
             type={type}
             value={value}
           />

@@ -54,6 +54,31 @@ const DefaultSelectDropdownBase = memo(
         ? SelectOptionValue | SelectOptionValue[] | null
         : SelectOptionValue | null;
 
+      const optionStyles = useMemo(
+        () => ({
+          optionCell: styles?.optionCell,
+          optionContent: styles?.optionContent,
+          optionLabel: styles?.optionLabel,
+          optionDescription: styles?.optionDescription,
+          selectAllDivider: styles?.selectAllDivider,
+        }),
+        [
+          styles?.optionCell,
+          styles?.optionContent,
+          styles?.optionLabel,
+          styles?.optionDescription,
+          styles?.selectAllDivider,
+        ],
+      );
+
+      const emptyDropdownContentsStyles = useMemo(
+        () => ({
+          emptyContentsContainer: styles?.emptyContentsContainer,
+          emptyContentsText: styles?.emptyContentsText,
+        }),
+        [styles?.emptyContentsContainer, styles?.emptyContentsText],
+      );
+
       const isMultiSelect = type === 'multi';
       const isSomeOptionsSelected = isMultiSelect ? (value as string[]).length > 0 : false;
       const isAllOptionsSelected = isMultiSelect
@@ -107,13 +132,7 @@ const DefaultSelectDropdownBase = memo(
             onPress={toggleSelectAll}
             selected={isAllOptionsSelected}
             style={styles?.option}
-            styles={{
-              optionCell: styles?.optionCell,
-              optionContent: styles?.optionContent,
-              optionLabel: styles?.optionLabel,
-              optionDescription: styles?.optionDescription,
-              selectAllDivider: styles?.selectAllDivider,
-            }}
+            styles={optionStyles}
             type={type}
             value={'select-all' as SelectOptionValue}
           />
@@ -124,11 +143,6 @@ const DefaultSelectDropdownBase = memo(
           accessory,
           styles?.optionBlendStyles,
           styles?.option,
-          styles?.optionCell,
-          styles?.optionContent,
-          styles?.optionLabel,
-          styles?.optionDescription,
-          styles?.selectAllDivider,
           compact,
           detail,
           handleClearAll,
@@ -141,6 +155,7 @@ const DefaultSelectDropdownBase = memo(
           isAllOptionsSelected,
           isSomeOptionsSelected,
           toggleSelectAll,
+          optionStyles,
           type,
         ],
       );
@@ -200,13 +215,7 @@ const DefaultSelectDropdownBase = memo(
                           }}
                           selected={selected}
                           style={styles?.option}
-                          styles={{
-                            optionCell: styles?.optionCell,
-                            optionContent: styles?.optionContent,
-                            optionLabel: styles?.optionLabel,
-                            optionDescription: styles?.optionDescription,
-                            selectAllDivider: styles?.selectAllDivider,
-                          }}
+                          styles={optionStyles}
                           type={type}
                           {...option}
                         />
@@ -216,10 +225,7 @@ const DefaultSelectDropdownBase = memo(
                 ) : (
                   <SelectEmptyDropdownContentsComponent
                     label={emptyOptionsLabel}
-                    styles={{
-                      emptyContentsContainer: styles?.emptyContentsContainer,
-                      emptyContentsText: styles?.emptyContentsText,
-                    }}
+                    styles={emptyDropdownContentsStyles}
                   />
                 )}
               </VStack>

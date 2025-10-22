@@ -550,6 +550,96 @@ const SelectBase = memo(
         [style, styles?.root],
       );
 
+      const controlClassNames = useMemo(
+        () => ({
+          controlStartNode: classNames?.controlStartNode,
+          controlInputNode: classNames?.controlInputNode,
+          controlValueNode: classNames?.controlValueNode,
+          controlLabelNode: classNames?.controlLabelNode,
+          controlHelperTextNode: classNames?.controlHelperTextNode,
+          controlEndNode: classNames?.controlEndNode,
+        }),
+        [
+          classNames?.controlStartNode,
+          classNames?.controlInputNode,
+          classNames?.controlValueNode,
+          classNames?.controlLabelNode,
+          classNames?.controlHelperTextNode,
+          classNames?.controlEndNode,
+        ],
+      );
+
+      const controlStyles = useMemo(
+        () => ({
+          controlStartNode: styles?.controlStartNode,
+          controlInputNode: styles?.controlInputNode,
+          controlValueNode: styles?.controlValueNode,
+          controlLabelNode: styles?.controlLabelNode,
+          controlHelperTextNode: styles?.controlHelperTextNode,
+          controlEndNode: styles?.controlEndNode,
+        }),
+        [
+          styles?.controlStartNode,
+          styles?.controlInputNode,
+          styles?.controlValueNode,
+          styles?.controlLabelNode,
+          styles?.controlHelperTextNode,
+          styles?.controlEndNode,
+        ],
+      );
+
+      const dropdownClassNames = useMemo(
+        () => ({
+          root: classNames?.dropdown,
+          option: classNames?.option,
+          optionCell: classNames?.optionCell,
+          optionContent: classNames?.optionContent,
+          optionLabel: classNames?.optionLabel,
+          optionDescription: classNames?.optionDescription,
+          selectAllDivider: classNames?.selectAllDivider,
+          emptyContentsContainer: classNames?.emptyContentsContainer,
+          emptyContentsText: classNames?.emptyContentsText,
+        }),
+        [
+          classNames?.dropdown,
+          classNames?.option,
+          classNames?.optionCell,
+          classNames?.optionContent,
+          classNames?.optionLabel,
+          classNames?.optionDescription,
+          classNames?.selectAllDivider,
+          classNames?.emptyContentsContainer,
+          classNames?.emptyContentsText,
+        ],
+      );
+
+      const dropdownStyles = useMemo(
+        () => ({
+          root: styles?.dropdown,
+          option: styles?.option,
+          optionBlendStyles: styles?.optionBlendStyles,
+          optionCell: styles?.optionCell,
+          optionContent: styles?.optionContent,
+          optionLabel: styles?.optionLabel,
+          optionDescription: styles?.optionDescription,
+          selectAllDivider: styles?.selectAllDivider,
+          emptyContentsContainer: styles?.emptyContentsContainer,
+          emptyContentsText: styles?.emptyContentsText,
+        }),
+        [
+          styles?.dropdown,
+          styles?.option,
+          styles?.optionBlendStyles,
+          styles?.optionCell,
+          styles?.optionContent,
+          styles?.optionLabel,
+          styles?.optionDescription,
+          styles?.selectAllDivider,
+          styles?.emptyContentsContainer,
+          styles?.emptyContentsText,
+        ],
+      );
+
       const { refs, floatingStyles } = useFloating({
         open,
         middleware: [flip()],
@@ -583,14 +673,7 @@ const SelectBase = memo(
             ariaHaspopup={accessibilityRoles?.dropdown}
             blendStyles={styles?.controlBlendStyles}
             className={classNames?.control}
-            classNames={{
-              controlStartNode: classNames?.controlStartNode,
-              controlInputNode: classNames?.controlInputNode,
-              controlValueNode: classNames?.controlValueNode,
-              controlLabelNode: classNames?.controlLabelNode,
-              controlHelperTextNode: classNames?.controlHelperTextNode,
-              controlEndNode: classNames?.controlEndNode,
-            }}
+            classNames={controlClassNames}
             compact={compact}
             disabled={disabled}
             endNode={endNode}
@@ -607,14 +690,7 @@ const SelectBase = memo(
             setOpen={setOpen}
             startNode={startNode}
             style={styles?.control}
-            styles={{
-              controlStartNode: styles?.controlStartNode,
-              controlInputNode: styles?.controlInputNode,
-              controlValueNode: styles?.controlValueNode,
-              controlLabelNode: styles?.controlLabelNode,
-              controlHelperTextNode: styles?.controlHelperTextNode,
-              controlEndNode: styles?.controlEndNode,
-            }}
+            styles={controlStyles}
             type={type}
             value={value}
             variant={variant}
@@ -628,17 +704,7 @@ const SelectBase = memo(
               accessibilityLabel={accessibilityLabel}
               accessibilityRoles={accessibilityRoles}
               accessory={accessory}
-              classNames={{
-                root: classNames?.dropdown,
-                option: classNames?.option,
-                optionCell: classNames?.optionCell,
-                optionContent: classNames?.optionContent,
-                optionLabel: classNames?.optionLabel,
-                optionDescription: classNames?.optionDescription,
-                selectAllDivider: classNames?.selectAllDivider,
-                emptyContentsContainer: classNames?.emptyContentsContainer,
-                emptyContentsText: classNames?.emptyContentsText,
-              }}
+              classNames={dropdownClassNames}
               clearAllLabel={clearAllLabel}
               compact={compact}
               controlRef={refs.reference as React.MutableRefObject<HTMLElement>}
@@ -653,18 +719,7 @@ const SelectBase = memo(
               options={options}
               selectAllLabel={selectAllLabel}
               setOpen={setOpen}
-              styles={{
-                root: { ...floatingStyles, ...styles?.dropdown },
-                option: styles?.option,
-                optionBlendStyles: styles?.optionBlendStyles,
-                optionCell: styles?.optionCell,
-                optionContent: styles?.optionContent,
-                optionLabel: styles?.optionLabel,
-                optionDescription: styles?.optionDescription,
-                selectAllDivider: styles?.selectAllDivider,
-                emptyContentsContainer: styles?.emptyContentsContainer,
-                emptyContentsText: styles?.emptyContentsText,
-              }}
+              styles={dropdownStyles}
               type={type}
               value={value}
             />
