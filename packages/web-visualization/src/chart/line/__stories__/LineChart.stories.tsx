@@ -1926,7 +1926,7 @@ export const ColorMapStories = () => {
 export const All = () => {
   return (
     <VStack gap={2}>
-      {/*<Example title="Basic">
+      <Example title="Basic">
         <LineChart
           enableScrubbing
           showArea
@@ -1960,11 +1960,11 @@ export const All = () => {
       </Example>
       <Example title="Compact">
         <CompactLineChart />
-      </Example>*/}
+      </Example>
       <Example title="Gain/Loss">
         <GainLossChart />
       </Example>
-      {/*<Example title="Connect Nulls">
+      <Example title="Connect Nulls">
         <ConnectNullsChart />
       </Example>
       <Example title="Multiple Series">
@@ -2218,7 +2218,7 @@ export const All = () => {
         >
           <Scrubber />
         </LineChart>
-      </Example>*/}
+      </Example>
     </VStack>
   );
 };

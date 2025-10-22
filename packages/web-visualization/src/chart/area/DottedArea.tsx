@@ -19,7 +19,7 @@ export type DottedAreaProps = Omit<PathProps, 'd' | 'fill' | 'fillOpacity' | 'cl
     dotSize?: number;
     /**
      * Opacity at the peak values (top/bottom of gradient).
-     * @default 0.3
+     * @default 1
      */
     peakOpacity?: number;
     /**

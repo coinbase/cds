@@ -247,11 +247,11 @@ const Candlesticks = () => {
     },
   );
 
-  const formatPrice = React.useCallback((price: string) => {
+  const formatPrice = React.useCallback((price: number) => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
       currency: 'USD',
-    }).format(parseFloat(price));
+    }).format(price);
   }, []);
 
   const formatVolume = React.useCallback((volume: string) => {
@@ -284,10 +284,10 @@ const Candlesticks = () => {
 
       const text =
         index !== undefined
-          ? `Open: ${formatPrice(stockData[index].open)}, Close: ${formatPrice(
-              stockData[index].close,
+          ? `Open: ${formatPrice(parseFloat(stockData[index].open))}, Close: ${formatPrice(
+              parseFloat(stockData[index].close),
             )}, Volume: ${formatVolume(stockData[index].volume)}`
-          : formatPrice(stockData[stockData.length - 1].close);
+          : formatPrice(parseFloat(stockData[stockData.length - 1].close));
 
       // Direct DOM manipulation - no React re-render
       infoTextRef.current.textContent = text;
@@ -297,7 +297,7 @@ const Candlesticks = () => {
   );
 
   // Initial value for the info text
-  const initialInfo = formatPrice(stockData[stockData.length - 1].close);
+  const initialInfo = formatPrice(parseFloat(stockData[stockData.length - 1].close));
 
   // Update text when stockData changes (on timePeriod change)
   React.useEffect(() => {
