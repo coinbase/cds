@@ -32,7 +32,7 @@ type DefaultSelectControlComponent = <
   props: SelectControlProps<Type, SelectOptionValue> & { ref?: React.Ref<TouchableOpacity> },
 ) => React.ReactElement;
 
-export const DefaultSelectControlBase = memo(
+export const DefaultSelectControlComponent = memo(
   forwardRef(
     <Type extends SelectType, SelectOptionValue extends string = string>(
       {
@@ -287,4 +287,4 @@ export const DefaultSelectControlBase = memo(
   ),
 );
 
-export const DefaultSelectControl = DefaultSelectControlBase as DefaultSelectControlComponent;
+export const DefaultSelectControl = DefaultSelectControlComponent as DefaultSelectControlComponent;

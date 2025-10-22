@@ -23,7 +23,7 @@ type DefaultSelectDropdownBase = <
   props: SelectDropdownProps<Type, SelectOptionValue> & { ref?: React.Ref<HTMLDivElement> },
 ) => React.ReactElement;
 
-const DefaultSelectDropdownBase = memo(
+const DefaultSelectDropdownComponent = memo(
   forwardRef(
     <Type extends SelectType, SelectOptionValue extends string = string>(
       {
@@ -329,4 +329,4 @@ const DefaultSelectDropdownBase = memo(
   ),
 );
 
-export const DefaultSelectDropdown = DefaultSelectDropdownBase as DefaultSelectDropdownBase;
+export const DefaultSelectDropdown = DefaultSelectDropdownComponent as DefaultSelectDropdownBase;

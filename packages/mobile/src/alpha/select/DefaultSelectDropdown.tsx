@@ -20,7 +20,7 @@ type DefaultSelectDropdownBase = <
   props: SelectDropdownProps<Type, SelectOptionValue> & { ref?: React.Ref<DrawerRefBaseProps> },
 ) => React.ReactElement;
 
-const DefaultSelectDropdownBase = memo(
+const DefaultSelectDropdownComponent = memo(
   forwardRef(
     <Type extends SelectType = 'single', SelectOptionValue extends string = string>(
       {
@@ -237,4 +237,4 @@ const DefaultSelectDropdownBase = memo(
   ),
 );
 
-export const DefaultSelectDropdown = DefaultSelectDropdownBase as DefaultSelectDropdownBase;
+export const DefaultSelectDropdown = DefaultSelectDropdownComponent as DefaultSelectDropdownBase;

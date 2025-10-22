@@ -40,7 +40,7 @@ type DefaultSelectControlBase = <
   props: SelectControlProps<Type, SelectOptionValue> & { ref?: React.Ref<HTMLElement> },
 ) => React.ReactElement;
 
-const DefaultSelectControlBase = memo(
+const DefaultSelectControlComponent = memo(
   forwardRef(
     <Type extends SelectType, SelectOptionValue extends string = string>(
       {
@@ -354,4 +354,4 @@ const DefaultSelectControlBase = memo(
   ),
 );
 
-export const DefaultSelectControl = DefaultSelectControlBase as DefaultSelectControlBase;
+export const DefaultSelectControl = DefaultSelectControlComponent as DefaultSelectControlBase;

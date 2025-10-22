@@ -13,7 +13,7 @@ type DefaultSelectAllOptionBase = <
   props: SelectOptionProps<Type, SelectOptionValue> & { ref?: React.Ref<View> },
 ) => React.ReactElement;
 
-const DefaultSelectAllOptionBase = memo(
+const DefaultSelectAllOptionComponent = memo(
   forwardRef(
     <Type extends SelectType, SelectOptionValue extends string = string>(
       {
@@ -60,4 +60,4 @@ const DefaultSelectAllOptionBase = memo(
   ),
 );
 
-export const DefaultSelectAllOption = DefaultSelectAllOptionBase as DefaultSelectAllOptionBase;
+export const DefaultSelectAllOption = DefaultSelectAllOptionComponent as DefaultSelectAllOptionBase;
