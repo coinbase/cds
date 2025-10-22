@@ -134,7 +134,7 @@ describe('getColorMapScale', () => {
     expect(result).toBe(bandScale);
   });
 
-  it('should return null for missing scale', () => {
+  it('should return undefined for missing scale', () => {
     const colorMap: ColorMap = {
       type: 'continuous',
       axis: 'x',
@@ -142,7 +142,7 @@ describe('getColorMapScale', () => {
     };
 
     const result = getColorMapScale(colorMap, undefined, undefined);
-    expect(result).toBeNull();
+    expect(result).toBeUndefined();
   });
 });
 

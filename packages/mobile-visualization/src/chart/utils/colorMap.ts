@@ -397,15 +397,15 @@ export const processColorMap = (
  * @param colorMap - The ColorMap configuration
  * @param xScale - The x-axis scale
  * @param yScale - The y-axis scale
- * @returns The scale to use for color mapping, or null if not supported
+ * @returns The scale to use for color mapping, or undefined if not supported
  */
 export const getColorMapScale = (
   colorMap: ColorMap | undefined,
   xScale: ChartScaleFunction | undefined,
   yScale: ChartScaleFunction | undefined,
-): ColorMapScale | null => {
+): ColorMapScale | undefined => {
   if (!colorMap) {
-    return yScale && isNumericScale(yScale) ? yScale : null;
+    return yScale && isNumericScale(yScale) ? yScale : undefined;
   }
 
   const axis = colorMap.axis ?? 'y';
@@ -414,12 +414,12 @@ export const getColorMapScale = (
   // ColorMap requires either a numeric scale or a categorical (band) scale
   if (!targetScale) {
     console.warn(`ColorMap requires a scale on the ${axis}-axis`);
-    return null;
+    return;
   }
 
   if (!isNumericScale(targetScale) && !isCategoricalScale(targetScale)) {
     console.warn(`ColorMap requires a numeric or categorical scale on the ${axis}-axis`);
-    return null;
+    return;
   }
 
   return targetScale as ColorMapScale;

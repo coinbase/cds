@@ -295,7 +295,7 @@ export const CartesianChart = memo(
 
           const yScale = yScales.get(targetSeries.yAxisId ?? defaultAxisId);
 
-          return getColorMapScale(targetSeries.colorMap, xScale, yScale) ?? undefined;
+          return getColorMapScale(targetSeries.colorMap, xScale, yScale);
         },
         [series, xScale, yScales],
       );
