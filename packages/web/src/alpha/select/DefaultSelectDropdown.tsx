@@ -16,13 +16,16 @@ import { defaultAccessibilityRoles } from './Select';
 const initialStyle = { opacity: 0, y: 0 };
 const animateStyle = { opacity: 1, y: 4 };
 
-type DefaultSelectDropdownBase = <Type extends SelectType, T extends string = string>(
-  props: SelectDropdownProps<Type, T> & { ref?: React.Ref<HTMLDivElement> },
+type DefaultSelectDropdownBase = <
+  Type extends SelectType,
+  SelectOptionValue extends string = string,
+>(
+  props: SelectDropdownProps<Type, SelectOptionValue> & { ref?: React.Ref<HTMLDivElement> },
 ) => React.ReactElement;
 
 const DefaultSelectDropdownBase = memo(
   forwardRef(
-    <Type extends SelectType, T extends string = string>(
+    <Type extends SelectType, SelectOptionValue extends string = string>(
       {
         type,
         options,
@@ -51,10 +54,12 @@ const DefaultSelectDropdownBase = memo(
         accessibilityLabel = 'Select dropdown',
         accessibilityRoles = defaultAccessibilityRoles,
         ...props
-      }: SelectDropdownProps<Type, T>,
+      }: SelectDropdownProps<Type, SelectOptionValue>,
       ref: React.Ref<HTMLDivElement>,
     ) => {
-      type ValueType = Type extends 'multi' ? T | T[] : T | null;
+      type ValueType = Type extends 'multi'
+        ? SelectOptionValue | SelectOptionValue[]
+        : SelectOptionValue | null;
       const isMultiSelect = type === 'multi';
       const [containerWidth, setContainerWidth] = useState<number | null>(null);
 
@@ -150,7 +155,7 @@ const DefaultSelectDropdownBase = memo(
               selectAllDivider: styles?.selectAllDivider,
             }}
             type={type}
-            value={'select-all' as T}
+            value={'select-all' as SelectOptionValue}
           />
         ),
         [

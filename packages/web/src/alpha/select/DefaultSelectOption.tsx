@@ -64,13 +64,13 @@ const multilineTextCss = css`
   white-space: normal;
 `;
 
-type DefaultSelectOptionBase = <Type extends SelectType, T extends string = string>(
-  props: SelectOptionProps<Type, T> & { ref?: React.Ref<HTMLButtonElement> },
+type DefaultSelectOptionBase = <Type extends SelectType, SelectOptionValue extends string = string>(
+  props: SelectOptionProps<Type, SelectOptionValue> & { ref?: React.Ref<HTMLButtonElement> },
 ) => React.ReactElement;
 
 const DefaultSelectOptionBase = memo(
   forwardRef(
-    <Type extends SelectType, T extends string = string>(
+    <Type extends SelectType, SelectOptionValue extends string = string>(
       {
         value,
         label,
@@ -90,7 +90,7 @@ const DefaultSelectOptionBase = memo(
         styles,
         classNames,
         ...props
-      }: SelectOptionProps<Type, T>,
+      }: SelectOptionProps<Type, SelectOptionValue>,
       ref: React.Ref<HTMLButtonElement>,
     ) => {
       const labelNode = useMemo(

@@ -8,7 +8,10 @@ import { Text } from '../../typography/Text';
 
 import type { SelectOptionProps, SelectType } from './Select';
 
-const DefaultSelectOptionComponent = <Type extends SelectType, T extends string = string>(
+const DefaultSelectOptionComponent = <
+  Type extends SelectType,
+  SelectOptionValue extends string = string,
+>(
   {
     value,
     label,
@@ -26,7 +29,7 @@ const DefaultSelectOptionComponent = <Type extends SelectType, T extends string 
     accessibilityRole,
     styles,
     ...props
-  }: SelectOptionProps<Type, T>,
+  }: SelectOptionProps<Type, SelectOptionValue>,
   ref: React.Ref<View>,
 ) => {
   const labelNode = useMemo(
@@ -108,7 +111,7 @@ const DefaultSelectOptionComponent = <Type extends SelectType, T extends string 
 
 export const DefaultSelectOption = memo(forwardRef(DefaultSelectOptionComponent)) as <
   Type extends SelectType = 'single',
-  T extends string = string,
+  SelectOptionValue extends string = string,
 >(
-  props: SelectOptionProps<Type, T> & { ref?: React.Ref<View> },
+  props: SelectOptionProps<Type, SelectOptionValue> & { ref?: React.Ref<View> },
 ) => React.ReactElement;

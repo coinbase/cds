@@ -38,13 +38,16 @@ const variantColor: Record<string, ThemeVars.Color> = {
   secondary: 'fgMuted',
 };
 
-type DefaultSelectControlBase = <Type extends SelectType, T extends string = string>(
-  props: SelectControlProps<Type, T> & { ref?: React.Ref<HTMLElement> },
+type DefaultSelectControlBase = <
+  Type extends SelectType,
+  SelectOptionValue extends string = string,
+>(
+  props: SelectControlProps<Type, SelectOptionValue> & { ref?: React.Ref<HTMLElement> },
 ) => React.ReactElement;
 
 const DefaultSelectControlBase = memo(
   forwardRef(
-    <Type extends SelectType, T extends string = string>(
+    <Type extends SelectType, SelectOptionValue extends string = string>(
       {
         type,
         options,
@@ -69,10 +72,12 @@ const DefaultSelectControlBase = memo(
         styles,
         classNames,
         ...props
-      }: SelectControlProps<Type, T>,
+      }: SelectControlProps<Type, SelectOptionValue>,
       ref: React.Ref<HTMLElement>,
     ) => {
-      type ValueType = Type extends 'multi' ? T | T[] : T | null;
+      type ValueType = Type extends 'multi'
+        ? SelectOptionValue | SelectOptionValue[]
+        : SelectOptionValue | null;
       const shouldShowCompactLabel = compact && label;
       const isMultiSelect = type === 'multi';
       const hasValue = value !== null && value.length > 0;
@@ -84,7 +89,7 @@ const DefaultSelectControlBase = memo(
         (e: React.MouseEvent, index: number) => {
           // Unselect the value
           e.stopPropagation();
-          const currentValue = [...(value as T[])];
+          const currentValue = [...(value as SelectOptionValue[])];
           const changedValue = currentValue[index];
           onChange?.(changedValue as ValueType);
 

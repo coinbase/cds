@@ -31,9 +31,9 @@ export type SelectType = 'single' | 'multi';
 /**
  * Configuration for a single option in the Select component
  */
-export type SelectOption<T extends string = string> = {
+export type SelectOption<SelectOptionValue extends string = string> = {
   /** The value associated with this option */
-  value: T | null;
+  value: SelectOptionValue | null;
   /** The label displayed for the option */
   label?: React.ReactNode;
   /** Additional description text shown below the label */
@@ -47,12 +47,12 @@ export type SelectOption<T extends string = string> = {
  */
 export type SelectOptionProps<
   Type extends SelectType = 'single',
-  T extends string = string,
-> = SelectOption<T> &
+  SelectOptionValue extends string = string,
+> = SelectOption<SelectOptionValue> &
   Pick<CellBaseProps, 'accessory' | 'media' | 'detail'> &
   Omit<PressableProps<PressableDefaultElement>, 'value' | 'type' | 'onClick'> & {
     /** Click handler for the option */
-    onClick?: (value: T | null) => void;
+    onClick?: (value: SelectOptionValue | null) => void;
     /** Whether this is for single or multi-select */
     type?: Type;
     /** Whether this option is currently selected */
@@ -93,8 +93,8 @@ export type SelectOptionProps<
 
 export type SelectOptionComponent<
   Type extends SelectType = 'single',
-  T extends string = string,
-> = React.FC<SelectOptionProps<Type, T>>;
+  SelectOptionValue extends string = string,
+> = React.FC<SelectOptionProps<Type, SelectOptionValue>>;
 
 export type SelectEmptyDropdownContentProps = {
   label: string;
@@ -116,9 +116,13 @@ export type SelectEmptyDropdownContentProps = {
 
 export type SelectEmptyDropdownContentComponent = React.FC<SelectEmptyDropdownContentProps>;
 
-type SelectState<Type extends SelectType = 'single', T extends string = string> = {
-  value: Type extends 'multi' ? T[] : T | null;
-  onChange: (value: Type extends 'multi' ? T | T[] : T | null) => void;
+type SelectState<Type extends SelectType = 'single', SelectOptionValue extends string = string> = {
+  value: Type extends 'multi' ? SelectOptionValue[] : SelectOptionValue | null;
+  onChange: (
+    value: Type extends 'multi'
+      ? SelectOptionValue | SelectOptionValue[]
+      : SelectOptionValue | null,
+  ) => void;
 };
 
 /**
@@ -126,16 +130,16 @@ type SelectState<Type extends SelectType = 'single', T extends string = string> 
  */
 export type SelectControlProps<
   Type extends SelectType = 'single',
-  T extends string = string,
+  SelectOptionValue extends string = string,
 > = Pick<SharedAccessibilityProps, 'accessibilityLabel'> &
   Omit<BoxProps<BoxDefaultElement>, 'borderWidth' | 'onChange'> &
   Pick<
     InputStackBaseProps,
     'disabled' | 'startNode' | 'variant' | 'labelVariant' | 'testID' | 'endNode'
   > &
-  SelectState<Type, T> & {
+  SelectState<Type, SelectOptionValue> & {
     /** Array of options to display in the select dropdown */
-    options: SelectOption<T>[];
+    options: SelectOption<SelectOptionValue>[];
     /** Label displayed above the control */
     label?: React.ReactNode;
     /** Placeholder text displayed when no option is selected */
@@ -198,9 +202,9 @@ export type SelectControlProps<
 
 export type SelectControlComponent<
   Type extends SelectType = 'single',
-  T extends string = string,
+  SelectOptionValue extends string = string,
 > = React.FC<
-  SelectControlProps<Type, T> & {
+  SelectControlProps<Type, SelectOptionValue> & {
     ref?: React.Ref<HTMLElement>;
   }
 >;
@@ -210,17 +214,17 @@ export type SelectControlComponent<
  */
 export type SelectDropdownProps<
   Type extends SelectType = 'single',
-  T extends string = string,
-> = SelectState<Type, T> &
+  SelectOptionValue extends string = string,
+> = SelectState<Type, SelectOptionValue> &
   Pick<SharedAccessibilityProps, 'accessibilityLabel'> &
   Omit<BoxProps<BoxDefaultElement>, 'onChange'> &
   Pick<SelectOptionProps<Type>, 'accessory' | 'media' | 'detail'> & {
     /** Whether this is for single or multi-select */
     type?: Type;
     /** Array of options with their configuration and optional custom components */
-    options: (SelectOption<T> &
+    options: (SelectOption<SelectOptionValue> &
       Pick<SelectOptionProps<Type>, 'accessory' | 'media'> & {
-        Component?: SelectOptionComponent<Type, T>;
+        Component?: SelectOptionComponent<Type, SelectOptionValue>;
       })[];
     /** Whether the dropdown is currently open */
     open: boolean;
@@ -291,9 +295,9 @@ export type SelectDropdownProps<
     /** Whether to use compact styling for the dropdown */
     compact?: boolean;
     /** Custom component to render individual options */
-    SelectOptionComponent?: SelectOptionComponent<Type, T>;
+    SelectOptionComponent?: SelectOptionComponent<Type, SelectOptionValue>;
     /** Custom component to render the "Select All" option */
-    SelectAllOptionComponent?: SelectOptionComponent<Type, T>;
+    SelectAllOptionComponent?: SelectOptionComponent<Type, SelectOptionValue>;
     /** Custom component to render when no options are available */
     SelectEmptyDropdownContentsComponent?: SelectEmptyDropdownContentComponent;
     /** Accessibility roles for dropdown and option elements */
@@ -307,20 +311,20 @@ export type SelectDropdownProps<
 
 export type SelectDropdownComponent<
   Type extends SelectType = 'single',
-  T extends string = string,
+  SelectOptionValue extends string = string,
 > = React.FC<
-  SelectDropdownProps<Type, T> & {
+  SelectDropdownProps<Type, SelectOptionValue> & {
     ref?: React.Ref<HTMLElement>;
   }
 >;
 
-export type SelectBaseProps<Type extends SelectType = 'single', T extends string = string> = Pick<
-  SharedAccessibilityProps,
-  'accessibilityLabel'
-> &
-  SelectState<Type, T> &
+export type SelectBaseProps<
+  Type extends SelectType = 'single',
+  SelectOptionValue extends string = string,
+> = Pick<SharedAccessibilityProps, 'accessibilityLabel'> &
+  SelectState<Type, SelectOptionValue> &
   Pick<
-    SelectControlProps<Type, T>,
+    SelectControlProps<Type, SelectOptionValue>,
     | 'label'
     | 'placeholder'
     | 'helperText'
@@ -344,7 +348,7 @@ export type SelectBaseProps<Type extends SelectType = 'single', T extends string
     /** Whether the select allows single or multiple selections */
     type?: Type;
     /** Array of options to display in the select dropdown */
-    options: SelectOption<T>[];
+    options: SelectOption<SelectOptionValue>[];
     /** Controlled open state of the dropdown */
     open?: boolean;
     /** Callback to update the open state */
@@ -358,13 +362,13 @@ export type SelectBaseProps<Type extends SelectType = 'single', T extends string
     /** Maximum number of selected options to show before truncating */
     maxSelectedOptionsToShow?: number;
     /** Custom component to render the dropdown container */
-    SelectDropdownComponent?: SelectDropdownComponent<Type, T>;
+    SelectDropdownComponent?: SelectDropdownComponent<Type, SelectOptionValue>;
     /** Custom component to render the select control */
-    SelectControlComponent?: SelectControlComponent<Type, T>;
+    SelectControlComponent?: SelectControlComponent<Type, SelectOptionValue>;
     /** Custom component to render individual options */
-    SelectOptionComponent?: SelectOptionComponent<Type, T>;
+    SelectOptionComponent?: SelectOptionComponent<Type, SelectOptionValue>;
     /** Custom component to render the "Select All" option */
-    SelectAllOptionComponent?: SelectOptionComponent<Type, T>;
+    SelectAllOptionComponent?: SelectOptionComponent<Type, SelectOptionValue>;
     /** Custom component to render when no options are available */
     SelectEmptyDropdownContentsComponent?: SelectEmptyDropdownContentComponent;
     /** Inline styles for the root element */
@@ -380,8 +384,8 @@ export type SelectBaseProps<Type extends SelectType = 'single', T extends string
  */
 export type SelectProps<
   Type extends SelectType = 'single',
-  T extends string = string,
-> = SelectBaseProps<Type, T> & {
+  SelectOptionValue extends string = string,
+> = SelectBaseProps<Type, SelectOptionValue> & {
   /** Custom styles for different parts of the select */
   styles?: {
     /** Styles for the root container */
@@ -467,13 +471,16 @@ export type SelectRef = HTMLElement &
     refs: UseFloatingReturn['refs'];
   };
 
-type SelectComponent = <Type extends SelectType = 'single', T extends string = string>(
-  props: SelectProps<Type, T> & { ref?: React.Ref<SelectRef> },
+type SelectComponent = <
+  Type extends SelectType = 'single',
+  SelectOptionValue extends string = string,
+>(
+  props: SelectProps<Type, SelectOptionValue> & { ref?: React.Ref<SelectRef> },
 ) => React.ReactElement;
 
 const SelectBase = memo(
   forwardRef(
-    <Type extends SelectType = 'single', T extends string = string>(
+    <Type extends SelectType = 'single', SelectOptionValue extends string = string>(
       {
         value,
         type = 'single' as Type,
@@ -515,7 +522,7 @@ const SelectBase = memo(
         classNames,
         testID,
         ...props
-      }: SelectProps<Type, T>,
+      }: SelectProps<Type, SelectOptionValue>,
       ref: React.Ref<SelectRef>,
     ) => {
       const hasMounted = useHasMounted();

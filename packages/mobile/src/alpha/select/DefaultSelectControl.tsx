@@ -25,13 +25,16 @@ const variantColor: Record<string, ThemeVars.Color> = {
   secondary: 'fgMuted',
 };
 
-type DefaultSelectControlComponent = <Type extends SelectType, T extends string = string>(
-  props: SelectControlProps<Type, T> & { ref?: React.Ref<TouchableOpacity> },
+type DefaultSelectControlComponent = <
+  Type extends SelectType,
+  SelectOptionValue extends string = string,
+>(
+  props: SelectControlProps<Type, SelectOptionValue> & { ref?: React.Ref<TouchableOpacity> },
 ) => React.ReactElement;
 
 export const DefaultSelectControlBase = memo(
   forwardRef(
-    <Type extends SelectType, T extends string = string>(
+    <Type extends SelectType, SelectOptionValue extends string = string>(
       {
         type,
         options,
@@ -56,10 +59,12 @@ export const DefaultSelectControlBase = memo(
         accessibilityHint,
         styles,
         ...props
-      }: SelectControlProps<Type, T>,
+      }: SelectControlProps<Type, SelectOptionValue>,
       ref: React.Ref<TouchableOpacity>,
     ) => {
-      type ValueType = Type extends 'multi' ? T | T[] : T | null;
+      type ValueType = Type extends 'multi'
+        ? SelectOptionValue | SelectOptionValue[]
+        : SelectOptionValue | null;
       const shouldShowCompactLabel = compact && label;
       const hasValue = value !== null && !(Array.isArray(value) && value.length === 0);
       const isMultiSelect = Array.isArray(value);
@@ -120,7 +125,7 @@ export const DefaultSelectControlBase = memo(
               : (value as string[]).slice(0, maxSelectedOptionsToShow);
           const optionsToShow = valuesToShow
             .map((value) => options.find((option) => option.value === value))
-            .filter(Boolean) as SelectOption<T>[];
+            .filter(Boolean) as SelectOption<SelectOptionValue>[];
           return (
             <HStack flexWrap="wrap" gap={1}>
               {optionsToShow.map((option) => (

@@ -6,13 +6,16 @@ import { Divider } from '../../layout/Divider';
 import { DefaultSelectOption } from './DefaultSelectOption';
 import { type SelectOptionProps, type SelectType } from './Select';
 
-type DefaultSelectAllOptionBase = <Type extends SelectType, T extends string = string>(
-  props: SelectOptionProps<Type, T> & { ref?: React.Ref<View> },
+type DefaultSelectAllOptionBase = <
+  Type extends SelectType,
+  SelectOptionValue extends string = string,
+>(
+  props: SelectOptionProps<Type, SelectOptionValue> & { ref?: React.Ref<View> },
 ) => React.ReactElement;
 
 const DefaultSelectAllOptionBase = memo(
   forwardRef(
-    <Type extends SelectType, T extends string = string>(
+    <Type extends SelectType, SelectOptionValue extends string = string>(
       {
         accessory,
         blendStyles,
@@ -26,7 +29,7 @@ const DefaultSelectAllOptionBase = memo(
         style,
         type,
         styles,
-      }: SelectOptionProps<Type, T>,
+      }: SelectOptionProps<Type, SelectOptionValue>,
       ref: React.Ref<View>,
     ) => {
       // Note: DefaultSelectOption doesn't support ref yet because Cell doesn't support ref forwarding
@@ -48,7 +51,7 @@ const DefaultSelectAllOptionBase = memo(
             style={style}
             styles={styles}
             type={type}
-            value={'select-all' as T}
+            value={'select-all' as SelectOptionValue}
           />
           <Divider paddingX={2} style={styles?.selectAllDivider} />
         </>

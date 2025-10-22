@@ -13,13 +13,16 @@ import { DefaultSelectEmptyDropdownContents } from './DefaultSelectEmptyDropdown
 import { DefaultSelectOption } from './DefaultSelectOption';
 import type { SelectDropdownProps, SelectType } from './Select';
 
-type DefaultSelectDropdownBase = <Type extends SelectType = 'single', T extends string = string>(
-  props: SelectDropdownProps<Type, T> & { ref?: React.Ref<DrawerRefBaseProps> },
+type DefaultSelectDropdownBase = <
+  Type extends SelectType = 'single',
+  SelectOptionValue extends string = string,
+>(
+  props: SelectDropdownProps<Type, SelectOptionValue> & { ref?: React.Ref<DrawerRefBaseProps> },
 ) => React.ReactElement;
 
 const DefaultSelectDropdownBase = memo(
   forwardRef(
-    <Type extends SelectType = 'single', T extends string = string>(
+    <Type extends SelectType = 'single', SelectOptionValue extends string = string>(
       {
         type,
         options,
@@ -44,10 +47,12 @@ const DefaultSelectDropdownBase = memo(
         SelectEmptyDropdownContentsComponent = DefaultSelectEmptyDropdownContents,
         accessibilityRoles,
         ...props
-      }: SelectDropdownProps<Type, T>,
+      }: SelectDropdownProps<Type, SelectOptionValue>,
       ref: React.Ref<DrawerRefBaseProps>,
     ) => {
-      type ValueType = Type extends 'multi' ? T | T[] : T | null;
+      type ValueType = Type extends 'multi'
+        ? SelectOptionValue | SelectOptionValue[]
+        : SelectOptionValue | null;
       const isMultiSelect = type === 'multi';
 
       const isAllOptionsSelected = isMultiSelect
@@ -111,7 +116,7 @@ const DefaultSelectDropdownBase = memo(
               selectAllDivider: styles?.selectAllDivider,
             }}
             type={type}
-            value={'select-all' as T}
+            value={'select-all' as SelectOptionValue}
           />
         ),
         [

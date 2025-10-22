@@ -5,13 +5,16 @@ import { Divider } from '../../layout/Divider';
 import { DefaultSelectOption } from './DefaultSelectOption';
 import { type SelectOptionComponent, type SelectOptionProps, type SelectType } from './Select';
 
-type DefaultSelectAllOptionBase = <Type extends SelectType, T extends string = string>(
-  props: SelectOptionProps<Type, T> & { ref?: React.Ref<HTMLButtonElement> },
+type DefaultSelectAllOptionBase = <
+  Type extends SelectType,
+  SelectOptionValue extends string = string,
+>(
+  props: SelectOptionProps<Type, SelectOptionValue> & { ref?: React.Ref<HTMLButtonElement> },
 ) => React.ReactElement;
 
 const DefaultSelectAllOptionBase = memo(
   forwardRef(
-    <Type extends SelectType, T extends string = string>(
+    <Type extends SelectType, SelectOptionValue extends string = string>(
       {
         accessory,
         blendStyles,
@@ -27,7 +30,7 @@ const DefaultSelectAllOptionBase = memo(
         type,
         styles,
         classNames,
-      }: SelectOptionProps<Type, T>,
+      }: SelectOptionProps<Type, SelectOptionValue>,
       ref: React.Ref<HTMLButtonElement>,
     ) => {
       return (
@@ -48,7 +51,7 @@ const DefaultSelectAllOptionBase = memo(
             style={style}
             styles={styles}
             type={type}
-            value={'select-all' as T}
+            value={'select-all' as SelectOptionValue}
           />
           <Divider
             className={classNames?.selectAllDivider}
