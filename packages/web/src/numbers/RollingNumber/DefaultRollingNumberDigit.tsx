@@ -30,6 +30,9 @@ const digitNonActiveCss = css`
   width: 100%;
   pointer-events: none;
   left: 0;
+  user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
 `;
 
 const topNonActiveCss = css`

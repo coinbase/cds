@@ -2528,5 +2528,17 @@ export const glyphMap = {
   'location-16-active': '󰧛',
   'location-16-inactive': '󰧜',
   'location-24-active': '󰧝',
-  'location-24-inactive': '󰧞'
+  'location-24-inactive': '󰧞',
+  'unfollowPeople-12-active': '󰧥',
+  'unfollowPeople-12-inactive': '󰧦',
+  'unfollowPeople-16-active': '󰧧',
+  'unfollowPeople-16-inactive': '󰧨',
+  'unfollowPeople-24-active': '󰧩',
+  'unfollowPeople-24-inactive': '󰧪',
+  'tokenSales-12-active': '󰧟',
+  'tokenSales-12-inactive': '󰧠',
+  'tokenSales-16-active': '󰧡',
+  'tokenSales-16-inactive': '󰧢',
+  'tokenSales-24-active': '󰧣',
+  'tokenSales-24-inactive': '󰧤'
 };
