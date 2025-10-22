@@ -1,9 +1,8 @@
 import React, { memo, useCallback, useMemo } from 'react';
-import { Button } from '@coinbase/cds-web/buttons/Button';
-import { ButtonGroup } from '@coinbase/cds-web/buttons/ButtonGroup';
+import { Icon } from '@coinbase/cds-web/icons';
 import { Box } from '@coinbase/cds-web/layout';
-import { Tooltip } from '@coinbase/cds-web/overlays/tooltip/Tooltip';
 import { useToast } from '@coinbase/cds-web/overlays/useToast';
+import { Link } from '@coinbase/cds-web/typography/Link';
 import { useLocation } from '@docusaurus/router';
 import { usePlatformContext } from '@site/src/utils/PlatformContext';
 
@@ -61,21 +60,23 @@ export const LLMDocButtons = memo(() => {
   }, [llmDocUrl, toast]);
 
   return (
-    <Box alignItems="flex-start" flexDirection={{ base: 'row', phone: 'column' }} gap={1}>
-      <Button compact transparent onClick={handleCopy} startIcon="copy">
+    <Box alignItems="flex-start" gap={2}>
+      <Link as="button" font="label2" onClick={handleCopy}>
+        <Icon
+          name="copy"
+          size="s"
+          style={{ display: 'inline-flex', verticalAlign: 'text-bottom' }}
+        />{' '}
         Copy for LLM
-      </Button>
-      <Button
-        compact
-        transparent
-        as="a"
-        href={llmDocUrl}
-        rel="noopener noreferrer"
-        startIcon="externalLink"
-        target="_blank"
-      >
+      </Link>
+      <Link openInNewWindow font="label2" href={llmDocUrl}>
+        <Icon
+          name="externalLink"
+          size="s"
+          style={{ display: 'inline-flex', verticalAlign: 'text-bottom' }}
+        />{' '}
         View as Markdown
-      </Button>
+      </Link>
     </Box>
   );
 });

@@ -245,7 +245,7 @@ export const ContentHeader = memo(
           </>
         )}
         <Divider />
-        <HStack paddingX={{ base: 2, phone: 1 }} paddingY={2}>
+        <HStack paddingX={{ base: 4, phone: 2 }} paddingY={2}>
           <LLMDocButtons />
         </HStack>
       </VStack>
