@@ -156,7 +156,7 @@ const DefaultSelectDropdownBase = memo(
           <VStack>
             <ScrollView showsVerticalScrollIndicator={true}>
               <VStack>
-                {!hideSelectAll && isMultiSelect && SelectAllOption}
+                {!hideSelectAll && isMultiSelect && options.length > 0 && SelectAllOption}
                 {options.length > 0 ? (
                   options.map(
                     ({ Component, media: optionMedia, accessory: optionAccessory, ...option }) => {

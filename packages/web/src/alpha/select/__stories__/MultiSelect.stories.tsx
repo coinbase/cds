@@ -553,6 +553,21 @@ export const StartNode = () => {
   );
 };
 
+export const EmptyOptions = () => {
+  const { value, onChange } = useMultiSelect({ initialValue: [] });
+
+  return (
+    <Select
+      label="Multi select - empty options"
+      onChange={onChange}
+      options={[]}
+      placeholder="Empty value"
+      type="multi"
+      value={value}
+    />
+  );
+};
+
 export const ComplexStyles = () => {
   const { value, onChange } = useMultiSelect({
     initialValue: ['1', '2'],

@@ -766,6 +766,21 @@ const MultiSelectManyOptionsExample = () => {
   );
 };
 
+const MultiSelectEmptyOptionsExample = () => {
+  const { value, onChange } = useMultiSelect({ initialValue: [] });
+
+  return (
+    <Select
+      label="Multi select - empty options"
+      onChange={onChange}
+      options={[]}
+      placeholder="Empty value"
+      type="multi"
+      value={value}
+    />
+  );
+};
+
 const MultiSelectMaxSelectedOptionsExample = () => {
   const manyExampleOptions = Array.from({ length: 100 }, (_, i) => ({
     value: (i + 1).toString(),
@@ -1124,6 +1139,9 @@ const SelectV3Screen = () => {
       </Example>
       <Example title="Multi Select Many Options">
         <MultiSelectManyOptionsExample />
+      </Example>
+      <Example title="Multi Select Empty Options">
+        <MultiSelectEmptyOptionsExample />
       </Example>
       <Example title="Multi Select Max Selected Options">
         <MultiSelectMaxSelectedOptionsExample />

@@ -214,7 +214,7 @@ const DefaultSelectDropdownBase = memo(
                     maxHeight={252}
                     overflow="auto"
                   >
-                    {!hideSelectAll && isMultiSelect && SelectAllOption}
+                    {!hideSelectAll && isMultiSelect && options.length > 0 && SelectAllOption}
                     {options.length > 0 ? (
                       options.map(
                         ({
