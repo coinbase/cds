@@ -35,50 +35,44 @@ export const Default = () => {
           Default
         </Text>
         <HStack gap={2}>
-          <InputChip onClick={NoopFn} value="USD" />
-          <InputChip onClick={NoopFn} start={<RemoteImage {...regularMediaProps} />} value="USD" />
-          <InputChip
-            disabled
-            onClick={NoopFn}
-            start={<RemoteImage {...regularMediaProps} />}
-            value="USD"
-          />
+          <InputChip onClick={NoopFn}>USD</InputChip>
+          <InputChip onClick={NoopFn} start={<RemoteImage {...regularMediaProps} />}>
+            USD
+          </InputChip>
+          <InputChip disabled onClick={NoopFn} start={<RemoteImage {...regularMediaProps} />}>
+            USD
+          </InputChip>
         </HStack>
         <Text as="h3" display="block" font="headline" paddingTop={3}>
           Compact
         </Text>
         <HStack gap={2}>
-          <InputChip compact onClick={NoopFn} value="USD" />
-          <InputChip
-            compact
-            onClick={NoopFn}
-            start={<RemoteImage {...compactMediaProps} />}
-            value="USD"
-          />
+          <InputChip compact onClick={NoopFn}>
+            USD
+          </InputChip>
+          <InputChip compact onClick={NoopFn} start={<RemoteImage {...compactMediaProps} />}>
+            USD
+          </InputChip>
           <InputChip
             compact
             disabled
             onClick={NoopFn}
             start={<RemoteImage {...compactMediaProps} />}
-            value="USD"
-          />
+          >
+            USD
+          </InputChip>
         </HStack>
         <Text as="h3" display="block" font="headline" paddingTop={3}>
           Long text
         </Text>
         <HStack gap={2}>
-          <InputChip onClick={NoopFn} value="Lorem ipsum sit dolar" />
-          <InputChip
-            onClick={NoopFn}
-            start={<RemoteImage {...regularMediaProps} />}
-            value="Lorem ipsum sit dolar"
-          />
-          <InputChip
-            disabled
-            onClick={NoopFn}
-            start={<RemoteImage {...regularMediaProps} />}
-            value="Lorem ipsum sit dolar"
-          />
+          <InputChip onClick={NoopFn}>Lorem ipsum sit dolar</InputChip>
+          <InputChip onClick={NoopFn} start={<RemoteImage {...regularMediaProps} />}>
+            Lorem ipsum sit dolar
+          </InputChip>
+          <InputChip disabled onClick={NoopFn} start={<RemoteImage {...regularMediaProps} />}>
+            Lorem ipsum sit dolar
+          </InputChip>
         </HStack>
       </VStack>
     </VStack>

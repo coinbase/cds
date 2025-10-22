@@ -10,7 +10,7 @@ export const InputChip = memo(
     {
       value,
       children = value,
-      accessibilityLabel = typeof value === 'string' ? `Remove ${value}` : 'Remove option',
+      accessibilityLabel = typeof children === 'string' ? `Remove ${children}` : 'Remove option',
       invertColorScheme = true,
       testID = 'input-chip',
       ...props

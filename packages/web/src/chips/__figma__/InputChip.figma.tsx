@@ -8,7 +8,7 @@ figma.connect(
   {
     imports: ["import { InputChip } from '@coinbase/cds-web/chips/InputChip'"],
     props: {
-      value: figma.string('value'),
+      children: figma.string('value'),
       start: figma.boolean('show start', {
         true: figma.instance('start'),
         false: undefined,
