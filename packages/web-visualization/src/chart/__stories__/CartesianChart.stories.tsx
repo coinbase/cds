@@ -680,6 +680,7 @@ const UVIndexChart = () => {
 
   return (
     <CartesianChart
+      animate={false}
       height={{ base: 150, tablet: 200, desktop: 250 }}
       series={[
         {
@@ -699,14 +700,16 @@ const UVIndexChart = () => {
         <Line seriesId="uv" strokeWidth={8} type="solid" />
       </FutureData>
       <ReferenceLine
-        LineComponent={(props) => <SolidLine {...props} stroke="var(--color-bg)" strokeWidth={2} />}
+        LineComponent={(props) => <SolidLine {...props} stroke="var(--color-bg)" strokeWidth={4} />}
         dataX={currentHour}
       />
       <Point
         dataX={currentHour}
         dataY={data[currentHour]}
         fill="var(--color-fg)"
+        radius={8}
         stroke="var(--color-bg)"
+        strokeWidth={4}
       />
     </CartesianChart>
   );
