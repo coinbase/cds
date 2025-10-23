@@ -188,7 +188,6 @@ export const ContentHeader = memo(
               <HStack
                 as="ul"
                 flexWrap="wrap"
-                gap={1}
                 margin={0}
                 padding={0}
                 style={{
@@ -197,7 +196,7 @@ export const ContentHeader = memo(
               >
                 {dependencies.map((dependency, index) => (
                   <li key={dependency.name}>
-                    <Text font="label2">
+                    <Text font="label2" style={{ whiteSpace: 'pre-wrap' }}>
                       {dependency.url ? (
                         <Link as={DocusaurusLink} target="_blank" to={dependency.url}>
                           {dependency.name}
@@ -223,7 +222,6 @@ export const ContentHeader = memo(
               <HStack
                 as="ul"
                 flexWrap="wrap"
-                gap={1}
                 margin={0}
                 padding={0}
                 style={{
@@ -232,7 +230,7 @@ export const ContentHeader = memo(
               >
                 {relatedComponents.map((component, index) => (
                   <li key={component.url}>
-                    <Text font="label2">
+                    <Text font="label2" style={{ whiteSpace: 'pre-wrap' }}>
                       <Link as={DocusaurusLink} to={component.url}>
                         {component.label}
                       </Link>
