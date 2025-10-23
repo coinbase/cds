@@ -214,9 +214,9 @@ const processContinuousColorMap = (
       return null;
     }
 
-    // Validate stops are in ascending order
+    // Validate stops are in ascending order (allow equal values for hard transitions)
     for (let i = 1; i < stops.length; i++) {
-      if (stops[i] <= stops[i - 1]) {
+      if (stops[i] < stops[i - 1]) {
         console.warn(`Continuous colorMap: stops must be in ascending order`);
         return null;
       }
@@ -541,10 +541,17 @@ export const evaluateColorMapAtValue = (
 
     // Find which segment we're in and interpolate
     for (let i = 0; i < orderedPositions.length - 1; i++) {
-      if (normalizedValue >= orderedPositions[i] && normalizedValue <= orderedPositions[i + 1]) {
+      const start = orderedPositions[i];
+      const end = orderedPositions[i + 1];
+      if (normalizedValue >= start && normalizedValue <= end) {
+        // Handle hard transition (equal consecutive stops)
+        if (end === start) {
+          // Choose the previous color at the exact boundary for determinism
+          return orderedColors[i];
+        }
+
         // Calculate progress within this segment (0-1)
-        const segmentProgress =
-          (normalizedValue - orderedPositions[i]) / (orderedPositions[i + 1] - orderedPositions[i]);
+        const segmentProgress = (normalizedValue - start) / (end - start);
         // Interpolate between the two colors
         return interpolateColors(orderedColors[i], orderedColors[i + 1], segmentProgress);
       }

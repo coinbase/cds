@@ -1315,8 +1315,8 @@ const GainLossChart = () => {
           id: 'prices',
           data: data,
           colorMap: {
-            type: 'discrete',
-            stops: [0],
+            type: 'continuous',
+            stops: [-15, 5],
             colors: [negativeColor, positiveColor],
           },
         },

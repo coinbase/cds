@@ -448,7 +448,7 @@ export const evaluateColorMapAtValue = (
     }
 
     // Find which segment we're in
-    if (normalizedValue <= positions[0]) {
+    if (normalizedValue < positions[0]) {
       return processedColors[0];
     }
     if (normalizedValue >= positions[positions.length - 1]) {
@@ -457,11 +457,16 @@ export const evaluateColorMapAtValue = (
 
     // Find the two colors to mix
     for (let i = 0; i < positions.length - 1; i++) {
-      if (normalizedValue >= positions[i] && normalizedValue <= positions[i + 1]) {
-        // Calculate progress within this segment (0-1)
-        const segmentProgress =
-          (normalizedValue - positions[i]) / (positions[i + 1] - positions[i]);
+      const start = positions[i];
+      const end = positions[i + 1];
+      if (normalizedValue >= start && normalizedValue <= end) {
+        // Prefer the upper bucket on exact boundaries and handle hard transitions
+        if (end === start || normalizedValue === start) {
+          return processedColors[i + 1];
+        }
 
+        // Calculate progress within this segment (0-1)
+        const segmentProgress = (normalizedValue - start) / (end - start);
         const percentage = segmentProgress * 100;
 
         // Use color-mix()! This works with CSS variables!

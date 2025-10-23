@@ -1255,9 +1255,9 @@ const GainLossChart = () => {
   const maxValue = Math.max(...data);
 
   // Line colorMap: discrete color change at 0 (full opacity for line)
-  const lineColorMap = {
-    type: 'discrete' as const,
-    stops: [0],
+  const lineColorMap: ColorMap = {
+    type: 'continuous',
+    stops: [-5, 5],
     colors: [negativeColor, positiveColor],
   };
 
