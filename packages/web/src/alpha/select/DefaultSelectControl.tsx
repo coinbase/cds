@@ -75,14 +75,14 @@ const DefaultSelectControlComponent = memo(
         : SelectOptionValue | null;
       const shouldShowCompactLabel = compact && label;
       const isMultiSelect = type === 'multi';
-      const hasValue = value !== null && value.length > 0;
+      const hasValue = value !== null && !(Array.isArray(value) && value.length === 0);
 
       const controlPressableRef = useRef<HTMLButtonElement>(null);
       const valueNodeContainerRef = useRef<HTMLDivElement>(null);
       const handleUnselectValue = useCallback(
-        (e: React.MouseEvent, index: number) => {
+        (event: React.MouseEvent, index: number) => {
           // Unselect the value
-          e.stopPropagation();
+          event.stopPropagation();
           const currentValue = [...(value as SelectOptionValue[])];
           const changedValue = currentValue[index];
           onChange?.(changedValue as ValueType);

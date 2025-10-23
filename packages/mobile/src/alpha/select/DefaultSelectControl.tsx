@@ -67,7 +67,7 @@ export const DefaultSelectControlComponent = memo(
         : SelectOptionValue | null;
       const shouldShowCompactLabel = compact && label;
       const hasValue = value !== null && !(Array.isArray(value) && value.length === 0);
-      const isMultiSelect = Array.isArray(value);
+      const isMultiSelect = type === 'multi';
 
       // Prop value doesn't have default value because it affects the color of the
       // animated caret

@@ -164,8 +164,14 @@ const DefaultSelectOptionComponent = memo(
             priority="end"
             selected={selected}
             style={styles?.optionCell}
+            // This is a workaround to ensure the end element is displayed correctly
+            styles={{ end: { width: 'fit-content' } }}
           >
-            <VStack className={classNames?.optionContent} style={styles?.optionContent}>
+            <VStack
+              className={classNames?.optionContent}
+              justifyContent="center"
+              style={styles?.optionContent}
+            >
               {labelNode}
               {descriptionNode}
             </VStack>

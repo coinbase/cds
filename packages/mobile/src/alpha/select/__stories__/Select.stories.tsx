@@ -686,7 +686,7 @@ const MultiSelectCustomSelectAllOptionExample = () => {
         style={style}
       >
         <Text color={selected ? 'fgPrimary' : 'fg'} font="headline">
-          {String(label || 'Custom Select All Option')}
+          {label || 'Custom Select All Option'}
         </Text>
       </Pressable>
     );

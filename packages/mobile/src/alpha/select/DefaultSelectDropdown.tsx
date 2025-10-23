@@ -119,20 +119,24 @@ const DefaultSelectDropdownComponent = memo(
             disabled={disabled}
             end={
               end ?? (
-                <Button compact transparent accessibilityRole="menuitem" onPress={handleClearAll}>
+                <Button
+                  compact
+                  transparent
+                  accessibilityRole="menuitem"
+                  flush="end"
+                  onPress={handleClearAll}
+                >
                   {clearAllLabel}
                 </Button>
               )
             }
             indeterminate={indeterminate}
-            label={String(
-              selectAllLabel + ' (' + options.filter((o) => o.value !== null).length + ')',
-            )}
+            label={`${selectAllLabel} (${options.filter((o) => o.value !== null).length})`}
             media={
               media ?? (
                 <Checkbox
                   checked={isAllOptionsSelected}
-                  indeterminate={!isAllOptionsSelected && isSomeOptionsSelected ? true : false}
+                  indeterminate={indeterminate}
                   tabIndex={-1}
                 />
               )
@@ -161,7 +165,6 @@ const DefaultSelectDropdownComponent = memo(
           options,
           media,
           isAllOptionsSelected,
-          isSomeOptionsSelected,
           toggleSelectAll,
           optionStyles,
           type,

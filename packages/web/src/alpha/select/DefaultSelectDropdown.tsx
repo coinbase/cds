@@ -166,6 +166,7 @@ const DefaultSelectDropdownComponent = memo(
         () => (
           <SelectAllOptionComponent
             key="select-all"
+            accessibilityRole={accessibilityRoles?.option}
             accessory={accessory}
             blendStyles={styles?.optionBlendStyles}
             className={classNames?.option}
@@ -180,6 +181,7 @@ const DefaultSelectDropdownComponent = memo(
                   onClick={handleClearAll}
                   role="option"
                   style={{ margin: 'var(--space-1)' }}
+                  width="fit-content"
                 >
                   {clearAllLabel}
                 </Button>
@@ -201,23 +203,24 @@ const DefaultSelectDropdownComponent = memo(
             onClick={toggleSelectAll}
             selected={isAllOptionsSelected || isSomeOptionsSelected}
             style={styles?.option}
-            styles={optionStyles}
+            styles={{ ...optionStyles }}
             type={type}
             value={'select-all' as SelectOptionValue}
           />
         ),
         [
           SelectAllOptionComponent,
+          accessibilityRoles?.option,
           accessory,
           styles?.optionBlendStyles,
           styles?.option,
           classNames?.option,
           optionClassNames,
           compact,
+          disabled,
           end,
           handleClearAll,
           clearAllLabel,
-          disabled,
           indeterminate,
           selectAllLabel,
           options,
