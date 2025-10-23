@@ -2699,6 +2699,19 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@cbhq/docusaurus-plugin-llm-dev-server@workspace:^, @cbhq/docusaurus-plugin-llm-dev-server@workspace:libs/docusaurus-plugin-llm-dev-server":
+  version: 0.0.0-use.local
+  resolution: "@cbhq/docusaurus-plugin-llm-dev-server@workspace:libs/docusaurus-plugin-llm-dev-server"
+  dependencies:
+    "@babel/core": "npm:^7.28.0"
+    "@babel/preset-env": "npm:^7.28.0"
+    "@babel/preset-react": "npm:^7.27.1"
+    "@babel/preset-typescript": "npm:^7.27.1"
+    "@docusaurus/types": "npm:^3.7.0"
+    "@types/express": "npm:^4.17.21"
+  languageName: unknown
+  linkType: soft
+
 "@cbhq/eslint-plugin-cds@workspace:packages/eslint-plugin-cds":
   version: 0.0.0-use.local
   resolution: "@cbhq/eslint-plugin-cds@workspace:packages/eslint-plugin-cds"
@@ -17943,6 +17956,7 @@ __metadata:
     "@cbhq/cds-web-visualization": "workspace:^"
     "@cbhq/docusaurus-plugin-docgen": "workspace:^"
     "@cbhq/docusaurus-plugin-kbar": "workspace:^"
+    "@cbhq/docusaurus-plugin-llm-dev-server": "workspace:^"
     "@docusaurus/core": "npm:^3.7.0"
     "@docusaurus/faster": "npm:^3.7.0"
     "@docusaurus/mdx-loader": "npm:^3.7.0"

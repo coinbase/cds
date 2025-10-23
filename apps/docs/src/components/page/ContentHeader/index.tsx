@@ -6,6 +6,7 @@ import { VStack } from '@cbhq/cds-web/layout/VStack';
 import { Link } from '@cbhq/cds-web/typography/Link';
 import { Text } from '@cbhq/cds-web/typography/Text';
 import DocusaurusLink from '@docusaurus/Link';
+import { LLMDocButtons } from '@site/src/components/page/LLMDocButton';
 import { usePlatformContext } from '@site/src/utils/PlatformContext';
 import CodeBlock from '@theme/CodeBlock';
 
@@ -102,11 +103,12 @@ export const ContentHeader = memo(
     } = activeMetadata ?? {};
 
     const descriptionText = activeMetadata?.description ?? description;
+    const hasMetadataItems = importText || changelog || source || storybook || figma;
 
     return (
       <VStack background="bgAlternate" borderRadius={600} overflow="hidden" width="100%">
         {activeBanner && (
-          <VStack height={200} width="100%">
+          <VStack display={{ base: 'flex', phone: 'none' }} height={200} width="100%">
             {typeof activeBanner === 'string' ? (
               <img
                 alt={`${title} banner`}
@@ -123,7 +125,7 @@ export const ContentHeader = memo(
             <Text font="display2">{title}</Text>
             {descriptionText && <Text font="title4">{descriptionText}</Text>}
           </VStack>
-          {activeMetadata && (
+          {hasMetadataItems && (
             <Grid
               alignItems="center"
               columnGap={2}
@@ -242,6 +244,10 @@ export const ContentHeader = memo(
             </VStack>
           </>
         )}
+        <Divider />
+        <HStack paddingX={{ base: 4, phone: 2 }} paddingY={2}>
+          <LLMDocButtons />
+        </HStack>
       </VStack>
     );
   },
