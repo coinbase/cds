@@ -1,7 +1,6 @@
 import React from 'react';
 import { assets } from '@coinbase/cds-common/internal/data/assets';
 
-import { useTheme } from '../../hooks/useTheme';
 import { HStack, VStack } from '../../layout';
 import { RemoteImage, type RemoteImageProps } from '../../media';
 import { Text } from '../../typography/Text';
@@ -22,7 +21,6 @@ const assetIconProps: RemoteImageProps = {
 const NoopFn = () => {};
 
 export const Default = () => {
-  const theme = useTheme();
   return (
     <VStack gap={3}>
       <VStack gap={2}>

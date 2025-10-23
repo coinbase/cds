@@ -68,6 +68,34 @@ describe('Chip', () => {
   it('renders correctly when passing custom styles to contentStyle prop', () => {
     render(<ChipWithNodes contentStyle={customContentStyle} />);
 
-    expect(screen.getByTestId(testID)).toHaveStyle(`max-width: ${customContentStyle.maxWidth}px`);
+    expect(screen.getByTestId(testID).firstElementChild).toHaveStyle(
+      `max-width: ${customContentStyle.maxWidth}px`,
+    );
+  });
+
+  it('applies custom classNames to root and content', () => {
+    const classNames = {
+      root: 'custom-root-class',
+      content: 'custom-content-class',
+    };
+
+    render(<ChipWithNodes classNames={classNames} />);
+
+    const chip = screen.getByTestId(testID);
+    expect(chip).toHaveClass('custom-root-class');
+    expect(chip.firstElementChild).toHaveClass('custom-content-class');
+  });
+
+  it('applies custom styles to root and content', () => {
+    const styles = {
+      root: { border: '2px solid red' },
+      content: { padding: '10px' },
+    };
+
+    render(<ChipWithNodes styles={styles} />);
+
+    const chip = screen.getByTestId(testID);
+    expect(chip).toHaveStyle('border: 2px solid red');
+    expect(chip.firstElementChild).toHaveStyle('padding: 10px');
   });
 });

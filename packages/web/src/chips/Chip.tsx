@@ -1,96 +1,145 @@
-import React, { forwardRef, Fragment, memo } from 'react';
+import { forwardRef, Fragment, memo, useMemo } from 'react';
 import { curves, durations } from '@coinbase/cds-common/motion/tokens';
 import { chipMaxWidth } from '@coinbase/cds-common/tokens/chip';
 import { css } from '@linaria/core';
 
+import { cx } from '../cx';
+import type { HStackProps } from '../layout';
 import { Box, HStack } from '../layout';
-import { Pressable } from '../system/Pressable';
-import { InvertedThemeProvider } from '../system/ThemeProvider';
+import type { PressableProps } from '../system';
+import { InvertedThemeProvider, Pressable } from '../system';
 import { Text } from '../typography/Text';
 
 import type { ChipProps } from './ChipProps';
 
-const contentCss = css`
+const transitionCss = css`
   transition: background ${durations.fast3}ms cubic-bezier(${curves.global.join(',')});
-`;
-
-// styles that clamp the width and height of the Chip container
-const containerCss = css`
-  max-height: fit-content;
-  min-width: min(fit-content, ${chipMaxWidth}px);
 `;
 
 /**
  * This is a basic Chip component used to create all Chip components.
+ * When onClick is provided, the ref will be typed as HTMLButtonElement.
+ * When onClick is not provided, the ref will be typed as HTMLDivElement.
  */
 export const Chip = memo(
-  forwardRef<HTMLButtonElement, ChipProps>(function Chip(
+  forwardRef(function Chip(
     {
+      as,
+      alignItems = 'center',
+      width = 'fit-content',
+      height = 'fit-content',
+      compact,
+      gap = 1,
+      paddingX = compact ? 1.5 : 2,
+      paddingY = compact ? 0.5 : 1,
+      padding,
+      paddingTop,
+      paddingBottom,
+      paddingStart,
+      justifyContent,
+      paddingEnd,
       children,
       start,
       end,
       maxWidth = chipMaxWidth,
       inverted,
-      compact,
       numberOfLines = 1,
-      onClick,
       testID,
-      accessibilityLabel,
       contentStyle,
       borderRadius = 700,
       background = 'bgSecondary',
+      style,
+      className,
+      styles,
+      classNames,
+      onClick,
       ...props
-    },
-    ref,
+    }: ChipProps,
+    ref: React.ForwardedRef<HTMLButtonElement | HTMLDivElement>,
   ) {
     const WrapperComponent = inverted ? InvertedThemeProvider : Fragment;
 
-    const content = (
-      <HStack
-        alignItems="center"
-        background={onClick ? undefined : background}
-        borderRadius={borderRadius}
-        className={contentCss}
-        gap={1}
-        maxWidth={maxWidth}
-        paddingX={compact ? 1 : 2}
-        paddingY={compact ? 0.5 : 1}
-        style={contentStyle}
-        testID={!onClick ? testID : undefined}
-      >
-        {start}
-        {typeof children === 'string' ? (
-          <Text font="headline" numberOfLines={numberOfLines}>
-            {children}
-          </Text>
-        ) : (
-          children
-        )}
-        {end}
-      </HStack>
-    );
+    const containerProps = {
+      background,
+      borderRadius,
+      className: cx(transitionCss, className, classNames?.root),
+      style: { ...style, ...styles?.root },
+      testID,
+      width,
+      height,
+      maxWidth,
+    };
 
-    // The wrapping Box ensures that the layout is consistent since the child pressable and provider child elements conditionally render
-    return (
-      <Box className={containerCss} display="block">
-        <WrapperComponent>
-          {onClick ? (
-            <Pressable
-              ref={ref}
-              accessibilityLabel={accessibilityLabel}
-              background={background}
-              borderRadius={borderRadius}
-              onClick={onClick}
-              testID={testID}
-              {...props}
-            >
-              {content}
-            </Pressable>
+    const content = useMemo(() => {
+      return (
+        <HStack
+          alignItems={alignItems}
+          className={classNames?.content}
+          gap={gap}
+          justifyContent={justifyContent}
+          maxWidth={maxWidth}
+          padding={padding}
+          paddingBottom={paddingBottom}
+          paddingEnd={paddingEnd}
+          paddingStart={paddingStart}
+          paddingTop={paddingTop}
+          paddingX={paddingX}
+          paddingY={paddingY}
+          style={{ ...contentStyle, ...styles?.content }}
+        >
+          {start}
+          {typeof children === 'string' ? (
+            <Text flexShrink={1} font="headline" numberOfLines={numberOfLines}>
+              {children}
+            </Text>
           ) : (
-            content
+            <Box flexShrink={1}>{children}</Box>
           )}
-        </WrapperComponent>
-      </Box>
+          {end}
+        </HStack>
+      );
+    }, [
+      alignItems,
+      classNames?.content,
+      gap,
+      justifyContent,
+      maxWidth,
+      padding,
+      paddingBottom,
+      paddingEnd,
+      paddingStart,
+      paddingTop,
+      paddingX,
+      paddingY,
+      contentStyle,
+      styles?.content,
+      start,
+      children,
+      numberOfLines,
+      end,
+    ]);
+
+    return (
+      <WrapperComponent {...(inverted ? { display: 'content' } : {})}>
+        {onClick ? (
+          <Pressable
+            ref={ref as React.ForwardedRef<HTMLButtonElement>}
+            onClick={onClick}
+            {...containerProps}
+            {...(props as Partial<PressableProps<'button'>>)}
+          >
+            {content}
+          </Pressable>
+        ) : (
+          <HStack
+            ref={ref as React.ForwardedRef<HTMLDivElement>}
+            {...containerProps}
+            {...(props as Partial<HStackProps<'div'>>)}
+          >
+            {content}
+          </HStack>
+        )}
+      </WrapperComponent>
     );
   }),
 );

@@ -1,8 +1,8 @@
-import React from 'react';
+import { useRef } from 'react';
 import { assets } from '@coinbase/cds-common/internal/data/assets';
 
 import { Icon } from '../../icons/Icon';
-import { HStack, VStack } from '../../layout';
+import { Box, VStack } from '../../layout';
 import { RemoteImage, type RemoteImageProps } from '../../media';
 import { Text } from '../../typography/Text';
 import { Chip } from '../Chip';
@@ -22,51 +22,60 @@ const assetIconProps: RemoteImageProps = {
 
 const ChipExamples = ({
   label,
+  direction = 'row',
   ...props
-}: { label?: string } & Omit<ChipBaseProps, 'children'>) => (
-  <HStack gap={2}>
-    <Chip {...props}>{label ?? <Text font="headline">Base</Text>}</Chip>
-    <Chip {...props} start={<RemoteImage {...assetIconProps} />}>
-      {label ?? <Text font="headline">Start</Text>}
-    </Chip>
-    <Chip
-      {...props}
-      end={<Icon color="fg" name="caretDown" size="s" />}
-      start={<RemoteImage {...assetIconProps} />}
-    >
-      {label ?? <Text font="headline">End & Start</Text>}
-    </Chip>
-    <Chip {...props} end={<Icon color="fg" name="filter" size="s" />}>
-      Filter 2
-    </Chip>
-    <Chip
-      {...props}
-      end={<Icon color="fg" name="caretDown" size="s" />}
-      onClick={() => {}}
-      start={<RemoteImage {...assetIconProps} />}
-    >
-      {label ?? <Text font="headline">Pressable</Text>}
-    </Chip>
-    <Chip
-      {...props}
-      accessibilityLabel="a11y label"
-      end={<Icon color="fg" name="caretDown" size="s" />}
-      onClick={() => {}}
-      start={<RemoteImage {...assetIconProps} />}
-    >
-      {label ?? <Text font="headline">Pressable with a11y label</Text>}
-    </Chip>
-    <Chip
-      {...props}
-      disabled
-      end={<Icon color="fg" name="caretDown" size="s" />}
-      onClick={() => {}}
-      start={<RemoteImage {...assetIconProps} />}
-    >
-      {label ?? <Text font="headline">Disabled</Text>}
-    </Chip>
-  </HStack>
-);
+}: { label?: string; direction?: 'row' | 'column' } & Pick<
+  ChipBaseProps,
+  'inverted' | 'compact'
+>) => {
+  const divRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+  return (
+    <Box flexDirection={direction} gap={2}>
+      <Chip {...props}>{label ?? <Text font="headline">Base</Text>}</Chip>
+      <Chip ref={divRef} {...props} start={<RemoteImage {...assetIconProps} />}>
+        {label ?? <Text font="headline">Start</Text>}
+      </Chip>
+      <Chip
+        {...props}
+        end={<Icon color="fg" name="caretDown" size="s" />}
+        start={<RemoteImage {...assetIconProps} />}
+      >
+        {label ?? <Text font="headline">End & Start</Text>}
+      </Chip>
+      <Chip {...props} end={<Icon color="fg" name="filter" size="s" />}>
+        Filter 2
+      </Chip>
+      <Chip
+        {...props}
+        ref={buttonRef}
+        end={<Icon color="fg" name="caretDown" size="s" />}
+        onClick={() => {}}
+        start={<RemoteImage {...assetIconProps} />}
+      >
+        {label ?? <Text font="headline">Pressable</Text>}
+      </Chip>
+      <Chip
+        {...props}
+        accessibilityLabel="a11y label"
+        end={<Icon color="fg" name="caretDown" size="s" />}
+        onClick={() => {}}
+        start={<RemoteImage {...assetIconProps} />}
+      >
+        {label ?? <Text font="headline">Pressable with a11y label</Text>}
+      </Chip>
+      <Chip
+        {...props}
+        disabled
+        end={<Icon color="fg" name="caretDown" size="s" />}
+        onClick={() => {}}
+        start={<RemoteImage {...assetIconProps} />}
+      >
+        {label ?? <Text font="headline">Disabled</Text>}
+      </Chip>
+    </Box>
+  );
+};
 
 export const Default = () => (
   <VStack gap={2}>
@@ -86,5 +95,9 @@ export const Default = () => (
       Long text
     </Text>
     <ChipExamples label="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec euismod, nisl eget" />
+    <Text as="h3" display="block" font="headline" paddingTop={3}>
+      Column Layout
+    </Text>
+    <ChipExamples direction="column" />
   </VStack>
 );
