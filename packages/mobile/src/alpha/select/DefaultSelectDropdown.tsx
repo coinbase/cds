@@ -12,6 +12,7 @@ import { DefaultSelectAllOption } from './DefaultSelectAllOption';
 import { DefaultSelectEmptyDropdownContents } from './DefaultSelectEmptyDropdownContents';
 import { DefaultSelectOption } from './DefaultSelectOption';
 import type { SelectDropdownProps, SelectType } from './Select';
+import { defaultAccessibilityRoles } from './Select';
 
 type DefaultSelectDropdownBase = <
   Type extends SelectType = 'single',
@@ -35,7 +36,7 @@ const DefaultSelectDropdownComponent = memo(
         styles,
         compact,
         label,
-        detail,
+        end,
         selectAllLabel = 'Select all',
         emptyOptionsLabel = 'No options available',
         clearAllLabel = 'Clear all',
@@ -45,7 +46,7 @@ const DefaultSelectDropdownComponent = memo(
         SelectOptionComponent = DefaultSelectOption,
         SelectAllOptionComponent = DefaultSelectAllOption,
         SelectEmptyDropdownContentsComponent = DefaultSelectEmptyDropdownContents,
-        accessibilityRoles,
+        accessibilityRoles = defaultAccessibilityRoles,
         ...props
       }: SelectDropdownProps<Type, SelectOptionValue>,
       ref: React.Ref<DrawerRefBaseProps>,
@@ -96,8 +97,8 @@ const DefaultSelectDropdownComponent = memo(
       }, [isAllOptionsSelected, onChange, options, value]);
 
       const handleClearAll = useCallback(
-        (e: GestureResponderEvent) => {
-          e.stopPropagation();
+        (event: GestureResponderEvent) => {
+          event.stopPropagation();
           onChange(null);
         },
         [onChange],
@@ -113,14 +114,14 @@ const DefaultSelectDropdownComponent = memo(
             accessory={accessory}
             blendStyles={styles?.optionBlendStyles}
             compact={compact}
-            detail={
-              detail ?? (
-                <Button compact transparent onPress={handleClearAll} role="option">
+            disabled={disabled}
+            end={
+              end ?? (
+                <Button compact transparent accessibilityRole="menuitem" onPress={handleClearAll}>
                   {clearAllLabel}
                 </Button>
               )
             }
-            disabled={disabled}
             indeterminate={indeterminate}
             label={String(
               selectAllLabel + ' (' + options.filter((o) => o.value !== null).length + ')',
@@ -149,7 +150,7 @@ const DefaultSelectDropdownComponent = memo(
           styles?.optionBlendStyles,
           styles?.option,
           compact,
-          detail,
+          end,
           handleClearAll,
           clearAllLabel,
           disabled,
@@ -189,6 +190,11 @@ const DefaultSelectDropdownComponent = memo(
                         option.value !== null && isMultiSelect
                           ? (value as string[]).includes(option.value)
                           : value === option.value;
+                      /** onPress handlers are passed so that when the media is pressed,
+                       * the onChange handler is called. Since the <RenderedSelectOption>
+                       * has an accessibilityRole, the inner media won't be detected by a screen reader
+                       * so this behavior matches web
+                       * */
                       const defaultMedia = isMultiSelect ? (
                         <Checkbox
                           checked={selected}
@@ -213,6 +219,7 @@ const DefaultSelectDropdownComponent = memo(
                           blendStyles={styles?.optionBlendStyles}
                           compact={compact}
                           disabled={option.disabled || disabled}
+                          end={end}
                           media={optionMedia ?? media ?? defaultMedia}
                           onPress={(newValue) => {
                             onChange(newValue as ValueType);

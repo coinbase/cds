@@ -461,8 +461,8 @@ describe('Select', () => {
             compact
             defaultOpen
             accessory={<View testID="accessory-element" />}
-            detail={<View testID="detail-element" />}
             disabled={false}
+            end={<View testID="end-element" />}
             media={<View testID="media-element" />}
             variant="positive"
           />
@@ -471,6 +471,8 @@ describe('Select', () => {
 
       // Props should be passed to sub-components
       expect(screen.getAllByRole('button').length).toBeGreaterThan(0);
+      expect(screen.getAllByTestId('end-element')).toBeTruthy();
+      expect(screen.getAllByTestId('accessory-element')).toBeTruthy();
       expect(screen.getAllByTestId('media-element')).toBeTruthy();
     });
   });

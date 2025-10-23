@@ -46,17 +46,17 @@ export const DefaultSelectControlComponent = memo(
         setOpen,
         variant,
         helperText,
-        hiddenSelectedOptionsLabel = 'more',
-        removeSelectedOptionAccessibilityLabel = 'Remove',
         label,
         labelVariant,
         startNode,
         endNode: customEndNode,
         compact,
-        style,
         maxSelectedOptionsToShow = 3,
         accessibilityLabel,
         accessibilityHint,
+        hiddenSelectedOptionsLabel = 'more',
+        removeSelectedOptionAccessibilityLabel = 'Remove',
+        style,
         styles,
         ...props
       }: SelectControlProps<Type, SelectOptionValue>,
@@ -69,7 +69,6 @@ export const DefaultSelectControlComponent = memo(
       const hasValue = value !== null && !(Array.isArray(value) && value.length === 0);
       const isMultiSelect = Array.isArray(value);
 
-      // Default to foregroundMuted if variant is not provided
       // Prop value doesn't have default value because it affects the color of the
       // animated caret
       const focusedVariant = useInputVariant(!!open, variant ?? 'foregroundMuted');
@@ -153,7 +152,7 @@ export const DefaultSelectControlComponent = memo(
               })}
               {value.length - maxSelectedOptionsToShow > 0 && (
                 <Chip>
-                  <Text font="headline">{`+${value.length - maxSelectedOptionsToShow} ${hiddenSelectedOptionsLabel}`}</Text>
+                  {`+${value.length - maxSelectedOptionsToShow} ${hiddenSelectedOptionsLabel}`}
                 </Chip>
               )}
             </HStack>

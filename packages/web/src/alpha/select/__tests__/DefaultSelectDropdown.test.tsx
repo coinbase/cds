@@ -431,13 +431,13 @@ describe('DefaultSelectDropdown', () => {
   });
 
   describe('Props Forwarding', () => {
-    it('forwards media, accessory, and detail props to options', () => {
+    it('forwards media, accessory, and end props to options', () => {
       render(
         <DefaultThemeProvider>
           <DefaultSelectDropdown
             {...defaultProps}
             accessory={<div data-testid="accessory-content">Accessory</div>}
-            detail={<div data-testid="detail-content">Detail</div>}
+            end={<div data-testid="end-content">End</div>}
             media={<div data-testid="media-content">Media</div>}
           />
         </DefaultThemeProvider>,
@@ -445,7 +445,7 @@ describe('DefaultSelectDropdown', () => {
 
       expect(screen.getAllByTestId('media-content')).toHaveLength(mockOptions.length);
       expect(screen.getAllByTestId('accessory-content')).toHaveLength(mockOptions.length);
-      expect(screen.getAllByTestId('detail-content')).toHaveLength(mockOptions.length);
+      expect(screen.getAllByTestId('end-content')).toHaveLength(mockOptions.length);
     });
 
     it('option-specific props override global props', () => {

@@ -258,17 +258,14 @@ describe('DefaultSelectOption', () => {
       expect(screen.getByTestId('accessory-content')).toBeInTheDocument();
     });
 
-    it('renders with detail', () => {
+    it('renders with end', () => {
       render(
         <DefaultThemeProvider>
-          <DefaultSelectOption
-            {...defaultProps}
-            detail={<div data-testid="detail-content">Detail</div>}
-          />
+          <DefaultSelectOption {...defaultProps} end={<div data-testid="end-content">End</div>} />
         </DefaultThemeProvider>,
       );
 
-      expect(screen.getByTestId('detail-content')).toBeInTheDocument();
+      expect(screen.getByTestId('end-content')).toBeInTheDocument();
     });
   });
 

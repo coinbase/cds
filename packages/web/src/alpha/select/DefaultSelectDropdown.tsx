@@ -35,19 +35,17 @@ const DefaultSelectDropdownComponent = memo(
         setOpen,
         controlRef,
         disabled,
-        style,
         styles,
-        className,
         classNames,
         compact,
+        label,
+        end,
         selectAllLabel = 'Select all',
         emptyOptionsLabel = 'No options available',
         clearAllLabel = 'Clear all',
         hideSelectAll,
         accessory,
         media,
-        label,
-        detail,
         SelectOptionComponent = DefaultSelectOption,
         SelectAllOptionComponent = DefaultSelectAllOption,
         SelectEmptyDropdownContentsComponent = DefaultSelectEmptyDropdownContents,
@@ -60,29 +58,6 @@ const DefaultSelectDropdownComponent = memo(
       type ValueType = Type extends 'multi'
         ? SelectOptionValue | SelectOptionValue[] | null
         : SelectOptionValue | null;
-
-      const isMultiSelect = type === 'multi';
-      const isSomeOptionsSelected = isMultiSelect ? (value as string[]).length > 0 : false;
-      const isAllOptionsSelected = isMultiSelect
-        ? (value as string[]).length === options.filter((o) => o.value !== null).length
-        : false;
-
-      const optionClassNames = useMemo(
-        () => ({
-          optionCell: classNames?.optionCell,
-          optionContent: classNames?.optionContent,
-          optionLabel: classNames?.optionLabel,
-          optionDescription: classNames?.optionDescription,
-          selectAllDivider: classNames?.selectAllDivider,
-        }),
-        [
-          classNames?.optionCell,
-          classNames?.optionContent,
-          classNames?.optionLabel,
-          classNames?.optionDescription,
-          classNames?.selectAllDivider,
-        ],
-      );
 
       const optionStyles = useMemo(
         () => ({
@@ -101,12 +76,21 @@ const DefaultSelectDropdownComponent = memo(
         ],
       );
 
-      const emptyDropdownContentsClassNames = useMemo(
+      const optionClassNames = useMemo(
         () => ({
-          emptyContentsContainer: classNames?.emptyContentsContainer,
-          emptyContentsText: classNames?.emptyContentsText,
+          optionCell: classNames?.optionCell,
+          optionContent: classNames?.optionContent,
+          optionLabel: classNames?.optionLabel,
+          optionDescription: classNames?.optionDescription,
+          selectAllDivider: classNames?.selectAllDivider,
         }),
-        [classNames?.emptyContentsContainer, classNames?.emptyContentsText],
+        [
+          classNames?.optionCell,
+          classNames?.optionContent,
+          classNames?.optionLabel,
+          classNames?.optionDescription,
+          classNames?.selectAllDivider,
+        ],
       );
 
       const emptyDropdownContentsStyles = useMemo(
@@ -116,6 +100,20 @@ const DefaultSelectDropdownComponent = memo(
         }),
         [styles?.emptyContentsContainer, styles?.emptyContentsText],
       );
+
+      const emptyDropdownContentsClassNames = useMemo(
+        () => ({
+          emptyContentsContainer: classNames?.emptyContentsContainer,
+          emptyContentsText: classNames?.emptyContentsText,
+        }),
+        [classNames?.emptyContentsContainer, classNames?.emptyContentsText],
+      );
+
+      const isMultiSelect = type === 'multi';
+      const isSomeOptionsSelected = isMultiSelect ? (value as string[]).length > 0 : false;
+      const isAllOptionsSelected = isMultiSelect
+        ? (value as string[]).length === options.filter((o) => o.value !== null).length
+        : false;
 
       const toggleSelectAll = useCallback(() => {
         if (isAllOptionsSelected) onChange(null);
@@ -128,8 +126,8 @@ const DefaultSelectDropdownComponent = memo(
       }, [isAllOptionsSelected, onChange, options, value]);
 
       const handleClearAll = useCallback(
-        (e: React.MouseEvent<HTMLButtonElement>) => {
-          e.stopPropagation();
+        (event: React.MouseEvent<HTMLButtonElement>) => {
+          event.stopPropagation();
           onChange(null);
         },
         [onChange],
@@ -138,7 +136,6 @@ const DefaultSelectDropdownComponent = memo(
       const handleEscPress = useCallback(() => setOpen(false), [setOpen]);
 
       const [containerWidth, setContainerWidth] = useState<number | null>(null);
-
       useEffect(() => {
         if (!controlRef.current) return;
         const resizeObserver = new ResizeObserver((entries) => {
@@ -154,10 +151,9 @@ const DefaultSelectDropdownComponent = memo(
             containerWidth !== null
               ? containerWidth
               : controlRef.current?.getBoundingClientRect().width,
-          ...style,
           ...styles?.root,
         }),
-        [style, styles?.root, containerWidth, controlRef],
+        [styles?.root, containerWidth, controlRef],
       );
 
       const indeterminate = !isAllOptionsSelected && isSomeOptionsSelected ? true : false;
@@ -171,8 +167,9 @@ const DefaultSelectDropdownComponent = memo(
             className={classNames?.option}
             classNames={optionClassNames}
             compact={compact}
-            detail={
-              detail ?? (
+            disabled={disabled}
+            end={
+              end ?? (
                 <Button
                   compact
                   transparent
@@ -184,7 +181,6 @@ const DefaultSelectDropdownComponent = memo(
                 </Button>
               )
             }
-            disabled={disabled}
             indeterminate={indeterminate}
             label={`${selectAllLabel} (${options.filter((o) => o.value !== null).length})`}
             media={
@@ -214,7 +210,7 @@ const DefaultSelectDropdownComponent = memo(
           classNames?.option,
           optionClassNames,
           compact,
-          detail,
+          end,
           handleClearAll,
           clearAllLabel,
           disabled,
@@ -237,7 +233,7 @@ const DefaultSelectDropdownComponent = memo(
               ref={ref}
               aria-label={accessibilityLabel}
               aria-multiselectable={isMultiSelect}
-              className={className}
+              className={classNames?.root}
               display="block"
               role={accessibilityRoles?.dropdown}
               style={dropdownStyles}
@@ -300,8 +296,8 @@ const DefaultSelectDropdownComponent = memo(
                               className={classNames?.option}
                               classNames={optionClassNames}
                               compact={compact}
-                              detail={detail}
                               disabled={option.disabled || disabled}
+                              end={end}
                               media={optionMedia ?? media ?? defaultMedia}
                               onClick={(newValue) => {
                                 onChange(newValue as ValueType);

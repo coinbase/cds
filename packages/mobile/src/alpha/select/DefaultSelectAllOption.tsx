@@ -20,7 +20,7 @@ const DefaultSelectAllOptionComponent = memo(
         accessory,
         blendStyles,
         compact,
-        detail,
+        end,
         disabled,
         label,
         media,
@@ -42,8 +42,8 @@ const DefaultSelectAllOptionComponent = memo(
             accessory={accessory}
             blendStyles={blendStyles}
             compact={compact}
-            detail={detail}
             disabled={disabled}
+            end={end}
             label={label}
             media={media}
             onPress={onPress}

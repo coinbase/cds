@@ -80,15 +80,15 @@ const DefaultSelectOptionComponent = memo(
         compact,
         description,
         multiline,
+        styles,
         className,
+        classNames,
         accessory,
         media,
-        detail,
+        end,
         type,
         accessibilityRole = 'option',
         background = type === 'single' && selected && value !== null ? 'bgAlternate' : 'bg',
-        styles,
-        classNames,
         ...props
       }: SelectOptionProps<Type, SelectOptionValue>,
       ref: React.Ref<HTMLButtonElement>,
@@ -99,7 +99,6 @@ const DefaultSelectOptionComponent = memo(
             <Text
               as="div"
               className={classNames?.optionLabel}
-              display="block"
               font="headline"
               overflow="truncate"
               style={styles?.optionLabel}
@@ -122,7 +121,6 @@ const DefaultSelectOptionComponent = memo(
                 classNames?.optionDescription,
               )}
               color="fgMuted"
-              display="block"
               font="body"
               overflow={multiline ? undefined : 'truncate'}
               style={styles?.optionDescription}
@@ -137,13 +135,13 @@ const DefaultSelectOptionComponent = memo(
 
       const handleClick = useCallback(() => onClick?.(value), [onClick, value]);
 
+      // Since Cell's ref prop is type HTMLDivElement, we need to wrap it in a Pressable to get ref forwarding.
+      // On web, the option role doesn't work well with ara-checked and screen readers
+      // so we use aria-selected regardless of the option type.
       return (
         <Pressable
           ref={ref}
-          // TO DO: Do we need this Pressable? Cell can render as a Pressable when passed onClick...
           noScaleOnPress
-          // On web, the option role doesn't work well with ara-checked and screen readers
-          // so we use aria-selected regardless of the option type
           aria-selected={selected}
           background={background}
           className={cx(selectOptionCss, className)}
@@ -154,12 +152,10 @@ const DefaultSelectOptionComponent = memo(
         >
           <Cell
             accessory={accessory}
-            // TO DO: Double check this
             background={type === 'multi' || disabled || value === null ? 'transparent' : undefined}
             borderRadius={0}
             className={cx(multiline ? multilineTextCss : undefined, classNames?.optionCell)}
-            detail={detail}
-            detailWidth="fit-content"
+            end={end}
             innerSpacing={selectCellSpacingConfig.innerSpacing}
             maxHeight={compact ? 56 : 64}
             media={media}

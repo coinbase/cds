@@ -43,7 +43,7 @@ export type SelectOptionProps<
   Type extends SelectType = 'single',
   SelectOptionValue extends string = string,
 > = SelectOption<SelectOptionValue> &
-  Pick<CellBaseProps, 'accessory' | 'media' | 'detail'> &
+  Pick<CellBaseProps, 'accessory' | 'media' | 'end'> &
   Omit<PressableProps, 'value' | 'type' | 'onClick'> & {
     /** Press handler for the option */
     onPress?: (value: SelectOptionValue | null) => void;
@@ -182,7 +182,7 @@ export type SelectDropdownProps<
 > = SelectState<Type, SelectOptionValue> &
   Pick<SharedAccessibilityProps, 'accessibilityLabel'> &
   Omit<BoxProps, 'onChange'> &
-  Pick<SelectOptionProps<Type, SelectOptionValue>, 'accessory' | 'media' | 'detail'> & {
+  Pick<SelectOptionProps<Type, SelectOptionValue>, 'accessory' | 'media' | 'end'> & {
     /** Whether this is for single or multi-select */
     type?: Type;
     /** Array of options with their configuration and optional custom components */
@@ -275,7 +275,7 @@ export type SelectBaseProps<
     | 'labelVariant'
     | 'endNode'
   > &
-  Pick<SelectOptionProps<Type, SelectOptionValue>, 'accessory' | 'media' | 'detail'> &
+  Pick<SelectOptionProps<Type, SelectOptionValue>, 'accessory' | 'media' | 'end'> &
   Pick<
     SelectDropdownProps<Type, SelectOptionValue>,
     | 'selectAllLabel'
@@ -414,7 +414,7 @@ const SelectBase = memo(
         removeSelectedOptionAccessibilityLabel,
         accessory,
         media,
-        detail,
+        end,
         SelectOptionComponent = DefaultSelectOption,
         SelectAllOptionComponent = DefaultSelectAllOption,
         SelectDropdownComponent = DefaultSelectDropdown,
@@ -534,9 +534,9 @@ const SelectBase = memo(
             clearAllLabel={clearAllLabel}
             compact={compact}
             controlRef={containerRef}
-            detail={detail}
             disabled={disabled}
             emptyOptionsLabel={emptyOptionsLabel}
+            end={end}
             hideSelectAll={hideSelectAll}
             label={label}
             media={media}

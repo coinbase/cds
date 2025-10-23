@@ -4,9 +4,12 @@ import { type View } from 'react-native';
 import { Box } from '../../layout/Box';
 import { Text } from '../../typography/Text';
 
-import type { SelectEmptyDropdownContentProps } from './Select';
+import type {
+  SelectEmptyDropdownContentComponent,
+  SelectEmptyDropdownContentProps,
+} from './Select';
 
-export const DefaultSelectEmptyDropdownContents = memo(
+export const DefaultSelectEmptyDropdownContents: SelectEmptyDropdownContentComponent = memo(
   forwardRef<View, SelectEmptyDropdownContentProps>(({ label, styles }, ref: React.Ref<View>) => {
     return (
       <Box ref={ref} paddingX={3} paddingY={2} style={styles?.emptyContentsContainer}>

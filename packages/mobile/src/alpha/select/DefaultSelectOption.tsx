@@ -23,11 +23,10 @@ const DefaultSelectOptionComponent = <
     description,
     multiline,
     style,
-    accessory,
-    media,
+    styles,
     type,
     accessibilityRole,
-    styles,
+    background = type === 'single' && selected && value !== null ? 'bgAlternate' : 'bg',
     ...props
   }: SelectOptionProps<Type, SelectOptionValue>,
   ref: React.Ref<View>,
@@ -51,8 +50,7 @@ const DefaultSelectOptionComponent = <
 
   const descriptionNode = useMemo(
     () =>
-      description &&
-      (typeof description === 'string' ? (
+      typeof description === 'string' ? (
         <Text
           color="fgMuted"
           ellipsize={multiline ? undefined : 'tail'}
@@ -64,7 +62,7 @@ const DefaultSelectOptionComponent = <
         </Text>
       ) : (
         description
-      )),
+      ),
     [description, multiline, label, styles?.optionDescription],
   );
 
@@ -87,13 +85,10 @@ const DefaultSelectOptionComponent = <
         selected: type === 'single' ? selected : undefined,
         disabled,
       }}
-      accessory={accessory}
-      background={type === 'multi' || disabled || value === null ? 'transparent' : undefined}
+      background={background}
       borderRadius={0}
-      detailWidth="fit-content"
       disabled={disabled}
       maxHeight={multiline ? undefined : compact ? 56 : 64}
-      media={media}
       minHeight={compact ? 40 : 56}
       onPress={handlePress}
       priority="end"

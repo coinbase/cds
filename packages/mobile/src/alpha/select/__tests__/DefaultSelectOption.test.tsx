@@ -342,14 +342,14 @@ describe('DefaultSelectOption', () => {
       expect(screen.getByTestId('accessory-content')).toBeTruthy();
     });
 
-    it('renders with detail', () => {
+    it('renders with end', () => {
       render(
         <DefaultThemeProvider>
-          <DefaultSelectOption {...defaultProps} detail={<View testID="detail-content" />} />
+          <DefaultSelectOption {...defaultProps} end={<View testID="end-content" />} />
         </DefaultThemeProvider>,
       );
 
-      expect(screen.getByTestId('detail-content')).toBeTruthy();
+      expect(screen.getByTestId('end-content')).toBeTruthy();
     });
 
     it('applies correct spacing configuration', () => {

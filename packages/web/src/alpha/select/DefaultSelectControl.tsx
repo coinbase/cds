@@ -79,7 +79,6 @@ const DefaultSelectControlComponent = memo(
 
       const controlPressableRef = useRef<HTMLButtonElement>(null);
       const valueNodeContainerRef = useRef<HTMLDivElement>(null);
-
       const handleUnselectValue = useCallback(
         (e: React.MouseEvent, index: number) => {
           // Unselect the value
@@ -104,13 +103,25 @@ const DefaultSelectControlComponent = memo(
         [onChange, value],
       );
 
+      const interactableBlendStyles = useMemo(
+        () =>
+          isMultiSelect
+            ? {
+                hoveredBackground: 'rgba(0, 0, 0, 0)',
+                hoveredOpacity: 1,
+                pressedBackground: 'rgba(0, 0, 0, 0)',
+                ...blendStyles,
+              }
+            : blendStyles,
+        [isMultiSelect, blendStyles],
+      );
+
       const helperTextNode = useMemo(
         () =>
           typeof helperText === 'string' ? (
             <HelperText
               className={classNames?.controlHelperTextNode}
               color={variant ? variantColor[variant] : 'fgMuted'}
-              overflow="truncate"
               style={styles?.controlHelperTextNode}
             >
               {helperText}
@@ -149,19 +160,6 @@ const DefaultSelectControlComponent = memo(
         ],
       );
 
-      const interactableBlendStyles = useMemo(
-        () =>
-          isMultiSelect
-            ? {
-                hoveredBackground: 'rgba(0, 0, 0, 0)',
-                hoveredOpacity: 1,
-                pressedBackground: 'rgba(0, 0, 0, 0)',
-                ...blendStyles,
-              }
-            : blendStyles,
-        [isMultiSelect, blendStyles],
-      );
-
       const valueNode = useMemo(() => {
         if (hasValue && isMultiSelect) {
           const valuesToShow =
@@ -172,7 +170,7 @@ const DefaultSelectControlComponent = memo(
             .map((value) => options.find((option) => option.value === value))
             .filter(Boolean) as SelectOption[];
           return (
-            <>
+            <HStack flexWrap="wrap" gap={1}>
               {optionsToShow.map((option, index) => {
                 const accessibilityLabel =
                   typeof option.label === 'string'
@@ -197,13 +195,14 @@ const DefaultSelectControlComponent = memo(
               {value.length - maxSelectedOptionsToShow > 0 && (
                 <Chip>{`+${value.length - maxSelectedOptionsToShow} ${hiddenSelectedOptionsLabel}`}</Chip>
               )}
-            </>
+            </HStack>
           );
         }
 
         const option = options.find((option) => option.value === value);
         const label = option?.label ?? option?.description ?? option?.value ?? placeholder;
-        return (
+        const content = hasValue ? label : placeholder;
+        return typeof content === 'string' ? (
           <Text
             as="p"
             color={hasValue ? 'fg' : 'fgMuted'}
@@ -211,8 +210,10 @@ const DefaultSelectControlComponent = memo(
             font="body"
             overflow="truncate"
           >
-            {hasValue ? label : placeholder}
+            {content}
           </Text>
+        ) : (
+          content
         );
       }, [
         hasValue,
