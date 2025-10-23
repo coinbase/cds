@@ -111,7 +111,6 @@ function CompactLineChart() {
         onClick={() => console.log('clicked')}
         subdetail={subdetail}
         title={isPhone ? undefined : assets.btc.name}
-        variant={variant}
         style={{ padding: 0 }}
       />
     );
@@ -124,7 +123,6 @@ function CompactLineChart() {
         color={assets.btc.color}
         referenceY={parseFloat(prices[Math.floor(prices.length / 4)])}
         subdetail="-4.55%"
-        variant="negative"
       />
       <ChartCell
         data={sparklineData}
@@ -132,7 +130,6 @@ function CompactLineChart() {
         color={assets.btc.color}
         referenceY={parseFloat(prices[Math.floor(prices.length / 4)])}
         subdetail="-4.55%"
-        variant="negative"
       />
       <ChartCell
         data={sparklineData}
@@ -140,7 +137,6 @@ function CompactLineChart() {
         color="var(--color-fgPositive)"
         referenceY={positiveFloor}
         subdetail="+0.25%"
-        variant="positive"
       />
       <ChartCell
         data={negativeData}
@@ -148,7 +144,6 @@ function CompactLineChart() {
         color="var(--color-fgNegative)"
         referenceY={negativeCeiling}
         subdetail="-4.55%"
-        variant="negative"
       />
     </VStack>
   );
@@ -157,15 +152,15 @@ function CompactLineChart() {
 
 ## Gain/Loss
 
-You can use the y-axis scale and a [linearGradient](https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/linearGradient) to create a gain/loss chart.
+You can use gradients to create a gain/loss chart that shows different colors for positive and negative values.
 
 ```jsx live
 function GainLossChart() {
-  const gradientId = useId();
-
   const data = [-40, -28, -21, -5, 48, -5, -28, 2, -29, -46, 16, -30, -29, 8];
+  const negativeColor = 'rgb(var(--gray15))';
+  const positiveColor = 'var(--color-fgPositive)';
 
-  const priceFormatter = useCallback(
+  const tickLabelFormatter = useCallback(
     (value) =>
       new Intl.NumberFormat('en-US', {
         style: 'currency',
@@ -175,66 +170,33 @@ function GainLossChart() {
     [],
   );
 
-  const ChartDefs = ({ threshold = 0 }) => {
-    const { getYScale } = useCartesianChartContext();
-    // get the default y-axis scale
-    const yScale = getYScale();
-
-    if (yScale) {
-      const domain = yScale.domain();
-      const range = yScale.range();
-
-      const baselinePercentage = ((threshold - domain[0]) / (domain[1] - domain[0])) * 100;
-
-      const negativeColor = 'rgb(var(--gray15))';
-      const positiveColor = 'var(--color-fgPositive)';
-
-      return (
-        <defs>
-          <linearGradient
-            gradientUnits="userSpaceOnUse"
-            id={`${gradientId}-solid`}
-            x1="0%"
-            x2="0%"
-            y1={range[0]}
-            y2={range[1]}
-          >
-            <stop offset="0%" stopColor={negativeColor} />
-            <stop offset={`${baselinePercentage}%`} stopColor={negativeColor} />
-            <stop offset={`${baselinePercentage}%`} stopColor={positiveColor} />
-            <stop offset="100%" stopColor={positiveColor} />
-          </linearGradient>
-          <linearGradient
-            gradientUnits="userSpaceOnUse"
-            id={`${gradientId}-gradient`}
-            x1="0%"
-            x2="0%"
-            y1={range[0]}
-            y2={range[1]}
-          >
-            <stop offset="0%" stopColor={negativeColor} stopOpacity={0.3} />
-            <stop offset={`${baselinePercentage}%`} stopColor={negativeColor} stopOpacity={0} />
-            <stop offset={`${baselinePercentage}%`} stopColor={positiveColor} stopOpacity={0} />
-            <stop offset="100%" stopColor={positiveColor} stopOpacity={0.3} />
-          </linearGradient>
-        </defs>
-      );
-    }
-
-    return null;
+  // Line gradient: hard color change at 0 (full opacity for line)
+  const lineGradient = {
+    stops: [
+      { offset: 0, color: negativeColor },
+      { offset: 0, color: positiveColor },
+    ],
   };
 
-  const solidColor = `url(#${gradientId}-solid)`;
+  // Area gradient: combines hard color change with continuous opacity fade
+  const areaGradient = {
+    stops: ({ min, max }) => [
+      { offset: min, color: negativeColor, opacity: 0.4 },
+      { offset: 0, color: negativeColor, opacity: 0 },
+      { offset: 0, color: positiveColor, opacity: 0 },
+      { offset: max, color: positiveColor, opacity: 0.4 },
+    ],
+  };
 
-  const chartAccessibilityLabel = `Gain/Loss chart showing price changes. Current value: ${priceFormatter(data[data.length - 1])}`;
+  const chartAccessibilityLabel = `Gain/Loss chart showing price changes. Current value: ${tickLabelFormatter(data[data.length - 1])}`;
 
   const scrubberAccessibilityLabel = useCallback(
-    (index: number) => {
+    (index) => {
       const value = data[index];
       const status = value >= 0 ? 'gain' : 'loss';
-      return `Position ${index + 1} of ${data.length}: ${priceFormatter(value)} ${status}`;
+      return `Position ${index + 1} of ${data.length}: ${tickLabelFormatter(value)} ${status}`;
     },
-    [data, priceFormatter],
+    [data, tickLabelFormatter],
   );
 
   return (
@@ -245,16 +207,21 @@ function GainLossChart() {
         {
           id: 'prices',
           data: data,
-          color: solidColor,
+          gradient: lineGradient,
         },
       ]}
-      inset={{ top: 12, bottom: 12, left: 16, right: 0 }}
+      inset={{ top: 12, bottom: 12, left: 0, right: 0 }}
       accessibilityLabel={chartAccessibilityLabel}
     >
-      <ChartDefs />
-      <YAxis requestedTickCount={2} showGrid tickLabelFormatter={priceFormatter} />
-      <Area seriesId="prices" curve="monotone" fill={`url(#${gradientId}-gradient)`} />
-      <Line strokeWidth={3} curve="monotone" seriesId="prices" stroke={solidColor} />
+      <YAxis showGrid requestedTickCount={2} tickLabelFormatter={tickLabelFormatter} />
+      <Line
+        showArea
+        AreaComponent={(props) => <GradientArea {...props} gradient={areaGradient} />}
+        curve="monotone"
+        seriesId="prices"
+        strokeWidth={3}
+        type="gradient"
+      />
       <Scrubber hideOverlay accessibilityLabel={scrubberAccessibilityLabel} />
     </CartesianChart>
   );

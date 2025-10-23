@@ -1262,10 +1262,10 @@ const GainLossChart = () => {
   // Creates a diverging gradient with proper colors on each side
   const areaGradient: Gradient = {
     stops: ({ min, max }) => [
-      { offset: min + 5, color: 'red', opacity: 0.3 }, // Peak negative (most opaque)
-      { offset: 0, color: 'red', opacity: 0 }, // Baseline negative
-      { offset: 0, color: 'red', opacity: 0 }, // Baseline positive
-      { offset: max - 5, color: 'red', opacity: 0.3 }, // Peak positive (most opaque)
+      { offset: min, color: negativeColor, opacity: 0.3 }, // Peak negative (most opaque)
+      { offset: 0, color: negativeColor, opacity: 0 }, // Baseline negative
+      { offset: 0, color: positiveColor, opacity: 0 }, // Baseline positive
+      { offset: max, color: positiveColor, opacity: 0.3 }, // Peak positive (most opaque)
     ],
   };
 
@@ -1696,8 +1696,8 @@ export const ColorMapStories = () => {
       <Example
         description={
           <Text color="fgMuted" font="body">
-            Continuous gradient with two colors. Should transition smoothly from red (low
-            values) to green (high values).
+            Continuous gradient with two colors. Should transition smoothly from red (low values) to
+            green (high values).
           </Text>
         }
         title="Gradient - Continuous (2 colors)"
@@ -1765,8 +1765,7 @@ export const ColorMapStories = () => {
       <Example
         description={
           <Text color="fgMuted" font="body">
-            Continuous gradient with custom stop positions. Blue at 10, purple at 40, pink at
-            80.
+            Continuous gradient with custom stop positions. Blue at 10, purple at 40, pink at 80.
           </Text>
         }
         title="Gradient - Custom Stops"
@@ -1902,8 +1901,8 @@ export const ColorMapStories = () => {
       <Example
         description={
           <Text color="fgMuted" font="body">
-            Testing scrubber beacon colors with gradient. The beacon should match the color of
-            the line at that position.
+            Testing scrubber beacon colors with gradient. The beacon should match the color of the
+            line at that position.
           </Text>
         }
         title="Gradient - Scrubber Beacon Test"

@@ -276,8 +276,9 @@ export const evaluateGradientAtValue = (
 
   if (resolvedStops.length === 0) return null;
 
-  // Default color space is 'srgb'
-  const colorSpace = 'srgb';
+  // Use oklab color space to give an evenly spaced gradient perceptually
+  // https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/color-mix#choosing_a_color_space
+  const colorSpace = 'oklab';
 
   // Process stops - always ignore opacity for point evaluation (opacity is handled in gradient rendering)
   const processedColors = resolvedStops.map((stop) => {

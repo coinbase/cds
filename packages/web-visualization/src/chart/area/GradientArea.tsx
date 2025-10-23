@@ -124,17 +124,28 @@ export const GradientArea = memo<GradientAreaProps>(
             ],
           };
         } else {
-          // Simple gradient from baseline to peak
+          const peakValue = minValue >= 0 ? maxValue : minValue;
+          const isNegative = maxValue <= 0;
+
           effectiveGradient = {
             axis: 'y',
-            stops: [
-              { offset: baselineValue, color: effectiveBaselineColor, opacity: baselineOpacity },
-              {
-                offset: minValue >= 0 ? maxValue : minValue,
-                color: effectivePeakColor,
-                opacity: peakOpacity,
-              },
-            ],
+            stops: isNegative
+              ? [
+                  { offset: peakValue, color: effectivePeakColor, opacity: peakOpacity },
+                  {
+                    offset: baselineValue,
+                    color: effectiveBaselineColor,
+                    opacity: baselineOpacity,
+                  },
+                ]
+              : [
+                  {
+                    offset: baselineValue,
+                    color: effectiveBaselineColor,
+                    opacity: baselineOpacity,
+                  },
+                  { offset: peakValue, color: effectivePeakColor, opacity: peakOpacity },
+                ],
           };
         }
 

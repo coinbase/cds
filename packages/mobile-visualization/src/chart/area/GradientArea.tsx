@@ -87,23 +87,34 @@ export const GradientArea = memo<GradientAreaProps>(
         }
 
         // Create default gradient (diverging if data crosses zero)
-        if (shouldDiverge) {
+        if (shouldDiverge && yDomain) {
           effectiveGradient = {
             axis: 'y',
-            stops: yDomain
+            stops: [
+              { offset: yDomain[0], color: fill, opacity: 0.4 },
+              { offset: baselineValue, color: fill, opacity: 0 },
+              { offset: yDomain[1], color: fill, opacity: 0.4 },
+            ],
+          };
+        } else if (yDomain) {
+          const [minValue, maxValue] = yDomain;
+          const peakValue = minValue >= 0 ? maxValue : minValue;
+          const isNegative = maxValue <= 0;
+
+          effectiveGradient = {
+            axis: 'y',
+            stops: isNegative
               ? [
-                  { offset: yDomain[0], color: fill, opacity: 0.4 },
+                  { offset: peakValue, color: fill, opacity: 0.4 },
                   { offset: baselineValue, color: fill, opacity: 0 },
-                  { offset: yDomain[1], color: fill, opacity: 0.4 },
                 ]
               : [
-                  { offset: 0, color: fill, opacity: 0.4 },
-                  { offset: 50, color: fill, opacity: 0 },
-                  { offset: 100, color: fill, opacity: 0.4 },
+                  { offset: baselineValue, color: fill, opacity: 0 },
+                  { offset: peakValue, color: fill, opacity: 0.4 },
                 ],
           };
         } else {
-          // Simple gradient from baseline to peak
+          // Fallback when no domain is available
           effectiveGradient = {
             axis: 'y',
             stops: [
