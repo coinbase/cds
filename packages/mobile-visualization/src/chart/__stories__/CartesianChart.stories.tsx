@@ -16,14 +16,7 @@ import { Line } from '../line/Line';
 import { Point } from '../Point';
 import { Scrubber } from '../scrubber/Scrubber';
 import { type Gradient, isCategoricalScale } from '../utils';
-import {
-  CartesianChart,
-  DottedArea,
-  GradientLine,
-  ReferenceLine,
-  SolidLine,
-  type SolidLineProps,
-} from '../';
+import { CartesianChart, DottedArea, ReferenceLine, SolidLine, type SolidLineProps } from '../';
 
 const defaultChartHeight = 250;
 
@@ -61,18 +54,7 @@ const LineStyles = () => {
       <Line seriesId="top" />
       <Line seriesId="upperMiddle" type="dotted" />
       <Line
-        LineComponent={(lineProps) => (
-          <GradientLine
-            {...lineProps}
-            gradient={{
-              stops: ({ min, max }) => [
-                { offset: min, color: '#E3D74D' },
-                { offset: max, color: '#F7931A' },
-              ],
-            }}
-            strokeWidth={4}
-          />
-        )}
+        LineComponent={(lineProps) => <SolidLine {...lineProps} strokeWidth={4} />}
         curve="natural"
         seriesId="lowerMiddle"
       />

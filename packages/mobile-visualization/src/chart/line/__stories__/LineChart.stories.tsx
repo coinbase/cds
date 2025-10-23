@@ -40,7 +40,7 @@ import { Point } from '../../Point';
 import { Scrubber, type ScrubberRef } from '../../scrubber';
 import { ChartText, type ChartTextChildren } from '../../text';
 import type { ChartAxisScaleType } from '../../utils/scale';
-import { GradientLine, Line, LineChart, type LineComponentProps, ReferenceLine } from '..';
+import { Line, LineChart, type LineComponentProps, ReferenceLine, SolidLine } from '..';
 
 const defaultChartHeight = 200;
 
@@ -337,13 +337,7 @@ const LineStyles = () => {
     >
       <Line renderPoints={() => true} seriesId="top" />
       <Line renderPoints={() => true} seriesId="upperMiddle" type="dotted" />
-      <Line
-        LineComponent={(props) => <GradientLine {...props} outlineColor="white" outlineWidth={1} />}
-        curve="natural"
-        renderPoints={() => true}
-        seriesId="lowerMiddle"
-        strokeWidth={4}
-      />
+      <Line curve="natural" renderPoints={() => true} seriesId="lowerMiddle" strokeWidth={4} />
       <Line showArea AreaComponent={DottedArea} curve="step" seriesId="bottom" />
     </CartesianChart>
   );
@@ -1270,25 +1264,6 @@ const TextComponent = memo(() => {
       x={25}
       y={25}
     >{`Testing thresholds: ${drawingArea.y} ${baselineY} ${drawingArea.height}`}</ChartText>
-  );
-});
-
-const GradientLineComponent = memo((props: LineComponentProps) => {
-  const theme = useTheme();
-  const negativeColor = `rgb(${theme.spectrum.gray15})`;
-  const positiveColor = theme.color.fgPositive;
-
-  return (
-    <GradientLine
-      {...props}
-      gradient={{
-        stops: [
-          { offset: 0, color: positiveColor },
-          { offset: 0, color: negativeColor },
-        ],
-      }}
-      strokeWidth={3}
-    />
   );
 });
 

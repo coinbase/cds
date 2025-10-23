@@ -9,7 +9,6 @@ import { type ChartPathCurveType, getLinePath } from '../utils';
 import { evaluateGradientAtValue, getGradientScale, type Gradient } from '../utils/gradient';
 
 import { DottedLine } from './DottedLine';
-import { GradientLine } from './GradientLine';
 import { SolidLine } from './SolidLine';
 
 export type LineComponentProps = {
@@ -25,7 +24,7 @@ export type LineComponentProps = {
   seriesId?: string;
   /**
    * ID of the y-axis to use.
-   * Required for components that need to map data values to pixel positions (e.g., GradientLine with threshold stops).
+   * Required for components that need to map data values to pixel positions.
    */
   yAxisId?: string;
   /**
@@ -193,7 +192,6 @@ export const Line = memo<LineProps>(
         case 'dotted':
           return DottedLine;
         case 'gradient':
-          return GradientLine;
         case 'solid':
         default:
           return SolidLine;

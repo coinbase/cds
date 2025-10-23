@@ -211,8 +211,10 @@ export const GradientArea = memo<GradientAreaProps>(
       seriesId,
     ]);
 
-    // Determine gradient direction - always vertical for areas
-    const gradientDirection = 'vertical';
+    // Determine gradient direction based on gradient axis
+    const effectiveGradient = gradientProp ?? seriesGradient;
+    const gradientAxis = effectiveGradient?.axis ?? 'y';
+    const gradientDirection = gradientAxis === 'x' ? 'horizontal' : 'vertical';
 
     if (!gradientConfig) {
       // Fallback to simple solid fill if no gradient config

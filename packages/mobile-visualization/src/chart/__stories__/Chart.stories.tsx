@@ -1,6 +1,6 @@
 import { Example, ExampleScreen } from '@coinbase/cds-mobile/examples/ExampleScreen';
 
-import { CartesianChart, DottedArea, GradientLine, Line, LineChart } from '../';
+import { CartesianChart, DottedArea, Line, LineChart, SolidLine } from '../';
 
 const defaultChartHeight = 250;
 
@@ -62,18 +62,7 @@ const LineStyles = () => {
       <Line seriesId="top" />
       <Line seriesId="upperMiddle" type="dotted" />
       <Line
-        LineComponent={(props) => (
-          <GradientLine
-            {...props}
-            gradient={{
-              stops: ({ min, max }) => [
-                { offset: min, color: '#E3D74D' },
-                { offset: max, color: '#F7931A' },
-              ],
-            }}
-            strokeWidth={4}
-          />
-        )}
+        LineComponent={(props) => <SolidLine {...props} strokeWidth={4} />}
         curve="natural"
         seriesId="lowerMiddle"
       />

@@ -47,9 +47,14 @@ All series will be scrubbed by default. You can set the `seriesIds` prop to rest
       data: [8, 15, 14, 25, 20, 18, 22, 28, 24, 30],
       color: '#f59e0b',
       curve: 'natural',
-      LineComponent: (props) => (
-        <GradientLine {...props} endColor="#F7931A" startColor="#E3D74D" strokeWidth={4} />
-      ),
+      gradient: {
+        axis: 'y',
+        stops: [
+          { offset: 0, color: '#E3D74D' },
+          { offset: 100, color: '#F7931A' },
+        ],
+      },
+      LineComponent: (props) => <SolidLine {...props} strokeWidth={4} />,
     },
     {
       id: 'bottom',

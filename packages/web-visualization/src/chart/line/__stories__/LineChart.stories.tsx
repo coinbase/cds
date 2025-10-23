@@ -33,16 +33,13 @@ import {
 } from '../..';
 import { Area, type AreaComponentProps, DottedArea, GradientArea } from '../../area';
 import { XAxis, YAxis } from '../../axis';
-import { BarPlot } from '../../bar';
 import { CartesianChart } from '../../CartesianChart';
-import { DottedLine, GradientLine, Line, LineChart, ReferenceLine, SolidLine } from '..';
+import { Line, LineChart, ReferenceLine, SolidLine } from '..';
 
 export default {
   component: LineChart,
   title: 'Components/Chart/LineChart',
 };
-
-const defaultChartHeight = 400;
 
 const formatChartDate = (timestamp: string, timeframe: string): string => {
   const date = new Date(timestamp);
@@ -2016,9 +2013,14 @@ export const All = () => {
               data: [8, 15, 14, 25, 20, 18, 22, 28, 24, 30],
               color: '#f59e0b',
               curve: 'natural',
-              LineComponent: (props) => (
-                <GradientLine {...props} endColor="#F7931A" startColor="#E3D74D" strokeWidth={4} />
-              ),
+              gradient: {
+                axis: 'y',
+                stops: [
+                  { offset: 0, color: '#E3D74D' },
+                  { offset: 100, color: '#F7931A' },
+                ],
+              },
+              LineComponent: (props) => <SolidLine {...props} strokeWidth={4} />,
             },
             {
               id: 'bottom',

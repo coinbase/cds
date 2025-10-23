@@ -155,15 +155,32 @@ const processGradientStops = (
   stops: GradientStop[],
   scale: GradientScale,
 ): GradientConfig | null => {
-  if (stops.length < 2) {
-    console.warn('Gradient requires at least 2 stops');
+  // Handle edge cases
+  if (stops.length === 0) {
+    console.warn('Gradient has no stops - falling back to default');
     return null;
+  }
+
+  // Get scale domain for single-stop expansion and normalization
+  const [minValue, maxValue] = getScaleDomainBounds(scale);
+
+  // If only 1 stop, create a 2-stop gradient from baseline to the stop
+  let effectiveStops = stops;
+  if (stops.length === 1) {
+    const singleStop = stops[0];
+    const { color, opacity } = normalizeGradientStop(singleStop);
+
+    // Create a gradient from baseline (transparent) to the stop color
+    // Determine baseline based on whether stop is positive or negative
+    const baselineOffset = singleStop.offset >= 0 ? minValue : maxValue;
+
+    effectiveStops = [{ offset: baselineOffset, color, opacity: 0 }, singleStop];
   }
 
   const offsets: number[] = [];
   const processedColors: string[] = [];
 
-  stops.forEach((stop) => {
+  effectiveStops.forEach((stop) => {
     const { color, opacity } = normalizeGradientStop(stop);
     // Parse color with Skia and apply opacity
     const parsedColor = parseColor(color, opacity);
@@ -179,8 +196,7 @@ const processGradientStops = (
     }
   }
 
-  // Get scale domain and normalize offsets to 0-1 range
-  const [minValue, maxValue] = getScaleDomainBounds(scale);
+  // Calculate range and normalize offsets to 0-1
   const range = maxValue - minValue;
 
   if (range === 0) {
@@ -293,16 +309,28 @@ export const evaluateGradientAtValue = (
 
   if (resolvedStops.length === 0) return null;
 
+  // Get scale domain for single-stop expansion
+  const [minValue, maxValue] = getScaleDomainBounds(scale);
+
+  // If only 1 stop, expand to 2-stop gradient from baseline
+  let effectiveStops = resolvedStops;
+  if (resolvedStops.length === 1) {
+    const singleStop = resolvedStops[0];
+    const { color } = normalizeGradientStop(singleStop);
+    const baselineOffset = singleStop.offset >= 0 ? minValue : maxValue;
+
+    effectiveStops = [{ offset: baselineOffset, color, opacity: 0 }, singleStop];
+  }
+
   // Process stops - always ignore opacity for point evaluation (opacity is handled in gradient rendering)
-  const processedColors = resolvedStops.map((stop) => {
+  const processedColors = effectiveStops.map((stop) => {
     const { color } = normalizeGradientStop(stop);
     return parseColor(color, 1); // Always use full opacity for point colors
   });
 
-  const offsets = resolvedStops.map((stop) => stop.offset);
+  const offsets = effectiveStops.map((stop) => stop.offset);
 
-  // Get scale domain and range
-  const [minValue, maxValue] = getScaleDomainBounds(scale);
+  // Calculate range
   const range = maxValue - minValue;
 
   if (range === 0) return processedColors[0];

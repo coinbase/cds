@@ -7,10 +7,9 @@ import { Area, type AreaComponent } from '../area/Area';
 import { axisTickLabelsInitialAnimationVariants } from '../axis';
 import { useCartesianChartContext } from '../ChartProvider';
 import { Point, type PointConfig, type RenderPointsParams } from '../Point';
-import { type ChartPathCurveType, type Gradient, getLinePath } from '../utils';
+import { type ChartPathCurveType, getLinePath, type Gradient } from '../utils';
 
 import { DottedLine } from './DottedLine';
-import { GradientLine } from './GradientLine';
 import { SolidLine } from './SolidLine';
 
 export type LineComponentProps = {
@@ -201,7 +200,6 @@ export const Line = memo<LineProps>(
         case 'dotted':
           return DottedLine;
         case 'gradient':
-          return GradientLine;
         case 'solid':
         default:
           return SolidLine;
@@ -224,18 +222,18 @@ export const Line = memo<LineProps>(
           <Area
             AreaComponent={AreaComponent}
             baseline={areaBaseline}
-            gradient={seriesGradient}
             connectNulls={connectNulls}
             curve={curve}
             fill={stroke}
             fillOpacity={opacity}
+            gradient={seriesGradient}
             seriesId={seriesId}
             type={areaType}
           />
         )}
         <LineComponent
-          gradient={seriesGradient}
           d={path}
+          gradient={seriesGradient}
           seriesId={seriesId}
           stroke={stroke}
           strokeOpacity={opacity}
