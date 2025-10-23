@@ -1,6 +1,6 @@
 import { stack as d3Stack, stackOffsetDiverging, stackOrderNone } from 'd3-shape';
 
-import type { ColorMap } from './colorMap';
+import type { Gradient } from './gradient';
 
 export const defaultStackId = 'DEFAULT_STACK_ID';
 
@@ -50,10 +50,10 @@ export type Series = {
    */
   stackId?: string;
   /**
-   * Color mapping configuration for the series.
-   * When provided, creates gradient or threshold-based coloring.
+   * Color gradient configuration for the series.
+   * When provided, creates gradient-based coloring.
    */
-  colorMap?: ColorMap;
+  gradient?: Gradient;
 };
 
 /**

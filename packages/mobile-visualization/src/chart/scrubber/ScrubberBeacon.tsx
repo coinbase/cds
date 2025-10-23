@@ -14,7 +14,7 @@ import { Circle, Group } from '@shopify/react-native-skia';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import { projectPoint, useScrubberContext } from '../utils';
-import { type ColorMap, evaluateColorMapAtValue, getColorMapScale } from '../utils/colorMap';
+import { evaluateGradientAtValue, type Gradient } from '../utils/gradient';
 
 const radius = 5;
 const glowRadius = 10;
@@ -51,10 +51,10 @@ export type ScrubberBeaconProps = SharedProps & {
    */
   color?: string;
   /**
-   * ColorMap configuration for the series.
+   * Gradient configuration for the series.
    * When provided, the beacon color is evaluated based on the data value.
    */
-  colorMap?: ColorMap;
+  gradient?: Gradient;
   /**
    * Opacity of the beacon.
    * @default 1
@@ -77,7 +77,7 @@ export const ScrubberBeacon = memo(
         dataX: dataXProp,
         dataY: dataYProp,
         color,
-        colorMap,
+        gradient,
         testID,
         idlePulse,
         opacity = 1,
@@ -85,7 +85,7 @@ export const ScrubberBeacon = memo(
       ref,
     ) => {
       const theme = useTheme();
-      const { getSeries, getXScale, getYScale, getSeriesData, animate, getSeriesColorMapScale } =
+      const { getSeries, getXScale, getYScale, getSeriesData, animate, getSeriesGradientScale } =
         useCartesianChartContext();
       const { scrubberPosition } = useScrubberContext();
 
@@ -93,7 +93,7 @@ export const ScrubberBeacon = memo(
       const sourceData = getSeriesData(seriesId);
       const xScale = getXScale();
       const yScale = getYScale(targetSeries?.yAxisId);
-      const colorMapScale = seriesId ? getSeriesColorMapScale(seriesId) : undefined;
+      const gradientScale = seriesId ? getSeriesGradientScale(seriesId) : undefined;
 
       const isIdleState = scrubberPosition === undefined;
 
@@ -209,18 +209,18 @@ export const ScrubberBeacon = memo(
 
       // Determine the beacon color (must be before conditional return to follow Rules of Hooks)
       const pointColor = useMemo(() => {
-        // If colorMap is provided (either from prop or from series), evaluate color based on data value
-        const effectiveColorMap = colorMap ?? targetSeries?.colorMap;
-        if (effectiveColorMap && colorMapScale) {
-          // Use the appropriate data value based on colorMap axis
-          const axis = effectiveColorMap.axis ?? 'y';
+        // If gradient is provided (either from prop or from series), evaluate color based on data value
+        const effectiveGradient = gradient ?? targetSeries?.gradient;
+        if (effectiveGradient && gradientScale) {
+          // Use the appropriate data value based on gradient axis
+          const axis = effectiveGradient.axis ?? 'y';
           const dataValue = axis === 'x' ? dataX : dataY;
 
           if (dataValue !== undefined) {
-            const evaluatedColor = evaluateColorMapAtValue(
-              effectiveColorMap,
+            const evaluatedColor = evaluateGradientAtValue(
+              effectiveGradient,
               dataValue,
-              colorMapScale,
+              gradientScale,
             );
             if (evaluatedColor) {
               return evaluatedColor;
@@ -231,9 +231,9 @@ export const ScrubberBeacon = memo(
         // Fallback to provided color, series color, or theme color
         return color ?? targetSeries?.color ?? theme.color.fgPrimary;
       }, [
-        colorMap,
-        targetSeries?.colorMap,
-        colorMapScale,
+        gradient,
+        targetSeries?.gradient,
+        gradientScale,
         dataX,
         dataY,
         color,

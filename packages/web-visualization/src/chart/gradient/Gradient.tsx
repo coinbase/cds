@@ -1,6 +1,6 @@
 import { memo } from 'react';
 
-import type { GradientConfig } from '../utils/colorMap';
+import type { GradientConfig } from '../utils/gradient';
 
 export type GradientProps = {
   /**

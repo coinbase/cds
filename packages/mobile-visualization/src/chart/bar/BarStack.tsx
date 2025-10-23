@@ -4,7 +4,7 @@ import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import type { ChartScaleFunction } from '../utils';
-import { evaluateColorMapAtValue, getColorMapScale } from '../utils/colorMap';
+import { evaluateGradientAtValue, getGradientScale } from '../utils/gradient';
 
 import { Bar, type BarComponent, type BarProps } from './Bar';
 import type { BarSeries } from './BarChart';
@@ -223,25 +223,20 @@ export const BarStack = memo<BarStackProps>(
         minY = Math.min(minY, y);
         maxY = Math.max(maxY, y + height);
 
-        // Determine fill color, respecting colorMap if present
+        // Determine fill color, respecting gradient if present
         let barFill = s.fill || s.color || theme.color.fgPrimary;
 
-        // Evaluate colorMap if provided
-        if (s.colorMap && xScale && yScale) {
-          const colorMapScale = getColorMapScale(s.colorMap, xScale, yScale);
-          if (colorMapScale) {
-            const axis = s.colorMap.axis ?? 'y';
-            // For x-axis colorMap, use the categoryIndex
-            // For y-axis colorMap, use the actual data value
+        // Evaluate gradient if provided
+        if (s.gradient && xScale && yScale) {
+          const gradientScale = getGradientScale(s.gradient, xScale, yScale);
+          if (gradientScale) {
+            const axis = s.gradient.axis ?? 'y';
+            // For x-axis gradient, use the categoryIndex
+            // For y-axis gradient, use the actual data value
             const dataValue = axis === 'x' ? categoryIndex : top;
-            const evaluatedColor = evaluateColorMapAtValue(
-              s.colorMap,
-              dataValue,
-              colorMapScale,
-              true,
-            );
+            const evaluatedColor = evaluateGradientAtValue(s.gradient, dataValue, gradientScale);
             if (evaluatedColor && !s.fill) {
-              // Only apply colorMap color if fill is not explicitly set
+              // Only apply gradient color if fill is not explicitly set
               barFill = evaluatedColor;
             }
           }

@@ -65,9 +65,11 @@ const LineStyles = () => {
         LineComponent={(props) => (
           <GradientLine
             {...props}
-            colorMap={{
-              type: 'continuous',
-              colors: ['#E3D74D', '#F7931A'],
+            gradient={{
+              stops: ({ min, max }) => [
+                { offset: min, color: '#E3D74D' },
+                { offset: max, color: '#F7931A' },
+              ],
             }}
             strokeWidth={4}
           />

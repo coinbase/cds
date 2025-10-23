@@ -7,7 +7,7 @@ import { Area, type AreaComponent } from '../area/Area';
 import { axisTickLabelsInitialAnimationVariants } from '../axis';
 import { useCartesianChartContext } from '../ChartProvider';
 import { Point, type PointConfig, type RenderPointsParams } from '../Point';
-import { type ChartPathCurveType, type ColorMap, getLinePath } from '../utils';
+import { type ChartPathCurveType, type Gradient, getLinePath } from '../utils';
 
 import { DottedLine } from './DottedLine';
 import { GradientLine } from './GradientLine';
@@ -24,17 +24,17 @@ export type LineComponentProps = {
   style?: React.CSSProperties;
   clipPath?: string;
   /**
-   * Color mapping configuration.
-   * When provided, creates gradient or threshold-based coloring.
+   * Color gradient configuration.
+   * When provided, creates gradient-based coloring.
    */
-  colorMap?: ColorMap;
+  gradient?: Gradient;
   /**
-   * Series ID - used to retrieve colorMap from series if not provided directly.
+   * Series ID - used to retrieve gradient from series if not provided directly.
    */
   seriesId?: string;
   /**
    * Y-axis ID to use for calculating color positions.
-   * Only needed when using colorMap with multiple y-axes.
+   * Only needed when using gradient with multiple y-axes.
    */
   yAxisId?: string;
 };
@@ -131,7 +131,7 @@ export const Line = memo<LineProps>(
       useCartesianChartContext();
 
     const matchedSeries = getSeries(seriesId);
-    const seriesColorMap = matchedSeries?.colorMap;
+    const seriesGradient = matchedSeries?.gradient;
 
     const sourceData = useMemo(() => {
       const stackedData = getSeriesData(seriesId);
@@ -224,7 +224,7 @@ export const Line = memo<LineProps>(
           <Area
             AreaComponent={AreaComponent}
             baseline={areaBaseline}
-            colorMap={seriesColorMap}
+            gradient={seriesGradient}
             connectNulls={connectNulls}
             curve={curve}
             fill={stroke}
@@ -234,7 +234,7 @@ export const Line = memo<LineProps>(
           />
         )}
         <LineComponent
-          colorMap={seriesColorMap}
+          gradient={seriesGradient}
           d={path}
           seriesId={seriesId}
           stroke={stroke}

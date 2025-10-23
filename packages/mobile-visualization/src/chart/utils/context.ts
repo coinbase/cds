@@ -3,7 +3,7 @@ import type { Rect } from '@coinbase/cds-common/types';
 
 import type { AxisConfig } from './axis';
 import type { Series } from './chart';
-import type { ColorMapScale } from './colorMap';
+import type { GradientScale } from './gradient';
 import type { ChartScaleFunction } from './scale';
 
 /**
@@ -82,7 +82,7 @@ export type CartesianChartContextValue = {
    * Returns undefined if the series does not exist or if there is no valid color map for that series.
    * @param seriesId - The series ID
    */
-  getSeriesColorMapScale: (seriesId: string) => ColorMapScale | undefined;
+  getSeriesGradientScale: (seriesId: string) => GradientScale | undefined;
 };
 
 export type ScrubberContextValue = {

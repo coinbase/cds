@@ -519,10 +519,10 @@ export const All = () => {
         description={
           <Text color="fgMuted" font="body">
             Simple gain/loss chart. Bars below zero are red (negative), bars at or above zero are
-            green (positive). Uses discrete colorMap with threshold at 0.
+            green (positive). Uses hard transition at 0.
           </Text>
         }
-        title="ColorMap - Gain/Loss"
+        title="Gradient - Gain/Loss"
       >
         <BarChart
           showXAxis
@@ -532,11 +532,14 @@ export const All = () => {
             {
               id: 'profit',
               data: [-40, -28, 15, -5, 48, -12, 22, -8, 35, -18, 42, -3],
-              colorMap: {
-                type: 'discrete',
+              gradient: {
                 axis: 'y',
-                stops: [0],
-                colors: ['var(--color-fgNegative)', 'var(--color-fgPositive)'],
+                stops: [
+                  { offset: -50, color: 'var(--color-fgNegative)' },
+                  { offset: 0, color: 'var(--color-fgNegative)' },
+                  { offset: 0, color: 'var(--color-fgPositive)' },
+                  { offset: 50, color: 'var(--color-fgPositive)' },
+                ],
               },
             },
           ]}
@@ -566,11 +569,11 @@ export const All = () => {
       <Example
         description={
           <Text color="fgMuted" font="body">
-            Continuous colorMap applied to bars. Each bar&apos;s color is determined by its value,
-            transitioning smoothly from red (low) to yellow (mid) to green (high).
+            Continuous gradient applied to bars. Each bar&apos;s color is determined by its value,
+            transitioning smoothly from green (low) to yellow (mid) to red (high).
           </Text>
         }
-        title="ColorMap - Continuous (Y-Axis)"
+        title="Gradient - Continuous (Y-Axis)"
       >
         <BarChart
           showXAxis
@@ -580,13 +583,12 @@ export const All = () => {
             {
               id: 'temperature',
               data: [12, 25, 38, 52, 45, 30, 18],
-              colorMap: {
-                type: 'continuous',
+              gradient: {
                 axis: 'y',
-                colors: [
-                  'var(--color-accentBoldGreen)',
-                  'var(--color-accentBoldYellow)',
-                  'var(--color-accentBoldRed)',
+                stops: ({ min, max }) => [
+                  { offset: min, color: 'var(--color-accentBoldGreen)' },
+                  { offset: (min + max) / 2, color: 'var(--color-accentBoldYellow)' },
+                  { offset: max, color: 'var(--color-accentBoldRed)' },
                 ],
               },
             },
@@ -604,11 +606,11 @@ export const All = () => {
       <Example
         description={
           <Text color="fgMuted" font="body">
-            Discrete colorMap with thresholds at 30 and 45. Bars below 30 are green (cool), 30-45
-            are yellow (warm), and above 45 are red (hot).
+            Hard transitions at 30 and 45. Bars below 30 are green (cool), 30-45 are yellow (warm),
+            and above 45 are red (hot).
           </Text>
         }
-        title="ColorMap - Discrete Thresholds (Y-Axis)"
+        title="Gradient - Hard Transitions (Y-Axis)"
       >
         <BarChart
           showXAxis
@@ -618,14 +620,15 @@ export const All = () => {
             {
               id: 'temperature',
               data: [25, 32, 48, 52, 29, 38, 22],
-              colorMap: {
-                type: 'discrete',
+              gradient: {
                 axis: 'y',
-                stops: [30, 45],
-                colors: [
-                  'var(--color-accentBoldGreen)',
-                  'var(--color-accentBoldYellow)',
-                  'var(--color-accentBoldRed)',
+                stops: [
+                  { offset: 0, color: 'var(--color-accentBoldGreen)' },
+                  { offset: 30, color: 'var(--color-accentBoldGreen)' },
+                  { offset: 30, color: 'var(--color-accentBoldYellow)' },
+                  { offset: 45, color: 'var(--color-accentBoldYellow)' },
+                  { offset: 45, color: 'var(--color-accentBoldRed)' },
+                  { offset: 60, color: 'var(--color-accentBoldRed)' },
                 ],
               },
             },
@@ -643,11 +646,11 @@ export const All = () => {
       <Example
         description={
           <Text color="fgMuted" font="body">
-            ColorMap applied on X-axis (category index). Each bar gets a color based on its position
+            Gradient applied on X-axis (category index). Each bar gets a color based on its position
             in the chart, creating a rainbow effect.
           </Text>
         }
-        title="ColorMap - Continuous (X-Axis)"
+        title="Gradient - Continuous (X-Axis)"
       >
         <BarChart
           showXAxis
@@ -657,10 +660,15 @@ export const All = () => {
             {
               id: 'sales',
               data: [50, 65, 45, 70, 55, 60, 52],
-              colorMap: {
-                type: 'continuous',
+              gradient: {
                 axis: 'x',
-                colors: ['#ef4444', '#f59e0b', '#10b981', '#3b82f6', '#8b5cf6'],
+                stops: [
+                  { offset: 0, color: '#ef4444' },
+                  { offset: 1.5, color: '#f59e0b' },
+                  { offset: 3, color: '#10b981' },
+                  { offset: 4.5, color: '#3b82f6' },
+                  { offset: 6, color: '#8b5cf6' },
+                ],
               },
             },
           ]}
@@ -676,11 +684,11 @@ export const All = () => {
       <Example
         description={
           <Text color="fgMuted" font="body">
-            Stacked bars with colorMap. Each series can have its own colorMap configuration,
+            Stacked bars with gradient. Each series can have its own gradient configuration,
             allowing for complex color compositions.
           </Text>
         }
-        title="ColorMap - Stacked Bars"
+        title="Gradient - Stacked Bars"
       >
         <BarChart
           showXAxis
@@ -691,19 +699,23 @@ export const All = () => {
             {
               id: 'category-a',
               data: [20, 30, 25, 35, 28, 32, 27],
-              colorMap: {
-                type: 'continuous',
+              gradient: {
                 axis: 'y',
-                colors: ['#3b82f6', '#8b5cf6'],
+                stops: ({ min, max }) => [
+                  { offset: min, color: '#3b82f6' },
+                  { offset: max, color: '#8b5cf6' },
+                ],
               },
             },
             {
               id: 'category-b',
               data: [15, 25, 20, 30, 22, 28, 23],
-              colorMap: {
-                type: 'continuous',
+              gradient: {
                 axis: 'y',
-                colors: ['#10b981', '#059669'],
+                stops: ({ min, max }) => [
+                  { offset: min, color: '#10b981' },
+                  { offset: max, color: '#059669' },
+                ],
               },
             },
           ]}

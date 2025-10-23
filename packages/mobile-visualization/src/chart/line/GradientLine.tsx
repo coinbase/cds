@@ -5,7 +5,7 @@ import { LinearGradient, vec } from '@shopify/react-native-skia';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import { Path, type PathProps } from '../Path';
-import { type ColorMap, processColorMap } from '../utils/colorMap';
+import { type Gradient, processGradient } from '../utils/gradient';
 
 export type GradientLineProps = SharedProps &
   Omit<PathProps, 'stroke' | 'strokeOpacity' | 'strokeWidth'> & {
@@ -25,24 +25,25 @@ export type GradientLineProps = SharedProps &
      */
     strokeWidth?: number;
     /**
-     * Color mapping configuration.
-     * Supports both continuous (smooth gradients) and discrete (threshold-based) coloring.
+     * Color gradient configuration.
+     * Supports smooth gradient transitions.
      * @example
-     * colorMap={{
-     *   type: 'discrete',
-     *   stops: [0],
-     *   colors: ['red', 'green']
+     * gradient={{
+     *   stops: [
+     *     { offset: 0, color: 'red' },
+     *     { offset: 0, color: 'green' }
+     *   ]
      * }}
      */
-    colorMap?: ColorMap;
+    gradient?: Gradient;
     /**
-     * Series ID to get the colorMap from if not provided directly.
-     * Used to retrieve the colorMap scale from context.
+     * Series ID to get the gradient from if not provided directly.
+     * Used to retrieve the gradient scale from context.
      */
     seriesId?: string;
     /**
      * Y-axis ID to use for calculating color positions.
-     * Only needed when using colorMap with multiple y-axes.
+     * Only needed when using gradient with multiple y-axes.
      */
     yAxisId?: string;
     /**
@@ -71,7 +72,7 @@ export const GradientLine = memo<GradientLineProps>(
     strokeLinejoin = 'round',
     strokeWidth = 2,
     animate,
-    colorMap,
+    gradient,
     seriesId,
     yAxisId,
     outlineColor,
@@ -86,12 +87,12 @@ export const GradientLine = memo<GradientLineProps>(
     // Get scales from context
     const { height: chartHeight, getSeries } = context;
 
-    // Get colorMap from series if seriesId is provided and colorMap is not
+    // Get gradient from series if seriesId is provided and gradient is not
     const targetSeries = seriesId ? getSeries(seriesId) : undefined;
-    const effectiveColorMap = colorMap ?? targetSeries?.colorMap;
+    const effectiveGradient = gradient ?? targetSeries?.gradient;
     const effectiveYAxisId = yAxisId ?? targetSeries?.yAxisId;
 
-    const colorMapScale = seriesId ? context.getSeriesColorMapScale(seriesId) : undefined;
+    const gradientScale = seriesId ? context.getSeriesGradientScale(seriesId) : undefined;
     const yScale = context.getYScale(effectiveYAxisId);
 
     // Calculate gradient configuration
@@ -101,23 +102,23 @@ export const GradientLine = memo<GradientLineProps>(
         return null;
       }
 
-      if (!effectiveColorMap) {
-        console.warn('GradientLine requires a colorMap prop or seriesId with colorMap');
+      if (!effectiveGradient) {
+        console.warn('GradientLine requires a gradient prop or seriesId with gradient');
         return null;
       }
 
-      const scale = colorMapScale;
+      const scale = gradientScale;
       if (!scale) {
-        console.warn('ColorMap requires a valid numeric scale');
+        console.warn('Gradient requires a valid numeric scale');
         return null;
       }
 
-      const processed = processColorMap(effectiveColorMap, scale);
+      const processed = processGradient(effectiveGradient, scale);
       if (!processed) {
         return null;
       }
 
-      const axisType = effectiveColorMap.axis ?? 'y';
+      const axisType = effectiveGradient.axis ?? 'y';
       const range = scale.range();
 
       // Determine gradient direction based on axis
@@ -130,7 +131,7 @@ export const GradientLine = memo<GradientLineProps>(
         colors: processed.colors,
         positions: processed.positions,
       };
-    }, [chartHeight, effectiveColorMap, colorMapScale]);
+    }, [chartHeight, effectiveGradient, gradientScale]);
 
     // Don't render if gradient couldn't be created (chart not ready yet)
     if (!gradientConfig) {

@@ -23,7 +23,7 @@ import { m as motion } from 'framer-motion';
 
 import {
   type ChartTextChildren,
-  type ColorMap,
+  type Gradient,
   LiveTabLabel,
   PeriodSelector,
   PeriodSelectorActiveIndicator,
@@ -1250,28 +1250,23 @@ const GainLossChart = () => {
     [],
   );
 
-  // Calculate min/max for the area colorMap with opacity fade
-  const minValue = Math.min(...data);
-  const maxValue = Math.max(...data);
-
-  // Line colorMap: discrete color change at 0 (full opacity for line)
-  const lineColorMap: ColorMap = {
-    type: 'continuous',
-    stops: [-5, 5],
-    colors: [negativeColor, positiveColor],
+  // Line gradient: hard color change at 0 (full opacity for line)
+  const lineGradient: Gradient = {
+    stops: [
+      { offset: 0, color: negativeColor },
+      { offset: 0, color: positiveColor },
+    ],
   };
 
-  // Area colorMap: combines discrete color change with continuous opacity fade
+  // Area gradient: combines hard color change with continuous opacity fade
   // Creates a diverging gradient with proper colors on each side
-  const areaColorMap: ColorMap = {
-    type: 'continuous',
-    colors: [
-      { color: negativeColor, opacity: 0.3 }, // Peak negative (most opaque)
-      { color: negativeColor, opacity: 0 }, // Baseline negative
-      { color: positiveColor, opacity: 0 }, // Baseline positive
-      { color: positiveColor, opacity: 0.3 }, // Peak positive (most opaque)
+  const areaGradient: Gradient = {
+    stops: ({ min, max }) => [
+      { offset: min + 5, color: 'red', opacity: 0.3 }, // Peak negative (most opaque)
+      { offset: 0, color: 'red', opacity: 0 }, // Baseline negative
+      { offset: 0, color: 'red', opacity: 0 }, // Baseline positive
+      { offset: max - 5, color: 'red', opacity: 0.3 }, // Peak positive (most opaque)
     ],
-    stops: [minValue, 0, 0, maxValue],
   };
 
   return (
@@ -1283,14 +1278,14 @@ const GainLossChart = () => {
         {
           id: 'prices',
           data: data,
-          colorMap: lineColorMap,
+          gradient: lineGradient,
         },
       ]}
     >
       <YAxis showGrid requestedTickCount={2} tickLabelFormatter={tickLabelFormatter} />
       <Line
         showArea
-        AreaComponent={(props) => <GradientArea {...props} colorMap={areaColorMap} />}
+        AreaComponent={(props) => <GradientArea {...props} gradient={areaGradient} />}
         curve="monotone"
         seriesId="prices"
         strokeWidth={3}
@@ -1701,11 +1696,11 @@ export const ColorMapStories = () => {
       <Example
         description={
           <Text color="fgMuted" font="body">
-            Continuous colorMap with two colors. Should transition smoothly from red (low values) to
-            green (high values).
+            Continuous gradient with two colors. Should transition smoothly from red (low
+            values) to green (high values).
           </Text>
         }
-        title="ColorMap - Continuous (2 colors)"
+        title="Gradient - Continuous (2 colors)"
       >
         <LineChart
           enableScrubbing
@@ -1718,9 +1713,11 @@ export const ColorMapStories = () => {
               id: 'line',
               data: [10, 25, 15, 35, 20, 40, 30, 45],
               type: 'gradient',
-              colorMap: {
-                type: 'continuous',
-                colors: ['var(--color-fgNegative)', 'var(--color-fgPositive)'],
+              gradient: {
+                stops: ({ min, max }) => [
+                  { offset: min, color: 'var(--color-fgNegative)' },
+                  { offset: max, color: 'var(--color-fgPositive)' },
+                ],
               },
             },
           ]}
@@ -1731,27 +1728,33 @@ export const ColorMapStories = () => {
       <Example
         description={
           <Text color="fgMuted" font="body">
-            Discrete colorMap with threshold at 20 and 30. Values &lt;20 should be red, 20-30 should
-            be yellow, &gt;30 should be green.
+            Hard transitions at 20 and 30. Values &lt;20 should be red, 20-30 should be yellow,
+            &gt;30 should be green. Multiple stops at same offset create hard transitions.
           </Text>
         }
-        title="ColorMap - Discrete Thresholds"
+        title="Gradient - Hard Transitions"
       >
         <LineChart
           enableScrubbing
           showArea
           showXAxis
           showYAxis
+          AreaComponent={(props) => <GradientArea {...props} fillOpacity={0.5} />}
           height={300}
           series={[
             {
               id: 'line',
               data: [5, 10, 15, 16.75, 17, 20, 25, 35, 45, 25, 15, 35],
               type: 'gradient',
-              colorMap: {
-                type: 'discrete',
-                stops: [20, 30],
-                colors: ['#ef4444', '#f59e0b', '#10b981'],
+              gradient: {
+                stops: [
+                  { offset: 0, color: '#ef4444' },
+                  { offset: 20, color: '#ef4444' },
+                  { offset: 20, color: '#f59e0b' },
+                  { offset: 30, color: '#f59e0b' },
+                  { offset: 30, color: '#10b981' },
+                  { offset: 50, color: '#10b981' },
+                ],
               },
             },
           ]}
@@ -1762,10 +1765,11 @@ export const ColorMapStories = () => {
       <Example
         description={
           <Text color="fgMuted" font="body">
-            Continuous colorMap with custom stop positions. Blue at 10, purple at 40, pink at 80.
+            Continuous gradient with custom stop positions. Blue at 10, purple at 40, pink at
+            80.
           </Text>
         }
-        title="ColorMap - Custom Stops"
+        title="Gradient - Custom Stops"
       >
         <LineChart
           enableScrubbing
@@ -1778,10 +1782,12 @@ export const ColorMapStories = () => {
               id: 'line',
               data: [10, 20, 30, 40, 50, 60, 70, 80],
               type: 'gradient',
-              colorMap: {
-                type: 'continuous',
-                colors: ['#3b82f6', '#8b5cf6', '#ec4899'],
-                stops: [10, 40, 80],
+              gradient: {
+                stops: [
+                  { offset: 10, color: '#3b82f6' },
+                  { offset: 40, color: '#8b5cf6' },
+                  { offset: 80, color: '#ec4899' },
+                ],
               },
             },
           ]}
@@ -1792,10 +1798,10 @@ export const ColorMapStories = () => {
       <Example
         description={
           <Text color="fgMuted" font="body">
-            Continuous colorMap with opacity values. Both colors have 80% opacity.
+            Continuous gradient with opacity values. Both colors have 80% opacity.
           </Text>
         }
-        title="ColorMap - With Opacity"
+        title="Gradient - With Opacity"
       >
         <LineChart
           enableScrubbing
@@ -1808,11 +1814,10 @@ export const ColorMapStories = () => {
               id: 'line',
               data: [10, 30, 20, 40, 35, 50, 45, 60],
               type: 'gradient',
-              colorMap: {
-                type: 'continuous',
-                colors: [
-                  { color: 'var(--color-fgNegative)', opacity: 0.8 },
-                  { color: 'var(--color-fgPositive)', opacity: 0.8 },
+              gradient: {
+                stops: ({ min, max }) => [
+                  { offset: min, color: 'var(--color-fgNegative)', opacity: 0.8 },
+                  { offset: max, color: 'var(--color-fgPositive)', opacity: 0.8 },
                 ],
               },
             },
@@ -1824,11 +1829,11 @@ export const ColorMapStories = () => {
       <Example
         description={
           <Text color="fgMuted" font="body">
-            Two series with different colorMaps. First series (red-yellow) and second series
+            Two series with different gradients. First series (red-yellow) and second series
             (blue-green).
           </Text>
         }
-        title="ColorMap - Multiple Series"
+        title="Gradient - Multiple Series"
       >
         <LineChart
           enableScrubbing
@@ -1840,18 +1845,22 @@ export const ColorMapStories = () => {
               id: 'series1',
               data: [20, 35, 25, 45, 30, 50, 40, 55],
               type: 'gradient',
-              colorMap: {
-                type: 'continuous',
-                colors: ['#ef4444', '#f59e0b'],
+              gradient: {
+                stops: ({ min, max }) => [
+                  { offset: min, color: '#ef4444' },
+                  { offset: max, color: '#f59e0b' },
+                ],
               },
             },
             {
               id: 'series2',
               data: [10, 25, 15, 35, 20, 40, 30, 45],
               type: 'gradient',
-              colorMap: {
-                type: 'continuous',
-                colors: ['#3b82f6', '#10b981'],
+              gradient: {
+                stops: ({ min, max }) => [
+                  { offset: min, color: '#3b82f6' },
+                  { offset: max, color: '#10b981' },
+                ],
               },
             },
           ]}
@@ -1862,11 +1871,10 @@ export const ColorMapStories = () => {
       <Example
         description={
           <Text color="fgMuted" font="body">
-            Using OKLCH color space for perceptually uniform gradients. Should show smoother
-            transition from red to blue.
+            Smooth gradient transition from red to blue using default color interpolation.
           </Text>
         }
-        title="ColorMap - OKLCH Color Space"
+        title="Gradient - Smooth Transition"
       >
         <LineChart
           enableScrubbing
@@ -1879,10 +1887,11 @@ export const ColorMapStories = () => {
               id: 'line',
               data: [10, 25, 15, 35, 20, 40, 30, 45],
               type: 'gradient',
-              colorMap: {
-                type: 'continuous',
-                colors: ['#ff0000', '#0000ff'],
-                colorSpace: 'oklch',
+              gradient: {
+                stops: ({ min, max }) => [
+                  { offset: min, color: '#ff0000' },
+                  { offset: max, color: '#0000ff' },
+                ],
               },
             },
           ]}
@@ -1893,11 +1902,11 @@ export const ColorMapStories = () => {
       <Example
         description={
           <Text color="fgMuted" font="body">
-            Testing scrubber beacon colors with colorMap. The beacon should match the color of the
-            line at that position.
+            Testing scrubber beacon colors with gradient. The beacon should match the color of
+            the line at that position.
           </Text>
         }
-        title="ColorMap - Scrubber Beacon Test"
+        title="Gradient - Scrubber Beacon Test"
       >
         <LineChart
           enableScrubbing
@@ -1909,9 +1918,11 @@ export const ColorMapStories = () => {
               id: 'line',
               data: [-40, -28, -21, -5, 8, 15, 25, 35],
               type: 'gradient',
-              colorMap: {
-                type: 'continuous',
-                colors: ['var(--color-fgNegative)', 'var(--color-fgPositive)'],
+              gradient: {
+                stops: ({ min, max }) => [
+                  { offset: min, color: 'var(--color-fgNegative)', opacity: 0.25 },
+                  { offset: max, color: 'var(--color-fgPositive)', opacity: 0.5 },
+                ],
               },
             },
           ]}
@@ -2077,7 +2088,7 @@ export const All = () => {
       <Example title="Bitcoin Chart With Scrubber Beacon">
         <BitcoinChartWithScrubberBeacon />
       </Example>
-      <Example title="ColorMap - Continuous">
+      <Example title="Gradient - Continuous">
         <LineChart
           enableScrubbing
           showXAxis
@@ -2088,9 +2099,11 @@ export const All = () => {
               id: 'line',
               data: [10, 25, 15, 35, 20, 40, 30, 45],
               type: 'gradient',
-              colorMap: {
-                type: 'continuous',
-                colors: ['var(--color-fgNegative)', 'var(--color-fgPositive)'],
+              gradient: {
+                stops: ({ min, max }) => [
+                  { offset: min, color: 'var(--color-fgNegative)' },
+                  { offset: max, color: 'var(--color-fgPositive)' },
+                ],
               },
             },
           ]}
@@ -2098,7 +2111,7 @@ export const All = () => {
           <Scrubber />
         </LineChart>
       </Example>
-      <Example title="ColorMap - Discrete Thresholds">
+      <Example title="Gradient - Hard Transitions">
         <LineChart
           enableScrubbing
           showXAxis
@@ -2109,10 +2122,15 @@ export const All = () => {
               id: 'line',
               data: [5, 10, 15, 25, 35, 45, 25, 15, 35],
               type: 'gradient',
-              colorMap: {
-                type: 'discrete',
-                stops: [20, 30],
-                colors: ['#ef4444', '#f59e0b', '#10b981'],
+              gradient: {
+                stops: [
+                  { offset: 0, color: '#ef4444' },
+                  { offset: 20, color: '#ef4444' },
+                  { offset: 20, color: '#f59e0b' },
+                  { offset: 30, color: '#f59e0b' },
+                  { offset: 30, color: '#10b981' },
+                  { offset: 50, color: '#10b981' },
+                ],
               },
             },
           ]}
@@ -2120,7 +2138,7 @@ export const All = () => {
           <Scrubber />
         </LineChart>
       </Example>
-      <Example title="ColorMap - Custom Stops">
+      <Example title="Gradient - Custom Stops">
         <LineChart
           enableScrubbing
           showXAxis
@@ -2131,10 +2149,12 @@ export const All = () => {
               id: 'line',
               data: [10, 20, 30, 40, 50, 60, 70, 80],
               type: 'gradient',
-              colorMap: {
-                type: 'continuous',
-                colors: ['#3b82f6', '#8b5cf6', '#ec4899'],
-                stops: [10, 40, 80],
+              gradient: {
+                stops: [
+                  { offset: 10, color: '#3b82f6' },
+                  { offset: 40, color: '#8b5cf6' },
+                  { offset: 80, color: '#ec4899' },
+                ],
               },
             },
           ]}
@@ -2142,7 +2162,7 @@ export const All = () => {
           <Scrubber />
         </LineChart>
       </Example>
-      <Example title="ColorMap - With Opacity">
+      <Example title="Gradient - With Opacity">
         <LineChart
           enableScrubbing
           showArea
@@ -2154,11 +2174,10 @@ export const All = () => {
               id: 'line',
               data: [10, 30, 20, 40, 35, 50, 45, 60],
               type: 'gradient',
-              colorMap: {
-                type: 'continuous',
-                colors: [
-                  { color: 'var(--color-fgNegative)', opacity: 0.8 },
-                  { color: 'var(--color-fgPositive)', opacity: 0.8 },
+              gradient: {
+                stops: ({ min, max }) => [
+                  { offset: min, color: 'var(--color-fgNegative)', opacity: 0.8 },
+                  { offset: max, color: 'var(--color-fgPositive)', opacity: 0.8 },
                 ],
               },
             },
@@ -2167,7 +2186,7 @@ export const All = () => {
           <Scrubber labelProps={{ elevation: 1 }} />
         </LineChart>
       </Example>
-      <Example title="ColorMap - Multiple Series">
+      <Example title="Gradient - Multiple Series">
         <LineChart
           enableScrubbing
           showXAxis
@@ -2178,18 +2197,22 @@ export const All = () => {
               id: 'series1',
               data: [20, 35, 25, 45, 30, 50, 40, 55],
               type: 'gradient',
-              colorMap: {
-                type: 'continuous',
-                colors: ['#ef4444', '#f59e0b'],
+              gradient: {
+                stops: ({ min, max }) => [
+                  { offset: min, color: '#ef4444' },
+                  { offset: max, color: '#f59e0b' },
+                ],
               },
             },
             {
               id: 'series2',
               data: [10, 25, 15, 35, 20, 40, 30, 45],
               type: 'gradient',
-              colorMap: {
-                type: 'continuous',
-                colors: ['#3b82f6', '#10b981'],
+              gradient: {
+                stops: ({ min, max }) => [
+                  { offset: min, color: '#3b82f6' },
+                  { offset: max, color: '#10b981' },
+                ],
               },
             },
           ]}
@@ -2197,7 +2220,7 @@ export const All = () => {
           <Scrubber />
         </LineChart>
       </Example>
-      <Example title="ColorMap - OKLCH Color Space">
+      <Example title="Gradient - Smooth Transition">
         <LineChart
           enableScrubbing
           showXAxis
@@ -2208,10 +2231,11 @@ export const All = () => {
               id: 'line',
               data: [10, 25, 15, 35, 20, 40, 30, 45],
               type: 'gradient',
-              colorMap: {
-                type: 'continuous',
-                colors: ['#ff0000', '#0000ff'],
-                colorSpace: 'oklch',
+              gradient: {
+                stops: ({ min, max }) => [
+                  { offset: min, color: '#ff0000' },
+                  { offset: max, color: '#0000ff' },
+                ],
               },
             },
           ]}

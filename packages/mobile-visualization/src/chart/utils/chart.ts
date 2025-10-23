@@ -1,6 +1,6 @@
 import { stack as d3Stack, stackOffsetDiverging, stackOrderNone } from 'd3-shape';
 
-import type { ColorMap } from './colorMap';
+import type { Gradient } from './gradient';
 
 export const defaultStackId = 'DEFAULT_STACK_ID';
 
@@ -36,23 +36,24 @@ export type Series = {
   label?: string | ((dataIndex: number) => string);
   /**
    * Solid color for the series.
-   * Used when colorMap is not provided.
+   * Used when gradient is not provided.
    * @example 'blue', '#FF0000', 'rgb(255, 0, 0)'
    */
   color?: string;
   /**
-   * Color mapping configuration.
-   * When provided, creates gradient or threshold-based coloring.
+   * Color gradient configuration.
+   * When provided, creates gradient-based coloring.
    * Takes precedence over solid `color`.
    * Applies to all visualization components (line, area, bars, points).
    * @example
-   * colorMap: {
-   *   type: 'discrete',
-   *   stops: [0],
-   *   colors: ['red', 'green']
+   * gradient: {
+   *   stops: [
+   *     { offset: 0, color: 'red' },
+   *     { offset: 0, color: 'green' }
+   *   ]
    * }
    */
-  colorMap?: ColorMap;
+  gradient?: Gradient;
   /**
    * The ID of the y-axis this series uses.
    * Defaults to defaultAxisId if not specified.

@@ -3,7 +3,7 @@ import type { Rect } from '@coinbase/cds-common';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import type { ChartScaleFunction } from '../utils';
-import { evaluateColorMapAtValue, getColorMapScale } from '../utils/colorMap';
+import { evaluateGradientAtValue, getGradientScale } from '../utils/gradient';
 
 import { Bar, type BarComponent, type BarProps } from './Bar';
 import type { BarSeries } from './BarChart';
@@ -227,19 +227,19 @@ export const BarStack = memo<BarStackProps>(
 
         let barFill = s.fill || s.color || 'var(--color-fgPrimary)';
 
-        // Evaluate colorMap if provided
+        // Evaluate gradient if provided
         if (
-          s.colorMap &&
+          s.gradient &&
           xScale &&
           yScale &&
           originalValue !== null &&
           originalValue !== undefined
         ) {
-          const colorMapScale = getColorMapScale(s.colorMap, xScale, yScale);
-          if (colorMapScale) {
-            const axis = s.colorMap.axis ?? 'y';
-            // For x-axis colorMap, use the categoryIndex
-            // For y-axis colorMap, use the ORIGINAL data value (not the processed top value)
+          const gradientScale = getGradientScale(s.gradient, xScale, yScale);
+          if (gradientScale) {
+            const axis = s.gradient.axis ?? 'y';
+            // For x-axis gradient, use the categoryIndex
+            // For y-axis gradient, use the ORIGINAL data value (not the processed top value)
             // This is important for bar charts where originalValue might be a single number (e.g., -40, 15)
             // or a tuple (e.g., [0, 10] for range bars)
             let evalValue: number;
@@ -249,9 +249,13 @@ export const BarStack = memo<BarStackProps>(
               // Use original value for evaluation - handles both single numbers and tuples
               evalValue = Array.isArray(originalValue) ? originalValue[1] : originalValue;
             }
-            const evaluatedColor = evaluateColorMapAtValue(s.colorMap, evalValue, colorMapScale);
+            const evaluatedColor = evaluateGradientAtValue(
+              s.gradient,
+              evalValue,
+              gradientScale,
+            );
             if (evaluatedColor && !s.fill) {
-              // Only apply colorMap color if fill is not explicitly set
+              // Only apply gradient color if fill is not explicitly set
               barFill = evaluatedColor;
             }
           }

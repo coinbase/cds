@@ -321,9 +321,11 @@ const LineStyles = () => {
         {
           id: 'lowerMiddle',
           data: lowerMiddleChartData,
-          colorMap: {
-            type: 'continuous',
-            colors: ['#E3D74D', '#F7931A'],
+          gradient: {
+            stops: ({ min, max }) => [
+              { offset: min, color: '#E3D74D' },
+              { offset: max, color: '#F7931A' },
+            ],
           },
         },
         {
@@ -1279,10 +1281,11 @@ const GradientLineComponent = memo((props: LineComponentProps) => {
   return (
     <GradientLine
       {...props}
-      colorMap={{
-        type: 'discrete',
-        stops: [0],
-        colors: [positiveColor, negativeColor],
+      gradient={{
+        stops: [
+          { offset: 0, color: positiveColor },
+          { offset: 0, color: negativeColor },
+        ],
       }}
       strokeWidth={3}
     />
@@ -1314,10 +1317,11 @@ const GainLossChart = () => {
         {
           id: 'prices',
           data: data,
-          colorMap: {
-            type: 'continuous',
-            stops: [-15, 5],
-            colors: [negativeColor, positiveColor],
+          gradient: {
+            stops: [
+              { offset: -15, color: negativeColor },
+              { offset: 5, color: positiveColor },
+            ],
           },
         },
       ]}
@@ -1890,10 +1894,13 @@ const AvailabilityChart = () => {
         {
           id: 'availability',
           data: availabilityEvents.map((event) => event.availability),
-          colorMap: {
-            type: 'discrete',
-            stops: [85, 90],
-            colors: [theme.color.fgNegative, theme.color.fgWarning, theme.color.fgPositive],
+          gradient: {
+            stops: [
+              { offset: 85, color: theme.color.fgNegative },
+              { offset: 85, color: theme.color.fgWarning },
+              { offset: 90, color: theme.color.fgWarning },
+              { offset: 90, color: theme.color.fgPositive },
+            ],
           },
         },
       ]}
@@ -1979,11 +1986,12 @@ const LineChartStories = () => {
               id: 'prices',
               data: data,
               color: theme.color.fgPositive,
-              colorMap: {
+              gradient: {
                 axis: 'x',
-                type: 'continuous',
-                colors: ['#ff0000', '#00ff00'],
-                stops: [15, data.length - 15],
+                stops: [
+                  { offset: 15, color: '#ff0000' },
+                  { offset: data.length - 15, color: '#00ff00' },
+                ],
               },
             },
           ]}
@@ -2018,11 +2026,12 @@ const LineChartStories = () => {
               id: 'prices',
               data: data,
               color: theme.color.fgPrimary,
-              colorMap: {
+              gradient: {
                 axis: 'x',
-                type: 'continuous',
-                colors: ['#ff0000', '#00ff00'],
-                stops: [15, data.length - 15],
+                stops: [
+                  { offset: 15, color: '#ff0000' },
+                  { offset: data.length - 15, color: '#00ff00' },
+                ],
               },
             },
           ]}
@@ -2085,10 +2094,13 @@ const LineChartStories = () => {
               id: 'line',
               data: [5, 10, 15, 25, 35, 45, 25, 15, 35],
               type: 'gradient',
-              colorMap: {
-                type: 'discrete',
-                stops: [20, 30],
-                colors: ['#ef4444', '#f59e0b', '#10b981'],
+              gradient: {
+                stops: [
+                  { offset: 20, color: '#ef4444' },
+                  { offset: 20, color: '#f59e0b' },
+                  { offset: 30, color: '#f59e0b' },
+                  { offset: 30, color: '#10b981' },
+                ],
               },
             },
           ]}
@@ -2146,14 +2158,12 @@ const LineChartStories = () => {
             {
               id: 'prices',
               data: data,
-              colorMap: {
+              gradient: {
                 axis: 'x',
-                type: 'continuous',
-                colors: [
-                  { color: assets.btc.color, opacity: 0 },
-                  { color: assets.btc.color, opacity: 1 },
+                stops: [
+                  { offset: Math.floor(data.length / 2), color: assets.btc.color, opacity: 0 },
+                  { offset: Math.floor(data.length / 2 + 50), color: assets.btc.color, opacity: 1 },
                 ],
-                stops: [Math.floor(data.length / 2), Math.floor(data.length / 2 + 50)],
               },
             },
           ]}

@@ -4,7 +4,7 @@ import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import { type ChartPathCurveType, getAreaPath } from '../utils';
-import type { ColorMap } from '../utils/colorMap';
+import type { Gradient } from '../utils/gradient';
 
 import { DottedArea } from './DottedArea';
 import { GradientArea } from './GradientArea';
@@ -32,10 +32,10 @@ export type AreaComponentProps = {
    */
   baseline?: number;
   /**
-   * Color mapping configuration.
+   * Gradient configuration.
    * When provided, creates gradient or threshold-based coloring.
    */
-  colorMap?: ColorMap;
+  gradient?: Gradient;
 };
 
 export type AreaComponent = React.FC<AreaComponentProps>;
@@ -78,10 +78,10 @@ export type AreaProps = {
    */
   baseline?: number;
   /**
-   * Color mapping configuration.
+   * Gradient configuration.
    * When provided, creates gradient or threshold-based coloring.
    */
-  colorMap?: ColorMap;
+  gradient?: Gradient;
   /**
    * When true, null values are skipped and the area connects across gaps.
    * When false, null values create gaps in the area.
@@ -101,7 +101,7 @@ export const Area = memo<AreaProps>(
     stroke,
     strokeWidth,
     baseline,
-    colorMap: propColorMap,
+    gradient: propGradient,
     connectNulls = false,
   }) => {
     const { getSeries, getSeriesData, getXScale, getYScale, getXAxis, drawingArea } =
@@ -109,9 +109,9 @@ export const Area = memo<AreaProps>(
 
     // Get sourceData from series (using stacked data if available)
     const matchedSeries = useMemo(() => getSeries(seriesId), [seriesId, getSeries]);
-    const seriesColorMap = matchedSeries?.colorMap;
-    // Use prop colorMap if provided, otherwise use series colorMap
-    const effectiveColorMap = propColorMap ?? seriesColorMap;
+    const seriesGradient = matchedSeries?.gradient;
+    // Use prop gradient if provided, otherwise use series gradient
+    const effectiveGradient = propGradient ?? seriesGradient;
 
     // Check for stacked data first, then fall back to raw data
     const sourceData = useMemo(() => {
@@ -168,10 +168,10 @@ export const Area = memo<AreaProps>(
       <AreaComponent
         baseline={baseline}
         clipRect={drawingArea}
-        colorMap={effectiveColorMap}
         d={area}
         fill={fill}
         fillOpacity={fillOpacity}
+        gradient={effectiveGradient}
         seriesId={seriesId}
         stroke={stroke}
         strokeWidth={strokeWidth}

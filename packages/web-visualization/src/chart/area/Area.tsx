@@ -2,7 +2,7 @@ import React, { memo, useMemo } from 'react';
 import type { SVGProps } from 'react';
 
 import { useCartesianChartContext } from '../ChartProvider';
-import { type ChartPathCurveType, type ColorMap, getAreaPath } from '../utils';
+import { type ChartPathCurveType, type Gradient, getAreaPath } from '../utils';
 
 import { DottedArea } from './DottedArea';
 import { GradientArea } from './GradientArea';
@@ -26,14 +26,14 @@ export type AreaComponentProps = {
    */
   baseline?: number;
   /**
-   * Series ID - passed to area components that support colorMap.
+   * Series ID - passed to area components that support gradient.
    */
   seriesId?: string;
   /**
-   * Color mapping configuration.
-   * When provided, creates gradient or threshold-based coloring.
+   * Color gradient configuration.
+   * When provided, creates gradient-based coloring.
    */
-  colorMap?: ColorMap;
+  gradient?: Gradient;
 };
 
 export type AreaComponent = React.FC<AreaComponentProps>;
@@ -67,10 +67,10 @@ export type AreaProps = Pick<
    */
   connectNulls?: boolean;
   /**
-   * Color mapping configuration.
-   * When provided, overrides the series colorMap and creates gradient or threshold-based coloring.
+   * Color gradient configuration.
+   * When provided, overrides the series gradient and creates gradient-based coloring.
    */
-  colorMap?: ColorMap;
+  gradient?: Gradient;
 };
 
 export const Area = memo<AreaProps>(
@@ -85,15 +85,15 @@ export const Area = memo<AreaProps>(
     strokeWidth,
     baseline,
     connectNulls,
-    colorMap: colorMapProp,
+    gradient: gradientProp,
   }) => {
     const { getSeries, getSeriesData, getXScale, getYScale, getXAxis } = useCartesianChartContext();
 
     // Get sourceData from series (using stacked data if available)
     const matchedSeries = useMemo(() => getSeries(seriesId), [seriesId, getSeries]);
-    const seriesColorMap = matchedSeries?.colorMap;
-    // Use prop colorMap if provided, otherwise use series colorMap
-    const effectiveColorMap = colorMapProp ?? seriesColorMap;
+    const seriesGradient = matchedSeries?.gradient;
+    // Use prop gradient if provided, otherwise use series gradient
+    const effectiveGradient = gradientProp ?? seriesGradient;
 
     // Check for stacked data first, then fall back to raw data
     const sourceData = useMemo(() => {
@@ -153,7 +153,7 @@ export const Area = memo<AreaProps>(
     return (
       <AreaComponent
         baseline={baseline}
-        colorMap={effectiveColorMap}
+        gradient={effectiveGradient}
         d={area}
         fill={fill}
         fillOpacity={fillOpacity}

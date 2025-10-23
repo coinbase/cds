@@ -15,7 +15,7 @@ import { useCartesianChartContext } from '../ChartProvider';
 import { Line } from '../line/Line';
 import { Point } from '../Point';
 import { Scrubber } from '../scrubber/Scrubber';
-import { type ColorMap, isCategoricalScale } from '../utils';
+import { type Gradient, isCategoricalScale } from '../utils';
 import {
   CartesianChart,
   DottedArea,
@@ -64,9 +64,11 @@ const LineStyles = () => {
         LineComponent={(lineProps) => (
           <GradientLine
             {...lineProps}
-            colorMap={{
-              type: 'continuous',
-              colors: ['#E3D74D', '#F7931A'],
+            gradient={{
+              stops: ({ min, max }) => [
+                { offset: min, color: '#E3D74D' },
+                { offset: max, color: '#F7931A' },
+              ],
             }}
             strokeWidth={4}
           />
@@ -406,11 +408,15 @@ function TradingTrends() {
   );
 }
 
-const UVColorMap: ColorMap = {
-  type: 'continuous',
+const UVGradient: Gradient = {
   axis: 'y',
-  colors: ['green', 'yellow', 'orange', 'red', 'purple'],
-  stops: [0, 3, 5, 8, 10],
+  stops: [
+    { offset: 0, color: 'green' },
+    { offset: 3, color: 'yellow' },
+    { offset: 5, color: 'orange' },
+    { offset: 8, color: 'red' },
+    { offset: 10, color: 'purple' },
+  ],
 };
 
 const PreviousData = memo(
@@ -492,7 +498,7 @@ const UVIndexChart = () => {
         {
           id: 'uv',
           data: data,
-          colorMap: UVColorMap,
+          gradient: UVGradient,
         },
       ]}
     >

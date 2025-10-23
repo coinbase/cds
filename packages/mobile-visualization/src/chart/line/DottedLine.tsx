@@ -5,19 +5,19 @@ import { LinearGradient, vec } from '@shopify/react-native-skia';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import { Path, type PathProps } from '../Path';
-import { type ColorMap, getColorMapScale, processColorMap } from '../utils/colorMap';
+import { getGradientScale, type Gradient, processGradient } from '../utils/gradient';
 
 export type DottedLineProps = SharedProps &
   Omit<PathProps, 'fill' | 'strokeWidth'> & {
     fill?: string;
     strokeWidth?: number;
     /**
-     * Color mapping configuration.
+     * Gradient configuration.
      * When provided, creates gradient or threshold-based coloring.
      */
-    colorMap?: ColorMap;
+    gradient?: Gradient;
     /**
-     * Series ID - used to retrieve colorMap scale from context.
+     * Series ID - used to retrieve gradient scale from context.
      */
     seriesId?: string;
     /**
@@ -28,7 +28,7 @@ export type DottedLineProps = SharedProps &
 
 /**
  * A customizable dotted line component.
- * Supports colorMap for gradient effects on the dots.
+ * Supports gradient for gradient effects on the dots.
  */
 export const DottedLine = memo<DottedLineProps>(
   ({
@@ -40,7 +40,7 @@ export const DottedLine = memo<DottedLineProps>(
     strokeOpacity = 1,
     strokeWidth = 2,
     vectorEffect = 'non-scaling-stroke',
-    colorMap,
+    gradient,
     seriesId,
     yAxisId,
     ...props
@@ -51,17 +51,17 @@ export const DottedLine = memo<DottedLineProps>(
     const xScale = context.getXScale();
     const yScale = context.getYScale(yAxisId);
 
-    // Process colorMap to get gradient configuration
+    // Process gradient to get gradient configuration
     const gradientConfig = useMemo(() => {
-      if (!colorMap || !xScale || !yScale) return null;
+      if (!gradient || !xScale || !yScale) return null;
 
-      const scale = getColorMapScale(colorMap, xScale, yScale);
+      const scale = getGradientScale(gradient, xScale, yScale);
       if (!scale) return null;
 
-      const processed = processColorMap(colorMap, scale);
+      const processed = processGradient(gradient, scale);
       if (!processed) return null;
 
-      const axisType = colorMap.axis ?? 'y';
+      const axisType = gradient.axis ?? 'y';
       const range = scale.range();
 
       // Determine gradient direction based on axis
@@ -74,7 +74,7 @@ export const DottedLine = memo<DottedLineProps>(
         colors: processed.colors,
         positions: processed.positions,
       };
-    }, [colorMap, xScale, yScale]);
+    }, [gradient, xScale, yScale]);
 
     const effectiveStroke = stroke ?? theme.color.bgLine;
 

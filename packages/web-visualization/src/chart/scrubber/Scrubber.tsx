@@ -17,8 +17,8 @@ import { useCartesianChartContext } from '../ChartProvider';
 import { ReferenceLine, type ReferenceLineProps } from '../line';
 import {
   type ChartScaleFunction,
-  evaluateColorMapAtValue,
-  getColorMapScale,
+  evaluateGradientAtValue,
+  getGradientScale,
   getPointOnScale,
   useScrubberContext,
 } from '../utils';
@@ -227,20 +227,20 @@ export const Scrubber = memo(
 
                 const resolvedLabel = typeof s.label === 'function' ? s.label(dataIndex) : s.label;
 
-                // Evaluate colorMap at the current dataY value if series has a colorMap
+                // Evaluate gradient at the current dataY value if series has a gradient
                 let evaluatedColor: string | undefined = s.color;
-                if (s.colorMap) {
+                if (s.gradient) {
                   const xScale = getXScale();
-                  const colorMapScale = getColorMapScale(s.colorMap, xScale, yScale);
-                  console.log('[Scrubber] Evaluating colorMap for beacon', {
+                  const gradientScale = getGradientScale(s.gradient, xScale, yScale);
+                  console.log('[Scrubber] Evaluating gradient for beacon', {
                     seriesId: s.id,
                     dataY,
-                    hasColorMapScale: !!colorMapScale,
-                    colorMap: s.colorMap,
+                    hasGradientScale: !!gradientScale,
+                    gradient: s.gradient,
                   });
-                  if (colorMapScale) {
-                    const colorResult = evaluateColorMapAtValue(s.colorMap, dataY, colorMapScale);
-                    console.log('[Scrubber] ColorMap evaluation result', {
+                  if (gradientScale) {
+                    const colorResult = evaluateGradientAtValue(s.gradient, dataY, gradientScale);
+                    console.log('[Scrubber] Gradient evaluation result', {
                       seriesId: s.id,
                       dataY,
                       colorResult,
@@ -249,7 +249,7 @@ export const Scrubber = memo(
                       evaluatedColor = colorResult;
                     }
                   } else {
-                    console.warn('[Scrubber] No colorMapScale available for beacon', {
+                    console.warn('[Scrubber] No gradientScale available for beacon', {
                       seriesId: s.id,
                     });
                   }

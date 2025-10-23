@@ -4,31 +4,30 @@ import { LinearGradient, vec } from '@shopify/react-native-skia';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import { Path, type PathProps } from '../Path';
-import { type ColorMap, processColorMap } from '../utils/colorMap';
+import { type Gradient, processGradient } from '../utils/gradient';
 
 import type { AreaComponentProps } from './Area';
 
 export type GradientAreaProps = Omit<PathProps, 'd' | 'fill' | 'fillOpacity'> &
   AreaComponentProps & {
     /**
-     * Color mapping configuration.
-     * Supports both continuous (smooth gradients) and discrete (threshold-based) coloring.
+     * Color gradient configuration.
+     * Supports smooth gradient transitions.
      * @example
-     * colorMap={{
-     *   type: 'continuous',
-     *   colors: [
-     *     { color: 'green', opacity: 0.4 },
-     *     { color: 'green', opacity: 0 }
+     * gradient={{
+     *   stops: [
+     *     { offset: 0, color: 'green', opacity: 0.4 },
+     *     { offset: 100, color: 'green', opacity: 0 }
      *   ]
      * }}
      */
-    colorMap?: ColorMap;
+    gradient?: Gradient;
   };
 
 /**
  * A customizable gradient area component which uses Path with Skia linear gradient shader.
  *
- * When no colorMap is provided, automatically creates an appropriate gradient:
+ * When no gradient is provided, automatically creates an appropriate gradient:
  * - For data crossing zero: Creates a diverging gradient with peak opacity at both extremes
  *   and baseline opacity at zero (or the specified baseline).
  * - For all-positive or all-negative data: Creates a simple gradient from baseline to peak.
@@ -38,7 +37,7 @@ export const GradientArea = memo<GradientAreaProps>(
     d,
     fill: fillProp,
     fillOpacity = 1,
-    colorMap,
+    gradient,
     seriesId,
     baseline,
     yAxisId,
@@ -50,19 +49,19 @@ export const GradientArea = memo<GradientAreaProps>(
 
     const fill = fillProp ?? theme.color.fgPrimary;
 
-    // Get colorMap scale from context if seriesId is provided and has a colorMap
-    const colorMapScale = seriesId ? context.getSeriesColorMapScale(seriesId) : undefined;
+    // Get gradient scale from context if seriesId is provided and has a gradient
+    const gradientScale = seriesId ? context.getSeriesGradientScale(seriesId) : undefined;
 
-    // Get scales directly for default gradient when no colorMap is defined
+    // Get scales directly for default gradient when no gradient is defined
     const xScale = context.getXScale();
     const yScale = context.getYScale(yAxisId);
 
     // Calculate gradient colors and positions
     const gradientConfig = useMemo(() => {
-      // If no colorMap is provided, create a default diverging gradient around baseline
-      let effectiveColorMap: ColorMap;
+      // If no gradient is provided, create a default diverging gradient around baseline
+      let effectiveGradient: Gradient;
 
-      if (!colorMap) {
+      if (!gradient) {
         // Get the y-scale to determine if we need a diverging gradient
         const scale = yScale;
         const yDomain = scale?.domain();
@@ -89,50 +88,53 @@ export const GradientArea = memo<GradientAreaProps>(
 
         // Create default gradient (diverging if data crosses zero)
         if (shouldDiverge) {
-          effectiveColorMap = {
-            type: 'continuous',
+          effectiveGradient = {
             axis: 'y',
-            colors: [
-              { color: fill, opacity: 0.4 },
-              { color: fill, opacity: 0 },
-              { color: fill, opacity: 0.4 },
-            ],
-            stops: yDomain ? [yDomain[0], baselineValue, yDomain[1]] : undefined,
+            stops: yDomain
+              ? [
+                  { offset: yDomain[0], color: fill, opacity: 0.4 },
+                  { offset: baselineValue, color: fill, opacity: 0 },
+                  { offset: yDomain[1], color: fill, opacity: 0.4 },
+                ]
+              : [
+                  { offset: 0, color: fill, opacity: 0.4 },
+                  { offset: 50, color: fill, opacity: 0 },
+                  { offset: 100, color: fill, opacity: 0.4 },
+                ],
           };
         } else {
           // Simple gradient from baseline to peak
-          effectiveColorMap = {
-            type: 'continuous',
+          effectiveGradient = {
             axis: 'y',
-            colors: [
-              { color: fill, opacity: 0 },
-              { color: fill, opacity: 0.4 },
+            stops: [
+              { offset: 0, color: fill, opacity: 0 },
+              { offset: 100, color: fill, opacity: 0.4 },
             ],
           };
         }
       } else {
-        effectiveColorMap = colorMap;
+        effectiveGradient = gradient;
       }
 
-      // Use colorMapScale if available (from series colorMap), otherwise calculate for default gradient
-      let scale = colorMapScale;
-      if (!scale && !colorMap) {
+      // Use gradientScale if available (from series gradient), otherwise calculate for default gradient
+      let scale = gradientScale;
+      if (!scale && !gradient) {
         // For default gradient, get the appropriate scale based on axis
-        const axis = effectiveColorMap.axis ?? 'y';
+        const axis = effectiveGradient.axis ?? 'y';
         scale = axis === 'x' ? xScale : yScale;
       }
 
       if (!scale) {
-        console.warn('ColorMap requires a valid numeric scale');
+        console.warn('Gradient requires a valid numeric scale');
         return;
       }
 
-      const processed = processColorMap(effectiveColorMap, scale);
+      const processed = processGradient(effectiveGradient, scale);
       if (!processed) {
         return;
       }
 
-      const axisType = effectiveColorMap.axis ?? 'y';
+      const axisType = effectiveGradient.axis ?? 'y';
       const range = scale.range();
 
       // Apply fillOpacity to all colors if fillOpacity < 1
@@ -148,7 +150,7 @@ export const GradientArea = memo<GradientAreaProps>(
         colors,
         positions: processed.positions,
       };
-    }, [colorMap, fill, baseline, colorMapScale, xScale, yScale]);
+    }, [gradient, fill, baseline, gradientScale, xScale, yScale]);
 
     if (!gradientConfig) return;
 

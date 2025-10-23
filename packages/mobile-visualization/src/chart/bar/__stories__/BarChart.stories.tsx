@@ -322,13 +322,12 @@ const YAxisContinuousColorMap = () => {
           id: 'temperature',
           data: [12, 25, 38, 52, 45, 30, 18],
           // Continuous gradient from blue (cold) to red (hot)
-          colorMap: {
-            type: 'continuous',
+          gradient: {
             axis: 'y',
-            colors: [
-              theme.color.accentBoldGreen,
-              theme.color.accentBoldYellow,
-              theme.color.accentBoldRed,
+            stops: ({ min, max }) => [
+              { offset: min, color: theme.color.accentBoldGreen },
+              { offset: (min + max) / 2, color: theme.color.accentBoldYellow },
+              { offset: max, color: theme.color.accentBoldRed },
             ],
           },
         },
@@ -356,16 +355,16 @@ const YAxisDiscreteColorMap = () => {
         {
           id: 'temperature',
           data: [12, 25, 38, 52, 45, 30, 18],
-          // Discrete colors based on performance thresholds
-          colorMap: {
-            type: 'discrete',
+          // Hard transitions based on performance thresholds
+          gradient: {
             axis: 'y',
-            colors: [
-              theme.color.accentBoldGreen,
-              theme.color.accentBoldYellow,
-              theme.color.accentBoldRed,
-            ],
-            stops: [20, 40, 60], // Red: <20, Yellow: 20-40, Green: >40
+            stops: [
+              { offset: 20, color: theme.color.accentBoldGreen },
+              { offset: 20, color: theme.color.accentBoldYellow },
+              { offset: 40, color: theme.color.accentBoldYellow },
+              { offset: 40, color: theme.color.accentBoldRed },
+              { offset: 60, color: theme.color.accentBoldRed },
+            ], // Hard transitions at 20, 40
           },
         },
       ]}
@@ -393,10 +392,12 @@ const XAxisContinuousColorMap = () => {
           id: 'weekly-trend',
           data: [45, 52, 38, 45, 48, 50, 55],
           // Gradient from left (start of week) to right (end of week)
-          colorMap: {
-            type: 'continuous',
+          gradient: {
             axis: 'x',
-            colors: [theme.color.accentBoldPurple, theme.color.accentBoldBlue],
+            stops: ({ min, max }) => [
+              { offset: min, color: theme.color.accentBoldPurple },
+              { offset: max, color: theme.color.accentBoldBlue },
+            ],
           },
         },
       ]}
@@ -423,15 +424,13 @@ const XAxisDiscreteColorMap = () => {
         {
           id: 'weekly-trend',
           data: [45, 52, 38, 45, 48, 50, 55],
-          // Discrete color change from purple to blue at midweek
-          colorMap: {
-            type: 'discrete',
+          // Hard color transition from purple to blue at midweek
+          gradient: {
             axis: 'x',
-            colors: [
-              theme.color.accentBoldPurple, // First half of week
-              theme.color.accentBoldBlue, // Second half of week
+            stops: [
+              { offset: 4, color: theme.color.accentBoldPurple }, // First half of week
+              { offset: 4, color: theme.color.accentBoldBlue }, // Second half of week - hard transition at index 4 (Thursday)
             ],
-            stops: [4], // Change color at index 4 (Thursday)
           },
         },
       ]}
@@ -459,16 +458,16 @@ const XAxisMultiSegmentColorMap = () => {
           id: 'quarters',
           data: [120, 135, 142, 128, 145, 158, 162, 155, 168, 175, 182, 190],
           // Different color for each quarter
-          colorMap: {
-            type: 'discrete',
+          gradient: {
             axis: 'x',
-            colors: [
-              theme.color.accentBoldBlue, // Q1 (Jan-Mar)
-              theme.color.accentBoldGreen, // Q2 (Apr-Jun)
-              theme.color.accentBoldYellow, // Q3 (Jul-Sep)
-              theme.color.accentBoldPurple, // Q4 (Oct-Dec)
-            ],
-            stops: [3, 6, 9], // Change colors at indices 3, 6, 9
+            stops: [
+              { offset: 3, color: theme.color.accentBoldBlue }, // Q1 (Jan-Mar)
+              { offset: 3, color: theme.color.accentBoldGreen }, // Q2 (Apr-Jun)
+              { offset: 6, color: theme.color.accentBoldGreen },
+              { offset: 6, color: theme.color.accentBoldYellow }, // Q3 (Jul-Sep)
+              { offset: 9, color: theme.color.accentBoldYellow },
+              { offset: 9, color: theme.color.accentBoldPurple }, // Q4 (Oct-Dec)
+            ], // Hard transitions at indices 3, 6, 9
           },
         },
       ]}
@@ -496,12 +495,11 @@ const ColorMapWithOpacity = () => {
           id: 'confidence',
           data: [25, 35, 45, 55, 65, 75, 85],
           // Gradient with opacity changes
-          colorMap: {
-            type: 'continuous',
+          gradient: {
             axis: 'y',
-            colors: [
-              { color: theme.color.accentBoldBlue, opacity: 0 }, // Low values - more transparent
-              { color: theme.color.accentBoldBlue, opacity: 1.0 }, // High values - more opaque
+            stops: ({ min, max }) => [
+              { offset: min, color: theme.color.accentBoldBlue, opacity: 0 }, // Low values - more transparent
+              { offset: max, color: theme.color.accentBoldBlue, opacity: 1.0 }, // High values - more opaque
             ],
           },
         },

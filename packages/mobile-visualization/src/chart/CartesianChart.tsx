@@ -6,7 +6,7 @@ import type { BoxBaseProps, BoxProps } from '@coinbase/cds-mobile/layout';
 import { Box } from '@coinbase/cds-mobile/layout';
 
 import { ScrubberProvider, type ScrubberProviderProps } from './scrubber/ScrubberProvider';
-import { getColorMapScale } from './utils/colorMap';
+import { getGradientScale } from './utils/gradient';
 import { ChartCanvas } from './ChartCanvas';
 import { CartesianChartProvider } from './ChartProvider';
 import {
@@ -288,14 +288,14 @@ export const CartesianChart = memo(
         [renderedAxes, chartRect, userInset],
       );
 
-      const getSeriesColorMapScale = useCallback(
+      const getSeriesGradientScale = useCallback(
         (seriesId: string) => {
           const targetSeries = series?.find((s) => s.id === seriesId);
-          if (!targetSeries?.colorMap) return undefined;
+          if (!targetSeries?.gradient) return undefined;
 
           const yScale = yScales.get(targetSeries.yAxisId ?? defaultAxisId);
 
-          return getColorMapScale(targetSeries.colorMap, xScale, yScale);
+          return getGradientScale(targetSeries.gradient, xScale, yScale);
         },
         [series, xScale, yScales],
       );
@@ -316,7 +316,7 @@ export const CartesianChart = memo(
           registerAxis,
           unregisterAxis,
           getAxisBounds,
-          getSeriesColorMapScale,
+          getSeriesGradientScale,
         }),
         [
           series,
@@ -333,7 +333,7 @@ export const CartesianChart = memo(
           registerAxis,
           unregisterAxis,
           getAxisBounds,
-          getSeriesColorMapScale,
+          getSeriesGradientScale,
         ],
       );
 

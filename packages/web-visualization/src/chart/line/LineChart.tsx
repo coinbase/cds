@@ -99,7 +99,7 @@ export const LineChart = memo(
             color: s.color,
             yAxisId: s.yAxisId,
             stackId: s.stackId,
-            colorMap: s.colorMap,
+            gradient: s.gradient,
           }),
         );
       }, [series]);

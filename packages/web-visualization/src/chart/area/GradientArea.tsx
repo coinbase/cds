@@ -1,9 +1,9 @@
 import { memo, useId, useMemo } from 'react';
 
 import { useCartesianChartContext } from '../ChartProvider';
-import { Gradient } from '../gradient';
+import { Gradient as GradientDef } from '../gradient';
 import { Path, type PathProps } from '../Path';
-import { type ColorMap, getColorMapScale, processColorMap } from '../utils';
+import { getGradientScale, type Gradient, processGradient } from '../utils';
 
 import type { AreaComponentProps } from './Area';
 
@@ -30,13 +30,13 @@ export type GradientAreaProps = Omit<PathProps, 'd' | 'fill' | 'fillOpacity'> &
      */
     baselineOpacity?: number;
     /**
-     * Color mapping configuration.
-     * When provided, overrides peakColor/baselineColor and creates a colorMap-based gradient.
+     * Color gradient configuration.
+     * When provided, overrides peakColor/baselineColor and creates a gradient-based gradient.
      * When not provided, creates an automatic diverging gradient around the baseline.
      */
-    colorMap?: ColorMap;
+    gradient?: Gradient;
     /**
-     * Series ID - used to retrieve colorMap from series if not provided directly.
+     * Series ID - used to retrieve gradient from series if not provided directly.
      */
     seriesId?: string;
   };
@@ -44,7 +44,7 @@ export type GradientAreaProps = Omit<PathProps, 'd' | 'fill' | 'fillOpacity'> &
 /**
  * A customizable gradient area component which uses Path with SVG linearGradient.
  *
- * When no colorMap is provided, automatically creates an appropriate gradient:
+ * When no gradient is provided, automatically creates an appropriate gradient:
  * - For data crossing zero: Creates a diverging gradient with peak opacity at both extremes
  *   and baseline opacity at zero (or the specified baseline).
  * - For all-positive or all-negative data: Creates a simple gradient from baseline to peak.
@@ -60,16 +60,16 @@ export const GradientArea = memo<GradientAreaProps>(
     baselineOpacity = 0,
     baseline,
     yAxisId,
-    colorMap: colorMapProp,
+    gradient: gradientProp,
     seriesId,
     ...pathProps
   }) => {
     const context = useCartesianChartContext();
     const patternId = useId();
 
-    // Get colorMap from series if seriesId is provided and colorMap is not
+    // Get gradient from series if seriesId is provided and gradient is not
     const targetSeries = seriesId ? context.getSeries(seriesId) : undefined;
-    const seriesColorMap = targetSeries?.colorMap;
+    const seriesGradient = targetSeries?.gradient;
 
     // Get scales and drawing area
     const xScale = context.getXScale();
@@ -78,20 +78,20 @@ export const GradientArea = memo<GradientAreaProps>(
     const yDomain = yScale?.domain();
     const drawingArea = context.drawingArea;
 
-    // Calculate gradient configuration from colorMap or create default
+    // Calculate gradient configuration from gradient or create default
     const gradientConfig = useMemo(() => {
-      // Use explicit colorMap prop, or fall back to series colorMap, or create default
-      let effectiveColorMap: ColorMap | undefined = colorMapProp ?? seriesColorMap;
+      // Use explicit gradient prop, or fall back to series gradient, or create default
+      let effectiveGradient: Gradient | undefined = gradientProp ?? seriesGradient;
 
       console.log('[GradientArea] Starting gradient config', {
         seriesId,
-        hasColorMapProp: !!colorMapProp,
-        hasSeriesColorMap: !!seriesColorMap,
+        hasGradientProp: !!gradientProp,
+        hasSeriesGradient: !!seriesGradient,
         hasYScale: !!yScale,
         yDomain,
       });
 
-      if (!effectiveColorMap && yScale && yDomain) {
+      if (!effectiveGradient && yScale && yDomain) {
         // Create default diverging gradient around baseline
         const [minValue, maxValue] = yDomain;
 
@@ -113,80 +113,81 @@ export const GradientArea = memo<GradientAreaProps>(
         const effectivePeakColor = peakColor ?? fill;
         const effectiveBaselineColor = baselineColor ?? fill;
 
-        // Create default gradient using colorMap
+        // Create default gradient using gradient
         if (shouldDiverge) {
-          effectiveColorMap = {
-            type: 'continuous',
+          effectiveGradient = {
             axis: 'y',
-            colors: [
-              { color: effectivePeakColor, opacity: peakOpacity },
-              { color: effectiveBaselineColor, opacity: baselineOpacity },
-              { color: effectivePeakColor, opacity: peakOpacity },
+            stops: [
+              { offset: minValue, color: effectivePeakColor, opacity: peakOpacity },
+              { offset: baselineValue, color: effectiveBaselineColor, opacity: baselineOpacity },
+              { offset: maxValue, color: effectivePeakColor, opacity: peakOpacity },
             ],
-            stops: [minValue, baselineValue, maxValue],
           };
         } else {
           // Simple gradient from baseline to peak
-          effectiveColorMap = {
-            type: 'continuous',
+          effectiveGradient = {
             axis: 'y',
-            colors: [
-              { color: effectiveBaselineColor, opacity: baselineOpacity },
-              { color: effectivePeakColor, opacity: peakOpacity },
+            stops: [
+              { offset: baselineValue, color: effectiveBaselineColor, opacity: baselineOpacity },
+              {
+                offset: minValue >= 0 ? maxValue : minValue,
+                color: effectivePeakColor,
+                opacity: peakOpacity,
+              },
             ],
           };
         }
 
-        console.log('[GradientArea] Created default colorMap', {
+        console.log('[GradientArea] Created default gradient', {
           seriesId,
           shouldDiverge,
           baselineValue,
-          effectiveColorMap,
+          effectiveGradient,
         });
       }
 
-      if (!effectiveColorMap) {
-        console.warn('[GradientArea] No effective colorMap', { seriesId });
+      if (!effectiveGradient) {
+        console.warn('[GradientArea] No effective gradient', { seriesId });
         return null;
       }
 
-      console.log('[GradientArea] Processing colorMap', {
+      console.log('[GradientArea] Processing gradient', {
         seriesId,
-        colorMap: effectiveColorMap,
+        gradient: effectiveGradient,
         hasXScale: !!xScale,
         hasYScale: !!yScale,
       });
 
-      const scale = getColorMapScale(effectiveColorMap, xScale, yScale);
+      const scale = getGradientScale(effectiveGradient, xScale, yScale);
       if (!scale) {
-        console.warn('[GradientArea] ColorMap requires a valid numeric or categorical scale', {
+        console.warn('[GradientArea] Gradient requires a valid numeric or categorical scale', {
           seriesId,
-          colorMap: effectiveColorMap,
+          gradient: effectiveGradient,
         });
         return null;
       }
 
-      console.log('[GradientArea] ColorMap scale obtained', {
+      console.log('[GradientArea] Gradient scale obtained', {
         seriesId,
         scaleDomain: scale.domain(),
         scaleRange: scale.range(),
       });
 
-      const processed = processColorMap(effectiveColorMap, scale);
+      const processed = processGradient(effectiveGradient, scale);
       if (!processed) {
-        console.warn('[GradientArea] Failed to process colorMap', { seriesId });
+        console.warn('[GradientArea] Failed to process gradient', { seriesId });
         return null;
       }
 
-      console.log('[GradientArea] ColorMap processed successfully', {
+      console.log('[GradientArea] Gradient processed successfully', {
         seriesId,
         config: processed,
       });
 
       return processed;
     }, [
-      colorMapProp,
-      seriesColorMap,
+      gradientProp,
+      seriesGradient,
       yScale,
       yDomain,
       baseline,
@@ -210,7 +211,7 @@ export const GradientArea = memo<GradientAreaProps>(
     return (
       <>
         <defs>
-          <Gradient
+          <GradientDef
             config={gradientConfig}
             direction={gradientDirection}
             drawingArea={drawingArea}

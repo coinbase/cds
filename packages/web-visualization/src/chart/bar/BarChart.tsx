@@ -100,7 +100,7 @@ export const BarChart = memo(
             color: s.color,
             yAxisId: s.yAxisId,
             stackId: s.stackId,
-            colorMap: s.colorMap, // Include colorMap for bar color evaluation
+            gradient: s.gradient, // Include gradient for bar color evaluation
           }),
         );
       }, [series]);

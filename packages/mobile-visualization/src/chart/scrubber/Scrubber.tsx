@@ -173,7 +173,7 @@ export const Scrubber = memo(
                   x: dataX,
                   y: dataY,
                   targetSeries: s,
-                  colorMap: s.colorMap,
+                  gradient: s.gradient,
                 };
               }
             })
@@ -247,9 +247,9 @@ export const Scrubber = memo(
                 <BeaconComponent
                   ref={createScrubberBeaconRef(beacon.targetSeries.id)}
                   color={beacon.targetSeries?.color}
-                  colorMap={beacon.colorMap}
                   dataX={beacon.x}
                   dataY={beacon.y}
+                  gradient={beacon.gradient}
                   idlePulse={idlePulse}
                   seriesId={beacon.targetSeries.id}
                   testID={testID ? `${testID}-${beacon.targetSeries.id}-dot` : undefined}

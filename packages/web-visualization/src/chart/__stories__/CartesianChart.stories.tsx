@@ -15,7 +15,7 @@ import { useCartesianChartContext } from '../ChartProvider';
 import { ReferenceLine, SolidLine, type SolidLineProps } from '../line';
 import { Line } from '../line/Line';
 import { LineChart } from '../line/LineChart';
-import { type ColorMap, isCategoricalScale } from '../utils';
+import { type Gradient, isCategoricalScale } from '../utils';
 import {
   BarPlot,
   CartesianChart,
@@ -588,11 +588,15 @@ export const Miscellaneous = () => {
   );
 };
 
-const UVColorMap: ColorMap = {
-  type: 'continuous',
+const UVGradient: Gradient = {
   axis: 'y',
-  colors: ['green', 'yellow', 'orange', 'red', 'purple'],
-  stops: [0, 3, 5, 8, 10],
+  stops: [
+    { offset: 0, color: 'green' },
+    { offset: 3, color: 'yellow' },
+    { offset: 5, color: 'orange' },
+    { offset: 8, color: 'red' },
+    { offset: 10, color: 'purple' },
+  ],
 };
 
 const PreviousData = memo(
@@ -686,7 +690,7 @@ const UVIndexChart = () => {
         {
           id: 'uv',
           data: data,
-          colorMap: UVColorMap,
+          gradient: UVGradient,
         },
       ]}
     >

@@ -2,21 +2,21 @@ import { memo, type SVGProps, useId, useMemo } from 'react';
 import type { SharedProps } from '@coinbase/cds-common/types';
 
 import { useCartesianChartContext } from '../ChartProvider';
-import { Gradient } from '../gradient/Gradient';
+import { Gradient as GradientDef } from '../gradient/Gradient';
 import { Path, type PathProps } from '../Path';
-import { getColorMapScale, processColorMap } from '../utils/colorMap';
+import { getGradientScale, type Gradient, processGradient } from '../utils/gradient';
 
 import type { LineComponentProps } from './Line';
 
 export type SolidLineProps = SharedProps &
   Omit<PathProps, 'fill' | 'strokeWidth'> &
-  Pick<LineComponentProps, 'strokeWidth' | 'colorMap' | 'seriesId' | 'yAxisId'> & {
+  Pick<LineComponentProps, 'strokeWidth' | 'gradient' | 'seriesId' | 'yAxisId'> & {
     fill?: SVGProps<SVGPathElement>['fill'];
   };
 
 /**
  * A customizable solid line component.
- * Supports colorMap for gradient effects.
+ * Supports gradient for gradient effects.
  */
 export const SolidLine = memo<SolidLineProps>(
   ({
@@ -26,7 +26,7 @@ export const SolidLine = memo<SolidLineProps>(
     strokeLinejoin = 'round',
     strokeOpacity = 1,
     strokeWidth = 2,
-    colorMap,
+    gradient,
     seriesId,
     yAxisId,
     ...props
@@ -38,24 +38,24 @@ export const SolidLine = memo<SolidLineProps>(
     const yScale = context.getYScale(yAxisId);
     const drawingArea = context.drawingArea;
 
-    // Process colorMap to get gradient configuration
+    // Process gradient to get gradient configuration
     const gradientConfig = useMemo(() => {
-      if (!colorMap || !xScale || !yScale) return null;
+      if (!gradient || !xScale || !yScale) return null;
 
-      const scale = getColorMapScale(colorMap, xScale, yScale);
+      const scale = getGradientScale(gradient, xScale, yScale);
       if (!scale) return null;
 
-      return processColorMap(colorMap, scale);
-    }, [colorMap, xScale, yScale]);
+      return processGradient(gradient, scale);
+    }, [gradient, xScale, yScale]);
 
-    // Determine gradient direction based on colorMap axis
-    const gradientDirection = colorMap?.axis === 'x' ? 'horizontal' : 'vertical';
+    // Determine gradient direction based on gradient axis
+    const gradientDirection = gradient?.axis === 'x' ? 'horizontal' : 'vertical';
 
     return (
       <>
         {gradientConfig && (
           <defs>
-            <Gradient
+            <GradientDef
               config={gradientConfig}
               direction={gradientDirection}
               drawingArea={drawingArea}

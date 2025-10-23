@@ -6,7 +6,7 @@ import { Area, type AreaComponent } from '../area/Area';
 import { useCartesianChartContext } from '../ChartProvider';
 import { Point, type PointConfig, type RenderPointsParams } from '../Point';
 import { type ChartPathCurveType, getLinePath } from '../utils';
-import { type ColorMap, evaluateColorMapAtValue, getColorMapScale } from '../utils/colorMap';
+import { evaluateGradientAtValue, getGradientScale, type Gradient } from '../utils/gradient';
 
 import { DottedLine } from './DottedLine';
 import { GradientLine } from './GradientLine';
@@ -20,7 +20,7 @@ export type LineComponentProps = {
   testID?: string;
   clipPath?: string;
   /**
-   * Series ID - used to retrieve colorMap scale from context.
+   * Series ID - used to retrieve gradient scale from context.
    */
   seriesId?: string;
   /**
@@ -32,7 +32,7 @@ export type LineComponentProps = {
    * Color mapping configuration.
    * When provided, creates gradient or threshold-based coloring.
    */
-  colorMap?: ColorMap;
+  gradient?: Gradient;
 };
 
 export type LineComponent = React.FC<LineComponentProps>;
@@ -127,7 +127,7 @@ export const Line = memo<LineProps>(
     const { getSeries, getSeriesData, getXScale, getYScale, getXAxis } = useCartesianChartContext();
 
     const matchedSeries = getSeries(seriesId);
-    const seriesColorMap = matchedSeries?.colorMap;
+    const seriesGradient = matchedSeries?.gradient;
 
     const sourceData = useMemo(() => {
       return getSeriesData(seriesId) || null;
@@ -209,10 +209,10 @@ export const Line = memo<LineProps>(
         : null;
     }, [xAxis?.data]);
 
-    const colorMapScale = useMemo(() => {
-      if (!seriesColorMap || !xScale || !yScale) return null;
-      return getColorMapScale(seriesColorMap, xScale, yScale);
-    }, [seriesColorMap, xScale, yScale]);
+    const gradientScale = useMemo(() => {
+      if (!seriesGradient || !xScale || !yScale) return null;
+      return getGradientScale(seriesGradient, xScale, yScale);
+    }, [seriesGradient, xScale, yScale]);
 
     if (!xScale || !yScale) return;
 
@@ -222,18 +222,18 @@ export const Line = memo<LineProps>(
           <Area
             AreaComponent={AreaComponent}
             baseline={areaBaseline}
-            colorMap={seriesColorMap}
             connectNulls={connectNulls}
             curve={curve}
             fill={stroke}
             fillOpacity={opacity}
+            gradient={seriesGradient}
             seriesId={seriesId}
             type={areaType}
           />
         )}
         <LineComponent
-          colorMap={seriesColorMap}
           d={path}
+          gradient={seriesGradient}
           seriesId={seriesId}
           stroke={stroke}
           strokeOpacity={opacity}
@@ -261,27 +261,26 @@ export const Line = memo<LineProps>(
 
             const pointConfig = pointResult === true ? {} : pointResult;
 
-            // Evaluate colors from colorMap if available (only if not explicitly set)
+            // Evaluate colors from gradient if available (only if not explicitly set)
             let pointFill = pointConfig.fill ?? stroke;
             let pointStroke = pointConfig.stroke;
 
-            if (colorMapScale && seriesColorMap) {
-              // Use the appropriate data value based on colorMap axis
-              const axis = seriesColorMap.axis ?? 'y';
+            if (gradientScale && seriesGradient) {
+              // Use the appropriate data value based on gradient axis
+              const axis = seriesGradient.axis ?? 'y';
               const dataValue = axis === 'x' ? xValue : value;
 
-              const evaluatedColor = evaluateColorMapAtValue(
-                seriesColorMap,
+              const evaluatedColor = evaluateGradientAtValue(
+                seriesGradient,
                 dataValue,
-                colorMapScale,
-                true,
+                gradientScale,
               );
               if (evaluatedColor) {
-                // Apply colorMap color to fill if not explicitly set
+                // Apply gradient color to fill if not explicitly set
                 if (!pointConfig.fill) {
                   pointFill = evaluatedColor;
                 }
-                // Apply colorMap color to stroke if not explicitly set
+                // Apply gradient color to stroke if not explicitly set
                 if (!pointConfig.stroke) {
                   pointStroke = evaluatedColor;
                 }

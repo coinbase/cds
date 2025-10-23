@@ -2,9 +2,9 @@ import { memo, useId, useMemo } from 'react';
 import type { SharedProps } from '@coinbase/cds-common/types';
 
 import { useCartesianChartContext } from '../ChartProvider';
-import { Gradient } from '../gradient';
+import { Gradient as GradientDef } from '../gradient';
 import { Path, type PathProps } from '../Path';
-import { type ColorMap, getColorMapScale, processColorMap } from '../utils';
+import { getGradientScale, type Gradient, processGradient } from '../utils';
 
 import type { LineComponentProps } from './Line';
 
@@ -42,19 +42,19 @@ export type GradientLineProps = SharedProps &
      */
     endOpacity?: number;
     /**
-     * Color mapping configuration.
-     * When provided, creates gradient or threshold-based coloring.
+     * Color gradient configuration.
+     * When provided, creates gradient-based coloring.
      * Takes precedence over startColor/endColor props.
      */
-    colorMap?: ColorMap;
+    gradient?: Gradient;
     /**
-     * Series ID to get the colorMap from if not provided directly.
-     * Used to retrieve the colorMap scale from context.
+     * Series ID to get the gradient from if not provided directly.
+     * Used to retrieve the gradient scale from context.
      */
     seriesId?: string;
     /**
      * Y-axis ID to use for calculating color positions.
-     * Only needed when using colorMap with multiple y-axes.
+     * Only needed when using gradient with multiple y-axes.
      */
     yAxisId?: string;
   };
@@ -74,7 +74,7 @@ export const GradientLine = memo<GradientLineProps>(
     strokeLinecap = 'round',
     strokeLinejoin = 'round',
     strokeWidth = 2,
-    colorMap,
+    gradient,
     seriesId,
     yAxisId,
     ...props
@@ -82,70 +82,70 @@ export const GradientLine = memo<GradientLineProps>(
     const gradientId = useId();
     const context = useCartesianChartContext();
 
-    // Get colorMap from series if seriesId is provided and colorMap is not
+    // Get gradient from series if seriesId is provided and gradient is not
     const targetSeries = seriesId ? context.getSeries(seriesId) : undefined;
-    const effectiveColorMap = colorMap ?? targetSeries?.colorMap;
+    const effectiveGradient = gradient ?? targetSeries?.gradient;
     const effectiveYAxisId = yAxisId ?? targetSeries?.yAxisId;
 
-    // Get scales and drawing area for colorMap processing
+    // Get scales and drawing area for gradient processing
     const xScale = context.getXScale();
     const yScale = context.getYScale(effectiveYAxisId);
     const drawingArea = context.drawingArea;
 
-    // Calculate gradient configuration from colorMap
+    // Calculate gradient configuration from gradient
     const gradientConfig = useMemo(() => {
-      if (!effectiveColorMap) {
+      if (!effectiveGradient) {
         return null;
       }
 
-      console.log('[GradientLine] Processing colorMap', {
+      console.log('[GradientLine] Processing gradient', {
         seriesId,
-        colorMap: effectiveColorMap,
+        gradient: effectiveGradient,
         hasXScale: !!xScale,
         hasYScale: !!yScale,
         xScaleDomain: xScale?.domain(),
         yScaleDomain: yScale?.domain(),
       });
 
-      const scale = getColorMapScale(effectiveColorMap, xScale, yScale);
+      const scale = getGradientScale(effectiveGradient, xScale, yScale);
       if (!scale) {
-        console.warn('[GradientLine] ColorMap requires a valid numeric or categorical scale', {
+        console.warn('[GradientLine] Gradient requires a valid numeric or categorical scale', {
           seriesId,
-          colorMap: effectiveColorMap,
+          gradient: effectiveGradient,
           hasXScale: !!xScale,
           hasYScale: !!yScale,
         });
         return null;
       }
 
-      console.log('[GradientLine] ColorMap scale obtained', {
+      console.log('[GradientLine] Gradient scale obtained', {
         seriesId,
         scaleDomain: scale.domain(),
         scaleRange: scale.range(),
       });
 
-      const processed = processColorMap(effectiveColorMap, scale);
+      const processed = processGradient(effectiveGradient, scale);
       if (!processed) {
-        console.warn('[GradientLine] Failed to process colorMap', { seriesId });
+        console.warn('[GradientLine] Failed to process gradient', { seriesId });
         return null;
       }
 
-      console.log('[GradientLine] ColorMap processed successfully', {
+      console.log('[GradientLine] Gradient processed successfully', {
         seriesId,
         config: processed,
       });
 
       return processed;
-    }, [effectiveColorMap, xScale, yScale, seriesId]);
+    }, [effectiveGradient, xScale, yScale, seriesId]);
 
-    // Determine gradient direction based on colorMap axis
-    const gradientDirection = effectiveColorMap?.axis === 'x' ? 'horizontal' : 'vertical';
+    // Determine gradient direction based on gradient axis
+    const gradientDirection = effectiveGradient?.axis === 'x' ? 'horizontal' : 'vertical';
 
     return (
       <>
         <defs>
           {gradientConfig ? (
-            <Gradient
+            <GradientDef
               config={gradientConfig}
               direction={gradientDirection}
               drawingArea={drawingArea}
