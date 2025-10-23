@@ -196,7 +196,7 @@ export const DefaultSelectControlComponent = memo(
             accessibilityRole="button"
             disabled={disabled}
             onPress={() => setOpen((s) => !s)}
-            style={[{ flexGrow: 1 }, style, styles?.controlInputNode]}
+            style={[{ flexGrow: 1 }, styles?.controlInputNode]}
             {...props}
           >
             <HStack
@@ -233,7 +233,6 @@ export const DefaultSelectControlComponent = memo(
           accessibilityHint,
           accessibilityLabel,
           disabled,
-          style,
           styles?.controlInputNode,
           styles?.controlStartNode,
           styles?.controlValueNode,

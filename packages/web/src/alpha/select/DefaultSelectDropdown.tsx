@@ -4,6 +4,7 @@ import { AnimatePresence, m as motion } from 'framer-motion';
 import { Button } from '../../buttons';
 import { Checkbox } from '../../controls/Checkbox';
 import { Radio } from '../../controls/Radio';
+import { cx } from '../../cx';
 import { Box } from '../../layout/Box';
 import { FocusTrap } from '../../overlays/FocusTrap';
 
@@ -35,7 +36,9 @@ const DefaultSelectDropdownComponent = memo(
         setOpen,
         controlRef,
         disabled,
+        style,
         styles,
+        className,
         classNames,
         compact,
         label,
@@ -58,6 +61,19 @@ const DefaultSelectDropdownComponent = memo(
       type ValueType = Type extends 'multi'
         ? SelectOptionValue | SelectOptionValue[] | null
         : SelectOptionValue | null;
+
+      const [containerWidth, setContainerWidth] = useState<number | null>(null);
+      const dropdownStyles = useMemo(
+        () => ({
+          width:
+            containerWidth !== null
+              ? containerWidth
+              : controlRef.current?.getBoundingClientRect().width,
+          ...style,
+          ...styles?.root,
+        }),
+        [styles?.root, containerWidth, controlRef, style],
+      );
 
       const optionStyles = useMemo(
         () => ({
@@ -135,7 +151,6 @@ const DefaultSelectDropdownComponent = memo(
 
       const handleEscPress = useCallback(() => setOpen(false), [setOpen]);
 
-      const [containerWidth, setContainerWidth] = useState<number | null>(null);
       useEffect(() => {
         if (!controlRef.current) return;
         const resizeObserver = new ResizeObserver((entries) => {
@@ -144,17 +159,6 @@ const DefaultSelectDropdownComponent = memo(
         resizeObserver.observe(controlRef.current);
         return () => resizeObserver.disconnect();
       }, [controlRef]);
-
-      const dropdownStyles = useMemo(
-        () => ({
-          width:
-            containerWidth !== null
-              ? containerWidth
-              : controlRef.current?.getBoundingClientRect().width,
-          ...styles?.root,
-        }),
-        [styles?.root, containerWidth, controlRef],
-      );
 
       const indeterminate = !isAllOptionsSelected && isSomeOptionsSelected ? true : false;
 
@@ -233,7 +237,7 @@ const DefaultSelectDropdownComponent = memo(
               ref={ref}
               aria-label={accessibilityLabel}
               aria-multiselectable={isMultiSelect}
-              className={classNames?.root}
+              className={cx(classNames?.root, className)}
               display="block"
               role={accessibilityRoles?.dropdown}
               style={dropdownStyles}

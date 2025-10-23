@@ -33,6 +33,7 @@ const DefaultSelectDropdownComponent = memo(
         setOpen,
         controlRef,
         disabled,
+        style,
         styles,
         compact,
         label,
@@ -55,6 +56,7 @@ const DefaultSelectDropdownComponent = memo(
         ? SelectOptionValue | SelectOptionValue[] | null
         : SelectOptionValue | null;
 
+      const dropdownStyles = useMemo(() => [style, styles?.root], [styles?.root, style]);
       const optionStyles = useMemo(
         () => ({
           optionCell: styles?.optionCell,
@@ -174,7 +176,7 @@ const DefaultSelectDropdownComponent = memo(
           disableCapturePanGestureToDismiss={true}
           onCloseComplete={() => setOpen(false)}
           onDismiss={() => setOpen(false)}
-          style={styles?.root}
+          style={dropdownStyles}
           title={label}
           verticalDrawerPercentageOfView={0.9}
         >

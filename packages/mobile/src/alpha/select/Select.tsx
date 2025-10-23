@@ -208,7 +208,7 @@ export type SelectDropdownProps<
     hideSelectAll?: boolean;
     /** Reference to the control element for positioning */
     controlRef: React.MutableRefObject<any>;
-    /** Style object for the dropdown */
+    /** Inline styles for the dropdown */
     style?: StyleProp<ViewStyle>;
     /** Custom styles for dropdown elements */
     styles?: {

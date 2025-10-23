@@ -64,6 +64,8 @@ export type SelectOptionProps<
     accessibilityRole?: string;
     /** Whether to use compact styling for the option */
     compact?: boolean;
+    /** Inline styles for the option */
+    style?: React.CSSProperties;
     /** Custom styles for different parts of the option */
     styles?: {
       /** Styles for the option cell element */
@@ -77,6 +79,8 @@ export type SelectOptionProps<
       /** Styles for the select all divider element */
       selectAllDivider?: React.CSSProperties;
     };
+    /** CSS class name for the option */
+    className?: string;
     /** Custom class names for different parts of the option */
     classNames?: {
       /** Class name for the option cell element */
