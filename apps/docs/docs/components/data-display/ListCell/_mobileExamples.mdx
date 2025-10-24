@@ -184,62 +184,60 @@ function PriorityContent() {
   ));
 
   return (
-    <Box style={{ width: 240 }}>
-      <VStack gap={3}>
-        <ListCell
-          spacingVariant="condensed"
-          title="Asset with a really long name"
-          description="Some description of the asset"
-          intermediary={
-            <CompactChart data={sparklineData} color={assets.btc.color} referenceY={referenceY} />
-          }
-          detail="$334,239.03"
-          subdetail="+4.06%"
-          priority="start"
-          variant="positive"
-          onPress={() => {}}
-        />
-        <ListCell
-          spacingVariant="condensed"
-          title="Asset with a really long name"
-          description="Some description of the asset"
-          intermediary={
-            <CompactChart data={sparklineData} color={assets.btc.color} referenceY={referenceY} />
-          }
-          detail="$334,239.03"
-          subdetail="+4.06%"
-          priority="middle"
-          variant="positive"
-          onPress={() => {}}
-        />
-        <ListCell
-          spacingVariant="condensed"
-          title="Asset with a really long name"
-          description="Some description of the asset"
-          intermediary={
-            <CompactChart data={sparklineData} color={assets.btc.color} referenceY={referenceY} />
-          }
-          detail="$334,239.03"
-          subdetail="+4.06%"
-          priority="end"
-          variant="positive"
-          onPress={() => {}}
-        />
-        <ListCell
-          spacingVariant="condensed"
-          title="Asset with a really long name"
-          description="Some description of the asset"
-          intermediary={
-            <CompactChart data={sparklineData} color={assets.btc.color} referenceY={referenceY} />
-          }
-          detail="$334,239.03"
-          subdetail="+4.06%"
-          priority={['start', 'middle', 'end']}
-          variant="warning"
-          onPress={() => {}}
-        />
-      </VStack>
-    </Box>
+    <VStack gap={3} style={{ width: '100%', maxWidth: 320, overflow: 'hidden' }}>
+      <ListCell
+        spacingVariant="condensed"
+        title="Asset with a really long name"
+        description="Some description of the asset"
+        intermediary={
+          <CompactChart data={sparklineData} color={assets.btc.color} referenceY={referenceY} />
+        }
+        detail="$334,239.03"
+        subdetail="+4.06%"
+        priority="start"
+        variant="positive"
+        onPress={() => {}}
+      />
+      <ListCell
+        spacingVariant="condensed"
+        title="Asset with a really long name"
+        description="Some description of the asset"
+        intermediary={
+          <CompactChart data={sparklineData} color={assets.btc.color} referenceY={referenceY} />
+        }
+        detail="$334,239.03"
+        subdetail="+4.06%"
+        priority="middle"
+        variant="positive"
+        onPress={() => {}}
+      />
+      <ListCell
+        spacingVariant="condensed"
+        title="Asset with a really long name"
+        description="Some description of the asset"
+        intermediary={
+          <CompactChart data={sparklineData} color={assets.btc.color} referenceY={referenceY} />
+        }
+        detail="$334,239.03"
+        subdetail="+4.06%"
+        priority="end"
+        variant="positive"
+        onPress={() => {}}
+      />
+      <ListCell
+        spacingVariant="condensed"
+        title="Asset with a really long name"
+        description="Some description of the asset"
+        intermediary={
+          <CompactChart data={sparklineData} color={assets.btc.color} referenceY={referenceY} />
+        }
+        detail="$334,239.03"
+        subdetail="+4.06%"
+        priority={['start', 'middle', 'end']}
+        variant="warning"
+        onPress={() => {}}
+      />
+    </VStack>
   );
 }
 ```
