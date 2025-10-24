@@ -240,36 +240,33 @@ try {
       let content = fs.readFileSync(mobileBoxPath, 'utf-8');
       content = updateImport(content);
 
-      if (!/return \/\*#__PURE__\*\/_jsx\(ElevationThemeProviderBackwardCompat/.test(content)) {
-        const targets = [
-          'return /*#__PURE__*/_jsxs(ViewComponent,',
-          'return /*#__PURE__*/_jsx(ViewComponent,',
-        ];
-        const wrapPrefix =
-          'return /*#__PURE__*/_jsx(ElevationThemeProviderBackwardCompat, { elevation: props === null || props === void 0 ? void 0 : props.elevation, children: /*#__PURE__*/_jsxs(ViewComponent,';
-        let startIdx = -1;
-        let chosenTarget = '';
-        for (const t of targets) {
-          const idx = content.indexOf(t);
-          if (idx !== -1) {
-            startIdx = idx;
-            chosenTarget = t;
-            break;
-          }
-        }
-        if (startIdx !== -1) {
-          // Inject the wrapper prefix
-          content = content.replace(chosenTarget, wrapPrefix);
-          // Insert the closing for the wrapper just before the closing '))' of the jsxs/extends call
-          const searchFrom = startIdx + wrapPrefix.length;
-          const closeIdx = content.indexOf('}))', searchFrom);
-          if (closeIdx !== -1) {
-            content = content.slice(0, closeIdx) + '})) })' + content.slice(closeIdx + 3);
-            // The above produces '})) })' which closes jsxs/extends then adds wrapper close before existing tokens
-            // Clean up in case of double '))' by normalizing '})) })' to '})) })'
+      // Ensure we pass local elevation variable, not props.elevation, in any existing transforms
+      content = content.replaceAll(
+        'elevation: props === null || props === void 0 ? void 0 : props.elevation',
+        'elevation: elevation',
+      );
+
+      // Inject ElevationThemeProviderBackwardCompat as first child inside ViewComponent children array
+      const providerAlreadyInjectedPattern =
+        /children:\s*\[\/\*#__PURE__\*\/_jsx\(ElevationThemeProviderBackwardCompat/;
+      if (!providerAlreadyInjectedPattern.test(content)) {
+        const childrenToken = 'children: [';
+        const overflowToken = ', overflow ===';
+        const childrenIdx = content.indexOf(childrenToken);
+        if (childrenIdx !== -1) {
+          const afterChildrenIdx = childrenIdx + childrenToken.length;
+          const commaIdx = content.indexOf(overflowToken, afterChildrenIdx);
+          if (commaIdx !== -1) {
+            const firstChild = content.slice(afterChildrenIdx, commaIdx);
+            const newFirstChild =
+              '/*#__PURE__*/_jsx(ElevationThemeProviderBackwardCompat, { elevation: elevation, children: ' +
+              firstChild.trim() +
+              ' })';
+            content = content.slice(0, afterChildrenIdx) + newFirstChild + content.slice(commaIdx);
           }
         }
       }
+
       fs.writeFileSync(mobileBoxPath, content, { encoding: 'utf-8' });
       console.log(
         `${greenColor}Updated v7 mobile Box.js for elevation theme backward compat${resetColor}`,
