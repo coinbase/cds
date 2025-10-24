@@ -108,6 +108,7 @@ export type SpotSquareName =
   | 'cryptoApps'
   | 'cryptoAssets'
   | 'cryptoEconomy'
+  | 'cryptoEconomyArrows'
   | 'cryptoForBeginners'
   | 'cryptoPortfolio'
   | 'cryptoWallet'
