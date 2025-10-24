@@ -258,13 +258,13 @@ export const ScrubberBeacon = memo(
             <Circle
               c={{ x: pixelCoordinate.x, y: pixelCoordinate.y }}
               color={theme.color.bg}
-              r={radius + strokeWidth}
+              r={radius + strokeWidth / 2}
             />
             {/* Inner fill circle */}
             <Circle
               c={{ x: pixelCoordinate.x, y: pixelCoordinate.y }}
               color={pointColor}
-              r={radius}
+              r={radius - strokeWidth / 2}
             />
           </Group>
         );
@@ -277,9 +277,9 @@ export const ScrubberBeacon = memo(
           {/* Pulse circle */}
           <Circle c={animatedPoint} color={pointColor} opacity={pulseOpacity} r={pulseRadius} />
           {/* Outer stroke circle */}
-          <Circle c={animatedPoint} color={theme.color.bg} r={radius + strokeWidth} />
+          <Circle c={animatedPoint} color={theme.color.bg} r={radius + strokeWidth / 2} />
           {/* Inner fill circle */}
-          <Circle c={animatedPoint} color={pointColor} r={radius} />
+          <Circle c={animatedPoint} color={pointColor} r={radius - strokeWidth / 2} />
         </Group>
       );
     },

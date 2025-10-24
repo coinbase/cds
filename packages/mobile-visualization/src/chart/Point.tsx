@@ -172,14 +172,14 @@ export const Point = memo<PointProps>(
             <Circle
               c={{ x: pixelCoordinate.x, y: pixelCoordinate.y }}
               color={effectiveStroke as Color}
-              r={radius + strokeWidth}
+              r={radius + strokeWidth / 2}
             />
           )}
           {/* Inner fill circle */}
           <Circle
             c={{ x: pixelCoordinate.x, y: pixelCoordinate.y }}
             color={(fill ?? theme.color.fgPrimary) as Color}
-            r={radius}
+            r={radius - strokeWidth / 2}
           />
         </Group>
         {label && (
