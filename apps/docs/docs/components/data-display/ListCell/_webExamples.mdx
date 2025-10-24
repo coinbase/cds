@@ -184,18 +184,14 @@ The ListCellFallback component provides loading state representations of ListCel
 
 ### Priority
 
-The `priority` prop controls which parts of the cell are protected from shrinking and truncation when horizontal space is limited. Use it to make a specific region “win” space before others when clipping occurs.
-
-- **start**: the main text column (`title`/`description`)
-- **middle**: the `intermediary` region
-- **end**: the trailing region (either `end` content or `detail`/`subdetail`)
-
-You can pass a single value (e.g., `"start"`) or an array (e.g., `['start', 'end']`) to protect multiple regions. The example below constrains width to 240px to make truncation behavior clear.
+The priority prop controls which parts of the cell are protected from shrinking and truncation when horizontal space is limited. It accepts start, middle, and end as a string or an array of strings.
 
 ```tsx live
 function PriorityCOntent() {
   const dimensions = { width: 62, height: 18 };
-  const sparklineData = Array.from({ length: 24 }, (_, i) => 100 + Math.sin(i / 2) * 8 + (i % 3));
+  const sparklineData = prices
+    .map((price) => parseFloat(price))
+    .filter((price, index) => index % 10 === 0);
   const referenceY = sparklineData[Math.floor(sparklineData.length / 3)];
 
   const CompactChart = memo(
@@ -222,7 +218,7 @@ function PriorityCOntent() {
   );
 
   return (
-    <div style={{ width: 240 }}>
+    <Box style={{ width: 240 }}>
       <VStack gap={3}>
         <ListCell
           spacingVariant="condensed"
@@ -265,7 +261,7 @@ function PriorityCOntent() {
           variant="warning"
         />
       </VStack>
-    </div>
+    </Box>
   );
 }
 ```
