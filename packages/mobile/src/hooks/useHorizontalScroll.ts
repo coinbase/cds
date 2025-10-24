@@ -29,29 +29,18 @@ export const useHorizontalScroll = ({
   const [isScrollContentOverflowing, setIsScrollContentOverflowing] = useState(false);
   const [isScrollContentOffscreenRight, setIsScrollContentOffscreenRight] = useState(false);
 
-  const checkIsContentOverflowing = useCallback(() => {
-    const isOverflowing = scrollDetails.current.contentWidth > scrollDetails.current.containerWidth;
+  const checkScrollState = useCallback(() => {
+    const { xPosition, containerWidth, contentWidth } = scrollDetails.current;
+    const maxScroll = contentWidth - containerWidth;
 
-    setIsScrollContentOverflowing((prevState) =>
-      prevState === isOverflowing ? prevState : isOverflowing,
-    );
-  }, []);
-
-  const checkIsContentOffscreenRight = useCallback(() => {
-    const isOffscreenRight =
-      scrollDetails.current.xPosition + scrollDetails.current.containerWidth + 1 < // +1 offset to account for fractional values
-      scrollDetails.current.contentWidth;
-
-    setIsScrollContentOffscreenRight((prevState) =>
-      prevState === isOffscreenRight ? prevState : isOffscreenRight,
-    );
+    setIsScrollContentOverflowing(contentWidth > containerWidth);
+    setIsScrollContentOffscreenRight(xPosition < maxScroll - 1); // -1 offset for fractional values
   }, []);
 
   const throttledHandleScroll = useRef(
     throttle((xPosition: number) => {
       scrollDetails.current.xPosition = xPosition;
-
-      checkIsContentOffscreenRight();
+      checkScrollState();
     }, scrollThrottleWaitTime),
   ).current;
 
@@ -65,45 +54,35 @@ export const useHorizontalScroll = ({
   const handleScrollContainerLayout = useCallback(
     (event: LayoutChangeEvent) => {
       scrollDetails.current.containerWidth = event.nativeEvent.layout.width;
-
-      checkIsContentOverflowing();
-      checkIsContentOffscreenRight();
+      checkScrollState();
     },
-    [checkIsContentOffscreenRight, checkIsContentOverflowing],
+    [checkScrollState],
   );
 
   const handleScrollContentSizeChange = useCallback(
     (contentWidth: number) => {
       scrollDetails.current.contentWidth = contentWidth;
-
-      checkIsContentOverflowing();
-      checkIsContentOffscreenRight();
+      checkScrollState();
     },
-    [checkIsContentOffscreenRight, checkIsContentOverflowing],
+    [checkScrollState],
   );
 
   useEffect(() => {
-    return () => {
-      throttledHandleScroll.cancel();
-    };
-  }, [throttledHandleScroll]);
+    if (activeTarget && scrollRef.current) {
+      // @ts-expect-error Type 'ScrollView' is not assignable to type 'Readonly<NativeMethods>'.
+      activeTarget.measureLayout(scrollRef.current, (x, _y, width) => {
+        const { xPosition, containerWidth } = scrollDetails.current;
+        const isOffscreenLeft = x < xPosition;
+        const isOffscreenRight = x + width - xPosition > containerWidth;
 
-  useEffect(() => {
-    if (!activeTarget || !scrollRef.current) return;
+        if (isOffscreenLeft || isOffscreenRight) {
+          scrollRef.current?.scrollTo({ x, y: 0, animated: true });
+        }
+      });
+    }
 
-    // @ts-expect-error Type 'ScrollView' is not assignable to type 'Readonly<NativeMethods>'.
-    activeTarget.measureLayout(scrollRef.current, (x, _y, width) => {
-      /** Check if active target is offscreen and only scroll if needed */
-      const isOffscreenLeft = x < scrollDetails.current.xPosition;
-      const isOffscreenRight =
-        x + width - scrollDetails.current.xPosition > scrollDetails.current.containerWidth;
-      const isOffscreen = isOffscreenLeft || isOffscreenRight;
-
-      if (isOffscreen) {
-        scrollRef.current?.scrollTo({ x, y: 0, animated: true });
-      }
-    });
-  }, [activeTarget]);
+    return () => throttledHandleScroll.cancel();
+  }, [activeTarget, throttledHandleScroll]);
 
   return {
     scrollRef,

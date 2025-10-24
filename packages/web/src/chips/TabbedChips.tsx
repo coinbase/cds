@@ -88,8 +88,6 @@ const TabbedChipsComponent = memo(
       scrollRef.current.scrollTo({ left: maxScroll, behavior: 'smooth' });
     }, [scrollRef]);
 
-    console.log('scrollTarget', scrollTarget);
-
     return (
       <HStack
         alignItems="center"

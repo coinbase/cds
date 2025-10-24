@@ -8,8 +8,6 @@ type Options = {
   overflowThreshold?: number;
 };
 
-type ScrollDetails = { xPosition: number; containerWidth: number; contentWidth: number };
-
 /**
  * A hook for managing horizontal scrolling with overflow detection.
  * Useful for horizontally scrollable content that needs to show overflow indicators.
@@ -27,106 +25,63 @@ export const useHorizontalScroll = ({
   overflowThreshold = 5,
 }: Options = {}) => {
   const scrollRef = useRef<HTMLDivElement>(null);
-  const scrollDetails = useRef<ScrollDetails>({ xPosition: 0, containerWidth: 0, contentWidth: 0 });
   const [isScrollContentOffscreenLeft, setIsScrollContentOffscreenLeft] = useState(false);
   const [isScrollContentOffscreenRight, setIsScrollContentOffscreenRight] = useState(false);
 
   const checkScrollOverflow = useCallback(() => {
     if (!scrollRef.current) return;
 
-    const scrollLeft = scrollRef.current.scrollLeft;
-    const scrollWidth = scrollRef.current.scrollWidth;
-    const clientWidth = scrollRef.current.clientWidth;
+    const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
     const maxScroll = scrollWidth - clientWidth;
 
-    // Content is offscreen left when scrolled past the threshold
-    const isOffscreenLeft = scrollLeft > overflowThreshold;
-    setIsScrollContentOffscreenLeft((prev) => (prev !== isOffscreenLeft ? isOffscreenLeft : prev));
-
-    // Content is offscreen right when not scrolled to the end
-    const isOffscreenRight = scrollLeft < maxScroll - overflowThreshold;
-    setIsScrollContentOffscreenRight((prev) =>
-      prev !== isOffscreenRight ? isOffscreenRight : prev,
-    );
+    setIsScrollContentOffscreenLeft(scrollLeft > overflowThreshold);
+    setIsScrollContentOffscreenRight(scrollLeft < maxScroll - overflowThreshold);
   }, [overflowThreshold]);
 
   const throttledHandleScroll = useRef(
-    throttle(() => {
-      if (!scrollRef.current) return;
-      scrollDetails.current.xPosition = scrollRef.current.scrollLeft;
-      checkScrollOverflow();
-    }, scrollThrottleWaitTime),
+    throttle(checkScrollOverflow, scrollThrottleWaitTime),
   ).current;
 
-  const handleScroll = useCallback(
-    (event: React.UIEvent<HTMLDivElement>) => {
-      throttledHandleScroll();
-    },
-    [throttledHandleScroll],
-  );
+  const handleScroll = useCallback(() => {
+    throttledHandleScroll();
+  }, [throttledHandleScroll]);
 
-  const updateScrollDimensions = useCallback(() => {
-    if (!scrollRef.current) return;
-
-    scrollDetails.current.containerWidth = scrollRef.current.clientWidth;
-    scrollDetails.current.contentWidth = scrollRef.current.scrollWidth;
-    scrollDetails.current.xPosition = scrollRef.current.scrollLeft;
-
-    checkScrollOverflow();
-  }, [checkScrollOverflow]);
-
-  // Update dimensions on mount and when content changes
+  // Set up ResizeObserver and cleanup throttle on unmount
   useEffect(() => {
-    updateScrollDimensions();
+    throttledHandleScroll();
 
-    // Use ResizeObserver to detect when content size changes
     if (!scrollRef.current) return;
 
-    const resizeObserver = new ResizeObserver(() => {
-      updateScrollDimensions();
-    });
-
+    const resizeObserver = new ResizeObserver(throttledHandleScroll);
     resizeObserver.observe(scrollRef.current);
 
     return () => {
       resizeObserver.disconnect();
+      throttledHandleScroll.cancel();
     };
-  }, [updateScrollDimensions]);
+  }, [throttledHandleScroll]);
 
   // Scroll to active target when it changes
   useEffect(() => {
     if (!activeTarget || !scrollRef.current) return;
 
     const container = scrollRef.current;
-    // Use offsetLeft to get the actual position within the scrollable container
     const targetX = activeTarget.offsetLeft;
     const targetWidth = activeTarget.offsetWidth;
     const scrollLeft = container.scrollLeft;
     const containerWidth = container.clientWidth;
 
-    /** Check if active target is offscreen and only scroll if needed */
     const isOffscreenLeft = targetX < scrollLeft + scrollPadding;
     const isOffscreenRight = targetX + targetWidth > scrollLeft + containerWidth - scrollPadding;
-    const isOffscreen = isOffscreenLeft || isOffscreenRight;
 
-    if (isOffscreen) {
-      let scrollToX = targetX;
+    if (isOffscreenLeft || isOffscreenRight) {
+      const scrollToX = isOffscreenLeft
+        ? Math.max(0, targetX - scrollPadding)
+        : targetX - scrollPadding;
 
-      // Only apply left-scroll logic if we're actually scrolling left (not right)
-      if (isOffscreenLeft) {
-        scrollToX = Math.max(0, targetX - scrollPadding);
-      } else if (isOffscreenRight) {
-        scrollToX = targetX - scrollPadding;
-      }
       container.scrollTo({ left: scrollToX, behavior: 'smooth' });
     }
   }, [activeTarget, scrollPadding]);
-
-  useEffect(() => {
-    return () => {
-      throttledHandleScroll.cancel();
-    };
-  }, [throttledHandleScroll]);
 
   return {
     scrollRef,
