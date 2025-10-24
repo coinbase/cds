@@ -52,25 +52,3 @@ export const ElevationThemeProviderBackwardCompat = ({
     </ThemeProvider>
   );
 };
-
-// Cody Nova
-//   1:20 PM
-// <TrayV7>
-//   <BoxV7 />
-// </TrayV7>
-
-// <TrayV7>
-//   <BoxV8 />
-// </TrayV7>
-
-// <ThemeProviderV8WithElevation>
-//   <TrayV8>
-//     <BoxV8 />
-//   </TrayV8>
-// <ThemeProviderV8WithElevation>
-
-// <TrayV8>
-//   <ThemeProviderV7WithElevation>
-//     <BoxV7 />
-//   </ThemeProviderV7WithElevation>
-// </TrayV8>
