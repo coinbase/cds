@@ -1,14 +1,16 @@
 import { useMemo } from 'react';
-import { Platform } from 'react-native';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 import type { SkFont } from '@shopify/react-native-skia';
 import { matchFont } from '@shopify/react-native-skia';
 
 /**
- * Hook to create a Skia Font for chart rendering using theme values.
+ * Hook to create a Skia Font for chart rendering using theme values with optional overrides.
  *
- * @param fontFamily - Optional CDS font family key. Defaults to 'label2'.
+ * @param font - Base font to use (e.g., 'headline', 'body', 'label1'). Defaults to 'label2'.
+ * @param fontFamilyOverride - Override fontFamily (can be a font name to lookup or a direct font family string)
+ * @param fontSizeOverride - Override fontSize (can be a number or a font name to lookup the size)
+ * @param fontWeightOverride - Override fontWeight (can be a weight string or a font name to lookup the weight)
  * @returns Skia Font object ready for rendering and measurement.
  *
  * @example
@@ -19,6 +21,12 @@ import { matchFont } from '@shopify/react-native-skia';
  * // Use custom font
  * const headlineFont = useChartFont('headline');
  * const captionFont = useChartFont('caption');
+ *
+ * // Use display1's family and weight, but body's size
+ * const mixedFont = useChartFont('display1', undefined, 'body');
+ *
+ * // Use headline, but override size to 20
+ * const customSizeFont = useChartFont('headline', undefined, 20);
  *
  * // Measure text
  * const { width, height } = font.measureText('Hello');
@@ -38,32 +46,57 @@ type SkiaFontWeight =
   | '800'
   | '900';
 
-export const useChartFont = (fontFamily?: ThemeVars.FontFamily): SkFont => {
+export const useChartFont = (
+  font?: ThemeVars.FontFamily,
+  fontFamilyOverride?: string | ThemeVars.FontFamily,
+  fontSizeOverride?: number | ThemeVars.FontFamily,
+  fontWeightOverride?: string | ThemeVars.FontFamily,
+): SkFont => {
   const theme = useTheme();
 
   return useMemo(() => {
-    const font = fontFamily ?? 'label2';
-    const fontStr = String(font);
+    const baseFont = font ?? 'label2';
 
-    // Handle special case for label1Emphasized which isn't in the theme
-    // It uses label1 size with bold weight
-    const fontSize =
-      fontStr === 'label1Emphasized'
-        ? theme.fontSize.label1
-        : (theme.fontSize[font as keyof typeof theme.fontSize] ?? theme.fontSize.label2);
+    // Get base values from theme
+    const baseFontFamily: string = (theme.fontFamily[baseFont as keyof typeof theme.fontFamily] ??
+      theme.fontFamily.label2) as string;
+    const baseFontSize: number = (theme.fontSize[baseFont as keyof typeof theme.fontSize] ??
+      theme.fontSize.label2) as number;
+    const baseFontWeight: string = (theme.fontWeight[baseFont as keyof typeof theme.fontWeight] ??
+      theme.fontWeight.label2) as string;
 
-    const fontWeight =
-      fontStr === 'label1Emphasized'
-        ? '700'
-        : (theme.fontWeight[font as keyof typeof theme.fontWeight] ?? theme.fontWeight.label2);
+    // Resolve fontFamily override
+    let fontFamily: string = baseFontFamily;
+    if (fontFamilyOverride !== undefined) {
+      // Check if it's a theme font key or a direct font family string
+      const lookupFamily = theme.fontFamily[fontFamilyOverride as keyof typeof theme.fontFamily];
+      fontFamily = (lookupFamily ?? fontFamilyOverride) as string;
+    }
 
-    const config = {
-      // Use platform-appropriate system fonts
-      fontFamily: Platform.select({ ios: 'Helvetica', default: 'sans-serif' }),
+    // Resolve fontSize override
+    let fontSize: number = baseFontSize;
+    if (fontSizeOverride !== undefined) {
+      if (typeof fontSizeOverride === 'number') {
+        fontSize = fontSizeOverride;
+      } else {
+        // It's a font name, look up the size
+        fontSize = (theme.fontSize[fontSizeOverride as keyof typeof theme.fontSize] ??
+          baseFontSize) as number;
+      }
+    }
+
+    // Resolve fontWeight override
+    let fontWeight: string = baseFontWeight;
+    if (fontWeightOverride !== undefined) {
+      // Check if it's a theme font key or a direct weight string
+      const lookupWeight = theme.fontWeight[fontWeightOverride as keyof typeof theme.fontWeight];
+      fontWeight = (lookupWeight ?? fontWeightOverride) as string;
+    }
+
+    return matchFont({
+      fontFamily: fontFamily as string,
       fontSize,
       fontWeight: fontWeight as SkiaFontWeight,
-    };
-
-    return matchFont(config);
-  }, [fontFamily, theme.fontSize, theme.fontWeight]);
+    });
+  }, [font, fontFamilyOverride, fontSizeOverride, fontWeightOverride, theme]);
 };

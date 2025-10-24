@@ -1,5 +1,4 @@
 import React, { memo, useMemo, useState } from 'react';
-import { Platform } from 'react-native';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import type { ElevationLevels, Rect, SharedProps } from '@coinbase/cds-common/types';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
@@ -27,26 +26,71 @@ type SkiaShadowConfig = {
 };
 
 /**
- * Get a Skia font for a given font family using theme values
+ * Get a Skia font using theme values with optional overrides.
+ *
+ * @param font - Base font to use (e.g., 'headline', 'body', 'label1')
+ * @param theme - Theme object containing font definitions
+ * @param fontFamilyOverride - Override fontFamily (can be a font name to lookup or a direct font family string)
+ * @param fontSizeOverride - Override fontSize (can be a number or a font name to lookup the size)
+ * @param fontWeightOverride - Override fontWeight (can be a weight string or a font name to lookup the weight)
+ *
+ * @example
+ * // Use display1 for everything
+ * getSkiaFont('display1', theme)
+ *
+ * // Use display1's family and weight, but body's size
+ * getSkiaFont('display1', theme, undefined, 'body')
+ *
+ * // Use headline, but override size to 20
+ * getSkiaFont('headline', theme, undefined, 20)
  */
-const getSkiaFont = (fontFamily: ThemeVars.FontFamily | undefined, theme: any) => {
-  const font = fontFamily ?? 'label2';
-  const fontStr = String(font);
+const getSkiaFont = (
+  font: ThemeVars.FontFamily | undefined,
+  theme: any,
+  fontFamilyOverride?: string | ThemeVars.FontFamily,
+  fontSizeOverride?: number | ThemeVars.FontFamily,
+  fontWeightOverride?: string | ThemeVars.FontFamily,
+) => {
+  const baseFont = font ?? 'label2';
 
-  // Handle special case for label1Emphasized which isn't in the theme
-  // It uses label1 size with bold weight
-  const fontSize =
-    fontStr === 'label1Emphasized'
-      ? theme.fontSize.label1
-      : (theme.fontSize[font as keyof typeof theme.fontSize] ?? theme.fontSize.label2);
+  // Get base values from theme
+  const baseFontFamily: string = (theme.fontFamily[baseFont as keyof typeof theme.fontFamily] ??
+    theme.fontFamily.label2) as string;
+  const baseFontSize: number = (theme.fontSize[baseFont as keyof typeof theme.fontSize] ??
+    theme.fontSize.label2) as number;
+  const baseFontWeight: string = (theme.fontWeight[baseFont as keyof typeof theme.fontWeight] ??
+    theme.fontWeight.label2) as string;
 
-  const fontWeight =
-    fontStr === 'label1Emphasized'
-      ? '700'
-      : (theme.fontWeight[font as keyof typeof theme.fontWeight] ?? theme.fontWeight.label2);
+  // Resolve fontFamily override
+  let fontFamily: string = baseFontFamily;
+  if (fontFamilyOverride !== undefined) {
+    // Check if it's a theme font key or a direct font family string
+    const lookupFamily = theme.fontFamily[fontFamilyOverride as keyof typeof theme.fontFamily];
+    fontFamily = (lookupFamily ?? fontFamilyOverride) as string;
+  }
+
+  // Resolve fontSize override
+  let fontSize: number = baseFontSize;
+  if (fontSizeOverride !== undefined) {
+    if (typeof fontSizeOverride === 'number') {
+      fontSize = fontSizeOverride;
+    } else {
+      // It's a font name, look up the size
+      fontSize = (theme.fontSize[fontSizeOverride as keyof typeof theme.fontSize] ??
+        baseFontSize) as number;
+    }
+  }
+
+  // Resolve fontWeight override
+  let fontWeight: string = baseFontWeight;
+  if (fontWeightOverride !== undefined) {
+    // Check if it's a theme font key or a direct weight string
+    const lookupWeight = theme.fontWeight[fontWeightOverride as keyof typeof theme.fontWeight];
+    fontWeight = (lookupWeight ?? fontWeightOverride) as string;
+  }
 
   return matchFont({
-    fontFamily: Platform.select({ ios: 'Helvetica', default: 'sans-serif' }),
+    fontFamily: fontFamily as string,
     fontSize,
     fontWeight: fontWeight as any,
   });
@@ -88,6 +132,18 @@ export type ChartTextSegment = {
    * @default inherits from parent ChartText
    */
   font?: ThemeVars.FontFamily;
+  /**
+   * Optional font size override for this segment.
+   * Overrides the size from font family.
+   * @default inherits from font or parent ChartText
+   */
+  fontSize?: number;
+  /**
+   * Optional font weight override for this segment.
+   * Overrides the weight from font family.
+   * @default inherits from font or parent ChartText
+   */
+  fontWeight?: string;
 };
 
 /**
@@ -189,6 +245,22 @@ export type ChartTextProps = SharedProps & {
    */
   font?: ThemeVars.FontFamily;
   /**
+   * Font size override in pixels.
+   * Overrides the size from font family.
+   * @example
+   * // Use label1 font but with custom size
+   * <ChartText font="label1" fontSize={18}>Text</ChartText>
+   */
+  fontSize?: number;
+  /**
+   * Font weight override.
+   * Overrides the weight from font family.
+   * @example
+   * // Use label1 font but with bold weight
+   * <ChartText font="label1" fontWeight="700">Text</ChartText>
+   */
+  fontWeight?: string;
+  /**
    * Opacity of the text and background.
    * @default 1
    */
@@ -276,6 +348,8 @@ export const ChartText = memo<ChartTextProps>(
     onDimensionsChange,
     opacity = 1,
     font,
+    fontSize: fontSizeOverride,
+    fontWeight: fontWeightOverride,
     elevation,
     shadowColor: shadowColorProp = 'rgba(0, 0, 0, 0.15)',
     shadowOffset: shadowOffsetProp = { x: 0, y: 2 },
@@ -284,7 +358,11 @@ export const ChartText = memo<ChartTextProps>(
   }) => {
     const theme = useTheme();
     const { width: chartWidth, height: chartHeight } = useCartesianChartContext();
-    const skiaFont = useChartFont(font);
+
+    // Create font with optional overrides
+    const skiaFont = useMemo(() => {
+      return getSkiaFont(font, theme, undefined, fontSizeOverride, fontWeightOverride);
+    }, [font, theme, fontSizeOverride, fontWeightOverride]);
 
     // Compute effective background color based on elevation
     const background = useMemo(() => {
@@ -313,7 +391,11 @@ export const ChartText = memo<ChartTextProps>(
       let currentX = 0;
 
       const segmentsWithDimensions = textSegments.map((segment) => {
-        const segmentFont = segment.font ? getSkiaFont(segment.font, theme) : skiaFont;
+        // Segment can override font family, size, and weight
+        const segmentFont =
+          segment.font || segment.fontSize || segment.fontWeight
+            ? getSkiaFont(segment.font, theme, undefined, segment.fontSize, segment.fontWeight)
+            : skiaFont;
         const { width } = segmentFont.measureText(segment.text);
         const height = segmentFont.getSize();
 

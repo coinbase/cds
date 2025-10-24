@@ -973,7 +973,7 @@ const AssetPriceDotted = () => {
       }).format(sparklineTimePeriodDataValues[dataIndex]);
       const date = formatDate(sparklineTimePeriodDataTimestamps[dataIndex]);
       return [
-        { text: `${price} USD`, font: 'label1Emphasized' as ThemeVars.FontFamily },
+        { text: `${price} USD`, font: 'label1' as ThemeVars.FontFamily, fontWeight: '700' },
         { text: ` ${date}`, font: 'label2' as ThemeVars.FontFamily },
       ];
     },
