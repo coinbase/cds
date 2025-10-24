@@ -1,10 +1,10 @@
-import React, { forwardRef, memo, useCallback, useMemo } from 'react';
+import React, { forwardRef, memo, useCallback, useMemo, useState } from 'react';
 import { ScrollView } from 'react-native';
 import type { View } from 'react-native';
 import { useTabsContext } from '@coinbase/cds-common/tabs/TabsContext';
 import type { TabValue } from '@coinbase/cds-common/tabs/useTabs';
 
-import { useHorizontallyScrollingPressables } from '../hooks/useHorizontallyScrollingPressables';
+import { useHorizontalScroll } from '../hooks/useHorizontalScroll';
 import { Box, OverflowGradient } from '../layout';
 import { type TabNavigationBaseProps, Tabs } from '../tabs';
 
@@ -54,13 +54,14 @@ const TabbedChipsComponent = memo(
     ref: React.ForwardedRef<View>,
   ) {
     const activeTab = useMemo(() => tabs.find((tab) => tab.id === value), [tabs, value]);
-
+    const [scrollTarget, setScrollTarget] = useState<View | null>(null);
     const handleChange = useCallback(
       (tabValue: TabValue<T> | null) => {
         if (tabValue) onChange?.(tabValue.id);
       },
       [onChange],
     );
+
     const {
       scrollRef,
       isScrollContentOverflowing,
@@ -68,7 +69,7 @@ const TabbedChipsComponent = memo(
       handleScroll,
       handleScrollContainerLayout,
       handleScrollContentSizeChange,
-    } = useHorizontallyScrollingPressables(value);
+    } = useHorizontalScroll({ activeTarget: scrollTarget });
 
     return (
       <Box
@@ -93,6 +94,7 @@ const TabbedChipsComponent = memo(
             TabsActiveIndicatorComponent={TabsActiveIndicatorComponent}
             activeTab={activeTab || null}
             gap={1}
+            onActiveTabElementChange={setScrollTarget}
             onChange={handleChange}
             tabs={tabs}
           />
