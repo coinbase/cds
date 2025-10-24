@@ -114,6 +114,7 @@ const names: SpotSquareName[] = [
   'cryptoApps',
   'cryptoAssets',
   'cryptoEconomy',
+  'cryptoEconomyArrows',
   'cryptoForBeginners',
   'cryptoPortfolio',
   'cryptoWallet',

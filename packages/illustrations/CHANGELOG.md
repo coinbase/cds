@@ -8,6 +8,56 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+##### ⭐️ Added (2)
+
+###### Pictogram (1)
+
+- futures
+
+###### SpotSquare (1)
+
+- cryptoEconomyArrows
+
+##### ⭐️ Updated (29)
+
+###### Pictogram (9)
+
+- baseSendSmall
+- baseMintNftSmall
+- basePiechartSmall
+- baseDecentralizationSmall
+- baseLoadingSmall
+- baseDiamondTrophy
+- baseTargetSmall
+- baseLocationSmall
+- baseConnectSmall
+
+###### HeroSquare (17)
+
+- baseRewardsCalmLarge
+- basePaycoinLarge
+- baseChartLarge
+- baseDecentralizationLarge
+- baseCoinCryptoLarge
+- baseSendLarge
+- baseNetworkLarge
+- baseEmptyLarge
+- baseCoinNetworkLarge
+- baseLocationLarge
+- baseMintNftLarge
+- baseNftLarge
+- baseTargetLarge
+- basePiechartLarge
+- baseSecurityLarge
+- baseSocial
+- basePeopleLarge
+
+###### SpotSquare (3)
+
+- baseChartMedium
+- baseIdMedium
+- baseCoinNetworkMedium
+
 ## 4.24.0 (10/10/2025 PST)
 
 #### 🚀 Updates

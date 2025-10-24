@@ -71,8 +71,8 @@ const svgJsMap = {
     dark: () => require('../svgJs/dark/baseCautionMedium-0.js').content,
   },
   baseChartMedium: {
-    light: () => require('../svgJs/light/baseChartMedium-0.js').content,
-    dark: () => require('../svgJs/dark/baseChartMedium-0.js').content,
+    light: () => require('../svgJs/light/baseChartMedium-1.js').content,
+    dark: () => require('../svgJs/dark/baseChartMedium-1.js').content,
   },
   baseCheckMedium: {
     light: () => require('../svgJs/light/baseCheckMedium-0.js').content,
@@ -87,8 +87,8 @@ const svgJsMap = {
     dark: () => require('../svgJs/dark/baseCoinCryptoMedium-0.js').content,
   },
   baseCoinNetworkMedium: {
-    light: () => require('../svgJs/light/baseCoinNetworkMedium-0.js').content,
-    dark: () => require('../svgJs/dark/baseCoinNetworkMedium-0.js').content,
+    light: () => require('../svgJs/light/baseCoinNetworkMedium-1.js').content,
+    dark: () => require('../svgJs/dark/baseCoinNetworkMedium-1.js').content,
   },
   baseConnectMedium: {
     light: () => require('../svgJs/light/baseConnectMedium-0.js').content,
@@ -123,8 +123,8 @@ const svgJsMap = {
     dark: () => require('../svgJs/dark/baseErrorMedium-0.js').content,
   },
   baseIdMedium: {
-    light: () => require('../svgJs/light/baseIdMedium-0.js').content,
-    dark: () => require('../svgJs/dark/baseIdMedium-0.js').content,
+    light: () => require('../svgJs/light/baseIdMedium-1.js').content,
+    dark: () => require('../svgJs/dark/baseIdMedium-1.js').content,
   },
   baseLoadingMedium: {
     light: () => require('../svgJs/light/baseLoadingMedium-0.js').content,
@@ -421,6 +421,10 @@ const svgJsMap = {
   cryptoEconomy: {
     light: () => require('../svgJs/light/cryptoEconomy-4.js').content,
     dark: () => require('../svgJs/dark/cryptoEconomy-4.js').content,
+  },
+  cryptoEconomyArrows: {
+    light: () => require('../svgJs/light/cryptoEconomyArrows-0.js').content,
+    dark: () => require('../svgJs/dark/cryptoEconomyArrows-0.js').content,
   },
   cryptoForBeginners: {
     light: () => require('../svgJs/light/cryptoForBeginners-5.js').content,
