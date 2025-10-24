@@ -194,6 +194,97 @@ try {
     fs.writeFileSync(file, newFileContent, { encoding: 'utf-8' });
   }
 
+  // After generic v7 path updates, apply ElevationThemeProviderBackwardCompat wrapping to Box.js in web and mobile v7
+  try {
+    const updateImport = (content) => {
+      if (content.includes('ElevationThemeProviderBackwardCompat')) return content;
+      const importLine =
+        "import { ElevationThemeProviderBackwardCompat } from '../../../system/ElevationThemeProviderBackwardCompat';\n";
+      const jsxRuntimeImportPattern = /import\s+\{[^}]*\}\s+from\s+"react\/jsx-runtime";\n/;
+      if (jsxRuntimeImportPattern.test(content)) {
+        return content.replace(jsxRuntimeImportPattern, (m) => m + importLine);
+      }
+      // Fallback: prepend import if jsx-runtime import not found for some reason
+      return importLine + content;
+    };
+
+    const updateWebBox = () => {
+      const webBoxPath = path.join(v7Dir, 'esm', 'layout', 'Box.js');
+      if (!fs.existsSync(webBoxPath)) return;
+      let content = fs.readFileSync(webBoxPath, 'utf-8');
+      content = updateImport(content);
+
+      // Wrap ElevationProvider with ElevationThemeProviderBackwardCompat when props.elevation is set
+      const webIfReturnPattern =
+        /if\s*\(props\.elevation\)\s*\{\s*return\s*\/\*#__PURE__\*\/_jsx\(ElevationProvider,\s*\{\s*elevation:\s*([^,]+),\s*children:\s*boxInner\s*\}\s*\);\s*\}/;
+      const webWrappedReplacement =
+        'if (props.elevation) { return /*#__PURE__*/_jsx(ElevationThemeProviderBackwardCompat, { elevation: $1, children: /*#__PURE__*/_jsx(ElevationProvider, { elevation: $1, children: boxInner }) }); }';
+      let before = content;
+      content = content.replace(webIfReturnPattern, webWrappedReplacement);
+      if (content === before) {
+        // Fallback without PURE hint or minor spacing differences
+        const fallbackPattern =
+          /if\s*\(props\.elevation\)\s*\{\s*return[\s\S]*?_jsx\(ElevationProvider,[\s\S]*?elevation:\s*([^,]+),[\s\S]*?children:\s*boxInner[\s\S]*?\);\s*\}/;
+        content = content.replace(fallbackPattern, webWrappedReplacement);
+      }
+
+      fs.writeFileSync(webBoxPath, content, { encoding: 'utf-8' });
+      console.log(
+        `${greenColor}Updated v7 web Box.js for elevation theme backward compat${resetColor}`,
+      );
+    };
+
+    const updateMobileBox = () => {
+      const mobileBoxPath = path.join(v7Dir, 'esm', 'layout', 'Box.js');
+      if (!fs.existsSync(mobileBoxPath)) return;
+      let content = fs.readFileSync(mobileBoxPath, 'utf-8');
+      content = updateImport(content);
+
+      if (!/return \/\*#__PURE__\*\/_jsx\(ElevationThemeProviderBackwardCompat/.test(content)) {
+        const targets = [
+          'return /*#__PURE__*/_jsxs(ViewComponent,',
+          'return /*#__PURE__*/_jsx(ViewComponent,',
+        ];
+        const wrapPrefix =
+          'return /*#__PURE__*/_jsx(ElevationThemeProviderBackwardCompat, { elevation: props === null || props === void 0 ? void 0 : props.elevation, children: /*#__PURE__*/_jsxs(ViewComponent,';
+        let startIdx = -1;
+        let chosenTarget = '';
+        for (const t of targets) {
+          const idx = content.indexOf(t);
+          if (idx !== -1) {
+            startIdx = idx;
+            chosenTarget = t;
+            break;
+          }
+        }
+        if (startIdx !== -1) {
+          // Inject the wrapper prefix
+          content = content.replace(chosenTarget, wrapPrefix);
+          // Insert the closing for the wrapper just before the closing '))' of the jsxs/extends call
+          const searchFrom = startIdx + wrapPrefix.length;
+          const closeIdx = content.indexOf('}))', searchFrom);
+          if (closeIdx !== -1) {
+            content = content.slice(0, closeIdx) + '})) })' + content.slice(closeIdx + 3);
+            // The above produces '})) })' which closes jsxs/extends then adds wrapper close before existing tokens
+            // Clean up in case of double '))' by normalizing '})) })' to '})) })'
+          }
+        }
+      }
+      fs.writeFileSync(mobileBoxPath, content, { encoding: 'utf-8' });
+      console.log(
+        `${greenColor}Updated v7 mobile Box.js for elevation theme backward compat${resetColor}`,
+      );
+    };
+
+    if (packageName === '@cbhq/cds-web') updateWebBox();
+    if (packageName === '@cbhq/cds-mobile') updateMobileBox();
+  } catch (e) {
+    console.warn(
+      `${yellowColor}Warning: Failed to update v7 Box.js for elevation theme backward compat.${resetColor}`,
+    );
+    console.warn(`Error: ${e.message}`);
+  }
+
   // For any package, we need to update the package.json exports
   const exportPaths = v7PackageJson.exports;
   delete exportPaths['./package.json'];
