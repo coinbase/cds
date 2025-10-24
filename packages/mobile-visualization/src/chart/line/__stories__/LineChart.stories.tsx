@@ -208,6 +208,59 @@ export const BasicLineChartWithPoints = () => {
   );
 };
 
+export const ScrubberWithBeaconLabels = () => {
+  const theme = useTheme();
+  const btcData = [42000, 43500, 41000, 45000, 46500, 44000, 47000];
+  const ethData = [2800, 2900, 2750, 3100, 3200, 3000, 3300];
+  const uniData = [8, 9, 7, 10, 11, 9, 12];
+
+  const formatPrice = useCallback((value: number, prefix = '$') => {
+    return `${prefix}${new Intl.NumberFormat('en-US', {
+      maximumFractionDigits: 0,
+    }).format(value)}`;
+  }, []);
+
+  return (
+    <VStack gap={2}>
+      <Text font="title3">Multi-Series with Beacon Labels</Text>
+      <Text font="body" style={{ color: theme.color.fgMuted }}>
+        Scrub the chart to see labels on each series beacon
+      </Text>
+      <LineChart
+        enableScrubbing
+        height={defaultChartHeight}
+        inset={{ top: 4, bottom: 4, left: 0, right: 60 }}
+        series={[
+          {
+            id: 'btc',
+            data: btcData,
+            color: assets.btc.color,
+            label: (dataIndex) => formatPrice(btcData[dataIndex]),
+          },
+          {
+            id: 'eth',
+            data: ethData,
+            color: assets.eth.color,
+            label: (dataIndex) => formatPrice(ethData[dataIndex]),
+          },
+          {
+            id: 'uni',
+            data: uniData,
+            color: assets.uni.color,
+            label: (dataIndex) => formatPrice(uniData[dataIndex]),
+          },
+        ]}
+        yAxis={{
+          requestedTickCount: 3,
+          showGrid: true,
+        }}
+      >
+        <Scrubber idlePulse />
+      </LineChart>
+    </VStack>
+  );
+};
+
 export const AssetPrice = () => {
   const pricePointsPerHour = 12;
   const currentHour = 14;
@@ -1220,16 +1273,19 @@ const AssetPriceMultipleDotted = () => {
             id: 'btc',
             data: sparklineTimePeriodDataValues,
             color: assets.btc.color,
+            label: 'BTC',
           },
           {
             id: 'eth',
             data: sparklineTimePeriodDataValues.map((d) => d * 0.75),
             color: assets.eth.color,
+            label: 'ETH',
           },
           {
             id: 'xrp',
             data: sparklineTimePeriodDataValues.map((d) => d * 0.5),
             color: assets.xrp.color,
+            label: 'XRP',
           },
         ]}
       >
@@ -1937,6 +1993,60 @@ const ConnectNullsChart = () => {
   );
 };
 
+const pageViews = [2400, 1398, 9800, 3908, 4800, 3800, 4300];
+const uniqueVisitors = [4000, 3000, 2000, 2780, 1890, 2390, 3490];
+const pages = ['Page A', 'Page B', 'Page C', 'Page D', 'Page E', 'Page F', 'Page G'];
+
+const MultipleSeriesChart = () => {
+  const theme = useTheme();
+  const [scrubIndex, setScrubIndex] = useState<number | undefined>();
+
+  const accessibilityLabel = useMemo(() => {
+    if (scrubIndex === undefined) return;
+    return `${pages[scrubIndex]}: Page Views ${pageViews[scrubIndex].toLocaleString()}, Unique Visitors ${uniqueVisitors[scrubIndex].toLocaleString()}`;
+  }, [scrubIndex]);
+
+  return (
+    <LineChart
+      enableScrubbing
+      showXAxis
+      showYAxis
+      accessibilityLabel={accessibilityLabel}
+      height={250}
+      inset={{ left: 12 }}
+      onScrubberPositionChange={setScrubIndex}
+      series={[
+        {
+          id: 'pageViews',
+          data: pageViews,
+          label: 'Page Views',
+          color: theme.color.accentBoldBlue,
+          curve: 'natural',
+        },
+        {
+          id: 'uniqueVisitors',
+          data: uniqueVisitors,
+          label: 'Unique Visitors',
+          color: theme.color.accentBoldGreen,
+          curve: 'natural',
+        },
+      ]}
+      xAxis={{
+        data: pages,
+      }}
+      yAxis={{
+        domain: {
+          min: 0,
+        },
+        showGrid: true,
+        tickLabelFormatter: (value) => value.toLocaleString(),
+      }}
+    >
+      <Scrubber />
+    </LineChart>
+  );
+};
+
 const data = sparklineInteractiveData.all.map((d) => d.value);
 
 const LineChartStories = () => {
@@ -1982,6 +2092,9 @@ const LineChartStories = () => {
           <Scrubber />
         </LineChart>
       </Example>
+      <Example title="Scrubber with Beacon Labels">
+        <ScrubberWithBeaconLabels />
+      </Example>
       <Example title="Basic 4 Line">
         <LineChart
           enableScrubbing
@@ -2005,6 +2118,9 @@ const LineChartStories = () => {
         >
           <Scrubber />
         </LineChart>
+      </Example>
+      <Example title="Multiple Series">
+        <MultipleSeriesChart />
       </Example>
       {/*<Example title="Data Formats 4">
         <LineChart
@@ -2055,20 +2171,20 @@ const LineChartStories = () => {
           showYAxis
           AreaComponent={(props) => <GradientArea {...props} fillOpacity={0.5} />}
           height={300}
-          renderPoints={() => true}
+          renderPoints={({ dataX }) => dataX % 100 === 0}
           series={[
             {
               id: 'line',
-              data: [5, 10, 15, 16.75, 17, 20, 25, 35, 45, 25, 15, 35],
+              data: sparklineInteractiveData.all.map((d) => d.value),
               type: 'gradient',
               gradient: {
                 stops: [
                   { offset: 0, color: '#ef4444' },
-                  { offset: 20, color: '#ef4444' },
-                  { offset: 20, color: '#f59e0b' },
-                  { offset: 30, color: '#f59e0b' },
-                  { offset: 30, color: '#10b981' },
-                  { offset: 50, color: '#10b981' },
+                  { offset: 10000, color: '#ef4444' },
+                  { offset: 20000, color: '#f59e0b' },
+                  { offset: 30000, color: '#f59e0b' },
+                  { offset: 40000, color: '#10b981' },
+                  { offset: 50000, color: '#10b981' },
                 ],
               },
             },

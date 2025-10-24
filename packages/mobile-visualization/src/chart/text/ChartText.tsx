@@ -27,31 +27,28 @@ type SkiaShadowConfig = {
 };
 
 /**
- * Font configurations matching CDS theme (duplicated from useChartFont for use in useMemo)
+ * Get a Skia font for a given font family using theme values
  */
-const FONT_CONFIGS: Record<string, { fontSize: number; fontWeight: string }> = {
-  label1: { fontSize: 17, fontWeight: '600' },
-  label1Emphasized: { fontSize: 17, fontWeight: '700' },
-  label2: { fontSize: 15, fontWeight: '400' },
-  body: { fontSize: 17, fontWeight: '400' },
-  caption: { fontSize: 13, fontWeight: '400' },
-  headline: { fontSize: 20, fontWeight: '600' },
-  title1: { fontSize: 28, fontWeight: '700' },
-  title2: { fontSize: 22, fontWeight: '600' },
-  title3: { fontSize: 20, fontWeight: '600' },
-};
-
-/**
- * Get a Skia font for a given font family
- */
-const getSkiaFont = (fontFamily?: ThemeVars.FontFamily) => {
+const getSkiaFont = (fontFamily: ThemeVars.FontFamily | undefined, theme: any) => {
   const font = fontFamily ?? 'label2';
-  const fontConfig = FONT_CONFIGS[font] ?? FONT_CONFIGS.label2;
+  const fontStr = String(font);
+
+  // Handle special case for label1Emphasized which isn't in the theme
+  // It uses label1 size with bold weight
+  const fontSize =
+    fontStr === 'label1Emphasized'
+      ? theme.fontSize.label1
+      : (theme.fontSize[font as keyof typeof theme.fontSize] ?? theme.fontSize.label2);
+
+  const fontWeight =
+    fontStr === 'label1Emphasized'
+      ? '700'
+      : (theme.fontWeight[font as keyof typeof theme.fontWeight] ?? theme.fontWeight.label2);
 
   return matchFont({
     fontFamily: Platform.select({ ios: 'Helvetica', default: 'sans-serif' }),
-    fontSize: fontConfig.fontSize,
-    fontWeight: fontConfig.fontWeight as any,
+    fontSize,
+    fontWeight: fontWeight as any,
   });
 };
 
@@ -316,7 +313,7 @@ export const ChartText = memo<ChartTextProps>(
       let currentX = 0;
 
       const segmentsWithDimensions = textSegments.map((segment) => {
-        const segmentFont = segment.font ? getSkiaFont(segment.font) : skiaFont;
+        const segmentFont = segment.font ? getSkiaFont(segment.font, theme) : skiaFont;
         const { width } = segmentFont.measureText(segment.text);
         const height = segmentFont.getSize();
 
@@ -335,7 +332,7 @@ export const ChartText = memo<ChartTextProps>(
       // Segments share the same baseline, matching SVG tspan behavior
       // No vertical offset needed - all text sits on the same baseline
       return segmentsWithDimensions;
-    }, [children, isSegments, skiaFont]);
+    }, [children, isSegments, skiaFont, theme]);
 
     // Calculate text dimensions
     const textDimensions = useMemo(() => {

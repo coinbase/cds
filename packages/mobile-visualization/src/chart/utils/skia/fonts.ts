@@ -1,21 +1,19 @@
 import { useMemo } from 'react';
 import { Platform } from 'react-native';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
+import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 import type { SkFont } from '@shopify/react-native-skia';
 import { matchFont } from '@shopify/react-native-skia';
 
 /**
- * Hook to create a Skia Font for chart rendering.
+ * Hook to create a Skia Font for chart rendering using theme values.
  *
- * TEMPORARY: Uses hardcoded font configurations instead of theme values
- * to avoid React Context issues inside Skia's rendering tree.
- *
- * @param fontFamily - Optional CDS font family key. Defaults to 'label2' (15px).
+ * @param fontFamily - Optional CDS font family key. Defaults to 'label2'.
  * @returns Skia Font object ready for rendering and measurement.
  *
  * @example
  * ```tsx
- * // Use default font (label2 - 15px)
+ * // Use default font (label2)
  * const font = useChartFont();
  *
  * // Use custom font
@@ -40,32 +38,32 @@ type SkiaFontWeight =
   | '800'
   | '900';
 
-// Temporary hardcoded font configurations matching CDS theme
-// TODO: Find a way to safely access theme values inside Skia rendering context
-const FONT_CONFIGS: Record<string, { fontSize: number; fontWeight: SkiaFontWeight }> = {
-  label1: { fontSize: 17, fontWeight: '600' },
-  label1Emphasized: { fontSize: 17, fontWeight: '700' },
-  label2: { fontSize: 15, fontWeight: '400' },
-  body: { fontSize: 17, fontWeight: '400' },
-  caption: { fontSize: 13, fontWeight: '400' },
-  headline: { fontSize: 20, fontWeight: '600' },
-  title1: { fontSize: 28, fontWeight: '700' },
-  title2: { fontSize: 22, fontWeight: '600' },
-  title3: { fontSize: 20, fontWeight: '600' },
-};
-
 export const useChartFont = (fontFamily?: ThemeVars.FontFamily): SkFont => {
+  const theme = useTheme();
+
   return useMemo(() => {
     const font = fontFamily ?? 'label2';
-    const fontConfig = FONT_CONFIGS[font] ?? FONT_CONFIGS.label2;
+    const fontStr = String(font);
+
+    // Handle special case for label1Emphasized which isn't in the theme
+    // It uses label1 size with bold weight
+    const fontSize =
+      fontStr === 'label1Emphasized'
+        ? theme.fontSize.label1
+        : (theme.fontSize[font as keyof typeof theme.fontSize] ?? theme.fontSize.label2);
+
+    const fontWeight =
+      fontStr === 'label1Emphasized'
+        ? '700'
+        : (theme.fontWeight[font as keyof typeof theme.fontWeight] ?? theme.fontWeight.label2);
 
     const config = {
       // Use platform-appropriate system fonts
       fontFamily: Platform.select({ ios: 'Helvetica', default: 'sans-serif' }),
-      fontSize: fontConfig.fontSize,
-      fontWeight: fontConfig.fontWeight,
+      fontSize,
+      fontWeight: fontWeight as SkiaFontWeight,
     };
 
     return matchFont(config);
-  }, [fontFamily]);
+  }, [fontFamily, theme.fontSize, theme.fontWeight]);
 };
