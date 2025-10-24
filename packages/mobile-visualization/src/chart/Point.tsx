@@ -1,7 +1,7 @@
 import { memo, useEffect, useMemo } from 'react';
 import type { SharedProps } from '@coinbase/cds-common/types';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
-import { Circle as SkiaCircle, type Color, Group } from '@shopify/react-native-skia';
+import { Circle, type Color, Group } from '@shopify/react-native-skia';
 
 import type { ChartTextChildren } from './text/ChartText';
 import { useCartesianChartContext } from './ChartProvider';
@@ -46,7 +46,7 @@ export type PointConfig = {
   yAxisId?: string;
   /**
    * Radius of the point.
-   * @default 4
+   * @default 5
    */
   radius?: number;
   /**
@@ -112,7 +112,7 @@ export const Point = memo<PointProps>(
     dataY,
     yAxisId,
     fill,
-    radius = 4,
+    radius = 5,
     opacity,
     onPress,
     onScrubberEnter,
@@ -169,14 +169,14 @@ export const Point = memo<PointProps>(
         <Group opacity={opacity}>
           {/* Outer stroke circle */}
           {strokeWidth > 0 && (
-            <SkiaCircle
+            <Circle
               c={{ x: pixelCoordinate.x, y: pixelCoordinate.y }}
               color={effectiveStroke as Color}
               r={radius + strokeWidth}
             />
           )}
           {/* Inner fill circle */}
-          <SkiaCircle
+          <Circle
             c={{ x: pixelCoordinate.x, y: pixelCoordinate.y }}
             color={(fill ?? theme.color.fgPrimary) as Color}
             r={radius}

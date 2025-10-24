@@ -1902,16 +1902,7 @@ const AvailabilityChart = () => {
         position="left"
         tickLabelFormatter={(value) => `${value}%`}
       />
-      <Line
-        curve="stepAfter"
-        renderPoints={() => ({
-          fill: theme.color.bg,
-          strokeWidth: 2,
-          // stroke will be automatically set from colorMap
-        })}
-        seriesId="availability"
-        type="gradient"
-      />
+      <Line curve="stepAfter" renderPoints={() => true} seriesId="availability" type="gradient" />
       <Scrubber overlayOffset={10} />
     </CartesianChart>
   );
@@ -2062,19 +2053,22 @@ const LineChartStories = () => {
           showArea
           showXAxis
           showYAxis
-          AreaComponent={(props) => <GradientArea {...props} opacity={0.5} />}
-          height={defaultChartHeight}
+          AreaComponent={(props) => <GradientArea {...props} fillOpacity={0.5} />}
+          height={300}
+          renderPoints={() => true}
           series={[
             {
               id: 'line',
-              data: [5, 10, 15, 25, 35, 45, 25, 15, 35],
+              data: [5, 10, 15, 16.75, 17, 20, 25, 35, 45, 25, 15, 35],
               type: 'gradient',
               gradient: {
                 stops: [
+                  { offset: 0, color: '#ef4444' },
                   { offset: 20, color: '#ef4444' },
                   { offset: 20, color: '#f59e0b' },
                   { offset: 30, color: '#f59e0b' },
                   { offset: 30, color: '#10b981' },
+                  { offset: 50, color: '#10b981' },
                 ],
               },
             },

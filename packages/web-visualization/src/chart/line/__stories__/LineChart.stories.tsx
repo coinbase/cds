@@ -1738,6 +1738,7 @@ export const ColorMapStories = () => {
           showYAxis
           AreaComponent={(props) => <GradientArea {...props} fillOpacity={0.5} />}
           height={300}
+          renderPoints={() => true}
           series={[
             {
               id: 'line',

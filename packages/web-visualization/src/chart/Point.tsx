@@ -66,7 +66,7 @@ export type PointConfig = {
   yAxisId?: string;
   /**
    * Radius of the point.
-   * @default 4
+   * @default 5
    */
   radius?: number;
   /**
@@ -175,7 +175,7 @@ export const Point = memo<PointProps>(
     dataY,
     yAxisId,
     fill = 'var(--color-fgPrimary)',
-    radius = 4,
+    radius = 5,
     opacity,
     onClick,
     onScrubberEnter,

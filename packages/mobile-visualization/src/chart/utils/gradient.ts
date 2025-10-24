@@ -147,6 +147,23 @@ export const parseColor = (color: string, opacity: number): string => {
 };
 
 /**
+ * Applies an additional opacity multiplier to an rgba color string.
+ * Used to apply fillOpacity to gradient colors.
+ */
+export const applyOpacityToColor = (colorString: string, opacityMultiplier: number): string => {
+  // Parse rgba string: rgba(r, g, b, a)
+  const match = colorString.match(/rgba?\((\d+),\s*(\d+),\s*(\d+),?\s*([\d.]+)?\)/);
+  if (!match) return colorString;
+
+  const r = parseInt(match[1], 10);
+  const g = parseInt(match[2], 10);
+  const b = parseInt(match[3], 10);
+  const a = parseFloat(match[4] ?? '1');
+
+  return `rgba(${r}, ${g}, ${b}, ${a * opacityMultiplier})`;
+};
+
+/**
  * Processes Gradient to gradient configuration for Skia.
  * Colors are smoothly interpolated between stops by Skia.
  * Multiple stops at the same offset create hard color transitions.

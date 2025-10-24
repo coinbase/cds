@@ -7,7 +7,13 @@ import { Area, type AreaComponent } from '../area/Area';
 import { axisTickLabelsInitialAnimationVariants } from '../axis';
 import { useCartesianChartContext } from '../ChartProvider';
 import { Point, type PointConfig, type RenderPointsParams } from '../Point';
-import { type ChartPathCurveType, getLinePath, type Gradient } from '../utils';
+import {
+  type ChartPathCurveType,
+  evaluateGradientAtValue,
+  getGradientScale,
+  getLinePath,
+  type Gradient,
+} from '../utils';
 
 import { DottedLine } from './DottedLine';
 import { SolidLine } from './SolidLine';
@@ -216,6 +222,11 @@ export const Line = memo<LineProps>(
         : null;
     }, [xAxis?.data]);
 
+    const gradientScale = useMemo(() => {
+      if (!seriesGradient || !xScale || !yScale) return null;
+      return getGradientScale(seriesGradient, xScale, yScale);
+    }, [seriesGradient, xScale, yScale]);
+
     return (
       <>
         {showArea && (
@@ -270,13 +281,32 @@ export const Line = memo<LineProps>(
 
               const pointConfig = typeof point === 'object' ? point : {};
 
+              // Evaluate colors from gradient if available (only if not explicitly set)
+              let pointFill = pointConfig.fill ?? stroke;
+
+              if (gradientScale && seriesGradient && !pointConfig.fill) {
+                // Use the appropriate data value based on gradient axis
+                const axis = seriesGradient.axis ?? 'y';
+                const dataValue = axis === 'x' ? xValue : value;
+
+                const evaluatedColor = evaluateGradientAtValue(
+                  seriesGradient,
+                  dataValue,
+                  gradientScale,
+                );
+                if (evaluatedColor) {
+                  // Apply gradient color to fill if not explicitly set
+                  pointFill = evaluatedColor;
+                }
+              }
+
               return (
                 <Point
                   key={`${seriesId}-renderpoint-${index}`}
                   dataX={xValue}
                   dataY={value}
                   {...pointConfig}
-                  fill={pointConfig.fill ?? stroke}
+                  fill={pointFill}
                   onClick={pointConfig.onClick ?? onPointClick}
                   opacity={pointConfig.opacity ?? opacity}
                 />

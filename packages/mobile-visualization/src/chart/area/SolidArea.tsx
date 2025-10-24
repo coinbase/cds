@@ -54,8 +54,10 @@ export const SolidArea = memo<SolidAreaProps>(
       const range = scale.range();
 
       // Determine gradient direction based on axis
-      const gradientStart = axisType === 'x' ? vec(range[0], 0) : vec(0, range[1]);
-      const gradientEnd = axisType === 'x' ? vec(range[1], 0) : vec(0, range[0]);
+      // For y-axis, we need to flip the gradient direction because y-scales are inverted
+      // (higher data values have smaller pixel values, appearing at the top)
+      const gradientStart = axisType === 'x' ? vec(range[0], 0) : vec(0, range[0]);
+      const gradientEnd = axisType === 'x' ? vec(range[1], 0) : vec(0, range[1]);
 
       return {
         start: gradientStart,

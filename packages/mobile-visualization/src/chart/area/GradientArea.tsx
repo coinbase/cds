@@ -4,7 +4,7 @@ import { LinearGradient, vec } from '@shopify/react-native-skia';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import { Path, type PathProps } from '../Path';
-import { type Gradient, processGradient } from '../utils/gradient';
+import { applyOpacityToColor, type Gradient, processGradient } from '../utils/gradient';
 
 import type { AreaComponentProps } from './Area';
 
@@ -148,12 +148,17 @@ export const GradientArea = memo<GradientAreaProps>(
       const axisType = effectiveGradient.axis ?? 'y';
       const range = scale.range();
 
-      // Apply fillOpacity to all colors if fillOpacity < 1
-      const colors = processed.colors;
+      // Apply fillOpacity to all colors
+      const colors =
+        fillOpacity < 1
+          ? processed.colors.map((color) => applyOpacityToColor(color, fillOpacity))
+          : processed.colors;
 
       // Determine gradient direction based on axis
-      const gradientStart = axisType === 'x' ? vec(range[0], 0) : vec(0, range[1]);
-      const gradientEnd = axisType === 'x' ? vec(range[1], 0) : vec(0, range[0]);
+      // For y-axis, we need to flip the gradient direction because y-scales are inverted
+      // (higher data values have smaller pixel values, appearing at the top)
+      const gradientStart = axisType === 'x' ? vec(range[0], 0) : vec(0, range[0]);
+      const gradientEnd = axisType === 'x' ? vec(range[1], 0) : vec(0, range[1]);
 
       return {
         start: gradientStart,
@@ -161,7 +166,7 @@ export const GradientArea = memo<GradientAreaProps>(
         colors,
         positions: processed.positions,
       };
-    }, [gradient, fill, baseline, gradientScale, xScale, yScale]);
+    }, [gradient, fill, baseline, gradientScale, xScale, yScale, fillOpacity]);
 
     if (!gradientConfig) return;
 

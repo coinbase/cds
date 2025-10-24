@@ -19,6 +19,7 @@ import { evaluateGradientAtValue, type Gradient } from '../utils/gradient';
 const radius = 5;
 const glowRadius = 10;
 const pulseRadius = 15;
+const strokeWidth = 2;
 
 const pulseDuration = 2000; // 2 seconds
 const singlePulseDuration = 1000; // 1 second
@@ -253,19 +254,17 @@ export const ScrubberBeacon = memo(
               opacity={0.15}
               r={glowRadius}
             />
-            {/* Filled circle */}
+            {/* Outer stroke circle */}
+            <Circle
+              c={{ x: pixelCoordinate.x, y: pixelCoordinate.y }}
+              color={theme.color.bg}
+              r={radius + strokeWidth}
+            />
+            {/* Inner fill circle */}
             <Circle
               c={{ x: pixelCoordinate.x, y: pixelCoordinate.y }}
               color={pointColor}
               r={radius}
-            />
-            {/* Stroke circle (background color) */}
-            <Circle
-              c={{ x: pixelCoordinate.x, y: pixelCoordinate.y }}
-              color={theme.color.bg}
-              r={radius}
-              strokeWidth={2}
-              style="stroke"
             />
           </Group>
         );
@@ -277,16 +276,10 @@ export const ScrubberBeacon = memo(
           <Circle c={animatedPoint} color={pointColor} opacity={0.15} r={glowRadius} />
           {/* Pulse circle */}
           <Circle c={animatedPoint} color={pointColor} opacity={pulseOpacity} r={pulseRadius} />
-          {/* Filled circle */}
+          {/* Outer stroke circle */}
+          <Circle c={animatedPoint} color={theme.color.bg} r={radius + strokeWidth} />
+          {/* Inner fill circle */}
           <Circle c={animatedPoint} color={pointColor} r={radius} />
-          {/* Stroke circle (background color) */}
-          <Circle
-            c={animatedPoint}
-            color={theme.color.bg}
-            r={radius}
-            strokeWidth={2}
-            style="stroke"
-          />
         </Group>
       );
     },
