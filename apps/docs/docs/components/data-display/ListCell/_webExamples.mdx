@@ -140,6 +140,28 @@ Prefer `spacingVariant="condensed"` for the new ListCell design. The `compact` m
 </VStack>
 ```
 
+### Accessibility Label
+
+The accessibility props are only applied when the `<ListCell>` has a value for the `onClick` prop. Otherwise, content passed into the `<ListCell>` must use accessibility props and attributes as needed.
+
+```tsx live
+<VStack gap={1}>
+  <ListCell
+    accessibilityLabel="Accessibility label. Describes content for entire list cell. Applied when onClick prop has a value"
+    intermediary={<Icon name="chartLine" />}
+    media={<Avatar src={assets.btc.imageUrl} />}
+    onClick={() => window.alert('ListCell clicked!')}
+    title="BTC"
+  />
+
+  <ListCell
+    intermediary={<Icon accessibilityLabel="Chart icon" name="chartLine" />}
+    media={<Avatar accessibilityLabel="Bitcoin" src={assets.btc.imageUrl} />}
+    title="BTC"
+  />
+</VStack>
+```
+
 ### Multiline Description
 
 ```tsx live
