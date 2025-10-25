@@ -6,11 +6,13 @@ A ListCell row is divided into the following 5 columns:
 - End (detail & subdetail or action)
 - Accessory
 
-:::warning
+::::warning
 
-The `title`, `description`, `detail` and `subdetail` props are only intended to accept a string or `Text` component. Other use cases, while allowed, are not supported and may result in unexpected behavior.
+The `title`, `description`, `detail`, and `subdetail` string props are rendered inside a CDS `Text` with default fonts and truncation. To render arbitrary React nodes (icons, multiple elements, chips, etc.), use the Node props: `titleNode`, `descriptionNode`, `detailNode`, and `subdetailNode`.
 
-:::
+When using the Node props, you are responsible for styling, layout, and truncation behavior.
+
+::::
 
 ### Basic usage
 
@@ -85,6 +87,54 @@ Prefer `spacingVariant="condensed"` for the new ListCell design. The `compact` m
 />
 ```
 
+### Custom Title/Description via Node props
+
+```tsx live
+<ListCell
+  spacingVariant="condensed"
+  media={<Avatar src={assets.eth.imageUrl} size="m" />}
+  titleNode={
+    <HStack gap={2} alignItems="center">
+      <Icon name="check" />
+      <span>Verified account</span>
+    </HStack>
+  }
+  descriptionNode={
+    <HStack gap={2} alignItems="center">
+      <span>Composed description with any React nodes</span>
+      <Icon name="info" />
+    </HStack>
+  }
+/>
+```
+
+### Custom Detail/Subdetail via Node props
+
+```tsx live
+<ListCell
+  spacingVariant="condensed"
+  media={<Avatar src={assets.btc.imageUrl} size="m" />}
+  title="Custom end content"
+  description="Detail and subdetail rendered with custom nodes"
+  detailNode={
+    <HStack gap={2} alignItems="center" justifyContent="flex-end">
+      <Icon name="info" />
+      <Text as="div" font="body" overflow="truncate" textAlign="end">
+        $12,345.00
+      </Text>
+    </HStack>
+  }
+  subdetailNode={
+    <HStack gap={1} alignItems="center" justifyContent="flex-end">
+      <Icon name="info" />
+      <Text as="div" color="fgPositive" font="label2" overflow="truncate" textAlign="end">
+        +5.43%
+      </Text>
+    </HStack>
+  }
+/>
+```
+
 ### Interactive Cell with Accessory
 
 ```tsx live
@@ -94,6 +144,32 @@ Prefer `spacingVariant="condensed"` for the new ListCell design. The `compact` m
   description="Click or tap to interact"
   accessory="arrow"
   onClick={() => alert('Cell clicked!')}
+/>
+```
+
+### Custom Accessory via Node prop
+
+```tsx live
+<ListCell
+  spacingVariant="condensed"
+  title="Accessory Node"
+  description="Custom accessory with its own onClick"
+  media={<Avatar src={assets.eth.imageUrl} size="m" />}
+  end={
+    <Button
+      compact
+      onClick={() => {
+        alert('Action clicked');
+      }}
+    >
+      Action
+    </Button>
+  }
+  accessoryNode={
+    <Tooltip content="question">
+      <Icon size="s" name="questionMark" compact variant="secondary" />
+    </Tooltip>
+  }
 />
 ```
 
