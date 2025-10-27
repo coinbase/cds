@@ -194,6 +194,94 @@ try {
     fs.writeFileSync(file, newFileContent, { encoding: 'utf-8' });
   }
 
+  // After generic v7 path updates, apply ElevationThemeProviderBackwardCompat wrapping to Box.js in web and mobile v7
+  try {
+    const updateImport = (content) => {
+      if (content.includes('ElevationThemeProviderBackwardCompat')) return content;
+      const importLine =
+        "import { ElevationThemeProviderBackwardCompat } from '../../../system/ElevationThemeProviderBackwardCompat';\n";
+      const jsxRuntimeImportPattern = /import\s+\{[^}]*\}\s+from\s+"react\/jsx-runtime";\n/;
+      if (jsxRuntimeImportPattern.test(content)) {
+        return content.replace(jsxRuntimeImportPattern, (m) => m + importLine);
+      }
+      // Fallback: prepend import if jsx-runtime import not found for some reason
+      return importLine + content;
+    };
+
+    const updateWebBox = () => {
+      const webBoxPath = path.join(v7Dir, 'esm', 'layout', 'Box.js');
+      if (!fs.existsSync(webBoxPath)) return;
+      let content = fs.readFileSync(webBoxPath, 'utf-8');
+      content = updateImport(content);
+
+      // Wrap ElevationProvider with ElevationThemeProviderBackwardCompat when props.elevation is set
+      const webIfReturnPattern =
+        /if\s*\(props\.elevation\)\s*\{\s*return\s*\/\*#__PURE__\*\/_jsx\(ElevationProvider,\s*\{\s*elevation:\s*([^,]+),\s*children:\s*boxInner\s*\}\s*\);\s*\}/;
+      const webWrappedReplacement =
+        'if (props.elevation) { return /*#__PURE__*/_jsx(ElevationThemeProviderBackwardCompat, { elevation: $1, children: /*#__PURE__*/_jsx(ElevationProvider, { elevation: $1, children: boxInner }) }); }';
+      let before = content;
+      content = content.replace(webIfReturnPattern, webWrappedReplacement);
+      if (content === before) {
+        // Fallback without PURE hint or minor spacing differences
+        const fallbackPattern =
+          /if\s*\(props\.elevation\)\s*\{\s*return[\s\S]*?_jsx\(ElevationProvider,[\s\S]*?elevation:\s*([^,]+),[\s\S]*?children:\s*boxInner[\s\S]*?\);\s*\}/;
+        content = content.replace(fallbackPattern, webWrappedReplacement);
+      }
+
+      fs.writeFileSync(webBoxPath, content, { encoding: 'utf-8' });
+      console.log(
+        `${greenColor}Updated v7 web Box.js for elevation theme backward compat${resetColor}`,
+      );
+    };
+
+    const updateMobileBox = () => {
+      const mobileBoxPath = path.join(v7Dir, 'esm', 'layout', 'Box.js');
+      if (!fs.existsSync(mobileBoxPath)) return;
+      let content = fs.readFileSync(mobileBoxPath, 'utf-8');
+      content = updateImport(content);
+
+      // Ensure we pass local elevation variable, not props.elevation, in any existing transforms
+      content = content.replaceAll(
+        'elevation: props === null || props === void 0 ? void 0 : props.elevation',
+        'elevation: elevation',
+      );
+
+      // Inject ElevationThemeProviderBackwardCompat as first child inside ViewComponent children array
+      const providerAlreadyInjectedPattern =
+        /children:\s*\[\/\*#__PURE__\*\/_jsx\(ElevationThemeProviderBackwardCompat/;
+      if (!providerAlreadyInjectedPattern.test(content)) {
+        const childrenToken = 'children: [';
+        const overflowToken = ', overflow ===';
+        const childrenIdx = content.indexOf(childrenToken);
+        if (childrenIdx !== -1) {
+          const afterChildrenIdx = childrenIdx + childrenToken.length;
+          const commaIdx = content.indexOf(overflowToken, afterChildrenIdx);
+          if (commaIdx !== -1) {
+            const firstChild = content.slice(afterChildrenIdx, commaIdx);
+            const newFirstChild =
+              '/*#__PURE__*/_jsx(ElevationThemeProviderBackwardCompat, { elevation: elevation, children: ' +
+              firstChild.trim() +
+              ' })';
+            content = content.slice(0, afterChildrenIdx) + newFirstChild + content.slice(commaIdx);
+          }
+        }
+      }
+
+      fs.writeFileSync(mobileBoxPath, content, { encoding: 'utf-8' });
+      console.log(
+        `${greenColor}Updated v7 mobile Box.js for elevation theme backward compat${resetColor}`,
+      );
+    };
+
+    if (packageName === '@cbhq/cds-web') updateWebBox();
+    if (packageName === '@cbhq/cds-mobile') updateMobileBox();
+  } catch (e) {
+    console.warn(
+      `${yellowColor}Warning: Failed to update v7 Box.js for elevation theme backward compat.${resetColor}`,
+    );
+    console.warn(`Error: ${e.message}`);
+  }
+
   // For any package, we need to update the package.json exports
   const exportPaths = v7PackageJson.exports;
   delete exportPaths['./package.json'];
