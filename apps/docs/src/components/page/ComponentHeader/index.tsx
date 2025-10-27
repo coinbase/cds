@@ -7,6 +7,7 @@ import { VStack } from '@cbhq/cds-web/layout/VStack';
 import { Link } from '@cbhq/cds-web/typography/Link';
 import { Text } from '@cbhq/cds-web/typography/Text';
 import DocusaurusLink from '@docusaurus/Link';
+import { LLMDocButtons } from '@site/src/components/page/LLMDocButton';
 import { VersionLabel } from '@site/src/components/page/VersionLabel';
 import { useDocsTheme } from '@site/src/theme/Layout/Provider/UnifiedThemeContext';
 import { usePlatformContext } from '@site/src/utils/PlatformContext';
@@ -193,7 +194,6 @@ export const ComponentHeader = memo(
               <HStack
                 as="ul"
                 flexWrap="wrap"
-                gap={{ base: 1, phone: 0 }}
                 margin={0}
                 padding={0}
                 style={{
@@ -202,7 +202,7 @@ export const ComponentHeader = memo(
               >
                 {dependencies.map((dependency, index) => (
                   <li key={dependency.name}>
-                    <Text font="label2">
+                    <Text font="label2" style={{ whiteSpace: 'pre-wrap' }}>
                       {dependency.url ? (
                         <Link as={DocusaurusLink} target="_blank" to={dependency.url}>
                           {dependency.name}
@@ -228,7 +228,6 @@ export const ComponentHeader = memo(
               <HStack
                 as="ul"
                 flexWrap="wrap"
-                gap={{ base: 1, phone: 0 }}
                 margin={0}
                 padding={0}
                 style={{
@@ -237,7 +236,7 @@ export const ComponentHeader = memo(
               >
                 {relatedComponents.map((component, index) => (
                   <li key={component.url}>
-                    <Text font="label2">
+                    <Text font="label2" style={{ whiteSpace: 'pre-wrap' }}>
                       <Link as={DocusaurusLink} to={component.url}>
                         {component.label}
                       </Link>
@@ -249,6 +248,10 @@ export const ComponentHeader = memo(
             </VStack>
           </>
         )}
+        <Divider />
+        <HStack paddingX={{ base: 4, phone: 2 }} paddingY={2}>
+          <LLMDocButtons />
+        </HStack>
       </VStack>
     );
   },

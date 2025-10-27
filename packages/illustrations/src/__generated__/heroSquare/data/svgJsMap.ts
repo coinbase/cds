@@ -75,20 +75,20 @@ const svgJsMap = {
     dark: () => require('../svgJs/dark/backedByUsDollar-5.js').content,
   },
   baseChartLarge: {
-    light: () => require('../svgJs/light/baseChartLarge-0.js').content,
-    dark: () => require('../svgJs/dark/baseChartLarge-0.js').content,
+    light: () => require('../svgJs/light/baseChartLarge-1.js').content,
+    dark: () => require('../svgJs/dark/baseChartLarge-1.js').content,
   },
   baseCheck: {
     light: () => require('../svgJs/light/baseCheck-1.js').content,
     dark: () => require('../svgJs/dark/baseCheck-1.js').content,
   },
   baseCoinCryptoLarge: {
-    light: () => require('../svgJs/light/baseCoinCryptoLarge-0.js').content,
-    dark: () => require('../svgJs/dark/baseCoinCryptoLarge-0.js').content,
+    light: () => require('../svgJs/light/baseCoinCryptoLarge-1.js').content,
+    dark: () => require('../svgJs/dark/baseCoinCryptoLarge-1.js').content,
   },
   baseCoinNetworkLarge: {
-    light: () => require('../svgJs/light/baseCoinNetworkLarge-0.js').content,
-    dark: () => require('../svgJs/dark/baseCoinNetworkLarge-0.js').content,
+    light: () => require('../svgJs/light/baseCoinNetworkLarge-1.js').content,
+    dark: () => require('../svgJs/dark/baseCoinNetworkLarge-1.js').content,
   },
   baseConnectLarge: {
     light: () => require('../svgJs/light/baseConnectLarge-1.js').content,
@@ -103,16 +103,16 @@ const svgJsMap = {
     dark: () => require('../svgJs/dark/baseCreatorCoinEmpty-0.js').content,
   },
   baseDecentralizationLarge: {
-    light: () => require('../svgJs/light/baseDecentralizationLarge-0.js').content,
-    dark: () => require('../svgJs/dark/baseDecentralizationLarge-0.js').content,
+    light: () => require('../svgJs/light/baseDecentralizationLarge-1.js').content,
+    dark: () => require('../svgJs/dark/baseDecentralizationLarge-1.js').content,
   },
   basedInUsa: {
     light: () => require('../svgJs/light/basedInUsa-5.js').content,
     dark: () => require('../svgJs/dark/basedInUsa-5.js').content,
   },
   baseEmptyLarge: {
-    light: () => require('../svgJs/light/baseEmptyLarge-0.js').content,
-    dark: () => require('../svgJs/dark/baseEmptyLarge-0.js').content,
+    light: () => require('../svgJs/light/baseEmptyLarge-1.js').content,
+    dark: () => require('../svgJs/dark/baseEmptyLarge-1.js').content,
   },
   baseErrorButterfly: {
     light: () => require('../svgJs/light/baseErrorButterfly-0.js').content,
@@ -127,52 +127,52 @@ const svgJsMap = {
     dark: () => require('../svgJs/dark/baseLoadingLarge-1.js').content,
   },
   baseLocationLarge: {
-    light: () => require('../svgJs/light/baseLocationLarge-0.js').content,
-    dark: () => require('../svgJs/dark/baseLocationLarge-0.js').content,
+    light: () => require('../svgJs/light/baseLocationLarge-1.js').content,
+    dark: () => require('../svgJs/dark/baseLocationLarge-1.js').content,
   },
   baseMintNftLarge: {
-    light: () => require('../svgJs/light/baseMintNftLarge-0.js').content,
-    dark: () => require('../svgJs/dark/baseMintNftLarge-0.js').content,
+    light: () => require('../svgJs/light/baseMintNftLarge-1.js').content,
+    dark: () => require('../svgJs/dark/baseMintNftLarge-1.js').content,
   },
   baseNetworkLarge: {
-    light: () => require('../svgJs/light/baseNetworkLarge-0.js').content,
-    dark: () => require('../svgJs/dark/baseNetworkLarge-0.js').content,
+    light: () => require('../svgJs/light/baseNetworkLarge-1.js').content,
+    dark: () => require('../svgJs/dark/baseNetworkLarge-1.js').content,
   },
   baseNftLarge: {
-    light: () => require('../svgJs/light/baseNftLarge-0.js').content,
-    dark: () => require('../svgJs/dark/baseNftLarge-0.js').content,
+    light: () => require('../svgJs/light/baseNftLarge-1.js').content,
+    dark: () => require('../svgJs/dark/baseNftLarge-1.js').content,
   },
   basePaycoinLarge: {
-    light: () => require('../svgJs/light/basePaycoinLarge-0.js').content,
-    dark: () => require('../svgJs/dark/basePaycoinLarge-0.js').content,
+    light: () => require('../svgJs/light/basePaycoinLarge-1.js').content,
+    dark: () => require('../svgJs/dark/basePaycoinLarge-1.js').content,
   },
   basePeopleLarge: {
-    light: () => require('../svgJs/light/basePeopleLarge-0.js').content,
-    dark: () => require('../svgJs/dark/basePeopleLarge-0.js').content,
+    light: () => require('../svgJs/light/basePeopleLarge-1.js').content,
+    dark: () => require('../svgJs/dark/basePeopleLarge-1.js').content,
   },
   basePiechartLarge: {
-    light: () => require('../svgJs/light/basePiechartLarge-0.js').content,
-    dark: () => require('../svgJs/dark/basePiechartLarge-0.js').content,
+    light: () => require('../svgJs/light/basePiechartLarge-1.js').content,
+    dark: () => require('../svgJs/dark/basePiechartLarge-1.js').content,
   },
   baseRewardsCalmLarge: {
-    light: () => require('../svgJs/light/baseRewardsCalmLarge-0.js').content,
-    dark: () => require('../svgJs/dark/baseRewardsCalmLarge-0.js').content,
+    light: () => require('../svgJs/light/baseRewardsCalmLarge-1.js').content,
+    dark: () => require('../svgJs/dark/baseRewardsCalmLarge-1.js').content,
   },
   baseSecurityLarge: {
-    light: () => require('../svgJs/light/baseSecurityLarge-0.js').content,
-    dark: () => require('../svgJs/dark/baseSecurityLarge-0.js').content,
+    light: () => require('../svgJs/light/baseSecurityLarge-1.js').content,
+    dark: () => require('../svgJs/dark/baseSecurityLarge-1.js').content,
   },
   baseSendLarge: {
-    light: () => require('../svgJs/light/baseSendLarge-0.js').content,
-    dark: () => require('../svgJs/dark/baseSendLarge-0.js').content,
+    light: () => require('../svgJs/light/baseSendLarge-1.js').content,
+    dark: () => require('../svgJs/dark/baseSendLarge-1.js').content,
   },
   baseSocial: {
-    light: () => require('../svgJs/light/baseSocial-0.js').content,
-    dark: () => require('../svgJs/dark/baseSocial-0.js').content,
+    light: () => require('../svgJs/light/baseSocial-1.js').content,
+    dark: () => require('../svgJs/dark/baseSocial-1.js').content,
   },
   baseTargetLarge: {
-    light: () => require('../svgJs/light/baseTargetLarge-0.js').content,
-    dark: () => require('../svgJs/dark/baseTargetLarge-0.js').content,
+    light: () => require('../svgJs/light/baseTargetLarge-1.js').content,
+    dark: () => require('../svgJs/dark/baseTargetLarge-1.js').content,
   },
   bigBtc: {
     light: () => require('../svgJs/light/bigBtc-6.js').content,

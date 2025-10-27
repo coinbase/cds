@@ -11,7 +11,8 @@
         {
           "projects": [
             "docusaurus-plugin-docgen",
-            "docusaurus-plugin-kbar"
+            "docusaurus-plugin-kbar",
+            "docusaurus-plugin-llm-dev-server"
           ],
           "target": "build"
         }
@@ -37,10 +38,11 @@
       "options": {
         "commands": [
           "docusaurus build --out-dir dist",
-          "node ai-doc-generator/generator.cjs"
+          "node ai-doc-generator/generator.cjs",
+          "node ai-doc-generator/validate.cjs dist"
         ],
-        "parallel": false,
-        "cwd": "apps/docs"
+        "cwd": "apps/docs",
+        "parallel": false
       }
     },
     "lint": {
@@ -64,6 +66,15 @@
     },
     "build-llm-docs": {
       "command": "node {projectRoot}/ai-doc-generator/generator.cjs",
+      "options": {
+        "cwd": "{workspaceRoot}"
+      }
+    },
+    "validate-llm-docs-dist": {
+      "command": "node {projectRoot}/ai-doc-generator/validate.cjs dist",
+      "dependsOn": [
+        "build-llm-docs"
+      ],
       "options": {
         "cwd": "{workspaceRoot}"
       }
