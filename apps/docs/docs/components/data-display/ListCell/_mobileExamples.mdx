@@ -127,6 +127,28 @@ Prefer `spacingVariant="condensed"` for the new ListCell design. The `compact` m
 </VStack>
 ```
 
+### Accessibility Label
+
+The accessibility props are only applied when the `<ListCell>` has a value for the `onPress` prop. Otherwise, content passed into the `<ListCell>` must use accessibility props and attributes as needed.
+
+```tsx
+<VStack gap={1}>
+  <ListCell
+    accessibilityLabel="Accessibility label. Describes content for entire list cell. Applied when onPress prop has a value"
+    intermediary={<Icon name="chartLine" />}
+    media={<Avatar src={assets.btc.imageUrl} />}
+    onPress={() => console.log('List cell pressed')}
+    title="BTC"
+  />
+
+  <ListCell
+    intermediary={<Icon accessibilityLabel="Chart icon" name="chartLine" />}
+    media={<Avatar accessibilityLabel="Bitcoin" src={assets.btc.imageUrl} />}
+    title="BTC"
+  />
+</VStack>
+```
+
 ### Compact Mode
 
 ```tsx
@@ -241,12 +263,12 @@ With helper text (top + bottom layout):
 Mapping to `styles` / `classNames` keys:
 
 - root: outer `Box` wrapping the entire cell
-- pressable: interactive overlay when `href`/`onClick`/keyboard handlers are present
+- pressable: interactive overlay when `href` / `onPress` event handlers are present
 - contentContainer: container around top and optional bottom content
 - mainContent: inner horizontal layout that holds the main pieces
 - title/description: stacked text column within `topContent`
 - media: leading media container
 - intermediary: middle container between main and end
-- end: container for `detail`/`subdetail` or `end` prop you pass in
+- end: container for `detail` / `subdetail` or `end` prop you pass in
 - accessory: trailing accessory container
 - helperText: container below main content to display helper text
