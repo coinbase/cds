@@ -259,6 +259,12 @@ const config: Config = {
     ],
     ['@cbhq/docusaurus-plugin-docgen', docgenConfig],
     webpackPlugin,
+    [
+      '@cbhq/docusaurus-plugin-llm-dev-server',
+      {
+        generatorPath: path.join(__dirname, 'ai-doc-generator'),
+      },
+    ],
   ],
 };
 
