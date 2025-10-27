@@ -10,8 +10,8 @@ import { CellAccessory, type CellAccessoryType } from './CellAccessory';
 import { CellDetail, type CellDetailProps } from './CellDetail';
 
 export const condensedInnerSpacing = {
-  paddingX: 2,
-  paddingY: 0.5,
+  paddingX: 3,
+  paddingY: 1,
   marginX: 0,
 } as const satisfies CellSpacing;
 
