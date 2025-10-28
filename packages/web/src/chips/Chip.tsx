@@ -1,4 +1,5 @@
-import { forwardRef, Fragment, memo, useMemo } from 'react';
+import { forwardRef, Fragment, memo, type ReactNode, useMemo } from 'react';
+import { getChipsSpacingProps } from '@coinbase/cds-common/chips/getChipsSpacingProps';
 import { curves, durations } from '@coinbase/cds-common/motion/tokens';
 import { chipMaxWidth } from '@coinbase/cds-common/tokens/chip';
 import { css } from '@linaria/core';
@@ -29,18 +30,18 @@ export const Chip = memo(
       width = 'fit-content',
       height = 'fit-content',
       compact,
-      gap = 1,
-      paddingX = compact ? 1.5 : 2,
-      paddingY = compact ? 0.5 : 1,
+      gap = 0.75,
+      start,
+      end,
+      paddingX,
+      paddingY,
       padding,
       paddingTop,
       paddingBottom,
       paddingStart,
-      justifyContent,
       paddingEnd,
+      justifyContent,
       children,
-      start,
-      end,
       maxWidth = chipMaxWidth,
       inverted,
       numberOfLines = 1,
@@ -52,6 +53,7 @@ export const Chip = memo(
       className,
       styles,
       classNames,
+      font = compact ? 'label1' : 'headline',
       onClick,
       ...props
     }: ChipProps,
@@ -70,40 +72,29 @@ export const Chip = memo(
       maxWidth,
     };
 
-    const content = useMemo(() => {
-      return (
-        <HStack
-          alignItems={alignItems}
-          className={classNames?.content}
-          gap={gap}
-          justifyContent={justifyContent}
-          maxWidth={maxWidth}
-          padding={padding}
-          paddingBottom={paddingBottom}
-          paddingEnd={paddingEnd}
-          paddingStart={paddingStart}
-          paddingTop={paddingTop}
-          paddingX={paddingX}
-          paddingY={paddingY}
-          style={{ ...contentStyle, ...styles?.content }}
-        >
-          {start}
-          {typeof children === 'string' ? (
-            <Text flexShrink={1} font="headline" numberOfLines={numberOfLines}>
-              {children}
-            </Text>
-          ) : (
-            <Box flexShrink={1}>{children}</Box>
-          )}
-          {end}
-        </HStack>
-      );
+    const spacingProps = useMemo(() => {
+      const defaults = getChipsSpacingProps({
+        compact: !!compact,
+        start: !!start,
+        end: !!end,
+        children: !!children,
+      });
+      return {
+        gap: gap ?? defaults.gap,
+        padding: padding ?? defaults.padding,
+        paddingBottom: paddingBottom ?? defaults.paddingBottom,
+        paddingEnd: paddingEnd ?? defaults.paddingEnd,
+        paddingStart: paddingStart ?? defaults.paddingStart,
+        paddingTop: paddingTop ?? defaults.paddingTop,
+        paddingX: paddingX ?? defaults.paddingX,
+        paddingY: paddingY ?? defaults.paddingY,
+      };
     }, [
-      alignItems,
-      classNames?.content,
+      compact,
+      start,
+      end,
+      children,
       gap,
-      justifyContent,
-      maxWidth,
       padding,
       paddingBottom,
       paddingEnd,
@@ -111,10 +102,40 @@ export const Chip = memo(
       paddingTop,
       paddingX,
       paddingY,
+    ]);
+
+    const content = useMemo(() => {
+      return (
+        <HStack
+          alignItems={alignItems}
+          className={classNames?.content}
+          justifyContent={justifyContent}
+          maxWidth={maxWidth}
+          {...spacingProps}
+          style={{ ...contentStyle, ...styles?.content }}
+        >
+          {start}
+          {typeof children === 'string' ? (
+            <Text flexShrink={1} font={font} numberOfLines={numberOfLines}>
+              {children}
+            </Text>
+          ) : children ? (
+            <Box flexShrink={1}>{children}</Box>
+          ) : null}
+          {end}
+        </HStack>
+      );
+    }, [
+      alignItems,
+      classNames?.content,
+      justifyContent,
+      maxWidth,
+      spacingProps,
       contentStyle,
       styles?.content,
       start,
       children,
+      font,
       numberOfLines,
       end,
     ]);

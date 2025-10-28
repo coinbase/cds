@@ -96,7 +96,7 @@ export const SelectChip = memo(
           ref={mergedRefs}
           noScaleOnPress
           disabled={disabled}
-          end={end ?? <AnimatedCaret color="fg" rotate={isOpen ? 0 : 180} />}
+          end={end ?? <AnimatedCaret active color="fg" rotate={isOpen ? 0 : 180} size="xs" />}
           inverted={active}
           onClick={handleOpenMenu}
           testID={testID}

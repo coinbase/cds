@@ -19,7 +19,7 @@ export type ChipBaseProps = SharedProps &
   > &
   Pick<SharedAccessibilityProps, 'accessibilityLabel'> & {
     /** ReactNode placed in the center of the Chip */
-    children: React.ReactNode;
+    children?: React.ReactNode;
     /** ReactNode placed before the value */
     start?: React.ReactNode;
     /** ReactNode placed after the value */

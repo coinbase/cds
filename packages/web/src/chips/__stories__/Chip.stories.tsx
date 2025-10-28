@@ -13,13 +13,6 @@ export default {
   component: Chip,
 };
 
-const assetIconProps: RemoteImageProps = {
-  height: 16,
-  shape: 'circle',
-  source: assets.eth.imageUrl,
-  width: 16,
-};
-
 const ChipExamples = ({
   label,
   direction = 'row',
@@ -30,48 +23,74 @@ const ChipExamples = ({
 >) => {
   const divRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
+  const mediaSize = props.compact ? 16 : 24;
+  const textFont = props.compact ? 'label1' : 'headline';
+  const assetIconProps: RemoteImageProps = {
+    height: mediaSize,
+    shape: 'circle',
+    source: assets.eth.imageUrl,
+    width: mediaSize,
+  };
+
   return (
-    <Box flexDirection={direction} gap={2}>
-      <Chip {...props}>{label ?? <Text font="headline">Base</Text>}</Chip>
+    <Box flexDirection={direction} flexWrap="wrap" gap={2}>
+      <Chip {...props}>{label ?? <Text font={textFont}>Label only</Text>}</Chip>
+      <Chip {...props} start={<RemoteImage {...assetIconProps} />} />
+      <Chip
+        {...props}
+        end={<Icon active color="fg" name="caretDown" size="xs" />}
+        start={<RemoteImage {...assetIconProps} />}
+      />
       <Chip ref={divRef} {...props} start={<RemoteImage {...assetIconProps} />}>
-        {label ?? <Text font="headline">Start</Text>}
+        {label ?? <Text font={textFont}>Media + Label</Text>}
+      </Chip>
+      <Chip {...props} end={<Icon active color="fg" name="filter" size="xs" />}>
+        <Text font={textFont}>Label + Icon</Text>
       </Chip>
       <Chip
         {...props}
-        end={<Icon color="fg" name="caretDown" size="s" />}
+        end={<Icon active color="fg" name="caretDown" size="xs" />}
         start={<RemoteImage {...assetIconProps} />}
       >
-        {label ?? <Text font="headline">End & Start</Text>}
+        {label ?? <Text font={textFont}>All three</Text>}
       </Chip>
-      <Chip {...props} end={<Icon color="fg" name="filter" size="s" />}>
-        Filter 2
+      <Chip
+        {...props}
+        end={<Icon active color="fg" name="caretDown" size="xs" />}
+        start={<RemoteImage {...assetIconProps} />}
+      >
+        {label ?? (
+          <Text font={textFont} overflow="break">
+            Looooooooooooooong Label
+          </Text>
+        )}
       </Chip>
       <Chip
         {...props}
         ref={buttonRef}
-        end={<Icon color="fg" name="caretDown" size="s" />}
+        end={<Icon active color="fg" name="caretDown" size="xs" />}
         onClick={() => {}}
         start={<RemoteImage {...assetIconProps} />}
       >
-        {label ?? <Text font="headline">Pressable</Text>}
+        {label ?? <Text font={textFont}>Pressable</Text>}
       </Chip>
       <Chip
         {...props}
         accessibilityLabel="a11y label"
-        end={<Icon color="fg" name="caretDown" size="s" />}
+        end={<Icon active color="fg" name="caretDown" size="xs" />}
         onClick={() => {}}
         start={<RemoteImage {...assetIconProps} />}
       >
-        {label ?? <Text font="headline">Pressable with a11y label</Text>}
+        {label ?? <Text font={textFont}>Pressable with a11y label</Text>}
       </Chip>
       <Chip
         {...props}
         disabled
-        end={<Icon color="fg" name="caretDown" size="s" />}
+        end={<Icon active color="fg" name="caretDown" size="xs" />}
         onClick={() => {}}
         start={<RemoteImage {...assetIconProps} />}
       >
-        {label ?? <Text font="headline">Disabled</Text>}
+        {label ?? <Text font={textFont}>Disabled</Text>}
       </Chip>
     </Box>
   );

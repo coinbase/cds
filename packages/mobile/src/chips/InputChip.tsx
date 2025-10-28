@@ -23,9 +23,10 @@ export const InputChip = memo(
         accessibilityLabel={accessibilityLabel}
         end={
           <Icon
+            active
             color="fg"
             name="close"
-            size="s"
+            size="xs"
             testID={testID ? `${testID}-close-icon` : 'input-chip-close-icon'}
           />
         }

@@ -12,60 +12,68 @@ import { Text } from '../../typography/Text';
 import { Chip } from '../Chip';
 import type { ChipBaseProps } from '../ChipProps';
 
-const assetIconProps: RemoteImageProps = {
-  height: 16,
-  shape: 'circle',
-  source: assets.eth.imageUrl,
-  width: 16,
-};
-
 const ChipExamples = ({
   label,
   flexDirection = 'column',
   ...props
 }: { label?: string; flexDirection?: 'row' | 'column' } & Omit<ChipBaseProps, 'children'>) => {
   const ref = useRef<View>(null);
+  const mediaSize = props.compact ? 16 : 24;
+  const textFont = props.compact ? 'label1' : 'headline';
+  const assetIconProps: RemoteImageProps = {
+    height: mediaSize,
+    shape: 'circle',
+    source: assets.eth.imageUrl,
+    width: mediaSize,
+  };
+
   return (
     <Box flexDirection={flexDirection} flexGrow={1} flexWrap="wrap" gap={1}>
       <Chip ref={ref} {...props}>
-        {label ?? <Text font="headline">Base</Text>}
+        {label ?? <Text font={textFont}>Label only</Text>}
       </Chip>
+      <Chip {...props} start={<RemoteImage {...assetIconProps} />} />
+      <Chip
+        {...props}
+        end={<Icon active color="fg" name="caretDown" size="xs" />}
+        start={<RemoteImage {...assetIconProps} />}
+      />
       <Chip {...props} start={<RemoteImage {...assetIconProps} />}>
-        {label ?? <Text font="headline">Start</Text>}
+        {label ?? <Text font={textFont}>Media + Label</Text>}
+      </Chip>
+      <Chip {...props} end={<Icon active color="fg" name="filter" size="xs" />}>
+        <Text font={textFont}>Label + Icon</Text>
       </Chip>
       <Chip
         {...props}
-        end={<Icon color="fg" name="caretDown" size="s" />}
+        end={<Icon active color="fg" name="caretDown" size="xs" />}
         start={<RemoteImage {...assetIconProps} />}
       >
-        {label ?? <Text font="headline">End & Start</Text>}
+        {label ?? <Text font={textFont}>All three</Text>}
       </Chip>
       <Chip
         {...props}
-        end={<Icon color="fg" name="caretDown" size="s" />}
+        end={<Icon active color="fg" name="caretDown" size="xs" />}
         start={<RemoteImage {...assetIconProps} />}
       >
-        {label ?? <Text font="headline">Looooooooooooooong Label</Text>}
-      </Chip>
-      <Chip {...props} end={<Icon color="fg" name="filter" size="s" />}>
-        <Text font="headline">Filter 2</Text>
+        {label ?? <Text font={textFont}>Looooooooooooooong Label</Text>}
       </Chip>
       <Chip
         {...props}
-        end={<Icon color="fg" name="caretDown" size="s" />}
+        end={<Icon active color="fg" name="caretDown" size="xs" />}
         onPress={NoopFn}
         start={<RemoteImage {...assetIconProps} />}
       >
-        {label ?? <Text font="headline">Pressable</Text>}
+        {label ?? <Text font={textFont}>Pressable</Text>}
       </Chip>
       <Chip
         {...props}
         disabled
-        end={<Icon color="fg" name="caretDown" size="s" />}
+        end={<Icon active color="fg" name="caretDown" size="xs" />}
         onPress={NoopFn}
         start={<RemoteImage {...assetIconProps} />}
       >
-        {label ?? <Text font="headline">Disabled</Text>}
+        {label ?? <Text font={textFont}>Disabled</Text>}
       </Chip>
     </Box>
   );
