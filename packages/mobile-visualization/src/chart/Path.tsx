@@ -1,5 +1,10 @@
 import { memo, type ReactNode, useEffect, useMemo } from 'react';
-import { useDerivedValue, useSharedValue, withTiming, type SharedValue } from 'react-native-reanimated';
+import {
+  type SharedValue,
+  useDerivedValue,
+  useSharedValue,
+  withTiming,
+} from 'react-native-reanimated';
 import type { Rect as RectType, SharedProps } from '@coinbase/cds-common/types';
 import {
   type Color,
@@ -73,6 +78,13 @@ export type PathBaseProps = SharedProps & {
    */
   clipRect?: RectType;
   /**
+   * Explicit clip path override (Skia SkPath).
+   * If provided, this takes precedence over clipRect/clipOffset generation.
+   * Pass undefined to explicitly disable clipping.
+   * If not provided at all, defaults to generating clip path from clipRect/clipOffset.
+   */
+  clipPath?: any | null; // SkPath type from Skia, or undefined/null
+  /**
    * Stroke dash array for dashed lines
    */
   strokeDasharray?: string;
@@ -83,6 +95,7 @@ export type PathBaseProps = SharedProps & {
   animate?: boolean;
   /**
    * The offset to add to the clip rect boundaries.
+   * Ignored if clipPath is explicitly provided.
    */
   clipOffset?: number;
   /**
@@ -119,9 +132,10 @@ export type PathBaseProps = SharedProps & {
 
 export type PathProps = PathBaseProps;
 
-export const Path = memo<PathProps>(
-  ({
+export const Path = memo<PathProps>((props) => {
+  const {
     clipRect,
+    clipPath: clipPathProp,
     clipOffset,
     d = '',
     fill,
@@ -142,166 +156,189 @@ export const Path = memo<PathProps>(
     children,
     testID,
     animate: animateProp,
-  }) => {
-    // Map deprecated props to new props for backwards compatibility
-    const resolvedStrokeCap = strokeCap ?? strokeLinecap ?? 'butt';
-    const resolvedStrokeJoin = strokeJoin ?? strokeLinejoin ?? 'miter';
-    const { animate: animateContext, drawingArea: contextRect } = useCartesianChartContext();
-    const rect = clipRect ?? contextRect;
-    const animate = animateProp ?? animateContext;
+  } = props;
 
-    // Animated progress for path trimming (Skia's native animation)
-    const animationProgress = useSharedValue(animate ? 0 : 1);
+  // Map deprecated props to new props for backwards compatibility
+  const resolvedStrokeCap = strokeCap ?? strokeLinecap ?? 'butt';
+  const resolvedStrokeJoin = strokeJoin ?? strokeLinejoin ?? 'miter';
+  const { animate: animateContext, drawingArea: contextRect } = useCartesianChartContext();
+  const rect = clipRect ?? contextRect;
+  const animate = animateProp ?? animateContext;
 
-    // Check if d is a SharedValue or a plain string
-    const isAnimatedPath = typeof d === 'object' && d !== null && 'value' in d;
+  // Check if clipPath was explicitly provided (even if undefined)
+  // We check 'clipPath' in props, not the value, because clipPath={undefined} is valid
+  const hasExplicitClipPath = 'clipPath' in props;
 
-    // Convert SVG path string to Skia path
-    // If d is animated, convert it in a derived value (worklet)
-    const skiaPath = useDerivedValue(() => {
-      'worklet';
-      const pathString = isAnimatedPath ? (d as SharedValue<string>).value : (d as string);
-      const path = svgPathToSkiaPath(pathString || '');
-      // Return a default empty path if null to satisfy Skia's type requirements
-      return path ?? Skia.Path.Make();
-    }, [d, isAnimatedPath]);
+  // Animated progress for path trimming (Skia's native animation)
+  const animationProgress = useSharedValue(animate ? 0 : 1);
 
-    // The clip offset provides extra padding to prevent path from being cut off
-    // Area charts typically use offset=0 for exact clipping, while lines use offset=2 for breathing room
-    const totalOffset = (clipOffset ?? 0) * 2; // Applied on both sides
+  // Check if d is a SharedValue or a plain string
+  const isAnimatedPath = typeof d === 'object' && d !== null && 'value' in d;
 
-    // Create clip path for the chart area
-    const clipPath = useMemo(() => {
-      if (!rect) return null;
-      const clipRect = Skia.Path.Make();
-      clipRect.addRect({
-        x: rect.x - (clipOffset ?? 0),
-        y: rect.y - (clipOffset ?? 0),
-        width: rect.width + totalOffset,
-        height: rect.height + totalOffset,
-      });
-      return clipRect;
-    }, [rect, clipOffset, totalOffset]);
+  // Convert SVG path string to Skia path
+  // If d is animated, convert it in a derived value (worklet)
+  const skiaPath = useDerivedValue(() => {
+    'worklet';
+    const pathString = isAnimatedPath ? (d as SharedValue<string>).value : (d as string);
+    const path = svgPathToSkiaPath(pathString || '');
+    // Return a default empty path if null to satisfy Skia's type requirements
+    return path ?? Skia.Path.Make();
+  }, [d, isAnimatedPath]);
 
-    // Parse dash array for dashed/dotted lines
-    const dashIntervals = useMemo(() => parseDashArray(strokeDasharray), [strokeDasharray]);
+  // The clip offset provides extra padding to prevent path from being cut off
+  // Area charts typically use offset=0 for exact clipping, while lines use offset=2 for breathing room
+  const totalOffset = (clipOffset ?? 0) * 2; // Applied on both sides
 
-    // Trigger animation when path changes
-    useEffect(() => {
-      if (!animate) {
-        animationProgress.value = 1;
-        return;
-      }
+  // Resolve the final clip path:
+  // 1. If clipPath prop was explicitly provided, use it (even if undefined = no clipping)
+  // 2. Otherwise, generate clip path from clipRect/clipOffset
+  const resolvedClipPath = useMemo(() => {
+    // If clipPath was explicitly provided (like on web with clipPath={undefined}), use it directly
+    if (hasExplicitClipPath) {
+      return clipPathProp; // Can be an SkPath or undefined (no clipping)
+    }
 
-      // Animate from 0 to 1 for path reveal
-      animationProgress.value = 0;
-      animationProgress.value = withTiming(1, {
-        duration: 200,
-      });
-    }, [animate, animationProgress, d]);
+    // Otherwise, generate clip path from rect and offset (default behavior)
+    if (!rect) return null; // null means render nothing (invalid state)
 
-    if (!rect) return null;
+    const generatedClipPath = Skia.Path.Make();
+    generatedClipPath.addRect({
+      x: rect.x - (clipOffset ?? 0),
+      y: rect.y - (clipOffset ?? 0),
+      width: rect.width + totalOffset,
+      height: rect.height + totalOffset,
+    });
+    return generatedClipPath;
+  }, [hasExplicitClipPath, clipPathProp, rect, clipOffset, totalOffset]);
 
-    // Determine if we should use children (declarative gradients) or traditional fill/stroke
-    const hasDeclarativeShader = children !== undefined && children !== null;
+  // Parse dash array for dashed/dotted lines
+  const dashIntervals = useMemo(() => parseDashArray(strokeDasharray), [strokeDasharray]);
 
-    // Determine rendering style
-    // Note: Children can be used for both fill and stroke gradients, so we check the fill prop explicitly
-    const isFilled = fill !== undefined && fill !== 'none';
-    const isStroked = (stroke !== undefined && stroke !== 'none') || color !== undefined;
+  // Trigger animation when path changes
+  useEffect(() => {
+    if (!animate) {
+      animationProgress.value = 1;
+      return;
+    }
 
-    // Resolve color (stroke or color prop)
-    const pathColor = (stroke ?? color) as Color | undefined;
+    // Animate from 0 to 1 for path reveal
+    animationProgress.value = 0;
+    animationProgress.value = withTiming(1, {
+      duration: 200,
+    });
+  }, [animate, animationProgress, d]);
 
-    // Resolve opacity
-    const resolvedOpacity = strokeOpacity ?? fillOpacity ?? opacity;
+  // Don't render if resolvedClipPath is null (invalid state, not enough info to render)
+  if (resolvedClipPath === null) {
+    return null;
+  }
 
-    if (!clipPath) return null;
+  // Determine if we should use children (declarative gradients) or traditional fill/stroke
+  const hasDeclarativeShader = children !== undefined && children !== null;
 
-    return (
-      <Group clip={clipPath}>
-        {/* Render filled path with declarative shader (children) */}
-        {isFilled && hasDeclarativeShader && (
-          <SkiaPath
-            end={animationProgress}
-            opacity={fillOpacity ?? opacity}
-            path={skiaPath}
-            style="fill"
-          >
-            {children}
-          </SkiaPath>
-        )}
+  // Determine rendering style
+  // Note: Children can be used for both fill and stroke gradients, so we check the fill prop explicitly
+  const isFilled = fill !== undefined && fill !== 'none';
+  const isStroked = (stroke !== undefined && stroke !== 'none') || color !== undefined;
 
-        {/* Render filled path with solid color */}
-        {isFilled && !hasDeclarativeShader && !shader && (
-          <SkiaPath
-            color={fill as Color}
-            end={animationProgress}
-            opacity={fillOpacity ?? opacity}
-            path={skiaPath}
-            style="fill"
-          />
-        )}
+  // Resolve color (stroke or color prop)
+  const pathColor = (stroke ?? color) as Color | undefined;
 
-        {/* Render filled path with imperative shader */}
-        {isFilled && !hasDeclarativeShader && shader && (
-          <SkiaPath
-            color={shader as any}
-            end={animationProgress}
-            opacity={fillOpacity ?? opacity}
-            path={skiaPath}
-            style="fill"
-          />
-        )}
+  // Resolve opacity
+  const resolvedOpacity = strokeOpacity ?? fillOpacity ?? opacity;
 
-        {/* Render stroked path with declarative shader (children) */}
-        {isStroked && hasDeclarativeShader && (
-          <SkiaPath
-            end={animationProgress}
-            opacity={resolvedOpacity}
-            path={skiaPath}
-            strokeCap={resolvedStrokeCap}
-            strokeJoin={resolvedStrokeJoin}
-            strokeWidth={strokeWidth}
-            style="stroke"
-          >
-            {dashIntervals && <DashPathEffect intervals={dashIntervals} />}
-            {children}
-          </SkiaPath>
-        )}
+  // Render content with or without clipping based on clipPath
+  const content = (
+    <>
+      {/* Render filled path with declarative shader (children) */}
+      {isFilled && hasDeclarativeShader && (
+        <SkiaPath
+          end={animationProgress}
+          opacity={fillOpacity ?? opacity}
+          path={skiaPath}
+          style="fill"
+        >
+          {children}
+        </SkiaPath>
+      )}
 
-        {/* Render stroked path with solid color */}
-        {isStroked && !hasDeclarativeShader && !shader && (
-          <SkiaPath
-            color={pathColor}
-            end={animationProgress}
-            opacity={resolvedOpacity}
-            path={skiaPath}
-            strokeCap={resolvedStrokeCap}
-            strokeJoin={resolvedStrokeJoin}
-            strokeWidth={strokeWidth}
-            style="stroke"
-          >
-            {dashIntervals && <DashPathEffect intervals={dashIntervals} />}
-          </SkiaPath>
-        )}
+      {/* Render filled path with solid color */}
+      {isFilled && !hasDeclarativeShader && !shader && (
+        <SkiaPath
+          color={fill as Color}
+          end={animationProgress}
+          opacity={fillOpacity ?? opacity}
+          path={skiaPath}
+          style="fill"
+        />
+      )}
 
-        {/* Render stroked path with imperative shader */}
-        {isStroked && !hasDeclarativeShader && shader && (
-          <SkiaPath
-            color={shader as any}
-            end={animationProgress}
-            opacity={resolvedOpacity}
-            path={skiaPath}
-            strokeCap={resolvedStrokeCap}
-            strokeJoin={resolvedStrokeJoin}
-            strokeWidth={strokeWidth}
-            style="stroke"
-          >
-            {dashIntervals && <DashPathEffect intervals={dashIntervals} />}
-          </SkiaPath>
-        )}
-      </Group>
-    );
-  },
-);
+      {/* Render filled path with imperative shader */}
+      {isFilled && !hasDeclarativeShader && shader && (
+        <SkiaPath
+          color={shader as any}
+          end={animationProgress}
+          opacity={fillOpacity ?? opacity}
+          path={skiaPath}
+          style="fill"
+        />
+      )}
+
+      {/* Render stroked path with declarative shader (children) */}
+      {isStroked && hasDeclarativeShader && (
+        <SkiaPath
+          end={animationProgress}
+          opacity={resolvedOpacity}
+          path={skiaPath}
+          strokeCap={resolvedStrokeCap}
+          strokeJoin={resolvedStrokeJoin}
+          strokeWidth={strokeWidth}
+          style="stroke"
+        >
+          {dashIntervals && <DashPathEffect intervals={dashIntervals} />}
+          {children}
+        </SkiaPath>
+      )}
+
+      {/* Render stroked path with solid color */}
+      {isStroked && !hasDeclarativeShader && !shader && (
+        <SkiaPath
+          color={pathColor}
+          end={animationProgress}
+          opacity={resolvedOpacity}
+          path={skiaPath}
+          strokeCap={resolvedStrokeCap}
+          strokeJoin={resolvedStrokeJoin}
+          strokeWidth={strokeWidth}
+          style="stroke"
+        >
+          {dashIntervals && <DashPathEffect intervals={dashIntervals} />}
+        </SkiaPath>
+      )}
+
+      {/* Render stroked path with imperative shader */}
+      {isStroked && !hasDeclarativeShader && shader && (
+        <SkiaPath
+          color={shader as any}
+          end={animationProgress}
+          opacity={resolvedOpacity}
+          path={skiaPath}
+          strokeCap={resolvedStrokeCap}
+          strokeJoin={resolvedStrokeJoin}
+          strokeWidth={strokeWidth}
+          style="stroke"
+        >
+          {dashIntervals && <DashPathEffect intervals={dashIntervals} />}
+        </SkiaPath>
+      )}
+    </>
+  );
+
+  // If resolvedClipPath is undefined, render without clipping (for elements that extend outside drawing area like tick marks)
+  // If resolvedClipPath exists, wrap in Group with clipping
+  if (resolvedClipPath === undefined) {
+    return content;
+  }
+
+  return <Group clip={resolvedClipPath}>{content}</Group>;
+});

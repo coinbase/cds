@@ -1,9 +1,11 @@
-import { memo, useMemo } from 'react';
+import { memo, useEffect, useMemo, useRef } from 'react';
+import { useSharedValue, withTiming } from 'react-native-reanimated';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
-import { LinearGradient, vec } from '@shopify/react-native-skia';
+import { LinearGradient, Path as SkiaPath, vec } from '@shopify/react-native-skia';
 
 import { useCartesianChartContext } from '../ChartProvider';
-import { Path, type PathProps } from '../Path';
+import { type PathProps } from '../Path';
+import { useD3PathInterpolation } from '../utils/animation';
 import { applyOpacityToColor, type Gradient, processGradient } from '../utils/gradient';
 
 import type { AreaComponentProps } from './Area';
@@ -42,12 +44,22 @@ export const GradientArea = memo<GradientAreaProps>(
     baseline,
     yAxisId,
     clipRect,
+    animate: animateProp,
     ...pathProps
   }) => {
     const context = useCartesianChartContext();
     const theme = useTheme();
 
     const fill = fillProp ?? theme.color.fgPrimary;
+
+    // Use prop value if provided, otherwise fall back to context
+    const shouldAnimate = animateProp ?? context.animate;
+
+    // Track previous path for smooth transitions
+    const previousPathRef = useRef(d ?? '');
+    const progress = useSharedValue(shouldAnimate ? 0 : 1);
+
+    const currentPath = d ?? '';
 
     // Get gradient scale from context if seriesId is provided and has a gradient
     const gradientScale = seriesId ? context.getSeriesGradientScale(seriesId) : undefined;
@@ -168,10 +180,21 @@ export const GradientArea = memo<GradientAreaProps>(
       };
     }, [gradient, fill, baseline, gradientScale, xScale, yScale, fillOpacity]);
 
-    if (!gradientConfig) return;
+    // Animate when path changes
+    useEffect(() => {
+      if (currentPath !== previousPathRef.current && shouldAnimate) {
+        progress.value = 0;
+        progress.value = withTiming(1, { duration: 300 });
+        previousPathRef.current = currentPath;
+      }
+    }, [currentPath, shouldAnimate, progress]);
+
+    const path = useD3PathInterpolation(progress, previousPathRef.current, currentPath);
+
+    if (!gradientConfig) return null;
 
     return (
-      <Path clipRect={clipRect} d={d} fill={fill} {...pathProps}>
+      <SkiaPath color={fill} path={path} style="fill">
         <LinearGradient
           colors={gradientConfig.colors}
           end={gradientConfig.end}
@@ -179,7 +202,7 @@ export const GradientArea = memo<GradientAreaProps>(
           positions={gradientConfig.positions}
           start={gradientConfig.start}
         />
-      </Path>
+      </SkiaPath>
     );
   },
 );

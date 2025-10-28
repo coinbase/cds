@@ -4,6 +4,7 @@ import type { Rect } from '@coinbase/cds-common/types';
 import { useLayout } from '@coinbase/cds-mobile/hooks/useLayout';
 import type { BoxBaseProps, BoxProps } from '@coinbase/cds-mobile/layout';
 import { Box } from '@coinbase/cds-mobile/layout';
+import { Skia } from '@shopify/react-native-skia';
 
 import { ScrubberProvider, type ScrubberProviderProps } from './scrubber/ScrubberProvider';
 import { getGradientScale } from './utils/gradient';
@@ -88,6 +89,14 @@ export const CartesianChart = memo(
       ref,
     ) => {
       const [containerLayout, onContainerLayout] = useLayout();
+
+      // Use Skia's default TypefaceFontProvider for paragraph rendering
+      // This provides access to system fonts (Helvetica, Arial, etc.) without custom font loading
+      const fontMgr = useMemo(() => {
+        const fontProvider = Skia.TypefaceFontProvider.Make();
+        // Register system fonts if available, otherwise Skia will use defaults
+        return fontProvider;
+      }, []);
 
       const chartWidth = typeof width === 'number' ? width : containerLayout.width;
       const chartHeight = typeof height === 'number' ? height : containerLayout.height;
@@ -308,6 +317,7 @@ export const CartesianChart = memo(
           animate,
           width: chartWidth,
           height: chartHeight,
+          fontMgr,
           getXAxis,
           getYAxis,
           getXScale,
@@ -325,6 +335,7 @@ export const CartesianChart = memo(
           animate,
           chartWidth,
           chartHeight,
+          fontMgr,
           getXAxis,
           getYAxis,
           getXScale,

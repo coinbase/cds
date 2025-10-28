@@ -1866,11 +1866,10 @@ const PredictionChart = () => {
         <Box style={{ marginLeft: -16, marginRight: -16 }}>
           <LineChart
             enableScrubbing
-            showYAxis
             accessibilityLiveRegion="polite"
+            animate={false}
             height={defaultChartHeight}
             inset={{ left: 0 }}
-            onScrubberPositionChange={onScrubberPositionChange}
             series={[
               {
                 id: 'candidate1',
@@ -1964,11 +1963,12 @@ const AvailabilityChart = () => {
   );
 };
 
-const ConnectNullsChart = () => {
-  const theme = useTheme();
-  const dataWithGaps = [10, 22, 29, null, null, 45, 22, 52, null, 4, 68, 20, 21, 58];
-  const dataWithGapsOffset = sampleData.map((value) => (value !== null ? value + 40 : null));
+const dataWithGaps = [10, 22, 29, null, null, 45, 22, 52, null, 4, 68, 20, 21, 58];
+const dataWithGapsOffset = dataWithGaps.map((value) => (value !== null ? value + 40 : null));
+const dataNoNull = dataWithGaps.map((value) => (value !== null ? value : 0));
 
+const ConnectNullsChart = memo(() => {
+  const theme = useTheme();
   return (
     <CartesianChart
       enableScrubbing
@@ -1976,7 +1976,7 @@ const ConnectNullsChart = () => {
       series={[
         {
           id: 'withGaps',
-          data: sampleData,
+          data: dataWithGaps,
         },
         {
           id: 'connected',
@@ -1985,67 +1985,12 @@ const ConnectNullsChart = () => {
         },
       ]}
     >
-      <YAxis showGrid />
-      <Line curve="monotone" seriesId="withGaps" />
-      <Line curve="monotone" seriesId="connected" />
+      <Line curve="bump" seriesId="withGaps" />
+      <Line connectNulls curve="bump" seriesId="connected" />
       <Scrubber />
     </CartesianChart>
   );
-};
-
-const pageViews = [2400, 1398, 9800, 3908, 4800, 3800, 4300];
-const uniqueVisitors = [4000, 3000, 2000, 2780, 1890, 2390, 3490];
-const pages = ['Page A', 'Page B', 'Page C', 'Page D', 'Page E', 'Page F', 'Page G'];
-
-const MultipleSeriesChart = () => {
-  const theme = useTheme();
-  const [scrubIndex, setScrubIndex] = useState<number | undefined>();
-
-  const accessibilityLabel = useMemo(() => {
-    if (scrubIndex === undefined) return;
-    return `${pages[scrubIndex]}: Page Views ${pageViews[scrubIndex].toLocaleString()}, Unique Visitors ${uniqueVisitors[scrubIndex].toLocaleString()}`;
-  }, [scrubIndex]);
-
-  return (
-    <LineChart
-      enableScrubbing
-      showXAxis
-      showYAxis
-      accessibilityLabel={accessibilityLabel}
-      height={250}
-      inset={{ left: 12 }}
-      onScrubberPositionChange={setScrubIndex}
-      series={[
-        {
-          id: 'pageViews',
-          data: pageViews,
-          label: 'Page Views',
-          color: theme.color.accentBoldBlue,
-          curve: 'natural',
-        },
-        {
-          id: 'uniqueVisitors',
-          data: uniqueVisitors,
-          label: 'Unique Visitors',
-          color: theme.color.accentBoldGreen,
-          curve: 'natural',
-        },
-      ]}
-      xAxis={{
-        data: pages,
-      }}
-      yAxis={{
-        domain: {
-          min: 0,
-        },
-        showGrid: true,
-        tickLabelFormatter: (value) => value.toLocaleString(),
-      }}
-    >
-      <Scrubber />
-    </LineChart>
-  );
-};
+});
 
 const data = sparklineInteractiveData.all.map((d) => d.value);
 
@@ -2053,6 +1998,9 @@ const LineChartStories = () => {
   const theme = useTheme();
   return (
     <ExampleScreen>
+      <Example title="Non Nulls">
+        <ConnectNullsChart />
+      </Example>
       <Example title="Basic 4">
         <CartesianChart
           enableScrubbing
@@ -2075,22 +2023,6 @@ const LineChartStories = () => {
           <Line curve="bump" seriesId="prices" type="gradient" />
           <Scrubber />
         </CartesianChart>
-      </Example>
-      <Example title="Basic Line">
-        <LineChart
-          enableScrubbing
-          curve="bump"
-          height={defaultChartHeight}
-          series={[
-            {
-              id: 'prices',
-              data: data,
-              color: theme.color.fgPositive,
-            },
-          ]}
-        >
-          <Scrubber />
-        </LineChart>
       </Example>
       <Example title="Scrubber with Beacon Labels">
         <ScrubberWithBeaconLabels />
@@ -2119,9 +2051,9 @@ const LineChartStories = () => {
           <Scrubber />
         </LineChart>
       </Example>
-      <Example title="Multiple Series">
+      {/* <Example title="Multiple Series">
         <MultipleSeriesChart />
-      </Example>
+      </Example>*/}
       {/*<Example title="Data Formats 4">
         <LineChart
           enableScrubbing
@@ -2166,39 +2098,20 @@ const LineChartStories = () => {
       <Example title="ColorMap - Discrete Thresholds">
         <LineChart
           enableScrubbing
-          showArea
-          showXAxis
-          showYAxis
-          AreaComponent={(props) => <GradientArea {...props} fillOpacity={0.5} />}
           height={300}
-          renderPoints={({ dataX }) => dataX % 100 === 0}
           series={[
             {
               id: 'line',
-              data: sparklineInteractiveData.all.map((d) => d.value),
-              type: 'gradient',
-              gradient: {
-                stops: [
-                  { offset: 0, color: '#ef4444' },
-                  { offset: 10000, color: '#ef4444' },
-                  { offset: 20000, color: '#f59e0b' },
-                  { offset: 30000, color: '#f59e0b' },
-                  { offset: 40000, color: '#10b981' },
-                  { offset: 50000, color: '#10b981' },
-                ],
-              },
+              data: data,
             },
           ]}
         >
           <Scrubber />
         </LineChart>
       </Example>
-      <Example title="Connect Nulls">
-        <ConnectNullsChart />
-      </Example>
-      <Example title="Availability Chart">
+      {/* <Example title="Availability Chart">
         <AvailabilityChart />
-      </Example>
+      </Example>*/}
       <Example title="BTC Price Chart">
         <BTCPriceChart />
       </Example>
@@ -2264,4 +2177,12 @@ const LineChartStories = () => {
   );
 };
 
-export default LineChartStories;
+export default () => {
+  return (
+    <ExampleScreen>
+      <Example title="Prediction Chart">
+        <AssetPriceDotted />
+      </Example>
+    </ExampleScreen>
+  );
+};

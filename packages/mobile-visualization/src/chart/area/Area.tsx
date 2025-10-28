@@ -36,6 +36,11 @@ export type AreaComponentProps = {
    * When provided, creates gradient or threshold-based coloring.
    */
   gradient?: Gradient;
+  /**
+   * Whether to animate the area.
+   * Overrides the animate value from the chart context.
+   */
+  animate?: boolean;
 };
 
 export type AreaComponent = React.FC<AreaComponentProps>;
@@ -88,6 +93,11 @@ export type AreaProps = {
    * @default false
    */
   connectNulls?: boolean;
+  /**
+   * Whether to animate the area.
+   * Overrides the animate value from the chart context.
+   */
+  animate?: boolean;
 };
 
 export const Area = memo<AreaProps>(
@@ -103,6 +113,7 @@ export const Area = memo<AreaProps>(
     baseline,
     gradient: propGradient,
     connectNulls = false,
+    animate,
   }) => {
     const { getSeries, getSeriesData, getXScale, getYScale, getXAxis, drawingArea } =
       useCartesianChartContext();
@@ -166,6 +177,7 @@ export const Area = memo<AreaProps>(
 
     return (
       <AreaComponent
+        animate={animate}
         baseline={baseline}
         clipRect={drawingArea}
         d={area}

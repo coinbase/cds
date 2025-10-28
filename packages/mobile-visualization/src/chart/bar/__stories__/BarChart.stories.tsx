@@ -237,6 +237,7 @@ const UpdatingChartValues = () => {
           showTickMarks: true,
           showLine: true,
           tickMarkSize: 12,
+          domain: { max: 250 },
         }}
       />
       <Button onPress={() => setData((data) => data.map((d) => d + 10))}>Update Data</Button>
@@ -519,10 +520,10 @@ const ColorMapWithOpacity = () => {
 const BarChartStories = () => {
   return (
     <ExampleScreen>
-      <Example title="Basic">
+      <Example title="Basic 2">
         <UpdatingChartValues />
       </Example>
-      <Example title="Negative Values with Top Axis">
+      {/*<Example title="Negative Values with Top Axis">
         <NegativeValuesWithTopAxis />
       </Example>
       <Example title="Positive and Negative Cash Flow">
@@ -533,7 +534,7 @@ const BarChartStories = () => {
       </Example>
       <Example title="Monthly Rewards">
         <MonthlyRewards />
-      </Example>*/}
+      </Example>
       <Example title="Multiple Y Axes">
         <MultipleYAxes />
       </Example>
@@ -555,7 +556,7 @@ const BarChartStories = () => {
       <Example title="ColorMap with Opacity">
         <ColorMapWithOpacity />
       </Example>
-      {/*<Example title="Candlestick Chart">
+      <Example title="Candlestick Chart">
         <Candlesticks />
       </Example>*/}
     </ExampleScreen>

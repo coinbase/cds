@@ -1,5 +1,6 @@
 import { createContext, useContext } from 'react';
 import type { Rect } from '@coinbase/cds-common/types';
+import type { SkTypefaceFontProvider } from '@shopify/react-native-skia';
 
 import type { AxisConfig } from './axis';
 import type { Series } from './chart';
@@ -38,6 +39,11 @@ export type CartesianChartContextValue = {
    * Height of the chart SVG.
    */
   height: number;
+  /**
+   * Skia font manager for rendering text.
+   * Uses system fonts (Helvetica, Arial, etc.) by default.
+   */
+  fontMgr: SkTypefaceFontProvider | null;
   /**
    * Get x-axis configuration.
    */

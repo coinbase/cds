@@ -1,5 +1,5 @@
 import { memo, useId, useMemo } from 'react';
-import { Group } from '@shopify/react-native-skia';
+import { Group, Skia } from '@shopify/react-native-skia';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import { defaultAxisId } from '../utils';
@@ -93,13 +93,27 @@ export const BarPlot = memo<BarPlotProps>(
       return Array.from(groups.values());
     }, [targetSeries]);
 
-    if (!drawingArea) {
+    // Create clip path for the entire chart area (shared by all bars)
+    const clipPath = useMemo(() => {
+      if (!drawingArea) return null;
+      const clip = Skia.Path.Make();
+      clip.addRect({
+        x: drawingArea.x,
+        y: drawingArea.y,
+        width: drawingArea.width,
+        height: drawingArea.height,
+      });
+      return clip;
+    }, [drawingArea]);
+
+    if (!clipPath) {
       return null;
     }
 
-    // Note: Clipping is handled by the individual Path components using the drawing area
+    // Note: Clipping is now handled here at the BarPlot level (one clip path for all bars!)
+    // This is much more efficient than creating a clip path for each individual bar
     return (
-      <Group>
+      <Group clip={clipPath}>
         {stackGroups.map((group, stackIndex) => (
           <BarStackGroup
             key={group.stackId}

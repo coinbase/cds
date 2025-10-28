@@ -1,19 +1,23 @@
-import React, { memo, useMemo, useState } from 'react';
+import { memo, useMemo, useState } from 'react';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import type { ElevationLevels, Rect, SharedProps } from '@coinbase/cds-common/types';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 import {
   type Color,
+  FontSlant,
   Group,
-  matchFont,
+  Paint,
+  Paragraph,
   RoundedRect,
   Shadow,
-  Text as SkiaText,
+  Skia,
+  TextAlign,
 } from '@shopify/react-native-skia';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import { type ChartInset, getChartInset } from '../utils';
-import { calculateTextPosition, useChartFont } from '../utils/skia';
+
+import { getSkiaFontDescriptor } from './fontMapping';
 
 /**
  * Shadow configuration for Skia rendering.
@@ -26,74 +30,17 @@ type SkiaShadowConfig = {
 };
 
 /**
- * Get a Skia font using theme values with optional overrides.
- *
- * @param font - Base font to use (e.g., 'headline', 'body', 'label1')
- * @param theme - Theme object containing font definitions
- * @param fontFamilyOverride - Override fontFamily (can be a font name to lookup or a direct font family string)
- * @param fontSizeOverride - Override fontSize (can be a number or a font name to lookup the size)
- * @param fontWeightOverride - Override fontWeight (can be a weight string or a font name to lookup the weight)
- *
- * @example
- * // Use display1 for everything
- * getSkiaFont('display1', theme)
- *
- * // Use display1's family and weight, but body's size
- * getSkiaFont('display1', theme, undefined, 'body')
- *
- * // Use headline, but override size to 20
- * getSkiaFont('headline', theme, undefined, 20)
+ * Maps horizontal alignment to Skia TextAlign.
  */
-const getSkiaFont = (
-  font: ThemeVars.FontFamily | undefined,
-  theme: any,
-  fontFamilyOverride?: string | ThemeVars.FontFamily,
-  fontSizeOverride?: number | ThemeVars.FontFamily,
-  fontWeightOverride?: string | ThemeVars.FontFamily,
-) => {
-  const baseFont = font ?? 'label2';
-
-  // Get base values from theme
-  const baseFontFamily: string = (theme.fontFamily[baseFont as keyof typeof theme.fontFamily] ??
-    theme.fontFamily.label2) as string;
-  const baseFontSize: number = (theme.fontSize[baseFont as keyof typeof theme.fontSize] ??
-    theme.fontSize.label2) as number;
-  const baseFontWeight: string = (theme.fontWeight[baseFont as keyof typeof theme.fontWeight] ??
-    theme.fontWeight.label2) as string;
-
-  // Resolve fontFamily override
-  let fontFamily: string = baseFontFamily;
-  if (fontFamilyOverride !== undefined) {
-    // Check if it's a theme font key or a direct font family string
-    const lookupFamily = theme.fontFamily[fontFamilyOverride as keyof typeof theme.fontFamily];
-    fontFamily = (lookupFamily ?? fontFamilyOverride) as string;
+const mapHorizontalAlignmentToTextAlign = (alignment: TextHorizontalAlignment): TextAlign => {
+  switch (alignment) {
+    case 'left':
+      return TextAlign.Left;
+    case 'center':
+      return TextAlign.Center;
+    case 'right':
+      return TextAlign.Right;
   }
-
-  // Resolve fontSize override
-  let fontSize: number = baseFontSize;
-  if (fontSizeOverride !== undefined) {
-    if (typeof fontSizeOverride === 'number') {
-      fontSize = fontSizeOverride;
-    } else {
-      // It's a font name, look up the size
-      fontSize = (theme.fontSize[fontSizeOverride as keyof typeof theme.fontSize] ??
-        baseFontSize) as number;
-    }
-  }
-
-  // Resolve fontWeight override
-  let fontWeight: string = baseFontWeight;
-  if (fontWeightOverride !== undefined) {
-    // Check if it's a theme font key or a direct weight string
-    const lookupWeight = theme.fontWeight[fontWeightOverride as keyof typeof theme.fontWeight];
-    fontWeight = (lookupWeight ?? fontWeightOverride) as string;
-  }
-
-  return matchFont({
-    fontFamily: fontFamily as string,
-    fontSize,
-    fontWeight: fontWeight as any,
-  });
 };
 
 /**
@@ -176,6 +123,8 @@ export type ChartTextProps = SharedProps & {
   background?: string;
   /**
    * The text content to display.
+   * Supports plain strings, numbers, and arrays of segments for rich text.
+   * Use \n for line breaks.
    */
   children: ChartTextChildren;
   /**
@@ -240,10 +189,13 @@ export type ChartTextProps = SharedProps & {
    */
   borderRadius?: number;
   /**
-   * Font family from theme to use for text rendering.
+   * Font from theme to use for text rendering.
+   * Accepts theme font keys like 'headline', 'body', 'label1', 'label2', etc.
    * @default 'label2'
+   * @example
+   * <ChartText font="headline">Chart Title</ChartText>
    */
-  font?: ThemeVars.FontFamily;
+  font?: ThemeVars.Font;
   /**
    * Font size override in pixels.
    * Overrides the size from font family.
@@ -253,13 +205,35 @@ export type ChartTextProps = SharedProps & {
    */
   fontSize?: number;
   /**
-   * Font weight override.
-   * Overrides the weight from font family.
+   * Font style (normal or italic).
+   * @default 'normal'
    * @example
-   * // Use label1 font but with bold weight
-   * <ChartText font="label1" fontWeight="700">Text</ChartText>
+   * <ChartText fontStyle="italic">Italic text</ChartText>
    */
-  fontWeight?: string;
+  fontStyle?: 'normal' | 'italic';
+  /**
+   * Maximum width for text layout in pixels.
+   * Text will wrap within this width. Explicit line breaks (\n) are also supported.
+   * @default chartWidth (uses full chart width)
+   * @example
+   * // Constrain text to 150px width
+   * <ChartText maxWidth={150}>Long text that wraps</ChartText>
+   */
+  maxWidth?: number;
+  /**
+   * Maximum number of lines before truncating with ellipsis.
+   * @default undefined (no limit)
+   * @example
+   * <ChartText maxLines={2} ellipsis="…">
+   *   Very long text that will be truncated after 2 lines
+   * </ChartText>
+   */
+  maxLines?: number;
+  /**
+   * Ellipsis text when truncating due to maxLines.
+   * @default '...'
+   */
+  ellipsis?: string;
   /**
    * Opacity of the text and background.
    * @default 1
@@ -349,7 +323,10 @@ export const ChartText = memo<ChartTextProps>(
     opacity = 1,
     font,
     fontSize: fontSizeOverride,
-    fontWeight: fontWeightOverride,
+    fontStyle: fontStyleOverride,
+    maxWidth: maxWidthProp,
+    maxLines,
+    ellipsis = '...',
     elevation,
     shadowColor: shadowColorProp = 'rgba(0, 0, 0, 0.15)',
     shadowOffset: shadowOffsetProp = { x: 0, y: 2 },
@@ -357,12 +334,10 @@ export const ChartText = memo<ChartTextProps>(
     shadowOpacity: shadowOpacityProp = 1,
   }) => {
     const theme = useTheme();
-    const { width: chartWidth, height: chartHeight } = useCartesianChartContext();
+    const { width: chartWidth, height: chartHeight, fontMgr } = useCartesianChartContext();
 
-    // Create font with optional overrides
-    const skiaFont = useMemo(() => {
-      return getSkiaFont(font, theme, undefined, fontSizeOverride, fontWeightOverride);
-    }, [font, theme, fontSizeOverride, fontWeightOverride]);
+    // Default maxWidth to chart width
+    const maxWidth = maxWidthProp ?? chartWidth;
 
     // Compute effective background color based on elevation
     const background = useMemo(() => {
@@ -373,61 +348,96 @@ export const ChartText = memo<ChartTextProps>(
       return elevation && elevation > 0 ? theme.color.bg : 'transparent';
     }, [backgroundProp, elevation, theme.color.bg]);
 
-    // Check if children is segments array
-    const isSegments = Array.isArray(children);
+    // Get default font descriptor from theme
+    const defaultFontDescriptor = useMemo(() => {
+      return getSkiaFontDescriptor('Helvetica', theme, fontSizeOverride, fontStyleOverride);
+    }, [theme, fontSizeOverride, fontStyleOverride]);
 
-    // Convert children to string (for simple text)
-    const simpleText = useMemo(() => {
-      if (isSegments) return '';
-      if (children === null || children === undefined) return '';
-      return String(children);
-    }, [children, isSegments]);
+    // Build paragraph with Skia ParagraphBuilder
+    const paragraph = useMemo(() => {
+      // FontMgr must be loaded before we can build paragraphs
+      if (!fontMgr) return null;
 
-    // Calculate segment dimensions and fonts
-    const segments = useMemo(() => {
-      if (!isSegments) return null;
+      // For positioning, we always use left alignment and position the paragraph manually
+      // This gives us consistent behavior with the old Text component
+      const paragraphStyle = {
+        textAlign: TextAlign.Left,
+        ...(maxLines && { maxLines }),
+        ...(maxLines && { ellipsis }),
+      };
 
-      const textSegments = children as ChartTextSegment[];
-      let currentX = 0;
+      const builder = Skia.ParagraphBuilder.Make(paragraphStyle, fontMgr!);
 
-      const segmentsWithDimensions = textSegments.map((segment) => {
-        // Segment can override font family, size, and weight
-        const segmentFont =
-          segment.font || segment.fontSize || segment.fontWeight
-            ? getSkiaFont(segment.font, theme, undefined, segment.fontSize, segment.fontWeight)
-            : skiaFont;
-        const { width } = segmentFont.measureText(segment.text);
-        const height = segmentFont.getSize();
+      // Check if children is segments array
+      const isSegments = Array.isArray(children);
 
-        const segmentData = {
-          text: segment.text,
-          font: segmentFont,
-          width,
-          height,
-          x: currentX,
-        };
+      if (isSegments) {
+        // Build rich text with segments
+        const textSegments = children as ChartTextSegment[];
+        textSegments.forEach((segment) => {
+          // Get segment font descriptor (use segment overrides or default)
+          const segmentDescriptor = getSkiaFontDescriptor(
+            'Helvetica',
+            theme,
+            segment.fontSize || fontSizeOverride,
+            fontStyleOverride,
+          );
 
-        currentX += width;
-        return segmentData;
-      });
-
-      // Segments share the same baseline, matching SVG tspan behavior
-      // No vertical offset needed - all text sits on the same baseline
-      return segmentsWithDimensions;
-    }, [children, isSegments, skiaFont, theme]);
-
-    // Calculate text dimensions
-    const textDimensions = useMemo(() => {
-      if (segments) {
-        const totalWidth = segments.reduce((sum, seg) => sum + seg.width, 0);
-        const maxHeight = Math.max(...segments.map((seg) => seg.height));
-        return { width: totalWidth, height: maxHeight };
+          builder.pushStyle({
+            fontFamilies: ['Helvetica'],
+            fontSize: segmentDescriptor.fontSize,
+            fontStyle: {
+              weight: segment.fontWeight
+                ? parseInt(segment.fontWeight, 10)
+                : segmentDescriptor.fontWeight,
+            },
+            color: Skia.Color(color ?? theme.color.fgMuted),
+          });
+          builder.addText(segment.text);
+          builder.pop();
+        });
+      } else {
+        // Build simple text
+        const text = children !== null && children !== undefined ? String(children) : '';
+        builder.pushStyle({
+          fontFamilies: ['Helvetica'],
+          fontSize: defaultFontDescriptor.fontSize,
+          fontStyle: {
+            weight: defaultFontDescriptor.fontWeight,
+            slant:
+              defaultFontDescriptor.fontStyle === 'italic' ? FontSlant.Italic : FontSlant.Upright,
+          },
+          color: Skia.Color(color ?? theme.color.fgMuted),
+        });
+        builder.addText(text);
+        builder.pop();
       }
 
-      const { width } = skiaFont.measureText(simpleText);
-      const height = skiaFont.getSize();
-      return { width, height };
-    }, [skiaFont, simpleText, segments]);
+      const para = builder.build();
+      para.layout(maxWidth);
+      return para;
+    }, [
+      fontMgr,
+      children,
+      font,
+      theme,
+      fontSizeOverride,
+      fontStyleOverride,
+      color,
+      maxLines,
+      ellipsis,
+      maxWidth,
+      defaultFontDescriptor,
+    ]);
+
+    // Calculate text dimensions from paragraph
+    const textDimensions = useMemo(() => {
+      if (!paragraph) return { width: 0, height: 0 };
+      return {
+        width: paragraph.getLongestLine(),
+        height: paragraph.getHeight(),
+      };
+    }, [paragraph]);
 
     // Calculate background rectangle dimensions with inset
     const inset = useMemo(() => getChartInset(insetInput), [insetInput]);
@@ -475,16 +485,21 @@ export const ChartText = memo<ChartTextProps>(
       };
     }, [x, y, backgroundRectSize, horizontalAlignment, verticalAlignment]);
 
-    // Calculate text position centered within the background rect
+    // Calculate text position within the background rect
+    // Note: Paragraph uses top-left positioning, not baseline like Text
     const textPosition = useMemo(
       () => ({
         x: backgroundRect.x + inset.left,
-        // For vertical centering: take the center of the background rect and adjust for baseline
-        y: backgroundRect.y + backgroundRect.height / 2 + textDimensions.height / 2.5,
+        // Paragraph y is the top of the text box (not baseline like Text)
+        // Center vertically within the background rect
+        y:
+          backgroundRect.y +
+          inset.top +
+          (backgroundRectSize.height - inset.top - inset.bottom - textDimensions.height) / 2,
         width: textDimensions.width,
         height: textDimensions.height,
       }),
-      [backgroundRect, textDimensions, inset.left],
+      [backgroundRect, textDimensions, inset, backgroundRectSize],
     );
 
     // Calculate overflow and repositioning
@@ -544,7 +559,16 @@ export const ChartText = memo<ChartTextProps>(
 
     const [reportedDimensionsRect, setReportedDimensionsRect] = useState<Rect | null>(null);
 
-    if (reportedDimensionsRect !== adjustedBackgroundRect) {
+    // Report dimensions when they change (with epsilon comparison to avoid jitter)
+    const EPSILON = 0.5;
+    const dimensionsChanged =
+      !reportedDimensionsRect ||
+      Math.abs(reportedDimensionsRect.x - adjustedBackgroundRect.x) > EPSILON ||
+      Math.abs(reportedDimensionsRect.y - adjustedBackgroundRect.y) > EPSILON ||
+      Math.abs(reportedDimensionsRect.width - adjustedBackgroundRect.width) > EPSILON ||
+      Math.abs(reportedDimensionsRect.height - adjustedBackgroundRect.height) > EPSILON;
+
+    if (dimensionsChanged) {
       setReportedDimensionsRect(adjustedBackgroundRect);
       onDimensionsChange?.(adjustedBackgroundRect);
     }
@@ -602,12 +626,15 @@ export const ChartText = memo<ChartTextProps>(
       shadowConfig.blur > 0 &&
       shadowConfig.opacity > 0;
 
-    // Don't render if there's no content
-    const hasContent = segments ? segments.length > 0 : simpleText.length > 0;
-    if (!hasContent) return null;
+    // Check if we have valid content to render
+    const hasValidContent = paragraph && textDimensions.width > 0 && textDimensions.height > 0;
+
+    // Always render a Group so onDimensionsChange is called (needed for collision detection)
+    // but make it invisible if content isn't ready
+    const finalOpacity = hasValidContent ? opacity : 0;
 
     return (
-      <Group opacity={opacity}>
+      <Group layer={<Paint opacity={finalOpacity} />}>
         {/* Background rectangle with shadow */}
         {background !== 'transparent' && (
           <RoundedRect
@@ -628,27 +655,11 @@ export const ChartText = memo<ChartTextProps>(
             )}
           </RoundedRect>
         )}
-        {/* Text - either segments or simple text */}
-        {segments ? (
-          // Render multiple text segments with different fonts sharing the same baseline
-          <>
-            {segments.map((segment, index) => (
-              <SkiaText
-                key={index}
-                color={(color ?? theme.color.fgMuted) as Color}
-                font={segment.font}
-                text={segment.text}
-                x={adjustedTextPosition.x + segment.x}
-                y={adjustedTextPosition.y}
-              />
-            ))}
-          </>
-        ) : (
-          // Render simple text
-          <SkiaText
-            color={(color ?? theme.color.fgMuted) as Color}
-            font={skiaFont}
-            text={simpleText}
+        {/* Render paragraph only when content is valid */}
+        {hasValidContent && (
+          <Paragraph
+            paragraph={paragraph}
+            width={maxWidth}
             x={adjustedTextPosition.x}
             y={adjustedTextPosition.y}
           />

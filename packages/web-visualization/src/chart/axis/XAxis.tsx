@@ -271,6 +271,7 @@ export const XAxis = memo<XAxisProps>(
         )}
         {showLine && (
           <LineComponent
+            animate={false}
             className={cx(axisLineCss, classNames?.line)}
             d={lineToPath(
               axisBounds.x,

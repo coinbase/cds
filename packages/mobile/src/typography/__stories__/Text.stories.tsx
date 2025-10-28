@@ -19,10 +19,10 @@ const TextScreen = () => {
   return (
     <ExampleScreen>
       <Example title="Default">
-        <TextDisplay1>Display1</TextDisplay1>
+        <TextDisplay1>$Display1</TextDisplay1>
         <TextDisplay2>Display2</TextDisplay2>
         <TextDisplay3>Display3</TextDisplay3>
-        <TextTitle1>Title1</TextTitle1>
+        <TextTitle1>$Title1</TextTitle1>
         <TextTitle2>Title2</TextTitle2>
         <TextTitle3>Title3</TextTitle3>
         <TextTitle4>Title4</TextTitle4>

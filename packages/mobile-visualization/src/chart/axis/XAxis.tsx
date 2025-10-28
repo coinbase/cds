@@ -217,6 +217,7 @@ export const XAxis = memo<XAxisProps>(
               return (
                 <TickMarkLineComponent
                   key={`tick-mark-${tick.tick}-${index}`}
+                  animate={false}
                   clipPath={undefined}
                   d={lineToPath(tick.position, tickY, tick.position, tickY2)}
                   stroke={theme.color.fg}
@@ -229,6 +230,7 @@ export const XAxis = memo<XAxisProps>(
         )}
         {showLine && (
           <LineComponent
+            animate={false}
             d={lineToPath(
               axisBounds.x,
               position === 'bottom' ? axisBounds.y : axisBounds.y + axisBounds.height,

@@ -32,6 +32,11 @@ export type LineComponentProps = {
    * When provided, creates gradient or threshold-based coloring.
    */
   gradient?: Gradient;
+  /**
+   * Whether to animate the line.
+   * Overrides the animate value from the chart context.
+   */
+  animate?: boolean;
 };
 
 export type LineComponent = React.FC<LineComponentProps>;
@@ -120,6 +125,7 @@ export const Line = memo<LineProps>(
     opacity = 1,
     renderPoints,
     connectNulls = false,
+    animate,
     ...props
   }) => {
     const theme = useTheme();
@@ -230,6 +236,7 @@ export const Line = memo<LineProps>(
           />
         )}
         <LineComponent
+          animate={animate}
           d={path}
           gradient={seriesGradient}
           seriesId={seriesId}

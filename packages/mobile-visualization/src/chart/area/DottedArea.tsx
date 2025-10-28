@@ -1,17 +1,19 @@
-import { memo, useMemo } from 'react';
+import { memo, useEffect, useMemo, useRef } from 'react';
+import { useSharedValue, withTiming } from 'react-native-reanimated';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 import {
   Blend,
   Group,
   ImageShader,
   LinearGradient,
-  Path,
+  Path as SkiaPath,
   Skia,
   vec,
 } from '@shopify/react-native-skia';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import type { PathProps } from '../Path';
+import { useD3PathInterpolation } from '../utils/animation';
 
 import type { AreaComponentProps } from './Area';
 
@@ -55,12 +57,22 @@ export const DottedArea = memo<DottedAreaProps>(
     baseline,
     yAxisId,
     clipRect,
+    animate: animateProp,
   }) => {
     const theme = useTheme();
     const context = useCartesianChartContext();
 
     const drawingArea = clipRect ?? context.drawingArea;
     const effectiveFill = fill ?? theme.color.fgPrimary;
+
+    // Use prop value if provided, otherwise fall back to context
+    const shouldAnimate = animateProp ?? context.animate;
+
+    // Track previous path for smooth transitions
+    const previousPathRef = useRef(d ?? '');
+    const progress = useSharedValue(shouldAnimate ? 0 : 1);
+
+    const currentPath = d ?? '';
 
     // Get the y-scale for gradient calculations
     const yScale = context.getYScale(yAxisId);
@@ -85,12 +97,6 @@ export const DottedArea = memo<DottedAreaProps>(
 
       return surface.makeImageSnapshot();
     }, [patternSize, dotSize, effectiveFill]);
-
-    // Convert SVG path to Skia path
-    const areaPath = useMemo(() => {
-      if (!d) return null;
-      return Skia.Path.MakeFromSVGString(d);
-    }, [d]);
 
     // Create clip rect for drawing area (like web's Path.tsx)
     const clipPath = useMemo(() => {
@@ -153,11 +159,22 @@ export const DottedArea = memo<DottedAreaProps>(
       };
     }, [yScale, yDomain, yRange, drawingArea, baseline, peakOpacity, baselineOpacity, fillOpacity]);
 
-    if (!areaPath || !clipPath || !drawingArea || !patternImage) return null;
+    // Animate when path changes
+    useEffect(() => {
+      if (currentPath !== previousPathRef.current && shouldAnimate) {
+        progress.value = 0;
+        progress.value = withTiming(1, { duration: 300 });
+        previousPathRef.current = currentPath;
+      }
+    }, [currentPath, shouldAnimate, progress]);
+
+    const areaPath = useD3PathInterpolation(progress, previousPathRef.current, currentPath);
+
+    if (!clipPath || !drawingArea || !patternImage) return null;
 
     return (
       <Group clip={clipPath}>
-        <Path path={areaPath}>
+        <SkiaPath path={areaPath} style="fill">
           {/* Dot pattern shader */}
           <ImageShader fit="none" image={patternImage} tx="repeat" ty="repeat" />
           {/* Blend with gradient opacity */}
@@ -169,7 +186,7 @@ export const DottedArea = memo<DottedAreaProps>(
               start={gradientStart}
             />
           </Blend>
-        </Path>
+        </SkiaPath>
       </Group>
     );
   },

@@ -1,4 +1,5 @@
 import { memo, useCallback, useEffect, useId, useMemo } from 'react';
+import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 import { Group, vec } from '@shopify/react-native-skia';
 
 import { useCartesianChartContext } from '../ChartProvider';
@@ -56,6 +57,7 @@ export const YAxis = memo<YAxisProps>(
     width = label ? AXIS_WIDTH + LABEL_SIZE : AXIS_WIDTH,
     ...props
   }) => {
+    const theme = useTheme();
     const registrationId = useId();
     const { animate, getYScale, getYAxis, registerAxis, unregisterAxis, getAxisBounds } =
       useCartesianChartContext();
@@ -143,7 +145,7 @@ export const YAxis = memo<YAxisProps>(
           y: tick.position,
           label: String(formatTick(tick.tick)),
           chartTextProps: {
-            color: 'gray',
+            color: theme.color.fgMuted,
             verticalAlignment: 'middle',
             horizontalAlignment: position === 'left' ? 'right' : 'left',
           },
@@ -157,6 +159,7 @@ export const YAxis = memo<YAxisProps>(
       tickMarkSize,
       position,
       formatTick,
+      theme.color.fgMuted,
     ]);
 
     if (!yScale || !axisBounds) return;
@@ -204,9 +207,10 @@ export const YAxis = memo<YAxisProps>(
               return (
                 <TickMarkLineComponent
                   key={`tick-mark-${tick.tick}-${index}`}
+                  animate={false}
                   clipPath={undefined}
                   d={lineToPath(tickX, tick.position, tickX2, tick.position)}
-                  stroke="black"
+                  stroke={theme.color.fg}
                   strokeLinecap="square"
                   strokeWidth={1}
                 />
@@ -216,13 +220,14 @@ export const YAxis = memo<YAxisProps>(
         )}
         {showLine && (
           <LineComponent
+            animate={false}
             d={lineToPath(
               position === 'left' ? axisBounds.x + axisBounds.width : axisBounds.x,
               axisBounds.y,
               position === 'left' ? axisBounds.x + axisBounds.width : axisBounds.x,
               axisBounds.y + axisBounds.height,
             )}
-            stroke="black"
+            stroke={theme.color.fg}
             strokeLinecap="square"
             strokeWidth={1}
           />
