@@ -9,12 +9,11 @@ import { XAxis, YAxis } from '../../axis';
 import { CartesianChart } from '../../CartesianChart';
 import { useCartesianChartContext } from '../../ChartProvider';
 import { ReferenceLine, SolidLine, type SolidLineProps } from '../../line';
-import { isCategoricalScale, ScrubberContext, type TransitionConfig } from '../../utils';
-import { Bar, type BarComponentProps } from '../Bar';
+import { isCategoricalScale, ScrubberContext } from '../../utils';
+import { Bar } from '../Bar';
 import { BarChart } from '../BarChart';
 import { BarPlot } from '../BarPlot';
 import type { BarStackComponentProps } from '../BarStack';
-import { DefaultBar } from '../DefaultBar';
 import { DefaultBarStack } from '../DefaultBarStack';
 
 const ThinSolidLine = memo((props: SolidLineProps) => <SolidLine {...props} strokeWidth={1} />);
@@ -218,48 +217,13 @@ const MultipleYAxes = () => {
 
 const initialData = [45, 52, 38, 45, 19, 23, 32];
 
-// Shared transition configs for testing
-const sharedTransitionConfig: TransitionConfig = {
-  type: 'timing',
-  config: { duration: 100 },
-};
-
-const sharedInitialTransitionConfig: TransitionConfig = {
-  type: 'timing',
-  config: { duration: 5000 },
-};
-
-const MyBarComponent = memo((props: BarComponentProps) => {
-  return (
-    <DefaultBar
-      {...props}
-      initialTransitionConfig={sharedInitialTransitionConfig}
-      transitionConfig={sharedTransitionConfig}
-    />
-  );
-});
-
-const MyBarStackComponent = memo((props: BarStackComponentProps) => {
-  return (
-    <DefaultBarStack
-      {...props}
-      initialTransitionConfig={sharedInitialTransitionConfig}
-      transitionConfig={sharedTransitionConfig}
-    />
-  );
-});
-
 const UpdatingChartValues = () => {
   const [data, setData] = useState(initialData);
 
   return (
     <VStack gap={2}>
       <BarChart
-        showXAxis
-        showYAxis
-        BarComponent={MyBarComponent}
-        BarStackComponent={MyBarStackComponent}
-        height={defaultChartHeight}
+        height={100}
         series={[
           {
             id: 'weekly-data',
@@ -281,6 +245,58 @@ const UpdatingChartValues = () => {
           domain: { max: 250 },
         }}
       />
+      <BarChart
+        height={100}
+        series={[
+          {
+            id: 'weekly-data',
+            data: data,
+          },
+        ]}
+        transitionConfig={{
+          initial: { type: 'timing', config: { duration: 600 } },
+          update: { type: 'timing', config: { duration: 300 } },
+        }}
+        xAxis={{
+          data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+          showTickMarks: true,
+          showLine: true,
+        }}
+        yAxis={{
+          requestedTickCount: 5,
+          tickLabelFormatter: (value) => `$${value}k`,
+          showGrid: true,
+          showTickMarks: true,
+          showLine: true,
+          tickMarkSize: 12,
+          domain: { max: 250 },
+        }}
+      />
+      <BarChart
+        height={100}
+        series={[
+          {
+            id: 'weekly-data',
+            data: data.map((d, i) => (i % 2 === 0 ? d : -d)),
+          },
+        ]}
+        xAxis={{
+          data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+          showTickMarks: true,
+          showLine: true,
+        }}
+        yAxis={{
+          requestedTickCount: 5,
+          tickLabelFormatter: (value) => `$${value}k`,
+          showGrid: true,
+          showTickMarks: true,
+          showLine: true,
+          tickMarkSize: 12,
+          domain: { max: 250 },
+        }}
+      >
+        <ReferenceLine LineComponent={SolidLine} dataY={0} />
+      </BarChart>
       <Button
         onPress={() => setData((data) => (data[0] > 200 ? initialData : data.map((d) => d + 50)))}
       >

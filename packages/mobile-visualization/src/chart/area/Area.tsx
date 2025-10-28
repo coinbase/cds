@@ -3,7 +3,7 @@ import type { Rect } from '@coinbase/cds-common/types';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 
 import { useCartesianChartContext } from '../ChartProvider';
-import { type ChartPathCurveType, getAreaPath } from '../utils';
+import { type ChartPathCurveType, getAreaPath, type TransitionConfig } from '../utils';
 import type { Gradient } from '../utils/gradient';
 
 import { DottedArea } from './DottedArea';
@@ -41,6 +41,11 @@ export type AreaComponentProps = {
    * Overrides the animate value from the chart context.
    */
   animate?: boolean;
+  /**
+   * Transition configuration for area animations.
+   * Defines how the area transitions when data changes.
+   */
+  transitionConfig?: TransitionConfig;
 };
 
 export type AreaComponent = React.FC<AreaComponentProps>;
@@ -98,6 +103,11 @@ export type AreaProps = {
    * Overrides the animate value from the chart context.
    */
   animate?: boolean;
+  /**
+   * Transition configuration for area animations.
+   * Defines how the area transitions when data changes.
+   */
+  transitionConfig?: TransitionConfig;
 };
 
 export const Area = memo<AreaProps>(
@@ -114,6 +124,7 @@ export const Area = memo<AreaProps>(
     gradient: propGradient,
     connectNulls = false,
     animate,
+    transitionConfig,
   }) => {
     const { getSeries, getSeriesData, getXScale, getYScale, getXAxis, drawingArea } =
       useCartesianChartContext();
@@ -187,6 +198,7 @@ export const Area = memo<AreaProps>(
         seriesId={seriesId}
         stroke={stroke}
         strokeWidth={strokeWidth}
+        transitionConfig={transitionConfig}
         yAxisId={matchedSeries?.yAxisId}
       />
     );

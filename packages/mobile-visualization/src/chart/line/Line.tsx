@@ -5,7 +5,7 @@ import { useTheme } from '@coinbase/cds-mobile';
 import { Area, type AreaComponent } from '../area/Area';
 import { useCartesianChartContext } from '../ChartProvider';
 import { Point, type PointConfig, type RenderPointsParams } from '../Point';
-import { type ChartPathCurveType, getLinePath } from '../utils';
+import { type ChartPathCurveType, getLinePath, type TransitionConfig } from '../utils';
 import { evaluateGradientAtValue, getGradientScale, type Gradient } from '../utils/gradient';
 
 import { DottedLine } from './DottedLine';
@@ -37,6 +37,11 @@ export type LineComponentProps = {
    * Overrides the animate value from the chart context.
    */
   animate?: boolean;
+  /**
+   * Transition configuration for line animations.
+   * Defines how the line transitions when data changes.
+   */
+  transitionConfig?: TransitionConfig;
 };
 
 export type LineComponent = React.FC<LineComponentProps>;
@@ -109,6 +114,11 @@ export type LineProps = SharedProps & {
    * @default false
    */
   connectNulls?: boolean;
+  /**
+   * Transition configuration for line animations.
+   * Defines how the line transitions when data changes.
+   */
+  transitionConfig?: TransitionConfig;
 };
 
 export const Line = memo<LineProps>(
@@ -126,6 +136,7 @@ export const Line = memo<LineProps>(
     renderPoints,
     connectNulls = false,
     animate,
+    transitionConfig,
     ...props
   }) => {
     const theme = useTheme();
@@ -232,6 +243,7 @@ export const Line = memo<LineProps>(
             fillOpacity={opacity}
             gradient={seriesGradient}
             seriesId={seriesId}
+            transitionConfig={transitionConfig}
             type={areaType}
           />
         )}
@@ -242,6 +254,7 @@ export const Line = memo<LineProps>(
           seriesId={seriesId}
           stroke={stroke}
           strokeOpacity={opacity}
+          transitionConfig={transitionConfig}
           yAxisId={matchedSeries?.yAxisId}
           {...props}
         />

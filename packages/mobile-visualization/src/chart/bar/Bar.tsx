@@ -1,7 +1,7 @@
 import React, { memo, useMemo } from 'react';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 
-import { getBarPath } from '../utils';
+import { getBarPath, type TransitionConfig } from '../utils';
 
 import { DefaultBar } from './DefaultBar';
 
@@ -80,6 +80,21 @@ export type BarProps = Omit<BarComponentProps, 'd'> & {
    * Component to render the bar.
    */
   BarComponent?: BarComponent;
+  /**
+   * Transition configuration for bar animations.
+   */
+  transitionConfig?: {
+    /**
+     * Transition used for the initial render/entrance animation.
+     * @default defaultTransition
+     */
+    initial?: TransitionConfig;
+    /**
+     * Transition used for data updates after initial render.
+     * @default defaultTransition
+     */
+    update?: TransitionConfig;
+  };
 };
 
 /**
@@ -111,6 +126,7 @@ export const Bar = memo<BarProps>(
     borderRadius = 4,
     roundTop = true,
     roundBottom = true,
+    transitionConfig,
   }) => {
     const theme = useTheme();
 
@@ -139,11 +155,13 @@ export const Bar = memo<BarProps>(
         fill={effectiveFill}
         fillOpacity={fillOpacity}
         height={height}
+        initialTransitionConfig={transitionConfig?.initial}
         originY={effectiveOriginY}
         roundBottom={roundBottom}
         roundTop={roundTop}
         stroke={stroke}
         strokeWidth={strokeWidth}
+        transitionConfig={transitionConfig?.update}
         width={width}
         x={x}
         y={y}

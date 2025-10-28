@@ -21,7 +21,10 @@ export type AreaSeries = Series &
   Partial<Pick<LineProps, 'LineComponent' | 'strokeWidth' | 'stroke' | 'opacity'>>;
 
 export type AreaChartProps = Omit<CartesianChartProps, 'xAxis' | 'yAxis' | 'series'> &
-  Pick<AreaProps, 'AreaComponent' | 'curve' | 'fillOpacity' | 'type' | 'connectNulls'> &
+  Pick<
+    AreaProps,
+    'AreaComponent' | 'curve' | 'fillOpacity' | 'type' | 'connectNulls' | 'transitionConfig'
+  > &
   Pick<LineProps, 'LineComponent' | 'strokeWidth'> & {
     /**
      * Configuration objects that define how to visualize the data.
@@ -71,6 +74,7 @@ export const AreaChart = memo(
         fillOpacity,
         type,
         connectNulls,
+        transitionConfig,
         LineComponent,
         strokeWidth,
         showXAxis,
@@ -193,6 +197,7 @@ export const AreaChart = memo(
                 curve={curve}
                 fillOpacity={fillOpacity}
                 seriesId={id}
+                transitionConfig={transitionConfig}
                 type={type}
                 {...areaPropsFromSeries}
               />
@@ -219,6 +224,7 @@ export const AreaChart = memo(
                     curve={curve}
                     seriesId={id}
                     strokeWidth={strokeWidth}
+                    transitionConfig={transitionConfig}
                     type={lineType}
                     {...linePropsFromSeries}
                   />

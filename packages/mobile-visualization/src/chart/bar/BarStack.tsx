@@ -66,7 +66,7 @@ export type BarStackComponent = React.FC<BarStackComponentProps>;
 
 export type BarStackProps = Pick<
   BarProps,
-  'BarComponent' | 'fillOpacity' | 'stroke' | 'strokeWidth' | 'borderRadius'
+  'BarComponent' | 'fillOpacity' | 'stroke' | 'strokeWidth' | 'borderRadius' | 'transitionConfig'
 > & {
   /**
    * Array of series configurations that belong to this stack.
@@ -143,6 +143,7 @@ export const BarStack = memo<BarStackProps>(
     barMinSize,
     stackMinSize,
     roundBaseline,
+    transitionConfig,
   }) => {
     const theme = useTheme();
     const { getSeriesData, getXAxis, getXScale } = useCartesianChartContext();
@@ -678,6 +679,7 @@ export const BarStack = memo<BarStackProps>(
         roundTop={bar.roundTop}
         stroke={bar.stroke ?? defaultStroke}
         strokeWidth={bar.strokeWidth ?? defaultStrokeWidth}
+        transitionConfig={transitionConfig}
         width={bar.width}
         x={bar.x}
         y={bar.y}
@@ -692,8 +694,10 @@ export const BarStack = memo<BarStackProps>(
         borderRadius={borderRadius}
         categoryIndex={categoryIndex}
         height={stackRect.height}
+        initialTransitionConfig={transitionConfig?.initial}
         roundBottom={stackRoundBottom}
         roundTop={stackRoundTop}
+        transitionConfig={transitionConfig?.update}
         width={stackRect.width}
         x={stackRect.x}
         y={stackRect.y}
