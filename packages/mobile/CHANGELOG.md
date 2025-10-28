@@ -12,7 +12,7 @@ All notable changes to this project will be documented in this file.
 
 #### 🐞 Fixes
 
-- Fix: correct padding. [[#133](https://github.com/coinbase/cds/pull/133)]
+- Increased ListCell innerSpacing when spacingVariant=“condensed” [[#133](https://github.com/coinbase/cds/pull/133)]
 
 ## 8.17.4 (10/27/2025 PST)
 
