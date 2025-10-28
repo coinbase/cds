@@ -217,12 +217,14 @@ The accessibility props are only applied when the `<ListCell>` has a value for t
     media={<Avatar src={assets.btc.imageUrl} />}
     onPress={() => console.log('List cell pressed')}
     title="BTC"
+    spacingVariant="condensed"
   />
 
   <ListCell
     intermediary={<Icon accessibilityLabel="Chart icon" name="chartLine" />}
     media={<Avatar accessibilityLabel="Bitcoin" src={assets.btc.imageUrl} />}
     title="BTC"
+    spacingVariant="condensed"
   />
 </VStack>
 ```
