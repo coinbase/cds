@@ -204,6 +204,88 @@ The ListCellFallback component provides loading state representations of ListCel
 </VStack>
 ```
 
+### Priority
+
+The priority prop controls which parts of the cell are protected from shrinking and truncation when horizontal space is limited. It accepts start, middle, and end as a string or an array of strings.
+
+```tsx live
+function PriorityCOntent() {
+  const dimensions = { width: 62, height: 18 };
+  const sparklineData = prices
+    .map((price) => parseFloat(price))
+    .filter((price, index) => index % 10 === 0);
+  const referenceY = sparklineData[Math.floor(sparklineData.length / 3)];
+
+  const CompactChart = memo(
+    ({ data, color = 'var(--color-fgPositive)', showArea = false, referenceY }) => (
+      <Box style={{ padding: 1 }}>
+        <LineChart
+          {...dimensions}
+          enableScrubbing={false}
+          overflow="visible"
+          inset={0}
+          showArea={showArea}
+          series={[
+            {
+              id: 'series',
+              data,
+              color,
+            },
+          ]}
+        >
+          <ReferenceLine dataY={referenceY} />
+        </LineChart>
+      </Box>
+    ),
+  );
+
+  return (
+    <VStack gap={3} style={{ width: '100%', maxWidth: 320, overflow: 'hidden' }}>
+      <ListCell
+        spacingVariant="condensed"
+        title="Asset with a really long name"
+        description="Some description of the asset"
+        intermediary={<CompactChart data={sparklineData} referenceY={referenceY} />}
+        detail="$334,239.03"
+        subdetail="+4.06%"
+        priority="start"
+        variant="positive"
+      />
+      <ListCell
+        spacingVariant="condensed"
+        title="Asset with a really long name"
+        description="Some description of the asset"
+        intermediary={<CompactChart data={sparklineData} referenceY={referenceY} />}
+        detail="$334,239.03"
+        subdetail="+4.06%"
+        priority="middle"
+        variant="positive"
+      />
+      <ListCell
+        spacingVariant="condensed"
+        title="Asset with a really long name"
+        description="Some description of the asset"
+        intermediary={<CompactChart data={sparklineData} referenceY={referenceY} />}
+        detail="$334,239.03"
+        subdetail="+4.06%"
+        priority="end"
+        variant="positive"
+      />
+      <ListCell
+        spacingVariant="condensed"
+        title="Asset with a really long name"
+        description="Some description of the asset"
+        intermediary={<CompactChart data={sparklineData} referenceY={referenceY} />}
+        detail="$334,239.03"
+        subdetail="+4.06%"
+        priority={['start', 'middle', 'end']}
+        variant="warning"
+      />
+    </VStack>
+  );
+}
+```
+
 ### Anatomy
 
 Without helper text (top-only layout):
