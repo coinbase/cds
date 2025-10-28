@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import {
   type ExtrapolationType,
   type SharedValue,
@@ -170,4 +170,95 @@ export const buildAnimation = (targetValue: number, config: PathAnimationConfig)
     default: // Fallback to default animation config
       return withSpring(targetValue, defaultAnimationConfig.config);
   }
+};
+
+/**
+ * Configuration for usePathAnimation hook
+ */
+export type UsePathAnimationConfig = {
+  /**
+   * Current target path to animate to.
+   */
+  currentPath: string;
+  /**
+   * Initial path for enter animation.
+   * When provided, the first animation will go from initialPath to currentPath.
+   * If not provided, defaults to currentPath (no enter animation).
+   */
+  initialPath?: string;
+  /**
+   * Whether to animate path transitions.
+   * @default true
+   */
+  animate?: boolean;
+  /**
+   * Animation configuration for path updates.
+   * @default defaultAnimationConfig
+   */
+  animationConfig?: PathAnimationConfig;
+  /**
+   * Animation configuration specifically for the initial/enter animation.
+   * If provided, this will be used for the first animation only.
+   * Subsequent animations will use the regular animationConfig.
+   */
+  initialAnimationConfig?: PathAnimationConfig;
+};
+
+/**
+ * Custom hook that manages path animation state and transitions.
+ * Handles both simple path-to-path transitions and enter animations with different configs.
+ *
+ * @param config - Animation configuration
+ * @returns Animated SkPath as a shared value
+ *
+ * @example
+ * // Simple path transition (like SolidLine)
+ * const path = usePathAnimation({
+ *   currentPath: d ?? '',
+ *   animate: shouldAnimate,
+ *   animationConfig: { type: 'timing', config: { duration: 3000 } }
+ * });
+ *
+ * @example
+ * // Enter animation with different initial config (like DefaultBar)
+ * const path = usePathAnimation({
+ *   currentPath: targetPath,
+ *   initialPath: baselinePath,
+ *   animate: true,
+ *   animationConfig: { type: 'timing', config: { duration: 300 } },
+ *   initialAnimationConfig: { type: 'timing', config: { duration: 1000 } }
+ * });
+ */
+export const usePathAnimation = ({
+  currentPath,
+  initialPath,
+  animate = true,
+  animationConfig = defaultAnimationConfig,
+  initialAnimationConfig,
+}: UsePathAnimationConfig): SharedValue<SkPath> => {
+  const isInitialRender = useRef(true);
+  const previousPathRef = useRef(initialPath ?? currentPath);
+  const progress = useSharedValue(animate ? 0 : 1);
+
+  useEffect(() => {
+    if (previousPathRef.current !== currentPath) {
+      if (animate) {
+        progress.value = 0;
+        // Use initialAnimationConfig for first render if provided, otherwise use regular config
+        const configToUse =
+          isInitialRender.current && initialAnimationConfig
+            ? initialAnimationConfig
+            : animationConfig;
+        progress.value = buildAnimation(1, configToUse);
+      } else {
+        progress.value = 1;
+      }
+      previousPathRef.current = currentPath;
+      isInitialRender.current = false;
+    }
+    // progress is a SharedValue and should not trigger re-renders
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentPath, animate, animationConfig, initialAnimationConfig]);
+
+  return useD3PathInterpolation(progress, previousPathRef.current, currentPath);
 };

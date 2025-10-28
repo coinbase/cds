@@ -1,15 +1,13 @@
-import { memo, useEffect, useMemo, useRef } from 'react';
-import { useSharedValue } from 'react-native-reanimated';
+import { memo, useMemo } from 'react';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 import { Path as SkiaPath } from '@shopify/react-native-skia';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import { getBarPath } from '../utils';
 import {
-  buildAnimation,
   defaultAnimationConfig,
   type PathAnimationConfig,
-  useD3PathInterpolation,
+  usePathAnimation,
 } from '../utils/animation';
 
 import type { BarComponentProps } from './Bar';
@@ -63,7 +61,7 @@ export const DefaultBar = memo<DefaultBarProps>(
     stroke,
     strokeWidth,
     originY,
-    animationConfig = { type: 'timing', config: { duration: 2000 } },
+    animationConfig = defaultAnimationConfig,
     initialAnimationConfig,
   }) => {
     const { animate } = useCartesianChartContext();
@@ -107,31 +105,13 @@ export const DefaultBar = memo<DefaultBarProps>(
       );
     }, [x, originY, y, height, width, borderRadius, roundTop, roundBottom]);
 
-    // Track previous path for smooth transitions
-    const previousPathRef = useRef(initialPath);
-    const isInitialRender = useRef(true);
-    const progress = useSharedValue(animate ? 0 : 1);
-
-    // Animate when path changes
-    useEffect(() => {
-      if (targetPath !== previousPathRef.current) {
-        if (animate) {
-          progress.value = 0;
-          // Use initialAnimationConfig for first render, then regular animationConfig
-          const configToUse = isInitialRender.current
-            ? (initialAnimationConfig ?? animationConfig)
-            : animationConfig;
-          progress.value = buildAnimation(1, configToUse);
-        } else {
-          progress.value = 1;
-        }
-        // Update previousPathRef AFTER starting the animation
-        previousPathRef.current = targetPath;
-        isInitialRender.current = false;
-      }
-    }, [targetPath, animate, progress, animationConfig, initialAnimationConfig]);
-
-    const path = useD3PathInterpolation(progress, previousPathRef.current, targetPath);
+    const path = usePathAnimation({
+      currentPath: targetPath,
+      initialPath,
+      animate,
+      animationConfig,
+      initialAnimationConfig,
+    });
 
     return (
       <SkiaPath

@@ -1048,7 +1048,7 @@ const AssetPriceDotted = () => {
           enableScrubbing
           showArea
           accessibilityLiveRegion="polite"
-          areaType="solid"
+          areaType="dotted"
           height={defaultChartHeight}
           inset={{ top: 56 }}
           series={[

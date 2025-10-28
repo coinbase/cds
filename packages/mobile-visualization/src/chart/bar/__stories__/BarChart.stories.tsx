@@ -215,8 +215,10 @@ const MultipleYAxes = () => {
   );
 };
 
+const initialData = [45, 52, 38, 45, 19, 23, 32];
+
 const UpdatingChartValues = () => {
-  const [data, setData] = useState([45, 52, 38, 45, 19, 23, 32]);
+  const [data, setData] = useState(initialData);
 
   return (
     <VStack gap={2}>
@@ -245,7 +247,11 @@ const UpdatingChartValues = () => {
           domain: { max: 250 },
         }}
       />
-      <Button onPress={() => setData((data) => data.map((d) => d - 10))}>Update Data</Button>
+      <Button
+        onPress={() => setData((data) => (data[0] > 100 ? initialData : data.map((d) => d + 10)))}
+      >
+        Update Data
+      </Button>
     </VStack>
   );
 };

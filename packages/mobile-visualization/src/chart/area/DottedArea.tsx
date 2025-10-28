@@ -1,5 +1,4 @@
-import { memo, useEffect, useMemo, useRef } from 'react';
-import { useSharedValue } from 'react-native-reanimated';
+import { memo, useMemo } from 'react';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 import {
   Blend,
@@ -14,10 +13,9 @@ import {
 import { useCartesianChartContext } from '../ChartProvider';
 import type { PathProps } from '../Path';
 import {
-  buildAnimation,
   defaultAnimationConfig,
   type PathAnimationConfig,
-  useD3PathInterpolation,
+  usePathAnimation,
 } from '../utils/animation';
 
 import type { AreaComponentProps } from './Area';
@@ -80,7 +78,7 @@ export const DottedArea = memo<DottedAreaProps>(
     yAxisId,
     clipRect,
     animate: animateProp,
-    animationConfig = { type: 'timing', config: { duration: 3000 } },
+    animationConfig = defaultAnimationConfig,
   }) => {
     const theme = useTheme();
     const context = useCartesianChartContext();
@@ -90,10 +88,6 @@ export const DottedArea = memo<DottedAreaProps>(
 
     // Use prop value if provided, otherwise fall back to context
     const shouldAnimate = animateProp ?? context.animate;
-
-    // Track previous path for smooth transitions
-    const previousPathRef = useRef(d ?? '');
-    const progress = useSharedValue(shouldAnimate ? 0 : 1);
 
     const currentPath = d ?? '';
 
@@ -182,16 +176,11 @@ export const DottedArea = memo<DottedAreaProps>(
       };
     }, [yScale, yDomain, yRange, drawingArea, baseline, peakOpacity, baselineOpacity, fillOpacity]);
 
-    // Animate when path changes
-    useEffect(() => {
-      if (currentPath !== previousPathRef.current && shouldAnimate) {
-        progress.value = 0;
-        progress.value = buildAnimation(1, animationConfig);
-        previousPathRef.current = currentPath;
-      }
-    }, [currentPath, shouldAnimate, progress, animationConfig]);
-
-    const areaPath = useD3PathInterpolation(progress, previousPathRef.current, currentPath);
+    const areaPath = usePathAnimation({
+      currentPath,
+      animate: shouldAnimate,
+      animationConfig,
+    });
 
     if (!clipPath || !drawingArea || !patternImage) return null;
 

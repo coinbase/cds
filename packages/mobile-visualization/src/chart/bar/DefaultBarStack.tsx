@@ -1,10 +1,9 @@
-import { memo, useEffect, useMemo } from 'react';
-import { useSharedValue, withTiming } from 'react-native-reanimated';
+import { memo, useMemo } from 'react';
 import { Group } from '@shopify/react-native-skia';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import { getBarPath } from '../utils';
-import { useD3PathInterpolation } from '../utils/animation';
+import { usePathAnimation } from '../utils/animation';
 
 import type { BarStackComponentProps } from './BarStack';
 
@@ -27,8 +26,6 @@ export const DefaultBarStack = memo<DefaultBarStackProps>(
   }) => {
     const { animate } = useCartesianChartContext();
 
-    const progress = useSharedValue(0);
-
     // Generate target clip path (full bar)
     const targetPath = useMemo(() => {
       return getBarPath(x, y, width, height, borderRadius, roundTop, roundBottom);
@@ -40,15 +37,12 @@ export const DefaultBarStack = memo<DefaultBarStackProps>(
       return getBarPath(x, baselineY, width, 1, borderRadius, roundTop, roundBottom);
     }, [x, yOrigin, y, height, width, borderRadius, roundTop, roundBottom]);
 
-    useEffect(() => {
-      if (animate) {
-        progress.value = withTiming(1, { duration: 1000 });
-      } else {
-        progress.value = 1;
-      }
-    }, [progress, animate]);
-
-    const clipPath = useD3PathInterpolation(progress, initialPath || targetPath, targetPath);
+    const clipPath = usePathAnimation({
+      currentPath: targetPath,
+      initialPath,
+      animate,
+      animationConfig: { type: 'timing', config: { duration: 1000 } },
+    });
 
     return <Group clip={clipPath}>{children}</Group>;
   },

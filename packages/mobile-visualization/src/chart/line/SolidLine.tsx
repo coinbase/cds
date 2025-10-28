@@ -1,5 +1,4 @@
-import React, { memo, useMemo, useRef } from 'react';
-import { useSharedValue } from 'react-native-reanimated';
+import { memo, useMemo } from 'react';
 import type { SharedProps } from '@coinbase/cds-common/types';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 import { LinearGradient, Path as SkiaPath, vec } from '@shopify/react-native-skia';
@@ -7,10 +6,9 @@ import { LinearGradient, Path as SkiaPath, vec } from '@shopify/react-native-ski
 import { useCartesianChartContext } from '../ChartProvider';
 import { type PathProps } from '../Path';
 import {
-  buildAnimation,
   defaultAnimationConfig,
   type PathAnimationConfig,
-  useD3PathInterpolation,
+  usePathAnimation,
 } from '../utils/animation';
 import { getGradientScale, type Gradient, processGradient } from '../utils/gradient';
 
@@ -80,7 +78,7 @@ export const SolidLine = memo<SolidLineProps>(
     yAxisId,
     d,
     animate: animateProp,
-    animationConfig = { type: 'timing', config: { duration: 3000 } },
+    animationConfig = defaultAnimationConfig,
     ...props
   }) => {
     const theme = useTheme();
@@ -91,10 +89,6 @@ export const SolidLine = memo<SolidLineProps>(
 
     // Use prop value if provided, otherwise fall back to context
     const shouldAnimate = animateProp ?? context.animate;
-
-    // Track previous path for smooth transitions
-    const previousPathRef = useRef(d ?? '');
-    const progress = useSharedValue(shouldAnimate ? 0 : 1);
 
     const currentPath = d ?? '';
 
@@ -125,15 +119,11 @@ export const SolidLine = memo<SolidLineProps>(
       };
     }, [gradient, xScale, yScale]);
 
-    React.useEffect(() => {
-      if (previousPathRef.current !== currentPath && shouldAnimate) {
-        progress.value = 0;
-        progress.value = buildAnimation(1, animationConfig);
-        previousPathRef.current = currentPath;
-      }
-    }, [currentPath, progress, animationConfig, shouldAnimate]);
-
-    const path = useD3PathInterpolation(progress, previousPathRef.current, currentPath);
+    const path = usePathAnimation({
+      currentPath,
+      animate: shouldAnimate,
+      animationConfig,
+    });
 
     return (
       <SkiaPath

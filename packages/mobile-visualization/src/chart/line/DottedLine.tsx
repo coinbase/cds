@@ -1,12 +1,11 @@
-import { memo, useEffect, useMemo, useRef } from 'react';
-import { useSharedValue, withTiming } from 'react-native-reanimated';
+import { memo, useMemo } from 'react';
 import type { SharedProps } from '@coinbase/cds-common/types';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 import { DashPathEffect, LinearGradient, Path as SkiaPath, vec } from '@shopify/react-native-skia';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import { type PathProps } from '../Path';
-import { useD3PathInterpolation } from '../utils/animation';
+import { type PathAnimationConfig, usePathAnimation } from '../utils/animation';
 import { getGradientScale, type Gradient, processGradient } from '../utils/gradient';
 
 export type DottedLineProps = SharedProps &
@@ -32,6 +31,23 @@ export type DottedLineProps = SharedProps &
      * Overrides the animate value from the chart context.
      */
     animate?: boolean;
+    /**
+     * Animation configuration for path transitions.
+     * Allows customization of animation type, timing, springs, delays, and chaining.
+     *
+     * @example
+     * // Simple timing animation
+     * animationConfig={{ type: 'timing', config: { duration: 500 } }}
+     *
+     * @example
+     * // Delayed spring animation
+     * animationConfig={{
+     *   type: 'delay',
+     *   delayMs: 200,
+     *   then: { type: 'spring', config: { damping: 15 } }
+     * }}
+     */
+    animationConfig?: PathAnimationConfig;
   };
 
 /**
@@ -53,6 +69,7 @@ export const DottedLine = memo<DottedLineProps>(
     yAxisId,
     d,
     animate: animateProp,
+    animationConfig = { type: 'timing', config: { duration: 300 } },
     ...props
   }) => {
     const theme = useTheme();
@@ -63,10 +80,6 @@ export const DottedLine = memo<DottedLineProps>(
 
     // Use prop value if provided, otherwise fall back to context
     const shouldAnimate = animateProp ?? context.animate;
-
-    // Track previous path for smooth transitions
-    const previousPathRef = useRef(d ?? '');
-    const progress = useSharedValue(shouldAnimate ? 0 : 1);
 
     const currentPath = d ?? '';
 
@@ -104,16 +117,11 @@ export const DottedLine = memo<DottedLineProps>(
       return strokeDasharray.split(/[\s,]+/).map((v) => parseFloat(v));
     }, [strokeDasharray]);
 
-    // Animate when path changes
-    useEffect(() => {
-      if (currentPath !== previousPathRef.current && shouldAnimate) {
-        progress.value = 0;
-        progress.value = withTiming(1, { duration: 300 });
-        previousPathRef.current = currentPath;
-      }
-    }, [currentPath, shouldAnimate, progress]);
-
-    const path = useD3PathInterpolation(progress, previousPathRef.current, currentPath);
+    const path = usePathAnimation({
+      currentPath,
+      animate: shouldAnimate,
+      animationConfig,
+    });
 
     return (
       <SkiaPath
