@@ -105,6 +105,7 @@ export const SelectTrigger = memo(
         <Pressable
           noScaleOnPress
           background="transparent"
+          borderWidth={0}
           className={pressableOverridesCss}
           minHeight={minHeight}
           minWidth={0}
