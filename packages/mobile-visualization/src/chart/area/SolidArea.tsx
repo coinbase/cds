@@ -1,16 +1,40 @@
 import { memo, useEffect, useMemo, useRef } from 'react';
-import { useSharedValue, withTiming } from 'react-native-reanimated';
+import { useSharedValue } from 'react-native-reanimated';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 import { LinearGradient, Path as SkiaPath, vec } from '@shopify/react-native-skia';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import { type PathProps } from '../Path';
-import { useD3PathInterpolation } from '../utils/animation';
+import {
+  buildAnimation,
+  defaultAnimationConfig,
+  type PathAnimationConfig,
+  useD3PathInterpolation,
+} from '../utils/animation';
 import { getGradientScale, processGradient } from '../utils/gradient';
 
 import type { AreaComponentProps } from './Area';
 
-export type SolidAreaProps = Omit<PathProps, 'd' | 'fill' | 'fillOpacity'> & AreaComponentProps;
+export type SolidAreaProps = Omit<PathProps, 'd' | 'fill' | 'fillOpacity'> &
+  AreaComponentProps & {
+    /**
+     * Animation configuration for area transitions.
+     * Allows customization of animation type, timing, springs, delays, and chaining.
+     *
+     * @example
+     * // Spring animation
+     * animationConfig={{ type: 'spring', config: { damping: 10 } }}
+     *
+     * @example
+     * // Delayed spring animation
+     * animationConfig={{
+     *   type: 'delay',
+     *   delayMs: 200,
+     *   then: { type: 'spring', config: { damping: 15 } }
+     * }}
+     */
+    animationConfig?: PathAnimationConfig;
+  };
 
 /**
  * A customizable solid area component which uses Path.
@@ -27,6 +51,7 @@ export const SolidArea = memo<SolidAreaProps>(
     seriesId,
     yAxisId,
     animate: animateProp,
+    animationConfig = defaultAnimationConfig,
     ...props
   }) => {
     const context = useCartesianChartContext();
@@ -86,10 +111,10 @@ export const SolidArea = memo<SolidAreaProps>(
     useEffect(() => {
       if (currentPath !== previousPathRef.current && shouldAnimate) {
         progress.value = 0;
-        progress.value = withTiming(1, { duration: 300 });
+        progress.value = buildAnimation(1, animationConfig);
         previousPathRef.current = currentPath;
       }
-    }, [currentPath, shouldAnimate, progress]);
+    }, [currentPath, shouldAnimate, progress, animationConfig]);
 
     const path = useD3PathInterpolation(progress, previousPathRef.current, currentPath);
 

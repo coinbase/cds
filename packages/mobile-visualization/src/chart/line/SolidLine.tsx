@@ -1,12 +1,17 @@
-import { memo, useEffect, useMemo, useRef } from 'react';
-import { useSharedValue, withTiming } from 'react-native-reanimated';
+import React, { memo, useMemo, useRef } from 'react';
+import { useSharedValue } from 'react-native-reanimated';
 import type { SharedProps } from '@coinbase/cds-common/types';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 import { LinearGradient, Path as SkiaPath, vec } from '@shopify/react-native-skia';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import { type PathProps } from '../Path';
-import { useD3PathInterpolation } from '../utils/animation';
+import {
+  buildAnimation,
+  defaultAnimationConfig,
+  type PathAnimationConfig,
+  useD3PathInterpolation,
+} from '../utils/animation';
 import { getGradientScale, type Gradient, processGradient } from '../utils/gradient';
 
 export type SolidLineProps = SharedProps &
@@ -32,6 +37,30 @@ export type SolidLineProps = SharedProps &
      * Overrides the animate value from the chart context.
      */
     animate?: boolean;
+    /**
+     * Animation configuration for path transitions.
+     * Allows customization of animation type, timing, springs, delays, and chaining.
+     *
+     * @example
+     * // Simple spring animation
+     * animationConfig={{ type: 'spring', config: { damping: 10 } }}
+     *
+     * @example
+     * // Delayed spring animation
+     * animationConfig={{
+     *   type: 'delay',
+     *   delayMs: 200,
+     *   then: { type: 'spring', config: { damping: 15 } }
+     * }}
+     *
+     * @example
+     * // Custom animation function with complex chaining
+     * animationConfig={(target) => withDelay(
+     *   100,
+     *   withSpring(target, { damping: 8, mass: 0.5, stiffness: 120 })
+     * )}
+     */
+    animationConfig?: PathAnimationConfig;
   };
 
 /**
@@ -51,6 +80,7 @@ export const SolidLine = memo<SolidLineProps>(
     yAxisId,
     d,
     animate: animateProp,
+    animationConfig = { type: 'timing', config: { duration: 3000 } },
     ...props
   }) => {
     const theme = useTheme();
@@ -95,14 +125,13 @@ export const SolidLine = memo<SolidLineProps>(
       };
     }, [gradient, xScale, yScale]);
 
-    // Animate when path changes
-    useEffect(() => {
-      if (currentPath !== previousPathRef.current && shouldAnimate) {
+    React.useEffect(() => {
+      if (previousPathRef.current !== currentPath && shouldAnimate) {
         progress.value = 0;
-        progress.value = withTiming(1, { duration: 300 });
+        progress.value = buildAnimation(1, animationConfig);
         previousPathRef.current = currentPath;
       }
-    }, [currentPath, shouldAnimate, progress]);
+    }, [currentPath, progress, animationConfig, shouldAnimate]);
 
     const path = useD3PathInterpolation(progress, previousPathRef.current, currentPath);
 

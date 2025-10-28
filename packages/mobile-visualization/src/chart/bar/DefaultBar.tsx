@@ -1,15 +1,49 @@
-import { memo, useEffect, useMemo } from 'react';
-import { useSharedValue, withTiming } from 'react-native-reanimated';
+import { memo, useEffect, useMemo, useRef } from 'react';
+import { useSharedValue } from 'react-native-reanimated';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 import { Path as SkiaPath } from '@shopify/react-native-skia';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import { getBarPath } from '../utils';
-import { useD3PathInterpolation } from '../utils/animation';
+import {
+  buildAnimation,
+  defaultAnimationConfig,
+  type PathAnimationConfig,
+  useD3PathInterpolation,
+} from '../utils/animation';
 
 import type { BarComponentProps } from './Bar';
 
-export type DefaultBarProps = BarComponentProps;
+export type DefaultBarProps = BarComponentProps & {
+  /**
+   * Animation configuration for bar transitions.
+   * Allows customization of animation type, timing, springs, delays, and chaining.
+   *
+   * @example
+   * // Spring animation for bouncy bars
+   * animationConfig={{ type: 'spring', config: { damping: 10 } }}
+   *
+   * @example
+   * // Delayed timing animation
+   * animationConfig={{
+   *   type: 'delay',
+   *   delayMs: 100,
+   *   then: { type: 'timing', config: { duration: 500 } }
+   * }}
+   */
+  animationConfig?: PathAnimationConfig;
+  /**
+   * Animation configuration specifically for the initial render.
+   * If provided, this will be used for the first animation only.
+   * Subsequent animations will use the regular animationConfig.
+   *
+   * @example
+   * // Slow initial animation, faster updates
+   * initialAnimationConfig={{ type: 'timing', config: { duration: 1000 } }}
+   * animationConfig={{ type: 'timing', config: { duration: 300 } }}
+   */
+  initialAnimationConfig?: PathAnimationConfig;
+};
 
 /**
  * Default bar component that renders a solid bar with animation support.
@@ -29,11 +63,11 @@ export const DefaultBar = memo<DefaultBarProps>(
     stroke,
     strokeWidth,
     originY,
+    animationConfig = { type: 'timing', config: { duration: 2000 } },
+    initialAnimationConfig,
   }) => {
     const { animate } = useCartesianChartContext();
     const theme = useTheme();
-
-    const progress = useSharedValue(0);
 
     const defaultFill = fill || theme.color.fgPrimary;
 
@@ -73,15 +107,31 @@ export const DefaultBar = memo<DefaultBarProps>(
       );
     }, [x, originY, y, height, width, borderRadius, roundTop, roundBottom]);
 
-    useEffect(() => {
-      if (animate) {
-        progress.value = withTiming(1, { duration: 1000 });
-      } else {
-        progress.value = 1;
-      }
-    }, [progress, animate]);
+    // Track previous path for smooth transitions
+    const previousPathRef = useRef(initialPath);
+    const isInitialRender = useRef(true);
+    const progress = useSharedValue(animate ? 0 : 1);
 
-    const path = useD3PathInterpolation(progress, initialPath || targetPath, targetPath);
+    // Animate when path changes
+    useEffect(() => {
+      if (targetPath !== previousPathRef.current) {
+        if (animate) {
+          progress.value = 0;
+          // Use initialAnimationConfig for first render, then regular animationConfig
+          const configToUse = isInitialRender.current
+            ? (initialAnimationConfig ?? animationConfig)
+            : animationConfig;
+          progress.value = buildAnimation(1, configToUse);
+        } else {
+          progress.value = 1;
+        }
+        // Update previousPathRef AFTER starting the animation
+        previousPathRef.current = targetPath;
+        isInitialRender.current = false;
+      }
+    }, [targetPath, animate, progress, animationConfig, initialAnimationConfig]);
+
+    const path = useD3PathInterpolation(progress, previousPathRef.current, targetPath);
 
     return (
       <SkiaPath

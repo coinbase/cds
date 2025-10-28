@@ -1,5 +1,5 @@
 import { memo, useEffect, useMemo, useRef } from 'react';
-import { useSharedValue, withTiming } from 'react-native-reanimated';
+import { useSharedValue } from 'react-native-reanimated';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 import {
   Blend,
@@ -13,7 +13,12 @@ import {
 
 import { useCartesianChartContext } from '../ChartProvider';
 import type { PathProps } from '../Path';
-import { useD3PathInterpolation } from '../utils/animation';
+import {
+  buildAnimation,
+  defaultAnimationConfig,
+  type PathAnimationConfig,
+  useD3PathInterpolation,
+} from '../utils/animation';
 
 import type { AreaComponentProps } from './Area';
 
@@ -39,6 +44,23 @@ export type DottedAreaProps = Omit<PathProps, 'd' | 'fill' | 'fillOpacity'> &
      * @default 0
      */
     baselineOpacity?: number;
+    /**
+     * Animation configuration for area transitions.
+     * Allows customization of animation type, timing, springs, delays, and chaining.
+     *
+     * @example
+     * // Spring animation
+     * animationConfig={{ type: 'spring', config: { damping: 10 } }}
+     *
+     * @example
+     * // Delayed spring animation
+     * animationConfig={{
+     *   type: 'delay',
+     *   delayMs: 200,
+     *   then: { type: 'spring', config: { damping: 15 } }
+     * }}
+     */
+    animationConfig?: PathAnimationConfig;
   };
 
 /**
@@ -58,6 +80,7 @@ export const DottedArea = memo<DottedAreaProps>(
     yAxisId,
     clipRect,
     animate: animateProp,
+    animationConfig = { type: 'timing', config: { duration: 3000 } },
   }) => {
     const theme = useTheme();
     const context = useCartesianChartContext();
@@ -163,10 +186,10 @@ export const DottedArea = memo<DottedAreaProps>(
     useEffect(() => {
       if (currentPath !== previousPathRef.current && shouldAnimate) {
         progress.value = 0;
-        progress.value = withTiming(1, { duration: 300 });
+        progress.value = buildAnimation(1, animationConfig);
         previousPathRef.current = currentPath;
       }
-    }, [currentPath, shouldAnimate, progress]);
+    }, [currentPath, shouldAnimate, progress, animationConfig]);
 
     const areaPath = useD3PathInterpolation(progress, previousPathRef.current, currentPath);
 

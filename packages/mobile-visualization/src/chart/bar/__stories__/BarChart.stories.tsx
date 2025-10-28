@@ -1,4 +1,4 @@
-import { memo, useContext, useState } from 'react';
+import { memo, useContext, useEffect, useState } from 'react';
 import { Button } from '@coinbase/cds-mobile/buttons';
 import { Example, ExampleScreen } from '@coinbase/cds-mobile/examples/ExampleScreen';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
@@ -94,13 +94,36 @@ const FiatAndStablecoinBalance = () => {
   );
 };
 
-const MonthlyRewards = () => {
+const CustomBarStackComponent = memo(({ children, ...props }: BarStackComponentProps) => {
   const theme = useTheme();
+  if (props.height === 0) {
+    const diameter = props.width;
+    return (
+      <Bar
+        roundBottom
+        roundTop
+        borderRadius={1000}
+        fill={theme.color.bgTertiary}
+        height={diameter}
+        originY={props.y}
+        width={diameter}
+        x={props.x}
+        y={props.y - diameter}
+      />
+    );
+  }
+
+  return <DefaultBarStack {...props}>{children}</DefaultBarStack>;
+});
+
+const MonthlyRewards = () => {
   const months = ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'];
   const purple = [null, 6, 8, 10, 7, 6, 6, 8, null, null, null, null];
   const blue = [null, 10, 12, 11, 10, 9, 10, 11, null, null, null, null];
   const cyan = [null, 7, 10, 12, 11, 10, 8, 11, null, null, null, null];
   const green = [10, null, null, null, 1, null, null, 6, null, null, null, null];
+
+  const [roundBaseline, setRoundBaseline] = useState(true);
 
   const series = [
     { id: 'purple', data: purple, color: '#b399ff' },
@@ -109,46 +132,28 @@ const MonthlyRewards = () => {
     { id: 'green', data: green, color: '#33c481' },
   ];
 
-  const CustomBarStackComponent = ({ children, ...props }: BarStackComponentProps) => {
-    if (props.height === 0) {
-      const diameter = props.width;
-      return (
-        <Bar
-          roundBottom
-          roundTop
-          borderRadius={1000}
-          fill={theme.color.bgTertiary}
-          height={diameter}
-          originY={props.y}
-          width={diameter}
-          x={props.x}
-          y={props.y - diameter}
-        />
-      );
-    }
-
-    return <DefaultBarStack {...props}>{children}</DefaultBarStack>;
-  };
-
   return (
-    <BarChart
-      roundBaseline
-      showXAxis
-      stacked
-      BarStackComponent={CustomBarStackComponent}
-      borderRadius={1000}
-      height={300}
-      inset={0}
-      series={series}
-      showYAxis={false}
-      stackMinSize={24}
-      xAxis={{
-        tickLabelFormatter: (index) => {
-          return months[index];
-        },
-        categoryPadding: 0.27,
-      }}
-    />
+    <VStack gap={2}>
+      <BarChart
+        showXAxis
+        stacked
+        BarStackComponent={CustomBarStackComponent}
+        borderRadius={1000}
+        height={300}
+        inset={0}
+        roundBaseline={roundBaseline}
+        series={series}
+        showYAxis={false}
+        stackMinSize={24}
+        xAxis={{
+          tickLabelFormatter: (index) => {
+            return months[index];
+          },
+          categoryPadding: 0.27,
+        }}
+      />
+      <Button onPress={() => setRoundBaseline(!roundBaseline)}>Toggle Round Baseline</Button>
+    </VStack>
   );
 };
 
@@ -240,8 +245,55 @@ const UpdatingChartValues = () => {
           domain: { max: 250 },
         }}
       />
-      <Button onPress={() => setData((data) => data.map((d) => d + 10))}>Update Data</Button>
+      <Button onPress={() => setData((data) => data.map((d) => d - 10))}>Update Data</Button>
     </VStack>
+  );
+};
+
+const AnimatedUpdatingChartValues = () => {
+  const [data, setData] = useState([45, 52, 38, 45, 19, 23, 32]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setData((prevData) =>
+        prevData.map((value) => {
+          // Generate random change between -15 and +15
+          const change = Math.floor(Math.random() * 31) - 15;
+          // Ensure values stay between 10 and 200
+          return Math.max(10, Math.min(200, value + change));
+        }),
+      );
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <BarChart
+      showXAxis
+      showYAxis
+      height={defaultChartHeight}
+      series={[
+        {
+          id: 'weekly-data',
+          data: data,
+        },
+      ]}
+      xAxis={{
+        data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+        showTickMarks: true,
+        showLine: true,
+      }}
+      yAxis={{
+        requestedTickCount: 5,
+        tickLabelFormatter: (value) => `$${value}k`,
+        showGrid: true,
+        showTickMarks: true,
+        showLine: true,
+        tickMarkSize: 12,
+        domain: { max: 250 },
+      }}
+    />
   );
 };
 
@@ -523,13 +575,16 @@ const BarChartStories = () => {
       <Example title="Basic 2">
         <UpdatingChartValues />
       </Example>
-      {/*<Example title="Negative Values with Top Axis">
+      <Example title="Animated Auto-Updating">
+        <AnimatedUpdatingChartValues />
+      </Example>
+      <Example title="Negative Values with Top Axis">
         <NegativeValuesWithTopAxis />
       </Example>
       <Example title="Positive and Negative Cash Flow">
         <PositiveAndNegativeCashFlow />
       </Example>
-      {/*<Example title="Fiat & Stablecoin Balance">
+      <Example title="Fiat & Stablecoin Balance">
         <FiatAndStablecoinBalance />
       </Example>
       <Example title="Monthly Rewards">
@@ -556,9 +611,6 @@ const BarChartStories = () => {
       <Example title="ColorMap with Opacity">
         <ColorMapWithOpacity />
       </Example>
-      <Example title="Candlestick Chart">
-        <Candlesticks />
-      </Example>*/}
     </ExampleScreen>
   );
 };

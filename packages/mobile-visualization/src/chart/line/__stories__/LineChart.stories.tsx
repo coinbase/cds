@@ -29,6 +29,7 @@ import {
 import { SegmentedTab, type SegmentedTabProps } from '@coinbase/cds-mobile/tabs/SegmentedTab';
 import { TextLabel1 } from '@coinbase/cds-mobile/typography';
 import { Text } from '@coinbase/cds-mobile/typography/Text';
+import { Rect } from '@shopify/react-native-skia';
 
 import { Area, DottedArea, GradientArea } from '../../area';
 import { XAxis, YAxis } from '../../axis';
@@ -906,6 +907,19 @@ const BTCActiveIndicator = memo(({ style, ...props }: TabsActiveIndicatorProps) 
   />
 ));
 
+const DrawingAreaBox = memo(() => {
+  const { drawingArea, width, height } = useCartesianChartContext();
+
+  if (!drawingArea) return;
+
+  return (
+    <>
+      <Rect color="green" height={height} opacity={0.25} width={width} x={0} y={0} />
+      <Rect {...drawingArea} color="red" opacity={0.25} />
+    </>
+  );
+});
+
 const AssetPriceDotted = () => {
   const currentPrice =
     sparklineInteractiveData.hour[sparklineInteractiveData.hour.length - 1].value;
@@ -1034,7 +1048,7 @@ const AssetPriceDotted = () => {
           enableScrubbing
           showArea
           accessibilityLiveRegion="polite"
-          areaType="dotted"
+          areaType="solid"
           height={defaultChartHeight}
           inset={{ top: 56 }}
           series={[

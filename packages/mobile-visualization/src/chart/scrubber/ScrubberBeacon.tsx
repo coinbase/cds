@@ -14,6 +14,11 @@ import { Circle, Group } from '@shopify/react-native-skia';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import { projectPoint, useScrubberContext } from '../utils';
+import {
+  buildAnimation,
+  defaultAnimationConfig,
+  type PathAnimationConfig,
+} from '../utils/animation';
 import { evaluateGradientAtValue, type Gradient } from '../utils/gradient';
 
 const radius = 5;
@@ -65,6 +70,24 @@ export type ScrubberBeaconProps = SharedProps & {
    * Pulse the scrubber beacon while it is at rest.
    */
   idlePulse?: boolean;
+  /**
+   * Animation configuration for beacon position transitions when idle.
+   * Allows customization of animation type, timing, springs, delays, and chaining.
+   * Only applies when the beacon transitions while at rest (idle state).
+   *
+   * @example
+   * // Bouncy spring animation
+   * beaconAnimationConfig={{ type: 'spring', config: { damping: 8, stiffness: 100 } }}
+   *
+   * @example
+   * // Delayed spring animation
+   * beaconAnimationConfig={{
+   *   type: 'delay',
+   *   delayMs: 100,
+   *   then: { type: 'spring', config: { damping: 15 } }
+   * }}
+   */
+  beaconAnimationConfig?: PathAnimationConfig;
 };
 
 /**
@@ -82,6 +105,7 @@ export const ScrubberBeacon = memo(
         testID,
         idlePulse,
         opacity = 1,
+        beaconAnimationConfig = defaultAnimationConfig,
       },
       ref,
     ) => {
@@ -197,11 +221,18 @@ export const ScrubberBeacon = memo(
           animatedX.value = pixelCoordinate.x;
           animatedY.value = pixelCoordinate.y;
         } else {
-          // When idle with animations enabled: animate smoothly
-          animatedX.value = withTiming(pixelCoordinate.x, { duration: 300 });
-          animatedY.value = withTiming(pixelCoordinate.y, { duration: 300 });
+          animatedX.value = buildAnimation(pixelCoordinate.x, beaconAnimationConfig);
+          animatedY.value = buildAnimation(pixelCoordinate.y, beaconAnimationConfig);
         }
-      }, [pixelCoordinate, isIdleState, animate, previousIdleState, animatedX, animatedY]);
+      }, [
+        pixelCoordinate,
+        isIdleState,
+        animate,
+        previousIdleState,
+        animatedX,
+        animatedY,
+        beaconAnimationConfig,
+      ]);
 
       // Create derived animated point for circles
       const animatedPoint = useDerivedValue(() => {
