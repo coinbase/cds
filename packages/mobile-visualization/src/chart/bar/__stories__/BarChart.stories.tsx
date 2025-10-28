@@ -9,11 +9,12 @@ import { XAxis, YAxis } from '../../axis';
 import { CartesianChart } from '../../CartesianChart';
 import { useCartesianChartContext } from '../../ChartProvider';
 import { ReferenceLine, SolidLine, type SolidLineProps } from '../../line';
-import { isCategoricalScale, ScrubberContext } from '../../utils';
-import { Bar } from '../Bar';
+import { isCategoricalScale, ScrubberContext, type TransitionConfig } from '../../utils';
+import { Bar, type BarComponentProps } from '../Bar';
 import { BarChart } from '../BarChart';
 import { BarPlot } from '../BarPlot';
 import type { BarStackComponentProps } from '../BarStack';
+import { DefaultBar } from '../DefaultBar';
 import { DefaultBarStack } from '../DefaultBarStack';
 
 const ThinSolidLine = memo((props: SolidLineProps) => <SolidLine {...props} strokeWidth={1} />);
@@ -217,6 +218,37 @@ const MultipleYAxes = () => {
 
 const initialData = [45, 52, 38, 45, 19, 23, 32];
 
+// Shared transition configs for testing
+const sharedTransitionConfig: TransitionConfig = {
+  type: 'timing',
+  config: { duration: 100 },
+};
+
+const sharedInitialTransitionConfig: TransitionConfig = {
+  type: 'timing',
+  config: { duration: 5000 },
+};
+
+const MyBarComponent = memo((props: BarComponentProps) => {
+  return (
+    <DefaultBar
+      {...props}
+      initialTransitionConfig={sharedInitialTransitionConfig}
+      transitionConfig={sharedTransitionConfig}
+    />
+  );
+});
+
+const MyBarStackComponent = memo((props: BarStackComponentProps) => {
+  return (
+    <DefaultBarStack
+      {...props}
+      initialTransitionConfig={sharedInitialTransitionConfig}
+      transitionConfig={sharedTransitionConfig}
+    />
+  );
+});
+
 const UpdatingChartValues = () => {
   const [data, setData] = useState(initialData);
 
@@ -225,6 +257,8 @@ const UpdatingChartValues = () => {
       <BarChart
         showXAxis
         showYAxis
+        BarComponent={MyBarComponent}
+        BarStackComponent={MyBarStackComponent}
         height={defaultChartHeight}
         series={[
           {
@@ -248,7 +282,7 @@ const UpdatingChartValues = () => {
         }}
       />
       <Button
-        onPress={() => setData((data) => (data[0] > 100 ? initialData : data.map((d) => d + 10)))}
+        onPress={() => setData((data) => (data[0] > 200 ? initialData : data.map((d) => d + 50)))}
       >
         Update Data
       </Button>
@@ -581,7 +615,7 @@ const BarChartStories = () => {
       <Example title="Basic 2">
         <UpdatingChartValues />
       </Example>
-      <Example title="Animated Auto-Updating">
+      {/*<Example title="Animated Auto-Updating">
         <AnimatedUpdatingChartValues />
       </Example>
       <Example title="Negative Values with Top Axis">
@@ -616,7 +650,7 @@ const BarChartStories = () => {
       </Example>
       <Example title="ColorMap with Opacity">
         <ColorMapWithOpacity />
-      </Example>
+      </Example>*/}
     </ExampleScreen>
   );
 };

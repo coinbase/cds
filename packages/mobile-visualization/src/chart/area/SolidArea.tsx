@@ -5,9 +5,9 @@ import { LinearGradient, Path as SkiaPath, vec } from '@shopify/react-native-ski
 import { useCartesianChartContext } from '../ChartProvider';
 import { type PathProps } from '../Path';
 import {
-  defaultAnimationConfig,
-  type PathAnimationConfig,
-  usePathAnimation,
+  defaultTransition,
+  type TransitionConfig,
+  useTransitionAnimation,
 } from '../utils/animation';
 import { getGradientScale, processGradient } from '../utils/gradient';
 
@@ -16,22 +16,22 @@ import type { AreaComponentProps } from './Area';
 export type SolidAreaProps = Omit<PathProps, 'd' | 'fill' | 'fillOpacity'> &
   AreaComponentProps & {
     /**
-     * Animation configuration for area transitions.
+     * Transition configuration for area transitions.
      * Allows customization of animation type, timing, springs, delays, and chaining.
      *
      * @example
      * // Spring animation
-     * animationConfig={{ type: 'spring', config: { damping: 10 } }}
+     * transitionConfig={{ type: 'spring', config: { damping: 10 } }}
      *
      * @example
      * // Delayed spring animation
-     * animationConfig={{
+     * transitionConfig={{
      *   type: 'delay',
      *   delayMs: 200,
      *   then: { type: 'spring', config: { damping: 15 } }
      * }}
      */
-    animationConfig?: PathAnimationConfig;
+    transitionConfig?: TransitionConfig;
   };
 
 /**
@@ -49,7 +49,7 @@ export const SolidArea = memo<SolidAreaProps>(
     seriesId,
     yAxisId,
     animate: animateProp,
-    animationConfig = defaultAnimationConfig,
+    transitionConfig = defaultTransition,
     ...props
   }) => {
     const context = useCartesianChartContext();
@@ -101,10 +101,10 @@ export const SolidArea = memo<SolidAreaProps>(
       };
     }, [gradient, xScale, yScale]);
 
-    const path = usePathAnimation({
+    const path = useTransitionAnimation({
       currentPath,
       animate: shouldAnimate,
-      animationConfig,
+      transitionConfig,
     });
 
     return (

@@ -13,9 +13,9 @@ import {
 import { useCartesianChartContext } from '../ChartProvider';
 import type { PathProps } from '../Path';
 import {
-  defaultAnimationConfig,
-  type PathAnimationConfig,
-  usePathAnimation,
+  defaultTransition,
+  type TransitionConfig,
+  useTransitionAnimation,
 } from '../utils/animation';
 
 import type { AreaComponentProps } from './Area';
@@ -43,22 +43,22 @@ export type DottedAreaProps = Omit<PathProps, 'd' | 'fill' | 'fillOpacity'> &
      */
     baselineOpacity?: number;
     /**
-     * Animation configuration for area transitions.
+     * Transition configuration for area transitions.
      * Allows customization of animation type, timing, springs, delays, and chaining.
      *
      * @example
      * // Spring animation
-     * animationConfig={{ type: 'spring', config: { damping: 10 } }}
+     * transitionConfig={{ type: 'spring', config: { damping: 10 } }}
      *
      * @example
      * // Delayed spring animation
-     * animationConfig={{
+     * transitionConfig={{
      *   type: 'delay',
      *   delayMs: 200,
      *   then: { type: 'spring', config: { damping: 15 } }
      * }}
      */
-    animationConfig?: PathAnimationConfig;
+    transitionConfig?: TransitionConfig;
   };
 
 /**
@@ -78,7 +78,7 @@ export const DottedArea = memo<DottedAreaProps>(
     yAxisId,
     clipRect,
     animate: animateProp,
-    animationConfig = defaultAnimationConfig,
+    transitionConfig = defaultTransition,
   }) => {
     const theme = useTheme();
     const context = useCartesianChartContext();
@@ -176,10 +176,10 @@ export const DottedArea = memo<DottedAreaProps>(
       };
     }, [yScale, yDomain, yRange, drawingArea, baseline, peakOpacity, baselineOpacity, fillOpacity]);
 
-    const areaPath = usePathAnimation({
+    const areaPath = useTransitionAnimation({
       currentPath,
       animate: shouldAnimate,
-      animationConfig,
+      transitionConfig,
     });
 
     if (!clipPath || !drawingArea || !patternImage) return null;

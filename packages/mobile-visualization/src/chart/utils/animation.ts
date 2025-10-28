@@ -90,8 +90,9 @@ export const useInterpolator = <T>(
 };
 
 /**
- * Animation configuration for path transitions.
+ * Transition configuration for animations.
  * Supports different animation types with chaining capabilities.
+ * Used for paths, positions, opacity, and any other animated properties.
  *
  * @example
  * // Spring animation
@@ -109,7 +110,7 @@ export const useInterpolator = <T>(
  * // Custom animation function
  * (target) => withDelay(100, withSpring(target, { damping: 10 }))
  */
-export type PathAnimationConfig =
+export type TransitionConfig =
   | {
       type: 'timing';
       config?: WithTimingConfig;
@@ -121,41 +122,41 @@ export type PathAnimationConfig =
   | {
       type: 'delay';
       delayMs: number;
-      then: PathAnimationConfig;
+      then: TransitionConfig;
     }
   | ((targetValue: number) => number);
 
 /**
- * Default animation configuration used across all chart components.
+ * Default transition configuration used across all chart components.
  * Uses a smooth spring animation with balanced stiffness and damping.
  */
-export const defaultAnimationConfig: PathAnimationConfig = {
+export const defaultTransition: TransitionConfig = {
   type: 'spring',
   config: { stiffness: 900, damping: 120 },
 };
 
 /**
- * Recursively builds the animation chain based on configuration.
+ * Builds a react-native-reanimated animation based on the configuration.
  *
  * @param targetValue - The target value to animate to
- * @param config - The animation configuration
+ * @param config - The transition configuration
  * @returns The animation value to assign to a shared value
  *
  * @example
  * // Use directly for animation
  * progress.value = 0;
- * progress.value = buildAnimation(1, { type: 'spring', config: { damping: 10 } });
+ * progress.value = buildTransition(1, { type: 'spring', config: { damping: 10 } });
  *
  * @example
  * // Coordinate animations
- * animatedX.value = buildAnimation(100, { type: 'spring', config: { damping: 10 } });
- * animatedY.value = buildAnimation(200, { type: 'spring', config: { damping: 10 } });
+ * animatedX.value = buildTransition(100, { type: 'spring', config: { damping: 10 } });
+ * animatedY.value = buildTransition(200, { type: 'spring', config: { damping: 10 } });
  *
  * @example
  * // Custom animation function
- * progress.value = buildAnimation(1, (target) => withDelay(100, withSpring(target)));
+ * progress.value = buildTransition(1, (target) => withDelay(100, withSpring(target)));
  */
-export const buildAnimation = (targetValue: number, config: PathAnimationConfig): number => {
+export const buildTransition = (targetValue: number, config: TransitionConfig): number => {
   if (typeof config === 'function') {
     return config(targetValue);
   }
@@ -166,16 +167,16 @@ export const buildAnimation = (targetValue: number, config: PathAnimationConfig)
     case 'spring':
       return withSpring(targetValue, config.config);
     case 'delay':
-      return withDelay(config.delayMs, buildAnimation(targetValue, config.then));
-    default: // Fallback to default animation config
-      return withSpring(targetValue, defaultAnimationConfig.config);
+      return withDelay(config.delayMs, buildTransition(targetValue, config.then));
+    default: // Fallback to default transition config
+      return withSpring(targetValue, defaultTransition.config);
   }
 };
 
 /**
- * Configuration for usePathAnimation hook
+ * Configuration for useTransitionAnimation hook
  */
-export type UsePathAnimationConfig = {
+export type UseTransitionAnimationConfig = {
   /**
    * Current target path to animate to.
    */
@@ -192,64 +193,65 @@ export type UsePathAnimationConfig = {
    */
   animate?: boolean;
   /**
-   * Animation configuration for path updates.
-   * @default defaultAnimationConfig
+   * Transition configuration for path updates.
+   * @default defaultTransition
    */
-  animationConfig?: PathAnimationConfig;
+  transitionConfig?: TransitionConfig;
   /**
-   * Animation configuration specifically for the initial/enter animation.
+   * Transition configuration specifically for the initial/enter animation.
    * If provided, this will be used for the first animation only.
-   * Subsequent animations will use the regular animationConfig.
+   * Subsequent animations will use the regular transitionConfig.
    */
-  initialAnimationConfig?: PathAnimationConfig;
+  initialTransitionConfig?: TransitionConfig;
 };
 
 /**
  * Custom hook that manages path animation state and transitions.
  * Handles both simple path-to-path transitions and enter animations with different configs.
+ * When path changes, the animation will start from the previous completed position to the new path.
  *
- * @param config - Animation configuration
+ * @param config - Transition configuration
  * @returns Animated SkPath as a shared value
  *
  * @example
  * // Simple path transition (like SolidLine)
- * const path = usePathAnimation({
+ * const path = useTransitionAnimation({
  *   currentPath: d ?? '',
  *   animate: shouldAnimate,
- *   animationConfig: { type: 'timing', config: { duration: 3000 } }
+ *   transitionConfig: { type: 'timing', config: { duration: 3000 } }
  * });
  *
  * @example
  * // Enter animation with different initial config (like DefaultBar)
- * const path = usePathAnimation({
+ * const path = useTransitionAnimation({
  *   currentPath: targetPath,
  *   initialPath: baselinePath,
  *   animate: true,
- *   animationConfig: { type: 'timing', config: { duration: 300 } },
- *   initialAnimationConfig: { type: 'timing', config: { duration: 1000 } }
+ *   transitionConfig: { type: 'timing', config: { duration: 300 } },
+ *   initialTransitionConfig: { type: 'timing', config: { duration: 1000 } }
  * });
  */
-export const usePathAnimation = ({
+export const useTransitionAnimation = ({
   currentPath,
   initialPath,
   animate = true,
-  animationConfig = defaultAnimationConfig,
-  initialAnimationConfig,
-}: UsePathAnimationConfig): SharedValue<SkPath> => {
+  transitionConfig = defaultTransition,
+  initialTransitionConfig,
+}: UseTransitionAnimationConfig): SharedValue<SkPath> => {
   const isInitialRender = useRef(true);
   const previousPathRef = useRef(initialPath ?? currentPath);
-  const progress = useSharedValue(animate ? 0 : 1);
+  const progress = useSharedValue(animate && initialPath ? 0 : 1);
 
   useEffect(() => {
     if (previousPathRef.current !== currentPath) {
       if (animate) {
         progress.value = 0;
-        // Use initialAnimationConfig for first render if provided, otherwise use regular config
+        // Use initialTransitionConfig for first render if provided, otherwise use regular config
         const configToUse =
-          isInitialRender.current && initialAnimationConfig
-            ? initialAnimationConfig
-            : animationConfig;
-        progress.value = buildAnimation(1, configToUse);
+          isInitialRender.current && initialTransitionConfig
+            ? initialTransitionConfig
+            : transitionConfig;
+        progress.value = buildTransition(1, configToUse);
       } else {
         progress.value = 1;
       }
@@ -258,7 +260,7 @@ export const usePathAnimation = ({
     }
     // progress is a SharedValue and should not trigger re-renders
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentPath, animate, animationConfig, initialAnimationConfig]);
+  }, [currentPath, animate, transitionConfig, initialTransitionConfig]);
 
   return useD3PathInterpolation(progress, previousPathRef.current, currentPath);
 };

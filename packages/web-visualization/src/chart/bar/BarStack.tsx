@@ -249,11 +249,7 @@ export const BarStack = memo<BarStackProps>(
               // Use original value for evaluation - handles both single numbers and tuples
               evalValue = Array.isArray(originalValue) ? originalValue[1] : originalValue;
             }
-            const evaluatedColor = evaluateGradientAtValue(
-              s.gradient,
-              evalValue,
-              gradientScale,
-            );
+            const evaluatedColor = evaluateGradientAtValue(s.gradient, evalValue, gradientScale);
             if (evaluatedColor && !s.fill) {
               // Only apply gradient color if fill is not explicitly set
               barFill = evaluatedColor;
@@ -656,16 +652,17 @@ export const BarStack = memo<BarStackProps>(
       return { bars: allBars, stackRect: stackBounds };
     }, [
       series,
-      x,
-      width,
-      getSeriesData,
-      categoryIndex,
-      roundBaseline,
-      baseline,
       stackGapPx,
       barMinSizePx,
+      x,
+      baseline,
+      width,
       stackMinSizePx,
+      getSeriesData,
+      categoryIndex,
       yScale,
+      xScale,
+      roundBaseline,
     ]);
 
     const xData =

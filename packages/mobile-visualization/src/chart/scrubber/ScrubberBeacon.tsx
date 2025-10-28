@@ -15,9 +15,9 @@ import { Circle, Group } from '@shopify/react-native-skia';
 import { useCartesianChartContext } from '../ChartProvider';
 import { projectPoint, useScrubberContext } from '../utils';
 import {
-  buildAnimation,
-  defaultAnimationConfig,
-  type PathAnimationConfig,
+  buildTransition,
+  defaultTransition,
+  type TransitionConfig,
 } from '../utils/animation';
 import { evaluateGradientAtValue, type Gradient } from '../utils/gradient';
 
@@ -71,23 +71,23 @@ export type ScrubberBeaconProps = SharedProps & {
    */
   idlePulse?: boolean;
   /**
-   * Animation configuration for beacon position transitions when idle.
+   * Transition configuration for beacon position transitions when idle.
    * Allows customization of animation type, timing, springs, delays, and chaining.
    * Only applies when the beacon transitions while at rest (idle state).
    *
    * @example
    * // Bouncy spring animation
-   * beaconAnimationConfig={{ type: 'spring', config: { damping: 8, stiffness: 100 } }}
+   * transitionConfig={{ type: 'spring', config: { damping: 8, stiffness: 100 } }}
    *
    * @example
    * // Delayed spring animation
-   * beaconAnimationConfig={{
+   * transitionConfig={{
    *   type: 'delay',
    *   delayMs: 100,
    *   then: { type: 'spring', config: { damping: 15 } }
    * }}
    */
-  beaconAnimationConfig?: PathAnimationConfig;
+  transitionConfig?: TransitionConfig;
 };
 
 /**
@@ -105,7 +105,7 @@ export const ScrubberBeacon = memo(
         testID,
         idlePulse,
         opacity = 1,
-        beaconAnimationConfig = defaultAnimationConfig,
+        transitionConfig = defaultTransition,
       },
       ref,
     ) => {
@@ -221,8 +221,8 @@ export const ScrubberBeacon = memo(
           animatedX.value = pixelCoordinate.x;
           animatedY.value = pixelCoordinate.y;
         } else {
-          animatedX.value = buildAnimation(pixelCoordinate.x, beaconAnimationConfig);
-          animatedY.value = buildAnimation(pixelCoordinate.y, beaconAnimationConfig);
+          animatedX.value = buildTransition(pixelCoordinate.x, transitionConfig);
+          animatedY.value = buildTransition(pixelCoordinate.y, transitionConfig);
         }
       }, [
         pixelCoordinate,
@@ -231,7 +231,7 @@ export const ScrubberBeacon = memo(
         previousIdleState,
         animatedX,
         animatedY,
-        beaconAnimationConfig,
+        transitionConfig,
       ]);
 
       // Create derived animated point for circles

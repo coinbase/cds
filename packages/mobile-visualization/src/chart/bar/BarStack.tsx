@@ -3,7 +3,7 @@ import type { Rect } from '@coinbase/cds-common';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 
 import { useCartesianChartContext } from '../ChartProvider';
-import type { ChartScaleFunction } from '../utils';
+import type { ChartScaleFunction, TransitionConfig } from '../utils';
 import { evaluateGradientAtValue, getGradientScale } from '../utils/gradient';
 
 import { Bar, type BarComponent, type BarProps } from './Bar';
@@ -52,6 +52,14 @@ export type BarStackComponentProps = {
    * The y-origin for animations (baseline position).
    */
   yOrigin?: number;
+  /**
+   * Transition configuration for stack clip path transitions.
+   */
+  transitionConfig?: TransitionConfig;
+  /**
+   * Transition configuration specifically for the initial render.
+   */
+  initialTransitionConfig?: TransitionConfig;
 };
 
 export type BarStackComponent = React.FC<BarStackComponentProps>;

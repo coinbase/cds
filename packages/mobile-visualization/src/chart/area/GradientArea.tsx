@@ -5,9 +5,9 @@ import { LinearGradient, Path as SkiaPath, vec } from '@shopify/react-native-ski
 import { useCartesianChartContext } from '../ChartProvider';
 import { type PathProps } from '../Path';
 import {
-  defaultAnimationConfig,
-  type PathAnimationConfig,
-  usePathAnimation,
+  defaultTransition,
+  type TransitionConfig,
+  useTransitionAnimation,
 } from '../utils/animation';
 import { applyOpacityToColor, type Gradient, processGradient } from '../utils/gradient';
 
@@ -28,22 +28,22 @@ export type GradientAreaProps = Omit<PathProps, 'd' | 'fill' | 'fillOpacity'> &
      */
     gradient?: Gradient;
     /**
-     * Animation configuration for area transitions.
+     * Transition configuration for area transitions.
      * Allows customization of animation type, timing, springs, delays, and chaining.
      *
      * @example
      * // Spring animation
-     * animationConfig={{ type: 'spring', config: { damping: 10 } }}
+     * transitionConfig={{ type: 'spring', config: { damping: 10 } }}
      *
      * @example
      * // Delayed spring animation
-     * animationConfig={{
+     * transitionConfig={{
      *   type: 'delay',
      *   delayMs: 200,
      *   then: { type: 'spring', config: { damping: 15 } }
      * }}
      */
-    animationConfig?: PathAnimationConfig;
+    transitionConfig?: TransitionConfig;
   };
 
 /**
@@ -65,7 +65,7 @@ export const GradientArea = memo<GradientAreaProps>(
     yAxisId,
     clipRect,
     animate: animateProp,
-    animationConfig = defaultAnimationConfig,
+    transitionConfig = defaultTransition,
     ...pathProps
   }) => {
     const context = useCartesianChartContext();
@@ -197,10 +197,10 @@ export const GradientArea = memo<GradientAreaProps>(
       };
     }, [gradient, fill, baseline, gradientScale, xScale, yScale, fillOpacity]);
 
-    const path = usePathAnimation({
+    const path = useTransitionAnimation({
       currentPath,
       animate: shouldAnimate,
-      animationConfig,
+      transitionConfig,
     });
 
     if (!gradientConfig) return null;

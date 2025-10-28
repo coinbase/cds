@@ -5,7 +5,7 @@ import { DashPathEffect, LinearGradient, Path as SkiaPath, vec } from '@shopify/
 
 import { useCartesianChartContext } from '../ChartProvider';
 import { type PathProps } from '../Path';
-import { type PathAnimationConfig, usePathAnimation } from '../utils/animation';
+import { defaultTransition, type TransitionConfig, useTransitionAnimation } from '../utils/animation';
 import { getGradientScale, type Gradient, processGradient } from '../utils/gradient';
 
 export type DottedLineProps = SharedProps &
@@ -32,22 +32,22 @@ export type DottedLineProps = SharedProps &
      */
     animate?: boolean;
     /**
-     * Animation configuration for path transitions.
+     * Transition configuration for path transitions.
      * Allows customization of animation type, timing, springs, delays, and chaining.
      *
      * @example
      * // Simple timing animation
-     * animationConfig={{ type: 'timing', config: { duration: 500 } }}
+     * transitionConfig={{ type: 'timing', config: { duration: 500 } }}
      *
      * @example
      * // Delayed spring animation
-     * animationConfig={{
+     * transitionConfig={{
      *   type: 'delay',
      *   delayMs: 200,
      *   then: { type: 'spring', config: { damping: 15 } }
      * }}
      */
-    animationConfig?: PathAnimationConfig;
+    transitionConfig?: TransitionConfig;
   };
 
 /**
@@ -69,7 +69,7 @@ export const DottedLine = memo<DottedLineProps>(
     yAxisId,
     d,
     animate: animateProp,
-    animationConfig = { type: 'timing', config: { duration: 300 } },
+    transitionConfig = defaultTransition,
     ...props
   }) => {
     const theme = useTheme();
@@ -117,10 +117,10 @@ export const DottedLine = memo<DottedLineProps>(
       return strokeDasharray.split(/[\s,]+/).map((v) => parseFloat(v));
     }, [strokeDasharray]);
 
-    const path = usePathAnimation({
+    const path = useTransitionAnimation({
       currentPath,
       animate: shouldAnimate,
-      animationConfig,
+      transitionConfig,
     });
 
     return (

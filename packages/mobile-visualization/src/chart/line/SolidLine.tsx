@@ -6,9 +6,9 @@ import { LinearGradient, Path as SkiaPath, vec } from '@shopify/react-native-ski
 import { useCartesianChartContext } from '../ChartProvider';
 import { type PathProps } from '../Path';
 import {
-  defaultAnimationConfig,
-  type PathAnimationConfig,
-  usePathAnimation,
+  defaultTransition,
+  type TransitionConfig,
+  useTransitionAnimation,
 } from '../utils/animation';
 import { getGradientScale, type Gradient, processGradient } from '../utils/gradient';
 
@@ -41,11 +41,11 @@ export type SolidLineProps = SharedProps &
      *
      * @example
      * // Simple spring animation
-     * animationConfig={{ type: 'spring', config: { damping: 10 } }}
+     * transitionConfig={{ type: 'spring', config: { damping: 10 } }}
      *
      * @example
      * // Delayed spring animation
-     * animationConfig={{
+     * transitionConfig={{
      *   type: 'delay',
      *   delayMs: 200,
      *   then: { type: 'spring', config: { damping: 15 } }
@@ -53,12 +53,12 @@ export type SolidLineProps = SharedProps &
      *
      * @example
      * // Custom animation function with complex chaining
-     * animationConfig={(target) => withDelay(
+     * transitionConfig={(target) => withDelay(
      *   100,
      *   withSpring(target, { damping: 8, mass: 0.5, stiffness: 120 })
      * )}
      */
-    animationConfig?: PathAnimationConfig;
+    transitionConfig?: TransitionConfig;
   };
 
 /**
@@ -78,7 +78,7 @@ export const SolidLine = memo<SolidLineProps>(
     yAxisId,
     d,
     animate: animateProp,
-    animationConfig = defaultAnimationConfig,
+    transitionConfig = defaultTransition,
     ...props
   }) => {
     const theme = useTheme();
@@ -119,10 +119,10 @@ export const SolidLine = memo<SolidLineProps>(
       };
     }, [gradient, xScale, yScale]);
 
-    const path = usePathAnimation({
+    const path = useTransitionAnimation({
       currentPath,
       animate: shouldAnimate,
-      animationConfig,
+      transitionConfig,
     });
 
     return (

@@ -5,42 +5,42 @@ import { Path as SkiaPath } from '@shopify/react-native-skia';
 import { useCartesianChartContext } from '../ChartProvider';
 import { getBarPath } from '../utils';
 import {
-  defaultAnimationConfig,
-  type PathAnimationConfig,
-  usePathAnimation,
+  defaultTransition,
+  type TransitionConfig,
+  useTransitionAnimation,
 } from '../utils/animation';
 
 import type { BarComponentProps } from './Bar';
 
 export type DefaultBarProps = BarComponentProps & {
   /**
-   * Animation configuration for bar transitions.
+   * Transition configuration for bar transitions.
    * Allows customization of animation type, timing, springs, delays, and chaining.
    *
    * @example
    * // Spring animation for bouncy bars
-   * animationConfig={{ type: 'spring', config: { damping: 10 } }}
+   * transitionConfig={{ type: 'spring', config: { damping: 10 } }}
    *
    * @example
    * // Delayed timing animation
-   * animationConfig={{
+   * transitionConfig={{
    *   type: 'delay',
    *   delayMs: 100,
    *   then: { type: 'timing', config: { duration: 500 } }
    * }}
    */
-  animationConfig?: PathAnimationConfig;
+  transitionConfig?: TransitionConfig;
   /**
-   * Animation configuration specifically for the initial render.
+   * Transition configuration specifically for the initial render.
    * If provided, this will be used for the first animation only.
-   * Subsequent animations will use the regular animationConfig.
+   * Subsequent animations will use the regular transitionConfig.
    *
    * @example
    * // Slow initial animation, faster updates
-   * initialAnimationConfig={{ type: 'timing', config: { duration: 1000 } }}
-   * animationConfig={{ type: 'timing', config: { duration: 300 } }}
+   * initialTransitionConfig={{ type: 'timing', config: { duration: 1000 } }}
+   * transitionConfig={{ type: 'timing', config: { duration: 300 } }}
    */
-  initialAnimationConfig?: PathAnimationConfig;
+  initialTransitionConfig?: TransitionConfig;
 };
 
 /**
@@ -61,8 +61,8 @@ export const DefaultBar = memo<DefaultBarProps>(
     stroke,
     strokeWidth,
     originY,
-    animationConfig = defaultAnimationConfig,
-    initialAnimationConfig,
+    transitionConfig = defaultTransition,
+    initialTransitionConfig,
   }) => {
     const { animate } = useCartesianChartContext();
     const theme = useTheme();
@@ -105,12 +105,12 @@ export const DefaultBar = memo<DefaultBarProps>(
       );
     }, [x, originY, y, height, width, borderRadius, roundTop, roundBottom]);
 
-    const path = usePathAnimation({
+    const path = useTransitionAnimation({
       currentPath: targetPath,
       initialPath,
       animate,
-      animationConfig,
-      initialAnimationConfig,
+      transitionConfig,
+      initialTransitionConfig,
     });
 
     return (
