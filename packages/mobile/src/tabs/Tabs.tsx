@@ -107,6 +107,16 @@ const TabsComponent = memo(
         );
       }, [activeTab, refMap]);
 
+      const registerRef = useCallback(
+        (tabId: string, ref: View) => {
+          refMap.registerRef(tabId, ref);
+          if (activeTab?.id === tabId) {
+            onActiveTabElementChange?.(ref);
+          }
+        },
+        [activeTab, onActiveTabElementChange, refMap],
+      );
+
       if (previousActiveRef.current !== activeTab) {
         previousActiveRef.current = activeTab;
         updateActiveTabRect();
@@ -130,16 +140,7 @@ const TabsComponent = memo(
             {tabs.map(({ id, Component: CustomTabComponent, disabled: tabDisabled, ...props }) => {
               const RenderedTab = CustomTabComponent ?? TabComponent;
               return (
-                <TabContainer
-                  key={id}
-                  id={id}
-                  registerRef={(tabId, ref) => {
-                    refMap.registerRef(tabId, ref);
-                    if (activeTab?.id === tabId) {
-                      onActiveTabElementChange?.(ref);
-                    }
-                  }}
-                >
+                <TabContainer key={id} id={id} registerRef={registerRef}>
                   <RenderedTab disabled={tabDisabled} id={id} {...props} />
                 </TabContainer>
               );
