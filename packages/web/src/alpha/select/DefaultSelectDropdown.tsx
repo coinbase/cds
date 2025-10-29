@@ -203,7 +203,7 @@ const DefaultSelectDropdownComponent = memo(
             onClick={toggleSelectAll}
             selected={isAllOptionsSelected || isSomeOptionsSelected}
             style={styles?.option}
-            styles={{ ...optionStyles }}
+            styles={optionStyles}
             type={type}
             value={'select-all' as SelectOptionValue}
           />
