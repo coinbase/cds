@@ -6,19 +6,19 @@
   "relatedComponents": [
     {
       "label": "Chip",
-      "url": "/components/inputs/Chip/chip"
+      "url": "/components/inputs/Chip/"
     },
     {
       "label": "InputChip",
-      "url": "/components/inputs/InputChip/input-chip"
+      "url": "/components/inputs/InputChip/"
     },
     {
       "label": "SelectChip",
-      "url": "/components/inputs/SelectChip/selectChip"
+      "url": "/components/inputs/SelectChip/"
     },
     {
       "label": "TabbedChips",
-      "url": "/components/navigation/TabbedChips/tabbedChips"
+      "url": "/components/navigation/TabbedChips/"
     }
   ]
 }
