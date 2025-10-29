@@ -419,7 +419,6 @@ export const ChartText = memo<ChartTextProps>(
     }, [
       fontMgr,
       children,
-      font,
       theme,
       fontSizeOverride,
       fontStyleOverride,

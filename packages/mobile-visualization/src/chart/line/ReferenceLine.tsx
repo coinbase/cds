@@ -1,4 +1,4 @@
-import { memo, useMemo } from 'react';
+import { memo, useMemo, useRef } from 'react';
 import type { SharedProps } from '@coinbase/cds-common/types';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 
@@ -117,6 +117,8 @@ export const ReferenceLine = memo<ReferenceLineProps>(
     stroke,
     labelProps,
   }) => {
+    const renderCount = useRef(0);
+    renderCount.current++;
     const theme = useTheme();
     const { getXScale, getYScale, drawingArea } = useCartesianChartContext();
 
@@ -203,6 +205,9 @@ export const ReferenceLine = memo<ReferenceLineProps>(
             d={`M${xPixel},${drawingArea.y} L${xPixel},${drawingArea.y + drawingArea.height}`}
             stroke={effectiveLineStroke}
           />
+          <ChartText {...finalLabelProps} x={xPixel} y={drawingArea.y + 30}>
+            {renderCount.current}
+          </ChartText>
           {label && (
             <ChartText {...finalLabelProps} x={xPixel} y={labelY}>
               {label}

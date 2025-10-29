@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { Platform } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import { runOnJS } from 'react-native-reanimated';
@@ -27,6 +27,8 @@ export const ScrubberProvider: React.FC<ScrubberProviderProps> = ({
   onScrubberPositionChange,
   allowOverflowGestures,
 }) => {
+  const renderCount = useRef(0);
+  renderCount.current++;
   const chartContext = useCartesianChartContext();
 
   if (!chartContext) {

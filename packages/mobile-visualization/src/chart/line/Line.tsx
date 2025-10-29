@@ -1,10 +1,11 @@
-import React, { memo, useMemo } from 'react';
+import React, { memo, useMemo, useRef } from 'react';
 import type { SharedProps } from '@coinbase/cds-common/types';
 import { useTheme } from '@coinbase/cds-mobile';
 
 import { Area, type AreaComponent } from '../area/Area';
 import { useCartesianChartContext } from '../ChartProvider';
 import { Point, type PointConfig, type RenderPointsParams } from '../Point';
+import { ChartText } from '../text';
 import { type ChartPathCurveType, getLinePath, type TransitionConfig } from '../utils';
 import { evaluateGradientAtValue, getGradientScale, type Gradient } from '../utils/gradient';
 
@@ -139,6 +140,8 @@ export const Line = memo<LineProps>(
     transitionConfig,
     ...props
   }) => {
+    const renderCount = useRef(0);
+    renderCount.current++;
     const theme = useTheme();
     const { getSeries, getSeriesData, getXScale, getYScale, getXAxis } = useCartesianChartContext();
 
@@ -233,6 +236,9 @@ export const Line = memo<LineProps>(
 
     return (
       <>
+        <ChartText x={10} y={50}>
+          {renderCount.current}
+        </ChartText>
         {showArea && (
           <Area
             AreaComponent={AreaComponent}

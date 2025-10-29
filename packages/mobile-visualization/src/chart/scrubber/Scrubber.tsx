@@ -26,8 +26,6 @@ type LabelDimensions = {
   id: string;
   width: number;
   height: number;
-  preferredX: number;
-  preferredY: number;
 };
 
 /**
@@ -132,7 +130,6 @@ export const Scrubber = memo(
       const { scrubberPosition: scrubberPosition } = useScrubberContext();
       const { getXScale, getYScale, getSeriesData, getXAxis, series, drawingArea } =
         useCartesianChartContext();
-      const getStackedSeriesData = getSeriesData; // getSeriesData now returns stacked data
 
       // Expose imperative handle with pulse method
       useImperativeHandle(ref, () => ({
@@ -151,7 +148,7 @@ export const Scrubber = memo(
 
         const maxDataLength =
           series?.reduce((max: any, s: any) => {
-            const seriesData = getStackedSeriesData(s.id) || getSeriesData(s.id);
+            const seriesData = getSeriesData(s.id);
             return Math.max(max, seriesData?.length ?? 0);
           }, 0) ?? 0;
 
@@ -167,7 +164,7 @@ export const Scrubber = memo(
         }
 
         return { dataX, dataIndex };
-      }, [getXScale, getXAxis, series, scrubberPosition, getStackedSeriesData, getSeriesData]);
+      }, [getXScale, getXAxis, series, scrubberPosition, getSeriesData]);
 
       const beaconPositions = useMemo(() => {
         const xScale = getXScale() as ChartScaleFunction;
@@ -181,7 +178,7 @@ export const Scrubber = memo(
               return seriesIds.includes(s.id);
             })
             ?.map((s) => {
-              const sourceData = getStackedSeriesData(s.id) || getSeriesData(s.id);
+              const sourceData = getSeriesData(s.id);
               // Use dataIndex to get the y value from the series data array
               const stuff = sourceData?.[dataIndex];
               let dataY: number | undefined;
@@ -212,16 +209,7 @@ export const Scrubber = memo(
             })
             .filter((beacon: any) => beacon !== undefined) ?? []
         );
-      }, [
-        getXScale,
-        getYScale,
-        dataX,
-        dataIndex,
-        series,
-        seriesIds,
-        getStackedSeriesData,
-        getSeriesData,
-      ]);
+      }, [getXScale, getYScale, dataX, dataIndex, series, seriesIds, getSeriesData]);
 
       const createScrubberBeaconRef = useCallback(
         (seriesId: string) => {
@@ -251,15 +239,18 @@ export const Scrubber = memo(
 
       // Calculate optimal label positioning strategy with collision detection
       const labelPositioning = useMemo(() => {
-        // Get current beacon IDs that are actually being rendered
-        const currentBeaconIds = new Set(
-          beaconPositions.map((beacon: any) => beacon?.targetSeries.id).filter(Boolean),
-        );
-
-        // Only use dimensions for beacons that are currently being rendered
-        const dimensions = Array.from(labelDimensions.values()).filter((dim) =>
-          currentBeaconIds.has(dim.id),
-        );
+        // Build enriched dimensions with current beacon positions
+        const dimensions = beaconPositions
+          .map((beacon: any) => {
+            const dim = labelDimensions.get(beacon?.targetSeries.id);
+            if (!dim) return null;
+            return {
+              ...dim,
+              preferredX: pixelX ?? 0,
+              preferredY: beacon.pixelY,
+            };
+          })
+          .filter((d): d is NonNullable<typeof d> => d !== null);
 
         if (dimensions.length === 0) return { strategy: 'auto' as const, adjustments: new Map() };
 
@@ -494,33 +485,23 @@ export const Scrubber = memo(
         }
 
         return { strategy: globalSide, adjustments };
-      }, [beaconPositions, labelDimensions, drawingArea]);
+      }, [beaconPositions, labelDimensions, drawingArea, pixelX]);
 
       // Callback for labels to register their dimensions
-      const registerLabelDimensions = useCallback(
-        (id: string, width: number, height: number, x: number, y: number) => {
-          setLabelDimensions((prev) => {
-            const existing = prev.get(id);
-            const newDimensions = { id, width, height, preferredX: x, preferredY: y };
+      const registerLabelDimensions = useCallback((id: string, width: number, height: number) => {
+        setLabelDimensions((prev) => {
+          const existing = prev.get(id);
 
-            // Only update if dimensions actually changed
-            if (
-              existing &&
-              existing.width === width &&
-              existing.height === height &&
-              existing.preferredX === x &&
-              existing.preferredY === y
-            ) {
-              return prev;
-            }
+          // Only update if dimensions actually changed
+          if (existing && existing.width === width && existing.height === height) {
+            return prev;
+          }
 
-            const next = new Map(prev);
-            next.set(id, newDimensions);
-            return next;
-          });
-        },
-        [],
-      );
+          const next = new Map(prev);
+          next.set(id, { id, width, height });
+          return next;
+        });
+      }, []);
 
       // Synchronize label positioning state when the position of any scrubber beacons change
       useEffect(() => {
@@ -529,6 +510,21 @@ export const Scrubber = memo(
         );
 
         setLabelDimensions((prev) => {
+          // Check if any IDs need to be removed
+          let hasChanges = false;
+          for (const id of prev.keys()) {
+            if (!currentBeaconIds.has(id)) {
+              hasChanges = true;
+              break;
+            }
+          }
+
+          // If no changes needed, return prev to avoid re-render
+          if (!hasChanges) {
+            return prev;
+          }
+
+          // Only create new Map if we actually need to remove entries
           const next = new Map();
           for (const [id, dimensions] of prev) {
             if (currentBeaconIds.has(id)) {
@@ -612,13 +608,7 @@ export const Scrubber = memo(
                           bottom: labelVerticalInset,
                         }}
                         onDimensionsChange={(rect) =>
-                          registerLabelDimensions(
-                            beacon.targetSeries.id,
-                            rect.width,
-                            rect.height,
-                            pixelX,
-                            beacon.pixelY,
-                          )
+                          registerLabelDimensions(beacon.targetSeries.id, rect.width, rect.height)
                         }
                         testID={testID ? `${testID}-${beacon.targetSeries.id}-label` : undefined}
                         x={finalAnchorX}

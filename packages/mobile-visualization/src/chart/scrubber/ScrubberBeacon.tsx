@@ -1,4 +1,4 @@
-import { forwardRef, memo, useEffect, useImperativeHandle, useMemo } from 'react';
+import { forwardRef, memo, useEffect, useImperativeHandle, useMemo, useRef } from 'react';
 import {
   cancelAnimation,
   useDerivedValue,
@@ -13,12 +13,9 @@ import { useTheme } from '@coinbase/cds-mobile';
 import { Circle, Group } from '@shopify/react-native-skia';
 
 import { useCartesianChartContext } from '../ChartProvider';
+import { ChartText } from '../text';
 import { projectPoint, useScrubberContext } from '../utils';
-import {
-  buildTransition,
-  defaultTransition,
-  type TransitionConfig,
-} from '../utils/animation';
+import { buildTransition, defaultTransition, type TransitionConfig } from '../utils/animation';
 import { evaluateGradientAtValue, type Gradient } from '../utils/gradient';
 
 const radius = 5;
@@ -71,23 +68,29 @@ export type ScrubberBeaconProps = SharedProps & {
    */
   idlePulse?: boolean;
   /**
-   * Transition configuration for beacon position transitions when idle.
-   * Allows customization of animation type, timing, springs, delays, and chaining.
-   * Only applies when the beacon transitions while at rest (idle state).
+   * Transition configuration for beacon animations.
+   * Allows customization of both position update animations and pulse animations.
    *
    * @example
-   * // Bouncy spring animation
-   * transitionConfig={{ type: 'spring', config: { damping: 8, stiffness: 100 } }}
-   *
-   * @example
-   * // Delayed spring animation
-   * transitionConfig={{
-   *   type: 'delay',
-   *   delayMs: 100,
-   *   then: { type: 'spring', config: { damping: 15 } }
+   * // Custom update and pulse animations
+   * beaconTransitionConfig={{
+   *   update: { type: 'spring', config: { damping: 8, stiffness: 100 } },
+   *   pulse: { type: 'timing', config: { duration: 1500 } }
    * }}
    */
-  transitionConfig?: TransitionConfig;
+  beaconTransitionConfig?: {
+    /**
+     * Transition used for beacon position updates when idle.
+     * @default defaultTransition
+     */
+    update?: TransitionConfig;
+    /**
+     * Transition used for the pulse animation (0->peak->0).
+     * This duration represents a single pulse cycle.
+     * @default { type: 'timing', config: { duration: 1000 } }
+     */
+    pulse?: TransitionConfig;
+  };
 };
 
 /**
@@ -105,10 +108,12 @@ export const ScrubberBeacon = memo(
         testID,
         idlePulse,
         opacity = 1,
-        transitionConfig = defaultTransition,
+        beaconTransitionConfig,
       },
       ref,
     ) => {
+      const renderCount = useRef(0);
+      renderCount.current++;
       const theme = useTheme();
       const { getSeries, getXScale, getYScale, getSeriesData, animate, getSeriesGradientScale } =
         useCartesianChartContext();
@@ -121,6 +126,20 @@ export const ScrubberBeacon = memo(
       const gradientScale = seriesId ? getSeriesGradientScale(seriesId) : undefined;
 
       const isIdleState = scrubberPosition === undefined;
+
+      // Extract update and pulse configs with defaults
+      const updateTransitionConfig = useMemo(
+        () => beaconTransitionConfig?.update ?? defaultTransition,
+        [beaconTransitionConfig?.update],
+      );
+      const pulseTransitionConfig = useMemo(
+        () =>
+          beaconTransitionConfig?.pulse ?? {
+            type: 'timing' as const,
+            config: { duration: pulseDuration },
+          },
+        [beaconTransitionConfig?.pulse],
+      );
 
       const { dataX, dataY } = useMemo(() => {
         let x: number | undefined;
@@ -186,7 +205,7 @@ export const ScrubberBeacon = memo(
         pulse: () => {
           if (isIdleState && animate) {
             pulseOpacity.value = 0.1;
-            pulseOpacity.value = withTiming(0, { duration: singlePulseDuration });
+            pulseOpacity.value = buildTransition(0, pulseTransitionConfig);
           }
         },
       }));
@@ -197,17 +216,17 @@ export const ScrubberBeacon = memo(
         if (shouldPulse) {
           pulseOpacity.value = withRepeat(
             withSequence(
-              withTiming(0.1, { duration: pulseDuration / 2 }),
-              withTiming(0, { duration: pulseDuration / 2 }),
+              buildTransition(0.1, pulseTransitionConfig),
+              buildTransition(0, pulseTransitionConfig),
             ),
             -1, // loop
             false,
           );
         } else {
           cancelAnimation(pulseOpacity);
-          pulseOpacity.value = withTiming(0, { duration: 200 });
+          pulseOpacity.value = buildTransition(0, pulseTransitionConfig);
         }
-      }, [animate, isIdleState, idlePulse, pulseOpacity]);
+      }, [animate, isIdleState, idlePulse, pulseOpacity, pulseTransitionConfig]);
 
       // Update position when data coordinates change
       useEffect(() => {
@@ -221,8 +240,8 @@ export const ScrubberBeacon = memo(
           animatedX.value = pixelCoordinate.x;
           animatedY.value = pixelCoordinate.y;
         } else {
-          animatedX.value = buildTransition(pixelCoordinate.x, transitionConfig);
-          animatedY.value = buildTransition(pixelCoordinate.y, transitionConfig);
+          animatedX.value = buildTransition(pixelCoordinate.x, updateTransitionConfig);
+          animatedY.value = buildTransition(pixelCoordinate.y, updateTransitionConfig);
         }
       }, [
         pixelCoordinate,
@@ -231,7 +250,7 @@ export const ScrubberBeacon = memo(
         previousIdleState,
         animatedX,
         animatedY,
-        transitionConfig,
+        updateTransitionConfig,
       ]);
 
       // Create derived animated point for circles
@@ -278,6 +297,9 @@ export const ScrubberBeacon = memo(
       if (!isIdleState) {
         return (
           <Group opacity={opacity}>
+            <ChartText x={pixelCoordinate.x} y={pixelCoordinate.y - 60}>
+              {renderCount.current}
+            </ChartText>
             {/* Glow circle behind */}
             <Circle
               c={{ x: pixelCoordinate.x, y: pixelCoordinate.y }}
@@ -303,6 +325,9 @@ export const ScrubberBeacon = memo(
 
       return (
         <Group opacity={opacity}>
+          <ChartText x={pixelCoordinate.x} y={pixelCoordinate.y - 60}>
+            {renderCount.current}
+          </ChartText>
           {/* Glow circle */}
           <Circle c={animatedPoint} color={pointColor} opacity={0.15} r={glowRadius} />
           {/* Pulse circle */}

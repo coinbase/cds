@@ -1,4 +1,4 @@
-import React, { forwardRef, memo, useCallback, useMemo } from 'react';
+import React, { forwardRef, memo, useCallback, useMemo, useRef } from 'react';
 import { type View } from 'react-native';
 import type { Rect } from '@coinbase/cds-common/types';
 import { useLayout } from '@coinbase/cds-mobile/hooks/useLayout';
@@ -10,6 +10,7 @@ import { ScrubberProvider, type ScrubberProviderProps } from './scrubber/Scrubbe
 import { getGradientScale } from './utils/gradient';
 import { ChartCanvas } from './ChartCanvas';
 import { CartesianChartProvider } from './ChartProvider';
+import { ChartText } from './text';
 import {
   type AxisConfig,
   type AxisConfigProps,
@@ -88,6 +89,9 @@ export const CartesianChart = memo(
       },
       ref,
     ) => {
+      const renderCount = useRef(0);
+      renderCount.current++;
+
       const [containerLayout, onContainerLayout] = useLayout();
 
       // Use Skia's default TypefaceFontProvider for paragraph rendering
@@ -376,6 +380,9 @@ export const CartesianChart = memo(
               {...props}
             >
               <ChartCanvas height={chartHeight} width={chartWidth}>
+                <ChartText x={10} y={10}>
+                  {renderCount.current}
+                </ChartText>
                 {children}
               </ChartCanvas>
             </Box>

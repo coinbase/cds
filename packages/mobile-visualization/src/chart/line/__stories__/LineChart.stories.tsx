@@ -37,7 +37,7 @@ import { BarChart } from '../../bar';
 import { CartesianChart } from '../../CartesianChart';
 import { useCartesianChartContext } from '../../ChartProvider';
 import { PeriodSelector, PeriodSelectorActiveIndicator } from '../../PeriodSelector';
-import { Point } from '../../Point';
+import { Point, type RenderPointsParams } from '../../Point';
 import { Scrubber, type ScrubberRef } from '../../scrubber';
 import { ChartText, type ChartTextChildren } from '../../text';
 import type { ChartAxisScaleType } from '../../utils/scale';
@@ -209,12 +209,13 @@ export const BasicLineChartWithPoints = () => {
   );
 };
 
+const data = sparklineInteractiveData.all.map((d) => d.value);
+
+const ethData = data.map((value) => value * 2);
+const uniData = data.map((value) => value * 3);
+
 export const ScrubberWithBeaconLabels = () => {
   const theme = useTheme();
-  const btcData = [42000, 43500, 41000, 45000, 46500, 44000, 47000];
-  const ethData = [2800, 2900, 2750, 3100, 3200, 3000, 3300];
-  const uniData = [8, 9, 7, 10, 11, 9, 12];
-
   const formatPrice = useCallback((value: number, prefix = '$') => {
     return `${prefix}${new Intl.NumberFormat('en-US', {
       maximumFractionDigits: 0,
@@ -234,21 +235,18 @@ export const ScrubberWithBeaconLabels = () => {
         series={[
           {
             id: 'btc',
-            data: btcData,
+            data: data,
             color: assets.btc.color,
-            label: (dataIndex) => formatPrice(btcData[dataIndex]),
           },
           {
             id: 'eth',
             data: ethData,
             color: assets.eth.color,
-            label: (dataIndex) => formatPrice(ethData[dataIndex]),
           },
           {
             id: 'uni',
             data: uniData,
             color: assets.uni.color,
-            label: (dataIndex) => formatPrice(uniData[dataIndex]),
           },
         ]}
         yAxis={{
@@ -1030,6 +1028,10 @@ const AssetPriceDotted = () => {
     return `Price chart for Bitcoin, ${startDateStr} to ${endDateStr}. Swipe left or right to navigate data points.`;
   }, [sparklineTimePeriodData, timePeriod.id]);
 
+  const myPoints = useCallback(({ dataX }: RenderPointsParams) => {
+    return dataX % 10 === 0;
+  }, []);
+
   return (
     <Box accessibilityLabel={chartOverviewLabel} accessibilityLiveRegion="polite">
       <VStack gap={2}>
@@ -1051,6 +1053,7 @@ const AssetPriceDotted = () => {
           areaType="dotted"
           height={defaultChartHeight}
           inset={{ top: 56 }}
+          renderPoints={myPoints}
           series={[
             {
               id: 'btc',
@@ -1058,6 +1061,7 @@ const AssetPriceDotted = () => {
               color: assets.btc.color,
             },
           ]}
+          transitionConfig={{ type: 'timing', config: { duration: 1500 } }}
         >
           <Scrubber
             idlePulse
@@ -2006,8 +2010,6 @@ const ConnectNullsChart = memo(() => {
   );
 });
 
-const data = sparklineInteractiveData.all.map((d) => d.value);
-
 const LineChartStories = () => {
   const theme = useTheme();
   return (
@@ -2112,11 +2114,27 @@ const LineChartStories = () => {
       <Example title="ColorMap - Discrete Thresholds">
         <LineChart
           enableScrubbing
+          showArea
+          showXAxis
+          showYAxis
+          AreaComponent={(props) => <GradientArea {...props} fillOpacity={0.5} />}
           height={300}
+          renderPoints={({ dataX }) => dataX % 100 === 0}
           series={[
             {
               id: 'line',
-              data: data,
+              data: sparklineInteractiveData.all.map((d) => d.value),
+              type: 'gradient',
+              gradient: {
+                stops: [
+                  { offset: 0, color: '#ef4444' },
+                  { offset: 10000, color: '#ef4444' },
+                  { offset: 20000, color: '#f59e0b' },
+                  { offset: 30000, color: '#f59e0b' },
+                  { offset: 40000, color: '#10b981' },
+                  { offset: 50000, color: '#10b981' },
+                ],
+              },
             },
           ]}
         >
@@ -2191,11 +2209,112 @@ const LineChartStories = () => {
   );
 };
 
+const GradientLineChart = memo(() => {
+  const [scrubberPosition, setScrubberPosition] = useState<number | undefined>();
+
+  return (
+    <VStack gap={2}>
+      <Text>Scrubber position: {scrubberPosition}</Text>
+      <GradientLineWithStateCallback onScrubberPositionChange={setScrubberPosition} />
+    </VStack>
+  );
+});
+
+const GradientLineWithStateCallback = memo(
+  ({
+    onScrubberPositionChange,
+  }: {
+    onScrubberPositionChange: (position: number | undefined) => void;
+  }) => {
+    const theme = useTheme();
+    const points = useCallback(({ dataX }: { dataX: number }) => dataX % 10 === 0, []);
+
+    return (
+      <CartesianChart
+        enableScrubbing
+        height={defaultChartHeight}
+        onScrubberPositionChange={onScrubberPositionChange}
+        series={[
+          {
+            id: 'prices',
+            data: data,
+            color: theme.color.fgPositive,
+            gradient: {
+              axis: 'x',
+              stops: [
+                { offset: 15, color: '#ff0000' },
+                { offset: data.length - 15, color: '#00ff00' },
+              ],
+            },
+          },
+        ]}
+      >
+        <Line curve="bump" renderPoints={points} seriesId="prices" type="gradient" />
+        <Scrubber hideLine hideOverlay />
+      </CartesianChart>
+    );
+  },
+);
+
 export default () => {
+  const theme = useTheme();
+
   return (
     <ExampleScreen>
-      <Example title="Prediction Chart">
-        <AssetPriceDotted />
+      <Example title="Gradient line 5">
+        <CartesianChart
+          enableScrubbing
+          height={defaultChartHeight}
+          series={[
+            {
+              id: 'prices',
+              data: data,
+              color: theme.color.fgPositive,
+              gradient: {
+                axis: 'x',
+                stops: [
+                  { offset: 15, color: '#ff0000' },
+                  { offset: data.length - 15, color: '#00ff00' },
+                ],
+              },
+              label: 'test',
+            },
+            {
+              id: 'prices2',
+              data: data.map((d) => d * 2),
+              color: theme.color.fgPositive,
+              gradient: {
+                axis: 'x',
+                stops: [
+                  { offset: 15, color: '#ff0000' },
+                  { offset: data.length - 15, color: '#00ff00' },
+                ],
+              },
+              label: 'test',
+            },
+            {
+              id: 'prices3',
+              data: data.map((d) => d * 1.5),
+              color: theme.color.fgPositive,
+              gradient: {
+                axis: 'x',
+                stops: [
+                  { offset: 15, color: '#ff0000' },
+                  { offset: data.length - 15, color: '#00ff00' },
+                ],
+              },
+              label: 'test',
+            },
+          ]}
+        >
+          <Line curve="bump" seriesId="prices" type="gradient" />
+          <Line curve="bump" seriesId="prices3" type="gradient" />
+          <Line curve="bump" seriesId="prices2" type="gradient" />
+          <Scrubber />
+        </CartesianChart>
+      </Example>
+      <Example title="Gradient line">
+        <GradientLineChart />
       </Example>
     </ExampleScreen>
   );
