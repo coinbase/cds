@@ -919,6 +919,7 @@ const DrawingAreaBox = memo(() => {
 });
 
 const AssetPriceDotted = () => {
+  const theme = useTheme();
   const currentPrice =
     sparklineInteractiveData.hour[sparklineInteractiveData.hour.length - 1].value;
   const tabs = useMemo(
@@ -1033,7 +1034,7 @@ const AssetPriceDotted = () => {
   }, [sparklineTimePeriodData, timePeriod.id]);
 
   const myPoints = useCallback(({ dataX }: RenderPointsParams) => {
-    return dataX % 10 === 0;
+    return dataX % 50 === 0;
   }, []);
 
   return (
@@ -1063,6 +1064,14 @@ const AssetPriceDotted = () => {
               id: 'btc',
               data: sparklineTimePeriodDataValues,
               color: assets.btc.color,
+              gradient: {
+                stops: [
+                  { offset: currentPrice * 0.25, color: theme.color.fgNegative },
+                  { offset: currentPrice * 0.5, color: theme.color.fgWarning },
+                  { offset: currentPrice * 0.75, color: theme.color.fgWarning },
+                  { offset: currentPrice, color: theme.color.fgPositive },
+                ],
+              },
             },
           ]}
           transitionConfig={{ type: 'timing', duration: 1500 }}

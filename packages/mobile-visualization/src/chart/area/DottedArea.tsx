@@ -17,6 +17,7 @@ import {
   type TransitionConfig,
   useTransitionAnimation,
 } from '../utils/animation';
+import { applyOpacityToColor, getGradientScale, processGradient } from '../utils/gradient';
 
 import type { AreaComponentProps } from './Area';
 
@@ -59,12 +60,13 @@ export type DottedAreaProps = Omit<PathProps, 'd' | 'fill' | 'fillOpacity'> &
 
 /**
  * Efficient dotted area component with gradient opacity support.
- * Uses Skia's ImageShader for the dot pattern and LinearGradient for opacity.
+ * Uses Skia's ImageShader for the dot pattern and LinearGradient for colors/opacity.
+ * Supports both data-based color gradients and simple opacity gradients.
  */
 export const DottedArea = memo<DottedAreaProps>(
   ({
     d,
-    fill,
+    fill: fillProp,
     fillOpacity = 1,
     patternSize = 4,
     dotSize = 1,
@@ -73,6 +75,8 @@ export const DottedArea = memo<DottedAreaProps>(
     baseline,
     yAxisId,
     clipRect,
+    gradient: gradientProp,
+    seriesId,
     animate: animateProp,
     transitionConfig = defaultTransition,
   }) => {
@@ -80,19 +84,24 @@ export const DottedArea = memo<DottedAreaProps>(
     const context = useCartesianChartContext();
 
     const drawingArea = clipRect ?? context.drawingArea;
-    const effectiveFill = fill ?? theme.color.fgPrimary;
+    const fill = fillProp ?? theme.color.fgPrimary;
 
-    // Use prop value if provided, otherwise fall back to context
     const shouldAnimate = animateProp ?? context.animate;
 
     const currentPath = d ?? '';
 
-    // Get the y-scale for gradient calculations
+    const targetSeries = seriesId ? context.getSeries(seriesId) : undefined;
+    const gradient = gradientProp ?? targetSeries?.gradient;
+    const gradientScale = seriesId ? context.getSeriesGradientScale(seriesId) : undefined;
+
+    // Get scales for gradient calculation
+    const xScale = context.getXScale();
     const yScale = context.getYScale(yAxisId);
     const yRange = yScale?.range();
     const yDomain = yScale?.domain();
 
-    // Create dot pattern image (created once, reused)
+    // Create white dot pattern image (reused for all gradients)
+    // We use white so it can be colored by the gradient
     const patternImage = useMemo(() => {
       const surface = Skia.Surface.Make(patternSize, patternSize);
       if (!surface) return null;
@@ -100,16 +109,15 @@ export const DottedArea = memo<DottedAreaProps>(
       const canvas = surface.getCanvas();
       const paint = Skia.Paint();
 
-      // Parse color string to Skia Color
-      const color = Skia.Color(effectiveFill);
-      paint.setColor(color);
+      // Use white for the pattern, will be colored by gradient
+      paint.setColor(Skia.Color('white'));
       paint.setAntiAlias(true);
 
       // Draw a single dot in the center of the pattern
       canvas.drawCircle(patternSize / 2, patternSize / 2, dotSize, paint);
 
       return surface.makeImageSnapshot();
-    }, [patternSize, dotSize, effectiveFill]);
+    }, [patternSize, dotSize]);
 
     // Create clip rect for drawing area (like web's Path.tsx)
     const clipPath = useMemo(() => {
@@ -121,22 +129,59 @@ export const DottedArea = memo<DottedAreaProps>(
       return path;
     }, [drawingArea]);
 
-    // Calculate gradient positions and colors
-    const { gradientStart, gradientEnd, gradientColors, gradientPositions } = useMemo(() => {
-      // Helper function to create white color with specific alpha (for opacity mask)
+    // Calculate gradient configuration (color or opacity-based)
+    const gradientConfig = useMemo(() => {
+      // If a data-based gradient is provided, use it for colors
+      if (gradient) {
+        // Use gradientScale if available, otherwise calculate from scales
+        let scale = gradientScale;
+        if (!scale && xScale && yScale) {
+          scale = getGradientScale(gradient, xScale, yScale);
+        }
+
+        if (!scale) {
+          console.warn('Gradient requires a valid numeric scale');
+          return null;
+        }
+
+        const processed = processGradient(gradient, scale);
+        if (!processed) return null;
+
+        const axisType = gradient.axis ?? 'y';
+        const range = scale.range();
+
+        // Apply fillOpacity to all colors
+        const colors =
+          fillOpacity < 1
+            ? processed.colors.map((color) => applyOpacityToColor(color, fillOpacity))
+            : processed.colors;
+
+        // Determine gradient direction based on axis
+        const gradientStart = axisType === 'x' ? vec(range[0], 0) : vec(0, range[0]);
+        const gradientEnd = axisType === 'x' ? vec(range[1], 0) : vec(0, range[1]);
+
+        return {
+          start: gradientStart,
+          end: gradientEnd,
+          colors,
+          positions: processed.positions,
+          isColorGradient: true,
+        };
+      }
+
+      // No data gradient - use opacity mask (legacy behavior)
       const createMaskColor = (alpha: number) => {
-        // White with specified alpha acts as an opacity mask
-        // Skia colors are Float32Array [r, g, b, a]
-        return [1, 1, 1, alpha * fillOpacity];
+        return applyOpacityToColor(fill, alpha * fillOpacity);
       };
 
       if (!yScale || !yDomain || !yRange || !drawingArea) {
         // Fallback to simple top-to-bottom gradient
         return {
-          gradientStart: vec(0, drawingArea?.y ?? 0),
-          gradientEnd: vec(0, (drawingArea?.y ?? 0) + (drawingArea?.height ?? 100)),
-          gradientColors: [createMaskColor(peakOpacity), createMaskColor(baselineOpacity)],
-          gradientPositions: [0, 1],
+          start: vec(0, drawingArea?.y ?? 0),
+          end: vec(0, (drawingArea?.y ?? 0) + (drawingArea?.height ?? 100)),
+          colors: [createMaskColor(peakOpacity), createMaskColor(baselineOpacity)],
+          positions: [0, 1],
+          isColorGradient: false,
         };
       }
 
@@ -161,16 +206,30 @@ export const DottedArea = memo<DottedAreaProps>(
 
       // Diverging gradient: high opacity at extremes, low at baseline
       return {
-        gradientStart: vec(0, yMax), // Top
-        gradientEnd: vec(0, yMin), // Bottom
-        gradientColors: [
+        start: vec(0, yMax), // Top
+        end: vec(0, yMin), // Bottom
+        colors: [
           createMaskColor(peakOpacity), // Top peak
           createMaskColor(baselineOpacity), // Baseline
           createMaskColor(peakOpacity), // Bottom peak
         ],
-        gradientPositions: [0, baselinePosition, 1],
+        positions: [0, baselinePosition, 1],
+        isColorGradient: false,
       };
-    }, [yScale, yDomain, yRange, drawingArea, baseline, peakOpacity, baselineOpacity, fillOpacity]);
+    }, [
+      gradient,
+      gradientScale,
+      xScale,
+      yScale,
+      yDomain,
+      yRange,
+      drawingArea,
+      baseline,
+      peakOpacity,
+      baselineOpacity,
+      fillOpacity,
+      fill,
+    ]);
 
     const areaPath = useTransitionAnimation({
       currentPath,
@@ -178,20 +237,18 @@ export const DottedArea = memo<DottedAreaProps>(
       transitionConfig,
     });
 
-    if (!clipPath || !drawingArea || !patternImage) return null;
+    if (!clipPath || !drawingArea || !patternImage || !gradientConfig) return null;
 
     return (
       <Group clip={clipPath}>
         <SkiaPath path={areaPath} style="fill">
-          {/* Dot pattern shader */}
           <ImageShader fit="none" image={patternImage} tx="repeat" ty="repeat" />
-          {/* Blend with gradient opacity */}
-          <Blend mode="dstIn">
+          <Blend mode="srcIn">
             <LinearGradient
-              colors={gradientColors}
-              end={gradientEnd}
-              positions={gradientPositions}
-              start={gradientStart}
+              colors={gradientConfig.colors}
+              end={gradientConfig.end}
+              positions={gradientConfig.positions}
+              start={gradientConfig.start}
             />
           </Blend>
         </SkiaPath>

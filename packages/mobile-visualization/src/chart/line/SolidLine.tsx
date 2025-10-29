@@ -1,7 +1,7 @@
 import { memo, useMemo } from 'react';
 import type { SharedProps } from '@coinbase/cds-common/types';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
-import { LinearGradient, Path as SkiaPath, vec } from '@shopify/react-native-skia';
+import { LinearGradient, Path as SkiaPath } from '@shopify/react-native-skia';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import { type PathProps } from '../Path';
@@ -10,7 +10,7 @@ import {
   type TransitionConfig,
   useTransitionAnimation,
 } from '../utils/animation';
-import { getGradientScale, type Gradient, processGradient } from '../utils/gradient';
+import { getGradientConfig, type Gradient } from '../utils/gradient';
 
 export type SolidLineProps = SharedProps &
   Omit<PathProps, 'fill' | 'strokeWidth' | 'd'> & {
@@ -81,31 +81,9 @@ export const SolidLine = memo<SolidLineProps>(
 
     const currentPath = d ?? '';
 
-    // Process gradient to get gradient configuration
     const gradientConfig = useMemo(() => {
       if (!gradient || !xScale || !yScale) return;
-
-      const scale = getGradientScale(gradient, xScale, yScale);
-      if (!scale) return;
-
-      const processed = processGradient(gradient, scale);
-      if (!processed) return;
-
-      const axisType = gradient.axis ?? 'y';
-      const range = scale.range();
-
-      // Determine gradient direction based on axis
-      // For y-axis, we need to flip the gradient direction because y-scales are inverted
-      // (higher data values have smaller pixel values, appearing at the top)
-      const gradientStart = axisType === 'x' ? vec(range[0], 0) : vec(0, range[0]);
-      const gradientEnd = axisType === 'x' ? vec(range[1], 0) : vec(0, range[1]);
-
-      return {
-        start: gradientStart,
-        end: gradientEnd,
-        colors: processed.colors,
-        positions: processed.positions,
-      };
+      return getGradientConfig(gradient, xScale, yScale);
     }, [gradient, xScale, yScale]);
 
     const path = useTransitionAnimation({

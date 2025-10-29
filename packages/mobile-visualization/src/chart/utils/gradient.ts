@@ -1,4 +1,4 @@
-import { Skia } from '@shopify/react-native-skia';
+import { Skia, vec } from '@shopify/react-native-skia';
 
 import {
   type CategoricalScale,
@@ -79,10 +79,25 @@ export type ProcessedColor = {
 };
 
 /**
- * Configuration for rendering a gradient using Skia
+ * Processed gradient colors and positions (internal use).
+ */
+type ProcessedGradient = {
+  colors: string[];
+  positions: number[];
+};
+
+/**
+ * Complete configuration for rendering a linear gradient with Skia.
+ * Includes start/end vectors for gradient direction and colors/positions for gradient stops.
  */
 export type GradientConfig = {
+  /** Starting point of the gradient (x, y coordinates) */
+  start: ReturnType<typeof vec>;
+  /** Ending point of the gradient (x, y coordinates) */
+  end: ReturnType<typeof vec>;
+  /** Array of color strings (rgba format) */
   colors: string[];
+  /** Array of position values (0-1 normalized) */
   positions: number[];
 };
 
@@ -171,7 +186,7 @@ export const applyOpacityToColor = (colorString: string, opacityMultiplier: numb
 const processGradientStops = (
   stops: GradientStop[],
   scale: GradientScale,
-): GradientConfig | null => {
+): ProcessedGradient | null => {
   // Handle edge cases
   if (stops.length === 0) {
     console.warn('Gradient has no stops - falling back to default');
@@ -245,7 +260,7 @@ const processGradientStops = (
 export const processGradient = (
   gradient: Gradient,
   scale: GradientScale,
-): GradientConfig | null => {
+): ProcessedGradient | null => {
   if (!gradient) return null;
 
   // Resolve stops (handle function form)
@@ -393,4 +408,60 @@ export const evaluateGradientAtValue = (
   }
 
   return processedColors[processedColors.length - 1];
+};
+
+/**
+ * Creates a gradient configuration for Skia components.
+ * Handles gradient processing and direction calculation based on axis.
+ *
+ * @param gradient - Gradient configuration (required)
+ * @param xScale - X-axis scale (required)
+ * @param yScale - Y-axis scale (required)
+ * @returns GradientConfig or null if gradient processing fails
+ *
+ * @example
+ * const gradientConfig = useMemo(() => {
+ *   if (!gradient || !xScale || !yScale) return;
+ *   return getGradientConfig(gradient, xScale, yScale);
+ * }, [gradient, xScale, yScale]);
+ *
+ * return (
+ *   <SkiaPath path={path} style="stroke">
+ *     {gradientConfig && (
+ *       <LinearGradient
+ *         colors={gradientConfig.colors}
+ *         end={gradientConfig.end}
+ *         positions={gradientConfig.positions}
+ *         start={gradientConfig.start}
+ *       />
+ *     )}
+ *   </SkiaPath>
+ * );
+ */
+export const getGradientConfig = (
+  gradient: Gradient,
+  xScale: ChartScaleFunction,
+  yScale: ChartScaleFunction,
+): GradientConfig | null => {
+  const scale = getGradientScale(gradient, xScale, yScale);
+  if (!scale) return null;
+
+  const processed = processGradient(gradient, scale);
+  if (!processed) return null;
+
+  const axisType = gradient.axis ?? 'y';
+  const range = scale.range();
+
+  // Determine gradient direction based on axis
+  // For y-axis, we need to flip the gradient direction because y-scales are inverted
+  // (higher data values have smaller pixel values, appearing at the top)
+  const gradientStart = axisType === 'x' ? vec(range[0], 0) : vec(0, range[0]);
+  const gradientEnd = axisType === 'x' ? vec(range[1], 0) : vec(0, range[1]);
+
+  return {
+    start: gradientStart,
+    end: gradientEnd,
+    colors: processed.colors,
+    positions: processed.positions,
+  };
 };

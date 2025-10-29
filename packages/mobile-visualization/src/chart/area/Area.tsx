@@ -121,7 +121,7 @@ export const Area = memo<AreaProps>(
     stroke,
     strokeWidth,
     baseline,
-    gradient: propGradient,
+    gradient: gradientProp,
     connectNulls = false,
     animate,
     transitionConfig,
@@ -129,11 +129,8 @@ export const Area = memo<AreaProps>(
     const { getSeries, getSeriesData, getXScale, getYScale, getXAxis, drawingArea } =
       useCartesianChartContext();
 
-    // Get sourceData from series (using stacked data if available)
     const matchedSeries = useMemo(() => getSeries(seriesId), [seriesId, getSeries]);
-    const seriesGradient = matchedSeries?.gradient;
-    // Use prop gradient if provided, otherwise use series gradient
-    const effectiveGradient = propGradient ?? seriesGradient;
+    const gradient = gradientProp ?? matchedSeries?.gradient;
 
     // Check for stacked data first, then fall back to raw data
     const sourceData = useMemo(() => {
@@ -194,7 +191,7 @@ export const Area = memo<AreaProps>(
         d={area}
         fill={fill}
         fillOpacity={fillOpacity}
-        gradient={effectiveGradient}
+        gradient={gradient}
         seriesId={seriesId}
         stroke={stroke}
         strokeWidth={strokeWidth}

@@ -1,6 +1,6 @@
 import { memo, useMemo } from 'react';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
-import { LinearGradient, Path as SkiaPath, vec } from '@shopify/react-native-skia';
+import { LinearGradient, Path as SkiaPath } from '@shopify/react-native-skia';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import { type PathProps } from '../Path';
@@ -9,7 +9,7 @@ import {
   type TransitionConfig,
   useTransitionAnimation,
 } from '../utils/animation';
-import { getGradientScale, processGradient } from '../utils/gradient';
+import { getGradientConfig } from '../utils/gradient';
 
 import type { AreaComponentProps } from './Area';
 
@@ -41,7 +41,7 @@ export const SolidArea = memo<SolidAreaProps>(
     fill: fillProp,
     fillOpacity = 1,
     clipRect,
-    gradient,
+    gradient: gradientProp,
     seriesId,
     yAxisId,
     animate: animateProp,
@@ -61,40 +61,14 @@ export const SolidArea = memo<SolidAreaProps>(
     // Get gradient from series if seriesId is provided and gradient is not
     const targetSeries = seriesId ? context.getSeries(seriesId) : undefined;
     const seriesGradient = targetSeries?.gradient;
-    const effectiveGradient = gradient ?? seriesGradient;
+    const gradient = gradientProp ?? seriesGradient;
 
-    // Get gradient scale from context if seriesId is provided and has a gradient
-    const gradientScale = seriesId ? context.getSeriesGradientScale(seriesId) : undefined;
-
-    // Get scales for gradient calculation
     const xScale = context.getXScale();
     const yScale = context.getYScale(yAxisId);
 
-    // Calculate gradient configuration
     const gradientConfig = useMemo(() => {
       if (!gradient || !xScale || !yScale) return;
-
-      const scale = getGradientScale(gradient, xScale, yScale);
-      if (!scale) return;
-
-      const processed = processGradient(gradient, scale);
-      if (!processed) return;
-
-      const axisType = gradient.axis ?? 'y';
-      const range = scale.range();
-
-      // Determine gradient direction based on axis
-      // For y-axis, we need to flip the gradient direction because y-scales are inverted
-      // (higher data values have smaller pixel values, appearing at the top)
-      const gradientStart = axisType === 'x' ? vec(range[0], 0) : vec(0, range[0]);
-      const gradientEnd = axisType === 'x' ? vec(range[1], 0) : vec(0, range[1]);
-
-      return {
-        start: gradientStart,
-        end: gradientEnd,
-        colors: processed.colors,
-        positions: processed.positions,
-      };
+      return getGradientConfig(gradient, xScale, yScale);
     }, [gradient, xScale, yScale]);
 
     const path = useTransitionAnimation({

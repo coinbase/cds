@@ -56,7 +56,7 @@ export type ScrubberBeaconProps = SharedProps & {
    */
   color?: string;
   /**
-   * Gradient configuration for the series.
+   * Gradient configuration.
    * When provided, the beacon color is evaluated based on the data value.
    */
   gradient?: Gradient;
@@ -106,7 +106,7 @@ export const ScrubberBeacon = memo(
         dataX: dataXProp,
         dataY: dataYProp,
         color,
-        gradient,
+        gradient: gradientProp,
         testID,
         idlePulse,
         opacity = 1,
@@ -121,6 +121,7 @@ export const ScrubberBeacon = memo(
 
       const targetSeries = getSeries(seriesId);
       const sourceData = getSeriesData(seriesId);
+      const gradient = gradientProp ?? targetSeries?.gradient;
       const xScale = getXScale();
       const yScale = getYScale(targetSeries?.yAxisId);
       const gradientScale = seriesId ? getSeriesGradientScale(seriesId) : undefined;
@@ -254,32 +255,22 @@ export const ScrubberBeacon = memo(
         return { x: animatedX.value, y: animatedY.value };
       }, [animatedX, animatedY]);
 
-      // Determine the beacon color (must be before conditional return to follow Rules of Hooks)
       const pointColor = useMemo(() => {
-        // If gradient is provided (either from prop or from series), evaluate color based on data value
-        const effectiveGradient = gradient ?? targetSeries?.gradient;
-        if (effectiveGradient && gradientScale) {
-          // Use the appropriate data value based on gradient axis
-          const axis = effectiveGradient.axis ?? 'y';
+        if (gradient && gradientScale) {
+          const axis = gradient.axis ?? 'y';
           const dataValue = axis === 'x' ? dataX : dataY;
 
           if (dataValue !== undefined) {
-            const evaluatedColor = evaluateGradientAtValue(
-              effectiveGradient,
-              dataValue,
-              gradientScale,
-            );
+            const evaluatedColor = evaluateGradientAtValue(gradient, dataValue, gradientScale);
             if (evaluatedColor) {
               return evaluatedColor;
             }
           }
         }
 
-        // Fallback to provided color, series color, or theme color
         return color ?? targetSeries?.color ?? theme.color.fgPrimary;
       }, [
         gradient,
-        targetSeries?.gradient,
         gradientScale,
         dataX,
         dataY,
