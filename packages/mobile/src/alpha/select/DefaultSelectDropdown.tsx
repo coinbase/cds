@@ -189,7 +189,13 @@ const DefaultSelectDropdownComponent = memo(
                 {!hideSelectAll && isMultiSelect && options.length > 0 && SelectAllOption}
                 {options.length > 0 ? (
                   options.map(
-                    ({ Component, media: optionMedia, accessory: optionAccessory, ...option }) => {
+                    ({
+                      Component,
+                      media: optionMedia,
+                      accessory: optionAccessory,
+                      end: optionEnd,
+                      ...option
+                    }) => {
                       const RenderedSelectOption = Component ?? SelectOptionComponent;
                       const selected =
                         option.value !== null && isMultiSelect
@@ -224,7 +230,7 @@ const DefaultSelectDropdownComponent = memo(
                           blendStyles={styles?.optionBlendStyles}
                           compact={compact}
                           disabled={option.disabled || disabled}
-                          end={end}
+                          end={optionEnd ?? end}
                           media={optionMedia ?? media ?? defaultMedia}
                           onPress={(newValue) => {
                             onChange(newValue as ValueType);

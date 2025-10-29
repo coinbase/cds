@@ -137,6 +137,13 @@ const exampleOptionsWithCustomAccessoriesAndMedia = [
   },
 ];
 
+const exampleOptionsWithUniqueEndNode = [
+  { value: null, label: 'Remove selection' },
+  { value: '1', label: 'Option 1', end: <Icon color="fg" name="star" /> },
+  { value: '2', label: 'Option 2', end: <Icon color="fg" name="checkmark" /> },
+  { value: '3', label: 'Option 3', end: <Icon color="fg" name="add" /> },
+];
+
 const DefaultExample = () => {
   const [value, setValue] = useState<string | null>('1');
 
@@ -555,6 +562,20 @@ const WithUniqueAccessoryAndMediaExample = () => {
       label="Single select - custom unique accessory and media on all options"
       onChange={setValue}
       options={exampleOptionsWithCustomAccessoriesAndMedia}
+      placeholder="Empty value"
+      value={value}
+    />
+  );
+};
+
+const UniqueEndNodeForEachOptionExample = () => {
+  const [value, setValue] = useState<string | null>('1');
+
+  return (
+    <Select
+      label="Single select - unique end node for each option"
+      onChange={setValue}
+      options={exampleOptionsWithUniqueEndNode}
       placeholder="Empty value"
       value={value}
     />
@@ -1140,6 +1161,9 @@ const SelectV3Screen = () => {
       </Example>
       <Example title="With Unique Accessory and Media">
         <WithUniqueAccessoryAndMediaExample />
+      </Example>
+      <Example title="Unique End Node for Each Option">
+        <UniqueEndNodeForEachOptionExample />
       </Example>
       <Example title="Positive Variant">
         <PositiveVariantExample />

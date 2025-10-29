@@ -261,7 +261,11 @@ describe('DefaultSelectControl', () => {
 
   describe('Focus Management in Multi-Select', () => {
     const multiSelectProps: SelectControlProps<'multi'> = {
-      ...defaultProps,
+      options: mockOptions,
+      placeholder: 'Select an option',
+      open: false,
+      setOpen: jest.fn(),
+      label: 'Test Select Control',
       type: 'multi',
       value: ['option1', 'option2'],
       onChange: jest.fn(),

@@ -570,6 +570,26 @@ export const UniqueAccessoryAndMedia = () => {
   );
 };
 
+export const UniqueEndNodeForEachOption = () => {
+  const exampleOptions = [
+    { value: null, label: 'Remove selection' },
+    { value: '1', label: 'Option 1', end: <Icon color="fg" name="star" /> },
+    { value: '2', label: 'Option 2', end: <Icon color="fg" name="checkmark" /> },
+    { value: '3', label: 'Option 3', end: <Icon color="fg" name="add" /> },
+  ];
+  const [value, setValue] = useState<string | null>('1');
+
+  return (
+    <Select
+      label="Single select - unique end node for each option"
+      onChange={setValue}
+      options={exampleOptions}
+      placeholder="Empty value"
+      value={value}
+    />
+  );
+};
+
 export const PositiveVariant = () => {
   const exampleOptions = [
     { value: null, label: 'Remove selection' },

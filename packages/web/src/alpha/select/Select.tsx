@@ -96,6 +96,17 @@ export type SelectOptionProps<
     };
   };
 
+/**
+ * Custom UI to render for an option in the Select component options array
+ */
+export type SelectOptionCustomUI<
+  Type extends SelectType = 'single',
+  SelectOptionValue extends string = string,
+> = Pick<SelectOptionProps<Type>, 'accessory' | 'media' | 'end'> & {
+  /** Custom component to render the option */
+  Component?: SelectOptionComponent<Type, SelectOptionValue>;
+};
+
 export type SelectOptionComponent<
   Type extends SelectType = 'single',
   SelectOptionValue extends string = string,
@@ -148,7 +159,7 @@ export type SelectControlProps<
   > &
   SelectState<Type, SelectOptionValue> & {
     /** Array of options to display in the select dropdown */
-    options: SelectOption<SelectOptionValue>[];
+    options: (SelectOption<SelectOptionValue> & SelectOptionCustomUI<Type, SelectOptionValue>)[];
     /** Label displayed above the control */
     label?: React.ReactNode;
     /** Placeholder text displayed when no option is selected */
@@ -231,10 +242,7 @@ export type SelectDropdownProps<
     /** Whether this is for single or multi-select */
     type?: Type;
     /** Array of options with their configuration and optional custom components */
-    options: (SelectOption<SelectOptionValue> &
-      Pick<SelectOptionProps<Type>, 'accessory' | 'media'> & {
-        Component?: SelectOptionComponent<Type, SelectOptionValue>;
-      })[];
+    options: (SelectOption<SelectOptionValue> & SelectOptionCustomUI<Type, SelectOptionValue>)[];
     /** Whether the dropdown is currently open */
     open: boolean;
     /** Function to update the dropdown open state */
@@ -357,10 +365,7 @@ export type SelectBaseProps<
     /** Whether the select allows single or multiple selections */
     type?: Type;
     /** Array of options to display in the select dropdown */
-    options: (SelectOption<SelectOptionValue> & {
-      /** Custom component to render the option */
-      Component?: SelectOptionComponent<Type, SelectOptionValue>;
-    })[];
+    options: (SelectOption<SelectOptionValue> & SelectOptionCustomUI<Type, SelectOptionValue>)[];
     /** Controlled open state of the dropdown */
     open?: boolean;
     /** Callback to update the open state */

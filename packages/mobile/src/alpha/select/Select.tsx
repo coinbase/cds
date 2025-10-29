@@ -82,7 +82,7 @@ export type SelectOptionProps<
 export type SelectOptionCustomUI<
   Type extends SelectType = 'single',
   SelectOptionValue extends string = string,
-> = Pick<SelectOptionProps<Type>, 'accessory' | 'media'> & {
+> = Pick<SelectOptionProps<Type>, 'accessory' | 'media' | 'end'> & {
   /** Custom component to render the option */
   Component?: SelectOptionComponent<Type, SelectOptionValue>;
 };

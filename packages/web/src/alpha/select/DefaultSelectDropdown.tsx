@@ -270,6 +270,7 @@ const DefaultSelectDropdownComponent = memo(
                           Component,
                           media: optionMedia,
                           accessory: optionAccessory,
+                          end: optionEnd,
                           ...option
                         }) => {
                           const RenderedSelectOption = Component ?? SelectOptionComponent;
@@ -304,7 +305,7 @@ const DefaultSelectDropdownComponent = memo(
                               classNames={optionClassNames}
                               compact={compact}
                               disabled={option.disabled || disabled}
-                              end={end}
+                              end={optionEnd ?? end}
                               media={optionMedia ?? media ?? defaultMedia}
                               onClick={(newValue) => {
                                 onChange(newValue as ValueType);
