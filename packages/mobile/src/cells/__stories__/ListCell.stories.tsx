@@ -114,6 +114,7 @@ const CustomNodes = () => (
         </HStack>
       }
       media={<Avatar src={assets.eth.imageUrl} />}
+      priority="end"
       spacingVariant="condensed"
       subdetailNode={
         <HStack alignItems="center" gap={0.5} justifyContent="flex-end">
