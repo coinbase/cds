@@ -1,4 +1,4 @@
-import { forwardRef, memo, useEffect, useImperativeHandle, useMemo, useRef } from 'react';
+import { forwardRef, memo, useEffect, useImperativeHandle, useMemo } from 'react';
 import {
   cancelAnimation,
   useDerivedValue,
@@ -112,8 +112,6 @@ export const ScrubberBeacon = memo(
       },
       ref,
     ) => {
-      const renderCount = useRef(0);
-      renderCount.current++;
       const theme = useTheme();
       const { getSeries, getXScale, getYScale, getSeriesData, animate, getSeriesGradientScale } =
         useCartesianChartContext();
@@ -297,9 +295,6 @@ export const ScrubberBeacon = memo(
       if (!isIdleState) {
         return (
           <Group opacity={opacity}>
-            <ChartText x={pixelCoordinate.x} y={pixelCoordinate.y - 60}>
-              {renderCount.current}
-            </ChartText>
             {/* Glow circle behind */}
             <Circle
               c={{ x: pixelCoordinate.x, y: pixelCoordinate.y }}
@@ -325,9 +320,6 @@ export const ScrubberBeacon = memo(
 
       return (
         <Group opacity={opacity}>
-          <ChartText x={pixelCoordinate.x} y={pixelCoordinate.y - 60}>
-            {renderCount.current}
-          </ChartText>
           {/* Glow circle */}
           <Circle c={animatedPoint} color={pointColor} opacity={0.15} r={glowRadius} />
           {/* Pulse circle */}

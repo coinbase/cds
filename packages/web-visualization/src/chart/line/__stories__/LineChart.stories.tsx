@@ -1927,6 +1927,223 @@ export const ColorMapStories = () => {
           <Scrubber />
         </LineChart>
       </Example>
+      <Example
+        description={
+          <Text color="fgMuted" font="body">
+            Rainbow gradient with 5 colors transitioning smoothly. Tests interpolation across
+            multiple color stops.
+          </Text>
+        }
+        title="Gradient - Rainbow (5 colors)"
+      >
+        <LineChart
+          enableScrubbing
+          showArea
+          showXAxis
+          showYAxis
+          height={300}
+          series={[
+            {
+              id: 'line',
+              data: [0, 12.5, 25, 37.5, 50, 62.5, 75, 87.5, 100],
+              type: 'gradient',
+              gradient: {
+                stops: [
+                  { offset: 0, color: '#ef4444' },
+                  { offset: 25, color: '#f59e0b' },
+                  { offset: 50, color: '#fbbf24' },
+                  { offset: 75, color: '#10b981' },
+                  { offset: 100, color: '#3b82f6' },
+                ],
+              },
+            },
+          ]}
+        >
+          <Scrubber />
+        </LineChart>
+      </Example>
+      <Example
+        description={
+          <Text color="fgMuted" font="body">
+            Performance test with 100 data points. Should render smoothly with gradient applied to
+            all segments.
+          </Text>
+        }
+        title="Gradient - Performance Test (100 points)"
+      >
+        <LineChart
+          enableScrubbing
+          showXAxis
+          showYAxis
+          height={300}
+          series={[
+            {
+              id: 'line',
+              data: Array.from({ length: 100 }, (_, i) => Math.sin(i / 5) * 30 + 50),
+              type: 'gradient',
+              gradient: {
+                stops: ({ min, max }) => [
+                  { offset: min, color: '#8b5cf6' },
+                  { offset: max, color: '#ec4899' },
+                ],
+              },
+            },
+          ]}
+        >
+          <Scrubber />
+        </LineChart>
+      </Example>
+      <Example
+        description={
+          <Text color="fgMuted" font="body">
+            Crossing zero with gradient. Negative values in blue, positive values in orange,
+            transition at zero.
+          </Text>
+        }
+        title="Gradient - Negative to Positive"
+      >
+        <LineChart
+          enableScrubbing
+          showArea
+          showXAxis
+          showYAxis
+          height={300}
+          series={[
+            {
+              id: 'line',
+              data: [-50, -30, -10, -5, 5, 10, 30, 50],
+              type: 'gradient',
+              gradient: {
+                stops: ({ min, max }) => [
+                  { offset: min, color: '#3b82f6' },
+                  { offset: 0, color: '#94a3b8' },
+                  { offset: max, color: '#f97316' },
+                ],
+              },
+            },
+          ]}
+        >
+          <Scrubber />
+        </LineChart>
+      </Example>
+      <Example
+        description={
+          <Text color="fgMuted" font="body">
+            Edge case with only 3 data points. Gradient should still render correctly with minimal
+            data.
+          </Text>
+        }
+        title="Gradient - Minimal Data (3 points)"
+      >
+        <LineChart
+          enableScrubbing
+          showXAxis
+          showYAxis
+          height={300}
+          renderPoints={() => true}
+          series={[
+            {
+              id: 'line',
+              data: [10, 50, 30],
+              type: 'gradient',
+              gradient: {
+                stops: ({ min, max }) => [
+                  { offset: min, color: '#ec4899' },
+                  { offset: max, color: '#8b5cf6' },
+                ],
+              },
+            },
+          ]}
+        >
+          <Scrubber />
+        </LineChart>
+      </Example>
+      <Example
+        description={
+          <Text color="fgMuted" font="body">
+            Gradient with varying opacity across stops. Start fully opaque, middle transparent, end
+            opaque.
+          </Text>
+        }
+        title="Gradient - Opacity Transition"
+      >
+        <LineChart
+          enableScrubbing
+          showArea
+          showXAxis
+          showYAxis
+          height={300}
+          series={[
+            {
+              id: 'line',
+              data: [10, 20, 30, 40, 50, 60, 70, 80],
+              type: 'gradient',
+              gradient: {
+                stops: ({ min, max }) => [
+                  { offset: min, color: '#6366f1', opacity: 1 },
+                  { offset: (min + max) / 2, color: '#8b5cf6', opacity: 0.2 },
+                  { offset: max, color: '#a855f7', opacity: 1 },
+                ],
+              },
+            },
+          ]}
+        >
+          <Scrubber />
+        </LineChart>
+      </Example>
+      <Example
+        description={
+          <Text color="fgMuted" font="body">
+            Three series with different gradient styles overlapping. Tests multiple gradients
+            rendering together.
+          </Text>
+        }
+        title="Gradient - Complex Multi-Series"
+      >
+        <LineChart
+          enableScrubbing
+          showXAxis
+          showYAxis
+          height={300}
+          series={[
+            {
+              id: 'series1',
+              data: [30, 40, 35, 45, 40, 50, 45, 55],
+              type: 'gradient',
+              gradient: {
+                stops: ({ min, max }) => [
+                  { offset: min, color: '#ef4444', opacity: 0.8 },
+                  { offset: max, color: '#f59e0b', opacity: 0.8 },
+                ],
+              },
+            },
+            {
+              id: 'series2',
+              data: [20, 30, 25, 35, 30, 40, 35, 45],
+              type: 'gradient',
+              gradient: {
+                stops: ({ min, max }) => [
+                  { offset: min, color: '#3b82f6', opacity: 0.6 },
+                  { offset: max, color: '#8b5cf6', opacity: 0.6 },
+                ],
+              },
+            },
+            {
+              id: 'series3',
+              data: [10, 20, 15, 25, 20, 30, 25, 35],
+              type: 'gradient',
+              gradient: {
+                stops: ({ min, max }) => [
+                  { offset: min, color: '#10b981', opacity: 0.7 },
+                  { offset: max, color: '#06b6d4', opacity: 0.7 },
+                ],
+              },
+            },
+          ]}
+        >
+          <Scrubber />
+        </LineChart>
+      </Example>
     </VStack>
   );
 };

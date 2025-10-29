@@ -29,7 +29,7 @@ import {
 import { SegmentedTab, type SegmentedTabProps } from '@coinbase/cds-mobile/tabs/SegmentedTab';
 import { TextLabel1 } from '@coinbase/cds-mobile/typography';
 import { Text } from '@coinbase/cds-mobile/typography/Text';
-import { Rect } from '@shopify/react-native-skia';
+import { FontWeight, Rect } from '@shopify/react-native-skia';
 
 import { Area, DottedArea, GradientArea } from '../../area';
 import { XAxis, YAxis } from '../../axis';
@@ -39,7 +39,7 @@ import { useCartesianChartContext } from '../../ChartProvider';
 import { PeriodSelector, PeriodSelectorActiveIndicator } from '../../PeriodSelector';
 import { Point, type RenderPointsParams } from '../../Point';
 import { Scrubber, type ScrubberRef } from '../../scrubber';
-import { ChartText, type ChartTextChildren } from '../../text';
+import { ChartText, type ChartTextChildren, ChartTextSpan } from '../../text';
 import type { ChartAxisScaleType } from '../../utils/scale';
 import { Line, LineChart, type LineComponentProps, ReferenceLine, SolidLine } from '..';
 
@@ -984,10 +984,14 @@ const AssetPriceDotted = () => {
         maximumFractionDigits: 2,
       }).format(sparklineTimePeriodDataValues[dataIndex]);
       const date = formatDate(sparklineTimePeriodDataTimestamps[dataIndex]);
-      return [
-        { text: `${price} USD`, font: 'label1' as ThemeVars.FontFamily, fontWeight: '700' },
-        { text: ` ${date}`, font: 'label2' as ThemeVars.FontFamily },
-      ];
+      return (
+        <>
+          <ChartTextSpan font="label1" fontWeight={FontWeight.Bold}>
+            {price} USD
+          </ChartTextSpan>
+          <ChartTextSpan font="label2"> {date}</ChartTextSpan>
+        </>
+      );
     },
     [sparklineTimePeriodDataValues, formatDate, sparklineTimePeriodDataTimestamps],
   );
@@ -2261,7 +2265,7 @@ export default () => {
 
   return (
     <ExampleScreen>
-      <Example title="Gradient line 5">
+      <Example title="Gradient line 6">
         <CartesianChart
           enableScrubbing
           height={defaultChartHeight}
@@ -2307,14 +2311,17 @@ export default () => {
             },
           ]}
         >
-          <Line curve="bump" seriesId="prices" type="gradient" />
-          <Line curve="bump" seriesId="prices3" type="gradient" />
-          <Line curve="bump" seriesId="prices2" type="gradient" />
+          <Line showArea curve="bump" seriesId="prices" type="gradient" />
+          <Line showArea curve="bump" seriesId="prices3" type="gradient" />
+          <Line showArea curve="bump" seriesId="prices2" type="gradient" />
           <Scrubber />
         </CartesianChart>
       </Example>
       <Example title="Gradient line">
         <GradientLineChart />
+      </Example>
+      <Example title="Dotted">
+        <AssetPriceDotted />
       </Example>
     </ExampleScreen>
   );

@@ -1,10 +1,11 @@
-import { memo, useMemo, useState } from 'react';
+import React, { memo, useMemo, useState } from 'react';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import type { ElevationLevels, Rect, SharedProps } from '@coinbase/cds-common/types';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 import {
   type Color,
   FontSlant,
+  type FontWeight,
   Group,
   Paint,
   Paragraph,
@@ -17,7 +18,11 @@ import {
 import { useCartesianChartContext } from '../ChartProvider';
 import { type ChartInset, getChartInset } from '../utils';
 
-import { getSkiaFontDescriptor } from './fontMapping';
+/**
+ * Default font family for chart text rendering.
+ * Uses system font that works across platforms.
+ */
+const DEFAULT_CHART_FONT_FAMILY = 'Inter';
 
 /**
  * Shadow configuration for Skia rendering.
@@ -27,20 +32,6 @@ type SkiaShadowConfig = {
   offset: { x: number; y: number };
   blur: number;
   opacity: number;
-};
-
-/**
- * Maps horizontal alignment to Skia TextAlign.
- */
-const mapHorizontalAlignmentToTextAlign = (alignment: TextHorizontalAlignment): TextAlign => {
-  switch (alignment) {
-    case 'left':
-      return TextAlign.Left;
-    case 'center':
-      return TextAlign.Center;
-    case 'right':
-      return TextAlign.Right;
-  }
 };
 
 /**
@@ -67,38 +58,65 @@ const getElevationShadowConfig = (elevation: ElevationLevels): SkiaShadowConfig 
 };
 
 /**
- * A text segment with optional styling for rich text support.
+ * Props for ChartTextSpan - used for inline text styling within ChartText.
  */
-export type ChartTextSegment = {
+export type ChartTextSpanProps = {
   /**
-   * The text content for this segment.
+   * The text content or nested spans.
    */
-  text: string;
+  children: React.ReactNode;
   /**
-   * Optional font family for this segment.
-   * @default inherits from parent ChartText
+   * Font from theme to use for this span.
+   * @default inherits from parent
    */
-  font?: ThemeVars.FontFamily;
+  font?: ThemeVars.Font;
   /**
-   * Optional font size override for this segment.
-   * Overrides the size from font family.
-   * @default inherits from font or parent ChartText
+   * Font size override for this span.
+   * @default inherits from parent
    */
   fontSize?: number;
   /**
-   * Optional font weight override for this segment.
-   * Overrides the weight from font family.
-   * @default inherits from font or parent ChartText
+   * Font weight override for this span.
+   * @default inherits from parent
    */
-  fontWeight?: string;
+  fontWeight?: FontWeight;
+  /**
+   * Font style for this span.
+   * @default inherits from parent
+   */
+  fontStyle?: FontSlant;
+};
+
+/**
+ * ChartTextSpan - A lightweight component for inline text styling.
+ * Must be used as a child of ChartText.
+ *
+ * @example
+ * <ChartText x={100} y={100}>
+ *   Regular text <ChartTextSpan fontWeight="700">bold text</ChartTextSpan> more text
+ * </ChartText>
+ */
+export const ChartTextSpan = (_props: ChartTextSpanProps) => {
+  // This is a marker component - it doesn't render anything itself
+  // ChartText will process it during paragraph building
+  return null;
+};
+
+/**
+ * Internal: A text segment extracted from the children tree.
+ */
+type TextSegment = {
+  text: string;
+  font: ThemeVars.Font;
+  fontSize: number;
+  fontWeight: number;
+  fontStyle: FontSlant;
 };
 
 /**
  * The supported content types for ChartText.
- * Note: Skia only supports simple string/number content, not complex SVG text elements.
- * For rich text with different font weights, use an array of ChartTextSegment.
  */
-export type ChartTextChildren = string | number | null | undefined | ChartTextSegment[];
+export type ChartTextChildren = React.ReactNode;
 
 /**
  * Horizontal alignment options for chart text.
@@ -191,6 +209,7 @@ export type ChartTextProps = SharedProps & {
   /**
    * Font from theme to use for text rendering.
    * Accepts theme font keys like 'headline', 'body', 'label1', 'label2', etc.
+   * This sets both fontSize and fontWeight from the theme.
    * @default 'label2'
    * @example
    * <ChartText font="headline">Chart Title</ChartText>
@@ -198,19 +217,26 @@ export type ChartTextProps = SharedProps & {
   font?: ThemeVars.Font;
   /**
    * Font size override in pixels.
-   * Overrides the size from font family.
+   * Overrides the size from the font prop.
    * @example
-   * // Use label1 font but with custom size
+   * // Use label1 font weight but with custom size
    * <ChartText font="label1" fontSize={18}>Text</ChartText>
    */
   fontSize?: number;
   /**
-   * Font style (normal or italic).
-   * @default 'normal'
+   * Font weight override.
+   * Overrides the weight from the font prop.
    * @example
-   * <ChartText fontStyle="italic">Italic text</ChartText>
+   * <ChartText font="label1" fontWeight="700">Bold text</ChartText>
    */
-  fontStyle?: 'normal' | 'italic';
+  fontWeight?: FontWeight;
+  /**
+   * Font style (normal or italic).
+   * @default FontSlant.Upright
+   * @example
+   * <ChartText fontStyle={FontSlant.Italic}>Italic text</ChartText>
+   */
+  fontStyle?: FontSlant;
   /**
    * Maximum width for text layout in pixels.
    * Text will wrap within this width. Explicit line breaks (\n) are also supported.
@@ -283,24 +309,77 @@ export type ChartTextProps = SharedProps & {
 };
 
 /**
- * Maps horizontal alignment to Skia text alignment.
+ * Checks if two rectangles are different (with epsilon tolerance to avoid jitter).
  */
-const mapHorizontalAlignment = (alignment: TextHorizontalAlignment): 'start' | 'center' | 'end' => {
-  switch (alignment) {
-    case 'left':
-      return 'start';
-    case 'center':
-      return 'center';
-    case 'right':
-      return 'end';
-  }
+const isDimensionChanged = (rect1: Rect | null, rect2: Rect, epsilon = 0.5): boolean => {
+  if (!rect1) return true;
+  return (
+    Math.abs(rect1.x - rect2.x) > epsilon ||
+    Math.abs(rect1.y - rect2.y) > epsilon ||
+    Math.abs(rect1.width - rect2.width) > epsilon ||
+    Math.abs(rect1.height - rect2.height) > epsilon
+  );
 };
 
 /**
- * Maps vertical alignment to Skia text alignment.
+ * Recursively extracts text segments from React children tree.
+ * Processes ChartTextSpan components and plain text nodes.
  */
-const mapVerticalAlignment = (alignment: TextVerticalAlignment): 'top' | 'middle' | 'bottom' => {
-  return alignment;
+const extractTextSegments = (
+  children: React.ReactNode,
+  parentFont: ThemeVars.Font,
+  parentFontSize: number,
+  parentFontWeight: number,
+  parentFontStyle: FontSlant,
+  theme: any,
+): TextSegment[] => {
+  const segments: TextSegment[] = [];
+
+  React.Children.forEach(children, (child) => {
+    if (child === null || child === undefined) {
+      return;
+    }
+
+    // Handle plain text or numbers
+    if (typeof child === 'string' || typeof child === 'number') {
+      const text = String(child);
+      if (text.length > 0) {
+        segments.push({
+          text,
+          font: parentFont,
+          fontSize: parentFontSize,
+          fontWeight: parentFontWeight,
+          fontStyle: parentFontStyle,
+        });
+      }
+      return;
+    }
+
+    // Handle React elements (ChartTextSpan)
+    if (React.isValidElement(child)) {
+      const props = child.props as ChartTextSpanProps;
+
+      // Get effective styling for this span
+      const spanFont = props.font ?? parentFont;
+      const spanFontSize = props.fontSize ?? theme.fontSize[spanFont] ?? parentFontSize;
+      const spanFontWeight =
+        props.fontWeight ?? parseInt(String(theme.fontWeight[spanFont] ?? parentFontWeight), 10);
+      const spanFontStyle = props.fontStyle ?? parentFontStyle;
+
+      // Recursively process children with inherited styles
+      const nestedSegments = extractTextSegments(
+        props.children,
+        spanFont,
+        spanFontSize,
+        spanFontWeight,
+        spanFontStyle,
+        theme,
+      );
+      segments.push(...nestedSegments);
+    }
+  });
+
+  return segments;
 };
 
 export const ChartText = memo<ChartTextProps>(
@@ -321,9 +400,10 @@ export const ChartText = memo<ChartTextProps>(
     inset: insetInput,
     onDimensionsChange,
     opacity = 1,
-    font,
+    font = 'label2',
     fontSize: fontSizeOverride,
-    fontStyle: fontStyleOverride,
+    fontWeight: fontWeightOverride,
+    fontStyle = FontSlant.Upright,
     maxWidth: maxWidthProp,
     maxLines,
     ellipsis = '...',
@@ -340,18 +420,17 @@ export const ChartText = memo<ChartTextProps>(
     const maxWidth = maxWidthProp ?? chartWidth;
 
     // Compute effective background color based on elevation
-    const background = useMemo(() => {
-      if (backgroundProp !== undefined) {
-        return backgroundProp;
-      }
-      // Default to theme.color.bg when elevated, transparent otherwise
-      return elevation && elevation > 0 ? theme.color.bg : 'transparent';
-    }, [backgroundProp, elevation, theme.color.bg]);
+    const background =
+      backgroundProp ?? (elevation && elevation > 0 ? theme.color.bg : 'transparent');
 
-    // Get default font descriptor from theme
-    const defaultFontDescriptor = useMemo(() => {
-      return getSkiaFontDescriptor('Helvetica', theme, fontSizeOverride, fontStyleOverride);
-    }, [theme, fontSizeOverride, fontStyleOverride]);
+    // Get font properties from theme with overrides (convert theme strings to numbers)
+    const fontSize = fontSizeOverride ?? theme.fontSize[font] ?? 14;
+    const fontWeight = fontWeightOverride ?? parseInt(String(theme.fontWeight[font] ?? '400'), 10);
+
+    // Extract text segments from children (handles ChartTextSpan nesting)
+    const textSegments = useMemo(() => {
+      return extractTextSegments(children, font, fontSize, fontWeight, fontStyle, theme);
+    }, [children, font, fontSize, fontWeight, fontStyle, theme]);
 
     // Build paragraph with Skia ParagraphBuilder
     const paragraph = useMemo(() => {
@@ -366,68 +445,27 @@ export const ChartText = memo<ChartTextProps>(
         ...(maxLines && { ellipsis }),
       };
 
-      const builder = Skia.ParagraphBuilder.Make(paragraphStyle, fontMgr!);
+      const builder = Skia.ParagraphBuilder.Make(paragraphStyle, fontMgr);
 
-      // Check if children is segments array
-      const isSegments = Array.isArray(children);
-
-      if (isSegments) {
-        // Build rich text with segments
-        const textSegments = children as ChartTextSegment[];
-        textSegments.forEach((segment) => {
-          // Get segment font descriptor (use segment overrides or default)
-          const segmentDescriptor = getSkiaFontDescriptor(
-            'Helvetica',
-            theme,
-            segment.fontSize || fontSizeOverride,
-            fontStyleOverride,
-          );
-
-          builder.pushStyle({
-            fontFamilies: ['Helvetica'],
-            fontSize: segmentDescriptor.fontSize,
-            fontStyle: {
-              weight: segment.fontWeight
-                ? parseInt(segment.fontWeight, 10)
-                : segmentDescriptor.fontWeight,
-            },
-            color: Skia.Color(color ?? theme.color.fgMuted),
-          });
-          builder.addText(segment.text);
-          builder.pop();
-        });
-      } else {
-        // Build simple text
-        const text = children !== null && children !== undefined ? String(children) : '';
+      // Build paragraph from extracted segments
+      textSegments.forEach((segment) => {
         builder.pushStyle({
-          fontFamilies: ['Helvetica'],
-          fontSize: defaultFontDescriptor.fontSize,
+          fontFamilies: [DEFAULT_CHART_FONT_FAMILY],
+          fontSize: segment.fontSize,
           fontStyle: {
-            weight: defaultFontDescriptor.fontWeight,
-            slant:
-              defaultFontDescriptor.fontStyle === 'italic' ? FontSlant.Italic : FontSlant.Upright,
+            weight: segment.fontWeight,
+            slant: segment.fontStyle,
           },
           color: Skia.Color(color ?? theme.color.fgMuted),
         });
-        builder.addText(text);
+        builder.addText(segment.text);
         builder.pop();
-      }
+      });
 
       const para = builder.build();
       para.layout(maxWidth);
       return para;
-    }, [
-      fontMgr,
-      children,
-      theme,
-      fontSizeOverride,
-      fontStyleOverride,
-      color,
-      maxLines,
-      ellipsis,
-      maxWidth,
-      defaultFontDescriptor,
-    ]);
+    }, [fontMgr, textSegments, color, theme.color.fgMuted, maxLines, ellipsis, maxWidth]);
 
     // Calculate text dimensions from paragraph
     const textDimensions = useMemo(() => {
@@ -559,15 +597,7 @@ export const ChartText = memo<ChartTextProps>(
     const [reportedDimensionsRect, setReportedDimensionsRect] = useState<Rect | null>(null);
 
     // Report dimensions when they change (with epsilon comparison to avoid jitter)
-    const EPSILON = 0.5;
-    const dimensionsChanged =
-      !reportedDimensionsRect ||
-      Math.abs(reportedDimensionsRect.x - adjustedBackgroundRect.x) > EPSILON ||
-      Math.abs(reportedDimensionsRect.y - adjustedBackgroundRect.y) > EPSILON ||
-      Math.abs(reportedDimensionsRect.width - adjustedBackgroundRect.width) > EPSILON ||
-      Math.abs(reportedDimensionsRect.height - adjustedBackgroundRect.height) > EPSILON;
-
-    if (dimensionsChanged) {
+    if (isDimensionChanged(reportedDimensionsRect, adjustedBackgroundRect)) {
       setReportedDimensionsRect(adjustedBackgroundRect);
       onDimensionsChange?.(adjustedBackgroundRect);
     }
@@ -588,35 +618,8 @@ export const ChartText = memo<ChartTextProps>(
       };
     }, [elevation, shadowColorProp, shadowOffsetProp, shadowBlurProp, shadowOpacityProp]);
 
-    // Compute shadow color with opacity baked in
-    const computedShadowColor = useMemo(() => {
-      if (!shadowConfig) return null;
-
-      const { color: shadowColor, opacity: shadowOpacity } = shadowConfig;
-
-      if (shadowOpacity >= 1) return shadowColor;
-
-      // Parse the color and apply opacity
-      // Support both rgba and hex colors
-      if (shadowColor.startsWith('rgba')) {
-        // Extract rgba values and multiply alpha by shadowOpacity
-        const match = shadowColor.match(/rgba\((\d+),\s*(\d+),\s*(\d+),\s*([\d.]+)\)/);
-        if (match) {
-          const [, r, g, b, a] = match;
-          const newAlpha = parseFloat(a) * shadowOpacity;
-          return `rgba(${r}, ${g}, ${b}, ${newAlpha})`;
-        }
-      } else if (shadowColor.startsWith('rgb')) {
-        // Convert rgb to rgba with shadowOpacity
-        const match = shadowColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
-        if (match) {
-          const [, r, g, b] = match;
-          return `rgba(${r}, ${g}, ${b}, ${shadowOpacity})`;
-        }
-      }
-      // For hex colors or other formats, just use as is
-      return shadowColor;
-    }, [shadowConfig]);
+    // Compute shadow color (Skia will handle opacity via Paint)
+    const shadowColor = shadowConfig?.color ?? null;
 
     // Check if shadow should be rendered
     const shouldRenderShadow =
@@ -644,10 +647,10 @@ export const ChartText = memo<ChartTextProps>(
             x={adjustedBackgroundRect.x}
             y={adjustedBackgroundRect.y}
           >
-            {shouldRenderShadow && shadowConfig && computedShadowColor && (
+            {shouldRenderShadow && shadowConfig && shadowColor && (
               <Shadow
                 blur={shadowConfig.blur}
-                color={computedShadowColor}
+                color={shadowColor}
                 dx={shadowConfig.offset.x}
                 dy={shadowConfig.offset.y}
               />

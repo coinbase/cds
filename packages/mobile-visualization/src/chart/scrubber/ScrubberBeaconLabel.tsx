@@ -1,4 +1,5 @@
 import { memo } from 'react';
+import { FontWeight } from '@shopify/react-native-skia';
 
 import { ChartText, type ChartTextProps } from '../text';
 
