@@ -31,7 +31,7 @@ import { TextLabel1 } from '@coinbase/cds-mobile/typography';
 import { Text } from '@coinbase/cds-mobile/typography/Text';
 import { FontWeight, Rect } from '@shopify/react-native-skia';
 
-import { Area, DottedArea, GradientArea } from '../../area';
+import { Area, type AreaComponentProps, DottedArea, GradientArea } from '../../area';
 import { XAxis, YAxis } from '../../axis';
 import { BarChart } from '../../bar';
 import { CartesianChart } from '../../CartesianChart';
@@ -897,6 +897,78 @@ const BTCTab: TabComponent = memo(
     );
   }),
 );
+
+function AnimatedGainLossChart() {
+  const theme = useTheme();
+  const negativeColor = `rgb(${theme.spectrum.gray15})`;
+  const positiveColor = theme.color.fgPositive;
+  const MyGradient = memo((props: AreaComponentProps) => {
+    // Area gradient: combines hard color change with continuous opacity fade
+    const areaGradient = {
+      stops: ({ min, max }: { min: number; max: number }) => [
+        { offset: min, color: negativeColor, opacity: 0.4 },
+        { offset: 0, color: negativeColor, opacity: 0 },
+        { offset: 0, color: positiveColor, opacity: 0 },
+        { offset: max, color: positiveColor, opacity: 0.4 },
+      ],
+    };
+
+    return <DottedArea {...props} gradient={areaGradient} />;
+  });
+  function InnerChart() {
+    const [data, setData] = useState([
+      -40, -28, -21, -5, 48, -5, 0, -28, 2, -29, -46, 16, -30, -29, 8,
+    ]);
+
+    const tickLabelFormatter = useCallback(
+      (value: number) =>
+        new Intl.NumberFormat('en-US', {
+          style: 'currency',
+          currency: 'USD',
+          maximumFractionDigits: 0,
+        }).format(value),
+      [],
+    );
+
+    // Line gradient: hard color change at 0 (full opacity for line)
+    const lineGradient = {
+      stops: [
+        { offset: 0, color: negativeColor },
+        { offset: 0, color: positiveColor },
+      ],
+    };
+
+    return (
+      <VStack gap={2}>
+        <CartesianChart
+          enableScrubbing
+          height={150}
+          inset={{ top: 12, bottom: 12, left: 0, right: 0 }}
+          series={[
+            {
+              id: 'prices',
+              data: data,
+              gradient: lineGradient,
+            },
+          ]}
+        >
+          <YAxis showGrid requestedTickCount={2} tickLabelFormatter={tickLabelFormatter} />
+          <Line
+            showArea
+            AreaComponent={MyGradient}
+            curve="monotone"
+            seriesId="prices"
+            strokeWidth={3}
+            type="gradient"
+          />
+          <Scrubber hideOverlay />
+        </CartesianChart>
+        <Button onPress={() => setData((d) => d.map((d) => -1 * d))}>Flip</Button>
+      </VStack>
+    );
+  }
+  return <InnerChart />;
+}
 
 const BTCActiveIndicator = memo(({ style, ...props }: TabsActiveIndicatorProps) => (
   <PeriodSelectorActiveIndicator
@@ -2335,6 +2407,9 @@ export default () => {
       </Example>
       <Example title="Dotted">
         <AssetPriceDotted />
+      </Example>
+      <Example title="Animated Gain/Loss">
+        <AnimatedGainLossChart />
       </Example>
     </ExampleScreen>
   );
