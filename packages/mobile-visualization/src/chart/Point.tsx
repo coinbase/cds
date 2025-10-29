@@ -1,4 +1,4 @@
-import { memo, useEffect, useMemo } from 'react';
+import { memo, useMemo, useRef } from 'react';
 import type { SharedProps } from '@coinbase/cds-common/types';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 import { Circle, type Color, Group } from '@shopify/react-native-skia';
@@ -6,7 +6,7 @@ import { Circle, type Color, Group } from '@shopify/react-native-skia';
 import type { ChartTextChildren } from './text/ChartText';
 import { useCartesianChartContext } from './ChartProvider';
 import { ChartText, type ChartTextProps } from './text';
-import { projectPoint, useScrubberContext } from './utils';
+import { projectPoint } from './utils';
 
 /**
  * Parameters passed to renderPoints callback function.
@@ -57,10 +57,6 @@ export type PointConfig = {
    * Handler for when the point is clicked.
    */
   onPress?: (point: { x: number; y: number; dataX: number; dataY: number }) => void;
-  /**
-   * Handler for when the scrubber enters this point.
-   */
-  onScrubberEnter?: (point: { x: number; y: number }) => void;
   /**
    * Color of the outer stroke around the point.
    * @default theme.color.bg
@@ -115,7 +111,6 @@ export const Point = memo<PointProps>(
     radius = 5,
     opacity,
     onPress,
-    onScrubberEnter,
     stroke,
     strokeWidth = 2,
     accessibilityLabel,
@@ -124,17 +119,15 @@ export const Point = memo<PointProps>(
     pixelCoordinates,
     testID,
   }) => {
+    const renderCount = useRef(0);
+    renderCount.current++;
     const theme = useTheme();
     const effectiveStroke = stroke ?? theme.color.bg;
 
     const { getXScale, getYScale } = useCartesianChartContext();
-    const { scrubberPosition } = useScrubberContext();
 
     const xScale = getXScale();
     const yScale = getYScale(yAxisId);
-
-    // Scrubber detection: check if this point is highlighted by the scrubber
-    const isScrubberHighlighted = scrubberPosition !== undefined && scrubberPosition === dataX;
 
     // Use provided pixelCoordinates or calculate from data coordinates
     const pixelCoordinate = useMemo(() => {
@@ -153,12 +146,6 @@ export const Point = memo<PointProps>(
         yScale,
       });
     }, [pixelCoordinates, xScale, yScale, dataX, dataY]);
-
-    useEffect(() => {
-      if (isScrubberHighlighted && onScrubberEnter) {
-        onScrubberEnter({ x: pixelCoordinate.x, y: pixelCoordinate.y });
-      }
-    }, [isScrubberHighlighted, onScrubberEnter, pixelCoordinate.x, pixelCoordinate.y]);
 
     if (!xScale || !yScale) {
       return null;
@@ -182,6 +169,9 @@ export const Point = memo<PointProps>(
             r={radius - strokeWidth / 2}
           />
         </Group>
+        <ChartText x={pixelCoordinate.x} y={pixelCoordinate.y - 20}>
+          {renderCount.current}
+        </ChartText>
         {label && (
           <ChartText x={pixelCoordinate.x} y={pixelCoordinate.y} {...labelProps}>
             {label}

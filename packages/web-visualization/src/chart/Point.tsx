@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useMemo } from 'react';
+import React, { memo, useMemo } from 'react';
 import type { SVGProps } from 'react';
 import type { SharedProps } from '@coinbase/cds-common/types';
 import { cx } from '@coinbase/cds-web';
@@ -8,7 +8,7 @@ import { m as motion } from 'framer-motion';
 import type { ChartTextChildren } from './text/ChartText';
 import { useCartesianChartContext } from './ChartProvider';
 import { ChartText, type ChartTextProps } from './text';
-import { projectPoint, useScrubberContext } from './utils';
+import { projectPoint } from './utils';
 
 const containerCss = css`
   outline: none;
@@ -80,10 +80,6 @@ export type PointConfig = {
     event: React.MouseEvent,
     point: { x: number; y: number; dataX: number; dataY: number },
   ) => void;
-  /**
-   * Handler for when the scrubber enters this point.
-   */
-  onScrubberEnter?: (point: { x: number; y: number }) => void;
   /**
    * Color of the outer stroke around the point.
    * @default 'var(--color-bg)'
@@ -178,7 +174,6 @@ export const Point = memo<PointProps>(
     radius = 5,
     opacity,
     onClick,
-    onScrubberEnter,
     className,
     style,
     classNames,
@@ -194,12 +189,9 @@ export const Point = memo<PointProps>(
     ...svgProps
   }) => {
     const { getXScale, getYScale, animate: animationEnabled } = useCartesianChartContext();
-    const { scrubberPosition } = useScrubberContext();
 
     const xScale = getXScale();
     const yScale = getYScale(yAxisId);
-
-    const isScrubberHighlighted = scrubberPosition !== undefined && scrubberPosition === dataX;
 
     const pixelCoordinate = useMemo(() => {
       if (pixelCoordinates) {
@@ -217,12 +209,6 @@ export const Point = memo<PointProps>(
         yScale,
       });
     }, [xScale, yScale, dataX, dataY, pixelCoordinates]);
-
-    useEffect(() => {
-      if (isScrubberHighlighted && onScrubberEnter) {
-        onScrubberEnter({ x: pixelCoordinate.x, y: pixelCoordinate.y });
-      }
-    }, [isScrubberHighlighted, onScrubberEnter, pixelCoordinate.x, pixelCoordinate.y]);
 
     const innerPoint = useMemo(() => {
       const mergedStyles = {
