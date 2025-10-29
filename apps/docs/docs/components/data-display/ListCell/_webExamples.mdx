@@ -1,3 +1,5 @@
+## Overview
+
 A ListCell row is divided into the following 5 columns:
 
 - Media
@@ -6,15 +8,7 @@ A ListCell row is divided into the following 5 columns:
 - End (detail & subdetail or action)
 - Accessory
 
-::::warning
-
-The `title`, `description`, `detail`, and `subdetail` string props are rendered inside a CDS `Text` with default fonts and truncation. To render arbitrary React nodes (icons, multiple elements, chips, etc.), use the Node props: `titleNode`, `descriptionNode`, `detailNode`, and `subdetailNode`.
-
-When using the Node props, you are responsible for styling, layout, and truncation behavior.
-
-::::
-
-### Basic usage
+### Basic Usage
 
 ```tsx live
 <ListCell
@@ -24,9 +18,11 @@ When using the Node props, you are responsible for styling, layout, and truncati
 />
 ```
 
-:::note
+:::tip
 Prefer `spacingVariant="condensed"` for the new ListCell design. The `compact` may be removed in a future major release.
 :::
+
+### Spacing Variant
 
 ```tsx live
 <VStack>
@@ -64,7 +60,13 @@ Prefer `spacingVariant="condensed"` for the new ListCell design. The `compact` m
 </VStack>
 ```
 
-### With Leading Icon
+## Media
+
+::::note
+We have deprecated `CellMedia`; pass media directly as shown below.
+::::
+
+### Leading Icon
 
 ```tsx live
 <ListCell
@@ -75,7 +77,114 @@ Prefer `spacingVariant="condensed"` for the new ListCell design. The `compact` m
 />
 ```
 
-### With Detail and Subdetail
+### Leading Avatar
+
+```tsx live
+<ListCell
+  spacingVariant="condensed"
+  title="List Cell with Icon"
+  description="Shows usage with a leading icon"
+  media={<Avatar src={assets.btc.imageUrl} size="l" />}
+/>
+```
+
+## Title & Description
+
+### Title Line Limits
+
+- In condensed spacing (`spacingVariant="condensed"`), the title shows up to two lines by default, regardless of whether a description is present.
+- In normal and compact spacing, the title shows up to two lines when there is no description; if a description is present, the title is limited to one line.
+- Use `disableMultilineTitle` to force the title to one line in all cases.
+
+::::warning
+The `title` and `description` props are rendered inside a CDS `Text` with default fonts and truncation. To render arbitrary React nodes without being wrapped by a `<Text>`, use `titleNode` and `descriptionNode`.
+When using the Node props, you are responsible for styling, layout, and truncation behavior.
+::::
+
+### Custom Title/Description via Node Props
+
+```tsx live
+<ListCell
+  spacingVariant="condensed"
+  media={<Avatar src={assets.eth.imageUrl} size="m" />}
+  titleNode={
+    <HStack gap={1} alignItems="center">
+      <Icon name="checkmark" />
+      <span>Verified account</span>
+    </HStack>
+  }
+  descriptionNode={
+    <HStack gap={1} alignItems="center">
+      <span>Composed description with any React nodes</span>
+      <Icon name="info" />
+    </HStack>
+  }
+/>
+```
+
+### Multiline Description
+
+```tsx live
+<ListCell
+  spacingVariant="condensed"
+  title="Multiline Description"
+  description="This is a longer description that demonstrates how the text wraps when the multiline prop is enabled. It can span multiple lines without truncating."
+  multiline
+/>
+```
+
+## Intermediary
+
+```tsx live
+function Intermediary() {
+  const dimensions = { width: 62, height: 18 };
+  const sparklineData = prices
+    .map((price) => parseFloat(price))
+    .filter((price, index) => index % 10 === 0);
+  const referenceY = sparklineData[Math.floor(sparklineData.length / 3)];
+
+  const CompactChart = memo(
+    ({ data, color = 'var(--color-fgPositive)', showArea = false, referenceY }) => (
+      <Box style={{ padding: 1 }}>
+        <LineChart
+          {...dimensions}
+          enableScrubbing={false}
+          overflow="visible"
+          inset={0}
+          showArea={showArea}
+          series={[
+            {
+              id: 'series',
+              data,
+              color,
+            },
+          ]}
+        >
+          <ReferenceLine dataY={referenceY} />
+        </LineChart>
+      </Box>
+    ),
+  );
+
+  return (
+    <ListCell
+      media={<Avatar src={assets.btc.imageUrl} />}
+      spacingVariant="condensed"
+      title="Bitcoin"
+      description="BTC"
+      intermediary={<CompactChart data={sparklineData} referenceY={referenceY} />}
+      detail="$334,239.03"
+      subdetail="+4.06%"
+      priority="start"
+      variant="positive"
+    />
+  );
+}
+```
+
+## End
+
+### Detail and Subdetail
 
 ```tsx live
 <ListCell
@@ -87,28 +196,11 @@ Prefer `spacingVariant="condensed"` for the new ListCell design. The `compact` m
 />
 ```
 
-### Custom Title/Description via Node props
+::::warning
+Like `title` and `description`, `detail` and `subdetail` props are also rendered inside a CDS `Text` with default fonts. To render arbitrary React nodes without being wrapped by a `<Text>`, use `detailNode` and `subdetailNode`.
+::::
 
-```tsx live
-<ListCell
-  spacingVariant="condensed"
-  media={<Avatar src={assets.eth.imageUrl} size="m" />}
-  titleNode={
-    <HStack gap={2} alignItems="center">
-      <Icon name="check" />
-      <span>Verified account</span>
-    </HStack>
-  }
-  descriptionNode={
-    <HStack gap={2} alignItems="center">
-      <span>Composed description with any React nodes</span>
-      <Icon name="info" />
-    </HStack>
-  }
-/>
-```
-
-### Custom Detail/Subdetail via Node props
+### Custom Detail/Subdetail via Node Props
 
 ```tsx live
 <ListCell
@@ -135,6 +227,33 @@ Prefer `spacingVariant="condensed"` for the new ListCell design. The `compact` m
 />
 ```
 
+### End Action
+
+When you pass the `end` prop, it overrides the `detail`/`subdetail`/`detailNode`/`subdetailNode`.
+
+```tsx live
+<ListCell
+  spacingVariant="condensed"
+  title="End action"
+  detail="This is overridden and won't show up"
+  subdetail="This is overridden and won't show up"
+  detailNode="This is overridden and won't show up"
+  subdetailNode="This is overridden and won't show up"
+  end={
+    <Button
+      compact
+      onClick={() => {
+        alert('Action clicked');
+      }}
+    >
+      Action
+    </Button>
+  }
+/>
+```
+
+## Accessory
+
 ### Interactive Cell with Accessory
 
 ```tsx live
@@ -147,7 +266,7 @@ Prefer `spacingVariant="condensed"` for the new ListCell design. The `compact` m
 />
 ```
 
-### Custom Accessory via Node prop
+### Custom Accessory via Node Prop
 
 ```tsx live
 <ListCell
@@ -173,7 +292,31 @@ Prefer `spacingVariant="condensed"` for the new ListCell design. The `compact` m
 />
 ```
 
-### With Helper Text
+## Accessibility Label
+
+The accessibility props are only applied when the `<ListCell>` has a value for the `onClick` prop. Otherwise, content passed into the `<ListCell>` must use accessibility props and attributes as needed.
+
+```tsx live
+<VStack gap={1}>
+  <ListCell
+    accessibilityLabel="Accessibility label. Describes content for entire list cell. Applied when onClick prop has a value"
+    intermediary={<Icon name="chartLine" />}
+    media={<Avatar src={assets.btc.imageUrl} />}
+    onClick={() => window.alert('ListCell clicked!')}
+    title="BTC"
+    spacingVariant="condensed"
+  />
+
+  <ListCell
+    intermediary={<Icon accessibilityLabel="Chart icon" name="chartLine" />}
+    media={<Avatar accessibilityLabel="Bitcoin" src={assets.btc.imageUrl} />}
+    title="BTC"
+    spacingVariant="condensed"
+  />
+</VStack>
+```
+
+## Helper text
 
 ```tsx live
 <VStack gap={3}>
@@ -216,42 +359,7 @@ Prefer `spacingVariant="condensed"` for the new ListCell design. The `compact` m
 </VStack>
 ```
 
-### Accessibility Label
-
-The accessibility props are only applied when the `<ListCell>` has a value for the `onClick` prop. Otherwise, content passed into the `<ListCell>` must use accessibility props and attributes as needed.
-
-```tsx live
-<VStack gap={1}>
-  <ListCell
-    accessibilityLabel="Accessibility label. Describes content for entire list cell. Applied when onClick prop has a value"
-    intermediary={<Icon name="chartLine" />}
-    media={<Avatar src={assets.btc.imageUrl} />}
-    onClick={() => window.alert('ListCell clicked!')}
-    title="BTC"
-    spacingVariant="condensed"
-  />
-
-  <ListCell
-    intermediary={<Icon accessibilityLabel="Chart icon" name="chartLine" />}
-    media={<Avatar accessibilityLabel="Bitcoin" src={assets.btc.imageUrl} />}
-    title="BTC"
-    spacingVariant="condensed"
-  />
-</VStack>
-```
-
-### Multiline Description
-
-```tsx live
-<ListCell
-  spacingVariant="condensed"
-  title="Multiline Description"
-  description="This is a longer description that demonstrates how the text wraps when the multiline prop is enabled. It can span multiple lines without truncating."
-  multiline
-/>
-```
-
-### Loading States
+## Loading States
 
 The ListCellFallback component provides loading state representations of ListCell. It uses placeholder rectangles to indicate where content will appear, creating a smooth loading experience. The web version uses percentage-based widths and custom layouts to match the ListCell's four-column structure.
 
@@ -282,12 +390,12 @@ The ListCellFallback component provides loading state representations of ListCel
 </VStack>
 ```
 
-### Priority
+## Priority
 
 The priority prop controls which parts of the cell are protected from shrinking and truncation when horizontal space is limited. It accepts start, middle, and end as a string or an array of strings.
 
 ```tsx live
-function PriorityCOntent() {
+function PriorityContent() {
   const dimensions = { width: 62, height: 18 };
   const sparklineData = prices
     .map((price) => parseFloat(price))
@@ -364,7 +472,7 @@ function PriorityCOntent() {
 }
 ```
 
-### Anatomy
+## Anatomy
 
 Without helper text (top-only layout):
 
@@ -424,8 +532,7 @@ Mapping to `styles` / `classNames` keys:
 - pressable: interactive overlay when `href` / `onClick` keyboard handlers are present
 - contentContainer: container around top and optional bottom content
 - mainContent: inner horizontal layout that holds the main pieces
-- title/description: stacked text column within `topContent`
-- media: leading media container
+- title/description: stacked text column within `topContent`- media: leading media container
 - intermediary: middle container between main and end
 - end: container for `detail` / `subdetail` or `end` prop you pass in
 - accessory: trailing accessory container
