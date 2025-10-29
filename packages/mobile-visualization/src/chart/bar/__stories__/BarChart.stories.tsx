@@ -256,8 +256,8 @@ const UpdatingChartValues = () => {
           },
         ]}
         transitionConfig={{
-          initial: { type: 'timing', config: { duration: 600 } },
-          update: { type: 'timing', config: { duration: 300 } },
+          initial: { type: 'timing', duration: 600 },
+          update: { type: 'timing', duration: 300 },
         }}
         xAxis={{
           data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],

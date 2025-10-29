@@ -15,19 +15,15 @@ import type { BarComponentProps } from './Bar';
 export type DefaultBarProps = BarComponentProps & {
   /**
    * Transition configuration for bar transitions.
-   * Allows customization of animation type, timing, springs, delays, and chaining.
+   * Allows customization of animation type, timing, and springs.
    *
    * @example
    * // Spring animation for bouncy bars
-   * transitionConfig={{ type: 'spring', config: { damping: 10 } }}
+   * transitionConfig={{ type: 'spring', damping: 10, stiffness: 100 }}
    *
    * @example
-   * // Delayed timing animation
-   * transitionConfig={{
-   *   type: 'delay',
-   *   delayMs: 100,
-   *   then: { type: 'timing', config: { duration: 500 } }
-   * }}
+   * // Timing animation
+   * transitionConfig={{ type: 'timing', duration: 500 }}
    */
   transitionConfig?: TransitionConfig;
   /**
@@ -37,8 +33,8 @@ export type DefaultBarProps = BarComponentProps & {
    *
    * @example
    * // Slow initial animation, faster updates
-   * initialTransitionConfig={{ type: 'timing', config: { duration: 1000 } }}
-   * transitionConfig={{ type: 'timing', config: { duration: 300 } }}
+   * initialTransitionConfig={{ type: 'timing', duration: 1000 }}
+   * transitionConfig={{ type: 'timing', duration: 300 }}
    */
   initialTransitionConfig?: TransitionConfig;
 };

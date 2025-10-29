@@ -91,40 +91,20 @@ export const useInterpolator = <T>(
 
 /**
  * Transition configuration for animations.
- * Supports different animation types with chaining capabilities.
+ * Supports timing and spring animation types.
  * Used for paths, positions, opacity, and any other animated properties.
  *
  * @example
  * // Spring animation
- * { type: 'spring', config: { damping: 10 } }
+ * { type: 'spring', damping: 10, stiffness: 100 }
  *
  * @example
  * // Timing animation
- * { type: 'timing', config: { duration: 500 } }
- *
- * @example
- * // Delayed animation
- * { type: 'delay', delayMs: 200, then: { type: 'spring', config: { damping: 15 } } }
- *
- * @example
- * // Custom animation function
- * (target) => withDelay(100, withSpring(target, { damping: 10 }))
+ * { type: 'timing', duration: 500, easing: Easing.inOut(Easing.ease) }
  */
 export type TransitionConfig =
-  | {
-      type: 'timing';
-      config?: WithTimingConfig;
-    }
-  | {
-      type: 'spring';
-      config?: WithSpringConfig;
-    }
-  | {
-      type: 'delay';
-      delayMs: number;
-      then: TransitionConfig;
-    }
-  | ((targetValue: number) => number);
+  | ({ type: 'timing' } & WithTimingConfig)
+  | ({ type: 'spring' } & WithSpringConfig);
 
 /**
  * Default transition configuration used across all chart components.
@@ -132,7 +112,8 @@ export type TransitionConfig =
  */
 export const defaultTransition: TransitionConfig = {
   type: 'spring',
-  config: { stiffness: 900, damping: 120 },
+  stiffness: 900,
+  damping: 120,
 };
 
 /**
@@ -145,31 +126,32 @@ export const defaultTransition: TransitionConfig = {
  * @example
  * // Use directly for animation
  * progress.value = 0;
- * progress.value = buildTransition(1, { type: 'spring', config: { damping: 10 } });
+ * progress.value = buildTransition(1, { type: 'spring', damping: 10, stiffness: 100 });
  *
  * @example
  * // Coordinate animations
- * animatedX.value = buildTransition(100, { type: 'spring', config: { damping: 10 } });
- * animatedY.value = buildTransition(200, { type: 'spring', config: { damping: 10 } });
+ * animatedX.value = buildTransition(100, { type: 'spring', damping: 10, stiffness: 100 });
+ * animatedY.value = buildTransition(200, { type: 'spring', damping: 10, stiffness: 100 });
  *
  * @example
- * // Custom animation function
- * progress.value = buildTransition(1, (target) => withDelay(100, withSpring(target)));
+ * // Timing animation
+ * progress.value = buildTransition(1, { type: 'timing', duration: 500 });
  */
 export const buildTransition = (targetValue: number, config: TransitionConfig): number => {
-  if (typeof config === 'function') {
-    return config(targetValue);
-  }
-
   switch (config.type) {
-    case 'timing':
-      return withTiming(targetValue, config.config);
-    case 'spring':
-      return withSpring(targetValue, config.config);
-    case 'delay':
-      return withDelay(config.delayMs, buildTransition(targetValue, config.then));
-    default: // Fallback to default transition config
-      return withSpring(targetValue, defaultTransition.config);
+    case 'timing': {
+      const { type, ...timingConfig } = config;
+      return withTiming(targetValue, timingConfig);
+    }
+    case 'spring': {
+      const { type, ...springConfig } = config;
+      return withSpring(targetValue, springConfig);
+    }
+    default: {
+      // Fallback to default transition config
+      const { type, ...springConfig } = defaultTransition;
+      return withSpring(targetValue, springConfig);
+    }
   }
 };
 
@@ -218,7 +200,7 @@ export type UseTransitionAnimationConfig = {
  * const path = useTransitionAnimation({
  *   currentPath: d ?? '',
  *   animate: shouldAnimate,
- *   transitionConfig: { type: 'timing', config: { duration: 3000 } }
+ *   transitionConfig: { type: 'timing', duration: 3000 }
  * });
  *
  * @example
@@ -227,8 +209,8 @@ export type UseTransitionAnimationConfig = {
  *   currentPath: targetPath,
  *   initialPath: baselinePath,
  *   animate: true,
- *   transitionConfig: { type: 'timing', config: { duration: 300 } },
- *   initialTransitionConfig: { type: 'timing', config: { duration: 1000 } }
+ *   transitionConfig: { type: 'timing', duration: 300 },
+ *   initialTransitionConfig: { type: 'timing', duration: 1000 }
  * });
  */
 export const useTransitionAnimation = ({

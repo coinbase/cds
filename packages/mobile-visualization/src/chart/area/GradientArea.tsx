@@ -29,19 +29,15 @@ export type GradientAreaProps = Omit<PathProps, 'd' | 'fill' | 'fillOpacity'> &
     gradient?: Gradient;
     /**
      * Transition configuration for area transitions.
-     * Allows customization of animation type, timing, springs, delays, and chaining.
+     * Allows customization of animation type, timing, and springs.
      *
      * @example
      * // Spring animation
-     * transitionConfig={{ type: 'spring', config: { damping: 10 } }}
+     * transitionConfig={{ type: 'spring', damping: 10, stiffness: 100 }}
      *
      * @example
-     * // Delayed spring animation
-     * transitionConfig={{
-     *   type: 'delay',
-     *   delayMs: 200,
-     *   then: { type: 'spring', config: { damping: 15 } }
-     * }}
+     * // Timing animation
+     * transitionConfig={{ type: 'timing', duration: 500 }}
      */
     transitionConfig?: TransitionConfig;
   };

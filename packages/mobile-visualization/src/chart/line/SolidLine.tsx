@@ -37,26 +37,15 @@ export type SolidLineProps = SharedProps &
     animate?: boolean;
     /**
      * Animation configuration for path transitions.
-     * Allows customization of animation type, timing, springs, delays, and chaining.
+     * Allows customization of animation type, timing, and springs.
      *
      * @example
      * // Simple spring animation
-     * transitionConfig={{ type: 'spring', config: { damping: 10 } }}
+     * transitionConfig={{ type: 'spring', damping: 10, stiffness: 100 }}
      *
      * @example
-     * // Delayed spring animation
-     * transitionConfig={{
-     *   type: 'delay',
-     *   delayMs: 200,
-     *   then: { type: 'spring', config: { damping: 15 } }
-     * }}
-     *
-     * @example
-     * // Custom animation function with complex chaining
-     * transitionConfig={(target) => withDelay(
-     *   100,
-     *   withSpring(target, { damping: 8, mass: 0.5, stiffness: 120 })
-     * )}
+     * // Timing animation
+     * transitionConfig={{ type: 'timing', duration: 500 }}
      */
     transitionConfig?: TransitionConfig;
   };

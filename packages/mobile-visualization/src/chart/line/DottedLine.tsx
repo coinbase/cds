@@ -5,7 +5,11 @@ import { DashPathEffect, LinearGradient, Path as SkiaPath, vec } from '@shopify/
 
 import { useCartesianChartContext } from '../ChartProvider';
 import { type PathProps } from '../Path';
-import { defaultTransition, type TransitionConfig, useTransitionAnimation } from '../utils/animation';
+import {
+  defaultTransition,
+  type TransitionConfig,
+  useTransitionAnimation,
+} from '../utils/animation';
 import { getGradientScale, type Gradient, processGradient } from '../utils/gradient';
 
 export type DottedLineProps = SharedProps &
@@ -33,19 +37,15 @@ export type DottedLineProps = SharedProps &
     animate?: boolean;
     /**
      * Transition configuration for path transitions.
-     * Allows customization of animation type, timing, springs, delays, and chaining.
+     * Allows customization of animation type, timing, and springs.
      *
      * @example
      * // Simple timing animation
-     * transitionConfig={{ type: 'timing', config: { duration: 500 } }}
+     * transitionConfig={{ type: 'timing', duration: 500 }}
      *
      * @example
-     * // Delayed spring animation
-     * transitionConfig={{
-     *   type: 'delay',
-     *   delayMs: 200,
-     *   then: { type: 'spring', config: { damping: 15 } }
-     * }}
+     * // Spring animation
+     * transitionConfig={{ type: 'spring', damping: 15, stiffness: 100 }}
      */
     transitionConfig?: TransitionConfig;
   };

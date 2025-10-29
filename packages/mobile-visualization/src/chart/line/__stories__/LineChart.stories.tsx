@@ -1065,7 +1065,7 @@ const AssetPriceDotted = () => {
               color: assets.btc.color,
             },
           ]}
-          transitionConfig={{ type: 'timing', config: { duration: 1500 } }}
+          transitionConfig={{ type: 'timing', duration: 1500 }}
         >
           <Scrubber
             idlePulse

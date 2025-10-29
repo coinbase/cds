@@ -74,8 +74,8 @@ export type ScrubberBeaconProps = SharedProps & {
    * @example
    * // Custom update and pulse animations
    * beaconTransitionConfig={{
-   *   update: { type: 'spring', config: { damping: 8, stiffness: 100 } },
-   *   pulse: { type: 'timing', config: { duration: 1500 } }
+   *   update: { type: 'spring', damping: 8, stiffness: 100 },
+   *   pulse: { type: 'timing', duration: 1500 }
    * }}
    */
   beaconTransitionConfig?: {
@@ -87,7 +87,7 @@ export type ScrubberBeaconProps = SharedProps & {
     /**
      * Transition used for the pulse animation (0->peak->0).
      * This duration represents a single pulse cycle.
-     * @default { type: 'timing', config: { duration: 1000 } }
+     * @default { type: 'timing', duration: 1000 }
      */
     pulse?: TransitionConfig;
   };
@@ -134,7 +134,7 @@ export const ScrubberBeacon = memo(
         () =>
           beaconTransitionConfig?.pulse ?? {
             type: 'timing' as const,
-            config: { duration: pulseDuration },
+            duration: singlePulseDuration,
           },
         [beaconTransitionConfig?.pulse],
       );
