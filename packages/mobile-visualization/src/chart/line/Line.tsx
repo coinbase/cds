@@ -300,9 +300,10 @@ export const Line = memo<LineProps>(
 
             return (
               <Point
-                key={`${seriesId}-renderpoint-${index}`}
+                key={`${seriesId}-renderpoint-${xValue}`}
                 dataX={xValue}
                 dataY={value}
+                transitionConfig={transitionConfig}
                 {...pointConfig}
                 fill={pointFill}
                 opacity={pointConfig.opacity ?? opacity}

@@ -33,7 +33,7 @@ type LabelDimensions = {
  * Provides consistent API with smart defaults and component customization.
  */
 export type ScrubberProps = SharedProps &
-  Pick<ScrubberBeaconProps, 'idlePulse'> & {
+  Pick<ScrubberBeaconProps, 'idlePulse' | 'beaconTransitionConfig'> & {
     /**
      * An array of series IDs that will receive visual emphasis as the user scrubs through the chart.
      * Use this prop to restrict the scrubbing visual behavior to specific series.
@@ -111,6 +111,7 @@ export const Scrubber = memo(
         overlayOffset = 2,
         testID,
         idlePulse,
+        beaconTransitionConfig,
       },
       ref,
     ) => {
@@ -580,6 +581,7 @@ export const Scrubber = memo(
               <Group key={beacon.targetSeries.id}>
                 <BeaconComponent
                   ref={createScrubberBeaconRef(beacon.targetSeries.id)}
+                  beaconTransitionConfig={beaconTransitionConfig}
                   color={beacon.targetSeries?.color}
                   dataX={beacon.x}
                   dataY={beacon.y}

@@ -1,9 +1,12 @@
-import { memo, useMemo } from 'react';
+import { memo, useEffect, useMemo } from 'react';
+import { cancelAnimation, useDerivedValue, useSharedValue } from 'react-native-reanimated';
+import { usePreviousValue } from '@coinbase/cds-common/hooks/usePreviousValue';
 import type { SharedProps } from '@coinbase/cds-common/types';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
-import { Circle, type Color, Group } from '@shopify/react-native-skia';
+import { Circle, type Color, Group, interpolateColors } from '@shopify/react-native-skia';
 
 import type { ChartTextChildren } from './text/ChartText';
+import { buildTransition, defaultTransition, type TransitionConfig } from './utils/animation';
 import { useCartesianChartContext } from './ChartProvider';
 import { ChartText, type ChartTextProps } from './text';
 import { projectPoint } from './utils';
@@ -83,6 +86,11 @@ export type PointConfig = {
    * If not provided, a default label will be generated using the data coordinates.
    */
   accessibilityLabel?: string;
+  /**
+   * Transition configuration for point animations.
+   * Defines how the point transitions when position or color changes.
+   */
+  transitionConfig?: TransitionConfig;
 };
 
 export type PointProps = SharedProps &
@@ -117,15 +125,20 @@ export const Point = memo<PointProps>(
     label,
     labelProps,
     pixelCoordinates,
+    transitionConfig,
     testID,
   }) => {
     const theme = useTheme();
     const effectiveStroke = stroke ?? theme.color.bg;
+    const effectiveFill = fill ?? theme.color.fgPrimary;
 
-    const { getXScale, getYScale } = useCartesianChartContext();
+    const { getXScale, getYScale, animate } = useCartesianChartContext();
 
     const xScale = getXScale();
     const yScale = getYScale(yAxisId);
+
+    const shouldAnimate = animate ?? false;
+    const effectiveTransitionConfig = transitionConfig ?? defaultTransition;
 
     // Use provided pixelCoordinates or calculate from data coordinates
     const pixelCoordinate = useMemo(() => {
@@ -145,27 +158,108 @@ export const Point = memo<PointProps>(
       });
     }, [pixelCoordinates, xScale, yScale, dataX, dataY]);
 
+    const previousPixelCoordinate = usePreviousValue(pixelCoordinate);
+    const previousFill = usePreviousValue(effectiveFill);
+
+    // Animated values for position
+    const animatedX = useSharedValue(pixelCoordinate.x);
+    const animatedY = useSharedValue(pixelCoordinate.y);
+
+    // Animated value for color interpolation (0 = old color, 1 = new color)
+    const colorProgress = useSharedValue(1);
+
+    // Update position when coordinates change
+    useEffect(() => {
+      if (shouldAnimate && previousPixelCoordinate) {
+        animatedX.value = buildTransition(pixelCoordinate.x, effectiveTransitionConfig);
+        animatedY.value = buildTransition(pixelCoordinate.y, effectiveTransitionConfig);
+      } else {
+        cancelAnimation(animatedX);
+        cancelAnimation(animatedY);
+        animatedX.value = pixelCoordinate.x;
+        animatedY.value = pixelCoordinate.y;
+      }
+    }, [
+      pixelCoordinate.x,
+      pixelCoordinate.y,
+      shouldAnimate,
+      previousPixelCoordinate,
+      animatedX,
+      animatedY,
+      effectiveTransitionConfig,
+    ]);
+
+    // Update color when fill changes
+    useEffect(() => {
+      if (shouldAnimate && previousFill && previousFill !== effectiveFill) {
+        colorProgress.value = 0;
+        colorProgress.value = buildTransition(1, effectiveTransitionConfig);
+      } else {
+        cancelAnimation(colorProgress);
+        colorProgress.value = 1;
+      }
+    }, [effectiveFill, shouldAnimate, previousFill, colorProgress, effectiveTransitionConfig]);
+
+    // Create animated point for circles
+    const animatedPoint = useDerivedValue(() => {
+      return { x: animatedX.value, y: animatedY.value };
+    }, [animatedX, animatedY]);
+
+    // Interpolate between previous and current fill color
+    const animatedFillColor = useDerivedValue(() => {
+      if (!previousFill || previousFill === effectiveFill) {
+        return effectiveFill;
+      }
+      return interpolateColors(colorProgress.value, [0, 1], [previousFill, effectiveFill]);
+    }, [colorProgress, previousFill, effectiveFill]);
+
     if (!xScale || !yScale) {
       return null;
     }
 
+    // If animation is disabled or on first render, use static rendering
+    if (!shouldAnimate || !previousPixelCoordinate) {
+      return (
+        <>
+          <Group opacity={opacity}>
+            {/* Outer stroke circle */}
+            {strokeWidth > 0 && (
+              <Circle
+                c={{ x: pixelCoordinate.x, y: pixelCoordinate.y }}
+                color={effectiveStroke as Color}
+                r={radius + strokeWidth / 2}
+              />
+            )}
+            {/* Inner fill circle */}
+            <Circle
+              c={{ x: pixelCoordinate.x, y: pixelCoordinate.y }}
+              color={effectiveFill as Color}
+              r={radius - strokeWidth / 2}
+            />
+          </Group>
+          {label && (
+            <ChartText x={pixelCoordinate.x} y={pixelCoordinate.y} {...labelProps}>
+              {label}
+            </ChartText>
+          )}
+        </>
+      );
+    }
+
+    // Animated rendering
     return (
       <>
         <Group opacity={opacity}>
           {/* Outer stroke circle */}
           {strokeWidth > 0 && (
             <Circle
-              c={{ x: pixelCoordinate.x, y: pixelCoordinate.y }}
+              c={animatedPoint}
               color={effectiveStroke as Color}
               r={radius + strokeWidth / 2}
             />
           )}
-          {/* Inner fill circle */}
-          <Circle
-            c={{ x: pixelCoordinate.x, y: pixelCoordinate.y }}
-            color={(fill ?? theme.color.fgPrimary) as Color}
-            r={radius - strokeWidth / 2}
-          />
+          {/* Inner fill circle with animated color */}
+          <Circle c={animatedPoint} color={animatedFillColor} r={radius - strokeWidth / 2} />
         </Group>
         {label && (
           <ChartText x={pixelCoordinate.x} y={pixelCoordinate.y} {...labelProps}>

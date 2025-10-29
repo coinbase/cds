@@ -23,8 +23,10 @@ const glowRadius = 10;
 const pulseRadius = 15;
 const strokeWidth = 2;
 
-const pulseDuration = 2000; // 2 seconds
-const singlePulseDuration = 1000; // 1 second
+const defaultPulseTransitionConfig: TransitionConfig = {
+  type: 'timing',
+  duration: 1000,
+};
 
 export type ScrubberBeaconRef = {
   /**
@@ -131,11 +133,7 @@ export const ScrubberBeacon = memo(
         [beaconTransitionConfig?.update],
       );
       const pulseTransitionConfig = useMemo(
-        () =>
-          beaconTransitionConfig?.pulse ?? {
-            type: 'timing' as const,
-            duration: singlePulseDuration,
-          },
+        () => beaconTransitionConfig?.pulse ?? defaultPulseTransitionConfig,
         [beaconTransitionConfig?.pulse],
       );
 
