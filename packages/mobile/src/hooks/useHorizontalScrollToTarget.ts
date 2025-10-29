@@ -8,7 +8,7 @@ import type {
 } from 'react-native';
 import throttle from 'lodash/throttle';
 
-type Options = {
+export type UseHorizontalScrollToTargetOptions = {
   scrollThrottleWaitTime?: number;
   activeTarget?: View | null;
 };
@@ -20,10 +20,10 @@ type ScrollDetails = { xPosition: number; containerWidth: number; contentWidth: 
  * Useful for horizontally scrollable content that needs to show overflow indicators.
  * Optionally handles scrolling to an active target element.
  */
-export const useHorizontalScroll = ({
+export const useHorizontalScrollToTarget = ({
   scrollThrottleWaitTime = 200,
   activeTarget,
-}: Options = {}) => {
+}: UseHorizontalScrollToTargetOptions = {}) => {
   const scrollRef = useRef<ScrollView>(null);
   const scrollDetails = useRef<ScrollDetails>({ xPosition: 0, containerWidth: 0, contentWidth: 0 });
   const [isScrollContentOverflowing, setIsScrollContentOverflowing] = useState(false);

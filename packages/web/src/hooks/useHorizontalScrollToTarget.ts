@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import throttle from 'lodash/throttle';
 
-type Options = {
+export type UseHorizontalScrollToTargetOptions = {
   scrollThrottleWaitTime?: number;
   activeTarget?: HTMLElement | null;
   scrollPadding?: number;
@@ -18,12 +18,12 @@ type Options = {
  * @param scrollPadding - Padding to add when scrolling to position elements (useful for paddles/overlays, default: 0)
  * @param overflowThreshold - Threshold for detecting if content is offscreen (default: 5px)
  */
-export const useHorizontalScroll = ({
+export const useHorizontalScrollToTarget = ({
   scrollThrottleWaitTime = 200,
   activeTarget,
   scrollPadding = 0,
   overflowThreshold = 5,
-}: Options = {}) => {
+}: UseHorizontalScrollToTargetOptions = {}) => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [isScrollContentOffscreenLeft, setIsScrollContentOffscreenLeft] = useState(false);
   const [isScrollContentOffscreenRight, setIsScrollContentOffscreenRight] = useState(false);

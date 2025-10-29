@@ -4,7 +4,7 @@ import type { View } from 'react-native';
 import { useTabsContext } from '@coinbase/cds-common/tabs/TabsContext';
 import type { TabValue } from '@coinbase/cds-common/tabs/useTabs';
 
-import { useHorizontalScroll } from '../hooks/useHorizontalScroll';
+import { useHorizontalScrollToTarget } from '../hooks/useHorizontalScrollToTarget';
 import { Box, OverflowGradient } from '../layout';
 import { type TabNavigationBaseProps, Tabs } from '../tabs';
 
@@ -69,7 +69,7 @@ const TabbedChipsComponent = memo(
       handleScroll,
       handleScrollContainerLayout,
       handleScrollContentSizeChange,
-    } = useHorizontalScroll({ activeTarget: scrollTarget });
+    } = useHorizontalScrollToTarget({ activeTarget: scrollTarget });
 
     return (
       <Box

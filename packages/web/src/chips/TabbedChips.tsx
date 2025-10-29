@@ -3,7 +3,7 @@ import { useTabsContext } from '@coinbase/cds-common/tabs/TabsContext';
 import type { TabValue } from '@coinbase/cds-common/tabs/useTabs';
 import { css } from '@linaria/core';
 
-import { useHorizontalScroll } from '../hooks/useHorizontalScroll';
+import { useHorizontalScrollToTarget } from '../hooks/useHorizontalScrollToTarget';
 import { type BoxBaseProps, HStack } from '../layout';
 import { Paddle, type TabNavigationBaseProps, Tabs } from '../tabs';
 
@@ -68,7 +68,7 @@ const TabbedChipsComponent = memo(
   ) {
     const [scrollTarget, setScrollTarget] = useState<HTMLElement | null>(null);
     const { scrollRef, isScrollContentOffscreenLeft, isScrollContentOffscreenRight, handleScroll } =
-      useHorizontalScroll({ activeTarget: scrollTarget, scrollPadding: 50 });
+      useHorizontalScrollToTarget({ activeTarget: scrollTarget, scrollPadding: 50 });
     const activeTab = useMemo(() => tabs.find((tab) => tab.id === value), [tabs, value]);
 
     const handleChange = useCallback(
