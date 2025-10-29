@@ -77,9 +77,9 @@ export type ListCellBaseProps = Polymorphic.ExtendableProps<
      * @default 'normal'
      */
     spacingVariant?: 'normal' | 'compact' | 'condensed';
-    /** Description of content. Max 1 line (with title) or 2 lines (without), otherwise will truncate. */
+    /** Description of content. Max 1 line (with title) or 2 lines (without), otherwise will truncate. This prop is only intended to accept a string or Text component; other use cases, while allowed, are not supported and may result in unexpected behavior. For arbitrary content, use `descriptionNode`. */
     description?: React.ReactNode;
-    /** React node to render instead of the <Text>{description}</Text> component. */
+    /** React node to render description. Takes precedence over `description`. */
     descriptionNode?: React.ReactNode;
     /**
      * When there is no description the title will take up two lines by default.
@@ -100,9 +100,9 @@ export type ListCellBaseProps = Polymorphic.ExtendableProps<
     media?: React.ReactElement;
     /** Allow the description to span multiple lines. This *will* break fixed height requirements, so should not be used in a `FlatList`. */
     multiline?: boolean;
-    /** Title of content. Max 1 line (with description) or 2 lines (without), otherwise will truncate. */
+    /** Title of content. Max 1 line (with description) or 2 lines (without), otherwise will truncate. This prop is only intended to accept a string or Text component; other use cases, while allowed, are not supported and may result in unexpected behavior. For arbitrary content, use `titleNode`. */
     title?: React.ReactNode;
-    /** React node to render instead of the <Text>{title}</Text> component. */
+    /** React node to render title. Takes precedence over `title`. */
     titleNode?: React.ReactNode;
     /** Class names for the components */
     classNames?: {
