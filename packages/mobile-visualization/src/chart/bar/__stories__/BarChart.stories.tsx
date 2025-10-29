@@ -217,6 +217,8 @@ const MultipleYAxes = () => {
 
 const initialData = [45, 52, 38, 45, 19, 23, 32];
 
+const MyCustomLine = memo(({ animate, ...props }: SolidLineProps) => <SolidLine {...props} />);
+
 const UpdatingChartValues = () => {
   const [data, setData] = useState(initialData);
 
@@ -295,7 +297,7 @@ const UpdatingChartValues = () => {
           domain: { max: 250 },
         }}
       >
-        <ReferenceLine LineComponent={SolidLine} dataY={0} />
+        <ReferenceLine LineComponent={MyCustomLine} dataY={0} />
       </BarChart>
       <Button
         onPress={() => setData((data) => (data[0] > 200 ? initialData : data.map((d) => d + 50)))}
