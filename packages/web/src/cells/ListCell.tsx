@@ -23,8 +23,8 @@ export const listCellDefaultElement = 'div';
 export type ListCellDefaultElement = typeof listCellDefaultElement;
 
 export const condensedInnerSpacing = {
-  paddingX: 2,
-  paddingY: 0.5,
+  paddingX: 3,
+  paddingY: 1,
   marginX: 0,
 } as const satisfies CellSpacing;
 // no padding outside of the pressable area
