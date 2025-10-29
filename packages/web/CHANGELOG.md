@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.17.6 (10/28/2025 PST)
+
+#### 🐞 Fixes
+
+- Fixed Select height on web.
+
 ## 8.17.5 (10/27/2025 PST)
 
 #### 🐞 Fixes
