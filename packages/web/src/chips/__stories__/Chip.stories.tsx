@@ -34,7 +34,7 @@ const ChipExamples = ({
 
   return (
     <Box flexDirection={direction} flexWrap="wrap" gap={2}>
-      <Chip {...props}>{label ?? <Text font={textFont}>Label only</Text>}</Chip>
+      <Chip {...props}>{label ?? 'Label only'}</Chip>
       <Chip {...props} start={<RemoteImage {...assetIconProps} />} />
       <Chip
         {...props}
@@ -42,17 +42,17 @@ const ChipExamples = ({
         start={<RemoteImage {...assetIconProps} />}
       />
       <Chip ref={divRef} {...props} start={<RemoteImage {...assetIconProps} />}>
-        {label ?? <Text font={textFont}>Media + Label</Text>}
+        {label ?? 'Media + Label'}
       </Chip>
       <Chip {...props} end={<Icon active color="fg" name="filter" size="xs" />}>
-        <Text font={textFont}>Label + Icon</Text>
+        Label + Icon
       </Chip>
       <Chip
         {...props}
         end={<Icon active color="fg" name="caretDown" size="xs" />}
         start={<RemoteImage {...assetIconProps} />}
       >
-        {label ?? <Text font={textFont}>All three</Text>}
+        {label ?? 'All three'}
       </Chip>
       <Chip
         {...props}
@@ -72,7 +72,7 @@ const ChipExamples = ({
         onClick={() => {}}
         start={<RemoteImage {...assetIconProps} />}
       >
-        {label ?? <Text font={textFont}>Pressable</Text>}
+        {label ?? 'Pressable'}
       </Chip>
       <Chip
         {...props}
@@ -81,7 +81,7 @@ const ChipExamples = ({
         onClick={() => {}}
         start={<RemoteImage {...assetIconProps} />}
       >
-        {label ?? <Text font={textFont}>Pressable with a11y label</Text>}
+        {label ?? 'Pressable with a11y label'}
       </Chip>
       <Chip
         {...props}
@@ -90,7 +90,7 @@ const ChipExamples = ({
         onClick={() => {}}
         start={<RemoteImage {...assetIconProps} />}
       >
-        {label ?? <Text font={textFont}>Disabled</Text>}
+        {label ?? 'Disabled'}
       </Chip>
     </Box>
   );
