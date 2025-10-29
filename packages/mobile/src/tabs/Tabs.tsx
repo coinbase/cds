@@ -1,12 +1,4 @@
-import React, {
-  forwardRef,
-  memo,
-  useCallback,
-  useImperativeHandle,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import React, { forwardRef, memo, useCallback, useImperativeHandle, useRef, useState } from 'react';
 import { View } from 'react-native';
 import Animated, {
   useAnimatedStyle,
@@ -69,6 +61,8 @@ export type TabsProps<T extends string = string> = {
   TabsActiveIndicatorComponent: TabsActiveIndicatorComponent;
   /** Background color passed to the TabsActiveIndicatorComponent. */
   activeBackground?: ThemeVars.Color;
+  /** Optional callback to receive the active tab element. */
+  onActiveTabElementChange?: (element: View | null) => void;
 } & Omit<TabsOptions<T>, 'tabs'> &
   Omit<HStackProps, 'onChange'>;
 
@@ -91,6 +85,7 @@ const TabsComponent = memo(
         position = 'relative',
         alignSelf = 'flex-start',
         opacity,
+        onActiveTabElementChange,
         ...props
       }: TabsProps<T>,
       ref: React.ForwardedRef<View>,
@@ -112,23 +107,20 @@ const TabsComponent = memo(
         );
       }, [activeTab, refMap]);
 
+      const registerRef = useCallback(
+        (tabId: string, ref: View) => {
+          refMap.registerRef(tabId, ref);
+          if (activeTab?.id === tabId) {
+            onActiveTabElementChange?.(ref);
+          }
+        },
+        [activeTab, onActiveTabElementChange, refMap],
+      );
+
       if (previousActiveRef.current !== activeTab) {
         previousActiveRef.current = activeTab;
         updateActiveTabRect();
       }
-
-      const tabComponents = useMemo(
-        () =>
-          tabs.map(({ id, Component: CustomTabComponent, disabled: tabDisabled, ...props }) => {
-            const RenderedTab = CustomTabComponent ?? TabComponent;
-            return (
-              <TabContainer key={id} id={id} registerRef={refMap.registerRef}>
-                <RenderedTab disabled={tabDisabled} id={id} {...props} />
-              </TabContainer>
-            );
-          }),
-        [tabs, TabComponent, refMap],
-      );
 
       return (
         <HStack
@@ -145,7 +137,14 @@ const TabsComponent = memo(
               activeTabRect={activeTabRect}
               background={activeBackground}
             />
-            {tabComponents}
+            {tabs.map(({ id, Component: CustomTabComponent, disabled: tabDisabled, ...props }) => {
+              const RenderedTab = CustomTabComponent ?? TabComponent;
+              return (
+                <TabContainer key={id} id={id} registerRef={registerRef}>
+                  <RenderedTab disabled={tabDisabled} id={id} {...props} />
+                </TabContainer>
+              );
+            })}
           </TabsContext.Provider>
         </HStack>
       );

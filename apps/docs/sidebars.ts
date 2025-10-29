@@ -158,6 +158,11 @@ const sidebars: SidebarsConfig = {
             },
             {
               type: 'doc',
+              id: 'components/inputs/MediaChip/mediaChip',
+              label: 'MediaChip',
+            },
+            {
+              type: 'doc',
               id: 'components/inputs/Interactable/interactable',
               label: 'Interactable',
             },

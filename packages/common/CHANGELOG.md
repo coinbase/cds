@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.19.0 (10/29/2025 PST)
+
+#### 🚀 Updates
+
+- Added getMediaChipSpacingProps util function. [[#125](https://github.com/coinbase/cds/pull/125)]
+
 ## 8.18.0 ((10/29/2025, 10:09 AM PST))
 
 This is an artificial version bump with no new change.

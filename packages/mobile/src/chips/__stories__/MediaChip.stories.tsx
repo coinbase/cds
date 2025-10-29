@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import { useRef } from 'react';
 import type { View } from 'react-native';
 import { assets } from '@cbhq/cds-common/internal/data/assets';
 import { NoopFn } from '@cbhq/cds-common/utils/mockUtils';
@@ -9,17 +9,16 @@ import { Box } from '../../layout';
 import type { RemoteImageProps } from '../../media';
 import { RemoteImage } from '../../media';
 import { Text } from '../../typography/Text';
-import { Chip } from '../Chip';
 import type { ChipBaseProps } from '../ChipProps';
+import { MediaChip } from '../MediaChip';
 
-const ChipExamples = ({
+const MediaChipExamples = ({
   label,
   flexDirection = 'column',
   ...props
 }: { label?: string; flexDirection?: 'row' | 'column' } & Omit<ChipBaseProps, 'children'>) => {
   const ref = useRef<View>(null);
   const mediaSize = props.compact ? 16 : 24;
-  const textFont = props.compact ? 'label1' : 'headline';
   const assetIconProps: RemoteImageProps = {
     height: mediaSize,
     shape: 'circle',
@@ -29,74 +28,58 @@ const ChipExamples = ({
 
   return (
     <Box flexDirection={flexDirection} flexGrow={1} flexWrap="wrap" gap={1}>
-      <Chip ref={ref} {...props}>
+      <MediaChip ref={ref} {...props}>
         {label ?? 'Label only'}
-      </Chip>
-      <Chip {...props} start={<RemoteImage {...assetIconProps} />} />
-      <Chip
+      </MediaChip>
+      <MediaChip {...props} start={<RemoteImage {...assetIconProps} />} />
+      <MediaChip
         {...props}
         end={<Icon active color="fg" name="caretDown" size="xs" />}
         start={<RemoteImage {...assetIconProps} />}
       />
-      <Chip {...props} start={<RemoteImage {...assetIconProps} />}>
+      <MediaChip {...props} start={<RemoteImage {...assetIconProps} />}>
         {label ?? 'Media + Label'}
-      </Chip>
-      <Chip {...props} end={<Icon active color="fg" name="filter" size="xs" />}>
+      </MediaChip>
+      <MediaChip {...props} end={<Icon active color="fg" name="filter" size="xs" />}>
         Label + Icon
-      </Chip>
-      <Chip
+      </MediaChip>
+      <MediaChip
         {...props}
         end={<Icon active color="fg" name="caretDown" size="xs" />}
         start={<RemoteImage {...assetIconProps} />}
       >
         {label ?? 'All three'}
-      </Chip>
-      <Chip
-        {...props}
-        end={<Icon active color="fg" name="caretDown" size="xs" />}
-        start={<RemoteImage {...assetIconProps} />}
-      >
-        {label ?? <Text font={textFont}>Looooooooooooooong Label</Text>}
-      </Chip>
-      <Chip
+      </MediaChip>
+      <MediaChip
         {...props}
         end={<Icon active color="fg" name="caretDown" size="xs" />}
         onPress={NoopFn}
         start={<RemoteImage {...assetIconProps} />}
       >
         {label ?? 'Pressable'}
-      </Chip>
-      <Chip
-        {...props}
-        disabled
-        end={<Icon active color="fg" name="caretDown" size="xs" />}
-        onPress={NoopFn}
-        start={<RemoteImage {...assetIconProps} />}
-      >
-        {label ?? 'Disabled'}
-      </Chip>
+      </MediaChip>
     </Box>
   );
 };
 
-const ChipScreen = () => (
+const MediaChipScreen = () => (
   <ExampleScreen>
-    <Example title="Default">
-      <ChipExamples />
+    <Example title="Default (Automatic Spacing)">
+      <MediaChipExamples />
     </Example>
     <Example title="Inverted">
-      <ChipExamples inverted />
+      <MediaChipExamples inverted />
     </Example>
     <Example title="Compact">
-      <ChipExamples compact />
+      <MediaChipExamples compact />
     </Example>
     <Example title="Long text">
-      <ChipExamples label="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec euismod, nisl eget" />
+      <MediaChipExamples label="Lorem ipsum dolor sit amet, consectetur adipiscing elit" />
     </Example>
     <Example title="Row Layout">
-      <ChipExamples flexDirection="row" />
+      <MediaChipExamples flexDirection="row" />
     </Example>
   </ExampleScreen>
 );
 
-export default ChipScreen;
+export default MediaChipScreen;
