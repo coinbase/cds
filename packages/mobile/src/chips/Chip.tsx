@@ -1,6 +1,5 @@
-import React, { forwardRef, Fragment, memo, useMemo } from 'react';
+import React, { forwardRef, Fragment, memo } from 'react';
 import type { View } from 'react-native';
-import { getChipsSpacingProps } from '@coinbase/cds-common/chips/getChipsSpacingProps';
 import { chipMaxWidth } from '@coinbase/cds-common/tokens/chip';
 
 import { Box, HStack } from '../layout';
@@ -22,9 +21,9 @@ export const Chip = memo(
       inverted,
       maxWidth = chipMaxWidth,
       compact,
-      gap,
-      paddingX,
-      paddingY,
+      gap = 1,
+      paddingX = compact ? 1.5 : 2,
+      paddingY = compact ? 0.5 : 1,
       alignItems = 'center',
       justifyContent,
       padding,
@@ -55,45 +54,20 @@ export const Chip = memo(
       style: [style, styles?.root],
     };
 
-    const spacingProps = useMemo(() => {
-      const defaults = getChipsSpacingProps({
-        compact: !!compact,
-        start: !!start,
-        end: !!end,
-        children: !!children,
-      });
-      return {
-        gap: gap ?? defaults.gap,
-        padding: padding ?? defaults.padding,
-        paddingBottom: paddingBottom ?? defaults.paddingBottom,
-        paddingEnd: paddingEnd ?? defaults.paddingEnd,
-        paddingStart: paddingStart ?? defaults.paddingStart,
-        paddingTop: paddingTop ?? defaults.paddingTop,
-        paddingX: paddingX ?? defaults.paddingX,
-        paddingY: paddingY ?? defaults.paddingY,
-      };
-    }, [
-      children,
-      compact,
-      end,
-      gap,
-      padding,
-      paddingBottom,
-      paddingEnd,
-      paddingStart,
-      paddingTop,
-      paddingX,
-      paddingY,
-      start,
-    ]);
-
     const content = (
       <HStack
         alignItems={alignItems}
+        gap={gap}
         justifyContent={justifyContent}
         maxWidth={maxWidth}
+        padding={padding}
+        paddingBottom={paddingBottom}
+        paddingEnd={paddingEnd}
+        paddingStart={paddingStart}
+        paddingTop={paddingTop}
+        paddingX={paddingX}
+        paddingY={paddingY}
         style={[contentStyle, styles?.content]}
-        {...spacingProps}
       >
         {start}
         {typeof children === 'string' ? (

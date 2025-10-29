@@ -7,8 +7,8 @@ import type { DropdownProps } from '../dropdown';
 import { Dropdown } from '../dropdown';
 import { AnimatedCaret } from '../motion/AnimatedCaret';
 
-import { Chip } from './Chip';
 import type { ChipProps } from './ChipProps';
+import { MediaChip } from './MediaChip';
 
 export const SELECT_CHIP_DEFAULT_TEST_ID = 'select-chip';
 
@@ -92,7 +92,7 @@ export const SelectChip = memo(
         value={value}
         width={width}
       >
-        <Chip
+        <MediaChip
           ref={mergedRefs}
           noScaleOnPress
           disabled={disabled}
@@ -103,7 +103,7 @@ export const SelectChip = memo(
           {...props}
         >
           {valueLabel ?? value ?? placeholder}
-        </Chip>
+        </MediaChip>
       </Dropdown>
     );
   }),

@@ -311,6 +311,10 @@ export const routes = [
       require('@coinbase/cds-mobile/animation/__stories__/LottieStatusAnimation.stories').default,
   },
   {
+    key: 'MediaChip',
+    getComponent: () => require('@coinbase/cds-mobile/chips/__stories__/MediaChip.stories').default,
+  },
+  {
     key: 'ModalBackButton',
     getComponent: () =>
       require('@coinbase/cds-mobile/overlays/__stories__/ModalBackButton.stories').default,

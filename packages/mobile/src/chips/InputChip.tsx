@@ -3,8 +3,8 @@ import type { View } from 'react-native';
 
 import { Icon } from '../icons';
 
-import { Chip } from './Chip';
 import type { InputChipProps } from './ChipProps';
+import { MediaChip } from './MediaChip';
 
 export const InputChip = memo(
   forwardRef(function InputChip(
@@ -17,7 +17,7 @@ export const InputChip = memo(
     ref: React.ForwardedRef<View>,
   ) {
     return (
-      <Chip
+      <MediaChip
         ref={ref}
         inverted
         accessibilityLabel={accessibilityLabel}
@@ -33,7 +33,7 @@ export const InputChip = memo(
         {...props}
       >
         {value}
-      </Chip>
+      </MediaChip>
     );
   }),
 );

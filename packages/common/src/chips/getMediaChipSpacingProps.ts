@@ -1,18 +1,18 @@
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 
-type GetChipsSpacingPropsParams = {
+type GetMediaChipSpacingPropsParams = {
   start?: boolean;
   end?: boolean;
   children?: boolean;
   compact?: boolean;
 };
 
-export const getChipsSpacingProps = ({
+export const getMediaChipSpacingProps = ({
   compact,
   start,
   end,
   children,
-}: GetChipsSpacingPropsParams): {
+}: GetMediaChipSpacingPropsParams): {
   paddingX?: ThemeVars.Space;
   paddingY?: ThemeVars.Space;
   padding?: ThemeVars.Space;
@@ -36,7 +36,7 @@ export const getChipsSpacingProps = ({
   }
   if (start && !children && !end) {
     // start (media) only
-    return { padding: 1 };
+    return { paddingY: 1, paddingX: 1 };
   }
   if (start && !children && end) {
     // start (media) and end (icon) only

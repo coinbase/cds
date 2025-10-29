@@ -7,7 +7,7 @@ import { useDimensions } from '../hooks/useDimensions';
 import { type BoxBaseProps, HStack } from '../layout';
 import { Paddle, type TabNavigationBaseProps, Tabs } from '../tabs';
 
-import { Chip } from './Chip';
+import { MediaChip } from './MediaChip';
 
 const scrollPadding = 5;
 
@@ -23,7 +23,7 @@ const TabComponent = <T extends string = string>({ label = '', id, ...tabProps }
   const isActive = useMemo(() => activeTab?.id === id, [activeTab, id]);
   const handleClick = useCallback(() => updateActiveTab(id), [id, updateActiveTab]);
   return (
-    <Chip
+    <MediaChip
       aria-selected={isActive}
       inverted={isActive}
       onClick={handleClick}
@@ -32,7 +32,7 @@ const TabComponent = <T extends string = string>({ label = '', id, ...tabProps }
       {...tabProps}
     >
       {label}
-    </Chip>
+    </MediaChip>
   );
 };
 

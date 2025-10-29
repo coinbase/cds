@@ -1,5 +1,4 @@
 import { forwardRef, Fragment, memo, type ReactNode, useMemo } from 'react';
-import { getChipsSpacingProps } from '@coinbase/cds-common/chips/getChipsSpacingProps';
 import { curves, durations } from '@coinbase/cds-common/motion/tokens';
 import { chipMaxWidth } from '@coinbase/cds-common/tokens/chip';
 import { css } from '@linaria/core';
@@ -30,11 +29,11 @@ export const Chip = memo(
       width = 'fit-content',
       height = 'fit-content',
       compact,
-      gap = 0.75,
+      gap = 1,
       start,
       end,
-      paddingX,
-      paddingY,
+      paddingX = compact ? 1.5 : 2,
+      paddingY = compact ? 0.5 : 1,
       padding,
       paddingTop,
       paddingBottom,
@@ -72,46 +71,21 @@ export const Chip = memo(
       maxWidth,
     };
 
-    const spacingProps = useMemo(() => {
-      const defaults = getChipsSpacingProps({
-        compact: !!compact,
-        start: !!start,
-        end: !!end,
-        children: !!children,
-      });
-      return {
-        gap: gap ?? defaults.gap,
-        padding: padding ?? defaults.padding,
-        paddingBottom: paddingBottom ?? defaults.paddingBottom,
-        paddingEnd: paddingEnd ?? defaults.paddingEnd,
-        paddingStart: paddingStart ?? defaults.paddingStart,
-        paddingTop: paddingTop ?? defaults.paddingTop,
-        paddingX: paddingX ?? defaults.paddingX,
-        paddingY: paddingY ?? defaults.paddingY,
-      };
-    }, [
-      compact,
-      start,
-      end,
-      children,
-      gap,
-      padding,
-      paddingBottom,
-      paddingEnd,
-      paddingStart,
-      paddingTop,
-      paddingX,
-      paddingY,
-    ]);
-
     const content = useMemo(() => {
       return (
         <HStack
           alignItems={alignItems}
           className={classNames?.content}
+          gap={gap}
           justifyContent={justifyContent}
           maxWidth={maxWidth}
-          {...spacingProps}
+          padding={padding}
+          paddingBottom={paddingBottom}
+          paddingEnd={paddingEnd}
+          paddingStart={paddingStart}
+          paddingTop={paddingTop}
+          paddingX={paddingX}
+          paddingY={paddingY}
           style={{ ...contentStyle, ...styles?.content }}
         >
           {start}
@@ -128,9 +102,16 @@ export const Chip = memo(
     }, [
       alignItems,
       classNames?.content,
+      gap,
       justifyContent,
       maxWidth,
-      spacingProps,
+      padding,
+      paddingBottom,
+      paddingEnd,
+      paddingStart,
+      paddingTop,
+      paddingX,
+      paddingY,
       contentStyle,
       styles?.content,
       start,

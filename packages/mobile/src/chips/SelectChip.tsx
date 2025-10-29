@@ -13,8 +13,8 @@ import { Tray } from '../overlays';
 import type { DrawerRefBaseProps } from '../overlays/drawer/Drawer';
 import type { TrayBaseProps } from '../overlays/tray/Tray';
 
-import { Chip } from './Chip';
 import type { ChipProps } from './ChipProps';
+import { MediaChip } from './MediaChip';
 
 export type SelectChipProps = Pick<
   SelectBaseProps,
@@ -112,7 +112,7 @@ export const SelectChip = memo(
 
       return (
         <SelectProvider value={context}>
-          <Chip
+          <MediaChip
             ref={refs}
             accessibilityLabel={accessibilityLabel ?? value}
             accessibilityRole="menu"
@@ -136,7 +136,7 @@ export const SelectChip = memo(
             {...props}
           >
             {valueLabel ?? value ?? placeholder}
-          </Chip>
+          </MediaChip>
           {isSelectTrayOpen && (
             <Tray
               ref={trayRef}
