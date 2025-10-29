@@ -3,7 +3,7 @@ import { memo, useId, useMemo } from 'react';
 import { useCartesianChartContext } from '../ChartProvider';
 import { Gradient as GradientDef } from '../gradient';
 import { Path, type PathProps } from '../Path';
-import { getGradientScale, type Gradient, processGradient } from '../utils';
+import { applyOpacityToColor, getGradientConfig, type Gradient } from '../utils';
 
 import type { AreaComponentProps } from './Area';
 
@@ -53,9 +53,11 @@ export const GradientArea = memo<GradientAreaProps>(
   ({
     d,
     fill = 'var(--color-fgPrimary)',
+    // todo: should we drop fillOpacity?
     fillOpacity = 1,
     peakColor,
     baselineColor,
+    // todo: what about peak opacity?
     peakOpacity = 0.3,
     baselineOpacity = 0,
     baseline,
@@ -64,160 +66,69 @@ export const GradientArea = memo<GradientAreaProps>(
     seriesId,
     ...pathProps
   }) => {
-    const context = useCartesianChartContext();
+    const { drawingArea, getXScale, getYScale, getYAxis } = useCartesianChartContext();
     const patternId = useId();
 
-    // Get gradient from series if seriesId is provided and gradient is not
-    const targetSeries = seriesId ? context.getSeries(seriesId) : undefined;
-    const seriesGradient = targetSeries?.gradient;
+    const xScale = getXScale();
+    const yScale = getYScale(yAxisId);
+    const yAxisConfig = getYAxis(yAxisId);
 
-    // Get scales and drawing area
-    const xScale = context.getXScale();
-    const yScale = context.getYScale(yAxisId);
-    const yRange = yScale?.range();
-    const yDomain = yScale?.domain();
-    const drawingArea = context.drawingArea;
+    const gradient = useMemo((): Gradient | undefined => {
+      if (gradientProp) return gradientProp;
+      if (!yAxisConfig) return;
 
-    // Calculate gradient configuration from gradient or create default
+      const { min, max } = yAxisConfig.domain;
+      const baselineValue = min >= 0 ? min : max <= 0 ? max : (baseline ?? 0);
+
+      // Diverging gradient (data crosses zero)
+      if (min < 0 && max > 0) {
+        return {
+          axis: 'y' as const,
+          stops: [
+            { offset: min, color: fill, opacity: 0.4 },
+            { offset: baselineValue, color: fill, opacity: 0 },
+            { offset: max, color: fill, opacity: 0.4 },
+          ],
+        };
+      }
+
+      // Simple gradient (all positive or all negative)
+      const peakValue = min >= 0 ? max : min;
+      return {
+        axis: 'y' as const,
+        stops:
+          max <= 0
+            ? [
+                { offset: peakValue, color: fill, opacity: peakOpacity },
+                { offset: baselineValue, color: fill, opacity: baselineOpacity },
+              ]
+            : [
+                { offset: baselineValue, color: fill, opacity: baselineOpacity },
+                { offset: peakValue, color: fill, opacity: peakOpacity },
+              ],
+      };
+    }, [gradientProp, yAxisConfig, fill, baseline, peakOpacity, baselineOpacity]);
+
     const gradientConfig = useMemo(() => {
-      // Use explicit gradient prop, or fall back to series gradient, or create default
-      let effectiveGradient: Gradient | undefined = gradientProp ?? seriesGradient;
+      if (!gradient || !xScale || !yScale) return;
 
-      console.log('[GradientArea] Starting gradient config', {
-        seriesId,
-        hasGradientProp: !!gradientProp,
-        hasSeriesGradient: !!seriesGradient,
-        hasYScale: !!yScale,
-        yDomain,
-      });
+      const config = getGradientConfig(gradient, xScale, yScale);
+      if (!config) return;
 
-      if (!effectiveGradient && yScale && yDomain) {
-        // Create default diverging gradient around baseline
-        const [minValue, maxValue] = yDomain;
-
-        let shouldDiverge = false;
-        let baselineValue = 0;
-
-        if (minValue >= 0) {
-          // All positive: simple gradient from bottom
-          baselineValue = minValue;
-        } else if (maxValue <= 0) {
-          // All negative: simple gradient from top
-          baselineValue = maxValue;
-        } else {
-          // Crosses zero: use diverging gradient
-          shouldDiverge = true;
-          baselineValue = baseline ?? 0;
-        }
-
-        const effectivePeakColor = peakColor ?? fill;
-        const effectiveBaselineColor = baselineColor ?? fill;
-
-        // Create default gradient using gradient
-        if (shouldDiverge) {
-          effectiveGradient = {
-            axis: 'y',
-            stops: [
-              { offset: minValue, color: effectivePeakColor, opacity: peakOpacity },
-              { offset: baselineValue, color: effectiveBaselineColor, opacity: baselineOpacity },
-              { offset: maxValue, color: effectivePeakColor, opacity: peakOpacity },
-            ],
-          };
-        } else {
-          const peakValue = minValue >= 0 ? maxValue : minValue;
-          const isNegative = maxValue <= 0;
-
-          effectiveGradient = {
-            axis: 'y',
-            stops: isNegative
-              ? [
-                  { offset: peakValue, color: effectivePeakColor, opacity: peakOpacity },
-                  {
-                    offset: baselineValue,
-                    color: effectiveBaselineColor,
-                    opacity: baselineOpacity,
-                  },
-                ]
-              : [
-                  {
-                    offset: baselineValue,
-                    color: effectiveBaselineColor,
-                    opacity: baselineOpacity,
-                  },
-                  { offset: peakValue, color: effectivePeakColor, opacity: peakOpacity },
-                ],
-          };
-        }
-
-        console.log('[GradientArea] Created default gradient', {
-          seriesId,
-          shouldDiverge,
-          baselineValue,
-          effectiveGradient,
-        });
+      if (fillOpacity < 1) {
+        return {
+          ...config,
+          colors: config.colors.map((color: string) => applyOpacityToColor(color, fillOpacity)),
+        };
       }
 
-      if (!effectiveGradient) {
-        console.warn('[GradientArea] No effective gradient', { seriesId });
-        return null;
-      }
+      return config;
+    }, [gradient, xScale, yScale, fillOpacity]);
 
-      console.log('[GradientArea] Processing gradient', {
-        seriesId,
-        gradient: effectiveGradient,
-        hasXScale: !!xScale,
-        hasYScale: !!yScale,
-      });
-
-      const scale = getGradientScale(effectiveGradient, xScale, yScale);
-      if (!scale) {
-        console.warn('[GradientArea] Gradient requires a valid numeric or categorical scale', {
-          seriesId,
-          gradient: effectiveGradient,
-        });
-        return null;
-      }
-
-      console.log('[GradientArea] Gradient scale obtained', {
-        seriesId,
-        scaleDomain: scale.domain(),
-        scaleRange: scale.range(),
-      });
-
-      const processed = processGradient(effectiveGradient, scale);
-      if (!processed) {
-        console.warn('[GradientArea] Failed to process gradient', { seriesId });
-        return null;
-      }
-
-      console.log('[GradientArea] Gradient processed successfully', {
-        seriesId,
-        config: processed,
-      });
-
-      return processed;
-    }, [
-      gradientProp,
-      seriesGradient,
-      yScale,
-      yDomain,
-      baseline,
-      peakColor,
-      baselineColor,
-      peakOpacity,
-      baselineOpacity,
-      fill,
-      xScale,
-      seriesId,
-    ]);
-
-    // Determine gradient direction based on gradient axis
-    const effectiveGradient = gradientProp ?? seriesGradient;
-    const gradientAxis = effectiveGradient?.axis ?? 'y';
+    const gradientAxis = gradient?.axis ?? 'y';
     const gradientDirection = gradientAxis === 'x' ? 'horizontal' : 'vertical';
 
     if (!gradientConfig) {
-      // Fallback to simple solid fill if no gradient config
       return <Path d={d} fill={fill} fillOpacity={fillOpacity} {...pathProps} />;
     }
 

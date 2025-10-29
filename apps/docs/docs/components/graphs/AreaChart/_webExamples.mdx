@@ -99,6 +99,37 @@ When an area chart contains negative values, the baseline automatically adjusts 
 />
 ```
 
+## Data-Based Gradients
+
+You can apply color gradients to dotted areas based on y-values or x-values. This creates visual emphasis on different data ranges.
+
+```jsx live
+<AreaChart
+  height={{ base: 150, tablet: 200, desktop: 250 }}
+  inset={0}
+  series={[
+    {
+      id: 'performance',
+      data: [-50, -30, -10, 20, 45, 65, 80, 70, 50, 30, 10, -20, -40],
+      gradient: {
+        axis: 'y',
+        stops: [
+          { offset: -50, color: '#dc2626', opacity: 0.8 },
+          { offset: 0, color: '#fbbf24', opacity: 0.6 },
+          { offset: 80, color: '#16a34a', opacity: 0.8 },
+        ],
+      },
+    },
+  ]}
+  type="dotted"
+  showLines
+  showYAxis
+  yAxis={{
+    showGrid: true,
+  }}
+/>
+```
+
 ## Area Styles
 
 You can have different area styles for each series.

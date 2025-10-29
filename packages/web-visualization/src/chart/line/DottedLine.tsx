@@ -4,7 +4,7 @@ import type { SharedProps } from '@coinbase/cds-common/types';
 import { useCartesianChartContext } from '../ChartProvider';
 import { Gradient as GradientDef } from '../gradient/Gradient';
 import { Path, type PathProps } from '../Path';
-import { getGradientScale, type Gradient, processGradient } from '../utils/gradient';
+import { getGradientConfig, type Gradient } from '../utils/gradient';
 
 import type { LineComponentProps } from './Line';
 
@@ -40,14 +40,9 @@ export const DottedLine = memo<DottedLineProps>(
     const yScale = context.getYScale(yAxisId);
     const drawingArea = context.drawingArea;
 
-    // Process gradient to get gradient configuration
     const gradientConfig = useMemo(() => {
-      if (!gradient || !xScale || !yScale) return null;
-
-      const scale = getGradientScale(gradient, xScale, yScale);
-      if (!scale) return null;
-
-      return processGradient(gradient, scale);
+      if (!gradient || !xScale || !yScale) return;
+      return getGradientConfig(gradient, xScale, yScale);
     }, [gradient, xScale, yScale]);
 
     // Determine gradient direction based on gradient axis

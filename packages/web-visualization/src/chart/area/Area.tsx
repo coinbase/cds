@@ -89,11 +89,8 @@ export const Area = memo<AreaProps>(
   }) => {
     const { getSeries, getSeriesData, getXScale, getYScale, getXAxis } = useCartesianChartContext();
 
-    // Get sourceData from series (using stacked data if available)
     const matchedSeries = useMemo(() => getSeries(seriesId), [seriesId, getSeries]);
-    const seriesGradient = matchedSeries?.gradient;
-    // Use prop gradient if provided, otherwise use series gradient
-    const effectiveGradient = gradientProp ?? seriesGradient;
+    const gradient = gradientProp ?? matchedSeries?.gradient;
 
     // Check for stacked data first, then fall back to raw data
     const sourceData = useMemo(() => {
@@ -153,7 +150,7 @@ export const Area = memo<AreaProps>(
     return (
       <AreaComponent
         baseline={baseline}
-        gradient={effectiveGradient}
+        gradient={gradient}
         d={area}
         fill={fill}
         fillOpacity={fillOpacity}

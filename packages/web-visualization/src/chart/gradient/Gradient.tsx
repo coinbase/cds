@@ -40,6 +40,8 @@ export const Gradient = memo<GradientProps>(
   ({ id, config, direction = 'vertical', drawingArea }) => {
     const { colors, positions, opacities } = config;
 
+    console.log('[Gradient] Rendering gradient:', { id, config, direction, drawingArea });
+
     // Determine gradient units and coordinates
     let gradientUnits: 'objectBoundingBox' | 'userSpaceOnUse' = 'objectBoundingBox';
     let coordinates: Record<string, string | number>;
@@ -75,20 +77,14 @@ export const Gradient = memo<GradientProps>(
           : { x1: '0%', y1: '0%', x2: '100%', y2: '0%' };
     }
 
-    console.log(`[Gradient] id=${id}, direction=${direction}`, {
-      colors,
-      positions,
-      opacities,
-      gradientUnits,
-      coordinates,
-      drawingArea,
-    });
+    console.log('[Gradient] Final coordinates:', { gradientUnits, coordinates });
 
     return (
       <linearGradient gradientUnits={gradientUnits} id={id} {...coordinates}>
         {colors.map((color, index) => {
           const offset = `${positions[index] * 100}%`;
           const opacity = opacities?.[index];
+          console.log(`[Gradient] Stop ${index}:`, { offset, color, opacity });
           return (
             <stop
               key={`${id}-stop-${index}`}

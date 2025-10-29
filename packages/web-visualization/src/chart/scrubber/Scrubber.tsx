@@ -227,20 +227,11 @@ export const Scrubber = memo(
 
                 const resolvedLabel = typeof s.label === 'function' ? s.label(dataIndex) : s.label;
 
-                // Evaluate gradient at the appropriate data value based on gradient axis
                 let evaluatedColor: string | undefined = s.color;
                 if (s.gradient) {
                   const xScale = getXScale();
                   const gradientScale = getGradientScale(s.gradient, xScale, yScale);
-                  console.log('[Scrubber] Evaluating gradient for beacon', {
-                    seriesId: s.id,
-                    dataX,
-                    dataY,
-                    hasGradientScale: !!gradientScale,
-                    gradient: s.gradient,
-                  });
                   if (gradientScale) {
-                    // Use the appropriate data value based on gradient axis
                     const gradientAxis = s.gradient.axis ?? 'y';
                     const dataValue = gradientAxis === 'x' ? dataX : dataY;
                     const colorResult = evaluateGradientAtValue(
@@ -248,19 +239,9 @@ export const Scrubber = memo(
                       dataValue,
                       gradientScale,
                     );
-                    console.log('[Scrubber] Gradient evaluation result', {
-                      seriesId: s.id,
-                      gradientAxis,
-                      dataValue,
-                      colorResult,
-                    });
                     if (colorResult) {
                       evaluatedColor = colorResult;
                     }
-                  } else {
-                    console.warn('[Scrubber] No gradientScale available for beacon', {
-                      seriesId: s.id,
-                    });
                   }
                 }
 

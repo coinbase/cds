@@ -3,7 +3,7 @@ import { memo, useId, useMemo } from 'react';
 import { useCartesianChartContext } from '../ChartProvider';
 import { Gradient as GradientDef } from '../gradient';
 import { Path, type PathProps } from '../Path';
-import { getGradientScale, processGradient } from '../utils';
+import { getGradientConfig } from '../utils';
 
 import type { AreaComponentProps } from './Area';
 
@@ -21,43 +21,32 @@ export const SolidArea = memo<SolidAreaProps>(
     fillOpacity = 1,
     yAxisId,
     baseline,
-    gradient,
+    gradient: gradientProp,
     seriesId,
     ...props
   }) => {
     const context = useCartesianChartContext();
     const patternId = useId();
 
-    // Get gradient from series if seriesId is provided and gradient is not
     const targetSeries = seriesId ? context.getSeries(seriesId) : undefined;
-    const seriesGradient = targetSeries?.gradient;
-    const effectiveGradient = gradient ?? seriesGradient;
+    const gradient = gradientProp ?? targetSeries?.gradient;
 
-    // Get scales and drawing area
     const xScale = context.getXScale();
     const yScale = context.getYScale(yAxisId);
     const drawingArea = context.drawingArea;
 
-    // Process gradient if provided
     const gradientConfig = useMemo(() => {
-      if (!effectiveGradient) return null;
+      if (!gradient || !xScale || !yScale) return;
+      return getGradientConfig(gradient, xScale, yScale);
+    }, [gradient, xScale, yScale]);
 
-      const scale = getGradientScale(effectiveGradient, xScale, yScale);
-      if (!scale) return null;
-
-      return processGradient(effectiveGradient, scale);
-    }, [effectiveGradient, xScale, yScale]);
-
-    // If no gradient, render solid
     if (!gradientConfig) {
       return <Path d={d} fill={fill} fillOpacity={fillOpacity} {...props} />;
     }
 
-    // Determine gradient direction based on gradient axis
-    const gradientAxis = effectiveGradient?.axis ?? 'y';
+    const gradientAxis = gradient?.axis ?? 'y';
     const gradientDirection = gradientAxis === 'x' ? 'horizontal' : 'vertical';
 
-    // Render with gradient
     return (
       <>
         <defs>

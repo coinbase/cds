@@ -28,6 +28,16 @@ export type GradientAreaProps = Omit<PathProps, 'd' | 'fill' | 'fillOpacity'> &
      */
     gradient?: Gradient;
     /**
+     * Opacity at peak values.
+     * @default 0.3
+     */
+    peakOpacity?: number;
+    /**
+     * Opacity at the baseline.
+     * @default 0
+     */
+    baselineOpacity?: number;
+    /**
      * Transition configuration for area transitions.
      * Allows customization of animation type, timing, and springs.
      *
@@ -54,9 +64,13 @@ export const GradientArea = memo<GradientAreaProps>(
   ({
     d,
     fill: fillProp,
+    // todo: should we drop fillOpacity?
     fillOpacity = 1,
     gradient: gradientProp,
     seriesId,
+    // todo: what about peak opacity?
+    peakOpacity = 0.3,
+    baselineOpacity = 0,
     baseline,
     yAxisId,
     clipRect,
@@ -69,18 +83,19 @@ export const GradientArea = memo<GradientAreaProps>(
 
     const fill = fillProp ?? theme.color.fgPrimary;
 
-    // Use prop value if provided, otherwise fall back to context
     const shouldAnimate = animateProp ?? context.animate;
 
     const currentPath = d ?? '';
 
-    const yScaleConfig = context.getYAxis(yAxisId);
+    const xScale = context.getXScale();
+    const yScale = context.getYScale(yAxisId);
+    const yAxisConfig = context.getYAxis(yAxisId);
 
     const gradient = useMemo((): Gradient | undefined => {
       if (gradientProp) return gradientProp;
-      if (!yScaleConfig) return;
+      if (!yAxisConfig) return;
 
-      const { min, max } = yScaleConfig.domain;
+      const { min, max } = yAxisConfig.domain;
       const baselineValue = min >= 0 ? min : max <= 0 ? max : (baseline ?? 0);
 
       // Diverging gradient (data crosses zero)
@@ -88,9 +103,9 @@ export const GradientArea = memo<GradientAreaProps>(
         return {
           axis: 'y',
           stops: [
-            { offset: min, color: fill, opacity: 0.4 },
-            { offset: baselineValue, color: fill, opacity: 0 },
-            { offset: max, color: fill, opacity: 0.4 },
+            { offset: min, color: fill, opacity: peakOpacity },
+            { offset: baselineValue, color: fill, opacity: baselineOpacity },
+            { offset: max, color: fill, opacity: peakOpacity },
           ],
         };
       }
@@ -102,18 +117,15 @@ export const GradientArea = memo<GradientAreaProps>(
         stops:
           max <= 0
             ? [
-                { offset: peakValue, color: fill, opacity: 0.4 },
-                { offset: baselineValue, color: fill, opacity: 0 },
+                { offset: peakValue, color: fill, opacity: peakOpacity },
+                { offset: baselineValue, color: fill, opacity: baselineOpacity },
               ]
             : [
-                { offset: baselineValue, color: fill, opacity: 0 },
-                { offset: peakValue, color: fill, opacity: 0.4 },
+                { offset: baselineValue, color: fill, opacity: baselineOpacity },
+                { offset: peakValue, color: fill, opacity: peakOpacity },
               ],
       };
-    }, [gradientProp, yScaleConfig, fill, baseline]);
-
-    const xScale = context.getXScale();
-    const yScale = context.getYScale(yAxisId);
+    }, [gradientProp, yAxisConfig, fill, baseline, peakOpacity, baselineOpacity]);
 
     const gradientConfig = useMemo(() => {
       if (!gradient || !xScale || !yScale) return;

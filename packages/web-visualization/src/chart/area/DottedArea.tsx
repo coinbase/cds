@@ -1,7 +1,9 @@
-import { memo, useId } from 'react';
+import { memo, useId, useMemo } from 'react';
 
 import { useCartesianChartContext } from '../ChartProvider';
+import { Gradient as GradientDef } from '../gradient';
 import { Path, type PathProps } from '../Path';
+import { applyOpacityToColor, getGradientConfig, type Gradient } from '../utils/gradient';
 
 import type { AreaComponentProps } from './Area';
 
@@ -82,6 +84,8 @@ export const DottedArea = memo<DottedAreaProps>(
     baselineOpacity = 0,
     baseline,
     yAxisId,
+    gradient: gradientProp,
+    seriesId,
     classNames,
     styles,
     animate,
@@ -94,10 +98,25 @@ export const DottedArea = memo<DottedAreaProps>(
 
     const dotCenterPosition = patternSize / 2;
 
-    // Get the y-scale for the specified axis (or default)
+    const targetSeries = seriesId ? context.getSeries(seriesId) : undefined;
+    const gradient = gradientProp ?? targetSeries?.gradient;
+
+    const xScale = context.getXScale();
     const yScale = context.getYScale(yAxisId);
     const yRange = yScale?.range();
     const yDomain = yScale?.domain();
+    const { drawingArea } = context;
+
+    // Process gradient configuration for data-based gradients
+    const gradientConfig = useMemo(() => {
+      if (!gradient || !xScale || !yScale) return null;
+      const config = getGradientConfig(gradient, xScale, yScale);
+      console.log('[DottedArea] Gradient input:', gradient);
+      console.log('[DottedArea] Gradient config:', config);
+      console.log('[DottedArea] yScale domain:', yScale.domain());
+      console.log('[DottedArea] yScale range:', yScale.range());
+      return config;
+    }, [gradient, xScale, yScale]);
 
     // Use chart range if available, otherwise fall back to percentage
     const useUserSpaceUnits = yRange !== undefined;
@@ -136,60 +155,94 @@ export const DottedArea = memo<DottedAreaProps>(
     const gradientY1 = useUserSpaceUnits ? yRange![1] : '0%';
     const gradientY2 = useUserSpaceUnits ? yRange![0] : '100%';
 
+    // Determine gradient axis for data-based gradients
+    const gradientAxis = gradient?.axis ?? 'y';
+    const gradientDirection = gradientAxis === 'x' ? 'horizontal' : 'vertical';
+
     return (
       <g className={className ?? classNames?.root} style={style ?? styles?.root}>
         <defs>
-          <pattern
-            className={classNames?.pattern}
-            height={patternSize}
-            id={patternId}
-            patternUnits="userSpaceOnUse"
-            style={styles?.pattern}
-            width={patternSize}
-            x="0"
-            y="0"
-          >
-            <circle cx={dotCenterPosition} cy={dotCenterPosition} fill={fill} r={dotSize} />
-          </pattern>
-          <linearGradient
-            gradientUnits={useUserSpaceUnits ? 'userSpaceOnUse' : 'objectBoundingBox'}
-            id={gradientId}
-            x1={useUserSpaceUnits ? 0 : '0%'}
-            x2={useUserSpaceUnits ? 0 : '0%'}
-            y1={gradientY1}
-            y2={gradientY2}
-          >
-            {baselinePosition !== undefined || baselinePercentage !== undefined ? (
-              <>
-                {/* Diverging gradient: high opacity at extremes, low at baseline */}
-                <stop offset="0%" stopColor="white" stopOpacity={peakOpacity} />
-                <stop
-                  offset={
-                    baselinePercentage ??
-                    `${((baselinePosition! - yRange![1]) / (yRange![0] - yRange![1])) * 100}%`
-                  }
-                  stopColor="white"
-                  stopOpacity={baselineOpacity}
-                />
-                <stop offset="100%" stopColor="white" stopOpacity={peakOpacity} />
-              </>
-            ) : (
-              <>
-                {/* Simple gradient from top to bottom */}
-                <stop offset="0%" stopColor="white" stopOpacity={peakOpacity} />
-                <stop offset="100%" stopColor="white" stopOpacity={baselineOpacity} />
-              </>
-            )}
-          </linearGradient>
-          <mask id={maskId}>
-            <Path animate={animate} d={d} fill={`url(#${gradientId})`} />
-          </mask>
+          {gradientConfig ? (
+            // Data-based gradient: use mask technique with colored gradient
+            <>
+              <pattern
+                className={classNames?.pattern}
+                height={patternSize}
+                id={patternId}
+                patternUnits="userSpaceOnUse"
+                style={styles?.pattern}
+                width={patternSize}
+                x="0"
+                y="0"
+              >
+                <circle cx={dotCenterPosition} cy={dotCenterPosition} fill="white" r={dotSize} />
+              </pattern>
+              <mask id={maskId}>
+                <Path animate={animate} d={d} fill={`url(#${patternId})`} />
+              </mask>
+              <GradientDef
+                config={gradientConfig}
+                direction={gradientDirection}
+                drawingArea={drawingArea}
+                id={gradientId}
+              />
+            </>
+          ) : (
+            // Opacity-based gradient: use mask technique
+            <>
+              <pattern
+                className={classNames?.pattern}
+                height={patternSize}
+                id={patternId}
+                patternUnits="userSpaceOnUse"
+                style={styles?.pattern}
+                width={patternSize}
+                x="0"
+                y="0"
+              >
+                <circle cx={dotCenterPosition} cy={dotCenterPosition} fill={fill} r={dotSize} />
+              </pattern>
+              <linearGradient
+                gradientUnits={useUserSpaceUnits ? 'userSpaceOnUse' : 'objectBoundingBox'}
+                id={gradientId}
+                x1={useUserSpaceUnits ? 0 : '0%'}
+                x2={useUserSpaceUnits ? 0 : '0%'}
+                y1={gradientY1}
+                y2={gradientY2}
+              >
+                {baselinePosition !== undefined || baselinePercentage !== undefined ? (
+                  <>
+                    {/* Diverging gradient: high opacity at extremes, low at baseline */}
+                    <stop offset="0%" stopColor="white" stopOpacity={peakOpacity} />
+                    <stop
+                      offset={
+                        baselinePercentage ??
+                        `${((baselinePosition! - yRange![1]) / (yRange![0] - yRange![1])) * 100}%`
+                      }
+                      stopColor="white"
+                      stopOpacity={baselineOpacity}
+                    />
+                    <stop offset="100%" stopColor="white" stopOpacity={peakOpacity} />
+                  </>
+                ) : (
+                  <>
+                    {/* Simple gradient from top to bottom */}
+                    <stop offset="0%" stopColor="white" stopOpacity={peakOpacity} />
+                    <stop offset="100%" stopColor="white" stopOpacity={baselineOpacity} />
+                  </>
+                )}
+              </linearGradient>
+              <mask id={maskId}>
+                <Path animate={animate} d={d} fill={`url(#${gradientId})`} />
+              </mask>
+            </>
+          )}
         </defs>
         <Path
           animate={animate}
           className={classNames?.path}
           d={d}
-          fill={`url(#${patternId})`}
+          fill={gradientConfig ? `url(#${gradientId})` : `url(#${patternId})`}
           mask={`url(#${maskId})`}
           style={styles?.path}
           {...pathProps}

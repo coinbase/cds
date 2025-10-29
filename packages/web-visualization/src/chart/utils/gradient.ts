@@ -139,6 +139,30 @@ export const normalizeGradientStop = (gradientStop: GradientStop): ProcessedColo
 };
 
 /**
+ * Applies an additional opacity multiplier to a color.
+ * For CSS variables and non-rgba colors, wraps them with color-mix for transparency.
+ * For rgba colors, multiplies the alpha channel.
+ */
+export const applyOpacityToColor = (colorString: string, opacityMultiplier: number): string => {
+  // If already fully opaque or no multiplier needed, return as-is
+  if (opacityMultiplier >= 1) return colorString;
+
+  // Parse rgba string: rgba(r, g, b, a) or rgb(r, g, b)
+  const rgbaMatch = colorString.match(/rgba?\((\d+),\s*(\d+),\s*(\d+),?\s*([\d.]+)?\)/);
+  if (rgbaMatch) {
+    const r = parseInt(rgbaMatch[1], 10);
+    const g = parseInt(rgbaMatch[2], 10);
+    const b = parseInt(rgbaMatch[3], 10);
+    const a = parseFloat(rgbaMatch[4] ?? '1');
+    return `rgba(${r}, ${g}, ${b}, ${a * opacityMultiplier})`;
+  }
+
+  // For CSS variables or other color formats, use color-mix with transparent
+  const transparentPercent = (1 - opacityMultiplier) * 100;
+  return `color-mix(in srgb, ${colorString} ${100 - transparentPercent}%, transparent)`;
+};
+
+/**
  * Processes Gradient to gradient configuration for SVG linearGradient.
  * Colors are smoothly interpolated between stops by the browser.
  * Multiple stops at the same offset create hard color transitions.
@@ -364,4 +388,42 @@ export const evaluateGradientAtValue = (
   }
 
   return processedColors[processedColors.length - 1];
+};
+
+/**
+ * Creates a gradient configuration for SVG components.
+ * Convenience function that combines gradient scale retrieval and processing.
+ *
+ * @param gradient - Gradient configuration (required)
+ * @param xScale - X-axis scale (required)
+ * @param yScale - Y-axis scale (required)
+ * @returns GradientConfig or null if gradient processing fails
+ *
+ * @example
+ * const gradientConfig = useMemo(() => {
+ *   if (!gradient || !xScale || !yScale) return;
+ *   return getGradientConfig(gradient, xScale, yScale);
+ * }, [gradient, xScale, yScale]);
+ *
+ * if (gradientConfig) {
+ *   return (
+ *     <defs>
+ *       <GradientDef
+ *         config={gradientConfig}
+ *         direction={gradient.axis === 'x' ? 'horizontal' : 'vertical'}
+ *         id={gradientId}
+ *       />
+ *     </defs>
+ *   );
+ * }
+ */
+export const getGradientConfig = (
+  gradient: Gradient,
+  xScale: ChartScaleFunction,
+  yScale: ChartScaleFunction,
+): GradientConfig | null => {
+  const scale = getGradientScale(gradient, xScale, yScale);
+  if (!scale) return null;
+
+  return processGradient(gradient, scale);
 };
