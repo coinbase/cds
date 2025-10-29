@@ -77,6 +77,58 @@ const Content = () => {
   );
 };
 
+const CustomNodes = () => (
+  <>
+    {/* Node title/description */}
+    <ListCell
+      descriptionNode={
+        <HStack alignItems="center" gap={1}>
+          <Text color="fgMuted">Composed description with any React nodes</Text>
+          <Icon name="info" />
+        </HStack>
+      }
+      media={<Avatar src={assets.eth.imageUrl} />}
+      spacingVariant="condensed"
+      titleNode={
+        <HStack alignItems="center" gap={1}>
+          <Icon name="checkmark" />
+          <Text font="headline">Verified account</Text>
+        </HStack>
+      }
+    />
+
+    {/* Node detail/subdetail and accessoryNode */}
+    <ListCell
+      accessoryNode={
+        <IconButton
+          accessibilityLabel="Help"
+          name="info"
+          onPress={() => console.log('Accessory')}
+        />
+      }
+      description="Using detailNode/subdetailNode and accessoryNode"
+      detailNode={
+        <HStack alignItems="center" gap={1} justifyContent="flex-end">
+          <Icon name="info" />
+          <Text font="body">$12</Text>
+        </HStack>
+      }
+      media={<Avatar src={assets.eth.imageUrl} />}
+      priority="end"
+      spacingVariant="condensed"
+      subdetailNode={
+        <HStack alignItems="center" gap={0.5} justifyContent="flex-end">
+          <Icon name="info" />
+          <Text color="fgPositive" font="label2">
+            +5.43%
+          </Text>
+        </HStack>
+      }
+      title="Custom nodes"
+    />
+  </>
+);
+
 const CompactContent = () => {
   return (
     <>
@@ -1035,6 +1087,9 @@ const ListCellScreen = () => {
     <ExampleScreen>
       <Example inline paddingX={0} title="Content" titlePadding={titlePadding}>
         <Content />
+      </Example>
+      <Example inline paddingX={0} title="CustomNodes" titlePadding={titlePadding}>
+        <CustomNodes />
       </Example>
       <Example inline paddingX={0} title="CompactContent(deprecated)" titlePadding={titlePadding}>
         <CompactContent />

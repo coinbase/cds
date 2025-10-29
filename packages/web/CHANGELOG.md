@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.18.0 (10/29/2025 PST)
+
+#### 🚀 Updates
+
+- Support custom `titleNode` `descriptionNode` `detailNode` `subdetailNode``accessoryNode` for ListCell. [[#131](https://github.com/coinbase/cds/pull/131)] [DX-5006]
+
 ## 8.17.6 (10/28/2025 PST)
 
 #### 🐞 Fixes

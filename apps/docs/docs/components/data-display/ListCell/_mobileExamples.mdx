@@ -1,4 +1,14 @@
-### Basic usage
+## Overview
+
+A ListCell row is divided into the following 5 columns:
+
+- Media
+- Title & description
+- Intermediary
+- End (detail & subdetail or action)
+- Accessory
+
+### Basic Usage
 
 ```tsx
 <ListCell
@@ -8,9 +18,11 @@
 />
 ```
 
-:::note
+:::tip
 Prefer `spacingVariant="condensed"` for the new ListCell design. The `compact` may be removed in a future major release.
 :::
+
+### Spacing Variant
 
 ```tsx
 <VStack>
@@ -21,7 +33,7 @@ Prefer `spacingVariant="condensed"` for the new ListCell design. The `compact` m
     detail="$12,345.00"
     spacingVariant="condensed"
     media={<Avatar src={assets.eth.imageUrl} size="m" />}
-    onClick={console.log}
+    onPress={console.log}
     title="Condensed"
     variant="positive"
   />
@@ -32,7 +44,7 @@ Prefer `spacingVariant="condensed"` for the new ListCell design. The `compact` m
     detail="$12,345.00"
     spacingVariant="compact"
     media={<Avatar src={assets.eth.imageUrl} size="m" />}
-    onClick={console.log}
+    onPress={console.log}
     title="Compact (deprecated)"
     variant="positive"
   />
@@ -41,93 +53,246 @@ Prefer `spacingVariant="condensed"` for the new ListCell design. The `compact` m
     detail="$12,345.00"
     spacingVariant="normal"
     media={<Avatar src={assets.eth.imageUrl} size="m" />}
-    onClick={console.log}
+    onPress={console.log}
     title="Normal"
     variant="positive"
   />
 </VStack>
 ```
 
-### With Media
+## Media
+
+::::note
+We have deprecated `CellMedia`; pass media directly as shown below.
+::::
+
+### Leading Icon
 
 ```tsx
 <ListCell
   spacingVariant="condensed"
-  title="List Cell with Media"
-  description="Shows usage with media"
+  title="List Cell with Icon"
+  description="Shows usage with a leading icon"
   media={<Icon active name="info" />}
 />
 ```
 
-### With Detail and Subdetail
+### Leading Avatar
+
+```tsx
+<ListCell
+  spacingVariant="condensed"
+  title="List Cell with Icon"
+  description="Shows usage with a leading icon"
+  media={<Avatar src={assets.btc.imageUrl} size="l" />}
+/>
+```
+
+## Title & Description
+
+### Title Line Limits
+
+- In condensed spacing (`spacingVariant="condensed"`), the title shows up to two lines by default, regardless of whether a description is present.
+- In normal and compact spacing, the title shows up to two lines when there is no description; if a description is present, the title is limited to one line.
+- Use `disableMultilineTitle` to force the title to one line in all cases.
+
+::::warning
+The `title` and `description` props are rendered inside a CDS `Text` with default fonts and truncation. To render arbitrary React nodes without being wrapped by a `<Text>`, use `titleNode` and `descriptionNode`.
+When using the Node props, you are responsible for styling, layout, and truncation behavior.
+::::
+
+### Custom Title/Description via Node Props
+
+```tsx
+<ListCell
+  spacingVariant="condensed"
+  media={<Avatar src={assets.eth.imageUrl} size="m" />}
+  titleNode={
+    <HStack gap={1} alignItems="center">
+      <Icon name="checkmark" />
+      <span>Verified account</span>
+    </HStack>
+  }
+  descriptionNode={
+    <HStack gap={1} alignItems="center">
+      <span>Composed description with any React nodes</span>
+      <Icon name="info" />
+    </HStack>
+  }
+/>
+```
+
+### Multiline Description
+
+```tsx
+<ListCell
+  spacingVariant="condensed"
+  title="Multiline Description"
+  description="This is a longer description that demonstrates how the text wraps when the multiline prop is enabled. It can span multiple lines without truncating."
+  multiline
+/>
+```
+
+## Intermediary
+
+```tsx
+function Intermediary() {
+  const dimensions = { width: 62, height: 18 };
+  const sparklineData = prices
+    .map((price) => parseFloat(price))
+    .filter((price, index) => index % 10 === 0);
+  const referenceY = sparklineData[Math.floor(sparklineData.length / 3)];
+
+  const CompactChart = memo(
+    ({ data, color = 'var(--color-fgPositive)', showArea = false, referenceY }) => (
+      <Box style={{ padding: 1 }}>
+        <LineChart
+          {...dimensions}
+          enableScrubbing={false}
+          overflow="visible"
+          inset={0}
+          showArea={showArea}
+          series={[
+            {
+              id: 'series',
+              data,
+              color,
+            },
+          ]}
+        >
+          <ReferenceLine dataY={referenceY} />
+        </LineChart>
+      </Box>
+    ),
+  );
+
+  return (
+    <ListCell
+      media={<Avatar src={assets.btc.imageUrl} />}
+      spacingVariant="condensed"
+      title="Bitcoin"
+      description="BTC"
+      intermediary={<CompactChart data={sparklineData} referenceY={referenceY} />}
+      detail="$334,239.03"
+      subdetail="+4.06%"
+      priority="start"
+      variant="positive"
+    />
+  );
+}
+```
+
+## End
+
+### Detail and Subdetail
 
 ```tsx
 <ListCell
   spacingVariant="condensed"
   title="List Cell with Details"
   description="Shows usage with detail and subdetail"
-  detail="$1,234.56"
-  subdetail="+2.5%"
-  variant="positive"
+  detail="Primary detail"
+  subdetail="Secondary detail"
 />
 ```
 
-### With Accessory
+::::warning
+Like `title` and `description`, `detail` and `subdetail` props are also rendered inside a CDS `Text` with default fonts. To render arbitrary React nodes without being wrapped by a `<Text>`, use `detailNode` and `subdetailNode`.
+::::
+
+### Custom Detail/Subdetail via Node Props
 
 ```tsx
 <ListCell
   spacingVariant="condensed"
-  title="List Cell with Accessory"
-  description="Shows usage with accessory"
-  accessory="arrow"
+  media={<Avatar src={assets.btc.imageUrl} size="m" />}
+  title="Custom end content"
+  description="Detail and subdetail rendered with custom nodes"
+  detailNode={
+    <HStack gap={2} alignItems="center" justifyContent="flex-end">
+      <Icon name="info" />
+      <Text as="div" font="body" overflow="truncate" textAlign="end">
+        $12,345.00
+      </Text>
+    </HStack>
+  }
+  subdetailNode={
+    <HStack gap={1} alignItems="center" justifyContent="flex-end">
+      <Icon name="info" />
+      <Text as="div" color="fgPositive" font="label2" overflow="truncate" textAlign="end">
+        +5.43%
+      </Text>
+    </HStack>
+  }
 />
 ```
 
-### Interactive Cell
+### End Action
+
+When you pass the `end` prop, it overrides the `detail`/`subdetail`/`detailNode`/`subdetailNode`.
+
+```tsx
+<ListCell
+  spacingVariant="condensed"
+  title="End action"
+  detail="This is overridden and won't show up"
+  subdetail="This is overridden and won't show up"
+  detailNode="This is overridden and won't show up"
+  subdetailNode="This is overridden and won't show up"
+  end={
+    <Button
+      compact
+      onPress={() => {
+        alert('Action clicked');
+      }}
+    >
+      Action
+    </Button>
+  }
+/>
+```
+
+## Accessory
+
+### Interactive Cell with Accessory
 
 ```tsx
 <ListCell
   spacingVariant="condensed"
   title="Interactive List Cell"
-  description="Tap to interact"
-  media={<Icon active name="info" />}
+  description="Click or tap to interact"
   accessory="arrow"
-  onPress={() => alert('Cell pressed!')}
+  onPress={() => alert('Cell clicked!')}
 />
 ```
 
-### With Helper Text
+### Custom Accessory via Node Prop
 
 ```tsx
-<VStack gap={3}>
-  <ListCell
-    spacingVariant="condensed"
-    title="List Cell with Helper Text"
-    description="Shows usage with helper text below the cell"
-    helperText={<CellHelperText>This is a default helper message.</CellHelperText>}
-    media={<Avatar src={assets.btc.imageUrl} />}
-    end={<Button compact>Action</Button>}
-  />
-  <ListCell
-    spacingVariant="condensed"
-    title="List Cell with Warning"
-    description="Shows usage with a warning message"
-    helperText={<CellHelperText variant="warning">This is a warning message.</CellHelperText>}
-    media={<Avatar src={assets.btc.imageUrl} />}
-    end={<Button compact>Action</Button>}
-  />
-  <ListCell
-    spacingVariant="condensed"
-    title="List Cell with Error"
-    description="Shows usage with an error message"
-    helperText={<CellHelperText variant="error">This is an error message.</CellHelperText>}
-    media={<Avatar src={assets.btc.imageUrl} />}
-    end={<Button compact>Action</Button>}
-  />
-</VStack>
+<ListCell
+  spacingVariant="condensed"
+  title="Accessory Node"
+  description="Custom accessory with its own onPress"
+  media={<Avatar src={assets.eth.imageUrl} size="m" />}
+  end={
+    <Button
+      compact
+      onPress={() => {
+        alert('Action clicked');
+      }}
+    >
+      Action
+    </Button>
+  }
+  accessoryNode={
+    <Tooltip content="question">
+      <Icon size="s" name="questionMark" compact variant="secondary" />
+    </Tooltip>
+  }
+/>
 ```
 
-### Accessibility Label
+## Accessibility Label
 
 The accessibility props are only applied when the `<ListCell>` has a value for the `onPress` prop. Otherwise, content passed into the `<ListCell>` must use accessibility props and attributes as needed.
 
@@ -137,42 +302,95 @@ The accessibility props are only applied when the `<ListCell>` has a value for t
     accessibilityLabel="Accessibility label. Describes content for entire list cell. Applied when onPress prop has a value"
     intermediary={<Icon name="chartLine" />}
     media={<Avatar src={assets.btc.imageUrl} />}
-    onPress={() => console.log('List cell pressed')}
+    onPress={() => window.alert('ListCell clicked!')}
     title="BTC"
+    spacingVariant="condensed"
   />
 
   <ListCell
     intermediary={<Icon accessibilityLabel="Chart icon" name="chartLine" />}
     media={<Avatar accessibilityLabel="Bitcoin" src={assets.btc.imageUrl} />}
     title="BTC"
+    spacingVariant="condensed"
   />
 </VStack>
 ```
 
-### Compact Mode
+## Helper text
 
 ```tsx
-<ListCell
-  spacingVariant="compact"
-  title="Compact List Cell"
-  description="Shows compact variant"
-  media={<Icon active name="info" />}
-/>
+<VStack gap={3}>
+  <ListCell
+    spacingVariant="condensed"
+    title="List Cell with Helper Text"
+    description="Shows usage with helper text below the cell"
+    helperText={
+      <CellHelperText font="label2" paddingStart={6}>
+        This is a default helper message.
+      </CellHelperText>
+    }
+    media={<Avatar src={assets.btc.imageUrl} />}
+    end={<Button compact>Action</Button>}
+  />
+  <ListCell
+    spacingVariant="condensed"
+    title="List Cell with Warning"
+    description="Shows usage with a warning message"
+    helperText={
+      <CellHelperText font="label2" variant="warning" paddingStart={6}>
+        This is a warning message.
+      </CellHelperText>
+    }
+    media={<Avatar src={assets.btc.imageUrl} />}
+    end={<Button compact>Action</Button>}
+  />
+  <ListCell
+    spacingVariant="condensed"
+    title="List Cell with Error"
+    description="Shows usage with an error message"
+    helperText={
+      <CellHelperText font="label2" variant="error" paddingStart={6}>
+        This is an error message.
+      </CellHelperText>
+    }
+    media={<Avatar src={assets.btc.imageUrl} />}
+    end={<Button compact>Action</Button>}
+  />
+</VStack>
 ```
 
-### Selected State
+## Loading States
+
+The ListCellFallback component provides loading state representations of ListCell. It uses placeholder rectangles to indicate where content will appear, creating a smooth loading experience. The web version uses percentage-based widths and custom layouts to match the ListCell's four-column structure.
 
 ```tsx
-<ListCell
-  spacingVariant="condensed"
-  selected
-  title="Selected List Cell"
-  description="Shows selected state"
-  media={<Icon active name="info" />}
-/>
+<VStack gap={3}>
+  {/* Basic loading state */}
+  <ListCellFallback title description spacingVariant="condensed" />
+
+  {/* Loading state with media */}
+  <ListCellFallback title description media="icon" spacingVariant="condensed" />
+
+  {/* Loading state with details */}
+  <ListCellFallback title description detail subdetail spacingVariant="condensed" />
+
+  {/* Full loading state with custom widths */}
+  <ListCellFallback
+    spacingVariant="condensed"
+    title
+    description
+    detail
+    subdetail
+    helperText
+    media="icon"
+    rectWidthVariant={2} // Creates a deterministic variant of the loading state
+    disableRandomRectWidth
+    styles={{ helperText: { paddingLeft: 48 } }}
+  />
+</VStack>
 ```
 
-### Priority
+## Priority
 
 The priority prop controls which parts of the cell are protected from shrinking and truncation when horizontal space is limited. It accepts start, middle, and end as a string or an array of strings.
 
@@ -184,26 +402,28 @@ function PriorityContent() {
     .filter((price, index) => index % 10 === 0);
   const referenceY = sparklineData[Math.floor(sparklineData.length / 3)];
 
-  const CompactChart = memo(({ data, color, showArea = false, referenceY }) => (
-    <Box style={{ padding: 1 }}>
-      <LineChart
-        {...dimensions}
-        enableScrubbing={false}
-        overflow="visible"
-        inset={0}
-        showArea={showArea}
-        series={[
-          {
-            id: 'series',
-            data,
-            color,
-          },
-        ]}
-      >
-        <ReferenceLine dataY={referenceY} />
-      </LineChart>
-    </Box>
-  ));
+  const CompactChart = memo(
+    ({ data, color = 'var(--color-fgPositive)', showArea = false, referenceY }) => (
+      <Box style={{ padding: 1 }}>
+        <LineChart
+          {...dimensions}
+          enableScrubbing={false}
+          overflow="visible"
+          inset={0}
+          showArea={showArea}
+          series={[
+            {
+              id: 'series',
+              data,
+              color,
+            },
+          ]}
+        >
+          <ReferenceLine dataY={referenceY} />
+        </LineChart>
+      </Box>
+    ),
+  );
 
   return (
     <VStack gap={3} style={{ width: '100%', maxWidth: 320, overflow: 'hidden' }}>
@@ -211,94 +431,48 @@ function PriorityContent() {
         spacingVariant="condensed"
         title="Asset with a really long name"
         description="Some description of the asset"
-        intermediary={
-          <CompactChart data={sparklineData} color={assets.btc.color} referenceY={referenceY} />
-        }
+        intermediary={<CompactChart data={sparklineData} referenceY={referenceY} />}
         detail="$334,239.03"
         subdetail="+4.06%"
         priority="start"
         variant="positive"
-        onPress={() => {}}
       />
       <ListCell
         spacingVariant="condensed"
         title="Asset with a really long name"
         description="Some description of the asset"
-        intermediary={
-          <CompactChart data={sparklineData} color={assets.btc.color} referenceY={referenceY} />
-        }
+        intermediary={<CompactChart data={sparklineData} referenceY={referenceY} />}
         detail="$334,239.03"
         subdetail="+4.06%"
         priority="middle"
         variant="positive"
-        onPress={() => {}}
       />
       <ListCell
         spacingVariant="condensed"
         title="Asset with a really long name"
         description="Some description of the asset"
-        intermediary={
-          <CompactChart data={sparklineData} color={assets.btc.color} referenceY={referenceY} />
-        }
+        intermediary={<CompactChart data={sparklineData} referenceY={referenceY} />}
         detail="$334,239.03"
         subdetail="+4.06%"
         priority="end"
         variant="positive"
-        onPress={() => {}}
       />
       <ListCell
         spacingVariant="condensed"
         title="Asset with a really long name"
         description="Some description of the asset"
-        intermediary={
-          <CompactChart data={sparklineData} color={assets.btc.color} referenceY={referenceY} />
-        }
+        intermediary={<CompactChart data={sparklineData} referenceY={referenceY} />}
         detail="$334,239.03"
         subdetail="+4.06%"
         priority={['start', 'middle', 'end']}
         variant="warning"
-        onPress={() => {}}
       />
     </VStack>
   );
 }
 ```
 
-### Loading States
-
-The ListCellFallback component provides loading state representations of ListCell. It uses placeholder rectangles to indicate where content will appear, creating a smooth loading experience. The mobile version leverages the theme system for consistent line heights and reuses the ListCell component structure for layout consistency.
-
-```tsx
-<VStack gap={3}>
-  {/* Basic loading state */}
-  <ListCellFallback spacingVariant="condensed" title description />
-
-  {/* Loading state with media */}
-  <ListCellFallback spacingVariant="condensed" title description media="icon" />
-
-  {/* Loading state with details */}
-  <ListCellFallback spacingVariant="condensed" title description detail subdetail />
-
-  {/* Full loading state with custom widths */}
-  <ListCellFallback
-    spacingVariant="condensed"
-    title
-    description
-    detail
-    subdetail
-    media="icon"
-    compact
-    rectWidthVariant={1} // Creates a deterministic variant of the loading state
-    disableRandomRectWidth
-  />
-</VStack>
-```
-
-:::note
-The mobile ListCellFallback uses theme-based line heights and reuses the ListCell component structure, resulting in a more consistent loading state appearance. The compact prop is also supported for loading states.
-:::
-
-### Anatomy
+## Anatomy
 
 Without helper text (top-only layout):
 

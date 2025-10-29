@@ -77,8 +77,10 @@ export type ListCellBaseProps = Polymorphic.ExtendableProps<
      * @default 'normal'
      */
     spacingVariant?: 'normal' | 'compact' | 'condensed';
-    /** Description of content. Max 1 line (with title) or 2 lines (without), otherwise will truncate. */
+    /** Description of content. Max 1 line (with title) or 2 lines (without), otherwise will truncate. This prop is only intended to accept a string or Text component; other use cases, while allowed, are not supported and may result in unexpected behavior. For arbitrary content, use `descriptionNode`. */
     description?: React.ReactNode;
+    /** React node to render description. Takes precedence over `description`. */
+    descriptionNode?: React.ReactNode;
     /**
      * When there is no description the title will take up two lines by default.
      * When this is set to true multiline title behavior is overwritten, and regardless of description text state
@@ -98,8 +100,10 @@ export type ListCellBaseProps = Polymorphic.ExtendableProps<
     media?: React.ReactElement;
     /** Allow the description to span multiple lines. This *will* break fixed height requirements, so should not be used in a `FlatList`. */
     multiline?: boolean;
-    /** Title of content. Max 1 line (with description) or 2 lines (without), otherwise will truncate. */
+    /** Title of content. Max 1 line (with description) or 2 lines (without), otherwise will truncate. This prop is only intended to accept a string or Text component; other use cases, while allowed, are not supported and may result in unexpected behavior. For arbitrary content, use `titleNode`. */
     title?: React.ReactNode;
+    /** React node to render title. Takes precedence over `title`. */
+    titleNode?: React.ReactNode;
     /** Class names for the components */
     classNames?: {
       root?: string;
@@ -147,11 +151,15 @@ export const ListCell: ListCellComponent = memo(
       {
         as,
         accessory,
+        accessoryNode,
         end: endProp,
         action,
         compact,
         title,
+        titleNode,
         description,
+        descriptionNode,
+        detailNode,
         detail,
         disabled,
         disableMultilineTitle = false,
@@ -160,6 +168,7 @@ export const ListCell: ListCellComponent = memo(
         media,
         multiline,
         selected,
+        subdetailNode,
         subdetail,
         variant,
         intermediary,
@@ -193,23 +202,26 @@ export const ListCell: ListCellComponent = memo(
         if (action) {
           return <Box justifyContent="flex-end">{action}</Box>;
         }
-        if (detail || subdetail) {
+        if (detail || subdetail || detailNode || subdetailNode) {
           return (
             <CellDetail
               detail={detail}
+              detailNode={detailNode}
               subdetail={subdetail}
               subdetailFont={spacingVariant === 'condensed' ? 'label2' : 'body'}
+              subdetailNode={subdetailNode}
               variant={variant}
             />
           );
         }
         return undefined;
-      }, [endProp, action, detail, subdetail, variant, spacingVariant]);
+      }, [endProp, action, detail, detailNode, subdetail, subdetailNode, variant, spacingVariant]);
 
       return (
         <Cell
           ref={ref}
           accessory={accessoryType && <CellAccessory type={accessoryType} />}
+          accessoryNode={accessoryNode}
           as={Component}
           borderRadius={props.borderRadius ?? (spacingVariant === 'condensed' ? 0 : undefined)}
           bottomContent={helperText}
@@ -241,7 +253,9 @@ export const ListCell: ListCellComponent = memo(
           {...props}
         >
           <VStack>
-            {!!title && (
+            {titleNode ? (
+              titleNode
+            ) : title ? (
               <Text
                 as="div"
                 display="block"
@@ -261,9 +275,11 @@ export const ListCell: ListCellComponent = memo(
               >
                 {title}
               </Text>
-            )}
+            ) : null}
 
-            {!!description && (
+            {descriptionNode ? (
+              descriptionNode
+            ) : description ? (
               <Text
                 as="div"
                 className={cx(multiline ? overflowCss : undefined, classNames?.description)}
@@ -275,7 +291,7 @@ export const ListCell: ListCellComponent = memo(
               >
                 {description}
               </Text>
-            )}
+            ) : null}
           </VStack>
         </Cell>
       );

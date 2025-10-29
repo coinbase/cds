@@ -86,6 +86,8 @@ export type CellBaseProps = Polymorphic.ExtendableProps<
     onClick?: React.MouseEventHandler;
     /** Accessory element rendered at the end of the cell (e.g., chevron). */
     accessory?: React.ReactElement<CellAccessoryProps>;
+    /** Custom accessory node rendered at the end of the cell. Takes precedence over `accessory`. */
+    accessoryNode?: React.ReactNode;
     /** Main content of the cell; typically title/description content. */
     children: React.ReactNode;
     /**
@@ -172,6 +174,7 @@ export const Cell: CellComponent = memo(
       {
         as,
         accessory,
+        accessoryNode,
         alignItems = 'center',
         borderRadius = 200,
         children,
@@ -298,14 +301,14 @@ export const Cell: CellComponent = memo(
               </Box>
             )}
 
-            {!!accessory && (
+            {!!(accessoryNode ?? accessory) && (
               <Box
                 className={classNames?.accessory}
                 flexGrow={0}
                 flexShrink={0}
                 style={styles?.accessory}
               >
-                {accessory}
+                {accessoryNode ?? accessory}
               </Box>
             )}
           </>
@@ -367,6 +370,7 @@ export const Cell: CellComponent = memo(
         detail,
         detailWidth,
         accessory,
+        accessoryNode,
         bottom,
         rowGap,
       ]);
