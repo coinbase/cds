@@ -1,7 +1,7 @@
 import React, { memo, useMemo } from 'react';
 import type { SVGProps } from 'react';
 import type { SharedProps } from '@coinbase/cds-common/types';
-import { m as motion } from 'framer-motion';
+import { m as motion, type Transition } from 'framer-motion';
 
 import { Area, type AreaComponent } from '../area/Area';
 import { axisTickLabelsInitialAnimationVariants } from '../axis';
@@ -113,6 +113,26 @@ export type LineProps = SharedProps & {
    * By default, null values create gaps in the line.
    */
   connectNulls?: boolean;
+  /**
+   * Transition configurations for point animations.
+   * Passed through to Point components rendered via renderPoints.
+   *
+   * @example
+   * transitionConfigs={{
+   *   enter: { type: 'spring', duration: 0.6 },
+   *   update: { type: 'tween', duration: 0.3, ease: 'easeInOut' }
+   * }}
+   */
+  transitionConfigs?: {
+    /**
+     * Transition used when points first enter/mount.
+     */
+    enter?: Transition;
+    /**
+     * Transition used when point positions update.
+     */
+    update?: Transition;
+  };
 };
 
 export const Line = memo<LineProps>(
@@ -130,6 +150,7 @@ export const Line = memo<LineProps>(
     opacity = 1,
     renderPoints,
     connectNulls,
+    transitionConfigs,
     ...props
   }) => {
     const { animate, getSeries, getSeriesData, getXScale, getYScale, getXAxis } =
@@ -312,6 +333,7 @@ export const Line = memo<LineProps>(
                   fill={pointFill}
                   onClick={pointConfig.onClick ?? onPointClick}
                   opacity={pointConfig.opacity ?? opacity}
+                  transitionConfigs={transitionConfigs}
                 />
               );
             })}

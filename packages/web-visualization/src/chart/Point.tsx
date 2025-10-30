@@ -1,14 +1,15 @@
 import React, { memo, useMemo } from 'react';
 import type { SVGProps } from 'react';
+import { useHasMounted } from '@coinbase/cds-common/hooks/useHasMounted';
 import type { SharedProps } from '@coinbase/cds-common/types';
 import { cx } from '@coinbase/cds-web';
 import { css } from '@linaria/core';
-import { m as motion } from 'framer-motion';
+import { m as motion, type Transition } from 'framer-motion';
 
 import type { ChartTextChildren } from './text/ChartText';
 import { useCartesianChartContext } from './ChartProvider';
 import { ChartText, type ChartTextProps } from './text';
-import { projectPoint } from './utils';
+import { defaultTransition, projectPoint } from './utils';
 
 const containerCss = css`
   outline: none;
@@ -163,6 +164,27 @@ export type PointProps = SharedProps &
        */
       point?: React.CSSProperties;
     };
+    /**
+     * Transition configurations for different animation phases.
+     * Allows separate control over enter and update animations for position changes.
+     *
+     * @example
+     * // Fast update, slow enter
+     * transitionConfigs={{
+     *   enter: { type: 'spring', duration: 0.6 },
+     *   update: { type: 'tween', duration: 0.3, ease: 'easeInOut' }
+     * }}
+     */
+    transitionConfigs?: {
+      /**
+       * Transition used when the point first enters/mounts.
+       */
+      enter?: Transition;
+      /**
+       * Transition used when the point position updates.
+       */
+      update?: Transition;
+    };
   };
 
 export const Point = memo<PointProps>(
@@ -185,10 +207,13 @@ export const Point = memo<PointProps>(
     labelProps,
     testID,
     pixelCoordinates,
-    animate,
+    animate: animateProp,
+    transitionConfigs,
     ...svgProps
   }) => {
+    const hasMounted = useHasMounted();
     const { getXScale, getYScale, animate: animationEnabled } = useCartesianChartContext();
+    const animate = animateProp ?? animationEnabled;
 
     const xScale = getXScale();
     const yScale = getYScale(yAxisId);
@@ -209,6 +234,11 @@ export const Point = memo<PointProps>(
         yScale,
       });
     }, [xScale, yScale, dataX, dataY, pixelCoordinates]);
+
+    const positionTransition = useMemo(() => {
+      if (!hasMounted && transitionConfigs?.enter) return transitionConfigs.enter;
+      return transitionConfigs?.update ?? defaultTransition;
+    }, [hasMounted, transitionConfigs]);
 
     const innerPoint = useMemo(() => {
       const mergedStyles = {
@@ -239,20 +269,38 @@ export const Point = memo<PointProps>(
           }
         : undefined;
 
-      // Use the animate prop if provided, otherwise fall back to chart context
-      const shouldAnimateInteractions = animate ?? animationEnabled;
-      const shouldAnimatePosition = animate ?? animationEnabled;
+      if (!animate) {
+        return (
+          <circle
+            aria-label={accessibilityLabel}
+            className={cx(innerPointCss, className, classNames?.point)}
+            cx={pixelCoordinate.x}
+            cy={pixelCoordinate.y}
+            fill={fill}
+            onClick={
+              onClick
+                ? (event: any) =>
+                    onClick(event, { dataX, dataY, x: pixelCoordinate.x, y: pixelCoordinate.y })
+                : undefined
+            }
+            onKeyDown={handleKeyDown}
+            r={radius}
+            role={onClick ? 'button' : undefined}
+            stroke={stroke}
+            strokeWidth={strokeWidth}
+            style={mergedStyles}
+            tabIndex={onClick ? 0 : -1}
+            {...(svgProps as any)}
+          />
+        );
+      }
 
       return (
         <motion.circle
-          animate={
-            shouldAnimatePosition
-              ? {
-                  cx: pixelCoordinate.x,
-                  cy: pixelCoordinate.y,
-                }
-              : undefined
-          }
+          animate={{
+            cx: pixelCoordinate.x,
+            cy: pixelCoordinate.y,
+          }}
           aria-label={accessibilityLabel}
           className={cx(innerPointCss, className, classNames?.point)}
           cx={pixelCoordinate.x}
@@ -272,10 +320,10 @@ export const Point = memo<PointProps>(
           strokeWidth={strokeWidth}
           style={mergedStyles}
           tabIndex={onClick ? 0 : -1}
-          transition={{ duration: 0.3, ease: 'easeInOut' }}
+          transition={positionTransition}
           variants={variants}
-          whileHover={shouldAnimateInteractions && onClick ? 'hovered' : 'default'}
-          whileTap={shouldAnimateInteractions && onClick ? 'pressed' : 'default'}
+          whileHover={onClick ? 'hovered' : 'default'}
+          whileTap={onClick ? 'pressed' : 'default'}
           {...(svgProps as any)}
         />
       );
@@ -285,7 +333,6 @@ export const Point = memo<PointProps>(
       classNames?.point,
       fill,
       animate,
-      animationEnabled,
       radius,
       className,
       onClick,
@@ -297,6 +344,7 @@ export const Point = memo<PointProps>(
       pixelCoordinate.x,
       pixelCoordinate.y,
       accessibilityLabel,
+      positionTransition,
     ]);
 
     if (!xScale || !yScale) {
