@@ -153,7 +153,7 @@ export const Line = memo<LineProps>(
     transitionConfigs,
     ...props
   }) => {
-    const { animate, getSeries, getSeriesData, getXScale, getYScale, getXAxis } =
+    const { animate, getSeries, getSeriesData, getXScale, getYScale, getXAxis, getYAxis } =
       useCartesianChartContext();
 
     const matchedSeries = getSeries(seriesId);
@@ -169,6 +169,7 @@ export const Line = memo<LineProps>(
 
     const xAxis = getXAxis();
     const xScale = getXScale();
+    const yAxis = getYAxis(matchedSeries?.yAxisId);
     const yScale = getYScale(matchedSeries?.yAxisId);
 
     // Convert sourceData to number array (line only supports numbers, not tuples)
@@ -248,8 +249,25 @@ export const Line = memo<LineProps>(
       return getGradientScale(seriesGradient, xScale, yScale);
     }, [seriesGradient, xScale, yScale]);
 
-    // Don't render if essential data is missing
-    if (!xScale || !yScale || !path) return null;
+    // Pre-filter data to only include points within domain/range
+    const filteredChartData = useMemo(() => {
+      if (!xScale || !yScale || !xAxis || !yAxis) return [];
+
+      return chartData.map((value, index) => {
+        if (value === null) return { value: null, index };
+
+        const xValue = xData && xData[index] !== undefined ? xData[index] : index;
+
+        // Check if both x and y values are within their respective axis domains
+        const isWithinXDomain = xValue >= xAxis.domain.min && xValue <= xAxis.domain.max;
+        const isWithinYDomain = value >= yAxis.domain.min && value <= yAxis.domain.max;
+        const isValid = isWithinXDomain && isWithinYDomain;
+
+        return isValid ? { value, index, xValue } : { value: null, index, xValue };
+      });
+    }, [chartData, xData, xScale, yScale, xAxis, yAxis]);
+
+    if (!xScale || !yScale || !path) return;
 
     return (
       <>
@@ -287,12 +305,11 @@ export const Line = memo<LineProps>(
                 }
               : {})}
           >
-            {chartData.map((value, index) => {
+            {filteredChartData.map(({ value, index, xValue }) => {
+              // Skip null values (either originally null or filtered out)
               if (value === null) {
                 return null;
               }
-
-              const xValue = xData && xData[index] !== undefined ? xData[index] : index;
 
               const point = renderPoints({
                 dataY: value,

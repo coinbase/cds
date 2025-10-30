@@ -212,11 +212,26 @@ export const Point = memo<PointProps>(
     ...svgProps
   }) => {
     const hasMounted = useHasMounted();
-    const { getXScale, getYScale, animate: animationEnabled } = useCartesianChartContext();
+    const {
+      getXScale,
+      getYScale,
+      getXAxis,
+      getYAxis,
+      animate: animationEnabled,
+    } = useCartesianChartContext();
     const animate = animateProp ?? animationEnabled;
 
     const xScale = getXScale();
     const yScale = getYScale(yAxisId);
+    const xAxis = getXAxis();
+    const yAxis = getYAxis(yAxisId);
+
+    const isWithinDomain = useMemo(() => {
+      if (!xAxis || !yAxis) return false;
+      const isWithinXDomain = dataX >= xAxis.domain.min && dataX <= xAxis.domain.max;
+      const isWithinYDomain = dataY >= yAxis.domain.min && dataY <= yAxis.domain.max;
+      return isWithinXDomain && isWithinYDomain;
+    }, [dataX, dataY, xAxis, yAxis]);
 
     const pixelCoordinate = useMemo(() => {
       if (pixelCoordinates) {
@@ -347,7 +362,7 @@ export const Point = memo<PointProps>(
       positionTransition,
     ]);
 
-    if (!xScale || !yScale) {
+    if (!xScale || !yScale || !isWithinDomain) {
       return null;
     }
 

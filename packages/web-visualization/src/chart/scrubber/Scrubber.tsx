@@ -150,8 +150,16 @@ export const Scrubber = memo(
       const ScrubberBeaconRefs = useRefMap<ScrubberBeaconRef>();
 
       const { scrubberPosition } = useScrubberContext();
-      const { getXScale, getYScale, getSeriesData, getXAxis, animate, series, drawingArea } =
-        useCartesianChartContext();
+      const {
+        getXScale,
+        getYScale,
+        getSeriesData,
+        getXAxis,
+        getYAxis,
+        animate,
+        series,
+        drawingArea,
+      } = useCartesianChartContext();
       const getStackedSeriesData = getSeriesData; // getSeriesData now returns stacked data
 
       // Track label dimensions for collision detection
@@ -196,8 +204,9 @@ export const Scrubber = memo(
 
       const beaconPositions = useMemo(() => {
         const xScale = getXScale() as ChartScaleFunction;
+        const xAxis = getXAxis();
 
-        if (!xScale || dataX === undefined || dataIndex === undefined) return [];
+        if (!xScale || dataX === undefined || dataIndex === undefined || !xAxis) return [];
 
         return (
           series
@@ -219,9 +228,14 @@ export const Scrubber = memo(
 
               if (dataY !== undefined) {
                 const yScale = getYScale(s.yAxisId) as ChartScaleFunction;
-                if (!yScale) {
-                  return undefined;
-                }
+                const yAxis = getYAxis(s.yAxisId);
+
+                if (!yScale || !yAxis) return;
+
+                const isWithinXDomain = dataX >= xAxis.domain.min && dataX <= xAxis.domain.max;
+                const isWithinYDomain = dataY >= yAxis.domain.min && dataY <= yAxis.domain.max;
+
+                if (!isWithinXDomain || !isWithinYDomain) return;
 
                 const pixelY = getPointOnScale(dataY, yScale);
 
@@ -258,6 +272,7 @@ export const Scrubber = memo(
         );
       }, [
         getXScale,
+        getXAxis,
         dataX,
         dataIndex,
         series,
@@ -265,6 +280,7 @@ export const Scrubber = memo(
         getStackedSeriesData,
         getSeriesData,
         getYScale,
+        getYAxis,
       ]);
 
       const labelVerticalInset = 2;
