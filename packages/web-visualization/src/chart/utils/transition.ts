@@ -32,11 +32,6 @@ export type UsePathTransitionParams = {
    */
   initialPath?: string;
   /**
-   * Whether to animate path transitions.
-   * @default true
-   */
-  animate?: boolean;
-  /**
    * Transition configurations for different animation phases.
    */
   transitionConfigs?: {
@@ -65,7 +60,6 @@ export type UsePathTransitionParams = {
  * // Simple path transition with spring
  * const animatedPath = usePathTransition({
  *   currentPath: d ?? '',
- *   animate: true,
  *   transitionConfigs: {
  *     update: { type: 'spring', stiffness: 300, damping: 20 }
  *   }
@@ -76,7 +70,6 @@ export type UsePathTransitionParams = {
  * const animatedPath = usePathTransition({
  *   currentPath: targetPath,
  *   initialPath: baselinePath,
- *   animate: true,
  *   transitionConfigs: {
  *     enter: { type: 'spring', duration: 0.6 },
  *     update: { type: 'tween', duration: 0.3, ease: 'easeInOut' }
@@ -86,7 +79,6 @@ export type UsePathTransitionParams = {
 export const usePathTransition = ({
   currentPath,
   initialPath,
-  animate = true,
   transitionConfigs,
 }: UsePathTransitionParams): MotionValue<string> => {
   const isInitialRender = useRef(true);
@@ -102,37 +94,35 @@ export const usePathTransition = ({
   });
 
   useEffect(() => {
+    // Cancel any ongoing animation
+    if (animationRef.current) {
+      animationRef.current.cancel();
+      animationRef.current = null;
+    }
+
     if (previousPathRef.current !== currentPath) {
-      // If there's an ongoing animation, capture the current interpolated position
-      // to use as the starting point for the new animation (smooth interruption)
-      if (animationRef.current) {
+      // Capture current position if we're interrupting an animation
+      if (progress.get() < 1 && progress.get() > 0) {
         const currentInterpolatedPath = interpolatedPath.get();
         previousPathRef.current = currentInterpolatedPath;
-        animationRef.current.cancel();
       }
 
       targetPathRef.current = currentPath;
 
-      if (animate) {
-        // Determine which transition config to use
-        const configToUse =
-          isInitialRender.current && transitionConfigs?.enter
-            ? transitionConfigs.enter
-            : (transitionConfigs?.update ?? defaultTransition);
+      // Determine which transition config to use
+      const configToUse =
+        isInitialRender.current && transitionConfigs?.enter
+          ? transitionConfigs.enter
+          : (transitionConfigs?.update ?? defaultTransition);
 
-        // Animate progress from 0 to 1 using framer-motion
-        progress.set(0);
-        animationRef.current = framerAnimate(progress, 1, {
-          ...(configToUse as any),
-          onComplete: () => {
-            previousPathRef.current = currentPath;
-          },
-        } as any);
-      } else {
-        // No animation, just update refs immediately
-        progress.set(1);
-        previousPathRef.current = currentPath;
-      }
+      // Animate progress from 0 to 1 using framer-motion
+      progress.set(0);
+      animationRef.current = framerAnimate(progress, 1, {
+        ...(configToUse as any),
+        onComplete: () => {
+          previousPathRef.current = currentPath;
+        },
+      } as any);
 
       isInitialRender.current = false;
     }
@@ -142,7 +132,7 @@ export const usePathTransition = ({
         animationRef.current.cancel();
       }
     };
-  }, [currentPath, animate, transitionConfigs, progress, interpolatedPath]);
+  }, [currentPath, transitionConfigs, progress, interpolatedPath]);
 
   return interpolatedPath;
 };

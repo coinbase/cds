@@ -2,7 +2,7 @@ import { memo, useId, useMemo } from 'react';
 import type { SVGProps } from 'react';
 import { useHasMounted } from '@coinbase/cds-common/hooks/useHasMounted';
 import type { Rect, SharedProps } from '@coinbase/cds-common/types';
-import { m as motion, type Transition } from 'framer-motion';
+import { m as motion, type MotionValue, type Transition } from 'framer-motion';
 
 import { defaultTransition, usePathTransition } from './utils/transition';
 import { useCartesianChartContext } from './ChartProvider';
@@ -64,6 +64,17 @@ export type PathProps = SharedProps &
     };
   };
 
+const AnimatedPath = memo<Omit<PathProps, 'animate'>>(
+  ({ d = '', transitionConfigs, ...pathProps }) => {
+    const interpolatedPath = usePathTransition({
+      currentPath: d,
+      transitionConfigs,
+    });
+
+    return <motion.path d={interpolatedPath} {...pathProps} />;
+  },
+);
+
 export const Path = memo<PathProps>(
   ({ animate: animateProp, clipRect, clipOffset = 0, d = '', transitionConfigs, ...pathProps }) => {
     const hasMounted = useHasMounted();
@@ -79,12 +90,6 @@ export const Path = memo<PathProps>(
     const clipPathTransition = useMemo(() => {
       if (!hasMounted) return transitionConfigs?.enter ?? defaultTransition;
     }, [hasMounted, transitionConfigs]);
-
-    const interpolatedPath = usePathTransition({
-      currentPath: d,
-      animate,
-      transitionConfigs,
-    });
 
     const clipPathAnimation = useMemo(
       () => ({
@@ -120,7 +125,16 @@ export const Path = memo<PathProps>(
             )}
           </clipPath>
         </defs>
-        <motion.path clipPath={`url(#${clipPathId})`} d={interpolatedPath} {...pathProps} />
+        {!animate ? (
+          <path clipPath={`url(#${clipPathId})`} d={d} {...pathProps} />
+        ) : (
+          <AnimatedPath
+            clipPath={`url(#${clipPathId})`}
+            d={d}
+            transitionConfigs={transitionConfigs}
+            {...pathProps}
+          />
+        )}
       </>
     );
   },
