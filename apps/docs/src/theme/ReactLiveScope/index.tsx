@@ -35,6 +35,7 @@ import * as CDSLottie from '@coinbase/cds-lottie-files';
 import { Accordion } from '@coinbase/cds-web/accordion/Accordion';
 import { AccordionItem } from '@coinbase/cds-web/accordion/AccordionItem';
 import { Select } from '@coinbase/cds-web/alpha/select/Select';
+import { TabbedChips as TabbedChipsAlpha } from '@coinbase/cds-web/alpha/tabbed-chips/TabbedChips';
 import { Lottie, LottieStatusAnimation } from '@coinbase/cds-web/animation';
 import { Banner } from '@coinbase/cds-web/banner/Banner';
 import * as CDSButtons from '@coinbase/cds-web/buttons';
@@ -173,6 +174,7 @@ const ReactLiveScope: Record<string, unknown> = {
   ...CDSSystem,
   MediaQueryProvider,
   ...CDSChips,
+  TabbedChipsAlpha,
   // loaders
   Spinner,
   // media

@@ -1,4 +1,3 @@
-import React from 'react';
 import { assets } from '@coinbase/cds-common/internal/data/assets';
 
 import { HStack, VStack } from '../../layout';

@@ -45,6 +45,7 @@ module.exports = {
    */
   sourceFiles: [
     'alpha/select/Select',
+    'alpha/tabbed-chips/TabbedChips',
     'animation/Lottie',
     'animation/LottieStatusAnimation',
     'accordion/Accordion',

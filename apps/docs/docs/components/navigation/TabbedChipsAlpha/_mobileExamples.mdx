@@ -1,0 +1,140 @@
+### Basic Usage
+
+```tsx
+function Example() {
+  const tabs = [
+    { id: 'one', label: 'One' },
+    { id: 'two', label: 'Two' },
+    { id: 'three', label: 'Three' },
+  ];
+  const [value, setValue] = useState(tabs[0]);
+  return <TabbedChips activeTab={value} onChange={setValue} tabs={tabs} />;
+}
+```
+
+### Many tabs (scrollable)
+
+:::tip Scrolling behavior
+The list becomes horizontally scrollable when content overflows; an `OverflowGradient` appears on the edge to hint more content.
+:::
+
+```tsx
+function LotsOfTabsExample() {
+  const tabs = Array.from({ length: 12 }).map((_, i) => ({
+    id: `tab_${i + 1}`,
+    label: `Tab ${i + 1}`,
+  }));
+  const [value, setValue] = useState(tabs[0]);
+  return <TabbedChips activeTab={value} onChange={setValue} tabs={tabs} />;
+}
+```
+
+### Long Text Tabs
+
+```tsx
+function LongTextExample() {
+  const tabs = [
+    { id: 'a', label: 'Very long tab label that wraps' },
+    { id: 'b', label: 'Another long label' },
+    { id: 'c', label: 'Short' },
+  ];
+  const [value, setValue] = useState(tabs[0]);
+  return <TabbedChips activeTab={value} onChange={setValue} tabs={tabs} />;
+}
+```
+
+### Disabled Tab
+
+```tsx
+function DisabledExample() {
+  const base = [
+    { id: 't1', label: 'First' },
+    { id: 't2', label: 'Second' },
+    { id: 't3', label: 'Third' },
+  ];
+  const tabs = base.map((t, i) => ({ ...t, disabled: i === 1 }));
+  const [value, setValue] = useState(tabs[0]);
+  return <TabbedChips activeTab={value} onChange={setValue} tabs={tabs} />;
+}
+```
+
+### With enum values
+
+```tsx
+function EnumValuesExample() {
+  const tabs = [
+    { id: 'one', label: 'One' },
+    { id: 'two', label: 'Two' },
+    { id: 'three', label: 'Three' },
+  ];
+  const [value, setValue] = useState(tabs[0]);
+  return <TabbedChips activeTab={value} onChange={setValue} tabs={tabs} />;
+}
+```
+
+### With start
+
+:::tip Media sizing
+For start media, use circular images sized 24×24 for regular chips and 16×16 for compact chips.
+:::
+
+```tsx
+function WithStartExample() {
+  const assetIconProps = { height: 24, width: 24, shape: 'circle', source: assets.eth.imageUrl };
+  const tabs = [
+    { id: 'one', label: 'One', start: <RemoteImage {...assetIconProps} /> },
+    { id: 'two', label: 'Two', start: <RemoteImage {...assetIconProps} /> },
+    { id: 'three', label: 'Three', start: <RemoteImage {...assetIconProps} /> },
+  ];
+  const [value, setValue] = useState(tabs[0]);
+  return <TabbedChips activeTab={value} onChange={setValue} tabs={tabs} />;
+}
+```
+
+### Compact with start
+
+```tsx
+function CompactWithStartExample() {
+  const icon = { height: 16, width: 16, shape: 'circle', source: assets.eth.imageUrl };
+  const tabs = [
+    { id: 'one', label: 'One', compact: true, start: <RemoteImage {...icon} /> },
+    { id: 'two', label: 'Two', compact: true, start: <RemoteImage {...icon} /> },
+    { id: 'three', label: 'Three', compact: true, start: <RemoteImage {...icon} /> },
+  ];
+  const [value, setValue] = useState(tabs[0]);
+  return <TabbedChips activeTab={value} onChange={setValue} tabs={tabs} />;
+}
+```
+
+### Custom TabComponent
+
+:::tip Custom Tab behavior
+When overriding `TabComponent`, call `updateActiveTab(id)` from `useTabsContext()` inside your tab to update selection. Mirror selection with `accessibilityState={{ selected: isActive }}`.
+:::
+
+```tsx
+function CustomTab({ id, label, ...props }: { id: string; label: string }) {
+  const { activeTab, updateActiveTab } = useTabsContext();
+  const isActive = activeTab?.id === id;
+  return (
+    <MediaChip
+      accessibilityState={{ selected: isActive }}
+      inverted={isActive}
+      onPress={() => updateActiveTab(id)}
+      {...props}
+    >
+      {label}
+    </MediaChip>
+  );
+}
+
+function CustomTabComponentExample() {
+  const tabs = [
+    { id: 'one', label: 'One' },
+    { id: 'two', label: 'Two' },
+    { id: 'three', label: 'Three' },
+  ];
+  const [value, setValue] = useState(tabs[0]);
+  return <TabbedChips activeTab={value} onChange={setValue} tabs={tabs} TabComponent={CustomTab} />;
+}
+```

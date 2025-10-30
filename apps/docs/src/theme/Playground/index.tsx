@@ -145,6 +145,7 @@ type PlaygroundProps = Omit<LiveProviderProps, 'transformCode'> & {
   hideControls?: boolean;
   hidePreview?: boolean;
   editorStartsExpanded?: boolean;
+  metastring?: string;
 };
 
 const Playground = memo(function Playground({
@@ -153,6 +154,7 @@ const Playground = memo(function Playground({
   hideControls,
   hidePreview,
   editorStartsExpanded,
+  metastring,
   ...props
 }: PlaygroundProps): JSX.Element {
   const [code, setCode] = useState(() => (codeProp ?? children ?? '').replace(/\n$/, ''));
@@ -163,6 +165,8 @@ const Playground = memo(function Playground({
   const { colorScheme, theme, prismTheme } = usePlaygroundTheme();
 
   const { editorRef, headingText } = useGetHeadingText();
+
+  const noInline = metastring?.includes('noInline');
 
   const handleCodeChange = useCallback((code: string) => {
     codeRef.current = code;
@@ -190,7 +194,7 @@ const Playground = memo(function Playground({
   return (
     <VStack ref={editorRef} paddingBottom={3} position="relative" zIndex={0}>
       <ThemeProvider activeColorScheme={colorScheme} theme={theme}>
-        <LiveProvider code={code} theme={prismTheme} {...props}>
+        <LiveProvider code={code} noInline={noInline} theme={prismTheme} {...props}>
           {!hidePreview && (
             <VStack
               background="bg"

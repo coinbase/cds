@@ -5,6 +5,11 @@
 
 export const routes = [
   {
+    key: 'TabbedChipsAlpha',
+    getComponent: () =>
+      require('@coinbase/cds-mobile/alpha/__stories__/TabbedChips.stories').default,
+  },
+  {
     key: 'Accordion',
     getComponent: () =>
       require('@coinbase/cds-mobile/accordion/__stories__/Accordion.stories').default,

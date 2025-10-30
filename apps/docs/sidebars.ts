@@ -548,6 +548,11 @@ const sidebars: SidebarsConfig = {
             },
             {
               type: 'doc',
+              id: 'components/navigation/TabbedChipsAlpha/tabbedChipsAlpha',
+              label: 'TabbedChips(Alpha)',
+            },
+            {
+              type: 'doc',
               id: 'components/navigation/Tour/tour',
               label: 'Tour',
             },

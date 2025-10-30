@@ -21,6 +21,10 @@
       "types": "./dts/accordion/index.d.ts",
       "default": "./esm/accordion/index.js"
     },
+    "./alpha": {
+      "types": "./dts/alpha/index.d.ts",
+      "default": "./esm/alpha/index.js"
+    },
     "./animation": {
       "types": "./dts/animation/index.d.ts",
       "default": "./esm/animation/index.js"
