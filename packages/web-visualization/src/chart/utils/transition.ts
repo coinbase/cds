@@ -102,12 +102,15 @@ export const usePathTransition = ({
   });
 
   useEffect(() => {
-    // Cancel any ongoing animation
-    if (animationRef.current) {
-      animationRef.current.cancel();
-    }
-
     if (previousPathRef.current !== currentPath) {
+      // If there's an ongoing animation, capture the current interpolated position
+      // to use as the starting point for the new animation (smooth interruption)
+      if (animationRef.current) {
+        const currentInterpolatedPath = interpolatedPath.get();
+        previousPathRef.current = currentInterpolatedPath;
+        animationRef.current.cancel();
+      }
+
       targetPathRef.current = currentPath;
 
       if (animate) {
@@ -139,7 +142,7 @@ export const usePathTransition = ({
         animationRef.current.cancel();
       }
     };
-  }, [currentPath, animate, transitionConfigs, progress]);
+  }, [currentPath, animate, transitionConfigs, progress, interpolatedPath]);
 
   return interpolatedPath;
 };
