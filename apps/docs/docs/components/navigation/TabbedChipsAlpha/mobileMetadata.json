@@ -1,7 +1,7 @@
 {
   "import": "import { TabbedChips } from '@coinbase/cds-mobile/alpha/tabbed-chips/TabbedChips'",
   "source": "https://github.com/coinbase/cds/blob/master/packages/mobile/src/alpha/tabbed-chips/TabbedChips.tsx",
-  "description": "Alpha version of TabbedChips for mobile. Tab chips are used in filter contexts to refine a data source.",
+  "description": "A chip component commonly used in filter context to refine a date source",
   "figma": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/%E2%9C%A8-CDS-Components?node-id=52745-18139&t=oNwj9s4WegnZ1o3v-4",
   "relatedComponents": [
     {
