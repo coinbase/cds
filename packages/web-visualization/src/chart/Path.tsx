@@ -120,7 +120,7 @@ export const Path = memo<PathProps>(
             )}
           </clipPath>
         </defs>
-        <path clipPath={`url(#${clipPathId})`} d={interpolatedPath} {...pathProps} />
+        <motion.path clipPath={`url(#${clipPathId})`} d={interpolatedPath} {...pathProps} />
       </>
     );
   },

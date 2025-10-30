@@ -1,10 +1,12 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { interpolatePath } from 'd3-interpolate-path';
 import {
   animate as framerAnimate,
   type AnimationPlaybackControls,
+  type MotionValue,
   type Transition,
   useMotionValue,
+  useTransform,
 } from 'framer-motion';
 
 /**
@@ -57,7 +59,7 @@ export type UsePathTransitionParams = {
  * When the path changes, the animation will start from the previous completed position to the new path.
  *
  * @param params - Configuration for path transitions
- * @returns Current interpolated path string
+ * @returns MotionValue containing the current interpolated path string
  *
  * @example
  * // Simple path transition with spring
@@ -86,12 +88,18 @@ export const usePathTransition = ({
   initialPath,
   animate = true,
   transitionConfigs,
-}: UsePathTransitionParams): string => {
+}: UsePathTransitionParams): MotionValue<string> => {
   const isInitialRender = useRef(true);
   const previousPathRef = useRef(initialPath ?? currentPath);
   const animationRef = useRef<AnimationPlaybackControls | null>(null);
-  const [interpolatedPath, setInterpolatedPath] = useState(previousPathRef.current);
   const progress = useMotionValue(0);
+  const targetPathRef = useRef(currentPath);
+
+  // Derive the interpolated path from progress using useTransform
+  const interpolatedPath = useTransform(progress, (latest) => {
+    const pathInterpolator = interpolatePath(previousPathRef.current, targetPathRef.current);
+    return pathInterpolator(latest);
+  });
 
   useEffect(() => {
     // Cancel any ongoing animation
@@ -100,6 +108,8 @@ export const usePathTransition = ({
     }
 
     if (previousPathRef.current !== currentPath) {
+      targetPathRef.current = currentPath;
+
       if (animate) {
         // Determine which transition config to use
         const configToUse =
@@ -107,25 +117,17 @@ export const usePathTransition = ({
             ? transitionConfigs.enter
             : (transitionConfigs?.update ?? defaultTransition);
 
-        // Create interpolator from previous path to new path
-        const pathInterpolator = interpolatePath(previousPathRef.current, currentPath);
-
         // Animate progress from 0 to 1 using framer-motion
         progress.set(0);
         animationRef.current = framerAnimate(progress, 1, {
           ...(configToUse as any),
-          onUpdate: (latest: number) => {
-            setInterpolatedPath(pathInterpolator(latest));
-          },
           onComplete: () => {
-            // Ensure we end at exactly the target path
-            setInterpolatedPath(currentPath);
             previousPathRef.current = currentPath;
           },
         } as any);
       } else {
-        // No animation, just set the path immediately
-        setInterpolatedPath(currentPath);
+        // No animation, just update refs immediately
+        progress.set(1);
         previousPathRef.current = currentPath;
       }
 
