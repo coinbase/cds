@@ -4,12 +4,8 @@ import { LinearGradient, Path as SkiaPath } from '@shopify/react-native-skia';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import { type PathProps } from '../Path';
-import {
-  defaultTransition,
-  type TransitionConfig,
-  useTransitionAnimation,
-} from '../utils/animation';
 import { getGradientConfig } from '../utils/gradient';
+import { defaultTransition, type TransitionConfig, useTransition } from '../utils/transition';
 
 import type { AreaComponentProps } from './Area';
 
@@ -71,7 +67,7 @@ export const SolidArea = memo<SolidAreaProps>(
       return getGradientConfig(gradient, xScale, yScale);
     }, [gradient, xScale, yScale]);
 
-    const path = useTransitionAnimation({
+    const path = useTransition({
       currentPath,
       animate: shouldAnimate,
       transitionConfig,

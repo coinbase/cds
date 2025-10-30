@@ -4,7 +4,6 @@ import {
   type SharedValue,
   useAnimatedReaction,
   useSharedValue,
-  withDelay,
   withSpring,
   type WithSpringConfig,
   withTiming,
@@ -156,9 +155,42 @@ export const buildTransition = (targetValue: number, config: TransitionConfig): 
 };
 
 /**
- * Configuration for useTransitionAnimation hook
+ * Custom hook that manages path animation state and transitions.
+ * Handles both simple path-to-path transitions and enter animations with different configs.
+ * When path changes, the animation will start from the previous completed position to the new path.
+ *
+ * @param currentPath - Current target path to animate to
+ * @param initialPath - Initial path for enter animation. When provided, the first animation will go from initialPath to currentPath. If not provided, defaults to currentPath (no enter animation)
+ * @param animate - Whether to animate path transitions (default: true)
+ * @param transitionConfig - Transition configuration for path updates (default: defaultTransition)
+ * @param initialTransitionConfig - Transition configuration specifically for the initial/enter animation. If provided, this will be used for the first animation only. Subsequent animations will use the regular transitionConfig
+ * @returns Animated SkPath as a shared value
+ *
+ * @example
+ * // Simple path transition (like SolidLine)
+ * const path = useTransition({
+ *   currentPath: d ?? '',
+ *   animate: shouldAnimate,
+ *   transitionConfig: { type: 'timing', duration: 3000 }
+ * });
+ *
+ * @example
+ * // Enter animation with different initial config (like DefaultBar)
+ * const path = useTransition({
+ *   currentPath: targetPath,
+ *   initialPath: baselinePath,
+ *   animate: true,
+ *   transitionConfig: { type: 'timing', duration: 300 },
+ *   initialTransitionConfig: { type: 'timing', duration: 1000 }
+ * });
  */
-export type UseTransitionAnimationConfig = {
+export const useTransition = ({
+  currentPath,
+  initialPath,
+  animate = true,
+  transitionConfig = defaultTransition,
+  initialTransitionConfig,
+}: {
   /**
    * Current target path to animate to.
    */
@@ -185,41 +217,7 @@ export type UseTransitionAnimationConfig = {
    * Subsequent animations will use the regular transitionConfig.
    */
   initialTransitionConfig?: TransitionConfig;
-};
-
-/**
- * Custom hook that manages path animation state and transitions.
- * Handles both simple path-to-path transitions and enter animations with different configs.
- * When path changes, the animation will start from the previous completed position to the new path.
- *
- * @param config - Transition configuration
- * @returns Animated SkPath as a shared value
- *
- * @example
- * // Simple path transition (like SolidLine)
- * const path = useTransitionAnimation({
- *   currentPath: d ?? '',
- *   animate: shouldAnimate,
- *   transitionConfig: { type: 'timing', duration: 3000 }
- * });
- *
- * @example
- * // Enter animation with different initial config (like DefaultBar)
- * const path = useTransitionAnimation({
- *   currentPath: targetPath,
- *   initialPath: baselinePath,
- *   animate: true,
- *   transitionConfig: { type: 'timing', duration: 300 },
- *   initialTransitionConfig: { type: 'timing', duration: 1000 }
- * });
- */
-export const useTransitionAnimation = ({
-  currentPath,
-  initialPath,
-  animate = true,
-  transitionConfig = defaultTransition,
-  initialTransitionConfig,
-}: UseTransitionAnimationConfig): SharedValue<SkPath> => {
+}): SharedValue<SkPath> => {
   const isInitialRender = useRef(true);
   const previousPathRef = useRef(initialPath ?? currentPath);
   const progress = useSharedValue(animate && initialPath ? 0 : 1);

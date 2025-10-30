@@ -6,7 +6,7 @@ import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 import { Circle, type Color, Group, interpolateColors } from '@shopify/react-native-skia';
 
 import type { ChartTextChildren } from './text/ChartText';
-import { buildTransition, defaultTransition, type TransitionConfig } from './utils/animation';
+import { buildTransition, defaultTransition, type TransitionConfig } from './utils/transition';
 import { useCartesianChartContext } from './ChartProvider';
 import { ChartText, type ChartTextProps } from './text';
 import { projectPoint } from './utils';

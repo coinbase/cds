@@ -5,7 +5,6 @@ import {
   useSharedValue,
   withRepeat,
   withSequence,
-  withTiming,
 } from 'react-native-reanimated';
 import { usePreviousValue } from '@coinbase/cds-common/hooks/usePreviousValue';
 import type { SharedProps } from '@coinbase/cds-common/types';
@@ -13,10 +12,9 @@ import { useTheme } from '@coinbase/cds-mobile';
 import { Circle, Group } from '@shopify/react-native-skia';
 
 import { useCartesianChartContext } from '../ChartProvider';
-import { ChartText } from '../text';
 import { projectPoint, useScrubberContext } from '../utils';
-import { buildTransition, defaultTransition, type TransitionConfig } from '../utils/animation';
 import { evaluateGradientAtValue, type Gradient } from '../utils/gradient';
+import { buildTransition, defaultTransition, type TransitionConfig } from '../utils/transition';
 
 const radius = 5;
 const glowRadius = 10;
