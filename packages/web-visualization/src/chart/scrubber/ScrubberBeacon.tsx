@@ -1,9 +1,10 @@
 import { forwardRef, memo, useImperativeHandle, useMemo } from 'react';
+import { useHasMounted } from '@coinbase/cds-common/hooks/useHasMounted';
 import type { SharedProps } from '@coinbase/cds-common/types';
-import { m as motion, useAnimate } from 'framer-motion';
+import { m as motion, type Transition, useAnimate } from 'framer-motion';
 
 import { useCartesianChartContext } from '../ChartProvider';
-import { projectPoint, useScrubberContext } from '../utils';
+import { defaultTransition, projectPoint, useScrubberContext } from '../utils';
 
 const pulseTransitionConfig = {
   duration: 2,
@@ -65,6 +66,27 @@ export type ScrubberBeaconProps = SharedProps & {
    * Custom inline styles.
    */
   style?: React.CSSProperties;
+  /**
+   * Transition configurations for different animation phases.
+   * Allows separate control over enter and update animations for position changes.
+   *
+   * @example
+   * // Fast update, slow enter
+   * transitionConfigs={{
+   *   enter: { type: 'spring', duration: 0.6 },
+   *   update: { type: 'tween', duration: 0.3, ease: 'easeInOut' }
+   * }}
+   */
+  transitionConfigs?: {
+    /**
+     * Transition used when the beacon first enters/mounts.
+     */
+    enter?: Transition;
+    /**
+     * Transition used when the beacon position updates.
+     */
+    update?: Transition;
+  };
 };
 
 /**
@@ -84,9 +106,11 @@ export const ScrubberBeacon = memo(
         opacity = 1,
         className,
         style,
+        transitionConfigs,
       },
       ref,
     ) => {
+      const hasMounted = useHasMounted();
       const [scope, animate] = useAnimate();
       const {
         getSeries,
@@ -171,6 +195,11 @@ export const ScrubberBeacon = memo(
         });
       }, [xScale, yScale, dataX, dataY]);
 
+      const positionTransition = useMemo(() => {
+        if (!hasMounted && transitionConfigs?.enter) return transitionConfigs.enter;
+        return transitionConfigs?.update ?? defaultTransition;
+      }, [hasMounted, transitionConfigs]);
+
       if (!pixelCoordinate) {
         return null;
       }
@@ -192,7 +221,7 @@ export const ScrubberBeacon = memo(
               initial={false}
               opacity={0.15}
               r={glowRadius}
-              transition={{ duration: 0.3, ease: 'easeInOut' }}
+              transition={positionTransition}
             />
             <motion.g
               animate={{
@@ -200,7 +229,7 @@ export const ScrubberBeacon = memo(
                 y: pixelCoordinate.y,
               }}
               initial={false}
-              transition={{ duration: 0.3, ease: 'easeInOut' }}
+              transition={positionTransition}
             >
               <motion.circle
                 ref={scope}
@@ -233,7 +262,7 @@ export const ScrubberBeacon = memo(
               stroke="var(--color-bg)"
               strokeWidth={2}
               style={style}
-              transition={{ duration: 0.3, ease: 'easeInOut' }}
+              transition={positionTransition}
             />
           </g>
         );

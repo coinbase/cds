@@ -1,5 +1,6 @@
 import React, { memo, useMemo } from 'react';
 import type { SVGProps } from 'react';
+import type { Transition } from 'framer-motion';
 
 import { getBarPath } from '../utils';
 
@@ -67,6 +68,20 @@ export type BarComponentProps = {
    * Stroke width for the bar outline.
    */
   strokeWidth?: number;
+  /**
+   * Transition configurations for different animation phases.
+   * Allows separate control over enter and update animations.
+   */
+  transitionConfigs?: {
+    /**
+     * Transition used when the bar first enters/mounts.
+     */
+    enter?: Transition;
+    /**
+     * Transition used when the bar's properties update.
+     */
+    update?: Transition;
+  };
 };
 
 export type BarComponent = React.FC<BarComponentProps>;
@@ -81,6 +96,20 @@ export type BarProps = Omit<BarComponentProps, 'd'> & {
    * Component to render the bar.
    */
   BarComponent?: BarComponent;
+  /**
+   * Transition configurations for different animation phases.
+   * Allows separate control over enter and update animations.
+   */
+  transitionConfigs?: {
+    /**
+     * Transition used when the bar first enters/mounts.
+     */
+    enter?: Transition;
+    /**
+     * Transition used when the bar's properties update.
+     */
+    update?: Transition;
+  };
 };
 
 /**
@@ -112,6 +141,7 @@ export const Bar = memo<BarProps>(
     borderRadius = 4,
     roundTop = true,
     roundBottom = true,
+    transitionConfigs,
   }) => {
     const barPath = useMemo(() => {
       return getBarPath(x, y, width, height, borderRadius, roundTop, roundBottom);
@@ -137,6 +167,7 @@ export const Bar = memo<BarProps>(
         roundTop={roundTop}
         stroke={stroke}
         strokeWidth={strokeWidth}
+        transitionConfigs={transitionConfigs}
         width={width}
         x={x}
         y={y}

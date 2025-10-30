@@ -1,14 +1,11 @@
-import 'd3-transition';
-
-import { memo, useCallback, useEffect, useId, useRef } from 'react';
+import { memo, useId, useMemo } from 'react';
 import type { SVGProps } from 'react';
-import { useValueChanges } from '@coinbase/cds-common/hooks/useValueChanges';
+import { useHasMounted } from '@coinbase/cds-common/hooks/useHasMounted';
 import type { Rect, SharedProps } from '@coinbase/cds-common/types';
-import { interpolatePath } from 'd3-interpolate-path';
-import { select } from 'd3-selection';
-import { m as motion } from 'framer-motion';
+import { m as motion, type Transition } from 'framer-motion';
 
 import { useCartesianChartContext } from './ChartProvider';
+import { defaultTransition } from './utils';
 
 export type PathProps = SharedProps &
   Omit<
@@ -38,45 +35,66 @@ export type PathProps = SharedProps &
      * The offset to add to the clip rect boundaries.
      */
     clipOffset?: number;
+    /**
+     * Transition configurations for different animation phases.
+     * Allows separate control over enter and update animations.
+     *
+     * @example
+     * // Fast update, slow enter
+     * transitionConfigs={{
+     *   enter: { type: 'spring', duration: 1, bounce: 0 },
+     *   update: { type: 'tween', duration: 0.2, ease: 'easeOut' }
+     * }}
+     *
+     * @example
+     * // Spring animation for all phases
+     * transitionConfigs={{
+     *   update: { type: 'spring', damping: 20, stiffness: 300 }
+     * }}
+     */
+    transitionConfigs?: {
+      /**
+       * Transition used when the path first enters/mounts.
+       */
+      enter?: Transition;
+      /**
+       * Transition used when the path morphs to new data.
+       */
+      update?: Transition;
+    };
   };
 
 export const Path = memo<PathProps>(
-  ({ animate: animateProp, clipRect, clipOffset = 0, d = '', ...pathProps }) => {
-    const pathRef = useRef<SVGPathElement>(null);
+  ({ animate: animateProp, clipRect, clipOffset = 0, d = '', transitionConfigs, ...pathProps }) => {
+    const hasMounted = useHasMounted();
     const clipPathId = useId();
     const context = useCartesianChartContext();
     const rect = clipRect ?? context.drawingArea;
     const animate = animateProp ?? context.animate;
 
-    const {
-      previousValue: previousPath,
-      newValue: newPath,
-      hasChanged,
-      addPreviousValue,
-    } = useValueChanges(d);
-
-    const morphPath = useCallback(() => {
-      if (!pathRef.current || !newPath || !previousPath) return;
-
-      select(pathRef.current)
-        .transition()
-        .duration(300)
-        .attrTween('d', function tween() {
-          return interpolatePath(previousPath as string, newPath as string);
-        });
-    }, [previousPath, newPath]);
-
-    useEffect(() => {
-      addPreviousValue(newPath);
-
-      if (animate && hasChanged && previousPath) {
-        morphPath();
-      }
-    }, [addPreviousValue, newPath, animate, hasChanged, previousPath, morphPath]);
-
     // The clip offset provides extra padding to prevent path from being cut off
     // Area charts typically use offset=0 for exact clipping, while lines use offset=2 for breathing room
     const totalOffset = clipOffset * 2; // Applied on both sides
+
+    const clipPathTransition = useMemo(() => {
+      if (!hasMounted) return transitionConfigs?.enter ?? defaultTransition;
+    }, [hasMounted, transitionConfigs]);
+
+    const pathTransition = useMemo(() => {
+      if (!hasMounted) return transitionConfigs?.enter;
+      return transitionConfigs?.update ?? defaultTransition;
+    }, [hasMounted, transitionConfigs]);
+
+    const clipPathAnimation = useMemo(
+      () => ({
+        hidden: { width: 0 },
+        visible: {
+          width: rect.width + totalOffset,
+          transition: clipPathTransition,
+        },
+      }),
+      [rect.width, totalOffset, clipPathTransition],
+    );
 
     return (
       <>
@@ -94,20 +112,24 @@ export const Path = memo<PathProps>(
                 animate="visible"
                 height={rect.height + totalOffset}
                 initial="hidden"
-                variants={{
-                  hidden: { width: 0 },
-                  visible: {
-                    width: rect.width + totalOffset,
-                    transition: { type: 'spring', duration: 1, bounce: 0 },
-                  },
-                }}
+                variants={clipPathAnimation}
                 x={rect.x - clipOffset}
                 y={rect.y - clipOffset}
               />
             )}
           </clipPath>
         </defs>
-        <path ref={pathRef} clipPath={`url(#${clipPathId})`} d={d} {...pathProps} />
+        {!animate ? (
+          <path clipPath={`url(#${clipPathId})`} d={d} {...pathProps} />
+        ) : (
+          <motion.path
+            animate={{ d }}
+            clipPath={`url(#${clipPathId})`}
+            initial={false}
+            transition={pathTransition}
+            {...pathProps}
+          />
+        )}
       </>
     );
   },

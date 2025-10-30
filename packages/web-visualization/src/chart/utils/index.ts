@@ -7,4 +7,5 @@ export * from './gradient';
 export * from './path';
 export * from './point';
 export * from './scale';
+export * from './transition';
 // codegen:end

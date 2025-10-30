@@ -19,6 +19,7 @@ export type BarStackGroupProps = Pick<
   | 'barMinSize'
   | 'stackMinSize'
   | 'BarStackComponent'
+  | 'transitionConfigs'
 > &
   Pick<BarStackProps, 'series' | 'yAxisId'> & {
     /**
@@ -106,7 +107,7 @@ export const BarStackGroup = memo<BarStackGroupProps>(
       );
     }
 
-    if (!yScale || !drawingArea || stackConfigs.length === 0) return;
+    if (!yScale || !drawingArea || stackConfigs.length === 0) return null;
 
     return stackConfigs.map(({ categoryIndex, x, width }) => (
       <BarStack

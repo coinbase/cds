@@ -1,8 +1,9 @@
 import { memo, useId, useMemo } from 'react';
+import { useHasMounted } from '@coinbase/cds-common/hooks/useHasMounted';
 import { m as motion } from 'framer-motion';
 
 import { useCartesianChartContext } from '../ChartProvider';
-import { getBarPath } from '../utils';
+import { defaultTransition, getBarPath } from '../utils';
 
 import type { BarStackComponentProps } from './BarStack';
 
@@ -33,7 +34,9 @@ export const DefaultBarStack = memo<DefaultBarStackProps>(
     roundTop = true,
     roundBottom = true,
     yOrigin,
+    transitionConfigs,
   }) => {
+    const hasMounted = useHasMounted();
     const { animate } = useCartesianChartContext();
     const clipPathId = useId();
 
@@ -42,8 +45,14 @@ export const DefaultBarStack = memo<DefaultBarStackProps>(
     }, [x, y, width, height, borderRadius, roundTop, roundBottom]);
 
     const initialClipPathData = useMemo(() => {
+      if (!animate) return undefined;
       return getBarPath(x, yOrigin ?? y + height, width, 1, borderRadius, roundTop, roundBottom);
-    }, [x, yOrigin, y, height, width, borderRadius, roundTop, roundBottom]);
+    }, [animate, x, yOrigin, y, height, width, borderRadius, roundTop, roundBottom]);
+
+    const transition = useMemo(() => {
+      if (!hasMounted && transitionConfigs?.enter) return transitionConfigs.enter;
+      return transitionConfigs?.update ?? defaultTransition;
+    }, [hasMounted, transitionConfigs]);
 
     return (
       <>
@@ -53,7 +62,7 @@ export const DefaultBarStack = memo<DefaultBarStackProps>(
               <motion.path
                 animate={{ d: clipPathData }}
                 initial={{ d: initialClipPathData }}
-                transition={{ type: 'spring', duration: 1, bounce: 0 }}
+                transition={transition}
               />
             ) : (
               <path d={clipPathData} />

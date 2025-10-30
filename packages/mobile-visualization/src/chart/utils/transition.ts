@@ -13,6 +13,33 @@ import { notifyChange, Skia, type SkPath } from '@shopify/react-native-skia';
 import * as interpolate from 'd3-interpolate-path';
 
 /**
+ * Transition configuration for animations.
+ * Supports timing and spring animation types.
+ * Used for paths, positions, opacity, and any other animated properties.
+ *
+ * @example
+ * // Spring animation
+ * { type: 'spring', damping: 10, stiffness: 100 }
+ *
+ * @example
+ * // Timing animation
+ * { type: 'timing', duration: 500, easing: Easing.inOut(Easing.ease) }
+ */
+export type TransitionConfig =
+  | ({ type: 'timing' } & WithTimingConfig)
+  | ({ type: 'spring' } & WithSpringConfig);
+
+/**
+ * Default transition configuration used across all chart components.
+ * Uses a smooth spring animation with balanced stiffness and damping.
+ */
+export const defaultTransition: TransitionConfig = {
+  type: 'spring',
+  stiffness: 900,
+  damping: 120,
+};
+
+/**
  * Custom hook that uses d3-interpolate-path for more robust path interpolation.
  * then use Skia's native interpolation in the worklet.
  *
@@ -86,33 +113,6 @@ export const useInterpolator = <T>(
     [input, output, options],
   );
   return result;
-};
-
-/**
- * Transition configuration for animations.
- * Supports timing and spring animation types.
- * Used for paths, positions, opacity, and any other animated properties.
- *
- * @example
- * // Spring animation
- * { type: 'spring', damping: 10, stiffness: 100 }
- *
- * @example
- * // Timing animation
- * { type: 'timing', duration: 500, easing: Easing.inOut(Easing.ease) }
- */
-export type TransitionConfig =
-  | ({ type: 'timing' } & WithTimingConfig)
-  | ({ type: 'spring' } & WithSpringConfig);
-
-/**
- * Default transition configuration used across all chart components.
- * Uses a smooth spring animation with balanced stiffness and damping.
- */
-export const defaultTransition: TransitionConfig = {
-  type: 'spring',
-  stiffness: 900,
-  damping: 120,
 };
 
 /**

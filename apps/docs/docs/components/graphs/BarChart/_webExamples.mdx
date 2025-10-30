@@ -912,3 +912,84 @@ function MonthlyRewards() {
   );
 }
 ```
+
+## Custom Transitions
+
+You can customize the transition animations for your bar chart using the `transitionConfigs` prop.
+This allows you to control enter, update, and exit animations separately.
+
+```jsx live
+function UpdatingChartValues() {
+  const [data, setData] = React.useState([45, 80, 120, 95, 150, 110, 85]);
+  const [nullIndex, setNullIndex] = React.useState(null);
+
+  const displayData = React.useMemo(() => {
+    if (nullIndex === null) return data;
+    return data.map((d, i) => (i === nullIndex ? null : d));
+  }, [data, nullIndex]);
+
+  return (
+    <VStack gap={2}>
+      <HStack gap={2}>
+        <Button
+          size="sm"
+          onClick={() =>
+            setData((prev) =>
+              prev[0] > 200 ? [45, 80, 120, 95, 150, 110, 85] : prev.map((d) => d + 25),
+            )
+          }
+        >
+          Update Data
+        </Button>
+        <Button size="sm" onClick={() => setNullIndex((prev) => (prev === null ? 3 : null))}>
+          {nullIndex === null ? 'Hide Bar' : 'Show Bar'}
+        </Button>
+      </HStack>
+
+      <Text font="label">Default Animations</Text>
+      <BarChart
+        height={150}
+        series={[
+          {
+            id: 'weekly-data',
+            data: displayData,
+          },
+        ]}
+        showXAxis
+        showYAxis
+        xAxis={{
+          data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+        }}
+        yAxis={{
+          showGrid: true,
+          domain: { max: 250 },
+        }}
+      />
+
+      <Text font="label">Custom Enter + Update Animations</Text>
+      <BarChart
+        height={150}
+        series={[
+          {
+            id: 'weekly-data-custom',
+            data: displayData,
+          },
+        ]}
+        transitionConfigs={{
+          enter: { type: 'spring', duration: 1.5, bounce: 0.2 },
+          update: { type: 'tween', duration: 0.3, ease: 'easeOut' },
+        }}
+        showXAxis
+        showYAxis
+        xAxis={{
+          data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+        }}
+        yAxis={{
+          showGrid: true,
+          domain: { max: 250 },
+        }}
+      />
+    </VStack>
+  );
+}
+```

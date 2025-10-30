@@ -11,15 +11,15 @@ import {
 import { SegmentedTab, type SegmentedTabProps } from '@coinbase/cds-web/tabs/SegmentedTab';
 import { Text, type TextBaseProps } from '@coinbase/cds-web/typography';
 import { css } from '@linaria/core';
-import { m as motion } from 'framer-motion';
+import { m as motion, type Transition } from 'framer-motion';
 
 const MotionBox = motion(Box);
 
-const pulseTransitionConfig = {
+const pulseTransitionConfig: Transition = {
   duration: 2,
   repeat: Infinity,
   ease: 'easeInOut',
-} as const;
+};
 
 // Animated active indicator to support smooth transition of background color
 export const PeriodSelectorActiveIndicator = memo(

@@ -2,7 +2,7 @@ import React, { memo, useMemo } from 'react';
 import type { SVGProps } from 'react';
 
 import { useCartesianChartContext } from '../ChartProvider';
-import { type ChartPathCurveType, type Gradient, getAreaPath } from '../utils';
+import { type ChartPathCurveType, getAreaPath, type Gradient } from '../utils';
 
 import { DottedArea } from './DottedArea';
 import { GradientArea } from './GradientArea';
@@ -141,19 +141,17 @@ export const Area = memo<AreaProps>(
       }
     }, [SelectedAreaComponent, type]);
 
-    if (!xScale || !yScale || !sourceData || !area) {
-      return null;
-    }
+    if (!xScale || !yScale || !sourceData || !area) return;
 
     const fill = specifiedFill ?? matchedSeries?.color ?? 'var(--color-fgPrimary)';
 
     return (
       <AreaComponent
         baseline={baseline}
-        gradient={gradient}
         d={area}
         fill={fill}
         fillOpacity={fillOpacity}
+        gradient={gradient}
         seriesId={seriesId}
         stroke={stroke}
         strokeWidth={strokeWidth}

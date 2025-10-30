@@ -227,6 +227,9 @@ export const Line = memo<LineProps>(
       return getGradientScale(seriesGradient, xScale, yScale);
     }, [seriesGradient, xScale, yScale]);
 
+    // Don't render if essential data is missing
+    if (!xScale || !yScale || !path) return null;
+
     return (
       <>
         {showArea && (

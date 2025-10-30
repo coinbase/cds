@@ -1,5 +1,6 @@
 import React, { memo, useMemo } from 'react';
 import type { Rect } from '@coinbase/cds-common';
+import type { Transition } from 'framer-motion';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import type { ChartScaleFunction } from '../utils';
@@ -51,13 +52,27 @@ export type BarStackComponentProps = {
    * The y-origin for animations (baseline position).
    */
   yOrigin?: number;
+  /**
+   * Transition configurations for different animation phases.
+   * Allows separate control over enter and update animations for the stack clip path.
+   */
+  transitionConfigs?: {
+    /**
+     * Transition used when the stack clip path first enters/mounts.
+     */
+    enter?: Transition;
+    /**
+     * Transition used when the stack clip path updates.
+     */
+    update?: Transition;
+  };
 };
 
 export type BarStackComponent = React.FC<BarStackComponentProps>;
 
 export type BarStackProps = Pick<
   BarProps,
-  'BarComponent' | 'fillOpacity' | 'stroke' | 'strokeWidth' | 'borderRadius'
+  'BarComponent' | 'fillOpacity' | 'stroke' | 'strokeWidth' | 'borderRadius' | 'transitionConfigs'
 > & {
   /**
    * Array of series configurations that belong to this stack.
@@ -134,6 +149,7 @@ export const BarStack = memo<BarStackProps>(
     barMinSize,
     stackMinSize,
     roundBaseline,
+    transitionConfigs,
   }) => {
     const { getSeriesData, getXAxis, getXScale, getSeries } = useCartesianChartContext();
 
@@ -686,6 +702,7 @@ export const BarStack = memo<BarStackProps>(
         roundTop={bar.roundTop}
         stroke={bar.stroke ?? defaultStroke}
         strokeWidth={bar.strokeWidth ?? defaultStrokeWidth}
+        transitionConfigs={transitionConfigs}
         width={bar.width}
         x={bar.x}
         y={bar.y}
@@ -702,6 +719,7 @@ export const BarStack = memo<BarStackProps>(
         height={stackRect.height}
         roundBottom={stackRoundBottom}
         roundTop={stackRoundTop}
+        transitionConfigs={transitionConfigs}
         width={stackRect.width}
         x={stackRect.x}
         y={stackRect.y}
