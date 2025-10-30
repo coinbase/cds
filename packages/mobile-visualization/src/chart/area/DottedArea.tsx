@@ -13,7 +13,7 @@ import {
 import { useCartesianChartContext } from '../ChartProvider';
 import type { PathProps } from '../Path';
 import { applyOpacityToColor, getGradientScale, processGradient } from '../utils/gradient';
-import { defaultTransition, type TransitionConfig, useTransition } from '../utils/transition';
+import { defaultTransition, type TransitionConfig, usePathTransition } from '../utils/transition';
 
 import type { AreaComponentProps } from './Area';
 
@@ -227,7 +227,7 @@ export const DottedArea = memo<DottedAreaProps>(
       fill,
     ]);
 
-    const areaPath = useTransition({
+    const areaPath = usePathTransition({
       currentPath,
       animate: shouldAnimate,
       transitionConfig,

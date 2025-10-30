@@ -4,7 +4,7 @@ import { Path as SkiaPath } from '@shopify/react-native-skia';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import { getBarPath } from '../utils';
-import { defaultTransition, type TransitionConfig, useTransition } from '../utils/transition';
+import { defaultTransition, type TransitionConfig, usePathTransition } from '../utils/transition';
 
 import type { BarComponentProps } from './Bar';
 
@@ -97,7 +97,7 @@ export const DefaultBar = memo<DefaultBarProps>(
       );
     }, [x, originY, y, height, width, borderRadius, roundTop, roundBottom]);
 
-    const path = useTransition({
+    const path = usePathTransition({
       currentPath: targetPath,
       initialPath,
       animate,

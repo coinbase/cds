@@ -4,8 +4,8 @@ import { useHasMounted } from '@coinbase/cds-common/hooks/useHasMounted';
 import type { Rect, SharedProps } from '@coinbase/cds-common/types';
 import { m as motion, type Transition } from 'framer-motion';
 
+import { defaultTransition, usePathTransition } from './utils/transition';
 import { useCartesianChartContext } from './ChartProvider';
-import { defaultTransition } from './utils';
 
 export type PathProps = SharedProps &
   Omit<
@@ -80,10 +80,11 @@ export const Path = memo<PathProps>(
       if (!hasMounted) return transitionConfigs?.enter ?? defaultTransition;
     }, [hasMounted, transitionConfigs]);
 
-    const pathTransition = useMemo(() => {
-      if (!hasMounted) return transitionConfigs?.enter;
-      return transitionConfigs?.update ?? defaultTransition;
-    }, [hasMounted, transitionConfigs]);
+    const interpolatedPath = usePathTransition({
+      currentPath: d,
+      animate,
+      transitionConfigs,
+    });
 
     const clipPathAnimation = useMemo(
       () => ({
@@ -119,17 +120,7 @@ export const Path = memo<PathProps>(
             )}
           </clipPath>
         </defs>
-        {!animate ? (
-          <path clipPath={`url(#${clipPathId})`} d={d} {...pathProps} />
-        ) : (
-          <motion.path
-            animate={{ d }}
-            clipPath={`url(#${clipPathId})`}
-            initial={false}
-            transition={pathTransition}
-            {...pathProps}
-          />
-        )}
+        <path clipPath={`url(#${clipPathId})`} d={interpolatedPath} {...pathProps} />
       </>
     );
   },

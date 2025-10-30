@@ -6,7 +6,7 @@ import { DashPathEffect, LinearGradient, Path as SkiaPath } from '@shopify/react
 import { useCartesianChartContext } from '../ChartProvider';
 import { type PathProps } from '../Path';
 import { getGradientConfig, type Gradient } from '../utils/gradient';
-import { defaultTransition, type TransitionConfig, useTransition } from '../utils/transition';
+import { defaultTransition, type TransitionConfig, usePathTransition } from '../utils/transition';
 
 export type DottedLineProps = SharedProps &
   Omit<PathProps, 'fill' | 'strokeWidth' | 'd'> & {
@@ -91,7 +91,7 @@ export const DottedLine = memo<DottedLineProps>(
       return strokeDasharray.split(/[\s,]+/).map((v) => parseFloat(v));
     }, [strokeDasharray]);
 
-    const path = useTransition({
+    const path = usePathTransition({
       currentPath,
       animate: shouldAnimate,
       transitionConfig,

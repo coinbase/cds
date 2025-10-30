@@ -168,7 +168,7 @@ export const buildTransition = (targetValue: number, config: TransitionConfig): 
  *
  * @example
  * // Simple path transition (like SolidLine)
- * const path = useTransition({
+ * const path = usePathTransition({
  *   currentPath: d ?? '',
  *   animate: shouldAnimate,
  *   transitionConfig: { type: 'timing', duration: 3000 }
@@ -176,7 +176,7 @@ export const buildTransition = (targetValue: number, config: TransitionConfig): 
  *
  * @example
  * // Enter animation with different initial config (like DefaultBar)
- * const path = useTransition({
+ * const path = usePathTransition({
  *   currentPath: targetPath,
  *   initialPath: baselinePath,
  *   animate: true,
@@ -184,7 +184,7 @@ export const buildTransition = (targetValue: number, config: TransitionConfig): 
  *   initialTransitionConfig: { type: 'timing', duration: 1000 }
  * });
  */
-export const useTransition = ({
+export const usePathTransition = ({
   currentPath,
   initialPath,
   animate = true,

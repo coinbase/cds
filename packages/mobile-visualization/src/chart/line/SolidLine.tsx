@@ -6,7 +6,7 @@ import { LinearGradient, Path as SkiaPath } from '@shopify/react-native-skia';
 import { useCartesianChartContext } from '../ChartProvider';
 import { type PathProps } from '../Path';
 import { getGradientConfig, type Gradient } from '../utils/gradient';
-import { defaultTransition, type TransitionConfig, useTransition } from '../utils/transition';
+import { defaultTransition, type TransitionConfig, usePathTransition } from '../utils/transition';
 
 export type SolidLineProps = SharedProps &
   Omit<PathProps, 'fill' | 'strokeWidth' | 'd'> & {
@@ -82,7 +82,7 @@ export const SolidLine = memo<SolidLineProps>(
       return getGradientConfig(gradient, xScale, yScale);
     }, [gradient, xScale, yScale]);
 
-    const path = useTransition({
+    const path = usePathTransition({
       currentPath,
       animate: shouldAnimate,
       transitionConfig,

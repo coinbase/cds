@@ -5,7 +5,7 @@ import { LinearGradient, Path as SkiaPath } from '@shopify/react-native-skia';
 import { useCartesianChartContext } from '../ChartProvider';
 import { type PathProps } from '../Path';
 import { applyOpacityToColor, getGradientConfig, type Gradient } from '../utils/gradient';
-import { defaultTransition, type TransitionConfig, useTransition } from '../utils/transition';
+import { defaultTransition, type TransitionConfig, usePathTransition } from '../utils/transition';
 
 import type { AreaComponentProps } from './Area';
 
@@ -139,7 +139,7 @@ export const GradientArea = memo<GradientAreaProps>(
       return config;
     }, [gradient, xScale, yScale, fillOpacity]);
 
-    const path = useTransition({
+    const path = usePathTransition({
       currentPath,
       animate: shouldAnimate,
       transitionConfig,

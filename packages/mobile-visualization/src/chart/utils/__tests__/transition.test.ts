@@ -5,7 +5,7 @@ import {
   buildTransition,
   defaultTransition,
   useD3PathInterpolation,
-  useTransition,
+  usePathTransition,
 } from '../transition';
 
 // Mock react-native-reanimated
@@ -203,7 +203,7 @@ describe('useD3PathInterpolation', () => {
   });
 });
 
-describe('useTransition', () => {
+describe('usePathTransition', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
@@ -212,7 +212,7 @@ describe('useTransition', () => {
     const currentPath = 'M0,0L10,10';
 
     const { result } = renderHook(() =>
-      useTransition({
+      usePathTransition({
         currentPath,
       }),
     );
@@ -225,7 +225,7 @@ describe('useTransition', () => {
     const currentPath = 'M0,0L10,10';
 
     const { result } = renderHook(() =>
-      useTransition({
+      usePathTransition({
         currentPath,
         animate: true,
       }),
@@ -239,7 +239,7 @@ describe('useTransition', () => {
     const initialPath = 'M0,0L0,0';
 
     const { result } = renderHook(() =>
-      useTransition({
+      usePathTransition({
         currentPath,
         initialPath,
         animate: true,
@@ -253,7 +253,7 @@ describe('useTransition', () => {
     const currentPath = 'M0,0L10,10';
 
     const { result } = renderHook(() =>
-      useTransition({
+      usePathTransition({
         currentPath,
         animate: false,
       }),
@@ -265,7 +265,7 @@ describe('useTransition', () => {
   it('should handle path updates', () => {
     const { result, rerender } = renderHook(
       ({ path }) =>
-        useTransition({
+        usePathTransition({
           currentPath: path,
           animate: true,
         }),
@@ -292,7 +292,7 @@ describe('useTransition', () => {
     };
 
     const { result } = renderHook(() =>
-      useTransition({
+      usePathTransition({
         currentPath,
         transitionConfig,
       }),
@@ -314,7 +314,7 @@ describe('useTransition', () => {
     };
 
     const { result } = renderHook(() =>
-      useTransition({
+      usePathTransition({
         currentPath,
         initialPath,
         animate: true,
@@ -338,7 +338,7 @@ describe('useTransition', () => {
 
     const { result, rerender } = renderHook(
       ({ path }) =>
-        useTransition({
+        usePathTransition({
           currentPath: path,
           initialPath: 'M0,0L0,0',
           animate: true,
@@ -359,7 +359,7 @@ describe('useTransition', () => {
 
   it('should handle empty paths', () => {
     const { result } = renderHook(() =>
-      useTransition({
+      usePathTransition({
         currentPath: '',
         animate: true,
       }),
@@ -372,7 +372,7 @@ describe('useTransition', () => {
     const complexPath = 'M10,20 L30,40 Q50,60 70,80 C90,100 110,120 130,140 A20,20 0 0,1 150,160 Z';
 
     const { result } = renderHook(() =>
-      useTransition({
+      usePathTransition({
         currentPath: complexPath,
         animate: true,
       }),
@@ -387,7 +387,7 @@ describe('useTransition', () => {
 
     const { result, rerender } = renderHook(
       ({ path }) =>
-        useTransition({
+        usePathTransition({
           currentPath: path,
           animate: true,
         }),
