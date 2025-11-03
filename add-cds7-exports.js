@@ -34,7 +34,7 @@ const packageUpdateOrder = [
 const packageVersionMap = {
   '@cbhq/cds-common': '^7',
   '@cbhq/cds-icons': '^4',
-  '@cbhq/cds-illustrations': '4.9.0',
+  '@cbhq/cds-illustrations': '^4',
   '@cbhq/cds-mobile-visualization': '^2',
   '@cbhq/cds-mobile': '^7',
   '@cbhq/cds-web-visualization': '^2',
@@ -120,6 +120,28 @@ try {
   }
 
   fs.renameSync(packageDir, v7Dir);
+
+  // Remove any nested 'v7' under top-level subfolders (e.g., esm/v7/esm/v7 -> removed entirely)
+  const removeNestedV7 = (parentDir) => {
+    const candidate = path.join(parentDir, 'v7');
+    if (!fs.existsSync(candidate)) return;
+    fs.rmSync(candidate, { recursive: true, force: true });
+    console.log(`${yellowColor}Removed nested v7 under ${parentDir}${resetColor}`);
+  };
+
+  try {
+    const immediateSubdirs = fs
+      .readdirSync(v7Dir, { withFileTypes: true })
+      .filter((d) => d.isDirectory())
+      .map((d) => path.join(v7Dir, d.name));
+    for (const subdir of immediateSubdirs) {
+      removeNestedV7(subdir);
+    }
+  } catch (e) {
+    console.warn(
+      `${yellowColor}Warning: Failed to remove nested v7 directories: ${e.message}${resetColor}`,
+    );
+  }
 
   const v7PackageJsonPath = `${v7Dir}/package.json`;
   if (!fs.existsSync(v7PackageJsonPath)) {
@@ -287,14 +309,18 @@ try {
   delete exportPaths['./package.json'];
   delete exportPaths['.'];
 
-  const newExportPaths = Object.fromEntries(
-    Object.entries(exportPaths).map(([key, value]) => [
-      key.replace('./', './v7/'),
-      Object.fromEntries(
-        Object.entries(value).map(([key, value]) => [key, value.replace('./', './esm/v7/')]),
-      ),
-    ]),
-  );
+  const hasV7Exports = Object.values(exportPaths).some((p) => p.includes('/v7'));
+
+  const newExportPaths = hasV7Exports
+    ? exportPaths
+    : Object.fromEntries(
+        Object.entries(exportPaths).map(([key, value]) => [
+          key.replace('./', './v7/'),
+          Object.fromEntries(
+            Object.entries(value).map(([key, value]) => [key, value.replace('./', './esm/v7/')]),
+          ),
+        ]),
+      );
 
   const v8PackageJson = JSON.parse(fs.readFileSync(`${PACKAGE_ROOT}/package.json`, 'utf-8'));
 
