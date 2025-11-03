@@ -309,41 +309,18 @@ try {
   delete exportPaths['./package.json'];
   delete exportPaths['.'];
 
-  // Helper to normalize export keys so we don't double prefix with v7
-  const normalizeExportKey = (key) => {
-    // remove leading './'
-    let sub = key.replace(/^\.\//, '');
-    // strip any leading 'v7/' to avoid './v7/v7/*'
-    sub = sub.replace(/^v7\/?/, '');
-    // if empty (e.g., key was './v7'), keep './v7'
-    if (sub.length === 0) return './v7';
-    return `./v7/${sub}`;
-  };
+  const hasV7Exports = Object.values(exportPaths).some((p) => p.includes('/v7'));
 
-  // Helper to normalize export target values to land under './esm/v7/'
-  const normalizeExportTarget = (target) => {
-    if (typeof target !== 'string') return target;
-    let rel = target.replace(/^\.\//, '');
-    // Remove nested v7 segments after format roots to avoid './esm/v7/esm/v7/*'
-    rel = rel.replace(/^esm\/v7\//, 'esm/');
-    rel = rel.replace(/^cjs\/v7\//, 'cjs/');
-    rel = rel.replace(/^dts\/v7\//, 'dts/');
-    // Also drop plain leading 'v7/' if present
-    rel = rel.replace(/^v7\//, '');
-    return `./esm/v7/${rel}`;
-  };
-
-  const newExportPaths = Object.fromEntries(
-    Object.entries(exportPaths)
-      // filter out any existing './v7' keys from the downloaded package
-      .filter(([key]) => !key.startsWith('./v7'))
-      .map(([key, value]) => [
-        normalizeExportKey(key),
-        Object.fromEntries(
-          Object.entries(value).map(([cond, target]) => [cond, normalizeExportTarget(target)]),
-        ),
-      ]),
-  );
+  const newExportPaths = hasV7Exports
+    ? exportPaths
+    : Object.fromEntries(
+        Object.entries(exportPaths).map(([key, value]) => [
+          key.replace('./', './v7/'),
+          Object.fromEntries(
+            Object.entries(value).map(([key, value]) => [key, value.replace('./', './esm/v7/')]),
+          ),
+        ]),
+      );
 
   const v8PackageJson = JSON.parse(fs.readFileSync(`${PACKAGE_ROOT}/package.json`, 'utf-8'));
 
