@@ -530,9 +530,21 @@ const svgJsMap = {
     light: () => require('../svgJs/light/barChart-2.js').content,
     dark: () => require('../svgJs/dark/barChart-2.js').content,
   },
+  baseAscend: {
+    light: () => require('../svgJs/light/baseAscend-0.js').content,
+    dark: () => require('../svgJs/dark/baseAscend-0.js').content,
+  },
+  baseCertificateStar: {
+    light: () => require('../svgJs/light/baseCertificateStar-0.js').content,
+    dark: () => require('../svgJs/dark/baseCertificateStar-0.js').content,
+  },
   baseChartSmall: {
     light: () => require('../svgJs/light/baseChartSmall-0.js').content,
     dark: () => require('../svgJs/dark/baseChartSmall-0.js').content,
+  },
+  baseChatBubbleHeart: {
+    light: () => require('../svgJs/light/baseChatBubbleHeart-0.js').content,
+    dark: () => require('../svgJs/dark/baseChatBubbleHeart-0.js').content,
   },
   baseCheckSmall: {
     light: () => require('../svgJs/light/baseCheckSmall-0.js').content,
@@ -550,6 +562,22 @@ const svgJsMap = {
     light: () => require('../svgJs/light/baseCoinStack-0.js').content,
     dark: () => require('../svgJs/dark/baseCoinStack-0.js').content,
   },
+  baseCoinStar: {
+    light: () => require('../svgJs/light/baseCoinStar-0.js').content,
+    dark: () => require('../svgJs/dark/baseCoinStar-0.js').content,
+  },
+  baseComet: {
+    light: () => require('../svgJs/light/baseComet-0.js').content,
+    dark: () => require('../svgJs/dark/baseComet-0.js').content,
+  },
+  baseComputer: {
+    light: () => require('../svgJs/light/baseComputer-0.js').content,
+    dark: () => require('../svgJs/dark/baseComputer-0.js').content,
+  },
+  baseConfetti: {
+    light: () => require('../svgJs/light/baseConfetti-0.js').content,
+    dark: () => require('../svgJs/dark/baseConfetti-0.js').content,
+  },
   baseConnectApps: {
     light: () => require('../svgJs/light/baseConnectApps-0.js').content,
     dark: () => require('../svgJs/dark/baseConnectApps-0.js').content,
@@ -557,6 +585,10 @@ const svgJsMap = {
   baseConnectSmall: {
     light: () => require('../svgJs/light/baseConnectSmall-1.js').content,
     dark: () => require('../svgJs/dark/baseConnectSmall-1.js').content,
+  },
+  baseCreatorCoin: {
+    light: () => require('../svgJs/light/baseCreatorCoin-0.js').content,
+    dark: () => require('../svgJs/dark/baseCreatorCoin-0.js').content,
   },
   baseDecentralizationSmall: {
     light: () => require('../svgJs/light/baseDecentralizationSmall-1.js').content,
@@ -570,6 +602,14 @@ const svgJsMap = {
     light: () => require('../svgJs/light/baseDiamondTrophy-1.js').content,
     dark: () => require('../svgJs/dark/baseDiamondTrophy-1.js').content,
   },
+  baseDoor: {
+    light: () => require('../svgJs/light/baseDoor-0.js').content,
+    dark: () => require('../svgJs/dark/baseDoor-0.js').content,
+  },
+  baseEarnedBadge: {
+    light: () => require('../svgJs/light/baseEarnedBadge-0.js').content,
+    dark: () => require('../svgJs/dark/baseEarnedBadge-0.js').content,
+  },
   baseEmptySmall: {
     light: () => require('../svgJs/light/baseEmptySmall-0.js').content,
     dark: () => require('../svgJs/dark/baseEmptySmall-0.js').content,
@@ -581,6 +621,34 @@ const svgJsMap = {
   baseErrorSmall: {
     light: () => require('../svgJs/light/baseErrorSmall-0.js').content,
     dark: () => require('../svgJs/dark/baseErrorSmall-0.js').content,
+  },
+  baseExchange: {
+    light: () => require('../svgJs/light/baseExchange-0.js').content,
+    dark: () => require('../svgJs/dark/baseExchange-0.js').content,
+  },
+  baseFire: {
+    light: () => require('../svgJs/light/baseFire-0.js').content,
+    dark: () => require('../svgJs/dark/baseFire-0.js').content,
+  },
+  baseGem: {
+    light: () => require('../svgJs/light/baseGem-0.js').content,
+    dark: () => require('../svgJs/dark/baseGem-0.js').content,
+  },
+  baseGlobe: {
+    light: () => require('../svgJs/light/baseGlobe-0.js').content,
+    dark: () => require('../svgJs/dark/baseGlobe-0.js').content,
+  },
+  baseHandStar: {
+    light: () => require('../svgJs/light/baseHandStar-0.js').content,
+    dark: () => require('../svgJs/dark/baseHandStar-0.js').content,
+  },
+  baseLayout: {
+    light: () => require('../svgJs/light/baseLayout-0.js').content,
+    dark: () => require('../svgJs/dark/baseLayout-0.js').content,
+  },
+  baseLightningbolt: {
+    light: () => require('../svgJs/light/baseLightningbolt-0.js').content,
+    dark: () => require('../svgJs/dark/baseLightningbolt-0.js').content,
   },
   baseLoadingSmall: {
     light: () => require('../svgJs/light/baseLoadingSmall-1.js').content,
@@ -597,6 +665,10 @@ const svgJsMap = {
   baseLogoNavigation: {
     light: () => require('../svgJs/light/baseLogoNavigation-6.js').content,
     dark: () => require('../svgJs/dark/baseLogoNavigation-6.js').content,
+  },
+  baseMedal: {
+    light: () => require('../svgJs/light/baseMedal-0.js').content,
+    dark: () => require('../svgJs/dark/baseMedal-0.js').content,
   },
   baseMessaging: {
     light: () => require('../svgJs/light/baseMessaging-0.js').content,
@@ -626,6 +698,30 @@ const svgJsMap = {
     light: () => require('../svgJs/light/basePiechartSmall-1.js').content,
     dark: () => require('../svgJs/dark/basePiechartSmall-1.js').content,
   },
+  basePlant: {
+    light: () => require('../svgJs/light/basePlant-0.js').content,
+    dark: () => require('../svgJs/dark/basePlant-0.js').content,
+  },
+  basePower: {
+    light: () => require('../svgJs/light/basePower-0.js').content,
+    dark: () => require('../svgJs/dark/basePower-0.js').content,
+  },
+  baseRibbon: {
+    light: () => require('../svgJs/light/baseRibbon-0.js').content,
+    dark: () => require('../svgJs/dark/baseRibbon-0.js').content,
+  },
+  baseRocket: {
+    light: () => require('../svgJs/light/baseRocket-0.js').content,
+    dark: () => require('../svgJs/dark/baseRocket-0.js').content,
+  },
+  baseRockon: {
+    light: () => require('../svgJs/light/baseRockon-0.js').content,
+    dark: () => require('../svgJs/dark/baseRockon-0.js').content,
+  },
+  baseSaved: {
+    light: () => require('../svgJs/light/baseSaved-0.js').content,
+    dark: () => require('../svgJs/dark/baseSaved-0.js').content,
+  },
   baseSecuritySmall: {
     light: () => require('../svgJs/light/baseSecuritySmall-0.js').content,
     dark: () => require('../svgJs/dark/baseSecuritySmall-0.js').content,
@@ -638,9 +734,25 @@ const svgJsMap = {
     light: () => require('../svgJs/light/baseSignin-0.js').content,
     dark: () => require('../svgJs/dark/baseSignin-0.js').content,
   },
+  baseSmile: {
+    light: () => require('../svgJs/light/baseSmile-0.js').content,
+    dark: () => require('../svgJs/dark/baseSmile-0.js').content,
+  },
+  baseStack: {
+    light: () => require('../svgJs/light/baseStack-0.js').content,
+    dark: () => require('../svgJs/dark/baseStack-0.js').content,
+  },
+  baseStar: {
+    light: () => require('../svgJs/light/baseStar-0.js').content,
+    dark: () => require('../svgJs/dark/baseStar-0.js').content,
+  },
   baseTargetSmall: {
     light: () => require('../svgJs/light/baseTargetSmall-1.js').content,
     dark: () => require('../svgJs/dark/baseTargetSmall-1.js').content,
+  },
+  baseTile: {
+    light: () => require('../svgJs/light/baseTile-0.js').content,
+    dark: () => require('../svgJs/dark/baseTile-0.js').content,
   },
   bitcoin: {
     light: () => require('../svgJs/light/bitcoin-1.js').content,
