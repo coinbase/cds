@@ -8,6 +8,45 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+##### ⭐️ Added (28)
+
+###### Pictogram (28)
+
+- baseLightningbolt
+- baseTile
+- baseLayout
+- baseAscend
+- baseComputer
+- baseStar
+- baseDoor
+- baseComet
+- baseRibbon
+- baseMedal
+- baseSmile
+- baseSaved
+- baseRockon
+- basePower
+- baseFire
+- basePlant
+- baseRocket
+- baseCreatorCoin
+- baseEarnedBadge
+- baseExchange
+- baseStack
+- baseGlobe
+- baseChatBubbleHeart
+- baseGem
+- baseCoinStar
+- baseCertificateStar
+- baseHandStar
+- baseConfetti
+
+##### ⭐️ Updated (1)
+
+###### SpotSquare (1)
+
+- cryptoEconomyArrows
+
 ## 4.25.0 (10/24/2025 PST)
 
 #### 🚀 Updates
