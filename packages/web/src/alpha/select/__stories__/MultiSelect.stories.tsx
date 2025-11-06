@@ -44,6 +44,7 @@ export const Default = () => {
 
   return (
     <Select
+      controlAccessibilityLabel="Multi select control with selected options"
       label="Multi select"
       onChange={onChange}
       options={exampleOptions}

@@ -63,6 +63,7 @@ const DefaultSelectControlComponent = memo(
         maxSelectedOptionsToShow = 6,
         hiddenSelectedOptionsLabel = 'more',
         removeSelectedOptionAccessibilityLabel = 'Remove',
+        accessibilityLabel,
         ariaHaspopup,
         styles,
         classNames,
@@ -233,6 +234,7 @@ const DefaultSelectControlComponent = memo(
           <Pressable
             ref={controlPressableRef}
             noScaleOnPress
+            accessibilityLabel={accessibilityLabel}
             aria-haspopup={ariaHaspopup}
             background="transparent"
             blendStyles={interactableBlendStyles}

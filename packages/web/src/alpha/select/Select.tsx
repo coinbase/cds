@@ -388,6 +388,8 @@ export type SelectBaseProps<
     SelectAllOptionComponent?: SelectOptionComponent<Type, SelectOptionValue>;
     /** Custom component to render when no options are available */
     SelectEmptyDropdownContentsComponent?: SelectEmptyDropdownContentComponent;
+    /** Accessibility label for the control */
+    controlAccessibilityLabel?: string;
     /** Inline styles for the root element */
     style?: React.CSSProperties;
     /** CSS class name for the root element */
@@ -512,8 +514,9 @@ const SelectBase = memo(
         compact,
         label,
         labelVariant,
-        accessibilityLabel,
+        accessibilityLabel = 'Select',
         accessibilityRoles = defaultAccessibilityRoles,
+        controlAccessibilityLabel,
         selectAllLabel,
         emptyOptionsLabel,
         clearAllLabel,
@@ -682,7 +685,7 @@ const SelectBase = memo(
         >
           <SelectControlComponent
             ref={refs.setReference}
-            accessibilityLabel={accessibilityLabel}
+            accessibilityLabel={controlAccessibilityLabel}
             ariaHaspopup={accessibilityRoles?.dropdown}
             blendStyles={styles?.controlBlendStyles}
             className={classNames?.control}

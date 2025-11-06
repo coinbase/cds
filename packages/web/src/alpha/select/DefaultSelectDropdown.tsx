@@ -180,7 +180,7 @@ const DefaultSelectDropdownComponent = memo(
                   transparent
                   onClick={handleClearAll}
                   role="option"
-                  style={{ margin: 'var(--space-1)' }}
+                  style={{ margin: 'var(--space-0_5)' }}
                   width="fit-content"
                 >
                   {clearAllLabel}
