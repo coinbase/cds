@@ -47,7 +47,11 @@ export const ElevationThemeProviderBackwardCompat = ({
   }, [theme, elevation]);
   if (!elevation) return children;
   return (
-    <ThemeProvider activeColorScheme={theme.activeColorScheme} theme={elevatedTheme}>
+    <ThemeProvider
+      activeColorScheme={theme.activeColorScheme}
+      display="contents"
+      theme={elevatedTheme}
+    >
       {children}
     </ThemeProvider>
   );
