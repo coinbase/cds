@@ -296,6 +296,7 @@ const DefaultSelectControlComponent = memo(
           </Pressable>
         ),
         [
+          accessibilityLabel,
           ariaHaspopup,
           interactableBlendStyles,
           classNames?.controlInputNode,
