@@ -1,61 +1,83 @@
-import React from 'react';
+import React, { useRef } from 'react';
+import type { View } from 'react-native';
 import { assets } from '@cbhq/cds-common/internal/data/assets';
 import { NoopFn } from '@cbhq/cds-common/utils/mockUtils';
 
 import { Example, ExampleScreen } from '../../examples/ExampleScreen';
 import { Icon } from '../../icons';
-import { VStack } from '../../layout';
+import { Box } from '../../layout';
 import type { RemoteImageProps } from '../../media';
 import { RemoteImage } from '../../media';
 import { Text } from '../../typography/Text';
 import { Chip } from '../Chip';
 import type { ChipBaseProps } from '../ChipProps';
 
-const assetIconProps: RemoteImageProps = {
-  height: 16,
-  shape: 'circle',
-  source: assets.eth.imageUrl,
-  width: 16,
-};
-
 const ChipExamples = ({
   label,
+  flexDirection = 'column',
   ...props
-}: { label?: string } & Omit<ChipBaseProps, 'children'>) => (
-  <VStack gap={1}>
-    <Chip {...props}>{label ?? <Text font="headline">Base</Text>}</Chip>
-    <Chip {...props} start={<RemoteImage {...assetIconProps} />}>
-      {label ?? <Text font="headline">Start</Text>}
-    </Chip>
-    <Chip
-      {...props}
-      end={<Icon color="fg" name="caretDown" size="s" />}
-      start={<RemoteImage {...assetIconProps} />}
-    >
-      {label ?? <Text font="headline">End & Start</Text>}
-    </Chip>
-    <Chip {...props} end={<Icon color="fg" name="filter" size="s" />}>
-      <Text font="headline">Filter 2</Text>
-    </Chip>
-    <Chip
-      {...props}
-      end={<Icon color="fg" name="caretDown" size="s" />}
-      onPress={NoopFn}
-      start={<RemoteImage {...assetIconProps} />}
-    >
-      {label ?? <Text font="headline">Pressable</Text>}
-    </Chip>
-    <Chip
-      {...props}
-      disabled
-      end={<Icon color="fg" name="caretDown" size="s" />}
-      onPress={NoopFn}
-      start={<RemoteImage {...assetIconProps} />}
-    >
-      {label ?? <Text font="headline">Disabled</Text>}
-    </Chip>
-  </VStack>
-);
+}: { label?: string; flexDirection?: 'row' | 'column' } & Omit<ChipBaseProps, 'children'>) => {
+  const ref = useRef<View>(null);
+  const mediaSize = props.compact ? 16 : 24;
+  const textFont = props.compact ? 'label1' : 'headline';
+  const assetIconProps: RemoteImageProps = {
+    height: mediaSize,
+    shape: 'circle',
+    source: assets.eth.imageUrl,
+    width: mediaSize,
+  };
+
+  return (
+    <Box flexDirection={flexDirection} flexGrow={1} flexWrap="wrap" gap={1}>
+      <Chip ref={ref} {...props}>
+        {label ?? 'Label only'}
+      </Chip>
+      <Chip {...props} start={<RemoteImage {...assetIconProps} />} />
+      <Chip
+        {...props}
+        end={<Icon active color="fg" name="caretDown" size="xs" />}
+        start={<RemoteImage {...assetIconProps} />}
+      />
+      <Chip {...props} start={<RemoteImage {...assetIconProps} />}>
+        {label ?? 'Media + Label'}
+      </Chip>
+      <Chip {...props} end={<Icon active color="fg" name="filter" size="xs" />}>
+        Label + Icon
+      </Chip>
+      <Chip
+        {...props}
+        end={<Icon active color="fg" name="caretDown" size="xs" />}
+        start={<RemoteImage {...assetIconProps} />}
+      >
+        {label ?? 'All three'}
+      </Chip>
+      <Chip
+        {...props}
+        end={<Icon active color="fg" name="caretDown" size="xs" />}
+        start={<RemoteImage {...assetIconProps} />}
+      >
+        {label ?? <Text font={textFont}>Looooooooooooooong Label</Text>}
+      </Chip>
+      <Chip
+        {...props}
+        end={<Icon active color="fg" name="caretDown" size="xs" />}
+        onPress={NoopFn}
+        start={<RemoteImage {...assetIconProps} />}
+      >
+        {label ?? 'Pressable'}
+      </Chip>
+      <Chip
+        {...props}
+        disabled
+        end={<Icon active color="fg" name="caretDown" size="xs" />}
+        onPress={NoopFn}
+        start={<RemoteImage {...assetIconProps} />}
+      >
+        {label ?? 'Disabled'}
+      </Chip>
+    </Box>
+  );
+};
 
 const ChipScreen = () => (
   <ExampleScreen>
@@ -70,6 +92,9 @@ const ChipScreen = () => (
     </Example>
     <Example title="Long text">
       <ChipExamples label="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec euismod, nisl eget" />
+    </Example>
+    <Example title="Row Layout">
+      <ChipExamples flexDirection="row" />
     </Example>
   </ExampleScreen>
 );

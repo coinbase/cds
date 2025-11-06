@@ -19,7 +19,7 @@ export type ChipBaseProps = SharedProps &
   > &
   Pick<SharedAccessibilityProps, 'accessibilityLabel'> & {
     /** ReactNode placed in the center of the Chip */
-    children: React.ReactNode;
+    children?: React.ReactNode;
     /** ReactNode placed before the value */
     start?: React.ReactNode;
     /** ReactNode placed after the value */
@@ -42,8 +42,21 @@ export type ChipBaseProps = SharedProps &
      * @default 1
      */
     numberOfLines?: number;
-    /** Apply styles to Chip content. */
+    /**
+     * @deprecated Use `styles.content` instead.
+     * Apply styles to Chip content.
+     */
     contentStyle?: React.CSSProperties;
+    /** Apply styles to the container and content. */
+    styles?: {
+      root?: React.CSSProperties;
+      content?: React.CSSProperties;
+    };
+    /** Class names for the components */
+    classNames?: {
+      root?: string;
+      content?: string;
+    };
   };
 
 export type ChipProps = ChipBaseProps;

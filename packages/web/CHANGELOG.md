@@ -8,6 +8,29 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.19.0 (10/29/2025 PST)
+
+#### 🚀 Updates
+
+- Added MediaChip component. [[#125](https://github.com/coinbase/cds/pull/125)]
+- Simplified Chip construct. [[#125](https://github.com/coinbase/cds/pull/125)]
+
+#### 🐞 Fixes
+
+- Fixed TabbedChip auto-scrolling issue. [[#125](https://github.com/coinbase/cds/pull/125)]
+
+## 8.18.0 (10/29/2025 PST)
+
+#### 🚀 Updates
+
+- Support custom `titleNode` `descriptionNode` `detailNode` `subdetailNode``accessoryNode` for ListCell. [[#131](https://github.com/coinbase/cds/pull/131)] [DX-5006]
+
+## 8.17.6 (10/28/2025 PST)
+
+#### 🐞 Fixes
+
+- Fixed Select height on web.
+
 ## 8.17.5 (10/27/2025 PST)
 
 #### 🐞 Fixes

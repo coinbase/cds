@@ -8,10 +8,10 @@ import {
 import type { PressableProps } from '../system';
 
 export type ChipBaseProps = SharedProps &
-  Omit<PressableProps, 'children'> &
+  Omit<PressableProps, 'children' | 'maxWidth' | 'style'> &
   Pick<SharedAccessibilityProps, 'accessibilityLabel'> & {
     /** ReactNode placed in the center of the Chip */
-    children: React.ReactNode;
+    children?: React.ReactNode;
     /** ReactNode placed before the value */
     start?: React.ReactNode;
     /** ReactNode placed after the value */
@@ -34,8 +34,17 @@ export type ChipBaseProps = SharedProps &
      * @default 1
      */
     numberOfLines?: number;
-    /** Apply styles to Chip content. */
+    /**
+     * @deprecated Use `styles.content` instead.
+     * Apply styles to Chip content.
+     */
     contentStyle?: StyleProp<ViewStyle>;
+    style?: StyleProp<ViewStyle>;
+    /** Apply styles to the container and content. */
+    styles?: {
+      root?: StyleProp<ViewStyle>;
+      content?: StyleProp<ViewStyle>;
+    };
   };
 
 export type ChipProps = ChipBaseProps;

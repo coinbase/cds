@@ -80,6 +80,7 @@ module.exports = {
     'chart/scrubber/Scrubber',
     'chips/Chip',
     'chips/InputChip',
+    'chips/MediaChip',
     'chips/SelectChip',
     'chips/TabbedChips',
     'coachmark/Coachmark',

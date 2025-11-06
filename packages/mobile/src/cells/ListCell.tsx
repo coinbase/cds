@@ -26,6 +26,8 @@ export type ListCellBaseProps = CellDetailProps &
   Omit<CellBaseProps, 'accessory' | 'children'> & {
     /** Accessory to display at the end of the cell. */
     accessory?: CellAccessoryType;
+    /** Custom accessory node rendered at the end of the cell. Takes precedence over `accessory`. */
+    accessoryNode?: React.ReactNode;
     /**
      * End-aligned content (e.g., CTA, form element, metric). Replacement for the deprecated action prop, and takes precedence over it.
      * If the content is a action (like button, link, etc), we recommand avoid using alongside `onPress`.
@@ -64,8 +66,10 @@ export type ListCellBaseProps = CellDetailProps &
      * @default 'normal'
      */
     spacingVariant?: 'normal' | 'compact' | 'condensed';
-    /** Description of content. Max 1 line (with title) or 2 lines (without), otherwise will truncate. */
+    /** Description of content. Max 1 line (with title) or 2 lines (without), otherwise will truncate. This prop is only intended to accept a string or Text component; other use cases, while allowed, are not supported and may result in unexpected behavior. For arbitrary content, use `descriptionNode`. */
     description?: React.ReactNode;
+    /** React node to render description. Takes precedence over `description`. */
+    descriptionNode?: React.ReactNode;
     /**
      * Disable the default accessory that is displayed when the cell is selected.
      * If `accessory` is provided, that will continue to be displayed, otherwise no accessory will be displayed when the cell is selected.
@@ -86,8 +90,10 @@ export type ListCellBaseProps = CellDetailProps &
     media?: React.ReactElement;
     /** Allow the description to span multiple lines. This *will* break fixed height requirements, so should not be used in a `FlatList`. */
     multiline?: boolean;
-    /** Title of content. Max 1 line (with description) or 2 lines (without), otherwise will truncate. */
+    /** Title of content. Max 1 line (with description) or 2 lines (without), otherwise will truncate. This prop is only intended to accept a string or Text component; other use cases, while allowed, are not supported and may result in unexpected behavior. For arbitrary content, use `titleNode`. */
     title?: React.ReactNode;
+    /** React node to render title. Takes precedence over `title`. */
+    titleNode?: React.ReactNode;
     /** Styles for the components */
     styles?: {
       root?: StyleProp<ViewStyle>;
@@ -108,13 +114,17 @@ export type ListCellProps = ListCellBaseProps & Omit<CellProps, 'accessory' | 'c
 
 export const ListCell = memo(function ListCell({
   accessory,
+  accessoryNode,
   end: endProp,
   action,
   compact,
   title,
+  titleNode,
   disableMultilineTitle = false,
   description,
+  descriptionNode,
   detail,
+  detailNode,
   detailWidth,
   intermediary,
   priority,
@@ -127,6 +137,7 @@ export const ListCell = memo(function ListCell({
   multiline,
   selected,
   subdetail,
+  subdetailNode,
   variant,
   onPress,
   spacingVariant = compact ? 'compact' : 'normal',
@@ -141,7 +152,7 @@ export const ListCell = memo(function ListCell({
         ? listHeight
         : undefined;
   const accessoryType = selected && !disableSelectionAccessory ? 'selected' : accessory;
-  const hasDetails = Boolean(detail || subdetail);
+  const hasDetails = Boolean(detail || subdetail || detailNode || subdetailNode);
 
   const end = useMemo(
     () =>
@@ -151,17 +162,31 @@ export const ListCell = memo(function ListCell({
         <CellDetail
           adjustsFontSizeToFit={!!detailWidth}
           detail={detail}
+          detailNode={detailNode}
           subdetail={subdetail}
           subdetailFont={spacingVariant === 'condensed' ? 'label2' : 'body'}
+          subdetailNode={subdetailNode}
           variant={variant}
         />
       )),
-    [endProp, action, hasDetails, detail, subdetail, detailWidth, spacingVariant, variant],
+    [
+      endProp,
+      action,
+      hasDetails,
+      detail,
+      detailNode,
+      subdetail,
+      subdetailNode,
+      detailWidth,
+      spacingVariant,
+      variant,
+    ],
   );
 
   return (
     <Cell
       accessory={accessoryType ? <CellAccessory type={accessoryType} /> : undefined}
+      accessoryNode={accessoryNode}
       borderRadius={props.borderRadius ?? (spacingVariant === 'condensed' ? 0 : undefined)}
       bottomContent={helperText}
       detailWidth={detailWidth}
@@ -181,23 +206,25 @@ export const ListCell = memo(function ListCell({
       selected={selected}
       style={[style, styles?.root]}
       styles={{
-        media: styles?.media,
-        intermediary: styles?.intermediary,
-        end: styles?.end,
         accessory: styles?.accessory,
-        topContent: styles?.mainContent,
         bottomContent: styles?.helperText,
         contentContainer: styles?.contentContainer,
+        end: styles?.end,
+        intermediary: styles?.intermediary,
+        media: styles?.media,
         pressable: [
           // for the condensed spacing, we need to offset the margin vertical to remove the strange gap between the pressable area
-          spacingVariant === 'condensed' && !!onPress && { marginVertical: -1 },
+          spacingVariant === 'condensed' && Boolean(onPress) && { marginVertical: -1 },
           styles?.pressable,
         ],
+        topContent: styles?.mainContent,
       }}
       {...props}
     >
       <VStack justifyContent="center">
-        {!!title && (
+        {titleNode ? (
+          titleNode
+        ) : title ? (
           <Text
             ellipsize="tail"
             font="headline"
@@ -215,9 +242,11 @@ export const ListCell = memo(function ListCell({
           >
             {title}
           </Text>
-        )}
+        ) : null}
 
-        {!!description && (
+        {descriptionNode ? (
+          descriptionNode
+        ) : description ? (
           <Text
             color="fgMuted"
             ellipsize={multiline ? undefined : 'tail'}
@@ -227,7 +256,7 @@ export const ListCell = memo(function ListCell({
           >
             {description}
           </Text>
-        )}
+        ) : null}
       </VStack>
     </Cell>
   );
