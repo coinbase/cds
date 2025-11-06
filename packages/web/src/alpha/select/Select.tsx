@@ -514,7 +514,7 @@ const SelectBase = memo(
         compact,
         label,
         labelVariant,
-        accessibilityLabel = 'Select',
+        accessibilityLabel = 'Select control',
         accessibilityRoles = defaultAccessibilityRoles,
         controlAccessibilityLabel,
         selectAllLabel,
