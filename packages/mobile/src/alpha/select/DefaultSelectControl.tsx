@@ -65,9 +65,9 @@ export const DefaultSelectControlComponent = memo(
       type ValueType = Type extends 'multi'
         ? SelectOptionValue | SelectOptionValue[] | null
         : SelectOptionValue | null;
-      const shouldShowCompactLabel = compact && label;
-      const hasValue = value !== null && !(Array.isArray(value) && value.length === 0);
       const isMultiSelect = type === 'multi';
+      const shouldShowCompactLabel = compact && label && !isMultiSelect;
+      const hasValue = value !== null && !(Array.isArray(value) && value.length === 0);
 
       // Prop value doesn't have default value because it affects the color of the
       // animated caret
@@ -202,9 +202,10 @@ export const DefaultSelectControlComponent = memo(
             <HStack
               alignItems="center"
               justifyContent="space-between"
-              minHeight={isMultiSelect ? 76 : undefined}
+              minHeight={isMultiSelect ? (compact ? 60 : 76) : undefined}
+              paddingBottom={labelVariant === 'inside' ? 0 : undefined}
               paddingStart={startNode ? 0 : 2}
-              paddingY={labelVariant === 'inside' ? 0 : compact ? 1 : 2}
+              paddingY={labelVariant === 'inside' || compact ? 1 : 2}
             >
               <HStack alignItems="center" flexGrow={1}>
                 {!!startNode && (

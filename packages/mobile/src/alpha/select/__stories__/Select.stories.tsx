@@ -185,7 +185,7 @@ const CompactExample = () => {
   return (
     <Select
       compact
-      label="Single select - compact"
+      label="Compact"
       onChange={setValue}
       options={exampleOptions}
       placeholder="Empty value"
@@ -622,6 +622,24 @@ const MultiSelectDefaultExample = () => {
   return (
     <Select
       label="Multi select"
+      onChange={onChange}
+      options={exampleOptions}
+      placeholder="Empty value"
+      type="multi"
+      value={value}
+    />
+  );
+};
+
+const MultiSelectCompactExample = () => {
+  const { value, onChange } = useMultiSelect({
+    initialValue: ['1'],
+  });
+
+  return (
+    <Select
+      compact
+      label="Compact"
       onChange={onChange}
       options={exampleOptions}
       placeholder="Empty value"
@@ -1173,6 +1191,9 @@ const SelectV3Screen = () => {
       </Example>
       <Example title="Multi Select Default">
         <MultiSelectDefaultExample />
+      </Example>
+      <Example title="Multi Select Compact">
+        <MultiSelectCompactExample />
       </Example>
       <Example title="Multi Select Hide Select All">
         <MultiSelectHideSelectAllExample />
