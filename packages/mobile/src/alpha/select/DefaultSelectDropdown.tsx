@@ -122,7 +122,11 @@ const DefaultSelectDropdownComponent = memo(
                 <Button
                   compact
                   transparent
-                  accessibilityRole="menuitem"
+                  // This button is not accessible to users using screen readers since it's
+                  // the child of a button. Clearing the a11y label ensures it isn't announced
+                  // by a screen reader
+                  accessibilityLabel=""
+                  accessible={false}
                   flush="end"
                   onPress={handleClearAll}
                 >

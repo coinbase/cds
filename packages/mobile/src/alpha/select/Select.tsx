@@ -403,7 +403,7 @@ const SelectBase = memo(
         compact,
         label,
         labelVariant,
-        accessibilityLabel = type === 'multi' ? 'Multi select control' : 'Select control',
+        accessibilityLabel = type === 'multi' ? 'Multi select control' : undefined,
         accessibilityHint,
         accessibilityRoles = defaultAccessibilityRoles,
         selectAllLabel,
