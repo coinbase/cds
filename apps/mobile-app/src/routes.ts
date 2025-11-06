@@ -311,6 +311,10 @@ export const routes = [
       require('@cbhq/cds-mobile/animation/__stories__/LottieStatusAnimation.stories').default,
   },
   {
+    key: 'MediaChip',
+    getComponent: () => require('@cbhq/cds-mobile/chips/__stories__/MediaChip.stories').default,
+  },
+  {
     key: 'ModalBackButton',
     getComponent: () =>
       require('@cbhq/cds-mobile/overlays/__stories__/ModalBackButton.stories').default,

@@ -45,21 +45,65 @@ const ExampleSelectChip = ({
 };
 
 export const Default = () => (
-  <HStack gap={2}>
-    <ExampleSelectChip value="Balance" />
-    <ExampleSelectChip placeholder="Sort by" />
-  </HStack>
+  <VStack gap={3}>
+    <VStack gap={2}>
+      <Text as="h3" display="block" font="headline">
+        Regular
+      </Text>
+      <HStack gap={2}>
+        <ExampleSelectChip value="Balance" />
+        <ExampleSelectChip placeholder="Sort by" />
+      </HStack>
+    </VStack>
+    <VStack gap={2}>
+      <Text as="h3" display="block" font="headline">
+        Compact
+      </Text>
+      <HStack gap={2}>
+        <ExampleSelectChip compact value="Balance" />
+        <ExampleSelectChip compact placeholder="Sort by" />
+      </HStack>
+    </VStack>
+  </VStack>
 );
 
 export const CustomEndNode = () => (
-  <HStack gap={2}>
-    <ExampleSelectChip end={<Icon color="fg" name="filter" size="s" />} placeholder="Filter" />
-    <ExampleSelectChip
-      end={<Icon color="fg" name="filter" size="s" />}
-      placeholder="Filter"
-      value="Balance"
-    />
-  </HStack>
+  <VStack gap={3}>
+    <VStack gap={2}>
+      <Text as="h3" display="block" font="headline">
+        Regular
+      </Text>
+      <HStack gap={2}>
+        <ExampleSelectChip
+          end={<Icon active color="fg" name="filter" size="xs" />}
+          placeholder="Filter"
+        />
+        <ExampleSelectChip
+          end={<Icon active color="fg" name="filter" size="xs" />}
+          placeholder="Filter"
+          value="Balance"
+        />
+      </HStack>
+    </VStack>
+    <VStack gap={2}>
+      <Text as="h3" display="block" font="headline">
+        Compact
+      </Text>
+      <HStack gap={2}>
+        <ExampleSelectChip
+          compact
+          end={<Icon active color="fg" name="filter" size="xs" />}
+          placeholder="Filter"
+        />
+        <ExampleSelectChip
+          compact
+          end={<Icon active color="fg" name="filter" size="xs" />}
+          placeholder="Filter"
+          value="Balance"
+        />
+      </HStack>
+    </VStack>
+  </VStack>
 );
 
 type ValueObject = {
@@ -108,7 +152,7 @@ export const ObjectValueModel = () => {
     <SelectChip
       active={value !== undefined}
       content={content}
-      end={<Icon color="fg" name={value.iconName} size="s" />}
+      end={<Icon active color="fg" name={value.iconName} size="xs" />}
       onChange={(newValue: string) => handleChange(newValue)}
       value={value.value}
       valueLabel={value.label}

@@ -1,15 +1,13 @@
-import React, { forwardRef, memo, useCallback, useMemo, useRef, useState } from 'react';
+import React, { forwardRef, memo, useCallback, useMemo, useState } from 'react';
 import { useTabsContext } from '@cbhq/cds-common/tabs/TabsContext';
 import type { TabValue } from '@cbhq/cds-common/tabs/useTabs';
 import { css } from '@linaria/core';
 
-import { useDimensions } from '../hooks/useDimensions';
+import { useHorizontalScrollToTarget } from '../hooks/useHorizontalScrollToTarget';
 import { type BoxBaseProps, HStack } from '../layout';
 import { Paddle, type TabNavigationBaseProps, Tabs } from '../tabs';
 
-import { Chip } from './Chip';
-
-const scrollPadding = 5;
+import { MediaChip } from './MediaChip';
 
 const scrollContainerCss = css`
   &::-webkit-scrollbar {
@@ -23,7 +21,7 @@ const TabComponent = <T extends string = string>({ label = '', id, ...tabProps }
   const isActive = useMemo(() => activeTab?.id === id, [activeTab, id]);
   const handleClick = useCallback(() => updateActiveTab(id), [id, updateActiveTab]);
   return (
-    <Chip
+    <MediaChip
       aria-selected={isActive}
       inverted={isActive}
       onClick={handleClick}
@@ -32,7 +30,7 @@ const TabComponent = <T extends string = string>({ label = '', id, ...tabProps }
       {...tabProps}
     >
       {label}
-    </Chip>
+    </MediaChip>
   );
 };
 
@@ -68,12 +66,11 @@ const TabbedChipsComponent = memo(
     }: TabbedChipsProps<T>,
     ref: React.ForwardedRef<HTMLElement | null>,
   ) {
+    const [scrollTarget, setScrollTarget] = useState<HTMLElement | null>(null);
+    const { scrollRef, isScrollContentOffscreenLeft, isScrollContentOffscreenRight, handleScroll } =
+      useHorizontalScrollToTarget({ activeTarget: scrollTarget, scrollPadding: 50 });
     const activeTab = useMemo(() => tabs.find((tab) => tab.id === value), [tabs, value]);
-    const scrollRef = useRef<HTMLDivElement>(null);
-    const end = Number(scrollRef.current?.scrollWidth) - Number(scrollRef.current?.offsetWidth);
-    const canScrollRight = Number(scrollRef.current?.scrollLeft) < end;
-    const [showLeftPaddle, setShowLeftPaddle] = useState(false);
-    const [showRightPaddle, setShowRightPaddle] = useState(canScrollRight);
+
     const handleChange = useCallback(
       (tabValue: TabValue<T> | null) => {
         if (tabValue) onChange?.(tabValue.id);
@@ -81,41 +78,20 @@ const TabbedChipsComponent = memo(
       [onChange],
     );
 
-    const handleOnScroll = useCallback(() => {
-      const scrollDistance = Number(scrollRef.current?.scrollLeft);
-      const endTrigger = end - scrollPadding;
-      const startTrigger = scrollPadding;
-
-      // Hide/show the left paddle
-      if (scrollDistance > startTrigger) setShowLeftPaddle(true);
-      else if (scrollDistance <= startTrigger) setShowLeftPaddle(false);
-
-      // Hide/show the right paddle
-      if (scrollDistance < endTrigger) setShowRightPaddle(true);
-      else if (scrollDistance >= endTrigger) setShowRightPaddle(false);
-    }, [end]);
-
-    if (canScrollRight && !showRightPaddle) {
-      const scrollLeft = Number(scrollRef.current?.scrollLeft);
-      const endTrigger = end - scrollPadding;
-      if (scrollLeft < endTrigger) {
-        setShowRightPaddle(true);
-      }
-    }
-
-    const { observe } = useDimensions({ onResize: handleOnScroll });
-
     const handleScrollLeft = useCallback(() => {
       scrollRef?.current?.scrollTo({ left: 0, behavior: 'smooth' });
     }, [scrollRef]);
+
     const handleScrollRight = useCallback(() => {
-      scrollRef?.current?.scrollTo({ left: end, behavior: 'smooth' });
-    }, [end]);
+      if (!scrollRef.current) return;
+      const maxScroll = scrollRef.current.scrollWidth - scrollRef.current.clientWidth;
+      scrollRef.current.scrollTo({ left: maxScroll, behavior: 'smooth' });
+    }, [scrollRef]);
 
     return (
       <HStack
-        ref={observe}
         alignItems="center"
+        overflow="hidden"
         position="relative"
         testID={testID}
         width={width}
@@ -127,15 +103,14 @@ const TabbedChipsComponent = memo(
           direction="left"
           onClick={handleScrollLeft}
           paddleStyle={paddleStyle}
-          show={showLeftPaddle}
+          show={isScrollContentOffscreenLeft}
           variant="secondary"
         />
         <HStack
           ref={scrollRef}
           alignItems="center"
           className={scrollContainerCss}
-          onScroll={handleOnScroll}
-          // TODO: this overflow styling is necessary for the Paddle feature but cuts off child Chips' focus ring
+          onScroll={handleScroll}
           overflow="auto"
         >
           <Tabs
@@ -145,6 +120,7 @@ const TabbedChipsComponent = memo(
             activeTab={activeTab || null}
             background={background}
             gap={gap}
+            onActiveTabElementChange={setScrollTarget}
             onChange={handleChange}
             role={role}
             tabs={tabs}
@@ -157,7 +133,7 @@ const TabbedChipsComponent = memo(
           direction="right"
           onClick={handleScrollRight}
           paddleStyle={paddleStyle}
-          show={showRightPaddle}
+          show={isScrollContentOffscreenRight}
           variant="secondary"
         />
       </HStack>

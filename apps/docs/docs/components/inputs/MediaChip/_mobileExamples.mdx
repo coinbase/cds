@@ -1,0 +1,139 @@
+### Basic Usage
+
+MediaChip automatically calculates spacing based on the content you provide (start, children, end).
+
+:::tip Recommended component sizes for regular sized chip
+
+- Start: **24×24** circular media
+- End: **xs** size icons
+  :::
+
+```tsx
+<HStack gap={2}>
+  <MediaChip>Label only</MediaChip>
+  <MediaChip
+    start={<RemoteImage height={24} shape="circle" source={assets.eth.imageUrl} width={24} />}
+  />
+  <MediaChip
+    start={<RemoteImage height={24} shape="circle" source={assets.eth.imageUrl} width={24} />}
+  >
+    Media + Label
+  </MediaChip>
+</HStack>
+```
+
+### Configurations
+
+MediaChip supports all 6 spacing configurations automatically.
+
+```tsx
+<VStack gap={2}>
+  <HStack flexWrap="wrap" gap={2}>
+    <MediaChip>Label only</MediaChip>
+    <MediaChip
+      start={<RemoteImage height={24} shape="circle" source={assets.eth.imageUrl} width={24} />}
+    />
+    <MediaChip
+      end={<Icon active color="fg" name="caretDown" size="xs" />}
+      start={<RemoteImage height={24} shape="circle" source={assets.eth.imageUrl} width={24} />}
+    />
+  </HStack>
+  <HStack flexWrap="wrap" gap={2}>
+    <MediaChip
+      start={<RemoteImage height={24} shape="circle" source={assets.eth.imageUrl} width={24} />}
+    >
+      Media + Label
+    </MediaChip>
+    <MediaChip end={<Icon active color="fg" name="filter" size="xs" />}>Label + Icon</MediaChip>
+    <MediaChip
+      end={<Icon active color="fg" name="caretDown" size="xs" />}
+      start={<RemoteImage height={24} shape="circle" source={assets.eth.imageUrl} width={24} />}
+    >
+      All three
+    </MediaChip>
+  </HStack>
+</VStack>
+```
+
+### Compact Variant
+
+The compact variant reduces spacing for denser layouts.
+
+:::tip Recommended component sizes for compact chip
+
+- Start: **16×16** circular media
+- End: **xs** size icons
+  :::
+
+```tsx
+<HStack flexWrap="wrap" gap={2}>
+  <MediaChip compact>Label only</MediaChip>
+  <MediaChip
+    compact
+    start={<RemoteImage height={16} shape="circle" source={assets.eth.imageUrl} width={16} />}
+  />
+  <MediaChip
+    compact
+    end={<Icon active color="fg" name="caretDown" size="xs" />}
+    start={<RemoteImage height={16} shape="circle" source={assets.eth.imageUrl} width={16} />}
+  >
+    Compact
+  </MediaChip>
+</HStack>
+```
+
+### Inverted State
+
+Use the inverted prop to emphasize the chip with inverted colors.
+
+```tsx
+<HStack gap={2}>
+  <MediaChip inverted>Selected</MediaChip>
+  <MediaChip
+    inverted
+    end={<Icon active color="fg" name="check" size="xs" />}
+    start={<RemoteImage height={24} shape="circle" source={assets.eth.imageUrl} width={24} />}
+  >
+    Active State
+  </MediaChip>
+</HStack>
+```
+
+### Interactive
+
+MediaChip can be made interactive by providing an onPress handler.
+
+```tsx
+<HStack gap={2}>
+  <MediaChip onPress={() => console.log('Pressed!')}>Pressable</MediaChip>
+  <MediaChip
+    onPress={() => console.log('Pressed!')}
+    start={<RemoteImage height={24} shape="circle" source={assets.eth.imageUrl} width={24} />}
+  >
+    With Media
+  </MediaChip>
+  <MediaChip disabled onPress={() => console.log('Should not fire')}>
+    Disabled
+  </MediaChip>
+</HStack>
+```
+
+### Custom Spacing
+
+You can override the automatic spacing with custom values if needed.
+
+```tsx
+<HStack gap={2}>
+  <MediaChip paddingX={4} paddingY={2}>
+    Custom spacing
+  </MediaChip>
+  <MediaChip
+    paddingStart={3}
+    paddingEnd={5}
+    paddingY={1.5}
+    start={<RemoteImage height={24} shape="circle" source={assets.eth.imageUrl} width={24} />}
+  >
+    Asymmetric padding
+  </MediaChip>
+</HStack>
+```

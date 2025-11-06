@@ -2,8 +2,8 @@ import React, { forwardRef, memo } from 'react';
 
 import { Icon } from '../icons/Icon';
 
-import { Chip } from './Chip';
 import type { InputChipProps } from './ChipProps';
+import { MediaChip } from './MediaChip';
 
 export const InputChip = memo(
   forwardRef(function InputChip(
@@ -16,22 +16,23 @@ export const InputChip = memo(
     ref: React.ForwardedRef<HTMLButtonElement>,
   ) {
     return (
-      <Chip
+      <MediaChip
         ref={ref}
         inverted
         accessibilityLabel={accessibilityLabel}
         end={
           <Icon
+            active
             color="fg"
             name="close"
-            size="s"
+            size="xs"
             testID={testID ? `${testID}-close-icon` : 'input-chip-close-icon'}
           />
         }
         {...props}
       >
         {value}
-      </Chip>
+      </MediaChip>
     );
   }),
 );

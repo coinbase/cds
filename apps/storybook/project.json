@@ -6,10 +6,10 @@
   "tags": [],
   "targets": {
     "dev": {
-      "command": "storybook dev"
+      "command": "storybook dev -p 6006"
     },
     "start": {
-      "command": "storybook dev",
+      "command": "storybook dev -p 6006",
       "dependsOn": [
         "build"
       ]
