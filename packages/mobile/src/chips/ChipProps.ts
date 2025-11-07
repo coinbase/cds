@@ -25,8 +25,15 @@ export type ChipBaseProps = SharedProps &
      * Invert the foreground and background colors to emphasize the Chip.
      * Depending on your theme, it may be dangerous to use this prop in conjunction with `transparentWhileInactive`.
      * @default false
+     * @deprecated Use the invertColorScheme prop instead
      */
     inverted?: boolean;
+    /**
+     * Invert the foreground and background colors to emphasize the Chip.
+     * Depending on your theme, it may be dangerous to use this prop in conjunction with `transparentWhileInactive`.
+     * @default false
+     */
+    invertColorScheme?: boolean;
     /** Reduces spacing around Chip content */
     compact?: boolean;
     /**
@@ -49,9 +56,10 @@ export type ChipBaseProps = SharedProps &
 
 export type ChipProps = ChipBaseProps;
 
-export type InputChipProps = {
-  /** Value indicates what is currently selected */
-  value: string;
-  /** Callback fired when Chip is pressed */
-  onPress: PressableProps['onPress'];
-} & Omit<ChipProps, 'end' | 'inverted' | 'children'>;
+export type InputChipProps = ChipProps & {
+  /**
+   * Value indicates what is currently selected
+   * @deprecated Use the `children` prop instead
+   */
+  value?: string;
+};

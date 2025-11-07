@@ -508,7 +508,8 @@ export const routes = [
   },
   {
     key: 'Select',
-    getComponent: () => require('@cbhq/cds-mobile/controls/__stories__/Select.stories').default,
+    getComponent: () =>
+      require('@cbhq/cds-mobile/alpha/select/__stories__/Select.stories').default,
   },
   {
     key: 'SelectChip',

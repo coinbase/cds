@@ -25,44 +25,33 @@ const InputChipScreen = () => {
   return (
     <ExampleScreen>
       <Example title="Default">
-        <InputChip onPress={NoopFn} value="USD" />
-        <InputChip onPress={NoopFn} start={<RemoteImage {...regularMediaProps} />} value="USD" />
-        <InputChip
-          disabled
-          onPress={NoopFn}
-          start={<RemoteImage {...regularMediaProps} />}
-          value="USD"
-        />
+        <InputChip onPress={NoopFn}>USD</InputChip>
+        <InputChip onPress={NoopFn} start={<RemoteImage {...regularMediaProps} />}>
+          USD
+        </InputChip>
+        <InputChip disabled onPress={NoopFn} start={<RemoteImage {...regularMediaProps} />}>
+          USD
+        </InputChip>
       </Example>
       <Example title="Compact">
-        <InputChip compact onPress={NoopFn} value="USD" />
-        <InputChip
-          compact
-          onPress={NoopFn}
-          start={<RemoteImage {...compactMediaProps} />}
-          value="USD"
-        />
-        <InputChip
-          compact
-          disabled
-          onPress={NoopFn}
-          start={<RemoteImage {...compactMediaProps} />}
-          value="USD"
-        />
+        <InputChip compact onPress={NoopFn}>
+          USD
+        </InputChip>
+        <InputChip compact onPress={NoopFn} start={<RemoteImage {...compactMediaProps} />}>
+          USD
+        </InputChip>
+        <InputChip compact disabled onPress={NoopFn} start={<RemoteImage {...compactMediaProps} />}>
+          USD
+        </InputChip>
       </Example>
       <Example title="Long text">
-        <InputChip onPress={NoopFn} value="Lorem ipsum sit dolar amit" />
-        <InputChip
-          onPress={NoopFn}
-          start={<RemoteImage {...regularMediaProps} />}
-          value="Lorem ipsum sit dolar amit"
-        />
-        <InputChip
-          disabled
-          onPress={NoopFn}
-          start={<RemoteImage {...regularMediaProps} />}
-          value="Lorem ipsum sit dolar amit"
-        />
+        <InputChip onPress={NoopFn}>Lorem ipsum sit dolar amit</InputChip>
+        <InputChip onPress={NoopFn} start={<RemoteImage {...regularMediaProps} />}>
+          Lorem ipsum sit dolar amit
+        </InputChip>
+        <InputChip disabled onPress={NoopFn} start={<RemoteImage {...regularMediaProps} />}>
+          Lorem ipsum sit dolar amit
+        </InputChip>
       </Example>
     </ExampleScreen>
   );
