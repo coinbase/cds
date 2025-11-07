@@ -309,18 +309,14 @@ try {
   delete exportPaths['./package.json'];
   delete exportPaths['.'];
 
-  const hasV7Exports = Object.values(exportPaths).some((p) => p.includes('/v7'));
-
-  const newExportPaths = hasV7Exports
-    ? exportPaths
-    : Object.fromEntries(
-        Object.entries(exportPaths).map(([key, value]) => [
-          key.replace('./', './v7/'),
-          Object.fromEntries(
-            Object.entries(value).map(([key, value]) => [key, value.replace('./', './esm/v7/')]),
-          ),
-        ]),
-      );
+  const newExportPaths = Object.fromEntries(
+    Object.entries(exportPaths).map(([key, value]) => [
+      key.replace('./', './v7/'),
+      Object.fromEntries(
+        Object.entries(value).map(([key, value]) => [key, value.replace('./', './esm/v7/')]),
+      ),
+    ]),
+  );
 
   const v8PackageJson = JSON.parse(fs.readFileSync(`${PACKAGE_ROOT}/package.json`, 'utf-8'));
 
