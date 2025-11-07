@@ -7,6 +7,50 @@ All notable changes to this project will be documented in this file.
 `@coinbase/cds-illustrations` adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 <!-- template-start -->
+## 4.27.0 (11/5/2025 PST)
+
+#### 🚀 Updates
+
+- Publish illustrations 2025-11-05. [[#142](https://github.com/coinbase/cds/pull/142)]
+
+##### ⭐️ Added (28)
+
+###### Pictogram (28)
+
+- baseLightningbolt
+- baseTile
+- baseLayout
+- baseAscend
+- baseComputer
+- baseStar
+- baseDoor
+- baseComet
+- baseRibbon
+- baseMedal
+- baseSmile
+- baseSaved
+- baseRockon
+- basePower
+- baseFire
+- basePlant
+- baseRocket
+- baseCreatorCoin
+- baseEarnedBadge
+- baseExchange
+- baseStack
+- baseGlobe
+- baseChatBubbleHeart
+- baseGem
+- baseCoinStar
+- baseCertificateStar
+- baseHandStar
+- baseConfetti
+
+##### ⭐️ Updated (1)
+
+###### SpotSquare (1)
+
+- cryptoEconomyArrows
 
 ## 4.26.0 (11/5/2025 PST)
 
