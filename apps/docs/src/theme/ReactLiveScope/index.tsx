@@ -23,6 +23,7 @@ import {
 } from '@cbhq/cds-common/overlays/OverlayContentContext';
 import { useAlert } from '@cbhq/cds-common/overlays/useAlert';
 import { useModal } from '@cbhq/cds-common/overlays/useModal';
+import { useMultiSelect } from '@cbhq/cds-common/select/useMultiSelect';
 import { useStepper } from '@cbhq/cds-common/stepper/useStepper';
 import { LocaleProvider } from '@cbhq/cds-common/system/LocaleProvider';
 import { useTabsContext } from '@cbhq/cds-common/tabs/TabsContext';
@@ -33,6 +34,7 @@ import { useSparklinePath } from '@cbhq/cds-common/visualizations/useSparklinePa
 import * as CDSLottie from '@cbhq/cds-lottie-files';
 import { Accordion } from '@cbhq/cds-web/accordion/Accordion';
 import { AccordionItem } from '@cbhq/cds-web/accordion/AccordionItem';
+import { Select } from '@cbhq/cds-web/alpha/select/Select';
 import { Lottie, LottieStatusAnimation } from '@cbhq/cds-web/animation';
 import { Banner } from '@cbhq/cds-web/banner/Banner';
 import * as CDSButtons from '@cbhq/cds-web/buttons';
@@ -52,6 +54,7 @@ import * as CDSChips from '@cbhq/cds-web/chips';
 import { Coachmark } from '@cbhq/cds-web/coachmark/Coachmark';
 import { Collapsible } from '@cbhq/cds-web/collapsible/Collapsible';
 import * as CDSControls from '@cbhq/cds-web/controls';
+import { Select as OldSelect } from '@cbhq/cds-web/controls/Select';
 import { Calendar } from '@cbhq/cds-web/dates/Calendar';
 import { DatePicker } from '@cbhq/cds-web/dates/DatePicker';
 import * as CDSDots from '@cbhq/cds-web/dots';
@@ -164,6 +167,9 @@ const ReactLiveScope: Record<string, unknown> = {
   // input
   ...CDSButtons,
   ...CDSControls,
+  Select,
+  OldSelect,
+  useMultiSelect,
   ...CDSSystem,
   MediaQueryProvider,
   ...CDSChips,

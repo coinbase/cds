@@ -8,11 +8,11 @@ function DefaultSelect() {
   const options = ['Option 1', 'Option 2', 'Option 3', 'Option 4', 'Option 5', 'Option 6'];
   return (
     <VStack padding={2}>
-      <Select value={value} placeholder="Choose something..." onChange={setValue}>
+      <OldSelect value={value} placeholder="Choose something..." onChange={setValue}>
         {options.map((option) => (
           <SelectOption value={option} key={option} title={option} description="Description" />
         ))}
-      </Select>
+      </OldSelect>
     </VStack>
   );
 }
@@ -34,7 +34,7 @@ function DefaultSelect() {
   const selectedValueLabel = value && options.find((option) => option.value === value).label;
   return (
     <VStack padding={2}>
-      <Select
+      <OldSelect
         value={value}
         valueLabel={selectedValueLabel}
         placeholder="Choose something..."
@@ -48,7 +48,7 @@ function DefaultSelect() {
             description="Description"
           />
         ))}
-      </Select>
+      </OldSelect>
     </VStack>
   );
 }
@@ -68,7 +68,7 @@ function LabelHelperTextSelect() {
   const options = ['Option 1', 'Option 2', 'Option 3', 'Option 4', 'Option 5', 'Option 6'];
   return (
     <VStack padding={2}>
-      <Select
+      <OldSelect
         label="Make a selection"
         helperText="You can only choose one"
         value={value}
@@ -78,7 +78,7 @@ function LabelHelperTextSelect() {
         {options.map((option) => (
           <SelectOption value={option} key={option} title={option} description="Description" />
         ))}
-      </Select>
+      </OldSelect>
     </VStack>
   );
 }
@@ -94,7 +94,7 @@ function CompactSelect() {
   const options = ['Option 1', 'Option 2', 'Option 3', 'Option 4', 'Option 5', 'Option 6'];
   return (
     <VStack padding={2}>
-      <Select compact label="Make a selection" value={value} onChange={setValue}>
+      <OldSelect compact label="Make a selection" value={value} onChange={setValue}>
         {options.map((option) => (
           <SelectOption
             value={option}
@@ -104,7 +104,7 @@ function CompactSelect() {
             description="Description"
           />
         ))}
-      </Select>
+      </OldSelect>
     </VStack>
   );
 }
@@ -120,7 +120,7 @@ function Variant() {
   const options = ['Positive', 'Negative', 'Primary', 'Secondary', 'Foreground'];
   return (
     <VStack padding={2}>
-      <Select
+      <OldSelect
         variant={value.toLowerCase()}
         label="Make a selection"
         helperText="You can only choose one"
@@ -130,7 +130,7 @@ function Variant() {
         {options.map((option) => (
           <SelectOption value={option} key={option} title={option} />
         ))}
-      </Select>
+      </OldSelect>
     </VStack>
   );
 }
@@ -152,29 +152,29 @@ When using the `inside` label variant, you should always include a `placeholder`
     <Text as="p">
       <strong>Outside label (default):</strong>
     </Text>
-    <Select placeholder="Choose an option">
+    <OldSelect placeholder="Choose an option">
       <SelectOption value="option1" title="Option 1" description="Description" />
       <SelectOption value="option2" title="Option 2" description="Description" />
       <SelectOption value="option3" title="Option 3" description="Description" />
-    </Select>
+    </OldSelect>
   </VStack>
 
   <VStack>
     <Text as="p">
       <strong>Inside label:</strong>
     </Text>
-    <Select label="Choose Option" labelVariant="inside" placeholder="Select from list">
+    <OldSelect label="Choose Option" labelVariant="inside" placeholder="Select from list">
       <SelectOption value="option1" title="Option 1" description="Description" />
       <SelectOption value="option2" title="Option 2" description="Description" />
       <SelectOption value="option3" title="Option 3" description="Description" />
-    </Select>
+    </OldSelect>
   </VStack>
 
   <VStack>
     <Text as="p">
       <strong>Inside label (with start content):</strong>
     </Text>
-    <Select
+    <OldSelect
       label="Filter Options"
       labelVariant="inside"
       startNode={<InputIcon name="search" />}
@@ -183,7 +183,7 @@ When using the `inside` label variant, you should always include a `placeholder`
       <SelectOption value="option1" title="Option 1" description="Description" />
       <SelectOption value="option2" title="Option 2" description="Description" />
       <SelectOption value="option3" title="Option 3" description="Description" />
-    </Select>
+    </OldSelect>
   </VStack>
 </VStack>
 ```
