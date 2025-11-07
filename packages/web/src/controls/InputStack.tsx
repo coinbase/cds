@@ -21,11 +21,14 @@ const baseCss = css`
   display: flex;
   min-width: 0;
   flex-grow: 2;
-  border-color: var(--border-color-unfocused);
   /* stylelint-disable plugin/no-low-performance-animation-properties */
   transition: box-shadow ${durations.moderate1}ms ease-in-out;
   /* stylelint-enable plugin/no-low-performance-animation-properties */
   overflow: hidden;
+
+  && {
+    border-color: var(--border-color-unfocused);
+  }
 
   /* When input is disabled, opacity 0.5 was applied twice. One time on the root VStack, and second time in interactable. As a result, it was not a11y compliant. To resolve this issue, i had to put an opacity of 1 override in the interactable element. */
   &:disabled,
