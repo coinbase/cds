@@ -10,7 +10,7 @@ function DefaultSelect() {
   const options = ['Option 1', 'Option 2', 'Option 3', 'Option 4', 'Option 5', 'Option 6'];
   return (
     <VStack paddding={2}>
-      <Select value={value} placeholder="Choose something..." onChange={setValue}>
+      <OldSelect value={value} placeholder="Choose something..." onChange={setValue}>
         {options.map((option) => (
           <SelectOption
             value={option}
@@ -20,7 +20,7 @@ function DefaultSelect() {
             media={<CellMedia type="icon" name="upload" />}
           />
         ))}
-      </Select>
+      </OldSelect>
     </VStack>
   );
 }

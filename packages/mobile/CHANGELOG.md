@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.20.1 (11/7/2025 PST)
+
+#### 🐞 Fixes
+
+- Add deprecation decorator to old Select. [[#148](https://github.com/coinbase/cds/pull/148)]
+
 ## 8.20.0 (11/7/2025 PST)
 
 #### 🚀 Updates
