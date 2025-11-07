@@ -42,6 +42,7 @@ export const Chip = memo(
       justifyContent,
       children,
       maxWidth = chipMaxWidth,
+      invertColorScheme,
       inverted,
       numberOfLines = 1,
       testID,
@@ -58,7 +59,7 @@ export const Chip = memo(
     }: ChipProps,
     ref: React.ForwardedRef<HTMLButtonElement | HTMLDivElement>,
   ) {
-    const WrapperComponent = inverted ? InvertedThemeProvider : Fragment;
+    const WrapperComponent = (invertColorScheme ?? inverted) ? InvertedThemeProvider : Fragment;
 
     const containerProps = {
       background,

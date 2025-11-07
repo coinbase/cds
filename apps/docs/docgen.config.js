@@ -44,6 +44,7 @@ module.exports = {
    * Plese add sourceFiles in alphabetical order.
    */
   sourceFiles: [
+    'alpha/select/Select',
     'animation/Lottie',
     'animation/LottieStatusAnimation',
     'accordion/Accordion',

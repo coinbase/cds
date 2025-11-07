@@ -217,6 +217,7 @@ export const Cell: CellComponent = memo(
         innerSpacing: innerSpacingProp,
         outerSpacing: outerSpacingProp,
         bottomContent: bottom,
+        background = 'bgAlternate',
         ...props
       }: CellProps<AsComponent>,
       ref?: Polymorphic.Ref<AsComponent>,
@@ -239,7 +240,7 @@ export const Cell: CellComponent = memo(
           borderRadius,
           className: cx(contentClassName, classNames?.contentContainer),
           testID,
-          ...(selected ? { background: 'bgAlternate' as const } : {}),
+          ...(selected ? { background } : {}),
           ...(linkable ? innerSpacingWithoutMarginX : innerSpacing),
           style: styles?.contentContainer,
         };
@@ -348,6 +349,7 @@ export const Cell: CellComponent = memo(
         classNames?.bottomContent,
         testID,
         selected,
+        background,
         linkable,
         innerSpacingWithoutMarginX,
         innerSpacing,
