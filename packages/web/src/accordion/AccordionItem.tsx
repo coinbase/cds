@@ -34,6 +34,7 @@ export const AccordionItem = memo(
     panelRef,
     maxHeight,
     style,
+    styles,
   }: AccordionItemProps) => {
     const { activeKey } = useAccordionContext();
     const collapsed = activeKey !== itemKey;
@@ -49,6 +50,7 @@ export const AccordionItem = memo(
           subtitle={subtitle}
           testID={testID && `${testID}-header`}
           title={title}
+          styles={styles}
         />
         <AccordionPanel
           ref={panelRef}

@@ -197,6 +197,11 @@ describe('Accordion', () => {
               itemKey="1"
               onClick={noop}
               style={customAccordionItemStyle}
+              styles={{
+                topContent: {
+                  padding: '10px',
+                },
+              }}
               subtitle="subtitle1"
               testID="mock-accordion-item1"
               title="Accordion #1"
@@ -222,6 +227,7 @@ describe('Accordion', () => {
 
       expect(screen.getByTestId('mock-accordion')).toHaveStyle('padding: 20px');
       expect(screen.getByTestId('mock-accordion-item1')).toHaveStyle('padding: 30px');
+      expect(screen.getByTestId('mock-accordion-item1-header-top-content')).toHaveStyle('padding: 10px');
     });
   });
 

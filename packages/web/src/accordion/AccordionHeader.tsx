@@ -49,6 +49,11 @@ export type AccordionHeaderBaseProps = SharedProps &
      * unless you want multiple items to be controlled at the same time.
      */
     itemKey: string;
+    /** Styles for the components */
+    styles?: {
+      topContent?: React.CSSProperties;
+      pressable?: React.CSSProperties;
+    }
   };
 
 const baseCss = css`
@@ -120,7 +125,7 @@ type AccordionHeaderProps = AccordionHeaderBaseProps;
 export const AccordionHeader = memo(
   forwardRef(
     (
-      { itemKey, title, subtitle, onClick, media, collapsed = false, testID }: AccordionHeaderProps,
+      { itemKey, title, subtitle, onClick, media, collapsed = false, styles, testID }: AccordionHeaderProps,
       forwardedRef: React.ForwardedRef<HTMLButtonElement>,
     ) => {
       const { setActiveKey, activeKey } = useAccordionContext();
@@ -144,6 +149,7 @@ export const AccordionHeader = memo(
             onClick={handleClick}
             testID={testID}
             width="100%"
+            style={styles?.pressable}
           >
             <HStack
               alignItems="center"
@@ -151,6 +157,8 @@ export const AccordionHeader = memo(
               minHeight={listHeight}
               width="100%"
               {...spacing.outer}
+              style={styles?.topContent}
+              testID={testID && `${testID}-top-content`}
             >
               {!!media && <AccordionMedia media={media} />}
               <AccordionTitle subtitle={subtitle} title={title} />
