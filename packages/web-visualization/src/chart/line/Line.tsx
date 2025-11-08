@@ -254,21 +254,12 @@ export const Line = memo<LineProps>(
       return getGradientScale(seriesGradient, xScale, yScale);
     }, [seriesGradient, xScale, yScale]);
 
-    // Pre-filter data to only include points within domain/range
     const filteredChartData = useMemo(() => {
       if (!xScale || !yScale || !xAxis || !yAxis) return [];
-
       return chartData.map((value, index) => {
         if (value === null) return { value: null, index };
-
         const xValue = xData && xData[index] !== undefined ? xData[index] : index;
-
-        // Check if both x and y values are within their respective axis domains
-        const isWithinXDomain = xValue >= xAxis.domain.min && xValue <= xAxis.domain.max;
-        const isWithinYDomain = value >= yAxis.domain.min && value <= yAxis.domain.max;
-        const isValid = isWithinXDomain && isWithinYDomain;
-
-        return isValid ? { value, index, xValue } : { value: null, index, xValue };
+        return { value, index, xValue };
       });
     }, [chartData, xData, xScale, yScale, xAxis, yAxis]);
 

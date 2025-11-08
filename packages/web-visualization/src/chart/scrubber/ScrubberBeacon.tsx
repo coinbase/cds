@@ -118,6 +118,7 @@ export const ScrubberBeacon = memo(
         getYScale,
         getSeriesData,
         animate: animationEnabled,
+        drawingArea,
       } = useCartesianChartContext();
       const { scrubberPosition } = useScrubberContext();
 
@@ -184,7 +185,7 @@ export const ScrubberBeacon = memo(
 
       const pixelCoordinate = useMemo(() => {
         if (!xScale || !yScale || dataX === undefined || dataY === undefined) {
-          return null;
+          return;
         }
 
         return projectPoint({
@@ -200,16 +201,27 @@ export const ScrubberBeacon = memo(
         return transitionConfigs?.update ?? defaultTransition;
       }, [hasMounted, transitionConfigs]);
 
+      const isWithinDrawingArea = useMemo(() => {
+        if (!pixelCoordinate) return false;
+        return (
+          pixelCoordinate.x >= drawingArea.x &&
+          pixelCoordinate.x <= drawingArea.x + drawingArea.width &&
+          pixelCoordinate.y >= drawingArea.y &&
+          pixelCoordinate.y <= drawingArea.y + drawingArea.height
+        );
+      }, [pixelCoordinate, drawingArea]);
+
       if (!pixelCoordinate) {
-        return null;
+        return;
       }
 
       const pointColor = color ?? targetSeries?.color ?? 'var(--color-fgPrimary)';
       const shouldPulse = animationEnabled && isIdleState && idlePulse;
+      const effectiveOpacity = isWithinDrawingArea ? opacity : 0;
 
       if (animationEnabled && isIdleState) {
         return (
-          <g data-testid={testID} opacity={opacity}>
+          <g data-testid={testID} opacity={effectiveOpacity}>
             <motion.circle
               animate={{
                 cx: pixelCoordinate.x,
@@ -268,7 +280,7 @@ export const ScrubberBeacon = memo(
         );
       }
       return (
-        <g data-testid={testID} opacity={opacity}>
+        <g data-testid={testID} opacity={effectiveOpacity}>
           <circle
             cx={pixelCoordinate.x}
             cy={pixelCoordinate.y}

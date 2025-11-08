@@ -233,11 +233,6 @@ export const Scrubber = memo(
 
                 if (!yScale || !yAxis) return;
 
-                const isWithinXDomain = dataX >= xAxis.domain.min && dataX <= xAxis.domain.max;
-                const isWithinYDomain = dataY >= yAxis.domain.min && dataY <= yAxis.domain.max;
-
-                if (!isWithinXDomain || !isWithinYDomain) return;
-
                 const pixelY = getPointOnScale(dataY, yScale);
 
                 const resolvedLabel = typeof s.label === 'function' ? s.label(dataIndex) : s.label;
@@ -663,7 +658,7 @@ export const Scrubber = memo(
             />
           )}
           {beaconPositions.map((beacon: any) => {
-            if (!beacon) return null;
+            if (!beacon) return;
             const adjustment = labelPositioning.adjustments.get(beacon.targetSeries.id);
             const dotStroke = beacon.targetSeries?.color || 'var(--color-fgPrimary)';
 

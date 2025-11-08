@@ -218,6 +218,7 @@ export const Point = memo<PointProps>(
       getXAxis,
       getYAxis,
       animate: animationEnabled,
+      drawingArea,
     } = useCartesianChartContext();
     const animate = animateProp ?? animationEnabled;
 
@@ -225,13 +226,6 @@ export const Point = memo<PointProps>(
     const yScale = getYScale(yAxisId);
     const xAxis = getXAxis();
     const yAxis = getYAxis(yAxisId);
-
-    const isWithinDomain = useMemo(() => {
-      if (!xAxis || !yAxis) return false;
-      const isWithinXDomain = dataX >= xAxis.domain.min && dataX <= xAxis.domain.max;
-      const isWithinYDomain = dataY >= yAxis.domain.min && dataY <= yAxis.domain.max;
-      return isWithinXDomain && isWithinYDomain;
-    }, [dataX, dataY, xAxis, yAxis]);
 
     const pixelCoordinate = useMemo(() => {
       if (pixelCoordinates) {
@@ -249,6 +243,16 @@ export const Point = memo<PointProps>(
         yScale,
       });
     }, [xScale, yScale, dataX, dataY, pixelCoordinates]);
+
+    const isWithinDrawingArea = useMemo(() => {
+      if (!pixelCoordinate) return false;
+      return (
+        pixelCoordinate.x >= drawingArea.x &&
+        pixelCoordinate.x <= drawingArea.x + drawingArea.width &&
+        pixelCoordinate.y >= drawingArea.y &&
+        pixelCoordinate.y <= drawingArea.y + drawingArea.height
+      );
+    }, [pixelCoordinate, drawingArea]);
 
     const positionTransition = useMemo(() => {
       if (!hasMounted && transitionConfigs?.enter) return transitionConfigs.enter;
@@ -362,12 +366,14 @@ export const Point = memo<PointProps>(
       positionTransition,
     ]);
 
-    if (!xScale || !yScale || !isWithinDomain) {
-      return null;
+    console.log('got point');
+
+    if (!xScale || !yScale) {
+      return;
     }
 
     return (
-      <>
+      <g opacity={isWithinDrawingArea ? 1 : 0}>
         <g
           className={cx(containerCss, classNames?.container)}
           data-testid={testID}
@@ -381,7 +387,7 @@ export const Point = memo<PointProps>(
             {label}
           </ChartText>
         )}
-      </>
+      </g>
     );
   },
 );
