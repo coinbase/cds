@@ -68,7 +68,7 @@ export type SolidAreaProps = Omit<PathProps, 'd' | 'fill' | 'fillOpacity'> & Are
 export const SolidArea = memo<SolidAreaProps>(
   ({
     d,
-    fill: fillProp,
+    fill,
     fillOpacity = 1,
     clipRect,
     gradient: gradientProp,
@@ -76,24 +76,17 @@ export const SolidArea = memo<SolidAreaProps>(
     yAxisId,
     animate,
     transitionConfig,
+    gradient,
     ...props
   }) => {
-    const context = useCartesianChartContext();
     const theme = useTheme();
-
-    const fill = fillProp ?? theme.color.fgPrimary;
-
-    // Get gradient from series if seriesId is provided and gradient is not
-    const targetSeries = seriesId ? context.getSeries(seriesId) : undefined;
-    const seriesGradient = targetSeries?.gradient;
-    const gradient = gradientProp ?? seriesGradient;
 
     return (
       <Path
         animate={animate}
         clipRect={clipRect}
         d={d}
-        fill={fill}
+        fill={fill ?? theme.color.fgPrimary}
         fillOpacity={fillOpacity}
         transitionConfigs={transitionConfig ? { update: transitionConfig } : undefined}
         {...props}

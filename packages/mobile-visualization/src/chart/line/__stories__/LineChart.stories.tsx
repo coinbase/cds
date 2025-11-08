@@ -1125,7 +1125,7 @@ const AssetPriceDotted = () => {
           enableScrubbing
           showArea
           accessibilityLiveRegion="polite"
-          areaType="dotted"
+          areaType="solid"
           height={defaultChartHeight}
           inset={{ top: 56 }}
           renderPoints={myPoints}
@@ -2408,13 +2408,13 @@ export default () => {
       </Example>
       <Example title="Gradient line">
         <GradientLineChart />
-      </Example>
+      </Example>*/}
       <Example title="Dotted">
         <AssetPriceDotted />
       </Example>
       <Example title="Animated Gain/Loss">
         <AnimatedGainLossChart />
-      </Example>*/}
+      </Example>
       <Example title="Continuous Gradient 2">
         <LineChart
           enableScrubbing
