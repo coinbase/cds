@@ -16,9 +16,23 @@ import { Area, type AreaProps } from './Area';
 
 export type AreaSeries = Series &
   Partial<
-    Pick<AreaProps, 'AreaComponent' | 'curve' | 'fillOpacity' | 'type' | 'fill' | 'connectNulls'>
+    Pick<
+      AreaProps,
+      | 'AreaComponent'
+      | 'curve'
+      | 'fillOpacity'
+      | 'type'
+      | 'fill'
+      | 'connectNulls'
+      | 'transitionConfig'
+    >
   > &
   Partial<Pick<LineProps, 'LineComponent' | 'strokeWidth' | 'stroke' | 'opacity'>> & {
+    /**
+     * The type of line to render for this series.
+     * Overrides the chart-level lineType if provided.
+     * @default 'solid'
+     */
     lineType?: 'solid' | 'dotted';
   };
 
@@ -60,7 +74,7 @@ export type AreaChartProps = Omit<CartesianChartProps, 'xAxis' | 'yAxis' | 'seri
      * @default 'solid'
      */
     lineType?: 'solid' | 'dotted';
-
+    // todo: add comments
     xAxis?: Partial<AxisConfigProps> & XAxisProps;
     yAxis?: Partial<AxisConfigProps> & YAxisProps;
   };
@@ -85,16 +99,13 @@ export const AreaChart = memo(
         lineType = 'solid',
         xAxis,
         yAxis,
-        inset: userInset,
+        inset,
         children,
         ...chartProps
       },
       ref,
     ) => {
-      const calculatedInset = useMemo(
-        () => getChartInset(userInset, defaultChartInset),
-        [userInset],
-      );
+      const calculatedInset = useMemo(() => getChartInset(inset, defaultChartInset), [inset]);
 
       // Convert AreaSeries to Series for Chart context
       const chartSeries = useMemo(() => {
@@ -216,9 +227,9 @@ export const AreaChart = memo(
                 fill,
                 fillOpacity,
                 stackId,
-                type,
+                type, // Area type (don't pass to Line)
                 lineType: seriesLineType,
-                ...linePropsFromSeries
+                ...otherPropsFromSeries
               }) => {
                 return (
                   <Line
@@ -230,7 +241,7 @@ export const AreaChart = memo(
                     strokeWidth={strokeWidth}
                     transitionConfig={transitionConfig}
                     type={seriesLineType ?? lineType}
-                    {...linePropsFromSeries}
+                    {...otherPropsFromSeries}
                   />
                 );
               },

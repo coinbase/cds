@@ -73,7 +73,7 @@ export type AreaChartProps = Omit<CartesianChartProps, 'xAxis' | 'yAxis' | 'seri
      * @default 'solid'
      */
     lineType?: 'solid' | 'dotted';
-
+    // todo: add comments
     xAxis?: Partial<AxisConfigProps> & XAxisProps;
     yAxis?: Partial<AxisConfigProps> & YAxisProps;
   };
@@ -98,16 +98,13 @@ export const AreaChart = memo(
         lineType = 'solid',
         xAxis,
         yAxis,
-        inset: userInset,
+        inset,
         children,
         ...chartProps
       },
       ref,
     ) => {
-      const calculatedInset = useMemo(
-        () => getChartInset(userInset, defaultChartInset),
-        [userInset],
-      );
+      const calculatedInset = useMemo(() => getChartInset(inset, defaultChartInset), [inset]);
 
       // Convert AreaSeries to Series for Chart context
       const chartSeries = useMemo(() => {
@@ -231,7 +228,7 @@ export const AreaChart = memo(
                 stackId,
                 type, // Area type (don't pass to Line)
                 lineType: seriesLineType,
-                ...linePropsFromSeries
+                ...otherPropsFromSeries
               }) => {
                 return (
                   <Line
@@ -241,9 +238,9 @@ export const AreaChart = memo(
                     curve={curve}
                     seriesId={id}
                     strokeWidth={strokeWidth}
-                    transitionConfigs={linePropsFromSeries.transitionConfigs ?? transitionConfigs}
+                    transitionConfigs={otherPropsFromSeries.transitionConfigs ?? transitionConfigs}
                     type={seriesLineType ?? lineType}
-                    {...linePropsFromSeries}
+                    {...otherPropsFromSeries}
                   />
                 );
               },

@@ -77,22 +77,13 @@ export const LineChart = memo(
         showYAxis,
         xAxis,
         yAxis,
-        inset: userInset,
+        inset,
         children,
         ...chartProps
       },
       ref,
     ) => {
-      const calculatedInset = useMemo(
-        () => getChartInset(userInset, defaultChartInset),
-        [userInset],
-      );
-
-      // Check if we have valid data across all series
-      const hasData = useMemo(() => {
-        if (!series || series.length === 0) return false;
-        return series.some((s) => s.data && s.data.length > 0);
-      }, [series]);
+      const calculatedInset = useMemo(() => getChartInset(inset, defaultChartInset), [inset]);
 
       // Convert LineSeries to Series for Chart context
       const chartSeries = useMemo(() => {
@@ -102,8 +93,9 @@ export const LineChart = memo(
             data: s.data,
             label: s.label,
             color: s.color,
-            gradient: s.gradient,
             yAxisId: s.yAxisId,
+            stackId: s.stackId,
+            gradient: s.gradient,
           }),
         );
       }, [series]);
@@ -159,24 +151,23 @@ export const LineChart = memo(
           {/* Render axes first for grid lines to appear behind everything else */}
           {showXAxis && <XAxis {...xAxisVisualProps} />}
           {showYAxis && <YAxis axisId={yAxisId} {...yAxisVisualProps} />}
-          {hasData &&
-            series?.map(({ id, data, label, color, yAxisId, ...linePropsFromSeries }) => (
-              <Line
-                key={id}
-                AreaComponent={AreaComponent}
-                LineComponent={LineComponent}
-                areaType={areaType}
-                connectNulls={connectNulls}
-                curve={curve}
-                renderPoints={renderPoints}
-                seriesId={id}
-                showArea={showArea}
-                strokeWidth={strokeWidth}
-                transitionConfig={transitionConfig}
-                type={type}
-                {...linePropsFromSeries}
-              />
-            ))}
+          {series?.map(({ id, data, label, color, yAxisId, ...linePropsFromSeries }) => (
+            <Line
+              key={id}
+              AreaComponent={AreaComponent}
+              LineComponent={LineComponent}
+              areaType={areaType}
+              connectNulls={connectNulls}
+              curve={curve}
+              renderPoints={renderPoints}
+              seriesId={id}
+              showArea={showArea}
+              strokeWidth={strokeWidth}
+              transitionConfig={transitionConfig}
+              type={type}
+              {...linePropsFromSeries}
+            />
+          ))}
           {children}
         </CartesianChart>
       );

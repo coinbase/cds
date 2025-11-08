@@ -11,15 +11,11 @@ import {
   type Series,
 } from '../utils';
 
-import { type BarProps } from './Bar';
 import { BarPlot, type BarPlotProps } from './BarPlot';
 
-/**
- * Series type specifically for bar charts - supports both single numbers and tuples,
- * and allows individual customization of Bar props per series.
- */
-export type BarSeries = Series &
-  Partial<Pick<BarProps, 'BarComponent' | 'fill' | 'fillOpacity' | 'stroke' | 'strokeWidth'>>;
+// Exported for consistency with AreaChart and LineChart
+// note we don't really support this at the moment since we don't pass this information into BarPlot
+export type BarSeries = Series;
 
 export type BarChartProps = Omit<CartesianChartProps, 'xAxis' | 'yAxis' | 'series'> &
   Pick<
@@ -35,18 +31,17 @@ export type BarChartProps = Omit<CartesianChartProps, 'xAxis' | 'yAxis' | 'serie
     | 'stackGap'
     | 'barMinSize'
     | 'stackMinSize'
-  > &
-  Pick<BarProps, 'transitionConfig'> & {
+    | 'transitionConfig'
+  > & {
     /**
      * Configuration objects that define how to visualize the data.
-     * Each series supports Bar component props for individual customization.
      */
     series?: Array<BarSeries>;
     /**
      * Whether to stack the areas on top of each other.
      * When true, each series builds cumulative values on top of the previous series.
      *
-     * **Note**: Only applies to series data containing singular numbers (e.g., `[10, 20, 30]`).
+     * @note only applies to series data containing singular numbers (e.g., `[10, 20, 30]`).
      * Series with start & end value tuples (e.g., `[[0, 10], [5, 20]]`) will be skipped during stacking
      * and rendered as-is.
      */
@@ -59,7 +54,7 @@ export type BarChartProps = Omit<CartesianChartProps, 'xAxis' | 'yAxis' | 'serie
      * Whether to show the Y axis.
      */
     showYAxis?: boolean;
-
+    // todo: add comments
     xAxis?: Partial<AxisConfigProps> & XAxisProps;
     yAxis?: Partial<AxisConfigProps> & YAxisProps;
   };
@@ -74,7 +69,7 @@ export const BarChart = memo(
         showYAxis,
         xAxis,
         yAxis,
-        inset: userInset,
+        inset,
         children,
         barPadding,
         BarComponent,
@@ -92,38 +87,16 @@ export const BarChart = memo(
       },
       ref,
     ) => {
-      const calculatedInset = useMemo(
-        () => getChartInset(userInset, defaultChartInset),
-        [userInset],
-      );
-
-      // Convert BarSeries to Series for Chart context
-      const chartSeries = useMemo(() => {
-        return series?.map(
-          (s): Series => ({
-            id: s.id,
-            data: s.data,
-            label: s.label,
-            color: s.color,
-            gradient: s.gradient,
-            yAxisId: s.yAxisId,
-            stackId: s.stackId,
-          }),
-        );
-      }, [series]);
+      const calculatedInset = useMemo(() => getChartInset(inset, defaultChartInset), [inset]);
 
       const transformedSeries = useMemo(() => {
-        if (!stacked || !chartSeries) return chartSeries;
-        return chartSeries.map((s) => ({ ...s, stackId: s.stackId ?? defaultStackId }));
-      }, [chartSeries, stacked]);
-
-      const seriesToRender = transformedSeries ?? chartSeries;
-
-      // Keep the original series with bar-specific props for BarPlot
-      const barSeriesToRender = useMemo(() => {
         if (!stacked || !series) return series;
         return series.map((s) => ({ ...s, stackId: s.stackId ?? defaultStackId }));
       }, [series, stacked]);
+
+      // Unlike other charts with custom props per series, we do not need to pick out
+      // the props from each series that shouldn't be passed to CartesianChart
+      const seriesToRender = transformedSeries ?? series;
 
       // Split axis props into config props for Chart and visual props for axis components
       const {
@@ -195,7 +168,7 @@ export const BarChart = memo(
             borderRadius={borderRadius}
             fillOpacity={fillOpacity}
             roundBaseline={roundBaseline}
-            seriesIds={barSeriesToRender?.map((s) => s.id)}
+            seriesIds={series?.map((s) => s.id)}
             stackGap={stackGap}
             stackMinSize={stackMinSize}
             stroke={stroke}

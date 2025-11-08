@@ -12,7 +12,6 @@ export type LineSeries = Series &
     Pick<
       LineProps,
       | 'curve'
-      | 'onPointClick'
       | 'showArea'
       | 'areaType'
       | 'areaBaseline'
@@ -24,7 +23,9 @@ export type LineSeries = Series &
       | 'renderPoints'
       | 'strokeWidth'
       | 'connectNulls'
-      | 'transitionConfigs'
+      | 'transitionConfigs' // todo reconcile with mobile not having this and mobile not including enter
+      // todo: does our enter animation even work?
+      | 'onPointClick'
     >
   >;
 
@@ -34,7 +35,6 @@ export type LineChartProps = Omit<CartesianChartProps, 'xAxis' | 'yAxis' | 'seri
     | 'showArea'
     | 'areaType'
     | 'type'
-    | 'onPointClick'
     | 'LineComponent'
     | 'AreaComponent'
     | 'curve'
@@ -42,6 +42,7 @@ export type LineChartProps = Omit<CartesianChartProps, 'xAxis' | 'yAxis' | 'seri
     | 'strokeWidth'
     | 'connectNulls'
     | 'transitionConfigs'
+    | 'onPointClick'
   > & {
     /**
      * Configuration objects that define how to visualize the data.
@@ -56,6 +57,7 @@ export type LineChartProps = Omit<CartesianChartProps, 'xAxis' | 'yAxis' | 'seri
      * Whether to show the Y axis.
      */
     showYAxis?: boolean;
+    // todo: add comments here
     xAxis?: Partial<AxisConfigProps> & XAxisProps;
     yAxis?: Partial<AxisConfigProps> & YAxisProps;
   };
@@ -80,16 +82,13 @@ export const LineChart = memo(
         showYAxis,
         xAxis,
         yAxis,
-        inset: userInset,
+        inset,
         children,
         ...chartProps
       },
       ref,
     ) => {
-      const calculatedInset = useMemo(
-        () => getChartInset(userInset, defaultChartInset),
-        [userInset],
-      );
+      const calculatedInset = useMemo(() => getChartInset(inset, defaultChartInset), [inset]);
 
       // Convert LineSeries to Series for Chart context
       const chartSeries = useMemo(() => {
