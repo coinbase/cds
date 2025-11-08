@@ -13,6 +13,10 @@ import { type TransitionConfig } from '../utils/transition';
  * Used by SolidArea, DottedArea, GradientArea, and other area variants.
  */
 export type AreaComponentProps = {
+  /**
+   * The ID of the series to render. Will be used to find the data from the chart context.
+   */
+  seriesId: string;
   d: string;
   fill: string;
   fillOpacity?: number;
