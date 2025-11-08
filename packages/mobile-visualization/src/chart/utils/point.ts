@@ -1,4 +1,11 @@
-import { type ChartScaleFunction, isCategoricalScale, isLogScale, isNumericScale } from './scale';
+import {
+  applySerializableScale,
+  type ChartScaleFunction,
+  isCategoricalScale,
+  isLogScale,
+  isNumericScale,
+  type SerializableScale,
+} from './scale';
 
 /**
  * Get a point from a data value and a scale.
@@ -23,6 +30,30 @@ export const getPointOnScale = (dataValue: number, scale: ChartScaleFunction): n
 
   return scale(adjustedValue) ?? 0;
 };
+
+/**
+ * Get a point from a data value and a serializable scale (worklet-compatible).
+ * @note for categorical scales, the point will be centered within the band.
+ * @note for log scales, zero and negative values are clamped to a small positive value.
+ * @param dataValue - the data value.
+ * @param scale - the serializable scale object.
+ * @returns the pixel value (defaulting to 0 if data value is not defined in scale).
+ */
+export function getPointOnSerializableScale(dataValue: number, scale: SerializableScale): number {
+  'worklet';
+
+  if (scale.type === 'band') {
+    const bandStart = applySerializableScale(dataValue, scale);
+    return bandStart + scale.bandwidth / 2;
+  }
+
+  // For log scales, ensure the value is positive
+  if (scale.type === 'log' && dataValue <= 0) {
+    dataValue = 0.001; // Use a small positive value for log scales
+  }
+
+  return applySerializableScale(dataValue, scale);
+}
 
 /**
  * Projects a data point to pixel coordinates using the chart scale.

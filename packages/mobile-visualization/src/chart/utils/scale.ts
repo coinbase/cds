@@ -84,12 +84,14 @@ export function convertToSerializableScale(
   if (isCategoricalScale(d3Scale)) {
     const bandScale = d3Scale as ScaleBand<any>;
     const bandwidth = bandScale.bandwidth();
+    const step = (bandScale as any).step?.() ?? (range[1] - range[0]) / domain.length;
 
     return {
       type: 'band',
       domain: [domain[0], domain[domain.length - 1]] as [number, number],
       range: [range[0], range[range.length - 1]] as [number, number],
       bandwidth,
+      step,
     };
   }
 
@@ -177,6 +179,7 @@ export type SerializableBandScale = {
   domain: [number, number];
   range: [number, number];
   bandwidth: number;
+  step: number;
 };
 
 export type SerializableScale =
@@ -225,13 +228,19 @@ export function applyBandScale(value: number, scale: SerializableBandScale): num
   'worklet';
 
   const [r0, r1] = scale.range;
-  const n = scale.domain.length;
-  const step = (r1 - r0) / n;
+  const [domainMin, domainMax] = scale.domain;
+  const n = domainMax - domainMin + 1;
+  const step = scale.step;
+  const index = value - domainMin;
 
-  const index = scale.domain.indexOf(value);
-  if (index === -1) return r0; // Default to start if not found
+  if (index < 0 || index >= n) {
+    return r0;
+  }
 
-  return r0 + step * index;
+  const paddingOffset = step - scale.bandwidth;
+  const bandStart = r0 + step * index + paddingOffset;
+
+  return bandStart;
 }
 
 /**

@@ -6,13 +6,13 @@ import { Haptics } from '@coinbase/cds-mobile/utils/haptics';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import {
-  applySerializableScale,
   getScaleBandwidth,
   invertSerializableScale,
   isCategoricalScale,
   ScrubberContext,
   type ScrubberContextValue,
 } from '../utils';
+import { getPointOnSerializableScale } from '../utils/point';
 
 export type ScrubberProviderProps = Partial<Pick<ScrubberContextValue, 'enableScrubbing'>> & {
   children: React.ReactNode;
@@ -56,14 +56,15 @@ export const ScrubberProvider: React.FC<ScrubberProviderProps> = ({
       if (!xScale || !xAxis) return 0;
 
       if (xScale.type === 'band') {
-        const categories = xAxis.data ?? [];
-        const bandwidth = getScaleBandwidth(xScale) ?? 0;
+        const [domainMin, domainMax] = xScale.domain;
+        const categoryCount = domainMax - domainMin + 1;
         let closestIndex = 0;
         let closestDistance = Infinity;
-        for (let i = 0; i < categories.length; i++) {
-          const xPos = applySerializableScale(i, xScale);
+
+        for (let i = 0; i < categoryCount; i++) {
+          const xPos = getPointOnSerializableScale(i, xScale);
           if (xPos !== undefined) {
-            const distance = Math.abs(touchX - (xPos + bandwidth / 2));
+            const distance = Math.abs(touchX - xPos);
             if (distance < closestDistance) {
               closestDistance = distance;
               closestIndex = i;
@@ -82,7 +83,7 @@ export const ScrubberProvider: React.FC<ScrubberProviderProps> = ({
 
           for (let i = 0; i < numericData.length; i++) {
             const xValue = numericData[i];
-            const xPos = applySerializableScale(xValue, xScale);
+            const xPos = getPointOnSerializableScale(xValue, xScale);
             if (xPos !== undefined) {
               const distance = Math.abs(touchX - xPos);
               if (distance < closestDistance) {

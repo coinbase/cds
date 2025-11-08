@@ -12,12 +12,13 @@ import { useTheme } from '@coinbase/cds-mobile';
 import { Circle, Group } from '@shopify/react-native-skia';
 
 import { useCartesianChartContext } from '../ChartProvider';
-import { applySerializableScale, useScrubberContext } from '../utils';
+import { useScrubberContext } from '../utils';
 import {
   evaluateGradientAtValueWithPrecomputedStops,
   getGradientStops,
   type GradientDefinition,
 } from '../utils/gradient';
+import { getPointOnSerializableScale } from '../utils/point';
 import { convertToSerializableScale } from '../utils/scale';
 import { buildTransition, defaultTransition, type TransitionConfig } from '../utils/transition';
 
@@ -228,9 +229,13 @@ export const ScrubberBeacon = memo(
       // Calculate the target idle state point position (the "target")
       const targetIdleStatePoint = useDerivedValue(() => {
         const pixelX =
-          idleDataX !== undefined && xScale ? applySerializableScale(idleDataX, xScale) : undefined;
+          idleDataX !== undefined && xScale
+            ? getPointOnSerializableScale(idleDataX, xScale)
+            : undefined;
         const pixelY =
-          idleDataY !== undefined && yScale ? applySerializableScale(idleDataY, yScale) : undefined;
+          idleDataY !== undefined && yScale
+            ? getPointOnSerializableScale(idleDataY, yScale)
+            : undefined;
         if (pixelX === undefined || pixelY === undefined) return;
         return { x: pixelX, y: pixelY };
       }, [idleDataX, idleDataY, xScale, yScale]);
@@ -370,11 +375,11 @@ export const ScrubberBeacon = memo(
       const scrubberPoint = useDerivedValue(() => {
         const pixelX =
           dataX.value !== undefined && xScale
-            ? applySerializableScale(dataX.value, xScale)
+            ? getPointOnSerializableScale(dataX.value, xScale)
             : undefined;
         const pixelY =
           dataY.value !== undefined && yScale
-            ? applySerializableScale(dataY.value, yScale)
+            ? getPointOnSerializableScale(dataY.value, yScale)
             : undefined;
         if (pixelX === undefined || pixelY === undefined) return;
         return { x: pixelX, y: pixelY };
@@ -386,9 +391,13 @@ export const ScrubberBeacon = memo(
 
       const idleStatePoint = useDerivedValue(() => {
         const pixelX =
-          idleDataX !== undefined && xScale ? applySerializableScale(idleDataX, xScale) : undefined;
+          idleDataX !== undefined && xScale
+            ? getPointOnSerializableScale(idleDataX, xScale)
+            : undefined;
         const pixelY =
-          idleDataY !== undefined && yScale ? applySerializableScale(idleDataY, yScale) : undefined;
+          idleDataY !== undefined && yScale
+            ? getPointOnSerializableScale(idleDataY, yScale)
+            : undefined;
         if (pixelX === undefined || pixelY === undefined) return;
         return { x: pixelX, y: pixelY };
       }, [idleDataX, idleDataY, xScale, yScale]);

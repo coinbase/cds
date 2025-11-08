@@ -12,7 +12,8 @@ import type {
   TextHorizontalAlignment,
   TextVerticalAlignment,
 } from '../text/ChartText';
-import { applySerializableScale, getPointOnScale, unwrapAnimatedValue } from '../utils';
+import { getPointOnScale, unwrapAnimatedValue } from '../utils';
+import { getPointOnSerializableScale } from '../utils/point';
 
 import { DottedLine } from './DottedLine';
 import type { LineComponent } from './Line';
@@ -146,14 +147,14 @@ export const ReferenceLine = memo<ReferenceLineProps>(
     const xPixel = useDerivedValue(() => {
       const dataXValue = unwrapAnimatedValue(dataX);
       return dataXValue !== undefined && xScale
-        ? applySerializableScale(dataXValue, xScale)
+        ? getPointOnSerializableScale(dataXValue, xScale)
         : undefined;
     }, [dataX, xScale]);
 
     const yPixel = useDerivedValue(() => {
       const dataYValue = unwrapAnimatedValue(dataY);
       return dataYValue !== undefined && yScale
-        ? applySerializableScale(dataYValue, yScale)
+        ? getPointOnSerializableScale(dataYValue, yScale)
         : undefined;
     }, [dataY, yScale]);
 

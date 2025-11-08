@@ -14,7 +14,7 @@ import { Group, Rect } from '@shopify/react-native-skia';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import { ReferenceLine, type ReferenceLineProps } from '../line';
-import { applySerializableScale, useScrubberContext } from '../utils';
+import { getPointOnSerializableScale, useScrubberContext } from '../utils';
 
 import { ScrubberBeacon, type ScrubberBeaconProps, type ScrubberBeaconRef } from './ScrubberBeacon';
 import { ScrubberBeaconLabel, type ScrubberBeaconLabelProps } from './ScrubberBeaconLabel';
@@ -193,13 +193,17 @@ export const Scrubber = memo(
 
       const overlayWidth = useDerivedValue(() => {
         const pixelX =
-          dataX.value !== undefined && xScale ? applySerializableScale(dataX.value, xScale) : 0;
+          dataX.value !== undefined && xScale
+            ? getPointOnSerializableScale(dataX.value, xScale)
+            : 0;
         return drawingArea.x + drawingArea.width - pixelX + overlayOffset;
       }, [dataX, xScale]);
 
       const overlayX = useDerivedValue(() => {
         const xValue =
-          dataX.value !== undefined && xScale ? applySerializableScale(dataX.value, xScale) : 0;
+          dataX.value !== undefined && xScale
+            ? getPointOnSerializableScale(dataX.value, xScale)
+            : 0;
         return xValue;
       }, [dataX, xScale]);
 
