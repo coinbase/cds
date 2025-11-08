@@ -604,9 +604,24 @@ const ColorMapWithOpacity = () => {
 const BarChartStories = () => {
   return (
     <ExampleScreen>
-      <Example title="Basic 3">
-        <UpdatingChartValues />
+      <Example title="Basic">
+        <BarChart
+          showYAxis
+          height={150}
+          series={[
+            {
+              id: 'prices',
+              data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+            },
+          ]}
+          yAxis={{
+            showGrid: true,
+          }}
+        />
       </Example>
+      {/*<Example title="Basic">
+        <UpdatingChartValues />
+      </Example>*/}
       {/*<Example title="Animated Auto-Updating">
         <AnimatedUpdatingChartValues />
       </Example>

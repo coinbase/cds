@@ -252,7 +252,9 @@ export const Path = memo<PathProps>((props) => {
 
   // Convert SVG path string to SkPath for static rendering
   const staticPath = useDerivedValue(() => {
-    return Skia.Path.MakeFromSVGString(unwrapAnimatedValue(d)) ?? Skia.Path.Make();
+    const dValue = unwrapAnimatedValue(d);
+    if (!dValue) return Skia.Path.Make();
+    return Skia.Path.MakeFromSVGString(dValue) ?? Skia.Path.Make();
   }, [d]);
 
   const isFilled = fill !== undefined && fill !== 'none';
