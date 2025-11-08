@@ -2384,6 +2384,32 @@ function MultipleSeriesChart() {
   );
 }
 
+function BasicExample() {
+  const data = [10, 22, 29, 45, 98, 45, 115, 52, 21, 4, 68, 20, 21, 58];
+
+  return (
+    <LineChart
+      enableScrubbing
+      showArea
+      showYAxis
+      height={150}
+      renderPoints={() => true}
+      series={[
+        {
+          id: 'prices',
+          data: data,
+        },
+      ]}
+      yAxis={{
+        showGrid: true,
+        domain: { min: 100, max: 0 },
+      }}
+    >
+      <Scrubber />
+    </LineChart>
+  );
+}
+
 export default () => {
   const theme = useTheme();
 
@@ -2445,12 +2471,12 @@ export default () => {
         <GradientLineChart />
       </Example>*/}
       <Example title="Dotted">
-        <AssetPriceDotted />
+        <BasicExample />
       </Example>
       <Example title="Imperative Handle">
         <ScrubberWithImperativeHandle />
       </Example>
-      <Example title="Animated Gain/Loss">
+      {/*<Example title="Animated Gain/Loss">
         <AnimatedGainLossChart />
       </Example>
       <Example title="Dotted">
@@ -2477,7 +2503,7 @@ export default () => {
         >
           <Scrubber idlePulse />
         </LineChart>
-      </Example>
+      </Example>*/}
       <Example title="Continuous Gradient 2">
         <AreaChart
           enableScrubbing

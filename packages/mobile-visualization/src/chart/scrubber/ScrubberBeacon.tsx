@@ -104,6 +104,7 @@ export const ScrubberBeacon = memo(
         getYScale,
         getSeriesData,
         animate,
+        drawingArea,
       } = useCartesianChartContext();
       const { scrubberPosition } = useScrubberContext();
 
@@ -386,25 +387,32 @@ export const ScrubberBeacon = memo(
       }, [dataX, dataY, xScale, yScale]);
 
       const scrubberStateOpacity = useDerivedValue(() => {
-        return isIdleState.value ? 0 : 1;
-      }, [isIdleState]);
+        if (isIdleState.value) return 0;
+        if (!scrubberPoint.value) return 0;
 
-      const idleStatePoint = useDerivedValue(() => {
-        const pixelX =
-          idleDataX !== undefined && xScale
-            ? getPointOnSerializableScale(idleDataX, xScale)
-            : undefined;
-        const pixelY =
-          idleDataY !== undefined && yScale
-            ? getPointOnSerializableScale(idleDataY, yScale)
-            : undefined;
-        if (pixelX === undefined || pixelY === undefined) return;
-        return { x: pixelX, y: pixelY };
-      }, [idleDataX, idleDataY, xScale, yScale]);
+        // Check if scrubber point is within drawing area
+        const isWithinBounds =
+          scrubberPoint.value.x >= drawingArea.x &&
+          scrubberPoint.value.x <= drawingArea.x + drawingArea.width &&
+          scrubberPoint.value.y >= drawingArea.y &&
+          scrubberPoint.value.y <= drawingArea.y + drawingArea.height;
+
+        return isWithinBounds ? 1 : 0;
+      }, [isIdleState, scrubberPoint, drawingArea]);
 
       const idleStateOpacity = useDerivedValue(() => {
-        return isIdleState.value ? 1 : 0;
-      }, [isIdleState]);
+        if (!isIdleState.value) return 0;
+        if (!animatedIdleStatePoint.value) return 0;
+
+        // Check if idle state point is within drawing area
+        const isWithinBounds =
+          animatedIdleStatePoint.value.x >= drawingArea.x &&
+          animatedIdleStatePoint.value.x <= drawingArea.x + drawingArea.width &&
+          animatedIdleStatePoint.value.y >= drawingArea.y &&
+          animatedIdleStatePoint.value.y <= drawingArea.y + drawingArea.height;
+
+        return isWithinBounds ? 1 : 0;
+      }, [isIdleState, animatedIdleStatePoint, drawingArea]);
 
       return (
         <>

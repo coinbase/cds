@@ -132,7 +132,7 @@ export const Point = memo<PointProps>(
     const effectiveStroke = stroke ?? theme.color.bg;
     const effectiveFill = fill ?? theme.color.fgPrimary;
 
-    const { getXScale, getYScale, animate } = useCartesianChartContext();
+    const { getXScale, getYScale, animate, drawingArea } = useCartesianChartContext();
 
     const xScale = getXScale();
     const yScale = getYScale(yAxisId);
@@ -213,15 +213,38 @@ export const Point = memo<PointProps>(
       return interpolateColors(colorProgress.value, [0, 1], [previousFill, effectiveFill]);
     }, [colorProgress, previousFill, effectiveFill]);
 
+    // Check if point is within drawing area
+    const isWithinDrawingArea = useDerivedValue(() => {
+      return (
+        animatedX.value >= drawingArea.x &&
+        animatedX.value <= drawingArea.x + drawingArea.width &&
+        animatedY.value >= drawingArea.y &&
+        animatedY.value <= drawingArea.y + drawingArea.height
+      );
+    }, [animatedX, animatedY, drawingArea]);
+
+    // Compute effective opacity based on drawing area bounds
+    const effectiveOpacity = useDerivedValue(() => {
+      const baseOpacity = opacity ?? 1;
+      return isWithinDrawingArea.value ? baseOpacity : 0;
+    }, [isWithinDrawingArea, opacity]);
+
     if (!xScale || !yScale) {
       return null;
     }
 
     // If animation is disabled or on first render, use static rendering
     if (!shouldAnimate || !previousPixelCoordinate) {
+      const isWithinBounds =
+        pixelCoordinate.x >= drawingArea.x &&
+        pixelCoordinate.x <= drawingArea.x + drawingArea.width &&
+        pixelCoordinate.y >= drawingArea.y &&
+        pixelCoordinate.y <= drawingArea.y + drawingArea.height;
+      const staticOpacity = isWithinBounds ? (opacity ?? 1) : 0;
+
       return (
         <>
-          <Group opacity={opacity}>
+          <Group opacity={staticOpacity}>
             {/* Outer stroke circle */}
             {strokeWidth > 0 && (
               <Circle
@@ -249,7 +272,7 @@ export const Point = memo<PointProps>(
     // Animated rendering
     return (
       <>
-        <Group opacity={opacity}>
+        <Group opacity={effectiveOpacity}>
           {/* Outer stroke circle */}
           {strokeWidth > 0 && (
             <Circle

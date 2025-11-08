@@ -366,8 +366,6 @@ export const Point = memo<PointProps>(
       positionTransition,
     ]);
 
-    console.log('got point');
-
     if (!xScale || !yScale) {
       return;
     }
