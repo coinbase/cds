@@ -137,6 +137,7 @@ export const useInterpolator = <T>(
  * progress.value = buildTransition(1, { type: 'timing', duration: 500 });
  */
 export const buildTransition = (targetValue: number, config: TransitionConfig): number => {
+  'worklet';
   switch (config.type) {
     case 'timing': {
       const { type, ...timingConfig } = config;

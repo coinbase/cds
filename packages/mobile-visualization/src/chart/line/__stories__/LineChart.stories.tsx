@@ -30,7 +30,13 @@ import { TextLabel1 } from '@coinbase/cds-mobile/typography';
 import { Text } from '@coinbase/cds-mobile/typography/Text';
 import { FontWeight, Rect } from '@shopify/react-native-skia';
 
-import { type AreaComponentProps, DottedArea, GradientArea, SolidArea } from '../../area';
+import {
+  AreaChart,
+  type AreaComponentProps,
+  DottedArea,
+  GradientArea,
+  SolidArea,
+} from '../../area';
 import { XAxis, YAxis } from '../../axis';
 import { CartesianChart } from '../../CartesianChart';
 import { useCartesianChartContext } from '../../ChartProvider';
@@ -207,7 +213,7 @@ export const BasicLineChartWithPoints = () => {
   );
 };
 
-const data = sparklineInteractiveData.day.map((d) => d.value);
+const data = sparklineInteractiveData.all.map((d) => d.value);
 
 const ethData = data.map((value) => value * 2);
 const uniData = data.map((value) => value * 3);
@@ -936,6 +942,8 @@ function AnimatedGainLossChart() {
       ],
     };
 
+    const myTransitionConfigs = { type: 'spring', stiffness: 700, damping: 20 } as const;
+
     return (
       <VStack gap={2}>
         <CartesianChart
@@ -954,12 +962,12 @@ function AnimatedGainLossChart() {
           <Line
             showArea
             AreaComponent={MyGradient}
-            curve="monotone"
             seriesId="prices"
             strokeWidth={3}
+            transitionConfig={myTransitionConfigs}
             type="solid"
           />
-          <Scrubber hideOverlay />
+          <Scrubber hideOverlay beaconTransitionConfig={{ update: myTransitionConfigs }} />
         </CartesianChart>
         <Button onPress={() => setData((d) => d.map((d) => -1 * d))}>Flip</Button>
       </VStack>
@@ -1144,14 +1152,11 @@ const AssetPriceDotted = () => {
               },
             },
           ]}
-          transitionConfig={{ type: 'timing', duration: 1500 }}
+          transitionConfig={{ type: 'timing', duration: 3000 }}
         >
           <Scrubber
             idlePulse
-            beaconTransitionConfig={{
-              update: { type: 'timing', duration: 1500 },
-              pulse: { type: 'timing', duration: 5000 },
-            }}
+            beaconTransitionConfig={{ update: { type: 'timing', duration: 3000 } }}
             label={scrubberLabel}
             labelProps={{
               yOffset: -28, // Elevate label 16 pixels above the default position
@@ -1463,7 +1468,7 @@ const GainLossChart = () => {
       ]}
     >
       <YAxis showGrid requestedTickCount={2} tickLabelFormatter={tickLabelFormatter} />
-      <Line curve="monotone" seriesId="prices" strokeWidth={3} type="solid" />
+      <Line seriesId="prices" strokeWidth={3} type="solid" />
       <Scrubber hideOverlay />
       <TextComponent />
     </CartesianChart>
@@ -1486,21 +1491,18 @@ const ScrubberWithImperativeHandle = () => {
             data: [2400, 1398, 9800, 3908, 4800, 3800, 4300],
             label: 'Page Views',
             color: theme.color.accentBoldBlue,
-            curve: 'natural',
           },
           {
             id: 'priceB',
             data: [2000, 2491, 4501, 6049, 5019, 4930, 5910],
             label: 'Unique Visitors G',
             color: theme.color.accentBoldGreen,
-            curve: 'natural',
           },
           {
             id: 'priceC',
             data: [1000, 4910, 2300, 5910, 3940, 2940, 1940],
             label: 'Unique Visitors P',
             color: theme.color.accentBoldPurple,
-            curve: 'natural',
           },
         ]}
         xAxis={{
@@ -2185,9 +2187,8 @@ const LineChartStories = () => {
           <Scrubber hideOverlay />
         </LineChart>
       </Example>*/}
-      {/*} <Example title="Simple">
+      <Example title="Simple">
         <LineChart
-          curve="monotone"
           height={defaultChartHeight}
           series={[
             {
@@ -2197,7 +2198,7 @@ const LineChartStories = () => {
           ]}
           type="dotted"
         />
-      </Example>*/}
+      </Example>
       <Example title="ColorMap - Discrete Thresholds">
         <LineChart
           enableScrubbing
@@ -2288,7 +2289,7 @@ const LineChartStories = () => {
             domain: { min: 0 },
           }}
         >
-          <Line curve="monotone" seriesId="prices" type="solid" />
+          <Line seriesId="prices" type="solid" />
           <Scrubber idlePulse />
         </CartesianChart>
       </Example>
@@ -2347,10 +2348,44 @@ const PartialSolidArea = memo((props: AreaComponentProps) => (
   <SolidArea {...props} fillOpacity={0.5} />
 ));
 
+function MultipleSeriesChart() {
+  const theme = useTheme();
+  const prices = [4000, 3000, 2000, 2780, 1890, 2390, 3490];
+  const volume = [2400, 1398, 9800, 3908, 4800, 3800, 4300];
+
+  return (
+    <LineChart
+      enableScrubbing
+      showYAxis
+      height={150}
+      series={[
+        {
+          id: 'prices',
+          data: prices,
+          label: 'Prices',
+          color: theme.color.accentBoldBlue,
+        },
+        {
+          id: 'volume',
+          data: volume,
+          label: 'Volume',
+          color: theme.color.accentBoldGreen,
+        },
+      ]}
+      yAxis={{
+        domain: {
+          min: 0,
+        },
+        showGrid: true,
+      }}
+    >
+      <Scrubber />
+    </LineChart>
+  );
+}
+
 export default () => {
   const theme = useTheme();
-
-  const value = useCallback((dataIndex: number) => `test ${dataIndex}`, []);
 
   return (
     <ExampleScreen>
@@ -2412,35 +2447,63 @@ export default () => {
       <Example title="Dotted">
         <AssetPriceDotted />
       </Example>
+      <Example title="Imperative Handle">
+        <ScrubberWithImperativeHandle />
+      </Example>
       <Example title="Animated Gain/Loss">
         <AnimatedGainLossChart />
       </Example>
-      <Example title="Continuous Gradient 2">
+      <Example title="Dotted">
+        <AssetPriceDotted />
+      </Example>
+      <Example title="Basic">
         <LineChart
           enableScrubbing
           showArea
           showYAxis
+          height={150}
+          series={[
+            {
+              id: 'prices',
+              data: sampleData,
+            },
+          ]}
+          xAxis={{
+            range: ({ min, max }) => ({ min, max: max - 16 }),
+          }}
+          yAxis={{
+            showGrid: true,
+          }}
+        >
+          <Scrubber idlePulse />
+        </LineChart>
+      </Example>
+      <Example title="Continuous Gradient 2">
+        <AreaChart
+          enableScrubbing
+          showLines
+          showYAxis
+          stacked
           AreaComponent={(props) => <DottedArea {...props} fillOpacity={0.5} />}
-          curve="monotone"
           height={250}
           series={[
             {
               id: 'prices',
-              data: data.map((d) => d * 3),
+              data: data.map((d) => d * 1.05),
               color: `rgb(${theme.spectrum.pink50})`,
-              label: value,
+              label: 'testing',
             },
             {
               id: 'prices2',
-              data: data.map((d) => d * 2),
+              data: data,
               color: `rgb(${theme.spectrum.red50})`,
-              label: 'test',
+              label: 'testing 2',
             },
             {
               id: 'prices3',
-              data: data,
+              data: data.map((d) => d * 0.95),
               color: `rgb(${theme.spectrum.chartreuse50})`,
-              label: (dataIndex: number) => `test ${data[dataIndex]}`,
+              label: 'testing 3',
             },
           ]}
           strokeWidth={4}
@@ -2449,18 +2512,16 @@ export default () => {
             tickLabelFormatter: (value) => `$${(value / 1000).toFixed(0)}k`,
           }}
         >
-          <Scrubber hideOverlay />
-        </LineChart>
+          <Scrubber idlePulse />
+        </AreaChart>
       </Example>
-      <Example title="Discrete Gradient">
+      <Example title="Discrete Gradient 2">
         <LineChart
           enableScrubbing
           showArea
           showYAxis
           AreaComponent={PartialSolidArea}
-          curve="monotone"
           height={150}
-          renderPoints={() => true}
           series={[
             {
               id: 'prices',
@@ -2485,11 +2546,13 @@ export default () => {
           <Scrubber />
         </LineChart>
       </Example>
+      <Example title="Multiple series">
+        <MultipleSeriesChart />
+      </Example>
       {/*<Example title="X Axis Gradient 2">
         <LineChart
           enableScrubbing
           showYAxis
-          curve="monotone"
           height={150}
           renderPoints={() => true}
           series={[

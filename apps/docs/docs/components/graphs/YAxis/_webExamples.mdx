@@ -14,7 +14,7 @@ The YAxis component provides a vertical axis for charts with automatic tick gene
   ]}
 >
   <YAxis showGrid />
-  <Line seriesId="prices" curve="monotone" showArea />
+  <Line seriesId="prices" showArea />
   <Scrubber />
 </CartesianChart>
 ```
@@ -74,7 +74,7 @@ You can pass in either an object (AxisBounds) with `min` and `max` properties (b
   }}
 >
   <YAxis showGrid />
-  <Line seriesId="prices" curve="monotone" showArea />
+  <Line seriesId="prices" showArea />
 </CartesianChart>
 ```
 
@@ -101,7 +101,7 @@ You can pass in either an object (AxisBounds) with `min` and `max` properties (b
     range: ({ min, max }) => ({ min: min + 96, max: max - 96 }),
   }}
 >
-  <Line seriesId="prices" curve="monotone" showArea />
+  <Line seriesId="prices" showArea />
 </CartesianChart>
 ```
 
@@ -165,7 +165,7 @@ function YAxisGridExample() {
         ]}
       >
         <YAxis showGrid={showGrid} />
-        <Line seriesId="prices" curve="monotone" showArea />
+        <Line seriesId="prices" showArea />
         <Scrubber />
       </CartesianChart>
     </VStack>
@@ -238,7 +238,7 @@ function YAxisLineExample() {
         ]}
       >
         <YAxis showLine={showLine} />
-        <Line seriesId="prices" curve="monotone" showArea />
+        <Line seriesId="prices" showArea />
         <Scrubber />
       </CartesianChart>
     </VStack>
@@ -273,7 +273,7 @@ function YAxisLineStylesExample() {
           showGrid
           styles={{ line: { stroke: 'var(--color-accentBoldGreen)', strokeWidth: 4 } }}
         />
-        <Line seriesId="prices" curve="monotone" showArea />
+        <Line seriesId="prices" showArea />
         <Scrubber />
       </CartesianChart>
     </VStack>
@@ -328,7 +328,7 @@ You can use the `ticks`, `requestedTickCount` (default for YAxis), and `tickInte
   ]}
 >
   <YAxis showLine showTickMarks showGrid ticks={[34, 56, 80]} />
-  <Line seriesId="prices" curve="monotone" showArea />
+  <Line seriesId="prices" showArea />
   <Scrubber />
 </CartesianChart>
 ```
@@ -349,7 +349,7 @@ This is the default behavior for YAxis, and defaults to `5`.
   ]}
 >
   <YAxis showLine showTickMarks showGrid requestedTickCount={5} />
-  <Line seriesId="prices" curve="monotone" showArea />
+  <Line seriesId="prices" showArea />
   <Scrubber />
 </CartesianChart>
 ```
@@ -368,7 +368,7 @@ This is the default behavior for YAxis, and defaults to `5`.
   ]}
 >
   <YAxis showLine showTickMarks showGrid tickInterval={8} />
-  <Line seriesId="prices" curve="monotone" showArea />
+  <Line seriesId="prices" showArea />
   <Scrubber />
 </CartesianChart>
 ```
@@ -399,7 +399,7 @@ function YAxisTickMarksExample() {
         ]}
       >
         <YAxis showLine showTickMarks={showTickMarks} tickMarkSize={16} showGrid />
-        <Line seriesId="prices" curve="monotone" showArea />
+        <Line seriesId="prices" showArea />
         <Scrubber />
       </CartesianChart>
     </VStack>
@@ -423,7 +423,7 @@ You can customize the tick labels using the `tickLabelFormatter` prop.
   ]}
 >
   <YAxis showGrid tickLabelFormatter={(value) => `$${value}`} />
-  <Line seriesId="prices" curve="monotone" showArea />
+  <Line seriesId="prices" showArea />
   <Scrubber />
 </CartesianChart>
 ```
@@ -444,7 +444,7 @@ You can add a label to the axis using the `label` prop.
   ]}
 >
   <YAxis showGrid label="Price ($)" tickLabelFormatter={(value) => `$${value}`} />
-  <Line seriesId="prices" curve="monotone" showArea />
+  <Line seriesId="prices" showArea />
   <Scrubber />
 </CartesianChart>
 ```

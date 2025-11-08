@@ -21,7 +21,6 @@ function BasicExample() {
           data: data,
         },
       ]}
-      curve="monotone"
       showYAxis
       showArea
       yAxis={{
@@ -46,7 +45,6 @@ function BasicExample() {
       data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
     },
   ]}
-  curve="monotone"
 />
 ```
 
@@ -237,8 +235,8 @@ function GainLossChart() {
     >
       <ChartDefs />
       <YAxis requestedTickCount={2} showGrid tickLabelFormatter={priceFormatter} />
-      <Area seriesId="prices" curve="monotone" fill={`url(#${gradientId}-gradient)`} />
-      <Line strokeWidth={3} curve="monotone" seriesId="prices" stroke={solidColor} />
+      <Area seriesId="prices" fill={`url(#${gradientId}-gradient)`} />
+      <Line strokeWidth={3} seriesId="prices" stroke={solidColor} />
       <Scrubber hideOverlay />
     </CartesianChart>
   );
@@ -274,8 +272,8 @@ function ConnectNullsExample() {
       inset={{ left: 16, right: 16 }}
     >
       <YAxis showGrid />
-      <Line seriesId="withGaps" curve="monotone" />
-      <Line seriesId="connected" connectNulls curve="monotone" />
+      <Line seriesId="withGaps" />
+      <Line seriesId="connected" connectNulls />
       <Scrubber />
     </CartesianChart>
   );
@@ -319,7 +317,6 @@ function MultipleSeriesChart() {
         },
         showGrid: true,
       }}
-      curve="monotone"
     >
       <Scrubber />
     </LineChart>
@@ -347,7 +344,7 @@ function PointsChart() {
         },
       ]}
     >
-      <Area seriesId="prices" curve="monotone" fill={`rgb(${theme.color.blue5})`} />
+      <Area seriesId="prices" fill={`rgb(${theme.color.blue5})`} />
       <Line
         seriesId="prices"
         renderPoints={({ dataX, dataY, ...props }) =>
@@ -365,7 +362,6 @@ function PointsChart() {
               }
             : false
         }
-        curve="monotone"
       />
     </CartesianChart>
   );
@@ -601,7 +597,6 @@ function AccessibleBasicChart() {
           data: data,
         },
       ]}
-      curve="monotone"
       showYAxis
       showArea
       yAxis={{
@@ -645,7 +640,6 @@ function AccessibleChartWithHeader() {
             data: data,
           },
         ]}
-        curve="monotone"
         showYAxis
         showArea
         yAxis={{
@@ -715,7 +709,6 @@ Values in between stops will be interpolated smoothly using [srgb color space](h
 <LineChart
   enableScrubbing
   showYAxis
-  curve="monotone"
   height={150}
   renderPoints={() => true}
   series={[
@@ -747,7 +740,6 @@ You can set multiple stops at the same offset to create a discrete gradient.
 <LineChart
   enableScrubbing
   showYAxis
-  curve="monotone"
   height={150}
   renderPoints={() => true}
   series={[
@@ -785,7 +777,6 @@ By default, gradients will be applied to the y-axis. You can apply a gradient to
 <LineChart
   enableScrubbing
   showYAxis
-  curve="monotone"
   height={150}
   renderPoints={() => true}
   series={[

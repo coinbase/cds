@@ -12,7 +12,6 @@ ReferenceLine can be used to add important details to a chart, such as a referen
     },
   ]}
   inset={0}
-  curve="monotone"
   showArea
 >
   <ReferenceLine
@@ -70,7 +69,6 @@ You can adjust the style of the label using the `labelProps` prop.
 
 ```jsx live
 <LineChart
-  curve="monotone"
   height={{ base: 150, tablet: 200, desktop: 250 }}
   inset={{ right: 4 }}
   series={[
@@ -383,7 +381,7 @@ function DraggablePriceTarget() {
         ref={chartRef}
         showArea
         animate={false}
-        curve="monotone"
+
         height={250}
         inset={isPhone ? { top: 16, bottom: 16, left: 0, right: 0 } : { top: 16, bottom: 16, left: 8, right: 80 }}
         series={[

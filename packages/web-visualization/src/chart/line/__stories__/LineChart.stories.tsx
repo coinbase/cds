@@ -1284,7 +1284,6 @@ const GainLossChart = () => {
       <Line
         showArea
         AreaComponent={(props) => <GradientArea {...props} gradient={areaGradient} />}
-        curve="monotone"
         seriesId="prices"
         strokeWidth={3}
         type="solid"
@@ -1464,14 +1463,12 @@ const MultipleSeriesChart = () => {
           data: pageViews,
           label: 'Page Views',
           color: 'var(--color-accentBoldBlue)',
-          curve: 'natural',
         },
         {
           id: 'uniqueVisitors',
           data: uniqueVisitors,
           label: 'Unique Visitors',
           color: 'var(--color-accentBoldGreen)',
-          curve: 'natural',
         },
       ]}
       xAxis={{
@@ -1504,9 +1501,8 @@ const PointsChart = () => {
         },
       ]}
     >
-      <Area curve="monotone" fill="rgb(var(--blue5))" seriesId="prices" />
+      <Area fill="rgb(var(--blue5))" seriesId="prices" />
       <Line
-        curve="monotone"
         renderPoints={({ dataX, dataY, ...props }) =>
           keyMarketShiftIndices.includes(dataX)
             ? {
@@ -1681,8 +1677,8 @@ const ConnectNullsChart = () => {
       ]}
     >
       <YAxis showGrid />
-      <Line curve="monotone" seriesId="withGaps" />
-      <Line connectNulls curve="monotone" seriesId="connected" />
+      <Line seriesId="withGaps" />
+      <Line connectNulls seriesId="connected" />
       <Scrubber />
     </CartesianChart>
   );
@@ -1940,7 +1936,6 @@ export const All = () => {
           enableScrubbing
           showArea
           showYAxis
-          curve="monotone"
           height={250}
           series={[
             {
@@ -1957,7 +1952,6 @@ export const All = () => {
       </Example>
       <Example title="Simple">
         <LineChart
-          curve="monotone"
           height={250}
           series={[
             {

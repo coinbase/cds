@@ -67,7 +67,7 @@ export const getPathCurveFunction = (curve: ChartPathCurveType = 'linear') => {
  */
 export const getLinePath = ({
   data,
-  curve = 'linear',
+  curve = 'bump',
   xScale,
   yScale,
   xData,
@@ -130,7 +130,7 @@ export const getLinePath = ({
  */
 export const getAreaPath = ({
   data,
-  curve = 'linear',
+  curve = 'bump',
   xScale,
   yScale,
   xData,
@@ -324,27 +324,30 @@ export const getDottedAreaPath = (
   }
 
   let path = '';
-  
+
   // Calculate the number of dots that fit in each dimension
   const dotsX = Math.ceil(bounds.width / patternSize);
   const dotsY = Math.ceil(bounds.height / patternSize);
-  
+
   // Generate circles in a grid pattern
   for (let row = 0; row < dotsY; row++) {
     for (let col = 0; col < dotsX; col++) {
       const centerX = bounds.x + col * patternSize + patternSize / 2;
       const centerY = bounds.y + row * patternSize + patternSize / 2;
-      
+
       // Only draw dots that are within the bounds
-      if (centerX >= bounds.x && centerX <= bounds.x + bounds.width &&
-          centerY >= bounds.y && centerY <= bounds.y + bounds.height) {
-        
+      if (
+        centerX >= bounds.x &&
+        centerX <= bounds.x + bounds.width &&
+        centerY >= bounds.y &&
+        centerY <= bounds.y + bounds.height
+      ) {
         // Create circle using SVG arc commands
         // M cx,cy-r a r,r 0 1,0 0,2r a r,r 0 1,0 0,-2r
         path += `M ${centerX},${centerY - dotSize} a ${dotSize},${dotSize} 0 1,0 0,${dotSize * 2} a ${dotSize},${dotSize} 0 1,0 0,${-dotSize * 2} `;
       }
     }
   }
-  
+
   return path.trim();
 };

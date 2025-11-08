@@ -1,6 +1,8 @@
 import { memo, useMemo } from 'react';
+import { useDerivedValue } from 'react-native-reanimated';
 import type { SharedProps } from '@coinbase/cds-common/types';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
+import type { AnimatedProp } from '@shopify/react-native-skia';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import { ChartText } from '../text';
@@ -10,7 +12,7 @@ import type {
   TextHorizontalAlignment,
   TextVerticalAlignment,
 } from '../text/ChartText';
-import { getPointOnScale } from '../utils';
+import { applySerializableScale, getPointOnScale, unwrapAnimatedValue } from '../utils';
 
 import { DottedLine } from './DottedLine';
 import type { LineComponent } from './Line';
@@ -75,7 +77,7 @@ type HorizontalReferenceLineProps = BaseReferenceLineProps & {
   /**
    * Y-value for horizontal reference line (data value).
    */
-  dataY: number;
+  dataY: AnimatedProp<number>;
   /**
    * The ID of the y-axis to use for positioning.
    * Defaults to defaultAxisId if not specified.
@@ -93,7 +95,7 @@ type VerticalReferenceLineProps = BaseReferenceLineProps & {
   /**
    * X-value for vertical reference line (data index).
    */
-  dataX: number;
+  dataX: AnimatedProp<number>;
   /**
    * Position of the label along the vertical line.
    * @default 'top'
@@ -118,7 +120,11 @@ export const ReferenceLine = memo<ReferenceLineProps>(
     labelProps,
   }) => {
     const theme = useTheme();
-    const { getXScale, getYScale, drawingArea } = useCartesianChartContext();
+    const { getXSerializableScale, getYSerializableScale, drawingArea } =
+      useCartesianChartContext();
+
+    const xScale = useMemo(() => getXSerializableScale(), [getXSerializableScale]);
+    const yScale = useMemo(() => getYSerializableScale(yAxisId), [getYSerializableScale, yAxisId]);
 
     const effectiveLineStroke = stroke ?? theme.color.bgLine;
 
@@ -136,19 +142,30 @@ export const ReferenceLine = memo<ReferenceLineProps>(
       }),
       [dataY, labelProps, theme.color.fgMuted],
     );
-    // Horizontal reference line logic
+
+    const xPixel = useDerivedValue(() => {
+      const dataXValue = unwrapAnimatedValue(dataX);
+      return dataXValue !== undefined && xScale
+        ? applySerializableScale(dataXValue, xScale)
+        : undefined;
+    }, [dataX, xScale]);
+
+    const yPixel = useDerivedValue(() => {
+      const dataYValue = unwrapAnimatedValue(dataY);
+      return dataYValue !== undefined && yScale
+        ? applySerializableScale(dataYValue, yScale)
+        : undefined;
+    }, [dataY, yScale]);
+
+    const horizontalLine = useDerivedValue(() => {
+      return `M${drawingArea.x},${yPixel.value} L${drawingArea.x + drawingArea.width},${yPixel.value}`;
+    }, [drawingArea, yPixel]);
+
+    const verticalLine = useDerivedValue(() => {
+      return `M${xPixel.value},${drawingArea.y} L${xPixel.value},${drawingArea.y + drawingArea.height}`;
+    }, [drawingArea, xPixel]);
+
     if (dataY !== undefined) {
-      const yScale = getYScale(yAxisId);
-
-      // Don't render if we don't have a scale
-      if (!yScale) {
-        return null;
-      }
-
-      const yPixel = yScale(dataY);
-
-      if (yPixel === undefined) return null;
-
       let labelX: number;
       if (labelPosition === 'left') {
         labelX = drawingArea.x;
@@ -160,33 +177,18 @@ export const ReferenceLine = memo<ReferenceLineProps>(
 
       return (
         <>
-          <LineComponent
-            animate={false}
-            d={`M${drawingArea.x},${yPixel} L${drawingArea.x + drawingArea.width},${yPixel}`}
-            stroke={effectiveLineStroke}
-          />
-          {label && (
+          <LineComponent animate={false} d={horizontalLine} stroke={effectiveLineStroke} />
+          {/*label && (
             <ChartText {...finalLabelProps} x={labelX} y={yPixel}>
               {label}
             </ChartText>
-          )}
+          )*/}
         </>
       );
     }
 
     // Vertical reference line logic
     if (dataX !== undefined) {
-      const xScale = getXScale();
-
-      // Don't render if we don't have scales
-      if (!xScale) {
-        return null;
-      }
-
-      const xPixel = getPointOnScale(dataX, xScale);
-
-      if (xPixel === undefined) return null;
-
       let labelY: number;
       if (labelPosition === 'top') {
         labelY = drawingArea.y;
@@ -198,16 +200,12 @@ export const ReferenceLine = memo<ReferenceLineProps>(
 
       return (
         <>
-          <LineComponent
-            animate={false}
-            d={`M${xPixel},${drawingArea.y} L${xPixel},${drawingArea.y + drawingArea.height}`}
-            stroke={effectiveLineStroke}
-          />
-          {label && (
+          <LineComponent animate={false} d={verticalLine} stroke={effectiveLineStroke} />
+          {/*label && (
             <ChartText {...finalLabelProps} x={xPixel} y={labelY}>
               {label}
             </ChartText>
-          )}
+          )*/}
         </>
       );
     }

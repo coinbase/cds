@@ -316,7 +316,7 @@ const PriceWithVolume = () => {
       >
         <YAxis showGrid axisId="price" tickLabelFormatter={formatPriceInThousands} width={20} />
         <BarPlot seriesIds={['volume']} />
-        <Line showArea curve="monotone" seriesId="prices" />
+        <Line showArea seriesId="prices" />
         <Scrubber label={scrubberLabel} seriesIds={['prices']} />
       </CartesianChart>
     </VStack>
@@ -385,7 +385,7 @@ function TradingTrends() {
       <XAxis />
       <ReferenceLine LineComponent={ThickSolidLine} dataY={0} yAxisId="profit" />
       <BarPlot seriesIds={['gains', 'losses']} />
-      <Line showArea curve="monotone" seriesId="revenue" />
+      <Line showArea seriesId="revenue" />
     </CartesianChart>
   );
 }

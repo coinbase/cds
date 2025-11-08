@@ -261,7 +261,6 @@ const PriceTargetChart = () => {
       ref={chartRef}
       showArea
       animate={false}
-      curve="monotone"
       height={250}
       inset={{ top: 16, bottom: 16, left: 8, right: 80 }}
       series={[
@@ -294,7 +293,6 @@ export const All = () => {
       <Example title="Basic Reference Line">
         <LineChart
           showArea
-          curve="monotone"
           height={250}
           inset={{ right: 32 }}
           series={[
@@ -314,7 +312,6 @@ export const All = () => {
       <Example title="Price Reference Line">
         <LineChart
           showArea
-          curve="monotone"
           height={250}
           inset={{ right: 32 }}
           series={[
@@ -339,7 +336,6 @@ export const All = () => {
       </Example>
       <Example title="Liquidation">
         <LineChart
-          curve="monotone"
           height={250}
           inset={{ right: 4 }}
           series={[

@@ -21,6 +21,10 @@ jest.mock('react-native-reanimated', () => {
     }),
     withTiming: jest.fn((toValue, config) => toValue),
     withSpring: jest.fn((toValue, config) => toValue),
+    isSharedValue: jest.fn((value) => {
+      // Mock isSharedValue to detect objects with a 'value' property
+      return value && typeof value === 'object' && 'value' in value;
+    }),
   };
 });
 
@@ -246,7 +250,6 @@ describe('usePathTransition', () => {
 
     expect(result.current).toBeDefined();
   });
-
 
   it('should handle path updates', () => {
     const { result, rerender } = renderHook(

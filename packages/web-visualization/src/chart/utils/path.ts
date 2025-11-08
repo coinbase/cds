@@ -62,12 +62,12 @@ export const getPathCurveFunction = (curve: ChartPathCurveType = 'linear') => {
  * @example
  * ```typescript
  * const chartScale = getChartScale({ chartRect, domain, range, xScale, yScale });
- * const path = getLinePath({ data: [1, 2, 3], chartScale, curve: 'linear' });
+ * const path = getLinePath({ data: [1, 2, 3], chartScale, curve: 'bump' });
  * ```
  */
 export const getLinePath = ({
   data,
-  curve = 'linear',
+  curve = 'bump',
   xScale,
   yScale,
   xData,
@@ -129,7 +129,7 @@ export const getLinePath = ({
  */
 export const getAreaPath = ({
   data,
-  curve = 'linear',
+  curve = 'bump',
   xScale,
   yScale,
   xData,

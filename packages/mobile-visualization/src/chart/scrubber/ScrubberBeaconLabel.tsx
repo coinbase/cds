@@ -1,45 +1,43 @@
-import { memo, useRef } from 'react';
-import { FontWeight } from '@shopify/react-native-skia';
+import { memo } from 'react';
+import { useTheme } from '@coinbase/cds-mobile';
 
 import { ChartText, type ChartTextProps } from '../text';
 
-export type ScrubberBeaconLabelProps = ChartTextProps;
+// We must disable repositioning
+export type ScrubberBeaconLabelProps = Omit<ChartTextProps, 'disableRepositioning'>;
 
-/**
- * The ScrubberBeaconLabel is a special instance of ChartText used to label a series' scrubber beacon (i.e. a point on the series pinned to the scrubber position).
- */
+const labelVerticalInset = 2;
+const labelHorizontalInset = 4;
+
 export const ScrubberBeaconLabel = memo<ScrubberBeaconLabelProps>(
   ({
-    background = 'transparent',
-    color = 'var(--color-fgPrimary)',
-    elevation = background !== 'transparent' ? 1 : undefined,
-    borderRadius = background !== 'transparent' ? 4 : undefined,
+    background,
+    color,
+    elevation = 1,
+    borderRadius = 4,
     font = 'label1',
     verticalAlignment = 'middle',
+    inset = {
+      left: labelHorizontalInset,
+      right: labelHorizontalInset,
+      top: labelVerticalInset,
+      bottom: labelVerticalInset,
+    },
     ...chartTextProps
   }) => {
-    const renderCount = useRef(0);
-    renderCount.current++;
-
+    const theme = useTheme();
     return (
-      <>
-        <ChartText
-          color="red"
-          x={chartTextProps.x ? chartTextProps.x + 50 : 50}
-          y={chartTextProps.y ? chartTextProps.y - 10 : 40}
-        >
-          {`renderCount: ${renderCount.current}`}
-        </ChartText>
-        <ChartText
-          background={background}
-          borderRadius={borderRadius}
-          color={color}
-          elevation={elevation}
-          font={font}
-          verticalAlignment={verticalAlignment}
-          {...chartTextProps}
-        />
-      </>
+      <ChartText
+        disableRepositioning
+        background={background ?? theme.color.bg}
+        borderRadius={borderRadius}
+        color={color ?? theme.color.fgPrimary}
+        elevation={elevation}
+        font={font}
+        inset={inset}
+        verticalAlignment={verticalAlignment}
+        {...chartTextProps}
+      />
     );
   },
 );

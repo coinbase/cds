@@ -12,7 +12,6 @@ ReferenceLine can be used to add important details to a chart, such as a referen
     },
   ]}
   inset={0}
-  curve="monotone"
   showArea
 >
   <ReferenceLine
@@ -78,7 +77,6 @@ function LabelStyleExample() {
   const theme = useTheme();
   return (
     <LineChart
-      curve="monotone"
       height={150}
       inset={{ right: 4 }}
       series={[

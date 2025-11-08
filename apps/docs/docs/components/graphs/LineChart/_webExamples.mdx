@@ -23,7 +23,7 @@ function BasicExample() {
           data: data,
         },
       ]}
-      curve="monotone"
+
       showYAxis
       showArea
       yAxis={{
@@ -48,7 +48,6 @@ function BasicExample() {
       data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
     },
   ]}
-  curve="monotone"
 />
 ```
 
@@ -217,7 +216,6 @@ function GainLossChart() {
       <Line
         showArea
         AreaComponent={(props) => <GradientArea {...props} gradient={areaGradient} />}
-        curve="monotone"
         seriesId="prices"
         strokeWidth={3}
         type="gradient"
@@ -271,8 +269,8 @@ function ConnectNullsExample() {
       accessibilityLabel={chartAccessibilityLabel}
     >
       <YAxis showGrid />
-      <Line seriesId="withGaps" curve="monotone" />
-      <Line seriesId="connected" connectNulls curve="monotone" />
+      <Line seriesId="withGaps"  />
+      <Line seriesId="connected" connectNulls  />
       <Scrubber accessibilityLabel={scrubberAccessibilityLabel} />
     </CartesianChart>
   );
@@ -322,7 +320,7 @@ function MultipleSeriesChart() {
         },
         showGrid: true,
       }}
-      curve="monotone"
+
       accessibilityLabel={chartAccessibilityLabel}
     >
       <Scrubber accessibilityLabel={scrubberAccessibilityLabel} />
@@ -350,7 +348,7 @@ function PointsChart() {
         },
       ]}
     >
-      <Area seriesId="prices" curve="monotone" fill="rgb(var(--blue5))" />
+      <Area seriesId="prices" fill="rgb(var(--blue5))" />
       <Line
         seriesId="prices"
         renderPoints={({ dataX, dataY, ...props }) =>
@@ -368,7 +366,6 @@ function PointsChart() {
               }
             : false
         }
-        curve="monotone"
       />
     </CartesianChart>
   );
@@ -607,7 +604,7 @@ function AccessibleBasicChart() {
           data: data,
         },
       ]}
-      curve="monotone"
+
       showYAxis
       showArea
       yAxis={{
@@ -653,7 +650,7 @@ function AccessibleChartWithHeader() {
             data: data,
           },
         ]}
-        curve="monotone"
+
         showYAxis
         showArea
         yAxis={{
@@ -795,7 +792,6 @@ function CustomizedTransitions() {
         <Line
           showArea
           AreaComponent={MyGradient}
-          curve="monotone"
           seriesId="prices"
           strokeWidth={3}
           transitionConfigs={myTransitionConfigs}
@@ -938,7 +934,6 @@ function CustomizedTransitions() {
         <Line
           showArea
           AreaComponent={MyGradient}
-          curve="monotone"
           seriesId="prices"
           strokeWidth={3}
           transitionConfigs={myTransitionConfigs}
@@ -1022,7 +1017,6 @@ function ContinuousGradient() {
         ]}
         renderPoints={() => true}
         strokeWidth={4}
-        curve="monotone"
         showYAxis
         yAxis={{
           showGrid: true,
@@ -1106,7 +1100,6 @@ function DiscreteGradient() {
         ]}
         renderPoints={() => true}
         strokeWidth={4}
-        curve="monotone"
         showYAxis
         yAxis={{
           showGrid: true,
@@ -1181,7 +1174,6 @@ function XAxisGradient() {
         ]}
         renderPoints={() => true}
         strokeWidth={4}
-        curve="monotone"
         showYAxis
         yAxis={{
           showGrid: true,

@@ -1,20 +1,24 @@
-import { forwardRef, memo, useEffect, useImperativeHandle, useMemo, useRef } from 'react';
+import { forwardRef, memo, useEffect, useImperativeHandle, useMemo } from 'react';
 import {
   cancelAnimation,
+  useAnimatedReaction,
   useDerivedValue,
   useSharedValue,
   withRepeat,
   withSequence,
 } from 'react-native-reanimated';
-import { usePreviousValue } from '@coinbase/cds-common/hooks/usePreviousValue';
 import type { SharedProps } from '@coinbase/cds-common/types';
 import { useTheme } from '@coinbase/cds-mobile';
 import { Circle, Group } from '@shopify/react-native-skia';
 
 import { useCartesianChartContext } from '../ChartProvider';
-import { ChartText } from '../text';
-import { projectPoint, useScrubberContext } from '../utils';
-import { evaluateGradientAtValue, type GradientDefinition } from '../utils/gradient';
+import { applySerializableScale, useScrubberContext } from '../utils';
+import {
+  evaluateGradientAtValueWithPrecomputedStops,
+  getGradientStops,
+  type GradientDefinition,
+} from '../utils/gradient';
+import { convertToSerializableScale } from '../utils/scale';
 import { buildTransition, defaultTransition, type TransitionConfig } from '../utils/transition';
 
 const radius = 5;
@@ -36,16 +40,6 @@ export type ScrubberBeaconRef = {
 
 export type ScrubberBeaconProps = SharedProps & {
   /**
-   * Optional data X coordinate to position the beacon.
-   * If not provided, uses the scrubber position from context.
-   */
-  dataX?: number;
-  /**
-   * Optional data Y coordinate to position the beacon.
-   * If not provided, looks up the Y value from series data at scrubber position.
-   */
-  dataY?: number;
-  /**
    * Filter to only show dot for specific series (used for hover-based positioning).
    */
   seriesId?: string;
@@ -59,11 +53,6 @@ export type ScrubberBeaconProps = SharedProps & {
    * When provided, the beacon color is evaluated based on the data value.
    */
   gradient?: GradientDefinition;
-  /**
-   * Opacity of the beacon.
-   * @default 1
-   */
-  opacity?: number;
   /**
    * Pulse the scrubber beacon while it is at rest.
    */
@@ -100,34 +89,57 @@ export type ScrubberBeaconProps = SharedProps & {
 export const ScrubberBeacon = memo(
   forwardRef<ScrubberBeaconRef, ScrubberBeaconProps>(
     (
-      {
-        seriesId,
-        dataX: dataXProp,
-        dataY: dataYProp,
-        color,
-        gradient: gradientProp,
-        testID,
-        idlePulse,
-        opacity = 1,
-        beaconTransitionConfig,
-      },
+      { seriesId, color, gradient: gradientProp, testID, idlePulse, beaconTransitionConfig },
       ref,
     ) => {
-      const renderCount = useRef(0);
-      renderCount.current++;
       const theme = useTheme();
-      const { getSeries, getXScale, getYScale, getSeriesData, animate, getSeriesGradientScale } =
-        useCartesianChartContext();
+      const {
+        series,
+        getXAxis,
+        getSeries,
+        getXSerializableScale,
+        getYSerializableScale,
+        getXScale,
+        getYScale,
+        getSeriesData,
+        animate,
+      } = useCartesianChartContext();
       const { scrubberPosition } = useScrubberContext();
 
-      const targetSeries = getSeries(seriesId);
-      const sourceData = getSeriesData(seriesId);
-      const gradient = gradientProp ?? targetSeries?.gradient;
-      const xScale = getXScale();
-      const yScale = getYScale(targetSeries?.yAxisId);
-      const gradientScale = seriesId ? getSeriesGradientScale(seriesId) : undefined;
+      const xAxis = useMemo(() => getXAxis(), [getXAxis]);
 
-      const isIdleState = scrubberPosition === undefined;
+      const targetSeries = useMemo(() => getSeries(seriesId), [getSeries, seriesId]);
+      const sourceData = useMemo(() => getSeriesData(seriesId), [getSeriesData, seriesId]);
+      const gradient = useMemo(
+        () => gradientProp ?? targetSeries?.gradient,
+        [gradientProp, targetSeries?.gradient],
+      );
+      const xScale = useMemo(() => getXSerializableScale(), [getXSerializableScale]);
+      const yScale = useMemo(
+        () => getYSerializableScale(targetSeries?.yAxisId),
+        [getYSerializableScale, targetSeries?.yAxisId],
+      );
+
+      const gradientScale = useMemo(() => {
+        if (!gradient) return;
+        const scale = gradient.axis === 'x' ? getXScale() : getYScale(targetSeries?.yAxisId);
+        if (!scale) return;
+        return convertToSerializableScale(scale);
+      }, [gradient, getXScale, getYScale, targetSeries?.yAxisId]);
+
+      // Pre-compute gradient stops off the UI thread for better performance
+      const precomputedGradientStops = useMemo(() => {
+        if (!gradient || !gradientScale) return undefined;
+
+        // Extract domain from serializable scale
+        const domain = { min: gradientScale.domain[0], max: gradientScale.domain[1] };
+
+        return getGradientStops(gradient.stops, domain);
+      }, [gradient, gradientScale]);
+
+      const isIdleState = useDerivedValue(() => {
+        return scrubberPosition.value === undefined;
+      }, [scrubberPosition]);
 
       // Extract update and pulse configs with defaults
       const updateTransitionConfig = useMemo(
@@ -139,69 +151,133 @@ export const ScrubberBeacon = memo(
         [beaconTransitionConfig?.pulse],
       );
 
-      const { dataX, dataY } = useMemo(() => {
-        let x: number | undefined;
-        let y: number | undefined;
+      const maxDataLength = useMemo(
+        () =>
+          series?.reduce((max: any, s: any) => {
+            const seriesData = getSeriesData(s.id);
+            return Math.max(max, seriesData?.length ?? 0);
+          }, 0) ?? 0,
+        [series, getSeriesData],
+      );
 
+      const dataIndex = useDerivedValue(() => {
+        return scrubberPosition.value ?? Math.max(0, maxDataLength - 1);
+      }, [scrubberPosition, maxDataLength]);
+
+      const dataX = useDerivedValue(() => {
+        if (xAxis?.data && Array.isArray(xAxis.data) && xAxis.data[dataIndex.value] !== undefined) {
+          const dataValue = xAxis.data[dataIndex.value];
+          return typeof dataValue === 'string' ? dataIndex.value : dataValue;
+        }
+        return dataIndex.value;
+      }, [xAxis, dataIndex]);
+
+      // todo: we might not want to show a scrubber if the max data point for this one is less than some of the other series
+      // the solution would be to pass in max data index from Scrubber
+      const idleDataX = useMemo(() => {
+        if (
+          xAxis?.data &&
+          Array.isArray(xAxis.data) &&
+          xAxis.data[maxDataLength - 1] !== undefined
+        ) {
+          const dataValue = xAxis.data[maxDataLength - 1];
+          return typeof dataValue === 'string' ? maxDataLength - 1 : dataValue;
+        }
+        return maxDataLength - 1;
+      }, [xAxis, maxDataLength]);
+
+      const idleDataY = useMemo(() => {
+        if (sourceData && sourceData[maxDataLength - 1] !== undefined) {
+          const dataValue = sourceData[maxDataLength - 1];
+          if (Array.isArray(dataValue)) {
+            return dataValue[dataValue.length - 1];
+          } else if (dataValue !== null) {
+            return dataValue;
+          }
+        }
+      }, [sourceData, maxDataLength]);
+
+      const dataY = useDerivedValue(() => {
         if (xScale && yScale) {
           if (
-            dataXProp !== undefined &&
-            dataYProp !== undefined &&
-            !isNaN(dataYProp) &&
-            !isNaN(dataXProp)
-          ) {
-            // Use direct coordinates if provided
-            x = dataXProp;
-            y = dataYProp;
-          } else if (
             sourceData &&
-            scrubberPosition != null &&
-            scrubberPosition >= 0 &&
-            scrubberPosition < sourceData.length
+            dataIndex.value !== undefined &&
+            dataIndex.value >= 0 &&
+            dataIndex.value < sourceData.length
           ) {
-            // Use series data at highlight index
-            x = scrubberPosition;
-            const dataValue = sourceData[scrubberPosition];
+            const dataValue = sourceData[dataIndex.value];
 
             if (typeof dataValue === 'number') {
-              y = dataValue;
+              return dataValue;
             } else if (Array.isArray(dataValue)) {
               const validValues = dataValue.filter((val): val is number => val !== null);
-              if (validValues.length >= 2) {
-                y = validValues[1];
+              if (validValues.length >= 1) {
+                return validValues[validValues.length - 1];
               }
             }
           }
         }
+      }, [sourceData, scrubberPosition, xScale, yScale]);
 
-        return { dataX: x, dataY: y };
-      }, [dataXProp, dataYProp, sourceData, scrubberPosition, xScale, yScale]);
-
-      const previousIdleState = usePreviousValue(!!isIdleState);
-
-      const pixelCoordinate = useMemo(() => {
-        if (!xScale || !yScale || dataX === undefined || dataY === undefined) return undefined;
-
-        const point = projectPoint({
-          x: dataX,
-          y: dataY,
-          xScale,
-          yScale,
-        });
-
-        // Return undefined if coordinates are invalid
-        if (!point || isNaN(point.x) || isNaN(point.y)) return undefined;
-
-        return point;
-      }, [xScale, yScale, dataX, dataY]);
-
-      const animatedX = useSharedValue(pixelCoordinate?.x ?? 0);
-      const animatedY = useSharedValue(pixelCoordinate?.y ?? 0);
       const pulseOpacity = useSharedValue(0);
+
+      // Animated position values for idle state point only (the "follower")
+      const animatedIdleX = useSharedValue(0);
+      const animatedIdleY = useSharedValue(0);
+
+      // Calculate the target idle state point position (the "target")
+      const targetIdleStatePoint = useDerivedValue(() => {
+        const pixelX =
+          idleDataX !== undefined && xScale ? applySerializableScale(idleDataX, xScale) : undefined;
+        const pixelY =
+          idleDataY !== undefined && yScale ? applySerializableScale(idleDataY, yScale) : undefined;
+        if (pixelX === undefined || pixelY === undefined) return;
+        return { x: pixelX, y: pixelY };
+      }, [idleDataX, idleDataY, xScale, yScale]);
+
+      // Initialize animated idle position with current target position
+      useEffect(() => {
+        const targetPos = targetIdleStatePoint.value;
+        if (targetPos) {
+          animatedIdleX.value = targetPos.x;
+          animatedIdleY.value = targetPos.y;
+        }
+      }, [animatedIdleX, animatedIdleY, targetIdleStatePoint]);
+
+      // Animate idle state position changes when data updates
+      useAnimatedReaction(
+        () => {
+          return targetIdleStatePoint.value;
+        },
+        (newPosition, previousPosition) => {
+          if (
+            newPosition &&
+            (!previousPosition ||
+              newPosition.x !== previousPosition.x ||
+              newPosition.y !== previousPosition.y)
+          ) {
+            if (!animate) {
+              // Snap immediately when animations are disabled
+              animatedIdleX.value = newPosition.x;
+              animatedIdleY.value = newPosition.y;
+            } else {
+              // Animate to new position using the update transition config
+              animatedIdleX.value = buildTransition(newPosition.x, updateTransitionConfig);
+              animatedIdleY.value = buildTransition(newPosition.y, updateTransitionConfig);
+            }
+          }
+        },
+        [targetIdleStatePoint, animate, updateTransitionConfig],
+      );
+
+      // Create animated idle state point using the animated values
+      const animatedIdleStatePoint = useDerivedValue(() => {
+        return { x: animatedIdleX.value, y: animatedIdleY.value };
+      }, [animatedIdleX, animatedIdleY]);
 
       useImperativeHandle(ref, () => ({
         pulse: () => {
-          if (isIdleState && animate) {
+          if (isIdleState.value && animate) {
             pulseOpacity.value = 0.1;
             pulseOpacity.value = buildTransition(0, pulseTransitionConfig);
           }
@@ -209,37 +285,46 @@ export const ScrubberBeacon = memo(
       }));
 
       useEffect(() => {
-        const shouldPulse = animate && isIdleState && idlePulse;
+        if (animate && idlePulse) {
+          // Use a derived value to control pulse based on scrubber state
+          const shouldPulse = scrubberPosition.value === undefined;
 
-        if (shouldPulse) {
-          pulseOpacity.value = withRepeat(
-            withSequence(
-              buildTransition(0.1, pulseTransitionConfig),
-              buildTransition(0, pulseTransitionConfig),
-            ),
-            -1, // loop
-            false,
-          );
+          if (shouldPulse) {
+            pulseOpacity.value = withRepeat(
+              withSequence(
+                buildTransition(0.1, pulseTransitionConfig),
+                buildTransition(0, pulseTransitionConfig),
+              ),
+              -1, // loop
+              false,
+            );
+          } else {
+            cancelAnimation(pulseOpacity);
+            pulseOpacity.value = buildTransition(0, pulseTransitionConfig);
+          }
         } else {
           cancelAnimation(pulseOpacity);
           pulseOpacity.value = buildTransition(0, pulseTransitionConfig);
         }
-      }, [animate, isIdleState, idlePulse, pulseOpacity, pulseTransitionConfig]);
+      }, [animate, idlePulse, pulseOpacity, pulseTransitionConfig, scrubberPosition]);
 
       // Update position when data coordinates change
-      useEffect(() => {
-        if (!pixelCoordinate) return;
+      /*useEffect(() => {
+        const currentPixelCoordinate = pixelCoordinate.value;
+        if (!currentPixelCoordinate) return;
+
+        const currentIsIdleState = isIdleState.value;
 
         // When scrubbing or animations disabled: snap immediately
-        if (!isIdleState || !animate || !previousIdleState) {
+        if (!currentIsIdleState || !animate || !previousIdleState) {
           // Cancel any ongoing animations before snapping
           cancelAnimation(animatedX);
           cancelAnimation(animatedY);
-          animatedX.value = pixelCoordinate.x;
-          animatedY.value = pixelCoordinate.y;
+          animatedX.value = currentPixelCoordinate.x;
+          animatedY.value = currentPixelCoordinate.y;
         } else {
-          animatedX.value = buildTransition(pixelCoordinate.x, updateTransitionConfig);
-          animatedY.value = buildTransition(pixelCoordinate.y, updateTransitionConfig);
+          animatedX.value = buildTransition(currentPixelCoordinate.x, updateTransitionConfig);
+          animatedY.value = buildTransition(currentPixelCoordinate.y, updateTransitionConfig);
         }
       }, [
         pixelCoordinate,
@@ -249,20 +334,21 @@ export const ScrubberBeacon = memo(
         animatedX,
         animatedY,
         updateTransitionConfig,
-      ]);
+      ]);*/
 
       // Create derived animated point for circles
-      const animatedPoint = useDerivedValue(() => {
-        return { x: animatedX.value, y: animatedY.value };
-      }, [animatedX, animatedY]);
 
-      const pointColor = useMemo(() => {
-        if (gradient && gradientScale) {
+      const pointColor = useDerivedValue(() => {
+        if (gradient && gradientScale && precomputedGradientStops) {
           const axis = gradient.axis ?? 'y';
-          const dataValue = axis === 'x' ? dataX : dataY;
+          const dataValue = axis === 'x' ? dataX.value : dataY.value;
 
           if (dataValue !== undefined) {
-            const evaluatedColor = evaluateGradientAtValue(gradient, dataValue, gradientScale);
+            const evaluatedColor = evaluateGradientAtValueWithPrecomputedStops(
+              precomputedGradientStops,
+              dataValue,
+              gradientScale,
+            );
             if (evaluatedColor) {
               return evaluatedColor;
             }
@@ -273,6 +359,7 @@ export const ScrubberBeacon = memo(
       }, [
         gradient,
         gradientScale,
+        precomputedGradientStops,
         dataX,
         dataY,
         color,
@@ -280,48 +367,66 @@ export const ScrubberBeacon = memo(
         theme.color.fgPrimary,
       ]);
 
-      if (!pixelCoordinate) return null;
+      const scrubberPoint = useDerivedValue(() => {
+        const pixelX =
+          dataX.value !== undefined && xScale
+            ? applySerializableScale(dataX.value, xScale)
+            : undefined;
+        const pixelY =
+          dataY.value !== undefined && yScale
+            ? applySerializableScale(dataY.value, yScale)
+            : undefined;
+        if (pixelX === undefined || pixelY === undefined) return;
+        return { x: pixelX, y: pixelY };
+      }, [dataX, dataY, xScale, yScale]);
 
-      if (!isIdleState) {
-        return (
-          <Group opacity={opacity}>
-            <ChartText color="red" x={pixelCoordinate.x} y={pixelCoordinate.y - 20}>
-              {renderCount.current}
-            </ChartText>
+      const scrubberStateOpacity = useDerivedValue(() => {
+        return isIdleState.value ? 0 : 1;
+      }, [isIdleState]);
+
+      const idleStatePoint = useDerivedValue(() => {
+        const pixelX =
+          idleDataX !== undefined && xScale ? applySerializableScale(idleDataX, xScale) : undefined;
+        const pixelY =
+          idleDataY !== undefined && yScale ? applySerializableScale(idleDataY, yScale) : undefined;
+        if (pixelX === undefined || pixelY === undefined) return;
+        return { x: pixelX, y: pixelY };
+      }, [idleDataX, idleDataY, xScale, yScale]);
+
+      const idleStateOpacity = useDerivedValue(() => {
+        return isIdleState.value ? 1 : 0;
+      }, [isIdleState]);
+
+      return (
+        <>
+          <Group opacity={scrubberStateOpacity}>
             {/* Glow circle behind */}
+            <Circle c={scrubberPoint} color={pointColor} opacity={0.15} r={glowRadius} />
+            {/* Outer stroke circle */}
+            <Circle c={scrubberPoint} color={theme.color.bg} r={radius + strokeWidth / 2} />
+            {/* Inner fill circle */}
+            <Circle c={scrubberPoint} color={pointColor} r={radius - strokeWidth / 2} />
+          </Group>
+          <Group opacity={idleStateOpacity}>
+            {/* Glow circle */}
+            <Circle c={animatedIdleStatePoint} color={pointColor} opacity={0.15} r={glowRadius} />
+            {/* Pulse circle */}
             <Circle
-              c={{ x: pixelCoordinate.x, y: pixelCoordinate.y }}
+              c={animatedIdleStatePoint}
               color={pointColor}
-              opacity={0.15}
-              r={glowRadius}
+              opacity={pulseOpacity}
+              r={pulseRadius}
             />
             {/* Outer stroke circle */}
             <Circle
-              c={{ x: pixelCoordinate.x, y: pixelCoordinate.y }}
+              c={animatedIdleStatePoint}
               color={theme.color.bg}
               r={radius + strokeWidth / 2}
             />
             {/* Inner fill circle */}
-            <Circle
-              c={{ x: pixelCoordinate.x, y: pixelCoordinate.y }}
-              color={pointColor}
-              r={radius - strokeWidth / 2}
-            />
+            <Circle c={animatedIdleStatePoint} color={pointColor} r={radius - strokeWidth / 2} />
           </Group>
-        );
-      }
-
-      return (
-        <Group opacity={opacity}>
-          {/* Glow circle */}
-          <Circle c={animatedPoint} color={pointColor} opacity={0.15} r={glowRadius} />
-          {/* Pulse circle */}
-          <Circle c={animatedPoint} color={pointColor} opacity={pulseOpacity} r={pulseRadius} />
-          {/* Outer stroke circle */}
-          <Circle c={animatedPoint} color={theme.color.bg} r={radius + strokeWidth / 2} />
-          {/* Inner fill circle */}
-          <Circle c={animatedPoint} color={pointColor} r={radius - strokeWidth / 2} />
-        </Group>
+        </>
       );
     },
   ),

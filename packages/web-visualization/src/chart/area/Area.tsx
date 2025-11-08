@@ -56,7 +56,7 @@ export type AreaProps = Pick<
   seriesId: string;
   /**
    * The curve interpolation method to use for the line.
-   * @default 'linear'
+   * @default 'bump'
    */
   curve?: ChartPathCurveType;
   /**
@@ -83,7 +83,7 @@ export type AreaProps = Pick<
 export const Area = memo<AreaProps>(
   ({
     seriesId,
-    curve = 'linear',
+    curve = 'bump',
     type = 'solid',
     AreaComponent: SelectedAreaComponent,
     fill: specifiedFill,

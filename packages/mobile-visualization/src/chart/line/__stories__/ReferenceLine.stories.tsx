@@ -11,7 +11,6 @@ const ReferenceLineStories = () => {
       <Example title="Basic">
         <LineChart
           showArea
-          curve="monotone"
           height={250}
           inset={0}
           series={[
@@ -39,7 +38,6 @@ const ReferenceLineStories = () => {
       </Example>
       <Example title="With Custom Label">
         <LineChart
-          curve="monotone"
           height={250}
           inset={{ right: 32, top: 0, left: 0, bottom: 0 }}
           series={[

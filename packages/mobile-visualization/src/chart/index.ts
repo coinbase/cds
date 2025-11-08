@@ -4,6 +4,7 @@ export * from './axis';
 export * from './bar';
 export * from './CartesianChart';
 export * from './ChartProvider';
+export * from './gradient';
 export * from './line';
 export * from './Path';
 export * from './PeriodSelector';

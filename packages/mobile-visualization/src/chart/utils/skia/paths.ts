@@ -16,7 +16,7 @@ import { Skia } from '@shopify/react-native-skia';
  * import { getLinePath } from '../path';
  *
  * // Generate path using existing utility
- * const svgPath = getLinePath({ data, xScale, yScale, curve: 'monotone' });
+ * const svgPath = getLinePath({ data, xScale, yScale });
  *
  * // Convert to Skia path
  * const skiaPath = svgPathToSkiaPath(svgPath);

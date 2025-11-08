@@ -23,7 +23,7 @@ export type LineProps = SharedProps & {
   seriesId: string;
   /**
    * The curve interpolation method to use for the line.
-   * @default 'linear'
+   * @default 'bump'
    */
   curve?: ChartPathCurveType;
   /**
@@ -92,7 +92,7 @@ export type LineProps = SharedProps & {
 export const Line = memo<LineProps>(
   ({
     seriesId,
-    curve = 'linear',
+    curve = 'bump',
     type = 'solid',
     areaType = 'gradient',
     areaBaseline,
@@ -215,8 +215,8 @@ export const Line = memo<LineProps>(
     }, [xAxis?.data]);
 
     const gradientScale = useMemo(() => {
-      if (!seriesGradient || !xScale || !yScale) return null;
-      return getGradientScale(seriesGradient, xScale, yScale);
+      if (!seriesGradient || !xScale || !yScale) return;
+      return seriesGradient.axis === 'x' ? xScale : yScale;
     }, [seriesGradient, xScale, yScale]);
 
     if (!xScale || !yScale) return;
@@ -241,7 +241,6 @@ export const Line = memo<LineProps>(
           animate={animate}
           d={path}
           gradient={seriesGradient}
-          seriesId={seriesId}
           stroke={stroke}
           strokeOpacity={opacity}
           transitionConfig={transitionConfig}

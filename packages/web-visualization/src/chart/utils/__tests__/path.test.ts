@@ -77,6 +77,7 @@ describe('getLinePath', () => {
   it('should generate path for numeric data array', () => {
     const result = getLinePath({
       data: [1, 2, 3],
+      curve: 'linear',
       xScale,
       yScale,
     });
@@ -95,6 +96,7 @@ describe('getLinePath', () => {
   it('should connect across null values when connectNulls is true', () => {
     const result = getLinePath({
       data: [1, null, 3],
+      curve: 'linear',
       xScale,
       yScale,
       connectNulls: true,
@@ -106,6 +108,7 @@ describe('getLinePath', () => {
   it('should handle multiple consecutive nulls with connectNulls', () => {
     const result = getLinePath({
       data: [1, null, null, 4],
+      curve: 'linear',
       xScale,
       yScale,
       connectNulls: true,
@@ -120,6 +123,7 @@ describe('getLinePath', () => {
         { x: 1, y: 2 },
         { x: 3, y: 4 },
       ],
+      curve: 'linear',
       xScale,
       yScale,
     });
@@ -129,6 +133,7 @@ describe('getLinePath', () => {
   it('should handle mixed data types', () => {
     const result = getLinePath({
       data: [1, { x: 2, y: 3 }, null, 4],
+      curve: 'linear',
       xScale,
       yScale,
     });
@@ -139,6 +144,7 @@ describe('getLinePath', () => {
     const result = getLinePath({
       data: [1, 2, 3],
       xData: [0, 5, 10],
+      curve: 'linear',
       xScale,
       yScale,
     });

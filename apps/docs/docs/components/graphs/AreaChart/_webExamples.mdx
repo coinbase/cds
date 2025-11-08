@@ -14,7 +14,6 @@ AreaChart is a cartesian chart variant that allows for easy visualization of sta
   ]}
   type="gradient"
   showLines
-  curve="monotone"
   showYAxis
   yAxis={{
     showGrid: true,
@@ -37,7 +36,6 @@ AreaChart is a cartesian chart variant that allows for easy visualization of sta
   ]}
   type="gradient"
   showLines
-  curve="monotone"
 />
 ```
 
@@ -229,7 +227,6 @@ function AnimatedStackedAreas() {
         stacked
         height={{ base: 200, tablet: 250, desktop: 300 }}
         series={series}
-        curve="monotone"
         type="dotted"
         showLines
         AreaComponent={MemoizedDottedArea}
@@ -345,7 +342,6 @@ function AnimatedStackedAreas() {
         stacked
         height={{ base: 200, tablet: 250, desktop: 300 }}
         series={series}
-        curve="monotone"
         type="dotted"
         showLines
         AreaComponent={MemoizedDottedArea}
@@ -429,7 +425,6 @@ function ContinuousGradient() {
             },
           },
         ]}
-        curve="monotone"
         showYAxis
         yAxis={{
           showGrid: true,
@@ -513,7 +508,6 @@ function DiscreteGradient() {
         ]}
         showLines
         strokeWidth={4}
-        curve="monotone"
         showYAxis
         yAxis={{
           showGrid: true,
@@ -587,7 +581,6 @@ function XAxisGradient() {
             },
           },
         ]}
-        curve="monotone"
         showYAxis
         yAxis={{
           showGrid: true,

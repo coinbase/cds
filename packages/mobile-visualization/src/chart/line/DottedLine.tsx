@@ -38,7 +38,6 @@ export const DottedLine = memo<DottedLineProps>(
     strokeWidth = 2,
     vectorEffect = 'non-scaling-stroke',
     gradient,
-    seriesId,
     yAxisId,
     d,
     animate,

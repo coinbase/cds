@@ -1,7 +1,13 @@
 import { Skia } from '@shopify/react-native-skia';
 
 import type { AxisBounds } from './chart';
-import { type ChartScaleFunction, isCategoricalScale, isNumericScale } from './scale';
+import {
+  applySerializableScale,
+  type ChartScaleFunction,
+  isCategoricalScale,
+  isNumericScale,
+  type SerializableScale,
+} from './scale';
 
 /**
  * Defines a color transition point in the gradient
@@ -38,7 +44,7 @@ export type GradientDefinition = {
  * Resolves gradient stops, handling both static arrays and function forms.
  * When stops is a function, calls it with the domain bounds.
  */
-const getGradientStops = (
+export const getGradientStops = (
   stops: GradientStop[] | ((domain: AxisBounds) => GradientStop[]),
   domain: AxisBounds,
 ): GradientStop[] => {
@@ -132,6 +138,7 @@ export const getGradientScale = (
  * Returns an rgba string.
  */
 const interpolateColor = (color1: string, color2: string, t: number): string => {
+  'worklet';
   const c1 = Skia.Color(color1);
   const c2 = Skia.Color(color2);
 
@@ -301,4 +308,166 @@ export const getGradientConfig = (
 
   const resolvedStops = getGradientStops(gradient.stops, domain);
   return processGradientStops(resolvedStops, scale);
+};
+
+/**
+ * Worklet-compatible version of evaluateGradientAtValue that works with SerializableScale.
+ * Evaluates a gradient at a specific data value using a serializable scale.
+ *
+ * @param gradient - The GradientDefinition configuration
+ * @param dataValue - The data value to evaluate (for band scales, this is the index)
+ * @param scale - The serializable scale to use for value mapping
+ * @returns The color string at this data value (may be an interpolated color), or null if invalid
+ */
+export const evaluateGradientAtValueWithSerializableScale = (
+  gradient: GradientDefinition,
+  dataValue: number,
+  scale: SerializableScale,
+): string | undefined => {
+  'worklet';
+
+  // Extract domain from serializable scale
+  const domain = { min: scale.domain[0], max: scale.domain[1] };
+
+  const stops = getGradientStops(gradient.stops, domain);
+  if (stops.length === 0) return;
+
+  // Use serializable scale to map values to positions
+  const rangeSpan = Math.abs(scale.range[1] - scale.range[0]);
+  if (rangeSpan === 0) return stops[0].color;
+
+  // Map dataValue through scale to get position
+  const dataPosition = applySerializableScale(dataValue, scale);
+
+  // Normalize to 0-1 based on range
+  const normalizedValue = Math.max(
+    0,
+    Math.min(1, Math.abs(dataPosition - scale.range[0]) / rangeSpan),
+  );
+
+  // Map stop offsets through scale and normalize to 0-1
+  const positions = stops.map((stop) => {
+    const stopPosition = applySerializableScale(stop.offset, scale);
+    return Math.max(0, Math.min(1, Math.abs(stopPosition - scale.range[0]) / rangeSpan));
+  });
+
+  // Find which segment we're in
+  if (normalizedValue < positions[0]) {
+    return stops[0].color;
+  }
+  if (normalizedValue >= positions[positions.length - 1]) {
+    return stops[stops.length - 1].color;
+  }
+
+  // Check if dataValue matches any stop offset exactly (for hard transitions)
+  for (let i = 0; i < stops.length; i++) {
+    if (dataValue === stops[i].offset) {
+      // Found exact match - check if there are multiple stops at this offset (hard transition)
+      // Use the LAST color at this offset for hard transitions
+      let lastIndexAtOffset = i;
+      while (
+        lastIndexAtOffset + 1 < stops.length &&
+        stops[lastIndexAtOffset + 1].offset === stops[i].offset
+      ) {
+        lastIndexAtOffset++;
+      }
+      return stops[lastIndexAtOffset].color;
+    }
+  }
+
+  // Find the segment to interpolate between
+  for (let i = 0; i < positions.length - 1; i++) {
+    if (normalizedValue >= positions[i] && normalizedValue <= positions[i + 1]) {
+      const segmentStart = positions[i];
+      const segmentEnd = positions[i + 1];
+
+      if (segmentEnd === segmentStart) {
+        return stops[i].color;
+      }
+
+      const t = (normalizedValue - segmentStart) / (segmentEnd - segmentStart);
+      return interpolateColor(stops[i].color, stops[i + 1].color, t);
+    }
+  }
+
+  return stops[0].color;
+};
+
+/**
+ * Optimized worklet-compatible version that accepts pre-computed gradient stops.
+ * Use this when you want to pre-compute stops off the UI thread and then evaluate colors on the UI thread.
+ *
+ * @param precomputedStops - Pre-computed gradient stops (computed off UI thread)
+ * @param dataValue - The data value to evaluate (for band scales, this is the index)
+ * @param scale - The serializable scale to use for value mapping
+ * @returns The color string at this data value (may be an interpolated color), or null if invalid
+ */
+export const evaluateGradientAtValueWithPrecomputedStops = (
+  precomputedStops: GradientStop[],
+  dataValue: number,
+  scale: SerializableScale,
+): string | undefined => {
+  'worklet';
+
+  if (precomputedStops.length === 0) return;
+
+  // Use serializable scale to map values to positions
+  const rangeSpan = Math.abs(scale.range[1] - scale.range[0]);
+  if (rangeSpan === 0) return precomputedStops[0].color;
+
+  // Map dataValue through scale to get position
+  const dataPosition = applySerializableScale(dataValue, scale);
+
+  // Normalize to 0-1 based on range
+  const normalizedValue = Math.max(
+    0,
+    Math.min(1, Math.abs(dataPosition - scale.range[0]) / rangeSpan),
+  );
+
+  // Map stop offsets through scale and normalize to 0-1
+  const positions = precomputedStops.map((stop) => {
+    const stopPosition = applySerializableScale(stop.offset, scale);
+    return Math.max(0, Math.min(1, Math.abs(stopPosition - scale.range[0]) / rangeSpan));
+  });
+
+  // Find which segment we're in
+  if (normalizedValue < positions[0]) {
+    return precomputedStops[0].color;
+  }
+  if (normalizedValue >= positions[positions.length - 1]) {
+    return precomputedStops[precomputedStops.length - 1].color;
+  }
+
+  // Check if dataValue matches any stop offset exactly (for hard transitions)
+  for (let i = 0; i < precomputedStops.length; i++) {
+    if (dataValue === precomputedStops[i].offset) {
+      // Found exact match - check if there are multiple stops at this offset (hard transition)
+      // Use the LAST color at this offset for hard transitions
+      let lastIndexAtOffset = i;
+      while (
+        lastIndexAtOffset + 1 < precomputedStops.length &&
+        precomputedStops[lastIndexAtOffset + 1].offset === precomputedStops[i].offset
+      ) {
+        lastIndexAtOffset++;
+      }
+      return precomputedStops[lastIndexAtOffset].color;
+    }
+  }
+
+  // Find the segment to interpolate between
+  for (let i = 0; i < positions.length - 1; i++) {
+    if (normalizedValue >= positions[i] && normalizedValue <= positions[i + 1]) {
+      const segmentStart = positions[i];
+      const segmentEnd = positions[i + 1];
+
+      if (segmentEnd === segmentStart) {
+        return precomputedStops[i].color;
+      }
+
+      const t = (normalizedValue - segmentStart) / (segmentEnd - segmentStart);
+      return interpolateColor(precomputedStops[i].color, precomputedStops[i + 1].color, t);
+    }
+  }
+
+  return precomputedStops[0].color;
 };

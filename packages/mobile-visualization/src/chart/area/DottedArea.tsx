@@ -7,6 +7,7 @@ import { Gradient } from '../gradient';
 import { Path, type PathProps } from '../Path';
 import { type GradientDefinition } from '../utils/gradient';
 import { getDottedAreaPath } from '../utils/path';
+import { usePathTransition } from '../utils/transition';
 
 import { type AreaComponentProps } from './SolidArea';
 
@@ -52,7 +53,6 @@ export const DottedArea = memo<DottedAreaProps>(
     yAxisId,
     clipRect,
     gradient: gradientProp,
-    seriesId,
     animate: animateProp,
     transitionConfig,
   }) => {
@@ -81,10 +81,17 @@ export const DottedArea = memo<DottedAreaProps>(
       );
     }, [drawingArea, patternSize, dotSize]);
 
-    const areaClipPath = useMemo(() => {
+    const animatedClipPath = usePathTransition({
+      currentPath: d ?? '',
+      transitionConfigs: transitionConfig ? { update: transitionConfig } : undefined,
+    });
+
+    const staticClipPath = useMemo(() => {
       if (!d) return;
       return Skia.Path.MakeFromSVGString(d) ?? undefined;
     }, [d]);
+
+    const areaClipPath = animate ? animatedClipPath : staticClipPath;
 
     const gradient = useMemo((): GradientDefinition | undefined => {
       if (gradientProp) return gradientProp;
@@ -124,7 +131,7 @@ export const DottedArea = memo<DottedAreaProps>(
 
     if (!gradient) return;
 
-    if (!drawingArea || !dottedPath || !gradient) return;
+    if (!drawingArea || !dottedPath || !areaClipPath) return;
 
     return (
       <Group clip={areaClipPath}>

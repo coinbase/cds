@@ -1,4 +1,4 @@
-import { memo, useContext, useEffect, useState } from 'react';
+import { memo, useEffect, useState } from 'react';
 import { Button } from '@coinbase/cds-mobile/buttons';
 import { Example, ExampleScreen } from '@coinbase/cds-mobile/examples/ExampleScreen';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
@@ -394,32 +394,6 @@ const tabs: TimePeriodTab[] = [
   { id: 'month', label: '1M' },
   { id: 'year', label: '1Y' },
 ];
-
-const ScrubberRect = memo(() => {
-  const theme = useTheme();
-  const { getXScale, getYScale } = useCartesianChartContext();
-  const { scrubberPosition } = useContext(ScrubberContext) ?? {};
-  const xScale = getXScale();
-  const yScale = getYScale();
-
-  if (!xScale || !yScale || scrubberPosition === undefined || !isCategoricalScale(xScale))
-    return null;
-
-  const yScaleDomain = yScale.range();
-  const [yMax, yMin] = yScaleDomain;
-
-  const barWidth = xScale.bandwidth();
-
-  return (
-    <Rect
-      color={theme.color.bgLine}
-      height={yMax - yMin}
-      width={barWidth}
-      x={xScale(scrubberPosition)}
-      y={yMin}
-    />
-  );
-});
 
 const YAxisContinuousColorMap = () => {
   const theme = useTheme();

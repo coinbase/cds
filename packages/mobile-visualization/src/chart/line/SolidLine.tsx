@@ -1,8 +1,8 @@
 import { memo } from 'react';
 import type { SharedProps } from '@coinbase/cds-common/types';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
+import type { AnimatedProp } from '@shopify/react-native-skia';
 
-import { useCartesianChartContext } from '../ChartProvider';
 import { Gradient } from '../gradient';
 import { Path, type PathProps } from '../Path';
 import { type GradientDefinition } from '../utils/gradient';
@@ -13,16 +13,12 @@ import { type TransitionConfig } from '../utils/transition';
  * Used by SolidLine, DottedLine, and other line variants.
  */
 export type LineComponentProps = {
-  d: string;
+  d: AnimatedProp<string>;
   stroke: string;
   strokeOpacity?: number;
   strokeWidth?: number;
   testID?: string;
   clipPath?: string;
-  /**
-   * Series ID - used to retrieve gradient scale from context.
-   */
-  seriesId?: string;
   /**
    * ID of the y-axis to use.
    * Required for components that need to map data values to pixel positions.
@@ -72,7 +68,6 @@ export const SolidLine = memo<SolidLineProps>(
     strokeOpacity = 1,
     strokeWidth = 2,
     gradient,
-    seriesId,
     yAxisId,
     d,
     animate,

@@ -1,10 +1,11 @@
 import { createContext, useContext } from 'react';
+import type { SharedValue } from 'react-native-reanimated';
 import type { Rect } from '@coinbase/cds-common/types';
 import type { SkTypefaceFontProvider } from '@shopify/react-native-skia';
 
 import type { AxisConfig } from './axis';
 import type { Series } from './chart';
-import type { ChartScaleFunction } from './scale';
+import type { ChartScaleFunction, SerializableScale } from './scale';
 
 /**
  * Context value for Cartesian (X/Y) coordinate charts.
@@ -62,6 +63,15 @@ export type CartesianChartContextValue = {
    */
   getYScale: (id?: string) => ChartScaleFunction | undefined;
   /**
+   * Get x-axis serializable scale function that can be used in worklets.
+   */
+  getXSerializableScale: () => SerializableScale | undefined;
+  /**
+   * Get y-axis serializable scale function by ID that can be used in worklets.
+   * @param id - The axis ID. Defaults to defaultAxisId.
+   */
+  getYSerializableScale: (id?: string) => SerializableScale | undefined;
+  /**
    * Drawing area of the chart.
    */
   drawingArea: Rect;
@@ -82,12 +92,6 @@ export type CartesianChartContextValue = {
    * Computes the bounds of the axis based on the chart's drawing area chart/axis config, and axis position.
    */
   getAxisBounds: (id: string) => Rect | undefined;
-  /**
-   * Gets the color map scale for a series.
-   * Returns undefined if the series does not exist or if there is no valid color map for that series.
-   * @param seriesId - The series ID
-   */
-  getSeriesGradientScale: (seriesId: string) => ChartScaleFunction | undefined;
 };
 
 export type ScrubberContextValue = {
@@ -99,12 +103,7 @@ export type ScrubberContextValue = {
   /**
    * The current position of the scrubber.
    */
-  scrubberPosition?: number;
-  /**
-   * Callback fired when the scrubber position changes.
-   * Receives the dataIndex of the scrubber or undefined when not scrubbing.
-   */
-  onScrubberPositionChange: (index: number | undefined) => void;
+  scrubberPosition: SharedValue<number | undefined>;
 };
 
 export const ScrubberContext = createContext<ScrubberContextValue | undefined>(undefined);

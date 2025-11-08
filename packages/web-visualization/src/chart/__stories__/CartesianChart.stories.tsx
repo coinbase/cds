@@ -482,7 +482,7 @@ const PriceWithVolume = () => {
           width={80}
         />
         <BarPlot seriesIds={['volume']} />
-        <Line showArea curve="monotone" seriesId="prices" />
+        <Line showArea seriesId="prices" />
         <Scrubber seriesIds={['prices']} />
       </CartesianChart>
     </VStack>
@@ -549,7 +549,7 @@ function TradingTrends() {
       <XAxis />
       <ReferenceLine LineComponent={ThickSolidLine} dataY={0} yAxisId="profit" />
       <BarPlot seriesIds={['gains', 'losses']} />
-      <Line showArea curve="monotone" seriesId="revenue" />
+      <Line showArea seriesId="revenue" />
     </CartesianChart>
   );
 }

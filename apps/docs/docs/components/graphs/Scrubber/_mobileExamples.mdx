@@ -12,7 +12,6 @@ Scrubber can be used to provide horizontal interaction with a chart. As your mou
       data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
     },
   ]}
-  curve="monotone"
   showYAxis
   showArea
   yAxis={{
@@ -84,7 +83,6 @@ Setting the `idlePulse` prop will cause the scrubber heads to pulse when the use
       data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
     },
   ]}
-  curve="monotone"
   showArea
 >
   <Scrubber idlePulse />
@@ -109,25 +107,21 @@ function ImperativeHandle() {
             id: 'priceA',
             data: [2400, 1398, 9800, 3908, 4800, 3800, 4300],
             color: theme.color.accentBoldBlue,
-            curve: 'natural',
           },
           {
             id: 'priceB',
             data: [2000, 2491, 4501, 6049, 5019, 4930, 5910],
             color: theme.color.accentBoldGreen,
-            curve: 'natural',
           },
           {
             id: 'priceC',
             data: [1000, 4910, 2300, 5910, 3940, 2940, 1940],
             color: theme.color.accentBoldPurple,
-            curve: 'natural',
           },
           {
             id: 'priceD',
             data: [4810, 2030, 5810, 3940, 2940, 1940, 940],
             color: theme.color.accentBoldYellow,
-            curve: 'natural',
           },
         ]}
         xAxis={{
@@ -164,7 +158,6 @@ By default, the scrubber will show an overlay to de-emphasize future data. You c
       data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
     },
   ]}
-  curve="monotone"
   showYAxis
   showArea
   yAxis={{

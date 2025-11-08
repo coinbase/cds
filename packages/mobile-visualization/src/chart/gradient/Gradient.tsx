@@ -1,8 +1,7 @@
-import { memo, useMemo, useRef } from 'react';
+import { memo, useMemo } from 'react';
 import { LinearGradient, Skia, vec } from '@shopify/react-native-skia';
 
 import { useCartesianChartContext } from '../ChartProvider';
-import { ChartText } from '../text';
 import type { GradientDefinition } from '../utils';
 import { getGradientConfig } from '../utils/gradient';
 
@@ -38,8 +37,6 @@ const interpolateColor = (color1: string, opacity: number): string => {
  * </Path>
  */
 export const Gradient = memo<GradientProps>(({ gradient, yAxisId }) => {
-  const renderCount = useRef(0);
-  renderCount.current++;
   const context = useCartesianChartContext();
 
   const xScale = context.getXScale();
@@ -72,12 +69,5 @@ export const Gradient = memo<GradientProps>(({ gradient, yAxisId }) => {
   const colors = stops.map((s) => interpolateColor(s.color, s.opacity ?? 1));
   const positions = stops.map((s) => s.offset);
 
-  return (
-    <>
-      <ChartText color="red" x={40} y={40}>
-        {`renderCount: ${renderCount.current}`}
-      </ChartText>
-      <LinearGradient colors={colors} end={end} positions={positions} start={start} />
-    </>
-  );
+  return <LinearGradient colors={colors} end={end} positions={positions} start={start} />;
 });
