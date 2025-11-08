@@ -13,7 +13,7 @@ import { type TransitionConfig } from '../utils/transition';
  * Used by SolidLine, DottedLine, and other line variants.
  */
 export type LineComponentProps = {
-  d: AnimatedProp<string>;
+  d: AnimatedProp<string | undefined>;
   stroke: string;
   strokeOpacity?: number;
   strokeWidth?: number;

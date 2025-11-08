@@ -18,7 +18,7 @@ export type PathProps = SharedProps & {
   /**
    * The SVG path data string.
    */
-  d?: AnimatedProp<string>;
+  d?: AnimatedProp<string | undefined>;
   /**
    * Initial path for enter animation.
    * When provided, the first animation will go from initialPath to d.
@@ -117,10 +117,10 @@ const AnimatedPath = memo<Omit<PathProps, 'animate' | 'clipRect' | 'clipOffset' 
     children,
     transitionConfigs,
   }) => {
-    const isAnimatedValue = typeof d !== 'string';
+    const isDAnimated = typeof d !== 'string';
 
     const animatedPath = usePathTransition({
-      currentPath: isAnimatedValue ? d.value : d,
+      currentPath: isDAnimated ? (d.value ?? '') : d,
       initialPath,
       transitionConfigs,
     });
@@ -128,12 +128,17 @@ const AnimatedPath = memo<Omit<PathProps, 'animate' | 'clipRect' | 'clipOffset' 
     const isFilled = fill !== undefined && fill !== 'none';
     const isStroked = stroke !== undefined && stroke !== 'none';
 
-    const path = isAnimatedValue ? d : animatedPath;
+    const activePath = useDerivedValue(() => {
+      if (isDAnimated) {
+        return d.value ?? Skia.Path.Make();
+      }
+      return animatedPath.value;
+    });
 
     return (
       <>
         {isFilled && (
-          <SkiaPath color={fill} opacity={fillOpacity} path={path} style="fill">
+          <SkiaPath color={fill} opacity={fillOpacity} path={activePath} style="fill">
             {children}
           </SkiaPath>
         )}
@@ -141,7 +146,7 @@ const AnimatedPath = memo<Omit<PathProps, 'animate' | 'clipRect' | 'clipOffset' 
           <SkiaPath
             color={stroke}
             opacity={strokeOpacity}
-            path={path}
+            path={activePath}
             strokeCap={strokeLinecap}
             strokeJoin={strokeLinejoin}
             strokeWidth={strokeWidth}

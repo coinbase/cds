@@ -159,10 +159,12 @@ export const ReferenceLine = memo<ReferenceLineProps>(
     }, [dataY, yScale]);
 
     const horizontalLine = useDerivedValue(() => {
+      if (!yPixel.value) return undefined;
       return `M${drawingArea.x},${yPixel.value} L${drawingArea.x + drawingArea.width},${yPixel.value}`;
     }, [drawingArea, yPixel]);
 
     const verticalLine = useDerivedValue(() => {
+      if (!xPixel.value) return undefined;
       return `M${xPixel.value},${drawingArea.y} L${xPixel.value},${drawingArea.y + drawingArea.height}`;
     }, [drawingArea, xPixel]);
 

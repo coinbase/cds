@@ -217,6 +217,7 @@ const MultipleYAxes = () => {
 
 const initialData = [45, 52, 38, 45, 19, 23, 32];
 
+// todo: support this to be animated
 const MyCustomLine = memo(({ animate, ...props }: SolidLineProps) => <SolidLine {...props} />);
 
 const UpdatingChartValues = () => {
@@ -605,23 +606,8 @@ const BarChartStories = () => {
   return (
     <ExampleScreen>
       <Example title="Basic">
-        <BarChart
-          showYAxis
-          height={150}
-          series={[
-            {
-              id: 'prices',
-              data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
-            },
-          ]}
-          yAxis={{
-            showGrid: true,
-          }}
-        />
-      </Example>
-      {/*<Example title="Basic">
         <UpdatingChartValues />
-      </Example>*/}
+      </Example>
       {/*<Example title="Animated Auto-Updating">
         <AnimatedUpdatingChartValues />
       </Example>
