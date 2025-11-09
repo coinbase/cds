@@ -8,7 +8,6 @@ import { useContextBridge } from '@coinbase/cds-mobile/system';
 import { Canvas, Skia } from '@shopify/react-native-skia';
 
 import { ScrubberProvider, type ScrubberProviderProps } from './scrubber/ScrubberProvider';
-import { getGradientScale } from './utils/gradient';
 import { convertToSerializableScale, type SerializableScale } from './utils/scale';
 import { CartesianChartProvider } from './ChartProvider';
 import {
@@ -59,7 +58,6 @@ export type CartesianChartBaseProps = BoxBaseProps &
     xAxis?: Partial<Omit<AxisConfigProps, 'id'>>;
     /**
      * Configuration for y-axis(es). Can be a single config or array of configs.
-     * If array, first axis becomes default if no id is specified.
      */
     yAxis?: Partial<AxisConfigProps> | Partial<AxisConfigProps>[];
     /**
@@ -86,13 +84,13 @@ export const CartesianChart = memo(
     (
       {
         series,
+        children,
         animate = true,
         enableScrubbing,
-        xAxis: xAxisConfigInput,
-        yAxis: yAxisConfigInput,
-        inset: insetInput,
+        xAxis: xAxisConfigProp,
+        yAxis: yAxisConfigProp,
+        inset,
         onScrubberPositionChange,
-        children,
         width = '100%',
         height = '100%',
         style,
@@ -114,27 +112,22 @@ export const CartesianChart = memo(
       const chartWidth = typeof width === 'number' ? width : containerLayout.width;
       const chartHeight = typeof height === 'number' ? height : containerLayout.height;
 
-      const userInset = useMemo(() => {
-        return getChartInset(insetInput, defaultChartInset);
-      }, [insetInput]);
+      const calculatedInset = useMemo(() => getChartInset(inset, defaultChartInset), [inset]);
 
       // there can only be one x axis but the helper function always returns an array
-      const xAxisConfig = useMemo(
-        () => getAxisConfig('x', xAxisConfigInput)[0],
-        [xAxisConfigInput],
-      );
-      const yAxisConfig = useMemo(() => getAxisConfig('y', yAxisConfigInput), [yAxisConfigInput]);
+      const xAxisConfig = useMemo(() => getAxisConfig('x', xAxisConfigProp)[0], [xAxisConfigProp]);
+      const yAxisConfig = useMemo(() => getAxisConfig('y', yAxisConfigProp), [yAxisConfigProp]);
 
       const { renderedAxes, registerAxis, unregisterAxis, axisPadding } = useTotalAxisPadding();
 
       const totalInset = useMemo(
         () => ({
-          top: userInset.top + axisPadding.top,
-          right: userInset.right + axisPadding.right,
-          bottom: userInset.bottom + axisPadding.bottom,
-          left: userInset.left + axisPadding.left,
+          top: calculatedInset.top + axisPadding.top,
+          right: calculatedInset.right + axisPadding.right,
+          bottom: calculatedInset.bottom + axisPadding.bottom,
+          left: calculatedInset.left + axisPadding.left,
         }),
-        [userInset, axisPadding],
+        [calculatedInset, axisPadding],
       );
 
       const chartRect: Rect = useMemo(() => {
@@ -251,6 +244,7 @@ export const CartesianChart = memo(
         return { yAxes: axes, yScales: scales };
       }, [yAxisConfig, series, chartRect]);
 
+      // We need a set of serialized scales usable in UI thread
       const ySerializableScales = useMemo(() => {
         const serializableScales = new Map<string, SerializableScale>();
         yScales.forEach((scale, id) => {
@@ -276,7 +270,6 @@ export const CartesianChart = memo(
         [series],
       );
 
-      // Compute stacked data for series with stack properties
       const stackedDataMap = useMemo(() => {
         if (!series) return new Map<string, Array<[number, number] | null>>();
         return calculateStackedSeriesData(series);
@@ -309,7 +302,7 @@ export const CartesianChart = memo(
 
           if (axis.position === 'top') {
             // Position above the chart rect, accounting for user inset
-            const startY = userInset.top + offsetFromPreviousAxes;
+            const startY = calculatedInset.top + offsetFromPreviousAxes;
             return {
               x: chartRect.x,
               y: startY,
@@ -327,7 +320,7 @@ export const CartesianChart = memo(
             };
           } else if (axis.position === 'left') {
             // Position to the left of the chart rect, accounting for user inset
-            const startX = userInset.left + offsetFromPreviousAxes;
+            const startX = calculatedInset.left + offsetFromPreviousAxes;
             return {
               x: startX,
               y: chartRect.y,
@@ -345,7 +338,7 @@ export const CartesianChart = memo(
             };
           }
         },
-        [renderedAxes, chartRect, userInset],
+        [renderedAxes, chartRect, calculatedInset],
       );
 
       const contextValue: CartesianChartContextValue = useMemo(

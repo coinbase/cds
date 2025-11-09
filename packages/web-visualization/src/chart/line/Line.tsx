@@ -10,7 +10,7 @@ import { Point, type PointConfig, type RenderPointsParams } from '../Point';
 import {
   type ChartPathCurveType,
   evaluateGradientAtValue,
-  getGradientScale,
+  getLineData,
   getLinePath,
   type GradientDefinition,
 } from '../utils';
@@ -162,49 +162,23 @@ export const Line = memo<LineProps>(
     const { animate, getSeries, getSeriesData, getXScale, getYScale, getXAxis, getYAxis } =
       useCartesianChartContext();
 
-    const matchedSeries = getSeries(seriesId);
-    const seriesGradient = matchedSeries?.gradient;
+    const matchedSeries = useMemo(() => getSeries(seriesId), [getSeries, seriesId]);
+    const seriesGradient = useMemo(() => matchedSeries?.gradient, [matchedSeries]);
+    const sourceData = useMemo(() => getSeriesData(seriesId), [getSeriesData, seriesId]);
 
-    const sourceData = useMemo(() => {
-      const stackedData = getSeriesData(seriesId);
-      if (stackedData) {
-        return stackedData;
-      }
-      return getSeriesData(seriesId) || null;
-    }, [seriesId, getSeriesData]);
-
-    const xAxis = getXAxis();
-    const xScale = getXScale();
-    const yAxis = getYAxis(matchedSeries?.yAxisId);
-    const yScale = getYScale(matchedSeries?.yAxisId);
+    const xAxis = useMemo(() => getXAxis(), [getXAxis]);
+    const xScale = useMemo(() => getXScale(), [getXScale]);
+    const yAxis = useMemo(
+      () => getYAxis(matchedSeries?.yAxisId),
+      [getYAxis, matchedSeries?.yAxisId],
+    );
+    const yScale = useMemo(
+      () => getYScale(matchedSeries?.yAxisId),
+      [getYScale, matchedSeries?.yAxisId],
+    );
 
     // Convert sourceData to number array (line only supports numbers, not tuples)
-    // If data is stacked (tuples), extract the actual values from [baseline, actualValue] format
-    const chartData = useMemo((): Array<number | null> => {
-      if (!sourceData) return [];
-
-      // Check if this is stacked data (array of tuples)
-      const firstNonNull = sourceData.find((d: any) => d !== null);
-      if (Array.isArray(firstNonNull)) {
-        // Extract actual values from [baseline, value] tuples
-        return sourceData.map((d: any) => {
-          if (d === null) return null;
-          if (Array.isArray(d)) return d[1];
-          return d as number;
-        });
-      }
-
-      // Regular number array
-      if (
-        sourceData.every(
-          (d: number | null | [number, number] | null) => typeof d === 'number' || d === null,
-        )
-      ) {
-        return sourceData as Array<number | null>;
-      }
-
-      return [];
-    }, [sourceData]);
+    const chartData = useMemo(() => getLineData(sourceData), [sourceData]);
 
     const path = useMemo(() => {
       if (!xScale || !yScale || chartData.length === 0) return '';
@@ -233,7 +207,6 @@ export const Line = memo<LineProps>(
       switch (type) {
         case 'dotted':
           return DottedLine;
-        case 'solid':
         default:
           return SolidLine;
       }
@@ -251,9 +224,10 @@ export const Line = memo<LineProps>(
 
     const gradientScale = useMemo(() => {
       if (!seriesGradient || !xScale || !yScale) return;
-      return getGradientScale(seriesGradient, xScale, yScale);
+      return seriesGradient.axis === 'x' ? xScale : yScale;
     }, [seriesGradient, xScale, yScale]);
 
+    // todo: see what this is for
     const filteredChartData = useMemo(() => {
       if (!xScale || !yScale || !xAxis || !yAxis) return [];
       return chartData.map((value, index) => {
@@ -291,6 +265,7 @@ export const Line = memo<LineProps>(
           yAxisId={matchedSeries?.yAxisId}
           {...props}
         />
+        {/* todo: should we simplify */}
         {renderPoints && (
           <motion.g
             data-component="line-points-group"

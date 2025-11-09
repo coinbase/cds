@@ -4,7 +4,7 @@ import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import type { ChartScaleFunction, TransitionConfig } from '../utils';
-import { evaluateGradientAtValue, getGradientScale } from '../utils/gradient';
+import { evaluateGradientAtValue } from '../utils/gradient';
 
 import { Bar, type BarComponent, type BarProps } from './Bar';
 import type { BarSeries } from './BarChart';

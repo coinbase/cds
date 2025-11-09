@@ -7,8 +7,8 @@ import { Group } from '@shopify/react-native-skia';
 import { Area, type AreaComponent } from '../area/Area';
 import { useCartesianChartContext } from '../ChartProvider';
 import { Point, type PointConfig, type RenderPointsParams } from '../Point';
-import { type ChartPathCurveType, getLinePath, type TransitionConfig } from '../utils';
-import { evaluateGradientAtValue, getGradientScale } from '../utils/gradient';
+import { type ChartPathCurveType, getLineData, getLinePath, type TransitionConfig } from '../utils';
+import { evaluateGradientAtValue } from '../utils/gradient';
 
 import { DottedLine } from './DottedLine';
 import { type LineComponentProps, SolidLine } from './SolidLine';
@@ -65,11 +65,6 @@ export type LineProps = SharedProps & {
    */
   opacity?: number;
   /**
-   * Whether to animate the line.
-   * Overrides the animate prop on the Chart component.
-   */
-  animate?: boolean;
-  /**
    * Callback function to determine how to render points at each data point in the series.
    * Called for every entry in the data array.
    *
@@ -103,74 +98,40 @@ export const Line = memo<LineProps>(
     opacity = 1,
     renderPoints,
     connectNulls,
-    animate,
     transitionConfig,
     ...props
   }) => {
     const theme = useTheme();
-    const {
-      getSeries,
-      getSeriesData,
-      getXScale,
-      getYScale,
-      getXAxis,
-      animate: contextAnimate,
-    } = useCartesianChartContext();
+    const { animate, getSeries, getSeriesData, getXScale, getYScale, getXAxis } =
+      useCartesianChartContext();
 
-    // Use animate prop or fall back to context animate
-    const shouldAnimate = animate ?? contextAnimate;
-
+    // todo: figure out why we have to do point animations here
     // Animation state for delayed point rendering (matches web timing)
-    const pointsOpacity = useSharedValue(shouldAnimate ? 0 : 1);
+    const pointsOpacity = useSharedValue(animate ? 0 : 1);
 
     // Trigger delayed point animation when component mounts and animate is true
     useEffect(() => {
-      if (shouldAnimate) {
+      if (animate) {
         // Match web timing: 850ms delay + 150ms fade in
         setTimeout(() => {
           pointsOpacity.value = withTiming(1, { duration: 150 });
         }, 850);
       }
-    }, [shouldAnimate, pointsOpacity]);
+    }, [animate, pointsOpacity]);
 
-    const matchedSeries = getSeries(seriesId);
-    const seriesGradient = matchedSeries?.gradient;
+    const matchedSeries = useMemo(() => getSeries(seriesId), [getSeries, seriesId]);
+    const seriesGradient = useMemo(() => matchedSeries?.gradient, [matchedSeries]);
+    const sourceData = useMemo(() => getSeriesData(seriesId), [getSeriesData, seriesId]);
 
-    const sourceData = useMemo(() => {
-      return getSeriesData(seriesId) || null;
-    }, [seriesId, getSeriesData]);
-
-    const xAxis = getXAxis();
-    const xScale = getXScale();
-    const yScale = getYScale(matchedSeries?.yAxisId);
+    const xAxis = useMemo(() => getXAxis(), [getXAxis]);
+    const xScale = useMemo(() => getXScale(), [getXScale]);
+    const yScale = useMemo(
+      () => getYScale(matchedSeries?.yAxisId),
+      [getYScale, matchedSeries?.yAxisId],
+    );
 
     // Convert sourceData to number array (line only supports numbers, not tuples)
-    // If data is stacked (tuples), extract the actual values from [baseline, actualValue] format
-    const chartData = useMemo((): Array<number | null> => {
-      if (!sourceData) return [];
-
-      // Check if this is stacked data (array of tuples)
-      const firstNonNull = sourceData.find((d) => d !== null);
-      if (Array.isArray(firstNonNull)) {
-        // Extract actual values from [baseline, value] tuples
-        return sourceData.map((d) => {
-          if (d === null) return null;
-          if (Array.isArray(d)) return d[1];
-          return d as number;
-        });
-      }
-
-      // Regular number array
-      if (
-        sourceData.every(
-          (d: number | null | [number, number] | null) => typeof d === 'number' || d === null,
-        )
-      ) {
-        return sourceData as Array<number | null>;
-      }
-
-      return [];
-    }, [sourceData]);
+    const chartData = useMemo(() => getLineData(sourceData), [sourceData]);
 
     const path = useMemo(() => {
       if (!xScale || !yScale || chartData.length === 0) return '';
@@ -199,12 +160,12 @@ export const Line = memo<LineProps>(
       switch (type) {
         case 'dotted':
           return DottedLine;
-        case 'solid':
         default:
           return SolidLine;
       }
     }, [SelectedLineComponent, type]);
 
+    // Get series color for stroke
     const stroke = specifiedStroke ?? matchedSeries?.color ?? theme.color.fgPrimary;
 
     const xData = useMemo(() => {
@@ -219,7 +180,7 @@ export const Line = memo<LineProps>(
       return seriesGradient.axis === 'x' ? xScale : yScale;
     }, [seriesGradient, xScale, yScale]);
 
-    if (!xScale || !yScale) return;
+    if (!xScale || !yScale || !path) return;
 
     return (
       <>
@@ -237,8 +198,8 @@ export const Line = memo<LineProps>(
             type={areaType}
           />
         )}
+        {/* todo: pass in series id? */}
         <LineComponent
-          animate={animate}
           d={path}
           gradient={seriesGradient}
           stroke={stroke}
@@ -247,9 +208,10 @@ export const Line = memo<LineProps>(
           yAxisId={matchedSeries?.yAxisId}
           {...props}
         />
+        {/* todo: should we simplify */}
         {renderPoints && (
           <Group opacity={pointsOpacity}>
-            {chartData.map((value, index) => {
+            {chartData.map((value: number | null, index: number) => {
               if (value === null) {
                 return null;
               }

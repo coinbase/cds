@@ -1,6 +1,6 @@
 import { memo, useEffect, useMemo, useState } from 'react';
-import { Group } from '@shopify/react-native-skia';
 import type { Rect } from '@coinbase/cds-common/types';
+import { Group } from '@shopify/react-native-skia';
 
 import { ChartText, type ChartTextChildren, type ChartTextProps } from './ChartText';
 

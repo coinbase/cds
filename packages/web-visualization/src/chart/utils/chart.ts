@@ -184,6 +184,33 @@ export const getStackedSeriesData = (
 };
 
 /**
+ * Extracts line data values from series data that may contain tuples.
+ * For tuple data [[baseline, value]], extracts the last value.
+ * For numeric data [value], returns as-is.
+ *
+ * @param data - Array of numbers, tuples, or null values
+ * @returns Array of numbers or null values
+ */
+export const getLineData = (
+  data?: Array<number | null> | Array<[number, number] | null>,
+): Array<number | null> => {
+  if (!data) return [];
+
+  // Check if this is tuple data by finding first non-null entry
+  const firstNonNull = data.find((d) => d !== null);
+  if (Array.isArray(firstNonNull)) {
+    return data.map((d) => {
+      if (d === null) return null;
+      if (Array.isArray(d)) return d.at(-1) ?? null;
+      return d as number;
+    });
+  }
+
+  // Already numeric data
+  return data as Array<number | null>;
+};
+
+/**
  * Calculates the range of a chart from series data.
  * Range represents the range of y-values from the data.
  * Handles stacking by transforming data when series have stack properties.

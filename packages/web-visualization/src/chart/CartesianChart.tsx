@@ -52,7 +52,7 @@ export type CartesianChartBaseProps = BoxBaseProps &
      */
     xAxis?: Partial<Omit<AxisConfigProps, 'id'>>;
     /**
-     * Configuration for y-axis(es). First defined axis becomes default.
+     * Configuration for y-axis(es). Can be a single config or array of configs.
      */
     yAxis?: Partial<Omit<AxisConfigProps, 'data'>> | Partial<Omit<AxisConfigProps, 'data'>>[];
     /**
@@ -70,9 +70,9 @@ export const CartesianChart = memo(
         series,
         children,
         animate = true,
-        xAxis: xAxisConfigInput,
-        yAxis: yAxisConfigInput,
-        inset: insetInput,
+        xAxis: xAxisConfigProp,
+        yAxis: yAxisConfigProp,
+        inset,
         enableScrubbing,
         onScrubberPositionChange,
         width = '100%',
@@ -86,17 +86,12 @@ export const CartesianChart = memo(
       const { observe, width: chartWidth, height: chartHeight } = useDimensions();
       const internalSvgRef = useRef<SVGSVGElement>(null);
 
-      const userInset = useMemo(() => {
-        return getChartInset(insetInput, defaultChartInset);
-      }, [insetInput]);
+      const calculatedInset = useMemo(() => getChartInset(inset, defaultChartInset), [inset]);
 
       // Axis configs store the properties of each axis, such as id, scale type, domain limit, etc.
       // We only support 1 x axis but allow for multiple y axes.
-      const xAxisConfig = useMemo(
-        () => getAxisConfig('x', xAxisConfigInput)[0],
-        [xAxisConfigInput],
-      );
-      const yAxisConfig = useMemo(() => getAxisConfig('y', yAxisConfigInput), [yAxisConfigInput]);
+      const xAxisConfig = useMemo(() => getAxisConfig('x', xAxisConfigProp)[0], [xAxisConfigProp]);
+      const yAxisConfig = useMemo(() => getAxisConfig('y', yAxisConfigProp), [yAxisConfigProp]);
 
       const { renderedAxes, registerAxis, unregisterAxis, axisPadding } = useTotalAxisPadding();
 
@@ -104,10 +99,10 @@ export const CartesianChart = memo(
         if (chartWidth <= 0 || chartHeight <= 0) return { x: 0, y: 0, width: 0, height: 0 };
 
         const totalInset = {
-          top: userInset.top + axisPadding.top,
-          right: userInset.right + axisPadding.right,
-          bottom: userInset.bottom + axisPadding.bottom,
-          left: userInset.left + axisPadding.left,
+          top: calculatedInset.top + axisPadding.top,
+          right: calculatedInset.right + axisPadding.right,
+          bottom: calculatedInset.bottom + axisPadding.bottom,
+          left: calculatedInset.left + axisPadding.left,
         };
 
         const availableWidth = chartWidth - totalInset.left - totalInset.right;
@@ -119,7 +114,7 @@ export const CartesianChart = memo(
           width: availableWidth > 0 ? availableWidth : 0,
           height: availableHeight > 0 ? availableHeight : 0,
         };
-      }, [chartHeight, chartWidth, userInset, axisPadding]);
+      }, [chartHeight, chartWidth, calculatedInset, axisPadding]);
 
       const { xAxis, xScale } = useMemo(() => {
         if (!chartRect || chartRect.width <= 0 || chartRect.height <= 0)
@@ -257,7 +252,7 @@ export const CartesianChart = memo(
 
           if (axis.position === 'top') {
             // Position above the chart rect, accounting for user inset
-            const startY = userInset.top + offsetFromPreviousAxes;
+            const startY = calculatedInset.top + offsetFromPreviousAxes;
             return {
               x: chartRect.x,
               y: startY,
@@ -275,7 +270,7 @@ export const CartesianChart = memo(
             };
           } else if (axis.position === 'left') {
             // Position to the left of the chart rect, accounting for user inset
-            const startX = userInset.left + offsetFromPreviousAxes;
+            const startX = calculatedInset.left + offsetFromPreviousAxes;
             return {
               x: startX,
               y: chartRect.y,
@@ -293,7 +288,7 @@ export const CartesianChart = memo(
             };
           }
         },
-        [renderedAxes, chartRect, userInset],
+        [renderedAxes, chartRect, calculatedInset],
       );
 
       const contextValue: CartesianChartContextValue = useMemo(

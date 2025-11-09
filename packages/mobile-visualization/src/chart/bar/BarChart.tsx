@@ -97,6 +97,7 @@ export const BarChart = memo(
       // Unlike other charts with custom props per series, we do not need to pick out
       // the props from each series that shouldn't be passed to CartesianChart
       const seriesToRender = transformedSeries ?? series;
+      const seriesIds = seriesToRender?.map((s) => s.id);
 
       // Split axis props into config props for Chart and visual props for axis components
       const {
@@ -168,7 +169,7 @@ export const BarChart = memo(
             borderRadius={borderRadius}
             fillOpacity={fillOpacity}
             roundBaseline={roundBaseline}
-            seriesIds={series?.map((s) => s.id)}
+            seriesIds={seriesIds}
             stackGap={stackGap}
             stackMinSize={stackMinSize}
             stroke={stroke}
