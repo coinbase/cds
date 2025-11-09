@@ -84,8 +84,7 @@ export type ScrubberProps = SharedProps &
 export type ScrubberRef = ScrubberBeaconRef;
 
 /**
- * Unified component that manages all scrubber elements (beacons, line, labels)
- * with intelligent collision detection and consistent positioning.
+ * Unified component that manages all scrubber elements (beacons, line, labels).
  */
 export const Scrubber = memo(
   forwardRef<ScrubberRef, ScrubberProps>(
@@ -93,21 +92,25 @@ export const Scrubber = memo(
       {
         seriesIds,
         hideLine,
-        label,
+        label, // todo - utilize
+        // todo: accessibility label?
         lineStroke,
         labelProps,
         BeaconComponent = ScrubberBeacon,
+        // todo: use
         BeaconLabelComponent = ScrubberBeaconLabel,
         LineComponent = ReferenceLine,
         hideOverlay,
         overlayOffset = 2,
         testID,
         idlePulse,
+        // todo: what about this vs transition configs?
         beaconTransitionConfig,
       },
       ref,
     ) => {
       const theme = useTheme();
+
       const ScrubberBeaconRefs = useRefMap<ScrubberBeaconRef>();
 
       const { scrubberPosition } = useScrubberContext();
@@ -120,7 +123,7 @@ export const Scrubber = memo(
       // Animation state for delayed scrubber rendering (matches web timing)
       const scrubberOpacity = useSharedValue(animate ? 0 : 1);
 
-      // Trigger delayed scrubber animation when component mounts and animate is true
+      // todo: what is the best way we can handle the animation delay for this
       useEffect(() => {
         if (animate) {
           // Match web timing: 850ms delay + 150ms fade in

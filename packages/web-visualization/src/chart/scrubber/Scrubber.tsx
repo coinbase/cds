@@ -5,7 +5,6 @@ import React, {
   useEffect,
   useImperativeHandle,
   useMemo,
-  useRef,
   useState,
 } from 'react';
 import { useRefMap } from '@coinbase/cds-common/hooks/useRefMap';
@@ -27,8 +26,6 @@ import { ScrubberBeacon, type ScrubberBeaconProps, type ScrubberBeaconRef } from
 import { ScrubberBeaconLabel, type ScrubberBeaconLabelProps } from './ScrubberBeaconLabel';
 
 const minGap = 2;
-
-export type ScrubberRef = ScrubberBeaconRef;
 
 /**
  * Configuration for scrubber functionality across chart components.
@@ -112,6 +109,8 @@ export type ScrubberProps = SharedProps &
     LineComponent?: React.ComponentType<ReferenceLineProps>;
   };
 
+export type ScrubberRef = ScrubberBeaconRef;
+
 type LabelDimensions = {
   id: string;
   width: number;
@@ -121,8 +120,7 @@ type LabelDimensions = {
 };
 
 /**
- * Unified component that manages all scrubber elements (beacons, line, labels)
- * with intelligent collision detection and consistent positioning.
+ * Unified component that manages all scrubber elements (beacons, line, labels).
  */
 export const Scrubber = memo(
   forwardRef<ScrubberRef, ScrubberProps>(
@@ -147,7 +145,6 @@ export const Scrubber = memo(
       },
       ref,
     ) => {
-      const scrubberGroupRef = useRef<SVGGElement>(null);
       const ScrubberBeaconRefs = useRefMap<ScrubberBeaconRef>();
 
       const { scrubberPosition } = useScrubberContext();
@@ -611,7 +608,6 @@ export const Scrubber = memo(
 
       return (
         <motion.g
-          ref={scrubberGroupRef}
           aria-atomic="true"
           aria-label={resolvedAccessibilityLabel}
           aria-live="polite"
