@@ -5,11 +5,6 @@
 
 export const routes = [
   {
-    key: 'TabbedChipsAlpha',
-    getComponent: () =>
-      require('@coinbase/cds-mobile/alpha/__stories__/TabbedChips.stories').default,
-  },
-  {
     key: 'Accordion',
     getComponent: () =>
       require('@coinbase/cds-mobile/accordion/__stories__/Accordion.stories').default,
@@ -609,7 +604,7 @@ export const routes = [
   {
     key: 'TabbedChips',
     getComponent: () =>
-      require('@coinbase/cds-mobile/chips/__stories__/TabbedChips.stories').default,
+      require('@coinbase/cds-mobile/alpha/tabbed-chips/__stories__/TabbedChips.stories').default,
   },
   {
     key: 'TabIndicator',

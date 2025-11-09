@@ -3,9 +3,9 @@ import { assets } from '@coinbase/cds-common/internal/data/assets';
 import { longTextTabs, sampleTabs } from '@coinbase/cds-common/internal/data/tabs';
 import type { TabValue } from '@coinbase/cds-common/tabs/useTabs';
 
-import { Example, ExampleScreen } from '../../examples/ExampleScreen';
-import { RemoteImage, type RemoteImageProps } from '../../media/RemoteImage';
-import { type TabbedChipProps, TabbedChips } from '../tabbed-chips/TabbedChips';
+import { Example, ExampleScreen } from '../../../examples/ExampleScreen';
+import { RemoteImage, type RemoteImageProps } from '../../../media/RemoteImage';
+import { type TabbedChipProps, TabbedChips } from '../TabbedChips';
 
 const defaultTabs: TabValue[] = sampleTabs.slice(0, 5);
 

@@ -3,10 +3,10 @@ import { assets } from '@coinbase/cds-common/internal/data/assets';
 import { longTextTabs, sampleTabs } from '@coinbase/cds-common/internal/data/tabs';
 import type { TabValue } from '@coinbase/cds-common/tabs/useTabs';
 
-import { VStack } from '../../layout';
-import { RemoteImage, type RemoteImageProps } from '../../media';
-import { Text } from '../../typography/Text';
-import { type TabbedChipProps, TabbedChips } from '../tabbed-chips/TabbedChips';
+import { VStack } from '../../../layout';
+import { RemoteImage, type RemoteImageProps } from '../../../media';
+import { Text } from '../../../typography';
+import { type TabbedChipProps, TabbedChips } from '../TabbedChips';
 
 export default {
   title: 'Components/alpha/TabbedChips',
