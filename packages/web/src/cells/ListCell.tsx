@@ -104,6 +104,10 @@ export type ListCellBaseProps = Polymorphic.ExtendableProps<
     title?: React.ReactNode;
     /** React node to render title. Takes precedence over `title`. */
     titleNode?: React.ReactNode;
+    /** Subtitle to display below the title and above the description. This prop is only intended to accept a string or Text component; other use cases, while allowed, are not supported and may result in unexpected behavior. For arbitrary content, use `subtitleNode`. */
+    subtitle?: React.ReactNode;
+    /** React node to render subtitle. Takes precedence over `subtitle`. */
+    subtitleNode?: React.ReactNode;
     /** Class names for the components */
     classNames?: {
       root?: string;
@@ -116,6 +120,7 @@ export type ListCellBaseProps = Polymorphic.ExtendableProps<
       mainContent?: string;
       helperText?: string;
       title?: string;
+      subtitle?: string;
       description?: string;
     };
     /** Styles for the components */
@@ -130,6 +135,7 @@ export type ListCellBaseProps = Polymorphic.ExtendableProps<
       mainContent?: React.CSSProperties;
       helperText?: React.CSSProperties;
       title?: React.CSSProperties;
+      subtitle?: React.CSSProperties;
       description?: React.CSSProperties;
     };
   }
@@ -180,6 +186,8 @@ export const ListCell: ListCellComponent = memo(
         classNames,
         styles,
         style,
+        subtitle,
+        subtitleNode,
         ...props
       }: ListCellProps<AsComponent>,
       ref?: Polymorphic.Ref<AsComponent>,
@@ -274,6 +282,21 @@ export const ListCell: ListCellComponent = memo(
                 style={styles?.title}
               >
                 {title}
+              </Text>
+            ) : null}
+
+            {subtitleNode ? (
+              subtitleNode
+            ) : subtitle ? (
+              <Text
+                as="div"
+                color="fgMuted"
+                display="block"
+                font="label1"
+                overflow="truncate"
+                style={styles?.subtitle}
+              >
+                {subtitle}
               </Text>
             ) : null}
 

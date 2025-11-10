@@ -824,6 +824,36 @@ const CondensedListCell = () => {
         title="Title"
       />
       <ListCell
+        multiline
+        description="Long description with multiple lines. This section can be arbitrarily long and occupy many many lines."
+        detail="Detail"
+        end={
+          <HStack alignItems="center" gap={1}>
+            <Text color="fgMuted" font="label2">
+              Meta
+            </Text>
+            <Icon color="fg" name="caretRight" size="s" />
+          </HStack>
+        }
+        media={<Avatar shape="circle" size="l" src={assets.eth.imageUrl} />}
+        onPress={onPressConsole}
+        priority="end"
+        spacingVariant="condensed"
+        styles={{
+          media: {
+            marginTop: theme.space[1],
+            alignSelf: 'flex-start',
+          },
+          end: {
+            marginTop: theme.space[1],
+            alignSelf: 'flex-start',
+          },
+        }}
+        subdetail="Subdetail"
+        subtitle="Subtitle"
+        title="Title"
+      />
+      <ListCell
         accessory="more"
         description="Description"
         detail="Detail"
