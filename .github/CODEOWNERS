@@ -1,6 +1,6 @@
 # FROM ./OWNERS
-#~ {"path":".","teams":{"@coinbase/ui-systems-eng-team":{"required_reviews":1}}}
-. @coinbase/ui-systems-eng-team
+#~ {"path":"*","teams":{"@coinbase/ui-systems-eng-team":{"required_reviews":1}}}
+* @coinbase/ui-systems-eng-team
 
 # Specific file owners
 packages/illustrations/manifest.json @twashdesign938
