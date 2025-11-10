@@ -9,7 +9,7 @@ import { useTheme } from '../hooks/useTheme';
 import { Box, type BoxBaseProps, type BoxProps } from '../layout/Box';
 import { HStack } from '../layout/HStack';
 import { VStack } from '../layout/VStack';
-import type { LinkableProps } from '../system/Pressable';
+import type { LinkableProps, PressableProps } from '../system/Pressable';
 import { Pressable } from '../system/Pressable';
 
 import type { CellAccessoryProps } from './CellAccessory';
@@ -33,8 +33,8 @@ export type CellSpacing = Pick<
 >;
 
 export type CellBaseProps = SharedProps &
-  LinkableProps & {
-    /** Accessory element rendered at the end of the cell (e.g., chevron). */
+  LinkableProps &
+  Pick<PressableProps, 'blendStyles'> & {
     accessory?: React.ReactElement<CellAccessoryProps>;
     /** Custom accessory node rendered at the end of the cell. Takes precedence over `accessory`. */
     accessoryNode?: React.ReactNode;
@@ -111,6 +111,8 @@ export const Cell = memo(function Cell({
   testID,
   accessibilityLabel,
   accessibilityHint,
+  accessibilityRole,
+  accessibilityState,
   gap = 2,
   columnGap,
   rowGap = 1,
@@ -118,6 +120,8 @@ export const Cell = memo(function Cell({
   outerSpacing: outerSpacingProp,
   bottomContent,
   style,
+  background = 'bgAlternate',
+  blendStyles,
   ...props
 }: CellProps) {
   const theme = useTheme();
@@ -133,7 +137,7 @@ export const Cell = memo(function Cell({
       borderRadius,
       testID,
       renderToHardwareTextureAndroid: disabled,
-      ...(selected ? { background: 'bgAlternate' as const } : {}),
+      ...(selected ? { background } : {}),
       ...(onPress ? innerSpacingWithoutMarginX : innerSpacing),
       style: styles?.contentContainer,
     };
@@ -221,6 +225,7 @@ export const Cell = memo(function Cell({
     testID,
     disabled,
     selected,
+    background,
     onPress,
     innerSpacingWithoutMarginX,
     innerSpacing,
@@ -259,8 +264,10 @@ export const Cell = memo(function Cell({
           transparentWhileInactive
           accessibilityHint={accessibilityHint}
           accessibilityLabel={accessibilityLabel}
-          accessibilityState={{ disabled }}
+          accessibilityRole={accessibilityRole}
+          accessibilityState={{ disabled, ...accessibilityState }}
           background="bg"
+          blendStyles={blendStyles}
           borderRadius={borderRadius}
           contentStyle={pressStyles}
           disabled={disabled}
@@ -273,15 +280,18 @@ export const Cell = memo(function Cell({
     }
     return content;
   }, [
+    onPress,
+    content,
+    theme.space,
+    innerSpacingMarginX,
     accessibilityHint,
     accessibilityLabel,
-    borderRadius,
-    content,
+    accessibilityRole,
     disabled,
-    onPress,
-    innerSpacingMarginX,
-    theme.space,
     styles?.pressable,
+    accessibilityState,
+    blendStyles,
+    borderRadius,
   ]);
 
   return (

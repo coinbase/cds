@@ -18,7 +18,7 @@ const SelectMobile = () => {
 
   return (
     <>
-      <Select value={value} onPress={handleOpenTray} />
+      <OldSelect value={value} onPress={handleOpenTray} />
       {isTrayVisible && (
         <Tray title={title} onCloseComplete={handleClose} ref={trayRef}>
           {/* You must wrap options in Menu. Treat it as a Select on web */}
@@ -57,7 +57,7 @@ const SelectWithValueLabel = () => {
 
   return (
     <>
-      <Select
+      <OldSelect
         value={value}
         valueLabel={selectedValueLabel}
         placeholder="Choose something..."
@@ -92,7 +92,7 @@ The `Select` trigger can be customized similar to `TextInput`. These options are
 You can add a label above the input and helper text below to provide context and guidance to users.
 
 ```jsx
-<Select
+<OldSelect
   label="Make a selection"
   helperText="You can only choose one"
   value={value}
@@ -108,9 +108,9 @@ You can add a label above the input and helper text below to provide context and
 When space is tight, this brings the label inside of the Input. Should be used with a `compact` `SelectOption`.
 
 ```jsx
-<Select compact label="Make a selection" value={value} onChange={setValue}>
+<OldSelect compact label="Make a selection" value={value} onChange={setValue}>
   ...
-</Select>
+</OldSelect>
 ```
 
 ### Variants
@@ -118,9 +118,9 @@ When space is tight, this brings the label inside of the Input. Should be used w
 Variants can be used to surface positive or negative feedback. The available variants are `positive`, `negative`, `primary`, `foreground`, `foregroundMuted`, and `secondary`.
 
 ```jsx
-<Select variant="positive" label="Make a selection">
+<OldSelect variant="positive" label="Make a selection">
   ...
-</Select>
+</OldSelect>
 ```
 
 ### Label Variants
@@ -136,17 +136,17 @@ When using the `inside` label variant, you should always include a `placeholder`
 #### Outside label (default)
 
 ```jsx
-<Select label="Choose Option" placeholder="Select from list">
+<OldSelect label="Choose Option" placeholder="Select from list">
   ...
-</Select>
+</OldSelect>
 ```
 
 #### Inside label
 
 ```jsx
-<Select label="Choose Option" labelVariant="inside" placeholder="Select from list">
+<OldSelect label="Choose Option" labelVariant="inside" placeholder="Select from list">
   ...
-</Select>
+</OldSelect>
 ```
 
 #### Inside label (with start content)
@@ -159,5 +159,5 @@ When using the `inside` label variant, you should always include a `placeholder`
   placeholder="Search and select"
 >
   ...
-</Select>
+</OldSelect>
 ```

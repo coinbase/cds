@@ -8,6 +8,55 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 4.26.1 (11/7/2025 PST)
+
+This is an artificial version bump with no new change.
+
+## 4.26.0 (11/5/2025 PST)
+
+#### 🚀 Updates
+
+- Publish illustrations 2025-11-05. [[#142](https://github.com/coinbase/cds/pull/142)]
+
+##### ⭐️ Added (28)
+
+###### Pictogram (28)
+
+- baseLightningbolt
+- baseTile
+- baseLayout
+- baseAscend
+- baseComputer
+- baseStar
+- baseDoor
+- baseComet
+- baseRibbon
+- baseMedal
+- baseSmile
+- baseSaved
+- baseRockon
+- basePower
+- baseFire
+- basePlant
+- baseRocket
+- baseCreatorCoin
+- baseEarnedBadge
+- baseExchange
+- baseStack
+- baseGlobe
+- baseChatBubbleHeart
+- baseGem
+- baseCoinStar
+- baseCertificateStar
+- baseHandStar
+- baseConfetti
+
+##### ⭐️ Updated (1)
+
+###### SpotSquare (1)
+
+- cryptoEconomyArrows
+
 ## 4.25.0 (10/24/2025 PST)
 
 #### 🚀 Updates

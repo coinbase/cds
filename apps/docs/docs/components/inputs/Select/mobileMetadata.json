@@ -3,6 +3,7 @@
   "source": "https://github.com/coinbase/cds/blob/master/packages/mobile/src/controls/Select.tsx",
   "figma": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/%E2%9C%A8-CDS-Components?m=auto&node-id=415-15061&t=6hbCJmIQxCsPCzeU-1",
   "description": "A control for selecting from a list of options.",
+  "warning": "This component is deprecated. Please use the new Select alpha component instead.",
   "relatedComponents": [
     {
       "label": "SelectOption",

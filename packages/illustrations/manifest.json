@@ -1,6 +1,6 @@
 {
   "executor": "sync-illustrations",
-  "lastUpdated": "2025-10-24T20:15:56.641Z",
+  "lastUpdated": "2025-11-05T18:41:52.871Z",
   "items": {
     "2:33979": {
       "type": "heroSquare",
@@ -25090,7 +25090,7 @@
       "height": 48,
       "description": "",
       "createdAt": "2025-07-03T14:26:31.311Z",
-      "lastUpdated": "2025-07-03T14:26:31.311Z",
+      "lastUpdated": "2025-10-29T16:53:07.639Z",
       "outputs": {
         "svgLight": "./pictogram/svg/light/baseErrorButterflySmall-0.svg",
         "svgDark": "./pictogram/svg/dark/baseErrorButterflySmall-0.svg",
@@ -25430,7 +25430,7 @@
       "height": 240,
       "description": "",
       "createdAt": "2025-07-03T14:26:31.523Z",
-      "lastUpdated": "2025-07-30T16:43:42.814Z",
+      "lastUpdated": "2025-11-04T21:44:15.777Z",
       "outputs": {
         "svgLight": "./heroSquare/svg/light/baseErrorLarge-1.svg",
         "svgDark": "./heroSquare/svg/dark/baseErrorLarge-1.svg",
@@ -25450,7 +25450,7 @@
       "height": 96.00069427490234,
       "description": "",
       "createdAt": "2025-07-03T14:26:31.348Z",
-      "lastUpdated": "2025-07-03T14:26:31.348Z",
+      "lastUpdated": "2025-11-03T15:18:53.017Z",
       "outputs": {
         "svgLight": "./spotSquare/svg/light/baseErrorMedium-0.svg",
         "svgDark": "./spotSquare/svg/dark/baseErrorMedium-0.svg",
@@ -27725,20 +27725,580 @@
     "22761:60": {
       "type": "spotSquare",
       "name": "cryptoEconomyArrows",
-      "hash": "r0edyUBAoWyp1GbifhqAEXYZhbrN8N8xjjNkZzH6YbE=",
+      "hash": "8NDrAp0bdIanQPmW0e56fCvfi9CZQmXy9xDvFoy3vp4=",
       "width": 96,
       "height": 96,
       "description": "globe, international, economy, freedom, growth, crypto, economic, money, coins",
       "createdAt": "2025-10-24T18:53:50.479Z",
-      "lastUpdated": "2025-10-24T18:53:50.479Z",
+      "lastUpdated": "2025-11-05T18:02:22.160Z",
       "outputs": {
-        "svgLight": "./spotSquare/svg/light/cryptoEconomyArrows-0.svg",
-        "svgDark": "./spotSquare/svg/dark/cryptoEconomyArrows-0.svg",
-        "svgThemed": "./spotSquare/svg/themeable/cryptoEconomyArrows-0.svg",
-        "svgJsLight": "./spotSquare/svgJs/light/cryptoEconomyArrows-0.js",
-        "svgJsDark": "./spotSquare/svgJs/dark/cryptoEconomyArrows-0.js",
-        "pngLight": "./spotSquare/png/light/cryptoEconomyArrows-0.png",
-        "pngDark": "./spotSquare/png/dark/cryptoEconomyArrows-0.png"
+        "svgLight": "./spotSquare/svg/light/cryptoEconomyArrows-1.svg",
+        "svgDark": "./spotSquare/svg/dark/cryptoEconomyArrows-1.svg",
+        "svgThemed": "./spotSquare/svg/themeable/cryptoEconomyArrows-1.svg",
+        "svgJsLight": "./spotSquare/svgJs/light/cryptoEconomyArrows-1.js",
+        "svgJsDark": "./spotSquare/svgJs/dark/cryptoEconomyArrows-1.js",
+        "pngLight": "./spotSquare/png/light/cryptoEconomyArrows-1.png",
+        "pngDark": "./spotSquare/png/dark/cryptoEconomyArrows-1.png"
+      },
+      "version": 1
+    },
+    "23235:456": {
+      "type": "pictogram",
+      "name": "baseLightningbolt",
+      "hash": "gNOJwr6JJuiRPFeZAgFsXi4+24HmKLHPwS6qdxhrA80=",
+      "width": 40,
+      "height": 40,
+      "description": "",
+      "createdAt": "2025-11-05T18:02:22.106Z",
+      "lastUpdated": "2025-11-05T18:03:14.281Z",
+      "outputs": {
+        "svgLight": "./pictogram/svg/light/baseLightningbolt-0.svg",
+        "svgDark": "./pictogram/svg/dark/baseLightningbolt-0.svg",
+        "svgThemed": "./pictogram/svg/themeable/baseLightningbolt-0.svg",
+        "svgJsLight": "./pictogram/svgJs/light/baseLightningbolt-0.js",
+        "svgJsDark": "./pictogram/svgJs/dark/baseLightningbolt-0.js",
+        "pngLight": "./pictogram/png/light/baseLightningbolt-0.png",
+        "pngDark": "./pictogram/png/dark/baseLightningbolt-0.png"
+      },
+      "version": 0
+    },
+    "23235:457": {
+      "type": "pictogram",
+      "name": "baseChatBubbleHeart",
+      "hash": "ZwCeY0NutYe2A9Q/ebnsHX8bdkBVltVOvasbifUcc5M=",
+      "width": 40,
+      "height": 40,
+      "description": "",
+      "createdAt": "2025-11-05T18:02:22.102Z",
+      "lastUpdated": "2025-11-05T18:03:14.248Z",
+      "outputs": {
+        "svgLight": "./pictogram/svg/light/baseChatBubbleHeart-0.svg",
+        "svgDark": "./pictogram/svg/dark/baseChatBubbleHeart-0.svg",
+        "svgThemed": "./pictogram/svg/themeable/baseChatBubbleHeart-0.svg",
+        "svgJsLight": "./pictogram/svgJs/light/baseChatBubbleHeart-0.js",
+        "svgJsDark": "./pictogram/svgJs/dark/baseChatBubbleHeart-0.js",
+        "pngLight": "./pictogram/png/light/baseChatBubbleHeart-0.png",
+        "pngDark": "./pictogram/png/dark/baseChatBubbleHeart-0.png"
+      },
+      "version": 0
+    },
+    "23235:458": {
+      "type": "pictogram",
+      "name": "basePlant",
+      "hash": "BdAAmxodJDtEcMD8G7u0CVcq/6SuG2/5TY6JWFIg7PU=",
+      "width": 40,
+      "height": 40,
+      "description": "",
+      "createdAt": "2025-11-05T18:02:22.096Z",
+      "lastUpdated": "2025-11-05T18:03:14.373Z",
+      "outputs": {
+        "svgLight": "./pictogram/svg/light/basePlant-0.svg",
+        "svgDark": "./pictogram/svg/dark/basePlant-0.svg",
+        "svgThemed": "./pictogram/svg/themeable/basePlant-0.svg",
+        "svgJsLight": "./pictogram/svgJs/light/basePlant-0.js",
+        "svgJsDark": "./pictogram/svgJs/dark/basePlant-0.js",
+        "pngLight": "./pictogram/png/light/basePlant-0.png",
+        "pngDark": "./pictogram/png/dark/basePlant-0.png"
+      },
+      "version": 0
+    },
+    "23235:459": {
+      "type": "pictogram",
+      "name": "baseRockon",
+      "hash": "az10YxxFHNdJmalZOX3CJxxNDurS47SdpbTVLCwR8RA=",
+      "width": 40,
+      "height": 40,
+      "description": "",
+      "createdAt": "2025-11-05T18:02:22.092Z",
+      "lastUpdated": "2025-11-05T18:03:14.357Z",
+      "outputs": {
+        "svgLight": "./pictogram/svg/light/baseRockon-0.svg",
+        "svgDark": "./pictogram/svg/dark/baseRockon-0.svg",
+        "svgThemed": "./pictogram/svg/themeable/baseRockon-0.svg",
+        "svgJsLight": "./pictogram/svgJs/light/baseRockon-0.js",
+        "svgJsDark": "./pictogram/svgJs/dark/baseRockon-0.js",
+        "pngLight": "./pictogram/png/light/baseRockon-0.png",
+        "pngDark": "./pictogram/png/dark/baseRockon-0.png"
+      },
+      "version": 0
+    },
+    "23235:460": {
+      "type": "pictogram",
+      "name": "baseFire",
+      "hash": "fGCkIV7fc5lQuCFQ/vePCSs0hjytDnpimsfX9Kb7/dk=",
+      "width": 40,
+      "height": 40,
+      "description": "",
+      "createdAt": "2025-11-05T18:02:22.087Z",
+      "lastUpdated": "2025-11-05T18:03:14.345Z",
+      "outputs": {
+        "svgLight": "./pictogram/svg/light/baseFire-0.svg",
+        "svgDark": "./pictogram/svg/dark/baseFire-0.svg",
+        "svgThemed": "./pictogram/svg/themeable/baseFire-0.svg",
+        "svgJsLight": "./pictogram/svgJs/light/baseFire-0.js",
+        "svgJsDark": "./pictogram/svgJs/dark/baseFire-0.js",
+        "pngLight": "./pictogram/png/light/baseFire-0.png",
+        "pngDark": "./pictogram/png/dark/baseFire-0.png"
+      },
+      "version": 0
+    },
+    "23235:461": {
+      "type": "pictogram",
+      "name": "baseCertificateStar",
+      "hash": "YqVm3jyaB5FYN0YsWA6rdSm+CslS17yn7v99Bmei/qY=",
+      "width": 40,
+      "height": 40,
+      "description": "",
+      "createdAt": "2025-11-05T18:02:22.082Z",
+      "lastUpdated": "2025-11-05T18:03:14.276Z",
+      "outputs": {
+        "svgLight": "./pictogram/svg/light/baseCertificateStar-0.svg",
+        "svgDark": "./pictogram/svg/dark/baseCertificateStar-0.svg",
+        "svgThemed": "./pictogram/svg/themeable/baseCertificateStar-0.svg",
+        "svgJsLight": "./pictogram/svgJs/light/baseCertificateStar-0.js",
+        "svgJsDark": "./pictogram/svgJs/dark/baseCertificateStar-0.js",
+        "pngLight": "./pictogram/png/light/baseCertificateStar-0.png",
+        "pngDark": "./pictogram/png/dark/baseCertificateStar-0.png"
+      },
+      "version": 0
+    },
+    "23235:462": {
+      "type": "pictogram",
+      "name": "baseMedal",
+      "hash": "PdHhIJO8AqzL+78izip1AIMkz3A6FRdgcYewbbStAv4=",
+      "width": 40,
+      "height": 40,
+      "description": "",
+      "createdAt": "2025-11-05T18:02:22.125Z",
+      "lastUpdated": "2025-11-05T18:03:14.339Z",
+      "outputs": {
+        "svgLight": "./pictogram/svg/light/baseMedal-0.svg",
+        "svgDark": "./pictogram/svg/dark/baseMedal-0.svg",
+        "svgThemed": "./pictogram/svg/themeable/baseMedal-0.svg",
+        "svgJsLight": "./pictogram/svgJs/light/baseMedal-0.js",
+        "svgJsDark": "./pictogram/svgJs/dark/baseMedal-0.js",
+        "pngLight": "./pictogram/png/light/baseMedal-0.png",
+        "pngDark": "./pictogram/png/dark/baseMedal-0.png"
+      },
+      "version": 0
+    },
+    "23235:463": {
+      "type": "pictogram",
+      "name": "baseRocket",
+      "hash": "3nb4u1xVkaB723k5c4HI0yLP2n2atKr25IuBKdmeSfU=",
+      "width": 40,
+      "height": 40,
+      "description": "",
+      "createdAt": "2025-11-05T18:02:22.076Z",
+      "lastUpdated": "2025-11-05T18:03:14.363Z",
+      "outputs": {
+        "svgLight": "./pictogram/svg/light/baseRocket-0.svg",
+        "svgDark": "./pictogram/svg/dark/baseRocket-0.svg",
+        "svgThemed": "./pictogram/svg/themeable/baseRocket-0.svg",
+        "svgJsLight": "./pictogram/svgJs/light/baseRocket-0.js",
+        "svgJsDark": "./pictogram/svgJs/dark/baseRocket-0.js",
+        "pngLight": "./pictogram/png/light/baseRocket-0.png",
+        "pngDark": "./pictogram/png/dark/baseRocket-0.png"
+      },
+      "version": 0
+    },
+    "23235:464": {
+      "type": "pictogram",
+      "name": "baseGlobe",
+      "hash": "sBTBRLSPjTg5wj94arwzp32Q7N3bMXWvl+8nvwvDwqE=",
+      "width": 40,
+      "height": 40,
+      "description": "",
+      "createdAt": "2025-11-05T18:02:22.071Z",
+      "lastUpdated": "2025-11-05T18:03:14.254Z",
+      "outputs": {
+        "svgLight": "./pictogram/svg/light/baseGlobe-0.svg",
+        "svgDark": "./pictogram/svg/dark/baseGlobe-0.svg",
+        "svgThemed": "./pictogram/svg/themeable/baseGlobe-0.svg",
+        "svgJsLight": "./pictogram/svgJs/light/baseGlobe-0.js",
+        "svgJsDark": "./pictogram/svgJs/dark/baseGlobe-0.js",
+        "pngLight": "./pictogram/png/light/baseGlobe-0.png",
+        "pngDark": "./pictogram/png/dark/baseGlobe-0.png"
+      },
+      "version": 0
+    },
+    "23235:465": {
+      "type": "pictogram",
+      "name": "baseGem",
+      "hash": "/umNE3fSTJcIJfesNenn5ImhRuDXKs/kKRb2BPWbb0Q=",
+      "width": 40,
+      "height": 40,
+      "description": "",
+      "createdAt": "2025-11-05T18:02:22.129Z",
+      "lastUpdated": "2025-11-05T18:03:14.228Z",
+      "outputs": {
+        "svgLight": "./pictogram/svg/light/baseGem-0.svg",
+        "svgDark": "./pictogram/svg/dark/baseGem-0.svg",
+        "svgThemed": "./pictogram/svg/themeable/baseGem-0.svg",
+        "svgJsLight": "./pictogram/svgJs/light/baseGem-0.js",
+        "svgJsDark": "./pictogram/svgJs/dark/baseGem-0.js",
+        "pngLight": "./pictogram/png/light/baseGem-0.png",
+        "pngDark": "./pictogram/png/dark/baseGem-0.png"
+      },
+      "version": 0
+    },
+    "23235:466": {
+      "type": "pictogram",
+      "name": "baseHandStar",
+      "hash": "U9AUdr5Ij1IqvsBG2qTzfddUvY7CPMWbd/hcfMR+gv0=",
+      "width": 40,
+      "height": 40,
+      "description": "",
+      "createdAt": "2025-11-05T18:02:22.065Z",
+      "lastUpdated": "2025-11-05T18:03:14.219Z",
+      "outputs": {
+        "svgLight": "./pictogram/svg/light/baseHandStar-0.svg",
+        "svgDark": "./pictogram/svg/dark/baseHandStar-0.svg",
+        "svgThemed": "./pictogram/svg/themeable/baseHandStar-0.svg",
+        "svgJsLight": "./pictogram/svgJs/light/baseHandStar-0.js",
+        "svgJsDark": "./pictogram/svgJs/dark/baseHandStar-0.js",
+        "pngLight": "./pictogram/png/light/baseHandStar-0.png",
+        "pngDark": "./pictogram/png/dark/baseHandStar-0.png"
+      },
+      "version": 0
+    },
+    "23235:467": {
+      "type": "pictogram",
+      "name": "baseEarnedBadge",
+      "hash": "7TrapNFeD+gOcJYMdeW0sHKr9jYMTTZSR9hbRIniNS4=",
+      "width": 40,
+      "height": 40,
+      "description": "",
+      "createdAt": "2025-11-05T18:02:22.060Z",
+      "lastUpdated": "2025-11-05T18:03:14.286Z",
+      "outputs": {
+        "svgLight": "./pictogram/svg/light/baseEarnedBadge-0.svg",
+        "svgDark": "./pictogram/svg/dark/baseEarnedBadge-0.svg",
+        "svgThemed": "./pictogram/svg/themeable/baseEarnedBadge-0.svg",
+        "svgJsLight": "./pictogram/svgJs/light/baseEarnedBadge-0.js",
+        "svgJsDark": "./pictogram/svgJs/dark/baseEarnedBadge-0.js",
+        "pngLight": "./pictogram/png/light/baseEarnedBadge-0.png",
+        "pngDark": "./pictogram/png/dark/baseEarnedBadge-0.png"
+      },
+      "version": 0
+    },
+    "23235:468": {
+      "type": "pictogram",
+      "name": "baseAscend",
+      "hash": "s+Cdv3Fzq9uRpQ48fTe3X+3goiQkniz0OBbVoXzbqhA=",
+      "width": 40,
+      "height": 40,
+      "description": "",
+      "createdAt": "2025-11-05T18:02:22.054Z",
+      "lastUpdated": "2025-11-05T18:03:14.309Z",
+      "outputs": {
+        "svgLight": "./pictogram/svg/light/baseAscend-0.svg",
+        "svgDark": "./pictogram/svg/dark/baseAscend-0.svg",
+        "svgThemed": "./pictogram/svg/themeable/baseAscend-0.svg",
+        "svgJsLight": "./pictogram/svgJs/light/baseAscend-0.js",
+        "svgJsDark": "./pictogram/svgJs/dark/baseAscend-0.js",
+        "pngLight": "./pictogram/png/light/baseAscend-0.png",
+        "pngDark": "./pictogram/png/dark/baseAscend-0.png"
+      },
+      "version": 0
+    },
+    "23235:469": {
+      "type": "pictogram",
+      "name": "baseConfetti",
+      "hash": "pn+2EhwkQi8XI6Rxfx62AK88mHZe+H74qMdaycP8JZY=",
+      "width": 40,
+      "height": 40,
+      "description": "",
+      "createdAt": "2025-11-05T18:02:22.049Z",
+      "lastUpdated": "2025-11-05T18:03:14.242Z",
+      "outputs": {
+        "svgLight": "./pictogram/svg/light/baseConfetti-0.svg",
+        "svgDark": "./pictogram/svg/dark/baseConfetti-0.svg",
+        "svgThemed": "./pictogram/svg/themeable/baseConfetti-0.svg",
+        "svgJsLight": "./pictogram/svgJs/light/baseConfetti-0.js",
+        "svgJsDark": "./pictogram/svgJs/dark/baseConfetti-0.js",
+        "pngLight": "./pictogram/png/light/baseConfetti-0.png",
+        "pngDark": "./pictogram/png/dark/baseConfetti-0.png"
+      },
+      "version": 0
+    },
+    "23235:470": {
+      "type": "pictogram",
+      "name": "baseTile",
+      "hash": "Jzk9nY5BeZAud4O5dmSlkYSspqON8+PwqUrB9lQJClA=",
+      "width": 40,
+      "height": 40,
+      "description": "",
+      "createdAt": "2025-11-05T18:02:22.042Z",
+      "lastUpdated": "2025-11-05T18:03:14.265Z",
+      "outputs": {
+        "svgLight": "./pictogram/svg/light/baseTile-0.svg",
+        "svgDark": "./pictogram/svg/dark/baseTile-0.svg",
+        "svgThemed": "./pictogram/svg/themeable/baseTile-0.svg",
+        "svgJsLight": "./pictogram/svgJs/light/baseTile-0.js",
+        "svgJsDark": "./pictogram/svgJs/dark/baseTile-0.js",
+        "pngLight": "./pictogram/png/light/baseTile-0.png",
+        "pngDark": "./pictogram/png/dark/baseTile-0.png"
+      },
+      "version": 0
+    },
+    "23235:471": {
+      "type": "pictogram",
+      "name": "baseSmile",
+      "hash": "WTH0ZqaHA1/3z3X5b7Mm8t43M26i6x3ysrr/irAQL/c=",
+      "width": 40,
+      "height": 40,
+      "description": "",
+      "createdAt": "2025-11-05T18:02:22.037Z",
+      "lastUpdated": "2025-11-05T18:03:14.321Z",
+      "outputs": {
+        "svgLight": "./pictogram/svg/light/baseSmile-0.svg",
+        "svgDark": "./pictogram/svg/dark/baseSmile-0.svg",
+        "svgThemed": "./pictogram/svg/themeable/baseSmile-0.svg",
+        "svgJsLight": "./pictogram/svgJs/light/baseSmile-0.js",
+        "svgJsDark": "./pictogram/svgJs/dark/baseSmile-0.js",
+        "pngLight": "./pictogram/png/light/baseSmile-0.png",
+        "pngDark": "./pictogram/png/dark/baseSmile-0.png"
+      },
+      "version": 0
+    },
+    "23235:472": {
+      "type": "pictogram",
+      "name": "baseStack",
+      "hash": "BqRZENT6t2Ty0tIzU48t4qGnZa269tcuQfnU7MbutnE=",
+      "width": 40,
+      "height": 40,
+      "description": "",
+      "createdAt": "2025-11-05T18:02:22.138Z",
+      "lastUpdated": "2025-11-05T18:03:14.259Z",
+      "outputs": {
+        "svgLight": "./pictogram/svg/light/baseStack-0.svg",
+        "svgDark": "./pictogram/svg/dark/baseStack-0.svg",
+        "svgThemed": "./pictogram/svg/themeable/baseStack-0.svg",
+        "svgJsLight": "./pictogram/svgJs/light/baseStack-0.js",
+        "svgJsDark": "./pictogram/svgJs/dark/baseStack-0.js",
+        "pngLight": "./pictogram/png/light/baseStack-0.png",
+        "pngDark": "./pictogram/png/dark/baseStack-0.png"
+      },
+      "version": 0
+    },
+    "23235:473": {
+      "type": "pictogram",
+      "name": "baseComputer",
+      "hash": "vPCN7GIMjdJDZZ/02GW4uqvVIaMI3/W9GwloZK4QpRw=",
+      "width": 40,
+      "height": 40,
+      "description": "",
+      "createdAt": "2025-11-05T18:02:22.031Z",
+      "lastUpdated": "2025-11-05T18:03:14.291Z",
+      "outputs": {
+        "svgLight": "./pictogram/svg/light/baseComputer-0.svg",
+        "svgDark": "./pictogram/svg/dark/baseComputer-0.svg",
+        "svgThemed": "./pictogram/svg/themeable/baseComputer-0.svg",
+        "svgJsLight": "./pictogram/svgJs/light/baseComputer-0.js",
+        "svgJsDark": "./pictogram/svgJs/dark/baseComputer-0.js",
+        "pngLight": "./pictogram/png/light/baseComputer-0.png",
+        "pngDark": "./pictogram/png/dark/baseComputer-0.png"
+      },
+      "version": 0
+    },
+    "23235:474": {
+      "type": "pictogram",
+      "name": "baseDoor",
+      "hash": "aaaX+Cs232uNPJerFGu1ut1/vQuNWoSZKFW4u+OExI8=",
+      "width": 40,
+      "height": 40,
+      "description": "",
+      "createdAt": "2025-11-05T18:02:22.142Z",
+      "lastUpdated": "2025-11-05T18:03:14.327Z",
+      "outputs": {
+        "svgLight": "./pictogram/svg/light/baseDoor-0.svg",
+        "svgDark": "./pictogram/svg/dark/baseDoor-0.svg",
+        "svgThemed": "./pictogram/svg/themeable/baseDoor-0.svg",
+        "svgJsLight": "./pictogram/svgJs/light/baseDoor-0.js",
+        "svgJsDark": "./pictogram/svgJs/dark/baseDoor-0.js",
+        "pngLight": "./pictogram/png/light/baseDoor-0.png",
+        "pngDark": "./pictogram/png/dark/baseDoor-0.png"
+      },
+      "version": 0
+    },
+    "23235:475": {
+      "type": "pictogram",
+      "name": "baseRibbon",
+      "hash": "slMzCdpGAQmztCUrLGzI5w6e7hwex254xDqZdLsHEJ0=",
+      "width": 40,
+      "height": 40,
+      "description": "",
+      "createdAt": "2025-11-05T18:02:22.149Z",
+      "lastUpdated": "2025-11-05T18:03:14.315Z",
+      "outputs": {
+        "svgLight": "./pictogram/svg/light/baseRibbon-0.svg",
+        "svgDark": "./pictogram/svg/dark/baseRibbon-0.svg",
+        "svgThemed": "./pictogram/svg/themeable/baseRibbon-0.svg",
+        "svgJsLight": "./pictogram/svgJs/light/baseRibbon-0.js",
+        "svgJsDark": "./pictogram/svgJs/dark/baseRibbon-0.js",
+        "pngLight": "./pictogram/png/light/baseRibbon-0.png",
+        "pngDark": "./pictogram/png/dark/baseRibbon-0.png"
+      },
+      "version": 0
+    },
+    "23235:476": {
+      "type": "pictogram",
+      "name": "baseCreatorCoin",
+      "hash": "CmfHSbg2Hseb1gfg3T1cM2jhkmVi2jtDbEXk0Ws/keE=",
+      "width": 40,
+      "height": 40,
+      "description": "",
+      "createdAt": "2025-11-05T18:02:22.025Z",
+      "lastUpdated": "2025-11-05T18:03:14.368Z",
+      "outputs": {
+        "svgLight": "./pictogram/svg/light/baseCreatorCoin-0.svg",
+        "svgDark": "./pictogram/svg/dark/baseCreatorCoin-0.svg",
+        "svgThemed": "./pictogram/svg/themeable/baseCreatorCoin-0.svg",
+        "svgJsLight": "./pictogram/svgJs/light/baseCreatorCoin-0.js",
+        "svgJsDark": "./pictogram/svgJs/dark/baseCreatorCoin-0.js",
+        "pngLight": "./pictogram/png/light/baseCreatorCoin-0.png",
+        "pngDark": "./pictogram/png/dark/baseCreatorCoin-0.png"
+      },
+      "version": 0
+    },
+    "23235:477": {
+      "type": "pictogram",
+      "name": "basePower",
+      "hash": "5r2Dml0l2Sp73E5HAuf0AXzS6inJybowsxfbbh1L9/o=",
+      "width": 40,
+      "height": 40,
+      "description": "",
+      "createdAt": "2025-11-05T18:02:22.019Z",
+      "lastUpdated": "2025-11-05T18:03:14.352Z",
+      "outputs": {
+        "svgLight": "./pictogram/svg/light/basePower-0.svg",
+        "svgDark": "./pictogram/svg/dark/basePower-0.svg",
+        "svgThemed": "./pictogram/svg/themeable/basePower-0.svg",
+        "svgJsLight": "./pictogram/svgJs/light/basePower-0.js",
+        "svgJsDark": "./pictogram/svgJs/dark/basePower-0.js",
+        "pngLight": "./pictogram/png/light/basePower-0.png",
+        "pngDark": "./pictogram/png/dark/basePower-0.png"
+      },
+      "version": 0
+    },
+    "23235:479": {
+      "type": "pictogram",
+      "name": "baseStar",
+      "hash": "3SoKCqGWN9G8gzhY85wcsuFyJN65i82a9Ug2nhyFWjo=",
+      "width": 40,
+      "height": 40,
+      "description": "",
+      "createdAt": "2025-11-05T18:02:22.134Z",
+      "lastUpdated": "2025-11-05T18:03:14.302Z",
+      "outputs": {
+        "svgLight": "./pictogram/svg/light/baseStar-0.svg",
+        "svgDark": "./pictogram/svg/dark/baseStar-0.svg",
+        "svgThemed": "./pictogram/svg/themeable/baseStar-0.svg",
+        "svgJsLight": "./pictogram/svgJs/light/baseStar-0.js",
+        "svgJsDark": "./pictogram/svgJs/dark/baseStar-0.js",
+        "pngLight": "./pictogram/png/light/baseStar-0.png",
+        "pngDark": "./pictogram/png/dark/baseStar-0.png"
+      },
+      "version": 0
+    },
+    "23235:480": {
+      "type": "pictogram",
+      "name": "baseSaved",
+      "hash": "2htBcwXQ6NSEvWeNsA07tS0daBFsWKyRgShbNTsDSiU=",
+      "width": 40,
+      "height": 40,
+      "description": "",
+      "createdAt": "2025-11-05T18:02:22.116Z",
+      "lastUpdated": "2025-11-05T18:03:14.270Z",
+      "outputs": {
+        "svgLight": "./pictogram/svg/light/baseSaved-0.svg",
+        "svgDark": "./pictogram/svg/dark/baseSaved-0.svg",
+        "svgThemed": "./pictogram/svg/themeable/baseSaved-0.svg",
+        "svgJsLight": "./pictogram/svgJs/light/baseSaved-0.js",
+        "svgJsDark": "./pictogram/svgJs/dark/baseSaved-0.js",
+        "pngLight": "./pictogram/png/light/baseSaved-0.png",
+        "pngDark": "./pictogram/png/dark/baseSaved-0.png"
+      },
+      "version": 0
+    },
+    "23235:481": {
+      "type": "pictogram",
+      "name": "baseCoinStar",
+      "hash": "fa92hDAIcMJnA+zscoBkSUt6rx3JLVfk8GtI0GtuB8I=",
+      "width": 40,
+      "height": 40,
+      "description": "",
+      "createdAt": "2025-11-05T18:02:22.110Z",
+      "lastUpdated": "2025-11-05T18:03:14.235Z",
+      "outputs": {
+        "svgLight": "./pictogram/svg/light/baseCoinStar-0.svg",
+        "svgDark": "./pictogram/svg/dark/baseCoinStar-0.svg",
+        "svgThemed": "./pictogram/svg/themeable/baseCoinStar-0.svg",
+        "svgJsLight": "./pictogram/svgJs/light/baseCoinStar-0.js",
+        "svgJsDark": "./pictogram/svgJs/dark/baseCoinStar-0.js",
+        "pngLight": "./pictogram/png/light/baseCoinStar-0.png",
+        "pngDark": "./pictogram/png/dark/baseCoinStar-0.png"
+      },
+      "version": 0
+    },
+    "23235:482": {
+      "type": "pictogram",
+      "name": "baseLayout",
+      "hash": "kEZwa/553S25Tzuqw8dXTCEe3q+TLAZppgxQQkqqv9o=",
+      "width": 40,
+      "height": 40,
+      "description": "",
+      "createdAt": "2025-11-05T18:02:22.013Z",
+      "lastUpdated": "2025-11-05T18:03:14.297Z",
+      "outputs": {
+        "svgLight": "./pictogram/svg/light/baseLayout-0.svg",
+        "svgDark": "./pictogram/svg/dark/baseLayout-0.svg",
+        "svgThemed": "./pictogram/svg/themeable/baseLayout-0.svg",
+        "svgJsLight": "./pictogram/svgJs/light/baseLayout-0.js",
+        "svgJsDark": "./pictogram/svgJs/dark/baseLayout-0.js",
+        "pngLight": "./pictogram/png/light/baseLayout-0.png",
+        "pngDark": "./pictogram/png/dark/baseLayout-0.png"
+      },
+      "version": 0
+    },
+    "23235:483": {
+      "type": "pictogram",
+      "name": "baseExchange",
+      "hash": "fSwaHfj1rmtNYzoDWUIQhSIGGuBF17iaT+AKcWiyW/I=",
+      "width": 40,
+      "height": 40,
+      "description": "",
+      "createdAt": "2025-11-05T18:02:22.004Z",
+      "lastUpdated": "2025-11-05T18:03:14.379Z",
+      "outputs": {
+        "svgLight": "./pictogram/svg/light/baseExchange-0.svg",
+        "svgDark": "./pictogram/svg/dark/baseExchange-0.svg",
+        "svgThemed": "./pictogram/svg/themeable/baseExchange-0.svg",
+        "svgJsLight": "./pictogram/svgJs/light/baseExchange-0.js",
+        "svgJsDark": "./pictogram/svgJs/dark/baseExchange-0.js",
+        "pngLight": "./pictogram/png/light/baseExchange-0.png",
+        "pngDark": "./pictogram/png/dark/baseExchange-0.png"
+      },
+      "version": 0
+    },
+    "23235:484": {
+      "type": "pictogram",
+      "name": "baseComet",
+      "hash": "bnslI7CNYx8cfEoyA5tvs4etbFRhyAMqd92Y4B6sN/U=",
+      "width": 40,
+      "height": 40,
+      "description": "",
+      "createdAt": "2025-11-05T18:02:22.120Z",
+      "lastUpdated": "2025-11-05T18:03:14.333Z",
+      "outputs": {
+        "svgLight": "./pictogram/svg/light/baseComet-0.svg",
+        "svgDark": "./pictogram/svg/dark/baseComet-0.svg",
+        "svgThemed": "./pictogram/svg/themeable/baseComet-0.svg",
+        "svgJsLight": "./pictogram/svgJs/light/baseComet-0.js",
+        "svgJsDark": "./pictogram/svgJs/dark/baseComet-0.js",
+        "pngLight": "./pictogram/png/light/baseComet-0.png",
+        "pngDark": "./pictogram/png/dark/baseComet-0.png"
       },
       "version": 0
     }

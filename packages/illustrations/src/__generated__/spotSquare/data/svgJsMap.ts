@@ -423,8 +423,8 @@ const svgJsMap = {
     dark: () => require('../svgJs/dark/cryptoEconomy-4.js').content,
   },
   cryptoEconomyArrows: {
-    light: () => require('../svgJs/light/cryptoEconomyArrows-0.js').content,
-    dark: () => require('../svgJs/dark/cryptoEconomyArrows-0.js').content,
+    light: () => require('../svgJs/light/cryptoEconomyArrows-1.js').content,
+    dark: () => require('../svgJs/dark/cryptoEconomyArrows-1.js').content,
   },
   cryptoForBeginners: {
     light: () => require('../svgJs/light/cryptoForBeginners-5.js').content,

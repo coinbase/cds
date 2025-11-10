@@ -261,7 +261,7 @@ const versionMap: Record<SpotSquareName, number> = {
   baseRewardTrophyStars: 0,
   coinbaseUnlockOffers: 0,
   baseCreatorCoin: 0,
-  cryptoEconomyArrows: 0,
+  cryptoEconomyArrows: 1,
 };
 
 export default versionMap;

@@ -108,6 +108,50 @@ export const interactableDefaultElement = 'button';
 
 export type InteractableDefaultElement = typeof interactableDefaultElement;
 
+/**
+ * Custom color overrides for different interaction states.
+ * Base colors (background, borderColor) are used directly, while interaction
+ * state colors (hovered, pressed, disabled) are used as alternative base colors
+ * for blending calculations with blend strength and color scheme considerations.
+ *
+ * @example
+ * ```tsx
+ * <Interactable
+ *   blendStyles={{
+ *     background: '#ffffff',
+ *     hoveredBackground: '#f5f5f5',
+ *     pressedBackground: '#e0e0e0',
+ *     borderColor: '#cccccc'
+ *   }}
+ * />
+ * ```
+ */
+export type InteractableBlendStyles = {
+  background?: string;
+  pressedBackground?: string;
+  disabledBackground?: string;
+  hoveredBackground?: string;
+  borderColor?: string;
+  pressedBorderColor?: string;
+  disabledBorderColor?: string;
+  hoveredBorderColor?: string;
+  /**
+   * The opacity of the element when hovered.
+   * @default 0.88
+   */
+  hoveredOpacity?: number;
+  /**
+   * The opacity of the element when pressed.
+   * @default 0.82
+   */
+  pressedOpacity?: number;
+  /**
+   * The opacity of the element when disabled.
+   * @default 0.75
+   */
+  disabledOpacity?: number;
+};
+
 export type InteractableBaseProps = Polymorphic.ExtendableProps<
   BoxBaseProps,
   {
@@ -138,34 +182,7 @@ export type InteractableBaseProps = Polymorphic.ExtendableProps<
      * Must be used in conjunction with the "pressed" prop
      */
     transparentWhilePressed?: boolean;
-    /**
-     * Custom color overrides for different interaction states.
-     * Base colors (background, borderColor) are used directly, while interaction
-     * state colors (hovered, pressed, disabled) are used as alternative base colors
-     * for blending calculations with blend strength and color scheme considerations.
-     *
-     * @example
-     * ```tsx
-     * <Interactable
-     *   blendStyles={{
-     *     background: '#ffffff',
-     *     hoveredBackground: '#f5f5f5',
-     *     pressedBackground: '#e0e0e0',
-     *     borderColor: '#cccccc'
-     *   }}
-     * />
-     * ```
-     */
-    blendStyles?: {
-      background?: string;
-      pressedBackground?: string;
-      disabledBackground?: string;
-      hoveredBackground?: string;
-      borderColor?: string;
-      pressedBorderColor?: string;
-      disabledBorderColor?: string;
-      hoveredBorderColor?: string;
-    };
+    blendStyles?: InteractableBlendStyles;
   }
 >;
 
@@ -250,19 +267,13 @@ export const getInteractableStyles = ({
   theme: Theme;
   background?: ThemeVars.Color;
   borderColor?: ThemeVars.Color;
-  blendStyles?: {
-    background?: string;
-    pressedBackground?: string;
-    disabledBackground?: string;
-    hoveredBackground?: string;
-    borderColor?: string;
-    pressedBorderColor?: string;
-    disabledBorderColor?: string;
-    hoveredBorderColor?: string;
-  };
+  blendStyles?: InteractableBlendStyles;
 }) => {
   const backgroundColor = blendStyles?.background ?? theme.color[background];
   const borderColorValue = blendStyles?.borderColor ?? theme.color[borderColor];
+  const hoveredOpacity = blendStyles?.hoveredOpacity ?? opacityHovered;
+  const pressedOpacity = blendStyles?.pressedOpacity ?? opacityPressed;
+  const disabledOpacity = blendStyles?.disabledOpacity ?? opacityDisabled;
 
   return {
     [interactableBackground]: blendStyles?.background ?? `var(--color-${background})`,
@@ -273,37 +284,37 @@ export const getInteractableStyles = ({
     // Hover:
     [interactableHoveredBackground]: getBlendedColor({
       overlayColor: blendStyles?.hoveredBackground ?? backgroundColor,
-      blendOpacity: opacityHovered,
+      blendOpacity: hoveredOpacity,
       colorScheme: theme.activeColorScheme,
     }),
     [interactableHoveredBorderColor]: getBlendedColor({
       overlayColor: blendStyles?.hoveredBorderColor ?? borderColorValue,
-      blendOpacity: opacityHovered,
+      blendOpacity: hoveredOpacity,
       colorScheme: theme.activeColorScheme,
     }),
-    [interactableHoveredOpacity]: opacityHovered,
+    [interactableHoveredOpacity]: hoveredOpacity,
     // Pressed:
     [interactablePressedBackground]: getBlendedColor({
       overlayColor: blendStyles?.pressedBackground ?? backgroundColor,
-      blendOpacity: opacityPressed,
+      blendOpacity: pressedOpacity,
       colorScheme: theme.activeColorScheme,
     }),
     [interactablePressedBorderColor]: getBlendedColor({
       overlayColor: blendStyles?.pressedBorderColor ?? borderColorValue,
-      blendOpacity: opacityPressed,
+      blendOpacity: pressedOpacity,
       colorScheme: theme.activeColorScheme,
     }),
-    [interactablePressedOpacity]: opacityPressed,
+    [interactablePressedOpacity]: pressedOpacity,
     // Disabled:
     [interactableDisabledBackground]: getBlendedColor({
       overlayColor: blendStyles?.disabledBackground ?? backgroundColor,
-      blendOpacity: opacityDisabled,
+      blendOpacity: disabledOpacity,
       colorScheme: theme.activeColorScheme,
       skipContrastOptimization: true,
     }),
     [interactableDisabledBorderColor]: getBlendedColor({
       overlayColor: blendStyles?.disabledBorderColor ?? borderColorValue,
-      blendOpacity: opacityDisabled,
+      blendOpacity: disabledOpacity,
       colorScheme: theme.activeColorScheme,
       skipContrastOptimization: true,
     }),

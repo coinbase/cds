@@ -18,6 +18,7 @@ export const Chip = memo(
       children,
       start,
       end,
+      invertColorScheme,
       inverted,
       maxWidth = chipMaxWidth,
       compact,
@@ -44,7 +45,7 @@ export const Chip = memo(
     }: ChipProps,
     ref: React.ForwardedRef<View>,
   ) {
-    const WrapperComponent = inverted ? InvertedThemeProvider : Fragment;
+    const WrapperComponent = (invertColorScheme ?? inverted) ? InvertedThemeProvider : Fragment;
     const containerProps = {
       testID,
       background,

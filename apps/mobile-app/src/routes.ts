@@ -508,7 +508,8 @@ export const routes = [
   },
   {
     key: 'Select',
-    getComponent: () => require('@coinbase/cds-mobile/controls/__stories__/Select.stories').default,
+    getComponent: () =>
+      require('@coinbase/cds-mobile/alpha/select/__stories__/Select.stories').default,
   },
   {
     key: 'SelectChip',

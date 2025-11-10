@@ -23,6 +23,7 @@ import {
 } from '@coinbase/cds-common/overlays/OverlayContentContext';
 import { useAlert } from '@coinbase/cds-common/overlays/useAlert';
 import { useModal } from '@coinbase/cds-common/overlays/useModal';
+import { useMultiSelect } from '@coinbase/cds-common/select/useMultiSelect';
 import { useStepper } from '@coinbase/cds-common/stepper/useStepper';
 import { LocaleProvider } from '@coinbase/cds-common/system/LocaleProvider';
 import { useTabsContext } from '@coinbase/cds-common/tabs/TabsContext';
@@ -33,6 +34,7 @@ import { useSparklinePath } from '@coinbase/cds-common/visualizations/useSparkli
 import * as CDSLottie from '@coinbase/cds-lottie-files';
 import { Accordion } from '@coinbase/cds-web/accordion/Accordion';
 import { AccordionItem } from '@coinbase/cds-web/accordion/AccordionItem';
+import { Select } from '@coinbase/cds-web/alpha/select/Select';
 import { Lottie, LottieStatusAnimation } from '@coinbase/cds-web/animation';
 import { Banner } from '@coinbase/cds-web/banner/Banner';
 import * as CDSButtons from '@coinbase/cds-web/buttons';
@@ -52,6 +54,7 @@ import * as CDSChips from '@coinbase/cds-web/chips';
 import { Coachmark } from '@coinbase/cds-web/coachmark/Coachmark';
 import { Collapsible } from '@coinbase/cds-web/collapsible/Collapsible';
 import * as CDSControls from '@coinbase/cds-web/controls';
+import { Select as OldSelect } from '@coinbase/cds-web/controls/Select';
 import { Calendar } from '@coinbase/cds-web/dates/Calendar';
 import { DatePicker } from '@coinbase/cds-web/dates/DatePicker';
 import * as CDSDots from '@coinbase/cds-web/dots';
@@ -164,6 +167,9 @@ const ReactLiveScope: Record<string, unknown> = {
   // input
   ...CDSButtons,
   ...CDSControls,
+  Select,
+  OldSelect,
+  useMultiSelect,
   ...CDSSystem,
   MediaQueryProvider,
   ...CDSChips,

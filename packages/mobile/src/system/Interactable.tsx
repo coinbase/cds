@@ -1,10 +1,36 @@
-import React, { memo, useMemo } from 'react';
+import { memo, useMemo } from 'react';
 import { type Animated, type StyleProp, View, type ViewProps, type ViewStyle } from 'react-native';
 import type { ElevationLevels, ThemeVars } from '@coinbase/cds-common';
 
 import { useTheme } from '../hooks/useTheme';
 import { Box, type BoxBaseProps } from '../layout/Box';
 import { getInteractableStyles } from '../styles/getInteractableStyles';
+
+/**
+ * Custom color overrides for different interaction states.
+ * Base colors (background, borderColor) are used directly, while interaction
+ * state colors (pressed, disabled) are used as alternative base colors
+ * for blending calculations with blend strength and color scheme considerations.
+ *
+ * @example
+ * ```tsx
+ * <Interactable
+ *   blendStyles={{
+ *     background: '#ffffff',
+ *     pressedBackground: '#e0e0e0',
+ *     borderColor: '#cccccc'
+ *   }}
+ * />
+ * ```
+ */
+export type InteractableBlendStyles = {
+  background?: string;
+  pressedBackground?: string;
+  disabledBackground?: string;
+  borderColor?: string;
+  pressedBorderColor?: string;
+  disabledBorderColor?: string;
+};
 
 export type InteractableBaseProps = Omit<BoxBaseProps, 'animated'> & {
   /** Apply animated styles to the outer container. */
@@ -34,31 +60,7 @@ export type InteractableBaseProps = Omit<BoxBaseProps, 'animated'> & {
    * Must be used in conjunction with the "pressed" prop
    * */
   transparentWhilePressed?: boolean;
-  /**
-   * Custom color overrides for different interaction states.
-   * Base colors (background, borderColor) are used directly, while interaction
-   * state colors (pressed, disabled) are used as alternative base colors
-   * for blending calculations with blend strength and color scheme considerations.
-   *
-   * @example
-   * ```tsx
-   * <Interactable
-   *   blendStyles={{
-   *     background: '#ffffff',
-   *     pressedBackground: '#e0e0e0',
-   *     borderColor: '#cccccc'
-   *   }}
-   * />
-   * ```
-   */
-  blendStyles?: {
-    background?: string;
-    pressedBackground?: string;
-    disabledBackground?: string;
-    borderColor?: string;
-    pressedBorderColor?: string;
-    disabledBorderColor?: string;
-  };
+  blendStyles?: InteractableBlendStyles;
   /** Apply animated styles to the inner container. */
   contentStyle?: StyleProp<ViewStyle>;
   /** Apply styles to the outer container. */
