@@ -53,4 +53,3 @@ jobs:
             } else {
               core.info('Required illustrations/icons checklist is complete.');
             }
-
