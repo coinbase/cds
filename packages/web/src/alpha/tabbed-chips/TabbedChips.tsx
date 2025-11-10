@@ -20,7 +20,6 @@ const scrollContainerCss = css`
 const DefaultTabComponent = <T extends string = string>({
   label = '',
   id,
-  onClick,
   ...tabProps
 }: TabbedChipProps<T>) => {
   const { activeTab, updateActiveTab } = useTabsContext();
@@ -28,10 +27,9 @@ const DefaultTabComponent = <T extends string = string>({
   const handleClick = useCallback(
     (event: React.MouseEvent<HTMLButtonElement>) => {
       event.preventDefault();
-      onClick?.(event);
       updateActiveTab(id);
     },
-    [id, onClick, updateActiveTab],
+    [id, updateActiveTab],
   );
   return (
     <MediaChip
@@ -54,19 +52,20 @@ const DefaultTabsActiveIndicatorComponent: TabsActiveIndicatorComponent = () => 
 export type TabbedChipProps<T extends string = string> = Omit<ChipProps, 'children' | 'onClick'> &
   TabValue<T> & {
     Component?: React.FC<Omit<ChipProps, 'children'> & TabValue<T>>;
-    onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
   };
 
-export type TabbedChipsBaseProps<T extends string = string> = Omit<BoxBaseProps, 'background'> &
-  Omit<TabsProps<T>, 'TabComponent' | 'TabsActiveIndicatorComponent' | 'tabs'> & {
-    paddleStyle?: React.CSSProperties;
-    previousArrowAccessibilityLabel?: string;
-    nextArrowAccessibilityLabel?: string;
-    background?: ThemeVars.Color;
-    TabComponent?: TabsProps<T>['TabComponent'];
-    TabsActiveIndicatorComponent?: TabsProps<T>['TabsActiveIndicatorComponent'];
-    tabs: TabbedChipProps<T>[];
-  };
+export type TabbedChipsBaseProps<T extends string = string> = Omit<
+  TabsProps<T>,
+  'TabComponent' | 'TabsActiveIndicatorComponent' | 'tabs'
+> & {
+  paddleStyle?: React.CSSProperties;
+  previousArrowAccessibilityLabel?: string;
+  nextArrowAccessibilityLabel?: string;
+  background?: ThemeVars.Color;
+  TabComponent?: TabsProps<T>['TabComponent'];
+  TabsActiveIndicatorComponent?: TabsProps<T>['TabsActiveIndicatorComponent'];
+  tabs: TabbedChipProps<T>[];
+};
 
 export type TabbedChipsProps<T extends string = string> = TabbedChipsBaseProps<T>;
 
@@ -108,12 +107,7 @@ const TabbedChipsComponent = memo(
       scrollRef.current.scrollTo({ left: maxScroll, behavior: 'smooth' });
     }, [scrollRef]);
     return (
-      <HStack
-        alignItems="center"
-        position="relative"
-        testID={testID}
-        width={width}
-      >
+      <HStack alignItems="center" position="relative" testID={testID} width={width}>
         <Paddle
           accessibilityLabel={previousArrowAccessibilityLabel}
           background={background}

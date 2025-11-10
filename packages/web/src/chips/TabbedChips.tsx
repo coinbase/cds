@@ -89,13 +89,7 @@ const TabbedChipsComponent = memo(
     }, [scrollRef]);
 
     return (
-      <HStack
-        alignItems="center"
-        position="relative"
-        testID={testID}
-        width={width}
-        {...props}
-      >
+      <HStack alignItems="center" position="relative" testID={testID} width={width} {...props}>
         <Paddle
           accessibilityLabel={previousArrowAccessibilityLabel}
           background={background}
