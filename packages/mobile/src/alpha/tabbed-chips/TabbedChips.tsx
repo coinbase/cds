@@ -1,7 +1,6 @@
 import React, { forwardRef, memo, useCallback, useMemo, useState } from 'react';
-import { ScrollView } from 'react-native';
-import type { View } from 'react-native';
-import type { SharedProps, ThemeVars } from '@coinbase/cds-common';
+import { ScrollView, type View } from 'react-native';
+import type { SharedAccessibilityProps, SharedProps, ThemeVars } from '@coinbase/cds-common';
 import { useTabsContext } from '@coinbase/cds-common/tabs/TabsContext';
 import type { TabValue } from '@coinbase/cds-common/tabs/useTabs';
 
@@ -9,7 +8,7 @@ import type { ChipProps } from '../../chips/ChipProps';
 import { MediaChip } from '../../chips/MediaChip';
 import { useHorizontalScrollToTarget } from '../../hooks/useHorizontalScrollToTarget';
 import { Box, OverflowGradient } from '../../layout';
-import { Tabs, SharedAccessibilityProps, type TabsBaseProps, type TabsProps } from '../../tabs';
+import { Tabs, type TabsBaseProps, type TabsProps } from '../../tabs';
 
 const DefaultTabComponent = <T extends string = string>({
   label = '',

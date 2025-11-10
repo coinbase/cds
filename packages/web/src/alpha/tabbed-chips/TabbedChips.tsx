@@ -7,7 +7,7 @@ import { css } from '@linaria/core';
 import type { ChipProps } from '../../chips/ChipProps';
 import { MediaChip } from '../../chips/MediaChip';
 import { useHorizontalScrollToTarget } from '../../hooks/useHorizontalScrollToTarget';
-import { type BoxBaseProps, HStack } from '../../layout';
+import { HStack } from '../../layout';
 import {
   Paddle,
   Tabs,
