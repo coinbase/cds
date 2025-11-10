@@ -1,5 +1,6 @@
-import { runOnJS } from 'react-native-reanimated';
 import type { Rect } from '@coinbase/cds-common/types';
+
+export type ScrubberLabelPosition = 'left' | 'right';
 
 type LabelDimension = {
   id: string;
@@ -10,31 +11,26 @@ type LabelDimension = {
 };
 
 /**
- * Determines which side (left/right) to place labels based on available space.
+ * Determines which side (left/right) to place scrubber labels based on available space.
  * Prefers right side, switches to left when labels would overflow.
  */
-export function calculateLabelSideStrategy(
+export const getLabelPosition = (
   beaconX: number,
   maxLabelWidth: number,
   drawingArea: Rect,
   xOffset: number = 16,
-): 'left' | 'right' {
-  'worklet';
+): ScrubberLabelPosition => {
+  'worklet'; // any regular functions in ui thread must be marked with 'worklet'
 
-  // Safety check for valid bounds
   if (drawingArea.width <= 0 || drawingArea.height <= 0) {
-    return 'right'; // Default to right if bounds are invalid
+    return 'right';
   }
 
-  // Calculate available space on the right side
   const availableRightSpace = drawingArea.x + drawingArea.width - beaconX;
-
-  // Check if longest label + offset fits on the right side
   const requiredSpace = maxLabelWidth + xOffset;
 
-  // Prefer right side, switch to left only if it doesn't fit
   return requiredSpace <= availableRightSpace ? 'right' : 'left';
-}
+};
 
 type LabelWithPosition = {
   id: string;
@@ -43,14 +39,11 @@ type LabelWithPosition = {
   finalY: number;
 };
 
-/**
- * Simple approach: Find all connected overlapping labels in one pass using Union-Find
- */
-function findConnectedGroups(
+const getConnectedScrubberLabels = (
   labels: LabelWithPosition[],
   labelHeight: number,
   minGap: number,
-): LabelWithPosition[][] {
+): LabelWithPosition[][] => {
   'worklet';
 
   const requiredDistance = labelHeight + minGap;
@@ -97,17 +90,14 @@ function findConnectedGroups(
   }
 
   return Array.from(groups.values());
-}
+};
 
-/**
- * Redistributes labels in a group to avoid overlaps while maintaining relative order.
- */
-function redistributeGroup(
+const redistributeGroup = (
   group: LabelWithPosition[],
   drawingArea: Rect,
   labelHeight: number,
   minGap: number,
-): void {
+) => {
   'worklet';
 
   if (group.length === 1) {
@@ -171,17 +161,17 @@ function redistributeGroup(
       currentCenterY += labelHeight + minGap;
     }
   }
-}
+};
 
 /**
  * Calculates Y positions for all labels avoiding overlaps while maintaining order.
  */
-export function calculateLabelYPositions(
+export const calculateLabelYPositions = (
   dimensions: LabelDimension[],
   drawingArea: Rect,
   labelHeight: number,
-  minGap: number = 2,
-): Map<string, number> {
+  minGap: number = 4,
+): Map<string, number> => {
   'worklet';
 
   if (dimensions.length === 0) {
@@ -208,7 +198,7 @@ export function calculateLabelYPositions(
   }
 
   // Step 3: Find connected groups and redistribute in ONE pass
-  const connectedGroups = findConnectedGroups(sortedLabels, labelHeight, minGap);
+  const connectedGroups = getConnectedScrubberLabels(sortedLabels, labelHeight, minGap);
 
   // Process each group once
   for (const group of connectedGroups) {
@@ -222,4 +212,4 @@ export function calculateLabelYPositions(
   }
 
   return result;
-}
+};

@@ -32,49 +32,40 @@ export type ScrubberProps = SharedProps &
      * By default, all series will be highlighted by the Scrubber.
      */
     seriesIds?: string[];
-
     /**
      * Hides the scrubber line
      */
     hideLine?: boolean;
-
     /**
      * Whether to hide the overlay rect which obscures future data.
      */
     hideOverlay?: boolean;
-
     /**
      * Offset of the overlay rect relative to the drawing area.
      * Useful for when scrubbing over lines, where the stroke width would cause part of the line to be visible.
      * @default 2
      */
     overlayOffset?: number;
-
     /**
      * Label text displayed above the scrubber line.
      */
     label?: ReferenceLineProps['label'] | ((dataIndex: number) => ReferenceLineProps['label']);
-
     /**
      * Props passed to the scrubber line's label.
      */
     labelProps?: ReferenceLineProps['labelProps'];
-
     /**
      * Stroke color for the scrubber line.
      */
     lineStroke?: ReferenceLineProps['stroke'];
-
     /**
      * Custom component for the scrubber beacon.
      */
     BeaconComponent?: React.ComponentType<ScrubberBeaconProps>;
-
     /**
      * Custom component for the scrubber beacon label.
      */
     BeaconLabelComponent?: React.ComponentType<ScrubberBeaconLabelProps>;
-
     /**
      * Custom component for the scrubber line.
      */
@@ -210,6 +201,18 @@ export const Scrubber = memo(
         return xValue;
       }, [dataX, xScale]);
 
+      const scrubberBeaconLabels: Array<{ id: string; label: string; color?: string }> = useMemo(
+        () =>
+          filteredSeries
+            .filter((s) => s.label !== undefined && s.label.length > 0)
+            .map((s) => ({
+              id: s.id,
+              label: s.label!,
+              color: s.color,
+            })),
+        [filteredSeries],
+      );
+
       if (!xScale) return;
 
       return (
@@ -248,15 +251,7 @@ export const Scrubber = memo(
               testID={testID ? `${testID}-${s.id}-dot` : undefined}
             />
           ))}
-          <ScrubberBeaconLabelGroup
-            labels={filteredSeries
-              .filter((s) => s.label !== undefined && s.label.length > 0)
-              .map((s) => ({
-                id: s.id,
-                label: s.label!,
-                color: s.color,
-              }))}
-          />
+          <ScrubberBeaconLabelGroup labels={scrubberBeaconLabels} />
         </Group>
       );
     },

@@ -5,13 +5,7 @@ import { runOnJS, useSharedValue } from 'react-native-reanimated';
 import { Haptics } from '@coinbase/cds-mobile/utils/haptics';
 
 import { useCartesianChartContext } from '../ChartProvider';
-import {
-  getScaleBandwidth,
-  invertSerializableScale,
-  isCategoricalScale,
-  ScrubberContext,
-  type ScrubberContextValue,
-} from '../utils';
+import { invertSerializableScale, ScrubberContext, type ScrubberContextValue } from '../utils';
 import { getPointOnSerializableScale } from '../utils/point';
 
 export type ScrubberProviderProps = Partial<Pick<ScrubberContextValue, 'enableScrubbing'>> & {
