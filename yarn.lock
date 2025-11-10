@@ -2417,10 +2417,10 @@ __metadata:
     "@types/react": "npm:^18.3.12"
     d3-interpolate-path: "npm:^2.3.0"
     lodash: "npm:^4.17.21"
-    react-native-gesture-handler: "npm:2.16.2"
+    react-native-gesture-handler: "npm:2.24.0"
     react-native-reanimated: "npm:3.14.0"
     react-native-safe-area-context: "npm:4.10.5"
-    react-native-svg: "npm:14.1.0"
+    react-native-svg: "patch:react-native-svg@npm%3A15.11.2#~/.yarn/patches/react-native-svg-npm-15.11.2-2f39703239.patch"
     react-test-renderer: "npm:^18.3.1"
   peerDependencies:
     "@coinbase/cds-common": "workspace:^"
@@ -2429,10 +2429,10 @@ __metadata:
     "@coinbase/cds-utils": "workspace:^"
     react: ^18.3.1
     react-native: ^0.74.5
-    react-native-gesture-handler: ^2.16.2
+    react-native-gesture-handler: ^2.24.0
     react-native-reanimated: ^3.14.0
     react-native-safe-area-context: ^4.10.5
-    react-native-svg: ^14.1.0
+    react-native-svg: 15.11.2
   languageName: unknown
   linkType: soft
 
@@ -2463,14 +2463,14 @@ __metadata:
     lottie-react-native: "npm:6.7.0"
     react-native-accessibility-engine: "npm:^3.2.0"
     react-native-date-picker: "npm:4.4.2"
-    react-native-gesture-handler: "npm:2.16.2"
+    react-native-gesture-handler: "npm:2.24.0"
     react-native-inappbrowser-reborn: "npm:3.7.0"
     react-native-linear-gradient: "npm:2.8.3"
     react-native-navigation-bar-color: "npm:2.0.2"
     react-native-reanimated: "npm:3.14.0"
     react-native-safe-area-context: "npm:4.10.5"
     react-native-screens: "npm:3.32.0"
-    react-native-svg: "npm:14.1.0"
+    react-native-svg: "patch:react-native-svg@npm%3A15.11.2#~/.yarn/patches/react-native-svg-npm-15.11.2-2f39703239.patch"
     react-test-renderer: "npm:^18.3.1"
     type-fest: "npm:^2.19.0"
   peerDependencies:
@@ -2481,14 +2481,14 @@ __metadata:
     react: ^18.3.1
     react-native: ^0.74.5
     react-native-date-picker: ^4.4.2
-    react-native-gesture-handler: ^2.16.2
+    react-native-gesture-handler: 2.24.0
     react-native-inappbrowser-reborn: ^3.7.0
     react-native-linear-gradient: ^2.8.3
     react-native-navigation-bar-color: ^2.0.2
     react-native-reanimated: ^3.14.0
     react-native-safe-area-context: ^4.10.5
     react-native-screens: ^3.32.0
-    react-native-svg: ^14.1.0
+    react-native-svg: 15.11.2
   languageName: unknown
   linkType: soft
 
@@ -28529,13 +28529,13 @@ __metadata:
     react-native: "npm:0.74.5"
     react-native-bundle-visualizer: "npm:^3.1.3"
     react-native-date-picker: "npm:4.4.2"
-    react-native-gesture-handler: "npm:2.16.2"
+    react-native-gesture-handler: "npm:2.24.0"
     react-native-inappbrowser-reborn: "npm:3.7.0"
     react-native-navigation-bar-color: "npm:2.0.2"
     react-native-reanimated: "npm:3.14.0"
     react-native-safe-area-context: "npm:4.10.5"
     react-native-screens: "npm:3.32.0"
-    react-native-svg: "npm:14.1.0"
+    react-native-svg: "patch:react-native-svg@npm%3A15.11.2#~/.yarn/patches/react-native-svg-npm-15.11.2-2f39703239.patch"
     zx: "npm:^8.1.9"
   languageName: unknown
   linkType: soft
@@ -32443,35 +32443,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-gesture-handler@npm:2.16.2":
-  version: 2.16.2
-  resolution: "react-native-gesture-handler@npm:2.16.2"
+"react-native-gesture-handler@npm:2.24.0":
+  version: 2.24.0
+  resolution: "react-native-gesture-handler@npm:2.24.0"
   dependencies:
     "@egjs/hammerjs": "npm:^2.0.17"
     hoist-non-react-statics: "npm:^3.3.0"
     invariant: "npm:^2.2.4"
-    lodash: "npm:^4.17.21"
-    prop-types: "npm:^15.7.2"
   peerDependencies:
     react: "*"
     react-native: "*"
-  checksum: 10c0/cd31794870edc51bc7051bf22893b19cebda5754c2fbd381f72e6ae6a718c26c5cf6966ad2f80e15e3a3217d09cc3e2e1637132f70bf44aacf62ea15a7636c98
-  languageName: node
-  linkType: hard
-
-"react-native-gesture-handler@patch:react-native-gesture-handler@npm:2.16.2#.yarn/patches/react-native-gesture-handler-npm-2.16.2-c16529326b.patch::locator=design-system%40workspace%3A.":
-  version: 2.16.2
-  resolution: "react-native-gesture-handler@patch:react-native-gesture-handler@npm%3A2.16.2#.yarn/patches/react-native-gesture-handler-npm-2.16.2-c16529326b.patch::version=2.16.2&hash=7e3399&locator=design-system%40workspace%3A."
-  dependencies:
-    "@egjs/hammerjs": "npm:^2.0.17"
-    hoist-non-react-statics: "npm:^3.3.0"
-    invariant: "npm:^2.2.4"
-    lodash: "npm:^4.17.21"
-    prop-types: "npm:^15.7.2"
-  peerDependencies:
-    react: "*"
-    react-native: "*"
-  checksum: 10c0/0fd9db11cc7561f5a412ab8376cf7f30f25f04ca9d42ecc72d2237b47a9af4184f4ebd5fcc99ca5fe7a084d3c16bf3fb56e119a0a7fc8db7c38bed895273dca5
+  checksum: 10c0/eb2c5cb53690ae5de1482370a156cbd775f6b3054540cd47310ec4712df83a280fe7b6259f372eec4c14a6d7f70ab18f1919a9fe63beaca9ceae126edbe32298
   languageName: node
   linkType: hard
 
@@ -32554,16 +32536,31 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-svg@npm:14.1.0":
-  version: 14.1.0
-  resolution: "react-native-svg@npm:14.1.0"
+"react-native-svg@npm:15.11.2":
+  version: 15.11.2
+  resolution: "react-native-svg@npm:15.11.2"
   dependencies:
     css-select: "npm:^5.1.0"
     css-tree: "npm:^1.1.3"
+    warn-once: "npm:0.1.1"
   peerDependencies:
     react: "*"
     react-native: "*"
-  checksum: 10c0/952d666471c1e849de1ca1f7c590dcbeba270fb62fb5afa707eac21da9d39f48ea21049dbaabf3db7078712c6236803e7143b9d9a30529bc6754f8d5f107d6ac
+  checksum: 10c0/040f3a298db80f4a282f9616c9550d7978beebc518de523eb417106afd7f5cb1d021424ea287cedba705f0c48aa15631056c42a79c4b46edcafa34cba71aed63
+  languageName: node
+  linkType: hard
+
+"react-native-svg@patch:react-native-svg@npm:15.11.2#.yarn/patches/react-native-svg-npm-15.11.2-2f39703239.patch::locator=design-system%40workspace%3A.":
+  version: 15.11.2
+  resolution: "react-native-svg@patch:react-native-svg@npm%3A15.11.2#.yarn/patches/react-native-svg-npm-15.11.2-2f39703239.patch::version=15.11.2&hash=fa5e7b&locator=design-system%40workspace%3A."
+  dependencies:
+    css-select: "npm:^5.1.0"
+    css-tree: "npm:^1.1.3"
+    warn-once: "npm:0.1.1"
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: 10c0/db9c9221265e201fb15dc1219ae0b8328ff89b41ca22f828fc49fb9a6b5e8d7e4971a764c1790f8c001fbdbb7b463a42a068b8c236ad7e25f51cd845a300589a
   languageName: node
   linkType: hard
 
@@ -38521,6 +38518,13 @@ __metadata:
   dependencies:
     makeerror: "npm:1.0.12"
   checksum: 10c0/a17e037bccd3ca8a25a80cb850903facdfed0de4864bd8728f1782370715d679fa72e0a0f5da7c1c1379365159901e5935f35be531229da53bbfc0efdabdb48e
+  languageName: node
+  linkType: hard
+
+"warn-once@npm:0.1.1":
+  version: 0.1.1
+  resolution: "warn-once@npm:0.1.1"
+  checksum: 10c0/f531e7b2382124f51e6d8f97b8c865246db8ab6ff4e53257a2d274e0f02b97d7201eb35db481843dc155815e154ad7afb53b01c4d4db15fb5aa073562496aff7
   languageName: node
   linkType: hard
 

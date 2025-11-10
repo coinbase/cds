@@ -133,36 +133,35 @@ export const ScrubberProvider: React.FC<ScrubberProviderProps> = ({
   }, [handleOnEndOrCancelledJsThread]);
 
   // Create the long press pan gesture
-  const longPressGesture = useMemo(
-    () =>
-      Gesture.Pan()
-        .activateAfterLongPress(110)
-        .shouldCancelWhenOutside(!allowOverflowGestures)
-        .onStart(function onStart(event) {
-          runOnJS(handleOnStartJsThread)();
+  const longPressGesture = useMemo(() => {
+    console.log('🏗️ longPressGesture');
+    return Gesture.Pan()
+      .activateAfterLongPress(110)
+      .shouldCancelWhenOutside(!allowOverflowGestures)
+      .onStart(function onStart(event) {
+        runOnJS(handleOnStartJsThread)();
 
-          // Android does not trigger onUpdate when the gesture starts. This achieves consistent behavior across both iOS and Android
-          if (Platform.OS === 'android') {
-            runOnJS(handleOnUpdateJsThread)(event.x);
-          }
-        })
-        .onUpdate(function onUpdate(event) {
+        // Android does not trigger onUpdate when the gesture starts. This achieves consistent behavior across both iOS and Android
+        if (Platform.OS === 'android') {
           runOnJS(handleOnUpdateJsThread)(event.x);
-        })
-        .onEnd(function onEnd() {
-          runOnJS(handleOnEndJsThread)();
-        })
-        .onTouchesCancelled(function onTouchesCancelled() {
-          runOnJS(handleOnEndOrCancelledJsThread)();
-        }),
-    [
-      allowOverflowGestures,
-      handleOnStartJsThread,
-      handleOnUpdateJsThread,
-      handleOnEndJsThread,
-      handleOnEndOrCancelledJsThread,
-    ],
-  );
+        }
+      })
+      .onUpdate(function onUpdate(event) {
+        runOnJS(handleOnUpdateJsThread)(event.x);
+      })
+      .onEnd(function onEnd() {
+        runOnJS(handleOnEndJsThread)();
+      })
+      .onTouchesCancelled(function onTouchesCancelled() {
+        runOnJS(handleOnEndOrCancelledJsThread)();
+      });
+  }, [
+    allowOverflowGestures,
+    handleOnStartJsThread,
+    handleOnUpdateJsThread,
+    handleOnEndJsThread,
+    handleOnEndOrCancelledJsThread,
+  ]);
 
   const contextValue: ScrubberContextValue = useMemo(
     () => ({

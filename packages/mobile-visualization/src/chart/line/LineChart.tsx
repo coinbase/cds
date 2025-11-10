@@ -1,4 +1,4 @@
-import { forwardRef, memo, useMemo } from 'react';
+import { forwardRef, memo, useEffect, useMemo } from 'react';
 import type { View } from 'react-native';
 
 import { XAxis, type XAxisProps } from '../axis/XAxis';
@@ -139,6 +139,13 @@ export const LineChart = memo(
         domainLimit: yDomainLimit,
         range: yRange,
       };
+
+      useEffect(() => {
+        console.log('🏗️ Architecture Check:');
+        console.log('Fabric:', !!(global as any).nativeFabricUIManager);
+        console.log('TurboModules:', !!(global as any).__turboModuleProxy);
+        console.log('_IS_FABRIC_ENABLED:', (global as any)._IS_FABRIC_ENABLED);
+      }, []);
 
       return (
         <CartesianChart
