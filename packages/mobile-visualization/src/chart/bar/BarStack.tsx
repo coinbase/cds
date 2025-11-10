@@ -4,7 +4,7 @@ import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import type { ChartScaleFunction, TransitionConfig } from '../utils';
-import { evaluateGradientAtValue } from '../utils/gradient';
+import { evaluateGradientAtValue, getGradientScale } from '../utils/gradient';
 
 import { Bar, type BarComponent, type BarProps } from './Bar';
 import type { BarSeries } from './BarChart';
@@ -176,12 +176,7 @@ export const BarStack = memo<BarStackProps>(
         width: number;
         height: number;
         dataY?: number | [number, number] | null;
-        BarComponent?: BarComponent;
         fill?: string;
-        fillOpacity?: number;
-        stroke?: string;
-        strokeWidth?: number;
-        borderRadius?: BarProps['borderRadius'];
         roundTop?: boolean;
         roundBottom?: boolean;
         shouldApplyGap?: boolean;
@@ -240,7 +235,7 @@ export const BarStack = memo<BarStackProps>(
         maxY = Math.max(maxY, y + height);
 
         // Determine fill color, respecting gradient if present
-        let barFill = s.fill || s.color || theme.color.fgPrimary;
+        let barFill = s.color || theme.color.fgPrimary;
 
         // Evaluate gradient if provided
         if (s.gradient && xScale && yScale) {
@@ -251,7 +246,7 @@ export const BarStack = memo<BarStackProps>(
             // For y-axis gradient, use the actual data value
             const dataValue = axis === 'x' ? categoryIndex : top;
             const evaluatedColor = evaluateGradientAtValue(s.gradient, dataValue, gradientScale);
-            if (evaluatedColor && !s.fill) {
+            if (evaluatedColor) {
               // Only apply gradient color if fill is not explicitly set
               barFill = evaluatedColor;
             }
@@ -265,12 +260,7 @@ export const BarStack = memo<BarStackProps>(
           width,
           height,
           dataY: value, // Store the actual data value
-          // Use series-specific properties, falling back to defaults
-          BarComponent: s.BarComponent,
           fill: barFill,
-          fillOpacity: s.fillOpacity,
-          stroke: s.stroke,
-          strokeWidth: s.strokeWidth,
           // Check if the bar should be rounded based on the baseline, with an epsilon to handle floating-point rounding
           roundTop: roundBaseline || Math.abs(barTop - baseline) >= EPSILON,
           roundBottom: roundBaseline || Math.abs(barBottom - baseline) >= EPSILON,
@@ -674,18 +664,18 @@ export const BarStack = memo<BarStackProps>(
     const barElements = bars.map((bar, index) => (
       <Bar
         key={`${bar.seriesId}-${categoryIndex}-${index}`}
-        BarComponent={bar.BarComponent || defaultBarComponent}
+        BarComponent={defaultBarComponent}
         borderRadius={borderRadius}
         dataX={dataX}
         dataY={bar.dataY}
         fill={bar.fill}
-        fillOpacity={bar.fillOpacity ?? defaultFillOpacity}
+        fillOpacity={defaultFillOpacity}
         height={bar.height}
         originY={baseline}
         roundBottom={bar.roundBottom}
         roundTop={bar.roundTop}
-        stroke={bar.stroke ?? defaultStroke}
-        strokeWidth={bar.strokeWidth ?? defaultStrokeWidth}
+        stroke={defaultStroke}
+        strokeWidth={defaultStrokeWidth}
         transitionConfig={transitionConfig}
         width={bar.width}
         x={bar.x}
