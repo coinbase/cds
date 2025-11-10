@@ -1,5 +1,5 @@
 import React, { forwardRef, memo, useCallback, useMemo, useState } from 'react';
-import type { ThemeVars } from '@coinbase/cds-common';
+import type { SharedAccessibilityProps, SharedProps, ThemeVars } from '@coinbase/cds-common';
 import { useTabsContext } from '@coinbase/cds-common/tabs/TabsContext';
 import type { TabValue } from '@coinbase/cds-common/tabs/useTabs';
 import { css } from '@linaria/core';
@@ -8,7 +8,13 @@ import type { ChipProps } from '../../chips/ChipProps';
 import { MediaChip } from '../../chips/MediaChip';
 import { useHorizontalScrollToTarget } from '../../hooks/useHorizontalScrollToTarget';
 import { type BoxBaseProps, HStack } from '../../layout';
-import { Paddle, Tabs, type TabsActiveIndicatorComponent, type TabsProps } from '../../tabs';
+import {
+  Paddle,
+  Tabs,
+  type TabsActiveIndicatorComponent,
+  type TabsBaseProps,
+  type TabsProps,
+} from '../../tabs';
 
 const scrollContainerCss = css`
   &::-webkit-scrollbar {
@@ -55,8 +61,12 @@ export type TabbedChipProps<T extends string = string> = Omit<ChipProps, 'childr
   };
 
 export type TabbedChipsBaseProps<T extends string = string> = Omit<
-  TabsProps<T>,
-  'TabComponent' | 'TabsActiveIndicatorComponent' | 'tabs'
+  TabsBaseProps<T>,
+  | 'TabComponent'
+  | 'TabsActiveIndicatorComponent'
+  | 'tabs'
+  | 'onActiveTabElementChange'
+  | 'activeBackground'
 > & {
   paddleStyle?: React.CSSProperties;
   previousArrowAccessibilityLabel?: string;
@@ -65,9 +75,13 @@ export type TabbedChipsBaseProps<T extends string = string> = Omit<
   TabComponent?: TabsProps<T>['TabComponent'];
   TabsActiveIndicatorComponent?: TabsProps<T>['TabsActiveIndicatorComponent'];
   tabs: TabbedChipProps<T>[];
+  gap?: ThemeVars.Space;
+  width?: React.CSSProperties['width'];
 };
 
-export type TabbedChipsProps<T extends string = string> = TabbedChipsBaseProps<T>;
+export type TabbedChipsProps<T extends string = string> = TabbedChipsBaseProps<T> &
+  SharedProps &
+  SharedAccessibilityProps;
 
 type TabbedChipsFC = <T extends string = string>(
   props: TabbedChipsProps<T> & { ref?: React.ForwardedRef<HTMLElement> },
@@ -84,12 +98,12 @@ const TabbedChipsComponent = memo(
       testID,
       background = 'bg',
       gap = 1,
-      role,
       previousArrowAccessibilityLabel = 'Previous',
       nextArrowAccessibilityLabel = 'Next',
       width = '100%',
       TabsActiveIndicatorComponent = DefaultTabsActiveIndicatorComponent,
-      ...props
+      disabled,
+      ...accessibilityProps
     }: TabbedChipsProps<T>,
     ref: React.ForwardedRef<HTMLElement | null>,
   ) {
@@ -130,12 +144,12 @@ const TabbedChipsComponent = memo(
             TabsActiveIndicatorComponent={DefaultTabsActiveIndicatorComponent}
             activeTab={activeTab || null}
             background={background}
+            disabled={disabled}
             gap={gap}
             onActiveTabElementChange={setScrollTarget}
             onChange={onChange}
-            role={role}
             tabs={tabs}
-            {...props}
+            {...accessibilityProps}
           />
         </HStack>
         <Paddle

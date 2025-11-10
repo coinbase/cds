@@ -1,6 +1,7 @@
 import React, { forwardRef, memo, useCallback, useMemo, useState } from 'react';
 import { ScrollView } from 'react-native';
 import type { View } from 'react-native';
+import type { SharedProps, ThemeVars } from '@coinbase/cds-common';
 import { useTabsContext } from '@coinbase/cds-common/tabs/TabsContext';
 import type { TabValue } from '@coinbase/cds-common/tabs/useTabs';
 
@@ -8,13 +9,13 @@ import type { ChipProps } from '../../chips/ChipProps';
 import { MediaChip } from '../../chips/MediaChip';
 import { useHorizontalScrollToTarget } from '../../hooks/useHorizontalScrollToTarget';
 import { Box, OverflowGradient } from '../../layout';
-import { Tabs, type TabsProps } from '../../tabs';
+import { Tabs, SharedAccessibilityProps, type TabsBaseProps, type TabsProps } from '../../tabs';
 
 const DefaultTabComponent = <T extends string = string>({
   label = '',
   id,
   ...tabProps
-}: TabValue<T>) => {
+}: TabbedChipProps<T>) => {
   const { activeTab, updateActiveTab } = useTabsContext();
   const isActive = useMemo(() => activeTab?.id === id, [activeTab, id]);
   const handlePress = useCallback(() => updateActiveTab(id), [id, updateActiveTab]);
@@ -40,15 +41,23 @@ export type TabbedChipProps<T extends string = string> = Omit<ChipProps, 'childr
   };
 
 export type TabbedChipsBaseProps<T extends string = string> = Omit<
-  TabsProps<T>,
-  'TabComponent' | 'TabsActiveIndicatorComponent' | 'tabs'
+  TabsBaseProps<T>,
+  | 'TabComponent'
+  | 'TabsActiveIndicatorComponent'
+  | 'tabs'
+  | 'onActiveTabElementChange'
+  | 'activeBackground'
 > & {
   tabs: TabbedChipProps<T>[];
   TabComponent?: TabsProps<T>['TabComponent'];
   TabsActiveIndicatorComponent?: TabsProps<T>['TabsActiveIndicatorComponent'];
+  gap?: ThemeVars.Space;
+  width?: React.CSSProperties['width'];
 };
 
-export type TabbedChipsProps<T extends string = string> = TabbedChipsBaseProps<T>;
+export type TabbedChipsProps<T extends string = string> = TabbedChipsBaseProps<T> &
+  SharedProps &
+  SharedAccessibilityProps;
 
 type TabbedChipsFC = <T extends string = string>(
   props: TabbedChipsProps<T> & { ref?: React.ForwardedRef<View> },
@@ -62,7 +71,9 @@ const TabbedChipsComponent = memo(
       testID = 'tabbed-chips',
       TabComponent = DefaultTabComponent,
       onChange,
-      ...props
+      width,
+      gap = 1,
+      ...accessibilityProps
     }: TabbedChipsProps<T>,
     ref: React.ForwardedRef<View>,
   ) {
@@ -83,7 +94,7 @@ const TabbedChipsComponent = memo(
           isScrollContentOverflowing && isScrollContentOffscreenRight ? undefined : 'visible'
         }
         testID={testID}
-        {...props}
+        width={width}
       >
         <ScrollView
           ref={scrollRef}
@@ -98,10 +109,11 @@ const TabbedChipsComponent = memo(
             TabComponent={TabComponent}
             TabsActiveIndicatorComponent={TabsActiveIndicatorComponent}
             activeTab={activeTab || null}
-            gap={1}
+            gap={gap}
             onActiveTabElementChange={setScrollTarget}
             onChange={onChange}
             tabs={tabs}
+            {...accessibilityProps}
           />
         </ScrollView>
         {isScrollContentOverflowing && isScrollContentOffscreenRight ? <OverflowGradient /> : null}
