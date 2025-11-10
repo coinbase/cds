@@ -1159,8 +1159,8 @@ const AssetPriceDotted = () => {
             beaconTransitionConfig={{ update: { type: 'timing', duration: 3000 } }}
             label={scrubberLabel}
             labelProps={{
-              yOffset: -28, // Elevate label 16 pixels above the default position
-              elevation: 1, // Add drop shadow for depth
+              dy: -28,
+              elevation: 1,
             }}
           />
         </LineChart>

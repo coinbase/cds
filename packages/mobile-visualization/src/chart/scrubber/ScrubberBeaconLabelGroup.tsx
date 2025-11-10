@@ -33,7 +33,7 @@ const PositionedLabel = memo<{
   const x = useDerivedValue(() => positions.value[index]?.x ?? 0, [positions, index]);
   const y = useDerivedValue(() => positions.value[index]?.y ?? 0, [positions, index]);
 
-  const xOffset = useDerivedValue(() => {
+  const dx = useDerivedValue(() => {
     return position.value === 'right' ? 16 : -16;
   }, [position]);
 
@@ -45,10 +45,10 @@ const PositionedLabel = memo<{
   return (
     <ScrubberBeaconLabel
       color={color}
+      dx={dx}
       horizontalAlignment={horizontalAlignment}
       onDimensionsChange={(d) => onDimensionsChange(seriesId, d)}
       x={x}
-      xOffset={xOffset}
       y={y}
     >
       {label}

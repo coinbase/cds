@@ -1,7 +1,9 @@
-import React, { memo, useEffect, useMemo } from 'react';
-import { useDerivedValue } from 'react-native-reanimated';
+import React, { memo, useMemo } from 'react';
+import type { ViewStyle } from 'react-native';
+import { runOnJS, useAnimatedReaction, useDerivedValue } from 'react-native-reanimated';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import type { ElevationLevels, Rect, SharedProps } from '@coinbase/cds-common/types';
+import type { Theme } from '@coinbase/cds-mobile/core/theme';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 import {
   type AnimatedProp,
@@ -26,37 +28,39 @@ import { type ChartInset, getChartInset, unwrapAnimatedValue } from '../utils';
  */
 const DEFAULT_CHART_FONT_FAMILY = 'Inter';
 
-/**
- * Shadow configuration for Skia rendering.
- */
-type SkiaShadowConfig = {
-  color: string;
-  offset: { x: number; y: number };
-  blur: number;
-  opacity: number;
+type Shadow = {
+  elevation?: number;
+  shadowColor?: ViewStyle['shadowColor'];
+  shadowOpacity?: ViewStyle['shadowOpacity'];
+  shadowOffset?: ViewStyle['shadowOffset'];
+  shadowRadius?: ViewStyle['shadowRadius'];
+  backgroundColor?: string;
+};
+
+const getElevationStyles = (elevation: ElevationLevels, theme: Theme) => {
+  const elevationStyles: Record<ElevationLevels, Shadow> = {
+    0: {},
+    1: {
+      elevation: 2,
+      backgroundColor: theme.color.bgElevation1,
+      ...theme.shadow.elevation1,
+    },
+    2: {
+      elevation: 8,
+      backgroundColor: theme.color.bgElevation2,
+      ...theme.shadow.elevation2,
+    },
+  };
+  return elevationStyles[elevation];
 };
 
 /**
- * Maps elevation levels to Skia-compatible shadow configurations.
- * Based on Material Design elevation guidelines.
+ * Interpolates between two colors using linear interpolation.
+ * Returns an rgba string.
  */
-const getElevationShadowConfig = (elevation: ElevationLevels): SkiaShadowConfig | null => {
-  const configs: Record<ElevationLevels, SkiaShadowConfig | null> = {
-    0: null,
-    1: {
-      color: 'rgba(0, 0, 0, 0.15)',
-      offset: { x: 0, y: 2 },
-      blur: 4,
-      opacity: 1,
-    },
-    2: {
-      color: 'rgba(0, 0, 0, 0.2)',
-      offset: { x: 0, y: 4 },
-      blur: 8,
-      opacity: 1,
-    },
-  };
-  return configs[elevation];
+const interpolateColor = (color1: string, opacity: number): string => {
+  const c = Skia.Color(color1);
+  return `rgba(${c[0] * 255}, ${c[1] * 255}, ${c[2] * 255}, ${opacity})`;
 };
 
 /**
@@ -162,17 +166,17 @@ export type ChartTextProps = SharedProps & {
    * Useful for fine-tuning placement without affecting alignment.
    * @default 0
    */
-  xOffset?: AnimatedProp<number>;
+  dx?: AnimatedProp<number>;
   /**
    * Vertical offset in pixels to adjust the final y position.
-   * Useful for fine-tuning placement or elevation (similar to dy in SVG).
+   * Useful for fine-tuning placement or elevation.
    * Positive values move the text down, negative values move it up.
    * @default 0
    * @example
    * // Elevate text 10 pixels above its calculated position
-   * yOffset={-10}
+   * dy={-10}
    */
-  yOffset?: AnimatedProp<number>;
+  dy?: AnimatedProp<number>;
   /**
    * Horizontal alignment of the text.
    * @default 'center'
@@ -240,74 +244,18 @@ export type ChartTextProps = SharedProps & {
    */
   fontStyle?: FontSlant;
   /**
-   * Maximum width for text layout in pixels.
-   * Text will wrap within this width. Explicit line breaks (\n) are also supported.
-   * @default chartWidth (uses full chart width)
-   * @example
-   * // Constrain text to 150px width
-   * <ChartText maxWidth={150}>Long text that wraps</ChartText>
-   */
-  maxWidth?: number;
-  /**
-   * Maximum number of lines before truncating with ellipsis.
-   * @default undefined (no limit)
-   * @example
-   * <ChartText maxLines={2} ellipsis="…">
-   *   Very long text that will be truncated after 2 lines
-   * </ChartText>
-   */
-  maxLines?: number;
-  /**
-   * Ellipsis text when truncating due to maxLines.
-   * @default '...'
-   */
-  ellipsis?: string;
-  /**
    * Opacity of the text and background.
    * @default 1
    */
   opacity?: number;
   /**
-   * Elevation level for drop shadow. When set, automatically configures shadow properties.
-   * Overrides individual shadow props (shadowColor, shadowOffset, shadowBlur, shadowOpacity).
-   * Use this for a simple, consistent elevation API.
+   * Elevation level for drop shadow.
    * @default undefined
    * @example
    * // Simple elevation
    * elevation={1}
    */
   elevation?: ElevationLevels;
-  /**
-   * Color of the drop shadow.
-   * Ignored if elevation is set.
-   * @default 'rgba(0, 0, 0, 0.15)'
-   */
-  shadowColor?: string;
-  /**
-   * Horizontal and vertical offset of the shadow.
-   * Ignored if elevation is set.
-   * @default { x: 0, y: 2 }
-   * @example
-   * // Shadow offset 4px down
-   * shadowOffset={{ x: 0, y: 4 }}
-   */
-  shadowOffset?: { x: number; y: number };
-  /**
-   * Blur radius of the shadow (elevation).
-   * Higher values create a more diffused shadow.
-   * Ignored if elevation is set.
-   * @default 4
-   * @example
-   * // Strong elevation
-   * shadowBlur={8}
-   */
-  shadowBlur?: number;
-  /**
-   * Opacity of the shadow.
-   * Ignored if elevation is set.
-   * @default 1
-   */
-  shadowOpacity?: number;
 };
 
 /**
@@ -376,8 +324,8 @@ export const ChartText = memo<ChartTextProps>(
     children,
     x,
     y,
-    xOffset = 0,
-    yOffset = 0,
+    dx = 0,
+    dy = 0,
     horizontalAlignment = 'center',
     verticalAlignment = 'middle',
     disableRepositioning = false,
@@ -393,20 +341,10 @@ export const ChartText = memo<ChartTextProps>(
     fontSize: fontSizeOverride,
     fontWeight: fontWeightOverride,
     fontStyle = FontSlant.Upright,
-    maxWidth: maxWidthProp,
-    maxLines,
-    ellipsis = '...',
     elevation,
-    shadowColor: shadowColorProp = 'rgba(0, 0, 0, 0.15)',
-    shadowOffset: shadowOffsetProp = { x: 0, y: 2 },
-    shadowBlur: shadowBlurProp = 4,
-    shadowOpacity: shadowOpacityProp = 1,
   }) => {
     const theme = useTheme();
     const { width: chartWidth, height: chartHeight, fontMgr } = useCartesianChartContext();
-
-    // Default maxWidth to chart width
-    const maxWidth = maxWidthProp ?? chartWidth;
 
     // Compute effective background color based on elevation
     const background =
@@ -430,8 +368,6 @@ export const ChartText = memo<ChartTextProps>(
       // This gives us consistent behavior with the old Text component
       const paragraphStyle = {
         textAlign: TextAlign.Left,
-        ...(maxLines && { maxLines }),
-        ...(maxLines && { ellipsis }),
       };
 
       const builder = Skia.ParagraphBuilder.Make(paragraphStyle, fontMgr);
@@ -452,9 +388,9 @@ export const ChartText = memo<ChartTextProps>(
       });
 
       const para = builder.build();
-      para.layout(maxWidth);
+      para.layout(chartWidth);
       return para;
-    }, [fontMgr, textSegments, color, theme.color.fgMuted, maxLines, ellipsis, maxWidth]);
+    }, [fontMgr, textSegments, color, theme.color.fgMuted, chartWidth]);
 
     // Calculate text dimensions from paragraph
     const textDimensions = useMemo(() => {
@@ -580,58 +516,38 @@ export const ChartText = memo<ChartTextProps>(
 
     // Final adjusted positions
     const adjustedBackgroundRect = useDerivedValue(() => {
-      const offsetX = unwrapAnimatedValue(xOffset);
-      const offsetY = unwrapAnimatedValue(yOffset);
+      const offsetX = unwrapAnimatedValue(dx);
+      const offsetY = unwrapAnimatedValue(dy);
       return {
         x: backgroundRect.value.x + overflowAmount.value.x + offsetX,
         y: backgroundRect.value.y + overflowAmount.value.y + offsetY,
         width: backgroundRect.value.width,
         height: backgroundRect.value.height,
       };
-    }, [backgroundRect, overflowAmount, xOffset, yOffset]);
+    }, [backgroundRect, overflowAmount, dx, dy]);
 
     const adjustedTextPositionX = useDerivedValue(
-      () => textPosition.value.x + overflowAmount.value.x + unwrapAnimatedValue(xOffset),
-      [textPosition, overflowAmount, xOffset],
+      () => textPosition.value.x + overflowAmount.value.x + unwrapAnimatedValue(dx),
+      [textPosition, overflowAmount, dx],
     );
 
     const adjustedTextPositionY = useDerivedValue(
-      () => textPosition.value.y + overflowAmount.value.y + unwrapAnimatedValue(yOffset),
-      [textPosition, overflowAmount, yOffset],
+      () => textPosition.value.y + overflowAmount.value.y + unwrapAnimatedValue(dy),
+      [textPosition, overflowAmount, dy],
     );
 
-    // todo: this might not be working, check out useAnimatedReaction
-    useEffect(() => {
-      if (onDimensionsChange && adjustedBackgroundRect !== null) {
-        onDimensionsChange(adjustedBackgroundRect.value);
-      }
-    }, [adjustedBackgroundRect, onDimensionsChange]);
+    useAnimatedReaction(
+      () => adjustedBackgroundRect.value,
+      (rect, previous) => {
+        'worklet';
 
-    // Resolve shadow configuration from elevation or individual props
-    const shadowConfig = useMemo(() => {
-      // Use elevation if provided
-      if (elevation !== undefined) {
-        return getElevationShadowConfig(elevation);
-      }
-
-      // Otherwise use individual shadow props
-      return {
-        color: shadowColorProp,
-        offset: shadowOffsetProp,
-        blur: shadowBlurProp,
-        opacity: shadowOpacityProp,
-      };
-    }, [elevation, shadowColorProp, shadowOffsetProp, shadowBlurProp, shadowOpacityProp]);
-
-    // Compute shadow color (Skia will handle opacity via Paint)
-    const shadowColor = shadowConfig?.color ?? null;
-
-    // Check if shadow should be rendered
-    const shouldRenderShadow =
-      background !== 'transparent' &&
-      shadowConfig !== null &&
-      shadowConfig.blur > 0 &&
-      shadowConfig.opacity > 0;
+        // If callback is provided, jump to JS thread
+        if (onDimensionsChange && rect !== previous) {
+          runOnJS(onDimensionsChange)(rect);
+        }
+      },
+      [onDimensionsChange],
+    );
 
     // Check if we have valid content to render
     const hasValidContent = paragraph && textDimensions.width > 0 && textDimensions.height > 0;
@@ -657,6 +573,8 @@ export const ChartText = memo<ChartTextProps>(
       [adjustedBackgroundRect],
     );
 
+    const elevationStylesResult = getElevationStyles(elevation ?? 0, theme);
+
     return (
       <Group layer={<Paint opacity={finalOpacity} />}>
         {/* Background rectangle with shadow */}
@@ -669,12 +587,15 @@ export const ChartText = memo<ChartTextProps>(
             x={backgroundRectX}
             y={backgroundRectY}
           >
-            {shouldRenderShadow && shadowConfig && shadowColor && (
+            {elevationStylesResult && (
               <Shadow
-                blur={shadowConfig.blur}
-                color={shadowColor}
-                dx={shadowConfig.offset.x}
-                dy={shadowConfig.offset.y}
+                blur={Number(elevationStylesResult.shadowRadius ?? 0)}
+                color={interpolateColor(
+                  String(elevationStylesResult.shadowColor ?? '#000000'),
+                  Number(elevationStylesResult.shadowOpacity ?? 1),
+                )}
+                dx={Number(elevationStylesResult.shadowOffset?.width ?? 0)}
+                dy={Number(elevationStylesResult.shadowOffset?.height ?? 0)}
               />
             )}
           </RoundedRect>
@@ -683,7 +604,7 @@ export const ChartText = memo<ChartTextProps>(
         {hasValidContent && (
           <Paragraph
             paragraph={paragraph}
-            width={maxWidth}
+            width={chartWidth}
             x={adjustedTextPositionX}
             y={adjustedTextPositionY}
           />

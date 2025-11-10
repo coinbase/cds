@@ -13,7 +13,7 @@ export const ScrubberBeaconLabel = memo<ScrubberBeaconLabelProps>(
   ({
     background,
     color,
-    elevation = 1,
+    elevation = 2,
     borderRadius = 4,
     font = 'label1',
     verticalAlignment = 'middle',
