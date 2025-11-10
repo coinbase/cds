@@ -36,7 +36,7 @@ const DefaultTabComponent = <T extends string = string>({
   return (
     <MediaChip
       aria-selected={isActive}
-      inverted={isActive}
+      invertColorScheme={isActive}
       onClick={handleClick}
       role="tab"
       width="max-content"
@@ -110,11 +110,9 @@ const TabbedChipsComponent = memo(
     return (
       <HStack
         alignItems="center"
-        overflow="hidden"
         position="relative"
         testID={testID}
         width={width}
-        {...props}
       >
         <Paddle
           accessibilityLabel={previousArrowAccessibilityLabel}

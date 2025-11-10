@@ -91,7 +91,6 @@ const TabbedChipsComponent = memo(
     return (
       <HStack
         alignItems="center"
-        overflow="hidden"
         position="relative"
         testID={testID}
         width={width}

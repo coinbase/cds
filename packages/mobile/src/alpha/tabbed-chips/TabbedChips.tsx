@@ -21,7 +21,7 @@ const DefaultTabComponent = <T extends string = string>({
   return (
     <MediaChip
       accessibilityState={{ selected: isActive }}
-      inverted={isActive}
+      invertColorScheme={isActive}
       onPress={handlePress}
       {...tabProps}
     >
