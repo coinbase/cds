@@ -5,11 +5,11 @@ import { Group, Skia } from '@shopify/react-native-skia';
 import { useCartesianChartContext } from '../ChartProvider';
 import { Gradient } from '../gradient';
 import { Path, type PathProps } from '../Path';
-import { type GradientDefinition } from '../utils/gradient';
+import { createGradient, getBaseline } from '../utils';
 import { getDottedAreaPath } from '../utils/path';
-import { defaultTransition, usePathTransition } from '../utils/transition';
+import { usePathTransition } from '../utils/transition';
 
-import { type AreaComponentProps } from './SolidArea';
+import type { AreaComponentProps } from './Area';
 
 export type DottedAreaProps = Omit<PathProps, 'd' | 'fill' | 'fillOpacity'> &
   AreaComponentProps & {
@@ -93,40 +93,12 @@ export const DottedArea = memo<DottedAreaProps>(
 
     const areaClipPath = animate ? animatedClipPath : staticClipPath;
 
-    const gradient = useMemo((): GradientDefinition | undefined => {
+    const gradient = useMemo(() => {
       if (gradientProp) return gradientProp;
       if (!yAxisConfig) return;
 
-      const { min, max } = yAxisConfig.domain;
-      const baselineValue = min >= 0 ? min : max <= 0 ? max : (baseline ?? 0);
-
-      // Diverging gradient (data crosses zero)
-      if (min < 0 && max > 0) {
-        return {
-          axis: 'y',
-          stops: [
-            { offset: min, color: fill, opacity: peakOpacity },
-            { offset: baselineValue, color: fill, opacity: baselineOpacity },
-            { offset: max, color: fill, opacity: peakOpacity },
-          ],
-        };
-      }
-
-      // Simple gradient (all positive or all negative)
-      const peakValue = min >= 0 ? max : min;
-      return {
-        axis: 'y',
-        stops:
-          max <= 0
-            ? [
-                { offset: peakValue, color: fill, opacity: peakOpacity },
-                { offset: baselineValue, color: fill, opacity: baselineOpacity },
-              ]
-            : [
-                { offset: baselineValue, color: fill, opacity: baselineOpacity },
-                { offset: peakValue, color: fill, opacity: peakOpacity },
-              ],
-      };
+      const baselineValue = getBaseline(yAxisConfig.domain, baseline);
+      return createGradient(yAxisConfig.domain, baselineValue, fill, peakOpacity, baselineOpacity);
     }, [gradientProp, yAxisConfig, fill, baseline, peakOpacity, baselineOpacity]);
 
     if (!gradient) return;

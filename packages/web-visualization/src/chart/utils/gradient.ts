@@ -74,18 +74,20 @@ const processGradientStops = (
   const rangeSpan = Math.abs(rangeMax - rangeMin);
 
   // Convert data value offsets to normalized positions (0-1) using scale
-  const normalizedStops: GradientStop[] = stops.map((stop, index) => {
-    const stopPosition = scale(stop.offset);
-    const normalized =
-      stopPosition === undefined
-        ? 0
-        : Math.max(0, Math.min(1, Math.abs(stopPosition - rangeMin) / rangeSpan));
-    return {
-      offset: normalized, // Now 0-1 normalized (not data space)
-      color: stop.color,
-      opacity: stop.opacity ?? 1,
-    };
-  });
+  const normalizedStops: GradientStop[] = stops
+    .map((stop, index) => {
+      const stopPosition = scale(stop.offset);
+      const normalized =
+        stopPosition === undefined
+          ? 0
+          : Math.max(0, Math.min(1, Math.abs(stopPosition - rangeMin) / rangeSpan));
+      return {
+        offset: normalized, // Now 0-1 normalized (not data space)
+        color: stop.color,
+        opacity: stop.opacity ?? 1,
+      };
+    })
+    .sort((a, b) => a.offset - b.offset);
 
   return normalizedStops;
 };

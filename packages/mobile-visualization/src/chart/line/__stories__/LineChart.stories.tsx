@@ -2390,30 +2390,101 @@ function BasicExample() {
   const data = [10, 22, 29, 45, 98, 45, 115, 52, 21, 4, 68, 20, 21, 58];
 
   return (
-    <LineChart
-      enableScrubbing
-      showArea
-      showYAxis
-      height={150}
-      renderPoints={() => true}
-      series={[
-        {
-          id: 'prices',
-          data: data,
-        },
-      ]}
-      yAxis={{
-        showGrid: true,
-        domain: { min: 100, max: 0 },
-      }}
-    >
-      <Scrubber />
-    </LineChart>
+    <VStack>
+      <LineChart
+        enableScrubbing
+        showArea
+        showYAxis
+        areaType="dotted"
+        height={150}
+        renderPoints={() => true}
+        series={[
+          {
+            id: 'prices',
+            data: data,
+          },
+        ]}
+        yAxis={{
+          showGrid: true,
+          domain: { min: 100, max: 0 },
+        }}
+      >
+        <Scrubber />
+      </LineChart>
+      <LineChart
+        enableScrubbing
+        showArea
+        showYAxis
+        areaType="dotted"
+        height={150}
+        renderPoints={() => true}
+        series={[
+          {
+            id: 'prices',
+            data: data,
+          },
+        ]}
+        yAxis={{
+          showGrid: true,
+          domain: { min: 0, max: 100 },
+        }}
+      >
+        <Scrubber />
+      </LineChart>
+      <LineChart
+        enableScrubbing
+        showArea
+        showYAxis
+        areaType="dotted"
+        height={150}
+        renderPoints={() => true}
+        series={[
+          {
+            id: 'prices',
+            data: data,
+          },
+        ]}
+        yAxis={{
+          showGrid: true,
+          domain: { min: 40, max: 60 },
+        }}
+      >
+        <Scrubber />
+      </LineChart>
+      <LineChart
+        enableScrubbing
+        showArea
+        showYAxis
+        areaType="dotted"
+        height={150}
+        renderPoints={() => true}
+        series={[
+          {
+            id: 'prices',
+            data: data,
+          },
+        ]}
+        yAxis={{
+          showGrid: true,
+          domain: { min: 60, max: 40 },
+        }}
+      >
+        <Scrubber />
+      </LineChart>
+    </VStack>
   );
 }
 
 export default () => {
   const theme = useTheme();
+
+  return (
+    <ExampleScreen>
+      <Example title="Dotted">
+        <BasicExample />
+      </Example>
+    </ExampleScreen>
+  );
 
   return (
     <ExampleScreen>

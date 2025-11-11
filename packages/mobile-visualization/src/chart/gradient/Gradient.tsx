@@ -42,20 +42,16 @@ export const Gradient = memo<GradientProps>(({ gradient, yAxisId }) => {
   const xScale = context.getXScale();
   const yScale = context.getYScale(yAxisId);
 
+  const axis = gradient.axis ?? 'y';
+  const scale = axis === 'x' ? xScale : yScale;
+
   // Process gradient definition into stops
   const stops = useMemo(() => {
     if (!xScale || !yScale) return;
     return getGradientConfig(gradient, xScale, yScale);
   }, [gradient, xScale, yScale]);
 
-  // If gradient processing failed, don't render
-  if (!stops) return null;
-
-  const axis = gradient.axis ?? 'y';
-
-  // Get the appropriate scale based on axis
-  const scale = axis === 'x' ? xScale : yScale;
-  if (!scale) return null;
+  if (!stops || !scale) return;
 
   const range = scale.range();
 
