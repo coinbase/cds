@@ -19,116 +19,115 @@ import { DottedLine } from './DottedLine';
 import { SolidLine } from './SolidLine';
 
 export type LineComponentProps = {
+  /**
+   * Path of the line
+   */
   d: SVGProps<SVGPathElement>['d'];
+  /**
+   * The color of the line.
+   * @default color of the series or 'var(--color-fgPrimary)'
+   */
   stroke: string;
+  /**
+   * Opacity of the line
+   * @note when combined with gradient, both will be applied
+   * @default 1
+   */
   strokeOpacity?: number;
+  /**
+   * Width of the line
+   * @default 2
+   */
   strokeWidth?: number;
-  testID?: string;
-  animate?: boolean;
-  className?: string;
-  style?: React.CSSProperties;
-  clipPath?: string;
   /**
-   * Color gradient configuration.
-   * When provided, creates gradient-based coloring.
-   */
-  gradient?: GradientDefinition;
-  /**
-   * Series ID - used to retrieve gradient from series if not provided directly.
-   */
-  seriesId?: string;
-  /**
-   * Y-axis ID to use for calculating color positions.
-   * Only needed when using gradient with multiple y-axes.
+   * ID of the y-axis to use.
+   * If not provided, defaults to the default y-axis.
    */
   yAxisId?: string;
   /**
-   * Transition configuration for path animations.
+   * Gradient configuration.
+   * When provided, creates gradient or threshold-based coloring.
+   */
+  gradient?: GradientDefinition;
+  /**
+   * Whether to animate the line.
+   * Overrides the animate value from the chart context.
+   */
+  animate?: boolean;
+  /**
+   * Transition configuration for line animations.
    */
   transition?: Transition;
 };
 
 export type LineComponent = React.FC<LineComponentProps>;
 
-export type LineProps = SharedProps & {
-  /**
-   * The ID of the series to render. Will be used to find the data from the chart context.
-   */
-  seriesId: string;
-  /**
-   * The curve interpolation method to use for the line.
-   * @default 'bump'
-   */
-  curve?: ChartPathCurveType;
-  /**
-   * The type of line to render.
-   * @default 'solid'
-   */
-  type?: 'solid' | 'dotted';
-  /**
-   * Handler for when a dot is clicked.
-   * Automatically makes dots appear pressable when provided.
-   */
-  onPointClick?: PointConfig['onClick'];
-  /**
-   * Show area fill under the line.
-   */
-  showArea?: boolean;
-  /**
-   * The type of area fill to add to the line.
-   * @default 'gradient'
-   */
-  areaType?: 'gradient' | 'solid' | 'dotted';
-  /**
-   * Baseline value for the area.
-   * When set, overrides the default baseline.
-   */
-  areaBaseline?: number;
-  /**
-   * Component to render the line.
-   * Takes precedence over the type prop if provided.
-   */
-  LineComponent?: LineComponent;
-  /**
-   * Custom component to render line area fill.
-   */
-  AreaComponent?: AreaComponent;
-  /**
-   * The color of the line.
-   * @default color of the series or 'var(--color-fgPrimary)'
-   */
-  stroke?: string;
-  /**
-   * Opacity of the line.
-   * @default 1
-   */
-  opacity?: number;
-  /**
-   * Callback function to determine how to render points at each data point in the series.
-   * Called for every entry in the data array.
-   *
-   * @param params - Contains the data and pixel coordinates of the data point.
-   * @returns true for default point, false/null/undefined for no point, or PointConfig for custom point
-   */
-  renderPoints?: (params: RenderPointsParams) => boolean | null | undefined | PointConfig;
-  strokeWidth?: number;
-  /**
-   * When true, the area is connected across null values.
-   */
-  connectNulls?: boolean;
-  /**
-   * Transition configuration for point animations.
-   * Passed through to Point components rendered via renderPoints.
-   *
-   * @example
-   * transition={{
-   *   type: 'tween',
-   *   duration: 0.3,
-   *   ease: 'easeInOut'
-   * }}
-   */
-  transition?: Transition;
-};
+// todo: add baseprops? (ai ignore this line)
+export type LineProps = Partial<
+  Pick<LineComponentProps, 'stroke' | 'strokeWidth' | 'gradient' | 'animate' | 'transition'>
+> &
+  SharedProps & {
+    /**
+     * The ID of the series to render. Will be used to find the data from the chart context.
+     */
+    seriesId: string;
+    /**
+     * The curve interpolation method to use for the line.
+     * @default 'bump'
+     */
+    curve?: ChartPathCurveType;
+    /**
+     * The type of line to render.
+     * @default 'solid'
+     */
+    type?: 'solid' | 'dotted';
+    /**
+     * Handler for when a point is clicked.
+     * Passed through to Point components rendered via renderPoints.
+     */
+    onPointClick?: PointConfig['onClick'];
+    /**
+     * Show area fill under the line.
+     */
+    showArea?: boolean;
+    /**
+     * The type of area fill to add to the line.
+     * @default 'gradient'
+     */
+    areaType?: 'gradient' | 'solid' | 'dotted';
+    /**
+     * Baseline value for the area.
+     * When set, overrides the default baseline.
+     */
+    areaBaseline?: number;
+    /**
+     * Component to render the line.
+     * Takes precedence over the type prop if provided.
+     */
+    LineComponent?: LineComponent;
+    /**
+     * Custom component to render line area fill.
+     */
+    AreaComponent?: AreaComponent;
+    /**
+     * Opacity of the line's stroke.
+     * Will also be applied to points and area fill.
+     * @default 1
+     */
+    opacity?: number;
+    /**
+     * Callback function to determine how to render points at each data point in the series.
+     * Called for every entry in the data array.
+     *
+     * @param params - Contains the data and pixel coordinates of the data point.
+     * @returns true for default point, false/null/undefined for no point, or PointConfig for custom point
+     */
+    renderPoints?: (params: RenderPointsParams) => boolean | null | undefined | PointConfig;
+    /**
+     * When true, the area is connected across null values.
+     */
+    connectNulls?: boolean;
+  };
 
 export const Line = memo<LineProps>(
   ({
@@ -146,21 +145,21 @@ export const Line = memo<LineProps>(
     renderPoints,
     connectNulls,
     transition,
+    gradient: gradientProp,
     ...props
   }) => {
     const { animate, getSeries, getSeriesData, getXScale, getYScale, getXAxis, getYAxis } =
       useCartesianChartContext();
 
     const matchedSeries = useMemo(() => getSeries(seriesId), [getSeries, seriesId]);
-    const seriesGradient = useMemo(() => matchedSeries?.gradient, [matchedSeries]);
+    const gradient = useMemo(
+      () => gradientProp ?? matchedSeries?.gradient,
+      [gradientProp, matchedSeries?.gradient],
+    );
     const sourceData = useMemo(() => getSeriesData(seriesId), [getSeriesData, seriesId]);
 
     const xAxis = useMemo(() => getXAxis(), [getXAxis]);
     const xScale = useMemo(() => getXScale(), [getXScale]);
-    const yAxis = useMemo(
-      () => getYAxis(matchedSeries?.yAxisId),
-      [getYAxis, matchedSeries?.yAxisId],
-    );
     const yScale = useMemo(
       () => getYScale(matchedSeries?.yAxisId),
       [getYScale, matchedSeries?.yAxisId],
@@ -212,19 +211,9 @@ export const Line = memo<LineProps>(
     }, [xAxis?.data]);
 
     const gradientScale = useMemo(() => {
-      if (!seriesGradient || !xScale || !yScale) return;
-      return seriesGradient.axis === 'x' ? xScale : yScale;
-    }, [seriesGradient, xScale, yScale]);
-
-    // todo: see what this is for
-    const filteredChartData = useMemo(() => {
-      if (!xScale || !yScale || !xAxis || !yAxis) return [];
-      return chartData.map((value, index) => {
-        if (value === null) return { value: null, index };
-        const xValue = xData && xData[index] !== undefined ? xData[index] : index;
-        return { value, index, xValue };
-      });
-    }, [chartData, xData, xScale, yScale, xAxis, yAxis]);
+      if (!gradient || !xScale || !yScale) return;
+      return gradient.axis === 'x' ? xScale : yScale;
+    }, [gradient, xScale, yScale]);
 
     if (!xScale || !yScale || !path) return;
 
@@ -238,7 +227,7 @@ export const Line = memo<LineProps>(
             curve={curve}
             fill={stroke}
             fillOpacity={opacity}
-            gradient={seriesGradient}
+            gradient={gradient}
             seriesId={seriesId}
             transition={transition}
             type={areaType}
@@ -246,15 +235,13 @@ export const Line = memo<LineProps>(
         )}
         <LineComponent
           d={path}
-          gradient={seriesGradient}
-          seriesId={seriesId}
+          gradient={gradient}
           stroke={stroke}
           strokeOpacity={opacity}
           transition={transition}
           yAxisId={matchedSeries?.yAxisId}
           {...props}
         />
-        {/* todo: should we simplify */}
         {renderPoints && (
           <motion.g
             data-component="line-points-group"
@@ -267,11 +254,10 @@ export const Line = memo<LineProps>(
                 }
               : {})}
           >
-            {filteredChartData.map(({ value, index, xValue }) => {
-              // Skip null values (either originally null or filtered out)
-              if (value === null) {
-                return null;
-              }
+            {chartData.map((value: number | null, index: number) => {
+              if (value === null) return;
+
+              const xValue = xData && xData[index] !== undefined ? xData[index] : index;
 
               const point = renderPoints({
                 dataY: value,
@@ -287,16 +273,12 @@ export const Line = memo<LineProps>(
               // Evaluate colors from gradient if available (only if not explicitly set)
               let pointFill = pointConfig.fill ?? stroke;
 
-              if (gradientScale && seriesGradient && !pointConfig.fill) {
+              if (gradientScale && gradient && !pointConfig.fill) {
                 // Use the appropriate data value based on gradient axis
-                const axis = seriesGradient.axis ?? 'y';
+                const axis = gradient.axis ?? 'y';
                 const dataValue = axis === 'x' ? xValue : value;
 
-                const evaluatedColor = evaluateGradientAtValue(
-                  seriesGradient,
-                  dataValue,
-                  gradientScale,
-                );
+                const evaluatedColor = evaluateGradientAtValue(gradient, dataValue, gradientScale);
                 if (evaluatedColor) {
                   // Apply gradient color to fill if not explicitly set
                   pointFill = evaluatedColor;
@@ -305,7 +287,7 @@ export const Line = memo<LineProps>(
 
               return (
                 <Point
-                  key={`${seriesId}-renderpoint-${index}`}
+                  key={`${seriesId}-${index}`}
                   dataX={xValue}
                   dataY={value}
                   {...pointConfig}

@@ -99,6 +99,7 @@ export const Line = memo<LineProps>(
     renderPoints,
     connectNulls,
     transition,
+    gradient: gradientProp,
     ...props
   }) => {
     const theme = useTheme();
@@ -120,7 +121,10 @@ export const Line = memo<LineProps>(
     }, [animate, pointsOpacity]);
 
     const matchedSeries = useMemo(() => getSeries(seriesId), [getSeries, seriesId]);
-    const seriesGradient = useMemo(() => matchedSeries?.gradient, [matchedSeries]);
+    const gradient = useMemo(
+      () => gradientProp ?? matchedSeries?.gradient,
+      [gradientProp, matchedSeries?.gradient],
+    );
     const sourceData = useMemo(() => getSeriesData(seriesId), [getSeriesData, seriesId]);
 
     const xAxis = useMemo(() => getXAxis(), [getXAxis]);
@@ -176,9 +180,9 @@ export const Line = memo<LineProps>(
     }, [xAxis?.data]);
 
     const gradientScale = useMemo(() => {
-      if (!seriesGradient || !xScale || !yScale) return;
-      return seriesGradient.axis === 'x' ? xScale : yScale;
-    }, [seriesGradient, xScale, yScale]);
+      if (!gradient || !xScale || !yScale) return;
+      return gradient.axis === 'x' ? xScale : yScale;
+    }, [gradient, xScale, yScale]);
 
     if (!xScale || !yScale || !path) return;
 
@@ -192,7 +196,7 @@ export const Line = memo<LineProps>(
             curve={curve}
             fill={stroke}
             fillOpacity={opacity}
-            gradient={seriesGradient}
+            gradient={gradient}
             seriesId={seriesId}
             transition={transition}
             type={areaType}
@@ -201,49 +205,40 @@ export const Line = memo<LineProps>(
         {/* todo: pass in series id? */}
         <LineComponent
           d={path}
-          gradient={seriesGradient}
+          gradient={gradient}
           stroke={stroke}
           strokeOpacity={opacity}
           transition={transition}
           yAxisId={matchedSeries?.yAxisId}
           {...props}
         />
-        {/* todo: should we simplify */}
         {renderPoints && (
           <Group opacity={pointsOpacity}>
             {chartData.map((value: number | null, index: number) => {
-              if (value === null) {
-                return null;
-              }
+              if (value === null) return;
 
               const xValue = xData && xData[index] !== undefined ? xData[index] : index;
 
-              const pointResult = renderPoints({
+              const point = renderPoints({
                 dataY: value,
                 dataX: xValue,
                 x: xScale?.(xValue) ?? 0,
                 y: yScale?.(value) ?? 0,
               });
 
-              if (pointResult === false || pointResult === null || pointResult === undefined) {
-                return null;
-              }
+              if (!point) return;
 
-              const pointConfig = pointResult === true ? {} : pointResult;
+              const pointConfig = point === true ? {} : point;
 
               // Evaluate colors from gradient if available (only if not explicitly set)
               let pointFill = pointConfig.fill ?? stroke;
 
-              if (gradientScale && seriesGradient && !pointConfig.fill) {
+              if (gradientScale && gradient && !pointConfig.fill) {
                 // Use the appropriate data value based on gradient axis
-                const axis = seriesGradient.axis ?? 'y';
+                const axis = gradient.axis ?? 'y';
                 const dataValue = axis === 'x' ? xValue : value;
 
-                const evaluatedColor = evaluateGradientAtValue(
-                  seriesGradient,
-                  dataValue,
-                  gradientScale,
-                );
+                const evaluatedColor = evaluateGradientAtValue(gradient, dataValue, gradientScale);
                 if (evaluatedColor) {
                   // Apply gradient color to fill if not explicitly set
                   pointFill = evaluatedColor;
@@ -252,13 +247,13 @@ export const Line = memo<LineProps>(
 
               return (
                 <Point
-                  key={`${seriesId}-renderpoint-${xValue}`}
+                  key={`${seriesId}-${xValue}`}
                   dataX={xValue}
                   dataY={value}
-                  transition={transition}
                   {...pointConfig}
                   fill={pointFill}
                   opacity={pointConfig.opacity ?? opacity}
+                  transition={transition}
                 />
               );
             })}

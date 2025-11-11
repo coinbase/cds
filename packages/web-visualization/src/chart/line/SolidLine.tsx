@@ -7,28 +7,36 @@ import { Path, type PathProps } from '../Path';
 import type { LineComponentProps } from './Line';
 
 export type SolidLineProps = SharedProps &
-  Omit<PathProps, 'fill' | 'strokeWidth'> &
-  Pick<LineComponentProps, 'strokeWidth' | 'gradient' | 'seriesId' | 'yAxisId' | 'transition'> & {
+  Pick<
+    PathProps,
+    | 'clipOffset'
+    | 'clipRect'
+    | 'strokeLinecap'
+    | 'strokeLinejoin'
+    | 'strokeDasharray'
+    | 'strokeDashoffset'
+  > &
+  LineComponentProps & {
     fill?: SVGProps<SVGPathElement>['fill'];
   };
 
 /**
  * A customizable solid line component.
- * Supports gradient for gradient effects.
+ * Supports gradient for gradient effects and smooth data transitions.
  */
 export const SolidLine = memo<SolidLineProps>(
   ({
     fill = 'none',
-    stroke = 'var(--color-bgLine)',
+    stroke = 'var(--color-fgPrimary)',
     strokeLinecap = 'round',
     strokeLinejoin = 'round',
     strokeOpacity = 1,
     strokeWidth = 2,
     gradient,
-    seriesId,
     yAxisId,
     animate,
     transition,
+    d,
     ...props
   }) => {
     const gradientId = useId();
@@ -49,6 +57,7 @@ export const SolidLine = memo<SolidLineProps>(
         <Path
           animate={animate}
           clipOffset={strokeWidth}
+          d={d}
           fill={fill}
           stroke={gradient ? `url(#${gradientId})` : stroke}
           strokeLinecap={strokeLinecap}

@@ -50,7 +50,16 @@ export type LineComponentProps = {
 };
 
 export type SolidLineProps = SharedProps &
-  Omit<PathProps, 'fill' | 'strokeWidth' | 'd'> &
+  Pick<
+    PathProps,
+    | 'initialPath'
+    | 'children'
+    | 'strokeLinecap'
+    | 'strokeLinejoin'
+    | 'clipRect'
+    | 'clipPath'
+    | 'clipOffset'
+  > &
   LineComponentProps & {
     fill?: string;
   };

@@ -1,15 +1,23 @@
 import { memo, type SVGProps, useId } from 'react';
 import type { SharedProps } from '@coinbase/cds-common/types';
 
-import { useCartesianChartContext } from '../ChartProvider';
 import { Gradient } from '../gradient';
 import { Path, type PathProps } from '../Path';
 
 import type { LineComponentProps } from './Line';
 
 export type DottedLineProps = SharedProps &
-  Omit<PathProps, 'fill' | 'strokeWidth'> &
-  Pick<LineComponentProps, 'strokeWidth' | 'gradient' | 'seriesId' | 'yAxisId' | 'transition'> & {
+  Pick<
+    PathProps,
+    | 'clipOffset'
+    | 'clipRect'
+    | 'strokeLinecap'
+    | 'strokeLinejoin'
+    | 'strokeDasharray'
+    | 'strokeDashoffset'
+    | 'vectorEffect'
+  > &
+  LineComponentProps & {
     fill?: SVGProps<SVGPathElement>['fill'];
   };
 
@@ -20,7 +28,7 @@ export type DottedLineProps = SharedProps &
 export const DottedLine = memo<DottedLineProps>(
   ({
     fill = 'none',
-    stroke = 'var(--color-bgLine)',
+    stroke = 'var(--color-fgPrimary)',
     strokeDasharray = '0 4',
     strokeLinecap = 'round',
     strokeLinejoin = 'round',
@@ -28,10 +36,10 @@ export const DottedLine = memo<DottedLineProps>(
     strokeWidth = 2,
     vectorEffect = 'non-scaling-stroke',
     gradient,
-    seriesId,
     yAxisId,
     animate,
     transition,
+    d,
     ...props
   }) => {
     const gradientId = useId();
@@ -52,6 +60,7 @@ export const DottedLine = memo<DottedLineProps>(
         <Path
           animate={animate}
           clipOffset={strokeWidth}
+          d={d}
           fill={fill}
           stroke={gradient ? `url(#${gradientId})` : stroke}
           strokeDasharray={strokeDasharray}

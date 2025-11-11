@@ -42,6 +42,7 @@ export type LineChartProps = Omit<CartesianChartProps, 'xAxis' | 'yAxis' | 'seri
     | 'connectNulls'
     | 'transition'
     | 'onPointClick'
+    | 'opacity'
   > & {
     /**
      * Configuration objects that define how to visualize the data.
@@ -77,6 +78,7 @@ export const LineChart = memo(
         strokeWidth,
         connectNulls,
         transition,
+        opacity,
         showXAxis,
         showYAxis,
         xAxis,
@@ -165,6 +167,7 @@ export const LineChart = memo(
               connectNulls={connectNulls}
               curve={curve}
               onPointClick={onPointClick}
+              opacity={opacity}
               renderPoints={renderPoints}
               seriesId={id}
               showArea={showArea}

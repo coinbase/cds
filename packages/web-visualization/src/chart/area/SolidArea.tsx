@@ -34,7 +34,7 @@ export const SolidArea = memo<SolidAreaProps>(
     animate,
     transition,
     gradient,
-    ...props
+    ...pathProps
   }) => {
     const patternId = useId();
 
@@ -57,7 +57,7 @@ export const SolidArea = memo<SolidAreaProps>(
           fill={gradient ? `url(#${patternId})` : fill}
           fillOpacity={fillOpacity}
           transition={transition}
-          {...props}
+          {...pathProps}
         />
       </>
     );
