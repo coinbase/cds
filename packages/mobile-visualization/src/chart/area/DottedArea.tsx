@@ -11,7 +11,19 @@ import { usePathTransition } from '../utils/transition';
 
 import type { AreaComponentProps } from './Area';
 
-export type DottedAreaProps = Omit<PathProps, 'd' | 'fill' | 'fillOpacity'> &
+export type DottedAreaProps = Pick<
+  PathProps,
+  | 'initialPath'
+  | 'children'
+  | 'stroke'
+  | 'strokeOpacity'
+  | 'strokeWidth'
+  | 'strokeLinecap'
+  | 'strokeLinejoin'
+  | 'clipRect'
+  | 'clipPath'
+  | 'clipOffset'
+> &
   AreaComponentProps & {
     /**
      * Size of the pattern unit (width and height).
@@ -25,11 +37,13 @@ export type DottedAreaProps = Omit<PathProps, 'd' | 'fill' | 'fillOpacity'> &
     dotSize?: number;
     /**
      * Opacity at the peak values (top/bottom of gradient).
+     * @note only used when no gradient is provided
      * @default 1
      */
     peakOpacity?: number;
     /**
      * Opacity at the baseline (0 or edge closest to 0).
+     * @note only used when no gradient is provided
      * @default 0
      */
     baselineOpacity?: number;
@@ -44,7 +58,6 @@ export const DottedArea = memo<DottedAreaProps>(
   ({
     d,
     fill: fillProp,
-    fillOpacity = 1,
     patternSize = 4,
     dotSize = 1,
     peakOpacity = 1,
@@ -54,13 +67,17 @@ export const DottedArea = memo<DottedAreaProps>(
     gradient: gradientProp,
     animate: animateProp,
     transition,
+    ...pathProps
   }) => {
     const theme = useTheme();
     const { drawingArea, animate, getYAxis } = useCartesianChartContext();
 
-    const fill = fillProp ?? theme.color.fgPrimary;
-
     const yAxisConfig = getYAxis(yAxisId);
+
+    const fill = useMemo(
+      () => fillProp ?? theme.color.fgPrimary,
+      [fillProp, theme.color.fgPrimary],
+    );
 
     const dottedPath = useMemo(() => {
       if (!drawingArea) return '';
@@ -78,7 +95,7 @@ export const DottedArea = memo<DottedAreaProps>(
     }, [drawingArea, patternSize, dotSize]);
 
     const animatedClipPath = usePathTransition({
-      currentPath: d ?? '',
+      currentPath: d,
       transition,
     });
 
@@ -86,8 +103,6 @@ export const DottedArea = memo<DottedAreaProps>(
       if (!d) return;
       return Skia.Path.MakeFromSVGString(d) ?? undefined;
     }, [d]);
-
-    const areaClipPath = animate ? animatedClipPath : staticClipPath;
 
     const gradient = useMemo(() => {
       if (gradientProp) return gradientProp;
@@ -97,20 +112,16 @@ export const DottedArea = memo<DottedAreaProps>(
       return createGradient(yAxisConfig.domain, baselineValue, fill, peakOpacity, baselineOpacity);
     }, [gradientProp, yAxisConfig, fill, baseline, peakOpacity, baselineOpacity]);
 
-    if (!gradient) return;
-
-    if (!drawingArea || !dottedPath || !areaClipPath) return;
-
     return (
-      <Group clip={areaClipPath}>
+      <Group clip={animate ? animatedClipPath : staticClipPath}>
         <Path
           animate={animateProp ?? animate}
           d={dottedPath}
           fill={fill}
-          fillOpacity={fillOpacity}
           transition={transition}
+          {...pathProps}
         >
-          <Gradient gradient={gradient} yAxisId={yAxisId} />
+          {gradient && <Gradient gradient={gradient} yAxisId={yAxisId} />}
         </Path>
       </Group>
     );

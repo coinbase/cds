@@ -8,7 +8,19 @@ import { createGradient, getBaseline } from '../utils';
 
 import type { AreaComponentProps } from './Area';
 
-export type GradientAreaProps = Omit<PathProps, 'd' | 'fill' | 'fillOpacity'> &
+export type GradientAreaProps = Pick<
+  PathProps,
+  | 'initialPath'
+  | 'children'
+  | 'stroke'
+  | 'strokeOpacity'
+  | 'strokeWidth'
+  | 'strokeLinecap'
+  | 'strokeLinejoin'
+  | 'clipRect'
+  | 'clipPath'
+  | 'clipOffset'
+> &
   AreaComponentProps & {
     /**
      * Opacity at peak of gradient.
@@ -46,14 +58,13 @@ export const GradientArea = memo<GradientAreaProps>(
     const { getYAxis } = useCartesianChartContext();
     const theme = useTheme();
 
+    const yAxisConfig = getYAxis(yAxisId);
+
     const fill = useMemo(
       () => fillProp ?? theme.color.fgPrimary,
       [fillProp, theme.color.fgPrimary],
     );
 
-    const yAxisConfig = getYAxis(yAxisId);
-
-    // Generate gradient if not provided
     const gradient = useMemo(() => {
       if (gradientProp) return gradientProp;
       if (!yAxisConfig) return;

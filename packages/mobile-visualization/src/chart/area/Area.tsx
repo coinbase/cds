@@ -1,6 +1,4 @@
 import React, { memo, useMemo } from 'react';
-import type { Rect } from '@coinbase/cds-common/types';
-import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import { type ChartPathCurveType, getAreaPath, type Transition } from '../utils';
@@ -11,19 +9,21 @@ import { GradientArea } from './GradientArea';
 import { SolidArea } from './SolidArea';
 
 export type AreaComponentProps = {
+  /**
+   * Path of the area
+   */
   d: string;
+  /**
+   * The color of the area.
+   * @default color of the series or 'var(--color-fgPrimary)'
+   */
   fill?: string;
   /**
    * Opacity of the area
    * @note when combined with gradient, both will be applied
-   * todo: double check this
    * @default 1
    */
   fillOpacity?: number;
-  // todo: get rid of this?
-  stroke?: string;
-  // todo: get rid of this?
-  strokeWidth?: number;
   /**
    * ID of the y-axis to use.
    * If not provided, defaults to the default y-axis.
@@ -45,24 +45,17 @@ export type AreaComponentProps = {
    */
   animate?: boolean;
   /**
-   * Transition configuration for area animations.
-   * Defines how the area transitions when data changes.
-   *
-   * @example
-   * // Spring animation
-   * transition={{ type: 'spring', damping: 10, stiffness: 100 }}
-   *
-   * @example
-   * // Timing animation
-   * transition={{ type: 'timing', duration: 500 }}
+   * Transition configuration for path animations.
    */
   transition?: Transition;
 };
 
 export type AreaComponent = React.FC<AreaComponentProps>;
 
-// todo: adjust type to pick from AreaCompoentProps where possible
-export type AreaProps = {
+export type AreaProps = Pick<
+  AreaComponentProps,
+  'fill' | 'fillOpacity' | 'baseline' | 'transition' | 'gradient' | 'animate'
+> & {
   /**
    * The ID of the series to render. Will be used to find the data from the chart context.
    */
@@ -83,41 +76,9 @@ export type AreaProps = {
    */
   AreaComponent?: AreaComponent;
   /**
-   * The color of the area.
-   * @default color of the series or theme.color.fgPrimary
-   */
-  fill?: string;
-  /**
-   * Opacity of the area.
-   * @default 1
-   */
-  fillOpacity?: number;
-  stroke?: string;
-  strokeWidth?: number;
-  /**
-   * Baseline value for the gradient.
-   * When set, overrides the default baseline.
-   */
-  baseline?: number;
-  /**
-   * Gradient configuration.
-   * When provided, creates gradient or threshold-based coloring.
-   */
-  gradient?: GradientDefinition;
-  /**
    * When true, the area is connected across null values.
    */
   connectNulls?: boolean;
-  /**
-   * Whether to animate the area.
-   * Overrides the animate value from the chart context.
-   */
-  animate?: boolean;
-  /**
-   * Transition configuration for area animations.
-   * Defines how the area transitions when data changes.
-   */
-  transition?: Transition;
 };
 
 export const Area = memo<AreaProps>(
@@ -128,13 +89,11 @@ export const Area = memo<AreaProps>(
     AreaComponent: AreaComponentProp,
     fill: fillProp,
     fillOpacity = 1,
-    stroke,
-    strokeWidth,
     baseline,
-    gradient: gradientProp,
     connectNulls,
-    animate,
+    gradient: gradientProp,
     transition,
+    animate,
   }) => {
     const { getSeries, getSeriesData, getXScale, getYScale, getXAxis } = useCartesianChartContext();
 
@@ -190,14 +149,12 @@ export const Area = memo<AreaProps>(
 
     return (
       <AreaComponent
-        animate={animate} // ideally we can get rid of this
+        animate={animate}
         baseline={baseline}
         d={area}
         fill={fill}
         fillOpacity={fillOpacity}
         gradient={gradient}
-        stroke={stroke}
-        strokeWidth={strokeWidth}
         transition={transition}
         yAxisId={matchedSeries?.yAxisId}
       />

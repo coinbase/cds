@@ -6,7 +6,20 @@ import { Path, type PathProps } from '../Path';
 
 import type { AreaComponentProps } from './Area';
 
-export type SolidAreaProps = Omit<PathProps, 'd' | 'fill' | 'fillOpacity'> & AreaComponentProps;
+export type SolidAreaProps = Pick<
+  PathProps,
+  | 'initialPath'
+  | 'children'
+  | 'stroke'
+  | 'strokeOpacity'
+  | 'strokeWidth'
+  | 'strokeLinecap'
+  | 'strokeLinejoin'
+  | 'clipRect'
+  | 'clipPath'
+  | 'clipOffset'
+> &
+  AreaComponentProps;
 
 /**
  * A customizable solid area component.
@@ -14,7 +27,7 @@ export type SolidAreaProps = Omit<PathProps, 'd' | 'fill' | 'fillOpacity'> & Are
  * Otherwise, renders with solid fill.
  */
 export const SolidArea = memo<SolidAreaProps>(
-  ({ d, fill, fillOpacity = 1, yAxisId, animate, transition, gradient, ...props }) => {
+  ({ d, fill, fillOpacity = 1, yAxisId, animate, transition, gradient, ...pathProps }) => {
     const theme = useTheme();
 
     return (
@@ -24,7 +37,7 @@ export const SolidArea = memo<SolidAreaProps>(
         fill={fill ?? theme.color.fgPrimary}
         fillOpacity={fillOpacity}
         transition={transition}
-        {...props}
+        {...pathProps}
       >
         {gradient && <Gradient gradient={gradient} yAxisId={yAxisId} />}
       </Path>
