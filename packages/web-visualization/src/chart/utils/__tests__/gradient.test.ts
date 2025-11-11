@@ -1,11 +1,6 @@
 import { scaleLinear } from 'd3-scale';
 
-import {
-  evaluateGradientAtValue,
-  getGradientConfig,
-  getGradientScale,
-  type GradientDefinition,
-} from '../gradient';
+import { evaluateGradientAtValue, getGradientConfig, type GradientDefinition } from '../gradient';
 import type { ChartScaleFunction } from '../scale';
 
 describe('gradient utilities', () => {
@@ -298,54 +293,6 @@ describe('gradient utilities', () => {
         stops: [],
       };
       expect(evaluateGradientAtValue(gradient, 50, scale)).toBeUndefined();
-    });
-  });
-
-  describe('getGradientScale', () => {
-    const xScale = scaleLinear().domain([0, 100]).range([0, 400]);
-    const yScale = scaleLinear().domain([0, 50]).range([400, 0]);
-
-    it('should return y-axis scale by default', () => {
-      const gradient: GradientDefinition = {
-        stops: [
-          { offset: 0, color: '#ff0000' },
-          { offset: 100, color: '#00ff00' },
-        ],
-      };
-      const result = getGradientScale(gradient, xScale, yScale);
-      expect(result).toBe(yScale);
-    });
-
-    it('should return x-axis scale when axis is x', () => {
-      const gradient: GradientDefinition = {
-        axis: 'x',
-        stops: [
-          { offset: 0, color: '#ff0000' },
-          { offset: 100, color: '#00ff00' },
-        ],
-      };
-      const result = getGradientScale(gradient, xScale, yScale);
-      expect(result).toBe(xScale);
-    });
-
-    it('should return yScale when gradient is undefined', () => {
-      const result = getGradientScale(undefined, xScale, yScale);
-      expect(result).toBe(yScale);
-    });
-
-    it('should warn when scale is not available', () => {
-      const warnSpy = jest.spyOn(console, 'warn').mockImplementation();
-      const gradient: GradientDefinition = {
-        axis: 'x',
-        stops: [
-          { offset: 0, color: '#ff0000' },
-          { offset: 100, color: '#00ff00' },
-        ],
-      };
-      const result = getGradientScale(gradient, undefined, yScale);
-      expect(result).toBeUndefined();
-      expect(warnSpy).toHaveBeenCalledWith('Gradient requires a scale on the x-axis');
-      warnSpy.mockRestore();
     });
   });
 });

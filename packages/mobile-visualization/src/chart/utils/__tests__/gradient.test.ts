@@ -1,9 +1,4 @@
-import {
-  evaluateGradientAtValue,
-  getGradientConfig,
-  getGradientScale,
-  type GradientDefinition,
-} from '../gradient';
+import { evaluateGradientAtValue, getGradientConfig, type GradientDefinition } from '../gradient';
 import { getCategoricalScale, getNumericScale } from '../scale';
 
 // Mock Skia for the test environment
@@ -48,88 +43,13 @@ jest.mock('@shopify/react-native-skia', () => ({
   },
 }));
 
-// Tests for internal functions removed - these are now implementation details
-
-describe('getGradientScale', () => {
-  it('should return yScale by default when no gradient provided', () => {
-    const yScale = getNumericScale({
-      scaleType: 'linear',
-      domain: { min: 0, max: 100 },
-      range: { min: 0, max: 400 },
-    });
-
-    const result = getGradientScale(undefined, undefined, yScale);
-    expect(result).toBe(yScale);
-  });
-
-  it('should return correct scale based on gradient axis', () => {
-    const xScale = getNumericScale({
-      scaleType: 'linear',
-      domain: { min: 0, max: 10 },
-      range: { min: 0, max: 200 },
-    });
-    const yScale = getNumericScale({
-      scaleType: 'linear',
-      domain: { min: 0, max: 100 },
-      range: { min: 0, max: 400 },
-    });
-
-    const gradient: GradientDefinition = {
-      axis: 'x',
-      stops: [
-        { offset: 0, color: 'red' },
-        { offset: 10, color: 'blue' },
-      ],
-    };
-
-    const result = getGradientScale(gradient, xScale, yScale);
-    expect(result).toBe(xScale);
-  });
-
-  it('should support band scales', () => {
-    const bandScale = getCategoricalScale({
-      domain: { min: 0, max: 6 },
-      range: { min: 0, max: 200 },
-    });
-    const yScale = getNumericScale({
-      scaleType: 'linear',
-      domain: { min: 0, max: 100 },
-      range: { min: 0, max: 400 },
-    });
-
-    const gradient: GradientDefinition = {
-      axis: 'x',
-      stops: [
-        { offset: 0, color: 'red' },
-        { offset: 6, color: 'blue' },
-      ],
-    };
-
-    const result = getGradientScale(gradient, bandScale, yScale);
-    expect(result).toBe(bandScale);
-  });
-
-  it('should return undefined for missing scale', () => {
-    const gradient: GradientDefinition = {
-      axis: 'x',
-      stops: [
-        { offset: 0, color: 'red' },
-        { offset: 10, color: 'blue' },
-      ],
-    };
-
-    const result = getGradientScale(gradient, undefined, undefined);
-    expect(result).toBeUndefined();
-  });
-});
-
 describe('getGradientConfig with band scale', () => {
   it('should process gradient with band scale', () => {
     const xScale = getCategoricalScale({
       domain: { min: 0, max: 6 }, // [0, 1, 2, 3, 4, 5, 6]
       range: { min: 0, max: 200 },
     });
-    
+
     const yScale = getNumericScale({
       scaleType: 'linear',
       domain: { min: 0, max: 100 },
@@ -248,7 +168,7 @@ describe('getGradientConfig with numeric scale', () => {
     domain: { min: 0, max: 100 },
     range: { min: 0, max: 400 },
   });
-  
+
   const yScale = getNumericScale({
     scaleType: 'linear',
     domain: { min: 0, max: 100 },

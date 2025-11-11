@@ -93,41 +93,6 @@ const processGradientStops = (
 };
 
 /**
- * Determines the appropriate scale to use based on GradientDefinition axis configuration.
- * Gradients work with numeric scales (linear, log) and categorical scales (band).
- * Band scales use numerical indices [0, 1, 2, ...] which work for color mapping.
- *
- * @param gradient - The GradientDefinition configuration
- * @param xScale - The x-axis scale
- * @param yScale - The y-axis scale
- * @returns The scale to use for color mapping, or undefined if not supported
- */
-export const getGradientScale = (
-  gradient: GradientDefinition | undefined,
-  xScale: ChartScaleFunction | undefined,
-  yScale: ChartScaleFunction | undefined,
-): ChartScaleFunction | undefined => {
-  if (!gradient) {
-    return yScale && isNumericScale(yScale) ? yScale : undefined;
-  }
-
-  const axis = gradient.axis ?? 'y';
-  const targetScale = axis === 'x' ? xScale : yScale;
-
-  if (!targetScale) {
-    console.warn(`Gradient requires a scale on the ${axis}-axis`);
-    return;
-  }
-
-  if (!isNumericScale(targetScale) && !isCategoricalScale(targetScale)) {
-    console.warn(`Gradient requires a numeric or categorical scale on the ${axis}-axis`);
-    return;
-  }
-
-  return targetScale;
-};
-
-/**
  * Evaluates the color at a specific data value based on the gradient configuration.
  * Uses CSS color-mix() function for color interpolation, which works natively with CSS variables.
  *
@@ -273,7 +238,7 @@ export const getGradientConfig = (
   if (!gradient) return;
 
   // Get the scale based on axis
-  const scale = getGradientScale(gradient, xScale, yScale);
+  const scale = gradient.axis === 'x' ? xScale : yScale;
   if (!scale) return;
 
   // Extract domain from scale
@@ -290,4 +255,73 @@ export const getGradientConfig = (
 
   const resolvedStops = getGradientStops(gradient.stops, domain);
   return processGradientStops(resolvedStops, scale);
+};
+
+/**
+ * Determines the baseline value for the gradient area by finding the value
+ * within the axis bounds that is closest to the target baseline.
+ *
+ * @param axisBounds - The min and max bounds of the axis
+ * @param baseline - The target baseline value (defaults to 0)
+ * @returns The value within bounds closest to the baseline
+ */
+export const getBaseline = (axisBounds: AxisBounds, baseline: number = 0): number => {
+  const { min, max } = axisBounds;
+
+  // Normalize to ensure lowerBound <= upperBound
+  const lowerBound = Math.min(min, max);
+  const upperBound = Math.max(min, max);
+
+  // If baseline is within the range, use it
+  if (lowerBound <= baseline && baseline <= upperBound) return baseline;
+
+  // Otherwise, return the bound closest to baseline
+  return Math.abs(lowerBound - baseline) < Math.abs(upperBound - baseline)
+    ? lowerBound
+    : upperBound;
+};
+
+/**
+ * Generates a gradient definition for the area chart based on the axis bounds
+ * and styling parameters. Ensures gradient stops are in ascending order.
+ *
+ * @param axisBounds - The min and max bounds of the axis
+ * @param baselineValue - The baseline value for the gradient
+ * @param fill - The color to use for the gradient
+ * @param peakOpacity - Opacity at the peak of the gradient
+ * @param baselineOpacity - Opacity at the baseline
+ * @returns A gradient definition with y-axis stops in ascending order
+ */
+export const createGradient = (
+  axisBounds: AxisBounds,
+  baselineValue: number,
+  fill: string,
+  peakOpacity: number,
+  baselineOpacity: number,
+): GradientDefinition => {
+  const { min, max } = axisBounds;
+
+  const lowerBound = Math.min(min, max);
+  const upperBound = Math.max(min, max);
+
+  if (lowerBound < baselineValue && baselineValue < upperBound) {
+    return {
+      axis: 'y',
+      stops: [
+        { offset: lowerBound, color: fill, opacity: peakOpacity },
+        { offset: baselineValue, color: fill, opacity: baselineOpacity },
+        { offset: upperBound, color: fill, opacity: peakOpacity },
+      ],
+    };
+  }
+
+  const peakValue = Math.abs(min - baselineValue) > Math.abs(max - baselineValue) ? min : max;
+
+  return {
+    axis: 'y',
+    stops: [
+      { offset: peakValue, color: fill, opacity: peakOpacity },
+      { offset: baselineValue, color: fill, opacity: baselineOpacity },
+    ].sort((a, b) => a.offset - b.offset),
+  };
 };

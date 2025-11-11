@@ -101,41 +101,6 @@ const processGradientStops = (
 };
 
 /**
- * Determines the appropriate scale to use based on GradientDefinition axis configuration.
- * Gradients work with numeric scales (linear, log) and categorical scales (band).
- * Band scales use numerical indices [0, 1, 2, ...] which work for color mapping.
- *
- * @param gradient - The GradientDefinition configuration
- * @param xScale - The x-axis scale
- * @param yScale - The y-axis scale
- * @returns The scale to use for color mapping, or undefined if not supported
- */
-export const getGradientScale = (
-  gradient: GradientDefinition | undefined,
-  xScale: ChartScaleFunction | undefined,
-  yScale: ChartScaleFunction | undefined,
-): ChartScaleFunction | undefined => {
-  if (!gradient) {
-    return yScale && isNumericScale(yScale) ? yScale : undefined;
-  }
-
-  const axis = gradient.axis ?? 'y';
-  const targetScale = axis === 'x' ? xScale : yScale;
-
-  if (!targetScale) {
-    console.warn(`Gradient requires a scale on the ${axis}-axis`);
-    return;
-  }
-
-  if (!isNumericScale(targetScale) && !isCategoricalScale(targetScale)) {
-    console.warn(`Gradient requires a numeric or categorical scale on the ${axis}-axis`);
-    return;
-  }
-
-  return targetScale;
-};
-
-/**
  * Interpolates between two colors using linear interpolation.
  * Returns an rgba string.
  */
@@ -293,7 +258,7 @@ export const getGradientConfig = (
   if (!gradient) return;
 
   // Get the scale based on axis
-  const scale = getGradientScale(gradient, xScale, yScale);
+  const scale = gradient.axis === 'x' ? xScale : yScale;
   if (!scale) return;
 
   // Extract domain from scale
@@ -310,89 +275,6 @@ export const getGradientConfig = (
 
   const resolvedStops = getGradientStops(gradient.stops, domain);
   return processGradientStops(resolvedStops, scale);
-};
-
-/**
- * Worklet-compatible version of evaluateGradientAtValue that works with SerializableScale.
- * Evaluates a gradient at a specific data value using a serializable scale.
- *
- * @param gradient - The GradientDefinition configuration
- * @param dataValue - The data value to evaluate (for band scales, this is the index)
- * @param scale - The serializable scale to use for value mapping
- * @returns The color string at this data value (may be an interpolated color), or null if invalid
- */
-export const evaluateGradientAtValueWithSerializableScale = (
-  gradient: GradientDefinition,
-  dataValue: number,
-  scale: SerializableScale,
-): string | undefined => {
-  'worklet';
-
-  // Extract domain from serializable scale
-  const domain = { min: scale.domain[0], max: scale.domain[1] };
-
-  const stops = getGradientStops(gradient.stops, domain);
-  if (stops.length === 0) return;
-
-  // Use serializable scale to map values to positions
-  const rangeSpan = Math.abs(scale.range[1] - scale.range[0]);
-  if (rangeSpan === 0) return stops[0].color;
-
-  // Map dataValue through scale to get position
-  const dataPosition = applySerializableScale(dataValue, scale);
-
-  // Normalize to 0-1 based on range
-  const normalizedValue = Math.max(
-    0,
-    Math.min(1, Math.abs(dataPosition - scale.range[0]) / rangeSpan),
-  );
-
-  // Map stop offsets through scale and normalize to 0-1
-  const positions = stops.map((stop) => {
-    const stopPosition = applySerializableScale(stop.offset, scale);
-    return Math.max(0, Math.min(1, Math.abs(stopPosition - scale.range[0]) / rangeSpan));
-  });
-
-  // Find which segment we're in
-  if (normalizedValue < positions[0]) {
-    return stops[0].color;
-  }
-  if (normalizedValue >= positions[positions.length - 1]) {
-    return stops[stops.length - 1].color;
-  }
-
-  // Check if dataValue matches any stop offset exactly (for hard transitions)
-  for (let i = 0; i < stops.length; i++) {
-    if (dataValue === stops[i].offset) {
-      // Found exact match - check if there are multiple stops at this offset (hard transition)
-      // Use the LAST color at this offset for hard transitions
-      let lastIndexAtOffset = i;
-      while (
-        lastIndexAtOffset + 1 < stops.length &&
-        stops[lastIndexAtOffset + 1].offset === stops[i].offset
-      ) {
-        lastIndexAtOffset++;
-      }
-      return stops[lastIndexAtOffset].color;
-    }
-  }
-
-  // Find the segment to interpolate between
-  for (let i = 0; i < positions.length - 1; i++) {
-    if (normalizedValue >= positions[i] && normalizedValue <= positions[i + 1]) {
-      const segmentStart = positions[i];
-      const segmentEnd = positions[i + 1];
-
-      if (segmentEnd === segmentStart) {
-        return stops[i].color;
-      }
-
-      const t = (normalizedValue - segmentStart) / (segmentEnd - segmentStart);
-      return interpolateColor(stops[i].color, stops[i + 1].color, t);
-    }
-  }
-
-  return stops[0].color;
 };
 
 /**

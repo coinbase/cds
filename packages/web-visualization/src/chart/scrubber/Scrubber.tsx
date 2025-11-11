@@ -17,7 +17,6 @@ import { ReferenceLine, type ReferenceLineProps } from '../line';
 import {
   type ChartScaleFunction,
   evaluateGradientAtValue,
-  getGradientScale,
   getPointOnScale,
   useScrubberContext,
 } from '../utils';
@@ -241,7 +240,7 @@ export const Scrubber = memo(
                 let evaluatedColor: string | undefined = s.color;
                 if (s.gradient) {
                   const xScale = getXScale();
-                  const gradientScale = getGradientScale(s.gradient, xScale, yScale);
+                  const gradientScale = s.gradient.axis === 'x' ? xScale : yScale;
                   if (gradientScale) {
                     const gradientAxis = s.gradient.axis ?? 'y';
                     const dataValue = gradientAxis === 'x' ? dataX : dataY;

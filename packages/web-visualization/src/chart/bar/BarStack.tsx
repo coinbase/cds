@@ -4,7 +4,7 @@ import type { Transition } from 'framer-motion';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import type { ChartScaleFunction } from '../utils';
-import { evaluateGradientAtValue, getGradientScale } from '../utils/gradient';
+import { evaluateGradientAtValue } from '../utils/gradient';
 
 import { Bar, type BarComponent, type BarProps } from './Bar';
 import type { BarSeries } from './BarChart';
@@ -242,7 +242,7 @@ export const BarStack = memo<BarStackProps>(
           originalValue !== null &&
           originalValue !== undefined
         ) {
-          const gradientScale = getGradientScale(s.gradient, xScale, yScale);
+          const gradientScale = s.gradient.axis === 'x' ? xScale : yScale;
           if (gradientScale) {
             const axis = s.gradient.axis ?? 'y';
             // For x-axis gradient, use the categoryIndex
