@@ -25,7 +25,7 @@ export type GradientAreaProps = Omit<PathProps, 'd' | 'fill' | 'fillOpacity'> &
   };
 
 /**
- * A customizable gradient area component which uses Path.
+ * A customizable gradient area component.
  * When no gradient is provided, renders a default gradient based
  * on the fill color and peak/baseline opacities.
  */
@@ -39,7 +39,6 @@ export const GradientArea = memo<GradientAreaProps>(
     baselineOpacity = 0,
     baseline,
     yAxisId,
-    clipRect,
     animate,
     transition,
     ...pathProps
@@ -66,7 +65,6 @@ export const GradientArea = memo<GradientAreaProps>(
     return (
       <Path
         animate={animate}
-        clipRect={clipRect}
         d={d}
         fill={fill}
         fillOpacity={fillOpacity}

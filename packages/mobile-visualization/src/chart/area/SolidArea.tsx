@@ -9,29 +9,17 @@ import type { AreaComponentProps } from './Area';
 export type SolidAreaProps = Omit<PathProps, 'd' | 'fill' | 'fillOpacity'> & AreaComponentProps;
 
 /**
- * A customizable solid area component which uses Path.
+ * A customizable solid area component.
  * When a gradient is provided, renders with gradient fill.
  * Otherwise, renders with solid fill.
  */
 export const SolidArea = memo<SolidAreaProps>(
-  ({
-    d,
-    fill,
-    fillOpacity = 1,
-    clipRect,
-    gradient: gradientProp,
-    yAxisId,
-    animate,
-    transition,
-    gradient,
-    ...props
-  }) => {
+  ({ d, fill, fillOpacity = 1, yAxisId, animate, transition, gradient, ...props }) => {
     const theme = useTheme();
 
     return (
       <Path
         animate={animate}
-        clipRect={clipRect}
         d={d}
         fill={fill ?? theme.color.fgPrimary}
         fillOpacity={fillOpacity}

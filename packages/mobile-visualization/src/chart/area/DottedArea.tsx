@@ -36,9 +36,9 @@ export type DottedAreaProps = Omit<PathProps, 'd' | 'fill' | 'fillOpacity'> &
   };
 
 /**
- * Efficient dotted area component with gradient opacity support.
- * Uses SVG path circles for the dot pattern and LinearGradient for colors/opacity.
- * Supports both data-based color gradients and simple opacity gradients.
+ * A customizable dotted area gradient component.
+ * When no gradient is provided, renders a default gradient based
+ * on the fill color and peak/baseline opacities.
  */
 export const DottedArea = memo<DottedAreaProps>(
   ({
@@ -51,20 +51,16 @@ export const DottedArea = memo<DottedAreaProps>(
     baselineOpacity = 0,
     baseline,
     yAxisId,
-    clipRect,
     gradient: gradientProp,
     animate: animateProp,
     transition,
   }) => {
     const theme = useTheme();
-    const context = useCartesianChartContext();
+    const { drawingArea, animate, getYAxis } = useCartesianChartContext();
 
-    const drawingArea = clipRect ?? context.drawingArea;
     const fill = fillProp ?? theme.color.fgPrimary;
 
-    const animate = animateProp ?? context.animate;
-
-    const yAxisConfig = context.getYAxis(yAxisId);
+    const yAxisConfig = getYAxis(yAxisId);
 
     const dottedPath = useMemo(() => {
       if (!drawingArea) return '';
@@ -108,8 +104,7 @@ export const DottedArea = memo<DottedAreaProps>(
     return (
       <Group clip={areaClipPath}>
         <Path
-          animate={animate}
-          clipRect={clipRect}
+          animate={animateProp ?? animate}
           d={dottedPath}
           fill={fill}
           fillOpacity={fillOpacity}

@@ -20,8 +20,6 @@ export type AreaComponentProps = {
    * @default 1
    */
   fillOpacity?: number;
-  // todo: get rid of this? no used on web
-  clipRect?: Rect;
   // todo: get rid of this?
   stroke?: string;
   // todo: get rid of this?
@@ -138,8 +136,7 @@ export const Area = memo<AreaProps>(
     animate,
     transition,
   }) => {
-    const { getSeries, getSeriesData, getXScale, getYScale, getXAxis, drawingArea } =
-      useCartesianChartContext();
+    const { getSeries, getSeriesData, getXScale, getYScale, getXAxis } = useCartesianChartContext();
 
     const matchedSeries = useMemo(() => getSeries(seriesId), [seriesId, getSeries]);
     const gradient = useMemo(
@@ -195,7 +192,6 @@ export const Area = memo<AreaProps>(
       <AreaComponent
         animate={animate} // ideally we can get rid of this
         baseline={baseline}
-        clipRect={drawingArea} // ideally we can get rid of this
         d={area}
         fill={fill}
         fillOpacity={fillOpacity}
