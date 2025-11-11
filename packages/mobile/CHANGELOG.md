@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.20.2 (11/10/2025 PST)
+
+#### 🐞 Fixes
+
+- Update dependencies for react-native-gesture-handler 2.24.0 compatibility with new architecture.
+
 ## 8.20.1 (11/7/2025 PST)
 
 #### 🐞 Fixes

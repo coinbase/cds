@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 3.4.0-beta.6 (11/11/2025 PST)
+
+#### 🐞 Fixes
+
+- Fix react-native-gesture-handler 2.24.0 compatibility for new architecture - chart scrubbing now works correctly.
+
 ## 3.4.0-beta.5 (11/4/2025 PST)
 
 This is an artificial version bump with no new change.
