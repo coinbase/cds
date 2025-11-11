@@ -256,10 +256,7 @@ const UpdatingChartValues = () => {
             data: data,
           },
         ]}
-        transitionConfig={{
-          initial: { type: 'timing', duration: 600 },
-          update: { type: 'timing', duration: 300 },
-        }}
+        transition={{ type: 'timing', duration: 300 }}
         xAxis={{
           data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
           showTickMarks: true,

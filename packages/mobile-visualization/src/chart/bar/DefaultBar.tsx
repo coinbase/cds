@@ -4,36 +4,19 @@ import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 import { useCartesianChartContext } from '../ChartProvider';
 import { Path } from '../Path';
 import { getBarPath } from '../utils';
-import { type TransitionConfig } from '../utils/transition';
+import { type Transition } from '../utils/transition';
 
 import type { BarComponentProps } from './Bar';
 
 export type DefaultBarProps = BarComponentProps & {
   /**
-   * Transition configurations for different animation phases.
-   * Allows customization of animation type, timing, and springs.
-   *
-   * @example
-   * // Spring animation for bouncy bars
-   * transitionConfigs={{ update: { type: 'spring', damping: 10, stiffness: 100 } }}
+   * Transition configuration for the bar.
    *
    * @example
    * // Different enter and update animations
-   * transitionConfigs={{
-   *   enter: { type: 'timing', duration: 1000 },
-   *   update: { type: 'timing', duration: 300 }
-   * }}
+   * transition={{ type: 'timing', duration: 300 }}
    */
-  transitionConfigs?: {
-    /**
-     * Transition used when the bar first enters/mounts.
-     */
-    enter?: TransitionConfig;
-    /**
-     * Transition used when the bar morphs to new data.
-     */
-    update?: TransitionConfig;
-  };
+  transition?: Transition;
 };
 
 /**
@@ -54,7 +37,7 @@ export const DefaultBar = memo<DefaultBarProps>(
     stroke,
     strokeWidth,
     originY,
-    transitionConfigs,
+    transition,
   }) => {
     const { animate } = useCartesianChartContext();
     const theme = useTheme();
@@ -107,10 +90,7 @@ export const DefaultBar = memo<DefaultBarProps>(
         initialPath={initialPath}
         stroke={stroke}
         strokeWidth={strokeWidth}
-        transitionConfigs={{
-          enter: transitionConfigs?.enter,
-          update: transitionConfigs?.update,
-        }}
+        transition={transition}
       />
     );
   },

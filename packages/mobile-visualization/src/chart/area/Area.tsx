@@ -2,7 +2,7 @@ import React, { memo, useMemo } from 'react';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 
 import { useCartesianChartContext } from '../ChartProvider';
-import { type ChartPathCurveType, getAreaPath, type TransitionConfig } from '../utils';
+import { type ChartPathCurveType, getAreaPath, type Transition } from '../utils';
 import type { GradientDefinition } from '../utils/gradient';
 
 import { DottedArea } from './DottedArea';
@@ -67,7 +67,7 @@ export type AreaProps = {
    * Transition configuration for area animations.
    * Defines how the area transitions when data changes.
    */
-  transitionConfig?: TransitionConfig;
+  transition?: Transition;
 };
 
 export const Area = memo<AreaProps>(
@@ -84,7 +84,7 @@ export const Area = memo<AreaProps>(
     gradient: gradientProp,
     connectNulls,
     animate,
-    transitionConfig,
+    transition,
   }) => {
     const theme = useTheme();
     const { getSeries, getSeriesData, getXScale, getYScale, getXAxis, drawingArea } =
@@ -156,7 +156,7 @@ export const Area = memo<AreaProps>(
         seriesId={seriesId}
         stroke={stroke}
         strokeWidth={strokeWidth}
-        transitionConfig={transitionConfig}
+        transition={transition}
         yAxisId={matchedSeries?.yAxisId}
       />
     );

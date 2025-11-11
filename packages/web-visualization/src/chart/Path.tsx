@@ -36,48 +36,30 @@ export type PathProps = SharedProps &
      */
     clipOffset?: number;
     /**
-     * Transition configurations for different animation phases.
-     * Allows separate control over enter and update animations.
+     * Transition configuration for path.
      *
      * @example
-     * // Fast update, slow enter
-     * transitionConfigs={{
-     *   enter: { type: 'spring', duration: 1, bounce: 0 },
-     *   update: { type: 'tween', duration: 0.2, ease: 'easeOut' }
-     * }}
+     * // Timing based animation
+     * transition={{ type: 'tween', duration: 0.2, ease: 'easeOut' }}
      *
      * @example
-     * // Spring animation for all phases
-     * transitionConfigs={{
-     *   update: { type: 'spring', damping: 20, stiffness: 300 }
-     * }}
+     * // Spring animation
+     * transition={{ type: 'spring', damping: 20, stiffness: 300 }}
      */
-    transitionConfigs?: {
-      /**
-       * Transition used when the path first enters/mounts.
-       */
-      enter?: Transition;
-      /**
-       * Transition used when the path morphs to new data.
-       */
-      update?: Transition;
-    };
+    transition?: Transition;
   };
 
-const AnimatedPath = memo<Omit<PathProps, 'animate'>>(
-  ({ d = '', transitionConfigs, ...pathProps }) => {
-    const interpolatedPath = usePathTransition({
-      currentPath: d,
-      transitionConfigs,
-    });
+const AnimatedPath = memo<Omit<PathProps, 'animate'>>(({ d = '', transition, ...pathProps }) => {
+  const interpolatedPath = usePathTransition({
+    currentPath: d,
+    transition,
+  });
 
-    return <motion.path d={interpolatedPath} {...pathProps} />;
-  },
-);
+  return <motion.path d={interpolatedPath} {...pathProps} />;
+});
 
 export const Path = memo<PathProps>(
-  ({ animate: animateProp, clipRect, clipOffset = 0, d = '', transitionConfigs, ...pathProps }) => {
-    const hasMounted = useHasMounted();
+  ({ animate: animateProp, clipRect, clipOffset = 0, d = '', transition, ...pathProps }) => {
     const clipPathId = useId();
     const context = useCartesianChartContext();
     const rect = clipRect ?? context.drawingArea;
@@ -87,19 +69,16 @@ export const Path = memo<PathProps>(
     // Area charts typically use offset=0 for exact clipping, while lines use offset=2 for breathing room
     const totalOffset = clipOffset * 2; // Applied on both sides
 
-    const clipPathTransition = useMemo(() => {
-      if (!hasMounted) return transitionConfigs?.enter ?? defaultTransition;
-    }, [hasMounted, transitionConfigs]);
-
+    // todo: likely do a set time based animation
     const clipPathAnimation = useMemo(
       () => ({
         hidden: { width: 0 },
         visible: {
           width: rect.width + totalOffset,
-          transition: clipPathTransition,
+          transition,
         },
       }),
-      [rect.width, totalOffset, clipPathTransition],
+      [rect.width, totalOffset, transition],
     );
 
     return (
@@ -131,7 +110,7 @@ export const Path = memo<PathProps>(
           <AnimatedPath
             clipPath={`url(#${clipPathId})`}
             d={d}
-            transitionConfigs={transitionConfigs}
+            transition={transition}
             {...pathProps}
           />
         )}

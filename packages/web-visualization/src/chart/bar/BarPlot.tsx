@@ -20,7 +20,7 @@ export type BarPlotProps = Pick<
   | 'barMinSize'
   | 'stackMinSize'
   | 'BarStackComponent'
-  | 'transitionConfigs'
+  | 'transition'
 > & {
   /**
    * Array of series IDs to render.
@@ -49,7 +49,7 @@ export const BarPlot = memo<BarPlotProps>(
     stackGap,
     barMinSize,
     stackMinSize,
-    transitionConfigs,
+    transition,
   }) => {
     const { series: allSeries, drawingArea } = useCartesianChartContext();
     const clipPathId = useId();
@@ -128,7 +128,7 @@ export const BarPlot = memo<BarPlotProps>(
               stroke={defaultStroke}
               strokeWidth={defaultStrokeWidth}
               totalStacks={stackGroups.length}
-              transitionConfigs={transitionConfigs}
+              transition={transition}
               yAxisId={group.yAxisId}
             />
           ))}

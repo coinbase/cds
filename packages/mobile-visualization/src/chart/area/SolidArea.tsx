@@ -2,11 +2,10 @@ import { memo } from 'react';
 import type { Rect } from '@coinbase/cds-common/types';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 
-import { useCartesianChartContext } from '../ChartProvider';
 import { Gradient } from '../gradient';
 import { Path, type PathProps } from '../Path';
 import { type GradientDefinition } from '../utils/gradient';
-import { type TransitionConfig } from '../utils/transition';
+import { type Transition } from '../utils/transition';
 
 /**
  * Shared props for area component implementations.
@@ -49,13 +48,13 @@ export type AreaComponentProps = {
    *
    * @example
    * // Spring animation
-   * transitionConfig={{ type: 'spring', damping: 10, stiffness: 100 }}
+   * transition={{ type: 'spring', damping: 10, stiffness: 100 }}
    *
    * @example
    * // Timing animation
-   * transitionConfig={{ type: 'timing', duration: 500 }}
+   * transition={{ type: 'timing', duration: 500 }}
    */
-  transitionConfig?: TransitionConfig;
+  transition?: Transition;
 };
 
 export type SolidAreaProps = Omit<PathProps, 'd' | 'fill' | 'fillOpacity'> & AreaComponentProps;
@@ -74,7 +73,7 @@ export const SolidArea = memo<SolidAreaProps>(
     gradient: gradientProp,
     yAxisId,
     animate,
-    transitionConfig,
+    transition,
     gradient,
     ...props
   }) => {
@@ -87,7 +86,7 @@ export const SolidArea = memo<SolidAreaProps>(
         d={d}
         fill={fill ?? theme.color.fgPrimary}
         fillOpacity={fillOpacity}
-        transitionConfigs={transitionConfig ? { update: transitionConfig } : undefined}
+        transition={transition}
         {...props}
       >
         {gradient && <Gradient gradient={gradient} yAxisId={yAxisId} />}

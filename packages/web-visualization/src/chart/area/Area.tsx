@@ -36,19 +36,16 @@ export type AreaComponentProps = {
    */
   gradient?: GradientDefinition;
   /**
-   * Transition configurations for path animations.
+   * Transition configuration for path animations.
    */
-  transitionConfigs?: {
-    enter?: Transition;
-    update?: Transition;
-  };
+  transition?: Transition;
 };
 
 export type AreaComponent = React.FC<AreaComponentProps>;
 
 export type AreaProps = Pick<
   AreaComponentProps,
-  'fill' | 'fillOpacity' | 'stroke' | 'strokeWidth' | 'baseline' | 'transitionConfigs'
+  'fill' | 'fillOpacity' | 'stroke' | 'strokeWidth' | 'baseline' | 'transition'
 > & {
   /**
    * The ID of the series to render. Will be used to find the data from the chart context.
@@ -93,7 +90,7 @@ export const Area = memo<AreaProps>(
     baseline,
     connectNulls,
     gradient: gradientProp,
-    transitionConfigs,
+    transition,
   }) => {
     const { getSeries, getSeriesData, getXScale, getYScale, getXAxis } = useCartesianChartContext();
 
@@ -163,7 +160,7 @@ export const Area = memo<AreaProps>(
         seriesId={seriesId}
         stroke={stroke}
         strokeWidth={strokeWidth}
-        transitionConfigs={transitionConfigs}
+        transition={transition}
         yAxisId={matchedSeries?.yAxisId}
       />
     );

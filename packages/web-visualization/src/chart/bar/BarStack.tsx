@@ -55,26 +55,16 @@ export type BarStackComponentProps = {
    */
   yOrigin?: number;
   /**
-   * Transition configurations for different animation phases.
-   * Allows separate control over enter and update animations for the stack clip path.
+   * Transition configuration for animation.
    */
-  transitionConfigs?: {
-    /**
-     * Transition used when the stack clip path first enters/mounts.
-     */
-    enter?: Transition;
-    /**
-     * Transition used when the stack clip path updates.
-     */
-    update?: Transition;
-  };
+  transition?: Transition;
 };
 
 export type BarStackComponent = React.FC<BarStackComponentProps>;
 
 export type BarStackProps = Pick<
   BarProps,
-  'BarComponent' | 'fillOpacity' | 'stroke' | 'strokeWidth' | 'borderRadius' | 'transitionConfigs'
+  'BarComponent' | 'fillOpacity' | 'stroke' | 'strokeWidth' | 'borderRadius' | 'transition'
 > & {
   /**
    * Array of series configurations that belong to this stack.
@@ -151,7 +141,7 @@ export const BarStack = memo<BarStackProps>(
     barMinSize,
     stackMinSize,
     roundBaseline,
-    transitionConfigs,
+    transition,
   }) => {
     const { getSeriesData, getXAxis, getXScale, getSeries } = useCartesianChartContext();
 
@@ -698,7 +688,7 @@ export const BarStack = memo<BarStackProps>(
         roundTop={bar.roundTop}
         stroke={bar.stroke ?? defaultStroke}
         strokeWidth={bar.strokeWidth ?? defaultStrokeWidth}
-        transitionConfigs={transitionConfigs}
+        transition={transition}
         width={bar.width}
         x={bar.x}
         y={bar.y}
@@ -717,7 +707,7 @@ export const BarStack = memo<BarStackProps>(
         height={stackRect.height}
         roundBottom={stackRoundBottom}
         roundTop={stackRoundTop}
-        transitionConfigs={transitionConfigs}
+        transition={transition}
         width={stackRect.width}
         x={stackRect.x}
         y={stackRect.y}

@@ -43,12 +43,9 @@ export type LineComponentProps = {
    */
   yAxisId?: string;
   /**
-   * Transition configurations for path animations.
+   * Transition configuration for path animations.
    */
-  transitionConfigs?: {
-    enter?: Transition;
-    update?: Transition;
-  };
+  transition?: Transition;
 };
 
 export type LineComponent = React.FC<LineComponentProps>;
@@ -120,25 +117,17 @@ export type LineProps = SharedProps & {
    */
   connectNulls?: boolean;
   /**
-   * Transition configurations for point animations.
+   * Transition configuration for point animations.
    * Passed through to Point components rendered via renderPoints.
    *
    * @example
-   * transitionConfigs={{
-   *   enter: { type: 'spring', duration: 0.6 },
-   *   update: { type: 'tween', duration: 0.3, ease: 'easeInOut' }
+   * transition={{
+   *   type: 'tween',
+   *   duration: 0.3,
+   *   ease: 'easeInOut'
    * }}
    */
-  transitionConfigs?: {
-    /**
-     * Transition used when points first enter/mount.
-     */
-    enter?: Transition;
-    /**
-     * Transition used when point positions update.
-     */
-    update?: Transition;
-  };
+  transition?: Transition;
 };
 
 export const Line = memo<LineProps>(
@@ -156,7 +145,7 @@ export const Line = memo<LineProps>(
     opacity = 1,
     renderPoints,
     connectNulls,
-    transitionConfigs,
+    transition,
     ...props
   }) => {
     const { animate, getSeries, getSeriesData, getXScale, getYScale, getXAxis, getYAxis } =
@@ -251,7 +240,7 @@ export const Line = memo<LineProps>(
             fillOpacity={opacity}
             gradient={seriesGradient}
             seriesId={seriesId}
-            transitionConfigs={transitionConfigs}
+            transition={transition}
             type={areaType}
           />
         )}
@@ -261,7 +250,7 @@ export const Line = memo<LineProps>(
           seriesId={seriesId}
           stroke={stroke}
           strokeOpacity={opacity}
-          transitionConfigs={transitionConfigs}
+          transition={transition}
           yAxisId={matchedSeries?.yAxisId}
           {...props}
         />
@@ -323,7 +312,7 @@ export const Line = memo<LineProps>(
                   fill={pointFill}
                   onClick={pointConfig.onClick ?? onPointClick}
                   opacity={pointConfig.opacity ?? opacity}
-                  transitionConfigs={transitionConfigs}
+                  transition={transition}
                 />
               );
             })}

@@ -4,6 +4,7 @@ import { renderHook } from '@testing-library/react-hooks';
 import {
   buildTransition,
   defaultTransition,
+  type Transition,
   useD3PathInterpolation,
   usePathTransition,
 } from '../transition';
@@ -274,76 +275,18 @@ describe('usePathTransition', () => {
 
   it('should use custom transition config', () => {
     const currentPath = 'M0,0L10,10';
-    const transitionConfig = {
-      type: 'timing' as const,
+    const transition: Transition = {
+      type: 'timing',
       duration: 1000,
     };
 
     const { result } = renderHook(() =>
       usePathTransition({
         currentPath,
-        transitionConfigs: { update: transitionConfig },
+        transition,
       }),
     );
 
-    expect(result.current).toBeDefined();
-  });
-
-  it('should use enter config for first animation', () => {
-    const currentPath = 'M0,0L20,20';
-    const initialPath = 'M0,0L0,0';
-    const updateConfig = {
-      type: 'timing' as const,
-      duration: 300,
-    };
-    const enterConfig = {
-      type: 'timing' as const,
-      duration: 1000,
-    };
-
-    const { result } = renderHook(() =>
-      usePathTransition({
-        currentPath,
-        initialPath,
-        transitionConfigs: {
-          enter: enterConfig,
-          update: updateConfig,
-        },
-      }),
-    );
-
-    expect(result.current).toBeDefined();
-  });
-
-  it('should switch to update config after first animation', () => {
-    const enterConfig = {
-      type: 'timing' as const,
-      duration: 1000,
-    };
-    const updateConfig = {
-      type: 'timing' as const,
-      duration: 300,
-    };
-
-    const { result, rerender } = renderHook(
-      ({ path }) =>
-        usePathTransition({
-          currentPath: path,
-          initialPath: 'M0,0L0,0',
-          transitionConfigs: {
-            enter: enterConfig,
-            update: updateConfig,
-          },
-        }),
-      {
-        initialProps: { path: 'M0,0L10,10' },
-      },
-    );
-
-    expect(result.current).toBeDefined();
-
-    // Second render should use update config, not enter
-    rerender({ path: 'M0,0L20,20' });
     expect(result.current).toBeDefined();
   });
 
@@ -395,7 +338,7 @@ describe('usePathTransition', () => {
   });
 });
 
-describe('TransitionConfig type', () => {
+describe('Transition type', () => {
   it('should accept valid timing config', () => {
     const config: typeof buildTransition extends (v: any, c: infer C) => any ? C : never = {
       type: 'timing',

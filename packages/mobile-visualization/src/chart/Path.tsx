@@ -9,8 +9,8 @@ import {
   usePathInterpolation,
 } from '@shopify/react-native-skia';
 
-import type { TransitionConfig } from './utils/transition';
-import { usePathTransition } from './utils/transition';
+import type { Transition } from './utils/transition';
+import { defaultTransition, usePathTransition } from './utils/transition';
 import { useCartesianChartContext } from './ChartProvider';
 import { unwrapAnimatedValue } from './utils';
 
@@ -75,32 +75,17 @@ export type PathProps = SharedProps & {
    */
   clipOffset?: number;
   /**
-   * Transition configurations for different animation phases.
-   * Allows separate control over enter and update animations.
+   * Animation transition
    *
    * @example
-   * // Fast update, slow enter
-   * transitionConfigs={{
-   *   enter: { type: 'spring', damping: 8, stiffness: 100 },
-   *   update: { type: 'timing', duration: 300 }
-   * }}
+   * // Duration based
+   * transition={{ type: 'timing', duration: 300 }}
    *
    * @example
-   * // Spring animation for all phases
-   * transitionConfigs={{
-   *   update: { type: 'spring', damping: 20, stiffness: 300 }
-   * }}
+   * // Spring based
+   * transition={{ type: 'spring', damping: 20, stiffness: 300 }}
    */
-  transitionConfigs?: {
-    /**
-     * Transition used when the path first enters/mounts.
-     */
-    enter?: TransitionConfig;
-    /**
-     * Transition used when the path morphs to new data.
-     */
-    update?: TransitionConfig;
-  };
+  transition?: Transition;
 };
 
 const AnimatedPath = memo<Omit<PathProps, 'animate' | 'clipRect' | 'clipOffset' | 'clipPath'>>(
@@ -115,14 +100,14 @@ const AnimatedPath = memo<Omit<PathProps, 'animate' | 'clipRect' | 'clipOffset' 
     strokeLinecap,
     strokeLinejoin,
     children,
-    transitionConfigs,
+    transition,
   }) => {
     const isDAnimated = typeof d !== 'string';
 
     const animatedPath = usePathTransition({
       currentPath: isDAnimated ? (d.value ?? '') : d,
       initialPath,
-      transitionConfigs,
+      transition,
     });
 
     const isFilled = fill !== undefined && fill !== 'none';
@@ -176,7 +161,7 @@ export const Path = memo<PathProps>((props) => {
     strokeLinecap,
     strokeLinejoin,
     children,
-    transitionConfigs,
+    transition,
   } = props;
 
   const context = useCartesianChartContext();
@@ -297,7 +282,7 @@ export const Path = memo<PathProps>((props) => {
       strokeLinejoin={strokeLinejoin}
       strokeOpacity={strokeOpacity}
       strokeWidth={strokeWidth}
-      transitionConfigs={transitionConfigs}
+      transition={transition}
     >
       {children}
     </AnimatedPath>

@@ -1,9 +1,8 @@
 import React, { memo, useMemo } from 'react';
-import { useHasMounted } from '@coinbase/cds-common/hooks/useHasMounted';
 import { m as motion, type Transition } from 'framer-motion';
 
 import { useCartesianChartContext } from '../ChartProvider';
-import { defaultTransition, getBarPath } from '../utils';
+import { getBarPath } from '../utils';
 
 import type { BarComponentProps } from './Bar';
 
@@ -17,32 +16,16 @@ export type DefaultBarProps = BarComponentProps & {
    */
   style?: React.CSSProperties;
   /**
-   * Transition configurations for different animation phases.
-   * Allows separate control over enter and update animations.
+   * Transition configuration for animation.
    *
    * @example
-   * // Slow enter, fast update
-   * transitionConfigs={{
-   *   enter: { type: 'spring', duration: 1.5 },
-   *   update: { type: 'tween', duration: 0.3 }
-   * }}
-   *
-   * @example
-   * // Bouncy enter only
-   * transitionConfigs={{
-   *   enter: { type: 'spring', damping: 10, stiffness: 100 }
+   * transition={{
+   *   type: 'tween',
+   *   duration: 0.3,
+   *   ease: 'easeInOut'
    * }}
    */
-  transitionConfigs?: {
-    /**
-     * Transition used when the bar first enters/mounts.
-     */
-    enter?: Transition;
-    /**
-     * Transition used when the bar's properties update.
-     */
-    update?: Transition;
-  };
+  transition?: Transition;
 };
 
 /**
@@ -61,10 +44,9 @@ export const DefaultBar = memo<DefaultBarProps>(
     fillOpacity = 1,
     dataX,
     dataY,
-    transitionConfigs,
+    transition,
     ...props
   }) => {
-    const hasMounted = useHasMounted();
     const { animate } = useCartesianChartContext();
 
     const initialPath = useMemo(() => {
@@ -74,11 +56,6 @@ export const DefaultBar = memo<DefaultBarProps>(
       const initialY = (originY ?? 0) - minHeight;
       return getBarPath(x, initialY, width, minHeight, borderRadius, !!roundTop, !!roundBottom);
     }, [animate, x, originY, width, borderRadius, roundTop, roundBottom]);
-
-    const transition = useMemo(() => {
-      if (!hasMounted && transitionConfigs?.enter) return transitionConfigs.enter;
-      return transitionConfigs?.update ?? defaultTransition;
-    }, [hasMounted, transitionConfigs]);
 
     if (animate && initialPath) {
       return (

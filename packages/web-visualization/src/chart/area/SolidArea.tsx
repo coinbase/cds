@@ -23,7 +23,7 @@ export const SolidArea = memo<SolidAreaProps>(
     gradient: gradientProp,
     seriesId,
     animate,
-    transitionConfigs,
+    transition,
     ...props
   }) => {
     const context = useCartesianChartContext();
@@ -39,7 +39,7 @@ export const SolidArea = memo<SolidAreaProps>(
           d={d}
           fill={fill}
           fillOpacity={fillOpacity}
-          transitionConfigs={transitionConfigs}
+          transition={transition}
           {...props}
         />
       );
@@ -52,7 +52,7 @@ export const SolidArea = memo<SolidAreaProps>(
             animate={animate}
             gradient={gradient}
             id={patternId}
-            transitionConfigs={transitionConfigs}
+            transition={transition}
             yAxisId={yAxisId}
           />
         </defs>
@@ -61,7 +61,7 @@ export const SolidArea = memo<SolidAreaProps>(
           d={d}
           fill={`url(#${patternId})`}
           fillOpacity={fillOpacity}
-          transitionConfigs={transitionConfigs}
+          transition={transition}
           {...props}
         />
       </>

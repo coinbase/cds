@@ -13,7 +13,7 @@ import { notifyChange, Skia, type SkPath } from '@shopify/react-native-skia';
 import * as interpolate from 'd3-interpolate-path';
 
 /**
- * Transition configuration for animations.
+ * Transition for animations.
  * Supports timing and spring animation types.
  * Used for paths, positions, opacity, and any other animated properties.
  *
@@ -25,7 +25,7 @@ import * as interpolate from 'd3-interpolate-path';
  * // Timing animation
  * { type: 'timing', duration: 500, easing: Easing.inOut(Easing.ease) }
  */
-export type TransitionConfig =
+export type Transition =
   | ({ type: 'timing' } & WithTimingConfig)
   | ({ type: 'spring' } & WithSpringConfig);
 
@@ -33,7 +33,7 @@ export type TransitionConfig =
  * Default transition configuration used across all chart components.
  * Uses a smooth spring animation with balanced stiffness and damping.
  */
-export const defaultTransition: TransitionConfig = {
+export const defaultTransition: Transition = {
   type: 'spring',
   stiffness: 900,
   damping: 120,
@@ -136,15 +136,15 @@ export const useInterpolator = <T>(
  * // Timing animation
  * progress.value = buildTransition(1, { type: 'timing', duration: 500 });
  */
-export const buildTransition = (targetValue: number, config: TransitionConfig): number => {
+export const buildTransition = (targetValue: number, transition: Transition): number => {
   'worklet';
-  switch (config.type) {
+  switch (transition.type) {
     case 'timing': {
-      const { type, ...timingConfig } = config;
+      const { type, ...timingConfig } = transition;
       return withTiming(targetValue, timingConfig);
     }
     case 'spring': {
-      const { type, ...springConfig } = config;
+      const { type, ...springConfig } = transition;
       return withSpring(targetValue, springConfig);
     }
     default: {
@@ -163,7 +163,7 @@ export const buildTransition = (targetValue: number, config: TransitionConfig): 
  * @param currentPath - Current target path to animate to
  * @param initialPath - Initial path for enter animation. When provided, the first animation will go from initialPath to currentPath. If not provided, defaults to currentPath (no enter animation)
  * @param animate - Whether to animate path transitions (default: true)
- * @param transitionConfigs - Transition configurations for different animation phases
+ * @param transition - Transition configurations for different animation phases
  * @returns Animated SkPath as a shared value
  *
  * @example
@@ -171,9 +171,7 @@ export const buildTransition = (targetValue: number, config: TransitionConfig): 
  * const path = usePathTransition({
  *   currentPath: d ?? '',
  *   animate: shouldAnimate,
- *   transitionConfigs: {
- *     update: { type: 'timing', duration: 3000 }
- *   }
+ *   transition: { type: 'timing', duration: 3000 }
  * });
  *
  * @example
@@ -182,16 +180,13 @@ export const buildTransition = (targetValue: number, config: TransitionConfig): 
  *   currentPath: targetPath,
  *   initialPath: baselinePath,
  *   animate: true,
- *   transitionConfigs: {
- *     enter: { type: 'timing', duration: 1000 },
- *     update: { type: 'timing', duration: 300 }
- *   }
+ *   transition: { type: 'timing', duration: 300 }
  * });
  */
 export const usePathTransition = ({
   currentPath,
   initialPath,
-  transitionConfigs,
+  transition = defaultTransition,
 }: {
   /**
    * Current target path to animate to.
@@ -206,16 +201,7 @@ export const usePathTransition = ({
   /**
    * Transition configurations for different animation phases.
    */
-  transitionConfigs?: {
-    /**
-     * Transition used when the path first enters/mounts.
-     */
-    enter?: TransitionConfig;
-    /**
-     * Transition used when the path morphs to new data.
-     */
-    update?: TransitionConfig;
-  };
+  transition?: Transition;
 }): SharedValue<SkPath> => {
   const isInitialRender = useRef(true);
   const previousPathRef = useRef(initialPath ?? currentPath);
@@ -268,17 +254,12 @@ export const usePathTransition = ({
       previousPathRef.current = fromPath;
       targetPathRef.current = toPath;
 
-      const configToUse =
-        isInitialRender.current && transitionConfigs?.enter
-          ? transitionConfigs.enter
-          : (transitionConfigs?.update ?? defaultTransition);
-
       progress.value = 0;
-      progress.value = buildTransition(1, configToUse);
+      progress.value = buildTransition(1, transition);
 
       isInitialRender.current = false;
     }
-  }, [currentPath, initialPath, transitionConfigs, fromPath, toPath, progress]);
+  }, [currentPath, initialPath, transition, fromPath, toPath, progress]);
 
   return useD3PathInterpolation(progress, fromPath, toPath);
 };

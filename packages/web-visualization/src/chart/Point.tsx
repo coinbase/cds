@@ -165,26 +165,16 @@ export type PointProps = SharedProps &
       point?: React.CSSProperties;
     };
     /**
-     * Transition configurations for different animation phases.
-     * Allows separate control over enter and update animations for position changes.
+     * Transition configuration for animation.
      *
      * @example
-     * // Fast update, slow enter
-     * transitionConfigs={{
-     *   enter: { type: 'spring', duration: 0.6 },
-     *   update: { type: 'tween', duration: 0.3, ease: 'easeInOut' }
+     * transition={{
+     *   type: 'tween',
+     *   duration: 0.3,
+     *   ease: 'easeInOut'
      * }}
      */
-    transitionConfigs?: {
-      /**
-       * Transition used when the point first enters/mounts.
-       */
-      enter?: Transition;
-      /**
-       * Transition used when the point position updates.
-       */
-      update?: Transition;
-    };
+    transition?: Transition;
   };
 
 export const Point = memo<PointProps>(
@@ -208,10 +198,9 @@ export const Point = memo<PointProps>(
     testID,
     pixelCoordinates,
     animate: animateProp,
-    transitionConfigs,
+    transition,
     ...svgProps
   }) => {
-    const hasMounted = useHasMounted();
     const {
       getXScale,
       getYScale,
@@ -253,11 +242,6 @@ export const Point = memo<PointProps>(
         pixelCoordinate.y <= drawingArea.y + drawingArea.height
       );
     }, [pixelCoordinate, drawingArea]);
-
-    const positionTransition = useMemo(() => {
-      if (!hasMounted && transitionConfigs?.enter) return transitionConfigs.enter;
-      return transitionConfigs?.update ?? defaultTransition;
-    }, [hasMounted, transitionConfigs]);
 
     const innerPoint = useMemo(() => {
       const mergedStyles = {
@@ -339,7 +323,7 @@ export const Point = memo<PointProps>(
           strokeWidth={strokeWidth}
           style={mergedStyles}
           tabIndex={onClick ? 0 : -1}
-          transition={positionTransition}
+          transition={transition}
           variants={variants}
           whileHover={onClick ? 'hovered' : 'default'}
           whileTap={onClick ? 'pressed' : 'default'}
@@ -363,7 +347,7 @@ export const Point = memo<PointProps>(
       pixelCoordinate.x,
       pixelCoordinate.y,
       accessibilityLabel,
-      positionTransition,
+      transition,
     ]);
 
     if (!xScale || !yScale) {

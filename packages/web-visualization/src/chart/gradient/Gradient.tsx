@@ -1,4 +1,4 @@
-import { memo, useEffect, useMemo, useRef } from 'react';
+import { memo, useMemo } from 'react';
 import { m as motion, type Transition } from 'framer-motion';
 
 import { useCartesianChartContext } from '../ChartProvider';
@@ -27,19 +27,9 @@ export type GradientProps = {
    */
   animate?: boolean;
   /**
-   * Transition configurations for different animation phases.
-   * Allows separate control over enter and update animations.
+   * Transition configuration for animation.
    */
-  transitionConfigs?: {
-    /**
-     * Transition used when the gradient first enters/mounts.
-     */
-    enter?: Transition;
-    /**
-     * Transition used when the gradient changes.
-     */
-    update?: Transition;
-  };
+  transition?: Transition;
 };
 
 /**
@@ -47,10 +37,9 @@ export type GradientProps = {
  * The gradient can be referenced via `fill="url(#${id})"` or `stroke="url(#${id})"`.
  */
 export const Gradient = memo<GradientProps>(
-  ({ id, gradient, yAxisId, animate: animateProp, transitionConfigs }) => {
+  ({ id, gradient, yAxisId, animate: animateProp, transition }) => {
     const context = useCartesianChartContext();
     const animate = animateProp ?? context.animate;
-    const isInitialRender = useRef(true);
 
     const xScale = context.getXScale();
     const yScale = context.getYScale(yAxisId);
@@ -60,19 +49,6 @@ export const Gradient = memo<GradientProps>(
       if (!xScale || !yScale) return;
       return getGradientConfig(gradient, xScale, yScale);
     }, [gradient, xScale, yScale]);
-
-    // Determine which transition to use
-    const transition =
-      isInitialRender.current && transitionConfigs?.enter
-        ? transitionConfigs.enter
-        : (transitionConfigs?.update ?? defaultTransition);
-
-    // Mark as no longer initial render after first animation is set up
-    useEffect(() => {
-      if (animate && Array.isArray(stops)) {
-        isInitialRender.current = false;
-      }
-    }, [animate, stops]);
 
     const drawingArea = context.drawingArea;
     const yAxis = context.getYAxis(yAxisId);

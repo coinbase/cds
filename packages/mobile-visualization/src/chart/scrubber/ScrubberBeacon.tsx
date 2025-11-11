@@ -20,14 +20,14 @@ import {
 } from '../utils/gradient';
 import { getPointOnSerializableScale } from '../utils/point';
 import { convertToSerializableScale } from '../utils/scale';
-import { buildTransition, defaultTransition, type TransitionConfig } from '../utils/transition';
+import { buildTransition, defaultTransition, type Transition } from '../utils/transition';
 
 const radius = 5;
 const glowRadius = 10;
 const pulseRadius = 15;
 const strokeWidth = 2;
 
-const defaultPulseTransitionConfig: TransitionConfig = {
+const defaultPulseTransition: Transition = {
   type: 'timing',
   duration: 1000,
 };
@@ -64,23 +64,23 @@ export type ScrubberBeaconProps = SharedProps & {
    *
    * @example
    * // Custom update and pulse animations
-   * beaconTransitionConfig={{
+   * transitions={{
    *   update: { type: 'spring', damping: 8, stiffness: 100 },
    *   pulse: { type: 'timing', duration: 1500 }
    * }}
    */
-  beaconTransitionConfig?: {
+  transitions?: {
     /**
      * Transition used for beacon position updates when idle.
      * @default defaultTransition
      */
-    update?: TransitionConfig;
+    update?: Transition;
     /**
      * Transition used for the pulse animation (0->peak->0).
      * This duration represents a single pulse cycle.
      * @default { type: 'timing', duration: 1000 }
      */
-    pulse?: TransitionConfig;
+    pulse?: Transition;
   };
 };
 
@@ -89,10 +89,7 @@ export type ScrubberBeaconProps = SharedProps & {
  */
 export const ScrubberBeacon = memo(
   forwardRef<ScrubberBeaconRef, ScrubberBeaconProps>(
-    (
-      { seriesId, color, gradient: gradientProp, testID, idlePulse, beaconTransitionConfig },
-      ref,
-    ) => {
+    ({ seriesId, color, gradient: gradientProp, testID, idlePulse, transitions }, ref) => {
       const theme = useTheme();
       const {
         series,
@@ -143,14 +140,13 @@ export const ScrubberBeacon = memo(
         return scrubberPosition.value === undefined;
       }, [scrubberPosition]);
 
-      // Extract update and pulse configs with defaults
-      const updateTransitionConfig = useMemo(
-        () => beaconTransitionConfig?.update ?? defaultTransition,
-        [beaconTransitionConfig?.update],
+      const updateTransition = useMemo(
+        () => transitions?.update ?? defaultTransition,
+        [transitions?.update],
       );
-      const pulseTransitionConfig = useMemo(
-        () => beaconTransitionConfig?.pulse ?? defaultPulseTransitionConfig,
-        [beaconTransitionConfig?.pulse],
+      const pulseTransition = useMemo(
+        () => transitions?.pulse ?? defaultPulseTransition,
+        [transitions?.pulse],
       );
 
       const maxDataLength = useMemo(
@@ -268,12 +264,12 @@ export const ScrubberBeacon = memo(
               animatedIdleY.value = newPosition.y;
             } else {
               // Animate to new position using the update transition config
-              animatedIdleX.value = buildTransition(newPosition.x, updateTransitionConfig);
-              animatedIdleY.value = buildTransition(newPosition.y, updateTransitionConfig);
+              animatedIdleX.value = buildTransition(newPosition.x, updateTransition);
+              animatedIdleY.value = buildTransition(newPosition.y, updateTransition);
             }
           }
         },
-        [targetIdleStatePoint, animate, updateTransitionConfig],
+        [targetIdleStatePoint, animate, updateTransition],
       );
 
       // Create animated idle state point using the animated values
@@ -285,7 +281,7 @@ export const ScrubberBeacon = memo(
         pulse: () => {
           if (isIdleState.value && animate) {
             pulseOpacity.value = 0.1;
-            pulseOpacity.value = buildTransition(0, pulseTransitionConfig);
+            pulseOpacity.value = buildTransition(0, pulseTransition);
           }
         },
       }));
@@ -298,51 +294,21 @@ export const ScrubberBeacon = memo(
           if (shouldPulse) {
             pulseOpacity.value = withRepeat(
               withSequence(
-                buildTransition(0.1, pulseTransitionConfig),
-                buildTransition(0, pulseTransitionConfig),
+                buildTransition(0.1, pulseTransition),
+                buildTransition(0, pulseTransition),
               ),
               -1, // loop
               false,
             );
           } else {
             cancelAnimation(pulseOpacity);
-            pulseOpacity.value = buildTransition(0, pulseTransitionConfig);
+            pulseOpacity.value = buildTransition(0, pulseTransition);
           }
         } else {
           cancelAnimation(pulseOpacity);
-          pulseOpacity.value = buildTransition(0, pulseTransitionConfig);
+          pulseOpacity.value = buildTransition(0, pulseTransition);
         }
-      }, [animate, idlePulse, pulseOpacity, pulseTransitionConfig, scrubberPosition]);
-
-      // Update position when data coordinates change
-      /*useEffect(() => {
-        const currentPixelCoordinate = pixelCoordinate.value;
-        if (!currentPixelCoordinate) return;
-
-        const currentIsIdleState = isIdleState.value;
-
-        // When scrubbing or animations disabled: snap immediately
-        if (!currentIsIdleState || !animate || !previousIdleState) {
-          // Cancel any ongoing animations before snapping
-          cancelAnimation(animatedX);
-          cancelAnimation(animatedY);
-          animatedX.value = currentPixelCoordinate.x;
-          animatedY.value = currentPixelCoordinate.y;
-        } else {
-          animatedX.value = buildTransition(currentPixelCoordinate.x, updateTransitionConfig);
-          animatedY.value = buildTransition(currentPixelCoordinate.y, updateTransitionConfig);
-        }
-      }, [
-        pixelCoordinate,
-        isIdleState,
-        animate,
-        previousIdleState,
-        animatedX,
-        animatedY,
-        updateTransitionConfig,
-      ]);*/
-
-      // Create derived animated point for circles
+      }, [animate, idlePulse, pulseOpacity, pulseTransition, scrubberPosition]);
 
       const pointColor = useDerivedValue(() => {
         if (gradient && gradientScale && precomputedGradientStops) {

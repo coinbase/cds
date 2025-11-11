@@ -6,7 +6,7 @@ import type { AnimatedProp } from '@shopify/react-native-skia';
 import { Gradient } from '../gradient';
 import { Path, type PathProps } from '../Path';
 import { type GradientDefinition } from '../utils/gradient';
-import { type TransitionConfig } from '../utils/transition';
+import { type Transition } from '../utils/transition';
 
 /**
  * Shared props for line component implementations.
@@ -40,13 +40,13 @@ export type LineComponentProps = {
    *
    * @example
    * // Simple spring animation
-   * transitionConfig={{ type: 'spring', damping: 10, stiffness: 100 }}
+   * transition={{ type: 'spring', damping: 10, stiffness: 100 }}
    *
    * @example
    * // Timing animation
-   * transitionConfig={{ type: 'timing', duration: 500 }}
+   * transition={{ type: 'timing', duration: 500 }}
    */
-  transitionConfig?: TransitionConfig;
+  transition?: Transition;
 };
 
 export type SolidLineProps = SharedProps &
@@ -71,7 +71,7 @@ export const SolidLine = memo<SolidLineProps>(
     yAxisId,
     d,
     animate,
-    transitionConfig,
+    transition,
     ...props
   }) => {
     const theme = useTheme();
@@ -87,7 +87,7 @@ export const SolidLine = memo<SolidLineProps>(
         strokeLinejoin={strokeLinejoin}
         strokeOpacity={strokeOpacity}
         strokeWidth={strokeWidth}
-        transitionConfigs={transitionConfig ? { update: transitionConfig } : undefined}
+        transition={transition}
         {...props}
       >
         {gradient && <Gradient gradient={gradient} yAxisId={yAxisId} />}

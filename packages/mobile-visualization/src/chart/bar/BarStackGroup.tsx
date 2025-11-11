@@ -17,7 +17,7 @@ export type BarStackGroupProps = Pick<
   | 'barMinSize'
   | 'stackMinSize'
   | 'BarStackComponent'
-  | 'transitionConfig'
+  | 'transition'
 > &
   Pick<BarStackProps, 'series' | 'yAxisId'> & {
     /**

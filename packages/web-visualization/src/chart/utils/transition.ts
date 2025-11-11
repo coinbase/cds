@@ -31,33 +31,36 @@ export const defaultTransition: Transition = {
  *
  * @param currentPath - Current target path to animate to
  * @param initialPath - Initial path for enter animation. When provided, the first animation will go from initialPath to currentPath. If not provided, defaults to currentPath (no enter animation)
- * @param transitionConfigs - Transition configurations for different animation phases
+ * @param transition - Transition configurations
  * @returns MotionValue containing the current interpolated path string
  *
  * @example
  * // Simple path transition with spring
  * const animatedPath = usePathTransition({
  *   currentPath: d ?? '',
- *   transitionConfigs: {
- *     update: { type: 'spring', stiffness: 300, damping: 20 }
+ *   transition: {
+ *     type: 'spring',
+ *     stiffness: 300,
+ *     damping: 20
  *   }
  * });
  *
  * @example
- * // Enter animation with different initial config
+ * // Time based animation
  * const animatedPath = usePathTransition({
  *   currentPath: targetPath,
  *   initialPath: baselinePath,
- *   transitionConfigs: {
- *     enter: { type: 'spring', duration: 0.6 },
- *     update: { type: 'tween', duration: 0.3, ease: 'easeInOut' }
+ *   transition: {
+ *     type: 'tween',
+ *     duration: 0.3,
+ *     ease: 'easeInOut'
  *   }
  * });
  */
 export const usePathTransition = ({
   currentPath,
   initialPath,
-  transitionConfigs,
+  transition = defaultTransition,
 }: {
   /**
    * Current target path to animate to.
@@ -70,18 +73,9 @@ export const usePathTransition = ({
    */
   initialPath?: string;
   /**
-   * Transition configurations for different animation phases.
+   * Transition configuration
    */
-  transitionConfigs?: {
-    /**
-     * Transition used when the path first enters/mounts.
-     */
-    enter?: Transition;
-    /**
-     * Transition used when the path morphs to new data.
-     */
-    update?: Transition;
-  };
+  transition?: Transition;
 }): MotionValue<string> => {
   const isInitialRender = useRef(true);
   const previousPathRef = useRef(initialPath ?? currentPath);
@@ -119,14 +113,9 @@ export const usePathTransition = ({
 
       targetPathRef.current = currentPath;
 
-      const configToUse =
-        isInitialRender.current && transitionConfigs?.enter
-          ? transitionConfigs.enter
-          : (transitionConfigs?.update ?? defaultTransition);
-
       progress.set(0);
       animationRef.current = animate(progress, 1, {
-        ...(configToUse as ValueAnimationTransition<number>),
+        ...(transition as ValueAnimationTransition<number>),
         onComplete: () => {
           previousPathRef.current = currentPath;
         },
@@ -140,7 +129,7 @@ export const usePathTransition = ({
         animationRef.current.cancel();
       }
     };
-  }, [currentPath, transitionConfigs, progress, interpolatedPath]);
+  }, [currentPath, transition, progress, interpolatedPath]);
 
   return interpolatedPath;
 };

@@ -34,9 +34,8 @@ export const DefaultBarStack = memo<DefaultBarStackProps>(
     roundTop = true,
     roundBottom = true,
     yOrigin,
-    transitionConfigs,
+    transition,
   }) => {
-    const hasMounted = useHasMounted();
     const { animate } = useCartesianChartContext();
     const clipPathId = useId();
 
@@ -48,11 +47,6 @@ export const DefaultBarStack = memo<DefaultBarStackProps>(
       if (!animate) return undefined;
       return getBarPath(x, yOrigin ?? y + height, width, 1, borderRadius, roundTop, roundBottom);
     }, [animate, x, yOrigin, y, height, width, borderRadius, roundTop, roundBottom]);
-
-    const transition = useMemo(() => {
-      if (!hasMounted && transitionConfigs?.enter) return transitionConfigs.enter;
-      return transitionConfigs?.update ?? defaultTransition;
-    }, [hasMounted, transitionConfigs]);
 
     return (
       <>

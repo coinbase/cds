@@ -4,6 +4,7 @@ import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 import { useCartesianChartContext } from '../ChartProvider';
 import { Gradient } from '../gradient';
 import { Path, type PathProps } from '../Path';
+import { defaultTransition } from '../utils';
 import { type GradientDefinition } from '../utils/gradient';
 
 import { type AreaComponentProps } from './SolidArea';
@@ -45,7 +46,7 @@ export const GradientArea = memo<GradientAreaProps>(
     yAxisId,
     clipRect,
     animate,
-    transitionConfig,
+    transition,
     ...pathProps
   }) => {
     const context = useCartesianChartContext();
@@ -100,7 +101,7 @@ export const GradientArea = memo<GradientAreaProps>(
         d={d}
         fill={fill}
         fillOpacity={fillOpacity}
-        transitionConfigs={transitionConfig ? { update: transitionConfig } : undefined}
+        transition={transition}
         {...pathProps}
       >
         <Gradient gradient={gradient} yAxisId={yAxisId} />

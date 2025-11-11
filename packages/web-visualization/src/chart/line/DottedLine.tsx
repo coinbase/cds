@@ -9,10 +9,7 @@ import type { LineComponentProps } from './Line';
 
 export type DottedLineProps = SharedProps &
   Omit<PathProps, 'fill' | 'strokeWidth'> &
-  Pick<
-    LineComponentProps,
-    'strokeWidth' | 'gradient' | 'seriesId' | 'yAxisId' | 'transitionConfigs'
-  > & {
+  Pick<LineComponentProps, 'strokeWidth' | 'gradient' | 'seriesId' | 'yAxisId' | 'transition'> & {
     fill?: SVGProps<SVGPathElement>['fill'];
   };
 
@@ -34,7 +31,7 @@ export const DottedLine = memo<DottedLineProps>(
     seriesId,
     yAxisId,
     animate,
-    transitionConfigs,
+    transition,
     ...props
   }) => {
     const gradientId = useId();
@@ -47,7 +44,7 @@ export const DottedLine = memo<DottedLineProps>(
               animate={animate}
               gradient={gradient}
               id={gradientId}
-              transitionConfigs={transitionConfigs}
+              transition={transition}
               yAxisId={yAxisId}
             />
           </defs>
@@ -62,7 +59,7 @@ export const DottedLine = memo<DottedLineProps>(
           strokeLinejoin={strokeLinejoin}
           strokeOpacity={strokeOpacity}
           strokeWidth={strokeWidth}
-          transitionConfigs={transitionConfigs}
+          transition={transition}
           vectorEffect={vectorEffect}
           {...props}
         />

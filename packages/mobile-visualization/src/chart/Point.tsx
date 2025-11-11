@@ -6,7 +6,7 @@ import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 import { Circle, type Color, Group, interpolateColors } from '@shopify/react-native-skia';
 
 import type { ChartTextChildren } from './text/ChartText';
-import { buildTransition, defaultTransition, type TransitionConfig } from './utils/transition';
+import { buildTransition, defaultTransition, type Transition } from './utils/transition';
 import { useCartesianChartContext } from './ChartProvider';
 import { ChartText, type ChartTextProps } from './text';
 import { projectPoint } from './utils';
@@ -90,7 +90,7 @@ export type PointConfig = {
    * Transition configuration for point animations.
    * Defines how the point transitions when position or color changes.
    */
-  transitionConfig?: TransitionConfig;
+  transition?: Transition;
 };
 
 export type PointProps = SharedProps &
@@ -125,7 +125,7 @@ export const Point = memo<PointProps>(
     label,
     labelProps,
     pixelCoordinates,
-    transitionConfig,
+    transition = defaultTransition,
     testID,
   }) => {
     const theme = useTheme();
@@ -138,7 +138,6 @@ export const Point = memo<PointProps>(
     const yScale = getYScale(yAxisId);
 
     const shouldAnimate = animate ?? false;
-    const effectiveTransitionConfig = transitionConfig ?? defaultTransition;
 
     // Use provided pixelCoordinates or calculate from data coordinates
     const pixelCoordinate = useMemo(() => {
@@ -171,8 +170,8 @@ export const Point = memo<PointProps>(
     // Update position when coordinates change
     useEffect(() => {
       if (shouldAnimate && previousPixelCoordinate) {
-        animatedX.value = buildTransition(pixelCoordinate.x, effectiveTransitionConfig);
-        animatedY.value = buildTransition(pixelCoordinate.y, effectiveTransitionConfig);
+        animatedX.value = buildTransition(pixelCoordinate.x, transition);
+        animatedY.value = buildTransition(pixelCoordinate.y, transition);
       } else {
         cancelAnimation(animatedX);
         cancelAnimation(animatedY);
@@ -186,19 +185,19 @@ export const Point = memo<PointProps>(
       previousPixelCoordinate,
       animatedX,
       animatedY,
-      effectiveTransitionConfig,
+      transition,
     ]);
 
     // Update color when fill changes
     useEffect(() => {
       if (shouldAnimate && previousFill && previousFill !== effectiveFill) {
         colorProgress.value = 0;
-        colorProgress.value = buildTransition(1, effectiveTransitionConfig);
+        colorProgress.value = buildTransition(1, transition);
       } else {
         cancelAnimation(colorProgress);
         colorProgress.value = 1;
       }
-    }, [effectiveFill, shouldAnimate, previousFill, colorProgress, effectiveTransitionConfig]);
+    }, [effectiveFill, shouldAnimate, previousFill, colorProgress, transition]);
 
     // Create animated point for circles
     const animatedPoint = useDerivedValue(() => {

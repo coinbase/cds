@@ -69,19 +69,9 @@ export type BarComponentProps = {
    */
   strokeWidth?: number;
   /**
-   * Transition configurations for different animation phases.
-   * Allows separate control over enter and update animations.
+   * Transition configuration for animation.
    */
-  transitionConfigs?: {
-    /**
-     * Transition used when the bar first enters/mounts.
-     */
-    enter?: Transition;
-    /**
-     * Transition used when the bar's properties update.
-     */
-    update?: Transition;
-  };
+  transition?: Transition;
 };
 
 export type BarComponent = React.FC<BarComponentProps>;
@@ -97,19 +87,9 @@ export type BarProps = Omit<BarComponentProps, 'd'> & {
    */
   BarComponent?: BarComponent;
   /**
-   * Transition configurations for different animation phases.
-   * Allows separate control over enter and update animations.
+   * Transition configuration for animation.
    */
-  transitionConfigs?: {
-    /**
-     * Transition used when the bar first enters/mounts.
-     */
-    enter?: Transition;
-    /**
-     * Transition used when the bar's properties update.
-     */
-    update?: Transition;
-  };
+  transition?: Transition;
 };
 
 /**
@@ -141,7 +121,7 @@ export const Bar = memo<BarProps>(
     borderRadius = 4,
     roundTop = true,
     roundBottom = true,
-    transitionConfigs,
+    transition,
   }) => {
     const barPath = useMemo(() => {
       return getBarPath(x, y, width, height, borderRadius, roundTop, roundBottom);
@@ -167,7 +147,7 @@ export const Bar = memo<BarProps>(
         roundTop={roundTop}
         stroke={stroke}
         strokeWidth={strokeWidth}
-        transitionConfigs={transitionConfigs}
+        transition={transition}
         width={width}
         x={x}
         y={y}

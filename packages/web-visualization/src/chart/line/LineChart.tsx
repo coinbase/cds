@@ -23,8 +23,7 @@ export type LineSeries = Series &
       | 'renderPoints'
       | 'strokeWidth'
       | 'connectNulls'
-      | 'transitionConfigs' // todo reconcile with mobile not having this and mobile not including enter
-      // todo: does our enter animation even work?
+      | 'transition'
       | 'onPointClick'
     >
   >;
@@ -41,7 +40,7 @@ export type LineChartProps = Omit<CartesianChartProps, 'xAxis' | 'yAxis' | 'seri
     | 'renderPoints'
     | 'strokeWidth'
     | 'connectNulls'
-    | 'transitionConfigs'
+    | 'transition'
     | 'onPointClick'
   > & {
     /**
@@ -77,7 +76,7 @@ export const LineChart = memo(
         renderPoints,
         strokeWidth,
         connectNulls,
-        transitionConfigs,
+        transition,
         showXAxis,
         showYAxis,
         xAxis,
@@ -170,7 +169,7 @@ export const LineChart = memo(
               seriesId={id}
               showArea={showArea}
               strokeWidth={strokeWidth}
-              transitionConfigs={linePropsFromSeries.transitionConfigs ?? transitionConfigs}
+              transition={linePropsFromSeries.transition ?? transition}
               type={type}
               {...linePropsFromSeries}
             />

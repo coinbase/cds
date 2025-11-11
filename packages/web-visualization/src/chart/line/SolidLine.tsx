@@ -1,7 +1,6 @@
 import { memo, type SVGProps, useId } from 'react';
 import type { SharedProps } from '@coinbase/cds-common/types';
 
-import { useCartesianChartContext } from '../ChartProvider';
 import { Gradient } from '../gradient';
 import { Path, type PathProps } from '../Path';
 
@@ -9,10 +8,7 @@ import type { LineComponentProps } from './Line';
 
 export type SolidLineProps = SharedProps &
   Omit<PathProps, 'fill' | 'strokeWidth'> &
-  Pick<
-    LineComponentProps,
-    'strokeWidth' | 'gradient' | 'seriesId' | 'yAxisId' | 'transitionConfigs'
-  > & {
+  Pick<LineComponentProps, 'strokeWidth' | 'gradient' | 'seriesId' | 'yAxisId' | 'transition'> & {
     fill?: SVGProps<SVGPathElement>['fill'];
   };
 
@@ -32,7 +28,7 @@ export const SolidLine = memo<SolidLineProps>(
     seriesId,
     yAxisId,
     animate,
-    transitionConfigs,
+    transition,
     ...props
   }) => {
     const gradientId = useId();
@@ -45,7 +41,7 @@ export const SolidLine = memo<SolidLineProps>(
               animate={animate}
               gradient={gradient}
               id={gradientId}
-              transitionConfigs={transitionConfigs}
+              transition={transition}
               yAxisId={yAxisId}
             />
           </defs>
@@ -59,7 +55,7 @@ export const SolidLine = memo<SolidLineProps>(
           strokeLinejoin={strokeLinejoin}
           strokeOpacity={strokeOpacity}
           strokeWidth={strokeWidth}
-          transitionConfigs={transitionConfigs}
+          transition={transition}
           {...props}
         />
       </>

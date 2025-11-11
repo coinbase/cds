@@ -14,7 +14,7 @@ import { Group, Rect } from '@shopify/react-native-skia';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import { ReferenceLine, type ReferenceLineProps } from '../line';
-import { getPointOnSerializableScale, useScrubberContext } from '../utils';
+import { getPointOnSerializableScale, type Transition, useScrubberContext } from '../utils';
 
 import { ScrubberBeacon, type ScrubberBeaconProps, type ScrubberBeaconRef } from './ScrubberBeacon';
 import { ScrubberBeaconLabel, type ScrubberBeaconLabelProps } from './ScrubberBeaconLabel';
@@ -25,7 +25,7 @@ import { ScrubberBeaconLabelGroup } from './ScrubberBeaconLabelGroup';
  * Provides consistent API with smart defaults and component customization.
  */
 export type ScrubberProps = SharedProps &
-  Pick<ScrubberBeaconProps, 'idlePulse' | 'beaconTransitionConfig'> & {
+  Pick<ScrubberBeaconProps, 'idlePulse'> & {
     /**
      * An array of series IDs that will receive visual emphasis as the user scrubs through the chart.
      * Use this prop to restrict the scrubbing visual behavior to specific series.
@@ -70,6 +70,10 @@ export type ScrubberProps = SharedProps &
      * Custom component for the scrubber line.
      */
     LineComponent?: React.ComponentType<ReferenceLineProps>;
+    /**
+     * Transition configuration for the scrubber beacon.
+     */
+    beaconTransitions?: ScrubberBeaconProps['transitions'];
   };
 
 export type ScrubberRef = ScrubberBeaconRef;
@@ -95,8 +99,7 @@ export const Scrubber = memo(
         overlayOffset = 2,
         testID,
         idlePulse,
-        // todo: what about this vs transition configs?
-        beaconTransitionConfig,
+        beaconTransitions,
       },
       ref,
     ) => {
@@ -243,12 +246,12 @@ export const Scrubber = memo(
             <BeaconComponent
               key={s.id}
               ref={createScrubberBeaconRef(s.id)}
-              beaconTransitionConfig={beaconTransitionConfig}
               color={s.color}
               gradient={s.gradient}
               idlePulse={idlePulse}
               seriesId={s.id}
               testID={testID ? `${testID}-${s.id}-dot` : undefined}
+              transitions={beaconTransitions}
             />
           ))}
           <ScrubberBeaconLabelGroup labels={scrubberBeaconLabels} />

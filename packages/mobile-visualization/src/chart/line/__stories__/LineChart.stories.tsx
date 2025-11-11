@@ -44,6 +44,7 @@ import { PeriodSelector, PeriodSelectorActiveIndicator } from '../../PeriodSelec
 import { Point, type RenderPointsParams } from '../../Point';
 import { Scrubber, type ScrubberRef } from '../../scrubber';
 import { ChartText, type ChartTextChildren } from '../../text';
+import type { Transition } from '../../utils';
 import type { ChartAxisScaleType } from '../../utils/scale';
 import { Line, LineChart, ReferenceLine } from '..';
 
@@ -942,7 +943,7 @@ function AnimatedGainLossChart() {
       ],
     };
 
-    const myTransitionConfigs = { type: 'spring', stiffness: 700, damping: 20 } as const;
+    const transition: Transition = { type: 'spring', stiffness: 700, damping: 20 };
 
     return (
       <VStack gap={2}>
@@ -964,10 +965,10 @@ function AnimatedGainLossChart() {
             AreaComponent={MyGradient}
             seriesId="prices"
             strokeWidth={3}
-            transitionConfig={myTransitionConfigs}
+            transition={transition}
             type="solid"
           />
-          <Scrubber hideOverlay beaconTransitionConfig={{ update: myTransitionConfigs }} />
+          <Scrubber hideOverlay beaconTransitions={{ update: transition }} />
         </CartesianChart>
         <Button onPress={() => setData((d) => d.map((d) => -1 * d))}>Flip</Button>
       </VStack>
@@ -1153,11 +1154,11 @@ const AssetPriceDotted = () => {
               },
             },
           ]}
-          transitionConfig={{ type: 'timing', duration: 3000 }}
+          transition={{ type: 'timing', duration: 3000 }}
         >
           <Scrubber
             idlePulse
-            beaconTransitionConfig={{ update: { type: 'timing', duration: 3000 } }}
+            beaconTransitions={{ update: { type: 'timing', duration: 3000 } }}
             label={scrubberLabel}
             labelProps={{
               dy: -28,

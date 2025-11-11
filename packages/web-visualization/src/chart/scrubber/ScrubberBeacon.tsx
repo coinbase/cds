@@ -1,21 +1,14 @@
 import { forwardRef, memo, useImperativeHandle, useMemo } from 'react';
-import { useHasMounted } from '@coinbase/cds-common/hooks/useHasMounted';
 import type { SharedProps } from '@coinbase/cds-common/types';
 import { m as motion, type Transition, useAnimate } from 'framer-motion';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import { defaultTransition, projectPoint, useScrubberContext } from '../utils';
 
-const pulseTransitionConfig = {
-  duration: 2,
-  repeat: Infinity,
-  ease: 'easeInOut',
-} as const;
-
-const singlePulseTransitionConfig = {
+const defaultPulseTransition: Transition = {
   duration: 1,
   ease: 'easeInOut',
-} as const;
+};
 
 export type ScrubberBeaconRef = {
   /**
@@ -67,25 +60,38 @@ export type ScrubberBeaconProps = SharedProps & {
    */
   style?: React.CSSProperties;
   /**
-   * Transition configurations for different animation phases.
-   * Allows separate control over enter and update animations for position changes.
+   * Transition configuration for beacon animations.
+   * Allows customization of both position update animations and pulse animations.
    *
    * @example
-   * // Fast update, slow enter
-   * transitionConfigs={{
-   *   enter: { type: 'spring', duration: 0.6 },
-   *   update: { type: 'tween', duration: 0.3, ease: 'easeInOut' }
+   * // Timing-based transitions (pulse runs for 1s out + 1s back = 2s total cycle)
+   * transitions={{
+   *   update: { type: 'tween', duration: 0.3, ease: 'easeInOut' },
+   *   pulse: { duration: 1, ease: 'easeInOut' }
+   * }}
+   *
+   * @example
+   * // Spring-based transitions (spring applied to each direction)
+   * transitions={{
+   *   update: { type: 'spring', damping: 15, stiffness: 300 },
+   *   pulse: { type: 'spring', damping: 10, stiffness: 100 }
    * }}
    */
-  transitionConfigs?: {
+  transitions?: {
     /**
-     * Transition used when the beacon first enters/mounts.
-     */
-    enter?: Transition;
-    /**
-     * Transition used when the beacon position updates.
+     * Transition used for beacon position updates when idle.
+     * @default defaultTransition
      */
     update?: Transition;
+    /**
+     * Transition used for the pulse animation.
+     * For imperative pulses (via ref), animates a single fade (0.1->0).
+     * For continuous idle pulses, this transition is applied twice in sequence using repeatType: "reverse",
+     * creating a full cycle (0.1->0->0.1) where each leg uses the configured transition.
+     * Works with both timing-based (duration) and physics-based (spring) transitions.
+     * @default { duration: 1, ease: 'easeInOut' }
+     */
+    pulse?: Transition;
   };
 };
 
@@ -106,12 +112,20 @@ export const ScrubberBeacon = memo(
         opacity = 1,
         className,
         style,
-        transitionConfigs,
+        transitions,
       },
       ref,
     ) => {
-      const hasMounted = useHasMounted();
       const [scope, animate] = useAnimate();
+
+      const updateTransition = useMemo(
+        () => transitions?.update ?? defaultTransition,
+        [transitions?.update],
+      );
+      const pulseTransition = useMemo(
+        () => transitions?.pulse ?? defaultPulseTransition,
+        [transitions?.pulse],
+      );
       const {
         getSeries,
         getXScale,
@@ -130,20 +144,24 @@ export const ScrubberBeacon = memo(
       const isIdleState = scrubberPosition === undefined;
 
       // Expose imperative handle for triggering pulse animations
-      useImperativeHandle(ref, () => ({
-        pulse: () => {
-          // Only pulse when idle
-          if (isIdleState && scope.current) {
-            animate(
-              scope.current,
-              {
-                opacity: [0.1, 0],
-              },
-              singlePulseTransitionConfig,
-            );
-          }
-        },
-      }));
+      useImperativeHandle(
+        ref,
+        () => ({
+          pulse: () => {
+            // Only pulse when idle
+            if (isIdleState && scope.current) {
+              animate(
+                scope.current,
+                {
+                  opacity: [0.1, 0],
+                },
+                pulseTransition as any,
+              );
+            }
+          },
+        }),
+        [isIdleState, scope, animate, pulseTransition],
+      );
 
       const { dataX, dataY } = useMemo(() => {
         let x: number | undefined;
@@ -196,11 +214,6 @@ export const ScrubberBeacon = memo(
         });
       }, [xScale, yScale, dataX, dataY]);
 
-      const positionTransition = useMemo(() => {
-        if (!hasMounted && transitionConfigs?.enter) return transitionConfigs.enter;
-        return transitionConfigs?.update ?? defaultTransition;
-      }, [hasMounted, transitionConfigs]);
-
       const isWithinDrawingArea = useMemo(() => {
         if (!pixelCoordinate) return false;
         return (
@@ -210,6 +223,17 @@ export const ScrubberBeacon = memo(
           pixelCoordinate.y <= drawingArea.y + drawingArea.height
         );
       }, [pixelCoordinate, drawingArea]);
+
+      // Create continuous pulse transition by repeating the base pulse transition in reverse
+      // repeatType: "reverse" creates a ping-pong effect, applying the transition twice per cycle
+      const continuousPulseTransition: Transition = useMemo(
+        () => ({
+          ...pulseTransition,
+          repeat: Infinity,
+          repeatType: 'reverse',
+        }),
+        [pulseTransition],
+      );
 
       if (!pixelCoordinate) {
         return;
@@ -233,7 +257,7 @@ export const ScrubberBeacon = memo(
               initial={false}
               opacity={0.15}
               r={glowRadius}
-              transition={positionTransition}
+              transition={updateTransition}
             />
             <motion.g
               animate={{
@@ -241,15 +265,15 @@ export const ScrubberBeacon = memo(
                 y: pixelCoordinate.y,
               }}
               initial={false}
-              transition={positionTransition}
+              transition={updateTransition}
             >
               <motion.circle
                 ref={scope}
                 animate={
                   shouldPulse
                     ? {
-                        opacity: [0.1, 0, 0.1],
-                        transition: pulseTransitionConfig,
+                        opacity: [0.1, 0],
+                        transition: continuousPulseTransition,
                       }
                     : { opacity: 0 }
                 }
@@ -274,7 +298,7 @@ export const ScrubberBeacon = memo(
               stroke="var(--color-bg)"
               strokeWidth={2}
               style={style}
-              transition={positionTransition}
+              transition={updateTransition}
             />
           </g>
         );

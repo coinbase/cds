@@ -7,7 +7,7 @@ import { Group } from '@shopify/react-native-skia';
 import { Area, type AreaComponent } from '../area/Area';
 import { useCartesianChartContext } from '../ChartProvider';
 import { Point, type PointConfig, type RenderPointsParams } from '../Point';
-import { type ChartPathCurveType, getLineData, getLinePath, type TransitionConfig } from '../utils';
+import { type ChartPathCurveType, getLineData, getLinePath, type Transition } from '../utils';
 import { evaluateGradientAtValue } from '../utils/gradient';
 
 import { DottedLine } from './DottedLine';
@@ -81,7 +81,7 @@ export type LineProps = SharedProps & {
    * Transition configuration for line animations.
    * Defines how the line transitions when data changes.
    */
-  transitionConfig?: TransitionConfig;
+  transition?: Transition;
 };
 
 export const Line = memo<LineProps>(
@@ -98,7 +98,7 @@ export const Line = memo<LineProps>(
     opacity = 1,
     renderPoints,
     connectNulls,
-    transitionConfig,
+    transition,
     ...props
   }) => {
     const theme = useTheme();
@@ -194,7 +194,7 @@ export const Line = memo<LineProps>(
             fillOpacity={opacity}
             gradient={seriesGradient}
             seriesId={seriesId}
-            transitionConfig={transitionConfig}
+            transition={transition}
             type={areaType}
           />
         )}
@@ -204,7 +204,7 @@ export const Line = memo<LineProps>(
           gradient={seriesGradient}
           stroke={stroke}
           strokeOpacity={opacity}
-          transitionConfig={transitionConfig}
+          transition={transition}
           yAxisId={matchedSeries?.yAxisId}
           {...props}
         />
@@ -255,7 +255,7 @@ export const Line = memo<LineProps>(
                   key={`${seriesId}-renderpoint-${xValue}`}
                   dataX={xValue}
                   dataY={value}
-                  transitionConfig={transitionConfig}
+                  transition={transition}
                   {...pointConfig}
                   fill={pointFill}
                   opacity={pointConfig.opacity ?? opacity}

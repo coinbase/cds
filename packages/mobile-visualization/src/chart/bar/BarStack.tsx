@@ -3,10 +3,10 @@ import type { Rect } from '@coinbase/cds-common';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 
 import { useCartesianChartContext } from '../ChartProvider';
-import type { ChartScaleFunction, TransitionConfig } from '../utils';
+import type { ChartScaleFunction, Transition } from '../utils';
 import { evaluateGradientAtValue, getGradientScale } from '../utils/gradient';
 
-import { Bar, type BarComponent, type BarProps } from './Bar';
+import { Bar, type BarProps } from './Bar';
 import type { BarSeries } from './BarChart';
 import { DefaultBarStack } from './DefaultBarStack';
 
@@ -57,23 +57,14 @@ export type BarStackComponentProps = {
   /**
    * Transition configurations for different animation phases.
    */
-  transitionConfigs?: {
-    /**
-     * Transition used when the bar stack first enters/mounts.
-     */
-    enter?: TransitionConfig;
-    /**
-     * Transition used when the bar stack morphs to new data.
-     */
-    update?: TransitionConfig;
-  };
+  transition?: Transition;
 };
 
 export type BarStackComponent = React.FC<BarStackComponentProps>;
 
 export type BarStackProps = Pick<
   BarProps,
-  'BarComponent' | 'fillOpacity' | 'stroke' | 'strokeWidth' | 'borderRadius' | 'transitionConfig'
+  'BarComponent' | 'fillOpacity' | 'stroke' | 'strokeWidth' | 'borderRadius' | 'transition'
 > & {
   /**
    * Array of series configurations that belong to this stack.
@@ -150,7 +141,7 @@ export const BarStack = memo<BarStackProps>(
     barMinSize,
     stackMinSize,
     roundBaseline,
-    transitionConfig,
+    transition,
   }) => {
     const theme = useTheme();
     const { getSeriesData, getXAxis, getXScale } = useCartesianChartContext();
@@ -676,7 +667,7 @@ export const BarStack = memo<BarStackProps>(
         roundTop={bar.roundTop}
         stroke={defaultStroke}
         strokeWidth={defaultStrokeWidth}
-        transitionConfig={transitionConfig}
+        transition={transition}
         width={bar.width}
         x={bar.x}
         y={bar.y}
@@ -695,14 +686,7 @@ export const BarStack = memo<BarStackProps>(
         height={stackRect.height}
         roundBottom={stackRoundBottom}
         roundTop={stackRoundTop}
-        transitionConfigs={
-          transitionConfig
-            ? {
-                enter: transitionConfig.initial,
-                update: transitionConfig.update,
-              }
-            : undefined
-        }
+        transition={transition}
         width={stackRect.width}
         x={stackRect.x}
         y={stackRect.y}

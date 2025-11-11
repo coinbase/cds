@@ -7,7 +7,7 @@ import { Gradient } from '../gradient';
 import { Path, type PathProps } from '../Path';
 import { type GradientDefinition } from '../utils/gradient';
 import { getDottedAreaPath } from '../utils/path';
-import { usePathTransition } from '../utils/transition';
+import { defaultTransition, usePathTransition } from '../utils/transition';
 
 import { type AreaComponentProps } from './SolidArea';
 
@@ -54,7 +54,7 @@ export const DottedArea = memo<DottedAreaProps>(
     clipRect,
     gradient: gradientProp,
     animate: animateProp,
-    transitionConfig,
+    transition,
   }) => {
     const theme = useTheme();
     const context = useCartesianChartContext();
@@ -83,7 +83,7 @@ export const DottedArea = memo<DottedAreaProps>(
 
     const animatedClipPath = usePathTransition({
       currentPath: d ?? '',
-      transitionConfigs: transitionConfig ? { update: transitionConfig } : undefined,
+      transition,
     });
 
     const staticClipPath = useMemo(() => {
@@ -141,7 +141,7 @@ export const DottedArea = memo<DottedAreaProps>(
           d={dottedPath}
           fill={fill}
           fillOpacity={fillOpacity}
-          transitionConfigs={transitionConfig ? { update: transitionConfig } : undefined}
+          transition={transition}
         >
           <Gradient gradient={gradient} yAxisId={yAxisId} />
         </Path>
