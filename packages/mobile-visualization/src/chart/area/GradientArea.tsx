@@ -4,42 +4,37 @@ import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 import { useCartesianChartContext } from '../ChartProvider';
 import { Gradient } from '../gradient';
 import { Path, type PathProps } from '../Path';
-import { defaultTransition } from '../utils';
 import { type GradientDefinition } from '../utils/gradient';
 
-import { type AreaComponentProps } from './SolidArea';
+import type { AreaComponentProps } from './Area';
 
 export type GradientAreaProps = Omit<PathProps, 'd' | 'fill' | 'fillOpacity'> &
   AreaComponentProps & {
     /**
-     * Opacity at peak values.
+     * Opacity at peak of gradient.
+     * @note only used when no gradient is provided
      * @default 0.3
      */
     peakOpacity?: number;
     /**
      * Opacity at the baseline.
+     * @note only used when no gradient is provided
      * @default 0
      */
     baselineOpacity?: number;
   };
 
 /**
- * A customizable gradient area component which uses Path with Skia linear gradient shader.
- *
- * When no gradient is provided, automatically creates an appropriate gradient:
- * - For data crossing zero: Creates a diverging gradient with peak opacity at both extremes
- *   and baseline opacity at zero (or the specified baseline).
- * - For all-positive or all-negative data: Creates a simple gradient from baseline to peak.
+ * A customizable gradient area component which uses Path.
+ * When no gradient is provided, renders a default gradient based
+ * on the fill color and peak/baseline opacities.
  */
 export const GradientArea = memo<GradientAreaProps>(
   ({
     d,
     fill: fillProp,
-    // todo: should we drop fillOpacity?
     fillOpacity = 1,
     gradient: gradientProp,
-    seriesId,
-    // todo: what about peak opacity?
     peakOpacity = 0.3,
     baselineOpacity = 0,
     baseline,
@@ -49,23 +44,27 @@ export const GradientArea = memo<GradientAreaProps>(
     transition,
     ...pathProps
   }) => {
-    const context = useCartesianChartContext();
+    const { getYAxis } = useCartesianChartContext();
     const theme = useTheme();
 
-    const fill = fillProp ?? theme.color.fgPrimary;
+    const fill = useMemo(
+      () => fillProp ?? theme.color.fgPrimary,
+      [fillProp, theme.color.fgPrimary],
+    );
 
-    const yAxisConfig = context.getYAxis(yAxisId);
+    const yAxisConfig = getYAxis(yAxisId);
 
-    const gradient = useMemo((): GradientDefinition | undefined => {
+    // Generate gradient if not provided
+    const gradient = useMemo(() => {
       if (gradientProp) return gradientProp;
       if (!yAxisConfig) return;
 
       const { min, max } = yAxisConfig.domain;
-      const baselineValue = min >= 0 ? min : max <= 0 ? max : (baseline ?? 0);
+      const baselineValue = baseline ? baseline : min >= 0 ? min : max <= 0 ? max : 0;
 
       // Diverging gradient (data crosses zero)
       if (min < 0 && max > 0) {
-        return {
+        const gradient: GradientDefinition = {
           axis: 'y',
           stops: [
             { offset: min, color: fill, opacity: peakOpacity },
@@ -73,11 +72,12 @@ export const GradientArea = memo<GradientAreaProps>(
             { offset: max, color: fill, opacity: peakOpacity },
           ],
         };
+        return gradient;
       }
 
       // Simple gradient (all positive or all negative)
       const peakValue = min >= 0 ? max : min;
-      return {
+      const gradient: GradientDefinition = {
         axis: 'y',
         stops:
           max <= 0
@@ -90,9 +90,8 @@ export const GradientArea = memo<GradientAreaProps>(
                 { offset: peakValue, color: fill, opacity: peakOpacity },
               ],
       };
+      return gradient;
     }, [gradientProp, yAxisConfig, fill, baseline, peakOpacity, baselineOpacity]);
-
-    if (!gradient) return;
 
     return (
       <Path
@@ -104,7 +103,7 @@ export const GradientArea = memo<GradientAreaProps>(
         transition={transition}
         {...pathProps}
       >
-        <Gradient gradient={gradient} yAxisId={yAxisId} />
+        {gradient && <Gradient gradient={gradient} yAxisId={yAxisId} />}
       </Path>
     );
   },

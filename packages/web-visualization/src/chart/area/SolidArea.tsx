@@ -11,7 +11,7 @@ export type SolidAreaProps = Omit<PathProps, 'd' | 'fill' | 'fillOpacity'> & Are
 /**
  * A customizable solid area component which uses Path.
  * When a gradient is provided, renders with gradient fill.
- * Otherwise, renders with solid fill (no automatic fade).
+ * Otherwise, renders with solid fill.
  */
 export const SolidArea = memo<SolidAreaProps>(
   ({

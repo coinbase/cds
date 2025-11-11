@@ -82,8 +82,8 @@ export const Area = memo<AreaProps>(
     seriesId,
     curve = 'bump',
     type = 'solid',
-    AreaComponent: SelectedAreaComponent,
-    fill: specifiedFill,
+    AreaComponent: AreaComponentProp,
+    fill: fillProp,
     fillOpacity = 1,
     stroke,
     strokeWidth,
@@ -95,18 +95,17 @@ export const Area = memo<AreaProps>(
     const { getSeries, getSeriesData, getXScale, getYScale, getXAxis } = useCartesianChartContext();
 
     const matchedSeries = useMemo(() => getSeries(seriesId), [seriesId, getSeries]);
-    const gradient = gradientProp ?? matchedSeries?.gradient;
+    const gradient = useMemo(
+      () => gradientProp ?? matchedSeries?.gradient,
+      [gradientProp, matchedSeries?.gradient],
+    );
+    const fill = useMemo(
+      () => fillProp ?? matchedSeries?.color ?? 'var(--color-fgPrimary)',
+      [fillProp, matchedSeries?.color],
+    );
 
-    // Check for stacked data first, then fall back to raw data
-    const sourceData = useMemo(() => {
-      const stackedData = getSeriesData(seriesId);
-      if (stackedData) {
-        return stackedData;
-      }
-      return getSeriesData(seriesId) || null;
-    }, [seriesId, getSeriesData]);
+    const sourceData = useMemo(() => getSeriesData(seriesId), [seriesId, getSeriesData]);
 
-    // Get scales and axes for this series
     const xAxis = getXAxis();
     const xScale = getXScale();
     const yScale = getYScale(matchedSeries?.yAxisId);
@@ -131,24 +130,22 @@ export const Area = memo<AreaProps>(
     }, [sourceData, xScale, yScale, curve, xAxis?.data, connectNulls]);
 
     const AreaComponent = useMemo((): AreaComponent => {
-      if (SelectedAreaComponent) {
-        return SelectedAreaComponent;
+      if (AreaComponentProp) {
+        return AreaComponentProp;
       }
 
       switch (type) {
-        case 'solid':
-          return SolidArea;
         case 'dotted':
           return DottedArea;
         case 'gradient':
-        default:
           return GradientArea;
+        case 'solid':
+        default:
+          return SolidArea;
       }
-    }, [SelectedAreaComponent, type]);
+    }, [AreaComponentProp, type]);
 
     if (!xScale || !yScale || !sourceData || !area) return;
-
-    const fill = specifiedFill ?? matchedSeries?.color ?? 'var(--color-fgPrimary)';
 
     return (
       <AreaComponent
