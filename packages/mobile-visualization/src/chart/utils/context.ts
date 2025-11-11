@@ -40,10 +40,14 @@ export type CartesianChartContextValue = {
    */
   height: number;
   /**
-   * Skia font manager for rendering text.
-   * Uses system fonts (Helvetica, Arial, etc.) by default.
+   * Default font family to use within ChartText.
+   * When not set, should use the default for the system.
    */
-  fontMgr: SkTypefaceFontProvider | null;
+  fontFamily?: string;
+  /**
+   * Skia font provider.
+   */
+  fontProvider: SkTypefaceFontProvider;
   /**
    * Get x-axis configuration.
    */

@@ -1,5 +1,5 @@
 import type { AxisBounds } from './chart';
-import { type ChartScaleFunction, isCategoricalScale, isNumericScale } from './scale';
+import { type ChartScaleFunction, isCategoricalScale } from './scale';
 
 /**
  * Defines a color transition point in the gradient
@@ -75,7 +75,7 @@ const processGradientStops = (
 
   // Convert data value offsets to normalized positions (0-1) using scale
   const normalizedStops: GradientStop[] = stops
-    .map((stop, index) => {
+    .map((stop) => {
       const stopPosition = scale(stop.offset);
       const normalized =
         stopPosition === undefined
@@ -185,20 +185,12 @@ export const evaluateGradientAtValue = (
     const end = positions[i + 1];
 
     if (normalizedValue >= start && normalizedValue <= end) {
-      // Handle hard transitions (multiple stops at same position)
-      if (end === start) {
-        return stops[i + 1].color;
-      }
-
-      // Calculate progress within this segment (0-1)
       const segmentProgress = (normalizedValue - start) / (end - start);
-      const percentage = segmentProgress * 100;
-
-      // Use color-mix()! This works with CSS variables!
-      return `color-mix(in ${colorSpace}, ${stops[i + 1].color} ${percentage}%, ${stops[i].color})`;
+      return `color-mix(in ${colorSpace}, ${stops[i + 1].color} ${segmentProgress * 100}%, ${stops[i].color})`;
     }
   }
 
+  // If we didn't reach any to be mixed, return the last color
   return stops[stops.length - 1].color;
 };
 

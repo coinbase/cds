@@ -3,7 +3,7 @@ import { LinearGradient, Skia, vec } from '@shopify/react-native-skia';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import type { GradientDefinition } from '../utils';
-import { getGradientConfig } from '../utils/gradient';
+import { getColorWithOpacity, getGradientConfig } from '../utils/gradient';
 
 export type GradientProps = {
   /**
@@ -16,15 +16,6 @@ export type GradientProps = {
    * This ensures gradients work correctly when the axis has a custom range configuration.
    */
   yAxisId?: string;
-};
-
-/**
- * Interpolates between two colors using linear interpolation.
- * Returns an rgba string.
- */
-const interpolateColor = (color1: string, opacity: number): string => {
-  const c = Skia.Color(color1);
-  return `rgba(${c[0] * 255}, ${c[1] * 255}, ${c[2] * 255}, ${opacity})`;
 };
 
 /**
@@ -62,7 +53,7 @@ export const Gradient = memo<GradientProps>(({ gradient, yAxisId }) => {
   const end = axis === 'x' ? vec(range[1], 0) : vec(0, range[1]);
 
   // Extract colors and positions for LinearGradient
-  const colors = stops.map((s) => interpolateColor(s.color, s.opacity ?? 1));
+  const colors = stops.map((s) => getColorWithOpacity(s.color, s.opacity ?? 1));
   const positions = stops.map((s) => s.offset);
 
   return <LinearGradient colors={colors} end={end} positions={positions} start={start} />;

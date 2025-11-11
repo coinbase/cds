@@ -5,7 +5,6 @@ import {
   applySerializableScale,
   type ChartScaleFunction,
   isCategoricalScale,
-  isNumericScale,
   type SerializableScale,
 } from './scale';
 
@@ -83,7 +82,7 @@ const processGradientStops = (
 
   // Convert data value offsets to normalized positions (0-1) using scale
   const normalizedStops: GradientStop[] = stops
-    .map((stop, index) => {
+    .map((stop) => {
       const stopPosition = scale(stop.offset);
       const normalized =
         stopPosition === undefined
@@ -115,6 +114,15 @@ const interpolateColor = (color1: string, color2: string, t: number): string => 
   const a = c1[3] + (c2[3] - c1[3]) * t;
 
   return `rgba(${r}, ${g}, ${b}, ${a})`;
+};
+
+/**
+ * Adds an opacity to a color
+ * Returns an rgba string.
+ */
+export const getColorWithOpacity = (color1: string, opacity: number): string => {
+  const c = Skia.Color(color1);
+  return `rgba(${c[0] * 255}, ${c[1] * 255}, ${c[2] * 255}, ${opacity})`;
 };
 
 /**
@@ -206,19 +214,12 @@ export const evaluateGradientAtValue = (
     const end = positions[i + 1];
 
     if (normalizedValue >= start && normalizedValue <= end) {
-      // Handle hard transitions (multiple stops at same position)
-      if (end === start) {
-        return stops[i + 1].color;
-      }
-
-      // Calculate progress within this segment (0-1)
       const segmentProgress = (normalizedValue - start) / (end - start);
-
-      // Use Skia color interpolation for smooth transitions
       return interpolateColor(stops[i].color, stops[i + 1].color, segmentProgress);
     }
   }
 
+  // If we didn't reach any to be mixed, return the last color
   return stops[stops.length - 1].color;
 };
 
@@ -277,6 +278,7 @@ export const getGradientConfig = (
   return processGradientStops(resolvedStops, scale);
 };
 
+// todo: can we somehow simplify this or bring it out of gradient.ts?
 /**
  * Optimized worklet-compatible version that accepts pre-computed gradient stops.
  * Use this when you want to pre-compute stops off the UI thread and then evaluate colors on the UI thread.

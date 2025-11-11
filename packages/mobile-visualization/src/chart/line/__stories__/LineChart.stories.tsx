@@ -38,7 +38,7 @@ import {
   SolidArea,
 } from '../../area';
 import { XAxis, YAxis } from '../../axis';
-import { CartesianChart } from '../../CartesianChart';
+import { CartesianChart, type CartesianChartProps } from '../../CartesianChart';
 import { useCartesianChartContext } from '../../ChartProvider';
 import { PeriodSelector, PeriodSelectorActiveIndicator } from '../../PeriodSelector';
 import { Point, type RenderPointsParams } from '../../Point';
@@ -1147,6 +1147,18 @@ const AssetPriceDotted = () => {
               color: assets.btc.color,
               label: 'Bitcoin',
             },
+            {
+              id: 'btc3',
+              data: sparklineTimePeriodDataValues.map((d) => d * 1.25),
+              color: assets.eth.color,
+              label: 'Bitcoin',
+            },
+            {
+              id: 'btc2',
+              data: sparklineTimePeriodDataValues.map((d) => d * 1.125),
+              color: assets.xrp.color,
+              label: 'Bitcoin',
+            },
           ]}
         >
           <Scrubber
@@ -1465,9 +1477,9 @@ const TextComponent = memo(() => {
   );
 });
 
-const GainLossChart = () => {
+const GainLossChart = (props: CartesianChartProps) => {
   const theme = useTheme();
-  const data = [-40, -28, -21, -5, 48, -5, -28, 2, -29, -46, 16, -30, -29, 8];
+  const data = [-40, -28, -21, -5, 48, -5, -28, 2, -29, -46, 16, -30, -29, 8, -5, 0, 0];
   const negativeColor = `rgb(${theme.spectrum.gray15})`;
   const positiveColor = theme.color.fgPositive;
 
@@ -1483,6 +1495,7 @@ const GainLossChart = () => {
 
   return (
     <CartesianChart
+      {...props}
       enableScrubbing
       height={defaultChartHeight}
       inset={{ top: 1.5, bottom: 1.5, left: 0, right: 0 }}
@@ -1490,18 +1503,19 @@ const GainLossChart = () => {
         {
           id: 'prices',
           data: data,
+          label: 'hello',
           gradient: {
             stops: [
-              { offset: -15, color: negativeColor },
-              { offset: 5, color: positiveColor },
+              { offset: 0, color: negativeColor },
+              { offset: 0, color: positiveColor },
             ],
           },
         },
       ]}
     >
       <YAxis showGrid requestedTickCount={2} tickLabelFormatter={tickLabelFormatter} />
-      <Line seriesId="prices" strokeWidth={3} type="solid" />
-      <Scrubber hideOverlay />
+      <Line renderPoints={() => true} seriesId="prices" strokeWidth={3} type="solid" />
+      <Scrubber hideOverlay label="Hello" />
       <TextComponent />
     </CartesianChart>
   );
@@ -2508,10 +2522,17 @@ function BasicExample() {
 export default () => {
   const theme = useTheme();
 
+  const m = Skia.FontMgr.System();
+  const f = Array.from({ length: m.countFamilies() - 40 }, (_, i) => m.getFamilyName(i + 40));
+  console.warn(f);
+
   return (
     <ExampleScreen>
       <Example title="Asset Price Dotted">
         <AssetPriceDotted />
+      </Example>
+      <Example title="Gain/Loss">
+        <GainLossChart fontFamily="Marker Felt" />
       </Example>
     </ExampleScreen>
   );

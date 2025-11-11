@@ -17,19 +17,12 @@ import {
   Shadow,
   Skia,
   type SkParagraph,
+  type SkTextStyle,
   TextAlign,
 } from '@shopify/react-native-skia';
 
 import { useCartesianChartContext } from '../ChartProvider';
-import { type ChartInset, getChartInset, unwrapAnimatedValue } from '../utils';
-
-// todo: we should switch to the native font for the platform by default
-// And then someone can set manually
-/**
- * Default font family for chart text rendering.
- * Uses system font that works across platforms.
- */
-const DEFAULT_CHART_FONT_FAMILY = 'Inter';
+import { type ChartInset, getChartInset, getColorWithOpacity, unwrapAnimatedValue } from '../utils';
 
 type Shadow = {
   elevation?: number;
@@ -56,16 +49,6 @@ const getElevationStyles = (elevation: ElevationLevels, theme: Theme) => {
     },
   };
   return elevationStyles[elevation];
-};
-
-// todo: should we store this somewhere for reuse across components on mobile?
-/**
- * Interpolates between two colors using linear interpolation.
- * Returns an rgba string.
- */
-const interpolateColor = (color1: string, opacity: number): string => {
-  const c = Skia.Color(color1);
-  return `rgba(${c[0] * 255}, ${c[1] * 255}, ${c[2] * 255}, ${opacity})`;
 };
 
 /**
@@ -127,7 +110,7 @@ export type ChartTextProps = SharedProps & {
    * @example
    * // Advanced rich text with SkParagraph
    * const paragraph = useMemo(() => {
-   *   const builder = Skia.ParagraphBuilder.Make(style, fontMgr);
+   *   const builder = Skia.ParagraphBuilder.Make(style, fontProvider);
    *   builder.pushStyle({ fontSize: 14, fontWeight: 400 });
    *   builder.addText('Regular ');
    *   builder.pushStyle({ fontSize: 14, fontWeight: 700 });
@@ -136,7 +119,7 @@ export type ChartTextProps = SharedProps & {
    *   const para = builder.build();
    *   para.layout(width);
    *   return para;
-   * }, [fontMgr, width]);
+   * }, [fontProvider, width]);
    * <ChartText x={100} y={100}>{paragraph}</ChartText>
    */
   children: ChartTextChildren;
@@ -211,6 +194,12 @@ export type ChartTextProps = SharedProps & {
    */
   font?: ThemeVars.Font;
   /**
+   * Font families override for Skia
+   * @example
+   * ['Helvetica', 'sans-serif']
+   */
+  fontFamilies?: string[];
+  /**
    * Font size override in pixels.
    * Overrides the size from the font prop.
    * @example
@@ -265,6 +254,7 @@ export const ChartText = memo<ChartTextProps>(
     inset: insetInput,
     onDimensionsChange,
     opacity = 1,
+    fontFamilies,
     font = 'label2',
     fontSize,
     fontWeight,
@@ -272,21 +262,26 @@ export const ChartText = memo<ChartTextProps>(
     elevation,
   }) => {
     const theme = useTheme();
-    const { width: chartWidth, height: chartHeight, fontMgr } = useCartesianChartContext();
+    const {
+      width: chartWidth,
+      height: chartHeight,
+      fontFamily,
+      fontProvider,
+    } = useCartesianChartContext();
 
     const inset = useMemo(() => getChartInset(insetInput), [insetInput]);
 
     const background =
       backgroundProp ?? (elevation && elevation > 0 ? theme.color.bg : 'transparent');
 
-    const defaultParagraphStyle = useMemo(
+    const defaultParagraphStyle: SkTextStyle = useMemo(
       () => ({
-        fontFamilies: [DEFAULT_CHART_FONT_FAMILY],
+        fontFamilies: fontFamilies ?? (fontFamily ? [fontFamily] : []),
         fontSize: fontSize ?? theme.fontSize[font],
         fontStyle: { weight: fontWeight ?? getFontWeight(theme, font), slant: fontStyleProp },
         color: Skia.Color(color ?? theme.color.fgMuted),
       }),
-      [fontSize, theme, font, fontWeight, fontStyleProp, color],
+      [fontFamilies, fontFamily, fontSize, theme, font, fontWeight, fontStyleProp, color],
     );
     const paragraph = useDerivedValue<SkParagraph | null>(() => {
       const childrenValue = unwrapAnimatedValue(children);
@@ -295,9 +290,7 @@ export const ChartText = memo<ChartTextProps>(
         return childrenValue;
       }
 
-      if (!fontMgr) return null;
-
-      const builder = Skia.ParagraphBuilder.Make({ textAlign: TextAlign.Left }, fontMgr);
+      const builder = Skia.ParagraphBuilder.Make({ textAlign: TextAlign.Left }, fontProvider);
 
       builder.pushStyle(defaultParagraphStyle);
       builder.addText(childrenValue);
@@ -306,7 +299,7 @@ export const ChartText = memo<ChartTextProps>(
       const para = builder.build();
       para.layout(chartWidth);
       return para;
-    }, [children, fontMgr, defaultParagraphStyle, chartWidth]);
+    }, [children, fontProvider, defaultParagraphStyle, chartWidth]);
 
     const textDimensions = useDerivedValue(() => {
       const unwrappedParagraph = paragraph.value;
@@ -494,7 +487,7 @@ export const ChartText = memo<ChartTextProps>(
             {elevationStylesResult && (
               <Shadow
                 blur={Number(elevationStylesResult.shadowRadius ?? 0)}
-                color={interpolateColor(
+                color={getColorWithOpacity(
                   String(elevationStylesResult.shadowColor ?? '#000000'),
                   Number(elevationStylesResult.shadowOpacity ?? 1),
                 )}

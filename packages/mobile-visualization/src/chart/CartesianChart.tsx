@@ -5,7 +5,7 @@ import { useLayout } from '@coinbase/cds-mobile/hooks/useLayout';
 import type { BoxBaseProps, BoxProps } from '@coinbase/cds-mobile/layout';
 import { Box } from '@coinbase/cds-mobile/layout';
 import { useContextBridge } from '@coinbase/cds-mobile/system';
-import { Canvas, Skia } from '@shopify/react-native-skia';
+import { Canvas, Skia, type SkTypefaceFontProvider, useFont } from '@shopify/react-native-skia';
 
 import { ScrubberProvider, type ScrubberProviderProps } from './scrubber/ScrubberProvider';
 import { convertToSerializableScale, type SerializableScale } from './utils/scale';
@@ -40,7 +40,7 @@ const ChartCanvas = memo(
   },
 );
 
-export type CartesianChartBaseProps = BoxBaseProps &
+export type CartesianChartBaseProps = Omit<BoxBaseProps, 'fontFamily'> &
   Pick<ScrubberProviderProps, 'enableScrubbing' | 'onScrubberPositionChange'> & {
     /**
      * Configuration objects that define how to visualize the data.
@@ -64,11 +64,21 @@ export type CartesianChartBaseProps = BoxBaseProps &
      * Inset around the entire chart (outside the axes).
      */
     inset?: number | Partial<ChartInset>;
+    /**
+     * Default font to use within ChartText.
+     * If not provided, will be the default for the system.
+     */
+    fontFamily?: string;
+    /**
+     * Skia font provider to allow for custom fonts.
+     * If not provided, the only available fonts will be those defined by the system.
+     */
+    fontProvider?: SkTypefaceFontProvider;
   };
 
 export type CartesianChartProps = CartesianChartBaseProps &
   Pick<ScrubberProviderProps, 'allowOverflowGestures'> &
-  BoxProps & {
+  Omit<BoxProps, 'fontFamily'> & {
     /**
      * Chart width. If not provided, will use the container's measured width.
      */
@@ -95,19 +105,13 @@ export const CartesianChart = memo(
         height = '100%',
         style,
         allowOverflowGestures,
+        fontFamily,
+        fontProvider: fontProviderProp,
         ...props
       },
       ref,
     ) => {
       const [containerLayout, onContainerLayout] = useLayout();
-
-      // Use Skia's default TypefaceFontProvider for paragraph rendering
-      // This provides access to system fonts (Helvetica, Arial, etc.) without custom font loading
-      const fontMgr = useMemo(() => {
-        const fontProvider = Skia.TypefaceFontProvider.Make();
-        // Register system fonts if available, otherwise Skia will use defaults
-        return fontProvider;
-      }, []);
 
       const chartWidth = typeof width === 'number' ? width : containerLayout.width;
       const chartHeight = typeof height === 'number' ? height : containerLayout.height;
@@ -341,6 +345,11 @@ export const CartesianChart = memo(
         [renderedAxes, chartRect, calculatedInset],
       );
 
+      const fontProvider = useMemo(() => {
+        if (fontProviderProp) return fontProviderProp;
+        return Skia.TypefaceFontProvider.Make();
+      }, [fontProviderProp]);
+
       const contextValue: CartesianChartContextValue = useMemo(
         () => ({
           series: series ?? [],
@@ -349,7 +358,8 @@ export const CartesianChart = memo(
           animate,
           width: chartWidth,
           height: chartHeight,
-          fontMgr,
+          fontFamily,
+          fontProvider,
           getXAxis,
           getYAxis,
           getXScale,
@@ -368,7 +378,8 @@ export const CartesianChart = memo(
           animate,
           chartWidth,
           chartHeight,
-          fontMgr,
+          fontFamily,
+          fontProvider,
           getXAxis,
           getYAxis,
           getXScale,
