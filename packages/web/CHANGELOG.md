@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.20.2 (11/10/2025 PST)
+
+#### 🐞 Fixes
+
+- Align version with mobile package for react-native-gesture-handler upgrade.
+
 ## 8.20.1 (11/7/2025 PST)
 
 #### 🐞 Fixes
