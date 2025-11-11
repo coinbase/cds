@@ -43,7 +43,7 @@ import { useCartesianChartContext } from '../../ChartProvider';
 import { PeriodSelector, PeriodSelectorActiveIndicator } from '../../PeriodSelector';
 import { Point, type RenderPointsParams } from '../../Point';
 import { Scrubber, type ScrubberRef } from '../../scrubber';
-import { ChartText, type ChartTextChildren, ChartTextSpan } from '../../text';
+import { ChartText, type ChartTextChildren } from '../../text';
 import type { ChartAxisScaleType } from '../../utils/scale';
 import { Line, LineChart, ReferenceLine } from '..';
 
@@ -1063,14 +1063,15 @@ const AssetPriceDotted = () => {
         maximumFractionDigits: 2,
       }).format(sparklineTimePeriodDataValues[dataIndex]);
       const date = formatDate(sparklineTimePeriodDataTimestamps[dataIndex]);
-      return (
+      return `${price} USD ${date}`;
+      /*return (
         <>
           <ChartTextSpan font="label1" fontWeight={FontWeight.Bold}>
             {price} USD
           </ChartTextSpan>
           <ChartTextSpan font="label2"> {date}</ChartTextSpan>
         </>
-      );
+      );*/
     },
     [sparklineTimePeriodDataValues, formatDate, sparklineTimePeriodDataTimestamps],
   );
@@ -1237,8 +1238,8 @@ const AssetPriceDottedNonMemoized = () => {
     return `${dayOfWeek}, ${monthDay}, ${time}`;
   }, []);
 
-  const scrubberLabel: ChartTextChildren = useMemo(() => {
-    if (scrubIndex === undefined) return null;
+  const scrubberLabel: string | undefined = useMemo(() => {
+    if (scrubIndex === undefined) return;
     const price = new Intl.NumberFormat('en-US', {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
@@ -1349,8 +1350,8 @@ const AssetPriceMultipleDotted = () => {
     return `${dayOfWeek}, ${monthDay}, ${time}`;
   }, []);
 
-  const scrubberLabel: ChartTextChildren = useMemo(() => {
-    if (scrubIndex === undefined) return null;
+  const scrubberLabel: string | undefined = useMemo(() => {
+    if (scrubIndex === undefined) return;
     const price = new Intl.NumberFormat('en-US', {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
@@ -1399,7 +1400,7 @@ const AssetPriceMultipleDotted = () => {
           },
         ]}
       >
-        <Scrubber />
+        <Scrubber label={scrubberLabel} />
       </LineChart>
       <PeriodSelector
         TabComponent={BTCTab}

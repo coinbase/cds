@@ -9,19 +9,22 @@ import {
   type AnimatedProp,
   type Color,
   FontSlant,
-  type FontWeight,
+  FontWeight,
   Group,
   Paint,
   Paragraph,
   RoundedRect,
   Shadow,
   Skia,
+  type SkParagraph,
   TextAlign,
 } from '@shopify/react-native-skia';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import { type ChartInset, getChartInset, unwrapAnimatedValue } from '../utils';
 
+// todo: we should switch to the native font for the platform by default
+// And then someone can set manually
 /**
  * Default font family for chart text rendering.
  * Uses system font that works across platforms.
@@ -37,6 +40,7 @@ type Shadow = {
   backgroundColor?: string;
 };
 
+// todo: how can we simplify elevation
 const getElevationStyles = (elevation: ElevationLevels, theme: Theme) => {
   const elevationStyles: Record<ElevationLevels, Shadow> = {
     0: {},
@@ -54,6 +58,7 @@ const getElevationStyles = (elevation: ElevationLevels, theme: Theme) => {
   return elevationStyles[elevation];
 };
 
+// todo: should we store this somewhere for reuse across components on mobile?
 /**
  * Interpolates between two colors using linear interpolation.
  * Returns an rgba string.
@@ -64,65 +69,32 @@ const interpolateColor = (color1: string, opacity: number): string => {
 };
 
 /**
- * Props for ChartTextSpan - used for inline text styling within ChartText.
+ * Converts a fontWeight from Theme to a Skia FontWeight
+ * @note this only works when the fontWeight is a valid number (ie not 'bold')
+ * @param theme - The theme to use
+ * @param font - The font to use
+ * @returns The FontWeight or undefined if the fontWeight is not a valid number
  */
-export type ChartTextSpanProps = {
-  /**
-   * The text content or nested spans.
-   */
-  children: React.ReactNode;
-  /**
-   * Font from theme to use for this span.
-   * @default inherits from parent
-   */
-  font?: ThemeVars.Font;
-  /**
-   * Font size override for this span.
-   * @default inherits from parent
-   */
-  fontSize?: number;
-  /**
-   * Font weight override for this span.
-   * @default inherits from parent
-   */
-  fontWeight?: FontWeight;
-  /**
-   * Font style for this span.
-   * @default inherits from parent
-   */
-  fontStyle?: FontSlant;
-};
+const getFontWeight = (theme: Theme, font: ThemeVars.Font): FontWeight | undefined => {
+  const themeFontWeight = theme.fontWeight[font];
 
-/**
- * ChartTextSpan - A lightweight component for inline text styling.
- * Must be used as a child of ChartText.
- *
- * @example
- * <ChartText x={100} y={100}>
- *   Regular text <ChartTextSpan fontWeight="700">bold text</ChartTextSpan> more text
- * </ChartText>
- */
-export const ChartTextSpan = (_props: ChartTextSpanProps) => {
-  // This is a marker component - it doesn't render anything itself
-  // ChartText will process it during paragraph building
-  return null;
-};
+  const numericWeight =
+    typeof themeFontWeight === 'string' ? Number(themeFontWeight) : themeFontWeight;
 
-/**
- * Internal: A text segment extracted from the children tree.
- */
-type TextSegment = {
-  text: string;
-  font: ThemeVars.Font;
-  fontSize: number;
-  fontWeight: number;
-  fontStyle: FontSlant;
+  const validFontWeights = Object.values(FontWeight).filter(
+    (value): value is number => typeof value === 'number',
+  );
+
+  return numericWeight !== undefined && validFontWeights.includes(numericWeight)
+    ? numericWeight
+    : undefined;
 };
 
 /**
  * The supported content types for ChartText.
+ * Pass a string for simple text, or a SkParagraph for advanced rich text formatting.
  */
-export type ChartTextChildren = React.ReactNode;
+export type ChartTextChildren = AnimatedProp<string> | AnimatedProp<SkParagraph>;
 
 /**
  * Horizontal alignment options for chart text.
@@ -147,8 +119,25 @@ export type ChartTextProps = SharedProps & {
   background?: string;
   /**
    * The text content to display.
-   * Supports plain strings, numbers, and arrays of segments for rich text.
-   * Use \n for line breaks.
+   * Pass a string for simple text rendering, or build your own SkParagraph for advanced formatting.
+   * @example
+   * // Simple text
+   * <ChartText x={100} y={100}>Hello World</ChartText>
+   *
+   * @example
+   * // Advanced rich text with SkParagraph
+   * const paragraph = useMemo(() => {
+   *   const builder = Skia.ParagraphBuilder.Make(style, fontMgr);
+   *   builder.pushStyle({ fontSize: 14, fontWeight: 400 });
+   *   builder.addText('Regular ');
+   *   builder.pushStyle({ fontSize: 14, fontWeight: 700 });
+   *   builder.addText('Bold');
+   *   builder.pop();
+   *   const para = builder.build();
+   *   para.layout(width);
+   *   return para;
+   * }, [fontMgr, width]);
+   * <ChartText x={100} y={100}>{paragraph}</ChartText>
    */
   children: ChartTextChildren;
   /**
@@ -258,67 +247,6 @@ export type ChartTextProps = SharedProps & {
   elevation?: ElevationLevels;
 };
 
-/**
- * Recursively extracts text segments from React children tree.
- * Processes ChartTextSpan components and plain text nodes.
- */
-const extractTextSegments = (
-  children: React.ReactNode,
-  parentFont: ThemeVars.Font,
-  parentFontSize: number,
-  parentFontWeight: number,
-  parentFontStyle: FontSlant,
-  theme: any,
-): TextSegment[] => {
-  const segments: TextSegment[] = [];
-
-  React.Children.forEach(children, (child) => {
-    if (child === null || child === undefined) {
-      return;
-    }
-
-    // Handle plain text or numbers
-    if (typeof child === 'string' || typeof child === 'number') {
-      const text = String(child);
-      if (text.length > 0) {
-        segments.push({
-          text,
-          font: parentFont,
-          fontSize: parentFontSize,
-          fontWeight: parentFontWeight,
-          fontStyle: parentFontStyle,
-        });
-      }
-      return;
-    }
-
-    // Handle React elements (ChartTextSpan)
-    if (React.isValidElement(child)) {
-      const props = child.props as ChartTextSpanProps;
-
-      // Get effective styling for this span
-      const spanFont = props.font ?? parentFont;
-      const spanFontSize = props.fontSize ?? theme.fontSize[spanFont] ?? parentFontSize;
-      const spanFontWeight =
-        props.fontWeight ?? parseInt(String(theme.fontWeight[spanFont] ?? parentFontWeight), 10);
-      const spanFontStyle = props.fontStyle ?? parentFontStyle;
-
-      // Recursively process children with inherited styles
-      const nestedSegments = extractTextSegments(
-        props.children,
-        spanFont,
-        spanFontSize,
-        spanFontWeight,
-        spanFontStyle,
-        theme,
-      );
-      segments.push(...nestedSegments);
-    }
-  });
-
-  return segments;
-};
-
 export const ChartText = memo<ChartTextProps>(
   ({
     children,
@@ -338,136 +266,123 @@ export const ChartText = memo<ChartTextProps>(
     onDimensionsChange,
     opacity = 1,
     font = 'label2',
-    fontSize: fontSizeOverride,
-    fontWeight: fontWeightOverride,
+    fontSize,
+    fontWeight,
     fontStyle = FontSlant.Upright,
     elevation,
   }) => {
     const theme = useTheme();
     const { width: chartWidth, height: chartHeight, fontMgr } = useCartesianChartContext();
 
-    // Compute effective background color based on elevation
+    const inset = useMemo(() => getChartInset(insetInput), [insetInput]);
+
     const background =
       backgroundProp ?? (elevation && elevation > 0 ? theme.color.bg : 'transparent');
 
-    // Get font properties from theme with overrides (convert theme strings to numbers)
-    const fontSize = fontSizeOverride ?? theme.fontSize[font] ?? 14;
-    const fontWeight = fontWeightOverride ?? parseInt(String(theme.fontWeight[font] ?? '400'), 10);
+    const paragraph = useDerivedValue<SkParagraph | null>(() => {
+      const childrenValue = unwrapAnimatedValue(children);
 
-    // Extract text segments from children (handles ChartTextSpan nesting)
-    const textSegments = useMemo(() => {
-      return extractTextSegments(children, font, fontSize, fontWeight, fontStyle, theme);
-    }, [children, font, fontSize, fontWeight, fontStyle, theme]);
+      if (typeof childrenValue !== 'string') {
+        return childrenValue;
+      }
 
-    // Build paragraph with Skia ParagraphBuilder
-    const paragraph = useMemo(() => {
-      // FontMgr must be loaded before we can build paragraphs
       if (!fontMgr) return null;
 
-      // For positioning, we always use left alignment and position the paragraph manually
-      // This gives us consistent behavior with the old Text component
-      const paragraphStyle = {
-        textAlign: TextAlign.Left,
-      };
+      const builder = Skia.ParagraphBuilder.Make({ textAlign: TextAlign.Left }, fontMgr);
 
-      const builder = Skia.ParagraphBuilder.Make(paragraphStyle, fontMgr);
-
-      // Build paragraph from extracted segments
-      textSegments.forEach((segment) => {
-        builder.pushStyle({
-          fontFamilies: [DEFAULT_CHART_FONT_FAMILY],
-          fontSize: segment.fontSize,
-          fontStyle: {
-            weight: segment.fontWeight,
-            slant: segment.fontStyle,
-          },
-          color: Skia.Color(color ?? theme.color.fgMuted),
-        });
-        builder.addText(segment.text);
-        builder.pop();
+      builder.pushStyle({
+        fontFamilies: [DEFAULT_CHART_FONT_FAMILY],
+        fontSize: fontSize ?? theme.fontSize[font],
+        fontStyle: {
+          weight: fontWeight ?? getFontWeight(theme, font),
+          slant: fontStyle,
+        },
+        color: Skia.Color(color ?? theme.color.fgMuted),
       });
+      builder.addText(childrenValue);
+      builder.pop();
 
       const para = builder.build();
       para.layout(chartWidth);
       return para;
-    }, [fontMgr, textSegments, color, theme.color.fgMuted, chartWidth]);
+    }, [
+      children,
+      fontMgr,
+      fontSize,
+      fontWeight,
+      fontStyle,
+      color,
+      theme.color.fgMuted,
+      chartWidth,
+    ]);
 
-    // Calculate text dimensions from paragraph
-    const textDimensions = useMemo(() => {
-      if (!paragraph) return { width: 0, height: 0 };
+    const textDimensions = useDerivedValue(() => {
+      const unwrappedParagraph = paragraph.value;
+      if (!unwrappedParagraph) return { width: 0, height: 0 };
       return {
-        width: paragraph.getLongestLine(),
-        height: paragraph.getHeight(),
+        width: unwrappedParagraph.getLongestLine(),
+        height: unwrappedParagraph.getHeight(),
       };
     }, [paragraph]);
 
-    // Calculate background rectangle dimensions with inset
-    const inset = useMemo(() => getChartInset(insetInput), [insetInput]);
-
-    const backgroundRectSize = useMemo(
+    const backgroundRectSize = useDerivedValue(
       () => ({
-        width: textDimensions.width + inset.left + inset.right,
-        height: textDimensions.height + inset.top + inset.bottom,
+        width: textDimensions.value.width + inset.left + inset.right,
+        height: textDimensions.value.height + inset.top + inset.bottom,
       }),
       [textDimensions, inset],
     );
 
     // Calculate background rect position based on alignment
-    const backgroundRect = useDerivedValue(() => {
+    const backgroundRect = useDerivedValue<Rect>(() => {
       const horAlignment = unwrapAnimatedValue(horizontalAlignment);
       const verAlignment = unwrapAnimatedValue(verticalAlignment);
+      // By default the value is top left
       let rectX = unwrapAnimatedValue(x);
       let rectY = unwrapAnimatedValue(y);
+      const rectSize = backgroundRectSize.value;
 
       // Adjust for horizontal alignment
       switch (horAlignment) {
         case 'center':
-          rectX = rectX - backgroundRectSize.width / 2;
+          rectX = rectX - rectSize.width / 2;
           break;
         case 'right':
-          rectX = rectX - backgroundRectSize.width;
+          rectX = rectX - rectSize.width;
           break;
-        // 'left' is default, no adjustment needed
       }
 
       // Adjust for vertical alignment
       switch (verAlignment) {
         case 'middle':
-          rectY = rectY - backgroundRectSize.height / 2;
+          rectY = rectY - rectSize.height / 2;
           break;
         case 'bottom':
-          rectY = rectY - backgroundRectSize.height;
+          rectY = rectY - rectSize.height;
           break;
-        // 'top' is default, no adjustment needed
       }
 
       return {
         x: rectX,
         y: rectY,
-        width: backgroundRectSize.width,
-        height: backgroundRectSize.height,
+        width: rectSize.width,
+        height: rectSize.height,
       };
     }, [x, y, backgroundRectSize, horizontalAlignment, verticalAlignment]);
 
-    // Calculate text position within the background rect
-    // Note: Paragraph uses top-left positioning, not baseline like Text
-    const textPosition = useDerivedValue(
-      () => ({
+    // Paragraph uses top-left positioning
+    const textPosition = useDerivedValue<Rect>(() => {
+      const textDims = textDimensions.value;
+      return {
         x: backgroundRect.value.x + inset.left,
-        // Paragraph y is the top of the text box (not baseline like Text)
-        // Center vertically within the background rect
-        y:
-          backgroundRect.value.y +
-          inset.top +
-          (backgroundRectSize.height - inset.top - inset.bottom - textDimensions.height) / 2,
-        width: textDimensions.width,
-        height: textDimensions.height,
-      }),
-      [backgroundRect, textDimensions, inset, backgroundRectSize],
-    );
+        y: backgroundRect.value.y + inset.top,
+        width: textDims.width,
+        height: textDims.height,
+      };
+    }, [backgroundRect, textDimensions, inset, backgroundRectSize]);
 
     // Calculate overflow and repositioning
-    const fullChartBounds = useMemo(
+    const fullChartBounds = useMemo<Rect>(
       () => ({ x: 0, y: 0, width: chartWidth, height: chartHeight }),
       [chartWidth, chartHeight],
     );
@@ -515,7 +430,7 @@ export const ChartText = memo<ChartTextProps>(
     }, [backgroundRect, fullChartBounds, bounds, disableRepositioning]);
 
     // Final adjusted positions
-    const adjustedBackgroundRect = useDerivedValue(() => {
+    const backgroundRectWithOffset = useDerivedValue<Rect>(() => {
       const offsetX = unwrapAnimatedValue(dx);
       const offsetY = unwrapAnimatedValue(dy);
       return {
@@ -526,22 +441,19 @@ export const ChartText = memo<ChartTextProps>(
       };
     }, [backgroundRect, overflowAmount, dx, dy]);
 
-    const adjustedTextPositionX = useDerivedValue(
+    const textWithOffsetX = useDerivedValue(
       () => textPosition.value.x + overflowAmount.value.x + unwrapAnimatedValue(dx),
       [textPosition, overflowAmount, dx],
     );
 
-    const adjustedTextPositionY = useDerivedValue(
+    const textWithOffsetY = useDerivedValue(
       () => textPosition.value.y + overflowAmount.value.y + unwrapAnimatedValue(dy),
       [textPosition, overflowAmount, dy],
     );
 
     useAnimatedReaction(
-      () => adjustedBackgroundRect.value,
+      () => backgroundRectWithOffset.value,
       (rect, previous) => {
-        'worklet';
-
-        // If callback is provided, jump to JS thread
         if (onDimensionsChange && rect !== previous) {
           runOnJS(onDimensionsChange)(rect);
         }
@@ -549,35 +461,35 @@ export const ChartText = memo<ChartTextProps>(
       [onDimensionsChange],
     );
 
-    // Check if we have valid content to render
-    const hasValidContent = paragraph && textDimensions.width > 0 && textDimensions.height > 0;
-
-    // Always render a Group so onDimensionsChange is called (needed for collision detection)
-    // but make it invisible if content isn't ready
-    const finalOpacity = hasValidContent ? opacity : 0;
+    // Show group if we are ready
+    const groupOpacity = useDerivedValue(() => {
+      const textSize = textDimensions.value;
+      const hasValidContent = paragraph.value && textSize.width > 0 && textSize.height > 0;
+      return hasValidContent ? opacity : 0;
+    }, [paragraph, textDimensions, opacity]);
 
     const backgroundRectHeight = useDerivedValue(
-      () => adjustedBackgroundRect.value.height,
-      [adjustedBackgroundRect],
+      () => backgroundRectWithOffset.value.height,
+      [backgroundRectWithOffset],
     );
     const backgroundRectWidth = useDerivedValue(
-      () => adjustedBackgroundRect.value.width,
-      [adjustedBackgroundRect],
+      () => backgroundRectWithOffset.value.width,
+      [backgroundRectWithOffset],
     );
     const backgroundRectX = useDerivedValue(
-      () => adjustedBackgroundRect.value.x,
-      [adjustedBackgroundRect],
+      () => backgroundRectWithOffset.value.x,
+      [backgroundRectWithOffset],
     );
     const backgroundRectY = useDerivedValue(
-      () => adjustedBackgroundRect.value.y,
-      [adjustedBackgroundRect],
+      () => backgroundRectWithOffset.value.y,
+      [backgroundRectWithOffset],
     );
 
     const elevationStylesResult = getElevationStyles(elevation ?? 0, theme);
 
+    // Opacity on a group doesn't impact the paragraph so we need to apply it to Group
     return (
-      <Group layer={<Paint opacity={finalOpacity} />}>
-        {/* Background rectangle with shadow */}
+      <Group data-testID={testID} layer={<Paint opacity={groupOpacity} />}>
         {background !== 'transparent' && (
           <RoundedRect
             color={background as Color}
@@ -600,15 +512,12 @@ export const ChartText = memo<ChartTextProps>(
             )}
           </RoundedRect>
         )}
-        {/* Render paragraph only when content is valid */}
-        {hasValidContent && (
-          <Paragraph
-            paragraph={paragraph}
-            width={chartWidth}
-            x={adjustedTextPositionX}
-            y={adjustedTextPositionY}
-          />
-        )}
+        <Paragraph
+          paragraph={paragraph}
+          width={chartWidth}
+          x={textWithOffsetX}
+          y={textWithOffsetY}
+        />
       </Group>
     );
   },
