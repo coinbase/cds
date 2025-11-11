@@ -268,7 +268,7 @@ export const ChartText = memo<ChartTextProps>(
     font = 'label2',
     fontSize,
     fontWeight,
-    fontStyle = FontSlant.Upright,
+    fontStyle: fontStyleProp = FontSlant.Upright,
     elevation,
   }) => {
     const theme = useTheme();
@@ -279,6 +279,15 @@ export const ChartText = memo<ChartTextProps>(
     const background =
       backgroundProp ?? (elevation && elevation > 0 ? theme.color.bg : 'transparent');
 
+    const defaultParagraphStyle = useMemo(
+      () => ({
+        fontFamilies: [DEFAULT_CHART_FONT_FAMILY],
+        fontSize: fontSize ?? theme.fontSize[font],
+        fontStyle: { weight: fontWeight ?? getFontWeight(theme, font), slant: fontStyleProp },
+        color: Skia.Color(color ?? theme.color.fgMuted),
+      }),
+      [fontSize, theme, font, fontWeight, fontStyleProp, color],
+    );
     const paragraph = useDerivedValue<SkParagraph | null>(() => {
       const childrenValue = unwrapAnimatedValue(children);
 
@@ -290,31 +299,14 @@ export const ChartText = memo<ChartTextProps>(
 
       const builder = Skia.ParagraphBuilder.Make({ textAlign: TextAlign.Left }, fontMgr);
 
-      builder.pushStyle({
-        fontFamilies: [DEFAULT_CHART_FONT_FAMILY],
-        fontSize: fontSize ?? theme.fontSize[font],
-        fontStyle: {
-          weight: fontWeight ?? getFontWeight(theme, font),
-          slant: fontStyle,
-        },
-        color: Skia.Color(color ?? theme.color.fgMuted),
-      });
+      builder.pushStyle(defaultParagraphStyle);
       builder.addText(childrenValue);
       builder.pop();
 
       const para = builder.build();
       para.layout(chartWidth);
       return para;
-    }, [
-      children,
-      fontMgr,
-      fontSize,
-      fontWeight,
-      fontStyle,
-      color,
-      theme.color.fgMuted,
-      chartWidth,
-    ]);
+    }, [children, fontMgr, defaultParagraphStyle, chartWidth]);
 
     const textDimensions = useDerivedValue(() => {
       const unwrappedParagraph = paragraph.value;

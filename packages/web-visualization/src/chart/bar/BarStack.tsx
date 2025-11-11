@@ -242,7 +242,7 @@ export const BarStack = memo<BarStackProps>(
         minY = Math.min(minY, y);
         maxY = Math.max(maxY, y + height);
 
-        let barFill = s.fill || s.color || 'var(--color-fgPrimary)';
+        let barFill = s.color ?? 'var(--color-fgPrimary)';
 
         // Evaluate gradient if provided
         if (
@@ -267,7 +267,7 @@ export const BarStack = memo<BarStackProps>(
               evalValue = Array.isArray(originalValue) ? originalValue[1] : originalValue;
             }
             const evaluatedColor = evaluateGradientAtValue(s.gradient, evalValue, gradientScale);
-            if (evaluatedColor && !s.fill) {
+            if (evaluatedColor) {
               // Only apply gradient color if fill is not explicitly set
               barFill = evaluatedColor;
             }
@@ -281,12 +281,7 @@ export const BarStack = memo<BarStackProps>(
           width,
           height,
           dataY: value, // Store the actual data value
-          // Use series-specific properties, falling back to defaults
-          BarComponent: s.BarComponent,
           fill: barFill,
-          fillOpacity: s.fillOpacity,
-          stroke: s.stroke,
-          strokeWidth: s.strokeWidth,
           // Check if the bar should be rounded based on the baseline, with an epsilon to handle floating-point rounding
           roundTop: roundBaseline || Math.abs(barTop - baseline) >= EPSILON,
           roundBottom: roundBaseline || Math.abs(barBottom - baseline) >= EPSILON,
