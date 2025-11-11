@@ -6,14 +6,21 @@ import React, {
   useImperativeHandle,
   useMemo,
 } from 'react';
-import { useDerivedValue, useSharedValue, withTiming } from 'react-native-reanimated';
+import {
+  runOnJS,
+  useAnimatedReaction,
+  useDerivedValue,
+  useSharedValue,
+  withTiming,
+} from 'react-native-reanimated';
 import { useRefMap } from '@coinbase/cds-common/hooks/useRefMap';
 import type { SharedProps } from '@coinbase/cds-common/types';
 import { useTheme } from '@coinbase/cds-mobile';
-import { Group, Rect } from '@shopify/react-native-skia';
+import { Group, Rect, type SkParagraph } from '@shopify/react-native-skia';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import { ReferenceLine, type ReferenceLineProps } from '../line';
+import type { ChartTextChildren } from '../text';
 import { getPointOnSerializableScale, type Transition, useScrubberContext } from '../utils';
 
 import { ScrubberBeacon, type ScrubberBeaconProps, type ScrubberBeaconRef } from './ScrubberBeacon';
@@ -48,8 +55,9 @@ export type ScrubberProps = SharedProps &
     overlayOffset?: number;
     /**
      * Label text displayed above the scrubber line.
+     * Can be a static string or a function that receives the current dataIndex.
      */
-    label?: ReferenceLineProps['label'] | ((dataIndex: number) => ReferenceLineProps['label']);
+    label?: string | SkParagraph | ((dataIndex: number) => string | SkParagraph);
     /**
      * Props passed to the scrubber line's label.
      */
@@ -87,12 +95,10 @@ export const Scrubber = memo(
       {
         seriesIds,
         hideLine,
-        label, // todo - utilize
-        // todo: accessibility label?
+        label,
         lineStroke,
         labelProps,
         BeaconComponent = ScrubberBeacon,
-        // todo: use
         BeaconLabelComponent = ScrubberBeaconLabel,
         LineComponent = ReferenceLine,
         hideOverlay,
@@ -108,8 +114,16 @@ export const Scrubber = memo(
       const ScrubberBeaconRefs = useRefMap<ScrubberBeaconRef>();
 
       const { scrubberPosition } = useScrubberContext();
-      const { getXSerializableScale, getSeriesData, getXAxis, series, drawingArea, animate } =
-        useCartesianChartContext();
+      const {
+        getXSerializableScale,
+        getSeriesData,
+        getXAxis,
+        series,
+        drawingArea,
+        animate,
+        width: chartWidth,
+        height: chartHeight,
+      } = useCartesianChartContext();
 
       const xAxis = useMemo(() => getXAxis(), [getXAxis]);
       const xScale = useMemo(() => getXSerializableScale(), [getXSerializableScale]);
@@ -178,8 +192,6 @@ export const Scrubber = memo(
         return dataIndex.value;
       }, [xAxis, dataIndex]);
 
-      const memoizedScrubberLabel = 'test';
-
       const lineOpacity = useDerivedValue(() => {
         return scrubberPosition.value !== undefined ? 1 : 0;
       }, [scrubberPosition]);
@@ -203,6 +215,36 @@ export const Scrubber = memo(
             : 0;
         return xValue;
       }, [dataX, xScale]);
+
+      // todo: see if we can simplify these three sections
+      const resolvedLabelValue = useSharedValue<SkParagraph | string>('');
+
+      const updateResolvedLabel = useCallback(
+        (index: number) => {
+          if (!label) {
+            resolvedLabelValue.value = '';
+            return;
+          }
+
+          if (typeof label === 'function') {
+            const result = label(index);
+            resolvedLabelValue.value = result ?? '';
+          } else if (typeof label === 'string') {
+            resolvedLabelValue.value = label;
+          }
+        },
+        [label, resolvedLabelValue],
+      );
+
+      // Update resolved label when dataIndex changes
+      useAnimatedReaction(
+        () => dataIndex.value,
+        (currentIndex) => {
+          'worklet';
+          runOnJS(updateResolvedLabel)(currentIndex);
+        },
+        [updateResolvedLabel],
+      );
 
       const scrubberBeaconLabels: Array<{ id: string; label: string; color?: string }> = useMemo(
         () =>
@@ -234,10 +276,17 @@ export const Scrubber = memo(
             <Group opacity={lineOpacity}>
               <LineComponent
                 dataX={dataX}
-                label={memoizedScrubberLabel}
+                label={resolvedLabelValue}
                 labelProps={{
                   verticalAlignment: 'middle',
                   ...labelProps,
+                  bounds: {
+                    // todo - how to bake this into the chart on web and on mobile
+                    x: 16,
+                    y: 16,
+                    width: chartWidth - 32,
+                    height: chartHeight - 32,
+                  },
                 }}
               />
             </Group>

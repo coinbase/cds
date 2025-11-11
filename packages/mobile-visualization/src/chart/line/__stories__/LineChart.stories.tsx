@@ -28,7 +28,7 @@ import {
 import { SegmentedTab, type SegmentedTabProps } from '@coinbase/cds-mobile/tabs/SegmentedTab';
 import { TextLabel1 } from '@coinbase/cds-mobile/typography';
 import { Text } from '@coinbase/cds-mobile/typography/Text';
-import { FontWeight, Rect } from '@shopify/react-native-skia';
+import { FontWeight, Rect, Skia, type SkTextStyle, TextAlign } from '@shopify/react-native-skia';
 
 import {
   AreaChart,
@@ -1041,6 +1041,7 @@ const AssetPriceDotted = () => {
   }, []);
 
   const formatDate = useCallback((date: Date) => {
+    'worklet';
     const dayOfWeek = date.toLocaleDateString('en-US', { weekday: 'short' });
 
     const monthDay = date.toLocaleDateString('en-US', {
@@ -1057,25 +1058,24 @@ const AssetPriceDotted = () => {
     return `${dayOfWeek}, ${monthDay}, ${time}`;
   }, []);
 
-  const scrubberLabel = useCallback(
+  const scrubberLabel = (dataIndex: number) => {
+    'worklet';
+    return `${dataIndex} test`;
+  };
+
+  /*const scrubberLabel = useCallback(
     (dataIndex: number) => {
+      'worklet';
+      return 'testing';
       const price = new Intl.NumberFormat('en-US', {
         minimumFractionDigits: 2,
         maximumFractionDigits: 2,
       }).format(sparklineTimePeriodDataValues[dataIndex]);
-      const date = formatDate(sparklineTimePeriodDataTimestamps[dataIndex]);
-      return `${price} USD ${date}`;
-      /*return (
-        <>
-          <ChartTextSpan font="label1" fontWeight={FontWeight.Bold}>
-            {price} USD
-          </ChartTextSpan>
-          <ChartTextSpan font="label2"> {date}</ChartTextSpan>
-        </>
-      );*/
+      // const date = formatDate(sparklineTimePeriodDataTimestamps[dataIndex]);
+      return `${price} USD`;
     },
     [sparklineTimePeriodDataValues, formatDate, sparklineTimePeriodDataTimestamps],
-  );
+  );*/
 
   // Chart overview accessibility label
   const chartOverviewLabel = useMemo(() => {
@@ -1113,8 +1113,10 @@ const AssetPriceDotted = () => {
     return `Price chart for Bitcoin, ${startDateStr} to ${endDateStr}. Swipe left or right to navigate data points.`;
   }, [sparklineTimePeriodData, timePeriod.id]);
 
-  const myPoints = useCallback(({ dataX }: RenderPointsParams) => {
-    return dataX % 50 === 0;
+  const fontMgr = useMemo(() => {
+    const fontProvider = Skia.TypefaceFontProvider.Make();
+    // Register system fonts if available, otherwise Skia will use defaults
+    return fontProvider;
   }, []);
 
   return (
@@ -1135,31 +1137,59 @@ const AssetPriceDotted = () => {
           enableScrubbing
           showArea
           accessibilityLiveRegion="polite"
-          areaType="solid"
+          areaType="dotted"
           height={defaultChartHeight}
           inset={{ top: 56 }}
-          renderPoints={myPoints}
           series={[
             {
               id: 'btc',
               data: sparklineTimePeriodDataValues,
               color: assets.btc.color,
-              gradient: {
-                stops: [
-                  { offset: currentPrice * 0.25, color: theme.color.fgNegative },
-                  { offset: currentPrice * 0.5, color: theme.color.fgWarning },
-                  { offset: currentPrice * 0.75, color: theme.color.fgWarning },
-                  { offset: currentPrice, color: theme.color.fgPositive },
-                ],
-              },
+              label: 'Bitcoin',
             },
           ]}
-          transition={{ type: 'timing', duration: 3000 }}
         >
           <Scrubber
             idlePulse
-            beaconTransitions={{ update: { type: 'timing', duration: 3000 } }}
-            label={scrubberLabel}
+            label={(d: number) => {
+              const date = formatDate(sparklineTimePeriodDataTimestamps[d]);
+              const price = formatPrice(sparklineTimePeriodDataValues[d]);
+
+              const regularStyle: SkTextStyle = {
+                fontFamilies: ['Inter'],
+                fontSize: 14,
+                fontStyle: {
+                  weight: FontWeight.Normal,
+                },
+                color: Skia.Color(theme.color.fgMuted),
+              };
+
+              const boldStyle: SkTextStyle = {
+                fontFamilies: ['Inter'],
+                ...regularStyle,
+                fontStyle: {
+                  weight: FontWeight.Bold,
+                },
+              };
+
+              // 3. Use the ParagraphBuilder
+              const builder = Skia.ParagraphBuilder.Make(
+                {
+                  textAlign: TextAlign.Left,
+                },
+                fontMgr,
+              );
+
+              builder.pushStyle(boldStyle);
+              builder.addText(price);
+
+              builder.pushStyle(regularStyle);
+              builder.addText(` ${date}`);
+
+              const para = builder.build();
+              para.layout(512);
+              return para;
+            }}
             labelProps={{
               dy: -28,
               elevation: 1,
@@ -2480,8 +2510,8 @@ export default () => {
 
   return (
     <ExampleScreen>
-      <Example title="Dotted">
-        <BasicExample />
+      <Example title="Asset Price Dotted">
+        <AssetPriceDotted />
       </Example>
     </ExampleScreen>
   );

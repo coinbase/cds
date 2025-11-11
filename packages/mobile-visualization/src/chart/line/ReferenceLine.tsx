@@ -164,6 +164,17 @@ export const ReferenceLine = memo<ReferenceLineProps>(
       return `M${xPixel.value},${drawingArea.y} L${xPixel.value},${drawingArea.y + drawingArea.height}`;
     }, [drawingArea, xPixel]);
 
+    const labelXPixel = useDerivedValue(() => xPixel.value ?? 0, [xPixel]);
+    const labelYPixel = useDerivedValue(() => yPixel.value ?? 0, [yPixel]);
+    const labelOpacity = useDerivedValue(
+      () =>
+        (dataY !== undefined && yPixel.value !== undefined) ||
+        (dataX !== undefined && xPixel.value !== undefined)
+          ? 1
+          : 0,
+      [yPixel],
+    );
+
     if (dataY !== undefined) {
       let labelX: number;
       if (labelPosition === 'left') {
@@ -177,11 +188,11 @@ export const ReferenceLine = memo<ReferenceLineProps>(
       return (
         <>
           <LineComponent animate={false} d={horizontalLine} stroke={effectiveLineStroke} />
-          {/*label && (
-            <ChartText {...finalLabelProps} x={labelX} y={yPixel}>
+          {label && (
+            <ChartText {...finalLabelProps} opacity={labelOpacity} x={labelX} y={labelYPixel}>
               {label}
             </ChartText>
-          )*/}
+          )}
         </>
       );
     }
@@ -200,11 +211,11 @@ export const ReferenceLine = memo<ReferenceLineProps>(
       return (
         <>
           <LineComponent animate={false} d={verticalLine} stroke={effectiveLineStroke} />
-          {/*label && (
-            <ChartText {...finalLabelProps} x={xPixel} y={labelY}>
+          {label && (
+            <ChartText {...finalLabelProps} opacity={labelOpacity} x={labelXPixel} y={labelY}>
               {label}
             </ChartText>
-          )*/}
+          )}
         </>
       );
     }

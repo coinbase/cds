@@ -94,7 +94,7 @@ const getFontWeight = (theme: Theme, font: ThemeVars.Font): FontWeight | undefin
  * The supported content types for ChartText.
  * Pass a string for simple text, or a SkParagraph for advanced rich text formatting.
  */
-export type ChartTextChildren = AnimatedProp<string> | AnimatedProp<SkParagraph>;
+export type ChartTextChildren = AnimatedProp<string | SkParagraph>;
 
 /**
  * Horizontal alignment options for chart text.
@@ -236,7 +236,7 @@ export type ChartTextProps = SharedProps & {
    * Opacity of the text and background.
    * @default 1
    */
-  opacity?: number;
+  opacity?: AnimatedProp<number>;
   /**
    * Elevation level for drop shadow.
    * @default undefined
@@ -457,7 +457,7 @@ export const ChartText = memo<ChartTextProps>(
     const groupOpacity = useDerivedValue(() => {
       const textSize = textDimensions.value;
       const hasValidContent = paragraph.value && textSize.width > 0 && textSize.height > 0;
-      return hasValidContent ? opacity : 0;
+      return hasValidContent ? unwrapAnimatedValue(opacity) : 0;
     }, [paragraph, textDimensions, opacity]);
 
     const backgroundRectHeight = useDerivedValue(
