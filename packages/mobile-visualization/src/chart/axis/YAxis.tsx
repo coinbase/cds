@@ -7,7 +7,7 @@ import { DottedLine } from '../line/DottedLine';
 import { ReferenceLine } from '../line/ReferenceLine';
 import { SolidLine } from '../line/SolidLine';
 import { ChartText } from '../text/ChartText';
-import { SmartChartTextGroup, type TextLabelData } from '../text/SmartChartTextGroup';
+import { ChartTextGroup, type TextLabelData } from '../text/ChartTextGroup';
 import { getAxisTicksData, isCategoricalScale, lineToPath } from '../utils';
 
 import { type AxisBaseProps, type AxisProps } from './Axis';
@@ -188,11 +188,7 @@ export const YAxis = memo<YAxisProps>(
           </Group>
         )}
         {chartTextData && (
-          <SmartChartTextGroup
-            prioritizeEndLabels
-            labels={chartTextData}
-            minGap={minTickLabelGap}
-          />
+          <ChartTextGroup prioritizeEndLabels labels={chartTextData} minGap={minTickLabelGap} />
         )}
         {axisBounds && showTickMarks && (
           <Group>

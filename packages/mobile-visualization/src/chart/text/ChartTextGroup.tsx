@@ -28,7 +28,7 @@ export type TextLabelData = {
 
 export type TextLabelDataWithKey = TextLabelData & { key: string };
 
-export type SmartChartTextGroupProps = {
+export type ChartTextGroupProps = {
   /**
    * Array of text labels to display
    */
@@ -72,7 +72,7 @@ const EPSILON_PX = 0.5;
  *
  * The component focuses solely on overlap prevention logic for better separation of concerns.
  */
-export const SmartChartTextGroup = memo<SmartChartTextGroupProps>(
+export const ChartTextGroup = memo<ChartTextGroupProps>(
   ({ labels, minGap = 8, prioritizeEndLabels = true, chartTextProps }) => {
     const [boundingBoxes, setBoundingBoxes] = useState<Map<string, Rect>>(new Map());
     const { onDimensionsChange: propsOnDimensionsChange, ...restChartTextProps } =

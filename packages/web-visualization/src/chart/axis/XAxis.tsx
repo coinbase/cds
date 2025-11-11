@@ -8,7 +8,7 @@ import { DottedLine } from '../line/DottedLine';
 import { ReferenceLine } from '../line/ReferenceLine';
 import { SolidLine } from '../line/SolidLine';
 import { ChartText } from '../text/ChartText';
-import { SmartChartTextGroup, type TextLabelData } from '../text/SmartChartTextGroup';
+import { ChartTextGroup, type TextLabelData } from '../text/ChartTextGroup';
 import { getAxisTicksData, isCategoricalScale, lineToPath } from '../utils';
 
 import {
@@ -240,11 +240,7 @@ export const XAxis = memo<XAxisProps>(
               initial="initial"
               variants={animate ? axisTickLabelsInitialAnimationVariants : undefined}
             >
-              <SmartChartTextGroup
-                prioritizeEndLabels
-                labels={chartTextData}
-                minGap={minTickLabelGap}
-              />
+              <ChartTextGroup prioritizeEndLabels labels={chartTextData} minGap={minTickLabelGap} />
             </motion.g>
           </AnimatePresence>
         )}
