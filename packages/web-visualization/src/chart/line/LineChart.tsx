@@ -19,9 +19,10 @@ export type LineSeries = Series &
       | 'LineComponent'
       | 'AreaComponent'
       | 'stroke'
+      | 'strokeWidth'
+      | 'strokeOpacity'
       | 'opacity'
       | 'renderPoints'
-      | 'strokeWidth'
       | 'connectNulls'
       | 'transition'
       | 'onPointClick'
@@ -39,6 +40,7 @@ export type LineChartProps = Omit<CartesianChartProps, 'xAxis' | 'yAxis' | 'seri
     | 'curve'
     | 'renderPoints'
     | 'strokeWidth'
+    | 'strokeOpacity'
     | 'connectNulls'
     | 'transition'
     | 'onPointClick'
@@ -76,6 +78,7 @@ export const LineChart = memo(
         curve,
         renderPoints,
         strokeWidth,
+        strokeOpacity,
         connectNulls,
         transition,
         opacity,
@@ -171,6 +174,7 @@ export const LineChart = memo(
               renderPoints={renderPoints}
               seriesId={id}
               showArea={showArea}
+              strokeOpacity={strokeOpacity}
               strokeWidth={strokeWidth}
               transition={linePropsFromSeries.transition ?? transition}
               type={type}

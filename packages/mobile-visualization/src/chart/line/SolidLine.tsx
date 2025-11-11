@@ -1,53 +1,11 @@
 import { memo } from 'react';
 import type { SharedProps } from '@coinbase/cds-common/types';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
-import type { AnimatedProp } from '@shopify/react-native-skia';
 
 import { Gradient } from '../gradient';
 import { Path, type PathProps } from '../Path';
-import { type GradientDefinition } from '../utils/gradient';
-import { type Transition } from '../utils/transition';
 
-/**
- * Shared props for line component implementations.
- * Used by SolidLine, DottedLine, and other line variants.
- */
-export type LineComponentProps = {
-  d: AnimatedProp<string | undefined>;
-  stroke: string;
-  strokeOpacity?: number;
-  strokeWidth?: number;
-  testID?: string;
-  clipPath?: string;
-  /**
-   * ID of the y-axis to use.
-   * Required for components that need to map data values to pixel positions.
-   */
-  yAxisId?: string;
-  /**
-   * Color mapping configuration.
-   * When provided, creates gradient or threshold-based coloring.
-   */
-  gradient?: GradientDefinition;
-  /**
-   * Whether to animate the line.
-   * Overrides the animate value from the chart context.
-   */
-  animate?: boolean;
-  /**
-   * Transition configuration for line animations.
-   * Defines how the line transitions when data changes.
-   *
-   * @example
-   * // Simple spring animation
-   * transition={{ type: 'spring', damping: 10, stiffness: 100 }}
-   *
-   * @example
-   * // Timing animation
-   * transition={{ type: 'timing', duration: 500 }}
-   */
-  transition?: Transition;
-};
+import type { LineComponentProps } from './Line';
 
 export type SolidLineProps = SharedProps &
   Pick<

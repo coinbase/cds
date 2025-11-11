@@ -20,10 +20,13 @@ export type LineSeries = Series &
       | 'LineComponent'
       | 'AreaComponent'
       | 'stroke'
+      | 'strokeWidth'
+      | 'strokeOpacity'
       | 'opacity'
       | 'renderPoints'
-      | 'strokeWidth'
       | 'connectNulls'
+      | 'transition'
+      | 'onPointPress'
     >
   >;
 
@@ -38,8 +41,11 @@ export type LineChartProps = Omit<CartesianChartProps, 'xAxis' | 'yAxis' | 'seri
     | 'curve'
     | 'renderPoints'
     | 'strokeWidth'
+    | 'strokeOpacity'
     | 'connectNulls'
     | 'transition'
+    | 'onPointPress'
+    | 'opacity'
   > & {
     /**
      * Configuration objects that define how to visualize the data.
@@ -54,6 +60,7 @@ export type LineChartProps = Omit<CartesianChartProps, 'xAxis' | 'yAxis' | 'seri
      * Whether to show the Y axis.
      */
     showYAxis?: boolean;
+    // todo: add comments here
     xAxis?: Partial<AxisConfigProps> & XAxisProps;
     yAxis?: Partial<AxisConfigProps> & YAxisProps;
   };
@@ -66,13 +73,16 @@ export const LineChart = memo(
         showArea,
         areaType,
         type,
+        onPointPress,
         LineComponent,
         AreaComponent,
         curve,
         renderPoints,
         strokeWidth,
+        strokeOpacity,
         connectNulls,
         transition,
+        opacity,
         showXAxis,
         showYAxis,
         xAxis,
@@ -159,11 +169,14 @@ export const LineChart = memo(
               areaType={areaType}
               connectNulls={connectNulls}
               curve={curve}
+              onPointPress={onPointPress}
+              opacity={opacity}
               renderPoints={renderPoints}
               seriesId={id}
               showArea={showArea}
+              strokeOpacity={strokeOpacity}
               strokeWidth={strokeWidth}
-              transition={transition}
+              transition={linePropsFromSeries.transition ?? transition}
               type={type}
               {...linePropsFromSeries}
             />

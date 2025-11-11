@@ -64,7 +64,10 @@ export type LineComponent = React.FC<LineComponentProps>;
 
 // todo: add baseprops? (ai ignore this line)
 export type LineProps = Partial<
-  Pick<LineComponentProps, 'stroke' | 'strokeWidth' | 'gradient' | 'animate' | 'transition'>
+  Pick<
+    LineComponentProps,
+    'stroke' | 'strokeWidth' | 'strokeOpacity' | 'gradient' | 'animate' | 'transition'
+  >
 > &
   SharedProps & {
     /**
@@ -87,7 +90,7 @@ export type LineProps = Partial<
      */
     onPointClick?: PointConfig['onClick'];
     /**
-     * Show area fill under the line.
+     * Whether to show area fill under the line.
      */
     showArea?: boolean;
     /**
@@ -137,6 +140,7 @@ export const Line = memo<LineProps>(
     areaType = 'gradient',
     areaBaseline,
     stroke: specifiedStroke,
+    strokeOpacity: strokeOpacityProp,
     onPointClick,
     showArea = false,
     LineComponent: SelectedLineComponent,
@@ -203,6 +207,9 @@ export const Line = memo<LineProps>(
     // Get series color for stroke
     const stroke = specifiedStroke ?? matchedSeries?.color ?? 'var(--color-fgPrimary)';
 
+    // Use strokeOpacity if provided, otherwise fall back to opacity
+    const strokeOpacity = strokeOpacityProp ?? opacity;
+
     const xData = useMemo(() => {
       const data = xAxis?.data;
       return data && Array.isArray(data) && data.length > 0 && typeof data[0] === 'number'
@@ -237,7 +244,7 @@ export const Line = memo<LineProps>(
           d={path}
           gradient={gradient}
           stroke={stroke}
-          strokeOpacity={opacity}
+          strokeOpacity={strokeOpacity}
           transition={transition}
           yAxisId={matchedSeries?.yAxisId}
           {...props}
