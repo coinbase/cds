@@ -15,6 +15,7 @@ All notable changes to this project will be documented in this file.
 - Support connecting null values in Area and Line
 - Added label to XAxis and YAxis
 - Switched charts to @shopify/react-native-skia
+- Added gradient support
 
 ## 3.4.0-beta.5 (11/4/2025 PST)
 

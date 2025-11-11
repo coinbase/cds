@@ -60,8 +60,17 @@ export type LineChartProps = Omit<CartesianChartProps, 'xAxis' | 'yAxis' | 'seri
      * Whether to show the Y axis.
      */
     showYAxis?: boolean;
-    // todo: add comments here
+    /**
+     * Configuration for x-axis.
+     * Accepts axis config and axis props.
+     * To show the axis, set `showXAxis` to true.
+     */
     xAxis?: Partial<AxisConfigProps> & XAxisProps;
+    /**
+     * Configuration for y-axis.
+     * Accepts axis config and axis props.
+     * To show the axis, set `showYAxis` to true.
+     */
     yAxis?: Partial<AxisConfigProps> & YAxisProps;
   };
 

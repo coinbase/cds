@@ -52,8 +52,17 @@ export type BarChartProps = Omit<CartesianChartProps, 'xAxis' | 'yAxis' | 'serie
      * Whether to show the Y axis.
      */
     showYAxis?: boolean;
-    // todo: add comments
+    /**
+     * Configuration for x-axis.
+     * Accepts axis config and axis props.
+     * To show the axis, set `showXAxis` to true.
+     */
     xAxis?: Partial<AxisConfigProps> & XAxisProps;
+    /**
+     * Configuration for y-axis.
+     * Accepts axis config and axis props.
+     * To show the axis, set `showYAxis` to true.
+     */
     yAxis?: Partial<AxisConfigProps> & YAxisProps;
   };
 
