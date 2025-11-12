@@ -1,13 +1,15 @@
 import React, { memo, useEffect, useMemo } from 'react';
-import { useSharedValue, withTiming } from 'react-native-reanimated';
+import { useSharedValue, withDelay, withTiming } from 'react-native-reanimated';
 import type { SharedProps } from '@coinbase/cds-common/types';
 import { useTheme } from '@coinbase/cds-mobile';
 import { type AnimatedProp, Group } from '@shopify/react-native-skia';
 
 import { Area, type AreaComponent } from '../area/Area';
 import { useCartesianChartContext } from '../ChartProvider';
+import { pathEnterTransitionDuration } from '../Path';
 import { Point, type PointConfig, type RenderPointsParams } from '../Point';
 import {
+  accessoryFadeDuration,
   type ChartPathCurveType,
   getLineData,
   getLinePath,
@@ -161,13 +163,13 @@ export const Line = memo<LineProps>(
     // Animation state for delayed point rendering (matches web timing)
     const pointsOpacity = useSharedValue(animate ? 0 : 1);
 
-    // Trigger delayed point animation when component mounts and animate is true
+    // Delay point appearance until after path enter animation completes
     useEffect(() => {
       if (animate) {
-        // Match web timing: 850ms delay + 150ms fade in
-        setTimeout(() => {
-          pointsOpacity.value = withTiming(1, { duration: 150 });
-        }, 850);
+        pointsOpacity.value = withDelay(
+          pathEnterTransitionDuration,
+          withTiming(1, { duration: accessoryFadeDuration }),
+        );
       }
     }, [animate, pointsOpacity]);
 

@@ -22,6 +22,11 @@ export const defaultTransition: Transition = {
 };
 
 /**
+ * Duration in seconds for accessory elements to fade in.
+ */
+export const accessoryFadeDuration = 0.15;
+
+/**
  * Hook that manages path animation state and transitions using d3-interpolate-path
  * with framer-motion's transition system (supports springs, tweens, etc.).
  *

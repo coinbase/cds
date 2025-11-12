@@ -6,6 +6,8 @@ import { m as motion, type MotionValue, type Transition } from 'framer-motion';
 import { usePathTransition } from './utils/transition';
 import { useCartesianChartContext } from './ChartProvider';
 
+export const pathEnterTransitionDuration = 0.35;
+
 export type PathProps = SharedProps &
   Omit<
     SVGProps<SVGPathElement>,
@@ -74,10 +76,13 @@ export const Path = memo<PathProps>(
         hidden: { width: 0 },
         visible: {
           width: rect.width + totalOffset,
-          transition,
+          transition: {
+            type: 'timing',
+            duration: pathEnterTransitionDuration,
+          },
         },
       }),
-      [rect.width, totalOffset, transition],
+      [rect.width, totalOffset],
     );
 
     return (

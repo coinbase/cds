@@ -4,10 +4,11 @@ import type { SharedProps } from '@coinbase/cds-common/types';
 import { m as motion, type Transition } from 'framer-motion';
 
 import { Area, type AreaComponent } from '../area/Area';
-import { axisTickLabelsInitialAnimationVariants } from '../axis';
 import { useCartesianChartContext } from '../ChartProvider';
+import { pathEnterTransitionDuration } from '../Path';
 import { Point, type PointConfig, type RenderPointsParams } from '../Point';
 import {
+  accessoryFadeDuration,
   type ChartPathCurveType,
   evaluateGradientAtValue,
   getGradientConfig,
@@ -263,10 +264,15 @@ export const Line = memo<LineProps>(
             data-component="line-points-group"
             {...(animate
               ? {
-                  animate: 'animate',
-                  exit: 'exit',
-                  initial: 'initial',
-                  variants: axisTickLabelsInitialAnimationVariants,
+                  animate: {
+                    opacity: 1,
+                    transition: {
+                      duration: accessoryFadeDuration,
+                      delay: pathEnterTransitionDuration,
+                    },
+                  },
+                  exit: { opacity: 0, transition: { duration: accessoryFadeDuration } },
+                  initial: { opacity: 0 },
                 }
               : {})}
           >

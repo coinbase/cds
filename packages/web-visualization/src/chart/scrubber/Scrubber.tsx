@@ -11,10 +11,11 @@ import { useRefMap } from '@coinbase/cds-common/hooks/useRefMap';
 import type { SharedProps } from '@coinbase/cds-common/types';
 import { m as motion } from 'framer-motion';
 
-import { axisTickLabelsInitialAnimationVariants } from '../axis';
 import { useCartesianChartContext } from '../ChartProvider';
 import { ReferenceLine, type ReferenceLineProps } from '../line';
+import { pathEnterTransitionDuration } from '../Path';
 import {
+  accessoryFadeDuration,
   type ChartScaleFunction,
   evaluateGradientAtValue,
   getGradientConfig,
@@ -649,10 +650,15 @@ export const Scrubber = memo(
           role="status"
           {...(animate
             ? {
-                animate: 'animate',
-                exit: 'exit',
-                initial: 'initial',
-                variants: axisTickLabelsInitialAnimationVariants,
+                animate: {
+                  opacity: 1,
+                  transition: {
+                    duration: accessoryFadeDuration,
+                    delay: pathEnterTransitionDuration,
+                  },
+                },
+                exit: { opacity: 0, transition: { duration: accessoryFadeDuration } },
+                initial: { opacity: 0 },
               }
             : {})}
         >

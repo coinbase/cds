@@ -40,6 +40,11 @@ export const defaultTransition: Transition = {
 };
 
 /**
+ * Duration in milliseconds for accessory elements to fade in.
+ */
+export const accessoryFadeDuration = 250;
+
+/**
  * Custom hook that uses d3-interpolate-path for more robust path interpolation.
  * then use Skia's native interpolation in the worklet.
  *

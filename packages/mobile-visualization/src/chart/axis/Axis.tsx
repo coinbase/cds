@@ -5,6 +5,8 @@ import type { ChartTextChildren } from '../text/ChartText';
 
 /**
  * Animation variants for grouped axis tick labels - initial mount
+ * Note: Mobile currently doesn't use these variants. Axes render immediately without animation.
+ * Web uses similar variants with delay to match path enter animation timing.
  */
 export const axisTickLabelsInitialAnimationVariants = {
   initial: {

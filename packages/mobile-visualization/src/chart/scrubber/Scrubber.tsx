@@ -11,6 +11,7 @@ import {
   useAnimatedReaction,
   useDerivedValue,
   useSharedValue,
+  withDelay,
   withTiming,
 } from 'react-native-reanimated';
 import { useRefMap } from '@coinbase/cds-common/hooks/useRefMap';
@@ -20,8 +21,8 @@ import { Group, Rect, type SkParagraph } from '@shopify/react-native-skia';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import { ReferenceLine, type ReferenceLineProps } from '../line';
-import type { ChartTextChildren } from '../text';
-import { getPointOnSerializableScale, type Transition, useScrubberContext } from '../utils';
+import { pathEnterTransitionDuration } from '../Path';
+import { accessoryFadeDuration, getPointOnSerializableScale, useScrubberContext } from '../utils';
 
 import { ScrubberBeacon, type ScrubberBeaconProps, type ScrubberBeaconRef } from './ScrubberBeacon';
 import { ScrubberBeaconLabel, type ScrubberBeaconLabelProps } from './ScrubberBeaconLabel';
@@ -131,13 +132,13 @@ export const Scrubber = memo(
       // Animation state for delayed scrubber rendering (matches web timing)
       const scrubberOpacity = useSharedValue(animate ? 0 : 1);
 
-      // todo: what is the best way we can handle the animation delay for this
+      // Delay scrubber appearance until after path enter animation completes
       useEffect(() => {
         if (animate) {
-          // Match web timing: 850ms delay + 150ms fade in
-          setTimeout(() => {
-            scrubberOpacity.value = withTiming(1, { duration: 150 });
-          }, 850);
+          scrubberOpacity.value = withDelay(
+            pathEnterTransitionDuration,
+            withTiming(1, { duration: accessoryFadeDuration }),
+          );
         }
       }, [animate, scrubberOpacity]);
 

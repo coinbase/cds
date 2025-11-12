@@ -204,8 +204,6 @@ export const Point = memo<PointProps>(
     const {
       getXScale,
       getYScale,
-      getXAxis,
-      getYAxis,
       animate: animationEnabled,
       drawingArea,
     } = useCartesianChartContext();
@@ -213,8 +211,6 @@ export const Point = memo<PointProps>(
 
     const xScale = getXScale();
     const yScale = getYScale(yAxisId);
-    const xAxis = getXAxis();
-    const yAxis = getYAxis(yAxisId);
 
     const pixelCoordinate = useMemo(() => {
       if (pixelCoordinates) {

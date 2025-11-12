@@ -1,7 +1,9 @@
 import type React from 'react';
 
 import { type LineComponent } from '../line';
+import { pathEnterTransitionDuration } from '../Path';
 import type { ChartTextChildren } from '../text/ChartText';
+import { accessoryFadeDuration } from '../utils';
 
 export const axisLineStyles = `
   stroke: var(--color-fg);
@@ -25,14 +27,14 @@ export const axisTickLabelsInitialAnimationVariants = {
   animate: {
     opacity: 1,
     transition: {
-      duration: 0.15,
-      delay: 0.85, // Initial animation: wait 850ms then fade in over 150ms
+      duration: accessoryFadeDuration,
+      delay: pathEnterTransitionDuration,
     },
   },
   exit: {
     opacity: 0,
     transition: {
-      duration: 0.15,
+      duration: accessoryFadeDuration,
     },
   },
 };
@@ -47,14 +49,14 @@ export const axisUpdateAnimationVariants = {
   animate: {
     opacity: 1,
     transition: {
-      duration: 0.15,
-      delay: 0.15, // For updates: fade out 150ms, then fade in 150ms
+      duration: accessoryFadeDuration,
+      delay: accessoryFadeDuration, // For updates: fade out 150ms, then fade in 150ms
     },
   },
   exit: {
     opacity: 0,
     transition: {
-      duration: 0.15,
+      duration: accessoryFadeDuration,
     },
   },
 };

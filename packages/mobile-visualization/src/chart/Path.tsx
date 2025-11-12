@@ -15,6 +15,8 @@ import { usePathTransition } from './utils/transition';
 import { useCartesianChartContext } from './ChartProvider';
 import { unwrapAnimatedValue } from './utils';
 
+export const pathEnterTransitionDuration = 350;
+
 export type PathProps = SharedProps &
   Pick<
     SkiaPathProps,
@@ -197,7 +199,7 @@ export const Path = memo<PathProps>((props) => {
   // Trigger clip path animation when component mounts and animate is true
   useEffect(() => {
     if (animate) {
-      clipProgress.value = withTiming(1, { duration: 800 });
+      clipProgress.value = withTiming(1, { duration: pathEnterTransitionDuration });
     }
   }, [animate, clipProgress]);
 

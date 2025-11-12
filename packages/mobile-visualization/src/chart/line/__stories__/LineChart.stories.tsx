@@ -2503,16 +2503,11 @@ export default () => {
 
   return (
     <ExampleScreen>
-      <Example title="Asset Price Dotted">
-        <AssetPriceDotted />
-      </Example>
-      <Example title="Gain/Loss">
-        <GainLossChart fontFamily="Marker Felt" />
-      </Example>
       <Example title="Simple">
         <LineChart
           enableScrubbing
           height={defaultChartHeight}
+          renderPoints={() => true}
           series={[
             {
               id: 'prices',
@@ -2526,9 +2521,18 @@ export default () => {
             },
           ]}
           strokeWidth={5}
+          xAxis={{
+            range: ({ min, max }) => ({ min, max: max - 16 }),
+          }}
         >
           <Scrubber />
         </LineChart>
+      </Example>
+      <Example title="Asset Price Dotted">
+        <AssetPriceDotted />
+      </Example>
+      <Example title="Gain/Loss">
+        <GainLossChart fontFamily="Marker Felt" />
       </Example>
     </ExampleScreen>
   );
