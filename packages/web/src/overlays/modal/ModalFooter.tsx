@@ -54,12 +54,6 @@ export const ModalFooter = ({
 }: ModalFooterProps) => {
   const { hideDividers } = useModalContext();
 
-  if (primaryAction.type !== Button || (secondaryAction && primaryAction.type !== Button)) {
-    console.error('Modal footer actions need to be CDS Button component');
-
-    return null;
-  }
-
   return (
     <HStack
       borderedTop={!hideDividers}
