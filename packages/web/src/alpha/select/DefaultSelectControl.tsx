@@ -245,7 +245,7 @@ const DefaultSelectControlComponent = memo(
             className={cx(noFocusOutlineCss, classNames?.controlInputNode)}
             disabled={disabled}
             focusable={false}
-            minHeight={isMultiSelect && !compact ? 76 : 52}
+            minHeight={isMultiSelect ? (compact ? 60 : 76) : undefined}
             onClick={() => setOpen((s) => !s)}
             paddingStart={1}
             style={styles?.controlInputNode}
