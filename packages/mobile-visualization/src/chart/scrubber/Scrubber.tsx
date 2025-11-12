@@ -279,6 +279,7 @@ export const Scrubber = memo(
                 label={resolvedLabelValue}
                 labelProps={{
                   verticalAlignment: 'middle',
+                  dy: -0.5 * drawingArea.y,
                   ...labelProps,
                   bounds: {
                     // todo - how to bake this into the chart on web and on mobile

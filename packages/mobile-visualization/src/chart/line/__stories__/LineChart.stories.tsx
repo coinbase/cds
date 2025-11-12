@@ -1203,6 +1203,7 @@ const AssetPriceDotted = () => {
               return para;
             }}
             labelProps={{
+              horizontalAlignment: 'center',
               dy: -28,
               elevation: 1,
             }}
@@ -1456,27 +1457,6 @@ const AssetPriceMultipleDotted = () => {
   );
 };
 
-const TextComponent = memo(() => {
-  const { getYScale, drawingArea } = useCartesianChartContext();
-  const yScale = getYScale();
-
-  if (!yScale)
-    return (
-      <ChartText x={25} y={25}>
-        Testing thresholds
-      </ChartText>
-    );
-
-  const baselineY = yScale(0) ?? 0;
-
-  return (
-    <ChartText
-      x={25}
-      y={25}
-    >{`Testing thresholds: ${drawingArea.y} ${baselineY} ${drawingArea.height}`}</ChartText>
-  );
-});
-
 const GainLossChart = (props: CartesianChartProps) => {
   const theme = useTheme();
   const data = [-40, -28, -21, -5, 48, -5, -28, 2, -29, -46, 16, -30, -29, 8, -5, 0, 0];
@@ -1515,7 +1495,6 @@ const GainLossChart = (props: CartesianChartProps) => {
       <YAxis showGrid requestedTickCount={2} tickLabelFormatter={tickLabelFormatter} />
       <Line seriesId="prices" type="solid" />
       <Scrubber hideOverlay label="Hello" />
-      <TextComponent />
     </CartesianChart>
   );
 };
