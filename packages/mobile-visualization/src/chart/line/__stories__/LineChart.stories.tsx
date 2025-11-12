@@ -1498,7 +1498,6 @@ const GainLossChart = (props: CartesianChartProps) => {
       {...props}
       enableScrubbing
       height={defaultChartHeight}
-      inset={{ top: 1.5, bottom: 1.5, left: 0, right: 0 }}
       series={[
         {
           id: 'prices',
@@ -1514,7 +1513,7 @@ const GainLossChart = (props: CartesianChartProps) => {
       ]}
     >
       <YAxis showGrid requestedTickCount={2} tickLabelFormatter={tickLabelFormatter} />
-      <Line renderPoints={() => true} seriesId="prices" strokeWidth={3} type="solid" />
+      <Line seriesId="prices" type="solid" />
       <Scrubber hideOverlay label="Hello" />
       <TextComponent />
     </CartesianChart>

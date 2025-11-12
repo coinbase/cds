@@ -217,7 +217,7 @@ export const XAxis = memo<XAxisProps>(
                   clipPath={undefined}
                   d={lineToPath(tick.position, tickY, tick.position, tickY2)}
                   stroke={theme.color.fg}
-                  strokeLinecap="square"
+                  strokeCap="square"
                   strokeWidth={1}
                 />
               );
@@ -234,7 +234,7 @@ export const XAxis = memo<XAxisProps>(
               position === 'bottom' ? axisBounds.y : axisBounds.y + axisBounds.height,
             )}
             stroke={theme.color.fg}
-            strokeLinecap="square"
+            strokeCap="square"
             strokeWidth={1}
           />
         )}

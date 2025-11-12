@@ -11,13 +11,7 @@ import type { LineComponentProps } from './Line';
 export type DottedLineProps = SharedProps &
   Pick<
     PathProps,
-    | 'initialPath'
-    | 'children'
-    | 'strokeLinecap'
-    | 'strokeLinejoin'
-    | 'clipRect'
-    | 'clipPath'
-    | 'clipOffset'
+    'initialPath' | 'children' | 'strokeCap' | 'strokeJoin' | 'clipRect' | 'clipPath' | 'clipOffset'
   > &
   LineComponentProps & {
     fill?: string;
@@ -37,8 +31,8 @@ export const DottedLine = memo<DottedLineProps>(
     fill = 'none',
     stroke,
     dashIntervals = [0, 4],
-    strokeLinecap = 'round',
-    strokeLinejoin = 'round',
+    strokeCap = 'round',
+    strokeJoin = 'round',
     strokeOpacity = 1,
     strokeWidth = 2,
     gradient,
@@ -57,8 +51,8 @@ export const DottedLine = memo<DottedLineProps>(
         d={d}
         fill={fill}
         stroke={stroke ?? theme.color.fgPrimary}
-        strokeLinecap={strokeLinecap}
-        strokeLinejoin={strokeLinejoin}
+        strokeCap={strokeCap}
+        strokeJoin={strokeJoin}
         strokeOpacity={strokeOpacity}
         strokeWidth={strokeWidth}
         transition={transition}

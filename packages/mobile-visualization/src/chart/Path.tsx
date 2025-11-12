@@ -1,92 +1,99 @@
-import { memo, type ReactNode, useEffect, useMemo } from 'react';
+import { memo, useEffect, useMemo } from 'react';
 import { useDerivedValue, useSharedValue, withTiming } from 'react-native-reanimated';
 import type { Rect, SharedProps } from '@coinbase/cds-common/types';
 import {
   type AnimatedProp,
   Group,
   Path as SkiaPath,
+  type PathProps as SkiaPathProps,
   Skia,
   usePathInterpolation,
 } from '@shopify/react-native-skia';
 
 import type { Transition } from './utils/transition';
-import { defaultTransition, usePathTransition } from './utils/transition';
+import { usePathTransition } from './utils/transition';
 import { useCartesianChartContext } from './ChartProvider';
 import { unwrapAnimatedValue } from './utils';
 
-export type PathProps = SharedProps & {
-  /**
-   * The SVG path data string.
-   */
-  d?: AnimatedProp<string | undefined>;
-  /**
-   * Initial path for enter animation.
-   * When provided, the first animation will go from initialPath to d.
-   * If not provided, defaults to d (no enter animation).
-   */
-  initialPath?: string;
-  /**
-   * Children for declarative shaders (e.g., LinearGradient, ImageShader).
-   */
-  children?: ReactNode;
-  /**
-   * Path fill color.
-   */
-  fill?: string;
-  /**
-   * Path fill opacity.
-   */
-  fillOpacity?: number;
-  /**
-   * Path stroke color.
-   */
-  stroke?: string;
-  /**
-   * Path stroke opacity.
-   */
-  strokeOpacity?: number;
-  /**
-   * Path stroke width.
-   */
-  strokeWidth?: number;
-  /**
-   * Stroke line cap.
-   */
-  strokeLinecap?: 'butt' | 'round' | 'square';
-  /**
-   * Stroke line join.
-   */
-  strokeLinejoin?: 'miter' | 'round' | 'bevel';
-  /**
-   * Whether to animate this path. Overrides the animate prop on the Chart component.
-   */
-  animate?: boolean;
-  /**
-   * Custom clip path rect. If provided, this overrides the default chart rect for clipping.
-   */
-  clipRect?: Rect;
-  /**
-   * Explicit clip path override (Skia SkPath).
-   * Pass undefined to explicitly disable clipping.
-   */
-  clipPath?: any;
-  /**
-   * The offset to add to the clip rect boundaries.
-   */
-  clipOffset?: number;
-  /**
-   * Animation transition
-   *
-   * @example
-   * // Duration based
-   * transition={{ type: 'timing', duration: 300 }}
-   *
-   * @example
-   * // Spring based
-   * transition={{ type: 'spring', damping: 20, stiffness: 300 }}
-   */
-  transition?: Transition;
-};
+export type PathProps = SharedProps &
+  Pick<
+    SkiaPathProps,
+    | 'antiAlias'
+    | 'blendMode'
+    | 'children'
+    | 'dither'
+    | 'invertClip'
+    | 'origin'
+    | 'matrix'
+    | 'strokeCap'
+    | 'strokeJoin'
+    | 'strokeMiter'
+    | 'strokeWidth'
+    | 'style'
+    | 'transform'
+  > & {
+    /**
+     * Whether to animate this path. Overrides the animate prop on the Chart component.
+     */
+    animate?: boolean;
+    /**
+     * The SVG path data string.
+     */
+    d?: AnimatedProp<string | undefined>;
+    /**
+     * Initial path for enter animation.
+     * When provided, the first animation will go from initialPath to d.
+     * If not provided, defaults to d (no enter animation).
+     */
+    initialPath?: string;
+    /**
+     * Fill color for the path.
+     * When provided, will render a fill with the given color.
+     * If not provided, will not render a fill.
+     */
+    fill?: string;
+    /**
+     * Opacity for the path fill.
+     */
+    fillOpacity?: number;
+    /**
+     * Stroke color for the path.
+     * When provided, will render a fill with the given color.
+     * If not provided, will not render a fill.
+     */
+    stroke?: string;
+    /**
+     * Opacity for the path stroke.
+     */
+    strokeOpacity?: number;
+    /**
+     * Custom clip path rect. If provided, this overrides the default chart rect for clipping.
+     * Will be overridden by clipPath if set.
+     */
+    clipRect?: Rect;
+    /**
+     * Custom clip path.
+     * When set, overrides clipRect.
+     * @note pass undefined to disable clipping.
+     */
+    clipPath?: string | undefined;
+    /**
+     * The offset to add to the clip rect boundaries.
+     */
+    clipOffset?: number;
+    /**
+     * Animation transition
+     *
+     * @example
+     * // Duration based
+     * transition={{ type: 'timing', duration: 300 }}
+     *
+     * @example
+     * // Spring based
+     * transition={{ type: 'spring', damping: 20, stiffness: 300 }}
+     */
+    transition?: Transition;
+  };
 
 const AnimatedPath = memo<Omit<PathProps, 'animate' | 'clipRect' | 'clipOffset' | 'clipPath'>>(
   ({
@@ -97,10 +104,11 @@ const AnimatedPath = memo<Omit<PathProps, 'animate' | 'clipRect' | 'clipOffset' 
     stroke,
     strokeOpacity,
     strokeWidth,
-    strokeLinecap,
-    strokeLinejoin,
+    strokeCap,
+    strokeJoin,
     children,
     transition,
+    ...pathProps
   }) => {
     const isDAnimated = typeof d !== 'string';
 
@@ -123,7 +131,13 @@ const AnimatedPath = memo<Omit<PathProps, 'animate' | 'clipRect' | 'clipOffset' 
     return (
       <>
         {isFilled && (
-          <SkiaPath color={fill} opacity={fillOpacity} path={activePath} style="fill">
+          <SkiaPath
+            color={fill}
+            opacity={fillOpacity}
+            path={activePath}
+            style="fill"
+            {...pathProps}
+          >
             {children}
           </SkiaPath>
         )}
@@ -132,10 +146,11 @@ const AnimatedPath = memo<Omit<PathProps, 'animate' | 'clipRect' | 'clipOffset' 
             color={stroke}
             opacity={strokeOpacity}
             path={activePath}
-            strokeCap={strokeLinecap}
-            strokeJoin={strokeLinejoin}
+            strokeCap={strokeCap}
+            strokeJoin={strokeJoin}
             strokeWidth={strokeWidth}
             style="stroke"
+            {...pathProps}
           >
             {children}
           </SkiaPath>
@@ -158,10 +173,11 @@ export const Path = memo<PathProps>((props) => {
     stroke,
     strokeOpacity,
     strokeWidth,
-    strokeLinecap,
-    strokeLinejoin,
+    strokeCap,
+    strokeJoin,
     children,
     transition,
+    ...pathProps
   } = props;
 
   const context = useCartesianChartContext();
@@ -253,7 +269,7 @@ export const Path = memo<PathProps>((props) => {
   const content = !animate ? (
     <>
       {isFilled && (
-        <SkiaPath color={fill} opacity={fillOpacity} path={staticPath} style="fill">
+        <SkiaPath color={fill} opacity={fillOpacity} path={staticPath} style="fill" {...pathProps}>
           {children}
         </SkiaPath>
       )}
@@ -262,10 +278,11 @@ export const Path = memo<PathProps>((props) => {
           color={stroke}
           opacity={strokeOpacity}
           path={staticPath}
-          strokeCap={strokeLinecap}
-          strokeJoin={strokeLinejoin}
+          strokeCap={strokeCap}
+          strokeJoin={strokeJoin}
           strokeWidth={strokeWidth}
           style="stroke"
+          {...pathProps}
         >
           {children}
         </SkiaPath>
@@ -278,8 +295,8 @@ export const Path = memo<PathProps>((props) => {
       fillOpacity={fillOpacity}
       initialPath={initialPath}
       stroke={stroke}
-      strokeLinecap={strokeLinecap}
-      strokeLinejoin={strokeLinejoin}
+      strokeCap={strokeCap}
+      strokeJoin={strokeJoin}
       strokeOpacity={strokeOpacity}
       strokeWidth={strokeWidth}
       transition={transition}

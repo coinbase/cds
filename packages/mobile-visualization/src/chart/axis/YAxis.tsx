@@ -207,7 +207,7 @@ export const YAxis = memo<YAxisProps>(
                   clipPath={undefined}
                   d={lineToPath(tickX, tick.position, tickX2, tick.position)}
                   stroke={theme.color.fg}
-                  strokeLinecap="square"
+                  strokeCap="square"
                   strokeWidth={1}
                 />
               );
@@ -224,7 +224,7 @@ export const YAxis = memo<YAxisProps>(
               axisBounds.y + axisBounds.height,
             )}
             stroke={theme.color.fg}
-            strokeLinecap="square"
+            strokeCap="square"
             strokeWidth={1}
           />
         )}

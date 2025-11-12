@@ -10,13 +10,7 @@ import type { LineComponentProps } from './Line';
 export type SolidLineProps = SharedProps &
   Pick<
     PathProps,
-    | 'initialPath'
-    | 'children'
-    | 'strokeLinecap'
-    | 'strokeLinejoin'
-    | 'clipRect'
-    | 'clipPath'
-    | 'clipOffset'
+    'initialPath' | 'children' | 'strokeCap' | 'strokeJoin' | 'clipRect' | 'clipPath' | 'clipOffset'
   > &
   LineComponentProps & {
     fill?: string;
@@ -30,8 +24,8 @@ export const SolidLine = memo<SolidLineProps>(
   ({
     fill = 'none',
     stroke,
-    strokeLinecap = 'round',
-    strokeLinejoin = 'round',
+    strokeCap = 'round',
+    strokeJoin = 'round',
     strokeOpacity = 1,
     strokeWidth = 2,
     gradient,
@@ -50,8 +44,8 @@ export const SolidLine = memo<SolidLineProps>(
         d={d}
         fill={fill}
         stroke={stroke ?? theme.color.fgPrimary}
-        strokeLinecap={strokeLinecap}
-        strokeLinejoin={strokeLinejoin}
+        strokeCap={strokeCap}
+        strokeJoin={strokeJoin}
         strokeOpacity={strokeOpacity}
         strokeWidth={strokeWidth}
         transition={transition}

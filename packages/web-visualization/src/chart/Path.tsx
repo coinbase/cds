@@ -1,10 +1,9 @@
 import { memo, useId, useMemo } from 'react';
 import type { SVGProps } from 'react';
-import { useHasMounted } from '@coinbase/cds-common/hooks/useHasMounted';
 import type { Rect, SharedProps } from '@coinbase/cds-common/types';
 import { m as motion, type MotionValue, type Transition } from 'framer-motion';
 
-import { defaultTransition, usePathTransition } from './utils/transition';
+import { usePathTransition } from './utils/transition';
 import { useCartesianChartContext } from './ChartProvider';
 
 export type PathProps = SharedProps &
