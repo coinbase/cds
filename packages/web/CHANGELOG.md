@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.20.2 (11/12/2025 PST)
+
+#### 🐞 Fixes
+
+- Support custom buttons in ModalFooter. [[#155](https://github.com/coinbase/cds/pull/155)]
+
 ## 8.20.1 (11/7/2025 PST)
 
 #### 🐞 Fixes
