@@ -31,7 +31,7 @@ function ExampleCompactNoStart() {
 ### Many tabs (paddles)
 
 :::tip Paddles & overflow
-Paddles appear automatically when the tab list overflows. You can adjust their size via `paddleStyle`.
+Paddles appear automatically when the tab list overflows.
 :::
 
 ```jsx live
@@ -47,6 +47,10 @@ function ExampleWithPaddles() {
 
 ### With custom sized paddles
 
+:::tip Paddle styling
+You can adjust the size of the paddles via `styles.paddle`.
+:::
+
 ```jsx live
 function ExampleCustomPaddles() {
   const tabs = Array.from({ length: 10 }).map((_, i) => ({
@@ -59,7 +63,7 @@ function ExampleCustomPaddles() {
       activeTab={activeTab}
       onChange={setActiveTab}
       tabs={tabs}
-      paddleStyle={{ transform: 'scale(0.8)' }}
+      styles={{ paddle: { transform: 'scale(0.8)' } }}
     />
   );
 }
