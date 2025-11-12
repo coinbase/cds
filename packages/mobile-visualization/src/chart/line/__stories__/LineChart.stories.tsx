@@ -1187,7 +1187,7 @@ const AssetPriceDotted = () => {
               // 3. Use the ParagraphBuilder
               const builder = Skia.ParagraphBuilder.Make(
                 {
-                  textAlign: TextAlign.Left,
+                  textAlign: TextAlign.Center,
                 },
                 fontMgr,
               );
@@ -1206,6 +1206,7 @@ const AssetPriceDotted = () => {
               horizontalAlignment: 'center',
               dy: -28,
               elevation: 1,
+              paragraphAlignment: TextAlign.Center,
             }}
           />
         </LineChart>
@@ -1493,7 +1494,7 @@ const GainLossChart = (props: CartesianChartProps) => {
       ]}
     >
       <YAxis showGrid requestedTickCount={2} tickLabelFormatter={tickLabelFormatter} />
-      <Line seriesId="prices" type="solid" />
+      <Line seriesId="prices" strokeWidth={4} type="solid" />
       <Scrubber hideOverlay label="Hello" />
     </CartesianChart>
   );

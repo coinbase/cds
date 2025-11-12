@@ -73,12 +73,12 @@ export type ChartTextProps = SharedProps &
      */
     y: number;
     /**
-     * Horizontal alignment of the text.
+     * Horizontal alignment of the component.
      * @default 'center'
      */
     horizontalAlignment?: TextHorizontalAlignment;
     /**
-     * Vertical alignment of the text.
+     * Vertical alignment of the component.
      * @default 'middle'
      */
     verticalAlignment?: TextVerticalAlignment;

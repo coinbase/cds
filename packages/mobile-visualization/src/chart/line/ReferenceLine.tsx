@@ -36,6 +36,7 @@ export type ReferenceLineLabelProps = Pick<
   | 'dx'
   | 'dy'
   | 'elevation'
+  | 'paragraphAlignment'
 >;
 
 type BaseReferenceLineProps = SharedProps & {

@@ -1,5 +1,5 @@
 import React, { memo, useMemo } from 'react';
-import type { ViewStyle } from 'react-native';
+import { Platform, type ViewStyle } from 'react-native';
 import { runOnJS, useAnimatedReaction, useDerivedValue } from 'react-native-reanimated';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import type { ElevationLevels, Rect, SharedProps } from '@coinbase/cds-common/types';
@@ -11,6 +11,7 @@ import {
   FontSlant,
   FontWeight,
   Group,
+  matchFont,
   Paint,
   Paragraph,
   RoundedRect,
@@ -18,7 +19,9 @@ import {
   Skia,
   type SkParagraph,
   type SkTextStyle,
+  Text,
   TextAlign,
+  type Transforms3d,
 } from '@shopify/react-native-skia';
 
 import { useCartesianChartContext } from '../ChartProvider';
@@ -150,15 +153,21 @@ export type ChartTextProps = SharedProps & {
    */
   dy?: AnimatedProp<number>;
   /**
-   * Horizontal alignment of the text.
+   * Horizontal alignment of the component.
    * @default 'center'
    */
   horizontalAlignment?: AnimatedProp<TextHorizontalAlignment>;
   /**
-   * Vertical alignment of the text.
+   * Vertical alignment of the component.
    * @default 'middle'
    */
   verticalAlignment?: AnimatedProp<TextVerticalAlignment>;
+  /**
+   * Text alignment of the SkParagraph
+   * @note when providing a custom SkParagraph as children, you still need to pass in the alignment used.
+   * @default TextAlign.Left
+   */
+  paragraphAlignment?: TextAlign;
   /**
    * When true, disables automatic repositioning to fit within bounds.
    */
@@ -245,6 +254,7 @@ export const ChartText = memo<ChartTextProps>(
     dy = 0,
     horizontalAlignment = 'center',
     verticalAlignment = 'middle',
+    paragraphAlignment = TextAlign.Left,
     disableRepositioning = false,
     bounds,
     testID,
@@ -472,6 +482,32 @@ export const ChartText = memo<ChartTextProps>(
 
     const elevationStylesResult = getElevationStyles(elevation ?? 0, theme);
 
+    // Calculate the paragraph's internal x offset from line metrics based on text alignment
+    const paragraphTransform = useDerivedValue<Transforms3d>(() => {
+      if (!paragraph.value || !paragraphAlignment) return [];
+      const rects = paragraph.value.getLineMetrics();
+      if (rects.length === 0) return [];
+
+      let minOffset: number;
+      switch (paragraphAlignment) {
+        case TextAlign.Center:
+          // For center-aligned text, account for half the width
+          minOffset = Math.min(...rects.map((rect) => rect.x - rect.width / 2));
+          break;
+        case TextAlign.Right:
+        case TextAlign.End:
+          // For right-aligned text, account for the full width
+          minOffset = Math.min(...rects.map((rect) => rect.x - rect.width));
+          break;
+        default:
+          // For left-aligned text, use the x position directly
+          minOffset = Math.min(...rects.map((rect) => rect.x));
+          break;
+      }
+
+      return [{ translateX: -minOffset }];
+    }, [paragraph, paragraphAlignment]);
+
     // Opacity on a group doesn't impact the paragraph so we need to apply it to Group
     return (
       <Group data-testID={testID} layer={<Paint opacity={groupOpacity} />}>
@@ -497,12 +533,14 @@ export const ChartText = memo<ChartTextProps>(
             )}
           </RoundedRect>
         )}
-        <Paragraph
-          paragraph={paragraph}
-          width={chartWidth}
-          x={textWithOffsetX}
-          y={textWithOffsetY}
-        />
+        <Group transform={paragraphTransform}>
+          <Paragraph
+            paragraph={paragraph}
+            width={chartWidth}
+            x={textWithOffsetX}
+            y={textWithOffsetY}
+          />
+        </Group>
       </Group>
     );
   },
