@@ -73,40 +73,62 @@ export type TabbedChipsBaseProps<T extends string = string> = Omit<
   TabsActiveIndicatorComponent?: TabsProps<T>['TabsActiveIndicatorComponent'];
   tabs: TabbedChipProps<T>[];
   /**
-   * The spacing between Tabs
-   * @default 1
-   */
-  gap?: HStackProps<HStackDefaultElement>['gap'];
-  /**
-   * The width of the scroll container, defaults to 100% of the parent container
-   * If the tabs are wider than the width of the container, paddles will be shown to scroll the tabs.
-   * @default 100%
-   */
-  width?: HStackProps<HStackDefaultElement>['width'];
-  /**
-   * Turn on to use a compact Chip component for the Tabs
+   * Turn on to use a compact Chip component for each tab.
    * @default false
    */
   compact?: boolean;
-  styles?: {
-    root?: React.CSSProperties;
-    scrollContainer?: React.CSSProperties;
-    paddle?: React.CSSProperties;
-    tabs?: React.CSSProperties;
-  };
-  classNames?: {
-    root?: string;
-    scrollContainer?: string;
-    tabs?: string;
-  };
 };
 
-export type TabbedChipsProps<T extends string = string> = TabbedChipsBaseProps<T> & {
-  background?: ThemeVars.Color;
-  previousArrowAccessibilityLabel?: string;
-  nextArrowAccessibilityLabel?: string;
-} & SharedProps &
-  SharedAccessibilityProps;
+export type TabbedChipsProps<T extends string = string> = TabbedChipsBaseProps<T> &
+  SharedProps &
+  SharedAccessibilityProps & {
+    background?: ThemeVars.Color;
+    previousArrowAccessibilityLabel?: string;
+    nextArrowAccessibilityLabel?: string;
+    /**
+     * The spacing between Tabs
+     * @default 1
+     */
+    gap?: HStackProps<HStackDefaultElement>['gap'];
+    /**
+     * The width of the scroll container, defaults to 100% of the parent container
+     * If the tabs are wider than the width of the container, paddles will be shown to scroll the tabs.
+     * @default 100%
+     */
+    width?: HStackProps<HStackDefaultElement>['width'];
+    styles?: {
+      /**
+       * Style applied to the root container.
+       */
+      root?: React.CSSProperties;
+      /**
+       * Style applied to the scroll container.
+       */
+      scrollContainer?: React.CSSProperties;
+      /**
+       * Style applied to the paddle icon buttons.
+       */
+      paddle?: React.CSSProperties;
+      /**
+       * Style applied to the root of the Tabs component.
+       */
+      tabs?: React.CSSProperties;
+    };
+    classNames?: {
+      /**
+       * Class name applied to the root container.
+       */
+      root?: string;
+      /**
+       * Class name applied to the scroll container.
+       */
+      scrollContainer?: string;
+      /**
+       * Class name applied to the root of the Tabs component.
+       */
+      tabs?: string;
+    };
+  };
 
 type TabbedChipsFC = <T extends string = string>(
   props: TabbedChipsProps<T> & { ref?: React.ForwardedRef<HTMLElement> },

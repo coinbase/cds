@@ -51,29 +51,36 @@ export type TabbedChipsBaseProps<T extends string = string> = Omit<
   TabComponent?: React.FC<TabbedChipProps<T>>;
   TabsActiveIndicatorComponent?: TabsProps<T>['TabsActiveIndicatorComponent'];
   /**
-   * The spacing between Tabs
-   * @default 1
-   */
-  gap?: ThemeVars.Space;
-  /**
-   * The width of the scroll container, defaults to 100% of the parent container
-   * If the tabs are wider than the width of the container, paddles will be shown to scroll the tabs.
-   */
-  width?: BoxProps['width'];
-  /**
-   * Turn on to use a compact Chip component for the Tabs
+   * Turn on to use a compact Chip component for each tab.
    * @default false
    */
   compact?: boolean;
-  styles?: {
-    root?: StyleProp<ViewStyle>;
-    tabs?: StyleProp<ViewStyle>;
-  };
 };
 
 export type TabbedChipsProps<T extends string = string> = TabbedChipsBaseProps<T> &
   SharedProps &
-  SharedAccessibilityProps;
+  SharedAccessibilityProps & {
+    /**
+     * The spacing between Tabs
+     * @default 1
+     */
+    gap?: ThemeVars.Space;
+    /**
+     * The width of the scroll container, defaults to 100% of the parent container
+     * If the tabs are wider than the width of the container, paddles will be shown to scroll the tabs.
+     */
+    width?: BoxProps['width'];
+    styles?: {
+      /**
+       * Style applied to the root container.
+       */
+      root?: StyleProp<ViewStyle>;
+      /**
+       * Style applied to the root of the Tabs component.
+       */
+      tabs?: StyleProp<ViewStyle>;
+    };
+  };
 
 type TabbedChipsFC = <T extends string = string>(
   props: TabbedChipsProps<T> & { ref?: React.ForwardedRef<View> },
