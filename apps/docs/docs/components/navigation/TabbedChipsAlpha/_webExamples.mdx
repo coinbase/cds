@@ -9,20 +9,22 @@ function ExampleDefault() {
     { id: 'bridge', label: 'Bridge' },
   ];
   const [activeTab, setActiveTab] = useState(tabs[0]);
-  return <TabbedChipsAlpha activeTab={activeTab} onChange={setActiveTab} tabs={tabs} />;
+  return <TabbedChips activeTab={activeTab} onChange={setActiveTab} tabs={tabs} />;
 }
 ```
+
+### Compact
 
 ```jsx live
 function ExampleCompactNoStart() {
   const tabs = [
-    { id: 'all', label: 'All', compact: true },
-    { id: 'swap', label: 'Swap', compact: true },
-    { id: 'collect', label: 'Collect', compact: true },
-    { id: 'bridge', label: 'Bridge', compact: true },
+    { id: 'all', label: 'All' },
+    { id: 'swap', label: 'Swap' },
+    { id: 'collect', label: 'Collect' },
+    { id: 'bridge', label: 'Bridge' },
   ];
   const [activeTab, setActiveTab] = useState(tabs[0]);
-  return <TabbedChipsAlpha activeTab={activeTab} onChange={setActiveTab} tabs={tabs} />;
+  return <TabbedChips activeTab={activeTab} compact onChange={setActiveTab} tabs={tabs} />;
 }
 ```
 
@@ -39,7 +41,7 @@ function ExampleWithPaddles() {
     label: `Tab ${i + 1}`,
   }));
   const [activeTab, setActiveTab] = useState(tabs[0]);
-  return <TabbedChipsAlpha activeTab={activeTab} onChange={setActiveTab} tabs={tabs} />;
+  return <TabbedChips activeTab={activeTab} onChange={setActiveTab} tabs={tabs} />;
 }
 ```
 
@@ -53,7 +55,7 @@ function ExampleCustomPaddles() {
   }));
   const [activeTab, setActiveTab] = useState(tabs[0]);
   return (
-    <TabbedChipsAlpha
+    <TabbedChips
       activeTab={activeTab}
       onChange={setActiveTab}
       tabs={tabs}
@@ -73,7 +75,7 @@ function ExampleLongText() {
     { id: 'c', label: 'Short' },
   ];
   const [activeTab, setActiveTab] = useState(tabs[0]);
-  return <TabbedChipsAlpha activeTab={activeTab} onChange={setActiveTab} tabs={tabs} />;
+  return <TabbedChips activeTab={activeTab} onChange={setActiveTab} tabs={tabs} />;
 }
 ```
 
@@ -81,14 +83,13 @@ function ExampleLongText() {
 
 ```jsx live
 function ExampleDisabled() {
-  const base = [
+  const tabs = [
     { id: 'first', label: 'First' },
-    { id: 'second', label: 'Second' },
+    { id: 'second', label: 'Second', disabled: true },
     { id: 'third', label: 'Third' },
   ];
-  const tabs = base.map((t, i) => ({ ...t, disabled: i === 1 }));
   const [activeTab, setActiveTab] = useState(tabs[0]);
-  return <TabbedChipsAlpha activeTab={activeTab} onChange={setActiveTab} tabs={tabs} />;
+  return <TabbedChips activeTab={activeTab} onChange={setActiveTab} tabs={tabs} />;
 }
 ```
 
@@ -101,30 +102,21 @@ For start media, use circular images sized 24×24 for regular chips and 16×16 f
 ```jsx live
 function ExampleWithStart() {
   const icon = { height: 24, width: 24, shape: 'circle', source: assets.eth.imageUrl };
+  const compactIcon = { height: 16, width: 16, shape: 'circle', source: assets.eth.imageUrl };
   const tabs = [
     { id: 'all', label: 'All', start: <RemoteImage {...icon} /> },
     { id: 'swap', label: 'Swap', start: <RemoteImage {...icon} /> },
     { id: 'collect', label: 'Collect', start: <RemoteImage {...icon} /> },
     { id: 'bridge', label: 'Bridge', start: <RemoteImage {...icon} /> },
   ];
+  const compactTabs = tabs.map((tab) => ({ ...tab, start: <RemoteImage {...compactIcon} /> }));
   const [activeTab, setActiveTab] = useState(tabs[0]);
-  return <TabbedChipsAlpha activeTab={activeTab} onChange={setActiveTab} tabs={tabs} />;
-}
-```
-
-### Compact with start
-
-```jsx live
-function ExampleCompactWithStart() {
-  const cicon = { height: 16, width: 16, shape: 'circle', source: assets.eth.imageUrl };
-  const tabs = [
-    { id: 'all', label: 'All', compact: true, start: <RemoteImage {...cicon} /> },
-    { id: 'swap', label: 'Swap', compact: true, start: <RemoteImage {...cicon} /> },
-    { id: 'collect', label: 'Collect', compact: true, start: <RemoteImage {...cicon} /> },
-    { id: 'bridge', label: 'Bridge', compact: true, start: <RemoteImage {...cicon} /> },
-  ];
-  const [activeTab, setActiveTab] = useState(tabs[0]);
-  return <TabbedChipsAlpha activeTab={activeTab} onChange={setActiveTab} tabs={tabs} />;
+  return (
+    <VStack gap={2}>
+      <TabbedChips activeTab={activeTab} onChange={setActiveTab} tabs={tabs} />
+      <TabbedChips compact activeTab={activeTab} onChange={setActiveTab} tabs={compactTabs} />
+    </VStack>
+  );
 }
 ```
 
@@ -154,7 +146,7 @@ const tabs = [
 function Example() {
   const [activeTab, setActiveTab] = useState(tabs[0]);
   return (
-    <TabbedChipsAlpha
+    <TabbedChips
       activeTab={activeTab}
       onChange={setActiveTab}
       tabs={tabs}

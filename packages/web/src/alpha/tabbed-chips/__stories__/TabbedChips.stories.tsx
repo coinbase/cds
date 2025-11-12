@@ -6,7 +6,7 @@ import type { TabValue } from '@coinbase/cds-common/tabs/useTabs';
 import { VStack } from '../../../layout';
 import { RemoteImage, type RemoteImageProps } from '../../../media';
 import { Text } from '../../../typography';
-import { type TabbedChipProps, TabbedChips } from '../TabbedChips';
+import { type TabbedChipProps, TabbedChips, type TabbedChipsProps } from '../TabbedChips';
 
 export default {
   title: 'Components/alpha/TabbedChips',
@@ -45,19 +45,26 @@ const tabsWithStart: TabbedChipProps[] = defaultTabs.map((tab) => ({
 const compactTabsWithStart: TabbedChipProps[] = defaultTabs.map((tab) => ({
   ...tab,
   start: <RemoteImage {...compactAssetIconProps} />,
-  compact: true,
 }));
 
 const Demo = ({
   tabs = defaultTabs,
-  style,
+  compact = false,
+  styles,
 }: {
   tabs?: TabbedChipProps[];
-  style?: React.CSSProperties;
+  styles?: TabbedChipsProps['styles'];
+  compact?: boolean;
 }) => {
   const [activeTab, setActiveTab] = useState<TabValue | null>(tabs[0]);
   return (
-    <TabbedChips activeTab={activeTab} onChange={setActiveTab} paddleStyle={style} tabs={tabs} />
+    <TabbedChips
+      activeTab={activeTab}
+      compact={compact}
+      onChange={setActiveTab}
+      styles={styles}
+      tabs={tabs}
+    />
   );
 };
 
@@ -80,7 +87,7 @@ export const Default = () => {
       <Text as="p" display="block" font="headline">
         With custom sized paddles
       </Text>
-      <Demo style={{ transform: 'scale(0.5)' }} tabs={sampleTabs} />
+      <Demo styles={{ paddle: { transform: 'scale(0.5)' } }} tabs={sampleTabs} />
       <Text as="p" display="block" font="headline">
         With long text
       </Text>
@@ -97,7 +104,7 @@ export const Default = () => {
       <Text as="p" display="block" font="headline">
         Compact with start
       </Text>
-      <Demo tabs={compactTabsWithStart} />
+      <Demo compact tabs={compactTabsWithStart} />
     </VStack>
   );
 };

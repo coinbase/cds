@@ -1,5 +1,5 @@
 import React, { forwardRef, memo, useCallback, useMemo, useState } from 'react';
-import { ScrollView, type View } from 'react-native';
+import { ScrollView, type StyleProp, type View, type ViewStyle } from 'react-native';
 import type { SharedAccessibilityProps, SharedProps, ThemeVars } from '@coinbase/cds-common';
 import { useTabsContext } from '@coinbase/cds-common/tabs/TabsContext';
 import type { TabValue } from '@coinbase/cds-common/tabs/useTabs';
@@ -7,7 +7,7 @@ import type { TabValue } from '@coinbase/cds-common/tabs/useTabs';
 import type { ChipProps } from '../../chips/ChipProps';
 import { MediaChip } from '../../chips/MediaChip';
 import { useHorizontalScrollToTarget } from '../../hooks/useHorizontalScrollToTarget';
-import { Box, OverflowGradient } from '../../layout';
+import { Box, type BoxProps, OverflowGradient } from '../../layout';
 import { Tabs, type TabsBaseProps, type TabsProps } from '../../tabs';
 
 const DefaultTabComponent = <T extends string = string>({
@@ -48,10 +48,27 @@ export type TabbedChipsBaseProps<T extends string = string> = Omit<
   | 'activeBackground'
 > & {
   tabs: TabbedChipProps<T>[];
-  TabComponent?: TabsProps<T>['TabComponent'];
+  TabComponent?: React.FC<TabbedChipProps<T>>;
   TabsActiveIndicatorComponent?: TabsProps<T>['TabsActiveIndicatorComponent'];
+  /**
+   * The spacing between Tabs
+   * @default 1
+   */
   gap?: ThemeVars.Space;
-  width?: React.CSSProperties['width'];
+  /**
+   * The width of the scroll container, defaults to 100% of the parent container
+   * If the tabs are wider than the width of the container, paddles will be shown to scroll the tabs.
+   */
+  width?: BoxProps['width'];
+  /**
+   * Turn on to use a compact Chip component for the Tabs
+   * @default false
+   */
+  compact?: boolean;
+  styles?: {
+    root?: StyleProp<ViewStyle>;
+    tabs?: StyleProp<ViewStyle>;
+  };
 };
 
 export type TabbedChipsProps<T extends string = string> = TabbedChipsBaseProps<T> &
@@ -72,6 +89,8 @@ const TabbedChipsComponent = memo(
       onChange,
       width,
       gap = 1,
+      compact,
+      styles,
       ...accessibilityProps
     }: TabbedChipsProps<T>,
     ref: React.ForwardedRef<View>,
@@ -86,12 +105,20 @@ const TabbedChipsComponent = memo(
       handleScrollContentSizeChange,
     } = useHorizontalScrollToTarget({ activeTarget: scrollTarget });
 
+    const TabComponentWithCompact = useCallback(
+      (props: TabValue<T>) => {
+        return <TabComponent compact={compact} {...props} />;
+      },
+      [TabComponent, compact],
+    );
+
     return (
       <Box
         ref={ref}
         overflow={
           isScrollContentOverflowing && isScrollContentOffscreenRight ? undefined : 'visible'
         }
+        style={styles?.root}
         testID={testID}
         width={width}
       >
@@ -105,7 +132,7 @@ const TabbedChipsComponent = memo(
           showsHorizontalScrollIndicator={false}
         >
           <Tabs
-            TabComponent={TabComponent}
+            TabComponent={TabComponentWithCompact}
             TabsActiveIndicatorComponent={TabsActiveIndicatorComponent}
             activeTab={activeTab || null}
             gap={gap}

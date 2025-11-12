@@ -6,8 +6,9 @@ import { css } from '@linaria/core';
 
 import type { ChipProps } from '../../chips/ChipProps';
 import { MediaChip } from '../../chips/MediaChip';
+import { cx } from '../../cx';
 import { useHorizontalScrollToTarget } from '../../hooks/useHorizontalScrollToTarget';
-import { HStack } from '../../layout';
+import { HStack, type HStackDefaultElement, type HStackProps } from '../../layout';
 import {
   Paddle,
   Tabs,
@@ -68,19 +69,43 @@ export type TabbedChipsBaseProps<T extends string = string> = Omit<
   | 'onActiveTabElementChange'
   | 'activeBackground'
 > & {
-  paddleStyle?: React.CSSProperties;
-  previousArrowAccessibilityLabel?: string;
-  nextArrowAccessibilityLabel?: string;
-  background?: ThemeVars.Color;
-  TabComponent?: TabsProps<T>['TabComponent'];
+  TabComponent?: React.FC<TabbedChipProps<T>>;
   TabsActiveIndicatorComponent?: TabsProps<T>['TabsActiveIndicatorComponent'];
   tabs: TabbedChipProps<T>[];
-  gap?: ThemeVars.Space;
-  width?: React.CSSProperties['width'];
+  /**
+   * The spacing between Tabs
+   * @default 1
+   */
+  gap?: HStackProps<HStackDefaultElement>['gap'];
+  /**
+   * The width of the scroll container, defaults to 100% of the parent container
+   * If the tabs are wider than the width of the container, paddles will be shown to scroll the tabs.
+   * @default 100%
+   */
+  width?: HStackProps<HStackDefaultElement>['width'];
+  /**
+   * Turn on to use a compact Chip component for the Tabs
+   * @default false
+   */
+  compact?: boolean;
+  styles?: {
+    root?: React.CSSProperties;
+    scrollContainer?: React.CSSProperties;
+    paddle?: React.CSSProperties;
+    tabs?: React.CSSProperties;
+  };
+  classNames?: {
+    root?: string;
+    scrollContainer?: string;
+    tabs?: string;
+  };
 };
 
-export type TabbedChipsProps<T extends string = string> = TabbedChipsBaseProps<T> &
-  SharedProps &
+export type TabbedChipsProps<T extends string = string> = TabbedChipsBaseProps<T> & {
+  background?: ThemeVars.Color;
+  previousArrowAccessibilityLabel?: string;
+  nextArrowAccessibilityLabel?: string;
+} & SharedProps &
   SharedAccessibilityProps;
 
 type TabbedChipsFC = <T extends string = string>(
@@ -94,7 +119,6 @@ const TabbedChipsComponent = memo(
       activeTab,
       onChange,
       TabComponent = DefaultTabComponent,
-      paddleStyle,
       testID,
       background = 'bg',
       gap = 1,
@@ -103,6 +127,9 @@ const TabbedChipsComponent = memo(
       width = '100%',
       TabsActiveIndicatorComponent = DefaultTabsActiveIndicatorComponent,
       disabled,
+      compact,
+      styles,
+      classNames,
       ...accessibilityProps
     }: TabbedChipsProps<T>,
     ref: React.ForwardedRef<HTMLElement | null>,
@@ -120,34 +147,52 @@ const TabbedChipsComponent = memo(
       const maxScroll = scrollRef.current.scrollWidth - scrollRef.current.clientWidth;
       scrollRef.current.scrollTo({ left: maxScroll, behavior: 'smooth' });
     }, [scrollRef]);
+
+    const TabComponentWithCompact = useCallback(
+      (props: TabValue<T>) => {
+        return <TabComponent compact={compact} {...props} />;
+      },
+      [TabComponent, compact],
+    );
+
     return (
-      <HStack alignItems="center" position="relative" testID={testID} width={width}>
+      <HStack
+        alignItems="center"
+        className={classNames?.root}
+        position="relative"
+        style={styles?.root}
+        testID={testID}
+        width={width}
+      >
         <Paddle
           accessibilityLabel={previousArrowAccessibilityLabel}
           background={background}
           direction="left"
           onClick={handleScrollLeft}
-          paddleStyle={paddleStyle}
+          paddleStyle={styles?.paddle}
           show={isScrollContentOffscreenLeft}
           variant="secondary"
         />
         <HStack
           ref={scrollRef}
           alignItems="center"
-          className={scrollContainerCss}
+          className={cx(scrollContainerCss, classNames?.scrollContainer)}
           onScroll={handleScroll}
           overflow="auto"
+          style={styles?.scrollContainer}
         >
           <Tabs
             ref={ref}
-            TabComponent={TabComponent}
+            TabComponent={TabComponentWithCompact}
             TabsActiveIndicatorComponent={DefaultTabsActiveIndicatorComponent}
             activeTab={activeTab || null}
             background={background}
+            className={classNames?.tabs}
             disabled={disabled}
             gap={gap}
             onActiveTabElementChange={setScrollTarget}
             onChange={onChange}
+            style={styles?.tabs}
             tabs={tabs}
             {...accessibilityProps}
           />
@@ -157,7 +202,7 @@ const TabbedChipsComponent = memo(
           background={background}
           direction="right"
           onClick={handleScrollRight}
-          paddleStyle={paddleStyle}
+          paddleStyle={styles?.paddle}
           show={isScrollContentOffscreenRight}
           variant="secondary"
         />

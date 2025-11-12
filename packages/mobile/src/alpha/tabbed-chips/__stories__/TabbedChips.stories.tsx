@@ -4,6 +4,7 @@ import { longTextTabs, sampleTabs } from '@coinbase/cds-common/internal/data/tab
 import type { TabValue } from '@coinbase/cds-common/tabs/useTabs';
 
 import { Example, ExampleScreen } from '../../../examples/ExampleScreen';
+import type { BoxProps } from '../../../layout';
 import { RemoteImage, type RemoteImageProps } from '../../../media/RemoteImage';
 import { type TabbedChipProps, TabbedChips } from '../TabbedChips';
 
@@ -17,9 +18,25 @@ const enumTabs: TabValue<TabId>[] = [
   { id: 'three', label: 'Three' },
 ];
 
-const Demo = ({ tabs = defaultTabs }: { tabs?: TabValue[] }) => {
+const Demo = ({
+  tabs = defaultTabs,
+  compact = false,
+  width,
+}: {
+  tabs?: TabValue[];
+  compact?: boolean;
+  width?: BoxProps['width'];
+}) => {
   const [value, setValue] = useState<TabValue | null>(tabs[0]);
-  return <TabbedChips activeTab={value} onChange={setValue} tabs={tabs} />;
+  return (
+    <TabbedChips
+      activeTab={value}
+      compact={compact}
+      onChange={setValue}
+      tabs={tabs}
+      width={width}
+    />
+  );
 };
 
 const EnumDemo = () => {
@@ -49,7 +66,6 @@ const tabsWithStart: TabbedChipProps[] = defaultTabs.map((tab) => ({
 const compactTabsWithStart: TabbedChipProps[] = defaultTabs.map((tab) => ({
   ...tab,
   start: <RemoteImage {...compactAssetIconProps} />,
-  compact: true,
 }));
 
 const TabbedChipsScreen = () => {
@@ -74,7 +90,7 @@ const TabbedChipsScreen = () => {
         <Demo tabs={tabsWithStart} />
       </Example>
       <Example title="Compact with start">
-        <Demo tabs={compactTabsWithStart} />
+        <Demo compact tabs={compactTabsWithStart} />
       </Example>
     </ExampleScreen>
   );
