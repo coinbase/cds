@@ -138,6 +138,7 @@ export const DefaultSelectControlComponent = memo(
                   <InputChip
                     key={option.value}
                     accessibilityLabel={`${removeSelectedOptionAccessibilityLabel} ${accessibilityLabel}`}
+                    compact={compact}
                     disabled={option.disabled}
                     invertColorScheme={false}
                     maxWidth={200}
@@ -151,7 +152,7 @@ export const DefaultSelectControlComponent = memo(
                 );
               })}
               {value.length - maxSelectedOptionsToShow > 0 && (
-                <Chip>
+                <Chip compact={compact} paddingY={compact ? 0.75 : undefined}>
                   {`+${value.length - maxSelectedOptionsToShow} ${hiddenSelectedOptionsLabel}`}
                 </Chip>
               )}
@@ -185,6 +186,7 @@ export const DefaultSelectControlComponent = memo(
         hiddenSelectedOptionsLabel,
         removeSelectedOptionAccessibilityLabel,
         onChange,
+        compact,
       ]);
 
       const inputNode = useMemo(

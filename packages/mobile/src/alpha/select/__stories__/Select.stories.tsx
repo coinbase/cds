@@ -649,6 +649,38 @@ const MultiSelectCompactExample = () => {
   );
 };
 
+const MultiSelectCompactManySelectedExample = () => {
+  const manyExampleOptions = [
+    { value: null, label: 'Remove selection' },
+    { value: '1', label: 'Option 1' },
+    { value: '2', label: 'Option 2' },
+    { value: '3', label: 'Option 3' },
+    { value: '4', label: 'Option 4' },
+    { value: '5', label: 'Option 5' },
+    { value: '6', label: 'Option 6' },
+    { value: '7', label: 'Option 7' },
+    { value: '8', label: 'Option 8' },
+    { value: '9', label: 'Option 9' },
+    { value: '10', label: 'Option 10' },
+  ];
+  const { value, onChange } = useMultiSelect({
+    initialValue: ['1', '3', '7', '8', '9', '10'],
+  });
+
+  return (
+    <Select
+      compact
+      label="Compact with many selected 1"
+      labelVariant="inside"
+      onChange={onChange}
+      options={manyExampleOptions}
+      placeholder="Empty value"
+      type="multi"
+      value={value}
+    />
+  );
+};
+
 const MultiSelectHideSelectAllExample = () => {
   const { value, onChange } = useMultiSelect({
     initialValue: ['1'],
@@ -1194,6 +1226,9 @@ const SelectV3Screen = () => {
       </Example>
       <Example title="Multi Select Compact">
         <MultiSelectCompactExample />
+      </Example>
+      <Example title="Multi Select Compact Many Selected">
+        <MultiSelectCompactManySelectedExample />
       </Example>
       <Example title="Multi Select Hide Select All">
         <MultiSelectHideSelectAllExample />

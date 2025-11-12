@@ -84,6 +84,37 @@ export const Compact = () => {
   );
 };
 
+export const CompactManySelected = () => {
+  const exampleOptions = [
+    { value: null, label: 'Remove selection' },
+    { value: '1', label: 'Option 1' },
+    { value: '2', label: 'Option 2' },
+    { value: '3', label: 'Option 3' },
+    { value: '4', label: 'Option 4' },
+    { value: '5', label: 'Option 5' },
+    { value: '6', label: 'Option 6' },
+    { value: '7', label: 'Option 7' },
+    { value: '8', label: 'Option 8' },
+    { value: '9', label: 'Option 9' },
+    { value: '10', label: 'Option 10' },
+  ];
+  const { value, onChange } = useMultiSelect({
+    initialValue: ['1', '3', '7', '8', '9', '10'],
+  });
+
+  return (
+    <Select
+      compact
+      label="Multi select - compact with many selected"
+      onChange={onChange}
+      options={exampleOptions}
+      placeholder="Empty value"
+      type="multi"
+      value={value}
+    />
+  );
+};
+
 export const HideSelectAll = () => {
   const exampleOptions = [
     { value: null, label: 'Remove selection' },

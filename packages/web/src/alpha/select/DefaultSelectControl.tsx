@@ -184,6 +184,7 @@ const DefaultSelectControlComponent = memo(
                     key={option.value}
                     data-selected-value
                     accessibilityLabel={`${removeSelectedOptionAccessibilityLabel} ${accessibilityLabel}`}
+                    compact={compact}
                     disabled={option.disabled}
                     invertColorScheme={false}
                     maxWidth={200}
@@ -194,7 +195,9 @@ const DefaultSelectControlComponent = memo(
                 );
               })}
               {value.length - maxSelectedOptionsToShow > 0 && (
-                <Chip>{`+${value.length - maxSelectedOptionsToShow} ${hiddenSelectedOptionsLabel}`}</Chip>
+                <Chip compact={compact} paddingY={compact ? 0.75 : undefined}>
+                  {`+${value.length - maxSelectedOptionsToShow} ${hiddenSelectedOptionsLabel}`}
+                </Chip>
               )}
             </HStack>
           );
@@ -226,6 +229,7 @@ const DefaultSelectControlComponent = memo(
         hiddenSelectedOptionsLabel,
         removeSelectedOptionAccessibilityLabel,
         handleUnselectValue,
+        compact,
       ]);
 
       const inputNode = useMemo(
