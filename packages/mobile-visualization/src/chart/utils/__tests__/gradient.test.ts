@@ -1,4 +1,9 @@
-import { evaluateGradientAtValue, getGradientConfig, type GradientDefinition } from '../gradient';
+import {
+  evaluateGradientAtValue,
+  getGradientConfig,
+  getGradientStops,
+  type GradientDefinition,
+} from '../gradient';
 import { getCategoricalScale, getNumericScale } from '../scale';
 
 // Mock Skia for the test environment
@@ -84,16 +89,18 @@ describe('evaluateGradientAtValue with band scale', () => {
       ],
     };
 
+    const stops = getGradientConfig(gradient, bandScale, bandScale) ?? [];
+
     // First index should be closer to red
-    const color0 = evaluateGradientAtValue(gradient, 0, bandScale);
+    const color0 = evaluateGradientAtValue(stops, 0, bandScale);
     expect(color0).toBeTruthy();
 
     // Middle index should be a blend
-    const color3 = evaluateGradientAtValue(gradient, 3, bandScale);
+    const color3 = evaluateGradientAtValue(stops, 3, bandScale);
     expect(color3).toBeTruthy();
 
     // Last index should be closer to blue
-    const color6 = evaluateGradientAtValue(gradient, 6, bandScale);
+    const color6 = evaluateGradientAtValue(stops, 6, bandScale);
     expect(color6).toBeTruthy();
   });
 });
@@ -113,7 +120,9 @@ describe('evaluateGradientAtValue includeAlpha parameter', () => {
       ],
     };
 
-    const color = evaluateGradientAtValue(gradient, 50, linearScale);
+    const domain = { min: 0, max: 100 };
+    const stops = getGradientStops(gradient.stops, domain);
+    const color = evaluateGradientAtValue(stops, 50, linearScale);
     expect(color).toBeTruthy();
     // Should have alpha of 1 (full opacity)
     expect(color).toMatch(/rgba\(\s*\d+,\s*\d+,\s*\d+,\s*1\s*\)/);
@@ -127,7 +136,9 @@ describe('evaluateGradientAtValue includeAlpha parameter', () => {
       ],
     };
 
-    const color = evaluateGradientAtValue(gradient, 50, linearScale);
+    const domain = { min: 0, max: 100 };
+    const stops = getGradientStops(gradient.stops, domain);
+    const color = evaluateGradientAtValue(stops, 50, linearScale);
     expect(color).toBeTruthy();
     // Opacity is always ignored for point evaluation, so alpha should be 1
     expect(color).toMatch(/rgba\(\s*\d+,\s*\d+,\s*\d+,\s*1\s*\)/);
@@ -141,7 +152,9 @@ describe('evaluateGradientAtValue includeAlpha parameter', () => {
       ],
     };
 
-    const color = evaluateGradientAtValue(gradient, 50, linearScale);
+    const domain = { min: 0, max: 100 };
+    const stops = getGradientStops(gradient.stops, domain);
+    const color = evaluateGradientAtValue(stops, 50, linearScale);
     expect(color).toBeTruthy();
     // Should have alpha of 1 since no opacity was specified
     expect(color).toMatch(/rgba\(\s*\d+,\s*\d+,\s*\d+,\s*1\s*\)/);
@@ -155,7 +168,9 @@ describe('evaluateGradientAtValue includeAlpha parameter', () => {
       ],
     };
 
-    const color = evaluateGradientAtValue(gradient, 50, linearScale);
+    const domain = { min: 0, max: 100 };
+    const stops = getGradientStops(gradient.stops, domain);
+    const color = evaluateGradientAtValue(stops, 50, linearScale);
     expect(color).toBeTruthy();
     // Opacity is always ignored for point evaluation, so alpha should be 1
     expect(color).toMatch(/rgba\(\s*\d+,\s*\d+,\s*\d+,\s*1\s*\)/);

@@ -17,6 +17,7 @@ import { ReferenceLine, type ReferenceLineProps } from '../line';
 import {
   type ChartScaleFunction,
   evaluateGradientAtValue,
+  getGradientConfig,
   getPointOnScale,
   useScrubberContext,
 } from '../utils';
@@ -203,6 +204,37 @@ export const Scrubber = memo(
         return { dataX, dataIndex };
       }, [getXScale, getXAxis, series, scrubberPosition, getStackedSeriesData, getSeriesData]);
 
+      const seriesGradients = useMemo(() => {
+        const xScale = getXScale();
+        if (!xScale) return [];
+
+        return (
+          series
+            ?.filter((s) => {
+              if (seriesIds === undefined) return true;
+              return seriesIds.includes(s.id);
+            })
+            ?.map((s) => {
+              if (!s.gradient) return null;
+
+              const yScale = getYScale(s.yAxisId);
+              if (!yScale) return null;
+
+              const gradientScale = s.gradient.axis === 'x' ? xScale : yScale;
+              const stops = getGradientConfig(s.gradient, xScale, yScale);
+              if (!stops) return null;
+
+              return {
+                seriesId: s.id,
+                gradient: s.gradient,
+                scale: gradientScale,
+                stops,
+              };
+            })
+            .filter((g): g is NonNullable<typeof g> => g !== null) ?? []
+        );
+      }, [series, seriesIds, getXScale, getYScale]);
+
       const beaconPositions = useMemo(() => {
         const xScale = getXScale() as ChartScaleFunction;
         const xAxis = getXAxis();
@@ -238,20 +270,17 @@ export const Scrubber = memo(
                 const resolvedLabel = typeof s.label === 'function' ? s.label(dataIndex) : s.label;
 
                 let evaluatedColor: string | undefined = s.color;
-                if (s.gradient) {
-                  const xScale = getXScale();
-                  const gradientScale = s.gradient.axis === 'x' ? xScale : yScale;
-                  if (gradientScale) {
-                    const gradientAxis = s.gradient.axis ?? 'y';
-                    const dataValue = gradientAxis === 'x' ? dataX : dataY;
-                    const colorResult = evaluateGradientAtValue(
-                      s.gradient,
-                      dataValue,
-                      gradientScale,
-                    );
-                    if (colorResult) {
-                      evaluatedColor = colorResult;
-                    }
+                const seriesGradientConfig = seriesGradients.find((g) => g.seriesId === s.id);
+                if (seriesGradientConfig) {
+                  const gradientAxis = seriesGradientConfig.gradient.axis ?? 'y';
+                  const dataValue = gradientAxis === 'x' ? dataX : dataY;
+                  const colorResult = evaluateGradientAtValue(
+                    seriesGradientConfig.stops,
+                    dataValue,
+                    seriesGradientConfig.scale,
+                  );
+                  if (colorResult) {
+                    evaluatedColor = colorResult;
                   }
                 }
 
@@ -277,6 +306,7 @@ export const Scrubber = memo(
         getSeriesData,
         getYScale,
         getYAxis,
+        seriesGradients,
       ]);
 
       const labelVerticalInset = 2;

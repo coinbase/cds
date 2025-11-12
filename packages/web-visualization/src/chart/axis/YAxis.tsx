@@ -244,7 +244,7 @@ export const YAxis = memo<YAxisProps>(
                 <TickMarkLineComponent
                   key={`tick-mark-${tick.tick}-${index}`}
                   className={cx(axisTickMarkCss, classNames?.tickMark)}
-                  clipPath={undefined}
+                  clipRect={undefined}
                   d={lineToPath(tickX, tick.position, tickX2, tick.position)}
                   stroke="var(--color-fg)"
                   strokeLinecap="square"

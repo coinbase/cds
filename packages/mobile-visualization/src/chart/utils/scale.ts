@@ -32,6 +32,23 @@ export const isLogScale = (
 };
 
 /**
+ * Type guard to check if a scale is a SerializableScale.
+ * This can be used in worklets to differentiate between scale objects and scale functions.
+ */
+export const isSerializableScale = (
+  scale: SerializableScale | ChartScaleFunction,
+): scale is SerializableScale => {
+  'worklet';
+  return (
+    typeof scale === 'object' &&
+    scale !== null &&
+    'type' in scale &&
+    'domain' in scale &&
+    'range' in scale
+  );
+};
+
+/**
  * Create a numeric scale (linear or logarithmic)
  * @returns A numeric scale function
  */

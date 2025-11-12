@@ -1196,7 +1196,7 @@ const AssetPriceDotted = () => {
               builder.addText(price);
 
               builder.pushStyle(regularStyle);
-              builder.addText(` ${date}`);
+              builder.addText(`\n${date}`);
 
               const para = builder.build();
               para.layout(512);
@@ -2522,10 +2522,6 @@ function BasicExample() {
 export default () => {
   const theme = useTheme();
 
-  const m = Skia.FontMgr.System();
-  const f = Array.from({ length: m.countFamilies() - 40 }, (_, i) => m.getFamilyName(i + 40));
-  console.warn(f);
-
   return (
     <ExampleScreen>
       <Example title="Asset Price Dotted">
@@ -2533,6 +2529,27 @@ export default () => {
       </Example>
       <Example title="Gain/Loss">
         <GainLossChart fontFamily="Marker Felt" />
+      </Example>
+      <Example title="Simple">
+        <LineChart
+          enableScrubbing
+          height={defaultChartHeight}
+          series={[
+            {
+              id: 'prices',
+              data: sampleData,
+              gradient: {
+                stops: [
+                  { offset: 0, color: 'red', opacity: 0.5 },
+                  { offset: 100, color: 'blue', opacity: 0.3 },
+                ],
+              },
+            },
+          ]}
+          strokeWidth={5}
+        >
+          <Scrubber />
+        </LineChart>
       </Example>
     </ExampleScreen>
   );

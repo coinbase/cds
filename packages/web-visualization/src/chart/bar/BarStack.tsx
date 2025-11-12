@@ -4,7 +4,7 @@ import type { Transition } from 'framer-motion';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import type { ChartScaleFunction } from '../utils';
-import { evaluateGradientAtValue } from '../utils/gradient';
+import { evaluateGradientAtValue, getGradientConfig } from '../utils/gradient';
 
 import { Bar, type BarComponent, type BarProps } from './Bar';
 import type { BarSeries } from './BarChart';
@@ -160,6 +160,23 @@ export const BarStack = memo<BarStackProps>(
       return Math.max(rect.y, Math.min(baseline, rect.y + rect.height));
     }, [rect.height, rect.y, yScale]);
 
+    const seriesGradients = useMemo(() => {
+      return series.map((s) => {
+        if (!s.gradient || !xScale || !yScale) return null;
+
+        const gradientScale = s.gradient.axis === 'x' ? xScale : yScale;
+        const stops = getGradientConfig(s.gradient, xScale, yScale);
+        if (!stops) return null;
+
+        return {
+          seriesId: s.id,
+          gradient: s.gradient,
+          scale: gradientScale,
+          stops,
+        };
+      });
+    }, [series, xScale, yScale]);
+
     // Calculate bars for this specific category
     const { bars, stackRect } = useMemo(() => {
       let allBars: Array<{
@@ -234,33 +251,29 @@ export const BarStack = memo<BarStackProps>(
 
         let barFill = s.color ?? 'var(--color-fgPrimary)';
 
-        // Evaluate gradient if provided
-        if (
-          s.gradient &&
-          xScale &&
-          yScale &&
-          originalValue !== null &&
-          originalValue !== undefined
-        ) {
-          const gradientScale = s.gradient.axis === 'x' ? xScale : yScale;
-          if (gradientScale) {
-            const axis = s.gradient.axis ?? 'y';
-            // For x-axis gradient, use the categoryIndex
-            // For y-axis gradient, use the ORIGINAL data value (not the processed top value)
-            // This is important for bar charts where originalValue might be a single number (e.g., -40, 15)
-            // or a tuple (e.g., [0, 10] for range bars)
-            let evalValue: number;
-            if (axis === 'x') {
-              evalValue = categoryIndex;
-            } else {
-              // Use original value for evaluation - handles both single numbers and tuples
-              evalValue = Array.isArray(originalValue) ? originalValue[1] : originalValue;
-            }
-            const evaluatedColor = evaluateGradientAtValue(s.gradient, evalValue, gradientScale);
-            if (evaluatedColor) {
-              // Only apply gradient color if fill is not explicitly set
-              barFill = evaluatedColor;
-            }
+        // Evaluate gradient if provided (using precomputed stops)
+        const seriesGradientConfig = seriesGradients.find((g) => g?.seriesId === s.id);
+        if (seriesGradientConfig && originalValue !== null && originalValue !== undefined) {
+          const axis = seriesGradientConfig.gradient.axis ?? 'y';
+          // For x-axis gradient, use the categoryIndex
+          // For y-axis gradient, use the ORIGINAL data value (not the processed top value)
+          // This is important for bar charts where originalValue might be a single number (e.g., -40, 15)
+          // or a tuple (e.g., [0, 10] for range bars)
+          let evalValue: number;
+          if (axis === 'x') {
+            evalValue = categoryIndex;
+          } else {
+            // Use original value for evaluation - handles both single numbers and tuples
+            evalValue = Array.isArray(originalValue) ? originalValue[1] : originalValue;
+          }
+          const evaluatedColor = evaluateGradientAtValue(
+            seriesGradientConfig.stops,
+            evalValue,
+            seriesGradientConfig.scale,
+          );
+          if (evaluatedColor) {
+            // Only apply gradient color if fill is not explicitly set
+            barFill = evaluatedColor;
           }
         }
 
@@ -663,7 +676,7 @@ export const BarStack = memo<BarStackProps>(
       getSeriesData,
       categoryIndex,
       yScale,
-      xScale,
+      seriesGradients,
       roundBaseline,
     ]);
 

@@ -14,7 +14,7 @@ import { Circle, Group } from '@shopify/react-native-skia';
 import { useCartesianChartContext } from '../ChartProvider';
 import { useScrubberContext } from '../utils';
 import {
-  evaluateGradientAtValueWithPrecomputedStops,
+  evaluateGradientAtValue,
   getGradientStops,
   type GradientDefinition,
 } from '../utils/gradient';
@@ -126,13 +126,9 @@ export const ScrubberBeacon = memo(
         return convertToSerializableScale(scale);
       }, [gradient, getXScale, getYScale, targetSeries?.yAxisId]);
 
-      // Pre-compute gradient stops off the UI thread for better performance
-      const precomputedGradientStops = useMemo(() => {
+      const gradientStops = useMemo(() => {
         if (!gradient || !gradientScale) return undefined;
-
-        // Extract domain from serializable scale
         const domain = { min: gradientScale.domain[0], max: gradientScale.domain[1] };
-
         return getGradientStops(gradient.stops, domain);
       }, [gradient, gradientScale]);
 
@@ -311,16 +307,12 @@ export const ScrubberBeacon = memo(
       }, [animate, idlePulse, pulseOpacity, pulseTransition, scrubberPosition]);
 
       const pointColor = useDerivedValue(() => {
-        if (gradient && gradientScale && precomputedGradientStops) {
+        if (gradient && gradientScale && gradientStops) {
           const axis = gradient.axis ?? 'y';
           const dataValue = axis === 'x' ? dataX.value : dataY.value;
 
           if (dataValue !== undefined) {
-            const evaluatedColor = evaluateGradientAtValueWithPrecomputedStops(
-              precomputedGradientStops,
-              dataValue,
-              gradientScale,
-            );
+            const evaluatedColor = evaluateGradientAtValue(gradientStops, dataValue, gradientScale);
             if (evaluatedColor) {
               return evaluatedColor;
             }
@@ -331,7 +323,7 @@ export const ScrubberBeacon = memo(
       }, [
         gradient,
         gradientScale,
-        precomputedGradientStops,
+        gradientStops,
         dataX,
         dataY,
         color,

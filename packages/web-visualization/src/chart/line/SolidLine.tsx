@@ -9,12 +9,14 @@ import type { LineComponentProps } from './Line';
 export type SolidLineProps = SharedProps &
   Pick<
     PathProps,
+    | 'className'
     | 'clipOffset'
     | 'clipRect'
     | 'strokeLinecap'
     | 'strokeLinejoin'
     | 'strokeDasharray'
     | 'strokeDashoffset'
+    | 'style'
   > &
   LineComponentProps & {
     fill?: SVGProps<SVGPathElement>['fill'];

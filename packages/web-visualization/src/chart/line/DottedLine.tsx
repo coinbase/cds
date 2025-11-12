@@ -9,12 +9,14 @@ import type { LineComponentProps } from './Line';
 export type DottedLineProps = SharedProps &
   Pick<
     PathProps,
+    | 'className'
     | 'clipOffset'
     | 'clipRect'
     | 'strokeLinecap'
     | 'strokeLinejoin'
     | 'strokeDasharray'
     | 'strokeDashoffset'
+    | 'style'
     | 'vectorEffect'
   > &
   LineComponentProps & {

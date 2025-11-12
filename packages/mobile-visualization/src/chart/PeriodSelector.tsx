@@ -54,7 +54,7 @@ export const PeriodSelectorActiveIndicator = ({
     [animatedValues],
   );
 
-  if (!width) return null;
+  if (!width) return;
 
   return (
     <Animated.View

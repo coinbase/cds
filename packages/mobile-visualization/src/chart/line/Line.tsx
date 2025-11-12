@@ -14,7 +14,8 @@ import {
   type GradientDefinition,
   type Transition,
 } from '../utils';
-import { evaluateGradientAtValue } from '../utils/gradient';
+import { evaluateGradientAtValue, getGradientStops } from '../utils/gradient';
+import { convertToSerializableScale } from '../utils/scale';
 
 import { DottedLine } from './DottedLine';
 import { SolidLine } from './SolidLine';
@@ -232,9 +233,20 @@ export const Line = memo<LineProps>(
         : null;
     }, [xAxis?.data]);
 
-    const gradientScale = useMemo(() => {
+    const gradientConfig = useMemo(() => {
       if (!gradient || !xScale || !yScale) return;
-      return gradient.axis === 'x' ? xScale : yScale;
+
+      const gradientScale = gradient.axis === 'x' ? xScale : yScale;
+      const serializableScale = convertToSerializableScale(gradientScale);
+      if (!serializableScale) return;
+
+      const domain = { min: serializableScale.domain[0], max: serializableScale.domain[1] };
+      const stops = getGradientStops(gradient.stops, domain);
+
+      return {
+        scale: serializableScale,
+        stops,
+      };
     }, [gradient, xScale, yScale]);
 
     if (!xScale || !yScale || !path) return;
@@ -286,12 +298,16 @@ export const Line = memo<LineProps>(
               // Evaluate colors from gradient if available (only if not explicitly set)
               let pointFill = pointConfig.fill ?? stroke;
 
-              if (gradientScale && gradient && !pointConfig.fill) {
+              if (gradientConfig && gradient && !pointConfig.fill) {
                 // Use the appropriate data value based on gradient axis
                 const axis = gradient.axis ?? 'y';
                 const dataValue = axis === 'x' ? xValue : value;
 
-                const evaluatedColor = evaluateGradientAtValue(gradient, dataValue, gradientScale);
+                const evaluatedColor = evaluateGradientAtValue(
+                  gradientConfig.stops,
+                  dataValue,
+                  gradientConfig.scale,
+                );
                 if (evaluatedColor) {
                   // Apply gradient color to fill if not explicitly set
                   pointFill = evaluatedColor;

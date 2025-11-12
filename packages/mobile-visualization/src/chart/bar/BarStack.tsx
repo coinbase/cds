@@ -4,7 +4,8 @@ import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import type { ChartScaleFunction, Transition } from '../utils';
-import { evaluateGradientAtValue } from '../utils/gradient';
+import { evaluateGradientAtValue, getGradientStops } from '../utils/gradient';
+import { convertToSerializableScale } from '../utils/scale';
 
 import { Bar, type BarProps } from './Bar';
 import type { BarSeries } from './BarChart';
@@ -158,6 +159,26 @@ export const BarStack = memo<BarStackProps>(
       return Math.max(rect.y, Math.min(baseline, rect.y + rect.height));
     }, [rect.height, rect.y, yScale]);
 
+    const seriesGradients = useMemo(() => {
+      return series.map((s) => {
+        if (!s.gradient || !xScale || !yScale) return;
+
+        const gradientScale = s.gradient.axis === 'x' ? xScale : yScale;
+        const serializableScale = convertToSerializableScale(gradientScale);
+        if (!serializableScale) return;
+
+        const domain = { min: serializableScale.domain[0], max: serializableScale.domain[1] };
+        const stops = getGradientStops(s.gradient.stops, domain);
+
+        return {
+          seriesId: s.id,
+          gradient: s.gradient,
+          scale: serializableScale,
+          stops,
+        };
+      });
+    }, [series, xScale, yScale]);
+
     // Calculate bars for this specific category
     const { bars, stackRect } = useMemo(() => {
       let allBars: Array<{
@@ -228,19 +249,21 @@ export const BarStack = memo<BarStackProps>(
         // Determine fill color, respecting gradient if present
         let barFill = s.color || theme.color.fgPrimary;
 
-        // Evaluate gradient if provided
-        if (s.gradient && xScale && yScale) {
-          const gradientScale = s.gradient.axis === 'x' ? xScale : yScale;
-          if (gradientScale) {
-            const axis = s.gradient.axis ?? 'y';
-            // For x-axis gradient, use the categoryIndex
-            // For y-axis gradient, use the actual data value
-            const dataValue = axis === 'x' ? categoryIndex : top;
-            const evaluatedColor = evaluateGradientAtValue(s.gradient, dataValue, gradientScale);
-            if (evaluatedColor) {
-              // Only apply gradient color if fill is not explicitly set
-              barFill = evaluatedColor;
-            }
+        // Evaluate gradient if provided (using precomputed stops)
+        const seriesGradientConfig = seriesGradients.find((g) => g?.seriesId === s.id);
+        if (seriesGradientConfig) {
+          const axis = seriesGradientConfig.gradient.axis ?? 'y';
+          // For x-axis gradient, use the categoryIndex
+          // For y-axis gradient, use the actual data value
+          const dataValue = axis === 'x' ? categoryIndex : top;
+          const evaluatedColor = evaluateGradientAtValue(
+            seriesGradientConfig.stops,
+            dataValue,
+            seriesGradientConfig.scale,
+          );
+          if (evaluatedColor) {
+            // Only apply gradient color if fill is not explicitly set
+            barFill = evaluatedColor;
           }
         }
 
@@ -642,7 +665,7 @@ export const BarStack = memo<BarStackProps>(
       barMinSize,
       stackMinSize,
       yScale,
-      xScale,
+      seriesGradients,
       theme.color.fgPrimary,
     ]);
 

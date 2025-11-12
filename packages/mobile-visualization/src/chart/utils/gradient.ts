@@ -5,6 +5,7 @@ import {
   applySerializableScale,
   type ChartScaleFunction,
   isCategoricalScale,
+  isSerializableScale,
   type SerializableScale,
 } from './scale';
 
@@ -126,104 +127,6 @@ export const getColorWithOpacity = (color1: string, opacity: number): string => 
 };
 
 /**
- * Evaluates the color at a specific data value based on the gradient configuration.
- * Uses Skia color interpolation for smooth transitions.
- *
- * Note: Opacity from gradient stops is ignored when evaluating colors at specific points.
- * Opacity should only be used in the gradient rendering itself (Skia LinearGradient).
- *
- * Returns an interpolated color that Skia can render.
- *
- * @param gradient - The GradientDefinition configuration
- * @param dataValue - The data value to evaluate (for band scales, this is the index)
- * @param scale - The scale to use for value mapping (handles log scales correctly)
- * @returns The color string at this data value (may be an interpolated color), or null if invalid
- */
-export const evaluateGradientAtValue = (
-  gradient: GradientDefinition,
-  dataValue: number,
-  scale: ChartScaleFunction,
-): string | undefined => {
-  // Extract domain from scale
-  const scaleDomain = scale.domain();
-  let domain: AxisBounds;
-
-  if (isCategoricalScale(scale)) {
-    const domainArray = scaleDomain as number[];
-    domain = { min: domainArray[0], max: domainArray[domainArray.length - 1] };
-  } else {
-    const [min, max] = scaleDomain as [number, number];
-    domain = { min, max };
-  }
-
-  const stops = getGradientStops(gradient.stops, domain);
-  if (stops.length === 0) return;
-
-  // Use scale to map values to positions (handles log scales correctly)
-  // For numeric scales: scale(value) returns pixel position
-  // We normalize these positions to 0-1 based on the range
-  const scaleRange = scale.range();
-  const [rangeMin, rangeMax] = Array.isArray(scaleRange)
-    ? (scaleRange as [number, number])
-    : [scaleRange, scaleRange]; // fallback for band scales
-
-  const rangeSpan = Math.abs(rangeMax - rangeMin);
-  if (rangeSpan === 0) return stops[0].color;
-
-  // Map dataValue through scale to get position
-  const dataPosition = scale(dataValue);
-  if (dataPosition === undefined) return stops[0].color;
-
-  // Normalize to 0-1 based on range
-  const normalizedValue = Math.max(0, Math.min(1, Math.abs(dataPosition - rangeMin) / rangeSpan));
-
-  // Map stop offsets through scale and normalize to 0-1
-  const positions = stops.map((stop) => {
-    const stopPosition = scale(stop.offset);
-    if (stopPosition === undefined) return 0;
-    return Math.max(0, Math.min(1, Math.abs(stopPosition - rangeMin) / rangeSpan));
-  });
-
-  // Find which segment we're in
-  if (normalizedValue < positions[0]) {
-    return stops[0].color;
-  }
-  if (normalizedValue >= positions[positions.length - 1]) {
-    return stops[stops.length - 1].color;
-  }
-
-  // Check if dataValue matches any stop offset exactly (for hard transitions)
-  for (let i = 0; i < stops.length; i++) {
-    if (dataValue === stops[i].offset) {
-      // Found exact match - check if there are multiple stops at this offset (hard transition)
-      // Use the LAST color at this offset for hard transitions
-      let lastIndexAtOffset = i;
-      while (
-        lastIndexAtOffset + 1 < stops.length &&
-        stops[lastIndexAtOffset + 1].offset === stops[i].offset
-      ) {
-        lastIndexAtOffset++;
-      }
-      return stops[lastIndexAtOffset].color;
-    }
-  }
-
-  // Find the two colors to mix based on normalized positions
-  for (let i = 0; i < positions.length - 1; i++) {
-    const start = positions[i];
-    const end = positions[i + 1];
-
-    if (normalizedValue >= start && normalizedValue <= end) {
-      const segmentProgress = (normalizedValue - start) / (end - start);
-      return interpolateColor(stops[i].color, stops[i + 1].color, segmentProgress);
-    }
-  }
-
-  // If we didn't reach any to be mixed, return the last color
-  return stops[stops.length - 1].color;
-};
-
-/**
  * Creates a gradient configuration for SVG components.
  * Processes a GradientDefinition into a renderable GradientConfig.
  * Supports both numeric scales (linear, log) and categorical scales (band).
@@ -278,65 +181,87 @@ export const getGradientConfig = (
   return processGradientStops(resolvedStops, scale);
 };
 
-// todo: can we somehow simplify this or bring it out of gradient.ts?
 /**
- * Optimized worklet-compatible version that accepts pre-computed gradient stops.
- * Use this when you want to pre-compute stops off the UI thread and then evaluate colors on the UI thread.
- *
- * @param precomputedStops - Pre-computed gradient stops (computed off UI thread)
+ * Evaluates the color at a specific data value based on the gradient stops, ignoring opacity.
+ * @param stops - The gradient stops configuration
  * @param dataValue - The data value to evaluate (for band scales, this is the index)
- * @param scale - The serializable scale to use for value mapping
- * @returns The color string at this data value (may be an interpolated color), or null if invalid
+ * @param scale - The scale to use for value mapping (handles log scales correctly)
+ * @returns The color string at this data value, or undefined if invalid
  */
-export const evaluateGradientAtValueWithPrecomputedStops = (
-  precomputedStops: GradientStop[],
+export const evaluateGradientAtValue = (
+  stops: GradientStop[],
   dataValue: number,
-  scale: SerializableScale,
+  scale: SerializableScale | ChartScaleFunction,
 ): string | undefined => {
   'worklet';
 
-  if (precomputedStops.length === 0) return;
+  if (stops.length === 0) return;
 
-  // Use serializable scale to map values to positions
-  const rangeSpan = Math.abs(scale.range[1] - scale.range[0]);
-  if (rangeSpan === 0) return precomputedStops[0].color;
+  // Determine range based on scale type
+  let rangeMin: number;
+  let rangeMax: number;
+
+  if (isSerializableScale(scale)) {
+    // SerializableScale has range as [number, number]
+    [rangeMin, rangeMax] = scale.range;
+  } else {
+    // ChartScaleFunction has range() method
+    const scaleRange = scale.range();
+    [rangeMin, rangeMax] = Array.isArray(scaleRange)
+      ? (scaleRange as [number, number])
+      : [scaleRange, scaleRange]; // fallback for band scales
+  }
+
+  const rangeSpan = Math.abs(rangeMax - rangeMin);
+  if (rangeSpan === 0) return stops[0].color;
 
   // Map dataValue through scale to get position
-  const dataPosition = applySerializableScale(dataValue, scale);
+  let dataPosition: number;
+  if (isSerializableScale(scale)) {
+    dataPosition = applySerializableScale(dataValue, scale);
+  } else {
+    const result = scale(dataValue);
+    if (result === undefined) return stops[0].color;
+    dataPosition = result;
+  }
 
   // Normalize to 0-1 based on range
-  const normalizedValue = Math.max(
-    0,
-    Math.min(1, Math.abs(dataPosition - scale.range[0]) / rangeSpan),
-  );
+  const normalizedValue = Math.max(0, Math.min(1, Math.abs(dataPosition - rangeMin) / rangeSpan));
 
   // Map stop offsets through scale and normalize to 0-1
-  const positions = precomputedStops.map((stop) => {
-    const stopPosition = applySerializableScale(stop.offset, scale);
-    return Math.max(0, Math.min(1, Math.abs(stopPosition - scale.range[0]) / rangeSpan));
+  const positions = stops.map((stop) => {
+    let stopPosition: number;
+    if (isSerializableScale(scale)) {
+      stopPosition = applySerializableScale(stop.offset, scale);
+    } else {
+      const result = scale(stop.offset);
+      if (result === undefined) return 0;
+      stopPosition = result;
+    }
+    return Math.max(0, Math.min(1, Math.abs(stopPosition - rangeMin) / rangeSpan));
   });
 
   // Find which segment we're in
   if (normalizedValue < positions[0]) {
-    return precomputedStops[0].color;
+    return stops[0].color;
   }
   if (normalizedValue >= positions[positions.length - 1]) {
-    return precomputedStops[precomputedStops.length - 1].color;
+    return stops[stops.length - 1].color;
   }
 
   // Check if dataValue matches any stop offset exactly (for hard transitions)
-  for (let i = 0; i < precomputedStops.length; i++) {
-    if (dataValue === precomputedStops[i].offset) {
+  for (let i = 0; i < stops.length; i++) {
+    if (dataValue === stops[i].offset) {
       // Found exact match - check if there are multiple stops at this offset (hard transition)
       // Use the LAST color at this offset for hard transitions
       let lastIndexAtOffset = i;
       while (
-        lastIndexAtOffset + 1 < precomputedStops.length &&
-        precomputedStops[lastIndexAtOffset + 1].offset === precomputedStops[i].offset
+        lastIndexAtOffset + 1 < stops.length &&
+        stops[lastIndexAtOffset + 1].offset === stops[i].offset
       ) {
         lastIndexAtOffset++;
       }
-      return precomputedStops[lastIndexAtOffset].color;
+      return stops[lastIndexAtOffset].color;
     }
   }
 
@@ -347,15 +272,15 @@ export const evaluateGradientAtValueWithPrecomputedStops = (
       const segmentEnd = positions[i + 1];
 
       if (segmentEnd === segmentStart) {
-        return precomputedStops[i].color;
+        return stops[i].color;
       }
 
       const t = (normalizedValue - segmentStart) / (segmentEnd - segmentStart);
-      return interpolateColor(precomputedStops[i].color, precomputedStops[i + 1].color, t);
+      return interpolateColor(stops[i].color, stops[i + 1].color, t);
     }
   }
 
-  return precomputedStops[0].color;
+  return stops[0].color;
 };
 
 /**

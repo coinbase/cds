@@ -93,37 +93,17 @@ const processGradientStops = (
 };
 
 /**
- * Evaluates the color at a specific data value based on the gradient configuration.
- * Uses CSS color-mix() function for color interpolation, which works natively with CSS variables.
- *
- * Note: Opacity from gradient stops is ignored when evaluating colors at specific points.
- * Opacity should only be used in the gradient rendering itself (SVG linearGradient).
- *
- * Returns a color-mix() expression that the browser evaluates.
- *
- * @param gradient - The GradientDefinition configuration
+ * Evaluates the color at a specific data value based on the gradient stops, ignoring opacity.
+ * @param stops - The gradient stops configuration
  * @param dataValue - The data value to evaluate (for band scales, this is the index)
  * @param scale - The scale to use for value mapping (handles log scales correctly)
- * @returns The color string at this data value (may be a color-mix() expression), or null if invalid
+ * @returns The color string at this data value, or undefined if invalid
  */
 export const evaluateGradientAtValue = (
-  gradient: GradientDefinition,
+  stops: GradientStop[],
   dataValue: number,
   scale: ChartScaleFunction,
 ): string | undefined => {
-  // Extract domain from scale
-  const scaleDomain = scale.domain();
-  let domain: AxisBounds;
-
-  if (isCategoricalScale(scale)) {
-    const domainArray = scaleDomain as number[];
-    domain = { min: domainArray[0], max: domainArray[domainArray.length - 1] };
-  } else {
-    const [min, max] = scaleDomain as [number, number];
-    domain = { min, max };
-  }
-
-  const stops = getGradientStops(gradient.stops, domain);
   if (stops.length === 0) return;
 
   // Use srgb color space to match our linearGradient which uses srgb color space
@@ -148,12 +128,8 @@ export const evaluateGradientAtValue = (
   // Normalize to 0-1 based on range
   const normalizedValue = Math.max(0, Math.min(1, Math.abs(dataPosition - rangeMin) / rangeSpan));
 
-  // Map stop offsets through scale and normalize to 0-1
-  const positions = stops.map((stop) => {
-    const stopPosition = scale(stop.offset);
-    if (stopPosition === undefined) return 0;
-    return Math.max(0, Math.min(1, Math.abs(stopPosition - rangeMin) / rangeSpan));
-  });
+  // stops already have normalized offsets (0-1), use them directly
+  const positions = stops.map((stop) => stop.offset);
 
   // Find which segment we're in
   if (normalizedValue < positions[0]) {
@@ -163,15 +139,15 @@ export const evaluateGradientAtValue = (
     return stops[stops.length - 1].color;
   }
 
-  // Check if dataValue matches any stop offset exactly (for hard transitions)
+  // Check if normalizedValue matches any stop offset exactly (for hard transitions)
   for (let i = 0; i < stops.length; i++) {
-    if (dataValue === stops[i].offset) {
+    if (Math.abs(normalizedValue - stops[i].offset) < 1e-10) {
       // Found exact match - check if there are multiple stops at this offset (hard transition)
       // Use the LAST color at this offset for hard transitions
       let lastIndexAtOffset = i;
       while (
         lastIndexAtOffset + 1 < stops.length &&
-        stops[lastIndexAtOffset + 1].offset === stops[i].offset
+        Math.abs(stops[lastIndexAtOffset + 1].offset - stops[i].offset) < 1e-10
       ) {
         lastIndexAtOffset++;
       }

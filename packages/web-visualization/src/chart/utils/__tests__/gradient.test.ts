@@ -167,7 +167,8 @@ describe('gradient utilities', () => {
             { offset: 100, color: '#00ff00' },
           ],
         };
-        const result = evaluateGradientAtValue(gradient, 50, scale);
+        const stops = getGradientConfig(gradient, scale, scale) ?? [];
+        const result = evaluateGradientAtValue(stops, 50, scale);
         expect(result).toContain('color-mix(in srgb');
         expect(result).toContain('#ff0000');
         expect(result).toContain('#00ff00');
@@ -181,7 +182,8 @@ describe('gradient utilities', () => {
             { offset: 100, color: '#00ff00' },
           ],
         };
-        expect(evaluateGradientAtValue(gradient, 0, scale)).toBe('#ff0000');
+        const stops = getGradientConfig(gradient, scale, scale) ?? [];
+        expect(evaluateGradientAtValue(stops, 0, scale)).toBe('#ff0000');
       });
 
       it('should return last color for value at end of range', () => {
@@ -191,7 +193,8 @@ describe('gradient utilities', () => {
             { offset: 100, color: '#00ff00' },
           ],
         };
-        expect(evaluateGradientAtValue(gradient, 100, scale)).toBe('#00ff00');
+        const stops = getGradientConfig(gradient, scale, scale) ?? [];
+        expect(evaluateGradientAtValue(stops, 100, scale)).toBe('#00ff00');
       });
 
       it('should work with CSS variables', () => {
@@ -201,7 +204,8 @@ describe('gradient utilities', () => {
             { offset: 100, color: 'var(--color-fgPositive)' },
           ],
         };
-        const result = evaluateGradientAtValue(gradient, 50, scale);
+        const stops = getGradientConfig(gradient, scale, scale) ?? [];
+        const result = evaluateGradientAtValue(stops, 50, scale);
         expect(result).toContain('color-mix');
         expect(result).toContain('var(--color-fgNegative)');
         expect(result).toContain('var(--color-fgPositive)');
@@ -216,7 +220,8 @@ describe('gradient utilities', () => {
           ],
         };
         // Value at 15 should be between red and yellow
-        const result = evaluateGradientAtValue(gradient, 15, scale);
+        const stops = getGradientConfig(gradient, scale, scale) ?? [];
+        const result = evaluateGradientAtValue(stops, 15, scale);
         expect(result).toContain('color-mix');
         expect(result).toContain('#ff0000');
         expect(result).toContain('#ffff00');
@@ -229,7 +234,8 @@ describe('gradient utilities', () => {
             { offset: 100, color: '#00ff00' },
           ],
         };
-        const result = evaluateGradientAtValue(gradient, 50, scale);
+        const stops = getGradientConfig(gradient, scale, scale) ?? [];
+        const result = evaluateGradientAtValue(stops, 50, scale);
         expect(result).toContain('color-mix');
         // Opacity should be ignored - no transparent mixing
         expect(result).not.toContain('transparent');
@@ -244,8 +250,9 @@ describe('gradient utilities', () => {
             { offset: 0, color: '#00ff00' },
           ],
         };
+        const stops = getGradientConfig(gradient, scale, scale) ?? [];
         // At exact boundary, should return the second color (upper bucket)
-        expect(evaluateGradientAtValue(gradient, 0, scale)).toBe('#00ff00');
+        expect(evaluateGradientAtValue(stops, 0, scale)).toBe('#00ff00');
       });
     });
 
@@ -257,7 +264,8 @@ describe('gradient utilities', () => {
             { offset: max, color: '#00ff00' },
           ],
         };
-        const result = evaluateGradientAtValue(gradient, 50, scale);
+        const stops = getGradientConfig(gradient, scale, scale) ?? [];
+        const result = evaluateGradientAtValue(stops, 50, scale);
         expect(result).toContain('color-mix(in srgb');
         expect(result).toContain('#ff0000');
         expect(result).toContain('#00ff00');
@@ -273,26 +281,26 @@ describe('gradient utilities', () => {
           ],
         };
 
+        const stops = getGradientConfig(gradient, scale, scale) ?? [];
+
         // Test negative value
-        const negResult = evaluateGradientAtValue(gradient, 50, scale);
+        const negResult = evaluateGradientAtValue(stops, 50, scale);
         expect(negResult).toBeTruthy();
 
         // Test at zero (hard transition)
-        const zeroResult = evaluateGradientAtValue(gradient, 0, scale);
+        const zeroResult = evaluateGradientAtValue(stops, 0, scale);
         expect(zeroResult).toBeTruthy();
 
         // Test positive value
-        const posResult = evaluateGradientAtValue(gradient, 50, scale);
+        const posResult = evaluateGradientAtValue(stops, 50, scale);
         expect(posResult).toBeTruthy();
       });
     });
 
     it('should return undefined for empty stops array', () => {
       // This shouldn't happen in practice, but test for robustness
-      const gradient: GradientDefinition = {
-        stops: [],
-      };
-      expect(evaluateGradientAtValue(gradient, 50, scale)).toBeUndefined();
+      const stops: any[] = [];
+      expect(evaluateGradientAtValue(stops, 50, scale)).toBeUndefined();
     });
   });
 });
