@@ -127,17 +127,21 @@ function ExampleWithStart() {
 ### Custom TabComponent
 
 :::tip Custom Tab behavior
-When providing a custom TabComponent, use `useTabsContext()` and call `updateActiveTab(id)` to update selection state. Reflect the active state (e.g., `inverted` styling) based on `activeTab?.id === id`.
+When providing a custom TabComponent, use `useTabsContext()` and call `updateActiveTab(id)` to update selection state. Reflect the active state (e.g., end icon state) based on `activeTab?.id === id`.
 :::
 
 ```jsx live noInline
-function CustomTab({ id, label, ...props }) {
+function CustomTab({ id, label, ...props }: TabbedChipProps) {
   const { activeTab, updateActiveTab } = useTabsContext();
   const isActive = activeTab?.id === id;
   return (
-    <Chip inverted={isActive} onClick={() => updateActiveTab(id)} width="max-content" {...props}>
+    <MediaChip
+      end={<Icon size="s" active={isActive} name="star" />}
+      onClick={() => updateActiveTab(id)}
+      {...props}
+    >
       {label}
-    </Chip>
+    </MediaChip>
   );
 }
 
