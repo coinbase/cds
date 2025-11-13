@@ -1,9 +1,11 @@
 /* stylelint-disable color-named */
 import { useRef, useState } from 'react';
+import { useMultiSelect } from '@coinbase/cds-common/select/useMultiSelect';
 import { css } from '@linaria/core';
 
 import { Button } from '../../../buttons/Button';
 import { UpsellCard } from '../../../cards/UpsellCard';
+import { TextInput } from '../../../controls';
 import { cx } from '../../../cx';
 import { Icon } from '../../../icons/Icon';
 import { HStack } from '../../../layout/HStack';
@@ -87,6 +89,106 @@ export const Compact = () => {
       placeholder="Empty value"
       value={value}
     />
+  );
+};
+
+export const ExampleForm = () => {
+  const exampleOptions = [
+    { value: null, label: 'Remove selection' },
+    { value: '1', label: 'Option 1' },
+    { value: '2', label: 'Option 2' },
+    { value: '3', label: 'Option 3' },
+    { value: '4', label: 'Option 4' },
+    { value: '5', label: 'Option 5' },
+    { value: '6', label: 'Option 6' },
+    { value: '7', label: 'Option 7' },
+    { value: '8', label: 'Option 8' },
+    { value: '9', label: 'Option 9' },
+  ];
+  const [value, setValue] = useState<string | null>('1');
+  const { value: multiSelectValue, onChange: multiSelectOnChange } = useMultiSelect({
+    initialValue: ['1', '2'],
+  });
+
+  return (
+    <VStack gap={2} width="100%">
+      <HStack gap={1}>
+        <Select
+          label="Single select"
+          onChange={setValue}
+          options={exampleOptions}
+          placeholder="Empty value"
+          style={{ flexGrow: 1 }}
+          value={value}
+        />
+        <TextInput label="Text input" width="40%" />
+      </HStack>
+      <HStack gap={1}>
+        <Select
+          compact
+          label="Single select - compact"
+          onChange={setValue}
+          options={exampleOptions}
+          placeholder="Empty value"
+          style={{ flexGrow: 1 }}
+          value={value}
+        />
+        <TextInput compact label="Text input" width="40%" />
+      </HStack>
+      <HStack gap={1}>
+        <Select
+          label="Single select"
+          labelVariant="inside"
+          onChange={setValue}
+          options={exampleOptions}
+          placeholder="Empty value"
+          style={{ flexGrow: 1 }}
+          value={value}
+        />
+        <TextInput label="Text input" labelVariant="inside" width="40%" />
+      </HStack>
+      <HStack gap={1}>
+        <Select
+          controlAccessibilityLabel="Multi select control with selected options"
+          label="Multi select"
+          onChange={multiSelectOnChange}
+          options={exampleOptions}
+          placeholder="Empty value"
+          style={{ flexGrow: 1 }}
+          type="multi"
+          value={multiSelectValue}
+        />
+        <TextInput label="Text input" width="40%" />
+      </HStack>
+      <HStack gap={1}>
+        <Select
+          compact
+          controlAccessibilityLabel="Multi select control with selected options"
+          label="Multi select - compact"
+          onChange={multiSelectOnChange}
+          options={exampleOptions}
+          placeholder="Empty value"
+          style={{ flexGrow: 1 }}
+          type="multi"
+          value={multiSelectValue}
+        />
+        <TextInput compact label="Text input" width="40%" />
+      </HStack>
+      <HStack gap={1}>
+        <Select
+          controlAccessibilityLabel="Multi select control with selected options"
+          label="Multi select"
+          labelVariant="inside"
+          onChange={multiSelectOnChange}
+          options={exampleOptions}
+          placeholder="Empty value"
+          style={{ flexGrow: 1 }}
+          type="multi"
+          value={multiSelectValue}
+        />
+        <TextInput label="Text input" labelVariant="inside" width="40%" />
+      </HStack>
+    </VStack>
   );
 };
 
