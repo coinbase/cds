@@ -3,7 +3,6 @@ import { Pressable, TouchableOpacity } from 'react-native';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import { useInputVariant } from '@coinbase/cds-common/hooks/useInputVariant';
 
-import { Chip } from '../../chips/Chip';
 import { InputChip } from '../../chips/InputChip';
 import { HelperText } from '../../controls/HelperText';
 import { InputLabel } from '../../controls/InputLabel';
@@ -15,6 +14,12 @@ import { AnimatedCaret } from '../../motion/AnimatedCaret';
 import { Text } from '../../typography/Text';
 
 import type { SelectControlProps, SelectOption, SelectType } from './Select';
+
+// The height is smaller for the inside label variant since the label takes
+// up space above the input.
+const LABEL_VARIANT_INSIDE_HEIGHT = 24;
+const COMPACT_HEIGHT = 40;
+const DEFAULT_HEIGHT = 56;
 
 const variantColor: Record<string, ThemeVars.Color> = {
   foreground: 'fg',
@@ -204,7 +209,13 @@ export const DefaultSelectControlComponent = memo(
             <HStack
               alignItems="center"
               justifyContent="space-between"
-              minHeight={labelVariant === 'inside' ? 24 : compact ? 40 : 56}
+              minHeight={
+                labelVariant === 'inside'
+                  ? LABEL_VARIANT_INSIDE_HEIGHT
+                  : compact
+                    ? COMPACT_HEIGHT
+                    : DEFAULT_HEIGHT
+              }
               paddingStart={startNode ? 0 : 2}
               paddingY={labelVariant === 'inside' ? 0 : compact ? 0.5 : 1.5}
             >

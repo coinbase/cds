@@ -15,6 +15,12 @@ import { findClosestNonDisabledNodeIndex } from '../../utils/findClosestNonDisab
 
 import type { SelectControlProps, SelectOption, SelectType } from './Select';
 
+// The height is smaller for the inside label variant since the label takes
+// up space above the input.
+const LABEL_VARIANT_INSIDE_HEIGHT = 32;
+const COMPACT_HEIGHT = 40;
+const DEFAULT_HEIGHT = 56;
+
 const noFocusOutlineCss = css`
   &:focus,
   &:focus-visible,
@@ -246,7 +252,13 @@ const DefaultSelectControlComponent = memo(
             className={cx(noFocusOutlineCss, classNames?.controlInputNode)}
             disabled={disabled}
             focusable={false}
-            minHeight={labelVariant === 'inside' ? 32 : compact ? 40 : 56}
+            minHeight={
+              labelVariant === 'inside'
+                ? LABEL_VARIANT_INSIDE_HEIGHT
+                : compact
+                  ? COMPACT_HEIGHT
+                  : DEFAULT_HEIGHT
+            }
             onClick={() => setOpen((s) => !s)}
             paddingStart={1}
             style={styles?.controlInputNode}
