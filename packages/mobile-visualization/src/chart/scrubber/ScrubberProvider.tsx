@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo, useState } from 'react';
-import { Platform } from 'react-native';
+import { Platform, Text, View } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import { runOnJS } from 'react-native-reanimated';
 import { Haptics } from '@coinbase/cds-mobile/utils/haptics';
@@ -179,7 +179,11 @@ export const ScrubberProvider: React.FC<ScrubberProviderProps> = ({
 
   // Wrap with gesture handler only if scrubbing is enabled
   if (enableScrubbing) {
-    return <GestureDetector gesture={longPressGesture}>{content}</GestureDetector>;
+    return (
+      <GestureDetector gesture={longPressGesture}>
+        <View collapsable={false}>{content}</View>
+      </GestureDetector>
+    );
   }
 
   return content;
