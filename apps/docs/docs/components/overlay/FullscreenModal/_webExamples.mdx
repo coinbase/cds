@@ -42,11 +42,11 @@ function DefaultModal() {
     const options = ['Option 1', 'Option 2', 'Option 3', 'Option 4', 'Option 5', 'Option 6'];
 
     return (
-      <Select value={value} placeholder="Choose something..." onChange={setValue}>
+      <OldSelect value={value} placeholder="Choose something..." onChange={setValue}>
         {options.map((option) => (
           <SelectOption value={option} key={option} title={option} description="Description" />
         ))}
-      </Select>
+      </OldSelect>
     );
   };
 
