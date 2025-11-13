@@ -50,7 +50,7 @@ export type ListCellBaseProps = Polymorphic.ExtendableProps<
      */
     action?: React.ReactNode;
     /**
-     * @deprecated Use `layoutDensity="compact"` instead. `compact` will be removed in a future major release.
+     * @deprecated Use `spacingVariant="compact"` instead. `compact` will be removed in a future major release.
      */
     compact?: boolean;
     /**
