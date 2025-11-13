@@ -1,4 +1,5 @@
 import { forwardRef, memo, useCallback, useEffect, useMemo, useState } from 'react';
+import { zIndex } from '@coinbase/cds-common/tokens/zIndex';
 import { AnimatePresence, m as motion } from 'framer-motion';
 
 import { Button } from '../../buttons';
@@ -69,6 +70,7 @@ const DefaultSelectDropdownComponent = memo(
             containerWidth !== null
               ? containerWidth
               : controlRef.current?.getBoundingClientRect().width,
+          zIndex: zIndex.dropdown,
           ...style,
           ...styles?.root,
         }),
