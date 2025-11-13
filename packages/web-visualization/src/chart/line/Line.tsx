@@ -5,10 +5,10 @@ import { m as motion, type Transition } from 'framer-motion';
 
 import { Area, type AreaComponent } from '../area/Area';
 import { useCartesianChartContext } from '../ChartProvider';
-import { pathEnterTransitionDuration } from '../Path';
 import { Point, type PointConfig, type RenderPointsParams } from '../Point';
 import {
-  accessoryFadeDuration,
+  accessoryFadeTransitionDelay,
+  accessoryFadeTransitionDuration,
   type ChartPathCurveType,
   evaluateGradientAtValue,
   getGradientConfig,
@@ -267,11 +267,11 @@ export const Line = memo<LineProps>(
                   animate: {
                     opacity: 1,
                     transition: {
-                      duration: accessoryFadeDuration,
-                      delay: pathEnterTransitionDuration,
+                      duration: accessoryFadeTransitionDuration,
+                      delay: accessoryFadeTransitionDelay,
                     },
                   },
-                  exit: { opacity: 0, transition: { duration: accessoryFadeDuration } },
+                  exit: { opacity: 0, transition: { duration: accessoryFadeTransitionDuration } },
                   initial: { opacity: 0 },
                 }
               : {})}

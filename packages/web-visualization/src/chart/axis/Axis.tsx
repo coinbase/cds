@@ -1,9 +1,8 @@
 import type React from 'react';
 
 import { type LineComponent } from '../line';
-import { pathEnterTransitionDuration } from '../Path';
 import type { ChartTextChildren } from '../text/ChartText';
-import { accessoryFadeDuration } from '../utils';
+import { accessoryFadeTransitionDuration } from '../utils';
 
 export const axisLineStyles = `
   stroke: var(--color-fg);
@@ -18,28 +17,6 @@ export const axisTickMarkStyles = `
 `;
 
 /**
- * Animation variants for grouped axis tick labels - initial mount
- */
-export const axisTickLabelsInitialAnimationVariants = {
-  initial: {
-    opacity: 0,
-  },
-  animate: {
-    opacity: 1,
-    transition: {
-      duration: accessoryFadeDuration,
-      delay: pathEnterTransitionDuration,
-    },
-  },
-  exit: {
-    opacity: 0,
-    transition: {
-      duration: accessoryFadeDuration,
-    },
-  },
-};
-
-/**
  * Animation variants for axis elements - updates (used for both grid lines and tick labels)
  */
 export const axisUpdateAnimationVariants = {
@@ -49,14 +26,14 @@ export const axisUpdateAnimationVariants = {
   animate: {
     opacity: 1,
     transition: {
-      duration: accessoryFadeDuration,
-      delay: accessoryFadeDuration, // For updates: fade out 150ms, then fade in 150ms
+      duration: accessoryFadeTransitionDuration,
+      delay: accessoryFadeTransitionDuration,
     },
   },
   exit: {
     opacity: 0,
     transition: {
-      duration: accessoryFadeDuration,
+      duration: accessoryFadeTransitionDuration,
     },
   },
 };

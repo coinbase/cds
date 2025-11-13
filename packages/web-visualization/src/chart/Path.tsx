@@ -6,7 +6,10 @@ import { m as motion, type MotionValue, type Transition } from 'framer-motion';
 import { usePathTransition } from './utils/transition';
 import { useCartesianChartContext } from './ChartProvider';
 
-export const pathEnterTransitionDuration = 0.35;
+/**
+ * Duration in seconds for path enter transition.
+ */
+export const pathEnterTransitionDuration = 0.5;
 
 export type PathProps = SharedProps &
   Omit<

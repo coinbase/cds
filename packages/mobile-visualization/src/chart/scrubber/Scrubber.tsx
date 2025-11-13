@@ -20,9 +20,13 @@ import { useTheme } from '@coinbase/cds-mobile';
 import { Group, Rect, type SkParagraph } from '@shopify/react-native-skia';
 
 import { useCartesianChartContext } from '../ChartProvider';
-import { ReferenceLine, type ReferenceLineProps } from '../line';
-import { pathEnterTransitionDuration } from '../Path';
-import { accessoryFadeDuration, getPointOnSerializableScale, useScrubberContext } from '../utils';
+import { type LineComponent, ReferenceLine, type ReferenceLineProps } from '../line';
+import {
+  accessoryFadeTransitionDelay,
+  accessoryFadeTransitionDuration,
+  getPointOnSerializableScale,
+  useScrubberContext,
+} from '../utils';
 
 import { ScrubberBeacon, type ScrubberBeaconProps, type ScrubberBeaconRef } from './ScrubberBeacon';
 import { ScrubberBeaconLabel, type ScrubberBeaconLabelProps } from './ScrubberBeaconLabel';
@@ -78,7 +82,7 @@ export type ScrubberProps = SharedProps &
     /**
      * Custom component for the scrubber line.
      */
-    LineComponent?: React.ComponentType<ReferenceLineProps>;
+    LineComponent?: LineComponent;
     /**
      * Transition configuration for the scrubber beacon.
      */
@@ -101,7 +105,7 @@ export const Scrubber = memo(
         labelProps,
         BeaconComponent = ScrubberBeacon,
         BeaconLabelComponent = ScrubberBeaconLabel,
-        LineComponent = ReferenceLine,
+        LineComponent,
         hideOverlay,
         overlayOffset = 2,
         testID,
@@ -136,8 +140,8 @@ export const Scrubber = memo(
       useEffect(() => {
         if (animate) {
           scrubberOpacity.value = withDelay(
-            pathEnterTransitionDuration,
-            withTiming(1, { duration: accessoryFadeDuration }),
+            accessoryFadeTransitionDelay,
+            withTiming(1, { duration: accessoryFadeTransitionDuration }),
           );
         }
       }, [animate, scrubberOpacity]);
@@ -275,7 +279,8 @@ export const Scrubber = memo(
           )}
           {!hideLine && (
             <Group opacity={lineOpacity}>
-              <LineComponent
+              <ReferenceLine
+                LineComponent={LineComponent}
                 dataX={dataX}
                 label={resolvedLabelValue}
                 labelProps={{

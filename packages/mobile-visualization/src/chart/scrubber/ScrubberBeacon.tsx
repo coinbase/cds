@@ -307,6 +307,7 @@ export const ScrubberBeacon = memo(
       }, [animate, idlePulse, pulseOpacity, pulseTransition, scrubberPosition]);
 
       const pointColor = useDerivedValue(() => {
+        if (color) return color;
         if (gradient && gradientScale && gradientStops) {
           const axis = gradient.axis ?? 'y';
           const dataValue = axis === 'x' ? dataX.value : dataY.value;
@@ -319,7 +320,7 @@ export const ScrubberBeacon = memo(
           }
         }
 
-        return color ?? targetSeries?.color ?? theme.color.fgPrimary;
+        return targetSeries?.color ?? theme.color.fgPrimary;
       }, [
         gradient,
         gradientScale,

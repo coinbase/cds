@@ -1,6 +1,5 @@
 import React, { memo, useMemo } from 'react';
 import type { SVGProps } from 'react';
-import { useHasMounted } from '@coinbase/cds-common/hooks/useHasMounted';
 import type { SharedProps } from '@coinbase/cds-common/types';
 import { cx } from '@coinbase/cds-web';
 import { css } from '@linaria/core';
@@ -9,7 +8,7 @@ import { m as motion, type Transition } from 'framer-motion';
 import type { ChartTextChildren } from './text/ChartText';
 import { useCartesianChartContext } from './ChartProvider';
 import { ChartText, type ChartTextProps } from './text';
-import { defaultTransition, projectPoint } from './utils';
+import { projectPoint } from './utils';
 
 const containerCss = css`
   outline: none;

@@ -15,7 +15,6 @@ import {
   type AxisBaseProps,
   axisLineStyles,
   type AxisProps,
-  axisTickLabelsInitialAnimationVariants,
   axisTickMarkStyles,
   axisUpdateAnimationVariants,
 } from './Axis';
@@ -233,16 +232,7 @@ export const XAxis = memo<XAxisProps>(
           </AnimatePresence>
         )}
         {chartTextData && (
-          <AnimatePresence>
-            <motion.g
-              animate="animate"
-              exit="exit"
-              initial="initial"
-              variants={animate ? axisTickLabelsInitialAnimationVariants : undefined}
-            >
-              <ChartTextGroup prioritizeEndLabels labels={chartTextData} minGap={minTickLabelGap} />
-            </motion.g>
-          </AnimatePresence>
+          <ChartTextGroup prioritizeEndLabels labels={chartTextData} minGap={minTickLabelGap} />
         )}
         {axisBounds && showTickMarks && (
           <g data-testid="tick-marks">

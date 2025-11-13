@@ -12,7 +12,7 @@ import type {
   TextHorizontalAlignment,
   TextVerticalAlignment,
 } from '../text/ChartText';
-import { getPointOnScale, unwrapAnimatedValue } from '../utils';
+import { unwrapAnimatedValue } from '../utils';
 import { getPointOnSerializableScale } from '../utils/point';
 
 import { DottedLine } from './DottedLine';

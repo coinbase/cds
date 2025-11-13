@@ -15,7 +15,10 @@ import { usePathTransition } from './utils/transition';
 import { useCartesianChartContext } from './ChartProvider';
 import { unwrapAnimatedValue } from './utils';
 
-export const pathEnterTransitionDuration = 350;
+/**
+ * Duration in milliseconds for path enter transition.
+ */
+export const pathEnterTransitionDuration = 500;
 
 export type PathProps = SharedProps &
   Pick<

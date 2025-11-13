@@ -24,7 +24,12 @@ export const defaultTransition: Transition = {
 /**
  * Duration in seconds for accessory elements to fade in.
  */
-export const accessoryFadeDuration = 0.15;
+export const accessoryFadeTransitionDuration = 0.15;
+
+/**
+ * Delay in seconds before accessory elements fade in.
+ */
+export const accessoryFadeTransitionDelay = 0.35;
 
 /**
  * Hook that manages path animation state and transitions using d3-interpolate-path

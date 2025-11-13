@@ -12,10 +12,10 @@ import type { SharedProps } from '@coinbase/cds-common/types';
 import { m as motion } from 'framer-motion';
 
 import { useCartesianChartContext } from '../ChartProvider';
-import { ReferenceLine, type ReferenceLineProps } from '../line';
-import { pathEnterTransitionDuration } from '../Path';
+import { type LineComponent, ReferenceLine, type ReferenceLineProps } from '../line';
 import {
-  accessoryFadeDuration,
+  accessoryFadeTransitionDelay,
+  accessoryFadeTransitionDuration,
   type ChartScaleFunction,
   evaluateGradientAtValue,
   getGradientConfig,
@@ -107,7 +107,7 @@ export type ScrubberProps = SharedProps &
     /**
      * Custom component for the scrubber line.
      */
-    LineComponent?: React.ComponentType<ReferenceLineProps>;
+    LineComponent?: LineComponent;
     /**
      * Transition configuration for the scrubber beacon.
      */
@@ -139,7 +139,7 @@ export const Scrubber = memo(
         labelProps,
         BeaconComponent = ScrubberBeacon,
         BeaconLabelComponent = ScrubberBeaconLabel,
-        LineComponent = ReferenceLine,
+        LineComponent,
         hideOverlay,
         overlayOffset = 2,
         testID,
@@ -653,11 +653,11 @@ export const Scrubber = memo(
                 animate: {
                   opacity: 1,
                   transition: {
-                    duration: accessoryFadeDuration,
-                    delay: pathEnterTransitionDuration,
+                    duration: accessoryFadeTransitionDuration,
+                    delay: accessoryFadeTransitionDelay,
                   },
                 },
-                exit: { opacity: 0, transition: { duration: accessoryFadeDuration } },
+                exit: { opacity: 0, transition: { duration: accessoryFadeTransitionDuration } },
                 initial: { opacity: 0 },
               }
             : {})}
@@ -678,7 +678,8 @@ export const Scrubber = memo(
               />
             )}
           {!hideLine && scrubberPosition !== undefined && dataX !== undefined && (
-            <LineComponent
+            <ReferenceLine
+              LineComponent={LineComponent}
               className={classNames?.line}
               dataX={dataX}
               label={typeof label === 'function' ? label(dataIndex) : label}

@@ -6,10 +6,10 @@ import { type AnimatedProp, Group } from '@shopify/react-native-skia';
 
 import { Area, type AreaComponent } from '../area/Area';
 import { useCartesianChartContext } from '../ChartProvider';
-import { pathEnterTransitionDuration } from '../Path';
 import { Point, type PointConfig, type RenderPointsParams } from '../Point';
 import {
-  accessoryFadeDuration,
+  accessoryFadeTransitionDelay,
+  accessoryFadeTransitionDuration,
   type ChartPathCurveType,
   getLineData,
   getLinePath,
@@ -167,8 +167,8 @@ export const Line = memo<LineProps>(
     useEffect(() => {
       if (animate) {
         pointsOpacity.value = withDelay(
-          pathEnterTransitionDuration,
-          withTiming(1, { duration: accessoryFadeDuration }),
+          accessoryFadeTransitionDelay,
+          withTiming(1, { duration: accessoryFadeTransitionDuration }),
         );
       }
     }, [animate, pointsOpacity]);

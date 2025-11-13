@@ -12,12 +12,7 @@ import { ChartTextGroup, type TextLabelData } from '../text/ChartTextGroup';
 import { getAxisTicksData, isCategoricalScale, lineToPath } from '../utils';
 
 import type { AxisBaseProps, AxisProps } from './Axis';
-import {
-  axisLineStyles,
-  axisTickLabelsInitialAnimationVariants,
-  axisTickMarkStyles,
-  axisUpdateAnimationVariants,
-} from './Axis';
+import { axisLineStyles, axisTickMarkStyles, axisUpdateAnimationVariants } from './Axis';
 
 const AXIS_WIDTH = 44;
 const LABEL_SIZE = 20;
@@ -219,16 +214,7 @@ export const YAxis = memo<YAxisProps>(
           </AnimatePresence>
         )}
         {chartTextData && (
-          <AnimatePresence>
-            <motion.g
-              animate="animate"
-              exit="exit"
-              initial="initial"
-              variants={animate ? axisTickLabelsInitialAnimationVariants : undefined}
-            >
-              <ChartTextGroup prioritizeEndLabels labels={chartTextData} minGap={minTickLabelGap} />
-            </motion.g>
-          </AnimatePresence>
+          <ChartTextGroup prioritizeEndLabels labels={chartTextData} minGap={minTickLabelGap} />
         )}
         {showTickMarks && (
           <g data-testid="tick-marks">
