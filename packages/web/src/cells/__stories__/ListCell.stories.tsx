@@ -3,6 +3,7 @@ import { assets, squareAssets } from '@coinbase/cds-common/internal/data/assets'
 import type { CellPriority } from '@coinbase/cds-common/types/CellBaseProps';
 
 import { Button, IconButton } from '../../buttons';
+import { Switch } from '../../controls/Switch';
 import { Icon } from '../../icons/Icon';
 import { Pictogram } from '../../illustrations/Pictogram';
 import { HStack, VStack } from '../../layout';
@@ -13,6 +14,7 @@ import { Text } from '../../typography/Text';
 import { CellHelperText } from '../CellHelperText';
 import { CellMedia } from '../CellMedia';
 import { ListCell } from '../ListCell';
+import { ListCellFallback } from '../ListCellFallback';
 
 const parameters = {
   percy: { enableJavaScript: true },
@@ -700,6 +702,47 @@ const WithActions = () => (
   </>
 );
 
+const WithFallbackToggle = () => {
+  const [showFallback, setShowFallback] = React.useState(false);
+
+  return (
+    <VStack gap={4}>
+      <Switch
+        checked={showFallback}
+        onChange={(event) => setShowFallback(event.currentTarget.checked)}
+      >
+        Show fallback state
+      </Switch>
+      {showFallback ? (
+        <ListCellFallback
+          description
+          detail
+          disableRandomRectWidth
+          helperText
+          subtitle
+          title
+          media="asset"
+          spacingVariant="condensed"
+        />
+      ) : (
+        <ListCell
+          accessory="more"
+          description="Check your portfolio performance"
+          detail="$12,345.00"
+          helperText={
+            <CellHelperText variant="information">Balance reflects live market data</CellHelperText>
+          }
+          media={<Avatar src={assets.eth.imageUrl} />}
+          spacingVariant="condensed"
+          subdetail="+5.43%"
+          subtitle="Ethereum"
+          title="ETH"
+        />
+      )}
+    </VStack>
+  );
+};
+
 const WithIntermediary = () => (
   <>
     <ListCell
@@ -1187,6 +1230,7 @@ export {
   UseCaseShowcase,
   WithAccessory,
   WithActions,
+  WithFallbackToggle,
   WithHelperText,
   WithIntermediary,
   WithMedia,

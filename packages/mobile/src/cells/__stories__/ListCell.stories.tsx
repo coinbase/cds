@@ -6,6 +6,7 @@ import { gutter } from '@coinbase/cds-common/tokens/sizing';
 
 import { Button } from '../../buttons/Button';
 import { IconButton } from '../../buttons/IconButton';
+import { Switch } from '../../controls/Switch';
 import { Example, ExampleScreen } from '../../examples/ExampleScreen';
 import { useTheme } from '../../hooks/useTheme';
 import { Icon } from '../../icons/Icon';
@@ -17,6 +18,7 @@ import { Tag } from '../../tag/Tag';
 import { Text } from '../../typography/Text';
 import { CellHelperText } from '../CellHelperText';
 import { ListCell } from '../ListCell';
+import { ListCellFallback } from '../ListCellFallback';
 
 const onPressConsole = () => console.log('onPress');
 const cellPriorities: CellPriority[] = ['middle', 'end'];
@@ -621,6 +623,46 @@ const WithActions = () => (
   </>
 );
 
+const WithFallbackToggle = () => {
+  const [showFallback, setShowFallback] = React.useState(false);
+
+  return (
+    <VStack gap={2}>
+      <Switch
+        checked={showFallback}
+        onChange={(_, nextChecked) => setShowFallback(Boolean(nextChecked))}
+      >
+        Show fallback state
+      </Switch>
+      {showFallback ? (
+        <ListCellFallback
+          description
+          detail
+          disableRandomRectWidth
+          helperText
+          subdetail
+          subtitle
+          title
+          media="asset"
+          spacingVariant="condensed"
+        />
+      ) : (
+        <ListCell
+          accessory="more"
+          description="Review portfolio performance"
+          detail="$12,345.00"
+          helperText={<CellHelperText>Balance reflects live market data</CellHelperText>}
+          media={<Avatar src={assets.eth.imageUrl} />}
+          spacingVariant="condensed"
+          subdetail="+5.43%"
+          subtitle="ETH"
+          title="Ethereum"
+        />
+      )}
+    </VStack>
+  );
+};
+
 const WithIntermediary = () => (
   <>
     <ListCell
@@ -1149,6 +1191,9 @@ const ListCellScreen = () => {
       </Example>
       <Example inline paddingX={0} title="WithActions" titlePadding={titlePadding}>
         <WithActions />
+      </Example>
+      <Example inline paddingX={0} title="WithFallbackToggle" titlePadding={titlePadding}>
+        <WithFallbackToggle />
       </Example>
       <Example inline paddingX={0} title="WithIntermediary" titlePadding={titlePadding}>
         <WithIntermediary />

@@ -5,7 +5,7 @@ import { getRectWidthVariant } from '@coinbase/cds-common/utils/getRectWidthVari
 import { VStack } from '../layout';
 import { Fallback } from '../layout/Fallback';
 
-import { Cell, type CellBaseProps } from './Cell';
+import { Cell } from './Cell';
 import type { CellMediaType } from './CellMedia';
 import { condensedInnerSpacing, condensedOuterSpacing, type ListCellBaseProps } from './ListCell';
 import { MediaFallback } from './MediaFallback';
@@ -23,6 +23,8 @@ export type ListCellFallbackBaseProps = SharedProps &
     media?: CellMediaType;
     /** Display subdetail shimmer. */
     subdetail?: boolean;
+    /** Display subtitle shimmer. */
+    subtitle?: boolean;
     /** Display title shimmer. */
     title?: boolean;
   };
@@ -36,6 +38,8 @@ export type ListCellFallbackProps = ListCellFallbackBaseProps & {
     detail?: string;
     /** Class name for the subdetail shimmer. */
     subdetail?: string;
+    /** Class name for the subtitle shimmer. */
+    subtitle?: string;
     /** Class name for the title shimmer. */
     title?: string;
     /** Class name for the description shimmer. */
@@ -49,6 +53,8 @@ export type ListCellFallbackProps = ListCellFallbackBaseProps & {
     detail?: CSSProperties;
     /** Style to apply to the subdetail shimmer. */
     subdetail?: CSSProperties;
+    /** Style to apply to the subtitle shimmer. */
+    subtitle?: CSSProperties;
     /** Style to apply to the title shimmer. */
     title?: CSSProperties;
     /** Style to apply to the description shimmer. */
@@ -67,6 +73,7 @@ export const ListCellFallback = memo(function ListCellFallback({
   disableRandomRectWidth,
   rectWidthVariant,
   helperText,
+  subtitle,
   spacingVariant,
   innerSpacing,
   outerSpacing,
@@ -127,7 +134,7 @@ export const ListCellFallback = memo(function ListCellFallback({
           percentage
           className={classNames?.subdetail}
           disableRandomRectWidth={disableRandomRectWidth}
-          height={22}
+          height={spacingVariant === 'condensed' ? 18 : 22}
           rectWidthVariant={getRectWidthVariant(rectWidthVariant, 1)}
           style={styles?.subdetail}
           width={50}
@@ -143,6 +150,7 @@ export const ListCellFallback = memo(function ListCellFallback({
     styles?.subdetail,
     disableRandomRectWidth,
     rectWidthVariant,
+    spacingVariant,
   ]);
 
   const titleFallback = useMemo(() => {
@@ -164,6 +172,25 @@ export const ListCellFallback = memo(function ListCellFallback({
     );
   }, [classNames?.title, disableRandomRectWidth, rectWidthVariant, styles?.title, title]);
 
+  const subtitleFallback = useMemo(() => {
+    if (!subtitle) {
+      return null;
+    }
+
+    return (
+      <Fallback
+        percentage
+        className={classNames?.subtitle}
+        disableRandomRectWidth={disableRandomRectWidth}
+        height={18}
+        rectWidthVariant={getRectWidthVariant(rectWidthVariant, 2)}
+        style={styles?.subtitle}
+        testID="list-cell-fallback-subtitle"
+        width={50}
+      />
+    );
+  }, [classNames?.subtitle, disableRandomRectWidth, rectWidthVariant, styles?.subtitle, subtitle]);
+
   const descriptionFallback = useMemo(() => {
     if (!description) {
       return null;
@@ -174,7 +201,7 @@ export const ListCellFallback = memo(function ListCellFallback({
         percentage
         className={classNames?.description}
         disableRandomRectWidth={disableRandomRectWidth}
-        height={22}
+        height={spacingVariant === 'condensed' ? 18 : 22}
         rectWidthVariant={getRectWidthVariant(rectWidthVariant, 3)}
         style={styles?.description}
         testID="list-cell-fallback-description"
@@ -182,11 +209,12 @@ export const ListCellFallback = memo(function ListCellFallback({
       />
     );
   }, [
+    description,
     classNames?.description,
     disableRandomRectWidth,
+    spacingVariant,
     rectWidthVariant,
     styles?.description,
-    description,
   ]);
 
   const mediaFallback = useMemo(() => {
@@ -212,6 +240,7 @@ export const ListCellFallback = memo(function ListCellFallback({
     >
       <VStack gap={0.5}>
         {titleFallback}
+        {subtitleFallback}
         {descriptionFallback}
       </VStack>
     </Cell>
