@@ -1,0 +1,47 @@
+diff --git a/common/cpp/react/renderer/components/rnsvg/RNSVGConcreteShadowNode.h b/common/cpp/react/renderer/components/rnsvg/RNSVGConcreteShadowNode.h
+index afbd565da731c8c071a57ff1985bbccfea6f72f5..08dec6ad98c96fa00e1a7cfd68e8cacfaa02a2e3 100644
+--- a/common/cpp/react/renderer/components/rnsvg/RNSVGConcreteShadowNode.h
++++ b/common/cpp/react/renderer/components/rnsvg/RNSVGConcreteShadowNode.h
+@@ -12,17 +12,13 @@ class RNSVGConcreteShadowNode : public ConcreteShadowNode<
+                                     concreteComponentName,
+                                     RNSVGLayoutableShadowNode,
+                                     PropsT,
+-                                    ViewEventEmitter,
+-                                    StateData,
+-                                    false> {
++                                    ViewEventEmitter> {
+  public:
+   using BaseShadowNode = ConcreteShadowNode<
+       concreteComponentName,
+       RNSVGLayoutableShadowNode,
+       PropsT,
+-      ViewEventEmitter,
+-      StateData,
+-      false>;
++      ViewEventEmitter>;
+ 
+   using ConcreteViewProps = PropsT;
+ 
+@@ -36,19 +32,19 @@ class RNSVGConcreteShadowNode : public ConcreteShadowNode<
+     return traits;
+   }
+ 
+-  Transform getTransform() const override {
++  Transform getTransform() const {
+     auto layoutMetrics = BaseShadowNode::getLayoutMetrics();
+     return BaseShadowNode::getConcreteProps().resolveTransform(layoutMetrics);
+   }
+ 
+-  bool canBeTouchTarget() const override {
++  bool canBeTouchTarget() const {
+     auto pointerEvents =
+         BaseShadowNode::getConcreteProps().ViewProps::pointerEvents;
+     return pointerEvents == PointerEventsMode::Auto ||
+         pointerEvents == PointerEventsMode::BoxOnly;
+   }
+ 
+-  bool canChildrenBeTouchTarget() const override {
++  bool canChildrenBeTouchTarget() const {
+     auto pointerEvents =
+         BaseShadowNode::getConcreteProps().ViewProps::pointerEvents;
+     return pointerEvents == PointerEventsMode::Auto ||

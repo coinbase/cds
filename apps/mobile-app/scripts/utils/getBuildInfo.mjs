@@ -8,7 +8,7 @@ $.verbose = true;
 const outputDirectory = 'prebuilds';
 const filePath = new URL(import.meta.url).pathname;
 const scriptUtilsDirectory = path.dirname(filePath);
-const { platform, profile, jsEngine, newArchEnabled = false } = argv;
+const { platform, profile, jsEngine, newArchEnabled = true } = argv;
 
 async function patchBundleForPlatform({ platform: platformParam, fileToPatch }) {
   await $`expo export --output-dir lib -p ${platformParam}`;

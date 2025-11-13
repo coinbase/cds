@@ -3,7 +3,7 @@ import { $, argv } from 'zx'; // https://github.com/google/zx
 import { getBuildInfo } from './getBuildInfo.mjs';
 
 export function setEnvVars() {
-  const { debug = false, newArchEnabled = false, jsEngine, profile, platform } = argv;
+  const { debug = false, newArchEnabled = true, jsEngine, profile, platform } = argv;
   const { ios, android, outputDirectory } = getBuildInfo();
 
   /**

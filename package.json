@@ -70,6 +70,7 @@
     "expo-splash-screen": "patch:expo-splash-screen@npm:0.27.5#.yarn/patches/expo-splash-screen-npm-0.27.5-f91e0b41df.patch",
     "react-native-navigation-bar-color": "patch:react-native-navigation-bar-color@npm:2.0.2#.yarn/patches/react-native-navigation-bar-color-npm-2.0.2-9a2ea3aaf6.patch",
     "expo-dev-launcher": "patch:expo-dev-launcher@npm:4.0.27#.yarn/patches/expo-dev-launcher-npm-4.0.27-c2ab5dd4a5.patch",
+    "react-native-svg": "patch:react-native-svg@npm:15.11.2#.yarn/patches/react-native-svg-npm-15.11.2-2f39703239.patch",
     "react-helmet-async": "^2.0.5"
   },
   "resolutionComments": {
@@ -81,6 +82,7 @@
     "expo-splash-screen": "[Managed by CMR] Adds support for transitions and bottom images in the splash screen. We aim to upstream some of those improvements to Expo.",
     "react-native-navigation-bar-color": "[Managed by CMR] Promisify react-native-navigation-bar-color.",
     "expo-dev-launcher": "[Managed by CMR] Necessary to install the Expo network inspector for the Android `development` build type. Issue tracked internally by Expo.",
+    "react-native-svg": "Fixes C++ template compatibility with React Native 0.74.5's new architecture (Fabric). Updates ConcreteShadowNode template signature from 6 to 4 parameters.",
     "react-helmet-async": "Working around Nx graph resolution issue"
   },
   "workspaces": [
