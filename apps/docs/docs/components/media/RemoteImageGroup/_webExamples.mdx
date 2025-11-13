@@ -47,9 +47,9 @@ function Component() {
 
   return (
     <VStack gap={2}>
-      <Select width={240} labelVariant="inside" label="Image Size" value={size} onChange={setSize}>
+      <OldSelect width={240} labelVariant="inside" label="Image Size" value={size} onChange={setSize}>
         {options}
-      </Select>
+      </OldSelect>
       <RemoteImageGroup size={size}>
         <RemoteImage source={assets.eth.imageUrl} />
         <RemoteImage source={assets.btc.imageUrl} />
