@@ -35,6 +35,7 @@ import * as CDSLottie from '@cbhq/cds-lottie-files';
 import { Accordion } from '@cbhq/cds-web/accordion/Accordion';
 import { AccordionItem } from '@cbhq/cds-web/accordion/AccordionItem';
 import { Select } from '@cbhq/cds-web/alpha/select/Select';
+import { TabbedChips } from '@cbhq/cds-web/alpha/tabbed-chips/TabbedChips';
 import { Lottie, LottieStatusAnimation } from '@cbhq/cds-web/animation';
 import { Banner } from '@cbhq/cds-web/banner/Banner';
 import * as CDSButtons from '@cbhq/cds-web/buttons';
@@ -50,7 +51,11 @@ import {
   DefaultCarouselPagination,
 } from '@cbhq/cds-web/carousel';
 import * as CDSCells from '@cbhq/cds-web/cells';
-import * as CDSChips from '@cbhq/cds-web/chips';
+import { Chip } from '@cbhq/cds-web/chips/Chip';
+import { InputChip } from '@cbhq/cds-web/chips/InputChip';
+import { MediaChip } from '@cbhq/cds-web/chips/MediaChip';
+import { SelectChip } from '@cbhq/cds-web/chips/SelectChip';
+import { TabbedChips as OldTabbedChips } from '@cbhq/cds-web/chips/TabbedChips';
 import { Coachmark } from '@cbhq/cds-web/coachmark/Coachmark';
 import { Collapsible } from '@cbhq/cds-web/collapsible/Collapsible';
 import * as CDSControls from '@cbhq/cds-web/controls';
@@ -172,7 +177,13 @@ const ReactLiveScope: Record<string, unknown> = {
   useMultiSelect,
   ...CDSSystem,
   MediaQueryProvider,
-  ...CDSChips,
+  // chips
+  Chip,
+  InputChip,
+  MediaChip,
+  SelectChip,
+  OldTabbedChips,
+  TabbedChips,
   // loaders
   Spinner,
   // media

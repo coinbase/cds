@@ -1,0 +1,143 @@
+### Basic usage
+
+```tsx
+function ExampleDefault() {
+  const tabs = [
+    { id: 'all', label: 'All' },
+    { id: 'swap', label: 'Swap' },
+    { id: 'collect', label: 'Collect' },
+    { id: 'bridge', label: 'Bridge' },
+  ];
+  const [activeTab, setActiveTab] = useState(tabs[0]);
+  return <TabbedChips activeTab={activeTab} onChange={setActiveTab} tabs={tabs} />;
+}
+```
+
+### Compact
+
+```tsx
+function ExampleCompactNoStart() {
+  const tabs = [
+    { id: 'all', label: 'All' },
+    { id: 'swap', label: 'Swap' },
+    { id: 'collect', label: 'Collect' },
+    { id: 'bridge', label: 'Bridge' },
+  ];
+  const [activeTab, setActiveTab] = useState(tabs[0]);
+  return <TabbedChips activeTab={activeTab} compact onChange={setActiveTab} tabs={tabs} />;
+}
+```
+
+### Many tabs (scrollable)
+
+:::tip Scrolling behavior
+The list becomes horizontally scrollable when content overflows; an `OverflowGradient` appears on the edge to hint more content.
+:::
+
+```tsx
+function ExampleManyTabs() {
+  const tabs = Array.from({ length: 12 }).map((_, i) => ({
+    id: `tab_${i + 1}`,
+    label: `Tab ${i + 1}`,
+  }));
+  const [activeTab, setActiveTab] = useState(tabs[0]);
+  return <TabbedChips activeTab={activeTab} onChange={setActiveTab} tabs={tabs} />;
+}
+```
+
+### Long text tabs
+
+```tsx
+function ExampleLongText() {
+  const tabs = [
+    { id: 'a', label: 'Very long tab label that can wrap on small widths' },
+    { id: 'b', label: 'Another extra long label to test overflow' },
+    { id: 'c', label: 'Short' },
+  ];
+  const [activeTab, setActiveTab] = useState(tabs[0]);
+  return <TabbedChips activeTab={activeTab} onChange={setActiveTab} tabs={tabs} />;
+}
+```
+
+### Disabled tab
+
+```tsx
+function ExampleDisabled() {
+  const tabs = [
+    { id: 'first', label: 'First' },
+    { id: 'second', label: 'Second', disabled: true },
+    { id: 'third', label: 'Third' },
+  ];
+  const [activeTab, setActiveTab] = useState(tabs[0]);
+  return <TabbedChips activeTab={activeTab} onChange={setActiveTab} tabs={tabs} />;
+}
+```
+
+### With start media
+
+:::tip Media sizing
+For start media, use circular images sized 24×24 for regular chips and 16×16 for compact chips.
+:::
+
+```tsx
+function ExampleWithStart() {
+  const icon = { height: 24, width: 24, shape: 'circle', source: assets.eth.imageUrl };
+  const compactIcon = { height: 16, width: 16, shape: 'circle', source: assets.eth.imageUrl };
+  const tabs = [
+    { id: 'all', label: 'All', start: <RemoteImage {...icon} /> },
+    { id: 'swap', label: 'Swap', start: <RemoteImage {...icon} /> },
+    { id: 'collect', label: 'Collect', start: <RemoteImage {...icon} /> },
+    { id: 'bridge', label: 'Bridge', start: <RemoteImage {...icon} /> },
+  ];
+  const compactTabs = tabs.map((tab) => ({ ...tab, start: <RemoteImage {...compactIcon} /> }));
+  const [activeTab, setActiveTab] = useState(tabs[0]);
+  return (
+    <VStack gap={2}>
+      <TabbedChips activeTab={activeTab} onChange={setActiveTab} tabs={tabs} />
+      <TabbedChips compact activeTab={activeTab} onChange={setActiveTab} tabs={compactTabs} />
+    </VStack>
+  );
+}
+```
+
+### Custom TabComponent
+
+:::tip Custom Tab behavior
+When providing a custom TabComponent, use `useTabsContext()` and call `updateActiveTab(id)` to update selection state. Reflect the active state (e.g., end icon state) based on `activeTab?.id === id`.
+:::
+
+```tsx
+function CustomTab({ id, label, ...props }: TabbedChipProps) {
+  const { activeTab, updateActiveTab } = useTabsContext();
+  const isActive = activeTab?.id === id;
+  return (
+    <MediaChip
+      onPress={() => updateActiveTab(id)}
+      end={<Icon size="s" active={isActive} name="star" />}
+      {...props}
+    >
+      {label}
+    </MediaChip>
+  );
+}
+
+const tabs = [
+  { id: 'all', label: 'All' },
+  { id: 'swap', label: 'Swap' },
+  { id: 'collect', label: 'Collect' },
+];
+
+function Example() {
+  const [activeTab, setActiveTab] = useState(tabs[0]);
+  return (
+    <TabbedChips
+      activeTab={activeTab}
+      onChange={setActiveTab}
+      tabs={tabs}
+      TabComponent={CustomTab}
+    />
+  );
+}
+
+render(<Example />);
+```

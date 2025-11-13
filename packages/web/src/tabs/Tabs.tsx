@@ -50,7 +50,7 @@ export type TabComponent<T extends string = string> = React.FC<TabValue<T>>;
 
 export type TabsActiveIndicatorComponent = React.FC<TabsActiveIndicatorProps>;
 
-export type TabsProps<T extends string = string> = {
+export type TabsBaseProps<T extends string = string> = {
   /** The array of tabs data. Each tab may optionally define a custom Component to render. */
   tabs: (TabValue<T> & { Component?: TabComponent<T> })[];
   /** The default Component to render each tab. */
@@ -61,7 +61,9 @@ export type TabsProps<T extends string = string> = {
   activeBackground?: ThemeVars.Color;
   /** Optional callback to receive the active tab element. */
   onActiveTabElementChange?: (element: HTMLElement | null) => void;
-} & Omit<TabsOptions<T>, 'tabs'> &
+} & Omit<TabsOptions<T>, 'tabs'>;
+
+export type TabsProps<T extends string = string> = TabsBaseProps<T> &
   Omit<HStackProps<HStackDefaultElement>, 'onChange' | 'ref'>;
 
 type TabsFC = <T extends string = string>(

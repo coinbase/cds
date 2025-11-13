@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.21.0 (11/12/2025 PST)
+
+#### 🚀 Updates
+
+- Deprecate TabbedChips and create new TabbedChips(Alpha), whose props mirror Tabs' props. [[#138](https://github.com/coinbase/cds/pull/138)]
+
 ## 8.20.2 (11/12/2025 PST)
 
 #### 🐞 Fixes
