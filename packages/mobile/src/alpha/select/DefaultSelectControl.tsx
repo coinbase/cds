@@ -137,8 +137,9 @@ export const DefaultSelectControlComponent = memo(
                 return (
                   <InputChip
                     key={option.value}
+                    compact
                     accessibilityLabel={`${removeSelectedOptionAccessibilityLabel} ${accessibilityLabel}`}
-                    compact={compact}
+                    borderWidth={0}
                     disabled={option.disabled}
                     invertColorScheme={false}
                     maxWidth={200}
@@ -152,9 +153,9 @@ export const DefaultSelectControlComponent = memo(
                 );
               })}
               {value.length - maxSelectedOptionsToShow > 0 && (
-                <Chip compact={compact} paddingY={compact ? 0.75 : undefined}>
+                <InputChip compact borderWidth={0} end={null} invertColorScheme={false}>
                   {`+${value.length - maxSelectedOptionsToShow} ${hiddenSelectedOptionsLabel}`}
-                </Chip>
+                </InputChip>
               )}
             </HStack>
           );
@@ -186,7 +187,6 @@ export const DefaultSelectControlComponent = memo(
         hiddenSelectedOptionsLabel,
         removeSelectedOptionAccessibilityLabel,
         onChange,
-        compact,
       ]);
 
       const inputNode = useMemo(
@@ -204,10 +204,9 @@ export const DefaultSelectControlComponent = memo(
             <HStack
               alignItems="center"
               justifyContent="space-between"
-              minHeight={isMultiSelect ? (compact ? 60 : 76) : undefined}
-              paddingBottom={labelVariant === 'inside' ? 0 : undefined}
+              minHeight={labelVariant === 'inside' ? 24 : compact ? 40 : 56}
               paddingStart={startNode ? 0 : 2}
-              paddingY={labelVariant === 'inside' || compact ? 1 : 2}
+              paddingY={labelVariant === 'inside' ? 0 : compact ? 0.5 : 1.5}
             >
               <HStack alignItems="center" flexGrow={1}>
                 {!!startNode && (
@@ -240,7 +239,6 @@ export const DefaultSelectControlComponent = memo(
           styles?.controlStartNode,
           styles?.controlValueNode,
           props,
-          isMultiSelect,
           startNode,
           labelVariant,
           compact,
