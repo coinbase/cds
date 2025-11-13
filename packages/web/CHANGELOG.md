@@ -8,6 +8,14 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.21.1 (11/13/2025 PST)
+
+#### 🐞 Fixes
+
+- Fixed select alpha dropdown zIndex. [[#161](https://github.com/coinbase/cds/pull/161)]
+- Corrected ListCell spacingVariant jsdoc. [[#161](https://github.com/coinbase/cds/pull/161)]
+- Updated docs of FullscreenMoal and FullscreenModalLayout to show a more precise 3-column layout example. [[#161](https://github.com/coinbase/cds/pull/161)]
+
 ## 8.21.0 (11/12/2025 PST)
 
 #### 🚀 Updates
