@@ -58,6 +58,7 @@ export type PointConfig = {
   opacity?: number;
   /**
    * Handler for when the point is clicked.
+   * @note there is no way to add an accessibilityLabel inside of the chart
    */
   onPress?: (point: { x: number; y: number; dataX: number; dataY: number }) => void;
   /**
@@ -82,11 +83,6 @@ export type PointConfig = {
    */
   labelProps?: Omit<ChartTextProps, 'x' | 'y' | 'children'>;
   /**
-   * Accessibility label for screen readers to describe the point.
-   * If not provided, a default label will be generated using the data coordinates.
-   */
-  accessibilityLabel?: string;
-  /**
    * Transition configuration for point animations.
    * Defines how the point transitions when position or color changes.
    */
@@ -108,6 +104,11 @@ export type PointProps = SharedProps &
      * Useful for performance when coordinates are already calculated.
      */
     pixelCoordinates?: { x: number; y: number };
+    /**
+     * Override the chart's animation setting for this specific point.
+     * When undefined, uses the chart context's animation setting.
+     */
+    animate?: boolean;
   };
 
 export const Point = memo<PointProps>(
@@ -115,24 +116,30 @@ export const Point = memo<PointProps>(
     dataX,
     dataY,
     yAxisId,
-    fill,
+    fill: fillProp,
     radius = 5,
     opacity,
     onPress,
-    stroke,
+    stroke: strokeProp,
     strokeWidth = 2,
-    accessibilityLabel,
     label,
     labelProps,
     pixelCoordinates,
     transition = defaultTransition,
     testID,
+    animate: animateProp,
   }) => {
     const theme = useTheme();
-    const effectiveStroke = stroke ?? theme.color.bg;
-    const effectiveFill = fill ?? theme.color.fgPrimary;
+    const stroke = strokeProp ?? theme.color.bg;
+    const fill = fillProp ?? theme.color.fgPrimary;
 
-    const { getXScale, getYScale, animate, drawingArea } = useCartesianChartContext();
+    const {
+      getXScale,
+      getYScale,
+      animate: animationEnabled,
+      drawingArea,
+    } = useCartesianChartContext();
+    const animate = animateProp ?? animationEnabled;
 
     const xScale = getXScale();
     const yScale = getYScale(yAxisId);
@@ -158,7 +165,7 @@ export const Point = memo<PointProps>(
     }, [pixelCoordinates, xScale, yScale, dataX, dataY]);
 
     const previousPixelCoordinate = usePreviousValue(pixelCoordinate);
-    const previousFill = usePreviousValue(effectiveFill);
+    const previousFill = usePreviousValue(fill);
 
     // Animated values for position
     const animatedX = useSharedValue(pixelCoordinate.x);
@@ -190,14 +197,14 @@ export const Point = memo<PointProps>(
 
     // Update color when fill changes
     useEffect(() => {
-      if (shouldAnimate && previousFill && previousFill !== effectiveFill) {
+      if (shouldAnimate && previousFill && previousFill !== fill) {
         colorProgress.value = 0;
         colorProgress.value = buildTransition(1, transition);
       } else {
         cancelAnimation(colorProgress);
         colorProgress.value = 1;
       }
-    }, [effectiveFill, shouldAnimate, previousFill, colorProgress, transition]);
+    }, [fill, shouldAnimate, previousFill, colorProgress, transition]);
 
     // Create animated point for circles
     const animatedPoint = useDerivedValue(() => {
@@ -206,11 +213,11 @@ export const Point = memo<PointProps>(
 
     // Interpolate between previous and current fill color
     const animatedFillColor = useDerivedValue(() => {
-      if (!previousFill || previousFill === effectiveFill) {
-        return effectiveFill;
+      if (!previousFill || previousFill === fill) {
+        return fill;
       }
-      return interpolateColors(colorProgress.value, [0, 1], [previousFill, effectiveFill]);
-    }, [colorProgress, previousFill, effectiveFill]);
+      return interpolateColors(colorProgress.value, [0, 1], [previousFill, fill]);
+    }, [colorProgress, previousFill, fill]);
 
     // Check if point is within drawing area
     const isWithinDrawingArea = useDerivedValue(() => {
@@ -248,14 +255,14 @@ export const Point = memo<PointProps>(
             {strokeWidth > 0 && (
               <Circle
                 c={{ x: pixelCoordinate.x, y: pixelCoordinate.y }}
-                color={effectiveStroke as Color}
+                color={stroke as Color}
                 r={radius + strokeWidth / 2}
               />
             )}
             {/* Inner fill circle */}
             <Circle
               c={{ x: pixelCoordinate.x, y: pixelCoordinate.y }}
-              color={effectiveFill as Color}
+              color={fill as Color}
               r={radius - strokeWidth / 2}
             />
           </Group>
@@ -274,11 +281,7 @@ export const Point = memo<PointProps>(
         <Group opacity={effectiveOpacity}>
           {/* Outer stroke circle */}
           {strokeWidth > 0 && (
-            <Circle
-              c={animatedPoint}
-              color={effectiveStroke as Color}
-              r={radius + strokeWidth / 2}
-            />
+            <Circle c={animatedPoint} color={stroke as Color} r={radius + strokeWidth / 2} />
           )}
           {/* Inner fill circle with animated color */}
           <Circle c={animatedPoint} color={animatedFillColor} r={radius - strokeWidth / 2} />

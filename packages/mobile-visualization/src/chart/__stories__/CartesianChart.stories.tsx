@@ -1,4 +1,4 @@
-import { memo, useCallback, useMemo } from 'react';
+import { memo, useCallback, useMemo, useState } from 'react';
 import { Image, ScrollView, StyleSheet } from 'react-native';
 import { assets } from '@coinbase/cds-common/internal/data/assets';
 import { candles as btcCandles } from '@coinbase/cds-common/internal/data/candles';
@@ -6,7 +6,7 @@ import { Example, ExampleScreen } from '@coinbase/cds-mobile/examples/ExampleScr
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 import { Box, HStack, VStack } from '@coinbase/cds-mobile/layout';
 import { TextLabel1, TextLabel2, TextTitle1, TextTitle2 } from '@coinbase/cds-mobile/typography';
-import { Circle, Group, Path, Skia } from '@shopify/react-native-skia';
+import { Circle, Group, Skia } from '@shopify/react-native-skia';
 
 import { Area } from '../area/Area';
 import { XAxis, YAxis } from '../axis';
@@ -219,75 +219,50 @@ const EarningsHistory = () => {
   );
 };
 
-const PriceWithVolume = () => {
-  const theme = useTheme();
-  const btcData = btcCandles.slice(0, 180).reverse();
+const btcData = btcCandles.slice(0, 180).reverse();
 
-  const btcPrices = btcData.map((candle) => parseFloat(candle.close));
-  const btcVolumes = btcData.map((candle) => parseFloat(candle.volume));
-  const btcDates = btcData.map((candle) => new Date(parseInt(candle.start) * 1000));
+const btcPrices = btcData.map((candle) => parseFloat(candle.close));
+const btcVolumes = btcData.map((candle) => parseFloat(candle.volume));
+const btcDates = btcData.map((candle) => new Date(parseInt(candle.start) * 1000));
 
-  const formatPrice = useCallback((price: number) => {
-    return `$${price.toLocaleString('en-US', {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    })}`;
-  }, []);
+const displayIndex = btcPrices.length - 1;
+const currentPrice = btcPrices[displayIndex];
+const currentDate = btcDates[displayIndex];
 
-  const formatPriceInThousands = useCallback((price: number) => {
-    return `$${(price / 1000).toLocaleString('en-US', {
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 2,
-    })}k`;
-  }, []);
+const PriceWithVolumeChart = memo(
+  ({
+    onScrubberPositionChange,
+  }: {
+    onScrubberPositionChange: (index: number | undefined) => void;
+  }) => {
+    const theme = useTheme();
 
-  const formatVolume = useCallback((volume: number) => {
-    return `${(volume / 1000).toFixed(2)}K`;
-  }, []);
+    const formatPriceInThousands = useCallback((price: number) => {
+      return `$${(price / 1000).toLocaleString('en-US', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 2,
+      })}k`;
+    }, []);
 
-  const formatDate = useCallback((date: Date) => {
-    return date.toLocaleDateString('en-US', {
-      month: 'short',
-      day: 'numeric',
-    });
-  }, []);
+    const formatDate = useCallback((date: Date) => {
+      return date.toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
+      });
+    }, []);
 
-  const scrubberLabel = useCallback(
-    (dataIndex: number) => {
-      return formatDate(btcDates[dataIndex]);
-    },
-    [btcDates, formatDate],
-  );
+    const scrubberLabel = useCallback(
+      (dataIndex: number) => {
+        return formatDate(btcDates[dataIndex]);
+      },
+      [formatDate],
+    );
 
-  // Display the last values in the header
-  const displayIndex = btcPrices.length - 1;
-  const currentPrice = btcPrices[displayIndex];
-  const currentVolume = btcVolumes[displayIndex];
-  const currentDate = btcDates[displayIndex];
-
-  return (
-    <VStack gap={2}>
-      <HStack gap={2} justifyContent="space-between" paddingX={0}>
-        <VStack gap={0}>
-          <TextTitle1>Bitcoin</TextTitle1>
-          <TextTitle2>{formatPrice(currentPrice)}</TextTitle2>
-        </VStack>
-        <HStack gap={2}>
-          <VStack alignItems="flex-end" justifyContent="center">
-            <TextLabel1>{formatDate(currentDate)}</TextLabel1>
-            <TextLabel2>{formatVolume(currentVolume)}</TextLabel2>
-          </VStack>
-          <VStack justifyContent="center">
-            <Image
-              source={{ uri: assets.btc.imageUrl }}
-              style={{ width: theme.iconSize.l, height: theme.iconSize.l, borderRadius: 1000 }}
-            />
-          </VStack>
-        </HStack>
-      </HStack>
+    return (
       <CartesianChart
         enableScrubbing
         height={defaultChartHeight}
+        onScrubberPositionChange={onScrubberPositionChange}
         series={[
           {
             id: 'prices',
@@ -302,7 +277,7 @@ const PriceWithVolume = () => {
             yAxisId: 'volume',
           },
         ]}
-        xAxis={{ scaleType: 'band' }}
+        xAxis={{ scaleType: 'band', range: ({ min, max }) => ({ min, max: max - 16 }) }}
         yAxis={[
           {
             id: 'price',
@@ -319,9 +294,69 @@ const PriceWithVolume = () => {
         <Line showArea seriesId="prices" />
         <Scrubber label={scrubberLabel} seriesIds={['prices']} />
       </CartesianChart>
+    );
+  },
+);
+
+const PriceWithVolumeHeader = memo(({ currentIndex }: { currentIndex: number | undefined }) => {
+  const theme = useTheme();
+
+  const formatPrice = useCallback((price: number) => {
+    return `$${price.toLocaleString('en-US', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    })}`;
+  }, []);
+
+  const formatDate = useCallback((date: Date) => {
+    return date.toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+    });
+  }, []);
+
+  const formatVolume = useCallback((volume: number) => {
+    return `${(volume / 1000).toFixed(2)}K`;
+  }, []);
+
+  const volumeText = useMemo(() => {
+    return formatVolume(
+      currentIndex !== undefined ? btcVolumes[currentIndex] : btcVolumes[displayIndex],
+    );
+  }, [currentIndex, formatVolume]);
+
+  return (
+    <HStack gap={2} justifyContent="space-between" paddingX={0}>
+      <VStack gap={0}>
+        <TextTitle1>Bitcoin</TextTitle1>
+        <TextTitle2>{formatPrice(currentPrice)}</TextTitle2>
+      </VStack>
+      <HStack gap={2}>
+        <VStack alignItems="flex-end" justifyContent="center">
+          <TextLabel1>{formatDate(currentDate)}</TextLabel1>
+          <TextLabel2>{volumeText}</TextLabel2>
+        </VStack>
+        <VStack justifyContent="center">
+          <Image
+            source={{ uri: assets.btc.imageUrl }}
+            style={{ width: theme.iconSize.l, height: theme.iconSize.l, borderRadius: 1000 }}
+          />
+        </VStack>
+      </HStack>
+    </HStack>
+  );
+});
+
+const PriceWithVolume = memo(() => {
+  const [currentIndex, setCurrentIndex] = useState<number | undefined>();
+
+  return (
+    <VStack gap={2}>
+      <PriceWithVolumeHeader currentIndex={currentIndex} />
+      <PriceWithVolumeChart onScrubberPositionChange={setCurrentIndex} />
     </VStack>
   );
-};
+});
 
 function TradingTrends() {
   const theme = useTheme();
@@ -467,47 +502,6 @@ const FutureData = memo(
   },
 );
 
-const UVIndexChart = () => {
-  const theme = useTheme();
-  const data = [0, 0, 0, 1, 2, 3, 4, 5, 6, 7, 8, 8, 9, 10, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0, 0, 0];
-
-  const currentHour = 14;
-
-  return (
-    <CartesianChart
-      height={defaultChartHeight}
-      series={[
-        {
-          id: 'uv',
-          data: data,
-          gradient: UVGradient,
-        },
-      ]}
-    >
-      <PreviousData clipOffset={8} currentHour={currentHour}>
-        <Area fillOpacity={0.25} seriesId="uv" type="solid" />
-        <Line seriesId="uv" strokeWidth={8} type="dotted" />
-      </PreviousData>
-      <FutureData clipOffset={8} currentHour={currentHour}>
-        <Area fillOpacity={0.5} seriesId="uv" type="solid" />
-        <Line seriesId="uv" strokeWidth={8} type="solid" />
-      </FutureData>
-      <ReferenceLine
-        LineComponent={(props) => <SolidLine {...props} stroke={theme.color.bg} strokeWidth={4} />}
-        dataX={currentHour}
-      />
-      <Point
-        dataX={currentHour}
-        dataY={data[currentHour]}
-        fill={theme.color.fg}
-        radius={8}
-        stroke={theme.color.bg}
-        strokeWidth={4}
-      />
-    </CartesianChart>
-  );
-};
-
 const ChartStories = () => {
   return (
     <ScrollView>
@@ -526,9 +520,6 @@ const ChartStories = () => {
         </Example>
         <Example title="Trading Trends">
           <TradingTrends />
-        </Example>
-        <Example title="UV Index">
-          <UVIndexChart />
         </Example>
       </ExampleScreen>
     </ScrollView>

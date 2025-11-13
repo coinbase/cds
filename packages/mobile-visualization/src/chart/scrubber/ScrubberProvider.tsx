@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo } from 'react';
 import { Platform } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
-import { runOnJS, useSharedValue } from 'react-native-reanimated';
+import { runOnJS, useAnimatedReaction, useSharedValue } from 'react-native-reanimated';
 import { Haptics } from '@coinbase/cds-mobile/utils/haptics';
 
 import { useCartesianChartContext } from '../ChartProvider';
@@ -102,6 +102,18 @@ export const ScrubberProvider: React.FC<ScrubberProviderProps> = ({
     void Haptics.lightImpact();
   }, []);
 
+  useAnimatedReaction(
+    () => scrubberPosition.value,
+    (currentValue, previousValue) => {
+      // Confirm changes here and inside of our gesture handler before calling JS thread
+      // To prevent any rerenders
+      if (onScrubberPositionChange !== undefined && currentValue !== previousValue) {
+        runOnJS(onScrubberPositionChange)(currentValue);
+      }
+    },
+    [onScrubberPositionChange],
+  );
+
   // Create the long press pan gesture
   const longPressGesture = useMemo(
     () =>
@@ -116,8 +128,6 @@ export const ScrubberProvider: React.FC<ScrubberProviderProps> = ({
             const newScrubberPosition = getDataIndexFromX(event.x);
             if (newScrubberPosition !== scrubberPosition.value) {
               scrubberPosition.value = newScrubberPosition;
-              if (onScrubberPositionChange !== undefined)
-                runOnJS(onScrubberPositionChange)(newScrubberPosition);
             }
           }
         })
@@ -125,23 +135,17 @@ export const ScrubberProvider: React.FC<ScrubberProviderProps> = ({
           const newScrubberPosition = getDataIndexFromX(event.x);
           if (newScrubberPosition !== scrubberPosition.value) {
             scrubberPosition.value = newScrubberPosition;
-            if (onScrubberPositionChange !== undefined)
-              runOnJS(onScrubberPositionChange)(newScrubberPosition);
           }
         })
         .onEnd(function onEnd() {
           if (enableScrubbing) {
             runOnJS(handleStartEndHaptics)();
             scrubberPosition.value = undefined;
-            if (onScrubberPositionChange !== undefined)
-              runOnJS(onScrubberPositionChange)(undefined);
           }
         })
         .onTouchesCancelled(function onTouchesCancelled() {
           if (enableScrubbing) {
             scrubberPosition.value = undefined;
-            if (onScrubberPositionChange !== undefined)
-              runOnJS(onScrubberPositionChange)(undefined);
           }
         }),
     [
@@ -149,7 +153,6 @@ export const ScrubberProvider: React.FC<ScrubberProviderProps> = ({
       handleStartEndHaptics,
       getDataIndexFromX,
       scrubberPosition,
-      onScrubberPositionChange,
       enableScrubbing,
     ],
   );

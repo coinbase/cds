@@ -3,13 +3,16 @@ import {
   memo,
   useCallback,
   useEffect,
+  useId,
   useImperativeHandle,
   useMemo,
   useRef,
   useState,
 } from 'react';
 import type { View } from 'react-native';
+import { useDerivedValue } from 'react-native-reanimated';
 import { assets } from '@coinbase/cds-common/internal/data/assets';
+import { candles as btcCandles } from '@coinbase/cds-common/internal/data/candles';
 import { prices } from '@coinbase/cds-common/internal/data/prices';
 import { sparklineInteractiveData } from '@coinbase/cds-common/internal/visualizations/SparklineInteractiveData';
 import { useTabsContext } from '@coinbase/cds-common/tabs/TabsContext';
@@ -28,7 +31,14 @@ import {
 import { SegmentedTab, type SegmentedTabProps } from '@coinbase/cds-mobile/tabs/SegmentedTab';
 import { TextLabel1 } from '@coinbase/cds-mobile/typography';
 import { Text } from '@coinbase/cds-mobile/typography/Text';
-import { FontWeight, Rect, Skia, type SkTextStyle, TextAlign } from '@shopify/react-native-skia';
+import {
+  FontWeight,
+  Line as SkiaLine,
+  Rect,
+  Skia,
+  type SkTextStyle,
+  TextAlign,
+} from '@shopify/react-native-skia';
 
 import {
   AreaChart,
@@ -38,15 +48,29 @@ import {
   SolidArea,
 } from '../../area';
 import { XAxis, YAxis } from '../../axis';
+import type { BarComponentProps } from '../../bar/Bar';
+import { BarChart } from '../../bar/BarChart';
 import { CartesianChart, type CartesianChartProps } from '../../CartesianChart';
 import { useCartesianChartContext } from '../../ChartProvider';
 import { PeriodSelector, PeriodSelectorActiveIndicator } from '../../PeriodSelector';
-import { Point, type RenderPointsParams } from '../../Point';
+import { Point } from '../../Point';
 import { Scrubber, type ScrubberRef } from '../../scrubber';
-import { ChartText, type ChartTextChildren } from '../../text';
-import type { Transition } from '../../utils';
-import type { ChartAxisScaleType } from '../../utils/scale';
-import { Line, LineChart, ReferenceLine } from '..';
+import { ScrubberBeacon, type ScrubberBeaconProps } from '../../scrubber/ScrubberBeacon';
+import {
+  getPointOnSerializableScale,
+  type Transition,
+  unwrapAnimatedValue,
+  useScrubberContext,
+} from '../../utils';
+import type { ChartAxisScaleType, SerializableScale } from '../../utils/scale';
+import {
+  Line,
+  LineChart,
+  type LineComponentProps,
+  ReferenceLine,
+  SolidLine,
+  type SolidLineProps,
+} from '..';
 
 const defaultChartHeight = 200;
 
@@ -2498,41 +2522,367 @@ function BasicExample() {
   );
 }
 
+const candlestickStockData = btcCandles.slice(0, 90).reverse();
+
+const CandlesticksHeader = memo(({ currentIndex }: { currentIndex: number | undefined }) => {
+  const formatPrice = useCallback((price: string) => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+    }).format(parseFloat(price));
+  }, []);
+
+  const formatThousandsPriceNumber = useCallback((price: number) => {
+    const formattedPrice = new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(price / 1000);
+
+    return `${formattedPrice}k`;
+  }, []);
+
+  const currentText = useMemo(() => {
+    if (currentIndex !== undefined) {
+      return `Open: ${formatThousandsPriceNumber(parseFloat(candlestickStockData[currentIndex].open))}, Close: ${formatThousandsPriceNumber(
+        parseFloat(candlestickStockData[currentIndex].close),
+      )}, Volume: ${(parseFloat(candlestickStockData[currentIndex].volume) / 1000).toFixed(2)}k`;
+    }
+    return formatPrice(candlestickStockData[candlestickStockData.length - 1].close);
+  }, [currentIndex, formatThousandsPriceNumber, formatPrice]);
+
+  return (
+    <Text aria-live="polite" font="headline">
+      {currentText}
+    </Text>
+  );
+});
+
+const CandlesticksChart = memo(
+  ({
+    infoTextId,
+    onScrubberPositionChange,
+  }: {
+    infoTextId: string;
+    onScrubberPositionChange: (index: number | undefined) => void;
+  }) => {
+    const min = useMemo(
+      () => Math.min(...candlestickStockData.map((data) => parseFloat(data.low))),
+      [],
+    );
+
+    const ThinSolidLine = memo((props: SolidLineProps) => <SolidLine {...props} strokeWidth={1} />);
+
+    // Custom line component that renders a rect to highlight the entire bandwidth
+    const BandwidthHighlight = memo(({ stroke }: LineComponentProps) => {
+      const { getXSerializableScale, drawingArea } = useCartesianChartContext();
+      const { scrubberPosition } = useScrubberContext();
+      const xScale = useMemo(() => getXSerializableScale(), [getXSerializableScale]);
+
+      const rectWidth = useMemo(() => {
+        if (xScale !== undefined && xScale.type === 'band') {
+          return xScale.bandwidth;
+        }
+        return 0;
+      }, [xScale]);
+
+      const xPos = useDerivedValue(() => {
+        const position = unwrapAnimatedValue(scrubberPosition);
+        const xPos =
+          position !== undefined && xScale
+            ? getPointOnSerializableScale(position, xScale)
+            : undefined;
+        return xPos !== undefined ? xPos - rectWidth / 2 : 0;
+      }, [scrubberPosition, xScale]);
+
+      const opacity = useDerivedValue(() => (xPos.value !== undefined ? 1 : 0), [xPos]);
+
+      return (
+        <Rect
+          color={stroke}
+          height={drawingArea.height}
+          opacity={opacity}
+          width={rectWidth}
+          x={xPos}
+          y={drawingArea.y}
+        />
+      );
+    });
+
+    const candlesData = useMemo(
+      () =>
+        candlestickStockData.map((data) => [parseFloat(data.low), parseFloat(data.high)]) as [
+          number,
+          number,
+        ][],
+      [],
+    );
+
+    const CandlestickBarComponent = memo<BarComponentProps>(
+      ({ x, y, width, height, originY, dataX, ...props }) => {
+        const { getYScale } = useCartesianChartContext();
+        const yScale = getYScale();
+
+        const wickX = x + width / 2;
+
+        const timePeriodValue = candlestickStockData[dataX as number];
+
+        const open = parseFloat(timePeriodValue.open);
+        const close = parseFloat(timePeriodValue.close);
+
+        const bullish = open < close;
+        const theme = useTheme();
+        const color = bullish ? theme.color.fgPositive : theme.color.fgNegative;
+        const openY = yScale?.(open) ?? 0;
+        const closeY = yScale?.(close) ?? 0;
+
+        const bodyHeight = Math.abs(openY - closeY);
+        const bodyY = openY < closeY ? openY : closeY;
+
+        return (
+          <>
+            <SkiaLine
+              color={color}
+              p1={{ x: wickX, y }}
+              p2={{ x: wickX, y: y + height }}
+              strokeWidth={1}
+            />
+            <Rect color={color} height={bodyHeight} width={width} x={x} y={bodyY} />
+          </>
+        );
+      },
+    );
+
+    const formatThousandsPriceNumber = useCallback((price: number) => {
+      const formattedPrice = new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0,
+      }).format(price / 1000);
+
+      return `${formattedPrice}k`;
+    }, []);
+
+    const formatTime = useCallback((index: number | null) => {
+      if (index === null || index === undefined || index >= candlestickStockData.length) return '';
+      const ts = parseInt(candlestickStockData[index].start);
+      return new Date(ts * 1000).toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
+      });
+    }, []);
+
+    return (
+      <BarChart
+        enableScrubbing
+        showXAxis
+        showYAxis
+        BarComponent={CandlestickBarComponent}
+        BarStackComponent={({ children }) => <g>{children}</g>}
+        animate={false}
+        aria-labelledby={infoTextId}
+        borderRadius={0}
+        height={150}
+        inset={{ top: 8, bottom: 8, left: 0, right: 0 }}
+        onScrubberPositionChange={onScrubberPositionChange}
+        series={[
+          {
+            id: 'stock-prices',
+            data: candlesData,
+          },
+        ]}
+        xAxis={{
+          tickLabelFormatter: formatTime,
+        }}
+        yAxis={{
+          domain: { min },
+          tickLabelFormatter: formatThousandsPriceNumber,
+          width: 40,
+          showGrid: true,
+          GridLineComponent: ThinSolidLine,
+        }}
+      >
+        <Scrubber hideOverlay LineComponent={BandwidthHighlight} seriesIds={[]} />
+      </BarChart>
+    );
+  },
+);
+
+function Candlesticks() {
+  const infoTextId = useId();
+  const [currentIndex, setCurrentIndex] = useState<number | undefined>();
+
+  return (
+    <VStack gap={2}>
+      <CandlesticksHeader currentIndex={currentIndex} />
+      <CandlesticksChart infoTextId={infoTextId} onScrubberPositionChange={setCurrentIndex} />
+    </VStack>
+  );
+}
+
+function UpdatedMotionLineSeriesChart() {
+  const theme = useTheme();
+  const prices = [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58];
+  const volume = [4, 8, 11, 15, 16, 14, 16, 10, 12, 14, 16, 14, 16, 10];
+
+  return (
+    <LineChart
+      height={250}
+      series={[
+        {
+          id: 'prices',
+          data: prices,
+          label: 'Prices',
+          color: theme.color.accentBoldBlue,
+        },
+        {
+          id: 'volume',
+          data: volume,
+          label: 'Volume',
+          color: theme.color.accentBoldGreen,
+        },
+      ]}
+      xAxis={{ range: ({ min, max }) => ({ min, max: max - 16 }) }}
+      yAxis={{
+        domain: {
+          min: 0,
+        },
+        showGrid: true,
+      }}
+    >
+      <Scrubber />
+    </LineChart>
+  );
+}
+
+function MonotoneAssetPriceChart() {
+  const prices = sparklineInteractiveData.hour;
+  const currentPrice = prices[prices.length - 1].value;
+
+  const priceFormatter = useMemo(
+    () =>
+      new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+      }),
+    [],
+  );
+
+  const scrubberPriceFormatter = useMemo(
+    () =>
+      new Intl.NumberFormat('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      }),
+    [],
+  );
+
+  const formatPrice = useCallback(
+    (price: number) => {
+      return priceFormatter.format(price);
+    },
+    [priceFormatter],
+  );
+
+  const formatAxisLabelPrice = useCallback(
+    (price: number) => {
+      return (
+        <tspan dx={4} dy={-12} textAnchor="start">
+          {formatPrice(price)}
+        </tspan>
+      );
+    },
+    [formatPrice],
+  );
+
+  const formatDate = useCallback((date: Date) => {
+    const dayOfWeek = date.toLocaleDateString('en-US', { weekday: 'short' });
+
+    const monthDay = date.toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+    });
+
+    const time = date.toLocaleTimeString('en-US', {
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true,
+    });
+
+    return `${dayOfWeek}, ${monthDay}, ${time}`;
+  }, []);
+
+  const scrubberLabel = useCallback(
+    (index: number) => {
+      const price = scrubberPriceFormatter.format(prices[index].value);
+      const date = formatDate(prices[index].date);
+      return (
+        <>
+          <tspan style={{ fontWeight: 'bold' }}>{price} USD</tspan> {date}
+        </>
+      );
+    },
+    [scrubberPriceFormatter, prices, formatDate],
+  );
+
+  const CustomScrubberBeacon = memo((props: ScrubberBeaconProps) => {
+    return <ScrubberBeacon {...props} color="red" />;
+  });
+
+  return (
+    <LineChart
+      enableScrubbing
+      showYAxis
+      height={200}
+      inset={{ top: 64 }}
+      overflow="visible"
+      series={[
+        {
+          id: 'btc',
+          data: prices.map((price) => price.value),
+          color: 'var(--color-fg)',
+          gradient: {
+            axis: 'x',
+            stops: ({ min, max }) => [
+              { offset: min, color: 'var(--color-fg)', opacity: 0 },
+              { offset: 32, color: 'var(--color-fg)', opacity: 1 },
+            ],
+          },
+        },
+      ]}
+      xAxis={{
+        range: ({ min, max }) => ({ min: 96, max: max }),
+      }}
+      yAxis={{
+        position: 'left',
+        width: 0,
+        showGrid: true,
+        tickLabelFormatter: formatPrice,
+      }}
+    >
+      <Scrubber hideOverlay BeaconComponent={CustomScrubberBeacon} labelProps={{ elevation: 1 }} />
+    </LineChart>
+  );
+}
+
 export default () => {
   const theme = useTheme();
 
   return (
     <ExampleScreen>
-      <Example title="Simple">
-        <LineChart
-          enableScrubbing
-          height={defaultChartHeight}
-          renderPoints={() => true}
-          series={[
-            {
-              id: 'prices',
-              data: sampleData,
-              gradient: {
-                stops: [
-                  { offset: 0, color: 'red', opacity: 0.5 },
-                  { offset: 100, color: 'blue', opacity: 0.3 },
-                ],
-              },
-            },
-          ]}
-          strokeWidth={5}
-          xAxis={{
-            range: ({ min, max }) => ({ min, max: max - 16 }),
-          }}
-        >
-          <Scrubber />
-        </LineChart>
-      </Example>
       <Example title="Asset Price Dotted">
         <AssetPriceDotted />
       </Example>
       <Example title="Gain/Loss">
         <GainLossChart fontFamily="Marker Felt" />
+      </Example>
+      <Example title="Monotone Asset Price Chart">
+        <MonotoneAssetPriceChart />
+      </Example>
+      <Example title="Candlesticks">
+        <Candlesticks />
       </Example>
     </ExampleScreen>
   );

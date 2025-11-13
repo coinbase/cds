@@ -715,10 +715,6 @@ function Candlesticks() {
     );
   });
 
-  const BandwidthReferenceLine = memo<ReferenceLineProps>((props) => (
-    <ReferenceLine {...props} LineComponent={BandwidthHighlight} />
-  ));
-
   const candlesData = stockData.map((data) => [parseFloat(data.low), parseFloat(data.high)]) as [
     number,
     number,
@@ -760,6 +756,19 @@ function Candlesticks() {
     }).format(parseFloat(price));
   }, []);
 
+
+  const formatThousandsPrice = React.useCallback((price: string) => {
+    const formattedPrice = new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(parseFloat(price) / 1000);
+
+    return `${formattedPrice}k`;
+  }, []);
+
+
   const formatVolume = React.useCallback((volume: string) => {
     const volumeInThousands = parseFloat(volume) / 1000;
     return (
@@ -789,9 +798,9 @@ function Candlesticks() {
 
       const text =
         index !== null && index !== undefined
-          ? `Open: ${formatPrice(stockData[index].open)}, Close: ${formatPrice(
+          ? `Open: ${formatThousandsPrice(stockData[index].open)}, Close: ${formatThousandsPrice(
               stockData[index].close,
-            )}, Volume: ${formatVolume(stockData[index].volume)}`
+            )}, Volume: ${(parseFloat(stockData[index].volume) / 1000).toFixed(2)}k`
           : formatPrice(stockData[stockData.length - 1].close);
 
       infoTextRef.current.textContent = text;
@@ -800,10 +809,6 @@ function Candlesticks() {
     [stockData, formatPrice, formatVolume],
   );
   const initialInfo = formatPrice(stockData[stockData.length - 1].close);
-
-  React.useEffect(() => {
-    updateInfoText(selectedIndexRef.current);
-  }, [stockData, updateInfoText]);
 
   return (
     <VStack gap={2}>
@@ -832,8 +837,8 @@ function Candlesticks() {
         }}
         yAxis={{
           domain: { min },
-          tickLabelFormatter: formatPrice,
-          width: 92,
+          tickLabelFormatter: formatThousandsPrice,
+          width: 40,
           showGrid: true,
           GridLineComponent: ThinSolidLine,
         }}
@@ -841,7 +846,7 @@ function Candlesticks() {
       >
         <Scrubber
           hideOverlay
-          LineComponent={BandwidthReferenceLine}
+          LineComponent={BandwidthHighlight}
           seriesIds={[]}
         />
       </BarChart>
