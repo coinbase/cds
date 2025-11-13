@@ -185,6 +185,7 @@ const DefaultSelectControlComponent = memo(
                     compact
                     data-selected-value
                     accessibilityLabel={`${removeSelectedOptionAccessibilityLabel} ${accessibilityLabel}`}
+                    borderWidth={0}
                     disabled={option.disabled}
                     invertColorScheme={false}
                     maxWidth={200}
@@ -195,7 +196,7 @@ const DefaultSelectControlComponent = memo(
                 );
               })}
               {value.length - maxSelectedOptionsToShow > 0 && (
-                <InputChip compact end={null} invertColorScheme={false}>
+                <InputChip compact borderWidth={0} end={null} invertColorScheme={false}>
                   {`+${value.length - maxSelectedOptionsToShow} ${hiddenSelectedOptionsLabel}`}
                 </InputChip>
               )}
@@ -241,10 +242,11 @@ const DefaultSelectControlComponent = memo(
             aria-haspopup={ariaHaspopup}
             background="transparent"
             blendStyles={interactableBlendStyles}
+            borderWidth={0}
             className={cx(noFocusOutlineCss, classNames?.controlInputNode)}
             disabled={disabled}
             focusable={false}
-            height={labelVariant === 'inside' ? 32 : compact ? 40 : 56}
+            minHeight={labelVariant === 'inside' ? 32 : compact ? 40 : 56}
             onClick={() => setOpen((s) => !s)}
             paddingStart={1}
             style={styles?.controlInputNode}
@@ -264,7 +266,7 @@ const DefaultSelectControlComponent = memo(
               </HStack>
             )}
             {shouldShowCompactLabel ? (
-              <HStack alignItems="center" height="100%" maxWidth="40%" padding={1}>
+              <HStack alignItems="center" height="100%" maxWidth="40%" paddingStart={1}>
                 <InputLabel color="fg" overflow="truncate">
                   {label}
                 </InputLabel>
