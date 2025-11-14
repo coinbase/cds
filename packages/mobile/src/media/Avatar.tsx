@@ -111,7 +111,7 @@ export const Avatar = memo(
           </Text>
         );
       }
-      if (size === 'm' || isCustomSizeAndSmall) {
+      if (size === 'm' || size === 's' || isCustomSizeAndSmall) {
         return (
           <Text
             align="center"
@@ -163,13 +163,11 @@ export const Avatar = memo(
     return (
       <Box
         accessibilityLabel={accessibilityLabel}
-        alignItems="center"
         borderColor={borderColor}
         dangerouslySetBackground={imgSrc}
         flexGrow={0}
         flexShrink={0}
         height={computedSize}
-        justifyContent="center"
         overflow="hidden"
         position="relative"
         style={containerStyle}
@@ -177,19 +175,21 @@ export const Avatar = memo(
         width={computedSize}
         {...props}
       >
-        {shouldShowAvatarImage ? (
-          <RemoteImage
-            alt={alt}
-            height={computedSize}
-            resizeMode="cover"
-            shape={shape}
-            source={{ uri: imgSrc }}
-            testID={`${testID ?? ''}-image`}
-            width={computedSize}
-          />
-        ) : (
-          coloredFallback
-        )}
+        <Box style={styles.contentWrapper}>
+          {shouldShowAvatarImage ? (
+            <RemoteImage
+              alt={alt}
+              height={computedSize}
+              resizeMode="cover"
+              shape={shape}
+              source={{ uri: imgSrc }}
+              testID={`${testID ?? ''}-image`}
+              width={computedSize}
+            />
+          ) : (
+            coloredFallback
+          )}
+        </Box>
       </Box>
     );
   },
@@ -198,5 +198,14 @@ export const Avatar = memo(
 const styles = StyleSheet.create({
   border: {
     borderWidth: 2,
+  },
+  contentWrapper: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    top: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });

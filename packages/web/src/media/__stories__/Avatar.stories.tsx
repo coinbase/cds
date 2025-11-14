@@ -108,17 +108,17 @@ export const FallbackImage = () => {
         <Text as="h3" display="block" font="headline">
           Default
         </Text>
-        <HStack alignItems="center" gap={2}>
+        <HStack alignItems="baseline" gap={2}>
           {sizes.map((size, i) => (
             <Avatar key={i} alt="" size={size} />
           ))}
         </HStack>
-        <HStack alignItems="center" gap={2}>
+        <HStack alignItems="baseline" gap={2}>
           {sizes.map((size, i) => (
-            <Avatar key={i} alt="" shape="square" size={size} />
+            <Avatar key={i} alt="" name="Alice" shape="square" size={size} />
           ))}
         </HStack>
-        <HStack alignItems="center" gap={2}>
+        <HStack alignItems="baseline" gap={2}>
           {sizes.map((size, i) => (
             <Avatar key={i} alt="" shape="hexagon" size={size} />
           ))}
@@ -188,5 +188,33 @@ export const FallbackColored = () => {
         return <Avatar key={name} alt="" colorScheme={avatarFallbackColor} name={name} />;
       })}
     </HStack>
+  );
+};
+
+export const Idk = () => {
+  const AvatarTest = ({ size, name }: { size: AvatarSize; name?: string }) => {
+    return (
+      <VStack alignItems="center" alignSelf="baseline">
+        <Avatar name={name} size={size} />
+      </VStack>
+    );
+  };
+
+  return (
+    <VStack gap={6}>
+      <HStack alignItems="baseline" gap={3}>
+        <AvatarTest size="s" />
+        <AvatarTest size="m" />
+        <AvatarTest size="l" />
+        <AvatarTest size="l" />
+      </HStack>
+
+      <HStack alignItems="baseline" gap={3}>
+        <AvatarTest name="Avatar" size="s" />
+        <AvatarTest name="Avatar" size="m" />
+        <AvatarTest name="Avatar" size="l" />
+        <AvatarTest name="Avatar" size="l" />
+      </HStack>
+    </VStack>
   );
 };

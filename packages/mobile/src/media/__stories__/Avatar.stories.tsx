@@ -37,12 +37,12 @@ const AvatarScreen = () => {
     <ExampleScreen>
       <Example title="Normal - Default">
         <VStack gap={2}>
-          <HStack alignItems="center" flexWrap="wrap" gap={2}>
+          <HStack alignItems="baseline" flexWrap="wrap" gap={2}>
             {sizes.map((size) => (
               <Avatar key={size} accessibilityLabel="" alt="" size={size} src={image} />
             ))}
           </HStack>
-          <HStack alignItems="center" flexWrap="wrap" gap={2}>
+          <HStack alignItems="baseline" flexWrap="wrap" gap={2}>
             {sizes.map((size) => (
               <Avatar
                 key={size}
@@ -54,7 +54,7 @@ const AvatarScreen = () => {
               />
             ))}
           </HStack>
-          <HStack alignItems="center" flexWrap="wrap" gap={2}>
+          <HStack alignItems="baseline" flexWrap="wrap" gap={2}>
             {sizes.map((size) => (
               <Avatar
                 key={size}
@@ -99,19 +99,52 @@ const AvatarScreen = () => {
       </Example>
       <Example title="Fallback Image - Default">
         <VStack gap={2}>
-          <HStack alignItems="center" flexWrap="wrap" gap={2}>
+          <HStack alignItems="baseline" flexWrap="wrap" gap={2}>
             {sizes.map((size) => (
               <Avatar key={size} accessibilityLabel="" alt="" size={size} />
             ))}
           </HStack>
-          <HStack alignItems="center" flexWrap="wrap" gap={2}>
+          <HStack alignItems="baseline" flexWrap="wrap" gap={2}>
             {sizes.map((size) => (
               <Avatar key={size} accessibilityLabel="" alt="" shape="square" size={size} />
             ))}
           </HStack>
-          <HStack alignItems="center" flexWrap="wrap" gap={2}>
+          <HStack alignItems="baseline" flexWrap="wrap" gap={2}>
             {sizes.map((size) => (
               <Avatar key={size} accessibilityLabel="" alt="" shape="hexagon" size={size} />
+            ))}
+          </HStack>
+        </VStack>
+      </Example>
+      <Example title="Fallback - Text Only">
+        <VStack gap={2}>
+          <HStack alignItems="baseline" flexWrap="wrap" gap={2}>
+            {sizes.map((size) => (
+              <Avatar key={size} accessibilityLabel="" alt="" name="Avatar" size={size} />
+            ))}
+          </HStack>
+          <HStack alignItems="baseline" flexWrap="wrap" gap={2}>
+            {sizes.map((size) => (
+              <Avatar
+                key={size}
+                accessibilityLabel=""
+                alt=""
+                name="Avatar"
+                shape="square"
+                size={size}
+              />
+            ))}
+          </HStack>
+          <HStack alignItems="baseline" flexWrap="wrap" gap={2}>
+            {sizes.map((size) => (
+              <Avatar
+                key={size}
+                accessibilityLabel=""
+                alt=""
+                name="Avatar"
+                shape="hexagon"
+                size={size}
+              />
             ))}
           </HStack>
         </VStack>
