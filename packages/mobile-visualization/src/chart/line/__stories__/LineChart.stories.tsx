@@ -9,6 +9,7 @@ import { sparklineInteractiveData } from '@coinbase/cds-common/internal/visualiz
 import { useTabsContext } from '@coinbase/cds-common/tabs/TabsContext';
 import type { TabValue } from '@coinbase/cds-common/tabs/useTabs';
 import { useTheme } from '@coinbase/cds-mobile';
+import { IconButton } from '@coinbase/cds-mobile/buttons';
 import { ListCell } from '@coinbase/cds-mobile/cells';
 import { Example, ExampleScreen } from '@coinbase/cds-mobile/examples/ExampleScreen';
 import { Box, HStack, VStack } from '@coinbase/cds-mobile/layout';
@@ -913,6 +914,12 @@ function Compact() {
 }
 
 function AssetPriceWithDottedArea() {
+  const fontMgr = useMemo(() => {
+    const fontProvider = Skia.TypefaceFontProvider.Make();
+    // Register system fonts if available, otherwise Skia will use defaults
+    return fontProvider;
+  }, []);
+
   const BTCTab: TabComponent = memo(
     forwardRef(({ label, ...props }: SegmentedTabProps, ref: React.ForwardedRef<View>) => {
       const { activeTab } = useTabsContext();
@@ -987,15 +994,6 @@ function AssetPriceWithDottedArea() {
       [],
     );
 
-    const scrubberPriceFormatter = useMemo(
-      () =>
-        new Intl.NumberFormat('en-US', {
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2,
-        }),
-      [],
-    );
-
     const formatPrice = useCallback(
       (price: number) => {
         return priceFormatter.format(price);
@@ -1020,82 +1018,6 @@ function AssetPriceWithDottedArea() {
       return `${dayOfWeek}, ${monthDay}, ${time}`;
     }, []);
 
-    const chartAccessibilityLabel = `Bitcoin price chart for ${timePeriod.label} period. Current price: ${formatPrice(currentPrice)}`;
-
-    const scrubberAccessibilityLabel = useCallback(
-      (index: number) => {
-        const price = scrubberPriceFormatter.format(sparklineTimePeriodDataValues[index]);
-        const date = formatDate(sparklineTimePeriodDataTimestamps[index]);
-        return `${price} USD ${date}`;
-      },
-      [
-        scrubberPriceFormatter,
-        sparklineTimePeriodDataValues,
-        sparklineTimePeriodDataTimestamps,
-        formatDate,
-      ],
-    );
-
-    const ChartScrubber = memo(() => {
-      const { fontProvider } = useCartesianChartContext();
-
-      const scrubberLabel = useCallback(
-        (index: number) => {
-          const price = scrubberPriceFormatter.format(sparklineTimePeriodDataValues[index]);
-          const date = formatDate(sparklineTimePeriodDataTimestamps[index]);
-
-          const regularStyle: SkTextStyle = {
-            fontFamilies: ['Inter'],
-            fontSize: 14,
-            fontStyle: {
-              weight: FontWeight.Normal,
-            },
-            color: Skia.Color(theme.color.fgMuted),
-          };
-
-          const boldStyle: SkTextStyle = {
-            fontFamilies: ['Inter'],
-            fontSize: 14,
-            fontStyle: {
-              weight: FontWeight.Bold,
-            },
-            color: Skia.Color(theme.color.fgMuted),
-          };
-
-          const builder = Skia.ParagraphBuilder.Make(
-            {
-              textAlign: TextAlign.Center,
-            },
-            fontProvider,
-          );
-
-          builder.pushStyle(boldStyle);
-          builder.addText(`${price} USD`);
-          builder.pushStyle(regularStyle);
-          builder.addText(` ${date}`);
-
-          const para = builder.build();
-          para.layout(512);
-
-          return para;
-        },
-        [fontProvider],
-      );
-
-      return (
-        <Scrubber
-          idlePulse
-          label={scrubberLabel}
-          labelProps={{
-            horizontalAlignment: 'center',
-            dy: -28,
-            elevation: 1,
-            paragraphAlignment: TextAlign.Center,
-          }}
-        />
-      );
-    });
-
     return (
       <VStack gap={2}>
         <SectionHeader
@@ -1110,9 +1032,9 @@ function AssetPriceWithDottedArea() {
         <LineChart
           enableScrubbing
           showArea
-          accessibilityLabel={chartAccessibilityLabel}
           areaType="dotted"
           height={200}
+          inset={{ top: 52 }}
           overflow="visible"
           series={[
             {
@@ -1123,7 +1045,51 @@ function AssetPriceWithDottedArea() {
           ]}
           style={{ outlineColor: assets.btc.color }}
         >
-          <ChartScrubber />
+          <Scrubber
+            idlePulse
+            label={(d: number) => {
+              const date = formatDate(sparklineTimePeriodDataTimestamps[d]);
+              const price = formatPrice(sparklineTimePeriodDataValues[d]);
+
+              const regularStyle: SkTextStyle = {
+                fontFamilies: ['Inter'],
+                fontSize: 14,
+                fontStyle: {
+                  weight: FontWeight.Normal,
+                },
+                color: Skia.Color(theme.color.fgMuted),
+              };
+
+              const boldStyle: SkTextStyle = {
+                fontFamilies: ['Inter'],
+                ...regularStyle,
+                fontStyle: {
+                  weight: FontWeight.Bold,
+                },
+              };
+
+              // 3. Use the ParagraphBuilder
+              const builder = Skia.ParagraphBuilder.Make(
+                {
+                  textAlign: TextAlign.Left,
+                },
+                fontMgr,
+              );
+
+              builder.pushStyle(boldStyle);
+              builder.addText(price);
+
+              builder.pushStyle(regularStyle);
+              builder.addText(` ${date}`);
+
+              const para = builder.build();
+              para.layout(512);
+              return para;
+            }}
+            labelProps={{
+              elevation: 1,
+            }}
+          />
         </LineChart>
         <PeriodSelector
           TabComponent={BTCTab}
@@ -1448,196 +1414,281 @@ function ForecastAssetPrice() {
   );
 }
 
-export default () => {
+type ExampleItem = {
+  title: string;
+  component: React.ReactNode;
+};
+
+function ExampleNavigator() {
   const theme = useTheme();
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  const examples = useMemo<ExampleItem[]>(
+    () => [
+      {
+        title: 'Basic',
+        component: (
+          <LineChart
+            showArea
+            height={200}
+            series={[
+              {
+                id: 'prices',
+                data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+              },
+            ]}
+          />
+        ),
+      },
+      {
+        title: 'Multiple Lines',
+        component: <MultipleLine />,
+      },
+      {
+        title: 'Data Format',
+        component: <DataFormat />,
+      },
+      {
+        title: 'Live Updates',
+        component: <LiveUpdates />,
+      },
+      {
+        title: 'Missing Data',
+        component: <MissingData />,
+      },
+      {
+        title: 'Empty State',
+        component: (
+          <LineChart
+            height={200}
+            series={[
+              {
+                id: 'line',
+                color: `rgb(${theme.spectrum.gray50})`,
+                data: [1, 1],
+                showArea: true,
+              },
+            ]}
+            yAxis={{ domain: { min: -1, max: 3 } }}
+          />
+        ),
+      },
+      {
+        title: 'Scales',
+        component: (
+          <LineChart
+            showArea
+            showYAxis
+            height={200}
+            series={[
+              {
+                id: 'prices',
+                data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+              },
+            ]}
+            yAxis={{
+              scaleType: 'log',
+              showGrid: true,
+              ticks: [1, 10, 100],
+            }}
+          />
+        ),
+      },
+      {
+        title: 'Interaction',
+        component: <Interaction />,
+      },
+      {
+        title: 'Points',
+        component: <Points />,
+      },
+      {
+        title: 'Transitions',
+        component: <Transitions />,
+      },
+      {
+        title: 'Basic Accessible',
+        component: <BasicAccessible />,
+      },
+      {
+        title: 'Styling Axes',
+        component: (
+          <LineChart
+            showArea
+            showXAxis
+            showYAxis
+            height={200}
+            series={[
+              {
+                id: 'prices',
+                data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+              },
+            ]}
+            xAxis={{
+              showGrid: true,
+              showLine: true,
+              showTickMarks: true,
+              tickLabelFormatter: (dataX: number) => `Day ${dataX}`,
+            }}
+            yAxis={{
+              showGrid: true,
+              showLine: true,
+              showTickMarks: true,
+            }}
+          />
+        ),
+      },
+      {
+        title: 'Gradients',
+        component: <Gradients />,
+      },
+      {
+        title: 'Gain/Loss',
+        component: <GainLossChart />,
+      },
+      {
+        title: 'Styling Lines',
+        component: (
+          <LineChart
+            height={200}
+            series={[
+              {
+                id: 'top',
+                data: [15, 28, 32, 44, 46, 36, 40, 45, 48, 38],
+              },
+              {
+                id: 'upperMiddle',
+                data: [12, 23, 21, 29, 34, 28, 31, 38, 42, 35],
+                color: '#ef4444',
+                type: 'dotted',
+              },
+              {
+                id: 'lowerMiddle',
+                data: [8, 15, 14, 25, 20, 18, 22, 28, 24, 30],
+                color: '#f59e0b',
+                curve: 'natural',
+                gradient: {
+                  axis: 'x',
+                  stops: [
+                    { offset: 0, color: '#E3D74D' },
+                    { offset: 9, color: '#F7931A' },
+                  ],
+                },
+                strokeWidth: 6,
+              },
+              {
+                id: 'bottom',
+                data: [4, 8, 11, 15, 16, 14, 16, 10, 12, 14],
+                color: '#800080',
+                curve: 'step',
+                AreaComponent: DottedArea,
+                showArea: true,
+              },
+            ]}
+          />
+        ),
+      },
+      {
+        title: 'Styling Reference Lines',
+        component: (
+          <LineChart
+            enableScrubbing
+            showArea
+            height={200}
+            series={[
+              {
+                id: 'prices',
+                data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+                color: theme.color.fgPositive,
+              },
+            ]}
+            xAxis={{
+              // Give space before the end of the chart for the scrubber
+              range: ({ min, max }) => ({ min, max: max - 24 }),
+            }}
+          >
+            <ReferenceLine
+              LineComponent={(props) => (
+                <DottedLine {...props} dashIntervals={[0, 16]} strokeWidth={3} />
+              )}
+              dataY={10}
+              stroke={theme.color.fg}
+            />
+            <Scrubber />
+          </LineChart>
+        ),
+      },
+      {
+        title: 'High/Low Price',
+        component: <HighLowPrice />,
+      },
+      {
+        title: 'Styling Scrubber',
+        component: <StylingScrubber />,
+      },
+      {
+        title: 'Compact',
+        component: <Compact />,
+      },
+      {
+        title: 'Asset Price With Dotted Area',
+        component: <AssetPriceWithDottedArea />,
+      },
+      {
+        title: 'Service Availability',
+        component: <ServiceAvailability />,
+      },
+      {
+        title: 'Forecast Asset Price',
+        component: <ForecastAssetPrice />,
+      },
+    ],
+    [theme.color.fg, theme.color.fgPositive, theme.spectrum.gray50],
+  );
+
+  const currentExample = examples[currentIndex];
+  const isFirstExample = currentIndex === 0;
+  const isLastExample = currentIndex === examples.length - 1;
+
+  const handlePrevious = useCallback(() => {
+    setCurrentIndex((prev) => Math.max(0, prev - 1));
+  }, []);
+
+  const handleNext = useCallback(() => {
+    setCurrentIndex((prev) => Math.min(examples.length - 1, prev + 1));
+  }, [examples.length]);
+
   return (
     <ExampleScreen>
-      <Example title="Basic">
-        <LineChart
-          showArea
-          height={200}
-          series={[
-            {
-              id: 'prices',
-              data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
-            },
-          ]}
-        />
-      </Example>
-      <Example title="Multiple Lines">
-        <MultipleLine />
-      </Example>
-      <Example title="Data Format">
-        <DataFormat />
-      </Example>
-      <Example title="Live Updates">
-        <LiveUpdates />
-      </Example>
-      <Example title="Missing Data">
-        <MissingData />
-      </Example>
-      <Example title="Empty State">
-        <LineChart
-          height={200}
-          series={[
-            {
-              id: 'line',
-              color: `rgb(${theme.spectrum.gray50})`,
-              data: [1, 1],
-              showArea: true,
-            },
-          ]}
-          yAxis={{ domain: { min: -1, max: 3 } }}
-        />
-      </Example>
-      <Example title="Scales">
-        <LineChart
-          showArea
-          showYAxis
-          height={200}
-          series={[
-            {
-              id: 'prices',
-              data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
-            },
-          ]}
-          yAxis={{
-            scaleType: 'log',
-            showGrid: true,
-            ticks: [1, 10, 100],
-          }}
-        />
-      </Example>
-      <Example title="Interaction">
-        <Interaction />
-      </Example>
-      <Example title="Points">
-        <Points />
-      </Example>
-      <Example title="Transitions">
-        <Transitions />
-      </Example>
-      <Example title="Basic Accessible">
-        <BasicAccessible />
-      </Example>
-      <Example title="Styling Axes">
-        <LineChart
-          showArea
-          showXAxis
-          showYAxis
-          height={200}
-          series={[
-            {
-              id: 'prices',
-              data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
-            },
-          ]}
-          xAxis={{
-            showGrid: true,
-            showLine: true,
-            showTickMarks: true,
-            tickLabelFormatter: (dataX: number) => `Day ${dataX}`,
-          }}
-          yAxis={{
-            showGrid: true,
-            showLine: true,
-            showTickMarks: true,
-          }}
-        />
-      </Example>
-      <Example title="Gradients">
-        <Gradients />
-      </Example>
-      <Example title="Gain/Loss">
-        <GainLossChart />
-      </Example>
-      <Example title="Styling Lines">
-        <LineChart
-          height={200}
-          series={[
-            {
-              id: 'top',
-              data: [15, 28, 32, 44, 46, 36, 40, 45, 48, 38],
-            },
-            {
-              id: 'upperMiddle',
-              data: [12, 23, 21, 29, 34, 28, 31, 38, 42, 35],
-              color: '#ef4444',
-              type: 'dotted',
-            },
-            {
-              id: 'lowerMiddle',
-              data: [8, 15, 14, 25, 20, 18, 22, 28, 24, 30],
-              color: '#f59e0b',
-              curve: 'natural',
-              gradient: {
-                axis: 'x',
-                stops: [
-                  { offset: 0, color: '#E3D74D' },
-                  { offset: 9, color: '#F7931A' },
-                ],
-              },
-              strokeWidth: 6,
-            },
-            {
-              id: 'bottom',
-              data: [4, 8, 11, 15, 16, 14, 16, 10, 12, 14],
-              color: '#800080',
-              curve: 'step',
-              AreaComponent: DottedArea,
-              showArea: true,
-            },
-          ]}
-        />
-      </Example>
-      <Example title="Styling Reference Lines">
-        <LineChart
-          enableScrubbing
-          showArea
-          height={200}
-          series={[
-            {
-              id: 'prices',
-              data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
-              color: theme.color.fgPositive,
-            },
-          ]}
-          xAxis={{
-            // Give space before the end of the chart for the scrubber
-            range: ({ min, max }) => ({ min, max: max - 24 }),
-          }}
-        >
-          <ReferenceLine
-            LineComponent={(props) => (
-              <DottedLine {...props} dashIntervals={[0, 16]} strokeWidth={3} />
-            )}
-            dataY={10}
-            stroke={theme.color.fg}
+      <VStack gap={4}>
+        <HStack alignItems="center" justifyContent="space-between" padding={2}>
+          <IconButton
+            accessibilityHint="Navigate to previous example"
+            accessibilityLabel="Previous"
+            disabled={isFirstExample}
+            name="arrowLeft"
+            onPress={handlePrevious}
+            variant="secondary"
           />
-          <Scrubber />
-        </LineChart>
-      </Example>
-      <Example title="High/Low Price">
-        <HighLowPrice />
-      </Example>
-      <Example title="Styling Scrubber">
-        <StylingScrubber />
-      </Example>
-      <Example title="Compact">
-        <Compact />
-      </Example>
-      <Example title="Asset Price With Dotted Area">
-        <AssetPriceWithDottedArea />
-      </Example>
-      {/*<Example title="Monotone Asset Price">
-        <MonotoneAssetPrice />
-      </Example>*/}
-      <Example title="Service Availability">
-        <ServiceAvailability />
-      </Example>
-      <Example title="Forecast Asset Price">
-        <ForecastAssetPrice />
-      </Example>
+          <VStack alignItems="center" gap={1}>
+            <Text font="title3">{currentExample.title}</Text>
+            <TextLabel1 color="fgMuted">
+              {currentIndex + 1} / {examples.length}
+            </TextLabel1>
+          </VStack>
+          <IconButton
+            accessibilityHint="Navigate to next example"
+            accessibilityLabel="Next"
+            disabled={isLastExample}
+            name="arrowRight"
+            onPress={handleNext}
+            variant="secondary"
+          />
+        </HStack>
+        <Box padding={1}>{currentExample.component}</Box>
+      </VStack>
     </ExampleScreen>
   );
-};
+}
+
+export default ExampleNavigator;

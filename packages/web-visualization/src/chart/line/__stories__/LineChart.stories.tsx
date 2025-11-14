@@ -30,7 +30,7 @@ import {
   useCartesianChartContext,
   useScrubberContext,
 } from '../..';
-import { Area, DottedArea, GradientArea } from '../../area';
+import { Area, DottedArea, type DottedAreaProps, GradientArea } from '../../area';
 import { XAxis, YAxis } from '../../axis';
 import { CartesianChart } from '../../CartesianChart';
 import { ScrubberBeacon, type ScrubberBeaconProps } from '../../scrubber/ScrubberBeacon';
