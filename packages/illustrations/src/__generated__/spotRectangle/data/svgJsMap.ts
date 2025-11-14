@@ -794,6 +794,10 @@ const svgJsMap = {
     light: () => require('../svgJs/light/usdcLoan-2.js').content,
     dark: () => require('../svgJs/dark/usdcLoan-2.js').content,
   },
+  usdcLoanEth: {
+    light: () => require('../svgJs/light/usdcLoanEth-0.js').content,
+    dark: () => require('../svgJs/dark/usdcLoanEth-0.js').content,
+  },
   verifyEmail: {
     light: () => require('../svgJs/light/verifyEmail-4.js').content,
     dark: () => require('../svgJs/dark/verifyEmail-4.js').content,

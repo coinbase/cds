@@ -8,6 +8,30 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+##### ⭐️ Added (10)
+
+###### Pictogram (2)
+
+- btcOneHundred
+- bigBtcSend
+
+###### HeroSquare (6)
+
+- moreGains
+- usdAndUsdc
+- futuresAndPerps
+- futuresVsPerps
+- futuresExpire
+- tradingWithLeverage
+
+###### SpotRectangle (1)
+
+- usdcLoanEth
+
+###### SpotSquare (1)
+
+- baseQuickBuy
+
 ## 4.26.1 (11/7/2025 PST)
 
 This is an artificial version bump with no new change.

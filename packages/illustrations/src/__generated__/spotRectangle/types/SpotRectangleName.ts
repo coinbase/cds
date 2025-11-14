@@ -201,6 +201,7 @@ export type SpotRectangleName =
   | 'update'
   | 'uploadDocument'
   | 'usdcLoan'
+  | 'usdcLoanEth'
   | 'verifyEmail'
   | 'verifyInfo'
   | 'walletNotifications'
