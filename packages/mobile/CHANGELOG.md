@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.21.2 (11/13/2025 PST)
+
+#### 🐞 Fixes
+
+- Uniform flex alignment for all Avatar variants. [[#162](https://github.com/coinbase/cds/pull/162)] [DX-4991]
+
 ## 8.21.1 ((11/13/2025, 12:21 PM PST))
 
 This is an artificial version bump with no new change.
