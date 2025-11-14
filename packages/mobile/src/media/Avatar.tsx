@@ -80,6 +80,7 @@ export const Avatar = memo(
     const isLargestSize = size.includes('xx');
     const isCustomSize = typeof dangerouslySetSize !== 'undefined';
     const isCustomSizeAndSmall = isCustomSize && dangerouslySetSize <= smallAvatarSize;
+    const shouldUseSmallFont = isCustomSizeAndSmall || size === 's' || size === 'm';
     const spectrumColor = colorSchemeMap[colorScheme];
     const colorSchemeRgb = `rgb(${theme.spectrum[spectrumColor]})`;
 
@@ -111,7 +112,7 @@ export const Avatar = memo(
           </Text>
         );
       }
-      if (size === 'm' || size === 's' || isCustomSizeAndSmall) {
+      if (shouldUseSmallFont) {
         return (
           <Text
             align="center"
