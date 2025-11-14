@@ -280,6 +280,23 @@ function MultipleLineExample() {
 }
 ```
 
+#### Empty State
+
+```jsx live
+<LineChart
+  series={[
+    {
+      id: 'line',
+      color: 'rgb(var(--gray50))',
+      data: [1, 1],
+      showArea: true,
+    },
+  ]}
+  yAxis={{ domain: { min: -1, max: 3 } }}
+  height={{ base: 150, tablet: 200, desktop: 250 }}
+/>
+```
+
 ### Scales
 
 LineChart uses `linear` scaling on axes by default, but you can also use `log` or `band` scaling.
@@ -477,13 +494,106 @@ function Transitions() {
 }
 ```
 
+## Accessibility
+
+You can use `accessibilityLabel` on both the chart and the scrubber to provide descriptive labels. The chart's label gives an overview, while the scrubber's label provides specific information about the current data point being viewed.
+
+```jsx live
+function AccessibleBasicChart() {
+  const data = [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58];
+
+  // Chart-level accessibility label provides overview
+  const chartAccessibilityLabel = useMemo(() => {
+    const currentPrice = data[data.length - 1];
+    return `Price chart showing trend over ${data.length} data points. Current value: ${currentPrice}. Use arrow keys to adjust view`;
+  }, [data]);
+
+  // Scrubber-level accessibility label provides specific position info
+  const scrubberAccessibilityLabel = useCallback(
+    (index: number) => {
+      return `Price at position ${index + 1} of ${data.length}: ${data[index]}`;
+    },
+    [data],
+  );
+
+  return (
+    <LineChart
+      enableScrubbing
+      height={{ base: 150, tablet: 200, desktop: 250 }}
+      series={[
+        {
+          id: 'prices',
+          data: data,
+        },
+      ]}
+
+      showYAxis
+      showArea
+      yAxis={{
+        showGrid: true,
+      }}
+      accessibilityLabel={chartAccessibilityLabel}
+    >
+      <Scrubber accessibilityLabel={scrubberAccessibilityLabel} />
+    </LineChart>
+  );
+}
+```
+
+When a chart has a visible header or title, you can use `aria-labelledby` to reference it, and still provide a dynamic scrubber accessibility label.
+
+```jsx live
+function AccessibleChartWithHeader() {
+  const headerId = useId();
+  const data = [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58];
+
+  // Display label provides overview
+  const displayLabel = `Revenue chart showing trend. Current value: ${data[data.length - 1]}`;
+
+  // Scrubber-specific accessibility label
+  const scrubberAccessibilityLabel = useCallback(
+    (index: number) => {
+      return `Viewing position ${index + 1} of ${data.length}, value: ${data[index]}`;
+    },
+    [data],
+  );
+
+  return (
+    <VStack gap={2}>
+      <Text id={headerId} font="label1">
+        {displayLabel}
+      </Text>
+      <LineChart
+        enableScrubbing
+        height={{ base: 150, tablet: 200, desktop: 250 }}
+        series={[
+          {
+            id: 'revenue',
+            data: data,
+          },
+        ]}
+
+        showYAxis
+        showArea
+        yAxis={{
+          showGrid: true,
+        }}
+        aria-labelledby={headerId}
+      >
+        <Scrubber accessibilityLabel={scrubberAccessibilityLabel} />
+      </LineChart>
+    </VStack>
+  );
+}
+```
+
 ## Styling
 
 ### Axes
 
 ### Gradients
 
-You can use the `gradient` prop on `series` or `Line` components to enable gradients. Gradients can be applied to the y-axis (default) or x-axis. Each stop requires an `offset`, which is based on the data within the x/y scale and `color`, with an optional `opacity` (defaults to 1).
+Gradients can be applied to the y-axis (default) or x-axis. Each stop requires an `offset`, which is based on the data within the x/y scale and `color`, with an optional `opacity` (defaults to 1).
 
 Values in between stops will be interpolated smoothly using [srgb color space](https://www.w3.org/TR/SVG11/painting.html#ColorInterpolationProperty).
 
@@ -587,6 +697,81 @@ function Gradients() {
 }
 ```
 
+You can even pass in a separate gradient for your `Line` and `Area` components.
+
+```jsx live
+function GainLossChart() {
+  const data = [-40, -28, -21, -5, 48, -5, -28, 2, -29, -46, 16, -30, -29, 8];
+  const negativeColor = 'rgb(var(--gray15))';
+  const positiveColor = 'var(--color-fgPositive)';
+
+  const tickLabelFormatter = useCallback(
+    (value) =>
+      new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+        maximumFractionDigits: 0,
+      }).format(value),
+    [],
+  );
+
+  // Line gradient: hard color change at 0 (full opacity for line)
+  const lineGradient = {
+    stops: [
+      { offset: 0, color: negativeColor },
+      { offset: 0, color: positiveColor },
+    ],
+  };
+
+  const chartAccessibilityLabel = `Gain/Loss chart showing price changes. Current value: ${tickLabelFormatter(data[data.length - 1])}`;
+
+  const scrubberAccessibilityLabel = useCallback(
+    (index) => {
+      const value = data[index];
+      const status = value >= 0 ? 'gain' : 'loss';
+      return `Position ${index + 1} of ${data.length}: ${tickLabelFormatter(value)} ${status}`;
+    },
+    [data, tickLabelFormatter],
+  );
+
+  const GradientDottedArea = memo((props) => (
+    <DottedArea
+      {...props}
+      gradient={{
+        stops: ({ min, max }) => [
+          { offset: min, color: negativeColor, opacity: 0.4 },
+          { offset: 0, color: negativeColor, opacity: 0 },
+          { offset: 0, color: positiveColor, opacity: 0 },
+          { offset: max, color: positiveColor, opacity: 0.4 },
+        ],
+      }}
+    />
+  ));
+
+  return (
+    <CartesianChart
+      enableScrubbing
+      height={{ base: 150, tablet: 200, desktop: 250 }}
+      series={[
+        {
+          id: 'prices',
+          data: data,
+          gradient: lineGradient,
+        },
+      ]}
+      xAxis={{
+        range: ({ min, max }) => ({ min, max: max - 16 }),
+      }}
+      accessibilityLabel={chartAccessibilityLabel}
+    >
+      <YAxis showGrid requestedTickCount={2} tickLabelFormatter={tickLabelFormatter} />
+      <Line showArea AreaComponent={GradientDottedArea} seriesId="prices" strokeWidth={3} />
+      <Scrubber hideOverlay accessibilityLabel={scrubberAccessibilityLabel} />
+    </CartesianChart>
+  );
+}
+```
+
 ### Inset
 
 todo: talk about inset and how we can use that to give space as needed.
@@ -640,6 +825,102 @@ You can customize lines by placing props in `LineChart` or at each individual se
 ### Sizing
 
 Charts by default take up `100%` of the `width` and `height` available, but can be customized as any other component.
+
+#### Compact
+
+```jsx live
+function CompactLineChart() {
+  const dimensions = { width: 62, height: 18 };
+
+  const sparklineData = prices
+    .map((price) => parseFloat(price))
+    .filter((price, index) => index % 10 === 0);
+  const positiveFloor = Math.min(...sparklineData) - 10;
+
+  const negativeData = sparklineData.map((price) => -1 * price).reverse();
+  const negativeCeiling = Math.max(...negativeData) + 10;
+
+  const formatPrice = useCallback((price: number) => {
+    return `$${price.toLocaleString('en-US', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    })}`;
+  }, []);
+
+  const CompactChart = memo(({ data, showArea, color, referenceY }) => (
+    <Box style={{ padding: 1 }}>
+      <LineChart
+        {...dimensions}
+        enableScrubbing={false}
+        overflow="visible"
+        inset={0}
+        showArea={showArea}
+        series={[
+          {
+            id: 'btc',
+            data,
+            color,
+          },
+        ]}
+      >
+        <ReferenceLine dataY={referenceY} />
+      </LineChart>
+    </Box>
+  ));
+
+  const ChartCell = memo(({ data, showArea, color, referenceY, subdetail, variant }) => {
+    const { isPhone } = useBreakpoints();
+
+    return (
+      <ListCell
+        spacingVariant="condensed"
+        description={isPhone ? undefined : assets.btc.symbol}
+        detail={formatPrice(parseFloat(prices[0]))}
+        intermediary={
+          <CompactChart data={data} showArea={showArea} color={color} referenceY={referenceY} />
+        }
+        media={<Avatar src={assets.btc.imageUrl} />}
+        onClick={() => console.log('clicked')}
+        subdetail={subdetail}
+        title={isPhone ? undefined : assets.btc.name}
+        style={{ padding: 0 }}
+      />
+    );
+  });
+
+  return (
+    <VStack>
+      <ChartCell
+        data={sparklineData}
+        color={assets.btc.color}
+        referenceY={parseFloat(prices[Math.floor(prices.length / 4)])}
+        subdetail="-4.55%"
+      />
+      <ChartCell
+        data={sparklineData}
+        showArea
+        color={assets.btc.color}
+        referenceY={parseFloat(prices[Math.floor(prices.length / 4)])}
+        subdetail="-4.55%"
+      />
+      <ChartCell
+        data={sparklineData}
+        showArea
+        color="var(--color-fgPositive)"
+        referenceY={positiveFloor}
+        subdetail="+0.25%"
+      />
+      <ChartCell
+        data={negativeData}
+        showArea
+        color="var(--color-fgNegative)"
+        referenceY={negativeCeiling}
+        subdetail="-4.55%"
+      />
+    </VStack>
+  );
+};
+```
 
 ## Composed Examples
 
@@ -1234,288 +1515,3 @@ function ForecastAssetPrice() {
 - when to use cartesian chart
 - reference lines
 - custom lines
-
-You can specify the dimensions of the chart to make it more compact.
-
-```jsx live
-function CompactLineChart() {
-  const dimensions = { width: 62, height: 18 };
-
-  const sparklineData = prices
-    .map((price) => parseFloat(price))
-    .filter((price, index) => index % 10 === 0);
-  const positiveFloor = Math.min(...sparklineData) - 10;
-
-  const negativeData = sparklineData.map((price) => -1 * price).reverse();
-  const negativeCeiling = Math.max(...negativeData) + 10;
-
-  const formatPrice = useCallback((price: number) => {
-    return `$${price.toLocaleString('en-US', {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    })}`;
-  }, []);
-
-  const CompactChart = memo(({ data, showArea, color, referenceY }) => (
-    <Box style={{ padding: 1 }}>
-      <LineChart
-        {...dimensions}
-        enableScrubbing={false}
-        overflow="visible"
-        inset={0}
-        showArea={showArea}
-        series={[
-          {
-            id: 'btc',
-            data,
-            color,
-          },
-        ]}
-      >
-        <ReferenceLine dataY={referenceY} />
-      </LineChart>
-    </Box>
-  ));
-
-  const ChartCell = memo(({ data, showArea, color, referenceY, subdetail, variant }) => {
-    const { isPhone } = useBreakpoints();
-
-    return (
-      <ListCell
-        spacingVariant="condensed"
-        description={isPhone ? undefined : assets.btc.symbol}
-        detail={formatPrice(parseFloat(prices[0]))}
-        intermediary={
-          <CompactChart data={data} showArea={showArea} color={color} referenceY={referenceY} />
-        }
-        media={<Avatar src={assets.btc.imageUrl} />}
-        onClick={() => console.log('clicked')}
-        subdetail={subdetail}
-        title={isPhone ? undefined : assets.btc.name}
-        style={{ padding: 0 }}
-      />
-    );
-  });
-
-  return (
-    <VStack>
-      <ChartCell
-        data={sparklineData}
-        color={assets.btc.color}
-        referenceY={parseFloat(prices[Math.floor(prices.length / 4)])}
-        subdetail="-4.55%"
-      />
-      <ChartCell
-        data={sparklineData}
-        showArea
-        color={assets.btc.color}
-        referenceY={parseFloat(prices[Math.floor(prices.length / 4)])}
-        subdetail="-4.55%"
-      />
-      <ChartCell
-        data={sparklineData}
-        showArea
-        color="var(--color-fgPositive)"
-        referenceY={positiveFloor}
-        subdetail="+0.25%"
-      />
-      <ChartCell
-        data={negativeData}
-        showArea
-        color="var(--color-fgNegative)"
-        referenceY={negativeCeiling}
-        subdetail="-4.55%"
-      />
-    </VStack>
-  );
-};
-```
-
-## Gain/Loss
-
-You can use gradients to create a gain/loss chart that shows different colors for positive and negative values.
-
-```jsx live
-function GainLossChart() {
-  const data = [-40, -28, -21, -5, 48, -5, -28, 2, -29, -46, 16, -30, -29, 8];
-  const negativeColor = 'rgb(var(--gray15))';
-  const positiveColor = 'var(--color-fgPositive)';
-
-  const tickLabelFormatter = useCallback(
-    (value) =>
-      new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'USD',
-        maximumFractionDigits: 0,
-      }).format(value),
-    [],
-  );
-
-  // Line gradient: hard color change at 0 (full opacity for line)
-  const lineGradient = {
-    stops: [
-      { offset: 0, color: negativeColor },
-      { offset: 0, color: positiveColor },
-    ],
-  };
-
-  // Area gradient: combines hard color change with continuous opacity fade
-  const areaGradient = {
-    stops: ({ min, max }) => [
-      { offset: min, color: negativeColor, opacity: 0.4 },
-      { offset: 0, color: negativeColor, opacity: 0 },
-      { offset: 0, color: positiveColor, opacity: 0 },
-      { offset: max, color: positiveColor, opacity: 0.4 },
-    ],
-  };
-
-  const chartAccessibilityLabel = `Gain/Loss chart showing price changes. Current value: ${tickLabelFormatter(data[data.length - 1])}`;
-
-  const scrubberAccessibilityLabel = useCallback(
-    (index) => {
-      const value = data[index];
-      const status = value >= 0 ? 'gain' : 'loss';
-      return `Position ${index + 1} of ${data.length}: ${tickLabelFormatter(value)} ${status}`;
-    },
-    [data, tickLabelFormatter],
-  );
-
-  return (
-    <CartesianChart
-      enableScrubbing
-      height={{ base: 150, tablet: 200, desktop: 250 }}
-      series={[
-        {
-          id: 'prices',
-          data: data,
-          gradient: lineGradient,
-        },
-      ]}
-      inset={{ top: 12, bottom: 12, left: 0, right: 0 }}
-      accessibilityLabel={chartAccessibilityLabel}
-    >
-      <YAxis showGrid requestedTickCount={2} tickLabelFormatter={tickLabelFormatter} />
-      <Line
-        showArea
-        AreaComponent={(props) => <GradientArea {...props} gradient={areaGradient} />}
-        seriesId="prices"
-        strokeWidth={3}
-        type="gradient"
-      />
-      <Scrubber hideOverlay accessibilityLabel={scrubberAccessibilityLabel} />
-    </CartesianChart>
-  );
-}
-```
-
-## Empty State
-
-This example shows how to use an empty state for a line chart.
-
-```jsx live
-<LineChart
-  series={[
-    {
-      id: 'line',
-      color: 'rgb(var(--gray50))',
-      data: [1, 1],
-      showArea: true,
-    },
-  ]}
-  yAxis={{ domain: { min: -1, max: 3 } }}
-  height={{ base: 150, tablet: 200, desktop: 250 }}
-/>
-```
-
-## Accessibility
-
-You can use `accessibilityLabel` on both the chart and the scrubber to provide descriptive labels. The chart's label gives an overview, while the scrubber's label provides specific information about the current data point being viewed.
-
-```jsx live
-function AccessibleBasicChart() {
-  const data = [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58];
-
-  // Chart-level accessibility label provides overview
-  const chartAccessibilityLabel = useMemo(() => {
-    const currentPrice = data[data.length - 1];
-    return `Price chart showing trend over ${data.length} data points. Current value: ${currentPrice}. Use arrow keys to adjust view`;
-  }, [data]);
-
-  // Scrubber-level accessibility label provides specific position info
-  const scrubberAccessibilityLabel = useCallback(
-    (index: number) => {
-      return `Price at position ${index + 1} of ${data.length}: ${data[index]}`;
-    },
-    [data],
-  );
-
-  return (
-    <LineChart
-      enableScrubbing
-      height={{ base: 150, tablet: 200, desktop: 250 }}
-      series={[
-        {
-          id: 'prices',
-          data: data,
-        },
-      ]}
-
-      showYAxis
-      showArea
-      yAxis={{
-        showGrid: true,
-      }}
-      accessibilityLabel={chartAccessibilityLabel}
-    >
-      <Scrubber accessibilityLabel={scrubberAccessibilityLabel} />
-    </LineChart>
-  );
-}
-```
-
-When a chart has a visible header or title, you can use `aria-labelledby` to reference it, and still provide a dynamic scrubber accessibility label.
-
-```jsx live
-function AccessibleChartWithHeader() {
-  const headerId = useId();
-  const data = [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58];
-
-  // Display label provides overview
-  const displayLabel = `Revenue chart showing trend. Current value: ${data[data.length - 1]}`;
-
-  // Scrubber-specific accessibility label
-  const scrubberAccessibilityLabel = useCallback(
-    (index: number) => {
-      return `Viewing position ${index + 1} of ${data.length}, value: ${data[index]}`;
-    },
-    [data],
-  );
-
-  return (
-    <VStack gap={2}>
-      <Text id={headerId} font="label1">
-        {displayLabel}
-      </Text>
-      <LineChart
-        enableScrubbing
-        height={{ base: 150, tablet: 200, desktop: 250 }}
-        series={[
-          {
-            id: 'revenue',
-            data: data,
-          },
-        ]}
-
-        showYAxis
-        showArea
-        yAxis={{
-          showGrid: true,
-        }}
-        aria-labelledby={headerId}
-      >
-        <Scrubber accessibilityLabel={scrubberAccessibilityLabel} />
-      </LineChart>
-    </VStack>
-  );
-}
-```
