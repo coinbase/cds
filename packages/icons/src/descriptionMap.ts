@@ -455,7 +455,8 @@ export const descriptionMap: Record<string, IconName[]> = {
     'ethereum',
     'currencies',
     'stake',
-    'crypto'
+    'crypto',
+    'baseQuickBuy'
   ],
   'adventure': [
     'planet'
@@ -714,7 +715,8 @@ export const descriptionMap: Record<string, IconName[]> = {
     'star',
     'crypto',
     'peopleStar',
-    'creatorCoin'
+    'creatorCoin',
+    'baseQuickBuy'
   ],
   '🌕': [
     'moon'
@@ -974,7 +976,8 @@ export const descriptionMap: Record<string, IconName[]> = {
     'leadChart',
     'grid',
     'fscsProtection',
-    'config'
+    'config',
+    'baseQuickBuy'
   ],
   'profile': [
     'account',
@@ -1764,7 +1767,8 @@ export const descriptionMap: Record<string, IconName[]> = {
     'leadChart',
     'savingsBank',
     'creatorCoin',
-    'distribution'
+    'distribution',
+    'baseQuickBuy'
   ],
   'defi': [
     'defi'
@@ -5020,7 +5024,8 @@ export const descriptionMap: Record<string, IconName[]> = {
     'verifiedBadge',
     'staggeredList',
     'gitHubLogo',
-    'gitHubLogo'
+    'gitHubLogo',
+    'baseQuickBuy'
   ],
   'login': [
     'logout',
@@ -5587,5 +5592,8 @@ export const descriptionMap: Record<string, IconName[]> = {
   ],
   'sales': [
     'tokenSales'
+  ],
+  'quick buy': [
+    'baseQuickBuy'
   ]
 };

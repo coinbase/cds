@@ -427,5 +427,6 @@ export const names: IconName[] = [
   'config',
   'location',
   'unfollowPeople',
-  'tokenSales'
+  'tokenSales',
+  'baseQuickBuy'
 ];
