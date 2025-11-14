@@ -139,9 +139,9 @@ export const Avatar = memo(
       isLargestSize,
       isCustomSize,
       isCustomSizeAndSmall,
-      size,
       fallbackTextColor,
       placeholderLetter,
+      shouldUseSmallFont,
     ]);
 
     const coloredFallback = useMemo(
