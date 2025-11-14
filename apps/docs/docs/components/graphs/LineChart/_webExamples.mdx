@@ -776,10 +776,6 @@ function GainLossChart() {
 }
 ```
 
-### Inset
-
-todo: talk about inset and how we can use that to give space as needed.
-
 ### Lines
 
 You can customize lines by placing props in `LineChart` or at each individual series. Lines can have a `type` of `solid` or `dotted`. They can optionally show an area underneath them (using `showArea`).
@@ -915,6 +911,99 @@ function HighLowPrice() {
 ### Sizing
 
 Charts by default take up `100%` of the `width` and `height` available, but can be customized as any other component.
+
+```jsx live
+function ResizableLineChart() {
+  const candles = [...btcCandles].reverse();
+  const prices = candles.map((candle) => parseFloat(candle.close));
+  const highs = candles.map((candle) => parseFloat(candle.high));
+  const lows = candles.map((candle) => parseFloat(candle.low));
+
+  const latestPrice = prices[prices.length - 1];
+  const previousPrice = prices[prices.length - 2];
+  const change24h = ((latestPrice - previousPrice) / previousPrice) * 100;
+
+  function DetailCell ({ title, description }) {
+    return (
+      <VStack>
+        <Text font="label2" color="fgMuted">{title}</Text>
+        <Text font="headline">{description}</Text>
+      </VStack>
+    );
+  }
+
+  // Calculate 7-day moving average
+  const calculateMA = (data, period) => {
+    const ma = [];
+    for (let i = 0; i < data.length; i++) {
+      if (i < period - 1) {
+        ma.push(null);
+      } else {
+        const sum = data.slice(i - period + 1, i + 1).reduce((a, b) => a + b, 0);
+        ma.push(sum / period);
+      }
+    }
+    return ma;
+  };
+
+  const ma7 = calculateMA(prices, 7);
+  const latestMA7 = ma7[ma7.length - 1];
+
+  const periodHigh = Math.max(...highs);
+  const periodLow = Math.min(...lows);
+
+  const formatPrice = useCallback((price: number) => {
+    return `$${price.toLocaleString('en-US', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    })}`;
+  }, []);
+
+  const formatPercentage = useCallback((value: number) => {
+    const sign = value >= 0 ? '+' : '';
+    return `${sign}${value.toFixed(2)}%`;
+  }, []);
+
+  return (
+    <HStack gap={3}>
+      <Box
+        borderTopLeftRadius={300}
+        borderBottomLeftRadius={300}
+        flexGrow={1}
+        style={{
+          background: 'linear-gradient(0deg, #D07609 0%, #F7931A 100%)',
+          marginTop: 'calc(-1 * var(--space-3))',
+          marginLeft: 'calc(-1 * var(--space-3))',
+          marginBottom: 'calc(-1 * var(--space-3))',
+        }}
+      >
+        {/* LineChart fills to take up available width and height */}
+        <LineChart
+          series={[
+            {
+              id: 'btc',
+              data: prices,
+              color: 'white',
+            },
+          ]}
+        />
+      </Box>
+      <VStack gap={1}>
+        <VStack>
+          <Text font="title1">BTC</Text>
+          <Text font="title2">{formatPrice(latestPrice)}</Text>
+        </VStack>
+        <DetailCell title="High" description={formatPrice(periodHigh)} />
+        <DetailCell title="Low" description={formatPrice(periodLow)} />
+        <VStack gap={1} display={{ base: 'none', tablet: 'flex', desktop: 'flex' }}>
+          <DetailCell title="24h" description={formatPercentage(change24h)} />
+          <DetailCell title="7d MA" description={formatPrice(latestMA7)} />
+        </VStack>
+      </VStack>
+    </HStack>
+  );
+}
+```
 
 #### Compact
 
