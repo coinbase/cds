@@ -1483,16 +1483,26 @@ function ForecastAssetPrice() {
 
   const CustomScrubber = memo(() => {
     const { scrubberPosition } = useScrubberContext();
-    if (scrubberPosition === undefined) {
-      return <ScrubberBeacon seriesId="price" dataX={currentIndex} dataY={data[currentIndex]} />;
-    }
-    return <Scrubber hideOverlay />;
+    const isScrubbing = scrubberPosition !== undefined;
+    // We need a fade in animation for the Scrubber
+    return (
+      <m.g
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.15, delay: 0.35 }}
+      >
+        <g style={{ opacity: isScrubbing ? 1 : 0 }}>
+          <Scrubber hideOverlay />
+        </g>
+        <g style={{ opacity: isScrubbing ? 0 : 1 }}>
+          <ScrubberBeacon seriesId="price" dataX={currentIndex} dataY={data[currentIndex]} />
+        </g>
+      </m.g>
+    );
   });
 
-  // We are disabling animations since the scrubber change has a delay
   return (
     <CartesianChart
-      animate={false}
       enableScrubbing
       height={{ base: 150, tablet: 200, desktop: 250 }}
       maxWidth={512}
@@ -1515,3 +1525,6 @@ function ForecastAssetPrice() {
 - when to use cartesian chart
 - reference lines
 - custom lines
+- follow portfolio
+- follow asset
+- showcase customization
