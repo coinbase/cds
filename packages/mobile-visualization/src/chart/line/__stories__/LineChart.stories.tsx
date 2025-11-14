@@ -12,7 +12,7 @@ import { useTheme } from '@coinbase/cds-mobile';
 import { IconButton } from '@coinbase/cds-mobile/buttons';
 import { ListCell } from '@coinbase/cds-mobile/cells';
 import { Example, ExampleScreen } from '@coinbase/cds-mobile/examples/ExampleScreen';
-import { Box, HStack, VStack } from '@coinbase/cds-mobile/layout';
+import { Box, type BoxBaseProps, HStack, VStack } from '@coinbase/cds-mobile/layout';
 import { Avatar, RemoteImage } from '@coinbase/cds-mobile/media';
 import { SectionHeader } from '@coinbase/cds-mobile/section-header/SectionHeader';
 import { Pressable } from '@coinbase/cds-mobile/system';
@@ -1105,6 +1105,193 @@ function AssetPriceWithDottedArea() {
   return <AssetPriceDotted />;
 }
 
+function Performance() {
+  const AssetPriceDotted = memo(() => {
+    const [scrubberPosition, setScrubberPosition] = useState<number | undefined>();
+    const theme = useTheme();
+    const currentPrice =
+      sparklineInteractiveData.hour[sparklineInteractiveData.hour.length - 1].value;
+    const tabs = useMemo(
+      () => [
+        { id: 'hour', label: '1H' },
+        { id: 'day', label: '1D' },
+        { id: 'week', label: '1W' },
+        { id: 'month', label: '1M' },
+        { id: 'year', label: '1Y' },
+        { id: 'all', label: 'All' },
+      ],
+      [],
+    );
+    const [timePeriod, setTimePeriod] = useState<TabValue>(tabs[0]);
+
+    const sparklineTimePeriodData = useMemo(() => {
+      return sparklineInteractiveData[timePeriod.id as keyof typeof sparklineInteractiveData];
+    }, [timePeriod]);
+
+    const sparklineTimePeriodDataValues = useMemo(() => {
+      return sparklineTimePeriodData.map((d) => d.value);
+    }, [sparklineTimePeriodData]);
+
+    const sparklineTimePeriodDataTimestamps = useMemo(() => {
+      return sparklineTimePeriodData.map((d) => d.date);
+    }, [sparklineTimePeriodData]);
+
+    const onPeriodChange = useCallback(
+      (period: TabValue | null) => {
+        setTimePeriod(period || tabs[0]);
+      },
+      [tabs, setTimePeriod],
+    );
+
+    const priceFormatter = useMemo(
+      () =>
+        new Intl.NumberFormat('en-US', {
+          style: 'currency',
+          currency: 'USD',
+        }),
+      [],
+    );
+
+    const priceFormatterThousands = useMemo(
+      () =>
+        new Intl.NumberFormat('en-US', {
+          style: 'currency',
+          currency: 'USD',
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 0,
+        }),
+      [],
+    );
+
+    const formatPrice = useCallback(
+      (price: number) => {
+        return priceFormatter.format(price);
+      },
+      [priceFormatter],
+    );
+
+    const formatPriceThousands = useCallback(
+      (price: number) => {
+        return `${priceFormatterThousands.format(price / 1000)}k`;
+      },
+      [priceFormatterThousands],
+    );
+
+    const formatDate = useCallback((date: Date) => {
+      const dayOfWeek = date.toLocaleDateString('en-US', { weekday: 'short' });
+
+      const monthDay = date.toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
+      });
+
+      const time = date.toLocaleTimeString('en-US', {
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: true,
+      });
+
+      return `${dayOfWeek}, ${monthDay}, ${time}`;
+    }, []);
+
+    const getScrubberLabel = useCallback(
+      (d: number) => formatDate(sparklineTimePeriodDataTimestamps[d]),
+      [formatDate, sparklineTimePeriodDataTimestamps],
+    );
+
+    const LegendDot = memo((props: BoxBaseProps) => {
+      return <Box borderRadius={1000} height={10} width={10} {...props} />;
+    });
+
+    const LegendItem = memo(
+      ({
+        color = assets.btc.color,
+        label,
+        value,
+      }: {
+        color?: string;
+        label: string;
+        value?: string;
+      }) => {
+        return (
+          <Box alignItems="center" flexDirection="row" gap={0.5}>
+            <LegendDot style={{ backgroundColor: color }} />
+            <Text font="label2">{label}</Text>
+            {value && (
+              <Text color="fgMuted" font="label2" style={{ fontWeight: 'bold' }}>
+                {value}
+              </Text>
+            )}
+          </Box>
+        );
+      },
+    );
+
+    const shownPosition =
+      scrubberPosition !== undefined ? scrubberPosition : sparklineTimePeriodDataValues.length - 1;
+
+    return (
+      <VStack gap={2} style={{ marginLeft: -8, marginRight: -8 }}>
+        <HStack gap={1} paddingX={1}>
+          <LegendItem
+            color={theme.color.fgPositive}
+            label="High Price"
+            value={formatPriceThousands(sparklineTimePeriodDataValues[shownPosition] * 1.2)}
+          />
+          <LegendItem
+            color={assets.btc.color}
+            label="Actual Price"
+            value={formatPriceThousands(sparklineTimePeriodDataValues[shownPosition])}
+          />
+          <LegendItem
+            color={theme.color.fgNegative}
+            label="Low Price"
+            value={formatPriceThousands(sparklineTimePeriodDataValues[shownPosition] * 0.8)}
+          />
+        </HStack>
+        <LineChart
+          enableScrubbing
+          showArea
+          showYAxis
+          areaType="dotted"
+          height={300}
+          inset={{ top: 52, left: 0, right: 0 }}
+          onScrubberPositionChange={setScrubberPosition}
+          overflow="visible"
+          series={[
+            {
+              id: 'high',
+              data: sparklineTimePeriodDataValues.map((d) => d * 1.2),
+              color: theme.color.fgPositive,
+              label: 'High Price',
+            },
+            {
+              id: 'btc',
+              data: sparklineTimePeriodDataValues,
+              color: assets.btc.color,
+              label: 'Actual Price',
+            },
+            {
+              id: 'low',
+              data: sparklineTimePeriodDataValues.map((d) => d * 0.8),
+              color: theme.color.fgNegative,
+              label: 'Low Price',
+            },
+          ]}
+          style={{ outlineColor: assets.btc.color }}
+          xAxis={{ range: ({ min, max }) => ({ min, max: max - 16 }) }}
+          yAxis={{ showGrid: true, tickLabelFormatter: formatPriceThousands }}
+        >
+          <Scrubber idlePulse label={getScrubberLabel} />
+        </LineChart>
+        <PeriodSelector activeTab={timePeriod} onChange={onPeriodChange} tabs={tabs} />
+      </VStack>
+    );
+  });
+
+  return <AssetPriceDotted />;
+}
+
 /*function MonotoneAssetPrice() {
   const theme = useTheme();
   const prices = sparklineInteractiveData.hour;
@@ -1633,6 +1820,10 @@ function ExampleNavigator() {
       {
         title: 'Asset Price With Dotted Area',
         component: <AssetPriceWithDottedArea />,
+      },
+      {
+        title: 'Performance',
+        component: <Performance />,
       },
       {
         title: 'Service Availability',
