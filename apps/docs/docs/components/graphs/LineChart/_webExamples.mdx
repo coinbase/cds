@@ -22,9 +22,12 @@ Other props, such as `areaType` can be applied to the chart as a whole or per se
 
 ```jsx live
 function MultipleLine() {
-  const pages = ['Page A', 'Page B', 'Page C', 'Page D', 'Page E', 'Page F', 'Page G'];
-  const pageViews = [2400, 1398, 9800, 3908, 4800, 3800, 4300];
-  const uniqueVisitors = [4000, 3000, 2000, 2780, 1890, 2390, 3490];
+  const pages = useMemo(
+    () => ['Page A', 'Page B', 'Page C', 'Page D', 'Page E', 'Page F', 'Page G'],
+    [],
+  );
+  const pageViews = useMemo(() => [2400, 1398, 9800, 3908, 4800, 3800, 4300], []);
+  const uniqueVisitors = useMemo(() => [4000, 3000, 2000, 2780, 1890, 2390, 3490], []);
 
   const chartAccessibilityLabel = `Website visitors across ${pageViews.length} pages.`;
 
@@ -86,8 +89,8 @@ The data array for each series defines the y values for that series. You can adj
 
 ```jsx live
 function DataFormat() {
-  const yData = [2, 5.5, 2, 8.5, 1.5, 5];
-  const xData = [1, 2, 3, 5, 8, 10];
+  const yData = useMemo(() => [2, 5.5, 2, 8.5, 1.5, 5], []);
+  const xData = useMemo(() => [1, 2, 3, 5, 8, 10], []);
 
   const chartAccessibilityLabel = `Chart with custom X and Y data. ${yData.length} data points`;
 
@@ -983,6 +986,8 @@ When using [Scrubber](/components/graphs/Scrubber) with series that have labels,
 
 You can customize the line used for and which series will render a scrubber beacon.
 
+You can have scrubber beacon's pulse by either adding `idlePulse` to Scrubber or use Scrubber's ref to dynamically pulse.
+
 ```jsx live
 function StylingScrubber() {
   const pages = ['Page A', 'Page B', 'Page C', 'Page D', 'Page E', 'Page F', 'Page G'];
@@ -1027,7 +1032,7 @@ function StylingScrubber() {
         tickLabelFormatter: numberFormatter,
       }}
     >
-      <Scrubber LineComponent={SolidLine} seriesIds={['pageViews']} />
+      <Scrubber idlePulse LineComponent={SolidLine} seriesIds={['pageViews']} />
     </LineChart>
   );
 }

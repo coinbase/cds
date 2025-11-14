@@ -1,16 +1,7 @@
-import {
-  forwardRef,
-  memo,
-  useCallback,
-  useEffect,
-  useId,
-  useImperativeHandle,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import { forwardRef, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { View } from 'react-native';
-import { useDerivedValue } from 'react-native-reanimated';
+import { useSharedValue, withDelay, withTiming } from 'react-native-reanimated';
+import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import { assets } from '@coinbase/cds-common/internal/data/assets';
 import { candles as btcCandles } from '@coinbase/cds-common/internal/data/candles';
 import { prices } from '@coinbase/cds-common/internal/data/prices';
@@ -18,1680 +9,161 @@ import { sparklineInteractiveData } from '@coinbase/cds-common/internal/visualiz
 import { useTabsContext } from '@coinbase/cds-common/tabs/TabsContext';
 import type { TabValue } from '@coinbase/cds-common/tabs/useTabs';
 import { useTheme } from '@coinbase/cds-mobile';
-import { Button } from '@coinbase/cds-mobile/buttons';
+import { ListCell } from '@coinbase/cds-mobile/cells';
 import { Example, ExampleScreen } from '@coinbase/cds-mobile/examples/ExampleScreen';
 import { Box, HStack, VStack } from '@coinbase/cds-mobile/layout';
-import { RemoteImage } from '@coinbase/cds-mobile/media';
+import { Avatar, RemoteImage } from '@coinbase/cds-mobile/media';
 import { SectionHeader } from '@coinbase/cds-mobile/section-header/SectionHeader';
-import {
-  SegmentedTabs,
-  type TabComponent,
-  type TabsActiveIndicatorProps,
-} from '@coinbase/cds-mobile/tabs';
+import { Pressable } from '@coinbase/cds-mobile/system';
+import { type TabComponent, type TabsActiveIndicatorProps } from '@coinbase/cds-mobile/tabs';
 import { SegmentedTab, type SegmentedTabProps } from '@coinbase/cds-mobile/tabs/SegmentedTab';
 import { TextLabel1 } from '@coinbase/cds-mobile/typography';
 import { Text } from '@coinbase/cds-mobile/typography/Text';
-import {
-  FontWeight,
-  Line as SkiaLine,
-  Rect,
-  Skia,
-  type SkTextStyle,
-  TextAlign,
-} from '@shopify/react-native-skia';
+import { FontWeight, Group, Skia, type SkTextStyle, TextAlign } from '@shopify/react-native-skia';
 
-import {
-  AreaChart,
-  type AreaComponentProps,
-  DottedArea,
-  GradientArea,
-  SolidArea,
-} from '../../area';
+import { Area, DottedArea, type DottedAreaProps } from '../../area';
 import { XAxis, YAxis } from '../../axis';
-import type { BarComponentProps } from '../../bar/Bar';
-import { BarChart } from '../../bar/BarChart';
-import { CartesianChart, type CartesianChartProps } from '../../CartesianChart';
+import { CartesianChart } from '../../CartesianChart';
 import { useCartesianChartContext } from '../../ChartProvider';
 import { PeriodSelector, PeriodSelectorActiveIndicator } from '../../PeriodSelector';
 import { Point } from '../../Point';
 import { Scrubber, type ScrubberRef } from '../../scrubber';
-import { ScrubberBeacon, type ScrubberBeaconProps } from '../../scrubber/ScrubberBeacon';
+import { type AxisBounds, type Transition, useScrubberContext } from '../../utils';
 import {
-  getPointOnSerializableScale,
-  type Transition,
-  unwrapAnimatedValue,
-  useScrubberContext,
-} from '../../utils';
-import type { ChartAxisScaleType, SerializableScale } from '../../utils/scale';
-import {
+  DottedLine,
+  type DottedLineProps,
   Line,
   LineChart,
-  type LineComponentProps,
   ReferenceLine,
   SolidLine,
   type SolidLineProps,
 } from '..';
 
-const defaultChartHeight = 200;
-
-const sampleData = [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58];
-
-const formatChartDate = (timestamp: string, timeframe: string): string => {
-  const date = new Date(timestamp);
-
-  switch (timeframe) {
-    case 'hour':
-    case '1H':
-      return date.toLocaleString('en-US', {
-        hour: 'numeric',
-        minute: '2-digit',
-        hour12: true,
-      });
-    case 'day':
-    case '1D':
-      return date.toLocaleString('en-US', {
-        month: 'short',
-        day: 'numeric',
-        hour: 'numeric',
-        minute: '2-digit',
-        hour12: true,
-      });
-    case 'week':
-    case 'month':
-    case '1W':
-    case '1M':
-      return date.toLocaleDateString('en-US', {
-        month: 'short',
-        day: 'numeric',
-        year: 'numeric',
-      });
-    case 'year':
-    case 'all':
-    case '1Y':
-    case 'All':
-      return date.toLocaleDateString('en-US', {
-        month: 'short',
-        year: 'numeric',
-      });
-    default:
-      return date.toLocaleDateString('en-US');
-  }
-};
-
-type TrendData = {
-  trendPrice: number;
-  trendPreviousPrice: number;
-  trendDirection: 'up' | 'down' | 'neutral';
-  displayDate: string;
-};
-
-const calculateTrendData = (
-  scrubberPosition: number | undefined,
-  currentData: number[],
-  currentTimestamps: string[],
-  startPrice: number,
-  currentPrice: number,
-  activeTimeframe: string,
-): TrendData => {
-  if (scrubberPosition !== undefined) {
-    // When hovering, show trend relative to START of time period (not previous point)
-    const hoverIndex = scrubberPosition;
-    const hoverPrice = currentData[hoverIndex];
-    const hoverPriceChange = hoverPrice - startPrice; // Fixed: relative to start price
-    const hoverTimestamp = currentTimestamps[hoverIndex];
-
-    return {
-      trendPrice: hoverPrice,
-      trendPreviousPrice: startPrice, // Fixed: always use start price
-      trendDirection: hoverPriceChange > 0 ? 'up' : hoverPriceChange < 0 ? 'down' : 'neutral',
-      displayDate: formatChartDate(hoverTimestamp, activeTimeframe),
-    };
-  } else {
-    // When not hovering, show current trend relative to start
-    const latestTimestamp = currentTimestamps[currentTimestamps.length - 1];
-    const priceChange = currentPrice - startPrice;
-
-    return {
-      trendPrice: currentPrice,
-      trendPreviousPrice: startPrice,
-      trendDirection: priceChange > 0 ? 'up' : priceChange < 0 ? 'down' : 'neutral',
-      displayDate: formatChartDate(latestTimestamp, activeTimeframe),
-    };
-  }
-};
-
-export const BasicLineChart = () => {
-  const chartData = [65, 78, 45, 88, 92, 73, 69];
-
-  return (
-    <LineChart
-      enableScrubbing
-      showYAxis
-      height={defaultChartHeight}
-      renderPoints={() => true}
-      series={[
-        {
-          id: 'monthly-growth',
-          data: chartData,
-          label: 'Monthly Growth',
-          color: '#2ca02c',
-        },
-      ]}
-      yAxis={{
-        requestedTickCount: 2,
-        tickLabelFormatter: (value) => `$${value}`,
-        showGrid: true,
-      }}
-    >
-      <Scrubber />
-    </LineChart>
-  );
-};
-
-export const BasicLineChartWithPoints = () => {
-  const chartData = [65, 78, 45, 88, 92, 73, 69];
-
-  return (
-    <LineChart
-      showYAxis
-      height={defaultChartHeight}
-      renderPoints={() => true}
-      series={[
-        {
-          id: 'monthly-growth',
-          data: chartData,
-          label: 'Monthly Growth',
-          color: '#2ca02c',
-        },
-      ]}
-      yAxis={{
-        requestedTickCount: 2,
-        tickLabelFormatter: (value) => `$${value}`,
-        showGrid: true,
-      }}
-    >
-      <Point
-        dataX={2}
-        dataY={60}
-        fill="purple"
-        label="hello world im on a point!"
-        labelProps={{
-          verticalAlignment: 'bottom',
-        }}
-        onPress={() => console.log('clicked')}
-        radius={6}
-        stroke="purple"
-        strokeWidth={7}
-      />
-      <ReferenceLine
-        dataX={2}
-        label="testing 123"
-        labelProps={{
-          color: '#10b981',
-          inset: 0,
-          verticalAlignment: 'middle',
-        }}
-      />
-      <ReferenceLine dataY={60} label="testing 123" labelProps={{ horizontalAlignment: 'left' }} />
-      <Point dataX={5} dataY={50} fill="orange" radius={5} />
-    </LineChart>
-  );
-};
-
-const data = sparklineInteractiveData.all.map((d) => d.value);
-
-const ethData = data.map((value) => value * 2);
-const uniData = data.map((value) => value * 3);
-
-export const ScrubberWithBeaconLabels = () => {
+function MultipleLine() {
   const theme = useTheme();
-  const formatPrice = useCallback((value: number, prefix = '$') => {
-    return `${prefix}${new Intl.NumberFormat('en-US', {
-      maximumFractionDigits: 0,
-    }).format(value)}`;
-  }, []);
-
-  return (
-    <VStack gap={2}>
-      <Text font="title3">Multi-Series with Beacon Labels</Text>
-      <Text font="body" style={{ color: theme.color.fgMuted }}>
-        Scrub the chart to see labels on each series beacon
-      </Text>
-      <LineChart
-        enableScrubbing
-        height={defaultChartHeight}
-        inset={{ top: 4, bottom: 4, left: 0, right: 60 }}
-        series={[
-          {
-            id: 'btc',
-            data: data,
-            color: assets.btc.color,
-          },
-          {
-            id: 'eth',
-            data: ethData,
-            color: assets.eth.color,
-          },
-          {
-            id: 'uni',
-            data: uniData,
-            color: assets.uni.color,
-          },
-        ]}
-        yAxis={{
-          requestedTickCount: 3,
-          showGrid: true,
-        }}
-      >
-        <Scrubber idlePulse />
-      </LineChart>
-    </VStack>
+  const [scrubberPosition, setScrubberPosition] = useState<number | undefined>();
+  const pages = useMemo(
+    () => ['Page A', 'Page B', 'Page C', 'Page D', 'Page E', 'Page F', 'Page G'],
+    [],
   );
-};
+  const pageViews = useMemo(() => [2400, 1398, 9800, 3908, 4800, 3800, 4300], []);
+  const uniqueVisitors = useMemo(() => [4000, 3000, 2000, 2780, 1890, 2390, 3490], []);
 
-export const AssetPrice = () => {
-  const pricePointsPerHour = 12;
-  const currentHour = 14;
-  const pricePointsToShow = currentHour * pricePointsPerHour;
-  const parsedPrices = useMemo(
-    () => prices.slice(0, pricePointsToShow).map((price) => parseFloat(price)),
-    [pricePointsToShow],
-  );
-  const [highlightedItemIndex, setHighlightedItemIndex] = useState<number | undefined>(undefined);
+  const chartAccessibilityLabel = `Website visitors across ${pageViews.length} pages.`;
 
-  const isHovering = useMemo(
-    () => typeof highlightedItemIndex === 'number' && highlightedItemIndex < pricePointsToShow,
-    [highlightedItemIndex, pricePointsToShow],
-  );
-
-  const indexToTime = useCallback((index: number) => {
-    const date = new Date();
-    date.setHours(0, 0, 0, 0);
-    date.setMinutes(index * 5);
-    return date.toLocaleTimeString('en-US', {
-      hour: 'numeric',
-      minute: '2-digit',
-      hour12: true,
-    });
-  }, []);
-
-  const onScrubberPositionChange = useCallback((scrubberPosition: number | undefined) => {
-    setHighlightedItemIndex(scrubberPosition);
-  }, []);
-
-  const highlightedPrice = useMemo(() => {
-    const price =
-      isHovering && typeof highlightedItemIndex === 'number'
-        ? prices[highlightedItemIndex]
-        : prices[prices.length - 1];
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-    }).format(parseFloat(price));
-  }, [highlightedItemIndex, isHovering]);
-
-  // Calculate trend information
-  const trendInfo: { direction: 'up' | 'down' | 'neutral'; text: string } = useMemo(() => {
-    const currentPrice =
-      isHovering && typeof highlightedItemIndex === 'number'
-        ? parseFloat(prices[highlightedItemIndex])
-        : parseFloat(prices[prices.length - 1]);
-    const startPrice = parseFloat(prices[0]);
-    const priceChange = currentPrice - startPrice;
-    const percentChange = (priceChange / startPrice) * 100;
-
-    const trendDirection = priceChange > 0 ? 'up' : priceChange < 0 ? 'down' : 'neutral';
-
-    const formattedPriceChange = new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-    }).format(Math.abs(priceChange));
-
-    const formattedPercentChange = `${Math.abs(percentChange).toFixed(2)}%`;
-
-    return {
-      direction: trendDirection,
-      text: `${formattedPriceChange} (${formattedPercentChange})`,
-    };
-  }, [highlightedItemIndex, isHovering]);
-
-  return (
-    <VStack gap={2}>
-      <LineChart
-        height={defaultChartHeight}
-        inset={{ top: 4, bottom: 8, left: 0, right: 0 }}
-        onScrubberPositionChange={onScrubberPositionChange}
-        series={[
-          {
-            id: 'price',
-            data: parsedPrices,
-            color: assets.btc.color,
-          },
-        ]}
-        xAxis={{ domain: { min: 0, max: pricePointsPerHour * 24 } }}
-      >
-        <XAxis
-          tickLabelFormatter={(index) => indexToTime(index).slice(0, -3)}
-          ticks={(index) => index % (12 * 6) === 0}
-        />
-        <ReferenceLine dataY={parsedPrices[0]} />
-      </LineChart>
-    </VStack>
-  );
-};
-
-const LineStyles = () => {
-  const topChartData = [15, 28, 32, 44, 46, 36, 40, 45, 48, 38];
-  const upperMiddleChartData = [12, 23, 21, 29, 34, 28, 31, 38, 42, 35];
-  const lowerMiddleChartData = [8, 15, 14, 25, 20, 18, 22, 28, 24, 30];
-  const bottomChartData = [4, 8, 11, 15, 16, 14, 16, 10, 12, 14];
-
-  return (
-    <CartesianChart
-      height={defaultChartHeight}
-      series={[
-        {
-          id: 'top',
-          data: topChartData,
-        },
-        {
-          id: 'upperMiddle',
-          data: upperMiddleChartData,
-          color: '#ef4444',
-        },
-        {
-          id: 'lowerMiddle',
-          data: lowerMiddleChartData,
-          gradient: {
-            stops: ({ min, max }) => [
-              { offset: min, color: '#E3D74D' },
-              { offset: max, color: '#F7931A' },
-            ],
-          },
-        },
-        {
-          id: 'bottom',
-          data: bottomChartData,
-          color: '#800080',
-        },
-      ]}
-    >
-      <Line renderPoints={() => true} seriesId="top" />
-      <Line renderPoints={() => true} seriesId="upperMiddle" type="dotted" />
-      <Line curve="natural" renderPoints={() => true} seriesId="lowerMiddle" strokeWidth={4} />
-      <Line showArea AreaComponent={DottedArea} curve="step" seriesId="bottom" />
-    </CartesianChart>
-  );
-};
-
-export const ChartScale = () => {
-  // Generate exponential growth data that benefits from log scaling
-  const exponentialData = [
-    1, 2, 4, 8, 15, 30, 65, 140, 280, 580, 1200, 2400, 4800, 9500, 19000, 38000, 75000, 150000,
-  ];
-
-  const scaleTypes = [
-    { id: 'linear', label: 'Linear' },
-    { id: 'log', label: 'Log' },
-  ];
-
-  const [selectedScaleType, setSelectedScaleType] = useState<TabValue | null>(scaleTypes[0]);
-
-  return (
-    <VStack gap={3}>
-      <VStack alignItems="flex-end" gap={2}>
-        <HStack alignItems="center" gap={2}>
-          <Text font="label1">Scale Type</Text>
-          <SegmentedTabs
-            activeTab={selectedScaleType}
-            onChange={setSelectedScaleType}
-            tabs={scaleTypes}
-          />
-        </HStack>
-      </VStack>
-      <LineChart
-        showYAxis
-        curve="natural"
-        height={defaultChartHeight}
-        series={[
-          {
-            id: 'growth',
-            data: exponentialData,
-            color: '#10b981',
-          },
-        ]}
-        yAxis={{
-          scaleType: selectedScaleType?.id as ChartAxisScaleType,
-          requestedTickCount: 5,
-          tickLabelFormatter: (value) => value.toLocaleString(),
-          showGrid: true,
-          width: 70,
-        }}
-      />
-    </VStack>
-  );
-};
-
-export const ColorShiftChart = () => {
-  const theme = useTheme();
-  const [activeTab, setActiveTab] = useState<TabValue | null>({ id: '1H', label: '1H' });
-
-  const tabConversion = {
-    '1H': 'hour',
-    '1D': 'day',
-    '1W': 'week',
-    '1M': 'month',
-    '1Y': 'year',
-    All: 'all',
-  };
-
-  const currentPriceData = activeTab
-    ? sparklineInteractiveData[
-        tabConversion[
-          activeTab.id as keyof typeof tabConversion
-        ] as keyof typeof sparklineInteractiveData
-      ]
-    : sparklineInteractiveData.hour;
-
-  const currentData = useMemo(
-    () => [...currentPriceData.map((price) => price.value)],
-    [currentPriceData],
-  );
-  const currentTimestamps = useMemo(
-    () => [...currentPriceData.map((price) => price.date.toISOString())],
-    [currentPriceData],
-  );
-
-  const startPrice = currentData[0];
-  const currentPrice = currentData[currentData.length - 1];
-  const priceChange = currentPrice - startPrice;
-
-  // Determine colors based on trend
-  const trendColor = useMemo(() => {
-    return priceChange >= 0 ? theme.color.fgPositive : theme.color.fgNegative;
-  }, [priceChange, theme.color.fgPositive, theme.color.fgNegative]);
-
-  const activeBackground = useMemo(() => {
-    return priceChange >= 0 ? 'bgPositiveWash' : 'bgNegativeWash';
-  }, [priceChange]);
-
-  const formatPrice = useCallback((price: number) => {
-    return `$${price.toLocaleString('en-US', {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    })}`;
-  }, []);
-
-  const scrubberLabel = useCallback(
+  const scrubberAccessibilityLabel = useCallback(
     (index: number) => {
-      const timestamp = currentTimestamps[index];
-      return formatChartDate(timestamp, activeTab?.id || '1H');
+      return `${pages[index]} has ${pageViews[index]} views and ${uniqueVisitors[index]} unique visitors.`;
     },
-    [activeTab?.id, currentTimestamps],
+    [pages, pageViews, uniqueVisitors],
   );
 
-  // Custom tab component that uses the trend color for both active and inactive states
-  const ColorShiftTab: TabComponent = useMemo(
-    () =>
-      memo(
-        forwardRef(({ label, ...props }: SegmentedTabProps, ref: React.ForwardedRef<any>) => {
-          return (
-            <SegmentedTab
-              ref={ref}
-              activeColor={trendColor as any}
-              color={trendColor as any}
-              font="label1"
-              label={label}
-              {...props}
-            />
-          );
-        }),
-      ),
-    [trendColor],
-  );
-
-  const tabs = useMemo(
-    () => [
-      { id: '1H', label: '1H' },
-      { id: '1D', label: '1D' },
-      { id: '1W', label: '1W' },
-      { id: '1M', label: '1M' },
-      { id: '1Y', label: '1Y' },
-      { id: 'All', label: 'All' },
-    ],
+  const numberFormatter = useCallback(
+    (value: number) => new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 }).format(value),
     [],
   );
 
-  return (
-    <Box style={{ marginLeft: -16, marginRight: -16 }}>
-      <VStack gap={3} width="100%">
-        <LineChart
-          enableScrubbing
-          showXAxis
-          height={defaultChartHeight}
-          inset={{ left: 0, right: 24, bottom: 0 }}
-          series={[
-            {
-              id: 'price',
-              data: currentData,
-              color: trendColor,
-            },
-          ]}
-        >
-          <Scrubber idlePulse label={scrubberLabel} />
-          <ReferenceLine
-            dataY={startPrice}
-            label={formatPrice(startPrice)}
-            labelProps={{
-              horizontalAlignment: 'right',
-              inset: 4,
-              borderRadius: 4,
-              color: theme.color.fgInverse,
-              background: priceChange >= 0 ? theme.color.bgPositive : theme.color.bgNegative,
-            }}
-            stroke={priceChange >= 0 ? theme.color.bgPositive : theme.color.bgNegative}
-          />
-        </LineChart>
-        <PeriodSelector
-          TabComponent={ColorShiftTab}
-          activeBackground={activeBackground}
-          activeTab={activeTab}
-          onChange={setActiveTab}
-          tabs={tabs}
-        />
-      </VStack>
-    </Box>
-  );
-};
-
-export const PriceChart = () => {
-  const { latestPrice, formattedPrice } = useMemo(() => {
-    const latestPrice =
-      sparklineInteractiveData.hour[sparklineInteractiveData.hour.length - 1].value;
-    return {
-      latestPrice,
-      formattedPrice: `$${latestPrice.toLocaleString('en-US', {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-      })}`,
-    };
-  }, []);
-
-  const tabs = useMemo(
-    () => [
-      {
-        id: '1H',
-        label: '1H',
-      },
-      { id: '1D', label: '1D' },
-      { id: '1W', label: '1W' },
-      { id: '1M', label: '1M' },
-      { id: '1Y', label: '1Y' },
-      { id: 'All', label: 'All' },
-    ],
-    [],
-  );
-
-  const [activeTab, setActiveTab] = useState<TabValue | null>(tabs[0]);
-  const isLive = useMemo(() => activeTab?.id === '1H', [activeTab]);
-
-  const activeBackground = useMemo(() => (!isLive ? 'bgPrimaryWash' : 'bgNegativeWash'), [isLive]);
-
-  const [isHovering, setIsHovering] = useState(false);
-
-  const tabConversion = {
-    '1H': 'hour',
-    '1D': 'day',
-    '1W': 'week',
-    '1M': 'month',
-    '1Y': 'year',
-    All: 'all',
-  };
-
-  const currentPriceData = activeTab
-    ? sparklineInteractiveData[
-        tabConversion[
-          activeTab.id as keyof typeof tabConversion
-        ] as keyof typeof sparklineInteractiveData
-      ]
-    : sparklineInteractiveData.hour;
-
-  const currentData = useMemo(
-    () => [...currentPriceData.map((price) => price.value)],
-    [currentPriceData],
-  );
-  const currentTimestamps = useMemo(
-    () => [...currentPriceData.map((price) => price.date.toISOString())],
-    [currentPriceData],
-  );
-  const startPrice = currentData[0];
-
-  const { lowestPriceIndices, highestPriceIndices } = useMemo(() => {
-    if (currentData.length === 0) {
-      return { lowestPriceIndices: [], highestPriceIndices: [], minPrice: 0, maxPrice: 0 };
+  const accessibilityLabel = useMemo(() => {
+    if (scrubberPosition !== undefined) {
+      return scrubberAccessibilityLabel(scrubberPosition);
     }
-
-    let minPrice = currentData[0];
-    let maxPrice = currentData[0];
-
-    // First pass: find min and max values
-    for (let i = 1; i < currentData.length; i++) {
-      if (currentData[i] < minPrice) {
-        minPrice = currentData[i];
-      }
-      if (currentData[i] > maxPrice) {
-        maxPrice = currentData[i];
-      }
-    }
-
-    // Second pass: find all indices where min and max occur
-    const lowestPriceIndices: number[] = [];
-    const highestPriceIndices: number[] = [];
-
-    for (let i = 0; i < currentData.length; i++) {
-      if (currentData[i] === minPrice) {
-        lowestPriceIndices.push(i);
-      }
-      if (currentData[i] === maxPrice) {
-        highestPriceIndices.push(i);
-      }
-    }
-
-    return { lowestPriceIndices, highestPriceIndices, minPrice, maxPrice };
-  }, [currentData]);
-
-  const latestPriceCoords = useMemo(() => {
-    if (currentData.length === 0) return {};
-    return {
-      x: currentData.length - 1,
-      y: currentData[currentData.length - 1],
-    };
-  }, [currentData]);
-
-  const onScrubberPositionChange = useCallback((item: number | undefined) => {
-    setIsHovering(item !== undefined);
-  }, []);
-
-  const { trendPrice, trendPreviousPrice, trendDirection } = useMemo(() => {
-    return calculateTrendData(
-      undefined,
-      currentData,
-      currentTimestamps,
-      startPrice,
-      latestPrice,
-      activeTab?.id || '1H',
-    );
-  }, [currentData, currentTimestamps, startPrice, latestPrice, activeTab]);
-
-  const calculatedPriceChange = trendPrice - trendPreviousPrice;
-  const calculatedPercentChange = (calculatedPriceChange / trendPreviousPrice) * 100;
-
-  const formattedPriceChange = `$${Math.abs(calculatedPriceChange).toLocaleString('en-US', {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  })} (${Math.abs(calculatedPercentChange).toLocaleString('en-US', {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  })}%)`;
-
-  const scrubberLabel = useCallback(
-    (item: number | undefined) => {
-      if (item === undefined) return null;
-      const timestamp = currentTimestamps[item];
-      const price = currentData[item];
-      const formattedPrice =
-        price.toLocaleString('en-US', {
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2,
-        }) + ' USD';
-      const formattedDate = formatChartDate(timestamp, activeTab?.id || '1H');
-
-      return (
-        <>
-          <tspan style={{ fontWeight: 'bold', display: 'inline-block' }}>{formattedPrice}</tspan>
-          <tspan style={{ display: 'inline-block' }}> {formattedDate}</tspan>
-        </>
-      );
-    },
-    [currentTimestamps, currentData, activeTab?.id],
-  );
-
-  const formatPrice = useCallback((value: number) => {
-    return `$${value.toLocaleString('en-US', {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    })}`;
-  }, []);
-
-  return (
-    <VStack gap={3} width="100%">
-      <LineChart
-        height={defaultChartHeight}
-        inset={{ left: 0, right: 3, bottom: 3, top: 3 }}
-        onScrubberPositionChange={onScrubberPositionChange}
-        series={[
-          {
-            id: 'price',
-            data: currentData,
-            color: assets.eth.color,
-            renderPoints: ({ dataX: index }) => {
-              if (highestPriceIndices.includes(index)) {
-                return {
-                  opacity: 0,
-                  label: formatPrice(currentData[index]),
-                };
-              }
-
-              if (lowestPriceIndices.includes(index)) {
-                return {
-                  opacity: 0,
-                  label: formatPrice(currentData[index]),
-                };
-              }
-            },
-          },
-        ]}
-        yAxis={{ domainLimit: 'strict' }}
-      >
-        <Scrubber />
-      </LineChart>
-      <PeriodSelector activeTab={activeTab} onChange={(tab) => setActiveTab(tab)} tabs={tabs} />
-    </VStack>
-  );
-};
-
-export const ForecastChart = () => {
-  const getDataFromSparkline = (startDate: Date) => {
-    const allData = sparklineInteractiveData.all;
-    if (!allData || allData.length === 0) return [];
-
-    const timelineData = allData.filter((point) => point.date >= startDate);
-
-    return timelineData.map((point) => ({
-      date: point.date,
-      value: point.value,
-    }));
-  };
-
-  const historicalData = useMemo(() => getDataFromSparkline(new Date('2019-01-01')), []);
-
-  const annualGrowthRate = 10;
-
-  const generateForecastData = useCallback(
-    (lastDate: Date, lastPrice: number, growthRate: number) => {
-      const dailyGrowthRate = Math.pow(1 + growthRate / 100, 1 / 365) - 1;
-      const forecastData: Array<{ date: Date; value: number }> = [];
-      const fiveYearsFromNow = new Date(lastDate);
-      fiveYearsFromNow.setFullYear(fiveYearsFromNow.getFullYear() + 5);
-
-      // Generate daily forecast points for 5 years
-      const currentDate = new Date(lastDate);
-      let currentPrice = lastPrice;
-
-      while (currentDate <= fiveYearsFromNow) {
-        currentPrice = currentPrice * (1 + dailyGrowthRate * 10);
-        forecastData.push({
-          date: new Date(currentDate),
-          value: Math.round(currentPrice),
-        });
-        currentDate.setDate(currentDate.getDate() + 10);
-      }
-
-      return forecastData;
-    },
-    [],
-  );
-
-  const forecastData = useMemo(() => {
-    if (historicalData.length === 0) return [];
-    const lastPoint = historicalData[historicalData.length - 1];
-    return generateForecastData(lastPoint.date, lastPoint.value, annualGrowthRate);
-  }, [generateForecastData, historicalData, annualGrowthRate]);
-
-  // Combine all data points with dates converted to timestamps for x-axis
-  const allDataPoints = useMemo(
-    () => [...historicalData, ...forecastData],
-    [historicalData, forecastData],
-  );
-
-  const formatPrice = useCallback((price: number) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    }).format(price);
-  }, []);
-
-  // Format x-axis labels to show years
-  const formatXAxisLabel = useCallback((timestamp: number) => {
-    return new Date(timestamp).getFullYear().toString();
-  }, []);
+    return chartAccessibilityLabel;
+  }, [scrubberPosition, chartAccessibilityLabel, scrubberAccessibilityLabel]);
 
   return (
     <LineChart
       enableScrubbing
+      showArea
       showXAxis
-      areaType="dotted"
-      height={defaultChartHeight}
-      inset={{
-        top: 4,
-        left: 0,
-        right: 0,
-        bottom: 0,
-      }}
+      showYAxis
+      accessibilityLabel={accessibilityLabel}
+      height={200}
+      onScrubberPositionChange={setScrubberPosition}
       series={[
         {
-          id: 'historical',
-          data: historicalData.map((d) => d.value),
-          color: assets.btc.color,
+          id: 'pageViews',
+          data: pageViews,
+          color: theme.color.accentBoldGreen,
+          // Label will render next to scrubber beacon
+          label: 'Page Views',
         },
         {
-          id: 'forecast',
-          data: [...historicalData.map((d) => null), ...forecastData.map((d) => d.value)],
-          color: assets.btc.color,
-          type: 'dotted',
+          id: 'uniqueVisitors',
+          data: uniqueVisitors,
+          color: theme.color.accentBoldPurple,
+          label: 'Unique Visitors',
+          // Default area is gradient
+          areaType: 'dotted',
         },
       ]}
       xAxis={{
-        data: allDataPoints.map((d) => d.date.getTime()),
-        tickLabelFormatter: formatXAxisLabel,
-        tickInterval: 32,
+        // Used on the x-axis to provide context for each index from the series data array
+        data: pages,
+      }}
+      yAxis={{
+        showGrid: true,
+        tickLabelFormatter: numberFormatter,
       }}
     >
       <Scrubber />
     </LineChart>
   );
-};
-
-const BTCTab: TabComponent = memo(
-  forwardRef(({ label, ...props }: SegmentedTabProps, ref: React.ForwardedRef<View>) => {
-    const { activeTab } = useTabsContext();
-    const isActive = activeTab?.id === props.id;
-
-    return (
-      <SegmentedTab
-        ref={ref}
-        label={
-          <TextLabel1
-            style={{
-              color: isActive ? assets.btc.color : undefined,
-            }}
-          >
-            {label}
-          </TextLabel1>
-        }
-        {...props}
-      />
-    );
-  }),
-);
-
-function AnimatedGainLossChart() {
-  const theme = useTheme();
-  const negativeColor = `rgb(${theme.spectrum.gray15})`;
-  const positiveColor = theme.color.fgPositive;
-  const MyGradient = memo((props: AreaComponentProps) => {
-    // Area gradient: combines hard color change with continuous opacity fade
-    const areaGradient = {
-      stops: ({ min, max }: { min: number; max: number }) => [
-        { offset: min, color: negativeColor, opacity: 1 },
-        { offset: 0, color: negativeColor, opacity: 0 },
-        { offset: 0, color: positiveColor, opacity: 0 },
-        { offset: max, color: positiveColor, opacity: 1 },
-      ],
-    };
-
-    return <DottedArea {...props} gradient={areaGradient} />;
-  });
-  function InnerChart() {
-    const [data, setData] = useState([
-      -40, -28, -21, -5, 48, -5, 0, -28, 2, -29, -46, 16, -30, -29, 8,
-    ]);
-
-    const tickLabelFormatter = useCallback(
-      (value: number) =>
-        new Intl.NumberFormat('en-US', {
-          style: 'currency',
-          currency: 'USD',
-          maximumFractionDigits: 0,
-        }).format(value),
-      [],
-    );
-
-    // Line gradient: hard color change at 0 (full opacity for line)
-    const lineGradient = {
-      stops: [
-        { offset: 0, color: negativeColor },
-        { offset: 0, color: positiveColor },
-      ],
-    };
-
-    const transition: Transition = { type: 'spring', stiffness: 700, damping: 20 };
-
-    return (
-      <VStack gap={2}>
-        <CartesianChart
-          enableScrubbing
-          height={150}
-          inset={{ top: 12, bottom: 12, left: 0, right: 0 }}
-          series={[
-            {
-              id: 'prices',
-              data: data,
-              gradient: lineGradient,
-            },
-          ]}
-        >
-          <YAxis showGrid requestedTickCount={2} tickLabelFormatter={tickLabelFormatter} />
-          <Line
-            showArea
-            AreaComponent={MyGradient}
-            seriesId="prices"
-            strokeWidth={3}
-            transition={transition}
-            type="solid"
-          />
-          <Scrubber hideOverlay beaconTransitions={{ update: transition }} />
-        </CartesianChart>
-        <Button onPress={() => setData((d) => d.map((d) => -1 * d))}>Flip</Button>
-      </VStack>
-    );
-  }
-  return <InnerChart />;
 }
 
-const BTCActiveIndicator = memo(({ style, ...props }: TabsActiveIndicatorProps) => (
-  <PeriodSelectorActiveIndicator
-    {...props}
-    style={[style, { backgroundColor: `${assets.btc.color}1A` }]}
-  />
-));
+function DataFormat() {
+  const [scrubberPosition, setScrubberPosition] = useState<number | undefined>();
+  const yData = useMemo(() => [2, 5.5, 2, 8.5, 1.5, 5], []);
+  const xData = useMemo(() => [1, 2, 3, 5, 8, 10], []);
 
-const DrawingAreaBox = memo(() => {
-  const { drawingArea, width, height } = useCartesianChartContext();
+  const chartAccessibilityLabel = `Chart with custom X and Y data. ${yData.length} data points`;
 
-  if (!drawingArea) return;
-
-  return (
-    <>
-      <Rect color="green" height={height} opacity={0.25} width={width} x={0} y={0} />
-      <Rect {...drawingArea} color="red" opacity={0.25} />
-    </>
-  );
-});
-
-const AssetPriceDotted = () => {
-  const theme = useTheme();
-  const currentPrice =
-    sparklineInteractiveData.hour[sparklineInteractiveData.hour.length - 1].value;
-  const tabs = useMemo(
-    () => [
-      { id: 'hour', label: '1H' },
-      { id: 'day', label: '1D' },
-      { id: 'week', label: '1W' },
-      { id: 'month', label: '1M' },
-      { id: 'year', label: '1Y' },
-      { id: 'all', label: 'All' },
-    ],
-    [],
-  );
-  const [timePeriod, setTimePeriod] = useState<TabValue>(tabs[0]);
-
-  const sparklineTimePeriodData = useMemo(() => {
-    return sparklineInteractiveData[timePeriod.id as keyof typeof sparklineInteractiveData];
-  }, [timePeriod]);
-
-  const sparklineTimePeriodDataValues = useMemo(() => {
-    return sparklineTimePeriodData.map((d) => d.value);
-  }, [sparklineTimePeriodData]);
-
-  const sparklineTimePeriodDataTimestamps = useMemo(() => {
-    return sparklineTimePeriodData.map((d) => d.date);
-  }, [sparklineTimePeriodData]);
-
-  const onPeriodChange = useCallback(
-    (period: TabValue | null) => {
-      setTimePeriod(period || tabs[0]);
+  const scrubberAccessibilityLabel = useCallback(
+    (index: number) => {
+      return `Point ${index + 1}: X value ${xData[index]}, Y value ${yData[index]}`;
     },
-    [tabs, setTimePeriod],
+    [xData, yData],
   );
 
-  const formatPrice = useCallback((price: number) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-    }).format(price);
-  }, []);
-
-  const formatDate = useCallback((date: Date) => {
-    'worklet';
-    const dayOfWeek = date.toLocaleDateString('en-US', { weekday: 'short' });
-
-    const monthDay = date.toLocaleDateString('en-US', {
-      month: 'short',
-      day: 'numeric',
-    });
-
-    const time = date.toLocaleTimeString('en-US', {
-      hour: 'numeric',
-      minute: '2-digit',
-      hour12: true,
-    });
-
-    return `${dayOfWeek}, ${monthDay}, ${time}`;
-  }, []);
-
-  const scrubberLabel = (dataIndex: number) => {
-    'worklet';
-    return `${dataIndex} test`;
-  };
-
-  /*const scrubberLabel = useCallback(
-    (dataIndex: number) => {
-      'worklet';
-      return 'testing';
-      const price = new Intl.NumberFormat('en-US', {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-      }).format(sparklineTimePeriodDataValues[dataIndex]);
-      // const date = formatDate(sparklineTimePeriodDataTimestamps[dataIndex]);
-      return `${price} USD`;
-    },
-    [sparklineTimePeriodDataValues, formatDate, sparklineTimePeriodDataTimestamps],
-  );*/
-
-  // Chart overview accessibility label
-  const chartOverviewLabel = useMemo(() => {
-    if (sparklineTimePeriodData.length === 0) return '';
-
-    const firstDate = sparklineTimePeriodData[0].date;
-    const lastDate = sparklineTimePeriodData[sparklineTimePeriodData.length - 1].date;
-    const currentYear = new Date().getFullYear();
-    const shouldIncludeTime = timePeriod.id === 'hour' || timePeriod.id === 'day';
-
-    const dateRangeOptions: Intl.DateTimeFormatOptions = {
-      month: 'long',
-      day: 'numeric',
-      year: firstDate.getFullYear() !== currentYear ? 'numeric' : undefined,
-      ...(shouldIncludeTime && {
-        hour: 'numeric',
-        minute: '2-digit',
-        hour12: true,
-      }),
-    };
-
-    const startDateStr = shouldIncludeTime
-      ? firstDate.toLocaleString('en-US', dateRangeOptions)
-      : firstDate.toLocaleDateString('en-US', dateRangeOptions);
-    const endDateStr = shouldIncludeTime
-      ? lastDate.toLocaleString('en-US', {
-          ...dateRangeOptions,
-          year: lastDate.getFullYear() !== currentYear ? 'numeric' : undefined,
-        })
-      : lastDate.toLocaleDateString('en-US', {
-          ...dateRangeOptions,
-          year: lastDate.getFullYear() !== currentYear ? 'numeric' : undefined,
-        });
-
-    return `Price chart for Bitcoin, ${startDateStr} to ${endDateStr}. Swipe left or right to navigate data points.`;
-  }, [sparklineTimePeriodData, timePeriod.id]);
-
-  const fontMgr = useMemo(() => {
-    const fontProvider = Skia.TypefaceFontProvider.Make();
-    // Register system fonts if available, otherwise Skia will use defaults
-    return fontProvider;
-  }, []);
+  const accessibilityLabel = useMemo(() => {
+    if (scrubberPosition !== undefined) {
+      return scrubberAccessibilityLabel(scrubberPosition);
+    }
+    return chartAccessibilityLabel;
+  }, [scrubberPosition, chartAccessibilityLabel, scrubberAccessibilityLabel]);
 
   return (
-    <Box accessibilityLabel={chartOverviewLabel} accessibilityLiveRegion="polite">
-      <VStack gap={2}>
-        <SectionHeader
-          aria-hidden="true"
-          balance={<Text font="title2">{formatPrice(currentPrice)}</Text>}
-          end={
-            <VStack justifyContent="center">
-              <RemoteImage shape="circle" size="xl" source={assets.btc.imageUrl} />
-            </VStack>
-          }
-          padding={0}
-          title={<Text font="title1">Bitcoin</Text>}
-        />
-        <LineChart
-          enableScrubbing
-          showArea
-          accessibilityLiveRegion="polite"
-          areaType="dotted"
-          height={defaultChartHeight}
-          inset={{ top: 56 }}
-          series={[
-            {
-              id: 'btc',
-              data: sparklineTimePeriodDataValues,
-              color: assets.btc.color,
-              label: 'Bitcoin',
-            },
-            {
-              id: 'btc3',
-              data: sparklineTimePeriodDataValues.map((d) => d * 1.25),
-              color: assets.eth.color,
-              label: 'Bitcoin',
-            },
-            {
-              id: 'btc2',
-              data: sparklineTimePeriodDataValues.map((d) => d * 1.125),
-              color: assets.xrp.color,
-              label: 'Bitcoin',
-            },
-          ]}
-        >
-          <Scrubber
-            idlePulse
-            label={(d: number) => {
-              const date = formatDate(sparklineTimePeriodDataTimestamps[d]);
-              const price = formatPrice(sparklineTimePeriodDataValues[d]);
-
-              const regularStyle: SkTextStyle = {
-                fontFamilies: ['Inter'],
-                fontSize: 14,
-                fontStyle: {
-                  weight: FontWeight.Normal,
-                },
-                color: Skia.Color(theme.color.fgMuted),
-              };
-
-              const boldStyle: SkTextStyle = {
-                fontFamilies: ['Inter'],
-                ...regularStyle,
-                fontStyle: {
-                  weight: FontWeight.Bold,
-                },
-              };
-
-              // 3. Use the ParagraphBuilder
-              const builder = Skia.ParagraphBuilder.Make(
-                {
-                  textAlign: TextAlign.Center,
-                },
-                fontMgr,
-              );
-
-              builder.pushStyle(boldStyle);
-              builder.addText(price);
-
-              builder.pushStyle(regularStyle);
-              builder.addText(`\n${date}`);
-
-              const para = builder.build();
-              para.layout(512);
-              return para;
-            }}
-            labelProps={{
-              horizontalAlignment: 'center',
-              dy: -28,
-              elevation: 1,
-              paragraphAlignment: TextAlign.Center,
-            }}
-          />
-        </LineChart>
-        <PeriodSelector
-          TabComponent={BTCTab}
-          TabsActiveIndicatorComponent={BTCActiveIndicator}
-          accessibilityLabel="Select time period for chart"
-          activeTab={timePeriod}
-          onChange={onPeriodChange}
-          tabs={tabs}
-        />
-      </VStack>
-    </Box>
-  );
-};
-
-const AssetPriceDottedNonMemoized = () => {
-  const [scrubIndex, setScrubIndex] = useState<number | undefined>(undefined);
-  const currentPrice =
-    sparklineInteractiveData.hour[sparklineInteractiveData.hour.length - 1].value;
-  const tabs = useMemo(
-    () => [
-      { id: 'hour', label: '1H' },
-      { id: 'day', label: '1D' },
-      { id: 'week', label: '1W' },
-      { id: 'month', label: '1M' },
-      { id: 'year', label: '1Y' },
-      { id: 'all', label: 'All' },
-    ],
-    [],
-  );
-  const [timePeriod, setTimePeriod] = useState<TabValue>(tabs[0]);
-
-  const sparklineTimePeriodData = useMemo(() => {
-    return sparklineInteractiveData[timePeriod.id as keyof typeof sparklineInteractiveData];
-  }, [timePeriod]);
-
-  const sparklineTimePeriodDataValues = useMemo(() => {
-    return sparklineTimePeriodData.map((d) => d.value);
-  }, [sparklineTimePeriodData]);
-
-  const sparklineTimePeriodDataTimestamps = useMemo(() => {
-    return sparklineTimePeriodData.map((d) => d.date);
-  }, [sparklineTimePeriodData]);
-
-  const onPeriodChange = useCallback(
-    (period: TabValue | null) => {
-      setTimePeriod(period || tabs[0]);
-    },
-    [tabs, setTimePeriod],
-  );
-
-  const formatPrice = useCallback((price: number) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-    }).format(price);
-  }, []);
-
-  const formatDate = useCallback((date: Date) => {
-    const dayOfWeek = date.toLocaleDateString('en-US', { weekday: 'short' });
-
-    const monthDay = date.toLocaleDateString('en-US', {
-      month: 'short',
-      day: 'numeric',
-    });
-
-    const time = date.toLocaleTimeString('en-US', {
-      hour: 'numeric',
-      minute: '2-digit',
-      hour12: true,
-    });
-
-    return `${dayOfWeek}, ${monthDay}, ${time}`;
-  }, []);
-
-  const scrubberLabel: string | undefined = useMemo(() => {
-    if (scrubIndex === undefined) return;
-    const price = new Intl.NumberFormat('en-US', {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    }).format(sparklineTimePeriodDataValues[scrubIndex]);
-    const date = formatDate(sparklineTimePeriodDataTimestamps[scrubIndex]);
-    return `${price} USD ${date}`;
-  }, [scrubIndex, sparklineTimePeriodDataValues, formatDate, sparklineTimePeriodDataTimestamps]);
-
-  return (
-    <VStack gap={2}>
-      <SectionHeader
-        balance={
-          <Text font="title2">
-            {formatPrice(currentPrice)} {sparklineTimePeriodDataValues.length}
-          </Text>
-        }
-        end={
-          <VStack justifyContent="center">
-            <RemoteImage shape="circle" size="xl" source={assets.btc.imageUrl} />
-          </VStack>
-        }
-        padding={0}
-        title={<Text font="title1">Bitcoin</Text>}
-      />
-      <LineChart
-        enableScrubbing
-        areaType="dotted"
-        height={defaultChartHeight}
-        onScrubberPositionChange={setScrubIndex}
-        series={[
-          {
-            id: 'btc',
-            data: sparklineTimePeriodDataValues,
-            color: assets.btc.color,
-          },
-        ]}
-      >
-        <Scrubber label={scrubberLabel} />
-      </LineChart>
-      <PeriodSelector
-        TabComponent={BTCTab}
-        TabsActiveIndicatorComponent={BTCActiveIndicator}
-        activeTab={timePeriod}
-        onChange={onPeriodChange}
-        tabs={tabs}
-      />
-    </VStack>
-  );
-};
-
-const AssetPriceMultipleDotted = () => {
-  const [scrubIndex, setScrubIndex] = useState<number | undefined>(undefined);
-  const currentPrice =
-    sparklineInteractiveData.hour[sparklineInteractiveData.hour.length - 1].value;
-  const tabs = useMemo(
-    () => [
-      { id: 'hour', label: '1H' },
-      { id: 'day', label: '1D' },
-      { id: 'week', label: '1W' },
-      { id: 'month', label: '1M' },
-      { id: 'year', label: '1Y' },
-      { id: 'all', label: 'All' },
-    ],
-    [],
-  );
-  const [timePeriod, setTimePeriod] = useState<TabValue>(tabs[0]);
-
-  const sparklineTimePeriodData = useMemo(() => {
-    return sparklineInteractiveData[timePeriod.id as keyof typeof sparklineInteractiveData];
-  }, [timePeriod]);
-
-  const sparklineTimePeriodDataValues = useMemo(() => {
-    return sparklineTimePeriodData.map((d) => d.value);
-  }, [sparklineTimePeriodData]);
-
-  const sparklineTimePeriodDataTimestamps = useMemo(() => {
-    return sparklineTimePeriodData.map((d) => d.date);
-  }, [sparklineTimePeriodData]);
-
-  const onPeriodChange = useCallback(
-    (period: TabValue | null) => {
-      setTimePeriod(period || tabs[0]);
-    },
-    [tabs, setTimePeriod],
-  );
-
-  const formatPrice = useCallback((price: number) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-    }).format(price);
-  }, []);
-
-  const formatDate = useCallback((date: Date) => {
-    const dayOfWeek = date.toLocaleDateString('en-US', { weekday: 'short' });
-
-    const monthDay = date.toLocaleDateString('en-US', {
-      month: 'short',
-      day: 'numeric',
-    });
-
-    const time = date.toLocaleTimeString('en-US', {
-      hour: 'numeric',
-      minute: '2-digit',
-      hour12: true,
-    });
-
-    return `${dayOfWeek}, ${monthDay}, ${time}`;
-  }, []);
-
-  const scrubberLabel: string | undefined = useMemo(() => {
-    if (scrubIndex === undefined) return;
-    const price = new Intl.NumberFormat('en-US', {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    }).format(sparklineTimePeriodDataValues[scrubIndex]);
-    const date = formatDate(sparklineTimePeriodDataTimestamps[scrubIndex]);
-    return `${price} USD ${date}`;
-  }, [scrubIndex, sparklineTimePeriodDataValues, formatDate, sparklineTimePeriodDataTimestamps]);
-
-  return (
-    <VStack gap={2}>
-      <SectionHeader
-        balance={
-          <Text font="title2">
-            {formatPrice(currentPrice)} {sparklineTimePeriodDataValues.length}
-          </Text>
-        }
-        end={
-          <VStack justifyContent="center">
-            <RemoteImage shape="circle" size="xl" source={assets.btc.imageUrl} />
-          </VStack>
-        }
-        padding={0}
-        title={<Text font="title1">Bitcoin</Text>}
-      />
-      <LineChart
-        enableScrubbing
-        height={defaultChartHeight}
-        series={[
-          {
-            id: 'btc',
-            data: sparklineTimePeriodDataValues,
-            color: assets.btc.color,
-            label: 'BTC',
-          },
-          {
-            id: 'eth',
-            data: sparklineTimePeriodDataValues.map((d) => d * 0.75),
-            color: assets.eth.color,
-            label: 'ETH',
-          },
-          {
-            id: 'xrp',
-            data: sparklineTimePeriodDataValues.map((d) => d * 0.5),
-            color: assets.xrp.color,
-            label: 'XRP',
-          },
-        ]}
-      >
-        <Scrubber label={scrubberLabel} />
-      </LineChart>
-      <PeriodSelector
-        TabComponent={BTCTab}
-        TabsActiveIndicatorComponent={BTCActiveIndicator}
-        activeTab={timePeriod}
-        onChange={onPeriodChange}
-        tabs={tabs}
-      />
-    </VStack>
-  );
-};
-
-const GainLossChart = (props: CartesianChartProps) => {
-  const theme = useTheme();
-  const data = [-40, -28, -21, -5, 48, -5, -28, 2, -29, -46, 16, -30, -29, 8, -5, 0, 0];
-  const negativeColor = `rgb(${theme.spectrum.gray15})`;
-  const positiveColor = theme.color.fgPositive;
-
-  const tickLabelFormatter = useCallback(
-    (value: number) =>
-      new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'USD',
-        maximumFractionDigits: 0,
-      }).format(value),
-    [],
-  );
-
-  return (
-    <CartesianChart
-      {...props}
+    <LineChart
       enableScrubbing
-      height={defaultChartHeight}
+      showArea
+      showXAxis
+      showYAxis
+      accessibilityLabel={accessibilityLabel}
+      curve="natural"
+      height={200}
+      inset={{ top: 16, right: 16, bottom: 0, left: 0 }}
+      onScrubberPositionChange={setScrubberPosition}
+      renderPoints={() => true}
       series={[
         {
-          id: 'prices',
-          data: data,
-          label: 'hello',
-          gradient: {
-            stops: [
-              { offset: 0, color: negativeColor },
-              { offset: 0, color: positiveColor },
-            ],
-          },
+          id: 'line',
+          data: yData,
         },
       ]}
+      xAxis={{ data: xData, showLine: true, showTickMarks: true, showGrid: true }}
+      yAxis={{
+        domain: { min: 0 },
+        position: 'left',
+        showLine: true,
+        showTickMarks: true,
+        showGrid: true,
+      }}
     >
-      <YAxis showGrid requestedTickCount={2} tickLabelFormatter={tickLabelFormatter} />
-      <Line seriesId="prices" strokeWidth={4} type="solid" />
-      <Scrubber hideOverlay label="Hello" />
-    </CartesianChart>
+      <Scrubber hideOverlay />
+    </LineChart>
   );
-};
+}
 
-const ScrubberWithImperativeHandle = () => {
-  const theme = useTheme();
-  const scrubberRef = useRef<ScrubberRef>(null);
-
-  return (
-    <VStack gap={2}>
-      <LineChart
-        enableScrubbing
-        showYAxis
-        height={defaultChartHeight}
-        series={[
-          {
-            id: 'priceA',
-            data: [2400, 1398, 9800, 3908, 4800, 3800, 4300],
-            label: 'Page Views',
-            color: theme.color.accentBoldBlue,
-          },
-          {
-            id: 'priceB',
-            data: [2000, 2491, 4501, 6049, 5019, 4930, 5910],
-            label: 'Unique Visitors G',
-            color: theme.color.accentBoldGreen,
-          },
-          {
-            id: 'priceC',
-            data: [1000, 4910, 2300, 5910, 3940, 2940, 1940],
-            label: 'Unique Visitors P',
-            color: theme.color.accentBoldPurple,
-          },
-        ]}
-        xAxis={{
-          range: ({ min, max }) => ({ min, max: max - 32 }),
-        }}
-        yAxis={{
-          domain: {
-            min: 0,
-          },
-          showGrid: true,
-          tickLabelFormatter: (value) => value.toLocaleString(),
-        }}
-      >
-        <Scrubber ref={scrubberRef} />
-      </LineChart>
-      <Button onPress={() => scrubberRef.current?.pulse()}>Pulse Beacons</Button>
-    </VStack>
-  );
-};
-
-const BTCPriceChart = () => {
-  const tabs = [
-    { id: 'hour', label: '1H' },
-    { id: 'day', label: '1D' },
-    { id: 'week', label: '1W' },
-    { id: 'month', label: '1M' },
-    { id: 'year', label: '1Y' },
-    { id: 'all', label: 'All' },
-  ];
-  const [activeTab, setActiveTab] = useState<TabValue | null>(tabs[0]);
-  const [highlightedItem, setHighlightedItem] = useState<number | undefined>();
-
-  const currentPriceData = activeTab
-    ? sparklineInteractiveData[activeTab.id as keyof typeof sparklineInteractiveData]
-    : sparklineInteractiveData.hour;
-
-  const currentData = useMemo(
-    () => [...currentPriceData.map((price) => price.value)],
-    [currentPriceData],
-  );
-  const currentTimestamps = useMemo(
-    () => [...currentPriceData.map((price) => price.date.toISOString())],
-    [currentPriceData],
-  );
-  const currentPrice = currentData[currentData.length - 1];
-  const startPrice = currentData[0];
-
-  const onScrubberPositionChange = useCallback((item?: number) => {
-    setHighlightedItem(item);
-  }, []);
-
-  const displayPrice =
-    highlightedItem !== null && highlightedItem !== undefined
-      ? currentData[highlightedItem]
-      : currentPrice;
-
-  const btcAccentColor = '#F0A73C';
-
-  const { displayDate } = useMemo(() => {
-    return calculateTrendData(
-      highlightedItem,
-      currentData,
-      currentTimestamps,
-      startPrice,
-      currentPrice,
-      activeTab?.id || 'hour',
-    );
-  }, [highlightedItem, currentData, currentTimestamps, startPrice, currentPrice, activeTab]);
-
-  const formattedPrice = `$${displayPrice.toLocaleString('en-US', {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  })}`;
-
-  const AreaComponent = useMemo(
-    () => (props: any) => (
-      <GradientArea
-        {...props}
-        colorMap={{
-          type: 'continuous',
-          colors: [
-            { color: 'black', opacity: 0.15 },
-            { color: 'black', opacity: 0 },
-          ],
-        }}
-      />
-    ),
-    [],
-  );
-
-  return (
-    <Box
-      borderRadius={300}
-      overflow="hidden"
-      style={{ backgroundColor: btcAccentColor }}
-      width="100%"
-    >
-      <VStack gap={3} width="100%">
-        <HStack alignItems="flex-start" gap={3} justifyContent="space-between" padding={4}>
-          <VStack flexGrow={1} gap={1}>
-            <Text font="title1">Coinbase Wrapped BTC</Text>
-            <Text font="title2">{formattedPrice}</Text>
-          </VStack>
-          <VStack justifyContent="center">
-            <RemoteImage shape="circle" size="xxl" source={assets.btc.imageUrl} />
-          </VStack>
-        </HStack>
-        <CartesianChart
-          enableScrubbing
-          height={200}
-          inset={{ bottom: 0, right: 3, left: 0, top: 6 }}
-          onScrubberPositionChange={onScrubberPositionChange}
-          series={[
-            {
-              id: 'price',
-              data: currentData,
-              color: 'black',
-            },
-          ]}
-          width="100%"
-        >
-          <Line AreaComponent={AreaComponent} seriesId="price" strokeWidth={3} />
-          <Scrubber
-            idlePulse
-            label={displayDate}
-            labelProps={{
-              color: 'black',
-            }}
-            lineStroke="black"
-          />
-        </CartesianChart>
-        <Box padding={2}>
-          <PeriodSelector activeTab={activeTab} onChange={(tab) => setActiveTab(tab)} tabs={tabs} />
-        </Box>
-      </VStack>
-    </Box>
-  );
-};
-
-const LiveAssetPrice = () => {
+function LiveUpdates() {
   const scrubberRef = useRef<ScrubberRef>(null);
 
   const initialData = useMemo(() => {
@@ -1748,7 +220,9 @@ const LiveAssetPrice = () => {
   return (
     <LineChart
       enableScrubbing
-      height={defaultChartHeight}
+      showArea
+      height={200}
+      inset={{ right: 64 }}
       series={[
         {
           id: 'btc',
@@ -1757,1009 +231,917 @@ const LiveAssetPrice = () => {
         },
       ]}
     >
-      <Scrubber ref={scrubberRef} />
+      <Scrubber ref={scrubberRef} labelProps={{ elevation: 1 }} />
     </LineChart>
   );
-};
+}
 
-const availabilityEvents = [
-  {
-    date: new Date('2022-01-01'),
-    availability: 79,
-  },
-  {
-    date: new Date('2022-01-03'),
-    availability: 81,
-  },
-  {
-    date: new Date('2022-01-04'),
-    availability: 82,
-  },
-  {
-    date: new Date('2022-01-06'),
-    availability: 91,
-  },
-  {
-    date: new Date('2022-01-07'),
-    availability: 90,
-  },
-  {
-    date: new Date('2022-01-10'),
-    availability: 86,
-  },
-];
-
-// Generate prediction probability data for three candidates
-const generatePredictionData = () => {
-  const now = new Date();
-  const baseTimestamp = now.getTime();
-
-  // Generate data for different time periods
-  const generateForPeriod = (points: number, intervalMs: number) => {
-    return Array.from({ length: points }, (_, i) => {
-      const timestamp = new Date(baseTimestamp - (points - 1 - i) * intervalMs);
-
-      // Generate percentage values for three candidates that roughly sum to 100%
-      const candidate1 = 45 + Math.random() * 30; // 45-75%
-      const candidate2 = 15 + Math.random() * 20; // 15-35%
-      const candidate3 = Math.max(0, 100 - candidate1 - candidate2 - Math.random() * 5); // remainder
-
-      return {
-        date: timestamp,
-        candidate1: Math.round(candidate1 * 10) / 10,
-        candidate2: Math.round(candidate2 * 10) / 10,
-        candidate3: Math.round(candidate3 * 10) / 10,
-      };
-    });
-  };
-
-  return {
-    hour: generateForPeriod(60, 60 * 1000), // 60 points, 1 min apart
-    day: generateForPeriod(96, 15 * 60 * 1000), // 96 points, 15 min apart
-    week: generateForPeriod(84, 2 * 60 * 60 * 1000), // 84 points, 2 hours apart
-    month: generateForPeriod(120, 6 * 60 * 60 * 1000), // 120 points, 6 hours apart
-    year: generateForPeriod(365, 24 * 60 * 60 * 1000), // 365 points, 1 day apart
-    all: generateForPeriod(100, 7 * 24 * 60 * 60 * 1000), // 100 points, 1 week apart
-  };
-};
-
-const predictionData = generatePredictionData();
-
-type PredictionLegendData = {
-  candidate1: number[];
-  candidate2: number[];
-  candidate3: number[];
-};
-
-type PredictionLegendRef = {
-  updateSelectedIndex: (index: number) => void;
-};
-
-type PredictionLegendProps = {
-  data: PredictionLegendData;
-  colors: { pink: string; teal: string; green: string };
-};
-
-const PredictionLegend = memo(
-  forwardRef<PredictionLegendRef, PredictionLegendProps>(({ data, colors }, ref) => {
-    const [selectedIndex, setSelectedIndex] = useState(data.candidate1.length - 1);
-
-    useImperativeHandle(ref, () => ({
-      updateSelectedIndex: (index: number) => {
-        setSelectedIndex(index);
-      },
-    }));
-
-    const candidate1Value = Math.round(data.candidate1[selectedIndex]);
-    const candidate2Value = Math.round(data.candidate2[selectedIndex]);
-    const candidate3Value = Math.round(data.candidate3[selectedIndex]);
-
-    return (
-      <VStack gap={2}>
-        <HStack alignItems="center" gap={2}>
-          <Box style={{ width: 12, height: 12, borderRadius: 6, backgroundColor: colors.pink }} />
-          <Text font="label2">Noah Wyle</Text>
-          <Text font="label1">{candidate1Value}%</Text>
-        </HStack>
-        <HStack alignItems="center" gap={2}>
-          <Box style={{ width: 12, height: 12, borderRadius: 6, backgroundColor: colors.teal }} />
-          <Text font="label2">Adam Scott</Text>
-          <Text font="label1">{candidate2Value}%</Text>
-        </HStack>
-        <HStack alignItems="center" gap={2}>
-          <Box
-            style={{
-              width: 12,
-              height: 12,
-              borderRadius: 6,
-              backgroundColor: colors.green,
-            }}
-          />
-          <Text font="label2">Pedro Pascal</Text>
-          <Text font="label1">{candidate3Value}%</Text>
-        </HStack>
-      </VStack>
-    );
-  }),
-);
-
-const PredictionChart = () => {
+function MissingData() {
   const theme = useTheme();
+  const pages = ['Page A', 'Page B', 'Page C', 'Page D', 'Page E', 'Page F', 'Page G'];
+  const pageViews = [2400, 1398, null, 3908, 4800, 3800, 4300];
+  const uniqueVisitors = [4000, 3000, null, 2780, 1890, 2390, 3490];
 
-  // Ref for the legend component
-  const legendRef = useRef<PredictionLegendRef>(null);
-
-  // Define colors using spectrum
-  const colors = useMemo(
-    () => ({
-      pink: `rgb(${theme.spectrum.pink50})`,
-      teal: `rgb(${theme.spectrum.teal50})`,
-      green: `rgb(${theme.spectrum.green50})`,
-    }),
-    [theme.spectrum],
-  );
-
-  const tabs = useMemo(
-    () => [
-      { id: 'hour', label: '1H' },
-      { id: 'day', label: '1D' },
-      { id: 'week', label: '1W' },
-      { id: 'month', label: '1M' },
-      { id: 'year', label: '1Y' },
-      { id: 'all', label: 'All' },
-    ],
+  const numberFormatter = useCallback(
+    (value: number) => new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 }).format(value),
     [],
   );
-  const [timePeriod, setTimePeriod] = useState<TabValue>(tabs[0]);
 
-  const periodData = useMemo(() => {
-    return predictionData[timePeriod.id as keyof typeof predictionData];
-  }, [timePeriod]);
+  return (
+    <LineChart
+      enableScrubbing
+      showArea
+      showXAxis
+      showYAxis
+      height={200}
+      // You can render points at every valid data point by always returning true
+      renderPoints={() => true}
+      series={[
+        {
+          id: 'pageViews',
+          data: pageViews,
+          color: theme.color.accentBoldGreen,
+          // Label will render next to scrubber beacon
+          label: 'Page Views',
+          connectNulls: true,
+        },
+        {
+          id: 'uniqueVisitors',
+          data: uniqueVisitors,
+          color: theme.color.accentBoldPurple,
+          label: 'Unique Visitors',
+        },
+      ]}
+      xAxis={{
+        // Used on the x-axis to provide context for each index from the series data array
+        data: pages,
+      }}
+      yAxis={{
+        showGrid: true,
+        tickLabelFormatter: numberFormatter,
+      }}
+    >
+      {/* We can offset the overlay to account for the points being drawn on the lines */}
+      <Scrubber overlayOffset={6} />
+    </LineChart>
+  );
+}
 
-  const candidate1Data = useMemo(() => periodData.map((d) => d.candidate1), [periodData]);
-  const candidate2Data = useMemo(() => periodData.map((d) => d.candidate2), [periodData]);
-  const candidate3Data = useMemo(() => periodData.map((d) => d.candidate3), [periodData]);
-  const timestamps = useMemo(() => periodData.map((d) => d.date), [periodData]);
+function Interaction() {
+  const [scrubberPosition, setScrubberPosition] = useState<number | undefined>();
 
-  // Data object for the legend
-  const legendData = useMemo(
-    () => ({
-      candidate1: candidate1Data,
-      candidate2: candidate2Data,
-      candidate3: candidate3Data,
+  return (
+    <VStack gap={2}>
+      <Text font="label1">
+        {scrubberPosition !== undefined
+          ? `Scrubber position: ${scrubberPosition}`
+          : 'Not scrubbing'}
+      </Text>
+      <LineChart
+        enableScrubbing
+        showArea
+        height={200}
+        onScrubberPositionChange={setScrubberPosition}
+        series={[
+          {
+            id: 'prices',
+            data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+          },
+        ]}
+      >
+        <Scrubber />
+      </LineChart>
+    </VStack>
+  );
+}
+
+function Points() {
+  const theme = useTheme();
+  const keyMarketShiftIndices = [4, 6, 7, 9, 10];
+  const data = [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58];
+
+  return (
+    <CartesianChart
+      height={200}
+      series={[
+        {
+          id: 'prices',
+          data: data,
+        },
+      ]}
+    >
+      <Area fill={`rgb(${theme.spectrum.blue5})`} seriesId="prices" />
+      <Line
+        renderPoints={({ dataX, dataY, ...props }) =>
+          keyMarketShiftIndices.includes(dataX)
+            ? {
+                ...props,
+                strokeWidth: 2,
+                stroke: theme.color.bg,
+                radius: 5,
+                onClick: () =>
+                  alert(
+                    `You have clicked a key market shift at position ${dataX + 1} with value ${dataY}!`,
+                  ),
+                accessibilityLabel: `Key market shift point at position ${dataX + 1}, value ${dataY}. Click to view details.`,
+              }
+            : false
+        }
+        seriesId="prices"
+      />
+    </CartesianChart>
+  );
+}
+
+function Transitions() {
+  const theme = useTheme();
+  const dataCount = 20;
+  const maxDataOffset = 15000;
+  const minStepOffset = 2500;
+  const maxStepOffset = 10000;
+  const domainLimit = 20000;
+  const updateInterval = 500;
+
+  const myTransitionConfig: Transition = { type: 'spring', stiffness: 700, damping: 20 };
+  const negativeColor = `rgb(${theme.spectrum.gray15})`;
+  const positiveColor = theme.color.fgPositive;
+
+  function generateNextValue(previousValue: number) {
+    const range = maxStepOffset - minStepOffset;
+    const offset = Math.random() * range + minStepOffset;
+
+    let direction;
+    if (previousValue >= maxDataOffset) {
+      direction = -1;
+    } else if (previousValue <= -maxDataOffset) {
+      direction = 1;
+    } else {
+      direction = Math.random() < 0.5 ? -1 : 1;
+    }
+
+    let newValue = previousValue + offset * direction;
+    newValue = Math.max(-maxDataOffset, Math.min(maxDataOffset, newValue));
+    return newValue;
+  }
+
+  function generateInitialData() {
+    const data = [];
+
+    let previousValue = Math.random() * 2 * maxDataOffset - maxDataOffset;
+    data.push(previousValue);
+
+    for (let i = 1; i < dataCount; i++) {
+      const newValue = generateNextValue(previousValue);
+      data.push(newValue);
+      previousValue = newValue;
+    }
+
+    return data;
+  }
+
+  const MyGradient = memo((props: DottedAreaProps) => {
+    const areaGradient = {
+      stops: ({ min, max }: AxisBounds) => [
+        { offset: min, color: negativeColor, opacity: 1 },
+        { offset: 0, color: negativeColor, opacity: 0 },
+        { offset: 0, color: positiveColor, opacity: 0 },
+        { offset: max, color: positiveColor, opacity: 1 },
+      ],
+    };
+
+    return <DottedArea {...props} gradient={areaGradient} />;
+  });
+
+  function CustomTransitionsChart() {
+    const [data, setData] = useState(generateInitialData);
+
+    useEffect(() => {
+      const intervalId = setInterval(() => {
+        setData((currentData) => {
+          const lastValue = currentData[currentData.length - 1] ?? 0;
+          const newValue = generateNextValue(lastValue);
+
+          return [...currentData.slice(1), newValue];
+        });
+      }, updateInterval);
+
+      return () => clearInterval(intervalId);
+    }, []);
+
+    const tickLabelFormatter = useCallback(
+      (value: number) =>
+        new Intl.NumberFormat('en-US', {
+          style: 'currency',
+          currency: 'USD',
+          maximumFractionDigits: 0,
+        }).format(value),
+      [],
+    );
+
+    const valueAtIndexFormatter = useCallback(
+      (dataIndex: number) =>
+        new Intl.NumberFormat('en-US', {
+          style: 'currency',
+          currency: 'USD',
+        }).format(data[dataIndex]),
+      [data],
+    );
+
+    const lineGradient = {
+      stops: [
+        { offset: 0, color: negativeColor },
+        { offset: 0, color: positiveColor },
+      ],
+    };
+
+    return (
+      <CartesianChart
+        enableScrubbing
+        height={200}
+        inset={{ top: 32, bottom: 32, left: 16, right: 16 }}
+        series={[
+          {
+            id: 'prices',
+            data: data,
+            gradient: lineGradient,
+          },
+        ]}
+        yAxis={{ domain: { min: -domainLimit, max: domainLimit } }}
+      >
+        <YAxis showGrid requestedTickCount={2} tickLabelFormatter={tickLabelFormatter} />
+        <Line
+          showArea
+          AreaComponent={MyGradient}
+          seriesId="prices"
+          strokeWidth={3}
+          transition={myTransitionConfig}
+        />
+        <Scrubber
+          hideOverlay
+          beaconTransitions={{ update: myTransitionConfig }}
+          label={valueAtIndexFormatter}
+        />
+      </CartesianChart>
+    );
+  }
+
+  return <CustomTransitionsChart />;
+}
+
+function BasicAccessible() {
+  const [scrubberPosition, setScrubberPosition] = useState<number | undefined>();
+  const data = useMemo(() => [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58], []);
+
+  // Chart-level accessibility label provides overview
+  const chartAccessibilityLabel = useMemo(() => {
+    const currentPrice = data[data.length - 1];
+    return `Price chart showing trend over ${data.length} data points. Current value: ${currentPrice}. Use arrow keys to adjust view`;
+  }, [data]);
+
+  // Scrubber-level accessibility label provides specific position info
+  const scrubberAccessibilityLabel = useCallback(
+    (index: number) => {
+      return `Price at position ${index + 1} of ${data.length}: ${data[index]}`;
+    },
+    [data],
+  );
+
+  const accessibilityLabel = useMemo(() => {
+    if (scrubberPosition !== undefined) {
+      return scrubberAccessibilityLabel(scrubberPosition);
+    }
+    return chartAccessibilityLabel;
+  }, [scrubberPosition, chartAccessibilityLabel, scrubberAccessibilityLabel]);
+
+  return (
+    <LineChart
+      enableScrubbing
+      showArea
+      showYAxis
+      accessibilityLabel={accessibilityLabel}
+      height={200}
+      onScrubberPositionChange={setScrubberPosition}
+      series={[
+        {
+          id: 'prices',
+          data: data,
+        },
+      ]}
+      yAxis={{
+        showGrid: true,
+      }}
+    >
+      <Scrubber />
+    </LineChart>
+  );
+}
+
+function Gradients() {
+  const theme = useTheme();
+  const spectrumColors: ThemeVars.SpectrumHue[] = [
+    'blue',
+    'green',
+    'orange',
+    'yellow',
+    'gray',
+    'indigo',
+    'pink',
+    'purple',
+    'red',
+    'teal',
+    'chartreuse',
+  ];
+  const data = [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58];
+
+  const [currentSpectrumColor, setCurrentSpectrumColor] = useState<ThemeVars.SpectrumHue>('pink');
+
+  return (
+    <VStack gap={2}>
+      <HStack flexWrap="wrap" gap={1} justifyContent="flex-end">
+        {spectrumColors.map((color) => (
+          <Pressable
+            key={color}
+            accessibilityLabel={`Select ${color}`}
+            height={16}
+            onPress={() => setCurrentSpectrumColor(color)}
+            style={{
+              backgroundColor: `rgb(${theme.spectrum[`${color}20`]})`,
+              borderColor: `rgb(${theme.spectrum[`${color}50`]})`,
+              borderWidth: 2,
+            }}
+            width={16}
+          />
+        ))}
+      </HStack>
+      <LineChart
+        showYAxis
+        height={200}
+        renderPoints={() => true}
+        series={[
+          {
+            id: 'continuousGradient',
+            data: data,
+            gradient: {
+              stops: [
+                { offset: 0, color: `rgb(${theme.spectrum[`${currentSpectrumColor}80`]})` },
+                {
+                  offset: Math.max(...data),
+                  color: `rgb(${theme.spectrum[`${currentSpectrumColor}20`]})`,
+                },
+              ],
+            },
+          },
+          {
+            id: 'discreteGradient',
+            data: data.map((d) => d + 50),
+            // You can create a "discrete" gradient by having multiple stops at the same offset
+            gradient: {
+              stops: ({ min, max }) => [
+                // Allows a function which accepts min/max or direct array
+                { offset: min, color: `rgb(${theme.spectrum[`${currentSpectrumColor}80`]})` },
+                {
+                  offset: min + (max - min) / 3,
+                  color: `rgb(${theme.spectrum[`${currentSpectrumColor}80`]})`,
+                },
+                {
+                  offset: min + (max - min) / 3,
+                  color: `rgb(${theme.spectrum[`${currentSpectrumColor}50`]})`,
+                },
+                {
+                  offset: min + ((max - min) / 3) * 2,
+                  color: `rgb(${theme.spectrum[`${currentSpectrumColor}50`]})`,
+                },
+                {
+                  offset: min + ((max - min) / 3) * 2,
+                  color: `rgb(${theme.spectrum[`${currentSpectrumColor}20`]})`,
+                },
+                { offset: max, color: `rgb(${theme.spectrum[`${currentSpectrumColor}20`]})` },
+              ],
+            },
+          },
+          {
+            id: 'xAxisGradient',
+            data: data.map((d) => d + 100),
+            gradient: {
+              // You can also configure by the x-axis.
+              axis: 'x',
+              stops: ({ min, max }) => [
+                {
+                  offset: min,
+                  color: `rgb(${theme.spectrum[`${currentSpectrumColor}80`]})`,
+                  opacity: 0,
+                },
+                {
+                  offset: max,
+                  color: `rgb(${theme.spectrum[`${currentSpectrumColor}20`]})`,
+                  opacity: 1,
+                },
+              ],
+            },
+          },
+        ]}
+        strokeWidth={4}
+        yAxis={{
+          showGrid: true,
+        }}
+      />
+    </VStack>
+  );
+}
+
+function GainLossChart() {
+  const theme = useTheme();
+  const data = useMemo(() => [-40, -28, -21, -5, 48, -5, -28, 2, -29, -46, 16, -30, -29, 8], []);
+  const negativeColor = `rgb(${theme.spectrum.gray15})`;
+  const positiveColor = theme.color.fgPositive;
+
+  const tickLabelFormatter = useCallback(
+    (value: number) =>
+      new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+        maximumFractionDigits: 0,
+      }).format(value),
+    [],
+  );
+
+  // Line gradient: hard color change at 0 (full opacity for line)
+  const lineGradient = {
+    stops: [
+      { offset: 0, color: negativeColor },
+      { offset: 0, color: positiveColor },
+    ],
+  };
+
+  const GradientDottedArea = memo((props: DottedAreaProps) => (
+    <DottedArea
+      {...props}
+      gradient={{
+        stops: ({ min, max }) => [
+          { offset: min, color: negativeColor, opacity: 0.4 },
+          { offset: 0, color: negativeColor, opacity: 0 },
+          { offset: 0, color: positiveColor, opacity: 0 },
+          { offset: max, color: positiveColor, opacity: 0.4 },
+        ],
+      }}
+    />
+  ));
+
+  return (
+    <CartesianChart
+      enableScrubbing
+      height={200}
+      series={[
+        {
+          id: 'prices',
+          data: data,
+          gradient: lineGradient,
+        },
+      ]}
+      xAxis={{
+        range: ({ min, max }) => ({ min, max: max - 16 }),
+      }}
+    >
+      <YAxis showGrid requestedTickCount={2} tickLabelFormatter={tickLabelFormatter} />
+      <Line showArea AreaComponent={GradientDottedArea} seriesId="prices" strokeWidth={3} />
+      <Scrubber hideOverlay />
+    </CartesianChart>
+  );
+}
+
+function HighLowPrice() {
+  const data = [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58];
+  const minPrice = Math.min(...data);
+  const maxPrice = Math.max(...data);
+
+  const minPriceIndex = data.indexOf(minPrice);
+  const maxPriceIndex = data.indexOf(maxPrice);
+
+  const formatPrice = useCallback((price: number) => {
+    return `$${price.toLocaleString('en-US', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    })}`;
+  }, []);
+
+  return (
+    <LineChart
+      showArea
+      height={200}
+      series={[
+        {
+          id: 'prices',
+          data: data,
+        },
+      ]}
+    >
+      <Point
+        dataX={minPriceIndex}
+        dataY={minPrice}
+        label={formatPrice(minPrice)}
+        labelProps={{
+          // Shift the label down and have it render downwards
+          dy: 8,
+          verticalAlignment: 'top',
+        }}
+      />
+      <Point
+        dataX={maxPriceIndex}
+        dataY={maxPrice}
+        label={formatPrice(maxPrice)}
+        labelProps={{
+          // Shift the label up and have it render upwards
+          dy: -8,
+          verticalAlignment: 'bottom',
+        }}
+      />
+    </LineChart>
+  );
+}
+
+function StylingScrubber() {
+  const theme = useTheme();
+  const pages = ['Page A', 'Page B', 'Page C', 'Page D', 'Page E', 'Page F', 'Page G'];
+  const pageViews = [2400, 1398, 9800, 3908, 4800, 3800, 4300];
+  const uniqueVisitors = [4000, 3000, 2000, 2780, 1890, 2390, 3490];
+
+  const numberFormatter = useCallback(
+    (value: number) => new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 }).format(value),
+    [],
+  );
+
+  return (
+    <LineChart
+      enableScrubbing
+      showArea
+      showXAxis
+      showYAxis
+      height={200}
+      series={[
+        {
+          id: 'pageViews',
+          data: pageViews,
+          color: theme.color.accentBoldGreen,
+          // Label will render next to scrubber beacon
+          label: 'Page Views',
+        },
+        {
+          id: 'uniqueVisitors',
+          data: uniqueVisitors,
+          color: theme.color.accentBoldPurple,
+          label: 'Unique Visitors',
+          // Default area is gradient
+          areaType: 'dotted',
+        },
+      ]}
+      xAxis={{
+        // Used on the x-axis to provide context for each index from the series data array
+        data: pages,
+      }}
+      yAxis={{
+        showGrid: true,
+        tickLabelFormatter: numberFormatter,
+      }}
+    >
+      <Scrubber idlePulse LineComponent={SolidLine} seriesIds={['pageViews']} />
+    </LineChart>
+  );
+}
+
+function Compact() {
+  const theme = useTheme();
+  const dimensions = { width: 62, height: 18 };
+
+  const sparklineData = prices
+    .map((price) => parseFloat(price))
+    .filter((price, index) => index % 10 === 0);
+  const positiveFloor = Math.min(...sparklineData) - 10;
+
+  const negativeData = sparklineData.map((price) => -1 * price).reverse();
+  const negativeCeiling = Math.max(...negativeData) + 10;
+
+  const formatPrice = useCallback((price: number) => {
+    return `$${price.toLocaleString('en-US', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    })}`;
+  }, []);
+
+  type CompactChartProps = {
+    data: number[];
+    showArea?: boolean;
+    color?: string;
+    referenceY: number;
+  };
+
+  const CompactChart = memo(({ data, showArea, color, referenceY }: CompactChartProps) => (
+    <Box style={{ padding: 1 }}>
+      <LineChart
+        {...dimensions}
+        enableScrubbing={false}
+        inset={0}
+        overflow="visible"
+        series={[
+          {
+            id: 'btc',
+            data,
+            color,
+          },
+        ]}
+        showArea={showArea}
+      >
+        <ReferenceLine dataY={referenceY} />
+      </LineChart>
+    </Box>
+  ));
+
+  const ChartCell = memo(
+    ({
+      data,
+      showArea,
+      color,
+      referenceY,
+      subdetail,
+    }: CompactChartProps & { subdetail: string }) => {
+      return (
+        <ListCell
+          detail={formatPrice(parseFloat(prices[0]))}
+          intermediary={
+            <CompactChart color={color} data={data} referenceY={referenceY} showArea={showArea} />
+          }
+          media={<Avatar src={assets.btc.imageUrl} />}
+          onPress={() => console.log('clicked')}
+          spacingVariant="condensed"
+          style={{ padding: 0 }}
+          subdetail={subdetail}
+        />
+      );
+    },
+  );
+
+  return (
+    <VStack>
+      <ChartCell
+        color={assets.btc.color}
+        data={sparklineData}
+        referenceY={parseFloat(prices[Math.floor(prices.length / 4)])}
+        subdetail="-4.55%"
+      />
+      <ChartCell
+        showArea
+        color={assets.btc.color}
+        data={sparklineData}
+        referenceY={parseFloat(prices[Math.floor(prices.length / 4)])}
+        subdetail="-4.55%"
+      />
+      <ChartCell
+        showArea
+        color={theme.color.fgPositive}
+        data={sparklineData}
+        referenceY={positiveFloor}
+        subdetail="+0.25%"
+      />
+      <ChartCell
+        showArea
+        color={theme.color.fgNegative}
+        data={negativeData}
+        referenceY={negativeCeiling}
+        subdetail="-4.55%"
+      />
+    </VStack>
+  );
+}
+
+function AssetPriceWithDottedArea() {
+  const BTCTab: TabComponent = memo(
+    forwardRef(({ label, ...props }: SegmentedTabProps, ref: React.ForwardedRef<View>) => {
+      const { activeTab } = useTabsContext();
+      const isActive = activeTab?.id === props.id;
+
+      return (
+        <SegmentedTab
+          ref={ref}
+          label={
+            <TextLabel1
+              style={{
+                color: isActive ? assets.btc.color : undefined,
+              }}
+            >
+              {label}
+            </TextLabel1>
+          }
+          {...props}
+        />
+      );
     }),
-    [candidate1Data, candidate2Data, candidate3Data],
   );
+  const BTCActiveIndicator = memo(({ style, ...props }: TabsActiveIndicatorProps) => (
+    <PeriodSelectorActiveIndicator
+      {...props}
+      style={[style, { backgroundColor: `${assets.btc.color}1A` }]}
+    />
+  ));
 
-  // Update legend via imperative ref when scrubber position changes
-  const onScrubberPositionChange = useCallback(
-    (dataIndex: number | undefined) => {
-      const idx = dataIndex ?? candidate1Data.length - 1;
-      legendRef.current?.updateSelectedIndex(idx);
-    },
-    [candidate1Data.length],
-  );
+  const AssetPriceDotted = memo(() => {
+    const theme = useTheme();
+    const currentPrice =
+      sparklineInteractiveData.hour[sparklineInteractiveData.hour.length - 1].value;
+    const tabs = useMemo(
+      () => [
+        { id: 'hour', label: '1H' },
+        { id: 'day', label: '1D' },
+        { id: 'week', label: '1W' },
+        { id: 'month', label: '1M' },
+        { id: 'year', label: '1Y' },
+        { id: 'all', label: 'All' },
+      ],
+      [],
+    );
+    const [timePeriod, setTimePeriod] = useState<TabValue>(tabs[0]);
 
-  // Update legend when data length changes
-  useEffect(() => {
-    legendRef.current?.updateSelectedIndex(candidate1Data.length - 1);
-  }, [candidate1Data.length]);
+    const sparklineTimePeriodData = useMemo(() => {
+      return sparklineInteractiveData[timePeriod.id as keyof typeof sparklineInteractiveData];
+    }, [timePeriod]);
 
-  const onPeriodChange = useCallback(
-    (period: TabValue | null) => {
-      setTimePeriod(period || tabs[0]);
-    },
-    [tabs],
-  );
+    const sparklineTimePeriodDataValues = useMemo(() => {
+      return sparklineTimePeriodData.map((d) => d.value);
+    }, [sparklineTimePeriodData]);
 
-  const scrubberLabel = useCallback(
-    (dataIndex: number) => {
-      const date = timestamps[dataIndex];
-      const currentYear = new Date().getFullYear();
-      const shouldIncludeTime = timePeriod.id === 'hour' || timePeriod.id === 'day';
+    const sparklineTimePeriodDataTimestamps = useMemo(() => {
+      return sparklineTimePeriodData.map((d) => d.date);
+    }, [sparklineTimePeriodData]);
 
-      const dateOptions: Intl.DateTimeFormatOptions = {
-        weekday: 'short',
+    const onPeriodChange = useCallback(
+      (period: TabValue | null) => {
+        setTimePeriod(period || tabs[0]);
+      },
+      [tabs, setTimePeriod],
+    );
+
+    const priceFormatter = useMemo(
+      () =>
+        new Intl.NumberFormat('en-US', {
+          style: 'currency',
+          currency: 'USD',
+        }),
+      [],
+    );
+
+    const scrubberPriceFormatter = useMemo(
+      () =>
+        new Intl.NumberFormat('en-US', {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        }),
+      [],
+    );
+
+    const formatPrice = useCallback(
+      (price: number) => {
+        return priceFormatter.format(price);
+      },
+      [priceFormatter],
+    );
+
+    const formatDate = useCallback((date: Date) => {
+      const dayOfWeek = date.toLocaleDateString('en-US', { weekday: 'short' });
+
+      const monthDay = date.toLocaleDateString('en-US', {
         month: 'short',
         day: 'numeric',
-        year: date.getFullYear() !== currentYear ? 'numeric' : undefined,
-        ...(shouldIncludeTime && {
-          hour: 'numeric',
-          minute: '2-digit',
-          hour12: true,
-        }),
-      };
+      });
 
-      const dateStr = shouldIncludeTime
-        ? date.toLocaleString('en-US', dateOptions)
-        : date.toLocaleDateString('en-US', dateOptions);
-
-      return dateStr;
-    },
-    [timestamps, timePeriod.id],
-  );
-
-  const chartOverviewLabel = useMemo(() => {
-    if (periodData.length === 0) return '';
-
-    const firstDate = periodData[0].date;
-    const lastDate = periodData[periodData.length - 1].date;
-    const currentYear = new Date().getFullYear();
-    const shouldIncludeTime = timePeriod.id === 'hour' || timePeriod.id === 'day';
-
-    const dateRangeOptions: Intl.DateTimeFormatOptions = {
-      month: 'long',
-      day: 'numeric',
-      year: firstDate.getFullYear() !== currentYear ? 'numeric' : undefined,
-      ...(shouldIncludeTime && {
+      const time = date.toLocaleTimeString('en-US', {
         hour: 'numeric',
         minute: '2-digit',
         hour12: true,
-      }),
-    };
+      });
 
-    const startDateStr = shouldIncludeTime
-      ? firstDate.toLocaleString('en-US', dateRangeOptions)
-      : firstDate.toLocaleDateString('en-US', dateRangeOptions);
-    const endDateStr = shouldIncludeTime
-      ? lastDate.toLocaleString('en-US', {
-          ...dateRangeOptions,
-          year: lastDate.getFullYear() !== currentYear ? 'numeric' : undefined,
-        })
-      : lastDate.toLocaleDateString('en-US', {
-          ...dateRangeOptions,
-          year: lastDate.getFullYear() !== currentYear ? 'numeric' : undefined,
-        });
+      return `${dayOfWeek}, ${monthDay}, ${time}`;
+    }, []);
 
-    return `Prediction chart, ${startDateStr} to ${endDateStr}. Swipe left or right to navigate data points.`;
-  }, [periodData, timePeriod.id]);
+    const chartAccessibilityLabel = `Bitcoin price chart for ${timePeriod.label} period. Current price: ${formatPrice(currentPrice)}`;
 
-  return (
-    <Box accessibilityLabel={chartOverviewLabel} accessibilityLiveRegion="polite">
-      <VStack gap={4}>
-        <PredictionLegend ref={legendRef} colors={colors} data={legendData} />
+    const scrubberAccessibilityLabel = useCallback(
+      (index: number) => {
+        const price = scrubberPriceFormatter.format(sparklineTimePeriodDataValues[index]);
+        const date = formatDate(sparklineTimePeriodDataTimestamps[index]);
+        return `${price} USD ${date}`;
+      },
+      [
+        scrubberPriceFormatter,
+        sparklineTimePeriodDataValues,
+        sparklineTimePeriodDataTimestamps,
+        formatDate,
+      ],
+    );
 
-        <Box style={{ marginLeft: -16, marginRight: -16 }}>
-          <LineChart
-            enableScrubbing
-            accessibilityLiveRegion="polite"
-            animate={false}
-            height={defaultChartHeight}
-            inset={{ left: 0 }}
-            series={[
-              {
-                id: 'candidate1',
-                data: candidate1Data,
-                color: colors.pink,
-              },
-              {
-                id: 'candidate2',
-                data: candidate2Data,
-                color: colors.teal,
-              },
-              {
-                id: 'candidate3',
-                data: candidate3Data,
-                color: colors.green,
-              },
-            ]}
-            xAxis={{
-              range: ({ min, max }) => ({ min, max: max - 32 }),
-            }}
-            yAxis={{
-              domain: { min: 0, max: 100 },
-              tickLabelFormatter: (value) => `${value}%`,
-              requestedTickCount: 5,
-              showGrid: true,
-            }}
-          >
-            <Scrubber idlePulse label={scrubberLabel} />
-          </LineChart>
-        </Box>
+    const ChartScrubber = memo(() => {
+      const { fontProvider } = useCartesianChartContext();
+
+      const scrubberLabel = useCallback(
+        (index: number) => {
+          const price = scrubberPriceFormatter.format(sparklineTimePeriodDataValues[index]);
+          const date = formatDate(sparklineTimePeriodDataTimestamps[index]);
+
+          const regularStyle: SkTextStyle = {
+            fontFamilies: ['Inter'],
+            fontSize: 14,
+            fontStyle: {
+              weight: FontWeight.Normal,
+            },
+            color: Skia.Color(theme.color.fgMuted),
+          };
+
+          const boldStyle: SkTextStyle = {
+            fontFamilies: ['Inter'],
+            fontSize: 14,
+            fontStyle: {
+              weight: FontWeight.Bold,
+            },
+            color: Skia.Color(theme.color.fgMuted),
+          };
+
+          const builder = Skia.ParagraphBuilder.Make(
+            {
+              textAlign: TextAlign.Center,
+            },
+            fontProvider,
+          );
+
+          builder.pushStyle(boldStyle);
+          builder.addText(`${price} USD`);
+          builder.pushStyle(regularStyle);
+          builder.addText(` ${date}`);
+
+          const para = builder.build();
+          para.layout(512);
+
+          return para;
+        },
+        [fontProvider],
+      );
+
+      return (
+        <Scrubber
+          idlePulse
+          label={scrubberLabel}
+          labelProps={{
+            horizontalAlignment: 'center',
+            dy: -28,
+            elevation: 1,
+            paragraphAlignment: TextAlign.Center,
+          }}
+        />
+      );
+    });
+
+    return (
+      <VStack gap={2}>
+        <SectionHeader
+          balance={<Text font="title2">{formatPrice(currentPrice)}</Text>}
+          end={
+            <VStack justifyContent="center">
+              <RemoteImage shape="circle" size="xl" source={assets.btc.imageUrl} />
+            </VStack>
+          }
+          title={<Text font="title1">Bitcoin</Text>}
+        />
+        <LineChart
+          enableScrubbing
+          showArea
+          accessibilityLabel={chartAccessibilityLabel}
+          areaType="dotted"
+          height={200}
+          overflow="visible"
+          series={[
+            {
+              id: 'btc',
+              data: sparklineTimePeriodDataValues,
+              color: assets.btc.color,
+            },
+          ]}
+          style={{ outlineColor: assets.btc.color }}
+        >
+          <ChartScrubber />
+        </LineChart>
         <PeriodSelector
-          accessibilityLabel="Select time period for prediction chart"
+          TabComponent={BTCTab}
+          TabsActiveIndicatorComponent={BTCActiveIndicator}
           activeTab={timePeriod}
           onChange={onPeriodChange}
           tabs={tabs}
         />
       </VStack>
-    </Box>
-  );
-};
-
-const AvailabilityChart = () => {
-  const theme = useTheme();
-  const [scrubIndex, setScrubIndex] = useState<number | undefined>();
-
-  return (
-    <CartesianChart
-      enableScrubbing
-      height={defaultChartHeight}
-      onScrubberPositionChange={setScrubIndex}
-      series={[
-        {
-          id: 'availability',
-          data: availabilityEvents.map((event) => event.availability),
-          gradient: {
-            stops: [
-              { offset: 85, color: theme.color.fgNegative },
-              { offset: 85, color: theme.color.fgWarning },
-              { offset: 90, color: theme.color.fgWarning },
-              { offset: 90, color: theme.color.fgPositive },
-            ],
-          },
-        },
-      ]}
-      xAxis={{
-        data: availabilityEvents.map((event) => event.date.getTime()),
-      }}
-      yAxis={{
-        domain: ({ min, max }: { min: number; max: number }) => ({
-          min: Math.max(min - 2, 0),
-          max: Math.min(max + 2, 100),
-        }),
-      }}
-    >
-      <XAxis
-        showGrid
-        showLine
-        showTickMarks
-        tickLabelFormatter={(value) => new Date(value).toLocaleDateString()}
-      />
-      <YAxis
-        showGrid
-        showLine
-        showTickMarks
-        position="left"
-        tickLabelFormatter={(value) => `${value}%`}
-      />
-      <Line curve="stepAfter" renderPoints={() => true} seriesId="availability" type="solid" />
-      <Scrubber overlayOffset={10} />
-    </CartesianChart>
-  );
-};
-
-const dataWithGaps = [10, 22, 29, null, null, 45, 22, 52, null, 4, 68, 20, 21, 58];
-const dataWithGapsOffset = dataWithGaps.map((value) => (value !== null ? value + 40 : null));
-const dataNoNull = dataWithGaps.map((value) => (value !== null ? value : 0));
-
-const ConnectNullsChart = memo(() => {
-  const theme = useTheme();
-  return (
-    <CartesianChart
-      enableScrubbing
-      height={defaultChartHeight}
-      series={[
-        {
-          id: 'withGaps',
-          data: dataWithGaps,
-        },
-        {
-          id: 'connected',
-          data: dataWithGapsOffset,
-          color: theme.color.fgPositive,
-        },
-      ]}
-    >
-      <Line curve="bump" seriesId="withGaps" />
-      <Line connectNulls curve="bump" seriesId="connected" />
-      <Scrubber />
-    </CartesianChart>
-  );
-});
-
-const LineChartStories = () => {
-  const theme = useTheme();
-  return (
-    <ExampleScreen>
-      <Example title="Non Nulls">
-        <ConnectNullsChart />
-      </Example>
-      <Example title="Basic 4">
-        <CartesianChart
-          enableScrubbing
-          height={defaultChartHeight}
-          series={[
-            {
-              id: 'prices',
-              data: data,
-              color: theme.color.fgPositive,
-              gradient: {
-                axis: 'x',
-                stops: [
-                  { offset: 15, color: '#ff0000' },
-                  { offset: data.length - 15, color: '#00ff00' },
-                ],
-              },
-            },
-          ]}
-        >
-          <Line curve="bump" seriesId="prices" type="solid" />
-          <Scrubber />
-        </CartesianChart>
-      </Example>
-      <Example title="Scrubber with Beacon Labels">
-        <ScrubberWithBeaconLabels />
-      </Example>
-      <Example title="Basic 4 Line">
-        <LineChart
-          enableScrubbing
-          curve="bump"
-          height={defaultChartHeight}
-          series={[
-            {
-              id: 'prices',
-              data: data,
-              color: theme.color.fgPrimary,
-              gradient: {
-                axis: 'x',
-                stops: [
-                  { offset: 15, color: '#ff0000' },
-                  { offset: data.length - 15, color: '#00ff00' },
-                ],
-              },
-            },
-          ]}
-          type="solid"
-        >
-          <Scrubber />
-        </LineChart>
-      </Example>
-      {/* <Example title="Multiple Series">
-        <MultipleSeriesChart />
-      </Example>*/}
-      {/*<Example title="Data Formats 4">
-        <LineChart
-          enableScrubbing
-          showArea
-          showXAxis
-          showYAxis
-          areaType="gradient"
-          curve="natural"
-          height={defaultChartHeight}
-          renderPoints={() => true}
-          series={[
-            {
-              id: 'line',
-              data: [2, 5.5, 2, 8.5, 1.5, 5],
-            },
-          ]}
-          xAxis={{ data: [1, 2, 3, 5, 8, 10], showLine: true, showTickMarks: true, showGrid: true }}
-          yAxis={{
-            domain: { min: 0 },
-            position: 'left',
-            showLine: true,
-            showTickMarks: true,
-            showGrid: true,
-          }}
-        >
-          <Scrubber hideOverlay />
-        </LineChart>
-      </Example>*/}
-      <Example title="Simple">
-        <LineChart
-          height={defaultChartHeight}
-          series={[
-            {
-              id: 'prices',
-              data: sampleData,
-            },
-          ]}
-          type="dotted"
-        />
-      </Example>
-      <Example title="ColorMap - Discrete Thresholds">
-        <LineChart
-          enableScrubbing
-          showArea
-          showXAxis
-          showYAxis
-          AreaComponent={(props) => <GradientArea {...props} fillOpacity={0.5} />}
-          height={300}
-          renderPoints={({ dataX }) => dataX % 100 === 0}
-          series={[
-            {
-              id: 'line',
-              data: sparklineInteractiveData.all.map((d) => d.value),
-              type: 'solid',
-              gradient: {
-                stops: [
-                  { offset: 0, color: '#ef4444' },
-                  { offset: 10000, color: '#ef4444' },
-                  { offset: 20000, color: '#f59e0b' },
-                  { offset: 30000, color: '#f59e0b' },
-                  { offset: 40000, color: '#10b981' },
-                  { offset: 50000, color: '#10b981' },
-                ],
-              },
-            },
-          ]}
-        >
-          <Scrubber />
-        </LineChart>
-      </Example>
-      {/* <Example title="Availability Chart">
-        <AvailabilityChart />
-      </Example>*/}
-      <Example title="BTC Price Chart">
-        <BTCPriceChart />
-      </Example>
-      <Example title="Color Shift Chart">
-        <ColorShiftChart />
-      </Example>
-      <Example title="Asset Price Dotted">
-        <AssetPriceDotted />
-      </Example>
-      <Example title="Asset Price Multiple Dotted">
-        <AssetPriceMultipleDotted />
-      </Example>
-      <Example title="Asset Price Dotted (Old)">
-        <AssetPriceDottedNonMemoized />
-      </Example>
-      <Example title="BTC Price Chart">
-        <BTCPriceChart />
-      </Example>
-      <Example title="Gain/Loss">
-        <GainLossChart />
-      </Example>
-      <Example title="Live Asset Price">
-        <LiveAssetPrice />
-      </Example>
-      <Example title="Prediction Chart">
-        <PredictionChart />
-      </Example>
-      <Example title="Gain/Loss">
-        <GainLossChart />
-      </Example>
-      <Example title="Line Styles">
-        <LineStyles />
-      </Example>
-      <Example title="Gain/Loss">
-        <GainLossChart />
-      </Example>
-      <Example title="Basic">
-        <CartesianChart
-          enableScrubbing
-          height={defaultChartHeight}
-          series={[
-            {
-              id: 'prices',
-              data: data,
-              gradient: {
-                axis: 'x',
-                stops: [
-                  { offset: Math.floor(data.length / 2), color: assets.btc.color, opacity: 0 },
-                  { offset: Math.floor(data.length / 2 + 50), color: assets.btc.color, opacity: 1 },
-                ],
-              },
-            },
-          ]}
-          yAxis={{
-            domain: { min: 0 },
-          }}
-        >
-          <Line seriesId="prices" type="solid" />
-          <Scrubber idlePulse />
-        </CartesianChart>
-      </Example>
-    </ExampleScreen>
-  );
-};
-
-const GradientLineChart = memo(() => {
-  const [scrubberPosition, setScrubberPosition] = useState<number | undefined>();
-
-  return (
-    <VStack gap={2}>
-      <Text>Scrubber position: {scrubberPosition}</Text>
-      <GradientLineWithStateCallback onScrubberPositionChange={setScrubberPosition} />
-    </VStack>
-  );
-});
-
-const GradientLineWithStateCallback = memo(
-  ({
-    onScrubberPositionChange,
-  }: {
-    onScrubberPositionChange: (position: number | undefined) => void;
-  }) => {
-    const theme = useTheme();
-    const points = useCallback(({ dataX }: { dataX: number }) => dataX % 10 === 0, []);
-
-    return (
-      <CartesianChart
-        enableScrubbing
-        height={defaultChartHeight}
-        onScrubberPositionChange={onScrubberPositionChange}
-        series={[
-          {
-            id: 'prices',
-            data: data,
-            color: theme.color.fgPositive,
-            gradient: {
-              axis: 'x',
-              stops: [
-                { offset: 15, color: '#ff0000' },
-                { offset: data.length - 15, color: '#00ff00' },
-              ],
-            },
-          },
-        ]}
-      >
-        <Line curve="bump" renderPoints={points} seriesId="prices" type="solid" />
-        <Scrubber hideLine hideOverlay />
-      </CartesianChart>
     );
-  },
-);
+  });
 
-const PartialSolidArea = memo((props: AreaComponentProps) => (
-  <SolidArea {...props} fillOpacity={0.5} />
-));
-
-function MultipleSeriesChart() {
-  const theme = useTheme();
-  const prices = [4000, 3000, 2000, 2780, 1890, 2390, 3490];
-  const volume = [2400, 1398, 9800, 3908, 4800, 3800, 4300];
-
-  return (
-    <LineChart
-      enableScrubbing
-      showYAxis
-      height={150}
-      series={[
-        {
-          id: 'prices',
-          data: prices,
-          label: 'Prices',
-          color: theme.color.accentBoldBlue,
-        },
-        {
-          id: 'volume',
-          data: volume,
-          label: 'Volume',
-          color: theme.color.accentBoldGreen,
-        },
-      ]}
-      yAxis={{
-        domain: {
-          min: 0,
-        },
-        showGrid: true,
-      }}
-    >
-      <Scrubber />
-    </LineChart>
-  );
+  return <AssetPriceDotted />;
 }
 
-function BasicExample() {
-  const data = [10, 22, 29, 45, 98, 45, 115, 52, 21, 4, 68, 20, 21, 58];
-
-  return (
-    <VStack>
-      <LineChart
-        enableScrubbing
-        showArea
-        showYAxis
-        areaType="dotted"
-        height={150}
-        renderPoints={() => true}
-        series={[
-          {
-            id: 'prices',
-            data: data,
-          },
-        ]}
-        yAxis={{
-          showGrid: true,
-          domain: { min: 100, max: 0 },
-        }}
-      >
-        <Scrubber />
-      </LineChart>
-      <LineChart
-        enableScrubbing
-        showArea
-        showYAxis
-        areaType="dotted"
-        height={150}
-        renderPoints={() => true}
-        series={[
-          {
-            id: 'prices',
-            data: data,
-          },
-        ]}
-        yAxis={{
-          showGrid: true,
-          domain: { min: 0, max: 100 },
-        }}
-      >
-        <Scrubber />
-      </LineChart>
-      <LineChart
-        enableScrubbing
-        showArea
-        showYAxis
-        areaType="dotted"
-        height={150}
-        renderPoints={() => true}
-        series={[
-          {
-            id: 'prices',
-            data: data,
-          },
-        ]}
-        yAxis={{
-          showGrid: true,
-          domain: { min: 40, max: 60 },
-        }}
-      >
-        <Scrubber />
-      </LineChart>
-      <LineChart
-        enableScrubbing
-        showArea
-        showYAxis
-        areaType="dotted"
-        height={150}
-        renderPoints={() => true}
-        series={[
-          {
-            id: 'prices',
-            data: data,
-          },
-        ]}
-        yAxis={{
-          showGrid: true,
-          domain: { min: 60, max: 40 },
-        }}
-      >
-        <Scrubber />
-      </LineChart>
-    </VStack>
-  );
-}
-
-const candlestickStockData = btcCandles.slice(0, 90).reverse();
-
-const CandlesticksHeader = memo(({ currentIndex }: { currentIndex: number | undefined }) => {
-  const formatPrice = useCallback((price: string) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-    }).format(parseFloat(price));
-  }, []);
-
-  const formatThousandsPriceNumber = useCallback((price: number) => {
-    const formattedPrice = new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    }).format(price / 1000);
-
-    return `${formattedPrice}k`;
-  }, []);
-
-  const currentText = useMemo(() => {
-    if (currentIndex !== undefined) {
-      return `Open: ${formatThousandsPriceNumber(parseFloat(candlestickStockData[currentIndex].open))}, Close: ${formatThousandsPriceNumber(
-        parseFloat(candlestickStockData[currentIndex].close),
-      )}, Volume: ${(parseFloat(candlestickStockData[currentIndex].volume) / 1000).toFixed(2)}k`;
-    }
-    return formatPrice(candlestickStockData[candlestickStockData.length - 1].close);
-  }, [currentIndex, formatThousandsPriceNumber, formatPrice]);
-
-  return (
-    <Text aria-live="polite" font="headline">
-      {currentText}
-    </Text>
-  );
-});
-
-const CandlesticksChart = memo(
-  ({
-    infoTextId,
-    onScrubberPositionChange,
-  }: {
-    infoTextId: string;
-    onScrubberPositionChange: (index: number | undefined) => void;
-  }) => {
-    const min = useMemo(
-      () => Math.min(...candlestickStockData.map((data) => parseFloat(data.low))),
-      [],
-    );
-
-    const ThinSolidLine = memo((props: SolidLineProps) => <SolidLine {...props} strokeWidth={1} />);
-
-    // Custom line component that renders a rect to highlight the entire bandwidth
-    const BandwidthHighlight = memo(({ stroke }: LineComponentProps) => {
-      const { getXSerializableScale, drawingArea } = useCartesianChartContext();
-      const { scrubberPosition } = useScrubberContext();
-      const xScale = useMemo(() => getXSerializableScale(), [getXSerializableScale]);
-
-      const rectWidth = useMemo(() => {
-        if (xScale !== undefined && xScale.type === 'band') {
-          return xScale.bandwidth;
-        }
-        return 0;
-      }, [xScale]);
-
-      const xPos = useDerivedValue(() => {
-        const position = unwrapAnimatedValue(scrubberPosition);
-        const xPos =
-          position !== undefined && xScale
-            ? getPointOnSerializableScale(position, xScale)
-            : undefined;
-        return xPos !== undefined ? xPos - rectWidth / 2 : 0;
-      }, [scrubberPosition, xScale]);
-
-      const opacity = useDerivedValue(() => (xPos.value !== undefined ? 1 : 0), [xPos]);
-
-      return (
-        <Rect
-          color={stroke}
-          height={drawingArea.height}
-          opacity={opacity}
-          width={rectWidth}
-          x={xPos}
-          y={drawingArea.y}
-        />
-      );
-    });
-
-    const candlesData = useMemo(
-      () =>
-        candlestickStockData.map((data) => [parseFloat(data.low), parseFloat(data.high)]) as [
-          number,
-          number,
-        ][],
-      [],
-    );
-
-    const CandlestickBarComponent = memo<BarComponentProps>(
-      ({ x, y, width, height, originY, dataX, ...props }) => {
-        const { getYScale } = useCartesianChartContext();
-        const yScale = getYScale();
-
-        const wickX = x + width / 2;
-
-        const timePeriodValue = candlestickStockData[dataX as number];
-
-        const open = parseFloat(timePeriodValue.open);
-        const close = parseFloat(timePeriodValue.close);
-
-        const bullish = open < close;
-        const theme = useTheme();
-        const color = bullish ? theme.color.fgPositive : theme.color.fgNegative;
-        const openY = yScale?.(open) ?? 0;
-        const closeY = yScale?.(close) ?? 0;
-
-        const bodyHeight = Math.abs(openY - closeY);
-        const bodyY = openY < closeY ? openY : closeY;
-
-        return (
-          <>
-            <SkiaLine
-              color={color}
-              p1={{ x: wickX, y }}
-              p2={{ x: wickX, y: y + height }}
-              strokeWidth={1}
-            />
-            <Rect color={color} height={bodyHeight} width={width} x={x} y={bodyY} />
-          </>
-        );
-      },
-    );
-
-    const formatThousandsPriceNumber = useCallback((price: number) => {
-      const formattedPrice = new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'USD',
-        minimumFractionDigits: 0,
-        maximumFractionDigits: 0,
-      }).format(price / 1000);
-
-      return `${formattedPrice}k`;
-    }, []);
-
-    const formatTime = useCallback((index: number | null) => {
-      if (index === null || index === undefined || index >= candlestickStockData.length) return '';
-      const ts = parseInt(candlestickStockData[index].start);
-      return new Date(ts * 1000).toLocaleDateString('en-US', {
-        month: 'short',
-        day: 'numeric',
-      });
-    }, []);
-
-    return (
-      <BarChart
-        enableScrubbing
-        showXAxis
-        showYAxis
-        BarComponent={CandlestickBarComponent}
-        BarStackComponent={({ children }) => <g>{children}</g>}
-        animate={false}
-        aria-labelledby={infoTextId}
-        borderRadius={0}
-        height={150}
-        inset={{ top: 8, bottom: 8, left: 0, right: 0 }}
-        onScrubberPositionChange={onScrubberPositionChange}
-        series={[
-          {
-            id: 'stock-prices',
-            data: candlesData,
-          },
-        ]}
-        xAxis={{
-          tickLabelFormatter: formatTime,
-        }}
-        yAxis={{
-          domain: { min },
-          tickLabelFormatter: formatThousandsPriceNumber,
-          width: 40,
-          showGrid: true,
-          GridLineComponent: ThinSolidLine,
-        }}
-      >
-        <Scrubber hideOverlay LineComponent={BandwidthHighlight} seriesIds={[]} />
-      </BarChart>
-    );
-  },
-);
-
-function Candlesticks() {
-  const infoTextId = useId();
-  const [currentIndex, setCurrentIndex] = useState<number | undefined>();
-
-  return (
-    <VStack gap={2}>
-      <CandlesticksHeader currentIndex={currentIndex} />
-      <CandlesticksChart infoTextId={infoTextId} onScrubberPositionChange={setCurrentIndex} />
-    </VStack>
-  );
-}
-
-function UpdatedMotionLineSeriesChart() {
+/*function MonotoneAssetPrice() {
   const theme = useTheme();
-  const prices = [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58];
-  const volume = [4, 8, 11, 15, 16, 14, 16, 10, 12, 14, 16, 14, 16, 10];
-
-  return (
-    <LineChart
-      height={250}
-      series={[
-        {
-          id: 'prices',
-          data: prices,
-          label: 'Prices',
-          color: theme.color.accentBoldBlue,
-        },
-        {
-          id: 'volume',
-          data: volume,
-          label: 'Volume',
-          color: theme.color.accentBoldGreen,
-        },
-      ]}
-      xAxis={{ range: ({ min, max }) => ({ min, max: max - 16 }) }}
-      yAxis={{
-        domain: {
-          min: 0,
-        },
-        showGrid: true,
-      }}
-    >
-      <Scrubber />
-    </LineChart>
-  );
-}
-
-function MonotoneAssetPriceChart() {
   const prices = sparklineInteractiveData.hour;
-  const currentPrice = prices[prices.length - 1].value;
 
   const priceFormatter = useMemo(
     () =>
@@ -2827,8 +1209,9 @@ function MonotoneAssetPriceChart() {
     [scrubberPriceFormatter, prices, formatDate],
   );
 
-  const CustomScrubberBeacon = memo((props: ScrubberBeaconProps) => {
-    return <ScrubberBeacon {...props} color="red" />;
+  const CustomScrubberBeacon = memo(({ dataX, dataY, ...props }: ScrubberBeaconProps) => {
+    if (dataX === undefined || dataY === undefined) return;
+    return <Point {...props} animate={false} dataX={dataX} dataY={dataY} r={5} />;
   });
 
   return (
@@ -2842,16 +1225,17 @@ function MonotoneAssetPriceChart() {
         {
           id: 'btc',
           data: prices.map((price) => price.value),
-          color: 'var(--color-fg)',
+          color: theme.color.fg,
           gradient: {
             axis: 'x',
             stops: ({ min, max }) => [
-              { offset: min, color: 'var(--color-fg)', opacity: 0 },
-              { offset: 32, color: 'var(--color-fg)', opacity: 1 },
+              { offset: min, color: theme.color.fg, opacity: 0 },
+              { offset: 32, color: theme.color.fg, opacity: 1 },
             ],
           },
         },
       ]}
+      style={{ outlineColor: theme.color.fg }}
       xAxis={{
         range: ({ min, max }) => ({ min: 96, max: max }),
       }}
@@ -2859,227 +1243,401 @@ function MonotoneAssetPriceChart() {
         position: 'left',
         width: 0,
         showGrid: true,
-        tickLabelFormatter: formatPrice,
+        tickLabelFormatter: formatAxisLabelPrice,
       }}
     >
-      <Scrubber hideOverlay BeaconComponent={CustomScrubberBeacon} labelProps={{ elevation: 1 }} />
+      <Scrubber
+        hideOverlay
+        BeaconComponent={CustomScrubberBeacon}
+        LineComponent={SolidLine}
+        label={scrubberLabel}
+        labelProps={{ elevation: 1 }}
+        styles={{
+          beacon: {
+            stroke: theme.color.fg,
+            fill: theme.color.bg,
+            strokeWidth: 3,
+          },
+        }}
+      />
     </LineChart>
+  );
+}*/
+
+function ServiceAvailability() {
+  const theme = useTheme();
+  const availabilityEvents = useMemo(
+    () => [
+      { date: new Date('2022-01-01'), availability: 79 },
+      { date: new Date('2022-01-03'), availability: 81 },
+      { date: new Date('2022-01-04'), availability: 82 },
+      { date: new Date('2022-01-06'), availability: 91 },
+      { date: new Date('2022-01-07'), availability: 92 },
+      { date: new Date('2022-01-10'), availability: 86 },
+    ],
+    [],
+  );
+
+  return (
+    <CartesianChart
+      enableScrubbing
+      height={200}
+      series={[
+        {
+          id: 'availability',
+          data: availabilityEvents.map((event) => event.availability),
+          gradient: {
+            stops: ({ min, max }) => [
+              { offset: min, color: theme.color.fgNegative },
+              { offset: 85, color: theme.color.fgNegative },
+              { offset: 85, color: theme.color.fgWarning },
+              { offset: 90, color: theme.color.fgWarning },
+              { offset: 90, color: theme.color.fgPositive },
+              { offset: max, color: theme.color.fgPositive },
+            ],
+          },
+        },
+      ]}
+      xAxis={{
+        data: availabilityEvents.map((event) => event.date.getTime()),
+      }}
+      yAxis={{
+        domain: ({ min, max }) => ({ min: Math.max(min - 2, 0), max: Math.min(max + 2, 100) }),
+      }}
+    >
+      <XAxis
+        showGrid
+        showLine
+        showTickMarks
+        tickLabelFormatter={(value) => new Date(value).toLocaleDateString()}
+      />
+      <YAxis
+        showGrid
+        showLine
+        showTickMarks
+        position="left"
+        tickLabelFormatter={(value) => `${value}%`}
+      />
+      <Line
+        curve="stepAfter"
+        renderPoints={(props) => ({
+          ...props,
+          fill: theme.color.bg,
+          stroke: props.fill,
+        })}
+        seriesId="availability"
+      />
+      <Scrubber hideOverlay />
+    </CartesianChart>
+  );
+}
+
+function ForecastAssetPrice() {
+  const startYear = 2020;
+  const data = [50, 45, 47, 46, 54, 54, 60, 61, 63, 66, 70];
+  const currentIndex = 6;
+
+  const strokeWidth = 3;
+  // To prevent cutting off the edge of our lines
+  const clipOffset = strokeWidth;
+
+  const axisFormatter = useCallback(
+    (dataIndex: number) => {
+      return `${startYear + dataIndex}`;
+    },
+    [startYear],
+  );
+
+  const HistoricalLineComponent = memo((props: SolidLineProps) => {
+    const { drawingArea, getXScale } = useCartesianChartContext();
+    const xScale = getXScale();
+
+    const historicalClipPath = useMemo(() => {
+      if (!xScale || !drawingArea) return null;
+
+      const currentX = xScale(currentIndex);
+      if (currentX === undefined) return null;
+
+      // Create clip path for historical data (left side)
+      const clip = Skia.Path.Make();
+      clip.addRect({
+        x: drawingArea.x - clipOffset,
+        y: drawingArea.y - clipOffset,
+        width: currentX + clipOffset - drawingArea.x,
+        height: drawingArea.height + clipOffset * 2,
+      });
+      return clip;
+    }, [xScale, drawingArea]);
+
+    if (!historicalClipPath) return null;
+
+    return (
+      <Group clip={historicalClipPath}>
+        <SolidLine strokeWidth={strokeWidth} {...props} />
+      </Group>
+    );
+  });
+
+  // Since the solid and dotted line have different curves,
+  // we need two separate line components. Otherwise we could
+  // have one line component with SolidLine and DottedLine inside
+  // of it and two clipPaths.
+  const ForecastLineComponent = memo((props: DottedLineProps) => {
+    const { drawingArea, getXScale } = useCartesianChartContext();
+    const xScale = getXScale();
+
+    const forecastClipPath = useMemo(() => {
+      if (!xScale || !drawingArea) return null;
+
+      const currentX = xScale(currentIndex);
+      if (currentX === undefined) return null;
+
+      // Create clip path for forecast data (right side)
+      const clip = Skia.Path.Make();
+      clip.addRect({
+        x: currentX,
+        y: drawingArea.y - clipOffset,
+        width: drawingArea.x + drawingArea.width - currentX + clipOffset * 2,
+        height: drawingArea.height + clipOffset * 2,
+      });
+      return clip;
+    }, [xScale, drawingArea]);
+
+    if (!forecastClipPath) return null;
+
+    return (
+      <Group clip={forecastClipPath}>
+        <DottedLine dashIntervals={[0, strokeWidth * 2]} strokeWidth={strokeWidth} {...props} />
+      </Group>
+    );
+  });
+  const CustomScrubber = memo(() => {
+    const { scrubberPosition } = useScrubberContext();
+    const isScrubbing = scrubberPosition !== undefined;
+
+    // Fade in animation for the Scrubber
+    const fadeInOpacity = useSharedValue(0);
+
+    useEffect(() => {
+      fadeInOpacity.value = withDelay(350, withTiming(1, { duration: 150 }));
+    }, [fadeInOpacity]);
+
+    return (
+      <Group opacity={fadeInOpacity}>
+        <Group opacity={isScrubbing ? 1 : 0}>
+          <Scrubber hideOverlay />
+        </Group>
+        <Group opacity={isScrubbing ? 0 : 1}>
+          <Point dataX={currentIndex} dataY={data[currentIndex]} fill={assets.btc.color} />
+        </Group>
+      </Group>
+    );
+  });
+
+  return (
+    <CartesianChart
+      enableScrubbing
+      height={200}
+      series={[{ id: 'price', data, color: assets.btc.color }]}
+    >
+      <Line LineComponent={HistoricalLineComponent} curve="linear" seriesId="price" />
+      <Line LineComponent={ForecastLineComponent} curve="monotone" seriesId="price" type="dotted" />
+      <XAxis position="bottom" requestedTickCount={3} tickLabelFormatter={axisFormatter} />
+      <CustomScrubber />
+    </CartesianChart>
   );
 }
 
 export default () => {
   const theme = useTheme();
-
   return (
     <ExampleScreen>
-      <Example title="Asset Price Dotted">
-        <AssetPriceDotted />
-      </Example>
-      <Example title="Gain/Loss">
-        <GainLossChart fontFamily="Marker Felt" />
-      </Example>
-      <Example title="Monotone Asset Price Chart">
-        <MonotoneAssetPriceChart />
-      </Example>
-      <Example title="Candlesticks">
-        <Candlesticks />
-      </Example>
-    </ExampleScreen>
-  );
-
-  return (
-    <ExampleScreen>
-      {/*<Example title="Gradient line 6">
-        <CartesianChart
-          enableScrubbing
-          height={defaultChartHeight}
-          series={[
-            {
-              id: 'prices',
-              data: data,
-              color: theme.color.fgPositive,
-              gradient: {
-                axis: 'x',
-                stops: [
-                  { offset: 15, color: '#ff0000' },
-                  { offset: data.length - 15, color: '#00ff00' },
-                ],
-              },
-              label: 'test',
-            },
-            {
-              id: 'prices2',
-              data: data.map((d) => d * 2),
-              color: theme.color.fgPositive,
-              gradient: {
-                axis: 'x',
-                stops: [
-                  { offset: 15, color: '#ff0000' },
-                  { offset: data.length - 15, color: '#00ff00' },
-                ],
-              },
-              label: 'test',
-            },
-            {
-              id: 'prices3',
-              data: data.map((d) => d * 1.5),
-              color: theme.color.fgPositive,
-              gradient: {
-                axis: 'x',
-                stops: [
-                  { offset: 15, color: '#ff0000' },
-                  { offset: data.length - 15, color: '#00ff00' },
-                ],
-              },
-              label: 'test',
-            },
-          ]}
-        >
-          <Line showArea curve="bump" seriesId="prices" type="solid" />
-          <Line showArea curve="bump" seriesId="prices3" type="solid" />
-          <Line showArea curve="bump" seriesId="prices2" type="solid" />
-          <Scrubber />
-        </CartesianChart>
-      </Example>
-      <Example title="Gradient line">
-        <GradientLineChart />
-      </Example>*/}
-      <Example title="Dotted">
-        <BasicExample />
-      </Example>
-      <Example title="Imperative Handle">
-        <ScrubberWithImperativeHandle />
-      </Example>
-      {/*<Example title="Animated Gain/Loss">
-        <AnimatedGainLossChart />
-      </Example>
-      <Example title="Dotted">
-        <AssetPriceDotted />
-      </Example>
       <Example title="Basic">
         <LineChart
-          enableScrubbing
           showArea
-          showYAxis
-          height={150}
+          height={200}
           series={[
             {
               id: 'prices',
-              data: sampleData,
+              data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+            },
+          ]}
+        />
+      </Example>
+      <Example title="Multiple Lines">
+        <MultipleLine />
+      </Example>
+      <Example title="Data Format">
+        <DataFormat />
+      </Example>
+      <Example title="Live Updates">
+        <LiveUpdates />
+      </Example>
+      <Example title="Missing Data">
+        <MissingData />
+      </Example>
+      <Example title="Empty State">
+        <LineChart
+          height={200}
+          series={[
+            {
+              id: 'line',
+              color: `rgb(${theme.spectrum.gray50})`,
+              data: [1, 1],
+              showArea: true,
+            },
+          ]}
+          yAxis={{ domain: { min: -1, max: 3 } }}
+        />
+      </Example>
+      <Example title="Scales">
+        <LineChart
+          showArea
+          showYAxis
+          height={200}
+          series={[
+            {
+              id: 'prices',
+              data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+            },
+          ]}
+          yAxis={{
+            scaleType: 'log',
+            showGrid: true,
+            ticks: [1, 10, 100],
+          }}
+        />
+      </Example>
+      <Example title="Interaction">
+        <Interaction />
+      </Example>
+      <Example title="Points">
+        <Points />
+      </Example>
+      <Example title="Transitions">
+        <Transitions />
+      </Example>
+      <Example title="Basic Accessible">
+        <BasicAccessible />
+      </Example>
+      <Example title="Styling Axes">
+        <LineChart
+          showArea
+          showXAxis
+          showYAxis
+          height={200}
+          series={[
+            {
+              id: 'prices',
+              data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
             },
           ]}
           xAxis={{
-            range: ({ min, max }) => ({ min, max: max - 16 }),
+            showGrid: true,
+            showLine: true,
+            showTickMarks: true,
+            tickLabelFormatter: (dataX: number) => `Day ${dataX}`,
           }}
           yAxis={{
             showGrid: true,
+            showLine: true,
+            showTickMarks: true,
           }}
-        >
-          <Scrubber idlePulse />
-        </LineChart>
-      </Example>*/}
-      <Example title="Continuous Gradient 2">
-        <AreaChart
-          enableScrubbing
-          showLines
-          showYAxis
-          stacked
-          AreaComponent={(props) => <DottedArea {...props} fillOpacity={0.5} />}
-          height={250}
-          series={[
-            {
-              id: 'prices',
-              data: data.map((d) => d * 1.05),
-              color: `rgb(${theme.spectrum.pink50})`,
-              label: 'testing',
-            },
-            {
-              id: 'prices2',
-              data: data,
-              color: `rgb(${theme.spectrum.red50})`,
-              label: 'testing 2',
-            },
-            {
-              id: 'prices3',
-              data: data.map((d) => d * 0.95),
-              color: `rgb(${theme.spectrum.chartreuse50})`,
-              label: 'testing 3',
-            },
-          ]}
-          strokeWidth={4}
-          yAxis={{
-            showGrid: true,
-            tickLabelFormatter: (value) => `$${(value / 1000).toFixed(0)}k`,
-          }}
-        >
-          <Scrubber idlePulse />
-        </AreaChart>
+        />
       </Example>
-      <Example title="Discrete Gradient 2">
+      <Example title="Gradients">
+        <Gradients />
+      </Example>
+      <Example title="Gain/Loss">
+        <GainLossChart />
+      </Example>
+      <Example title="Styling Lines">
         <LineChart
-          enableScrubbing
-          showArea
-          showYAxis
-          AreaComponent={PartialSolidArea}
-          height={150}
+          height={200}
           series={[
             {
-              id: 'prices',
-              data: sampleData,
-              gradient: {
-                stops: ({ min, max }) => [
-                  { offset: min, color: `rgb(${theme.spectrum.pink90})` },
-                  { offset: min + (max - min) / 3, color: `rgb(${theme.spectrum.pink90})` },
-                  { offset: min + (max - min) / 3, color: `rgb(${theme.spectrum.pink50})` },
-                  { offset: min + ((max - min) / 3) * 2, color: `rgb(${theme.spectrum.pink50})` },
-                  { offset: min + ((max - min) / 3) * 2, color: `rgb(${theme.spectrum.pink10})` },
-                  { offset: max, color: `rgb(${theme.spectrum.pink10})` },
-                ],
-              },
+              id: 'top',
+              data: [15, 28, 32, 44, 46, 36, 40, 45, 48, 38],
             },
-          ]}
-          strokeWidth={4}
-          yAxis={{
-            showGrid: true,
-          }}
-        >
-          <Scrubber />
-        </LineChart>
-      </Example>
-      <Example title="Multiple series">
-        <MultipleSeriesChart />
-      </Example>
-      {/*<Example title="X Axis Gradient 2">
-        <LineChart
-          enableScrubbing
-          showYAxis
-          height={150}
-          renderPoints={() => true}
-          series={[
             {
-              id: 'prices',
-              data: sampleData,
+              id: 'upperMiddle',
+              data: [12, 23, 21, 29, 34, 28, 31, 38, 42, 35],
+              color: '#ef4444',
+              type: 'dotted',
+            },
+            {
+              id: 'lowerMiddle',
+              data: [8, 15, 14, 25, 20, 18, 22, 28, 24, 30],
+              color: '#f59e0b',
+              curve: 'natural',
               gradient: {
                 axis: 'x',
                 stops: [
-                  { offset: 0, color: `rgb(${theme.spectrum.pink90})`, opacity: 0 },
-                  {
-                    offset: sampleData.length - 1,
-                    color: `rgb(${theme.spectrum.pink10})`,
-                    opacity: 1,
-                  },
+                  { offset: 0, color: '#E3D74D' },
+                  { offset: 9, color: '#F7931A' },
                 ],
               },
+              strokeWidth: 6,
+            },
+            {
+              id: 'bottom',
+              data: [4, 8, 11, 15, 16, 14, 16, 10, 12, 14],
+              color: '#800080',
+              curve: 'step',
+              AreaComponent: DottedArea,
+              showArea: true,
             },
           ]}
-          strokeWidth={4}
-          yAxis={{
-            showGrid: true,
+        />
+      </Example>
+      <Example title="Styling Reference Lines">
+        <LineChart
+          enableScrubbing
+          showArea
+          height={200}
+          series={[
+            {
+              id: 'prices',
+              data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+              color: theme.color.fgPositive,
+            },
+          ]}
+          xAxis={{
+            // Give space before the end of the chart for the scrubber
+            range: ({ min, max }) => ({ min, max: max - 24 }),
           }}
         >
+          <ReferenceLine
+            LineComponent={(props) => (
+              <DottedLine {...props} dashIntervals={[0, 16]} strokeWidth={3} />
+            )}
+            dataY={10}
+            stroke={theme.color.fg}
+          />
           <Scrubber />
         </LineChart>
+      </Example>
+      <Example title="High/Low Price">
+        <HighLowPrice />
+      </Example>
+      <Example title="Styling Scrubber">
+        <StylingScrubber />
+      </Example>
+      <Example title="Compact">
+        <Compact />
+      </Example>
+      <Example title="Asset Price With Dotted Area">
+        <AssetPriceWithDottedArea />
+      </Example>
+      {/*<Example title="Monotone Asset Price">
+        <MonotoneAssetPrice />
       </Example>*/}
+      <Example title="Service Availability">
+        <ServiceAvailability />
+      </Example>
+      <Example title="Forecast Asset Price">
+        <ForecastAssetPrice />
+      </Example>
     </ExampleScreen>
   );
 };

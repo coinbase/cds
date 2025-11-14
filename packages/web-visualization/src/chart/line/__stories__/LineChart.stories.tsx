@@ -5,19 +5,16 @@ import { prices } from '@coinbase/cds-common/internal/data/prices';
 import { sparklineInteractiveData } from '@coinbase/cds-common/internal/visualizations/SparklineInteractiveData';
 import { useTabsContext } from '@coinbase/cds-common/tabs/TabsContext';
 import type { TabValue } from '@coinbase/cds-common/tabs/useTabs';
-import { useTheme } from '@coinbase/cds-web';
 import { ListCell } from '@coinbase/cds-web/cells';
 import { useBreakpoints } from '@coinbase/cds-web/hooks/useBreakpoints';
 import { Box, HStack, VStack } from '@coinbase/cds-web/layout';
 import { Avatar, RemoteImage } from '@coinbase/cds-web/media';
-import { RollingNumber } from '@coinbase/cds-web/numbers';
 import { SectionHeader } from '@coinbase/cds-web/section-header/SectionHeader';
 import { Pressable } from '@coinbase/cds-web/system';
 import {
   SegmentedTab,
   type SegmentedTabProps,
   type TabComponent,
-  TabsActiveIndicator,
   type TabsActiveIndicatorProps,
 } from '@coinbase/cds-web/tabs';
 import { Text, TextLabel1 } from '@coinbase/cds-web/typography';
@@ -25,10 +22,6 @@ import { m } from 'framer-motion';
 
 import {
   type AxisBounds,
-  type ChartTextChildren,
-  type GradientDefinition,
-  type GradientStop,
-  LiveTabLabel,
   PeriodSelector,
   PeriodSelectorActiveIndicator,
   Point,
@@ -37,13 +30,7 @@ import {
   useCartesianChartContext,
   useScrubberContext,
 } from '../..';
-import {
-  Area,
-  type AreaComponentProps,
-  DottedArea,
-  type DottedAreaProps,
-  GradientArea,
-} from '../../area';
+import { Area, DottedArea, GradientArea } from '../../area';
 import { XAxis, YAxis } from '../../axis';
 import { CartesianChart } from '../../CartesianChart';
 import { ScrubberBeacon, type ScrubberBeaconProps } from '../../scrubber/ScrubberBeacon';
@@ -77,9 +64,12 @@ const Example: React.FC<
 };
 
 function MultipleLine() {
-  const pages = ['Page A', 'Page B', 'Page C', 'Page D', 'Page E', 'Page F', 'Page G'];
-  const pageViews = [2400, 1398, 9800, 3908, 4800, 3800, 4300];
-  const uniqueVisitors = [4000, 3000, 2000, 2780, 1890, 2390, 3490];
+  const pages = useMemo(
+    () => ['Page A', 'Page B', 'Page C', 'Page D', 'Page E', 'Page F', 'Page G'],
+    [],
+  );
+  const pageViews = useMemo(() => [2400, 1398, 9800, 3908, 4800, 3800, 4300], []);
+  const uniqueVisitors = useMemo(() => [4000, 3000, 2000, 2780, 1890, 2390, 3490], []);
 
   const chartAccessibilityLabel = `Website visitors across ${pageViews.length} pages.`;
 
@@ -135,8 +125,8 @@ function MultipleLine() {
 }
 
 function DataFormat() {
-  const yData = [2, 5.5, 2, 8.5, 1.5, 5];
-  const xData = [1, 2, 3, 5, 8, 10];
+  const yData = useMemo(() => [2, 5.5, 2, 8.5, 1.5, 5], []);
+  const xData = useMemo(() => [1, 2, 3, 5, 8, 10], []);
 
   const chartAccessibilityLabel = `Chart with custom X and Y data. ${yData.length} data points`;
 
@@ -863,7 +853,7 @@ function StylingScrubber() {
         tickLabelFormatter: numberFormatter,
       }}
     >
-      <Scrubber LineComponent={SolidLine} seriesIds={['pageViews']} />
+      <Scrubber idlePulse LineComponent={SolidLine} seriesIds={['pageViews']} />
     </LineChart>
   );
 }
