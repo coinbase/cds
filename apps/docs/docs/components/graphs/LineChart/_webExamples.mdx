@@ -6,7 +6,7 @@ The only prop required is `series`, which takes an array of series objects. Each
 
 ```jsx live
 <LineChart
-  height={{ base: 150, tablet: 200, desktop: 250 }}
+  height={{ base: 200, tablet: 225, desktop: 250 }}
   series={[
     {
       id: 'prices',
@@ -43,7 +43,7 @@ function MultipleLineExample() {
   return (
     <LineChart
       enableScrubbing
-      height={{ base: 150, tablet: 200, desktop: 250 }}
+      height={{ base: 200, tablet: 225, desktop: 250 }}
       series={[
         {
           id: 'pageViews',
@@ -107,7 +107,7 @@ function DataFormatChart() {
           data: yData,
         },
       ]}
-      height={{ base: 150, tablet: 200, desktop: 250 }}
+      height={{ base: 200, tablet: 225, desktop: 250 }}
       showArea
       renderPoints={() => true}
       curve="natural"
@@ -207,7 +207,7 @@ function LiveUpdates() {
     <LineChart
       enableScrubbing
       showArea
-      height={{ base: 150, tablet: 200, desktop: 250 }}
+      height={{ base: 200, tablet: 225, desktop: 250 }}
       series={[
         {
           id: 'btc',
@@ -242,7 +242,7 @@ function MultipleLineExample() {
   return (
     <LineChart
       enableScrubbing
-      height={{ base: 150, tablet: 200, desktop: 250 }}
+      height={{ base: 200, tablet: 225, desktop: 250 }}
       series={[
         {
           id: 'pageViews',
@@ -293,19 +293,62 @@ function MultipleLineExample() {
     },
   ]}
   yAxis={{ domain: { min: -1, max: 3 } }}
-  height={{ base: 150, tablet: 200, desktop: 250 }}
+  height={{ base: 200, tablet: 225, desktop: 250 }}
 />
 ```
 
 ### Scales
 
-LineChart uses `linear` scaling on axes by default, but you can also use `log` or `band` scaling.
+LineChart uses `linear` scaling on axes by default, but you can also use other types, such as `log`. See [XAxis](/components/graphs/XAxis) and [YAxis](/components/graphs/YAxis) for more information.
 
-Showcase the chart where we showcase % availability over time. Point to X and Y axis docs for more information.
+```jsx live
+<LineChart
+  height={{ base: 200, tablet: 225, desktop: 250 }}
+  series={[
+    {
+      id: 'prices',
+      data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+    },
+  ]}
+  showArea
+  showYAxis
+  yAxis={{
+    scaleType: 'log',
+    showGrid: true,
+    ticks: [1, 10, 100],
+  }}
+/>
+```
 
 ## Interaction
 
-todo: intro paragraph
+Charts have built in functionality enabled through scrubbing, which can be used by setting `enableScrubbing` to true. You can listen to value changes through `onScrubberPositionChange`. Adding `Scrubber` to LineChart showcases the current scrubber position.
+
+```jsx live
+function Interaction() {
+  const [scrubberPosition, setScrubberPosition] = useState<number | undefined>();
+
+  return (
+    <VStack gap={2}>
+      <Text font="label1">{scrubberPosition !== undefined ? `Scrubber position: ${scrubberPosition}` : 'Not scrubbing'}</Text>
+      <LineChart
+        enableScrubbing
+        height={{ base: 200, tablet: 225, desktop: 250 }}
+        series={[
+          {
+            id: 'prices',
+            data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+          },
+        ]}
+        showArea
+        onScrubberPositionChange={setScrubberPosition}
+      >
+        <Scrubber />
+      </LineChart>
+    </VStack>
+  );
+}
+```
 
 ### Points
 
@@ -318,7 +361,7 @@ function PointsChart() {
 
   return (
     <CartesianChart
-      height={{ base: 150, tablet: 200, desktop: 250 }}
+      height={{ base: 200, tablet: 225, desktop: 250 }}
       series={[
         {
           id: 'prices',
@@ -350,9 +393,9 @@ function PointsChart() {
 }
 ```
 
-### Performance
+### Performance (mobile)
 
-### Gestures - allow outside gestures on mobile
+### Gestures - allow outside gestures on mobile (mobile)
 
 ## Animations
 
@@ -519,7 +562,7 @@ function AccessibleBasicChart() {
   return (
     <LineChart
       enableScrubbing
-      height={{ base: 150, tablet: 200, desktop: 250 }}
+      height={{ base: 200, tablet: 225, desktop: 250 }}
       series={[
         {
           id: 'prices',
@@ -565,7 +608,7 @@ function AccessibleChartWithHeader() {
       </Text>
       <LineChart
         enableScrubbing
-        height={{ base: 150, tablet: 200, desktop: 250 }}
+        height={{ base: 200, tablet: 225, desktop: 250 }}
         series={[
           {
             id: 'revenue',
@@ -593,7 +636,31 @@ function AccessibleChartWithHeader() {
 
 Using `showXAxis` and `showYAxis` allows you to display the axes. For more information, such as adjusting domain and range, see [XAxis](/components/graphs/XAxis) and [YAxis](/components/graphs/YAxis).
 
-[todo talk about domain and range]
+```jsx live
+<LineChart
+  height={{ base: 200, tablet: 225, desktop: 250 }}
+  series={[
+    {
+      id: 'prices',
+      data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+    },
+  ]}
+  showArea
+  showXAxis
+  xAxis={{
+    showGrid: true,
+    showLine: true,
+    showTickMarks: true,
+    tickLabelFormatter: (dataX: number) => `Day ${dataX}`,
+  }}
+  showYAxis
+  yAxis={{
+    showGrid: true,
+    showLine: true,
+    showTickMarks: true,
+  }}
+/>
+```
 
 ### Gradients
 
@@ -642,7 +709,7 @@ function Gradients() {
         ))}
       </HStack>
       <LineChart
-        height={{ base: 150, tablet: 200, desktop: 250 }}
+        height={{ base: 200, tablet: 225, desktop: 250 }}
         series={[
           {
             id: 'continuousGradient',
@@ -755,7 +822,7 @@ function GainLossChart() {
   return (
     <CartesianChart
       enableScrubbing
-      height={{ base: 150, tablet: 200, desktop: 250 }}
+      height={{ base: 200, tablet: 225, desktop: 250 }}
       series={[
         {
           id: 'prices',
@@ -782,7 +849,7 @@ You can customize lines by placing props in `LineChart` or at each individual se
 
 ```jsx live
 <LineChart
-  height={{ base: 150, tablet: 200, desktop: 250 }}
+  height={{ base: 200, tablet: 225, desktop: 250 }}
   series={[
     {
       id: 'top',
@@ -825,7 +892,7 @@ You can also add instances of [ReferenceLine](/components/graphs/ReferenceLine) 
 ```jsx live
 <LineChart
   enableScrubbing
-  height={{ base: 150, tablet: 200, desktop: 250 }}
+  height={{ base: 200, tablet: 225, desktop: 250 }}
   series={[
     {
       id: 'prices',
@@ -870,7 +937,7 @@ function HighLowPrice() {
 
   return (
     <LineChart
-      height={{ base: 150, tablet: 200, desktop: 250 }}
+      height={{ base: 200, tablet: 225, desktop: 250 }}
       series={[
         {
           id: 'prices',
@@ -907,6 +974,59 @@ function HighLowPrice() {
 ```
 
 ### Scrubber
+
+When using [Scrubber](/components/graphs/Scrubber) with series that have labels, labels will automatically render to the side of the scrubber beacon.
+
+You can customize the line used for and which series will render a scrubber beacon.
+
+```jsx live
+function MultipleLineExample() {
+  const pages = ['Page A', 'Page B', 'Page C', 'Page D', 'Page E', 'Page F', 'Page G'];
+  const pageViews = [2400, 1398, 9800, 3908, 4800, 3800, 4300];
+  const uniqueVisitors = [4000, 3000, 2000, 2780, 1890, 2390, 3490];
+
+  const numberFormatter = useCallback((value: number) => (
+    new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 }).format(value)
+  ), []);
+
+  return (
+    <LineChart
+      enableScrubbing
+      height={{ base: 200, tablet: 225, desktop: 250 }}
+      series={[
+        {
+          id: 'pageViews',
+          data: pageViews,
+          color: 'var(--color-accentBoldGreen)',
+          // Label will render next to scrubber beacon
+          label: 'Page Views',
+        },
+        {
+          id: 'uniqueVisitors',
+          data: uniqueVisitors,
+          color: 'var(--color-accentBoldPurple)',
+          label: 'Unique Visitors',
+          // Default area is gradient
+          areaType: 'dotted',
+        },
+      ]}
+      showArea
+      showXAxis
+      xAxis={{
+        // Used on the x-axis to provide context for each index from the series data array
+        data: pages,
+      }}
+      showYAxis
+      yAxis={{
+        showGrid: true,
+        tickLabelFormatter: numberFormatter,
+      }}
+    >
+      <Scrubber LineComponent={SolidLine} seriesIds={['pageViews']} />
+    </LineChart>
+  );
+}
+```
 
 ### Sizing
 
@@ -1263,7 +1383,7 @@ const BTCActiveIndicator = memo(({ style, ...props }: TabsActiveIndicatorProps) 
         ]}
         showArea
         areaType="dotted"
-        height={{ base: 150, tablet: 200, desktop: 250 }}
+        height={{ base: 200, tablet: 225, desktop: 250 }}
         style={{ outlineColor: assets.btc.color }}
         accessibilityLabel={chartAccessibilityLabel}
       >
@@ -1537,7 +1657,7 @@ function ServiceAvailability() {
   return (
     <CartesianChart
       enableScrubbing
-      height={{ base: 150, tablet: 200, desktop: 250 }}
+      height={{ base: 200, tablet: 225, desktop: 250 }}
       series={[
         {
           id: 'availability',
@@ -1693,7 +1813,7 @@ function ForecastAssetPrice() {
   return (
     <CartesianChart
       enableScrubbing
-      height={{ base: 150, tablet: 200, desktop: 250 }}
+      height={{ base: 200, tablet: 225, desktop: 250 }}
       maxWidth={512}
       series={[{ id: 'price', data, color: assets.btc.color }]}
       style={{ margin: '0 auto' }}
