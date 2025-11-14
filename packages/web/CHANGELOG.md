@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.21.5 (11/19/2025 PST)
+
+#### 🐞 Fixes
+
+- Auto-fill DatePicker width. [[#118](https://github.com/coinbase/cds/pull/118)] [DX-4988]
+
 ## 8.21.4 (11/18/2025 PST)
 
 #### 🐞 Fixes
