@@ -48,6 +48,10 @@ export type RenderPointsParams = {
    * Y coordinate in data space (same as value).
    */
   dataY: number;
+  /**
+   * Fill for the point
+   */
+  fill: string;
 };
 
 /**

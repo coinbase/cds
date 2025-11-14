@@ -281,21 +281,9 @@ export const Line = memo<LineProps>(
 
               const xValue = xData && xData[index] !== undefined ? xData[index] : index;
 
-              const point = renderPoints({
-                dataY: value,
-                dataX: xValue,
-                x: xScale?.(xValue) ?? 0,
-                y: yScale?.(value) ?? 0,
-              });
+              let pointFill = stroke;
 
-              if (!point) return;
-
-              const pointConfig = typeof point === 'object' ? point : {};
-
-              // Evaluate colors from gradient if available (only if not explicitly set)
-              let pointFill = pointConfig.fill ?? stroke;
-
-              if (gradientConfig && gradient && !pointConfig.fill) {
+              if (gradientConfig && gradient) {
                 // Use the appropriate data value based on gradient axis
                 const axis = gradient.axis ?? 'y';
                 const dataValue = axis === 'x' ? xValue : value;
@@ -310,6 +298,21 @@ export const Line = memo<LineProps>(
                   pointFill = evaluatedColor;
                 }
               }
+
+              const point = renderPoints({
+                dataY: value,
+                dataX: xValue,
+                x: xScale?.(xValue) ?? 0,
+                y: yScale?.(value) ?? 0,
+                fill: pointFill,
+              });
+
+              if (!point) return;
+
+              const pointConfig = typeof point === 'object' ? point : {};
+
+              // Use the updated fill (if applicable)
+              if (pointConfig.fill) pointFill = pointConfig.fill;
 
               return (
                 <Point

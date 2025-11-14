@@ -243,8 +243,9 @@ export const XAxis = memo<XAxisProps>(
               return (
                 <TickMarkLineComponent
                   key={`tick-mark-${tick.tick}-${index}`}
+                  animate={false}
                   className={cx(axisTickMarkCss, classNames?.tickMark)}
-                  clipRect={undefined}
+                  clipRect={null}
                   d={lineToPath(tick.position, tickY2, tick.position, tickY)}
                   stroke="var(--color-fg)"
                   strokeLinecap="square"
