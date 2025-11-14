@@ -1,4 +1,4 @@
-import { memo, useMemo } from 'react';
+import { memo, type ReactNode, useMemo } from 'react';
 import type { StyleProp, ViewStyle } from 'react-native';
 import type { FallbackRectWidthProps, SharedProps } from '@coinbase/cds-common/types';
 import { getRectWidthVariant } from '@coinbase/cds-common/utils/getRectWidthVariant';
@@ -8,6 +8,7 @@ import { VStack } from '../layout';
 import { Fallback } from '../layout/Fallback';
 
 import { Cell } from './Cell';
+import { CellAccessory, type CellAccessoryType } from './CellAccessory';
 import type { CellMediaType } from './CellMedia';
 import { condensedInnerSpacing, condensedOuterSpacing, type ListCellBaseProps } from './ListCell';
 import { MediaFallback } from './MediaFallback';
@@ -15,6 +16,10 @@ import { MediaFallback } from './MediaFallback';
 export type ListCellFallbackBaseProps = SharedProps &
   FallbackRectWidthProps &
   Pick<ListCellBaseProps, 'compact' | 'innerSpacing' | 'outerSpacing' | 'spacingVariant'> & {
+    /** Accessory to display at the end of the cell. */
+    accessory?: CellAccessoryType;
+    /** Custom accessory rendered at the end of the cell. Takes precedence over `accessory`. */
+    accessoryNode?: ReactNode;
     /** Display description shimmer. */
     description?: boolean;
     /** Display detail shimmer. */
@@ -46,10 +51,14 @@ export type ListCellFallbackProps = ListCellFallbackBaseProps & {
     description?: StyleProp<ViewStyle>;
     /** Style to apply to the subtitle shimmer. */
     subtitle?: StyleProp<ViewStyle>;
+    /** Style to apply to the accessory container. */
+    accessory?: StyleProp<ViewStyle>;
   };
 };
 
 export const ListCellFallback = memo(function ListCellFallback({
+  accessory,
+  accessoryNode,
   title,
   description,
   detail,
@@ -209,8 +218,10 @@ export const ListCellFallback = memo(function ListCellFallback({
 
   return (
     <Cell
+      accessory={accessory ? <CellAccessory type={accessory} /> : undefined}
+      accessoryNode={accessoryNode}
       bottomContent={helperTextFallback}
-      detail={detailFallback}
+      end={detailFallback}
       innerSpacing={
         innerSpacing ?? (spacingVariant === 'condensed' ? condensedInnerSpacing : undefined)
       }
@@ -218,6 +229,7 @@ export const ListCellFallback = memo(function ListCellFallback({
       outerSpacing={
         outerSpacing ?? (spacingVariant === 'condensed' ? condensedOuterSpacing : undefined)
       }
+      styles={{ accessory: styles?.accessory }}
       {...props}
     >
       <VStack gap={0.5}>

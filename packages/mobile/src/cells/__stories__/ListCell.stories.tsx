@@ -623,7 +623,7 @@ const WithActions = () => (
   </>
 );
 
-const WithFallbackToggle = () => {
+const Fallback = () => {
   const [showFallback, setShowFallback] = React.useState(false);
 
   return (
@@ -643,6 +643,7 @@ const WithFallbackToggle = () => {
           subdetail
           subtitle
           title
+          accessory="more"
           media="asset"
           spacingVariant="condensed"
         />
@@ -1192,8 +1193,8 @@ const ListCellScreen = () => {
       <Example inline paddingX={0} title="WithActions" titlePadding={titlePadding}>
         <WithActions />
       </Example>
-      <Example inline paddingX={0} title="WithFallbackToggle" titlePadding={titlePadding}>
-        <WithFallbackToggle />
+      <Example inline paddingX={0} title="Fallback" titlePadding={titlePadding}>
+        <Fallback />
       </Example>
       <Example inline paddingX={0} title="WithIntermediary" titlePadding={titlePadding}>
         <WithIntermediary />

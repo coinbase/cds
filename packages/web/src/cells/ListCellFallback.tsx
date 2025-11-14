@@ -1,4 +1,5 @@
-import { type CSSProperties, memo, useMemo } from 'react';
+import { memo, useMemo } from 'react';
+import type { CSSProperties, ReactNode } from 'react';
 import type { FallbackRectWidthProps, SharedProps } from '@coinbase/cds-common/types';
 import { getRectWidthVariant } from '@coinbase/cds-common/utils/getRectWidthVariant';
 
@@ -6,6 +7,7 @@ import { VStack } from '../layout';
 import { Fallback } from '../layout/Fallback';
 
 import { Cell } from './Cell';
+import { CellAccessory, type CellAccessoryType } from './CellAccessory';
 import type { CellMediaType } from './CellMedia';
 import { condensedInnerSpacing, condensedOuterSpacing, type ListCellBaseProps } from './ListCell';
 import { MediaFallback } from './MediaFallback';
@@ -13,6 +15,10 @@ import { MediaFallback } from './MediaFallback';
 export type ListCellFallbackBaseProps = SharedProps &
   FallbackRectWidthProps &
   Pick<ListCellBaseProps, 'innerSpacing' | 'outerSpacing' | 'spacingVariant'> & {
+    /** Accessory to display at the end of the cell. */
+    accessory?: CellAccessoryType;
+    /** Custom accessory rendered at the end of the cell. Takes precedence over `accessory`. */
+    accessoryNode?: ReactNode;
     /** Display description shimmer. */
     description?: boolean;
     /** Display detail shimmer. */
@@ -30,7 +36,7 @@ export type ListCellFallbackBaseProps = SharedProps &
   };
 
 export type ListCellFallbackProps = ListCellFallbackBaseProps & {
-  /** Class names to apply to the detail, bottomContent, and title. */
+  /** Class names to apply to parts of the fallback cell. */
   classNames?: {
     /** Class name for the bottom content (helper text). */
     helperText?: string;
@@ -38,6 +44,8 @@ export type ListCellFallbackProps = ListCellFallbackBaseProps & {
     detail?: string;
     /** Class name for the subdetail shimmer. */
     subdetail?: string;
+    /** Class name for the accessory container. */
+    accessory?: string;
     /** Class name for the subtitle shimmer. */
     subtitle?: string;
     /** Class name for the title shimmer. */
@@ -45,7 +53,7 @@ export type ListCellFallbackProps = ListCellFallbackBaseProps & {
     /** Class name for the description shimmer. */
     description?: string;
   };
-  /** Styles to apply to the detail, bottomContent, and title. */
+  /** Styles to apply to parts of the fallback cell. */
   styles?: {
     /** Style to apply to the bottom content (helper text shimmer). */
     helperText?: CSSProperties;
@@ -53,6 +61,8 @@ export type ListCellFallbackProps = ListCellFallbackBaseProps & {
     detail?: CSSProperties;
     /** Style to apply to the subdetail shimmer. */
     subdetail?: CSSProperties;
+    /** Style to apply to the accessory container. */
+    accessory?: CSSProperties;
     /** Style to apply to the subtitle shimmer. */
     subtitle?: CSSProperties;
     /** Style to apply to the title shimmer. */
@@ -63,6 +73,8 @@ export type ListCellFallbackProps = ListCellFallbackBaseProps & {
 };
 
 export const ListCellFallback = memo(function ListCellFallback({
+  accessory,
+  accessoryNode,
   classNames,
   styles,
   title,
@@ -227,8 +239,11 @@ export const ListCellFallback = memo(function ListCellFallback({
 
   return (
     <Cell
+      accessory={accessory ? <CellAccessory type={accessory} /> : undefined}
+      accessoryNode={accessoryNode}
       bottomContent={bottomContentFallback}
-      detail={detailFallback}
+      classNames={{ accessory: classNames?.accessory }}
+      end={detailFallback}
       innerSpacing={
         innerSpacing ?? (spacingVariant === 'condensed' ? condensedInnerSpacing : undefined)
       }
@@ -236,6 +251,7 @@ export const ListCellFallback = memo(function ListCellFallback({
       outerSpacing={
         outerSpacing ?? (spacingVariant === 'condensed' ? condensedOuterSpacing : undefined)
       }
+      styles={{ accessory: styles?.accessory }}
       {...props}
     >
       <VStack gap={0.5}>

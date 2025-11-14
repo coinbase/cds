@@ -702,7 +702,7 @@ const WithActions = () => (
   </>
 );
 
-const WithFallbackToggle = () => {
+const Fallback = () => {
   const [showFallback, setShowFallback] = React.useState(false);
 
   return (
@@ -721,6 +721,7 @@ const WithFallbackToggle = () => {
           helperText
           subtitle
           title
+          accessory="more"
           media="asset"
           spacingVariant="condensed"
         />
@@ -1223,6 +1224,7 @@ export {
   CondensedListCell,
   Content,
   CustomNodes,
+  Fallback,
   LongContent,
   PressableContent,
   PriorityContent,
@@ -1230,7 +1232,6 @@ export {
   UseCaseShowcase,
   WithAccessory,
   WithActions,
-  WithFallbackToggle,
   WithHelperText,
   WithIntermediary,
   WithMedia,
