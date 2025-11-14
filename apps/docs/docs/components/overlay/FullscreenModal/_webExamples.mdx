@@ -38,15 +38,24 @@ function DefaultModal() {
   const onClickConsole = () => void console.log;
 
   const SelectComponent = () => {
-    const [value, setValue] = useState();
-    const options = ['Option 1', 'Option 2', 'Option 3', 'Option 4', 'Option 5', 'Option 6'];
+    const [value, setValue] = useState('1');
+    const options = [
+      { value: '1', label: 'Option 1' },
+      { value: '2', label: 'Option 2' },
+      { value: '3', label: 'Option 3' },
+      { value: '4', label: 'Option 4' },
+      { value: '5', label: 'Option 5' },
+      { value: '6', label: 'Option 6' },
+    ];
 
     return (
-      <Select value={value} placeholder="Choose something..." onChange={setValue}>
-        {options.map((option) => (
-          <SelectOption value={option} key={option} title={option} description="Description" />
-        ))}
-      </Select>
+      <Select
+        label="Select an option"
+        value={value}
+        onChange={setValue}
+        options={options}
+        placeholder="Choose something..."
+      />
     );
   };
 
@@ -102,3 +111,7 @@ function DefaultModal() {
   );
 }
 ```
+
+### Advanced layouts
+
+For more complex layouts, including three-column structures with custom headers and footers, see the [FullscreenModalLayout](/components/overlay/FullscreenModalLayout#three-column-layout-with-fullscreenmodalheader-and-pagefooter) component examples. `FullscreenModalLayout` provides more flexibility for building custom modal layouts while `FullscreenModal` offers a simpler API for common two-column use cases.

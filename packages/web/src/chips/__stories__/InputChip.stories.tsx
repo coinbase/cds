@@ -1,4 +1,3 @@
-import React from 'react';
 import { assets } from '@cbhq/cds-common/internal/data/assets';
 
 import { HStack, VStack } from '../../layout';

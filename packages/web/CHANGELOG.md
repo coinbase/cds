@@ -8,6 +8,38 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.21.2 (11/13/2025 PST)
+
+#### 🐞 Fixes
+
+- Uniform flex alignment for all Avatar variants. [[#162](https://github.com/coinbase/cds/pull/162)] [DX-4991]
+
+## 8.21.1 (11/13/2025 PST)
+
+#### 🐞 Fixes
+
+- Fixed select alpha dropdown zIndex. [[#161](https://github.com/coinbase/cds/pull/161)]
+- Corrected ListCell spacingVariant jsdoc. [[#161](https://github.com/coinbase/cds/pull/161)]
+- Updated docs of FullscreenMoal and FullscreenModalLayout to show a more precise 3-column layout example. [[#161](https://github.com/coinbase/cds/pull/161)]
+
+## 8.21.0 (11/12/2025 PST)
+
+#### 🚀 Updates
+
+- Deprecate TabbedChips and create new TabbedChips(Alpha), whose props mirror Tabs' props. [[#138](https://github.com/coinbase/cds/pull/138)]
+
+## 8.20.2 (11/12/2025 PST)
+
+#### 🐞 Fixes
+
+- Support custom buttons in ModalFooter. [[#155](https://github.com/coinbase/cds/pull/155)]
+
+## 8.20.1 (11/7/2025 PST)
+
+#### 🐞 Fixes
+
+- Add deprecation decorator to old Select. [[#148](https://github.com/coinbase/cds/pull/148)]
+
 ## 8.20.0 (11/7/2025 PST)
 
 #### 🚀 Updates

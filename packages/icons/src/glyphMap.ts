@@ -2540,5 +2540,11 @@ export const glyphMap = {
   'tokenSales-16-active': '󰧡',
   'tokenSales-16-inactive': '󰧢',
   'tokenSales-24-active': '󰧣',
-  'tokenSales-24-inactive': '󰧤'
+  'tokenSales-24-inactive': '󰧤',
+  'baseQuickBuy-12-active': '󰧫',
+  'baseQuickBuy-12-inactive': '󰧬',
+  'baseQuickBuy-16-active': '󰧭',
+  'baseQuickBuy-16-inactive': '󰧮',
+  'baseQuickBuy-24-active': '󰧯',
+  'baseQuickBuy-24-inactive': '󰧰'
 };

@@ -158,6 +158,10 @@ const svgJsMap = {
     light: () => require('../svgJs/light/basePiechartMedium-0.js').content,
     dark: () => require('../svgJs/dark/basePiechartMedium-0.js').content,
   },
+  baseQuickBuy: {
+    light: () => require('../svgJs/light/baseQuickBuy-0.js').content,
+    dark: () => require('../svgJs/dark/baseQuickBuy-0.js').content,
+  },
   baseRewardChest: {
     light: () => require('../svgJs/light/baseRewardChest-0.js').content,
     dark: () => require('../svgJs/dark/baseRewardChest-0.js').content,

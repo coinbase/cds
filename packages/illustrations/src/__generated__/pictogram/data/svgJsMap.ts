@@ -754,6 +754,10 @@ const svgJsMap = {
     light: () => require('../svgJs/light/baseTile-0.js').content,
     dark: () => require('../svgJs/dark/baseTile-0.js').content,
   },
+  bigBtcSend: {
+    light: () => require('../svgJs/light/bigBtcSend-0.js').content,
+    dark: () => require('../svgJs/dark/bigBtcSend-0.js').content,
+  },
   bitcoin: {
     light: () => require('../svgJs/light/bitcoin-1.js').content,
     dark: () => require('../svgJs/dark/bitcoin-1.js').content,
@@ -805,6 +809,10 @@ const svgJsMap = {
   browserTransaction: {
     light: () => require('../svgJs/light/browserTransaction-3.js').content,
     dark: () => require('../svgJs/dark/browserTransaction-3.js').content,
+  },
+  btcOneHundred: {
+    light: () => require('../svgJs/light/btcOneHundred-0.js').content,
+    dark: () => require('../svgJs/dark/btcOneHundred-0.js').content,
   },
   bundle: {
     light: () => require('../svgJs/light/bundle-3.js').content,
