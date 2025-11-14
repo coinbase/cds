@@ -309,7 +309,7 @@ todo: intro paragraph
 
 ### Points
 
-You can pass an `onPointClick` function to `renderPoints` prop to add interaction to an individual point.
+You can use `renderPoints` from LineChart with `onClick` listeners to render instances of [Point](/components/graphs/Point) that are interactable.
 
 ```jsx live
 function PointsChart() {
@@ -591,6 +591,10 @@ function AccessibleChartWithHeader() {
 
 ### Axes
 
+Using `showXAxis` and `showYAxis` allows you to display the axes. For more information, such as adjusting domain and range, see [XAxis](/components/graphs/XAxis) and [YAxis](/components/graphs/YAxis).
+
+[todo talk about domain and range]
+
 ### Gradients
 
 Gradients can be applied to the y-axis (default) or x-axis. Each stop requires an `offset`, which is based on the data within the x/y scale and `color`, with an optional `opacity` (defaults to 1).
@@ -820,6 +824,92 @@ You can customize lines by placing props in `LineChart` or at each individual se
 />
 ```
 
+You can also add instances of [ReferenceLine](/components/graphs/ReferenceLine) to your LineChart to highlight a specific x or y value.
+
+```jsx live
+<LineChart
+  enableScrubbing
+  height={{ base: 150, tablet: 200, desktop: 250 }}
+  series={[
+    {
+      id: 'prices',
+      data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+      color: 'var(--color-fgPositive)',
+    },
+  ]}
+  showArea
+  xAxis={{
+    // Give space before the end of the chart for the scrubber
+    range: ({ min, max }) => ({ min, max: max - 24 }),
+  }}
+>
+  <ReferenceLine
+    dataY={10}
+    stroke="var(--color-fg)"
+    LineComponent={(props) => <DottedLine {...props} strokeWidth={3} strokeDasharray="0 16" />}
+  />
+  <Scrubber />
+</LineChart>
+```
+
+### Points
+
+You can also add instances of [Point](/components/graphs/Point) directly inside of a LineChart.
+
+```jsx live
+function HighLowPrice() {
+  const data = [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58];
+  const minPrice = Math.min(...data);
+  const maxPrice = Math.max(...data);
+
+  const minPriceIndex = data.indexOf(minPrice);
+  const maxPriceIndex = data.indexOf(maxPrice);
+
+  const formatPrice = useCallback((price: number) => {
+    return `$${price.toLocaleString('en-US', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    })}`;
+  }, []);
+
+  return (
+    <LineChart
+      height={{ base: 150, tablet: 200, desktop: 250 }}
+      series={[
+        {
+          id: 'prices',
+          data: data,
+        },
+      ]}
+      showArea
+    >
+      <Point
+        seriesId="prices"
+        dataX={minPriceIndex}
+        dataY={minPrice}
+        label={formatPrice(minPrice)}
+        labelProps={{
+          // Shift the label down and have it render downwards
+          dy: 8,
+          verticalAlignment: 'top'
+        }}
+      />
+      <Point
+        seriesId="prices"
+        dataX={maxPriceIndex}
+        dataY={maxPrice}
+        label={formatPrice(maxPrice)}
+        labelProps={{
+          // Shift the label up and have it render upwards
+          dy: -8,
+          verticalAlignment: 'bottom'
+        }}
+      />
+    </LineChart>
+  );
+}
+```
+
 ### Scrubber
 
 ### Sizing
@@ -827,6 +917,8 @@ You can customize lines by placing props in `LineChart` or at each individual se
 Charts by default take up `100%` of the `width` and `height` available, but can be customized as any other component.
 
 #### Compact
+
+You can also have charts in a compact form.
 
 ```jsx live
 function CompactLineChart() {
@@ -925,6 +1017,8 @@ function CompactLineChart() {
 ## Composed Examples
 
 ### Asset Price with Dotted Area
+
+You can use [PeriodSelector](/components/graphs/PeriodSelector) to have a chart where the user can select a time period and the chart automatically animates.
 
 ```jsx live
 function AssetPriceWithDottedArea() {
@@ -1101,6 +1195,8 @@ const BTCActiveIndicator = memo(({ style, ...props }: TabsActiveIndicatorProps) 
 ```
 
 ### Monotone Asset Price
+
+You can adjust [YAxis](/components/graphs/YAxis) and [Scrubber](/components/graphs/Scrubber) to have a chart where the y-axis is overlaid and the beacon is inverted in style.
 
 ```jsx live
 function MonotoneAssetPrice() {
@@ -1450,6 +1546,10 @@ function ForecastAssetPrice() {
     );
   });
 
+  // Since the solid and dotted line have different curves,
+  // we need two separate line components. Otherwise we could
+  // have one line component with SolidLine and DottedLine inside
+  // of it and two clipPaths.
   const ForecastLineComponent = memo((props) => {
     const { drawingArea, getXScale } = useCartesianChartContext();
     const xScale = getXScale();
@@ -1517,14 +1617,3 @@ function ForecastAssetPrice() {
   );
 }
 ```
-
-- min and max points
-
-## others
-
-- when to use cartesian chart
-- reference lines
-- custom lines
-- follow portfolio
-- follow asset
-- showcase customization
