@@ -207,6 +207,7 @@ const names: SpotRectangleName[] = [
   'update',
   'uploadDocument',
   'usdcLoan',
+  'usdcLoanEth',
   'verifyEmail',
   'verifyInfo',
   'walletNotifications',

@@ -409,6 +409,12 @@ const versionMap: Record<HeroSquareName, number> = {
   baseSocial: 1,
   graphChartTrading: 0,
   stakingMissedReturnsUsdc: 0,
+  usdAndUsdc: 0,
+  futuresVsPerps: 0,
+  futuresAndPerps: 0,
+  tradingWithLeverage: 0,
+  futuresExpire: 0,
+  moreGains: 0,
 };
 
 export default versionMap;

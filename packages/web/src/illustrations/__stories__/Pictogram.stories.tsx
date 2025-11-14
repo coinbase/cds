@@ -30,3 +30,8 @@ export const pictogramSheet2 = getIllustrationSheet({
   startIndex: 240,
   endIndex: 480,
 });
+export const pictogramSheet3 = getIllustrationSheet({
+  type: 'pictogram',
+  startIndex: 480,
+  endIndex: 720,
+});

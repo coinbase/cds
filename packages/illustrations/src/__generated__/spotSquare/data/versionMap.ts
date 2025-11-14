@@ -262,6 +262,7 @@ const versionMap: Record<SpotSquareName, number> = {
   coinbaseUnlockOffers: 0,
   baseCreatorCoin: 0,
   cryptoEconomyArrows: 1,
+  baseQuickBuy: 0,
 };
 
 export default versionMap;

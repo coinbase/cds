@@ -1,6 +1,6 @@
 {
   "executor": "sync-illustrations",
-  "lastUpdated": "2025-11-05T18:41:52.871Z",
+  "lastUpdated": "2025-11-14T19:11:41.103Z",
   "items": {
     "2:33979": {
       "type": "heroSquare",
@@ -28299,6 +28299,206 @@
         "svgJsDark": "./pictogram/svgJs/dark/baseComet-0.js",
         "pngLight": "./pictogram/png/light/baseComet-0.png",
         "pngDark": "./pictogram/png/dark/baseComet-0.png"
+      },
+      "version": 0
+    },
+    "23697:465": {
+      "type": "heroSquare",
+      "name": "moreGains",
+      "hash": "LxW9cxOtfwE2l18mMubPb9fkTNqjXpzeDq1FNbCwqIQ=",
+      "width": 240,
+      "height": 240,
+      "description": "",
+      "createdAt": "2025-11-14T15:59:13.026Z",
+      "lastUpdated": "2025-11-14T15:59:13.026Z",
+      "outputs": {
+        "svgLight": "./heroSquare/svg/light/moreGains-0.svg",
+        "svgDark": "./heroSquare/svg/dark/moreGains-0.svg",
+        "svgThemed": "./heroSquare/svg/themeable/moreGains-0.svg",
+        "svgJsLight": "./heroSquare/svgJs/light/moreGains-0.js",
+        "svgJsDark": "./heroSquare/svgJs/dark/moreGains-0.js",
+        "pngLight": "./heroSquare/png/light/moreGains-0.png",
+        "pngDark": "./heroSquare/png/dark/moreGains-0.png"
+      },
+      "version": 0
+    },
+    "23697:466": {
+      "type": "heroSquare",
+      "name": "futuresExpire",
+      "hash": "TdRZJOuiB8opOIh5z2ou+Ib/O4ESbH8i6mfzhkUp2H8=",
+      "width": 240,
+      "height": 240,
+      "description": "",
+      "createdAt": "2025-11-14T15:59:13.014Z",
+      "lastUpdated": "2025-11-14T15:59:13.014Z",
+      "outputs": {
+        "svgLight": "./heroSquare/svg/light/futuresExpire-0.svg",
+        "svgDark": "./heroSquare/svg/dark/futuresExpire-0.svg",
+        "svgThemed": "./heroSquare/svg/themeable/futuresExpire-0.svg",
+        "svgJsLight": "./heroSquare/svgJs/light/futuresExpire-0.js",
+        "svgJsDark": "./heroSquare/svgJs/dark/futuresExpire-0.js",
+        "pngLight": "./heroSquare/png/light/futuresExpire-0.png",
+        "pngDark": "./heroSquare/png/dark/futuresExpire-0.png"
+      },
+      "version": 0
+    },
+    "23697:467": {
+      "type": "heroSquare",
+      "name": "tradingWithLeverage",
+      "hash": "EmEtG/roToe1fuBD9mwLxuKzJ+ZSs1vTIrWXyW0xMKQ=",
+      "width": 240,
+      "height": 240,
+      "description": "",
+      "createdAt": "2025-11-14T15:59:13.008Z",
+      "lastUpdated": "2025-11-14T15:59:13.008Z",
+      "outputs": {
+        "svgLight": "./heroSquare/svg/light/tradingWithLeverage-0.svg",
+        "svgDark": "./heroSquare/svg/dark/tradingWithLeverage-0.svg",
+        "svgThemed": "./heroSquare/svg/themeable/tradingWithLeverage-0.svg",
+        "svgJsLight": "./heroSquare/svgJs/light/tradingWithLeverage-0.js",
+        "svgJsDark": "./heroSquare/svgJs/dark/tradingWithLeverage-0.js",
+        "pngLight": "./heroSquare/png/light/tradingWithLeverage-0.png",
+        "pngDark": "./heroSquare/png/dark/tradingWithLeverage-0.png"
+      },
+      "version": 0
+    },
+    "23697:468": {
+      "type": "heroSquare",
+      "name": "futuresAndPerps",
+      "hash": "Q46E6vIwu3Qt0b1ZXlZO4MMGOwYuHW7LVSOPhYEFlbQ=",
+      "width": 240,
+      "height": 240,
+      "description": "",
+      "createdAt": "2025-11-14T15:59:12.995Z",
+      "lastUpdated": "2025-11-14T15:59:12.995Z",
+      "outputs": {
+        "svgLight": "./heroSquare/svg/light/futuresAndPerps-0.svg",
+        "svgDark": "./heroSquare/svg/dark/futuresAndPerps-0.svg",
+        "svgThemed": "./heroSquare/svg/themeable/futuresAndPerps-0.svg",
+        "svgJsLight": "./heroSquare/svgJs/light/futuresAndPerps-0.js",
+        "svgJsDark": "./heroSquare/svgJs/dark/futuresAndPerps-0.js",
+        "pngLight": "./heroSquare/png/light/futuresAndPerps-0.png",
+        "pngDark": "./heroSquare/png/dark/futuresAndPerps-0.png"
+      },
+      "version": 0
+    },
+    "23697:469": {
+      "type": "heroSquare",
+      "name": "usdAndUsdc",
+      "hash": "Q7MLuI8HWI4L37r0C5QOlMfFi/WGnozpbgfMvO/2uoI=",
+      "width": 240,
+      "height": 240,
+      "description": "coinbase, One, cb1, usdc, USDCoin, coin, USD, linking, to, connect, both, user, avatar, coins",
+      "createdAt": "2025-11-14T15:59:12.979Z",
+      "lastUpdated": "2025-11-14T15:59:12.979Z",
+      "outputs": {
+        "svgLight": "./heroSquare/svg/light/usdAndUsdc-0.svg",
+        "svgDark": "./heroSquare/svg/dark/usdAndUsdc-0.svg",
+        "svgThemed": "./heroSquare/svg/themeable/usdAndUsdc-0.svg",
+        "svgJsLight": "./heroSquare/svgJs/light/usdAndUsdc-0.js",
+        "svgJsDark": "./heroSquare/svgJs/dark/usdAndUsdc-0.js",
+        "pngLight": "./heroSquare/png/light/usdAndUsdc-0.png",
+        "pngDark": "./heroSquare/png/dark/usdAndUsdc-0.png"
+      },
+      "version": 0
+    },
+    "23697:470": {
+      "type": "heroSquare",
+      "name": "futuresVsPerps",
+      "hash": "PPDy9MjOF/dDPdeIswCNzphzSXdkFFEqOQGFKpY5L4o=",
+      "width": 240,
+      "height": 240,
+      "description": "",
+      "createdAt": "2025-11-14T15:59:12.989Z",
+      "lastUpdated": "2025-11-14T15:59:12.989Z",
+      "outputs": {
+        "svgLight": "./heroSquare/svg/light/futuresVsPerps-0.svg",
+        "svgDark": "./heroSquare/svg/dark/futuresVsPerps-0.svg",
+        "svgThemed": "./heroSquare/svg/themeable/futuresVsPerps-0.svg",
+        "svgJsLight": "./heroSquare/svgJs/light/futuresVsPerps-0.js",
+        "svgJsDark": "./heroSquare/svgJs/dark/futuresVsPerps-0.js",
+        "pngLight": "./heroSquare/png/light/futuresVsPerps-0.png",
+        "pngDark": "./heroSquare/png/dark/futuresVsPerps-0.png"
+      },
+      "version": 0
+    },
+    "23697:1962": {
+      "type": "pictogram",
+      "name": "bigBtcSend",
+      "hash": "+VSL0lHhuQ2dyGlZbkdpL2vUrQI50Gc3Ed7daFBuruE=",
+      "width": 48,
+      "height": 48,
+      "description": "Coin, Coins, Currency, Crypto, Bitcoin, BTC, store, value, money, asset, sparkles, stars, ✨, success state",
+      "createdAt": "2025-11-14T15:59:13.019Z",
+      "lastUpdated": "2025-11-14T17:14:36.899Z",
+      "outputs": {
+        "svgLight": "./pictogram/svg/light/bigBtcSend-0.svg",
+        "svgDark": "./pictogram/svg/dark/bigBtcSend-0.svg",
+        "svgThemed": "./pictogram/svg/themeable/bigBtcSend-0.svg",
+        "svgJsLight": "./pictogram/svgJs/light/bigBtcSend-0.js",
+        "svgJsDark": "./pictogram/svgJs/dark/bigBtcSend-0.js",
+        "pngLight": "./pictogram/png/light/bigBtcSend-0.png",
+        "pngDark": "./pictogram/png/dark/bigBtcSend-0.png"
+      },
+      "version": 0
+    },
+    "23697:1994": {
+      "type": "spotSquare",
+      "name": "baseQuickBuy",
+      "hash": "VxiatLny2pev8vnwSmOGRi/j98IFHF5Oc+0WYUpBIXc=",
+      "width": 96,
+      "height": 96,
+      "description": "",
+      "createdAt": "2025-11-14T15:59:13.002Z",
+      "lastUpdated": "2025-11-14T15:59:13.002Z",
+      "outputs": {
+        "svgLight": "./spotSquare/svg/light/baseQuickBuy-0.svg",
+        "svgDark": "./spotSquare/svg/dark/baseQuickBuy-0.svg",
+        "svgThemed": "./spotSquare/svg/themeable/baseQuickBuy-0.svg",
+        "svgJsLight": "./spotSquare/svgJs/light/baseQuickBuy-0.js",
+        "svgJsDark": "./spotSquare/svgJs/dark/baseQuickBuy-0.js",
+        "pngLight": "./spotSquare/png/light/baseQuickBuy-0.png",
+        "pngDark": "./spotSquare/png/dark/baseQuickBuy-0.png"
+      },
+      "version": 0
+    },
+    "23706:43": {
+      "type": "pictogram",
+      "name": "btcOneHundred",
+      "hash": "2T3FGW1Oe6sU5RYsaoek59WxhFgyqvfcbE1MaaVLy1w=",
+      "width": 48,
+      "height": 48,
+      "description": "btc, One, Hundred",
+      "createdAt": "2025-11-14T17:14:36.883Z",
+      "lastUpdated": "2025-11-14T17:14:36.883Z",
+      "outputs": {
+        "svgLight": "./pictogram/svg/light/btcOneHundred-0.svg",
+        "svgDark": "./pictogram/svg/dark/btcOneHundred-0.svg",
+        "svgThemed": "./pictogram/svg/themeable/btcOneHundred-0.svg",
+        "svgJsLight": "./pictogram/svgJs/light/btcOneHundred-0.js",
+        "svgJsDark": "./pictogram/svgJs/dark/btcOneHundred-0.js",
+        "pngLight": "./pictogram/png/light/btcOneHundred-0.png",
+        "pngDark": "./pictogram/png/dark/btcOneHundred-0.png"
+      },
+      "version": 0
+    },
+    "23706:94": {
+      "type": "spotRectangle",
+      "name": "usdcLoanEth",
+      "hash": "2GMVZJBVlm1VHbnkkPZ7iIutFMHkThxgKVVTwQ2QVBc=",
+      "width": 240,
+      "height": 120,
+      "description": "usdc, send, loan, coin, portal, stars",
+      "createdAt": "2025-11-14T17:19:09.031Z",
+      "lastUpdated": "2025-11-14T17:20:18.070Z",
+      "outputs": {
+        "svgLight": "./spotRectangle/svg/light/usdcLoanEth-0.svg",
+        "svgDark": "./spotRectangle/svg/dark/usdcLoanEth-0.svg",
+        "svgThemed": "./spotRectangle/svg/themeable/usdcLoanEth-0.svg",
+        "svgJsLight": "./spotRectangle/svgJs/light/usdcLoanEth-0.js",
+        "svgJsDark": "./spotRectangle/svgJs/dark/usdcLoanEth-0.js",
+        "pngLight": "./spotRectangle/png/light/usdcLoanEth-0.png",
+        "pngDark": "./spotRectangle/png/dark/usdcLoanEth-0.png"
       },
       "version": 0
     }
