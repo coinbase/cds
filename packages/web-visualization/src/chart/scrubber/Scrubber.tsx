@@ -268,8 +268,6 @@ export const Scrubber = memo(
 
                 const pixelY = getPointOnScale(dataY, yScale);
 
-                const resolvedLabel = typeof s.label === 'function' ? s.label(dataIndex) : s.label;
-
                 let evaluatedColor: string | undefined = s.color;
                 const seriesGradientConfig = seriesGradients.find((g) => g.seriesId === s.id);
                 if (seriesGradientConfig) {
@@ -288,7 +286,7 @@ export const Scrubber = memo(
                 return {
                   x: dataX,
                   y: dataY,
-                  label: resolvedLabel,
+                  label,
                   pixelY,
                   targetSeries: { ...s, color: evaluatedColor },
                 };
@@ -308,6 +306,7 @@ export const Scrubber = memo(
         getYScale,
         getYAxis,
         seriesGradients,
+        label,
       ]);
 
       const labelVerticalInset = 2;

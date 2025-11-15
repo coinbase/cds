@@ -31,9 +31,10 @@ export type Series = {
    */
   data?: Array<number | null> | Array<[number, number] | null>;
   /**
-   * The label of the series. Can be a React node or a function that receives the data index and returns a React node.
+   * Label of the series.
+   * Used for scrubber beacon labels.
    */
-  label?: string | ((dataIndex: number) => string);
+  label?: string;
   /**
    * Color of the series.
    * If gradient is provided, that will be used for chart components
