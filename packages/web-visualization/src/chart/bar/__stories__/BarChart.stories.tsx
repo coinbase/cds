@@ -340,11 +340,7 @@ const Candlesticks = () => {
         }}
       >
         {timePeriod.id === 'year' ? (
-          <Scrubber
-            hideOverlay
-            LineComponent={(props) => <ReferenceLine {...props} LineComponent={ThinSolidLine} />}
-            seriesIds={[]}
-          />
+          <Scrubber hideOverlay LineComponent={ThinSolidLine} seriesIds={[]} />
         ) : (
           <ScrubberRect />
         )}

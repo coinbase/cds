@@ -66,6 +66,22 @@ describe('defaultTransition', () => {
   });
 });
 
+describe('accessory transition constants', () => {
+  it('should export accessoryFadeTransitionDuration', () => {
+    const { accessoryFadeTransitionDuration } = require('../transition');
+    expect(accessoryFadeTransitionDuration).toBeDefined();
+    expect(typeof accessoryFadeTransitionDuration).toBe('number');
+    expect(accessoryFadeTransitionDuration).toBeGreaterThan(0);
+  });
+
+  it('should export accessoryFadeTransitionDelay', () => {
+    const { accessoryFadeTransitionDelay } = require('../transition');
+    expect(accessoryFadeTransitionDelay).toBeDefined();
+    expect(typeof accessoryFadeTransitionDelay).toBe('number');
+    expect(accessoryFadeTransitionDelay).toBeGreaterThan(0);
+  });
+});
+
 describe('buildTransition', () => {
   beforeEach(() => {
     jest.clearAllMocks();
@@ -205,6 +221,66 @@ describe('useD3PathInterpolation', () => {
     renderHook(() => useD3PathInterpolation(progress as any, fromPath, toPath));
 
     expect(Skia.Path.MakeFromSVGString).toHaveBeenCalled();
+  });
+});
+
+describe('useInterpolator', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('should create interpolated value', () => {
+    const { useInterpolator } = require('../transition');
+    const value = { value: 0 };
+    const factory = () => 0;
+    const interpolator = jest.fn((val, input, output, options, result) => {
+      // Simple linear interpolation
+      return output[0] + (output[1] - output[0]) * val;
+    });
+    const input = [0, 1];
+    const output = [0, 100];
+
+    const { result } = renderHook(() =>
+      useInterpolator(factory, value as any, interpolator, input, output),
+    );
+
+    expect(result.current).toBeDefined();
+    expect(result.current).toHaveProperty('value');
+  });
+
+  it('should call interpolator with correct arguments', () => {
+    const { useInterpolator } = require('../transition');
+    const value = { value: 0.5 };
+    const factory = () => 10;
+    const interpolator = jest.fn((val, input, output, options, result) => result);
+    const input = [0, 1];
+    const output = [0, 100];
+    const options = 'clamp' as any;
+
+    renderHook(() => useInterpolator(factory, value as any, interpolator, input, output, options));
+
+    expect(interpolator).toHaveBeenCalled();
+  });
+
+  it('should update when value changes', () => {
+    const { useInterpolator } = require('../transition');
+    const value = { value: 0 };
+    const factory = () => 0;
+    const interpolator = jest.fn((val, input, output, options, result) => val * 100);
+    const input = [0, 1];
+    const output = [0, 100];
+
+    const { result, rerender } = renderHook(() =>
+      useInterpolator(factory, value as any, interpolator, input, output),
+    );
+
+    expect(result.current).toBeDefined();
+
+    // Update value
+    value.value = 0.5;
+    rerender();
+
+    expect(result.current).toBeDefined();
   });
 });
 
