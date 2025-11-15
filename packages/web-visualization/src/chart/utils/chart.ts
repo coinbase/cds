@@ -19,11 +19,11 @@ export const isValidBounds = (bounds: Partial<AxisBounds>): bounds is AxisBounds
 
 export type Series = {
   /**
-   * The id of the series.
+   * Id of the series.
    */
   id: string;
   /**
-   * The data array for this series. Use null values to create gaps in the visualization.
+   * Data array for this series. Use null values to create gaps in the visualization.
    *
    * Can be either:
    * - Array of numbers: `[10, -5, 20]`
@@ -35,25 +35,27 @@ export type Series = {
    */
   label?: string | ((dataIndex: number) => string);
   /**
-   * The color of the series.
+   * Color of the series.
+   * If gradient is provided, that will be used for chart components
+   * Color will still be used by scrubber beacon labels
    */
   color?: string;
   /**
-   * The ID of the y-axis this series uses.
+   * Color gradient configuration.
+   * Takes precedence over color except for scrubber beacon labels.
+   */
+  gradient?: GradientDefinition;
+  /**
+   * Id of the y-axis this series uses.
    * Defaults to defaultAxisId if not specified.
    */
   yAxisId?: string;
   /**
-   * The stack group this series belongs to.
+   * Id of the stack group this series belongs to.
    * Series with the same stackId value will be stacked together.
    * If not specified, the series will not be stacked.
    */
   stackId?: string;
-  /**
-   * Color gradient configuration for the series.
-   * When provided, creates gradient-based coloring.
-   */
-  gradient?: GradientDefinition;
 };
 
 /**

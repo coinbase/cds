@@ -21,11 +21,11 @@ export const isValidBounds = (bounds: Partial<AxisBounds>): bounds is AxisBounds
 
 export type Series = {
   /**
-   * The id of the series.
+   * Id of the series.
    */
   id: string;
   /**
-   * The data array for this series. Use null values to create gaps in the visualization.
+   * Data array for this series. Use null values to create gaps in the visualization.
    *
    * Can be either:
    * - Array of numbers: `[10, -5, 20]`
@@ -37,32 +37,23 @@ export type Series = {
    */
   label?: string;
   /**
-   * Solid color for the series.
-   * Used when gradient is not provided.
-   * @example 'blue', '#FF0000', 'rgb(255, 0, 0)'
+   * Color for the series.
+   * If gradient is provided, that will be used for chart components
+   * Color will still be used by scrubber beacon labels
    */
   color?: string;
   /**
    * Color gradient configuration.
-   * When provided, creates gradient-based coloring.
-   * Takes precedence over solid `color`.
-   * Applies to all visualization components (line, area, bars, points).
-   * @example
-   * gradient: {
-   *   stops: [
-   *     { offset: 0, color: 'red' },
-   *     { offset: 0, color: 'green' }
-   *   ]
-   * }
+   * Takes precedence over color except for scrubber beacon labels.
    */
   gradient?: GradientDefinition;
   /**
-   * The ID of the y-axis this series uses.
+   * Id of the y-axis this series uses.
    * Defaults to defaultAxisId if not specified.
    */
   yAxisId?: string;
   /**
-   * The stack group this series belongs to.
+   * Id of the stack group this series belongs to.
    * Series with the same stackId value will be stacked together.
    * If not specified, the series will not be stacked.
    */
@@ -363,6 +354,11 @@ export const getChartInset = (
   };
 };
 
+/**
+ * Unwraps an optionally animated value to get the raw value.
+ * @param value - The value to unwrap.
+ * @returns The raw value.
+ */
 export const unwrapAnimatedValue = <T>(value: AnimatedProp<T>): T => {
   'worklet';
   if (isSharedValue<T>(value)) {
