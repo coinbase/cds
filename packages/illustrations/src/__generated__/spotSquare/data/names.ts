@@ -47,6 +47,7 @@ const names: SpotSquareName[] = [
   'basePaycoinMedium',
   'basePeopleMedium',
   'basePiechartMedium',
+  'baseQuickBuy',
   'baseRewardChest',
   'baseRewardClam',
   'baseRewardPlate',

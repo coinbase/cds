@@ -89,14 +89,7 @@ const TabbedChipsComponent = memo(
     }, [scrollRef]);
 
     return (
-      <HStack
-        alignItems="center"
-        overflow="hidden"
-        position="relative"
-        testID={testID}
-        width={width}
-        {...props}
-      >
+      <HStack alignItems="center" position="relative" testID={testID} width={width} {...props}>
         <Paddle
           accessibilityLabel={previousArrowAccessibilityLabel}
           background={background}
@@ -143,4 +136,7 @@ const TabbedChipsComponent = memo(
 
 TabbedChipsComponent.displayName = 'TabbedChips';
 
+/**
+ * @deprecated Use `TabbedChips(Alpha)` instead.
+ */
 export const TabbedChips = TabbedChipsComponent as TabbedChipsFC;

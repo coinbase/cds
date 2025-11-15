@@ -544,7 +544,12 @@ const sidebars: SidebarsConfig = {
             {
               type: 'doc',
               id: 'components/navigation/TabbedChips/tabbedChips',
-              label: 'TabbedChips',
+              label: 'TabbedChips (Deprecated)',
+            },
+            {
+              type: 'doc',
+              id: 'components/navigation/TabbedChipsAlpha/tabbedChipsAlpha',
+              label: 'TabbedChips (Alpha)',
             },
             {
               type: 'doc',

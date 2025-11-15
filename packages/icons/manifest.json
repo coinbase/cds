@@ -1,6 +1,6 @@
 {
-  "lastUpdated": "2025-10-21T21:08:20.392Z",
-  "lastUnicode": 985578,
+  "lastUpdated": "2025-11-14T19:07:09.539Z",
+  "lastUnicode": 985584,
   "iconSets": [
     {
       "nodeId": "4:39245",
@@ -19880,6 +19880,53 @@
           "active": true,
           "size": 12,
           "unicode": 985567
+        }
+      ]
+    },
+    {
+      "nodeId": "5626:16",
+      "name": "baseQuickBuy",
+      "description": "quick buy, coin, ui, star, crypto,",
+      "assetsHash": "bIApGjbl1/WFDhIp6fGIQnSdwyqz+IaJsi1+yLb7V+Q=",
+      "nameHash": "IeWD7sqdtJusqx87v/tLx8j5at/QAGNvyap1kLMg6yg=",
+      "createdAt": "2025-11-14T16:48:02.259Z",
+      "lastUpdated": "2025-11-14T16:48:02.259Z",
+      "svgs": [
+        {
+          "name": "baseQuickBuy-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 985584
+        },
+        {
+          "name": "baseQuickBuy-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 985583
+        },
+        {
+          "name": "baseQuickBuy-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 985582
+        },
+        {
+          "name": "baseQuickBuy-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 985581
+        },
+        {
+          "name": "baseQuickBuy-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 985580
+        },
+        {
+          "name": "baseQuickBuy-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 985579
         }
       ]
     }

@@ -39,6 +39,7 @@ export type IconName =
  | 'baseApps'
  | 'baseFeed'
  | 'baseNotification'
+ | 'baseQuickBuy'
  | 'baseSquare'
  | 'baseTransact'
  | 'baseVerification'

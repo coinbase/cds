@@ -22,7 +22,7 @@ const SelectMobile = () => {
 
   return (
     <>
-      <Select value={value} onPress={handleOpenTray} />
+      <OldSelect value={value} onPress={handleOpenTray} />
       {isTrayVisible && (
         <Tray title={title} onCloseComplete={handleClose} ref={trayRef}>
           {/* You must wrap options in Menu. Treat it as a Select on web */}

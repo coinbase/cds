@@ -604,7 +604,7 @@ export const routes = [
   {
     key: 'TabbedChips',
     getComponent: () =>
-      require('@cbhq/cds-mobile/chips/__stories__/TabbedChips.stories').default,
+      require('@cbhq/cds-mobile/alpha/tabbed-chips/__stories__/TabbedChips.stories').default,
   },
   {
     key: 'TabIndicator',
