@@ -10,7 +10,7 @@ import {
   type WithTimingConfig,
 } from 'react-native-reanimated';
 import { notifyChange, Skia, type SkPath } from '@shopify/react-native-skia';
-import * as interpolate from 'd3-interpolate-path';
+import { interpolatePath } from 'd3-interpolate-path';
 
 /**
  * Transition for animations.
@@ -31,7 +31,6 @@ export type Transition =
 
 /**
  * Default transition configuration used across all chart components.
- * Uses a smooth spring animation with balanced stiffness and damping.
  */
 export const defaultTransition: Transition = {
   type: 'spring',
@@ -65,7 +64,7 @@ export const useD3PathInterpolation = (
 ): SharedValue<SkPath> => {
   // Pre-compute intermediate paths on JS thread using d3-interpolate-path
   const { fromSkiaPath, i0, i1, toSkiaPath } = useMemo(() => {
-    const pathInterpolator = interpolate.interpolatePath(fromPath, toPath);
+    const pathInterpolator = interpolatePath(fromPath, toPath);
     const d = 1e-3;
 
     return {
@@ -166,18 +165,15 @@ export const buildTransition = (targetValue: number, transition: Transition): nu
 };
 
 /**
- * Custom hook that manages path animation state and transitions.
- * Handles both simple path-to-path transitions and enter animations with different configs.
- * When path changes, the animation will start from the previous completed position to the new path.
+ * Hook for path animation state and transitions.
  *
  * @param currentPath - Current target path to animate to
- * @param initialPath - Initial path for enter animation. When provided, the first animation will go from initialPath to currentPath. If not provided, defaults to currentPath (no enter animation)
- * @param animate - Whether to animate path transitions (default: true)
- * @param transition - Transition configurations for different animation phases
+ * @param initialPath - Initial path for enter animation. When provided, the first animation will go from initialPath to currentPath.
+ * @param transition - Transition configuration
  * @returns Animated SkPath as a shared value
  *
  * @example
- * // Simple path transition (like SolidLine)
+ * // Simple path transition
  * const path = usePathTransition({
  *   currentPath: d ?? '',
  *   animate: shouldAnimate,
@@ -209,7 +205,7 @@ export const usePathTransition = ({
    */
   initialPath?: string;
   /**
-   * Transition configurations for different animation phases.
+   * Transition configuration
    */
   transition?: Transition;
 }): SharedValue<SkPath> => {
@@ -233,10 +229,7 @@ export const usePathTransition = ({
 
     if (isInterrupting) {
       // Animation was interrupted - capture current interpolated path
-      const pathInterpolator = interpolate.interpolatePath(
-        previousPathRef.current,
-        targetPathRef.current,
-      );
+      const pathInterpolator = interpolatePath(previousPathRef.current, targetPathRef.current);
       const currentInterpolatedPath = pathInterpolator(currentProgress);
 
       return {

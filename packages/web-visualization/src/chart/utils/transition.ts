@@ -12,7 +12,6 @@ import {
 
 /**
  * Default transition configuration used across all chart components.
- * Uses a smooth spring animation with balanced stiffness and damping.
  */
 export const defaultTransition: Transition = {
   type: 'spring',
@@ -32,20 +31,15 @@ export const accessoryFadeTransitionDuration = 0.15;
 export const accessoryFadeTransitionDelay = 0.35;
 
 /**
- * Hook that manages path animation state and transitions using d3-interpolate-path
- * with framer-motion's transition system (supports springs, tweens, etc.).
- *
- * This provides smooth path morphing with configurable transition types and automatic
- * interruption handling. When an animation is interrupted by a new path change, it will
- * smoothly transition from the current interpolated position to the new target.
+ * Hook for path animation state and transitions.
  *
  * @param currentPath - Current target path to animate to
- * @param initialPath - Initial path for enter animation. When provided, the first animation will go from initialPath to currentPath. If not provided, defaults to currentPath (no enter animation)
- * @param transition - Transition configurations
+ * @param initialPath - Initial path for enter animation. When provided, the first animation will go from initialPath to currentPath.
+ * @param transition - Transition configuration
  * @returns MotionValue containing the current interpolated path string
  *
  * @example
- * // Simple path transition with spring
+ * // Simple path transition
  * const animatedPath = usePathTransition({
  *   currentPath: d ?? '',
  *   transition: {
