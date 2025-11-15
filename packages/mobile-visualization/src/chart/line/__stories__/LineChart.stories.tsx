@@ -1,6 +1,6 @@
-import { forwardRef, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { forwardRef, memo, useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
 import type { View } from 'react-native';
-import { useSharedValue, withDelay, withTiming } from 'react-native-reanimated';
+import { useDerivedValue, useSharedValue, withDelay, withTiming } from 'react-native-reanimated';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import { assets } from '@coinbase/cds-common/internal/data/assets';
 import { candles as btcCandles } from '@coinbase/cds-common/internal/data/candles';
@@ -20,21 +20,37 @@ import { type TabComponent, type TabsActiveIndicatorProps } from '@coinbase/cds-
 import { SegmentedTab, type SegmentedTabProps } from '@coinbase/cds-mobile/tabs/SegmentedTab';
 import { TextLabel1 } from '@coinbase/cds-mobile/typography';
 import { Text } from '@coinbase/cds-mobile/typography/Text';
-import { FontWeight, Group, Skia, type SkTextStyle, TextAlign } from '@shopify/react-native-skia';
+import {
+  FontWeight,
+  Group,
+  Line as SkiaLine,
+  Rect,
+  Skia,
+  type SkTextStyle,
+  TextAlign,
+} from '@shopify/react-native-skia';
 
 import { Area, DottedArea, type DottedAreaProps } from '../../area';
 import { XAxis, YAxis } from '../../axis';
+import { BarChart, type BarComponentProps } from '../../bar';
 import { CartesianChart } from '../../CartesianChart';
 import { useCartesianChartContext } from '../../ChartProvider';
 import { PeriodSelector, PeriodSelectorActiveIndicator } from '../../PeriodSelector';
 import { Point } from '../../Point';
 import { Scrubber, type ScrubberRef } from '../../scrubber';
-import { type AxisBounds, type Transition, useScrubberContext } from '../../utils';
+import {
+  type AxisBounds,
+  getPointOnSerializableScale,
+  type Transition,
+  unwrapAnimatedValue,
+  useScrubberContext,
+} from '../../utils';
 import {
   DottedLine,
   type DottedLineProps,
   Line,
   LineChart,
+  type LineComponentProps,
   ReferenceLine,
   SolidLine,
   type SolidLineProps,
@@ -1105,24 +1121,87 @@ function AssetPriceWithDottedArea() {
   return <AssetPriceDotted />;
 }
 
-function Performance() {
-  const AssetPriceDotted = memo(() => {
-    const [scrubberPosition, setScrubberPosition] = useState<number | undefined>();
-    const theme = useTheme();
-    const currentPrice =
-      sparklineInteractiveData.hour[sparklineInteractiveData.hour.length - 1].value;
-    const tabs = useMemo(
-      () => [
-        { id: 'hour', label: '1H' },
-        { id: 'day', label: '1D' },
-        { id: 'week', label: '1W' },
-        { id: 'month', label: '1M' },
-        { id: 'year', label: '1Y' },
-        { id: 'all', label: 'All' },
-      ],
-      [],
+const LegendDot = memo((props: BoxBaseProps) => {
+  return <Box borderRadius={1000} height={10} width={10} {...props} />;
+});
+
+const LegendItem = memo(
+  ({
+    color = assets.btc.color,
+    label,
+    value,
+  }: {
+    color?: string;
+    label: string;
+    value?: string;
+  }) => {
+    return (
+      <Box alignItems="center" flexDirection="row" gap={0.5}>
+        <LegendDot style={{ backgroundColor: color }} />
+        <Text font="label2">{label}</Text>
+        {value && (
+          <Text color="fgMuted" font="label2" style={{ fontWeight: 'bold' }}>
+            {value}
+          </Text>
+        )}
+      </Box>
     );
-    const [timePeriod, setTimePeriod] = useState<TabValue>(tabs[0]);
+  },
+);
+
+const PerformanceHeader = memo(
+  ({
+    scrubberPosition,
+    sparklineTimePeriodDataValues,
+  }: {
+    scrubberPosition: number | undefined;
+    sparklineTimePeriodDataValues: number[];
+  }) => {
+    const theme = useTheme();
+
+    const formatPriceThousands = useCallback((price: number) => {
+      return `${new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0,
+      }).format(price / 1000)}k`;
+    }, []);
+
+    const shownPosition =
+      scrubberPosition !== undefined ? scrubberPosition : sparklineTimePeriodDataValues.length - 1;
+
+    return (
+      <HStack gap={1} paddingX={1}>
+        <LegendItem
+          color={theme.color.fgPositive}
+          label="High Price"
+          value={formatPriceThousands(sparklineTimePeriodDataValues[shownPosition] * 1.2)}
+        />
+        <LegendItem
+          color={assets.btc.color}
+          label="Actual Price"
+          value={formatPriceThousands(sparklineTimePeriodDataValues[shownPosition])}
+        />
+        <LegendItem
+          color={theme.color.fgNegative}
+          label="Low Price"
+          value={formatPriceThousands(sparklineTimePeriodDataValues[shownPosition] * 0.8)}
+        />
+      </HStack>
+    );
+  },
+);
+
+const PerformanceChart = memo(
+  ({
+    timePeriod,
+    onScrubberPositionChange,
+  }: {
+    timePeriod: TabValue;
+    onScrubberPositionChange: (position: number | undefined) => void;
+  }) => {
+    const theme = useTheme();
 
     const sparklineTimePeriodData = useMemo(() => {
       return sparklineInteractiveData[timePeriod.id as keyof typeof sparklineInteractiveData];
@@ -1136,46 +1215,14 @@ function Performance() {
       return sparklineTimePeriodData.map((d) => d.date);
     }, [sparklineTimePeriodData]);
 
-    const onPeriodChange = useCallback(
-      (period: TabValue | null) => {
-        setTimePeriod(period || tabs[0]);
-      },
-      [tabs, setTimePeriod],
-    );
-
-    const priceFormatter = useMemo(
-      () =>
-        new Intl.NumberFormat('en-US', {
-          style: 'currency',
-          currency: 'USD',
-        }),
-      [],
-    );
-
-    const priceFormatterThousands = useMemo(
-      () =>
-        new Intl.NumberFormat('en-US', {
-          style: 'currency',
-          currency: 'USD',
-          minimumFractionDigits: 0,
-          maximumFractionDigits: 0,
-        }),
-      [],
-    );
-
-    const formatPrice = useCallback(
-      (price: number) => {
-        return priceFormatter.format(price);
-      },
-      [priceFormatter],
-    );
-
-    const formatPriceThousands = useCallback(
-      (price: number) => {
-        return `${priceFormatterThousands.format(price / 1000)}k`;
-      },
-      [priceFormatterThousands],
-    );
+    const formatPriceThousands = useCallback((price: number) => {
+      return `${new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0,
+      }).format(price / 1000)}k`;
+    }, []);
 
     const formatDate = useCallback((date: Date) => {
       const dayOfWeek = date.toLocaleDateString('en-US', { weekday: 'short' });
@@ -1199,97 +1246,286 @@ function Performance() {
       [formatDate, sparklineTimePeriodDataTimestamps],
     );
 
-    const LegendDot = memo((props: BoxBaseProps) => {
-      return <Box borderRadius={1000} height={10} width={10} {...props} />;
+    return (
+      <LineChart
+        enableScrubbing
+        showArea
+        showYAxis
+        areaType="dotted"
+        height={300}
+        inset={{ top: 52, left: 0, right: 0 }}
+        onScrubberPositionChange={onScrubberPositionChange}
+        overflow="visible"
+        series={[
+          {
+            id: 'high',
+            data: sparklineTimePeriodDataValues.map((d) => d * 1.2),
+            color: theme.color.fgPositive,
+            label: 'High Price',
+          },
+          {
+            id: 'btc',
+            data: sparklineTimePeriodDataValues,
+            color: assets.btc.color,
+            label: 'Actual Price',
+          },
+          {
+            id: 'low',
+            data: sparklineTimePeriodDataValues.map((d) => d * 0.8),
+            color: theme.color.fgNegative,
+            label: 'Low Price',
+          },
+        ]}
+        style={{ outlineColor: assets.btc.color }}
+        xAxis={{ range: ({ min, max }) => ({ min, max: max - 16 }) }}
+        yAxis={{ showGrid: true, tickLabelFormatter: formatPriceThousands }}
+      >
+        <Scrubber idlePulse label={getScrubberLabel} />
+      </LineChart>
+    );
+  },
+);
+
+function Performance() {
+  const tabs = useMemo(
+    () => [
+      { id: 'hour', label: '1H' },
+      { id: 'day', label: '1D' },
+      { id: 'week', label: '1W' },
+      { id: 'month', label: '1M' },
+      { id: 'year', label: '1Y' },
+      { id: 'all', label: 'All' },
+    ],
+    [],
+  );
+  const [timePeriod, setTimePeriod] = useState<TabValue>(tabs[0]);
+  const [scrubberPosition, setScrubberPosition] = useState<number | undefined>();
+
+  const sparklineTimePeriodData = useMemo(() => {
+    return sparklineInteractiveData[timePeriod.id as keyof typeof sparklineInteractiveData];
+  }, [timePeriod]);
+
+  const sparklineTimePeriodDataValues = useMemo(() => {
+    return sparklineTimePeriodData.map((d) => d.value);
+  }, [sparklineTimePeriodData]);
+
+  const onPeriodChange = useCallback(
+    (period: TabValue | null) => {
+      setTimePeriod(period || tabs[0]);
+    },
+    [tabs],
+  );
+
+  return (
+    <VStack gap={2} style={{ marginLeft: -8, marginRight: -8 }}>
+      <PerformanceHeader
+        scrubberPosition={scrubberPosition}
+        sparklineTimePeriodDataValues={sparklineTimePeriodDataValues}
+      />
+      <PerformanceChart onScrubberPositionChange={setScrubberPosition} timePeriod={timePeriod} />
+      <PeriodSelector activeTab={timePeriod} onChange={onPeriodChange} tabs={tabs} />
+    </VStack>
+  );
+}
+
+const candlestickStockData = btcCandles.slice(0, 90).reverse();
+
+const CandlesticksHeader = memo(({ currentIndex }: { currentIndex: number | undefined }) => {
+  const formatPrice = useCallback((price: string) => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+    }).format(parseFloat(price));
+  }, []);
+
+  const formatThousandsPriceNumber = useCallback((price: number) => {
+    const formattedPrice = new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(price / 1000);
+
+    return `${formattedPrice}k`;
+  }, []);
+
+  const currentText = useMemo(() => {
+    if (currentIndex !== undefined) {
+      return `Open: ${formatThousandsPriceNumber(parseFloat(candlestickStockData[currentIndex].open))}, Close: ${formatThousandsPriceNumber(
+        parseFloat(candlestickStockData[currentIndex].close),
+      )}, Volume: ${(parseFloat(candlestickStockData[currentIndex].volume) / 1000).toFixed(2)}k`;
+    }
+    return formatPrice(candlestickStockData[candlestickStockData.length - 1].close);
+  }, [currentIndex, formatThousandsPriceNumber, formatPrice]);
+
+  return (
+    <Text aria-live="polite" font="headline">
+      {currentText}
+    </Text>
+  );
+});
+
+const CandlesticksChart = memo(
+  ({
+    infoTextId,
+    onScrubberPositionChange,
+  }: {
+    infoTextId: string;
+    onScrubberPositionChange: (index: number | undefined) => void;
+  }) => {
+    const min = useMemo(
+      () => Math.min(...candlestickStockData.map((data) => parseFloat(data.low))),
+      [],
+    );
+
+    const ThinSolidLine = memo((props: SolidLineProps) => <SolidLine {...props} strokeWidth={1} />);
+
+    // Custom line component that renders a rect to highlight the entire bandwidth
+    const BandwidthHighlight = memo(({ stroke }: LineComponentProps) => {
+      const { getXSerializableScale, drawingArea } = useCartesianChartContext();
+      const { scrubberPosition } = useScrubberContext();
+      const xScale = useMemo(() => getXSerializableScale(), [getXSerializableScale]);
+
+      const rectWidth = useMemo(() => {
+        if (xScale !== undefined && xScale.type === 'band') {
+          return xScale.bandwidth;
+        }
+        return 0;
+      }, [xScale]);
+
+      const xPos = useDerivedValue(() => {
+        const position = unwrapAnimatedValue(scrubberPosition);
+        const xPos =
+          position !== undefined && xScale
+            ? getPointOnSerializableScale(position, xScale)
+            : undefined;
+        return xPos !== undefined ? xPos - rectWidth / 2 : 0;
+      }, [scrubberPosition, xScale]);
+
+      const opacity = useDerivedValue(() => (xPos.value !== undefined ? 1 : 0), [xPos]);
+
+      return (
+        <Rect
+          color={stroke}
+          height={drawingArea.height}
+          opacity={opacity}
+          width={rectWidth}
+          x={xPos}
+          y={drawingArea.y}
+        />
+      );
     });
 
-    const LegendItem = memo(
-      ({
-        color = assets.btc.color,
-        label,
-        value,
-      }: {
-        color?: string;
-        label: string;
-        value?: string;
-      }) => {
+    const candlesData = useMemo(
+      () =>
+        candlestickStockData.map((data) => [parseFloat(data.low), parseFloat(data.high)]) as [
+          number,
+          number,
+        ][],
+      [],
+    );
+
+    const CandlestickBarComponent = memo<BarComponentProps>(
+      ({ x, y, width, height, originY, dataX, ...props }) => {
+        const { getYScale } = useCartesianChartContext();
+        const yScale = getYScale();
+
+        const wickX = x + width / 2;
+
+        const timePeriodValue = candlestickStockData[dataX as number];
+
+        const open = parseFloat(timePeriodValue.open);
+        const close = parseFloat(timePeriodValue.close);
+
+        const bullish = open < close;
+        const theme = useTheme();
+        const color = bullish ? theme.color.fgPositive : theme.color.fgNegative;
+        const openY = yScale?.(open) ?? 0;
+        const closeY = yScale?.(close) ?? 0;
+
+        const bodyHeight = Math.abs(openY - closeY);
+        const bodyY = openY < closeY ? openY : closeY;
+
         return (
-          <Box alignItems="center" flexDirection="row" gap={0.5}>
-            <LegendDot style={{ backgroundColor: color }} />
-            <Text font="label2">{label}</Text>
-            {value && (
-              <Text color="fgMuted" font="label2" style={{ fontWeight: 'bold' }}>
-                {value}
-              </Text>
-            )}
-          </Box>
+          <>
+            <SkiaLine
+              color={color}
+              p1={{ x: wickX, y }}
+              p2={{ x: wickX, y: y + height }}
+              strokeWidth={1}
+            />
+            <Rect color={color} height={bodyHeight} width={width} x={x} y={bodyY} />
+          </>
         );
       },
     );
 
-    const shownPosition =
-      scrubberPosition !== undefined ? scrubberPosition : sparklineTimePeriodDataValues.length - 1;
+    const formatThousandsPriceNumber = useCallback((price: number) => {
+      const formattedPrice = new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0,
+      }).format(price / 1000);
+
+      return `${formattedPrice}k`;
+    }, []);
+
+    const formatTime = useCallback((index: number | null) => {
+      if (index === null || index === undefined || index >= candlestickStockData.length) return '';
+      const ts = parseInt(candlestickStockData[index].start);
+      return new Date(ts * 1000).toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
+      });
+    }, []);
 
     return (
-      <VStack gap={2} style={{ marginLeft: -8, marginRight: -8 }}>
-        <HStack gap={1} paddingX={1}>
-          <LegendItem
-            color={theme.color.fgPositive}
-            label="High Price"
-            value={formatPriceThousands(sparklineTimePeriodDataValues[shownPosition] * 1.2)}
-          />
-          <LegendItem
-            color={assets.btc.color}
-            label="Actual Price"
-            value={formatPriceThousands(sparklineTimePeriodDataValues[shownPosition])}
-          />
-          <LegendItem
-            color={theme.color.fgNegative}
-            label="Low Price"
-            value={formatPriceThousands(sparklineTimePeriodDataValues[shownPosition] * 0.8)}
-          />
-        </HStack>
-        <LineChart
-          enableScrubbing
-          showArea
-          showYAxis
-          areaType="dotted"
-          height={300}
-          inset={{ top: 52, left: 0, right: 0 }}
-          onScrubberPositionChange={setScrubberPosition}
-          overflow="visible"
-          series={[
-            {
-              id: 'high',
-              data: sparklineTimePeriodDataValues.map((d) => d * 1.2),
-              color: theme.color.fgPositive,
-              label: 'High Price',
-            },
-            {
-              id: 'btc',
-              data: sparklineTimePeriodDataValues,
-              color: assets.btc.color,
-              label: 'Actual Price',
-            },
-            {
-              id: 'low',
-              data: sparklineTimePeriodDataValues.map((d) => d * 0.8),
-              color: theme.color.fgNegative,
-              label: 'Low Price',
-            },
-          ]}
-          style={{ outlineColor: assets.btc.color }}
-          xAxis={{ range: ({ min, max }) => ({ min, max: max - 16 }) }}
-          yAxis={{ showGrid: true, tickLabelFormatter: formatPriceThousands }}
-        >
-          <Scrubber idlePulse label={getScrubberLabel} />
-        </LineChart>
-        <PeriodSelector activeTab={timePeriod} onChange={onPeriodChange} tabs={tabs} />
-      </VStack>
+      <BarChart
+        enableScrubbing
+        showXAxis
+        showYAxis
+        BarComponent={CandlestickBarComponent}
+        BarStackComponent={({ children }) => <g>{children}</g>}
+        animate={false}
+        aria-labelledby={infoTextId}
+        borderRadius={0}
+        height={150}
+        inset={{ top: 8, bottom: 8, left: 0, right: 0 }}
+        onScrubberPositionChange={onScrubberPositionChange}
+        series={[
+          {
+            id: 'stock-prices',
+            data: candlesData,
+          },
+        ]}
+        xAxis={{
+          tickLabelFormatter: formatTime,
+        }}
+        yAxis={{
+          domain: { min },
+          tickLabelFormatter: formatThousandsPriceNumber,
+          width: 40,
+          showGrid: true,
+          GridLineComponent: ThinSolidLine,
+        }}
+      >
+        <Scrubber hideOverlay LineComponent={BandwidthHighlight} seriesIds={[]} />
+      </BarChart>
     );
-  });
+  },
+);
 
-  return <AssetPriceDotted />;
+function Candlesticks() {
+  const infoTextId = useId();
+  const [currentIndex, setCurrentIndex] = useState<number | undefined>();
+
+  return (
+    <VStack gap={2}>
+      <CandlesticksHeader currentIndex={currentIndex} />
+      <CandlesticksChart infoTextId={infoTextId} onScrubberPositionChange={setCurrentIndex} />
+    </VStack>
+  );
 }
 
 /*function MonotoneAssetPrice() {
@@ -1824,6 +2060,10 @@ function ExampleNavigator() {
       {
         title: 'Performance',
         component: <Performance />,
+      },
+      {
+        title: 'Candlesticks',
+        component: <Candlesticks />,
       },
       {
         title: 'Service Availability',

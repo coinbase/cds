@@ -21,76 +21,33 @@ LineChart also supports multiple lines, interaction, and axes.
 Other props, such as `areaType` can be applied to the chart as a whole or per series.
 
 ```jsx
-function MultipleLine() {
-  const theme = useTheme();
-  const [scrubberPosition, setScrubberPosition] = useState<number | undefined>();
-  const pages = useMemo(
-    () => ['Page A', 'Page B', 'Page C', 'Page D', 'Page E', 'Page F', 'Page G'],
-    [],
-  );
-  const pageViews = useMemo(() => [2400, 1398, 9800, 3908, 4800, 3800, 4300], []);
-  const uniqueVisitors = useMemo(() => [4000, 3000, 2000, 2780, 1890, 2390, 3490], []);
-
-  const chartAccessibilityLabel = `Website visitors across ${pageViews.length} pages.`;
-
-  const scrubberAccessibilityLabel = useCallback(
-    (index: number) => {
-      return `${pages[index]} has ${pageViews[index]} views and ${uniqueVisitors[index]} unique visitors.`;
+<LineChart
+  enableScrubbing
+  showArea
+  series={[
+    {
+      id: 'pageViews',
+      data: [2400, 1398, 9800, 3908, 4800, 3800, 4300],
+      color: theme.color.accentBoldGreen,
+      // Label will render next to scrubber beacon
+      label: 'Page Views',
     },
-    [pages, pageViews, uniqueVisitors],
-  );
-
-  const numberFormatter = useCallback(
-    (value: number) => new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 }).format(value),
-    [],
-  );
-
-  const accessibilityLabel = useMemo(() => {
-    if (scrubberPosition !== undefined) {
-      return scrubberAccessibilityLabel(scrubberPosition);
-    }
-    return chartAccessibilityLabel;
-  }, [scrubberPosition, chartAccessibilityLabel, scrubberAccessibilityLabel]);
-
-  return (
-    <LineChart
-      enableScrubbing
-      showArea
-      showXAxis
-      showYAxis
-      accessibilityLabel={accessibilityLabel}
-      height={200}
-      onScrubberPositionChange={setScrubberPosition}
-      series={[
-        {
-          id: 'pageViews',
-          data: pageViews,
-          color: theme.color.accentBoldGreen,
-          // Label will render next to scrubber beacon
-          label: 'Page Views',
-        },
-        {
-          id: 'uniqueVisitors',
-          data: uniqueVisitors,
-          color: theme.color.accentBoldPurple,
-          label: 'Unique Visitors',
-          // Default area is gradient
-          areaType: 'dotted',
-        },
-      ]}
-      xAxis={{
-        // Used on the x-axis to provide context for each index from the series data array
-        data: pages,
-      }}
-      yAxis={{
-        showGrid: true,
-        tickLabelFormatter: numberFormatter,
-      }}
-    >
-      <Scrubber />
-    </LineChart>
-  );
-}
+    {
+      id: 'uniqueVisitors',
+      data: [4000, 3000, 2000, 2780, 1890, 2390, 3490],
+      color: theme.color.accentBoldPurple,
+      label: 'Unique Visitors',
+      // Default area is gradient
+      areaType: 'dotted',
+    },
+  ]}
+  xAxis={{
+    // Used on the x-axis to provide context for each index from the series data array
+    data: ['Page A', 'Page B', 'Page C', 'Page D', 'Page E', 'Page F', 'Page G'],
+  }}
+>
+  <Scrubber />
+</LineChart>
 ```
 
 ## Data
@@ -98,58 +55,31 @@ function MultipleLine() {
 The data array for each series defines the y values for that series. You can adjust the y values for a series of data by setting the `data` prop on the xAxis.
 
 ```jsx
-function DataFormat() {
-  const [scrubberPosition, setScrubberPosition] = useState<number | undefined>();
-  const yData = useMemo(() => [2, 5.5, 2, 8.5, 1.5, 5], []);
-  const xData = useMemo(() => [1, 2, 3, 5, 8, 10], []);
+const yData = [2, 5.5, 2, 8.5, 1.5, 5];
+const xData = [1, 2, 3, 5, 8, 10];
 
-  const chartAccessibilityLabel = `Chart with custom X and Y data. ${yData.length} data points`;
-
-  const scrubberAccessibilityLabel = useCallback(
-    (index: number) => {
-      return `Point ${index + 1}: X value ${xData[index]}, Y value ${yData[index]}`;
-    },
-    [xData, yData],
-  );
-
-  const accessibilityLabel = useMemo(() => {
-    if (scrubberPosition !== undefined) {
-      return scrubberAccessibilityLabel(scrubberPosition);
-    }
-    return chartAccessibilityLabel;
-  }, [scrubberPosition, chartAccessibilityLabel, scrubberAccessibilityLabel]);
-
-  return (
-    <LineChart
-      enableScrubbing
-      showArea
-      showXAxis
-      showYAxis
-      accessibilityLabel={accessibilityLabel}
-      curve="natural"
-      height={200}
-      inset={{ top: 16, right: 16, bottom: 0, left: 0 }}
-      onScrubberPositionChange={setScrubberPosition}
-      renderPoints={() => true}
-      series={[
-        {
-          id: 'line',
-          data: yData,
-        },
-      ]}
-      xAxis={{ data: xData, showLine: true, showTickMarks: true, showGrid: true }}
-      yAxis={{
-        domain: { min: 0 },
-        position: 'left',
-        showLine: true,
-        showTickMarks: true,
-        showGrid: true,
-      }}
-    >
-      <Scrubber hideOverlay />
-    </LineChart>
-  );
-}
+return (
+  <LineChart
+    enableScrubbing
+    showArea
+    series={[
+      {
+        id: 'line',
+        data: yData,
+      },
+    ]}
+    xAxis={{ data: xData, showLine: true, showTickMarks: true, showGrid: true }}
+    yAxis={{
+      domain: { min: 0 },
+      position: 'left',
+      showLine: true,
+      showTickMarks: true,
+      showGrid: true,
+    }}
+  >
+    <Scrubber />
+  </LineChart>
+);
 ```
 
 ### Live Updates
@@ -416,6 +346,190 @@ function Points() {
 
 ### Performance
 
+Renders are done on JS thread, other code is in UI
+
+```jsx
+
+function Performance() {
+  const tabs = useMemo(
+    () => [
+      { id: 'hour', label: '1H' },
+      { id: 'day', label: '1D' },
+      { id: 'week', label: '1W' },
+      { id: 'month', label: '1M' },
+      { id: 'year', label: '1Y' },
+      { id: 'all', label: 'All' },
+    ],
+    [],
+  );
+  const [timePeriod, setTimePeriod] = useState<TabValue>(tabs[0]);
+  const [scrubberPosition, setScrubberPosition] = useState<number | undefined>();
+
+  const sparklineTimePeriodData = useMemo(() => {
+    return sparklineInteractiveData[timePeriod.id as keyof typeof sparklineInteractiveData];
+  }, [timePeriod]);
+
+  const sparklineTimePeriodDataValues = useMemo(() => {
+    return sparklineTimePeriodData.map((d) => d.value);
+  }, [sparklineTimePeriodData]);
+
+  const onPeriodChange = useCallback(
+    (period: TabValue | null) => {
+      setTimePeriod(period || tabs[0]);
+    },
+    [tabs],
+  );
+
+  return (
+    <VStack gap={2} style={{ marginLeft: -8, marginRight: -8 }}>
+      <PerformanceHeader
+        scrubberPosition={scrubberPosition}
+        sparklineTimePeriodDataValues={sparklineTimePeriodDataValues}
+      />
+      <PerformanceChart onScrubberPositionChange={setScrubberPosition} timePeriod={timePeriod} />
+      <PeriodSelector activeTab={timePeriod} onChange={onPeriodChange} tabs={tabs} />
+    </VStack>
+  );
+}
+
+const PerformanceHeader = memo(
+  ({
+    scrubberPosition,
+    sparklineTimePeriodDataValues,
+  }: {
+    scrubberPosition: number | undefined;
+    sparklineTimePeriodDataValues: number[];
+  }) => {
+    const theme = useTheme();
+
+    const formatPriceThousands = useCallback((price: number) => {
+      return `${new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0,
+      }).format(price / 1000)}k`;
+    }, []);
+
+    const shownPosition =
+      scrubberPosition !== undefined ? scrubberPosition : sparklineTimePeriodDataValues.length - 1;
+
+    return (
+      <HStack gap={1} paddingX={1}>
+        <LegendItem
+          color={theme.color.fgPositive}
+          label="High Price"
+          value={formatPriceThousands(sparklineTimePeriodDataValues[shownPosition] * 1.2)}
+        />
+        <LegendItem
+          color={assets.btc.color}
+          label="Actual Price"
+          value={formatPriceThousands(sparklineTimePeriodDataValues[shownPosition])}
+        />
+        <LegendItem
+          color={theme.color.fgNegative}
+          label="Low Price"
+          value={formatPriceThousands(sparklineTimePeriodDataValues[shownPosition] * 0.8)}
+        />
+      </HStack>
+    );
+  },
+);
+
+const PerformanceChart = memo(
+  ({
+    timePeriod,
+    onScrubberPositionChange,
+  }: {
+    timePeriod: TabValue;
+    onScrubberPositionChange: (position: number | undefined) => void;
+  }) => {
+    const theme = useTheme();
+
+    const sparklineTimePeriodData = useMemo(() => {
+      return sparklineInteractiveData[timePeriod.id as keyof typeof sparklineInteractiveData];
+    }, [timePeriod]);
+
+    const sparklineTimePeriodDataValues = useMemo(() => {
+      return sparklineTimePeriodData.map((d) => d.value);
+    }, [sparklineTimePeriodData]);
+
+    const sparklineTimePeriodDataTimestamps = useMemo(() => {
+      return sparklineTimePeriodData.map((d) => d.date);
+    }, [sparklineTimePeriodData]);
+
+    const formatPriceThousands = useCallback((price: number) => {
+      return `${new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0,
+      }).format(price / 1000)}k`;
+    }, []);
+
+    const formatDate = useCallback((date: Date) => {
+      const dayOfWeek = date.toLocaleDateString('en-US', { weekday: 'short' });
+
+      const monthDay = date.toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
+      });
+
+      const time = date.toLocaleTimeString('en-US', {
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: true,
+      });
+
+      return `${dayOfWeek}, ${monthDay}, ${time}`;
+    }, []);
+
+    const getScrubberLabel = useCallback(
+      (d: number) => formatDate(sparklineTimePeriodDataTimestamps[d]),
+      [formatDate, sparklineTimePeriodDataTimestamps],
+    );
+
+    return (
+      <LineChart
+        enableScrubbing
+        showArea
+        showYAxis
+        areaType="dotted"
+        height={300}
+        inset={{ top: 52, left: 0, right: 0 }}
+        onScrubberPositionChange={onScrubberPositionChange}
+        overflow="visible"
+        series={[
+          {
+            id: 'high',
+            data: sparklineTimePeriodDataValues.map((d) => d * 1.2),
+            color: theme.color.fgPositive,
+            label: 'High Price',
+          },
+          {
+            id: 'btc',
+            data: sparklineTimePeriodDataValues,
+            color: assets.btc.color,
+            label: 'Actual Price',
+          },
+          {
+            id: 'low',
+            data: sparklineTimePeriodDataValues.map((d) => d * 0.8),
+            color: theme.color.fgNegative,
+            label: 'Low Price',
+          },
+        ]}
+        style={{ outlineColor: assets.btc.color }}
+        xAxis={{ range: ({ min, max }) => ({ min, max: max - 16 }) }}
+        yAxis={{ showGrid: true, tickLabelFormatter: formatPriceThousands }}
+      >
+        <Scrubber idlePulse label={getScrubberLabel} />
+      </LineChart>
+    );
+  },
+);
+```
+
 ### Gestures
 
 By default, charts will not track gestures that go outside of the chart bounds. You can allow overflow gestures by setting `allowOverflowGestures` to `true`.
@@ -432,7 +546,7 @@ By default, charts will not track gestures that go outside of the chart bounds. 
 
 ## Animations
 
-You can configure chart transitions using `transitionConfig` on LineChart and [Scrubber](/components/graphs/Scrubber). You can also disable animations by setting the `animate` on LineChart to `false`.
+You can configure chart transitions using `transition` on LineChart and `beaconTransitions` on[Scrubber](/components/graphs/Scrubber). You can also disable animations by setting the `animate` on LineChart to `false`.
 
 ```jsx
 function Transitions() {
