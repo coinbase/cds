@@ -2,9 +2,9 @@ import { memo, useId, useMemo } from 'react';
 import { Group, Skia } from '@shopify/react-native-skia';
 
 import { useCartesianChartContext } from '../ChartProvider';
+import type { Series } from '../utils';
 import { defaultAxisId } from '../utils';
 
-import type { BarSeries } from './BarChart';
 import type { BarStackGroupProps } from './BarStackGroup';
 import { BarStackGroup } from './BarStackGroup';
 
@@ -69,7 +69,7 @@ export const BarPlot = memo<BarPlotProps>(
         string,
         {
           stackId: string;
-          series: BarSeries[];
+          series: Series[];
           yAxisId?: string;
         }
       >();

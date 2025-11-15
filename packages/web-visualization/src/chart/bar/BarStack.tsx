@@ -3,11 +3,10 @@ import type { Rect } from '@coinbase/cds-common';
 import type { Transition } from 'framer-motion';
 
 import { useCartesianChartContext } from '../ChartProvider';
-import type { ChartScaleFunction } from '../utils';
+import type { ChartScaleFunction, Series } from '../utils';
 import { evaluateGradientAtValue, getGradientConfig } from '../utils/gradient';
 
 import { Bar, type BarComponent, type BarProps } from './Bar';
-import type { BarSeries } from './BarChart';
 import { DefaultBarStack } from './DefaultBarStack';
 
 const EPSILON = 1e-4;
@@ -69,7 +68,7 @@ export type BarStackProps = Pick<
   /**
    * Array of series configurations that belong to this stack.
    */
-  series: BarSeries[];
+  series: Series[];
   /**
    * The category index for this stack.
    */

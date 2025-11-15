@@ -13,10 +13,6 @@ import {
 
 import { BarPlot, type BarPlotProps } from './BarPlot';
 
-// Exported for consistency with AreaChart and LineChart
-// note we don't really support this at the moment since we don't pass this information into BarPlot
-export type BarSeries = Series;
-
 export type BarChartProps = Omit<CartesianChartProps, 'xAxis' | 'yAxis' | 'series'> &
   Pick<
     BarPlotProps,
@@ -36,7 +32,7 @@ export type BarChartProps = Omit<CartesianChartProps, 'xAxis' | 'yAxis' | 'serie
     /**
      * Configuration objects that define how to visualize the data.
      */
-    series?: Array<BarSeries>;
+    series?: Array<Series>;
     /**
      * Whether to stack the areas on top of each other.
      * When true, each series builds cumulative values on top of the previous series.

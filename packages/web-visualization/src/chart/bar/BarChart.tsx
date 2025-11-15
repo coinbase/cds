@@ -12,9 +12,6 @@ import {
 
 import { BarPlot, type BarPlotProps } from './BarPlot';
 
-// note we don't really support this at the moment since we don't pass this information into BarPlot
-export type BarSeries = Series;
-
 export type BarChartProps = Omit<CartesianChartProps, 'xAxis' | 'yAxis' | 'series'> &
   Pick<
     BarPlotProps,
