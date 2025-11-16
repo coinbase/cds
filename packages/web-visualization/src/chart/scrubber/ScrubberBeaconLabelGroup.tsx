@@ -63,8 +63,6 @@ export const ScrubberBeaconLabelGroup = memo<ScrubberBeaconLabelGroupProps>(
       useCartesianChartContext();
     const { scrubberPosition } = useScrubberContext();
 
-    console.log('got labels', labels);
-
     const [labelDimensions, setLabelDimensions] = useState<Record<string, LabelDimensions>>({});
 
     const handleDimensionsChange = useCallback((id: string, dimensions: LabelDimensions) => {

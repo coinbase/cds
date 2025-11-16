@@ -303,8 +303,6 @@ export const Scrubber = memo(
         [filteredSeries],
       );
 
-      console.log('got series2', scrubberBeaconLabels);
-
       // Callback to create ref handlers for scrubber beacons
       const createScrubberBeaconRef = useCallback(
         (seriesId: string) => {
