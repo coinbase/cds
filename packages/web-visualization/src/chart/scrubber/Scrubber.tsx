@@ -295,12 +295,12 @@ export const Scrubber = memo(
         return typeof resolvedLabel === 'string' ? resolvedLabel : undefined;
       }, [accessibilityLabel, label, dataIndex]);
 
-      const scrubberBeaconLabels: Array<{ id: string; label: string; color?: string }> = useMemo(
+      const scrubberBeaconLabels: ScrubberBeaconLabelGroupBaseProps['labels'] = useMemo(
         () =>
           filteredSeries
             .filter((s) => s.label !== undefined && s.label.length > 0)
             .map((s) => ({
-              id: s.id,
+              seriesId: s.id,
               label: s.label!,
               color: s.color,
             })),
@@ -360,7 +360,7 @@ export const Scrubber = memo(
               y={drawingArea.y - overlayOffset}
             />
           )}
-          {!hideLine && dataX !== undefined && (
+          {!hideLine && scrubberPosition !== undefined && dataX !== undefined && (
             <ReferenceLine
               LineComponent={LineComponent}
               className={classNames?.line}
