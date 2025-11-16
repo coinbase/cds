@@ -151,7 +151,7 @@ describe('calculateLabelYPositions', () => {
         { seriesId: 'label4', width: 50, height: 24, preferredX: 100, preferredY: 200 },
       ];
       const result = calculateLabelYPositions(dimensions, drawingArea, labelHeight, minGap);
-      
+
       // All labels should stay at their exact preferred positions
       expect(result.get('label1')).toBe(50);
       expect(result.get('label2')).toBe(100);
@@ -167,12 +167,12 @@ describe('calculateLabelYPositions', () => {
         { seriesId: 'label2', width: 50, height: 24, preferredX: 100, preferredY: 60 },
       ];
       const result = calculateLabelYPositions(dimensions, drawingArea, labelHeight, minGap);
-      
+
       // Labels form collision group and are centered around their average (50+60)/2 = 55
       // With spacing of 28, they're positioned at 55-14=41 and 55+14=69
       expect(result.get('label1')).toBe(41);
       expect(result.get('label2')).toBe(69);
-      
+
       // Verify proper spacing
       expect(result.get('label2')! - result.get('label1')!).toBe(28);
     });
@@ -184,13 +184,13 @@ describe('calculateLabelYPositions', () => {
         { seriesId: 'label3', width: 50, height: 24, preferredX: 100, preferredY: 60 },
       ];
       const result = calculateLabelYPositions(dimensions, drawingArea, labelHeight, minGap);
-      
+
       // Labels form collision group and are centered around their average (50+55+60)/3 = 55
       // Middle label at 55, others spaced 28 apart
       expect(result.get('label1')).toBe(27);
       expect(result.get('label2')).toBe(55);
       expect(result.get('label3')).toBe(83);
-      
+
       // Verify proper spacing
       expect(result.get('label2')! - result.get('label1')!).toBe(28);
       expect(result.get('label3')! - result.get('label2')!).toBe(28);
@@ -203,7 +203,7 @@ describe('calculateLabelYPositions', () => {
         { seriesId: 'label2', width: 50, height: 24, preferredX: 100, preferredY: 55 },
       ];
       const result = calculateLabelYPositions(dimensions, drawingArea, labelHeight, minGap);
-      
+
       // Despite different input order, results should be same as cascade test
       expect(result.get('label1')).toBe(27);
       expect(result.get('label2')).toBe(55);
@@ -293,7 +293,7 @@ describe('calculateLabelYPositions', () => {
       // Both should be within bounds (maxY = 288)
       expect(label3Y).toBeLessThanOrEqual(288);
       expect(label4Y).toBeLessThanOrEqual(288);
-      
+
       // They should be centered around their preferred average
       expect(label3Y).toBeCloseTo(248.5, 1);
       expect(label4Y).toBeCloseTo(276.5, 1);
@@ -381,7 +381,7 @@ describe('calculateLabelYPositions', () => {
       // Labels form collision group, centered around (50+60)/2 = 55
       expect(result.get('wide')).toBe(41);
       expect(result.get('narrow')).toBe(69);
-      
+
       // Width doesn't affect Y positioning
       expect(result.get('narrow')! - result.get('wide')!).toBe(28);
     });
@@ -399,7 +399,7 @@ describe('calculateLabelYPositions', () => {
       // Centered around (50+60)/2 = 55, with spacing of 24+16=40
       expect(result.get('label1')).toBe(35);
       expect(result.get('label2')).toBe(75);
-      
+
       // Verify proper spacing with larger gap
       expect(result.get('label2')! - result.get('label1')!).toBe(40);
     });
@@ -415,7 +415,7 @@ describe('calculateLabelYPositions', () => {
       // Centered around (50+60)/2 = 55, with spacing of 24+1=25
       expect(result.get('label1')).toBe(42.5);
       expect(result.get('label2')).toBe(67.5);
-      
+
       // Verify proper spacing with smaller gap
       expect(result.get('label2')! - result.get('label1')!).toBe(25);
     });
@@ -433,7 +433,7 @@ describe('calculateLabelYPositions', () => {
       // Centered around (50+60)/2 = 55, with spacing of 32+4=36
       expect(result.get('label1')).toBe(37);
       expect(result.get('label2')).toBe(73);
-      
+
       // Verify proper spacing with larger label height
       expect(result.get('label2')! - result.get('label1')!).toBe(36);
     });
