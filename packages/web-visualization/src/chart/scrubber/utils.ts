@@ -45,6 +45,8 @@ const getConnectedScrubberLabels = (
   const requiredDistance = labelHeight + minGap;
   const sortedLabels = [...labels].sort((a, b) => a.boundedY - b.boundedY);
 
+  console.log('  getConnectedScrubberLabels - requiredDistance:', requiredDistance);
+
   // Union-Find to group connected overlapping labels
   const parent = new Map<string, string>();
   const findRoot = (id: string): string => {
@@ -65,11 +67,16 @@ const getConnectedScrubberLabels = (
     const next = sortedLabels[i + 1];
 
     const distance = next.boundedY - current.boundedY;
+    console.log(
+      `  Checking ${current.id} (${current.boundedY.toFixed(2)}) vs ${next.id} (${next.boundedY.toFixed(2)}): distance=${distance.toFixed(2)}, required=${requiredDistance.toFixed(2)}, collision=${distance < requiredDistance}`,
+    );
+
     if (distance < requiredDistance) {
       // Union: connect these labels
       const rootA = findRoot(current.id);
       const rootB = findRoot(next.id);
       if (rootA !== rootB) {
+        console.log(`    -> Connecting ${current.id} and ${next.id} (roots: ${rootA}, ${rootB})`);
         parent.set(rootB, rootA);
       }
     }
@@ -170,6 +177,11 @@ export const calculateLabelYPositions = (
     return new Map();
   }
 
+  console.log('=== calculateLabelYPositions START ===');
+  console.log('Input dimensions:', JSON.stringify(dimensions, null, 2));
+  console.log('drawingArea:', JSON.stringify(drawingArea));
+  console.log('labelHeight:', labelHeight, 'minGap:', minGap);
+
   // Step 1: Sort by preferred Y values and create working labels
   const sortedLabels: LabelWithPosition[] = [...dimensions]
     .sort((a, b) => a.preferredY - b.preferredY)
@@ -180,28 +192,84 @@ export const calculateLabelYPositions = (
       finalY: dim.preferredY,
     }));
 
+  console.log('Step 1 - Sorted labels:', JSON.stringify(sortedLabels, null, 2));
+
   // Step 2: Initial bounds fitting
   const minY = drawingArea.y + labelHeight / 2;
   const maxY = drawingArea.y + drawingArea.height - labelHeight / 2;
 
+  console.log('Step 2 - Bounds:', JSON.stringify({ minY, maxY }));
+
   for (const label of sortedLabels) {
     // Clamp each label to the drawing area
     label.finalY = Math.max(minY, Math.min(maxY, label.preferredY));
+    // Update boundedY to reflect the clamped position for collision detection
+    label.boundedY = label.finalY;
   }
 
-  // Step 3: Find connected groups and redistribute in ONE pass
-  const connectedGroups = getConnectedScrubberLabels(sortedLabels, labelHeight, minGap);
+  console.log('Step 2 - After clamping:', JSON.stringify(sortedLabels, null, 2));
 
-  // Process each group once
-  for (const group of connectedGroups) {
-    redistributeGroup(group, drawingArea, labelHeight, minGap);
+  // Step 3: Sequential spacing enforcement - ensure no overlaps by processing labels in order
+  console.log('\n--- Step 3: Sequential spacing enforcement ---');
+  const requiredDistance = labelHeight + minGap;
+
+  // First pass: push down any overlapping labels
+  for (let i = 1; i < sortedLabels.length; i++) {
+    const prev = sortedLabels[i - 1];
+    const current = sortedLabels[i];
+    const minAllowedY = prev.finalY + requiredDistance;
+
+    if (current.finalY < minAllowedY) {
+      console.log(
+        `  Adjusting ${current.id}: ${current.finalY.toFixed(2)} -> ${minAllowedY.toFixed(2)} (too close to ${prev.id})`,
+      );
+      current.finalY = minAllowedY;
+    }
   }
+
+  // Check if labels overflow the bottom boundary
+  const lastLabel = sortedLabels[sortedLabels.length - 1];
+  const bottomOverflow = lastLabel.finalY + labelHeight / 2 - (drawingArea.y + drawingArea.height);
+
+  if (bottomOverflow > 0) {
+    console.log(`  Bottom overflow detected: ${bottomOverflow.toFixed(2)}px`);
+
+    // Calculate total space needed and available
+    const totalNeeded = sortedLabels.length * labelHeight + (sortedLabels.length - 1) * minGap;
+    const totalAvailable = drawingArea.height;
+
+    if (totalNeeded > totalAvailable) {
+      // Not enough space - compress gaps uniformly
+      console.log('  Not enough space - compressing gaps uniformly');
+      const compressedGap = Math.max(
+        1,
+        (totalAvailable - sortedLabels.length * labelHeight) / Math.max(1, sortedLabels.length - 1),
+      );
+      let currentY = minY;
+      for (const label of sortedLabels) {
+        label.finalY = currentY;
+        currentY += labelHeight + compressedGap;
+      }
+    } else {
+      // Enough space - shift everything up to fit
+      console.log('  Enough space - shifting all labels up');
+      const shiftAmount = bottomOverflow;
+      for (const label of sortedLabels) {
+        label.finalY -= shiftAmount;
+      }
+    }
+  }
+
+  console.log('Step 3 - After spacing enforcement:', JSON.stringify(sortedLabels, null, 2));
 
   // Return final positions
   const result = new Map<string, number>();
   for (const label of sortedLabels) {
     result.set(label.id, label.finalY);
   }
+
+  console.log('Final result:', Array.from(result.entries()));
+  console.log('=== calculateLabelYPositions END ===\n');
 
   return result;
 };
