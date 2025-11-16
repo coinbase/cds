@@ -1,13 +1,32 @@
 import type { Rect } from '@coinbase/cds-common/types';
 
+export type ScrubberBeaconLabelGroupLabel = {
+  /**
+   * Id of the label.
+   */
+  id: string;
+  /**
+   * Label to be displayed.
+   */
+  label: string;
+  /**
+   * Color of the label.
+   * @default theme.color.fgPrimary
+   */
+  color?: string;
+};
+
 export type ScrubberLabelPosition = 'left' | 'right';
 
-type LabelDimension = {
+export type LabelPosition = {
   id: string;
+  x: number;
+  y: number;
+};
+
+export type LabelDimensions = {
   width: number;
   height: number;
-  preferredX: number;
-  preferredY: number;
 };
 
 /**
@@ -34,6 +53,14 @@ type LabelWithPosition = {
   id: string;
   preferredY: number;
   finalY: number;
+};
+
+type LabelDimension = {
+  id: string;
+  width: number;
+  height: number;
+  preferredX: number;
+  preferredY: number;
 };
 
 /**

@@ -2,24 +2,24 @@ import { memo, useCallback, useMemo, useState } from 'react';
 import type { SharedValue } from 'react-native-reanimated';
 import { useDerivedValue } from 'react-native-reanimated';
 import type { SharedProps } from '@coinbase/cds-common/types';
-import { Group } from '@shopify/react-native-skia';
 
 import { useCartesianChartContext } from '../ChartProvider';
+import type { ChartTextProps } from '../text';
 import { applySerializableScale, useScrubberContext } from '../utils';
+import {
+  calculateLabelYPositions,
+  getLabelPosition,
+  type LabelDimensions,
+  type LabelPosition,
+  type ScrubberBeaconLabelGroupLabel,
+  type ScrubberLabelPosition,
+} from '../utils/scrubber';
 
-import { ScrubberBeaconLabel } from './ScrubberBeaconLabel';
-import { calculateLabelYPositions, getLabelPosition, type ScrubberLabelPosition } from './utils';
+import { DefaultScrubberBeaconLabel } from './DefaultScrubberBeaconLabel';
 
-type LabelPosition = {
-  id: string;
-  x: number;
-  y: number;
-};
+export type ScrubberBeaconLabelProps = Omit<ChartTextProps, 'disableRepositioning'>;
 
-type LabelDimensions = {
-  width: number;
-  height: number;
-};
+export type ScrubberBeaconLabelComponent = React.FC<ScrubberBeaconLabelProps>;
 
 const PositionedLabel = memo<{
   index: number;
@@ -29,35 +29,50 @@ const PositionedLabel = memo<{
   color?: string;
   seriesId: string;
   onDimensionsChange: (id: string, dimensions: LabelDimensions) => void;
-}>(({ index, positions, position, label, color, seriesId, onDimensionsChange }) => {
-  const x = useDerivedValue(() => positions.value[index]?.x ?? 0, [positions, index]);
-  const y = useDerivedValue(() => positions.value[index]?.y ?? 0, [positions, index]);
+  BeaconLabelComponent: ScrubberBeaconLabelComponent;
+}>(
+  ({
+    index,
+    positions,
+    position,
+    label,
+    color,
+    seriesId,
+    onDimensionsChange,
+    BeaconLabelComponent,
+  }) => {
+    const x = useDerivedValue(() => positions.value[index]?.x ?? 0, [positions, index]);
+    const y = useDerivedValue(() => positions.value[index]?.y ?? 0, [positions, index]);
 
-  const dx = useDerivedValue(() => {
-    return position.value === 'right' ? 16 : -16;
-  }, [position]);
+    const dx = useDerivedValue(() => {
+      return position.value === 'right' ? 16 : -16;
+    }, [position]);
 
-  const horizontalAlignment = useDerivedValue(
-    () => (position.value === 'right' ? 'left' : 'right'),
-    [position],
-  );
+    const horizontalAlignment = useDerivedValue(
+      () => (position.value === 'right' ? 'left' : 'right'),
+      [position],
+    );
 
-  return (
-    <ScrubberBeaconLabel
-      color={color}
-      dx={dx}
-      horizontalAlignment={horizontalAlignment}
-      onDimensionsChange={(d) => onDimensionsChange(seriesId, d)}
-      x={x}
-      y={y}
-    >
-      {label}
-    </ScrubberBeaconLabel>
-  );
-});
+    return (
+      <BeaconLabelComponent
+        color={color}
+        dx={dx}
+        horizontalAlignment={horizontalAlignment}
+        onDimensionsChange={(d) => onDimensionsChange(seriesId, d)}
+        x={x}
+        y={y}
+      >
+        {label}
+      </BeaconLabelComponent>
+    );
+  },
+);
 
 export type ScrubberBeaconLabelGroupBaseProps = SharedProps & {
-  labels: Array<{ id: string; label: string; color?: string }>;
+  /**
+   * Labels to be displayed.
+   */
+  labels: Array<ScrubberBeaconLabelGroupLabel>;
   /**
    * Minimum gap between labels in pixels.
    * @default 4
@@ -65,10 +80,16 @@ export type ScrubberBeaconLabelGroupBaseProps = SharedProps & {
   minLabelGap?: number;
 };
 
-export type ScrubberBeaconLabelGroupProps = ScrubberBeaconLabelGroupBaseProps;
+export type ScrubberBeaconLabelGroupProps = ScrubberBeaconLabelGroupBaseProps & {
+  /**
+   * Custom component to render as a scrubber beacon label.
+   * @default DefaultScrubberBeaconLabel
+   */
+  BeaconLabelComponent?: ScrubberBeaconLabelComponent;
+};
 
 export const ScrubberBeaconLabelGroup = memo<ScrubberBeaconLabelGroupProps>(
-  ({ labels, minLabelGap = 4 }) => {
+  ({ labels, minLabelGap = 4, BeaconLabelComponent = DefaultScrubberBeaconLabel }) => {
     const {
       getSeries,
       getSeriesData,
@@ -228,6 +249,7 @@ export const ScrubberBeaconLabelGroup = memo<ScrubberBeaconLabelGroupProps>(
       return (
         <PositionedLabel
           key={info.id}
+          BeaconLabelComponent={BeaconLabelComponent}
           color={labelInfo.color}
           index={index}
           label={labelInfo.label}

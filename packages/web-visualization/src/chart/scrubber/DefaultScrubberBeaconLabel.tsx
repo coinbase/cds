@@ -1,17 +1,16 @@
 import { memo } from 'react';
 
-import { ChartText, type ChartTextProps } from '../text';
+import { ChartText } from '../text';
 
-// We must disable repositioning
-export type ScrubberBeaconLabelProps = Omit<ChartTextProps, 'disableRepositioning'>;
+import type { ScrubberBeaconLabelProps } from './ScrubberBeaconLabelGroup';
 
 const labelVerticalInset = 3.5;
 const labelHorizontalInset = 4;
 
 /**
- * The ScrubberBeaconLabel is a special instance of ChartText used to label a series' scrubber beacon (i.e. a point on the series pinned to the scrubber position).
+ * DefaultScrubberBeaconLabel is a special instance of ChartText used to label a series' scrubber beacon (i.e. a point on the series pinned to the scrubber position).
  */
-export const ScrubberBeaconLabel = memo<ScrubberBeaconLabelProps>(
+export const DefaultScrubberBeaconLabel = memo<ScrubberBeaconLabelProps>(
   ({
     background = 'var(--color-bg',
     color = 'var(--color-fgPrimary)',

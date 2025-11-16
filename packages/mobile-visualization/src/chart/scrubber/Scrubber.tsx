@@ -27,12 +27,13 @@ import {
   getPointOnSerializableScale,
   useScrubberContext,
 } from '../utils';
+import type { ScrubberBeaconLabelGroupLabel } from '../utils/scrubber';
 
 import { ScrubberBeacon, type ScrubberBeaconProps, type ScrubberBeaconRef } from './ScrubberBeacon';
-import { ScrubberBeaconLabel, type ScrubberBeaconLabelProps } from './ScrubberBeaconLabel';
 import {
   ScrubberBeaconLabelGroup,
   type ScrubberBeaconLabelGroupBaseProps,
+  type ScrubberBeaconLabelGroupProps,
 } from './ScrubberBeaconLabelGroup';
 
 export type ScrubberBaseProps = SharedProps &
@@ -59,7 +60,8 @@ export type ScrubberBaseProps = SharedProps &
   };
 
 export type ScrubberProps = ScrubberBaseProps &
-  Pick<ScrubberBeaconProps, 'idlePulse'> & {
+  Pick<ScrubberBeaconProps, 'idlePulse'> &
+  Pick<ScrubberBeaconLabelGroupProps, 'BeaconLabelComponent'> & {
     /**
      * Label text displayed above the scrubber line.
      * Can be a static string or a function that receives the current dataIndex.
@@ -78,10 +80,6 @@ export type ScrubberProps = ScrubberBaseProps &
      * Custom component for the scrubber beacon.
      */
     BeaconComponent?: React.ComponentType<ScrubberBeaconProps>;
-    /**
-     * Custom component for the scrubber beacon label.
-     */
-    BeaconLabelComponent?: React.ComponentType<ScrubberBeaconLabelProps>;
     /**
      * Custom component for the scrubber line.
      */
@@ -107,7 +105,7 @@ export const Scrubber = memo(
         lineStroke,
         labelProps,
         BeaconComponent = ScrubberBeacon,
-        BeaconLabelComponent = ScrubberBeaconLabel,
+        BeaconLabelComponent,
         LineComponent,
         hideOverlay,
         overlayOffset = 2,
@@ -251,7 +249,7 @@ export const Scrubber = memo(
         [updateResolvedLabel],
       );
 
-      const scrubberBeaconLabels: Array<{ id: string; label: string; color?: string }> = useMemo(
+      const scrubberBeaconLabels: Array<ScrubberBeaconLabelGroupLabel> = useMemo(
         () =>
           filteredSeries
             .filter((s) => s.label !== undefined && s.label.length > 0)
@@ -311,7 +309,11 @@ export const Scrubber = memo(
             />
           ))}
           {scrubberBeaconLabels.length > 0 && (
-            <ScrubberBeaconLabelGroup labels={scrubberBeaconLabels} minLabelGap={minLabelGap} />
+            <ScrubberBeaconLabelGroup
+              BeaconLabelComponent={BeaconLabelComponent}
+              labels={scrubberBeaconLabels}
+              minLabelGap={minLabelGap}
+            />
           )}
         </Group>
       );

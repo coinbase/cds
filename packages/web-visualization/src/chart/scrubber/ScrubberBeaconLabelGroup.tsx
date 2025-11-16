@@ -2,21 +2,20 @@ import { memo, useCallback, useMemo, useState } from 'react';
 import type { SharedProps } from '@coinbase/cds-common/types';
 
 import { useCartesianChartContext } from '../ChartProvider';
+import type { ChartTextProps } from '../text';
 import { getPointOnScale, useScrubberContext } from '../utils';
+import {
+  calculateLabelYPositions,
+  getLabelPosition,
+  type LabelDimensions,
+  type LabelPosition,
+  type ScrubberLabelPosition,
+} from '../utils/scrubber';
 
-import { ScrubberBeaconLabel } from './ScrubberBeaconLabel';
-import { calculateLabelYPositions, getLabelPosition, type ScrubberLabelPosition } from './utils';
+import { DefaultScrubberBeaconLabel } from './DefaultScrubberBeaconLabel';
 
-type LabelPosition = {
-  id: string;
-  x: number;
-  y: number;
-};
-
-type LabelDimensions = {
-  width: number;
-  height: number;
-};
+export type ScrubberBeaconLabelProps = Omit<ChartTextProps, 'disableRepositioning'>;
+export type ScrubberBeaconLabelComponent = React.FC<ScrubberBeaconLabelProps>;
 
 const PositionedLabel = memo<{
   index: number;
@@ -26,25 +25,37 @@ const PositionedLabel = memo<{
   color?: string;
   seriesId: string;
   onDimensionsChange: (id: string, dimensions: LabelDimensions) => void;
-}>(({ index, positions, position, label, color, seriesId, onDimensionsChange }) => {
-  const x = positions[index]?.x ?? 0;
-  const y = positions[index]?.y ?? 0;
-  const dx = position === 'right' ? 16 : -16;
-  const horizontalAlignment = position === 'right' ? 'left' : 'right';
+  BeaconLabelComponent: ScrubberBeaconLabelComponent;
+}>(
+  ({
+    index,
+    positions,
+    position,
+    label,
+    color,
+    seriesId,
+    onDimensionsChange,
+    BeaconLabelComponent,
+  }) => {
+    const x = positions[index]?.x ?? 0;
+    const y = positions[index]?.y ?? 0;
+    const dx = position === 'right' ? 16 : -16;
+    const horizontalAlignment = position === 'right' ? 'left' : 'right';
 
-  return (
-    <ScrubberBeaconLabel
-      color={color}
-      dx={dx}
-      horizontalAlignment={horizontalAlignment}
-      onDimensionsChange={(d) => onDimensionsChange(seriesId, d)}
-      x={x}
-      y={y}
-    >
-      {label}
-    </ScrubberBeaconLabel>
-  );
-});
+    return (
+      <BeaconLabelComponent
+        color={color}
+        dx={dx}
+        horizontalAlignment={horizontalAlignment}
+        onDimensionsChange={(d) => onDimensionsChange(seriesId, d)}
+        x={x}
+        y={y}
+      >
+        {label}
+      </BeaconLabelComponent>
+    );
+  },
+);
 
 export type ScrubberBeaconLabelGroupBaseProps = SharedProps & {
   labels: Array<{ id: string; label: string; color?: string }>;
@@ -55,10 +66,16 @@ export type ScrubberBeaconLabelGroupBaseProps = SharedProps & {
   minLabelGap?: number;
 };
 
-export type ScrubberBeaconLabelGroupProps = ScrubberBeaconLabelGroupBaseProps;
+export type ScrubberBeaconLabelGroupProps = ScrubberBeaconLabelGroupBaseProps & {
+  /**
+   * Custom component to render as a scrubber beacon label.
+   * @default DefaultScrubberBeaconLabel
+   */
+  BeaconLabelComponent?: ScrubberBeaconLabelComponent;
+};
 
 export const ScrubberBeaconLabelGroup = memo<ScrubberBeaconLabelGroupProps>(
-  ({ labels, minLabelGap = 4 }) => {
+  ({ labels, minLabelGap = 4, BeaconLabelComponent = DefaultScrubberBeaconLabel }) => {
     const { getSeries, getSeriesData, getXScale, getYScale, getXAxis, series, drawingArea } =
       useCartesianChartContext();
     const { scrubberPosition } = useScrubberContext();
@@ -211,6 +228,7 @@ export const ScrubberBeaconLabelGroup = memo<ScrubberBeaconLabelGroupProps>(
       return (
         <PositionedLabel
           key={info.id}
+          BeaconLabelComponent={BeaconLabelComponent}
           color={labelInfo.color}
           index={index}
           label={labelInfo.label}

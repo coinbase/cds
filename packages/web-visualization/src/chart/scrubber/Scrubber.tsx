@@ -19,6 +19,7 @@ import { ScrubberBeacon, type ScrubberBeaconProps, type ScrubberBeaconRef } from
 import {
   ScrubberBeaconLabelGroup,
   type ScrubberBeaconLabelGroupBaseProps,
+  type ScrubberBeaconLabelGroupProps,
 } from './ScrubberBeaconLabelGroup';
 
 export type ScrubberBaseProps = SharedProps &
@@ -45,7 +46,8 @@ export type ScrubberBaseProps = SharedProps &
   };
 
 export type ScrubberProps = ScrubberBaseProps &
-  Pick<ScrubberBeaconProps, 'idlePulse'> & {
+  Pick<ScrubberBeaconProps, 'idlePulse'> &
+  Pick<ScrubberBeaconLabelGroupProps, 'BeaconLabelComponent'> & {
     /**
      * Label text displayed above the scrubber line.
      * Can be a static string or a function that receives the current dataIndex.
@@ -113,6 +115,7 @@ export const Scrubber = memo(
         lineStroke,
         labelProps,
         BeaconComponent = ScrubberBeacon,
+        BeaconLabelComponent,
         LineComponent,
         hideOverlay,
         overlayOffset = 2,
@@ -392,7 +395,11 @@ export const Scrubber = memo(
             );
           })}
           {scrubberBeaconLabels.length > 0 && (
-            <ScrubberBeaconLabelGroup labels={scrubberBeaconLabels} minLabelGap={minLabelGap} />
+            <ScrubberBeaconLabelGroup
+              BeaconLabelComponent={BeaconLabelComponent}
+              labels={scrubberBeaconLabels}
+              minLabelGap={minLabelGap}
+            />
           )}
         </motion.g>
       );
