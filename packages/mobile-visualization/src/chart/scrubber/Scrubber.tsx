@@ -32,32 +32,30 @@ import { ScrubberBeacon, type ScrubberBeaconProps, type ScrubberBeaconRef } from
 import { ScrubberBeaconLabel, type ScrubberBeaconLabelProps } from './ScrubberBeaconLabel';
 import { ScrubberBeaconLabelGroup } from './ScrubberBeaconLabelGroup';
 
-/**
- * Configuration for scrubber functionality across chart components.
- * Provides consistent API with smart defaults and component customization.
- */
-export type ScrubberProps = SharedProps &
+export type ScrubberBaseProps = SharedProps & {
+  /**
+   * Array of series IDs to highlight when scrubbing with scrubber beacons.
+   * By default, all series will be highlighted.
+   */
+  seriesIds?: string[];
+  /**
+   * Hides the scrubber line
+   */
+  hideLine?: boolean;
+  /**
+   * Hides the overlay rect which obscures data beyond the scrubber position.
+   */
+  hideOverlay?: boolean;
+  /**
+   * Offset of the overlay rect relative to the drawing area.
+   * Useful for when scrubbing over lines, where the stroke width would cause part of the line to be visible.
+   * @default 2
+   */
+  overlayOffset?: number;
+};
+
+export type ScrubberProps = ScrubberBaseProps &
   Pick<ScrubberBeaconProps, 'idlePulse'> & {
-    /**
-     * An array of series IDs that will receive visual emphasis as the user scrubs through the chart.
-     * Use this prop to restrict the scrubbing visual behavior to specific series.
-     * By default, all series will be highlighted by the Scrubber.
-     */
-    seriesIds?: string[];
-    /**
-     * Hides the scrubber line
-     */
-    hideLine?: boolean;
-    /**
-     * Whether to hide the overlay rect which obscures future data.
-     */
-    hideOverlay?: boolean;
-    /**
-     * Offset of the overlay rect relative to the drawing area.
-     * Useful for when scrubbing over lines, where the stroke width would cause part of the line to be visible.
-     * @default 2
-     */
-    overlayOffset?: number;
     /**
      * Label text displayed above the scrubber line.
      * Can be a static string or a function that receives the current dataIndex.
@@ -65,6 +63,7 @@ export type ScrubberProps = SharedProps &
     label?: string | SkParagraph | ((dataIndex: number) => string | SkParagraph);
     /**
      * Props passed to the scrubber line's label.
+     * @todo can we get rid of this?
      */
     labelProps?: ReferenceLineProps['labelProps'];
     /**
@@ -157,12 +156,8 @@ export const Scrubber = memo(
       }));
 
       const filteredSeries = useMemo(() => {
-        return (
-          series?.filter((s) => {
-            if (seriesIds === undefined) return true;
-            return seriesIds.includes(s.id);
-          }) ?? []
-        );
+        if (seriesIds === undefined) return series;
+        return series?.filter((s) => seriesIds.includes(s.id)) ?? [];
       }, [series, seriesIds]);
 
       const createScrubberBeaconRef = useCallback(
@@ -310,7 +305,9 @@ export const Scrubber = memo(
               transitions={beaconTransitions}
             />
           ))}
-          <ScrubberBeaconLabelGroup labels={scrubberBeaconLabels} />
+          {scrubberBeaconLabels.length > 0 && (
+            <ScrubberBeaconLabelGroup labels={scrubberBeaconLabels} />
+          )}
         </Group>
       );
     },

@@ -1,11 +1,8 @@
 import { memo, useCallback, useMemo, useState } from 'react';
-import type { SharedValue } from 'react-native-reanimated';
-import { useDerivedValue } from 'react-native-reanimated';
 import type { SharedProps } from '@coinbase/cds-common/types';
-import { Group } from '@shopify/react-native-skia';
 
 import { useCartesianChartContext } from '../ChartProvider';
-import { applySerializableScale, useScrubberContext } from '../utils';
+import { getPointOnScale, useScrubberContext } from '../utils';
 
 import { ScrubberBeaconLabel } from './ScrubberBeaconLabel';
 import { calculateLabelYPositions, getLabelPosition, type ScrubberLabelPosition } from './utils';
@@ -23,24 +20,17 @@ type LabelDimensions = {
 
 const PositionedLabel = memo<{
   index: number;
-  positions: SharedValue<LabelPosition[]>;
-  position: SharedValue<ScrubberLabelPosition>;
+  positions: LabelPosition[];
+  position: ScrubberLabelPosition;
   label: string;
   color?: string;
   seriesId: string;
   onDimensionsChange: (id: string, dimensions: LabelDimensions) => void;
 }>(({ index, positions, position, label, color, seriesId, onDimensionsChange }) => {
-  const x = useDerivedValue(() => positions.value[index]?.x ?? 0, [positions, index]);
-  const y = useDerivedValue(() => positions.value[index]?.y ?? 0, [positions, index]);
-
-  const dx = useDerivedValue(() => {
-    return position.value === 'right' ? 16 : -16;
-  }, [position]);
-
-  const horizontalAlignment = useDerivedValue(
-    () => (position.value === 'right' ? 'left' : 'right'),
-    [position],
-  );
+  const x = positions[index]?.x ?? 0;
+  const y = positions[index]?.y ?? 0;
+  const dx = position === 'right' ? 16 : -16;
+  const horizontalAlignment = position === 'right' ? 'left' : 'right';
 
   return (
     <ScrubberBeaconLabel
@@ -61,16 +51,11 @@ export type ScrubberBeaconLabelGroupProps = SharedProps & {
 };
 
 export const ScrubberBeaconLabelGroup = memo<ScrubberBeaconLabelGroupProps>(({ labels }) => {
-  const {
-    getSeries,
-    getSeriesData,
-    getXSerializableScale,
-    getYSerializableScale,
-    getXAxis,
-    series,
-    drawingArea,
-  } = useCartesianChartContext();
+  const { getSeries, getSeriesData, getXScale, getYScale, getXAxis, series, drawingArea } =
+    useCartesianChartContext();
   const { scrubberPosition } = useScrubberContext();
+
+  console.log('got labels', labels);
 
   const [labelDimensions, setLabelDimensions] = useState<Record<string, LabelDimensions>>({});
 
@@ -100,7 +85,7 @@ export const ScrubberBeaconLabelGroup = memo<ScrubberBeaconLabelGroupProps>(({ l
         if (!series) return null;
 
         const sourceData = getSeriesData(label.id);
-        const yScale = getYSerializableScale(series.yAxisId);
+        const yScale = getYScale(series.yAxisId);
 
         return {
           id: label.id,
@@ -109,7 +94,7 @@ export const ScrubberBeaconLabelGroup = memo<ScrubberBeaconLabelGroupProps>(({ l
         };
       })
       .filter((info): info is NonNullable<typeof info> => info !== null);
-  }, [labels, getSeries, getSeriesData, getYSerializableScale]);
+  }, [labels, getSeries, getSeriesData, getYScale]);
 
   const maxDataLength = useMemo(
     () =>
@@ -120,35 +105,36 @@ export const ScrubberBeaconLabelGroup = memo<ScrubberBeaconLabelGroupProps>(({ l
     [series, getSeriesData],
   );
 
-  const xScale = getXSerializableScale();
+  const xScale = getXScale();
   const xAxis = getXAxis();
 
-  const dataIndex = useDerivedValue(() => {
-    return scrubberPosition.value ?? Math.max(0, maxDataLength - 1);
+  const dataIndex = useMemo(() => {
+    return scrubberPosition ?? Math.max(0, maxDataLength - 1);
   }, [scrubberPosition, maxDataLength]);
 
-  const dataX = useDerivedValue(() => {
-    if (xAxis?.data && Array.isArray(xAxis.data) && xAxis.data[dataIndex.value] !== undefined) {
-      const dataValue = xAxis.data[dataIndex.value];
-      return typeof dataValue === 'string' ? dataIndex.value : dataValue;
+  const dataX = useMemo(() => {
+    if (xAxis?.data && Array.isArray(xAxis.data) && xAxis.data[dataIndex] !== undefined) {
+      const dataValue = xAxis.data[dataIndex];
+      return typeof dataValue === 'string' ? dataIndex : dataValue;
     }
-    return dataIndex.value;
+    return dataIndex;
   }, [xAxis, dataIndex]);
 
-  const allLabelPositions = useDerivedValue(() => {
-    const sharedPixelX =
-      dataX.value !== undefined && xScale ? applySerializableScale(dataX.value, xScale) : 0;
+  const allLabelPositions = useMemo(() => {
+    if (!xScale || dataX === undefined) return [];
+
+    const sharedPixelX = getPointOnScale(dataX, xScale);
 
     const desiredPositions = seriesInfo.map((info) => {
       let dataY: number | undefined;
-      if (xScale && info.yScale) {
+      if (info.yScale) {
         if (
           info.sourceData &&
-          dataIndex.value !== undefined &&
-          dataIndex.value >= 0 &&
-          dataIndex.value < info.sourceData.length
+          dataIndex !== undefined &&
+          dataIndex >= 0 &&
+          dataIndex < info.sourceData.length
         ) {
-          const dataValue = info.sourceData[dataIndex.value];
+          const dataValue = info.sourceData[dataIndex];
 
           if (typeof dataValue === 'number') {
             dataY = dataValue;
@@ -161,8 +147,7 @@ export const ScrubberBeaconLabelGroup = memo<ScrubberBeaconLabelGroupProps>(({ l
         }
       }
 
-      const desiredY =
-        dataY !== undefined && info.yScale ? applySerializableScale(dataY, info.yScale) : 0;
+      const desiredY = dataY !== undefined && info.yScale ? getPointOnScale(dataY, info.yScale) : 0;
 
       return {
         id: info.id,
@@ -197,16 +182,15 @@ export const ScrubberBeaconLabelGroup = memo<ScrubberBeaconLabelGroupProps>(({ l
       x: pos.x,
       y: yPositions.get(pos.id) ?? pos.desiredY, // Use Y from collision resolution
     }));
-  }, [seriesInfo, dataIndex, dataX, xScale, labelDimensions]);
+  }, [seriesInfo, dataIndex, dataX, xScale, labelDimensions, drawingArea]);
 
-  const currentPosition = useDerivedValue(() => {
-    const pixelX =
-      dataX.value !== undefined && xScale ? applySerializableScale(dataX.value, xScale) : 0;
+  const currentPosition = useMemo(() => {
+    if (!xScale || dataX === undefined) return 'right';
 
+    const pixelX = getPointOnScale(dataX, xScale);
     const maxWidth = Math.max(...Object.values(labelDimensions).map((dim) => dim.width));
 
-    const position = getLabelPosition(pixelX, maxWidth, drawingArea, 16);
-    return position;
+    return getLabelPosition(pixelX, maxWidth, drawingArea, 16);
   }, [dataX, xScale, labelDimensions, drawingArea]);
 
   return seriesInfo.map((info, index) => {

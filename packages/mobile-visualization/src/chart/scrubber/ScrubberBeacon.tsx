@@ -39,11 +39,14 @@ export type ScrubberBeaconRef = {
   pulse: () => void;
 };
 
-export type ScrubberBeaconProps = SharedProps & {
+export type ScrubberBeaconBaseProps = SharedProps & {
   /**
    * Filter to only show dot for specific series (used for hover-based positioning).
    */
   seriesId?: string;
+};
+
+export type ScrubberBeaconProps = ScrubberBeaconBaseProps & {
   /**
    * Color of the beacon point.
    * If not provided, uses the series color.
@@ -84,9 +87,6 @@ export type ScrubberBeaconProps = SharedProps & {
   };
 };
 
-/**
- * The ScrubberBeacon is a special instance of a Point used to mark the scrubber's position on a specific series.
- */
 export const ScrubberBeacon = memo(
   forwardRef<ScrubberBeaconRef, ScrubberBeaconProps>(
     ({ seriesId, color, gradient: gradientProp, testID, idlePulse, transitions }, ref) => {

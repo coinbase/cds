@@ -95,10 +95,6 @@ export type ScrubberBeaconProps = SharedProps & {
   };
 };
 
-/**
- * The ScrubberBeacon is a special instance of a Point used to mark the scrubber's position on a specific series.
- * It renders a glow effect around the point to highlight the scrubber position.
- */
 export const ScrubberBeacon = memo(
   forwardRef<ScrubberBeaconRef, ScrubberBeaconProps>(
     (

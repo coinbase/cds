@@ -9,7 +9,7 @@ import { sparklineInteractiveData } from '@coinbase/cds-common/internal/visualiz
 import { useTabsContext } from '@coinbase/cds-common/tabs/TabsContext';
 import type { TabValue } from '@coinbase/cds-common/tabs/useTabs';
 import { useTheme } from '@coinbase/cds-mobile';
-import { IconButton } from '@coinbase/cds-mobile/buttons';
+import { Button, IconButton } from '@coinbase/cds-mobile/buttons';
 import { ListCell } from '@coinbase/cds-mobile/cells';
 import { Example, ExampleScreen } from '@coinbase/cds-mobile/examples/ExampleScreen';
 import { Box, type BoxBaseProps, HStack, VStack } from '@coinbase/cds-mobile/layout';
@@ -1059,7 +1059,6 @@ function AssetPriceWithDottedArea() {
               color: assets.btc.color,
             },
           ]}
-          style={{ outlineColor: assets.btc.color }}
         >
           <Scrubber
             idlePulse
@@ -1276,7 +1275,6 @@ const PerformanceChart = memo(
             label: 'Low Price',
           },
         ]}
-        style={{ outlineColor: assets.btc.color }}
         xAxis={{ range: ({ min, max }) => ({ min, max: max - 16 }) }}
         yAxis={{ showGrid: true, tickLabelFormatter: formatPriceThousands }}
       >
@@ -1837,6 +1835,60 @@ function ForecastAssetPrice() {
   );
 }
 
+function ImperativeHandle() {
+  const theme = useTheme();
+  const scrubberRef = useRef<ScrubberRef>(null);
+
+  return (
+    <VStack gap={2}>
+      <LineChart
+        enableScrubbing
+        showYAxis
+        height={200}
+        series={[
+          {
+            id: 'priceA',
+            data: [2400, 1398, 9800, 3908, 4800, 3800, 4300],
+            label: 'Price A',
+            color: theme.color.accentBoldBlue,
+          },
+          {
+            id: 'priceB',
+            data: [2000, 2491, 4501, 6049, 5019, 4930, 5910],
+            label: 'Price B',
+            color: theme.color.accentBoldGreen,
+          },
+          {
+            id: 'priceC',
+            data: [1000, 4910, 2300, 5910, 3940, 2940, 1940],
+            label: 'Price C',
+            color: theme.color.accentBoldPurple,
+          },
+          {
+            id: 'priceD',
+            data: [4810, 2030, 5810, 3940, 2940, 1940, 940],
+            label: 'Price D',
+            color: theme.color.accentBoldYellow,
+          },
+        ]}
+        xAxis={{
+          range: ({ min, max }) => ({ min, max: max - 32 }),
+        }}
+        yAxis={{
+          domain: {
+            min: 0,
+          },
+          showGrid: true,
+          tickLabelFormatter: (value) => value.toLocaleString(),
+        }}
+      >
+        <Scrubber ref={scrubberRef} />
+      </LineChart>
+      <Button onPress={() => scrubberRef.current?.pulse()}>Pulse</Button>
+    </VStack>
+  );
+}
+
 type ExampleItem = {
   title: string;
   component: React.ReactNode;
@@ -1862,6 +1914,10 @@ function ExampleNavigator() {
             ]}
           />
         ),
+      },
+      {
+        title: 'Imperative Handle',
+        component: <ImperativeHandle />,
       },
       {
         title: 'Multiple Lines',

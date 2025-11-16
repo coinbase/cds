@@ -519,7 +519,6 @@ const PerformanceChart = memo(
             label: 'Low Price',
           },
         ]}
-        style={{ outlineColor: assets.btc.color }}
         xAxis={{ range: ({ min, max }) => ({ min, max: max - 16 }) }}
         yAxis={{ showGrid: true, tickLabelFormatter: formatPriceThousands }}
       >
@@ -1407,7 +1406,6 @@ function AssetPriceWithDottedArea() {
               color: assets.btc.color,
             },
           ]}
-          style={{ outlineColor: assets.btc.color }}
         >
           <Scrubber
             idlePulse
