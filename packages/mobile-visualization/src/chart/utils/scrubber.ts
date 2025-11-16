@@ -157,7 +157,6 @@ export const calculateLabelYPositions = (
     }
   }
 
-  // Return final positions
   const result = new Map<string, number>();
   for (const label of sortedLabels) {
     result.set(label.id, label.finalY);

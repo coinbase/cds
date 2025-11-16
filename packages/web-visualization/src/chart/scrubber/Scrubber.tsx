@@ -348,7 +348,7 @@ export const Scrubber = memo(
               }
             : {})}
         >
-          {!hideOverlay && pixelX !== undefined && (
+          {!hideOverlay && scrubberPosition !== undefined && pixelX !== undefined && (
             <rect
               className={classNames?.overlay}
               fill="var(--color-bg)"

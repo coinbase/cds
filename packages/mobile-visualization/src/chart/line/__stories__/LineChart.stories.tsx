@@ -1836,6 +1836,49 @@ function ForecastAssetPrice() {
 }
 
 function ImperativeHandle() {
+  return (
+    <LineChart
+      enableScrubbing
+      showArea
+      showYAxis
+      areaType="dotted"
+      height={150}
+      series={[
+        {
+          id: 'Boston',
+          data: [25, 30, 35, 45, 60, 100],
+          color: 'rgb(var(--green40))',
+          label: 'Boston',
+        },
+        {
+          id: 'Miami',
+          data: [20, 25, 30, 35, 20, 0],
+          color: 'rgb(var(--blue40))',
+          label: 'Miami',
+        },
+        {
+          id: 'Denver',
+          data: [10, 15, 20, 25, 40, 0],
+          color: 'rgb(var(--orange40))',
+          label: 'Denver',
+        },
+        {
+          id: 'Phoenix',
+          data: [15, 10, 5, 0, 0, 0],
+          color: 'rgb(var(--red40))',
+          label: 'Phoenix',
+        },
+      ]}
+      yAxis={{
+        showGrid: true,
+      }}
+    >
+      <Scrubber />
+    </LineChart>
+  );
+}
+
+function ImperativeHandleOld() {
   const theme = useTheme();
   const scrubberRef = useRef<ScrubberRef>(null);
 

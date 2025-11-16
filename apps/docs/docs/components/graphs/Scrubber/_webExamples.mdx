@@ -5,6 +5,8 @@ Scrubber can be used to provide horizontal interaction with a chart. As your mou
 ```jsx live
 <LineChart
   enableScrubbing
+  showArea
+  showYAxis
   height={{ base: 150, tablet: 200, desktop: 250 }}
   series={[
     {
@@ -12,8 +14,9 @@ Scrubber can be used to provide horizontal interaction with a chart. As your mou
       data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
     },
   ]}
-  showYAxis
-  showArea
+  xAxis={{
+    range: ({ min, max }) => ({ min, max: max - 16 }),
+  }}
   yAxis={{
     showGrid: true,
   }}
@@ -122,41 +125,11 @@ function ImperativeHandle() {
         height={{ base: 150, tablet: 200, desktop: 250 }}
         series={[
           {
-            id: 'priceA',
-            data: [2400, 1398, 9800, 3908, 4800, 3800, 4300],
-            label: 'Price A',
-            color: 'var(--color-accentBoldBlue)',
-          },
-          {
-            id: 'priceB',
-            data: [2000, 2491, 4501, 6049, 5019, 4930, 5910],
-            label: 'Price B',
-            color: 'var(--color-accentBoldGreen)',
-          },
-          {
-            id: 'priceC',
-            data: [1000, 4910, 2300, 5910, 3940, 2940, 1940],
-            label: 'Price C',
-            color: 'var(--color-accentBoldPurple)',
-          },
-          {
-            id: 'priceD',
-            data: [4810, 2030, 5810, 3940, 2940, 1940, 940],
-            label: 'Price D',
-            color: 'var(--color-accentBoldYellow)',
+            id: 'prices',
+            data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
           },
         ]}
-        xAxis={{
-          range: ({ min, max }) => ({ min, max: max - 32 }),
-        }}
-        showYAxis
-        yAxis={{
-          domain: {
-            min: 0,
-          },
-          showGrid: true,
-          tickLabelFormatter: (value) => value.toLocaleString(),
-        }}
+        showArea
       >
         <Scrubber ref={scrubberRef} />
       </LineChart>
@@ -169,6 +142,8 @@ function ImperativeHandle() {
 ## Styling
 
 ### Beacons
+
+Showcase custom beacons in a simplified manner.
 
 ### Labels
 
@@ -246,7 +221,7 @@ function CustomBeaconLabel() {
       ]}
       showYAxis
       showArea
-      areaType='dotted'
+      areaType="dotted"
       yAxis={{
         showGrid: true,
       }}
@@ -260,6 +235,24 @@ function CustomBeaconLabel() {
 todo: you can also adjust the label above the reference line here
 
 ### Line
+
+You can use `LineComponent` to customize Scrubber's line. In this case, as a user scrubs, they will see a solid line instead of dotted.
+
+```jsx live
+<LineChart
+  enableScrubbing
+  height={{ base: 150, tablet: 200, desktop: 250 }}
+  series={[
+    {
+      id: 'prices',
+      data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+    },
+  ]}
+  showArea
+>
+  <Scrubber LineComponent={SolidLine} />
+</LineChart>
+```
 
 ### Overlay
 
@@ -275,11 +268,7 @@ By default, Scrubber will show an overlay to de-emphasize future data. You can h
       data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
     },
   ]}
-  showYAxis
   showArea
-  yAxis={{
-    showGrid: true,
-  }}
 >
   <Scrubber hideOverlay />
 </LineChart>
