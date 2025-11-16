@@ -117,26 +117,42 @@ export const calculateLabelYPositions = (
   const bottomOverflow = lastLabel.finalY + labelHeight / 2 - (drawingArea.y + drawingArea.height);
 
   if (bottomOverflow > 0) {
-    // Calculate total space needed and available
-    const totalNeeded = sortedLabels.length * labelHeight + (sortedLabels.length - 1) * minGap;
-    const totalAvailable = drawingArea.height;
+    // Find the collision group causing the overflow (labels that were moved from their preferred positions)
+    const collisionGroup: LabelWithPosition[] = [];
+    for (let i = sortedLabels.length - 1; i >= 0; i--) {
+      const label = sortedLabels[i];
+      // Include labels that were moved or are adjacent to moved labels
+      if (Math.abs(label.finalY - label.preferredY) > 0.01 || collisionGroup.length > 0) {
+        collisionGroup.unshift(label);
+      } else {
+        // Stop when we find a label at its preferred position with space below it
+        break;
+      }
+    }
 
-    if (totalNeeded > totalAvailable) {
-      // Not enough space - compress gaps uniformly
+    // Calculate total space needed for collision group
+    const groupTotalNeeded =
+      collisionGroup.length * labelHeight + (collisionGroup.length - 1) * minGap;
+    const firstLabel = collisionGroup[0];
+    const availableSpace =
+      drawingArea.y + drawingArea.height - (firstLabel.finalY - labelHeight / 2);
+
+    if (groupTotalNeeded > availableSpace) {
+      // Not enough space - compress gaps within collision group
       const compressedGap = Math.max(
         1,
-        (totalAvailable - sortedLabels.length * labelHeight) / Math.max(1, sortedLabels.length - 1),
+        (availableSpace - collisionGroup.length * labelHeight) /
+          Math.max(1, collisionGroup.length - 1),
       );
-      let currentY = minY;
-      for (const label of sortedLabels) {
+      let currentY = firstLabel.finalY;
+      for (const label of collisionGroup) {
         label.finalY = currentY;
         currentY += labelHeight + compressedGap;
       }
     } else {
-      // Enough space - shift everything up to fit
-      const shiftAmount = bottomOverflow;
-      for (const label of sortedLabels) {
-        label.finalY -= shiftAmount;
+      // Enough space - shift only the collision group up to fit
+      for (const label of collisionGroup) {
+        label.finalY -= bottomOverflow;
       }
     }
   }
