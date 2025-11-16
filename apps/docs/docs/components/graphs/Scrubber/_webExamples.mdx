@@ -263,7 +263,23 @@ function HiddenBeaconLabelWhenIdle() {
 }
 ```
 
-In addition to scrubber beacon labels, users can be shown a label above Scrubber's line when scrubbing.
+In addition to scrubber beacon labels, users can be shown a label above Scrubber's line when scrubbing. You can use `labelProps` to customize this label.
+
+```jsx live
+<LineChart
+  enableScrubbing
+  height={{ base: 150, tablet: 200, desktop: 250 }}
+  series={[
+    {
+      id: 'prices',
+      data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+    },
+  ]}
+  showArea
+>
+  <Scrubber label={(dataIndex: number) => `Day ${dataIndex + 1}`} labelProps={{ elevation: 1 }} />
+</LineChart>
+```
 
 ### Line
 
