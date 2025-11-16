@@ -26,6 +26,7 @@ const PositionedLabel = memo<{
   seriesId: string;
   onDimensionsChange: (id: string, dimensions: LabelDimensions) => void;
   BeaconLabelComponent: ScrubberBeaconLabelComponent;
+  labelHorizontalOffset: number;
 }>(
   ({
     index,
@@ -36,10 +37,11 @@ const PositionedLabel = memo<{
     seriesId,
     onDimensionsChange,
     BeaconLabelComponent,
+    labelHorizontalOffset,
   }) => {
     const x = positions[index]?.x ?? 0;
     const y = positions[index]?.y ?? 0;
-    const dx = position === 'right' ? 16 : -16;
+    const dx = position === 'right' ? labelHorizontalOffset : -labelHorizontalOffset;
     const horizontalAlignment = position === 'right' ? 'left' : 'right';
 
     return (
@@ -63,7 +65,12 @@ export type ScrubberBeaconLabelGroupBaseProps = SharedProps & {
    * Minimum gap between labels in pixels.
    * @default 4
    */
-  minLabelGap?: number;
+  labelMinGap?: number;
+  /**
+   * Horizontal offset of labels from the scrubber line in pixels.
+   * @default 16
+   */
+  labelHorizontalOffset?: number;
 };
 
 export type ScrubberBeaconLabelGroupProps = ScrubberBeaconLabelGroupBaseProps & {
@@ -75,7 +82,12 @@ export type ScrubberBeaconLabelGroupProps = ScrubberBeaconLabelGroupBaseProps & 
 };
 
 export const ScrubberBeaconLabelGroup = memo<ScrubberBeaconLabelGroupProps>(
-  ({ labels, minLabelGap = 4, BeaconLabelComponent = DefaultScrubberBeaconLabel }) => {
+  ({
+    labels,
+    labelMinGap = 4,
+    labelHorizontalOffset = 16,
+    BeaconLabelComponent = DefaultScrubberBeaconLabel,
+  }) => {
     const { getSeries, getSeriesData, getXScale, getYScale, getXAxis, series, drawingArea } =
       useCartesianChartContext();
     const { scrubberPosition } = useScrubberContext();
@@ -202,7 +214,7 @@ export const ScrubberBeaconLabelGroup = memo<ScrubberBeaconLabelGroupProps>(
         dimensions,
         drawingArea,
         maxLabelHeight,
-        minLabelGap,
+        labelMinGap,
       );
 
       // Return final positions (strategy calculated separately)
@@ -211,7 +223,7 @@ export const ScrubberBeaconLabelGroup = memo<ScrubberBeaconLabelGroupProps>(
         x: pos.x,
         y: yPositions.get(pos.id) ?? pos.desiredY, // Use Y from collision resolution
       }));
-    }, [seriesInfo, dataIndex, dataX, xScale, labelDimensions, drawingArea, minLabelGap]);
+    }, [seriesInfo, dataIndex, dataX, xScale, labelDimensions, drawingArea, labelMinGap]);
 
     const currentPosition = useMemo(() => {
       if (!xScale || dataX === undefined) return 'right';
@@ -219,8 +231,8 @@ export const ScrubberBeaconLabelGroup = memo<ScrubberBeaconLabelGroupProps>(
       const pixelX = getPointOnScale(dataX, xScale);
       const maxWidth = Math.max(...Object.values(labelDimensions).map((dim) => dim.width));
 
-      return getLabelPosition(pixelX, maxWidth, drawingArea, 16);
-    }, [dataX, xScale, labelDimensions, drawingArea]);
+      return getLabelPosition(pixelX, maxWidth, drawingArea, labelHorizontalOffset);
+    }, [dataX, xScale, labelDimensions, drawingArea, labelHorizontalOffset]);
 
     return seriesInfo.map((info, index) => {
       const labelInfo = labels.find((label) => label.id === info.id);
@@ -232,6 +244,7 @@ export const ScrubberBeaconLabelGroup = memo<ScrubberBeaconLabelGroupProps>(
           color={labelInfo.color}
           index={index}
           label={labelInfo.label}
+          labelHorizontalOffset={labelHorizontalOffset}
           onDimensionsChange={handleDimensionsChange}
           position={currentPosition}
           positions={allLabelPositions}

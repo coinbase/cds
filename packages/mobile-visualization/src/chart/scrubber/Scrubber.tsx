@@ -37,7 +37,7 @@ import {
 } from './ScrubberBeaconLabelGroup';
 
 export type ScrubberBaseProps = SharedProps &
-  Pick<ScrubberBeaconLabelGroupBaseProps, 'minLabelGap'> & {
+  Pick<ScrubberBeaconLabelGroupBaseProps, 'labelMinGap' | 'labelHorizontalOffset'> & {
     /**
      * Array of series IDs to highlight when scrubbing with scrubber beacons.
      * By default, all series will be highlighted.
@@ -109,7 +109,8 @@ export const Scrubber = memo(
         LineComponent,
         hideOverlay,
         overlayOffset = 2,
-        minLabelGap,
+        labelMinGap,
+        labelHorizontalOffset,
         testID,
         idlePulse,
         beaconTransitions,
@@ -293,6 +294,7 @@ export const Scrubber = memo(
                     height: chartHeight - 32,
                   },
                 }}
+                stroke={lineStroke}
               />
             </Group>
           )}
@@ -311,8 +313,9 @@ export const Scrubber = memo(
           {scrubberBeaconLabels.length > 0 && (
             <ScrubberBeaconLabelGroup
               BeaconLabelComponent={BeaconLabelComponent}
+              labelHorizontalOffset={labelHorizontalOffset}
+              labelMinGap={labelMinGap}
               labels={scrubberBeaconLabels}
-              minLabelGap={minLabelGap}
             />
           )}
         </Group>
