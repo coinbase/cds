@@ -170,7 +170,7 @@ export const calculateLabelYPositions = (
   dimensions: LabelDimension[],
   drawingArea: Rect,
   labelHeight: number,
-  minGap: number = 4,
+  minGap: number,
 ): Map<string, number> => {
   'worklet';
 

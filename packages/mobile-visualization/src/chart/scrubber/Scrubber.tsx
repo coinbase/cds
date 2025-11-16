@@ -30,29 +30,33 @@ import {
 
 import { ScrubberBeacon, type ScrubberBeaconProps, type ScrubberBeaconRef } from './ScrubberBeacon';
 import { ScrubberBeaconLabel, type ScrubberBeaconLabelProps } from './ScrubberBeaconLabel';
-import { ScrubberBeaconLabelGroup } from './ScrubberBeaconLabelGroup';
+import {
+  ScrubberBeaconLabelGroup,
+  type ScrubberBeaconLabelGroupBaseProps,
+} from './ScrubberBeaconLabelGroup';
 
-export type ScrubberBaseProps = SharedProps & {
-  /**
-   * Array of series IDs to highlight when scrubbing with scrubber beacons.
-   * By default, all series will be highlighted.
-   */
-  seriesIds?: string[];
-  /**
-   * Hides the scrubber line
-   */
-  hideLine?: boolean;
-  /**
-   * Hides the overlay rect which obscures data beyond the scrubber position.
-   */
-  hideOverlay?: boolean;
-  /**
-   * Offset of the overlay rect relative to the drawing area.
-   * Useful for when scrubbing over lines, where the stroke width would cause part of the line to be visible.
-   * @default 2
-   */
-  overlayOffset?: number;
-};
+export type ScrubberBaseProps = SharedProps &
+  Pick<ScrubberBeaconLabelGroupBaseProps, 'minLabelGap'> & {
+    /**
+     * Array of series IDs to highlight when scrubbing with scrubber beacons.
+     * By default, all series will be highlighted.
+     */
+    seriesIds?: string[];
+    /**
+     * Hides the scrubber line
+     */
+    hideLine?: boolean;
+    /**
+     * Hides the overlay rect which obscures data beyond the scrubber position.
+     */
+    hideOverlay?: boolean;
+    /**
+     * Offset of the overlay rect relative to the drawing area.
+     * Useful for when scrubbing over lines, where the stroke width would cause part of the line to be visible.
+     * @default 2
+     */
+    overlayOffset?: number;
+  };
 
 export type ScrubberProps = ScrubberBaseProps &
   Pick<ScrubberBeaconProps, 'idlePulse'> & {
@@ -107,6 +111,7 @@ export const Scrubber = memo(
         LineComponent,
         hideOverlay,
         overlayOffset = 2,
+        minLabelGap,
         testID,
         idlePulse,
         beaconTransitions,
@@ -306,7 +311,7 @@ export const Scrubber = memo(
             />
           ))}
           {scrubberBeaconLabels.length > 0 && (
-            <ScrubberBeaconLabelGroup labels={scrubberBeaconLabels} />
+            <ScrubberBeaconLabelGroup labels={scrubberBeaconLabels} minLabelGap={minLabelGap} />
           )}
         </Group>
       );
