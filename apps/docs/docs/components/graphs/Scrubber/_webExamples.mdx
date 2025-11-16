@@ -112,8 +112,6 @@ Setting `idlePulse` to `true` will cause the scrubber beacons to pulse when the 
 </LineChart>
 ```
 
-### With Imperative Handle
-
 You can also use the imperative handle to pulse the scrubber beacons programmatically.
 
 ```jsx live
@@ -183,6 +181,7 @@ function CustomBeaconLabel() {
     return (
       <DefaultScrubberBeaconLabel
         {...props}
+        seriesId={seriesId}
         color="var(--color-bg)"
         background={color}
         label={percentageLabel}

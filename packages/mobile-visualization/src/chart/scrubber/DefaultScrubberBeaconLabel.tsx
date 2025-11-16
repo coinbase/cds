@@ -11,7 +11,7 @@ const labelHorizontalInset = 4;
 export type DefaultScrubberBeaconLabelProps = ScrubberBeaconLabelProps &
   Pick<
     ChartTextProps,
-    'background' | 'elevation' | 'borderRadius' | 'font' | 'verticalAlignment' | 'inset'
+    'background' | 'elevation' | 'borderRadius' | 'font' | 'verticalAlignment' | 'inset' | 'opacity'
   >;
 
 /**

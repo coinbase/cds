@@ -45,7 +45,8 @@ All series will be scrubbed by default. You can set `seriesIds` to show only spe
 
 ## Labels
 
-Setting `label` on a series will display a label above the scrubber beacon.
+Setting `label` on a series will display a label to the side of the scrubber beacon, and
+setting `label` on Scrubber displays a label above the scrubber line.
 
 ```jsx
 <LineChart
@@ -58,8 +59,9 @@ Setting `label` on a series will display a label above the scrubber beacon.
       label: 'Price',
     },
   ]}
+  showArea
 >
-  <Scrubber />
+  <Scrubber label={(dataIndex: number) => `Day ${dataIndex + 1}`} />
 </LineChart>
 ```
 
@@ -83,64 +85,192 @@ Setting the `idlePulse` prop will cause the scrubber beacons to pulse when the u
 </LineChart>
 ```
 
-### With Imperative Handle
-
 You can also use the imperative handle to pulse the scrubber beacons programmatically.
 
 ```jsx
-function ImperativeHandle() {
+const scrubberRef = useRef(null);
+
+return (
+  <VStack gap={2}>
+    <LineChart
+      enableScrubbing
+      height={150}
+      series={[
+        {
+          id: 'prices',
+          data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+        },
+      ]}
+      showYAxis
+      showArea
+      yAxis={{
+        showGrid: true,
+      }}
+    >
+      <Scrubber ref={scrubberRef} />
+    </LineChart>
+    <Button onPress={() => scrubberRef.current?.pulse()}>Pulse</Button>
+  </VStack>
+);
+```
+
+## Styling
+
+### Beacons
+
+Showcase custom beacons in a simplified manner.
+
+### Labels
+
+You can use `BeaconLabelComponent` to customize the labels for each scrubber beacon.
+
+```jsx
+function CustomBeaconLabel() {
   const theme = useTheme();
-  const scrubberRef = useRef(null);
+  // This custom component label shows the percentage value of the data at the scrubber position.
+  const MyScrubberBeaconLabel = memo(
+    ({ seriesId, color, label, ...props }: ScrubberBeaconLabelProps) => {
+      const { getSeriesData, series } = useCartesianChartContext();
+      const { scrubberPosition } = useScrubberContext();
+
+      const seriesData = useMemo(
+        () => getLineData(getSeriesData(seriesId)),
+        [getSeriesData, seriesId],
+      );
+
+      const maxDataLength = useMemo(
+        () =>
+          series?.reduce((max, s) => {
+            const seriesData = getSeriesData(s.id);
+            return Math.max(max, seriesData?.length ?? 0);
+          }, 0) ?? 0,
+        [series, getSeriesData],
+      );
+
+      const dataIndex = useDerivedValue(() => {
+        return scrubberPosition.value ?? Math.max(0, maxDataLength - 1);
+      }, [scrubberPosition, maxDataLength]);
+
+      const percentageLabel = useDerivedValue(() => {
+        if (seriesData !== undefined) {
+          const dataAtPosition = seriesData[dataIndex.value];
+          return `${unwrapAnimatedValue(label)} · ${dataAtPosition}%`;
+        }
+        return unwrapAnimatedValue(label);
+      }, [label, seriesData, dataIndex]);
+
+      return (
+        <DefaultScrubberBeaconLabel
+          {...props}
+          background={color}
+          color={theme.color.bg}
+          label={percentageLabel}
+          seriesId={seriesId}
+        />
+      );
+    },
+  );
+
   return (
-    <VStack gap={2}>
-      <LineChart
-        enableScrubbing
-        height={150}
-        series={[
-          {
-            id: 'priceA',
-            data: [2400, 1398, 9800, 3908, 4800, 3800, 4300],
-            color: theme.color.accentBoldBlue,
-          },
-          {
-            id: 'priceB',
-            data: [2000, 2491, 4501, 6049, 5019, 4930, 5910],
-            color: theme.color.accentBoldGreen,
-          },
-          {
-            id: 'priceC',
-            data: [1000, 4910, 2300, 5910, 3940, 2940, 1940],
-            color: theme.color.accentBoldPurple,
-          },
-          {
-            id: 'priceD',
-            data: [4810, 2030, 5810, 3940, 2940, 1940, 940],
-            color: theme.color.accentBoldYellow,
-          },
-        ]}
-        xAxis={{
-          range: ({ min, max }) => ({ min, max: max - 32 }),
-        }}
-        showYAxis
-        yAxis={{
-          domain: {
-            min: 0,
-          },
-          showGrid: true,
-          tickLabelFormatter: (value) => value.toLocaleString(),
-        }}
-      >
-        <Scrubber ref={scrubberRef} />
-      </LineChart>
-      <Button onClick={() => scrubberRef.current?.pulse()}>Pulse</Button>
-    </VStack>
+    <LineChart
+      enableScrubbing
+      showArea
+      showYAxis
+      areaType="dotted"
+      height={150}
+      series={[
+        {
+          id: 'Boston',
+          data: [25, 30, 35, 45, 60, 100],
+          color: `rgb(${theme.spectrum.green40})`,
+          label: 'Boston',
+        },
+        {
+          id: 'Miami',
+          data: [20, 25, 30, 35, 20, 0],
+          color: `rgb(${theme.spectrum.blue40})`,
+          label: 'Miami',
+        },
+        {
+          id: 'Denver',
+          data: [10, 15, 20, 25, 40, 0],
+          color: `rgb(${theme.spectrum.orange40})`,
+          label: 'Denver',
+        },
+        {
+          id: 'Phoenix',
+          data: [15, 10, 5, 0, 0, 0],
+          color: `rgb(${theme.spectrum.red40})`,
+          label: 'Phoenix',
+        },
+      ]}
+      yAxis={{
+        showGrid: true,
+      }}
+    >
+      <Scrubber BeaconLabelComponent={MyScrubberBeaconLabel} />
+    </LineChart>
   );
 }
 ```
 
-## Hide Overlay
+You can also use `BeaconLabelComponent` to hide labels when idle.
 
-By default, the scrubber will show an overlay to de-emphasize future data. You can hide this by setting `hideOverlay` to `true`.
+```jsx
+function HiddenBeaconLabelWhenIdle() {
+  const MyScrubberBeaconLabel = memo((props: ScrubberBeaconLabelProps) => {
+    const { scrubberPosition } = useScrubberContext();
+    const labelOpacity = useDerivedValue(
+      () => (scrubberPosition.value !== undefined ? 1 : 0),
+      [scrubberPosition],
+    );
+
+    return <DefaultScrubberBeaconLabel {...props} opacity={labelOpacity} />;
+  });
+  return (
+    <LineChart
+      enableScrubbing
+      showArea
+      height={150}
+      series={[
+        {
+          id: 'prices',
+          data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+          label: 'Price',
+        },
+      ]}
+    >
+      <Scrubber BeaconLabelComponent={MyScrubberBeaconLabel} />
+    </LineChart>
+  );
+}
+```
+
+In addition to scrubber beacon labels, users can be shown a label above Scrubber's line when scrubbing.
+
+### Line
+
+You can use `LineComponent` to customize Scrubber's line. In this case, as a user scrubs, they will see a solid line instead of dotted.
+
+```jsx
+<LineChart
+  enableScrubbing
+  height={150}
+  series={[
+    {
+      id: 'prices',
+      data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+    },
+  ]}
+  showArea
+>
+  <Scrubber LineComponent={SolidLine} />
+</LineChart>
+```
+
+### Overlay
+
+By default, Scrubber will show an overlay to de-emphasize future data. You can hide this by setting `hideOverlay` to `true`.
 
 ```jsx
 <LineChart

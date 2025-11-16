@@ -2,6 +2,7 @@ import { memo, useCallback, useMemo, useState } from 'react';
 import type { SharedValue } from 'react-native-reanimated';
 import { useDerivedValue } from 'react-native-reanimated';
 import type { SharedProps } from '@coinbase/cds-common/types';
+import type { AnimatedProp } from '@shopify/react-native-skia';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import type { ChartTextProps } from '../text';
@@ -21,7 +22,7 @@ export type ScrubberBeaconLabelProps = Pick<Series, 'color'> &
     /**
      * Label for the series.
      */
-    label: string;
+    label: AnimatedProp<string>;
     /**
      * Id of the series.
      */
@@ -33,7 +34,7 @@ const PositionedLabel = memo<{
   index: number;
   positions: SharedValue<LabelPosition[]>;
   position: SharedValue<ScrubberLabelPosition>;
-  label: string;
+  label: AnimatedProp<string>;
   color?: string;
   seriesId: string;
   onDimensionsChange: (id: string, dimensions: LabelDimensions) => void;

@@ -76,14 +76,12 @@ export const calculateLabelYPositions = (
   // Initial bounds fitting
   const minY = drawingArea.y + labelHeight / 2;
   const maxY = drawingArea.y + drawingArea.height - labelHeight / 2;
+  const requiredDistance = labelHeight + minGap;
 
   for (const label of sortedLabels) {
     // Clamp each label to the drawing area
     label.finalY = Math.max(minY, Math.min(maxY, label.preferredY));
   }
-
-  // Ensure no overlaps by processing labels in order
-  const requiredDistance = labelHeight + minGap;
 
   // First pass: push down any overlapping labels
   for (let i = 1; i < sortedLabels.length; i++) {
@@ -96,47 +94,93 @@ export const calculateLabelYPositions = (
     }
   }
 
-  // Check if labels overflow the bottom boundary
-  const lastLabel = sortedLabels[sortedLabels.length - 1];
-  const bottomOverflow = lastLabel.finalY + labelHeight / 2 - (drawingArea.y + drawingArea.height);
+  // Find collision groups - groups of labels that are tightly packed (gap < minGap between them)
+  const collisionGroups: LabelWithPosition[][] = [];
+  let currentGroup: LabelWithPosition[] = [sortedLabels[0]];
 
-  if (bottomOverflow > 0) {
-    // Find the collision group causing the overflow (labels that were moved from their preferred positions)
-    const collisionGroup: LabelWithPosition[] = [];
-    for (let i = sortedLabels.length - 1; i >= 0; i--) {
-      const label = sortedLabels[i];
-      // Include labels that were moved or are adjacent to moved labels
-      if (Math.abs(label.finalY - label.preferredY) > 0.01 || collisionGroup.length > 0) {
-        collisionGroup.unshift(label);
-      } else {
-        // Stop when we find a label at its preferred position with space below it
-        break;
-      }
+  for (let i = 1; i < sortedLabels.length; i++) {
+    const prev = sortedLabels[i - 1];
+    const current = sortedLabels[i];
+    const gap = current.finalY - prev.finalY - labelHeight;
+
+    if (gap < minGap + 0.01) {
+      // Labels are touching or very close - part of same collision group
+      currentGroup.push(current);
+    } else {
+      // Gap is large enough - start new group
+      collisionGroups.push(currentGroup);
+      currentGroup = [current];
+    }
+  }
+  collisionGroups.push(currentGroup);
+
+  // Process each collision group - optimize positioning to minimize displacement
+  for (const group of collisionGroups) {
+    if (group.length === 1) {
+      // Single label, already at best position
+      continue;
     }
 
-    // Calculate total space needed for collision group
-    const groupTotalNeeded =
-      collisionGroup.length * labelHeight + (collisionGroup.length - 1) * minGap;
-    const firstLabel = collisionGroup[0];
-    const availableSpace =
-      drawingArea.y + drawingArea.height - (firstLabel.finalY - labelHeight / 2);
+    const groupLastLabel = group[group.length - 1];
+    const groupFirstLabel = group[0];
+    const groupOverflow =
+      groupLastLabel.finalY + labelHeight / 2 - (drawingArea.y + drawingArea.height);
 
-    if (groupTotalNeeded > availableSpace) {
-      // Not enough space - compress gaps within collision group
-      const compressedGap = Math.max(
-        1,
-        (availableSpace - collisionGroup.length * labelHeight) /
-          Math.max(1, collisionGroup.length - 1),
-      );
-      let currentY = firstLabel.finalY;
-      for (const label of collisionGroup) {
-        label.finalY = currentY;
-        currentY += labelHeight + compressedGap;
+    // Calculate the ideal center point for this group
+    const groupPreferredCenter =
+      group.reduce((sum, label) => sum + label.preferredY, 0) / group.length;
+    const groupTotalNeeded = group.length * labelHeight + (group.length - 1) * minGap;
+
+    if (groupOverflow <= 0) {
+      // Group fits, but let's center it better if possible
+      // Calculate how much we can shift up/down to center around preferred positions
+      const currentCenter = (groupFirstLabel.finalY + groupLastLabel.finalY) / 2;
+      const desiredShift = groupPreferredCenter - currentCenter;
+
+      // Calculate max shift in each direction
+      const maxShiftUp = groupFirstLabel.finalY - minY;
+      const maxShiftDown = maxY - groupLastLabel.finalY;
+
+      // Apply the shift, constrained by boundaries
+      const actualShift = Math.max(-maxShiftUp, Math.min(maxShiftDown, desiredShift));
+
+      if (Math.abs(actualShift) > 0.01) {
+        for (const label of group) {
+          label.finalY += actualShift;
+        }
       }
     } else {
-      // Enough space - shift only the collision group up to fit
-      for (const label of collisionGroup) {
-        label.finalY -= bottomOverflow;
+      // Group overflows - need to adjust
+      const groupStartY = groupFirstLabel.finalY - labelHeight / 2;
+      const availableSpace = drawingArea.y + drawingArea.height - groupStartY;
+      const maxShiftUp = groupFirstLabel.finalY - minY;
+
+      if (maxShiftUp >= groupOverflow) {
+        // Can shift entire group up to fit
+        for (const label of group) {
+          label.finalY -= groupOverflow;
+        }
+      } else if (groupTotalNeeded <= availableSpace) {
+        // Can't shift enough, but there's room - redistribute with proper spacing
+        let currentY = Math.max(minY, groupFirstLabel.finalY - maxShiftUp);
+        const gap = (availableSpace - group.length * labelHeight) / Math.max(1, group.length - 1);
+        for (const label of group) {
+          label.finalY = currentY;
+          currentY += labelHeight + gap;
+        }
+      } else {
+        // Not enough space even with compression - compress gaps and fit to bottom
+        const compressedGap = Math.max(
+          1,
+          (availableSpace - group.length * labelHeight) / Math.max(1, group.length - 1),
+        );
+        // Position so last label is at maxY
+        let currentY = maxY - (group.length - 1) * (labelHeight + compressedGap);
+        currentY = Math.max(minY, currentY);
+        for (const label of group) {
+          label.finalY = currentY;
+          currentY += labelHeight + compressedGap;
+        }
       }
     }
   }

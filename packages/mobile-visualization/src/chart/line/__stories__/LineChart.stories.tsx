@@ -38,8 +38,11 @@ import { useCartesianChartContext } from '../../ChartProvider';
 import { PeriodSelector, PeriodSelectorActiveIndicator } from '../../PeriodSelector';
 import { Point } from '../../Point';
 import { Scrubber, type ScrubberRef } from '../../scrubber';
+import { DefaultScrubberBeaconLabel } from '../../scrubber/DefaultScrubberBeaconLabel';
+import type { ScrubberBeaconLabelProps } from '../../scrubber/ScrubberBeaconLabelGroup';
 import {
   type AxisBounds,
+  getLineData,
   getPointOnSerializableScale,
   type Transition,
   unwrapAnimatedValue,
@@ -1836,6 +1839,51 @@ function ForecastAssetPrice() {
 }
 
 function ImperativeHandle() {
+  const theme = useTheme();
+  // This custom component label shows the percentage value of the data at the scrubber position.
+  const MyScrubberBeaconLabel = memo(
+    ({ seriesId, color, label, ...props }: ScrubberBeaconLabelProps) => {
+      const { getSeriesData, series } = useCartesianChartContext();
+      const { scrubberPosition } = useScrubberContext();
+
+      const seriesData = useMemo(
+        () => getLineData(getSeriesData(seriesId)),
+        [getSeriesData, seriesId],
+      );
+
+      const maxDataLength = useMemo(
+        () =>
+          series?.reduce((max, s) => {
+            const seriesData = getSeriesData(s.id);
+            return Math.max(max, seriesData?.length ?? 0);
+          }, 0) ?? 0,
+        [series, getSeriesData],
+      );
+
+      const dataIndex = useDerivedValue(() => {
+        return scrubberPosition.value ?? Math.max(0, maxDataLength - 1);
+      }, [scrubberPosition, maxDataLength]);
+
+      const percentageLabel = useDerivedValue(() => {
+        if (seriesData !== undefined) {
+          const dataAtPosition = seriesData[dataIndex.value];
+          return `${unwrapAnimatedValue(label)} · ${dataAtPosition}%`;
+        }
+        return unwrapAnimatedValue(label);
+      }, [label, seriesData, dataIndex]);
+
+      return (
+        <DefaultScrubberBeaconLabel
+          {...props}
+          background={color}
+          color={theme.color.bg}
+          label={percentageLabel}
+          seriesId={seriesId}
+        />
+      );
+    },
+  );
+
   return (
     <LineChart
       enableScrubbing
@@ -1847,25 +1895,25 @@ function ImperativeHandle() {
         {
           id: 'Boston',
           data: [25, 30, 35, 45, 60, 100],
-          color: 'rgb(var(--green40))',
+          color: `rgb(${theme.spectrum.green40})`,
           label: 'Boston',
         },
         {
           id: 'Miami',
           data: [20, 25, 30, 35, 20, 0],
-          color: 'rgb(var(--blue40))',
+          color: `rgb(${theme.spectrum.blue40})`,
           label: 'Miami',
         },
         {
           id: 'Denver',
           data: [10, 15, 20, 25, 40, 0],
-          color: 'rgb(var(--orange40))',
+          color: `rgb(${theme.spectrum.orange40})`,
           label: 'Denver',
         },
         {
           id: 'Phoenix',
           data: [15, 10, 5, 0, 0, 0],
-          color: 'rgb(var(--red40))',
+          color: `rgb(${theme.spectrum.red40})`,
           label: 'Phoenix',
         },
       ]}
@@ -1873,7 +1921,7 @@ function ImperativeHandle() {
         showGrid: true,
       }}
     >
-      <Scrubber />
+      <Scrubber BeaconLabelComponent={MyScrubberBeaconLabel} />
     </LineChart>
   );
 }
@@ -1959,7 +2007,7 @@ function ExampleNavigator() {
         ),
       },
       {
-        title: 'Imperative Handle',
+        title: 'Imperative Handle 2',
         component: <ImperativeHandle />,
       },
       {
