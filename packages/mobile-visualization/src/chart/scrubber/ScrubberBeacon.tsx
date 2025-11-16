@@ -44,26 +44,55 @@ export type ScrubberBeaconBaseProps = SharedProps & {
    * Filter to only show dot for specific series (used for hover-based positioning).
    */
   seriesId?: string;
-};
-
-export type ScrubberBeaconProps = ScrubberBeaconBaseProps & {
   /**
    * Color of the beacon point.
    * If not provided, uses the series color.
+   * Gradient overrides this property.
    */
   color?: string;
   /**
    * Gradient configuration.
-   * When provided, the beacon color is evaluated based on the data value.
+   * When provided, this overrides color.
    */
   gradient?: GradientDefinition;
+  /**
+   * Opacity of the beacon.
+   * @default 1
+   */
+  opacity?: number;
   /**
    * Pulse the scrubber beacon while it is at rest.
    */
   idlePulse?: boolean;
+};
+
+/**
+ * By default, the beacon position is determined by the scrubber context.
+ */
+export type ContextPositionedBeaconProps = ScrubberBeaconBaseProps & {
+  dataX?: never;
+  dataY?: never;
+};
+
+/**
+ * You can also provide direct X and Y coordinates for positioning.
+ */
+export type DirectPositionedBeaconProps = ScrubberBeaconBaseProps & {
+  /**
+   * Direct X coordinate for positioning.
+   * When provided, dataY must also be provided.
+   */
+  dataX: number;
+  /**
+   * Direct Y coordinate for positioning.
+   * When provided, dataX must also be provided.
+   */
+  dataY: number;
+};
+
+export type ScrubberBeaconProps = (ContextPositionedBeaconProps | DirectPositionedBeaconProps) & {
   /**
    * Transition configuration for beacon animations.
-   * Allows customization of both position update animations and pulse animations.
    *
    * @example
    * // Custom update and pulse animations
@@ -79,8 +108,9 @@ export type ScrubberBeaconProps = ScrubberBeaconBaseProps & {
      */
     update?: Transition;
     /**
-     * Transition used for the pulse animation (0->peak->0).
-     * This duration represents a single pulse cycle.
+     * Transition used for the pulse animation.
+     * When using 'idlePulse', this transition is applied in both directions (0->peak->0).
+     * When using 'pulse' from a ref, this transition is applied in a single direction (peak->0).
      * @default { type: 'timing', duration: 1000 }
      */
     pulse?: Transition;
@@ -89,7 +119,20 @@ export type ScrubberBeaconProps = ScrubberBeaconBaseProps & {
 
 export const ScrubberBeacon = memo(
   forwardRef<ScrubberBeaconRef, ScrubberBeaconProps>(
-    ({ seriesId, color, gradient: gradientProp, testID, idlePulse, transitions }, ref) => {
+    (
+      {
+        seriesId,
+        dataX: dataXProp,
+        dataY: dataYProp,
+        color,
+        gradient: gradientProp,
+        opacity = 1,
+        testID,
+        idlePulse,
+        transitions,
+      },
+      ref,
+    ) => {
       const theme = useTheme();
       const {
         series,
@@ -159,16 +202,28 @@ export const ScrubberBeacon = memo(
       }, [scrubberPosition, maxDataLength]);
 
       const dataX = useDerivedValue(() => {
+        // Use direct prop if provided (discriminated union ensures both are present)
+        if (dataXProp !== undefined && !isNaN(dataXProp)) {
+          return dataXProp;
+        }
+
+        // Fall back to context-based resolution
         if (xAxis?.data && Array.isArray(xAxis.data) && xAxis.data[dataIndex.value] !== undefined) {
           const dataValue = xAxis.data[dataIndex.value];
           return typeof dataValue === 'string' ? dataIndex.value : dataValue;
         }
         return dataIndex.value;
-      }, [xAxis, dataIndex]);
+      }, [dataXProp, xAxis, dataIndex]);
 
       // todo: we might not want to show a scrubber if the max data point for this one is less than some of the other series
       // the solution would be to pass in max data index from Scrubber
       const idleDataX = useMemo(() => {
+        // Use direct prop if provided (discriminated union ensures both are present)
+        if (dataXProp !== undefined && !isNaN(dataXProp)) {
+          return dataXProp;
+        }
+
+        // Fall back to last data point
         if (
           xAxis?.data &&
           Array.isArray(xAxis.data) &&
@@ -178,9 +233,15 @@ export const ScrubberBeacon = memo(
           return typeof dataValue === 'string' ? maxDataLength - 1 : dataValue;
         }
         return maxDataLength - 1;
-      }, [xAxis, maxDataLength]);
+      }, [dataXProp, xAxis, maxDataLength]);
 
       const idleDataY = useMemo(() => {
+        // Use direct prop if provided (discriminated union ensures both are present)
+        if (dataYProp !== undefined && !isNaN(dataYProp)) {
+          return dataYProp;
+        }
+
+        // Fall back to last data point
         if (sourceData && sourceData[maxDataLength - 1] !== undefined) {
           const dataValue = sourceData[maxDataLength - 1];
           if (Array.isArray(dataValue)) {
@@ -189,9 +250,15 @@ export const ScrubberBeacon = memo(
             return dataValue;
           }
         }
-      }, [sourceData, maxDataLength]);
+      }, [dataYProp, sourceData, maxDataLength]);
 
       const dataY = useDerivedValue(() => {
+        // Use direct prop if provided (discriminated union ensures both are present)
+        if (dataYProp !== undefined && !isNaN(dataYProp)) {
+          return dataYProp;
+        }
+
+        // Fall back to context-based resolution
         if (xScale && yScale) {
           if (
             sourceData &&
@@ -211,7 +278,7 @@ export const ScrubberBeacon = memo(
             }
           }
         }
-      }, [sourceData, scrubberPosition, xScale, yScale]);
+      }, [dataYProp, sourceData, scrubberPosition, xScale, yScale, dataIndex]);
 
       const pulseOpacity = useSharedValue(0);
 
@@ -356,8 +423,8 @@ export const ScrubberBeacon = memo(
           scrubberPoint.value.y >= drawingArea.y &&
           scrubberPoint.value.y <= drawingArea.y + drawingArea.height;
 
-        return isWithinBounds ? 1 : 0;
-      }, [isIdleState, scrubberPoint, drawingArea]);
+        return (isWithinBounds ? 1 : 0) * opacity;
+      }, [isIdleState, scrubberPoint, drawingArea, opacity]);
 
       const idleStateOpacity = useDerivedValue(() => {
         if (!isIdleState.value) return 0;
@@ -370,8 +437,8 @@ export const ScrubberBeacon = memo(
           animatedIdleStatePoint.value.y >= drawingArea.y &&
           animatedIdleStatePoint.value.y <= drawingArea.y + drawingArea.height;
 
-        return isWithinBounds ? 1 : 0;
-      }, [isIdleState, animatedIdleStatePoint, drawingArea]);
+        return (isWithinBounds ? 1 : 0) * opacity;
+      }, [isIdleState, animatedIdleStatePoint, drawingArea, opacity]);
 
       return (
         <>

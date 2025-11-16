@@ -3,7 +3,19 @@ import type { SharedProps } from '@coinbase/cds-common/types';
 import { m as motion, type Transition, useAnimate } from 'framer-motion';
 
 import { useCartesianChartContext } from '../ChartProvider';
-import { defaultTransition, projectPoint, useScrubberContext } from '../utils';
+import {
+  defaultTransition,
+  evaluateGradientAtValue,
+  getGradientConfig,
+  type GradientDefinition,
+  projectPoint,
+  useScrubberContext,
+} from '../utils';
+
+const radius = 5;
+const glowRadius = 10;
+const pulseRadius = 15;
+const strokeWidth = 2;
 
 const defaultPulseTransition: Transition = {
   duration: 1,
@@ -18,21 +30,7 @@ export type ScrubberBeaconRef = {
   pulse: () => void;
 };
 
-const radius = 5;
-const glowRadius = 10;
-const pulseRadius = 15;
-
-export type ScrubberBeaconProps = SharedProps & {
-  /**
-   * Optional data X coordinate to position the beacon.
-   * If not provided, uses the scrubber position from context.
-   */
-  dataX?: number;
-  /**
-   * Optional data Y coordinate to position the beacon.
-   * If not provided, looks up the Y value from series data at scrubber position.
-   */
-  dataY?: number;
+export type ScrubberBeaconBaseProps = SharedProps & {
   /**
    * Filter to only show dot for specific series (used for hover-based positioning).
    */
@@ -40,8 +38,14 @@ export type ScrubberBeaconProps = SharedProps & {
   /**
    * Color of the beacon point.
    * If not provided, uses the series color.
+   * Gradient overrides this property.
    */
   color?: string;
+  /**
+   * Gradient configuration.
+   * When provided, this overrides color.
+   */
+  gradient?: GradientDefinition;
   /**
    * Opacity of the beacon.
    * @default 1
@@ -51,17 +55,35 @@ export type ScrubberBeaconProps = SharedProps & {
    * Pulse the scrubber beacon while it is at rest.
    */
   idlePulse?: boolean;
+};
+
+/**
+ * By default, the beacon position is determined by the scrubber context.
+ */
+export type ContextPositionedBeaconProps = ScrubberBeaconBaseProps & {
+  dataX?: never;
+  dataY?: never;
+};
+
+/**
+ * You can also provide direct X and Y coordinates for positioning.
+ */
+export type DirectPositionedBeaconProps = ScrubberBeaconBaseProps & {
   /**
-   * Custom className for styling.
+   * Direct X coordinate for positioning.
+   * When provided, dataY must also be provided.
    */
-  className?: string;
+  dataX: number;
   /**
-   * Custom inline styles.
+   * Direct Y coordinate for positioning.
+   * When provided, dataX must also be provided.
    */
-  style?: React.CSSProperties;
+  dataY: number;
+};
+
+export type ScrubberBeaconProps = (ContextPositionedBeaconProps | DirectPositionedBeaconProps) & {
   /**
    * Transition configuration for beacon animations.
-   * Allows customization of both position update animations and pulse animations.
    *
    * @example
    * // Timing-based transitions (pulse runs for 1s out + 1s back = 2s total cycle)
@@ -85,14 +107,20 @@ export type ScrubberBeaconProps = SharedProps & {
     update?: Transition;
     /**
      * Transition used for the pulse animation.
-     * For imperative pulses (via ref), animates a single fade (0.1->0).
-     * For continuous idle pulses, this transition is applied twice in sequence using repeatType: "reverse",
-     * creating a full cycle (0.1->0->0.1) where each leg uses the configured transition.
-     * Works with both timing-based (duration) and physics-based (spring) transitions.
+     * When using 'idlePulse', this transition is applied in both directions (0->peak->0).
+     * When using 'pulse' from a ref, this transition is applied in a single direction (peak->0).
      * @default { duration: 1, ease: 'easeInOut' }
      */
     pulse?: Transition;
   };
+  /**
+   * Custom className for styling.
+   */
+  className?: string;
+  /**
+   * Custom inline styles.
+   */
+  style?: React.CSSProperties;
 };
 
 export const ScrubberBeacon = memo(
@@ -103,12 +131,13 @@ export const ScrubberBeacon = memo(
         dataX: dataXProp,
         dataY: dataYProp,
         color,
+        gradient,
         testID,
         idlePulse,
         opacity = 1,
+        transitions,
         className,
         style,
-        transitions,
       },
       ref,
     ) => {
@@ -231,13 +260,35 @@ export const ScrubberBeacon = memo(
         [pulseTransition],
       );
 
+      const pointColor = useMemo(() => {
+        if (color) return color;
+
+        // Evaluate gradient if present
+        const gradientToEvaluate = gradient ?? targetSeries?.gradient;
+        if (gradientToEvaluate && xScale && yScale) {
+          const gradientScale = gradientToEvaluate.axis === 'x' ? xScale : yScale;
+          const stops = getGradientConfig(gradientToEvaluate, xScale, yScale);
+
+          if (stops) {
+            const axis = gradientToEvaluate.axis ?? 'y';
+            const dataValue = axis === 'x' ? dataX : dataY;
+
+            if (dataValue !== undefined) {
+              const evaluatedColor = evaluateGradientAtValue(stops, dataValue, gradientScale);
+              if (evaluatedColor) return evaluatedColor;
+            }
+          }
+        }
+
+        return targetSeries?.color ?? 'var(--color-fgPrimary)';
+      }, [color, gradient, dataX, dataY, xScale, yScale, targetSeries]);
+
+      const shouldPulse = animationEnabled && isIdleState && idlePulse;
+      const effectiveOpacity = isWithinDrawingArea ? opacity : 0;
+
       if (!pixelCoordinate) {
         return;
       }
-
-      const pointColor = color ?? targetSeries?.color ?? 'var(--color-fgPrimary)';
-      const shouldPulse = animationEnabled && isIdleState && idlePulse;
-      const effectiveOpacity = isWithinDrawingArea ? opacity : 0;
 
       if (animationEnabled && isIdleState) {
         return (
@@ -292,7 +343,7 @@ export const ScrubberBeacon = memo(
               initial={false}
               r={radius}
               stroke="var(--color-bg)"
-              strokeWidth={2}
+              strokeWidth={strokeWidth}
               style={style}
               transition={updateTransition}
             />
