@@ -16,7 +16,13 @@ import { DefaultScrubberBeaconLabel } from './DefaultScrubberBeaconLabel';
 
 export type ScrubberBeaconLabelProps = Pick<Series, 'color'> &
   Pick<ChartTextProps, 'x' | 'y' | 'dx' | 'horizontalAlignment' | 'onDimensionsChange'> & {
+    /**
+     * Label for the series.
+     */
     label: string;
+    /**
+     * Id of the series.
+     */
     seriesId: Series['id'];
   };
 export type ScrubberBeaconLabelComponent = React.FC<ScrubberBeaconLabelProps>;
@@ -64,6 +70,9 @@ const PositionedLabel = memo<{
 );
 
 export type ScrubberBeaconLabelGroupBaseProps = SharedProps & {
+  /**
+   * Labels to be displayed.
+   */
   labels: Array<Pick<ScrubberBeaconLabelProps, 'seriesId' | 'label' | 'color'>>;
   /**
    * Minimum gap between labels in pixels.

@@ -1,25 +1,9 @@
 import type { Rect } from '@coinbase/cds-common/types';
 
-export type ScrubberBeaconLabelGroupLabel = {
-  /**
-   * Id of the label.
-   */
-  id: string;
-  /**
-   * Label to be displayed.
-   */
-  label: string;
-  /**
-   * Color of the label.
-   * @default theme.color.fgPrimary
-   */
-  color?: string;
-};
-
 export type ScrubberLabelPosition = 'left' | 'right';
 
 export type LabelPosition = {
-  id: string;
+  seriesId: string;
   x: number;
   y: number;
 };
@@ -52,13 +36,13 @@ export const getLabelPosition = (
 };
 
 type LabelWithPosition = {
-  id: string;
+  seriesId: string;
   preferredY: number;
   finalY: number;
 };
 
 type LabelDimension = {
-  id: string;
+  seriesId: string;
   width: number;
   height: number;
   preferredX: number;
@@ -84,7 +68,7 @@ export const calculateLabelYPositions = (
   const sortedLabels: LabelWithPosition[] = [...dimensions]
     .sort((a, b) => a.preferredY - b.preferredY)
     .map((dim) => ({
-      id: dim.id,
+      seriesId: dim.seriesId,
       preferredY: dim.preferredY,
       finalY: dim.preferredY,
     }));
@@ -159,7 +143,7 @@ export const calculateLabelYPositions = (
 
   const result = new Map<string, number>();
   for (const label of sortedLabels) {
-    result.set(label.id, label.finalY);
+    result.set(label.seriesId, label.finalY);
   }
 
   return result;

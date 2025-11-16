@@ -27,7 +27,6 @@ import {
   getPointOnSerializableScale,
   useScrubberContext,
 } from '../utils';
-import type { ScrubberBeaconLabelGroupLabel } from '../utils/scrubber';
 
 import { ScrubberBeacon, type ScrubberBeaconProps, type ScrubberBeaconRef } from './ScrubberBeacon';
 import {
@@ -250,12 +249,12 @@ export const Scrubber = memo(
         [updateResolvedLabel],
       );
 
-      const scrubberBeaconLabels: Array<ScrubberBeaconLabelGroupLabel> = useMemo(
+      const scrubberBeaconLabels: ScrubberBeaconLabelGroupBaseProps['labels'] = useMemo(
         () =>
           filteredSeries
             .filter((s) => s.label !== undefined && s.label.length > 0)
             .map((s) => ({
-              id: s.id,
+              seriesId: s.id,
               label: s.label!,
               color: s.color,
             })),

@@ -72,7 +72,8 @@ All series will be scrubbed by default. You can set `seriesIds` to show only spe
 
 ## Labels
 
-Setting `label` on a series will display a label above the scrubber beacon.
+Setting `label` on a series will display a label to the side of the scrubber beacon, and
+setting `label` on Scrubber displays a label above the scrubber line.
 
 ```jsx live
 <LineChart
@@ -87,7 +88,7 @@ Setting `label` on a series will display a label above the scrubber beacon.
   ]}
   showArea
 >
-  <Scrubber />
+  <Scrubber label={(dataIndex: number) => `Day ${dataIndex + 1}`} />
 </LineChart>
 ```
 
@@ -151,7 +152,7 @@ You can use `BeaconLabelComponent` to customize the labels for each scrubber bea
 
 ```jsx live
 function CustomBeaconLabel() {
-  // This component flips the color and background props compared to a regular label
+  // This custom component label shows the percentage value of the data at the scrubber position.
   const MyScrubberBeaconLabel = memo(({ seriesId, color, label, ...props}: ScrubberBeaconLabelProps) => {
     const { getSeriesData, series } = useCartesianChartContext();
     const { scrubberPosition } = useScrubberContext();
@@ -232,7 +233,38 @@ function CustomBeaconLabel() {
 }
 ```
 
-todo: you can also adjust the label above the reference line here
+You can also use `BeaconLabelComponent` to hide labels when idle.
+
+```jsx live
+function HiddenBeaconLabelWhenIdle() {
+  const MyScrubberBeaconLabel = memo((props: ScrubberBeaconLabelProps) => {
+    const { scrubberPosition } = useScrubberContext();
+    const isScrubbing = scrubberPosition !== undefined;
+
+    return (
+      <DefaultScrubberBeaconLabel {...props} opacity={isScrubbing ? 1 : 0} />
+    );
+  })
+  return (
+    <LineChart
+      enableScrubbing
+      showArea
+      height={{ base: 150, tablet: 200, desktop: 250 }}
+      series={[
+        {
+          id: 'prices',
+          data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+          label: 'Price'
+        },
+      ]}
+    >
+      <Scrubber BeaconLabelComponent={MyScrubberBeaconLabel} />
+    </LineChart>
+  );
+}
+```
+
+In addition to scrubber beacon labels, users can be shown a label above Scrubber's line when scrubbing.
 
 ### Line
 
