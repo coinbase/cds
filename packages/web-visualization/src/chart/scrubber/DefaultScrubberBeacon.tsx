@@ -70,8 +70,8 @@ export const DefaultScrubberBeacon = memo(
         ref,
         () => ({
           pulse: () => {
-            // Only pulse when idle
-            if (isIdle && scope.current) {
+            // Only pulse when idle and idlePulse is not enabled
+            if (isIdle && !idlePulse && scope.current) {
               animate(
                 scope.current,
                 {
@@ -82,7 +82,7 @@ export const DefaultScrubberBeacon = memo(
             }
           },
         }),
-        [isIdle, scope, animate, pulseTransition],
+        [isIdle, idlePulse, scope, animate, pulseTransition],
       );
 
       // Create continuous pulse transition by repeating the base pulse transition in reverse

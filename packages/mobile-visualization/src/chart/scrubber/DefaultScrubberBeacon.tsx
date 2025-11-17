@@ -1,4 +1,4 @@
-import { forwardRef, memo, useEffect, useImperativeHandle, useMemo } from 'react';
+import { forwardRef, memo, useImperativeHandle, useMemo } from 'react';
 import {
   cancelAnimation,
   useAnimatedReaction,
@@ -61,10 +61,12 @@ export const DefaultScrubberBeacon = memo(
       );
 
       const pulseOpacity = useSharedValue(0);
-      const manualPulseTrigger = useSharedValue(0);
 
-      // Scrubber state point (actively scrubbing) - project data to pixels
-      const scrubberPoint = useDerivedValue(() => {
+      const animatedX = useSharedValue(0);
+      const animatedY = useSharedValue(0);
+
+      // Calculate the target point position - project data to pixels
+      const targetPoint = useDerivedValue(() => {
         if (!xScale || !yScale) return { x: 0, y: 0 };
         return projectPointWithSerializableScale({
           x: unwrapAnimatedValue(dataX),
@@ -74,79 +76,53 @@ export const DefaultScrubberBeacon = memo(
         });
       }, [dataX, dataY, xScale, yScale]);
 
-      // Animated position values for idle state point (the "follower")
-      const animatedIdleX = useSharedValue(0);
-      const animatedIdleY = useSharedValue(0);
-
-      // Calculate the target idle state point position (the "target") - project data to pixels
-      const targetIdleStatePoint = useDerivedValue(() => {
-        if (!xScale || !yScale) return { x: 0, y: 0 };
-        return projectPointWithSerializableScale({
-          x: unwrapAnimatedValue(dataX),
-          y: unwrapAnimatedValue(dataY),
-          xScale,
-          yScale,
-        });
-      }, [dataX, dataY, xScale, yScale]);
-
-      // Initialize animated idle position with current target position
-      useEffect(() => {
-        const targetPos = targetIdleStatePoint.value;
-        if (targetPos) {
-          animatedIdleX.value = targetPos.x;
-          animatedIdleY.value = targetPos.y;
-        }
-      }, [animatedIdleX, animatedIdleY, targetIdleStatePoint]);
-
-      // Animate idle state position changes when data updates
       useAnimatedReaction(
         () => {
-          return targetIdleStatePoint.value;
+          return { point: targetPoint.value, isIdle: unwrapAnimatedValue(isIdle) };
         },
-        (newPosition, previousPosition) => {
-          if (
-            newPosition &&
-            (!previousPosition ||
-              newPosition.x !== previousPosition.x ||
-              newPosition.y !== previousPosition.y)
-          ) {
-            if (!animate) {
-              // Snap immediately when animations are disabled
-              animatedIdleX.value = newPosition.x;
-              animatedIdleY.value = newPosition.y;
-            } else {
-              // Animate to new position using the update transition config
-              animatedIdleX.value = buildTransition(newPosition.x, updateTransition);
-              animatedIdleY.value = buildTransition(newPosition.y, updateTransition);
-            }
+        (current, previous) => {
+          // When animation is disabled, on initial render, or when we are starting,
+          // continuing, or finishing scrubbing we should immediately transition
+          if (!animate || previous === null || !previous.isIdle || !current.isIdle) {
+            animatedX.value = current.point.x;
+            animatedY.value = current.point.y;
+            return;
           }
+
+          animatedX.value = buildTransition(current.point.x, updateTransition);
+          animatedY.value = buildTransition(current.point.y, updateTransition);
         },
-        [targetIdleStatePoint, animate, updateTransition],
+        [animate, updateTransition],
       );
 
-      // Create animated idle state point using the animated values
-      const animatedIdleStatePoint = useDerivedValue(() => {
-        return { x: animatedIdleX.value, y: animatedIdleY.value };
-      }, [animatedIdleX, animatedIdleY]);
+      // Create animated point using the animated values
+      const animatedPoint = useDerivedValue(() => {
+        return { x: animatedX.value, y: animatedY.value };
+      }, [animatedX, animatedY]);
 
-      useImperativeHandle(ref, () => ({
-        pulse: () => {
-          // Increment trigger to cause a manual pulse
-          manualPulseTrigger.value += 1;
-        },
-      }));
+      useImperativeHandle(
+        ref,
+        () => ({
+          pulse: () => {
+            // Only trigger manual pulse when idlePulse is not enabled
+            if (!idlePulse) {
+              cancelAnimation(pulseOpacity);
+              pulseOpacity.value = 0.1;
+              pulseOpacity.value = withSequence(buildTransition(0, pulseTransition));
+            }
+          },
+        }),
+        [idlePulse, pulseOpacity, pulseTransition],
+      );
 
-      // Watch isIdle changes and control automatic pulse
+      // Watch idlePulse changes and control continuous pulse
       useAnimatedReaction(
-        () => ({ idle: unwrapAnimatedValue(isIdle), shouldAutoPulse: idlePulse }),
+        () => idlePulse,
         (current, previous) => {
-          'worklet';
           if (!animate) return;
 
-          const { idle, shouldAutoPulse } = current;
-
-          if (idle && shouldAutoPulse) {
-            // Start continuous pulse when idle
+          if (current) {
+            // Start continuous pulse when idlePulse is enabled
             pulseOpacity.value = withRepeat(
               withSequence(
                 buildTransition(0.1, pulseTransition),
@@ -156,63 +132,26 @@ export const DefaultScrubberBeacon = memo(
               false,
             );
           } else {
-            // Stop pulse when not idle or pulse disabled
+            // Stop pulse when idlePulse is disabled
             cancelAnimation(pulseOpacity);
-            pulseOpacity.value = buildTransition(0, pulseTransition);
+            pulseOpacity.value = 0;
           }
         },
-        [animate, idlePulse],
+        [animate, pulseTransition],
       );
 
-      // Watch manual pulse trigger
-      useAnimatedReaction(
-        () => manualPulseTrigger.value,
-        (current, previous) => {
-          'worklet';
-          if (current !== previous && unwrapAnimatedValue(isIdle) && animate) {
-            // Trigger a single manual pulse
-            cancelAnimation(pulseOpacity);
-            pulseOpacity.value = withSequence(
-              buildTransition(0.1, pulseTransition),
-              buildTransition(0, pulseTransition),
-            );
-          }
-        },
-        [animate],
-      );
-
-      const scrubberStateOpacity = useDerivedValue(() => {
-        if (unwrapAnimatedValue(isIdle)) return 0;
-        return 1;
-      }, [isIdle]);
-
-      const idleStateOpacity = useDerivedValue(() => {
+      const pulseVisibility = useDerivedValue(() => {
+        // Never pulse when scrubbing
         if (!unwrapAnimatedValue(isIdle)) return 0;
-        return 1;
-      }, [isIdle]);
+        return pulseOpacity.value;
+      }, [isIdle, pulseOpacity]);
 
       return (
         <>
-          <Group opacity={scrubberStateOpacity}>
-            <Circle c={scrubberPoint} color={color} opacity={0.15} r={glowRadius} />
-            <Circle c={scrubberPoint} color={theme.color.bg} r={radius + strokeWidth / 2} />
-            <Circle c={scrubberPoint} color={color} r={radius - strokeWidth / 2} />
-          </Group>
-          <Group opacity={idleStateOpacity}>
-            <Circle c={animatedIdleStatePoint} color={color} opacity={0.15} r={glowRadius} />
-            <Circle
-              c={animatedIdleStatePoint}
-              color={color}
-              opacity={pulseOpacity}
-              r={pulseRadius}
-            />
-            <Circle
-              c={animatedIdleStatePoint}
-              color={theme.color.bg}
-              r={radius + strokeWidth / 2}
-            />
-            <Circle c={animatedIdleStatePoint} color={color} r={radius - strokeWidth / 2} />
-          </Group>
+          <Circle c={animatedPoint} color={color} opacity={0.15} r={glowRadius} />
+          <Circle c={animatedPoint} color={color} opacity={pulseVisibility} r={pulseRadius} />
+          <Circle c={animatedPoint} color={theme.color.bg} r={radius + strokeWidth / 2} />
+          <Circle c={animatedPoint} color={color} r={radius - strokeWidth / 2} />
         </>
       );
     },
