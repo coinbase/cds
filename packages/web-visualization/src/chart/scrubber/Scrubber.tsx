@@ -43,7 +43,7 @@ export type ScrubberBeaconProps = SharedProps & {
   /**
    * Color of the series.
    */
-  color: string;
+  color?: string;
   /**
    * X coordinate in data space.
    */

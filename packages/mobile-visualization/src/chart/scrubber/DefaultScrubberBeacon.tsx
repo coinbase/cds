@@ -13,7 +13,7 @@ import { Circle, Group } from '@shopify/react-native-skia';
 import { useCartesianChartContext } from '../ChartProvider';
 import { unwrapAnimatedValue } from '../utils';
 import { projectPointWithSerializableScale } from '../utils/point';
-import { buildTransition, defaultTransition } from '../utils/transition';
+import { buildTransition, defaultTransition, type Transition } from '../utils/transition';
 
 import type { ScrubberBeaconProps, ScrubberBeaconRef } from './Scrubber';
 
@@ -22,8 +22,8 @@ const glowRadius = 10;
 const pulseRadius = 15;
 const strokeWidth = 2;
 
-const defaultPulseTransition = {
-  type: 'timing' as const,
+const defaultPulseTransition: Transition = {
+  type: 'timing',
   duration: 1000,
 };
 
@@ -31,7 +31,10 @@ export type DefaultScrubberBeaconProps = ScrubberBeaconProps;
 
 export const DefaultScrubberBeacon = memo(
   forwardRef<ScrubberBeaconRef, DefaultScrubberBeaconProps>(
-    ({ seriesId, color, dataX, dataY, isIdle, idlePulse, animate = true, transitions }, ref) => {
+    (
+      { seriesId, color: colorProp, dataX, dataY, isIdle, idlePulse, animate = true, transitions },
+      ref,
+    ) => {
       const theme = useTheme();
       const { getSeries, getXSerializableScale, getYSerializableScale } =
         useCartesianChartContext();
@@ -41,6 +44,11 @@ export const DefaultScrubberBeacon = memo(
       const yScale = useMemo(
         () => getYSerializableScale(targetSeries?.yAxisId),
         [getYSerializableScale, targetSeries?.yAxisId],
+      );
+
+      const color = useMemo(
+        () => colorProp ?? targetSeries?.color ?? theme.color.fgPrimary,
+        [colorProp, targetSeries?.color, theme.color.fgPrimary],
       );
 
       const updateTransition = useMemo(

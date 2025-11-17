@@ -97,7 +97,6 @@ import { TourStep } from '@coinbase/cds-web/tour/TourStep';
 import * as CDSTypography from '@coinbase/cds-web/typography';
 import * as CDSVisualizations from '@coinbase/cds-web/visualizations';
 import * as CDSChartComponents from '@coinbase/cds-web-visualization/chart';
-import { ScrubberBeacon } from '@coinbase/cds-web-visualization/chart/scrubber/ScrubberBeacon';
 import * as CDSSparklineComponents from '@coinbase/cds-web-visualization/sparkline';
 import { JSONCodeBlock } from '@site/src/components/page/JSONCodeBlock';
 import * as motion from 'framer-motion';
@@ -189,7 +188,6 @@ const ReactLiveScope: Record<string, unknown> = {
   // visualizations
   btcCandles,
   ...CDSChartComponents,
-  ScrubberBeacon,
   ...CDSVisualizations,
   ...CDSSparklineComponents,
   useSparklinePath,

@@ -26,7 +26,18 @@ export type DefaultScrubberBeaconProps = ScrubberBeaconProps;
 export const DefaultScrubberBeacon = memo(
   forwardRef<ScrubberBeaconRef, DefaultScrubberBeaconProps>(
     (
-      { seriesId, color, dataX, dataY, isIdle, idlePulse, transitions, className, style, testID },
+      {
+        seriesId,
+        color: colorProp,
+        dataX,
+        dataY,
+        isIdle,
+        idlePulse,
+        transitions,
+        className,
+        style,
+        testID,
+      },
       ref,
     ) => {
       const [scope, animate] = useAnimate();
@@ -35,6 +46,11 @@ export const DefaultScrubberBeacon = memo(
       const targetSeries = getSeries(seriesId);
       const xScale = getXScale();
       const yScale = getYScale(targetSeries?.yAxisId);
+
+      const color = useMemo(
+        () => colorProp ?? targetSeries?.color ?? 'var(--color-fgPrimary)',
+        [colorProp, targetSeries],
+      );
 
       const updateTransition = useMemo(
         () => transitions?.update ?? defaultTransition,

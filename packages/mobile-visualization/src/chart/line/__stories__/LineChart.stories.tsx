@@ -38,11 +38,8 @@ import { useCartesianChartContext } from '../../ChartProvider';
 import { PeriodSelector, PeriodSelectorActiveIndicator } from '../../PeriodSelector';
 import { Point } from '../../Point';
 import { Scrubber, type ScrubberRef } from '../../scrubber';
-import { DefaultScrubberBeaconLabel } from '../../scrubber/DefaultScrubberBeaconLabel';
-import type { ScrubberBeaconLabelProps } from '../../scrubber/ScrubberBeaconLabelGroup';
 import {
   type AxisBounds,
-  getLineData,
   getPointOnSerializableScale,
   type Transition,
   unwrapAnimatedValue,

@@ -22,10 +22,12 @@ import { m } from 'framer-motion';
 
 import {
   type AxisBounds,
+  DefaultScrubberBeacon,
   PeriodSelector,
   PeriodSelectorActiveIndicator,
   Point,
   Scrubber,
+  type ScrubberBeaconProps,
   type ScrubberRef,
   useCartesianChartContext,
   useScrubberContext,
@@ -33,7 +35,6 @@ import {
 import { Area, DottedArea, type DottedAreaProps, GradientArea } from '../../area';
 import { XAxis, YAxis } from '../../axis';
 import { CartesianChart } from '../../CartesianChart';
-import { ScrubberBeacon, type ScrubberBeaconProps } from '../../scrubber/ScrubberBeacon';
 import {
   DottedLine,
   type DottedLineProps,
@@ -1655,7 +1656,7 @@ function ForecastAssetPrice() {
           <Scrubber hideOverlay />
         </g>
         <g style={{ opacity: isScrubbing ? 0 : 1 }}>
-          <ScrubberBeacon dataX={currentIndex} dataY={data[currentIndex]} seriesId="price" />
+          <DefaultScrubberBeacon dataX={currentIndex} dataY={data[currentIndex]} seriesId="price" />
         </g>
       </m.g>
     );

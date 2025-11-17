@@ -1876,7 +1876,7 @@ function ForecastAssetPrice() {
           <Scrubber hideOverlay />
         </g>
         <g style={{ opacity: isScrubbing ? 0 : 1 }}>
-          <ScrubberBeacon dataX={currentIndex} dataY={data[currentIndex]} seriesId="price" />
+          <DefaultScrubberBeacon dataX={currentIndex} dataY={data[currentIndex]} seriesId="price" />
         </g>
       </m.g>
     );
