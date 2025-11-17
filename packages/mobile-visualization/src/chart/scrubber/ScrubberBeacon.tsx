@@ -126,9 +126,9 @@ export const ScrubberBeacon = memo(
         dataY: dataYProp,
         color,
         gradient: gradientProp,
-        opacity = 1,
         testID,
         idlePulse,
+        opacity = 1,
         transitions,
       },
       ref,
@@ -145,6 +145,7 @@ export const ScrubberBeacon = memo(
         getSeriesData,
         animate,
         drawingArea,
+        maxDataLength,
       } = useCartesianChartContext();
       const { scrubberPosition } = useScrubberContext();
 
@@ -186,15 +187,6 @@ export const ScrubberBeacon = memo(
       const pulseTransition = useMemo(
         () => transitions?.pulse ?? defaultPulseTransition,
         [transitions?.pulse],
-      );
-
-      const maxDataLength = useMemo(
-        () =>
-          series?.reduce((max: any, s: any) => {
-            const seriesData = getSeriesData(s.id);
-            return Math.max(max, seriesData?.length ?? 0);
-          }, 0) ?? 0,
-        [series, getSeriesData],
       );
 
       const dataIndex = useDerivedValue(() => {

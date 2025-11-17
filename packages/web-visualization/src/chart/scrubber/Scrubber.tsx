@@ -141,6 +141,7 @@ export const Scrubber = memo(
         animate,
         series,
         drawingArea,
+        maxDataLength,
       } = useCartesianChartContext();
       const getStackedSeriesData = getSeriesData; // getSeriesData now returns stacked data
 
@@ -164,12 +165,6 @@ export const Scrubber = memo(
         const xAxis = getXAxis();
         if (!xScale) return { dataX: undefined, dataIndex: undefined };
 
-        const maxDataLength =
-          series?.reduce((max: any, s: any) => {
-            const seriesData = getStackedSeriesData(s.id) || getSeriesData(s.id);
-            return Math.max(max, seriesData?.length ?? 0);
-          }, 0) ?? 0;
-
         const dataIndex = scrubberPosition ?? Math.max(0, maxDataLength - 1);
 
         // Convert index to actual x value if axis has data
@@ -182,7 +177,7 @@ export const Scrubber = memo(
         }
 
         return { dataX, dataIndex };
-      }, [getXScale, getXAxis, series, scrubberPosition, getStackedSeriesData, getSeriesData]);
+      }, [getXScale, getXAxis, scrubberPosition, maxDataLength]);
 
       const seriesGradients = useMemo(() => {
         const xScale = getXScale();

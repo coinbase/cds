@@ -101,7 +101,7 @@ export const ScrubberBeaconLabelGroup = memo<ScrubberBeaconLabelGroupProps>(
     labelHorizontalOffset = 16,
     BeaconLabelComponent = DefaultScrubberBeaconLabel,
   }) => {
-    const { getSeries, getSeriesData, getXScale, getYScale, getXAxis, series, drawingArea } =
+    const { getSeries, getSeriesData, getXScale, getYScale, getXAxis, drawingArea, maxDataLength } =
       useCartesianChartContext();
     const { scrubberPosition } = useScrubberContext();
 
@@ -143,15 +143,6 @@ export const ScrubberBeaconLabelGroup = memo<ScrubberBeaconLabelGroupProps>(
         })
         .filter((info): info is NonNullable<typeof info> => info !== null);
     }, [labels, getSeries, getSeriesData, getYScale]);
-
-    const maxDataLength = useMemo(
-      () =>
-        series?.reduce((max: any, s: any) => {
-          const seriesData = getSeriesData(s.id);
-          return Math.max(max, seriesData?.length ?? 0);
-        }, 0) ?? 0,
-      [series, getSeriesData],
-    );
 
     const xScale = getXScale();
     const xAxis = getXAxis();

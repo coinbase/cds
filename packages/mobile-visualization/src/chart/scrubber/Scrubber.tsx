@@ -130,6 +130,7 @@ export const Scrubber = memo(
         animate,
         width: chartWidth,
         height: chartHeight,
+        maxDataLength,
       } = useCartesianChartContext();
 
       const xAxis = useMemo(() => getXAxis(), [getXAxis]);
@@ -172,15 +173,6 @@ export const Scrubber = memo(
           };
         },
         [ScrubberBeaconRefs],
-      );
-
-      const maxDataLength = useMemo(
-        () =>
-          series?.reduce((max: any, s: any) => {
-            const seriesData = getSeriesData(s.id);
-            return Math.max(max, seriesData?.length ?? 0);
-          }, 0) ?? 0,
-        [series, getSeriesData],
       );
 
       const dataIndex = useDerivedValue(() => {
