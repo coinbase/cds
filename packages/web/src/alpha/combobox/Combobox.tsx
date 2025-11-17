@@ -1,4 +1,4 @@
-import { forwardRef, memo, useCallback, useMemo, useRef, useState } from 'react';
+import { forwardRef, memo, useMemo, useRef, useState } from 'react';
 import type { InputVariant, SharedAccessibilityProps } from '@coinbase/cds-common';
 import Fuse from 'fuse.js';
 
@@ -302,10 +302,8 @@ const ComboboxBase = memo(
 
       const [searchTextInternal, setSearchTextInternal] = useState(defaultSearchText);
       const searchText = searchTextProp ?? searchTextInternal;
+      const setSearchText = onSearchProp ?? setSearchTextInternal;
 
-      const [openInternal, setOpenInternal] = useState(defaultOpen ?? false);
-      const open = openProp ?? openInternal;
-      const setOpen = setOpenProp ?? setOpenInternal;
       if (
         (typeof searchTextProp === 'undefined' && typeof onSearchProp !== 'undefined') ||
         (typeof searchTextProp !== 'undefined' && typeof onSearchProp === 'undefined')
@@ -314,11 +312,17 @@ const ComboboxBase = memo(
           'Combobox component must be fully controlled or uncontrolled: "searchText" and "onSearch" props must be provided together or not at all',
         );
 
-      const handleSearch = useCallback((searchText: string) => {
-        setSearchTextInternal(searchText);
-      }, []);
+      const [openInternal, setOpenInternal] = useState(defaultOpen ?? false);
+      const open = openProp ?? openInternal;
+      const setOpen = setOpenProp ?? setOpenInternal;
 
-      const onSearch = onSearchProp ?? handleSearch;
+      if (
+        (typeof openProp === 'undefined' && typeof setOpenProp !== 'undefined') ||
+        (typeof openProp !== 'undefined' && typeof setOpenProp === 'undefined')
+      )
+        throw Error(
+          'Combobox component must be fully controlled or uncontrolled: "open" and "setOpen" props must be provided together or not at all',
+        );
 
       const fuse = useMemo(
         () =>
@@ -351,7 +355,7 @@ const ComboboxBase = memo(
             labelVariant={labelVariant}
             maxSelectedOptionsToShow={maxSelectedOptionsToShow}
             onChange={(value) => onChange?.(value as T | T[])}
-            onSearch={onSearch}
+            onSearch={setSearchText}
             open={open}
             options={options}
             placeholder={placeholder}
