@@ -1,6 +1,8 @@
 import { forwardRef, memo, useMemo, useRef, useState } from 'react';
 import Fuse from 'fuse.js';
 
+import { NativeInput } from '../../controls/NativeInput';
+import { DefaultSelectControl } from '../select/DefaultSelectControl';
 import {
   defaultAccessibilityRoles,
   Select,
@@ -32,7 +34,8 @@ export type ComboboxControlComponent<
 export type ComboboxBaseProps<
   Type extends SelectType = 'single',
   SelectOptionValue extends string = string,
-> = Omit<SelectBaseProps<Type, SelectOptionValue>, 'SelectControlComponent'> & {
+  // > = Omit<SelectBaseProps<Type, SelectOptionValue>, 'SelectControlComponent'> & {
+> = SelectBaseProps<Type, SelectOptionValue> & {
   /** Controlled search text value */
   searchText?: string;
   /** Search text change handler */
@@ -103,7 +106,8 @@ const ComboboxBase = memo(
         SelectOptionComponent,
         SelectAllOptionComponent,
         SelectDropdownComponent,
-        ComboboxControlComponent = DefaultComboboxControl,
+        SelectControlComponent = DefaultSelectControl,
+        // ComboboxControlComponent = DefaultComboboxControl,
         SelectEmptyDropdownContentsComponent,
         style,
         styles,
@@ -155,39 +159,49 @@ const ComboboxBase = memo(
         return fuse.search(searchText).map((result) => result.item);
       }, [filterFunction, fuse, options, searchText]);
 
-      const control = (
-        <ComboboxControlComponent
-          ref={controlRef.current?.refs.setReference}
-          accessibilityLabel={accessibilityLabel}
-          ariaHaspopup={accessibilityRoles?.dropdown}
-          classNames={classNames}
-          compact={compact}
-          disabled={disabled}
-          endNode={endNode}
-          helperText={helperText}
-          hiddenSelectedOptionsLabel={hiddenSelectedOptionsLabel}
-          label={label}
-          labelVariant={labelVariant}
-          maxSelectedOptionsToShow={maxSelectedOptionsToShow}
-          onChange={(value) => onChange?.(value)}
-          onSearch={setSearchText}
-          open={open}
-          options={options}
-          placeholder={placeholder}
-          removeSelectedOptionAccessibilityLabel={removeSelectedOptionAccessibilityLabel}
-          searchText={searchText}
-          setOpen={setOpen}
-          startNode={startNode}
-          styles={styles}
-          value={value}
-          variant={variant}
-        />
-      );
+      // const control = (
+      //   <ComboboxControlComponent
+      //     ref={controlRef.current?.refs.setReference}
+      //     accessibilityLabel={accessibilityLabel}
+      //     ariaHaspopup={accessibilityRoles?.dropdown}
+      //     classNames={classNames}
+      //     compact={compact}
+      //     disabled={disabled}
+      //     endNode={endNode}
+      //     helperText={helperText}
+      //     hiddenSelectedOptionsLabel={hiddenSelectedOptionsLabel}
+      //     label={label}
+      //     labelVariant={labelVariant}
+      //     maxSelectedOptionsToShow={maxSelectedOptionsToShow}
+      //     onChange={(value) => onChange?.(value)}
+      //     onSearch={setSearchText}
+      //     open={open}
+      //     options={options}
+      //     placeholder={placeholder}
+      //     removeSelectedOptionAccessibilityLabel={removeSelectedOptionAccessibilityLabel}
+      //     searchText={searchText}
+      //     setOpen={setOpen}
+      //     startNode={startNode}
+      //     styles={styles}
+      //     value={value}
+      //     variant={variant}
+      //   />
+      // );
 
       return (
         <Select
           ref={controlRef}
-          SelectControlComponent={() => control}
+          SelectControlComponent={(props) => (
+            <SelectControlComponent
+              {...props}
+              contentNode={
+                <NativeInput
+                  onChange={(event) => setSearchText(event.target.value)}
+                  value={searchText}
+                />
+              }
+            />
+          )}
           SelectDropdownComponent={SelectDropdownComponent}
           SelectEmptyDropdownContentsComponent={SelectEmptyDropdownContentsComponent}
           SelectOptionComponent={SelectOptionComponent}
