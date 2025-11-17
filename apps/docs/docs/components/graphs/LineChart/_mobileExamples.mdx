@@ -1542,6 +1542,205 @@ function ServiceAvailability() {
 }
 ```
 
+### Monotone Asset Price
+
+You can adjust [YAxis](/components/graphs/YAxis) and [Scrubber](/components/graphs/Scrubber) to have a chart where the y-axis is overlaid and the beacon is inverted in style.
+
+```jsx
+function MonotoneAssetPrice() {
+  const theme = useTheme();
+  const prices = sparklineInteractiveData.hour;
+
+  const priceFormatter = useMemo(
+    () =>
+      new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+      }),
+    [],
+  );
+
+  const scrubberPriceFormatter = useMemo(
+    () =>
+      new Intl.NumberFormat('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      }),
+    [],
+  );
+
+  const formatPrice = useCallback(
+    (price: number) => {
+      return priceFormatter.format(price);
+    },
+    [priceFormatter],
+  );
+
+  const formatDate = useCallback((date: Date) => {
+    const dayOfWeek = date.toLocaleDateString('en-US', { weekday: 'short' });
+
+    const monthDay = date.toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+    });
+
+    const time = date.toLocaleTimeString('en-US', {
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true,
+    });
+
+    return `${dayOfWeek}, ${monthDay}, ${time}`;
+  }, []);
+
+  const scrubberLabel = useCallback(
+    (index: number) => {
+      const price = scrubberPriceFormatter.format(prices[index].value);
+      const date = formatDate(prices[index].date);
+
+      const regularStyle: SkTextStyle = {
+        fontFamilies: ['Inter'],
+        fontSize: 14,
+        fontStyle: {
+          weight: FontWeight.Normal,
+        },
+        color: Skia.Color(theme.color.fgMuted),
+      };
+
+      const boldStyle: SkTextStyle = {
+        fontFamilies: ['Inter'],
+        ...regularStyle,
+        fontStyle: {
+          weight: FontWeight.Bold,
+        },
+      };
+
+      const builder = Skia.ParagraphBuilder.Make(
+        {
+          textAlign: TextAlign.Left,
+        },
+        fontMgr,
+      );
+
+      builder.pushStyle(boldStyle);
+      builder.addText(`${price} USD`);
+
+      builder.pushStyle(regularStyle);
+      builder.addText(` ${date}`);
+
+      const para = builder.build();
+      para.layout(512);
+      return para;
+    },
+    [scrubberPriceFormatter, prices, formatDate, theme.color.fgMuted],
+  );
+
+  const formatAxisLabelPrice = useCallback(
+    (price: number) => {
+      return formatPrice(price);
+    },
+    [formatPrice],
+  );
+
+  const CustomScrubberBeacon = memo(({ dataX, dataY, seriesId, isIdle, animate = true }: ScrubberBeaconProps) => {
+    const { getSeries, getXSerializableScale, getYSerializableScale } = useCartesianChartContext();
+
+    const targetSeries = useMemo(() => getSeries(seriesId), [getSeries, seriesId]);
+    const xScale = useMemo(() => getXSerializableScale(), [getXSerializableScale]);
+    const yScale = useMemo(
+      () => getYSerializableScale(targetSeries?.yAxisId),
+      [getYSerializableScale, targetSeries?.yAxisId],
+    );
+
+    const animatedX = useSharedValue(0);
+    const animatedY = useSharedValue(0);
+
+    // Calculate the target point position - project data to pixels
+    const targetPoint = useDerivedValue(() => {
+      if (!xScale || !yScale) return { x: 0, y: 0 };
+      return projectPointWithSerializableScale({
+        x: unwrapAnimatedValue(dataX),
+        y: unwrapAnimatedValue(dataY),
+        xScale,
+        yScale,
+      });
+    }, [dataX, dataY, xScale, yScale]);
+
+    useAnimatedReaction(
+      () => {
+        return { point: targetPoint.value, isIdle: unwrapAnimatedValue(isIdle) };
+      },
+      (current, previous) => {
+        // When animation is disabled, on initial render, or when we are starting,
+        // continuing, or finishing scrubbing we should immediately transition
+        if (!animate || previous === null || !previous.isIdle || !current.isIdle) {
+          animatedX.value = current.point.x;
+          animatedY.value = current.point.y;
+          return;
+        }
+
+        animatedX.value = buildTransition(current.point.x, defaultTransition);
+        animatedY.value = buildTransition(current.point.y, defaultTransition);
+      },
+      [animate],
+    );
+
+    // Create animated point using the animated values
+    const animatedPoint = useDerivedValue(() => {
+      return { x: animatedX.value, y: animatedY.value };
+    }, [animatedX, animatedY]);
+
+    return (
+      <>
+        <Circle c={animatedPoint} color={theme.color.bg} r={5} />
+        <Circle c={animatedPoint} color={theme.color.fgPrimary} r={5} style="stroke" strokeWidth={3} />
+      </>
+    );
+  });
+
+  return (
+    <LineChart
+      enableScrubbing
+      showYAxis
+      height={200}
+      inset={{ top: 64 }}
+      overflow="visible"
+      series={[
+        {
+          id: 'btc',
+          data: prices.map((price) => price.value),
+          color: theme.color.fgPrimary,
+          gradient: {
+            axis: 'x',
+            stops: ({ min, max }) => [
+              { offset: min, color: theme.color.fgPrimary, opacity: 0 },
+              { offset: 32, color: theme.color.fgPrimary, opacity: 1 },
+            ],
+          },
+        },
+      ]}
+      xAxis={{
+        range: ({ min, max }) => ({ min: 96, max: max }),
+      }}
+      yAxis={{
+        position: 'left',
+        width: 0,
+        showGrid: true,
+        tickLabelFormatter: formatAxisLabelPrice,
+      }}
+    >
+      <Scrubber
+        hideOverlay
+        BeaconComponent={CustomScrubberBeacon}
+        LineComponent={SolidLine}
+        label={scrubberLabel}
+        labelProps={{ elevation: 1 }}
+      />
+    </LineChart>
+  );
+}
+```
+
 ### Forecast Asset Price
 
 You can combine multiple lines within a series to change styles dynamically.
@@ -1628,7 +1827,15 @@ function ForecastAssetPrice() {
   });
   const CustomScrubber = memo(() => {
     const { scrubberPosition } = useScrubberContext();
-    const isScrubbing = scrubberPosition !== undefined;
+
+    const idleScrubberOpacity = useDerivedValue(
+      () => (scrubberPosition.value === undefined ? 1 : 0),
+      [scrubberPosition],
+    );
+    const scrubberOpacity = useDerivedValue(
+      () => (scrubberPosition.value !== undefined ? 1 : 0),
+      [scrubberPosition],
+    );
 
     // Fade in animation for the Scrubber
     const fadeInOpacity = useSharedValue(0);
@@ -1639,11 +1846,16 @@ function ForecastAssetPrice() {
 
     return (
       <Group opacity={fadeInOpacity}>
-        <Group opacity={isScrubbing ? 1 : 0}>
+        <Group opacity={scrubberOpacity}>
           <Scrubber hideOverlay />
         </Group>
-        <Group opacity={isScrubbing ? 0 : 1}>
-          <Point dataX={currentIndex} dataY={data[currentIndex]} fill={assets.btc.color} />
+        <Group opacity={idleScrubberOpacity}>
+          <DefaultScrubberBeacon
+            isIdle
+            dataX={currentIndex}
+            dataY={data[currentIndex]}
+            seriesId="price"
+          />
         </Group>
       </Group>
     );

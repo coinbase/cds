@@ -1524,9 +1524,44 @@ function MonotoneAssetPrice() {
     [scrubberPriceFormatter, prices, formatDate],
   );
 
-  const CustomScrubberBeacon = memo(({ dataX, dataY, ...props }: ScrubberBeaconProps) => {
-    if (dataX === undefined || dataY === undefined) return;
-    return <Point {...props} animate={false} dataX={dataX} dataY={dataY} r={5} />;
+  const CustomScrubberBeacon = memo(({ dataX, dataY, seriesId, isIdle }: ScrubberBeaconProps) => {
+    const { getSeries, getXScale, getYScale } = useCartesianChartContext();
+    const targetSeries = getSeries(seriesId);
+    const xScale = getXScale();
+    const yScale = getYScale(targetSeries?.yAxisId);
+
+    const pixelCoordinate = useMemo(() => {
+      if (!xScale || !yScale) return;
+      return projectPoint({ x: dataX, y: dataY, xScale, yScale });
+    }, [dataX, dataY, xScale, yScale]);
+
+    if (!pixelCoordinate) return;
+
+    if (isIdle) {
+      return (
+        <m.circle
+          animate={{ cx: pixelCoordinate.x, cy: pixelCoordinate.y }}
+          cx={pixelCoordinate.x}
+          cy={pixelCoordinate.y}
+          fill="var(--color-bg)"
+          r={5}
+          stroke="var(--color-fg)"
+          strokeWidth={3}
+          transition={defaultTransition}
+        />
+      );
+    }
+
+    return (
+      <circle
+        cx={pixelCoordinate.x}
+        cy={pixelCoordinate.y}
+        fill="var(--color-bg)"
+        r={5}
+        stroke="var(--color-fg)"
+        strokeWidth={3}
+      />
+    );
   });
 
   return (
@@ -1567,13 +1602,6 @@ function MonotoneAssetPrice() {
         LineComponent={SolidLine}
         label={scrubberLabel}
         labelProps={{ elevation: 1 }}
-        styles={{
-          beacon: {
-            stroke: 'var(--color-fg)',
-            fill: 'var(--color-bg)',
-            strokeWidth: 3,
-          },
-        }}
       />
     </LineChart>
   );

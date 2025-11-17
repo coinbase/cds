@@ -37,7 +37,7 @@ import { CartesianChart } from '../../CartesianChart';
 import { useCartesianChartContext } from '../../ChartProvider';
 import { PeriodSelector, PeriodSelectorActiveIndicator } from '../../PeriodSelector';
 import { Point } from '../../Point';
-import { Scrubber, type ScrubberRef } from '../../scrubber';
+import { DefaultScrubberBeacon, Scrubber, type ScrubberRef } from '../../scrubber';
 import {
   type AxisBounds,
   getPointOnSerializableScale,
@@ -1800,7 +1800,15 @@ function ForecastAssetPrice() {
   });
   const CustomScrubber = memo(() => {
     const { scrubberPosition } = useScrubberContext();
-    const isScrubbing = scrubberPosition !== undefined;
+
+    const idleScrubberOpacity = useDerivedValue(
+      () => (scrubberPosition.value === undefined ? 1 : 0),
+      [scrubberPosition],
+    );
+    const scrubberOpacity = useDerivedValue(
+      () => (scrubberPosition.value !== undefined ? 1 : 0),
+      [scrubberPosition],
+    );
 
     // Fade in animation for the Scrubber
     const fadeInOpacity = useSharedValue(0);
@@ -1811,11 +1819,16 @@ function ForecastAssetPrice() {
 
     return (
       <Group opacity={fadeInOpacity}>
-        <Group opacity={isScrubbing ? 1 : 0}>
+        <Group opacity={scrubberOpacity}>
           <Scrubber hideOverlay />
         </Group>
-        <Group opacity={isScrubbing ? 0 : 1}>
-          <Point dataX={currentIndex} dataY={data[currentIndex]} fill={assets.btc.color} />
+        <Group opacity={idleScrubberOpacity}>
+          <DefaultScrubberBeacon
+            isIdle
+            dataX={currentIndex}
+            dataY={data[currentIndex]}
+            seriesId="price"
+          />
         </Group>
       </Group>
     );
