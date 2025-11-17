@@ -46,7 +46,9 @@ import { PeriodSelector, PeriodSelectorActiveIndicator } from '../../PeriodSelec
 import { Point } from '../../Point';
 import {
   DefaultScrubberBeacon,
+  DefaultScrubberBeaconLabel,
   Scrubber,
+  type ScrubberBeaconLabelProps,
   type ScrubberBeaconProps,
   type ScrubberRef,
 } from '../../scrubber';
@@ -54,6 +56,7 @@ import {
   type AxisBounds,
   buildTransition,
   defaultTransition,
+  getLineData,
   getPointOnSerializableScale,
   projectPointWithSerializableScale,
   type Transition,
@@ -1996,6 +1999,94 @@ function ImperativeHandle() {
   );
 }
 
+function CustomBeaconLabel() {
+  const theme = useTheme();
+  // This custom component label shows the percentage value of the data at the scrubber position.
+  const MyScrubberBeaconLabel = memo(
+    ({ seriesId, color, label, ...props }: ScrubberBeaconLabelProps) => {
+      const { getSeriesData, series } = useCartesianChartContext();
+      const { scrubberPosition } = useScrubberContext();
+
+      const seriesData = useMemo(
+        () => getLineData(getSeriesData(seriesId)),
+        [getSeriesData, seriesId],
+      );
+
+      const maxDataLength = useMemo(
+        () =>
+          series?.reduce((max, s) => {
+            const seriesData = getSeriesData(s.id);
+            return Math.max(max, seriesData?.length ?? 0);
+          }, 0) ?? 0,
+        [series, getSeriesData],
+      );
+
+      const dataIndex = useDerivedValue(() => {
+        return scrubberPosition.value ?? Math.max(0, maxDataLength - 1);
+      }, [scrubberPosition, maxDataLength]);
+
+      const percentageLabel = useDerivedValue(() => {
+        if (seriesData !== undefined) {
+          const dataAtPosition = seriesData[dataIndex.value];
+          return `${unwrapAnimatedValue(label)} · ${dataAtPosition}%`;
+        }
+        return unwrapAnimatedValue(label);
+      }, [label, seriesData, dataIndex]);
+
+      return (
+        <DefaultScrubberBeaconLabel
+          {...props}
+          background={color}
+          color={theme.color.bg}
+          label={percentageLabel}
+          seriesId={seriesId}
+        />
+      );
+    },
+  );
+
+  return (
+    <LineChart
+      enableScrubbing
+      showArea
+      showYAxis
+      areaType="dotted"
+      height={200}
+      series={[
+        {
+          id: 'Boston',
+          data: [25, 30, 35, 45, 60, 100],
+          color: `rgb(${theme.spectrum.green40})`,
+          label: 'Boston',
+        },
+        {
+          id: 'Miami',
+          data: [20, 25, 30, 35, 20, 0],
+          color: `rgb(${theme.spectrum.blue40})`,
+          label: 'Miami',
+        },
+        {
+          id: 'Denver',
+          data: [10, 15, 20, 25, 40, 0],
+          color: `rgb(${theme.spectrum.orange40})`,
+          label: 'Denver',
+        },
+        {
+          id: 'Phoenix',
+          data: [15, 10, 5, 0, 0, 0],
+          color: `rgb(${theme.spectrum.red40})`,
+          label: 'Phoenix',
+        },
+      ]}
+      yAxis={{
+        showGrid: true,
+      }}
+    >
+      <Scrubber BeaconLabelComponent={MyScrubberBeaconLabel} />
+    </LineChart>
+  );
+}
+
 type ExampleItem = {
   title: string;
   component: React.ReactNode;
@@ -2239,6 +2330,10 @@ function ExampleNavigator() {
       {
         title: 'Forecast Asset Price',
         component: <ForecastAssetPrice />,
+      },
+      {
+        title: 'Custom Beacon Label',
+        component: <CustomBeaconLabel />,
       },
     ],
     [theme.color.fg, theme.color.fgPositive, theme.spectrum.gray50],
