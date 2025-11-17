@@ -141,6 +141,7 @@ export type ScrubberBaseProps = SharedProps &
   };
 
 export type ScrubberProps = ScrubberBaseProps &
+  Pick<ReferenceLineProps, 'LineComponent'> &
   Pick<ScrubberBeaconGroupProps, 'BeaconComponent'> &
   Pick<ScrubberBeaconLabelGroupProps, 'BeaconLabelComponent'> & {
     /**
@@ -161,10 +162,6 @@ export type ScrubberProps = ScrubberBaseProps &
      * Custom component for the scrubber beacon.
      */
     BeaconComponent?: ScrubberBeaconComponent;
-    /**
-     * Custom component for the scrubber line.
-     */
-    LineComponent?: LineComponent;
     /**
      * Transition configuration for the scrubber beacon.
      */
