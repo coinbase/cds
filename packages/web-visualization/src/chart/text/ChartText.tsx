@@ -211,29 +211,44 @@ export const ChartText = memo<ChartTextProps>(
       }
 
       const parentBounds = bounds ?? fullChartBounds;
-      if (!textBBox || !parentBounds || parentBounds.width <= 0 || parentBounds.height <= 0) {
+      if (
+        !backgroundRectDimensions ||
+        !parentBounds ||
+        parentBounds.width <= 0 ||
+        parentBounds.height <= 0
+      ) {
         return { x: 0, y: 0 };
       }
 
       let x = 0;
       let y = 0;
 
-      // X-axis overflow
-      if (textBBox.x < parentBounds.x) {
-        x = parentBounds.x - textBBox.x; // positive = shift right
-      } else if (textBBox.x + textBBox.width > parentBounds.x + parentBounds.width) {
-        x = parentBounds.x + parentBounds.width - (textBBox.x + textBBox.width); // negative = shift left
+      if (backgroundRectDimensions.x < parentBounds.x) {
+        x = parentBounds.x - backgroundRectDimensions.x; // positive = shift right
+      } else if (
+        backgroundRectDimensions.x + backgroundRectDimensions.width >
+        parentBounds.x + parentBounds.width
+      ) {
+        x =
+          parentBounds.x +
+          parentBounds.width -
+          (backgroundRectDimensions.x + backgroundRectDimensions.width); // negative = shift left
       }
 
-      // Y-axis overflow
-      if (textBBox.y < parentBounds.y) {
-        y = parentBounds.y - textBBox.y; // positive = shift down
-      } else if (textBBox.y + textBBox.height > parentBounds.y + parentBounds.height) {
-        y = parentBounds.y + parentBounds.height - (textBBox.y + textBBox.height); // negative = shift up
+      if (backgroundRectDimensions.y < parentBounds.y) {
+        y = parentBounds.y - backgroundRectDimensions.y; // positive = shift down
+      } else if (
+        backgroundRectDimensions.y + backgroundRectDimensions.height >
+        parentBounds.y + parentBounds.height
+      ) {
+        y =
+          parentBounds.y +
+          parentBounds.height -
+          (backgroundRectDimensions.y + backgroundRectDimensions.height); // negative = shift up
       }
 
       return { x, y };
-    }, [textBBox, fullChartBounds, bounds, disableRepositioning]);
+    }, [backgroundRectDimensions, fullChartBounds, bounds, disableRepositioning]);
 
     // Compose the final reported rect including any overflow translation applied
     const reportedRect = useMemo(() => {

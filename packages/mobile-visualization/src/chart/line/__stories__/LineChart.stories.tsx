@@ -266,7 +266,7 @@ function LiveUpdates() {
         },
       ]}
     >
-      <Scrubber ref={scrubberRef} labelProps={{ elevation: 1 }} />
+      <Scrubber ref={scrubberRef} />
     </LineChart>
   );
 }
@@ -875,7 +875,6 @@ function Compact() {
         {...dimensions}
         enableScrubbing={false}
         inset={0}
-        overflow="visible"
         series={[
           {
             id: 'btc',
@@ -1068,8 +1067,7 @@ function AssetPriceWithDottedArea() {
           showArea
           areaType="dotted"
           height={200}
-          inset={{ top: 52 }}
-          overflow="visible"
+          inset={{ left: 0, right: 0, top: 52 }}
           series={[
             {
               id: 'btc',
@@ -1079,6 +1077,7 @@ function AssetPriceWithDottedArea() {
           ]}
         >
           <Scrubber
+            elevateLabel
             idlePulse
             label={(d: number) => {
               const date = formatDate(sparklineTimePeriodDataTimestamps[d]);
@@ -1118,9 +1117,6 @@ function AssetPriceWithDottedArea() {
               const para = builder.build();
               para.layout(512);
               return para;
-            }}
-            labelProps={{
-              elevation: 1,
             }}
           />
         </LineChart>
@@ -1272,7 +1268,6 @@ const PerformanceChart = memo(
         height={300}
         inset={{ top: 52, left: 0, right: 0 }}
         onScrubberPositionChange={onScrubberPositionChange}
-        overflow="visible"
         series={[
           {
             id: 'high',
@@ -1712,7 +1707,6 @@ function MonotoneAssetPrice() {
       showYAxis
       height={200}
       inset={{ top: 64 }}
-      overflow="visible"
       series={[
         {
           id: 'btc',
@@ -1738,11 +1732,11 @@ function MonotoneAssetPrice() {
       }}
     >
       <Scrubber
+        elevateLabel
         hideOverlay
         BeaconComponent={CustomScrubberBeacon}
         LineComponent={SolidLine}
         label={scrubberLabel}
-        labelProps={{ elevation: 1 }}
       />
     </LineChart>
   );

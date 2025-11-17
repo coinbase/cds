@@ -252,11 +252,7 @@ function LiveUpdates() {
         },
       ]}
     >
-      <Scrubber
-        ref={scrubberRef}
-        accessibilityLabel={scrubberAccessibilityLabel}
-        labelProps={{ elevation: 1 }}
-      />
+      <Scrubber ref={scrubberRef} elevateLabel accessibilityLabel={scrubberAccessibilityLabel} />
     </LineChart>
   );
 }
@@ -983,7 +979,6 @@ function Compact() {
         {...dimensions}
         enableScrubbing={false}
         inset={0}
-        overflow="visible"
         series={[
           {
             id: 'btc',
@@ -1222,7 +1217,6 @@ function AssetPriceWithDottedArea() {
           accessibilityLabel={chartAccessibilityLabel}
           areaType="dotted"
           height={{ base: 200, tablet: 225, desktop: 250 }}
-          overflow="visible"
           series={[
             {
               id: 'btc',
@@ -1233,10 +1227,10 @@ function AssetPriceWithDottedArea() {
           style={{ outlineColor: assets.btc.color }}
         >
           <Scrubber
+            elevateLabel
             idlePulse
             accessibilityLabel={scrubberAccessibilityLabel}
             label={scrubberLabel}
-            labelProps={{ elevation: 1 }}
           />
         </LineChart>
         <PeriodSelector
@@ -1671,7 +1665,6 @@ function MonotoneAssetPrice() {
       showYAxis
       height={{ base: 200, tablet: 250, desktop: 300 }}
       inset={{ top: 64 }}
-      overflow="visible"
       series={[
         {
           id: 'btc',
@@ -1698,11 +1691,11 @@ function MonotoneAssetPrice() {
       }}
     >
       <Scrubber
+        elevateLabel
         hideOverlay
         BeaconComponent={CustomScrubberBeacon}
         LineComponent={SolidLine}
         label={scrubberLabel}
-        labelProps={{ elevation: 1 }}
       />
     </LineChart>
   );

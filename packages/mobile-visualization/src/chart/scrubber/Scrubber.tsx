@@ -6,7 +6,6 @@ import React, {
   useImperativeHandle,
   useMemo,
 } from 'react';
-import type { SharedValue } from 'react-native-reanimated';
 import {
   runOnJS,
   useAnimatedReaction,
@@ -20,7 +19,12 @@ import { useTheme } from '@coinbase/cds-mobile';
 import { type AnimatedProp, Group, Rect, type SkParagraph } from '@shopify/react-native-skia';
 
 import { useCartesianChartContext } from '../ChartProvider';
-import { type LineComponent, ReferenceLine, type ReferenceLineProps } from '../line';
+import {
+  ReferenceLine,
+  type ReferenceLineLabelComponent,
+  type ReferenceLineLabelComponentProps,
+  type ReferenceLineProps,
+} from '../line';
 import type { ChartTextProps } from '../text';
 import {
   accessoryFadeTransitionDelay,
@@ -32,6 +36,7 @@ import {
 import type { Transition } from '../utils/transition';
 
 import { DefaultScrubberBeacon } from './DefaultScrubberBeacon';
+import { DefaultScrubberLabel } from './DefaultScrubberLabel';
 import {
   ScrubberBeaconGroup,
   type ScrubberBeaconGroupBaseProps,
@@ -116,9 +121,11 @@ export type ScrubberBeaconLabelProps = Pick<Series, 'color'> &
   };
 export type ScrubberBeaconLabelComponent = React.FC<ScrubberBeaconLabelProps>;
 
+export type ScrubberLabelProps = ReferenceLineLabelComponentProps;
+export type ScrubberLabelComponent = React.FC<ScrubberLabelProps>;
+
 export type ScrubberBaseProps = SharedProps &
-  Pick<ScrubberBeaconGroupBaseProps, 'idlePulse'> &
-  Pick<ScrubberBeaconLabelGroupBaseProps, 'labelMinGap' | 'labelHorizontalOffset'> & {
+  Pick<ScrubberBeaconGroupBaseProps, 'idlePulse'> & {
     /**
      * Array of series IDs to highlight when scrubbing with scrubber beacons.
      * By default, all series will be highlighted.
@@ -138,6 +145,16 @@ export type ScrubberBaseProps = SharedProps &
      * @default 2
      */
     overlayOffset?: number;
+    /**
+     * Minimum gap between beacon labels to prevent overlap.
+     * Measured in pixels.
+     */
+    beaconLabelMinGap?: ScrubberBeaconLabelGroupBaseProps['labelMinGap'];
+    /**
+     * Horizontal offset for beacon labels from their beacon position.
+     * Measured in pixels.
+     */
+    beaconLabelHorizontalOffset?: ScrubberBeaconLabelGroupBaseProps['labelHorizontalOffset'];
   };
 
 export type ScrubberProps = ScrubberBaseProps &
@@ -150,10 +167,15 @@ export type ScrubberProps = ScrubberBaseProps &
      */
     label?: string | SkParagraph | ((dataIndex: number) => string | SkParagraph);
     /**
-     * Props passed to the scrubber line's label.
-     * @todo can we get rid of this?
+     * Component to render the scrubber line label.
+     * @default DefaultScrubberLabel
      */
-    labelProps?: ReferenceLineProps['labelProps'];
+    LabelComponent?: ScrubberLabelComponent;
+    /**
+     * Whether to elevate the scrubber line label with a shadow.
+     * When true, applies elevation and automatically adds bounds to keep label within chart area.
+     */
+    elevateLabel?: boolean;
     /**
      * Stroke color for the scrubber line.
      */
@@ -181,14 +203,15 @@ export const Scrubber = memo(
         hideLine,
         label,
         lineStroke,
-        labelProps,
         BeaconComponent = DefaultScrubberBeacon,
         BeaconLabelComponent,
         LineComponent,
+        LabelComponent = DefaultScrubberLabel,
+        elevateLabel,
         hideOverlay,
         overlayOffset = 2,
-        labelMinGap,
-        labelHorizontalOffset,
+        beaconLabelMinGap,
+        beaconLabelHorizontalOffset,
         testID,
         idlePulse,
         beaconTransitions,
@@ -340,21 +363,11 @@ export const Scrubber = memo(
           {!hideLine && (
             <Group opacity={lineOpacity}>
               <ReferenceLine
+                LabelComponent={LabelComponent}
                 LineComponent={LineComponent}
                 dataX={dataX}
+                elevateLabel={elevateLabel}
                 label={resolvedLabelValue}
-                labelProps={{
-                  verticalAlignment: 'middle',
-                  dy: -0.5 * drawingArea.y,
-                  ...labelProps,
-                  bounds: {
-                    // todo - how to bake this into the chart on web and on mobile
-                    x: 16,
-                    y: 16,
-                    width: chartWidth - 32,
-                    height: chartHeight - 32,
-                  },
-                }}
                 stroke={lineStroke}
               />
             </Group>
@@ -370,8 +383,8 @@ export const Scrubber = memo(
           {scrubberBeaconLabels.length > 0 && (
             <ScrubberBeaconLabelGroup
               BeaconLabelComponent={BeaconLabelComponent}
-              labelHorizontalOffset={labelHorizontalOffset}
-              labelMinGap={labelMinGap}
+              labelHorizontalOffset={beaconLabelHorizontalOffset}
+              labelMinGap={beaconLabelMinGap}
               labels={scrubberBeaconLabels}
             />
           )}

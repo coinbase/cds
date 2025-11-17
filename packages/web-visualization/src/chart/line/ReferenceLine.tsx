@@ -1,9 +1,8 @@
-import React, { memo, useMemo } from 'react';
+import React, { memo } from 'react';
 import type { SharedProps } from '@coinbase/cds-common/types';
 import { cx } from '@coinbase/cds-web';
 
 import { useCartesianChartContext } from '../ChartProvider';
-import { ChartText } from '../text';
 import type {
   ChartTextChildren,
   ChartTextProps,
@@ -12,14 +11,16 @@ import type {
 } from '../text/ChartText';
 import { getPointOnScale } from '../utils';
 
+import { DefaultReferenceLineLabel } from './DefaultReferenceLineLabel';
 import { DottedLine } from './DottedLine';
 import type { LineComponent } from './Line';
 
-/**
- * Configuration for ReferenceLine label rendering using ChartText.
- */
-export type ReferenceLineLabelProps = Pick<
+export type ReferenceLineLabelComponentProps = Pick<
   ChartTextProps,
+  | 'x'
+  | 'y'
+  | 'children'
+  | 'testID'
   | 'dx'
   | 'dy'
   | 'font'
@@ -37,7 +38,11 @@ export type ReferenceLineLabelProps = Pick<
   | 'classNames'
   | 'horizontalAlignment'
   | 'verticalAlignment'
+  | 'className'
+  | 'style'
 >;
+
+export type ReferenceLineLabelComponent = React.FC<ReferenceLineLabelComponentProps>;
 
 type BaseReferenceLineProps = SharedProps & {
   /**
@@ -59,16 +64,20 @@ type BaseReferenceLineProps = SharedProps & {
    */
   LineComponent?: LineComponent;
   /**
+   * Component to render the label.
+   * @default DefaultReferenceLineLabel
+   */
+  LabelComponent?: ReferenceLineLabelComponent;
+  /**
+   * Whether to elevate the label with a shadow.
+   * When true, applies elevation and automatically adds bounds to keep label within chart area.
+   */
+  elevateLabel?: boolean;
+  /**
    * The color of the line.
    * @default 'var(--color-bgLine)'
    */
   stroke?: string;
-  /**
-   * Props for the label rendering.
-   * Consolidates styling and positioning options for the ChartText component.
-   * Alignment defaults are set based on line orientation and can be overridden here.
-   */
-  labelProps?: ReferenceLineLabelProps;
   /**
    * Custom class name for the root element.
    */
@@ -148,44 +157,15 @@ export const ReferenceLine = memo<ReferenceLineProps>(
     labelPosition = dataY !== undefined ? 'right' : 'top',
     testID,
     LineComponent = DottedLine,
+    LabelComponent = DefaultReferenceLineLabel,
+    elevateLabel,
     stroke = 'var(--color-bgLine)',
-    labelProps,
     className,
     style,
     classNames,
     styles,
   }) => {
     const { getXScale, getYScale, drawingArea } = useCartesianChartContext();
-
-    // For horizontal lines (dataY defined): default to verticalAlignment: 'middle'
-    // For vertical lines (dataX defined): default to horizontalAlignment: 'center'
-    const isHorizontal = dataY !== undefined;
-
-    // Merge default props with user provided props, including text-specific styles and classNames
-    const finalLabelProps: ReferenceLineLabelProps = useMemo(
-      () => ({
-        borderRadius: 4,
-        color: 'var(--color-fgMuted)',
-        elevation: 0,
-        inset: { top: 8, bottom: 8, left: 12, right: 12 },
-        // Set default alignment based on orientation
-        ...(isHorizontal
-          ? { verticalAlignment: 'middle' as const }
-          : { horizontalAlignment: 'center' as const }),
-        ...labelProps,
-        // Merge classNames for text
-        classNames: {
-          ...labelProps?.classNames,
-          ...(classNames?.label && { text: classNames.label }),
-        },
-        // Merge styles for text
-        styles: {
-          ...labelProps?.styles,
-          ...(styles?.label && { text: styles.label }),
-        },
-      }),
-      [isHorizontal, labelProps, classNames?.label, styles?.label],
-    );
 
     // Combine root classNames
     const rootClassName = cx(className, classNames?.root);
@@ -222,9 +202,17 @@ export const ReferenceLine = memo<ReferenceLineProps>(
             stroke={stroke}
           />
           {label && (
-            <ChartText {...finalLabelProps} x={labelX} y={yPixel}>
+            <LabelComponent
+              className={classNames?.label}
+              elevation={elevateLabel ? 1 : undefined}
+              style={styles?.label}
+              testID={testID}
+              verticalAlignment="middle"
+              x={labelX}
+              y={yPixel}
+            >
               {label}
-            </ChartText>
+            </LabelComponent>
           )}
         </g>
       );
@@ -260,9 +248,17 @@ export const ReferenceLine = memo<ReferenceLineProps>(
             stroke={stroke}
           />
           {label && (
-            <ChartText {...finalLabelProps} x={xPixel} y={labelY}>
+            <LabelComponent
+              className={classNames?.label}
+              elevation={elevateLabel ? 1 : undefined}
+              horizontalAlignment="center"
+              style={styles?.label}
+              testID={testID}
+              x={xPixel}
+              y={labelY}
+            >
               {label}
-            </ChartText>
+            </LabelComponent>
           )}
         </g>
       );
