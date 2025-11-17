@@ -37,6 +37,8 @@ const DefaultSelectDropdownComponent = memo(
         style,
         styles,
         compact,
+        header,
+        footer,
         label,
         end,
         selectAllLabel = 'Select all',
@@ -245,14 +247,17 @@ const DefaultSelectDropdownComponent = memo(
         <Tray
           ref={ref}
           disableCapturePanGestureToDismiss={true}
+          footer={footer}
+          header={header}
           onCloseComplete={() => setOpen(false)}
           onDismiss={() => setOpen(false)}
           style={dropdownStyles}
           title={label}
           verticalDrawerPercentageOfView={0.9}
         >
-          <VStack>
+          <VStack {...props}>
             <ScrollView showsVerticalScrollIndicator={true}>
+              {/* TO DO: can we remove this VStack? */}
               <VStack>
                 {!hideSelectAll && isMultiSelect && options.length > 0 && SelectAllOption}
                 {options.length > 0 ? (

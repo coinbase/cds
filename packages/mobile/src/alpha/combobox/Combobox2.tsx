@@ -1,9 +1,11 @@
 import { forwardRef, memo, useMemo, useRef, useState } from 'react';
+import { type StyleProp, type TouchableOpacity, View, type ViewStyle } from 'react-native';
 import type { InputVariant, SharedAccessibilityProps } from '@coinbase/cds-common';
 import Fuse from 'fuse.js';
 
-import type { AriaHasPopupType } from '../../hooks/useA11yControlledVisibility';
 import type { InteractableBlendStyles } from '../../system/Interactable';
+import { Text } from '../../typography/Text';
+import { DefaultSelectDropdown } from '../select/DefaultSelectDropdown';
 import {
   defaultAccessibilityRoles,
   Select,
@@ -56,25 +58,14 @@ export type ComboboxControlProps<T extends string = string> = {
   hiddenSelectedOptionsLabel?: string;
   /** Accessibility label for each chip in a multi-select */
   removeSelectedOptionAccessibilityLabel?: string;
-  /** ARIA haspopup attribute value */
-  ariaHaspopup?: AriaHasPopupType;
   /** Custom styles for different parts of the control */
   styles?: {
-    controlStartNode?: React.CSSProperties;
-    controlInputNode?: React.CSSProperties;
-    controlValueNode?: React.CSSProperties;
-    controlLabelNode?: React.CSSProperties;
-    controlHelperTextNode?: React.CSSProperties;
-    controlEndNode?: React.CSSProperties;
-  };
-  /** Custom class names for different parts of the control */
-  classNames?: {
-    controlStartNode?: string;
-    controlInputNode?: string;
-    controlValueNode?: string;
-    controlLabelNode?: string;
-    controlHelperTextNode?: string;
-    controlEndNode?: string;
+    controlStartNode?: StyleProp<ViewStyle>;
+    controlInputNode?: StyleProp<ViewStyle>;
+    controlValueNode?: StyleProp<ViewStyle>;
+    controlLabelNode?: StyleProp<ViewStyle>;
+    controlHelperTextNode?: StyleProp<ViewStyle>;
+    controlEndNode?: StyleProp<ViewStyle>;
   };
   /** Accessibility label for the combobox */
   accessibilityLabel?: string;
@@ -83,7 +74,7 @@ export type ComboboxControlProps<T extends string = string> = {
 };
 
 export type ComboboxControlComponent<T extends string = string> = React.FC<
-  ComboboxControlProps<T> & { ref?: React.Ref<HTMLElement> }
+  ComboboxControlProps<T> & { ref?: React.Ref<TouchableOpacity> }
 >;
 
 export type ComboboxBaseProps<T extends string = string> = Pick<
@@ -102,7 +93,6 @@ export type ComboboxBaseProps<T extends string = string> = Pick<
     | 'disabled'
     | 'labelVariant'
     | 'endNode'
-    | 'ariaHaspopup'
   > &
   Pick<SelectDropdownProps<'multi', T>, 'accessory' | 'media' | 'end'> &
   Pick<
@@ -150,9 +140,7 @@ export type ComboboxBaseProps<T extends string = string> = Pick<
     /** Custom component to render when no options are available */
     SelectEmptyDropdownContentsComponent?: SelectEmptyDropdownContentComponent;
     /** Inline styles for the root element */
-    style?: React.CSSProperties;
-    /** CSS class name for the root element */
-    className?: string;
+    style?: StyleProp<ViewStyle>;
     /** Test ID for the root element */
     testID?: string;
   };
@@ -164,80 +152,43 @@ export type ComboboxProps<T extends string = string> = ComboboxBaseProps<T> & {
   /** Custom styles for different parts of the combobox */
   styles?: {
     /** Styles for the root container */
-    root?: React.CSSProperties;
+    root?: StyleProp<ViewStyle>;
     /** Styles for the control element */
-    control?: React.CSSProperties;
+    control?: StyleProp<ViewStyle>;
     /** Styles for the start node element */
-    controlStartNode?: React.CSSProperties;
+    controlStartNode?: StyleProp<ViewStyle>;
     /** Styles for the input node element */
-    controlInputNode?: React.CSSProperties;
+    controlInputNode?: StyleProp<ViewStyle>;
     /** Styles for the value node element */
-    controlValueNode?: React.CSSProperties;
+    controlValueNode?: StyleProp<ViewStyle>;
     /** Styles for the label node element */
-    controlLabelNode?: React.CSSProperties;
+    controlLabelNode?: StyleProp<ViewStyle>;
     /** Styles for the helper text node element */
-    controlHelperTextNode?: React.CSSProperties;
+    controlHelperTextNode?: StyleProp<ViewStyle>;
     /** Styles for the end node element */
-    controlEndNode?: React.CSSProperties;
+    controlEndNode?: StyleProp<ViewStyle>;
     /** Blend styles for control interactivity */
     controlBlendStyles?: InteractableBlendStyles;
     /** Styles for the dropdown container */
-    dropdown?: React.CSSProperties;
+    dropdown?: StyleProp<ViewStyle>;
     /** Styles for individual options */
-    option?: React.CSSProperties;
+    option?: StyleProp<ViewStyle>;
     /** Blend styles for option interactivity */
     optionBlendStyles?: InteractableBlendStyles;
     /** Styles for the option cell element */
-    optionCell?: React.CSSProperties;
+    optionCell?: StyleProp<ViewStyle>;
     /** Styles for the option content wrapper */
-    optionContent?: React.CSSProperties;
+    optionContent?: StyleProp<ViewStyle>;
     /** Styles for the option label element */
-    optionLabel?: React.CSSProperties;
+    optionLabel?: StyleProp<ViewStyle>;
     /** Styles for the option description element */
-    optionDescription?: React.CSSProperties;
+    optionDescription?: StyleProp<ViewStyle>;
     /** Styles for the select all divider element */
-    selectAllDivider?: React.CSSProperties;
+    selectAllDivider?: StyleProp<ViewStyle>;
     /** Styles for the empty contents container element */
-    emptyContentsContainer?: React.CSSProperties;
+    emptyContentsContainer?: StyleProp<ViewStyle>;
     /** Styles for the empty contents text element */
-    emptyContentsText?: React.CSSProperties;
-  };
-  /** Custom class names for different parts of the combobox */
-  classNames?: {
-    /** Class name for the root container */
-    root?: string;
-    /** Class name for the control element */
-    control?: string;
-    /** Class name for the start node element */
-    controlStartNode?: string;
-    /** Class name for the input node element */
-    controlInputNode?: string;
-    /** Class name for the value node element */
-    controlValueNode?: string;
-    /** Class name for the label node element */
-    controlLabelNode?: string;
-    /** Class name for the helper text node element */
-    controlHelperTextNode?: string;
-    /** Class name for the end node element */
-    controlEndNode?: string;
-    /** Class name for the dropdown container */
-    dropdown?: string;
-    /** Class name for individual options */
-    option?: string;
-    /** Class name for the option cell element */
-    optionCell?: string;
-    /** Class name for the option content wrapper */
-    optionContent?: string;
-    /** Class name for the option label element */
-    optionLabel?: string;
-    /** Class name for the option description element */
-    optionDescription?: string;
-    /** Class name for the select all divider element */
-    selectAllDivider?: string;
-    /** Class name for the empty contents container element */
-    emptyContentsContainer?: string;
-    /** Class name for the empty contents text element */
-    emptyContentsText?: string;
+    emptyContentsText?: StyleProp<ViewStyle>;
   };
 };
 
@@ -267,7 +218,6 @@ const ComboboxBase = memo(
         labelVariant,
         accessibilityLabel,
         accessibilityRoles = defaultAccessibilityRoles,
-        ariaHaspopup = 'listbox',
         selectAllLabel,
         emptyOptionsLabel,
         clearAllLabel,
@@ -286,17 +236,15 @@ const ComboboxBase = memo(
         filterFunction,
         SelectOptionComponent,
         SelectAllOptionComponent,
-        SelectDropdownComponent,
+        SelectDropdownComponent = DefaultSelectDropdown,
         ComboboxControlComponent = DefaultComboboxControl,
         SelectEmptyDropdownContentsComponent,
         style,
         styles,
-        className,
-        classNames,
         testID,
         ...props
       }: ComboboxProps<T>,
-      ref: React.Ref<HTMLDivElement>,
+      ref: React.Ref<View>,
     ) => {
       const controlRef = useRef<SelectRef>(null);
 
@@ -339,45 +287,47 @@ const ComboboxBase = memo(
         return fuse.search(searchText).map((result) => result.item);
       }, [filterFunction, fuse, options, searchText]);
 
+      const control = (
+        <ComboboxControlComponent
+          accessibilityLabel={accessibilityLabel}
+          compact={compact}
+          disabled={disabled}
+          endNode={endNode}
+          helperText={helperText}
+          hiddenSelectedOptionsLabel={hiddenSelectedOptionsLabel}
+          label={label}
+          labelVariant={labelVariant}
+          maxSelectedOptionsToShow={maxSelectedOptionsToShow}
+          onChange={(value) => onChange?.(value as T | T[])}
+          onSearch={setSearchText}
+          open={open}
+          options={options}
+          placeholder={placeholder}
+          removeSelectedOptionAccessibilityLabel={removeSelectedOptionAccessibilityLabel}
+          searchText={searchText}
+          setOpen={setOpen}
+          startNode={startNode}
+          styles={styles}
+          value={value}
+          variant={variant}
+        />
+      );
+
       return (
-        <div ref={ref}>
-          <ComboboxControlComponent
-            ref={controlRef.current?.refs.setReference}
-            accessibilityLabel={accessibilityLabel}
-            ariaHaspopup={ariaHaspopup}
-            classNames={classNames}
-            compact={compact}
-            disabled={disabled}
-            endNode={endNode}
-            helperText={helperText}
-            hiddenSelectedOptionsLabel={hiddenSelectedOptionsLabel}
-            label={label}
-            labelVariant={labelVariant}
-            maxSelectedOptionsToShow={maxSelectedOptionsToShow}
-            onChange={(value) => onChange?.(value as T | T[])}
-            onSearch={setSearchText}
-            open={open}
-            options={options}
-            placeholder={placeholder}
-            removeSelectedOptionAccessibilityLabel={removeSelectedOptionAccessibilityLabel}
-            searchText={searchText}
-            setOpen={setOpen}
-            startNode={startNode}
-            styles={styles}
-            value={value}
-            variant={variant}
-          />
+        <View ref={ref}>
+          {control}
           <Select
             ref={controlRef}
             SelectControlComponent={() => null}
             SelectDropdownComponent={SelectDropdownComponent}
+            // SelectDropdownComponent={(props) => (
+            //   <SelectDropdownComponent {...props} header={control} />
+            // )}
             SelectEmptyDropdownContentsComponent={SelectEmptyDropdownContentsComponent}
             SelectOptionComponent={SelectOptionComponent}
             accessibilityLabel={accessibilityLabel}
             accessibilityRoles={accessibilityRoles}
             accessory={accessory}
-            className={className}
-            classNames={classNames}
             clearAllLabel={clearAllLabel}
             compact={compact}
             defaultOpen={defaultOpen}
@@ -408,7 +358,7 @@ const ComboboxBase = memo(
             value={value}
             variant={variant}
           />
-        </div>
+        </View>
       );
     },
   ),

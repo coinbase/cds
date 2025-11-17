@@ -1,7 +1,7 @@
 import { useMultiSelect } from '@coinbase/cds-common/select/useMultiSelect';
 
 import { Example, ExampleScreen } from '../../../examples/ExampleScreen';
-import { Combobox } from '../Combobox';
+import { Combobox } from '../Combobox2';
 
 const exampleOptions = [
   { value: '1', label: 'Option 1' },

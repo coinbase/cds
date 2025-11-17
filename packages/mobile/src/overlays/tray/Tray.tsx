@@ -22,6 +22,10 @@ export type TrayRenderChildren = React.FC<{ handleClose: () => void }>;
 
 export type TrayBaseProps = Omit<DrawerBaseProps, 'pin' | 'children'> & {
   children: React.ReactNode | TrayRenderChildren;
+  /** ReactNode to render as the Drawer header */
+  header?: React.ReactNode;
+  /** ReactNode to render as the Drawer footer */
+  footer?: React.ReactNode;
   /**
    * Optional callback that, if provided, will be triggered when the Tray is toggled open/ closed
    * If used for analytics, context ('visible' | 'hidden') can be bundled with the event info to track whether the
