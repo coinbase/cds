@@ -165,19 +165,6 @@ const TabsComponent = memo(
         [tabs, refMap],
       );
 
-      const tabComponents = useMemo(
-        () =>
-          tabs.map(({ id, Component: CustomTabComponent, disabled: tabDisabled, ...props }) => {
-            const RenderedTab = CustomTabComponent ?? TabComponent;
-            return (
-              <TabContainer key={id} id={id} registerRef={refMap.registerRef}>
-                <RenderedTab data-rendered-tab disabled={tabDisabled} id={id} {...props} />
-              </TabContainer>
-            );
-          }),
-        [tabs, TabComponent, refMap.registerRef],
-      );
-
       const containerStyle = useMemo(
         () => ({ opacity: disabled ? accessibleOpacityDisabled : 1, ...style }),
         [disabled, style],
@@ -212,7 +199,7 @@ const TabsComponent = memo(
               const RenderedTab = CustomTabComponent ?? TabComponent;
               return (
                 <TabContainer key={id} id={id} registerRef={registerRef}>
-                  <RenderedTab disabled={tabDisabled} id={id} {...props} />
+                  <RenderedTab data-rendered-tab disabled={tabDisabled} id={id} {...props} />
                 </TabContainer>
               );
             })}
