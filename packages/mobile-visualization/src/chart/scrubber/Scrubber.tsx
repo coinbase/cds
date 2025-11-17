@@ -62,11 +62,11 @@ export type ScrubberBeaconProps = {
    */
   color?: AnimatedProp<string>;
   /**
-   * X coordinate in data space (animated).
+   * X coordinate in data space.
    */
   dataX: AnimatedProp<number>;
   /**
-   * Y coordinate in data space (animated).
+   * Y coordinate in data space.
    */
   dataY: AnimatedProp<number>;
   /**
