@@ -2,8 +2,7 @@ import { memo, useCallback, useMemo, useState } from 'react';
 import type { SharedProps } from '@coinbase/cds-common/types';
 
 import { useCartesianChartContext } from '../ChartProvider';
-import type { ChartTextProps } from '../text';
-import { getPointOnScale, type Series, useScrubberContext } from '../utils';
+import { getPointOnScale, useScrubberContext } from '../utils';
 import {
   calculateLabelYPositions,
   getLabelPosition,
@@ -13,19 +12,7 @@ import {
 } from '../utils/scrubber';
 
 import { DefaultScrubberBeaconLabel } from './DefaultScrubberBeaconLabel';
-
-export type ScrubberBeaconLabelProps = Pick<Series, 'color'> &
-  Pick<ChartTextProps, 'x' | 'y' | 'dx' | 'horizontalAlignment' | 'onDimensionsChange'> & {
-    /**
-     * Label for the series.
-     */
-    label: string;
-    /**
-     * Id of the series.
-     */
-    seriesId: Series['id'];
-  };
-export type ScrubberBeaconLabelComponent = React.FC<ScrubberBeaconLabelProps>;
+import type { ScrubberBeaconLabelComponent, ScrubberBeaconLabelProps } from './Scrubber';
 
 const PositionedLabel = memo<{
   index: number;

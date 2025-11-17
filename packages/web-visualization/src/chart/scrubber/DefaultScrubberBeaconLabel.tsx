@@ -2,7 +2,7 @@ import { memo } from 'react';
 
 import { ChartText, type ChartTextProps } from '../text';
 
-import type { ScrubberBeaconLabelProps } from './ScrubberBeaconLabelGroup';
+import type { ScrubberBeaconLabelProps } from './Scrubber';
 
 const labelVerticalInset = 3.5;
 const labelHorizontalInset = 4;

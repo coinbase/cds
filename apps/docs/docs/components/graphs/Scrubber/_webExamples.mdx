@@ -142,7 +142,136 @@ function ImperativeHandle() {
 
 ### Beacons
 
-Showcase custom beacons in a simplified manner.
+You can use `BeaconComponent` to customize the visual appearance of scrubber beacons.
+
+```jsx live
+function OutlineBeacon() {
+  const OutlineBeaconComponent = memo(({ dataX, dataY, seriesId, color, isIdle }: ScrubberBeaconProps) => {
+    const { getSeries, getXScale, getYScale } = useCartesianChartContext();
+    const targetSeries = getSeries(seriesId);
+    const xScale = getXScale();
+    const yScale = getYScale(targetSeries?.yAxisId);
+
+    const pixelCoordinate = useMemo(() => {
+      if (!xScale || !yScale) return;
+      return projectPoint({ x: dataX, y: dataY, xScale, yScale });
+    }, [dataX, dataY, xScale, yScale]);
+
+    if (!pixelCoordinate) return;
+
+    if (isIdle) {
+      return (
+        <>
+          <m.circle
+            animate={{ cx: pixelCoordinate.x, cy: pixelCoordinate.y }}
+            cx={pixelCoordinate.x}
+            cy={pixelCoordinate.y}
+            transition={defaultTransition}
+            r={6}
+            fill={color}
+          />
+          <m.circle
+            animate={{ cx: pixelCoordinate.x, cy: pixelCoordinate.y }}
+            cx={pixelCoordinate.x}
+            cy={pixelCoordinate.y}
+            transition={defaultTransition}
+            r={3}
+            fill="var(--color-bg)"
+          />
+        </>
+      );
+    }
+
+    return (
+      <>
+        <circle cx={pixelCoordinate.x} cy={pixelCoordinate.y} r={6} fill={color} />
+        <circle cx={pixelCoordinate.x} cy={pixelCoordinate.y} r={3} fill="var(--color-bg)" />
+      </>
+    );
+  });
+
+  const dataCount = 14;
+  const minDataValue = 0;
+  const maxDataValue = 100;
+  const minStepOffset = 5;
+  const maxStepOffset = 20;
+  const updateInterval = 2000;
+
+  function generateNextValue(previousValue) {
+    const range = maxStepOffset - minStepOffset;
+    const offset = Math.random() * range + minStepOffset;
+
+    let direction;
+    if (previousValue >= maxDataValue) {
+      direction = -1;
+    } else if (previousValue <= minDataValue) {
+      direction = 1;
+    } else {
+      direction = Math.random() < 0.5 ? -1 : 1;
+    }
+
+    let newValue = previousValue + offset * direction;
+    return Math.max(minDataValue, Math.min(maxDataValue, newValue));
+  }
+
+  function generateInitialData() {
+    const data = [];
+    let previousValue = Math.random() * (maxDataValue - minDataValue) + minDataValue;
+    data.push(previousValue);
+
+    for (let i = 1; i < dataCount; i++) {
+      const newValue = generateNextValue(previousValue);
+      data.push(newValue);
+      previousValue = newValue;
+    }
+    return data;
+  }
+
+
+  const OutlineBeaconChart = memo(() => {
+    const [data, setData] = useState(generateInitialData);
+
+    useEffect(() => {
+      const intervalId = setInterval(() => {
+        setData((currentData) => {
+          const lastValue = currentData[currentData.length - 1] ?? 50;
+          const newValue = generateNextValue(lastValue);
+          return [...currentData.slice(1), newValue];
+        });
+      }, updateInterval);
+
+      return () => clearInterval(intervalId);
+    }, []);
+
+    return (
+      <LineChart
+        enableScrubbing
+        showArea
+        showYAxis
+        height={{ base: 150, tablet: 200, desktop: 250 }}
+        series={[
+          {
+            id: 'prices',
+            data,
+            color: 'var(--color-fg)',
+          },
+        ]}
+        xAxis={{
+          range: ({ min, max }) => ({ min, max: max - 16 }),
+        }}
+        yAxis={{
+          showGrid: true,
+          domain: { min: 0, max: 100 }
+        }}
+      >
+        <Scrubber BeaconComponent={OutlineBeaconComponent} />
+      </LineChart>
+    );
+  });
+
+  return <OutlineBeaconChart />;
+}
+```
 
 ### Labels
 
