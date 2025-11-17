@@ -1,4 +1,4 @@
-import { forwardRef, memo, useMemo, useRef, useState } from 'react';
+import { forwardRef, memo, useCallback, useMemo, useRef, useState } from 'react';
 import Fuse from 'fuse.js';
 
 import { NativeInput } from '../../controls/NativeInput';
@@ -188,20 +188,32 @@ const ComboboxBase = memo(
       //   />
       // );
 
+      const ComboboxControl = useCallback(
+        (props: SelectControlProps<Type, SelectOptionValue>) => (
+          <SelectControlComponent
+            ref={controlRef.current?.refs.setReference}
+            {...props}
+            contentNode={
+              <NativeInput
+                onChange={(event) => setSearchText(event.target.value)}
+                onKeyDown={(event) => {
+                  event.stopPropagation();
+                }}
+                placeholder={typeof placeholder === 'string' ? placeholder : undefined}
+                style={{ padding: 0 }}
+              />
+            }
+            options={options}
+            placeholder={null}
+          />
+        ),
+        [SelectControlComponent, options, placeholder, setSearchText],
+      );
+
       return (
         <Select
           ref={controlRef}
-          SelectControlComponent={(props) => (
-            <SelectControlComponent
-              {...props}
-              contentNode={
-                <NativeInput
-                  onChange={(event) => setSearchText(event.target.value)}
-                  value={searchText}
-                />
-              }
-            />
-          )}
+          SelectControlComponent={ComboboxControl}
           SelectDropdownComponent={SelectDropdownComponent}
           SelectEmptyDropdownContentsComponent={SelectEmptyDropdownContentsComponent}
           SelectOptionComponent={SelectOptionComponent}
