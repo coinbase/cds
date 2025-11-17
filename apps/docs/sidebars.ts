@@ -529,7 +529,7 @@ const sidebars: SidebarsConfig = {
             {
               type: 'doc',
               id: 'components/navigation/TabNavigation/tabNavigation',
-              label: 'TabNavigation',
+              label: 'TabNavigation (Deprecated)',
             },
             {
               type: 'doc',
