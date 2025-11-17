@@ -146,6 +146,7 @@ You can use `BeaconComponent` to customize the visual appearance of scrubber bea
 
 ```jsx live
 function OutlineBeacon() {
+  // Simple outline beacon with no pulse animation
   const OutlineBeaconComponent = memo(({ dataX, dataY, seriesId, color, isIdle }: ScrubberBeaconProps) => {
     const { getSeries, getXScale, getYScale } = useCartesianChartContext();
     const targetSeries = getSeries(seriesId);
