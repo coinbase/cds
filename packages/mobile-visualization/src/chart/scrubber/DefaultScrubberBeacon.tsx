@@ -36,7 +36,7 @@ export const DefaultScrubberBeacon = memo(
       ref,
     ) => {
       const theme = useTheme();
-      const { getSeries, getXSerializableScale, getYSerializableScale } =
+      const { getSeries, getXSerializableScale, getYSerializableScale, drawingArea } =
         useCartesianChartContext();
 
       const targetSeries = useMemo(() => getSeries(seriesId), [getSeries, seriesId]);
@@ -146,13 +146,23 @@ export const DefaultScrubberBeacon = memo(
         return pulseOpacity.value;
       }, [isIdle, pulseOpacity]);
 
+      const beaconOpacity = useDerivedValue(() => {
+        const point = targetPoint.value;
+        const isWithinDrawingArea =
+          point.x >= drawingArea.x &&
+          point.x <= drawingArea.x + drawingArea.width &&
+          point.y >= drawingArea.y &&
+          point.y <= drawingArea.y + drawingArea.height;
+        return isWithinDrawingArea ? 1 : 0;
+      }, [targetPoint, drawingArea]);
+
       return (
-        <>
+        <Group opacity={beaconOpacity}>
           <Circle c={animatedPoint} color={color} opacity={0.15} r={glowRadius} />
           <Circle c={animatedPoint} color={color} opacity={pulseVisibility} r={pulseRadius} />
           <Circle c={animatedPoint} color={theme.color.bg} r={radius + strokeWidth / 2} />
           <Circle c={animatedPoint} color={color} r={radius - strokeWidth / 2} />
-        </>
+        </Group>
       );
     },
   ),

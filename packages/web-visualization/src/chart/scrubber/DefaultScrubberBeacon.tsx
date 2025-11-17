@@ -41,7 +41,7 @@ export const DefaultScrubberBeacon = memo(
       ref,
     ) => {
       const [scope, animate] = useAnimate();
-      const { getSeries, getXScale, getYScale } = useCartesianChartContext();
+      const { getSeries, getXScale, getYScale, drawingArea } = useCartesianChartContext();
 
       const targetSeries = getSeries(seriesId);
       const xScale = getXScale();
@@ -97,11 +97,21 @@ export const DefaultScrubberBeacon = memo(
 
       const shouldPulse = isIdle && idlePulse;
 
+      const isWithinDrawingArea = useMemo(() => {
+        if (!pixelCoordinate) return false;
+        return (
+          pixelCoordinate.x >= drawingArea.x &&
+          pixelCoordinate.x <= drawingArea.x + drawingArea.width &&
+          pixelCoordinate.y >= drawingArea.y &&
+          pixelCoordinate.y <= drawingArea.y + drawingArea.height
+        );
+      }, [pixelCoordinate, drawingArea]);
+
       if (!pixelCoordinate) return;
 
       if (isIdle) {
         return (
-          <g data-testid={testID}>
+          <g data-testid={testID} opacity={isWithinDrawingArea ? 1 : 0}>
             <motion.circle
               animate={{
                 cx: pixelCoordinate.x,
@@ -161,7 +171,7 @@ export const DefaultScrubberBeacon = memo(
       }
 
       return (
-        <g data-testid={testID}>
+        <g data-testid={testID} opacity={isWithinDrawingArea ? 1 : 0}>
           <circle
             cx={pixelCoordinate.x}
             cy={pixelCoordinate.y}
