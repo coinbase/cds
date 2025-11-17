@@ -118,7 +118,155 @@ return (
 
 ### Beacons
 
-Showcase custom beacons in a simplified manner.
+You can use `BeaconComponent` to customize the visual appearance of scrubber beacons.
+
+```jsx
+function OutlineBeacon() {
+  // Simple outline beacon with no pulse animation
+  const OutlineBeaconComponent = memo(({ dataX, dataY, seriesId, isIdle, animate = true }: ScrubberBeaconProps) => {
+    const theme = useTheme();
+    const { getSeries, getXSerializableScale, getYSerializableScale } = useCartesianChartContext();
+
+    const targetSeries = useMemo(() => getSeries(seriesId), [getSeries, seriesId]);
+    const xScale = useMemo(() => getXSerializableScale(), [getXSerializableScale]);
+    const yScale = useMemo(
+      () => getYSerializableScale(targetSeries?.yAxisId),
+      [getYSerializableScale, targetSeries?.yAxisId],
+    );
+
+    const color = useMemo(
+      () => targetSeries?.color ?? theme.color.fgPrimary,
+      [targetSeries?.color, theme.color.fgPrimary],
+    );
+
+    const animatedX = useSharedValue(0);
+    const animatedY = useSharedValue(0);
+
+    // Calculate the target point position - project data to pixels
+    const targetPoint = useDerivedValue(() => {
+      if (!xScale || !yScale) return { x: 0, y: 0 };
+      return projectPointWithSerializableScale({
+        x: unwrapAnimatedValue(dataX),
+        y: unwrapAnimatedValue(dataY),
+        xScale,
+        yScale,
+      });
+    }, [dataX, dataY, xScale, yScale]);
+
+    useAnimatedReaction(
+      () => {
+        return { point: targetPoint.value, isIdle: unwrapAnimatedValue(isIdle) };
+      },
+      (current, previous) => {
+        // When animation is disabled, on initial render, or when we are starting,
+        // continuing, or finishing scrubbing we should immediately transition
+        if (!animate || previous === null || !previous.isIdle || !current.isIdle) {
+          animatedX.value = current.point.x;
+          animatedY.value = current.point.y;
+          return;
+        }
+
+        animatedX.value = buildTransition(current.point.x, defaultTransition);
+        animatedY.value = buildTransition(current.point.y, defaultTransition);
+      },
+      [animate],
+    );
+
+    // Create animated point using the animated values
+    const animatedPoint = useDerivedValue(() => {
+      return { x: animatedX.value, y: animatedY.value };
+    }, [animatedX, animatedY]);
+
+    return (
+      <>
+        <Circle c={animatedPoint} color={color} r={6} />
+        <Circle c={animatedPoint} color={theme.color.bg} r={3} />
+      </>
+    );
+  });
+
+  const dataCount = 14;
+  const minDataValue = 0;
+  const maxDataValue = 100;
+  const minStepOffset = 5;
+  const maxStepOffset = 20;
+  const updateInterval = 2000;
+
+  function generateNextValue(previousValue: number) {
+    const range = maxStepOffset - minStepOffset;
+    const offset = Math.random() * range + minStepOffset;
+
+    let direction;
+    if (previousValue >= maxDataValue) {
+      direction = -1;
+    } else if (previousValue <= minDataValue) {
+      direction = 1;
+    } else {
+      direction = Math.random() < 0.5 ? -1 : 1;
+    }
+
+    const newValue = previousValue + offset * direction;
+    return Math.max(minDataValue, Math.min(maxDataValue, newValue));
+  }
+
+  function generateInitialData() {
+    const data = [];
+    let previousValue = Math.random() * (maxDataValue - minDataValue) + minDataValue;
+    data.push(previousValue);
+
+    for (let i = 1; i < dataCount; i++) {
+      const newValue = generateNextValue(previousValue);
+      data.push(newValue);
+      previousValue = newValue;
+    }
+    return data;
+  }
+
+
+  const OutlineBeaconChart = memo(() => {
+    const [data, setData] = useState(generateInitialData);
+
+    useEffect(() => {
+      const intervalId = setInterval(() => {
+        setData((currentData) => {
+          const lastValue = currentData[currentData.length - 1] ?? 50;
+          const newValue = generateNextValue(lastValue);
+          return [...currentData.slice(1), newValue];
+        });
+      }, updateInterval);
+
+      return () => clearInterval(intervalId);
+    }, []);
+
+    return (
+      <LineChart
+        enableScrubbing
+        showArea
+        showYAxis
+        height={150}
+        series={[
+          {
+            id: 'prices',
+            data,
+            color: 'var(--color-fg)',
+          },
+        ]}
+        xAxis={{
+          range: ({ min, max }) => ({ min, max: max - 16 }),
+        }}
+        yAxis={{
+          showGrid: true,
+          domain: { min: 0, max: 100 }
+        }}
+      >
+        <Scrubber BeaconComponent={OutlineBeaconComponent} />
+      </LineChart>
+    );
+  });
+
+  return <OutlineBeaconChart />;
+}
+```
 
 ### Labels
 

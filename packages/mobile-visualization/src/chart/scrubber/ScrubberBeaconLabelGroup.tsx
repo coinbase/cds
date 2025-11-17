@@ -5,8 +5,7 @@ import type { SharedProps } from '@coinbase/cds-common/types';
 import type { AnimatedProp } from '@shopify/react-native-skia';
 
 import { useCartesianChartContext } from '../ChartProvider';
-import type { ChartTextProps } from '../text';
-import { applySerializableScale, type Series, useScrubberContext } from '../utils';
+import { applySerializableScale, useScrubberContext } from '../utils';
 import {
   calculateLabelYPositions,
   getLabelPosition,
@@ -16,19 +15,7 @@ import {
 } from '../utils/scrubber';
 
 import { DefaultScrubberBeaconLabel } from './DefaultScrubberBeaconLabel';
-
-export type ScrubberBeaconLabelProps = Pick<Series, 'color'> &
-  Pick<ChartTextProps, 'x' | 'y' | 'dx' | 'horizontalAlignment' | 'onDimensionsChange'> & {
-    /**
-     * Label for the series.
-     */
-    label: AnimatedProp<string>;
-    /**
-     * Id of the series.
-     */
-    seriesId: Series['id'];
-  };
-export type ScrubberBeaconLabelComponent = React.FC<ScrubberBeaconLabelProps>;
+import type { ScrubberBeaconLabelComponent, ScrubberBeaconLabelProps } from './Scrubber';
 
 const PositionedLabel = memo<{
   index: number;
@@ -117,8 +104,8 @@ export const ScrubberBeaconLabelGroup = memo<ScrubberBeaconLabelGroupProps>(
       getXSerializableScale,
       getYSerializableScale,
       getXAxis,
-      series,
       drawingArea,
+      maxDataLength,
     } = useCartesianChartContext();
     const { scrubberPosition } = useScrubberContext();
 
@@ -160,15 +147,6 @@ export const ScrubberBeaconLabelGroup = memo<ScrubberBeaconLabelGroupProps>(
         })
         .filter((info): info is NonNullable<typeof info> => info !== null);
     }, [labels, getSeries, getSeriesData, getYSerializableScale]);
-
-    const maxDataLength = useMemo(
-      () =>
-        series?.reduce((max: any, s: any) => {
-          const seriesData = getSeriesData(s.id);
-          return Math.max(max, seriesData?.length ?? 0);
-        }, 0) ?? 0,
-      [series, getSeriesData],
-    );
 
     const xScale = getXSerializableScale();
     const xAxis = getXAxis();

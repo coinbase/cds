@@ -37,12 +37,9 @@ import { CartesianChart } from '../../CartesianChart';
 import { useCartesianChartContext } from '../../ChartProvider';
 import { PeriodSelector, PeriodSelectorActiveIndicator } from '../../PeriodSelector';
 import { Point } from '../../Point';
-import { Scrubber, type ScrubberRef } from '../../scrubber';
-import { DefaultScrubberBeaconLabel } from '../../scrubber/DefaultScrubberBeaconLabel';
-import type { ScrubberBeaconLabelProps } from '../../scrubber/ScrubberBeaconLabelGroup';
+import { DefaultScrubberBeacon, Scrubber, type ScrubberRef } from '../../scrubber';
 import {
   type AxisBounds,
-  getLineData,
   getPointOnSerializableScale,
   type Transition,
   unwrapAnimatedValue,
@@ -1803,7 +1800,15 @@ function ForecastAssetPrice() {
   });
   const CustomScrubber = memo(() => {
     const { scrubberPosition } = useScrubberContext();
-    const isScrubbing = scrubberPosition !== undefined;
+
+    const idleScrubberOpacity = useDerivedValue(
+      () => (scrubberPosition.value === undefined ? 1 : 0),
+      [scrubberPosition],
+    );
+    const scrubberOpacity = useDerivedValue(
+      () => (scrubberPosition.value !== undefined ? 1 : 0),
+      [scrubberPosition],
+    );
 
     // Fade in animation for the Scrubber
     const fadeInOpacity = useSharedValue(0);
@@ -1814,11 +1819,16 @@ function ForecastAssetPrice() {
 
     return (
       <Group opacity={fadeInOpacity}>
-        <Group opacity={isScrubbing ? 1 : 0}>
+        <Group opacity={scrubberOpacity}>
           <Scrubber hideOverlay />
         </Group>
-        <Group opacity={isScrubbing ? 0 : 1}>
-          <Point dataX={currentIndex} dataY={data[currentIndex]} fill={assets.btc.color} />
+        <Group opacity={idleScrubberOpacity}>
+          <DefaultScrubberBeacon
+            isIdle
+            dataX={currentIndex}
+            dataY={data[currentIndex]}
+            seriesId="price"
+          />
         </Group>
       </Group>
     );
@@ -1839,94 +1849,6 @@ function ForecastAssetPrice() {
 }
 
 function ImperativeHandle() {
-  const theme = useTheme();
-  // This custom component label shows the percentage value of the data at the scrubber position.
-  const MyScrubberBeaconLabel = memo(
-    ({ seriesId, color, label, ...props }: ScrubberBeaconLabelProps) => {
-      const { getSeriesData, series } = useCartesianChartContext();
-      const { scrubberPosition } = useScrubberContext();
-
-      const seriesData = useMemo(
-        () => getLineData(getSeriesData(seriesId)),
-        [getSeriesData, seriesId],
-      );
-
-      const maxDataLength = useMemo(
-        () =>
-          series?.reduce((max, s) => {
-            const seriesData = getSeriesData(s.id);
-            return Math.max(max, seriesData?.length ?? 0);
-          }, 0) ?? 0,
-        [series, getSeriesData],
-      );
-
-      const dataIndex = useDerivedValue(() => {
-        return scrubberPosition.value ?? Math.max(0, maxDataLength - 1);
-      }, [scrubberPosition, maxDataLength]);
-
-      const percentageLabel = useDerivedValue(() => {
-        if (seriesData !== undefined) {
-          const dataAtPosition = seriesData[dataIndex.value];
-          return `${unwrapAnimatedValue(label)} · ${dataAtPosition}%`;
-        }
-        return unwrapAnimatedValue(label);
-      }, [label, seriesData, dataIndex]);
-
-      return (
-        <DefaultScrubberBeaconLabel
-          {...props}
-          background={color}
-          color={theme.color.bg}
-          label={percentageLabel}
-          seriesId={seriesId}
-        />
-      );
-    },
-  );
-
-  return (
-    <LineChart
-      enableScrubbing
-      showArea
-      showYAxis
-      areaType="dotted"
-      height={150}
-      series={[
-        {
-          id: 'Boston',
-          data: [25, 30, 35, 45, 60, 100],
-          color: `rgb(${theme.spectrum.green40})`,
-          label: 'Boston',
-        },
-        {
-          id: 'Miami',
-          data: [20, 25, 30, 35, 20, 0],
-          color: `rgb(${theme.spectrum.blue40})`,
-          label: 'Miami',
-        },
-        {
-          id: 'Denver',
-          data: [10, 15, 20, 25, 40, 0],
-          color: `rgb(${theme.spectrum.orange40})`,
-          label: 'Denver',
-        },
-        {
-          id: 'Phoenix',
-          data: [15, 10, 5, 0, 0, 0],
-          color: `rgb(${theme.spectrum.red40})`,
-          label: 'Phoenix',
-        },
-      ]}
-      yAxis={{
-        showGrid: true,
-      }}
-    >
-      <Scrubber BeaconLabelComponent={MyScrubberBeaconLabel} />
-    </LineChart>
-  );
-}
-
-function ImperativeHandleOld() {
   const theme = useTheme();
   const scrubberRef = useRef<ScrubberRef>(null);
 

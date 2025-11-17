@@ -233,6 +233,14 @@ export const CartesianChart = memo(
         [stackedDataMap],
       );
 
+      const maxDataLength = useMemo(() => {
+        if (!series || series.length === 0) return 0;
+        return series.reduce((max, s) => {
+          const seriesData = getStackedSeriesData(s.id);
+          return Math.max(max, seriesData?.length ?? 0);
+        }, 0);
+      }, [series, getStackedSeriesData]);
+
       const getAxisBounds = useCallback(
         (axisId: string): Rect | undefined => {
           const axis = renderedAxes.get(axisId);
@@ -304,6 +312,7 @@ export const CartesianChart = memo(
           getXScale,
           getYScale,
           drawingArea: chartRect,
+          maxDataLength,
           registerAxis,
           unregisterAxis,
           getAxisBounds,
@@ -320,6 +329,7 @@ export const CartesianChart = memo(
           getXScale,
           getYScale,
           chartRect,
+          maxDataLength,
           registerAxis,
           unregisterAxis,
           getAxisBounds,
