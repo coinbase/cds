@@ -54,6 +54,7 @@ export const DefaultSelectControlComponent = memo(
         helperText,
         label,
         labelVariant,
+        contentNode,
         startNode,
         endNode: customEndNode,
         compact,
@@ -255,6 +256,7 @@ export const DefaultSelectControlComponent = memo(
             style={[{ flexGrow: 1 }, styles?.controlInputNode]}
             {...props}
           >
+            {/* TO DO: Why is this so different than the web implementation? */}
             <HStack
               alignItems="center"
               justifyContent="space-between"
@@ -285,6 +287,7 @@ export const DefaultSelectControlComponent = memo(
                   style={styles?.controlValueNode}
                 >
                   {valueNode}
+                  {contentNode}
                 </VStack>
               </HStack>
             </HStack>
@@ -305,6 +308,7 @@ export const DefaultSelectControlComponent = memo(
           shouldShowCompactLabel,
           labelNode,
           valueNode,
+          contentNode,
           setOpen,
         ],
       );

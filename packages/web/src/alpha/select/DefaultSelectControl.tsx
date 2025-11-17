@@ -8,6 +8,7 @@ import { InputLabel } from '../../controls/InputLabel';
 import { InputStack } from '../../controls/InputStack';
 import { cx } from '../../cx';
 import { HStack } from '../../layout/HStack';
+import { VStack } from '../../layout/VStack';
 import { AnimatedCaret } from '../../motion/AnimatedCaret';
 import { Pressable } from '../../system/Pressable';
 import { Text } from '../../typography/Text';
@@ -66,6 +67,7 @@ const DefaultSelectControlComponent = memo(
         helperText,
         label,
         labelVariant,
+        contentNode,
         startNode,
         endNode: customEndNode,
         compact,
@@ -342,9 +344,10 @@ const DefaultSelectControlComponent = memo(
               justifyContent="space-between"
               width={shouldShowCompactLabel ? '60%' : '100%'}
             >
-              <HStack
+              {/* TO DO: Why is this so different than the mobile implementation? */}
+              <VStack
                 ref={valueNodeContainerRef}
-                alignItems="center"
+                alignItems={shouldShowCompactLabel ? 'flex-end' : 'flex-start'}
                 className={classNames?.controlValueNode}
                 flexGrow={1}
                 flexShrink={1}
@@ -358,7 +361,8 @@ const DefaultSelectControlComponent = memo(
                 style={styles?.controlValueNode}
               >
                 {valueNode}
-              </HStack>
+                {contentNode}
+              </VStack>
             </HStack>
           </Pressable>
         ),
@@ -379,6 +383,7 @@ const DefaultSelectControlComponent = memo(
           labelVariant,
           compact,
           valueNode,
+          contentNode,
           setOpen,
         ],
       );
