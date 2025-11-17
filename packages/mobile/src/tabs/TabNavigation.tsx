@@ -249,6 +249,11 @@ const TabNavigationComponent = memo(
   ),
 );
 
+/**
+ * TabNavigation renders a horizontal, tab-based navigation bar.
+ * This component has a opinionated default style, but allows for customization through custom Component props.
+ * @deprecated Use `Tabs` instead.
+ */
 export const TabNavigation = TabNavigationComponent as TabNavigationFC;
 
 TabNavigationComponent.displayName = 'TabNavigation';
