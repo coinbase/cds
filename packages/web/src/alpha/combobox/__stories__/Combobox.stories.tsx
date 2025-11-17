@@ -33,6 +33,16 @@ const fruitOptions: SelectOption[] = [
   { value: 'strawberry', label: 'Strawberry' },
 ];
 
+const singleFruitOptions: SelectOption[] = [
+  { value: null, label: 'Remove selection' },
+  { value: 'apple', label: 'Apple' },
+  { value: 'banana', label: 'Banana' },
+  { value: 'cherry', label: 'Cherry' },
+  { value: 'date', label: 'Date' },
+  { value: 'elderberry', label: 'Elderberry' },
+  { value: 'fig', label: 'Fig' },
+];
+
 const countryOptions: SelectOption[] = [
   { value: 'us', label: 'United States', description: 'North America' },
   { value: 'ca', label: 'Canada', description: 'North America' },
@@ -93,6 +103,23 @@ export const BasicUsage = () => {
         onChange={onChange}
         options={fruitOptions}
         placeholder="Search and select fruits..."
+        type="multi"
+        value={value}
+      />
+    </VStack>
+  );
+};
+
+export const SingleSelect = () => {
+  const [value, setValue] = useState<string | null>('apple');
+
+  return (
+    <VStack gap={4}>
+      <Combobox
+        label="Select fruits"
+        onChange={setValue}
+        options={singleFruitOptions}
+        placeholder="Search and select fruits..."
         value={value}
       />
     </VStack>
@@ -111,6 +138,7 @@ export const InitialValues = () => {
         onChange={onChange}
         options={fruitOptions}
         placeholder="Search fruits..."
+        type="multi"
         value={value}
       />
     </VStack>
@@ -131,6 +159,7 @@ export const ControlledSearch = () => {
         options={fruitOptions}
         placeholder="Type to search..."
         searchText={searchText}
+        type="multi"
         value={value}
       />
       <Button onClick={() => setSearchText('apple')}>Set search to &quot;apple&quot;</Button>
@@ -149,6 +178,7 @@ export const UncontrolledSearch = () => {
         onChange={onChange}
         options={fruitOptions}
         placeholder="Search..."
+        type="multi"
         value={value}
       />
     </VStack>
@@ -173,6 +203,7 @@ export const ControlledOpen = () => {
         options={fruitOptions}
         placeholder="Controlled state..."
         setOpen={setOpen}
+        type="multi"
         value={value}
       />
     </VStack>
@@ -190,6 +221,7 @@ export const DefaultOpen = () => {
         onChange={onChange}
         options={fruitOptions}
         placeholder="Already open..."
+        type="multi"
         value={value}
       />
     </VStack>
@@ -206,6 +238,7 @@ export const WithDescriptions = () => {
         onChange={onChange}
         options={countryOptions}
         placeholder="Search countries..."
+        type="multi"
         value={value}
       />
     </VStack>
@@ -236,6 +269,7 @@ export const CustomFilter = () => {
         onChange={onChange}
         options={cryptoOptions}
         placeholder="Type to filter..."
+        type="multi"
         value={value}
       />
     </VStack>
@@ -255,6 +289,7 @@ export const Disabled = () => {
         onChange={onChange}
         options={fruitOptions}
         placeholder="Cannot interact..."
+        type="multi"
         value={value}
       />
     </VStack>
@@ -272,6 +307,7 @@ export const Compact = () => {
         onChange={onChange}
         options={fruitOptions}
         placeholder="Compact combobox..."
+        type="multi"
         value={value}
       />
     </VStack>
@@ -289,6 +325,7 @@ export const HelperText = () => {
         onChange={onChange}
         options={teamOptions}
         placeholder="Search team members..."
+        type="multi"
         value={value}
       />
     </VStack>
@@ -308,6 +345,7 @@ export const Variants = () => {
         onChange={onChange1}
         options={fruitOptions}
         placeholder="Default style..."
+        type="multi"
         value={value1}
       />
       <Combobox
@@ -315,6 +353,7 @@ export const Variants = () => {
         onChange={onChange2}
         options={fruitOptions}
         placeholder="Success style..."
+        type="multi"
         value={value2}
         variant="positive"
       />
@@ -323,6 +362,7 @@ export const Variants = () => {
         onChange={onChange3}
         options={fruitOptions}
         placeholder="Error style..."
+        type="multi"
         value={value3}
         variant="negative"
       />
@@ -331,6 +371,7 @@ export const Variants = () => {
         onChange={onChange4}
         options={fruitOptions}
         placeholder="Primary style..."
+        type="multi"
         value={value4}
         variant="primary"
       />
@@ -350,6 +391,7 @@ export const LabelPosition = () => {
         onChange={onChange1}
         options={fruitOptions}
         placeholder="Label is outside..."
+        type="multi"
         value={value1}
       />
       <Combobox
@@ -358,6 +400,7 @@ export const LabelPosition = () => {
         onChange={onChange2}
         options={fruitOptions}
         placeholder="Label is inside..."
+        type="multi"
         value={value2}
       />
     </VStack>
@@ -375,6 +418,7 @@ export const StartNode = () => {
         options={cryptoOptions}
         placeholder="Search crypto..."
         startNode={<Icon name="search" size="s" />}
+        type="multi"
         value={value}
       />
     </VStack>
@@ -392,6 +436,7 @@ export const EndNode = () => {
         onChange={onChange}
         options={fruitOptions}
         placeholder="Custom icon..."
+        type="multi"
         value={value}
       />
     </VStack>
@@ -411,6 +456,7 @@ export const MaxSelectedDisplay = () => {
         onChange={onChange}
         options={fruitOptions}
         placeholder="Shows max 3 selections..."
+        type="multi"
         value={value}
       />
     </VStack>
@@ -431,6 +477,7 @@ export const HiddenOptionsLabel = () => {
         onChange={onChange}
         options={countryOptions}
         placeholder="Select countries..."
+        type="multi"
         value={value}
       />
     </VStack>
@@ -450,6 +497,7 @@ export const RemoveOptionLabel = () => {
         options={fruitOptions}
         placeholder="Custom accessibility..."
         removeSelectedOptionAccessibilityLabel="Delete"
+        type="multi"
         value={value}
       />
     </VStack>
@@ -467,6 +515,7 @@ export const AccessibilityLabel = () => {
         onChange={onChange}
         options={fruitOptions}
         placeholder="Has accessibility label..."
+        type="multi"
         value={value}
       />
     </VStack>
@@ -484,6 +533,7 @@ export const SelectAll = () => {
         options={fruitOptions}
         placeholder="Can select all..."
         selectAllLabel="Select all fruits"
+        type="multi"
         value={value}
       />
     </VStack>
@@ -501,6 +551,7 @@ export const HideSelectAll = () => {
         onChange={onChange}
         options={fruitOptions}
         placeholder="No select all option..."
+        type="multi"
         value={value}
       />
     </VStack>
@@ -520,6 +571,7 @@ export const ClearAll = () => {
         onChange={onChange}
         options={fruitOptions}
         placeholder="Can clear all..."
+        type="multi"
         value={value}
       />
     </VStack>
@@ -537,6 +589,7 @@ export const EmptyOptions = () => {
         onChange={onChange}
         options={[]}
         placeholder="No options available..."
+        type="multi"
         value={value}
       />
     </VStack>
@@ -557,6 +610,7 @@ export const PersistentDropdown = () => {
         onChange={onChange}
         options={fruitOptions}
         placeholder="Stays open..."
+        type="multi"
         value={value}
       />
     </VStack>
@@ -580,6 +634,7 @@ export const CustomStyles = () => {
           option: { padding: '12px' },
           optionLabel: { fontWeight: 'bold' },
         }}
+        type="multi"
         value={value}
       />
     </VStack>
@@ -601,6 +656,7 @@ export const CustomClasses = () => {
         onChange={onChange}
         options={fruitOptions}
         placeholder="Custom classes..."
+        type="multi"
         value={value}
       />
     </VStack>
@@ -618,6 +674,7 @@ export const TestIdentifier = () => {
         options={fruitOptions}
         placeholder="Has test ID..."
         testID="fruit-combobox"
+        type="multi"
         value={value}
       />
     </VStack>
@@ -639,6 +696,7 @@ export const OptionsWithMedia = () => {
         onChange={onChange}
         options={optionsWithIcons}
         placeholder="Icons in options..."
+        type="multi"
         value={value}
       />
     </VStack>
@@ -664,6 +722,7 @@ export const OptionsWithAccessory = () => {
         onChange={onChange}
         options={optionsWithBadges}
         placeholder="Select team members..."
+        type="multi"
         value={value}
       />
     </VStack>
@@ -689,6 +748,7 @@ export const OptionsWithEnd = () => {
         onChange={onChange}
         options={optionsWithEnd}
         placeholder="Select assets..."
+        type="multi"
         value={value}
       />
     </VStack>
@@ -710,6 +770,7 @@ export const DisabledOptions = () => {
         onChange={onChange}
         options={mixedOptions}
         placeholder="Some options disabled..."
+        type="multi"
         value={value}
       />
     </VStack>
@@ -732,6 +793,7 @@ export const LongList = () => {
         onChange={onChange}
         options={longOptions}
         placeholder="Search from 100 options..."
+        type="multi"
         value={value}
       />
     </VStack>
@@ -752,6 +814,7 @@ export const NoResults = () => {
         options={fruitOptions}
         placeholder="Try searching..."
         searchText={searchText}
+        type="multi"
         value={value}
       />
     </VStack>
@@ -786,6 +849,7 @@ export const AdvancedFiltering = () => {
         onChange={onChange}
         options={countryOptions}
         placeholder="Try 'north america' or 'euro'..."
+        type="multi"
         value={value}
       />
     </VStack>
@@ -802,6 +866,7 @@ export const ValueMonitoring = () => {
         onChange={onChange}
         options={fruitOptions}
         placeholder="Select to see values..."
+        type="multi"
         value={value}
       />
       <VStack background="bgSecondary" borderRadius={400} gap={2} padding={3}>
@@ -820,9 +885,9 @@ export const ChangeHandler = () => {
   const [value, setValue] = useState<string[]>([]);
   const [lastChange, setLastChange] = useState<string>('');
 
-  const handleChange = (newValue: string | string[]) => {
+  const handleChange = (newValue: string | string[] | null) => {
     const arrayValue = Array.isArray(newValue) ? newValue : [newValue];
-    setValue(arrayValue);
+    setValue(arrayValue as string[]);
     setLastChange(`Changed to: ${JSON.stringify(newValue)}`);
   };
 
@@ -833,6 +898,7 @@ export const ChangeHandler = () => {
         onChange={handleChange}
         options={fruitOptions}
         placeholder="Select to track changes..."
+        type="multi"
         value={value}
       />
       <Text color="fgMuted" fontSize="caption">
@@ -861,6 +927,7 @@ export const KeyboardSupport = () => {
         onChange={onChange}
         options={fruitOptions}
         placeholder="Try keyboard navigation..."
+        type="multi"
         value={value}
       />
     </VStack>
@@ -879,6 +946,7 @@ export const MultipleInstances = () => {
         onChange={fruits.onChange}
         options={fruitOptions}
         placeholder="Select fruits..."
+        type="multi"
         value={fruits.value}
       />
       <Combobox
@@ -886,6 +954,7 @@ export const MultipleInstances = () => {
         onChange={countries.onChange}
         options={countryOptions}
         placeholder="Select countries..."
+        type="multi"
         value={countries.value}
       />
       <Combobox
@@ -893,6 +962,7 @@ export const MultipleInstances = () => {
         onChange={crypto.onChange}
         options={cryptoOptions}
         placeholder="Select crypto..."
+        type="multi"
         value={crypto.value}
       />
     </VStack>
@@ -919,6 +989,7 @@ export const DynamicOptions = () => {
         onChange={onChange}
         options={options}
         placeholder="Options can change..."
+        type="multi"
         value={value}
       />
       <Button compact onClick={addOption}>
@@ -947,6 +1018,7 @@ export const StressTest = () => {
         onChange={onChange}
         options={hugeOptions}
         placeholder="Search 1000 items..."
+        type="multi"
         value={value}
       />
     </VStack>
