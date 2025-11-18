@@ -1,4 +1,4 @@
-import React, { forwardRef, memo, useCallback, useMemo, useState } from 'react';
+import React, { forwardRef, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { SharedAccessibilityProps, SharedProps, ThemeVars } from '@coinbase/cds-common';
 import { useTabsContext } from '@coinbase/cds-common/tabs/TabsContext';
 import type { TabValue } from '@coinbase/cds-common/tabs/useTabs';
@@ -31,6 +31,7 @@ const DefaultTabComponent = <T extends string = string>({
 }: TabbedChipProps<T>) => {
   const { activeTab, updateActiveTab } = useTabsContext();
   const isActive = useMemo(() => activeTab?.id === id, [activeTab, id]);
+  const chipRef = useRef<HTMLButtonElement>(null);
   const handleClick = useCallback(
     (event: React.MouseEvent<HTMLButtonElement>) => {
       event.preventDefault();
@@ -38,8 +39,17 @@ const DefaultTabComponent = <T extends string = string>({
     },
     [id, updateActiveTab],
   );
+
+  // Keep focus on the newly active chip
+  useEffect(() => {
+    if (isActive && chipRef.current) {
+      chipRef.current.focus();
+    }
+  }, [isActive]);
+
   return (
     <MediaChip
+      ref={chipRef}
       aria-selected={isActive}
       invertColorScheme={isActive}
       onClick={handleClick}

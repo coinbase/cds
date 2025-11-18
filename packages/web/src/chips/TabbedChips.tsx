@@ -1,4 +1,4 @@
-import React, { forwardRef, memo, useCallback, useMemo, useState } from 'react';
+import React, { forwardRef, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTabsContext } from '@coinbase/cds-common/tabs/TabsContext';
 import type { TabValue } from '@coinbase/cds-common/tabs/useTabs';
 import { css } from '@linaria/core';
@@ -19,9 +19,19 @@ const scrollContainerCss = css`
 const TabComponent = <T extends string = string>({ label = '', id, ...tabProps }: TabValue<T>) => {
   const { activeTab, updateActiveTab } = useTabsContext();
   const isActive = useMemo(() => activeTab?.id === id, [activeTab, id]);
+  const chipRef = useRef<HTMLButtonElement>(null);
   const handleClick = useCallback(() => updateActiveTab(id), [id, updateActiveTab]);
+
+  // Keep focus on the newly active chip
+  useEffect(() => {
+    if (isActive && chipRef.current) {
+      chipRef.current.focus();
+    }
+  }, [isActive]);
+
   return (
     <MediaChip
+      ref={chipRef}
       aria-selected={isActive}
       inverted={isActive}
       onClick={handleClick}
