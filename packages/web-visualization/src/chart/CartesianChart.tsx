@@ -61,10 +61,46 @@ export type CartesianChartBaseProps = BoxBaseProps &
     inset?: number | Partial<ChartInset>;
   };
 
-export type CartesianChartProps = BoxProps<'svg'> & CartesianChartBaseProps;
+export type CartesianChartProps = Omit<BoxProps<'div'>, 'title'> &
+  CartesianChartBaseProps & {
+    /**
+     * Custom class name for the root element.
+     */
+    className?: string;
+    /**
+     * Custom class names for the component.
+     */
+    classNames?: {
+      /**
+       * Custom class name for the root element.
+       */
+      root?: string;
+      /**
+       * Custom class name for the chart SVG element.
+       */
+      chart?: string;
+    };
+    /**
+     * Custom styles for the root element.
+     */
+    style?: React.CSSProperties;
+    /**
+     * Custom styles for the component.
+     */
+    styles?: {
+      /**
+       * Custom styles for the root element.
+       */
+      root?: React.CSSProperties;
+      /**
+       * Custom styles for the chart SVG element.
+       */
+      chart?: React.CSSProperties;
+    };
+  };
 
 export const CartesianChart = memo(
-  forwardRef<SVGSVGElement, CartesianChartProps>(
+  forwardRef<HTMLDivElement, CartesianChartProps>(
     (
       {
         series,
@@ -78,13 +114,15 @@ export const CartesianChart = memo(
         width = '100%',
         height = '100%',
         className,
+        classNames,
         style,
+        styles,
         ...props
       },
       ref,
     ) => {
       const { observe, width: chartWidth, height: chartHeight } = useDimensions();
-      const internalSvgRef = useRef<SVGSVGElement>(null);
+      const svgRef = useRef<SVGSVGElement>(null);
 
       const calculatedInset = useMemo(() => getChartInset(inset, defaultChartInset), [inset]);
 
@@ -336,42 +374,57 @@ export const CartesianChart = memo(
         ],
       );
 
+      const rootClassNames = useMemo(
+        () => cx(className, classNames?.root),
+        [className, classNames],
+      );
+      const rootStyles = useMemo(() => ({ ...style, ...styles?.root }), [style, styles?.root]);
+
       return (
-        <Box
-          ref={(node) => {
-            // Handle the observe ref, internal ref, and forwarded ref
-            observe(node as unknown as HTMLElement);
-            if (internalSvgRef.current !== node) {
-              (internalSvgRef as React.MutableRefObject<SVGSVGElement | null>).current =
-                node as unknown as SVGSVGElement;
-            }
-            if (ref) {
-              if (typeof ref === 'function') {
-                ref(node as unknown as SVGSVGElement);
-              } else {
-                ref.current = node as unknown as SVGSVGElement;
-              }
-            }
-          }}
-          aria-live="polite"
-          as="svg"
-          className={cx(enableScrubbing && focusStylesCss, className)}
-          height={height}
-          style={style}
-          tabIndex={enableScrubbing ? 0 : undefined}
-          width={width}
-          {...props}
-        >
-          <CartesianChartProvider value={contextValue}>
-            <ScrubberProvider
-              enableScrubbing={!!enableScrubbing}
-              onScrubberPositionChange={onScrubberPositionChange}
-              svgRef={internalSvgRef}
+        <CartesianChartProvider value={contextValue}>
+          <ScrubberProvider
+            enableScrubbing={!!enableScrubbing}
+            onScrubberPositionChange={onScrubberPositionChange}
+            svgRef={svgRef}
+          >
+            <Box
+              ref={(node) => {
+                // Handle the observe ref and forwarded ref
+                observe(node as unknown as HTMLElement);
+                if (ref) {
+                  if (typeof ref === 'function') {
+                    ref(node as unknown as HTMLDivElement);
+                  } else {
+                    ref.current = node as unknown as HTMLDivElement;
+                  }
+                }
+              }}
+              className={rootClassNames}
+              height={height}
+              style={rootStyles}
+              width={width}
+              {...props}
             >
-              {children}
-            </ScrubberProvider>
-          </CartesianChartProvider>
-        </Box>
+              <Box
+                ref={(node) => {
+                  if (svgRef.current !== (node as unknown as SVGSVGElement)) {
+                    (svgRef as React.MutableRefObject<SVGSVGElement | null>).current =
+                      node as unknown as SVGSVGElement;
+                  }
+                }}
+                aria-live="polite"
+                as="svg"
+                className={cx(enableScrubbing && focusStylesCss, classNames?.chart)}
+                height="100%"
+                style={styles?.chart}
+                tabIndex={enableScrubbing ? 0 : undefined}
+                width="100%"
+              >
+                {children}
+              </Box>
+            </Box>
+          </ScrubberProvider>
+        </CartesianChartProvider>
       );
     },
   ),

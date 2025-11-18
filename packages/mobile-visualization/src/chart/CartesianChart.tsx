@@ -1,5 +1,5 @@
 import React, { forwardRef, memo, useCallback, useMemo } from 'react';
-import { type View } from 'react-native';
+import { type StyleProp, type View, type ViewStyle } from 'react-native';
 import type { Rect } from '@coinbase/cds-common/types';
 import { useLayout } from '@coinbase/cds-mobile/hooks/useLayout';
 import type { BoxBaseProps, BoxProps } from '@coinbase/cds-mobile/layout';
@@ -29,11 +29,11 @@ import {
 } from './utils';
 
 const ChartCanvas = memo(
-  ({ children, width, height }: { children: React.ReactNode; width: number; height: number }) => {
+  ({ children, style }: { children: React.ReactNode; style?: StyleProp<ViewStyle> }) => {
     const ContextBridge = useContextBridge();
 
     return (
-      <Canvas style={{ width, height }}>
+      <Canvas style={[{ width: '100%', height: '100%' }, style]}>
         <ContextBridge>{children}</ContextBridge>
       </Canvas>
     );
@@ -64,6 +64,11 @@ export type CartesianChartBaseProps = Omit<BoxBaseProps, 'fontFamily'> &
      * Inset around the entire chart (outside the axes).
      */
     inset?: number | Partial<ChartInset>;
+  };
+
+export type CartesianChartProps = CartesianChartBaseProps &
+  Pick<ScrubberProviderProps, 'allowOverflowGestures'> &
+  Omit<BoxProps, 'fontFamily'> & {
     /**
      * Default font to use within ChartText.
      * If not provided, will be the default for the system.
@@ -74,19 +79,23 @@ export type CartesianChartBaseProps = Omit<BoxBaseProps, 'fontFamily'> &
      * If not provided, the only available fonts will be those defined by the system.
      */
     fontProvider?: SkTypefaceFontProvider;
-  };
-
-export type CartesianChartProps = CartesianChartBaseProps &
-  Pick<ScrubberProviderProps, 'allowOverflowGestures'> &
-  Omit<BoxProps, 'fontFamily'> & {
     /**
-     * Chart width. If not provided, will use the container's measured width.
+     * Custom styles for the root element.
      */
-    width?: number | string;
+    style?: StyleProp<ViewStyle>;
     /**
-     * Chart height. If not provided, will use the container's measured height.
+     * Custom styles for the component.
      */
-    height?: number | string;
+    styles?: {
+      /**
+       * Custom styles for the root element.
+       */
+      root?: StyleProp<ViewStyle>;
+      /**
+       * Custom styles for the chart canvas element.
+       */
+      chart?: StyleProp<ViewStyle>;
+    };
   };
 
 export const CartesianChart = memo(
@@ -104,6 +113,7 @@ export const CartesianChart = memo(
         width = '100%',
         height = '100%',
         style,
+        styles,
         allowOverflowGestures,
         fontFamily,
         fontProvider: fontProviderProp,
@@ -117,8 +127,8 @@ export const CartesianChart = memo(
     ) => {
       const [containerLayout, onContainerLayout] = useLayout();
 
-      const chartWidth = typeof width === 'number' ? width : containerLayout.width;
-      const chartHeight = typeof height === 'number' ? height : containerLayout.height;
+      const chartWidth = containerLayout.width;
+      const chartHeight = containerLayout.height;
 
       const calculatedInset = useMemo(() => getChartInset(inset, defaultChartInset), [inset]);
 
@@ -407,17 +417,9 @@ export const CartesianChart = memo(
         ],
       );
 
-      const containerStyles = useMemo(() => {
-        const dynamicStyles: any = {};
-        if (typeof width === 'string') {
-          dynamicStyles.width = width;
-        }
-        if (typeof height === 'string') {
-          dynamicStyles.height = height;
-        }
-
-        return [style, dynamicStyles];
-      }, [style, width, height]);
+      const rootStyles = useMemo(() => {
+        return [style, styles?.root];
+      }, [style, styles?.root]);
 
       return (
         <CartesianChartProvider value={contextValue}>
@@ -431,13 +433,13 @@ export const CartesianChart = memo(
               accessibilityLiveRegion="polite"
               accessibilityRole="image"
               collapsable={collapsable}
+              height={height}
               onLayout={onContainerLayout}
-              style={containerStyles}
+              style={rootStyles}
+              width={width}
               {...props}
             >
-              <ChartCanvas height={chartHeight} width={chartWidth}>
-                {children}
-              </ChartCanvas>
+              <ChartCanvas style={styles?.chart}>{children}</ChartCanvas>
             </Box>
           </ScrubberProvider>
         </CartesianChartProvider>

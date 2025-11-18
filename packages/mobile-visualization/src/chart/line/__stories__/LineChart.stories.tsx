@@ -2155,7 +2155,7 @@ function ExampleNavigator() {
         ),
       },
       {
-        title: 'Imperative Handle 2',
+        title: 'Imperative Handle',
         component: <ImperativeHandle />,
       },
       {
