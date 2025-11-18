@@ -1,4 +1,12 @@
-import { forwardRef, memo, useCallback, useMemo, useRef, useState } from 'react';
+import {
+  forwardRef,
+  memo,
+  useCallback,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import Fuse from 'fuse.js';
 
 import { NativeInput } from '../../controls/NativeInput';
@@ -82,7 +90,6 @@ const ComboboxBase = memo(
       ref: React.Ref<ComboboxRef>,
     ) => {
       const controlRef = useRef<ComboboxRef>(null);
-
       const [searchTextInternal, setSearchTextInternal] = useState(defaultSearchText);
       const searchText = searchTextProp ?? searchTextInternal;
       const setSearchText = onSearchProp ?? setSearchTextInternal;
@@ -150,6 +157,13 @@ const ComboboxBase = memo(
       //     variant={variant}
       //   />
       // );
+
+      useImperativeHandle(ref, () =>
+        Object.assign(controlRef.current as ComboboxRef, {
+          open,
+          setOpen,
+        }),
+      );
 
       const ComboboxControl = useCallback(
         (props: SelectControlProps<Type, SelectOptionValue>) => (

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { useMultiSelect } from '@coinbase/cds-common/select/useMultiSelect';
 import { css } from '@linaria/core';
 
@@ -8,7 +8,7 @@ import { HStack } from '../../../layout/HStack';
 import { VStack } from '../../../layout/VStack';
 import { Text } from '../../../typography/Text';
 import type { SelectOption } from '../../select/Select';
-import { Combobox } from '../Combobox';
+import { Combobox, type ComboboxRef } from '../Combobox';
 
 export default {
   title: 'Components/Alpha/Combobox',
@@ -908,25 +908,21 @@ export const ChangeHandler = () => {
   );
 };
 
-export const KeyboardSupport = () => {
+export const RefImperativeHandle = () => {
+  const comboboxRef = useRef<ComboboxRef>(null);
   const { value, onChange } = useMultiSelect({ initialValue: [] });
-
   return (
     <VStack gap={4}>
-      <VStack background="bgSecondary" borderRadius={400} gap={2} padding={3}>
-        <Text fontSize="label1" fontWeight="label1">
-          Keyboard shortcuts:
-        </Text>
-        <Text fontSize="caption">↑/↓ - Navigate options</Text>
-        <Text fontSize="caption">Enter - Toggle selection</Text>
-        <Text fontSize="caption">Esc - Close dropdown</Text>
-        <Text fontSize="caption">Type - Search options</Text>
-      </VStack>
+      <HStack gap={2}>
+        <Button onClick={() => comboboxRef.current?.setOpen?.(true)}>Open</Button>
+        <Button onClick={() => comboboxRef.current?.setOpen?.(false)}>Close</Button>
+        <Text color="fg">{comboboxRef.current?.open ? 'Open' : 'Closed'}</Text>
+      </HStack>
       <Combobox
-        label="Keyboard navigation"
+        ref={comboboxRef}
         onChange={onChange}
         options={fruitOptions}
-        placeholder="Try keyboard navigation..."
+        placeholder="Select fruits..."
         type="multi"
         value={value}
       />

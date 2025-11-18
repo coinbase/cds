@@ -1643,8 +1643,9 @@ export const RefImperativeHandle = () => {
   return (
     <VStack gap={2}>
       <HStack gap={2}>
-        <Button onClick={handleOpenSelect}>Open Select</Button>
-        <Button onClick={handleCloseSelect}>Close Select</Button>
+        <Button onClick={handleOpenSelect}>Open</Button>
+        <Button onClick={handleCloseSelect}>Close</Button>
+        <Text color="fg">{selectRef.current?.open ? 'Open' : 'Closed'}</Text>
       </HStack>
       <Select
         ref={selectRef}
