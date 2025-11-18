@@ -18,7 +18,7 @@ import { InputLabel } from './InputLabel';
 
 const baseCss = css`
   /* This is a workaround to avoid the styles being overridden by interactable base styles */
-  
+
   && {
     flex-direction: row;
     display: flex;
