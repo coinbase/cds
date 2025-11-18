@@ -1955,7 +1955,7 @@ function ImperativeHandle() {
       <LineChart
         enableScrubbing
         showYAxis
-        height={200}
+        height={250}
         series={[
           {
             id: 'priceA',

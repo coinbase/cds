@@ -19,7 +19,7 @@ import type { ScrubberBeaconLabelComponent, ScrubberBeaconLabelProps } from './S
 
 const PositionedLabel = memo<{
   index: number;
-  positions: SharedValue<LabelPosition[]>;
+  positions: SharedValue<(LabelPosition | null)[]>;
   position: SharedValue<ScrubberLabelPosition>;
   label: AnimatedProp<string>;
   color?: string;
@@ -39,6 +39,10 @@ const PositionedLabel = memo<{
     BeaconLabelComponent,
     labelHorizontalOffset,
   }) => {
+    const opacity = useDerivedValue(
+      () => (positions.value[index] !== null ? 1 : 0),
+      [positions, index],
+    );
     const x = useDerivedValue(() => positions.value[index]?.x ?? 0, [positions, index]);
     const y = useDerivedValue(() => positions.value[index]?.y ?? 0, [positions, index]);
 
@@ -58,6 +62,7 @@ const PositionedLabel = memo<{
         horizontalAlignment={horizontalAlignment}
         label={label}
         onDimensionsChange={(d) => onDimensionsChange(seriesId, d)}
+        opacity={opacity}
         seriesId={seriesId}
         x={x}
         y={y}
@@ -178,9 +183,7 @@ export const ScrubberBeaconLabelGroup = memo<ScrubberBeaconLabelGroupProps>(
           ) {
             const dataValue = info.sourceData[dataIndex.value];
 
-            if (typeof dataValue === 'number') {
-              dataY = dataValue;
-            } else if (Array.isArray(dataValue)) {
+            if (Array.isArray(dataValue)) {
               const validValues = dataValue.filter((val): val is number => val !== null);
               if (validValues.length >= 1) {
                 dataY = validValues[validValues.length - 1];
@@ -189,34 +192,37 @@ export const ScrubberBeaconLabelGroup = memo<ScrubberBeaconLabelGroupProps>(
           }
         }
 
-        const desiredY =
-          dataY !== undefined && info.yScale ? applySerializableScale(dataY, info.yScale) : 0;
+        if (dataY !== undefined && info.yScale) {
+          return {
+            seriesId: info.seriesId,
+            x: sharedPixelX,
+            desiredY: applySerializableScale(dataY, info.yScale),
+          };
+        }
 
-        return {
-          seriesId: info.seriesId,
-          x: sharedPixelX,
-          desiredY,
-        };
+        // Return null for invalid data
+        return null;
       });
 
       const maxLabelHeight = Math.max(...Object.values(labelDimensions).map((dim) => dim.height));
 
       const maxLabelWidth = Math.max(...Object.values(labelDimensions).map((dim) => dim.width));
 
-      // Step 3: Complete collision detection using utility function
+      const validPositions = desiredPositions.filter((pos) => pos !== null);
+
       // Convert to LabelDimension format expected by utility
-      const dimensions = desiredPositions.map((pos) => {
+      const dimensions = validPositions.map((pos) => {
         const trackedDimensions = labelDimensions[pos.seriesId];
         return {
           seriesId: pos.seriesId,
-          width: trackedDimensions?.width ?? maxLabelWidth, // Use actual width or max width
-          height: trackedDimensions?.height ?? maxLabelHeight, // Use actual height or default
+          width: trackedDimensions?.width ?? maxLabelWidth,
+          height: trackedDimensions?.height ?? maxLabelHeight,
           preferredX: pos.x,
           preferredY: pos.desiredY,
         };
       });
 
-      // Calculate Y positions with collision resolution
+      // Calculate Y positions with collision resolution for valid positions only
       const yPositions = calculateLabelYPositions(
         dimensions,
         drawingArea,
@@ -224,12 +230,15 @@ export const ScrubberBeaconLabelGroup = memo<ScrubberBeaconLabelGroupProps>(
         labelMinGap,
       );
 
-      // Return final positions (strategy calculated separately)
-      return desiredPositions.map((pos) => ({
-        seriesId: pos.seriesId,
-        x: pos.x,
-        y: yPositions.get(pos.seriesId) ?? pos.desiredY, // Use Y from collision resolution
-      }));
+      // Return all positions (including null ones)
+      return desiredPositions.map((pos) => {
+        if (!pos) return null;
+        return {
+          seriesId: pos.seriesId,
+          x: pos.x,
+          y: yPositions.get(pos.seriesId) ?? pos.desiredY,
+        };
+      });
     }, [seriesInfo, dataIndex, dataX, xScale, labelDimensions, labelMinGap]);
 
     const currentPosition = useDerivedValue(() => {

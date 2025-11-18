@@ -16,7 +16,7 @@ import type { ScrubberBeaconLabelComponent, ScrubberBeaconLabelProps } from './S
 
 const PositionedLabel = memo<{
   index: number;
-  positions: LabelPosition[];
+  positions: (LabelPosition | null)[];
   position: ScrubberLabelPosition;
   label: string;
   color?: string;
@@ -36,8 +36,15 @@ const PositionedLabel = memo<{
     BeaconLabelComponent,
     labelHorizontalOffset,
   }) => {
-    const x = positions[index]?.x ?? 0;
-    const y = positions[index]?.y ?? 0;
+    const pos = positions[index];
+
+    // Don't render if position is null (invalid data)
+    if (!pos) {
+      return null;
+    }
+
+    const x = pos.x;
+    const y = pos.y;
     const dx = position === 'right' ? labelHorizontalOffset : -labelHorizontalOffset;
     const horizontalAlignment = position === 'right' ? 'left' : 'right';
 
@@ -162,9 +169,7 @@ export const ScrubberBeaconLabelGroup = memo<ScrubberBeaconLabelGroupProps>(
           ) {
             const dataValue = info.sourceData[dataIndex];
 
-            if (typeof dataValue === 'number') {
-              dataY = dataValue;
-            } else if (Array.isArray(dataValue)) {
+            if (Array.isArray(dataValue)) {
               const validValues = dataValue.filter((val): val is number => val !== null);
               if (validValues.length >= 1) {
                 dataY = validValues[validValues.length - 1];
@@ -173,34 +178,38 @@ export const ScrubberBeaconLabelGroup = memo<ScrubberBeaconLabelGroupProps>(
           }
         }
 
-        const desiredY =
-          dataY !== undefined && info.yScale ? getPointOnScale(dataY, info.yScale) : 0;
+        if (dataY !== undefined && info.yScale) {
+          return {
+            seriesId: info.seriesId,
+            x: sharedPixelX,
+            desiredY: getPointOnScale(dataY, info.yScale),
+          };
+        }
 
-        return {
-          seriesId: info.seriesId,
-          x: sharedPixelX,
-          desiredY,
-        };
+        // Return null for invalid data
+        return null;
       });
 
       const maxLabelHeight = Math.max(...Object.values(labelDimensions).map((dim) => dim.height));
 
       const maxLabelWidth = Math.max(...Object.values(labelDimensions).map((dim) => dim.width));
 
-      // Step 3: Complete collision detection using utility function
+      // Only apply collision detection to valid positions
+      const validPositions = desiredPositions.filter((pos) => pos !== null);
+
       // Convert to LabelDimension format expected by utility
-      const dimensions = desiredPositions.map((pos) => {
+      const dimensions = validPositions.map((pos) => {
         const trackedDimensions = labelDimensions[pos.seriesId];
         return {
           seriesId: pos.seriesId,
-          width: trackedDimensions?.width ?? maxLabelWidth, // Use actual width or max width
-          height: trackedDimensions?.height ?? maxLabelHeight, // Use actual height or default
+          width: trackedDimensions?.width ?? maxLabelWidth,
+          height: trackedDimensions?.height ?? maxLabelHeight,
           preferredX: pos.x,
           preferredY: pos.desiredY,
         };
       });
 
-      // Calculate Y positions with collision resolution
+      // Calculate Y positions with collision resolution for valid positions only
       const yPositions = calculateLabelYPositions(
         dimensions,
         drawingArea,
@@ -208,12 +217,15 @@ export const ScrubberBeaconLabelGroup = memo<ScrubberBeaconLabelGroupProps>(
         labelMinGap,
       );
 
-      // Return final positions (strategy calculated separately)
-      return desiredPositions.map((pos) => ({
-        seriesId: pos.seriesId,
-        x: pos.x,
-        y: yPositions.get(pos.seriesId) ?? pos.desiredY, // Use Y from collision resolution
-      }));
+      // Return all positions (including null ones)
+      return desiredPositions.map((pos) => {
+        if (!pos) return null;
+        return {
+          seriesId: pos.seriesId,
+          x: pos.x,
+          y: yPositions.get(pos.seriesId) ?? pos.desiredY,
+        };
+      });
     }, [seriesInfo, dataIndex, dataX, xScale, labelDimensions, drawingArea, labelMinGap]);
 
     const currentPosition = useMemo(() => {
