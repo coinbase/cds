@@ -54,7 +54,6 @@ const DefaultTabComponent = <T extends string = string>({
       invertColorScheme={isActive}
       onClick={handleClick}
       role="tab"
-      tabIndex={isActive || !activeTab ? 0 : -1}
       width="max-content"
       {...tabProps}
     >

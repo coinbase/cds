@@ -131,7 +131,6 @@ const SegmentedTabComponent = memo(
           lineHeight={lineHeight}
           onClick={handlePress}
           role="tab"
-          tabIndex={isActive || !activeTab ? 0 : -1}
           textAlign={textAlign}
           textTransform={textTransform}
           type="button"

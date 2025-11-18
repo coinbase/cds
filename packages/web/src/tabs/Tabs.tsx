@@ -46,7 +46,7 @@ export type TabsActiveIndicatorProps = {
 } & BoxProps<BoxDefaultElement> &
   MotionProps;
 
-export type TabComponent<T extends string = string> = React.FC<TabValue<T>>;
+export type TabComponent<T extends string = string> = React.FC<TabValue<T> & { tabIndex?: number }>;
 
 export type TabsActiveIndicatorComponent = React.FC<TabsActiveIndicatorProps>;
 
@@ -199,7 +199,13 @@ const TabsComponent = memo(
               const RenderedTab = CustomTabComponent ?? TabComponent;
               return (
                 <TabContainer key={id} id={id} registerRef={registerRef}>
-                  <RenderedTab data-rendered-tab disabled={tabDisabled} id={id} {...props} />
+                  <RenderedTab
+                    data-rendered-tab
+                    disabled={tabDisabled}
+                    id={id}
+                    tabIndex={activeTab?.id === id || !activeTab ? 0 : -1}
+                    {...props}
+                  />
                 </TabContainer>
               );
             })}

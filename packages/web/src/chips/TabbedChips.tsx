@@ -36,7 +36,6 @@ const TabComponent = <T extends string = string>({ label = '', id, ...tabProps }
       inverted={isActive}
       onClick={handleClick}
       role="tab"
-      tabIndex={isActive || !activeTab ? 0 : -1}
       width="max-content"
       {...tabProps}
     >
