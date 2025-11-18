@@ -806,6 +806,18 @@ const svgJsMap = {
     light: () => require('../svgJs/light/futures-6.js').content,
     dark: () => require('../svgJs/dark/futures-6.js').content,
   },
+  futuresAndPerps: {
+    light: () => require('../svgJs/light/futuresAndPerps-0.js').content,
+    dark: () => require('../svgJs/dark/futuresAndPerps-0.js').content,
+  },
+  futuresExpire: {
+    light: () => require('../svgJs/light/futuresExpire-0.js').content,
+    dark: () => require('../svgJs/dark/futuresExpire-0.js').content,
+  },
+  futuresVsPerps: {
+    light: () => require('../svgJs/light/futuresVsPerps-0.js').content,
+    dark: () => require('../svgJs/dark/futuresVsPerps-0.js').content,
+  },
   gainsAndLosses: {
     light: () => require('../svgJs/light/gainsAndLosses-4.js').content,
     dark: () => require('../svgJs/dark/gainsAndLosses-4.js').content,
@@ -1021,6 +1033,10 @@ const svgJsMap = {
   moneyDecentralized: {
     light: () => require('../svgJs/light/moneyDecentralized-5.js').content,
     dark: () => require('../svgJs/dark/moneyDecentralized-5.js').content,
+  },
+  moreGains: {
+    light: () => require('../svgJs/light/moreGains-0.js').content,
+    dark: () => require('../svgJs/dark/moreGains-0.js').content,
   },
   multicoinSupport: {
     light: () => require('../svgJs/light/multicoinSupport-4.js').content,
@@ -1454,6 +1470,10 @@ const svgJsMap = {
     light: () => require('../svgJs/light/tradeImmediately-4.js').content,
     dark: () => require('../svgJs/dark/tradeImmediately-4.js').content,
   },
+  tradingWithLeverage: {
+    light: () => require('../svgJs/light/tradingWithLeverage-0.js').content,
+    dark: () => require('../svgJs/dark/tradingWithLeverage-0.js').content,
+  },
   transactionLimit: {
     light: () => require('../svgJs/light/transactionLimit-4.js').content,
     dark: () => require('../svgJs/dark/transactionLimit-4.js').content,
@@ -1469,6 +1489,10 @@ const svgJsMap = {
   unlockKey: {
     light: () => require('../svgJs/light/unlockKey-3.js').content,
     dark: () => require('../svgJs/dark/unlockKey-3.js').content,
+  },
+  usdAndUsdc: {
+    light: () => require('../svgJs/light/usdAndUsdc-0.js').content,
+    dark: () => require('../svgJs/dark/usdAndUsdc-0.js').content,
   },
   usdtToUSDC: {
     light: () => require('../svgJs/light/usdtToUSDC-2.js').content,

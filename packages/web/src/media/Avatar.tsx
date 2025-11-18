@@ -96,6 +96,17 @@ const borderRadiusCss: Record<AvatarShape, LinariaClassName> = {
   `,
 };
 
+const contentWrapperCss = css`
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
 export type AvatarBaseProps = SharedProps & {
   /** Absolute url to the image that should be shown in the Avatar. If no src is provided then a generic fallback image is used. */
   src?: string;
@@ -189,6 +200,11 @@ export const Avatar = memo(
 
     const shouldShowBorder = Boolean((src || !name) && borderColor);
 
+    const dimensionProps = useMemo(
+      () => ({ width: computedSize, height: computedSize }),
+      [computedSize],
+    );
+
     const avatarInlineStyles = useMemo<React.CSSProperties>(
       () => ({
         width: computedSize,
@@ -211,39 +227,39 @@ export const Avatar = memo(
         {...props}
       >
         <Box
-          alignItems="center"
           className={cx(avatarCss, borderRadiusCss[shape], className)}
           data-bordered={shouldShowBorder}
           data-selected={selected}
           data-shape={shape}
           flexGrow={0}
           flexShrink={0}
-          justifyContent="center"
+          position="relative"
           style={avatarInlineStyles}
           testID={testID}
         >
-          {/* render the Remote image when neither a src URL or name is passed in */}
-          {!!src || !name ? (
-            <RemoteImage
-              alt={alt}
-              height={computedSize}
-              shape={shape}
-              source={src || fallbackImageSrc}
-              width={computedSize}
-            />
-          ) : (
-            <Box
-              alignItems="center"
-              background="currentColor"
-              className={borderRadiusCss[shape]}
-              flexGrow={1}
-              height="100%"
-              justifyContent="center"
-              testID={`${testID}-fallback`}
-            >
-              {avatarText}
-            </Box>
-          )}
+          <Box className={contentWrapperCss}>
+            {/* render the Remote image when neither a src URL or name is passed in */}
+            {!!src || !name ? (
+              <RemoteImage
+                {...dimensionProps}
+                alt={alt}
+                shape={shape}
+                source={src || fallbackImageSrc}
+              />
+            ) : (
+              <Box
+                {...dimensionProps}
+                alignItems="center"
+                background="currentColor"
+                className={borderRadiusCss[shape]}
+                justifyContent="center"
+                position="relative"
+                testID={`${testID}-fallback`}
+              >
+                {avatarText}
+              </Box>
+            )}
+          </Box>
         </Box>
         {/* The selected emphasis is applied with an offset HexagonBorder element since the actual box shadow would be hidden by the clip path */}
         {shape === 'hexagon' && selected && (

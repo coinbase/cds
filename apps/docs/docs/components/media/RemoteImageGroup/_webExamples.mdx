@@ -43,20 +43,24 @@ Use the `size` prop to change the dimensions of the avatars in the group.
 function Component() {
   const [size, setSize] = React.useState('m');
   const avatarSizes = ['s', 'm', 'l', 'xl', 'xxl', 'xxxl', 16, 24, 32];
-  const options = avatarSizes.map((s) => <SelectOption key={s} title={s} value={s} />);
+  const options = avatarSizes.map((s) => ({ value: s, label: String(s) }));
 
   return (
     <VStack gap={2}>
-      <Select width={240} labelVariant="inside" label="Image Size" value={size} onChange={setSize}>
-        {options}
-      </Select>
+      <Select
+        labelVariant="inside"
+        label="Image Size"
+        value={size}
+        onChange={setSize}
+        options={options}
+      />
       <RemoteImageGroup size={size}>
         <RemoteImage source={assets.eth.imageUrl} />
         <RemoteImage source={assets.btc.imageUrl} />
         <RemoteImage source={assets.dai.imageUrl} />
         <RemoteImage source={assets.hbar.imageUrl} />
       </RemoteImageGroup>
-    </>
+    </VStack>
   );
 }
 ```

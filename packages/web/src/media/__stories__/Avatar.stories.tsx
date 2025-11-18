@@ -108,17 +108,17 @@ export const FallbackImage = () => {
         <Text as="h3" display="block" font="headline">
           Default
         </Text>
-        <HStack alignItems="center" gap={2}>
+        <HStack alignItems="baseline" gap={2}>
           {sizes.map((size, i) => (
             <Avatar key={i} alt="" size={size} />
           ))}
         </HStack>
-        <HStack alignItems="center" gap={2}>
+        <HStack alignItems="baseline" gap={2}>
           {sizes.map((size, i) => (
-            <Avatar key={i} alt="" shape="square" size={size} />
+            <Avatar key={i} alt="" name="Alice" shape="square" size={size} />
           ))}
         </HStack>
-        <HStack alignItems="center" gap={2}>
+        <HStack alignItems="baseline" gap={2}>
           {sizes.map((size, i) => (
             <Avatar key={i} alt="" shape="hexagon" size={size} />
           ))}

@@ -8,6 +8,32 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.21.3 (11/17/2025 PST)
+
+#### 🐞 Fixes
+
+- Chore: fully deprecate TabNavigation in packages and update docsite. [[#167](https://github.com/coinbase/cds/pull/167)]
+
+## 8.21.2 (11/13/2025 PST)
+
+#### 🐞 Fixes
+
+- Uniform flex alignment for all Avatar variants. [[#162](https://github.com/coinbase/cds/pull/162)] [DX-4991]
+
+## 8.21.1 ((11/13/2025, 12:21 PM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.21.0 (11/12/2025 PST)
+
+#### 🚀 Updates
+
+- Deprecate TabbedChips and create new TabbedChips(Alpha), whose props mirror Tabs' props. [[#138](https://github.com/coinbase/cds/pull/138)]
+
+## 8.20.2 ((11/12/2025, 10:01 AM PST))
+
+This is an artificial version bump with no new change.
+
 ## 8.20.1 (11/7/2025 PST)
 
 #### 🐞 Fixes

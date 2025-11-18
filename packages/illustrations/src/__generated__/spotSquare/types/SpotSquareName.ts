@@ -42,6 +42,7 @@ export type SpotSquareName =
   | 'basePaycoinMedium'
   | 'basePeopleMedium'
   | 'basePiechartMedium'
+  | 'baseQuickBuy'
   | 'baseRewardChest'
   | 'baseRewardClam'
   | 'baseRewardPlate'

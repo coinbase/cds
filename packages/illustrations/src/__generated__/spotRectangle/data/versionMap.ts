@@ -223,6 +223,7 @@ const versionMap: Record<SpotRectangleName, number> = {
   tokenSales: 0,
   calendar: 0,
   graphChartTrading: 0,
+  usdcLoanEth: 0,
 };
 
 export default versionMap;

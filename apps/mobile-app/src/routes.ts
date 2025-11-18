@@ -604,7 +604,7 @@ export const routes = [
   {
     key: 'TabbedChips',
     getComponent: () =>
-      require('@coinbase/cds-mobile/chips/__stories__/TabbedChips.stories').default,
+      require('@coinbase/cds-mobile/alpha/tabbed-chips/__stories__/TabbedChips.stories').default,
   },
   {
     key: 'TabIndicator',

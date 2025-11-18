@@ -80,6 +80,7 @@ export const Avatar = memo(
     const isLargestSize = size.includes('xx');
     const isCustomSize = typeof dangerouslySetSize !== 'undefined';
     const isCustomSizeAndSmall = isCustomSize && dangerouslySetSize <= smallAvatarSize;
+    const shouldUseSmallFont = isCustomSizeAndSmall || size === 's' || size === 'm';
     const spectrumColor = colorSchemeMap[colorScheme];
     const colorSchemeRgb = `rgb(${theme.spectrum[spectrumColor]})`;
 
@@ -111,7 +112,7 @@ export const Avatar = memo(
           </Text>
         );
       }
-      if (size === 'm' || isCustomSizeAndSmall) {
+      if (shouldUseSmallFont) {
         return (
           <Text
             align="center"
@@ -138,9 +139,9 @@ export const Avatar = memo(
       isLargestSize,
       isCustomSize,
       isCustomSizeAndSmall,
-      size,
       fallbackTextColor,
       placeholderLetter,
+      shouldUseSmallFont,
     ]);
 
     const coloredFallback = useMemo(
@@ -163,13 +164,11 @@ export const Avatar = memo(
     return (
       <Box
         accessibilityLabel={accessibilityLabel}
-        alignItems="center"
         borderColor={borderColor}
         dangerouslySetBackground={imgSrc}
         flexGrow={0}
         flexShrink={0}
         height={computedSize}
-        justifyContent="center"
         overflow="hidden"
         position="relative"
         style={containerStyle}
@@ -177,19 +176,21 @@ export const Avatar = memo(
         width={computedSize}
         {...props}
       >
-        {shouldShowAvatarImage ? (
-          <RemoteImage
-            alt={alt}
-            height={computedSize}
-            resizeMode="cover"
-            shape={shape}
-            source={{ uri: imgSrc }}
-            testID={`${testID ?? ''}-image`}
-            width={computedSize}
-          />
-        ) : (
-          coloredFallback
-        )}
+        <Box style={styles.contentWrapper}>
+          {shouldShowAvatarImage ? (
+            <RemoteImage
+              alt={alt}
+              height={computedSize}
+              resizeMode="cover"
+              shape={shape}
+              source={{ uri: imgSrc }}
+              testID={`${testID ?? ''}-image`}
+              width={computedSize}
+            />
+          ) : (
+            coloredFallback
+          )}
+        </Box>
       </Box>
     );
   },
@@ -198,5 +199,14 @@ export const Avatar = memo(
 const styles = StyleSheet.create({
   border: {
     borderWidth: 2,
+  },
+  contentWrapper: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    top: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
