@@ -14,8 +14,6 @@ import {
   type SelectType,
 } from '../select/Select';
 
-import { DefaultComboboxControl } from './DefaultComboboxControl';
-
 export type ComboboxControlProps<
   Type extends SelectType = 'single',
   SelectOptionValue extends string = string,
@@ -70,50 +68,19 @@ const ComboboxBase = memo(
   forwardRef(
     <Type extends SelectType = 'single', SelectOptionValue extends string = string>(
       {
-        value,
         type = 'single' as Type,
-        options,
         onChange,
+        options,
         open: openProp,
         setOpen: setOpenProp,
-        disabled,
-        disableClickOutsideClose,
         placeholder,
-        helperText,
-        hiddenSelectedOptionsLabel,
-        removeSelectedOptionAccessibilityLabel,
-        compact,
-        label,
-        labelVariant,
-        accessibilityLabel,
-        accessibilityRoles = defaultAccessibilityRoles,
-        selectAllLabel,
-        emptyOptionsLabel,
-        clearAllLabel,
-        hideSelectAll,
+        accessibilityLabel = 'Combobox control',
         defaultOpen,
-        startNode,
-        endNode,
-        variant,
-        maxSelectedOptionsToShow,
-        accessory,
-        media,
-        end,
         searchText: searchTextProp,
         onSearch: onSearchProp,
         defaultSearchText = '',
         filterFunction,
-        SelectOptionComponent,
-        SelectAllOptionComponent,
-        SelectDropdownComponent,
         SelectControlComponent = DefaultSelectControl,
-        // ComboboxControlComponent = DefaultComboboxControl,
-        SelectEmptyDropdownContentsComponent,
-        style,
-        styles,
-        className,
-        classNames,
-        testID,
         ...props
       }: ComboboxProps<Type, SelectOptionValue>,
       ref: React.Ref<ComboboxRef>,
@@ -198,6 +165,12 @@ const ComboboxBase = memo(
                 onChange={(event) => setSearchText(event.target.value)}
                 onKeyDown={(event) => {
                   event.stopPropagation();
+                  if (
+                    event.key === 'Enter' ||
+                    (event.key.length === 1 && /[a-zA-Z0-9]/.test(event.key))
+                  ) {
+                    setOpen(true);
+                  }
                 }}
                 placeholder={typeof placeholder === 'string' ? placeholder : undefined}
                 style={{ padding: 0 }}
@@ -207,50 +180,22 @@ const ComboboxBase = memo(
             placeholder={null}
           />
         ),
-        [SelectControlComponent, options, placeholder, setSearchText],
+        [SelectControlComponent, options, placeholder, setOpen, setSearchText],
       );
 
       return (
         <Select
           ref={controlRef}
           SelectControlComponent={ComboboxControl}
-          SelectDropdownComponent={SelectDropdownComponent}
-          SelectEmptyDropdownContentsComponent={SelectEmptyDropdownContentsComponent}
-          SelectOptionComponent={SelectOptionComponent}
           accessibilityLabel={accessibilityLabel}
-          accessibilityRoles={accessibilityRoles}
-          accessory={accessory}
-          className={className}
-          classNames={classNames}
-          clearAllLabel={clearAllLabel}
-          compact={compact}
           defaultOpen={defaultOpen}
-          disableClickOutsideClose={disableClickOutsideClose}
-          disabled={disabled}
-          emptyOptionsLabel={emptyOptionsLabel}
-          end={end}
-          endNode={endNode}
-          helperText={helperText}
-          hiddenSelectedOptionsLabel={hiddenSelectedOptionsLabel}
-          hideSelectAll={hideSelectAll}
-          label={label}
-          labelVariant={labelVariant}
-          maxSelectedOptionsToShow={maxSelectedOptionsToShow}
-          media={media}
           onChange={(value) => onChange?.(value)}
           open={open}
           options={filteredOptions}
           placeholder={placeholder}
-          removeSelectedOptionAccessibilityLabel={removeSelectedOptionAccessibilityLabel}
-          selectAllLabel={selectAllLabel}
           setOpen={setOpen}
-          startNode={startNode}
-          style={style}
-          styles={styles}
-          testID={testID}
           type={type}
-          value={value}
-          variant={variant}
+          {...props}
         />
       );
     },
