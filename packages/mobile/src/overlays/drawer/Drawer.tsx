@@ -45,10 +45,6 @@ export type DrawerBaseProps = SharedProps &
   Omit<ModalProps, 'onRequestClose' | 'children'> & {
     /** Component to render as the Modal content */
     children: DrawerRenderChildren | React.ReactNode;
-    /** ReactNode to render as the Drawer header */
-    header?: React.ReactNode;
-    /** ReactNode to render as the Drawer footer */
-    footer?: React.ReactNode;
     /**
      * Pin the modal to one side of the screen
      * @default bottom
@@ -106,8 +102,6 @@ export const Drawer = memo(
   forwardRef<DrawerRefBaseProps, DrawerProps>(function Drawer(
     {
       children,
-      header,
-      footer,
       pin = 'bottom',
       onCloseComplete,
       preventDismissGestures = false,
@@ -272,9 +266,7 @@ export const Drawer = memo(
               maxHeight={!isPinHorizontal ? verticalDrawerMaxHeight : '100%'}
               style={[cardStyles.spacing, shouldShowHandleBar && cardStyles.overflowStyles]}
             >
-              {header}
               {content}
-              {footer}
             </Box>
           </Box>
         </OverlayContentContext.Provider>

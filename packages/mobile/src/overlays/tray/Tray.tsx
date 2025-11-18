@@ -50,6 +50,8 @@ export const Tray = memo(
   forwardRef<DrawerRefBaseProps, TrayProps>(function Tray(
     {
       children,
+      header,
+      footer,
       title,
       onVisibilityChange,
       verticalDrawerPercentageOfView = defaultVerticalDrawerPercentageOfView,
@@ -84,10 +86,12 @@ export const Tray = memo(
             ) : (
               <Box onLayout={onTitleLayout}>{title}</Box>
             ))}
+          {header}
           {typeof children === 'function' ? children({ handleClose }) : children}
+          {footer}
         </VStack>
       ),
-      [children, onTitleLayout, title],
+      [children, footer, header, onTitleLayout, title],
     );
 
     useEffect(() => {
