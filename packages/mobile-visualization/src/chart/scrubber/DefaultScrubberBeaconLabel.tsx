@@ -3,13 +3,21 @@ import { useTheme } from '@coinbase/cds-mobile';
 
 import { ChartText, type ChartTextProps } from '../text';
 
-// We must disable repositioning
-export type ScrubberBeaconLabelProps = Omit<ChartTextProps, 'disableRepositioning'>;
+import type { ScrubberBeaconLabelProps } from './Scrubber';
 
-const labelVerticalInset = 2;
+const labelVerticalInset = 3.5;
 const labelHorizontalInset = 4;
 
-export const ScrubberBeaconLabel = memo<ScrubberBeaconLabelProps>(
+export type DefaultScrubberBeaconLabelProps = ScrubberBeaconLabelProps &
+  Pick<
+    ChartTextProps,
+    'background' | 'elevation' | 'borderRadius' | 'font' | 'verticalAlignment' | 'inset' | 'opacity'
+  >;
+
+/**
+ * DefaultScrubberBeaconLabel is a special instance of ChartText used to label a series' scrubber beacon.
+ */
+export const DefaultScrubberBeaconLabel = memo<DefaultScrubberBeaconLabelProps>(
   ({
     background,
     color,
@@ -23,6 +31,7 @@ export const ScrubberBeaconLabel = memo<ScrubberBeaconLabelProps>(
       top: labelVerticalInset,
       bottom: labelVerticalInset,
     },
+    label,
     ...chartTextProps
   }) => {
     const theme = useTheme();
@@ -37,7 +46,9 @@ export const ScrubberBeaconLabel = memo<ScrubberBeaconLabelProps>(
         inset={inset}
         verticalAlignment={verticalAlignment}
         {...chartTextProps}
-      />
+      >
+        {label}
+      </ChartText>
     );
   },
 );

@@ -189,7 +189,6 @@ const EarningsHistory = () => {
       <CartesianChart
         height={defaultChartHeight}
         inset={{ top: 32, bottom: 0, left: 0, right: 0 }}
-        overflow="visible"
         series={[
           {
             id: 'estimatedEPS',

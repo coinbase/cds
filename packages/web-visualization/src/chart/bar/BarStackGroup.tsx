@@ -43,24 +43,10 @@ export type BarStackGroupProps = Pick<
  */
 export const BarStackGroup = memo<BarStackGroupProps>(
   ({ series, yAxisId, stackIndex, totalStacks, barPadding = 0.1, ...props }) => {
-    const { getSeriesData, getXScale, getYScale, drawingArea } = useCartesianChartContext();
+    const { getXScale, getYScale, drawingArea, maxDataLength } = useCartesianChartContext();
 
     const xScale = getXScale();
     const yScale = getYScale(yAxisId);
-
-    const maxDataLength = useMemo(() => {
-      if (!series || series.length === 0) return 0;
-
-      let maxLength = 0;
-      series.forEach((s) => {
-        const data = getSeriesData(s.id);
-        if (data && data.length > maxLength) {
-          maxLength = data.length;
-        }
-      });
-
-      return maxLength;
-    }, [series, getSeriesData]);
 
     const stackConfigs = useMemo(() => {
       if (!xScale || !yScale || !drawingArea || maxDataLength === 0) return [];
@@ -83,6 +69,7 @@ export const BarStackGroup = memo<BarStackGroupProps>(
       }> = [];
 
       // Calculate position for each category
+      // todo: look at using xDomain for this instead of maxDataLength
       for (let categoryIndex = 0; categoryIndex < maxDataLength; categoryIndex++) {
         // Get x position for this category
         const categoryX = xScale(categoryIndex);

@@ -53,7 +53,6 @@ function AssetPriceWithMinMax() {
       showArea
       areaType="dotted"
       height={{ base: 150, tablet: 200, desktop: 250 }}
-      style={{ outlineColor: assets.btc.color }}
       renderPoints={({ dataX, dataY }) => {
         const isMin = dataY === minPrice;
         const isMax = dataY === maxPrice;

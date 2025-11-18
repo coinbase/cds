@@ -22,10 +22,16 @@ import { m } from 'framer-motion';
 
 import {
   type AxisBounds,
+  DefaultScrubberBeacon,
+  DefaultScrubberLabel,
+  defaultTransition,
   PeriodSelector,
   PeriodSelectorActiveIndicator,
   Point,
+  projectPoint,
   Scrubber,
+  type ScrubberBeaconProps,
+  type ScrubberLabelProps,
   type ScrubberRef,
   useCartesianChartContext,
   useScrubberContext,
@@ -33,7 +39,6 @@ import {
 import { Area, DottedArea, type DottedAreaProps, GradientArea } from '../../area';
 import { XAxis, YAxis } from '../../axis';
 import { CartesianChart } from '../../CartesianChart';
-import { ScrubberBeacon, type ScrubberBeaconProps } from '../../scrubber/ScrubberBeacon';
 import {
   DottedLine,
   type DottedLineProps,
@@ -249,11 +254,7 @@ function LiveUpdates() {
         },
       ]}
     >
-      <Scrubber
-        ref={scrubberRef}
-        accessibilityLabel={scrubberAccessibilityLabel}
-        labelProps={{ elevation: 1 }}
-      />
+      <Scrubber ref={scrubberRef} elevateLabel accessibilityLabel={scrubberAccessibilityLabel} />
     </LineChart>
   );
 }
@@ -980,7 +981,6 @@ function Compact() {
         {...dimensions}
         enableScrubbing={false}
         inset={0}
-        overflow="visible"
         series={[
           {
             id: 'btc',
@@ -1219,7 +1219,6 @@ function AssetPriceWithDottedArea() {
           accessibilityLabel={chartAccessibilityLabel}
           areaType="dotted"
           height={{ base: 200, tablet: 225, desktop: 250 }}
-          overflow="visible"
           series={[
             {
               id: 'btc',
@@ -1230,10 +1229,10 @@ function AssetPriceWithDottedArea() {
           style={{ outlineColor: assets.btc.color }}
         >
           <Scrubber
+            elevateLabel
             idlePulse
             accessibilityLabel={scrubberAccessibilityLabel}
             label={scrubberLabel}
-            labelProps={{ elevation: 1 }}
           />
         </LineChart>
         <PeriodSelector
@@ -1248,130 +1247,6 @@ function AssetPriceWithDottedArea() {
   });
 
   return <AssetPriceDotted />;
-}
-
-function MonotoneAssetPrice() {
-  const prices = sparklineInteractiveData.hour;
-
-  const priceFormatter = useMemo(
-    () =>
-      new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'USD',
-      }),
-    [],
-  );
-
-  const scrubberPriceFormatter = useMemo(
-    () =>
-      new Intl.NumberFormat('en-US', {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-      }),
-    [],
-  );
-
-  const formatPrice = useCallback(
-    (price: number) => {
-      return priceFormatter.format(price);
-    },
-    [priceFormatter],
-  );
-
-  const formatAxisLabelPrice = useCallback(
-    (price: number) => {
-      return (
-        <tspan dx={4} dy={-12} textAnchor="start">
-          {formatPrice(price)}
-        </tspan>
-      );
-    },
-    [formatPrice],
-  );
-
-  const formatDate = useCallback((date: Date) => {
-    const dayOfWeek = date.toLocaleDateString('en-US', { weekday: 'short' });
-
-    const monthDay = date.toLocaleDateString('en-US', {
-      month: 'short',
-      day: 'numeric',
-    });
-
-    const time = date.toLocaleTimeString('en-US', {
-      hour: 'numeric',
-      minute: '2-digit',
-      hour12: true,
-    });
-
-    return `${dayOfWeek}, ${monthDay}, ${time}`;
-  }, []);
-
-  const scrubberLabel = useCallback(
-    (index: number) => {
-      const price = scrubberPriceFormatter.format(prices[index].value);
-      const date = formatDate(prices[index].date);
-      return (
-        <>
-          <tspan style={{ fontWeight: 'bold' }}>{price} USD</tspan> {date}
-        </>
-      );
-    },
-    [scrubberPriceFormatter, prices, formatDate],
-  );
-
-  const CustomScrubberBeacon = memo(({ dataX, dataY, ...props }: ScrubberBeaconProps) => {
-    if (dataX === undefined || dataY === undefined) return;
-    return <Point {...props} animate={false} dataX={dataX} dataY={dataY} r={5} />;
-  });
-
-  return (
-    <LineChart
-      enableScrubbing
-      showYAxis
-      height={{ base: 200, tablet: 250, desktop: 300 }}
-      inset={{ top: 64 }}
-      overflow="visible"
-      series={[
-        {
-          id: 'btc',
-          data: prices.map((price) => price.value),
-          color: 'var(--color-fg)',
-          gradient: {
-            axis: 'x',
-            stops: ({ min, max }) => [
-              { offset: min, color: 'var(--color-fg)', opacity: 0 },
-              { offset: 32, color: 'var(--color-fg)', opacity: 1 },
-            ],
-          },
-        },
-      ]}
-      style={{ outlineColor: 'var(--color-fg)' }}
-      xAxis={{
-        range: ({ min, max }) => ({ min: 96, max: max }),
-      }}
-      yAxis={{
-        position: 'left',
-        width: 0,
-        showGrid: true,
-        tickLabelFormatter: formatAxisLabelPrice,
-      }}
-    >
-      <Scrubber
-        hideOverlay
-        BeaconComponent={CustomScrubberBeacon}
-        LineComponent={SolidLine}
-        label={scrubberLabel}
-        labelProps={{ elevation: 1 }}
-        styles={{
-          beacon: {
-            stroke: 'var(--color-fg)',
-            fill: 'var(--color-bg)',
-            strokeWidth: 3,
-          },
-        }}
-      />
-    </LineChart>
-  );
 }
 
 function AssetPriceWidget() {
@@ -1655,7 +1530,7 @@ function ForecastAssetPrice() {
           <Scrubber hideOverlay />
         </g>
         <g style={{ opacity: isScrubbing ? 0 : 1 }}>
-          <ScrubberBeacon dataX={currentIndex} dataY={data[currentIndex]} seriesId="price" />
+          <DefaultScrubberBeacon dataX={currentIndex} dataY={data[currentIndex]} seriesId="price" />
         </g>
       </m.g>
     );
@@ -1674,6 +1549,196 @@ function ForecastAssetPrice() {
       <XAxis position="bottom" requestedTickCount={3} tickLabelFormatter={axisFormatter} />
       <CustomScrubber />
     </CartesianChart>
+  );
+}
+
+function MonotoneAssetPrice() {
+  const prices = sparklineInteractiveData.hour;
+
+  const priceFormatter = useMemo(
+    () =>
+      new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+      }),
+    [],
+  );
+
+  const scrubberPriceFormatter = useMemo(
+    () =>
+      new Intl.NumberFormat('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      }),
+    [],
+  );
+
+  const formatPrice = useCallback(
+    (price: number) => {
+      return priceFormatter.format(price);
+    },
+    [priceFormatter],
+  );
+
+  const formatAxisLabelPrice = useCallback(
+    (price: number) => {
+      return (
+        <tspan dx={4} dy={-12} textAnchor="start">
+          {formatPrice(price)}
+        </tspan>
+      );
+    },
+    [formatPrice],
+  );
+
+  const formatDate = useCallback((date: Date) => {
+    const dayOfWeek = date.toLocaleDateString('en-US', { weekday: 'short' });
+
+    const monthDay = date.toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+    });
+
+    const time = date.toLocaleTimeString('en-US', {
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true,
+    });
+
+    return `${dayOfWeek}, ${monthDay}, ${time}`;
+  }, []);
+
+  const scrubberLabel = useCallback(
+    (index: number) => {
+      const price = scrubberPriceFormatter.format(prices[index].value);
+      const date = formatDate(prices[index].date);
+      return (
+        <>
+          <tspan style={{ fontWeight: 'bold' }}>{price} USD</tspan> {date}
+        </>
+      );
+    },
+    [scrubberPriceFormatter, prices, formatDate],
+  );
+
+  const CustomScrubberBeacon = memo(({ dataX, dataY, seriesId, isIdle }: ScrubberBeaconProps) => {
+    const { getSeries, getXScale, getYScale } = useCartesianChartContext();
+    const targetSeries = getSeries(seriesId);
+    const xScale = getXScale();
+    const yScale = getYScale(targetSeries?.yAxisId);
+
+    const pixelCoordinate = useMemo(() => {
+      if (!xScale || !yScale) return;
+      return projectPoint({ x: dataX, y: dataY, xScale, yScale });
+    }, [dataX, dataY, xScale, yScale]);
+
+    if (!pixelCoordinate) return;
+
+    if (isIdle) {
+      return (
+        <m.circle
+          animate={{ cx: pixelCoordinate.x, cy: pixelCoordinate.y }}
+          cx={pixelCoordinate.x}
+          cy={pixelCoordinate.y}
+          fill="var(--color-bg)"
+          r={5}
+          stroke="var(--color-fg)"
+          strokeWidth={3}
+          transition={defaultTransition}
+        />
+      );
+    }
+
+    return (
+      <circle
+        cx={pixelCoordinate.x}
+        cy={pixelCoordinate.y}
+        fill="var(--color-bg)"
+        r={5}
+        stroke="var(--color-fg)"
+        strokeWidth={3}
+      />
+    );
+  });
+
+  return (
+    <LineChart
+      enableScrubbing
+      showYAxis
+      height={{ base: 200, tablet: 250, desktop: 300 }}
+      inset={{ top: 64 }}
+      series={[
+        {
+          id: 'btc',
+          data: prices.map((price) => price.value),
+          color: 'var(--color-fg)',
+          gradient: {
+            axis: 'x',
+            stops: ({ min, max }) => [
+              { offset: min, color: 'var(--color-fg)', opacity: 0 },
+              { offset: 32, color: 'var(--color-fg)', opacity: 1 },
+            ],
+          },
+        },
+      ]}
+      style={{ outlineColor: 'var(--color-fg)' }}
+      xAxis={{
+        range: ({ min, max }) => ({ min: 96, max: max }),
+      }}
+      yAxis={{
+        position: 'left',
+        width: 0,
+        showGrid: true,
+        tickLabelFormatter: formatAxisLabelPrice,
+      }}
+    >
+      <Scrubber
+        elevateLabel
+        hideOverlay
+        BeaconComponent={CustomScrubberBeacon}
+        LineComponent={SolidLine}
+        label={scrubberLabel}
+      />
+    </LineChart>
+  );
+}
+
+function CustomLabelComponent() {
+  const CustomLabelComponent = memo((props: ScrubberLabelProps) => {
+    const { drawingArea } = useCartesianChartContext();
+
+    if (!drawingArea) return;
+
+    return (
+      <DefaultScrubberLabel
+        {...props}
+        background="var(--color-bgPrimary)"
+        color="var(--color-bgPrimaryWash)"
+        dy={32}
+        elevation={1}
+        fontWeight="label1"
+        y={drawingArea.y + drawingArea.height}
+      />
+    );
+  });
+  return (
+    <LineChart
+      enableScrubbing
+      showArea
+      height={{ base: 150, tablet: 200, desktop: 250 }}
+      inset={{ top: 16, bottom: 64 }}
+      series={[
+        {
+          id: 'prices',
+          data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+        },
+      ]}
+    >
+      <Scrubber
+        LabelComponent={CustomLabelComponent}
+        label={(dataIndex: number) => `Day ${dataIndex + 1}`}
+      />
+    </LineChart>
   );
 }
 
@@ -1874,6 +1939,9 @@ export const All = () => {
       </Example>
       <Example title="Forecast Asset Price">
         <ForecastAssetPrice />
+      </Example>
+      <Example title="Custom Label Component">
+        <CustomLabelComponent />
       </Example>
     </VStack>
   );

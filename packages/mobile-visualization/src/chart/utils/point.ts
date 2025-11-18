@@ -56,6 +56,28 @@ export function getPointOnSerializableScale(dataValue: number, scale: Serializab
 }
 
 /**
+ * Projects a single data point to pixel coordinates using serializable scales.
+ * This is the worklet-compatible version for use in react-native-reanimated.
+ */
+export function projectPointWithSerializableScale({
+  x,
+  y,
+  xScale,
+  yScale,
+}: {
+  x: number;
+  y: number;
+  xScale: SerializableScale;
+  yScale: SerializableScale;
+}): { x: number; y: number } {
+  'worklet';
+  return {
+    x: getPointOnSerializableScale(x, xScale),
+    y: getPointOnSerializableScale(y, yScale),
+  };
+}
+
+/**
  * Projects a data point to pixel coordinates using the chart scale.
  * Automatically handles log scale transformations for zero/negative values.
  *

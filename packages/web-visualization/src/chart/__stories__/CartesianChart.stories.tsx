@@ -77,7 +77,6 @@ const PredictionRow = ({
       enableScrubbing={false}
       height={6}
       inset={0}
-      overflow="visible"
       series={[seriesData]}
       width={60}
     />
@@ -344,7 +343,6 @@ const EarningsHistory = () => {
         animate={false}
         height={250}
         inset={0}
-        overflow="visible"
         series={[
           {
             id: 'estimatedEPS',

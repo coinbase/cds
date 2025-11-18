@@ -1,6 +1,12 @@
 import { forwardRef, memo, useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
 import type { View } from 'react-native';
-import { useDerivedValue, useSharedValue, withDelay, withTiming } from 'react-native-reanimated';
+import {
+  useAnimatedReaction,
+  useDerivedValue,
+  useSharedValue,
+  withDelay,
+  withTiming,
+} from 'react-native-reanimated';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import { assets } from '@coinbase/cds-common/internal/data/assets';
 import { candles as btcCandles } from '@coinbase/cds-common/internal/data/candles';
@@ -9,7 +15,7 @@ import { sparklineInteractiveData } from '@coinbase/cds-common/internal/visualiz
 import { useTabsContext } from '@coinbase/cds-common/tabs/TabsContext';
 import type { TabValue } from '@coinbase/cds-common/tabs/useTabs';
 import { useTheme } from '@coinbase/cds-mobile';
-import { IconButton } from '@coinbase/cds-mobile/buttons';
+import { Button, IconButton } from '@coinbase/cds-mobile/buttons';
 import { ListCell } from '@coinbase/cds-mobile/cells';
 import { Example, ExampleScreen } from '@coinbase/cds-mobile/examples/ExampleScreen';
 import { Box, type BoxBaseProps, HStack, VStack } from '@coinbase/cds-mobile/layout';
@@ -21,6 +27,7 @@ import { SegmentedTab, type SegmentedTabProps } from '@coinbase/cds-mobile/tabs/
 import { TextLabel1 } from '@coinbase/cds-mobile/typography';
 import { Text } from '@coinbase/cds-mobile/typography/Text';
 import {
+  Circle,
   FontWeight,
   Group,
   Line as SkiaLine,
@@ -37,10 +44,23 @@ import { CartesianChart } from '../../CartesianChart';
 import { useCartesianChartContext } from '../../ChartProvider';
 import { PeriodSelector, PeriodSelectorActiveIndicator } from '../../PeriodSelector';
 import { Point } from '../../Point';
-import { Scrubber, type ScrubberRef } from '../../scrubber';
+import {
+  DefaultScrubberBeacon,
+  DefaultScrubberBeaconLabel,
+  DefaultScrubberLabel,
+  Scrubber,
+  type ScrubberBeaconLabelProps,
+  type ScrubberBeaconProps,
+  type ScrubberLabelProps,
+  type ScrubberRef,
+} from '../../scrubber';
 import {
   type AxisBounds,
+  buildTransition,
+  defaultTransition,
+  getLineData,
   getPointOnSerializableScale,
+  projectPointWithSerializableScale,
   type Transition,
   unwrapAnimatedValue,
   useScrubberContext,
@@ -248,7 +268,7 @@ function LiveUpdates() {
         },
       ]}
     >
-      <Scrubber ref={scrubberRef} labelProps={{ elevation: 1 }} />
+      <Scrubber ref={scrubberRef} />
     </LineChart>
   );
 }
@@ -857,7 +877,6 @@ function Compact() {
         {...dimensions}
         enableScrubbing={false}
         inset={0}
-        overflow="visible"
         series={[
           {
             id: 'btc',
@@ -1050,8 +1069,7 @@ function AssetPriceWithDottedArea() {
           showArea
           areaType="dotted"
           height={200}
-          inset={{ top: 52 }}
-          overflow="visible"
+          inset={{ left: 0, right: 0, top: 52 }}
           series={[
             {
               id: 'btc',
@@ -1059,9 +1077,9 @@ function AssetPriceWithDottedArea() {
               color: assets.btc.color,
             },
           ]}
-          style={{ outlineColor: assets.btc.color }}
         >
           <Scrubber
+            elevateLabel
             idlePulse
             label={(d: number) => {
               const date = formatDate(sparklineTimePeriodDataTimestamps[d]);
@@ -1101,9 +1119,6 @@ function AssetPriceWithDottedArea() {
               const para = builder.build();
               para.layout(512);
               return para;
-            }}
-            labelProps={{
-              elevation: 1,
             }}
           />
         </LineChart>
@@ -1255,7 +1270,6 @@ const PerformanceChart = memo(
         height={300}
         inset={{ top: 52, left: 0, right: 0 }}
         onScrubberPositionChange={onScrubberPositionChange}
-        overflow="visible"
         series={[
           {
             id: 'high',
@@ -1276,7 +1290,6 @@ const PerformanceChart = memo(
             label: 'Low Price',
           },
         ]}
-        style={{ outlineColor: assets.btc.color }}
         xAxis={{ range: ({ min, max }) => ({ min, max: max - 16 }) }}
         yAxis={{ showGrid: true, tickLabelFormatter: formatPriceThousands }}
       >
@@ -1528,15 +1541,23 @@ function Candlesticks() {
   );
 }
 
-/*function MonotoneAssetPrice() {
+function MonotoneAssetPrice() {
   const theme = useTheme();
   const prices = sparklineInteractiveData.hour;
+
+  const fontMgr = useMemo(() => {
+    const fontProvider = Skia.TypefaceFontProvider.Make();
+    // Register system fonts if available, otherwise Skia will use defaults
+    return fontProvider;
+  }, []);
 
   const priceFormatter = useMemo(
     () =>
       new Intl.NumberFormat('en-US', {
         style: 'currency',
         currency: 'USD',
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0,
       }),
     [],
   );
@@ -1550,22 +1571,11 @@ function Candlesticks() {
     [],
   );
 
-  const formatPrice = useCallback(
+  const formatPriceThousands = useCallback(
     (price: number) => {
-      return priceFormatter.format(price);
+      return priceFormatter.format(price / 1000);
     },
     [priceFormatter],
-  );
-
-  const formatAxisLabelPrice = useCallback(
-    (price: number) => {
-      return (
-        <tspan dx={4} dy={-12} textAnchor="start">
-          {formatPrice(price)}
-        </tspan>
-      );
-    },
-    [formatPrice],
   );
 
   const formatDate = useCallback((date: Date) => {
@@ -1589,19 +1599,109 @@ function Candlesticks() {
     (index: number) => {
       const price = scrubberPriceFormatter.format(prices[index].value);
       const date = formatDate(prices[index].date);
+
+      const regularStyle: SkTextStyle = {
+        fontFamilies: ['Inter'],
+        fontSize: 14,
+        fontStyle: {
+          weight: FontWeight.Normal,
+        },
+        color: Skia.Color(theme.color.fgMuted),
+      };
+
+      const boldStyle: SkTextStyle = {
+        fontFamilies: ['Inter'],
+        ...regularStyle,
+        fontStyle: {
+          weight: FontWeight.Bold,
+        },
+      };
+
+      const builder = Skia.ParagraphBuilder.Make(
+        {
+          textAlign: TextAlign.Left,
+        },
+        fontMgr,
+      );
+
+      builder.pushStyle(boldStyle);
+      builder.addText(`${price} USD`);
+
+      builder.pushStyle(regularStyle);
+      builder.addText(` ${date}`);
+
+      const para = builder.build();
+      para.layout(512);
+      return para;
+    },
+    [scrubberPriceFormatter, prices, formatDate, theme.color.fgMuted, fontMgr],
+  );
+
+  const formatAxisLabelPrice = useCallback(
+    (price: number) => {
+      return `${formatPriceThousands(price)}k`;
+    },
+    [formatPriceThousands],
+  );
+
+  const CustomScrubberBeacon = memo(
+    ({ dataX, dataY, seriesId, isIdle, animate = true }: ScrubberBeaconProps) => {
+      const { getSeries, getXSerializableScale, getYSerializableScale } =
+        useCartesianChartContext();
+
+      const targetSeries = useMemo(() => getSeries(seriesId), [getSeries, seriesId]);
+      const xScale = useMemo(() => getXSerializableScale(), [getXSerializableScale]);
+      const yScale = useMemo(
+        () => getYSerializableScale(targetSeries?.yAxisId),
+        [getYSerializableScale, targetSeries?.yAxisId],
+      );
+
+      const animatedX = useSharedValue(0);
+      const animatedY = useSharedValue(0);
+
+      // Calculate the target point position - project data to pixels
+      const targetPoint = useDerivedValue(() => {
+        if (!xScale || !yScale) return { x: 0, y: 0 };
+        return projectPointWithSerializableScale({
+          x: unwrapAnimatedValue(dataX),
+          y: unwrapAnimatedValue(dataY),
+          xScale,
+          yScale,
+        });
+      }, [dataX, dataY, xScale, yScale]);
+
+      useAnimatedReaction(
+        () => {
+          return { point: targetPoint.value, isIdle: unwrapAnimatedValue(isIdle) };
+        },
+        (current, previous) => {
+          // When animation is disabled, on initial render, or when we are starting,
+          // continuing, or finishing scrubbing we should immediately transition
+          if (!animate || previous === null || !previous.isIdle || !current.isIdle) {
+            animatedX.value = current.point.x;
+            animatedY.value = current.point.y;
+            return;
+          }
+
+          animatedX.value = buildTransition(current.point.x, defaultTransition);
+          animatedY.value = buildTransition(current.point.y, defaultTransition);
+        },
+        [animate],
+      );
+
+      // Create animated point using the animated values
+      const animatedPoint = useDerivedValue(() => {
+        return { x: animatedX.value, y: animatedY.value };
+      }, [animatedX, animatedY]);
+
       return (
         <>
-          <tspan style={{ fontWeight: 'bold' }}>{price} USD</tspan> {date}
+          <Circle c={animatedPoint} color={theme.color.bg} r={5} />
+          <Circle c={animatedPoint} color={theme.color.fg} r={5} strokeWidth={3} style="stroke" />
         </>
       );
     },
-    [scrubberPriceFormatter, prices, formatDate],
   );
-
-  const CustomScrubberBeacon = memo(({ dataX, dataY, ...props }: ScrubberBeaconProps) => {
-    if (dataX === undefined || dataY === undefined) return;
-    return <Point {...props} animate={false} dataX={dataX} dataY={dataY} r={5} />;
-  });
 
   return (
     <LineChart
@@ -1609,7 +1709,6 @@ function Candlesticks() {
       showYAxis
       height={200}
       inset={{ top: 64 }}
-      overflow="visible"
       series={[
         {
           id: 'btc',
@@ -1617,16 +1716,15 @@ function Candlesticks() {
           color: theme.color.fg,
           gradient: {
             axis: 'x',
-            stops: ({ min, max }) => [
+            stops: ({ min }) => [
               { offset: min, color: theme.color.fg, opacity: 0 },
               { offset: 32, color: theme.color.fg, opacity: 1 },
             ],
           },
         },
       ]}
-      style={{ outlineColor: theme.color.fg }}
       xAxis={{
-        range: ({ min, max }) => ({ min: 96, max: max }),
+        range: ({ max }) => ({ min: 32, max }),
       }}
       yAxis={{
         position: 'left',
@@ -1636,22 +1734,15 @@ function Candlesticks() {
       }}
     >
       <Scrubber
+        elevateLabel
         hideOverlay
         BeaconComponent={CustomScrubberBeacon}
         LineComponent={SolidLine}
         label={scrubberLabel}
-        labelProps={{ elevation: 1 }}
-        styles={{
-          beacon: {
-            stroke: theme.color.fg,
-            fill: theme.color.bg,
-            strokeWidth: 3,
-          },
-        }}
       />
     </LineChart>
   );
-}*/
+}
 
 function ServiceAvailability() {
   const theme = useTheme();
@@ -1802,7 +1893,15 @@ function ForecastAssetPrice() {
   });
   const CustomScrubber = memo(() => {
     const { scrubberPosition } = useScrubberContext();
-    const isScrubbing = scrubberPosition !== undefined;
+
+    const idleScrubberOpacity = useDerivedValue(
+      () => (scrubberPosition.value === undefined ? 1 : 0),
+      [scrubberPosition],
+    );
+    const scrubberOpacity = useDerivedValue(
+      () => (scrubberPosition.value !== undefined ? 1 : 0),
+      [scrubberPosition],
+    );
 
     // Fade in animation for the Scrubber
     const fadeInOpacity = useSharedValue(0);
@@ -1813,11 +1912,16 @@ function ForecastAssetPrice() {
 
     return (
       <Group opacity={fadeInOpacity}>
-        <Group opacity={isScrubbing ? 1 : 0}>
+        <Group opacity={scrubberOpacity}>
           <Scrubber hideOverlay />
         </Group>
-        <Group opacity={isScrubbing ? 0 : 1}>
-          <Point dataX={currentIndex} dataY={data[currentIndex]} fill={assets.btc.color} />
+        <Group opacity={idleScrubberOpacity}>
+          <DefaultScrubberBeacon
+            isIdle
+            dataX={currentIndex}
+            dataY={data[currentIndex]}
+            seriesId="price"
+          />
         </Group>
       </Group>
     );
@@ -1834,6 +1938,188 @@ function ForecastAssetPrice() {
       <XAxis position="bottom" requestedTickCount={3} tickLabelFormatter={axisFormatter} />
       <CustomScrubber />
     </CartesianChart>
+  );
+}
+
+function ImperativeHandle() {
+  const theme = useTheme();
+  const scrubberRef = useRef<ScrubberRef>(null);
+
+  return (
+    <VStack gap={2}>
+      <LineChart
+        enableScrubbing
+        showYAxis
+        height={200}
+        series={[
+          {
+            id: 'priceA',
+            data: [2400, 1398, 9800, 3908, 4800, 3800, 4300],
+            label: 'Price A',
+            color: theme.color.accentBoldBlue,
+          },
+          {
+            id: 'priceB',
+            data: [2000, 2491, 4501, 6049, 5019, 4930, 5910],
+            label: 'Price B',
+            color: theme.color.accentBoldGreen,
+          },
+          {
+            id: 'priceC',
+            data: [1000, 4910, 2300, 5910, 3940, 2940, 1940],
+            label: 'Price C',
+            color: theme.color.accentBoldPurple,
+          },
+          {
+            id: 'priceD',
+            data: [4810, 2030, 5810, 3940, 2940, 1940, 940],
+            label: 'Price D',
+            color: theme.color.accentBoldYellow,
+          },
+        ]}
+        xAxis={{
+          range: ({ min, max }) => ({ min, max: max - 32 }),
+        }}
+        yAxis={{
+          domain: {
+            min: 0,
+          },
+          showGrid: true,
+          tickLabelFormatter: (value) => value.toLocaleString(),
+        }}
+      >
+        <Scrubber ref={scrubberRef} />
+      </LineChart>
+      <Button onPress={() => scrubberRef.current?.pulse()}>Pulse</Button>
+    </VStack>
+  );
+}
+
+function CustomBeaconLabel() {
+  const theme = useTheme();
+  // This custom component label shows the percentage value of the data at the scrubber position.
+  const MyScrubberBeaconLabel = memo(
+    ({ seriesId, color, label, ...props }: ScrubberBeaconLabelProps) => {
+      const { getSeriesData, series } = useCartesianChartContext();
+      const { scrubberPosition } = useScrubberContext();
+
+      const seriesData = useMemo(
+        () => getLineData(getSeriesData(seriesId)),
+        [getSeriesData, seriesId],
+      );
+
+      const maxDataLength = useMemo(
+        () =>
+          series?.reduce((max, s) => {
+            const seriesData = getSeriesData(s.id);
+            return Math.max(max, seriesData?.length ?? 0);
+          }, 0) ?? 0,
+        [series, getSeriesData],
+      );
+
+      const dataIndex = useDerivedValue(() => {
+        return scrubberPosition.value ?? Math.max(0, maxDataLength - 1);
+      }, [scrubberPosition, maxDataLength]);
+
+      const percentageLabel = useDerivedValue(() => {
+        if (seriesData !== undefined) {
+          const dataAtPosition = seriesData[dataIndex.value];
+          return `${unwrapAnimatedValue(label)} · ${dataAtPosition}%`;
+        }
+        return unwrapAnimatedValue(label);
+      }, [label, seriesData, dataIndex]);
+
+      return (
+        <DefaultScrubberBeaconLabel
+          {...props}
+          background={color}
+          color={theme.color.bg}
+          label={percentageLabel}
+          seriesId={seriesId}
+        />
+      );
+    },
+  );
+
+  return (
+    <LineChart
+      enableScrubbing
+      showArea
+      showYAxis
+      areaType="dotted"
+      height={200}
+      series={[
+        {
+          id: 'Boston',
+          data: [25, 30, 35, 45, 60, 100],
+          color: `rgb(${theme.spectrum.green40})`,
+          label: 'Boston',
+        },
+        {
+          id: 'Miami',
+          data: [20, 25, 30, 35, 20, 0],
+          color: `rgb(${theme.spectrum.blue40})`,
+          label: 'Miami',
+        },
+        {
+          id: 'Denver',
+          data: [10, 15, 20, 25, 40, 0],
+          color: `rgb(${theme.spectrum.orange40})`,
+          label: 'Denver',
+        },
+        {
+          id: 'Phoenix',
+          data: [15, 10, 5, 0, 0, 0],
+          color: `rgb(${theme.spectrum.red40})`,
+          label: 'Phoenix',
+        },
+      ]}
+      yAxis={{
+        showGrid: true,
+      }}
+    >
+      <Scrubber BeaconLabelComponent={MyScrubberBeaconLabel} />
+    </LineChart>
+  );
+}
+
+function CustomLabelComponent() {
+  const CustomLabelComponent = memo((props: ScrubberLabelProps) => {
+    const theme = useTheme();
+    const { drawingArea } = useCartesianChartContext();
+
+    if (!drawingArea) return;
+
+    return (
+      <DefaultScrubberLabel
+        {...props}
+        background={theme.color.bgPrimary}
+        color={theme.color.bgPrimaryWash}
+        dy={32}
+        elevation={1}
+        fontWeight={FontWeight.Bold}
+        y={drawingArea.y + drawingArea.height}
+      />
+    );
+  });
+  return (
+    <LineChart
+      enableScrubbing
+      showArea
+      height={200}
+      inset={{ top: 16, bottom: 64 }}
+      series={[
+        {
+          id: 'prices',
+          data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+        },
+      ]}
+    >
+      <Scrubber
+        LabelComponent={CustomLabelComponent}
+        label={(dataIndex: number) => `Day ${dataIndex + 1}`}
+      />
+    </LineChart>
   );
 }
 
@@ -1862,6 +2148,10 @@ function ExampleNavigator() {
             ]}
           />
         ),
+      },
+      {
+        title: 'Imperative Handle 2',
+        component: <ImperativeHandle />,
       },
       {
         title: 'Multiple Lines',
@@ -2066,12 +2356,24 @@ function ExampleNavigator() {
         component: <Candlesticks />,
       },
       {
+        title: 'Monotone Asset Price',
+        component: <MonotoneAssetPrice />,
+      },
+      {
         title: 'Service Availability',
         component: <ServiceAvailability />,
       },
       {
         title: 'Forecast Asset Price',
         component: <ForecastAssetPrice />,
+      },
+      {
+        title: 'Custom Beacon Label',
+        component: <CustomBeaconLabel />,
+      },
+      {
+        title: 'Custom Label Component',
+        component: <CustomLabelComponent />,
       },
     ],
     [theme.color.fg, theme.color.fgPositive, theme.spectrum.gray50],

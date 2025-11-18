@@ -60,6 +60,10 @@ export type CartesianChartContextValue = {
    */
   drawingArea: Rect;
   /**
+   * Maximum data length across all series in the chart.
+   */
+  maxDataLength: number;
+  /**
    * Registers an axis.
    * Used by axis components to reserve space in the chart, preventing overlap with the drawing area.
    * @param id - The axis ID

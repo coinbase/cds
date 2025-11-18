@@ -1,11 +1,10 @@
-import { memo, useMemo } from 'react';
+import { memo } from 'react';
 import { useDerivedValue } from 'react-native-reanimated';
 import type { SharedProps } from '@coinbase/cds-common/types';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 import type { AnimatedProp } from '@shopify/react-native-skia';
 
 import { useCartesianChartContext } from '../ChartProvider';
-import { ChartText } from '../text';
 import type {
   ChartTextChildren,
   ChartTextProps,
@@ -15,14 +14,15 @@ import type {
 import { unwrapAnimatedValue } from '../utils';
 import { getPointOnSerializableScale } from '../utils/point';
 
+import { DefaultReferenceLineLabel } from './DefaultReferenceLineLabel';
 import { DottedLine } from './DottedLine';
 import type { LineComponent } from './Line';
 
-/**
- * Configuration for ReferenceLine label rendering using ChartText.
- */
-export type ReferenceLineLabelProps = Pick<
+export type ReferenceLineLabelComponentProps = Pick<
   ChartTextProps,
+  | 'x'
+  | 'y'
+  | 'children'
   | 'color'
   | 'inset'
   | 'background'
@@ -32,6 +32,8 @@ export type ReferenceLineLabelProps = Pick<
   | 'horizontalAlignment'
   | 'verticalAlignment'
   | 'font'
+  | 'fontWeight'
+  | 'fontFamilies'
   | 'opacity'
   | 'dx'
   | 'dy'
@@ -39,7 +41,9 @@ export type ReferenceLineLabelProps = Pick<
   | 'paragraphAlignment'
 >;
 
-type BaseReferenceLineProps = SharedProps & {
+export type ReferenceLineLabelComponent = React.FC<ReferenceLineLabelComponentProps>;
+
+type BaseReferenceLineProps = {
   /**
    * Label content to display near the reference line.
    * Can be a string or ReactNode for rich formatting.
@@ -59,16 +63,20 @@ type BaseReferenceLineProps = SharedProps & {
    */
   LineComponent?: LineComponent;
   /**
+   * Component to render the label.
+   * @default DefaultReferenceLineLabel
+   */
+  LabelComponent?: ReferenceLineLabelComponent;
+  /**
+   * Whether to elevate the label with a shadow.
+   * When true, applies elevation and automatically adds bounds to keep label within chart area.
+   */
+  elevateLabel?: boolean;
+  /**
    * The color of the line.
    * @default theme.color.bgLine
    */
   stroke?: string;
-  /**
-   * Props for the label rendering.
-   * Consolidates styling and positioning options for the ChartText component.
-   * Alignment defaults are set based on line orientation and can be overridden here.
-   */
-  labelProps?: ReferenceLineLabelProps;
 };
 
 type HorizontalReferenceLineProps = BaseReferenceLineProps & {
@@ -112,34 +120,23 @@ export const ReferenceLine = memo<ReferenceLineProps>(
     yAxisId,
     label,
     labelPosition = dataY !== undefined ? 'right' : 'top',
-    testID,
     LineComponent = DottedLine,
+    LabelComponent = DefaultReferenceLineLabel,
+    elevateLabel,
     stroke,
-    labelProps,
   }) => {
     const theme = useTheme();
     const { getXSerializableScale, getYSerializableScale, drawingArea } =
       useCartesianChartContext();
 
-    const xScale = useMemo(() => getXSerializableScale(), [getXSerializableScale]);
-    const yScale = useMemo(() => getYSerializableScale(yAxisId), [getYSerializableScale, yAxisId]);
+    const xScale = getXSerializableScale();
+    const yScale = getYSerializableScale(yAxisId);
 
     const effectiveLineStroke = stroke ?? theme.color.bgLine;
 
-    // Merge default props with user provided props
-    const finalLabelProps: ReferenceLineLabelProps = useMemo(
-      () => ({
-        borderRadius: 8,
-        color: theme.color.fgMuted,
-        inset: { top: 8, bottom: 8, left: 12, right: 12 },
-        // Set default alignment based on orientation
-        ...(dataY !== undefined
-          ? { verticalAlignment: 'middle' as const }
-          : { horizontalAlignment: 'center' as const }),
-        ...labelProps,
-      }),
-      [dataY, labelProps, theme.color.fgMuted],
-    );
+    // For horizontal lines (dataY defined): default to verticalAlignment: 'middle'
+    // For vertical lines (dataX defined): default to horizontalAlignment: 'center'
+    const isHorizontal = dataY !== undefined;
 
     const xPixel = useDerivedValue(() => {
       const dataXValue = unwrapAnimatedValue(dataX);
@@ -190,9 +187,15 @@ export const ReferenceLine = memo<ReferenceLineProps>(
         <>
           <LineComponent animate={false} d={horizontalLine} stroke={effectiveLineStroke} />
           {label && (
-            <ChartText {...finalLabelProps} opacity={labelOpacity} x={labelX} y={labelYPixel}>
+            <LabelComponent
+              elevation={elevateLabel ? 1 : undefined}
+              opacity={labelOpacity}
+              verticalAlignment={isHorizontal ? 'middle' : undefined}
+              x={labelX}
+              y={labelYPixel}
+            >
               {label}
-            </ChartText>
+            </LabelComponent>
           )}
         </>
       );
@@ -213,9 +216,15 @@ export const ReferenceLine = memo<ReferenceLineProps>(
         <>
           <LineComponent animate={false} d={verticalLine} stroke={effectiveLineStroke} />
           {label && (
-            <ChartText {...finalLabelProps} opacity={labelOpacity} x={labelXPixel} y={labelY}>
+            <LabelComponent
+              elevation={elevateLabel ? 1 : undefined}
+              horizontalAlignment={!isHorizontal ? 'center' : undefined}
+              opacity={labelOpacity}
+              x={labelXPixel}
+              y={labelY}
+            >
               {label}
-            </ChartText>
+            </LabelComponent>
           )}
         </>
       );

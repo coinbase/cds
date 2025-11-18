@@ -14,34 +14,121 @@ import {
   withDelay,
   withTiming,
 } from 'react-native-reanimated';
-import { useRefMap } from '@coinbase/cds-common/hooks/useRefMap';
 import type { SharedProps } from '@coinbase/cds-common/types';
 import { useTheme } from '@coinbase/cds-mobile';
-import { Group, Rect, type SkParagraph } from '@shopify/react-native-skia';
+import { type AnimatedProp, Group, Rect, type SkParagraph } from '@shopify/react-native-skia';
 
 import { useCartesianChartContext } from '../ChartProvider';
-import { type LineComponent, ReferenceLine, type ReferenceLineProps } from '../line';
+import {
+  ReferenceLine,
+  type ReferenceLineLabelComponent,
+  type ReferenceLineLabelComponentProps,
+  type ReferenceLineProps,
+} from '../line';
+import type { ChartTextProps } from '../text';
 import {
   accessoryFadeTransitionDelay,
   accessoryFadeTransitionDuration,
   getPointOnSerializableScale,
+  type Series,
   useScrubberContext,
 } from '../utils';
+import type { Transition } from '../utils/transition';
 
-import { ScrubberBeacon, type ScrubberBeaconProps, type ScrubberBeaconRef } from './ScrubberBeacon';
-import { ScrubberBeaconLabel, type ScrubberBeaconLabelProps } from './ScrubberBeaconLabel';
-import { ScrubberBeaconLabelGroup } from './ScrubberBeaconLabelGroup';
+import { DefaultScrubberBeacon } from './DefaultScrubberBeacon';
+import { DefaultScrubberLabel } from './DefaultScrubberLabel';
+import {
+  ScrubberBeaconGroup,
+  type ScrubberBeaconGroupBaseProps,
+  type ScrubberBeaconGroupProps,
+  type ScrubberBeaconGroupRef,
+} from './ScrubberBeaconGroup';
+import {
+  ScrubberBeaconLabelGroup,
+  type ScrubberBeaconLabelGroupBaseProps,
+  type ScrubberBeaconLabelGroupProps,
+} from './ScrubberBeaconLabelGroup';
 
-/**
- * Configuration for scrubber functionality across chart components.
- * Provides consistent API with smart defaults and component customization.
- */
-export type ScrubberProps = SharedProps &
-  Pick<ScrubberBeaconProps, 'idlePulse'> & {
+export type ScrubberBeaconRef = {
+  /**
+   * Triggers a single pulse animation.
+   * Only works when the beacon is in idle state (not actively scrubbing).
+   */
+  pulse: () => void;
+};
+
+export type ScrubberBeaconProps = {
+  /**
+   * Id of the series.
+   */
+  seriesId: Series['id'];
+  /**
+   * Color of the beacon.
+   */
+  color?: AnimatedProp<string>;
+  /**
+   * X coordinate in data space.
+   */
+  dataX: AnimatedProp<number>;
+  /**
+   * Y coordinate in data space.
+   */
+  dataY: AnimatedProp<number>;
+  /**
+   * Whether the beacon is in idle state (not actively scrubbing).
+   */
+  isIdle: AnimatedProp<boolean>;
+  /**
+   * Pulse the beacon while it is at rest.
+   */
+  idlePulse?: boolean;
+  /**
+   * Whether animations are enabled.
+   * @default true
+   */
+  animate?: boolean;
+  /**
+   * Transition configuration for beacon animations.
+   */
+  transitions?: {
     /**
-     * An array of series IDs that will receive visual emphasis as the user scrubs through the chart.
-     * Use this prop to restrict the scrubbing visual behavior to specific series.
-     * By default, all series will be highlighted by the Scrubber.
+     * Transition used for beacon position updates.
+     * @default defaultTransition
+     */
+    update?: Transition;
+    /**
+     * Transition used for the pulse animation.
+     * @default { type: 'timing', duration: 1000 }
+     */
+    pulse?: Transition;
+  };
+};
+
+export type ScrubberBeaconComponent = React.FC<
+  ScrubberBeaconProps & { ref?: React.Ref<ScrubberBeaconRef> }
+>;
+
+export type ScrubberBeaconLabelProps = Pick<Series, 'color'> &
+  Pick<ChartTextProps, 'x' | 'y' | 'dx' | 'horizontalAlignment' | 'onDimensionsChange'> & {
+    /**
+     * Label for the series.
+     */
+    label: AnimatedProp<string>;
+    /**
+     * Id of the series.
+     */
+    seriesId: Series['id'];
+  };
+export type ScrubberBeaconLabelComponent = React.FC<ScrubberBeaconLabelProps>;
+
+export type ScrubberLabelProps = ReferenceLineLabelComponentProps;
+export type ScrubberLabelComponent = React.FC<ScrubberLabelProps>;
+
+export type ScrubberBaseProps = SharedProps &
+  Pick<ScrubberBeaconGroupBaseProps, 'idlePulse'> & {
+    /**
+     * Array of series IDs to highlight when scrubbing with scrubber beacons.
+     * By default, all series will be highlighted.
      */
     seriesIds?: string[];
     /**
@@ -49,7 +136,7 @@ export type ScrubberProps = SharedProps &
      */
     hideLine?: boolean;
     /**
-     * Whether to hide the overlay rect which obscures future data.
+     * Hides the overlay rect which obscures data beyond the scrubber position.
      */
     hideOverlay?: boolean;
     /**
@@ -59,14 +146,36 @@ export type ScrubberProps = SharedProps &
      */
     overlayOffset?: number;
     /**
+     * Minimum gap between beacon labels to prevent overlap.
+     * Measured in pixels.
+     */
+    beaconLabelMinGap?: ScrubberBeaconLabelGroupBaseProps['labelMinGap'];
+    /**
+     * Horizontal offset for beacon labels from their beacon position.
+     * Measured in pixels.
+     */
+    beaconLabelHorizontalOffset?: ScrubberBeaconLabelGroupBaseProps['labelHorizontalOffset'];
+  };
+
+export type ScrubberProps = ScrubberBaseProps &
+  Pick<ReferenceLineProps, 'LineComponent'> &
+  Pick<ScrubberBeaconGroupProps, 'BeaconComponent'> &
+  Pick<ScrubberBeaconLabelGroupProps, 'BeaconLabelComponent'> & {
+    /**
      * Label text displayed above the scrubber line.
      * Can be a static string or a function that receives the current dataIndex.
      */
     label?: string | SkParagraph | ((dataIndex: number) => string | SkParagraph);
     /**
-     * Props passed to the scrubber line's label.
+     * Component to render the scrubber line label.
+     * @default DefaultScrubberLabel
      */
-    labelProps?: ReferenceLineProps['labelProps'];
+    LabelComponent?: ScrubberLabelComponent;
+    /**
+     * Whether to elevate the scrubber line label with a shadow.
+     * When true, applies elevation and automatically adds bounds to keep label within chart area.
+     */
+    elevateLabel?: boolean;
     /**
      * Stroke color for the scrubber line.
      */
@@ -74,22 +183,14 @@ export type ScrubberProps = SharedProps &
     /**
      * Custom component for the scrubber beacon.
      */
-    BeaconComponent?: React.ComponentType<ScrubberBeaconProps>;
-    /**
-     * Custom component for the scrubber beacon label.
-     */
-    BeaconLabelComponent?: React.ComponentType<ScrubberBeaconLabelProps>;
-    /**
-     * Custom component for the scrubber line.
-     */
-    LineComponent?: LineComponent;
+    BeaconComponent?: ScrubberBeaconComponent;
     /**
      * Transition configuration for the scrubber beacon.
      */
     beaconTransitions?: ScrubberBeaconProps['transitions'];
   };
 
-export type ScrubberRef = ScrubberBeaconRef;
+export type ScrubberRef = ScrubberBeaconGroupRef;
 
 /**
  * Unified component that manages all scrubber elements (beacons, line, labels).
@@ -102,12 +203,15 @@ export const Scrubber = memo(
         hideLine,
         label,
         lineStroke,
-        labelProps,
-        BeaconComponent = ScrubberBeacon,
-        BeaconLabelComponent = ScrubberBeaconLabel,
+        BeaconComponent = DefaultScrubberBeacon,
+        BeaconLabelComponent,
         LineComponent,
+        LabelComponent = DefaultScrubberLabel,
+        elevateLabel,
         hideOverlay,
         overlayOffset = 2,
+        beaconLabelMinGap,
+        beaconLabelHorizontalOffset,
         testID,
         idlePulse,
         beaconTransitions,
@@ -115,19 +219,18 @@ export const Scrubber = memo(
       ref,
     ) => {
       const theme = useTheme();
-
-      const ScrubberBeaconRefs = useRefMap<ScrubberBeaconRef>();
+      const beaconGroupRef = React.useRef<ScrubberBeaconGroupRef>(null);
 
       const { scrubberPosition } = useScrubberContext();
       const {
         getXSerializableScale,
-        getSeriesData,
         getXAxis,
         series,
         drawingArea,
         animate,
         width: chartWidth,
         height: chartHeight,
+        maxDataLength,
       } = useCartesianChartContext();
 
       const xAxis = useMemo(() => getXAxis(), [getXAxis]);
@@ -149,41 +252,16 @@ export const Scrubber = memo(
       // Expose imperative handle with pulse method
       useImperativeHandle(ref, () => ({
         pulse: () => {
-          // Pulse all registered scrubber beacons
-          Object.values(ScrubberBeaconRefs.refs).forEach((beaconRef) => {
-            beaconRef?.pulse();
-          });
+          beaconGroupRef.current?.pulse();
         },
       }));
 
-      const filteredSeries = useMemo(() => {
-        return (
-          series?.filter((s) => {
-            if (seriesIds === undefined) return true;
-            return seriesIds.includes(s.id);
-          }) ?? []
-        );
+      const filteredSeriesIds = useMemo(() => {
+        if (seriesIds === undefined) {
+          return series?.map((s) => s.id) ?? [];
+        }
+        return seriesIds;
       }, [series, seriesIds]);
-
-      const createScrubberBeaconRef = useCallback(
-        (seriesId: string) => {
-          return (beaconRef: ScrubberBeaconRef | null) => {
-            if (beaconRef) {
-              ScrubberBeaconRefs.registerRef(seriesId, beaconRef);
-            }
-          };
-        },
-        [ScrubberBeaconRefs],
-      );
-
-      const maxDataLength = useMemo(
-        () =>
-          series?.reduce((max: any, s: any) => {
-            const seriesData = getSeriesData(s.id);
-            return Math.max(max, seriesData?.length ?? 0);
-          }, 0) ?? 0,
-        [series, getSeriesData],
-      );
 
       const dataIndex = useDerivedValue(() => {
         return scrubberPosition.value ?? Math.max(0, maxDataLength - 1);
@@ -196,6 +274,10 @@ export const Scrubber = memo(
         }
         return dataIndex.value;
       }, [xAxis, dataIndex]);
+
+      const isIdle = useDerivedValue(() => {
+        return scrubberPosition.value === undefined;
+      }, [scrubberPosition]);
 
       const lineOpacity = useDerivedValue(() => {
         return scrubberPosition.value !== undefined ? 1 : 0;
@@ -251,16 +333,17 @@ export const Scrubber = memo(
         [updateResolvedLabel],
       );
 
-      const scrubberBeaconLabels: Array<{ id: string; label: string; color?: string }> = useMemo(
+      const scrubberBeaconLabels: ScrubberBeaconLabelGroupBaseProps['labels'] = useMemo(
         () =>
-          filteredSeries
+          series
+            ?.filter((s) => filteredSeriesIds.includes(s.id))
             .filter((s) => s.label !== undefined && s.label.length > 0)
             .map((s) => ({
-              id: s.id,
+              seriesId: s.id,
               label: s.label!,
               color: s.color,
-            })),
-        [filteredSeries],
+            })) ?? [],
+        [series, filteredSeriesIds],
       );
 
       if (!xScale) return;
@@ -280,37 +363,31 @@ export const Scrubber = memo(
           {!hideLine && (
             <Group opacity={lineOpacity}>
               <ReferenceLine
+                LabelComponent={LabelComponent}
                 LineComponent={LineComponent}
                 dataX={dataX}
+                elevateLabel={elevateLabel}
                 label={resolvedLabelValue}
-                labelProps={{
-                  verticalAlignment: 'middle',
-                  dy: -0.5 * drawingArea.y,
-                  ...labelProps,
-                  bounds: {
-                    // todo - how to bake this into the chart on web and on mobile
-                    x: 16,
-                    y: 16,
-                    width: chartWidth - 32,
-                    height: chartHeight - 32,
-                  },
-                }}
+                stroke={lineStroke}
               />
             </Group>
           )}
-          {filteredSeries.map((s) => (
-            <BeaconComponent
-              key={s.id}
-              ref={createScrubberBeaconRef(s.id)}
-              color={s.color}
-              gradient={s.gradient}
-              idlePulse={idlePulse}
-              seriesId={s.id}
-              testID={testID ? `${testID}-${s.id}-dot` : undefined}
-              transitions={beaconTransitions}
+          <ScrubberBeaconGroup
+            ref={beaconGroupRef}
+            BeaconComponent={BeaconComponent}
+            idlePulse={idlePulse}
+            seriesIds={filteredSeriesIds}
+            testID={testID}
+            transitions={beaconTransitions}
+          />
+          {scrubberBeaconLabels.length > 0 && (
+            <ScrubberBeaconLabelGroup
+              BeaconLabelComponent={BeaconLabelComponent}
+              labelHorizontalOffset={beaconLabelHorizontalOffset}
+              labelMinGap={beaconLabelMinGap}
+              labels={scrubberBeaconLabels}
             />
-          ))}
-          <ScrubberBeaconLabelGroup labels={scrubberBeaconLabels} />
+          )}
         </Group>
       );
     },

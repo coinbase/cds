@@ -503,7 +503,6 @@ function PriceWithVolume() {
             yAxisId: 'volume',
           },
         ]}
-        style={{ outlineColor: assets.btc.color }}
         xAxis={{ scaleType: 'band', range: ({ min, max }) => ({ min, max: max - 16 }) }}
         yAxis={[
           {
@@ -632,7 +631,6 @@ function EarningsHistory() {
   return (
     <VStack gap={0.5}>
       <CartesianChart
-        overflow="visible"
         animate={false}
         height={150}
         padding={0}

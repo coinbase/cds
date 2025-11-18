@@ -224,7 +224,6 @@ function LiveUpdates() {
       <Scrubber
         ref={scrubberRef}
         accessibilityLabel={scrubberAccessibilityLabel}
-        labelProps={{ elevation: 1 }}
       />
     </LineChart>
   );
@@ -1171,7 +1170,6 @@ function Compact() {
         {...dimensions}
         enableScrubbing={false}
         inset={0}
-        overflow="visible"
         series={[
           {
             id: 'btc',
@@ -1418,7 +1416,6 @@ function AssetPriceWithDottedArea() {
           accessibilityLabel={chartAccessibilityLabel}
           areaType="dotted"
           height={{ base: 200, tablet: 225, desktop: 250 }}
-          overflow="visible"
           series={[
             {
               id: 'btc',
@@ -1427,12 +1424,13 @@ function AssetPriceWithDottedArea() {
             },
           ]}
           style={{ outlineColor: assets.btc.color }}
+          inset={{ top: 60 }}
         >
           <Scrubber
             idlePulse
             accessibilityLabel={scrubberAccessibilityLabel}
             label={scrubberLabel}
-            labelProps={{ elevation: 1 }}
+            elevateLabel
           />
         </LineChart>
         <PeriodSelector
@@ -1524,9 +1522,44 @@ function MonotoneAssetPrice() {
     [scrubberPriceFormatter, prices, formatDate],
   );
 
-  const CustomScrubberBeacon = memo(({ dataX, dataY, ...props }: ScrubberBeaconProps) => {
-    if (dataX === undefined || dataY === undefined) return;
-    return <Point {...props} animate={false} dataX={dataX} dataY={dataY} r={5} />;
+  const CustomScrubberBeacon = memo(({ dataX, dataY, seriesId, isIdle }: ScrubberBeaconProps) => {
+    const { getSeries, getXScale, getYScale } = useCartesianChartContext();
+    const targetSeries = getSeries(seriesId);
+    const xScale = getXScale();
+    const yScale = getYScale(targetSeries?.yAxisId);
+
+    const pixelCoordinate = useMemo(() => {
+      if (!xScale || !yScale) return;
+      return projectPoint({ x: dataX, y: dataY, xScale, yScale });
+    }, [dataX, dataY, xScale, yScale]);
+
+    if (!pixelCoordinate) return;
+
+    if (isIdle) {
+      return (
+        <m.circle
+          animate={{ cx: pixelCoordinate.x, cy: pixelCoordinate.y }}
+          cx={pixelCoordinate.x}
+          cy={pixelCoordinate.y}
+          fill="var(--color-bg)"
+          r={5}
+          stroke="var(--color-fg)"
+          strokeWidth={3}
+          transition={defaultTransition}
+        />
+      );
+    }
+
+    return (
+      <circle
+        cx={pixelCoordinate.x}
+        cy={pixelCoordinate.y}
+        fill="var(--color-bg)"
+        r={5}
+        stroke="var(--color-fg)"
+        strokeWidth={3}
+      />
+    );
   });
 
   return (
@@ -1535,7 +1568,6 @@ function MonotoneAssetPrice() {
       showYAxis
       height={{ base: 200, tablet: 250, desktop: 300 }}
       inset={{ top: 64 }}
-      overflow="visible"
       series={[
         {
           id: 'btc',
@@ -1566,14 +1598,7 @@ function MonotoneAssetPrice() {
         BeaconComponent={CustomScrubberBeacon}
         LineComponent={SolidLine}
         label={scrubberLabel}
-        labelProps={{ elevation: 1 }}
-        styles={{
-          beacon: {
-            stroke: 'var(--color-fg)',
-            fill: 'var(--color-bg)',
-            strokeWidth: 3,
-          },
-        }}
+        elevateLabel
       />
     </LineChart>
   );
@@ -1876,7 +1901,7 @@ function ForecastAssetPrice() {
           <Scrubber hideOverlay />
         </g>
         <g style={{ opacity: isScrubbing ? 0 : 1 }}>
-          <ScrubberBeacon dataX={currentIndex} dataY={data[currentIndex]} seriesId="price" />
+          <DefaultScrubberBeacon dataX={currentIndex} dataY={data[currentIndex]} seriesId="price" />
         </g>
       </m.g>
     );

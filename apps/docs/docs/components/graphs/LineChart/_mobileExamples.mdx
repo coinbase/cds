@@ -157,7 +157,7 @@ function LiveUpdates() {
         },
       ]}
     >
-      <Scrubber ref={scrubberRef} labelProps={{ elevation: 1 }} />
+      <Scrubber ref={scrubberRef} elevateLabel />
     </LineChart>
   );
 }
@@ -498,7 +498,6 @@ const PerformanceChart = memo(
         height={300}
         inset={{ top: 52, left: 0, right: 0 }}
         onScrubberPositionChange={onScrubberPositionChange}
-        overflow="visible"
         series={[
           {
             id: 'high',
@@ -519,7 +518,6 @@ const PerformanceChart = memo(
             label: 'Low Price',
           },
         ]}
-        style={{ outlineColor: assets.btc.color }}
         xAxis={{ range: ({ min, max }) => ({ min, max: max - 16 }) }}
         yAxis={{ showGrid: true, tickLabelFormatter: formatPriceThousands }}
       >
@@ -1197,7 +1195,6 @@ function Compact() {
         {...dimensions}
         enableScrubbing={false}
         inset={0}
-        overflow="visible"
         series={[
           {
             id: 'btc',
@@ -1399,7 +1396,6 @@ function AssetPriceWithDottedArea() {
           areaType="dotted"
           height={200}
           inset={{ top: 52 }}
-          overflow="visible"
           series={[
             {
               id: 'btc',
@@ -1407,7 +1403,6 @@ function AssetPriceWithDottedArea() {
               color: assets.btc.color,
             },
           ]}
-          style={{ outlineColor: assets.btc.color }}
         >
           <Scrubber
             idlePulse
@@ -1450,9 +1445,7 @@ function AssetPriceWithDottedArea() {
               para.layout(512);
               return para;
             }}
-            labelProps={{
-              elevation: 1,
-            }}
+            elevateLabel
           />
         </LineChart>
         <PeriodSelector
@@ -1467,6 +1460,215 @@ function AssetPriceWithDottedArea() {
   });
 
   return <AssetPriceDotted />;
+}
+```
+
+### Monotone Asset Price
+
+You can adjust [YAxis](/components/graphs/YAxis) and [Scrubber](/components/graphs/Scrubber) to have a chart where the y-axis is overlaid and the beacon is inverted in style.
+
+```jsx
+function MonotoneAssetPrice() {
+  const theme = useTheme();
+  const prices = sparklineInteractiveData.hour;
+
+  const fontMgr = useMemo(() => {
+    const fontProvider = Skia.TypefaceFontProvider.Make();
+    // Register system fonts if available, otherwise Skia will use defaults
+    return fontProvider;
+  }, []);
+
+  const priceFormatter = useMemo(
+    () =>
+      new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0,
+      }),
+    [],
+  );
+
+  const scrubberPriceFormatter = useMemo(
+    () =>
+      new Intl.NumberFormat('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      }),
+    [],
+  );
+
+  const formatPriceThousands = useCallback(
+    (price: number) => {
+      return priceFormatter.format(price / 1000);
+    },
+    [priceFormatter],
+  );
+
+  const formatDate = useCallback((date: Date) => {
+    const dayOfWeek = date.toLocaleDateString('en-US', { weekday: 'short' });
+
+    const monthDay = date.toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+    });
+
+    const time = date.toLocaleTimeString('en-US', {
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true,
+    });
+
+    return `${dayOfWeek}, ${monthDay}, ${time}`;
+  }, []);
+
+  const scrubberLabel = useCallback(
+    (index: number) => {
+      const price = scrubberPriceFormatter.format(prices[index].value);
+      const date = formatDate(prices[index].date);
+
+      const regularStyle: SkTextStyle = {
+        fontFamilies: ['Inter'],
+        fontSize: 14,
+        fontStyle: {
+          weight: FontWeight.Normal,
+        },
+        color: Skia.Color(theme.color.fgMuted),
+      };
+
+      const boldStyle: SkTextStyle = {
+        fontFamilies: ['Inter'],
+        ...regularStyle,
+        fontStyle: {
+          weight: FontWeight.Bold,
+        },
+      };
+
+      const builder = Skia.ParagraphBuilder.Make(
+        {
+          textAlign: TextAlign.Left,
+        },
+        fontMgr,
+      );
+
+      builder.pushStyle(boldStyle);
+      builder.addText(`${price} USD`);
+
+      builder.pushStyle(regularStyle);
+      builder.addText(` ${date}`);
+
+      const para = builder.build();
+      para.layout(512);
+      return para;
+    },
+    [scrubberPriceFormatter, prices, formatDate, theme.color.fgMuted, fontMgr],
+  );
+
+  const formatAxisLabelPrice = useCallback(
+    (price: number) => {
+      return `${formatPriceThousands(price)}k`;
+    },
+    [formatPriceThousands],
+  );
+
+  const CustomScrubberBeacon = memo(
+    ({ dataX, dataY, seriesId, isIdle, animate = true }: ScrubberBeaconProps) => {
+      const { getSeries, getXSerializableScale, getYSerializableScale } =
+        useCartesianChartContext();
+
+      const targetSeries = useMemo(() => getSeries(seriesId), [getSeries, seriesId]);
+      const xScale = useMemo(() => getXSerializableScale(), [getXSerializableScale]);
+      const yScale = useMemo(
+        () => getYSerializableScale(targetSeries?.yAxisId),
+        [getYSerializableScale, targetSeries?.yAxisId],
+      );
+
+      const animatedX = useSharedValue(0);
+      const animatedY = useSharedValue(0);
+
+      // Calculate the target point position - project data to pixels
+      const targetPoint = useDerivedValue(() => {
+        if (!xScale || !yScale) return { x: 0, y: 0 };
+        return projectPointWithSerializableScale({
+          x: unwrapAnimatedValue(dataX),
+          y: unwrapAnimatedValue(dataY),
+          xScale,
+          yScale,
+        });
+      }, [dataX, dataY, xScale, yScale]);
+
+      useAnimatedReaction(
+        () => {
+          return { point: targetPoint.value, isIdle: unwrapAnimatedValue(isIdle) };
+        },
+        (current, previous) => {
+          // When animation is disabled, on initial render, or when we are starting,
+          // continuing, or finishing scrubbing we should immediately transition
+          if (!animate || previous === null || !previous.isIdle || !current.isIdle) {
+            animatedX.value = current.point.x;
+            animatedY.value = current.point.y;
+            return;
+          }
+
+          animatedX.value = buildTransition(current.point.x, defaultTransition);
+          animatedY.value = buildTransition(current.point.y, defaultTransition);
+        },
+        [animate],
+      );
+
+      // Create animated point using the animated values
+      const animatedPoint = useDerivedValue(() => {
+        return { x: animatedX.value, y: animatedY.value };
+      }, [animatedX, animatedY]);
+
+      return (
+        <>
+          <Circle c={animatedPoint} color={theme.color.bg} r={5} />
+          <Circle c={animatedPoint} color={theme.color.fg} r={5} strokeWidth={3} style="stroke" />
+        </>
+      );
+    },
+  );
+
+  return (
+    <LineChart
+      enableScrubbing
+      showYAxis
+      height={200}
+      inset={{ top: 64 }}
+      series={[
+        {
+          id: 'btc',
+          data: prices.map((price) => price.value),
+          color: theme.color.fg,
+          gradient: {
+            axis: 'x',
+            stops: ({ min, max }) => [
+              { offset: min, color: theme.color.fg, opacity: 0 },
+              { offset: 32, color: theme.color.fg, opacity: 1 },
+            ],
+          },
+        },
+      ]}
+      xAxis={{
+        range: ({ min, max }) => ({ min: 32, max: max }),
+      }}
+      yAxis={{
+        position: 'left',
+        width: 0,
+        showGrid: true,
+        tickLabelFormatter: formatAxisLabelPrice,
+      }}
+    >
+      <Scrubber
+        hideOverlay
+        BeaconComponent={CustomScrubberBeacon}
+        LineComponent={SolidLine}
+        label={scrubberLabel}
+        elevateLabel
+      />
+    </LineChart>
+  );
 }
 ```
 
@@ -1630,7 +1832,15 @@ function ForecastAssetPrice() {
   });
   const CustomScrubber = memo(() => {
     const { scrubberPosition } = useScrubberContext();
-    const isScrubbing = scrubberPosition !== undefined;
+
+    const idleScrubberOpacity = useDerivedValue(
+      () => (scrubberPosition.value === undefined ? 1 : 0),
+      [scrubberPosition],
+    );
+    const scrubberOpacity = useDerivedValue(
+      () => (scrubberPosition.value !== undefined ? 1 : 0),
+      [scrubberPosition],
+    );
 
     // Fade in animation for the Scrubber
     const fadeInOpacity = useSharedValue(0);
@@ -1641,11 +1851,16 @@ function ForecastAssetPrice() {
 
     return (
       <Group opacity={fadeInOpacity}>
-        <Group opacity={isScrubbing ? 1 : 0}>
+        <Group opacity={scrubberOpacity}>
           <Scrubber hideOverlay />
         </Group>
-        <Group opacity={isScrubbing ? 0 : 1}>
-          <Point dataX={currentIndex} dataY={data[currentIndex]} fill={assets.btc.color} />
+        <Group opacity={idleScrubberOpacity}>
+          <DefaultScrubberBeacon
+            isIdle
+            dataX={currentIndex}
+            dataY={data[currentIndex]}
+            seriesId="price"
+          />
         </Group>
       </Group>
     );

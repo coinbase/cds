@@ -1,5 +1,5 @@
 import React, { memo, useMemo } from 'react';
-import { Platform, type ViewStyle } from 'react-native';
+import { type ViewStyle } from 'react-native';
 import { runOnJS, useAnimatedReaction, useDerivedValue } from 'react-native-reanimated';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import type { ElevationLevels, Rect, SharedProps } from '@coinbase/cds-common/types';
@@ -11,7 +11,6 @@ import {
   FontSlant,
   FontWeight,
   Group,
-  matchFont,
   Paint,
   Paragraph,
   RoundedRect,
@@ -19,7 +18,6 @@ import {
   Skia,
   type SkParagraph,
   type SkTextStyle,
-  Text,
   TextAlign,
   type Transforms3d,
 } from '@shopify/react-native-skia';
