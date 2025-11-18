@@ -771,7 +771,7 @@ Using `showXAxis` and `showYAxis` allows you to display the axes. For more infor
 
 ### Fonts
 
-By default, charts will use the default font of the system. You can provide a font family at the chart level to customize this. For more, see [Skia's documentation on fonts](https://shopify.github.io/react-native-skia/docs/text/paragraph/#fonts).
+By default, charts will use the default font of the system. You can use `fontFamily` at the chart level to customize this. For more, see [Skia's documentation on fonts](https://shopify.github.io/react-native-skia/docs/text/paragraph/#fonts).
 
 ```jsx
 <LineChart
@@ -780,6 +780,27 @@ By default, charts will use the default font of the system. You can provide a fo
 >
   ...
 </LineChart>
+```
+
+You can also use `fontProvider` along with `useFonts` from Skia if you need to load a custom font.
+
+```jsx
+const fontProvider = useFonts({
+  MyCustomFontFamily: [
+    require("./MyCustomFont-Regular.ttf"),
+    require("./MyCustomFont-Bold.ttf"),
+  ],
+});
+
+return (
+  <LineChart
+    fontFamily="MyCustomFontFamily"
+    fontProvider={fontProvider}
+    ...
+  >
+    ...
+  </LineChart>
+);
 ```
 
 ### Gradients
