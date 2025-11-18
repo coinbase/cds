@@ -5,7 +5,8 @@ ReferenceLine can be used to add important details to a chart, such as a referen
 ```jsx
 function BasicExample() {
   const VerticalLabel = useMemo(
-    () => memo((props) => <DefaultReferenceLineLabel {...props} dx={8} horizontalAlignment="left" />),
+    () =>
+      memo((props) => <DefaultReferenceLineLabel {...props} dx={8} horizontalAlignment="left" />),
     [],
   );
 
@@ -34,11 +35,7 @@ function BasicExample() {
       inset={0}
       showArea
     >
-      <ReferenceLine
-        LabelComponent={VerticalLabel}
-        dataX={5}
-        label="Vertical Reference Line"
-      />
+      <ReferenceLine LabelComponent={VerticalLabel} dataX={5} label="Vertical Reference Line" />
       <ReferenceLine
         LabelComponent={HorizontalLabel}
         dataY={50}
@@ -58,7 +55,8 @@ function DataValuesExample() {
   const theme = useTheme();
 
   const BottomAlignedLabel = useMemo(
-    () => memo((props) => <DefaultReferenceLineLabel {...props} dy={-4} verticalAlignment="bottom" />),
+    () =>
+      memo((props) => <DefaultReferenceLineLabel {...props} dy={-4} verticalAlignment="bottom" />),
     [],
   );
 
