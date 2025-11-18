@@ -107,6 +107,10 @@ export const CartesianChart = memo(
         allowOverflowGestures,
         fontFamily,
         fontProvider: fontProviderProp,
+        // React Native will collapse views by default when only used
+        // to group children, which interferes with gesture-handler
+        // https://docs.swmansion.com/react-native-gesture-handler/docs/gestures/gesture-detector/#:~:text=%7B%0A%20%20return%20%3C-,View,-collapsable%3D%7B
+        collapsable = false,
         ...props
       },
       ref,
@@ -426,6 +430,7 @@ export const CartesianChart = memo(
               ref={ref}
               accessibilityLiveRegion="polite"
               accessibilityRole="image"
+              collapsable={collapsable}
               onLayout={onContainerLayout}
               style={containerStyles}
               {...props}
