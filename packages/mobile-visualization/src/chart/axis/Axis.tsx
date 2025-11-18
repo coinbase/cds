@@ -1,7 +1,7 @@
 import type React from 'react';
 
 import { type LineComponent } from '../line';
-import type { ChartTextChildren } from '../text/ChartText';
+import type { ChartTextChildren, ChartTextProps } from '../text/ChartText';
 
 /**
  * Animation variants for grouped axis tick labels - initial mount
@@ -48,6 +48,27 @@ export const axisUpdateAnimationVariants = {
     },
   },
 };
+
+export type AxisTickLabelComponentProps = Pick<
+  ChartTextProps,
+  | 'x'
+  | 'y'
+  | 'children'
+  | 'testID'
+  | 'dx'
+  | 'dy'
+  | 'font'
+  | 'fontFamilies'
+  | 'fontSize'
+  | 'fontWeight'
+  | 'fontStyle'
+  | 'color'
+  | 'horizontalAlignment'
+  | 'verticalAlignment'
+  | 'opacity'
+>;
+
+export type AxisTickLabelComponent = React.FC<AxisTickLabelComponentProps>;
 
 export type AxisBaseProps = {
   /**
@@ -157,9 +178,6 @@ export type AxisProps = AxisBaseProps & {
    * @example
    * // XAxis
    * tickLabelFormatter: (index) => {
-   *   if (index % 12 === 0) {
-   *     return <TSpan style={{ fontWeight: 'bold' }}>${prices[index]}</TSpan>;
-   *   }
    *   return `$${prices[index]}`;
    * }
    *
@@ -168,4 +186,16 @@ export type AxisProps = AxisBaseProps & {
    * tickLabelFormatter: (value) => `$${prices[value]}`
    */
   tickLabelFormatter?: (value: number) => ChartTextChildren;
+  /**
+   * Component to render tick labels.
+   * Allows for custom styling and formatting that works cross-platform.
+   *
+   * @example
+   * // Custom tick label component with offset positioning
+   * TickLabelComponent={(props) => (
+   *   <DefaultAxisTickLabel {...props} dx={4} dy={-12} />
+   * )}
+   * @default DefaultAxisTickLabel
+   */
+  TickLabelComponent?: AxisTickLabelComponent;
 };

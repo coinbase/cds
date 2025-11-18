@@ -606,3 +606,39 @@ You can add a label to the axis using the `label` prop.
   <Scrubber />
 </CartesianChart>
 ```
+
+#### Custom Tick Labels
+
+You can create custom tick label components using the `TickLabelComponent` prop for advanced styling that works cross-platform.
+
+```jsx
+function CustomTickLabelExample() {
+  const theme = useTheme();
+
+  const CustomXAxisTickLabel = useCallback(
+    (props) => <DefaultAxisTickLabel {...props} color={theme.color.accentBoldBlue} />,
+    [theme],
+  );
+
+  return (
+    <CartesianChart
+      enableScrubbing
+      height={250}
+      series={[
+        {
+          id: 'prices',
+          data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+        },
+      ]}
+      xAxis={{
+        data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+      }}
+    >
+      <XAxis showLine showTickMarks showGrid TickLabelComponent={CustomXAxisTickLabel} />
+      <YAxis showGrid />
+      <Line seriesId="prices" showArea />
+      <Scrubber />
+    </CartesianChart>
+  );
+}
+```

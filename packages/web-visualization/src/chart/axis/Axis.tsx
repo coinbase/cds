@@ -1,7 +1,7 @@
 import type React from 'react';
 
 import { type LineComponent } from '../line';
-import type { ChartTextChildren } from '../text/ChartText';
+import type { ChartTextChildren, ChartTextProps } from '../text/ChartText';
 import { accessoryFadeTransitionDuration } from '../utils';
 
 export const axisLineStyles = `
@@ -37,6 +37,35 @@ export const axisUpdateAnimationVariants = {
     },
   },
 };
+
+export type AxisTickLabelComponentProps = Pick<
+  ChartTextProps,
+  | 'x'
+  | 'y'
+  | 'children'
+  | 'testID'
+  | 'dx'
+  | 'dy'
+  | 'font'
+  | 'fontFamily'
+  | 'fontSize'
+  | 'fontWeight'
+  | 'color'
+  | 'elevation'
+  | 'inset'
+  | 'background'
+  | 'borderRadius'
+  | 'disableRepositioning'
+  | 'bounds'
+  | 'styles'
+  | 'classNames'
+  | 'horizontalAlignment'
+  | 'verticalAlignment'
+  | 'className'
+  | 'style'
+>;
+
+export type AxisTickLabelComponent = React.FC<AxisTickLabelComponentProps>;
 
 export type AxisBaseProps = {
   /**
@@ -223,4 +252,17 @@ export type AxisProps = AxisBaseProps & {
    * tickLabelFormatter: (value) => `$${prices[value]}`
    */
   tickLabelFormatter?: (value: number) => ChartTextChildren;
+  /**
+   * Component to render tick labels.
+   * Allows for custom styling and formatting that works cross-platform.
+   *
+   * @example
+   * // Custom tick label component with elevation
+   * TickLabelComponent={(props) => (
+   *   <DefaultAxisTickLabel {...props} elevation={1} color="var(--color-fgPrimary)" />
+   * )}
+   *
+   * @default DefaultAxisTickLabel
+   */
+  TickLabelComponent?: AxisTickLabelComponent;
 };

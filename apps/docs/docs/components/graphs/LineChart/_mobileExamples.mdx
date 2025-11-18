@@ -1483,8 +1483,6 @@ function MonotoneAssetPrice() {
       new Intl.NumberFormat('en-US', {
         style: 'currency',
         currency: 'USD',
-        minimumFractionDigits: 0,
-        maximumFractionDigits: 0,
       }),
     [],
   );
@@ -1498,9 +1496,9 @@ function MonotoneAssetPrice() {
     [],
   );
 
-  const formatPriceThousands = useCallback(
+  const formatPrice = useCallback(
     (price: number) => {
-      return priceFormatter.format(price / 1000);
+      return priceFormatter.format(price);
     },
     [priceFormatter],
   );
@@ -1566,9 +1564,15 @@ function MonotoneAssetPrice() {
 
   const formatAxisLabelPrice = useCallback(
     (price: number) => {
-      return `${formatPriceThousands(price)}k`;
+      return formatPrice(price);
     },
-    [formatPriceThousands],
+    [formatPrice],
+  );
+
+  // Custom tick label component with offset positioning
+  const CustomYAxisTickLabel = useCallback(
+    (props: any) => <DefaultAxisTickLabel {...props} dx={4} dy={-12} horizontalAlignment="left" />,
+    [],
   );
 
   const CustomScrubberBeacon = memo(
@@ -1643,7 +1647,7 @@ function MonotoneAssetPrice() {
           color: theme.color.fg,
           gradient: {
             axis: 'x',
-            stops: ({ min, max }) => [
+            stops: ({ min }) => [
               { offset: min, color: theme.color.fg, opacity: 0 },
               { offset: 32, color: theme.color.fg, opacity: 1 },
             ],
@@ -1651,21 +1655,22 @@ function MonotoneAssetPrice() {
         },
       ]}
       xAxis={{
-        range: ({ min, max }) => ({ min: 32, max: max }),
+        range: ({ max }) => ({ min: 96, max }),
       }}
       yAxis={{
         position: 'left',
         width: 0,
         showGrid: true,
         tickLabelFormatter: formatAxisLabelPrice,
+        TickLabelComponent: CustomYAxisTickLabel,
       }}
     >
       <Scrubber
+        elevateLabel
         hideOverlay
         BeaconComponent={CustomScrubberBeacon}
         LineComponent={SolidLine}
         label={scrubberLabel}
-        elevateLabel
       />
     </LineChart>
   );

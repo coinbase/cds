@@ -13,6 +13,7 @@ import { getAxisTicksData, isCategoricalScale, lineToPath } from '../utils';
 
 import type { AxisBaseProps, AxisProps } from './Axis';
 import { axisLineStyles, axisTickMarkStyles, axisUpdateAnimationVariants } from './Axis';
+import { DefaultAxisTickLabel } from './DefaultAxisTickLabel';
 
 const AXIS_WIDTH = 44;
 const LABEL_SIZE = 20;
@@ -52,6 +53,7 @@ export const YAxis = memo<YAxisProps>(
     requestedTickCount,
     ticks,
     tickLabelFormatter,
+    TickLabelComponent = DefaultAxisTickLabel,
     style,
     className,
     styles,
@@ -214,7 +216,12 @@ export const YAxis = memo<YAxisProps>(
           </AnimatePresence>
         )}
         {chartTextData && (
-          <ChartTextGroup prioritizeEndLabels labels={chartTextData} minGap={minTickLabelGap} />
+          <ChartTextGroup
+            prioritizeEndLabels
+            LabelComponent={TickLabelComponent}
+            labels={chartTextData}
+            minGap={minTickLabelGap}
+          />
         )}
         {showTickMarks && (
           <g data-testid="tick-marks">

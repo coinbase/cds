@@ -18,6 +18,7 @@ import {
   axisTickMarkStyles,
   axisUpdateAnimationVariants,
 } from './Axis';
+import { DefaultAxisTickLabel } from './DefaultAxisTickLabel';
 
 const AXIS_HEIGHT = 32;
 const LABEL_SIZE = 20;
@@ -51,6 +52,7 @@ export const XAxis = memo<XAxisProps>(
     requestedTickCount,
     ticks,
     tickLabelFormatter,
+    TickLabelComponent = DefaultAxisTickLabel,
     style,
     className,
     styles,
@@ -232,7 +234,12 @@ export const XAxis = memo<XAxisProps>(
           </AnimatePresence>
         )}
         {chartTextData && (
-          <ChartTextGroup prioritizeEndLabels labels={chartTextData} minGap={minTickLabelGap} />
+          <ChartTextGroup
+            prioritizeEndLabels
+            LabelComponent={TickLabelComponent}
+            labels={chartTextData}
+            minGap={minTickLabelGap}
+          />
         )}
         {axisBounds && showTickMarks && (
           <g data-testid="tick-marks">

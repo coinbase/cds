@@ -1481,15 +1481,16 @@ function MonotoneAssetPrice() {
     [priceFormatter],
   );
 
-  const formatAxisLabelPrice = useCallback(
-    (price: number) => {
-      return (
-        <tspan dx={4} dy={-12} textAnchor="start">
-          {formatPrice(price)}
-        </tspan>
-      );
-    },
-    [formatPrice],
+  const CustomYAxisTickLabel = useCallback(
+    (props) => (
+      <DefaultAxisTickLabel
+        {...props}
+        dx={4}
+        dy={-12}
+        horizontalAlignment="left"
+      />
+    ),
+    [],
   );
 
   const formatDate = useCallback((date: Date) => {
@@ -1590,7 +1591,8 @@ function MonotoneAssetPrice() {
         position: 'left',
         width: 0,
         showGrid: true,
-        tickLabelFormatter: formatAxisLabelPrice,
+        tickLabelFormatter: formatPrice,
+        TickLabelComponent: CustomYAxisTickLabel,
       }}
     >
       <Scrubber

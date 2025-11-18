@@ -449,6 +449,42 @@ You can add a label to the axis using the `label` prop.
 </CartesianChart>
 ```
 
+#### Custom Tick Labels
+
+You can create custom tick label components using the `TickLabelComponent` prop for advanced styling and positioning that works cross-platform.
+
+```jsx live
+function CustomTickLabelExample() {
+  const CustomYAxisTickLabel = useCallback(
+    (props) => <DefaultAxisTickLabel {...props} dx={4} dy={-12} horizontalAlignment="left" />,
+    [],
+  );
+
+  return (
+    <CartesianChart
+      enableScrubbing
+      height={250}
+      series={[
+        {
+          id: 'prices',
+          data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+        },
+      ]}
+    >
+      <YAxis
+        showGrid
+        position="left"
+        width={0}
+        tickLabelFormatter={(value) => `$${value}`}
+        TickLabelComponent={CustomYAxisTickLabel}
+      />
+      <Line seriesId="prices" showArea />
+      <Scrubber />
+    </CartesianChart>
+  );
+}
+```
+
 ## Customization
 
 ### Multiple Y Axes

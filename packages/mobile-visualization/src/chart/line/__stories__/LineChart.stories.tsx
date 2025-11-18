@@ -38,7 +38,7 @@ import {
 } from '@shopify/react-native-skia';
 
 import { Area, DottedArea, type DottedAreaProps } from '../../area';
-import { XAxis, YAxis } from '../../axis';
+import { DefaultAxisTickLabel, XAxis, YAxis } from '../../axis';
 import { BarChart, type BarComponentProps } from '../../bar';
 import { CartesianChart } from '../../CartesianChart';
 import { useCartesianChartContext } from '../../ChartProvider';
@@ -1556,8 +1556,6 @@ function MonotoneAssetPrice() {
       new Intl.NumberFormat('en-US', {
         style: 'currency',
         currency: 'USD',
-        minimumFractionDigits: 0,
-        maximumFractionDigits: 0,
       }),
     [],
   );
@@ -1571,9 +1569,9 @@ function MonotoneAssetPrice() {
     [],
   );
 
-  const formatPriceThousands = useCallback(
+  const formatPrice = useCallback(
     (price: number) => {
-      return priceFormatter.format(price / 1000);
+      return priceFormatter.format(price);
     },
     [priceFormatter],
   );
@@ -1639,9 +1637,15 @@ function MonotoneAssetPrice() {
 
   const formatAxisLabelPrice = useCallback(
     (price: number) => {
-      return `${formatPriceThousands(price)}k`;
+      return formatPrice(price);
     },
-    [formatPriceThousands],
+    [formatPrice],
+  );
+
+  // Custom tick label component with offset positioning
+  const CustomYAxisTickLabel = useCallback(
+    (props: any) => <DefaultAxisTickLabel {...props} dx={4} dy={-12} horizontalAlignment="left" />,
+    [],
   );
 
   const CustomScrubberBeacon = memo(
@@ -1724,13 +1728,14 @@ function MonotoneAssetPrice() {
         },
       ]}
       xAxis={{
-        range: ({ max }) => ({ min: 32, max }),
+        range: ({ max }) => ({ min: 96, max }),
       }}
       yAxis={{
         position: 'left',
         width: 0,
         showGrid: true,
         tickLabelFormatter: formatAxisLabelPrice,
+        TickLabelComponent: CustomYAxisTickLabel,
       }}
     >
       <Scrubber

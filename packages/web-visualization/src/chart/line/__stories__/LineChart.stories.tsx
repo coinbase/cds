@@ -37,7 +37,7 @@ import {
   useScrubberContext,
 } from '../..';
 import { Area, DottedArea, type DottedAreaProps, GradientArea } from '../../area';
-import { XAxis, YAxis } from '../../axis';
+import { DefaultAxisTickLabel, XAxis, YAxis } from '../../axis';
 import { CartesianChart } from '../../CartesianChart';
 import {
   DottedLine,
@@ -1580,15 +1580,10 @@ function MonotoneAssetPrice() {
     [priceFormatter],
   );
 
-  const formatAxisLabelPrice = useCallback(
-    (price: number) => {
-      return (
-        <tspan dx={4} dy={-12} textAnchor="start">
-          {formatPrice(price)}
-        </tspan>
-      );
-    },
-    [formatPrice],
+  // Custom tick label component with offset positioning
+  const CustomYAxisTickLabel = useCallback(
+    (props: any) => <DefaultAxisTickLabel {...props} dx={4} dy={-12} horizontalAlignment="left" />,
+    [],
   );
 
   const formatDate = useCallback((date: Date) => {
@@ -1689,7 +1684,8 @@ function MonotoneAssetPrice() {
         position: 'left',
         width: 0,
         showGrid: true,
-        tickLabelFormatter: formatAxisLabelPrice,
+        tickLabelFormatter: formatPrice,
+        TickLabelComponent: CustomYAxisTickLabel,
       }}
     >
       <Scrubber

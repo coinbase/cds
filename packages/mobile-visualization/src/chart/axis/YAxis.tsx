@@ -11,6 +11,7 @@ import { ChartTextGroup, type TextLabelData } from '../text/ChartTextGroup';
 import { getAxisTicksData, isCategoricalScale, lineToPath } from '../utils';
 
 import { type AxisBaseProps, type AxisProps } from './Axis';
+import { DefaultAxisTickLabel } from './DefaultAxisTickLabel';
 
 const AXIS_WIDTH = 44;
 const LABEL_SIZE = 20;
@@ -43,6 +44,7 @@ export const YAxis = memo<YAxisProps>(
     requestedTickCount = 5,
     ticks,
     tickLabelFormatter,
+    TickLabelComponent = DefaultAxisTickLabel,
     GridLineComponent = DottedLine,
     LineComponent = SolidLine,
     TickMarkLineComponent = SolidLine,
@@ -188,7 +190,12 @@ export const YAxis = memo<YAxisProps>(
           </Group>
         )}
         {chartTextData && (
-          <ChartTextGroup prioritizeEndLabels labels={chartTextData} minGap={minTickLabelGap} />
+          <ChartTextGroup 
+            prioritizeEndLabels 
+            LabelComponent={TickLabelComponent}
+            labels={chartTextData} 
+            minGap={minTickLabelGap}
+          />
         )}
         {axisBounds && showTickMarks && (
           <Group>

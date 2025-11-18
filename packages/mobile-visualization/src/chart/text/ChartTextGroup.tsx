@@ -47,6 +47,11 @@ export type ChartTextGroupProps = {
    * Common props to apply to all ChartText components
    */
   chartTextProps?: Partial<ChartTextProps>;
+  /**
+   * Custom component to render each label
+   * @default ChartText
+   */
+  LabelComponent?: React.FC<ChartTextProps>;
 };
 
 /**
@@ -73,7 +78,7 @@ const EPSILON_PX = 0.5;
  * The component focuses solely on overlap prevention logic for better separation of concerns.
  */
 export const ChartTextGroup = memo<ChartTextGroupProps>(
-  ({ labels, minGap = 8, prioritizeEndLabels = true, chartTextProps }) => {
+  ({ labels, minGap = 8, prioritizeEndLabels = true, chartTextProps, LabelComponent = ChartText }) => {
     const [boundingBoxes, setBoundingBoxes] = useState<Map<string, Rect>>(new Map());
     const { onDimensionsChange: propsOnDimensionsChange, ...restChartTextProps } =
       chartTextProps ?? {};
@@ -240,7 +245,7 @@ export const ChartTextGroup = memo<ChartTextGroupProps>(
           const isVisible = hasMeasurement && isReady && visibleKeySet?.has(labelData.key);
 
           return (
-            <ChartText
+            <LabelComponent
               key={labelData.key}
               opacity={isVisible ? 1 : 0}
               x={labelData.x}
@@ -250,7 +255,7 @@ export const ChartTextGroup = memo<ChartTextGroupProps>(
               onDimensionsChange={onDimensionsChangeByKey.get(labelData.key)}
             >
               {labelData.label}
-            </ChartText>
+            </LabelComponent>
           );
         })}
       </Group>
