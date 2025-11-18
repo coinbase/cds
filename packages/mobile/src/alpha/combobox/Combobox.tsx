@@ -189,7 +189,9 @@ const ComboboxBase = memo(
                 placeholder={typeof placeholder === 'string' ? placeholder : undefined}
                 style={{
                   padding: 0,
-                  paddingTop: valueRef.current?.length && valueRef.current?.length > 0 ? 16 : 0,
+                  paddingTop: valueRef.current?.length && valueRef.current?.length > 0 ? 8 : 0,
+                  flex: 1,
+                  minWidth: 0,
                 }}
                 value={searchTextRef.current}
               />
