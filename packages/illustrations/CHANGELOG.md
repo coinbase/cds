@@ -8,6 +8,22 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+##### ⭐️ Added (8)
+
+###### Pictogram (7)
+
+- crystalballInsight
+- loop
+- piechartData
+- podium
+- cryptoCoins
+- calendarHighlight
+- moneyCrypto
+
+###### SpotIcon (1)
+
+- arrowsUpDown
+
 ## 4.27.0 (11/14/2025 PST)
 
 #### 🚀 Updates
