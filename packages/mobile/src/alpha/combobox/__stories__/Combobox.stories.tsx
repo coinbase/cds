@@ -1,7 +1,7 @@
 import { useMultiSelect } from '@coinbase/cds-common/select/useMultiSelect';
 
 import { Example, ExampleScreen } from '../../../examples/ExampleScreen';
-import { Combobox } from '../Combobox2';
+import { Combobox } from '../Combobox';
 
 const exampleOptions = [
   { value: '1', label: 'Option 1' },
@@ -26,6 +26,7 @@ const Default = () => {
           onChange={onChange}
           options={exampleOptions}
           placeholder="Search..."
+          type="multi"
           value={value}
         />
       </Example>
