@@ -47,9 +47,11 @@ import { Point } from '../../Point';
 import {
   DefaultScrubberBeacon,
   DefaultScrubberBeaconLabel,
+  DefaultScrubberLabel,
   Scrubber,
   type ScrubberBeaconLabelProps,
   type ScrubberBeaconProps,
+  type ScrubberLabelProps,
   type ScrubberRef,
 } from '../../scrubber';
 import {
@@ -2081,6 +2083,46 @@ function CustomBeaconLabel() {
   );
 }
 
+function CustomLabelComponent() {
+  const CustomLabelComponent = memo((props: ScrubberLabelProps) => {
+    const theme = useTheme();
+    const { drawingArea } = useCartesianChartContext();
+
+    if (!drawingArea) return;
+
+    return (
+      <DefaultScrubberLabel
+        {...props}
+        background={theme.color.bgPrimary}
+        color={theme.color.bgPrimaryWash}
+        dy={32}
+        elevation={1}
+        fontWeight={FontWeight.Bold}
+        y={drawingArea.y + drawingArea.height}
+      />
+    );
+  });
+  return (
+    <LineChart
+      enableScrubbing
+      showArea
+      height={200}
+      inset={{ top: 16, bottom: 64 }}
+      series={[
+        {
+          id: 'prices',
+          data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+        },
+      ]}
+    >
+      <Scrubber
+        LabelComponent={CustomLabelComponent}
+        label={(dataIndex: number) => `Day ${dataIndex + 1}`}
+      />
+    </LineChart>
+  );
+}
+
 type ExampleItem = {
   title: string;
   component: React.ReactNode;
@@ -2328,6 +2370,10 @@ function ExampleNavigator() {
       {
         title: 'Custom Beacon Label',
         component: <CustomBeaconLabel />,
+      },
+      {
+        title: 'Custom Label Component',
+        component: <CustomLabelComponent />,
       },
     ],
     [theme.color.fg, theme.color.fgPositive, theme.spectrum.gray50],

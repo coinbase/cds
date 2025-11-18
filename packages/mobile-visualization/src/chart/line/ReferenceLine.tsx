@@ -32,6 +32,8 @@ export type ReferenceLineLabelComponentProps = Pick<
   | 'horizontalAlignment'
   | 'verticalAlignment'
   | 'font'
+  | 'fontWeight'
+  | 'fontFamilies'
   | 'opacity'
   | 'dx'
   | 'dy'

@@ -2,12 +2,14 @@ import { memo, useMemo } from 'react';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import { DefaultReferenceLineLabel } from '../line';
+import type { ChartInset } from '../utils';
 
 import type { ScrubberLabelProps } from './Scrubber';
 
 export type DefaultScrubberLabelProps = ScrubberLabelProps;
 
-const elevatedLabelBoundsPadding = 16;
+// This is pulled by shadow information, ideally we can get this direct from that in the future
+const elevatedLabelBounds: ChartInset = { top: 4, bottom: 20, left: 12, right: 12 };
 
 /**
  * DefaultScrubberLabel is the default label component for the scrubber line.
@@ -25,10 +27,10 @@ export const DefaultScrubberLabel = memo<DefaultScrubberLabelProps>(
       // When elevated, add padding around the label to fit within chart bounds to prevent shadow from being cutoff.
       if (elevation && elevation > 0) {
         return {
-          x: elevatedLabelBoundsPadding,
-          y: elevatedLabelBoundsPadding,
-          width: chartWidth - elevatedLabelBoundsPadding * 2,
-          height: chartHeight - elevatedLabelBoundsPadding * 2,
+          x: elevatedLabelBounds.left,
+          y: elevatedLabelBounds.top,
+          width: chartWidth - elevatedLabelBounds.left - elevatedLabelBounds.right,
+          height: chartHeight - elevatedLabelBounds.top - elevatedLabelBounds.bottom,
         };
       }
       return undefined;

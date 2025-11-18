@@ -23,6 +23,7 @@ import { m } from 'framer-motion';
 import {
   type AxisBounds,
   DefaultScrubberBeacon,
+  DefaultScrubberLabel,
   defaultTransition,
   PeriodSelector,
   PeriodSelectorActiveIndicator,
@@ -30,6 +31,7 @@ import {
   projectPoint,
   Scrubber,
   type ScrubberBeaconProps,
+  type ScrubberLabelProps,
   type ScrubberRef,
   useCartesianChartContext,
   useScrubberContext,
@@ -1701,6 +1703,45 @@ function MonotoneAssetPrice() {
   );
 }
 
+function CustomLabelComponent() {
+  const CustomLabelComponent = memo((props: ScrubberLabelProps) => {
+    const { drawingArea } = useCartesianChartContext();
+
+    if (!drawingArea) return;
+
+    return (
+      <DefaultScrubberLabel
+        {...props}
+        background="var(--color-bgPrimary)"
+        color="var(--color-bgPrimaryWash)"
+        dy={32}
+        elevation={1}
+        fontWeight="label1"
+        y={drawingArea.y + drawingArea.height}
+      />
+    );
+  });
+  return (
+    <LineChart
+      enableScrubbing
+      showArea
+      height={{ base: 150, tablet: 200, desktop: 250 }}
+      inset={{ top: 16, bottom: 64 }}
+      series={[
+        {
+          id: 'prices',
+          data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+        },
+      ]}
+    >
+      <Scrubber
+        LabelComponent={CustomLabelComponent}
+        label={(dataIndex: number) => `Day ${dataIndex + 1}`}
+      />
+    </LineChart>
+  );
+}
+
 export const All = () => {
   return (
     <VStack gap={2}>
@@ -1898,6 +1939,9 @@ export const All = () => {
       </Example>
       <Example title="Forecast Asset Price">
         <ForecastAssetPrice />
+      </Example>
+      <Example title="Custom Label Component">
+        <CustomLabelComponent />
       </Example>
     </VStack>
   );
