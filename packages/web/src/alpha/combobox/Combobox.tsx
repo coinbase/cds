@@ -4,7 +4,6 @@ import Fuse from 'fuse.js';
 import { NativeInput } from '../../controls/NativeInput';
 import { DefaultSelectControl } from '../select/DefaultSelectControl';
 import {
-  defaultAccessibilityRoles,
   Select,
   type SelectBaseProps,
   type SelectControlProps,
@@ -32,7 +31,6 @@ export type ComboboxControlComponent<
 export type ComboboxBaseProps<
   Type extends SelectType = 'single',
   SelectOptionValue extends string = string,
-  // > = Omit<SelectBaseProps<Type, SelectOptionValue>, 'SelectControlComponent'> & {
 > = SelectBaseProps<Type, SelectOptionValue> & {
   /** Controlled search text value */
   searchText?: string;
@@ -45,8 +43,6 @@ export type ComboboxBaseProps<
   ) => SelectOption<SelectOptionValue>[];
   /** Default search text value for uncontrolled mode */
   defaultSearchText?: string;
-  /** Custom component to render the Combobox control */
-  ComboboxControlComponent?: ComboboxControlComponent<Type, SelectOptionValue>;
 };
 
 export type ComboboxProps<
