@@ -76,10 +76,12 @@ const ComboboxBase = memo(
     <Type extends SelectType = 'single', SelectOptionValue extends string = string>(
       {
         type = 'single' as Type,
+        value,
         onChange,
         options,
         open: openProp,
         setOpen: setOpenProp,
+        label,
         placeholder,
         accessibilityLabel = 'Combobox control',
         defaultOpen,
@@ -169,9 +171,11 @@ const ComboboxBase = memo(
         }),
       );
 
-      // Store search text in a ref to avoid recreating ComboboxControl on every search text change
+      // Store in refs to avoid recreating ComboboxControl on every search text change
       const searchTextRef = useRef(searchText);
       searchTextRef.current = searchText;
+      const valueRef = useRef(value);
+      valueRef.current = value;
 
       const ComboboxControl = useCallback(
         (props: SelectControlProps<Type, SelectOptionValue>) => (
@@ -183,7 +187,10 @@ const ComboboxBase = memo(
                 onChangeText={(text) => setSearchText(text)}
                 onPress={() => setOpen(true)}
                 placeholder={typeof placeholder === 'string' ? placeholder : undefined}
-                style={{ padding: 0, width: '100%' }}
+                style={{
+                  padding: 0,
+                  paddingTop: valueRef.current?.length && valueRef.current?.length > 0 ? 16 : 0,
+                }}
                 value={searchTextRef.current}
               />
             }
@@ -202,16 +209,17 @@ const ComboboxBase = memo(
       const ComboboxDropdownComponent = useCallback(
         (props: SelectDropdownProps<Type, SelectOptionValue>) => (
           <SelectDropdownComponent
+            label={label}
             {...props}
             header={
-              <Box padding={3} paddingBottom={0}>
-                <ComboboxControl {...props} styles={undefined} />
+              <Box paddingX={3}>
+                <ComboboxControl {...props} label={null} styles={undefined} />
               </Box>
             }
             options={filteredOptionsRef.current}
           />
         ),
-        [ComboboxControl, SelectDropdownComponent],
+        [ComboboxControl, SelectDropdownComponent, label],
       );
 
       return (
@@ -221,12 +229,14 @@ const ComboboxBase = memo(
           SelectDropdownComponent={ComboboxDropdownComponent}
           accessibilityLabel={accessibilityLabel}
           defaultOpen={defaultOpen}
+          label={label}
           onChange={(value) => onChange?.(value)}
           open={open}
           options={options}
           placeholder={placeholder}
           setOpen={setOpen}
           type={type}
+          value={value}
           {...props}
         />
       );
