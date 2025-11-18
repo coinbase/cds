@@ -109,7 +109,10 @@ export type ScrubberBeaconComponent = React.FC<
 >;
 
 export type ScrubberBeaconLabelProps = Pick<Series, 'color'> &
-  Pick<ChartTextProps, 'x' | 'y' | 'dx' | 'horizontalAlignment' | 'onDimensionsChange'> & {
+  Pick<
+    ChartTextProps,
+    'x' | 'y' | 'dx' | 'horizontalAlignment' | 'onDimensionsChange' | 'opacity'
+  > & {
     /**
      * Label for the series.
      */

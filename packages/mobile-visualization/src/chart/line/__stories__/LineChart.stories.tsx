@@ -1069,7 +1069,7 @@ function AssetPriceWithDottedArea() {
           showArea
           areaType="dotted"
           height={200}
-          inset={{ left: 0, right: 0, top: 52 }}
+          inset={{ top: 52 }}
           series={[
             {
               id: 'btc',
