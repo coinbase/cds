@@ -47,9 +47,11 @@ import { Point } from '../../Point';
 import {
   DefaultScrubberBeacon,
   DefaultScrubberBeaconLabel,
+  DefaultScrubberLabel,
   Scrubber,
   type ScrubberBeaconLabelProps,
   type ScrubberBeaconProps,
+  type ScrubberLabelProps,
   type ScrubberRef,
 } from '../../scrubber';
 import {
@@ -266,7 +268,7 @@ function LiveUpdates() {
         },
       ]}
     >
-      <Scrubber ref={scrubberRef} labelProps={{ elevation: 1 }} />
+      <Scrubber ref={scrubberRef} />
     </LineChart>
   );
 }
@@ -875,7 +877,6 @@ function Compact() {
         {...dimensions}
         enableScrubbing={false}
         inset={0}
-        overflow="visible"
         series={[
           {
             id: 'btc',
@@ -1068,8 +1069,7 @@ function AssetPriceWithDottedArea() {
           showArea
           areaType="dotted"
           height={200}
-          inset={{ top: 52 }}
-          overflow="visible"
+          inset={{ left: 0, right: 0, top: 52 }}
           series={[
             {
               id: 'btc',
@@ -1079,6 +1079,7 @@ function AssetPriceWithDottedArea() {
           ]}
         >
           <Scrubber
+            elevateLabel
             idlePulse
             label={(d: number) => {
               const date = formatDate(sparklineTimePeriodDataTimestamps[d]);
@@ -1118,9 +1119,6 @@ function AssetPriceWithDottedArea() {
               const para = builder.build();
               para.layout(512);
               return para;
-            }}
-            labelProps={{
-              elevation: 1,
             }}
           />
         </LineChart>
@@ -1272,7 +1270,6 @@ const PerformanceChart = memo(
         height={300}
         inset={{ top: 52, left: 0, right: 0 }}
         onScrubberPositionChange={onScrubberPositionChange}
-        overflow="visible"
         series={[
           {
             id: 'high',
@@ -1712,7 +1709,6 @@ function MonotoneAssetPrice() {
       showYAxis
       height={200}
       inset={{ top: 64 }}
-      overflow="visible"
       series={[
         {
           id: 'btc',
@@ -1738,11 +1734,11 @@ function MonotoneAssetPrice() {
       }}
     >
       <Scrubber
+        elevateLabel
         hideOverlay
         BeaconComponent={CustomScrubberBeacon}
         LineComponent={SolidLine}
         label={scrubberLabel}
-        labelProps={{ elevation: 1 }}
       />
     </LineChart>
   );
@@ -2087,6 +2083,46 @@ function CustomBeaconLabel() {
   );
 }
 
+function CustomLabelComponent() {
+  const CustomLabelComponent = memo((props: ScrubberLabelProps) => {
+    const theme = useTheme();
+    const { drawingArea } = useCartesianChartContext();
+
+    if (!drawingArea) return;
+
+    return (
+      <DefaultScrubberLabel
+        {...props}
+        background={theme.color.bgPrimary}
+        color={theme.color.bgPrimaryWash}
+        dy={32}
+        elevation={1}
+        fontWeight={FontWeight.Bold}
+        y={drawingArea.y + drawingArea.height}
+      />
+    );
+  });
+  return (
+    <LineChart
+      enableScrubbing
+      showArea
+      height={200}
+      inset={{ top: 16, bottom: 64 }}
+      series={[
+        {
+          id: 'prices',
+          data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+        },
+      ]}
+    >
+      <Scrubber
+        LabelComponent={CustomLabelComponent}
+        label={(dataIndex: number) => `Day ${dataIndex + 1}`}
+      />
+    </LineChart>
+  );
+}
+
 type ExampleItem = {
   title: string;
   component: React.ReactNode;
@@ -2334,6 +2370,10 @@ function ExampleNavigator() {
       {
         title: 'Custom Beacon Label',
         component: <CustomBeaconLabel />,
+      },
+      {
+        title: 'Custom Label Component',
+        component: <CustomLabelComponent />,
       },
     ],
     [theme.color.fg, theme.color.fgPositive, theme.spectrum.gray50],

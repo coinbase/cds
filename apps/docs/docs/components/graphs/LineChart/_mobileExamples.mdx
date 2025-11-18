@@ -157,7 +157,7 @@ function LiveUpdates() {
         },
       ]}
     >
-      <Scrubber ref={scrubberRef} labelProps={{ elevation: 1 }} />
+      <Scrubber ref={scrubberRef} elevateLabel />
     </LineChart>
   );
 }
@@ -498,7 +498,6 @@ const PerformanceChart = memo(
         height={300}
         inset={{ top: 52, left: 0, right: 0 }}
         onScrubberPositionChange={onScrubberPositionChange}
-        overflow="visible"
         series={[
           {
             id: 'high',
@@ -1196,7 +1195,6 @@ function Compact() {
         {...dimensions}
         enableScrubbing={false}
         inset={0}
-        overflow="visible"
         series={[
           {
             id: 'btc',
@@ -1398,7 +1396,6 @@ function AssetPriceWithDottedArea() {
           areaType="dotted"
           height={200}
           inset={{ top: 52 }}
-          overflow="visible"
           series={[
             {
               id: 'btc',
@@ -1448,9 +1445,7 @@ function AssetPriceWithDottedArea() {
               para.layout(512);
               return para;
             }}
-            labelProps={{
-              elevation: 1,
-            }}
+            elevateLabel
           />
         </LineChart>
         <PeriodSelector
@@ -1641,7 +1636,6 @@ function MonotoneAssetPrice() {
       showYAxis
       height={200}
       inset={{ top: 64 }}
-      overflow="visible"
       series={[
         {
           id: 'btc',
@@ -1671,7 +1665,7 @@ function MonotoneAssetPrice() {
         BeaconComponent={CustomScrubberBeacon}
         LineComponent={SolidLine}
         label={scrubberLabel}
-        labelProps={{ elevation: 1 }}
+        elevateLabel
       />
     </LineChart>
   );

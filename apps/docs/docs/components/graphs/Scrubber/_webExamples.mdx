@@ -393,7 +393,7 @@ function HiddenBeaconLabelWhenIdle() {
 }
 ```
 
-In addition to scrubber beacon labels, users can be shown a label above Scrubber's line when scrubbing. You can use `labelProps` to customize this label.
+Using `elevateLabel` will elevate the Scrubber's reference line label with a shadow.
 
 ```jsx live
 <LineChart
@@ -406,9 +406,53 @@ In addition to scrubber beacon labels, users can be shown a label above Scrubber
     },
   ]}
   showArea
+  inset={{ top: 60 }}
 >
-  <Scrubber label={(dataIndex: number) => `Day ${dataIndex + 1}`} labelProps={{ elevation: 1 }} />
+  <Scrubber label={(dataIndex: number) => `Day ${dataIndex + 1}`} elevateLabel />
 </LineChart>
+```
+
+You can use `LabelComponent` to customize this label even further.
+
+```jsx live
+function CustomLabelComponent() {
+  const CustomLabelComponent = memo((props: ScrubberLabelProps) => {
+    const { drawingArea } = useCartesianChartContext();
+
+    if (!drawingArea) return;
+
+    return (
+      <DefaultScrubberLabel
+        {...props}
+        background="var(--color-bgPrimary)"
+        color="var(--color-bgPrimaryWash)"
+        dy={32}
+        elevation={1}
+        fontWeight="label1"
+        y={drawingArea.y + drawingArea.height}
+      />
+    );
+  });
+  return (
+    <LineChart
+      enableScrubbing
+      showArea
+      height={{ base: 150, tablet: 200, desktop: 250 }}
+      inset={{ top: 16, bottom: 64 }}
+      series={[
+        {
+          id: 'prices',
+          data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+        },
+      ]}
+    >
+      <Scrubber
+        LabelComponent={CustomLabelComponent}
+        label={(dataIndex: number) => `Day ${dataIndex + 1}`}
+      />
+    </LineChart>
+  );
+}
 ```
 
 ### Line

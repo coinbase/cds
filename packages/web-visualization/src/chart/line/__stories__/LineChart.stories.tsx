@@ -23,6 +23,7 @@ import { m } from 'framer-motion';
 import {
   type AxisBounds,
   DefaultScrubberBeacon,
+  DefaultScrubberLabel,
   defaultTransition,
   PeriodSelector,
   PeriodSelectorActiveIndicator,
@@ -30,6 +31,7 @@ import {
   projectPoint,
   Scrubber,
   type ScrubberBeaconProps,
+  type ScrubberLabelProps,
   type ScrubberRef,
   useCartesianChartContext,
   useScrubberContext,
@@ -252,11 +254,7 @@ function LiveUpdates() {
         },
       ]}
     >
-      <Scrubber
-        ref={scrubberRef}
-        accessibilityLabel={scrubberAccessibilityLabel}
-        labelProps={{ elevation: 1 }}
-      />
+      <Scrubber ref={scrubberRef} elevateLabel accessibilityLabel={scrubberAccessibilityLabel} />
     </LineChart>
   );
 }
@@ -983,7 +981,6 @@ function Compact() {
         {...dimensions}
         enableScrubbing={false}
         inset={0}
-        overflow="visible"
         series={[
           {
             id: 'btc',
@@ -1222,7 +1219,6 @@ function AssetPriceWithDottedArea() {
           accessibilityLabel={chartAccessibilityLabel}
           areaType="dotted"
           height={{ base: 200, tablet: 225, desktop: 250 }}
-          overflow="visible"
           series={[
             {
               id: 'btc',
@@ -1233,10 +1229,10 @@ function AssetPriceWithDottedArea() {
           style={{ outlineColor: assets.btc.color }}
         >
           <Scrubber
+            elevateLabel
             idlePulse
             accessibilityLabel={scrubberAccessibilityLabel}
             label={scrubberLabel}
-            labelProps={{ elevation: 1 }}
           />
         </LineChart>
         <PeriodSelector
@@ -1671,7 +1667,6 @@ function MonotoneAssetPrice() {
       showYAxis
       height={{ base: 200, tablet: 250, desktop: 300 }}
       inset={{ top: 64 }}
-      overflow="visible"
       series={[
         {
           id: 'btc',
@@ -1698,11 +1693,50 @@ function MonotoneAssetPrice() {
       }}
     >
       <Scrubber
+        elevateLabel
         hideOverlay
         BeaconComponent={CustomScrubberBeacon}
         LineComponent={SolidLine}
         label={scrubberLabel}
-        labelProps={{ elevation: 1 }}
+      />
+    </LineChart>
+  );
+}
+
+function CustomLabelComponent() {
+  const CustomLabelComponent = memo((props: ScrubberLabelProps) => {
+    const { drawingArea } = useCartesianChartContext();
+
+    if (!drawingArea) return;
+
+    return (
+      <DefaultScrubberLabel
+        {...props}
+        background="var(--color-bgPrimary)"
+        color="var(--color-bgPrimaryWash)"
+        dy={32}
+        elevation={1}
+        fontWeight="label1"
+        y={drawingArea.y + drawingArea.height}
+      />
+    );
+  });
+  return (
+    <LineChart
+      enableScrubbing
+      showArea
+      height={{ base: 150, tablet: 200, desktop: 250 }}
+      inset={{ top: 16, bottom: 64 }}
+      series={[
+        {
+          id: 'prices',
+          data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+        },
+      ]}
+    >
+      <Scrubber
+        LabelComponent={CustomLabelComponent}
+        label={(dataIndex: number) => `Day ${dataIndex + 1}`}
       />
     </LineChart>
   );
@@ -1905,6 +1939,9 @@ export const All = () => {
       </Example>
       <Example title="Forecast Asset Price">
         <ForecastAssetPrice />
+      </Example>
+      <Example title="Custom Label Component">
+        <CustomLabelComponent />
       </Example>
     </VStack>
   );
