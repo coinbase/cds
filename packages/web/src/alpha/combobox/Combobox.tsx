@@ -73,6 +73,7 @@ const ComboboxBase = memo(
     <Type extends SelectType = 'single', SelectOptionValue extends string = string>(
       {
         type = 'single' as Type,
+        value,
         onChange,
         options,
         open: openProp,
@@ -165,6 +166,12 @@ const ComboboxBase = memo(
         }),
       );
 
+      // Store in refs to avoid recreating ComboboxControl on every search text change
+      const searchTextRef = useRef(searchText);
+      searchTextRef.current = searchText;
+      const valueRef = useRef(value);
+      valueRef.current = value;
+
       const ComboboxControl = useCallback(
         (props: SelectControlProps<Type, SelectOptionValue>) => (
           <SelectControlComponent
@@ -183,7 +190,12 @@ const ComboboxBase = memo(
                   }
                 }}
                 placeholder={typeof placeholder === 'string' ? placeholder : undefined}
-                style={{ padding: 0 }}
+                style={{
+                  padding: 0,
+                  paddingTop: valueRef.current?.length && valueRef.current?.length > 0 ? 8 : 0,
+                  width: '100%',
+                }}
+                value={searchTextRef.current}
               />
             }
             options={options}
@@ -205,6 +217,7 @@ const ComboboxBase = memo(
           placeholder={placeholder}
           setOpen={setOpen}
           type={type}
+          value={value}
           {...props}
         />
       );
