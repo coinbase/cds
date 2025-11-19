@@ -1,0 +1,55 @@
+name: Enforce illustrations/icons checklist
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize, reopened]
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  enforce:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify checklist when illustrations/icons are modified
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { owner, repo } = context.repo;
+            const pull_number = context.payload.pull_request.number;
+
+            const files = await github.paginate(
+              github.rest.pulls.listFiles,
+              { owner, repo, pull_number, per_page: 100 }
+            );
+
+            const relevant = files.some(f => /^packages\/(illustrations|icons)\//.test(f.filename));
+            if (!relevant) {
+              core.info('No changes under packages/illustrations or packages/icons. Skipping.');
+              return;
+            }
+
+            const body = (context.payload.pull_request.body || '').toString();
+
+            function hasChecked(regex) {
+              return body
+                .split('\n')
+                .some(line => /\[\s*[xX]\s*\]/.test(line) && regex.test(line));
+            }
+
+            const visregOk = hasChecked(/verified\s+visreg\s+changes\s+with\s+Terran/i);
+            const namesOk = hasChecked(/illustration\/?icons\s+names.*reviewed.*Dom.*Terran/i);
+
+            const missing = [];
+            if (!visregOk) missing.push('- [x] verified visreg changes with Terran');
+            if (!namesOk) missing.push('- [x] all illustration/icons names have been reviewed by Dom and/or Terran');
+
+            if (missing.length > 0) {
+              core.setFailed(
+                'This PR changes files under packages/illustrations or packages/icons, but the required checklist in the PR description is incomplete. Please ensure the following are checked:\n' +
+                missing.join('\n')
+              );
+            } else {
+              core.info('Required illustrations/icons checklist is complete.');
+            }

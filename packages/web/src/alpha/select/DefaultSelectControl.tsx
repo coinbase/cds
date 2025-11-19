@@ -2,7 +2,6 @@ import React, { forwardRef, memo, useCallback, useMemo, useRef } from 'react';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import { css } from '@linaria/core';
 
-import { Chip } from '../../chips/Chip';
 import { InputChip } from '../../chips/InputChip';
 import { HelperText } from '../../controls/HelperText';
 import { InputLabel } from '../../controls/InputLabel';
@@ -15,6 +14,12 @@ import { Text } from '../../typography/Text';
 import { findClosestNonDisabledNodeIndex } from '../../utils/findClosestNonDisabledNodeIndex';
 
 import type { SelectControlProps, SelectOption, SelectType } from './Select';
+
+// The height is smaller for the inside label variant since the label takes
+// up space above the input.
+const LABEL_VARIANT_INSIDE_HEIGHT = 32;
+const COMPACT_HEIGHT = 40;
+const DEFAULT_HEIGHT = 56;
 
 const noFocusOutlineCss = css`
   &:focus,
@@ -140,6 +145,7 @@ const DefaultSelectControlComponent = memo(
               noScaleOnPress
               className={classNames?.controlLabelNode}
               disabled={disabled}
+              height={28}
               onClick={() => setOpen((s) => !s)}
               style={styles?.controlLabelNode}
               tabIndex={-1}
@@ -182,8 +188,10 @@ const DefaultSelectControlComponent = memo(
                 return (
                   <InputChip
                     key={option.value}
+                    compact
                     data-selected-value
                     accessibilityLabel={`${removeSelectedOptionAccessibilityLabel} ${accessibilityLabel}`}
+                    borderWidth={0}
                     disabled={option.disabled}
                     invertColorScheme={false}
                     maxWidth={200}
@@ -194,7 +202,9 @@ const DefaultSelectControlComponent = memo(
                 );
               })}
               {value.length - maxSelectedOptionsToShow > 0 && (
-                <Chip>{`+${value.length - maxSelectedOptionsToShow} ${hiddenSelectedOptionsLabel}`}</Chip>
+                <InputChip compact borderWidth={0} end={null} invertColorScheme={false}>
+                  {`+${value.length - maxSelectedOptionsToShow} ${hiddenSelectedOptionsLabel}`}
+                </InputChip>
               )}
             </HStack>
           );
@@ -238,10 +248,17 @@ const DefaultSelectControlComponent = memo(
             aria-haspopup={ariaHaspopup}
             background="transparent"
             blendStyles={interactableBlendStyles}
+            borderWidth={0}
             className={cx(noFocusOutlineCss, classNames?.controlInputNode)}
             disabled={disabled}
             focusable={false}
-            minHeight={isMultiSelect ? 76 : undefined}
+            minHeight={
+              labelVariant === 'inside'
+                ? LABEL_VARIANT_INSIDE_HEIGHT
+                : compact
+                  ? COMPACT_HEIGHT
+                  : DEFAULT_HEIGHT
+            }
             onClick={() => setOpen((s) => !s)}
             paddingStart={1}
             style={styles?.controlInputNode}
@@ -261,7 +278,7 @@ const DefaultSelectControlComponent = memo(
               </HStack>
             )}
             {shouldShowCompactLabel ? (
-              <HStack alignItems="center" height="100%" maxWidth="40%" padding={1}>
+              <HStack alignItems="center" height="100%" maxWidth="40%" paddingStart={1}>
                 <InputLabel color="fg" overflow="truncate">
                   {label}
                 </InputLabel>
@@ -270,7 +287,6 @@ const DefaultSelectControlComponent = memo(
             <HStack
               alignItems="center"
               borderRadius={200}
-              height="100%"
               justifyContent="space-between"
               width="100%"
             >
@@ -282,12 +298,11 @@ const DefaultSelectControlComponent = memo(
                 flexShrink={1}
                 flexWrap="wrap"
                 gap={1}
-                height="100%"
                 justifyContent={shouldShowCompactLabel ? 'flex-end' : 'flex-start'}
                 overflow="auto"
-                paddingTop={labelVariant === 'inside' ? 0 : compact ? 1 : 2}
+                paddingTop={labelVariant === 'inside' ? 0 : undefined}
                 paddingX={1}
-                paddingY={labelVariant === 'inside' || compact ? 1 : 2}
+                paddingY={labelVariant === 'inside' || compact ? 0.5 : 1.5}
                 style={styles?.controlValueNode}
               >
                 {valueNode}
@@ -303,7 +318,6 @@ const DefaultSelectControlComponent = memo(
           classNames?.controlStartNode,
           classNames?.controlValueNode,
           disabled,
-          isMultiSelect,
           styles?.controlInputNode,
           styles?.controlStartNode,
           styles?.controlValueNode,

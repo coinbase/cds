@@ -12,6 +12,7 @@ import type { SpotIconName } from '../types/SpotIconName';
 const names: SpotIconName[] = [
   '2fa',
   'advancedTradeProduct',
+  'arrowsUpDown',
   'assetEmptyStateAa',
   'assetEmptyStateAb',
   'assetEmptyStateAc',

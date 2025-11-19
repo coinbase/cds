@@ -1,6 +1,6 @@
 {
   "import": "import { SelectChip } from '@coinbase/cds-web/controls/SelectChip'",
-  "source": "https://github.com/coinbase/cds/blob/master/packages/web/src/controls/SelectChip.tsx",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/web/src/chips/SelectChip.tsx",
   "storybook": "https://cds-storybook.coinbase.com/?path=/story/components-chips-selectchip--default",
   "figma": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/%E2%9C%A8-CDS-Components?m=auto&node-id=10177-4849&t=6hbCJmIQxCsPCzeU-1",
   "description": "A Chip and Select control for selecting from a list of options.",

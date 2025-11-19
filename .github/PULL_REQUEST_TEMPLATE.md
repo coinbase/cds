@@ -31,6 +31,13 @@
 
 ### Testing instructions
 
+## Illustrations/Icons Checklist
+
+Required if this PR changes files under `packages/illustrations/**` or `packages/icons/**`
+
+- [ ] verified visreg changes with Terran (include link to visreg run/approval)
+- [ ] all illustration/icons names have been reviewed by Dom and/or Terran
+
 ## Change management
 
 type=routine <!-- {routine,nonroutine,emergency} -->

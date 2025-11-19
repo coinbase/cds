@@ -1,4 +1,4 @@
-import React, { forwardRef, memo, useCallback, useMemo, useRef, useState } from 'react';
+import { forwardRef, memo, useCallback, useMemo, useRef, useState } from 'react';
 import {
   animateDropdownOpacityInConfig,
   animateDropdownOpacityOutConfig,
@@ -11,7 +11,7 @@ import { zIndex } from '@coinbase/cds-common/tokens/zIndex';
 import { type AnimationProps, m as motion } from 'framer-motion';
 
 import { InputIconButton } from '../controls/InputIconButton';
-import { VStack } from '../layout/VStack';
+import { Box, VStack } from '../layout';
 import { getMotionProps } from '../motion/useMotionProps';
 import { Popover } from '../overlays/popover/Popover';
 import {
@@ -148,6 +148,7 @@ export const DatePicker = memo(
         calendarClassName,
         dateInputStyle,
         dateInputClassName,
+        width = '100%',
         onOpen,
         onClose,
         onConfirm,
@@ -332,8 +333,9 @@ export const DatePicker = memo(
       );
 
       return (
-        <div ref={ref}>
+        <Box ref={ref} width={width}>
           <Popover
+            block
             respectNegativeTabIndex
             content={calendar}
             contentPosition={calendarPopoverPosition}
@@ -344,7 +346,7 @@ export const DatePicker = memo(
           >
             {dateInput}
           </Popover>
-        </div>
+        </Box>
       );
     },
   ),

@@ -1,17 +1,17 @@
-import React, { forwardRef, memo, useCallback, useMemo, useRef, useState } from 'react';
+import { forwardRef, memo, useCallback, useMemo, useRef, useState } from 'react';
 import {
   type NativeSyntheticEvent,
   type StyleProp,
   type TextInput,
   type TextInputChangeEventData,
-  View,
+  type View,
   type ViewStyle,
 } from 'react-native';
 import NativeDatePicker from 'react-native-date-picker';
 import { type DateInputValidationError } from '@coinbase/cds-common/dates/DateInputValidationError';
 
 import { InputIconButton } from '../controls/InputIconButton';
-import { VStack } from '../layout/VStack';
+import { Box, VStack } from '../layout';
 
 import { DateInput, type DateInputProps } from './DateInput';
 
@@ -89,6 +89,7 @@ export const DatePicker = memo(
         compact,
         variant,
         helperText,
+        width = '100%',
         onOpen,
         onClose,
         onConfirm,
@@ -157,7 +158,7 @@ export const DatePicker = memo(
       );
 
       return (
-        <View ref={ref}>
+        <Box ref={ref} width={width}>
           <DateInput
             ref={dateInputRef}
             {...props}
@@ -194,7 +195,7 @@ export const DatePicker = memo(
               open={showNativePicker}
             />
           )}
-        </View>
+        </Box>
       );
     },
   ),

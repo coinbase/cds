@@ -3,7 +3,6 @@ import { Pressable, TouchableOpacity } from 'react-native';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import { useInputVariant } from '@coinbase/cds-common/hooks/useInputVariant';
 
-import { Chip } from '../../chips/Chip';
 import { InputChip } from '../../chips/InputChip';
 import { HelperText } from '../../controls/HelperText';
 import { InputLabel } from '../../controls/InputLabel';
@@ -15,6 +14,12 @@ import { AnimatedCaret } from '../../motion/AnimatedCaret';
 import { Text } from '../../typography/Text';
 
 import type { SelectControlProps, SelectOption, SelectType } from './Select';
+
+// The height is smaller for the inside label variant since the label takes
+// up space above the input.
+const LABEL_VARIANT_INSIDE_HEIGHT = 24;
+const COMPACT_HEIGHT = 40;
+const DEFAULT_HEIGHT = 56;
 
 const variantColor: Record<string, ThemeVars.Color> = {
   foreground: 'fg',
@@ -137,7 +142,9 @@ export const DefaultSelectControlComponent = memo(
                 return (
                   <InputChip
                     key={option.value}
+                    compact
                     accessibilityLabel={`${removeSelectedOptionAccessibilityLabel} ${accessibilityLabel}`}
+                    borderWidth={0}
                     disabled={option.disabled}
                     invertColorScheme={false}
                     maxWidth={200}
@@ -151,9 +158,9 @@ export const DefaultSelectControlComponent = memo(
                 );
               })}
               {value.length - maxSelectedOptionsToShow > 0 && (
-                <Chip>
+                <InputChip compact borderWidth={0} end={null} invertColorScheme={false}>
                   {`+${value.length - maxSelectedOptionsToShow} ${hiddenSelectedOptionsLabel}`}
-                </Chip>
+                </InputChip>
               )}
             </HStack>
           );
@@ -202,10 +209,15 @@ export const DefaultSelectControlComponent = memo(
             <HStack
               alignItems="center"
               justifyContent="space-between"
-              minHeight={isMultiSelect ? (compact ? 60 : 76) : undefined}
-              paddingBottom={labelVariant === 'inside' ? 0 : undefined}
+              minHeight={
+                labelVariant === 'inside'
+                  ? LABEL_VARIANT_INSIDE_HEIGHT
+                  : compact
+                    ? COMPACT_HEIGHT
+                    : DEFAULT_HEIGHT
+              }
               paddingStart={startNode ? 0 : 2}
-              paddingY={labelVariant === 'inside' || compact ? 1 : 2}
+              paddingY={labelVariant === 'inside' ? 0 : compact ? 0.5 : 1.5}
             >
               <HStack alignItems="center" flexGrow={1}>
                 {!!startNode && (
@@ -238,7 +250,6 @@ export const DefaultSelectControlComponent = memo(
           styles?.controlStartNode,
           styles?.controlValueNode,
           props,
-          isMultiSelect,
           startNode,
           labelVariant,
           compact,
