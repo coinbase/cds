@@ -14,6 +14,10 @@ const svgJsMap = {
     light: () => require('../svgJs/light/advancedTradeProduct-3.js').content,
     dark: () => require('../svgJs/dark/advancedTradeProduct-3.js').content,
   },
+  arrowsUpDown: {
+    light: () => require('../svgJs/light/arrowsUpDown-0.js').content,
+    dark: () => require('../svgJs/dark/arrowsUpDown-0.js').content,
+  },
   assetEmptyStateAa: {
     light: () => require('../svgJs/light/assetEmptyStateAa-0.js').content,
     dark: () => require('../svgJs/dark/assetEmptyStateAa-0.js').content,

@@ -6,6 +6,7 @@
 export type SpotIconName =
   | '2fa'
   | 'advancedTradeProduct'
+  | 'arrowsUpDown'
   | 'assetEmptyStateAa'
   | 'assetEmptyStateAb'
   | 'assetEmptyStateAc'
