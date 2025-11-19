@@ -100,7 +100,7 @@ export const DefaultScrubberBeacon = memo(
         () => ({
           ...pulseTransition,
           repeat: Infinity,
-          delay: pulseRepeatDelay,
+          repeatDelay: pulseRepeatDelay,
         }),
         [pulseTransition, pulseRepeatDelay],
       );
