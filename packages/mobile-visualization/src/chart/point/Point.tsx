@@ -186,7 +186,7 @@ export const Point = memo<PointProps>(
     const previousPixelCoordinate = usePreviousValue(pixelCoordinate);
     const previousFill = usePreviousValue(fill);
 
-    // Animated values for position - initialize with 0 but won't be used until pixelCoordinate is defined
+    // Animated values for position
     const animatedX = useSharedValue(0);
     const animatedY = useSharedValue(0);
 
