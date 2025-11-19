@@ -1,6 +1,6 @@
 {
-  "lastUpdated": "2025-11-14T19:07:09.539Z",
-  "lastUnicode": 985584,
+  "lastUpdated": "2025-11-19T03:33:12.921Z",
+  "lastUnicode": 985632,
   "iconSets": [
     {
       "nodeId": "4:39245",
@@ -19927,6 +19927,382 @@
           "active": true,
           "size": 12,
           "unicode": 985579
+        }
+      ]
+    },
+    {
+      "nodeId": "5697:331",
+      "name": "arrowsUpDown",
+      "description": "arrows, up, down",
+      "assetsHash": "7fg6xJqkgiYU1fiUx+gswfp9K/lqDwnotxjB305T8JM=",
+      "nameHash": "W4wiSE0p3mQwxyotSeeOO1t9mCufGfNk+nCsaznEdkU=",
+      "createdAt": "2025-11-18T23:11:28.812Z",
+      "lastUpdated": "2025-11-18T23:11:28.812Z",
+      "svgs": [
+        {
+          "name": "arrowsUpDown-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 985590
+        },
+        {
+          "name": "arrowsUpDown-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 985589
+        },
+        {
+          "name": "arrowsUpDown-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 985588
+        },
+        {
+          "name": "arrowsUpDown-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 985587
+        },
+        {
+          "name": "arrowsUpDown-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 985586
+        },
+        {
+          "name": "arrowsUpDown-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 985585
+        }
+      ]
+    },
+    {
+      "nodeId": "5690:261",
+      "name": "moneyCardCoin",
+      "description": "",
+      "assetsHash": "UZ9WTRdPNiCX0awaae8J39Y3Q80BcjJ4BO9n8hNVK2M=",
+      "nameHash": "T4wikk60OKrVS+qZVFzZSjxkSCF8YrnpHhdcPSRCiJA=",
+      "createdAt": "2025-11-18T23:11:28.823Z",
+      "lastUpdated": "2025-11-18T23:11:28.823Z",
+      "svgs": [
+        {
+          "name": "moneyCardCoin-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 985620
+        },
+        {
+          "name": "moneyCardCoin-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 985619
+        },
+        {
+          "name": "moneyCardCoin-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 985618
+        },
+        {
+          "name": "moneyCardCoin-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 985617
+        },
+        {
+          "name": "moneyCardCoin-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 985616
+        },
+        {
+          "name": "moneyCardCoin-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 985615
+        }
+      ]
+    },
+    {
+      "nodeId": "5679:98",
+      "name": "singleCoin",
+      "description": "single Coin",
+      "assetsHash": "e3n02NEcNjDI00uWZ6O+E4oqZQkR+AvKRR/wDUohpfA=",
+      "nameHash": "6tE95iS6H0iW3lPThYv7VeWLan+ZReZE4k9is6PMeZ8=",
+      "createdAt": "2025-11-18T23:11:28.829Z",
+      "lastUpdated": "2025-11-18T23:11:28.829Z",
+      "svgs": [
+        {
+          "name": "singleCoin-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 985632
+        },
+        {
+          "name": "singleCoin-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 985631
+        },
+        {
+          "name": "singleCoin-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 985630
+        },
+        {
+          "name": "singleCoin-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 985629
+        },
+        {
+          "name": "singleCoin-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 985628
+        },
+        {
+          "name": "singleCoin-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 985627
+        }
+      ]
+    },
+    {
+      "nodeId": "5677:506",
+      "name": "calendarBlank",
+      "description": "calendar",
+      "assetsHash": "gOZ30FTHA72e9nfPzRUgiEf6V8PR7x3jJgFnVi18EJg=",
+      "nameHash": "lxfm2bDZ2cfBP9gfLtboCFSttc9Vj0mxI0RLELzZSAU=",
+      "createdAt": "2025-11-18T23:11:28.834Z",
+      "lastUpdated": "2025-11-18T23:11:28.834Z",
+      "svgs": [
+        {
+          "name": "calendarBlank-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 985596
+        },
+        {
+          "name": "calendarBlank-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 985595
+        },
+        {
+          "name": "calendarBlank-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 985594
+        },
+        {
+          "name": "calendarBlank-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 985593
+        },
+        {
+          "name": "calendarBlank-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 985592
+        },
+        {
+          "name": "calendarBlank-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 985591
+        }
+      ]
+    },
+    {
+      "nodeId": "5677:356",
+      "name": "pieChartData",
+      "description": "piechart",
+      "assetsHash": "qzFepCaZETWEwx1J8/kifOCNxv2GoEs17Fb8NmckC+8=",
+      "nameHash": "JyF88l98ae/KZ6ArSKtJVnPPFrkP1/xXPRMIDkLtGlc=",
+      "createdAt": "2025-11-18T23:11:28.840Z",
+      "lastUpdated": "2025-11-18T23:17:07.281Z",
+      "svgs": [
+        {
+          "name": "pieChartData-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 985626
+        },
+        {
+          "name": "pieChartData-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 985625
+        },
+        {
+          "name": "pieChartData-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 985624
+        },
+        {
+          "name": "pieChartData-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 985623
+        },
+        {
+          "name": "pieChartData-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 985622
+        },
+        {
+          "name": "pieChartData-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 985621
+        }
+      ]
+    },
+    {
+      "nodeId": "5677:132",
+      "name": "coinsCrypto",
+      "description": "coins, crypto",
+      "assetsHash": "HaHejKTIhQk5VpM03jBm6nMykeFRbPD5xPbynEOGxb0=",
+      "nameHash": "uqbVDyF8ORQVla2OK7tclr7e4g1LLoutP5rPlRrBiyQ=",
+      "createdAt": "2025-11-18T23:11:28.845Z",
+      "lastUpdated": "2025-11-18T23:11:28.845Z",
+      "svgs": [
+        {
+          "name": "coinsCrypto-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 985602
+        },
+        {
+          "name": "coinsCrypto-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 985601
+        },
+        {
+          "name": "coinsCrypto-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 985600
+        },
+        {
+          "name": "coinsCrypto-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 985599
+        },
+        {
+          "name": "coinsCrypto-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 985598
+        },
+        {
+          "name": "coinsCrypto-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 985597
+        }
+      ]
+    },
+    {
+      "nodeId": "5685:80",
+      "name": "crystalBallInsight",
+      "description": "",
+      "assetsHash": "RZmUK/ThvRPrMHDNAmHNA+0OIhJv/C98mBLeWBUJVyE=",
+      "nameHash": "4YDlIfGtN6qHHcgiyY8183MMQrCReSFbLv1qEE1qkSc=",
+      "createdAt": "2025-11-18T23:11:28.850Z",
+      "lastUpdated": "2025-11-18T23:17:07.291Z",
+      "svgs": [
+        {
+          "name": "crystalBallInsight-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 985608
+        },
+        {
+          "name": "crystalBallInsight-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 985607
+        },
+        {
+          "name": "crystalBallInsight-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 985606
+        },
+        {
+          "name": "crystalBallInsight-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 985605
+        },
+        {
+          "name": "crystalBallInsight-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 985604
+        },
+        {
+          "name": "crystalBallInsight-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 985603
+        }
+      ]
+    },
+    {
+      "nodeId": "5679:22",
+      "name": "loop",
+      "description": "loop",
+      "assetsHash": "VUYI8dZJy++QNbeDs1NPYACsbA59TUYs03vIto6eMY0=",
+      "nameHash": "Fj/5wIdtJdZoOrRJ81B+RqzvopKYWC2B30YqR26L/Ic=",
+      "createdAt": "2025-11-18T23:11:28.855Z",
+      "lastUpdated": "2025-11-18T23:11:28.855Z",
+      "svgs": [
+        {
+          "name": "loop-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 985614
+        },
+        {
+          "name": "loop-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 985613
+        },
+        {
+          "name": "loop-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 985612
+        },
+        {
+          "name": "loop-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 985611
+        },
+        {
+          "name": "loop-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 985610
+        },
+        {
+          "name": "loop-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 985609
         }
       ]
     }

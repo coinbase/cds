@@ -1,6 +1,6 @@
 {
   "executor": "sync-illustrations",
-  "lastUpdated": "2025-11-14T19:11:41.103Z",
+  "lastUpdated": "2025-11-19T03:18:55.277Z",
   "items": {
     "2:33979": {
       "type": "heroSquare",
@@ -10170,7 +10170,7 @@
       "height": 48,
       "description": "globe, earth, international, continents, global, 🌎, 🌍, 🌐, 🌏",
       "createdAt": "2022-08-05T05:36:58.210Z",
-      "lastUpdated": "2025-10-21T16:37:25.212Z",
+      "lastUpdated": "2025-11-18T19:53:17.566Z",
       "outputs": {
         "svgLight": "./pictogram/svg/light/worldwide-3.svg",
         "svgDark": "./pictogram/svg/dark/worldwide-3.svg",
@@ -19290,7 +19290,7 @@
       "height": 32,
       "description": "product, icons, wallet",
       "createdAt": "2023-10-21T00:32:35.808Z",
-      "lastUpdated": "2025-10-21T16:31:36.260Z",
+      "lastUpdated": "2025-11-18T23:47:41.464Z",
       "outputs": {
         "svgLight": "./spotIcon/svg/light/walletLogo-4.svg",
         "svgDark": "./spotIcon/svg/dark/walletLogo-4.svg",
@@ -19510,7 +19510,7 @@
       "height": 32,
       "description": "product, icons, base",
       "createdAt": "2023-10-21T00:32:35.945Z",
-      "lastUpdated": "2025-10-21T16:32:43.636Z",
+      "lastUpdated": "2025-11-18T23:47:41.442Z",
       "outputs": {
         "svgLight": "./spotIcon/svg/light/base-5.svg",
         "svgDark": "./spotIcon/svg/dark/base-5.svg",
@@ -26290,7 +26290,7 @@
       "height": 32,
       "description": "product, icons, advanced, trade, coinbaseone, One,",
       "createdAt": "2025-07-30T14:55:45.312Z",
-      "lastUpdated": "2025-10-21T16:30:29.587Z",
+      "lastUpdated": "2025-11-18T23:47:41.459Z",
       "outputs": {
         "svgLight": "./spotIcon/svg/light/businessProduct-0.svg",
         "svgDark": "./spotIcon/svg/dark/businessProduct-0.svg",
@@ -28499,6 +28499,166 @@
         "svgJsDark": "./spotRectangle/svgJs/dark/usdcLoanEth-0.js",
         "pngLight": "./spotRectangle/png/light/usdcLoanEth-0.png",
         "pngDark": "./spotRectangle/png/dark/usdcLoanEth-0.png"
+      },
+      "version": 0
+    },
+    "23873:78": {
+      "type": "pictogram",
+      "name": "cryptoCoins",
+      "hash": "1tkr7IQguAEFLkchv+1/iU3zcaia3dwNYX7rqmrEkNM=",
+      "width": 40,
+      "height": 40,
+      "description": "pictogram, coin, crypto learning, rewards, bitcoin, btc, satoshi, giveaway, free, competition",
+      "createdAt": "2025-11-18T19:53:17.527Z",
+      "lastUpdated": "2025-11-18T19:53:17.527Z",
+      "outputs": {
+        "svgLight": "./pictogram/svg/light/cryptoCoins-0.svg",
+        "svgDark": "./pictogram/svg/dark/cryptoCoins-0.svg",
+        "svgThemed": "./pictogram/svg/themeable/cryptoCoins-0.svg",
+        "svgJsLight": "./pictogram/svgJs/light/cryptoCoins-0.js",
+        "svgJsDark": "./pictogram/svgJs/dark/cryptoCoins-0.js",
+        "pngLight": "./pictogram/png/light/cryptoCoins-0.png",
+        "pngDark": "./pictogram/png/dark/cryptoCoins-0.png"
+      },
+      "version": 0
+    },
+    "23873:79": {
+      "type": "pictogram",
+      "name": "pieChartData",
+      "hash": "p08OQN0aW5olvvk+ROgI7Oey7i09bVs8MBCcfynBnPE=",
+      "width": 40,
+      "height": 40,
+      "description": "chart pie, data, visualization, numbers, graph, 📊, 📉, 📈, 🥧",
+      "createdAt": "2025-11-18T19:53:17.531Z",
+      "lastUpdated": "2025-11-18T23:47:41.455Z",
+      "outputs": {
+        "svgLight": "./pictogram/svg/light/pieChartData-0.svg",
+        "svgDark": "./pictogram/svg/dark/pieChartData-0.svg",
+        "svgThemed": "./pictogram/svg/themeable/pieChartData-0.svg",
+        "svgJsLight": "./pictogram/svgJs/light/pieChartData-0.js",
+        "svgJsDark": "./pictogram/svgJs/dark/pieChartData-0.js",
+        "pngLight": "./pictogram/png/light/pieChartData-0.png",
+        "pngDark": "./pictogram/png/dark/pieChartData-0.png"
+      },
+      "version": 0
+    },
+    "23873:80": {
+      "type": "pictogram",
+      "name": "calendarHighlight",
+      "hash": "XxDAFiSyWXV3JJDaWn/euiLU6FRSdCxSr3dmX1xGYUc=",
+      "width": 40,
+      "height": 40,
+      "description": "calendar, date",
+      "createdAt": "2025-11-18T19:53:17.520Z",
+      "lastUpdated": "2025-11-18T19:53:17.520Z",
+      "outputs": {
+        "svgLight": "./pictogram/svg/light/calendarHighlight-0.svg",
+        "svgDark": "./pictogram/svg/dark/calendarHighlight-0.svg",
+        "svgThemed": "./pictogram/svg/themeable/calendarHighlight-0.svg",
+        "svgJsLight": "./pictogram/svgJs/light/calendarHighlight-0.js",
+        "svgJsDark": "./pictogram/svgJs/dark/calendarHighlight-0.js",
+        "pngLight": "./pictogram/png/light/calendarHighlight-0.png",
+        "pngDark": "./pictogram/png/dark/calendarHighlight-0.png"
+      },
+      "version": 0
+    },
+    "23873:81": {
+      "type": "pictogram",
+      "name": "loop",
+      "hash": "3nDvyD5bxydzygoMizeGVRYQYgUKDKcej22Ysovv7ss=",
+      "width": 40,
+      "height": 40,
+      "description": "derivatives, pictogram, leverage, invest, prime, advanced, derive, arrow, triangles",
+      "createdAt": "2025-11-18T19:53:17.551Z",
+      "lastUpdated": "2025-11-18T19:53:17.551Z",
+      "outputs": {
+        "svgLight": "./pictogram/svg/light/loop-0.svg",
+        "svgDark": "./pictogram/svg/dark/loop-0.svg",
+        "svgThemed": "./pictogram/svg/themeable/loop-0.svg",
+        "svgJsLight": "./pictogram/svgJs/light/loop-0.js",
+        "svgJsDark": "./pictogram/svgJs/dark/loop-0.js",
+        "pngLight": "./pictogram/png/light/loop-0.png",
+        "pngDark": "./pictogram/png/dark/loop-0.png"
+      },
+      "version": 0
+    },
+    "23873:82": {
+      "type": "pictogram",
+      "name": "podium",
+      "hash": "ZaQ2ZeMvdQNVkw2ulS0d4/gc/U1zOeWMSEdU2HjQZNQ=",
+      "width": 40,
+      "height": 40,
+      "description": "podium, coin, star",
+      "createdAt": "2025-11-18T19:53:17.556Z",
+      "lastUpdated": "2025-11-18T19:53:17.556Z",
+      "outputs": {
+        "svgLight": "./pictogram/svg/light/podium-0.svg",
+        "svgDark": "./pictogram/svg/dark/podium-0.svg",
+        "svgThemed": "./pictogram/svg/themeable/podium-0.svg",
+        "svgJsLight": "./pictogram/svgJs/light/podium-0.js",
+        "svgJsDark": "./pictogram/svgJs/dark/podium-0.js",
+        "pngLight": "./pictogram/png/light/podium-0.png",
+        "pngDark": "./pictogram/png/dark/podium-0.png"
+      },
+      "version": 0
+    },
+    "23873:83": {
+      "type": "pictogram",
+      "name": "crystalBallInsight",
+      "hash": "GMg/LJR7PKt2MEK3c0zTb2o1OAFuc8OEdzfparfg1kM=",
+      "width": 40,
+      "height": 40,
+      "description": "crystalball,",
+      "createdAt": "2025-11-18T19:53:17.536Z",
+      "lastUpdated": "2025-11-18T23:47:41.451Z",
+      "outputs": {
+        "svgLight": "./pictogram/svg/light/crystalBallInsight-0.svg",
+        "svgDark": "./pictogram/svg/dark/crystalBallInsight-0.svg",
+        "svgThemed": "./pictogram/svg/themeable/crystalBallInsight-0.svg",
+        "svgJsLight": "./pictogram/svgJs/light/crystalBallInsight-0.js",
+        "svgJsDark": "./pictogram/svgJs/dark/crystalBallInsight-0.js",
+        "pngLight": "./pictogram/png/light/crystalBallInsight-0.png",
+        "pngDark": "./pictogram/png/dark/crystalBallInsight-0.png"
+      },
+      "version": 0
+    },
+    "23873:84": {
+      "type": "pictogram",
+      "name": "moneyCrypto",
+      "hash": "iQr8U7Z1BHus6fdnnCZYfeS01uxbXcdt9oSEWT4ADkc=",
+      "width": 40,
+      "height": 40,
+      "description": "card, coin, credit, sparkle, 💳, ✨, ❇️",
+      "createdAt": "2025-11-18T19:53:17.546Z",
+      "lastUpdated": "2025-11-18T19:53:17.546Z",
+      "outputs": {
+        "svgLight": "./pictogram/svg/light/moneyCrypto-0.svg",
+        "svgDark": "./pictogram/svg/dark/moneyCrypto-0.svg",
+        "svgThemed": "./pictogram/svg/themeable/moneyCrypto-0.svg",
+        "svgJsLight": "./pictogram/svgJs/light/moneyCrypto-0.js",
+        "svgJsDark": "./pictogram/svgJs/dark/moneyCrypto-0.js",
+        "pngLight": "./pictogram/png/light/moneyCrypto-0.png",
+        "pngDark": "./pictogram/png/dark/moneyCrypto-0.png"
+      },
+      "version": 0
+    },
+    "23873:85": {
+      "type": "spotIcon",
+      "name": "arrowsUpDown",
+      "hash": "+ESFjonvm4YdIgHlN51L3juvOyuD4kdOBQ5vMNL7Puw=",
+      "width": 40,
+      "height": 40,
+      "description": "pictogram, leverage, invest, prime, advanced, derive, arrow, triangles",
+      "createdAt": "2025-11-18T19:53:17.541Z",
+      "lastUpdated": "2025-11-18T19:53:17.541Z",
+      "outputs": {
+        "svgLight": "./spotIcon/svg/light/arrowsUpDown-0.svg",
+        "svgDark": "./spotIcon/svg/dark/arrowsUpDown-0.svg",
+        "svgThemed": "./spotIcon/svg/themeable/arrowsUpDown-0.svg",
+        "svgJsLight": "./spotIcon/svgJs/light/arrowsUpDown-0.js",
+        "svgJsDark": "./spotIcon/svgJs/dark/arrowsUpDown-0.js",
+        "pngLight": "./spotIcon/png/light/arrowsUpDown-0.png",
+        "pngDark": "./spotIcon/png/dark/arrowsUpDown-0.png"
       },
       "version": 0
     }

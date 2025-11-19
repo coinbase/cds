@@ -456,7 +456,8 @@ export const descriptionMap: Record<string, IconName[]> = {
     'currencies',
     'stake',
     'crypto',
-    'baseQuickBuy'
+    'baseQuickBuy',
+    'coinsCrypto'
   ],
   'adventure': [
     'planet'
@@ -977,7 +978,9 @@ export const descriptionMap: Record<string, IconName[]> = {
     'grid',
     'fscsProtection',
     'config',
-    'baseQuickBuy'
+    'baseQuickBuy',
+    'moneyCardCoin',
+    'crystalBallInsight'
   ],
   'profile': [
     'account',
@@ -2385,7 +2388,8 @@ export const descriptionMap: Record<string, IconName[]> = {
   ],
   'calendar': [
     'calendar',
-    'calendarEmpty'
+    'calendarEmpty',
+    'calendarBlank'
   ],
   'date': [
     'calendar',
@@ -2749,7 +2753,8 @@ export const descriptionMap: Record<string, IconName[]> = {
     'upArrow',
     'allTimeHigh',
     'sendReceive',
-    'candlesticks'
+    'candlesticks',
+    'arrowsUpDown'
   ],
   '👍': [
     'thumbsUpOutline',
@@ -2773,7 +2778,8 @@ export const descriptionMap: Record<string, IconName[]> = {
     'diagonalDownArrow',
     'sortDoubleArrow',
     'sendReceive',
-    'candlesticks'
+    'candlesticks',
+    'arrowsUpDown'
   ],
   '👎': [
     'thumbsDown',
@@ -3720,7 +3726,8 @@ export const descriptionMap: Record<string, IconName[]> = {
     'expandAddress',
     'initiator',
     'arrowsHorizontal',
-    'sendReceive'
+    'sendReceive',
+    'arrowsUpDown'
   ],
   'gear': [
     'gear',
@@ -4598,7 +4605,8 @@ export const descriptionMap: Record<string, IconName[]> = {
   'coins': [
     'circulatingSupply',
     'derivatives',
-    'cashCoins'
+    'cashCoins',
+    'coinsCrypto'
   ],
   'amount': [
     'circulatingSupply'
@@ -5561,7 +5569,8 @@ export const descriptionMap: Record<string, IconName[]> = {
     'allocation'
   ],
   'piechart': [
-    'allocation'
+    'allocation',
+    'pieChartData'
   ],
   'Verification': [
     'baseVerification'
@@ -5595,5 +5604,11 @@ export const descriptionMap: Record<string, IconName[]> = {
   ],
   'quick buy': [
     'baseQuickBuy'
+  ],
+  'single Coin': [
+    'singleCoin'
+  ],
+  'loop': [
+    'loop'
   ]
 };
