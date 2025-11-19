@@ -106,6 +106,7 @@ const versionMap: Record<SpotIconName, number> = {
   assetEmptyStateBd: 0,
   assetEmptyStateEa: 0,
   coinbaseOneProductInvestWeekly: 0,
+  arrowsUpDown: 0,
 };
 
 export default versionMap;
