@@ -172,7 +172,7 @@ export const Point = memo<PointProps>(
     // Calculate pixel coordinates from data coordinates
     const pixelCoordinate = useMemo(() => {
       if (!xScale || !yScale) {
-        return { x: 0, y: 0 };
+        return undefined;
       }
 
       return projectPoint({
@@ -186,15 +186,19 @@ export const Point = memo<PointProps>(
     const previousPixelCoordinate = usePreviousValue(pixelCoordinate);
     const previousFill = usePreviousValue(fill);
 
-    // Animated values for position
-    const animatedX = useSharedValue(pixelCoordinate.x);
-    const animatedY = useSharedValue(pixelCoordinate.y);
+    // Animated values for position - initialize with 0 but won't be used until pixelCoordinate is defined
+    const animatedX = useSharedValue(0);
+    const animatedY = useSharedValue(0);
 
     // Animated value for color interpolation (0 = old color, 1 = new color)
     const colorProgress = useSharedValue(1);
 
     // Update position when coordinates change
     useEffect(() => {
+      if (!pixelCoordinate) {
+        return;
+      }
+
       if (shouldAnimate && previousPixelCoordinate) {
         animatedX.value = buildTransition(pixelCoordinate.x, transition);
         animatedY.value = buildTransition(pixelCoordinate.y, transition);
@@ -204,15 +208,7 @@ export const Point = memo<PointProps>(
         animatedX.value = pixelCoordinate.x;
         animatedY.value = pixelCoordinate.y;
       }
-    }, [
-      pixelCoordinate.x,
-      pixelCoordinate.y,
-      shouldAnimate,
-      previousPixelCoordinate,
-      animatedX,
-      animatedY,
-      transition,
-    ]);
+    }, [pixelCoordinate, shouldAnimate, previousPixelCoordinate, animatedX, animatedY, transition]);
 
     // Update color when fill changes
     useEffect(() => {
@@ -256,7 +252,7 @@ export const Point = memo<PointProps>(
 
     const offset = useMemo(() => labelOffset ?? radius * 2, [labelOffset, radius]);
 
-    if (!xScale || !yScale) {
+    if (!pixelCoordinate) {
       return null;
     }
 
