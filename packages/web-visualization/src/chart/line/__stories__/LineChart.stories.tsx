@@ -253,6 +253,10 @@ function LiveUpdates() {
           color: assets.btc.color,
         },
       ]}
+      xAxis={{
+        // Give space for pulse animation
+        range: ({ min, max }) => ({ min, max: max - 16 }),
+      }}
     >
       <Scrubber ref={scrubberRef} elevateLabel accessibilityLabel={scrubberAccessibilityLabel} />
     </LineChart>
@@ -848,6 +852,8 @@ function StylingScrubber() {
       xAxis={{
         // Used on the x-axis to provide context for each index from the series data array
         data: pages,
+        // Give space for idle pulse animation
+        range: ({ min, max }) => ({ min, max: max - 16 }),
       }}
       yAxis={{
         showGrid: true,
@@ -1227,6 +1233,10 @@ function AssetPriceWithDottedArea() {
             },
           ]}
           style={{ outlineColor: assets.btc.color }}
+          xAxis={{
+            // Give space for idle pulse animation
+            range: ({ min, max }) => ({ min, max: max - 16 }),
+          }}
         >
           <Scrubber
             elevateLabel
@@ -1336,6 +1346,10 @@ function AssetPriceWidget() {
             },
           ]}
           width="100%"
+          xAxis={{
+            // Give space for idle pulse animation
+            range: ({ min, max }) => ({ min, max: max - 16 }),
+          }}
         >
           <Scrubber
             idlePulse

@@ -267,6 +267,10 @@ function LiveUpdates() {
           color: assets.btc.color,
         },
       ]}
+      xAxis={{
+        // Give space for pulse animation
+        range: ({ min, max }) => ({ min, max: max - 16 }),
+      }}
     >
       <Scrubber ref={scrubberRef} />
     </LineChart>
@@ -834,6 +838,8 @@ function StylingScrubber() {
       xAxis={{
         // Used on the x-axis to provide context for each index from the series data array
         data: pages,
+        // Give space for idle pulse animation
+        range: ({ min, max }) => ({ min, max: max - 16 }),
       }}
       yAxis={{
         showGrid: true,
@@ -1077,6 +1083,10 @@ function AssetPriceWithDottedArea() {
               color: assets.btc.color,
             },
           ]}
+          xAxis={{
+            // Give space for idle pulse animation
+            range: ({ min, max }) => ({ min, max: max - 16 }),
+          }}
         >
           <Scrubber
             elevateLabel
@@ -1290,7 +1300,10 @@ const PerformanceChart = memo(
             label: 'Low Price',
           },
         ]}
-        xAxis={{ range: ({ min, max }) => ({ min, max: max - 16 }) }}
+        xAxis={{
+          // Give space for idle pulse animation
+          range: ({ min, max }) => ({ min, max: max - 16 }),
+        }}
         yAxis={{ showGrid: true, tickLabelFormatter: formatPriceThousands }}
       >
         <Scrubber idlePulse label={getScrubberLabel} />
@@ -1983,7 +1996,8 @@ function ImperativeHandle() {
           },
         ]}
         xAxis={{
-          range: ({ min, max }) => ({ min, max: max - 32 }),
+          // Give space for pulse animation
+          range: ({ min, max }) => ({ min, max: max - 16 }),
         }}
         yAxis={{
           domain: {

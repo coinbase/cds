@@ -76,9 +76,15 @@ export type ScrubberBeaconProps = SharedProps & {
     update?: Transition;
     /**
      * Transition used for the pulse animation.
-     * @default { duration: 1, ease: 'easeInOut' }
+     * @default { duration: 1.6, ease: 'easeInOut' }
      */
     pulse?: Transition;
+    /**
+     * Delay, in seconds between pulse transitions
+     * when `idlePulse` is enabled.
+     * @default 0.4
+     */
+    pulseRepeatDelay?: number;
   };
   /**
    * Custom className for styling.

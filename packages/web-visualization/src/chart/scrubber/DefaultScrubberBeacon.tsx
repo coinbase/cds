@@ -12,14 +12,16 @@ import { defaultTransition, projectPoint } from '../utils';
 import type { ScrubberBeaconProps, ScrubberBeaconRef } from './Scrubber';
 
 const radius = 5;
-const glowRadius = 10;
-const pulseRadius = 15;
+const pulseRadiusStart = 10;
+const pulseRadiusEnd = 20;
 const strokeWidth = 2;
 
 const defaultPulseTransition: Transition = {
-  duration: 1,
-  ease: 'easeInOut',
+  duration: 1.6,
+  ease: [0.0, 0.0, 0.0, 1.0],
 };
+
+const defaultPulseRepeatDelay = 0.4;
 
 export type DefaultScrubberBeaconProps = ScrubberBeaconProps;
 
@@ -60,6 +62,10 @@ export const DefaultScrubberBeacon = memo(
         () => transitions?.pulse ?? defaultPulseTransition,
         [transitions?.pulse],
       );
+      const pulseRepeatDelay = useMemo(
+        () => transitions?.pulseRepeatDelay ?? defaultPulseRepeatDelay,
+        [transitions?.pulseRepeatDelay],
+      );
 
       const pixelCoordinate = useMemo(() => {
         if (!xScale || !yScale) return;
@@ -75,7 +81,8 @@ export const DefaultScrubberBeacon = memo(
               animate(
                 scope.current,
                 {
-                  opacity: [0.1, 0],
+                  opacity: [0.5, 0],
+                  r: [pulseRadiusStart, pulseRadiusEnd],
                 },
                 pulseTransition as ValueAnimationTransition,
               );
@@ -85,14 +92,14 @@ export const DefaultScrubberBeacon = memo(
         [isIdle, idlePulse, scope, animate, pulseTransition],
       );
 
-      // Create continuous pulse transition by repeating the base pulse transition in reverse
+      // Create continuous pulse transition by repeating the base pulse transition with delay
       const continuousPulseTransition: Transition = useMemo(
         () => ({
           ...pulseTransition,
           repeat: Infinity,
-          repeatType: 'reverse',
+          delay: pulseRepeatDelay,
         }),
-        [pulseTransition],
+        [pulseTransition, pulseRepeatDelay],
       );
 
       const shouldPulse = isIdle && idlePulse;
@@ -112,19 +119,6 @@ export const DefaultScrubberBeacon = memo(
       if (isIdle) {
         return (
           <g data-testid={testID} opacity={isWithinDrawingArea ? 1 : 0}>
-            <motion.circle
-              animate={{
-                cx: pixelCoordinate.x,
-                cy: pixelCoordinate.y,
-              }}
-              cx={pixelCoordinate.x}
-              cy={pixelCoordinate.y}
-              fill={color}
-              initial={false}
-              opacity={0.15}
-              r={glowRadius}
-              transition={updateTransition}
-            />
             <motion.g
               animate={{
                 x: pixelCoordinate.x,
@@ -138,16 +132,16 @@ export const DefaultScrubberBeacon = memo(
                 animate={
                   shouldPulse
                     ? {
-                        opacity: [0.1, 0],
+                        opacity: [0.5, 0],
+                        r: [pulseRadiusStart, pulseRadiusEnd],
                         transition: continuousPulseTransition,
                       }
-                    : { opacity: 0 }
+                    : { opacity: 0, r: pulseRadiusStart }
                 }
                 cx={0}
                 cy={0}
                 fill={color}
-                initial={{ opacity: shouldPulse ? 0.1 : 0 }}
-                r={pulseRadius}
+                initial={{ opacity: shouldPulse ? 0.5 : 0, r: pulseRadiusStart }}
               />
             </motion.g>
             <motion.circle
@@ -173,20 +167,13 @@ export const DefaultScrubberBeacon = memo(
       return (
         <g data-testid={testID} opacity={isWithinDrawingArea ? 1 : 0}>
           <circle
-            cx={pixelCoordinate.x}
-            cy={pixelCoordinate.y}
-            fill={color}
-            opacity={0.15}
-            r={glowRadius}
-          />
-          <circle
             className={className}
             cx={pixelCoordinate.x}
             cy={pixelCoordinate.y}
             fill={color}
             r={radius}
             stroke="var(--color-bg)"
-            strokeWidth={2}
+            strokeWidth={strokeWidth}
             style={style}
           />
         </g>

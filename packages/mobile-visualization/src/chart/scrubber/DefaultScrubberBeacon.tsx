@@ -1,6 +1,7 @@
 import { forwardRef, memo, useImperativeHandle, useMemo } from 'react';
 import {
   cancelAnimation,
+  Easing,
   useAnimatedReaction,
   useDerivedValue,
   useSharedValue,
@@ -18,14 +19,17 @@ import { buildTransition, defaultTransition, type Transition } from '../utils/tr
 import type { ScrubberBeaconProps, ScrubberBeaconRef } from './Scrubber';
 
 const radius = 5;
-const glowRadius = 10;
-const pulseRadius = 15;
+const pulseRadiusStart = 10;
+const pulseRadiusEnd = 20;
 const strokeWidth = 2;
 
 const defaultPulseTransition: Transition = {
   type: 'timing',
-  duration: 1000,
+  duration: 1600,
+  easing: Easing.bezier(0.0, 0.0, 0.0, 1.0),
 };
+
+const defaultPulseRepeatDelay = 400;
 
 export type DefaultScrubberBeaconProps = ScrubberBeaconProps;
 
@@ -59,8 +63,13 @@ export const DefaultScrubberBeacon = memo(
         () => transitions?.pulse ?? defaultPulseTransition,
         [transitions?.pulse],
       );
+      const pulseRepeatDelay = useMemo(
+        () => transitions?.pulseRepeatDelay ?? defaultPulseRepeatDelay,
+        [transitions?.pulseRepeatDelay],
+      );
 
       const pulseOpacity = useSharedValue(0);
+      const pulseRadius = useSharedValue(pulseRadiusStart);
 
       const animatedX = useSharedValue(0);
       const animatedY = useSharedValue(0);
@@ -107,12 +116,18 @@ export const DefaultScrubberBeacon = memo(
             // Only trigger manual pulse when idlePulse is not enabled
             if (!idlePulse) {
               cancelAnimation(pulseOpacity);
-              pulseOpacity.value = 0.1;
-              pulseOpacity.value = withSequence(buildTransition(0, pulseTransition));
+              cancelAnimation(pulseRadius);
+
+              // Manual pulse without delay
+              const immediatePulseTransition = { ...pulseTransition, delay: 0 };
+              pulseOpacity.value = 0.5;
+              pulseRadius.value = pulseRadiusStart;
+              pulseOpacity.value = buildTransition(0, immediatePulseTransition);
+              pulseRadius.value = buildTransition(pulseRadiusEnd, immediatePulseTransition);
             }
           },
         }),
-        [idlePulse, pulseOpacity, pulseTransition],
+        [idlePulse, pulseOpacity, pulseRadius, pulseTransition],
       );
 
       // Watch idlePulse changes and control continuous pulse
@@ -123,10 +138,26 @@ export const DefaultScrubberBeacon = memo(
 
           if (current) {
             // Start continuous pulse when idlePulse is enabled
+            // Create instant transition to reset pulse after delay
+            const instantTransition: Transition = { type: 'timing', duration: 0 };
+            const resetWithDelay = { ...instantTransition, delay: pulseRepeatDelay };
+
+            pulseOpacity.value = 0.5;
+            pulseRadius.value = pulseRadiusStart;
+
             pulseOpacity.value = withRepeat(
               withSequence(
-                buildTransition(0.1, pulseTransition),
                 buildTransition(0, pulseTransition),
+                buildTransition(0.5, resetWithDelay),
+              ),
+              -1, // infinite loop
+              false,
+            );
+
+            pulseRadius.value = withRepeat(
+              withSequence(
+                buildTransition(pulseRadiusEnd, pulseTransition),
+                buildTransition(pulseRadiusStart, resetWithDelay),
               ),
               -1, // infinite loop
               false,
@@ -134,10 +165,12 @@ export const DefaultScrubberBeacon = memo(
           } else {
             // Stop pulse when idlePulse is disabled
             cancelAnimation(pulseOpacity);
+            cancelAnimation(pulseRadius);
             pulseOpacity.value = 0;
+            pulseRadius.value = pulseRadiusStart;
           }
         },
-        [animate, pulseTransition],
+        [animate, pulseTransition, pulseRepeatDelay],
       );
 
       const pulseVisibility = useDerivedValue(() => {
@@ -158,7 +191,6 @@ export const DefaultScrubberBeacon = memo(
 
       return (
         <Group opacity={beaconOpacity}>
-          <Circle c={animatedPoint} color={color} opacity={0.15} r={glowRadius} />
           <Circle c={animatedPoint} color={color} opacity={pulseVisibility} r={pulseRadius} />
           <Circle c={animatedPoint} color={theme.color.bg} r={radius + strokeWidth / 2} />
           <Circle c={animatedPoint} color={color} r={radius - strokeWidth / 2} />
