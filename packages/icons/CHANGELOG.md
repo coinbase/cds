@@ -8,6 +8,19 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+
+
+##### ⭐️ Added (8)
+
+- arrowsUpDown
+- moneyCardCoin
+- singleCoin
+- calendarBlank
+- coinsCrypto
+- loop
+- pieChartData
+- crystalBallInsight
+
 ## 5.6.0 (11/14/2025 PST)
 
 #### 🚀 Updates
