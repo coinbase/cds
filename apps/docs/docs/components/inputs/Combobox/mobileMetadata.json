@@ -1,0 +1,13 @@
+{
+  "import": "import { Combobox } from '@coinbase/cds-mobile/alpha/combobox'",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/mobile/src/alpha/combobox/Combobox.tsx",
+  "storybook": "https://cds-storybook.coinbase.com/?path=/story/components-alpha-combobox-combobox--default",
+  "description": "A flexible combobox component for both single and multi-selection, built for mobile applications with comprehensive accessibility support.",
+  "relatedComponents": [
+    {
+      "label": "Select",
+      "url": "/components/inputs/SelectAlpha/"
+    }
+  ],
+  "dependencies": []
+}

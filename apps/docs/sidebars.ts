@@ -133,6 +133,11 @@ const sidebars: SidebarsConfig = {
             },
             {
               type: 'doc',
+              id: 'components/inputs/Combobox/combobox',
+              label: 'Combobox',
+            },
+            {
+              type: 'doc',
               id: 'components/inputs/ControlGroup/controlGroup',
               label: 'ControlGroup',
             },

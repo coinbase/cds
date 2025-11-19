@@ -1,0 +1,38 @@
+## Multi-Select
+
+Basic multi-selection combobox with search.
+
+```jsx live
+function MultiSelect() {
+const fruitOptions: SelectOption[] = [
+  { value: 'apple', label: 'Apple' },
+  { value: 'banana', label: 'Banana' },
+  { value: 'cherry', label: 'Cherry' },
+  { value: 'date', label: 'Date' },
+  { value: 'elderberry', label: 'Elderberry' },
+  { value: 'fig', label: 'Fig' },
+  { value: 'grape', label: 'Grape' },
+  { value: 'honeydew', label: 'Honeydew' },
+  { value: 'kiwi', label: 'Kiwi' },
+  { value: 'lemon', label: 'Lemon' },
+  { value: 'mango', label: 'Mango' },
+  { value: 'orange', label: 'Orange' },
+  { value: 'papaya', label: 'Papaya' },
+  { value: 'raspberry', label: 'Raspberry' },
+  { value: 'strawberry', label: 'Strawberry' },
+];
+
+  const { value, onChange } = useMultiSelect({ initialValue: ['apple', 'banana'] });
+
+  return (
+      <Combobox
+        label="Select fruits"
+        onChange={onChange}
+        options={fruitOptions}
+        placeholder="Search and select fruits..."
+        type="multi"
+        value={value}
+      />
+  );
+}
+```
