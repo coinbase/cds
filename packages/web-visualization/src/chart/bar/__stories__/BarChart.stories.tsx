@@ -6,10 +6,10 @@ import { Text } from '@coinbase/cds-web/typography';
 import { CartesianChart } from '../..';
 import { XAxis, YAxis } from '../../axis';
 import { useCartesianChartContext } from '../../ChartProvider';
-import { ReferenceLine, SolidLine, type SolidLineProps } from '../../line';
+import { type LineComponentProps, ReferenceLine, SolidLine, type SolidLineProps } from '../../line';
 import { PeriodSelector } from '../../PeriodSelector';
 import { Scrubber } from '../../scrubber';
-import { isCategoricalScale, ScrubberContext } from '../../utils';
+import { isCategoricalScale, ScrubberContext, useScrubberContext } from '../../utils';
 import { BarChart } from '../BarChart';
 import { BarPlot } from '../BarPlot';
 import { type BarStackComponentProps } from '../BarStack';
@@ -213,6 +213,32 @@ const Candlesticks = () => {
     .reverse();
   const min = Math.min(...stockData.map((data) => parseFloat(data.low)));
 
+  // Custom line component that renders a rect to highlight the entire bandwidth
+  const BandwidthHighlight = memo<LineComponentProps>(({ stroke }) => {
+    const { getXScale, drawingArea } = useCartesianChartContext();
+    const { scrubberPosition } = useScrubberContext();
+    const xScale = getXScale();
+
+    if (!xScale || scrubberPosition === undefined) return null;
+
+    const xPos = xScale(scrubberPosition);
+
+    if (xPos === undefined) return null;
+
+    // Type guard to check if scale has bandwidth (band scale)
+    const bandwidth = 'bandwidth' in xScale ? xScale.bandwidth() : 0;
+
+    return (
+      <rect
+        fill={stroke}
+        height={drawingArea.height}
+        width={bandwidth}
+        x={xPos}
+        y={drawingArea.y}
+      />
+    );
+  });
+
   const candlesData = stockData.map((data) => [parseFloat(data.low), parseFloat(data.high)]) as [
     number,
     number,
@@ -339,11 +365,12 @@ const Candlesticks = () => {
           GridLineComponent: ThinSolidLine,
         }}
       >
-        {timePeriod.id === 'year' ? (
-          <Scrubber hideOverlay LineComponent={ThinSolidLine} seriesIds={[]} />
-        ) : (
-          <ScrubberRect />
-        )}
+        <Scrubber
+          hideOverlay
+          LineComponent={BandwidthHighlight}
+          lineStroke="var(--color-fgMuted)"
+          seriesIds={[]}
+        />
       </BarChart>
       <PeriodSelector
         activeTab={timePeriod}

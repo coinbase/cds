@@ -39,7 +39,7 @@ import {
 
 import { Area, DottedArea, type DottedAreaProps } from '../../area';
 import { DefaultAxisTickLabel, XAxis, YAxis } from '../../axis';
-import { BarChart, type BarComponentProps } from '../../bar';
+import { BarChart, type BarComponentProps, BarPlot } from '../../bar';
 import { CartesianChart } from '../../CartesianChart';
 import { useCartesianChartContext } from '../../ChartProvider';
 import { PeriodSelector, PeriodSelectorActiveIndicator } from '../../PeriodSelector';
@@ -1386,6 +1386,7 @@ const CandlesticksChart = memo(
     infoTextId: string;
     onScrubberPositionChange: (index: number | undefined) => void;
   }) => {
+    const theme = useTheme();
     const min = useMemo(
       () => Math.min(...candlestickStockData.map((data) => parseFloat(data.low))),
       [],
@@ -1494,12 +1495,8 @@ const CandlesticksChart = memo(
     }, []);
 
     return (
-      <BarChart
+      <CartesianChart
         enableScrubbing
-        showXAxis
-        showYAxis
-        BarComponent={CandlestickBarComponent}
-        BarStackComponent={({ children }) => <g>{children}</g>}
         animate={false}
         aria-labelledby={infoTextId}
         borderRadius={0}
@@ -1513,18 +1510,30 @@ const CandlesticksChart = memo(
           },
         ]}
         xAxis={{
-          tickLabelFormatter: formatTime,
+          scaleType: 'band',
         }}
         yAxis={{
           domain: { min },
-          tickLabelFormatter: formatThousandsPriceNumber,
-          width: 40,
-          showGrid: true,
-          GridLineComponent: ThinSolidLine,
         }}
       >
-        <Scrubber hideOverlay LineComponent={BandwidthHighlight} seriesIds={[]} />
-      </BarChart>
+        <XAxis tickLabelFormatter={formatTime} />
+        <YAxis
+          showGrid
+          GridLineComponent={ThinSolidLine}
+          tickLabelFormatter={formatThousandsPriceNumber}
+          width={40}
+        />
+        <Scrubber
+          hideOverlay
+          LineComponent={BandwidthHighlight}
+          lineStroke={theme.color.fgMuted}
+          seriesIds={[]}
+        />
+        <BarPlot
+          BarComponent={CandlestickBarComponent}
+          BarStackComponent={({ children }) => <g>{children}</g>}
+        />
+      </CartesianChart>
     );
   },
 );
