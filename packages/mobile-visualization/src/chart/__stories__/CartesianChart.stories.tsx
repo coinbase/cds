@@ -13,7 +13,9 @@ import { XAxis, YAxis } from '../axis';
 import { BarPlot } from '../bar/BarPlot';
 import { useCartesianChartContext } from '../ChartProvider';
 import { Line } from '../line/Line';
+import { Point } from '../point/Point';
 import { Scrubber } from '../scrubber/Scrubber';
+import { ChartText } from '../text';
 import { type GradientDefinition, isCategoricalScale } from '../utils';
 import { CartesianChart, DottedArea, ReferenceLine, SolidLine, type SolidLineProps } from '../';
 
@@ -500,6 +502,82 @@ const FutureData = memo(
   },
 );
 
+const ScatterplotWithCustomLabels = memo(() => {
+  const theme = useTheme();
+  const dataPoints = useMemo(
+    () => [
+      { x: 12, y: 34, label: 'A', color: theme.color.accentBoldBlue },
+      { x: 28, y: 67, label: 'B', color: theme.color.accentBoldBlue },
+      { x: 45, y: 23, label: 'C', color: theme.color.accentBoldBlue },
+      { x: 67, y: 89, label: 'D', color: theme.color.bgPositive },
+      { x: 82, y: 76, label: 'E', color: theme.color.bgPositive },
+      { x: 34, y: 91, label: 'F', color: theme.color.bgPositive },
+      { x: 56, y: 45, label: 'G', color: theme.color.bgPositive },
+      { x: 19, y: 12, label: 'H', color: theme.color.fgWarning },
+      { x: 73, y: 28, label: 'I', color: theme.color.fgWarning },
+      { x: 91, y: 54, label: 'J', color: theme.color.fgWarning },
+      { x: 15, y: 58, label: 'K', color: theme.color.fgPrimary },
+      { x: 39, y: 72, label: 'L', color: theme.color.fgPrimary },
+      { x: 88, y: 15, label: 'M', color: theme.color.fgPrimary },
+      { x: 52, y: 82, label: 'N', color: theme.color.fgPrimary },
+    ],
+    [theme],
+  );
+
+  // Calculate domain based on data
+  const xValues = useMemo(() => dataPoints.map((p) => p.x), [dataPoints]);
+  const yValues = useMemo(() => dataPoints.map((p) => p.y), [dataPoints]);
+  const xMin = Math.min(...xValues);
+  const xMax = Math.max(...xValues);
+  const yMin = Math.min(...yValues);
+  const yMax = Math.max(...yValues);
+
+  // Custom label component that places labels to the top-right
+  const TopRightPointLabel = useCallback(({ x, y, offset = 0, children }: any) => {
+    return (
+      <ChartText
+        font="label1"
+        fontWeight={600}
+        horizontalAlignment="left"
+        verticalAlignment="bottom"
+        x={x + offset}
+        y={y - offset}
+      >
+        {children}
+      </ChartText>
+    );
+  }, []);
+
+  return (
+    <CartesianChart
+      height={300}
+      xAxis={{
+        domain: { min: xMin, max: xMax },
+        domainLimit: 'nice',
+      }}
+      yAxis={{
+        domain: { min: yMin, max: yMax },
+        domainLimit: 'nice',
+      }}
+    >
+      <XAxis showGrid showLine showTickMarks />
+      <YAxis showGrid showLine showTickMarks position="left" />
+      {dataPoints.map((point, index) => (
+        <Point
+          key={index}
+          LabelComponent={TopRightPointLabel}
+          dataX={point.x}
+          dataY={point.y}
+          fill={point.color}
+          label={point.label}
+          labelOffset={8}
+          radius={5}
+        />
+      ))}
+    </CartesianChart>
+  );
+});
+
 const ChartStories = () => {
   return (
     <ScrollView>
@@ -518,6 +596,9 @@ const ChartStories = () => {
         </Example>
         <Example title="Trading Trends">
           <TradingTrends />
+        </Example>
+        <Example title="Scatterplot with Custom Labels">
+          <ScatterplotWithCustomLabels />
         </Example>
       </ExampleScreen>
     </ScrollView>

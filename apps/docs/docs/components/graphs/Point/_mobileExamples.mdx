@@ -112,54 +112,6 @@ function AssetPriceWithMinMax() {
 };
 ```
 
-## Interaction
-
-Points can be made interactive by adding click handlers, allowing users to explore data in more detail.
-
-```jsx
-function InteractivePoints() {
-  const months = [
-    'Jan',
-    'Feb',
-    'Mar',
-    'Apr',
-    'May',
-    'Jun',
-    'Jul',
-    'Aug',
-    'Sep',
-    'Oct',
-    'Nov',
-    'Dec',
-  ];
-
-  return (
-    <LineChart
-      showArea
-      showYAxis
-      height={200}
-      renderPoints={({ dataX, dataY }) => {
-        return {
-          radius: 4,
-          onClick: () => alert(`${months[dataX]}: ${dataY} units sold`),
-          accessibilityLabel: `${months[dataX]} sales: ${dataY} units`,
-        };
-      }}
-      series={[
-        {
-          id: 'sales',
-          data: [120, 132, 101, 134, 90, 230, 210, 120, 180, 190, 210, 176],
-        },
-      ]}
-      yAxis={{
-        showGrid: true,
-        label: 'Sales (units)',
-      }}
-    />
-  );
-}
-```
-
 ## Styling
 
 Points support customization through various properties including colors, sizes, and labels.
