@@ -8,7 +8,11 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
-## Unreleased
+## 4.5.7 (11/19/2025 PST)
+
+#### 🐞 Fixes
+
+- Update icon map. [[#177](https://github.com/coinbase/cds/pull/177)]
 
 #### 📘 Misc
 
