@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.21.4 (11/18/2025 PST)
+
+#### 🐞 Fixes
+
+- Update styling of DefaultSelectControl to use compact chips. [[#156](https://github.com/coinbase/cds/pull/156)]
+
 ## 8.21.3 (11/17/2025 PST)
 
 #### 🐞 Fixes
