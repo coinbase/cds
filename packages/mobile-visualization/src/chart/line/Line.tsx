@@ -6,7 +6,7 @@ import { type AnimatedProp, Group } from '@shopify/react-native-skia';
 
 import { Area, type AreaComponent } from '../area/Area';
 import { useCartesianChartContext } from '../ChartProvider';
-import { Point, type PointConfig, type RenderPointsParams } from '../Point';
+import { Point, type PointBaseProps, type PointProps } from '../point';
 import {
   accessoryFadeTransitionDelay,
   accessoryFadeTransitionDuration,
@@ -117,18 +117,17 @@ export type LineProps = Partial<
      */
     opacity?: number;
     /**
-     * Handler for when a point is pressed.
-     * Passed through to Point components rendered via renderPoints.
-     */
-    onPointPress?: PointConfig['onPress'];
-    /**
-     * Callback function to determine how to render points at each data point in the series.
-     * Called for every entry in the data array.
+     * Controls whether and how to render points at each data point in the series.
+     * - `true`: Show all points with default styling
+     * - `false` or `undefined`: Hide all points
+     * - Function: Called for every entry in the data array to customize individual points
      *
-     * @param params - Contains the data and pixel coordinates of the data point.
-     * @returns true for default point, false/null/undefined for no point, or PointConfig for custom point
+     * @param defaults - The default point props computed by the Line component
+     * @returns true for default point, false/null/undefined for no point, or Partial<PointProps> to customize
      */
-    renderPoints?: (params: RenderPointsParams) => boolean | null | undefined | PointConfig;
+    points?:
+      | boolean
+      | ((defaults: PointBaseProps) => boolean | null | undefined | Partial<PointProps>);
     /**
      * When true, the area is connected across null values.
      */
@@ -144,12 +143,11 @@ export const Line = memo<LineProps>(
     areaBaseline,
     stroke: specifiedStroke,
     strokeOpacity: strokeOpacityProp,
-    onPointPress,
     showArea,
     LineComponent: SelectedLineComponent,
     AreaComponent,
     opacity = 1,
-    renderPoints,
+    points,
     connectNulls,
     transition,
     gradient: gradientProp,
@@ -279,7 +277,7 @@ export const Line = memo<LineProps>(
           yAxisId={matchedSeries?.yAxisId}
           {...props}
         />
-        {renderPoints && (
+        {points && (
           <Group opacity={pointsOpacity}>
             {chartData.map((value: number | null, index: number) => {
               if (value === null) return;
@@ -304,30 +302,35 @@ export const Line = memo<LineProps>(
                 }
               }
 
-              const point = renderPoints({
-                dataY: value,
+              // Build defaults that would be passed to Point
+              const defaults: PointBaseProps = {
                 dataX: xValue,
-                x: xScale?.(xValue) ?? 0,
-                y: yScale?.(value) ?? 0,
+                dataY: value,
                 fill: pointFill,
-              });
+                yAxisId: matchedSeries?.yAxisId,
+                opacity,
+              };
 
-              if (!point) return;
+              // If points is true, render with defaults
+              if (points === true) {
+                return (
+                  <Point key={`${seriesId}-${xValue}`} transition={transition} {...defaults} />
+                );
+              }
 
-              const pointConfig = point === true ? {} : point;
+              // Call the function with defaults
+              const result = points(defaults);
 
-              pointFill = pointConfig.fill ?? pointFill;
+              if (!result) return;
+
+              const pointConfig = result === true ? {} : result;
 
               return (
                 <Point
                   key={`${seriesId}-${xValue}`}
-                  dataX={xValue}
-                  dataY={value}
                   transition={transition}
+                  {...defaults}
                   {...pointConfig}
-                  fill={pointFill}
-                  onPress={pointConfig.onPress ?? onPointPress}
-                  opacity={pointConfig.opacity ?? opacity}
                 />
               );
             })}

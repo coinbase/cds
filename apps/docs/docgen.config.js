@@ -78,7 +78,7 @@ module.exports = {
     'chart/axis/XAxis',
     'chart/axis/YAxis',
     'chart/PeriodSelector',
-    'chart/Point',
+    'chart/point/Point',
     'chart/scrubber/Scrubber',
     'chips/Chip',
     'chips/InputChip',

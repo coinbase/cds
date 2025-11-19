@@ -152,7 +152,7 @@ function DataFormat() {
       curve="natural"
       height={{ base: 200, tablet: 225, desktop: 250 }}
       inset={{ top: 16, right: 16, bottom: 0, left: 0 }}
-      renderPoints={() => true}
+      points
       series={[
         {
           id: 'line',
@@ -281,7 +281,7 @@ function MissingData() {
       showYAxis
       height={{ base: 200, tablet: 225, desktop: 250 }}
       // You can render points at every valid data point by always returning true
-      renderPoints={() => true}
+      points
       series={[
         {
           id: 'pageViews',
@@ -357,7 +357,7 @@ function Points() {
     >
       <Area fill="rgb(var(--blue5))" seriesId="prices" />
       <Line
-        renderPoints={({ dataX, dataY, ...props }) =>
+        points={({ dataX, dataY, ...props }) =>
           keyMarketShiftIndices.includes(dataX)
             ? {
                 ...props,
@@ -638,7 +638,7 @@ function Gradients() {
       <LineChart
         showYAxis
         height={{ base: 200, tablet: 225, desktop: 250 }}
-        renderPoints={() => true}
+        points
         series={[
           {
             id: 'continuousGradient',
@@ -795,21 +795,13 @@ function HighLowPrice() {
         dataX={minPriceIndex}
         dataY={minPrice}
         label={formatPrice(minPrice)}
-        labelProps={{
-          // Shift the label down and have it render downwards
-          dy: 8,
-          verticalAlignment: 'top',
-        }}
+        labelPosition="bottom"
       />
       <Point
         dataX={maxPriceIndex}
         dataY={maxPrice}
         label={formatPrice(maxPrice)}
-        labelProps={{
-          // Shift the label up and have it render upwards
-          dy: -8,
-          verticalAlignment: 'bottom',
-        }}
+        labelPosition="top"
       />
     </LineChart>
   );
@@ -1436,7 +1428,7 @@ function ServiceAvailability() {
       />
       <Line
         curve="stepAfter"
-        renderPoints={(props) => ({
+        points={(props) => ({
           ...props,
           fill: 'var(--color-bg)',
           stroke: props.fill,

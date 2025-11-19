@@ -188,7 +188,7 @@ function MissingData() {
       showYAxis
       height={200}
       // You can render points at every valid data point by always returning true
-      renderPoints={() => true}
+      points
       series={[
         {
           id: 'pageViews',
@@ -302,7 +302,7 @@ function Interaction() {
 
 ### Points
 
-You can use `renderPoints` from LineChart to render instances of [Point](/components/graphs/Point) at specific data locations with custom styling.
+You can use `points` from LineChart to render instances of [Point](/components/graphs/Point) at specific data locations with custom styling.
 
 ```jsx
 function Points() {
@@ -322,7 +322,7 @@ function Points() {
     >
       <Area fill={`rgb(${theme.spectrum.blue5})`} seriesId="prices" />
       <Line
-        renderPoints={({ dataX, ...props }) =>
+        points={({ dataX, ...props }) =>
           keyMarketShiftIndices.includes(dataX)
             ? {
                 ...props,
@@ -845,7 +845,7 @@ function Gradients() {
       <LineChart
         showYAxis
         height={200}
-        renderPoints={() => true}
+        points
         series={[
           {
             id: 'continuousGradient',
@@ -1090,21 +1090,13 @@ function HighLowPrice() {
         dataX={minPriceIndex}
         dataY={minPrice}
         label={formatPrice(minPrice)}
-        labelProps={{
-          // Shift the label down and have it render downwards
-          dy: 8,
-          verticalAlignment: 'top',
-        }}
+        labelPosition="bottom"
       />
       <Point
         dataX={maxPriceIndex}
         dataY={maxPrice}
         label={formatPrice(maxPrice)}
-        labelProps={{
-          // Shift the label up and have it render upwards
-          dy: -8,
-          verticalAlignment: 'bottom',
-        }}
+        labelPosition="top"
       />
     </LineChart>
   );
@@ -1758,7 +1750,7 @@ function ServiceAvailability() {
       />
       <Line
         curve="stepAfter"
-        renderPoints={(props) => ({
+        points={(props) => ({
           ...props,
           fill: theme.color.bg,
           stroke: props.fill,

@@ -279,7 +279,7 @@ export const InteractiveChartText = () => {
         <LineChart
           enableScrubbing={false}
           height={CHART_HEIGHT}
-          renderPoints={() => true}
+          points
           series={[
             {
               id: 'sample-data',

@@ -43,7 +43,7 @@ import { BarChart, type BarComponentProps, BarPlot } from '../../bar';
 import { CartesianChart } from '../../CartesianChart';
 import { useCartesianChartContext } from '../../ChartProvider';
 import { PeriodSelector, PeriodSelectorActiveIndicator } from '../../PeriodSelector';
-import { Point } from '../../Point';
+import { Point } from '../../point';
 import {
   DefaultScrubberBeacon,
   DefaultScrubberBeaconLabel,
@@ -171,6 +171,7 @@ function DataFormat() {
   return (
     <LineChart
       enableScrubbing
+      points
       showArea
       showXAxis
       showYAxis
@@ -179,7 +180,6 @@ function DataFormat() {
       height={200}
       inset={{ top: 16, right: 16, bottom: 0, left: 0 }}
       onScrubberPositionChange={setScrubberPosition}
-      renderPoints={() => true}
       series={[
         {
           id: 'line',
@@ -294,9 +294,6 @@ function MissingData() {
       showArea
       showXAxis
       showYAxis
-      height={200}
-      // You can render points at every valid data point by always returning true
-      renderPoints={() => true}
       series={[
         {
           id: 'pageViews',
@@ -321,6 +318,9 @@ function MissingData() {
         showGrid: true,
         tickLabelFormatter: numberFormatter,
       }}
+      height={200}
+      // You can render points at every valid data point by always returning true
+      points
     >
       {/* We can offset the overlay to account for the points being drawn on the lines */}
       <Scrubber overlayOffset={6} />
@@ -373,7 +373,7 @@ function Points() {
     >
       <Area fill={`rgb(${theme.spectrum.blue5})`} seriesId="prices" />
       <Line
-        renderPoints={({ dataX, dataY, ...props }) =>
+        points={({ dataX, dataY, ...props }) =>
           keyMarketShiftIndices.includes(dataX)
             ? {
                 ...props,
@@ -615,9 +615,9 @@ function Gradients() {
         ))}
       </HStack>
       <LineChart
+        points
         showYAxis
         height={200}
-        renderPoints={() => true}
         series={[
           {
             id: 'continuousGradient',
@@ -780,21 +780,13 @@ function HighLowPrice() {
         dataX={minPriceIndex}
         dataY={minPrice}
         label={formatPrice(minPrice)}
-        labelProps={{
-          // Shift the label down and have it render downwards
-          dy: 8,
-          verticalAlignment: 'top',
-        }}
+        labelPosition="bottom"
       />
       <Point
         dataX={maxPriceIndex}
         dataY={maxPrice}
         label={formatPrice(maxPrice)}
-        labelProps={{
-          // Shift the label up and have it render upwards
-          dy: -8,
-          verticalAlignment: 'bottom',
-        }}
+        labelPosition="top"
       />
     </LineChart>
   );
@@ -1827,7 +1819,7 @@ function ServiceAvailability() {
       />
       <Line
         curve="stepAfter"
-        renderPoints={(props) => ({
+        points={(props) => ({
           ...props,
           fill: theme.color.bg,
           stroke: props.fill,
