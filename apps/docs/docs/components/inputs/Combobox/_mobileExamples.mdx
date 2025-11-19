@@ -30,3 +30,129 @@ function MultiSelect() {
   );
 }
 ```
+
+## Single Select
+
+Single selection combobox with an option to clear the current choice.
+
+```jsx
+function SingleSelect() {
+  const singleSelectOptions = [
+    { value: null, label: 'Remove selection' },
+    { value: '1', label: 'Option 1' },
+    { value: '2', label: 'Option 2' },
+    { value: '3', label: 'Option 3' },
+  ];
+  const [value, setValue] = useState(null);
+
+  return (
+    <Combobox
+      label="Single Select"
+      onChange={setValue}
+      options={singleSelectOptions}
+      placeholder="Search..."
+      value={value}
+    />
+  );
+}
+```
+
+## Controlled Search
+
+Manage the search text externally while letting the combobox stay in sync.
+
+```jsx
+function ControlledSearch() {
+  const { value, onChange } = useMultiSelect({ initialValue: [] });
+  const [searchText, setSearchText] = useState('');
+
+  const fruitOptions = [
+    { value: 'apple', label: 'Apple' },
+    { value: 'banana', label: 'Banana' },
+    { value: 'cherry', label: 'Cherry' },
+    { value: 'date', label: 'Date' },
+  ];
+
+  return (
+    <Combobox
+      label="Controlled search"
+      onChange={onChange}
+      onSearch={setSearchText}
+      options={fruitOptions}
+      placeholder="Type to search..."
+      searchText={searchText}
+      type="multi"
+      value={value}
+    />
+  );
+}
+```
+
+## Helper Text
+
+Use helper text to guide how many selections a user should make.
+
+```jsx
+function HelperTextExample() {
+  const { value, onChange } = useMultiSelect({ initialValue: [] });
+
+  const teamOptions = [
+    { value: 'john', label: 'John Smith', description: 'Engineering' },
+    { value: 'jane', label: 'Jane Doe', description: 'Design' },
+    { value: 'bob', label: 'Bob Johnson', description: 'Product' },
+    { value: 'alice', label: 'Alice Williams', description: 'Engineering' },
+  ];
+
+  return (
+    <Combobox
+      helperText="Select up to 4 team members"
+      label="Team members"
+      onChange={onChange}
+      options={teamOptions}
+      placeholder="Search team members..."
+      type="multi"
+      value={value}
+    />
+  );
+}
+```
+
+## Label Variants
+
+Demonstrate both outside and inside label placements for different layouts.
+
+```jsx
+function LabelVariants() {
+  const outside = useMultiSelect({ initialValue: [] });
+  const inside = useMultiSelect({ initialValue: [] });
+
+  const fruitOptions = [
+    { value: 'apple', label: 'Apple' },
+    { value: 'banana', label: 'Banana' },
+    { value: 'cherry', label: 'Cherry' },
+  ];
+
+  return (
+    <>
+      <Combobox
+        label="Outside label"
+        labelVariant="outside"
+        onChange={outside.onChange}
+        options={fruitOptions}
+        placeholder="Label sits above..."
+        type="multi"
+        value={outside.value}
+      />
+      <Combobox
+        label="Inside label"
+        labelVariant="inside"
+        onChange={inside.onChange}
+        options={fruitOptions}
+        placeholder="Label sits inside..."
+        type="multi"
+        value={inside.value}
+      />
+    </>
+  );
+}
+```

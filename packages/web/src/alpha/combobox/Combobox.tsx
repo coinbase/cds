@@ -1,25 +1,18 @@
-import {
-  forwardRef,
-  memo,
-  useCallback,
-  useImperativeHandle,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import { forwardRef, memo, useImperativeHandle, useMemo, useRef, useState } from 'react';
 import Fuse from 'fuse.js';
 
 import { NativeInput } from '../../controls/NativeInput';
 import { DefaultSelectControl } from '../select/DefaultSelectControl';
-import {
-  Select,
-  type SelectBaseProps,
-  type SelectControlProps,
-  type SelectOption,
-  type SelectProps,
-  type SelectRef,
-  type SelectType,
+import type {
+  SelectBaseProps,
+  SelectControlComponent,
+  SelectControlProps,
+  SelectOption,
+  SelectProps,
+  SelectRef,
+  SelectType,
 } from '../select/Select';
+import { Select } from '../select/Select';
 
 export type ComboboxControlProps<
   Type extends SelectType = 'single',
@@ -143,43 +136,48 @@ const ComboboxBase = memo(
       const valueRef = useRef(value);
       valueRef.current = value;
 
-      const ComboboxControl = useCallback(
-        (props: SelectControlProps<Type, SelectOptionValue>) => (
-          <SelectControlComponent
-            ref={controlRef.current?.refs.setReference}
-            {...props}
-            contentNode={
-              <NativeInput
-                onChange={(event) => setSearchText(event.target.value)}
-                onKeyDown={(event) => {
-                  event.stopPropagation();
-                  if (
-                    event.key === 'Enter' ||
-                    (event.key.length === 1 && /[a-zA-Z0-9]/.test(event.key))
-                  ) {
-                    setOpen(true);
-                  }
-                }}
-                placeholder={typeof placeholder === 'string' ? placeholder : undefined}
-                style={{
-                  padding: 0,
-                  paddingTop: valueRef.current?.length && valueRef.current?.length > 0 ? 8 : 0,
-                  width: '100%',
-                }}
-                value={searchTextRef.current}
+      const ComboboxControl = useMemo(
+        () =>
+          forwardRef<HTMLDivElement, SelectControlProps<Type, SelectOptionValue>>(
+            (props: SelectControlProps<Type, SelectOptionValue>) => (
+              <SelectControlComponent
+                ref={controlRef.current?.refs.setReference}
+                {...props}
+                contentNode={
+                  <NativeInput
+                    onChange={(event) => setSearchText(event.target.value)}
+                    onKeyDown={(event) => {
+                      event.stopPropagation();
+                      if (
+                        event.key === 'Enter' ||
+                        (event.key.length === 1 && /[a-zA-Z0-9]/.test(event.key))
+                      ) {
+                        setOpen(true);
+                      }
+                    }}
+                    placeholder={typeof placeholder === 'string' ? placeholder : undefined}
+                    style={{
+                      padding: 0,
+                      paddingTop: valueRef.current?.length && valueRef.current?.length > 0 ? 8 : 0,
+                      width: '100%',
+                    }}
+                    value={searchTextRef.current}
+                  />
+                }
+                options={options}
+                placeholder={null}
               />
-            }
-            options={options}
-            placeholder={null}
-          />
-        ),
+            ),
+          ),
         [SelectControlComponent, options, placeholder, setOpen, setSearchText],
       );
 
       return (
         <Select
           ref={controlRef}
-          SelectControlComponent={ComboboxControl}
+          SelectControlComponent={
+            ComboboxControl as SelectControlComponent<Type, SelectOptionValue>
+          }
           accessibilityLabel={accessibilityLabel}
           defaultOpen={defaultOpen}
           onChange={(value) => onChange?.(value)}

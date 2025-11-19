@@ -126,6 +126,32 @@ export const SingleSelect = () => {
   );
 };
 
+export const MultipleComboboxes = () => {
+  const { value, onChange } = useMultiSelect({ initialValue: [] });
+  const { value: insideValue, onChange: insideOnChange } = useMultiSelect({ initialValue: [] });
+
+  return (
+    <VStack gap={4}>
+      <Combobox
+        label="Fruits"
+        onChange={onChange}
+        options={fruitOptions}
+        placeholder="Search fruits..."
+        type="multi"
+        value={value}
+      />
+      <Combobox
+        label="Inside"
+        onChange={insideOnChange}
+        options={fruitOptions}
+        placeholder="Search fruits..."
+        type="multi"
+        value={insideValue}
+      />
+    </VStack>
+  );
+};
+
 export const InitialValues = () => {
   const { value, onChange } = useMultiSelect({
     initialValue: ['apple', 'banana', 'cherry'],

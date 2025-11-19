@@ -36,3 +36,113 @@ const fruitOptions: SelectOption[] = [
   );
 }
 ```
+
+## Single Select
+
+Standard single-selection combobox with an option to clear the current value.
+
+```jsx live
+function SingleSelect() {
+  const singleSelectOptions = [
+    { value: null, label: 'Remove selection' },
+    { value: 'apple', label: 'Apple' },
+    { value: 'banana', label: 'Banana' },
+    { value: 'cherry', label: 'Cherry' },
+    { value: 'date', label: 'Date' },
+  ];
+
+  const [value, setValue] = useState('apple');
+
+  return (
+    <Combobox
+      label="Favorite fruit"
+      onChange={setValue}
+      options={singleSelectOptions}
+      placeholder="Search fruits..."
+      value={value}
+    />
+  );
+}
+```
+
+## Helper Text
+
+Communicate limits or guidance by pairing helper text with multi-select usage.
+
+```jsx live
+function HelperText() {
+const fruitOptions: SelectOption[] = [
+  { value: 'apple', label: 'Apple' },
+  { value: 'banana', label: 'Banana' },
+  { value: 'cherry', label: 'Cherry' },
+  { value: 'date', label: 'Date' },
+  { value: 'elderberry', label: 'Elderberry' },
+  { value: 'fig', label: 'Fig' },
+  { value: 'grape', label: 'Grape' },
+  { value: 'honeydew', label: 'Honeydew' },
+  { value: 'kiwi', label: 'Kiwi' },
+  { value: 'lemon', label: 'Lemon' },
+  { value: 'mango', label: 'Mango' },
+  { value: 'orange', label: 'Orange' },
+  { value: 'papaya', label: 'Papaya' },
+  { value: 'raspberry', label: 'Raspberry' },
+  { value: 'strawberry', label: 'Strawberry' },
+];
+
+  const { value, onChange } = useMultiSelect({ initialValue: ['apple', 'banana'] });
+
+  return (
+      <Combobox
+      helperText="Choose more than one fruit"
+        label="Select fruits"
+        onChange={onChange}
+        options={fruitOptions}
+        placeholder="Search and select fruits..."
+        type="multi"
+        value={value}
+      />
+  );
+}
+```
+
+## Label Variants
+
+Switch between outside and inside label placements to best fit the layout.
+
+```jsx live
+function LabelVariants() {
+  const { value, onChange } = useMultiSelect({ initialValue: [] });
+  const { value: insideValue, onChange: insideOnChange } = useMultiSelect({ initialValue: [] });
+
+  const fruitOptions = [
+    { value: 'apple', label: 'Apple' },
+    { value: 'banana', label: 'Banana' },
+    { value: 'cherry', label: 'Cherry' },
+    { value: 'date', label: 'Date' },
+    { value: 'elderberry', label: 'Elderberry' },
+  ];
+
+  return (
+    <VStack gap={2}>
+      <Combobox
+        label="Outside label"
+        labelVariant="outside"
+        onChange={onChange}
+        options={fruitOptions}
+        placeholder="Label sits above"
+        value={value}
+        type="multi"
+      />
+      <Combobox
+        label="Inside label"
+        labelVariant="inside"
+        onChange={insideOnChange}
+        options={fruitOptions}
+        placeholder="Label sits inside"
+        value={insideValue}
+        type="multi"
+      />
+    </VStack>
+  );
+}
+```
