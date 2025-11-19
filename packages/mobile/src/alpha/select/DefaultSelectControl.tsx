@@ -195,7 +195,7 @@ export const DefaultSelectControlComponent = memo(
                     compact
                     accessibilityLabel={`${removeSelectedOptionAccessibilityLabel} ${accessibilityLabel}`}
                     borderWidth={0}
-                    disabled={option.disabled}
+                    disabled={disabled || option.disabled}
                     invertColorScheme={false}
                     maxWidth={200}
                     onPress={(event) => {
@@ -241,6 +241,7 @@ export const DefaultSelectControlComponent = memo(
         maxSelectedOptionsToShow,
         hiddenSelectedOptionsLabel,
         removeSelectedOptionAccessibilityLabel,
+        disabled,
         onChange,
       ]);
 
@@ -316,7 +317,7 @@ export const DefaultSelectControlComponent = memo(
       const endNode = useMemo(
         () => (
           <HStack alignItems="center" paddingX={2} style={styles?.controlEndNode}>
-            <Pressable onPress={() => setOpen((s) => !s)}>
+            <Pressable disabled={disabled} onPress={() => setOpen((s) => !s)}>
               {customEndNode ? (
                 customEndNode
               ) : (
@@ -328,7 +329,7 @@ export const DefaultSelectControlComponent = memo(
             </Pressable>
           </HStack>
         ),
-        [open, variant, setOpen, customEndNode, styles?.controlEndNode],
+        [open, variant, setOpen, customEndNode, styles?.controlEndNode, disabled],
       );
 
       return (

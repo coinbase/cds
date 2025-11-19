@@ -83,6 +83,7 @@ const ComboboxBase = memo(
         setOpen: setOpenProp,
         label,
         placeholder,
+        disabled,
         accessibilityLabel = 'Combobox control',
         defaultOpen,
         searchText: searchTextProp,
@@ -154,9 +155,9 @@ const ComboboxBase = memo(
             {...props}
             contentNode={
               <NativeInput
-                disabled={!open}
+                disabled={disabled || !open}
                 onChangeText={(text) => setSearchText(text)}
-                onPress={() => setOpen(true)}
+                onPress={() => !disabled && setOpen(true)}
                 placeholder={typeof placeholder === 'string' ? placeholder : undefined}
                 style={{
                   padding: 0,
@@ -170,7 +171,7 @@ const ComboboxBase = memo(
             placeholder={null}
           />
         ),
-        [SelectControlComponent, open, placeholder, setOpen, setSearchText],
+        [SelectControlComponent, disabled, open, placeholder, setOpen, setSearchText],
       );
 
       // Store filtered options in a ref to avoid recreating the dropdown
@@ -202,6 +203,7 @@ const ComboboxBase = memo(
           SelectDropdownComponent={ComboboxDropdownComponent}
           accessibilityLabel={accessibilityLabel}
           defaultOpen={defaultOpen}
+          disabled={disabled}
           label={label}
           onChange={(value) => onChange?.(value)}
           open={open}
