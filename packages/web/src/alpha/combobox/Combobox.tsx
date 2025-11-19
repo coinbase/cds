@@ -130,35 +130,6 @@ const ComboboxBase = memo(
         return fuse.search(searchText).map((result) => result.item);
       }, [filterFunction, fuse, options, searchText]);
 
-      // const control = (
-      //   <ComboboxControlComponent
-      //     ref={controlRef.current?.refs.setReference}
-      //     accessibilityLabel={accessibilityLabel}
-      //     ariaHaspopup={accessibilityRoles?.dropdown}
-      //     classNames={classNames}
-      //     compact={compact}
-      //     disabled={disabled}
-      //     endNode={endNode}
-      //     helperText={helperText}
-      //     hiddenSelectedOptionsLabel={hiddenSelectedOptionsLabel}
-      //     label={label}
-      //     labelVariant={labelVariant}
-      //     maxSelectedOptionsToShow={maxSelectedOptionsToShow}
-      //     onChange={(value) => onChange?.(value)}
-      //     onSearch={setSearchText}
-      //     open={open}
-      //     options={options}
-      //     placeholder={placeholder}
-      //     removeSelectedOptionAccessibilityLabel={removeSelectedOptionAccessibilityLabel}
-      //     searchText={searchText}
-      //     setOpen={setOpen}
-      //     startNode={startNode}
-      //     styles={styles}
-      //     value={value}
-      //     variant={variant}
-      //   />
-      // );
-
       useImperativeHandle(ref, () =>
         Object.assign(controlRef.current as ComboboxRef, {
           open,
