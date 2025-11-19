@@ -28,58 +28,15 @@ const innerPointCss = css`
   }
 `;
 
-/**
- * Parameters passed to renderPoints callback function.
- */
-export type RenderPointsParams = {
+export type PointBaseProps = SharedProps & {
   /**
-   * X coordinate in SVG pixel space.
-   */
-  x: number;
-  /**
-   * Y coordinate in SVG pixel space.
-   */
-  y: number;
-  /**
-   * X coordinate in data space (usually same as index).
+   * X coordinate in data space (not pixel coordinates).
    */
   dataX: number;
   /**
-   * Y coordinate in data space (same as value).
+   * Y coordinate in data space (not pixel coordinates).
    */
   dataY: number;
-  /**
-   * Fill for the point
-   */
-  fill: string;
-};
-
-/**
- * Props for point label components.
- */
-export type PointLabelProps = RenderPointsParams & {
-  /**
-   * Position of the label relative to the point.
-   * @default 'center'
-   */
-  position?: PointLabelPosition;
-  /**
-   * Distance in pixels to offset the label from the point.
-   */
-  offset?: number;
-  /**
-   * Content to display in the label.
-   */
-  children: ChartTextChildren;
-};
-
-export type PointLabelComponent = React.FC<PointLabelProps>;
-
-/**
- * Shared configuration for point appearance and behavior.
- * Used by line-associated points rendered via Line/LineChart components.
- */
-export type PointConfig = {
   /**
    * The fill color of the point.
    * @default 'var(--color-fgPrimary)'
@@ -100,13 +57,6 @@ export type PointConfig = {
    */
   opacity?: number;
   /**
-   * Handler for when the point is clicked.
-   */
-  onClick?: (
-    event: React.MouseEvent,
-    point: { x: number; y: number; dataX: number; dataY: number },
-  ) => void;
-  /**
    * Color of the outer stroke around the point.
    * @default 'var(--color-bg)'
    */
@@ -118,55 +68,51 @@ export type PointConfig = {
    */
   strokeWidth?: number;
   /**
-   * Custom class name for the point.
+   * When set, overrides the chart's animation setting for this specific point.
    */
-  className?: string;
+  animate?: boolean;
+};
+
+/**
+ * Props for point label components.
+ */
+export type PointLabelProps = {
   /**
-   * Custom styles for the point.
+   * X coordinate in SVG pixel space.
    */
-  style?: React.CSSProperties;
+  x: number;
   /**
-   * Accessibility label for screen readers to describe the point.
-   * If not provided, a default label will be generated using the data coordinates.
+   * Y coordinate in SVG pixel space.
    */
-  accessibilityLabel?: string;
+  y: number;
   /**
-   * Simple text label to display at the point position.
-   * If provided, a label component will be automatically rendered.
+   * X coordinate in data space (usually same as index).
    */
-  label?: ChartTextChildren;
+  dataX: number;
   /**
-   * Custom component to render the label.
-   * @default DefaultPointLabel
+   * Y coordinate in data space (same as value).
    */
-  LabelComponent?: PointLabelComponent;
+  dataY: number;
+  /**
+   * Fill color for the point.
+   */
+  fill: string;
   /**
    * Position of the label relative to the point.
    * @default 'center'
    */
-  labelPosition?: PointLabelPosition;
+  position?: PointLabelPosition;
   /**
    * Distance in pixels to offset the label from the point.
-   * @default 2 * radius
    */
-  labelOffset?: number;
+  offset?: number;
+  /**
+   * Content to display in the label.
+   */
+  children: ChartTextChildren;
 };
 
-export type PointBaseProps = SharedProps &
-  PointConfig & {
-    /**
-     * X coordinate in data space (not pixel coordinates).
-     */
-    dataX: number;
-    /**
-     * Y coordinate in data space (not pixel coordinates).
-     */
-    dataY: number;
-    /**
-     * When set, overrides the chart's animation setting for this specific point.
-     */
-    animate?: boolean;
-  };
+export type PointLabelComponent = React.FC<PointLabelProps>;
 
 export type PointProps = PointBaseProps &
   Omit<
@@ -199,6 +145,21 @@ export type PointProps = PointBaseProps &
     | 'onKeyDown'
   > & {
     /**
+     * Handler for when the point is clicked.
+     */
+    onClick?: (
+      event: React.MouseEvent,
+      point: { x: number; y: number; dataX: number; dataY: number },
+    ) => void;
+    /**
+     * Custom class name for the point.
+     */
+    className?: string;
+    /**
+     * Custom styles for the point.
+     */
+    style?: React.CSSProperties;
+    /**
      * Custom class names for the component.
      */
     classNames?: {
@@ -224,6 +185,31 @@ export type PointProps = PointBaseProps &
        */
       point?: React.CSSProperties;
     };
+    /**
+     * Accessibility label for screen readers to describe the point.
+     * If not provided, a default label will be generated using the data coordinates.
+     */
+    accessibilityLabel?: string;
+    /**
+     * Simple text label to display at the point position.
+     * If provided, a label component will be automatically rendered.
+     */
+    label?: ChartTextChildren;
+    /**
+     * Custom component to render the label.
+     * @default DefaultPointLabel
+     */
+    LabelComponent?: PointLabelComponent;
+    /**
+     * Position of the label relative to the point.
+     * @default 'center'
+     */
+    labelPosition?: PointLabelPosition;
+    /**
+     * Distance in pixels to offset the label from the point.
+     * @default 2 * radius
+     */
+    labelOffset?: number;
     /**
      * Transition configuration for animation.
      * @default defaultTransition

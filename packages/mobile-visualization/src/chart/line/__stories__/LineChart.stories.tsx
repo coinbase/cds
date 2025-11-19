@@ -171,6 +171,7 @@ function DataFormat() {
   return (
     <LineChart
       enableScrubbing
+      points
       showArea
       showXAxis
       showYAxis
@@ -179,7 +180,6 @@ function DataFormat() {
       height={200}
       inset={{ top: 16, right: 16, bottom: 0, left: 0 }}
       onScrubberPositionChange={setScrubberPosition}
-      renderPoints={() => true}
       series={[
         {
           id: 'line',
@@ -290,9 +290,6 @@ function MissingData() {
       showArea
       showXAxis
       showYAxis
-      height={200}
-      // You can render points at every valid data point by always returning true
-      renderPoints={() => true}
       series={[
         {
           id: 'pageViews',
@@ -317,6 +314,9 @@ function MissingData() {
         showGrid: true,
         tickLabelFormatter: numberFormatter,
       }}
+      height={200}
+      // You can render points at every valid data point by always returning true
+      points
     >
       {/* We can offset the overlay to account for the points being drawn on the lines */}
       <Scrubber overlayOffset={6} />
@@ -369,7 +369,7 @@ function Points() {
     >
       <Area fill={`rgb(${theme.spectrum.blue5})`} seriesId="prices" />
       <Line
-        renderPoints={({ dataX, dataY, ...props }) =>
+        points={({ dataX, dataY, ...props }) =>
           keyMarketShiftIndices.includes(dataX)
             ? {
                 ...props,
@@ -611,9 +611,9 @@ function Gradients() {
         ))}
       </HStack>
       <LineChart
+        points
         showYAxis
         height={200}
-        renderPoints={() => true}
         series={[
           {
             id: 'continuousGradient',
@@ -1797,7 +1797,7 @@ function ServiceAvailability() {
       />
       <Line
         curve="stepAfter"
-        renderPoints={(props) => ({
+        points={(props) => ({
           ...props,
           fill: theme.color.bg,
           stroke: props.fill,

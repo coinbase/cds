@@ -64,7 +64,7 @@ export type BarChartProps = Omit<CartesianChartProps, 'xAxis' | 'yAxis' | 'serie
   };
 
 export const BarChart = memo(
-  forwardRef<SVGSVGElement, BarChartProps>(
+  forwardRef<HTMLDivElement, BarChartProps>(
     (
       {
         series,

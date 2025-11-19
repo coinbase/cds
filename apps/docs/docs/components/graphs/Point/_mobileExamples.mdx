@@ -2,7 +2,7 @@
 
 Points are visual markers that highlight specific data values on a chart. They can be used to emphasize important data points, show discrete values, or provide interactive elements.
 
-You can add points using `renderPoints` on Line or [LineChart](/components/graphs/LineChart).
+You can add points using `points` on Line or [LineChart](/components/graphs/LineChart).
 
 ```jsx
 <LineChart
@@ -10,7 +10,7 @@ You can add points using `renderPoints` on Line or [LineChart](/components/graph
   showArea
   showYAxis
   height={200}
-  renderPoints={() => true}
+  points
   series={[
     {
       id: 'prices',
@@ -88,7 +88,7 @@ function AssetPriceWithMinMax() {
       showArea
       areaType="dotted"
       height={200}
-      renderPoints={({ dataX, dataY }) => {
+      points={({ dataX, dataY }: PointBaseProps) => {
         const isMin = dataY === minPrice;
         const isMax = dataY === maxPrice;
 
@@ -124,7 +124,7 @@ function CustomizedPoints() {
       showArea
       showYAxis
       height={200}
-      renderPoints={({ dataX, dataY }) => {
+      points={({ dataX, dataY }) => {
         const isHighPerformance = dataY >= 90;
         const isLowPerformance = dataY < 75;
 

@@ -11,58 +11,15 @@ import { buildTransition, defaultTransition, type Transition } from '../utils/tr
 
 import { DefaultPointLabel } from './DefaultPointLabel';
 
-/**
- * Parameters passed to renderPoints callback function.
- */
-export type RenderPointsParams = {
+export type PointBaseProps = {
   /**
-   * X coordinate in SVG pixel space.
-   */
-  x: number;
-  /**
-   * Y coordinate in SVG pixel space.
-   */
-  y: number;
-  /**
-   * X coordinate in data space (usually same as index).
+   * X coordinate in data space (not pixel coordinates).
    */
   dataX: number;
   /**
-   * Y coordinate in data space (same as value).
+   * Y coordinate in data space (not pixel coordinates).
    */
   dataY: number;
-  /**
-   * Fill for the point
-   */
-  fill: string;
-};
-
-/**
- * Props for point label components.
- */
-export type PointLabelProps = RenderPointsParams & {
-  /**
-   * Position of the label relative to the point.
-   * @default 'center'
-   */
-  position?: PointLabelPosition;
-  /**
-   * Distance in pixels to offset the label from the point.
-   */
-  offset?: number;
-  /**
-   * Content to display in the label.
-   */
-  children: ChartTextChildren;
-};
-
-export type PointLabelComponent = ComponentType<PointLabelProps>;
-
-/**
- * Shared configuration for point appearance and behavior.
- * Used by line-associated points rendered via Line/LineChart components.
- */
-export type PointConfig = {
   /**
    * The fill color of the point.
    * @default theme.color.fgPrimary
@@ -94,6 +51,54 @@ export type PointConfig = {
    */
   strokeWidth?: number;
   /**
+   * When set, overrides the chart's animation setting for this specific point.
+   */
+  animate?: boolean;
+};
+
+/**
+ * Props for point label components.
+ */
+export type PointLabelProps = {
+  /**
+   * X coordinate in SVG pixel space.
+   */
+  x: number;
+  /**
+   * Y coordinate in SVG pixel space.
+   */
+  y: number;
+  /**
+   * X coordinate in data space (usually same as index).
+   */
+  dataX: number;
+  /**
+   * Y coordinate in data space (same as value).
+   */
+  dataY: number;
+  /**
+   * Fill color for the point.
+   */
+  fill: string;
+  /**
+   * Position of the label relative to the point.
+   * @default 'center'
+   */
+  position?: PointLabelPosition;
+  /**
+   * Distance in pixels to offset the label from the point.
+   */
+  offset?: number;
+  /**
+   * Content to display in the label.
+   */
+  children: ChartTextChildren;
+};
+
+export type PointLabelComponent = ComponentType<PointLabelProps>;
+
+export type PointProps = PointBaseProps & {
+  /**
    * Simple text label to display at the point position.
    * If provided, a label component will be automatically rendered.
    */
@@ -118,21 +123,6 @@ export type PointConfig = {
    * Defines how the point transitions when position or color changes.
    */
   transition?: Transition;
-};
-
-export type PointProps = PointConfig & {
-  /**
-   * X coordinate in data space (not pixel coordinates).
-   */
-  dataX: number;
-  /**
-   * Y coordinate in data space (not pixel coordinates).
-   */
-  dataY: number;
-  /**
-   * When set, overrides the chart's animation setting for this specific point.
-   */
-  animate?: boolean;
 };
 
 export const Point = memo<PointProps>(

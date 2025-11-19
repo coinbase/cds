@@ -5,7 +5,7 @@ import { m as motion, type Transition } from 'framer-motion';
 
 import { Area, type AreaComponent } from '../area/Area';
 import { useCartesianChartContext } from '../ChartProvider';
-import { Point, type PointConfig, type RenderPointsParams } from '../point';
+import { Point, type PointBaseProps, type PointProps } from '../point';
 import {
   accessoryFadeTransitionDelay,
   accessoryFadeTransitionDuration,
@@ -88,9 +88,9 @@ export type LineProps = Partial<
     type?: 'solid' | 'dotted';
     /**
      * Handler for when a point is clicked.
-     * Passed through to Point components rendered via renderPoints.
+     * Passed through to Point components rendered via points.
      */
-    onPointClick?: PointConfig['onClick'];
+    onPointClick?: PointProps['onClick'];
     /**
      * Whether to show area fill under the line.
      */
@@ -121,13 +121,17 @@ export type LineProps = Partial<
      */
     opacity?: number;
     /**
-     * Callback function to determine how to render points at each data point in the series.
-     * Called for every entry in the data array.
+     * Controls whether and how to render points at each data point in the series.
+     * - `true`: Show all points with default styling
+     * - `false` or `undefined`: Hide all points
+     * - Function: Called for every entry in the data array to customize individual points
      *
-     * @param params - Contains the data and pixel coordinates of the data point.
-     * @returns true for default point, false/null/undefined for no point, or PointConfig for custom point
+     * @param defaults - The default point props computed by the Line component
+     * @returns true for default point, false/null/undefined for no point, or Partial<PointProps> to customize
      */
-    renderPoints?: (params: RenderPointsParams) => boolean | null | undefined | PointConfig;
+    points?:
+      | boolean
+      | ((defaults: PointBaseProps) => boolean | null | undefined | Partial<PointProps>);
     /**
      * When true, the area is connected across null values.
      */
@@ -148,7 +152,7 @@ export const Line = memo<LineProps>(
     LineComponent: SelectedLineComponent,
     AreaComponent,
     opacity = 1,
-    renderPoints,
+    points,
     connectNulls,
     transition,
     gradient: gradientProp,
@@ -259,7 +263,7 @@ export const Line = memo<LineProps>(
           yAxisId={matchedSeries?.yAxisId}
           {...props}
         />
-        {renderPoints && (
+        {points && (
           <motion.g
             data-component="line-points-group"
             {...(animate
@@ -299,31 +303,42 @@ export const Line = memo<LineProps>(
                 }
               }
 
-              const point = renderPoints({
-                dataY: value,
+              // Build defaults that would be passed to Point
+              const defaults: PointBaseProps = {
                 dataX: xValue,
-                x: xScale?.(xValue) ?? 0,
-                y: yScale?.(value) ?? 0,
+                dataY: value,
                 fill: pointFill,
-              });
+                yAxisId: matchedSeries?.yAxisId,
+                opacity,
+                testID: undefined,
+              };
 
-              if (!point) return;
+              // If points is true, render with defaults
+              if (points === true) {
+                return (
+                  <Point
+                    key={`${seriesId}-${index}`}
+                    onClick={onPointClick}
+                    transition={transition}
+                    {...defaults}
+                  />
+                );
+              }
 
-              const pointConfig = typeof point === 'object' ? point : {};
+              // Call the function with defaults
+              const result = points(defaults);
 
-              // Use the updated fill (if applicable)
-              if (pointConfig.fill) pointFill = pointConfig.fill;
+              if (!result) return;
+
+              const pointConfig = result === true ? {} : result;
 
               return (
                 <Point
                   key={`${seriesId}-${index}`}
-                  dataX={xValue}
-                  dataY={value}
-                  {...pointConfig}
-                  fill={pointFill}
                   onClick={pointConfig.onClick ?? onPointClick}
-                  opacity={pointConfig.opacity ?? opacity}
                   transition={transition}
+                  {...defaults}
+                  {...pointConfig}
                 />
               );
             })}

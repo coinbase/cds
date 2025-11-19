@@ -22,7 +22,7 @@ export type LineSeries = Series &
       | 'strokeWidth'
       | 'strokeOpacity'
       | 'opacity'
-      | 'renderPoints'
+      | 'points'
       | 'connectNulls'
       | 'transition'
       | 'onPointClick'
@@ -38,7 +38,7 @@ export type LineChartProps = Omit<CartesianChartProps, 'xAxis' | 'yAxis' | 'seri
     | 'LineComponent'
     | 'AreaComponent'
     | 'curve'
-    | 'renderPoints'
+    | 'points'
     | 'strokeWidth'
     | 'strokeOpacity'
     | 'connectNulls'
@@ -74,7 +74,7 @@ export type LineChartProps = Omit<CartesianChartProps, 'xAxis' | 'yAxis' | 'seri
   };
 
 export const LineChart = memo(
-  forwardRef<SVGSVGElement, LineChartProps>(
+  forwardRef<HTMLDivElement, LineChartProps>(
     (
       {
         series,
@@ -85,7 +85,7 @@ export const LineChart = memo(
         LineComponent,
         AreaComponent,
         curve,
-        renderPoints,
+        points,
         strokeWidth,
         strokeOpacity,
         connectNulls,
@@ -180,7 +180,7 @@ export const LineChart = memo(
               curve={curve}
               onPointClick={onPointClick}
               opacity={opacity}
-              renderPoints={renderPoints}
+              points={points}
               seriesId={id}
               showArea={showArea}
               strokeOpacity={strokeOpacity}
