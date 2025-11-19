@@ -15,13 +15,14 @@ Scrubber can be used to provide horizontal interaction with a chart. As your mou
     },
   ]}
   xAxis={{
+    /* Give space between the scrubber and the axis / chart edge when it might pulse */
     range: ({ min, max }) => ({ min, max: max - 16 }),
   }}
   yAxis={{
     showGrid: true,
   }}
 >
-  <Scrubber />
+  <Scrubber idlePulse />
 </LineChart>
 ```
 
@@ -99,15 +100,25 @@ Setting `idlePulse` to `true` will cause the scrubber beacons to pulse when the 
 ```jsx live
 <LineChart
   enableScrubbing
+  showArea
   height={{ base: 150, tablet: 200, desktop: 250 }}
   series={[
     {
       id: 'prices',
       data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+      color: 'var(--color-fgPositive)',
     },
   ]}
-  showArea
+  xAxis={{
+    /* Give space between the scrubber and the axis / chart edge when it might pulse */
+    range: ({ min, max }) => ({ min, max: max - 16 }),
+  }}
 >
+  <ReferenceLine
+    LineComponent={(props) => <DottedLine {...props} strokeDasharray="0 16" strokeWidth={3} />}
+    dataY={10}
+    stroke="var(--color-fg)"
+  />
   <Scrubber idlePulse />
 </LineChart>
 ```
@@ -129,6 +140,10 @@ function ImperativeHandle() {
           },
         ]}
         showArea
+        xAxis={{
+          /* Give space between the scrubber and the axis / chart edge when it might pulse */
+          range: ({ min, max }) => ({ min, max: max - 16 }),
+        }}
       >
         <Scrubber ref={scrubberRef} />
       </LineChart>

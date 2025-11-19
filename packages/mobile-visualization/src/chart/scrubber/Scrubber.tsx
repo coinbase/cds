@@ -98,9 +98,15 @@ export type ScrubberBeaconProps = {
     update?: Transition;
     /**
      * Transition used for the pulse animation.
-     * @default { type: 'timing', duration: 1000 }
+     * @default { type: 'timing', duration: 1600, easing: Easing.bezier(0.0, 0.0, 0.0, 1.0) }
      */
     pulse?: Transition;
+    /**
+     * Delay, in milliseconds between pulse transitions
+     * when `idlePulse` is enabled.
+     * @default 400
+     */
+    pulseRepeatDelay?: number;
   };
 };
 

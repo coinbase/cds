@@ -14,11 +14,15 @@ Scrubber can be used to provide horizontal interaction with a chart. As you drag
   ]}
   showYAxis
   showArea
+  xAxis={{
+    /* Give space between the scrubber and the axis / chart edge when it might pulse */
+    range: ({ min, max }) => ({ min, max: max - 16 }),
+  }}
   yAxis={{
     showGrid: true,
   }}
 >
-  <Scrubber />
+  <Scrubber idlePulse />
 </LineChart>
 ```
 
@@ -67,7 +71,7 @@ setting `label` on Scrubber displays a label above the scrubber line.
 
 ## Pulsing
 
-Setting the `idlePulse` prop will cause the scrubber beacons to pulse when the user is not actively scrubbing.
+Setting `idlePulse` to `true` will cause the scrubber beacons to pulse when the user is not actively scrubbing.
 
 ```jsx
 <LineChart
@@ -77,10 +81,20 @@ Setting the `idlePulse` prop will cause the scrubber beacons to pulse when the u
     {
       id: 'prices',
       data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+      color: 'var(--color-fgPositive)',
     },
   ]}
   showArea
+  xAxis={{
+    /* Give space between the scrubber and the axis / chart edge when it might pulse */
+    range: ({ min, max }) => ({ min, max: max - 16 }),
+  }}
 >
+  <ReferenceLine
+    LineComponent={(props) => <DottedLine {...props} dashIntervals={[0, 16]} strokeWidth={3} />}
+    dataY={10}
+    stroke="var(--color-fg)"
+  />
   <Scrubber idlePulse />
 </LineChart>
 ```
@@ -88,30 +102,35 @@ Setting the `idlePulse` prop will cause the scrubber beacons to pulse when the u
 You can also use the imperative handle to pulse the scrubber beacons programmatically.
 
 ```jsx
-const scrubberRef = useRef(null);
-
-return (
-  <VStack gap={2}>
-    <LineChart
-      enableScrubbing
-      height={150}
-      series={[
-        {
-          id: 'prices',
-          data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
-        },
-      ]}
-      showYAxis
-      showArea
-      yAxis={{
-        showGrid: true,
-      }}
-    >
-      <Scrubber ref={scrubberRef} />
-    </LineChart>
-    <Button onPress={() => scrubberRef.current?.pulse()}>Pulse</Button>
-  </VStack>
-);
+function ImperativeHandle() {
+  const scrubberRef = useRef(null);
+  return (
+    <VStack gap={2}>
+      <LineChart
+        enableScrubbing
+        height={150}
+        series={[
+          {
+            id: 'prices',
+            data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+          },
+        ]}
+        showYAxis
+        showArea
+        xAxis={{
+          /* Give space between the scrubber and the axis / chart edge when it might pulse */
+          range: ({ min, max }) => ({ min, max: max - 16 }),
+        }}
+        yAxis={{
+          showGrid: true,
+        }}
+      >
+        <Scrubber ref={scrubberRef} />
+      </LineChart>
+      <Button onPress={() => scrubberRef.current?.pulse()}>Pulse</Button>
+    </VStack>
+  );
+}
 ```
 
 ## Styling
