@@ -13,7 +13,6 @@ import { XAxis, YAxis } from '../axis';
 import { BarPlot } from '../bar/BarPlot';
 import { useCartesianChartContext } from '../ChartProvider';
 import { Line } from '../line/Line';
-import { Point } from '../Point';
 import { Scrubber } from '../scrubber/Scrubber';
 import { type GradientDefinition, isCategoricalScale } from '../utils';
 import { CartesianChart, DottedArea, ReferenceLine, SolidLine, type SolidLineProps } from '../';

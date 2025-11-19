@@ -1,14 +1,14 @@
-import React, { memo, useMemo } from 'react';
-import type { SVGProps } from 'react';
+import React, { type ComponentType, memo, type SVGProps, useMemo } from 'react';
 import type { SharedProps } from '@coinbase/cds-common/types';
 import { cx } from '@coinbase/cds-web';
 import { css } from '@linaria/core';
 import { m as motion, type Transition } from 'framer-motion';
 
-import type { ChartTextChildren } from './text/ChartText';
-import { useCartesianChartContext } from './ChartProvider';
-import { ChartText, type ChartTextProps } from './text';
-import { projectPoint } from './utils';
+import { useCartesianChartContext } from '../ChartProvider';
+import type { ChartTextChildren } from '../text/ChartText';
+import { type PointLabelPosition, projectPoint } from '../utils';
+
+import { DefaultPointLabel } from './DefaultPointLabel';
 
 const containerCss = css`
   outline: none;
@@ -55,17 +55,40 @@ export type RenderPointsParams = {
 };
 
 /**
+ * Props for point label components.
+ */
+export type PointLabelProps = RenderPointsParams & {
+  /**
+   * Position of the label relative to the point.
+   * @default 'center'
+   */
+  position?: PointLabelPosition;
+  /**
+   * Distance in pixels to offset the label from the point.
+   * @default 0
+   */
+  offset?: number;
+  /**
+   * Content to display in the label.
+   */
+  children: ChartTextChildren;
+};
+
+export type PointLabelComponent = React.FC<PointLabelProps>;
+
+/**
  * Shared configuration for point appearance and behavior.
  * Used by line-associated points rendered via Line/LineChart components.
  */
 export type PointConfig = {
   /**
    * The fill color of the point.
+   * @default 'var(--color-fgPrimary)'
    */
   fill?: string;
   /**
    * Optional Y-axis id to specify which axis to plot along.
-   * Defaults to the first y-axis
+   * @default first y-axis defined in chart props.
    */
   yAxisId?: string;
   /**
@@ -110,19 +133,28 @@ export type PointConfig = {
   accessibilityLabel?: string;
   /**
    * Simple text label to display at the point position.
-   * If provided, a ChartText will be automatically rendered.
+   * If provided, a label component will be automatically rendered.
    */
   label?: ChartTextChildren;
   /**
-   * Configuration for the automatically rendered label.
-   * Only used when `label` prop is provided.
+   * Custom component to render the label.
+   * @default DefaultPointLabel
    */
-  labelProps?: Omit<ChartTextProps, 'x' | 'y' | 'children'>;
+  LabelComponent?: PointLabelComponent;
+  /**
+   * Position of the label relative to the point.
+   * @default 'center'
+   */
+  labelPosition?: PointLabelPosition;
+  /**
+   * Distance in pixels to offset the label from the point.
+   * @default 2 * radius
+   */
+  labelOffset?: number;
 };
 
-export type PointProps = SharedProps &
-  PointConfig &
-  Omit<SVGProps<SVGCircleElement>, 'onClick'> & {
+export type PointBaseProps = SharedProps &
+  PointConfig & {
     /**
      * X coordinate in data space (not pixel coordinates).
      */
@@ -132,23 +164,49 @@ export type PointProps = SharedProps &
      */
     dataY: number;
     /**
-     * Coordinates in SVG pixel space.
-     * Overrides dataX and dataY for pixel coordinate calculation.
-     */
-    pixelCoordinates?: { x: number; y: number };
-    /**
-     * Override the chart's animation setting for this specific point.
-     * When undefined, uses the chart context's animation setting.
+     * When set, overrides the chart's animation setting for this specific point.
      */
     animate?: boolean;
+  };
+
+export type PointProps = PointBaseProps &
+  Omit<
+    SVGProps<SVGCircleElement>,
+    | 'onClick'
+    | 'onAnimationStart'
+    | 'onAnimationEnd'
+    | 'onAnimationIteration'
+    | 'onAnimationStartCapture'
+    | 'onAnimationEndCapture'
+    | 'onAnimationIterationCapture'
+    | 'onDrag'
+    | 'onDragEnd'
+    | 'onDragStart'
+    | 'onDragCapture'
+    | 'onDragEndCapture'
+    | 'onDragStartCapture'
+    | 'cx'
+    | 'cy'
+    | 'r'
+    | 'fill'
+    | 'stroke'
+    | 'strokeWidth'
+    | 'opacity'
+    | 'className'
+    | 'style'
+    | 'aria-label'
+    | 'role'
+    | 'tabIndex'
+    | 'onKeyDown'
+  > & {
     /**
      * Custom class names for the component.
      */
     classNames?: {
       /**
-       * Custom class name for the point container element.
+       * Custom class name for the point root element.
        */
-      container?: string;
+      root?: string;
       /**
        * Custom class name for the inner circle element.
        */
@@ -159,9 +217,9 @@ export type PointProps = SharedProps &
      */
     styles?: {
       /**
-       * Custom styles for the point container element.
+       * Custom styles for the point root element.
        */
-      container?: React.CSSProperties;
+      root?: React.CSSProperties;
       /**
        * Custom styles for the inner circle element.
        */
@@ -169,13 +227,7 @@ export type PointProps = SharedProps &
     };
     /**
      * Transition configuration for animation.
-     *
-     * @example
-     * transition={{
-     *   type: 'tween',
-     *   duration: 0.3,
-     *   ease: 'easeInOut'
-     * }}
+     * @default defaultTransition
      */
     transition?: Transition;
   };
@@ -197,9 +249,10 @@ export const Point = memo<PointProps>(
     strokeWidth = 2,
     accessibilityLabel,
     label,
-    labelProps,
+    LabelComponent = DefaultPointLabel,
+    labelPosition = 'center',
+    labelOffset = radius * 2,
     testID,
-    pixelCoordinates,
     animate: animateProp,
     transition,
     ...svgProps
@@ -216,10 +269,6 @@ export const Point = memo<PointProps>(
     const yScale = getYScale(yAxisId);
 
     const pixelCoordinate = useMemo(() => {
-      if (pixelCoordinates) {
-        return pixelCoordinates;
-      }
-
       if (!xScale || !yScale) {
         return { x: 0, y: 0 };
       }
@@ -230,7 +279,7 @@ export const Point = memo<PointProps>(
         xScale,
         yScale,
       });
-    }, [xScale, yScale, dataX, dataY, pixelCoordinates]);
+    }, [xScale, yScale, dataX, dataY]);
 
     const isWithinDrawingArea = useMemo(() => {
       if (!pixelCoordinate) return false;
@@ -292,7 +341,7 @@ export const Point = memo<PointProps>(
             strokeWidth={strokeWidth}
             style={mergedStyles}
             tabIndex={onClick ? 0 : -1}
-            {...(svgProps as any)}
+            {...svgProps}
           />
         );
       }
@@ -326,7 +375,7 @@ export const Point = memo<PointProps>(
           variants={variants}
           whileHover={onClick ? 'hovered' : 'default'}
           whileTap={onClick ? 'pressed' : 'default'}
-          {...(svgProps as any)}
+          {...svgProps}
         />
       );
     }, [
@@ -356,17 +405,25 @@ export const Point = memo<PointProps>(
     return (
       <g opacity={isWithinDrawingArea ? 1 : 0}>
         <g
-          className={cx(containerCss, classNames?.container)}
+          className={cx(containerCss, classNames?.root)}
           data-testid={testID}
           opacity={opacity}
-          style={styles?.container}
+          style={styles?.root}
         >
           {innerPoint}
         </g>
         {label && (
-          <ChartText x={pixelCoordinate.x} y={pixelCoordinate.y} {...labelProps}>
+          <LabelComponent
+            dataX={dataX}
+            dataY={dataY}
+            fill={fill}
+            offset={labelOffset}
+            position={labelPosition}
+            x={pixelCoordinate.x}
+            y={pixelCoordinate.y}
+          >
             {label}
-          </ChartText>
+          </LabelComponent>
         )}
       </g>
     );

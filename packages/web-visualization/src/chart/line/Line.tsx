@@ -5,7 +5,7 @@ import { m as motion, type Transition } from 'framer-motion';
 
 import { Area, type AreaComponent } from '../area/Area';
 import { useCartesianChartContext } from '../ChartProvider';
-import { Point, type PointConfig, type RenderPointsParams } from '../Point';
+import { Point, type PointConfig, type RenderPointsParams } from '../point';
 import {
   accessoryFadeTransitionDelay,
   accessoryFadeTransitionDuration,

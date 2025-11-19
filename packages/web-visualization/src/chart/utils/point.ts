@@ -1,4 +1,15 @@
+import type { TextHorizontalAlignment, TextVerticalAlignment } from '../text';
+
 import { type ChartScaleFunction, isCategoricalScale, isLogScale, isNumericScale } from './scale';
+
+/**
+ * Position a label should be placed relative to the point
+ *
+ * @example
+ * 'top' would have the label be located above the point itself,
+ * and thus the vertical alignment of that text would be bottom.
+ */
+export type PointLabelPosition = 'top' | 'bottom' | 'left' | 'right' | 'center';
 
 /**
  * Get a point from a data value and a scale.
@@ -130,4 +141,73 @@ export const projectPoints = ({
       yScale,
     });
   });
+};
+
+/**
+ * Determines text alignment based on label position.
+ * For example, a 'top' position needs the text aligned to the 'bottom' so it appears above the point.
+ */
+export const getAlignmentFromPosition = (
+  position: PointLabelPosition,
+): { horizontalAlignment: TextHorizontalAlignment; verticalAlignment: TextVerticalAlignment } => {
+  let horizontalAlignment: TextHorizontalAlignment = 'center';
+  let verticalAlignment: TextVerticalAlignment = 'middle';
+
+  switch (position) {
+    case 'top':
+      verticalAlignment = 'bottom';
+      break;
+    case 'bottom':
+      verticalAlignment = 'top';
+      break;
+    case 'left':
+      horizontalAlignment = 'right';
+      break;
+    case 'right':
+      horizontalAlignment = 'left';
+      break;
+    case 'center':
+    default:
+      horizontalAlignment = 'center';
+      verticalAlignment = 'middle';
+      break;
+  }
+
+  return { horizontalAlignment, verticalAlignment };
+};
+
+/**
+ * Calculates the final label coordinates by applying offset based on position.
+ */
+export const getLabelCoordinates = (
+  x: number,
+  y: number,
+  position: PointLabelPosition,
+  offset: number,
+): { x: number; y: number } => {
+  let dx = 0;
+  let dy = 0;
+
+  switch (position) {
+    case 'top':
+      dy = -offset;
+      break;
+    case 'bottom':
+      dy = offset;
+      break;
+    case 'left':
+      dx = -offset;
+      break;
+    case 'right':
+      dx = offset;
+      break;
+    case 'center':
+    default:
+      break;
+  }
+
+  return {
+    x: x + dx,
+    y: y + dy,
+  };
 };

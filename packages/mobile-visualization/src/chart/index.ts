@@ -8,7 +8,7 @@ export * from './gradient';
 export * from './line';
 export * from './Path';
 export * from './PeriodSelector';
-export * from './Point';
+export * from './point';
 export * from './scrubber';
 export * from './text';
 export * from './utils';

@@ -26,7 +26,6 @@ export type LineSeries = Series &
       | 'renderPoints'
       | 'connectNulls'
       | 'transition'
-      | 'onPointPress'
     >
   >;
 
@@ -44,7 +43,6 @@ export type LineChartProps = Omit<CartesianChartProps, 'xAxis' | 'yAxis' | 'seri
     | 'strokeOpacity'
     | 'connectNulls'
     | 'transition'
-    | 'onPointPress'
     | 'opacity'
   > & {
     /**
@@ -82,7 +80,6 @@ export const LineChart = memo(
         showArea,
         areaType,
         type,
-        onPointPress,
         LineComponent,
         AreaComponent,
         curve,
@@ -178,7 +175,6 @@ export const LineChart = memo(
               areaType={areaType}
               connectNulls={connectNulls}
               curve={curve}
-              onPointPress={onPointPress}
               opacity={opacity}
               renderPoints={renderPoints}
               seriesId={id}

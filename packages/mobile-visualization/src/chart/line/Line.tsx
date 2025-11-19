@@ -6,7 +6,7 @@ import { type AnimatedProp, Group } from '@shopify/react-native-skia';
 
 import { Area, type AreaComponent } from '../area/Area';
 import { useCartesianChartContext } from '../ChartProvider';
-import { Point, type PointConfig, type RenderPointsParams } from '../Point';
+import { Point, type PointConfig, type RenderPointsParams } from '../point';
 import {
   accessoryFadeTransitionDelay,
   accessoryFadeTransitionDuration,
@@ -117,11 +117,6 @@ export type LineProps = Partial<
      */
     opacity?: number;
     /**
-     * Handler for when a point is pressed.
-     * Passed through to Point components rendered via renderPoints.
-     */
-    onPointPress?: PointConfig['onPress'];
-    /**
      * Callback function to determine how to render points at each data point in the series.
      * Called for every entry in the data array.
      *
@@ -144,7 +139,6 @@ export const Line = memo<LineProps>(
     areaBaseline,
     stroke: specifiedStroke,
     strokeOpacity: strokeOpacityProp,
-    onPointPress,
     showArea,
     LineComponent: SelectedLineComponent,
     AreaComponent,
@@ -326,7 +320,6 @@ export const Line = memo<LineProps>(
                   transition={transition}
                   {...pointConfig}
                   fill={pointFill}
-                  onPress={pointConfig.onPress ?? onPointPress}
                   opacity={pointConfig.opacity ?? opacity}
                 />
               );

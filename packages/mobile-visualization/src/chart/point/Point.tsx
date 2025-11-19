@@ -1,15 +1,15 @@
-import { memo, useEffect, useMemo } from 'react';
+import { type ComponentType, memo, useEffect, useMemo } from 'react';
 import { cancelAnimation, useDerivedValue, useSharedValue } from 'react-native-reanimated';
 import { usePreviousValue } from '@coinbase/cds-common/hooks/usePreviousValue';
-import type { SharedProps } from '@coinbase/cds-common/types';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 import { Circle, type Color, Group, interpolateColors } from '@shopify/react-native-skia';
 
-import type { ChartTextChildren } from './text/ChartText';
-import { buildTransition, defaultTransition, type Transition } from './utils/transition';
-import { useCartesianChartContext } from './ChartProvider';
-import { ChartText, type ChartTextProps } from './text';
-import { projectPoint } from './utils';
+import { useCartesianChartContext } from '../ChartProvider';
+import type { ChartTextChildren } from '../text/ChartText';
+import { type PointLabelPosition, projectPoint } from '../utils';
+import { buildTransition, defaultTransition, type Transition } from '../utils/transition';
+
+import { DefaultPointLabel } from './DefaultPointLabel';
 
 /**
  * Parameters passed to renderPoints callback function.
@@ -38,17 +38,40 @@ export type RenderPointsParams = {
 };
 
 /**
+ * Props for point label components.
+ */
+export type PointLabelProps = RenderPointsParams & {
+  /**
+   * Position of the label relative to the point.
+   * @default 'center'
+   */
+  position?: PointLabelPosition;
+  /**
+   * Distance in pixels to offset the label from the point.
+   * @default 0
+   */
+  offset?: number;
+  /**
+   * Content to display in the label.
+   */
+  children: ChartTextChildren;
+};
+
+export type PointLabelComponent = ComponentType<PointLabelProps>;
+
+/**
  * Shared configuration for point appearance and behavior.
  * Used by line-associated points rendered via Line/LineChart components.
  */
 export type PointConfig = {
   /**
    * The fill color of the point.
+   * @default theme.color.fgPrimary
    */
   fill?: string;
   /**
    * Optional Y-axis id to specify which axis to plot along.
-   * Defaults to the first y-axis
+   * @default first y-axis defined in chart props.
    */
   yAxisId?: string;
   /**
@@ -60,11 +83,6 @@ export type PointConfig = {
    * Opacity of the point.
    */
   opacity?: number;
-  /**
-   * Handler for when the point is clicked.
-   * @note there is no way to add an accessibilityLabel inside of the chart
-   */
-  onPress?: (point: { x: number; y: number; dataX: number; dataY: number }) => void;
   /**
    * Color of the outer stroke around the point.
    * @default theme.color.bg
@@ -78,14 +96,24 @@ export type PointConfig = {
   strokeWidth?: number;
   /**
    * Simple text label to display at the point position.
-   * If provided, a ChartText will be automatically rendered.
+   * If provided, a label component will be automatically rendered.
    */
   label?: ChartTextChildren;
   /**
-   * Configuration for the automatically rendered label.
-   * Only used when `label` prop is provided.
+   * Custom component to render the label.
+   * @default DefaultPointLabel
    */
-  labelProps?: Omit<ChartTextProps, 'x' | 'y' | 'children'>;
+  LabelComponent?: PointLabelComponent;
+  /**
+   * Position of the label relative to the point.
+   * @default 'center'
+   */
+  labelPosition?: PointLabelPosition;
+  /**
+   * Distance in pixels to offset the label from the point.
+   * @default 2 * radius
+   */
+  labelOffset?: number;
   /**
    * Transition configuration for point animations.
    * Defines how the point transitions when position or color changes.
@@ -93,27 +121,21 @@ export type PointConfig = {
   transition?: Transition;
 };
 
-export type PointProps = SharedProps &
-  PointConfig & {
-    /**
-     * X coordinate in data space (not pixel coordinates).
-     */
-    dataX: number;
-    /**
-     * Y coordinate in data space (not pixel coordinates).
-     */
-    dataY: number;
-    /**
-     * Optional pixel coordinates to use instead of calculating from dataX/dataY.
-     * Useful for performance when coordinates are already calculated.
-     */
-    pixelCoordinates?: { x: number; y: number };
-    /**
-     * Override the chart's animation setting for this specific point.
-     * When undefined, uses the chart context's animation setting.
-     */
-    animate?: boolean;
-  };
+export type PointProps = PointConfig & {
+  /**
+   * X coordinate in data space (not pixel coordinates).
+   */
+  dataX: number;
+  /**
+   * Y coordinate in data space (not pixel coordinates).
+   */
+  dataY: number;
+  /**
+   * Override the chart's animation setting for this specific point.
+   * When undefined, uses the chart context's animation setting.
+   */
+  animate?: boolean;
+};
 
 export const Point = memo<PointProps>(
   ({
@@ -123,14 +145,13 @@ export const Point = memo<PointProps>(
     fill: fillProp,
     radius = 5,
     opacity,
-    onPress,
     stroke: strokeProp,
     strokeWidth = 2,
     label,
-    labelProps,
-    pixelCoordinates,
+    LabelComponent = DefaultPointLabel,
+    labelPosition = 'center',
+    labelOffset,
     transition = defaultTransition,
-    testID,
     animate: animateProp,
   }) => {
     const theme = useTheme();
@@ -150,12 +171,8 @@ export const Point = memo<PointProps>(
 
     const shouldAnimate = animate ?? false;
 
-    // Use provided pixelCoordinates or calculate from data coordinates
+    // Calculate pixel coordinates from data coordinates
     const pixelCoordinate = useMemo(() => {
-      if (pixelCoordinates) {
-        return pixelCoordinates;
-      }
-
       if (!xScale || !yScale) {
         return { x: 0, y: 0 };
       }
@@ -166,7 +183,7 @@ export const Point = memo<PointProps>(
         xScale,
         yScale,
       });
-    }, [pixelCoordinates, xScale, yScale, dataX, dataY]);
+    }, [xScale, yScale, dataX, dataY]);
 
     const previousPixelCoordinate = usePreviousValue(pixelCoordinate);
     const previousFill = usePreviousValue(fill);
@@ -239,6 +256,8 @@ export const Point = memo<PointProps>(
       return isWithinDrawingArea.value ? baseOpacity : 0;
     }, [isWithinDrawingArea, opacity]);
 
+    const offset = useMemo(() => labelOffset ?? radius * 2, [labelOffset, radius]);
+
     if (!xScale || !yScale) {
       return null;
     }
@@ -271,9 +290,17 @@ export const Point = memo<PointProps>(
             />
           </Group>
           {label && (
-            <ChartText x={pixelCoordinate.x} y={pixelCoordinate.y} {...labelProps}>
+            <LabelComponent
+              dataX={dataX}
+              dataY={dataY}
+              fill={fill}
+              offset={offset}
+              position={labelPosition}
+              x={pixelCoordinate.x}
+              y={pixelCoordinate.y}
+            >
               {label}
-            </ChartText>
+            </LabelComponent>
           )}
         </>
       );
@@ -291,9 +318,17 @@ export const Point = memo<PointProps>(
           <Circle c={animatedPoint} color={animatedFillColor} r={radius - strokeWidth / 2} />
         </Group>
         {label && (
-          <ChartText x={pixelCoordinate.x} y={pixelCoordinate.y} {...labelProps}>
+          <LabelComponent
+            dataX={dataX}
+            dataY={dataY}
+            fill={fill}
+            offset={offset}
+            position={labelPosition}
+            x={pixelCoordinate.x}
+            y={pixelCoordinate.y}
+          >
             {label}
-          </ChartText>
+          </LabelComponent>
         )}
       </>
     );

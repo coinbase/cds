@@ -43,7 +43,7 @@ import { BarChart, type BarComponentProps } from '../../bar';
 import { CartesianChart } from '../../CartesianChart';
 import { useCartesianChartContext } from '../../ChartProvider';
 import { PeriodSelector, PeriodSelectorActiveIndicator } from '../../PeriodSelector';
-import { Point } from '../../Point';
+import { Point } from '../../point';
 import {
   DefaultScrubberBeacon,
   DefaultScrubberBeaconLabel,
@@ -776,21 +776,13 @@ function HighLowPrice() {
         dataX={minPriceIndex}
         dataY={minPrice}
         label={formatPrice(minPrice)}
-        labelProps={{
-          // Shift the label down and have it render downwards
-          dy: 8,
-          verticalAlignment: 'top',
-        }}
+        labelPosition="bottom"
       />
       <Point
         dataX={maxPriceIndex}
         dataY={maxPrice}
         label={formatPrice(maxPrice)}
-        labelProps={{
-          // Shift the label up and have it render upwards
-          dy: -8,
-          verticalAlignment: 'bottom',
-        }}
+        labelPosition="top"
       />
     </LineChart>
   );
