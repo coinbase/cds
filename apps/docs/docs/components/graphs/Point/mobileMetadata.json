@@ -1,7 +1,7 @@
 {
   "import": "import { Point } from '@coinbase/cds-mobile-visualization'",
   "source": "https://github.com/coinbase/cds/blob/master/packages/mobile-visualization/src/chart/Point.tsx",
-  "description": "Visual markers that highlight specific data values on a chart. Points can be customized with different colors, sizes, and interactivity.",
+  "description": "Visual markers that highlight specific data values on a chart. Points can be customized with different colors, sizes, and labels.",
   "relatedComponents": [
     {
       "label": "CartesianChart",
@@ -14,8 +14,12 @@
   ],
   "dependencies": [
     {
-      "name": "react-native-svg",
-      "version": "^14.1.0"
+      "name": "@shopify/react-native-skia",
+      "version": "^1.12.4 || ^2.0.0"
+    },
+    {
+      "name": "react-native-gesture-handler",
+      "version": "^2.16.2"
     },
     {
       "name": "react-native-reanimated",
