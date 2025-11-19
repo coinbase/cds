@@ -162,8 +162,6 @@ const ComboboxBase = memo(
                 style={{
                   padding: 0,
                   paddingTop: valueRef.current?.length && valueRef.current?.length > 0 ? 8 : 0,
-                  flex: 1,
-                  minWidth: 0,
                 }}
                 value={searchTextRef.current}
               />
@@ -183,6 +181,7 @@ const ComboboxBase = memo(
       const ComboboxDropdownComponent = useCallback(
         (props: SelectDropdownProps<Type, SelectOptionValue>) => (
           <SelectDropdownComponent
+            height="150%"
             label={label}
             {...props}
             header={
