@@ -160,6 +160,7 @@ const ComboboxBase = memo(
                 onPress={() => !disabled && setOpen(true)}
                 placeholder={typeof placeholder === 'string' ? placeholder : undefined}
                 style={{
+                  flex: undefined,
                   padding: 0,
                   paddingTop: valueRef.current?.length && valueRef.current?.length > 0 ? 8 : 0,
                 }}
