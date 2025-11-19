@@ -65,7 +65,6 @@ export type PointLabelProps = RenderPointsParams & {
   position?: PointLabelPosition;
   /**
    * Distance in pixels to offset the label from the point.
-   * @default 0
    */
   offset?: number;
   /**

@@ -48,7 +48,6 @@ export type PointLabelProps = RenderPointsParams & {
   position?: PointLabelPosition;
   /**
    * Distance in pixels to offset the label from the point.
-   * @default 0
    */
   offset?: number;
   /**
@@ -131,8 +130,7 @@ export type PointProps = PointConfig & {
    */
   dataY: number;
   /**
-   * Override the chart's animation setting for this specific point.
-   * When undefined, uses the chart context's animation setting.
+   * When set, overrides the chart's animation setting for this specific point.
    */
   animate?: boolean;
 };
