@@ -19,9 +19,12 @@ import { buildTransition, defaultTransition, type Transition } from '../utils/tr
 import type { ScrubberBeaconProps, ScrubberBeaconRef } from './Scrubber';
 
 const radius = 5;
+const strokeWidth = 2;
+
+const pulseOpacityStart = 0.5;
+const pulseOpacityEnd = 0;
 const pulseRadiusStart = 10;
 const pulseRadiusEnd = 20;
-const strokeWidth = 2;
 
 const defaultPulseTransition: Transition = {
   type: 'timing',
@@ -120,9 +123,9 @@ export const DefaultScrubberBeacon = memo(
 
               // Manual pulse without delay
               const immediatePulseTransition = { ...pulseTransition, delay: 0 };
-              pulseOpacity.value = 0.5;
+              pulseOpacity.value = pulseOpacityStart;
               pulseRadius.value = pulseRadiusStart;
-              pulseOpacity.value = buildTransition(0, immediatePulseTransition);
+              pulseOpacity.value = buildTransition(pulseOpacityEnd, immediatePulseTransition);
               pulseRadius.value = buildTransition(pulseRadiusEnd, immediatePulseTransition);
             }
           },
@@ -142,13 +145,13 @@ export const DefaultScrubberBeacon = memo(
             const instantTransition: Transition = { type: 'timing', duration: 0 };
             const resetWithDelay = { ...instantTransition, delay: pulseRepeatDelay };
 
-            pulseOpacity.value = 0.5;
+            pulseOpacity.value = pulseOpacityStart;
             pulseRadius.value = pulseRadiusStart;
 
             pulseOpacity.value = withRepeat(
               withSequence(
-                buildTransition(0, pulseTransition),
-                buildTransition(0.5, resetWithDelay),
+                buildTransition(pulseOpacityEnd, pulseTransition),
+                buildTransition(pulseOpacityStart, resetWithDelay),
               ),
               -1, // infinite loop
               false,
@@ -166,7 +169,7 @@ export const DefaultScrubberBeacon = memo(
             // Stop pulse when idlePulse is disabled
             cancelAnimation(pulseOpacity);
             cancelAnimation(pulseRadius);
-            pulseOpacity.value = 0;
+            pulseOpacity.value = pulseOpacityEnd;
             pulseRadius.value = pulseRadiusStart;
           }
         },

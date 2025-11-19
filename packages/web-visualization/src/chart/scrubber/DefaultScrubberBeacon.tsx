@@ -12,9 +12,12 @@ import { defaultTransition, projectPoint } from '../utils';
 import type { ScrubberBeaconProps, ScrubberBeaconRef } from './Scrubber';
 
 const radius = 5;
+const strokeWidth = 2;
+
+const pulseOpacityStart = 0.5;
+const pulseOpacityEnd = 0;
 const pulseRadiusStart = 10;
 const pulseRadiusEnd = 20;
-const strokeWidth = 2;
 
 const defaultPulseTransition: Transition = {
   duration: 1.6,
@@ -81,7 +84,7 @@ export const DefaultScrubberBeacon = memo(
               animate(
                 scope.current,
                 {
-                  opacity: [0.5, 0],
+                  opacity: [pulseOpacityStart, pulseOpacityEnd],
                   r: [pulseRadiusStart, pulseRadiusEnd],
                 },
                 pulseTransition as ValueAnimationTransition,
@@ -132,16 +135,19 @@ export const DefaultScrubberBeacon = memo(
                 animate={
                   shouldPulse
                     ? {
-                        opacity: [0.5, 0],
+                        opacity: [pulseOpacityStart, pulseOpacityEnd],
                         r: [pulseRadiusStart, pulseRadiusEnd],
                         transition: continuousPulseTransition,
                       }
-                    : { opacity: 0, r: pulseRadiusStart }
+                    : { opacity: pulseOpacityEnd, r: pulseRadiusStart }
                 }
                 cx={0}
                 cy={0}
                 fill={color}
-                initial={{ opacity: shouldPulse ? 0.5 : 0, r: pulseRadiusStart }}
+                initial={{
+                  opacity: shouldPulse ? pulseOpacityStart : pulseOpacityEnd,
+                  r: pulseRadiusStart,
+                }}
               />
             </motion.g>
             <motion.circle
