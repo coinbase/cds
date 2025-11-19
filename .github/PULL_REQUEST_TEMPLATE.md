@@ -32,6 +32,7 @@
 ### Testing instructions
 
 ## Illustrations/Icons Checklist
+
 Required if this PR changes files under `packages/illustrations/**` or `packages/icons/**`
 
 - [ ] verified visreg changes with Terran (include link to visreg run/approval)
