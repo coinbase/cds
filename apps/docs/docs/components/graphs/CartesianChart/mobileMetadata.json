@@ -26,8 +26,12 @@
   ],
   "dependencies": [
     {
-      "name": "react-native-svg",
-      "version": "^14.1.0"
+      "name": "@shopify/react-native-skia",
+      "version": "^1.12.4 || ^2.0.0"
+    },
+    {
+      "name": "react-native-gesture-handler",
+      "version": "^2.16.2"
     },
     {
       "name": "react-native-reanimated",

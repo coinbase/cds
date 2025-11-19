@@ -36,7 +36,7 @@
     "@coinbase/cds-lottie-files": "workspace:^",
     "@coinbase/cds-mobile": "workspace:^",
     "@coinbase/cds-utils": "workspace:^",
-    "@shopify/react-native-skia": "1.12.4",
+    "@shopify/react-native-skia": "^1.12.4 || ^2.0.0",
     "react": "^18.3.1",
     "react-native": "^0.74.5",
     "react-native-gesture-handler": "^2.16.2",

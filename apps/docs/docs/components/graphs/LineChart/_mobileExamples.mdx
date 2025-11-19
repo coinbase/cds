@@ -302,7 +302,7 @@ function Interaction() {
 
 ### Points
 
-You can use `renderPoints` from LineChart with `onClick` listeners to render instances of [Point](/components/graphs/Point) that are interactable.
+You can use `renderPoints` from LineChart to render instances of [Point](/components/graphs/Point) at specific data locations with custom styling.
 
 ```jsx
 function Points() {
@@ -322,18 +322,13 @@ function Points() {
     >
       <Area fill={`rgb(${theme.spectrum.blue5})`} seriesId="prices" />
       <Line
-        renderPoints={({ dataX, dataY, ...props }) =>
+        renderPoints={({ dataX, ...props }) =>
           keyMarketShiftIndices.includes(dataX)
             ? {
                 ...props,
                 strokeWidth: 2,
                 stroke: theme.color.bg,
                 radius: 5,
-                onClick: () =>
-                  alert(
-                    `You have clicked a key market shift at position ${dataX + 1} with value ${dataY}!`,
-                  ),
-                accessibilityLabel: `Key market shift point at position ${dataX + 1}, value ${dataY}. Click to view details.`,
               }
             : false
         }
@@ -544,7 +539,7 @@ By default, charts will not track gestures that go outside of the chart bounds. 
 
 ## Animations
 
-You can configure chart transitions using `transition` on LineChart and `beaconTransitions` on[Scrubber](/components/graphs/Scrubber). You can also disable animations by setting the `animate` on LineChart to `false`.
+You can configure chart transitions using `transition` on LineChart and `beaconTransitions` on [Scrubber](/components/graphs/Scrubber). You can also disable animations by setting the `animate` on LineChart to `false`.
 
 ```jsx
 function Transitions() {
