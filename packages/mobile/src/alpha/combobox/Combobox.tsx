@@ -89,6 +89,7 @@ const ComboboxBase = memo(
         label,
         placeholder,
         disabled,
+        variant,
         accessibilityLabel = 'Combobox control',
         defaultOpen,
         searchText: searchTextProp,
@@ -174,6 +175,7 @@ const ComboboxBase = memo(
               />
             }
             placeholder={null}
+            variant={variant}
           />
         ),
         [SelectControlComponent, disabled, open, placeholder, setOpen, setSearchText],
@@ -227,6 +229,7 @@ const ComboboxBase = memo(
           setOpen={setOpen}
           type={type}
           value={value}
+          variant={variant}
           {...props}
         />
       );
