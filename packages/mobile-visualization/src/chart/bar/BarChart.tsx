@@ -2,7 +2,11 @@ import { forwardRef, memo, useMemo } from 'react';
 import type { View } from 'react-native';
 
 import { XAxis, type XAxisProps, YAxis, type YAxisProps } from '../axis';
-import { CartesianChart, type CartesianChartProps } from '../CartesianChart';
+import {
+  CartesianChart,
+  type CartesianChartBaseProps,
+  type CartesianChartProps,
+} from '../CartesianChart';
 import {
   type AxisConfigProps,
   defaultChartInset,
@@ -13,7 +17,7 @@ import {
 
 import { BarPlot, type BarPlotProps } from './BarPlot';
 
-export type BarChartProps = Omit<CartesianChartProps, 'xAxis' | 'yAxis' | 'series'> &
+export type BarChartBaseProps = Omit<CartesianChartBaseProps, 'xAxis' | 'yAxis' | 'series'> &
   Pick<
     BarPlotProps,
     | 'barPadding'
@@ -63,6 +67,9 @@ export type BarChartProps = Omit<CartesianChartProps, 'xAxis' | 'yAxis' | 'serie
      */
     yAxis?: Partial<AxisConfigProps> & YAxisProps;
   };
+
+export type BarChartProps = BarChartBaseProps &
+  Omit<CartesianChartProps, 'xAxis' | 'yAxis' | 'series'>;
 
 export const BarChart = memo(
   forwardRef<View, BarChartProps>(
