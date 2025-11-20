@@ -2,7 +2,11 @@ import { forwardRef, memo, useMemo } from 'react';
 import type { View } from 'react-native';
 
 import { XAxis, type XAxisProps, YAxis, type YAxisProps } from '../axis';
-import { CartesianChart, type CartesianChartProps } from '../CartesianChart';
+import {
+  CartesianChart,
+  type CartesianChartBaseProps,
+  type CartesianChartProps,
+} from '../CartesianChart';
 import { Line, type LineProps } from '../line/Line';
 import {
   type AxisConfigProps,
@@ -30,7 +34,7 @@ export type AreaSeries = Series &
     lineType?: 'solid' | 'dotted';
   };
 
-export type AreaChartProps = Omit<CartesianChartProps, 'xAxis' | 'yAxis' | 'series'> &
+export type AreaChartBaseProps = Omit<CartesianChartBaseProps, 'xAxis' | 'yAxis' | 'series'> &
   Pick<
     AreaProps,
     'AreaComponent' | 'curve' | 'fillOpacity' | 'type' | 'connectNulls' | 'transition'
@@ -81,6 +85,9 @@ export type AreaChartProps = Omit<CartesianChartProps, 'xAxis' | 'yAxis' | 'seri
      */
     yAxis?: Partial<AxisConfigProps> & YAxisProps;
   };
+
+export type AreaChartProps = AreaChartBaseProps &
+  Omit<CartesianChartProps, 'xAxis' | 'yAxis' | 'series'>;
 
 export const AreaChart = memo(
   forwardRef<View, AreaChartProps>(

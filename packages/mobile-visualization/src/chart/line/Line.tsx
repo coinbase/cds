@@ -1,6 +1,5 @@
 import React, { memo, useEffect, useMemo } from 'react';
 import { useSharedValue, withDelay, withTiming } from 'react-native-reanimated';
-import type { SharedProps } from '@coinbase/cds-common/types';
 import { useTheme } from '@coinbase/cds-mobile';
 import { type AnimatedProp, Group } from '@shopify/react-native-skia';
 
@@ -22,16 +21,71 @@ import { convertToSerializableScale } from '../utils/scale';
 import { DottedLine } from './DottedLine';
 import { SolidLine } from './SolidLine';
 
-export type LineComponentProps = {
+export type LineBaseProps = {
   /**
-   * Path of the line
+   * The ID of the series to render. Will be used to find the data from the chart context.
    */
-  d: AnimatedProp<string | undefined>;
+  seriesId: string;
+  /**
+   * The curve interpolation method to use for the line.
+   * @default 'bump'
+   */
+  curve?: ChartPathCurveType;
+  /**
+   * The type of line to render.
+   * @default 'solid'
+   */
+  type?: 'solid' | 'dotted';
+  /**
+   * Whether to show area fill under the line.
+   */
+  showArea?: boolean;
+  /**
+   * The type of area fill to add to the line.
+   * @default 'gradient'
+   */
+  areaType?: 'gradient' | 'solid' | 'dotted';
+  /**
+   * Baseline value for the area.
+   * When set, overrides the default baseline.
+   */
+  areaBaseline?: number;
+  /**
+   * Component to render the line.
+   * Takes precedence over the type prop if provided.
+   */
+  LineComponent?: LineComponent;
+  /**
+   * Custom component to render line area fill.
+   */
+  AreaComponent?: AreaComponent;
+  /**
+   * Opacity of the line's stroke.
+   * Will also be applied to points and area fill.
+   * @default 1
+   */
+  opacity?: number;
+  /**
+   * Controls whether and how to render points at each data point in the series.
+   * - `true`: Show all points with default styling
+   * - `false` or `undefined`: Hide all points
+   * - Function: Called for every entry in the data array to customize individual points
+   *
+   * @param defaults - The default point props computed by the Line component
+   * @returns true for default point, false/null/undefined for no point, or Partial<PointProps> to customize
+   */
+  points?:
+    | boolean
+    | ((defaults: PointBaseProps) => boolean | null | undefined | Partial<PointProps>);
+  /**
+   * When true, the area is connected across null values.
+   */
+  connectNulls?: boolean;
   /**
    * The color of the line.
    * @default color of the series or theme.color.fgPrimary
    */
-  stroke: string;
+  stroke?: string;
   /**
    * Opacity of the line
    * @note when combined with gradient, both will be applied
@@ -44,11 +98,6 @@ export type LineComponentProps = {
    */
   strokeWidth?: number;
   /**
-   * ID of the y-axis to use.
-   * If not provided, defaults to the default y-axis.
-   */
-  yAxisId?: string;
-  /**
    * Gradient configuration.
    * When provided, creates gradient or threshold-based coloring.
    */
@@ -58,81 +107,31 @@ export type LineComponentProps = {
    * Overrides the animate value from the chart context.
    */
   animate?: boolean;
+};
+
+export type LineProps = LineBaseProps & {
   /**
    * Transition configuration for line animations.
    */
   transition?: Transition;
 };
 
-export type LineComponent = React.FC<LineComponentProps>;
+export type LineComponentProps = Pick<
+  LineProps,
+  'stroke' | 'strokeOpacity' | 'strokeWidth' | 'gradient' | 'animate' | 'transition'
+> & {
+  /**
+   * Path of the line
+   */
+  d: AnimatedProp<string | undefined>;
+  /**
+   * ID of the y-axis to use.
+   * If not provided, defaults to the default y-axis.
+   */
+  yAxisId?: string;
+};
 
-export type LineProps = Partial<
-  Pick<
-    LineComponentProps,
-    'stroke' | 'strokeWidth' | 'strokeOpacity' | 'gradient' | 'animate' | 'transition'
-  >
-> &
-  SharedProps & {
-    /**
-     * The ID of the series to render. Will be used to find the data from the chart context.
-     */
-    seriesId: string;
-    /**
-     * The curve interpolation method to use for the line.
-     * @default 'bump'
-     */
-    curve?: ChartPathCurveType;
-    /**
-     * The type of line to render.
-     * @default 'solid'
-     */
-    type?: 'solid' | 'dotted';
-    /**
-     * Whether to show area fill under the line.
-     */
-    showArea?: boolean;
-    /**
-     * The type of area fill to add to the line.
-     * @default 'gradient'
-     */
-    areaType?: 'gradient' | 'solid' | 'dotted';
-    /**
-     * Baseline value for the area.
-     * When set, overrides the default baseline.
-     */
-    areaBaseline?: number;
-    /**
-     * Component to render the line.
-     * Takes precedence over the type prop if provided.
-     */
-    LineComponent?: LineComponent;
-    /**
-     * Custom component to render line area fill.
-     */
-    AreaComponent?: AreaComponent;
-    /**
-     * Opacity of the line's stroke.
-     * Will also be applied to points and area fill.
-     * @default 1
-     */
-    opacity?: number;
-    /**
-     * Controls whether and how to render points at each data point in the series.
-     * - `true`: Show all points with default styling
-     * - `false` or `undefined`: Hide all points
-     * - Function: Called for every entry in the data array to customize individual points
-     *
-     * @param defaults - The default point props computed by the Line component
-     * @returns true for default point, false/null/undefined for no point, or Partial<PointProps> to customize
-     */
-    points?:
-      | boolean
-      | ((defaults: PointBaseProps) => boolean | null | undefined | Partial<PointProps>);
-    /**
-     * When true, the area is connected across null values.
-     */
-    connectNulls?: boolean;
-  };
+export type LineComponent = React.FC<LineComponentProps>;
 
 export const Line = memo<LineProps>(
   ({

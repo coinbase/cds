@@ -1,5 +1,4 @@
 import { memo } from 'react';
-import type { SharedProps } from '@coinbase/cds-common/types';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 
 import { Gradient } from '../gradient';
@@ -7,11 +6,10 @@ import { Path, type PathProps } from '../Path';
 
 import type { LineComponentProps } from './Line';
 
-export type SolidLineProps = SharedProps &
-  Pick<
-    PathProps,
-    'initialPath' | 'children' | 'strokeCap' | 'strokeJoin' | 'clipRect' | 'clipPath' | 'clipOffset'
-  > &
+export type SolidLineProps = Pick<
+  PathProps,
+  'initialPath' | 'children' | 'strokeCap' | 'strokeJoin' | 'clipRect' | 'clipPath' | 'clipOffset'
+> &
   LineComponentProps & {
     fill?: string;
   };

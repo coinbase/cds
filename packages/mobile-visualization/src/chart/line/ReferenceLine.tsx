@@ -1,6 +1,5 @@
 import { memo } from 'react';
 import { useDerivedValue } from 'react-native-reanimated';
-import type { SharedProps } from '@coinbase/cds-common/types';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 import type { AnimatedProp } from '@shopify/react-native-skia';
 
@@ -43,7 +42,7 @@ export type ReferenceLineLabelComponentProps = Pick<
 
 export type ReferenceLineLabelComponent = React.FC<ReferenceLineLabelComponentProps>;
 
-type BaseReferenceLineProps = {
+export type ReferenceLineBaseProps = {
   /**
    * Label content to display near the reference line.
    * Can be a string or ReactNode for rich formatting.
@@ -79,7 +78,7 @@ type BaseReferenceLineProps = {
   stroke?: string;
 };
 
-type HorizontalReferenceLineProps = BaseReferenceLineProps & {
+type HorizontalReferenceLineProps = ReferenceLineBaseProps & {
   /**
    * Y-value for horizontal reference line (data value).
    */
@@ -97,7 +96,7 @@ type HorizontalReferenceLineProps = BaseReferenceLineProps & {
   dataX?: never;
 };
 
-type VerticalReferenceLineProps = BaseReferenceLineProps & {
+type VerticalReferenceLineProps = ReferenceLineBaseProps & {
   /**
    * X-value for vertical reference line (data index).
    */

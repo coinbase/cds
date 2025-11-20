@@ -71,6 +71,21 @@ export type PointBaseProps = SharedProps & {
    * When set, overrides the chart's animation setting for this specific point.
    */
   animate?: boolean;
+  /**
+   * Custom component to render the label.
+   * @default DefaultPointLabel
+   */
+  LabelComponent?: PointLabelComponent;
+  /**
+   * Position of the label relative to the point.
+   * @default 'center'
+   */
+  labelPosition?: PointLabelPosition;
+  /**
+   * Distance in pixels to offset the label from the point.
+   * @default 2 * radius
+   */
+  labelOffset?: number;
 };
 
 /**
@@ -145,6 +160,11 @@ export type PointProps = PointBaseProps &
     | 'onKeyDown'
   > & {
     /**
+     * Simple text label to display at the point position.
+     * If provided, a label component will be automatically rendered.
+     */
+    label?: ChartTextChildren;
+    /**
      * Handler for when the point is clicked.
      */
     onClick?: (
@@ -190,26 +210,6 @@ export type PointProps = PointBaseProps &
      * If not provided, a default label will be generated using the data coordinates.
      */
     accessibilityLabel?: string;
-    /**
-     * Simple text label to display at the point position.
-     * If provided, a label component will be automatically rendered.
-     */
-    label?: ChartTextChildren;
-    /**
-     * Custom component to render the label.
-     * @default DefaultPointLabel
-     */
-    LabelComponent?: PointLabelComponent;
-    /**
-     * Position of the label relative to the point.
-     * @default 'center'
-     */
-    labelPosition?: PointLabelPosition;
-    /**
-     * Distance in pixels to offset the label from the point.
-     * @default 2 * radius
-     */
-    labelOffset?: number;
     /**
      * Transition configuration for animation.
      * @default defaultTransition

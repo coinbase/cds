@@ -1,6 +1,6 @@
 import { memo, useEffect, useMemo } from 'react';
 import { useDerivedValue, useSharedValue, withTiming } from 'react-native-reanimated';
-import type { Rect, SharedProps } from '@coinbase/cds-common/types';
+import type { Rect } from '@coinbase/cds-common/types';
 import {
   type AnimatedProp,
   Group,
@@ -20,7 +20,40 @@ import { unwrapAnimatedValue } from './utils';
  */
 export const pathEnterTransitionDuration = 500;
 
-export type PathProps = SharedProps &
+export type PathBaseProps = {
+  /**
+   * Whether to animate this path. Overrides the animate prop on the Chart component.
+   */
+  animate?: boolean;
+  /**
+   * Initial path for enter animation.
+   * When provided, the first animation will go from initialPath to d.
+   * If not provided, defaults to d (no enter animation).
+   */
+  initialPath?: string;
+  /**
+   * Fill color for the path.
+   * When provided, will render a fill with the given color.
+   * If not provided, will not render a fill.
+   */
+  fill?: string;
+  /**
+   * Opacity for the path fill.
+   */
+  fillOpacity?: number;
+  /**
+   * Stroke color for the path.
+   * When provided, will render a fill with the given color.
+   * If not provided, will not render a fill.
+   */
+  stroke?: string;
+  /**
+   * Opacity for the path stroke.
+   */
+  strokeOpacity?: number;
+};
+
+export type PathProps = PathBaseProps &
   Pick<
     SkiaPathProps,
     | 'antiAlias'
@@ -38,54 +71,25 @@ export type PathProps = SharedProps &
     | 'transform'
   > & {
     /**
-     * Whether to animate this path. Overrides the animate prop on the Chart component.
-     */
-    animate?: boolean;
-    /**
      * The SVG path data string.
      */
     d?: AnimatedProp<string | undefined>;
     /**
-     * Initial path for enter animation.
-     * When provided, the first animation will go from initialPath to d.
-     * If not provided, defaults to d (no enter animation).
+     * Offset added to the clip rect boundaries.
      */
-    initialPath?: string;
-    /**
-     * Fill color for the path.
-     * When provided, will render a fill with the given color.
-     * If not provided, will not render a fill.
-     */
-    fill?: string;
-    /**
-     * Opacity for the path fill.
-     */
-    fillOpacity?: number;
-    /**
-     * Stroke color for the path.
-     * When provided, will render a fill with the given color.
-     * If not provided, will not render a fill.
-     */
-    stroke?: string;
-    /**
-     * Opacity for the path stroke.
-     */
-    strokeOpacity?: number;
-    /**
-     * Custom clip path rect. If provided, this overrides the default chart rect for clipping.
-     * Will be overridden by clipPath if set.
-     */
-    clipRect?: Rect;
+    clipOffset?: number;
     /**
      * Custom clip path.
      * When set, overrides clipRect.
-     * @note pass undefined to disable clipping.
+     * @note pass null to disable clipping.
      */
-    clipPath?: string | undefined;
+    clipPath?: string | null;
     /**
-     * The offset to add to the clip rect boundaries.
+     * Custom clip path rect. If provided, this overrides the default chart rect for clipping.
+     * @default drawingArea of chart + clipOffset
+     * Will be overridden by clipPath if set.
      */
-    clipOffset?: number;
+    clipRect?: Rect;
     /**
      * Animation transition
      *
@@ -189,9 +193,6 @@ export const Path = memo<PathProps>((props) => {
   const rect = clipRect ?? context.drawingArea;
   const animate = animateProp ?? context.animate;
 
-  // Check if clipPath was explicitly provided (even if undefined)
-  const hasExplicitClipPath = 'clipPath' in props;
-
   // The clip offset provides extra padding to prevent path from being cut off
   // Area charts typically use offset=0 for exact clipping, while lines use offset=2 for breathing room
   const totalOffset = clipOffset * 2; // Applied on both sides
@@ -243,12 +244,12 @@ export const Path = memo<PathProps>((props) => {
   );
 
   // Resolve the final clip path:
-  // 1. If clipPath prop was explicitly provided, use it (even if undefined = no clipping)
+  // 1. If clipPath prop was explicitly provided, use it (even if null = no clipping)
   // 2. If animating, use the interpolated clip path
   // 3. Otherwise, use static target clip path
   const resolvedClipPath = useMemo(() => {
-    // If clipPath was explicitly provided, use it directly
-    if (hasExplicitClipPath) {
+    // If clipPath was explicitly provided (null or string), use it directly
+    if (clipPathProp !== undefined) {
       return clipPathProp;
     }
 
@@ -257,9 +258,9 @@ export const Path = memo<PathProps>((props) => {
       return targetClipPath;
     }
 
-    // Return null here since we'll use animatedClipPath directly
-    return null;
-  }, [hasExplicitClipPath, clipPathProp, animate, targetClipPath]);
+    // Return undefined here since we'll use animatedClipPath directly
+    return undefined;
+  }, [clipPathProp, animate, targetClipPath]);
 
   // Convert SVG path string to SkPath for static rendering
   const staticPath = useDerivedValue(() => {
@@ -311,15 +312,13 @@ export const Path = memo<PathProps>((props) => {
   );
 
   // Determine which clip path to use
-  const finalClipPath = animate && resolvedClipPath === null ? animatedClipPath : resolvedClipPath;
+  const finalClipPath =
+    animate && resolvedClipPath === undefined ? animatedClipPath : resolvedClipPath;
 
-  // If finalClipPath is undefined, render without clipping
-  if (finalClipPath === undefined) {
+  // If finalClipPath is null, render without clipping
+  if (finalClipPath === null) {
     return content;
   }
-
-  // Don't render if finalClipPath is null (invalid state)
-  if (finalClipPath === null) return null;
 
   return <Group clip={finalClipPath}>{content}</Group>;
 });

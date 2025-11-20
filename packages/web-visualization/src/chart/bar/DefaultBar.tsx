@@ -15,17 +15,6 @@ export type DefaultBarProps = BarComponentProps & {
    * Custom styles for the bar.
    */
   style?: React.CSSProperties;
-  /**
-   * Transition configuration for animation.
-   *
-   * @example
-   * transition={{
-   *   type: 'tween',
-   *   duration: 0.3,
-   *   ease: 'easeInOut'
-   * }}
-   */
-  transition?: Transition;
 };
 
 /**

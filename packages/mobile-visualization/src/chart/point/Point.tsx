@@ -54,6 +54,21 @@ export type PointBaseProps = {
    * When set, overrides the chart's animation setting for this specific point.
    */
   animate?: boolean;
+  /**
+   * Custom component to render the label.
+   * @default DefaultPointLabel
+   */
+  LabelComponent?: PointLabelComponent;
+  /**
+   * Position of the label relative to the point.
+   * @default 'center'
+   */
+  labelPosition?: PointLabelPosition;
+  /**
+   * Distance in pixels to offset the label from the point.
+   * @default 2 * radius
+   */
+  labelOffset?: number;
 };
 
 /**
@@ -103,21 +118,6 @@ export type PointProps = PointBaseProps & {
    * If provided, a label component will be automatically rendered.
    */
   label?: ChartTextChildren;
-  /**
-   * Custom component to render the label.
-   * @default DefaultPointLabel
-   */
-  LabelComponent?: PointLabelComponent;
-  /**
-   * Position of the label relative to the point.
-   * @default 'center'
-   */
-  labelPosition?: PointLabelPosition;
-  /**
-   * Distance in pixels to offset the label from the point.
-   * @default 2 * radius
-   */
-  labelOffset?: number;
   /**
    * Transition configuration for point animations.
    * Defines how the point transitions when position or color changes.

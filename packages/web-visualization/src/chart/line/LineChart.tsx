@@ -2,7 +2,11 @@ import { forwardRef, memo, useMemo } from 'react';
 
 import { XAxis, type XAxisProps } from '../axis/XAxis';
 import { YAxis, type YAxisProps } from '../axis/YAxis';
-import { CartesianChart, type CartesianChartProps } from '../CartesianChart';
+import {
+  CartesianChart,
+  type CartesianChartBaseProps,
+  type CartesianChartProps,
+} from '../CartesianChart';
 import { type AxisConfigProps, defaultChartInset, getChartInset, type Series } from '../utils';
 
 import { Line, type LineProps } from './Line';
@@ -29,7 +33,7 @@ export type LineSeries = Series &
     >
   >;
 
-export type LineChartProps = Omit<CartesianChartProps, 'xAxis' | 'yAxis' | 'series'> &
+export type LineChartBaseProps = Omit<CartesianChartBaseProps, 'xAxis' | 'yAxis' | 'series'> &
   Pick<
     LineProps,
     | 'showArea'
@@ -72,6 +76,9 @@ export type LineChartProps = Omit<CartesianChartProps, 'xAxis' | 'yAxis' | 'seri
      */
     yAxis?: Partial<AxisConfigProps> & YAxisProps;
   };
+
+export type LineChartProps = LineChartBaseProps &
+  Omit<CartesianChartProps, 'xAxis' | 'yAxis' | 'series'>;
 
 export const LineChart = memo(
   forwardRef<SVGSVGElement, LineChartProps>(

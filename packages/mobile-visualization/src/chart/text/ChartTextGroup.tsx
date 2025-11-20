@@ -28,7 +28,7 @@ export type TextLabelData = {
 
 export type TextLabelDataWithKey = TextLabelData & { key: string };
 
-export type ChartTextGroupProps = {
+export type ChartTextGroupBaseProps = {
   /**
    * Array of text labels to display
    */
@@ -54,6 +54,8 @@ export type ChartTextGroupProps = {
   LabelComponent?: React.FC<ChartTextProps>;
 };
 
+export type ChartTextGroupProps = ChartTextGroupBaseProps;
+
 /**
  * Overlap check that enforces a minimum pixel gap between two rectangles.
  * We inflate each rect by gap/2 on all sides so two neighbors must be at
@@ -78,7 +80,13 @@ const EPSILON_PX = 0.5;
  * The component focuses solely on overlap prevention logic for better separation of concerns.
  */
 export const ChartTextGroup = memo<ChartTextGroupProps>(
-  ({ labels, minGap = 8, prioritizeEndLabels = true, chartTextProps, LabelComponent = ChartText }) => {
+  ({
+    labels,
+    minGap = 8,
+    prioritizeEndLabels = true,
+    chartTextProps,
+    LabelComponent = ChartText,
+  }) => {
     const [boundingBoxes, setBoundingBoxes] = useState<Map<string, Rect>>(new Map());
     const { onDimensionsChange: propsOnDimensionsChange, ...restChartTextProps } =
       chartTextProps ?? {};

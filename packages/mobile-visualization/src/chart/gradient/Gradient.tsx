@@ -5,7 +5,7 @@ import { useCartesianChartContext } from '../ChartProvider';
 import type { GradientDefinition } from '../utils';
 import { getColorWithOpacity, getGradientConfig } from '../utils/gradient';
 
-export type GradientProps = {
+export type GradientBaseProps = {
   /**
    * Gradient definition with stops, axis, and other configuration.
    */
@@ -17,6 +17,8 @@ export type GradientProps = {
    */
   yAxisId?: string;
 };
+
+export type GradientProps = GradientBaseProps;
 
 /**
  * Renders a Skia LinearGradient element based on a GradientDefinition.

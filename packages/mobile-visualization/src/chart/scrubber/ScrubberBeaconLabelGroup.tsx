@@ -1,7 +1,6 @@
 import { memo, useCallback, useMemo, useState } from 'react';
 import type { SharedValue } from 'react-native-reanimated';
 import { useDerivedValue } from 'react-native-reanimated';
-import type { SharedProps } from '@coinbase/cds-common/types';
 import type { AnimatedProp } from '@shopify/react-native-skia';
 
 import { useCartesianChartContext } from '../ChartProvider';
@@ -71,7 +70,7 @@ const PositionedLabel = memo<{
   },
 );
 
-export type ScrubberBeaconLabelGroupBaseProps = SharedProps & {
+export type ScrubberBeaconLabelGroupBaseProps = {
   /**
    * Labels to be displayed.
    */

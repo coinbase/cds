@@ -11,7 +11,14 @@ import { useCartesianChartContext } from './ChartProvider';
  */
 export const pathEnterTransitionDuration = 0.5;
 
-export type PathProps = SharedProps &
+export type PathBaseProps = SharedProps & {
+  /**
+   * Whether to animate this path. Overrides the animate prop on the Chart component.
+   */
+  animate?: boolean;
+};
+
+export type PathProps = PathBaseProps &
   Omit<
     SVGProps<SVGPathElement>,
     | 'onAnimationStart'
@@ -28,18 +35,15 @@ export type PathProps = SharedProps &
     | 'onDragStartCapture'
   > & {
     /**
-     * Whether to animate this path. Overrides the animate prop on the Chart component.
+     * Offset added to the clip rect boundaries.
      */
-    animate?: boolean;
+    clipOffset?: number;
     /**
      * Custom clip path rect. If provided, this overrides the default chart rect for clipping.
      * Pass null to disable clipping.
+     * @default drawingArea of chart + clipOffset
      */
     clipRect?: Rect | null;
-    /**
-     * The offset to add to the clip rect boundaries.
-     */
-    clipOffset?: number;
     /**
      * Transition configuration for path.
      *

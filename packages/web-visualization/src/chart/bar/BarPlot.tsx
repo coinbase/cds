@@ -7,7 +7,7 @@ import { defaultAxisId } from '../utils';
 import type { BarStackGroupProps } from './BarStackGroup';
 import { BarStackGroup } from './BarStackGroup';
 
-export type BarPlotProps = Pick<
+export type BarPlotBaseProps = Pick<
   BarStackGroupProps,
   | 'barPadding'
   | 'BarComponent'
@@ -20,7 +20,6 @@ export type BarPlotProps = Pick<
   | 'barMinSize'
   | 'stackMinSize'
   | 'BarStackComponent'
-  | 'transition'
 > & {
   /**
    * Array of series IDs to render.
@@ -28,6 +27,8 @@ export type BarPlotProps = Pick<
    */
   seriesIds?: string[];
 };
+
+export type BarPlotProps = BarPlotBaseProps & Pick<BarStackGroupProps, 'transition'>;
 
 /**
  * BarPlot component that handles multiple series with proper stacking coordination.
