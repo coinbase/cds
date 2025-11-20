@@ -57,7 +57,7 @@ export type ComboboxBaseProps<
   ) => SelectOption<SelectOptionValue>[];
   /** Default search text value for uncontrolled mode */
   defaultSearchText?: string;
-  /** Label for close button when combobox is open */
+  /** Label for close button when combobox is open (mobile only) */
   closeButtonLabel?: string;
 };
 
@@ -103,7 +103,6 @@ const ComboboxBase = memo(
       }: ComboboxProps<Type, SelectOptionValue>,
       ref: React.Ref<ComboboxRef>,
     ) => {
-      const controlRef = useRef<ComboboxRef>(null);
       const [searchTextInternal, setSearchTextInternal] = useState(defaultSearchText);
       const searchText = searchTextProp ?? searchTextInternal;
       const setSearchText = onSearchProp ?? setSearchTextInternal;
@@ -143,6 +142,7 @@ const ComboboxBase = memo(
         return fuse.search(searchText).map((result) => result.item);
       }, [filterFunction, fuse, options, searchText]);
 
+      const controlRef = useRef<ComboboxRef>(null);
       useImperativeHandle(ref, () =>
         Object.assign(controlRef.current as ComboboxRef, {
           open,

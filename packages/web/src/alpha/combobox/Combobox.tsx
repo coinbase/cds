@@ -5,7 +5,6 @@ import { NativeInput } from '../../controls/NativeInput';
 import { DefaultSelectControl } from '../select/DefaultSelectControl';
 import type {
   SelectBaseProps,
-  SelectControlComponent,
   SelectControlProps,
   SelectOption,
   SelectProps,
@@ -161,6 +160,7 @@ const ComboboxBase = memo(
                   paddingTop: valueRef.current?.length && valueRef.current?.length > 0 ? 8 : 0,
                   width: '100%',
                 }}
+                tabIndex={0}
                 value={searchTextRef.current}
               />
             }
