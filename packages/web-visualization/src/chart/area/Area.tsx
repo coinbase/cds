@@ -53,7 +53,7 @@ export type AreaComponentProps = {
 
 export type AreaComponent = React.FC<AreaComponentProps>;
 
-export type AreaProps = Pick<
+export type AreaBaseProps = Pick<
   AreaComponentProps,
   'fill' | 'fillOpacity' | 'baseline' | 'transition' | 'gradient' | 'animate'
 > & {
@@ -81,6 +81,8 @@ export type AreaProps = Pick<
    */
   connectNulls?: boolean;
 };
+
+export type AreaProps = AreaBaseProps;
 
 export const Area = memo<AreaProps>(
   ({

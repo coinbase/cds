@@ -1,5 +1,4 @@
 import { memo } from 'react';
-import type { SharedProps } from '@coinbase/cds-common/types';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 import { DashPathEffect } from '@shopify/react-native-skia';
 
@@ -8,11 +7,10 @@ import { Path, type PathProps } from '../Path';
 
 import type { LineComponentProps } from './Line';
 
-export type DottedLineProps = SharedProps &
-  Pick<
-    PathProps,
-    'initialPath' | 'children' | 'strokeCap' | 'strokeJoin' | 'clipRect' | 'clipPath' | 'clipOffset'
-  > &
+export type DottedLineProps = Pick<
+  PathProps,
+  'initialPath' | 'children' | 'strokeCap' | 'strokeJoin' | 'clipRect' | 'clipPath' | 'clipOffset'
+> &
   LineComponentProps & {
     fill?: string;
     /**

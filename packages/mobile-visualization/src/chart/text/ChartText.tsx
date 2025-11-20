@@ -1,8 +1,7 @@
 import React, { memo, useMemo } from 'react';
-import { type ViewStyle } from 'react-native';
 import { runOnJS, useAnimatedReaction, useDerivedValue } from 'react-native-reanimated';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
-import type { Rect, SharedProps } from '@coinbase/cds-common/types';
+import type { Rect } from '@coinbase/cds-common/types';
 import type { Theme } from '@coinbase/cds-mobile/core/theme';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 import {

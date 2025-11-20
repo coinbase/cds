@@ -14,13 +14,13 @@ import {
   withDelay,
   withTiming,
 } from 'react-native-reanimated';
-import type { SharedProps } from '@coinbase/cds-common/types';
 import { useTheme } from '@coinbase/cds-mobile';
 import { type AnimatedProp, Group, Rect, type SkParagraph } from '@shopify/react-native-skia';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import {
   ReferenceLine,
+  type ReferenceLineBaseProps,
   type ReferenceLineLabelComponent,
   type ReferenceLineLabelComponentProps,
   type ReferenceLineProps,
@@ -133,8 +133,10 @@ export type ScrubberBeaconLabelComponent = React.FC<ScrubberBeaconLabelProps>;
 export type ScrubberLabelProps = ReferenceLineLabelComponentProps;
 export type ScrubberLabelComponent = React.FC<ScrubberLabelProps>;
 
-export type ScrubberBaseProps = SharedProps &
-  Pick<ScrubberBeaconGroupBaseProps, 'idlePulse'> & {
+export type ScrubberBaseProps = Pick<ScrubberBeaconGroupBaseProps, 'idlePulse'> &
+  Pick<ReferenceLineBaseProps, 'LineComponent' | 'LabelComponent' | 'elevateLabel'> &
+  Pick<ScrubberBeaconGroupProps, 'BeaconComponent'> &
+  Pick<ScrubberBeaconLabelGroupProps, 'BeaconLabelComponent'> & {
     /**
      * Array of series IDs to highlight when scrubbing with scrubber beacons.
      * By default, all series will be highlighted.
@@ -164,40 +166,22 @@ export type ScrubberBaseProps = SharedProps &
      * Measured in pixels.
      */
     beaconLabelHorizontalOffset?: ScrubberBeaconLabelGroupBaseProps['labelHorizontalOffset'];
-  };
-
-export type ScrubberProps = ScrubberBaseProps &
-  Pick<ReferenceLineProps, 'LineComponent'> &
-  Pick<ScrubberBeaconGroupProps, 'BeaconComponent'> &
-  Pick<ScrubberBeaconLabelGroupProps, 'BeaconLabelComponent'> & {
     /**
      * Label text displayed above the scrubber line.
      * Can be a static string or a function that receives the current dataIndex.
      */
     label?: string | SkParagraph | ((dataIndex: number) => string | SkParagraph);
     /**
-     * Component to render the scrubber line label.
-     * @default DefaultScrubberLabel
-     */
-    LabelComponent?: ScrubberLabelComponent;
-    /**
-     * Whether to elevate the scrubber line label with a shadow.
-     * When true, applies elevation and automatically adds bounds to keep label within chart area.
-     */
-    elevateLabel?: boolean;
-    /**
      * Stroke color for the scrubber line.
      */
-    lineStroke?: ReferenceLineProps['stroke'];
-    /**
-     * Custom component for the scrubber beacon.
-     */
-    BeaconComponent?: ScrubberBeaconComponent;
+    lineStroke?: ReferenceLineBaseProps['stroke'];
     /**
      * Transition configuration for the scrubber beacon.
      */
     beaconTransitions?: ScrubberBeaconProps['transitions'];
   };
+
+export type ScrubberProps = ScrubberBaseProps;
 
 export type ScrubberRef = ScrubberBeaconGroupRef;
 

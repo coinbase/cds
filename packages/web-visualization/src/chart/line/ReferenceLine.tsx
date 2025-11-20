@@ -44,7 +44,7 @@ export type ReferenceLineLabelComponentProps = Pick<
 
 export type ReferenceLineLabelComponent = React.FC<ReferenceLineLabelComponentProps>;
 
-type BaseReferenceLineProps = SharedProps & {
+export type ReferenceLineBaseProps = SharedProps & {
   /**
    * Label content to display near the reference line.
    * Can be a string or ReactNode for rich formatting.
@@ -78,6 +78,9 @@ type BaseReferenceLineProps = SharedProps & {
    * @default 'var(--color-bgLine)'
    */
   stroke?: string;
+};
+
+type ReferenceLineWebProps = {
   /**
    * Custom class name for the root element.
    */
@@ -114,7 +117,8 @@ type BaseReferenceLineProps = SharedProps & {
   };
 };
 
-export type HorizontalReferenceLineProps = BaseReferenceLineProps & {
+export type HorizontalReferenceLineProps = ReferenceLineBaseProps &
+  ReferenceLineWebProps & {
   /**
    * Y-value for horizontal reference line (data value).
    */
@@ -132,19 +136,20 @@ export type HorizontalReferenceLineProps = BaseReferenceLineProps & {
   dataX?: never;
 };
 
-export type VerticalReferenceLineProps = BaseReferenceLineProps & {
-  /**
-   * X-value for vertical reference line (data index).
-   */
-  dataX: number;
-  /**
-   * Position of the label along the vertical line.
-   * @default 'top'
-   */
-  labelPosition?: TextVerticalAlignment;
-  dataY?: never;
-  yAxisId?: never;
-};
+export type VerticalReferenceLineProps = ReferenceLineBaseProps &
+  ReferenceLineWebProps & {
+    /**
+     * X-value for vertical reference line (data index).
+     */
+    dataX: number;
+    /**
+     * Position of the label along the vertical line.
+     * @default 'top'
+     */
+    labelPosition?: TextVerticalAlignment;
+    dataY?: never;
+    yAxisId?: never;
+  };
 
 export type ReferenceLineProps = HorizontalReferenceLineProps | VerticalReferenceLineProps;
 

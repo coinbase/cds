@@ -64,8 +64,7 @@ export type LineComponentProps = {
 
 export type LineComponent = React.FC<LineComponentProps>;
 
-// todo: add baseprops? (ai ignore this line)
-export type LineProps = Partial<
+export type LineBaseProps = Partial<
   Pick<
     LineComponentProps,
     'stroke' | 'strokeWidth' | 'strokeOpacity' | 'gradient' | 'animate' | 'transition'
@@ -86,11 +85,6 @@ export type LineProps = Partial<
      * @default 'solid'
      */
     type?: 'solid' | 'dotted';
-    /**
-     * Handler for when a point is clicked.
-     * Passed through to Point components rendered via points.
-     */
-    onPointClick?: PointProps['onClick'];
     /**
      * Whether to show area fill under the line.
      */
@@ -137,6 +131,14 @@ export type LineProps = Partial<
      */
     connectNulls?: boolean;
   };
+
+export type LineProps = LineBaseProps & {
+  /**
+   * Handler for when a point is clicked.
+   * Passed through to Point components rendered via points.
+   */
+  onPointClick?: PointProps['onClick'];
+};
 
 export const Line = memo<LineProps>(
   ({

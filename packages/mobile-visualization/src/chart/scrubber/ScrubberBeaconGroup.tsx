@@ -2,7 +2,6 @@ import { forwardRef, memo, useCallback, useImperativeHandle, useMemo } from 'rea
 import type { SharedValue } from 'react-native-reanimated';
 import { useDerivedValue } from 'react-native-reanimated';
 import { useRefMap } from '@coinbase/cds-common/hooks/useRefMap';
-import type { SharedProps } from '@coinbase/cds-common/types';
 import { useTheme } from '@coinbase/cds-mobile';
 
 import { useCartesianChartContext } from '../ChartProvider';
@@ -129,7 +128,7 @@ export type ScrubberBeaconGroupRef = {
   pulse: () => void;
 };
 
-export type ScrubberBeaconGroupBaseProps = SharedProps & {
+export type ScrubberBeaconGroupBaseProps = {
   /**
    * Array of series IDs to render beacons for.
    */

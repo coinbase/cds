@@ -6,12 +6,7 @@ import type { GradientDefinition } from '../utils';
 import { getGradientConfig } from '../utils/gradient';
 import { defaultTransition } from '../utils/transition';
 
-export type GradientProps = {
-  /**
-   * Unique ID for the gradient definition.
-   * Will be used in `url(#${id})` references.
-   */
-  id: string;
+export type GradientBaseProps = {
   /**
    * Gradient definition with stops, axis, and other configuration.
    */
@@ -22,6 +17,14 @@ export type GradientProps = {
    * This ensures gradients work correctly when the axis has a custom range configuration.
    */
   yAxisId?: string;
+};
+
+export type GradientProps = GradientBaseProps & {
+  /**
+   * Unique ID for the gradient definition.
+   * Will be used in `url(#${id})` references.
+   */
+  id: string;
   /**
    * Whether to animate gradient changes.
    */

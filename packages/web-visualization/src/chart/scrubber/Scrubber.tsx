@@ -5,6 +5,7 @@ import { m as motion, type Transition } from 'framer-motion';
 import { useCartesianChartContext } from '../ChartProvider';
 import {
   ReferenceLine,
+  type ReferenceLineBaseProps,
   type ReferenceLineLabelComponentProps,
   type ReferenceLineProps,
 } from '../line';
@@ -117,7 +118,10 @@ export type ScrubberLabelProps = ReferenceLineLabelComponentProps;
 export type ScrubberLabelComponent = React.FC<ScrubberLabelProps>;
 
 export type ScrubberBaseProps = SharedProps &
-  Pick<ScrubberBeaconGroupBaseProps, 'idlePulse'> & {
+  Pick<ScrubberBeaconGroupBaseProps, 'idlePulse'> &
+  Pick<ReferenceLineBaseProps, 'LineComponent' | 'LabelComponent' | 'elevateLabel'> &
+  Pick<ScrubberBeaconGroupProps, 'BeaconComponent'> &
+  Pick<ScrubberBeaconLabelGroupProps, 'BeaconLabelComponent'> & {
     /**
      * Array of series IDs to highlight when scrubbing with scrubber beacons.
      * By default, all series will be highlighted.
@@ -147,59 +151,48 @@ export type ScrubberBaseProps = SharedProps &
      * Measured in pixels.
      */
     beaconLabelHorizontalOffset?: ScrubberBeaconLabelGroupBaseProps['labelHorizontalOffset'];
-  };
-
-export type ScrubberProps = ScrubberBaseProps &
-  Pick<ReferenceLineProps, 'LineComponent'> &
-  Pick<ScrubberBeaconGroupProps, 'BeaconComponent'> &
-  Pick<ScrubberBeaconLabelGroupProps, 'BeaconLabelComponent'> & {
     /**
      * Label text displayed above the scrubber line.
      * Can be a static string or a function that receives the current dataIndex.
      */
-    label?: ReferenceLineProps['label'] | ((dataIndex: number) => ReferenceLineProps['label']);
-    /**
-     * Accessibility label for the scrubber. Can be a static string or a function that receives the current dataIndex.
-     * If not provided, label will be used if it resolves to a string.
-     */
-    accessibilityLabel?: string | ((dataIndex: number) => string);
-    /**
-     * Component to render the scrubber line label.
-     * @default DefaultScrubberLabel
-     */
-    LabelComponent?: ScrubberLabelComponent;
-    /**
-     * Whether to elevate the scrubber line label with a shadow.
-     * When true, applies elevation and automatically adds bounds to keep label within chart area.
-     */
-    elevateLabel?: boolean;
+    label?:
+      | ReferenceLineBaseProps['label']
+      | ((dataIndex: number) => ReferenceLineBaseProps['label']);
     /**
      * Stroke color for the scrubber line.
      */
-    lineStroke?: ReferenceLineProps['stroke'];
-    /**
-     * Custom styles for scrubber elements.
-     */
-    styles?: {
-      overlay?: React.CSSProperties;
-      beacon?: React.CSSProperties;
-      line?: React.CSSProperties;
-      beaconLabel?: React.CSSProperties;
-    };
-    /**
-     * Custom class names for scrubber elements.
-     */
-    classNames?: {
-      overlay?: string;
-      beacon?: string;
-      line?: string;
-      beaconLabel?: string;
-    };
+    lineStroke?: ReferenceLineBaseProps['stroke'];
     /**
      * Transition configuration for the scrubber beacon.
      */
     beaconTransitions?: ScrubberBeaconProps['transitions'];
   };
+
+export type ScrubberProps = ScrubberBaseProps & {
+  /**
+   * Accessibility label for the scrubber. Can be a static string or a function that receives the current dataIndex.
+   * If not provided, label will be used if it resolves to a string.
+   */
+  accessibilityLabel?: string | ((dataIndex: number) => string);
+  /**
+   * Custom styles for scrubber elements.
+   */
+  styles?: {
+    overlay?: React.CSSProperties;
+    beacon?: React.CSSProperties;
+    line?: React.CSSProperties;
+    beaconLabel?: React.CSSProperties;
+  };
+  /**
+   * Custom class names for scrubber elements.
+   */
+  classNames?: {
+    overlay?: string;
+    beacon?: string;
+    line?: string;
+    beaconLabel?: string;
+  };
+};
 
 export type ScrubberRef = ScrubberBeaconGroupRef;
 

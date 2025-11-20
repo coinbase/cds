@@ -76,7 +76,7 @@ export type BarComponentProps = {
 
 export type BarComponent = React.FC<BarComponentProps>;
 
-export type BarProps = Omit<BarComponentProps, 'd'> & {
+export type BarBaseProps = Omit<BarComponentProps, 'd'> & {
   /**
    * Border radius for the bar.
    * @default 4
@@ -91,6 +91,8 @@ export type BarProps = Omit<BarComponentProps, 'd'> & {
    */
   transition?: Transition;
 };
+
+export type BarProps = BarBaseProps;
 
 /**
  * Simple bar component that renders a single bar at the specified position.

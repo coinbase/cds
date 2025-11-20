@@ -28,7 +28,7 @@ export type TextLabelData = {
 
 export type TextLabelDataWithKey = TextLabelData & { key: string };
 
-export type ChartTextGroupProps = {
+export type ChartTextGroupBaseProps = {
   /**
    * Array of text labels to display
    */
@@ -53,6 +53,8 @@ export type ChartTextGroupProps = {
    */
   LabelComponent?: React.FC<ChartTextProps>;
 };
+
+export type ChartTextGroupProps = ChartTextGroupBaseProps;
 
 /**
  * Overlap check that enforces a minimum pixel gap between two rectangles.

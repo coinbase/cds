@@ -11,7 +11,35 @@ import { useCartesianChartContext } from './ChartProvider';
  */
 export const pathEnterTransitionDuration = 0.5;
 
-export type PathProps = SharedProps &
+export type PathBaseProps = SharedProps & {
+  /**
+   * Whether to animate this path. Overrides the animate prop on the Chart component.
+   */
+  animate?: boolean;
+  /**
+   * Custom clip path rect. If provided, this overrides the default chart rect for clipping.
+   * Pass null to disable clipping.
+   */
+  clipRect?: Rect | null;
+  /**
+   * The offset to add to the clip rect boundaries.
+   */
+  clipOffset?: number;
+  /**
+   * Transition configuration for path.
+   *
+   * @example
+   * // Timing based animation
+   * transition={{ type: 'tween', duration: 0.2, ease: 'easeOut' }}
+   *
+   * @example
+   * // Spring animation
+   * transition={{ type: 'spring', damping: 20, stiffness: 300 }}
+   */
+  transition?: Transition;
+};
+
+export type PathProps = PathBaseProps &
   Omit<
     SVGProps<SVGPathElement>,
     | 'onAnimationStart'
@@ -26,33 +54,7 @@ export type PathProps = SharedProps &
     | 'onDragCapture'
     | 'onDragEndCapture'
     | 'onDragStartCapture'
-  > & {
-    /**
-     * Whether to animate this path. Overrides the animate prop on the Chart component.
-     */
-    animate?: boolean;
-    /**
-     * Custom clip path rect. If provided, this overrides the default chart rect for clipping.
-     * Pass null to disable clipping.
-     */
-    clipRect?: Rect | null;
-    /**
-     * The offset to add to the clip rect boundaries.
-     */
-    clipOffset?: number;
-    /**
-     * Transition configuration for path.
-     *
-     * @example
-     * // Timing based animation
-     * transition={{ type: 'tween', duration: 0.2, ease: 'easeOut' }}
-     *
-     * @example
-     * // Spring animation
-     * transition={{ type: 'spring', damping: 20, stiffness: 300 }}
-     */
-    transition?: Transition;
-  };
+  >;
 
 const AnimatedPath = memo<Omit<PathProps, 'animate'>>(({ d = '', transition, ...pathProps }) => {
   const interpolatedPath = usePathTransition({

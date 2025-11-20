@@ -1,6 +1,6 @@
 import { memo, useEffect, useMemo } from 'react';
 import { useDerivedValue, useSharedValue, withTiming } from 'react-native-reanimated';
-import type { Rect, SharedProps } from '@coinbase/cds-common/types';
+import type { Rect } from '@coinbase/cds-common/types';
 import {
   type AnimatedProp,
   Group,
@@ -20,7 +20,61 @@ import { unwrapAnimatedValue } from './utils';
  */
 export const pathEnterTransitionDuration = 500;
 
-export type PathProps = SharedProps &
+export type PathBaseProps = {
+  /**
+   * Whether to animate this path. Overrides the animate prop on the Chart component.
+   */
+  animate?: boolean;
+  /**
+   * Initial path for enter animation.
+   * When provided, the first animation will go from initialPath to d.
+   * If not provided, defaults to d (no enter animation).
+   */
+  initialPath?: string;
+  /**
+   * Fill color for the path.
+   * When provided, will render a fill with the given color.
+   * If not provided, will not render a fill.
+   */
+  fill?: string;
+  /**
+   * Opacity for the path fill.
+   */
+  fillOpacity?: number;
+  /**
+   * Stroke color for the path.
+   * When provided, will render a fill with the given color.
+   * If not provided, will not render a fill.
+   */
+  stroke?: string;
+  /**
+   * Opacity for the path stroke.
+   */
+  strokeOpacity?: number;
+  /**
+   * Custom clip path rect. If provided, this overrides the default chart rect for clipping.
+   * Will be overridden by clipPath if set.
+   */
+  clipRect?: Rect;
+  /**
+   * The offset to add to the clip rect boundaries.
+   */
+  clipOffset?: number;
+  /**
+   * Animation transition
+   *
+   * @example
+   * // Duration based
+   * transition={{ type: 'timing', duration: 300 }}
+   *
+   * @example
+   * // Spring based
+   * transition={{ type: 'spring', damping: 20, stiffness: 300 }}
+   */
+  transition?: Transition;
+};
+
+export type PathProps = PathBaseProps &
   Pick<
     SkiaPathProps,
     | 'antiAlias'
@@ -38,66 +92,15 @@ export type PathProps = SharedProps &
     | 'transform'
   > & {
     /**
-     * Whether to animate this path. Overrides the animate prop on the Chart component.
-     */
-    animate?: boolean;
-    /**
      * The SVG path data string.
      */
     d?: AnimatedProp<string | undefined>;
-    /**
-     * Initial path for enter animation.
-     * When provided, the first animation will go from initialPath to d.
-     * If not provided, defaults to d (no enter animation).
-     */
-    initialPath?: string;
-    /**
-     * Fill color for the path.
-     * When provided, will render a fill with the given color.
-     * If not provided, will not render a fill.
-     */
-    fill?: string;
-    /**
-     * Opacity for the path fill.
-     */
-    fillOpacity?: number;
-    /**
-     * Stroke color for the path.
-     * When provided, will render a fill with the given color.
-     * If not provided, will not render a fill.
-     */
-    stroke?: string;
-    /**
-     * Opacity for the path stroke.
-     */
-    strokeOpacity?: number;
-    /**
-     * Custom clip path rect. If provided, this overrides the default chart rect for clipping.
-     * Will be overridden by clipPath if set.
-     */
-    clipRect?: Rect;
     /**
      * Custom clip path.
      * When set, overrides clipRect.
      * @note pass undefined to disable clipping.
      */
     clipPath?: string | undefined;
-    /**
-     * The offset to add to the clip rect boundaries.
-     */
-    clipOffset?: number;
-    /**
-     * Animation transition
-     *
-     * @example
-     * // Duration based
-     * transition={{ type: 'timing', duration: 300 }}
-     *
-     * @example
-     * // Spring based
-     * transition={{ type: 'spring', damping: 20, stiffness: 300 }}
-     */
-    transition?: Transition;
   };
 
 const AnimatedPath = memo<Omit<PathProps, 'animate' | 'clipRect' | 'clipOffset' | 'clipPath'>>(

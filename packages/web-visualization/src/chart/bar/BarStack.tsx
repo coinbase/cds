@@ -61,7 +61,7 @@ export type BarStackComponentProps = {
 
 export type BarStackComponent = React.FC<BarStackComponentProps>;
 
-export type BarStackProps = Pick<
+export type BarStackBaseProps = Pick<
   BarProps,
   'BarComponent' | 'fillOpacity' | 'stroke' | 'strokeWidth' | 'borderRadius' | 'transition'
 > & {
@@ -117,6 +117,8 @@ export type BarStackProps = Pick<
    */
   stackMinSize?: number;
 };
+
+export type BarStackProps = BarStackBaseProps;
 
 /**
  * BarStack component that renders a single stack of bars at a specific category index.
