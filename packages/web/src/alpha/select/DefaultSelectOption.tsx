@@ -100,7 +100,7 @@ const DefaultSelectOptionComponent = memo(
               as="div"
               className={classNames?.optionLabel}
               font="headline"
-              overflow="truncate"
+              overflow="wrap"
               style={styles?.optionLabel}
             >
               {label}
@@ -157,7 +157,6 @@ const DefaultSelectOptionComponent = memo(
             className={cx(multiline ? multilineTextCss : undefined, classNames?.optionCell)}
             end={end}
             innerSpacing={selectCellSpacingConfig.innerSpacing}
-            maxHeight={compact ? 56 : 64}
             media={media}
             minHeight={compact ? 40 : 56}
             outerSpacing={selectCellSpacingConfig.outerSpacing}

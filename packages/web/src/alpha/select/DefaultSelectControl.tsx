@@ -278,7 +278,7 @@ const DefaultSelectControlComponent = memo(
               </HStack>
             )}
             {shouldShowCompactLabel ? (
-              <HStack alignItems="center" height="100%" maxWidth="40%" paddingStart={1}>
+              <HStack alignItems="center" height="100%" paddingStart={1} width="40%">
                 <InputLabel color="fg" overflow="truncate">
                   {label}
                 </InputLabel>
@@ -288,7 +288,7 @@ const DefaultSelectControlComponent = memo(
               alignItems="center"
               borderRadius={200}
               justifyContent="space-between"
-              width="100%"
+              width={shouldShowCompactLabel ? '60%' : '100%'}
             >
               <HStack
                 ref={valueNodeContainerRef}
