@@ -80,7 +80,13 @@ const EPSILON_PX = 0.5;
  * The component focuses solely on overlap prevention logic for better separation of concerns.
  */
 export const ChartTextGroup = memo<ChartTextGroupProps>(
-  ({ labels, minGap = 8, prioritizeEndLabels = true, chartTextProps, LabelComponent = ChartText }) => {
+  ({
+    labels,
+    minGap = 8,
+    prioritizeEndLabels = true,
+    chartTextProps,
+    LabelComponent = ChartText,
+  }) => {
     const [boundingBoxes, setBoundingBoxes] = useState<Map<string, Rect>>(new Map());
     const { onDimensionsChange: propsOnDimensionsChange, ...restChartTextProps } =
       chartTextProps ?? {};
