@@ -214,7 +214,6 @@ const MultipleYAxes = () => {
 
 const initialData = [45, 52, 38, 45, 19, 23, 32];
 
-// todo: support this to be animated
 const MyCustomLine = memo(({ animate, ...props }: SolidLineProps) => <SolidLine {...props} />);
 
 const UpdatingChartValues = () => {

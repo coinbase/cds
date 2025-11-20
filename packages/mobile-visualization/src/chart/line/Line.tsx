@@ -157,7 +157,6 @@ export const Line = memo<LineProps>(
     const { animate, getSeries, getSeriesData, getXScale, getYScale, getXAxis } =
       useCartesianChartContext();
 
-    // todo: figure out why we have to do point animations here
     // Animation state for delayed point rendering (matches web timing)
     const pointsOpacity = useSharedValue(animate ? 0 : 1);
 

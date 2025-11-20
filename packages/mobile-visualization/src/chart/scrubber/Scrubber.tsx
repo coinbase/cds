@@ -311,7 +311,6 @@ export const Scrubber = memo(
         return xValue;
       }, [dataX, xScale]);
 
-      // todo: see if we can simplify these three sections
       const resolvedLabelValue = useSharedValue<SkParagraph | string>('');
 
       const updateResolvedLabel = useCallback(
