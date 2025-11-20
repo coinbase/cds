@@ -178,7 +178,7 @@ const ComboboxBase = memo(
             variant={variant}
           />
         ),
-        [SelectControlComponent, disabled, open, placeholder, setOpen, setSearchText],
+        [SelectControlComponent, disabled, open, placeholder, setOpen, setSearchText, variant],
       );
 
       // Store filtered options in a ref to avoid recreating the dropdown
