@@ -16,15 +16,6 @@ export type PathBaseProps = SharedProps & {
    * Whether to animate this path. Overrides the animate prop on the Chart component.
    */
   animate?: boolean;
-  /**
-   * Custom clip path rect. If provided, this overrides the default chart rect for clipping.
-   * Pass null to disable clipping.
-   */
-  clipRect?: Rect | null;
-  /**
-   * The offset to add to the clip rect boundaries.
-   */
-  clipOffset?: number;
 };
 
 export type PathProps = PathBaseProps &
@@ -43,6 +34,16 @@ export type PathProps = PathBaseProps &
     | 'onDragEndCapture'
     | 'onDragStartCapture'
   > & {
+    /**
+     * Offset added to the clip rect boundaries.
+     */
+    clipOffset?: number;
+    /**
+     * Custom clip path rect. If provided, this overrides the default chart rect for clipping.
+     * Pass null to disable clipping.
+     * @default drawingArea of chart + clipOffset
+     */
+    clipRect?: Rect | null;
     /**
      * Transition configuration for path.
      *

@@ -51,15 +51,6 @@ export type PathBaseProps = {
    * Opacity for the path stroke.
    */
   strokeOpacity?: number;
-  /**
-   * Custom clip path rect. If provided, this overrides the default chart rect for clipping.
-   * Will be overridden by clipPath if set.
-   */
-  clipRect?: Rect;
-  /**
-   * The offset to add to the clip rect boundaries.
-   */
-  clipOffset?: number;
 };
 
 export type PathProps = PathBaseProps &
@@ -84,11 +75,21 @@ export type PathProps = PathBaseProps &
      */
     d?: AnimatedProp<string | undefined>;
     /**
+     * Offset added to the clip rect boundaries.
+     */
+    clipOffset?: number;
+    /**
      * Custom clip path.
      * When set, overrides clipRect.
      * @note pass null to disable clipping.
      */
     clipPath?: string | null;
+    /**
+     * Custom clip path rect. If provided, this overrides the default chart rect for clipping.
+     * @default drawingArea of chart + clipOffset
+     * Will be overridden by clipPath if set.
+     */
+    clipRect?: Rect;
     /**
      * Animation transition
      *
