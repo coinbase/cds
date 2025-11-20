@@ -70,27 +70,33 @@ export const Tray = memo(
     );
 
     const renderChildren: TrayRenderChildren = useCallback(
-      ({ handleClose }) => (
-        <VStack paddingTop={title ? 0 : 2}>
-          {title &&
-            (typeof title === 'string' ? (
-              <HStack
-                alignItems="center"
-                onLayout={onTitleLayout}
-                paddingBottom={2}
-                paddingTop={3}
-                paddingX={3}
-              >
-                <Text font="title3">{title}</Text>
-              </HStack>
-            ) : (
-              <Box onLayout={onTitleLayout}>{title}</Box>
-            ))}
-          {header}
-          {typeof children === 'function' ? children({ handleClose }) : children}
-          {footer}
-        </VStack>
-      ),
+      ({ handleClose }) => {
+        const content = typeof children === 'function' ? children({ handleClose }) : children;
+
+        return (
+          <VStack flexGrow={1} flexShrink={1} minHeight={0} paddingTop={title ? 0 : 2}>
+            {title &&
+              (typeof title === 'string' ? (
+                <HStack
+                  alignItems="center"
+                  onLayout={onTitleLayout}
+                  paddingBottom={2}
+                  paddingTop={3}
+                  paddingX={3}
+                >
+                  <Text font="title3">{title}</Text>
+                </HStack>
+              ) : (
+                <Box onLayout={onTitleLayout}>{title}</Box>
+              ))}
+            {header}
+            <Box flexGrow={1} flexShrink={1} minHeight={0} width="100%">
+              {content}
+            </Box>
+            {footer}
+          </VStack>
+        );
+      },
       [children, footer, header, onTitleLayout, title],
     );
 
