@@ -145,6 +145,7 @@ function DataFormat() {
   return (
     <LineChart
       enableScrubbing
+      points
       showArea
       showXAxis
       showYAxis
@@ -152,7 +153,6 @@ function DataFormat() {
       curve="natural"
       height={{ base: 200, tablet: 225, desktop: 250 }}
       inset={{ top: 16, right: 16, bottom: 0, left: 0 }}
-      points
       series={[
         {
           id: 'line',
@@ -279,9 +279,6 @@ function MissingData() {
       showArea
       showXAxis
       showYAxis
-      height={{ base: 200, tablet: 225, desktop: 250 }}
-      // You can render points at every valid data point by always returning true
-      points
       series={[
         {
           id: 'pageViews',
@@ -306,6 +303,9 @@ function MissingData() {
         showGrid: true,
         tickLabelFormatter: numberFormatter,
       }}
+      height={{ base: 200, tablet: 225, desktop: 250 }}
+      // You can render points at every valid data point by always returning true
+      points
     >
       {/* We can offset the overlay to account for the points being drawn on the lines */}
       <Scrubber overlayOffset={6} />
@@ -636,9 +636,9 @@ function Gradients() {
         ))}
       </HStack>
       <LineChart
+        points
         showYAxis
         height={{ base: 200, tablet: 225, desktop: 250 }}
-        points
         series={[
           {
             id: 'continuousGradient',
@@ -1714,10 +1714,10 @@ function CustomLabelComponent() {
     return (
       <DefaultScrubberLabel
         {...props}
+        elevated
         background="var(--color-bgPrimary)"
         color="var(--color-bgPrimaryWash)"
         dy={32}
-        elevated
         fontWeight="label1"
         y={drawingArea.y + drawingArea.height}
       />

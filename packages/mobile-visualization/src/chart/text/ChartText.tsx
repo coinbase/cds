@@ -63,17 +63,49 @@ export type TextHorizontalAlignment = 'left' | 'center' | 'right';
  */
 export type TextVerticalAlignment = 'top' | 'middle' | 'bottom';
 
-export type ChartTextProps = {
+export type ChartTextBaseProps = {
   /**
    * The text color.
    * @default theme.color.fgMuted
    */
   color?: string;
   /**
-   * The background color of the text's container element.
-   * @default 'transparent' if not elevated, theme.color.bgElevation1 if elevated
+   * The background color of the text's background rectangle.
+   * @default theme.color.bgElevation1 if elevated, otherwise 'transparent'
    */
   background?: string;
+  /**
+   * Whether the text's background should have an elevated appearance with a shadow.
+   */
+  elevated?: boolean;
+  /**
+   * When true, disables automatic repositioning to fit within bounds.
+   */
+  disableRepositioning?: boolean;
+  /**
+   * Optional bounds rectangle to constrain the text within. If provided, text will be positioned
+   * to stay within these bounds. Defaults to the full chart bounds when not provided.
+   */
+  bounds?: Rect;
+  /**
+   * Callback fired when text dimensions change.
+   * Used for collision detection and smart positioning.
+   * Returns the adjusted position and dimensions.
+   */
+  onDimensionsChange?: (rect: Rect) => void;
+  /**
+   * Inset around the text content for the background rect.
+   * Only affects the background, text position remains unchanged.
+   */
+  inset?: number | ChartInset;
+  /**
+   * Border radius for the background rectangle.
+   * @default 4
+   */
+  borderRadius?: number;
+};
+
+export type ChartTextProps = ChartTextBaseProps & {
   /**
    * The text content to display.
    * Pass a string for simple text rendering, or build your own SkParagraph for advanced formatting.
@@ -110,17 +142,11 @@ export type ChartTextProps = {
   /**
    * Horizontal offset in pixels to adjust the final x position.
    * Useful for fine-tuning placement without affecting alignment.
-   * @default 0
    */
   dx?: AnimatedProp<number>;
   /**
    * Vertical offset in pixels to adjust the final y position.
    * Useful for fine-tuning placement or elevation.
-   * Positive values move the text down, negative values move it up.
-   * @default 0
-   * @example
-   * // Elevate text 10 pixels above its calculated position
-   * dy={-10}
    */
   dy?: AnimatedProp<number>;
   /**
@@ -140,37 +166,11 @@ export type ChartTextProps = {
    */
   paragraphAlignment?: TextAlign;
   /**
-   * When true, disables automatic repositioning to fit within bounds.
-   */
-  disableRepositioning?: boolean;
-  /**
-   * Optional bounds rectangle to constrain the text within. If provided, text will be positioned
-   * to stay within these bounds. If not provided, defaults to the full chart bounds.
-   */
-  bounds?: Rect;
-  /**
-   * Callback fired when text dimensions change.
-   * Used for collision detection and smart positioning.
-   * Returns the adjusted position and dimensions.
-   */
-  onDimensionsChange?: (rect: Rect) => void;
-  /**
-   * Inset around the text content for the background rect.
-   * Only affects the background, text position remains unchanged.
-   */
-  inset?: number | ChartInset;
-  /**
-   * Border radius for the background rectangle.
-   * @default 4
-   */
-  borderRadius?: number;
-  /**
-   * Font from theme to use for text rendering.
-   * Accepts theme font keys like 'headline', 'body', 'label1', 'label2', etc.
+   * Theme font to use for text rendering.
    * This sets both fontSize and fontWeight from the theme.
+   * @note this will not adjust the actual font family used,
+   * that is only adjusted by using fontFamilies on ChartText or at chart level
    * @default 'label2'
-   * @example
-   * <ChartText font="headline">Chart Title</ChartText>
    */
   font?: ThemeVars.Font;
   /**
@@ -188,17 +188,13 @@ export type ChartTextProps = {
    */
   fontSize?: number;
   /**
-   * Font weight override.
+   * Font weight.
    * Overrides the weight from the font prop.
-   * @example
-   * <ChartText font="label1" fontWeight="700">Bold text</ChartText>
    */
   fontWeight?: FontWeight;
   /**
    * Font style (normal or italic).
    * @default FontSlant.Upright
-   * @example
-   * <ChartText fontStyle={FontSlant.Italic}>Italic text</ChartText>
    */
   fontStyle?: FontSlant;
   /**
@@ -206,10 +202,6 @@ export type ChartTextProps = {
    * @default 1
    */
   opacity?: AnimatedProp<number>;
-  /**
-   * Whether the text's background should have an elevated appearance with a shadow.
-   */
-  elevated?: boolean;
 };
 
 export const ChartText = memo<ChartTextProps>(
@@ -241,7 +233,7 @@ export const ChartText = memo<ChartTextProps>(
     const {
       width: chartWidth,
       height: chartHeight,
-      fontFamily,
+      fontFamilies: contextFontFamilies,
       fontProvider,
     } = useCartesianChartContext();
 
@@ -251,12 +243,12 @@ export const ChartText = memo<ChartTextProps>(
 
     const defaultParagraphStyle: SkTextStyle = useMemo(
       () => ({
-        fontFamilies: fontFamilies ?? (fontFamily ? [fontFamily] : []),
+        fontFamilies: fontFamilies ?? contextFontFamilies ?? [],
         fontSize: fontSize ?? theme.fontSize[font],
         fontStyle: { weight: fontWeight ?? getFontWeight(theme, font), slant: fontStyleProp },
         color: Skia.Color(color ?? theme.color.fgMuted),
       }),
-      [fontFamilies, fontFamily, fontSize, theme, font, fontWeight, fontStyleProp, color],
+      [fontFamilies, contextFontFamilies, fontSize, theme, font, fontWeight, fontStyleProp, color],
     );
     const paragraph = useDerivedValue<SkParagraph | null>(() => {
       const childrenValue = unwrapAnimatedValue(children);

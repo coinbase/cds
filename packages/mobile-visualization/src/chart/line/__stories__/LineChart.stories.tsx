@@ -2113,10 +2113,10 @@ function CustomLabelComponent() {
     return (
       <DefaultScrubberLabel
         {...props}
+        elevated
         background={theme.color.bgPrimary}
         color={theme.color.bgPrimaryWash}
         dy={32}
-        elevated
         fontWeight={FontWeight.Bold}
         y={drawingArea.y + drawingArea.height}
       />

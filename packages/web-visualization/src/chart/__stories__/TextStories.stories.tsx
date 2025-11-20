@@ -277,9 +277,9 @@ export const InteractiveChartText = () => {
         }}
       >
         <LineChart
+          points
           enableScrubbing={false}
           height={CHART_HEIGHT}
-          points
           series={[
             {
               id: 'sample-data',
@@ -296,11 +296,11 @@ export const InteractiveChartText = () => {
           <XAxis showGrid showLine showTickMarks />
           <YAxis showGrid showLine showTickMarks position="left" />
           <ChartText
+            elevated
             borderRadius={8}
             color="var(--color-fgPrimary)"
             dx={offsetX}
             dy={offsetY}
-            elevated
             font="label1"
             horizontalAlignment={horizontalAlignment}
             inset={chartTextInset}

@@ -33,18 +33,51 @@ export type TextHorizontalAlignment = 'left' | 'center' | 'right';
  */
 export type TextVerticalAlignment = 'top' | 'middle' | 'bottom';
 
-export type ChartTextProps = SharedProps &
+export type ChartTextBaseProps = SharedProps & {
+  /**
+   * The text color.
+   * @default 'var(--color-fgMuted)'
+   */
+  color?: string;
+  /**
+   * The background color of the text's background rectangle.
+   * @default 'var(--color-bg)' if elevated, otherwise 'transparent'
+   */
+  background?: string;
+  /**
+   * Whether the text should have an elevated appearance with a shadow.
+   * @default false
+   */
+  elevated?: boolean;
+  /**
+   * When true, disables automatic repositioning to fit within bounds.
+   */
+  disableRepositioning?: boolean;
+  /**
+   * Optional bounds rectangle to constrain the text within. If provided, text will be positioned
+   * to stay within these bounds. Defaults to the full chart bounds when not provided.
+   */
+  bounds?: Rect;
+  /**
+   * Callback fired when text dimensions change.
+   * Used for collision detection and smart positioning.
+   * Returns the adjusted position and dimensions.
+   */
+  onDimensionsChange?: (rect: Rect) => void;
+  /**
+   * Inset around the text content for the background rect.
+   * Only affects the background, text position remains unchanged.
+   */
+  inset?: number | ChartInset;
+  /**
+   * Border radius for the background rectangle.
+   * @default 4
+   */
+  borderRadius?: number;
+};
+
+export type ChartTextProps = ChartTextBaseProps &
   Pick<BoxProps<'g'>, 'font' | 'fontFamily' | 'fontSize' | 'fontWeight' | 'opacity'> & {
-    /**
-     * The text color.
-     * @default 'var(--color-fgMuted)'
-     */
-    color?: string;
-    /**
-     * The background color of the text's background rectangle.
-     * @default 'transparent' if not elevated, 'var(--color-bg)' if elevated
-     */
-    background?: string;
     /**
      * The desired x offset in SVG pixels.
      */
@@ -53,12 +86,6 @@ export type ChartTextProps = SharedProps &
      * The desired y offset in SVG pixels.
      */
     dy?: number;
-    // override box responsive style
-    /**
-     * Whether the text should have an elevated appearance with a shadow.
-     * @default false
-     */
-    elevated?: boolean;
     /**
      * The text content to display.
      */
@@ -83,26 +110,6 @@ export type ChartTextProps = SharedProps &
      * @default 'middle'
      */
     verticalAlignment?: TextVerticalAlignment;
-    /**
-     * When true, disables automatic repositioning to fit within bounds.
-     */
-    disableRepositioning?: boolean;
-    /**
-     * Optional bounds rectangle to constrain the text within. If provided, text will be positioned
-     * to stay within these bounds. Defaults to the full chart bounds when not provided.
-     */
-    bounds?: Rect;
-    /**
-     * Callback fired when text dimensions change.
-     * Used for collision detection and smart positioning.
-     * Returns the adjusted position and dimensions.
-     */
-    onDimensionsChange?: (rect: Rect) => void;
-    /**
-     * Inset around the text content for the background rect.
-     * Only affects the background, text position remains unchanged.
-     */
-    inset?: number | ChartInset;
     style?: React.CSSProperties;
     styles?: {
       root?: React.CSSProperties;
@@ -115,11 +122,6 @@ export type ChartTextProps = SharedProps &
       text?: string;
       backgroundRect?: string;
     };
-    /**
-     * Border radius for the background rectangle.
-     * @default 4
-     */
-    borderRadius?: number;
   };
 
 /**

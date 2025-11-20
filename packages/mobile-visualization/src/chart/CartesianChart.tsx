@@ -70,10 +70,12 @@ export type CartesianChartProps = CartesianChartBaseProps &
   Pick<ScrubberProviderProps, 'allowOverflowGestures'> &
   Omit<BoxProps, 'fontFamily'> & {
     /**
-     * Default font to use within ChartText.
+     * Default font families to use within ChartText.
      * If not provided, will be the default for the system.
+     * @example
+     * ['Helvetica', 'sans-serif']
      */
-    fontFamily?: string;
+    fontFamilies?: string[];
     /**
      * Skia font provider to allow for custom fonts.
      * If not provided, the only available fonts will be those defined by the system.
@@ -115,7 +117,7 @@ export const CartesianChart = memo(
         style,
         styles,
         allowOverflowGestures,
-        fontFamily,
+        fontFamilies,
         fontProvider: fontProviderProp,
         // React Native will collapse views by default when only used
         // to group children, which interferes with gesture-handler
@@ -380,7 +382,7 @@ export const CartesianChart = memo(
           animate,
           width: chartWidth,
           height: chartHeight,
-          fontFamily,
+          fontFamilies,
           fontProvider,
           getXAxis,
           getYAxis,
@@ -401,7 +403,7 @@ export const CartesianChart = memo(
           animate,
           chartWidth,
           chartHeight,
-          fontFamily,
+          fontFamilies,
           fontProvider,
           getXAxis,
           getYAxis,

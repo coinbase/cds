@@ -40,10 +40,10 @@ export type CartesianChartContextValue = {
    */
   height: number;
   /**
-   * Default font family to use within ChartText.
+   * Default font families to use within ChartText.
    * When not set, should use the default for the system.
    */
-  fontFamily?: string;
+  fontFamilies?: string[];
   /**
    * Skia font provider.
    */
