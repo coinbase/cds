@@ -109,6 +109,8 @@ export const DefaultSelectControlComponent = memo(
               <InputLabel
                 alignSelf={labelVariant === 'inside' ? 'flex-start' : undefined}
                 color="fg"
+                ellipsizeMode="tail"
+                numberOfLines={2}
                 paddingX={labelVariant === 'inside' ? 2 : 0}
                 paddingY={shouldShowCompactLabel || labelVariant === 'inside' ? 0 : 0.5}
               >
@@ -226,13 +228,13 @@ export const DefaultSelectControlComponent = memo(
                   </HStack>
                 )}
                 {shouldShowCompactLabel ? (
-                  <HStack alignItems="center" maxWidth="40%" paddingEnd={1}>
+                  <HStack alignItems="center" paddingEnd={1} width="40%">
                     {labelNode}
                   </HStack>
                 ) : null}
                 <VStack
                   justifyContent="center"
-                  maxWidth={startNode ? '70%' : '85%'}
+                  maxWidth={shouldShowCompactLabel ? '45%' : startNode ? '70%' : '85%'}
                   style={styles?.controlValueNode}
                 >
                   {valueNode}
