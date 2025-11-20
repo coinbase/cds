@@ -138,7 +138,7 @@ const ComboboxBase = memo(
       const optionsRef = useRef(options);
       optionsRef.current = options;
 
-      const ComboboxControl = useMemo(
+      const ComboboxControlComponent = useMemo(
         () => (props: SelectControlProps<Type, SelectOptionValue>) => (
           <SelectControlComponent
             ref={controlRef.current?.refs.setReference}
@@ -174,7 +174,7 @@ const ComboboxBase = memo(
       return (
         <Select
           ref={controlRef}
-          SelectControlComponent={ComboboxControl}
+          SelectControlComponent={ComboboxControlComponent}
           accessibilityLabel={accessibilityLabel}
           defaultOpen={defaultOpen}
           onChange={(value) => onChange?.(value)}

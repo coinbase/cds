@@ -155,7 +155,7 @@ const ComboboxBase = memo(
       const valueRef = useRef(value);
       valueRef.current = value;
 
-      const ComboboxControl = useCallback(
+      const ComboboxControlComponent = useCallback(
         (props: SelectControlProps<Type, SelectOptionValue>) => (
           <SelectControlComponent
             {...props}
@@ -202,19 +202,19 @@ const ComboboxBase = memo(
             }
             header={
               <Box paddingX={3}>
-                <ComboboxControl {...props} label={null} styles={undefined} />
+                <ComboboxControlComponent {...props} label={null} styles={undefined} />
               </Box>
             }
             options={filteredOptionsRef.current}
           />
         ),
-        [ComboboxControl, SelectDropdownComponent, closeButtonLabel, label, setOpen],
+        [ComboboxControlComponent, SelectDropdownComponent, closeButtonLabel, label, setOpen],
       );
 
       return (
         <Select
           ref={controlRef}
-          SelectControlComponent={ComboboxControl}
+          SelectControlComponent={ComboboxControlComponent}
           SelectDropdownComponent={ComboboxDropdownComponent}
           accessibilityLabel={accessibilityLabel}
           defaultOpen={defaultOpen}
