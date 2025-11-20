@@ -7,10 +7,13 @@ import {
   useRef,
   useState,
 } from 'react';
+import { KeyboardAvoidingView } from 'react-native';
 import Fuse from 'fuse.js';
 
+import { Button } from '../../buttons/Button';
 import { NativeInput } from '../../controls/NativeInput';
 import { Box } from '../../layout';
+import { StickyFooter } from '../../sticky-footer/StickyFooter';
 import { DefaultSelectControl } from '../select/DefaultSelectControl';
 import { DefaultSelectDropdown } from '../select/DefaultSelectDropdown';
 import {
@@ -54,6 +57,8 @@ export type ComboboxBaseProps<
   ) => SelectOption<SelectOptionValue>[];
   /** Default search text value for uncontrolled mode */
   defaultSearchText?: string;
+  /** Label for close button when combobox is open */
+  closeButtonLabel?: string;
 };
 
 export type ComboboxProps<
@@ -89,6 +94,7 @@ const ComboboxBase = memo(
         searchText: searchTextProp,
         onSearch: onSearchProp,
         defaultSearchText = '',
+        closeButtonLabel = 'Done',
         filterFunction,
         SelectControlComponent = DefaultSelectControl,
         SelectDropdownComponent = DefaultSelectDropdown,
@@ -182,9 +188,18 @@ const ComboboxBase = memo(
       const ComboboxDropdownComponent = useCallback(
         (props: SelectDropdownProps<Type, SelectOptionValue>) => (
           <SelectDropdownComponent
-            height="150%"
             label={label}
+            style={{ paddingBottom: 200 }}
             {...props}
+            footer={
+              <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={86}>
+                <StickyFooter background="bg">
+                  <Button compact onPress={() => setOpen(false)}>
+                    {closeButtonLabel}
+                  </Button>
+                </StickyFooter>
+              </KeyboardAvoidingView>
+            }
             header={
               <Box paddingX={3}>
                 <ComboboxControl {...props} label={null} styles={undefined} />
@@ -193,7 +208,7 @@ const ComboboxBase = memo(
             options={filteredOptionsRef.current}
           />
         ),
-        [ComboboxControl, SelectDropdownComponent, label],
+        [ComboboxControl, SelectDropdownComponent, closeButtonLabel, label, setOpen],
       );
 
       return (
