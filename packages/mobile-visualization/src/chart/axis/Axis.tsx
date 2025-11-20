@@ -54,7 +54,6 @@ export type AxisTickLabelComponentProps = Pick<
   | 'x'
   | 'y'
   | 'children'
-  | 'testID'
   | 'dx'
   | 'dy'
   | 'font'

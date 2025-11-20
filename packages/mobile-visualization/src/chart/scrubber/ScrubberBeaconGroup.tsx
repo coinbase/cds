@@ -154,10 +154,7 @@ export type ScrubberBeaconGroupProps = ScrubberBeaconGroupBaseProps & {
 
 export const ScrubberBeaconGroup = memo(
   forwardRef<ScrubberBeaconGroupRef, ScrubberBeaconGroupProps>(
-    (
-      { seriesIds, idlePulse, transitions, BeaconComponent = DefaultScrubberBeacon, testID },
-      ref,
-    ) => {
+    ({ seriesIds, idlePulse, transitions, BeaconComponent = DefaultScrubberBeacon }, ref) => {
       const ScrubberBeaconRefs = useRefMap<ScrubberBeaconRef>();
       const { scrubberPosition } = useScrubberContext();
       const { getXAxis, series, maxDataLength, animate } = useCartesianChartContext();

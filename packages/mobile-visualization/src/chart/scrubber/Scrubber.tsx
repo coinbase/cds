@@ -221,7 +221,6 @@ export const Scrubber = memo(
         overlayOffset = 2,
         beaconLabelMinGap,
         beaconLabelHorizontalOffset,
-        testID,
         idlePulse,
         beaconTransitions,
       },
@@ -386,7 +385,6 @@ export const Scrubber = memo(
             BeaconComponent={BeaconComponent}
             idlePulse={idlePulse}
             seriesIds={filteredSeriesIds}
-            testID={testID}
             transitions={beaconTransitions}
           />
           {scrubberBeaconLabels.length > 0 && (
