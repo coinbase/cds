@@ -253,10 +253,6 @@ function LiveUpdates() {
           color: assets.btc.color,
         },
       ]}
-      xAxis={{
-        // Give space for pulse animation
-        range: ({ min, max }) => ({ min, max: max - 16 }),
-      }}
     >
       <Scrubber ref={scrubberRef} elevateLabel accessibilityLabel={scrubberAccessibilityLabel} />
     </LineChart>
@@ -753,9 +749,6 @@ function GainLossChart() {
           gradient: lineGradient,
         },
       ]}
-      xAxis={{
-        range: ({ min, max }) => ({ min, max: max - 16 }),
-      }}
     >
       <YAxis showGrid requestedTickCount={2} tickLabelFormatter={tickLabelFormatter} />
       <Line showArea AreaComponent={GradientDottedArea} seriesId="prices" strokeWidth={3} />
@@ -843,8 +836,8 @@ function StylingScrubber() {
       xAxis={{
         // Used on the x-axis to provide context for each index from the series data array
         data: pages,
-        // Give space for idle pulse animation
-        range: ({ min, max }) => ({ min, max: max - 16 }),
+        // Give space between the scrubber and the axis
+        range: ({ min, max }) => ({ min, max: max - 8 }),
       }}
       yAxis={{
         showGrid: true,
@@ -1224,10 +1217,6 @@ function AssetPriceWithDottedArea() {
             },
           ]}
           style={{ outlineColor: assets.btc.color }}
-          xAxis={{
-            // Give space for idle pulse animation
-            range: ({ min, max }) => ({ min, max: max - 16 }),
-          }}
         >
           <Scrubber
             elevateLabel

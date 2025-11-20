@@ -14,10 +14,6 @@ Scrubber can be used to provide horizontal interaction with a chart. As you drag
   ]}
   showYAxis
   showArea
-  xAxis={{
-    /* Give space between the scrubber and the axis / chart edge when it might pulse */
-    range: ({ min, max }) => ({ min, max: max - 16 }),
-  }}
   yAxis={{
     showGrid: true,
   }}
@@ -85,10 +81,6 @@ Setting `idlePulse` to `true` will cause the scrubber beacons to pulse when the 
     },
   ]}
   showArea
-  xAxis={{
-    /* Give space between the scrubber and the axis / chart edge when it might pulse */
-    range: ({ min, max }) => ({ min, max: max - 16 }),
-  }}
 >
   <ReferenceLine
     LineComponent={(props) => <DottedLine {...props} dashIntervals={[0, 16]} strokeWidth={3} />}
@@ -118,8 +110,8 @@ function ImperativeHandle() {
         showYAxis
         showArea
         xAxis={{
-          /* Give space between the scrubber and the axis / chart edge when it might pulse */
-          range: ({ min, max }) => ({ min, max: max - 16 }),
+          /* Give space between the scrubber and the axis */
+          range: ({ min, max }) => ({ min, max: max - 8 }),
         }}
         yAxis={{
           showGrid: true,
