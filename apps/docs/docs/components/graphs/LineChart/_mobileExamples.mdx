@@ -770,7 +770,7 @@ By default, charts will use the default font of the system. You can use `fontFam
 
 ```jsx
 <LineChart
-  fontFamily="Coinbase Sans"
+  fontFamilies={["Coinbase Sans"]}
   ...
 >
   ...
@@ -789,7 +789,7 @@ const fontProvider = useFonts({
 
 return (
   <LineChart
-    fontFamily="MyCustomFontFamily"
+    fontFamilies={["MyCustomFontFamily"]}
     fontProvider={fontProvider}
     ...
   >
