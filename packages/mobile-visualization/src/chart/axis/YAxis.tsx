@@ -211,7 +211,7 @@ export const YAxis = memo<YAxisProps>(
                 <TickMarkLineComponent
                   key={`tick-mark-${tick.tick}-${index}`}
                   animate={false}
-                  clipPath={undefined}
+                  clipPath={null}
                   d={lineToPath(tickX, tick.position, tickX2, tick.position)}
                   stroke={theme.color.fg}
                   strokeCap="square"

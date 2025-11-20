@@ -73,7 +73,7 @@ export const DefaultBar = memo<DefaultBarProps>(
     return (
       <Path
         animate={animate}
-        clipPath={undefined}
+        clipPath={null}
         d={targetPath}
         fill={stroke ? 'none' : defaultFill}
         fillOpacity={fillOpacity}

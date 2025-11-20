@@ -86,9 +86,9 @@ export type PathProps = PathBaseProps &
     /**
      * Custom clip path.
      * When set, overrides clipRect.
-     * @note pass undefined to disable clipping.
+     * @note pass null to disable clipping.
      */
-    clipPath?: string | undefined;
+    clipPath?: string | null;
     /**
      * Animation transition
      *
@@ -192,9 +192,6 @@ export const Path = memo<PathProps>((props) => {
   const rect = clipRect ?? context.drawingArea;
   const animate = animateProp ?? context.animate;
 
-  // Check if clipPath was explicitly provided (even if undefined)
-  const hasExplicitClipPath = 'clipPath' in props;
-
   // The clip offset provides extra padding to prevent path from being cut off
   // Area charts typically use offset=0 for exact clipping, while lines use offset=2 for breathing room
   const totalOffset = clipOffset * 2; // Applied on both sides
@@ -246,12 +243,12 @@ export const Path = memo<PathProps>((props) => {
   );
 
   // Resolve the final clip path:
-  // 1. If clipPath prop was explicitly provided, use it (even if undefined = no clipping)
+  // 1. If clipPath prop was explicitly provided, use it (even if null = no clipping)
   // 2. If animating, use the interpolated clip path
   // 3. Otherwise, use static target clip path
   const resolvedClipPath = useMemo(() => {
-    // If clipPath was explicitly provided, use it directly
-    if (hasExplicitClipPath) {
+    // If clipPath was explicitly provided (null or string), use it directly
+    if (clipPathProp !== undefined) {
       return clipPathProp;
     }
 
@@ -260,9 +257,9 @@ export const Path = memo<PathProps>((props) => {
       return targetClipPath;
     }
 
-    // Return null here since we'll use animatedClipPath directly
-    return null;
-  }, [hasExplicitClipPath, clipPathProp, animate, targetClipPath]);
+    // Return undefined here since we'll use animatedClipPath directly
+    return undefined;
+  }, [clipPathProp, animate, targetClipPath]);
 
   // Convert SVG path string to SkPath for static rendering
   const staticPath = useDerivedValue(() => {
@@ -314,15 +311,13 @@ export const Path = memo<PathProps>((props) => {
   );
 
   // Determine which clip path to use
-  const finalClipPath = animate && resolvedClipPath === null ? animatedClipPath : resolvedClipPath;
+  const finalClipPath =
+    animate && resolvedClipPath === undefined ? animatedClipPath : resolvedClipPath;
 
-  // If finalClipPath is undefined, render without clipping
-  if (finalClipPath === undefined) {
+  // If finalClipPath is null, render without clipping
+  if (finalClipPath === null) {
     return content;
   }
-
-  // Don't render if finalClipPath is null (invalid state)
-  if (finalClipPath === null) return null;
 
   return <Group clip={finalClipPath}>{content}</Group>;
 });
