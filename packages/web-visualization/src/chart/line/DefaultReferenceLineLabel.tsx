@@ -17,9 +17,9 @@ const elevatedBorderRadius = 4;
 export const DefaultReferenceLineLabel = memo<DefaultReferenceLineLabelProps>(
   ({
     color = 'var(--color-fgMuted)',
-    elevation,
-    borderRadius = elevation && elevation > 0 ? elevatedBorderRadius : undefined,
-    inset = elevation && elevation > 0 ? elevatedInset : undefined,
+    elevated,
+    borderRadius = elevated ? elevatedBorderRadius : undefined,
+    inset = elevated ? elevatedInset : undefined,
     className,
     classNames,
     style,
@@ -47,7 +47,7 @@ export const DefaultReferenceLineLabel = memo<DefaultReferenceLineLabelProps>(
         borderRadius={borderRadius}
         classNames={mergedClassNames}
         color={color}
-        elevation={elevation}
+        elevated={elevated}
         inset={inset}
         styles={mergedStyles}
         {...props}

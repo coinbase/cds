@@ -2116,7 +2116,7 @@ function CustomLabelComponent() {
         background={theme.color.bgPrimary}
         color={theme.color.bgPrimaryWash}
         dy={32}
-        elevation={1}
+        elevated
         fontWeight={FontWeight.Bold}
         y={drawingArea.y + drawingArea.height}
       />

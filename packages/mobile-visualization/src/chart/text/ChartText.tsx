@@ -2,7 +2,7 @@ import React, { memo, useMemo } from 'react';
 import { type ViewStyle } from 'react-native';
 import { runOnJS, useAnimatedReaction, useDerivedValue } from 'react-native-reanimated';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
-import type { ElevationLevels, Rect, SharedProps } from '@coinbase/cds-common/types';
+import type { Rect, SharedProps } from '@coinbase/cds-common/types';
 import type { Theme } from '@coinbase/cds-mobile/core/theme';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 import {
@@ -24,33 +24,6 @@ import {
 
 import { useCartesianChartContext } from '../ChartProvider';
 import { type ChartInset, getChartInset, getColorWithOpacity, unwrapAnimatedValue } from '../utils';
-
-type Shadow = {
-  elevation?: number;
-  shadowColor?: ViewStyle['shadowColor'];
-  shadowOpacity?: ViewStyle['shadowOpacity'];
-  shadowOffset?: ViewStyle['shadowOffset'];
-  shadowRadius?: ViewStyle['shadowRadius'];
-  backgroundColor?: string;
-};
-
-// todo: how can we simplify elevation
-const getElevationStyles = (elevation: ElevationLevels, theme: Theme) => {
-  const elevationStyles: Record<ElevationLevels, Shadow> = {
-    0: {},
-    1: {
-      elevation: 2,
-      backgroundColor: theme.color.bgElevation1,
-      ...theme.shadow.elevation1,
-    },
-    2: {
-      elevation: 8,
-      backgroundColor: theme.color.bgElevation2,
-      ...theme.shadow.elevation2,
-    },
-  };
-  return elevationStyles[elevation];
-};
 
 /**
  * Converts a fontWeight from Theme to a Skia FontWeight
@@ -90,7 +63,7 @@ export type TextHorizontalAlignment = 'left' | 'center' | 'right';
  */
 export type TextVerticalAlignment = 'top' | 'middle' | 'bottom';
 
-export type ChartTextProps = SharedProps & {
+export type ChartTextProps = {
   /**
    * The text color.
    * @default theme.color.fgMuted
@@ -98,7 +71,7 @@ export type ChartTextProps = SharedProps & {
   color?: string;
   /**
    * The background color of the text's container element.
-   * @default 'transparent' if not elevated, theme.color.bg if elevated
+   * @default 'transparent' if not elevated, theme.color.bgElevation1 if elevated
    */
   background?: string;
   /**
@@ -234,13 +207,9 @@ export type ChartTextProps = SharedProps & {
    */
   opacity?: AnimatedProp<number>;
   /**
-   * Elevation level for drop shadow.
-   * @default undefined
-   * @example
-   * // Simple elevation
-   * elevation={1}
+   * Whether the text's background should have an elevated appearance with a shadow.
    */
-  elevation?: ElevationLevels;
+  elevated?: boolean;
 };
 
 export const ChartText = memo<ChartTextProps>(
@@ -255,7 +224,6 @@ export const ChartText = memo<ChartTextProps>(
     paragraphAlignment = TextAlign.Left,
     disableRepositioning = false,
     bounds,
-    testID,
     color,
     background: backgroundProp,
     borderRadius = 4,
@@ -267,7 +235,7 @@ export const ChartText = memo<ChartTextProps>(
     fontSize,
     fontWeight,
     fontStyle: fontStyleProp = FontSlant.Upright,
-    elevation,
+    elevated,
   }) => {
     const theme = useTheme();
     const {
@@ -279,8 +247,7 @@ export const ChartText = memo<ChartTextProps>(
 
     const inset = useMemo(() => getChartInset(insetInput), [insetInput]);
 
-    const background =
-      backgroundProp ?? (elevation && elevation > 0 ? theme.color.bg : 'transparent');
+    const background = backgroundProp ?? (elevated ? theme.color.bgElevation1 : 'transparent');
 
     const defaultParagraphStyle: SkTextStyle = useMemo(
       () => ({
@@ -478,7 +445,7 @@ export const ChartText = memo<ChartTextProps>(
       [backgroundRectWithOffset],
     );
 
-    const elevationStylesResult = getElevationStyles(elevation ?? 0, theme);
+    const elevationShadow = elevated ? theme.shadow.elevation1 : undefined;
 
     // Calculate the paragraph's internal x offset from line metrics based on text alignment
     const paragraphTransform = useDerivedValue<Transforms3d>(() => {
@@ -508,7 +475,7 @@ export const ChartText = memo<ChartTextProps>(
 
     // Opacity on a group doesn't impact the paragraph so we need to apply it to Group
     return (
-      <Group data-testID={testID} layer={<Paint opacity={groupOpacity} />}>
+      <Group layer={<Paint opacity={groupOpacity} />}>
         {background !== 'transparent' && (
           <RoundedRect
             color={background as Color}
@@ -518,15 +485,15 @@ export const ChartText = memo<ChartTextProps>(
             x={backgroundRectX}
             y={backgroundRectY}
           >
-            {elevationStylesResult && (
+            {elevationShadow && (
               <Shadow
-                blur={Number(elevationStylesResult.shadowRadius ?? 0)}
+                blur={Number(elevationShadow.shadowRadius ?? 0)}
                 color={getColorWithOpacity(
-                  String(elevationStylesResult.shadowColor ?? '#000000'),
-                  Number(elevationStylesResult.shadowOpacity ?? 1),
+                  String(elevationShadow.shadowColor ?? '#000000'),
+                  Number(elevationShadow.shadowOpacity ?? 1),
                 )}
-                dx={Number(elevationStylesResult.shadowOffset?.width ?? 0)}
-                dy={Number(elevationStylesResult.shadowOffset?.height ?? 0)}
+                dx={Number(elevationShadow.shadowOffset?.width ?? 0)}
+                dy={Number(elevationShadow.shadowOffset?.height ?? 0)}
               />
             )}
           </RoundedRect>

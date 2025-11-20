@@ -10,7 +10,7 @@ const labelHorizontalInset = 4;
 export type DefaultScrubberBeaconLabelProps = ScrubberBeaconLabelProps &
   Pick<
     ChartTextProps,
-    'background' | 'elevation' | 'borderRadius' | 'font' | 'verticalAlignment' | 'inset' | 'opacity'
+    'background' | 'elevated' | 'borderRadius' | 'font' | 'verticalAlignment' | 'inset' | 'opacity'
   >;
 
 /**
@@ -20,7 +20,7 @@ export const DefaultScrubberBeaconLabel = memo<DefaultScrubberBeaconLabelProps>(
   ({
     background = 'var(--color-bg',
     color = 'var(--color-fgPrimary)',
-    elevation = 1,
+    elevated = true,
     borderRadius = 4,
     font = 'label1',
     verticalAlignment = 'middle',
@@ -39,7 +39,7 @@ export const DefaultScrubberBeaconLabel = memo<DefaultScrubberBeaconLabelProps>(
         background={background}
         borderRadius={borderRadius}
         color={color}
-        elevation={elevation}
+        elevated={elevated}
         font={font}
         inset={inset}
         verticalAlignment={verticalAlignment}

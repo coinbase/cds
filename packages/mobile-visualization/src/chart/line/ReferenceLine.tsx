@@ -37,7 +37,7 @@ export type ReferenceLineLabelComponentProps = Pick<
   | 'opacity'
   | 'dx'
   | 'dy'
-  | 'elevation'
+  | 'elevated'
   | 'paragraphAlignment'
 >;
 
@@ -188,7 +188,7 @@ export const ReferenceLine = memo<ReferenceLineProps>(
           <LineComponent animate={false} d={horizontalLine} stroke={effectiveLineStroke} />
           {label && (
             <LabelComponent
-              elevation={elevateLabel ? 1 : undefined}
+              elevated={elevateLabel}
               opacity={labelOpacity}
               verticalAlignment={isHorizontal ? 'middle' : undefined}
               x={labelX}
@@ -217,7 +217,7 @@ export const ReferenceLine = memo<ReferenceLineProps>(
           <LineComponent animate={false} d={verticalLine} stroke={effectiveLineStroke} />
           {label && (
             <LabelComponent
-              elevation={elevateLabel ? 1 : undefined}
+              elevated={elevateLabel}
               horizontalAlignment={!isHorizontal ? 'center' : undefined}
               opacity={labelOpacity}
               x={labelXPixel}

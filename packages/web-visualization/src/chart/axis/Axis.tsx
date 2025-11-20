@@ -51,7 +51,7 @@ export type AxisTickLabelComponentProps = Pick<
   | 'fontSize'
   | 'fontWeight'
   | 'color'
-  | 'elevation'
+  | 'elevated'
   | 'inset'
   | 'background'
   | 'borderRadius'
@@ -259,7 +259,7 @@ export type AxisProps = AxisBaseProps & {
    * @example
    * // Custom tick label component with elevation
    * TickLabelComponent={(props) => (
-   *   <DefaultAxisTickLabel {...props} elevation={1} color="var(--color-fgPrimary)" />
+   *   <DefaultAxisTickLabel {...props} elevated color="var(--color-fgPrimary)" />
    * )}
    *
    * @default DefaultAxisTickLabel

@@ -28,7 +28,7 @@ export type ReferenceLineLabelComponentProps = Pick<
   | 'fontSize'
   | 'fontWeight'
   | 'color'
-  | 'elevation'
+  | 'elevated'
   | 'inset'
   | 'background'
   | 'borderRadius'
@@ -204,7 +204,7 @@ export const ReferenceLine = memo<ReferenceLineProps>(
           {label && (
             <LabelComponent
               className={classNames?.label}
-              elevation={elevateLabel ? 1 : undefined}
+              elevated={elevateLabel}
               style={styles?.label}
               testID={testID}
               verticalAlignment="middle"
@@ -250,7 +250,7 @@ export const ReferenceLine = memo<ReferenceLineProps>(
           {label && (
             <LabelComponent
               className={classNames?.label}
-              elevation={elevateLabel ? 1 : undefined}
+              elevated={elevateLabel}
               horizontalAlignment="center"
               style={styles?.label}
               testID={testID}

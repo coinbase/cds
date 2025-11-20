@@ -1,5 +1,5 @@
 import React, { memo, useEffect, useMemo, useRef, useState } from 'react';
-import type { ElevationLevels, Rect, SharedProps } from '@coinbase/cds-common/types';
+import type { Rect, SharedProps } from '@coinbase/cds-common/types';
 import { cx } from '@coinbase/cds-web';
 import { Box, type BoxProps } from '@coinbase/cds-web/layout';
 import { Text } from '@coinbase/cds-web/typography';
@@ -55,9 +55,10 @@ export type ChartTextProps = SharedProps &
     dy?: number;
     // override box responsive style
     /**
-     * The elevation for the background.
+     * Whether the text should have an elevated appearance with a shadow.
+     * @default false
      */
-    elevation?: ElevationLevels;
+    elevated?: boolean;
     /**
      * The text content to display.
      */
@@ -170,9 +171,9 @@ export const ChartText = memo<ChartTextProps>(
     fontFamily,
     fontSize,
     fontWeight,
-    elevation,
+    elevated,
     color = 'var(--color-fgMuted)',
-    background = elevation && elevation > 0 ? 'var(--color-bg)' : 'transparent',
+    background = elevated ? 'var(--color-bg)' : 'transparent',
     borderRadius,
     inset: insetInput,
     onDimensionsChange,
@@ -323,11 +324,7 @@ export const ChartText = memo<ChartTextProps>(
             as="rect"
             className={classNames?.backgroundRect}
             fill={background}
-            filter={
-              elevation && elevation > 0
-                ? `drop-shadow(var(--shadow-elevation${elevation}))`
-                : undefined
-            }
+            filter={elevated ? 'drop-shadow(var(--shadow-elevation1))' : undefined}
             height={backgroundRectDimensions?.height}
             rx={borderRadius}
             ry={borderRadius}

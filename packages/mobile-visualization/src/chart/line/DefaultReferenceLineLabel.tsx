@@ -18,9 +18,9 @@ const elevatedBorderRadius = 4;
 export const DefaultReferenceLineLabel = memo<DefaultReferenceLineLabelProps>(
   ({
     color,
-    elevation,
-    borderRadius = elevation && elevation > 0 ? elevatedBorderRadius : undefined,
-    inset = elevation && elevation > 0 ? elevatedInset : undefined,
+    elevated,
+    borderRadius = elevated ? elevatedBorderRadius : undefined,
+    inset = elevated ? elevatedInset : undefined,
     ...props
   }) => {
     const theme = useTheme();
@@ -29,7 +29,7 @@ export const DefaultReferenceLineLabel = memo<DefaultReferenceLineLabelProps>(
       <ChartText
         borderRadius={borderRadius}
         color={color ?? theme.color.fgMuted}
-        elevation={elevation}
+        elevated={elevated}
         inset={inset}
         {...props}
       />

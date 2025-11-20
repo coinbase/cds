@@ -300,7 +300,7 @@ export const InteractiveChartText = () => {
             color="var(--color-fgPrimary)"
             dx={offsetX}
             dy={offsetY}
-            elevation={1}
+            elevated
             font="label1"
             horizontalAlignment={horizontalAlignment}
             inset={chartTextInset}

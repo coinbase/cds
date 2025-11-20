@@ -17,7 +17,7 @@ const elevatedLabelBounds: ChartInset = { top: 4, bottom: 20, left: 12, right: 1
  * It will also center the label vertically with the top available area.
  */
 export const DefaultScrubberLabel = memo<DefaultScrubberLabelProps>(
-  ({ elevation, bounds: boundsProp, verticalAlignment = 'middle', dy, ...props }) => {
+  ({ elevated, bounds: boundsProp, verticalAlignment = 'middle', dy, ...props }) => {
     const { width: chartWidth, height: chartHeight, drawingArea } = useCartesianChartContext();
 
     const bounds = useMemo(() => {
@@ -25,7 +25,7 @@ export const DefaultScrubberLabel = memo<DefaultScrubberLabelProps>(
         return boundsProp;
       }
       // When elevated, add padding around the label to fit within chart bounds to prevent shadow from being cutoff.
-      if (elevation && elevation > 0) {
+      if (elevated) {
         return {
           x: elevatedLabelBounds.left,
           y: elevatedLabelBounds.top,
@@ -34,13 +34,13 @@ export const DefaultScrubberLabel = memo<DefaultScrubberLabelProps>(
         };
       }
       return undefined;
-    }, [boundsProp, elevation, chartWidth, chartHeight]);
+    }, [boundsProp, elevated, chartWidth, chartHeight]);
 
     return (
       <DefaultReferenceLineLabel
         bounds={bounds}
         dy={dy ?? -0.5 * drawingArea.y}
-        elevation={elevation}
+        elevated={elevated}
         verticalAlignment={verticalAlignment}
         {...props}
       />
