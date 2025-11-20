@@ -17,7 +17,7 @@ const strokeWidth = 2;
 const pulseOpacityStart = 0.5;
 const pulseOpacityEnd = 0;
 const pulseRadiusStart = 10;
-const pulseRadiusEnd = 20;
+const pulseRadiusEnd = 15;
 
 const defaultPulseTransition: Transition = {
   duration: 1.6,

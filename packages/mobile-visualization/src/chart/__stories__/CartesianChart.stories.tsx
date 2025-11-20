@@ -277,7 +277,7 @@ const PriceWithVolumeChart = memo(
             yAxisId: 'volume',
           },
         ]}
-        xAxis={{ scaleType: 'band', range: ({ min, max }) => ({ min, max: max - 16 }) }}
+        xAxis={{ scaleType: 'band', range: ({ min, max }) => ({ min, max: max - 8 }) }}
         yAxis={[
           {
             id: 'price',

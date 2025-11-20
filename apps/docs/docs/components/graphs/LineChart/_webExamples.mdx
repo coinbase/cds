@@ -1417,10 +1417,6 @@ function AssetPriceWithDottedArea() {
           ]}
           style={{ outlineColor: assets.btc.color }}
           inset={{ top: 60 }}
-          xAxis={{
-            // Give space for idle pulse animation
-            range: ({ min, max }) => ({ min, max: max - 16 }),
-          }}
         >
           <Scrubber
             idlePulse
