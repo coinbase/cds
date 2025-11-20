@@ -1,8 +1,10 @@
 import React, { forwardRef, memo } from 'react';
+import { compactListHeight, listHeight } from '@coinbase/cds-common/tokens/cell';
 import { isProduction } from '@coinbase/cds-utils';
 import { css } from '@linaria/core';
 
 import type { Polymorphic } from '../core/polymorphism';
+import { cx } from '../cx';
 import { Box } from '../layout/Box';
 import { HStack } from '../layout/HStack';
 import { VStack } from '../layout/VStack';
@@ -10,6 +12,7 @@ import { Text } from '../typography/Text';
 
 import { Cell, type CellBaseProps } from './Cell';
 import { CellAccessory, type CellAccessoryType } from './CellAccessory';
+import { condensedInnerSpacing, condensedOuterSpacing } from './ListCell';
 
 const overflowCss = css`
   overflow: auto;
@@ -34,16 +37,77 @@ export type ContentCellBaseProps = Polymorphic.ExtendableProps<
   {
     /** Accessory to display at the end of the cell. */
     accessory?: CellAccessoryType;
+    /**
+     * @deprecated Use `spacingVariant="compact"` instead. `compact` will be removed in a future major release.
+     */
+    compact?: boolean;
+    /**
+     * Spacing variant configuration.
+     * Deprecated value: 'compact'. Prefer 'condensed'.
+     *
+     * When `spacingVariant="normal"`:
+     * 1. `min-height` is `80px`
+     * 2. `padding` is `'var(--space-2) var(--space-3)'`
+     * 3. `border-radius` is `'var(--borderRadius-200)'`
+     *
+     * When `spacingVariant="compact"`:
+     * 1. same as `spacingVariant="normal"`, except `min-height` is `40px`
+     *
+     * When `spacingVariant="condensed"`:
+     * 1. `min-height` is undefined
+     * 2. `padding` is `'var(--space-1) var(--space-2)'`
+     * 3. `border-radius` is `'var(--borderRadius-0)'`
+     * 4. subtitle uses `label1`
+     *
+     * @default 'normal'
+     */
+    spacingVariant?: 'normal' | 'compact' | 'condensed';
+    /** React node to render description. Takes precedence over `description`. */
+    descriptionNode?: React.ReactNode;
     /** Description of content. Content will wrap accordingly. */
     description?: React.ReactNode;
+    /** React node to render meta. Takes precedence over `meta`. */
+    metaNode?: React.ReactNode;
     /** Media (icon, asset, image, etc) to display at the start of the cell. */
     media?: React.ReactElement;
     /** Meta information to display at the end of the title. */
     meta?: React.ReactNode;
+    /** React node to render subtitle. Takes precedence over `subtitle`. */
+    subtitleNode?: React.ReactNode;
     /** Subtitle of content. Max 1 line, otherwise will truncate. */
     subtitle?: React.ReactNode;
+    /** React node to render title. Takes precedence over `title`. */
+    titleNode?: React.ReactNode;
     /** Title of content. Max 1 line, otherwise will truncate. */
     title?: React.ReactNode;
+    /** Class names for the components */
+    classNames?: {
+      root?: string;
+      media?: string;
+      accessory?: string;
+      contentContainer?: string;
+      pressable?: string;
+      mainContent?: string;
+      title?: string;
+      subtitle?: string;
+      metaContainer?: string;
+      meta?: string;
+      description?: string;
+    };
+    /** Styles for the components */
+    styles?: {
+      root?: React.CSSProperties;
+      media?: React.CSSProperties;
+      accessory?: React.CSSProperties;
+      contentContainer?: React.CSSProperties;
+      pressable?: React.CSSProperties;
+      mainContent?: React.CSSProperties;
+      title?: React.CSSProperties;
+      subtitle?: React.CSSProperties;
+      metaContainer?: React.CSSProperties;
+      meta?: React.CSSProperties;
+      description?: React.CSSProperties;
+    };
   }
 >;
 
@@ -63,94 +127,183 @@ export const ContentCell: ContentCellComponent = memo(
       {
         as,
         accessory,
+        accessoryNode,
         title,
+        titleNode,
         description,
+        descriptionNode,
         disabled,
         media,
         meta,
+        metaNode,
         selected,
         subtitle,
+        subtitleNode,
         detailWidth,
         priority,
         innerSpacing,
         outerSpacing,
+        compact: compactProp,
+        spacingVariant = compactProp ? 'compact' : 'normal',
         alignItems = 'flex-start',
+        className,
+        classNames,
+        style,
+        styles,
         ...props
       }: ContentCellProps<AsComponent>,
       ref?: Polymorphic.Ref<AsComponent>,
     ) => {
       const Component = (as ?? contentCellDefaultElement) satisfies React.ElementType;
+      const hasTitleContent = Boolean(titleNode ?? title);
+      const hasSubtitleContent = Boolean(subtitleNode ?? subtitle);
+      const hasMetaContent = Boolean(metaNode ?? meta);
+      const hasDescriptionContent = Boolean(descriptionNode ?? description);
       if (!isProduction()) {
-        if (meta && !title && !subtitle) {
-          console.error('ContentCell: Cannot use `meta` without a `title` or `subtitle`.');
+        if (hasMetaContent && !hasTitleContent && !hasSubtitleContent) {
+          console.error('ContentCell: Cannot use meta content without a title or subtitle.');
         }
       }
 
       const accessoryType = selected ? 'selected' : accessory;
-      const hasTitles = Boolean(title ?? subtitle);
+      const hasTitles = hasTitleContent || hasSubtitleContent;
+      const minHeight =
+        spacingVariant === 'compact'
+          ? compactListHeight
+          : spacingVariant === 'normal'
+            ? listHeight
+            : undefined;
+      const subtitleFont = spacingVariant === 'condensed' ? 'label1' : 'label2';
 
       return (
         <Cell
           ref={ref}
           accessory={accessoryType && <CellAccessory paddingTop={0.5} type={accessoryType} />}
+          accessoryNode={accessoryNode}
           alignItems={alignItems}
           as={Component}
+          borderRadius={props.borderRadius ?? (spacingVariant === 'condensed' ? 0 : undefined)}
+          className={cx(className, classNames?.root)}
+          classNames={{
+            accessory: classNames?.accessory,
+            contentContainer: classNames?.contentContainer,
+            media: classNames?.media,
+            pressable: classNames?.pressable,
+          }}
           detailWidth={detailWidth}
           disabled={disabled}
-          innerSpacing={innerSpacing}
+          innerSpacing={
+            innerSpacing ?? (spacingVariant === 'condensed' ? condensedInnerSpacing : undefined)
+          }
           media={media}
-          outerSpacing={outerSpacing}
+          minHeight={minHeight}
+          outerSpacing={
+            outerSpacing ?? (spacingVariant === 'condensed' ? condensedOuterSpacing : undefined)
+          }
           priority={priority}
           selected={selected}
+          style={{ ...style, ...styles?.root }}
+          styles={{
+            accessory: styles?.accessory,
+            contentContainer: styles?.contentContainer,
+            media: styles?.media,
+            pressable: styles?.pressable,
+          }}
           {...props}
         >
           {hasTitles && (
             <HStack alignItems="flex-start" justifyContent="space-between">
-              <VStack className={truncationCss} flexGrow={1} flexShrink={1}>
-                {!!title && (
-                  <Text as="div" display="block" font="headline" overflow="truncate">
-                    {title}
-                  </Text>
-                )}
-
-                {!!subtitle && (
+              <VStack
+                className={cx(truncationCss, classNames?.mainContent)}
+                flexGrow={1}
+                flexShrink={1}
+                style={styles?.mainContent}
+              >
+                {titleNode ? (
+                  titleNode
+                ) : title ? (
                   <Text
                     as="div"
+                    className={classNames?.title}
                     display="block"
-                    font="label2"
+                    font="headline"
                     overflow="truncate"
-                    paddingBottom={description ? 0.5 : 0}
-                    paddingTop={title ? 0.5 : 0}
+                    style={styles?.title}
+                  >
+                    {title}
+                  </Text>
+                ) : null}
+
+                {subtitleNode ? (
+                  subtitleNode
+                ) : subtitle ? (
+                  <Text
+                    as="div"
+                    className={classNames?.subtitle}
+                    display="block"
+                    font={subtitleFont}
+                    overflow="truncate"
+                    paddingBottom={hasDescriptionContent ? 0.5 : 0}
+                    paddingTop={hasTitleContent ? 0.5 : 0}
+                    style={styles?.subtitle}
                   >
                     {subtitle}
                   </Text>
-                )}
+                ) : null}
               </VStack>
 
-              {!!meta && (
+              {metaNode ? (
                 <Box
-                  className={truncationCss}
+                  className={cx(truncationCss, classNames?.metaContainer)}
                   flexGrow={0}
                   flexShrink={0}
                   justifyContent="flex-end"
                   paddingStart={2}
                   paddingTop={0.5}
+                  style={styles?.metaContainer}
                 >
-                  <Text color="fgMuted" font="label2" overflow="truncate">
+                  {metaNode}
+                </Box>
+              ) : meta ? (
+                <Box
+                  className={cx(truncationCss, classNames?.metaContainer)}
+                  flexGrow={0}
+                  flexShrink={0}
+                  justifyContent="flex-end"
+                  paddingStart={2}
+                  paddingTop={0.5}
+                  style={styles?.metaContainer}
+                >
+                  <Text
+                    className={classNames?.meta}
+                    color="fgMuted"
+                    font="label2"
+                    overflow="truncate"
+                    style={styles?.meta}
+                  >
                     {meta}
                   </Text>
                 </Box>
-              )}
+              ) : null}
             </HStack>
           )}
 
-          {!!description && (
+          {descriptionNode ? (
+            descriptionNode
+          ) : description ? (
             <div className={overflowCss}>
-              <Text as="div" color="fgMuted" display="block" font="body">
+              <Text
+                as="div"
+                className={classNames?.description}
+                color="fgMuted"
+                display="block"
+                font={spacingVariant === 'condensed' ? 'label2' : 'body'}
+                style={styles?.description}
+              >
                 {description}
               </Text>
             </div>
-          )}
+          ) : null}
         </Cell>
       );
     },

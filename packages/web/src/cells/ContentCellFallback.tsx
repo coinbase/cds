@@ -1,4 +1,5 @@
 import React, { memo } from 'react';
+import { compactListHeight, listHeight } from '@coinbase/cds-common/tokens/cell';
 import type { FallbackRectWidthProps } from '@coinbase/cds-common/types';
 import { getRectWidthVariant } from '@coinbase/cds-common/utils/getRectWidthVariant';
 
@@ -7,20 +8,28 @@ import { Fallback } from '../layout/Fallback';
 
 import { Cell } from './Cell';
 import type { CellMediaType } from './CellMedia';
+import type { ContentCellBaseProps } from './ContentCell';
+import { condensedInnerSpacing, condensedOuterSpacing } from './ListCell';
 import { MediaFallback } from './MediaFallback';
 
-export type ContentCellFallbackProps = FallbackRectWidthProps & {
-  /** Display description shimmer. */
-  description?: boolean;
-  /** Display media shimmer with a shape according to type. */
-  media?: CellMediaType;
-  /** Display meta shimmer. */
-  meta?: boolean;
-  /** Display subtitle shimmer. */
-  subtitle?: boolean;
-  /** Display title shimmer. */
-  title?: boolean;
-};
+type ContentCellFallbackSpacingProps = Pick<
+  ContentCellBaseProps,
+  'innerSpacing' | 'outerSpacing' | 'spacingVariant'
+>;
+
+export type ContentCellFallbackProps = FallbackRectWidthProps &
+  ContentCellFallbackSpacingProps & {
+    /** Display description shimmer. */
+    description?: boolean;
+    /** Display media shimmer with a shape according to type. */
+    media?: CellMediaType;
+    /** Display meta shimmer. */
+    meta?: boolean;
+    /** Display subtitle shimmer. */
+    subtitle?: boolean;
+    /** Display title shimmer. */
+    title?: boolean;
+  };
 
 const fullWidthStyle = { width: '100%' } as const;
 
@@ -34,11 +43,32 @@ export const ContentCellFallback = memo(function ContentCellFallback({
   subtitle,
   disableRandomRectWidth,
   rectWidthVariant,
+  spacingVariant = 'normal',
+  innerSpacing,
+  outerSpacing,
 }: ContentCellFallbackProps) {
   // We can't use ContentCell here as we need to account for percentage based widths.
   // Flexbox collides with percentages also, so we need to wrap in normal divs.
+  const minHeight =
+    spacingVariant === 'compact'
+      ? compactListHeight
+      : spacingVariant === 'normal'
+        ? listHeight
+        : undefined;
+  const subtitleHeight = spacingVariant === 'condensed' ? 18 : 16;
+
   return (
-    <Cell media={media && <MediaFallback type={media} />}>
+    <Cell
+      borderRadius={spacingVariant === 'condensed' ? 0 : undefined}
+      innerSpacing={
+        innerSpacing ?? (spacingVariant === 'condensed' ? condensedInnerSpacing : undefined)
+      }
+      media={media && <MediaFallback type={media} />}
+      minHeight={minHeight}
+      outerSpacing={
+        outerSpacing ?? (spacingVariant === 'condensed' ? condensedOuterSpacing : undefined)
+      }
+    >
       <div style={fullWidthStyle}>
         {meta && (
           <div style={floatStyle}>
@@ -67,7 +97,7 @@ export const ContentCellFallback = memo(function ContentCellFallback({
           <Fallback
             percentage
             disableRandomRectWidth={disableRandomRectWidth}
-            height={16}
+            height={subtitleHeight}
             paddingTop={0.5}
             rectWidthVariant={getRectWidthVariant(rectWidthVariant, 2)}
             width={35}
