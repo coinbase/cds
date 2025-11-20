@@ -157,7 +157,7 @@ export const ScrubberBeaconGroup = memo(
     ({ seriesIds, idlePulse, transitions, BeaconComponent = DefaultScrubberBeacon }, ref) => {
       const ScrubberBeaconRefs = useRefMap<ScrubberBeaconRef>();
       const { scrubberPosition } = useScrubberContext();
-      const { getXAxis, series, maxDataLength, animate } = useCartesianChartContext();
+      const { getXAxis, series, dataLength, animate } = useCartesianChartContext();
 
       const xAxis = useMemo(() => getXAxis(), [getXAxis]);
 
@@ -175,8 +175,8 @@ export const ScrubberBeaconGroup = memo(
       }, [series, seriesIds]);
 
       const dataIndex = useDerivedValue(() => {
-        return scrubberPosition.value ?? Math.max(0, maxDataLength - 1);
-      }, [scrubberPosition, maxDataLength]);
+        return scrubberPosition.value ?? Math.max(0, dataLength - 1);
+      }, [scrubberPosition, dataLength]);
 
       const dataX = useDerivedValue(() => {
         // Convert index to actual x value if axis has data

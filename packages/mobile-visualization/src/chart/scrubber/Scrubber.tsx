@@ -238,7 +238,7 @@ export const Scrubber = memo(
         animate,
         width: chartWidth,
         height: chartHeight,
-        maxDataLength,
+        dataLength,
       } = useCartesianChartContext();
 
       const xAxis = useMemo(() => getXAxis(), [getXAxis]);
@@ -272,8 +272,8 @@ export const Scrubber = memo(
       }, [series, seriesIds]);
 
       const dataIndex = useDerivedValue(() => {
-        return scrubberPosition.value ?? Math.max(0, maxDataLength - 1);
-      }, [scrubberPosition, maxDataLength]);
+        return scrubberPosition.value ?? Math.max(0, dataLength - 1);
+      }, [scrubberPosition, dataLength]);
 
       const dataX = useDerivedValue(() => {
         if (xAxis?.data && Array.isArray(xAxis.data) && xAxis.data[dataIndex.value] !== undefined) {

@@ -167,7 +167,7 @@ export const ScrubberBeaconGroup = memo(
     ) => {
       const ScrubberBeaconRefs = useRefMap<ScrubberBeaconRef>();
       const { scrubberPosition } = useScrubberContext();
-      const { getXScale, getXAxis, maxDataLength, series } = useCartesianChartContext();
+      const { getXScale, getXAxis, dataLength, series } = useCartesianChartContext();
 
       // Expose imperative handle with pulse method
       useImperativeHandle(ref, () => ({
@@ -187,7 +187,7 @@ export const ScrubberBeaconGroup = memo(
         const xAxis = getXAxis();
         if (!xScale) return { dataX: undefined, dataIndex: undefined };
 
-        const dataIndex = scrubberPosition ?? Math.max(0, maxDataLength - 1);
+        const dataIndex = scrubberPosition ?? Math.max(0, dataLength - 1);
 
         // Convert index to actual x value if axis has data
         let dataX: number;
@@ -199,7 +199,7 @@ export const ScrubberBeaconGroup = memo(
         }
 
         return { dataX, dataIndex };
-      }, [getXScale, getXAxis, scrubberPosition, maxDataLength]);
+      }, [getXScale, getXAxis, scrubberPosition, dataLength]);
 
       const isIdle = scrubberPosition === undefined;
 

@@ -110,7 +110,7 @@ export const ScrubberBeaconLabelGroup = memo<ScrubberBeaconLabelGroupProps>(
       getYSerializableScale,
       getXAxis,
       drawingArea,
-      maxDataLength,
+      dataLength,
     } = useCartesianChartContext();
     const { scrubberPosition } = useScrubberContext();
 
@@ -157,8 +157,8 @@ export const ScrubberBeaconLabelGroup = memo<ScrubberBeaconLabelGroupProps>(
     const xAxis = getXAxis();
 
     const dataIndex = useDerivedValue(() => {
-      return scrubberPosition.value ?? Math.max(0, maxDataLength - 1);
-    }, [scrubberPosition, maxDataLength]);
+      return scrubberPosition.value ?? Math.max(0, dataLength - 1);
+    }, [scrubberPosition, dataLength]);
 
     const dataX = useDerivedValue(() => {
       if (xAxis?.data && Array.isArray(xAxis.data) && xAxis.data[dataIndex.value] !== undefined) {

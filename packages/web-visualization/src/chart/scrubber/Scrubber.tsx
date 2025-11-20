@@ -235,7 +235,7 @@ export const Scrubber = memo(
       const beaconGroupRef = React.useRef<ScrubberBeaconGroupRef>(null);
 
       const { scrubberPosition } = useScrubberContext();
-      const { getXScale, getXAxis, animate, series, drawingArea, maxDataLength } =
+      const { getXScale, getXAxis, animate, series, drawingArea, dataLength } =
         useCartesianChartContext();
 
       // Expose imperative handle with pulse method
@@ -257,7 +257,7 @@ export const Scrubber = memo(
         const xAxis = getXAxis();
         if (!xScale) return { dataX: undefined, dataIndex: undefined };
 
-        const dataIndex = scrubberPosition ?? Math.max(0, maxDataLength - 1);
+        const dataIndex = scrubberPosition ?? Math.max(0, dataLength - 1);
 
         // Convert index to actual x value if axis has data
         let dataX: number;
@@ -269,7 +269,7 @@ export const Scrubber = memo(
         }
 
         return { dataX, dataIndex };
-      }, [getXScale, getXAxis, scrubberPosition, maxDataLength]);
+      }, [getXScale, getXAxis, scrubberPosition, dataLength]);
 
       // Compute resolved accessibility label
       const resolvedAccessibilityLabel = useMemo(() => {

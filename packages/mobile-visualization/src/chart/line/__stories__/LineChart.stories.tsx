@@ -2027,7 +2027,7 @@ function CustomBeaconLabel() {
         [getSeriesData, seriesId],
       );
 
-      const maxDataLength = useMemo(
+      const dataLength = useMemo(
         () =>
           series?.reduce((max, s) => {
             const seriesData = getSeriesData(s.id);
@@ -2037,8 +2037,8 @@ function CustomBeaconLabel() {
       );
 
       const dataIndex = useDerivedValue(() => {
-        return scrubberPosition.value ?? Math.max(0, maxDataLength - 1);
-      }, [scrubberPosition, maxDataLength]);
+        return scrubberPosition.value ?? Math.max(0, dataLength - 1);
+      }, [scrubberPosition, dataLength]);
 
       const percentageLabel = useDerivedValue(() => {
         if (seriesData !== undefined) {

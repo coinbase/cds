@@ -43,13 +43,13 @@ export type BarStackGroupProps = Pick<
  */
 export const BarStackGroup = memo<BarStackGroupProps>(
   ({ series, yAxisId, stackIndex, totalStacks, barPadding = 0.1, ...props }) => {
-    const { getXScale, getYScale, drawingArea, maxDataLength } = useCartesianChartContext();
+    const { getXScale, getYScale, drawingArea, dataLength } = useCartesianChartContext();
 
     const xScale = getXScale();
     const yScale = getYScale(yAxisId);
 
     const stackConfigs = useMemo(() => {
-      if (!xScale || !yScale || !drawingArea || maxDataLength === 0) return [];
+      if (!xScale || !yScale || !drawingArea || dataLength === 0) return [];
 
       if (!isCategoricalScale(xScale)) {
         return [];
@@ -69,8 +69,8 @@ export const BarStackGroup = memo<BarStackGroupProps>(
       }> = [];
 
       // Calculate position for each category
-      // todo: look at using xDomain for this instead of maxDataLength
-      for (let categoryIndex = 0; categoryIndex < maxDataLength; categoryIndex++) {
+      // todo: look at using xDomain for this instead of dataLength
+      for (let categoryIndex = 0; categoryIndex < dataLength; categoryIndex++) {
         // Get x position for this category
         const categoryX = xScale(categoryIndex);
         if (categoryX !== undefined) {
@@ -86,7 +86,7 @@ export const BarStackGroup = memo<BarStackGroupProps>(
       }
 
       return configs;
-    }, [xScale, yScale, drawingArea, maxDataLength, stackIndex, totalStacks, barPadding]);
+    }, [xScale, yScale, drawingArea, dataLength, stackIndex, totalStacks, barPadding]);
 
     if (xScale && !isCategoricalScale(xScale)) {
       throw new Error(

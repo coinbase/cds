@@ -80,11 +80,11 @@ export const getChartDomain = (
   }
 
   if (series.length > 0) {
-    const maxDataLength = Math.max(...series.map((s) => s.data?.length || 0));
+    const dataLength = Math.max(...series.map((s) => s.data?.length || 0));
 
-    if (maxDataLength > 0) {
+    if (dataLength > 0) {
       if (domain.min === undefined) domain.min = 0;
-      if (domain.max === undefined) domain.max = maxDataLength - 1;
+      if (domain.max === undefined) domain.max = dataLength - 1;
     }
   }
 
