@@ -39,7 +39,17 @@ export type DefaultScrubberBeaconProps = ScrubberBeaconProps;
 export const DefaultScrubberBeacon = memo(
   forwardRef<ScrubberBeaconRef, DefaultScrubberBeaconProps>(
     (
-      { seriesId, color: colorProp, dataX, dataY, isIdle, idlePulse, animate = true, transitions },
+      {
+        seriesId,
+        color: colorProp,
+        dataX,
+        dataY,
+        isIdle,
+        idlePulse,
+        animate = true,
+        transitions,
+        opacity: opacityProp = 1,
+      },
       ref,
     ) => {
       const theme = useTheme();
@@ -189,8 +199,9 @@ export const DefaultScrubberBeacon = memo(
           point.x <= drawingArea.x + drawingArea.width &&
           point.y >= drawingArea.y &&
           point.y <= drawingArea.y + drawingArea.height;
-        return isWithinDrawingArea ? 1 : 0;
-      }, [targetPoint, drawingArea]);
+        const userOpacity = unwrapAnimatedValue(opacityProp);
+        return isWithinDrawingArea ? userOpacity : 0;
+      }, [targetPoint, drawingArea, opacityProp]);
 
       return (
         <Group opacity={beaconOpacity}>

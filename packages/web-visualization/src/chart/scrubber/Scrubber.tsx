@@ -88,6 +88,11 @@ export type ScrubberBeaconProps = SharedProps & {
     pulseRepeatDelay?: number;
   };
   /**
+   * Opacity of the beacon.
+   * @default 1
+   */
+  opacity?: number;
+  /**
    * Custom className for styling.
    */
   className?: string;
@@ -102,7 +107,10 @@ export type ScrubberBeaconComponent = React.FC<
 >;
 
 export type ScrubberBeaconLabelProps = Pick<Series, 'color'> &
-  Pick<ChartTextProps, 'x' | 'y' | 'dx' | 'horizontalAlignment' | 'onDimensionsChange'> & {
+  Pick<
+    ChartTextProps,
+    'x' | 'y' | 'dx' | 'horizontalAlignment' | 'onDimensionsChange' | 'opacity'
+  > & {
     /**
      * Label for the series.
      */

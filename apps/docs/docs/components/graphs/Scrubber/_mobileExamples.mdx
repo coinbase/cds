@@ -373,38 +373,6 @@ function CustomBeaconLabel() {
 }
 ```
 
-You can also use `BeaconLabelComponent` to hide labels when idle.
-
-```jsx
-function HiddenBeaconLabelWhenIdle() {
-  const MyScrubberBeaconLabel = memo((props: ScrubberBeaconLabelProps) => {
-    const { scrubberPosition } = useScrubberContext();
-    const labelOpacity = useDerivedValue(
-      () => (scrubberPosition.value !== undefined ? 1 : 0),
-      [scrubberPosition],
-    );
-
-    return <DefaultScrubberBeaconLabel {...props} opacity={labelOpacity} />;
-  });
-  return (
-    <LineChart
-      enableScrubbing
-      showArea
-      height={150}
-      series={[
-        {
-          id: 'prices',
-          data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
-          label: 'Price',
-        },
-      ]}
-    >
-      <Scrubber BeaconLabelComponent={MyScrubberBeaconLabel} />
-    </LineChart>
-  );
-}
-```
-
 Using `elevateLabel` will elevate the Scrubber's reference line label with a shadow.
 
 ```jsx live
@@ -486,6 +454,51 @@ You can use `LineComponent` to customize Scrubber's line. In this case, as a use
 >
   <Scrubber LineComponent={SolidLine} />
 </LineChart>
+```
+
+### Opacity
+
+You can use `BeaconComponent` and `BeaconLabelComponent` with the `opacity` prop to hide scrubber beacons and labels when idle.
+
+```jsx
+function HiddenScrubberWhenIdle() {
+  const MyScrubberBeacon = memo((props: ScrubberBeaconProps) => {
+    const { scrubberPosition } = useScrubberContext();
+    const beaconOpacity = useDerivedValue(
+      () => (scrubberPosition.value !== undefined ? 1 : 0),
+      [scrubberPosition],
+    );
+
+    return <DefaultScrubberBeacon {...props} opacity={beaconOpacity} />;
+  });
+
+  const MyScrubberBeaconLabel = memo((props: ScrubberBeaconLabelProps) => {
+    const { scrubberPosition } = useScrubberContext();
+    const labelOpacity = useDerivedValue(
+      () => (scrubberPosition.value !== undefined ? 1 : 0),
+      [scrubberPosition],
+    );
+
+    return <DefaultScrubberBeaconLabel {...props} opacity={labelOpacity} />;
+  });
+
+  return (
+    <LineChart
+      enableScrubbing
+      showArea
+      height={150}
+      series={[
+        {
+          id: 'prices',
+          data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+          label: 'Price',
+        },
+      ]}
+    >
+      <Scrubber BeaconComponent={MyScrubberBeacon} BeaconLabelComponent={MyScrubberBeaconLabel} />
+    </LineChart>
+  );
+}
 ```
 
 ### Overlay

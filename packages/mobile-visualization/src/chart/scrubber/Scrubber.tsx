@@ -108,6 +108,11 @@ export type ScrubberBeaconProps = {
      */
     pulseRepeatDelay?: number;
   };
+  /**
+   * Opacity of the beacon.
+   * @default 1
+   */
+  opacity?: AnimatedProp<number>;
 };
 
 export type ScrubberBeaconComponent = React.FC<

@@ -2125,6 +2125,45 @@ function CustomLabelComponent() {
   );
 }
 
+function HiddenScrubberWhenIdle() {
+  const MyScrubberBeacon = memo((props: ScrubberBeaconProps) => {
+    const { scrubberPosition } = useScrubberContext();
+    const beaconOpacity = useDerivedValue(
+      () => (scrubberPosition.value !== undefined ? 1 : 0),
+      [scrubberPosition],
+    );
+
+    return <DefaultScrubberBeacon {...props} opacity={beaconOpacity} />;
+  });
+
+  const MyScrubberBeaconLabel = memo((props: ScrubberBeaconLabelProps) => {
+    const { scrubberPosition } = useScrubberContext();
+    const labelOpacity = useDerivedValue(
+      () => (scrubberPosition.value !== undefined ? 1 : 0),
+      [scrubberPosition],
+    );
+
+    return <DefaultScrubberBeaconLabel {...props} opacity={labelOpacity} />;
+  });
+
+  return (
+    <LineChart
+      enableScrubbing
+      showArea
+      height={150}
+      series={[
+        {
+          id: 'prices',
+          data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+          label: 'hello',
+        },
+      ]}
+    >
+      <Scrubber BeaconComponent={MyScrubberBeacon} BeaconLabelComponent={MyScrubberBeaconLabel} />
+    </LineChart>
+  );
+}
+
 type ExampleItem = {
   title: string;
   component: React.ReactNode;
@@ -2376,6 +2415,10 @@ function ExampleNavigator() {
       {
         title: 'Custom Label Component',
         component: <CustomLabelComponent />,
+      },
+      {
+        title: 'Hidden Scrubber When Idle',
+        component: <HiddenScrubberWhenIdle />,
       },
     ],
     [theme.color.fg, theme.color.fgPositive, theme.spectrum.gray50],

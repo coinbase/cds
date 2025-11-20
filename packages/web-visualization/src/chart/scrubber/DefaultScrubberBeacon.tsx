@@ -39,6 +39,7 @@ export const DefaultScrubberBeacon = memo(
         isIdle,
         idlePulse,
         transitions,
+        opacity = 1,
         className,
         style,
         testID,
@@ -121,7 +122,7 @@ export const DefaultScrubberBeacon = memo(
 
       if (isIdle) {
         return (
-          <g data-testid={testID} opacity={isWithinDrawingArea ? 1 : 0}>
+          <g data-testid={testID} opacity={isWithinDrawingArea ? opacity : 0}>
             <motion.g
               animate={{
                 x: pixelCoordinate.x,
@@ -171,7 +172,7 @@ export const DefaultScrubberBeacon = memo(
       }
 
       return (
-        <g data-testid={testID} opacity={isWithinDrawingArea ? 1 : 0}>
+        <g data-testid={testID} opacity={isWithinDrawingArea ? opacity : 0}>
           <circle
             className={className}
             cx={pixelCoordinate.x}
