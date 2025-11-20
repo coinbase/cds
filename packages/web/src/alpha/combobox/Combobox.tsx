@@ -135,49 +135,46 @@ const ComboboxBase = memo(
       searchTextRef.current = searchText;
       const valueRef = useRef(value);
       valueRef.current = value;
+      const optionsRef = useRef(options);
+      optionsRef.current = options;
 
       const ComboboxControl = useMemo(
-        () =>
-          forwardRef<HTMLDivElement, SelectControlProps<Type, SelectOptionValue>>(
-            (props: SelectControlProps<Type, SelectOptionValue>) => (
-              <SelectControlComponent
-                ref={controlRef.current?.refs.setReference}
-                {...props}
-                contentNode={
-                  <NativeInput
-                    onChange={(event) => setSearchText(event.target.value)}
-                    onKeyDown={(event) => {
-                      event.stopPropagation();
-                      if (
-                        event.key === 'Enter' ||
-                        (event.key.length === 1 && /[a-zA-Z0-9]/.test(event.key))
-                      ) {
-                        setOpen(true);
-                      }
-                    }}
-                    placeholder={typeof placeholder === 'string' ? placeholder : undefined}
-                    style={{
-                      padding: 0,
-                      paddingTop: valueRef.current?.length && valueRef.current?.length > 0 ? 8 : 0,
-                      width: '100%',
-                    }}
-                    value={searchTextRef.current}
-                  />
-                }
-                options={options}
-                placeholder={null}
+        () => (props: SelectControlProps<Type, SelectOptionValue>) => (
+          <SelectControlComponent
+            ref={controlRef.current?.refs.setReference}
+            {...props}
+            contentNode={
+              <NativeInput
+                onChange={(event) => setSearchText(event.target.value)}
+                onKeyDown={(event) => {
+                  event.stopPropagation();
+                  if (
+                    event.key === 'Enter' ||
+                    (event.key.length === 1 && /[a-zA-Z0-9]/.test(event.key))
+                  ) {
+                    setOpen(true);
+                  }
+                }}
+                placeholder={typeof placeholder === 'string' ? placeholder : undefined}
+                style={{
+                  padding: 0,
+                  paddingTop: valueRef.current?.length && valueRef.current?.length > 0 ? 8 : 0,
+                  width: '100%',
+                }}
+                value={searchTextRef.current}
               />
-            ),
-          ),
-        [SelectControlComponent, options, placeholder, setOpen, setSearchText],
+            }
+            options={optionsRef.current}
+            placeholder={null}
+          />
+        ),
+        [SelectControlComponent, placeholder, setOpen, setSearchText],
       );
 
       return (
         <Select
           ref={controlRef}
-          SelectControlComponent={
-            ComboboxControl as SelectControlComponent<Type, SelectOptionValue>
-          }
+          SelectControlComponent={ComboboxControl}
           accessibilityLabel={accessibilityLabel}
           defaultOpen={defaultOpen}
           onChange={(value) => onChange?.(value)}
