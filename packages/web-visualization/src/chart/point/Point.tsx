@@ -160,6 +160,11 @@ export type PointProps = PointBaseProps &
     | 'onKeyDown'
   > & {
     /**
+     * Simple text label to display at the point position.
+     * If provided, a label component will be automatically rendered.
+     */
+    label?: ChartTextChildren;
+    /**
      * Handler for when the point is clicked.
      */
     onClick?: (
