@@ -276,9 +276,11 @@ function MissingData() {
   return (
     <LineChart
       enableScrubbing
+      points
       showArea
       showXAxis
       showYAxis
+      height={{ base: 200, tablet: 225, desktop: 250 }}
       series={[
         {
           id: 'pageViews',
@@ -303,9 +305,6 @@ function MissingData() {
         showGrid: true,
         tickLabelFormatter: numberFormatter,
       }}
-      height={{ base: 200, tablet: 225, desktop: 250 }}
-      // You can render points at every valid data point by always returning true
-      points
     >
       {/* We can offset the overlay to account for the points being drawn on the lines */}
       <Scrubber overlayOffset={6} />

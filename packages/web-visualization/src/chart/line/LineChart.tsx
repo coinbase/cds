@@ -74,7 +74,7 @@ export type LineChartProps = Omit<CartesianChartProps, 'xAxis' | 'yAxis' | 'seri
   };
 
 export const LineChart = memo(
-  forwardRef<HTMLDivElement, LineChartProps>(
+  forwardRef<SVGSVGElement, LineChartProps>(
     (
       {
         series,

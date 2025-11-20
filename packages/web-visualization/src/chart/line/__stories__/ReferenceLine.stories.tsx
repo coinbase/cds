@@ -1,4 +1,4 @@
-import { memo, type RefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { assets } from '@coinbase/cds-common/internal/data/assets';
 import { sparklineInteractiveData } from '@coinbase/cds-common/internal/visualizations/SparklineInteractiveData';
 import { useTheme } from '@coinbase/cds-web';
@@ -146,7 +146,7 @@ const DraggableReferenceLine = memo(
   }: {
     baselineAmount: number;
     startAmount: number;
-    chartRef: RefObject<SVGSVGElement>;
+    chartRef: React.RefObject<SVGSVGElement>;
   }) => {
     const theme = useTheme();
 

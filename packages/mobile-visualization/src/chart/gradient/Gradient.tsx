@@ -1,5 +1,5 @@
 import { memo, useMemo } from 'react';
-import { LinearGradient, Skia, vec } from '@shopify/react-native-skia';
+import { LinearGradient, vec } from '@shopify/react-native-skia';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import type { GradientDefinition } from '../utils';

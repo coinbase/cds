@@ -100,7 +100,7 @@ export type CartesianChartProps = Omit<BoxProps<'div'>, 'title'> &
   };
 
 export const CartesianChart = memo(
-  forwardRef<HTMLDivElement, CartesianChartProps>(
+  forwardRef<SVGSVGElement, CartesianChartProps>(
     (
       {
         series,
@@ -122,7 +122,7 @@ export const CartesianChart = memo(
       ref,
     ) => {
       const { observe, width: chartWidth, height: chartHeight } = useDimensions();
-      const svgRef = useRef<SVGSVGElement>(null);
+      const svgRef = useRef<SVGSVGElement | null>(null);
 
       const calculatedInset = useMemo(() => getChartInset(inset, defaultChartInset), [inset]);
 
@@ -389,15 +389,7 @@ export const CartesianChart = memo(
           >
             <Box
               ref={(node) => {
-                // Handle the observe ref and forwarded ref
                 observe(node as unknown as HTMLElement);
-                if (ref) {
-                  if (typeof ref === 'function') {
-                    ref(node as unknown as HTMLDivElement);
-                  } else {
-                    ref.current = node as unknown as HTMLDivElement;
-                  }
-                }
               }}
               className={rootClassNames}
               height={height}
@@ -407,9 +399,15 @@ export const CartesianChart = memo(
             >
               <Box
                 ref={(node) => {
-                  if (svgRef.current !== (node as unknown as SVGSVGElement)) {
-                    (svgRef as React.MutableRefObject<SVGSVGElement | null>).current =
-                      node as unknown as SVGSVGElement;
+                  const svgElement = node as unknown as SVGSVGElement;
+                  svgRef.current = svgElement;
+                  // Forward the ref to the user
+                  if (ref) {
+                    if (typeof ref === 'function') {
+                      ref(svgElement);
+                    } else {
+                      (ref as React.MutableRefObject<SVGSVGElement | null>).current = svgElement;
+                    }
                   }
                 }}
                 aria-live="polite"

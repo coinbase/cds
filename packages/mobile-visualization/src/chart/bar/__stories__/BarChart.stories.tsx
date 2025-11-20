@@ -3,13 +3,10 @@ import { Button } from '@coinbase/cds-mobile/buttons';
 import { Example, ExampleScreen } from '@coinbase/cds-mobile/examples/ExampleScreen';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 import { VStack } from '@coinbase/cds-mobile/layout';
-import { Rect } from '@shopify/react-native-skia';
 
 import { XAxis, YAxis } from '../../axis';
 import { CartesianChart } from '../../CartesianChart';
-import { useCartesianChartContext } from '../../ChartProvider';
 import { ReferenceLine, SolidLine, type SolidLineProps } from '../../line';
-import { isCategoricalScale, ScrubberContext } from '../../utils';
 import { Bar } from '../Bar';
 import { BarChart } from '../BarChart';
 import { BarPlot } from '../BarPlot';
@@ -605,7 +602,7 @@ const BarChartStories = () => {
       <Example title="Basic">
         <UpdatingChartValues />
       </Example>
-      {/*<Example title="Animated Auto-Updating">
+      <Example title="Animated Auto-Updating">
         <AnimatedUpdatingChartValues />
       </Example>
       <Example title="Negative Values with Top Axis">
@@ -640,7 +637,7 @@ const BarChartStories = () => {
       </Example>
       <Example title="ColorMap with Opacity">
         <ColorMapWithOpacity />
-      </Example>*/}
+      </Example>
     </ExampleScreen>
   );
 };

@@ -3,7 +3,7 @@ import { Group } from '@shopify/react-native-skia';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import { getBarPath } from '../utils';
-import { defaultTransition, type Transition, usePathTransition } from '../utils/transition';
+import { type Transition, usePathTransition } from '../utils/transition';
 
 import type { BarStackComponentProps } from './BarStack';
 

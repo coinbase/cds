@@ -82,7 +82,7 @@ export type AreaChartProps = Omit<CartesianChartProps, 'xAxis' | 'yAxis' | 'seri
   };
 
 export const AreaChart = memo(
-  forwardRef<HTMLDivElement, AreaChartProps>(
+  forwardRef<SVGSVGElement, AreaChartProps>(
     (
       {
         series,
