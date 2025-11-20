@@ -5,7 +5,7 @@ import { getBarPath, type Transition } from '../utils';
 
 import { DefaultBar } from './DefaultBar';
 
-export type BarComponentProps = {
+export type BarBaseProps = {
   /**
    * X coordinate of the bar (left edge).
    */
@@ -23,7 +23,8 @@ export type BarComponentProps = {
    */
   height: number;
   /**
-   * Border radius of the bar.
+   * Border radius for the bar.
+   * @default 4
    */
   borderRadius?: number;
   /**
@@ -47,10 +48,6 @@ export type BarComponentProps = {
    */
   dataY?: number | [number, number] | null;
   /**
-   * The path data for the bar shape.
-   */
-  d: string;
-  /**
    * Fill color for the bar.
    */
   fill?: string;
@@ -67,26 +64,26 @@ export type BarComponentProps = {
    */
   strokeWidth?: number;
   /**
-   * Transition configuration for bar animations.
-   */
-  transition?: Transition;
-};
-
-export type BarComponent = React.FC<BarComponentProps>;
-
-export type BarBaseProps = Omit<BarComponentProps, 'd' | 'transition'> & {
-  /**
-   * Border radius for the bar.
-   * @default 4
-   */
-  borderRadius?: BarComponentProps['borderRadius'];
-  /**
    * Component to render the bar.
    */
   BarComponent?: BarComponent;
 };
 
-export type BarProps = BarBaseProps & Pick<BarComponentProps, 'transition'>;
+export type BarProps = BarBaseProps & {
+  /**
+   * Transition configuration for bar animations.
+   */
+  transition?: Transition;
+};
+
+export type BarComponentProps = Omit<BarProps, 'BarComponent'> & {
+  /**
+   * The path data for the bar shape.
+   */
+  d: string;
+};
+
+export type BarComponent = React.FC<BarComponentProps>;
 
 /**
  * Simple bar component that renders a single bar at the specified position.

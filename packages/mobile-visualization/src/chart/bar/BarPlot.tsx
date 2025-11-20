@@ -21,7 +21,6 @@ export type BarPlotBaseProps = Pick<
   | 'barMinSize'
   | 'stackMinSize'
   | 'BarStackComponent'
-  | 'transition'
 > & {
   /**
    * Array of series IDs to render.
@@ -30,7 +29,7 @@ export type BarPlotBaseProps = Pick<
   seriesIds?: string[];
 };
 
-export type BarPlotProps = BarPlotBaseProps;
+export type BarPlotProps = BarPlotBaseProps & Pick<BarStackGroupProps, 'transition'>;
 
 /**
  * BarPlot component that handles multiple series with proper stacking coordination.

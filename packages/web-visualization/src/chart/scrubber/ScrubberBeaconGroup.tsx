@@ -129,13 +129,13 @@ export type ScrubberBeaconGroupBaseProps = SharedProps & {
    * Pulse the beacons while at rest.
    */
   idlePulse?: boolean;
+};
+
+export type ScrubberBeaconGroupProps = ScrubberBeaconGroupBaseProps & {
   /**
    * Transition configuration for beacon animations.
    */
   transitions?: ScrubberBeaconProps['transitions'];
-};
-
-export type ScrubberBeaconGroupProps = ScrubberBeaconGroupBaseProps & {
   /**
    * Custom component for the scrubber beacon.
    * @default DefaultScrubberBeacon

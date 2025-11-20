@@ -12,56 +12,6 @@ import { DefaultBarStack } from './DefaultBarStack';
 
 const EPSILON = 1e-4;
 
-export type BarStackComponentProps = {
-  /**
-   * The x position of the stack.
-   */
-  x: number;
-  /**
-   * The y position of the stack.
-   */
-  y: number;
-  /**
-   * The width of the stack.
-   */
-  width: number;
-  /**
-   * The height of the stack.
-   */
-  height: number;
-  /**
-   * The bar elements to render within the stack.
-   */
-  children: React.ReactNode;
-  /**
-   * The index of the category this stack belongs to.
-   */
-  categoryIndex: number;
-  /**
-   * Border radius for the bar.
-   * @default 4
-   */
-  borderRadius?: number;
-  /**
-   * Whether to round the top corners.
-   */
-  roundTop?: boolean;
-  /**
-   * Whether to round the bottom corners.
-   */
-  roundBottom?: boolean;
-  /**
-   * The y-origin for animations (baseline position).
-   */
-  yOrigin?: number;
-  /**
-   * Transition configurations for different animation phases.
-   */
-  transition?: Transition;
-};
-
-export type BarStackComponent = React.FC<BarStackComponentProps>;
-
 export type BarStackBaseProps = Pick<
   BarProps,
   'BarComponent' | 'fillOpacity' | 'stroke' | 'strokeWidth' | 'borderRadius'
@@ -119,7 +69,44 @@ export type BarStackBaseProps = Pick<
   stackMinSize?: number;
 };
 
-export type BarStackProps = BarStackBaseProps & Pick<BarStackComponentProps, 'transition'>;
+export type BarStackProps = BarStackBaseProps & {
+  /**
+   * Transition configurations for different animation phases.
+   */
+  transition?: Transition;
+};
+
+export type BarStackComponentProps = Pick<
+  BarStackProps,
+  'x' | 'width' | 'categoryIndex' | 'borderRadius' | 'transition'
+> & {
+  /**
+   * The y position of the stack.
+   */
+  y: number;
+  /**
+   * The height of the stack.
+   */
+  height: number;
+  /**
+   * The bar elements to render within the stack.
+   */
+  children: React.ReactNode;
+  /**
+   * Whether to round the top corners.
+   */
+  roundTop?: boolean;
+  /**
+   * Whether to round the bottom corners.
+   */
+  roundBottom?: boolean;
+  /**
+   * The y-origin for animations (baseline position).
+   */
+  yOrigin?: number;
+};
+
+export type BarStackComponent = React.FC<BarStackComponentProps>;
 
 /**
  * BarStack component that renders a single stack of bars at a specific category index.

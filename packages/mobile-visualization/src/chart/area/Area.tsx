@@ -8,54 +8,7 @@ import { DottedArea } from './DottedArea';
 import { GradientArea } from './GradientArea';
 import { SolidArea } from './SolidArea';
 
-export type AreaComponentProps = {
-  /**
-   * Path of the area
-   */
-  d: string;
-  /**
-   * The color of the area.
-   * @default color of the series or 'var(--color-fgPrimary)'
-   */
-  fill?: string;
-  /**
-   * Opacity of the area
-   * @note when combined with gradient, both will be applied
-   * @default 1
-   */
-  fillOpacity?: number;
-  /**
-   * ID of the y-axis to use.
-   * If not provided, defaults to the default y-axis.
-   */
-  yAxisId?: string;
-  /**
-   * Baseline value for the gradient.
-   * When set, overrides the default baseline.
-   */
-  baseline?: number;
-  /**
-   * Gradient configuration.
-   * When provided, creates gradient or threshold-based coloring.
-   */
-  gradient?: GradientDefinition;
-  /**
-   * Whether to animate the area.
-   * Overrides the animate value from the chart context.
-   */
-  animate?: boolean;
-  /**
-   * Transition configuration for path animations.
-   */
-  transition?: Transition;
-};
-
-export type AreaComponent = React.FC<AreaComponentProps>;
-
-export type AreaBaseProps = Pick<
-  AreaComponentProps,
-  'fill' | 'fillOpacity' | 'baseline' | 'transition' | 'gradient' | 'animate'
-> & {
+export type AreaBaseProps = {
   /**
    * The ID of the series to render. Will be used to find the data from the chart context.
    */
@@ -79,9 +32,57 @@ export type AreaBaseProps = Pick<
    * When true, the area is connected across null values.
    */
   connectNulls?: boolean;
+  /**
+   * The color of the area.
+   * @default color of the series or 'var(--color-fgPrimary)'
+   */
+  fill?: string;
+  /**
+   * Opacity of the area
+   * @note when combined with gradient, both will be applied
+   * @default 1
+   */
+  fillOpacity?: number;
+  /**
+   * Baseline value for the gradient.
+   * When set, overrides the default baseline.
+   */
+  baseline?: number;
+  /**
+   * Gradient configuration.
+   * When provided, creates gradient or threshold-based coloring.
+   */
+  gradient?: GradientDefinition;
+  /**
+   * Whether to animate the area.
+   * Overrides the animate value from the chart context.
+   */
+  animate?: boolean;
 };
 
-export type AreaProps = AreaBaseProps;
+export type AreaProps = AreaBaseProps & {
+  /**
+   * Transition configuration for path animations.
+   */
+  transition?: Transition;
+};
+
+export type AreaComponentProps = Pick<
+  AreaProps,
+  'fill' | 'fillOpacity' | 'baseline' | 'gradient' | 'animate' | 'transition'
+> & {
+  /**
+   * Path of the area
+   */
+  d: string;
+  /**
+   * ID of the y-axis to use.
+   * If not provided, defaults to the default y-axis.
+   */
+  yAxisId?: string;
+};
+
+export type AreaComponent = React.FC<AreaComponentProps>;
 
 export const Area = memo<AreaProps>(
   ({

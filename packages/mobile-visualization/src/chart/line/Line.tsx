@@ -21,56 +21,7 @@ import { convertToSerializableScale } from '../utils/scale';
 import { DottedLine } from './DottedLine';
 import { SolidLine } from './SolidLine';
 
-export type LineComponentProps = {
-  /**
-   * Path of the line
-   */
-  d: AnimatedProp<string | undefined>;
-  /**
-   * The color of the line.
-   * @default color of the series or theme.color.fgPrimary
-   */
-  stroke: string;
-  /**
-   * Opacity of the line
-   * @note when combined with gradient, both will be applied
-   * @default 1
-   */
-  strokeOpacity?: number;
-  /**
-   * Width of the line
-   * @default 2
-   */
-  strokeWidth?: number;
-  /**
-   * ID of the y-axis to use.
-   * If not provided, defaults to the default y-axis.
-   */
-  yAxisId?: string;
-  /**
-   * Gradient configuration.
-   * When provided, creates gradient or threshold-based coloring.
-   */
-  gradient?: GradientDefinition;
-  /**
-   * Whether to animate the line.
-   * Overrides the animate value from the chart context.
-   */
-  animate?: boolean;
-  /**
-   * Transition configuration for line animations.
-   */
-  transition?: Transition;
-};
-
-export type LineComponent = React.FC<LineComponentProps>;
-
-export type LineBaseProps = Partial<
-  Pick<
-    LineComponentProps,
-    'stroke' | 'strokeWidth' | 'strokeOpacity' | 'gradient' | 'animate' | 'transition'
-  >
-> & {
+export type LineBaseProps = {
   /**
    * The ID of the series to render. Will be used to find the data from the chart context.
    */
@@ -130,9 +81,57 @@ export type LineBaseProps = Partial<
    * When true, the area is connected across null values.
    */
   connectNulls?: boolean;
+  /**
+   * The color of the line.
+   * @default color of the series or theme.color.fgPrimary
+   */
+  stroke?: string;
+  /**
+   * Opacity of the line
+   * @note when combined with gradient, both will be applied
+   * @default 1
+   */
+  strokeOpacity?: number;
+  /**
+   * Width of the line
+   * @default 2
+   */
+  strokeWidth?: number;
+  /**
+   * Gradient configuration.
+   * When provided, creates gradient or threshold-based coloring.
+   */
+  gradient?: GradientDefinition;
+  /**
+   * Whether to animate the line.
+   * Overrides the animate value from the chart context.
+   */
+  animate?: boolean;
 };
 
-export type LineProps = LineBaseProps;
+export type LineProps = LineBaseProps & {
+  /**
+   * Transition configuration for line animations.
+   */
+  transition?: Transition;
+};
+
+export type LineComponentProps = Pick<
+  LineProps,
+  'stroke' | 'strokeOpacity' | 'strokeWidth' | 'gradient' | 'animate' | 'transition'
+> & {
+  /**
+   * Path of the line
+   */
+  d: AnimatedProp<string | undefined>;
+  /**
+   * ID of the y-axis to use.
+   * If not provided, defaults to the default y-axis.
+   */
+  yAxisId?: string;
+};
+
+export type LineComponent = React.FC<LineComponentProps>;
 
 export const Line = memo<LineProps>(
   ({
