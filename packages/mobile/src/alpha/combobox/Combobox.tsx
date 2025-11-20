@@ -189,7 +189,7 @@ const ComboboxBase = memo(
         (props: SelectDropdownProps<Type, SelectOptionValue>) => (
           <SelectDropdownComponent
             label={label}
-            style={{ paddingBottom: 200 }}
+            minHeight={500}
             {...props}
             footer={
               <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={86}>
