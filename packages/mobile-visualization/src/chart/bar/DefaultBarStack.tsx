@@ -7,16 +7,7 @@ import { type Transition, usePathTransition } from '../utils/transition';
 
 import type { BarStackComponentProps } from './BarStack';
 
-export type DefaultBarStackProps = BarStackComponentProps & {
-  /**
-   * Transition configuration for the bar stack.
-   *
-   * @example
-   * // Different enter and update animations
-   * transition={{ type: 'timing', duration: 300 }}
-   */
-  transition?: Transition;
-};
+export type DefaultBarStackProps = BarStackComponentProps;
 
 /**
  * Default stack component that renders children in a group with animated clip path.

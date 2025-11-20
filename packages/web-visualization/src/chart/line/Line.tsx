@@ -65,10 +65,7 @@ export type LineComponentProps = {
 export type LineComponent = React.FC<LineComponentProps>;
 
 export type LineBaseProps = Partial<
-  Pick<
-    LineComponentProps,
-    'stroke' | 'strokeWidth' | 'strokeOpacity' | 'gradient' | 'animate' | 'transition'
-  >
+  Pick<LineComponentProps, 'stroke' | 'strokeWidth' | 'strokeOpacity' | 'gradient' | 'animate'>
 > &
   SharedProps & {
     /**
@@ -132,13 +129,14 @@ export type LineBaseProps = Partial<
     connectNulls?: boolean;
   };
 
-export type LineProps = LineBaseProps & {
-  /**
-   * Handler for when a point is clicked.
-   * Passed through to Point components rendered via points.
-   */
-  onPointClick?: PointProps['onClick'];
-};
+export type LineProps = LineBaseProps &
+  Pick<LineComponentProps, 'transition'> & {
+    /**
+     * Handler for when a point is clicked.
+     * Passed through to Point components rendered via points.
+     */
+    onPointClick?: PointProps['onClick'];
+  };
 
 export const Line = memo<LineProps>(
   ({

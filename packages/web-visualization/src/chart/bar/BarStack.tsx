@@ -63,7 +63,7 @@ export type BarStackComponent = React.FC<BarStackComponentProps>;
 
 export type BarStackBaseProps = Pick<
   BarProps,
-  'BarComponent' | 'fillOpacity' | 'stroke' | 'strokeWidth' | 'borderRadius' | 'transition'
+  'BarComponent' | 'fillOpacity' | 'stroke' | 'strokeWidth' | 'borderRadius'
 > & {
   /**
    * Array of series configurations that belong to this stack.
@@ -118,7 +118,7 @@ export type BarStackBaseProps = Pick<
   stackMinSize?: number;
 };
 
-export type BarStackProps = BarStackBaseProps;
+export type BarStackProps = BarStackBaseProps & Pick<BarStackComponentProps, 'transition'>;
 
 /**
  * BarStack component that renders a single stack of bars at a specific category index.

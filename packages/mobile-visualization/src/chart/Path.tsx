@@ -60,18 +60,6 @@ export type PathBaseProps = {
    * The offset to add to the clip rect boundaries.
    */
   clipOffset?: number;
-  /**
-   * Animation transition
-   *
-   * @example
-   * // Duration based
-   * transition={{ type: 'timing', duration: 300 }}
-   *
-   * @example
-   * // Spring based
-   * transition={{ type: 'spring', damping: 20, stiffness: 300 }}
-   */
-  transition?: Transition;
 };
 
 export type PathProps = PathBaseProps &
@@ -101,6 +89,18 @@ export type PathProps = PathBaseProps &
      * @note pass undefined to disable clipping.
      */
     clipPath?: string | undefined;
+    /**
+     * Animation transition
+     *
+     * @example
+     * // Duration based
+     * transition={{ type: 'timing', duration: 300 }}
+     *
+     * @example
+     * // Spring based
+     * transition={{ type: 'spring', damping: 20, stiffness: 300 }}
+     */
+    transition?: Transition;
   };
 
 const AnimatedPath = memo<Omit<PathProps, 'animate' | 'clipRect' | 'clipOffset' | 'clipPath'>>(

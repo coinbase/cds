@@ -80,7 +80,39 @@ export type ReferenceLineBaseProps = SharedProps & {
   stroke?: string;
 };
 
-type ReferenceLineWebProps = {
+export type HorizontalReferenceLineProps = ReferenceLineBaseProps & {
+  /**
+   * Y-value for horizontal reference line (data value).
+   */
+  dataY: number;
+  /**
+   * The ID of the y-axis to use for positioning.
+   * Defaults to defaultAxisId if not specified.
+   */
+  yAxisId?: string;
+  /**
+   * Position of the label along the horizontal line.
+   * @default 'right'
+   */
+  labelPosition?: TextHorizontalAlignment;
+  dataX?: never;
+};
+
+export type VerticalReferenceLineProps = ReferenceLineBaseProps & {
+  /**
+   * X-value for vertical reference line (data index).
+   */
+  dataX: number;
+  /**
+   * Position of the label along the vertical line.
+   * @default 'top'
+   */
+  labelPosition?: TextVerticalAlignment;
+  dataY?: never;
+  yAxisId?: never;
+};
+
+export type ReferenceLineProps = (HorizontalReferenceLineProps | VerticalReferenceLineProps) & {
   /**
    * Custom class name for the root element.
    */
@@ -116,42 +148,6 @@ type ReferenceLineWebProps = {
     label?: React.CSSProperties;
   };
 };
-
-export type HorizontalReferenceLineProps = ReferenceLineBaseProps &
-  ReferenceLineWebProps & {
-  /**
-   * Y-value for horizontal reference line (data value).
-   */
-  dataY: number;
-  /**
-   * The ID of the y-axis to use for positioning.
-   * Defaults to defaultAxisId if not specified.
-   */
-  yAxisId?: string;
-  /**
-   * Position of the label along the horizontal line.
-   * @default 'right'
-   */
-  labelPosition?: TextHorizontalAlignment;
-  dataX?: never;
-};
-
-export type VerticalReferenceLineProps = ReferenceLineBaseProps &
-  ReferenceLineWebProps & {
-    /**
-     * X-value for vertical reference line (data index).
-     */
-    dataX: number;
-    /**
-     * Position of the label along the vertical line.
-     * @default 'top'
-     */
-    labelPosition?: TextVerticalAlignment;
-    dataY?: never;
-    yAxisId?: never;
-  };
-
-export type ReferenceLineProps = HorizontalReferenceLineProps | VerticalReferenceLineProps;
 
 export const ReferenceLine = memo<ReferenceLineProps>(
   ({

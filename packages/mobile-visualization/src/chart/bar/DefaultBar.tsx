@@ -4,20 +4,10 @@ import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 import { useCartesianChartContext } from '../ChartProvider';
 import { Path } from '../Path';
 import { getBarPath } from '../utils';
-import { type Transition } from '../utils/transition';
 
 import type { BarComponentProps } from './Bar';
 
-export type DefaultBarProps = BarComponentProps & {
-  /**
-   * Transition configuration for the bar.
-   *
-   * @example
-   * // Different enter and update animations
-   * transition={{ type: 'timing', duration: 300 }}
-   */
-  transition?: Transition;
-};
+export type DefaultBarProps = BarComponentProps;
 
 /**
  * Default bar component that renders a solid bar with animation support.

@@ -25,18 +25,6 @@ export type PathBaseProps = SharedProps & {
    * The offset to add to the clip rect boundaries.
    */
   clipOffset?: number;
-  /**
-   * Transition configuration for path.
-   *
-   * @example
-   * // Timing based animation
-   * transition={{ type: 'tween', duration: 0.2, ease: 'easeOut' }}
-   *
-   * @example
-   * // Spring animation
-   * transition={{ type: 'spring', damping: 20, stiffness: 300 }}
-   */
-  transition?: Transition;
 };
 
 export type PathProps = PathBaseProps &
@@ -54,7 +42,20 @@ export type PathProps = PathBaseProps &
     | 'onDragCapture'
     | 'onDragEndCapture'
     | 'onDragStartCapture'
-  >;
+  > & {
+    /**
+     * Transition configuration for path.
+     *
+     * @example
+     * // Timing based animation
+     * transition={{ type: 'tween', duration: 0.2, ease: 'easeOut' }}
+     *
+     * @example
+     * // Spring animation
+     * transition={{ type: 'spring', damping: 20, stiffness: 300 }}
+     */
+    transition?: Transition;
+  };
 
 const AnimatedPath = memo<Omit<PathProps, 'animate'>>(({ d = '', transition, ...pathProps }) => {
   const interpolatedPath = usePathTransition({

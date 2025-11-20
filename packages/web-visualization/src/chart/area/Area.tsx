@@ -82,7 +82,7 @@ export type AreaBaseProps = Pick<
   connectNulls?: boolean;
 };
 
-export type AreaProps = AreaBaseProps;
+export type AreaProps = AreaBaseProps & Pick<AreaComponentProps, 'transition'>;
 
 export const Area = memo<AreaProps>(
   ({

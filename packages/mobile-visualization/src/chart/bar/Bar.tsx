@@ -66,11 +66,15 @@ export type BarComponentProps = {
    * Stroke width for the bar outline.
    */
   strokeWidth?: number;
+  /**
+   * Transition configuration for bar animations.
+   */
+  transition?: Transition;
 };
 
 export type BarComponent = React.FC<BarComponentProps>;
 
-export type BarBaseProps = Omit<BarComponentProps, 'd'> & {
+export type BarBaseProps = Omit<BarComponentProps, 'd' | 'transition'> & {
   /**
    * Border radius for the bar.
    * @default 4
@@ -80,13 +84,9 @@ export type BarBaseProps = Omit<BarComponentProps, 'd'> & {
    * Component to render the bar.
    */
   BarComponent?: BarComponent;
-  /**
-   * Transition configuration for bar animations.
-   */
-  transition?: Transition;
 };
 
-export type BarProps = BarBaseProps;
+export type BarProps = BarBaseProps & Pick<BarComponentProps, 'transition'>;
 
 /**
  * Simple bar component that renders a single bar at the specified position.
