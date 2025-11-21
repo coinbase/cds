@@ -203,6 +203,11 @@ const sidebars: SidebarsConfig = {
               id: 'components/inputs/SelectChip/selectChip',
               label: 'SelectChip',
             },
+            {
+              type: 'doc',
+              id: 'components/controls/SelectChipAlpha/selectChipAlpha',
+              label: 'SelectChip (Alpha)',
+            },
             { type: 'doc', id: 'components/inputs/Switch/switch', label: 'Switch' },
             {
               type: 'doc',

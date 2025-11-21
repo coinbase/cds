@@ -16,6 +16,10 @@ import type { TrayBaseProps } from '../overlays/tray/Tray';
 import type { ChipProps } from './ChipProps';
 import { MediaChip } from './MediaChip';
 
+/**
+ * @deprecated This component is deprecated. Please use the new SelectChip alpha component instead.
+ * @see {@link @coinbase/cds-mobile/alpha/select-chip/SelectChip}
+ */
 export type SelectChipProps = Pick<
   SelectBaseProps,
   'onChange' | 'valueLabel' | 'placeholder' | 'value'
@@ -27,6 +31,10 @@ export type SelectChipProps = Pick<
     active?: boolean;
   };
 
+/**
+ * @deprecated This component is deprecated. Please use the new SelectChip alpha component instead.
+ * @see {@link @coinbase/cds-mobile/alpha/select-chip/SelectChip}
+ */
 export const SelectChip = memo(
   forwardRef(
     (
