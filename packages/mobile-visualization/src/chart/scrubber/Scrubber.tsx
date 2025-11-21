@@ -234,16 +234,8 @@ export const Scrubber = memo(
       const beaconGroupRef = React.useRef<ScrubberBeaconGroupRef>(null);
 
       const { scrubberPosition } = useScrubberContext();
-      const {
-        getXSerializableScale,
-        getXAxis,
-        series,
-        drawingArea,
-        animate,
-        width: chartWidth,
-        height: chartHeight,
-        dataLength,
-      } = useCartesianChartContext();
+      const { getXSerializableScale, getXAxis, series, drawingArea, animate, dataLength } =
+        useCartesianChartContext();
 
       const xAxis = useMemo(() => getXAxis(), [getXAxis]);
       const xScale = useMemo(() => getXSerializableScale(), [getXSerializableScale]);
@@ -286,10 +278,6 @@ export const Scrubber = memo(
         }
         return dataIndex.value;
       }, [xAxis, dataIndex]);
-
-      const isIdle = useDerivedValue(() => {
-        return scrubberPosition.value === undefined;
-      }, [scrubberPosition]);
 
       const lineOpacity = useDerivedValue(() => {
         return scrubberPosition.value !== undefined ? 1 : 0;

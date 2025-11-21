@@ -324,13 +324,30 @@ export const ChartText = memo<ChartTextProps>(
     // Paragraph uses top-left positioning
     const textPosition = useDerivedValue<Rect>(() => {
       const textDims = textDimensions.value;
+
+      // Calculate horizontal offset based on paragraph alignment
+      let horizontalOffset = 0;
+      switch (paragraphAlignment) {
+        case TextAlign.Center:
+          horizontalOffset = -textDims.width / 2;
+          break;
+        case TextAlign.Right:
+        case TextAlign.End:
+          horizontalOffset = -textDims.width;
+          break;
+        default:
+          // Left-aligned text needs no offset
+          horizontalOffset = 0;
+          break;
+      }
+
       return {
-        x: backgroundRect.value.x + inset.left,
+        x: backgroundRect.value.x + inset.left + horizontalOffset,
         y: backgroundRect.value.y + inset.top,
         width: textDims.width,
         height: textDims.height,
       };
-    }, [backgroundRect, textDimensions, inset, backgroundRectSize]);
+    }, [backgroundRect, textDimensions, inset, paragraphAlignment]);
 
     // Calculate overflow and repositioning
     const fullChartBounds = useMemo<Rect>(
