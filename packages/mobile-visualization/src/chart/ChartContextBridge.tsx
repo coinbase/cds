@@ -8,29 +8,29 @@ import * as React from 'react';
 import type ReactReconciler from 'react-reconciler';
 
 /**
- * Represents a react-internal Fiber node.
+ * Represents a react-internal tree node.
  */
-export type Fiber<T = any> = Omit<ReactReconciler.Fiber, 'stateNode'> & { stateNode: T };
+type TreeNode<T = any> = Omit<ReactReconciler.Fiber, 'stateNode'> & { stateNode: T };
 
 /**
- * Represents a Fiber node selector for traversal.
+ * Represents a tree node selector for traversal.
  */
-export type FiberSelector<T = any> = (node: Fiber<T | null>) => boolean | void;
+type TreeNodeSelector<T = any> = (node: TreeNode<T | null>) => boolean | void;
 
 /**
- * Traverses up or down a Fiber tree, return `true` to stop and select a node.
+ * Traverses up or down a React tree, return `true` to stop and select a node.
  */
-export function traverseFiber<T = any>(
-  fiber: Fiber | undefined,
+function traverseTreeNode<T = any>(
+  node: TreeNode | undefined,
   ascending: boolean,
-  selector: FiberSelector<T>,
-): Fiber<T> | undefined {
-  if (!fiber) return;
-  if (selector(fiber) === true) return fiber;
+  selector: TreeNodeSelector<T>,
+): TreeNode<T> | undefined {
+  if (!node) return;
+  if (selector(node) === true) return node;
 
-  let child = ascending ? fiber.return : fiber.child;
+  let child = ascending ? node.return : node.child;
   while (child) {
-    const match = traverseFiber(child, ascending, selector);
+    const match = traverseTreeNode(child, ascending, selector);
     if (match) return match;
 
     child = ascending ? null : child.sibling;
@@ -74,46 +74,47 @@ console.error = function (...args: any[]) {
   return error.apply(this, args);
 };
 
-const FiberContext = wrapContext(React.createContext<Fiber>(null!));
+const TreeNodeContext = wrapContext(React.createContext<TreeNode>(null!));
 
 /**
- * A react-internal Fiber provider that binds React children to the React Fiber tree.
+ * A react-internal tree node provider that binds React children to the React tree for chart context bridging.
  */
-export class FiberProvider extends React.Component<{ children?: React.ReactNode }> {
-  private _reactInternals!: Fiber;
+export class ChartBridgeProvider extends React.Component<{ children?: React.ReactNode }> {
+  private _reactInternals!: TreeNode;
 
   render() {
     return (
-      <FiberContext.Provider value={this._reactInternals}>
+      <TreeNodeContext.Provider value={this._reactInternals}>
         {this.props.children}
-      </FiberContext.Provider>
+      </TreeNodeContext.Provider>
     );
   }
 }
 
 /**
- * Returns the current react-internal Fiber.
+ * Returns the current react-internal tree node.
  */
-export function useFiber(): Fiber<null> | undefined {
-  const root = React.useContext(FiberContext);
-  if (root === null) throw new Error('useFiber must be called within a <FiberProvider />!');
+function useTreeNode(): TreeNode<null> | undefined {
+  const root = React.useContext(TreeNodeContext);
+  if (root === null)
+    throw new Error('useTreeNode must be called within a <ChartBridgeProvider />!');
 
   const id = React.useId();
-  const fiber = React.useMemo(() => {
-    for (const maybeFiber of [root, root?.alternate]) {
-      if (!maybeFiber) continue;
-      const fiber = traverseFiber<null>(maybeFiber, false, (node) => {
+  const treeNode = React.useMemo(() => {
+    for (const maybeNode of [root, root?.alternate]) {
+      if (!maybeNode) continue;
+      const node = traverseTreeNode<null>(maybeNode, false, (node) => {
         let state = node.memoizedState;
         while (state) {
           if (state.memoizedState === id) return true;
           state = state.next;
         }
       });
-      if (fiber) return fiber;
+      if (node) return node;
     }
   }, [root, id]);
 
-  return fiber;
+  return treeNode;
 }
 
 export type ContextMap = Map<React.Context<any>, any> & {
@@ -123,20 +124,20 @@ export type ContextMap = Map<React.Context<any>, any> & {
 /**
  * Returns a map of all contexts and their values.
  */
-export function useContextMap(): ContextMap {
-  const fiber = useFiber();
+function useContextMap(): ContextMap {
+  const treeNode = useTreeNode();
   const [contextMap] = React.useState(() => new Map<React.Context<any>, any>());
 
   // Collect live context
   contextMap.clear();
-  let node = fiber;
+  let node = treeNode;
   while (node) {
     if (node.type && typeof node.type === 'object') {
       // https://github.com/facebook/react/pull/28226
       const enableRenderableContext =
         (node.type as any)._context === undefined && (node.type as any).Provider === node.type;
       const context = enableRenderableContext ? node.type : (node.type as any)._context;
-      if (context && context !== FiberContext && !contextMap.has(context)) {
+      if (context && context !== TreeNodeContext && !contextMap.has(context)) {
         // eslint-disable-next-line react-hooks/rules-of-hooks
         contextMap.set(context, React.useContext(wrapContext(context)));
       }
@@ -149,18 +150,18 @@ export function useContextMap(): ContextMap {
 }
 
 /**
- * Represents a react-context bridge provider component.
+ * Represents a chart context bridge provider component.
  */
-export type ContextBridge = React.FC<React.PropsWithChildren<object>>;
+export type ChartContextBridge = React.FC<React.PropsWithChildren<object>>;
 
 /**
- * Returns a ContextBridge of live context providers to pierce Context across renderers.
- * Pass ContextBridge as a component to a secondary renderer (e.g., Skia Canvas) to enable context-sharing.
+ * Returns a ChartContextBridge of live context providers to pierce Context across renderers.
+ * Pass ChartContextBridge as a component to a secondary renderer (e.g., Skia Canvas) to enable context-sharing in charts.
  */
-export function useContextBridge(): ContextBridge {
+export function useChartContextBridge(): ChartContextBridge {
   const contextMap = useContextMap();
 
-  // Flatten context and their memoized values into a `ContextBridge` provider
+  // Flatten context and their memoized values into a `ChartContextBridge` provider
   return React.useMemo(
     () =>
       Array.from(contextMap.keys()).reduce(
@@ -169,7 +170,7 @@ export function useContextBridge(): ContextBridge {
             <context.Provider {...props} value={contextMap.get(context)} />
           </Prev>
         ),
-        (props) => <FiberProvider {...props} />,
+        (props) => <ChartBridgeProvider {...props} />,
       ),
     [contextMap],
   );

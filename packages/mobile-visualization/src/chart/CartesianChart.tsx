@@ -4,11 +4,11 @@ import type { Rect } from '@coinbase/cds-common/types';
 import { useLayout } from '@coinbase/cds-mobile/hooks/useLayout';
 import type { BoxBaseProps, BoxProps } from '@coinbase/cds-mobile/layout';
 import { Box } from '@coinbase/cds-mobile/layout';
-import { useContextBridge } from '@coinbase/cds-mobile/system';
 import { Canvas, Skia, type SkTypefaceFontProvider, useFont } from '@shopify/react-native-skia';
 
 import { ScrubberProvider, type ScrubberProviderProps } from './scrubber/ScrubberProvider';
 import { convertToSerializableScale, type SerializableScale } from './utils/scale';
+import { useChartContextBridge } from './ChartContextBridge';
 import { CartesianChartProvider } from './ChartProvider';
 import {
   type AxisConfig,
@@ -30,7 +30,7 @@ import {
 
 const ChartCanvas = memo(
   ({ children, style }: { children: React.ReactNode; style?: StyleProp<ViewStyle> }) => {
-    const ContextBridge = useContextBridge();
+    const ContextBridge = useChartContextBridge();
 
     return (
       <Canvas style={[{ width: '100%', height: '100%' }, style]}>
