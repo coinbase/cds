@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.21.7 (11/21/2025 PST)
+
+#### 🐞 Fixes
+
+- Add "heading" a11y role to MultiContentModule title. [[#183](https://github.com/coinbase/cds/pull/183)]
+
 ## 8.21.6 ((11/21/2025, 06:37 AM PST))
 
 This is an artificial version bump with no new change.

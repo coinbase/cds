@@ -72,7 +72,13 @@ export const MultiContentModule = memo(
         ) : (
           pictogram
         )}
-        {typeof title === 'string' ? <Text font="title1">{title}</Text> : title}
+        {typeof title === 'string' ? (
+          <Text font="title1" role="heading">
+            {title}
+          </Text>
+        ) : (
+          title
+        )}
         {typeof description === 'string' ? (
           <Text color="fgMuted" font="body" numberOfLines={3}>
             {description}
