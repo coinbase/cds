@@ -2164,6 +2164,124 @@ function HiddenScrubberWhenIdle() {
   );
 }
 
+function TwoLineScrubberLabel() {
+  const theme = useTheme();
+  const data = useMemo(() => [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58], []);
+  const [alignment, setAlignment] = useState<TextAlign>(TextAlign.Center);
+
+  const fontMgr = useMemo(() => {
+    const fontProvider = Skia.TypefaceFontProvider.Make();
+    return fontProvider;
+  }, []);
+
+  const formatPrice = useCallback((price: number) => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }).format(price);
+  }, []);
+
+  const scrubberLabel = useCallback(
+    (index: number) => {
+      const price = formatPrice(data[index] * 100);
+      const day = `Day ${index + 100}`;
+
+      const priceStyle: SkTextStyle = {
+        fontFamilies: ['Inter'],
+        fontSize: 16,
+        fontStyle: {
+          weight: FontWeight.Bold,
+        },
+        color: Skia.Color(theme.color.fg),
+      };
+
+      const dayStyle: SkTextStyle = {
+        fontFamilies: ['Inter'],
+        fontSize: 14,
+        fontStyle: {
+          weight: FontWeight.Normal,
+        },
+        color: Skia.Color(theme.color.fgMuted),
+      };
+
+      const builder = Skia.ParagraphBuilder.Make(
+        {
+          textAlign: alignment,
+        },
+        fontMgr,
+      );
+
+      builder.pushStyle(priceStyle);
+      builder.addText(price);
+      builder.addText('\n');
+
+      builder.pushStyle(dayStyle);
+      builder.addText(day);
+
+      const para = builder.build();
+      // First layout with large width to get intrinsic size
+      para.layout(384);
+      return para;
+    },
+    [data, formatPrice, theme.color.fg, theme.color.fgMuted, fontMgr, alignment],
+  );
+
+  // Custom scrubber label component that uses the selected alignment
+  const AlignedScrubberLabel = memo((props: ScrubberLabelProps) => (
+    <DefaultScrubberLabel {...props} paragraphAlignment={alignment} />
+  ));
+
+  return (
+    <VStack gap={2}>
+      <HStack gap={1}>
+        <Button
+          compact
+          onPress={() => setAlignment(TextAlign.Left)}
+          variant={alignment === TextAlign.Left ? 'primary' : 'secondary'}
+        >
+          Left
+        </Button>
+        <Button
+          compact
+          onPress={() => setAlignment(TextAlign.Center)}
+          variant={alignment === TextAlign.Center ? 'primary' : 'secondary'}
+        >
+          Center
+        </Button>
+        <Button
+          compact
+          onPress={() => setAlignment(TextAlign.Right)}
+          variant={alignment === TextAlign.Right ? 'primary' : 'secondary'}
+        >
+          Right
+        </Button>
+      </HStack>
+      <LineChart
+        enableScrubbing
+        showArea
+        height={200}
+        inset={{ top: 64 }}
+        series={[
+          {
+            id: 'prices',
+            data: data,
+            color: theme.color.accentBoldBlue,
+          },
+        ]}
+      >
+        <Scrubber
+          idlePulse
+          labelElevated
+          LabelComponent={AlignedScrubberLabel}
+          label={scrubberLabel}
+        />
+      </LineChart>
+    </VStack>
+  );
+}
+
 type ExampleItem = {
   title: string;
   component: React.ReactNode;
@@ -2419,6 +2537,10 @@ function ExampleNavigator() {
       {
         title: 'Hidden Scrubber When Idle',
         component: <HiddenScrubberWhenIdle />,
+      },
+      {
+        title: 'Two-Line Scrubber Label',
+        component: <TwoLineScrubberLabel />,
       },
     ],
     [theme.color.fg, theme.color.fgPositive, theme.spectrum.gray50],

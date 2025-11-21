@@ -427,6 +427,91 @@ function CustomLabelComponent() {
 }
 ```
 
+#### Multi-line Centered Text
+
+You can create custom multi-line centered labels using Skia's `ParagraphBuilder` with `TextAlign.Center`. Set `paragraphAlignment={TextAlign.Center}` on your custom label component to ensure proper positioning.
+
+```jsx
+function TwoLineCenteredLabel() {
+  const theme = useTheme();
+  const data = useMemo(() => [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58], []);
+
+  const fontMgr = useMemo(() => Skia.TypefaceFontProvider.Make(), []);
+
+  const formatPrice = useCallback((price: number) => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }).format(price);
+  }, []);
+
+  const scrubberLabel = useCallback(
+    (index: number) => {
+      const price = formatPrice(data[index]);
+      const day = `Day ${index + 1}`;
+
+      const priceStyle: SkTextStyle = {
+        fontFamilies: ['Inter'],
+        fontSize: 16,
+        fontStyle: { weight: FontWeight.Bold },
+        color: Skia.Color(theme.color.fg),
+      };
+
+      const dayStyle: SkTextStyle = {
+        fontFamilies: ['Inter'],
+        fontSize: 14,
+        fontStyle: { weight: FontWeight.Normal },
+        color: Skia.Color(theme.color.fgMuted),
+      };
+
+      const builder = Skia.ParagraphBuilder.Make({ textAlign: TextAlign.Center }, fontMgr);
+
+      builder.pushStyle(priceStyle);
+      builder.addText(price);
+      builder.addText('\n');
+
+      builder.pushStyle(dayStyle);
+      builder.addText(day);
+
+      const para = builder.build();
+      para.layout(384);
+      return para;
+    },
+    [data, formatPrice, theme.color.fg, theme.color.fgMuted, fontMgr],
+  );
+
+  // Custom label component that sets paragraphAlignment to center
+  const CenteredScrubberLabel = memo((props: ScrubberLabelProps) => (
+    <DefaultScrubberLabel {...props} paragraphAlignment={TextAlign.Center} />
+  ));
+
+  return (
+    <LineChart
+      enableScrubbing
+      showArea
+      height={200}
+      inset={{ top: 64 }}
+      series={[
+        {
+          id: 'prices',
+          data: data,
+          color: theme.color.accentBoldBlue,
+        },
+      ]}
+    >
+      <Scrubber
+        idlePulse
+        labelElevated
+        LabelComponent={CenteredScrubberLabel}
+        label={scrubberLabel}
+      />
+    </LineChart>
+  );
+}
+```
+
 #### Fonts
 
 You can use `labelFont` to customize the font of the scrubber line label and `beaconLabelFont` to customize the font of the beacon labels.
