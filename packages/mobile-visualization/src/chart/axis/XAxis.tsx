@@ -201,10 +201,10 @@ export const XAxis = memo<XAxisProps>(
           </Group>
         )}
         {chartTextData && (
-          <ChartTextGroup 
-            prioritizeEndLabels 
+          <ChartTextGroup
+            prioritizeEndLabels
             LabelComponent={TickLabelComponent}
-            labels={chartTextData} 
+            labels={chartTextData}
             minGap={minTickLabelGap}
           />
         )}
