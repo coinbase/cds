@@ -1,4 +1,4 @@
-import React, { type ComponentType, memo, type SVGProps, useMemo } from 'react';
+import React, { memo, type SVGProps, useMemo } from 'react';
 import type { SharedProps } from '@coinbase/cds-common/types';
 import { cx } from '@coinbase/cds-web';
 import { css } from '@linaria/core';

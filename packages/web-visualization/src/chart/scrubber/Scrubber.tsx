@@ -7,7 +7,6 @@ import {
   ReferenceLine,
   type ReferenceLineBaseProps,
   type ReferenceLineLabelComponentProps,
-  type ReferenceLineProps,
 } from '../line';
 import type { ChartTextProps } from '../text';
 import {

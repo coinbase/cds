@@ -6,7 +6,7 @@ import type { TabValue } from '@coinbase/cds-common/tabs/useTabs';
 import { IconButton } from '@coinbase/cds-mobile/buttons';
 import { Example, ExampleScreen } from '@coinbase/cds-mobile/examples/ExampleScreen';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
-import { Box, HStack } from '@coinbase/cds-mobile/layout';
+import { HStack } from '@coinbase/cds-mobile/layout';
 import { type TabComponent, type TabsActiveIndicatorProps } from '@coinbase/cds-mobile/tabs';
 import { SegmentedTab, type SegmentedTabProps } from '@coinbase/cds-mobile/tabs/SegmentedTab';
 import { TextLabel1 } from '@coinbase/cds-mobile/typography';

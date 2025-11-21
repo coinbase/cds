@@ -15,7 +15,7 @@ import { useCartesianChartContext } from '../ChartProvider';
 import { ReferenceLine, SolidLine, type SolidLineProps } from '../line';
 import { Line } from '../line/Line';
 import { LineChart } from '../line/LineChart';
-import { type GradientDefinition, isCategoricalScale } from '../utils';
+import { isCategoricalScale } from '../utils';
 import {
   BarPlot,
   CartesianChart,

@@ -4,7 +4,7 @@ import type { Rect } from '@coinbase/cds-common/types';
 import { useLayout } from '@coinbase/cds-mobile/hooks/useLayout';
 import type { BoxBaseProps, BoxProps } from '@coinbase/cds-mobile/layout';
 import { Box } from '@coinbase/cds-mobile/layout';
-import { Canvas, Skia, type SkTypefaceFontProvider, useFont } from '@shopify/react-native-skia';
+import { Canvas, Skia, type SkTypefaceFontProvider } from '@shopify/react-native-skia';
 
 import { ScrubberProvider, type ScrubberProviderProps } from './scrubber/ScrubberProvider';
 import { convertToSerializableScale, type SerializableScale } from './utils/scale';

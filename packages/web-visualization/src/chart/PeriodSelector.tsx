@@ -15,12 +15,6 @@ import { m as motion, type Transition } from 'framer-motion';
 
 const MotionBox = motion(Box);
 
-const pulseTransitionConfig: Transition = {
-  duration: 2,
-  repeat: Infinity,
-  ease: 'easeInOut',
-};
-
 // Animated active indicator to support smooth transition of background color
 export const PeriodSelectorActiveIndicator = memo(
   ({

@@ -1,5 +1,5 @@
 import React, { memo, useMemo } from 'react';
-import { m as motion, type Transition } from 'framer-motion';
+import { m as motion } from 'framer-motion';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import { getBarPath } from '../utils';

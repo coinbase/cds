@@ -4,7 +4,6 @@ import { m as motion, type Transition } from 'framer-motion';
 import { useCartesianChartContext } from '../ChartProvider';
 import type { GradientDefinition } from '../utils';
 import { getGradientConfig } from '../utils/gradient';
-import { defaultTransition } from '../utils/transition';
 
 export type GradientBaseProps = {
   /**

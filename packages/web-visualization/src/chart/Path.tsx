@@ -1,7 +1,7 @@
 import { memo, useId, useMemo } from 'react';
 import type { SVGProps } from 'react';
 import type { Rect, SharedProps } from '@coinbase/cds-common/types';
-import { m as motion, type MotionValue, type Transition } from 'framer-motion';
+import { m as motion, type Transition } from 'framer-motion';
 
 import { usePathTransition } from './utils/transition';
 import { useCartesianChartContext } from './ChartProvider';

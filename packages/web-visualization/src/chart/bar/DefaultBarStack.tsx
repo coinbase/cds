@@ -1,9 +1,8 @@
 import { memo, useId, useMemo } from 'react';
-import { useHasMounted } from '@coinbase/cds-common/hooks/useHasMounted';
 import { m as motion } from 'framer-motion';
 
 import { useCartesianChartContext } from '../ChartProvider';
-import { defaultTransition, getBarPath } from '../utils';
+import { getBarPath } from '../utils';
 
 import type { BarStackComponentProps } from './BarStack';
 

@@ -7,23 +7,6 @@ import { DottedLine } from '../DottedLine';
 import { LineChart } from '../LineChart';
 import { ReferenceLine } from '../ReferenceLine';
 
-const VerticalLabel = memo<React.ComponentProps<typeof DefaultReferenceLineLabel>>((props) => (
-  <DefaultReferenceLineLabel {...props} horizontalAlignment="left" inset={0} />
-));
-
-const HorizontalLabel = memo<React.ComponentProps<typeof DefaultReferenceLineLabel>>((props) => (
-  <DefaultReferenceLineLabel
-    {...props}
-    horizontalAlignment="right"
-    inset={0}
-    verticalAlignment="bottom"
-  />
-));
-
-const BottomLeftLabel = memo<React.ComponentProps<typeof DefaultReferenceLineLabel>>((props) => (
-  <DefaultReferenceLineLabel {...props} dy={-4} verticalAlignment="bottom" />
-));
-
 const LiquidationLabelMobile = memo<
   React.ComponentProps<typeof DefaultReferenceLineLabel> & {
     accentColor: string;
