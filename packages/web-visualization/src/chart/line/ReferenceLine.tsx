@@ -9,6 +9,7 @@ import type {
   TextHorizontalAlignment,
   TextVerticalAlignment,
 } from '../text/ChartText';
+import type { ChartInset } from '../utils';
 import { getPointOnScale } from '../utils';
 
 import { DefaultReferenceLineLabel } from './DefaultReferenceLineLabel';
@@ -33,14 +34,19 @@ export type ReferenceLineLabelComponentProps = Pick<
   | 'background'
   | 'borderRadius'
   | 'disableRepositioning'
-  | 'bounds'
   | 'styles'
   | 'classNames'
   | 'horizontalAlignment'
   | 'verticalAlignment'
   | 'className'
   | 'style'
->;
+> & {
+  /**
+   * Bounds inset for label to prevent cutoff at chart edges.
+   * @default { top: 4, bottom: 20, left: 12, right: 12 } when elevated is true, otherwise undefined
+   */
+  boundsInset?: number | ChartInset;
+};
 
 export type ReferenceLineLabelComponent = React.FC<ReferenceLineLabelComponentProps>;
 
@@ -72,7 +78,7 @@ export type ReferenceLineBaseProps = SharedProps & {
    * Whether to elevate the label with a shadow.
    * When true, applies elevation and automatically adds bounds to keep label within chart area.
    */
-  elevateLabel?: boolean;
+  labelElevated?: boolean;
   /**
    * Font style for the label text.
    */
@@ -93,6 +99,13 @@ export type ReferenceLineBaseProps = SharedProps & {
    * Vertical alignment of the label text.
    */
   labelVerticalAlignment?: TextVerticalAlignment;
+  /**
+   * Bounds inset for the label to prevent cutoff at chart edges.
+   * Especially useful when labelElevated is true to prevent shadow clipping.
+   * Can be a number (applied to all sides) or a ChartInset object.
+   * @default { top: 4, bottom: 20, left: 12, right: 12 } when labelElevated is true, otherwise none
+   */
+  labelBoundsInset?: number | ChartInset;
   /**
    * The color of the line.
    * @default 'var(--color-bgLine)'
@@ -179,12 +192,13 @@ export const ReferenceLine = memo<ReferenceLineProps>(
     testID,
     LineComponent = DottedLine,
     LabelComponent = DefaultReferenceLineLabel,
-    elevateLabel,
+    labelElevated,
     labelFont,
     labelDx,
     labelDy,
     labelHorizontalAlignment,
     labelVerticalAlignment,
+    labelBoundsInset,
     stroke = 'var(--color-bgLine)',
     className,
     style,
@@ -229,10 +243,11 @@ export const ReferenceLine = memo<ReferenceLineProps>(
           />
           {label && (
             <LabelComponent
+              boundsInset={labelBoundsInset}
               className={classNames?.label}
               dx={labelDx}
               dy={labelDy}
-              elevated={elevateLabel}
+              elevated={labelElevated}
               font={labelFont}
               horizontalAlignment={labelHorizontalAlignment}
               style={styles?.label}
@@ -279,10 +294,11 @@ export const ReferenceLine = memo<ReferenceLineProps>(
           />
           {label && (
             <LabelComponent
+              boundsInset={labelBoundsInset}
               className={classNames?.label}
               dx={labelDx}
               dy={labelDy}
-              elevated={elevateLabel}
+              elevated={labelElevated}
               font={labelFont}
               horizontalAlignment={labelHorizontalAlignment ?? 'center'}
               style={styles?.label}

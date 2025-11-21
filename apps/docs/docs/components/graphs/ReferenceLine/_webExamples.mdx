@@ -94,13 +94,15 @@ ReferenceLine relies on `dataX` or `dataY` to position the line. Passing in `dat
 </LineChart>
 ```
 
-## Label Customization
+## Labels
+
+### Customization
 
 You can customize label appearance using `labelFont`, `labelDx`, `labelDy`, `labelHorizontalAlignment`, and `labelVerticalAlignment` props.
 
 ```jsx live
 <LineChart
-  height={{ base: 150, tablet: 200, desktop: 250 }}
+  height={150}
   series={[
     {
       id: 'prices',
@@ -129,9 +131,42 @@ You can customize label appearance using `labelFont`, `labelDx`, `labelDy`, `lab
 </LineChart>
 ```
 
-## Customization
+### Bounds
 
-### Label Style
+Use `labelBoundsInset` to prevent labels from getting too close to chart edges.
+
+```jsx live
+<Box style={{ marginLeft: 'calc(-1 * var(--space-3))', marginRight: 'calc(-1 * var(--space-3))' }}>
+  <LineChart
+    height={{ base: 150, tablet: 200, desktop: 250 }}
+    inset={{ left: 0, right: 0 }}
+    series={[
+      {
+        id: 'prices',
+        data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+      },
+    ]}
+    showArea
+  >
+    <ReferenceLine
+      dataX={1}
+      label="No Bounds Inset"
+      labelBoundsInset={0}
+      labelDy={0}
+      labelPosition="top"
+    />
+    <ReferenceLine
+      dataX={13}
+      label="12px Bounds Inset"
+      labelBoundsInset={{ left: 12, right: 12 }}
+      labelDy={0}
+      labelPosition="top"
+    />
+  </LineChart>
+</Box>
+```
+
+### Custom Component
 
 You can adjust the style of the label using a custom `LabelComponent`.
 
@@ -201,7 +236,7 @@ function LabelStyleExample() {
 }
 ```
 
-### Draggable Price Target
+## Draggable Price Target
 
 You can pair a ReferenceLine with a custom drag component to create a draggable price target.
 

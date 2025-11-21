@@ -10,6 +10,7 @@ import type {
   TextHorizontalAlignment,
   TextVerticalAlignment,
 } from '../text/ChartText';
+import type { ChartInset } from '../utils';
 import { unwrapAnimatedValue } from '../utils';
 import { getPointOnSerializableScale } from '../utils/point';
 
@@ -27,7 +28,6 @@ export type ReferenceLineLabelComponentProps = Pick<
   | 'background'
   | 'borderRadius'
   | 'disableRepositioning'
-  | 'bounds'
   | 'horizontalAlignment'
   | 'verticalAlignment'
   | 'font'
@@ -38,7 +38,14 @@ export type ReferenceLineLabelComponentProps = Pick<
   | 'dy'
   | 'elevated'
   | 'paragraphAlignment'
->;
+> & {
+  /**
+   * Bounds inset for label to prevent cutoff at chart edges.
+   * Can be a number (applied to all sides) or a ChartInset object.
+   * @default { top: 4, bottom: 20, left: 12, right: 12 } when elevated is true, otherwise undefined
+   */
+  boundsInset?: number | ChartInset;
+};
 
 export type ReferenceLineLabelComponent = React.FC<ReferenceLineLabelComponentProps>;
 
@@ -70,7 +77,7 @@ export type ReferenceLineBaseProps = {
    * Whether to elevate the label with a shadow.
    * When true, applies elevation and automatically adds bounds to keep label within chart area.
    */
-  elevateLabel?: boolean;
+  labelElevated?: boolean;
   /**
    * Font style for the label text.
    */
@@ -91,6 +98,13 @@ export type ReferenceLineBaseProps = {
    * Vertical alignment of the label text.
    */
   labelVerticalAlignment?: TextVerticalAlignment;
+  /**
+   * Bounds inset for the label to prevent cutoff at chart edges.
+   * Especially useful when labelElevated is true to prevent shadow clipping.
+   * Can be a number (applied to all sides) or a ChartInset object.
+   * @default { top: 4, bottom: 20, left: 12, right: 12 } when labelElevated is true, otherwise none
+   */
+  labelBoundsInset?: number | ChartInset;
   /**
    * The color of the line.
    * @default theme.color.bgLine
@@ -141,12 +155,13 @@ export const ReferenceLine = memo<ReferenceLineProps>(
     labelPosition = dataY !== undefined ? 'right' : 'top',
     LineComponent = DottedLine,
     LabelComponent = DefaultReferenceLineLabel,
-    elevateLabel,
+    labelElevated,
     labelFont,
     labelDx,
     labelDy,
     labelHorizontalAlignment,
     labelVerticalAlignment,
+    labelBoundsInset,
     stroke,
   }) => {
     const theme = useTheme();
@@ -212,9 +227,10 @@ export const ReferenceLine = memo<ReferenceLineProps>(
           <LineComponent animate={false} d={horizontalLine} stroke={effectiveLineStroke} />
           {label && (
             <LabelComponent
+              boundsInset={labelBoundsInset}
               dx={labelDx}
               dy={labelDy}
-              elevated={elevateLabel}
+              elevated={labelElevated}
               font={labelFont}
               horizontalAlignment={labelHorizontalAlignment}
               opacity={labelOpacity}
@@ -245,9 +261,10 @@ export const ReferenceLine = memo<ReferenceLineProps>(
           <LineComponent animate={false} d={verticalLine} stroke={effectiveLineStroke} />
           {label && (
             <LabelComponent
+              boundsInset={labelBoundsInset}
               dx={labelDx}
               dy={labelDy}
-              elevated={elevateLabel}
+              elevated={labelElevated}
               font={labelFont}
               horizontalAlignment={
                 labelHorizontalAlignment ?? (!isHorizontal ? 'center' : undefined)

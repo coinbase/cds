@@ -21,14 +21,13 @@ import { useCartesianChartContext } from '../ChartProvider';
 import {
   ReferenceLine,
   type ReferenceLineBaseProps,
-  type ReferenceLineLabelComponent,
   type ReferenceLineLabelComponentProps,
-  type ReferenceLineProps,
 } from '../line';
 import type { ChartTextProps } from '../text';
 import {
   accessoryFadeTransitionDelay,
   accessoryFadeTransitionDuration,
+  type ChartInset,
   getPointOnSerializableScale,
   type Series,
   useScrubberContext,
@@ -139,7 +138,7 @@ export type ScrubberLabelProps = ReferenceLineLabelComponentProps;
 export type ScrubberLabelComponent = React.FC<ScrubberLabelProps>;
 
 export type ScrubberBaseProps = Pick<ScrubberBeaconGroupBaseProps, 'idlePulse'> &
-  Pick<ReferenceLineBaseProps, 'LineComponent' | 'LabelComponent' | 'elevateLabel'> &
+  Pick<ReferenceLineBaseProps, 'LineComponent' | 'LabelComponent' | 'labelElevated'> &
   Pick<ScrubberBeaconGroupProps, 'BeaconComponent'> &
   Pick<ScrubberBeaconLabelGroupProps, 'BeaconLabelComponent'> & {
     /**
@@ -179,11 +178,16 @@ export type ScrubberBaseProps = Pick<ScrubberBeaconGroupBaseProps, 'idlePulse'> 
     /**
      * Font style for the scrubber line label.
      */
-    scrubberLabelFont?: ChartTextProps['font'];
+    labelFont?: ChartTextProps['font'];
+    /**
+     * Bounds inset for the scrubber line label to prevent cutoff at chart edges.
+     * @default { top: 4, bottom: 20, left: 12, right: 12 } when labelElevated is true, otherwise none
+     */
+    labelBoundsInset?: number | ChartInset;
     /**
      * Font style for the beacon labels.
      */
-    labelFont?: ChartTextProps['font'];
+    beaconLabelFont?: ChartTextProps['font'];
     /**
      * Stroke color for the scrubber line.
      */
@@ -213,13 +217,14 @@ export const Scrubber = memo(
         BeaconLabelComponent,
         LineComponent,
         LabelComponent = DefaultScrubberLabel,
-        elevateLabel,
+        labelElevated,
         hideOverlay,
         overlayOffset = 2,
         beaconLabelMinGap,
         beaconLabelHorizontalOffset,
-        scrubberLabelFont,
         labelFont,
+        labelBoundsInset,
+        beaconLabelFont,
         idlePulse,
         beaconTransitions,
       },
@@ -339,7 +344,7 @@ export const Scrubber = memo(
         [updateResolvedLabel],
       );
 
-      const scrubberBeaconLabels: ScrubberBeaconLabelGroupBaseProps['labels'] = useMemo(
+      const beaconLabels: ScrubberBeaconLabelGroupBaseProps['labels'] = useMemo(
         () =>
           series
             ?.filter((s) => filteredSeriesIds.includes(s.id))
@@ -372,9 +377,10 @@ export const Scrubber = memo(
                 LabelComponent={LabelComponent}
                 LineComponent={LineComponent}
                 dataX={dataX}
-                elevateLabel={elevateLabel}
                 label={resolvedLabelValue}
-                labelFont={scrubberLabelFont}
+                labelBoundsInset={labelBoundsInset}
+                labelElevated={labelElevated}
+                labelFont={labelFont}
                 stroke={lineStroke}
               />
             </Group>
@@ -386,13 +392,13 @@ export const Scrubber = memo(
             seriesIds={filteredSeriesIds}
             transitions={beaconTransitions}
           />
-          {scrubberBeaconLabels.length > 0 && (
+          {beaconLabels.length > 0 && (
             <ScrubberBeaconLabelGroup
               BeaconLabelComponent={BeaconLabelComponent}
-              labelFont={labelFont}
+              labelFont={beaconLabelFont}
               labelHorizontalOffset={beaconLabelHorizontalOffset}
               labelMinGap={beaconLabelMinGap}
-              labels={scrubberBeaconLabels}
+              labels={beaconLabels}
             />
           )}
         </Group>

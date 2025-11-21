@@ -422,9 +422,9 @@ function CustomLabelComponent() {
 }
 ```
 
-#### Label Fonts
+#### Fonts
 
-You can use `scrubberLabelFont` to customize the font of the scrubber line label and `labelFont` to customize the font of the beacon labels.
+You can use `labelFont` to customize the font of the scrubber line label and `beaconLabelFont` to customize the font of the beacon labels.
 
 ```jsx live
 <LineChart
@@ -452,10 +452,55 @@ You can use `scrubberLabelFont` to customize the font of the scrubber line label
 >
   <Scrubber
     label={(dataIndex: number) => `Day ${dataIndex + 1}`}
-    scrubberLabelFont="legal"
     labelFont="legal"
+    beaconLabelFont="legal"
   />
 </LineChart>
+```
+
+#### Bounds
+
+Use `labelBoundsInset` to prevent the scrubber line label from getting too close to chart edges.
+
+```jsx live
+<Box style={{ marginLeft: 'calc(-1 * var(--space-3))', marginRight: 'calc(-1 * var(--space-3))' }}>
+  <LineChart
+    enableScrubbing
+    showArea
+    height={{ base: 150, tablet: 200, desktop: 250 }}
+    inset={{ left: 0, right: 0 }}
+    series={[
+      {
+        id: 'prices',
+        data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+      },
+    ]}
+  >
+    <Scrubber label="Without bounds - text touches edge" labelBoundsInset={0} />
+  </LineChart>
+</Box>
+```
+
+```jsx live
+<Box style={{ marginLeft: 'calc(-1 * var(--space-3))', marginRight: 'calc(-1 * var(--space-3))' }}>
+  <LineChart
+    enableScrubbing
+    showArea
+    height={{ base: 150, tablet: 200, desktop: 250 }}
+    inset={{ left: 0, right: 0 }}
+    series={[
+      {
+        id: 'prices',
+        data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+      },
+    ]}
+  >
+    <Scrubber
+      label="With bounds inset - text has space"
+      labelBoundsInset={{ left: 12, right: 12 }}
+    />
+  </LineChart>
+</Box>
 ```
 
 ### Line

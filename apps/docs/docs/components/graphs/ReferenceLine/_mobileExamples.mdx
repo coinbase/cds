@@ -110,7 +110,9 @@ function DataValuesExample() {
 }
 ```
 
-## Label Customization
+## Labels
+
+### Customization
 
 You can customize label appearance using `labelFont`, `labelDx`, `labelDy`, `labelHorizontalAlignment`, and `labelVerticalAlignment` props.
 
@@ -149,9 +151,44 @@ function LabelCustomizationExample() {
 }
 ```
 
-## Customization
+### Bounds
 
-### Label Style
+Use `labelBoundsInset` to prevent labels from getting too close to chart edges.
+
+```jsx
+function BoundsExample() {
+  return (
+    <LineChart
+      height={150}
+      inset={{ left: 0, right: 0 }}
+      series={[
+        {
+          id: 'prices',
+          data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+        },
+      ]}
+      showArea
+    >
+      <ReferenceLine
+        dataX={1}
+        label="No Bounds Inset"
+        labelBoundsInset={0}
+        labelDy={0}
+        labelPosition="top"
+      />
+      <ReferenceLine
+        dataX={13}
+        label="12px Bounds Inset"
+        labelBoundsInset={{ left: 12, right: 12 }}
+        labelDy={0}
+        labelPosition="top"
+      />
+    </LineChart>
+  );
+}
+```
+
+### Custom Component
 
 You can adjust the style of the label using a custom `LabelComponent`.
 
