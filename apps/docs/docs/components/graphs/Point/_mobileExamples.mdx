@@ -158,7 +158,7 @@ function CustomizedPoints() {
 
 ### Labels
 
-You can use `labelPosition` and `labelOffset` to adjust Point's label.
+You can use `labelPosition`, `labelOffset`, and `labelFont` to adjust Point's label.
 
 ```jsx
 function Scatterplot() {
@@ -189,6 +189,7 @@ function Scatterplot() {
           label={point.label}
           labelPosition="top"
           labelOffset={6}
+          labelFont="title3"
         />
       ))}
     </CartesianChart>

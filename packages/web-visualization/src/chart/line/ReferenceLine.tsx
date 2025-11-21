@@ -74,6 +74,26 @@ export type ReferenceLineBaseProps = SharedProps & {
    */
   elevateLabel?: boolean;
   /**
+   * Font style for the label text.
+   */
+  labelFont?: ChartTextProps['font'];
+  /**
+   * Horizontal offset for the label in pixels.
+   */
+  labelDx?: number;
+  /**
+   * Vertical offset for the label in pixels.
+   */
+  labelDy?: number;
+  /**
+   * Horizontal alignment of the label text.
+   */
+  labelHorizontalAlignment?: TextHorizontalAlignment;
+  /**
+   * Vertical alignment of the label text.
+   */
+  labelVerticalAlignment?: TextVerticalAlignment;
+  /**
    * The color of the line.
    * @default 'var(--color-bgLine)'
    */
@@ -160,6 +180,11 @@ export const ReferenceLine = memo<ReferenceLineProps>(
     LineComponent = DottedLine,
     LabelComponent = DefaultReferenceLineLabel,
     elevateLabel,
+    labelFont,
+    labelDx,
+    labelDy,
+    labelHorizontalAlignment,
+    labelVerticalAlignment,
     stroke = 'var(--color-bgLine)',
     className,
     style,
@@ -205,10 +230,14 @@ export const ReferenceLine = memo<ReferenceLineProps>(
           {label && (
             <LabelComponent
               className={classNames?.label}
+              dx={labelDx}
+              dy={labelDy}
               elevated={elevateLabel}
+              font={labelFont}
+              horizontalAlignment={labelHorizontalAlignment}
               style={styles?.label}
               testID={testID}
-              verticalAlignment="middle"
+              verticalAlignment={labelVerticalAlignment ?? 'middle'}
               x={labelX}
               y={yPixel}
             >
@@ -251,10 +280,14 @@ export const ReferenceLine = memo<ReferenceLineProps>(
           {label && (
             <LabelComponent
               className={classNames?.label}
+              dx={labelDx}
+              dy={labelDy}
               elevated={elevateLabel}
-              horizontalAlignment="center"
+              font={labelFont}
+              horizontalAlignment={labelHorizontalAlignment ?? 'center'}
               style={styles?.label}
               testID={testID}
+              verticalAlignment={labelVerticalAlignment}
               x={xPixel}
               y={labelY}
             >

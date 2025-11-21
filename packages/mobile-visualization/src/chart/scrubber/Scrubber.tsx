@@ -122,7 +122,7 @@ export type ScrubberBeaconComponent = React.FC<
 export type ScrubberBeaconLabelProps = Pick<Series, 'color'> &
   Pick<
     ChartTextProps,
-    'x' | 'y' | 'dx' | 'horizontalAlignment' | 'onDimensionsChange' | 'opacity'
+    'x' | 'y' | 'dx' | 'horizontalAlignment' | 'onDimensionsChange' | 'opacity' | 'font'
   > & {
     /**
      * Label for the series.
@@ -177,6 +177,14 @@ export type ScrubberBaseProps = Pick<ScrubberBeaconGroupBaseProps, 'idlePulse'> 
      */
     label?: string | SkParagraph | ((dataIndex: number) => string | SkParagraph);
     /**
+     * Font style for the scrubber line label.
+     */
+    scrubberLabelFont?: ChartTextProps['font'];
+    /**
+     * Font style for the beacon labels.
+     */
+    labelFont?: ChartTextProps['font'];
+    /**
      * Stroke color for the scrubber line.
      */
     lineStroke?: ReferenceLineBaseProps['stroke'];
@@ -210,6 +218,8 @@ export const Scrubber = memo(
         overlayOffset = 2,
         beaconLabelMinGap,
         beaconLabelHorizontalOffset,
+        scrubberLabelFont,
+        labelFont,
         idlePulse,
         beaconTransitions,
       },
@@ -364,6 +374,7 @@ export const Scrubber = memo(
                 dataX={dataX}
                 elevateLabel={elevateLabel}
                 label={resolvedLabelValue}
+                labelFont={scrubberLabelFont}
                 stroke={lineStroke}
               />
             </Group>
@@ -378,6 +389,7 @@ export const Scrubber = memo(
           {scrubberBeaconLabels.length > 0 && (
             <ScrubberBeaconLabelGroup
               BeaconLabelComponent={BeaconLabelComponent}
+              labelFont={labelFont}
               labelHorizontalOffset={beaconLabelHorizontalOffset}
               labelMinGap={beaconLabelMinGap}
               labels={scrubberBeaconLabels}

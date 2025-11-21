@@ -8,6 +8,7 @@ import { TextHeadline } from '@coinbase/cds-web/typography';
 import { useCartesianChartContext } from '../../ChartProvider';
 import { ChartText } from '../../text/ChartText';
 import { DefaultReferenceLineLabel } from '../DefaultReferenceLineLabel';
+import { DottedLine } from '../DottedLine';
 import { LineChart } from '../LineChart';
 import { ReferenceLine } from '../ReferenceLine';
 import { SolidLine } from '../SolidLine';
@@ -351,7 +352,28 @@ const PriceTargetChart = () => {
 export const All = () => {
   return (
     <VStack gap={2}>
-      <Example title="Basic Reference Line">
+      <Example title="Simple Reference Line">
+        <LineChart
+          showArea
+          height={250}
+          series={[
+            {
+              id: 'prices',
+              data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+              color: 'var(--color-fgPositive)',
+            },
+          ]}
+        >
+          <ReferenceLine
+            LineComponent={(props) => (
+              <DottedLine {...props} strokeDasharray="0 16" strokeWidth={3} />
+            )}
+            dataY={10}
+            stroke="var(--color-fg)"
+          />
+        </LineChart>
+      </Example>
+      <Example title="With Label">
         <LineChart
           showArea
           height={250}
@@ -363,7 +385,43 @@ export const All = () => {
             },
           ]}
         >
-          <ReferenceLine LabelComponent={LeftAlignedLabel} dataY={50} label="$50" />
+          <ReferenceLine dataY={50} label="$50" labelDx={16} labelHorizontalAlignment="left" />
+        </LineChart>
+      </Example>
+      <Example
+        description="Using labelDx, labelDy, labelHorizontalAlignment, and labelVerticalAlignment props"
+        title="Label Customization"
+      >
+        <LineChart
+          showArea
+          height={250}
+          series={[
+            {
+              id: 'prices',
+              data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+            },
+          ]}
+        >
+          <ReferenceLine
+            dataY={75}
+            label="Top Right"
+            labelDx={-8}
+            labelDy={-8}
+            labelFont="label1"
+            labelHorizontalAlignment="right"
+            labelPosition="right"
+            labelVerticalAlignment="bottom"
+          />
+          <ReferenceLine
+            dataX={7}
+            label="Bottom Left"
+            labelDx={8}
+            labelDy={8}
+            labelFont="label1"
+            labelHorizontalAlignment="left"
+            labelPosition="top"
+            labelVerticalAlignment="top"
+          />
         </LineChart>
       </Example>
       <Example title="Price Reference Line">

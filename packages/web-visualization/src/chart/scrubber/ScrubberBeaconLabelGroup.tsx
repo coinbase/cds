@@ -2,6 +2,7 @@ import { memo, useCallback, useMemo, useState } from 'react';
 import type { SharedProps } from '@coinbase/cds-common/types';
 
 import { useCartesianChartContext } from '../ChartProvider';
+import type { ChartTextProps } from '../text';
 import { getPointOnScale, useScrubberContext } from '../utils';
 import {
   calculateLabelYPositions,
@@ -24,6 +25,7 @@ const PositionedLabel = memo<{
   onDimensionsChange: (id: string, dimensions: LabelDimensions) => void;
   BeaconLabelComponent: ScrubberBeaconLabelComponent;
   labelHorizontalOffset: number;
+  labelFont?: ChartTextProps['font'];
 }>(
   ({
     index,
@@ -35,6 +37,7 @@ const PositionedLabel = memo<{
     onDimensionsChange,
     BeaconLabelComponent,
     labelHorizontalOffset,
+    labelFont,
   }) => {
     const pos = positions[index];
 
@@ -52,6 +55,7 @@ const PositionedLabel = memo<{
       <BeaconLabelComponent
         color={color}
         dx={dx}
+        font={labelFont}
         horizontalAlignment={horizontalAlignment}
         label={label}
         onDimensionsChange={(d) => onDimensionsChange(seriesId, d)}
@@ -78,6 +82,10 @@ export type ScrubberBeaconLabelGroupBaseProps = SharedProps & {
    * @default 16
    */
   labelHorizontalOffset?: number;
+  /**
+   * Font style for the beacon labels.
+   */
+  labelFont?: ChartTextProps['font'];
 };
 
 export type ScrubberBeaconLabelGroupProps = ScrubberBeaconLabelGroupBaseProps & {
@@ -93,6 +101,7 @@ export const ScrubberBeaconLabelGroup = memo<ScrubberBeaconLabelGroupProps>(
     labels,
     labelMinGap = 4,
     labelHorizontalOffset = 16,
+    labelFont,
     BeaconLabelComponent = DefaultScrubberBeaconLabel,
   }) => {
     const { getSeries, getSeriesData, getXScale, getYScale, getXAxis, drawingArea, dataLength } =
@@ -247,6 +256,7 @@ export const ScrubberBeaconLabelGroup = memo<ScrubberBeaconLabelGroupProps>(
           color={labelInfo.color}
           index={index}
           label={labelInfo.label}
+          labelFont={labelFont}
           labelHorizontalOffset={labelHorizontalOffset}
           onDimensionsChange={handleDimensionsChange}
           position={currentPosition}

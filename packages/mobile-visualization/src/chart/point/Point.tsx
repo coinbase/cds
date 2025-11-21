@@ -5,7 +5,7 @@ import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 import { Circle, type Color, Group, interpolateColors } from '@shopify/react-native-skia';
 
 import { useCartesianChartContext } from '../ChartProvider';
-import type { ChartTextChildren } from '../text/ChartText';
+import type { ChartTextChildren, ChartTextProps } from '../text/ChartText';
 import { type PointLabelPosition, projectPoint } from '../utils';
 import { buildTransition, defaultTransition, type Transition } from '../utils/transition';
 
@@ -69,6 +69,10 @@ export type PointBaseProps = {
    * @default 2 * radius
    */
   labelOffset?: number;
+  /**
+   * Font style for the label text.
+   */
+  labelFont?: ChartTextProps['font'];
 };
 
 /**
@@ -139,6 +143,7 @@ export const Point = memo<PointProps>(
     LabelComponent = DefaultPointLabel,
     labelPosition = 'center',
     labelOffset,
+    labelFont,
     transition = defaultTransition,
     animate: animateProp,
   }) => {
@@ -278,6 +283,7 @@ export const Point = memo<PointProps>(
               dataX={dataX}
               dataY={dataY}
               fill={fill}
+              font={labelFont}
               offset={offset}
               position={labelPosition}
               x={pixelCoordinate.x}
@@ -306,6 +312,7 @@ export const Point = memo<PointProps>(
             dataX={dataX}
             dataY={dataY}
             fill={fill}
+            font={labelFont}
             offset={offset}
             position={labelPosition}
             x={pixelCoordinate.x}

@@ -5,7 +5,7 @@ import { css } from '@linaria/core';
 import { m as motion, type Transition } from 'framer-motion';
 
 import { useCartesianChartContext } from '../ChartProvider';
-import type { ChartTextChildren } from '../text/ChartText';
+import type { ChartTextChildren, ChartTextProps } from '../text/ChartText';
 import { type PointLabelPosition, projectPoint } from '../utils';
 
 import { DefaultPointLabel } from './DefaultPointLabel';
@@ -86,6 +86,10 @@ export type PointBaseProps = SharedProps & {
    * @default 2 * radius
    */
   labelOffset?: number;
+  /**
+   * Font style for the label text.
+   */
+  labelFont?: ChartTextProps['font'];
 };
 
 /**
@@ -237,6 +241,7 @@ export const Point = memo<PointProps>(
     LabelComponent = DefaultPointLabel,
     labelPosition = 'center',
     labelOffset = radius * 2,
+    labelFont,
     testID,
     animate: animateProp,
     transition,
@@ -402,6 +407,7 @@ export const Point = memo<PointProps>(
             dataX={dataX}
             dataY={dataY}
             fill={fill}
+            font={labelFont}
             offset={labelOffset}
             position={labelPosition}
             x={pixelCoordinate.x}

@@ -289,7 +289,7 @@ function CustomBeaconLabel() {
   // This custom component label shows the percentage value of the data at the scrubber position.
   const MyScrubberBeaconLabel = memo(
     ({ seriesId, color, label, ...props }: ScrubberBeaconLabelProps) => {
-      const { getSeriesData, series } = useCartesianChartContext();
+      const { getSeriesData, dataLength } = useCartesianChartContext();
       const { scrubberPosition } = useScrubberContext();
 
       const seriesData = useMemo(
@@ -297,18 +297,9 @@ function CustomBeaconLabel() {
         [getSeriesData, seriesId],
       );
 
-      const maxDataLength = useMemo(
-        () =>
-          series?.reduce((max, s) => {
-            const seriesData = getSeriesData(s.id);
-            return Math.max(max, seriesData?.length ?? 0);
-          }, 0) ?? 0,
-        [series, getSeriesData],
-      );
-
       const dataIndex = useDerivedValue(() => {
-        return scrubberPosition.value ?? Math.max(0, maxDataLength - 1);
-      }, [scrubberPosition, maxDataLength]);
+        return scrubberPosition.value ?? Math.max(0, dataLength - 1);
+      }, [scrubberPosition, dataLength]);
 
       const percentageLabel = useDerivedValue(() => {
         if (seriesData !== undefined) {
@@ -430,6 +421,48 @@ function CustomLabelComponent() {
       <Scrubber
         LabelComponent={CustomLabelComponent}
         label={(dataIndex: number) => `Day ${dataIndex + 1}`}
+      />
+    </LineChart>
+  );
+}
+```
+
+#### Label Fonts
+
+You can use `scrubberLabelFont` to customize the font of the scrubber line label and `labelFont` to customize the font of the beacon labels.
+
+```jsx
+function CustomLabelFonts() {
+  const theme = useTheme();
+
+  return (
+    <LineChart
+      enableScrubbing
+      showArea
+      showYAxis
+      height={200}
+      series={[
+        {
+          id: 'btc',
+          data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+          label: 'BTC',
+          color: assets.btc.color,
+        },
+        {
+          id: 'eth',
+          data: [5, 15, 18, 30, 65, 30, 15, 35, 15, 2, 45, 12, 15, 40],
+          label: 'ETH',
+          color: assets.eth.color,
+        },
+      ]}
+      yAxis={{
+        showGrid: true,
+      }}
+    >
+      <Scrubber
+        label={(dataIndex: number) => `Day ${dataIndex + 1}`}
+        scrubberLabelFont="legal"
+        labelFont="legal"
       />
     </LineChart>
   );

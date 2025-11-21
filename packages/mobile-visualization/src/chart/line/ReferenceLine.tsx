@@ -72,6 +72,26 @@ export type ReferenceLineBaseProps = {
    */
   elevateLabel?: boolean;
   /**
+   * Font style for the label text.
+   */
+  labelFont?: ChartTextProps['font'];
+  /**
+   * Horizontal offset for the label in pixels.
+   */
+  labelDx?: number;
+  /**
+   * Vertical offset for the label in pixels.
+   */
+  labelDy?: number;
+  /**
+   * Horizontal alignment of the label text.
+   */
+  labelHorizontalAlignment?: TextHorizontalAlignment;
+  /**
+   * Vertical alignment of the label text.
+   */
+  labelVerticalAlignment?: TextVerticalAlignment;
+  /**
    * The color of the line.
    * @default theme.color.bgLine
    */
@@ -122,6 +142,11 @@ export const ReferenceLine = memo<ReferenceLineProps>(
     LineComponent = DottedLine,
     LabelComponent = DefaultReferenceLineLabel,
     elevateLabel,
+    labelFont,
+    labelDx,
+    labelDy,
+    labelHorizontalAlignment,
+    labelVerticalAlignment,
     stroke,
   }) => {
     const theme = useTheme();
@@ -187,9 +212,13 @@ export const ReferenceLine = memo<ReferenceLineProps>(
           <LineComponent animate={false} d={horizontalLine} stroke={effectiveLineStroke} />
           {label && (
             <LabelComponent
+              dx={labelDx}
+              dy={labelDy}
               elevated={elevateLabel}
+              font={labelFont}
+              horizontalAlignment={labelHorizontalAlignment}
               opacity={labelOpacity}
-              verticalAlignment={isHorizontal ? 'middle' : undefined}
+              verticalAlignment={labelVerticalAlignment ?? (isHorizontal ? 'middle' : undefined)}
               x={labelX}
               y={labelYPixel}
             >
@@ -216,9 +245,15 @@ export const ReferenceLine = memo<ReferenceLineProps>(
           <LineComponent animate={false} d={verticalLine} stroke={effectiveLineStroke} />
           {label && (
             <LabelComponent
+              dx={labelDx}
+              dy={labelDy}
               elevated={elevateLabel}
-              horizontalAlignment={!isHorizontal ? 'center' : undefined}
+              font={labelFont}
+              horizontalAlignment={
+                labelHorizontalAlignment ?? (!isHorizontal ? 'center' : undefined)
+              }
               opacity={labelOpacity}
+              verticalAlignment={labelVerticalAlignment}
               x={labelXPixel}
               y={labelY}
             >

@@ -3,6 +3,7 @@ import { useTheme } from '@coinbase/cds-mobile';
 import { Example, ExampleScreen } from '@coinbase/cds-mobile/examples/ExampleScreen';
 
 import { DefaultReferenceLineLabel } from '../DefaultReferenceLineLabel';
+import { DottedLine } from '../DottedLine';
 import { LineChart } from '../LineChart';
 import { ReferenceLine } from '../ReferenceLine';
 
@@ -55,7 +56,28 @@ const ReferenceLineStories = () => {
 
   return (
     <ExampleScreen>
-      <Example title="Basic">
+      <Example title="Simple Reference Line">
+        <LineChart
+          showArea
+          height={250}
+          series={[
+            {
+              id: 'prices',
+              data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+              color: theme.color.fgPositive,
+            },
+          ]}
+        >
+          <ReferenceLine
+            LineComponent={(props) => (
+              <DottedLine {...props} dashIntervals={[0, 16]} strokeWidth={3} />
+            )}
+            dataY={10}
+            stroke={theme.color.fg}
+          />
+        </LineChart>
+      </Example>
+      <Example title="With Labels">
         <LineChart
           showArea
           height={250}
@@ -67,15 +89,53 @@ const ReferenceLineStories = () => {
             },
           ]}
         >
-          <ReferenceLine LabelComponent={VerticalLabel} dataX={4} label="Vertical Reference Line" />
           <ReferenceLine
-            LabelComponent={HorizontalLabel}
+            dataX={4}
+            label="Vertical Reference Line"
+            labelHorizontalAlignment="left"
+          />
+          <ReferenceLine
             dataY={70}
             label="Horizontal Reference Line"
+            labelHorizontalAlignment="right"
+            labelVerticalAlignment="bottom"
           />
         </LineChart>
       </Example>
-      <Example title="With Custom Label">
+      <Example title="Label Customization">
+        <LineChart
+          showArea
+          height={250}
+          series={[
+            {
+              id: 'prices',
+              data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+            },
+          ]}
+        >
+          <ReferenceLine
+            dataY={75}
+            label="Top Right"
+            labelDx={-8}
+            labelDy={-8}
+            labelFont="label1"
+            labelHorizontalAlignment="right"
+            labelPosition="right"
+            labelVerticalAlignment="bottom"
+          />
+          <ReferenceLine
+            dataX={7}
+            label="Bottom Left"
+            labelDx={8}
+            labelDy={8}
+            labelFont="label1"
+            labelHorizontalAlignment="left"
+            labelPosition="top"
+            labelVerticalAlignment="top"
+          />
+        </LineChart>
+      </Example>
+      <Example title="With Custom Label Component">
         <LineChart
           height={250}
           inset={{ right: 32, top: 0, left: 0, bottom: 0 }}

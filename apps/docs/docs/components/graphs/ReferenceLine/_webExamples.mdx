@@ -1,49 +1,61 @@
-## Basic Example
+## Basics
 
-ReferenceLine can be used to add important details to a chart, such as a reference price or date.
+ReferenceLine can be used to add important details to a chart, such as a reference price or date. You can create horizontal lines using `dataY` or vertical lines using `dataX`.
+
+### Simple Reference Line
+
+A minimal reference line without labels, useful for marking key thresholds:
 
 ```jsx live
-function BasicExample() {
-  const VerticalLabel = useMemo(
-    () =>
-      memo((props) => <DefaultReferenceLineLabel {...props} dx={8} horizontalAlignment="left" />),
-    [],
-  );
+<LineChart
+  showArea
+  height={{ base: 150, tablet: 200, desktop: 250 }}
+  series={[
+    {
+      id: 'prices',
+      data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+      color: 'var(--color-fgPositive)',
+    },
+  ]}
+>
+  <ReferenceLine
+    LineComponent={(props) => <DottedLine {...props} strokeDasharray="0 16" strokeWidth={3} />}
+    dataY={10}
+    stroke="var(--color-fg)"
+  />
+</LineChart>
+```
 
-  const HorizontalLabel = useMemo(
-    () =>
-      memo((props) => (
-        <DefaultReferenceLineLabel
-          {...props}
-          dy={-8}
-          horizontalAlignment="right"
-          verticalAlignment="bottom"
-        />
-      )),
-    [],
-  );
+### With Labels
 
-  return (
-    <LineChart
-      height={{ base: 150, tablet: 200, desktop: 250 }}
-      series={[
-        {
-          id: 'prices',
-          data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
-        },
-      ]}
-      inset={0}
-      showArea
-    >
-      <ReferenceLine LabelComponent={VerticalLabel} dataX={5} label="Vertical Reference Line" />
-      <ReferenceLine
-        LabelComponent={HorizontalLabel}
-        dataY={50}
-        label="Horizontal Reference Line"
-      />
-    </LineChart>
-  );
-}
+You can add text labels to reference lines and position them using alignment and offset props:
+
+```jsx live
+<LineChart
+  height={{ base: 150, tablet: 200, desktop: 250 }}
+  series={[
+    {
+      id: 'prices',
+      data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+    },
+  ]}
+  inset={0}
+  showArea
+>
+  <ReferenceLine
+    dataX={5}
+    label="Vertical Reference Line"
+    labelDx={8}
+    labelHorizontalAlignment="left"
+  />
+  <ReferenceLine
+    dataY={50}
+    label="Horizontal Reference Line"
+    labelDy={-8}
+    labelHorizontalAlignment="right"
+    labelVerticalAlignment="bottom"
+  />
+</LineChart>
 ```
 
 ## Data Values
@@ -51,43 +63,70 @@ function BasicExample() {
 ReferenceLine relies on `dataX` or `dataY` to position the line. Passing in `dataY` will create a horizontal line across the y axis at that value, and passing in `dataX` will do the same along the x axis.
 
 ```jsx live
-function DataValuesExample() {
-  const BottomAlignedLabel = useMemo(
-    () =>
-      memo((props) => <DefaultReferenceLineLabel {...props} dy={-4} verticalAlignment="bottom" />),
-    [],
-  );
+<LineChart
+  showArea
+  curve="natural"
+  height={{ base: 150, tablet: 200, desktop: 250 }}
+  series={[
+    {
+      id: 'growth',
+      data: [
+        2, 4, 8, 15, 30, 65, 140, 280, 580, 1200, 2400, 4800, 9500, 19000, 38000, 75000, 150000,
+      ],
+      color: 'var(--color-fgPositive)',
+    },
+  ]}
+>
+  <ReferenceLine
+    dataY={10000}
+    label="10,000"
+    labelDy={-4}
+    labelPosition="left"
+    labelVerticalAlignment="bottom"
+  />
+  <ReferenceLine
+    dataY={100000}
+    label="100,000"
+    labelDy={-4}
+    labelPosition="left"
+    labelVerticalAlignment="bottom"
+  />
+</LineChart>
+```
 
-  return (
-    <LineChart
-      showArea
-      curve="natural"
-      height={{ base: 150, tablet: 200, desktop: 250 }}
-      series={[
-        {
-          id: 'growth',
-          data: [
-            2, 4, 8, 15, 30, 65, 140, 280, 580, 1200, 2400, 4800, 9500, 19000, 38000, 75000, 150000,
-          ],
-          color: 'var(--color-fgPositive)',
-        },
-      ]}
-    >
-      <ReferenceLine
-        LabelComponent={BottomAlignedLabel}
-        dataY={10000}
-        label="10,000"
-        labelPosition="left"
-      />
-      <ReferenceLine
-        LabelComponent={BottomAlignedLabel}
-        dataY={100000}
-        label="100,000"
-        labelPosition="left"
-      />
-    </LineChart>
-  );
-}
+## Label Customization
+
+You can customize label appearance using `labelFont`, `labelDx`, `labelDy`, `labelHorizontalAlignment`, and `labelVerticalAlignment` props.
+
+```jsx live
+<LineChart
+  height={{ base: 150, tablet: 200, desktop: 250 }}
+  series={[
+    {
+      id: 'prices',
+      data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+    },
+  ]}
+  showArea
+>
+  <ReferenceLine
+    dataY={50}
+    label="Target Price"
+    labelDy={-8}
+    labelFont="legal"
+    labelHorizontalAlignment="right"
+    labelPosition="right"
+    labelVerticalAlignment="bottom"
+  />
+  <ReferenceLine
+    dataX={7}
+    label="Midpoint"
+    labelDx={8}
+    labelFont="label1"
+    labelHorizontalAlignment="left"
+    labelPosition="top"
+  />
+</LineChart>
 ```
 
 ## Customization
