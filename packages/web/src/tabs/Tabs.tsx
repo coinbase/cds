@@ -46,7 +46,17 @@ export type TabsActiveIndicatorProps = {
 } & BoxProps<BoxDefaultElement> &
   MotionProps;
 
-export type TabComponent<T extends string = string> = React.FC<TabValue<T> & { tabIndex?: number }>;
+export type TabComponentProps<T extends string = string> = TabValue<T> & {
+  /** The tab index for the tab. Automatically set to manage focus behavior. */
+  tabIndex?: number;
+  /**
+   * The role for the tab.
+   * @default "tab"
+   */
+  role?: string;
+};
+
+export type TabComponent<T extends string = string> = React.FC<TabComponentProps<T>>;
 
 export type TabsActiveIndicatorComponent = React.FC<TabsActiveIndicatorProps>;
 
@@ -203,6 +213,7 @@ const TabsComponent = memo(
                     data-rendered-tab
                     disabled={tabDisabled}
                     id={id}
+                    role="tab"
                     tabIndex={activeTab?.id === id || !activeTab ? 0 : -1}
                     {...props}
                   />
