@@ -1,7 +1,11 @@
 import { forwardRef, memo, useMemo } from 'react';
 
 import { XAxis, type XAxisProps, YAxis, type YAxisProps } from '../axis';
-import { CartesianChart, type CartesianChartProps } from '../CartesianChart';
+import {
+  CartesianChart,
+  type CartesianChartBaseProps,
+  type CartesianChartProps,
+} from '../CartesianChart';
 import {
   type AxisConfigProps,
   defaultChartInset,
@@ -10,13 +14,9 @@ import {
   type Series,
 } from '../utils';
 
-import { type BarProps } from './Bar';
 import { BarPlot, type BarPlotProps } from './BarPlot';
 
-export type BarSeries = Series &
-  Partial<Pick<BarProps, 'BarComponent' | 'fill' | 'fillOpacity' | 'stroke' | 'strokeWidth'>>;
-
-export type BarChartProps = Omit<CartesianChartProps, 'xAxis' | 'yAxis' | 'series'> &
+export type BarChartBaseProps = Omit<CartesianChartBaseProps, 'xAxis' | 'yAxis' | 'series'> &
   Pick<
     BarPlotProps,
     | 'barPadding'
@@ -30,17 +30,17 @@ export type BarChartProps = Omit<CartesianChartProps, 'xAxis' | 'yAxis' | 'serie
     | 'stackGap'
     | 'barMinSize'
     | 'stackMinSize'
+    | 'transition'
   > & {
     /**
      * Configuration objects that define how to visualize the data.
-     * Each series supports Bar component props for individual customization.
      */
-    series?: Array<BarSeries>;
+    series?: Array<Series>;
     /**
      * Whether to stack the areas on top of each other.
      * When true, each series builds cumulative values on top of the previous series.
      *
-     * **Note**: Only applies to series data containing singular numbers (e.g., `[10, 20, 30]`).
+     * @note only applies to series data containing singular numbers (e.g., `[10, 20, 30]`).
      * Series with start & end value tuples (e.g., `[[0, 10], [5, 20]]`) will be skipped during stacking
      * and rendered as-is.
      */
@@ -53,10 +53,22 @@ export type BarChartProps = Omit<CartesianChartProps, 'xAxis' | 'yAxis' | 'serie
      * Whether to show the Y axis.
      */
     showYAxis?: boolean;
-
+    /**
+     * Configuration for x-axis.
+     * Accepts axis config and axis props.
+     * To show the axis, set `showXAxis` to true.
+     */
     xAxis?: Partial<AxisConfigProps> & XAxisProps;
+    /**
+     * Configuration for y-axis.
+     * Accepts axis config and axis props.
+     * To show the axis, set `showYAxis` to true.
+     */
     yAxis?: Partial<AxisConfigProps> & YAxisProps;
   };
+
+export type BarChartProps = BarChartBaseProps &
+  Omit<CartesianChartProps, 'xAxis' | 'yAxis' | 'series'>;
 
 export const BarChart = memo(
   forwardRef<SVGSVGElement, BarChartProps>(
@@ -68,7 +80,7 @@ export const BarChart = memo(
         showYAxis,
         xAxis,
         yAxis,
-        inset: userInset,
+        inset,
         children,
         barPadding,
         BarComponent,
@@ -81,41 +93,22 @@ export const BarChart = memo(
         stackGap,
         barMinSize,
         stackMinSize,
+        transition,
         ...chartProps
       },
       ref,
     ) => {
-      const calculatedInset = useMemo(
-        () => getChartInset(userInset, defaultChartInset),
-        [userInset],
-      );
-
-      // Convert BarSeries to Series for Chart context
-      const chartSeries = useMemo(() => {
-        return series?.map(
-          (s): Series => ({
-            id: s.id,
-            data: s.data,
-            label: s.label,
-            color: s.color,
-            yAxisId: s.yAxisId,
-            stackId: s.stackId,
-          }),
-        );
-      }, [series]);
+      const calculatedInset = useMemo(() => getChartInset(inset, defaultChartInset), [inset]);
 
       const transformedSeries = useMemo(() => {
-        if (!stacked || !chartSeries) return chartSeries;
-        return chartSeries.map((s) => ({ ...s, stackId: s.stackId ?? defaultStackId }));
-      }, [chartSeries, stacked]);
-
-      const seriesToRender = transformedSeries ?? chartSeries;
-
-      // Keep the original series with bar-specific props for BarPlot
-      const barSeriesToRender = useMemo(() => {
         if (!stacked || !series) return series;
         return series.map((s) => ({ ...s, stackId: s.stackId ?? defaultStackId }));
       }, [series, stacked]);
+
+      // Unlike other charts with custom props per series, we do not need to pick out
+      // the props from each series that shouldn't be passed to CartesianChart
+      const seriesToRender = transformedSeries ?? series;
+      const seriesIds = seriesToRender?.map((s) => s.id);
 
       // Split axis props into config props for Chart and visual props for axis components
       const {
@@ -187,11 +180,12 @@ export const BarChart = memo(
             borderRadius={borderRadius}
             fillOpacity={fillOpacity}
             roundBaseline={roundBaseline}
-            seriesIds={barSeriesToRender?.map((s) => s.id)}
+            seriesIds={seriesIds}
             stackGap={stackGap}
             stackMinSize={stackMinSize}
             stroke={stroke}
             strokeWidth={strokeWidth}
+            transition={transition}
           />
           {children}
         </CartesianChart>

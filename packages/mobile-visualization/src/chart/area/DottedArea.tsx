@@ -1,13 +1,29 @@
-import { memo, useId } from 'react';
-import { Circle, Defs, G, LinearGradient, Mask, Pattern, Stop } from 'react-native-svg';
+import { memo, useMemo } from 'react';
 import { useTheme } from '@cbhq/cds-mobile/hooks/useTheme';
+import { Group, Skia } from '@shopify/react-native-skia';
 
 import { useCartesianChartContext } from '../ChartProvider';
+import { Gradient } from '../gradient';
 import { Path, type PathProps } from '../Path';
+import { createGradient, getBaseline } from '../utils';
+import { getDottedAreaPath } from '../utils/path';
+import { usePathTransition } from '../utils/transition';
 
 import type { AreaComponentProps } from './Area';
 
-export type DottedAreaProps = Omit<PathProps, 'd' | 'fill' | 'fillOpacity'> &
+export type DottedAreaProps = Pick<
+  PathProps,
+  | 'initialPath'
+  | 'children'
+  | 'stroke'
+  | 'strokeOpacity'
+  | 'strokeWidth'
+  | 'strokeCap'
+  | 'strokeJoin'
+  | 'clipRect'
+  | 'clipPath'
+  | 'clipOffset'
+> &
   AreaComponentProps & {
     /**
      * Size of the pattern unit (width and height).
@@ -21,141 +37,93 @@ export type DottedAreaProps = Omit<PathProps, 'd' | 'fill' | 'fillOpacity'> &
     dotSize?: number;
     /**
      * Opacity at the peak values (top/bottom of gradient).
-     * @default 0.3
+     * @note only used when no gradient is provided
+     * @default 1
      */
     peakOpacity?: number;
     /**
      * Opacity at the baseline (0 or edge closest to 0).
+     * @note only used when no gradient is provided
      * @default 0
      */
     baselineOpacity?: number;
   };
 
+/**
+ * A customizable dotted area gradient component.
+ * When no gradient is provided, renders a default gradient based
+ * on the fill color and peak/baseline opacities.
+ */
 export const DottedArea = memo<DottedAreaProps>(
   ({
     d,
-    fill,
-    fillOpacity = 1,
+    fill: fillProp,
     patternSize = 4,
     dotSize = 1,
     peakOpacity = 1,
     baselineOpacity = 0,
     baseline,
     yAxisId,
-    clipRect,
+    gradient: gradientProp,
+    animate: animateProp,
+    transition,
     ...pathProps
   }) => {
     const theme = useTheme();
-    const context = useCartesianChartContext();
-    const patternId = useId();
-    const gradientId = useId();
-    const maskId = useId();
+    const { drawingArea, animate, getYAxis } = useCartesianChartContext();
 
-    const dotCenterPosition = patternSize / 2;
+    const yAxisConfig = getYAxis(yAxisId);
 
-    // Get the y-scale for the specified axis (or default)
-    const yScale = context.getYScale(yAxisId);
-    const yRange = yScale?.range();
-    const yDomain = yScale?.domain();
+    const fill = useMemo(
+      () => fillProp ?? theme.color.fgPrimary,
+      [fillProp, theme.color.fgPrimary],
+    );
 
-    // Use chart range if available, otherwise fall back to percentage
-    const useUserSpaceUnits = yRange !== undefined;
+    const dottedPath = useMemo(() => {
+      if (!drawingArea) return '';
 
-    // Auto-calculate baseline position based on domain
-    let baselinePosition: number | undefined;
-    let baselinePercentage: string | undefined;
+      return getDottedAreaPath(
+        {
+          x: drawingArea.x,
+          y: drawingArea.y,
+          width: drawingArea.width,
+          height: drawingArea.height,
+        },
+        patternSize,
+        dotSize,
+      );
+    }, [drawingArea, patternSize, dotSize]);
 
-    if (yScale && yDomain) {
-      const [minValue, maxValue] = yDomain;
+    const animatedClipPath = usePathTransition({
+      currentPath: d,
+      transition,
+    });
 
-      let dataBaseline: number;
-      if (minValue >= 0) {
-        // All positive: baseline at min
-        dataBaseline = minValue;
-      } else if (maxValue <= 0) {
-        // All negative: baseline at max
-        dataBaseline = maxValue;
-      } else {
-        // Crosses zero: baseline at 0
-        dataBaseline = 0;
-      }
+    const staticClipPath = useMemo(() => {
+      if (!d) return;
+      return Skia.Path.MakeFromSVGString(d) ?? undefined;
+    }, [d]);
 
-      if (useUserSpaceUnits && yRange) {
-        // Get the actual y coordinate for the baseline
-        const scaledValue = yScale(baseline ?? dataBaseline);
-        if (typeof scaledValue === 'number') {
-          baselinePosition = scaledValue;
-        }
-      } else {
-        // Calculate percentage position
-        baselinePercentage = `${((maxValue - (baseline ?? dataBaseline)) / (maxValue - minValue)) * 100}%`;
-      }
-    }
+    const gradient = useMemo(() => {
+      if (gradientProp) return gradientProp;
+      if (!yAxisConfig) return;
 
-    const gradientY1 = useUserSpaceUnits && yRange ? String(yRange[1]) : '0%';
-    const gradientY2 = useUserSpaceUnits && yRange ? String(yRange[0]) : '100%';
-
-    const effectiveFill = fill ?? theme.color.fgPrimary;
+      const baselineValue = getBaseline(yAxisConfig.domain, baseline);
+      return createGradient(yAxisConfig.domain, baselineValue, fill, peakOpacity, baselineOpacity);
+    }, [gradientProp, yAxisConfig, fill, baseline, peakOpacity, baselineOpacity]);
 
     return (
-      <G>
-        <Defs>
-          <Pattern
-            height={patternSize}
-            id={patternId}
-            patternUnits="userSpaceOnUse"
-            width={patternSize}
-            x="0"
-            y="0"
-          >
-            <Circle
-              cx={dotCenterPosition}
-              cy={dotCenterPosition}
-              fill={effectiveFill}
-              r={dotSize}
-            />
-          </Pattern>
-          <LinearGradient
-            gradientUnits={useUserSpaceUnits ? 'userSpaceOnUse' : 'objectBoundingBox'}
-            id={gradientId}
-            x1={useUserSpaceUnits ? '0' : '0%'}
-            x2={useUserSpaceUnits ? '0' : '0%'}
-            y1={gradientY1}
-            y2={gradientY2}
-          >
-            {baselinePosition !== undefined || baselinePercentage !== undefined
-              ? /* Diverging gradient: high opacity at extremes, low at baseline */
-                [
-                  <Stop key="0" offset="0%" stopColor="white" stopOpacity={peakOpacity} />,
-                  <Stop
-                    key="1"
-                    offset={
-                      baselinePercentage ??
-                      `${((baselinePosition! - yRange![1]) / (yRange![0] - yRange![1])) * 100}%`
-                    }
-                    stopColor="white"
-                    stopOpacity={baselineOpacity}
-                  />,
-                  <Stop key="2" offset="100%" stopColor="white" stopOpacity={peakOpacity} />,
-                ]
-              : /* Simple gradient from top to bottom */
-                [
-                  <Stop key="0" offset="0%" stopColor="white" stopOpacity={peakOpacity} />,
-                  <Stop key="1" offset="100%" stopColor="white" stopOpacity={baselineOpacity} />,
-                ]}
-          </LinearGradient>
-          <Mask id={maskId}>
-            <Path d={d} fill={`url(#${gradientId})`} />
-          </Mask>
-        </Defs>
+      <Group clip={animate ? animatedClipPath : staticClipPath}>
         <Path
-          clipRect={clipRect}
-          d={d}
-          fill={`url(#${patternId})`}
-          mask={`url(#${maskId})`}
+          animate={animateProp ?? animate}
+          d={dottedPath}
+          fill={fill}
+          transition={transition}
           {...pathProps}
-        />
-      </G>
+        >
+          {gradient && <Gradient gradient={gradient} yAxisId={yAxisId} />}
+        </Path>
+      </Group>
     );
   },
 );

@@ -1,7 +1,8 @@
-import { type AxisBounds, isValidBounds } from '../chart';
 import {
+  applySerializableScale,
   type CategoricalScale,
   type ChartScaleFunction,
+  convertToSerializableScale,
   getCategoricalScale,
   getNumericScale,
   isCategoricalScale,
@@ -316,5 +317,249 @@ describe('scale integration', () => {
     });
     expect(invertedDomain(10)).toBe(0);
     expect(invertedDomain(0)).toBe(100);
+  });
+});
+
+describe('convertToSerializableScale and applySerializableScale', () => {
+  describe('linear scale conversion', () => {
+    it('should convert linear scale correctly', () => {
+      const d3Scale = getNumericScale({
+        scaleType: 'linear',
+        domain: { min: 0, max: 10 },
+        range: { min: 0, max: 100 },
+      });
+
+      const serialized = convertToSerializableScale(d3Scale);
+
+      expect(serialized).toEqual({
+        type: 'linear',
+        domain: [0, 10],
+        range: [0, 100],
+      });
+    });
+
+    it('should produce identical results to D3 scale', () => {
+      const d3Scale = getNumericScale({
+        scaleType: 'linear',
+        domain: { min: -5, max: 15 },
+        range: { min: 50, max: 200 },
+      });
+
+      const serialized = convertToSerializableScale(d3Scale);
+      expect(serialized?.type).toBe('linear');
+
+      if (serialized?.type !== 'linear') return;
+
+      const testValues = [-10, -5, 0, 5, 10, 15, 20];
+
+      testValues.forEach((value) => {
+        const d3Result = d3Scale(value);
+        const serializableResult = applySerializableScale(value, serialized);
+
+        expect(serializableResult).toBeCloseTo(d3Result ?? 0, 5);
+      });
+    });
+
+    it('should handle inverted ranges', () => {
+      const d3Scale = getNumericScale({
+        scaleType: 'linear',
+        domain: { min: 0, max: 10 },
+        range: { min: 100, max: 0 }, // Inverted
+      });
+
+      const serialized = convertToSerializableScale(d3Scale);
+
+      expect(serialized?.domain).toEqual([0, 10]);
+      expect(serialized?.range).toEqual([100, 0]);
+
+      if (serialized?.type !== 'linear') return;
+
+      const testValues = [0, 5, 10];
+      testValues.forEach((value) => {
+        const d3Result = d3Scale(value);
+        const serializableResult = applySerializableScale(value, serialized);
+
+        expect(serializableResult).toBeCloseTo(d3Result ?? 0, 5);
+      });
+    });
+  });
+
+  describe('log scale conversion', () => {
+    it('should convert log scale correctly', () => {
+      const d3Scale = getNumericScale({
+        scaleType: 'log',
+        domain: { min: 1, max: 1000 },
+        range: { min: 0, max: 300 },
+      });
+
+      const serialized = convertToSerializableScale(d3Scale);
+
+      expect(serialized).toEqual({
+        type: 'log',
+        domain: [1, 1000],
+        range: [0, 300],
+        base: 10,
+      });
+    });
+
+    it('should produce identical results to D3 scale', () => {
+      const d3Scale = getNumericScale({
+        scaleType: 'log',
+        domain: { min: 1, max: 100 },
+        range: { min: 0, max: 200 },
+      });
+
+      const serialized = convertToSerializableScale(d3Scale);
+      expect(serialized?.type).toBe('log');
+
+      if (serialized?.type !== 'log') return;
+
+      const testValues = [0.1, 1, 2, 5, 10, 25, 50, 100, 200];
+
+      testValues.forEach((value) => {
+        const d3Result = d3Scale(value);
+        const serializableResult = applySerializableScale(value, serialized);
+
+        expect(serializableResult).toBeCloseTo(d3Result ?? 0, 5);
+      });
+    });
+  });
+
+  describe('band scale conversion', () => {
+    it('should convert band scale correctly', () => {
+      const d3Scale = getCategoricalScale({
+        domain: { min: 0, max: 4 },
+        range: { min: 0, max: 100 },
+        padding: 0.2,
+      });
+
+      const serialized = convertToSerializableScale(d3Scale);
+
+      expect(serialized?.type).toBe('band');
+      expect(serialized?.domain).toEqual([0, 4]);
+      expect(serialized?.range).toEqual([0, 100]);
+      expect(serialized).toHaveProperty('bandwidth');
+
+      expect(serialized?.type).toBe('band');
+      if (serialized?.type !== 'band') {
+        throw new Error('Expected band scale');
+      }
+      expect(serialized.bandwidth).toBeCloseTo(d3Scale.bandwidth(), 5);
+    });
+
+    it('should produce identical band start positions to D3 scale', () => {
+      const d3Scale = getCategoricalScale({
+        domain: { min: 0, max: 3 },
+        range: { min: 0, max: 200 },
+        padding: 0.1,
+      });
+
+      const serialized = convertToSerializableScale(d3Scale);
+      expect(serialized?.type).toBe('band');
+
+      if (serialized?.type !== 'band') return;
+
+      // Test band start positions (not centers)
+      for (let i = 0; i <= 3; i++) {
+        const d3Result = d3Scale(i);
+        const serializableResult = applySerializableScale(i, serialized);
+
+        expect(serializableResult).toBeCloseTo(d3Result ?? 0, 5);
+      }
+    });
+
+    it('should handle different padding values', () => {
+      const paddings = [0, 0.1, 0.3, 0.5];
+
+      paddings.forEach((padding) => {
+        const d3Scale = getCategoricalScale({
+          domain: { min: 0, max: 2 },
+          range: { min: 0, max: 150 },
+          padding,
+        });
+
+        const serialized = convertToSerializableScale(d3Scale);
+
+        if (serialized?.type !== 'band') return;
+
+        expect(serialized.bandwidth).toBeCloseTo(d3Scale.bandwidth(), 5);
+
+        for (let i = 0; i <= 2; i++) {
+          const d3Result = d3Scale(i);
+          const serializableResult = applySerializableScale(i, serialized);
+
+          expect(serializableResult).toBeCloseTo(d3Result ?? 0, 5);
+        }
+      });
+    });
+
+    it('should handle invalid indices correctly', () => {
+      const d3Scale = getCategoricalScale({
+        domain: { min: 0, max: 2 },
+        range: { min: 0, max: 100 },
+      });
+
+      const serialized = convertToSerializableScale(d3Scale);
+
+      if (serialized?.type !== 'band') return;
+
+      const invalidIndices = [-1, 5, 10];
+
+      invalidIndices.forEach((index) => {
+        const d3Result = d3Scale(index); // Returns undefined for invalid
+        const serializableResult = applySerializableScale(index, serialized);
+
+        // Our implementation returns range start for invalid indices (D3 returns undefined)
+        expect(d3Result).toBeUndefined();
+        expect(serializableResult).toBe(serialized.range[0]);
+      });
+    });
+  });
+
+  describe('edge cases', () => {
+    it('should handle undefined scale', () => {
+      const result = convertToSerializableScale(undefined as any);
+      expect(result).toBeUndefined();
+    });
+
+    it('should handle single category band scale', () => {
+      const d3Scale = getCategoricalScale({
+        domain: { min: 0, max: 0 },
+        range: { min: 0, max: 100 },
+      });
+
+      const serialized = convertToSerializableScale(d3Scale);
+
+      expect(serialized?.type).toBe('band');
+      expect(serialized?.domain).toEqual([0, 0]);
+
+      if (serialized?.type !== 'band') return;
+
+      const d3Result = d3Scale(0);
+      const serializableResult = applySerializableScale(0, serialized);
+
+      expect(serializableResult).toBeCloseTo(d3Result ?? 0, 5);
+    });
+
+    it('should handle zero width range', () => {
+      const d3Scale = getNumericScale({
+        scaleType: 'linear',
+        domain: { min: 0, max: 10 },
+        range: { min: 50, max: 50 },
+      });
+
+      const serialized = convertToSerializableScale(d3Scale);
+
+      if (serialized?.type !== 'linear') return;
+
+      const testValues = [0, 5, 10];
+      testValues.forEach((value) => {
+        const d3Result = d3Scale(value);
+        const serializableResult = applySerializableScale(value, serialized);
+
+        expect(serializableResult).toBe(50);
+        expect(serializableResult).toBeCloseTo(d3Result ?? 0, 5);
+      });
+    });
   });
 });

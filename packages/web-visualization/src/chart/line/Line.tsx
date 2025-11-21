@@ -1,51 +1,42 @@
 import React, { memo, useMemo } from 'react';
 import type { SVGProps } from 'react';
 import type { SharedProps } from '@cbhq/cds-common/types';
-import { m as motion } from 'framer-motion';
+import { m as motion, type Transition } from 'framer-motion';
 
 import { Area, type AreaComponent } from '../area/Area';
-import { axisTickLabelsInitialAnimationVariants } from '../axis';
 import { useCartesianChartContext } from '../ChartProvider';
-import { Point, type PointConfig, type RenderPointsParams } from '../Point';
-import { type ChartPathCurveType, getLinePath } from '../utils';
+import { Point, type PointBaseProps, type PointProps } from '../point';
+import {
+  accessoryFadeTransitionDelay,
+  accessoryFadeTransitionDuration,
+  type ChartPathCurveType,
+  evaluateGradientAtValue,
+  getGradientConfig,
+  getLineData,
+  getLinePath,
+  type GradientDefinition,
+} from '../utils';
 
 import { DottedLine } from './DottedLine';
-import { GradientLine } from './GradientLine';
 import { SolidLine } from './SolidLine';
 
-export type LineComponentProps = {
-  d: SVGProps<SVGPathElement>['d'];
-  stroke: string;
-  strokeOpacity?: number;
-  strokeWidth?: number;
-  testID?: string;
-  animate?: boolean;
-};
-
-export type LineComponent = React.FC<LineComponentProps>;
-
-export type LineProps = SharedProps & {
+export type LineBaseProps = SharedProps & {
   /**
    * The ID of the series to render. Will be used to find the data from the chart context.
    */
   seriesId: string;
   /**
    * The curve interpolation method to use for the line.
-   * @default 'linear'
+   * @default 'bump'
    */
   curve?: ChartPathCurveType;
   /**
    * The type of line to render.
    * @default 'solid'
    */
-  type?: 'solid' | 'dotted' | 'gradient';
+  type?: 'solid' | 'dotted';
   /**
-   * Handler for when a dot is clicked.
-   * Automatically makes dots appear pressable when provided.
-   */
-  onPointClick?: PointConfig['onClick'];
-  /**
-   * Show area fill under the line.
+   * Whether to show area fill under the line.
    */
   showArea?: boolean;
   /**
@@ -68,86 +59,123 @@ export type LineProps = SharedProps & {
    */
   AreaComponent?: AreaComponent;
   /**
+   * Opacity of the line's stroke.
+   * Will also be applied to points and area fill.
+   * @default 1
+   */
+  opacity?: number;
+  /**
+   * Controls whether and how to render points at each data point in the series.
+   * - `true`: Show all points with default styling
+   * - `false` or `undefined`: Hide all points
+   * - Function: Called for every entry in the data array to customize individual points
+   *
+   * @param defaults - The default point props computed by the Line component
+   * @returns true for default point, false/null/undefined for no point, or Partial<PointProps> to customize
+   */
+  points?:
+    | boolean
+    | ((defaults: PointBaseProps) => boolean | null | undefined | Partial<PointProps>);
+  /**
+   * When true, the area is connected across null values.
+   */
+  connectNulls?: boolean;
+  /**
    * The color of the line.
    * @default color of the series or 'var(--color-fgPrimary)'
    */
   stroke?: string;
   /**
-   * Opacity of the line.
+   * Opacity of the line
+   * @note when combined with gradient, both will be applied
    * @default 1
    */
-  opacity?: number;
+  strokeOpacity?: number;
   /**
-   * Callback function to determine how to render points at each data point in the series.
-   * Called for every entry in the data array.
-   *
-   * @param params - Contains the data and pixel coordinates of the data point.
-   * @returns true for default point, false/null/undefined for no point, or PointConfig for custom point
+   * Width of the line
+   * @default 2
    */
-  renderPoints?: (params: RenderPointsParams) => boolean | null | undefined | PointConfig;
   strokeWidth?: number;
+  /**
+   * Gradient configuration.
+   * When provided, creates gradient or threshold-based coloring.
+   */
+  gradient?: GradientDefinition;
+  /**
+   * Whether to animate the line.
+   * Overrides the animate value from the chart context.
+   */
+  animate?: boolean;
 };
+
+export type LineProps = LineBaseProps & {
+  /**
+   * Transition configuration for line animations.
+   */
+  transition?: Transition;
+  /**
+   * Handler for when a point is clicked.
+   * Passed through to Point components rendered via points.
+   */
+  onPointClick?: PointProps['onClick'];
+};
+
+export type LineComponentProps = Pick<
+  LineProps,
+  'stroke' | 'strokeOpacity' | 'strokeWidth' | 'gradient' | 'animate' | 'transition'
+> & {
+  /**
+   * Path of the line
+   */
+  d: SVGProps<SVGPathElement>['d'];
+  /**
+   * ID of the y-axis to use.
+   * If not provided, defaults to the default y-axis.
+   */
+  yAxisId?: string;
+};
+
+export type LineComponent = React.FC<LineComponentProps>;
 
 export const Line = memo<LineProps>(
   ({
     seriesId,
-    curve = 'linear',
+    curve = 'bump',
     type = 'solid',
     areaType = 'gradient',
     areaBaseline,
-    stroke: specifiedStroke,
+    stroke: strokeProp,
+    strokeOpacity,
     onPointClick,
     showArea = false,
     LineComponent: SelectedLineComponent,
     AreaComponent,
     opacity = 1,
-    renderPoints,
+    points,
+    connectNulls,
+    transition,
+    gradient: gradientProp,
     ...props
   }) => {
-    const { animate, getSeries, getSeriesData, getXScale, getYScale, getXAxis } =
+    const { animate, getSeries, getSeriesData, getXScale, getYScale, getXAxis, getYAxis } =
       useCartesianChartContext();
 
-    const matchedSeries = getSeries(seriesId);
+    const matchedSeries = useMemo(() => getSeries(seriesId), [getSeries, seriesId]);
+    const gradient = useMemo(
+      () => gradientProp ?? matchedSeries?.gradient,
+      [gradientProp, matchedSeries?.gradient],
+    );
+    const sourceData = useMemo(() => getSeriesData(seriesId), [getSeriesData, seriesId]);
 
-    const sourceData = useMemo(() => {
-      const stackedData = getSeriesData(seriesId);
-      if (stackedData) {
-        return stackedData;
-      }
-      return getSeriesData(seriesId) || null;
-    }, [seriesId, getSeriesData]);
-
-    const xAxis = getXAxis();
-    const xScale = getXScale();
-    const yScale = getYScale(matchedSeries?.yAxisId);
+    const xAxis = useMemo(() => getXAxis(), [getXAxis]);
+    const xScale = useMemo(() => getXScale(), [getXScale]);
+    const yScale = useMemo(
+      () => getYScale(matchedSeries?.yAxisId),
+      [getYScale, matchedSeries?.yAxisId],
+    );
 
     // Convert sourceData to number array (line only supports numbers, not tuples)
-    // If data is stacked (tuples), extract the actual values from [baseline, actualValue] format
-    const chartData = useMemo((): Array<number | null> => {
-      if (!sourceData) return [];
-
-      // Check if this is stacked data (array of tuples)
-      const firstNonNull = sourceData.find((d: any) => d !== null);
-      if (Array.isArray(firstNonNull)) {
-        // Extract actual values from [baseline, value] tuples
-        return sourceData.map((d: any) => {
-          if (d === null) return null;
-          if (Array.isArray(d)) return d[1];
-          return d as number;
-        });
-      }
-
-      // Regular number array
-      if (
-        sourceData.every(
-          (d: number | null | [number, number] | null) => typeof d === 'number' || d === null,
-        )
-      ) {
-        return sourceData as Array<number | null>;
-      }
-
-      return [];
-    }, [sourceData]);
+    const chartData = useMemo(() => getLineData(sourceData), [sourceData]);
 
     const path = useMemo(() => {
       if (!xScale || !yScale || chartData.length === 0) return '';
@@ -164,8 +192,9 @@ export const Line = memo<LineProps>(
         yScale,
         curve,
         xData,
+        connectNulls,
       });
-    }, [chartData, xScale, yScale, curve, xAxis?.data]);
+    }, [chartData, xScale, yScale, curve, xAxis?.data, connectNulls]);
 
     const LineComponent = useMemo((): LineComponent => {
       if (SelectedLineComponent) {
@@ -175,16 +204,13 @@ export const Line = memo<LineProps>(
       switch (type) {
         case 'dotted':
           return DottedLine;
-        case 'gradient':
-          return GradientLine;
-        case 'solid':
         default:
           return SolidLine;
       }
     }, [SelectedLineComponent, type]);
 
     // Get series color for stroke
-    const stroke = specifiedStroke ?? matchedSeries?.color ?? 'var(--color-fgPrimary)';
+    const stroke = strokeProp ?? matchedSeries?.color ?? 'var(--color-fgPrimary)';
 
     const xData = useMemo(() => {
       const data = xAxis?.data;
@@ -193,59 +219,122 @@ export const Line = memo<LineProps>(
         : null;
     }, [xAxis?.data]);
 
+    const gradientConfig = useMemo(() => {
+      if (!gradient || !xScale || !yScale) return;
+
+      const gradientScale = gradient.axis === 'x' ? xScale : yScale;
+      const stops = getGradientConfig(gradient, xScale, yScale);
+      if (!stops) return;
+
+      return {
+        scale: gradientScale,
+        stops,
+      };
+    }, [gradient, xScale, yScale]);
+
+    if (!xScale || !yScale || !path) return;
+
     return (
       <>
         {showArea && (
           <Area
             AreaComponent={AreaComponent}
             baseline={areaBaseline}
+            connectNulls={connectNulls}
             curve={curve}
             fill={stroke}
             fillOpacity={opacity}
+            gradient={gradient}
             seriesId={seriesId}
+            transition={transition}
             type={areaType}
           />
         )}
-        <LineComponent d={path} stroke={stroke} strokeOpacity={opacity} {...props} />
-        {renderPoints && (
+        <LineComponent
+          d={path}
+          gradient={gradient}
+          stroke={stroke}
+          strokeOpacity={strokeOpacity ?? opacity}
+          transition={transition}
+          yAxisId={matchedSeries?.yAxisId}
+          {...props}
+        />
+        {points && (
           <motion.g
             data-component="line-points-group"
             {...(animate
               ? {
-                  animate: 'animate',
-                  exit: 'exit',
-                  initial: 'initial',
-                  variants: axisTickLabelsInitialAnimationVariants,
+                  animate: {
+                    opacity: 1,
+                    transition: {
+                      duration: accessoryFadeTransitionDuration,
+                      delay: accessoryFadeTransitionDelay,
+                    },
+                  },
+                  exit: { opacity: 0, transition: { duration: accessoryFadeTransitionDuration } },
+                  initial: { opacity: 0 },
                 }
               : {})}
           >
-            {chartData.map((value, index) => {
-              if (value === null) {
-                return null;
-              }
+            {chartData.map((value: number | null, index: number) => {
+              if (value === null) return;
 
               const xValue = xData && xData[index] !== undefined ? xData[index] : index;
 
-              const point = renderPoints({
-                dataY: value,
+              let pointFill = stroke;
+
+              if (gradientConfig && gradient) {
+                // Use the appropriate data value based on gradient axis
+                const axis = gradient.axis ?? 'y';
+                const dataValue = axis === 'x' ? xValue : value;
+
+                const evaluatedColor = evaluateGradientAtValue(
+                  gradientConfig.stops,
+                  dataValue,
+                  gradientConfig.scale,
+                );
+                if (evaluatedColor) {
+                  // Apply gradient color to fill if not explicitly set
+                  pointFill = evaluatedColor;
+                }
+              }
+
+              // Build defaults that would be passed to Point
+              const defaults: PointBaseProps = {
                 dataX: xValue,
-                x: xScale?.(xValue) ?? 0,
-                y: yScale?.(value) ?? 0,
-              });
+                dataY: value,
+                fill: pointFill,
+                yAxisId: matchedSeries?.yAxisId,
+                opacity,
+                testID: undefined,
+              };
 
-              if (!point) return;
+              // If points is true, render with defaults
+              if (points === true) {
+                return (
+                  <Point
+                    key={`${seriesId}-${index}`}
+                    onClick={onPointClick}
+                    transition={transition}
+                    {...defaults}
+                  />
+                );
+              }
 
-              const pointConfig = typeof point === 'object' ? point : {};
+              // Call the function with defaults
+              const result = points(defaults);
+
+              if (!result) return;
+
+              const pointConfig = result === true ? {} : result;
 
               return (
                 <Point
-                  key={`${seriesId}-renderpoint-${index}`}
-                  dataX={xValue}
-                  dataY={value}
-                  {...pointConfig}
-                  fill={pointConfig.fill ?? stroke}
+                  key={`${seriesId}-${index}`}
                   onClick={pointConfig.onClick ?? onPointClick}
-                  opacity={pointConfig.opacity ?? opacity}
+                  transition={transition}
+                  {...defaults}
+                  {...pointConfig}
                 />
               );
             })}

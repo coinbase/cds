@@ -6,17 +6,22 @@ import { AnimatePresence, m as motion } from 'framer-motion';
 import { useCartesianChartContext } from '../ChartProvider';
 import { DottedLine } from '../line/DottedLine';
 import { ReferenceLine } from '../line/ReferenceLine';
-import { SmartChartTextGroup, type TextLabelData } from '../text/SmartChartTextGroup';
-import { getAxisTicksData, isCategoricalScale } from '../utils';
+import { SolidLine } from '../line/SolidLine';
+import { ChartText } from '../text/ChartText';
+import { ChartTextGroup, type TextLabelData } from '../text/ChartTextGroup';
+import { getAxisTicksData, isCategoricalScale, lineToPath } from '../utils';
 
 import {
   type AxisBaseProps,
   axisLineStyles,
   type AxisProps,
-  axisTickLabelsInitialAnimationVariants,
   axisTickMarkStyles,
   axisUpdateAnimationVariants,
 } from './Axis';
+import { DefaultAxisTickLabel } from './DefaultAxisTickLabel';
+
+const AXIS_HEIGHT = 32;
+const LABEL_SIZE = 20;
 
 const axisTickMarkCss = css`
   ${axisTickMarkStyles}
@@ -33,7 +38,7 @@ export type XAxisBaseProps = AxisBaseProps & {
   position?: 'top' | 'bottom';
   /**
    * Height of the axis. This value is inclusive of the padding.
-   * @default 32
+   * @default 32 when no label is provided, 52 when a label is provided
    */
   height?: number;
 };
@@ -47,13 +52,15 @@ export const XAxis = memo<XAxisProps>(
     requestedTickCount,
     ticks,
     tickLabelFormatter,
+    TickLabelComponent = DefaultAxisTickLabel,
     style,
     className,
     styles,
     classNames,
     GridLineComponent = DottedLine,
+    LineComponent = SolidLine,
+    TickMarkLineComponent = SolidLine,
     tickMarkLabelGap = 2,
-    height = 32,
     minTickLabelGap = 4,
     showTickMarks,
     showLine,
@@ -61,6 +68,9 @@ export const XAxis = memo<XAxisProps>(
     tickInterval = 32,
     tickMinStep = 1,
     tickMaxStep,
+    label,
+    labelGap = 4,
+    height = label ? AXIS_HEIGHT + LABEL_SIZE : AXIS_HEIGHT,
     ...props
   }) => {
     const registrationId = useId();
@@ -151,12 +161,12 @@ export const XAxis = memo<XAxisProps>(
       return ticksData.map((tick) => {
         const tickOffset = tickMarkLabelGap + (showTickMarks ? tickMarkSize : 0);
 
-        const availableSpace = axisBounds.height - tickOffset;
+        const availableSpace = AXIS_HEIGHT - tickOffset;
         const labelOffset = availableSpace / 2;
+
+        const baseY = position === 'top' && label ? axisBounds.y + LABEL_SIZE : axisBounds.y;
         const labelY =
-          position === 'top'
-            ? axisBounds.y + labelOffset - tickOffset
-            : axisBounds.y + labelOffset + tickOffset;
+          position === 'top' ? baseY + labelOffset - tickOffset : baseY + labelOffset + tickOffset;
 
         return {
           x: tick.position,
@@ -181,9 +191,16 @@ export const XAxis = memo<XAxisProps>(
       formatTick,
       classNames?.tickLabel,
       styles?.tickLabel,
+      label,
     ]);
 
-    if (!xScale) return;
+    if (!xScale || !axisBounds) return;
+
+    const labelX = axisBounds.x + axisBounds.width / 2;
+    const labelY =
+      position === 'bottom'
+        ? axisBounds.y + axisBounds.height - LABEL_SIZE / 2
+        : axisBounds.y + LABEL_SIZE / 2;
 
     return (
       <g
@@ -217,54 +234,63 @@ export const XAxis = memo<XAxisProps>(
           </AnimatePresence>
         )}
         {chartTextData && (
-          <AnimatePresence>
-            <motion.g
-              animate="animate"
-              exit="exit"
-              initial="initial"
-              variants={animate ? axisTickLabelsInitialAnimationVariants : undefined}
-            >
-              <SmartChartTextGroup
-                prioritizeEndLabels
-                labels={chartTextData}
-                minGap={minTickLabelGap}
-              />
-            </motion.g>
-          </AnimatePresence>
+          <ChartTextGroup
+            prioritizeEndLabels
+            LabelComponent={TickLabelComponent}
+            labels={chartTextData}
+            minGap={minTickLabelGap}
+          />
         )}
         {axisBounds && showTickMarks && (
           <g data-testid="tick-marks">
             {ticksData.map((tick, index) => {
               const tickY = position === 'bottom' ? axisBounds.y : axisBounds.y + axisBounds.height;
-              const tickMarkSizePixels = tickMarkSize;
-              const tickY2 =
-                position === 'bottom'
-                  ? axisBounds.y + tickMarkSizePixels
-                  : axisBounds.y + axisBounds.height - tickMarkSizePixels;
+              const tickY2 = position === 'bottom' ? tickY + tickMarkSize : tickY - tickMarkSize;
 
               return (
-                <line
+                <TickMarkLineComponent
                   key={`tick-mark-${tick.tick}-${index}`}
+                  animate={false}
                   className={cx(axisTickMarkCss, classNames?.tickMark)}
+                  clipRect={null}
+                  d={lineToPath(tick.position, tickY2, tick.position, tickY)}
+                  stroke="var(--color-fg)"
+                  strokeLinecap="square"
+                  strokeWidth={1}
                   style={styles?.tickMark}
-                  x1={tick.position}
-                  x2={tick.position}
-                  y1={tickY}
-                  y2={tickY2}
                 />
               );
             })}
           </g>
         )}
-        {axisBounds && showLine && (
-          <line
+        {showLine && (
+          <LineComponent
+            animate={false}
             className={cx(axisLineCss, classNames?.line)}
+            d={lineToPath(
+              axisBounds.x,
+              position === 'bottom' ? axisBounds.y : axisBounds.y + axisBounds.height,
+              axisBounds.x + axisBounds.width,
+              position === 'bottom' ? axisBounds.y : axisBounds.y + axisBounds.height,
+            )}
+            stroke="var(--color-fg)"
+            strokeLinecap="square"
+            strokeWidth={1}
             style={styles?.line}
-            x1={axisBounds.x}
-            x2={axisBounds.x + axisBounds.width}
-            y1={position === 'bottom' ? axisBounds.y : axisBounds.y + axisBounds.height}
-            y2={position === 'bottom' ? axisBounds.y : axisBounds.y + axisBounds.height}
           />
+        )}
+        {label && (
+          <ChartText
+            disableRepositioning
+            className={classNames?.label}
+            horizontalAlignment="center"
+            style={styles?.label}
+            verticalAlignment="middle"
+            x={labelX}
+            y={labelY}
+          >
+            {label}
+          </ChartText>
         )}
       </g>
     );

@@ -16,7 +16,14 @@ import { ReferenceLine, SolidLine, type SolidLineProps } from '../line';
 import { Line } from '../line/Line';
 import { LineChart } from '../line/LineChart';
 import { isCategoricalScale } from '../utils';
-import { BarPlot, CartesianChart, type ChartTextChildren, PeriodSelector, Scrubber } from '../';
+import {
+  BarPlot,
+  CartesianChart,
+  type ChartTextChildren,
+  PeriodSelector,
+  Point,
+  Scrubber,
+} from '../';
 
 export default {
   component: CartesianChart,
@@ -70,7 +77,6 @@ const PredictionRow = ({
       enableScrubbing={false}
       height={6}
       inset={0}
-      overflow="visible"
       series={[seriesData]}
       width={60}
     />
@@ -337,7 +343,6 @@ const EarningsHistory = () => {
         animate={false}
         height={250}
         inset={0}
-        overflow="visible"
         series={[
           {
             id: 'estimatedEPS',
@@ -475,7 +480,7 @@ const PriceWithVolume = () => {
           width={80}
         />
         <BarPlot seriesIds={['volume']} />
-        <Line showArea curve="monotone" seriesId="prices" />
+        <Line showArea seriesId="prices" />
         <Scrubber seriesIds={['prices']} />
       </CartesianChart>
     </VStack>
@@ -542,7 +547,7 @@ function TradingTrends() {
       <XAxis />
       <ReferenceLine LineComponent={ThickSolidLine} dataY={0} yAxisId="profit" />
       <BarPlot seriesIds={['gains', 'losses']} />
-      <Line showArea curve="monotone" seriesId="revenue" />
+      <Line showArea seriesId="revenue" />
     </CartesianChart>
   );
 }

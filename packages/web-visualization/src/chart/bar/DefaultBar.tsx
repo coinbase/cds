@@ -33,9 +33,11 @@ export const DefaultBar = memo<DefaultBarProps>(
     fillOpacity = 1,
     dataX,
     dataY,
+    transition,
     ...props
   }) => {
     const { animate } = useCartesianChartContext();
+
     const initialPath = useMemo(() => {
       if (!animate) return undefined;
       // Need a minimum height to allow for animation
@@ -52,7 +54,7 @@ export const DefaultBar = memo<DefaultBarProps>(
           fill={fill}
           fillOpacity={fillOpacity}
           initial={{ d: initialPath }}
-          transition={{ type: 'spring', duration: 1, bounce: 0 }}
+          transition={transition}
         />
       );
     }

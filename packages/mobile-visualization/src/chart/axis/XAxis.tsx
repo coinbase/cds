@@ -1,17 +1,20 @@
 import { memo, useCallback, useEffect, useId, useMemo } from 'react';
-import Animated, { useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
-import { G, Line } from 'react-native-svg';
 import { useTheme } from '@cbhq/cds-mobile/hooks/useTheme';
+import { Group } from '@shopify/react-native-skia';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import { DottedLine } from '../line/DottedLine';
 import { ReferenceLine } from '../line/ReferenceLine';
-import { SmartChartTextGroup, type TextLabelData } from '../text/SmartChartTextGroup';
-import { getAxisTicksData, isCategoricalScale } from '../utils';
+import { SolidLine } from '../line/SolidLine';
+import { ChartText } from '../text/ChartText';
+import { ChartTextGroup, type TextLabelData } from '../text/ChartTextGroup';
+import { getAxisTicksData, isCategoricalScale, lineToPath } from '../utils';
 
 import { type AxisBaseProps, type AxisProps } from './Axis';
+import { DefaultAxisTickLabel } from './DefaultAxisTickLabel';
 
-const AnimatedG = Animated.createAnimatedComponent(G);
+const AXIS_HEIGHT = 32;
+const LABEL_SIZE = 20;
 
 export type XAxisBaseProps = AxisBaseProps & {
   /**
@@ -21,7 +24,7 @@ export type XAxisBaseProps = AxisBaseProps & {
   position?: 'top' | 'bottom';
   /**
    * Height of the axis. This value is inclusive of the padding.
-   * @default 32
+   * @default 32 when no label is provided, 52 when a label is provided
    */
   height?: number;
 };
@@ -35,13 +38,11 @@ export const XAxis = memo<XAxisProps>(
     requestedTickCount,
     ticks,
     tickLabelFormatter,
-    style,
-    className,
-    styles,
-    classNames,
+    TickLabelComponent = DefaultAxisTickLabel,
     GridLineComponent = DottedLine,
+    LineComponent = SolidLine,
+    TickMarkLineComponent = SolidLine,
     tickMarkLabelGap = 2,
-    height = 32,
     minTickLabelGap = 4,
     showTickMarks,
     showLine,
@@ -49,6 +50,9 @@ export const XAxis = memo<XAxisProps>(
     tickInterval = 32,
     tickMinStep = 1,
     tickMaxStep,
+    label,
+    labelGap = 4,
+    height = label ? AXIS_HEIGHT + LABEL_SIZE : AXIS_HEIGHT,
     ...props
   }) => {
     const theme = useTheme();
@@ -60,25 +64,8 @@ export const XAxis = memo<XAxisProps>(
     const xAxis = getXAxis();
     const axisBounds = getAxisBounds(registrationId);
 
-    const gridOpacity = useSharedValue(1);
-
-    const axisLineProps = useMemo(
-      () => ({
-        stroke: theme.color.fg,
-        strokeLinecap: 'square' as const,
-        strokeWidth: 1,
-      }),
-      [theme.color.fg],
-    );
-
-    const axisTickMarkProps = useMemo(
-      () => ({
-        stroke: theme.color.fg,
-        strokeLinecap: 'square' as const,
-        strokeWidth: 1,
-      }),
-      [theme.color.fg],
-    );
+    // Note: gridOpacity not currently used in Skia version
+    // const gridOpacity = useSharedValue(1);
 
     useEffect(() => {
       registerAxis(registrationId, position, height);
@@ -157,22 +144,25 @@ export const XAxis = memo<XAxisProps>(
       return ticksData.map((tick) => {
         const tickOffset = tickMarkLabelGap + (showTickMarks ? tickMarkSize : 0);
 
-        const availableSpace = axisBounds.height - tickOffset;
+        // Use AXIS_HEIGHT for centering, not full axisBounds.height
+        // This ensures tick labels are centered in the axis area, not including label space
+        const availableSpace = AXIS_HEIGHT - tickOffset;
         const labelOffset = availableSpace / 2;
+
+        // For bottom position: start at axisBounds.y
+        // For top position with label: start at axisBounds.y + LABEL_SIZE
+        const baseY = position === 'top' && label ? axisBounds.y + LABEL_SIZE : axisBounds.y;
+
         const labelY =
-          position === 'top'
-            ? axisBounds.y + labelOffset - tickOffset
-            : axisBounds.y + labelOffset + tickOffset;
+          position === 'top' ? baseY + labelOffset - tickOffset : baseY + labelOffset + tickOffset;
 
         return {
           x: tick.position,
           y: labelY,
           label: String(formatTick(tick.tick)),
           chartTextProps: {
-            className: classNames?.tickLabel,
             color: theme.color.fgMuted,
             verticalAlignment: 'middle',
-            style: styles?.tickLabel,
             horizontalAlignment: 'center',
           },
         };
@@ -186,69 +176,81 @@ export const XAxis = memo<XAxisProps>(
       tickMarkSize,
       position,
       formatTick,
-      classNames?.tickLabel,
-      styles?.tickLabel,
+      label,
     ]);
 
-    const gridAnimatedStyle = useAnimatedStyle(() => ({
-      opacity: gridOpacity.value,
-    }));
+    if (!xScale || !axisBounds) return;
 
-    if (!xScale) return;
+    const labelX = axisBounds.x + axisBounds.width / 2;
+    const labelY =
+      position === 'bottom'
+        ? axisBounds.y + axisBounds.height - LABEL_SIZE / 2
+        : axisBounds.y + LABEL_SIZE / 2;
 
     return (
-      <G data-axis="x" data-position={position} {...props}>
+      <Group>
         {showGrid && (
-          <AnimatedG animatedProps={gridAnimatedStyle}>
+          <Group>
             {ticksData.map((tick, index) => {
               const verticalLine = (
                 <ReferenceLine LineComponent={GridLineComponent} dataX={tick.tick} />
               );
 
-              return <G key={`grid-${tick.tick}-${index}`}>{verticalLine}</G>;
+              return <Group key={`grid-${tick.tick}-${index}`}>{verticalLine}</Group>;
             })}
-          </AnimatedG>
+          </Group>
         )}
         {chartTextData && (
-          <SmartChartTextGroup
+          <ChartTextGroup
             prioritizeEndLabels
+            LabelComponent={TickLabelComponent}
             labels={chartTextData}
             minGap={minTickLabelGap}
           />
         )}
         {axisBounds && showTickMarks && (
-          <G data-testid="tick-marks">
+          <Group>
             {ticksData.map((tick, index) => {
               const tickY = position === 'bottom' ? axisBounds.y : axisBounds.y + axisBounds.height;
-              const tickMarkSizePixels = tickMarkSize;
               const tickY2 =
                 position === 'bottom'
-                  ? axisBounds.y + tickMarkSizePixels
-                  : axisBounds.y + axisBounds.height - tickMarkSizePixels;
+                  ? axisBounds.y + tickMarkSize
+                  : axisBounds.y + axisBounds.height - tickMarkSize;
 
               return (
-                <Line
+                <TickMarkLineComponent
                   key={`tick-mark-${tick.tick}-${index}`}
-                  {...axisTickMarkProps}
-                  x1={tick.position}
-                  x2={tick.position}
-                  y1={tickY}
-                  y2={tickY2}
+                  animate={false}
+                  clipPath={null}
+                  d={lineToPath(tick.position, tickY, tick.position, tickY2)}
+                  stroke={theme.color.fg}
+                  strokeCap="square"
+                  strokeWidth={1}
                 />
               );
             })}
-          </G>
+          </Group>
         )}
-        {axisBounds && showLine && (
-          <Line
-            {...axisLineProps}
-            x1={axisBounds.x}
-            x2={axisBounds.x + axisBounds.width}
-            y1={position === 'bottom' ? axisBounds.y : axisBounds.y + axisBounds.height}
-            y2={position === 'bottom' ? axisBounds.y : axisBounds.y + axisBounds.height}
+        {showLine && (
+          <LineComponent
+            animate={false}
+            d={lineToPath(
+              axisBounds.x,
+              position === 'bottom' ? axisBounds.y : axisBounds.y + axisBounds.height,
+              axisBounds.x + axisBounds.width,
+              position === 'bottom' ? axisBounds.y : axisBounds.y + axisBounds.height,
+            )}
+            stroke={theme.color.fg}
+            strokeCap="square"
+            strokeWidth={1}
           />
         )}
-      </G>
+        {label && (
+          <ChartText horizontalAlignment="center" verticalAlignment="middle" x={labelX} y={labelY}>
+            {label}
+          </ChartText>
+        )}
+      </Group>
     );
   },
 );

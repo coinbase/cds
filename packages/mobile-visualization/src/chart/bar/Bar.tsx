@@ -1,11 +1,11 @@
 import React, { memo, useMemo } from 'react';
 import { useTheme } from '@cbhq/cds-mobile/hooks/useTheme';
 
-import { getBarPath } from '../utils';
+import { getBarPath, type Transition } from '../utils';
 
 import { DefaultBar } from './DefaultBar';
 
-export type BarComponentProps = {
+export type BarBaseProps = {
   /**
    * X coordinate of the bar (left edge).
    */
@@ -23,7 +23,8 @@ export type BarComponentProps = {
    */
   height: number;
   /**
-   * Border radius of the bar.
+   * Border radius for the bar.
+   * @default 4
    */
   borderRadius?: number;
   /**
@@ -47,10 +48,6 @@ export type BarComponentProps = {
    */
   dataY?: number | [number, number] | null;
   /**
-   * The path data for the bar shape.
-   */
-  d: string;
-  /**
    * Fill color for the bar.
    */
   fill?: string;
@@ -66,21 +63,27 @@ export type BarComponentProps = {
    * Stroke width for the bar outline.
    */
   strokeWidth?: number;
-};
-
-export type BarComponent = React.FC<BarComponentProps>;
-
-export type BarProps = Omit<BarComponentProps, 'd'> & {
-  /**
-   * Border radius for the bar.
-   * @default 4
-   */
-  borderRadius?: BarComponentProps['borderRadius'];
   /**
    * Component to render the bar.
    */
   BarComponent?: BarComponent;
 };
+
+export type BarProps = BarBaseProps & {
+  /**
+   * Transition configuration for bar animations.
+   */
+  transition?: Transition;
+};
+
+export type BarComponentProps = Omit<BarProps, 'BarComponent'> & {
+  /**
+   * The path data for the bar shape.
+   */
+  d: string;
+};
+
+export type BarComponent = React.FC<BarComponentProps>;
 
 /**
  * Simple bar component that renders a single bar at the specified position.
@@ -111,6 +114,7 @@ export const Bar = memo<BarProps>(
     borderRadius = 4,
     roundTop = true,
     roundBottom = true,
+    transition,
   }) => {
     const theme = useTheme();
 
@@ -144,6 +148,7 @@ export const Bar = memo<BarProps>(
         roundTop={roundTop}
         stroke={stroke}
         strokeWidth={strokeWidth}
+        transition={transition}
         width={width}
         x={x}
         y={y}

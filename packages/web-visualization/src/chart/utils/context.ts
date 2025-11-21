@@ -60,6 +60,12 @@ export type CartesianChartContextValue = {
    */
   drawingArea: Rect;
   /**
+   * Length of the data domain.
+   * This is equal to the length of xAxis.data or the longest series data length
+   * This equals the number of possible scrubber positions
+   */
+  dataLength: number;
+  /**
    * Registers an axis.
    * Used by axis components to reserve space in the chart, preventing overlap with the drawing area.
    * @param id - The axis ID

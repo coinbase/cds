@@ -1,14 +1,14 @@
 import { memo, useId, useMemo } from 'react';
-import { ClipPath, Defs, G, Rect } from 'react-native-svg';
+import { Group, Skia } from '@shopify/react-native-skia';
 
 import { useCartesianChartContext } from '../ChartProvider';
+import type { Series } from '../utils';
 import { defaultAxisId } from '../utils';
 
-import type { BarSeries } from './BarChart';
 import type { BarStackGroupProps } from './BarStackGroup';
 import { BarStackGroup } from './BarStackGroup';
 
-export type BarPlotProps = Pick<
+export type BarPlotBaseProps = Pick<
   BarStackGroupProps,
   | 'barPadding'
   | 'BarComponent'
@@ -28,6 +28,8 @@ export type BarPlotProps = Pick<
    */
   seriesIds?: string[];
 };
+
+export type BarPlotProps = BarPlotBaseProps & Pick<BarStackGroupProps, 'transition'>;
 
 /**
  * BarPlot component that handles multiple series with proper stacking coordination.
@@ -49,6 +51,7 @@ export const BarPlot = memo<BarPlotProps>(
     stackGap,
     barMinSize,
     stackMinSize,
+    transition,
   }) => {
     const { series: allSeries, drawingArea } = useCartesianChartContext();
     const clipPathId = useId();
@@ -67,7 +70,7 @@ export const BarPlot = memo<BarPlotProps>(
         string,
         {
           stackId: string;
-          series: BarSeries[];
+          series: Series[];
           yAxisId?: string;
         }
       >();
@@ -93,45 +96,49 @@ export const BarPlot = memo<BarPlotProps>(
       return Array.from(groups.values());
     }, [targetSeries]);
 
-    if (!drawingArea) {
+    // Create clip path for the entire chart area (shared by all bars)
+    const clipPath = useMemo(() => {
+      if (!drawingArea) return null;
+      const clip = Skia.Path.Make();
+      clip.addRect({
+        x: drawingArea.x,
+        y: drawingArea.y,
+        width: drawingArea.width,
+        height: drawingArea.height,
+      });
+      return clip;
+    }, [drawingArea]);
+
+    if (!clipPath) {
       return null;
     }
 
+    // Note: Clipping is now handled here at the BarPlot level (one clip path for all bars!)
+    // This is much more efficient than creating a clip path for each individual bar
     return (
-      <>
-        <Defs>
-          <ClipPath id={clipPathId}>
-            <Rect
-              height={drawingArea.height}
-              width={drawingArea.width}
-              x={drawingArea.x}
-              y={drawingArea.y}
-            />
-          </ClipPath>
-        </Defs>
-        <G clipPath={`url(#${clipPathId})`}>
-          {stackGroups.map((group, stackIndex) => (
-            <BarStackGroup
-              key={group.stackId}
-              BarComponent={defaultBarComponent}
-              BarStackComponent={BarStackComponent}
-              barMinSize={barMinSize}
-              barPadding={barPadding}
-              borderRadius={defaultBorderRadius}
-              fillOpacity={defaultFillOpacity}
-              roundBaseline={roundBaseline}
-              series={group.series}
-              stackGap={stackGap}
-              stackIndex={stackIndex}
-              stackMinSize={stackMinSize}
-              stroke={defaultStroke}
-              strokeWidth={defaultStrokeWidth}
-              totalStacks={stackGroups.length}
-              yAxisId={group.yAxisId}
-            />
-          ))}
-        </G>
-      </>
+      <Group clip={clipPath}>
+        {stackGroups.map((group, stackIndex) => (
+          <BarStackGroup
+            key={group.stackId}
+            BarComponent={defaultBarComponent}
+            BarStackComponent={BarStackComponent}
+            barMinSize={barMinSize}
+            barPadding={barPadding}
+            borderRadius={defaultBorderRadius}
+            fillOpacity={defaultFillOpacity}
+            roundBaseline={roundBaseline}
+            series={group.series}
+            stackGap={stackGap}
+            stackIndex={stackIndex}
+            stackMinSize={stackMinSize}
+            stroke={defaultStroke}
+            strokeWidth={defaultStrokeWidth}
+            totalStacks={stackGroups.length}
+            transition={transition}
+            yAxisId={group.yAxisId}
+          />
+        ))}
+      </Group>
     );
   },
 );

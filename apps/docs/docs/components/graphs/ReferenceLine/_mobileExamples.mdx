@@ -1,31 +1,71 @@
-## Basic Example
+## Basics
 
-ReferenceLine can be used to add important details to a chart, such as a reference price or date.
+ReferenceLine can be used to add important details to a chart, such as a reference price or date. You can create horizontal lines using `dataY` or vertical lines using `dataX`.
+
+### Simple Reference Line
+
+A minimal reference line without labels, useful for marking key thresholds:
 
 ```jsx
-<LineChart
-  height={150}
-  series={[
-    {
-      id: 'prices',
-      data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
-    },
-  ]}
-  inset={0}
-  curve="monotone"
-  showArea
->
-  <ReferenceLine
-    dataX={5}
-    label="Vertical Reference Line"
-    labelProps={{ horizontalAlignment: 'left', dx: 8 }}
-  />
-  <ReferenceLine
-    dataY={50}
-    label="Horizontal Reference Line"
-    labelProps={{ verticalAlignment: 'bottom', dy: -8, horizontalAlignment: 'right' }}
-  />
-</LineChart>
+function SimpleReferenceLineExample() {
+  const theme = useTheme();
+
+  return (
+    <LineChart
+      showArea
+      height={150}
+      series={[
+        {
+          id: 'prices',
+          data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+          color: theme.color.fgPositive,
+        },
+      ]}
+    >
+      <ReferenceLine
+        LineComponent={(props) => <DottedLine {...props} dashIntervals={[0, 16]} strokeWidth={3} />}
+        dataY={10}
+        stroke={theme.color.fg}
+      />
+    </LineChart>
+  );
+}
+```
+
+### With Labels
+
+You can add text labels to reference lines and position them using alignment and offset props:
+
+```jsx
+function WithLabelsExample() {
+  return (
+    <LineChart
+      height={150}
+      series={[
+        {
+          id: 'prices',
+          data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+        },
+      ]}
+      inset={0}
+      showArea
+    >
+      <ReferenceLine
+        dataX={5}
+        label="Vertical Reference Line"
+        labelDx={8}
+        labelHorizontalAlignment="left"
+      />
+      <ReferenceLine
+        dataY={50}
+        label="Horizontal Reference Line"
+        labelDy={-8}
+        labelHorizontalAlignment="right"
+        labelVerticalAlignment="bottom"
+      />
+    </LineChart>
+  );
+}
 ```
 
 ## Data Values
@@ -35,6 +75,7 @@ ReferenceLine relies on `dataX` or `dataY` to position the line. Passing in `dat
 ```jsx
 function DataValuesExample() {
   const theme = useTheme();
+
   return (
     <LineChart
       showArea
@@ -53,32 +94,144 @@ function DataValuesExample() {
       <ReferenceLine
         dataY={10000}
         label="10,000"
+        labelDy={-4}
         labelPosition="left"
-        labelProps={{ verticalAlignment: 'bottom', dy: -4 }}
+        labelVerticalAlignment="bottom"
       />
       <ReferenceLine
         dataY={100000}
         label="100,000"
+        labelDy={-4}
         labelPosition="left"
-        labelProps={{ verticalAlignment: 'bottom', dy: -4 }}
+        labelVerticalAlignment="bottom"
       />
     </LineChart>
   );
 }
 ```
 
-## Customization
+## Labels
 
-### Label Style
+### Customization
 
-You can adjust the style of the label using the `labelProps` prop.
+You can customize label appearance using `labelFont`, `labelDx`, `labelDy`, `labelHorizontalAlignment`, and `labelVerticalAlignment` props.
+
+```jsx
+function LabelCustomizationExample() {
+  return (
+    <LineChart
+      height={150}
+      series={[
+        {
+          id: 'prices',
+          data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+        },
+      ]}
+      showArea
+    >
+      <ReferenceLine
+        dataY={50}
+        label="Target Price"
+        labelDy={-8}
+        labelFont="legal"
+        labelHorizontalAlignment="right"
+        labelPosition="right"
+        labelVerticalAlignment="bottom"
+      />
+      <ReferenceLine
+        dataX={7}
+        label="Midpoint"
+        labelDx={8}
+        labelFont="label1"
+        labelHorizontalAlignment="left"
+        labelPosition="top"
+      />
+    </LineChart>
+  );
+}
+```
+
+### Bounds
+
+Use `labelBoundsInset` to prevent labels from getting too close to chart edges.
+
+```jsx
+function BoundsExample() {
+  return (
+    <LineChart
+      height={150}
+      inset={{ left: 0, right: 0 }}
+      series={[
+        {
+          id: 'prices',
+          data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+        },
+      ]}
+      showArea
+    >
+      <ReferenceLine
+        dataX={0}
+        label="No Bounds Inset"
+        labelBoundsInset={0}
+        labelDy={0}
+        labelPosition="top"
+      />
+      <ReferenceLine
+        dataX={13}
+        label="12px Bounds Inset"
+        labelBoundsInset={{ left: 12, right: 12 }}
+        labelDy={0}
+        labelPosition="top"
+      />
+    </LineChart>
+  );
+}
+```
+
+### Custom Component
+
+You can adjust the style of the label using a custom `LabelComponent`.
 
 ```jsx
 function LabelStyleExample() {
   const theme = useTheme();
+
+  const LiquidationLabel = useMemo(
+    () =>
+      memo((props) => (
+        <DefaultReferenceLineLabel
+          {...props}
+          background={theme.color.accentSubtleYellow}
+          borderRadius={4}
+          color={`rgb(${theme.color.accentSubtleYellow})`}
+          dx={12}
+          font="label1"
+          horizontalAlignment="left"
+          inset={{ top: 4, bottom: 4, left: 8, right: 8 }}
+        />
+      )),
+    [theme.color.accentSubtleYellow],
+  );
+
+  const PriceLabel = useMemo(
+    () =>
+      memo((props) => (
+        <DefaultReferenceLineLabel
+          {...props}
+          background={theme.color.bg}
+          borderRadius={4}
+          color={`rgb(${theme.color.yellow70})`}
+          dx={-12}
+          font="label1"
+          horizontalAlignment="right"
+          inset={{ top: 2, bottom: 2, left: 4, right: 4 }}
+        />
+      )),
+    [theme.color.bg, theme.color.yellow70],
+  );
+
   return (
     <LineChart
-      curve="monotone"
       height={150}
       inset={{ right: 4 }}
       series={[
@@ -89,33 +242,17 @@ function LabelStyleExample() {
       ]}
     >
       <ReferenceLine
+        LabelComponent={LiquidationLabel}
         dataY={25}
         label="Liquidation"
         labelPosition="left"
-        labelProps={{
-          horizontalAlignment: 'left',
-          dx: 12,
-          borderRadius: 4,
-          inset: { top: 4, bottom: 4, left: 8, right: 8 },
-          color: `rgb(${theme.color.accentSubtleYellow})`,
-          background: theme.color.accentSubtleYellow,
-          font: 'label1',
-        }}
         stroke={theme.color.bgWarning}
       />
       <ReferenceLine
+        LabelComponent={PriceLabel}
         dataY={25}
         label="$25"
         labelPosition="right"
-        labelProps={{
-          horizontalAlignment: 'right',
-          dx: -12,
-          borderRadius: 4,
-          inset: { top: 2, bottom: 2, left: 4, right: 4 },
-          color: `rgb(${theme.color.yellow70})`,
-          background: theme.color.bg,
-          font: 'label1',
-        }}
         stroke="transparent"
       />
     </LineChart>

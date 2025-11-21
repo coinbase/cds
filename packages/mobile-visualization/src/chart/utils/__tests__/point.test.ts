@@ -1,5 +1,12 @@
-import { getPointOnScale, projectPoint, projectPoints } from '../point';
-import { getCategoricalScale, getNumericScale } from '../scale';
+import {
+  getAlignmentFromPosition,
+  getLabelCoordinates,
+  getPointOnScale,
+  getPointOnSerializableScale,
+  projectPoint,
+  projectPoints,
+} from '../point';
+import { convertToSerializableScale, getCategoricalScale, getNumericScale } from '../scale';
 
 describe('getPointOnScale', () => {
   let numericScale: ReturnType<typeof getNumericScale>;
@@ -115,6 +122,223 @@ describe('getPointOnScale', () => {
     it('should handle negative category index', () => {
       const result = getPointOnScale(-1, categoricalScale);
       expect(typeof result).toBe('number');
+    });
+  });
+});
+
+describe('getPointOnSerializableScale', () => {
+  let numericScale: ReturnType<typeof getNumericScale>;
+  let logScale: ReturnType<typeof getNumericScale>;
+  let categoricalScale: ReturnType<typeof getCategoricalScale>;
+
+  beforeEach(() => {
+    numericScale = getNumericScale({
+      scaleType: 'linear',
+      domain: { min: 0, max: 10 },
+      range: { min: 0, max: 100 },
+    });
+
+    logScale = getNumericScale({
+      scaleType: 'log',
+      domain: { min: 1, max: 100 },
+      range: { min: 0, max: 100 },
+    });
+
+    categoricalScale = getCategoricalScale({
+      domain: { min: 0, max: 4 }, // 5 categories (0, 1, 2, 3, 4)
+      range: { min: 0, max: 100 },
+      padding: 0.1,
+    });
+  });
+
+  describe('with linear scale', () => {
+    it('should match getPointOnScale results exactly', () => {
+      const serializableScale = convertToSerializableScale(numericScale);
+      expect(serializableScale?.type).toBe('linear');
+
+      if (serializableScale?.type !== 'linear') return;
+
+      const testValues = [0, 2.5, 5, 7.5, 10, -1, 11];
+
+      testValues.forEach((value) => {
+        const d3Result = getPointOnScale(value, numericScale);
+        const serializableResult = getPointOnSerializableScale(value, serializableScale);
+
+        expect(serializableResult).toBeCloseTo(d3Result, 5);
+      });
+    });
+
+    it('should handle different domains and ranges', () => {
+      const configs = [
+        { domain: { min: 0, max: 100 }, range: { min: 0, max: 500 } },
+        { domain: { min: -10, max: 10 }, range: { min: 50, max: 200 } },
+        { domain: { min: 1, max: 5 }, range: { min: -100, max: 100 } },
+      ];
+
+      configs.forEach(({ domain, range }) => {
+        const d3Scale = getNumericScale({ scaleType: 'linear', domain, range });
+        const serializableScale = convertToSerializableScale(d3Scale);
+
+        if (serializableScale?.type !== 'linear') return;
+
+        const testValues = [domain.min, (domain.min + domain.max) / 2, domain.max];
+
+        testValues.forEach((value) => {
+          const d3Result = getPointOnScale(value, d3Scale);
+          const serializableResult = getPointOnSerializableScale(value, serializableScale);
+
+          expect(serializableResult).toBeCloseTo(d3Result, 5);
+        });
+      });
+    });
+  });
+
+  describe('with log scale', () => {
+    it('should match getPointOnScale results exactly', () => {
+      const serializableScale = convertToSerializableScale(logScale);
+      expect(serializableScale?.type).toBe('log');
+
+      if (serializableScale?.type !== 'log') return;
+
+      const testValues = [1, 2, 5, 10, 25, 50, 100];
+
+      testValues.forEach((value) => {
+        const d3Result = getPointOnScale(value, logScale);
+        const serializableResult = getPointOnSerializableScale(value, serializableScale);
+
+        expect(serializableResult).toBeCloseTo(d3Result, 5);
+      });
+    });
+
+    it('should handle zero and negative values the same way', () => {
+      const serializableScale = convertToSerializableScale(logScale);
+
+      if (serializableScale?.type !== 'log') return;
+
+      const problematicValues = [0, -1, -10];
+
+      problematicValues.forEach((value) => {
+        const d3Result = getPointOnScale(value, logScale);
+        const serializableResult = getPointOnSerializableScale(value, serializableScale);
+
+        expect(serializableResult).toBeCloseTo(d3Result, 5);
+      });
+    });
+  });
+
+  describe('with band scale', () => {
+    it('should match getPointOnScale results exactly', () => {
+      const serializableScale = convertToSerializableScale(categoricalScale);
+      expect(serializableScale?.type).toBe('band');
+
+      if (serializableScale?.type !== 'band') return;
+
+      // Test each category index
+      for (let i = 0; i <= 4; i++) {
+        const d3Result = getPointOnScale(i, categoricalScale);
+        const serializableResult = getPointOnSerializableScale(i, serializableScale);
+
+        expect(serializableResult).toBeCloseTo(d3Result, 5);
+      }
+    });
+
+    it('should handle different padding values', () => {
+      const paddings = [0, 0.1, 0.3, 0.5];
+
+      paddings.forEach((padding) => {
+        const d3Scale = getCategoricalScale({
+          domain: { min: 0, max: 3 },
+          range: { min: 10, max: 200 },
+          padding,
+        });
+
+        const serializableScale = convertToSerializableScale(d3Scale);
+
+        if (serializableScale?.type !== 'band') return;
+
+        for (let i = 0; i <= 3; i++) {
+          const d3Result = getPointOnScale(i, d3Scale);
+          const serializableResult = getPointOnSerializableScale(i, serializableScale);
+
+          expect(serializableResult).toBeCloseTo(d3Result, 5);
+        }
+      });
+    });
+
+    it('should handle invalid category indices', () => {
+      const serializableScale = convertToSerializableScale(categoricalScale);
+
+      if (serializableScale?.type !== 'band') return;
+
+      const invalidIndices = [-1, 10, 100];
+
+      invalidIndices.forEach((index) => {
+        const d3Result = getPointOnScale(index, categoricalScale);
+        const serializableResult = getPointOnSerializableScale(index, serializableScale);
+
+        expect(serializableResult).toBeCloseTo(d3Result, 5);
+      });
+    });
+  });
+
+  describe('edge cases', () => {
+    it('should handle single category band scale', () => {
+      const d3Scale = getCategoricalScale({
+        domain: { min: 0, max: 0 },
+        range: { min: 0, max: 100 },
+        padding: 0.1,
+      });
+
+      const serializableScale = convertToSerializableScale(d3Scale);
+
+      if (serializableScale?.type !== 'band') return;
+
+      const d3Result = getPointOnScale(0, d3Scale);
+      const serializableResult = getPointOnSerializableScale(0, serializableScale);
+
+      expect(serializableResult).toBeCloseTo(d3Result, 5);
+    });
+
+    it('should handle zero range scales', () => {
+      const d3Scale = getNumericScale({
+        scaleType: 'linear',
+        domain: { min: 0, max: 10 },
+        range: { min: 50, max: 50 }, // Zero range
+      });
+
+      const serializableScale = convertToSerializableScale(d3Scale);
+
+      if (serializableScale?.type !== 'linear') return;
+
+      const testValues = [0, 5, 10];
+
+      testValues.forEach((value) => {
+        const d3Result = getPointOnScale(value, d3Scale);
+        const serializableResult = getPointOnSerializableScale(value, serializableScale);
+
+        expect(serializableResult).toBeCloseTo(d3Result, 5);
+      });
+    });
+
+    it('should handle inverted ranges', () => {
+      const d3Scale = getNumericScale({
+        scaleType: 'linear',
+        domain: { min: 0, max: 10 },
+        range: { min: 100, max: 0 }, // Inverted
+      });
+
+      const serializableScale = convertToSerializableScale(d3Scale);
+
+      if (serializableScale?.type !== 'linear') return;
+
+      const testValues = [0, 5, 10];
+
+      testValues.forEach((value) => {
+        const d3Result = getPointOnScale(value, d3Scale);
+        const serializableResult = getPointOnSerializableScale(value, serializableScale);
+
+        expect(serializableResult).toBeCloseTo(d3Result, 5);
+      });
     });
   });
 });
@@ -400,5 +624,99 @@ describe('projectPoints', () => {
 
     expect(result).toHaveLength(1);
     expect(result[0]).toEqual({ x: 0, y: 50 });
+  });
+});
+
+describe('getAlignmentFromPosition', () => {
+  it('should return bottom vertical alignment for top position', () => {
+    const result = getAlignmentFromPosition('top');
+    expect(result).toEqual({
+      horizontalAlignment: 'center',
+      verticalAlignment: 'bottom',
+    });
+  });
+
+  it('should return top vertical alignment for bottom position', () => {
+    const result = getAlignmentFromPosition('bottom');
+    expect(result).toEqual({
+      horizontalAlignment: 'center',
+      verticalAlignment: 'top',
+    });
+  });
+
+  it('should return right horizontal alignment for left position', () => {
+    const result = getAlignmentFromPosition('left');
+    expect(result).toEqual({
+      horizontalAlignment: 'right',
+      verticalAlignment: 'middle',
+    });
+  });
+
+  it('should return left horizontal alignment for right position', () => {
+    const result = getAlignmentFromPosition('right');
+    expect(result).toEqual({
+      horizontalAlignment: 'left',
+      verticalAlignment: 'middle',
+    });
+  });
+
+  it('should return centered alignment for center position', () => {
+    const result = getAlignmentFromPosition('center');
+    expect(result).toEqual({
+      horizontalAlignment: 'center',
+      verticalAlignment: 'middle',
+    });
+  });
+});
+
+describe('getLabelCoordinates', () => {
+  it('should offset y coordinate negatively for top position', () => {
+    const result = getLabelCoordinates(100, 200, 'top', 10);
+    expect(result).toEqual({ x: 100, y: 190 });
+  });
+
+  it('should offset y coordinate positively for bottom position', () => {
+    const result = getLabelCoordinates(100, 200, 'bottom', 10);
+    expect(result).toEqual({ x: 100, y: 210 });
+  });
+
+  it('should offset x coordinate negatively for left position', () => {
+    const result = getLabelCoordinates(100, 200, 'left', 10);
+    expect(result).toEqual({ x: 90, y: 200 });
+  });
+
+  it('should offset x coordinate positively for right position', () => {
+    const result = getLabelCoordinates(100, 200, 'right', 10);
+    expect(result).toEqual({ x: 110, y: 200 });
+  });
+
+  it('should not offset coordinates for center position', () => {
+    const result = getLabelCoordinates(100, 200, 'center', 10);
+    expect(result).toEqual({ x: 100, y: 200 });
+  });
+
+  it('should handle zero offset', () => {
+    const result = getLabelCoordinates(100, 200, 'top', 0);
+    expect(result).toEqual({ x: 100, y: 200 });
+  });
+
+  it('should handle negative offset for top position', () => {
+    const result = getLabelCoordinates(100, 200, 'top', -10);
+    expect(result).toEqual({ x: 100, y: 210 });
+  });
+
+  it('should handle large offsets', () => {
+    const result = getLabelCoordinates(50, 50, 'right', 100);
+    expect(result).toEqual({ x: 150, y: 50 });
+  });
+
+  it('should handle fractional offsets', () => {
+    const result = getLabelCoordinates(100, 200, 'bottom', 5.5);
+    expect(result).toEqual({ x: 100, y: 205.5 });
+  });
+
+  it('should handle negative coordinates', () => {
+    const result = getLabelCoordinates(-50, -100, 'left', 20);
+    expect(result).toEqual({ x: -70, y: -100 });
   });
 });

@@ -1,6 +1,6 @@
 import { Example, ExampleScreen } from '@cbhq/cds-mobile/examples/ExampleScreen';
 
-import { CartesianChart, DottedArea, GradientLine, Line, LineChart } from '../';
+import { CartesianChart, DottedArea, Line, LineChart, SolidLine } from '../';
 
 const defaultChartHeight = 250;
 
@@ -62,9 +62,7 @@ const LineStyles = () => {
       <Line seriesId="top" />
       <Line seriesId="upperMiddle" type="dotted" />
       <Line
-        LineComponent={(props) => (
-          <GradientLine {...props} endColor="#F7931A" startColor="#E3D74D" strokeWidth={4} />
-        )}
+        LineComponent={(props) => <SolidLine {...props} strokeWidth={4} />}
         curve="natural"
         seriesId="lowerMiddle"
       />

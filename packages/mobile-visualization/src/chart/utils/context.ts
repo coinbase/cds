@@ -1,9 +1,11 @@
 import { createContext, useContext } from 'react';
+import type { SharedValue } from 'react-native-reanimated';
 import type { Rect } from '@cbhq/cds-common/types';
+import type { SkTypefaceFontProvider } from '@shopify/react-native-skia';
 
 import type { AxisConfig } from './axis';
 import type { Series } from './chart';
-import type { ChartScaleFunction } from './scale';
+import type { ChartScaleFunction, SerializableScale } from './scale';
 
 /**
  * Context value for Cartesian (X/Y) coordinate charts.
@@ -38,6 +40,15 @@ export type CartesianChartContextValue = {
    */
   height: number;
   /**
+   * Default font families to use within ChartText.
+   * When not set, should use the default for the system.
+   */
+  fontFamilies?: string[];
+  /**
+   * Skia font provider.
+   */
+  fontProvider: SkTypefaceFontProvider;
+  /**
    * Get x-axis configuration.
    */
   getXAxis: () => AxisConfig | undefined;
@@ -56,9 +67,24 @@ export type CartesianChartContextValue = {
    */
   getYScale: (id?: string) => ChartScaleFunction | undefined;
   /**
+   * Get x-axis serializable scale function that can be used in worklets.
+   */
+  getXSerializableScale: () => SerializableScale | undefined;
+  /**
+   * Get y-axis serializable scale function by ID that can be used in worklets.
+   * @param id - The axis ID. Defaults to defaultAxisId.
+   */
+  getYSerializableScale: (id?: string) => SerializableScale | undefined;
+  /**
    * Drawing area of the chart.
    */
   drawingArea: Rect;
+  /**
+   * Length of the data domain.
+   * This is equal to the length of xAxis.data or the longest series data length
+   * This equals the number of possible scrubber positions
+   */
+  dataLength: number;
   /**
    * Registers an axis.
    * Used by axis components to reserve space in the chart, preventing overlap with the drawing area.
@@ -87,12 +113,7 @@ export type ScrubberContextValue = {
   /**
    * The current position of the scrubber.
    */
-  scrubberPosition?: number;
-  /**
-   * Callback fired when the scrubber position changes.
-   * Receives the dataIndex of the scrubber or undefined when not scrubbing.
-   */
-  onScrubberPositionChange: (index: number | undefined) => void;
+  scrubberPosition: SharedValue<number | undefined>;
 };
 
 export const ScrubberContext = createContext<ScrubberContextValue | undefined>(undefined);

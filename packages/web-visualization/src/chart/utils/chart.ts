@@ -1,5 +1,7 @@
 import { stack as d3Stack, stackOffsetDiverging, stackOrderNone } from 'd3-shape';
 
+import type { GradientDefinition } from './gradient';
+
 export const defaultStackId = 'DEFAULT_STACK_ID';
 
 export type AxisBounds = {
@@ -17,11 +19,11 @@ export const isValidBounds = (bounds: Partial<AxisBounds>): bounds is AxisBounds
 
 export type Series = {
   /**
-   * The id of the series.
+   * Id of the series.
    */
   id: string;
   /**
-   * The data array for this series. Use null values to create gaps in the visualization.
+   * Data array for this series. Use null values to create gaps in the visualization.
    *
    * Can be either:
    * - Array of numbers: `[10, -5, 20]`
@@ -29,20 +31,28 @@ export type Series = {
    */
   data?: Array<number | null> | Array<[number, number] | null>;
   /**
-   * The label of the series. Can be a React node or a function that receives the data index and returns a React node.
+   * Label of the series.
+   * Used for scrubber beacon labels.
    */
-  label?: string | ((dataIndex: number) => string);
+  label?: string;
   /**
-   * The color of the series.
+   * Color of the series.
+   * If gradient is provided, that will be used for chart components
+   * Color will still be used by scrubber beacon labels
    */
   color?: string;
   /**
-   * The ID of the y-axis this series uses.
+   * Color gradient configuration.
+   * Takes precedence over color except for scrubber beacon labels.
+   */
+  gradient?: GradientDefinition;
+  /**
+   * Id of the y-axis this series uses.
    * Defaults to defaultAxisId if not specified.
    */
   yAxisId?: string;
   /**
-   * The stack group this series belongs to.
+   * Id of the stack group this series belongs to.
    * Series with the same stackId value will be stacked together.
    * If not specified, the series will not be stacked.
    */
@@ -68,11 +78,11 @@ export const getChartDomain = (
   }
 
   if (series.length > 0) {
-    const maxDataLength = Math.max(...series.map((s) => s.data?.length || 0));
+    const dataLength = Math.max(...series.map((s) => s.data?.length || 0));
 
-    if (maxDataLength > 0) {
+    if (dataLength > 0) {
       if (domain.min === undefined) domain.min = 0;
-      if (domain.max === undefined) domain.max = maxDataLength - 1;
+      if (domain.max === undefined) domain.max = dataLength - 1;
     }
   }
 
@@ -174,6 +184,33 @@ export const getStackedSeriesData = (
   });
 
   return stackedDataMap;
+};
+
+/**
+ * Extracts line data values from series data that may contain tuples.
+ * For tuple data [[baseline, value]], extracts the last value.
+ * For numeric data [value], returns as-is.
+ *
+ * @param data - Array of numbers, tuples, or null values
+ * @returns Array of numbers or null values
+ */
+export const getLineData = (
+  data?: Array<number | null> | Array<[number, number] | null>,
+): Array<number | null> => {
+  if (!data) return [];
+
+  // Check if this is tuple data by finding first non-null entry
+  const firstNonNull = data.find((d) => d !== null);
+  if (Array.isArray(firstNonNull)) {
+    return data.map((d) => {
+      if (d === null) return null;
+      if (Array.isArray(d)) return d.at(-1) ?? null;
+      return d as number;
+    });
+  }
+
+  // Already numeric data
+  return data as Array<number | null>;
 };
 
 /**

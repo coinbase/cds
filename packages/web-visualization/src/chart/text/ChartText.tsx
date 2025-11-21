@@ -1,5 +1,5 @@
 import React, { memo, useEffect, useMemo, useRef, useState } from 'react';
-import type { ElevationLevels, Rect, SharedProps } from '@cbhq/cds-common/types';
+import type { Rect, SharedProps } from '@cbhq/cds-common/types';
 import { cx } from '@cbhq/cds-web';
 import { Box, type BoxProps } from '@cbhq/cds-web/layout';
 import { Text } from '@cbhq/cds-web/typography';
@@ -33,18 +33,51 @@ export type TextHorizontalAlignment = 'left' | 'center' | 'right';
  */
 export type TextVerticalAlignment = 'top' | 'middle' | 'bottom';
 
-export type ChartTextProps = SharedProps &
+export type ChartTextBaseProps = SharedProps & {
+  /**
+   * The text color.
+   * @default 'var(--color-fgMuted)'
+   */
+  color?: string;
+  /**
+   * The background color of the text's background rectangle.
+   * @default 'var(--color-bg)' if elevated, otherwise 'transparent'
+   */
+  background?: string;
+  /**
+   * Whether the text should have an elevated appearance with a shadow.
+   * @default false
+   */
+  elevated?: boolean;
+  /**
+   * When true, disables automatic repositioning to fit within bounds.
+   */
+  disableRepositioning?: boolean;
+  /**
+   * Optional bounds rectangle to constrain the text within. If provided, text will be positioned
+   * to stay within these bounds. Defaults to the full chart bounds when not provided.
+   */
+  bounds?: Rect;
+  /**
+   * Callback fired when text dimensions change.
+   * Used for collision detection and smart positioning.
+   * Returns the adjusted position and dimensions.
+   */
+  onDimensionsChange?: (rect: Rect) => void;
+  /**
+   * Inset around the text content for the background rect.
+   * Only affects the background, text position remains unchanged.
+   */
+  inset?: number | ChartInset;
+  /**
+   * Border radius for the background rectangle.
+   * @default 4
+   */
+  borderRadius?: number;
+};
+
+export type ChartTextProps = ChartTextBaseProps &
   Pick<BoxProps<'g'>, 'font' | 'fontFamily' | 'fontSize' | 'fontWeight' | 'opacity'> & {
-    /**
-     * The text color.
-     * @default 'var(--color-fgMuted)'
-     */
-    color?: string;
-    /**
-     * The background color of the text's background rectangle.
-     * @default 'transparent' if not elevated, 'var(--color-bg)' if elevated
-     */
-    background?: string;
     /**
      * The desired x offset in SVG pixels.
      */
@@ -53,11 +86,6 @@ export type ChartTextProps = SharedProps &
      * The desired y offset in SVG pixels.
      */
     dy?: number;
-    // override box responsive style
-    /**
-     * The elevation for the background.
-     */
-    elevation?: ElevationLevels;
     /**
      * The text content to display.
      */
@@ -73,35 +101,15 @@ export type ChartTextProps = SharedProps &
      */
     y: number;
     /**
-     * Horizontal alignment of the text.
+     * Horizontal alignment of the component.
      * @default 'center'
      */
     horizontalAlignment?: TextHorizontalAlignment;
     /**
-     * Vertical alignment of the text.
+     * Vertical alignment of the component.
      * @default 'middle'
      */
     verticalAlignment?: TextVerticalAlignment;
-    /**
-     * When true, disables automatic repositioning to fit within bounds.
-     */
-    disableRepositioning?: boolean;
-    /**
-     * Optional bounds rectangle to constrain the text within. If provided, text will be positioned
-     * to stay within these bounds. Defaults to the full chart bounds when not provided.
-     */
-    bounds?: Rect;
-    /**
-     * Callback fired when text dimensions change.
-     * Used for collision detection and smart positioning.
-     * Returns the adjusted position and dimensions.
-     */
-    onDimensionsChange?: (rect: Rect) => void;
-    /**
-     * Inset around the text content for the background rect.
-     * Only affects the background, text position remains unchanged.
-     */
-    inset?: number | ChartInset;
     style?: React.CSSProperties;
     styles?: {
       root?: React.CSSProperties;
@@ -114,11 +122,6 @@ export type ChartTextProps = SharedProps &
       text?: string;
       backgroundRect?: string;
     };
-    /**
-     * Border radius for the background rectangle.
-     * @default 4
-     */
-    borderRadius?: number;
   };
 
 /**
@@ -170,9 +173,9 @@ export const ChartText = memo<ChartTextProps>(
     fontFamily,
     fontSize,
     fontWeight,
-    elevation,
+    elevated,
     color = 'var(--color-fgMuted)',
-    background = elevation && elevation > 0 ? 'var(--color-bg)' : 'transparent',
+    background = elevated ? 'var(--color-bg)' : 'transparent',
     borderRadius,
     inset: insetInput,
     onDimensionsChange,
@@ -211,29 +214,44 @@ export const ChartText = memo<ChartTextProps>(
       }
 
       const parentBounds = bounds ?? fullChartBounds;
-      if (!textBBox || !parentBounds || parentBounds.width <= 0 || parentBounds.height <= 0) {
+      if (
+        !backgroundRectDimensions ||
+        !parentBounds ||
+        parentBounds.width <= 0 ||
+        parentBounds.height <= 0
+      ) {
         return { x: 0, y: 0 };
       }
 
       let x = 0;
       let y = 0;
 
-      // X-axis overflow
-      if (textBBox.x < parentBounds.x) {
-        x = parentBounds.x - textBBox.x; // positive = shift right
-      } else if (textBBox.x + textBBox.width > parentBounds.x + parentBounds.width) {
-        x = parentBounds.x + parentBounds.width - (textBBox.x + textBBox.width); // negative = shift left
+      if (backgroundRectDimensions.x < parentBounds.x) {
+        x = parentBounds.x - backgroundRectDimensions.x; // positive = shift right
+      } else if (
+        backgroundRectDimensions.x + backgroundRectDimensions.width >
+        parentBounds.x + parentBounds.width
+      ) {
+        x =
+          parentBounds.x +
+          parentBounds.width -
+          (backgroundRectDimensions.x + backgroundRectDimensions.width); // negative = shift left
       }
 
-      // Y-axis overflow
-      if (textBBox.y < parentBounds.y) {
-        y = parentBounds.y - textBBox.y; // positive = shift down
-      } else if (textBBox.y + textBBox.height > parentBounds.y + parentBounds.height) {
-        y = parentBounds.y + parentBounds.height - (textBBox.y + textBBox.height); // negative = shift up
+      if (backgroundRectDimensions.y < parentBounds.y) {
+        y = parentBounds.y - backgroundRectDimensions.y; // positive = shift down
+      } else if (
+        backgroundRectDimensions.y + backgroundRectDimensions.height >
+        parentBounds.y + parentBounds.height
+      ) {
+        y =
+          parentBounds.y +
+          parentBounds.height -
+          (backgroundRectDimensions.y + backgroundRectDimensions.height); // negative = shift up
       }
 
       return { x, y };
-    }, [textBBox, fullChartBounds, bounds, disableRepositioning]);
+    }, [backgroundRectDimensions, fullChartBounds, bounds, disableRepositioning]);
 
     // Compose the final reported rect including any overflow translation applied
     const reportedRect = useMemo(() => {
@@ -246,7 +264,6 @@ export const ChartText = memo<ChartTextProps>(
       };
     }, [backgroundRectDimensions, overflowAmount.x, overflowAmount.y]);
 
-    // send latest calculated dimensions (adjusted for translation) to parent
     useEffect(() => {
       if (onDimensionsChange && reportedRect !== null) {
         onDimensionsChange(reportedRect);
@@ -309,11 +326,7 @@ export const ChartText = memo<ChartTextProps>(
             as="rect"
             className={classNames?.backgroundRect}
             fill={background}
-            filter={
-              elevation && elevation > 0
-                ? `drop-shadow(var(--shadow-elevation${elevation}))`
-                : undefined
-            }
+            filter={elevated ? 'drop-shadow(var(--shadow-elevation1))' : undefined}
             height={backgroundRectDimensions?.height}
             rx={borderRadius}
             ry={borderRadius}
