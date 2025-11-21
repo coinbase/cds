@@ -14,7 +14,7 @@ jest.mock('react-native-safe-area-context', () => {
   };
 });
 
-const mockOptions: SelectOption[] = [
+const mockOptions = [
   { value: 'option1', label: 'Option 1' },
   { value: 'option2', label: 'Option 2' },
   { value: 'option3', label: 'Option 3', disabled: true },
@@ -241,7 +241,128 @@ describe('Select', () => {
       const selectAllOption = screen.getByText(/Select all/);
       fireEvent.press(selectAllOption);
 
-      expect(onChange).toHaveBeenCalledWith(['option1', 'option2', 'option3', 'option4']);
+      expect(onChange).toHaveBeenCalledWith(['option1', 'option2', 'option4']);
+    });
+
+    it('does not select disabled options when using select all', () => {
+      const onChange = jest.fn();
+      const optionsWithDisabled = [
+        { value: 'option1', label: 'Option 1' },
+        { value: 'option2', label: 'Option 2' },
+        { value: 'option3', label: 'Option 3', disabled: true },
+        { value: 'option4', label: 'Option 4', disabled: true },
+        { value: 'option5', label: 'Option 5' },
+      ];
+
+      render(
+        <DefaultThemeProvider>
+          <Select
+            {...multiSelectProps}
+            defaultOpen
+            onChange={onChange}
+            options={optionsWithDisabled}
+          />
+        </DefaultThemeProvider>,
+      );
+
+      const selectAllOption = screen.getByText(/Select all/);
+      fireEvent.press(selectAllOption);
+
+      // Should only select enabled options (option1, option2, option5)
+      // Disabled options (option3, option4) should be excluded
+      expect(onChange).toHaveBeenCalledWith(['option1', 'option2', 'option5']);
+      expect(onChange).not.toHaveBeenCalledWith(expect.arrayContaining(['option3', 'option4']));
+    });
+
+    it('does not select options from disabled groups when using select all', () => {
+      const onChange = jest.fn();
+      const optionsWithDisabledGroup = [
+        { value: 'option1', label: 'Option 1' },
+        { value: 'option2', label: 'Option 2' },
+        {
+          label: 'Disabled Group',
+          disabled: true,
+          options: [
+            { value: 'option3', label: 'Option 3' },
+            { value: 'option4', label: 'Option 4' },
+          ],
+        },
+        { value: 'option5', label: 'Option 5' },
+      ];
+
+      render(
+        <DefaultThemeProvider>
+          <Select
+            {...multiSelectProps}
+            defaultOpen
+            onChange={onChange}
+            options={optionsWithDisabledGroup}
+          />
+        </DefaultThemeProvider>,
+      );
+
+      const selectAllOption = screen.getByText(/Select all/);
+      fireEvent.press(selectAllOption);
+
+      // Should only select options from enabled groups (option1, option2, option5)
+      // Options from disabled group (option3, option4) should be excluded
+      expect(onChange).toHaveBeenCalledWith(['option1', 'option2', 'option5']);
+      expect(onChange).not.toHaveBeenCalledWith(expect.arrayContaining(['option3', 'option4']));
+    });
+
+    it('does not select individually disabled options within enabled groups', () => {
+      const onChange = jest.fn();
+      const optionsWithDisabledInGroup = [
+        { value: 'option1', label: 'Option 1' },
+        {
+          label: 'Enabled Group',
+          options: [
+            { value: 'option2', label: 'Option 2' },
+            { value: 'option3', label: 'Option 3', disabled: true },
+            { value: 'option4', label: 'Option 4' },
+          ],
+        },
+        { value: 'option5', label: 'Option 5' },
+      ];
+
+      render(
+        <DefaultThemeProvider>
+          <Select
+            {...multiSelectProps}
+            defaultOpen
+            onChange={onChange}
+            options={optionsWithDisabledInGroup}
+          />
+        </DefaultThemeProvider>,
+      );
+
+      const selectAllOption = screen.getByText(/Select all/);
+      fireEvent.press(selectAllOption);
+
+      // Should select enabled options from enabled group (option2, option4)
+      // and other enabled options (option1, option5)
+      // But exclude disabled option within group (option3)
+      expect(onChange).toHaveBeenCalledWith(['option1', 'option2', 'option4', 'option5']);
+      expect(onChange).not.toHaveBeenCalledWith(expect.arrayContaining(['option3']));
+    });
+
+    it('shows correct count in select all label excluding disabled options', () => {
+      const optionsWithDisabled = [
+        { value: 'option1', label: 'Option 1' },
+        { value: 'option2', label: 'Option 2' },
+        { value: 'option3', label: 'Option 3', disabled: true },
+        { value: 'option4', label: 'Option 4', disabled: true },
+        { value: 'option5', label: 'Option 5' },
+      ];
+
+      render(
+        <DefaultThemeProvider>
+          <Select {...multiSelectProps} defaultOpen options={optionsWithDisabled} />
+        </DefaultThemeProvider>,
+      );
+
+      // Should show count of 3 (option1, option2, option5) excluding disabled options
+      expect(screen.getByText(/Select all \(3\)/)).toBeTruthy();
     });
 
     it('shows overflow indicator when maxSelectedOptionsToShow is exceeded', () => {
