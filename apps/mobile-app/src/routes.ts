@@ -539,7 +539,7 @@ export const routes = [
   {
     key: 'SelectChip',
     getComponent: () =>
-      require('@coinbase/cds-mobile/chips/__stories__/SelectChip.stories').default,
+      require('@coinbase/cds-mobile/alpha/select-chip/__stories__/SelectChip.stories').default,
   },
   {
     key: 'SelectOption',
