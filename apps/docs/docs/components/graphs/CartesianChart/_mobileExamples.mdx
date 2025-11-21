@@ -1,6 +1,6 @@
 CartesianChart is a customizable, SVG based component that can be used to display a variety of data in a x/y coordinate space. The underlying logic is handled by D3.
 
-## Basic Example
+## Basics
 
 [AreaChart](/components/graphs/AreaChart/), [BarChart](/components/graphs/BarChart/), and [LineChart](/components/graphs/LineChart/) are built on top of CartesianChart and have default functionality for your chart.
 
@@ -56,6 +56,25 @@ CartesianChart is a customizable, SVG based component that can be used to displa
     <Scrubber />
   </LineChart>
 </VStack>
+```
+
+## Setup
+
+All charts uses Skia Canvas for rendering, which requires a context bridge to share React contexts with the Skia renderer. You need to wrap your app with `ChartBridgeProvider` at the root of your app to enable charts to access theme and other React contexts.
+
+```jsx
+import { ChartBridgeProvider } from '@coinbase/cds-mobile-visualization/chart';
+import { ThemeProvider } from '@coinbase/cds-mobile/system/ThemeProvider';
+
+function App() {
+  return (
+    <ChartBridgeProvider>
+      <ThemeProvider activeColorScheme="light" theme={defaultTheme}>
+        {/* Your app content with charts */}
+      </ThemeProvider>
+    </ChartBridgeProvider>
+  );
+}
 ```
 
 ## Series

@@ -1,5 +1,9 @@
 LineChart is a wrapper for [CartesianChart](/components/graphs/CartesianChart) that makes it easy to create standard line charts, supporting a single x/y axis pair. Charts are built using `@shopify/react-native-skia`.
 
+## Setup
+
+Before using LineChart, you need to wrap your app with `ChartBridgeProvider`. This enables charts to access CDS theming and other React contexts within the Skia renderer. See [CartesianChart](/components/graphs/CartesianChart/#setup) for details.
+
 ## Basics
 
 The only prop required is `series`, which takes an array of series objects. Each series object needs an `id` and a `data` array of numbers.
