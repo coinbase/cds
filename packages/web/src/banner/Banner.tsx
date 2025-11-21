@@ -91,7 +91,9 @@ export type BannerBaseProps = SharedProps & {
   styleVariant?: BannerStyleVariant;
   /** Accessibility label for start icon on the banner */
   startIconAccessibilityLabel?: string;
-  /** Accessibility label for close button on the banner */
+  /** Accessibility label for close button on the banner
+   * @default 'close'
+   */
   closeAccessibilityLabel?: string;
   /**
    * Determines whether banner has a border or not
@@ -128,7 +130,7 @@ export const Banner = memo(
         label,
         styleVariant = 'contextual',
         startIconAccessibilityLabel,
-        closeAccessibilityLabel,
+        closeAccessibilityLabel = 'close',
         borderRadius = 400,
         margin,
         marginY,
