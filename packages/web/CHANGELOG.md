@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.21.6 (11/21/2025 PST)
+
+#### 🐞 Fixes
+
+- Fix text input border color missing issue. [[#147](https://github.com/coinbase/cds/pull/147)] [DX-5030]
+
 ## 8.21.5 (11/19/2025 PST)
 
 #### 🐞 Fixes
