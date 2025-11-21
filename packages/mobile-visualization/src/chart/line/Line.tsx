@@ -140,8 +140,8 @@ export const Line = memo<LineProps>(
     type = 'solid',
     areaType = 'gradient',
     areaBaseline,
-    stroke: specifiedStroke,
-    strokeOpacity: strokeOpacityProp,
+    stroke: strokeProp,
+    strokeOpacity,
     showArea,
     LineComponent: SelectedLineComponent,
     AreaComponent,
@@ -219,10 +219,7 @@ export const Line = memo<LineProps>(
     }, [SelectedLineComponent, type]);
 
     // Get series color for stroke
-    const stroke = specifiedStroke ?? matchedSeries?.color ?? theme.color.fgPrimary;
-
-    // Use strokeOpacity if provided, otherwise fall back to opacity
-    const strokeOpacity = strokeOpacityProp ?? opacity;
+    const stroke = strokeProp ?? matchedSeries?.color ?? theme.color.fgPrimary;
 
     const xData = useMemo(() => {
       const data = xAxis?.data;
@@ -270,7 +267,7 @@ export const Line = memo<LineProps>(
           d={path}
           gradient={gradient}
           stroke={stroke}
-          strokeOpacity={strokeOpacity}
+          strokeOpacity={strokeOpacity ?? opacity}
           transition={transition}
           yAxisId={matchedSeries?.yAxisId}
           {...props}
