@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.21.8 (11/21/2025 PST)
+
+#### 🐞 Fixes
+
+- Feat: added default a11y label for banner close button. [[#185](https://github.com/coinbase/cds/pull/185)]
+
 ## 8.21.7 (11/21/2025 PST)
 
 #### 🐞 Fixes
