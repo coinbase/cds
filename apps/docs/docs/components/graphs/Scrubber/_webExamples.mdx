@@ -360,7 +360,7 @@ function CustomBeaconLabel() {
 }
 ```
 
-Using `elevateLabel` will elevate the Scrubber's reference line label with a shadow.
+Using `labelElevated` will elevate the Scrubber's reference line label with a shadow.
 
 ```jsx live
 <LineChart
@@ -375,7 +375,7 @@ Using `elevateLabel` will elevate the Scrubber's reference line label with a sha
   showArea
   inset={{ top: 60 }}
 >
-  <Scrubber label={(dataIndex: number) => `Day ${dataIndex + 1}`} elevateLabel />
+  <Scrubber label={(dataIndex: number) => `Day ${dataIndex + 1}`} labelElevated />
 </LineChart>
 ```
 

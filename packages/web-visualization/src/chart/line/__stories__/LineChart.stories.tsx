@@ -254,7 +254,7 @@ function LiveUpdates() {
         },
       ]}
     >
-      <Scrubber ref={scrubberRef} elevateLabel accessibilityLabel={scrubberAccessibilityLabel} />
+      <Scrubber ref={scrubberRef} labelElevated accessibilityLabel={scrubberAccessibilityLabel} />
     </LineChart>
   );
 }
@@ -1219,8 +1219,8 @@ function AssetPriceWithDottedArea() {
           style={{ outlineColor: assets.btc.color }}
         >
           <Scrubber
-            elevateLabel
             idlePulse
+            labelElevated
             accessibilityLabel={scrubberAccessibilityLabel}
             label={scrubberLabel}
           />
@@ -1683,8 +1683,8 @@ function MonotoneAssetPrice() {
       }}
     >
       <Scrubber
-        elevateLabel
         hideOverlay
+        labelElevated
         BeaconComponent={CustomScrubberBeacon}
         LineComponent={SolidLine}
         label={scrubberLabel}

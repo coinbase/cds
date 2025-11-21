@@ -161,7 +161,7 @@ function LiveUpdates() {
         },
       ]}
     >
-      <Scrubber ref={scrubberRef} elevateLabel />
+      <Scrubber ref={scrubberRef} labelElevated />
     </LineChart>
   );
 }
@@ -1457,7 +1457,7 @@ function AssetPriceWithDottedArea() {
               para.layout(512);
               return para;
             }}
-            elevateLabel
+            labelElevated
           />
         </LineChart>
         <PeriodSelector
@@ -1678,7 +1678,7 @@ function MonotoneAssetPrice() {
       }}
     >
       <Scrubber
-        elevateLabel
+        labelElevated
         hideOverlay
         BeaconComponent={CustomScrubberBeacon}
         LineComponent={SolidLine}

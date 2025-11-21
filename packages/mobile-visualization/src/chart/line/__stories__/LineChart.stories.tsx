@@ -1067,8 +1067,8 @@ function AssetPriceWithDottedArea() {
           ]}
         >
           <Scrubber
-            elevateLabel
             idlePulse
+            labelElevated
             label={(d: number) => {
               const date = formatDate(sparklineTimePeriodDataTimestamps[d]);
               const price = formatPrice(sparklineTimePeriodDataValues[d]);
@@ -1735,8 +1735,8 @@ function MonotoneAssetPrice() {
       }}
     >
       <Scrubber
-        elevateLabel
         hideOverlay
+        labelElevated
         BeaconComponent={CustomScrubberBeacon}
         LineComponent={SolidLine}
         label={scrubberLabel}
