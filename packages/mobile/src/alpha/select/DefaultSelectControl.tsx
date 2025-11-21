@@ -257,7 +257,6 @@ export const DefaultSelectControlComponent = memo(
             style={[{ flexGrow: 1 }, styles?.controlInputNode]}
             {...props}
           >
-            {/* TO DO: Why is this so different than the web implementation? */}
             <HStack
               alignItems="center"
               justifyContent="space-between"

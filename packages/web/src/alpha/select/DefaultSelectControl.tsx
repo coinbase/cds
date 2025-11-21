@@ -344,7 +344,6 @@ const DefaultSelectControlComponent = memo(
               justifyContent="space-between"
               width={shouldShowCompactLabel ? '60%' : '100%'}
             >
-              {/* TO DO: Why is this so different than the mobile implementation? */}
               <VStack
                 ref={valueNodeContainerRef}
                 alignItems={shouldShowCompactLabel ? 'flex-end' : 'flex-start'}

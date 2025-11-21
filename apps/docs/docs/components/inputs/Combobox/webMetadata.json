@@ -9,5 +9,10 @@
       "url": "/components/inputs/SelectAlpha/"
     }
   ],
-  "dependencies": []
+  "dependencies": [
+    {
+      "name": "fuse.js",
+      "version": "^6.6.2"
+    }
+  ]
 }
