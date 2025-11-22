@@ -1,6 +1,7 @@
 /// <reference types="detox" />
 
 import { execSync } from 'node:child_process';
+import shellQuote from 'shell-quote';
 
 import type { PercyScreenshotOptions } from './percy/processScreenshots';
 import processScreenshots from './percy/processScreenshots';
@@ -111,8 +112,9 @@ export function processScreenshotsForVisualDiffs(options: {
 }) {
   const screenshotsDir = options.screenshotsDir ? `/${options.screenshotsDir}` : '';
   const fullDirPath = `${baseDir}${screenshotsDir}`;
+  const quotedDirPath = shellQuote.quote([fullDirPath]);
 
-  processScreenshots(fullDirPath, options.processingOptions ?? {});
+  processScreenshots(quotedDirPath, options.processingOptions ?? {});
 }
 
 /**

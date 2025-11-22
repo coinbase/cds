@@ -46,7 +46,8 @@
     "@percy/cli": "^1.31.1",
     "@percy/client": "^1.31.1",
     "@percy/sdk-utils": "^1.31.1",
-    "lodash": "^4.17.21"
+    "lodash": "^4.17.21",
+    "shell-quote": "^1.8.3"
   },
   "devDependencies": {
     "@babel/core": "^7.28.0",
