@@ -1,4 +1,4 @@
-import { execSync } from 'child_process';
+import { execSync, execFileSync } from 'child_process';
 import { existsSync, mkdirSync, readdirSync, readFileSync, unlinkSync } from 'fs';
 import inquirer from 'inquirer';
 import { join, resolve } from 'path';
@@ -106,7 +106,7 @@ async function main() {
       const tarballPath = resolve(tarballsDir, tarballName);
 
       process.chdir(projectDir);
-      execSync(`yarn pack --filename ${tarballPath}`, {
+      execFileSync('yarn', ['pack', '--filename', tarballPath], {
         maxBuffer: 1024 * 1024 * 10, // 10MB buffer
         stdio: 'pipe',
       });
