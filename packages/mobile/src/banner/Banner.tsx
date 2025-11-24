@@ -20,21 +20,6 @@ import type { LinkProps } from '../typography';
 import { Link } from '../typography';
 import { Text } from '../typography/Text';
 
-const variantStyleProps: Record<BannerStyleVariant, HStackProps> = {
-  contextual: {
-    paddingX: 2,
-    borderRadius: 400,
-  },
-  global: {
-    paddingX: 3,
-    borderRadius: undefined,
-  },
-  inline: {
-    paddingX: 3,
-    borderRadius: undefined,
-  },
-};
-
 export type BannerBaseProps = SharedProps & {
   /** Sets the variant of the banner - which is responsible for foreground and background color assignment */
   variant: BannerVariant;
@@ -80,7 +65,7 @@ export type BannerBaseProps = SharedProps & {
   /**
    * Determines banner's border radius
    *
-   * @default 400 for contextual, 0 for global and inline
+   * @default 400 for contextual, undefined for global and inline
    * */
   borderRadius?: ThemeVars.BorderRadius;
 };
@@ -106,7 +91,7 @@ export const Banner = memo(
       styleVariant = 'contextual',
       startIconAccessibilityLabel,
       closeAccessibilityLabel = 'close',
-      borderRadius = styleVariant === 'contextual' ? 400 : 0,
+      borderRadius = styleVariant === 'contextual' ? 400 : undefined,
       margin,
       marginX,
       marginY,
@@ -196,13 +181,13 @@ export const Banner = memo(
         <HStack
           ref={forwardedRef}
           background={background}
+          borderRadius={borderRadius}
           gap={1}
+          paddingX={styleVariant === 'contextual' ? 2 : 3}
           paddingY={2}
           style={style}
           testID={testID}
-          {...variantStyleProps[styleVariant]}
           {...props}
-          borderRadius={borderRadius}
         >
           {/** Start */}
           <Box

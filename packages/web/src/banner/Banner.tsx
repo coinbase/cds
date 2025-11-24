@@ -43,21 +43,6 @@ export const contentResponsiveConfig: ResponsiveProps<StaticStyleProps>['flexDir
   desktop: 'row',
 } as const;
 
-const variantStyleProps: Record<BannerStyleVariant, HStackProps<React.ElementType>> = {
-  contextual: {
-    paddingX: 2,
-    borderRadius: 400,
-  },
-  global: {
-    paddingX: 3,
-    borderRadius: undefined,
-  },
-  inline: {
-    paddingX: 3,
-    borderRadius: undefined,
-  },
-};
-
 export type BannerBaseProps = SharedProps & {
   /** Sets the variant of the banner - which is responsible for foreground and background color assignment */
   variant: BannerVariant;
@@ -102,7 +87,7 @@ export type BannerBaseProps = SharedProps & {
   bordered?: boolean;
   /**
    * Determines banner's border radius
-   * @default 400
+   * @default 400 for contextual, undefined for global and inline
    * */
   borderRadius?: ThemeVars.BorderRadius;
 };
@@ -131,7 +116,7 @@ export const Banner = memo(
         styleVariant = 'contextual',
         startIconAccessibilityLabel,
         closeAccessibilityLabel = 'close',
-        borderRadius = styleVariant === 'contextual' ? 400 : 0,
+        borderRadius = styleVariant === 'contextual' ? 400 : undefined,
         margin,
         marginY,
         marginX,
@@ -224,16 +209,16 @@ export const Banner = memo(
           <HStack
             ref={ref}
             background={background}
+            borderRadius={borderRadius}
             className={className}
             flexGrow={1}
             gap={1}
             minWidth={bannerMinWidth}
+            paddingX={styleVariant === 'contextual' ? 2 : 3}
             paddingY={2}
             style={style}
             testID={testID}
-            {...variantStyleProps[styleVariant]}
             {...props}
-            borderRadius={borderRadius}
           >
             {/** Start */}
             <Box paddingX={0.5} paddingY={0.25}>
