@@ -79,7 +79,8 @@ export type BannerBaseProps = SharedProps & {
   bordered?: boolean;
   /**
    * Determines banner's border radius
-   * @default 400
+   *
+   * @default 400 for contextual, 0 for global and inline
    * */
   borderRadius?: ThemeVars.BorderRadius;
 };
@@ -105,7 +106,7 @@ export const Banner = memo(
       styleVariant = 'contextual',
       startIconAccessibilityLabel,
       closeAccessibilityLabel = 'close',
-      borderRadius = 400,
+      borderRadius = styleVariant === 'contextual' ? 400 : 0,
       margin,
       marginX,
       marginY,
@@ -195,13 +196,13 @@ export const Banner = memo(
         <HStack
           ref={forwardedRef}
           background={background}
-          borderRadius={borderRadius}
           gap={1}
           paddingY={2}
           style={style}
           testID={testID}
           {...variantStyleProps[styleVariant]}
           {...props}
+          borderRadius={borderRadius}
         >
           {/** Start */}
           <Box

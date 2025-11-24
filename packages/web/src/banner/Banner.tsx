@@ -131,7 +131,7 @@ export const Banner = memo(
         styleVariant = 'contextual',
         startIconAccessibilityLabel,
         closeAccessibilityLabel = 'close',
-        borderRadius = 400,
+        borderRadius = styleVariant === 'contextual' ? 400 : 0,
         margin,
         marginY,
         marginX,
@@ -224,7 +224,6 @@ export const Banner = memo(
           <HStack
             ref={ref}
             background={background}
-            borderRadius={borderRadius}
             className={className}
             flexGrow={1}
             gap={1}
@@ -234,6 +233,7 @@ export const Banner = memo(
             testID={testID}
             {...variantStyleProps[styleVariant]}
             {...props}
+            borderRadius={borderRadius}
           >
             {/** Start */}
             <Box paddingX={0.5} paddingY={0.25}>

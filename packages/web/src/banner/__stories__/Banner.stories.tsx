@@ -296,6 +296,48 @@ export const CustomMargin = () => {
   );
 };
 
+const borderRadiusValues = [0, 200, 400] as const;
+
+export const BorderRadiusExamples = () => {
+  return (
+    <VStack gap={2}>
+      <Text as="h1" display="block" font="title1">
+        Contextual
+      </Text>
+      <VStack gap={2}>
+        {borderRadiusValues.map((radius) => (
+          <Banner
+            key={`contextual-${radius}`}
+            {...exampleProps}
+            borderRadius={radius}
+            title={`Contextual radius ${radius}`}
+            variant="informational"
+          >
+            {shortMessage}
+          </Banner>
+        ))}
+      </VStack>
+      <Text as="h1" display="block" font="title1">
+        Inline
+      </Text>
+      <VStack gap={2}>
+        {borderRadiusValues.map((radius) => (
+          <Banner
+            key={`inline-${radius}`}
+            {...exampleProps}
+            borderRadius={radius}
+            styleVariant="inline"
+            title={`Inline radius ${radius}`}
+            variant="informational"
+          >
+            {shortMessage}
+          </Banner>
+        ))}
+      </VStack>
+    </VStack>
+  );
+};
+
 export const CustomAlignment = () => {
   return (
     <VStack gap={2}>
