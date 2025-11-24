@@ -204,6 +204,7 @@ const DefaultSelectDropdownComponent = memo(
             media={
               media ?? (
                 <Checkbox
+                  accessible={false}
                   checked={isAllOptionsSelected}
                   indeterminate={indeterminate}
                   onPress={toggleSelectAll}
