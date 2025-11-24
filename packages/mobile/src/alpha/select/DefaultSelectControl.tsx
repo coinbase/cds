@@ -315,8 +315,14 @@ export const DefaultSelectControlComponent = memo(
 
       const endNode = useMemo(
         () => (
-          <HStack alignItems="center" paddingX={2} style={styles?.controlEndNode}>
-            <Pressable disabled={disabled} onPress={() => setOpen((s) => !s)}>
+          <Pressable disabled={disabled} onPress={() => setOpen((s) => !s)}>
+            <HStack
+              alignItems="center"
+              flexGrow={1}
+              paddingX={2}
+              paddingY={labelVariant === 'inside' ? 0 : compact ? 0.5 : 1.5}
+              style={styles?.controlEndNode}
+            >
               {customEndNode ? (
                 customEndNode
               ) : (
@@ -325,10 +331,19 @@ export const DefaultSelectControlComponent = memo(
                   rotate={open ? 0 : 180}
                 />
               )}
-            </Pressable>
-          </HStack>
+            </HStack>
+          </Pressable>
         ),
-        [open, variant, setOpen, customEndNode, styles?.controlEndNode, disabled],
+        [
+          labelVariant,
+          compact,
+          styles?.controlEndNode,
+          disabled,
+          customEndNode,
+          open,
+          variant,
+          setOpen,
+        ],
       );
 
       return (

@@ -138,36 +138,43 @@ const ComboboxBase = memo(
       optionsRef.current = options;
 
       const ComboboxControlComponent = useMemo(
-        () => (props: SelectControlProps<Type, SelectOptionValue>) => (
-          <SelectControlComponent
-            ref={controlRef.current?.refs.setReference}
-            {...props}
-            contentNode={
-              <NativeInput
-                onChange={(event) => setSearchText(event.target.value)}
-                onKeyDown={(event) => {
-                  event.stopPropagation();
-                  if (
-                    event.key === 'Enter' ||
-                    (event.key.length === 1 && /[a-zA-Z0-9]/.test(event.key))
-                  ) {
-                    setOpen(true);
-                  }
-                }}
-                placeholder={typeof placeholder === 'string' ? placeholder : undefined}
-                style={{
-                  padding: 0,
-                  paddingTop: valueRef.current?.length && valueRef.current?.length > 0 ? 8 : 0,
-                  width: '100%',
-                }}
-                tabIndex={0}
-                value={searchTextRef.current}
-              />
-            }
-            options={optionsRef.current}
-            placeholder={null}
-          />
-        ),
+        () => (props: SelectControlProps<Type, SelectOptionValue>) => {
+          const hasValue =
+            valueRef.current !== null &&
+            !(Array.isArray(valueRef.current) && valueRef.current.length === 0);
+
+          return (
+            <SelectControlComponent
+              ref={controlRef.current?.refs.setReference}
+              {...props}
+              contentNode={
+                <NativeInput
+                  onChange={(event) => setSearchText(event.target.value)}
+                  onKeyDown={(event) => {
+                    event.stopPropagation();
+                    if (
+                      event.key === 'Enter' ||
+                      (event.key.length === 1 && /[a-zA-Z0-9]/.test(event.key))
+                    ) {
+                      setOpen(true);
+                    }
+                  }}
+                  placeholder={typeof placeholder === 'string' ? placeholder : undefined}
+                  style={{
+                    padding: 0,
+                    paddingTop: valueRef.current?.length && valueRef.current?.length > 0 ? 8 : 0,
+                    width: '100%',
+                  }}
+                  tabIndex={0}
+                  value={searchTextRef.current}
+                />
+              }
+              options={optionsRef.current}
+              placeholder={null}
+              styles={{ controlEndNode: { alignItems: hasValue ? 'flex-end' : 'center' } }}
+            />
+          );
+        },
         [SelectControlComponent, placeholder, setOpen, setSearchText],
       );
 

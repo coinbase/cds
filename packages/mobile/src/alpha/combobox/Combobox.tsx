@@ -157,27 +157,34 @@ const ComboboxBase = memo(
       valueRef.current = value;
 
       const ComboboxControlComponent = useCallback(
-        (props: SelectControlProps<Type, SelectOptionValue>) => (
-          <SelectControlComponent
-            {...props}
-            contentNode={
-              <NativeInput
-                disabled={disabled || !open}
-                onChangeText={(text) => setSearchText(text)}
-                onPress={() => !disabled && setOpen(true)}
-                placeholder={typeof placeholder === 'string' ? placeholder : undefined}
-                style={{
-                  flex: 0,
-                  padding: 0,
-                  paddingTop: valueRef.current?.length && valueRef.current?.length > 0 ? 8 : 0,
-                }}
-                value={searchTextRef.current}
-              />
-            }
-            placeholder={null}
-            variant={variant}
-          />
-        ),
+        (props: SelectControlProps<Type, SelectOptionValue>) => {
+          const hasValue =
+            valueRef.current !== null &&
+            !(Array.isArray(valueRef.current) && valueRef.current.length === 0);
+
+          return (
+            <SelectControlComponent
+              {...props}
+              contentNode={
+                <NativeInput
+                  disabled={disabled || !open}
+                  onChangeText={(text) => setSearchText(text)}
+                  onPress={() => !disabled && setOpen(true)}
+                  placeholder={typeof placeholder === 'string' ? placeholder : undefined}
+                  style={{
+                    flex: 0,
+                    padding: 0,
+                    paddingTop: valueRef.current?.length && valueRef.current?.length > 0 ? 8 : 0,
+                  }}
+                  value={searchTextRef.current}
+                />
+              }
+              placeholder={null}
+              styles={{ controlEndNode: { alignItems: hasValue ? 'flex-end' : 'center' } }}
+              variant={variant}
+            />
+          );
+        },
         [SelectControlComponent, disabled, open, placeholder, setOpen, setSearchText, variant],
       );
 
