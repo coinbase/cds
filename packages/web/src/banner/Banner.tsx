@@ -16,11 +16,9 @@ import type {
   IconName,
   SharedProps,
 } from '@coinbase/cds-common/types';
-import { isDevelopment } from '@coinbase/cds-utils';
 import { css } from '@linaria/core';
 
 import { Collapsible } from '../collapsible';
-import { cx } from '../cx';
 import { Icon } from '../icons/Icon';
 import { Box, HStack, type HStackDefaultElement, type HStackProps, VStack } from '../layout';
 import type { ResponsiveProps, StaticStyleProps } from '../styles/styleProps';
@@ -28,10 +26,6 @@ import { Pressable } from '../system/Pressable';
 import type { LinkDefaultElement, LinkProps } from '../typography/Link';
 import { Link } from '../typography/Link';
 import { Text } from '../typography/Text';
-
-const warningCss = css`
-  background-color: rgb(var(--orange0));
-`;
 
 const actionContainerCss = css`
   white-space: nowrap;

@@ -1,5 +1,5 @@
 import React, { forwardRef, isValidElement, memo, useCallback, useMemo, useState } from 'react';
-import type { View, ViewStyle } from 'react-native';
+import type { View } from 'react-native';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import { variants } from '@coinbase/cds-common/tokens/banner';
 import type {
@@ -8,7 +8,6 @@ import type {
   IconName,
   SharedProps,
 } from '@coinbase/cds-common/types';
-import { isDevelopment } from '@coinbase/cds-utils';
 
 import { Collapsible } from '../collapsible/Collapsible';
 import { useTheme } from '../hooks/useTheme';
@@ -16,7 +15,6 @@ import { Icon } from '../icons';
 import type { HStackProps } from '../layout';
 import { Box, HStack, VStack } from '../layout';
 import { Pressable } from '../system/Pressable';
-import type { LinkProps } from '../typography';
 import { Link } from '../typography';
 import { Text } from '../typography/Text';
 
