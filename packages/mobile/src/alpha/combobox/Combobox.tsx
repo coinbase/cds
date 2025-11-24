@@ -103,8 +103,6 @@ const ComboboxBase = memo(
       }: ComboboxProps<Type, SelectOptionValue>,
       ref: React.Ref<ComboboxRef>,
     ) => {
-      const hasValue = value !== null && !(Array.isArray(value) && value.length === 0);
-
       const [searchTextInternal, setSearchTextInternal] = useState(defaultSearchText);
       const searchText = searchTextProp ?? searchTextInternal;
       const setSearchText = onSearchProp ?? setSearchTextInternal;
@@ -177,22 +175,10 @@ const ComboboxBase = memo(
               />
             }
             placeholder={null}
-            styles={{
-              controlEndNode: { alignItems: hasValue ? 'flex-end' : 'center', flex: 1 },
-            }}
             variant={variant}
           />
         ),
-        [
-          SelectControlComponent,
-          disabled,
-          hasValue,
-          open,
-          placeholder,
-          setOpen,
-          setSearchText,
-          variant,
-        ],
+        [SelectControlComponent, disabled, open, placeholder, setOpen, setSearchText, variant],
       );
 
       // Store filtered options in a ref to avoid recreating the dropdown

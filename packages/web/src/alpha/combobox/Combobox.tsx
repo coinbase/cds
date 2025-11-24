@@ -82,8 +82,6 @@ const ComboboxBase = memo(
       }: ComboboxProps<Type, SelectOptionValue>,
       ref: React.Ref<ComboboxRef>,
     ) => {
-      const hasValue = value !== null && !(Array.isArray(value) && value.length === 0);
-
       const [searchTextInternal, setSearchTextInternal] = useState(defaultSearchText);
       const searchText = searchTextProp ?? searchTextInternal;
       const setSearchText = onSearchProp ?? setSearchTextInternal;
@@ -184,9 +182,6 @@ const ComboboxBase = memo(
           options={filteredOptions}
           placeholder={placeholder}
           setOpen={setOpen}
-          styles={{
-            controlEndNode: { alignItems: hasValue ? 'flex-end' : 'center' },
-          }}
           type={type}
           value={value}
           {...props}
