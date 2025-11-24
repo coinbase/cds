@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.22.0 (11/24/2025 PST)
+
+#### 🚀 Updates
+
+- Added `subtitle` for ListCell and accessory for `ListCellFallback`. [[#149](https://github.com/coinbase/cds/pull/149)] [DX-5015]
+
 ## 8.21.8 (11/21/2025 PST)
 
 #### 🐞 Fixes

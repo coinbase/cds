@@ -3,6 +3,7 @@ import { assets, squareAssets } from '@cbhq/cds-common/internal/data/assets';
 import type { CellPriority } from '@cbhq/cds-common/types/CellBaseProps';
 
 import { Button, IconButton } from '../../buttons';
+import { Switch } from '../../controls/Switch';
 import { Icon } from '../../icons/Icon';
 import { Pictogram } from '../../illustrations/Pictogram';
 import { HStack, VStack } from '../../layout';
@@ -13,6 +14,7 @@ import { Text } from '../../typography/Text';
 import { CellHelperText } from '../CellHelperText';
 import { CellMedia } from '../CellMedia';
 import { ListCell } from '../ListCell';
+import { ListCellFallback } from '../ListCellFallback';
 
 const parameters = {
   percy: { enableJavaScript: true },
@@ -700,6 +702,48 @@ const WithActions = () => (
   </>
 );
 
+const Fallback = () => {
+  const [showFallback, setShowFallback] = React.useState(false);
+
+  return (
+    <VStack gap={4}>
+      <Switch
+        checked={showFallback}
+        onChange={(event) => setShowFallback(event.currentTarget.checked)}
+      >
+        Show fallback state
+      </Switch>
+      {showFallback ? (
+        <ListCellFallback
+          description
+          detail
+          disableRandomRectWidth
+          helperText
+          subtitle
+          title
+          accessory="more"
+          media="asset"
+          spacingVariant="condensed"
+        />
+      ) : (
+        <ListCell
+          accessory="more"
+          description="Check your portfolio performance"
+          detail="$12,345.00"
+          helperText={
+            <CellHelperText variant="information">Balance reflects live market data</CellHelperText>
+          }
+          media={<Avatar src={assets.eth.imageUrl} />}
+          spacingVariant="condensed"
+          subdetail="+5.43%"
+          subtitle="Ethereum"
+          title="ETH"
+        />
+      )}
+    </VStack>
+  );
+};
+
 const WithIntermediary = () => (
   <>
     <ListCell
@@ -930,6 +974,35 @@ const CondensedListCell = () => {
         title="Title"
       />
       <ListCell
+        multiline
+        description="Long description with multiple lines. This section can be arbitrarily long and occupy many many lines."
+        end={
+          <HStack alignItems="center" gap={2}>
+            <Text color="fgMuted" font="label2">
+              Meta
+            </Text>
+            <Icon color="fg" name="caretRight" size="s" />
+          </HStack>
+        }
+        media={<Avatar shape="circle" size="l" src={assets.eth.imageUrl} />}
+        onClick={onClickConsole}
+        priority="end"
+        spacingVariant="condensed"
+        styles={{
+          media: {
+            marginTop: 'var(--space-0_5)',
+            alignSelf: 'flex-start',
+          },
+          end: {
+            marginTop: 'var(--space-0_5)',
+            alignSelf: 'flex-start',
+          },
+        }}
+        subdetail="Subdetail"
+        subtitle="Subtitle"
+        title="Title"
+      />
+      <ListCell
         accessory="more"
         description="Description"
         detail="Detail"
@@ -1151,6 +1224,7 @@ export {
   CondensedListCell,
   Content,
   CustomNodes,
+  Fallback,
   LongContent,
   PressableContent,
   PriorityContent,
