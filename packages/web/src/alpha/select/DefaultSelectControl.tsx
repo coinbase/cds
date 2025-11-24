@@ -389,13 +389,14 @@ const DefaultSelectControlComponent = memo(
 
       const endNode = useMemo(
         () => (
-          <HStack
-            alignItems="center"
-            className={classNames?.controlEndNode}
-            paddingX={2}
-            style={styles?.controlEndNode}
-          >
-            <Pressable aria-hidden onClick={() => setOpen((s) => !s)} tabIndex={-1}>
+          <Pressable aria-hidden onClick={() => setOpen((s) => !s)} tabIndex={-1}>
+            <HStack
+              alignItems="center"
+              className={classNames?.controlEndNode}
+              paddingX={2}
+              paddingY={labelVariant === 'inside' || compact ? 0.5 : 1.5}
+              style={styles?.controlEndNode}
+            >
               {customEndNode ? (
                 customEndNode
               ) : (
@@ -404,10 +405,19 @@ const DefaultSelectControlComponent = memo(
                   rotate={open ? 0 : 180}
                 />
               )}
-            </Pressable>
-          </HStack>
+            </HStack>
+          </Pressable>
         ),
-        [open, variant, setOpen, customEndNode, classNames?.controlEndNode, styles?.controlEndNode],
+        [
+          classNames?.controlEndNode,
+          labelVariant,
+          compact,
+          styles?.controlEndNode,
+          customEndNode,
+          open,
+          variant,
+          setOpen,
+        ],
       );
 
       return (
