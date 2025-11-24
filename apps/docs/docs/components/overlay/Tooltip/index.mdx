@@ -30,6 +30,9 @@ import mobileMetadata from './mobileMetadata.json';
     mobileMetadata={mobileMetadata}
     banner={<TooltipBanner />}
   />
+  ::::note Default color inversion
+Tooltip surfaces automatically flip the active color scheme (via `invertColorScheme`, which defaults to `true`) so the overlay background has high contrast against the surrounding UI. Set `invertColorScheme={false}` on either the web or mobile Tooltip if you need the content to inherit the current theme and ensure your custom colors still meet contrast guidelines.
+::::
 
   <ComponentTabsContainer
     webPropsTable={<WebPropsTable />}

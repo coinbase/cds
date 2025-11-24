@@ -52,3 +52,19 @@ function TooltipPosition() {
   );
 }
 ```
+
+### Opt out of color inversion
+
+Tooltips invert the current color scheme by default. Pass `invertColorScheme={false}` to keep the tooltip aligned with the surrounding surface and supply your preferred elevation/background tokens.
+
+```jsx live
+function TooltipColorSchemeOptOut() {
+  return (
+    <Box justifyContent="center">
+      <Tooltip content="Matches the surrounding surface" invertColorScheme={false}>
+        <Button>Keep current theme</Button>
+      </Tooltip>
+    </Box>
+  );
+}
+```
