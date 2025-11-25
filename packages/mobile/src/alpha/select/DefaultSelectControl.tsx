@@ -268,7 +268,7 @@ export const DefaultSelectControlComponent = memo(
                     : DEFAULT_HEIGHT
               }
               paddingStart={startNode ? 0 : 2}
-              paddingY={labelVariant === 'inside' ? 0 : compact ? 0.5 : 1.5}
+              paddingY={labelVariant === 'inside' ? 0 : compact ? 1 : 1.5}
             >
               <HStack alignItems="center" flexGrow={1}>
                 {!!startNode && (
@@ -320,7 +320,7 @@ export const DefaultSelectControlComponent = memo(
               alignItems="center"
               flexGrow={1}
               paddingX={2}
-              paddingY={labelVariant === 'inside' ? 0 : compact ? 0.5 : 1.5}
+              paddingY={labelVariant === 'inside' ? 0 : compact ? 1 : 1.5}
               style={styles?.controlEndNode}
             >
               {customEndNode ? (
