@@ -304,6 +304,7 @@ export const CustomFilter = () => {
 
 export const CustomOnSearch = () => {
   const [searchText, setSearchText] = useState('');
+  const [searchValue, setSearchValue] = useState('');
   const [searching, setIsSearching] = useState(false);
   const { value, onChange } = useMultiSelect({ initialValue: [] });
 
@@ -311,13 +312,15 @@ export const CustomOnSearch = () => {
     setIsSearching(true);
     setTimeout(() => {
       setIsSearching(false);
+      setSearchValue(searchText);
     }, 3000);
     setSearchText(searchText);
   };
 
   return (
     <VStack gap={4}>
-      <Text fontSize="caption">{searching ? 'Searching...' : 'Not searching'}</Text>
+      <Text fontSize="body">{searching ? 'Searching...' : 'Not searching'}</Text>
+      <Text fontSize="body">Search value: {searchValue}</Text>
       <Combobox
         onChange={onChange}
         onSearch={handleSearch}
