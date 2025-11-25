@@ -7,7 +7,7 @@ import {
   useRef,
   useState,
 } from 'react';
-import { KeyboardAvoidingView } from 'react-native';
+import { KeyboardAvoidingView, Platform, View } from 'react-native';
 import Fuse from 'fuse.js';
 
 import { Button } from '../../buttons/Button';
@@ -201,12 +201,25 @@ const ComboboxBase = memo(
             minHeight={500}
             {...props}
             footer={
-              <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={86}>
-                <StickyFooter background="bg">
-                  <Button compact onPress={() => setOpen(false)}>
-                    {closeButtonLabel}
-                  </Button>
-                </StickyFooter>
+              <KeyboardAvoidingView
+                behavior="padding"
+                keyboardVerticalOffset={Platform.OS === 'ios' ? 86 : 0}
+              >
+                <View
+                  style={
+                    Platform.OS === 'android' ? { overflow: 'hidden', paddingTop: 4 } : undefined
+                  }
+                >
+                  <StickyFooter
+                    background="bg"
+                    elevation={2}
+                    style={{ shadowOffset: { width: 0, height: -32 }, shadowOpacity: 0.05 }}
+                  >
+                    <Button compact onPress={() => setOpen(false)}>
+                      {closeButtonLabel}
+                    </Button>
+                  </StickyFooter>
+                </View>
               </KeyboardAvoidingView>
             }
             header={
