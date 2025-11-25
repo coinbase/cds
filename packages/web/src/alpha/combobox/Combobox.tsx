@@ -1,4 +1,12 @@
-import { forwardRef, memo, useImperativeHandle, useMemo, useRef, useState } from 'react';
+import {
+  forwardRef,
+  memo,
+  useCallback,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import Fuse from 'fuse.js';
 
 import { NativeInput } from '../../controls/NativeInput';
@@ -133,10 +141,16 @@ const ComboboxBase = memo(
       // Store in refs to avoid recreating ComboboxControl on every search text change
       const searchTextRef = useRef(searchText);
       searchTextRef.current = searchText;
+      const setSearchTextRef = useRef(setSearchText);
+      setSearchTextRef.current = setSearchText;
       const valueRef = useRef(value);
       valueRef.current = value;
       const optionsRef = useRef(options);
       optionsRef.current = options;
+
+      const handleSearchChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+        setSearchTextRef.current(event.target.value);
+      }, []);
 
       const ComboboxControlComponent = useMemo(
         () => (props: SelectControlProps<Type, SelectOptionValue>) => {
@@ -150,7 +164,7 @@ const ComboboxBase = memo(
               {...props}
               contentNode={
                 <NativeInput
-                  onChange={(event) => setSearchText(event.target.value)}
+                  onChange={handleSearchChange}
                   onKeyDown={(event) => {
                     if (ALPHABET_KEYS.includes(event.key)) {
                       event.stopPropagation();
@@ -177,7 +191,7 @@ const ComboboxBase = memo(
             />
           );
         },
-        [SelectControlComponent, placeholder, setOpen, setSearchText],
+        [SelectControlComponent, handleSearchChange, placeholder, setOpen],
       );
 
       return (
