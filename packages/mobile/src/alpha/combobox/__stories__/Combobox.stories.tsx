@@ -182,6 +182,22 @@ const WithDescriptionsExample = () => {
   );
 };
 
+const HideSearchInputExample = () => {
+  const { value, onChange } = useMultiSelect({ initialValue: ['apple', 'banana', 'cherry'] });
+
+  return (
+    <Combobox
+      hideSearchInput
+      label="Hide search input"
+      onChange={onChange}
+      options={fruitOptions}
+      placeholder="Search..."
+      type="multi"
+      value={value}
+    />
+  );
+};
+
 const CryptoAssetsExample = () => {
   const { value, onChange } = useMultiSelect({ initialValue: [] });
 
@@ -352,38 +368,6 @@ const PrimaryVariantExample = () => {
       type="multi"
       value={value}
       variant="primary"
-    />
-  );
-};
-
-const OutsideLabelExample = () => {
-  const { value, onChange } = useMultiSelect({ initialValue: [] });
-
-  return (
-    <Combobox
-      label="Outside label"
-      labelVariant="outside"
-      onChange={onChange}
-      options={fruitOptions}
-      placeholder="Label is outside..."
-      type="multi"
-      value={value}
-    />
-  );
-};
-
-const InsideLabelExample = () => {
-  const { value, onChange } = useMultiSelect({ initialValue: [] });
-
-  return (
-    <Combobox
-      label="Inside label"
-      labelVariant="inside"
-      onChange={onChange}
-      options={fruitOptions}
-      placeholder="Label is inside..."
-      type="multi"
-      value={value}
     />
   );
 };
@@ -701,6 +685,9 @@ const Default = () => {
       <Example title="Options with descriptions">
         <WithDescriptionsExample />
       </Example>
+      <Example title="Hide search input">
+        <HideSearchInputExample />
+      </Example>
       <Example title="Crypto assets">
         <CryptoAssetsExample />
       </Example>
@@ -730,12 +717,6 @@ const Default = () => {
       </Example>
       <Example title="Primary variant">
         <PrimaryVariantExample />
-      </Example>
-      <Example title="Outside label">
-        <OutsideLabelExample />
-      </Example>
-      <Example title="Inside label">
-        <InsideLabelExample />
       </Example>
       <Example title="With start icon">
         <WithStartIconExample />

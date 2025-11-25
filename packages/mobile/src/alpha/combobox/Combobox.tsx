@@ -57,6 +57,8 @@ export type ComboboxBaseProps<
   ) => SelectOption<SelectOptionValue>[];
   /** Default search text value for uncontrolled mode */
   defaultSearchText?: string;
+  /** Hide the search input */
+  hideSearchInput?: boolean;
   /** Label for close button when combobox is open (mobile only) */
   closeButtonLabel?: string;
 };
@@ -99,6 +101,7 @@ const ComboboxBase = memo(
         filterFunction,
         SelectControlComponent = DefaultSelectControl,
         SelectDropdownComponent = DefaultSelectDropdown,
+        hideSearchInput,
         ...props
       }: ComboboxProps<Type, SelectOptionValue>,
       ref: React.Ref<ComboboxRef>,
@@ -166,18 +169,20 @@ const ComboboxBase = memo(
             <SelectControlComponent
               {...props}
               contentNode={
-                <NativeInput
-                  disabled={disabled || !open}
-                  onChangeText={(text) => setSearchText(text)}
-                  onPress={() => !disabled && setOpen(true)}
-                  placeholder={typeof placeholder === 'string' ? placeholder : undefined}
-                  style={{
-                    flex: 0,
-                    padding: 0,
-                    paddingTop: valueRef.current?.length && valueRef.current?.length > 0 ? 8 : 0,
-                  }}
-                  value={searchTextRef.current}
-                />
+                hideSearchInput ? null : (
+                  <NativeInput
+                    disabled={disabled || !open}
+                    onChangeText={(text) => setSearchText(text)}
+                    onPress={() => !disabled && setOpen(true)}
+                    placeholder={typeof placeholder === 'string' ? placeholder : undefined}
+                    style={{
+                      flex: 0,
+                      padding: 0,
+                      paddingTop: valueRef.current?.length && valueRef.current?.length > 0 ? 8 : 0,
+                    }}
+                    value={searchTextRef.current}
+                  />
+                )
               }
               placeholder={null}
               styles={{ controlEndNode: { alignItems: hasValue ? 'flex-end' : 'center' } }}
@@ -185,7 +190,16 @@ const ComboboxBase = memo(
             />
           );
         },
-        [SelectControlComponent, disabled, open, placeholder, setOpen, setSearchText, variant],
+        [
+          SelectControlComponent,
+          disabled,
+          hideSearchInput,
+          open,
+          placeholder,
+          setOpen,
+          setSearchText,
+          variant,
+        ],
       );
 
       // Store filtered options in a ref to avoid recreating the dropdown

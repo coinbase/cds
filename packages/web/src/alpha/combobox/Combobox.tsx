@@ -52,6 +52,8 @@ export type ComboboxBaseProps<
   ) => SelectOption<SelectOptionValue>[];
   /** Default search text value for uncontrolled mode */
   defaultSearchText?: string;
+  /** Hide the search input */
+  hideSearchInput?: boolean;
 };
 
 export type ComboboxProps<
@@ -87,6 +89,7 @@ const ComboboxBase = memo(
         defaultSearchText = '',
         filterFunction,
         SelectControlComponent = DefaultSelectControl,
+        hideSearchInput,
         ...props
       }: ComboboxProps<Type, SelectOptionValue>,
       ref: React.Ref<ComboboxRef>,
@@ -163,25 +166,27 @@ const ComboboxBase = memo(
               ref={controlRef.current?.refs.setReference}
               {...props}
               contentNode={
-                <NativeInput
-                  onChange={handleSearchChange}
-                  onKeyDown={(event) => {
-                    if (ALPHABET_KEYS.includes(event.key)) {
-                      event.stopPropagation();
-                    }
-                    if (event.key === 'Enter' || ALPHABET_KEYS.includes(event.key)) {
-                      setOpen(true);
-                    }
-                  }}
-                  placeholder={typeof placeholder === 'string' ? placeholder : undefined}
-                  style={{
-                    padding: 0,
-                    paddingTop: valueRef.current?.length && valueRef.current?.length > 0 ? 8 : 0,
-                    width: '100%',
-                  }}
-                  tabIndex={0}
-                  value={searchTextRef.current}
-                />
+                hideSearchInput ? null : (
+                  <NativeInput
+                    onChange={handleSearchChange}
+                    onKeyDown={(event) => {
+                      if (ALPHABET_KEYS.includes(event.key)) {
+                        event.stopPropagation();
+                      }
+                      if (event.key === 'Enter' || ALPHABET_KEYS.includes(event.key)) {
+                        setOpen(true);
+                      }
+                    }}
+                    placeholder={typeof placeholder === 'string' ? placeholder : undefined}
+                    style={{
+                      padding: 0,
+                      paddingTop: valueRef.current?.length && valueRef.current?.length > 0 ? 8 : 0,
+                      width: '100%',
+                    }}
+                    tabIndex={0}
+                    value={searchTextRef.current}
+                  />
+                )
               }
               options={optionsRef.current}
               placeholder={null}
@@ -191,7 +196,7 @@ const ComboboxBase = memo(
             />
           );
         },
-        [SelectControlComponent, handleSearchChange, placeholder, setOpen],
+        [SelectControlComponent, handleSearchChange, hideSearchInput, placeholder, setOpen],
       );
 
       return (

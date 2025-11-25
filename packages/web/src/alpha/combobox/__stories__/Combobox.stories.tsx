@@ -271,6 +271,34 @@ export const WithDescriptions = () => {
   );
 };
 
+export const HideSearchInput = () => {
+  const [singleValue, setSingleValue] = useState<string | null>(null);
+  const { value: multiValue, onChange: multiOnChange } = useMultiSelect({ initialValue: [] });
+
+  return (
+    <VStack gap={4}>
+      <Combobox
+        hideSearchInput
+        label="Hide search input - multi"
+        onChange={multiOnChange}
+        options={fruitOptions}
+        placeholder="Search..."
+        type="multi"
+        value={multiValue}
+      />
+      <Combobox
+        hideSearchInput
+        label="Hide search input - single"
+        onChange={setSingleValue}
+        options={fruitOptions}
+        placeholder="Search..."
+        type="single"
+        value={singleValue}
+      />
+    </VStack>
+  );
+};
+
 export const CustomFilter = () => {
   const { value, onChange } = useMultiSelect({ initialValue: [] });
 
