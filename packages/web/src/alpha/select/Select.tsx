@@ -73,7 +73,6 @@ const SelectBase = memo(
         helperText,
         compact,
         label,
-        labelVariant,
         accessibilityLabel = 'Select control',
         accessibilityRoles = defaultAccessibilityRoles,
         controlAccessibilityLabel,
@@ -262,7 +261,6 @@ const SelectBase = memo(
             helperText={helperText}
             hiddenSelectedOptionsLabel={hiddenSelectedOptionsLabel}
             label={label}
-            labelVariant={labelVariant}
             maxSelectedOptionsToShow={maxSelectedOptionsToShow}
             onChange={onChange}
             open={open}

@@ -302,6 +302,35 @@ export const CustomFilter = () => {
   );
 };
 
+export const CustomOnSearch = () => {
+  const [searchText, setSearchText] = useState('');
+  const [searching, setIsSearching] = useState(false);
+  const { value, onChange } = useMultiSelect({ initialValue: [] });
+
+  const handleSearch = (searchText: string) => {
+    setIsSearching(true);
+    setTimeout(() => {
+      setIsSearching(false);
+    }, 3000);
+    setSearchText(searchText);
+  };
+
+  return (
+    <VStack gap={4}>
+      <Text fontSize="caption">{searching ? 'Searching...' : 'Not searching'}</Text>
+      <Combobox
+        onChange={onChange}
+        onSearch={handleSearch}
+        options={fruitOptions}
+        placeholder="Search..."
+        searchText={searchText}
+        type="multi"
+        value={value}
+      />
+    </VStack>
+  );
+};
+
 export const Disabled = () => {
   const { value, onChange } = useMultiSelect({
     initialValue: ['apple', 'banana'],
@@ -400,34 +429,6 @@ export const Variants = () => {
         type="multi"
         value={value4}
         variant="primary"
-      />
-    </VStack>
-  );
-};
-
-export const LabelPosition = () => {
-  const { value: value1, onChange: onChange1 } = useMultiSelect({ initialValue: [] });
-  const { value: value2, onChange: onChange2 } = useMultiSelect({ initialValue: [] });
-
-  return (
-    <VStack gap={4}>
-      <Combobox
-        label="Outside label"
-        labelVariant="outside"
-        onChange={onChange1}
-        options={fruitOptions}
-        placeholder="Label is outside..."
-        type="multi"
-        value={value1}
-      />
-      <Combobox
-        label="Inside label"
-        labelVariant="inside"
-        onChange={onChange2}
-        options={fruitOptions}
-        placeholder="Label is inside..."
-        type="multi"
-        value={value2}
       />
     </VStack>
   );
