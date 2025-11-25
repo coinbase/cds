@@ -72,7 +72,6 @@ export const DefaultSelectControlComponent = memo(
         ? SelectOptionValue | SelectOptionValue[] | null
         : SelectOptionValue | null;
       const isMultiSelect = type === 'multi';
-      const shouldShowCompactLabel = compact && label && !isMultiSelect;
       const hasValue = value !== null && !(Array.isArray(value) && value.length === 0);
 
       // Map of options to their values
@@ -153,14 +152,14 @@ export const DefaultSelectControlComponent = memo(
               onPress={() => setOpen((s) => !s)}
               style={styles?.controlLabelNode}
             >
-              <InputLabel color="fg" paddingX={0} paddingY={shouldShowCompactLabel ? 0 : 0.5}>
+              <InputLabel color="fg" paddingX={0} paddingY={0.5}>
                 {label}
               </InputLabel>
             </Pressable>
           ) : (
             label
           ),
-        [disabled, label, setOpen, shouldShowCompactLabel, styles?.controlLabelNode],
+        [disabled, label, setOpen, styles?.controlLabelNode],
       );
 
       const valueNode = useMemo(() => {
@@ -212,12 +211,7 @@ export const DefaultSelectControlComponent = memo(
         const label = option?.label ?? option?.description ?? option?.value ?? placeholder;
         const content = hasValue ? label : placeholder;
         return typeof content === 'string' ? (
-          <Text
-            color={hasValue ? 'fg' : 'fgMuted'}
-            ellipsize="tail"
-            font="body"
-            textAlign={shouldShowCompactLabel ? 'right' : 'left'}
-          >
+          <Text color={hasValue ? 'fg' : 'fgMuted'} ellipsize="tail" font="body" textAlign="left">
             {content}
           </Text>
         ) : (
@@ -228,7 +222,6 @@ export const DefaultSelectControlComponent = memo(
         isMultiSelect,
         optionsMap,
         placeholder,
-        shouldShowCompactLabel,
         value,
         maxSelectedOptionsToShow,
         hiddenSelectedOptionsLabel,
@@ -262,14 +255,9 @@ export const DefaultSelectControlComponent = memo(
                     {startNode}
                   </HStack>
                 )}
-                {shouldShowCompactLabel ? (
-                  <HStack alignItems="center" paddingEnd={1} width="40%">
-                    {labelNode}
-                  </HStack>
-                ) : null}
                 <VStack
                   justifyContent="center"
-                  maxWidth={shouldShowCompactLabel ? '45%' : startNode ? '70%' : '85%'}
+                  maxWidth={startNode ? '70%' : '85%'}
                   style={styles?.controlValueNode}
                 >
                   {valueNode}
@@ -290,7 +278,6 @@ export const DefaultSelectControlComponent = memo(
           props,
           startNode,
           compact,
-          shouldShowCompactLabel,
           labelNode,
           valueNode,
           contentNode,
@@ -331,7 +318,7 @@ export const DefaultSelectControlComponent = memo(
           focused={open}
           helperTextNode={helperTextNode}
           inputNode={inputNode}
-          labelNode={shouldShowCompactLabel ? null : labelNode}
+          labelNode={labelNode}
           variant={variant}
           {...props}
         />
