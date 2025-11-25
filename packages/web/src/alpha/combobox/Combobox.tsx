@@ -172,7 +172,6 @@ const ComboboxBase = memo(
               options={optionsRef.current}
               placeholder={null}
               styles={{
-                controlValueNode: { alignItems: 'flex-start' },
                 controlEndNode: { alignItems: hasValue ? 'flex-end' : 'center' },
               }}
             />

@@ -346,7 +346,7 @@ const DefaultSelectControlComponent = memo(
             >
               <VStack
                 ref={valueNodeContainerRef}
-                alignItems={shouldShowCompactLabel ? 'flex-end' : 'flex-start'}
+                alignItems="flex-start"
                 className={classNames?.controlValueNode}
                 flexGrow={1}
                 flexShrink={1}
