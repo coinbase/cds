@@ -136,9 +136,6 @@ export const ExampleForm = () => {
         <TextInput compact label="Text input" width="40%" />
       </HStack>
       <HStack gap={1}>
-        <TextInput label="Text input" labelVariant="inside" width="40%" />
-      </HStack>
-      <HStack gap={1}>
         <Select
           controlAccessibilityLabel="Multi select control with selected options"
           label="Multi select"
@@ -164,9 +161,6 @@ export const ExampleForm = () => {
           value={multiSelectValue}
         />
         <TextInput compact label="Text input" width="40%" />
-      </HStack>
-      <HStack gap={1}>
-        <TextInput label="Text input" labelVariant="inside" width="40%" />
       </HStack>
     </VStack>
   );
