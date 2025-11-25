@@ -2,6 +2,7 @@ import { forwardRef, memo, useImperativeHandle, useMemo, useRef, useState } from
 import Fuse from 'fuse.js';
 
 import { NativeInput } from '../../controls/NativeInput';
+import { ALPHABET_KEYS } from '../../overlays/FocusTrap';
 import { DefaultSelectControl } from '../select/DefaultSelectControl';
 import type {
   SelectBaseProps,
@@ -151,11 +152,10 @@ const ComboboxBase = memo(
                 <NativeInput
                   onChange={(event) => setSearchText(event.target.value)}
                   onKeyDown={(event) => {
-                    event.stopPropagation();
-                    if (
-                      event.key === 'Enter' ||
-                      (event.key.length === 1 && /[a-zA-Z0-9]/.test(event.key))
-                    ) {
+                    if (ALPHABET_KEYS.includes(event.key)) {
+                      event.stopPropagation();
+                    }
+                    if (event.key === 'Enter' || ALPHABET_KEYS.includes(event.key)) {
                       setOpen(true);
                     }
                   }}
