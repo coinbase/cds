@@ -16,11 +16,9 @@ import type {
   IconName,
   SharedProps,
 } from '@cbhq/cds-common/types';
-import { isDevelopment } from '@cbhq/cds-utils';
 import { css } from '@linaria/core';
 
 import { Collapsible } from '../collapsible';
-import { cx } from '../cx';
 import { Icon } from '../icons/Icon';
 import { Box, HStack, type HStackDefaultElement, type HStackProps, VStack } from '../layout';
 import type { ResponsiveProps, StaticStyleProps } from '../styles/styleProps';
@@ -28,10 +26,6 @@ import { Pressable } from '../system/Pressable';
 import type { LinkDefaultElement, LinkProps } from '../typography/Link';
 import { Link } from '../typography/Link';
 import { Text } from '../typography/Text';
-
-const warningCss = css`
-  background-color: rgb(var(--orange0));
-`;
 
 const actionContainerCss = css`
   white-space: nowrap;
@@ -42,21 +36,6 @@ export const contentResponsiveConfig: ResponsiveProps<StaticStyleProps>['flexDir
   tablet: 'row',
   desktop: 'row',
 } as const;
-
-const variantStyleProps: Record<BannerStyleVariant, HStackProps<React.ElementType>> = {
-  contextual: {
-    paddingX: 2,
-    borderRadius: 400,
-  },
-  global: {
-    paddingX: 3,
-    borderRadius: undefined,
-  },
-  inline: {
-    paddingX: 3,
-    borderRadius: undefined,
-  },
-};
 
 export type BannerBaseProps = SharedProps & {
   /** Sets the variant of the banner - which is responsible for foreground and background color assignment */
@@ -102,7 +81,7 @@ export type BannerBaseProps = SharedProps & {
   bordered?: boolean;
   /**
    * Determines banner's border radius
-   * @default 400
+   * @default 400 for contextual, undefined for global and inline
    * */
   borderRadius?: ThemeVars.BorderRadius;
 };
@@ -131,7 +110,7 @@ export const Banner = memo(
         styleVariant = 'contextual',
         startIconAccessibilityLabel,
         closeAccessibilityLabel = 'close',
-        borderRadius = 400,
+        borderRadius = styleVariant === 'contextual' ? 400 : undefined,
         margin,
         marginY,
         marginX,
@@ -229,10 +208,10 @@ export const Banner = memo(
             flexGrow={1}
             gap={1}
             minWidth={bannerMinWidth}
+            paddingX={styleVariant === 'contextual' ? 2 : 3}
             paddingY={2}
             style={style}
             testID={testID}
-            {...variantStyleProps[styleVariant]}
             {...props}
           >
             {/** Start */}

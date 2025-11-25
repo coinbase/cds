@@ -1,5 +1,5 @@
 import React, { forwardRef, isValidElement, memo, useCallback, useMemo, useState } from 'react';
-import type { View, ViewStyle } from 'react-native';
+import type { View } from 'react-native';
 import type { ThemeVars } from '@cbhq/cds-common/core/theme';
 import { variants } from '@cbhq/cds-common/tokens/banner';
 import type {
@@ -8,7 +8,6 @@ import type {
   IconName,
   SharedProps,
 } from '@cbhq/cds-common/types';
-import { isDevelopment } from '@cbhq/cds-utils';
 
 import { Collapsible } from '../collapsible/Collapsible';
 import { useTheme } from '../hooks/useTheme';
@@ -16,24 +15,8 @@ import { Icon } from '../icons';
 import type { HStackProps } from '../layout';
 import { Box, HStack, VStack } from '../layout';
 import { Pressable } from '../system/Pressable';
-import type { LinkProps } from '../typography';
 import { Link } from '../typography';
 import { Text } from '../typography/Text';
-
-const variantStyleProps: Record<BannerStyleVariant, HStackProps> = {
-  contextual: {
-    paddingX: 2,
-    borderRadius: 400,
-  },
-  global: {
-    paddingX: 3,
-    borderRadius: undefined,
-  },
-  inline: {
-    paddingX: 3,
-    borderRadius: undefined,
-  },
-};
 
 export type BannerBaseProps = SharedProps & {
   /** Sets the variant of the banner - which is responsible for foreground and background color assignment */
@@ -79,7 +62,8 @@ export type BannerBaseProps = SharedProps & {
   bordered?: boolean;
   /**
    * Determines banner's border radius
-   * @default 400
+   *
+   * @default 400 for contextual, undefined for global and inline
    * */
   borderRadius?: ThemeVars.BorderRadius;
 };
@@ -105,7 +89,7 @@ export const Banner = memo(
       styleVariant = 'contextual',
       startIconAccessibilityLabel,
       closeAccessibilityLabel = 'close',
-      borderRadius = 400,
+      borderRadius = styleVariant === 'contextual' ? 400 : undefined,
       margin,
       marginX,
       marginY,
@@ -197,10 +181,10 @@ export const Banner = memo(
           background={background}
           borderRadius={borderRadius}
           gap={1}
+          paddingX={styleVariant === 'contextual' ? 2 : 3}
           paddingY={2}
           style={style}
           testID={testID}
-          {...variantStyleProps[styleVariant]}
           {...props}
         >
           {/** Start */}

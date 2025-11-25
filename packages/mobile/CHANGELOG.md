@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.22.1 (11/24/2025 PST)
+
+#### 🐞 Fixes
+
+- Fix the borderRadius prop issue in Banner. [[#190](https://github.com/coinbase/cds/pull/190)]
+
 ## 8.22.0 (11/24/2025 PST)
 
 #### 🚀 Updates
