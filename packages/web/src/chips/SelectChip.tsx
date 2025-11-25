@@ -12,6 +12,10 @@ import { MediaChip } from './MediaChip';
 
 export const SELECT_CHIP_DEFAULT_TEST_ID = 'select-chip';
 
+/**
+ * @deprecated This component is deprecated. Please use the new SelectChip alpha component instead.
+ * @see {@link @coinbase/cds-web/alpha/select-chip/SelectChip}
+ */
 export type SelectChipProps = {
   /** Indicates that the control is being used to manipulate data elsewhere */
   active?: boolean;
@@ -23,6 +27,10 @@ export type SelectChipProps = {
   Pick<SelectBaseProps, 'onChange' | 'valueLabel' | 'placeholder' | 'value'> &
   Omit<DropdownProps, 'onChange' | 'children'>;
 
+/**
+ * @deprecated This component is deprecated. Please use the new SelectChip alpha component instead.
+ * @see {@link @coinbase/cds-web/alpha/select-chip/SelectChip}
+ */
 export const SelectChip = memo(
   forwardRef(function SelectChip(
     {

@@ -35,6 +35,7 @@ import * as CDSLottie from '@coinbase/cds-lottie-files';
 import { Accordion } from '@coinbase/cds-web/accordion/Accordion';
 import { AccordionItem } from '@coinbase/cds-web/accordion/AccordionItem';
 import { Select } from '@coinbase/cds-web/alpha/select/Select';
+import { SelectChip } from '@coinbase/cds-web/alpha/select-chip/SelectChip';
 import { TabbedChips } from '@coinbase/cds-web/alpha/tabbed-chips/TabbedChips';
 import { Lottie, LottieStatusAnimation } from '@coinbase/cds-web/animation';
 import { Banner } from '@coinbase/cds-web/banner/Banner';
@@ -54,7 +55,7 @@ import * as CDSCells from '@coinbase/cds-web/cells';
 import { Chip } from '@coinbase/cds-web/chips/Chip';
 import { InputChip } from '@coinbase/cds-web/chips/InputChip';
 import { MediaChip } from '@coinbase/cds-web/chips/MediaChip';
-import { SelectChip } from '@coinbase/cds-web/chips/SelectChip';
+import { SelectChip as OldSelectChip } from '@coinbase/cds-web/chips/SelectChip';
 import { TabbedChips as OldTabbedChips } from '@coinbase/cds-web/chips/TabbedChips';
 import { Coachmark } from '@coinbase/cds-web/coachmark/Coachmark';
 import { Collapsible } from '@coinbase/cds-web/collapsible/Collapsible';
@@ -183,6 +184,7 @@ const ReactLiveScope: Record<string, unknown> = {
   Chip,
   InputChip,
   MediaChip,
+  OldSelectChip,
   SelectChip,
   OldTabbedChips,
   TabbedChips,
