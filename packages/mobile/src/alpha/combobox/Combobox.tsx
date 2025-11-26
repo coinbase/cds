@@ -210,8 +210,10 @@ const ComboboxBase = memo(
               options={optionsRef.current}
               placeholder={null}
               styles={{
-                controlValueNode: { marginBottom: -12 },
-                controlEndNode: { alignItems: hasValue ? 'flex-end' : 'center' },
+                controlValueNode: { marginBottom: hideSearchInput ? 0 : -12 },
+                controlEndNode: {
+                  alignItems: hasValue && !hideSearchInput ? 'flex-end' : 'center',
+                },
               }}
               variant={variant}
             />
