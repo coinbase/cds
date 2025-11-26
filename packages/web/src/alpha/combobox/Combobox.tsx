@@ -133,6 +133,17 @@ const ComboboxBase = memo(
         return fuse.search(searchText).map((result) => result.item);
       }, [filterFunction, fuse, options, searchText]);
 
+      const handleChange = useCallback(
+        (
+          value: Type extends 'multi'
+            ? SelectOptionValue | SelectOptionValue[] | null
+            : SelectOptionValue | null,
+        ) => {
+          onChange?.(value);
+        },
+        [onChange],
+      );
+
       const controlRef = useRef<ComboboxRef>(null);
       useImperativeHandle(ref, () =>
         Object.assign(controlRef.current as ComboboxRef, {
@@ -205,7 +216,7 @@ const ComboboxBase = memo(
           SelectControlComponent={ComboboxControlComponent}
           accessibilityLabel={accessibilityLabel}
           defaultOpen={defaultOpen}
-          onChange={(value) => onChange?.(value)}
+          onChange={handleChange}
           open={open}
           options={filteredOptions}
           placeholder={placeholder}

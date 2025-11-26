@@ -145,6 +145,17 @@ const ComboboxBase = memo(
         return fuse.search(searchText).map((result) => result.item);
       }, [filterFunction, fuse, options, searchText]);
 
+      const handleChange = useCallback(
+        (
+          value: Type extends 'multi'
+            ? SelectOptionValue | SelectOptionValue[] | null
+            : SelectOptionValue | null,
+        ) => {
+          onChange?.(value);
+        },
+        [onChange],
+      );
+
       const controlRef = useRef<ComboboxRef>(null);
       useImperativeHandle(ref, () =>
         Object.assign(controlRef.current as ComboboxRef, {
@@ -156,8 +167,16 @@ const ComboboxBase = memo(
       // Store in refs to avoid recreating ComboboxControl on every search text change
       const searchTextRef = useRef(searchText);
       searchTextRef.current = searchText;
+      const setSearchTextRef = useRef(setSearchText);
+      setSearchTextRef.current = setSearchText;
       const valueRef = useRef(value);
       valueRef.current = value;
+      const optionsRef = useRef(options);
+      optionsRef.current = options;
+
+      const handleSearchChange = useCallback((text: string) => {
+        setSearchTextRef.current(text);
+      }, []);
 
       const ComboboxControlComponent = useCallback(
         (props: SelectControlProps<Type, SelectOptionValue>) => {
@@ -172,7 +191,7 @@ const ComboboxBase = memo(
                 hideSearchInput ? null : (
                   <NativeInput
                     disabled={disabled || !open}
-                    onChangeText={(text) => setSearchText(text)}
+                    onChangeText={handleSearchChange}
                     onPress={() => !disabled && setOpen(true)}
                     placeholder={typeof placeholder === 'string' ? placeholder : undefined}
                     style={{
@@ -184,6 +203,7 @@ const ComboboxBase = memo(
                   />
                 )
               }
+              options={optionsRef.current}
               placeholder={null}
               styles={{ controlEndNode: { alignItems: hasValue ? 'flex-end' : 'center' } }}
               variant={variant}
@@ -193,11 +213,11 @@ const ComboboxBase = memo(
         [
           SelectControlComponent,
           disabled,
+          handleSearchChange,
           hideSearchInput,
           open,
           placeholder,
           setOpen,
-          setSearchText,
           variant,
         ],
       );
@@ -256,9 +276,9 @@ const ComboboxBase = memo(
           defaultOpen={defaultOpen}
           disabled={disabled}
           label={label}
-          onChange={(value) => onChange?.(value)}
+          onChange={handleChange}
           open={open}
-          options={options}
+          options={filteredOptions}
           placeholder={placeholder}
           setOpen={setOpen}
           type={type}
