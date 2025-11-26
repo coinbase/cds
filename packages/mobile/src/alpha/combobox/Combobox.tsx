@@ -198,6 +198,7 @@ const ComboboxBase = memo(
                       minWidth: 0,
                       padding: 0,
                       paddingTop: valueRef.current?.length && valueRef.current?.length > 0 ? 8 : 0,
+                      paddingBottom: 12,
                       // This is constrained by the parent container's width. The width is large
                       // to ensure it grows to fill the control
                       width: 300,
@@ -208,7 +209,10 @@ const ComboboxBase = memo(
               }
               options={optionsRef.current}
               placeholder={null}
-              styles={{ controlEndNode: { alignItems: hasValue ? 'flex-end' : 'center' } }}
+              styles={{
+                controlValueNode: { marginBottom: -12 },
+                controlEndNode: { alignItems: hasValue ? 'flex-end' : 'center' },
+              }}
               variant={variant}
             />
           );
