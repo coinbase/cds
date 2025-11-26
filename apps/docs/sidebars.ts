@@ -201,7 +201,7 @@ const sidebars: SidebarsConfig = {
             {
               type: 'doc',
               id: 'components/inputs/SelectChip/selectChip',
-              label: 'SelectChip',
+              label: 'SelectChip (Deprecated)',
             },
             {
               type: 'doc',
