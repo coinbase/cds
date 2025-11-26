@@ -49,8 +49,8 @@ export type FocusTrapProps = {
 };
 
 const DEBOUNCE_MS = 50;
-const NAVIGATION_KEYS = ['Tab', 'ArrowDown', 'ArrowUp', 'Home', 'End'];
-export const ALPHABET_KEYS = [
+export const NAVIGATION_KEYS = ['Tab', 'ArrowDown', 'ArrowUp', 'Home', 'End'];
+const ALPHABET_KEYS = [
   'a',
   'b',
   'c',
