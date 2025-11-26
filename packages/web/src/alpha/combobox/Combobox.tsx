@@ -201,6 +201,7 @@ const ComboboxBase = memo(
               styles={{
                 controlEndNode: { alignItems: hasValue ? 'flex-end' : 'center' },
               }}
+              tabIndex={-1}
             />
           );
         },

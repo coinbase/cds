@@ -75,6 +75,7 @@ const DefaultSelectControlComponent = memo(
         removeSelectedOptionAccessibilityLabel = 'Remove',
         accessibilityLabel,
         ariaHaspopup,
+        tabIndex = 0,
         styles,
         classNames,
         ...props
@@ -294,6 +295,8 @@ const DefaultSelectControlComponent = memo(
             onClick={() => setOpen((s) => !s)}
             paddingStart={1}
             style={styles?.controlInputNode}
+            tabIndex={tabIndex}
+            width="100%"
           >
             {!!startNode && (
               <HStack
