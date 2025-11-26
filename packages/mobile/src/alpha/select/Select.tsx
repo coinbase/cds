@@ -16,7 +16,7 @@ import {
   type SelectType,
 } from './types';
 
-export const defaultAccessibilityRoles: SelectDropdownProps['accessibilityRoles'] = {
+const defaultAccessibilityRoles: SelectDropdownProps['accessibilityRoles'] = {
   option: 'menuitem',
 };
 
