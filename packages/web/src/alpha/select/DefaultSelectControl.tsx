@@ -96,7 +96,6 @@ const DefaultSelectControlComponent = memo(
 
         options.forEach((option, optionIndex) => {
           if (isSelectOptionGroup<Type, SelectOptionValue>(option)) {
-            // It's a group, add all its options (skip null values)
             option.options.forEach((groupOption, groupOptionIndex) => {
               if (groupOption.value !== null) {
                 const value = groupOption.value as SelectOptionValue;
@@ -118,7 +117,6 @@ const DefaultSelectControlComponent = memo(
             const singleOption = option as SelectOption<SelectOptionValue>;
             if (singleOption.value !== null) {
               const value = singleOption.value;
-              // Only set if not already present (first wins)
               if (!map.has(value)) {
                 map.set(value, singleOption);
               } else if (isDev) {

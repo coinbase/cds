@@ -83,7 +83,6 @@ export const DefaultSelectControlComponent = memo(
 
         options.forEach((option, optionIndex) => {
           if (isSelectOptionGroup<Type, SelectOptionValue>(option)) {
-            // It's a group, add all its options (skip null values)
             option.options.forEach((groupOption, groupOptionIndex) => {
               if (groupOption.value !== null) {
                 const optionValue = groupOption.value as SelectOptionValue;
@@ -101,7 +100,6 @@ export const DefaultSelectControlComponent = memo(
               }
             });
           } else {
-            // It's a single option
             const singleOption = option as SelectOption<SelectOptionValue>;
             if (singleOption.value !== null) {
               const optionValue = singleOption.value;
