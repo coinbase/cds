@@ -282,6 +282,27 @@ When you pass the `end` prop, it overrides the `detail`/`subdetail`/`detailNode`
 />
 ```
 
+### Preserve Layout During Selection
+
+Use the `deselected` accessory to reserve space for the selection checkmark when toggling the `selected` state.
+
+```tsx
+<VStack gap={1}>
+  <ListCell
+    accessory="deselected"
+    description="No layout shift when selected"
+    spacingVariant="condensed"
+    title="Placeholder accessory"
+  />
+  <ListCell
+    selected
+    description="Selected state uses the same space"
+    spacingVariant="condensed"
+    title="Selected state"
+  />
+</VStack>
+```
+
 ### Custom Accessory via Node Prop
 
 ```tsx

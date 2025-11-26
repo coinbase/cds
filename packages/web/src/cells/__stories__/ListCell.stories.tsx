@@ -543,6 +543,12 @@ const PriorityContent = () => (
 const WithAccessory = () => (
   <>
     <ListCell accessory="arrow" spacingVariant="condensed" title="Title" />
+    <ListCell
+      accessory="deselected"
+      description="Reserve space for selection"
+      spacingVariant="condensed"
+      title="Deselected placeholder"
+    />
 
     <ListCell accessory="more" detail="Detail" spacingVariant="condensed" title="Title" />
 
