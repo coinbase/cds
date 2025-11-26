@@ -122,10 +122,7 @@ const ComboboxBase = memo(
       const open = openProp ?? openInternal;
       const setOpen = setOpenProp ?? setOpenInternal;
 
-      if (
-        (typeof openProp === 'undefined' && typeof setOpenProp !== 'undefined') ||
-        (typeof openProp !== 'undefined' && typeof setOpenProp === 'undefined')
-      )
+      if ((typeof openProp === 'undefined') !== (typeof setOpenProp === 'undefined'))
         throw Error(
           'Combobox component must be fully controlled or uncontrolled: "open" and "setOpen" props must be provided together or not at all',
         );
