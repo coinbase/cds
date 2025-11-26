@@ -251,6 +251,7 @@ const DefaultSelectControlComponent = memo(
             borderWidth={0}
             className={cx(noFocusOutlineCss, classNames?.controlInputNode)}
             disabled={disabled}
+            flexGrow={1}
             focusable={false}
             minHeight={
               labelVariant === 'inside'
@@ -259,10 +260,10 @@ const DefaultSelectControlComponent = memo(
                   ? COMPACT_HEIGHT
                   : DEFAULT_HEIGHT
             }
+            minWidth={0}
             onClick={() => setOpen((s) => !s)}
             paddingStart={1}
             style={styles?.controlInputNode}
-            width="100%"
           >
             {!!startNode && (
               <HStack

@@ -1043,6 +1043,22 @@ export const VeryLongLabels = () => {
         placeholder="Empty value"
         value={value}
       />
+      <Select
+        label="Single select - very long option labels - custom start node"
+        onChange={setValue}
+        options={longOptions}
+        placeholder="Empty value"
+        startNode={<Icon color="fg" name="star" />}
+        value={value}
+      />
+      <Select
+        endNode={<Icon color="fg" name="star" />}
+        label="Single select - very long option labels - custom end node"
+        onChange={setValue}
+        options={longOptions}
+        placeholder="Empty value"
+        value={value}
+      />
     </VStack>
   );
 };
