@@ -162,7 +162,6 @@ const TimeOfDayAxesExample = () => {
   return (
     <LineChart
       enableScrubbing
-      curve="monotone"
       height={defaultChartHeight}
       series={[
         {

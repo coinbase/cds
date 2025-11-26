@@ -2,7 +2,11 @@ import { forwardRef, memo, useMemo } from 'react';
 import type { View } from 'react-native';
 
 import { XAxis, type XAxisProps, YAxis, type YAxisProps } from '../axis';
-import { CartesianChart, type CartesianChartProps } from '../CartesianChart';
+import {
+  CartesianChart,
+  type CartesianChartBaseProps,
+  type CartesianChartProps,
+} from '../CartesianChart';
 import { Line, type LineProps } from '../line/Line';
 import {
   type AxisConfigProps,
@@ -15,11 +19,26 @@ import {
 import { Area, type AreaProps } from './Area';
 
 export type AreaSeries = Series &
-  Partial<Pick<AreaProps, 'AreaComponent' | 'curve' | 'fillOpacity' | 'type' | 'fill'>> &
-  Partial<Pick<LineProps, 'LineComponent' | 'strokeWidth' | 'stroke' | 'opacity'>>;
+  Partial<
+    Pick<
+      AreaProps,
+      'AreaComponent' | 'curve' | 'fillOpacity' | 'type' | 'fill' | 'connectNulls' | 'transition'
+    >
+  > &
+  Partial<Pick<LineProps, 'LineComponent' | 'strokeWidth' | 'stroke' | 'opacity'>> & {
+    /**
+     * The type of line to render for this series.
+     * Overrides the chart-level lineType if provided.
+     * @default 'solid'
+     */
+    lineType?: 'solid' | 'dotted';
+  };
 
-export type AreaChartProps = Omit<CartesianChartProps, 'xAxis' | 'yAxis' | 'series'> &
-  Pick<AreaProps, 'AreaComponent' | 'curve' | 'fillOpacity' | 'type'> &
+export type AreaChartBaseProps = Omit<CartesianChartBaseProps, 'xAxis' | 'yAxis' | 'series'> &
+  Pick<
+    AreaProps,
+    'AreaComponent' | 'curve' | 'fillOpacity' | 'type' | 'connectNulls' | 'transition'
+  > &
   Pick<LineProps, 'LineComponent' | 'strokeWidth'> & {
     /**
      * Configuration objects that define how to visualize the data.
@@ -52,11 +71,23 @@ export type AreaChartProps = Omit<CartesianChartProps, 'xAxis' | 'yAxis' | 'seri
      * The type of line to render.
      * @default 'solid'
      */
-    lineType?: 'solid' | 'dotted' | 'gradient';
-
+    lineType?: 'solid' | 'dotted';
+    /**
+     * Configuration for x-axis.
+     * Accepts axis config and axis props.
+     * To show the axis, set `showXAxis` to true.
+     */
     xAxis?: Partial<AxisConfigProps> & XAxisProps;
+    /**
+     * Configuration for y-axis.
+     * Accepts axis config and axis props.
+     * To show the axis, set `showYAxis` to true.
+     */
     yAxis?: Partial<AxisConfigProps> & YAxisProps;
   };
+
+export type AreaChartProps = AreaChartBaseProps &
+  Omit<CartesianChartProps, 'xAxis' | 'yAxis' | 'series'>;
 
 export const AreaChart = memo(
   forwardRef<View, AreaChartProps>(
@@ -68,6 +99,8 @@ export const AreaChart = memo(
         curve,
         fillOpacity,
         type,
+        connectNulls,
+        transition,
         LineComponent,
         strokeWidth,
         showXAxis,
@@ -76,16 +109,13 @@ export const AreaChart = memo(
         lineType = 'solid',
         xAxis,
         yAxis,
-        inset: userInset,
+        inset,
         children,
         ...chartProps
       },
       ref,
     ) => {
-      const calculatedInset = useMemo(
-        () => getChartInset(userInset, defaultChartInset),
-        [userInset],
-      );
+      const calculatedInset = useMemo(() => getChartInset(inset, defaultChartInset), [inset]);
 
       // Convert AreaSeries to Series for Chart context
       const chartSeries = useMemo(() => {
@@ -95,6 +125,7 @@ export const AreaChart = memo(
             data: s.data,
             label: s.label,
             color: s.color,
+            gradient: s.gradient,
             yAxisId: s.yAxisId,
             stackId: s.stackId,
           }),
@@ -185,9 +216,11 @@ export const AreaChart = memo(
               <Area
                 key={id}
                 AreaComponent={AreaComponent}
+                connectNulls={connectNulls}
                 curve={curve}
                 fillOpacity={fillOpacity}
                 seriesId={id}
+                transition={transition}
                 type={type}
                 {...areaPropsFromSeries}
               />
@@ -204,18 +237,21 @@ export const AreaChart = memo(
                 fill,
                 fillOpacity,
                 stackId,
-                ...linePropsFromSeries
+                type, // Area type (don't pass to Line)
+                lineType: seriesLineType,
+                ...otherPropsFromSeries
               }) => {
                 return (
                   <Line
-                    key={`${id}-line`}
+                    key={id}
                     LineComponent={LineComponent}
+                    connectNulls={connectNulls}
                     curve={curve}
-                    seriesId={id} // Line component now handles stacked data automatically
-                    stroke={color} // Default to series color
+                    seriesId={id}
                     strokeWidth={strokeWidth}
-                    type={lineType}
-                    {...linePropsFromSeries}
+                    transition={transition}
+                    type={seriesLineType ?? lineType}
+                    {...otherPropsFromSeries}
                   />
                 );
               },

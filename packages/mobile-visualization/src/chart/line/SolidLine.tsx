@@ -1,41 +1,56 @@
 import { memo } from 'react';
-import type { SharedProps } from '@cbhq/cds-common/types';
 import { useTheme } from '@cbhq/cds-mobile/hooks/useTheme';
 
+import { Gradient } from '../gradient';
 import { Path, type PathProps } from '../Path';
 
-export type SolidLineProps = SharedProps &
-  Omit<PathProps, 'fill' | 'strokeWidth'> & {
+import type { LineComponentProps } from './Line';
+
+export type SolidLineProps = Pick<
+  PathProps,
+  'initialPath' | 'children' | 'strokeCap' | 'strokeJoin' | 'clipRect' | 'clipPath' | 'clipOffset'
+> &
+  LineComponentProps & {
     fill?: string;
-    strokeWidth?: number;
   };
 
 /**
- * A customizable solid line component which uses path element.
+ * A customizable solid line component.
+ * Supports gradient for gradient effects and smooth data transitions via AnimatedPath.
  */
 export const SolidLine = memo<SolidLineProps>(
   ({
     fill = 'none',
     stroke,
-    strokeLinecap = 'round',
-    strokeLinejoin = 'round',
+    strokeCap = 'round',
+    strokeJoin = 'round',
     strokeOpacity = 1,
     strokeWidth = 2,
+    gradient,
+    yAxisId,
+    d,
+    animate,
+    transition,
     ...props
   }) => {
     const theme = useTheme();
 
     return (
       <Path
+        animate={animate}
         clipOffset={strokeWidth}
+        d={d}
         fill={fill}
-        stroke={stroke ?? theme.color.bgLine}
-        strokeLinecap={strokeLinecap}
-        strokeLinejoin={strokeLinejoin}
+        stroke={stroke ?? theme.color.fgPrimary}
+        strokeCap={strokeCap}
+        strokeJoin={strokeJoin}
         strokeOpacity={strokeOpacity}
         strokeWidth={strokeWidth}
+        transition={transition}
         {...props}
-      />
+      >
+        {gradient && <Gradient gradient={gradient} yAxisId={yAxisId} />}
+      </Path>
     );
   },
 );

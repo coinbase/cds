@@ -15,7 +15,6 @@ CartesianChart is a customizable, SVG based component that can be used to displa
         data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
       },
     ]}
-    curve="monotone"
     showYAxis
     yAxis={{
       showGrid: true,
@@ -48,7 +47,6 @@ CartesianChart is a customizable, SVG based component that can be used to displa
         data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
       },
     ]}
-    curve="monotone"
     showYAxis
     showArea
     yAxis={{
@@ -125,8 +123,8 @@ function ForecastedPrice() {
       }}
     >
       <ForecastRect startIndex={7} endIndex={13} />
-      <Area seriesId="variance" type="solid" curve="monotone" fillOpacity={0.3} />
-      <Line seriesId="prices" curve="monotone" />
+      <Area seriesId="variance" type="solid" fillOpacity={0.3} />
+      <Line seriesId="prices" />
     </CartesianChart>
   );
 }
@@ -210,7 +208,7 @@ You can provide a `stackId` to stack series together.
       color: 'var(--color-accentBoldPurple)',
     },
   ]}
-  curve="monotone"
+
   showYAxis
   yAxis={{
     showGrid: true,
@@ -280,7 +278,7 @@ const formatPrice = useCallback((dataIndex: number) => {
             },
           ]}
           yAxis={{ domainLimit: 'strict' }}
-          curve="monotone"
+
           showArea
           style={{ border: '2px solid var(--color-fgPrimary)' }}
         />
@@ -298,7 +296,7 @@ const formatPrice = useCallback((dataIndex: number) => {
             },
           ]}
           yAxis={{ domainLimit: 'strict' }}
-          curve="monotone"
+
           showArea
           style={{ border: '2px solid var(--color-fgPrimary)' }}
         >
@@ -317,7 +315,7 @@ const formatPrice = useCallback((dataIndex: number) => {
             },
           ]}
           yAxis={{ domainLimit: 'strict' }}
-          curve="monotone"
+
           showArea
           style={{ border: '2px solid var(--color-fgPrimary)' }}
         >
@@ -354,7 +352,7 @@ function Scrubbing() {
             data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
           },
         ]}
-        curve="monotone"
+
         showYAxis
         showArea
         yAxis={{
@@ -484,7 +482,7 @@ function PriceWithVolume() {
       >
         <YAxis axisId="price" showGrid tickLabelFormatter={formatPriceInThousands} width={48} GridLineComponent={ThinSolidLine} />
         <BarPlot seriesIds={['volume']} />
-        <Line seriesId="prices" curve="monotone" showArea />
+        <Line seriesId="prices"  showArea />
         <Scrubber seriesIds={['prices']} />
       </CartesianChart>
     </VStack>
@@ -594,7 +592,6 @@ function EarningsHistory() {
   return (
     <VStack gap={0.5}>
       <CartesianChart
-        overflow="visible"
         animate={false}
         height={250}
         padding={0}
@@ -668,7 +665,7 @@ function TradingTrends() {
       <XAxis />
       <ReferenceLine LineComponent={ThickSolidLine} dataY={0} yAxisId="profit" stroke="rgb(var(--gray15))" />
       <BarPlot seriesIds={['gains', 'losses']} />
-      <Line seriesId="revenue" curve="monotone" showArea />
+      <Line seriesId="revenue"  showArea />
     </CartesianChart>
   );
 }

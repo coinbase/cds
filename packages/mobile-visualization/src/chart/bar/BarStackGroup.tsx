@@ -17,6 +17,7 @@ export type BarStackGroupProps = Pick<
   | 'barMinSize'
   | 'stackMinSize'
   | 'BarStackComponent'
+  | 'transition'
 > &
   Pick<BarStackProps, 'series' | 'yAxisId'> & {
     /**
@@ -40,27 +41,13 @@ export type BarStackGroupProps = Pick<
  */
 export const BarStackGroup = memo<BarStackGroupProps>(
   ({ series, yAxisId = defaultAxisId, stackIndex, totalStacks, barPadding = 0.1, ...props }) => {
-    const { getSeriesData, getXScale, getYScale, drawingArea } = useCartesianChartContext();
+    const { getXScale, getYScale, drawingArea, dataLength } = useCartesianChartContext();
 
     const xScale = getXScale();
     const yScale = getYScale(yAxisId);
 
-    const maxDataLength = useMemo(() => {
-      if (!series || series.length === 0) return 0;
-
-      let maxLength = 0;
-      series.forEach((s) => {
-        const data = getSeriesData(s.id);
-        if (data && data.length > maxLength) {
-          maxLength = data.length;
-        }
-      });
-
-      return maxLength;
-    }, [series, getSeriesData]);
-
     const stackConfigs = useMemo(() => {
-      if (!xScale || !yScale || !drawingArea || maxDataLength === 0) return [];
+      if (!xScale || !yScale || !drawingArea || dataLength === 0) return [];
 
       if (!isCategoricalScale(xScale)) {
         return [];
@@ -80,7 +67,8 @@ export const BarStackGroup = memo<BarStackGroupProps>(
       }> = [];
 
       // Calculate position for each category
-      for (let categoryIndex = 0; categoryIndex < maxDataLength; categoryIndex++) {
+      // todo: look at using xDomain for this instead of dataLength
+      for (let categoryIndex = 0; categoryIndex < dataLength; categoryIndex++) {
         // Get x position for this category
         const categoryX = xScale(categoryIndex);
         if (categoryX !== undefined) {
@@ -96,7 +84,7 @@ export const BarStackGroup = memo<BarStackGroupProps>(
       }
 
       return configs;
-    }, [xScale, yScale, drawingArea, maxDataLength, stackIndex, totalStacks, barPadding]);
+    }, [xScale, yScale, drawingArea, dataLength, stackIndex, totalStacks, barPadding]);
 
     if (xScale && !isCategoricalScale(xScale)) {
       throw new Error(

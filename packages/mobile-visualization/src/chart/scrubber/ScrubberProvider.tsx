@@ -1,20 +1,24 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { Platform } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
-import { runOnJS } from 'react-native-reanimated';
+import { runOnJS, useAnimatedReaction, useSharedValue } from 'react-native-reanimated';
 import { Haptics } from '@cbhq/cds-mobile/utils/haptics';
 
 import { useCartesianChartContext } from '../ChartProvider';
-import { isCategoricalScale, ScrubberContext, type ScrubberContextValue } from '../utils';
+import { invertSerializableScale, ScrubberContext, type ScrubberContextValue } from '../utils';
+import { getPointOnSerializableScale } from '../utils/point';
 
-export type ScrubberProviderProps = Partial<
-  Pick<ScrubberContextValue, 'enableScrubbing' | 'onScrubberPositionChange'>
-> & {
+export type ScrubberProviderProps = Partial<Pick<ScrubberContextValue, 'enableScrubbing'>> & {
   children: React.ReactNode;
   /**
    * Allows continuous gestures on the chart to continue outside the bounds of the chart element.
    */
   allowOverflowGestures?: boolean;
+  /**
+   * Callback fired when the scrubber position changes.
+   * Receives the dataIndex of the scrubber or undefined when not scrubbing.
+   */
+  onScrubberPositionChange?: (index: number | undefined) => void;
 };
 
 /**
@@ -33,25 +37,28 @@ export const ScrubberProvider: React.FC<ScrubberProviderProps> = ({
     throw new Error('ScrubberProvider must be used within a ChartContext');
   }
 
-  const { getXScale, getXAxis, series } = chartContext;
-  const [scrubberPosition, setScrubberPosition] = useState<number | undefined>(undefined);
+  const { getXSerializableScale, getXAxis } = chartContext;
+  const scrubberPosition = useSharedValue<number | undefined>(undefined);
+
+  const xAxis = useMemo(() => getXAxis(), [getXAxis]);
+  const xScale = useMemo(() => getXSerializableScale(), [getXSerializableScale]);
 
   const getDataIndexFromX = useCallback(
     (touchX: number): number => {
-      const xScale = getXScale();
-      const xAxis = getXAxis();
+      'worklet';
 
       if (!xScale || !xAxis) return 0;
 
-      if (isCategoricalScale(xScale)) {
-        const categories = xScale.domain?.() ?? xAxis.data ?? [];
-        const bandwidth = xScale.bandwidth?.() ?? 0;
+      if (xScale.type === 'band') {
+        const [domainMin, domainMax] = xScale.domain;
+        const categoryCount = domainMax - domainMin + 1;
         let closestIndex = 0;
         let closestDistance = Infinity;
-        for (let i = 0; i < categories.length; i++) {
-          const xPos = xScale(i);
+
+        for (let i = 0; i < categoryCount; i++) {
+          const xPos = getPointOnSerializableScale(i, xScale);
           if (xPos !== undefined) {
-            const distance = Math.abs(touchX - (xPos + bandwidth / 2));
+            const distance = Math.abs(touchX - xPos);
             if (distance < closestDistance) {
               closestDistance = distance;
               closestIndex = i;
@@ -70,7 +77,7 @@ export const ScrubberProvider: React.FC<ScrubberProviderProps> = ({
 
           for (let i = 0; i < numericData.length; i++) {
             const xValue = numericData[i];
-            const xPos = xScale(xValue);
+            const xPos = getPointOnSerializableScale(xValue, xScale);
             if (xPos !== undefined) {
               const distance = Math.abs(touchX - xPos);
               if (distance < closestDistance) {
@@ -81,56 +88,31 @@ export const ScrubberProvider: React.FC<ScrubberProviderProps> = ({
           }
           return closestIndex;
         } else {
-          const xValue = xScale.invert(touchX);
+          const xValue = invertSerializableScale(touchX, xScale);
           const dataIndex = Math.round(xValue);
           const domain = xAxis.domain;
           return Math.max(domain.min ?? 0, Math.min(dataIndex, domain.max ?? 0));
         }
       }
     },
-    [getXScale, getXAxis],
+    [xAxis, xScale],
   );
 
-  const handlePositionUpdate = useCallback(
-    (x: number) => {
-      if (!enableScrubbing || !series || series.length === 0) return;
-
-      const dataIndex = getDataIndexFromX(x);
-      if (dataIndex !== scrubberPosition) {
-        setScrubberPosition(dataIndex);
-        onScrubberPositionChange?.(dataIndex);
-      }
-    },
-    [enableScrubbing, series, getDataIndexFromX, scrubberPosition, onScrubberPositionChange],
-  );
-
-  const handleInteractionEnd = useCallback(() => {
-    if (!enableScrubbing) return;
-    setScrubberPosition(undefined);
-    onScrubberPositionChange?.(undefined);
-  }, [enableScrubbing, onScrubberPositionChange]);
-
-  // Gesture handler callbacks
-  const handleOnStartJsThread = useCallback(() => {
+  const handleStartEndHaptics = useCallback(() => {
     void Haptics.lightImpact();
-    // Could add onScrubStart callback here if needed
   }, []);
 
-  const handleOnEndOrCancelledJsThread = useCallback(() => {
-    handleInteractionEnd();
-  }, [handleInteractionEnd]);
-
-  const handleOnUpdateJsThread = useCallback(
-    (x: number) => {
-      handlePositionUpdate(x);
+  useAnimatedReaction(
+    () => scrubberPosition.value,
+    (currentValue, previousValue) => {
+      // Confirm changes here and inside of our gesture handler before calling JS thread
+      // To prevent any rerenders
+      if (onScrubberPositionChange !== undefined && currentValue !== previousValue) {
+        runOnJS(onScrubberPositionChange)(currentValue);
+      }
     },
-    [handlePositionUpdate],
+    [onScrubberPositionChange],
   );
-
-  const handleOnEndJsThread = useCallback(() => {
-    void Haptics.lightImpact();
-    handleOnEndOrCancelledJsThread();
-  }, [handleOnEndOrCancelledJsThread]);
 
   // Create the long press pan gesture
   const longPressGesture = useMemo(
@@ -139,28 +121,39 @@ export const ScrubberProvider: React.FC<ScrubberProviderProps> = ({
         .activateAfterLongPress(110)
         .shouldCancelWhenOutside(!allowOverflowGestures)
         .onStart(function onStart(event) {
-          runOnJS(handleOnStartJsThread)();
+          runOnJS(handleStartEndHaptics)();
 
           // Android does not trigger onUpdate when the gesture starts. This achieves consistent behavior across both iOS and Android
           if (Platform.OS === 'android') {
-            runOnJS(handleOnUpdateJsThread)(event.x);
+            const newScrubberPosition = getDataIndexFromX(event.x);
+            if (newScrubberPosition !== scrubberPosition.value) {
+              scrubberPosition.value = newScrubberPosition;
+            }
           }
         })
         .onUpdate(function onUpdate(event) {
-          runOnJS(handleOnUpdateJsThread)(event.x);
+          const newScrubberPosition = getDataIndexFromX(event.x);
+          if (newScrubberPosition !== scrubberPosition.value) {
+            scrubberPosition.value = newScrubberPosition;
+          }
         })
         .onEnd(function onEnd() {
-          runOnJS(handleOnEndJsThread)();
+          if (enableScrubbing) {
+            runOnJS(handleStartEndHaptics)();
+            scrubberPosition.value = undefined;
+          }
         })
         .onTouchesCancelled(function onTouchesCancelled() {
-          runOnJS(handleOnEndOrCancelledJsThread)();
+          if (enableScrubbing) {
+            scrubberPosition.value = undefined;
+          }
         }),
     [
       allowOverflowGestures,
-      handleOnStartJsThread,
-      handleOnUpdateJsThread,
-      handleOnEndJsThread,
-      handleOnEndOrCancelledJsThread,
+      handleStartEndHaptics,
+      getDataIndexFromX,
+      scrubberPosition,
+      enableScrubbing,
     ],
   );
 
@@ -168,7 +161,6 @@ export const ScrubberProvider: React.FC<ScrubberProviderProps> = ({
     () => ({
       enableScrubbing: !!enableScrubbing,
       scrubberPosition,
-      onScrubberPositionChange: setScrubberPosition,
     }),
     [enableScrubbing, scrubberPosition],
   );

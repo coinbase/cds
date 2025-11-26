@@ -5,7 +5,7 @@ import { Switch } from '@cbhq/cds-web/controls';
 import { XAxis, YAxis } from '../axis';
 import { useCartesianChartContext } from '../ChartProvider';
 import { LineChart } from '../line/LineChart';
-import { ChartText, SmartChartTextGroup, type TextLabelData } from '../text';
+import { ChartText, ChartTextGroup, type TextLabelData } from '../text';
 import { type ChartInset, isCategoricalScale } from '../utils';
 
 const CHART_WIDTH = 500;
@@ -277,9 +277,9 @@ export const InteractiveChartText = () => {
         }}
       >
         <LineChart
+          points
           enableScrubbing={false}
           height={CHART_HEIGHT}
-          renderPoints={() => true}
           series={[
             {
               id: 'sample-data',
@@ -296,11 +296,11 @@ export const InteractiveChartText = () => {
           <XAxis showGrid showLine showTickMarks />
           <YAxis showGrid showLine showTickMarks position="left" />
           <ChartText
+            elevated
             borderRadius={8}
             color="var(--color-fgPrimary)"
             dx={offsetX}
             dy={offsetY}
-            elevation={1}
             font="label1"
             horizontalAlignment={horizontalAlignment}
             inset={chartTextInset}
@@ -387,7 +387,7 @@ export const InteractiveChartText = () => {
   );
 };
 
-export const InteractiveSmartChartTextGroup = () => {
+export const InteractiveChartTextGroup = () => {
   // State for interactive controls
   const [dataPointCount, setDataPointCount] = useState(10);
   const [labelLength, setLabelLength] = useState<'numbers' | 'short' | 'medium' | 'long'>('short');
@@ -493,7 +493,7 @@ export const InteractiveSmartChartTextGroup = () => {
 
     return (
       <>
-        <SmartChartTextGroup labels={labelsData} prioritizeEndLabels={true} />
+        <ChartTextGroup labels={labelsData} prioritizeEndLabels={true} />
         {showDebug && (
           <>
             {/* Debug visuals: red dots at intended label positions */}
@@ -539,7 +539,7 @@ export const InteractiveSmartChartTextGroup = () => {
         }}
       >
         <h3 style={{ margin: '0 0 10px 0', fontSize: '16px' }}>
-          SmartChartTextGroup Interactive Controls
+          ChartTextGroup Interactive Controls
         </h3>
 
         {/* Data Point Count Control */}
@@ -597,8 +597,7 @@ export const InteractiveSmartChartTextGroup = () => {
           <strong>Instructions:</strong>
           <ul style={{ margin: '5px 0 0 0', paddingLeft: '20px' }}>
             <li>
-              Adjust the number of data points to see how SmartChartTextGroup handles different
-              densities
+              Adjust the number of data points to see how ChartTextGroup handles different densities
             </li>
             <li>Change label length to test overlap detection with varying text widths</li>
             <li>Notice how the component automatically hides overlapping labels</li>
@@ -643,7 +642,7 @@ export const InteractiveSmartChartTextGroup = () => {
             tickLabelFormatter={() => ''} // Hide axis labels
           />
 
-          {/* SmartChartTextGroup with labels aligned to data point x positions */}
+          {/* ChartTextGroup with labels aligned to data point x positions */}
           <ScaleAlignedLabels labels={labelStrings} />
         </LineChart>
       </div>

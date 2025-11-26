@@ -1,11 +1,12 @@
 import React, { memo, useMemo } from 'react';
 import type { SVGProps } from 'react';
+import type { Transition } from 'framer-motion';
 
 import { getBarPath } from '../utils';
 
 import { DefaultBar } from './';
 
-export type BarComponentProps = {
+export type BarBaseProps = {
   /**
    * X coordinate of the bar (left edge).
    */
@@ -23,7 +24,8 @@ export type BarComponentProps = {
    */
   height: number;
   /**
-   * Border radius of the bar.
+   * Border radius for the bar.
+   * @default 4
    */
   borderRadius?: number;
   /**
@@ -48,10 +50,6 @@ export type BarComponentProps = {
    */
   dataY?: number | [number, number] | null;
   /**
-   * The path data for the bar shape.
-   */
-  d: SVGProps<SVGPathElement>['d'];
-  /**
    * Fill color for the bar.
    */
   fill?: string;
@@ -67,21 +65,27 @@ export type BarComponentProps = {
    * Stroke width for the bar outline.
    */
   strokeWidth?: number;
-};
-
-export type BarComponent = React.FC<BarComponentProps>;
-
-export type BarProps = Omit<BarComponentProps, 'd'> & {
-  /**
-   * Border radius for the bar.
-   * @default 4
-   */
-  borderRadius?: BarComponentProps['borderRadius'];
   /**
    * Component to render the bar.
    */
   BarComponent?: BarComponent;
 };
+
+export type BarProps = BarBaseProps & {
+  /**
+   * Transition configuration for animation.
+   */
+  transition?: Transition;
+};
+
+export type BarComponentProps = Omit<BarProps, 'BarComponent'> & {
+  /**
+   * The path data for the bar shape.
+   */
+  d: SVGProps<SVGPathElement>['d'];
+};
+
+export type BarComponent = React.FC<BarComponentProps>;
 
 /**
  * Simple bar component that renders a single bar at the specified position.
@@ -112,6 +116,7 @@ export const Bar = memo<BarProps>(
     borderRadius = 4,
     roundTop = true,
     roundBottom = true,
+    transition,
   }) => {
     const barPath = useMemo(() => {
       return getBarPath(x, y, width, height, borderRadius, roundTop, roundBottom);
@@ -137,6 +142,7 @@ export const Bar = memo<BarProps>(
         roundTop={roundTop}
         stroke={stroke}
         strokeWidth={strokeWidth}
+        transition={transition}
         width={width}
         x={x}
         y={y}

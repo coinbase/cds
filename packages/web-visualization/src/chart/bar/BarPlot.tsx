@@ -1,13 +1,13 @@
 import { memo, useId, useMemo } from 'react';
 
 import { useCartesianChartContext } from '../ChartProvider';
+import type { Series } from '../utils';
 import { defaultAxisId } from '../utils';
 
-import type { BarSeries } from './BarChart';
 import type { BarStackGroupProps } from './BarStackGroup';
 import { BarStackGroup } from './BarStackGroup';
 
-export type BarPlotProps = Pick<
+export type BarPlotBaseProps = Pick<
   BarStackGroupProps,
   | 'barPadding'
   | 'BarComponent'
@@ -27,6 +27,8 @@ export type BarPlotProps = Pick<
    */
   seriesIds?: string[];
 };
+
+export type BarPlotProps = BarPlotBaseProps & Pick<BarStackGroupProps, 'transition'>;
 
 /**
  * BarPlot component that handles multiple series with proper stacking coordination.
@@ -48,6 +50,7 @@ export const BarPlot = memo<BarPlotProps>(
     stackGap,
     barMinSize,
     stackMinSize,
+    transition,
   }) => {
     const { series: allSeries, drawingArea } = useCartesianChartContext();
     const clipPathId = useId();
@@ -66,7 +69,7 @@ export const BarPlot = memo<BarPlotProps>(
         string,
         {
           stackId: string;
-          series: BarSeries[];
+          series: Series[];
           yAxisId?: string;
         }
       >();
@@ -108,7 +111,7 @@ export const BarPlot = memo<BarPlotProps>(
             />
           </clipPath>
         </defs>
-        <g clipPath={`url(#${clipPathId})`} data-testid="whoa">
+        <g clipPath={`url(#${clipPathId})`}>
           {stackGroups.map((group, stackIndex) => (
             <BarStackGroup
               key={group.stackId}
@@ -126,6 +129,7 @@ export const BarPlot = memo<BarPlotProps>(
               stroke={defaultStroke}
               strokeWidth={defaultStrokeWidth}
               totalStacks={stackGroups.length}
+              transition={transition}
               yAxisId={group.yAxisId}
             />
           ))}

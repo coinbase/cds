@@ -73,6 +73,9 @@ install-state.gz
 # Docusaurus
 .docusaurus
 
+# Netlify
+.netlify/
+
 # React Native
 
 ## Xcode

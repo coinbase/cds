@@ -41,6 +41,8 @@ const examplePropsWithOffset: ExampleProps = {
   children: 'Lorem ipsum dolar sit amet',
 };
 
+const borderRadiusValues = [0, 200, 400] as const;
+
 const styleProps: MobileBannerProps[] = [
   {
     variant: 'warning',
@@ -306,6 +308,39 @@ const BannerScreen = () => {
             startIconAccessibilityLabel="Warning"
             variant="warning"
           />
+        </VStack>
+      </Example>
+      <Example title="Border Radius">
+        <VStack gap={2}>
+          <Text font="title1">Contextual</Text>
+          <VStack gap={2}>
+            {borderRadiusValues.map((radius) => (
+              <Banner
+                key={`mobile-contextual-${radius}`}
+                {...exampleProps}
+                borderRadius={radius}
+                title={`Contextual radius ${radius}`}
+                variant="informational"
+              >
+                {shortMessage}
+              </Banner>
+            ))}
+          </VStack>
+          <Text font="title1">Inline</Text>
+          <VStack gap={2}>
+            {borderRadiusValues.map((radius) => (
+              <Banner
+                key={`mobile-inline-${radius}`}
+                {...exampleProps}
+                borderRadius={radius}
+                styleVariant="inline"
+                title={`Inline radius ${radius}`}
+                variant="informational"
+              >
+                {shortMessage}
+              </Banner>
+            ))}
+          </VStack>
         </VStack>
       </Example>
     </ExampleScreen>

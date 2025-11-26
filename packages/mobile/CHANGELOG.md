@@ -8,6 +8,40 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.22.1 (11/24/2025 PST)
+
+#### 🐞 Fixes
+
+- Fix the borderRadius prop issue in Banner. [[#190](https://github.com/coinbase/cds/pull/190)]
+
+## 8.22.0 (11/24/2025 PST)
+
+#### 🚀 Updates
+
+- Added `subtitle` for ListCell and accessory for `ListCellFallback`. [[#149](https://github.com/coinbase/cds/pull/149)] [DX-5015]
+
+## 8.21.8 (11/21/2025 PST)
+
+#### 🐞 Fixes
+
+- Feat: added default a11y label for banner close button. [[#185](https://github.com/coinbase/cds/pull/185)]
+
+## 8.21.7 (11/21/2025 PST)
+
+#### 🐞 Fixes
+
+- Add "heading" a11y role to MultiContentModule title. [[#183](https://github.com/coinbase/cds/pull/183)]
+
+## 8.21.6 ((11/21/2025, 06:37 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.21.5 (11/19/2025 PST)
+
+#### 🐞 Fixes
+
+- Auto-fill DatePicker width. [[#118](https://github.com/coinbase/cds/pull/118)] [DX-4988]
+
 ## 8.21.4 (11/18/2025 PST)
 
 #### 🐞 Fixes

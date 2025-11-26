@@ -6,16 +6,17 @@ import { AnimatePresence, m as motion } from 'framer-motion';
 import { useCartesianChartContext } from '../ChartProvider';
 import { DottedLine } from '../line/DottedLine';
 import { ReferenceLine } from '../line/ReferenceLine';
-import { SmartChartTextGroup, type TextLabelData } from '../text/SmartChartTextGroup';
-import { getAxisTicksData, isCategoricalScale } from '../utils';
+import { SolidLine } from '../line/SolidLine';
+import { ChartText } from '../text/ChartText';
+import { ChartTextGroup, type TextLabelData } from '../text/ChartTextGroup';
+import { getAxisTicksData, isCategoricalScale, lineToPath } from '../utils';
 
 import type { AxisBaseProps, AxisProps } from './Axis';
-import {
-  axisLineStyles,
-  axisTickLabelsInitialAnimationVariants,
-  axisTickMarkStyles,
-  axisUpdateAnimationVariants,
-} from './Axis';
+import { axisLineStyles, axisTickMarkStyles, axisUpdateAnimationVariants } from './Axis';
+import { DefaultAxisTickLabel } from './DefaultAxisTickLabel';
+
+const AXIS_WIDTH = 44;
+const LABEL_SIZE = 20;
 
 const axisTickMarkCss = css`
   ${axisTickMarkStyles}
@@ -37,7 +38,7 @@ export type YAxisBaseProps = AxisBaseProps & {
   position?: 'left' | 'right';
   /**
    * Width of the axis. This value is inclusive of the padding.
-   * @default 44
+   * @default 44 when no label is provided, 64 when a label is provided
    */
   width?: number;
 };
@@ -52,18 +53,23 @@ export const YAxis = memo<YAxisProps>(
     requestedTickCount,
     ticks,
     tickLabelFormatter,
+    TickLabelComponent = DefaultAxisTickLabel,
     style,
     className,
     styles,
     classNames,
     GridLineComponent = DottedLine,
+    LineComponent = SolidLine,
+    TickMarkLineComponent = SolidLine,
     tickMarkLabelGap = 8,
-    width = 44,
     minTickLabelGap = 0,
     showTickMarks,
     showLine,
     tickMarkSize = 4,
     tickInterval,
+    label,
+    labelGap = 4,
+    width = label ? AXIS_WIDTH + LABEL_SIZE : AXIS_WIDTH,
     ...props
   }) => {
     const registrationId = useId();
@@ -166,7 +172,13 @@ export const YAxis = memo<YAxisProps>(
       styles?.tickLabel,
     ]);
 
-    if (!yScale) return;
+    if (!yScale || !axisBounds) return;
+
+    const labelX =
+      position === 'left'
+        ? axisBounds.x + LABEL_SIZE / 2
+        : axisBounds.x + axisBounds.width - LABEL_SIZE / 2;
+    const labelY = axisBounds.y + axisBounds.height / 2;
 
     return (
       <g
@@ -204,22 +216,14 @@ export const YAxis = memo<YAxisProps>(
           </AnimatePresence>
         )}
         {chartTextData && (
-          <AnimatePresence>
-            <motion.g
-              animate="animate"
-              exit="exit"
-              initial="initial"
-              variants={animate ? axisTickLabelsInitialAnimationVariants : undefined}
-            >
-              <SmartChartTextGroup
-                prioritizeEndLabels
-                labels={chartTextData}
-                minGap={minTickLabelGap}
-              />
-            </motion.g>
-          </AnimatePresence>
+          <ChartTextGroup
+            prioritizeEndLabels
+            LabelComponent={TickLabelComponent}
+            labels={chartTextData}
+            minGap={minTickLabelGap}
+          />
         )}
-        {axisBounds && showTickMarks && (
+        {showTickMarks && (
           <g data-testid="tick-marks">
             {ticksData.map((tick, index) => {
               const tickX = position === 'left' ? axisBounds.x + axisBounds.width : axisBounds.x;
@@ -230,28 +234,56 @@ export const YAxis = memo<YAxisProps>(
                   : axisBounds.x + tickMarkSizePixels;
 
               return (
-                <line
+                <TickMarkLineComponent
                   key={`tick-mark-${tick.tick}-${index}`}
+                  animate={false}
                   className={cx(axisTickMarkCss, classNames?.tickMark)}
+                  clipRect={null}
+                  d={lineToPath(tickX, tick.position, tickX2, tick.position)}
+                  stroke="var(--color-fg)"
+                  strokeLinecap="square"
+                  strokeWidth={1}
                   style={styles?.tickMark}
-                  x1={tickX}
-                  x2={tickX2}
-                  y1={tick.position}
-                  y2={tick.position}
                 />
               );
             })}
           </g>
         )}
-        {axisBounds && showLine && (
-          <line
+        {showLine && (
+          <LineComponent
+            animate={false}
             className={cx(axisLineCss, classNames?.line)}
+            d={lineToPath(
+              position === 'left' ? axisBounds.x + axisBounds.width : axisBounds.x,
+              axisBounds.y,
+              position === 'left' ? axisBounds.x + axisBounds.width : axisBounds.x,
+              axisBounds.y + axisBounds.height,
+            )}
+            stroke="var(--color-fg)"
+            strokeLinecap="square"
+            strokeWidth={1}
             style={styles?.line}
-            x1={position === 'left' ? axisBounds.x + axisBounds.width : axisBounds.x}
-            x2={position === 'left' ? axisBounds.x + axisBounds.width : axisBounds.x}
-            y1={axisBounds.y}
-            y2={axisBounds.y + axisBounds.height}
           />
+        )}
+        {label && (
+          <g
+            style={{
+              transformOrigin: `${labelX}px ${labelY}px`,
+              transform: `rotate(${position === 'left' ? -90 : 90}deg)`,
+            }}
+          >
+            <ChartText
+              disableRepositioning
+              className={classNames?.label}
+              horizontalAlignment="center"
+              style={styles?.label}
+              verticalAlignment="middle"
+              x={labelX}
+              y={labelY}
+            >
+              {label}
+            </ChartText>
+          </g>
         )}
       </g>
     );

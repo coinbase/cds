@@ -2,7 +2,7 @@
 
 The global warning banner is used to communicate important alerts or warnings to users across the entire platform, ensuring universal visibility and building trust.
 
-```jsx live
+```tsx live
 <Banner
   showDismiss
   label="Message last updated today at 3:33pm"
@@ -25,7 +25,7 @@ The global warning banner is used to communicate important alerts or warnings to
 
 The In-line Error Banner is used to display specific error messages directly beneath the relevant section headers. Use in-line banners to help users identify exactly where the error or outage is located.
 
-```jsx live
+```tsx live
 <Banner
   startIcon="info"
   startIconActive
@@ -46,7 +46,7 @@ The In-line Error Banner is used to display specific error messages directly ben
 
 The Contextual Promotional Banner is used to highlight special offers, promotions, or announcements within a specific context or section of the platform. It is used to increase user engagement and drive conversions.
 
-```jsx live
+```tsx live
 <Banner
   startIcon="info"
   startIconActive
@@ -65,7 +65,7 @@ The Contextual Promotional Banner is used to highlight special offers, promotion
 
 The in-line Informational Banner is used to provide users with additional information or helpful tips directly within the content or interface, providing relevant guidance.
 
-```jsx live
+```tsx live
 <VStack gap={2}>
   <Banner
     startIcon="info"
@@ -94,3 +94,42 @@ The in-line Informational Banner is used to provide users with additional inform
   </Banner>
 </VStack>
 ```
+
+### Rounded Corner Banners
+
+You can customize `borderRadius` to soften contextual and in-line banners.
+
+```tsx live
+<VStack gap={2}>
+  <Banner
+    borderRadius={200}
+    startIcon="info"
+    startIconActive
+    styleVariant="contextual"
+    title="Rounded contextual banner"
+    variant="informational"
+  >
+    <TextLabel2 as="p">
+      Rounded corners help align with softer surface treatments within a page section.
+    </TextLabel2>
+  </Banner>
+  <Banner
+    borderRadius={400}
+    primaryAction={<Link to="https://www.coinbase.com">Primary</Link>}
+    secondaryAction={<Link to="https://www.coinbase.com">Secondary</Link>}
+    startIcon="info"
+    startIconActive
+    styleVariant="inline"
+    title="Rounded inline banner"
+    variant="promotional"
+  >
+    <TextLabel2 as="p">
+      You can incrementally increase the radius to match surrounding cards or panels.
+    </TextLabel2>
+  </Banner>
+</VStack>
+```
+
+:::tip
+Avoid setting `borderRadius` for `styleVariant="global"` so the vertical status bar remains aligned.
+:::

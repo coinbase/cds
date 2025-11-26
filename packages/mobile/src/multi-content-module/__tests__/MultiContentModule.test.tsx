@@ -49,7 +49,9 @@ describe('MultiContentModule', () => {
         <MultiContentModule {...exampleProps} />
       </DefaultThemeProvider>,
     );
-    expect(screen.getByText('Title')).toBeTruthy();
+    const title = screen.getByText('Title');
+    expect(title).toBeTruthy();
+    expect(title.props.role).toBe('heading');
     expect(screen.getByText('Description')).toBeTruthy();
     expect(screen.getByTestId('mcm-pictogram')).toBeTruthy();
     expect(screen.getByTestId('mcm-primary-content')).toBeTruthy();

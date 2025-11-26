@@ -94,6 +94,10 @@ export type ListCellBaseProps = CellDetailProps &
     title?: React.ReactNode;
     /** React node to render title. Takes precedence over `title`. */
     titleNode?: React.ReactNode;
+    /** Subtitle to display below the title and above the description. This prop is only intended to accept a string or Text component; other use cases, while allowed, are not supported and may result in unexpected behavior. For arbitrary content, use `subtitleNode`. */
+    subtitle?: React.ReactNode;
+    /** React node to render subtitle. Takes precedence over `subtitle`. */
+    subtitleNode?: React.ReactNode;
     /** Styles for the components */
     styles?: {
       root?: StyleProp<ViewStyle>;
@@ -106,6 +110,7 @@ export type ListCellBaseProps = CellDetailProps &
       mainContent?: StyleProp<ViewStyle>;
       helperText?: StyleProp<ViewStyle>;
       title?: StyleProp<TextStyle>;
+      subtitle?: StyleProp<TextStyle>;
       description?: StyleProp<TextStyle>;
     };
   };
@@ -123,6 +128,8 @@ export const ListCell = memo(function ListCell({
   disableMultilineTitle = false,
   description,
   descriptionNode,
+  subtitle,
+  subtitleNode,
   detail,
   detailNode,
   detailWidth,
@@ -241,6 +248,20 @@ export const ListCell = memo(function ListCell({
             style={styles?.title}
           >
             {title}
+          </Text>
+        ) : null}
+
+        {subtitleNode ? (
+          subtitleNode
+        ) : subtitle ? (
+          <Text
+            color="fgMuted"
+            ellipsize="tail"
+            font="label1"
+            numberOfLines={1}
+            style={styles?.subtitle}
+          >
+            {subtitle}
           </Text>
         ) : null}
 

@@ -1,4 +1,4 @@
-import { memo, useMemo } from 'react';
+import { memo, type ReactNode, useMemo } from 'react';
 import type { StyleProp, ViewStyle } from 'react-native';
 import type { FallbackRectWidthProps, SharedProps } from '@cbhq/cds-common/types';
 import { getRectWidthVariant } from '@cbhq/cds-common/utils/getRectWidthVariant';
@@ -8,6 +8,7 @@ import { VStack } from '../layout';
 import { Fallback } from '../layout/Fallback';
 
 import { Cell } from './Cell';
+import { CellAccessory, type CellAccessoryType } from './CellAccessory';
 import type { CellMediaType } from './CellMedia';
 import { condensedInnerSpacing, condensedOuterSpacing, type ListCellBaseProps } from './ListCell';
 import { MediaFallback } from './MediaFallback';
@@ -15,6 +16,10 @@ import { MediaFallback } from './MediaFallback';
 export type ListCellFallbackBaseProps = SharedProps &
   FallbackRectWidthProps &
   Pick<ListCellBaseProps, 'compact' | 'innerSpacing' | 'outerSpacing' | 'spacingVariant'> & {
+    /** Accessory to display at the end of the cell. */
+    accessory?: CellAccessoryType;
+    /** Custom accessory rendered at the end of the cell. Takes precedence over `accessory`. */
+    accessoryNode?: ReactNode;
     /** Display description shimmer. */
     description?: boolean;
     /** Display detail shimmer. */
@@ -25,6 +30,8 @@ export type ListCellFallbackBaseProps = SharedProps &
     media?: CellMediaType;
     /** Display subdetail shimmer. */
     subdetail?: boolean;
+    /** Display subtitle shimmer. */
+    subtitle?: boolean;
     /** Display title shimmer. */
     title?: boolean;
   };
@@ -42,10 +49,16 @@ export type ListCellFallbackProps = ListCellFallbackBaseProps & {
     title?: StyleProp<ViewStyle>;
     /** Style to apply to the description shimmer. */
     description?: StyleProp<ViewStyle>;
+    /** Style to apply to the subtitle shimmer. */
+    subtitle?: StyleProp<ViewStyle>;
+    /** Style to apply to the accessory container. */
+    accessory?: StyleProp<ViewStyle>;
   };
 };
 
 export const ListCellFallback = memo(function ListCellFallback({
+  accessory,
+  accessoryNode,
   title,
   description,
   detail,
@@ -54,6 +67,7 @@ export const ListCellFallback = memo(function ListCellFallback({
   disableRandomRectWidth,
   rectWidthVariant,
   helperText,
+  subtitle,
   styles,
   compact,
   spacingVariant = compact ? 'compact' : 'normal',
@@ -71,7 +85,7 @@ export const ListCellFallback = memo(function ListCellFallback({
     return (
       <Fallback
         disableRandomRectWidth={disableRandomRectWidth}
-        height={theme.lineHeight.body}
+        height={spacingVariant === 'condensed' ? theme.lineHeight.label2 : theme.lineHeight.body}
         rectWidthVariant={getRectWidthVariant(rectWidthVariant, 0)}
         style={styles?.description}
         testID="list-cell-fallback-description"
@@ -82,8 +96,10 @@ export const ListCellFallback = memo(function ListCellFallback({
     description,
     disableRandomRectWidth,
     rectWidthVariant,
+    spacingVariant,
     styles?.description,
     theme.lineHeight.body,
+    theme.lineHeight.label2,
   ]);
 
   const detailFallback = useMemo(() => {
@@ -106,7 +122,9 @@ export const ListCellFallback = memo(function ListCellFallback({
         {!!subdetail && (
           <Fallback
             disableRandomRectWidth={disableRandomRectWidth}
-            height={theme.lineHeight.body}
+            height={
+              spacingVariant === 'condensed' ? theme.lineHeight.label2 : theme.lineHeight.body
+            }
             rectWidthVariant={getRectWidthVariant(rectWidthVariant, 1)}
             style={styles?.subdetail}
             testID="list-cell-fallback-subdetail"
@@ -119,10 +137,12 @@ export const ListCellFallback = memo(function ListCellFallback({
     detail,
     disableRandomRectWidth,
     rectWidthVariant,
+    spacingVariant,
     styles?.detail,
     styles?.subdetail,
     subdetail,
     theme.lineHeight.body,
+    theme.lineHeight.label2,
   ]);
 
   const helperTextFallback = useMemo(() => {
@@ -146,6 +166,29 @@ export const ListCellFallback = memo(function ListCellFallback({
     rectWidthVariant,
     styles?.helperText,
     theme.lineHeight.body,
+  ]);
+
+  const subtitleFallback = useMemo(() => {
+    if (!subtitle) {
+      return null;
+    }
+
+    return (
+      <Fallback
+        disableRandomRectWidth={disableRandomRectWidth}
+        height={theme.lineHeight.label1}
+        rectWidthVariant={getRectWidthVariant(rectWidthVariant, 2)}
+        style={styles?.subtitle}
+        testID="list-cell-fallback-subtitle"
+        width={80}
+      />
+    );
+  }, [
+    disableRandomRectWidth,
+    rectWidthVariant,
+    styles?.subtitle,
+    subtitle,
+    theme.lineHeight.label1,
   ]);
 
   const mediaFallback = useMemo(() => {
@@ -175,8 +218,10 @@ export const ListCellFallback = memo(function ListCellFallback({
 
   return (
     <Cell
+      accessory={accessory ? <CellAccessory type={accessory} /> : undefined}
+      accessoryNode={accessoryNode}
       bottomContent={helperTextFallback}
-      detail={detailFallback}
+      end={detailFallback}
       innerSpacing={
         innerSpacing ?? (spacingVariant === 'condensed' ? condensedInnerSpacing : undefined)
       }
@@ -184,10 +229,12 @@ export const ListCellFallback = memo(function ListCellFallback({
       outerSpacing={
         outerSpacing ?? (spacingVariant === 'condensed' ? condensedOuterSpacing : undefined)
       }
+      styles={{ accessory: styles?.accessory }}
       {...props}
     >
       <VStack gap={0.5}>
         {titleFallback}
+        {subtitleFallback}
         {descriptionFallback}
       </VStack>
     </Cell>

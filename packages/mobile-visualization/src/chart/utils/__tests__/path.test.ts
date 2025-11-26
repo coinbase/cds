@@ -77,6 +77,7 @@ describe('getLinePath', () => {
   it('should generate path for numeric data array', () => {
     const result = getLinePath({
       data: [1, 2, 3],
+      curve: 'linear',
       xScale,
       yScale,
     });
@@ -92,12 +93,37 @@ describe('getLinePath', () => {
     expect(result).toBe('M0,90ZM20,70Z');
   });
 
+  it('should connect across null values when connectNulls is true', () => {
+    const result = getLinePath({
+      data: [1, null, 3],
+      curve: 'linear',
+      xScale,
+      yScale,
+      connectNulls: true,
+    });
+    // When connectNulls is true, it should create a continuous line from point 1 to point 3
+    expect(result).toBe('M0,90L20,70');
+  });
+
+  it('should handle multiple consecutive nulls with connectNulls', () => {
+    const result = getLinePath({
+      data: [1, null, null, 4],
+      curve: 'linear',
+      xScale,
+      yScale,
+      connectNulls: true,
+    });
+    // Should connect from first to last point, skipping all nulls
+    expect(result).toBe('M0,90L30,60');
+  });
+
   it('should handle object data with x and y properties', () => {
     const result = getLinePath({
       data: [
         { x: 1, y: 2 },
         { x: 3, y: 4 },
       ],
+      curve: 'linear',
       xScale,
       yScale,
     });
@@ -107,6 +133,7 @@ describe('getLinePath', () => {
   it('should handle mixed data types', () => {
     const result = getLinePath({
       data: [1, { x: 2, y: 3 }, null, 4],
+      curve: 'linear',
       xScale,
       yScale,
     });
@@ -117,6 +144,7 @@ describe('getLinePath', () => {
     const result = getLinePath({
       data: [1, 2, 3],
       xData: [0, 5, 10],
+      curve: 'linear',
       xScale,
       yScale,
     });
@@ -212,6 +240,42 @@ describe('getAreaPath', () => {
       yScale,
     });
     expect(result).toBe('M0,90L0,100ZM20,70L20,100Z');
+  });
+
+  it('should connect across null values when connectNulls is true', () => {
+    const result = getAreaPath({
+      data: [1, null, 3],
+      curve: 'linear',
+      xScale,
+      yScale,
+      connectNulls: true,
+    });
+    // When connectNulls is true, it should create a continuous area from point 1 to point 3
+    expect(result).toBe('M0,90L20,70L20,100L0,100Z');
+  });
+
+  it('should handle multiple consecutive nulls with connectNulls', () => {
+    const result = getAreaPath({
+      data: [1, null, null, 4],
+      curve: 'linear',
+      xScale,
+      yScale,
+      connectNulls: true,
+    });
+    // Should connect from first to last point, skipping all nulls
+    expect(result).toBe('M0,90L30,60L30,100L0,100Z');
+  });
+
+  it('should handle tuple data with connectNulls', () => {
+    const result = getAreaPath({
+      data: [[1, 3], null, [2, 4]],
+      curve: 'linear',
+      xScale,
+      yScale,
+      connectNulls: true,
+    });
+    // Should connect from first tuple to last tuple, skipping the null
+    expect(result).toBe('M0,70L20,60L20,80L0,90Z');
   });
 
   it('should use custom xData when provided', () => {

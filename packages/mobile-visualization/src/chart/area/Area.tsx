@@ -1,43 +1,21 @@
 import React, { memo, useMemo } from 'react';
-import type { Rect } from '@cbhq/cds-common/types';
-import { useTheme } from '@cbhq/cds-mobile/hooks/useTheme';
 
 import { useCartesianChartContext } from '../ChartProvider';
-import { type ChartPathCurveType, getAreaPath } from '../utils';
+import { type ChartPathCurveType, getAreaPath, type Transition } from '../utils';
+import type { GradientDefinition } from '../utils/gradient';
 
 import { DottedArea } from './DottedArea';
 import { GradientArea } from './GradientArea';
 import { SolidArea } from './SolidArea';
 
-export type AreaComponentProps = {
-  d: string;
-  fill: string;
-  fillOpacity?: number;
-  clipRect?: Rect;
-  stroke?: string;
-  strokeWidth?: number;
-  /**
-   * ID of the y-axis to use.
-   * If not provided, defaults to the default y-axis.
-   */
-  yAxisId?: string;
-  /**
-   * Baseline value for the gradient.
-   * When set, overrides the default baseline.
-   */
-  baseline?: number;
-};
-
-export type AreaComponent = React.FC<AreaComponentProps>;
-
-export type AreaProps = {
+export type AreaBaseProps = {
   /**
    * The ID of the series to render. Will be used to find the data from the chart context.
    */
   seriesId: string;
   /**
    * The curve interpolation method to use for the line.
-   * @default 'linear'
+   * @default 'bump'
    */
   curve?: ChartPathCurveType;
   /**
@@ -51,49 +29,86 @@ export type AreaProps = {
    */
   AreaComponent?: AreaComponent;
   /**
+   * When true, the area is connected across null values.
+   */
+  connectNulls?: boolean;
+  /**
    * The color of the area.
-   * @default color of the series or theme.color.fgPrimary
+   * @default color of the series or 'var(--color-fgPrimary)'
    */
   fill?: string;
   /**
-   * Opacity of the area.
+   * Opacity of the area
+   * @note when combined with gradient, both will be applied
    * @default 1
    */
   fillOpacity?: number;
-  stroke?: string;
-  strokeWidth?: number;
   /**
    * Baseline value for the gradient.
    * When set, overrides the default baseline.
    */
   baseline?: number;
+  /**
+   * Gradient configuration.
+   * When provided, creates gradient or threshold-based coloring.
+   */
+  gradient?: GradientDefinition;
+  /**
+   * Whether to animate the area.
+   * Overrides the animate value from the chart context.
+   */
+  animate?: boolean;
 };
+
+export type AreaProps = AreaBaseProps & {
+  /**
+   * Transition configuration for path animations.
+   */
+  transition?: Transition;
+};
+
+export type AreaComponentProps = Pick<
+  AreaProps,
+  'fill' | 'fillOpacity' | 'baseline' | 'gradient' | 'animate' | 'transition'
+> & {
+  /**
+   * Path of the area
+   */
+  d: string;
+  /**
+   * ID of the y-axis to use.
+   * If not provided, defaults to the default y-axis.
+   */
+  yAxisId?: string;
+};
+
+export type AreaComponent = React.FC<AreaComponentProps>;
 
 export const Area = memo<AreaProps>(
   ({
     seriesId,
-    curve = 'linear',
+    curve = 'bump',
     type = 'solid',
-    AreaComponent: SelectedAreaComponent,
-    fill: specifiedFill,
+    AreaComponent: AreaComponentProp,
+    fill: fillProp,
     fillOpacity = 1,
-    stroke,
-    strokeWidth,
     baseline,
+    connectNulls,
+    gradient: gradientProp,
+    transition,
+    animate,
   }) => {
-    const theme = useTheme();
-    const { getSeries, getSeriesData, getXScale, getYScale, getXAxis, drawingArea } =
-      useCartesianChartContext();
+    const { getSeries, getSeriesData, getXScale, getYScale, getXAxis } = useCartesianChartContext();
 
-    // Get sourceData from series (using stacked data if available)
     const matchedSeries = useMemo(() => getSeries(seriesId), [seriesId, getSeries]);
+    const gradient = useMemo(
+      () => gradientProp ?? matchedSeries?.gradient,
+      [gradientProp, matchedSeries?.gradient],
+    );
+    const fill = useMemo(() => fillProp ?? matchedSeries?.color, [fillProp, matchedSeries?.color]);
 
-    // Check for stacked data first, then fall back to raw data
-    const sourceData = useMemo(() => {
-      return getSeriesData(seriesId) || null;
-    }, [seriesId, getSeriesData]);
+    const sourceData = useMemo(() => getSeriesData(seriesId), [seriesId, getSeriesData]);
 
-    // Get scales and axes for this series
     const xAxis = getXAxis();
     const xScale = getXScale();
     const yScale = getYScale(matchedSeries?.yAxisId);
@@ -113,40 +128,37 @@ export const Area = memo<AreaProps>(
         yScale,
         curve,
         xData,
+        connectNulls,
       });
-    }, [sourceData, xScale, yScale, curve, xAxis?.data]);
+    }, [sourceData, xScale, yScale, curve, xAxis?.data, connectNulls]);
 
     const AreaComponent = useMemo((): AreaComponent => {
-      if (SelectedAreaComponent) {
-        return SelectedAreaComponent;
+      if (AreaComponentProp) {
+        return AreaComponentProp;
       }
 
       switch (type) {
-        case 'solid':
-          return SolidArea;
         case 'dotted':
           return DottedArea;
         case 'gradient':
-        default:
           return GradientArea;
+        case 'solid':
+        default:
+          return SolidArea;
       }
-    }, [SelectedAreaComponent, type]);
+    }, [AreaComponentProp, type]);
 
-    if (!xScale || !yScale || !sourceData || !area) {
-      return null;
-    }
-
-    const fill = specifiedFill ?? matchedSeries?.color ?? theme.color.fgPrimary;
+    if (!xScale || !yScale || !sourceData || !area) return;
 
     return (
       <AreaComponent
+        animate={animate}
         baseline={baseline}
-        clipRect={drawingArea}
         d={area}
         fill={fill}
         fillOpacity={fillOpacity}
-        stroke={stroke}
-        strokeWidth={strokeWidth}
+        gradient={gradient}
+        transition={transition}
         yAxisId={matchedSeries?.yAxisId}
       />
     );
