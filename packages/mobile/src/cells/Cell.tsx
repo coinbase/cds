@@ -111,7 +111,7 @@ export const Cell = memo(function Cell({
   testID,
   accessibilityLabel,
   accessibilityHint,
-  accessibilityRole,
+  accessibilityRole = 'button',
   accessibilityState,
   gap = 2,
   columnGap,
