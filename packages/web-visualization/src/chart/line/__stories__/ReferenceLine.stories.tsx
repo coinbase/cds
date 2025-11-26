@@ -1,4 +1,4 @@
-import { memo, type RefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { assets } from '@cbhq/cds-common/internal/data/assets';
 import { sparklineInteractiveData } from '@cbhq/cds-common/internal/visualizations/SparklineInteractiveData';
 import { useTheme } from '@cbhq/cds-web';
@@ -7,6 +7,8 @@ import { TextHeadline } from '@cbhq/cds-web/typography';
 
 import { useCartesianChartContext } from '../../ChartProvider';
 import { ChartText } from '../../text/ChartText';
+import { DefaultReferenceLineLabel } from '../DefaultReferenceLineLabel';
+import { DottedLine } from '../DottedLine';
 import { LineChart } from '../LineChart';
 import { ReferenceLine } from '../ReferenceLine';
 import { SolidLine } from '../SolidLine';
@@ -27,6 +29,67 @@ const Example: React.FC<
     </VStack>
   );
 };
+
+// Memoized label components for performance
+const LeftAlignedLabel = memo<React.ComponentProps<typeof DefaultReferenceLineLabel>>((props) => (
+  <DefaultReferenceLineLabel {...props} dx={16} horizontalAlignment="left" />
+));
+
+const LeftAlignedLabelWithOffset = memo<React.ComponentProps<typeof DefaultReferenceLineLabel>>(
+  (props) => <DefaultReferenceLineLabel {...props} dx={8} horizontalAlignment="left" />,
+);
+
+const PositivePriceLabel = memo<React.ComponentProps<typeof DefaultReferenceLineLabel>>((props) => (
+  <DefaultReferenceLineLabel
+    {...props}
+    background="var(--color-bgPositive)"
+    borderRadius={8}
+    color="white"
+    dx={-16}
+    inset={{ top: 8, bottom: 8, left: 12, right: 12 }}
+  />
+));
+
+const LiquidationLabel = memo<React.ComponentProps<typeof DefaultReferenceLineLabel>>((props) => (
+  <DefaultReferenceLineLabel
+    {...props}
+    background="var(--color-accentSubtleYellow)"
+    borderRadius={4}
+    color="rgb(var(--yellow70))"
+    dx={12}
+    font="label1"
+    horizontalAlignment="left"
+    inset={{ top: 4, bottom: 4, left: 8, right: 8 }}
+  />
+));
+
+const PriceLabel = memo<React.ComponentProps<typeof DefaultReferenceLineLabel>>((props) => (
+  <DefaultReferenceLineLabel
+    {...props}
+    background="var(--color-bg)"
+    borderRadius={4}
+    color="rgb(var(--yellow70))"
+    dx={-12}
+    font="label1"
+    horizontalAlignment="right"
+    inset={{ top: 2, bottom: 2, left: 4, right: 4 }}
+  />
+));
+
+const DynamicPriceLabel = memo<
+  React.ComponentProps<typeof DefaultReferenceLineLabel> & { color: string }
+>(({ color, ...props }) => (
+  <DefaultReferenceLineLabel
+    {...props}
+    background={color}
+    borderRadius={4}
+    color="white"
+    dx={-12}
+    font="label1"
+    horizontalAlignment="right"
+    inset={{ top: 5, bottom: 5, left: 10, right: 10 }}
+  />
+));
 
 const DragIcon = ({ x, y }: { x: number; y: number }) => {
   const DragCircle = (props: React.SVGProps<SVGCircleElement>) => (
@@ -84,7 +147,7 @@ const DraggableReferenceLine = memo(
   }: {
     baselineAmount: number;
     startAmount: number;
-    chartRef: RefObject<SVGSVGElement>;
+    chartRef: React.RefObject<SVGSVGElement>;
   }) => {
     const theme = useTheme();
 
@@ -161,6 +224,13 @@ const DraggableReferenceLine = memo(
       };
     }, [isDragging, yScale, chartRef, baselineAmount, drawingArea.y, drawingArea.height]);
 
+    const labelComponent = useCallback(
+      (props: React.ComponentProps<typeof DefaultReferenceLineLabel>) => (
+        <DynamicPriceLabel {...props} color={color} />
+      ),
+      [color],
+    );
+
     if (!yScale) return null;
 
     const yPixel = yScale(amount);
@@ -190,18 +260,10 @@ const DraggableReferenceLine = memo(
     return (
       <>
         <ReferenceLine
+          LabelComponent={labelComponent}
           dataY={amount}
           label={dollarLabel}
           labelPosition="right"
-          labelProps={{
-            background: color,
-            borderRadius: 4,
-            color: 'white',
-            dx: -12,
-            font: 'label1',
-            horizontalAlignment: 'right',
-            inset: { top: 5, bottom: 5, left: 10, right: 10 },
-          }}
         />
         <g
           onMouseDown={handleMouseDown}
@@ -261,7 +323,6 @@ const PriceTargetChart = () => {
       ref={chartRef}
       showArea
       animate={false}
-      curve="monotone"
       height={250}
       inset={{ top: 16, bottom: 16, left: 8, right: 80 }}
       series={[
@@ -274,10 +335,10 @@ const PriceTargetChart = () => {
       yAxis={{ domain: ({ min, max }) => ({ min: min * 0.7, max: max * 1.3 }) }}
     >
       <ReferenceLine
+        LabelComponent={LeftAlignedLabelWithOffset}
         LineComponent={SolidLine}
         dataY={priceData[priceData.length - 1]}
         label={formatPrice(priceData[priceData.length - 1])}
-        labelProps={{ dx: 8, horizontalAlignment: 'left' }}
       />
       <DraggableReferenceLine
         baselineAmount={priceData[priceData.length - 1]}
@@ -291,10 +352,30 @@ const PriceTargetChart = () => {
 export const All = () => {
   return (
     <VStack gap={2}>
-      <Example title="Basic Reference Line">
+      <Example title="Simple Reference Line">
         <LineChart
           showArea
-          curve="monotone"
+          height={250}
+          series={[
+            {
+              id: 'prices',
+              data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+              color: 'var(--color-fgPositive)',
+            },
+          ]}
+        >
+          <ReferenceLine
+            LineComponent={(props) => (
+              <DottedLine {...props} strokeDasharray="0 16" strokeWidth={3} />
+            )}
+            dataY={10}
+            stroke="var(--color-fg)"
+          />
+        </LineChart>
+      </Example>
+      <Example title="With Label">
+        <LineChart
+          showArea
           height={250}
           inset={{ right: 32 }}
           series={[
@@ -304,19 +385,16 @@ export const All = () => {
             },
           ]}
         >
-          <ReferenceLine
-            dataY={50}
-            label="$50"
-            labelProps={{ dx: 16, horizontalAlignment: 'left' }}
-          />
+          <ReferenceLine dataY={50} label="$50" labelDx={16} labelHorizontalAlignment="left" />
         </LineChart>
       </Example>
-      <Example title="Price Reference Line">
+      <Example
+        description="Using labelDx, labelDy, labelHorizontalAlignment, and labelVerticalAlignment props"
+        title="Label Customization"
+      >
         <LineChart
           showArea
-          curve="monotone"
           height={250}
-          inset={{ right: 32 }}
           series={[
             {
               id: 'prices',
@@ -326,20 +404,48 @@ export const All = () => {
         >
           <ReferenceLine
             dataY={75}
+            label="Top Right"
+            labelDx={-8}
+            labelDy={-8}
+            labelFont="label1"
+            labelHorizontalAlignment="right"
+            labelPosition="right"
+            labelVerticalAlignment="bottom"
+          />
+          <ReferenceLine
+            dataX={7}
+            label="Bottom Left"
+            labelDx={8}
+            labelDy={8}
+            labelFont="label1"
+            labelHorizontalAlignment="left"
+            labelPosition="top"
+            labelVerticalAlignment="top"
+          />
+        </LineChart>
+      </Example>
+      <Example title="Price Reference Line">
+        <LineChart
+          showArea
+          height={250}
+          inset={{ right: 32 }}
+          series={[
+            {
+              id: 'prices',
+              data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+            },
+          ]}
+        >
+          <ReferenceLine
+            LabelComponent={PositivePriceLabel}
+            dataY={75}
             label="$75"
             labelPosition="right"
-            labelProps={{
-              dx: -16,
-              borderRadius: 8,
-              color: 'white',
-              background: 'var(--color-bgPositive)',
-            }}
           />
         </LineChart>
       </Example>
       <Example title="Liquidation">
         <LineChart
-          curve="monotone"
           height={250}
           inset={{ right: 4 }}
           series={[
@@ -350,33 +456,17 @@ export const All = () => {
           ]}
         >
           <ReferenceLine
+            LabelComponent={LiquidationLabel}
             dataY={25}
             label="Liquidation"
             labelPosition="left"
-            labelProps={{
-              horizontalAlignment: 'left',
-              dx: 12,
-              borderRadius: 4,
-              inset: { top: 4, bottom: 4, left: 8, right: 8 },
-              color: 'rgb(var(--yellow70))',
-              background: 'var(--color-accentSubtleYellow)',
-              font: 'label1',
-            }}
             stroke="var(--color-bgWarning)"
           />
           <ReferenceLine
+            LabelComponent={PriceLabel}
             dataY={25}
             label="$25"
             labelPosition="right"
-            labelProps={{
-              horizontalAlignment: 'right',
-              dx: -12,
-              borderRadius: 4,
-              inset: { top: 2, bottom: 2, left: 4, right: 4 },
-              color: 'rgb(var(--yellow70))',
-              background: 'var(--color-bg)',
-              font: 'label1',
-            }}
             stroke="transparent"
           />
         </LineChart>

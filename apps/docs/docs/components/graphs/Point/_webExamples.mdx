@@ -1,30 +1,71 @@
-## Basic Example
+## Basics
 
 Points are visual markers that highlight specific data values on a chart. They can be used to emphasize important data points, show discrete values, or provide interactive elements.
+
+You can add points using `points` on Line or [LineChart](/components/graphs/LineChart).
 
 ```jsx live
 <LineChart
   enableScrubbing
+  showArea
+  showYAxis
   height={{ base: 150, tablet: 200, desktop: 250 }}
+  points
   series={[
     {
       id: 'prices',
       data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
     },
   ]}
-  curve="monotone"
-  showYAxis
-  showArea
+  xAxis={{
+    /* This prevents points close to the right edge from awkward cutoff when scrubbing */
+    range: ({ min, max }) => ({ min, max: max - 8 }),
+  }}
   yAxis={{
     showGrid: true,
   }}
-  renderPoints={() => true}
 >
   <Scrubber />
 </LineChart>
 ```
 
-## Conditional Points
+You can also add Points directly to a chart.
+
+```jsx live
+function MyChart() {
+  const prices = [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58];
+
+  return (
+    <CartesianChart
+      height={{ base: 150, tablet: 200, desktop: 250 }}
+      series={[
+        {
+          id: 'prices',
+          data: prices,
+        },
+      ]}
+      inset={{
+        // Overriding the right offset gives us more space to place this
+        right: 32,
+      }}
+    >
+      <YAxis showGrid position="left" tickLabelFormatter={(value) => `$${value}`} />
+      {prices.map((price, index) => (
+        <Point
+          seriesId="prices"
+          key={index}
+          dataX={index}
+          dataY={price}
+          label={`$${price}`}
+          labelPosition="right"
+        />
+      ))}
+    </CartesianChart>
+  );
+}
+```
+
+### Conditional
 
 You can conditionally render points to highlight specific values in your data, such as maximum/minimum values or outliers.
 
@@ -44,6 +85,21 @@ function AssetPriceWithMinMax() {
 
   return (
     <LineChart
+      showArea
+      areaType="dotted"
+      height={{ base: 150, tablet: 200, desktop: 250 }}
+      points={({ dataX, dataY }: PointBaseProps) => {
+        const isMin = dataY === minPrice;
+        const isMax = dataY === maxPrice;
+
+        if (isMin) {
+          return { label: formatPrice(dataY), labelPosition: 'bottom' };
+        }
+
+        if (isMax) {
+          return { label: formatPrice(dataY), labelPosition: 'top' };
+        }
+      }}
       series={[
         {
           id: 'btc',
@@ -51,48 +107,22 @@ function AssetPriceWithMinMax() {
           color: assets.btc.color,
         },
       ]}
-      showArea
-      areaType="dotted"
-      height={{ base: 150, tablet: 200, desktop: 250 }}
       style={{ outlineColor: assets.btc.color }}
-      renderPoints={({ dataX, dataY }) => {
-        const isMin = dataY === minPrice;
-        const isMax = dataY === maxPrice;
-
-        if (isMin) {
-          return { label: formatPrice(dataY), labelProps: {  dy: 6, verticalAlignment: 'top' } };
-        }
-
-        if (isMax) {
-          return { label: formatPrice(dataY), labelProps: { dy: -6, verticalAlignment: 'bottom' } };
-        }
-      }}
     />
   );
 };
 ```
 
-## Interactive Points
+## Interaction
 
 Points can be made interactive by adding click handlers, allowing users to explore data in more detail.
 
 ```jsx live
 <LineChart
-  height={{ base: 150, tablet: 200, desktop: 250 }}
-  series={[
-    {
-      id: 'sales',
-      data: [120, 132, 101, 134, 90, 230, 210, 120, 180, 190, 210, 176],
-    },
-  ]}
-  curve="monotone"
-  showYAxis
   showArea
-  yAxis={{
-    showGrid: true,
-    label: 'Sales (units)',
-  }}
-  renderPoints={({ dataX, dataY }) => {
+  showYAxis
+  height={{ base: 150, tablet: 200, desktop: 250 }}
+  points={({ dataX, dataY }) => {
     const months = [
       'Jan',
       'Feb',
@@ -113,30 +143,29 @@ Points can be made interactive by adding click handlers, allowing users to explo
       accessibilityLabel: `${months[dataX]} sales: ${dataY} units`,
     };
   }}
+  series={[
+    {
+      id: 'sales',
+      data: [120, 132, 101, 134, 90, 230, 210, 120, 180, 190, 210, 176],
+    },
+  ]}
+  yAxis={{
+    showGrid: true,
+    label: 'Sales (units)',
+  }}
 />
 ```
 
-## Customization
+## Styling
 
-Points support extensive customization through various properties including colors, sizes, animations, and labels.
+Points support customization through various properties including colors, sizes, and labels.
 
 ```jsx live
 <LineChart
-  height={{ base: 150, tablet: 200, desktop: 250 }}
-  series={[
-    {
-      id: 'performance',
-      data: [65, 70, 72, 85, 88, 92, 78, 82, 90, 95, 91, 94],
-    },
-  ]}
-  curve="monotone"
-  showYAxis
   showArea
-  yAxis={{
-    showGrid: true,
-    label: 'Performance Score',
-  }}
-  renderPoints={({ dataX, dataY }) => {
+  showYAxis
+  height={{ base: 150, tablet: 200, desktop: 250 }}
+  points={({ dataX, dataY }) => {
     const isHighPerformance = dataY >= 90;
     const isLowPerformance = dataY < 75;
 
@@ -150,16 +179,139 @@ Points support extensive customization through various properties including colo
       strokeWidth: 2,
       stroke: 'var(--color-bg)',
       label: isHighPerformance || isLowPerformance ? `${dataY}%` : undefined,
-      labelProps: {
-        verticalAlignment: isHighPerformance ? 'bottom' : 'top',
-        dy: isHighPerformance ? -10 : 10,
-        color: isHighPerformance
-          ? 'var(--color-fgPositive)'
-          : isLowPerformance
-            ? 'var(--color-fgNegative)'
-            : undefined,
-      },
+      labelPosition: isHighPerformance ? 'top' : 'bottom',
     };
   }}
+  series={[
+    {
+      id: 'performance',
+      data: [65, 70, 72, 85, 88, 92, 78, 82, 90, 95, 91, 94],
+    },
+  ]}
+  xAxis={{
+    range: ({ min, max }) => ({ min, max: max - 8 }),
+  }}
+  yAxis={{
+    showGrid: true,
+    label: 'Performance Score',
+  }}
 />
+```
+
+### Labels
+
+You can use `labelPosition`, `labelOffset`, and `labelFont` to adjust Point's label.
+
+```jsx live
+function Scatterplot() {
+  const dataPoints = [
+    { x: 20, y: 30, label: 'A' },
+    { x: 40, y: 65, label: 'B' },
+    { x: 60, y: 45, label: 'C' },
+    { x: 75, y: 80, label: 'D' },
+  ];
+
+  return (
+    <CartesianChart
+      height={250}
+      xAxis={{
+        domain: { min: 0, max: 100 },
+      }}
+      yAxis={{
+        domain: { min: 0, max: 100 },
+      }}
+    >
+      <XAxis showLine showTickMarks showGrid />
+      <YAxis position="left" showLine showTickMarks showGrid />
+      {dataPoints.map((point, index) => (
+        <Point
+          key={index}
+          dataX={point.x}
+          dataY={point.y}
+          label={point.label}
+          labelPosition="top"
+          labelOffset={6}
+          labelFont="title3"
+        />
+      ))}
+    </CartesianChart>
+  );
+}
+```
+
+### Custom Label Position
+
+You can also use `LabelComponent` to create custom label components.
+
+```jsx live
+function ScatterplotWithCustomLabels() {
+  const dataPoints = [
+    { x: 12, y: 34, label: 'A', color: 'var(--color-fgAccent)' },
+    { x: 28, y: 67, label: 'B', color: 'var(--color-fgAccent)' },
+    { x: 45, y: 23, label: 'C', color: 'var(--color-fgAccent)' },
+    { x: 67, y: 89, label: 'D', color: 'var(--color-bgPositive)' },
+    { x: 82, y: 76, label: 'E', color: 'var(--color-bgPositive)' },
+    { x: 34, y: 91, label: 'F', color: 'var(--color-bgPositive)' },
+    { x: 56, y: 45, label: 'G', color: 'var(--color-bgPositive)' },
+    { x: 19, y: 12, label: 'H', color: 'var(--color-fgWarning)' },
+    { x: 73, y: 28, label: 'I', color: 'var(--color-fgWarning)' },
+    { x: 91, y: 54, label: 'J', color: 'var(--color-fgWarning)' },
+    { x: 15, y: 58, label: 'K', color: 'var(--color-fgPrimary)' },
+    { x: 39, y: 72, label: 'L', color: 'var(--color-fgPrimary)' },
+    { x: 88, y: 15, label: 'M', color: 'var(--color-fgPrimary)' },
+    { x: 52, y: 82, label: 'N', color: 'var(--color-fgPrimary)' },
+  ];
+
+  // Calculate domain based on data
+  const xValues = dataPoints.map((p) => p.x);
+  const yValues = dataPoints.map((p) => p.y);
+  const xMin = Math.min(...xValues);
+  const xMax = Math.max(...xValues);
+  const yMin = Math.min(...yValues);
+  const yMax = Math.max(...yValues);
+
+  // Custom label component that places labels to the top-right
+  const TopRightPointLabel = ({ x, y, offset = 0, children }) => {
+    return (
+      <ChartText
+        horizontalAlignment="left"
+        verticalAlignment="bottom"
+        x={x + offset}
+        y={y - offset}
+        font="label1"
+      >
+        {children}
+      </ChartText>
+    );
+  };
+
+  return (
+    <CartesianChart
+      height={300}
+      xAxis={{
+        domain: { min: xMin, max: xMax },
+        domainLimit: 'nice',
+      }}
+      yAxis={{
+        domain: { min: yMin, max: yMax },
+        domainLimit: 'nice',
+      }}
+    >
+      <XAxis showLine showTickMarks showGrid />
+      <YAxis position="left" showLine showTickMarks showGrid />
+      {dataPoints.map((point, index) => (
+        <Point
+          key={index}
+          dataX={point.x}
+          dataY={point.y}
+          label={point.label}
+          labelOffset={8}
+          fill={point.color}
+          radius={5}
+          LabelComponent={TopRightPointLabel}
+        />
+      ))}
+    </CartesianChart>
+  );
+}
 ```

@@ -1,5 +1,5 @@
 ---
-description:
+description: Information useful when generating Figma Code Connect files for new components.
 globs:
 alwaysApply: false
 ---

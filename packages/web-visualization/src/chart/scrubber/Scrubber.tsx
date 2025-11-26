@@ -1,39 +1,138 @@
-import React, {
-  forwardRef,
-  memo,
-  useCallback,
-  useEffect,
-  useImperativeHandle,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
-import { useRefMap } from '@cbhq/cds-common/hooks/useRefMap';
+import React, { forwardRef, memo, useImperativeHandle, useMemo } from 'react';
 import type { SharedProps } from '@cbhq/cds-common/types';
-import { m as motion } from 'framer-motion';
+import { m as motion, type Transition } from 'framer-motion';
 
-import { axisTickLabelsInitialAnimationVariants } from '../axis';
 import { useCartesianChartContext } from '../ChartProvider';
-import { ReferenceLine, type ReferenceLineProps } from '../line';
-import { type ChartScaleFunction, getPointOnScale, useScrubberContext } from '../utils';
+import {
+  ReferenceLine,
+  type ReferenceLineBaseProps,
+  type ReferenceLineLabelComponentProps,
+} from '../line';
+import type { ChartTextProps } from '../text';
+import {
+  accessoryFadeTransitionDelay,
+  accessoryFadeTransitionDuration,
+  type ChartInset,
+  type ChartScaleFunction,
+  getPointOnScale,
+  type Series,
+  useScrubberContext,
+} from '../utils';
 
-import { ScrubberBeacon, type ScrubberBeaconProps, type ScrubberBeaconRef } from './ScrubberBeacon';
-import { ScrubberBeaconLabel, type ScrubberBeaconLabelProps } from './ScrubberBeaconLabel';
+import { DefaultScrubberBeacon } from './DefaultScrubberBeacon';
+import { DefaultScrubberLabel } from './DefaultScrubberLabel';
+import {
+  ScrubberBeaconGroup,
+  type ScrubberBeaconGroupBaseProps,
+  type ScrubberBeaconGroupProps,
+  type ScrubberBeaconGroupRef,
+} from './ScrubberBeaconGroup';
+import {
+  ScrubberBeaconLabelGroup,
+  type ScrubberBeaconLabelGroupBaseProps,
+  type ScrubberBeaconLabelGroupProps,
+} from './ScrubberBeaconLabelGroup';
 
-const minGap = 2;
+export type ScrubberBeaconRef = {
+  /**
+   * Triggers a single pulse animation.
+   * Only works when the beacon is in idle state (not actively scrubbing).
+   */
+  pulse: () => void;
+};
 
-export type ScrubberRef = ScrubberBeaconRef;
-
-/**
- * Configuration for scrubber functionality across chart components.
- * Provides consistent API with smart defaults and component customization.
- */
-export type ScrubberProps = SharedProps &
-  Pick<ScrubberBeaconProps, 'idlePulse'> & {
+export type ScrubberBeaconProps = SharedProps & {
+  /**
+   * Id of the series.
+   */
+  seriesId: Series['id'];
+  /**
+   * Color of the series.
+   */
+  color?: string;
+  /**
+   * X coordinate in data space.
+   */
+  dataX: number;
+  /**
+   * Y coordinate in data space.
+   */
+  dataY: number;
+  /**
+   * Whether the beacon is in idle state (not actively scrubbing).
+   */
+  isIdle?: boolean;
+  /**
+   * Pulse the beacon while it is at rest.
+   */
+  idlePulse?: boolean;
+  /**
+   * Transition configuration for beacon animations.
+   */
+  transitions?: {
     /**
-     * An array of series IDs that will receive visual emphasis as the user scrubs through the chart.
-     * Use this prop to restrict the scrubbing visual behavior to specific series.
-     * By default, all series will be highlighted by the Scrubber.
+     * Transition used for beacon position updates.
+     * @default defaultTransition
+     */
+    update?: Transition;
+    /**
+     * Transition used for the pulse animation.
+     * @default { duration: 1.6, ease: 'easeInOut' }
+     */
+    pulse?: Transition;
+    /**
+     * Delay, in seconds between pulse transitions
+     * when `idlePulse` is enabled.
+     * @default 0.4
+     */
+    pulseRepeatDelay?: number;
+  };
+  /**
+   * Opacity of the beacon.
+   * @default 1
+   */
+  opacity?: number;
+  /**
+   * Custom className for styling.
+   */
+  className?: string;
+  /**
+   * Custom inline styles.
+   */
+  style?: React.CSSProperties;
+};
+
+export type ScrubberBeaconComponent = React.FC<
+  ScrubberBeaconProps & { ref?: React.Ref<ScrubberBeaconRef> }
+>;
+
+export type ScrubberBeaconLabelProps = Pick<Series, 'color'> &
+  Pick<
+    ChartTextProps,
+    'x' | 'y' | 'dx' | 'horizontalAlignment' | 'onDimensionsChange' | 'opacity' | 'font'
+  > & {
+    /**
+     * Label for the series.
+     */
+    label: string;
+    /**
+     * Id of the series.
+     */
+    seriesId: Series['id'];
+  };
+export type ScrubberBeaconLabelComponent = React.FC<ScrubberBeaconLabelProps>;
+
+export type ScrubberLabelProps = ReferenceLineLabelComponentProps;
+export type ScrubberLabelComponent = React.FC<ScrubberLabelProps>;
+
+export type ScrubberBaseProps = SharedProps &
+  Pick<ScrubberBeaconGroupBaseProps, 'idlePulse'> &
+  Pick<ReferenceLineBaseProps, 'LineComponent' | 'LabelComponent' | 'labelElevated'> &
+  Pick<ScrubberBeaconGroupProps, 'BeaconComponent'> &
+  Pick<ScrubberBeaconLabelGroupProps, 'BeaconLabelComponent'> & {
+    /**
+     * Array of series IDs to highlight when scrubbing with scrubber beacons.
+     * By default, all series will be highlighted.
      */
     seriesIds?: string[];
     /**
@@ -41,76 +140,85 @@ export type ScrubberProps = SharedProps &
      */
     hideLine?: boolean;
     /**
-     * Whether to hide the overlay rect which obscures future data.
+     * Hides the overlay rect which obscures data beyond the scrubber position.
      */
     hideOverlay?: boolean;
-
     /**
      * Offset of the overlay rect relative to the drawing area.
      * Useful for when scrubbing over lines, where the stroke width would cause part of the line to be visible.
      * @default 2
      */
     overlayOffset?: number;
-
+    /**
+     * Minimum gap between beacon labels to prevent overlap.
+     * Measured in pixels.
+     */
+    beaconLabelMinGap?: ScrubberBeaconLabelGroupBaseProps['labelMinGap'];
+    /**
+     * Horizontal offset for beacon labels from their beacon position.
+     * Measured in pixels.
+     */
+    beaconLabelHorizontalOffset?: ScrubberBeaconLabelGroupBaseProps['labelHorizontalOffset'];
     /**
      * Label text displayed above the scrubber line.
+     * Can be a static string or a function that receives the current dataIndex.
      */
-    label?: ReferenceLineProps['label'] | ((dataIndex: number) => ReferenceLineProps['label']);
-
+    label?:
+      | ReferenceLineBaseProps['label']
+      | ((dataIndex: number) => ReferenceLineBaseProps['label']);
     /**
-     * Props passed to the scrubber line's label.
+     * Font style for the scrubber line label.
      */
-    labelProps?: ReferenceLineProps['labelProps'];
+    labelFont?: ChartTextProps['font'];
+    /**
+     * Bounds inset for the scrubber line label to prevent cutoff at chart edges.
+     * @default { top: 4, bottom: 20, left: 12, right: 12 } when labelElevated is true, otherwise none
+     */
+    labelBoundsInset?: number | ChartInset;
+    /**
+     * Font style for the beacon labels.
+     */
+    beaconLabelFont?: ChartTextProps['font'];
     /**
      * Stroke color for the scrubber line.
      */
-    lineStroke?: ReferenceLineProps['stroke'];
-
+    lineStroke?: ReferenceLineBaseProps['stroke'];
     /**
-     * Custom styles for scrubber elements.
+     * Transition configuration for the scrubber beacon.
      */
-    styles?: {
-      overlay?: React.CSSProperties;
-      beacon?: React.CSSProperties;
-      line?: React.CSSProperties;
-      beaconLabel?: React.CSSProperties;
-    };
-
-    /**
-     * Custom class names for scrubber elements.
-     */
-    classNames?: {
-      overlay?: string;
-      beacon?: string;
-      line?: string;
-      beaconLabel?: string;
-    };
-
-    /**
-     * Custom component for the scrubber beacon.
-     */
-    BeaconComponent?: React.ComponentType<ScrubberBeaconProps>;
-    /**
-     * Custom component for the scrubber beacon label.
-     */
-    BeaconLabelComponent?: React.ComponentType<ScrubberBeaconLabelProps>;
-    /**
-     * Custom component for the scrubber line.
-     */
-    LineComponent?: React.ComponentType<ReferenceLineProps>;
+    beaconTransitions?: ScrubberBeaconProps['transitions'];
   };
 
-type LabelDimensions = {
-  id: string;
-  width: number;
-  height: number;
-  preferredX: number;
-  preferredY: number;
+export type ScrubberProps = ScrubberBaseProps & {
+  /**
+   * Accessibility label for the scrubber. Can be a static string or a function that receives the current dataIndex.
+   * If not provided, label will be used if it resolves to a string.
+   */
+  accessibilityLabel?: string | ((dataIndex: number) => string);
+  /**
+   * Custom styles for scrubber elements.
+   */
+  styles?: {
+    overlay?: React.CSSProperties;
+    beacon?: React.CSSProperties;
+    line?: React.CSSProperties;
+    beaconLabel?: React.CSSProperties;
+  };
+  /**
+   * Custom class names for scrubber elements.
+   */
+  classNames?: {
+    overlay?: string;
+    beacon?: string;
+    line?: string;
+    beaconLabel?: string;
+  };
 };
 
+export type ScrubberRef = ScrubberBeaconGroupRef;
+
 /**
- * Unified component that manages all scrubber elements (beacons, line, labels)
- * with intelligent collision detection and consistent positioning.
+ * Unified component that manages all scrubber elements (beacons, line, labels).
  */
 export const Scrubber = memo(
   forwardRef<ScrubberRef, ScrubberProps>(
@@ -119,55 +227,54 @@ export const Scrubber = memo(
         seriesIds,
         hideLine,
         label,
+        accessibilityLabel,
         lineStroke,
-        labelProps,
-        BeaconComponent,
+        BeaconComponent = DefaultScrubberBeacon,
         BeaconLabelComponent,
         LineComponent,
+        LabelComponent = DefaultScrubberLabel,
+        labelElevated,
         hideOverlay,
         overlayOffset = 2,
+        beaconLabelMinGap,
+        beaconLabelHorizontalOffset,
+        labelFont,
+        labelBoundsInset,
+        beaconLabelFont,
         testID,
         idlePulse,
+        beaconTransitions,
         styles,
         classNames,
       },
       ref,
     ) => {
-      const scrubberGroupRef = useRef<SVGGElement>(null);
-      const ScrubberBeaconRefs = useRefMap<ScrubberBeaconRef>();
+      const beaconGroupRef = React.useRef<ScrubberBeaconGroupRef>(null);
 
       const { scrubberPosition } = useScrubberContext();
-      const { getXScale, getYScale, getSeriesData, getXAxis, animate, series, drawingArea } =
+      const { getXScale, getXAxis, animate, series, drawingArea, dataLength } =
         useCartesianChartContext();
-      const getStackedSeriesData = getSeriesData; // getSeriesData now returns stacked data
-
-      // Track label dimensions for collision detection
-      const [labelDimensions, setLabelDimensions] = useState<Map<string, LabelDimensions>>(
-        new Map(),
-      );
 
       // Expose imperative handle with pulse method
       useImperativeHandle(ref, () => ({
         pulse: () => {
-          // Pulse all registered scrubber beacons
-          Object.values(ScrubberBeaconRefs.refs).forEach((beaconRef) => {
-            beaconRef?.pulse();
-          });
+          beaconGroupRef.current?.pulse();
         },
       }));
+
+      const filteredSeriesIds = useMemo(() => {
+        if (seriesIds === undefined) {
+          return series?.map((s) => s.id) ?? [];
+        }
+        return seriesIds;
+      }, [series, seriesIds]);
 
       const { dataX, dataIndex } = useMemo(() => {
         const xScale = getXScale() as ChartScaleFunction;
         const xAxis = getXAxis();
         if (!xScale) return { dataX: undefined, dataIndex: undefined };
 
-        const maxDataLength =
-          series?.reduce((max: any, s: any) => {
-            const seriesData = getStackedSeriesData(s.id) || getSeriesData(s.id);
-            return Math.max(max, seriesData?.length ?? 0);
-          }, 0) ?? 0;
-
-        const dataIndex = scrubberPosition ?? Math.max(0, maxDataLength - 1);
+        const dataIndex = scrubberPosition ?? Math.max(0, dataLength - 1);
 
         // Convert index to actual x value if axis has data
         let dataX: number;
@@ -179,486 +286,111 @@ export const Scrubber = memo(
         }
 
         return { dataX, dataIndex };
-      }, [getXScale, getXAxis, series, scrubberPosition, getStackedSeriesData, getSeriesData]);
+      }, [getXScale, getXAxis, scrubberPosition, dataLength]);
 
-      const beaconPositions = useMemo(() => {
-        const xScale = getXScale() as ChartScaleFunction;
+      // Compute resolved accessibility label
+      const resolvedAccessibilityLabel = useMemo(() => {
+        if (dataIndex === undefined) return undefined;
 
-        if (!xScale || dataX === undefined || dataIndex === undefined) return [];
+        // If accessibilityLabel is provided, use it
+        if (accessibilityLabel) {
+          return typeof accessibilityLabel === 'function'
+            ? accessibilityLabel(dataIndex)
+            : accessibilityLabel;
+        }
 
-        return (
+        // Otherwise, if label resolves to a string, use that
+        const resolvedLabel = typeof label === 'function' ? label(dataIndex) : label;
+        return typeof resolvedLabel === 'string' ? resolvedLabel : undefined;
+      }, [accessibilityLabel, label, dataIndex]);
+
+      const beaconLabels: ScrubberBeaconLabelGroupBaseProps['labels'] = useMemo(
+        () =>
           series
-            ?.filter((s) => {
-              if (seriesIds === undefined) return true;
-              return seriesIds.includes(s.id);
-            })
-            ?.map((s) => {
-              const sourceData = getStackedSeriesData(s.id) || getSeriesData(s.id);
-
-              // Use dataIndex to get the y value from the series data array
-              const stuff = sourceData?.[dataIndex];
-              let dataY: number | undefined;
-              if (Array.isArray(stuff)) {
-                dataY = stuff[stuff.length - 1];
-              } else if (typeof stuff === 'number') {
-                dataY = stuff;
-              }
-
-              if (dataY !== undefined) {
-                const yScale = getYScale(s.yAxisId) as ChartScaleFunction;
-                if (!yScale) {
-                  return undefined;
-                }
-
-                const pixelY = getPointOnScale(dataY, yScale);
-
-                const resolvedLabel = typeof s.label === 'function' ? s.label(dataIndex) : s.label;
-
-                return {
-                  x: dataX,
-                  y: dataY,
-                  label: resolvedLabel,
-                  pixelY,
-                  targetSeries: s,
-                };
-              }
-            })
-            .filter((beacon: any) => beacon !== undefined) ?? []
-        );
-      }, [
-        getXScale,
-        dataX,
-        dataIndex,
-        series,
-        seriesIds,
-        getStackedSeriesData,
-        getSeriesData,
-        getYScale,
-      ]);
-
-      const labelVerticalInset = 2;
-      const labelHorizontalInset = 4;
-
-      // Calculate optimal label positioning strategy
-      const labelPositioning = useMemo(() => {
-        // Get current beacon IDs that are actually being rendered
-        const currentBeaconIds = new Set(
-          beaconPositions.map((beacon: any) => beacon?.targetSeries.id).filter(Boolean),
-        );
-
-        // Only use dimensions for beacons that are currently being rendered
-        const dimensions = Array.from(labelDimensions.values()).filter((dim) =>
-          currentBeaconIds.has(dim.id),
-        );
-
-        if (dimensions.length === 0) return { strategy: 'auto', adjustments: new Map() };
-
-        const adjustments = new Map<string, { x: number; y: number; side: 'left' | 'right' }>();
-
-        // Sort by Y position to handle overlaps systematically
-        const sortedDimensions = [...dimensions].sort((a, b) => a.preferredY - b.preferredY);
-
-        // Determine if we need to switch sides globally based on overflow
-        let globalSide: 'left' | 'right' = 'right';
-
-        const anchorRadius = 10; // Same as used in ScrubberBeaconLabel
-        const bufferPx = 5; // Small buffer to prevent premature switching
-
-        // Safety check for valid bounds
-        if (drawingArea.width <= 0 || drawingArea.height <= 0) {
-          globalSide = 'right'; // Default to right if bounds are invalid
-        } else {
-          // Check if labels would overflow when positioned on the right side
-          // Account for anchor radius and padding when calculating right edge
-          const wouldOverflow = sortedDimensions.some((dim) => {
-            const labelRightEdge =
-              dim.preferredX + anchorRadius + labelHorizontalInset + dim.width + bufferPx;
-            return labelRightEdge > drawingArea.x + drawingArea.width;
-          });
-
-          globalSide = wouldOverflow ? 'left' : 'right';
-        }
-
-        // Initialize all labels at their preferred positions
-        for (const dim of sortedDimensions) {
-          adjustments.set(dim.id, {
-            x: dim.preferredX,
-            y: dim.preferredY,
-            side: globalSide,
-          });
-        }
-
-        // Check for collisions and resolve them
-        const maxIterations = 10;
-        let iteration = 0;
-
-        while (iteration < maxIterations) {
-          let hasCollisions = false;
-          iteration++;
-
-          // Sort by current Y position for systematic collision resolution
-          const currentPositions = sortedDimensions
-            .map((dim) => ({
-              ...dim,
-              currentY: adjustments.get(dim.id)!.y,
-            }))
-            .sort((a, b) => a.currentY - b.currentY);
-
-          // Check adjacent labels for overlaps
-          for (let i = 0; i < currentPositions.length - 1; i++) {
-            const current = currentPositions[i];
-            const next = currentPositions[i + 1];
-
-            const currentAdjustment = adjustments.get(current.id)!;
-            const nextAdjustment = adjustments.get(next.id)!;
-
-            // Calculate required separation
-            const requiredSeparation = current.height / 2 + next.height / 2 + minGap;
-            const currentSeparation = nextAdjustment.y - currentAdjustment.y;
-
-            if (currentSeparation < requiredSeparation) {
-              hasCollisions = true;
-              const deficit = requiredSeparation - currentSeparation;
-
-              // Move labels apart - split the adjustment
-              const offsetPerLabel = deficit / 2;
-
-              adjustments.set(current.id, {
-                ...currentAdjustment,
-                y: currentAdjustment.y - offsetPerLabel,
-              });
-              adjustments.set(next.id, {
-                ...nextAdjustment,
-                y: nextAdjustment.y + offsetPerLabel,
-              });
-            }
-          }
-
-          if (!hasCollisions) {
-            break;
-          }
-        }
-
-        // After collision resolution, ensure all labels are within bounds
-        const labelIds = Array.from(adjustments.keys());
-
-        // Group labels that are close together or overlapping
-        // This prevents distant labels from being unnecessarily shifted
-        const findConnectedGroups = () => {
-          const groups: string[][] = [];
-          const visited = new Set<string>();
-
-          for (const id of labelIds) {
-            if (visited.has(id)) continue;
-
-            const group: string[] = [id];
-            visited.add(id);
-            const queue = [id];
-
-            while (queue.length > 0) {
-              const currentId = queue.shift()!;
-              const currentAdjustment = adjustments.get(currentId)!;
-              const currentDim = sortedDimensions.find((d) => d.id === currentId)!;
-
-              // Check if this label overlaps or is close to any other unvisited label
-              for (const otherId of labelIds) {
-                if (visited.has(otherId)) continue;
-
-                const otherAdjustment = adjustments.get(otherId)!;
-                const otherDim = sortedDimensions.find((d) => d.id === otherId)!;
-
-                // Calculate distance between labels
-                const distance = Math.abs(currentAdjustment.y - otherAdjustment.y);
-                const minDistance = (currentDim.height + otherDim.height) / 2 + minGap * 2;
-
-                // Labels are considered connected if they're close enough to potentially overlap
-                if (distance <= minDistance) {
-                  visited.add(otherId);
-                  group.push(otherId);
-                  queue.push(otherId);
-                }
-              }
-            }
-
-            groups.push(group);
-          }
-
-          return groups;
-        };
-
-        const connectedGroups = findConnectedGroups();
-
-        // Process each connected group independently
-        for (const groupIds of connectedGroups) {
-          // Check if any labels in this group are outside bounds
-          const groupOutOfBounds = groupIds.some((id) => {
-            const adjustment = adjustments.get(id)!;
-            const dim = sortedDimensions.find((d) => d.id === id)!;
-            const labelTop = adjustment.y - dim.height / 2;
-            const labelBottom = adjustment.y + dim.height / 2;
-            return labelTop < drawingArea.y || labelBottom > drawingArea.y + drawingArea.height;
-          });
-
-          if (groupOutOfBounds) {
-            // Get labels in this group sorted by their preferred Y position
-            const groupLabels = groupIds
-              .map((id) => ({
-                id,
-                dim: sortedDimensions.find((d) => d.id === id)!,
-                preferredY: sortedDimensions.find((d) => d.id === id)!.preferredY,
-                currentY: adjustments.get(id)!.y,
-              }))
-              .sort((a, b) => a.preferredY - b.preferredY);
-
-            // Calculate total height needed for this group
-            const totalLabelHeight = groupLabels.reduce((sum, label) => sum + label.dim.height, 0);
-            const totalGaps = (groupLabels.length - 1) * minGap;
-            const totalNeeded = totalLabelHeight + totalGaps;
-
-            if (totalNeeded > drawingArea.height) {
-              // Not enough space - use compressed equal spacing as fallback
-              const compressedGap = Math.max(
-                2,
-                (drawingArea.height - totalLabelHeight) / Math.max(1, groupLabels.length - 1),
-              );
-              let currentY = drawingArea.y + groupLabels[0].dim.height / 2;
-
-              for (const label of groupLabels) {
-                adjustments.set(label.id, {
-                  ...adjustments.get(label.id)!,
-                  y: currentY,
-                });
-
-                currentY += label.dim.height + compressedGap;
-              }
-            } else {
-              // Enough space - use minimal displacement algorithm for this group
-              const finalPositions = [...groupLabels];
-
-              // Ensure minimum spacing between adjacent labels in this group
-              for (let i = 1; i < finalPositions.length; i++) {
-                const prev = finalPositions[i - 1];
-                const current = finalPositions[i];
-
-                // Calculate minimum Y position for current label
-                const minCurrentY =
-                  prev.preferredY + prev.dim.height / 2 + minGap + current.dim.height / 2;
-
-                if (current.preferredY < minCurrentY) {
-                  // Need to push this label down
-                  current.preferredY = minCurrentY;
-                }
-              }
-
-              // Check if this specific group fits within bounds, if not shift only this group
-              const groupTop = finalPositions[0].preferredY - finalPositions[0].dim.height / 2;
-              const groupBottom =
-                finalPositions[finalPositions.length - 1].preferredY +
-                finalPositions[finalPositions.length - 1].dim.height / 2;
-
-              let shiftAmount = 0;
-
-              if (groupTop < drawingArea.y) {
-                // Group is too high, shift down
-                shiftAmount = drawingArea.y - groupTop;
-              } else if (groupBottom > drawingArea.y + drawingArea.height) {
-                // Group is too low, shift up
-                shiftAmount = drawingArea.y + drawingArea.height - groupBottom;
-              }
-
-              // Apply final positions with shift only to this group
-              for (const label of finalPositions) {
-                const finalY = label.preferredY + shiftAmount;
-
-                // Final bounds check for individual labels
-                const clampedY = Math.max(
-                  drawingArea.y + label.dim.height / 2,
-                  Math.min(drawingArea.y + drawingArea.height - label.dim.height / 2, finalY),
-                );
-
-                adjustments.set(label.id, {
-                  ...adjustments.get(label.id)!,
-                  y: clampedY,
-                });
-              }
-            }
-          }
-        }
-
-        return { strategy: globalSide, adjustments };
-      }, [beaconPositions, labelDimensions, drawingArea]);
-
-      // Callback for labels to register their dimensions
-      const registerLabelDimensions = useCallback(
-        (id: string, width: number, height: number, x: number, y: number) => {
-          setLabelDimensions((prev) => {
-            const existing = prev.get(id);
-            const newDimensions = { id, width, height, preferredX: x, preferredY: y };
-
-            // Only update if dimensions actually changed
-            if (
-              existing &&
-              existing.width === width &&
-              existing.height === height &&
-              existing.preferredX === x &&
-              existing.preferredY === y
-            ) {
-              return prev;
-            }
-
-            const next = new Map(prev);
-            next.set(id, newDimensions);
-            return next;
-          });
-        },
-        [],
+            ?.filter((s) => filteredSeriesIds.includes(s.id))
+            .filter((s) => s.label !== undefined && s.label.length > 0)
+            .map((s) => ({
+              seriesId: s.id,
+              label: s.label!,
+              color: s.color,
+            })) ?? [],
+        [series, filteredSeriesIds],
       );
-
-      // Callback to create ref handlers for scrubber beacons
-      const createScrubberBeaconRef = useCallback(
-        (seriesId: string) => {
-          return (beaconRef: ScrubberBeaconRef | null) => {
-            if (beaconRef) {
-              ScrubberBeaconRefs.registerRef(seriesId, beaconRef);
-            }
-          };
-        },
-        [ScrubberBeaconRefs],
-      );
-
-      // synchronize label positioning state when the position of any scrubber beacons change
-      useEffect(() => {
-        const currentBeaconIds = new Set(
-          beaconPositions.map((beacon: any) => beacon?.targetSeries.id).filter(Boolean),
-        );
-
-        setLabelDimensions((prev) => {
-          const next = new Map();
-          for (const [id, dimensions] of prev) {
-            if (currentBeaconIds.has(id)) {
-              next.set(id, dimensions);
-            }
-          }
-          return next;
-        });
-      }, [beaconPositions]);
 
       // Check if we have at least the default X scale
       const defaultXScale = getXScale();
       if (!defaultXScale) return null;
-
-      // Use custom components if provided
-      const ScrubberLineComponent = LineComponent ?? ReferenceLine;
-      const ScrubberBeaconComponent = BeaconComponent ?? ScrubberBeacon;
-      const ScrubberBeaconLabelComponent = BeaconLabelComponent ?? ScrubberBeaconLabel;
 
       const pixelX =
         dataX !== undefined && defaultXScale ? getPointOnScale(dataX, defaultXScale) : undefined;
 
       return (
         <motion.g
-          ref={scrubberGroupRef}
+          aria-atomic="true"
+          aria-label={resolvedAccessibilityLabel}
+          aria-live="polite"
           data-component="scrubber-group"
           data-testid={testID}
+          role="status"
           {...(animate
             ? {
-                animate: 'animate',
-                exit: 'exit',
-                initial: 'initial',
-                variants: axisTickLabelsInitialAnimationVariants,
+                animate: {
+                  opacity: 1,
+                  transition: {
+                    duration: accessoryFadeTransitionDuration,
+                    delay: accessoryFadeTransitionDelay,
+                  },
+                },
+                exit: { opacity: 0, transition: { duration: accessoryFadeTransitionDuration } },
+                initial: { opacity: 0 },
               }
             : {})}
         >
-          {!hideOverlay &&
-            dataX !== undefined &&
-            scrubberPosition !== undefined &&
-            pixelX !== undefined && (
-              <rect
-                className={classNames?.overlay}
-                fill="var(--color-bg)"
-                height={drawingArea.height + overlayOffset * 2}
-                opacity={0.8}
-                style={styles?.overlay}
-                width={drawingArea.x + drawingArea.width - pixelX + overlayOffset}
-                x={pixelX}
-                y={drawingArea.y - overlayOffset}
-              />
-            )}
-          {!hideLine && scrubberPosition !== undefined && dataX !== undefined && (
-            <ScrubberLineComponent
-              className={classNames?.line}
-              dataX={dataX}
-              label={typeof label === 'function' ? label(dataIndex) : label}
-              labelProps={{
-                verticalAlignment: 'middle',
-                // Place in the middle vertically by default
-                dy: -0.5 * drawingArea.y,
-                ...labelProps,
-              }}
-              stroke={lineStroke}
-              style={styles?.line}
+          {!hideOverlay && scrubberPosition !== undefined && pixelX !== undefined && (
+            <rect
+              className={classNames?.overlay}
+              fill="var(--color-bg)"
+              height={drawingArea.height + overlayOffset * 2}
+              opacity={0.8}
+              style={styles?.overlay}
+              width={drawingArea.x + drawingArea.width - pixelX + overlayOffset}
+              x={pixelX}
+              y={drawingArea.y - overlayOffset}
             />
           )}
-          {beaconPositions.map((beacon: any) => {
-            if (!beacon) return null;
-            const adjustment = labelPositioning.adjustments.get(beacon.targetSeries.id);
-            const dotStroke = beacon.targetSeries?.color || 'var(--color-fgPrimary)';
-
-            return (
-              <g key={beacon.targetSeries.id} data-component="scrubber-beacon">
-                <ScrubberBeaconComponent
-                  ref={createScrubberBeaconRef(beacon.targetSeries.id) as any}
-                  className={classNames?.beacon}
-                  color={beacon.targetSeries?.color}
-                  dataX={beacon.x}
-                  dataY={beacon.y}
-                  idlePulse={idlePulse}
-                  seriesId={beacon.targetSeries.id}
-                  style={styles?.beacon}
-                  testID={testID ? `${testID}-${beacon.targetSeries.id}-dot` : undefined}
-                />
-                {beacon.label &&
-                  pixelX !== undefined &&
-                  (() => {
-                    const finalAnchorX = adjustment?.x ?? pixelX;
-                    const finalAnchorY = adjustment?.y ?? beacon.pixelY;
-                    const finalSide = adjustment?.side ?? labelPositioning.strategy;
-
-                    return (
-                      <ScrubberBeaconLabelComponent
-                        background="var(--color-bg)"
-                        bounds={drawingArea}
-                        className={classNames?.beaconLabel}
-                        color={dotStroke}
-                        dx={finalSide === 'right' ? 16 : -16}
-                        horizontalAlignment={finalSide === 'right' ? 'left' : 'right'}
-                        inset={{
-                          left: labelHorizontalInset,
-                          right: labelHorizontalInset,
-                          top: labelVerticalInset,
-                          bottom: labelVerticalInset,
-                        }}
-                        onDimensionsChange={({ width, height }) =>
-                          registerLabelDimensions(
-                            beacon.targetSeries.id,
-                            width,
-                            height,
-                            pixelX,
-                            beacon.pixelY,
-                          )
-                        }
-                        style={styles?.beaconLabel}
-                        testID={testID ? `${testID}-${beacon.targetSeries.id}-label` : undefined}
-                        x={finalAnchorX}
-                        y={finalAnchorY}
-                      >
-                        {beacon.label}
-                      </ScrubberBeaconLabelComponent>
-                    );
-                  })()}
-              </g>
-            );
-          })}
+          {!hideLine && scrubberPosition !== undefined && dataX !== undefined && (
+            <ReferenceLine
+              LabelComponent={LabelComponent}
+              LineComponent={LineComponent}
+              classNames={{ label: classNames?.line }}
+              dataX={dataX}
+              label={typeof label === 'function' ? label(dataIndex) : label}
+              labelBoundsInset={labelBoundsInset}
+              labelElevated={labelElevated}
+              labelFont={labelFont}
+              stroke={lineStroke}
+              styles={{ label: styles?.line }}
+            />
+          )}
+          <ScrubberBeaconGroup
+            ref={beaconGroupRef}
+            BeaconComponent={BeaconComponent}
+            className={classNames?.beacon}
+            idlePulse={idlePulse}
+            seriesIds={filteredSeriesIds}
+            style={styles?.beacon}
+            testID={testID}
+            transitions={beaconTransitions}
+          />
+          {beaconLabels.length > 0 && (
+            <ScrubberBeaconLabelGroup
+              BeaconLabelComponent={BeaconLabelComponent}
+              labelFont={beaconLabelFont}
+              labelHorizontalOffset={beaconLabelHorizontalOffset}
+              labelMinGap={beaconLabelMinGap}
+              labels={beaconLabels}
+            />
+          )}
         </motion.g>
       );
     },

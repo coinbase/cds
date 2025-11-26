@@ -62,21 +62,27 @@ export const getPathCurveFunction = (curve: ChartPathCurveType = 'linear') => {
  * @example
  * ```typescript
  * const chartScale = getChartScale({ chartRect, domain, range, xScale, yScale });
- * const path = getLinePath({ data: [1, 2, 3], chartScale, curve: 'linear' });
+ * const path = getLinePath({ data: [1, 2, 3], chartScale, curve: 'bump' });
  * ```
  */
 export const getLinePath = ({
   data,
-  curve = 'linear',
+  curve = 'bump',
   xScale,
   yScale,
   xData,
+  connectNulls,
 }: {
   data: (number | null | { x: number; y: number })[];
   curve?: ChartPathCurveType;
   xScale: ChartScaleFunction;
   yScale: ChartScaleFunction;
   xData?: number[];
+  /**
+   * When true, null values are skipped and the line connects across gaps.
+   * By default, null values create gaps in the line.
+   */
+  connectNulls?: boolean;
 }): string => {
   if (data.length === 0) {
     return '';
@@ -86,13 +92,17 @@ export const getLinePath = ({
 
   const dataPoints = projectPoints({ data, xScale, yScale, xData });
 
+  // When connectNulls is true, filter out null values before rendering
+  // When false, use defined() to create gaps in the line
+  const filteredPoints = connectNulls ? dataPoints.filter((d) => d !== null) : dataPoints;
+
   const pathGenerator = d3Line<{ x: number; y: number } | null>()
     .x((d) => d!.x)
     .y((d) => d!.y)
     .curve(curveFunction)
-    .defined((d) => d !== null); // Only draw lines where point is not null
+    .defined((d) => connectNulls || d !== null);
 
-  return pathGenerator(dataPoints) ?? '';
+  return pathGenerator(filteredPoints) ?? '';
 };
 
 /**
@@ -119,16 +129,22 @@ export const getLinePath = ({
  */
 export const getAreaPath = ({
   data,
-  curve = 'linear',
+  curve = 'bump',
   xScale,
   yScale,
   xData,
+  connectNulls,
 }: {
   data: (number | null)[] | Array<[number, number] | null>;
   xScale: ChartScaleFunction;
   yScale: ChartScaleFunction;
   curve: ChartPathCurveType;
   xData?: number[];
+  /**
+   * When true, null values are skipped and the area connects across gaps.
+   * By default null values create gaps in the area.
+   */
+  connectNulls?: boolean;
 }): string => {
   if (data.length === 0) {
     return '';
@@ -195,6 +211,10 @@ export const getAreaPath = ({
     };
   });
 
+  // When connectNulls is true, filter out invalid points before rendering
+  // When false, use defined() to create gaps in the area
+  const filteredPoints = connectNulls ? dataPoints.filter((d) => d.isValid) : dataPoints;
+
   const areaGenerator = d3Area<{
     x: number;
     low: number | null;
@@ -205,10 +225,24 @@ export const getAreaPath = ({
     .y0((d) => d.low ?? 0) // Bottom boundary (low values), fallback to 0
     .y1((d) => d.high ?? 0) // Top boundary (high values), fallback to 0
     .curve(curveFunction)
-    .defined((d) => d.isValid && d.low != null && d.high != null); // Only draw where both values exist
+    .defined((d) => connectNulls || (d.isValid && d.low != null && d.high != null)); // Only draw where both values exist
 
-  const result = areaGenerator(dataPoints);
+  const result = areaGenerator(filteredPoints);
   return result ?? '';
+};
+
+/**
+ * Converts line coordinates to an SVG path string.
+ * Useful for rendering axis lines and tick marks.
+ *
+ * @example
+ * ```typescript
+ * const path = lineToPath(0, 0, 100, 100);
+ * // Returns: "M 0 0 L 100 100"
+ * ```
+ */
+export const lineToPath = (x1: number, y1: number, x2: number, y2: number): string => {
+  return `M${x1},${y1} L${x2},${y2}`;
 };
 
 /**

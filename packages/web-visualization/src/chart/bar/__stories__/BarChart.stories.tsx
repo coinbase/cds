@@ -6,10 +6,10 @@ import { Text } from '@cbhq/cds-web/typography';
 import { CartesianChart } from '../..';
 import { XAxis, YAxis } from '../../axis';
 import { useCartesianChartContext } from '../../ChartProvider';
-import { ReferenceLine, SolidLine, type SolidLineProps } from '../../line';
+import { type LineComponentProps, ReferenceLine, SolidLine, type SolidLineProps } from '../../line';
 import { PeriodSelector } from '../../PeriodSelector';
 import { Scrubber } from '../../scrubber';
-import { isCategoricalScale, ScrubberContext } from '../../utils';
+import { isCategoricalScale, ScrubberContext, useScrubberContext } from '../../utils';
 import { BarChart } from '../BarChart';
 import { BarPlot } from '../BarPlot';
 import { type BarStackComponentProps } from '../BarStack';
@@ -213,6 +213,32 @@ const Candlesticks = () => {
     .reverse();
   const min = Math.min(...stockData.map((data) => parseFloat(data.low)));
 
+  // Custom line component that renders a rect to highlight the entire bandwidth
+  const BandwidthHighlight = memo<LineComponentProps>(({ stroke }) => {
+    const { getXScale, drawingArea } = useCartesianChartContext();
+    const { scrubberPosition } = useScrubberContext();
+    const xScale = getXScale();
+
+    if (!xScale || scrubberPosition === undefined) return null;
+
+    const xPos = xScale(scrubberPosition);
+
+    if (xPos === undefined) return null;
+
+    // Type guard to check if scale has bandwidth (band scale)
+    const bandwidth = 'bandwidth' in xScale ? xScale.bandwidth() : 0;
+
+    return (
+      <rect
+        fill={stroke}
+        height={drawingArea.height}
+        width={bandwidth}
+        x={xPos}
+        y={drawingArea.y}
+      />
+    );
+  });
+
   const candlesData = stockData.map((data) => [parseFloat(data.low), parseFloat(data.high)]) as [
     number,
     number,
@@ -247,11 +273,11 @@ const Candlesticks = () => {
     },
   );
 
-  const formatPrice = React.useCallback((price: string) => {
+  const formatPrice = React.useCallback((price: number) => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
       currency: 'USD',
-    }).format(parseFloat(price));
+    }).format(price);
   }, []);
 
   const formatVolume = React.useCallback((volume: string) => {
@@ -284,10 +310,10 @@ const Candlesticks = () => {
 
       const text =
         index !== undefined
-          ? `Open: ${formatPrice(stockData[index].open)}, Close: ${formatPrice(
-              stockData[index].close,
+          ? `Open: ${formatPrice(parseFloat(stockData[index].open))}, Close: ${formatPrice(
+              parseFloat(stockData[index].close),
             )}, Volume: ${formatVolume(stockData[index].volume)}`
-          : formatPrice(stockData[stockData.length - 1].close);
+          : formatPrice(parseFloat(stockData[stockData.length - 1].close));
 
       // Direct DOM manipulation - no React re-render
       infoTextRef.current.textContent = text;
@@ -297,7 +323,7 @@ const Candlesticks = () => {
   );
 
   // Initial value for the info text
-  const initialInfo = formatPrice(stockData[stockData.length - 1].close);
+  const initialInfo = formatPrice(parseFloat(stockData[stockData.length - 1].close));
 
   // Update text when stockData changes (on timePeriod change)
   React.useEffect(() => {
@@ -339,15 +365,12 @@ const Candlesticks = () => {
           GridLineComponent: ThinSolidLine,
         }}
       >
-        {timePeriod.id === 'year' ? (
-          <Scrubber
-            hideOverlay
-            LineComponent={(props) => <ReferenceLine {...props} LineComponent={ThinSolidLine} />}
-            seriesIds={[]}
-          />
-        ) : (
-          <ScrubberRect />
-        )}
+        <Scrubber
+          hideOverlay
+          LineComponent={BandwidthHighlight}
+          lineStroke="var(--color-fgMuted)"
+          seriesIds={[]}
+        />
       </BarChart>
       <PeriodSelector
         activeTab={timePeriod}
@@ -393,6 +416,61 @@ export const All = () => {
           }}
         />
       </Example>
+      <Example title="Right Y-Axis with Labels">
+        <CartesianChart
+          height={400}
+          series={[
+            {
+              id: 'revenue',
+              data: [45, 52, 38, 45, 19, 23, 32],
+              color: 'var(--color-accentBoldBlue)',
+            },
+          ]}
+          xAxis={{
+            data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+            scaleType: 'band',
+          }}
+        >
+          <XAxis showLine showTickMarks label="Day of Week" />
+          <YAxis
+            showGrid
+            showLine
+            showTickMarks
+            label="Revenue"
+            position="right"
+            requestedTickCount={5}
+            tickLabelFormatter={(value) => `$${value}k`}
+          />
+          <BarPlot />
+        </CartesianChart>
+      </Example>
+      <Example title="Negative Values with Top Axis">
+        <CartesianChart
+          height={400}
+          series={[
+            {
+              id: 'losses',
+              data: [-45, -52, -38, -45, -19, -23, -32],
+              color: 'var(--color-fgNegative)',
+            },
+          ]}
+          xAxis={{
+            data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+            scaleType: 'band',
+          }}
+        >
+          <XAxis showLine showTickMarks label="Day of Week" position="top" />
+          <YAxis
+            showGrid
+            showLine
+            showTickMarks
+            label="Loss"
+            requestedTickCount={5}
+            tickLabelFormatter={(value) => `$${value}k`}
+          />
+          <BarPlot />
+        </CartesianChart>
+      </Example>
       <Example title="Positive and Negative Cash Flow">
         <PositiveAndNegativeCashFlow />
       </Example>
@@ -432,29 +510,246 @@ export const All = () => {
             },
           ]}
         >
-          <XAxis showLine showTickMarks />
+          <XAxis showLine showTickMarks label="Month" />
           <YAxis
             showGrid
             showLine
             showTickMarks
             axisId="revenue"
+            label="Revenue"
             position="left"
             requestedTickCount={5}
             tickLabelFormatter={(value) => `$${value}k`}
-            width={60}
+            width={80}
           />
           <YAxis
             showLine
             showTickMarks
             axisId="profit"
+            label="Profit"
+            position="right"
             requestedTickCount={5}
             tickLabelFormatter={(value) => `$${value}k`}
+            width={70}
           />
           <BarPlot />
         </CartesianChart>
       </Example>
       <Example title="Candlestick Chart">
         <Candlesticks />
+      </Example>
+      <Example
+        description={
+          <Text color="fgMuted" font="body">
+            Simple gain/loss chart. Bars below zero are red (negative), bars at or above zero are
+            green (positive). Uses hard transition at 0.
+          </Text>
+        }
+        title="Gradient - Gain/Loss"
+      >
+        <BarChart
+          showXAxis
+          showYAxis
+          height={300}
+          series={[
+            {
+              id: 'profit',
+              data: [-40, -28, 15, -5, 48, -12, 22, -8, 35, -18, 42, -3],
+              gradient: {
+                axis: 'y',
+                stops: [
+                  { offset: -50, color: 'var(--color-fgNegative)' },
+                  { offset: 0, color: 'var(--color-fgNegative)' },
+                  { offset: 0, color: 'var(--color-fgPositive)' },
+                  { offset: 50, color: 'var(--color-fgPositive)' },
+                ],
+              },
+            },
+          ]}
+          xAxis={{
+            data: [
+              'Jan',
+              'Feb',
+              'Mar',
+              'Apr',
+              'May',
+              'Jun',
+              'Jul',
+              'Aug',
+              'Sep',
+              'Oct',
+              'Nov',
+              'Dec',
+            ],
+          }}
+          yAxis={{
+            requestedTickCount: 5,
+            tickLabelFormatter: (value) => `$${value}k`,
+            showGrid: true,
+          }}
+        />
+      </Example>
+      <Example
+        description={
+          <Text color="fgMuted" font="body">
+            Continuous gradient applied to bars. Each bar&apos;s color is determined by its value,
+            transitioning smoothly from green (low) to yellow (mid) to red (high).
+          </Text>
+        }
+        title="Gradient - Continuous (Y-Axis)"
+      >
+        <BarChart
+          showXAxis
+          showYAxis
+          height={300}
+          series={[
+            {
+              id: 'temperature',
+              data: [12, 25, 38, 52, 45, 30, 18],
+              gradient: {
+                axis: 'y',
+                stops: ({ min, max }: { min: number; max: number }) => [
+                  { offset: min, color: 'var(--color-accentBoldGreen)' },
+                  { offset: (min + max) / 2, color: 'var(--color-accentBoldYellow)' },
+                  { offset: max, color: 'var(--color-accentBoldRed)' },
+                ],
+              },
+            },
+          ]}
+          xAxis={{
+            data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+          }}
+          yAxis={{
+            requestedTickCount: 5,
+            tickLabelFormatter: (value) => `${value}°C`,
+            showGrid: true,
+          }}
+        />
+      </Example>
+      <Example
+        description={
+          <Text color="fgMuted" font="body">
+            Hard transitions at 30 and 45. Bars below 30 are green (cool), 30-45 are yellow (warm),
+            and above 45 are red (hot).
+          </Text>
+        }
+        title="Gradient - Hard Transitions (Y-Axis)"
+      >
+        <BarChart
+          showXAxis
+          showYAxis
+          height={300}
+          series={[
+            {
+              id: 'temperature',
+              data: [25, 32, 48, 52, 29, 38, 22],
+              gradient: {
+                axis: 'y',
+                stops: [
+                  { offset: 0, color: 'var(--color-accentBoldGreen)' },
+                  { offset: 30, color: 'var(--color-accentBoldGreen)' },
+                  { offset: 30, color: 'var(--color-accentBoldYellow)' },
+                  { offset: 45, color: 'var(--color-accentBoldYellow)' },
+                  { offset: 45, color: 'var(--color-accentBoldRed)' },
+                  { offset: 60, color: 'var(--color-accentBoldRed)' },
+                ],
+              },
+            },
+          ]}
+          xAxis={{
+            data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+          }}
+          yAxis={{
+            requestedTickCount: 5,
+            tickLabelFormatter: (value) => `${value}°C`,
+            showGrid: true,
+          }}
+        />
+      </Example>
+      <Example
+        description={
+          <Text color="fgMuted" font="body">
+            Gradient applied on X-axis (category index). Each bar gets a color based on its position
+            in the chart, creating a rainbow effect.
+          </Text>
+        }
+        title="Gradient - Continuous (X-Axis)"
+      >
+        <BarChart
+          showXAxis
+          showYAxis
+          height={300}
+          series={[
+            {
+              id: 'sales',
+              data: [50, 65, 45, 70, 55, 60, 52],
+              gradient: {
+                axis: 'x',
+                stops: [
+                  { offset: 0, color: '#ef4444' },
+                  { offset: 1.5, color: '#f59e0b' },
+                  { offset: 3, color: '#10b981' },
+                  { offset: 4.5, color: '#3b82f6' },
+                  { offset: 6, color: '#8b5cf6' },
+                ],
+              },
+            },
+          ]}
+          xAxis={{
+            data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+          }}
+          yAxis={{
+            requestedTickCount: 5,
+            showGrid: true,
+          }}
+        />
+      </Example>
+      <Example
+        description={
+          <Text color="fgMuted" font="body">
+            Stacked bars with gradient. Each series can have its own gradient configuration,
+            allowing for complex color compositions.
+          </Text>
+        }
+        title="Gradient - Stacked Bars"
+      >
+        <BarChart
+          showXAxis
+          showYAxis
+          stacked
+          height={300}
+          series={[
+            {
+              id: 'category-a',
+              data: [20, 30, 25, 35, 28, 32, 27],
+              gradient: {
+                axis: 'y',
+                stops: ({ min, max }: { min: number; max: number }) => [
+                  { offset: min, color: '#3b82f6' },
+                  { offset: max, color: '#8b5cf6' },
+                ],
+              },
+            },
+            {
+              id: 'category-b',
+              data: [15, 25, 20, 30, 22, 28, 23],
+              gradient: {
+                axis: 'y',
+                stops: ({ min, max }: { min: number; max: number }) => [
+                  { offset: min, color: '#10b981' },
+                  { offset: max, color: '#059669' },
+                ],
+              },
+            },
+          ]}
+          xAxis={{
+            data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+          }}
+          yAxis={{
+            requestedTickCount: 5,
+            showGrid: true,
+          }}
+        />
       </Example>
     </VStack>
   );

@@ -1,28 +1,23 @@
-import { memo, useCallback, useMemo } from 'react';
+import { memo, useCallback, useMemo, useState } from 'react';
 import { Image, ScrollView, StyleSheet } from 'react-native';
-import { Circle, G } from 'react-native-svg';
 import { assets } from '@cbhq/cds-common/internal/data/assets';
 import { candles as btcCandles } from '@cbhq/cds-common/internal/data/candles';
 import { Example, ExampleScreen } from '@cbhq/cds-mobile/examples/ExampleScreen';
 import { useTheme } from '@cbhq/cds-mobile/hooks/useTheme';
 import { Box, HStack, VStack } from '@cbhq/cds-mobile/layout';
 import { TextLabel1, TextLabel2, TextTitle1, TextTitle2 } from '@cbhq/cds-mobile/typography';
+import { Circle, Group, Skia } from '@shopify/react-native-skia';
 
 import { Area } from '../area/Area';
 import { XAxis, YAxis } from '../axis';
 import { BarPlot } from '../bar/BarPlot';
 import { useCartesianChartContext } from '../ChartProvider';
 import { Line } from '../line/Line';
+import { Point } from '../point/Point';
 import { Scrubber } from '../scrubber/Scrubber';
-import { isCategoricalScale } from '../utils';
-import {
-  CartesianChart,
-  DottedArea,
-  GradientLine,
-  ReferenceLine,
-  SolidLine,
-  type SolidLineProps,
-} from '../';
+import { ChartText } from '../text';
+import { type GradientDefinition, isCategoricalScale } from '../utils';
+import { CartesianChart, DottedArea, ReferenceLine, SolidLine, type SolidLineProps } from '../';
 
 const defaultChartHeight = 250;
 
@@ -60,16 +55,7 @@ const LineStyles = () => {
       <Line seriesId="top" />
       <Line seriesId="upperMiddle" type="dotted" />
       <Line
-        LineComponent={(lineProps) => (
-          <GradientLine
-            d={lineProps.d}
-            endColor="#F7931A"
-            startColor="#E3D74D"
-            stroke={lineProps.stroke}
-            strokeOpacity={lineProps.strokeOpacity}
-            strokeWidth={4}
-          />
-        )}
+        LineComponent={(lineProps) => <SolidLine {...lineProps} strokeWidth={4} />}
         curve="natural"
         seriesId="lowerMiddle"
       />
@@ -126,7 +112,7 @@ const EarningsHistory = () => {
     const diameter = Math.min(xScale.bandwidth(), yScaleSize / 10);
 
     return (
-      <G>
+      <Group>
         {data.map((value: any, index: any) => {
           if (value === null || value === undefined) return null;
 
@@ -144,15 +130,15 @@ const EarningsHistory = () => {
           return (
             <Circle
               key={`${seriesId}-${index}`}
+              color={series?.color || theme.color.fgPrimary}
               cx={centerX}
               cy={centerY}
-              fill={series?.color || theme.color.fgPrimary}
               opacity={opacity}
               r={diameter / 2}
             />
           );
         })}
-      </G>
+      </Group>
     );
   });
 
@@ -204,7 +190,6 @@ const EarningsHistory = () => {
       <CartesianChart
         height={defaultChartHeight}
         inset={{ top: 32, bottom: 0, left: 0, right: 0 }}
-        overflow="visible"
         series={[
           {
             id: 'estimatedEPS',
@@ -234,75 +219,50 @@ const EarningsHistory = () => {
   );
 };
 
-const PriceWithVolume = () => {
-  const theme = useTheme();
-  const btcData = btcCandles.slice(0, 180).reverse();
+const btcData = btcCandles.slice(0, 180).reverse();
 
-  const btcPrices = btcData.map((candle) => parseFloat(candle.close));
-  const btcVolumes = btcData.map((candle) => parseFloat(candle.volume));
-  const btcDates = btcData.map((candle) => new Date(parseInt(candle.start) * 1000));
+const btcPrices = btcData.map((candle) => parseFloat(candle.close));
+const btcVolumes = btcData.map((candle) => parseFloat(candle.volume));
+const btcDates = btcData.map((candle) => new Date(parseInt(candle.start) * 1000));
 
-  const formatPrice = useCallback((price: number) => {
-    return `$${price.toLocaleString('en-US', {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    })}`;
-  }, []);
+const displayIndex = btcPrices.length - 1;
+const currentPrice = btcPrices[displayIndex];
+const currentDate = btcDates[displayIndex];
 
-  const formatPriceInThousands = useCallback((price: number) => {
-    return `$${(price / 1000).toLocaleString('en-US', {
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 2,
-    })}k`;
-  }, []);
+const PriceWithVolumeChart = memo(
+  ({
+    onScrubberPositionChange,
+  }: {
+    onScrubberPositionChange: (index: number | undefined) => void;
+  }) => {
+    const theme = useTheme();
 
-  const formatVolume = useCallback((volume: number) => {
-    return `${(volume / 1000).toFixed(2)}K`;
-  }, []);
+    const formatPriceInThousands = useCallback((price: number) => {
+      return `$${(price / 1000).toLocaleString('en-US', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 2,
+      })}k`;
+    }, []);
 
-  const formatDate = useCallback((date: Date) => {
-    return date.toLocaleDateString('en-US', {
-      month: 'short',
-      day: 'numeric',
-    });
-  }, []);
+    const formatDate = useCallback((date: Date) => {
+      return date.toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
+      });
+    }, []);
 
-  const scrubberLabel = useCallback(
-    (dataIndex: number) => {
-      return formatDate(btcDates[dataIndex]);
-    },
-    [btcDates, formatDate],
-  );
+    const scrubberLabel = useCallback(
+      (dataIndex: number) => {
+        return formatDate(btcDates[dataIndex]);
+      },
+      [formatDate],
+    );
 
-  // Display the last values in the header
-  const displayIndex = btcPrices.length - 1;
-  const currentPrice = btcPrices[displayIndex];
-  const currentVolume = btcVolumes[displayIndex];
-  const currentDate = btcDates[displayIndex];
-
-  return (
-    <VStack gap={2}>
-      <HStack gap={2} justifyContent="space-between" paddingX={0}>
-        <VStack gap={0}>
-          <TextTitle1>Bitcoin</TextTitle1>
-          <TextTitle2>{formatPrice(currentPrice)}</TextTitle2>
-        </VStack>
-        <HStack gap={2}>
-          <VStack alignItems="flex-end" justifyContent="center">
-            <TextLabel1>{formatDate(currentDate)}</TextLabel1>
-            <TextLabel2>{formatVolume(currentVolume)}</TextLabel2>
-          </VStack>
-          <VStack justifyContent="center">
-            <Image
-              source={{ uri: assets.btc.imageUrl }}
-              style={{ width: theme.iconSize.l, height: theme.iconSize.l, borderRadius: 1000 }}
-            />
-          </VStack>
-        </HStack>
-      </HStack>
+    return (
       <CartesianChart
         enableScrubbing
         height={defaultChartHeight}
+        onScrubberPositionChange={onScrubberPositionChange}
         series={[
           {
             id: 'prices',
@@ -317,7 +277,7 @@ const PriceWithVolume = () => {
             yAxisId: 'volume',
           },
         ]}
-        xAxis={{ scaleType: 'band' }}
+        xAxis={{ scaleType: 'band', range: ({ min, max }) => ({ min, max: max - 8 }) }}
         yAxis={[
           {
             id: 'price',
@@ -331,12 +291,72 @@ const PriceWithVolume = () => {
       >
         <YAxis showGrid axisId="price" tickLabelFormatter={formatPriceInThousands} width={20} />
         <BarPlot seriesIds={['volume']} />
-        <Line showArea curve="monotone" seriesId="prices" />
+        <Line showArea seriesId="prices" />
         <Scrubber label={scrubberLabel} seriesIds={['prices']} />
       </CartesianChart>
+    );
+  },
+);
+
+const PriceWithVolumeHeader = memo(({ currentIndex }: { currentIndex: number | undefined }) => {
+  const theme = useTheme();
+
+  const formatPrice = useCallback((price: number) => {
+    return `$${price.toLocaleString('en-US', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    })}`;
+  }, []);
+
+  const formatDate = useCallback((date: Date) => {
+    return date.toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+    });
+  }, []);
+
+  const formatVolume = useCallback((volume: number) => {
+    return `${(volume / 1000).toFixed(2)}K`;
+  }, []);
+
+  const volumeText = useMemo(() => {
+    return formatVolume(
+      currentIndex !== undefined ? btcVolumes[currentIndex] : btcVolumes[displayIndex],
+    );
+  }, [currentIndex, formatVolume]);
+
+  return (
+    <HStack gap={2} justifyContent="space-between" paddingX={0}>
+      <VStack gap={0}>
+        <TextTitle1>Bitcoin</TextTitle1>
+        <TextTitle2>{formatPrice(currentPrice)}</TextTitle2>
+      </VStack>
+      <HStack gap={2}>
+        <VStack alignItems="flex-end" justifyContent="center">
+          <TextLabel1>{formatDate(currentDate)}</TextLabel1>
+          <TextLabel2>{volumeText}</TextLabel2>
+        </VStack>
+        <VStack justifyContent="center">
+          <Image
+            source={{ uri: assets.btc.imageUrl }}
+            style={{ width: theme.iconSize.l, height: theme.iconSize.l, borderRadius: 1000 }}
+          />
+        </VStack>
+      </HStack>
+    </HStack>
+  );
+});
+
+const PriceWithVolume = memo(() => {
+  const [currentIndex, setCurrentIndex] = useState<number | undefined>();
+
+  return (
+    <VStack gap={2}>
+      <PriceWithVolumeHeader currentIndex={currentIndex} />
+      <PriceWithVolumeChart onScrubberPositionChange={setCurrentIndex} />
     </VStack>
   );
-};
+});
 
 function TradingTrends() {
   const theme = useTheme();
@@ -400,10 +420,163 @@ function TradingTrends() {
       <XAxis />
       <ReferenceLine LineComponent={ThickSolidLine} dataY={0} yAxisId="profit" />
       <BarPlot seriesIds={['gains', 'losses']} />
-      <Line showArea curve="monotone" seriesId="revenue" />
+      <Line showArea seriesId="revenue" />
     </CartesianChart>
   );
 }
+
+const UVGradient: GradientDefinition = {
+  axis: 'y',
+  stops: [
+    { offset: 0, color: 'green' },
+    { offset: 3, color: 'yellow' },
+    { offset: 5, color: 'orange' },
+    { offset: 8, color: 'red' },
+    { offset: 10, color: 'purple' },
+  ],
+};
+
+const PreviousData = memo(
+  ({
+    children,
+    currentHour,
+    clipOffset = 0,
+  }: {
+    children: React.ReactNode;
+    currentHour: number;
+    clipOffset?: number;
+  }) => {
+    // we will clip the data to the current hour
+    const { drawingArea, getXScale } = useCartesianChartContext();
+    const xScale = getXScale();
+
+    const currentHourX = xScale?.(currentHour);
+
+    const clipPath = useMemo(() => {
+      if (!xScale || currentHourX === undefined) return null;
+
+      // Create a rectangle from top-left of drawing area to currentHourX on the right
+      // Apply clipOffset to left, top, and bottom edges only (NOT to currentHourX)
+      const pathString = `M ${drawingArea.x - clipOffset} ${drawingArea.y - clipOffset} L ${currentHourX} ${drawingArea.y - clipOffset} L ${currentHourX} ${drawingArea.y + drawingArea.height + clipOffset} L ${drawingArea.x - clipOffset} ${drawingArea.y + drawingArea.height + clipOffset} Z`;
+      return Skia.Path.MakeFromSVGString(pathString);
+    }, [xScale, currentHourX, drawingArea, clipOffset]);
+
+    if (!clipPath) return null;
+
+    return (
+      <Group clip={clipPath} opacity={0.75}>
+        {children}
+      </Group>
+    );
+  },
+);
+
+const FutureData = memo(
+  ({
+    children,
+    currentHour,
+    clipOffset = 0,
+  }: {
+    children: React.ReactNode;
+    currentHour: number;
+    clipOffset?: number;
+  }) => {
+    // we will clip the data from the current hour to the right edge
+    const { drawingArea, getXScale } = useCartesianChartContext();
+    const xScale = getXScale();
+
+    const currentHourX = xScale?.(currentHour);
+
+    const clipPath = useMemo(() => {
+      if (!xScale || currentHourX === undefined) return null;
+
+      // Create a rectangle from currentHourX to right edge of drawing area
+      // Apply clipOffset to top, bottom, and right, but NOT left (currentHourX)
+      const pathString = `M ${currentHourX} ${drawingArea.y - clipOffset} L ${drawingArea.x + drawingArea.width + clipOffset} ${drawingArea.y - clipOffset} L ${drawingArea.x + drawingArea.width + clipOffset} ${drawingArea.y + drawingArea.height + clipOffset} L ${currentHourX} ${drawingArea.y + drawingArea.height + clipOffset} Z`;
+      return Skia.Path.MakeFromSVGString(pathString);
+    }, [xScale, currentHourX, drawingArea, clipOffset]);
+
+    if (!clipPath) return null;
+
+    return <Group clip={clipPath}>{children}</Group>;
+  },
+);
+
+const ScatterplotWithCustomLabels = memo(() => {
+  const theme = useTheme();
+  const dataPoints = useMemo(
+    () => [
+      { x: 12, y: 34, label: 'A', color: theme.color.accentBoldBlue },
+      { x: 28, y: 67, label: 'B', color: theme.color.accentBoldBlue },
+      { x: 45, y: 23, label: 'C', color: theme.color.accentBoldBlue },
+      { x: 67, y: 89, label: 'D', color: theme.color.bgPositive },
+      { x: 82, y: 76, label: 'E', color: theme.color.bgPositive },
+      { x: 34, y: 91, label: 'F', color: theme.color.bgPositive },
+      { x: 56, y: 45, label: 'G', color: theme.color.bgPositive },
+      { x: 19, y: 12, label: 'H', color: theme.color.fgWarning },
+      { x: 73, y: 28, label: 'I', color: theme.color.fgWarning },
+      { x: 91, y: 54, label: 'J', color: theme.color.fgWarning },
+      { x: 15, y: 58, label: 'K', color: theme.color.fgPrimary },
+      { x: 39, y: 72, label: 'L', color: theme.color.fgPrimary },
+      { x: 88, y: 15, label: 'M', color: theme.color.fgPrimary },
+      { x: 52, y: 82, label: 'N', color: theme.color.fgPrimary },
+    ],
+    [theme],
+  );
+
+  // Calculate domain based on data
+  const xValues = useMemo(() => dataPoints.map((p) => p.x), [dataPoints]);
+  const yValues = useMemo(() => dataPoints.map((p) => p.y), [dataPoints]);
+  const xMin = Math.min(...xValues);
+  const xMax = Math.max(...xValues);
+  const yMin = Math.min(...yValues);
+  const yMax = Math.max(...yValues);
+
+  // Custom label component that places labels to the top-right
+  const TopRightPointLabel = useCallback(({ x, y, offset = 0, children }: any) => {
+    return (
+      <ChartText
+        font="label1"
+        fontWeight={600}
+        horizontalAlignment="left"
+        verticalAlignment="bottom"
+        x={x + offset}
+        y={y - offset}
+      >
+        {children}
+      </ChartText>
+    );
+  }, []);
+
+  return (
+    <CartesianChart
+      height={300}
+      xAxis={{
+        domain: { min: xMin, max: xMax },
+        domainLimit: 'nice',
+      }}
+      yAxis={{
+        domain: { min: yMin, max: yMax },
+        domainLimit: 'nice',
+      }}
+    >
+      <XAxis showGrid showLine showTickMarks />
+      <YAxis showGrid showLine showTickMarks position="left" />
+      {dataPoints.map((point, index) => (
+        <Point
+          key={index}
+          LabelComponent={TopRightPointLabel}
+          dataX={point.x}
+          dataY={point.y}
+          fill={point.color}
+          label={point.label}
+          labelOffset={8}
+          radius={5}
+        />
+      ))}
+    </CartesianChart>
+  );
+});
 
 const ChartStories = () => {
   return (
@@ -423,6 +596,9 @@ const ChartStories = () => {
         </Example>
         <Example title="Trading Trends">
           <TradingTrends />
+        </Example>
+        <Example title="Scatterplot with Custom Labels">
+          <ScatterplotWithCustomLabels />
         </Example>
       </ExampleScreen>
     </ScrollView>

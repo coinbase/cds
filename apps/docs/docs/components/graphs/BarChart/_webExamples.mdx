@@ -15,7 +15,6 @@ To start, pass in a series of data to the chart.
       data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
     },
   ]}
-  curve="monotone"
   showYAxis
   yAxis={{
     showGrid: true,
@@ -692,6 +691,30 @@ function Candlesticks() {
 
   const ThinSolidLine = memo((props: SolidLineProps) => <SolidLine {...props} strokeWidth={1} />);
 
+  // Custom line component that renders a rect to highlight the entire bandwidth
+  const BandwidthHighlight = memo(({ d, stroke }) => {
+    const { getXScale, drawingArea, getXAxis } = useCartesianChartContext();
+    const { scrubberPosition } = useScrubberContext();
+    const xScale = getXScale();
+    const xAxis = getXAxis();
+
+    if (!xScale || scrubberPosition === undefined) return
+
+    const xPos = xScale(scrubberPosition);
+
+    if (xPos === undefined) return
+
+    return (
+      <rect
+        fill={stroke}
+        height={drawingArea.height}
+        width={xScale.bandwidth()}
+        x={xPos}
+        y={drawingArea.y}
+      />
+    );
+  });
+
   const candlesData = stockData.map((data) => [parseFloat(data.low), parseFloat(data.high)]) as [
     number,
     number,
@@ -733,6 +756,19 @@ function Candlesticks() {
     }).format(parseFloat(price));
   }, []);
 
+
+  const formatThousandsPrice = React.useCallback((price: string) => {
+    const formattedPrice = new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(parseFloat(price) / 1000);
+
+    return `${formattedPrice}k`;
+  }, []);
+
+
   const formatVolume = React.useCallback((volume: string) => {
     const volumeInThousands = parseFloat(volume) / 1000;
     return (
@@ -762,9 +798,9 @@ function Candlesticks() {
 
       const text =
         index !== null && index !== undefined
-          ? `Open: ${formatPrice(stockData[index].open)}, Close: ${formatPrice(
+          ? `Open: ${formatThousandsPrice(stockData[index].open)}, Close: ${formatThousandsPrice(
               stockData[index].close,
-            )}, Volume: ${formatVolume(stockData[index].volume)}`
+            )}, Volume: ${(parseFloat(stockData[index].volume) / 1000).toFixed(2)}k`
           : formatPrice(stockData[stockData.length - 1].close);
 
       infoTextRef.current.textContent = text;
@@ -773,10 +809,6 @@ function Candlesticks() {
     [stockData, formatPrice, formatVolume],
   );
   const initialInfo = formatPrice(stockData[stockData.length - 1].close);
-
-  React.useEffect(() => {
-    updateInfoText(selectedIndexRef.current);
-  }, [stockData, updateInfoText]);
 
   return (
     <VStack gap={2}>
@@ -805,20 +837,19 @@ function Candlesticks() {
         }}
         yAxis={{
           domain: { min },
-          tickLabelFormatter: formatPrice,
-          width: 92,
+          tickLabelFormatter: formatThousandsPrice,
+          width: 40,
           showGrid: true,
           GridLineComponent: ThinSolidLine,
         }}
         aria-labelledby={infoTextId}
       >
         <Scrubber
-            hideOverlay
-            LineComponent={(props) => (
-              <ReferenceLine {...props} LineComponent={ThinSolidLine} />
-            )}
-            seriesIds={[]}
-          />
+          hideOverlay
+          LineComponent={BandwidthHighlight}
+          lineStroke="var(--color-fgMuted)"
+          seriesIds={[]}
+        />
       </BarChart>
     </VStack>
   );
@@ -883,6 +914,84 @@ function MonthlyRewards() {
       yAxis={{ range: ({ min, max }) => ({ min, max: max - 4 }) }}
       style={{ margin: '0 auto' }}
     />
+  );
+}
+```
+
+## Custom Transitions
+
+You can customize the transition animations for your bar chart using the `transition` prop.
+This allows you to control enter, update, and exit animations separately.
+
+```jsx live
+function UpdatingChartValues() {
+  const [data, setData] = React.useState([45, 80, 120, 95, 150, 110, 85]);
+  const [nullIndex, setNullIndex] = React.useState(null);
+
+  const displayData = React.useMemo(() => {
+    if (nullIndex === null) return data;
+    return data.map((d, i) => (i === nullIndex ? null : d));
+  }, [data, nullIndex]);
+
+  return (
+    <VStack gap={2}>
+      <HStack gap={2}>
+        <Button
+          size="sm"
+          onClick={() =>
+            setData((prev) =>
+              prev[0] > 200 ? [45, 80, 120, 95, 150, 110, 85] : prev.map((d) => d + 25),
+            )
+          }
+        >
+          Update Data
+        </Button>
+        <Button size="sm" onClick={() => setNullIndex((prev) => (prev === null ? 3 : null))}>
+          {nullIndex === null ? 'Hide Bar' : 'Show Bar'}
+        </Button>
+      </HStack>
+
+      <Text font="label">Default Animations</Text>
+      <BarChart
+        height={150}
+        series={[
+          {
+            id: 'weekly-data',
+            data: displayData,
+          },
+        ]}
+        showXAxis
+        showYAxis
+        xAxis={{
+          data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+        }}
+        yAxis={{
+          showGrid: true,
+          domain: { max: 250 },
+        }}
+      />
+
+      <Text font="label">Custom Update Animations</Text>
+      <BarChart
+        height={150}
+        series={[
+          {
+            id: 'weekly-data-custom',
+            data: displayData,
+          },
+        ]}
+        transition={{ type: 'spring', stiffness: 700, damping: 20 }}
+        showXAxis
+        showYAxis
+        xAxis={{
+          data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+        }}
+        yAxis={{
+          showGrid: true,
+          domain: { max: 250 },
+        }}
+      />
+    </VStack>
   );
 }
 ```

@@ -92,14 +92,12 @@ const Simple = () => {
           data: pageViews,
           label: 'Page Views',
           color: '#8884d8',
-          curve: 'monotone',
         },
         {
           id: 'uniqueVisitors',
           data: pageUniqueVisitors,
           label: 'Unique Visitors',
           color: '#82ca9d',
-          curve: 'monotone',
         },
       ]}
       xAxis={{
@@ -178,7 +176,6 @@ const TimeOfDayAxesExample = () => {
   return (
     <LineChart
       enableScrubbing
-      curve="monotone"
       height={400}
       series={[
         {

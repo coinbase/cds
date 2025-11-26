@@ -85,7 +85,7 @@ const AreaChartStories = () => {
               data: [24, 13, -98, 39, 48, 38, 43],
             },
           ]}
-          type="gradient"
+          type="solid"
           yAxis={{
             showGrid: true,
           }}

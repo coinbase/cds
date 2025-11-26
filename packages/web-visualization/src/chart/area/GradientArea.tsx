@@ -1,136 +1,96 @@
-import { memo, useId } from 'react';
+import { memo, useId, useMemo } from 'react';
 
 import { useCartesianChartContext } from '../ChartProvider';
+import { Gradient } from '../gradient';
 import { Path, type PathProps } from '../Path';
+import { createGradient, getBaseline } from '../utils';
 
 import type { AreaComponentProps } from './Area';
 
-export type GradientAreaProps = Omit<PathProps, 'd' | 'fill' | 'fillOpacity'> &
+export type GradientAreaProps = Pick<
+  PathProps,
+  | 'stroke'
+  | 'strokeWidth'
+  | 'strokeOpacity'
+  | 'strokeLinecap'
+  | 'strokeLinejoin'
+  | 'strokeDasharray'
+  | 'strokeDashoffset'
+  | 'clipRect'
+  | 'clipOffset'
+  | 'children'
+> &
   AreaComponentProps & {
     /**
-     * The color at peak values (top/bottom of gradient).
-     * @default fill or 'var(--color-fgPrimary)'
-     */
-    peakColor?: string;
-    /**
-     * The color at the baseline (0 or edge closest to 0).
-     * @default peakColor or fill
-     */
-    baselineColor?: string;
-    /**
      * Opacity at peak values.
+     * @note only used when no gradient is provided
      * @default 0.3
      */
     peakOpacity?: number;
     /**
      * Opacity at the baseline.
+     * @note only used when no gradient is provided
      * @default 0
      */
     baselineOpacity?: number;
   };
 
 /**
- * A customizable gradient area component which uses Path.
+ * A customizable gradient area component which uses Path with SVG linearGradient.
+ *
+ * When no gradient is provided, automatically creates an appropriate gradient:
+ * - For data crossing zero: Creates a diverging gradient with peak opacity at both extremes
+ *   and baseline opacity at zero (or the specified baseline).
+ * - For all-positive or all-negative data: Creates a simple gradient from baseline to peak.
  */
 export const GradientArea = memo<GradientAreaProps>(
   ({
     d,
     fill = 'var(--color-fgPrimary)',
     fillOpacity = 1,
-    peakColor,
-    baselineColor,
     peakOpacity = 0.3,
     baselineOpacity = 0,
     baseline,
     yAxisId,
+    gradient: gradientProp,
+    animate,
+    transition,
     ...pathProps
   }) => {
-    const context = useCartesianChartContext();
+    const { getYAxis } = useCartesianChartContext();
     const patternId = useId();
 
-    // Get the y-scale for the specified axis (or default)
-    const yScale = context.getYScale(yAxisId);
-    const yRange = yScale?.range();
-    const yDomain = yScale?.domain();
+    const yAxisConfig = getYAxis(yAxisId);
 
-    // Use chart range if available, otherwise fall back to percentage
-    const useUserSpaceUnits = yRange !== undefined;
-    const gradientY1 = useUserSpaceUnits ? yRange[1] : '0%';
-    const gradientY2 = useUserSpaceUnits ? yRange[0] : '100%';
+    const gradient = useMemo(() => {
+      if (gradientProp) return gradientProp;
+      if (!yAxisConfig) return;
 
-    // Auto-calculate baseline position based on domain
-    let baselinePosition: number | undefined;
-    let baselinePercentage: string | undefined;
-
-    if (yScale && yDomain) {
-      const [minValue, maxValue] = yDomain;
-
-      let dataBaseline: number;
-      if (minValue >= 0) {
-        // All positive: baseline at min
-        dataBaseline = minValue;
-      } else if (maxValue <= 0) {
-        // All negative: baseline at max
-        dataBaseline = maxValue;
-      } else {
-        // Crosses zero: baseline at 0
-        dataBaseline = 0;
-      }
-
-      if (useUserSpaceUnits) {
-        // Get the actual y coordinate for the baseline
-        const scaledValue = yScale(baseline ?? dataBaseline);
-        if (typeof scaledValue === 'number') {
-          baselinePosition = scaledValue;
-        }
-      } else {
-        // Calculate percentage position
-        baselinePercentage = `${((maxValue - (baseline ?? dataBaseline)) / (maxValue - minValue)) * 100}%`;
-      }
-    }
-
-    const effectivePeakColor = peakColor ?? fill;
-    const effectiveBaselineColor = baselineColor ?? fill;
+      const baselineValue = getBaseline(yAxisConfig.domain, baseline);
+      return createGradient(yAxisConfig.domain, baselineValue, fill, peakOpacity, baselineOpacity);
+    }, [gradientProp, yAxisConfig, fill, baseline, peakOpacity, baselineOpacity]);
 
     return (
       <>
-        <defs>
-          <linearGradient
-            gradientUnits={useUserSpaceUnits ? 'userSpaceOnUse' : 'objectBoundingBox'}
-            id={patternId}
-            x1={useUserSpaceUnits ? 0 : '0%'}
-            x2={useUserSpaceUnits ? 0 : '0%'}
-            y1={gradientY1}
-            y2={gradientY2}
-          >
-            {baselinePosition !== undefined || baselinePercentage !== undefined ? (
-              <>
-                {/* Diverging gradient: peak opacity at extremes, baseline opacity at baseline */}
-                <stop offset="0%" stopColor={effectivePeakColor} stopOpacity={peakOpacity} />
-                <stop
-                  offset={
-                    baselinePercentage ??
-                    `${((baselinePosition! - yRange![1]) / (yRange![0] - yRange![1])) * 100}%`
-                  }
-                  stopColor={effectiveBaselineColor}
-                  stopOpacity={baselineOpacity}
-                />
-                <stop offset="100%" stopColor={effectivePeakColor} stopOpacity={peakOpacity} />
-              </>
-            ) : (
-              <>
-                {/* Simple gradient from peak to baseline */}
-                <stop offset="0%" stopColor={effectivePeakColor} stopOpacity={peakOpacity} />
-                <stop
-                  offset="100%"
-                  stopColor={effectiveBaselineColor}
-                  stopOpacity={baselineOpacity}
-                />
-              </>
-            )}
-          </linearGradient>
-        </defs>
-        <Path d={d} fill={`url(#${patternId})`} {...pathProps} />
+        {gradient && (
+          <defs>
+            <Gradient
+              animate={animate}
+              gradient={gradient}
+              id={patternId}
+              transition={transition}
+              yAxisId={yAxisId}
+            />
+          </defs>
+        )}
+        <Path
+          animate={animate}
+          d={d}
+          fill={gradient ? `url(#${patternId})` : fill}
+          fillOpacity={fillOpacity}
+          transition={transition}
+          {...pathProps}
+        />
       </>
     );
   },

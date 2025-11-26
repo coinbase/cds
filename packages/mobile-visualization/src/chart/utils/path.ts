@@ -67,16 +67,23 @@ export const getPathCurveFunction = (curve: ChartPathCurveType = 'linear') => {
  */
 export const getLinePath = ({
   data,
-  curve = 'linear',
+  curve = 'bump',
   xScale,
   yScale,
   xData,
+  connectNulls = false,
 }: {
   data: (number | null | { x: number; y: number })[];
   curve?: ChartPathCurveType;
   xScale: ChartScaleFunction;
   yScale: ChartScaleFunction;
   xData?: number[];
+  /**
+   * When true, null values are skipped and the line connects across gaps.
+   * When false, null values create gaps in the line.
+   * @default false
+   */
+  connectNulls?: boolean;
 }): string => {
   if (data.length === 0) {
     return '';
@@ -86,13 +93,17 @@ export const getLinePath = ({
 
   const dataPoints = projectPoints({ data, xScale, yScale, xData });
 
+  // When connectNulls is true, filter out null values before rendering
+  // When false, use defined() to create gaps in the line
+  const filteredPoints = connectNulls ? dataPoints.filter((d) => d !== null) : dataPoints;
+
   const pathGenerator = d3Line<{ x: number; y: number } | null>()
     .x((d) => d!.x)
     .y((d) => d!.y)
     .curve(curveFunction)
-    .defined((d) => d !== null); // Only draw lines where point is not null
+    .defined((d) => connectNulls || d !== null);
 
-  return pathGenerator(dataPoints) ?? '';
+  return pathGenerator(filteredPoints) ?? '';
 };
 
 /**
@@ -119,16 +130,23 @@ export const getLinePath = ({
  */
 export const getAreaPath = ({
   data,
-  curve = 'linear',
+  curve = 'bump',
   xScale,
   yScale,
   xData,
+  connectNulls = false,
 }: {
   data: (number | null)[] | Array<[number, number] | null>;
   xScale: ChartScaleFunction;
   yScale: ChartScaleFunction;
   curve: ChartPathCurveType;
   xData?: number[];
+  /**
+   * When true, null values are skipped and the area connects across gaps.
+   * When false, null values create gaps in the area.
+   * @default false
+   */
+  connectNulls?: boolean;
 }): string => {
   if (data.length === 0) {
     return '';
@@ -195,6 +213,10 @@ export const getAreaPath = ({
     };
   });
 
+  // When connectNulls is true, filter out invalid points before rendering
+  // When false, use defined() to create gaps in the area
+  const filteredPoints = connectNulls ? dataPoints.filter((d) => d.isValid) : dataPoints;
+
   const areaGenerator = d3Area<{
     x: number;
     low: number | null;
@@ -205,10 +227,24 @@ export const getAreaPath = ({
     .y0((d) => d.low ?? 0) // Bottom boundary (low values), fallback to 0
     .y1((d) => d.high ?? 0) // Top boundary (high values), fallback to 0
     .curve(curveFunction)
-    .defined((d) => d.isValid && d.low != null && d.high != null); // Only draw where both values exist
+    .defined((d) => connectNulls || (d.isValid && d.low != null && d.high != null)); // Only draw where both values exist
 
-  const result = areaGenerator(dataPoints);
+  const result = areaGenerator(filteredPoints);
   return result ?? '';
+};
+
+/**
+ * Converts line coordinates to an SVG path string.
+ * Useful for rendering axis lines and tick marks.
+ *
+ * @example
+ * ```typescript
+ * const path = lineToPath(0, 0, 100, 100);
+ * // Returns: "M 0 0 L 100 100"
+ * ```
+ */
+export const lineToPath = (x1: number, y1: number, x2: number, y2: number): string => {
+  return `M ${x1} ${y1} L ${x2} ${y2}`;
 };
 
 /**
@@ -258,4 +294,60 @@ export const getBarPath = (
 
   path += ' Z';
   return path;
+};
+
+/**
+ * Generates an SVG path string with circles arranged in a dotted pattern within a bounding area.
+ * Creates circles at regular intervals based on the pattern size and dot size parameters.
+ *
+ * @param bounds - The bounding rectangle to fill with dots
+ * @param patternSize - Size of the pattern unit (spacing between dots)
+ * @param dotSize - Radius of each dot
+ * @returns SVG path string containing all the circles
+ *
+ * @example
+ * ```typescript
+ * const dotsPath = getDottedAreaPath(
+ *   { x: 0, y: 0, width: 100, height: 50 },
+ *   8, // 8px spacing
+ *   2  // 2px radius dots
+ * );
+ * ```
+ */
+export const getDottedAreaPath = (
+  bounds: { x: number; y: number; width: number; height: number },
+  patternSize: number,
+  dotSize: number,
+): string => {
+  if (bounds.width <= 0 || bounds.height <= 0 || patternSize <= 0 || dotSize <= 0) {
+    return '';
+  }
+
+  let path = '';
+
+  // Calculate the number of dots that fit in each dimension
+  const dotsX = Math.ceil(bounds.width / patternSize);
+  const dotsY = Math.ceil(bounds.height / patternSize);
+
+  // Generate circles in a grid pattern
+  for (let row = 0; row < dotsY; row++) {
+    for (let col = 0; col < dotsX; col++) {
+      const centerX = bounds.x + col * patternSize + patternSize / 2;
+      const centerY = bounds.y + row * patternSize + patternSize / 2;
+
+      // Only draw dots that are within the bounds
+      if (
+        centerX >= bounds.x &&
+        centerX <= bounds.x + bounds.width &&
+        centerY >= bounds.y &&
+        centerY <= bounds.y + bounds.height
+      ) {
+        // Create circle using SVG arc commands
+        // M cx,cy-r a r,r 0 1,0 0,2r a r,r 0 1,0 0,-2r
+        path += `M ${centerX},${centerY - dotSize} a ${dotSize},${dotSize} 0 1,0 0,${dotSize * 2} a ${dotSize},${dotSize} 0 1,0 0,${-dotSize * 2} `;
+      }
+    }
+  }
+
+  return path.trim();
 };

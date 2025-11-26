@@ -7,6 +7,7 @@ import { PortalProvider } from '@cbhq/cds-mobile/overlays/PortalProvider';
 import { StatusBar } from '@cbhq/cds-mobile/system/StatusBar';
 import { ThemeProvider } from '@cbhq/cds-mobile/system/ThemeProvider';
 import { defaultTheme } from '@cbhq/cds-mobile/themes/defaultTheme';
+import { ChartBridgeProvider } from '@cbhq/cds-mobile-visualization/chart';
 import { Playground } from '@cbhq/ui-mobile-playground';
 import { NavigationContainer } from '@react-navigation/native';
 import * as Linking from 'expo-linking';
@@ -58,16 +59,18 @@ const App = memo(() => {
 
   return (
     <LocalStrictMode>
-      <ThemeProvider activeColorScheme={colorScheme} theme={defaultTheme}>
-        <CdsSafeAreaProvider>
-          <PortalProvider>
-            <StatusBar hidden={!__DEV__} />
-            <NavigationContainer linking={linking} onReady={handleOnReady}>
-              <Playground routes={codegenRoutes} setColorScheme={setColorScheme} />
-            </NavigationContainer>
-          </PortalProvider>
-        </CdsSafeAreaProvider>
-      </ThemeProvider>
+      <ChartBridgeProvider>
+        <ThemeProvider activeColorScheme={colorScheme} theme={defaultTheme}>
+          <CdsSafeAreaProvider>
+            <PortalProvider>
+              <StatusBar hidden={!__DEV__} />
+              <NavigationContainer linking={linking} onReady={handleOnReady}>
+                <Playground routes={codegenRoutes} setColorScheme={setColorScheme} />
+              </NavigationContainer>
+            </PortalProvider>
+          </CdsSafeAreaProvider>
+        </ThemeProvider>
+      </ChartBridgeProvider>
     </LocalStrictMode>
   );
 });

@@ -1,4 +1,22 @@
-import { type ChartScaleFunction, isCategoricalScale, isLogScale, isNumericScale } from './scale';
+import type { TextHorizontalAlignment, TextVerticalAlignment } from '../text';
+
+import {
+  applySerializableScale,
+  type ChartScaleFunction,
+  isCategoricalScale,
+  isLogScale,
+  isNumericScale,
+  type SerializableScale,
+} from './scale';
+
+/**
+ * Position a label should be placed relative to the point
+ *
+ * @example
+ * 'top' would have the label be located above the point itself,
+ * and thus the vertical alignment of that text would be bottom.
+ */
+export type PointLabelPosition = 'top' | 'bottom' | 'left' | 'right' | 'center';
 
 /**
  * Get a point from a data value and a scale.
@@ -23,6 +41,52 @@ export const getPointOnScale = (dataValue: number, scale: ChartScaleFunction): n
 
   return scale(adjustedValue) ?? 0;
 };
+
+/**
+ * Get a point from a data value and a serializable scale (worklet-compatible).
+ * @note for categorical scales, the point will be centered within the band.
+ * @note for log scales, zero and negative values are clamped to a small positive value.
+ * @param dataValue - the data value.
+ * @param scale - the serializable scale object.
+ * @returns the pixel value (defaulting to 0 if data value is not defined in scale).
+ */
+export function getPointOnSerializableScale(dataValue: number, scale: SerializableScale): number {
+  'worklet';
+
+  if (scale.type === 'band') {
+    const bandStart = applySerializableScale(dataValue, scale);
+    return bandStart + scale.bandwidth / 2;
+  }
+
+  // For log scales, ensure the value is positive
+  if (scale.type === 'log' && dataValue <= 0) {
+    dataValue = 0.001; // Use a small positive value for log scales
+  }
+
+  return applySerializableScale(dataValue, scale);
+}
+
+/**
+ * Projects a single data point to pixel coordinates using serializable scales.
+ * This is the worklet-compatible version for use in react-native-reanimated.
+ */
+export function projectPointWithSerializableScale({
+  x,
+  y,
+  xScale,
+  yScale,
+}: {
+  x: number;
+  y: number;
+  xScale: SerializableScale;
+  yScale: SerializableScale;
+}): { x: number; y: number } {
+  'worklet';
+  return {
+    x: getPointOnSerializableScale(x, xScale),
+    y: getPointOnSerializableScale(y, yScale),
+  };
+}
 
 /**
  * Projects a data point to pixel coordinates using the chart scale.
@@ -130,4 +194,73 @@ export const projectPoints = ({
       yScale,
     });
   });
+};
+
+/**
+ * Determines text alignment based on label position.
+ * For example, a 'top' position needs the text aligned to the 'bottom' so it appears above the point.
+ */
+export const getAlignmentFromPosition = (
+  position: PointLabelPosition,
+): { horizontalAlignment: TextHorizontalAlignment; verticalAlignment: TextVerticalAlignment } => {
+  let horizontalAlignment: TextHorizontalAlignment = 'center';
+  let verticalAlignment: TextVerticalAlignment = 'middle';
+
+  switch (position) {
+    case 'top':
+      verticalAlignment = 'bottom';
+      break;
+    case 'bottom':
+      verticalAlignment = 'top';
+      break;
+    case 'left':
+      horizontalAlignment = 'right';
+      break;
+    case 'right':
+      horizontalAlignment = 'left';
+      break;
+    case 'center':
+    default:
+      horizontalAlignment = 'center';
+      verticalAlignment = 'middle';
+      break;
+  }
+
+  return { horizontalAlignment, verticalAlignment };
+};
+
+/**
+ * Calculates the final label coordinates by applying offset based on position.
+ */
+export const getLabelCoordinates = (
+  x: number,
+  y: number,
+  position: PointLabelPosition,
+  offset: number,
+): { x: number; y: number } => {
+  let dx = 0;
+  let dy = 0;
+
+  switch (position) {
+    case 'top':
+      dy = -offset;
+      break;
+    case 'bottom':
+      dy = offset;
+      break;
+    case 'left':
+      dx = -offset;
+      break;
+    case 'right':
+      dx = offset;
+      break;
+    case 'center':
+    default:
+      break;
+  }
+
+  return {
+    x: x + dx,
+    y: y + dy,
+  };
 };

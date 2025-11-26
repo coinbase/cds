@@ -2,7 +2,11 @@ import { forwardRef, memo, useMemo } from 'react';
 
 import { XAxis, type XAxisProps } from '../axis/XAxis';
 import { YAxis, type YAxisProps } from '../axis/YAxis';
-import { CartesianChart, type CartesianChartProps } from '../CartesianChart';
+import {
+  CartesianChart,
+  type CartesianChartBaseProps,
+  type CartesianChartProps,
+} from '../CartesianChart';
 import { type AxisConfigProps, defaultChartInset, getChartInset, type Series } from '../utils';
 
 import { Line, type LineProps } from './Line';
@@ -12,33 +16,39 @@ export type LineSeries = Series &
     Pick<
       LineProps,
       | 'curve'
-      | 'onPointClick'
       | 'showArea'
       | 'areaType'
       | 'areaBaseline'
       | 'type'
-      | 'type'
       | 'LineComponent'
       | 'AreaComponent'
       | 'stroke'
-      | 'opacity'
-      | 'renderPoints'
       | 'strokeWidth'
+      | 'strokeOpacity'
+      | 'opacity'
+      | 'points'
+      | 'connectNulls'
+      | 'transition'
+      | 'onPointClick'
     >
   >;
 
-export type LineChartProps = Omit<CartesianChartProps, 'xAxis' | 'yAxis' | 'series'> &
+export type LineChartBaseProps = Omit<CartesianChartBaseProps, 'xAxis' | 'yAxis' | 'series'> &
   Pick<
     LineProps,
     | 'showArea'
     | 'areaType'
     | 'type'
-    | 'onPointClick'
     | 'LineComponent'
     | 'AreaComponent'
     | 'curve'
-    | 'renderPoints'
+    | 'points'
     | 'strokeWidth'
+    | 'strokeOpacity'
+    | 'connectNulls'
+    | 'transition'
+    | 'onPointClick'
+    | 'opacity'
   > & {
     /**
      * Configuration objects that define how to visualize the data.
@@ -53,9 +63,22 @@ export type LineChartProps = Omit<CartesianChartProps, 'xAxis' | 'yAxis' | 'seri
      * Whether to show the Y axis.
      */
     showYAxis?: boolean;
+    /**
+     * Configuration for x-axis.
+     * Accepts axis config and axis props.
+     * To show the axis, set `showXAxis` to true.
+     */
     xAxis?: Partial<AxisConfigProps> & XAxisProps;
+    /**
+     * Configuration for y-axis.
+     * Accepts axis config and axis props.
+     * To show the axis, set `showYAxis` to true.
+     */
     yAxis?: Partial<AxisConfigProps> & YAxisProps;
   };
+
+export type LineChartProps = LineChartBaseProps &
+  Omit<CartesianChartProps, 'xAxis' | 'yAxis' | 'series'>;
 
 export const LineChart = memo(
   forwardRef<SVGSVGElement, LineChartProps>(
@@ -69,22 +92,23 @@ export const LineChart = memo(
         LineComponent,
         AreaComponent,
         curve,
-        renderPoints,
+        points,
         strokeWidth,
+        strokeOpacity,
+        connectNulls,
+        transition,
+        opacity,
         showXAxis,
         showYAxis,
         xAxis,
         yAxis,
-        inset: userInset,
+        inset,
         children,
         ...chartProps
       },
       ref,
     ) => {
-      const calculatedInset = useMemo(
-        () => getChartInset(userInset, defaultChartInset),
-        [userInset],
-      );
+      const calculatedInset = useMemo(() => getChartInset(inset, defaultChartInset), [inset]);
 
       // Convert LineSeries to Series for Chart context
       const chartSeries = useMemo(() => {
@@ -94,6 +118,9 @@ export const LineChart = memo(
             data: s.data,
             label: s.label,
             color: s.color,
+            yAxisId: s.yAxisId,
+            stackId: s.stackId,
+            gradient: s.gradient,
           }),
         );
       }, [series]);
@@ -156,12 +183,16 @@ export const LineChart = memo(
               AreaComponent={AreaComponent}
               LineComponent={LineComponent}
               areaType={areaType}
+              connectNulls={connectNulls}
               curve={curve}
               onPointClick={onPointClick}
-              renderPoints={renderPoints}
+              opacity={opacity}
+              points={points}
               seriesId={id}
               showArea={showArea}
+              strokeOpacity={strokeOpacity}
               strokeWidth={strokeWidth}
+              transition={linePropsFromSeries.transition ?? transition}
               type={type}
               {...linePropsFromSeries}
             />

@@ -1,7 +1,8 @@
 import type React from 'react';
 
 import { type LineComponent } from '../line';
-import type { ChartTextChildren } from '../text/ChartText';
+import type { ChartTextChildren, ChartTextProps } from '../text/ChartText';
+import { accessoryFadeTransitionDuration } from '../utils';
 
 export const axisLineStyles = `
   stroke: var(--color-fg);
@@ -16,28 +17,6 @@ export const axisTickMarkStyles = `
 `;
 
 /**
- * Animation variants for grouped axis tick labels - initial mount
- */
-export const axisTickLabelsInitialAnimationVariants = {
-  initial: {
-    opacity: 0,
-  },
-  animate: {
-    opacity: 1,
-    transition: {
-      duration: 0.15,
-      delay: 0.85, // Initial animation: wait 850ms then fade in over 150ms
-    },
-  },
-  exit: {
-    opacity: 0,
-    transition: {
-      duration: 0.15,
-    },
-  },
-};
-
-/**
  * Animation variants for axis elements - updates (used for both grid lines and tick labels)
  */
 export const axisUpdateAnimationVariants = {
@@ -47,24 +26,57 @@ export const axisUpdateAnimationVariants = {
   animate: {
     opacity: 1,
     transition: {
-      duration: 0.15,
-      delay: 0.15, // For updates: fade out 150ms, then fade in 150ms
+      duration: accessoryFadeTransitionDuration,
+      delay: accessoryFadeTransitionDuration,
     },
   },
   exit: {
     opacity: 0,
     transition: {
-      duration: 0.15,
+      duration: accessoryFadeTransitionDuration,
     },
   },
 };
 
+export type AxisTickLabelComponentProps = Pick<
+  ChartTextProps,
+  | 'x'
+  | 'y'
+  | 'children'
+  | 'testID'
+  | 'dx'
+  | 'dy'
+  | 'font'
+  | 'fontFamily'
+  | 'fontSize'
+  | 'fontWeight'
+  | 'color'
+  | 'elevated'
+  | 'inset'
+  | 'background'
+  | 'borderRadius'
+  | 'disableRepositioning'
+  | 'bounds'
+  | 'styles'
+  | 'classNames'
+  | 'horizontalAlignment'
+  | 'verticalAlignment'
+  | 'className'
+  | 'style'
+>;
+
+export type AxisTickLabelComponent = React.FC<AxisTickLabelComponentProps>;
+
 export type AxisBaseProps = {
   /**
-   * Component to render the grid lines.
-   * @default DottedLine
+   * Label text to display for the axis.
    */
-  GridLineComponent?: LineComponent;
+  label?: string;
+  /**
+   * Gap between the tick labels and the axis label.
+   * @default 4
+   */
+  labelGap?: number;
   /**
    * Minimum gap between tick labels.
    * Labels will be hidden if they are closer than this gap.
@@ -115,24 +127,6 @@ export type AxisBaseProps = {
    */
   ticks?: number[] | ((value: number) => boolean);
   /**
-   * Formatter function for axis tick values.
-   * Tick values will be wrapped in ChartText component.
-   *
-   * @example
-   * // Simple string formatting
-   * tickLabelFormatter: (value) => `$${prices[value]}`
-   *
-   * @example
-   * // ReactNode with conditional styling
-   * tickLabelFormatter: (index) => {
-   *   if (index % 12 === 0) {
-   *     return <tspan style={{ fontWeight: 'bold' }}>${prices[index]}</tspan>;
-   *   }
-   *   return `$${prices[index]}`;
-   * }
-   */
-  tickLabelFormatter?: (value: any) => ChartTextChildren;
-  /**
    * Space between the axis tick mark and labels.
    * If tick marks are not shown, this is the gap between the axis and the chart.
    * @default 2 for x-axis, 8 for y-axis
@@ -172,6 +166,10 @@ export type AxisProps = AxisBaseProps & {
      */
     root?: string;
     /**
+     * Custom className for the axis label.
+     */
+    label?: string;
+    /**
      * Custom className for the tick labels.
      */
     tickLabel?: string;
@@ -201,6 +199,10 @@ export type AxisProps = AxisBaseProps & {
      */
     root?: React.CSSProperties;
     /**
+     * Custom style for the axis label.
+     */
+    label?: React.CSSProperties;
+    /**
      * Custom style for the tick labels.
      */
     tickLabel?: React.CSSProperties;
@@ -217,4 +219,50 @@ export type AxisProps = AxisBaseProps & {
      */
     tickMark?: React.CSSProperties;
   };
+  /**
+   * Component to render the grid lines.
+   * @default DottedLine
+   */
+  GridLineComponent?: LineComponent;
+  /**
+   * Component to render the axis line.
+   * @default SolidLine
+   */
+  LineComponent?: LineComponent;
+  /**
+   * Component to render the tick marks.
+   * @default SolidLine
+   */
+  TickMarkLineComponent?: LineComponent;
+  /**
+   * Formatter function for axis tick values.
+   * Tick values will be wrapped in ChartText component.
+   *
+   * @example
+   * // XAxis
+   * tickLabelFormatter: (index) => {
+   *   if (index % 12 === 0) {
+   *     return <tspan style={{ fontWeight: 'bold' }}>${prices[index]}</tspan>;
+   *   }
+   *   return `$${prices[index]}`;
+   * }
+   *
+   * @example
+   * // YAxis
+   * tickLabelFormatter: (value) => `$${prices[value]}`
+   */
+  tickLabelFormatter?: (value: number) => ChartTextChildren;
+  /**
+   * Component to render tick labels.
+   * Allows for custom styling and formatting that works cross-platform.
+   *
+   * @example
+   * // Custom tick label component with elevation
+   * TickLabelComponent={(props) => (
+   *   <DefaultAxisTickLabel {...props} elevated color="var(--color-fgPrimary)" />
+   * )}
+   *
+   * @default DefaultAxisTickLabel
+   */
+  TickLabelComponent?: AxisTickLabelComponent;
 };

@@ -1,17 +1,20 @@
 import { memo, useCallback, useEffect, useId, useMemo } from 'react';
-import Animated, { useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
-import { G, Line } from 'react-native-svg';
 import { useTheme } from '@cbhq/cds-mobile/hooks/useTheme';
+import { Group, vec } from '@shopify/react-native-skia';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import { DottedLine } from '../line/DottedLine';
 import { ReferenceLine } from '../line/ReferenceLine';
-import { SmartChartTextGroup, type TextLabelData } from '../text/SmartChartTextGroup';
-import { getAxisTicksData, isCategoricalScale } from '../utils';
+import { SolidLine } from '../line/SolidLine';
+import { ChartText } from '../text/ChartText';
+import { ChartTextGroup, type TextLabelData } from '../text/ChartTextGroup';
+import { getAxisTicksData, isCategoricalScale, lineToPath } from '../utils';
 
-import type { AxisBaseProps, AxisProps } from './Axis';
+import { type AxisBaseProps, type AxisProps } from './Axis';
+import { DefaultAxisTickLabel } from './DefaultAxisTickLabel';
 
-const AnimatedG = Animated.createAnimatedComponent(G);
+const AXIS_WIDTH = 44;
+const LABEL_SIZE = 20;
 
 export type YAxisBaseProps = AxisBaseProps & {
   /**
@@ -26,7 +29,7 @@ export type YAxisBaseProps = AxisBaseProps & {
   position?: 'left' | 'right';
   /**
    * Width of the axis. This value is inclusive of the padding.
-   * @default 44
+   * @default 44 when no label is provided, 64 when a label is provided
    */
   width?: number;
 };
@@ -41,18 +44,19 @@ export const YAxis = memo<YAxisProps>(
     requestedTickCount = 5,
     ticks,
     tickLabelFormatter,
-    style,
-    className,
-    styles,
-    classNames,
+    TickLabelComponent = DefaultAxisTickLabel,
     GridLineComponent = DottedLine,
+    LineComponent = SolidLine,
+    TickMarkLineComponent = SolidLine,
     tickMarkLabelGap = 8,
-    width = 44,
     minTickLabelGap = 0,
     showTickMarks,
     showLine,
     tickMarkSize = 4,
     tickInterval,
+    label,
+    labelGap = 4,
+    width = label ? AXIS_WIDTH + LABEL_SIZE : AXIS_WIDTH,
     ...props
   }) => {
     const theme = useTheme();
@@ -65,24 +69,8 @@ export const YAxis = memo<YAxisProps>(
 
     const axisBounds = getAxisBounds(registrationId);
 
-    const gridOpacity = useSharedValue(1);
-    const axisLineProps = useMemo(
-      () => ({
-        stroke: theme.color.fg,
-        strokeLinecap: 'square' as const,
-        strokeWidth: 1,
-      }),
-      [theme.color.fg],
-    );
-
-    const axisTickMarkProps = useMemo(
-      () => ({
-        stroke: theme.color.fg,
-        strokeLinecap: 'square' as const,
-        strokeWidth: 1,
-      }),
-      [theme.color.fg],
-    );
+    // Note: gridOpacity not currently used in Skia version
+    // const gridOpacity = useSharedValue(1);
 
     useEffect(() => {
       registerAxis(registrationId, position, width);
@@ -159,10 +147,8 @@ export const YAxis = memo<YAxisProps>(
           y: tick.position,
           label: String(formatTick(tick.tick)),
           chartTextProps: {
-            className: classNames?.tickLabel,
             color: theme.color.fgMuted,
             verticalAlignment: 'middle',
-            style: styles?.tickLabel,
             horizontalAlignment: position === 'left' ? 'right' : 'left',
           },
         };
@@ -170,26 +156,26 @@ export const YAxis = memo<YAxisProps>(
     }, [
       axisBounds,
       ticksData,
-      theme.color.fgMuted,
       tickMarkLabelGap,
       showTickMarks,
       tickMarkSize,
       position,
       formatTick,
-      classNames?.tickLabel,
-      styles?.tickLabel,
+      theme.color.fgMuted,
     ]);
 
-    const gridAnimatedStyle = useAnimatedStyle(() => ({
-      opacity: gridOpacity.value,
-    }));
+    if (!yScale || !axisBounds) return;
 
-    if (!yScale) return;
+    const labelX =
+      position === 'left'
+        ? axisBounds.x + LABEL_SIZE / 2
+        : axisBounds.x + axisBounds.width - LABEL_SIZE / 2;
+    const labelY = axisBounds.y + axisBounds.height / 2;
 
     return (
-      <G data-axis="y" data-position={position} {...props}>
+      <Group>
         {showGrid && (
-          <AnimatedG animatedProps={gridAnimatedStyle}>
+          <Group>
             {ticksData.map((tick, index) => {
               const horizontalLine = (
                 <ReferenceLine
@@ -199,19 +185,20 @@ export const YAxis = memo<YAxisProps>(
                 />
               );
 
-              return <G key={`grid-${tick.tick}-${index}`}>{horizontalLine}</G>;
+              return <Group key={`grid-${tick.tick}-${index}`}>{horizontalLine}</Group>;
             })}
-          </AnimatedG>
+          </Group>
         )}
         {chartTextData && (
-          <SmartChartTextGroup
+          <ChartTextGroup
             prioritizeEndLabels
+            LabelComponent={TickLabelComponent}
             labels={chartTextData}
             minGap={minTickLabelGap}
           />
         )}
         {axisBounds && showTickMarks && (
-          <G data-testid="tick-marks">
+          <Group>
             {ticksData.map((tick, index) => {
               const tickX = position === 'left' ? axisBounds.x + axisBounds.width : axisBounds.x;
               const tickMarkSizePixels = tickMarkSize;
@@ -221,28 +208,49 @@ export const YAxis = memo<YAxisProps>(
                   : axisBounds.x + tickMarkSizePixels;
 
               return (
-                <Line
+                <TickMarkLineComponent
                   key={`tick-mark-${tick.tick}-${index}`}
-                  {...axisTickMarkProps}
-                  x1={tickX}
-                  x2={tickX2}
-                  y1={tick.position}
-                  y2={tick.position}
+                  animate={false}
+                  clipPath={null}
+                  d={lineToPath(tickX, tick.position, tickX2, tick.position)}
+                  stroke={theme.color.fg}
+                  strokeCap="square"
+                  strokeWidth={1}
                 />
               );
             })}
-          </G>
+          </Group>
         )}
-        {axisBounds && showLine && (
-          <Line
-            {...axisLineProps}
-            x1={position === 'left' ? axisBounds.x + axisBounds.width : axisBounds.x}
-            x2={position === 'left' ? axisBounds.x + axisBounds.width : axisBounds.x}
-            y1={axisBounds.y}
-            y2={axisBounds.y + axisBounds.height}
+        {showLine && (
+          <LineComponent
+            animate={false}
+            d={lineToPath(
+              position === 'left' ? axisBounds.x + axisBounds.width : axisBounds.x,
+              axisBounds.y,
+              position === 'left' ? axisBounds.x + axisBounds.width : axisBounds.x,
+              axisBounds.y + axisBounds.height,
+            )}
+            stroke={theme.color.fg}
+            strokeCap="square"
+            strokeWidth={1}
           />
         )}
-      </G>
+        {label && (
+          <Group
+            origin={vec(labelX, labelY)}
+            transform={[{ rotate: position === 'left' ? -Math.PI / 2 : Math.PI / 2 }]}
+          >
+            <ChartText
+              horizontalAlignment="center"
+              verticalAlignment="middle"
+              x={labelX}
+              y={labelY}
+            >
+              {label}
+            </ChartText>
+          </Group>
+        )}
+      </Group>
     );
   },
 );

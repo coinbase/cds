@@ -3,7 +3,11 @@ import type { View } from 'react-native';
 
 import { XAxis, type XAxisProps } from '../axis/XAxis';
 import { YAxis, type YAxisProps } from '../axis/YAxis';
-import { CartesianChart, type CartesianChartProps } from '../CartesianChart';
+import {
+  CartesianChart,
+  type CartesianChartBaseProps,
+  type CartesianChartProps,
+} from '../CartesianChart';
 import { type AxisConfigProps, defaultChartInset, getChartInset, type Series } from '../utils';
 
 import { Line, type LineProps } from './Line';
@@ -20,13 +24,16 @@ export type LineSeries = Series &
       | 'LineComponent'
       | 'AreaComponent'
       | 'stroke'
-      | 'opacity'
-      | 'renderPoints'
       | 'strokeWidth'
+      | 'strokeOpacity'
+      | 'opacity'
+      | 'points'
+      | 'connectNulls'
+      | 'transition'
     >
   >;
 
-export type LineChartProps = Omit<CartesianChartProps, 'xAxis' | 'yAxis' | 'series'> &
+export type LineChartBaseProps = Omit<CartesianChartBaseProps, 'xAxis' | 'yAxis' | 'series'> &
   Pick<
     LineProps,
     | 'showArea'
@@ -35,8 +42,12 @@ export type LineChartProps = Omit<CartesianChartProps, 'xAxis' | 'yAxis' | 'seri
     | 'LineComponent'
     | 'AreaComponent'
     | 'curve'
-    | 'renderPoints'
+    | 'points'
     | 'strokeWidth'
+    | 'strokeOpacity'
+    | 'connectNulls'
+    | 'transition'
+    | 'opacity'
   > & {
     /**
      * Configuration objects that define how to visualize the data.
@@ -51,9 +62,22 @@ export type LineChartProps = Omit<CartesianChartProps, 'xAxis' | 'yAxis' | 'seri
      * Whether to show the Y axis.
      */
     showYAxis?: boolean;
+    /**
+     * Configuration for x-axis.
+     * Accepts axis config and axis props.
+     * To show the axis, set `showXAxis` to true.
+     */
     xAxis?: Partial<AxisConfigProps> & XAxisProps;
+    /**
+     * Configuration for y-axis.
+     * Accepts axis config and axis props.
+     * To show the axis, set `showYAxis` to true.
+     */
     yAxis?: Partial<AxisConfigProps> & YAxisProps;
   };
+
+export type LineChartProps = LineChartBaseProps &
+  Omit<CartesianChartProps, 'xAxis' | 'yAxis' | 'series'>;
 
 export const LineChart = memo(
   forwardRef<View, LineChartProps>(
@@ -66,28 +90,23 @@ export const LineChart = memo(
         LineComponent,
         AreaComponent,
         curve,
-        renderPoints,
+        points,
         strokeWidth,
+        strokeOpacity,
+        connectNulls,
+        transition,
+        opacity,
         showXAxis,
         showYAxis,
         xAxis,
         yAxis,
-        inset: userInset,
+        inset,
         children,
         ...chartProps
       },
       ref,
     ) => {
-      const calculatedInset = useMemo(
-        () => getChartInset(userInset, defaultChartInset),
-        [userInset],
-      );
-
-      // Check if we have valid data across all series
-      const hasData = useMemo(() => {
-        if (!series || series.length === 0) return false;
-        return series.some((s) => s.data && s.data.length > 0);
-      }, [series]);
+      const calculatedInset = useMemo(() => getChartInset(inset, defaultChartInset), [inset]);
 
       // Convert LineSeries to Series for Chart context
       const chartSeries = useMemo(() => {
@@ -97,6 +116,9 @@ export const LineChart = memo(
             data: s.data,
             label: s.label,
             color: s.color,
+            yAxisId: s.yAxisId,
+            stackId: s.stackId,
+            gradient: s.gradient,
           }),
         );
       }, [series]);
@@ -152,22 +174,25 @@ export const LineChart = memo(
           {/* Render axes first for grid lines to appear behind everything else */}
           {showXAxis && <XAxis {...xAxisVisualProps} />}
           {showYAxis && <YAxis axisId={yAxisId} {...yAxisVisualProps} />}
-          {hasData &&
-            series?.map(({ id, data, label, color, yAxisId, ...linePropsFromSeries }) => (
-              <Line
-                key={id}
-                AreaComponent={AreaComponent}
-                LineComponent={LineComponent}
-                areaType={areaType}
-                curve={curve}
-                renderPoints={renderPoints}
-                seriesId={id}
-                showArea={showArea}
-                strokeWidth={strokeWidth}
-                type={type}
-                {...linePropsFromSeries}
-              />
-            ))}
+          {series?.map(({ id, data, label, color, yAxisId, ...linePropsFromSeries }) => (
+            <Line
+              key={id}
+              AreaComponent={AreaComponent}
+              LineComponent={LineComponent}
+              areaType={areaType}
+              connectNulls={connectNulls}
+              curve={curve}
+              opacity={opacity}
+              points={points}
+              seriesId={id}
+              showArea={showArea}
+              strokeOpacity={strokeOpacity}
+              strokeWidth={strokeWidth}
+              transition={linePropsFromSeries.transition ?? transition}
+              type={type}
+              {...linePropsFromSeries}
+            />
+          ))}
           {children}
         </CartesianChart>
       );

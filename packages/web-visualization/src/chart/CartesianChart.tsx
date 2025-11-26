@@ -52,7 +52,7 @@ export type CartesianChartBaseProps = BoxBaseProps &
      */
     xAxis?: Partial<Omit<AxisConfigProps, 'id'>>;
     /**
-     * Configuration for y-axis(es). First defined axis becomes default.
+     * Configuration for y-axis(es). Can be a single config or array of configs.
      */
     yAxis?: Partial<Omit<AxisConfigProps, 'data'>> | Partial<Omit<AxisConfigProps, 'data'>>[];
     /**
@@ -61,7 +61,43 @@ export type CartesianChartBaseProps = BoxBaseProps &
     inset?: number | Partial<ChartInset>;
   };
 
-export type CartesianChartProps = BoxProps<'svg'> & CartesianChartBaseProps;
+export type CartesianChartProps = Omit<BoxProps<'div'>, 'title'> &
+  CartesianChartBaseProps & {
+    /**
+     * Custom class name for the root element.
+     */
+    className?: string;
+    /**
+     * Custom class names for the component.
+     */
+    classNames?: {
+      /**
+       * Custom class name for the root element.
+       */
+      root?: string;
+      /**
+       * Custom class name for the chart SVG element.
+       */
+      chart?: string;
+    };
+    /**
+     * Custom styles for the root element.
+     */
+    style?: React.CSSProperties;
+    /**
+     * Custom styles for the component.
+     */
+    styles?: {
+      /**
+       * Custom styles for the root element.
+       */
+      root?: React.CSSProperties;
+      /**
+       * Custom styles for the chart SVG element.
+       */
+      chart?: React.CSSProperties;
+    };
+  };
 
 export const CartesianChart = memo(
   forwardRef<SVGSVGElement, CartesianChartProps>(
@@ -70,33 +106,30 @@ export const CartesianChart = memo(
         series,
         children,
         animate = true,
-        xAxis: xAxisConfigInput,
-        yAxis: yAxisConfigInput,
-        inset: insetInput,
+        xAxis: xAxisConfigProp,
+        yAxis: yAxisConfigProp,
+        inset,
         enableScrubbing,
         onScrubberPositionChange,
         width = '100%',
         height = '100%',
         className,
+        classNames,
         style,
+        styles,
         ...props
       },
       ref,
     ) => {
       const { observe, width: chartWidth, height: chartHeight } = useDimensions();
-      const internalSvgRef = useRef<SVGSVGElement>(null);
+      const svgRef = useRef<SVGSVGElement | null>(null);
 
-      const userInset = useMemo(() => {
-        return getChartInset(insetInput, defaultChartInset);
-      }, [insetInput]);
+      const calculatedInset = useMemo(() => getChartInset(inset, defaultChartInset), [inset]);
 
       // Axis configs store the properties of each axis, such as id, scale type, domain limit, etc.
       // We only support 1 x axis but allow for multiple y axes.
-      const xAxisConfig = useMemo(
-        () => getAxisConfig('x', xAxisConfigInput)[0],
-        [xAxisConfigInput],
-      );
-      const yAxisConfig = useMemo(() => getAxisConfig('y', yAxisConfigInput), [yAxisConfigInput]);
+      const xAxisConfig = useMemo(() => getAxisConfig('x', xAxisConfigProp)[0], [xAxisConfigProp]);
+      const yAxisConfig = useMemo(() => getAxisConfig('y', yAxisConfigProp), [yAxisConfigProp]);
 
       const { renderedAxes, registerAxis, unregisterAxis, axisPadding } = useTotalAxisPadding();
 
@@ -104,10 +137,10 @@ export const CartesianChart = memo(
         if (chartWidth <= 0 || chartHeight <= 0) return { x: 0, y: 0, width: 0, height: 0 };
 
         const totalInset = {
-          top: userInset.top + axisPadding.top,
-          right: userInset.right + axisPadding.right,
-          bottom: userInset.bottom + axisPadding.bottom,
-          left: userInset.left + axisPadding.left,
+          top: calculatedInset.top + axisPadding.top,
+          right: calculatedInset.right + axisPadding.right,
+          bottom: calculatedInset.bottom + axisPadding.bottom,
+          left: calculatedInset.left + axisPadding.left,
         };
 
         const availableWidth = chartWidth - totalInset.left - totalInset.right;
@@ -119,11 +152,11 @@ export const CartesianChart = memo(
           width: availableWidth > 0 ? availableWidth : 0,
           height: availableHeight > 0 ? availableHeight : 0,
         };
-      }, [chartHeight, chartWidth, userInset, axisPadding]);
+      }, [chartHeight, chartWidth, calculatedInset, axisPadding]);
 
-      // Axes contain the config along with domain and range, which get calculated here.
-      const xAxis = useMemo(() => {
-        if (!chartRect || chartRect.width <= 0 || chartRect.height <= 0) return undefined;
+      const { xAxis, xScale } = useMemo(() => {
+        if (!chartRect || chartRect.width <= 0 || chartRect.height <= 0)
+          return { xAxis: undefined, xScale: undefined };
 
         const domain = getAxisDomain(xAxisConfig, series ?? [], 'x');
         const range = getAxisRange(xAxisConfig, chartRect, 'x');
@@ -137,11 +170,36 @@ export const CartesianChart = memo(
           domainLimit: xAxisConfig.domainLimit,
         };
 
-        return axisConfig;
+        // Create the scale
+        const scale = getAxisScale({
+          config: axisConfig,
+          type: 'x',
+          range: axisConfig.range,
+          dataDomain: axisConfig.domain,
+        });
+
+        if (!scale) return { xAxis: undefined, xScale: undefined };
+
+        // Update axis config with actual scale domain (after .nice() or other adjustments)
+        const scaleDomain = scale.domain();
+        const actualDomain =
+          Array.isArray(scaleDomain) && scaleDomain.length === 2
+            ? { min: scaleDomain[0] as number, max: scaleDomain[1] as number }
+            : axisConfig.domain;
+
+        const finalAxisConfig = {
+          ...axisConfig,
+          domain: actualDomain,
+        };
+
+        return { xAxis: finalAxisConfig, xScale: scale };
       }, [xAxisConfig, series, chartRect]);
-      const yAxes = useMemo(() => {
+
+      const { yAxes, yScales } = useMemo(() => {
         const axes = new Map<string, AxisConfig>();
-        if (!chartRect || chartRect.width <= 0 || chartRect.height <= 0) return axes;
+        const scales = new Map<string, ChartScaleFunction>();
+        if (!chartRect || chartRect.width <= 0 || chartRect.height <= 0)
+          return { yAxes: axes, yScales: scales };
 
         yAxisConfig.forEach((axisParam) => {
           const axisId = axisParam.id ?? defaultAxisId;
@@ -150,42 +208,20 @@ export const CartesianChart = memo(
           const relevantSeries =
             series?.filter((s) => (s.yAxisId ?? defaultAxisId) === axisId) ?? [];
 
-          // Calculate domain and range in one pass
-          const domain = getAxisDomain(axisParam, relevantSeries, 'y');
+          // Calculate domain and range
+          const dataDomain = getAxisDomain(axisParam, relevantSeries, 'y');
           const range = getAxisRange(axisParam, chartRect, 'y');
 
-          axes.set(axisId, {
+          const axisConfig: AxisConfig = {
             scaleType: axisParam.scaleType,
-            domain,
+            domain: dataDomain,
             range,
             data: axisParam.data,
             categoryPadding: axisParam.categoryPadding,
             domainLimit: axisParam.domainLimit ?? 'nice',
-          });
-        });
+          };
 
-        return axes;
-      }, [yAxisConfig, series, chartRect]);
-
-      // Scales are the functions that convert data values to visual positions.
-      // They are calculated here based on the above axes.
-      const xScale = useMemo(() => {
-        if (!chartRect || chartRect.width <= 0 || chartRect.height <= 0 || xAxis === undefined)
-          return undefined;
-
-        return getAxisScale({
-          config: xAxis,
-          type: 'x',
-          range: xAxis.range,
-          dataDomain: xAxis.domain,
-        });
-      }, [chartRect, xAxis]);
-
-      const yScales = useMemo(() => {
-        const scales = new Map<string, ChartScaleFunction>();
-        if (!chartRect || chartRect.width <= 0 || chartRect.height <= 0) return scales;
-
-        yAxes.forEach((axisConfig, axisId) => {
+          // Create the scale
           const scale = getAxisScale({
             config: axisConfig,
             type: 'y',
@@ -195,11 +231,23 @@ export const CartesianChart = memo(
 
           if (scale) {
             scales.set(axisId, scale);
+
+            // Update axis config with actual scale domain (after .nice() or other adjustments)
+            const scaleDomain = scale.domain();
+            const actualDomain =
+              Array.isArray(scaleDomain) && scaleDomain.length === 2
+                ? { min: scaleDomain[0] as number, max: scaleDomain[1] as number }
+                : axisConfig.domain;
+
+            axes.set(axisId, {
+              ...axisConfig,
+              domain: actualDomain,
+            });
           }
         });
 
-        return scales;
-      }, [chartRect, yAxes]);
+        return { yAxes: axes, yScales: scales };
+      }, [yAxisConfig, series, chartRect]);
 
       const getXAxis = useCallback(() => xAxis, [xAxis]);
       const getYAxis = useCallback((id?: string) => yAxes.get(id ?? defaultAxisId), [yAxes]);
@@ -223,6 +271,20 @@ export const CartesianChart = memo(
         [stackedDataMap],
       );
 
+      const dataLength = useMemo(() => {
+        // If xAxis has categorical data, use that length
+        if (xAxisConfig.data && xAxisConfig.data.length > 0) {
+          return xAxisConfig.data.length;
+        }
+
+        // Otherwise, find the longest series
+        if (!series || series.length === 0) return 0;
+        return series.reduce((max, s) => {
+          const seriesData = getStackedSeriesData(s.id);
+          return Math.max(max, seriesData?.length ?? 0);
+        }, 0);
+      }, [xAxisConfig.data, series, getStackedSeriesData]);
+
       const getAxisBounds = useCallback(
         (axisId: string): Rect | undefined => {
           const axis = renderedAxes.get(axisId);
@@ -242,7 +304,7 @@ export const CartesianChart = memo(
 
           if (axis.position === 'top') {
             // Position above the chart rect, accounting for user inset
-            const startY = userInset.top + offsetFromPreviousAxes;
+            const startY = calculatedInset.top + offsetFromPreviousAxes;
             return {
               x: chartRect.x,
               y: startY,
@@ -260,7 +322,7 @@ export const CartesianChart = memo(
             };
           } else if (axis.position === 'left') {
             // Position to the left of the chart rect, accounting for user inset
-            const startX = userInset.left + offsetFromPreviousAxes;
+            const startX = calculatedInset.left + offsetFromPreviousAxes;
             return {
               x: startX,
               y: chartRect.y,
@@ -278,7 +340,7 @@ export const CartesianChart = memo(
             };
           }
         },
-        [renderedAxes, chartRect, userInset],
+        [renderedAxes, chartRect, calculatedInset],
       );
 
       const contextValue: CartesianChartContextValue = useMemo(
@@ -294,6 +356,7 @@ export const CartesianChart = memo(
           getXScale,
           getYScale,
           drawingArea: chartRect,
+          dataLength,
           registerAxis,
           unregisterAxis,
           getAxisBounds,
@@ -310,49 +373,62 @@ export const CartesianChart = memo(
           getXScale,
           getYScale,
           chartRect,
+          dataLength,
           registerAxis,
           unregisterAxis,
           getAxisBounds,
         ],
       );
 
+      const rootClassNames = useMemo(
+        () => cx(className, classNames?.root),
+        [className, classNames],
+      );
+      const rootStyles = useMemo(() => ({ ...style, ...styles?.root }), [style, styles?.root]);
+
       return (
-        <Box
-          ref={(node) => {
-            // Handle the observe ref, internal ref, and forwarded ref
-            observe(node as unknown as HTMLElement);
-            if (internalSvgRef.current !== node) {
-              (internalSvgRef as React.MutableRefObject<SVGSVGElement | null>).current =
-                node as unknown as SVGSVGElement;
-            }
-            if (ref) {
-              if (typeof ref === 'function') {
-                ref(node as unknown as SVGSVGElement);
-              } else {
-                ref.current = node as unknown as SVGSVGElement;
-              }
-            }
-          }}
-          aria-live="polite"
-          as="svg"
-          className={cx(enableScrubbing && focusStylesCss, className)}
-          height={height}
-          role="figure"
-          style={style}
-          tabIndex={enableScrubbing ? 0 : undefined}
-          width={width}
-          {...props}
-        >
-          <CartesianChartProvider value={contextValue}>
-            <ScrubberProvider
-              enableScrubbing={!!enableScrubbing}
-              onScrubberPositionChange={onScrubberPositionChange}
-              svgRef={internalSvgRef}
+        <CartesianChartProvider value={contextValue}>
+          <ScrubberProvider
+            enableScrubbing={!!enableScrubbing}
+            onScrubberPositionChange={onScrubberPositionChange}
+            svgRef={svgRef}
+          >
+            <Box
+              ref={(node) => {
+                observe(node as unknown as HTMLElement);
+              }}
+              className={rootClassNames}
+              height={height}
+              style={rootStyles}
+              width={width}
+              {...props}
             >
-              {children}
-            </ScrubberProvider>
-          </CartesianChartProvider>
-        </Box>
+              <Box
+                ref={(node) => {
+                  const svgElement = node as unknown as SVGSVGElement;
+                  svgRef.current = svgElement;
+                  // Forward the ref to the user
+                  if (ref) {
+                    if (typeof ref === 'function') {
+                      ref(svgElement);
+                    } else {
+                      (ref as React.MutableRefObject<SVGSVGElement | null>).current = svgElement;
+                    }
+                  }
+                }}
+                aria-live="polite"
+                as="svg"
+                className={cx(enableScrubbing && focusStylesCss, classNames?.chart)}
+                height="100%"
+                style={styles?.chart}
+                tabIndex={enableScrubbing ? 0 : undefined}
+                width="100%"
+              >
+                {children}
+              </Box>
+            </Box>
+          </ScrubberProvider>
+        </CartesianChartProvider>
       );
     },
   ),

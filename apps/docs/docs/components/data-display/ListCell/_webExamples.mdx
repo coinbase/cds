@@ -95,6 +95,7 @@ We have deprecated `CellMedia`; pass media directly as shown below.
 - In condensed spacing (`spacingVariant="condensed"`), the title shows up to two lines by default, regardless of whether a description is present.
 - In normal and compact spacing, the title shows up to two lines when there is no description; if a description is present, the title is limited to one line.
 - Use `disableMultilineTitle` to force the title to one line in all cases.
+- When provided, the subtitle renders between the title and description and always truncates to a single line. Use `subtitleNode` if you need custom layout or multi-line behavior.
 
 ::::warning
 The `title` and `description` props are rendered inside a CDS `Text` with default fonts and truncation. To render arbitrary React nodes without being wrapped by a `<Text>`, use `titleNode` and `descriptionNode`.
@@ -119,6 +120,21 @@ When using the Node props, you are responsible for styling, layout, and truncati
       <Icon name="info" />
     </HStack>
   }
+/>
+```
+
+### Subtitle
+
+Use `subtitle` to add one line of supplementary context between the title and description. The subtitle always truncates to a single line; provide a `subtitleNode` when you need your own truncation or layout logic.
+
+```tsx live
+<ListCell
+  spacingVariant="condensed"
+  media={<Avatar src={assets.btc.imageUrl} size="l" />}
+  title="Bitcoin"
+  subtitle="Deposit available in 1-2 days"
+  description="Ending in ••42"
+  detail="$12,345.00"
 />
 ```
 

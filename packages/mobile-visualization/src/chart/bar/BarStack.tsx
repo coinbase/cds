@@ -3,66 +3,23 @@ import type { Rect } from '@cbhq/cds-common';
 import { useTheme } from '@cbhq/cds-mobile/hooks/useTheme';
 
 import { useCartesianChartContext } from '../ChartProvider';
-import type { ChartScaleFunction } from '../utils';
+import type { ChartScaleFunction, Series, Transition } from '../utils';
+import { evaluateGradientAtValue, getGradientStops } from '../utils/gradient';
+import { convertToSerializableScale } from '../utils/scale';
 
-import { Bar, type BarComponent, type BarProps } from './Bar';
-import type { BarSeries } from './BarChart';
+import { Bar, type BarProps } from './Bar';
 import { DefaultBarStack } from './DefaultBarStack';
 
-export type BarStackComponentProps = {
-  /**
-   * The x position of the stack.
-   */
-  x: number;
-  /**
-   * The y position of the stack.
-   */
-  y: number;
-  /**
-   * The width of the stack.
-   */
-  width: number;
-  /**
-   * The height of the stack.
-   */
-  height: number;
-  /**
-   * The bar elements to render within the stack.
-   */
-  children: React.ReactNode;
-  /**
-   * The index of the category this stack belongs to.
-   */
-  categoryIndex: number;
-  /**
-   * Border radius for the bar.
-   * @default 4
-   */
-  borderRadius?: number;
-  /**
-   * Whether to round the top corners.
-   */
-  roundTop?: boolean;
-  /**
-   * Whether to round the bottom corners.
-   */
-  roundBottom?: boolean;
-  /**
-   * The y-origin for animations (baseline position).
-   */
-  yOrigin?: number;
-};
+const EPSILON = 1e-4;
 
-export type BarStackComponent = React.FC<BarStackComponentProps>;
-
-export type BarStackProps = Pick<
+export type BarStackBaseProps = Pick<
   BarProps,
   'BarComponent' | 'fillOpacity' | 'stroke' | 'strokeWidth' | 'borderRadius'
 > & {
   /**
    * Array of series configurations that belong to this stack.
    */
-  series: BarSeries[];
+  series: Series[];
   /**
    * The category index for this stack.
    */
@@ -112,6 +69,45 @@ export type BarStackProps = Pick<
   stackMinSize?: number;
 };
 
+export type BarStackProps = BarStackBaseProps & {
+  /**
+   * Transition configurations for different animation phases.
+   */
+  transition?: Transition;
+};
+
+export type BarStackComponentProps = Pick<
+  BarStackProps,
+  'x' | 'width' | 'categoryIndex' | 'borderRadius' | 'transition'
+> & {
+  /**
+   * The y position of the stack.
+   */
+  y: number;
+  /**
+   * The height of the stack.
+   */
+  height: number;
+  /**
+   * The bar elements to render within the stack.
+   */
+  children: React.ReactNode;
+  /**
+   * Whether to round the top corners.
+   */
+  roundTop?: boolean;
+  /**
+   * Whether to round the bottom corners.
+   */
+  roundBottom?: boolean;
+  /**
+   * The y-origin for animations (baseline position).
+   */
+  yOrigin?: number;
+};
+
+export type BarStackComponent = React.FC<BarStackComponentProps>;
+
 /**
  * BarStack component that renders a single stack of bars at a specific category index.
  * Handles the stacking logic for bars within a single category.
@@ -134,11 +130,13 @@ export const BarStack = memo<BarStackProps>(
     barMinSize,
     stackMinSize,
     roundBaseline,
+    transition,
   }) => {
     const theme = useTheme();
-    const { getSeriesData, getXAxis } = useCartesianChartContext();
+    const { getSeriesData, getXAxis, getXScale } = useCartesianChartContext();
 
     const xAxis = getXAxis();
+    const xScale = getXScale();
 
     const baseline = useMemo(() => {
       const domain = yScale.domain();
@@ -149,6 +147,26 @@ export const BarStack = memo<BarStackProps>(
       return Math.max(rect.y, Math.min(baseline, rect.y + rect.height));
     }, [rect.height, rect.y, yScale]);
 
+    const seriesGradients = useMemo(() => {
+      return series.map((s) => {
+        if (!s.gradient || !xScale || !yScale) return;
+
+        const gradientScale = s.gradient.axis === 'x' ? xScale : yScale;
+        const serializableScale = convertToSerializableScale(gradientScale);
+        if (!serializableScale) return;
+
+        const domain = { min: serializableScale.domain[0], max: serializableScale.domain[1] };
+        const stops = getGradientStops(s.gradient.stops, domain);
+
+        return {
+          seriesId: s.id,
+          gradient: s.gradient,
+          scale: serializableScale,
+          stops,
+        };
+      });
+    }, [series, xScale, yScale]);
+
     // Calculate bars for this specific category
     const { bars, stackRect } = useMemo(() => {
       let allBars: Array<{
@@ -158,12 +176,7 @@ export const BarStack = memo<BarStackProps>(
         width: number;
         height: number;
         dataY?: number | [number, number] | null;
-        BarComponent?: BarComponent;
         fill?: string;
-        fillOpacity?: number;
-        stroke?: string;
-        strokeWidth?: number;
-        borderRadius?: BarProps['borderRadius'];
         roundTop?: boolean;
         roundBottom?: boolean;
         shouldApplyGap?: boolean;
@@ -221,6 +234,27 @@ export const BarStack = memo<BarStackProps>(
         minY = Math.min(minY, y);
         maxY = Math.max(maxY, y + height);
 
+        // Determine fill color, respecting gradient if present
+        let barFill = s.color || theme.color.fgPrimary;
+
+        // Evaluate gradient if provided (using precomputed stops)
+        const seriesGradientConfig = seriesGradients.find((g) => g?.seriesId === s.id);
+        if (seriesGradientConfig) {
+          const axis = seriesGradientConfig.gradient.axis ?? 'y';
+          // For x-axis gradient, use the categoryIndex
+          // For y-axis gradient, use the actual data value
+          const dataValue = axis === 'x' ? categoryIndex : top;
+          const evaluatedColor = evaluateGradientAtValue(
+            seriesGradientConfig.stops,
+            dataValue,
+            seriesGradientConfig.scale,
+          );
+          if (evaluatedColor) {
+            // Only apply gradient color if fill is not explicitly set
+            barFill = evaluatedColor;
+          }
+        }
+
         allBars.push({
           seriesId: s.id,
           x,
@@ -228,15 +262,10 @@ export const BarStack = memo<BarStackProps>(
           width,
           height,
           dataY: value, // Store the actual data value
-          // Use series-specific properties, falling back to defaults
-          BarComponent: s.BarComponent,
-          fill: s.fill || s.color || theme.color.fgPrimary,
-          fillOpacity: s.fillOpacity,
-          stroke: s.stroke,
-          strokeWidth: s.strokeWidth,
-          // Pass context data for custom components
-          roundTop: roundBaseline || barTop !== baseline,
-          roundBottom: roundBaseline || barBottom !== baseline,
+          fill: barFill,
+          // Check if the bar should be rounded based on the baseline, with an epsilon to handle floating-point rounding
+          roundTop: roundBaseline || Math.abs(barTop - baseline) >= EPSILON,
+          roundBottom: roundBaseline || Math.abs(barBottom - baseline) >= EPSILON,
           shouldApplyGap,
         });
       });
@@ -326,8 +355,7 @@ export const BarStack = memo<BarStackProps>(
           if (bar.height < barMinSize) {
             const heightIncrease = barMinSize - bar.height;
 
-            const bottom = 0;
-            const top = 0;
+            const [bottom, top] = (bar.dataY as [number, number]).sort((a, b) => a - b);
 
             // Determine how to expand the bar
             let newBottom = bottom;
@@ -484,8 +512,7 @@ export const BarStack = memo<BarStackProps>(
           const bar = allBars[0];
           const heightIncrease = stackMinSize - bar.height;
 
-          const bottom = 0;
-          const top = 0;
+          const [bottom, top] = (bar.dataY as [number, number]).sort((a, b) => a - b);
 
           // Determine how to expand the bar (same logic as barMinSize)
           let newBottom = bottom;
@@ -626,6 +653,7 @@ export const BarStack = memo<BarStackProps>(
       barMinSize,
       stackMinSize,
       yScale,
+      seriesGradients,
       theme.color.fgPrimary,
     ]);
 
@@ -638,26 +666,29 @@ export const BarStack = memo<BarStackProps>(
     const barElements = bars.map((bar, index) => (
       <Bar
         key={`${bar.seriesId}-${categoryIndex}-${index}`}
-        BarComponent={bar.BarComponent || defaultBarComponent}
+        BarComponent={defaultBarComponent}
         borderRadius={borderRadius}
         dataX={dataX}
         dataY={bar.dataY}
         fill={bar.fill}
-        fillOpacity={bar.fillOpacity ?? defaultFillOpacity}
+        fillOpacity={defaultFillOpacity}
         height={bar.height}
         originY={baseline}
         roundBottom={bar.roundBottom}
         roundTop={bar.roundTop}
-        stroke={bar.stroke ?? defaultStroke}
-        strokeWidth={bar.strokeWidth ?? defaultStrokeWidth}
+        stroke={defaultStroke}
+        strokeWidth={defaultStrokeWidth}
+        transition={transition}
         width={bar.width}
         x={bar.x}
         y={bar.y}
       />
     ));
 
-    const stackRoundBottom = roundBaseline || stackRect.y + stackRect.height !== baseline;
-    const stackRoundTop = roundBaseline || stackRect.y !== baseline;
+    // Check if the bar should be rounded based on the baseline, with an epsilon to handle floating-point rounding
+    const stackRoundBottom =
+      roundBaseline || Math.abs(stackRect.y + stackRect.height - baseline) >= EPSILON;
+    const stackRoundTop = roundBaseline || Math.abs(stackRect.y - baseline) >= EPSILON;
 
     return (
       <BarStackComponent
@@ -666,6 +697,7 @@ export const BarStack = memo<BarStackProps>(
         height={stackRect.height}
         roundBottom={stackRoundBottom}
         roundTop={stackRoundTop}
+        transition={transition}
         width={stackRect.width}
         x={stackRect.x}
         y={stackRect.y}

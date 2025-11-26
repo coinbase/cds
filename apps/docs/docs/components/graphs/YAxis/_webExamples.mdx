@@ -14,7 +14,7 @@ The YAxis component provides a vertical axis for charts with automatic tick gene
   ]}
 >
   <YAxis showGrid />
-  <Line seriesId="prices" curve="monotone" showArea />
+  <Line seriesId="prices" showArea />
   <Scrubber />
 </CartesianChart>
 ```
@@ -43,7 +43,7 @@ YAxis supports `linear` (default) and `log` scale types. Both `linear` and `log`
     scaleType: 'log',
   }}
 >
-  <Line seriesId="growthExponential" />
+  <Line seriesId="growthExponential" showArea />
   <YAxis
     showGrid
     showLine
@@ -74,7 +74,7 @@ You can pass in either an object (AxisBounds) with `min` and `max` properties (b
   }}
 >
   <YAxis showGrid />
-  <Line seriesId="prices" curve="monotone" showArea />
+  <Line seriesId="prices" showArea />
 </CartesianChart>
 ```
 
@@ -101,7 +101,7 @@ You can pass in either an object (AxisBounds) with `min` and `max` properties (b
     range: ({ min, max }) => ({ min: min + 96, max: max - 96 }),
   }}
 >
-  <Line seriesId="prices" curve="monotone" showArea />
+  <Line seriesId="prices" showArea />
 </CartesianChart>
 ```
 
@@ -165,7 +165,7 @@ function YAxisGridExample() {
         ]}
       >
         <YAxis showGrid={showGrid} />
-        <Line seriesId="prices" curve="monotone" showArea />
+        <Line seriesId="prices" showArea />
         <Scrubber />
       </CartesianChart>
     </VStack>
@@ -238,7 +238,7 @@ function YAxisLineExample() {
         ]}
       >
         <YAxis showLine={showLine} />
-        <Line seriesId="prices" curve="monotone" showArea />
+        <Line seriesId="prices" showArea />
         <Scrubber />
       </CartesianChart>
     </VStack>
@@ -273,7 +273,7 @@ function YAxisLineStylesExample() {
           showGrid
           styles={{ line: { stroke: 'var(--color-accentBoldGreen)', strokeWidth: 4 } }}
         />
-        <Line seriesId="prices" curve="monotone" showArea />
+        <Line seriesId="prices" showArea />
         <Scrubber />
       </CartesianChart>
     </VStack>
@@ -328,7 +328,7 @@ You can use the `ticks`, `requestedTickCount` (default for YAxis), and `tickInte
   ]}
 >
   <YAxis showLine showTickMarks showGrid ticks={[34, 56, 80]} />
-  <Line seriesId="prices" curve="monotone" showArea />
+  <Line seriesId="prices" showArea />
   <Scrubber />
 </CartesianChart>
 ```
@@ -349,7 +349,7 @@ This is the default behavior for YAxis, and defaults to `5`.
   ]}
 >
   <YAxis showLine showTickMarks showGrid requestedTickCount={5} />
-  <Line seriesId="prices" curve="monotone" showArea />
+  <Line seriesId="prices" showArea />
   <Scrubber />
 </CartesianChart>
 ```
@@ -368,7 +368,7 @@ This is the default behavior for YAxis, and defaults to `5`.
   ]}
 >
   <YAxis showLine showTickMarks showGrid tickInterval={8} />
-  <Line seriesId="prices" curve="monotone" showArea />
+  <Line seriesId="prices" showArea />
   <Scrubber />
 </CartesianChart>
 ```
@@ -399,7 +399,7 @@ function YAxisTickMarksExample() {
         ]}
       >
         <YAxis showLine showTickMarks={showTickMarks} tickMarkSize={16} showGrid />
-        <Line seriesId="prices" curve="monotone" showArea />
+        <Line seriesId="prices" showArea />
         <Scrubber />
       </CartesianChart>
     </VStack>
@@ -423,9 +423,66 @@ You can customize the tick labels using the `tickLabelFormatter` prop.
   ]}
 >
   <YAxis showGrid tickLabelFormatter={(value) => `$${value}`} />
-  <Line seriesId="prices" curve="monotone" showArea />
+  <Line seriesId="prices" showArea />
   <Scrubber />
 </CartesianChart>
+```
+
+### Label
+
+You can add a label to the axis using the `label` prop.
+
+```jsx live
+<CartesianChart
+  enableScrubbing
+  height={250}
+  series={[
+    {
+      id: 'prices',
+      data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+    },
+  ]}
+>
+  <YAxis showGrid label="Price ($)" tickLabelFormatter={(value) => `$${value}`} />
+  <Line seriesId="prices" showArea />
+  <Scrubber />
+</CartesianChart>
+```
+
+#### Custom Tick Labels
+
+You can create custom tick label components using the `TickLabelComponent` prop for advanced styling and positioning that works cross-platform.
+
+```jsx live
+function CustomTickLabelExample() {
+  const CustomYAxisTickLabel = useCallback(
+    (props) => <DefaultAxisTickLabel {...props} dx={4} dy={-12} horizontalAlignment="left" />,
+    [],
+  );
+
+  return (
+    <CartesianChart
+      enableScrubbing
+      height={250}
+      series={[
+        {
+          id: 'prices',
+          data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+        },
+      ]}
+    >
+      <YAxis
+        showGrid
+        position="left"
+        width={0}
+        tickLabelFormatter={(value) => `$${value}`}
+        TickLabelComponent={CustomYAxisTickLabel}
+      />
+      <Line seriesId="prices" showArea />
+      <Scrubber />
+    </CartesianChart>
+  );
+}
 ```
 
 ## Customization
@@ -433,77 +490,59 @@ You can customize the tick labels using the `tickLabelFormatter` prop.
 ### Multiple Y Axes
 
 ```jsx live
-<VStack gap={2}>
-  <CartesianChart
-    height={400}
-    series={[
-      {
-        id: 'revenue',
-        data: [455, 520, 380, 455, 285, 235],
-        yAxisId: 'revenue',
-        color: 'var(--color-accentBoldYellow)',
-      },
-      {
-        id: 'profitMargin',
-        data: [23, 20, 16, 38, 12, 9],
-        yAxisId: 'profitMargin',
-        color: 'var(--color-fgPositive)',
-      },
-    ]}
-    xAxis={{
-      data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-      scaleType: 'band',
-    }}
-    yAxis={[
-      {
-        id: 'revenue',
-        domain: { min: 0 },
-      },
-      {
-        id: 'profitMargin',
-        domain: { min: 0, max: 100 },
-      },
-    ]}
-  >
-    <XAxis showLine showTickMarks />
-    <YAxis
-      showGrid
-      showLine
-      showTickMarks
-      axisId="revenue"
-      position="left"
-      requestedTickCount={5}
-      width={60}
-      tickLabelFormatter={(value) => `$${value}k`}
-    />
-    <YAxis
-      showLine
-      showTickMarks
-      axisId="profitMargin"
-      requestedTickCount={5}
-      tickLabelFormatter={(value) => `${value}%`}
-    />
-    <BarPlot />
-  </CartesianChart>
-  <HStack justifyContent="center" gap={2}>
-    <Box alignItems="center" gap={0.5}>
-      <Box
-        borderRadius={1000}
-        width={10}
-        height={10}
-        style={{ background: 'var(--color-accentBoldYellow)' }}
-      />
-      <Text font="label2">Revenue ($)</Text>
-    </Box>
-    <Box alignItems="center" gap={0.5}>
-      <Box
-        borderRadius={1000}
-        width={10}
-        height={10}
-        style={{ background: 'var(--color-fgPositive)' }}
-      />
-      <Text font="label2">Profit Margin (%)</Text>
-    </Box>
-  </HStack>
-</VStack>
+<CartesianChart
+  height={400}
+  series={[
+    {
+      id: 'revenue',
+      data: [455, 520, 380, 455, 285, 235],
+      yAxisId: 'revenue',
+      color: 'var(--color-accentBoldYellow)',
+    },
+    {
+      id: 'profitMargin',
+      data: [23, 20, 16, 38, 12, 9],
+      yAxisId: 'profitMargin',
+      color: 'var(--color-fgPositive)',
+    },
+  ]}
+  xAxis={{
+    data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+    scaleType: 'band',
+  }}
+  yAxis={[
+    {
+      id: 'revenue',
+      domain: { min: 0 },
+    },
+    {
+      id: 'profitMargin',
+      domain: { min: 0, max: 100 },
+    },
+  ]}
+  inset={{ left: 0, right: 0 }}
+>
+  <XAxis showLine showTickMarks label="Month" />
+  <YAxis
+    showGrid
+    showLine
+    showTickMarks
+    axisId="revenue"
+    position="left"
+    label="Revenue"
+    width={80}
+    requestedTickCount={5}
+    tickLabelFormatter={(value) => `$${value}k`}
+  />
+  <YAxis
+    showLine
+    showTickMarks
+    axisId="profitMargin"
+    label="Profit Margin"
+    width={70}
+    requestedTickCount={5}
+    tickLabelFormatter={(value) => `${value}%`}
+  />
+  <BarPlot />
+</CartesianChart>
 ```

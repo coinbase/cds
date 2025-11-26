@@ -6,7 +6,7 @@ import type { TabValue } from '@cbhq/cds-common/tabs/useTabs';
 import { IconButton } from '@cbhq/cds-mobile/buttons';
 import { Example, ExampleScreen } from '@cbhq/cds-mobile/examples/ExampleScreen';
 import { useTheme } from '@cbhq/cds-mobile/hooks/useTheme';
-import { Box, HStack } from '@cbhq/cds-mobile/layout';
+import { HStack } from '@cbhq/cds-mobile/layout';
 import { type TabComponent, type TabsActiveIndicatorProps } from '@cbhq/cds-mobile/tabs';
 import { SegmentedTab, type SegmentedTabProps } from '@cbhq/cds-mobile/tabs/SegmentedTab';
 import { TextLabel1 } from '@cbhq/cds-mobile/typography';

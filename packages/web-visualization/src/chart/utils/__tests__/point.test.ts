@@ -1,4 +1,10 @@
-import { getPointOnScale, projectPoint, projectPoints } from '../point';
+import {
+  getAlignmentFromPosition,
+  getLabelCoordinates,
+  getPointOnScale,
+  projectPoint,
+  projectPoints,
+} from '../point';
 import { getCategoricalScale, getNumericScale } from '../scale';
 
 describe('getPointOnScale', () => {
@@ -400,5 +406,99 @@ describe('projectPoints', () => {
 
     expect(result).toHaveLength(1);
     expect(result[0]).toEqual({ x: 0, y: 50 });
+  });
+});
+
+describe('getAlignmentFromPosition', () => {
+  it('should return bottom vertical alignment for top position', () => {
+    const result = getAlignmentFromPosition('top');
+    expect(result).toEqual({
+      horizontalAlignment: 'center',
+      verticalAlignment: 'bottom',
+    });
+  });
+
+  it('should return top vertical alignment for bottom position', () => {
+    const result = getAlignmentFromPosition('bottom');
+    expect(result).toEqual({
+      horizontalAlignment: 'center',
+      verticalAlignment: 'top',
+    });
+  });
+
+  it('should return right horizontal alignment for left position', () => {
+    const result = getAlignmentFromPosition('left');
+    expect(result).toEqual({
+      horizontalAlignment: 'right',
+      verticalAlignment: 'middle',
+    });
+  });
+
+  it('should return left horizontal alignment for right position', () => {
+    const result = getAlignmentFromPosition('right');
+    expect(result).toEqual({
+      horizontalAlignment: 'left',
+      verticalAlignment: 'middle',
+    });
+  });
+
+  it('should return centered alignment for center position', () => {
+    const result = getAlignmentFromPosition('center');
+    expect(result).toEqual({
+      horizontalAlignment: 'center',
+      verticalAlignment: 'middle',
+    });
+  });
+});
+
+describe('getLabelCoordinates', () => {
+  it('should offset y coordinate negatively for top position', () => {
+    const result = getLabelCoordinates(100, 200, 'top', 10);
+    expect(result).toEqual({ x: 100, y: 190 });
+  });
+
+  it('should offset y coordinate positively for bottom position', () => {
+    const result = getLabelCoordinates(100, 200, 'bottom', 10);
+    expect(result).toEqual({ x: 100, y: 210 });
+  });
+
+  it('should offset x coordinate negatively for left position', () => {
+    const result = getLabelCoordinates(100, 200, 'left', 10);
+    expect(result).toEqual({ x: 90, y: 200 });
+  });
+
+  it('should offset x coordinate positively for right position', () => {
+    const result = getLabelCoordinates(100, 200, 'right', 10);
+    expect(result).toEqual({ x: 110, y: 200 });
+  });
+
+  it('should not offset coordinates for center position', () => {
+    const result = getLabelCoordinates(100, 200, 'center', 10);
+    expect(result).toEqual({ x: 100, y: 200 });
+  });
+
+  it('should handle zero offset', () => {
+    const result = getLabelCoordinates(100, 200, 'top', 0);
+    expect(result).toEqual({ x: 100, y: 200 });
+  });
+
+  it('should handle negative offset for top position', () => {
+    const result = getLabelCoordinates(100, 200, 'top', -10);
+    expect(result).toEqual({ x: 100, y: 210 });
+  });
+
+  it('should handle large offsets', () => {
+    const result = getLabelCoordinates(50, 50, 'right', 100);
+    expect(result).toEqual({ x: 150, y: 50 });
+  });
+
+  it('should handle fractional offsets', () => {
+    const result = getLabelCoordinates(100, 200, 'bottom', 5.5);
+    expect(result).toEqual({ x: 100, y: 205.5 });
+  });
+
+  it('should handle negative coordinates', () => {
+    const result = getLabelCoordinates(-50, -100, 'left', 20);
+    expect(result).toEqual({ x: -70, y: -100 });
   });
 });

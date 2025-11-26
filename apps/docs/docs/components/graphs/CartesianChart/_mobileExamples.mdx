@@ -1,6 +1,6 @@
 CartesianChart is a customizable, SVG based component that can be used to display a variety of data in a x/y coordinate space. The underlying logic is handled by D3.
 
-## Basic Example
+## Basics
 
 [AreaChart](/components/graphs/AreaChart/), [BarChart](/components/graphs/BarChart/), and [LineChart](/components/graphs/LineChart/) are built on top of CartesianChart and have default functionality for your chart.
 
@@ -15,7 +15,6 @@ CartesianChart is a customizable, SVG based component that can be used to displa
         data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
       },
     ]}
-    curve="monotone"
     showYAxis
     yAxis={{
       showGrid: true,
@@ -48,7 +47,6 @@ CartesianChart is a customizable, SVG based component that can be used to displa
         data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
       },
     ]}
-    curve="monotone"
     showYAxis
     showArea
     yAxis={{
@@ -58,6 +56,25 @@ CartesianChart is a customizable, SVG based component that can be used to displa
     <Scrubber />
   </LineChart>
 </VStack>
+```
+
+## Setup
+
+All charts uses Skia Canvas for rendering, which requires a context bridge to share React contexts with the Skia renderer. You need to wrap your app with `ChartBridgeProvider` at the root of your app to enable charts to access theme and other React contexts.
+
+```jsx
+import { ChartBridgeProvider } from '@cbhq/cds-mobile-visualization/chart';
+import { ThemeProvider } from '@cbhq/cds-mobile/system/ThemeProvider';
+
+function App() {
+  return (
+    <ChartBridgeProvider>
+      <ThemeProvider activeColorScheme="light" theme={defaultTheme}>
+        {/* Your app content with charts */}
+      </ThemeProvider>
+    </ChartBridgeProvider>
+  );
+}
 ```
 
 ## Series
@@ -127,8 +144,8 @@ function ForecastedPrice() {
       }}
     >
       <ForecastRect startIndex={7} endIndex={13} />
-      <Area seriesId="variance" type="solid" curve="monotone" fillOpacity={0.3} />
-      <Line seriesId="prices" curve="monotone" />
+      <Area seriesId="variance" type="solid" fillOpacity={0.3} />
+      <Line seriesId="prices" />
     </CartesianChart>
   );
 }
@@ -222,7 +239,7 @@ function SeriesStacks() {
           color: theme.color.accentBoldPurple,
         },
       ]}
-      curve="monotone"
+
       showYAxis
       yAxis={{
         showGrid: true,
@@ -296,7 +313,7 @@ function Insets() {
             },
           ]}
           yAxis={{ domainLimit: 'strict' }}
-          curve="monotone"
+
           showArea
           style={{ border: `2px solid ${theme.color.fgPrimary}` }}
         />
@@ -314,7 +331,7 @@ function Insets() {
             },
           ]}
           yAxis={{ domainLimit: 'strict' }}
-          curve="monotone"
+
           showArea
           style={{ border: `2px solid ${theme.color.fgPrimary}` }}
         >
@@ -333,7 +350,7 @@ function Insets() {
             },
           ]}
           yAxis={{ domainLimit: 'strict' }}
-          curve="monotone"
+
           showArea
           style={{ border: `2px solid ${theme.color.fgPrimary}` }}
         >
@@ -377,7 +394,7 @@ function Scrubbing() {
             data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
           },
         ]}
-        curve="monotone"
+
         showYAxis
         showArea
         yAxis={{
@@ -391,6 +408,20 @@ function Scrubbing() {
     </VStack>
   );
 }
+```
+
+### Allow Overflow Gestures
+
+By default, the scrubber will not allow overflow gestures. You can allow overflow gestures by setting the `allowOverflowGestures` prop to `true`.
+
+```jsx
+<CartesianChart
+  enableScrubbing
+  allowOverflowGestures
+  ...
+>
+  ...
+</CartesianChart>
 ```
 
 ## Customization
@@ -491,7 +522,6 @@ function PriceWithVolume() {
             yAxisId: 'volume',
           },
         ]}
-        style={{ outlineColor: assets.btc.color }}
         xAxis={{ scaleType: 'band', range: ({ min, max }) => ({ min, max: max - 16 }) }}
         yAxis={[
           {
@@ -509,7 +539,7 @@ function PriceWithVolume() {
       >
         <YAxis axisId="price" showGrid tickLabelFormatter={formatPriceInThousands} width={48} GridLineComponent={ThinSolidLine} />
         <BarPlot seriesIds={['volume']} />
-        <Line seriesId="prices" curve="monotone" showArea />
+        <Line seriesId="prices"  showArea />
         <Scrubber seriesIds={['prices']} />
       </CartesianChart>
     </VStack>
@@ -620,7 +650,6 @@ function EarningsHistory() {
   return (
     <VStack gap={0.5}>
       <CartesianChart
-        overflow="visible"
         animate={false}
         height={150}
         padding={0}
@@ -697,7 +726,7 @@ function TradingTrends() {
         <XAxis />
         <ReferenceLine LineComponent={ThickSolidLine} dataY={0} yAxisId="profit" stroke={`rgba(${theme.color.gray15.slice(4)})`} />
         <BarPlot seriesIds={['gains', 'losses']} />
-        <Line seriesId="revenue" curve="monotone" showArea />
+        <Line seriesId="revenue"  showArea />
       </CartesianChart>
     );
   }

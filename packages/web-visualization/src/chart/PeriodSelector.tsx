@@ -11,15 +11,9 @@ import {
 import { SegmentedTab, type SegmentedTabProps } from '@cbhq/cds-web/tabs/SegmentedTab';
 import { Text, type TextBaseProps } from '@cbhq/cds-web/typography';
 import { css } from '@linaria/core';
-import { m as motion } from 'framer-motion';
+import { m as motion, type Transition } from 'framer-motion';
 
 const MotionBox = motion(Box);
-
-const pulseTransitionConfig = {
-  duration: 2,
-  repeat: Infinity,
-  ease: 'easeInOut',
-} as const;
 
 // Animated active indicator to support smooth transition of background color
 export const PeriodSelectorActiveIndicator = memo(
@@ -69,10 +63,6 @@ export type LiveTabLabelBaseProps = TextBaseProps & {
    * Whether to hide the dot.
    */
   hideDot?: boolean;
-  /**
-   * Whether to disable the pulse animation.
-   */
-  disablePulse?: boolean;
 };
 
 export type LiveTabLabelProps<AsComponent extends React.ElementType> = Polymorphic.Props<
@@ -106,19 +96,11 @@ export const LiveTabLabel: LiveTabLabelComponent = memo(
         alignItems = 'center',
         font = 'label1',
         hideDot,
-        disablePulse,
         ...props
       }: LiveTabLabelProps<AsComponent>,
       ref?: Polymorphic.Ref<AsComponent>,
     ) => {
       const Component = (as ?? liveTabLabelDefaultElement) satisfies React.ElementType;
-
-      const pulseAnimation = !disablePulse
-        ? {
-            opacity: [1, 0, 1],
-            transition: pulseTransitionConfig,
-          }
-        : undefined;
 
       return (
         <Text
@@ -130,13 +112,7 @@ export const LiveTabLabel: LiveTabLabelComponent = memo(
           font={font}
           {...props}
         >
-          {!hideDot && (
-            <motion.span
-              animate={!disablePulse && pulseAnimation}
-              className={dotBaseCss}
-              initial={{ opacity: 1 }}
-            />
-          )}
+          {!hideDot && <span className={dotBaseCss} />}
           {label}
         </Text>
       );
