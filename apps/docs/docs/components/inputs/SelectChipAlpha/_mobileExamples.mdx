@@ -6,17 +6,19 @@ Avoid using options with duplicate values. Each option's `value` should be uniqu
 
 ### Basic usage
 
-```jsx live
+```tsx
 function ExampleDefault() {
   const exampleOptions = [
+    { value: null, label: 'Clear selection' },
     { value: '1', label: 'Option 1' },
     { value: '2', label: 'Option 2' },
     { value: '3', label: 'Option 3' },
     { value: '4', label: 'Option 4' },
   ];
-  const [value, setValue] = useState(null);
+  const [value, setValue] = useState<string | null>(null);
   return (
     <SelectChip
+      label="Select a value"
       accessibilityLabel="Select a value"
       onChange={setValue}
       options={exampleOptions}
@@ -29,9 +31,9 @@ function ExampleDefault() {
 
 ### Single select with groups
 
-```jsx live
+```tsx
 function ExampleSingleGroups() {
-  const exampleOptions = [
+  const exampleOptions: Array<SelectOption | SelectOptionGroup> = [
     {
       label: 'Group A',
       options: [
@@ -52,10 +54,11 @@ function ExampleSingleGroups() {
       options: [{ value: '6', label: 'Option 6' }],
     },
   ];
-  const [value, setValue] = useState(null);
+  const [value, setValue] = useState<string | null>(null);
   return (
     <SelectChip
       accessibilityLabel="Select a value"
+      label="Select a value"
       onChange={setValue}
       options={exampleOptions}
       placeholder="Choose an option"
@@ -67,9 +70,9 @@ function ExampleSingleGroups() {
 
 ### With disabled option group
 
-```jsx live
+```tsx
 function ExampleDisabledGroup() {
-  const exampleOptions = [
+  const exampleOptions: Array<SelectOption | SelectOptionGroup> = [
     {
       label: 'Group A',
       options: [
@@ -91,10 +94,11 @@ function ExampleDisabledGroup() {
       options: [{ value: '6', label: 'Option 6' }],
     },
   ];
-  const [value, setValue] = useState(null);
+  const [value, setValue] = useState<string | null>(null);
   return (
     <SelectChip
       accessibilityLabel="Select a value"
+      label="Select a value"
       onChange={setValue}
       options={exampleOptions}
       placeholder="Choose an option"
@@ -110,7 +114,7 @@ function ExampleDisabledGroup() {
 Disabled options and options inside disabled groups will be skipped when "Select all" is pressed. Only enabled options will be selected.
 :::
 
-```jsx live
+```tsx
 function ExampleMulti() {
   const exampleOptions = [
     { value: '1', label: 'Option 1' },
@@ -122,7 +126,8 @@ function ExampleMulti() {
   const { value, onChange } = useMultiSelect({ initialValue: [] });
   return (
     <SelectChip
-      controlAccessibilityLabel="Select multiple values"
+      accessibilityLabel="Select multiple values"
+      label="Select multiple values"
       onChange={onChange}
       options={exampleOptions}
       placeholder="Choose options"
@@ -135,9 +140,9 @@ function ExampleMulti() {
 
 ### Multi-select with groups
 
-```jsx live
+```tsx
 function ExampleMultiGroups() {
-  const exampleOptions = [
+  const exampleOptions: Array<SelectOption | SelectOptionGroup> = [
     {
       label: 'Group A',
       options: [
@@ -161,7 +166,8 @@ function ExampleMultiGroups() {
   const { value, onChange } = useMultiSelect({ initialValue: [] });
   return (
     <SelectChip
-      controlAccessibilityLabel="Select multiple values"
+      accessibilityLabel="Select multiple values"
+      label="Select multiple values"
       onChange={onChange}
       options={exampleOptions}
       placeholder="Choose options"
@@ -174,7 +180,7 @@ function ExampleMultiGroups() {
 
 ### Compact
 
-```jsx live
+```tsx
 function ExampleCompact() {
   const exampleOptions = [
     { value: '1', label: 'Option 1' },
@@ -182,10 +188,11 @@ function ExampleCompact() {
     { value: '3', label: 'Option 3' },
     { value: '4', label: 'Option 4' },
   ];
-  const [value, setValue] = useState('1');
+  const [value, setValue] = useState<string | null>('1');
   return (
     <SelectChip
       compact
+      label="Choose an option"
       onChange={setValue}
       options={exampleOptions}
       placeholder="Choose an option"
@@ -197,17 +204,17 @@ function ExampleCompact() {
 
 ### With start and end nodes
 
-```jsx live
+```tsx
 function ExampleWithNodes() {
   const exampleOptions = [
     { value: 'btc', label: assets.btc.name },
     { value: 'eth', label: assets.eth.name },
     { value: 'dai', label: assets.dai.name },
   ];
-  const [value, setValue] = useState('eth');
-  const getStartNode = (selectedValue) => {
+  const [value, setValue] = useState<string | null>('eth');
+  const getStartNode = (selectedValue: string | null) => {
     if (!selectedValue) return null;
-    const assetMap = {
+    const assetMap: Record<string, string> = {
       btc: assets.btc.imageUrl,
       eth: assets.eth.imageUrl,
       dai: assets.dai.imageUrl,
@@ -218,6 +225,7 @@ function ExampleWithNodes() {
   };
   return (
     <SelectChip
+      label="Choose an asset"
       onChange={setValue}
       options={exampleOptions}
       placeholder="Choose an asset"
@@ -230,18 +238,24 @@ function ExampleWithNodes() {
 
 ### Empty options
 
-```jsx live
+```tsx
 function ExampleEmptyOptions() {
-  const [value, setValue] = useState(null);
+  const [value, setValue] = useState<string | null>(null);
   return (
-    <SelectChip onChange={setValue} options={[]} placeholder="Select ..." value={value} />
+    <SelectChip
+      label="Select ..."
+      onChange={setValue}
+      options={[]}
+      placeholder="Select ..."
+      value={value}
+    />
   );
 }
 ```
 
 ### Options with descriptions
 
-```jsx live
+```tsx
 function ExampleDescriptions() {
   const exampleOptions = [
     { value: '1', label: 'Option 1', description: 'First option description' },
@@ -249,10 +263,11 @@ function ExampleDescriptions() {
     { value: '3', label: 'Option 3', description: 'Third option description' },
     { value: '4', label: 'Option 4', description: 'Fourth option description' },
   ];
-  const [value, setValue] = useState(null);
+  const [value, setValue] = useState<string | null>(null);
   return (
     <SelectChip
       accessibilityLabel="Select a value"
+      label="Select a value"
       onChange={setValue}
       options={exampleOptions}
       placeholder="Choose an option"
@@ -264,7 +279,7 @@ function ExampleDescriptions() {
 
 ### Disabled
 
-```jsx live
+```tsx
 function ExampleDisabled() {
   const exampleOptions = [
     { value: '1', label: 'Option 1' },
@@ -272,9 +287,9 @@ function ExampleDisabled() {
     { value: '3', label: 'Option 3' },
     { value: '4', label: 'Option 4' },
   ];
-  const [value, setValue] = useState('1');
+  const [value, setValue] = useState<string | null>('1');
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+    <VStack gap={2}>
       <SelectChip
         disabled
         accessibilityLabel="Select a value"
@@ -291,7 +306,7 @@ function ExampleDisabled() {
         placeholder="Choose an option"
         value={value}
       />
-    </div>
+    </VStack>
   );
 }
 ```

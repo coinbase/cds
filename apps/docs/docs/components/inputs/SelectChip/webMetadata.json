@@ -8,7 +8,7 @@
   "relatedComponents": [
     {
       "label": "SelectChip (Alpha)",
-      "url": "/components/controls/SelectChipAlpha/"
+      "url": "/components/inputs/SelectChipAlpha/"
     },
     {
       "label": "Select",

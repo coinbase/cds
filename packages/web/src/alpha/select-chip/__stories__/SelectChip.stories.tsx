@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { assets } from '@coinbase/cds-common/internal/data/assets';
 import { useMultiSelect } from '@coinbase/cds-common/select/useMultiSelect';
 
@@ -17,6 +17,7 @@ export default {
 
 export const DefaultSingle = () => {
   const exampleOptions = [
+    { value: null, label: 'Clear selection' },
     { value: '1', label: 'Option 1' },
     { value: '2', label: 'Option 2' },
     { value: '3', label: 'Option 3' },
@@ -123,48 +124,49 @@ const assetImageMap: Record<string, string> = {
   xrp: assets.xrp.imageUrl,
 };
 
-export const MultiSelectWithAssets = () => {
-  const exampleOptions = [
-    { value: 'btc', label: assets.btc.name },
-    { value: 'eth', label: assets.eth.name },
-    { value: 'dai', label: assets.dai.name },
-    { value: 'ltc', label: assets.ltc.name },
-    { value: 'xrp', label: assets.xrp.name },
-  ];
-  const { value, onChange } = useMultiSelect({
-    initialValue: ['eth', 'btc'],
-  });
+// TODO: Add multi-select with assets story when RemoteImageGroup is fixed
+// export const MultiSelectWithAssets = () => {
+//   const exampleOptions = [
+//     { value: 'btc', label: assets.btc.name },
+//     { value: 'eth', label: assets.eth.name },
+//     { value: 'dai', label: assets.dai.name },
+//     { value: 'ltc', label: assets.ltc.name },
+//     { value: 'xrp', label: assets.xrp.name },
+//   ];
+//   const { value, onChange } = useMultiSelect({
+//     initialValue: ['eth', 'btc'],
+//   });
 
-  // Get startNode based on selected assets
-  const startNode = useMemo(() => {
-    if (value.length === 0) return null;
+//   // Get startNode based on selected assets
+//   const startNode = useMemo(() => {
+//     if (value.length === 0) return null;
 
-    // Multiple assets selected - use RemoteImageGroup
-    return (
-      <RemoteImageGroup shape="circle" size={24}>
-        {value.map((assetValue) => {
-          const imageUrl = assetImageMap[assetValue];
-          if (!imageUrl) return null;
-          return <RemoteImage key={assetValue} source={imageUrl} />;
-        })}
-      </RemoteImageGroup>
-    );
-  }, [value]);
+//     // Multiple assets selected - use RemoteImageGroup
+//     return (
+//       <RemoteImageGroup shape="circle" size={24}>
+//         {value.map((assetValue) => {
+//           const imageUrl = assetImageMap[assetValue];
+//           if (!imageUrl) return null;
+//           return <RemoteImage key={assetValue} source={imageUrl} />;
+//         })}
+//       </RemoteImageGroup>
+//     );
+//   }, [value]);
 
-  return (
-    <SelectChip
-      controlAccessibilityLabel="Select multiple assets"
-      onChange={onChange}
-      options={exampleOptions}
-      placeholder="Choose assets"
-      startNode={startNode}
-      type="multi"
-      value={value}
-    />
-  );
-};
+//   return (
+//     <SelectChip
+//       controlAccessibilityLabel="Select multiple assets"
+//       onChange={onChange}
+//       options={exampleOptions}
+//       placeholder="Choose assets"
+//       startNode={startNode}
+//       type="multi"
+//       value={value}
+//     />
+//   );
+// };
 
-export const ColorScheme = () => {
+export const InvertColorScheme = () => {
   const exampleOptions = [
     { value: '1', label: 'Option 1' },
     { value: '2', label: 'Option 2' },
@@ -172,47 +174,15 @@ export const ColorScheme = () => {
   const [value, setValue] = useState<string | null>('1');
 
   return (
-    <VStack gap={2}>
-      <Text font="headline">Inactive</Text>
+    <VStack background="bgAlternate" borderRadius={200} padding={2}>
       <SelectChip
-        onChange={setValue}
-        options={exampleOptions}
-        placeholder="Choose an option"
-        value={value}
-      />
-      <Text font="headline">Active</Text>
-      <SelectChip
+        invertColorScheme
         onChange={setValue}
         options={exampleOptions}
         placeholder="Choose an option"
         value={value}
       />
     </VStack>
-  );
-};
-
-export const MultiWithSummary = () => {
-  const exampleOptions = [
-    { value: '1', label: 'Option 1' },
-    { value: '2', label: 'Option 2' },
-    { value: '3', label: 'Option 3' },
-    { value: '4', label: 'Option 4' },
-    { value: '5', label: 'Option 5' },
-  ];
-  const { value, onChange } = useMultiSelect({
-    initialValue: ['1', '2', '3', '4'],
-  });
-
-  return (
-    <SelectChip
-      hiddenSelectedOptionsLabel="more"
-      maxSelectedOptionsToShow={2}
-      onChange={onChange}
-      options={exampleOptions}
-      placeholder="Choose options"
-      type="multi"
-      value={value}
-    />
   );
 };
 
@@ -331,6 +301,120 @@ export const WithDisabledGroup = () => {
       accessibilityLabel="Select a value"
       onChange={setValue}
       options={exampleOptions as any}
+      placeholder="Choose an option"
+      value={value}
+    />
+  );
+};
+
+export const MultiWithDisabledGroup = () => {
+  const exampleOptions: (SelectOption<string> | SelectOptionGroup<SelectType, string>)[] = [
+    {
+      label: 'Available Options',
+      options: [
+        { value: '1', label: 'Option 1' },
+        { value: '2', label: 'Option 2' },
+        { value: '3', label: 'Option 3' },
+      ],
+    },
+    {
+      label: 'Unavailable Options (Group Disabled)',
+      disabled: true,
+      options: [
+        { value: '4', label: 'Option 4' },
+        { value: '5', label: 'Option 5' },
+        { value: '6', label: 'Option 6' },
+      ],
+    },
+    {
+      label: 'More Available Options',
+      options: [
+        { value: '7', label: 'Option 7' },
+        { value: '8', label: 'Option 8' },
+      ],
+    },
+  ];
+  const { value, onChange } = useMultiSelect({
+    initialValue: [],
+  });
+
+  return (
+    <SelectChip
+      controlAccessibilityLabel="Select multiple values"
+      onChange={onChange}
+      options={exampleOptions as any}
+      placeholder="Choose options"
+      type="multi"
+      value={value}
+    />
+  );
+};
+
+export const FullyDisabled = () => {
+  const exampleOptions = [
+    { value: '1', label: 'Option 1' },
+    { value: '2', label: 'Option 2' },
+    { value: '3', label: 'Option 3' },
+    { value: '4', label: 'Option 4' },
+  ];
+  const [value, setValue] = useState<string | null>('1');
+
+  return (
+    <VStack gap={2}>
+      <SelectChip
+        disabled
+        accessibilityLabel="Select a value"
+        onChange={setValue}
+        options={exampleOptions}
+        placeholder="Choose an option"
+        value={null}
+      />
+      <SelectChip
+        disabled
+        accessibilityLabel="Select a value"
+        onChange={setValue}
+        options={exampleOptions}
+        placeholder="Choose an option"
+        value={value}
+      />
+    </VStack>
+  );
+};
+
+export const WithDisabledOptions = () => {
+  const exampleOptions = [
+    { value: '1', label: 'Option 1' },
+    { value: '2', label: 'Option 2', disabled: true },
+    { value: '3', label: 'Option 3' },
+    { value: '4', label: 'Option 4', disabled: true },
+  ];
+  const [value, setValue] = useState<string | null>(null);
+
+  return (
+    <SelectChip
+      accessibilityLabel="Select a value"
+      onChange={setValue}
+      options={exampleOptions}
+      placeholder="Choose an option"
+      value={value}
+    />
+  );
+};
+
+export const WithDescriptions = () => {
+  const exampleOptions = [
+    { value: '1', label: 'Option 1', description: 'First option description' },
+    { value: '2', label: 'Option 2', description: 'Second option description' },
+    { value: '3', label: 'Option 3', description: 'Third option description' },
+    { value: '4', label: 'Option 4', description: 'Fourth option description' },
+  ];
+  const [value, setValue] = useState<string | null>(null);
+
+  return (
+    <SelectChip
+      accessibilityLabel="Select a value"
+      onChange={setValue}
+      options={exampleOptions}
       placeholder="Choose an option"
       value={value}
     />

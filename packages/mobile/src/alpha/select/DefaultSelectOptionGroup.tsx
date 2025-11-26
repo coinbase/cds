@@ -79,9 +79,17 @@ const DefaultSelectOptionGroupComponent = memo(
               ? (value as SelectOptionValue[]).includes(optionProps.value)
               : value === optionProps.value;
           const defaultMedia = isMultiSelect ? (
-            <Checkbox checked={selected} pointerEvents="none" tabIndex={-1} />
+            <Checkbox
+              checked={selected}
+              onChange={() => handleOptionPress(optionProps.value)}
+              tabIndex={-1}
+            />
           ) : (
-            <Radio checked={selected} pointerEvents="none" tabIndex={-1} />
+            <Radio
+              checked={selected}
+              onChange={() => handleOptionPress(optionProps.value)}
+              tabIndex={-1}
+            />
           );
 
           return (
