@@ -278,7 +278,6 @@ export const DefaultSelectControlComponent = memo(
           props,
           startNode,
           compact,
-          labelNode,
           valueNode,
           contentNode,
           setOpen,
