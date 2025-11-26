@@ -193,8 +193,14 @@ const ComboboxBase = memo(
                     placeholder={typeof placeholder === 'string' ? placeholder : undefined}
                     style={{
                       flex: 0,
+                      flexGrow: 1,
+                      flexShrink: 1,
+                      minWidth: 0,
                       padding: 0,
                       paddingTop: valueRef.current?.length && valueRef.current?.length > 0 ? 8 : 0,
+                      // This is constrained by the parent container's width. The width is large
+                      // to ensure it grows to fill the control
+                      width: 300,
                     }}
                     value={searchTextRef.current}
                   />
