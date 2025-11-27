@@ -92,6 +92,8 @@ const ComboboxBase = memo(
         placeholder,
         disabled,
         variant,
+        startNode,
+        endNode,
         accessibilityLabel = 'Combobox control',
         defaultOpen,
         searchText: searchTextProp,
@@ -267,13 +269,27 @@ const ComboboxBase = memo(
             }
             header={
               <Box paddingX={3}>
-                <ComboboxControlComponent {...props} label={null} styles={undefined} />
+                <ComboboxControlComponent
+                  endNode={endNode}
+                  startNode={startNode}
+                  {...props}
+                  label={null}
+                  styles={undefined}
+                />
               </Box>
             }
             options={filteredOptionsRef.current}
           />
         ),
-        [ComboboxControlComponent, SelectDropdownComponent, closeButtonLabel, label, setOpen],
+        [
+          ComboboxControlComponent,
+          SelectDropdownComponent,
+          closeButtonLabel,
+          endNode,
+          label,
+          setOpen,
+          startNode,
+        ],
       );
 
       return (
@@ -284,12 +300,14 @@ const ComboboxBase = memo(
           accessibilityLabel={accessibilityLabel}
           defaultOpen={defaultOpen}
           disabled={disabled}
+          endNode={endNode}
           label={label}
           onChange={handleChange}
           open={open}
           options={filteredOptions}
           placeholder={placeholder}
           setOpen={setOpen}
+          startNode={startNode}
           type={type}
           value={value}
           variant={variant}
