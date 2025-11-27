@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.22.2 (11/26/2025 PST)
+
+#### 🐞 Fixes
+
+- Wrap Select labels instead of truncating them. [[#179](https://github.com/coinbase/cds/pull/179)]
+
 ## 8.22.1 (11/24/2025 PST)
 
 #### 🐞 Fixes

@@ -8,6 +8,10 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.22.2 ((11/26/2025, 04:22 PM PST))
+
+This is an artificial version bump with no new change.
+
 ## 8.22.1 ((11/24/2025, 02:58 PM PST))
 
 This is an artificial version bump with no new change.
