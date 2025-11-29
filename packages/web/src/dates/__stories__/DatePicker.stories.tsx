@@ -2,10 +2,13 @@ import { useCallback, useState } from 'react';
 import { DateInputValidationError } from '@coinbase/cds-common/dates/DateInputValidationError';
 import { LocaleProvider } from '@coinbase/cds-common/system/LocaleProvider';
 
+import { InputLabel } from '../../controls/InputLabel';
 import { TextInput } from '../../controls/TextInput';
+import { Icon } from '../../icons';
 import { Box } from '../../layout/Box';
 import { HStack } from '../../layout/HStack';
 import { VStack } from '../../layout/VStack';
+import { Tooltip } from '../../overlays/tooltip/Tooltip';
 import { ThemeProvider } from '../../system';
 import { defaultTheme } from '../../themes/defaultTheme';
 import { DatePicker } from '../DatePicker';
@@ -62,6 +65,24 @@ export const Examples = () => {
       <VStack>
         <Note>DatePicker compact</Note>
         <DatePicker compact {...exampleProps} {...props} />
+      </VStack>
+      <VStack>
+        <Note>DatePicker with labelNode</Note>
+        <DatePicker
+          {...exampleProps}
+          {...props}
+          label="Date of birth"
+          labelNode={
+            <InputLabel>
+              <HStack alignItems="center" gap={1}>
+                Date of birth
+                <Tooltip content="This will be visible to other users.">
+                  <Icon active color="fg" name="info" size="xs" tabIndex={0} />
+                </Tooltip>
+              </HStack>
+            </InputLabel>
+          }
+        />
       </VStack>
       <VStack>
         <Note>DatePicker and TextInput (auto width)</Note>

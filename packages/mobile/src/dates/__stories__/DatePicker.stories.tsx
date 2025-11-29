@@ -2,9 +2,12 @@ import { useState } from 'react';
 import type { DimensionValue } from '@coinbase/cds-common';
 import { type DateInputValidationError } from '@coinbase/cds-common/dates/DateInputValidationError';
 
+import { InputLabel } from '../../controls/InputLabel';
 import { TextInput } from '../../controls/TextInput';
 import { Example, ExampleScreen } from '../../examples/ExampleScreen';
+import { Icon } from '../../icons';
 import { HStack } from '../../layout';
+import { Tooltip } from '../../overlays/tooltip/Tooltip';
 import { DatePicker } from '../DatePicker';
 
 const today = new Date(new Date(2024, 7, 18).setHours(0, 0, 0, 0));
@@ -20,6 +23,7 @@ const exampleProps = {
 };
 
 const ExampleDatePicker = (props: {
+  labelNode?: React.ReactNode;
   required?: boolean;
   calendarIconButtonAccessibilityLabel?: string;
   label?: string;
@@ -82,6 +86,20 @@ export const FullExample = () => {
             width="auto"
           />
         </HStack>
+      </Example>
+      <Example title="DatePicker with labelNode">
+        <ExampleDatePicker
+          calendarIconButtonAccessibilityLabel="Birthdate calendar"
+          label="Birthdate"
+          labelNode={
+            <HStack alignItems="center" gap={1}>
+              <InputLabel>Birthdate</InputLabel>
+              <Tooltip content="This will be visible to other users.">
+                <Icon color="fgMuted" name="info" size="xs" />
+              </Tooltip>
+            </HStack>
+          }
+        />
       </Example>
       <Example title="DatePicker fit-content width">
         <HStack flexWrap="wrap" gap={2}>

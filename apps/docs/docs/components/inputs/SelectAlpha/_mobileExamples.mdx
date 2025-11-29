@@ -1119,6 +1119,39 @@ function CustomClassNamesExamples() {
 }
 ```
 
+## Custom Label
+
+If you need to render a custom label (e.g. a label with a tooltip), you can pass a React Node to the `label` prop.
+
+```jsx
+function CustomLabelExample() {
+  const [value, setValue] = useState('1');
+
+  const options = [
+    { value: '1', label: 'Option 1' },
+    { value: '2', label: 'Option 2' },
+    { value: '3', label: 'Option 3' },
+  ];
+
+  return (
+    <Select
+      label={
+        <HStack alignItems="center" gap={1}>
+          Custom Label
+          <Tooltip content="This will be visible to other users.">
+            <Icon color="fgMuted" name="info" size="xs" />
+          </Tooltip>
+        </HStack>
+      }
+      value={value}
+      onChange={setValue}
+      options={options}
+      placeholder="Select an option"
+    />
+  );
+}
+```
+
 ## Custom components
 
 Select is highly customizable. Use the _Component_ props to customize the various subcomponents in Select.
