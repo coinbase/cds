@@ -78,4 +78,30 @@ describe('Tag', () => {
       backgroundColor: defaultTheme.lightColor.bgNegativeWash,
     });
   });
+
+  it('sets promotional background when emphasis is high', () => {
+    render(
+      <DefaultThemeProvider>
+        <Tag emphasis="high" colorScheme="blue" testID={TEST_ID}>
+          <Text>Tag</Text>
+        </Tag>
+      </DefaultThemeProvider>,
+    );
+    expect(screen.getByTestId(TEST_ID)).toHaveStyle({
+      backgroundColor: defaultTheme.lightColor.bgPrimary,
+    });
+  });
+
+  it('sets informational background when emphasis is low', () => {
+    render(
+      <DefaultThemeProvider>
+        <Tag emphasis="low" colorScheme="blue" testID={TEST_ID}>
+          <Text>Tag</Text>
+        </Tag>
+      </DefaultThemeProvider>,
+    );
+    expect(screen.getByTestId(TEST_ID)).toHaveStyle({
+      backgroundColor: defaultTheme.lightColor.bgPrimaryWash,
+    });
+  });
 });

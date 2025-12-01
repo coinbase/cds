@@ -9,6 +9,10 @@ figma.connect(
     imports: ["import { Tag } from '@coinbase/cds-web/tag/Tag';"],
     variant: { intent: 'informational' },
     props: {
+      emphasis: figma.enum('emphasis', {
+        high: 'high',
+        low: 'low',
+      }),
       colorScheme: figma.enum('colorScheme', {
         green: 'green',
         purple: 'purple',
@@ -39,6 +43,10 @@ figma.connect(
     imports: ["import { Tag } from '@coinbase/cds-web/tag/Tag';"],
     variant: { intent: 'promotional' },
     props: {
+      emphasis: figma.enum('emphasis', {
+        high: 'high',
+        low: 'low',
+      }),
       colorScheme: figma.enum('colorScheme', {
         green: 'green',
         purple: 'purple',

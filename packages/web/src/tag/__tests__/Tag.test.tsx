@@ -82,7 +82,33 @@ describe('Tag', () => {
       </DefaultThemeProvider>,
     );
     expect(screen.getByTestId(TEST_ID)).toHaveStyle({
-      background: '--background: rgb(var(--red0))', // red
+      backgroundColor: 'rgb(var(--red0))',
+    });
+  });
+
+  it('sets promotional background when emphasis is high', () => {
+    render(
+      <DefaultThemeProvider>
+        <Tag emphasis="high" colorScheme="blue" testID={TEST_ID}>
+          <Text font="body">Tag</Text>
+        </Tag>
+      </DefaultThemeProvider>,
+    );
+    expect(screen.getByTestId(TEST_ID)).toHaveStyle({
+      backgroundColor: 'rgb(var(--blue60))',
+    });
+  });
+
+  it('sets informational background when emphasis is low', () => {
+    render(
+      <DefaultThemeProvider>
+        <Tag emphasis="low" colorScheme="blue" testID={TEST_ID}>
+          <Text font="body">Tag</Text>
+        </Tag>
+      </DefaultThemeProvider>,
+    );
+    expect(screen.getByTestId(TEST_ID)).toHaveStyle({
+      backgroundColor: 'rgb(var(--blue0))',
     });
   });
 });

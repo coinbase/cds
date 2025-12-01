@@ -6,10 +6,12 @@ import { Tag, type TagBaseProps } from '../Tag';
 
 type TagPropConfig = {
   intent: TagBaseProps['intent'][];
+  emphasis: NonNullable<TagBaseProps['emphasis']>[];
   colorScheme: TagBaseProps['colorScheme'][];
 };
 const tagProps: TagPropConfig = {
   intent: ['informational', 'promotional'],
+  emphasis: ['high', 'low'],
   colorScheme: ['green', 'purple', 'blue', 'yellow', 'red', 'gray'],
 };
 
@@ -26,6 +28,18 @@ const tagMap = tagProps.intent
 const tagStories = {
   default: [{ children: 'Default tag', colorScheme: 'blue' }],
   all: tagMap,
+  emphasis: [
+    ...tagProps.colorScheme.map((scheme) => ({
+      emphasis: 'high' as const,
+      colorScheme: scheme,
+      children: `${startCase(scheme)} (High)`,
+    })),
+    ...tagProps.colorScheme.map((scheme) => ({
+      emphasis: 'low' as const,
+      colorScheme: scheme,
+      children: `${startCase(scheme)} (Low)`,
+    })),
+  ],
   wildcard: [
     {
       children: 'Atlanta',

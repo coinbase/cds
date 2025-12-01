@@ -4,6 +4,7 @@ import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import {
   tagBorderRadiusMap,
   tagColorMap,
+  tagEmphasisMap,
   tagFontMap,
   tagHorizontalSpacing,
 } from '@coinbase/cds-common/tokens/tags';
@@ -11,6 +12,7 @@ import type {
   SharedAccessibilityProps,
   SharedProps,
   TagColorScheme,
+  TagEmphasis,
   TagIntent,
 } from '@coinbase/cds-common/types';
 
@@ -27,6 +29,12 @@ export type TagBaseProps = SharedProps &
      * @default informational
      */
     intent?: TagIntent;
+    /**
+     * Specify the emphasis of the Tag.
+     * High emphasis will use promotional colors.
+     * Low emphasis will use informational colors.
+     */
+    emphasis?: TagEmphasis;
     /**
      * Specify the colorScheme of the Tag
      * @default blue
@@ -49,6 +57,7 @@ export const Tag = memo(
       {
         children,
         intent = 'informational',
+        emphasis = intent === 'informational' ? 'low' : 'high',
         colorScheme = 'blue',
         background: customBackground,
         color: customColor,
@@ -60,7 +69,8 @@ export const Tag = memo(
       forwardedRef: React.ForwardedRef<View>,
     ) => {
       const theme = useTheme();
-      const { background, foreground } = tagColorMap[intent][colorScheme];
+      const colorIntent = tagEmphasisMap[emphasis];
+      const { background, foreground } = tagColorMap[colorIntent][colorScheme];
       const backgroundColor = `rgb(${theme.spectrum[customBackground ?? background]})`;
       const color = `rgb(${theme.spectrum[customColor ?? foreground]})`;
 

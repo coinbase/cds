@@ -1,5 +1,10 @@
 import type { ThemeVars } from '../core/theme';
-import type { TagColorScheme, TagIntent } from '../types/TagBaseProps';
+import type { TagColorScheme, TagEmphasis, TagIntent } from '../types/TagBaseProps';
+
+export const tagEmphasisMap: Record<TagEmphasis, TagIntent> = {
+  high: 'promotional',
+  low: 'informational',
+} as const;
 
 export const tagHorizontalSpacing: Record<TagIntent, ThemeVars.Space> = {
   informational: 0.5,

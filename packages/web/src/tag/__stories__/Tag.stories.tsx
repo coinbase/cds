@@ -1,7 +1,8 @@
 import React from 'react';
 import startCase from 'lodash/startCase';
 
-import { VStack } from '../../layout';
+import { HStack, VStack } from '../../layout';
+import { Text } from '../../typography/Text';
 import { Tag, type TagBaseProps } from '../Tag';
 
 export default {
@@ -11,10 +12,12 @@ export default {
 
 type TagPropConfig = {
   intent: TagBaseProps['intent'][];
+  emphasis: NonNullable<TagBaseProps['emphasis']>[];
   colorScheme: TagBaseProps['colorScheme'][];
 };
 const tagProps: TagPropConfig = {
   intent: ['informational', 'promotional'],
+  emphasis: ['high', 'low'],
   colorScheme: ['green', 'purple', 'blue', 'yellow', 'red', 'gray'],
 };
 
@@ -64,6 +67,27 @@ export const All = () => (
     {tagStories.all.map((props) => (
       <Tag key={`tag-${props.intent}-${props.colorScheme}-${props.children}`} {...props} />
     ))}
+  </VStack>
+);
+
+export const Emphasis = () => (
+  <VStack alignItems="flex-start" gap={2} padding={0.5}>
+    <Text font="body">High Emphasis (Promotional colors)</Text>
+    <HStack gap={2}>
+      {tagProps.colorScheme.map((scheme) => (
+        <Tag key={`high-${scheme}`} colorScheme={scheme} emphasis="high">
+          {startCase(scheme)}
+        </Tag>
+      ))}
+    </HStack>
+    <Text font="body">Low Emphasis (Informational colors)</Text>
+    <HStack gap={2}>
+      {tagProps.colorScheme.map((scheme) => (
+        <Tag key={`low-${scheme}`} colorScheme={scheme} emphasis="low">
+          {startCase(scheme)}
+        </Tag>
+      ))}
+    </HStack>
   </VStack>
 );
 
