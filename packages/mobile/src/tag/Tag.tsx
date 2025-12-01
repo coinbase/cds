@@ -31,8 +31,7 @@ export type TagBaseProps = SharedProps &
     intent?: TagIntent;
     /**
      * Specify the emphasis of the Tag.
-     * High emphasis will use promotional colors.
-     * Low emphasis will use informational colors.
+     * @default 'low' when informational intent, 'high' when promotional intent
      */
     emphasis?: TagEmphasis;
     /**
