@@ -111,7 +111,7 @@ export function useExampleNavigatorProps({ setColorScheme }: UseExampleNavigator
         </Box>
       );
     };
-  }, [headerSize, onLayout, searchFilter, setFilter, style, theme.activeColorScheme, setColorScheme]);
+  }, [onLayout, searchFilter, setFilter, style, theme.activeColorScheme, setColorScheme]);
 
   return useMemo(() => {
     const screenOptions: StackNavigationOptions = {
