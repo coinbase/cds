@@ -88,6 +88,7 @@ export type TextInputBaseProps = SharedProps &
     helperTextErrorIconAccessibilityLabel?: string;
     /**
      * React node to render label. Takes precedence over `label`.
+     * @note if both labelNode and label are provided, label will still be used as accessibility label for the input if no accessibilityLabel is provided.
      */
     labelNode?: React.ReactNode;
   };
