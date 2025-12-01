@@ -200,13 +200,13 @@ const sidebars: SidebarsConfig = {
             },
             {
               type: 'doc',
-              id: 'components/inputs/SelectChip/selectChip',
-              label: 'SelectChip (Deprecated)',
+              id: 'components/inputs/SelectChipAlpha/selectChipAlpha',
+              label: 'SelectChip (Alpha)',
             },
             {
               type: 'doc',
-              id: 'components/inputs/SelectChipAlpha/selectChipAlpha',
-              label: 'SelectChip (Alpha)',
+              id: 'components/inputs/SelectChip/selectChip',
+              label: 'SelectChip (Deprecated)',
             },
             { type: 'doc', id: 'components/inputs/Switch/switch', label: 'Switch' },
             {
