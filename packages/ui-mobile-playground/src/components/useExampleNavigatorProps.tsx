@@ -13,7 +13,7 @@ import { Spacer } from '@coinbase/cds-mobile/layout/Spacer';
 import { TextHeadline } from '@coinbase/cds-mobile/typography/TextHeadline';
 import type { StackHeaderProps, StackNavigationOptions } from '@react-navigation/stack';
 
-import { SetSearchFilterContext } from './ExamplesSearchProvider';
+import { SearchFilterContext, SetSearchFilterContext } from './ExamplesSearchProvider';
 import { initialRouteName, searchRouteName } from './staticRoutes';
 
 type UseExampleNavigatorPropsOptions = {
@@ -26,6 +26,7 @@ export function useExampleNavigatorProps({ setColorScheme }: UseExampleNavigator
   const theme = useTheme();
   const { top } = useSafeAreaInsets();
   const [headerSize, onLayout] = useLayout();
+  const searchFilter = useContext(SearchFilterContext);
   const setFilter = useContext(SetSearchFilterContext);
 
   const style = useMemo(() => ({ marginTop: top }), [top]);
@@ -36,7 +37,10 @@ export function useExampleNavigatorProps({ setColorScheme }: UseExampleNavigator
       const canGoBack = navigation.canGoBack();
       const goBack = () => {
         navigation.goBack();
+      };
+      const goBackFromSearch = () => {
         setFilter('');
+        navigation.goBack();
       };
       const goToSearch = () => navigation.navigate(searchRouteName);
       const routeName = route.name;
@@ -94,7 +98,8 @@ export function useExampleNavigatorProps({ setColorScheme }: UseExampleNavigator
                   label=""
                   onChange={handleSearch}
                   placeholder="Search"
-                  start={<IconButton transparent name="backArrow" onPress={goBack} />}
+                  start={<IconButton transparent name="backArrow" onPress={goBackFromSearch} />}
+                  value={searchFilter}
                 />
               ) : (
                 <TextHeadline align="center">{titleForScene}</TextHeadline>
@@ -106,7 +111,7 @@ export function useExampleNavigatorProps({ setColorScheme }: UseExampleNavigator
         </Box>
       );
     };
-  }, [headerSize, onLayout, setFilter, style, theme.activeColorScheme, setColorScheme]);
+  }, [headerSize, onLayout, searchFilter, setFilter, style, theme.activeColorScheme, setColorScheme]);
 
   return useMemo(() => {
     const screenOptions: StackNavigationOptions = {

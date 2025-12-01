@@ -7,7 +7,7 @@ import { Box } from '@coinbase/cds-mobile/layout/Box';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import includes from 'lodash/includes';
 
-import { SearchFilterContext, SetSearchFilterContext } from './ExamplesSearchProvider';
+import { SearchFilterContext } from './ExamplesSearchProvider';
 import { keyToRouteName } from './keyToRouteName';
 import { initialRouteKey, searchRouteKey } from './staticRoutes';
 
@@ -15,7 +15,6 @@ const innerSpacingConfig: CellSpacing = { paddingX: 1 };
 
 export function ExamplesListScreen() {
   const searchFilter = useContext(SearchFilterContext);
-  const setFilter = useContext(SetSearchFilterContext);
 
   // React Navigation Route Param typing is not clean because our routes are dynamic
   const routeKeys = (useRoute().params as { routeKeys: string[] } | undefined)?.routeKeys ?? [];
@@ -24,7 +23,6 @@ export function ExamplesListScreen() {
   const renderItem: ListRenderItem<string> = useCallback(
     ({ item }) => {
       const handlePress = () => {
-        setFilter('');
         // typing not clean due to dynamic routes
         navigate(keyToRouteName(item) as never);
       };
@@ -39,7 +37,7 @@ export function ExamplesListScreen() {
         />
       );
     },
-    [navigate, setFilter],
+    [navigate],
   );
 
   const data = [...routeKeys, 'IconSheet']
