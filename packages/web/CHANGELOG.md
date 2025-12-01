@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.24.0 (12/1/2025 PST)
+
+#### 🚀 Updates
+
+- Support labelNode in TextInput. [[#198](https://github.com/coinbase/cds/pull/198)]
+
 ## 8.23.0 (12/1/2025 PST)
 
 #### 🚀 Updates

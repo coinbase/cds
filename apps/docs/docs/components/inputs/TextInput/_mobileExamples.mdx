@@ -311,6 +311,25 @@ When using the `inside` label variant, you should always include a `placeholder`
 />
 ```
 
+### Custom Label
+
+If you need to render a custom label (e.g. a label with a tooltip), you can use the `labelNode` prop.
+
+```jsx
+<TextInput
+  label="Display name"
+  labelNode={
+    <HStack alignItems="center" gap={1}>
+      <InputLabel>Display name</InputLabel>
+      <Tooltip content="This will be visible to other users.">
+        <Icon active color="fg" name="info" size="xs" />
+      </Tooltip>
+    </HStack>
+  }
+  placeholder="Satoshi Nakamoto"
+/>
+```
+
 ## Example of Input Objects placed at the End
 
 Here are some examples and best practices when using end content in a TextField.

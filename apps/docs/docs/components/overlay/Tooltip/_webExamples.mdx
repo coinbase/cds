@@ -39,13 +39,13 @@ function TooltipPosition() {
       <Box position="relative">
         Set your default display currency.
         <Tooltip content="I am not centered horizontally">
-          <Icon active color="fg" name="info" paddingStart={1} position="absolute" />
+          <Icon active color="fg" name="info" paddingStart={1} position="absolute" tabIndex={0} />
         </Tooltip>
       </Box>
       <Box position="relative">
         Set your default display currency.
         <Tooltip content="I am centered horizontally" position="absolute">
-          <Icon active color="fg" name="info" paddingStart={1} />
+          <Icon active color="fg" name="info" paddingStart={1} tabIndex={0} />
         </Tooltip>
       </Box>
     </VStack>
@@ -67,4 +67,26 @@ function TooltipColorSchemeOptOut() {
     </Box>
   );
 }
+```
+
+### Tooltip in TextInput
+
+You can use tooltips within `TextInput` to provide more context.
+
+```jsx live
+<TextInput
+  id="tooltip-input-example"
+  label="Display name"
+  labelNode={
+    <InputLabel htmlFor="tooltip-input-example">
+      <HStack alignItems="center" gap={1}>
+        Display name
+        <Tooltip content="This will be visible to other users.">
+          <Icon active color="fg" name="info" size="xs" tabIndex={0} />
+        </Tooltip>
+      </HStack>
+    </InputLabel>
+  }
+  placeholder="Satoshi Nakamoto"
+/>
 ```
