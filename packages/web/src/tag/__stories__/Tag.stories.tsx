@@ -1,8 +1,7 @@
 import React from 'react';
 import startCase from 'lodash/startCase';
 
-import { HStack, VStack } from '../../layout';
-import { Text } from '../../typography/Text';
+import { VStack } from '../../layout';
 import { Tag, type TagBaseProps } from '../Tag';
 
 export default {
@@ -21,19 +20,32 @@ const tagProps: TagPropConfig = {
   colorScheme: ['green', 'purple', 'blue', 'yellow', 'red', 'gray'],
 };
 
-const tagMap = tagProps.intent
-  .map((intent) => {
-    return tagProps.colorScheme.map((colorScheme) => ({
-      intent,
-      colorScheme,
-      children: `${startCase(intent)} ${colorScheme}`,
-    }));
-  })
-  .flat();
-
 const tagStories = {
   default: [{ children: 'Default tag', colorScheme: 'blue' }],
-  all: tagMap,
+  all: [
+    ...tagProps.colorScheme.map((scheme) => ({
+      intent: 'informational' as const,
+      emphasis: 'high' as const,
+      colorScheme: scheme,
+      children: `${startCase(scheme)} (High Informational)`,
+    })),
+    ...tagProps.colorScheme.map((scheme) => ({
+      intent: 'promotional' as const,
+      colorScheme: scheme,
+      children: `${startCase(scheme)} (High)`,
+    })),
+    ...tagProps.colorScheme.map((scheme) => ({
+      intent: 'informational' as const,
+      colorScheme: scheme,
+      children: `${startCase(scheme)} (Low)`,
+    })),
+    ...tagProps.colorScheme.map((scheme) => ({
+      intent: 'promotional' as const,
+      emphasis: 'low' as const,
+      colorScheme: scheme,
+      children: `${startCase(scheme)} (Low Promotional)`,
+    })),
+  ],
   wildcard: [
     {
       children: 'Atlanta',
@@ -67,27 +79,6 @@ export const All = () => (
     {tagStories.all.map((props) => (
       <Tag key={`tag-${props.intent}-${props.colorScheme}-${props.children}`} {...props} />
     ))}
-  </VStack>
-);
-
-export const Emphasis = () => (
-  <VStack alignItems="flex-start" gap={2} padding={0.5}>
-    <Text font="body">High Emphasis (Promotional colors)</Text>
-    <HStack gap={2}>
-      {tagProps.colorScheme.map((scheme) => (
-        <Tag key={`high-${scheme}`} colorScheme={scheme} emphasis="high">
-          {startCase(scheme)}
-        </Tag>
-      ))}
-    </HStack>
-    <Text font="body">Low Emphasis (Informational colors)</Text>
-    <HStack gap={2}>
-      {tagProps.colorScheme.map((scheme) => (
-        <Tag key={`low-${scheme}`} colorScheme={scheme} emphasis="low">
-          {startCase(scheme)}
-        </Tag>
-      ))}
-    </HStack>
   </VStack>
 );
 
