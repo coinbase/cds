@@ -2,8 +2,7 @@ import React, { forwardRef, memo, useMemo } from 'react';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import {
   tagBorderRadiusMap,
-  tagColorMap,
-  tagEmphasisMap,
+  tagEmphasisColorMap,
   tagFontMap,
   tagHorizontalSpacing,
 } from '@coinbase/cds-common/tokens/tags';
@@ -69,8 +68,7 @@ export const Tag = memo(
     forwardedRef: React.ForwardedRef<HTMLDivElement>,
   ) {
     const theme = useTheme();
-    const colorIntent = tagEmphasisMap[emphasis];
-    const { background, foreground } = tagColorMap[colorIntent][colorScheme];
+    const { background, foreground } = tagEmphasisColorMap[emphasis][colorScheme];
     const boxStyles = useMemo(
       () => ({
         backgroundColor: `rgb(${theme.spectrum[customBackground ?? background]})`,

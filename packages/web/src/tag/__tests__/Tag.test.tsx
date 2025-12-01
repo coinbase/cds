@@ -1,3 +1,4 @@
+import { tagColorMap, tagEmphasisColorMap } from '@coinbase/cds-common/tokens/tags';
 import { renderA11y } from '@coinbase/cds-web-utils/jest';
 import { render, screen } from '@testing-library/react';
 
@@ -110,5 +111,12 @@ describe('Tag', () => {
     expect(screen.getByTestId(TEST_ID)).toHaveStyle({
       backgroundColor: 'rgb(var(--blue0))',
     });
+  });
+
+  it('verifies tagColorMap maps correctly to tagEmphasisColorMap for backward compatibility', () => {
+    expect(tagColorMap.informational).toEqual(tagEmphasisColorMap.low);
+    expect(tagColorMap.promotional).toEqual(tagEmphasisColorMap.high);
+    expect(tagColorMap.informational.blue.background).toBe('blue0');
+    expect(tagColorMap.promotional.blue.background).toBe('blue60');
   });
 });
