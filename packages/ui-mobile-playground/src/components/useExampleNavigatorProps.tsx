@@ -1,5 +1,4 @@
 import React, { useContext, useMemo } from 'react';
-import { Pressable } from 'react-native';
 import type { NativeSyntheticEvent, TextInputChangeEventData } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import type { ColorScheme } from '@coinbase/cds-common/core/theme';
@@ -21,11 +20,6 @@ type UseExampleNavigatorPropsOptions = {
   setColorScheme?: React.Dispatch<React.SetStateAction<ColorScheme>>;
 };
 
-const invisiblePressableStyle = {
-  width: 40,
-  height: 40,
-};
-
 const iconButtonHeight = interactableHeight.regular;
 
 export function useExampleNavigatorProps({ setColorScheme }: UseExampleNavigatorPropsOptions) {
@@ -37,7 +31,7 @@ export function useExampleNavigatorProps({ setColorScheme }: UseExampleNavigator
   const style = useMemo(() => ({ marginTop: top }), [top]);
 
   const header = useMemo(() => {
-    return ({ navigation, route, options, progress, styleInterpolator }: StackHeaderProps) => {
+    return ({ navigation, route, options }: StackHeaderProps) => {
       const isFocused = navigation.isFocused();
       const canGoBack = navigation.canGoBack();
       const goBack = () => {
@@ -48,15 +42,6 @@ export function useExampleNavigatorProps({ setColorScheme }: UseExampleNavigator
       const routeName = route.name;
       const titleForScene = options.title;
       const isSearch = routeName === searchRouteName;
-      const { titleStyle } = styleInterpolator({
-        current: { progress: progress.current },
-        next: progress.next && { progress: progress.next },
-        layouts: {
-          header: headerSize,
-          title: headerSize,
-          screen: headerSize,
-        },
-      });
       const showBackButton = isFocused && canGoBack && !isSearch;
       const showSearch = routeName === initialRouteName;
 
@@ -112,9 +97,7 @@ export function useExampleNavigatorProps({ setColorScheme }: UseExampleNavigator
                   start={<IconButton transparent name="backArrow" onPress={goBack} />}
                 />
               ) : (
-                <TextHeadline animated align="center" style={titleStyle}>
-                  {titleForScene}
-                </TextHeadline>
+                <TextHeadline align="center">{titleForScene}</TextHeadline>
               )}
             </Box>
             <Spacer />
@@ -130,7 +113,6 @@ export function useExampleNavigatorProps({ setColorScheme }: UseExampleNavigator
       headerBackAllowFontScaling: false,
       headerBackTitleVisible: false,
       headerTitleAllowFontScaling: false,
-      headerMode: 'float',
       headerStyle: {
         backgroundColor: theme.color.bg,
         borderWidth: 0,
