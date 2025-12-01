@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.25.0 (12/1/2025 PST)
+
+#### 🚀 Updates
+
+- Add emphasis prop to Tag. [[#197](https://github.com/coinbase/cds/pull/197)]
+
 ## 8.24.0 (12/1/2025 PST)
 
 #### 🚀 Updates

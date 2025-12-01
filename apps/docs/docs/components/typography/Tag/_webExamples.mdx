@@ -1,48 +1,98 @@
-### Informational (Default)
+### Basics
 
-Informational Tags are used to note a characteristic or state of an object. The relationship between the Tag and the other UI component should be easy to interpret for a user.
-
-```jsx live
-<HStack gap={2} wrap>
-  <Tag colorScheme="green">Green</Tag>
-  <Tag colorScheme="blue">Blue</Tag>
-  <Tag colorScheme="yellow">Yellow</Tag>
-  <Tag colorScheme="purple">Purple</Tag>
-  <Tag colorScheme="red">Red</Tag>
-  <Tag colorScheme="gray">Gray</Tag>
-</HStack>
-```
-
-### Promotional
-
-Promotional Tags are for editorial, ephemeral communication. Terms like “New”, “Recommended”, “Beta”, “Hot”, “Trending”, fall into this Promotional Tag category.
+Informational tags (default) are used to note a characteristic or state of an object. Promotional tags for editorial, ephemeral communication.
 
 ```jsx live
-<HStack gap={2} wrap>
-  <Tag intent="promotional" colorScheme="green">
-    Green
-  </Tag>
-  <Tag intent="promotional" colorScheme="blue">
-    Blue
-  </Tag>
-  <Tag intent="promotional" colorScheme="yellow">
-    Yellow
-  </Tag>
-  <Tag intent="promotional" colorScheme="purple">
-    Purple
-  </Tag>
-  <Tag intent="promotional" colorScheme="red">
-    Red
-  </Tag>
-  <Tag intent="promotional" colorScheme="gray">
-    Gray
-  </Tag>
-</HStack>
+<VStack gap={2}>
+  <HStack gap={2} wrap>
+    <Tag intent="informational" colorScheme="green">
+      Green
+    </Tag>
+    <Tag intent="informational" colorScheme="blue">
+      Blue
+    </Tag>
+    <Tag intent="informational" colorScheme="yellow">
+      Yellow
+    </Tag>
+    <Tag intent="informational" colorScheme="purple">
+      Purple
+    </Tag>
+    <Tag intent="informational" colorScheme="red">
+      Red
+    </Tag>
+    <Tag intent="informational" colorScheme="gray">
+      Gray
+    </Tag>
+  </HStack>
+  <HStack gap={2} wrap>
+    <Tag intent="promotional" colorScheme="green">
+      Green
+    </Tag>
+    <Tag intent="promotional" colorScheme="blue">
+      Blue
+    </Tag>
+    <Tag intent="promotional" colorScheme="yellow">
+      Yellow
+    </Tag>
+    <Tag intent="promotional" colorScheme="purple">
+      Purple
+    </Tag>
+    <Tag intent="promotional" colorScheme="red">
+      Red
+    </Tag>
+    <Tag intent="promotional" colorScheme="gray">
+      Gray
+    </Tag>
+  </HStack>
+</VStack>
 ```
 
-### Working with Tags
+### Emphasis
 
-To get a better idea of what it workng with Tags is like, we've created some example UI components that use Tags.
+You can control the visual prominence of the Tag using the `emphasis` prop. By default, informational tags are low emphasis and promotional tags are high emphasis.
+
+```jsx live
+<VStack gap={2}>
+  <HStack gap={2} wrap>
+    <Tag emphasis="high" colorScheme="green">
+      High Green
+    </Tag>
+    <Tag emphasis="high" colorScheme="blue">
+      High Blue
+    </Tag>
+    <Tag emphasis="high" colorScheme="yellow">
+      High Yellow
+    </Tag>
+    <Tag intent="promotional" colorScheme="purple">
+      High Purple
+    </Tag>
+    <Tag intent="promotional" colorScheme="red">
+      High Red
+    </Tag>
+    <Tag intent="promotional" colorScheme="gray">
+      High Gray
+    </Tag>
+  </HStack>
+  <HStack gap={2} wrap>
+    <Tag colorScheme="green">Low Green</Tag>
+    <Tag colorScheme="blue">Low Blue</Tag>
+    <Tag colorScheme="yellow">Low Yellow</Tag>
+    <Tag intent="promotional" emphasis="low" colorScheme="purple">
+      Low Purple
+    </Tag>
+    <Tag intent="promotional" emphasis="low" colorScheme="red">
+      Low Red
+    </Tag>
+    <Tag intent="promotional" emphasis="low" colorScheme="gray">
+      Low Gray
+    </Tag>
+  </HStack>
+</VStack>
+```
+
+### Composed Examples
+
+#### Account Status
 
 ```jsx live
 <HStack justifyContent="space-between" gap="2" alignItems="center">
@@ -57,18 +107,7 @@ To get a better idea of what it workng with Tags is like, we've created some exa
 </HStack>
 ```
 
-```jsx live
-<HStack justifyContent="space-between" gap="2" alignItems="center">
-  <VStack gap={0.5}>
-    <HStack gap={1}>
-      <TextHeadline as="p">Tax account status</TextHeadline>
-      <Tag colorScheme="red">Not verified</Tag>
-    </HStack>
-    <TextBody as="p">Verify your info for tax reporting purposes.</TextBody>
-  </VStack>
-  <Button>Get started</Button>
-</HStack>
-```
+#### Margin Ratio
 
 ```jsx live
 function MarginExample() {
@@ -142,6 +181,8 @@ function MarginExample() {
   );
 }
 ```
+
+#### List Cell Integration
 
 ```jsx live
 <Box justifyContent="center">
