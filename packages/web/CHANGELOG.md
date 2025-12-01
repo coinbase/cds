@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.25.1 (12/1/2025 PST)
+
+#### 🐞 Fixes
+
+- Improve keyboard navigation for Tabs components and upadate ARIA roles. [[#96](https://github.com/coinbase/cds/pull/96)]
+
 ## 8.25.0 (12/1/2025 PST)
 
 #### 🚀 Updates
