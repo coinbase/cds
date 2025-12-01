@@ -57,6 +57,28 @@ const WithFirstLastButtonsExample = () => {
   );
 };
 
+const CustomButtonLabelsExample = () => {
+  const [page, setPage] = useState(5);
+  return (
+    <VStack alignItems="flex-start" gap={2}>
+      <Text as="h3" display="block" font="headline">
+        Custom First/Last Button Labels
+      </Text>
+      <Text as="p" display="block" font="body">
+        Custom labels for first and last page buttons
+      </Text>
+      <Pagination
+        activePage={page}
+        firstPageButtonLabel="Start"
+        lastPageButtonLabel="End"
+        onChange={setPage}
+        showFirstLastButtons={true}
+        totalPages={10}
+      />
+    </VStack>
+  );
+};
+
 const CustomRangesExample = () => {
   const [page, setPage] = useState(7);
   return (
@@ -285,6 +307,7 @@ export const PaginationExamples = () => {
       <FewPagesExample />
       <ManyPagesExample />
       <WithFirstLastButtonsExample />
+      <CustomButtonLabelsExample />
       <DisabledPagesExample />
       <AccessiblePaginationExample />
       <CustomRangesExample />
