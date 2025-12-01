@@ -59,6 +59,7 @@ import { TabbedChips as OldTabbedChips } from '@coinbase/cds-web/chips/TabbedChi
 import { Coachmark } from '@coinbase/cds-web/coachmark/Coachmark';
 import { Collapsible } from '@coinbase/cds-web/collapsible/Collapsible';
 import * as CDSControls from '@coinbase/cds-web/controls';
+import { InputLabel } from '@coinbase/cds-web/controls/InputLabel';
 import { Select as OldSelect } from '@coinbase/cds-web/controls/Select';
 import { Calendar } from '@coinbase/cds-web/dates/Calendar';
 import { DatePicker } from '@coinbase/cds-web/dates/DatePicker';
@@ -172,6 +173,7 @@ const ReactLiveScope: Record<string, unknown> = {
   // input
   ...CDSButtons,
   ...CDSControls,
+  InputLabel,
   Select,
   OldSelect,
   useMultiSelect,

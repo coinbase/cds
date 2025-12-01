@@ -24,6 +24,40 @@ function Example() {
 }
 ```
 
+### Custom Label
+
+If you need to render a custom label (e.g. a label with a tooltip), you can use the `labelNode` prop.
+
+```jsx
+function Example() {
+  const [date, setDate] = useState(null);
+  const [error, setError] = useState(null);
+
+  return (
+    <DatePicker
+      date={date}
+      error={error}
+      onChangeDate={setDate}
+      onErrorDate={setError}
+      label="Birthdate"
+      labelNode={
+        <HStack alignItems="center" gap={1}>
+          <InputLabel>Birthdate</InputLabel>
+          <Tooltip content="This will be visible to other users.">
+            <Icon color="fgMuted" name="info" size="xs" />
+          </Tooltip>
+        </HStack>
+      }
+      calendarIconButtonAccessibilityLabel="Birthdate calendar"
+      nextArrowAccessibilityLabel="Next month"
+      previousArrowAccessibilityLabel="Previous month"
+      helperTextErrorIconAccessibilityLabel="Error"
+      invalidDateError="Please enter a valid date"
+    />
+  );
+}
+```
+
 ### Invalid dates
 
 Always provide the `invalidDateError` prop for when users type an impossible date like 99/99/2000.

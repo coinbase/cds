@@ -2,9 +2,12 @@ import React, { useState } from 'react';
 import { type DateInputValidationError } from '@coinbase/cds-common/dates/DateInputValidationError';
 import { LocaleProvider } from '@coinbase/cds-common/system/LocaleProvider';
 
+import { InputLabel } from '../../controls/InputLabel';
 import { Icon } from '../../icons';
+import { HStack } from '../../layout';
 import { Group } from '../../layout/Group';
 import { VStack } from '../../layout/VStack';
+import { Tooltip } from '../../overlays';
 import { ThemeProvider } from '../../system/ThemeProvider';
 import { defaultTheme } from '../../themes/defaultTheme';
 import { DateInput } from '../DateInput';
@@ -97,6 +100,24 @@ export const Props = () => {
       <VStack>
         <Note>DateInput with separator</Note>
         <DateInput {...sharedProps} {...props} separator="-" />
+      </VStack>
+      <VStack>
+        <Note>DateInput with labelNode</Note>
+        <DateInput
+          {...sharedProps}
+          {...props}
+          label="Date of birth"
+          labelNode={
+            <InputLabel>
+              <HStack alignItems="center" gap={1}>
+                Date of birth
+                <Tooltip content="This will be visible to other users.">
+                  <Icon active color="fg" name="info" size="xs" tabIndex={0} />
+                </Tooltip>
+              </HStack>
+            </InputLabel>
+          }
+        />
       </VStack>
       <VStack>
         <Note>DateInput with start, end, and placeholder</Note>

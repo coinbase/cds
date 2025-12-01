@@ -115,6 +115,11 @@ export type TextInputBaseProps = {
    * @default 'error'
    */
   helperTextErrorIconAccessibilityLabel?: string;
+  /**
+   * React node to render label. Takes precedence over `label`.
+   * @note if both labelNode and label are provided, label will still be used as accessibility label for the input if no accessibilityLabel is provided.
+   */
+  labelNode?: React.ReactNode;
 } & SharedProps &
   Pick<
     SharedAccessibilityProps,
@@ -176,6 +181,7 @@ export const TextInput = memo(
       enableColorSurge = false,
       helperTextErrorIconAccessibilityLabel = 'error',
       labelVariant = 'outside',
+      labelNode,
       ...htmlInputElmProps
     }: TextInputProps,
     ref: React.ForwardedRef<HTMLInputElement>,
@@ -333,19 +339,21 @@ export const TextInput = memo(
           inputNode={inputElement}
           labelNode={
             !compact &&
-            !!label && (
-              <InputLabel
-                background={labelVariant === 'inside' ? inputBackground : undefined}
-                className={cx(
-                  labelVariant === 'inside' && insideLabelCss,
-                  labelVariant === 'inside' && !!start && insideLabelCssStartCss,
-                )}
-                htmlFor={shouldSetLabelId ? labelId : undefined}
-                testID={testIDMap?.label ?? ''}
-              >
-                {label}
-              </InputLabel>
-            )
+            (labelNode
+              ? labelNode
+              : !!label && (
+                  <InputLabel
+                    background={labelVariant === 'inside' ? inputBackground : undefined}
+                    className={cx(
+                      labelVariant === 'inside' && insideLabelCss,
+                      labelVariant === 'inside' && !!start && insideLabelCssStartCss,
+                    )}
+                    htmlFor={shouldSetLabelId ? labelId : undefined}
+                    testID={testIDMap?.label ?? ''}
+                  >
+                    {label}
+                  </InputLabel>
+                ))
           }
           labelVariant={labelVariant}
           startNode={

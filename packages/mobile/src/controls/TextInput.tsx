@@ -86,6 +86,11 @@ export type TextInputBaseProps = SharedProps &
      * @default 'error'
      */
     helperTextErrorIconAccessibilityLabel?: string;
+    /**
+     * React node to render label. Takes precedence over `label`.
+     * @note if both labelNode and label are provided, label will still be used as accessibility label for the input if no accessibilityLabel is provided.
+     */
+    labelNode?: React.ReactNode;
   };
 
 export type TextInputProps = TextInputBaseProps &
@@ -141,6 +146,7 @@ export const TextInput = memo(
         helperTextErrorIconAccessibilityLabel = 'error',
         bordered = true,
         labelVariant = 'outside',
+        labelNode,
         ...editableInputProps
       }: TextInputProps,
       ref: ForwardedRef<RNTextInput>,
@@ -285,22 +291,28 @@ export const TextInput = memo(
           }
           labelNode={
             !compact &&
-            !!label && (
-              <Pressable accessibilityRole="button" disabled={disabled} onPress={handleNodePress}>
-                <InputLabel
-                  {...(labelVariant === 'inside' && {
-                    paddingTop: 0,
-                    paddingBottom: 0,
-                    paddingStart: start ? 0.5 : 2,
-                    paddingEnd: 2,
-                    background: inputBackground,
-                  })}
-                  testID={testIDMap?.label ?? ''}
-                >
-                  {label}
-                </InputLabel>
-              </Pressable>
-            )
+            (labelNode
+              ? labelNode
+              : !!label && (
+                  <Pressable
+                    accessibilityRole="button"
+                    disabled={disabled}
+                    onPress={handleNodePress}
+                  >
+                    <InputLabel
+                      {...(labelVariant === 'inside' && {
+                        paddingTop: 0,
+                        paddingBottom: 0,
+                        paddingStart: start ? 0.5 : 2,
+                        paddingEnd: 2,
+                        background: inputBackground,
+                      })}
+                      testID={testIDMap?.label ?? ''}
+                    >
+                      {label}
+                    </InputLabel>
+                  </Pressable>
+                ))
           }
           labelVariant={labelVariant}
           startNode={

@@ -68,6 +68,10 @@ export type PaginationBaseProps = Omit<PaginationOptions, 'initialPage'> & {
     firstButton?: string;
     lastButton?: string;
   };
+  /** Custom label for the first page button */
+  firstPageButtonLabel?: string;
+  /** Custom label for the last page button */
+  lastPageButtonLabel?: string;
   /** Custom accessibility labels for navigation buttons */
   accessibilityLabels?: {
     next?: string;
@@ -113,6 +117,8 @@ export const Pagination = ({
   PaginationPageButtonComponent = DefaultPaginationPageButton,
   PaginationNavigationButtonComponent = DefaultPaginationNavigationButton,
   PaginationEllipsisComponent = DefaultPaginationEllipsis,
+  firstPageButtonLabel = 'First',
+  lastPageButtonLabel = 'Last',
   ...props
 }: PaginationProps) => {
   const { items, updateActivePage, goNextPage, goPrevPage, goFirstPage, goLastPage } =
@@ -182,7 +188,7 @@ export const Pagination = ({
             onClick={handleGoFirstPage}
             testID={testIDMap?.firstButton}
           >
-            First
+            {firstPageButtonLabel}
           </DefaultPaginationNavigationTextButton>
         ) : (
           <PaginationNavigationButtonComponent
@@ -242,7 +248,7 @@ export const Pagination = ({
             onClick={handleGoLastPage}
             testID={testIDMap?.lastButton}
           >
-            Last
+            {lastPageButtonLabel}
           </DefaultPaginationNavigationTextButton>
         ) : (
           <PaginationNavigationButtonComponent
