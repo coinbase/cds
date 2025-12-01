@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.23.0 (12/1/2025 PST)
+
+#### 🚀 Updates
+
+- Enable custom text label for "First" and "Last" buttons of Pagination. [[#192](https://github.com/coinbase/cds/pull/192)] [DX-4997]
+
 ## 8.22.2 (11/26/2025 PST)
 
 #### 🐞 Fixes
