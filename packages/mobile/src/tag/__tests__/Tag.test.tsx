@@ -82,7 +82,7 @@ describe('Tag', () => {
   it('sets promotional background when emphasis is high', () => {
     render(
       <DefaultThemeProvider>
-        <Tag emphasis="high" colorScheme="blue" testID={TEST_ID}>
+        <Tag colorScheme="blue" emphasis="high" testID={TEST_ID}>
           <Text>Tag</Text>
         </Tag>
       </DefaultThemeProvider>,
@@ -95,7 +95,7 @@ describe('Tag', () => {
   it('sets informational background when emphasis is low', () => {
     render(
       <DefaultThemeProvider>
-        <Tag emphasis="low" colorScheme="blue" testID={TEST_ID}>
+        <Tag colorScheme="blue" emphasis="low" testID={TEST_ID}>
           <Text>Tag</Text>
         </Tag>
       </DefaultThemeProvider>,
