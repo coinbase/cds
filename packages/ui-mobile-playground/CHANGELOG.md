@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 4.5.8 (12/1/2025 PST)
+
+#### 🐞 Fixes
+
+- Chore: QOL improvements for searching/navigating example component routes. [[#199](https://github.com/coinbase/cds/pull/199)]
+
 ## 4.5.7 (11/19/2025 PST)
 
 #### 🐞 Fixes
