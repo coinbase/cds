@@ -34,18 +34,13 @@ const DefaultSelectOptionComponent = <
   const labelNode = useMemo(
     () =>
       typeof label === 'string' ? (
-        <Text
-          ellipsize={description ? 'tail' : multiline ? undefined : 'tail'}
-          font="headline"
-          numberOfLines={description ? 1 : multiline ? undefined : 2}
-          style={styles?.optionLabel}
-        >
+        <Text ellipsize="tail" font="headline" numberOfLines={2} style={styles?.optionLabel}>
           {label}
         </Text>
       ) : (
         label
       ),
-    [label, description, multiline, styles?.optionLabel],
+    [label, styles?.optionLabel],
   );
 
   const descriptionNode = useMemo(
@@ -53,9 +48,9 @@ const DefaultSelectOptionComponent = <
       typeof description === 'string' ? (
         <Text
           color="fgMuted"
-          ellipsize={multiline ? undefined : 'tail'}
+          ellipsize="tail"
           font="body"
-          numberOfLines={multiline ? undefined : description && label ? 1 : 2}
+          numberOfLines={2}
           style={styles?.optionDescription}
         >
           {description}
@@ -63,7 +58,7 @@ const DefaultSelectOptionComponent = <
       ) : (
         description
       ),
-    [description, multiline, label, styles?.optionDescription],
+    [description, styles?.optionDescription],
   );
 
   const handlePress = useCallback(() => onPress?.(value), [onPress, value]);
@@ -88,7 +83,6 @@ const DefaultSelectOptionComponent = <
       background={background}
       borderRadius={0}
       disabled={disabled}
-      maxHeight={multiline ? undefined : compact ? 56 : 64}
       minHeight={compact ? 40 : 56}
       onPress={handlePress}
       priority="end"

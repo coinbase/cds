@@ -149,17 +149,14 @@ export const buildTransition = (targetValue: number, transition: Transition): nu
   'worklet';
   switch (transition.type) {
     case 'timing': {
-      const { type, ...timingConfig } = transition;
-      return withTiming(targetValue, timingConfig);
+      return withTiming(targetValue, transition);
     }
     case 'spring': {
-      const { type, ...springConfig } = transition;
-      return withSpring(targetValue, springConfig);
+      return withSpring(targetValue, transition);
     }
     default: {
       // Fallback to default transition config
-      const { type, ...springConfig } = defaultTransition;
-      return withSpring(targetValue, springConfig);
+      return withSpring(targetValue, defaultTransition);
     }
   }
 };

@@ -33,7 +33,7 @@ const SegmentedTabsComponent = memo(
         activeBackground={activeBackground}
         background={background}
         borderRadius={borderRadius}
-        role="radiogroup"
+        role="tablist"
         {...props}
       />
     ),

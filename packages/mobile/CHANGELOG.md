@@ -8,6 +8,32 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.25.1 ((12/1/2025, 11:18 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.25.0 (12/1/2025 PST)
+
+#### 🚀 Updates
+
+- Add emphasis prop to Tag. [[#197](https://github.com/coinbase/cds/pull/197)]
+
+## 8.24.0 (12/1/2025 PST)
+
+#### 🚀 Updates
+
+- Support labelNode in TextInput. [[#198](https://github.com/coinbase/cds/pull/198)]
+
+## 8.23.0 ((12/1/2025, 06:33 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.22.2 (11/26/2025 PST)
+
+#### 🐞 Fixes
+
+- Wrap Select labels instead of truncating them. [[#179](https://github.com/coinbase/cds/pull/179)]
+
 ## 8.22.1 (11/24/2025 PST)
 
 #### 🐞 Fixes

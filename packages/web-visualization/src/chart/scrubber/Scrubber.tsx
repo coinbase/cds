@@ -136,7 +136,8 @@ export type ScrubberBaseProps = SharedProps &
      */
     seriesIds?: string[];
     /**
-     * Hides the scrubber line
+     * Hides the scrubber line.
+     * @note This hides Scrubber's ReferenceLine including the label.
      */
     hideLine?: boolean;
     /**

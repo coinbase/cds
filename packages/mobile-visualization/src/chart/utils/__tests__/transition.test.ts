@@ -94,7 +94,7 @@ describe('buildTransition', () => {
       duration: 500,
     });
 
-    expect(withTiming).toHaveBeenCalledWith(100, { duration: 500 });
+    expect(withTiming).toHaveBeenCalledWith(100, { type: 'timing', duration: 500 });
     expect(result).toBe(100);
   });
 
@@ -107,6 +107,7 @@ describe('buildTransition', () => {
     });
 
     expect(withSpring).toHaveBeenCalledWith(200, {
+      type: 'spring',
       damping: 10,
       stiffness: 100,
     });
@@ -132,6 +133,7 @@ describe('buildTransition', () => {
     buildTransition(50, config);
 
     expect(withTiming).toHaveBeenCalledWith(50, {
+      type: 'timing',
       duration: 1000,
       easing: config.easing,
     });
@@ -152,6 +154,7 @@ describe('buildTransition', () => {
     buildTransition(75, config);
 
     expect(withSpring).toHaveBeenCalledWith(75, {
+      type: 'spring',
       damping: 15,
       stiffness: 200,
       mass: 1,

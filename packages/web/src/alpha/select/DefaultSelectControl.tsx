@@ -251,6 +251,7 @@ const DefaultSelectControlComponent = memo(
             borderWidth={0}
             className={cx(noFocusOutlineCss, classNames?.controlInputNode)}
             disabled={disabled}
+            flexGrow={1}
             focusable={false}
             minHeight={
               labelVariant === 'inside'
@@ -259,10 +260,10 @@ const DefaultSelectControlComponent = memo(
                   ? COMPACT_HEIGHT
                   : DEFAULT_HEIGHT
             }
+            minWidth={0}
             onClick={() => setOpen((s) => !s)}
             paddingStart={1}
             style={styles?.controlInputNode}
-            width="100%"
           >
             {!!startNode && (
               <HStack
@@ -278,7 +279,7 @@ const DefaultSelectControlComponent = memo(
               </HStack>
             )}
             {shouldShowCompactLabel ? (
-              <HStack alignItems="center" height="100%" maxWidth="40%" paddingStart={1}>
+              <HStack alignItems="center" height="100%" paddingStart={1} width="40%">
                 <InputLabel color="fg" overflow="truncate">
                   {label}
                 </InputLabel>
@@ -288,7 +289,7 @@ const DefaultSelectControlComponent = memo(
               alignItems="center"
               borderRadius={200}
               justifyContent="space-between"
-              width="100%"
+              width={shouldShowCompactLabel ? '60%' : '100%'}
             >
               <HStack
                 ref={valueNodeContainerRef}

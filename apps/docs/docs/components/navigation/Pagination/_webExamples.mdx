@@ -31,6 +31,28 @@ function FirstLastButtonsPaginationExample() {
 }
 ```
 
+### Custom First/Last Button Labels
+
+Demonstrates customizing the text labels for the first and last page buttons using `firstPageButtonLabel` and `lastPageButtonLabel` props.
+
+```jsx live
+function CustomButtonLabelsPaginationExample() {
+  const [activePage, setActivePage] = useState(5);
+  const totalPages = 15;
+
+  return (
+    <Pagination
+      totalPages={totalPages}
+      activePage={activePage}
+      onChange={setActivePage}
+      showFirstLastButtons
+      firstPageButtonLabel="Start"
+      lastPageButtonLabel="End"
+    />
+  );
+}
+```
+
 ### Pagination with Custom Counts
 
 Demonstrates using `siblingCount` and `boundaryCount` to adjust the number of pages displayed around the current page and at the boundaries, useful for larger page ranges.

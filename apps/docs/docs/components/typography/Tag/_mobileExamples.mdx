@@ -1,48 +1,40 @@
-### Informational (Default)
+### Basics
 
-Informational Tags are used to note a characteristic or state of an object. The relationship between the Tag and the other UI component should be easy to interpret for a user.
-
-```jsx
-<HStack gap={2} wrap>
-  <Tag colorScheme="green">Green</Tag>
-  <Tag colorScheme="blue">Blue</Tag>
-  <Tag colorScheme="yellow">Yellow</Tag>
-  <Tag colorScheme="purple">Purple</Tag>
-  <Tag colorScheme="red">Red</Tag>
-  <Tag colorScheme="gray">Gray</Tag>
-</HStack>
-```
-
-### Promotional
-
-Promotional Tags are for editorial, ephemeral communication. Terms like “New”, “Recommended”, “Beta”, “Hot”, “Trending”, fall into this Promotional Tag category.
+Informational tags (default) are used to note a characteristic or state of an object. Promotional tags for editorial, ephemeral communication.
 
 ```jsx
-<HStack gap={2} wrap>
+<HStack>
+  <Tag intent="informational" colorScheme="green">
+    Green
+  </Tag>
   <Tag intent="promotional" colorScheme="green">
     Green
   </Tag>
-  <Tag intent="promotional" colorScheme="blue">
-    Blue
-  </Tag>
-  <Tag intent="promotional" colorScheme="yellow">
-    Yellow
+</HStack>
+```
+
+### Emphasis
+
+You can control the visual prominence of the Tag using the `emphasis` prop. By default, informational tags are low emphasis and promotional tags are high emphasis.
+
+```jsx
+<HStack>
+  <Tag emphasis="high" colorScheme="green">
+    High Green
   </Tag>
   <Tag intent="promotional" colorScheme="purple">
-    Purple
+    High Purple
   </Tag>
-  <Tag intent="promotional" colorScheme="red">
-    Red
-  </Tag>
-  <Tag intent="promotional" colorScheme="gray">
-    Gray
+  <Tag colorScheme="green">Low Green</Tag>
+  <Tag intent="promotional" emphasis="low" colorScheme="purple">
+    Low Purple
   </Tag>
 </HStack>
 ```
 
-### Working with Tags
+### Composed Examples
 
-To get a better idea of what it workng with Tags is like, we've created some example UI components that use Tags.
+#### Account Status
 
 ```jsx
 <HStack justifyContent="space-between" gap="2" alignItems="center">
@@ -57,18 +49,7 @@ To get a better idea of what it workng with Tags is like, we've created some exa
 </HStack>
 ```
 
-```jsx
-<HStack justifyContent="space-between" gap="2" alignItems="center">
-  <VStack gap={0.5}>
-    <HStack gap={1}>
-      <TextHeadline as="p">Tax account status</TextHeadline>
-      <Tag colorScheme="red">Not verified</Tag>
-    </HStack>
-    <TextBody as="p">Verify your info for tax reporting purposes.</TextBody>
-  </VStack>
-  <Button>Get started</Button>
-</HStack>
-```
+#### Margin Ratio
 
 ```jsx
 function MarginExample() {
@@ -142,6 +123,8 @@ function MarginExample() {
   );
 }
 ```
+
+#### List Cell Integration
 
 ```jsx
 <Box justifyContent="center">

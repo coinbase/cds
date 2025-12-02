@@ -66,6 +66,50 @@ describe('Pagination', () => {
     expect(lastButton).toBeInTheDocument();
   });
 
+  it('renders default first and last button labels', () => {
+    renderComponent({ showFirstLastButtons: true });
+
+    const firstButton = screen.getByLabelText('First page');
+    expect(firstButton).toHaveTextContent('First');
+
+    const lastButton = screen.getByLabelText('Last page');
+    expect(lastButton).toHaveTextContent('Last');
+  });
+
+  it('renders custom firstPageButtonLabel when provided', () => {
+    renderComponent({
+      showFirstLastButtons: true,
+      firstPageButtonLabel: 'Go to Start',
+    });
+
+    const firstButton = screen.getByLabelText('First page');
+    expect(firstButton).toHaveTextContent('Go to Start');
+  });
+
+  it('renders custom lastPageButtonLabel when provided', () => {
+    renderComponent({
+      showFirstLastButtons: true,
+      lastPageButtonLabel: 'Go to End',
+    });
+
+    const lastButton = screen.getByLabelText('Last page');
+    expect(lastButton).toHaveTextContent('Go to End');
+  });
+
+  it('renders both custom labels when provided', () => {
+    renderComponent({
+      showFirstLastButtons: true,
+      firstPageButtonLabel: 'Start',
+      lastPageButtonLabel: 'Finish',
+    });
+
+    const firstButton = screen.getByLabelText('First page');
+    expect(firstButton).toHaveTextContent('Start');
+
+    const lastButton = screen.getByLabelText('Last page');
+    expect(lastButton).toHaveTextContent('Finish');
+  });
+
   it('disables next button on last page', () => {
     renderComponent({ activePage: 10 });
 

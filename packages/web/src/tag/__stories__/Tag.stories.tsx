@@ -11,26 +11,41 @@ export default {
 
 type TagPropConfig = {
   intent: TagBaseProps['intent'][];
+  emphasis: NonNullable<TagBaseProps['emphasis']>[];
   colorScheme: TagBaseProps['colorScheme'][];
 };
 const tagProps: TagPropConfig = {
   intent: ['informational', 'promotional'],
+  emphasis: ['high', 'low'],
   colorScheme: ['green', 'purple', 'blue', 'yellow', 'red', 'gray'],
 };
 
-const tagMap = tagProps.intent
-  .map((intent) => {
-    return tagProps.colorScheme.map((colorScheme) => ({
-      intent,
-      colorScheme,
-      children: `${startCase(intent)} ${colorScheme}`,
-    }));
-  })
-  .flat();
-
 const tagStories = {
   default: [{ children: 'Default tag', colorScheme: 'blue' }],
-  all: tagMap,
+  all: [
+    ...tagProps.colorScheme.map((scheme) => ({
+      intent: 'informational' as const,
+      emphasis: 'high' as const,
+      colorScheme: scheme,
+      children: `${startCase(scheme)} (High Informational)`,
+    })),
+    ...tagProps.colorScheme.map((scheme) => ({
+      intent: 'promotional' as const,
+      colorScheme: scheme,
+      children: `${startCase(scheme)} (High)`,
+    })),
+    ...tagProps.colorScheme.map((scheme) => ({
+      intent: 'informational' as const,
+      colorScheme: scheme,
+      children: `${startCase(scheme)} (Low)`,
+    })),
+    ...tagProps.colorScheme.map((scheme) => ({
+      intent: 'promotional' as const,
+      emphasis: 'low' as const,
+      colorScheme: scheme,
+      children: `${startCase(scheme)} (Low Promotional)`,
+    })),
+  ],
   wildcard: [
     {
       children: 'Atlanta',

@@ -1,3 +1,4 @@
+import { tagColorMap, tagEmphasisColorMap } from '@cbhq/cds-common/tokens/tags';
 import { renderA11y } from '@cbhq/cds-web-utils/jest';
 import { render, screen } from '@testing-library/react';
 
@@ -82,7 +83,40 @@ describe('Tag', () => {
       </DefaultThemeProvider>,
     );
     expect(screen.getByTestId(TEST_ID)).toHaveStyle({
-      background: '--background: rgb(var(--red0))', // red
+      backgroundColor: 'rgb(var(--red0))',
     });
+  });
+
+  it('sets promotional background when emphasis is high', () => {
+    render(
+      <DefaultThemeProvider>
+        <Tag colorScheme="blue" emphasis="high" testID={TEST_ID}>
+          <Text font="body">Tag</Text>
+        </Tag>
+      </DefaultThemeProvider>,
+    );
+    expect(screen.getByTestId(TEST_ID)).toHaveStyle({
+      backgroundColor: 'rgb(var(--blue60))',
+    });
+  });
+
+  it('sets informational background when emphasis is low', () => {
+    render(
+      <DefaultThemeProvider>
+        <Tag colorScheme="blue" emphasis="low" testID={TEST_ID}>
+          <Text font="body">Tag</Text>
+        </Tag>
+      </DefaultThemeProvider>,
+    );
+    expect(screen.getByTestId(TEST_ID)).toHaveStyle({
+      backgroundColor: 'rgb(var(--blue0))',
+    });
+  });
+
+  it('verifies tagColorMap maps correctly to tagEmphasisColorMap for backward compatibility', () => {
+    expect(tagColorMap.informational).toEqual(tagEmphasisColorMap.low);
+    expect(tagColorMap.promotional).toEqual(tagEmphasisColorMap.high);
+    expect(tagColorMap.informational.blue.background).toBe('blue0');
+    expect(tagColorMap.promotional.blue.background).toBe('blue60');
   });
 });
