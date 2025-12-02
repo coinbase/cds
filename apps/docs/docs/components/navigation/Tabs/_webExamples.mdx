@@ -8,7 +8,7 @@
     { id: 'tab3', label: 'Tab 3' },
   ];
   // TabComponent that uses context and TabLabel, wrapped in Pressable
-  const TabComponent = ({ id, label, disabled }) => {
+  const TabComponent = ({ id, label, disabled, ...props }) => {
     const api = useTabsContext();
     const isActive = api.activeTab?.id === id;
     return (
@@ -16,7 +16,7 @@
         onClick={() => api.updateActiveTab(id)}
         disabled={disabled}
         aria-pressed={isActive}
-        tabIndex={0}
+        {...props}
       >
         <TabLabel id={id} active={isActive}>
           {label}
@@ -58,7 +58,7 @@
     return <TabsActiveIndicator {...props} background="bgPrimary" bottom={0} height={2} />;
   }, []);
   // CustomTab uses context and TabLabel, wrapped in Pressable
-  const CustomTab = ({ id, label, icon, disabled }) => {
+  const CustomTab = ({ id, label, icon, disabled, ...props }) => {
     const { activeTab, updateActiveTab } = useTabsContext();
     const isActive = activeTab?.id === id;
     return (
@@ -66,7 +66,7 @@
         onClick={() => updateActiveTab(id)}
         disabled={disabled}
         aria-pressed={isActive}
-        tabIndex={0}
+        {...props}
       >
         <TabLabel id={id} active={isActive}>
           {label}

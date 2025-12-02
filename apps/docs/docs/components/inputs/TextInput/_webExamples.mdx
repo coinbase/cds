@@ -254,6 +254,28 @@ When using the `inside` label variant, you should always include a `placeholder`
 </VStack>
 ```
 
+### Custom Label
+
+If you need to render a custom label (e.g. a label with a tooltip), you can use the `labelNode` prop.
+
+```jsx live
+<TextInput
+  id="display-name-tooltip"
+  label="Display name"
+  labelNode={
+    <InputLabel htmlFor="display-name-tooltip">
+      <HStack alignItems="center" gap={1}>
+        Display name
+        <Tooltip content="This will be visible to other users.">
+          <Icon active color="fg" name="info" size="xs" tabIndex={0} />
+        </Tooltip>
+      </HStack>
+    </InputLabel>
+  }
+  placeholder="Satoshi Nakamoto"
+/>
+```
+
 ### StartContent & EndContent
 
 #### Examples of Input Objects placed at the Start

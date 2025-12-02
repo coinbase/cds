@@ -1,4 +1,5 @@
 import { Text } from 'react-native';
+import { tagColorMap, tagEmphasisColorMap } from '@cbhq/cds-common/tokens/tags';
 import { render, screen } from '@testing-library/react-native';
 
 import { defaultTheme } from '../../themes/defaultTheme';
@@ -77,5 +78,38 @@ describe('Tag', () => {
     expect(screen.getByTestId(TEST_ID)).toHaveStyle({
       backgroundColor: defaultTheme.lightColor.bgNegativeWash,
     });
+  });
+
+  it('sets promotional background when emphasis is high', () => {
+    render(
+      <DefaultThemeProvider>
+        <Tag colorScheme="blue" emphasis="high" testID={TEST_ID}>
+          <Text>Tag</Text>
+        </Tag>
+      </DefaultThemeProvider>,
+    );
+    expect(screen.getByTestId(TEST_ID)).toHaveStyle({
+      backgroundColor: defaultTheme.lightColor.bgPrimary,
+    });
+  });
+
+  it('sets informational background when emphasis is low', () => {
+    render(
+      <DefaultThemeProvider>
+        <Tag colorScheme="blue" emphasis="low" testID={TEST_ID}>
+          <Text>Tag</Text>
+        </Tag>
+      </DefaultThemeProvider>,
+    );
+    expect(screen.getByTestId(TEST_ID)).toHaveStyle({
+      backgroundColor: defaultTheme.lightColor.bgPrimaryWash,
+    });
+  });
+
+  it('verifies tagColorMap maps correctly to tagEmphasisColorMap for backward compatibility', () => {
+    expect(tagColorMap.informational).toEqual(tagEmphasisColorMap.low);
+    expect(tagColorMap.promotional).toEqual(tagEmphasisColorMap.high);
+    expect(tagColorMap.informational.blue.background).toBe('blue0');
+    expect(tagColorMap.promotional.blue.background).toBe('blue60');
   });
 });

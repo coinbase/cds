@@ -1,5 +1,10 @@
 import type { ThemeVars } from '../core/theme';
-import type { TagColorScheme, TagIntent } from '../types/TagBaseProps';
+import type { TagColorScheme, TagEmphasis, TagIntent } from '../types/TagBaseProps';
+
+export const tagEmphasisMap: Record<TagEmphasis, TagIntent> = {
+  high: 'promotional',
+  low: 'informational',
+} as const;
 
 export const tagHorizontalSpacing: Record<TagIntent, ThemeVars.Space> = {
   informational: 0.5,
@@ -16,16 +21,16 @@ export const tagBorderRadiusMap: Record<TagIntent, ThemeVars.BorderRadius> = {
   promotional: 1000,
 };
 
-type TagColorMap = Record<
-  TagIntent,
+type TagEmphasisColorMap = Record<
+  TagEmphasis,
   Record<
     TagColorScheme,
     { background: ThemeVars.SpectrumColor; foreground: ThemeVars.SpectrumColor }
   >
 >;
 
-export const tagColorMap: TagColorMap = {
-  informational: {
+export const tagEmphasisColorMap: TagEmphasisColorMap = {
+  low: {
     green: {
       background: 'green0',
       foreground: 'green60',
@@ -51,7 +56,7 @@ export const tagColorMap: TagColorMap = {
       foreground: 'gray80',
     },
   },
-  promotional: {
+  high: {
     green: {
       background: 'green60',
       foreground: 'green0',
@@ -77,4 +82,20 @@ export const tagColorMap: TagColorMap = {
       foreground: 'gray10',
     },
   },
+};
+
+type TagColorMap = Record<
+  TagIntent,
+  Record<
+    TagColorScheme,
+    { background: ThemeVars.SpectrumColor; foreground: ThemeVars.SpectrumColor }
+  >
+>;
+
+/**
+ * @deprecated Use tagEmphasisColorMap instead
+ */
+export const tagColorMap: TagColorMap = {
+  informational: tagEmphasisColorMap.low,
+  promotional: tagEmphasisColorMap.high,
 };

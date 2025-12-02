@@ -997,31 +997,69 @@ export const VeryLongLabels = () => {
       value: '1',
       label:
         'This is an extremely long option label that should test how the component handles very long text content',
+      description:
+        'This is an extremely long option description that should test how the component handles very long text content',
     },
     {
       value: '2',
       label:
         'Another super long option label with even more text to see how it wraps or truncates in the UI',
+      description:
+        'Another super long option description with even more text to see how it wraps or truncates in the UI',
     },
     {
       value: '3',
       label: 'Short',
+      description: 'Short description',
     },
     {
       value: '4',
       label: 'A moderately long label that is somewhere between short and extremely long',
+      description:
+        'A moderately long description that is somewhere between short and extremely long',
+    },
+    {
+      value: '5',
+      description:
+        'This is a very long description that is somewhere between short and extremely long',
     },
   ];
   const [value, setValue] = useState<string | null>('1');
 
   return (
-    <Select
-      label="Single select - very long option labels"
-      onChange={setValue}
-      options={longOptions}
-      placeholder="Empty value"
-      value={value}
-    />
+    <VStack gap={2}>
+      <Select
+        label="Single select - very long option labels"
+        onChange={setValue}
+        options={longOptions}
+        placeholder="Empty value"
+        value={value}
+      />
+      <Select
+        compact
+        label="Single select - very long option labels - compact"
+        onChange={setValue}
+        options={longOptions}
+        placeholder="Empty value"
+        value={value}
+      />
+      <Select
+        label="Single select - very long option labels - custom start node"
+        onChange={setValue}
+        options={longOptions}
+        placeholder="Empty value"
+        startNode={<Icon color="fg" name="star" />}
+        value={value}
+      />
+      <Select
+        endNode={<Icon color="fg" name="star" />}
+        label="Single select - very long option labels - custom end node"
+        onChange={setValue}
+        options={longOptions}
+        placeholder="Empty value"
+        value={value}
+      />
+    </VStack>
   );
 };
 

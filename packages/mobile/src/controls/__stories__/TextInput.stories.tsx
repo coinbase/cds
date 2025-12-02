@@ -7,9 +7,11 @@ import { Icon } from '../../icons';
 import { Box } from '../../layout/Box';
 import { HStack } from '../../layout/HStack';
 import { VStack } from '../../layout/VStack';
+import { Tooltip } from '../../overlays/tooltip/Tooltip';
 import { Text } from '../../typography/Text';
 import { InputIcon } from '../InputIcon';
 import { InputIconButton } from '../InputIconButton';
+import { InputLabel } from '../InputLabel';
 import type { TextInputProps } from '../TextInput';
 import { TextInput } from '../TextInput';
 
@@ -451,6 +453,20 @@ const InputScreen = () => {
           labelVariant="inside"
           placeholder="Enter your favorite color"
           variant="negative"
+        />
+      </Example>
+      <Example inline title="TextInput with labelNode">
+        <MockTextInput
+          label="Display name"
+          labelNode={
+            <HStack alignItems="center" gap={1}>
+              <InputLabel>Display name</InputLabel>
+              <Tooltip content="This will be visible to other users.">
+                <Icon active color="fg" name="info" size="xs" />
+              </Tooltip>
+            </HStack>
+          }
+          placeholder="Satoshi Nakamoto"
         />
       </Example>
     </ExampleScreen>

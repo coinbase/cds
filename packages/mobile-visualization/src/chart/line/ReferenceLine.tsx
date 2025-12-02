@@ -110,6 +110,11 @@ export type ReferenceLineBaseProps = {
    * @default theme.color.bgLine
    */
   stroke?: string;
+  /**
+   * Opacity applied to both the line and label.
+   * @default 1
+   */
+  opacity?: AnimatedProp<number>;
 };
 
 type HorizontalReferenceLineProps = ReferenceLineBaseProps & {
@@ -163,6 +168,7 @@ export const ReferenceLine = memo<ReferenceLineProps>(
     labelVerticalAlignment,
     labelBoundsInset,
     stroke,
+    opacity = 1,
   }) => {
     const theme = useTheme();
     const { getXSerializableScale, getYSerializableScale, drawingArea } =
@@ -203,14 +209,13 @@ export const ReferenceLine = memo<ReferenceLineProps>(
 
     const labelXPixel = useDerivedValue(() => xPixel.value ?? 0, [xPixel]);
     const labelYPixel = useDerivedValue(() => yPixel.value ?? 0, [yPixel]);
-    const labelOpacity = useDerivedValue(
-      () =>
+
+    const labelOpacity = useDerivedValue(() => {
+      const isVisible =
         (dataY !== undefined && yPixel.value !== undefined) ||
-        (dataX !== undefined && xPixel.value !== undefined)
-          ? 1
-          : 0,
-      [yPixel],
-    );
+        (dataX !== undefined && xPixel.value !== undefined);
+      return isVisible ? unwrapAnimatedValue(opacity) : 0;
+    }, [yPixel, xPixel, opacity]);
 
     if (dataY !== undefined) {
       let labelX: number;
@@ -224,7 +229,12 @@ export const ReferenceLine = memo<ReferenceLineProps>(
 
       return (
         <>
-          <LineComponent animate={false} d={horizontalLine} stroke={effectiveLineStroke} />
+          <LineComponent
+            animate={false}
+            d={horizontalLine}
+            stroke={effectiveLineStroke}
+            strokeOpacity={opacity}
+          />
           {label && (
             <LabelComponent
               boundsInset={labelBoundsInset}
@@ -258,7 +268,12 @@ export const ReferenceLine = memo<ReferenceLineProps>(
 
       return (
         <>
-          <LineComponent animate={false} d={verticalLine} stroke={effectiveLineStroke} />
+          <LineComponent
+            animate={false}
+            d={verticalLine}
+            stroke={effectiveLineStroke}
+            strokeOpacity={opacity}
+          />
           {label && (
             <LabelComponent
               boundsInset={labelBoundsInset}
