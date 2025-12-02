@@ -239,11 +239,7 @@ export default tseslint.config(
         ...globals.browser,
       },
     },
-    extends: [
-      ...sharedExtends,
-      eslintReactRefresh.configs.vite,
-      internalPlugin.configs.importRules,
-    ],
+    extends: [...sharedExtends, eslintReactRefresh.configs.vite],
     plugins: {
       ...sharedPlugins,
     },
@@ -254,7 +250,7 @@ export default tseslint.config(
   {
     files: ['**/*.{ts,tsx}'],
     settings: sharedSettings,
-    extends: [...sharedExtends, ...typescriptExtends, internalPlugin.configs.importRules],
+    extends: [...sharedExtends, ...typescriptExtends],
     plugins: {
       ...sharedPlugins,
       ...typescriptPlugins,
@@ -279,7 +275,7 @@ export default tseslint.config(
       'packages/**/*.spec.*',
     ],
     settings: sharedSettings,
-    extends: [...sharedExtends, ...typescriptExtends, internalPlugin.configs.importRules],
+    extends: [...sharedExtends, ...typescriptExtends],
     plugins: {
       ...sharedPlugins,
       ...typescriptPlugins,
@@ -293,7 +289,7 @@ export default tseslint.config(
   {
     files: ['**/*mobile*/**/*.{ts,tsx}'],
     settings: sharedSettings,
-    extends: [...sharedExtends, ...typescriptExtends, internalPlugin.configs.importRules],
+    extends: [...sharedExtends, ...typescriptExtends],
     plugins: {
       ...sharedPlugins,
       ...typescriptPlugins,
@@ -322,7 +318,6 @@ export default tseslint.config(
       ...typescriptExtends,
       eslintJest.configs['flat/recommended'],
       eslintTestingLibrary.configs['flat/react'],
-      internalPlugin.configs.importRules,
     ],
     plugins: {
       ...sharedPlugins,

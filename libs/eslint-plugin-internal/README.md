@@ -6,12 +6,6 @@ For simplicity there is no build process since the repo root depends on this lib
 
 The plugin encapsulates the following rules:
 
-### import-autofix
-
-A fixable rule that applies Coinbase-opinionated styles to a modules import statements.
-This rule copied from internal CB repositories during CDS's transition to open source.
-Eventually, this rule could be moved to a new @coinbase open source package
-
 ### safely-spread-props
 
 This rule checks that React component `...spread` props do not contain properties that the receiving component does not expect.

@@ -1,12 +1,10 @@
 import exampleScreenContainsExampleRule from './example-screen-contains-example/index.mjs';
 import exampleScreenDefaultRule from './example-screen-default/index.mjs';
 import safelySpreadPropsRule from './safely-spread-props/index.mjs';
-import importAutofixRule from './import-autofix.mjs';
 
 const plugin = {
   name: '@coinbase/eslint-plugin-internal',
   rules: {
-    'import-autofix': importAutofixRule,
     'safely-spread-props': safelySpreadPropsRule,
     'example-screen-default': exampleScreenDefaultRule,
     'example-screen-contains-example': exampleScreenContainsExampleRule,
@@ -15,14 +13,6 @@ const plugin = {
 };
 
 Object.assign(plugin.configs, {
-  importRules: {
-    plugins: {
-      internal: plugin,
-    },
-    rules: {
-      'internal/import-autofix': 'error',
-    },
-  },
   typedRules: {
     plugins: {
       internal: plugin,
