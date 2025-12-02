@@ -1,8 +1,8 @@
 import React, { forwardRef, memo, useMemo } from 'react';
 
 import type { ChipBaseProps } from '../../chips';
-import type { SelectControlProps, SelectProps, SelectRef, SelectType } from '../select/Select';
-import { Select } from '../select/Select';
+import type { SelectControlProps, SelectProps, SelectType } from '../select/types';
+import { Select, type SelectRef } from '../select/Select';
 
 import { SelectChipControl } from './SelectChipControl';
 
