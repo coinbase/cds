@@ -147,7 +147,8 @@ export type ScrubberBaseProps = Pick<ScrubberBeaconGroupBaseProps, 'idlePulse'> 
      */
     seriesIds?: string[];
     /**
-     * Hides the scrubber line
+     * Hides the scrubber line.
+     * @note This hides Scrubber's ReferenceLine including the label.
      */
     hideLine?: boolean;
     /**
@@ -360,18 +361,17 @@ export const Scrubber = memo(
             />
           )}
           {!hideLine && (
-            <Group opacity={lineOpacity}>
-              <ReferenceLine
-                LabelComponent={LabelComponent}
-                LineComponent={LineComponent}
-                dataX={dataX}
-                label={resolvedLabelValue}
-                labelBoundsInset={labelBoundsInset}
-                labelElevated={labelElevated}
-                labelFont={labelFont}
-                stroke={lineStroke}
-              />
-            </Group>
+            <ReferenceLine
+              LabelComponent={LabelComponent}
+              LineComponent={LineComponent}
+              dataX={dataX}
+              label={resolvedLabelValue}
+              labelBoundsInset={labelBoundsInset}
+              labelElevated={labelElevated}
+              labelFont={labelFont}
+              opacity={lineOpacity}
+              stroke={lineStroke}
+            />
           )}
           <ScrubberBeaconGroup
             ref={beaconGroupRef}

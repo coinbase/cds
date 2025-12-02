@@ -91,7 +91,7 @@ export type LineBaseProps = {
    * @note when combined with gradient, both will be applied
    * @default 1
    */
-  strokeOpacity?: number;
+  strokeOpacity?: AnimatedProp<number>;
   /**
    * Width of the line
    * @default 2
