@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## Unreleased
+
+#### 📘 Misc
+
+- Update storybook examples. [[#200](https://github.com/coinbase/cds/pull/200)]
+
 ## 8.25.1 ((12/1/2025, 11:18 AM PST))
 
 This is an artificial version bump with no new change.
