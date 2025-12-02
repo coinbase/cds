@@ -40,6 +40,7 @@ export type ReferenceLineLabelComponentProps = Pick<
   | 'verticalAlignment'
   | 'className'
   | 'style'
+  | 'opacity'
 > & {
   /**
    * Bounds inset for label to prevent cutoff at chart edges.
@@ -111,6 +112,11 @@ export type ReferenceLineBaseProps = SharedProps & {
    * @default 'var(--color-bgLine)'
    */
   stroke?: string;
+  /**
+   * Opacity applied to both the line and label.
+   * @default 1
+   */
+  opacity?: number;
 };
 
 export type HorizontalReferenceLineProps = ReferenceLineBaseProps & {
@@ -200,6 +206,7 @@ export const ReferenceLine = memo<ReferenceLineProps>(
     labelVerticalAlignment,
     labelBoundsInset,
     stroke = 'var(--color-bgLine)',
+    opacity,
     className,
     style,
     classNames,
@@ -240,6 +247,7 @@ export const ReferenceLine = memo<ReferenceLineProps>(
             animate={false}
             d={`M${drawingArea.x},${yPixel} L${drawingArea.x + drawingArea.width},${yPixel}`}
             stroke={stroke}
+            strokeOpacity={opacity}
           />
           {label && (
             <LabelComponent
@@ -250,6 +258,7 @@ export const ReferenceLine = memo<ReferenceLineProps>(
               elevated={labelElevated}
               font={labelFont}
               horizontalAlignment={labelHorizontalAlignment}
+              opacity={opacity}
               style={styles?.label}
               testID={testID}
               verticalAlignment={labelVerticalAlignment ?? 'middle'}
@@ -291,6 +300,7 @@ export const ReferenceLine = memo<ReferenceLineProps>(
             animate={false}
             d={`M${xPixel},${drawingArea.y} L${xPixel},${drawingArea.y + drawingArea.height}`}
             stroke={stroke}
+            strokeOpacity={opacity}
           />
           {label && (
             <LabelComponent
@@ -301,6 +311,7 @@ export const ReferenceLine = memo<ReferenceLineProps>(
               elevated={labelElevated}
               font={labelFont}
               horizontalAlignment={labelHorizontalAlignment ?? 'center'}
+              opacity={opacity}
               style={styles?.label}
               testID={testID}
               verticalAlignment={labelVerticalAlignment}
