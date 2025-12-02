@@ -1157,61 +1157,56 @@ const UseCaseShowcase = () => {
 
 const ListCellScreen = () => {
   return (
-    <ExampleScreen>
-      <Example inline paddingX={0} title="Content" titlePadding={titlePadding}>
+    <ExampleScreen paddingX={0}>
+      <Example inline title="Content" titlePadding={titlePadding}>
         <Content />
       </Example>
-      <Example inline paddingX={0} title="CustomNodes" titlePadding={titlePadding}>
+      <Example inline title="CustomNodes" titlePadding={titlePadding}>
         <CustomNodes />
       </Example>
-      <Example inline paddingX={0} title="CompactContent(deprecated)" titlePadding={titlePadding}>
+      <Example inline title="CompactContent(deprecated)" titlePadding={titlePadding}>
         <CompactContent />
       </Example>
-      <Example inline paddingX={0} title="PressableContent" titlePadding={titlePadding}>
+      <Example inline title="PressableContent" titlePadding={titlePadding}>
         <PressableContent />
       </Example>
-      <Example
-        inline
-        paddingX={0}
-        title="CompactPressableContent(deprecated)"
-        titlePadding={titlePadding}
-      >
+      <Example inline title="CompactPressableContent(deprecated)" titlePadding={titlePadding}>
         <CompactPressableContent />
       </Example>
-      <Example inline paddingX={0} title="LongContent" titlePadding={titlePadding}>
+      <Example inline title="LongContent" titlePadding={titlePadding}>
         <LongContent />
       </Example>
-      <Example inline paddingX={0} title="PriorityContent" titlePadding={titlePadding}>
+      <Example inline title="PriorityContent" titlePadding={titlePadding}>
         <PriorityContent />
       </Example>
-      <Example inline paddingX={0} title="WithAccessory" titlePadding={titlePadding}>
+      <Example inline title="WithAccessory" titlePadding={titlePadding}>
         <WithAccessory />
       </Example>
-      <Example inline paddingX={0} title="WithMedia" titlePadding={titlePadding}>
+      <Example inline title="WithMedia" titlePadding={titlePadding}>
         <WithMedia />
       </Example>
-      <Example inline paddingX={0} title="WithActions" titlePadding={titlePadding}>
+      <Example inline title="WithActions" titlePadding={titlePadding}>
         <WithActions />
       </Example>
-      <Example inline paddingX={0} title="Fallback" titlePadding={titlePadding}>
+      <Example inline title="Fallback" titlePadding={titlePadding}>
         <Fallback />
       </Example>
-      <Example inline paddingX={0} title="WithIntermediary" titlePadding={titlePadding}>
+      <Example inline title="WithIntermediary" titlePadding={titlePadding}>
         <WithIntermediary />
       </Example>
-      <Example inline paddingX={0} title="WithHelperText" titlePadding={titlePadding}>
+      <Example inline title="WithHelperText" titlePadding={titlePadding}>
         <WithHelperText />
       </Example>
-      <Example inline paddingX={0} title="CustomSpacing" titlePadding={titlePadding}>
+      <Example inline title="CustomSpacing" titlePadding={titlePadding}>
         <CustomSpacing />
       </Example>
-      <Example inline paddingX={0} title="CondensedListCell" titlePadding={titlePadding}>
+      <Example inline title="CondensedListCell" titlePadding={titlePadding}>
         <CondensedListCell />
       </Example>
-      <Example inline paddingX={0} title="SpacingVariant" titlePadding={titlePadding}>
+      <Example inline title="SpacingVariant" titlePadding={titlePadding}>
         <SpacingVariant />
       </Example>
-      <Example inline paddingX={0} title="UseCaseShowcase" titlePadding={titlePadding}>
+      <Example inline title="UseCaseShowcase" titlePadding={titlePadding}>
         <UseCaseShowcase />
       </Example>
     </ExampleScreen>

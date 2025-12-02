@@ -221,7 +221,7 @@ const Fallbacks = () => {
 
 const ListCellFallbackScreen = () => {
   return (
-    <ExampleScreen>
+    <ExampleScreen paddingX={0}>
       <Example>
         <Fallbacks />
       </Example>

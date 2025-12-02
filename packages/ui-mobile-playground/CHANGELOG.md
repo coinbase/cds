@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 4.5.9 (12/2/2025 PST)
+
+#### 🐞 Fixes
+
+- Regenerate routes. [[#200](https://github.com/coinbase/cds/pull/200)]
+
 ## 4.5.8 (12/1/2025 PST)
 
 #### 🐞 Fixes
