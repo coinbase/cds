@@ -984,7 +984,12 @@ const CondensedListCell = () => {
       />
       <ListCell
         multiline
-        description="Long description with multiple lines. This section can be arbitrarily long and occupy many many lines."
+        description={
+          <Text color="fgMuted" font="body">
+            Long description with multiple lines. This section can be arbitrarily long and occupy
+            many many lines.
+          </Text>
+        }
         end={
           <HStack alignItems="center" gap={2}>
             <Text color="fgMuted" font="label2">

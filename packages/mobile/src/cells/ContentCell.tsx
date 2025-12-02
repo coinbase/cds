@@ -34,8 +34,7 @@ export type ContentCellBaseProps = {
    * 2. padding is `var(--space-1) var(--space-2)`
    * 3. `border-radius` is `var(--borderRadius-0)`
    * 4. subtitle uses `label1`
-   * 5. description uses `label2`
-   * 6. title wraps to 2 lines regardless of description content
+   * 5. title wraps to 2 lines regardless of description content
    *
    * @default 'normal'
    */
@@ -243,11 +242,7 @@ export const ContentCell = memo(function ContentCell({
         {descriptionNode ? (
           descriptionNode
         ) : description ? (
-          <Text
-            color="fgMuted"
-            font={spacingVariant === 'condensed' ? 'label2' : 'body'}
-            style={styles?.description}
-          >
+          <Text color="fgMuted" font="body" style={styles?.description}>
             {description}
           </Text>
         ) : null}

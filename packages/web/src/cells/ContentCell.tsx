@@ -58,8 +58,7 @@ export type ContentCellBaseProps = Polymorphic.ExtendableProps<
      * 2. `padding` is `'var(--space-1) var(--space-2)'`
      * 3. `border-radius` is `'var(--borderRadius-0)'`
      * 4. subtitle uses `label1`
-     * 5. description uses `label2`
-     * 6. title wraps to 2 lines regardless of description content
+     * 5. title wraps to 2 lines regardless of description content
      *
      * @default 'normal'
      */
@@ -301,7 +300,7 @@ export const ContentCell: ContentCellComponent = memo(
                 className={classNames?.description}
                 color="fgMuted"
                 display="block"
-                font={spacingVariant === 'condensed' ? 'label2' : 'body'}
+                font="body"
                 style={styles?.description}
               >
                 {description}
