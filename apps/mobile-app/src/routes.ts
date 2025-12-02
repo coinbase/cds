@@ -539,7 +539,7 @@ export const routes = [
   {
     key: 'SelectChip',
     getComponent: () =>
-      require('@cbhq/cds-mobile/chips/__stories__/SelectChip.stories').default,
+      require('@cbhq/cds-mobile/alpha/select-chip/__stories__/SelectChip.stories').default,
   },
   {
     key: 'SelectOption',

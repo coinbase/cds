@@ -40,6 +40,7 @@ export const Chip = memo(
       style,
       styles,
       onPress,
+      color = 'fg',
       font = compact ? 'label1' : 'headline',
       ...props
     }: ChipProps,
@@ -72,11 +73,13 @@ export const Chip = memo(
       >
         {start}
         {typeof children === 'string' ? (
-          <Text flexShrink={1} font={font} numberOfLines={numberOfLines}>
+          <Text color={color} flexShrink={1} font={font} numberOfLines={numberOfLines}>
             {children}
           </Text>
         ) : children ? (
-          <Box flexShrink={1}>{children}</Box>
+          <Box color={color} flexShrink={1}>
+            {children}
+          </Box>
         ) : null}
         {end}
       </HStack>

@@ -8,6 +8,17 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.26.0 (12/1/2025 PST)
+
+#### 🚀 Updates
+
+- Add SelectChip alpha component. [[#180](https://github.com/coinbase/cds/pull/180)]
+- Add support for option grouping. [[#180](https://github.com/coinbase/cds/pull/180)]
+
+#### 🐞 Fixes
+
+- Fix Select select all when options disabled. [[#180](https://github.com/coinbase/cds/pull/180)]
+
 ## 8.25.1 (12/1/2025 PST)
 
 #### 🐞 Fixes
