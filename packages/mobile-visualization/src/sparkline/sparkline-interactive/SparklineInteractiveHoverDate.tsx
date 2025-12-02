@@ -1,5 +1,5 @@
-import React, { forwardRef, useImperativeHandle, useMemo, useRef } from 'react';
-import { Animated, StyleSheet, TextInput } from 'react-native';
+import React, { forwardRef, useImperativeHandle, useMemo, useRef, useState } from 'react';
+import { Animated, StyleSheet, Text } from 'react-native';
 import type { ChartScrubParams } from '@coinbase/cds-common/types/Chart';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 
@@ -58,7 +58,8 @@ const SparklineInteractiveHoverDateWithGeneric = forwardRef(
       {},
     );
     const transform = useRef(new Animated.ValueXY({ x: 0, y: 0 })).current;
-    const textInputRef = useRef<TextInput>(null);
+    const [displayText, setDisplayText] = useState('');
+    const textRef = useRef<Text | null>(null);
 
     // period => number mapping
     const measuredWidth = useRef<Record<string, number>>({});
@@ -83,23 +84,26 @@ const SparklineInteractiveHoverDateWithGeneric = forwardRef(
           return;
         }
 
-        // BAD: We only disabled this lint rule to enable eslint upgrade after this component was implemented. These apis should never be used.
-        // Usage in this component are known making this a high risk component. Contact team for more information.
-
-        textInputRef.current?.setNativeProps({
-          text: formatHoverDate?.(date, period),
-        });
+        setDisplayText(text);
 
         measureIterations.current[period] = measureIterations.current[period] ?? 0;
         if (measureIterations.current[period] > MAX_MEASURE_ITERATIONS) {
           const currWidth = measuredWidth.current[period];
           setTransform(x, currWidth, chartWidth, transform, minGutter);
         } else {
-          textInputRef.current?.measure((ox, oy, width) => {
-            measureIterations.current[period] += 1;
-            measuredWidth.current[period] = Math.max(width, measuredWidth.current[period] ?? 0);
-            setTransform(x, measuredWidth.current[period], chartWidth, transform, minGutter);
-          });
+          const measure = () => {
+            textRef.current?.measure((ox, oy, width) => {
+              measureIterations.current[period] += 1;
+              measuredWidth.current[period] = Math.max(width, measuredWidth.current[period] ?? 0);
+              setTransform(x, measuredWidth.current[period], chartWidth, transform, minGutter);
+            });
+          };
+
+          if (typeof requestAnimationFrame === 'function') {
+            requestAnimationFrame(measure);
+          } else {
+            setTimeout(measure, 0);
+          }
         }
       },
     }));
@@ -126,7 +130,7 @@ const SparklineInteractiveHoverDateWithGeneric = forwardRef(
       };
     }, [transform]);
 
-    const textInputStyle = useMemo(() => {
+    const textStyle = useMemo(() => {
       return {
         fontSize: theme.fontSize.label2,
         lineHeight: theme.lineHeight.label2,
@@ -143,12 +147,14 @@ const SparklineInteractiveHoverDateWithGeneric = forwardRef(
     return (
       <Animated.View pointerEvents="none" style={rootStyle}>
         <Animated.View style={innerStyle}>
-          <TextInput
-            ref={textInputRef}
-            accessibilityHint="Text input field"
-            accessibilityLabel="Text input field"
-            style={textInputStyle}
-          />
+          <Text
+            ref={textRef}
+            accessibilityHint="Hover date label"
+            accessibilityLabel="Hover date label"
+            style={textStyle}
+          >
+            {displayText}
+          </Text>
         </Animated.View>
       </Animated.View>
     );

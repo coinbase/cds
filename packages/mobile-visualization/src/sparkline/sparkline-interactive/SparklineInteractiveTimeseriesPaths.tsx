@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useEffect, useMemo, useRef } from 'react';
+import React, { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { G, Path, Svg } from 'react-native-svg';
 import { borderWidth } from '@coinbase/cds-common/tokens/sparkline';
 import type { ChartDataPoint, ChartTimeseries } from '@coinbase/cds-common/types';
@@ -27,7 +27,7 @@ export type TimeseriesPathProps = {
 const TimeseriesPath = memo(
   ({ timeseries, lineFn, initialPath, onRender, areaFn }: TimeseriesPathProps) => {
     const theme = useTheme();
-    const pathRef = useRef<Path | null>(null);
+    const [animatedPathD, setAnimatedPathD] = useState(initialPath);
     const { strokeColor } = timeseries;
 
     const lineColor =
@@ -53,23 +53,13 @@ const TimeseriesPath = memo(
     const animationListener = useCallback(
       ({ value }: { value: number }) => {
         const val = Number(value.toFixed(4));
-        // BAD: We only disabled this lint rule to enable eslint upgrade after this component was implemented. These apis should never be used.
-        // Usage in this component are known making this a high risk component. Contact team for more information.
-
-        pathRef.current?.setNativeProps({
-          d: pathInterpolator(val),
-        });
+        setAnimatedPathD(pathInterpolator(val));
       },
       [pathInterpolator],
     );
 
     const updatePathWithoutAnimation = useCallback(() => {
-      // BAD: We only disabled this lint rule to enable eslint upgrade after this component was implemented. These apis should never be used.
-      // Usage in this component are known making this a high risk component. Contact team for more information.
-
-      pathRef.current?.setNativeProps({
-        d: pathInterpolator(1),
-      });
+      setAnimatedPathD(pathInterpolator(1));
     }, [pathInterpolator]);
 
     const playAnimation = useInterruptiblePathAnimation({
@@ -89,8 +79,7 @@ const TimeseriesPath = memo(
 
     return (
       <Path
-        ref={pathRef}
-        d={initialPath}
+        d={animatedPathD}
         stroke={lineColor}
         strokeLinecap="round"
         strokeLinejoin="round"

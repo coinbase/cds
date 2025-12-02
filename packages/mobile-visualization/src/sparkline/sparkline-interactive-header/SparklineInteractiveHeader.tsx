@@ -1,5 +1,5 @@
-import React, { forwardRef, memo, useCallback, useImperativeHandle, useRef } from 'react';
-import { TextInput, View } from 'react-native';
+import React, { forwardRef, memo, useCallback, useImperativeHandle, useRef, useState } from 'react';
+import { Text, View } from 'react-native';
 import type { FunctionComponent, ReactNode } from 'react';
 import { subheadIconSignMap } from '@coinbase/cds-common/tokens/sparkline';
 import type {
@@ -118,17 +118,17 @@ const Trailing: FunctionComponent<React.PropsWithChildren<unknown>> = ({ childre
 const SparklineInteractiveHeaderStable = memo(
   forwardRef<SparklineInteractiveHeaderRef, SparklineInteractiveHeaderMobileProps>(
     ({ defaultLabel, defaultTitle, defaultSubHead, testID, trailing, labelNode }, forwardedRef) => {
-      const labelRef = useRef<TextInput>(null);
-      const titleRef = useRef<TextInput>(null);
-      const subHeadRef = useRef<TextInput>(null);
-      const subHeadIconRef = useRef<TextInput>(null);
-      const subHeadAccessoryRef = useRef<TextInput>(null);
-
       const valuesRef = useRef<SparklineInteractiveHeaderValues>({
         title: defaultTitle,
         label: defaultLabel,
         subHead: defaultSubHead,
       });
+
+      const [labelText, setLabelText] = useState(defaultLabel ?? '');
+      const [titleValue, setTitleValue] = useState<React.ReactNode>(defaultTitle);
+      const [subHeadValue, setSubHeadValue] = useState<SparklineInteractiveSubHead | undefined>(
+        defaultSubHead,
+      );
 
       const styles = useSparklineInteractiveHeaderStyles();
 
@@ -136,12 +136,7 @@ const SparklineInteractiveHeaderStable = memo(
         const prevLabel = valuesRef.current?.label;
 
         if (prevLabel !== label) {
-          // BAD: We only disabled this lint rule to enable eslint upgrade after this component was implemented. These apis should never be used.
-          // Usage in this component are known making this a high risk component. Contact team for more information.
-
-          labelRef.current?.setNativeProps({
-            text: label,
-          });
+          setLabelText(label);
           valuesRef.current = { ...valuesRef.current, label };
         }
       }, []);
@@ -151,17 +146,11 @@ const SparklineInteractiveHeaderStable = memo(
           const prevTitle = valuesRef.current?.title;
 
           if (prevTitle !== title && typeof title === 'string') {
-            // BAD: We only disabled this lint rule to enable eslint upgrade after this component was implemented. These apis should never be used.
-            // Usage in this component are known making this a high risk component. Contact team for more information.
-
-            titleRef.current?.setNativeProps({
-              text: title,
-              style: styles.title(title),
-            });
+            setTitleValue(title);
             valuesRef.current = { ...valuesRef.current, title };
           }
         },
-        [styles],
+        [],
       );
 
       const updateSubHead = useCallback(
@@ -169,31 +158,11 @@ const SparklineInteractiveHeaderStable = memo(
           const prevSubHead = valuesRef.current?.subHead;
 
           if (prevSubHead !== subHead) {
-            // BAD: We only disabled this lint rule to enable eslint upgrade after this component was implemented. These apis should never be used.
-            // Usage in this component are known making this a high risk component. Contact team for more information.
-
-            subHeadIconRef.current?.setNativeProps({
-              text: subheadIconSignMap[subHead.sign],
-              style: styles.subHeadIcon(subHead.variant),
-            });
-            // BAD: We only disabled this lint rule to enable eslint upgrade after this component was implemented. These apis should never be used.
-            // Usage in this component are known making this a high risk component. Contact team for more information.
-
-            subHeadRef.current?.setNativeProps({
-              text: interpolateSubHeadText(subHead),
-              style: styles.subHead(subHead.variant, subHead.accessoryText === undefined),
-            });
-            // BAD: We only disabled this lint rule to enable eslint upgrade after this component was implemented. These apis should never be used.
-            // Usage in this component are known making this a high risk component. Contact team for more information.
-
-            subHeadAccessoryRef.current?.setNativeProps({
-              text: subHead.accessoryText ?? '',
-              style: styles.subHeadAccessory(),
-            });
+            setSubHeadValue(subHead);
             valuesRef.current = { ...valuesRef.current, subHead };
           }
         },
-        [styles],
+        [],
       );
 
       // update is triggered from a parent component.
@@ -221,63 +190,44 @@ const SparklineInteractiveHeaderStable = memo(
         };
       }, [update]);
 
-      const label = !!defaultLabel && (
-        <TextInput
-          ref={labelRef}
-          defaultValue={defaultLabel}
-          editable={false}
-          pointerEvents="none"
-          style={styles.label}
-          testID="SparklineInteractiveHeaderLabel"
-        />
+      const label = !!labelText && (
+        <Text style={styles.label} testID="SparklineInteractiveHeaderLabel">
+          {labelText}
+        </Text>
       );
 
       const title = (
         <>
           <View>
-            {typeof defaultTitle === 'string' ? (
-              <TextInput
-                ref={titleRef}
-                defaultValue={defaultTitle}
-                editable={false}
-                pointerEvents="none"
-                style={styles.title(defaultTitle)}
-                testID="SparklineInteractiveHeaderTitle"
-              />
+            {typeof titleValue === 'string' ? (
+              <Text style={styles.title(titleValue)} testID="SparklineInteractiveHeaderTitle">
+                {titleValue}
+              </Text>
             ) : (
-              defaultTitle
+              titleValue
             )}
           </View>
-          {!!defaultSubHead && (
+          {!!subHeadValue && (
             <HStack accessible alignItems="center" padding={0}>
-              <TextInput
-                ref={subHeadIconRef}
-                defaultValue={subheadIconSignMap[defaultSubHead.sign]}
-                editable={false}
-                pointerEvents="none"
-                style={styles.subHeadIcon(defaultSubHead.variant)}
+              <Text
+                style={styles.subHeadIcon(subHeadValue.variant)}
                 testID="SparklineInteractiveHeaderSubHeadIcon"
-              />
-              <TextInput
-                ref={subHeadRef}
-                defaultValue={interpolateSubHeadText(defaultSubHead)}
-                editable={false}
-                pointerEvents="none"
+              >
+                {subheadIconSignMap[subHeadValue.sign]}
+              </Text>
+              <Text
                 style={styles.subHead(
-                  defaultSubHead.variant,
-                  defaultSubHead.accessoryText === undefined,
+                  subHeadValue.variant,
+                  subHeadValue.accessoryText === undefined,
                 )}
                 testID="SparklineInteractiveHeaderSubHead"
-              />
-              {!!defaultSubHead.accessoryText && (
-                <TextInput
-                  ref={subHeadAccessoryRef}
-                  defaultValue={defaultSubHead.accessoryText}
-                  editable={false}
-                  pointerEvents="none"
-                  style={styles.subHeadAccessory()}
-                  testID="SparklineInteractiveHeaderSubHead"
-                />
+              >
+                {interpolateSubHeadText(subHeadValue)}
+              </Text>
+              {!!subHeadValue.accessoryText && (
+                <Text style={styles.subHeadAccessory()} testID="SparklineInteractiveHeaderSubHead">
+                  {subHeadValue.accessoryText}
+                </Text>
               )}
             </HStack>
           )}

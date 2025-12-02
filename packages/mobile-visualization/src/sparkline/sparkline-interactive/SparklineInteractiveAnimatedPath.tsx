@@ -1,5 +1,4 @@
-import React, { memo, useCallback, useEffect, useMemo, useRef } from 'react';
-import type { Path } from 'react-native-svg';
+import React, { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { useValueChanges } from '@coinbase/cds-common/hooks/useValueChanges';
 import * as interpolate from 'd3-interpolate-path';
 
@@ -34,8 +33,8 @@ export const SparklineInteractiveAnimatedPath = memo(
   }: SparklineInteractiveAnimatedPathProps) => {
     const { isFallbackVisible, hideFallback, animateMinMaxIn, compact } =
       useSparklineInteractiveContext();
-    const pathRef = useRef<Path | null>(null);
-    const areaRef = useRef<Path | null>(null);
+    const [animatedPathD, setAnimatedPathD] = useState(initialPath ?? d);
+    const [animatedAreaD, setAnimatedAreaD] = useState(initialArea ?? area ?? '');
 
     // Only tween animation on period changes
     const { hasNotChanged: skipAnimation, addPreviousValue: addPreviousPeriod } =
@@ -67,24 +66,15 @@ export const SparklineInteractiveAnimatedPath = memo(
     const animationListener = useCallback(
       ({ value }: { value: number }) => {
         const val = Number(value.toFixed(4));
-        pathRef.current?.setNativeProps({
-          d: pathInterpolator(val),
-        });
-        areaRef.current?.setNativeProps({
-          d: areaInterpolator(val),
-        });
+        setAnimatedPathD(pathInterpolator(val));
+        setAnimatedAreaD(areaInterpolator(val));
       },
       [areaInterpolator, pathInterpolator],
     );
 
     const updatePathWithoutAnimation = useCallback(() => {
-      pathRef.current?.setNativeProps({
-        d: pathInterpolator(1),
-      });
-      areaRef.current?.setNativeProps({
-        d: areaInterpolator(1),
-      });
-
+      setAnimatedPathD(pathInterpolator(1));
+      setAnimatedAreaD(areaInterpolator(1));
       animateMinMaxIn.start();
     }, [animateMinMaxIn, areaInterpolator, pathInterpolator]);
 
@@ -132,16 +122,15 @@ export const SparklineInteractiveAnimatedPath = memo(
 
     return (
       <Sparkline
-        ref={pathRef}
         color={color}
         fillType={fillType}
         height={chartHeight}
-        path={initialPath}
+        path={animatedPathD}
         strokeType="solid"
         width={chartWidth}
         yAxisScalingFactor={yAxisScalingFactor}
       >
-        {!!area && <SparklineArea ref={areaRef} area={initialArea} />}
+        {!!area && <SparklineArea area={animatedAreaD} />}
       </Sparkline>
     );
   },
