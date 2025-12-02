@@ -8,7 +8,6 @@ import {
   isSelectOptionGroup,
   type SelectControlProps,
   type SelectOption,
-  type SelectOptionGroup,
   type SelectType,
 } from '../select/types';
 
@@ -160,6 +159,7 @@ const SelectChipControlComponent = memo(
     },
   ),
 );
+
 export const SelectChipControl = SelectChipControlComponent as <
   Type extends SelectType,
   SelectOptionValue extends string = string,

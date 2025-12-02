@@ -163,6 +163,7 @@ const SelectChipControlComponent = memo(
     },
   ),
 );
+
 export const SelectChipControl = SelectChipControlComponent as <
   Type extends SelectType,
   SelectOptionValue extends string = string,
