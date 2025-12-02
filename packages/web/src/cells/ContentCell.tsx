@@ -58,6 +58,8 @@ export type ContentCellBaseProps = Polymorphic.ExtendableProps<
      * 2. `padding` is `'var(--space-1) var(--space-2)'`
      * 3. `border-radius` is `'var(--borderRadius-0)'`
      * 4. subtitle uses `label1`
+     * 5. description uses `label2`
+     * 6. title wraps to 2 lines regardless of description content
      *
      * @default 'normal'
      */
@@ -78,7 +80,7 @@ export type ContentCellBaseProps = Polymorphic.ExtendableProps<
     subtitle?: React.ReactNode;
     /** React node to render title. Takes precedence over `title`. */
     titleNode?: React.ReactNode;
-    /** Title of content. Max 1 line, otherwise will truncate. */
+    /** Title of content. Up to 2 lines depending on spacing variant. */
     title?: React.ReactNode;
     /** Class names for the components */
     classNames?: {
@@ -174,6 +176,7 @@ export const ContentCell: ContentCellComponent = memo(
             ? listHeight
             : undefined;
       const subtitleFont = spacingVariant === 'condensed' ? 'label1' : 'label2';
+      const titleNumberOfLines = spacingVariant === 'condensed' ? 2 : hasDescriptionContent ? 1 : 2;
 
       return (
         <Cell
@@ -227,7 +230,8 @@ export const ContentCell: ContentCellComponent = memo(
                     className={classNames?.title}
                     display="block"
                     font="headline"
-                    overflow="truncate"
+                    numberOfLines={titleNumberOfLines}
+                    overflow={titleNumberOfLines === 1 ? 'truncate' : 'wrap'}
                     style={styles?.title}
                   >
                     {title}

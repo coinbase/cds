@@ -7,6 +7,7 @@ import { Box } from '../layout/Box';
 import { Fallback } from '../layout/Fallback';
 
 import { Cell } from './Cell';
+import { CellAccessory, type CellAccessoryType } from './CellAccessory';
 import type { CellMediaType } from './CellMedia';
 import type { ContentCellBaseProps } from './ContentCell';
 import { condensedInnerSpacing, condensedOuterSpacing } from './ListCell';
@@ -19,6 +20,10 @@ type ContentCellFallbackSpacingProps = Pick<
 
 export type ContentCellFallbackProps = FallbackRectWidthProps &
   ContentCellFallbackSpacingProps & {
+    /** Accessory to display at the end of the cell. */
+    accessory?: CellAccessoryType;
+    /** Custom accessory rendered at the end of the cell. Takes precedence over `accessory`. */
+    accessoryNode?: React.ReactNode;
     /** Display description shimmer. */
     description?: boolean;
     /** Display media shimmer with a shape according to type. */
@@ -36,6 +41,8 @@ const fullWidthStyle = { width: '100%' } as const;
 const floatStyle = { float: 'right', width: '30%' } as const;
 
 export const ContentCellFallback = memo(function ContentCellFallback({
+  accessory,
+  accessoryNode,
   title,
   description,
   media,
@@ -59,6 +66,8 @@ export const ContentCellFallback = memo(function ContentCellFallback({
 
   return (
     <Cell
+      accessory={accessory ? <CellAccessory paddingTop={0.5} type={accessory} /> : undefined}
+      accessoryNode={accessoryNode}
       borderRadius={spacingVariant === 'condensed' ? 0 : undefined}
       innerSpacing={
         innerSpacing ?? (spacingVariant === 'condensed' ? condensedInnerSpacing : undefined)
@@ -68,6 +77,14 @@ export const ContentCellFallback = memo(function ContentCellFallback({
       outerSpacing={
         outerSpacing ?? (spacingVariant === 'condensed' ? condensedOuterSpacing : undefined)
       }
+      styles={{
+        media: {
+          alignSelf: 'flex-start',
+        },
+        accessory: {
+          alignSelf: 'flex-start',
+        },
+      }}
     >
       <div style={fullWidthStyle}>
         {meta && (

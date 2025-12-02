@@ -286,6 +286,30 @@ describe('ContentCell', () => {
     expect(screen.getByRole('link')).toHaveAttribute('target', target);
   });
 
+  it('allows title to wrap to two lines in condensed spacing', () => {
+    render(
+      <DefaultThemeProvider>
+        <ContentCell description="Description" spacingVariant="condensed" title="Title" />
+      </DefaultThemeProvider>,
+    );
+
+    const title = screen.getByText('Title');
+
+    expect(title).toHaveStyle('--text-numberOfLines: 2');
+  });
+
+  it('limits title to a single line when description is present outside condensed spacing', () => {
+    render(
+      <DefaultThemeProvider>
+        <ContentCell description="Description" spacingVariant="normal" title="Title" />
+      </DefaultThemeProvider>,
+    );
+
+    const title = screen.getByText('Title');
+
+    expect(title).toHaveStyle('--text-numberOfLines: 1');
+  });
+
   it('fires onClick', () => {
     const onClickSpy = jest.fn();
 
