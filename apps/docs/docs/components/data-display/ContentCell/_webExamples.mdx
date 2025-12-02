@@ -1,5 +1,5 @@
 :::tip
-Prefer using `ListCell` for new experiences. `ContentCell` remains available for legacy surfaces that cannot yet migrate to `ListCell`, but new work should start with `ListCell`.
+Prefer using `ListCell` for new experiences. `ContentCell` remains available for legacy surfaces that cannot yet migrate to `ListCell`, but new work should start with `ListCell`. See [ContentCell with ListCell](../ListCell/#contentcell) for a full example.
 :::
 
 ### Basic usage
@@ -25,21 +25,28 @@ Prefer using `ListCell` for new experiences. `ContentCell` remains available for
     spacingVariant="condensed"
     media={<Avatar size="m" src={assets.eth.imageUrl} />}
     title="Condensed"
+    onClick={() => console.log('clicked')}
   />
 
   {/* Legacy spacing kept for backward compatibility */}
   <ContentCell
+    accessory="arrow"
     description="Legacy compact spacing"
+    meta="Updated 2m ago"
     spacingVariant="compact"
     media={<Avatar size="m" src={assets.eth.imageUrl} />}
     title="Compact (legacy)"
+    onClick={() => console.log('clicked')}
   />
 
   <ContentCell
+    accessory="arrow"
     description="Legacy normal spacing"
+    meta="Updated 2m ago"
     spacingVariant="normal"
     media={<Avatar size="m" src={assets.eth.imageUrl} />}
     title="Normal (legacy)"
+    onClick={() => console.log('clicked')}
   />
 </VStack>
 ```
