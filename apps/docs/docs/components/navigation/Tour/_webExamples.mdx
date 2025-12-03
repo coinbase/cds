@@ -1,7 +1,7 @@
-## Basics
-
 The Tour component guides users through your app with step-by-step coachmarks.
 You define tour steps with unique IDs and wrap target elements with `TourStep` components.
+
+## Basic usage
 
 ```jsx live
 function Example() {
@@ -292,7 +292,7 @@ function HideOverlayExample() {
           <Button compact onClick={() => startTour()}>
             Start tour
           </Button>
-          <Checkbox checked={hideOverlay} onChange={setHideOverlay}>
+          <Checkbox checked={hideOverlay} onChange={() => setHideOverlay((prev) => !prev)}>
             Hide overlay
           </Checkbox>
         </HStack>
@@ -487,48 +487,32 @@ You can disable this behavior if needed.
 
 ## Accessibility
 
-The Tour component renders as a modal dialog with proper ARIA attributes.
-You can provide additional accessibility labels.
+Always provide accessibility labels for close buttons using the `closeButtonAccessibilityLabel` prop and ensure coachmarks are navigable.
 
 ```jsx
-function AccessibilityExample() {
-  const [activeTourStep, setActiveTourStep] = useState(null);
+function AccessibleTourExample() {
+  const AccessibleStep = () => {
+    const { goNextTourStep, stopTour } = useTourContext();
 
-  return (
-    <Tour
-      activeTourStep={activeTourStep}
-      onChange={setActiveTourStep}
-      steps={tourSteps}
-      // Accessibility props
-      accessibilityLabel="Product tour walkthrough"
-      id="product-tour"
-    >
-      ...
-    </Tour>
-  );
+    return (
+      <Coachmark
+        action={
+          <Button
+            aria-label="Advances to the next step in the tour"
+            compact
+            onClick={goNextTourStep}
+          >
+            Next
+          </Button>
+        }
+        closeButtonAccessibilityLabel="Close tour and return to main content"
+        content="This coachmark has proper accessibility labels for screen readers."
+        onClose={stopTour}
+        title="Accessible Step"
+      />
+    );
+  };
 }
-```
-
-For coachmark steps, always provide accessibility labels for close buttons:
-
-```jsx
-const AccessibleStep = () => {
-  const { goNextTourStep, stopTour } = useTourContext();
-
-  return (
-    <Coachmark
-      action={
-        <Button compact onClick={goNextTourStep}>
-          Next
-        </Button>
-      }
-      closeButtonAccessibilityLabel="Close tour"
-      content="Step content here"
-      onClose={stopTour}
-      title="Step Title"
-    />
-  );
-};
 ```
 
 ## Callbacks
