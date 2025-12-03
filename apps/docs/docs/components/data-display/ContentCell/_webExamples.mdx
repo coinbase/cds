@@ -26,6 +26,11 @@ Prefer using `ListCell` for new experiences. `ContentCell` remains available for
     media={<Avatar size="m" src={assets.eth.imageUrl} />}
     title="Condensed"
     onClick={() => console.log('clicked')}
+    styles={{
+      media: {
+        paddingTop: 'var(--space-0_5)',
+      },
+    }}
   />
 
   {/* Legacy spacing kept for backward compatibility */}
@@ -37,6 +42,11 @@ Prefer using `ListCell` for new experiences. `ContentCell` remains available for
     media={<Avatar size="m" src={assets.eth.imageUrl} />}
     title="Compact (legacy)"
     onClick={() => console.log('clicked')}
+    styles={{
+      media: {
+        paddingTop: 'var(--space-0_5)',
+      },
+    }}
   />
 
   <ContentCell
@@ -47,6 +57,11 @@ Prefer using `ListCell` for new experiences. `ContentCell` remains available for
     media={<Avatar size="m" src={assets.eth.imageUrl} />}
     title="Normal (legacy)"
     onClick={() => console.log('clicked')}
+    styles={{
+      media: {
+        paddingTop: 'var(--space-0_5)',
+      },
+    }}
   />
 </VStack>
 ```
@@ -75,8 +90,17 @@ When `spacingVariant="condensed"`, `meta` content is aligend with the accessory.
   media={<Avatar alt="Sneezy" name="Sneezy" size="m" colorScheme="blue" />}
   accessory="disclosure"
   description="This example demonstrates the use of media (avatar) and an accessory indicator."
+  styles={{
+    media: {
+      paddingTop: 'var(--space-0_5)',
+    },
+  }}
 />
 ```
+
+:::tip
+Adjust the media `paddingTop` so the visual aligns with the text stack.
+:::
 
 ### Compact spacing (legacy)
 
