@@ -1,10 +1,10 @@
-import React, { useMemo } from 'react';
-import { ScrollView, View } from 'react-native';
-import type { ViewStyle } from 'react-native';
+import React, { createContext, useCallback, useContext, useMemo, useRef } from 'react';
+import { ScrollView } from 'react-native';
+import { gutter } from '@coinbase/cds-common/tokens/sizing';
 import type { PaddingProps } from '@coinbase/cds-common/types';
 
 import { useTheme } from '../hooks/useTheme';
-import type { BoxProps } from '../layout/Box';
+import type { BoxBaseProps, BoxProps } from '../layout/Box';
 import { Box } from '../layout/Box';
 import { Divider } from '../layout/Divider';
 import { VStack } from '../layout/VStack';
@@ -15,66 +15,90 @@ export type ExampleProps = {
   children: ExampleRenderChildren | React.ReactNode[] | React.ReactNode;
   inline?: boolean;
   title?: string;
+  hideDivider?: boolean;
   titlePadding?: PaddingProps;
 } & Omit<BoxProps, 'children'>;
 
-export const Example = ({ children, inline, title, titlePadding, ...props }: ExampleProps) => {
-  const childStyles = useMemo(() => {
-    const style: ViewStyle = { paddingTop: 12 };
+const ExampleContext = createContext<{
+  registerExample: () => number;
+}>({ registerExample: () => 0 });
 
-    if (inline) {
-      style.alignItems = 'flex-start';
-    }
+export const Example = ({
+  children,
+  inline,
+  title,
+  titlePadding,
+  hideDivider,
+  ...props
+}: ExampleProps) => {
+  const { registerExample } = useContext(ExampleContext);
 
-    return style;
-  }, [inline]);
+  // Register exactly once during first render
+  const exampleNumberRef = useRef<number>();
+  if (exampleNumberRef.current === undefined) {
+    exampleNumberRef.current = registerExample();
+  }
 
-  const content = (
-    <>
-      <Box background="bg" padding={2} paddingBottom={3} {...props}>
-        {!!title && (
-          <Text font="title3" {...titlePadding}>
-            {title}
-          </Text>
-        )}
-
-        {typeof children === 'function'
-          ? children()
-          : React.Children.map(children, (item, index) => (
-              <View key={index} style={childStyles}>
-                {item}
-              </View>
-            ))}
-      </Box>
-      <Divider />
-    </>
-  );
-
-  return content;
-};
-
-const Screen: React.FC<React.PropsWithChildren<unknown>> = ({ children }) => {
-  const theme = useTheme();
+  const exampleLabel = `Example ${exampleNumberRef.current}`;
 
   return (
-    <ScrollView
-      keyboardShouldPersistTaps="always"
-      persistentScrollbar={false}
-      showsVerticalScrollIndicator={false}
-      style={{ backgroundColor: theme.color.bg, height: '100%' }}
-      testID="mobile-playground-scrollview"
+    <VStack
+      accessibilityLabel={exampleLabel}
+      alignItems={inline ? 'flex-start' : undefined}
+      background="bg"
+      gap={2}
+      paddingBottom={3}
+      {...props}
     >
-      {children}
-      <Divider testID="mobile-playground-scrollview-end" />
-    </ScrollView>
-  );
-};
+      {!!title && (
+        <Text color="fgPrimary" font="title3" {...titlePadding}>
+          {title}
+        </Text>
+      )}
 
-export const ExampleScreen: React.FC<React.PropsWithChildren<unknown>> = ({ children }) => {
-  return (
-    <VStack testID="mobile-playground-screen">
-      <Divider />
-      <Screen>{children}</Screen>
+      {typeof children === 'function' ? children() : children}
+      {!hideDivider && <Divider background="bgLine" />}
     </VStack>
   );
 };
+
+export const ExampleScreen = React.forwardRef<ScrollView, React.PropsWithChildren<BoxBaseProps>>(
+  ({ children, ...boxProps }, ref) => {
+    const theme = useTheme();
+
+    // Use ref to track count - this avoids stale closure issues when multiple
+    // Example components mount simultaneously
+    const exampleCountRef = useRef(0);
+    const registerExample = useCallback(() => {
+      exampleCountRef.current += 1;
+      return exampleCountRef.current;
+    }, []);
+
+    const context = useMemo(() => ({ registerExample }), [registerExample]);
+    return (
+      <ExampleContext.Provider value={context}>
+        <Box
+          borderedTop
+          background="bg"
+          borderColor="bgLineHeavy"
+          paddingTop={2}
+          paddingX={gutter}
+          testID="mobile-playground-screen"
+          {...boxProps}
+        >
+          <ScrollView
+            ref={ref}
+            contentContainerStyle={{ flexGrow: 1 }}
+            keyboardShouldPersistTaps="always"
+            persistentScrollbar={false}
+            showsVerticalScrollIndicator={false}
+            style={{ backgroundColor: theme.color.bg, height: '100%' }}
+          >
+            {children}
+          </ScrollView>
+        </Box>
+      </ExampleContext.Provider>
+    );
+  },
+);
+ExampleScreen.displayName = 'ExampleScreen';

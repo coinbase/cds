@@ -13,7 +13,12 @@ import { Pressable } from '../../system/Pressable';
 import { Text } from '../../typography/Text';
 import { findClosestNonDisabledNodeIndex } from '../../utils/findClosestNonDisabledNodeIndex';
 
-import type { SelectControlProps, SelectOption, SelectType } from './Select';
+import {
+  isSelectOptionGroup,
+  type SelectControlProps,
+  type SelectOption,
+  type SelectType,
+} from './Select';
 
 // The height is smaller for the inside label variant since the label takes
 // up space above the input.
@@ -82,6 +87,52 @@ const DefaultSelectControlComponent = memo(
       const shouldShowCompactLabel = compact && label;
       const isMultiSelect = type === 'multi';
       const hasValue = value !== null && !(Array.isArray(value) && value.length === 0);
+
+      // Map of options to their values
+      // If multiple options share the same value, the first occurrence wins (matches native HTML select behavior)
+      const optionsMap = useMemo(() => {
+        const map = new Map<SelectOptionValue, SelectOption<SelectOptionValue>>();
+        const isDev = process.env.NODE_ENV !== 'production';
+
+        options.forEach((option, optionIndex) => {
+          if (isSelectOptionGroup<Type, SelectOptionValue>(option)) {
+            option.options.forEach((groupOption, groupOptionIndex) => {
+              if (groupOption.value !== null) {
+                const value = groupOption.value as SelectOptionValue;
+                // Only set if not already present (first wins)
+                if (!map.has(value)) {
+                  map.set(value, groupOption);
+                } else if (isDev) {
+                  console.warn(
+                    `[Select] Duplicate option value detected: "${value}". ` +
+                      `The first occurrence will be used for display. ` +
+                      `Found duplicate in group "${option.label}" at index ${groupOptionIndex}. ` +
+                      `First occurrence was at option index ${optionIndex}.`,
+                  );
+                }
+              }
+            });
+          } else {
+            // It's a single option
+            const singleOption = option as SelectOption<SelectOptionValue>;
+            if (singleOption.value !== null) {
+              const value = singleOption.value;
+              if (!map.has(value)) {
+                map.set(value, singleOption);
+              } else if (isDev) {
+                const existingOption = map.get(value);
+                console.warn(
+                  `[Select] Duplicate option value detected: "${value}". ` +
+                    `The first occurrence will be used for display. ` +
+                    `Found duplicate at option index ${optionIndex}. ` +
+                    `First occurrence label: "${existingOption?.label ?? existingOption?.value ?? 'unknown'}".`,
+                );
+              }
+            }
+          }
+        });
+        return map;
+      }, [options]);
 
       const controlPressableRef = useRef<HTMLButtonElement>(null);
       const valueNodeContainerRef = useRef<HTMLDivElement>(null);
@@ -171,11 +222,11 @@ const DefaultSelectControlComponent = memo(
         if (hasValue && isMultiSelect) {
           const valuesToShow =
             value.length <= maxSelectedOptionsToShow
-              ? (value as string[])
-              : (value as string[]).slice(0, maxSelectedOptionsToShow);
+              ? (value as SelectOptionValue[])
+              : (value as SelectOptionValue[]).slice(0, maxSelectedOptionsToShow);
           const optionsToShow = valuesToShow
-            .map((value) => options.find((option) => option.value === value))
-            .filter(Boolean) as SelectOption[];
+            .map((value) => optionsMap.get(value))
+            .filter((option): option is SelectOption<SelectOptionValue> => option !== undefined);
           return (
             <HStack flexWrap="wrap" gap={1}>
               {optionsToShow.map((option, index) => {
@@ -210,7 +261,7 @@ const DefaultSelectControlComponent = memo(
           );
         }
 
-        const option = options.find((option) => option.value === value);
+        const option = !isMultiSelect ? optionsMap.get(value as SelectOptionValue) : undefined;
         const label = option?.label ?? option?.description ?? option?.value ?? placeholder;
         const content = hasValue ? label : placeholder;
         return typeof content === 'string' ? (
@@ -229,7 +280,7 @@ const DefaultSelectControlComponent = memo(
       }, [
         hasValue,
         isMultiSelect,
-        options,
+        optionsMap,
         placeholder,
         value,
         maxSelectedOptionsToShow,

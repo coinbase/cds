@@ -26,7 +26,7 @@ const DefaultSelectOptionComponent = <
     styles,
     type,
     accessibilityRole,
-    background = type === 'single' && selected && value !== null ? 'bgAlternate' : 'bg',
+    background = 'transparent',
     ...props
   }: SelectOptionProps<Type, SelectOptionValue>,
   ref: React.Ref<View>,

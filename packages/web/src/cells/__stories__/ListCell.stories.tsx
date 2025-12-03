@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { assets, squareAssets } from '@coinbase/cds-common/internal/data/assets';
 import type { CellPriority } from '@coinbase/cds-common/types/CellBaseProps';
 
@@ -540,87 +540,97 @@ const PriorityContent = () => (
   </>
 );
 
-const WithAccessory = () => (
-  <>
-    <ListCell accessory="arrow" spacingVariant="condensed" title="Title" />
+const WithAccessory = () => {
+  const [isSelected, setIsSelected] = useState(false);
+  return (
+    <>
+      <ListCell accessory="arrow" spacingVariant="condensed" title="Title" />
+      <ListCell
+        accessory={isSelected ? 'selected' : 'unselected'}
+        description="Selected state uses the same space, no layout shift when selected"
+        onClick={() => setIsSelected((prev) => !prev)}
+        selected={isSelected}
+        spacingVariant="condensed"
+        title="Unselected placeholder"
+      />
 
-    <ListCell accessory="more" detail="Detail" spacingVariant="condensed" title="Title" />
+      <ListCell accessory="more" detail="Detail" spacingVariant="condensed" title="Title" />
 
-    <ListCell
-      accessory="selected"
-      description="Description"
-      spacingVariant="condensed"
-      title="Title"
-    />
+      <ListCell
+        accessory="selected"
+        description="Description"
+        spacingVariant="condensed"
+        title="Title"
+      />
 
-    <ListCell
-      accessory="arrow"
-      description="Description"
-      detail="Detail"
-      spacingVariant="condensed"
-      title="Title"
-    />
+      <ListCell
+        accessory="arrow"
+        description="Description"
+        detail="Detail"
+        spacingVariant="condensed"
+        title="Title"
+      />
 
-    <ListCell
-      selected
-      accessory="arrow"
-      description="Description"
-      detail="Detail"
-      spacingVariant="condensed"
-      title="Title"
-    />
+      <ListCell
+        selected
+        accessory="arrow"
+        description="Description"
+        detail="Detail"
+        spacingVariant="condensed"
+        title="Title"
+      />
 
-    <ListCell
-      disableSelectionAccessory
-      selected
-      accessory="arrow"
-      description="Description"
-      detail="Detail"
-      spacingVariant="condensed"
-      title="Title"
-    />
+      <ListCell
+        disableSelectionAccessory
+        selected
+        accessory="arrow"
+        description="Description"
+        detail="Detail"
+        spacingVariant="condensed"
+        title="Title"
+      />
 
-    <ListCell
-      accessory="more"
-      description="Description"
-      detail="Detail"
-      spacingVariant="condensed"
-      subdetail="Neutral"
-      title="Title"
-    />
+      <ListCell
+        accessory="more"
+        description="Description"
+        detail="Detail"
+        spacingVariant="condensed"
+        subdetail="Neutral"
+        title="Title"
+      />
 
-    <ListCell
-      accessory="selected"
-      description="Description"
-      detail="Detail"
-      spacingVariant="condensed"
-      subdetail="+Positive"
-      title="Title"
-      variant="positive"
-    />
+      <ListCell
+        accessory="selected"
+        description="Description"
+        detail="Detail"
+        spacingVariant="condensed"
+        subdetail="+Positive"
+        title="Title"
+        variant="positive"
+      />
 
-    <ListCell
-      accessory="arrow"
-      description="Description"
-      detail="Detail"
-      spacingVariant="condensed"
-      subdetail="-Negative"
-      title="Title"
-      variant="negative"
-    />
+      <ListCell
+        accessory="arrow"
+        description="Description"
+        detail="Detail"
+        spacingVariant="condensed"
+        subdetail="-Negative"
+        title="Title"
+        variant="negative"
+      />
 
-    <ListCell
-      accessory="arrow"
-      description="Description"
-      detail="Detail"
-      spacingVariant="condensed"
-      subdetail="Warning"
-      title="Title"
-      variant="warning"
-    />
-  </>
-);
-
+      <ListCell
+        accessory="arrow"
+        description="Description"
+        detail="Detail"
+        spacingVariant="condensed"
+        subdetail="Warning"
+        title="Title"
+        variant="warning"
+      />
+    </>
+  );
+};
 const WithMedia = () => (
   <>
     <ListCell media={<Icon active name="email" />} spacingVariant="condensed" title="Icon" />

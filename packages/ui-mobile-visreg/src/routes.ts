@@ -2,7 +2,6 @@
  * DO NOT MODIFY
  * Generated from scripts/codegen/main.ts
  */
-
 export const routes = [
   {
     key: 'Accordion',
@@ -35,9 +34,31 @@ export const routes = [
       require('@coinbase/cds-mobile/overlays/__stories__/AlertSingleAction.stories').default,
   },
   {
+    key: 'AlertVerticalActions',
+    getComponent: () =>
+      require('@coinbase/cds-mobile/overlays/__stories__/AlertVerticalActions.stories').default,
+  },
+  {
+    key: 'AlphaSelect',
+    getComponent: () =>
+      require('@coinbase/cds-mobile/alpha/select/__stories__/AlphaSelect.stories').default,
+  },
+  {
+    key: 'AlphaTabbedChips',
+    getComponent: () =>
+      require('@coinbase/cds-mobile/alpha/tabbed-chips/__stories__/AlphaTabbedChips.stories')
+        .default,
+  },
+  {
     key: 'AnimatedCaret',
     getComponent: () =>
       require('@coinbase/cds-mobile/motion/__stories__/AnimatedCaret.stories').default,
+  },
+  {
+    key: 'AreaChart',
+    getComponent: () =>
+      require('@coinbase/cds-mobile-visualization/chart/area/__stories__/AreaChart.stories')
+        .default,
   },
   {
     key: 'Avatar',
@@ -49,8 +70,28 @@ export const routes = [
       require('@coinbase/cds-mobile/buttons/__stories__/AvatarButton.stories').default,
   },
   {
+    key: 'Axis',
+    getComponent: () =>
+      require('@coinbase/cds-mobile-visualization/chart/axis/__stories__/Axis.stories').default,
+  },
+  {
     key: 'Banner',
     getComponent: () => require('@coinbase/cds-mobile/banner/__stories__/Banner.stories').default,
+  },
+  {
+    key: 'BannerActions',
+    getComponent: () =>
+      require('@coinbase/cds-mobile/banner/__stories__/BannerActions.stories').default,
+  },
+  {
+    key: 'BannerLayout',
+    getComponent: () =>
+      require('@coinbase/cds-mobile/banner/__stories__/BannerLayout.stories').default,
+  },
+  {
+    key: 'BarChart',
+    getComponent: () =>
+      require('@coinbase/cds-mobile-visualization/chart/bar/__stories__/BarChart.stories').default,
   },
   {
     key: 'Box',
@@ -90,9 +131,25 @@ export const routes = [
       require('@coinbase/cds-mobile/media/__stories__/CarouselMedia.stories').default,
   },
   {
+    key: 'CartesianChart',
+    getComponent: () =>
+      require('@coinbase/cds-mobile-visualization/chart/__stories__/CartesianChart.stories')
+        .default,
+  },
+  {
+    key: 'Chart',
+    getComponent: () =>
+      require('@coinbase/cds-mobile-visualization/chart/__stories__/Chart.stories').default,
+  },
+  {
     key: 'Checkbox',
     getComponent: () =>
       require('@coinbase/cds-mobile/controls/__stories__/Checkbox.stories').default,
+  },
+  {
+    key: 'CheckboxCell',
+    getComponent: () =>
+      require('@coinbase/cds-mobile/controls/__stories__/CheckboxCell.stories').default,
   },
   {
     key: 'Chip',
@@ -127,6 +184,11 @@ export const routes = [
     key: 'ContentCellFallback',
     getComponent: () =>
       require('@coinbase/cds-mobile/cells/__stories__/ContentCellFallback.stories').default,
+  },
+  {
+    key: 'ControlGroup',
+    getComponent: () =>
+      require('@coinbase/cds-mobile/controls/__stories__/ControlGroup.stories').default,
   },
   {
     key: 'DateInput',
@@ -208,10 +270,6 @@ export const routes = [
       require('@coinbase/cds-mobile/motion/__stories__/HintMotion.stories').default,
   },
   {
-    key: 'Icon',
-    getComponent: () => require('@coinbase/cds-mobile/icons/__stories__/Icon.stories').default,
-  },
-  {
     key: 'IconButton',
     getComponent: () =>
       require('@coinbase/cds-mobile/buttons/__stories__/IconButton.stories').default,
@@ -246,6 +304,12 @@ export const routes = [
       require('@coinbase/cds-mobile/gradients/__stories__/LinearGradient.stories').default,
   },
   {
+    key: 'LineChart',
+    getComponent: () =>
+      require('@coinbase/cds-mobile-visualization/chart/line/__stories__/LineChart.stories')
+        .default,
+  },
+  {
     key: 'Link',
     getComponent: () => require('@coinbase/cds-mobile/typography/__stories__/Link.stories').default,
   },
@@ -271,6 +335,10 @@ export const routes = [
     key: 'LottieStatusAnimation',
     getComponent: () =>
       require('@coinbase/cds-mobile/animation/__stories__/LottieStatusAnimation.stories').default,
+  },
+  {
+    key: 'MediaChip',
+    getComponent: () => require('@coinbase/cds-mobile/chips/__stories__/MediaChip.stories').default,
   },
   {
     key: 'ModalBackButton',
@@ -388,6 +456,12 @@ export const routes = [
       require('@coinbase/cds-mobile/system/__stories__/PatternError.stories').default,
   },
   {
+    key: 'PeriodSelector',
+    getComponent: () =>
+      require('@coinbase/cds-mobile-visualization/chart/__stories__/PeriodSelector.stories')
+        .default,
+  },
+  {
     key: 'Pictogram',
     getComponent: () =>
       require('@coinbase/cds-mobile/illustrations/__stories__/Pictogram.stories').default,
@@ -413,9 +487,20 @@ export const routes = [
       require('@coinbase/cds-mobile/visualizations/__stories__/ProgressCircle.stories').default,
   },
   {
+    key: 'RadioCell',
+    getComponent: () =>
+      require('@coinbase/cds-mobile/controls/__stories__/RadioCell.stories').default,
+  },
+  {
     key: 'RadioGroup',
     getComponent: () =>
       require('@coinbase/cds-mobile/controls/__stories__/RadioGroup.stories').default,
+  },
+  {
+    key: 'ReferenceLine',
+    getComponent: () =>
+      require('@coinbase/cds-mobile-visualization/chart/line/__stories__/ReferenceLine.stories')
+        .default,
   },
   {
     key: 'RemoteImage',
@@ -426,6 +511,11 @@ export const routes = [
     key: 'RemoteImageGroup',
     getComponent: () =>
       require('@coinbase/cds-mobile/media/__stories__/RemoteImageGroup.stories').default,
+  },
+  {
+    key: 'RollingNumber',
+    getComponent: () =>
+      require('@coinbase/cds-mobile/numbers/__stories__/RollingNumber.stories').default,
   },
   {
     key: 'SearchInput',

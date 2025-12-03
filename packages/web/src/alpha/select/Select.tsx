@@ -1,488 +1,48 @@
 import { forwardRef, memo, useImperativeHandle, useMemo, useRef, useState } from 'react';
-import type { SharedAccessibilityProps } from '@coinbase/cds-common';
 import { flip, useFloating, type UseFloatingReturn } from '@floating-ui/react-dom';
 
-import type { CellBaseProps } from '../../cells/Cell';
-import type { InputStackBaseProps } from '../../controls/InputStack';
 import { cx } from '../../cx';
-import type { AriaHasPopupType } from '../../hooks/useA11yControlledVisibility';
 import { useClickOutside } from '../../hooks/useClickOutside';
 import { useHasMounted } from '../../hooks/useHasMounted';
-import { Box, type BoxDefaultElement, type BoxProps } from '../../layout/Box';
+import { Box } from '../../layout/Box';
 import { Portal } from '../../overlays/Portal';
 import { modalContainerId } from '../../overlays/PortalProvider';
-import type { InteractableBlendStyles } from '../../system/Interactable';
-import type { PressableDefaultElement, PressableProps } from '../../system/Pressable';
 
 import { DefaultSelectAllOption } from './DefaultSelectAllOption';
 import { DefaultSelectControl } from './DefaultSelectControl';
 import { DefaultSelectDropdown } from './DefaultSelectDropdown';
 import { DefaultSelectEmptyDropdownContents } from './DefaultSelectEmptyDropdownContents';
 import { DefaultSelectOption } from './DefaultSelectOption';
+import { DefaultSelectOptionGroup } from './DefaultSelectOptionGroup';
+import { type SelectDropdownProps, type SelectProps, type SelectType } from './types';
+
+// Re-export all types for backward compatibility
+export type {
+  SelectBaseProps,
+  SelectControlComponent,
+  SelectControlProps,
+  SelectDropdownComponent,
+  SelectDropdownProps,
+  SelectEmptyDropdownContentComponent,
+  SelectEmptyDropdownContentProps,
+  SelectOption,
+  SelectOptionComponent,
+  SelectOptionCustomUI,
+  SelectOptionGroup,
+  SelectOptionGroupComponent,
+  SelectOptionGroupCustomUI,
+  SelectOptionGroupProps,
+  SelectOptionProps,
+  SelectProps,
+  SelectType,
+} from './types';
+
+// Re-export the type guard function
+export { isSelectOptionGroup } from './types';
 
 export const defaultAccessibilityRoles: SelectDropdownProps['accessibilityRoles'] = {
   dropdown: 'listbox',
   option: 'option',
-};
-
-export type SelectType = 'single' | 'multi';
-
-/**
- * Configuration for a single option in the Select component
- */
-export type SelectOption<SelectOptionValue extends string = string> = {
-  /** The value associated with this option */
-  value: SelectOptionValue | null;
-  /** The label displayed for the option */
-  label?: React.ReactNode;
-  /** Additional description text shown below the label */
-  description?: React.ReactNode;
-  /** Whether this option is disabled and cannot be selected */
-  disabled?: boolean;
-};
-
-/**
- * Props for individual option components within the Select dropdown
- */
-export type SelectOptionProps<
-  Type extends SelectType = 'single',
-  SelectOptionValue extends string = string,
-> = SelectOption<SelectOptionValue> &
-  Pick<CellBaseProps, 'accessory' | 'media' | 'end'> &
-  Omit<PressableProps<PressableDefaultElement>, 'value' | 'type' | 'onClick'> & {
-    /** Click handler for the option */
-    onClick?: (value: SelectOptionValue | null) => void;
-    /** Whether this is for single or multi-select */
-    type?: Type;
-    /** Whether this option is currently selected */
-    selected?: boolean;
-    /** Whether the option is in an indeterminate state (for multi-select) */
-    indeterminate?: boolean;
-    /** Whether to allow multiline text in the option */
-    multiline?: boolean;
-    /** ARIA role for the option element */
-    accessibilityRole?: string;
-    /** Whether to use compact styling for the option */
-    compact?: boolean;
-    /** Inline styles for the option */
-    style?: React.CSSProperties;
-    /** Custom styles for different parts of the option */
-    styles?: {
-      /** Styles for the option cell element */
-      optionCell?: React.CSSProperties;
-      /** Styles for the option content wrapper */
-      optionContent?: React.CSSProperties;
-      /** Styles for the option label element */
-      optionLabel?: React.CSSProperties;
-      /** Styles for the option description element */
-      optionDescription?: React.CSSProperties;
-      /** Styles for the select all divider element */
-      selectAllDivider?: React.CSSProperties;
-    };
-    /** CSS class name for the option */
-    className?: string;
-    /** Custom class names for different parts of the option */
-    classNames?: {
-      /** Class name for the option cell element */
-      optionCell?: string;
-      /** Class name for the option content wrapper */
-      optionContent?: string;
-      /** Class name for the option label element */
-      optionLabel?: string;
-      /** Class name for the option description element */
-      optionDescription?: string;
-      /** Class name for the select all divider element */
-      selectAllDivider?: string;
-    };
-  };
-
-/**
- * Custom UI to render for an option in the Select component options array
- */
-export type SelectOptionCustomUI<
-  Type extends SelectType = 'single',
-  SelectOptionValue extends string = string,
-> = Pick<SelectOptionProps<Type>, 'accessory' | 'media' | 'end'> & {
-  /** Custom component to render the option */
-  Component?: SelectOptionComponent<Type, SelectOptionValue>;
-};
-
-export type SelectOptionComponent<
-  Type extends SelectType = 'single',
-  SelectOptionValue extends string = string,
-> = React.FC<
-  SelectOptionProps<Type, SelectOptionValue> & {
-    ref?: React.Ref<HTMLButtonElement>;
-  }
->;
-
-export type SelectEmptyDropdownContentProps = {
-  label: string;
-  /** Custom styles for different parts of the empty dropdown content */
-  styles?: {
-    /** Styles for the container element */
-    emptyContentsContainer?: React.CSSProperties;
-    /** Styles for the text element */
-    emptyContentsText?: React.CSSProperties;
-  };
-  /** Custom class names for different parts of the empty dropdown content */
-  classNames?: {
-    /** Class name for the container element */
-    emptyContentsContainer?: string;
-    /** Class name for the text element */
-    emptyContentsText?: string;
-  };
-};
-
-export type SelectEmptyDropdownContentComponent = React.FC<SelectEmptyDropdownContentProps>;
-
-type SelectState<Type extends SelectType = 'single', SelectOptionValue extends string = string> = {
-  value: Type extends 'multi' ? SelectOptionValue[] : SelectOptionValue | null;
-  onChange: (
-    value: Type extends 'multi'
-      ? SelectOptionValue | SelectOptionValue[] | null
-      : SelectOptionValue | null,
-  ) => void;
-};
-
-/**
- * Props for the select control component (the clickable input that opens the dropdown)
- */
-export type SelectControlProps<
-  Type extends SelectType = 'single',
-  SelectOptionValue extends string = string,
-> = Pick<SharedAccessibilityProps, 'accessibilityLabel'> &
-  Omit<BoxProps<BoxDefaultElement>, 'borderWidth' | 'onChange'> &
-  Pick<
-    InputStackBaseProps,
-    'disabled' | 'startNode' | 'variant' | 'labelVariant' | 'testID' | 'endNode'
-  > &
-  SelectState<Type, SelectOptionValue> & {
-    /** Array of options to display in the select dropdown */
-    options: (SelectOption<SelectOptionValue> & SelectOptionCustomUI<Type, SelectOptionValue>)[];
-    /** Label displayed above the control */
-    label?: React.ReactNode;
-    /** Placeholder text displayed when no option is selected */
-    placeholder?: React.ReactNode;
-    /** Helper text displayed below the select */
-    helperText?: React.ReactNode;
-    /** Whether this is for single or multi-select */
-    type?: Type;
-    /** Whether the dropdown is currently open */
-    open: boolean;
-    /** Function to update the dropdown open state */
-    setOpen: (open: boolean | ((open: boolean) => boolean)) => void;
-    /** Maximum number of selected options to show before truncating */
-    maxSelectedOptionsToShow?: number;
-    /** Label to show for showcasing count of hidden selected options */
-    hiddenSelectedOptionsLabel?: string;
-    /** Accessibility label for each chip in a multi-select */
-    removeSelectedOptionAccessibilityLabel?: string;
-    /** Blend styles for control interactivity */
-    blendStyles?: InteractableBlendStyles;
-    /** ARIA haspopup attribute value */
-    ariaHaspopup?: AriaHasPopupType;
-    /** Whether to use compact styling for the control */
-    compact?: boolean;
-    /** Inline styles for the control */
-    style?: React.CSSProperties;
-    /** Custom styles for different parts of the control */
-    styles?: {
-      /** Styles for the start node element */
-      controlStartNode?: React.CSSProperties;
-      /** Styles for the input node element */
-      controlInputNode?: React.CSSProperties;
-      /** Styles for the value node element */
-      controlValueNode?: React.CSSProperties;
-      /** Styles for the label node element */
-      controlLabelNode?: React.CSSProperties;
-      /** Styles for the helper text node element */
-      controlHelperTextNode?: React.CSSProperties;
-      /** Styles for the end node element */
-      controlEndNode?: React.CSSProperties;
-    };
-    /** CSS class name for the control */
-    className?: string;
-    /** Custom class names for different parts of the control */
-    classNames?: {
-      /** Class name for the start node element */
-      controlStartNode?: string;
-      /** Class name for the input node element */
-      controlInputNode?: string;
-      /** Class name for the value node element */
-      controlValueNode?: string;
-      /** Class name for the label node element */
-      controlLabelNode?: string;
-      /** Class name for the helper text node element */
-      controlHelperTextNode?: string;
-      /** Class name for the end node element */
-      controlEndNode?: string;
-    };
-  };
-
-export type SelectControlComponent<
-  Type extends SelectType = 'single',
-  SelectOptionValue extends string = string,
-> = React.FC<
-  SelectControlProps<Type, SelectOptionValue> & {
-    ref?: React.Ref<HTMLElement>;
-  }
->;
-
-/**
- * Props for the dropdown component that contains the list of options
- */
-export type SelectDropdownProps<
-  Type extends SelectType = 'single',
-  SelectOptionValue extends string = string,
-> = SelectState<Type, SelectOptionValue> &
-  Pick<SharedAccessibilityProps, 'accessibilityLabel'> &
-  Omit<BoxProps<BoxDefaultElement>, 'onChange'> &
-  Pick<SelectOptionProps<Type>, 'accessory' | 'media' | 'end'> & {
-    /** Whether this is for single or multi-select */
-    type?: Type;
-    /** Array of options with their configuration and optional custom components */
-    options: (SelectOption<SelectOptionValue> & SelectOptionCustomUI<Type, SelectOptionValue>)[];
-    /** Whether the dropdown is currently open */
-    open: boolean;
-    /** Function to update the dropdown open state */
-    setOpen: (open: boolean | ((open: boolean) => boolean)) => void;
-    /** Label displayed above the dropdown */
-    label?: React.ReactNode;
-    /** Whether the dropdown is disabled */
-    disabled?: boolean;
-    /** Label for the "Select All" option in multi-select mode */
-    selectAllLabel?: string;
-    /** Label displayed when there are no options available */
-    emptyOptionsLabel?: string;
-    /** Label for the "Clear All" option in multi-select mode */
-    clearAllLabel?: string;
-    /** Whether to hide the "Select All" option in multi-select mode */
-    hideSelectAll?: boolean;
-    /** Reference to the control element for positioning */
-    controlRef: React.MutableRefObject<HTMLElement | null>;
-    /** Inline styles for the dropdown */
-    style?: React.CSSProperties;
-    /** Custom styles for dropdown elements */
-    styles?: {
-      /** Styles for the dropdown root container */
-      root?: React.CSSProperties;
-      /** Styles for individual options */
-      option?: React.CSSProperties;
-      /** Blend styles for option interactivity */
-      optionBlendStyles?: InteractableBlendStyles;
-      /** Styles for the option cell element */
-      optionCell?: React.CSSProperties;
-      /** Styles for the option content wrapper */
-      optionContent?: React.CSSProperties;
-      /** Styles for the option label element */
-      optionLabel?: React.CSSProperties;
-      /** Styles for the option description element */
-      optionDescription?: React.CSSProperties;
-      /** Styles for the select all divider element */
-      selectAllDivider?: React.CSSProperties;
-      /** Styles for the empty contents container element */
-      emptyContentsContainer?: React.CSSProperties;
-      /** Styles for the empty contents text element */
-      emptyContentsText?: React.CSSProperties;
-    };
-    /** CSS class name for the dropdown */
-    className?: string;
-    /** Custom class names for dropdown elements */
-    classNames?: {
-      /** Class name for the dropdown root container */
-      root?: string;
-      /** Class name for individual options */
-      option?: string;
-      /** Class name for the option cell element */
-      optionCell?: string;
-      /** Class name for the option content wrapper */
-      optionContent?: string;
-      /** Class name for the option label element */
-      optionLabel?: string;
-      /** Class name for the option description element */
-      optionDescription?: string;
-      /** Class name for the select all divider element */
-      selectAllDivider?: string;
-      /** Class name for the empty contents container element */
-      emptyContentsContainer?: string;
-      /** Class name for the empty contents text element */
-      emptyContentsText?: string;
-    };
-    /** Whether to use compact styling for the dropdown */
-    compact?: boolean;
-    /** Custom component to render individual options */
-    SelectOptionComponent?: SelectOptionComponent<Type, SelectOptionValue>;
-    /** Custom component to render the "Select All" option */
-    SelectAllOptionComponent?: SelectOptionComponent<Type, SelectOptionValue>;
-    /** Custom component to render when no options are available */
-    SelectEmptyDropdownContentsComponent?: SelectEmptyDropdownContentComponent;
-    /** Accessibility roles for dropdown and option elements */
-    accessibilityRoles?: {
-      /** ARIA role for the dropdown element */
-      dropdown?: AriaHasPopupType;
-      /** ARIA role for option elements */
-      option?: string;
-    };
-  };
-
-export type SelectDropdownComponent<
-  Type extends SelectType = 'single',
-  SelectOptionValue extends string = string,
-> = React.FC<
-  SelectDropdownProps<Type, SelectOptionValue> & {
-    ref?: React.Ref<HTMLElement>;
-  }
->;
-
-export type SelectBaseProps<
-  Type extends SelectType = 'single',
-  SelectOptionValue extends string = string,
-> = Pick<SharedAccessibilityProps, 'accessibilityLabel'> &
-  SelectState<Type, SelectOptionValue> &
-  Pick<
-    SelectControlProps<Type, SelectOptionValue>,
-    | 'label'
-    | 'placeholder'
-    | 'helperText'
-    | 'hiddenSelectedOptionsLabel'
-    | 'removeSelectedOptionAccessibilityLabel'
-    | 'startNode'
-    | 'variant'
-    | 'disabled'
-    | 'labelVariant'
-    | 'endNode'
-  > &
-  Pick<SelectOptionProps<Type>, 'accessory' | 'media' | 'end'> &
-  Pick<
-    SelectDropdownProps<Type>,
-    | 'selectAllLabel'
-    | 'emptyOptionsLabel'
-    | 'clearAllLabel'
-    | 'hideSelectAll'
-    | 'accessibilityRoles'
-  > & {
-    /** Whether the select allows single or multiple selections */
-    type?: Type;
-    /** Array of options to display in the select dropdown */
-    options: (SelectOption<SelectOptionValue> & SelectOptionCustomUI<Type, SelectOptionValue>)[];
-    /** Controlled open state of the dropdown */
-    open?: boolean;
-    /** Callback to update the open state */
-    setOpen?: (open: boolean | ((open: boolean) => boolean)) => void;
-    /** Whether clicking outside the dropdown should close it */
-    disableClickOutsideClose?: boolean;
-    /** Whether to use compact styling for the select */
-    compact?: boolean;
-    /** Initial open state when component mounts (uncontrolled mode) */
-    defaultOpen?: boolean;
-    /** Maximum number of selected options to show before truncating */
-    maxSelectedOptionsToShow?: number;
-    /** Custom component to render the dropdown container */
-    SelectDropdownComponent?: SelectDropdownComponent<Type, SelectOptionValue>;
-    /** Custom component to render the select control */
-    SelectControlComponent?: SelectControlComponent<Type, SelectOptionValue>;
-    /** Custom component to render individual options */
-    SelectOptionComponent?: SelectOptionComponent<Type, SelectOptionValue>;
-    /** Custom component to render the "Select All" option */
-    SelectAllOptionComponent?: SelectOptionComponent<Type, SelectOptionValue>;
-    /** Custom component to render when no options are available */
-    SelectEmptyDropdownContentsComponent?: SelectEmptyDropdownContentComponent;
-    /** Accessibility label for the control */
-    controlAccessibilityLabel?: string;
-    /** Inline styles for the root element */
-    style?: React.CSSProperties;
-    /** CSS class name for the root element */
-    className?: string;
-    /** Test ID for the root element */
-    testID?: string;
-  };
-
-/**
- * Props for the Select component
- */
-export type SelectProps<
-  Type extends SelectType = 'single',
-  SelectOptionValue extends string = string,
-> = SelectBaseProps<Type, SelectOptionValue> & {
-  /** Custom styles for different parts of the select */
-  styles?: {
-    /** Styles for the root container */
-    root?: React.CSSProperties;
-    /** Styles for the control element */
-    control?: React.CSSProperties;
-    /** Styles for the start node element */
-    controlStartNode?: React.CSSProperties;
-    /** Styles for the input node element */
-    controlInputNode?: React.CSSProperties;
-    /** Styles for the value node element */
-    controlValueNode?: React.CSSProperties;
-    /** Styles for the label node element */
-    controlLabelNode?: React.CSSProperties;
-    /** Styles for the helper text node element */
-    controlHelperTextNode?: React.CSSProperties;
-    /** Styles for the end node element */
-    controlEndNode?: React.CSSProperties;
-    /** Blend styles for control interactivity */
-    controlBlendStyles?: InteractableBlendStyles;
-    /** Styles for the dropdown container */
-    dropdown?: React.CSSProperties;
-    /** Styles for individual options */
-    option?: React.CSSProperties;
-    /** Styles for the option cell element */
-    optionCell?: React.CSSProperties;
-    /** Styles for the option content wrapper */
-    optionContent?: React.CSSProperties;
-    /** Styles for the option label element */
-    optionLabel?: React.CSSProperties;
-    /** Styles for the option description element */
-    optionDescription?: React.CSSProperties;
-    /** Blend styles for option interactivity */
-    optionBlendStyles?: InteractableBlendStyles;
-    /** Styles for the select all divider element */
-    selectAllDivider?: React.CSSProperties;
-    /** Styles for the empty contents container element */
-    emptyContentsContainer?: React.CSSProperties;
-    /** Styles for the empty contents text element */
-    emptyContentsText?: React.CSSProperties;
-  };
-  /** Custom class names for different parts of the select */
-  classNames?: {
-    /** Class name for the root container */
-    root?: string;
-    /** Class name for the control element */
-    control?: string;
-    /** Class name for the start node element */
-    controlStartNode?: string;
-    /** Class name for the input node element */
-    controlInputNode?: string;
-    /** Class name for the value node element */
-    controlValueNode?: string;
-    /** Class name for the label node element */
-    controlLabelNode?: string;
-    /** Class name for the helper text node element */
-    controlHelperTextNode?: string;
-    /** Class name for the end node element */
-    controlEndNode?: string;
-    /** Class name for the dropdown container */
-    dropdown?: string;
-    /** Class name for individual options */
-    option?: string;
-    /** Class name for the option cell element */
-    optionCell?: string;
-    /** Class name for the option content wrapper */
-    optionContent?: string;
-    /** Class name for the option label element */
-    optionLabel?: string;
-    /** Class name for the option description element */
-    optionDescription?: string;
-    /** Class name for the select all divider element */
-    selectAllDivider?: string;
-    /** Class name for the empty contents container element */
-    emptyContentsContainer?: string;
-    /** Class name for the empty contents text element */
-    emptyContentsText?: string;
-  };
 };
 
 export type SelectRef = HTMLElement &
@@ -535,7 +95,8 @@ const SelectBase = memo(
         SelectAllOptionComponent = DefaultSelectAllOption,
         SelectDropdownComponent = DefaultSelectDropdown,
         SelectControlComponent = DefaultSelectControl,
-        SelectEmptyDropdownContentsComponent = DefaultSelectEmptyDropdownContents as SelectEmptyDropdownContentComponent,
+        SelectEmptyDropdownContentsComponent = DefaultSelectEmptyDropdownContents,
+        SelectOptionGroupComponent = DefaultSelectOptionGroup,
         style,
         styles,
         className,
@@ -561,6 +122,7 @@ const SelectBase = memo(
       const { refs, floatingStyles } = useFloating({
         open,
         middleware: [flip()],
+        placement: 'bottom-start',
       });
 
       useClickOutside(() => !disableClickOutsideClose && setOpen(false), {
@@ -626,6 +188,7 @@ const SelectBase = memo(
           selectAllDivider: styles?.selectAllDivider,
           emptyContentsContainer: styles?.emptyContentsContainer,
           emptyContentsText: styles?.emptyContentsText,
+          optionGroup: styles?.optionGroup,
         }),
         [
           floatingStyles,
@@ -639,6 +202,7 @@ const SelectBase = memo(
           styles?.selectAllDivider,
           styles?.emptyContentsContainer,
           styles?.emptyContentsText,
+          styles?.optionGroup,
         ],
       );
 
@@ -653,6 +217,7 @@ const SelectBase = memo(
           selectAllDivider: classNames?.selectAllDivider,
           emptyContentsContainer: classNames?.emptyContentsContainer,
           emptyContentsText: classNames?.emptyContentsText,
+          optionGroup: classNames?.optionGroup,
         }),
         [
           classNames?.dropdown,
@@ -664,6 +229,7 @@ const SelectBase = memo(
           classNames?.selectAllDivider,
           classNames?.emptyContentsContainer,
           classNames?.emptyContentsText,
+          classNames?.optionGroup,
         ],
       );
 
@@ -717,6 +283,7 @@ const SelectBase = memo(
               SelectAllOptionComponent={SelectAllOptionComponent}
               SelectEmptyDropdownContentsComponent={SelectEmptyDropdownContentsComponent}
               SelectOptionComponent={SelectOptionComponent}
+              SelectOptionGroupComponent={SelectOptionGroupComponent}
               accessibilityLabel={accessibilityLabel}
               accessibilityRoles={accessibilityRoles}
               accessory={accessory}

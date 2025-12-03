@@ -1,10 +1,9 @@
 import React from 'react';
-import { View } from 'react-native';
 import { assets } from '@coinbase/cds-common/internal/data/assets';
 import { NoopFn } from '@coinbase/cds-common/utils/mockUtils';
 
 import { IconButton } from '../../buttons';
-import { ExampleScreen } from '../../examples/ExampleScreen';
+import { Example, ExampleScreen } from '../../examples/ExampleScreen';
 import { LogoMark } from '../../icons';
 import { SpotSquare } from '../../illustrations';
 import { Box, VStack } from '../../layout';
@@ -21,8 +20,8 @@ const exampleProps = {
 
 const PageHeaderInErrorEmptyState = () => {
   return (
-    <View>
-      <ExampleScreen>
+    <ExampleScreen>
+      <Example hideDivider height="100%" title="Error/Empty State">
         <VStack gap={0} width="100%">
           <PageHeader background="bg" position="sticky" start={exampleProps.logoMark2} top="0" />
           <Box background="bgPrimaryWash">
@@ -44,8 +43,8 @@ const PageHeaderInErrorEmptyState = () => {
             </VStack>
           </Box>
         </VStack>
-      </ExampleScreen>
-    </View>
+      </Example>
+    </ExampleScreen>
   );
 };
 

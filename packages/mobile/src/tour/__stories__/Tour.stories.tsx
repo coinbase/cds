@@ -1,7 +1,6 @@
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { Button as NativeButton, Image } from 'react-native';
-import type { View } from 'react-native';
-import { ScrollView } from 'react-native-gesture-handler';
+import type { ScrollView, View } from 'react-native';
 import { ethBackground } from '@coinbase/cds-common/internal/data/assets';
 import { useTourContext } from '@coinbase/cds-common/tour/TourContext';
 import type { TourStepValue } from '@coinbase/cds-common/tour/useTour';
@@ -219,157 +218,18 @@ const TourStory = () => {
   );
 
   return (
-    <Tour activeTourStep={activeTourStep} onChange={setActiveTourStep} steps={tourSteps}>
-      <ScrollView ref={scrollViewRef} style={{ flex: 1 }}>
-        <ExampleScreen>
-          <Example>
-            <TourExamples
-              ids={['step1', 'step2', 'step3', 'step4']}
-              step2Ref={step2Ref}
-              step3Ref={step3Ref}
-              step4Ref={step4Ref}
-            />
-          </Example>
-        </ExampleScreen>
-      </ScrollView>
-    </Tour>
-  );
-};
-
-export const TourWithStringLiteralIdStory = () => {
-  const [activeTourStep, setActiveTourStep] = useState<TourStepValue<StepId> | null>(null);
-  const scrollViewRef = useRef<ScrollView>(null);
-  const step2Ref = useRef<View>(null);
-  const step3Ref = useRef<View>(null);
-  const step4Ref = useRef<View>(null);
-
-  const complexIdTourSteps: TourStepValue<StepId>[] = useMemo(
-    () => [
-      {
-        id: 'step-id-1',
-        onBeforeActive: () => console.log('step1 before'),
-        Component: StepOne,
-      },
-      {
-        id: 'step-id-2',
-        arrowColor: 'yellow',
-        onBeforeActive: async () => {
-          console.log('step2 before');
-          await scrollIntoView(scrollViewRef, step2Ref);
-        },
-
-        Component: () => {
-          const { goNextTourStep, stopTour } = useTourContext();
-          return (
-            <Coachmark
-              action={
-                <Button compact onPress={goNextTourStep} variant="secondary">
-                  Next
-                </Button>
-              }
-              closeButtonAccessibilityLabel="Close"
-              content={
-                <VStack gap={2}>
-                  <Text color="fgMuted" font="caption">
-                    50%
-                  </Text>
-                  <ProgressBar progress={0.5} />
-                  <Text font="body">
-                    Add up to 3 lines of body copy. Deliver your message with clarity and impact
-                  </Text>
-                </VStack>
-              }
-              media={
-                <Image
-                  accessibilityIgnoresInvertColors
-                  source={{
-                    uri: ethBackground,
-                  }}
-                  style={{ width: '100%', height: 150 }}
-                />
-              }
-              onClose={stopTour}
-              title="My second step"
-            />
-          );
-        },
-      },
-      {
-        id: 'step-id-3',
-        onBeforeActive: async () => {
-          console.log('step3 before');
-          await scrollIntoView(scrollViewRef, step3Ref);
-        },
-        Component: () => {
-          const { stopTour, goNextTourStep, goPreviousTourStep } = useTourContext();
-          return (
-            <Coachmark
-              action={
-                <HStack gap={1}>
-                  <Button compact onPress={goPreviousTourStep} variant="secondary">
-                    Back
-                  </Button>
-                  <Button compact onPress={goNextTourStep} variant="secondary">
-                    Next
-                  </Button>
-                  <Button compact onPress={stopTour} variant="secondary">
-                    Done
-                  </Button>
-                </HStack>
-              }
-              content="Add up to 3 lines of body copy. Deliver your message with clarity and impact"
-              title="My third step"
-              width={350}
-            />
-          );
-        },
-      },
-      {
-        id: 'step-id-4',
-        onBeforeActive: async () => {
-          console.log('step4 before');
-          await scrollIntoView(scrollViewRef, step4Ref);
-        },
-        Component: () => {
-          const { stopTour, goPreviousTourStep } = useTourContext();
-          return (
-            <Coachmark
-              action={
-                <HStack gap={1}>
-                  <Button compact onPress={goPreviousTourStep} variant="secondary">
-                    Back
-                  </Button>
-                  <Button compact onPress={stopTour} variant="secondary">
-                    Done
-                  </Button>
-                </HStack>
-              }
-              content="Add up to 3 lines of body copy. Deliver your message with clarity and impact"
-              title="My last step"
-              width={250}
-            />
-          );
-        },
-      },
-    ],
-    [],
-  );
-
-  return (
-    <Tour activeTourStep={activeTourStep} onChange={setActiveTourStep} steps={complexIdTourSteps}>
-      <ScrollView ref={scrollViewRef} style={{ flex: 1 }}>
-        <ExampleScreen>
-          <Example>
-            <TourExamples
-              ids={complexIdTourSteps.map((s) => s.id)}
-              step2Ref={step2Ref}
-              step3Ref={step3Ref}
-              step4Ref={step4Ref}
-            />
-          </Example>
-        </ExampleScreen>
-      </ScrollView>
-    </Tour>
+    <ExampleScreen ref={scrollViewRef}>
+      <Example title="Tour Example">
+        <Tour activeTourStep={activeTourStep} onChange={setActiveTourStep} steps={tourSteps}>
+          <TourExamples
+            ids={['step1', 'step2', 'step3', 'step4']}
+            step2Ref={step2Ref}
+            step3Ref={step3Ref}
+            step4Ref={step4Ref}
+          />
+        </Tour>
+      </Example>
+    </ExampleScreen>
   );
 };
 

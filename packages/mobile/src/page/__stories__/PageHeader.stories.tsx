@@ -1,10 +1,9 @@
 import React from 'react';
-import { View } from 'react-native';
 import { assets } from '@coinbase/cds-common/internal/data/assets';
 import { NoopFn } from '@coinbase/cds-common/utils/mockUtils';
 
 import { Button, ButtonGroup, IconButton } from '../../buttons';
-import { ExampleScreen } from '../../examples/ExampleScreen';
+import { Example, ExampleScreen } from '../../examples/ExampleScreen';
 import { useTheme } from '../../hooks/useTheme';
 import { LogoMark } from '../../icons';
 import { Box, Divider, HStack, VStack } from '../../layout';
@@ -127,8 +126,8 @@ const PageHeaderScreen = () => {
   };
 
   return (
-    <View>
-      <ExampleScreen>
+    <ExampleScreen>
+      <Example title="PageHeader Variants">
         <VStack gap={3}>
           <PageHeader
             background="bgPrimaryWash"
@@ -213,8 +212,8 @@ const PageHeaderScreen = () => {
             title={exampleProps.intermediary2}
           />
         </VStack>
-      </ExampleScreen>
-    </View>
+      </Example>
+    </ExampleScreen>
   );
 };
 

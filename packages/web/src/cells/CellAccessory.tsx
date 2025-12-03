@@ -7,7 +7,7 @@ import { isRtl } from '../utils/isRtl';
 
 export const cellAccessoryTestId = 'accessory';
 
-export type CellAccessoryType = 'arrow' | 'more' | 'selected';
+export type CellAccessoryType = 'arrow' | 'more' | 'selected' | 'unselected';
 
 export type CellAccessoryBaseProps = PaddingProps & {
   /** Type of accessory to display at the end. */
@@ -37,6 +37,10 @@ export const CellAccessory = memo(
 
     if (type === 'selected') {
       icon = <Icon color="fgPrimary" name="checkmark" size="s" />;
+    }
+
+    if (type === 'unselected') {
+      icon = <Icon name="checkmark" size="s" style={{ opacity: 0 }} />;
     }
 
     if (!icon) {

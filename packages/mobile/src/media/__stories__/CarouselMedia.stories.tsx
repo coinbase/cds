@@ -1,5 +1,4 @@
 import React, { memo, useCallback, useMemo, useRef } from 'react';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { useIndexCounter } from '@coinbase/cds-common/hooks/useIndexCounter';
 import { svgs } from '@coinbase/cds-common/internal/data/assets';
 
@@ -148,15 +147,13 @@ const DynamicItemsExample = () => {
 
 const CarouselScreen = () => {
   return (
-    <SafeAreaProvider>
-      <ExampleScreen>
-        <ProgressBarsExample />
-        <DynamicItemsExample />
-        <SimpleExample />
-        <UpdateOnMountExample />
-        <TriggerViaButton />
-      </ExampleScreen>
-    </SafeAreaProvider>
+    <ExampleScreen>
+      <ProgressBarsExample />
+      <DynamicItemsExample />
+      <SimpleExample />
+      <UpdateOnMountExample />
+      <TriggerViaButton />
+    </ExampleScreen>
   );
 };
 

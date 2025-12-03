@@ -1,9 +1,8 @@
 import React from 'react';
-import { View } from 'react-native';
 import { NoopFn } from '@coinbase/cds-common/utils/mockUtils';
 
 import { Button, ButtonGroup } from '../../buttons';
-import { ExampleScreen } from '../../examples/ExampleScreen';
+import { Example, ExampleScreen } from '../../examples/ExampleScreen';
 import { Icon } from '../../icons';
 import { Divider } from '../../layout';
 import { PageFooter } from '../PageFooter';
@@ -31,15 +30,15 @@ const exampleProps = {
 
 const PageFooterScreen = () => {
   return (
-    <View>
-      <ExampleScreen>
+    <ExampleScreen paddingX={0}>
+      <Example gap={0}>
         <PageFooter action={exampleProps.endButton} background="bgPrimaryWash" />
         <Divider />
         <PageFooter action={exampleProps.endButtons} />
         <Divider />
         <PageFooter action={exampleProps.endButtons2} />
-      </ExampleScreen>
-    </View>
+      </Example>
+    </ExampleScreen>
   );
 };
 export default PageFooterScreen;

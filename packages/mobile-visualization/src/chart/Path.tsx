@@ -50,7 +50,7 @@ export type PathBaseProps = {
   /**
    * Opacity for the path stroke.
    */
-  strokeOpacity?: number;
+  strokeOpacity?: AnimatedProp<number>;
 };
 
 export type PathProps = PathBaseProps &

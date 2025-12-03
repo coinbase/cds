@@ -4,13 +4,7 @@ This is a custom EsLint plugin for use within this repo only; it is not publishe
 
 For simplicity there is no build process since the repo root depends on this lib for its lint task. Otherwise, that vital task would be blocked while this project builds.
 
-The plugin encapsulates two rules at this time:
-
-### import-autofix
-
-A fixable rule that applies Coinbase-opinionated styles to a modules import statements.
-This rule copied from internal CB repositories during CDS's transition to open source.
-Eventually, this rule could be moved to a new @coinbase open source package
+The plugin encapsulates the following rules:
 
 ### safely-spread-props
 
@@ -19,3 +13,11 @@ CDS components often compose together type interfaces from many other components
 We have encounted situations where developers accidentally forgot to descture a prop intended for a different element and it ended up passed to the wrong component via the spread props.
 
 At this time this rule is intended to only be used within this repo in the cds-web and cds-modile packages. However, after a trial period we may consider opening it up to a wider audience.
+
+### example-screen-default
+
+Ensures every Storybook file default-exports a component whose rendered output is rooted in `ExampleScreen`. This keeps documentation consistent and aligns with the patterns showcased in the mobile package.
+
+### example-screen-contains-example
+
+Validates that any `ExampleScreen` Storybook story ultimately renders at least one `<Example>` component. The rule looks through components defined in the same file to make sure examples exist even when they are encapsulated in helper components.

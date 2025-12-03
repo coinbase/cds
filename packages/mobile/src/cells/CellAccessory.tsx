@@ -5,7 +5,7 @@ import type { PaddingProps } from '@coinbase/cds-common/types';
 import { Icon } from '../icons/Icon';
 import { Box } from '../layout/Box';
 
-export type CellAccessoryType = 'arrow' | 'more' | 'selected';
+export type CellAccessoryType = 'arrow' | 'more' | 'selected' | 'unselected';
 
 export type CellAccessoryProps = PaddingProps & {
   /** Type of accessory to display at the end. */
@@ -29,6 +29,10 @@ export const CellAccessory = memo(function CellAccessory({ type, ...props }: Cel
 
   if (type === 'selected') {
     icon = <Icon color="fgPrimary" name="checkmark" size="s" />;
+  }
+
+  if (type === 'unselected') {
+    icon = <Icon name="checkmark" size="s" style={{ opacity: 0 }} />;
   }
 
   if (!icon) {

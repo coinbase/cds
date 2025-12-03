@@ -2,345 +2,207 @@ import React from 'react';
 import { loremIpsum } from '@coinbase/cds-common/internal/data/loremIpsum';
 import { NoopFn as noopFn } from '@coinbase/cds-common/utils/mockUtils';
 
-import { Button } from '../../buttons';
 import { Example, ExampleScreen } from '../../examples/ExampleScreen';
-import { Spacer, VStack } from '../../layout';
-import { Link } from '../../typography/Link';
+import { VStack } from '../../layout';
 import { Text } from '../../typography/Text';
-import type { MobileBannerProps } from '../Banner';
 import { Banner } from '../Banner';
 
-const primaryAction = <Link to="https://www.coinbase.com">Primary</Link>;
-const secondaryAction = <Link to="https://www.coinbase.com">Secondary</Link>;
 const shortMessage = 'Lorem ipsum dolar sit amet, consecturo.';
-const longMessage = `${loremIpsum}${loremIpsum}${loremIpsum}${loremIpsum}${loremIpsum}`;
+const longMessage = `${loremIpsum.slice(0, 200)}...`;
 const label = 'Last updated today at 3:33pm';
-
-type ExampleProps = Pick<
-  MobileBannerProps,
-  | 'title'
-  | 'children'
-  | 'marginX'
-  | 'startIcon'
-  | 'startIconActive'
-  | 'startIconAccessibilityLabel'
-  | 'closeAccessibilityLabel'
->;
-
-const exampleProps: ExampleProps = {
-  title: 'Failure Message',
-  startIcon: 'error',
-  startIconActive: true,
-  startIconAccessibilityLabel: 'Error',
-  closeAccessibilityLabel: 'Close',
-};
-
-const examplePropsWithOffset: ExampleProps = {
-  ...exampleProps,
-  marginX: -2,
-  children: 'Lorem ipsum dolar sit amet',
-};
-
-const borderRadiusValues = [0, 200, 400] as const;
-
-const styleProps: MobileBannerProps[] = [
-  {
-    variant: 'warning',
-    title: 'Warning message',
-    startIcon: 'warning',
-    startIconActive: true,
-    children: shortMessage,
-    startIconAccessibilityLabel: 'Warning',
-    closeAccessibilityLabel: 'Close',
-  },
-  {
-    variant: 'informational',
-    title: 'Informative message',
-    startIcon: 'info',
-    startIconActive: true,
-    children: shortMessage,
-    startIconAccessibilityLabel: 'Information',
-    closeAccessibilityLabel: 'Close',
-  },
-  {
-    variant: 'promotional',
-    title: 'Promotional message',
-    startIcon: 'info',
-    startIconActive: true,
-    children: shortMessage,
-    startIconAccessibilityLabel: 'Information',
-    closeAccessibilityLabel: 'Close',
-  },
-  {
-    variant: 'error',
-    title: 'Error message',
-    startIcon: 'error',
-    startIconActive: true,
-    children: shortMessage,
-    startIconAccessibilityLabel: 'Error',
-    closeAccessibilityLabel: 'Close',
-  },
-];
-
-const Banners = ({ title, props }: { title: string; props: MobileBannerProps }) => {
-  return (
-    <VStack gap={2}>
-      <Text font="title1">{title}</Text>
-      <Banner {...props} />
-      <Text font="title1">{title} with showDismiss</Text>
-      <Banner {...props} showDismiss onClose={noopFn} title={`${title} with showDismiss`} />
-      <Text font="title1">{title} with Action</Text>
-      <Banner {...props} primaryAction={primaryAction} />
-      <Text font="title1">{title} with multiple Actions</Text>
-      <Banner {...props} primaryAction={primaryAction} secondaryAction={secondaryAction} />
-      <Text font="title1">Primary Action is not a Link</Text>
-      <Banner {...props} primaryAction={<Button compact>Primary Action</Button>} />
-      <Text font="title1">Secondary Action is not a Link</Text>
-      <Banner {...props} secondaryAction={<Button compact>Secondary Action</Button>} />
-      <Text font="title1">{title} Long Text with Action</Text>
-      <Banner
-        {...props}
-        primaryAction={primaryAction}
-        title={`${title} Long Text with Action. ${longMessage}`}
-      >
-        {longMessage}
-      </Banner>
-      <Text font="title1">{title} with Action and showDismiss</Text>
-      <Banner
-        {...props}
-        showDismiss
-        onClose={noopFn}
-        primaryAction={primaryAction}
-        title={`${title} with Action and showDismiss`}
-      />
-      <Text font="title1">{title} Long Text and showDismiss</Text>
-      <Banner
-        {...props}
-        showDismiss
-        onClose={noopFn}
-        title={`${title} Long Text and showDismiss. ${longMessage}`}
-      >
-        {longMessage}
-      </Banner>
-      <Text font="title1">{title} Long Text with Action and showDismiss</Text>
-      <Banner
-        {...props}
-        showDismiss
-        onClose={noopFn}
-        primaryAction={primaryAction}
-        secondaryAction={secondaryAction}
-        title={`${title} Long Text with Action and showDismiss. ${longMessage}`}
-      >
-        {longMessage}
-      </Banner>
-    </VStack>
-  );
-};
-
-const All = () => {
-  return (
-    <VStack gap={2}>
-      {styleProps.map((props) => {
-        return (
-          <VStack key={`styles-${props.variant}`} gap={2}>
-            <Banners props={props} title={`Contextual ${props.variant}`} />
-            <Banners
-              props={{ ...props, styleVariant: 'inline' }}
-              title={`Inline ${props.variant}`}
-            />
-            <Banners
-              props={{ ...props, label, styleVariant: 'global' }}
-              title={`Global ${props.variant}`}
-            />
-          </VStack>
-        );
-      })}
-    </VStack>
-  );
-};
 
 const BannerScreen = () => {
   return (
     <ExampleScreen>
-      <Example title="Banners">
-        <All />
-      </Example>
-      <Example title="With Link">
+      <Example title="Variants">
         <VStack gap={2}>
-          <Text font="title1">Global</Text>
           <Banner
-            showDismiss
             startIconActive
             closeAccessibilityLabel="Close"
-            primaryAction={primaryAction}
-            secondaryAction={secondaryAction}
+            startIcon="warning"
+            startIconAccessibilityLabel="Warning"
+            title="Warning message"
+            variant="warning"
+          >
+            {shortMessage}
+          </Banner>
+          <Banner
+            startIconActive
+            closeAccessibilityLabel="Close"
+            startIcon="info"
+            startIconAccessibilityLabel="Information"
+            title="Informative message"
+            variant="informational"
+          >
+            {shortMessage}
+          </Banner>
+          <Banner
+            startIconActive
+            closeAccessibilityLabel="Close"
+            startIcon="info"
+            startIconAccessibilityLabel="Information"
+            title="Promotional message"
+            variant="promotional"
+          >
+            {shortMessage}
+          </Banner>
+          <Banner
+            startIconActive
+            closeAccessibilityLabel="Close"
             startIcon="error"
             startIconAccessibilityLabel="Error"
-            styleVariant="global"
-            title={`Global ${shortMessage}`}
+            title="Error message"
             variant="error"
           >
-            <Text font="label2">
-              {shortMessage}
-              <Link to="https://www.coinbase.com"> Learn more</Link>
-            </Text>
+            {shortMessage}
           </Banner>
-          <Text font="title1">Inline</Text>
+        </VStack>
+      </Example>
+
+      <Example title="Style Variants">
+        <VStack gap={2}>
+          <Text font="headline">Contextual (default)</Text>
           <Banner
-            showDismiss
             startIconActive
             closeAccessibilityLabel="Close"
-            primaryAction={primaryAction}
-            secondaryAction={secondaryAction}
+            startIcon="info"
+            startIconAccessibilityLabel="Information"
+            title="Contextual banner"
+            variant="informational"
+          >
+            Used for messages within a specific context or section
+          </Banner>
+
+          <Text font="headline">Inline</Text>
+          <Banner
+            startIconActive
+            closeAccessibilityLabel="Close"
             startIcon="warning"
             startIconAccessibilityLabel="Warning"
             styleVariant="inline"
-            title={`Inline ${shortMessage}`}
+            title="Inline banner"
             variant="warning"
           >
-            <Link font="label2" to="https://www.coinbase.com">
-              Learn more
-            </Link>
+            Used for inline messages with reduced visual emphasis
           </Banner>
-          <Text font="title1">Contextual</Text>
+
+          <Text font="headline">Global</Text>
           <Banner
-            showDismiss
             startIconActive
             closeAccessibilityLabel="Close"
             label={label}
-            primaryAction={primaryAction}
-            secondaryAction={secondaryAction}
+            startIcon="error"
+            startIconAccessibilityLabel="Error"
+            styleVariant="global"
+            title="Global banner"
+            variant="error"
+          >
+            Used for system-wide notifications and alerts
+          </Banner>
+        </VStack>
+      </Example>
+
+      <Example title="Dismissible">
+        <VStack gap={2}>
+          <Text font="headline">Warning with Dismiss</Text>
+          <Banner
+            showDismiss
+            startIconActive
+            closeAccessibilityLabel="Close"
+            onClose={noopFn}
+            startIcon="warning"
+            startIconAccessibilityLabel="Warning"
+            title="Dismissible warning"
+            variant="warning"
+          >
+            This warning can be dismissed by the user
+          </Banner>
+
+          <Text font="headline">Promotional with Dismiss</Text>
+          <Banner
+            showDismiss
+            startIconActive
+            closeAccessibilityLabel="Close"
+            onClose={noopFn}
             startIcon="info"
             startIconAccessibilityLabel="Information"
+            styleVariant="inline"
+            title="Limited time offer"
             variant="promotional"
           >
-            <Text font="label2">
-              {shortMessage}
-              <Link to="https://www.coinbase.com"> Learn more</Link>
-            </Text>
+            Special promotion that can be dismissed
           </Banner>
         </VStack>
       </Example>
-      <Example title="Custom Offset">
-        <VStack gap={2}>
-          <Spacer />
-          <Text font="title1">Global</Text>
-          <Banner
-            {...examplePropsWithOffset}
-            showDismiss
-            startIconAccessibilityLabel="Information"
-            styleVariant="global"
-            variant="informational"
-          />
-          <Banner
-            {...examplePropsWithOffset}
-            showDismiss
-            startIconAccessibilityLabel="Information"
-            styleVariant="global"
-            variant="promotional"
-          />
-          <Banner
-            {...examplePropsWithOffset}
-            startIconActive
-            startIcon="warning"
-            startIconAccessibilityLabel="Warning"
-            styleVariant="global"
-            variant="warning"
-          />
 
-          <Banner {...examplePropsWithOffset} styleVariant="global" variant="error" />
-          <Spacer />
-          <Text font="title1">Inline</Text>
-          <Banner
-            {...examplePropsWithOffset}
-            showDismiss
-            startIconAccessibilityLabel="Information"
-            styleVariant="inline"
-            variant="informational"
-          />
-          <Banner
-            {...examplePropsWithOffset}
-            showDismiss
-            startIconAccessibilityLabel="Information"
-            styleVariant="inline"
-            variant="promotional"
-          />
-          <Banner
-            {...examplePropsWithOffset}
-            startIconActive
-            startIcon="warning"
-            startIconAccessibilityLabel="Warning"
-            styleVariant="inline"
-            variant="warning"
-          />
-          <Banner {...examplePropsWithOffset} styleVariant="inline" variant="error" />
-        </VStack>
-      </Example>
-      <Example>
-        <Text font="title1">Vertical Align</Text>
+      <Example title="Long Content">
         <VStack gap={2}>
+          <Text font="headline">Long Message</Text>
           <Banner
-            {...exampleProps}
-            alignItems="center"
+            startIconActive
+            closeAccessibilityLabel="Close"
+            startIcon="info"
             startIconAccessibilityLabel="Information"
-            title={undefined}
+            title="Information with extended content"
             variant="informational"
           >
-            {examplePropsWithOffset.children}
+            {longMessage}
           </Banner>
+
+          <Text font="headline">Long Title</Text>
           <Banner
-            {...exampleProps}
-            showDismiss
-            alignItems="center"
-            startIconAccessibilityLabel="Information"
-            title={undefined}
-            variant="promotional"
+            startIconActive
+            closeAccessibilityLabel="Close"
+            startIcon="error"
+            startIconAccessibilityLabel="Error"
+            title={`Critical error detected: ${longMessage}`}
+            variant="error"
           >
-            {examplePropsWithOffset.children}
+            {shortMessage}
           </Banner>
-          <Banner {...exampleProps} alignItems="center" variant="error" />
+
+          <Text font="headline">Long Content with Dismiss</Text>
           <Banner
-            {...exampleProps}
             showDismiss
             startIconActive
-            alignItems="center"
+            closeAccessibilityLabel="Close"
+            onClose={noopFn}
             startIcon="warning"
             startIconAccessibilityLabel="Warning"
+            title="Detailed warning message"
             variant="warning"
-          />
+          >
+            {longMessage}
+          </Banner>
         </VStack>
       </Example>
-      <Example title="Border Radius">
+
+      <Example title="With Labels">
         <VStack gap={2}>
-          <Text font="title1">Contextual</Text>
-          <VStack gap={2}>
-            {borderRadiusValues.map((radius) => (
-              <Banner
-                key={`mobile-contextual-${radius}`}
-                {...exampleProps}
-                borderRadius={radius}
-                title={`Contextual radius ${radius}`}
-                variant="informational"
-              >
-                {shortMessage}
-              </Banner>
-            ))}
-          </VStack>
-          <Text font="title1">Inline</Text>
-          <VStack gap={2}>
-            {borderRadiusValues.map((radius) => (
-              <Banner
-                key={`mobile-inline-${radius}`}
-                {...exampleProps}
-                borderRadius={radius}
-                styleVariant="inline"
-                title={`Inline radius ${radius}`}
-                variant="informational"
-              >
-                {shortMessage}
-              </Banner>
-            ))}
-          </VStack>
+          <Banner
+            startIconActive
+            closeAccessibilityLabel="Close"
+            label="Version 2.4.1 released"
+            startIcon="info"
+            startIconAccessibilityLabel="Information"
+            title="Update available"
+            variant="informational"
+          >
+            A new version of the app is available with bug fixes and improvements
+          </Banner>
+
+          <Banner
+            startIconActive
+            closeAccessibilityLabel="Close"
+            label={label}
+            startIcon="error"
+            startIconAccessibilityLabel="Error"
+            styleVariant="global"
+            title="System maintenance"
+            variant="error"
+          >
+            Services will be unavailable during the maintenance window
+          </Banner>
         </VStack>
       </Example>
     </ExampleScreen>

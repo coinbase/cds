@@ -25,7 +25,7 @@ function SelectChipExample() {
   );
   return (
     <HStack>
-      <SelectChip value={value} onChange={setValue} content={content} minWidth={367} />
+      <OldSelectChip value={value} onChange={setValue} content={content} minWidth={367} />
     </HStack>
   );
 }
@@ -48,7 +48,7 @@ function SelectChipExample() {
   );
   return (
     <HStack>
-      <SelectChip value={value} onChange={setValue} content={content} minWidth={150} />
+      <OldSelectChip value={value} onChange={setValue} content={content} minWidth={150} />
     </HStack>
   );
 }
@@ -95,7 +95,7 @@ function SelectChipExample() {
   );
   return (
     <HStack>
-      <SelectChip
+      <OldSelectChip
         placeholder="Networks"
         value={value ? value.value : undefined}
         valueLabel={value ? value.title : undefined}
@@ -154,7 +154,7 @@ function SelectChipExample() {
   );
   return (
     <HStack>
-      <SelectChip
+      <OldSelectChip
         value={value.value}
         valueLabel={value.label}
         end={<Icon size="s" color="fg" name={value.iconName} />}

@@ -1,0 +1,312 @@
+SelectChip is built on top of the [Alpha Select](/components/inputs/SelectAlpha/) component. It provides a chip-styled interface while maintaining all the functionality of Select, including support for single and multi-selection, option groups, and custom components.
+
+:::note Duplicate Values
+Avoid using options with duplicate values. Each option's `value` should be unique within the options array to ensure proper selection behavior.
+:::
+
+### Basic usage
+
+```tsx
+function ExampleDefault() {
+  const exampleOptions = [
+    { value: null, label: 'Clear selection' },
+    { value: '1', label: 'Option 1' },
+    { value: '2', label: 'Option 2' },
+    { value: '3', label: 'Option 3' },
+    { value: '4', label: 'Option 4' },
+  ];
+  const [value, setValue] = useState<string | null>(null);
+  return (
+    <SelectChip
+      label="Select a value"
+      accessibilityLabel="Select a value"
+      onChange={setValue}
+      options={exampleOptions}
+      placeholder="Choose an option"
+      value={value}
+    />
+  );
+}
+```
+
+### Single select with groups
+
+```tsx
+function ExampleSingleGroups() {
+  const exampleOptions: Array<SelectOption | SelectOptionGroup> = [
+    {
+      label: 'Group A',
+      options: [
+        { value: '1', label: 'Option 1' },
+        { value: '2', label: 'Option 2' },
+        { value: '3', label: 'Option 3' },
+      ],
+    },
+    {
+      label: 'Group B',
+      options: [
+        { value: '4', label: 'Option 4' },
+        { value: '5', label: 'Option 5' },
+      ],
+    },
+    {
+      label: 'Group C',
+      options: [{ value: '6', label: 'Option 6' }],
+    },
+  ];
+  const [value, setValue] = useState<string | null>(null);
+  return (
+    <SelectChip
+      accessibilityLabel="Select a value"
+      label="Select a value"
+      onChange={setValue}
+      options={exampleOptions}
+      placeholder="Choose an option"
+      value={value}
+    />
+  );
+}
+```
+
+### With disabled option group
+
+```tsx
+function ExampleDisabledGroup() {
+  const exampleOptions: Array<SelectOption | SelectOptionGroup> = [
+    {
+      label: 'Group A',
+      options: [
+        { value: '1', label: 'Option 1' },
+        { value: '2', label: 'Option 2' },
+        { value: '3', label: 'Option 3' },
+      ],
+    },
+    {
+      label: 'Group B',
+      disabled: true,
+      options: [
+        { value: '4', label: 'Option 4' },
+        { value: '5', label: 'Option 5' },
+      ],
+    },
+    {
+      label: 'Group C',
+      options: [{ value: '6', label: 'Option 6' }],
+    },
+  ];
+  const [value, setValue] = useState<string | null>(null);
+  return (
+    <SelectChip
+      accessibilityLabel="Select a value"
+      label="Select a value"
+      onChange={setValue}
+      options={exampleOptions}
+      placeholder="Choose an option"
+      value={value}
+    />
+  );
+}
+```
+
+### Multi-select
+
+:::note Disabled Options and Select All
+Disabled options and options inside disabled groups will be skipped when "Select all" is pressed. Only enabled options will be selected.
+:::
+
+```tsx
+function ExampleMulti() {
+  const exampleOptions = [
+    { value: '1', label: 'Option 1' },
+    { value: '2', label: 'Option 2', disabled: true },
+    { value: '3', label: 'Option 3' },
+    { value: '4', label: 'Option 4' },
+    { value: '5', label: 'Option 5' },
+  ];
+  const { value, onChange } = useMultiSelect({ initialValue: [] });
+  return (
+    <SelectChip
+      accessibilityLabel="Select multiple values"
+      label="Select multiple values"
+      onChange={onChange}
+      options={exampleOptions}
+      placeholder="Choose options"
+      type="multi"
+      value={value}
+    />
+  );
+}
+```
+
+### Multi-select with groups
+
+```tsx
+function ExampleMultiGroups() {
+  const exampleOptions: Array<SelectOption | SelectOptionGroup> = [
+    {
+      label: 'Group A',
+      options: [
+        { value: '1', label: 'Option 1' },
+        { value: '2', label: 'Option 2' },
+        { value: '3', label: 'Option 3' },
+      ],
+    },
+    {
+      label: 'Group B',
+      options: [
+        { value: '4', label: 'Option 4' },
+        { value: '5', label: 'Option 5' },
+      ],
+    },
+    {
+      label: 'Group C',
+      options: [{ value: '6', label: 'Option 6' }],
+    },
+  ];
+  const { value, onChange } = useMultiSelect({ initialValue: [] });
+  return (
+    <SelectChip
+      accessibilityLabel="Select multiple values"
+      label="Select multiple values"
+      onChange={onChange}
+      options={exampleOptions}
+      placeholder="Choose options"
+      type="multi"
+      value={value}
+    />
+  );
+}
+```
+
+### Compact
+
+```tsx
+function ExampleCompact() {
+  const exampleOptions = [
+    { value: '1', label: 'Option 1' },
+    { value: '2', label: 'Option 2' },
+    { value: '3', label: 'Option 3' },
+    { value: '4', label: 'Option 4' },
+  ];
+  const [value, setValue] = useState<string | null>('1');
+  return (
+    <SelectChip
+      compact
+      label="Choose an option"
+      onChange={setValue}
+      options={exampleOptions}
+      placeholder="Choose an option"
+      value={value}
+    />
+  );
+}
+```
+
+### With start and end nodes
+
+```tsx
+function ExampleWithNodes() {
+  const exampleOptions = [
+    { value: 'btc', label: assets.btc.name },
+    { value: 'eth', label: assets.eth.name },
+    { value: 'dai', label: assets.dai.name },
+  ];
+  const [value, setValue] = useState<string | null>('eth');
+  const getStartNode = (selectedValue: string | null) => {
+    if (!selectedValue) return null;
+    const assetMap: Record<string, string> = {
+      btc: assets.btc.imageUrl,
+      eth: assets.eth.imageUrl,
+      dai: assets.dai.imageUrl,
+    };
+    const imageUrl = assetMap[selectedValue];
+    if (!imageUrl) return null;
+    return <RemoteImage height={24} shape="circle" source={imageUrl} width={24} />;
+  };
+  return (
+    <SelectChip
+      label="Choose an asset"
+      onChange={setValue}
+      options={exampleOptions}
+      placeholder="Choose an asset"
+      startNode={getStartNode(value)}
+      value={value}
+    />
+  );
+}
+```
+
+### Empty options
+
+```tsx
+function ExampleEmptyOptions() {
+  const [value, setValue] = useState<string | null>(null);
+  return (
+    <SelectChip
+      label="Select ..."
+      onChange={setValue}
+      options={[]}
+      placeholder="Select ..."
+      value={value}
+    />
+  );
+}
+```
+
+### Options with descriptions
+
+```tsx
+function ExampleDescriptions() {
+  const exampleOptions = [
+    { value: '1', label: 'Option 1', description: 'First option description' },
+    { value: '2', label: 'Option 2', description: 'Second option description' },
+    { value: '3', label: 'Option 3', description: 'Third option description' },
+    { value: '4', label: 'Option 4', description: 'Fourth option description' },
+  ];
+  const [value, setValue] = useState<string | null>(null);
+  return (
+    <SelectChip
+      accessibilityLabel="Select a value"
+      label="Select a value"
+      onChange={setValue}
+      options={exampleOptions}
+      placeholder="Choose an option"
+      value={value}
+    />
+  );
+}
+```
+
+### Disabled
+
+```tsx
+function ExampleDisabled() {
+  const exampleOptions = [
+    { value: '1', label: 'Option 1' },
+    { value: '2', label: 'Option 2' },
+    { value: '3', label: 'Option 3' },
+    { value: '4', label: 'Option 4' },
+  ];
+  const [value, setValue] = useState<string | null>('1');
+  return (
+    <VStack gap={2}>
+      <SelectChip
+        disabled
+        accessibilityLabel="Select a value"
+        onChange={setValue}
+        options={exampleOptions}
+        placeholder="Choose an option"
+        value={null}
+      />
+      <SelectChip
+        disabled
+        accessibilityLabel="Select a value"
+        onChange={setValue}
+        options={exampleOptions}
+        placeholder="Choose an option"
+        value={value}
+      />
+    </VStack>
+  );
+}
+```

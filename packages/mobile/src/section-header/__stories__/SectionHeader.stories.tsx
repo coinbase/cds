@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { View } from 'react-native';
 import type { SectionHeaderProps } from '@coinbase/cds-common';
 import { assets } from '@coinbase/cds-common/internal/data/assets';
 import { NoopFn } from '@coinbase/cds-common/utils/mockUtils';
@@ -7,7 +6,7 @@ import { NoopFn } from '@coinbase/cds-common/utils/mockUtils';
 import { Button, IconButton } from '../../buttons';
 import { SelectChip } from '../../chips/SelectChip';
 import { SearchInput, SelectOption } from '../../controls';
-import { ExampleScreen } from '../../examples/ExampleScreen';
+import { Example, ExampleScreen } from '../../examples/ExampleScreen';
 import { Icon } from '../../icons';
 import { Divider, HStack } from '../../layout';
 import { RemoteImage } from '../../media';
@@ -50,8 +49,8 @@ const SelectChipDropdown = () => {
 
 const SectionHeaderScreen = () => {
   return (
-    <View>
-      <ExampleScreen>
+    <ExampleScreen>
+      <Example title="SectionHeader Variants">
         <SectionHeader title="SectionHeader" />
         <Divider />
         <SectionHeader
@@ -113,8 +112,8 @@ const SectionHeaderScreen = () => {
         />
         <Divider />
         <SectionHeader {...defaultProps} balance={null} end={<IconButton name="upload" />} />
-      </ExampleScreen>
-    </View>
+      </Example>
+    </ExampleScreen>
   );
 };
 
