@@ -1,5 +1,5 @@
 import { forwardRef, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { AccessibilityInfo, StyleSheet, type TextStyle, type View } from 'react-native';
+import { AccessibilityInfo, StyleSheet, type View } from 'react-native';
 import Animated, {
   runOnJS,
   useAnimatedReaction,
@@ -247,27 +247,24 @@ const SlideDigit = memo(
         [digitHeight, style, styles?.root],
       );
 
-      // Extract text style - cast as TextStyle since we're not animating the text itself
-      const textStyle = styles?.text as TextStyle | undefined;
-
       return (
         <RollingNumberMaskComponent ref={ref} {...props}>
           <Animated.View style={containerStyle}>
             {/* Ghost element for layout */}
-            <Text style={[baseStylesheet.slideGhost, textStyle]} {...textProps}>
+            <AnimatedText style={[baseStylesheet.slideGhost, styles?.text]} {...textProps}>
               {value}
-            </Text>
+            </AnimatedText>
             {/* Previous digit (exiting) */}
             <Animated.View style={[baseStylesheet.slideDigit, prevAnimatedStyle]}>
-              <Text style={textStyle} {...textProps}>
+              <AnimatedText style={styles?.text} {...textProps}>
                 {displayedPrevDigit}
-              </Text>
+              </AnimatedText>
             </Animated.View>
             {/* Current digit (entering) */}
             <Animated.View style={[baseStylesheet.slideDigit, currentAnimatedStyle]}>
-              <Text style={textStyle} {...textProps}>
+              <AnimatedText style={styles?.text} {...textProps}>
                 {value}
-              </Text>
+              </AnimatedText>
             </Animated.View>
           </Animated.View>
         </RollingNumberMaskComponent>

@@ -1,7 +1,8 @@
-import type { StyleProp, TextStyle, ViewProps, ViewStyle } from 'react-native';
+import type { StyleProp, TextStyle, View, ViewProps, ViewStyle } from 'react-native';
 import type { AnimatedStyle, WithSpringConfig, WithTimingConfig } from 'react-native-reanimated';
 import { Easing } from 'react-native-reanimated';
 import { curves, durations } from '@coinbase/cds-common/motion/tokens';
+import type { KeyedNumberPart } from '@coinbase/cds-common/numbers/IntlNumberFormat';
 
 import type { HStackProps } from '../../layout/HStack';
 import type { TextProps } from '../../typography/Text';
@@ -129,3 +130,94 @@ export type RollingNumberDigitProps = ViewProps & {
 
 export type RollingNumberDigitComponent = React.FC<RollingNumberDigitProps>;
 
+export type RollingNumberSymbolProps = HStackProps & {
+  /**
+   * Literal symbol rendered within the formatted value.
+   */
+  value: string;
+  /**
+   * Text props forwarded to the Text components rendering the symbol.
+   */
+  textProps?: TextProps;
+  styles?: {
+    /**
+     * Style override applied to the symbol container.
+     */
+    root?: StyleProp<ViewStyle>;
+    /**
+     * Style override applied to Text within the symbol component.
+     */
+    text?:
+      | AnimatedStyle<TextStyle>
+      | StyleProp<TextStyle>
+      | (AnimatedStyle<TextStyle> | StyleProp<TextStyle>)[];
+  };
+  /**
+   * Ref forwarded to the symbol container view element.
+   */
+  ref?: React.Ref<View>;
+};
+
+export type RollingNumberSymbolComponent = React.FC<RollingNumberSymbolProps>;
+
+export type RollingNumberValueSectionProps = HStackProps & {
+  /**
+   * Parts from Intl.NumberFormat used to render digits and symbols.
+   */
+  intlNumberParts: KeyedNumberPart[];
+  /**
+   * Height of a single digit row used to size the animated mask.
+   */
+  digitHeight?: number;
+  /**
+   * Component used to render digit columns.
+   */
+  RollingNumberDigitComponent?: RollingNumberDigitComponent;
+  /**
+   * Component used to render symbols and literals.
+   */
+  RollingNumberSymbolComponent?: RollingNumberSymbolComponent;
+  /**
+   * Component used to mask the value section.
+   */
+  RollingNumberMaskComponent?: RollingNumberMaskComponent;
+  /**
+   * Preformatted value rendered instead of intlNumberParts when provided.
+   */
+  formattedValue?: string;
+  /**
+   * Transition overrides applied to digit and symbol animations.
+   */
+  transitionConfig?: RollingNumberTransitionConfig;
+  /**
+   * Style of digit transition animation. Defaults to {@code 'roll'}.
+   */
+  digitTransitionVariant?: DigitTransitionVariant;
+  /**
+   * Direction of value change for slide animations.
+   */
+  valueChangeDirection?: ValueChangeDirection;
+  /**
+   * Text props forwarded to Text children within the section.
+   */
+  textProps?: TextProps;
+  styles?: {
+    /**
+     * Style override applied to the value section container.
+     */
+    root?: StyleProp<ViewStyle>;
+    /**
+     * Style override applied to Text within the value section.
+     */
+    text?:
+      | AnimatedStyle<TextStyle>
+      | StyleProp<TextStyle>
+      | (AnimatedStyle<TextStyle> | StyleProp<TextStyle>)[];
+  };
+  /**
+   * Ref forwarded to the value section view element.
+   */
+  ref?: React.Ref<View>;
+};
+
+export type RollingNumberValueSectionComponent = React.FC<RollingNumberValueSectionProps>;

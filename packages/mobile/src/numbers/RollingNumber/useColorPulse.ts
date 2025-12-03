@@ -12,8 +12,7 @@ import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 
 import { useTheme } from '../../hooks/useTheme';
 
-import type { RollingNumberTransitionConfig } from './RollingNumber';
-import { defaultTransitionConfig } from './RollingNumber';
+import { defaultTransitionConfig, type RollingNumberTransitionConfig } from './digitTypes';
 
 export type AnimatedTextStyle = AnimatedStyle<TextStyle>;
 

@@ -9,13 +9,13 @@ import { Text } from '../../typography/Text';
 import { DefaultRollingNumberDigit } from './DefaultRollingNumberDigit';
 import { DefaultRollingNumberMask } from './DefaultRollingNumberMask';
 import { DefaultRollingNumberSymbol } from './DefaultRollingNumberSymbol';
-import type {
-  DigitTransitionVariant,
-  RollingNumberValueSectionComponent,
-  RollingNumberValueSectionProps,
-  ValueChangeDirection,
-} from './RollingNumber';
-import { digits } from './RollingNumber';
+import {
+  digits,
+  type DigitTransitionVariant,
+  type RollingNumberValueSectionComponent,
+  type RollingNumberValueSectionProps,
+  type ValueChangeDirection,
+} from './digitTypes';
 
 const AnimatedText = Animated.createAnimatedComponent(Text);
 
