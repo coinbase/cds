@@ -146,7 +146,10 @@ const ComboboxBase = memo(
         }),
       );
 
-      // Store in refs to avoid recreating ComboboxControl on every search text change
+      // Store in refs to avoid recreating ComboboxControl on every search text change.
+      // This is necessary due to the type of the SelectControlComponent prop.
+      // ComboboxControlComponent adds additional props to the SelectControlComponent
+      // which cause type issues when the SelectControlComponent is a forwardRef component.
       const searchTextRef = useRef(searchText);
       searchTextRef.current = searchText;
       const setSearchTextRef = useRef(setSearchText);
