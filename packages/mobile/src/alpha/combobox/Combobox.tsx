@@ -112,19 +112,15 @@ const ComboboxBase = memo(
       const [searchTextInternal, setSearchTextInternal] = useState(defaultSearchText);
       const searchText = searchTextProp ?? searchTextInternal;
       const setSearchText = onSearchProp ?? setSearchTextInternal;
-
-      if (
-        (typeof searchTextProp === 'undefined' && typeof onSearchProp !== 'undefined') ||
-        (typeof searchTextProp !== 'undefined' && typeof onSearchProp === 'undefined')
-      )
+      if ((typeof searchTextProp === 'undefined') !== (typeof onSearchProp === 'undefined')) {
         throw Error(
           'Combobox component must be fully controlled or uncontrolled: "searchText" and "onSearch" props must be provided together or not at all',
         );
+      }
 
       const [openInternal, setOpenInternal] = useState(defaultOpen ?? false);
       const open = openProp ?? openInternal;
       const setOpen = setOpenProp ?? setOpenInternal;
-
       if ((typeof openProp === 'undefined') !== (typeof setOpenProp === 'undefined'))
         throw Error(
           'Combobox component must be fully controlled or uncontrolled: "open" and "setOpen" props must be provided together or not at all',
