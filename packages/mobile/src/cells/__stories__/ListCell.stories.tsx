@@ -484,10 +484,10 @@ const WithAccessory = () => {
     <>
       <ListCell accessory="arrow" spacingVariant="condensed" title="Title" />
       <ListCell
-        selected={isSelected}
-        onPress={() => setIsSelected((prev) => !prev)}
         accessory={isSelected ? 'selected' : 'unselected'}
         description="Selected state uses the same space, no layout shift when selected"
+        onPress={() => setIsSelected((prev) => !prev)}
+        selected={isSelected}
         spacingVariant="condensed"
         title="Leverage unselected state"
       />
