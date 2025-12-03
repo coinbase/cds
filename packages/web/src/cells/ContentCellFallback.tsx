@@ -36,7 +36,7 @@ export type ContentCellFallbackProps = FallbackRectWidthProps &
     title?: boolean;
   };
 
-const fullWidthStyle = { width: '100%' } as const;
+const fullWidthStyle = { width: '100%', display: 'block' } as const;
 
 const floatStyle = { float: 'right', width: '30%' } as const;
 
@@ -86,7 +86,7 @@ export const ContentCellFallback = memo(function ContentCellFallback({
         },
       }}
     >
-      <div style={fullWidthStyle}>
+      <Box style={fullWidthStyle} paddingTop={spacingVariant === 'condensed' ? 0.5 : 0}>
         {meta && (
           <div style={floatStyle}>
             <Box flexShrink={0} justifyContent="flex-end">
@@ -130,7 +130,7 @@ export const ContentCellFallback = memo(function ContentCellFallback({
             width={65}
           />
         )}
-      </div>
+      </Box>
     </Cell>
   );
 });

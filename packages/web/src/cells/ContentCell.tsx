@@ -1,4 +1,4 @@
-import React, { forwardRef, memo } from 'react';
+import React, { forwardRef, memo, useMemo } from 'react';
 import { compactListHeight, listHeight } from '@coinbase/cds-common/tokens/cell';
 import { isProduction } from '@coinbase/cds-utils';
 import { css } from '@linaria/core';
@@ -59,6 +59,7 @@ export type ContentCellBaseProps = Polymorphic.ExtendableProps<
      * 3. `border-radius` is `'var(--borderRadius-0)'`
      * 4. subtitle uses `label1`
      * 5. title wraps to 2 lines regardless of description content
+     * 6. meta is placed alongside the accessory
      *
      * @default 'normal'
      */
@@ -91,6 +92,7 @@ export type ContentCellBaseProps = Polymorphic.ExtendableProps<
       mainContent?: string;
       title?: string;
       subtitle?: string;
+      end?: string;
       metaContainer?: string;
       meta?: string;
       description?: string;
@@ -105,6 +107,7 @@ export type ContentCellBaseProps = Polymorphic.ExtendableProps<
       mainContent?: React.CSSProperties;
       title?: React.CSSProperties;
       subtitle?: React.CSSProperties;
+      end?: React.CSSProperties;
       metaContainer?: React.CSSProperties;
       meta?: React.CSSProperties;
       description?: React.CSSProperties;
@@ -177,10 +180,76 @@ export const ContentCell: ContentCellComponent = memo(
       const subtitleFont = spacingVariant === 'condensed' ? 'label1' : 'label2';
       const titleNumberOfLines = spacingVariant === 'condensed' ? 2 : hasDescriptionContent ? 1 : 2;
 
+      // This meta section will be placed alongside the accessory in the condensed variant,
+      // when in other variants, it will be placed alongside the title and subtitle.
+      const metaRender = useMemo(
+        () =>
+          metaNode ? (
+            <Box
+              className={cx(truncationCss, classNames?.metaContainer)}
+              flexGrow={0}
+              flexShrink={0}
+              justifyContent="flex-end"
+              paddingStart={2}
+              paddingTop={0.5}
+              style={styles?.metaContainer}
+            >
+              {metaNode}
+            </Box>
+          ) : meta ? (
+            <Box
+              className={cx(truncationCss, classNames?.metaContainer)}
+              flexGrow={0}
+              flexShrink={0}
+              justifyContent="flex-end"
+              paddingStart={2}
+              paddingTop={0.5}
+              style={styles?.metaContainer}
+            >
+              <Text
+                className={classNames?.meta}
+                color="fgMuted"
+                font="label2"
+                overflow="truncate"
+                style={styles?.meta}
+              >
+                {meta}
+              </Text>
+            </Box>
+          ) : null,
+        [
+          metaNode,
+          meta,
+          classNames?.metaContainer,
+          styles?.metaContainer,
+          classNames?.meta,
+          styles?.meta,
+        ],
+      );
+
+      const accessoryRender = useMemo(() => {
+        if (spacingVariant !== 'condensed') {
+          return accessoryType ? (
+            <CellAccessory paddingTop={0.5} type={accessoryType} />
+          ) : undefined;
+        }
+
+        if (!accessoryType && !metaRender) {
+          return undefined;
+        }
+
+        return (
+          <HStack alignItems="center" gap={2}>
+            {metaRender}
+            {accessoryType && <CellAccessory paddingTop={0.5} type={accessoryType} />}
+          </HStack>
+        );
+      }, [spacingVariant, accessoryType, metaRender]);
+
       return (
         <Cell
           ref={ref}
-          accessory={accessoryType && <CellAccessory paddingTop={0.5} type={accessoryType} />}
+          accessory={accessoryRender}
           accessoryNode={accessoryNode}
           alignItems={alignItems}
           as={Component}
@@ -254,40 +323,7 @@ export const ContentCell: ContentCellComponent = memo(
                   </Text>
                 ) : null}
               </VStack>
-
-              {metaNode ? (
-                <Box
-                  className={cx(truncationCss, classNames?.metaContainer)}
-                  flexGrow={0}
-                  flexShrink={0}
-                  justifyContent="flex-end"
-                  paddingStart={2}
-                  paddingTop={0.5}
-                  style={styles?.metaContainer}
-                >
-                  {metaNode}
-                </Box>
-              ) : meta ? (
-                <Box
-                  className={cx(truncationCss, classNames?.metaContainer)}
-                  flexGrow={0}
-                  flexShrink={0}
-                  justifyContent="flex-end"
-                  paddingStart={2}
-                  paddingTop={0.5}
-                  style={styles?.metaContainer}
-                >
-                  <Text
-                    className={classNames?.meta}
-                    color="fgMuted"
-                    font="label2"
-                    overflow="truncate"
-                    style={styles?.meta}
-                  >
-                    {meta}
-                  </Text>
-                </Box>
-              ) : null}
+              {spacingVariant !== 'condensed' && metaRender}
             </HStack>
           )}
 

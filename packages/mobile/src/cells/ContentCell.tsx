@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import React, { memo, useMemo } from 'react';
 import type { StyleProp, TextStyle, ViewStyle } from 'react-native';
 import { compactListHeight, listHeight } from '@coinbase/cds-common/tokens/cell';
 import { isProduction } from '@coinbase/cds-utils';
@@ -152,13 +152,60 @@ export const ContentCell = memo(function ContentCell({
   const subtitleFont = spacingVariant === 'condensed' ? 'label1' : 'label2';
   const titleNumberOfLines = spacingVariant === 'condensed' ? 2 : hasDescriptionContent ? 1 : 2;
 
+  const metaRender = useMemo(() => {
+    if (metaNode) {
+      return (
+        <Box
+          justifyContent="flex-end"
+          paddingStart={1}
+          paddingTop={0.5}
+          style={styles?.metaContainer}
+        >
+          {metaNode}
+        </Box>
+      );
+    }
+
+    if (meta) {
+      return (
+        <Box
+          justifyContent="flex-end"
+          paddingStart={1}
+          paddingTop={0.5}
+          style={styles?.metaContainer}
+        >
+          <Text color="fgMuted" font="label2" style={styles?.meta}>
+            {meta}
+          </Text>
+        </Box>
+      );
+    }
+
+    return null;
+  }, [metaNode, meta, styles?.metaContainer, styles?.meta]);
+
+  const accessoryRender = useMemo(() => {
+    if (spacingVariant !== 'condensed') {
+      return accessoryType ? <CellAccessory paddingTop={0.5} type={accessoryType} /> : undefined;
+    }
+
+    if (!accessoryType && !metaRender) {
+      return undefined;
+    }
+
+    return (
+      <HStack alignItems="center" gap={2}>
+        {metaRender}
+        {accessoryType ? <CellAccessory paddingTop={0.5} type={accessoryType} /> : null}
+      </HStack>
+    );
+  }, [spacingVariant, accessoryType, metaRender]);
+
   return (
     <Cell
       accessibilityHint={computedAccessibilityHint}
       accessibilityLabel={computedAccessibilityLabel}
-      accessory={
-        accessoryType ? <CellAccessory paddingTop={0.5} type={accessoryType} /> : undefined
-      }
+      accessory={accessoryRender}
       accessoryNode={accessoryNode}
       alignItems={alignItems}
       borderRadius={props.borderRadius ?? (spacingVariant === 'condensed' ? 0 : undefined)}
@@ -215,27 +262,7 @@ export const ContentCell = memo(function ContentCell({
               ) : null}
             </Box>
 
-            {metaNode ? (
-              <Box
-                justifyContent="flex-end"
-                paddingStart={1}
-                paddingTop={0.5}
-                style={styles?.metaContainer}
-              >
-                {metaNode}
-              </Box>
-            ) : meta ? (
-              <Box
-                justifyContent="flex-end"
-                paddingStart={1}
-                paddingTop={0.5}
-                style={styles?.metaContainer}
-              >
-                <Text color="fgMuted" font="label2" style={styles?.meta}>
-                  {meta}
-                </Text>
-              </Box>
-            ) : null}
+            {spacingVariant !== 'condensed' ? metaRender : null}
           </HStack>
         )}
 

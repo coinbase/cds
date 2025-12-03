@@ -16,7 +16,7 @@ import type { CellSpacing } from '../Cell';
 import { ContentCell } from '../ContentCell';
 import { ContentCellFallback } from '../ContentCellFallback';
 
-const innerSpacingConfig: CellSpacing = { paddingX: 1 };
+const innerSpacingConfig: CellSpacing = { paddingX: 1, marginX: 0 };
 
 const onPressConsole = () => console.log('pressed');
 
