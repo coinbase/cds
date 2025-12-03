@@ -9,6 +9,7 @@ import { VStack } from '../../../layout/VStack';
 import { Text } from '../../../typography/Text';
 import type { SelectOption } from '../../select/Select';
 import { Combobox, type ComboboxRef } from '../Combobox';
+import type { SelectOptionList } from '../../select';
 
 export default {
   title: 'Components/Alpha/Combobox',
@@ -302,9 +303,9 @@ export const HideSearchInput = () => {
 export const CustomFilter = () => {
   const { value, onChange } = useMultiSelect({ initialValue: [] });
 
-  const customFilterFunction = (options: SelectOption[], searchText: string) => {
+  const customFilterFunction = (options: SelectOptionList<'multi'>, searchText: string) => {
     const search = searchText.toLowerCase();
-    return options.filter((option) => {
+    return (options as SelectOption[]).filter((option) => {
       const label = typeof option.label === 'string' ? option.label.toLowerCase() : '';
       const description =
         typeof option.description === 'string' ? option.description.toLowerCase() : '';
@@ -872,41 +873,6 @@ export const NoResults = () => {
         options={fruitOptions}
         placeholder="Try searching..."
         searchText={searchText}
-        type="multi"
-        value={value}
-      />
-    </VStack>
-  );
-};
-
-export const AdvancedFiltering = () => {
-  const { value, onChange } = useMultiSelect({ initialValue: [] });
-
-  // Filter by label OR description, case-insensitive, with fuzzy matching
-  const advancedFilter = (options: SelectOption[], searchText: string) => {
-    const search = searchText.toLowerCase();
-    const words = search.split(' ').filter(Boolean);
-
-    return options.filter((option) => {
-      const label = typeof option.label === 'string' ? option.label.toLowerCase() : '';
-      const desc = typeof option.description === 'string' ? option.description.toLowerCase() : '';
-      const combined = `${label} ${desc}`;
-
-      return words.every((word) => combined.includes(word));
-    });
-  };
-
-  return (
-    <VStack gap={4}>
-      <Text color="fgMuted" fontSize="caption">
-        Multi-word search across label and description
-      </Text>
-      <Combobox
-        filterFunction={advancedFilter}
-        label="Advanced search"
-        onChange={onChange}
-        options={countryOptions}
-        placeholder="Try 'north america' or 'euro'..."
         type="multi"
         value={value}
       />

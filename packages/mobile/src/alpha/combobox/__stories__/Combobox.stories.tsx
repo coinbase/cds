@@ -8,6 +8,7 @@ import { VStack } from '../../../layout';
 import { Text } from '../../../typography/Text';
 import type { SelectOption } from '../../select/Select';
 import { Combobox, type ComboboxRef } from '../Combobox';
+import type { SelectOptionList } from '../../select';
 
 // Basic option sets
 const multiSelectOptions = [
@@ -216,9 +217,9 @@ const CryptoAssetsExample = () => {
 const CustomFilterExample = () => {
   const { value, onChange } = useMultiSelect({ initialValue: [] });
 
-  const customFilterFunction = (options: SelectOption[], searchText: string) => {
+  const customFilterFunction = (options: SelectOptionList<'multi'>, searchText: string) => {
     const search = searchText.toLowerCase();
-    return options.filter((option) => {
+    return (options as SelectOption[]).filter((option) => {
       const label = typeof option.label === 'string' ? option.label.toLowerCase() : '';
       const description =
         typeof option.description === 'string' ? option.description.toLowerCase() : '';

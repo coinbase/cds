@@ -7,6 +7,7 @@ import type { AriaHasPopupType } from '../../hooks/useA11yControlledVisibility';
 import type { BoxDefaultElement, BoxProps } from '../../layout/Box';
 import type { PressableDefaultElement, PressableProps } from '../../system';
 import type { InteractableBlendStyles } from '../../system/Interactable';
+import type { TrayProps } from '../../overlays/tray/Tray';
 
 export type SelectType = 'single' | 'multi';
 
@@ -271,6 +272,7 @@ export type SelectDropdownProps<
 > = SelectState<Type, SelectOptionValue> &
   Pick<SharedAccessibilityProps, 'accessibilityLabel'> &
   Omit<BoxProps<BoxDefaultElement>, 'onChange'> &
+  Pick<TrayProps, 'header' | 'footer'> &
   Pick<SelectOptionProps<Type>, 'accessory' | 'media' | 'end'> & {
     /** Whether this is for single or multi-select */
     type?: Type;
@@ -395,6 +397,8 @@ export type SelectControlProps<
     placeholder?: React.ReactNode;
     /** Helper text displayed below the select */
     helperText?: React.ReactNode;
+    /** Content node displayed below the selected values */
+    contentNode?: React.ReactNode;
     /** Whether this is for single or multi-select */
     type?: Type;
     /** Whether the dropdown is currently open */

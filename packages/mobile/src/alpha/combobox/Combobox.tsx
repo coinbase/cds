@@ -26,6 +26,7 @@ import {
   type SelectRef,
   type SelectType,
 } from '../select/Select';
+import type { SelectOptionList } from '../select/types';
 
 export type ComboboxControlProps<
   Type extends SelectType = 'single',
@@ -52,7 +53,7 @@ export type ComboboxBaseProps<
   onSearch?: (searchText: string) => void;
   /** Custom filter function for searching options */
   filterFunction?: (
-    options: SelectOption<SelectOptionValue>[],
+    options: SelectOptionList<Type, SelectOptionValue>,
     searchText: string,
   ) => SelectOption<SelectOptionValue>[];
   /** Default search text value for uncontrolled mode */

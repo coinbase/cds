@@ -40,7 +40,7 @@ export type {
 // Re-export the type guard function
 export { isSelectOptionGroup } from './types';
 
-const defaultAccessibilityRoles: SelectDropdownProps['accessibilityRoles'] = {
+export const defaultAccessibilityRoles: SelectDropdownProps['accessibilityRoles'] = {
   dropdown: 'listbox',
   option: 'option',
 };

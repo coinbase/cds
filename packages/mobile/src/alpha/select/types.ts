@@ -5,7 +5,7 @@ import type { SharedAccessibilityProps } from '@coinbase/cds-common/types';
 import type { CellBaseProps } from '../../cells/Cell';
 import type { InputStackBaseProps } from '../../controls/InputStack';
 import type { BoxProps } from '../../layout';
-import type { DrawerRefBaseProps } from '../../overlays';
+import type { DrawerRefBaseProps, TrayProps } from '../../overlays';
 import type { InteractableBlendStyles } from '../../system/Interactable';
 import type { PressableProps } from '../../system/Pressable';
 
@@ -246,6 +246,8 @@ export type SelectControlProps<
     placeholder?: React.ReactNode;
     /** Helper text displayed below the select */
     helperText?: React.ReactNode;
+    /** Content node displayed below the selected values */
+    contentNode?: React.ReactNode;
     /** Whether this is for single or multi-select */
     type?: Type;
     /** Whether the dropdown is currently open */
@@ -299,6 +301,7 @@ export type SelectDropdownProps<
 > = SelectState<Type, SelectOptionValue> &
   Pick<SharedAccessibilityProps, 'accessibilityLabel'> &
   Omit<BoxProps, 'onChange'> &
+  Pick<TrayProps, 'header' | 'footer'> &
   Pick<SelectOptionProps<Type, SelectOptionValue>, 'accessory' | 'media' | 'end'> & {
     /** Whether this is for single or multi-select */
     type?: Type;
