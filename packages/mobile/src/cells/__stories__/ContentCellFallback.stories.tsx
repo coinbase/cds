@@ -6,87 +6,87 @@ import { ContentCellFallback } from '../ContentCellFallback';
 const Fallbacks = () => {
   return (
     <>
-      <ContentCellFallback disableRandomRectWidth spacingVariant="condensed" title />
-      <ContentCellFallback description disableRandomRectWidth spacingVariant="condensed" title />
-      <ContentCellFallback disableRandomRectWidth spacingVariant="condensed" meta title />
-      <ContentCellFallback disableRandomRectWidth spacingVariant="condensed" subtitle title />
+      <ContentCellFallback disableRandomRectWidth title spacingVariant="condensed" />
+      <ContentCellFallback description disableRandomRectWidth title spacingVariant="condensed" />
+      <ContentCellFallback disableRandomRectWidth meta title spacingVariant="condensed" />
+      <ContentCellFallback disableRandomRectWidth subtitle title spacingVariant="condensed" />
       <ContentCellFallback
         description
         disableRandomRectWidth
         meta
-        spacingVariant="condensed"
         title
+        spacingVariant="condensed"
       />
       <ContentCellFallback
         description
         disableRandomRectWidth
         meta
-        spacingVariant="condensed"
         subtitle
         title
+        spacingVariant="condensed"
       />
-      <ContentCellFallback disableRandomRectWidth spacingVariant="condensed" title media="icon" />
+      <ContentCellFallback disableRandomRectWidth title media="icon" spacingVariant="condensed" />
       <ContentCellFallback
         description
         disableRandomRectWidth
-        spacingVariant="condensed"
         title
         media="asset"
+        spacingVariant="condensed"
       />
       <ContentCellFallback
         disableRandomRectWidth
         meta
-        spacingVariant="condensed"
         title
         media="image"
+        spacingVariant="condensed"
       />
       <ContentCellFallback
         disableRandomRectWidth
-        spacingVariant="condensed"
         subtitle
         title
         media="avatar"
+        spacingVariant="condensed"
       />
       <ContentCellFallback
         description
         disableRandomRectWidth
         meta
-        spacingVariant="condensed"
         title
         media="icon"
+        spacingVariant="condensed"
       />
       <ContentCellFallback
         description
         disableRandomRectWidth
         meta
-        spacingVariant="condensed"
         subtitle
         title
         media="asset"
+        spacingVariant="condensed"
       />
       <ContentCellFallback
         description
-        media="asset"
-        spacingVariant="condensed"
         subtitle
         title
+        media="asset"
         rectWidthVariant={0}
+        spacingVariant="condensed"
       />
       <ContentCellFallback
         description
-        media="asset"
-        spacingVariant="condensed"
         subtitle
         title
+        media="asset"
         rectWidthVariant={1}
+        spacingVariant="condensed"
       />
       <ContentCellFallback
         description
-        media="asset"
-        spacingVariant="condensed"
         subtitle
         title
+        media="asset"
         rectWidthVariant={2}
+        spacingVariant="condensed"
       />
     </>
   );

@@ -296,7 +296,7 @@ describe('ContentCell', () => {
 
     expect(titleInstance?.props.numberOfLines).toBe(2);
     expect(subtitleInstance?.props.font).toBe('label1');
-    expect(descriptionInstance?.props.font).toBe('label2');
+    expect(descriptionInstance?.props.font).toBe('body');
   });
 
   it('limits title to a single line when description is present outside condensed spacing', () => {

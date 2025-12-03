@@ -86,7 +86,7 @@ export const ContentCellFallback = memo(function ContentCellFallback({
         },
       }}
     >
-      <Box style={fullWidthStyle} paddingTop={spacingVariant === 'condensed' ? 0.5 : 0}>
+      <Box paddingTop={spacingVariant === 'condensed' ? 0.5 : 0} style={fullWidthStyle}>
         {meta && (
           <div style={floatStyle}>
             <Box flexShrink={0} justifyContent="flex-end">
