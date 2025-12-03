@@ -8,17 +8,19 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.27.3 ((12/5/2025, 01:46 PM PST))
+
+This is an artificial version bump with no new change.
+
 ## 8.27.2 (12/4/2025 PST)
 
 #### 🐞 Fixes
 
 - Fix a bug where Banner will incorrectly grow to its parent height. [[#209](https://github.com/coinbase/cds/pull/209)] [DX-5059]
 
-## 8.27.1 (12/4/2025 PST)
+## 8.27.1 ((12/3/2025, 01:46 PM PST))
 
-#### 🐞 Fixes
-
-- Fix mobile safari not rendering radio icon issue. [[#208](https://github.com/coinbase/cds/pull/208)]
+This is an artificial version bump with no new change.
 
 ## 8.27.0 (12/3/2025 PST)
 
