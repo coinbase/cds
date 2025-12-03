@@ -40,7 +40,7 @@ export const CellAccessory = memo(
     }
 
     if (type === 'unselected') {
-      icon = <Icon color="fgMuted" name="checkmark" size="s" style={{ visibility: 'hidden' }} />;
+      icon = <Icon name="checkmark" size="s" style={{ opacity: 0 }} />;
     }
 
     if (!icon) {

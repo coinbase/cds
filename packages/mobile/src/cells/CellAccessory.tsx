@@ -32,7 +32,7 @@ export const CellAccessory = memo(function CellAccessory({ type, ...props }: Cel
   }
 
   if (type === 'unselected') {
-    icon = <Icon color="fgMuted" name="checkmark" size="s" style={{ opacity: 0 }} />;
+    icon = <Icon name="checkmark" size="s" style={{ opacity: 0 }} />;
   }
 
   if (!icon) {
