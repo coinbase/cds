@@ -1,0 +1,49 @@
+# NOTE: This workflow can only run within the internal mirrored repository; it is not runnable on public GitHub.
+name: Claude Slackbot Handler
+run-name: |-
+  Claude Bot Run (${{ inputs.request_id || 'Unknown' }})
+
+on:
+  workflow_dispatch:
+    inputs:
+      request_id:
+        description: 'The unique request ID for tracking'
+        required: true
+      prompt:
+        description: 'The prompt the bot was tagged with'
+        required: false
+      thread_context:
+        description: 'The context of the thread the bot was tagged in'
+        required: false
+      timestamp:
+        description: 'The timestamp of the message the bot was tagged in'
+        required: true
+      options:
+        description: 'JSON options containing command, org_repo, and linear_ticket_id'
+        required: true
+      slack_email:
+        description: 'Email of Slack user who initiated the request'
+        required: false
+
+# Default to read only permissions; use the Claude GitHub App PAT (which has write access) in later steps only when needed
+# It's important that we default to read only and always reset back to a read only token before running a workflow step
+# that uses the claude-code-standalone action, since we don't want claude to have write access during its execution (in case of a prompt injection or rogue agent scenario)
+permissions:
+  contents: read
+  issues: read
+  pull-requests: read
+  actions: read
+
+jobs:
+  claude-bot:
+    name: 'Claude Bot'
+    uses: infra/cb-workflow-claude-bot/.github/workflows/claude.yml@master
+    with:
+      request_id: ${{ inputs.request_id }}
+      prompt: ${{ inputs.prompt }}
+      thread_context: ${{ inputs.thread_context }}
+      timestamp: ${{ inputs.timestamp }}
+      options: ${{ inputs.options }}
+      slack_email: ${{ inputs.slack_email }}
+      has_setup_action: true
+      use_merge_base_checkout: true
