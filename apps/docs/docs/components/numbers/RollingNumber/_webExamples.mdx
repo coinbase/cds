@@ -317,6 +317,116 @@ function Example() {
 }
 ```
 
+## Digit Transition Variants
+
+RollingNumber supports two digit transition styles via the `digitTransitionVariant` prop:
+
+- **`'roll'`** (default): Digits roll through all intermediate values (e.g., 1→2→3→...→9).
+- **`'slide'`**: Digits slide directly from old to new value with opacity crossfade. Direction (up/down) is based on the total value change.
+
+The slide variant uses a spring animation with the following configuration:
+
+- Stiffness: 280
+- Damping: 18
+- Mass: 0.3
+
+When reduced motion is enabled, the slide animation falls back to a gentle crossfade.
+
+```tsx live
+function Example() {
+  const [price, setPrice] = React.useState(12345.67);
+  const [variant, setVariant] = React.useState<'roll' | 'slide'>('slide');
+
+  const onIncrease = () => setPrice((p) => Math.round((p + Math.random() * 500 + 100) * 100) / 100);
+  const onDecrease = () =>
+    setPrice((p) => Math.max(0, Math.round((p - Math.random() * 500 - 100) * 100) / 100));
+  const onRandom = () =>
+    setPrice((p) => {
+      const delta = (Math.random() - 0.5) * 1000;
+      return Math.max(0, Math.round((p + delta) * 100) / 100);
+    });
+
+  return (
+    <VStack gap={2}>
+      <Text as="p" display="block" font="label1">
+        Digit transition variant: <strong>{variant}</strong>
+      </Text>
+      <RollingNumber
+        digitTransitionVariant={variant}
+        font="display1"
+        format={{ style: 'currency', currency: 'USD' }}
+        value={price}
+      />
+      <HStack gap={2}>
+        <Button onClick={onIncrease}>Increase</Button>
+        <Button onClick={onDecrease}>Decrease</Button>
+        <Button onClick={onRandom}>Random</Button>
+      </HStack>
+      <HStack gap={2}>
+        <Button
+          variant={variant === 'roll' ? 'primary' : 'secondary'}
+          onClick={() => setVariant('roll')}
+        >
+          Roll
+        </Button>
+        <Button
+          variant={variant === 'slide' ? 'primary' : 'secondary'}
+          onClick={() => setVariant('slide')}
+        >
+          Slide
+        </Button>
+      </HStack>
+    </VStack>
+  );
+}
+```
+
+### Slide variant comparison
+
+```tsx live
+function Example() {
+  const [price, setPrice] = React.useState(98765.43);
+
+  const onNext = () =>
+    setPrice((p) => {
+      const delta = (Math.random() - 0.5) * 2000;
+      return Math.max(0, Math.round((p + delta) * 100) / 100);
+    });
+
+  return (
+    <VStack gap={2}>
+      <Text as="p" display="block" font="label1">
+        Roll variant (default)
+      </Text>
+      <RollingNumber
+        colorPulseOnUpdate
+        digitTransitionVariant="roll"
+        font="display3"
+        format={{ style: 'currency', currency: 'USD' }}
+        value={price}
+      />
+      <Text as="p" display="block" font="label1">
+        Slide variant
+      </Text>
+      <RollingNumber
+        colorPulseOnUpdate
+        digitTransitionVariant="slide"
+        font="display3"
+        format={{ style: 'currency', currency: 'USD' }}
+        value={price}
+      />
+      <Button alignSelf="flex-start" onClick={onNext}>
+        Random Change
+      </Button>
+    </VStack>
+  );
+}
+```
+
+::::tip Direction-aware animation
+The slide variant determines scroll direction based on the **total value change**, not individual digit changes. When the value increases, digits slide up (new digits enter from below). When the value decreases, digits slide down (new digits enter from above). This matches the behavior of the color pulse feature.
+::::
+
 ## Prefix and Suffix
 
 Attach text or React nodes before/after the number to create rich compositions. If the prefix/suffix is a string, it will pulse color together with the main number.

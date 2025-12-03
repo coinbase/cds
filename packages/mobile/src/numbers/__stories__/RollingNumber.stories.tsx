@@ -776,6 +776,75 @@ const FunExamples = () => {
   );
 };
 
+const SlideTransition = () => {
+  const [price, setPrice] = React.useState<number>(12345.67);
+  const onUp = () => setPrice((p) => Math.round((p + Math.random() * 100) * 100) / 100);
+  const onDown = () =>
+    setPrice((p) => Math.max(0, Math.round((p - Math.random() * 100) * 100) / 100));
+
+  return (
+    <VStack gap={2}>
+      <Text font="label1">Slide digit transition variant</Text>
+      <Text font="body">
+        Unlike the default &quot;roll&quot; animation where each digit scrolls through intermediate
+        values, the &quot;slide&quot; variant animates directly from the old digit to the new digit.
+        The animation direction (up/down) is based on the total value change, not individual digit
+        changes.
+      </Text>
+
+      <RollingNumber
+        colorPulseOnUpdate
+        digitTransitionVariant="slide"
+        font="display1"
+        format={{ style: 'currency', currency: 'USD' }}
+        value={price}
+      />
+
+      <HStack gap={2}>
+        <Button onPress={onUp}>
+          <HStack alignItems="center" gap={1}>
+            <Icon name="arrowUp" size="s" />
+            <Text>Increase</Text>
+          </HStack>
+        </Button>
+        <Button onPress={onDown}>
+          <HStack alignItems="center" gap={1}>
+            <Icon name="arrowDown" size="s" />
+            <Text>Decrease</Text>
+          </HStack>
+        </Button>
+      </HStack>
+
+      <Text font="label1">Comparison: Roll vs Slide</Text>
+      <HStack gap={2}>
+        <VStack gap={0.5}>
+          <Text color="fgMuted" font="caption">
+            Roll (default)
+          </Text>
+          <RollingNumber
+            colorPulseOnUpdate
+            font="title1"
+            format={{ style: 'currency', currency: 'USD' }}
+            value={price}
+          />
+        </VStack>
+        <VStack gap={0.5}>
+          <Text color="fgMuted" font="caption">
+            Slide
+          </Text>
+          <RollingNumber
+            colorPulseOnUpdate
+            digitTransitionVariant="slide"
+            font="title1"
+            format={{ style: 'currency', currency: 'USD' }}
+            value={price}
+          />
+        </VStack>
+      </HStack>
+    </VStack>
+  );
+};
+
 const Accessibility = () => {
   return (
     <VStack gap={2}>
@@ -812,6 +881,9 @@ const RollingNumberScreen = () => {
       </Example>
       <Example title="Color and Transition">
         <ColorAndTransition />
+      </Example>
+      <Example title="Slide Transition">
+        <SlideTransition />
       </Example>
       <Example title="Format">
         <Format />

@@ -10,8 +10,10 @@ import { DefaultRollingNumberDigit } from './DefaultRollingNumberDigit';
 import { DefaultRollingNumberMask } from './DefaultRollingNumberMask';
 import { DefaultRollingNumberSymbol } from './DefaultRollingNumberSymbol';
 import type {
+  DigitTransitionVariant,
   RollingNumberValueSectionComponent,
   RollingNumberValueSectionProps,
+  ValueChangeDirection,
 } from './RollingNumber';
 
 const MotionText = m(Text);
@@ -36,6 +38,8 @@ export const DefaultRollingNumberValueSection: RollingNumberValueSectionComponen
         RollingNumberMaskComponent = DefaultRollingNumberMask,
         formattedValue,
         transitionConfig,
+        digitTransitionVariant,
+        valueChangeDirection,
         styles,
         classNames,
         style,
@@ -62,10 +66,12 @@ export const DefaultRollingNumberValueSection: RollingNumberValueSectionComponen
                 key={part.key}
                 RollingNumberMaskComponent={RollingNumberMaskComponent}
                 classNames={{ text: classNames?.text }}
+                digitTransitionVariant={digitTransitionVariant}
                 initialValue={hasMounted ? 0 : undefined}
                 styles={{ text: styles?.text }}
                 transitionConfig={transitionConfig}
                 value={part.value}
+                valueChangeDirection={valueChangeDirection}
               />
             ),
           ),
@@ -76,6 +82,8 @@ export const DefaultRollingNumberValueSection: RollingNumberValueSectionComponen
           RollingNumberDigitComponent,
           hasMounted,
           transitionConfig,
+          digitTransitionVariant,
+          valueChangeDirection,
           RollingNumberMaskComponent,
           styles?.text,
           classNames?.text,
@@ -92,10 +100,12 @@ export const DefaultRollingNumberValueSection: RollingNumberValueSectionComponen
                   key={index}
                   RollingNumberMaskComponent={RollingNumberMaskComponent}
                   classNames={{ text: classNames?.text }}
+                  digitTransitionVariant={digitTransitionVariant}
                   initialValue={hasMounted ? 0 : undefined}
                   styles={{ text: styles?.text }}
                   transitionConfig={transitionConfig}
                   value={parseInt(char)}
+                  valueChangeDirection={valueChangeDirection}
                 />
               ) : (
                 <RollingNumberSymbolComponent
@@ -115,6 +125,8 @@ export const DefaultRollingNumberValueSection: RollingNumberValueSectionComponen
           justifyContent,
           RollingNumberMaskComponent,
           transitionConfig,
+          digitTransitionVariant,
+          valueChangeDirection,
           styles?.text,
           classNames?.text,
         ],

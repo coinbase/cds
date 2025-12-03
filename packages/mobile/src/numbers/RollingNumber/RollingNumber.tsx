@@ -29,9 +29,34 @@ import { DefaultRollingNumberDigit } from './DefaultRollingNumberDigit';
 import { DefaultRollingNumberMask } from './DefaultRollingNumberMask';
 import { DefaultRollingNumberSymbol } from './DefaultRollingNumberSymbol';
 import { DefaultRollingNumberValueSection } from './DefaultRollingNumberValueSection';
+import {
+  defaultTransitionConfig,
+  digits,
+  type DigitTransitionVariant,
+  type RollingNumberDigitComponent,
+  type RollingNumberDigitProps,
+  type RollingNumberMaskComponent,
+  type RollingNumberMaskProps,
+  type RollingNumberTransitionConfig,
+  slideTransitionSpringConfig,
+  type ValueChangeDirection,
+} from './digitTypes';
 import { useColorPulse } from './useColorPulse';
+import { useValueChangeDirection } from './useValueChangeDirection';
 
-export const digits = new Array(10).fill(null).map((_, digit) => digit);
+// Re-export shared types and constants for backward compatibility
+export {
+  defaultTransitionConfig,
+  digits,
+  type DigitTransitionVariant,
+  type RollingNumberDigitComponent,
+  type RollingNumberDigitProps,
+  type RollingNumberMaskComponent,
+  type RollingNumberMaskProps,
+  type RollingNumberTransitionConfig,
+  slideTransitionSpringConfig,
+  type ValueChangeDirection,
+};
 
 const baseStylesheet = StyleSheet.create({
   hide: {
@@ -51,45 +76,6 @@ const baseStylesheet = StyleSheet.create({
     color: 'transparent',
   },
 });
-
-/**
- * Defines transition overrides for RollingNumber animations.
- */
-export type RollingNumberTransitionConfig = {
-  /**
-   * Transition override for the vertical translation animation.
-   */
-  y?: ({ type: 'timing' } & WithTimingConfig) | ({ type: 'spring' } & WithSpringConfig);
-  /**
-   * Transition override for the color interpolation animation.
-   */
-  color?: ({ type: 'timing' } & WithTimingConfig) | ({ type: 'spring' } & WithSpringConfig);
-};
-
-export const defaultTransitionConfig = {
-  y: {
-    type: 'timing',
-    duration: durations.moderate3,
-    easing: Easing.bezier(...curves.global),
-  },
-  color: {
-    type: 'timing',
-    duration: durations.slow4,
-    easing: Easing.bezier(...curves.global),
-  },
-} as const satisfies RollingNumberTransitionConfig;
-
-// Subcomponent prop and component type declarations
-export type RollingNumberMaskProps = HStackProps & {
-  /**
-   * Content rendered inside the mask container.
-   */
-  children?: React.ReactNode;
-  /**
-   * Ref forwarded to the mask view element.
-   */
-  ref?: React.Ref<View>;
-};
 
 export type RollingNumberAffixSectionProps = HStackProps & {
   /**
@@ -149,6 +135,14 @@ export type RollingNumberValueSectionProps = HStackProps & {
    */
   transitionConfig?: RollingNumberTransitionConfig;
   /**
+   * Style of digit transition animation. Defaults to {@code 'roll'}.
+   */
+  digitTransitionVariant?: DigitTransitionVariant;
+  /**
+   * Direction of value change for slide animations.
+   */
+  valueChangeDirection?: ValueChangeDirection;
+  /**
    * Text props forwarded to Text children within the section.
    */
   textProps?: TextProps;
@@ -167,50 +161,6 @@ export type RollingNumberValueSectionProps = HStackProps & {
   };
   /**
    * Ref forwarded to the value section view element.
-   */
-  ref?: React.Ref<View>;
-};
-
-export type RollingNumberDigitProps = ViewProps & {
-  /**
-   * Digit currently displayed in the rotating column.
-   */
-  value: number;
-  /**
-   * Digit displayed during the initial render.
-   */
-  initialValue?: number;
-  /**
-   * Transition overrides applied to the digit animation.
-   */
-  transitionConfig?: RollingNumberTransitionConfig;
-  /**
-   * Component used to mask the digit column.
-   */
-  RollingNumberMaskComponent?: RollingNumberMaskComponent;
-  /**
-   * Height of the digit column used to compute translations.
-   */
-  digitHeight: number;
-  /**
-   * Text props forwarded to the Text elements rendering digits.
-   */
-  textProps?: TextProps;
-  styles?: {
-    /**
-     * Style overrides applied to the digit container view.
-     */
-    root?: StyleProp<ViewStyle>;
-    /**
-     * Style overrides applied to Text rendered within the digit column.
-     */
-    text?:
-      | AnimatedStyle<TextStyle>
-      | StyleProp<TextStyle>
-      | (AnimatedStyle<TextStyle> | StyleProp<TextStyle>)[];
-  };
-  /**
-   * Ref forwarded to the digit container view element.
    */
   ref?: React.Ref<View>;
 };
@@ -243,13 +193,9 @@ export type RollingNumberSymbolProps = HStackProps & {
   ref?: React.Ref<View>;
 };
 
-export type RollingNumberMaskComponent = React.FC<RollingNumberMaskProps>;
-
 export type RollingNumberAffixSectionComponent = React.FC<RollingNumberAffixSectionProps>;
 
 export type RollingNumberValueSectionComponent = React.FC<RollingNumberValueSectionProps>;
-
-export type RollingNumberDigitComponent = React.FC<RollingNumberDigitProps>;
 
 export type RollingNumberSymbolComponent = React.FC<RollingNumberSymbolProps>;
 
@@ -325,6 +271,12 @@ export type RollingNumberBaseProps = SharedProps &
      * Reanimated transition overrides. Supports per-property overrides for {@code y} and {@code color} only.
      */
     transition?: RollingNumberTransitionConfig;
+    /**
+     * Style of digit transition animation. Defaults to {@code 'roll'}.
+     * - `'roll'`: Digits roll through all intermediate values (e.g., 1→2→3→...→9).
+     * - `'slide'`: Digits slide directly from old to new value with opacity crossfade.
+     */
+    digitTransitionVariant?: DigitTransitionVariant;
     /**
      * Accessibility label prefix announced before the value.
      */
@@ -418,6 +370,7 @@ export const RollingNumber = memo(
         styles,
         enableSubscriptNotation,
         transition = defaultTransitionConfig,
+        digitTransitionVariant = 'roll',
         formattedValue,
         accessibilityLabel,
         accessibilityLabelPrefix,
@@ -482,6 +435,8 @@ export const RollingNumber = memo(
         () => formattedValue ?? intlNumberFormatter.format(),
         [formattedValue, intlNumberFormatter],
       );
+
+      const valueChangeDirection = useValueChangeDirection({ value, formatted });
 
       const animatedColorStyle = useColorPulse({
         value,
@@ -568,36 +523,42 @@ export const RollingNumber = memo(
               RollingNumberMaskComponent={RollingNumberMaskComponent}
               RollingNumberSymbolComponent={RollingNumberSymbolComponent}
               digitHeight={digitHeight}
+              digitTransitionVariant={digitTransitionVariant}
               intlNumberParts={pre}
               justifyContent="flex-end"
               style={styles?.i18nPrefix}
               styles={{ text: [animatedColorStyle, styles?.text] }}
               textProps={textProps}
               transitionConfig={transitionConfig}
+              valueChangeDirection={valueChangeDirection}
             />
             <RollingNumberValueSectionComponent
               RollingNumberDigitComponent={RollingNumberDigitComponent}
               RollingNumberMaskComponent={RollingNumberMaskComponent}
               RollingNumberSymbolComponent={RollingNumberSymbolComponent}
               digitHeight={digitHeight}
+              digitTransitionVariant={digitTransitionVariant}
               intlNumberParts={integer}
               justifyContent="flex-end"
               style={styles?.integer}
               styles={{ text: [animatedColorStyle, styles?.text] }}
               textProps={textProps}
               transitionConfig={transitionConfig}
+              valueChangeDirection={valueChangeDirection}
             />
             <RollingNumberValueSectionComponent
               RollingNumberDigitComponent={RollingNumberDigitComponent}
               RollingNumberMaskComponent={RollingNumberMaskComponent}
               RollingNumberSymbolComponent={RollingNumberSymbolComponent}
               digitHeight={digitHeight}
+              digitTransitionVariant={digitTransitionVariant}
               intlNumberParts={fraction}
               justifyContent="flex-start"
               style={styles?.fraction}
               styles={{ text: [animatedColorStyle, styles?.text] }}
               textProps={textProps}
               transitionConfig={transitionConfig}
+              valueChangeDirection={valueChangeDirection}
             />
             {/* Suffix generated by Intl.NumberFormat */}
             <RollingNumberValueSectionComponent
@@ -605,12 +566,14 @@ export const RollingNumber = memo(
               RollingNumberMaskComponent={RollingNumberMaskComponent}
               RollingNumberSymbolComponent={RollingNumberSymbolComponent}
               digitHeight={digitHeight}
+              digitTransitionVariant={digitTransitionVariant}
               intlNumberParts={post}
               justifyContent="flex-start"
               style={styles?.i18nSuffix}
               styles={{ text: [animatedColorStyle, styles?.text] }}
               textProps={textProps}
               transitionConfig={transitionConfig}
+              valueChangeDirection={valueChangeDirection}
             />
           </HStack>
         );
@@ -628,6 +591,8 @@ export const RollingNumber = memo(
         RollingNumberMaskComponent,
         RollingNumberSymbolComponent,
         digitHeight,
+        digitTransitionVariant,
+        valueChangeDirection,
         animatedColorStyle,
         textProps,
         transitionConfig,
@@ -640,6 +605,7 @@ export const RollingNumber = memo(
             RollingNumberMaskComponent={RollingNumberMaskComponent}
             RollingNumberSymbolComponent={RollingNumberSymbolComponent}
             digitHeight={digitHeight}
+            digitTransitionVariant={digitTransitionVariant}
             formattedValue={formattedValue}
             intlNumberParts={[]}
             justifyContent="flex-start"
@@ -647,6 +613,7 @@ export const RollingNumber = memo(
             styles={{ text: [animatedColorStyle, styles?.text] }}
             textProps={textProps}
             transitionConfig={transitionConfig}
+            valueChangeDirection={valueChangeDirection}
           />
         ),
         [
@@ -658,6 +625,8 @@ export const RollingNumber = memo(
           RollingNumberSymbolComponent,
           formattedValue,
           digitHeight,
+          digitTransitionVariant,
+          valueChangeDirection,
           animatedColorStyle,
           textProps,
           transitionConfig,

@@ -26,6 +26,7 @@ import { DefaultRollingNumberMask } from './DefaultRollingNumberMask';
 import { DefaultRollingNumberSymbol } from './DefaultRollingNumberSymbol';
 import { DefaultRollingNumberValueSection } from './DefaultRollingNumberValueSection';
 import { useColorPulse } from './useColorPulse';
+import { useValueChangeDirection } from './useValueChangeDirection';
 
 const tickerCss = css`
   display: inline-flex;
@@ -65,6 +66,30 @@ type RollingNumberTransitionConfig = {
    */
   color?: Transition;
 };
+
+/**
+ * Defines the style of digit transition animation.
+ * - `'roll'`: Digits roll through all intermediate values (e.g., 1→2→3→...→9). Default behavior.
+ * - `'slide'`: Digits slide directly from old to new value with opacity crossfade.
+ */
+export type DigitTransitionVariant = 'roll' | 'slide';
+
+/**
+ * Direction of value change for digit animations.
+ * - `'up'`: Value increased, digits animate upward.
+ * - `'down'`: Value decreased, digits animate downward.
+ * - `'none'`: No change or initial render.
+ */
+export type ValueChangeDirection = 'up' | 'down' | 'none';
+
+/**
+ * Spring configuration for slide transition variant.
+ */
+export const slideTransitionSpringConfig = {
+  stiffness: 280,
+  damping: 18,
+  mass: 0.3,
+} as const;
 
 export const defaultTransitionConfig = {
   y: { duration: durations.moderate3 / 1000, ease: curves.global },
@@ -146,6 +171,14 @@ export type RollingNumberValueSectionProps = TextProps<TextDefaultElement> & {
    */
   transitionConfig?: RollingNumberTransitionConfig;
   /**
+   * Style of digit transition animation. Defaults to {@code 'roll'}.
+   */
+  digitTransitionVariant?: DigitTransitionVariant;
+  /**
+   * Direction of value change for slide animations.
+   */
+  valueChangeDirection?: ValueChangeDirection;
+  /**
    * Inline style overrides applied to the value section.
    */
   styles?: {
@@ -194,6 +227,14 @@ export type RollingNumberDigitProps = TextProps<TextDefaultElement> & {
    * Component used to mask the digit column.
    */
   RollingNumberMaskComponent?: RollingNumberMaskComponent;
+  /**
+   * Style of digit transition animation. Defaults to {@code 'roll'}.
+   */
+  digitTransitionVariant?: DigitTransitionVariant;
+  /**
+   * Direction of value change for slide animations.
+   */
+  valueChangeDirection?: ValueChangeDirection;
   /**
    * Inline style overrides applied to the digit component.
    */
@@ -346,6 +387,12 @@ export type RollingNumberBaseProps = SharedProps &
      */
     transition?: RollingNumberTransitionConfig;
     /**
+     * Style of digit transition animation. Defaults to {@code 'roll'}.
+     * - `'roll'`: Digits roll through all intermediate values (e.g., 1→2→3→...→9).
+     * - `'slide'`: Digits slide directly from old to new value with opacity crossfade.
+     */
+    digitTransitionVariant?: DigitTransitionVariant;
+    /**
      * Accessibility label prefix announced before the value.
      */
     accessibilityLabelPrefix?: string;
@@ -496,6 +543,7 @@ export const RollingNumber: RollingNumberComponent = memo(
         classNames,
         styles,
         enableSubscriptNotation,
+        digitTransitionVariant = 'roll',
         RollingNumberMaskComponent = DefaultRollingNumberMask,
         RollingNumberAffixSectionComponent = DefaultRollingNumberAffixSection,
         RollingNumberValueSectionComponent = DefaultRollingNumberValueSection,
@@ -532,6 +580,8 @@ export const RollingNumber: RollingNumberComponent = memo(
         () => formattedValue ?? intlNumberFormatter.format(),
         [formattedValue, intlNumberFormatter],
       );
+
+      const valueChangeDirection = useValueChangeDirection({ value, formatted });
 
       const colorControls = useColorPulse({
         value,
@@ -615,11 +665,13 @@ export const RollingNumber: RollingNumberComponent = memo(
               RollingNumberSymbolComponent={RollingNumberSymbolComponent}
               className={classNames?.i18nPrefix}
               classNames={{ text: classNames?.text }}
+              digitTransitionVariant={digitTransitionVariant}
               intlNumberParts={pre}
               justifyContent="flex-end"
               style={styles?.i18nPrefix}
               styles={{ text: styles?.text }}
               transitionConfig={transitionConfig}
+              valueChangeDirection={valueChangeDirection}
             />
             <RollingNumberValueSectionComponent
               RollingNumberDigitComponent={RollingNumberDigitComponent}
@@ -627,11 +679,13 @@ export const RollingNumber: RollingNumberComponent = memo(
               RollingNumberSymbolComponent={RollingNumberSymbolComponent}
               className={classNames?.integer}
               classNames={{ text: classNames?.text }}
+              digitTransitionVariant={digitTransitionVariant}
               intlNumberParts={integer}
               justifyContent="flex-end"
               style={styles?.integer}
               styles={{ text: styles?.text }}
               transitionConfig={transitionConfig}
+              valueChangeDirection={valueChangeDirection}
             />
             <RollingNumberValueSectionComponent
               RollingNumberDigitComponent={RollingNumberDigitComponent}
@@ -639,11 +693,13 @@ export const RollingNumber: RollingNumberComponent = memo(
               RollingNumberSymbolComponent={RollingNumberSymbolComponent}
               className={classNames?.fraction}
               classNames={{ text: classNames?.text }}
+              digitTransitionVariant={digitTransitionVariant}
               intlNumberParts={fraction}
               justifyContent="flex-start"
               style={styles?.fraction}
               styles={{ text: styles?.text }}
               transitionConfig={transitionConfig}
+              valueChangeDirection={valueChangeDirection}
             />
             {/* Suffix generated by Intl.NumberFormat is displayed here. */}
             <RollingNumberValueSectionComponent
@@ -652,11 +708,13 @@ export const RollingNumber: RollingNumberComponent = memo(
               RollingNumberSymbolComponent={RollingNumberSymbolComponent}
               className={classNames?.i18nSuffix}
               classNames={{ text: classNames?.text }}
+              digitTransitionVariant={digitTransitionVariant}
               intlNumberParts={post}
               justifyContent="flex-start"
               style={styles?.i18nSuffix}
               styles={{ text: styles?.text }}
               transitionConfig={transitionConfig}
+              valueChangeDirection={valueChangeDirection}
             />
           </HStack>
         );
@@ -678,6 +736,8 @@ export const RollingNumber: RollingNumberComponent = memo(
         RollingNumberDigitComponent,
         RollingNumberSymbolComponent,
         transitionConfig,
+        digitTransitionVariant,
+        valueChangeDirection,
         styles?.text,
         classNames?.text,
       ]);
@@ -690,12 +750,14 @@ export const RollingNumber: RollingNumberComponent = memo(
             RollingNumberSymbolComponent={RollingNumberSymbolComponent}
             className={classNames?.formattedValueSection}
             classNames={{ text: classNames?.text }}
+            digitTransitionVariant={digitTransitionVariant}
             formattedValue={formattedValue}
             intlNumberParts={[]}
             justifyContent="flex-start"
             style={styles?.formattedValueSection}
             styles={{ text: styles?.text }}
             transitionConfig={transitionConfig}
+            valueChangeDirection={valueChangeDirection}
           />
         ),
         [
@@ -709,6 +771,8 @@ export const RollingNumber: RollingNumberComponent = memo(
           formattedValue,
           RollingNumberMaskComponent,
           transitionConfig,
+          digitTransitionVariant,
+          valueChangeDirection,
         ],
       );
 

@@ -477,6 +477,69 @@ export const Accessibility = () => {
   );
 };
 
+export const SlideTransition = () => {
+  const [price, setPrice] = useState<number>(12345.67);
+  const onUp = () => setPrice((p) => Math.round((p + Math.random() * 100) * 100) / 100);
+  const onDown = () =>
+    setPrice((p) => Math.max(0, Math.round((p - Math.random() * 100) * 100) / 100));
+
+  return (
+    <VStack gap={3}>
+      <Text font="label1">Slide digit transition variant</Text>
+      <Text font="body">
+        Unlike the default &quot;roll&quot; animation where each digit scrolls through intermediate
+        values, the &quot;slide&quot; variant animates directly from the old digit to the new digit.
+        The animation direction (up/down) is based on the total value change, not individual digit
+        changes.
+      </Text>
+
+      <RollingNumber
+        colorPulseOnUpdate
+        digitTransitionVariant="slide"
+        font="display1"
+        format={{ style: 'currency', currency: 'USD' }}
+        value={price}
+      />
+
+      <HStack gap={2}>
+        <Button onClick={onUp}>
+          <Icon name="arrowUp" size="s" /> Increase
+        </Button>
+        <Button onClick={onDown}>
+          <Icon name="arrowDown" size="s" /> Decrease
+        </Button>
+      </HStack>
+
+      <Text font="label1">Comparison: Roll vs Slide</Text>
+      <HStack gap={4}>
+        <VStack gap={1}>
+          <Text color="fgMuted" font="caption">
+            Roll (default)
+          </Text>
+          <RollingNumber
+            colorPulseOnUpdate
+            font="title1"
+            format={{ style: 'currency', currency: 'USD' }}
+            value={price}
+          />
+        </VStack>
+        <VStack gap={1}>
+          <Text color="fgMuted" font="caption">
+            Slide
+          </Text>
+          <RollingNumber
+            colorPulseOnUpdate
+            digitTransitionVariant="slide"
+            font="title1"
+            format={{ style: 'currency', currency: 'USD' }}
+            value={price}
+          />
+        </VStack>
+      </HStack>
+    </VStack>
+  );
+};
+
 export const Fun = () => {
   // Counter
   const [count, setCount] = useState(0);
