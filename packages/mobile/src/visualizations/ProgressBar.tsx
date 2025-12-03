@@ -159,7 +159,7 @@ export const ProgressBar = memo(
           accessible
           accessibilityLabel={accessibilityLabel}
           accessibilityRole="progressbar"
-          accessibilityValue={{ min: 0, max: 100, now: progress * 100 }}
+          accessibilityValue={{ min: 0, max: 100, now: Math.round(progress * 100) }}
           alignItems="center"
           flexGrow={1}
           flexShrink={0}
