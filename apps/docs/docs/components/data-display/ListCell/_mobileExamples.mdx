@@ -287,20 +287,22 @@ When you pass the `end` prop, it overrides the `detail`/`subdetail`/`detailNode`
 Use the `unselected` accessory to reserve space for the selection checkmark when toggling the `selected` state.
 
 ```tsx
-<VStack gap={1}>
-  <ListCell
-    accessory="unselected"
-    description="No layout shift when selected"
-    spacingVariant="condensed"
-    title="Placeholder accessory"
-  />
-  <ListCell
-    selected
-    description="Selected state uses the same space"
-    spacingVariant="condensed"
-    title="Selected state"
-  />
-</VStack>
+function PreserveLayoutExample() {
+  const [isSelected, setIsSelected] = React.useState(false);
+
+  return (
+    <VStack gap={1}>
+      <ListCell
+        accessory={isSelected ? 'selected' : 'unselected'}
+        description="Selected state uses the same space, no layout shift when selected"
+        spacingVariant="condensed"
+        title="Leverage unselected state"
+        selected={isSelected}
+        onPress={() => setIsSelected((prev) => !prev)}
+      />
+    </VStack>
+  );
+}
 ```
 
 ### Custom Accessory via Node Prop
