@@ -1,0 +1,107 @@
+---
+description: These rules help agents write React component code that follow our team's best practices. Reference for React component work in the packages cds-web, cds-mobile, cds-web-visualization and cds-mobile-visualization.
+alwaysApply: false
+---
+
+# React Component Development Rules
+
+## Organization
+
+- Every component should live within it own folder
+- Every component should be accompanied by a Storybook file, unit tests and Figma code connect bindings.
+- Sample component folder structure:
+  ```
+  ComponentName/
+  ├── ComponentName.tsx       # Main component file
+  ├── index.ts                # Re-exports for public API
+  ├── __stories__/            # Storybook stories
+  ├── __tests__/              # Unit tests
+  ├── __figma__/              # Figma exports
+  ```
+
+## Conventions
+
+- **memoize**: Always memoize components with React's memo HOC
+- **refs**: All components should accept a ref via forwardRef
+- **memo + forwardRef**: Wrap components with `memo(forwardRef(...))` pattern
+- **Props documentation**: Every prop must have JSDoc comments with `@default` tags where applicable
+- **Type exports**: Export both `BaseProps` and `Props` types (e.g., `ButtonBaseProps`, `ButtonProps`) for type composability
+- **Style overrides**: All components support style overrides via a `style` prop (platform-specific additional props covered in platform rules)
+- **testID propagation**: Support `testID` prop on root element for every component
+
+## Component Patterns
+
+### Compound Components
+
+- Break components down into discrete subcomponents (i.e. "slots")
+- Use this pattern for complex components with clear, distinct composed parts
+- Accept optional subcomponent props with sensible defaults using `*Component`/`Default*` naming:
+  ```ts
+  NavigationComponent = DefaultCarouselNavigation,
+  PaginationComponent = DefaultCarouselPagination,
+  ```
+- Export subcomponent types for consumers (e.g., `type CarouselNavigationComponent`)
+- Examples: Stepper, Carousel, Select (alpha)
+
+**Benefits:**
+
+- Complete customization without forking
+- Sensible defaults for common use case
+- Exported subcomponents for consumers to customize/wrap themselves
+
+### Context + Hook Pattern
+
+- Pair contexts with `use*Context()` hooks that throw descriptive errors on misuse:
+  ```ts
+  export const useCarouselContext = () => {
+    const context = useContext(CarouselContext);
+    if (!context) throw new Error('useCarouselContext must be used within Carousel');
+    return context;
+  };
+  ```
+
+### Controlled/Uncontrolled
+
+- Support both patterns for input components; validate and throw if consumer mixes them (e.g., provides `value` but not `onChange`)
+- Use internal state with prop override: `const open = openProp ?? openInternal;`
+
+### Generics for Type Safety
+
+- Use generics for components with dynamic value types:
+  ```ts
+  type SelectComponent = <Type extends SelectType, Value extends string>(
+    props: SelectProps<Type, Value>,
+  ) => React.ReactElement;
+  ```
+
+## Prop Type Practices
+
+- Components encapsulate two prop types: `BaseProps` (platform-agnostic) and `Props` (extends BaseProps with platform-specific properties like `className`)
+- When composing other components reuse their types via utilities: `Pick` being preferred then secondarily `Omit`/`Exclude`
+- Compose types using type intersections (`&`) in this order: (1) full types (2) Picks (3) Omits (4) other type literal(s):
+  ```ts
+  type MyComponentProps = BoxBaseProps &
+    Pick<OtherComponentProps, 'someProp'> &
+    Omit<AnotherComponentProps, 'otherProp'> & {
+      propA: string;
+      propB: number;
+    };
+  ```
+
+## React Practices
+
+- Always memoize CDS components with `memo` HOC
+- Use `useMemo` for expensive computations or for computed/conditional styles
+- Use `useCallback` for event handlers passed as props to other components
+- Use `useEffect` only for side effects (e.g API calls, subscriptions, dom manipulation, external libs) as needed and avoid using it for most other cases.
+- Consult React's own docs when you feel you may need a useEffect otherwise: https://react.dev/learn/you-might-not-need-an-effect
+
+## Reference Components
+
+These components demonstrate the patterns above well:
+
+- **Select** (alpha/): generics, controlled/uncontrolled, compound architecture
+- **Stepper**: props-based defaults, metadata generics, compound components
+- **Carousel** (web): compound components, imperative handle, context + hook
+- **RollingNumber**: animation config extraction, measurement patterns
+- **SlideButton** (mobile): gesture handling, spring animations, accessibility actions
