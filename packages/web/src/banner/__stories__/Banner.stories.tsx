@@ -97,7 +97,8 @@ const Banners = ({ title, props }: { title: string; props: BannerProps }) => {
         {title} with wrapping VStack
       </Text>
 
-      <VStack background="bgPositiveWash" height={300}>
+      <VStack background="bgPositiveWash" height={300} gap={2}>
+        <Banner {...props} />
         <Banner {...props} />
       </VStack>
       <Text as="h1" display="block" font="title1">
@@ -122,7 +123,8 @@ const Banners = ({ title, props }: { title: string; props: BannerProps }) => {
       <Text as="h1" display="block" font="title1">
         {title} with showDismiss and wrapping VStack
       </Text>
-      <VStack background="bgPositiveWash" height={300}>
+      <VStack background="bgPositiveWash" height={300} gap={2}>
+        <Banner {...props} showDismiss onClose={() => {}} title={`${title} with showDismiss`} />
         <Banner {...props} showDismiss onClose={() => {}} title={`${title} with showDismiss`} />
       </VStack>
 
