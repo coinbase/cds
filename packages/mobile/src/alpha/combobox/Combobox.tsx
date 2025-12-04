@@ -7,7 +7,7 @@ import {
   useRef,
   useState,
 } from 'react';
-import { KeyboardAvoidingView, Platform, View } from 'react-native';
+import { KeyboardAvoidingView, Platform, StyleSheet, View } from 'react-native';
 import Fuse from 'fuse.js';
 
 import { Button } from '../../buttons/Button';
@@ -213,7 +213,9 @@ const ComboboxBase = memo(
               placeholder={null}
               styles={{
                 controlValueNode: { marginBottom: hideSearchInput ? 0 : -12 },
+                ...props.styles,
                 controlEndNode: {
+                  ...StyleSheet.flatten(props.styles?.controlEndNode),
                   alignItems: hasValue && !hideSearchInput ? 'flex-end' : 'center',
                 },
               }}

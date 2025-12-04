@@ -202,7 +202,9 @@ const ComboboxBase = memo(
               options={optionsRef.current}
               placeholder={null}
               styles={{
+                ...props.styles,
                 controlEndNode: {
+                  ...props.styles?.controlEndNode,
                   alignItems: hasValue && !hideSearchInput ? 'flex-end' : 'center',
                 },
               }}
