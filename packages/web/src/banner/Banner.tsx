@@ -199,7 +199,12 @@ export const Banner = memo(
       );
 
       const content = (
-        <Box flexGrow={1} position="relative" {...(!showDismiss && marginStyles)}>
+        <Box
+          width="100%"
+          position="relative"
+          {...(!showDismiss && marginStyles)}
+          height="fit-content"
+        >
           <HStack
             ref={ref}
             background={background}
@@ -292,7 +297,7 @@ export const Banner = memo(
       );
 
       return showDismiss ? (
-        <Box display="block" position="relative" {...marginStyles}>
+        <Box display="block" position="relative" width="100%" {...marginStyles}>
           <Collapsible
             accessibilityLabelledBy={accessibilityLabelledBy}
             collapsed={isCollapsed}

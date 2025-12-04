@@ -7,6 +7,7 @@ import { Link } from '../../typography/Link';
 import { Text } from '../../typography/Text';
 import type { BannerProps } from '../Banner';
 import { Banner } from '../Banner';
+import { Box } from '../../layout/Box';
 
 const primaryAction = <Link href="https://www.coinbase.com">Primary</Link>;
 const secondaryAction = <Link href="https://www.coinbase.com">Secondary</Link>;
@@ -86,9 +87,46 @@ const Banners = ({ title, props }: { title: string; props: BannerProps }) => {
       </Text>
       <Banner {...props} />
       <Text as="h1" display="block" font="title1">
+        {title} with wrapping box
+      </Text>
+      <Text as="p" display="block" font="body">
+        It will by default takes 100% width of the parent, but the height fits its own content.
+      </Text>
+      <Box background="bgPositiveWash" height={300}>
+        <Banner {...props} />
+      </Box>
+      <Text as="h1" display="block" font="title1">
+        {title} with wrapping VStack
+      </Text>
+      <Text as="p" display="block" font="body">
+        It will by default takes 100% width of the parent, but the height fits its own content.
+      </Text>
+      <VStack background="bgPositiveWash" height={300}>
+        <Banner {...props} />
+      </VStack>
+      <Text as="h1" display="block" font="title1">
         {title} with showDismiss
       </Text>
       <Banner {...props} showDismiss onClose={() => {}} title={`${title} with showDismiss`} />
+      <Text as="h1" display="block" font="title1">
+        {title} with showDismiss and wrapping Box
+      </Text>
+      <Text as="p" display="block" font="body">
+        It will by default takes 100% width of the parent, but the height fits its own content.
+      </Text>
+      <Box background="bgPositiveWash" height={300}>
+        <Banner {...props} showDismiss onClose={() => {}} title={`${title} with showDismiss`} />
+      </Box>
+      <Text as="h1" display="block" font="title1">
+        {title} with showDismiss and wrapping VStack
+      </Text>
+      <Text as="p" display="block" font="body">
+        It will by default takes 100% width of the parent, but the height fits its own content.
+      </Text>
+      <VStack background="bgPositiveWash" height={300}>
+        <Banner {...props} showDismiss onClose={() => {}} title={`${title} with showDismiss`} />
+      </VStack>
+
       <Text as="h1" display="block" font="title1">
         {title} with Action
       </Text>
