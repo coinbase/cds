@@ -60,8 +60,8 @@ export const DefaultRollingNumberDigit: RollingNumberDigitComponent = memo(
         value,
         initialValue,
         transitionConfig,
-        digitTransitionVariant = 'roll',
-        valueChangeDirection = 'none',
+        digitTransitionVariant = 'every',
+        direction,
         RollingNumberMaskComponent = DefaultRollingNumberMask,
         color = 'inherit',
         className,
@@ -77,7 +77,7 @@ export const DefaultRollingNumberDigit: RollingNumberDigitComponent = memo(
 
       const numberRefs = useRef(new Array<HTMLSpanElement | null>(10));
       const prevValue = useRef(initialValue ?? value);
-      const isSlideVariant = digitTransitionVariant === 'slide';
+      const isSingleVariant = digitTransitionVariant === 'single';
 
       useLayoutEffect(() => {
         const prevDigit = numberRefs.current[prevValue.current];
@@ -85,11 +85,11 @@ export const DefaultRollingNumberDigit: RollingNumberDigitComponent = memo(
         if (!internalRef.current || !prevDigit || !currDigit || value === prevValue.current) return;
 
         const box = internalRef.current.getBoundingClientRect();
-        // Roll: distance based on numeric difference (rolls through intermediate values)
-        // Slide: distance is always 1 height (direct transition to adjacent position)
-        const slideDirection = valueChangeDirection === 'up' ? 1 : -1;
-        const initialY = isSlideVariant
-          ? box.height * slideDirection
+        // Every: distance based on numeric difference (rolls through every intermediate digit)
+        // Single: distance is always 1 height (rolls directly to the new digit)
+        const directionSign = direction === 'up' ? 1 : -1;
+        const initialY = isSingleVariant
+          ? box.height * directionSign
           : box.height * (value - prevValue.current);
         const prevWidth = getWidthInEm(prevDigit);
         const currentWidth = getWidthInEm(currDigit);
@@ -103,7 +103,7 @@ export const DefaultRollingNumberDigit: RollingNumberDigitComponent = memo(
           (transitionConfig?.y ?? defaultTransitionConfig.y) as ValueAnimationOptions,
         );
         prevValue.current = value;
-      }, [isSlideVariant, transitionConfig, value, valueChangeDirection]);
+      }, [isSingleVariant, transitionConfig, value, direction]);
 
       const renderDigit = useCallback(
         (digit: number) => (
@@ -118,20 +118,20 @@ export const DefaultRollingNumberDigit: RollingNumberDigitComponent = memo(
         [],
       );
 
-      // Use valueChangeDirection prop for slide variant positioning
-      const isGoingUp = valueChangeDirection === 'up';
-      const isGoingDown = valueChangeDirection === 'down';
+      // Use direction prop for single variant positioning
+      const isGoingUp = direction === 'up';
+      const isGoingDown = direction === 'down';
 
-      // Roll: render all digits above/below current (shows intermediate values during animation)
-      // Slide: render only the previous digit in the appropriate section (direct transition)
-      const showTopSection = isSlideVariant ? isGoingUp : value !== 0;
-      const showBottomSection = isSlideVariant ? isGoingDown : value !== 9;
+      // Every: render all digits above/below current (shows every intermediate digit during animation)
+      // Single: render only the previous digit in the appropriate section (direct transition)
+      const showTopSection = isSingleVariant ? isGoingUp : value !== 0;
+      const showBottomSection = isSingleVariant ? isGoingDown : value !== 9;
 
-      const topDigits = isSlideVariant
+      const topDigits = isSingleVariant
         ? renderDigit(prevValue.current)
         : new Array(value).fill(null).map((_, i) => renderDigit(i));
 
-      const bottomDigits = isSlideVariant
+      const bottomDigits = isSingleVariant
         ? renderDigit(prevValue.current)
         : new Array(9 - value).fill(null).map((_, i) => renderDigit(value + i + 1));
 

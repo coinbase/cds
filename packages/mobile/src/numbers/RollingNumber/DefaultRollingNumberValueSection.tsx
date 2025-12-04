@@ -11,10 +11,8 @@ import { DefaultRollingNumberMask } from './DefaultRollingNumberMask';
 import { DefaultRollingNumberSymbol } from './DefaultRollingNumberSymbol';
 import {
   digits,
-  type DigitTransitionVariant,
   type RollingNumberValueSectionComponent,
   type RollingNumberValueSectionProps,
-  type ValueChangeDirection,
 } from './digitTypes';
 
 const AnimatedText = Animated.createAnimatedComponent(Text);
@@ -37,7 +35,7 @@ export const DefaultRollingNumberValueSection: RollingNumberValueSectionComponen
         justifyContent = 'flex-start',
         transitionConfig,
         digitTransitionVariant,
-        valueChangeDirection,
+        direction,
         ...props
       }: RollingNumberValueSectionProps,
       ref,
@@ -87,7 +85,7 @@ export const DefaultRollingNumberValueSection: RollingNumberValueSectionComponen
                 textProps={textProps}
                 transitionConfig={transitionConfig}
                 value={part.value}
-                valueChangeDirection={valueChangeDirection}
+                direction={direction}
               />
             );
           }),
@@ -104,7 +102,7 @@ export const DefaultRollingNumberValueSection: RollingNumberValueSectionComponen
           justifyContent,
           transitionConfig,
           digitTransitionVariant,
-          valueChangeDirection,
+          direction,
           RollingNumberMaskComponent,
         ],
       );
@@ -137,7 +135,7 @@ export const DefaultRollingNumberValueSection: RollingNumberValueSectionComponen
                 textProps={textProps}
                 transitionConfig={transitionConfig}
                 value={parseInt(char)}
-                valueChangeDirection={valueChangeDirection}
+                direction={direction}
               />
             );
           }),
@@ -154,7 +152,7 @@ export const DefaultRollingNumberValueSection: RollingNumberValueSectionComponen
           justifyContent,
           transitionConfig,
           digitTransitionVariant,
-          valueChangeDirection,
+          direction,
           RollingNumberMaskComponent,
         ],
       );

@@ -17,8 +17,7 @@ import {
   digits,
   type RollingNumberDigitComponent,
   type RollingNumberDigitProps,
-  slideTransitionSpringConfig,
-  type ValueChangeDirection,
+  type SingleDirection,
 } from './digitTypes';
 
 const AnimatedText = Animated.createAnimatedComponent(Text);
@@ -30,15 +29,15 @@ const baseStylesheet = StyleSheet.create({
     justifyContent: 'center',
     position: 'relative',
   },
-  // Styles for slide variant
-  slideContainer: {
+  // Styles for single variant
+  singleContainer: {
     overflow: 'hidden',
     position: 'relative',
   },
-  slideGhost: {
+  singleGhost: {
     opacity: 0,
   },
-  slideDigit: {
+  singleDigit: {
     position: 'absolute',
     top: 0,
     left: 0,
@@ -49,18 +48,12 @@ const baseStylesheet = StyleSheet.create({
   },
 });
 
-/**
- * Get the initial and exit Y positions for slide animation based on direction.
- * Roll Up: New digits enter from bottom (100%), old exit to top (-100%)
- * Roll Down: New digits enter from top (-100%), old exit to bottom (100%)
- */
-const getSlideYMultiplier = (direction: ValueChangeDirection) => {
-  if (direction === 'up') {
-    return { initial: 1, exit: -1 }; // Enter from bottom, exit to top
-  }
-  // direction === 'down' or 'none'
-  return { initial: -1, exit: 1 }; // Enter from top, exit to bottom
-};
+/** Spring configuration for single transition variant. */
+const singleTransitionSpringConfig = {
+  stiffness: 280,
+  damping: 18,
+  mass: 0.3,
+} as const;
 
 /**
  * Note that the DefaultRollingNumberDigit component implementation is different in web
@@ -78,34 +71,34 @@ export const DefaultRollingNumberDigit: RollingNumberDigitComponent = memo(
         style,
         styles,
         transitionConfig,
-        digitTransitionVariant = 'roll',
-        valueChangeDirection = 'none',
+        digitTransitionVariant = 'every',
+        direction,
         RollingNumberMaskComponent = DefaultRollingNumberMask,
         ...props
       },
       ref,
     ) => {
-      // Slide variant implementation
-      if (digitTransitionVariant === 'slide') {
+      // Single variant implementation
+      if (digitTransitionVariant === 'single') {
         return (
-          <SlideDigit
+          <SingleDigit
             ref={ref}
             RollingNumberMaskComponent={RollingNumberMaskComponent}
             digitHeight={digitHeight}
+            direction={direction}
             initialValue={initialValue}
             style={style}
             styles={styles}
             textProps={textProps}
             value={value}
-            valueChangeDirection={valueChangeDirection}
             {...props}
           />
         );
       }
 
-      // Roll variant implementation (original behavior)
+      // Every variant implementation (original behavior)
       return (
-        <RollDigit
+        <EveryDigit
           ref={ref}
           RollingNumberMaskComponent={RollingNumberMaskComponent}
           digitHeight={digitHeight}
@@ -123,9 +116,9 @@ export const DefaultRollingNumberDigit: RollingNumberDigitComponent = memo(
 );
 
 /**
- * Internal component for the slide variant.
+ * Internal component for the single variant.
  */
-const SlideDigit = memo(
+const SingleDigit = memo(
   forwardRef<View, Omit<RollingNumberDigitProps, 'digitTransitionVariant' | 'transitionConfig'>>(
     (
       {
@@ -135,7 +128,7 @@ const SlideDigit = memo(
         textProps,
         style,
         styles,
-        valueChangeDirection = 'none',
+        direction,
         RollingNumberMaskComponent = DefaultRollingNumberMask,
         ...props
       },
@@ -171,12 +164,12 @@ const SlideDigit = memo(
 
       // Track values and direction in shared values for worklet access
       const currentValue = useSharedValue(value);
-      const directionShared = useSharedValue<ValueChangeDirection>(valueChangeDirection);
+      const directionShared = useSharedValue<SingleDirection | undefined>(direction);
       const heightShared = useSharedValue(digitHeight);
 
       // Update shared values synchronously during render
       currentValue.value = value;
-      directionShared.value = valueChangeDirection;
+      directionShared.value = direction;
       heightShared.value = digitHeight;
 
       // Animation values for current digit
@@ -198,14 +191,14 @@ const SlideDigit = memo(
           runOnJS(updateDisplayedPrevDigit)(oldValue);
 
           // Get direction multipliers
-          const direction = directionShared.value;
-          const initialMult = direction === 'up' ? 1 : -1;
-          const exitMult = direction === 'up' ? -1 : 1;
+          const dir = directionShared.value;
+          const initialMult = dir === 'up' ? 1 : -1;
+          const exitMult = dir === 'up' ? -1 : 1;
           const height = heightShared.value;
 
           // Spring config
           const springConfig = {
-            ...slideTransitionSpringConfig,
+            ...singleTransitionSpringConfig,
           };
 
           // Reset and start exit animation for previous digit
@@ -243,7 +236,7 @@ const SlideDigit = memo(
       }));
 
       const containerStyle = useMemo(
-        () => [baseStylesheet.slideContainer, { height: digitHeight }, style, styles?.root],
+        () => [baseStylesheet.singleContainer, { height: digitHeight }, style, styles?.root],
         [digitHeight, style, styles?.root],
       );
 
@@ -251,17 +244,17 @@ const SlideDigit = memo(
         <RollingNumberMaskComponent ref={ref} {...props}>
           <Animated.View style={containerStyle}>
             {/* Ghost element for layout */}
-            <AnimatedText style={[baseStylesheet.slideGhost, styles?.text]} {...textProps}>
+            <AnimatedText style={[baseStylesheet.singleGhost, styles?.text]} {...textProps}>
               {value}
             </AnimatedText>
             {/* Previous digit (exiting) */}
-            <Animated.View style={[baseStylesheet.slideDigit, prevAnimatedStyle]}>
+            <Animated.View style={[baseStylesheet.singleDigit, prevAnimatedStyle]}>
               <AnimatedText style={styles?.text} {...textProps}>
                 {displayedPrevDigit}
               </AnimatedText>
             </Animated.View>
             {/* Current digit (entering) */}
-            <Animated.View style={[baseStylesheet.slideDigit, currentAnimatedStyle]}>
+            <Animated.View style={[baseStylesheet.singleDigit, currentAnimatedStyle]}>
               <AnimatedText style={styles?.text} {...textProps}>
                 {value}
               </AnimatedText>
@@ -274,13 +267,10 @@ const SlideDigit = memo(
 );
 
 /**
- * Internal component for the roll variant to avoid hooks in conditional branches.
+ * Internal component for the every variant to avoid hooks in conditional branches.
  */
-const RollDigit = memo(
-  forwardRef<
-    View,
-    Omit<RollingNumberDigitProps, 'digitTransitionVariant' | 'valueChangeDirection'>
-  >(
+const EveryDigit = memo(
+  forwardRef<View, Omit<RollingNumberDigitProps, 'digitTransitionVariant' | 'direction'>>(
     (
       {
         value,

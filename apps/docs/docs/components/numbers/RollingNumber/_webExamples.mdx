@@ -321,21 +321,13 @@ function Example() {
 
 RollingNumber supports two digit transition styles via the `digitTransitionVariant` prop:
 
-- **`'roll'`** (default): Digits roll through all intermediate values (e.g., 1→2→3→...→9).
-- **`'slide'`**: Digits slide directly from old to new value with opacity crossfade. Direction (up/down) is based on the total value change.
-
-The slide variant uses a spring animation with the following configuration:
-
-- Stiffness: 280
-- Damping: 18
-- Mass: 0.3
-
-When reduced motion is enabled, the slide animation falls back to a gentle crossfade.
+- **`'every'`** (default): Rolls through every intermediate digit (e.g., 1→2→3→...→9).
+- **`'single'`**: Rolls directly to the new digit without showing intermediates. Direction (up/down) is based on the total value change.
 
 ```tsx live
 function Example() {
   const [price, setPrice] = React.useState(12345.67);
-  const [variant, setVariant] = React.useState<'roll' | 'slide'>('slide');
+  const [variant, setVariant] = React.useState<'every' | 'single'>('single');
 
   const onIncrease = () => setPrice((p) => Math.round((p + Math.random() * 500 + 100) * 100) / 100);
   const onDecrease = () =>
@@ -364,16 +356,16 @@ function Example() {
       </HStack>
       <HStack gap={2}>
         <Button
-          variant={variant === 'roll' ? 'primary' : 'secondary'}
-          onClick={() => setVariant('roll')}
+          variant={variant === 'every' ? 'primary' : 'secondary'}
+          onClick={() => setVariant('every')}
         >
-          Roll
+          Every
         </Button>
         <Button
-          variant={variant === 'slide' ? 'primary' : 'secondary'}
-          onClick={() => setVariant('slide')}
+          variant={variant === 'single' ? 'primary' : 'secondary'}
+          onClick={() => setVariant('single')}
         >
-          Slide
+          Single
         </Button>
       </HStack>
     </VStack>
@@ -381,7 +373,7 @@ function Example() {
 }
 ```
 
-### Slide variant comparison
+### Variant comparison
 
 ```tsx live
 function Example() {
@@ -396,21 +388,21 @@ function Example() {
   return (
     <VStack gap={2}>
       <Text as="p" display="block" font="label1">
-        Roll variant (default)
+        Every variant (default)
       </Text>
       <RollingNumber
         colorPulseOnUpdate
-        digitTransitionVariant="roll"
+        digitTransitionVariant="every"
         font="display3"
         format={{ style: 'currency', currency: 'USD' }}
         value={price}
       />
       <Text as="p" display="block" font="label1">
-        Slide variant
+        Single variant
       </Text>
       <RollingNumber
         colorPulseOnUpdate
-        digitTransitionVariant="slide"
+        digitTransitionVariant="single"
         font="display3"
         format={{ style: 'currency', currency: 'USD' }}
         value={price}
@@ -424,7 +416,7 @@ function Example() {
 ```
 
 ::::tip Direction-aware animation
-The slide variant determines scroll direction based on the **total value change**, not individual digit changes. When the value increases, digits slide up (new digits enter from below). When the value decreases, digits slide down (new digits enter from above). This matches the behavior of the color pulse feature.
+The single variant determines scroll direction based on the **total value change**, not individual digit changes. When the value increases, digits roll up (new digits enter from below). When the value decreases, digits roll down (new digits enter from above). This matches the behavior of the color pulse feature.
 ::::
 
 ## Prefix and Suffix

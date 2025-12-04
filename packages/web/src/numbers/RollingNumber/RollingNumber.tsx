@@ -69,18 +69,17 @@ type RollingNumberTransitionConfig = {
 
 /**
  * Defines the style of digit transition animation.
- * - `'roll'`: Digits roll through all intermediate values (e.g., 1→2→3→...→9). Default behavior.
- * - `'slide'`: Digits slide directly from old to new value with opacity crossfade.
+ * - `'every'`: Rolls through every intermediate digit (e.g., 1→2→3→...→9). Default behavior.
+ * - `'single'`: Rolls directly to the new digit without showing intermediates.
  */
-export type DigitTransitionVariant = 'roll' | 'slide';
+export type DigitTransitionVariant = 'every' | 'single';
 
 /**
- * Direction of value change for digit animations.
+ * Direction for single variant animations. Only used when {@link digitTransitionVariant} is `'single'`.
  * - `'up'`: Value increased, digits animate upward.
  * - `'down'`: Value decreased, digits animate downward.
- * - `'none'`: No change or initial render.
  */
-export type ValueChangeDirection = 'up' | 'down' | 'none';
+export type SingleDirection = 'up' | 'down';
 
 /**
  * Spring configuration for slide transition variant.
@@ -171,13 +170,13 @@ export type RollingNumberValueSectionProps = TextProps<TextDefaultElement> & {
    */
   transitionConfig?: RollingNumberTransitionConfig;
   /**
-   * Style of digit transition animation. Defaults to {@code 'roll'}.
+   * Style of digit transition animation. Defaults to {@code 'every'}.
    */
   digitTransitionVariant?: DigitTransitionVariant;
   /**
-   * Direction of value change for slide animations.
+   * Direction of the roll animation. Only used when {@link digitTransitionVariant} is `'single'`.
    */
-  valueChangeDirection?: ValueChangeDirection;
+  direction?: SingleDirection;
   /**
    * Inline style overrides applied to the value section.
    */
@@ -228,13 +227,13 @@ export type RollingNumberDigitProps = TextProps<TextDefaultElement> & {
    */
   RollingNumberMaskComponent?: RollingNumberMaskComponent;
   /**
-   * Style of digit transition animation. Defaults to {@code 'roll'}.
+   * Style of digit transition animation. Defaults to {@code 'every'}.
    */
   digitTransitionVariant?: DigitTransitionVariant;
   /**
-   * Direction of value change for slide animations.
+   * Direction of the roll animation. Only used when {@link digitTransitionVariant} is `'single'`.
    */
-  valueChangeDirection?: ValueChangeDirection;
+  direction?: SingleDirection;
   /**
    * Inline style overrides applied to the digit component.
    */
@@ -387,9 +386,9 @@ export type RollingNumberBaseProps = SharedProps &
      */
     transition?: RollingNumberTransitionConfig;
     /**
-     * Style of digit transition animation. Defaults to {@code 'roll'}.
-     * - `'roll'`: Digits roll through all intermediate values (e.g., 1→2→3→...→9).
-     * - `'slide'`: Digits slide directly from old to new value with opacity crossfade.
+     * Style of digit transition animation. Defaults to {@code 'every'}.
+     * - `'every'`: Rolls through every intermediate digit (e.g., 1→2→3→...→9).
+     * - `'single'`: Rolls directly to the new digit without showing intermediates.
      */
     digitTransitionVariant?: DigitTransitionVariant;
     /**
@@ -543,7 +542,7 @@ export const RollingNumber: RollingNumberComponent = memo(
         classNames,
         styles,
         enableSubscriptNotation,
-        digitTransitionVariant = 'roll',
+        digitTransitionVariant = 'every',
         RollingNumberMaskComponent = DefaultRollingNumberMask,
         RollingNumberAffixSectionComponent = DefaultRollingNumberAffixSection,
         RollingNumberValueSectionComponent = DefaultRollingNumberValueSection,
@@ -581,7 +580,7 @@ export const RollingNumber: RollingNumberComponent = memo(
         [formattedValue, intlNumberFormatter],
       );
 
-      const valueChangeDirection = useValueChangeDirection({ value, formatted });
+      const direction = useValueChangeDirection({ value, formatted });
 
       const colorControls = useColorPulse({
         value,
@@ -671,7 +670,7 @@ export const RollingNumber: RollingNumberComponent = memo(
               style={styles?.i18nPrefix}
               styles={{ text: styles?.text }}
               transitionConfig={transitionConfig}
-              valueChangeDirection={valueChangeDirection}
+              direction={direction}
             />
             <RollingNumberValueSectionComponent
               RollingNumberDigitComponent={RollingNumberDigitComponent}
@@ -685,7 +684,7 @@ export const RollingNumber: RollingNumberComponent = memo(
               style={styles?.integer}
               styles={{ text: styles?.text }}
               transitionConfig={transitionConfig}
-              valueChangeDirection={valueChangeDirection}
+              direction={direction}
             />
             <RollingNumberValueSectionComponent
               RollingNumberDigitComponent={RollingNumberDigitComponent}
@@ -699,7 +698,7 @@ export const RollingNumber: RollingNumberComponent = memo(
               style={styles?.fraction}
               styles={{ text: styles?.text }}
               transitionConfig={transitionConfig}
-              valueChangeDirection={valueChangeDirection}
+              direction={direction}
             />
             {/* Suffix generated by Intl.NumberFormat is displayed here. */}
             <RollingNumberValueSectionComponent
@@ -714,7 +713,7 @@ export const RollingNumber: RollingNumberComponent = memo(
               style={styles?.i18nSuffix}
               styles={{ text: styles?.text }}
               transitionConfig={transitionConfig}
-              valueChangeDirection={valueChangeDirection}
+              direction={direction}
             />
           </HStack>
         );
@@ -737,7 +736,7 @@ export const RollingNumber: RollingNumberComponent = memo(
         RollingNumberSymbolComponent,
         transitionConfig,
         digitTransitionVariant,
-        valueChangeDirection,
+        direction,
         styles?.text,
         classNames?.text,
       ]);
@@ -757,7 +756,7 @@ export const RollingNumber: RollingNumberComponent = memo(
             style={styles?.formattedValueSection}
             styles={{ text: styles?.text }}
             transitionConfig={transitionConfig}
-            valueChangeDirection={valueChangeDirection}
+            direction={direction}
           />
         ),
         [
@@ -772,7 +771,7 @@ export const RollingNumber: RollingNumberComponent = memo(
           RollingNumberMaskComponent,
           transitionConfig,
           digitTransitionVariant,
-          valueChangeDirection,
+          direction,
         ],
       );
 

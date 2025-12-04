@@ -1,10 +1,10 @@
 import { useRef } from 'react';
 
-import type { ValueChangeDirection } from './RollingNumber';
+import type { SingleDirection } from './RollingNumber';
 
 /**
  * Hook to track the direction of value changes for RollingNumber animations.
- * Returns 'up' when value increases, 'down' when value decreases, and 'none' on initial render or no change.
+ * Returns 'up' when value increases, 'down' when value decreases, and undefined on initial render or no change.
  *
  * Direction is calculated synchronously during render to ensure animations use the correct direction immediately.
  */
@@ -14,10 +14,10 @@ export function useValueChangeDirection({
 }: {
   value: number;
   formatted: string;
-}): ValueChangeDirection {
+}): SingleDirection | undefined {
   const previousValue = useRef<number | null>(null);
   const previousFormatted = useRef<string | null>(null);
-  const direction = useRef<ValueChangeDirection>('none');
+  const direction = useRef<SingleDirection | undefined>(undefined);
 
   // Calculate direction synchronously during render
   const prev = previousValue.current;

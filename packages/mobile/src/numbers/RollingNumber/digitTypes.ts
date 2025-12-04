@@ -41,27 +41,17 @@ export const defaultTransitionConfig = {
 
 /**
  * Defines the style of digit transition animation.
- * - `'roll'`: Digits roll through all intermediate values (e.g., 1→2→3→...→9). Default behavior.
- * - `'slide'`: Digits slide directly from old to new value with opacity crossfade.
+ * - `'every'`: Rolls through every intermediate digit (e.g., 1→2→3→...→9). Default behavior.
+ * - `'single'`: Rolls directly to the new digit without showing intermediates.
  */
-export type DigitTransitionVariant = 'roll' | 'slide';
+export type DigitTransitionVariant = 'every' | 'single';
 
 /**
- * Direction of value change for digit animations.
+ * Direction for single variant animations. Only used when {@link digitTransitionVariant} is `'single'`.
  * - `'up'`: Value increased, digits animate upward.
  * - `'down'`: Value decreased, digits animate downward.
- * - `'none'`: No change or initial render.
  */
-export type ValueChangeDirection = 'up' | 'down' | 'none';
-
-/**
- * Spring configuration for slide transition variant.
- */
-export const slideTransitionSpringConfig = {
-  stiffness: 280,
-  damping: 18,
-  mass: 0.3,
-} as const;
+export type SingleDirection = 'up' | 'down';
 
 export type RollingNumberMaskProps = HStackProps & {
   /**
@@ -98,13 +88,13 @@ export type RollingNumberDigitProps = ViewProps & {
    */
   digitHeight: number;
   /**
-   * Style of digit transition animation. Defaults to {@code 'roll'}.
+   * Style of digit transition animation. Defaults to {@code 'every'}.
    */
   digitTransitionVariant?: DigitTransitionVariant;
   /**
-   * Direction of value change for slide animations.
+   * Direction of the roll animation. Only used when {@link digitTransitionVariant} is `'single'`.
    */
-  valueChangeDirection?: ValueChangeDirection;
+  direction?: SingleDirection;
   /**
    * Text props forwarded to the Text elements rendering digits.
    */
@@ -190,13 +180,13 @@ export type RollingNumberValueSectionProps = HStackProps & {
    */
   transitionConfig?: RollingNumberTransitionConfig;
   /**
-   * Style of digit transition animation. Defaults to {@code 'roll'}.
+   * Style of digit transition animation. Defaults to {@code 'every'}.
    */
   digitTransitionVariant?: DigitTransitionVariant;
   /**
-   * Direction of value change for slide animations.
+   * Direction of the roll animation. Only used when {@link digitTransitionVariant} is `'single'`.
    */
-  valueChangeDirection?: ValueChangeDirection;
+  direction?: SingleDirection;
   /**
    * Text props forwarded to Text children within the section.
    */

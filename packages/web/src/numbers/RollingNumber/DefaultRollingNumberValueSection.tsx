@@ -10,10 +10,8 @@ import { DefaultRollingNumberDigit } from './DefaultRollingNumberDigit';
 import { DefaultRollingNumberMask } from './DefaultRollingNumberMask';
 import { DefaultRollingNumberSymbol } from './DefaultRollingNumberSymbol';
 import type {
-  DigitTransitionVariant,
   RollingNumberValueSectionComponent,
   RollingNumberValueSectionProps,
-  ValueChangeDirection,
 } from './RollingNumber';
 
 const MotionText = m(Text);
@@ -39,7 +37,7 @@ export const DefaultRollingNumberValueSection: RollingNumberValueSectionComponen
         formattedValue,
         transitionConfig,
         digitTransitionVariant,
-        valueChangeDirection,
+        direction,
         styles,
         classNames,
         style,
@@ -71,7 +69,7 @@ export const DefaultRollingNumberValueSection: RollingNumberValueSectionComponen
                 styles={{ text: styles?.text }}
                 transitionConfig={transitionConfig}
                 value={part.value}
-                valueChangeDirection={valueChangeDirection}
+                direction={direction}
               />
             ),
           ),
@@ -83,7 +81,7 @@ export const DefaultRollingNumberValueSection: RollingNumberValueSectionComponen
           hasMounted,
           transitionConfig,
           digitTransitionVariant,
-          valueChangeDirection,
+          direction,
           RollingNumberMaskComponent,
           styles?.text,
           classNames?.text,
@@ -105,7 +103,7 @@ export const DefaultRollingNumberValueSection: RollingNumberValueSectionComponen
                   styles={{ text: styles?.text }}
                   transitionConfig={transitionConfig}
                   value={parseInt(char)}
-                  valueChangeDirection={valueChangeDirection}
+                  direction={direction}
                 />
               ) : (
                 <RollingNumberSymbolComponent
@@ -126,7 +124,7 @@ export const DefaultRollingNumberValueSection: RollingNumberValueSectionComponen
           RollingNumberMaskComponent,
           transitionConfig,
           digitTransitionVariant,
-          valueChangeDirection,
+          direction,
           styles?.text,
           classNames?.text,
         ],
