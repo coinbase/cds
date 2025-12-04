@@ -76,6 +76,8 @@ export const DefaultRollingNumberDigit: RollingNumberDigitComponent = memo(
       useImperativeHandle(ref, () => internalRef.current as HTMLSpanElement);
 
       const numberRefs = useRef(new Array<HTMLSpanElement | null>(10));
+      const prevSectionRef = useRef<HTMLSpanElement>(null);
+      const currentDigitRef = useRef<HTMLSpanElement>(null);
       const prevValue = useRef(initialValue ?? value);
       const isSingleVariant = digitTransitionVariant === 'single';
 
@@ -94,14 +96,31 @@ export const DefaultRollingNumberDigit: RollingNumberDigitComponent = memo(
         const prevWidth = getWidthInEm(prevDigit);
         const currentWidth = getWidthInEm(currDigit);
 
+        const yTransition = (transitionConfig?.y ??
+          defaultTransitionConfig.y) as ValueAnimationOptions;
+
         animate(
           internalRef.current,
           {
             y: [initialY, 0],
             width: [prevWidth, currentWidth],
           },
-          (transitionConfig?.y ?? defaultTransitionConfig.y) as ValueAnimationOptions,
+          yTransition,
         );
+
+        // Single variant: add opacity crossfade (prev fades out, current fades in)
+        if (isSingleVariant) {
+          const opacityTransition = (transitionConfig?.opacity ??
+            defaultTransitionConfig.opacity) as ValueAnimationOptions;
+
+          if (prevSectionRef.current) {
+            animate(prevSectionRef.current, { opacity: [1, 0] }, opacityTransition);
+          }
+          if (currentDigitRef.current) {
+            animate(currentDigitRef.current, { opacity: [0, 1] }, opacityTransition);
+          }
+        }
+
         prevValue.current = value;
       }, [isSingleVariant, transitionConfig, value, direction]);
 
@@ -145,11 +164,21 @@ export const DefaultRollingNumberDigit: RollingNumberDigitComponent = memo(
             {...props}
           >
             {showTopSection && (
-              <span className={cx(digitNonActiveCss, topNonActiveCss)}>{topDigits}</span>
+              <span
+                ref={isSingleVariant ? prevSectionRef : undefined}
+                className={cx(digitNonActiveCss, topNonActiveCss)}
+              >
+                {topDigits}
+              </span>
             )}
-            {renderDigit(value)}
+            <span ref={isSingleVariant ? currentDigitRef : undefined}>{renderDigit(value)}</span>
             {showBottomSection && (
-              <span className={cx(digitNonActiveCss, bottomNonActiveCss)}>{bottomDigits}</span>
+              <span
+                ref={isSingleVariant ? prevSectionRef : undefined}
+                className={cx(digitNonActiveCss, bottomNonActiveCss)}
+              >
+                {bottomDigits}
+              </span>
             )}
           </MotionText>
         </RollingNumberMaskComponent>

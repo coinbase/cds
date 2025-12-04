@@ -58,11 +58,16 @@ const screenReaderOnlyCss = css`
  */
 type RollingNumberTransitionConfig = {
   /**
-   * Transition override applied to the vertical translation animation.
+   * Transition applied to the vertical translation animation (digit roll).
    */
   y?: Transition;
   /**
-   * Transition override applied to the color interpolation animation.
+   * Transition applied to the opacity animation during digit transitions.
+   * Controls how digits fade in/out during the single variant animation.
+   */
+  opacity?: Transition;
+  /**
+   * Transition applied to the color interpolation animation (color pulse).
    */
   color?: Transition;
 };
@@ -81,17 +86,9 @@ export type DigitTransitionVariant = 'every' | 'single';
  */
 export type SingleDirection = 'up' | 'down';
 
-/**
- * Spring configuration for slide transition variant.
- */
-export const slideTransitionSpringConfig = {
-  stiffness: 280,
-  damping: 18,
-  mass: 0.3,
-} as const;
-
 export const defaultTransitionConfig = {
-  y: { duration: durations.moderate3 / 1000, ease: curves.global },
+  y: { type: 'spring', stiffness: 280, damping: 18, mass: 0.3 },
+  opacity: { duration: durations.fast2 / 1000, ease: curves.global },
   color: { duration: durations.slow4 / 1000, ease: curves.global },
 } as const satisfies RollingNumberTransitionConfig;
 
