@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import React, { memo, useMemo } from 'react';
 import type { FallbackRectWidthProps } from '@coinbase/cds-common/types';
 import { getRectWidthVariant } from '@coinbase/cds-common/utils/getRectWidthVariant';
 
@@ -58,44 +58,68 @@ export const ContentCellFallback = memo(function ContentCellFallback({
     spacingVariant === 'condensed' ? theme.lineHeight.label1 : theme.lineHeight.label2;
   const titleHeight = theme.lineHeight.headline;
 
-  const metaNode = meta ? (
-    <Fallback
-      disableRandomRectWidth={disableRandomRectWidth}
-      height={theme.lineHeight.label2}
-      rectWidthVariant={getRectWidthVariant(rectWidthVariant, 0)}
-      width={50}
-    />
-  ) : undefined;
+  const metaNode = useMemo(() => {
+    if (!meta) {
+      return undefined;
+    }
 
-  const titleNode = title ? (
-    <Fallback
-      disableRandomRectWidth={disableRandomRectWidth}
-      height={titleHeight}
-      rectWidthVariant={getRectWidthVariant(rectWidthVariant, 1)}
-      width={90}
-    />
-  ) : undefined;
+    return (
+      <Fallback
+        disableRandomRectWidth={disableRandomRectWidth}
+        height={theme.lineHeight.label2}
+        rectWidthVariant={getRectWidthVariant(rectWidthVariant, 0)}
+        width={50}
+      />
+    );
+  }, [meta, disableRandomRectWidth, rectWidthVariant, theme]);
 
-  const subtitleNode = subtitle ? (
-    <Fallback
-      disableRandomRectWidth={disableRandomRectWidth}
-      height={subtitleHeight}
-      paddingBottom={description ? 0.5 : undefined}
-      paddingTop={title ? 0.5 : undefined}
-      rectWidthVariant={getRectWidthVariant(rectWidthVariant, 2)}
-      width={90}
-    />
-  ) : undefined;
+  const titleNode = useMemo(() => {
+    if (!title) {
+      return undefined;
+    }
 
-  const descriptionNode = description ? (
-    <Fallback
-      disableRandomRectWidth={disableRandomRectWidth}
-      height={descriptionHeight}
-      paddingTop={0.5}
-      rectWidthVariant={getRectWidthVariant(rectWidthVariant, 3)}
-      width={110}
-    />
-  ) : undefined;
+    return (
+      <Fallback
+        disableRandomRectWidth={disableRandomRectWidth}
+        height={titleHeight}
+        rectWidthVariant={getRectWidthVariant(rectWidthVariant, 1)}
+        width={90}
+      />
+    );
+  }, [title, disableRandomRectWidth, rectWidthVariant, titleHeight]);
+
+  const subtitleNode = useMemo(() => {
+    if (!subtitle) {
+      return undefined;
+    }
+
+    return (
+      <Fallback
+        disableRandomRectWidth={disableRandomRectWidth}
+        height={subtitleHeight}
+        paddingBottom={description ? 0.5 : undefined}
+        paddingTop={title ? 0.5 : undefined}
+        rectWidthVariant={getRectWidthVariant(rectWidthVariant, 2)}
+        width={90}
+      />
+    );
+  }, [subtitle, disableRandomRectWidth, rectWidthVariant, subtitleHeight, description, title]);
+
+  const descriptionNode = useMemo(() => {
+    if (!description) {
+      return undefined;
+    }
+
+    return (
+      <Fallback
+        disableRandomRectWidth={disableRandomRectWidth}
+        height={descriptionHeight}
+        paddingTop={0.5}
+        rectWidthVariant={getRectWidthVariant(rectWidthVariant, 3)}
+        width={110}
+      />
+    );
+  }, [description, disableRandomRectWidth, rectWidthVariant, descriptionHeight]);
 
   return (
     <ContentCell
