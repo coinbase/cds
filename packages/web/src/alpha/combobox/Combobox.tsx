@@ -2,6 +2,7 @@ import {
   forwardRef,
   memo,
   useCallback,
+  useEffect,
   useImperativeHandle,
   useMemo,
   useRef,
@@ -158,6 +159,8 @@ const ComboboxBase = memo(
       valueRef.current = value;
       const optionsRef = useRef(options);
       optionsRef.current = options;
+      const openRef = useRef(open);
+      openRef.current = open;
 
       const handleSearchChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
         setSearchTextRef.current(event.target.value);
@@ -165,18 +168,32 @@ const ComboboxBase = memo(
 
       const ComboboxControlComponent = useMemo(
         () => (props: SelectControlProps<Type, SelectOptionValue>) => {
+          const textInputRef = useRef<HTMLInputElement>(null);
           const hasValue =
             valueRef.current !== null &&
             !(Array.isArray(valueRef.current) && valueRef.current.length === 0);
+          const shouldShowSearchInput = !hideSearchInput && (!hasValue || openRef.current);
+
+          useEffect(() => {
+            if (hasValue && shouldShowSearchInput) {
+              textInputRef.current?.focus();
+            }
+          }, [hasValue, shouldShowSearchInput]);
 
           return (
             <SelectControlComponent
               ref={controlRef.current?.refs.setReference}
               {...props}
+              onClick={(event) => {
+                props.onClick?.(event);
+                textInputRef.current?.focus();
+              }}
               contentNode={
-                hideSearchInput ? null : (
+                shouldShowSearchInput ? (
                   <NativeInput
+                    ref={textInputRef}
                     onChange={handleSearchChange}
+                    onClick={(event) => hasValue && event.stopPropagation()}
                     onKeyDown={(event) => {
                       if (!NAVIGATION_KEYS.includes(event.key)) {
                         event.stopPropagation();
@@ -191,13 +208,13 @@ const ComboboxBase = memo(
                     placeholder={typeof placeholder === 'string' ? placeholder : undefined}
                     style={{
                       padding: 0,
-                      paddingTop: valueRef.current?.length && valueRef.current?.length > 0 ? 8 : 0,
+                      paddingTop: hasValue ? 8 : 0,
                       width: '100%',
                     }}
                     tabIndex={0}
                     value={searchTextRef.current}
                   />
-                )
+                ) : null
               }
               options={optionsRef.current}
               placeholder={null}
@@ -205,7 +222,7 @@ const ComboboxBase = memo(
                 ...props.styles,
                 controlEndNode: {
                   ...props.styles?.controlEndNode,
-                  alignItems: hasValue && !hideSearchInput ? 'flex-end' : 'center',
+                  alignItems: hasValue && shouldShowSearchInput ? 'flex-end' : 'center',
                 },
               }}
               tabIndex={-1}

@@ -7,7 +7,7 @@ import {
   useRef,
   useState,
 } from 'react';
-import { KeyboardAvoidingView, Platform, StyleSheet, View } from 'react-native';
+import { KeyboardAvoidingView, Platform, StyleSheet, View, type TextInput } from 'react-native';
 import Fuse from 'fuse.js';
 
 import { Button } from '../../buttons/Button';
@@ -172,6 +172,8 @@ const ComboboxBase = memo(
       valueRef.current = value;
       const optionsRef = useRef(options);
       optionsRef.current = options;
+      const openRef = useRef(open);
+      openRef.current = open;
 
       const handleSearchChange = useCallback((text: string) => {
         setSearchTextRef.current(text);
@@ -179,16 +181,19 @@ const ComboboxBase = memo(
 
       const ComboboxControlComponent = useCallback(
         (props: SelectControlProps<Type, SelectOptionValue>) => {
+          const textInputRef = useRef<TextInput>(null);
           const hasValue =
             valueRef.current !== null &&
             !(Array.isArray(valueRef.current) && valueRef.current.length === 0);
+          const shouldShowSearchInput = !hideSearchInput && (!hasValue || openRef.current);
 
           return (
             <SelectControlComponent
               {...props}
               contentNode={
-                hideSearchInput ? null : (
+                shouldShowSearchInput ? (
                   <NativeInput
+                    ref={textInputRef}
                     disabled={disabled || !open}
                     onChangeText={handleSearchChange}
                     onPress={() => !disabled && setOpen(true)}
@@ -199,24 +204,22 @@ const ComboboxBase = memo(
                       flexShrink: 1,
                       minWidth: 0,
                       padding: 0,
-                      paddingTop: valueRef.current?.length && valueRef.current?.length > 0 ? 8 : 0,
-                      paddingBottom: 12,
+                      paddingTop: hasValue ? 8 : 0,
                       // This is constrained by the parent container's width. The width is large
                       // to ensure it grows to fill the control
                       width: 300,
                     }}
                     value={searchTextRef.current}
                   />
-                )
+                ) : null
               }
               options={optionsRef.current}
               placeholder={null}
               styles={{
-                controlValueNode: { marginBottom: hideSearchInput ? 0 : -12 },
                 ...props.styles,
                 controlEndNode: {
                   ...StyleSheet.flatten(props.styles?.controlEndNode),
-                  alignItems: hasValue && !hideSearchInput ? 'flex-end' : 'center',
+                  alignItems: hasValue && shouldShowSearchInput ? 'flex-end' : 'center',
                 },
               }}
               variant={variant}
