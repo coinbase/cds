@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "cds-web-components",
+      "cds-mobile-components",
+      "Bash(yarn nx run web:*)",
+      "Bash(yarn nx run mobile:*)",
+      "Bash(yarn nx run common:*)"
+    ]
+  }
+}
