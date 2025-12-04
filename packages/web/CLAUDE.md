@@ -1,1 +1,1 @@
-@./AGENTS.md
+@.cursor/rules/cds-web.mdc

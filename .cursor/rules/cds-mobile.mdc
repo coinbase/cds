@@ -1,3 +1,10 @@
+---
+description: Always use this information to guide you when working on React components in cds-mobile (packages/mobile/)
+alwaysApply: false
+---
+
+<!-- TODO: nested AGENTS.md files should work but they seem a little flaky at the moment. Intelligent mdc files are working better -->
+
 # CDS Mobile Package Guidelines
 
 Mobile-specific patterns for `@coinbase/cds-mobile`.
@@ -23,30 +30,36 @@ const dynamicStyle = {
 <View style={[styles.container, dynamicStyle, style]} />;
 ```
 
-### Overriding styles
+### Inline styles
 
-Mobile components should expose a `style` and `styles` props. `styles` can be used for granular overrides on child elements within the component.
-`styles` should always be in the `*Props` type object, NEVER `*BaseProps`.
+- Mobile components should all expose a `style` and `styles` object props for overriding default styles.
+- As styling is a concern of that specific component, the `style` and `styles` props should never be on the `*BaseProps` type.
+- `styles` can be used for granular overrides on child elements within the component.
+- **Always** merge styles into a react-native style array with `useMemo` in the correct order (default styles => `style` prop => `styles[ELEMENT_NAME]` prop).
 
 **Example:**
 
 ```tsx
 type ComponentProps = ComponentBaseProps & {
+  style?: StyleProp<ViewStyle>;
   styles?: {
     root?: StyleProp<ViewStyle>;
     label?: StyleProp<TextStyle>;
   };
 };
-```
 
-- While merging root styles give priority to `styles.[ELEMENT_NAME]` over the `style` prop
-- Compose styles within the component with array syntax and memoize:
-
-```tsx
-const containerStyle = useMemo(
-  () => [styles.base, { height }, styleProp?.container],
-  [height, styleProp?.container],
+const theme = useTheme();
+const containerStyles = useMemo(
+  () => [
+    { backgroundColor: theme.color.bgPrimary }, // default styles
+    style, // from props
+    styles.root, // from props
+  ],
+  [theme.color.bgPrimary, animatedStyles, style]
 );
+
+// Apply to component
+<Box style={containerStyles}>
 ```
 
 ## Animation
@@ -110,7 +123,11 @@ const [size, onLayout] = useLayout();
 
 ## Accessibility
 
-Use React Native accessibility props:
+- Use appropriate accessibilityLabel, accessibilityHint, and accessibilityRole, accessibilityState props
+- Support screen readers (VoiceOver and TalkBack)
+- Ensure touch targets meet minimum size requirements (44x44 points)
+
+**Example:** Use React Native accessibility props:
 
 ```tsx
 <View
@@ -168,3 +185,5 @@ import NativeDatePicker from 'react-native-date-picker';
 - **RollingNumber**: Reanimated, measurement patterns, screen reader content
 - **Select** (alpha/): controlled/uncontrolled, Drawer integration
 - **Stepper**: direction-based defaults, shared logic from cds-common
+- **Tour**: animations, complexity
+- **DatePicker**: complexity, native modules

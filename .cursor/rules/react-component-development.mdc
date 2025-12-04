@@ -5,10 +5,27 @@ alwaysApply: false
 
 # React Component Development Rules
 
+## Component Development Workflow
+
+1. Research similar reference components and given requirements/description
+2. Optionally, ask clarifying questions about the component's requirements & behavior
+3. Implement the component with unit tests & stories on web first before proceeding to mobile if both platforms were requested.
+4. Never write figma code connect files unless explicitly instructed to do so.
+5. Follow remaining general coding standards and guidelines you've been given.
+
+## Reference Components
+
+These high quality components demonstrate proper use of patterns/conventions:
+
+- **Select** (alpha/): generics, controlled/uncontrolled, compound architecture
+- **Stepper**: props-based defaults, metadata generics, compound components
+- **Carousel** (web): compound components, imperative handle, context + hook
+- **RollingNumber**: animation config extraction, measurement patterns
+- **SlideButton** (mobile): gesture handling, spring animations, accessibility actions
+
 ## Organization
 
 - Every component should live within it own folder
-- Every component should be accompanied by a Storybook file, unit tests and Figma code connect bindings.
 - Sample component folder structure:
   ```
   ComponentName/
@@ -16,31 +33,30 @@ alwaysApply: false
   ├── index.ts                # Re-exports for public API
   ├── __stories__/            # Storybook stories
   ├── __tests__/              # Unit tests
-  ├── __figma__/              # Figma exports
+  ├── __figma__/              # Figma exports (Code Connect bindings)
   ```
 
 ## Conventions
 
 - **memoize**: Always memoize components with React's memo HOC
-- **refs**: All components should accept a ref via forwardRef
-- **memo + forwardRef**: Wrap components with `memo(forwardRef(...))` pattern
+- **refs**: All components should accept a ref via React's forwardRef pattern
 - **Props documentation**: Every prop must have JSDoc comments with `@default` tags where applicable
-- **Type exports**: Export both `BaseProps` and `Props` types (e.g., `ButtonBaseProps`, `ButtonProps`) for type composability
-- **Style overrides**: All components support style overrides via a `style` prop (platform-specific additional props covered in platform rules)
-- **testID propagation**: Support `testID` prop on root element for every component
+- **Type exports**: Export both a `*BaseProps` and `*Props` type (e.g., `ButtonBaseProps`, `ButtonProps`)
+- **Style overrides**: All components must support a way to override styles (varries by web/mobile platform)
+- **testID**: Support `testID` prop on root element for every component
 
 ## Component Patterns
 
 ### Compound Components
 
 - Break components down into discrete subcomponents (i.e. "slots")
-- Use this pattern for complex components with clear, distinct composed parts
+- Use this pattern for complex components with clear, distinct parts
 - Accept optional subcomponent props with sensible defaults using `*Component`/`Default*` naming:
   ```ts
   NavigationComponent = DefaultCarouselNavigation,
   PaginationComponent = DefaultCarouselPagination,
   ```
-- Export subcomponent types for consumers (e.g., `type CarouselNavigationComponent`)
+- The names of classNames/styles keys must line up with the name of the subcomponents (e.g. `classNames.pagination`, `styles.pagination`).
 - Examples: Stepper, Carousel, Select (alpha)
 
 **Benefits:**
@@ -60,7 +76,7 @@ alwaysApply: false
   };
   ```
 
-### Controlled/Uncontrolled
+### Controlled/Uncontrolled Components
 
 - Support both patterns for input components; validate and throw if consumer mixes them (e.g., provides `value` but not `onChange`)
 - Use internal state with prop override: `const open = openProp ?? openInternal;`
@@ -73,12 +89,13 @@ alwaysApply: false
     props: SelectProps<Type, Value>,
   ) => React.ReactElement;
   ```
+- Examples: Select (alpha), Stepper
 
-## Prop Type Practices
+### BaseProps & Props
 
-- Components encapsulate two prop types: `BaseProps` (platform-agnostic) and `Props` (extends BaseProps with platform-specific properties like `className`)
-- When composing other components reuse their types via utilities: `Pick` being preferred then secondarily `Omit`/`Exclude`
-- Compose types using type intersections (`&`) in this order: (1) full types (2) Picks (3) Omits (4) other type literal(s):
+- Component modules encapsulate two prop Types: `*BaseProps` (platform-agnostic) and `*Props` (extends BaseProps with platform and component specific properties like `className`, `classNames`, `styles`, etc.)
+- Reuse other components' Types via utilities: `Pick` being preferred then secondarily `Omit`/`Exclude`
+- Compose prop types using Typescript intersections (`&`) in this order: (1) full types (2) Picks (3) Omits (4) other type literal(s):
   ```ts
   type MyComponentProps = BoxBaseProps &
     Pick<OtherComponentProps, 'someProp'> &
@@ -95,13 +112,3 @@ alwaysApply: false
 - Use `useCallback` for event handlers passed as props to other components
 - Use `useEffect` only for side effects (e.g API calls, subscriptions, dom manipulation, external libs) as needed and avoid using it for most other cases.
 - Consult React's own docs when you feel you may need a useEffect otherwise: https://react.dev/learn/you-might-not-need-an-effect
-
-## Reference Components
-
-These components demonstrate the patterns above well:
-
-- **Select** (alpha/): generics, controlled/uncontrolled, compound architecture
-- **Stepper**: props-based defaults, metadata generics, compound components
-- **Carousel** (web): compound components, imperative handle, context + hook
-- **RollingNumber**: animation config extraction, measurement patterns
-- **SlideButton** (mobile): gesture handling, spring animations, accessibility actions

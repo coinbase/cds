@@ -52,6 +52,7 @@ Runtime: NodeJS (see file: @.nvmrc for version)
 
 ### General Code Standards
 
+- We prefer quality over quantity for unit tests: focus on high-quality tests that provide outsized value before writing exhaustive test cases for coverage.
 - Prefer constants over magic numbers: replace hard-coded values with descriptively named constants in camelCase
 - Use meaningful names: variables and functions should reveal their purpose
 - Code is self-documenting: code shouldn't need comments unless it is unusually complex in which case add brief comments where appropriate

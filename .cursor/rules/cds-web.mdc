@@ -1,13 +1,18 @@
+---
+description: Always use this information to guide you when working on new or existing React components in cds-web (packages/web/)
+alwaysApply: false
+---
+
+<!-- TODO: nested AGENTS.md files should work but they seem a little flaky at the moment. Intelligent mdc files are working better -->
+
 # CDS Web Package Guidelines
 
-Web-specific patterns for `@coinbase/cds-web`.
-
-## Styling with Linaria
+## CSS with Linaria
 
 Use Linaria for zero-runtime CSS. **Always use CDS theme CSS variables** for colors, spacing, typography, and other design tokens:
 
 ```tsx
-import { css } from '@linaria/core';
+import { css, cx } from '@linaria/core';
 
 const containerCss = css`
   /* Spacing tokens */
@@ -30,32 +35,42 @@ const containerCss = css`
   }
 `;
 
-// Compose with cx utility
-<div className={cx(containerCss, className)} style={style} />;
+// Merge classNames with cx utility **in CORRECT ORDER**
+<div
+  className={cx(
+    containerCss, // Base styles first
+    isCompact && conditionClassToApply, // Conditional computed styles
+    className, // User-provided className prop
+    classNames.root, // granular overrides last
+  )}
+/>;
 ```
 
 **IMPORTANT:** Using CSS variables ensures components respond correctly to theme changes (light/dark mode, brand themes).
 
-### Overriding styles
+### Granular classNames
 
-Web components should expose a `className`, `classNames`, `style` and `styles` object props for styling. `classNames` and `styles` can be used for granular overrides on child elements within the component.
+- Components can expose a `classNames` object prop for granular overrides on child elements within the component.
+- Since the keys of the `classNames` object are specific to the component they should never be on the `*BaseProps` type
+
+### data-attributes
+
+- Use data attributes for state-based styling: `data-active`, `data-disabled`, `data-variant`, `data-filled`
+
+## Inline styles
+
+- Web components should all expose a `style` and `styles` object props for overriding inline styles.
+- As styling is a concern of that specific component, the `style` and `styles` props should never be on the `*BaseProps` type.
+- Styles should be merged into a single object with a `useMemo` hook and applied in the correct order (deafult styles => `style` prop => `styles[ELEMENT_NAME]` prop).
 
 **Example:**
 
 ```tsx
 type ComponentProps = ComponentBaseProps & {
-  className?: string;
   style?: React.CSSProperties;
   styles?: { root?: React.CSSProperties; label?: React.CSSProperties };
-  classNames?: { root?: string; label?: string };
 };
 ```
-
-- `className` and `style` should always be applied to the root element of the component.
-- `classNames`/`styles` should always be in the `*Props` type object, NEVER `*BaseProps`
-- While merging root styles give priority to `styles.[ELEMENT_NAME]` over the `style` prop
-- While merging classNames give priority to `classNames.[ELEMENT_NAME]` over the `className` prop
-- When using the Compound Components pattern (like Stepper or Carousel) the names of the classNames/styles keys should line up with the name of the subcomponents.
 
 ## Animation
 
@@ -87,7 +102,12 @@ Use ARIA attributes:
 </div>
 ```
 
-Implement keyboard navigation (Arrow keys, Home, End) for interactive components.
+- Implement keyboard navigation (Arrow keys, Home, End) for interactive components.
+- Provide descriptive labels for all interactive elements
+- Associate form inputs with helper text using aria-describedby
+- Use semantic HTML elements whenever possible
+- Follow WCAG 2.1 AA standards for color contrast
+- Support screen readers by providing descriptive labels and instructions
 
 ## Web-Specific Props
 
