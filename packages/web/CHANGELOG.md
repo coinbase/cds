@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.27.1 (12/4/2025 PST)
+
+#### 🐞 Fixes
+
+- Fix mobile safari not rendering radio icon issue. [[#208](https://github.com/coinbase/cds/pull/208)]
+
 ## 8.27.0 (12/3/2025 PST)
 
 #### 🚀 Updates
