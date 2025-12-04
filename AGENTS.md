@@ -4,7 +4,7 @@ This is the Coinbase Design System (CDS) - a cross-platform React component libr
 Primary language: Typescript
 Package manager: yarn
 Task runner & monorepo tooling: Nx
-Runtime: NodeJS (see file: @.nvmrc for version)
+Runtime: NodeJS (see .nvmrc for version)
 
 ## Core Commands
 
