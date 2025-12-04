@@ -297,7 +297,13 @@ export const Banner = memo(
       );
 
       return showDismiss ? (
-        <Box display="block" position="relative" width="100%" {...marginStyles}>
+        <Box
+          display="block"
+          position="relative"
+          height="fit-content"
+          width="100%"
+          {...marginStyles}
+        >
           <Collapsible
             accessibilityLabelledBy={accessibilityLabelledBy}
             collapsed={isCollapsed}
