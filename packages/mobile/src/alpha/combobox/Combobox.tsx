@@ -181,7 +181,6 @@ const ComboboxBase = memo(
 
       const ComboboxControlComponent = useCallback(
         (props: SelectControlProps<Type, SelectOptionValue>) => {
-          const textInputRef = useRef<TextInput>(null);
           const hasValue =
             valueRef.current !== null &&
             !(Array.isArray(valueRef.current) && valueRef.current.length === 0);
@@ -193,7 +192,6 @@ const ComboboxBase = memo(
               contentNode={
                 shouldShowSearchInput ? (
                   <NativeInput
-                    ref={textInputRef}
                     disabled={disabled || !open}
                     onChangeText={handleSearchChange}
                     onPress={() => !disabled && setOpen(true)}

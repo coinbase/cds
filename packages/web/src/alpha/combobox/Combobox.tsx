@@ -168,30 +168,18 @@ const ComboboxBase = memo(
 
       const ComboboxControlComponent = useMemo(
         () => (props: SelectControlProps<Type, SelectOptionValue>) => {
-          const textInputRef = useRef<HTMLInputElement>(null);
           const hasValue =
             valueRef.current !== null &&
             !(Array.isArray(valueRef.current) && valueRef.current.length === 0);
           const shouldShowSearchInput = !hideSearchInput && (!hasValue || openRef.current);
 
-          useEffect(() => {
-            if (hasValue && shouldShowSearchInput) {
-              textInputRef.current?.focus();
-            }
-          }, [hasValue, shouldShowSearchInput]);
-
           return (
             <SelectControlComponent
               ref={controlRef.current?.refs.setReference}
               {...props}
-              onClick={(event) => {
-                props.onClick?.(event);
-                textInputRef.current?.focus();
-              }}
               contentNode={
                 shouldShowSearchInput ? (
                   <NativeInput
-                    ref={textInputRef}
                     onChange={handleSearchChange}
                     onClick={(event) => hasValue && event.stopPropagation()}
                     onKeyDown={(event) => {
@@ -225,7 +213,7 @@ const ComboboxBase = memo(
                   alignItems: hasValue && shouldShowSearchInput ? 'flex-end' : 'center',
                 },
               }}
-              tabIndex={-1}
+              tabIndex={shouldShowSearchInput ? -1 : 0}
             />
           );
         },
