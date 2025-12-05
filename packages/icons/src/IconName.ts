@@ -344,6 +344,7 @@ export type IconName =
  | 'regulatedFutures'
  | 'report'
  | 'rewardsProduct'
+ | 'robot'
  | 'rocket'
  | 'rocketShip'
  | 'rollingSpot'

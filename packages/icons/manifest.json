@@ -1,6 +1,6 @@
 {
-  "lastUpdated": "2025-11-19T03:33:12.921Z",
-  "lastUnicode": 985632,
+  "lastUpdated": "2025-12-05T17:24:14.954Z",
+  "lastUnicode": 985638,
   "iconSets": [
     {
       "nodeId": "4:39245",
@@ -20303,6 +20303,53 @@
           "active": true,
           "size": 12,
           "unicode": 985609
+        }
+      ]
+    },
+    {
+      "nodeId": "6000:153",
+      "name": "robot",
+      "description": "robot",
+      "assetsHash": "dYSq0T451DsH2t35WQlEh24Wtm5fECocu7A7X4zu7VI=",
+      "nameHash": "LWiSyb1XumJuH9TrNvYNpy8S+1bzIl0XVJ8t4wFCN5E=",
+      "createdAt": "2025-12-05T16:54:09.296Z",
+      "lastUpdated": "2025-12-05T16:54:09.296Z",
+      "svgs": [
+        {
+          "name": "robot-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 985638
+        },
+        {
+          "name": "robot-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 985637
+        },
+        {
+          "name": "robot-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 985636
+        },
+        {
+          "name": "robot-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 985635
+        },
+        {
+          "name": "robot-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 985634
+        },
+        {
+          "name": "robot-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 985633
         }
       ]
     }
