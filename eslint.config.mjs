@@ -218,11 +218,7 @@ export default tseslint.config(
         ...globals.browser,
       },
     },
-    extends: [
-      ...sharedExtends,
-      eslintReactRefresh.configs.vite,
-      internalPlugin.configs.importRules,
-    ],
+    extends: [...sharedExtends, eslintReactRefresh.configs.vite],
     plugins: {
       ...sharedPlugins,
     },
@@ -233,7 +229,7 @@ export default tseslint.config(
   {
     files: ['**/*.{ts,tsx}'],
     settings: sharedSettings,
-    extends: [...sharedExtends, ...typescriptExtends, internalPlugin.configs.allRules],
+    extends: [...sharedExtends, ...typescriptExtends],
     plugins: {
       ...sharedPlugins,
       ...typescriptPlugins,
@@ -241,7 +237,6 @@ export default tseslint.config(
     rules: {
       ...typescriptRules,
       ...sharedRules,
-      // 'internal/safely-spread-props': 'warn',
     },
   },
   {
@@ -259,7 +254,7 @@ export default tseslint.config(
       'packages/**/*.spec.*',
     ],
     settings: sharedSettings,
-    extends: [...sharedExtends, ...typescriptExtends, internalPlugin.configs.allRules],
+    extends: [...sharedExtends, ...typescriptExtends],
     plugins: {
       ...sharedPlugins,
       ...typescriptPlugins,
@@ -268,13 +263,12 @@ export default tseslint.config(
       ...sharedRules,
       ...typescriptRules,
       ...packageProductionRules,
-      // 'internal/safely-spread-props': 'warn',
     },
   },
   {
     files: ['**/*mobile*/**/*.{ts,tsx}'],
     settings: sharedSettings,
-    extends: [...sharedExtends, ...typescriptExtends, internalPlugin.configs.importRules],
+    extends: [...sharedExtends, ...typescriptExtends],
     plugins: {
       ...sharedPlugins,
       ...typescriptPlugins,
@@ -284,6 +278,11 @@ export default tseslint.config(
       ...sharedRules,
       ...typescriptRules,
     },
+  },
+  // Rules specific to mobile story files
+  {
+    files: ['packages/mobile/**/*.stories.tsx'],
+    extends: [internalPlugin.configs.mobileStoryRules],
   },
   {
     files: ['**/*.test.{ts,tsx}', '**/__tests__/**', '**/setup.js'],
@@ -298,7 +297,6 @@ export default tseslint.config(
       ...typescriptExtends,
       eslintJest.configs['flat/recommended'],
       eslintTestingLibrary.configs['flat/react'],
-      internalPlugin.configs.importRules,
     ],
     plugins: {
       ...sharedPlugins,

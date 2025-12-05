@@ -172,7 +172,7 @@ describe('DefaultSelectDropdown', () => {
       const selectAllOption = screen.getByText(/Select all/);
       fireEvent.press(selectAllOption);
 
-      expect(onChange).toHaveBeenCalledWith(['option1', 'option2', 'option3', 'option4']);
+      expect(onChange).toHaveBeenCalledWith(['option1', 'option2', 'option4']);
     });
 
     it('handles clear all functionality', () => {

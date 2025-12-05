@@ -335,4 +335,138 @@ describe('DefaultSelectControl', () => {
       expect(screen.getAllByRole('button').length).toBeGreaterThan(0);
     });
   });
+
+  describe('Duplicate Option Values', () => {
+    const originalEnv = process.env.NODE_ENV;
+    const originalWarn = console.warn;
+
+    beforeEach(() => {
+      console.warn = jest.fn();
+    });
+
+    afterEach(() => {
+      console.warn = originalWarn;
+      process.env.NODE_ENV = originalEnv;
+    });
+
+    it('warns about duplicate values in flat options and uses first occurrence', () => {
+      process.env.NODE_ENV = 'development';
+      const duplicateOptions: SelectOption[] = [
+        { value: 'duplicate', label: 'First Option' },
+        { value: 'option2', label: 'Option 2' },
+        { value: 'duplicate', label: 'Second Option' },
+      ];
+
+      render(
+        <DefaultThemeProvider>
+          <DefaultSelectControl {...defaultProps} options={duplicateOptions} value="duplicate" />
+        </DefaultThemeProvider>,
+      );
+
+      expect(console.warn).toHaveBeenCalledWith(
+        expect.stringContaining('[Select] Duplicate option value detected: "duplicate"'),
+      );
+      // First occurrence should be used for display
+      expect(screen.getByText('First Option')).toBeTruthy();
+      expect(screen.queryByText('Second Option')).toBeNull();
+    });
+
+    it('warns about duplicate values within option groups', () => {
+      process.env.NODE_ENV = 'development';
+      const optionsWithGroup: SelectControlProps<'single'>['options'] = [
+        {
+          label: 'Group 1',
+          options: [
+            { value: 'duplicate', label: 'First in Group' },
+            { value: 'duplicate', label: 'Second in Group' },
+          ],
+        },
+      ];
+
+      render(
+        <DefaultThemeProvider>
+          <DefaultSelectControl {...defaultProps} options={optionsWithGroup} value="duplicate" />
+        </DefaultThemeProvider>,
+      );
+
+      expect(console.warn).toHaveBeenCalledWith(
+        expect.stringContaining('[Select] Duplicate option value detected: "duplicate"'),
+      );
+      expect(console.warn).toHaveBeenCalledWith(
+        expect.stringContaining('Found duplicate in group "Group 1"'),
+      );
+      // First occurrence should be used for display
+      expect(screen.getByText('First in Group')).toBeTruthy();
+      expect(screen.queryByText('Second in Group')).toBeNull();
+    });
+
+    it('warns about duplicate values across groups and flat options', () => {
+      process.env.NODE_ENV = 'development';
+      const mixedOptions: SelectControlProps<'single'>['options'] = [
+        { value: 'duplicate', label: 'Flat Option' },
+        {
+          label: 'Group 1',
+          options: [{ value: 'duplicate', label: 'Group Option' }],
+        },
+      ];
+
+      render(
+        <DefaultThemeProvider>
+          <DefaultSelectControl {...defaultProps} options={mixedOptions} value="duplicate" />
+        </DefaultThemeProvider>,
+      );
+
+      expect(console.warn).toHaveBeenCalledWith(
+        expect.stringContaining('[Select] Duplicate option value detected: "duplicate"'),
+      );
+      // First occurrence (flat option) should be used for display
+      expect(screen.getByText('Flat Option')).toBeTruthy();
+      expect(screen.queryByText('Group Option')).toBeNull();
+    });
+
+    it('does not warn in production mode', () => {
+      process.env.NODE_ENV = 'production';
+      const duplicateOptions: SelectOption[] = [
+        { value: 'duplicate', label: 'First Option' },
+        { value: 'duplicate', label: 'Second Option' },
+      ];
+
+      render(
+        <DefaultThemeProvider>
+          <DefaultSelectControl {...defaultProps} options={duplicateOptions} value="duplicate" />
+        </DefaultThemeProvider>,
+      );
+
+      expect(console.warn).not.toHaveBeenCalled();
+      // Still uses first occurrence
+      expect(screen.getByText('First Option')).toBeTruthy();
+    });
+
+    it('handles duplicate values in multi-select mode', () => {
+      process.env.NODE_ENV = 'development';
+      const duplicateOptions: SelectOption[] = [
+        { value: 'duplicate', label: 'First Option' },
+        { value: 'duplicate', label: 'Second Option' },
+      ];
+
+      const multiSelectPropsWithDuplicates: SelectControlProps<'multi'> = {
+        ...multiSelectProps,
+        options: duplicateOptions,
+        value: ['duplicate'],
+      };
+
+      render(
+        <DefaultThemeProvider>
+          <DefaultSelectControl {...multiSelectPropsWithDuplicates} />
+        </DefaultThemeProvider>,
+      );
+
+      expect(console.warn).toHaveBeenCalledWith(
+        expect.stringContaining('[Select] Duplicate option value detected: "duplicate"'),
+      );
+      // First occurrence should be used for display
+      expect(screen.getByText('First Option')).toBeTruthy();
+      expect(screen.queryByText('Second Option')).toBeNull();
+    });
+  });
 });
