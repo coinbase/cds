@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.27.2 (12/4/2025 PST)
+
+#### 🐞 Fixes
+
+- Fix a bug where Banner will incorrectly grow to its parent height. [[#209](https://github.com/coinbase/cds/pull/209)] [DX-5059]
+
 ## 8.27.1 (12/4/2025 PST)
 
 #### 🐞 Fixes
