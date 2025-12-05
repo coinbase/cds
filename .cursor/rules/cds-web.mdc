@@ -9,7 +9,8 @@ alwaysApply: false
 
 ## CSS with Linaria
 
-Use Linaria for zero-runtime CSS. **Always use CDS theme CSS variables** for colors, spacing, typography, and other design tokens:
+Use Linaria for zero-runtime CSS. **Always use CDS theme CSS variables** for colors, spacing, typography, and other design tokens.
+Reference packages/web/src/core/theme.ts:53-119 for the CSS variable naming pattern.
 
 ```tsx
 import { css, cx } from '@linaria/core';

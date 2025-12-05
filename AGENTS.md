@@ -17,6 +17,7 @@ Runtime: NodeJS (see .nvmrc for version)
 
 **ALWAYS** run Nx commands using the formats demonstrated by the commands below.
 
+- `yarn nx show projects` - Show all projects in the workspace (project names differ from package names)
 - `yarn nx affected --target=test` - Run tests only for affected projects
 - `yarn nx run <project>:test` - Run tests for a specific project
 - `yarn nx run <project>:test --testNamePattern=<pattern>` - Run tests matching pattern
@@ -50,16 +51,25 @@ Runtime: NodeJS (see .nvmrc for version)
 - **`apps/storybook/`** - Component development and testing environment for cds-web
 - **`apps/mobile-app/`** - Sample React Native app for testing components from cds-mobile
 
-### General Code Standards
+## Standards & Best Practices
+
+### General
 
 - We prefer quality over quantity for unit tests: focus on high-quality tests that provide outsized value before writing exhaustive test cases for coverage.
 - Prefer constants over magic numbers: replace hard-coded values with descriptively named constants in camelCase
 - Use meaningful names: variables and functions should reveal their purpose
 - Code is self-documenting: code shouldn't need comments unless it is unusually complex in which case add brief comments where appropriate
 
-### Agent Guidelines
+### React
 
-- Ensure you are following coding standards and patterns for the package you are working on (e.g. cds-web vs. cds-mobile)
+- Always memoize CDS components with `memo` HOC
+- Use `useMemo` for expensive computations or for computed/conditional styles
+- Use `useCallback` for event handlers passed as props to other components
+- Use `useEffect` only for side effects (e.g API calls, subscriptions, browser API calls, etc.)
+- Consult React's docs if you feel you need a useEffect for something else (https://react.dev/learn/you-might-not-need-an-effect)
+
+## Agent Guidelines
+
 - NEVER make commits without being instructed to do so directly
 - ALWAYS run the Nx test target for the **specific file(s)** you modified
 - ALWAYS run the Nx typecheck target on the **specific package(s)** you modified

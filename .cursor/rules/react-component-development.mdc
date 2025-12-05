@@ -25,25 +25,29 @@ These high quality components demonstrate proper use of patterns/conventions:
 
 ## Organization
 
-- Every component should live within it own folder
-- Sample component folder structure:
+- Every main CDS component should live within it own folder.
+- Component folders main contain other React component that used exclusively by the main component.
+  **Sample structure:**
   ```
   ComponentName/
   ├── ComponentName.tsx       # Main component file
+  ├── SubComponent.tsx        # Supporting component
   ├── index.ts                # Re-exports for public API
   ├── __stories__/            # Storybook stories
   ├── __tests__/              # Unit tests
   ├── __figma__/              # Figma exports (Code Connect bindings)
   ```
 
-## Conventions
+## Component Conventions
 
-- **memoize**: Always memoize components with React's memo HOC
+- **Memoize**: Always memoize components with React's memo HOC
 - **refs**: All components should accept a ref via React's forwardRef pattern
 - **Props documentation**: Every prop must have JSDoc comments with `@default` tags where applicable
 - **Type exports**: Export both a `*BaseProps` and `*Props` type (e.g., `ButtonBaseProps`, `ButtonProps`)
-- **Style overrides**: All components must support a way to override styles (varries by web/mobile platform)
+- **Style overrides**: All components MUST support a way to override styles (varries by web/mobile platform)
 - **testID**: Support `testID` prop on root element for every component
+- **Use design tokens**: Reference packages/common/src/core/theme.ts:57-331 as the definitive source for available token names
+- **Padding over margin**: Use padding in combination with flex gap to achieve spacing instead of margin.
 
 ## Component Patterns
 
@@ -104,11 +108,3 @@ These high quality components demonstrate proper use of patterns/conventions:
       propB: number;
     };
   ```
-
-## React Practices
-
-- Always memoize CDS components with `memo` HOC
-- Use `useMemo` for expensive computations or for computed/conditional styles
-- Use `useCallback` for event handlers passed as props to other components
-- Use `useEffect` only for side effects (e.g API calls, subscriptions, dom manipulation, external libs) as needed and avoid using it for most other cases.
-- Consult React's own docs when you feel you may need a useEffect otherwise: https://react.dev/learn/you-might-not-need-an-effect
