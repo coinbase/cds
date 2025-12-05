@@ -24,6 +24,11 @@ import type {
 import { Select } from '../select/Select';
 import type { SelectOptionList } from '../select';
 
+const hasSelectedValue = (currentValue: unknown): boolean =>
+  currentValue !== null &&
+  typeof currentValue !== 'undefined' &&
+  !(Array.isArray(currentValue) && currentValue.length === 0);
+
 export type ComboboxControlProps<
   Type extends SelectType = 'single',
   SelectOptionValue extends string = string,
@@ -161,6 +166,15 @@ const ComboboxBase = memo(
       optionsRef.current = options;
       const openRef = useRef(open);
       openRef.current = open;
+      const searchInputRef = useRef<HTMLInputElement | null>(null);
+      const shouldShowSearchInput = !hideSearchInput && (!hasSelectedValue(value) || open);
+
+      useEffect(() => {
+        if (shouldShowSearchInput) {
+          searchInputRef.current?.focus();
+          searchInputRef.current?.select();
+        }
+      }, [shouldShowSearchInput]);
 
       const handleSearchChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
         setSearchTextRef.current(event.target.value);
@@ -168,18 +182,17 @@ const ComboboxBase = memo(
 
       const ComboboxControlComponent = useMemo(
         () => (props: SelectControlProps<Type, SelectOptionValue>) => {
-          const hasValue =
-            valueRef.current !== null &&
-            !(Array.isArray(valueRef.current) && valueRef.current.length === 0);
-          const shouldShowSearchInput = !hideSearchInput && (!hasValue || openRef.current);
+          const hasValue = hasSelectedValue(valueRef.current);
+          const shouldRenderSearchInput = !hideSearchInput && (!hasValue || openRef.current);
 
           return (
             <SelectControlComponent
               ref={controlRef.current?.refs.setReference}
               {...props}
               contentNode={
-                shouldShowSearchInput ? (
+                shouldRenderSearchInput ? (
                   <NativeInput
+                    ref={searchInputRef}
                     onChange={handleSearchChange}
                     onClick={(event) => hasValue && event.stopPropagation()}
                     onKeyDown={(event) => {
@@ -195,8 +208,9 @@ const ComboboxBase = memo(
                     }}
                     placeholder={typeof placeholder === 'string' ? placeholder : undefined}
                     style={{
-                      padding: 0,
-                      paddingTop: hasValue ? 8 : 0,
+                      paddingLeft: 0,
+                      paddingRight: 0,
+                      height: hasValue ? 24 : 48,
                       width: '100%',
                     }}
                     tabIndex={0}
@@ -210,10 +224,15 @@ const ComboboxBase = memo(
                 ...props.styles,
                 controlEndNode: {
                   ...props.styles?.controlEndNode,
-                  alignItems: hasValue && shouldShowSearchInput ? 'flex-end' : 'center',
+                  alignItems: hasValue && shouldRenderSearchInput ? 'flex-end' : 'center',
+                },
+                controlValueNode: {
+                  ...props.styles?.controlValueNode,
+                  paddingTop: hasValue ? 'var(--space-1_5)' : 0,
+                  paddingBottom: hasValue ? 'var(--space-1_5)' : 0,
                 },
               }}
-              tabIndex={shouldShowSearchInput ? -1 : 0}
+              tabIndex={shouldRenderSearchInput ? -1 : 0}
             />
           );
         },

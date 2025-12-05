@@ -10,6 +10,7 @@ import {
 import { KeyboardAvoidingView, Platform, StyleSheet, View, type TextInput } from 'react-native';
 import Fuse from 'fuse.js';
 
+import { useTheme } from '../../hooks/useTheme';
 import { Button } from '../../buttons/Button';
 import { NativeInput } from '../../controls/NativeInput';
 import { Box } from '../../layout';
@@ -27,6 +28,11 @@ import {
   type SelectType,
 } from '../select/Select';
 import type { SelectOptionList } from '../select/types';
+
+const hasSelectedValue = (currentValue: unknown): boolean =>
+  currentValue !== null &&
+  typeof currentValue !== 'undefined' &&
+  !(Array.isArray(currentValue) && currentValue.length === 0);
 
 export type ComboboxControlProps<
   Type extends SelectType = 'single',
@@ -109,6 +115,7 @@ const ComboboxBase = memo(
       }: ComboboxProps<Type, SelectOptionValue>,
       ref: React.Ref<ComboboxRef>,
     ) => {
+      const theme = useTheme();
       const [searchTextInternal, setSearchTextInternal] = useState(defaultSearchText);
       const searchText = searchTextProp ?? searchTextInternal;
       const setSearchText = onSearchProp ?? setSearchTextInternal;
@@ -174,6 +181,12 @@ const ComboboxBase = memo(
       optionsRef.current = options;
       const openRef = useRef(open);
       openRef.current = open;
+      const searchInputRef = useRef<TextInput | null>(null);
+      const handleTrayVisibilityChange = useCallback((visibility: 'visible' | 'hidden') => {
+        if (visibility === 'visible') {
+          searchInputRef.current?.focus();
+        }
+      }, []);
 
       const handleSearchChange = useCallback((text: string) => {
         setSearchTextRef.current(text);
@@ -181,17 +194,16 @@ const ComboboxBase = memo(
 
       const ComboboxControlComponent = useCallback(
         (props: SelectControlProps<Type, SelectOptionValue>) => {
-          const hasValue =
-            valueRef.current !== null &&
-            !(Array.isArray(valueRef.current) && valueRef.current.length === 0);
-          const shouldShowSearchInput = !hideSearchInput && (!hasValue || openRef.current);
+          const hasValue = hasSelectedValue(valueRef.current);
+          const shouldRenderSearchInput = !hideSearchInput && (!hasValue || openRef.current);
 
           return (
             <SelectControlComponent
               {...props}
               contentNode={
-                shouldShowSearchInput ? (
+                shouldRenderSearchInput ? (
                   <NativeInput
+                    ref={searchInputRef}
                     disabled={disabled || !open}
                     onChangeText={handleSearchChange}
                     onPress={() => !disabled && setOpen(true)}
@@ -202,6 +214,9 @@ const ComboboxBase = memo(
                       flexShrink: 1,
                       minWidth: 0,
                       padding: 0,
+                      height: hasValue ? 24 : 48,
+                      marginTop: hasValue ? 0 : -24,
+                      marginBottom: hasValue ? -12 : -24,
                       paddingTop: hasValue ? 8 : 0,
                       // This is constrained by the parent container's width. The width is large
                       // to ensure it grows to fill the control
@@ -217,7 +232,11 @@ const ComboboxBase = memo(
                 ...props.styles,
                 controlEndNode: {
                   ...StyleSheet.flatten(props.styles?.controlEndNode),
-                  alignItems: hasValue && shouldShowSearchInput ? 'flex-end' : 'center',
+                  alignItems: hasValue && shouldRenderSearchInput ? 'flex-end' : 'center',
+                },
+                controlValueNode: {
+                  ...StyleSheet.flatten(props.styles?.controlValueNode),
+                  paddingBottom: hasValue && shouldRenderSearchInput ? theme.space[1.5] : 0,
                 },
               }}
               variant={variant}
@@ -248,6 +267,7 @@ const ComboboxBase = memo(
             label={label}
             minHeight={500}
             {...props}
+            onVisibilityChange={handleTrayVisibilityChange}
             footer={
               <KeyboardAvoidingView
                 behavior="padding"
@@ -289,6 +309,7 @@ const ComboboxBase = memo(
           SelectDropdownComponent,
           closeButtonLabel,
           endNode,
+          handleTrayVisibilityChange,
           label,
           setOpen,
           startNode,

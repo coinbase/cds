@@ -30,6 +30,7 @@ const DefaultSelectDropdownComponent = memo(
         options,
         value,
         onChange,
+        onVisibilityChange,
         open,
         setOpen,
         controlRef,
@@ -254,6 +255,7 @@ const DefaultSelectDropdownComponent = memo(
           onDismiss={() => setOpen(false)}
           style={dropdownStyles}
           title={label}
+          onVisibilityChange={onVisibilityChange}
           verticalDrawerPercentageOfView={0.9}
         >
           <ScrollView showsVerticalScrollIndicator={true}>

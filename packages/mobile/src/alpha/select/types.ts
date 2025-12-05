@@ -301,7 +301,7 @@ export type SelectDropdownProps<
 > = SelectState<Type, SelectOptionValue> &
   Pick<SharedAccessibilityProps, 'accessibilityLabel'> &
   Omit<BoxProps, 'onChange'> &
-  Pick<TrayProps, 'header' | 'footer'> &
+  Pick<TrayProps, 'header' | 'footer' | 'onVisibilityChange'> &
   Pick<SelectOptionProps<Type, SelectOptionValue>, 'accessory' | 'media' | 'end'> & {
     /** Whether this is for single or multi-select */
     type?: Type;
