@@ -2,12 +2,12 @@ import React from 'react';
 import { loremIpsum } from '@coinbase/cds-common/internal/data/loremIpsum';
 
 import { Button } from '../../buttons';
+import { Box } from '../../layout/Box';
 import { VStack } from '../../layout/VStack';
 import { Link } from '../../typography/Link';
 import { Text } from '../../typography/Text';
 import type { BannerProps } from '../Banner';
 import { Banner } from '../Banner';
-import { Box } from '../../layout/Box';
 
 const primaryAction = <Link href="https://www.coinbase.com">Primary</Link>;
 const secondaryAction = <Link href="https://www.coinbase.com">Secondary</Link>;
@@ -97,7 +97,7 @@ const Banners = ({ title, props }: { title: string; props: BannerProps }) => {
         {title} with wrapping VStack
       </Text>
 
-      <VStack background="bgPositiveWash" height={300} gap={2}>
+      <VStack background="bgPositiveWash" gap={2} height={300}>
         <Banner {...props} />
         <Banner {...props} />
       </VStack>
@@ -105,7 +105,7 @@ const Banners = ({ title, props }: { title: string; props: BannerProps }) => {
         {title} with wrapping HStack
       </Text>
 
-      <Box background="bgPositiveWash" height={300} gap={2}>
+      <Box background="bgPositiveWash" gap={2} height={300}>
         <Banner {...props} />
         <Banner {...props} />
       </Box>
@@ -123,7 +123,7 @@ const Banners = ({ title, props }: { title: string; props: BannerProps }) => {
       <Text as="h1" display="block" font="title1">
         {title} with showDismiss and wrapping VStack
       </Text>
-      <VStack background="bgPositiveWash" height={300} gap={2}>
+      <VStack background="bgPositiveWash" gap={2} height={300}>
         <Banner {...props} showDismiss onClose={() => {}} title={`${title} with showDismiss`} />
         <Banner {...props} showDismiss onClose={() => {}} title={`${title} with showDismiss`} />
       </VStack>
@@ -131,7 +131,7 @@ const Banners = ({ title, props }: { title: string; props: BannerProps }) => {
       <Text as="h1" display="block" font="title1">
         {title} with showDismiss and wrapping HStack
       </Text>
-      <Box background="bgPositiveWash" height={300} gap={2}>
+      <Box background="bgPositiveWash" gap={2} height={300}>
         <Banner {...props} showDismiss onClose={() => {}} title={`${title} with showDismiss`} />
         <Banner {...props} showDismiss onClose={() => {}} title={`${title} with showDismiss`} />
       </Box>

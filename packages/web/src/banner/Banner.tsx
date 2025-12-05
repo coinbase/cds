@@ -200,8 +200,8 @@ export const Banner = memo(
 
       const content = (
         <Box
-          width="100%"
           position="relative"
+          width="100%"
           {...(!showDismiss && marginStyles)}
           height="fit-content"
         >
@@ -299,8 +299,8 @@ export const Banner = memo(
       return showDismiss ? (
         <Box
           display="block"
-          position="relative"
           height="fit-content"
+          position="relative"
           width="100%"
           {...marginStyles}
         >
