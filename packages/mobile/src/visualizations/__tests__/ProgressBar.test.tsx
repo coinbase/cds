@@ -355,4 +355,23 @@ describe('ProgressBar test', () => {
     expect(labelContainer).toHaveStyle({ padding: 6 });
     expect(floatLabelText).toHaveStyle({ backgroundColor: 'green' });
   });
+
+  it('rounds accessibilityValue.now to the nearest integer', () => {
+    render(
+      <DefaultThemeProvider>
+        <Box width="200">
+          <ProgressBar progress={0.777} testID="mock-progress-bar" />
+        </Box>
+      </DefaultThemeProvider>,
+    );
+
+    const progressBar = screen.getByTestId('mock-progress-bar');
+
+    // 0.777 * 100 = 77.7, which should round to 78
+    expect(progressBar.props.accessibilityValue).toEqual({
+      min: 0,
+      max: 100,
+      now: 78,
+    });
+  });
 });
