@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 3.4.0-beta.8 (12/2/2025 PST)
+
+#### 🐞 Fixes
+
+- Fix reanimated animation warning. [[#211](https://github.com/coinbase/cds/pull/211)]
+
 ## 3.4.0-beta.7 (12/2/2025 PST)
 
 #### 🐞 Fixes
