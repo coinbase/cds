@@ -8,7 +8,7 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
-## 8.27.3 (12/3/2025 PST)
+## 8.27.3 (12/5/2025 PST)
 
 #### 🐞 Fixes
 

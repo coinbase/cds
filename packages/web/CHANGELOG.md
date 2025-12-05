@@ -18,9 +18,11 @@ This is an artificial version bump with no new change.
 
 - Fix a bug where Banner will incorrectly grow to its parent height. [[#209](https://github.com/coinbase/cds/pull/209)] [DX-5059]
 
-## 8.27.1 ((12/3/2025, 01:46 PM PST))
+## 8.27.1 (12/4/2025 PST)
 
-This is an artificial version bump with no new change.
+#### 🐞 Fixes
+
+- Fix mobile safari not rendering radio icon issue. [[#208](https://github.com/coinbase/cds/pull/208)]
 
 ## 8.27.0 (12/3/2025 PST)
 
