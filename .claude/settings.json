@@ -1,16 +1,13 @@
 {
   "permissions": {
     "allow": [
+      "Bash(ls:*)",
       "Skill(cds-web-components)",
       "Skill(cds-mobile-components)",
-      "Bash(yarn nx run web:typecheck)",
-      "Bash(yarn nx run mobile:typecheck)",
-      "Bash(yarn nx run common:typecheck)",
-      "Bash(yarn nx run web:test*)",
-      "Bash(yarn nx run mobile:test*)",
-      "Bash(yarn nx run common:test*)",
-      "Bash(yarn nx format)",
-      "Bash(yarn nx format:write)"
+      "Bash(yarn nx run web:*)",
+      "Bash(yarn nx run mobile:*)",
+      "Bash(yarn nx format:write)",
+      "Bash(yarn nx run common:*)"
     ],
     "deny": [],
     "ask": []

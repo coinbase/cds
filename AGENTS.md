@@ -6,6 +6,16 @@ Package manager: yarn
 Task runner & monorepo tooling: Nx
 Runtime: NodeJS (see .nvmrc for version)
 
+## Agent Guidelines
+
+- NEVER make commits without being instructed to do so directly
+- IMPORTANT: After you are done writing code, ALWAYS perform these tasks:
+  1. run the unit for the **specific file(s)** you modified
+  2. run typecheck on the **specific package(s)** you modified
+  3. run the formatter
+- For complex tasks, ask clarifying questions to the user before executing
+- ALWAYS look for relevant skills and rules you can apply before beginning your work
+
 ## Core Commands
 
 - `yarn install` - Install dependencies
@@ -67,12 +77,3 @@ Runtime: NodeJS (see .nvmrc for version)
 - Use `useCallback` for event handlers passed as props to other components
 - Use `useEffect` only for side effects (e.g API calls, subscriptions, browser API calls, etc.)
 - Consult React's docs if you feel you need a useEffect for something else (https://react.dev/learn/you-might-not-need-an-effect)
-
-## Agent Guidelines
-
-- NEVER make commits without being instructed to do so directly
-- ALWAYS run the Nx test target for the **specific file(s)** you modified
-- ALWAYS run the Nx typecheck target on the **specific package(s)** you modified
-- ALWAYS run the formatter when you are done making changes
-- Link to real files when referencing existing code using file paths
-- For complex tasks, ask clarifying questions to the user before executing
