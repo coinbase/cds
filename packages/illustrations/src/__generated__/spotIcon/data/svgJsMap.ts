@@ -135,8 +135,8 @@ const svgJsMap = {
     dark: () => require('../svgJs/dark/bank-3.js').content,
   },
   base: {
-    light: () => require('../svgJs/light/base-5.js').content,
-    dark: () => require('../svgJs/dark/base-5.js').content,
+    light: () => require('../svgJs/light/base-6.js').content,
+    dark: () => require('../svgJs/dark/base-6.js').content,
   },
   bonusFivePercent: {
     light: () => require('../svgJs/light/bonusFivePercent-0.js').content,
@@ -363,8 +363,8 @@ const svgJsMap = {
     dark: () => require('../svgJs/dark/walletAsAServiceProduct-3.js').content,
   },
   walletLogo: {
-    light: () => require('../svgJs/light/walletLogo-4.js').content,
-    dark: () => require('../svgJs/dark/walletLogo-4.js').content,
+    light: () => require('../svgJs/light/walletLogo-5.js').content,
+    dark: () => require('../svgJs/dark/walletLogo-5.js').content,
   },
   warning: {
     light: () => require('../svgJs/light/warning-1.js').content,

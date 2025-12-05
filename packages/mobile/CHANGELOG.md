@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.27.3 (12/5/2025 PST)
+
+#### 🐞 Fixes
+
+- Fix ProgressBar accessibilityValue for Fabric. [[#207](https://github.com/celsaad/cds/pull/207)]
+
 ## 8.27.2 ((12/4/2025, 04:23 PM PST))
 
 This is an artificial version bump with no new change.

@@ -121,8 +121,10 @@ const AnimatedPath = memo<Omit<PathProps, 'animate' | 'clipRect' | 'clipOffset' 
   }) => {
     const isDAnimated = typeof d !== 'string';
 
+    // When d is animated, usePathTransition handles static path transitions.
+    // For animated d values, we skip usePathTransition and use useDerivedValue directly.
     const animatedPath = usePathTransition({
-      currentPath: isDAnimated ? (d.value ?? '') : d,
+      currentPath: isDAnimated ? '' : d,
       initialPath,
       transition,
     });
