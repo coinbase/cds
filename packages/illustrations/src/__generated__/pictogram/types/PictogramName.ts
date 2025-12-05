@@ -414,6 +414,7 @@ export type PictogramName =
   | 'reviewAndAdd'
   | 'rewardsNavigation'
   | 'riskStaking'
+  | 'robot'
   | 'rosettaNavigation'
   | 'safe'
   | 'securedAssets'

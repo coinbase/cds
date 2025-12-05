@@ -420,6 +420,7 @@ const names: PictogramName[] = [
   'reviewAndAdd',
   'rewardsNavigation',
   'riskStaking',
+  'robot',
   'rosettaNavigation',
   'safe',
   'securedAssets',
