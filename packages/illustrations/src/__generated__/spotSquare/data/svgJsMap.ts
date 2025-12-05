@@ -95,8 +95,8 @@ const svgJsMap = {
     dark: () => require('../svgJs/dark/baseConnectMedium-0.js').content,
   },
   baseCreatorCoin: {
-    light: () => require('../svgJs/light/baseCreatorCoin-0.js').content,
-    dark: () => require('../svgJs/dark/baseCreatorCoin-0.js').content,
+    light: () => require('../svgJs/light/baseCreatorCoin-1.js').content,
+    dark: () => require('../svgJs/dark/baseCreatorCoin-1.js').content,
   },
   baseDecentralizationMedium: {
     light: () => require('../svgJs/light/baseDecentralizationMedium-0.js').content,
@@ -199,8 +199,8 @@ const svgJsMap = {
     dark: () => require('../svgJs/dark/baseSendMedium-0.js').content,
   },
   baseSwitch: {
-    light: () => require('../svgJs/light/baseSwitch-0.js').content,
-    dark: () => require('../svgJs/dark/baseSwitch-0.js').content,
+    light: () => require('../svgJs/light/baseSwitch-1.js').content,
+    dark: () => require('../svgJs/dark/baseSwitch-1.js').content,
   },
   baseTargetMedium: {
     light: () => require('../svgJs/light/baseTargetMedium-0.js').content,
@@ -659,12 +659,12 @@ const svgJsMap = {
     dark: () => require('../svgJs/dark/lightningNetworkSend-1.js').content,
   },
   linkCoinbaseWallet: {
-    light: () => require('../svgJs/light/linkCoinbaseWallet-5.js').content,
-    dark: () => require('../svgJs/dark/linkCoinbaseWallet-5.js').content,
+    light: () => require('../svgJs/light/linkCoinbaseWallet-6.js').content,
+    dark: () => require('../svgJs/dark/linkCoinbaseWallet-6.js').content,
   },
   linkingYourWalletToYourCoinbaseAccount: {
-    light: () => require('../svgJs/light/linkingYourWalletToYourCoinbaseAccount-5.js').content,
-    dark: () => require('../svgJs/dark/linkingYourWalletToYourCoinbaseAccount-5.js').content,
+    light: () => require('../svgJs/light/linkingYourWalletToYourCoinbaseAccount-6.js').content,
+    dark: () => require('../svgJs/dark/linkingYourWalletToYourCoinbaseAccount-6.js').content,
   },
   miniGift: {
     light: () => require('../svgJs/light/miniGift-5.js').content,
@@ -959,8 +959,8 @@ const svgJsMap = {
     dark: () => require('../svgJs/dark/waitlistSignup-5.js').content,
   },
   walletApp: {
-    light: () => require('../svgJs/light/walletApp-8.js').content,
-    dark: () => require('../svgJs/dark/walletApp-8.js').content,
+    light: () => require('../svgJs/light/walletApp-9.js').content,
+    dark: () => require('../svgJs/dark/walletApp-9.js').content,
   },
   walletNotifications: {
     light: () => require('../svgJs/light/walletNotifications-3.js').content,

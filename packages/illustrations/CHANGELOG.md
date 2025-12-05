@@ -8,6 +8,78 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+##### ⭐️ Added (1)
+
+###### Pictogram (1)
+
+- robot
+
+##### ⭐️ Updated (49)
+
+###### Pictogram (28)
+
+- cloudNavigation
+- baseChatBubbleHeart
+- baseTile
+- baseSmile
+- baseGlobe
+- baseRockon
+- baseRocket
+- baseCreatorCoin
+- basePower
+- coinbaseWalletApp
+- futures
+- baseDoor
+- linkYourAccount
+- baseCoinStar
+- baseConfetti
+- baseCertificateStar
+- baseSaved
+- baseRibbon
+- baseStack
+- baseGem
+- baseExchange
+- baseStar
+- baseComet
+- baseHandStar
+- baseLightningbolt
+- baseAscend
+- baseComputer
+- baseLogo
+
+###### HeroSquare (10)
+
+- baseCreatorCoin
+- referralsWalletPhones
+- walletUi
+- baseSocial
+- baseCreatorCoinEmpty
+- walletAsset
+- exploreDecentralizedApps
+- linkingYourWalletToYourCoinbaseAccount
+- restrictedCountry
+- downloadCoinbaseWallet
+
+###### SpotIcon (2)
+
+- walletLogo
+- base
+
+###### SpotRectangle (4)
+
+- linkCoinbaseWallet
+- downloadCoinbaseWalletArrow
+- linkingYourWalletToYourCoinbaseAccount
+- exploreDecentralizedApps
+
+###### SpotSquare (5)
+
+- baseSwitch
+- linkCoinbaseWallet
+- linkingYourWalletToYourCoinbaseAccount
+- baseCreatorCoin
+- walletApp
+
 ## 4.28.0 (11/18/2025 PST)
 
 #### 🚀 Updates
