@@ -436,5 +436,6 @@ export const names: IconName[] = [
   'pieChartData',
   'coinsCrypto',
   'crystalBallInsight',
-  'loop'
+  'loop',
+  'robot'
 ];
