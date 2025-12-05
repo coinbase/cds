@@ -401,6 +401,24 @@ export const Compact = () => {
   );
 };
 
+export const CompactSingleSelect = () => {
+  const [value, setValue] = useState<string | null>('apple');
+
+  return (
+    <VStack gap={4}>
+      <Combobox
+        compact
+        label="Compact size"
+        onChange={setValue}
+        options={fruitOptions}
+        placeholder="Compact combobox..."
+        type="single"
+        value={value}
+      />
+    </VStack>
+  );
+};
+
 export const HelperText = () => {
   const { value, onChange } = useMultiSelect({ initialValue: [] });
 

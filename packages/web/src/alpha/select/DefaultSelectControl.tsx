@@ -86,6 +86,7 @@ const DefaultSelectControlComponent = memo(
         ? SelectOptionValue | SelectOptionValue[] | null
         : SelectOptionValue | null;
       const isMultiSelect = type === 'multi';
+      const shouldShowCompactLabel = compact && label && !isMultiSelect;
       const hasValue = value !== null && !(Array.isArray(value) && value.length === 0);
 
       // Map of options to their values
@@ -311,6 +312,11 @@ const DefaultSelectControlComponent = memo(
                 {startNode}
               </HStack>
             )}
+            {shouldShowCompactLabel ? (
+              <HStack alignItems="center" paddingEnd={1} maxWidth="40%">
+                {labelNode}
+              </HStack>
+            ) : null}
             <HStack
               alignItems="center"
               borderRadius={200}
@@ -403,7 +409,7 @@ const DefaultSelectControlComponent = memo(
           endNode={endNode}
           helperTextNode={helperTextNode}
           inputNode={inputNode}
-          labelNode={labelNode}
+          labelNode={shouldShowCompactLabel ? null : labelNode}
           variant={variant}
           {...props}
         />

@@ -18,7 +18,6 @@ import { isSelectOptionGroup } from './Select';
 
 // The height is smaller for the inside label variant since the label takes
 // up space above the input.
-const LABEL_VARIANT_INSIDE_HEIGHT = 24;
 const COMPACT_HEIGHT = 40;
 const DEFAULT_HEIGHT = 56;
 
@@ -72,6 +71,7 @@ export const DefaultSelectControlComponent = memo(
         ? SelectOptionValue | SelectOptionValue[] | null
         : SelectOptionValue | null;
       const isMultiSelect = type === 'multi';
+      const shouldShowCompactLabel = compact && label && !isMultiSelect;
       const hasValue = value !== null && !(Array.isArray(value) && value.length === 0);
 
       // Map of options to their values
@@ -255,6 +255,11 @@ export const DefaultSelectControlComponent = memo(
                     {startNode}
                   </HStack>
                 )}
+                {shouldShowCompactLabel ? (
+                  <HStack alignItems="center" paddingEnd={1} maxWidth="40%">
+                    {labelNode}
+                  </HStack>
+                ) : null}
                 <VStack
                   justifyContent="center"
                   maxWidth={startNode ? '70%' : '85%'}
@@ -317,7 +322,7 @@ export const DefaultSelectControlComponent = memo(
           focused={open}
           helperTextNode={helperTextNode}
           inputNode={inputNode}
-          labelNode={labelNode}
+          labelNode={shouldShowCompactLabel ? null : labelNode}
           variant={variant}
           {...props}
         />

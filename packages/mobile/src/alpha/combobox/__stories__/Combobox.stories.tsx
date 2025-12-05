@@ -279,6 +279,24 @@ const CompactExample = () => {
   );
 };
 
+export const CompactSingleSelect = () => {
+  const [value, setValue] = useState<string | null>('apple');
+
+  return (
+    <VStack gap={4}>
+      <Combobox
+        compact
+        label="Compact size"
+        onChange={setValue}
+        options={fruitOptions}
+        placeholder="Compact combobox..."
+        type="single"
+        value={value}
+      />
+    </VStack>
+  );
+};
+
 const RegularSizeExample = () => {
   const { value, onChange } = useMultiSelect({ initialValue: [] });
 
@@ -700,6 +718,9 @@ const Default = () => {
       </Example>
       <Example title="Compact size">
         <CompactExample />
+      </Example>
+      <Example title="Compact single select">
+        <CompactSingleSelect />
       </Example>
       <Example title="Regular size (for comparison)">
         <RegularSizeExample />
