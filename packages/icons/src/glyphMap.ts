@@ -2594,5 +2594,11 @@ export const glyphMap = {
   'loop-16-active': '󰨋',
   'loop-16-inactive': '󰨌',
   'loop-24-active': '󰨍',
-  'loop-24-inactive': '󰨎'
+  'loop-24-inactive': '󰨎',
+  'robot-12-active': '󰨡',
+  'robot-12-inactive': '󰨢',
+  'robot-16-active': '󰨣',
+  'robot-16-inactive': '󰨤',
+  'robot-24-active': '󰨥',
+  'robot-24-inactive': '󰨦'
 };

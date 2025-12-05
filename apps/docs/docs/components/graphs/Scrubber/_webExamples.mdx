@@ -154,49 +154,54 @@ You can use `BeaconComponent` to customize the visual appearance of scrubber bea
 ```jsx live
 function OutlineBeacon() {
   // Simple outline beacon with no pulse animation
-  const OutlineBeaconComponent = memo(({ dataX, dataY, seriesId, color, isIdle }: ScrubberBeaconProps) => {
-    const { getSeries, getXScale, getYScale } = useCartesianChartContext();
-    const targetSeries = getSeries(seriesId);
-    const xScale = getXScale();
-    const yScale = getYScale(targetSeries?.yAxisId);
+  const OutlineBeaconComponent = memo(
+    forwardRef(({ dataX, dataY, seriesId, color, isIdle }: ScrubberBeaconProps, ref) => {
+      const { getSeries, getXScale, getYScale } = useCartesianChartContext();
+      const targetSeries = getSeries(seriesId);
+      const xScale = getXScale();
+      const yScale = getYScale(targetSeries?.yAxisId);
 
-    const pixelCoordinate = useMemo(() => {
-      if (!xScale || !yScale) return;
-      return projectPoint({ x: dataX, y: dataY, xScale, yScale });
-    }, [dataX, dataY, xScale, yScale]);
+      const pixelCoordinate = useMemo(() => {
+        if (!xScale || !yScale) return;
+        return projectPoint({ x: dataX, y: dataY, xScale, yScale });
+      }, [dataX, dataY, xScale, yScale]);
 
-    if (!pixelCoordinate) return;
+      // Provide a no-op pulse implementation for simple beacons
+      useImperativeHandle(ref, () => ({ pulse: () => {} }), []);
 
-    if (isIdle) {
+      if (!pixelCoordinate) return;
+
+      if (isIdle) {
+        return (
+          <>
+            <m.circle
+              animate={{ cx: pixelCoordinate.x, cy: pixelCoordinate.y }}
+              cx={pixelCoordinate.x}
+              cy={pixelCoordinate.y}
+              transition={defaultTransition}
+              r={6}
+              fill={color}
+            />
+            <m.circle
+              animate={{ cx: pixelCoordinate.x, cy: pixelCoordinate.y }}
+              cx={pixelCoordinate.x}
+              cy={pixelCoordinate.y}
+              transition={defaultTransition}
+              r={3}
+              fill="var(--color-bg)"
+            />
+          </>
+        );
+      }
+
       return (
         <>
-          <m.circle
-            animate={{ cx: pixelCoordinate.x, cy: pixelCoordinate.y }}
-            cx={pixelCoordinate.x}
-            cy={pixelCoordinate.y}
-            transition={defaultTransition}
-            r={6}
-            fill={color}
-          />
-          <m.circle
-            animate={{ cx: pixelCoordinate.x, cy: pixelCoordinate.y }}
-            cx={pixelCoordinate.x}
-            cy={pixelCoordinate.y}
-            transition={defaultTransition}
-            r={3}
-            fill="var(--color-bg)"
-          />
+          <circle cx={pixelCoordinate.x} cy={pixelCoordinate.y} r={6} fill={color} />
+          <circle cx={pixelCoordinate.x} cy={pixelCoordinate.y} r={3} fill="var(--color-bg)" />
         </>
       );
-    }
-
-    return (
-      <>
-        <circle cx={pixelCoordinate.x} cy={pixelCoordinate.y} r={6} fill={color} />
-        <circle cx={pixelCoordinate.x} cy={pixelCoordinate.y} r={3} fill="var(--color-bg)" />
-      </>
-    );
-  });
+    }),
+  );
 
   const dataCount = 14;
   const minDataValue = 0;
@@ -529,12 +534,14 @@ You can use `BeaconComponent` and `BeaconLabelComponent` with the `opacity` prop
 
 ```jsx live
 function HiddenScrubberWhenIdle() {
-  const MyScrubberBeacon = memo((props: ScrubberBeaconProps) => {
-    const { scrubberPosition } = useScrubberContext();
-    const isScrubbing = scrubberPosition !== undefined;
+  const MyScrubberBeacon = memo(
+    forwardRef((props: ScrubberBeaconProps, ref) => {
+      const { scrubberPosition } = useScrubberContext();
+      const isScrubbing = scrubberPosition !== undefined;
 
-    return <DefaultScrubberBeacon {...props} opacity={isScrubbing ? 1 : 0} />;
-  });
+      return <DefaultScrubberBeacon ref={ref} {...props} opacity={isScrubbing ? 1 : 0} />;
+    }),
+  );
 
   const MyScrubberBeaconLabel = memo((props: ScrubberBeaconLabelProps) => {
     const { scrubberPosition } = useScrubberContext();
