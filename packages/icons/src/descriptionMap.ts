@@ -5610,5 +5610,8 @@ export const descriptionMap: Record<string, IconName[]> = {
   ],
   'loop': [
     'loop'
+  ],
+  'robot': [
+    'robot'
   ]
 };
