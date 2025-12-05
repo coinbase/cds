@@ -1,22 +1,29 @@
-### Basic usage
+The Tour component guides users through your app with step-by-step coachmarks.
+You define tour steps with unique IDs and wrap target elements with `TourStep` components.
 
-```tsx live
-function Example() {
+## Basic usage
+
+```jsx
+function BasicTourExample() {
   const [activeTourStep, setActiveTourStep] = useState(null);
 
   const StepOne = () => {
     const [checked, setChecked] = useState(false);
-
     const { goNextTourStep, stopTour } = useTourContext();
 
     return (
       <Coachmark
-        action={<Button variant="secondary" onPress={goNextTourStep} compact label="Next" />}
+        action={
+          <Button compact onPress={goNextTourStep} variant="secondary">
+            Next
+          </Button>
+        }
         checkbox={
           <Checkbox checked={checked} onChange={setChecked}>
-            Don&apos;t show again
+            Don't show again
           </Checkbox>
         }
+        closeButtonAccessibilityLabel="Close"
         content="Add up to 3 lines of body copy. Deliver your message with clarity and impact"
         onClose={stopTour}
         title="My first step"
@@ -28,16 +35,21 @@ function Example() {
     const { goNextTourStep, stopTour } = useTourContext();
     return (
       <Coachmark
-        action={<Button variant="secondary" onPress={goNextTourStep} compact label="Next" />}
+        action={
+          <Button compact onPress={goNextTourStep} variant="secondary">
+            Next
+          </Button>
+        }
+        closeButtonAccessibilityLabel="Close"
         content={
           <VStack gap={2}>
-            <TextCaption as="p" color="fgMuted">
+            <Text color="fgMuted" font="caption">
               50%
-            </TextCaption>
+            </Text>
             <ProgressBar progress={0.5} />
-            <TextBody as="p">
+            <Text font="body">
               Add up to 3 lines of body copy. Deliver your message with clarity and impact
-            </TextBody>
+            </Text>
           </VStack>
         }
         media={<RemoteImage height={150} source={ethBackground} width="100%" />}
@@ -53,9 +65,15 @@ function Example() {
       <Coachmark
         action={
           <HStack gap={1}>
-            <Button variant="secondary" onPress={goPreviousTourStep} compact label="Back" />
-            <Button variant="secondary" onPress={goNextTourStep} compact label="Next" />
-            <Button variant="secondary" onPress={stopTour} compact label="Done" />
+            <Button compact onPress={goPreviousTourStep} variant="secondary">
+              Back
+            </Button>
+            <Button compact onPress={goNextTourStep} variant="secondary">
+              Next
+            </Button>
+            <Button compact onPress={stopTour} variant="secondary">
+              Done
+            </Button>
           </HStack>
         }
         content="Add up to 3 lines of body copy. Deliver your message with clarity and impact"
@@ -66,62 +84,383 @@ function Example() {
   };
 
   const tourSteps = [
-    {
-      id: 'step1',
-      onBeforeActive: () => console.log('step1 before'),
-      Component: StepOne,
-    },
-    {
-      id: 'step2',
-      onBeforeActive: () => console.log('step2 before'),
-      Component: StepTwo,
-    },
-    {
-      id: 'step3',
-      onBeforeActive: () => console.log('step3 before'),
-      Component: StepThree,
-    },
+    { id: 'step1', Component: StepOne },
+    { id: 'step2', Component: StepTwo },
+    { id: 'step3', Component: StepThree },
   ];
 
-  const TourExample = ({ spacerWidthIncrement = 0, spacerHeightIncrement = 500 }) => {
+  const TourContent = () => {
     const { startTour } = useTourContext();
-
-    const handlePress = useCallback(() => startTour(), [startTour]);
 
     return (
       <VStack flexGrow={1} gap={2} justifyContent="space-between">
-        <Button onPress={handlePress} compact label="Start tour" />
+        <Button onPress={() => startTour()} compact>
+          Start tour
+        </Button>
         <TourStep id="step1">
-          <Box backgroundColor="secondary" padding={4}>
+          <Box background="bgSecondary" padding={4}>
             <Text>This is step 1</Text>
           </Box>
         </TourStep>
-        <Box height={spacerHeightIncrement} />
-        <HStack justifyContent="flex-end">
-          <Box flexShrink={0} width={spacerWidthIncrement} />
-          <TourStep id="step2">
-            <Box backgroundColor="secondary" padding={4} width={150}>
-              <Text>This is step 2</Text>
-            </Box>
-          </TourStep>
-        </HStack>
-        <Box height={spacerHeightIncrement} />
-        <HStack>
-          <Box flexShrink={0} width={spacerWidthIncrement * 2} />
-          <TourStep id="step3">
-            <VStack backgroundColor="secondary" padding={4} width={150}>
-              <Text>This is step 3</Text>
-            </VStack>
-          </TourStep>
-        </HStack>
+        <Box height={300} />
+        <TourStep id="step2">
+          <Box background="bgSecondary" padding={4} width={150}>
+            <Text>This is step 2</Text>
+          </Box>
+        </TourStep>
+        <Box height={300} />
+        <TourStep id="step3">
+          <VStack background="bgSecondary" padding={4} width={150}>
+            <Text>This is step 3</Text>
+          </VStack>
+        </TourStep>
       </VStack>
     );
   };
 
   return (
     <Tour activeTourStep={activeTourStep} onChange={setActiveTourStep} steps={tourSteps}>
-      <TourExample />
+      <TourContent />
     </Tour>
   );
+}
+```
+
+Coachmarks can contain rich content including images, progress indicators, and custom layouts.
+
+```jsx
+function RichContentExample() {
+  const RichStep = () => {
+    const { goNextTourStep, stopTour } = useTourContext();
+
+    return (
+      <Coachmark
+        action={
+          <Button compact onPress={goNextTourStep} variant="secondary">
+            Continue
+          </Button>
+        }
+        closeButtonAccessibilityLabel="Close"
+        content={
+          <VStack gap={2}>
+            <Text color="fgMuted" font="caption">
+              Step 2 of 4
+            </Text>
+            <ProgressBar progress={0.5} />
+            <Text font="body">
+              This step showcases how you can include rich content like progress bars and images.
+            </Text>
+          </VStack>
+        }
+        media={
+          <Image
+            accessibilityIgnoresInvertColors
+            source={{ uri: 'https://example.com/feature-image.png' }}
+            style={{ width: '100%', height: 150 }}
+          />
+        }
+        onClose={stopTour}
+        title="Rich Content Example"
+      />
+    );
+  };
+}
+```
+
+You can use TypeScript string literal types to ensure type safety for your step IDs.
+
+```tsx
+type StepId = 'intro' | 'feature-highlight' | 'call-to-action';
+
+function TypeSafeTourExample() {
+  const [activeTourStep, setActiveTourStep] = useState<TourStepValue<StepId> | null>(null);
+
+  const tourSteps: TourStepValue<StepId>[] = [
+    { id: 'intro', Component: IntroStep },
+    { id: 'feature-highlight', Component: FeatureStep },
+    { id: 'call-to-action', Component: CTAStep },
+  ];
+
+  return (
+    <Tour activeTourStep={activeTourStep} onChange={setActiveTourStep} steps={tourSteps}>
+      <TourStep id="intro">
+        <IntroContent />
+      </TourStep>
+      <TourStep id="feature-highlight">
+        <FeatureContent />
+      </TourStep>
+      {/* TypeScript error if id doesn't match StepId type */}
+      <TourStep id="call-to-action">
+        <CTAContent />
+      </TourStep>
+    </Tour>
+  );
+}
+```
+
+## Scrolling
+
+When tour steps are off-screen, you can use the `onBeforeActive` callback to scroll them into view.
+This callback runs before the step becomes active and can be async.
+
+```jsx
+function ScrollingTourExample() {
+  const [activeTourStep, setActiveTourStep] = useState(null);
+  const scrollViewRef = useRef(null);
+  const step2Ref = useRef(null);
+  const step3Ref = useRef(null);
+
+  // Helper function to scroll an element into view
+  const scrollIntoView = async (scrollViewRef, elementRef) => {
+    const scrollView = scrollViewRef.current;
+    if (!scrollView) return;
+    elementRef.current?.measureLayout(scrollView, (x, y) => {
+      scrollView.scrollTo({ x, y, animated: true });
+    });
+  };
+
+  const tourSteps = [
+    {
+      id: 'step1',
+      Component: StepOne,
+    },
+    {
+      id: 'step2',
+      onBeforeActive: async () => {
+        // Scroll step 2 into view before showing the coachmark
+        await scrollIntoView(scrollViewRef, step2Ref);
+      },
+      Component: StepTwo,
+    },
+    {
+      id: 'step3',
+      onBeforeActive: async () => {
+        await scrollIntoView(scrollViewRef, step3Ref);
+      },
+      Component: StepThree,
+    },
+  ];
+
+  return (
+    <Tour activeTourStep={activeTourStep} onChange={setActiveTourStep} steps={tourSteps}>
+      <ScrollView ref={scrollViewRef} style={{ flex: 1 }}>
+        <TourStep id="step1">
+          <Box background="bgSecondary" padding={4}>
+            <Text>Step 1 - visible on load</Text>
+          </Box>
+        </TourStep>
+        <Box height={1000} />
+        <TourStep id="step2">
+          <Box ref={step2Ref} background="bgSecondary" padding={4}>
+            <Text>Step 2 - requires scroll</Text>
+          </Box>
+        </TourStep>
+        <Box height={1000} />
+        <TourStep id="step3">
+          <Box ref={step3Ref} background="bgSecondary" padding={4}>
+            <Text>Step 3 - requires more scroll</Text>
+          </Box>
+        </TourStep>
+      </ScrollView>
+    </Tour>
+  );
+}
+```
+
+## Customization
+
+### Overlay
+
+You can hide the dimmed overlay behind the coachmark using the `hideOverlay` prop.
+This can be set globally on the `Tour` component or per-step.
+
+```jsx
+function HideOverlayExample() {
+  const [activeTourStep, setActiveTourStep] = useState(null);
+
+  const tourSteps = [
+    {
+      id: 'step1',
+      Component: StepOne,
+      // Hide overlay for just this step
+      hideOverlay: true,
+    },
+    {
+      id: 'step2',
+      Component: StepTwo,
+    },
+  ];
+
+  return (
+    // Or hide overlay for all steps
+    <Tour
+      hideOverlay
+      activeTourStep={activeTourStep}
+      onChange={setActiveTourStep}
+      steps={tourSteps}
+    >
+      ...
+    </Tour>
+  );
+}
+```
+
+### Mask
+
+Customize the mask (cutout) around the highlighted element with padding and border radius.
+
+```jsx
+function MaskCustomizationExample() {
+  const [activeTourStep, setActiveTourStep] = useState(null);
+
+  const tourSteps = [
+    {
+      id: 'step1',
+      Component: StepOne,
+      // Per-step mask customization
+      tourMaskPadding: 16,
+      tourMaskBorderRadius: 12,
+    },
+    { id: 'step2', Component: StepTwo },
+  ];
+
+  return (
+    <Tour
+      activeTourStep={activeTourStep}
+      onChange={setActiveTourStep}
+      steps={tourSteps}
+      tourMaskPadding={8}
+      tourMaskBorderRadius={8}
+    >
+      ...
+    </Tour>
+  );
+}
+```
+
+### Positioning
+
+The Tour component uses `@floating-ui` to position coachmarks relative to their target elements.
+You can customize positioning with the `tourStepOffset`, `tourStepShift`, and `tourStepAutoPlacement` props.
+
+```jsx
+function PositioningExample() {
+  const [activeTourStep, setActiveTourStep] = useState(null);
+
+  const tourSteps = [
+    { id: 'step1', Component: StepOne },
+    { id: 'step2', Component: StepTwo },
+  ];
+
+  return (
+    <Tour
+      activeTourStep={activeTourStep}
+      onChange={setActiveTourStep}
+      steps={tourSteps}
+      tourStepOffset={32}
+      tourStepShift={{ padding: 16 }}
+    >
+      ...
+    </Tour>
+  );
+}
+```
+
+### Arrow
+
+You can customize the arrow that points to the target element by providing a custom `TourStepArrowComponent`.
+
+```jsx
+function CustomArrowExample() {
+  const [activeTourStep, setActiveTourStep] = useState(null);
+
+  // Custom arrow component (must forward ref)
+  const CustomArrow = memo(
+    forwardRef((props, ref) => {
+      return <DefaultTourStepArrow {...props} ref={ref} style={{ color: 'yellow' }} />;
+    }),
+  );
+
+  const tourSteps = [
+    {
+      id: 'step1',
+      Component: StepOne,
+      // Per-step custom arrow
+      ArrowComponent: CustomArrow,
+      arrowStyle: { color: 'red' },
+    },
+    { id: 'step2', Component: StepTwo },
+  ];
+
+  return (
+    <Tour
+      activeTourStep={activeTourStep}
+      onChange={setActiveTourStep}
+      steps={tourSteps}
+      TourStepArrowComponent={CustomArrow}
+    >
+      ...
+    </Tour>
+  );
+}
+```
+
+## Accessibility
+
+Always provide accessibility labels for close buttons using the `closeButtonAccessibilityLabel` prop and ensure coachmarks are navigable.
+
+```jsx
+function AccessibleTourExample() {
+  const AccessibleStep = () => {
+    const { goNextTourStep, stopTour } = useTourContext();
+
+    return (
+      <Coachmark
+        action={
+          <Button
+            accessibilityHint="Advances to the next step in the tour"
+            compact
+            onPress={goNextTourStep}
+            variant="secondary"
+          >
+            Next
+          </Button>
+        }
+        closeButtonAccessibilityLabel="Close tour and return to main content"
+        content="This coachmark has proper accessibility labels for screen readers."
+        onClose={stopTour}
+        title="Accessible Step"
+      />
+    );
+  };
+}
+```
+
+## Callbacks
+
+Use the `onBeforeActive` callback to perform actions before a step becomes active,
+such as scrolling, fetching data, or preparing the UI.
+
+```jsx
+function CallbacksExample() {
+  const tourSteps = [
+    {
+      id: 'step1',
+      onBeforeActive: () => {
+        console.log('Step 1 is about to become active');
+        // Perform any setup needed
+      },
+      Component: StepOne,
+    },
+    {
+      id: 'step2',
+      onBeforeActive: async () => {
+        // Async operations are supported
+        await someAsyncSetup();
+        console.log('Step 2 setup complete');
+      },
+      Component: StepTwo,
+    },
+  ];
 }
 ```

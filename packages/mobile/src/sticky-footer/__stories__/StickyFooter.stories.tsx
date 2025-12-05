@@ -15,12 +15,10 @@ const StickyFooterScreen = () => {
   const inset = useSafeAreaInsets();
 
   return (
-    <View>
-      <ExampleScreen>
-        <Example title="StickyFooter with Screen">
-          <Button onPress={handleButtonPress}>{showStickyFooter ? 'Close' : 'Open'}</Button>
-        </Example>
-      </ExampleScreen>
+    <ExampleScreen>
+      <Example title="StickyFooter with Screen">
+        <Button onPress={handleButtonPress}>{showStickyFooter ? 'Close' : 'Open'}</Button>
+      </Example>
       {showStickyFooter && (
         <View style={{ position: 'absolute', bottom: inset.bottom / 2, left: 0, right: 0 }}>
           <StickyFooter>
@@ -41,7 +39,7 @@ const StickyFooterScreen = () => {
           </StickyFooter>
         </View>
       )}
-    </View>
+    </ExampleScreen>
   );
 };
 

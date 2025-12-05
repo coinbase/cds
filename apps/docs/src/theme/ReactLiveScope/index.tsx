@@ -35,6 +35,7 @@ import * as CDSLottie from '@cbhq/cds-lottie-files';
 import { Accordion } from '@cbhq/cds-web/accordion/Accordion';
 import { AccordionItem } from '@cbhq/cds-web/accordion/AccordionItem';
 import { Select } from '@cbhq/cds-web/alpha/select/Select';
+import { SelectChip } from '@cbhq/cds-web/alpha/select-chip/SelectChip';
 import { TabbedChips } from '@cbhq/cds-web/alpha/tabbed-chips/TabbedChips';
 import { Lottie, LottieStatusAnimation } from '@cbhq/cds-web/animation';
 import { Banner } from '@cbhq/cds-web/banner/Banner';
@@ -54,7 +55,7 @@ import * as CDSCells from '@cbhq/cds-web/cells';
 import { Chip } from '@cbhq/cds-web/chips/Chip';
 import { InputChip } from '@cbhq/cds-web/chips/InputChip';
 import { MediaChip } from '@cbhq/cds-web/chips/MediaChip';
-import { SelectChip } from '@cbhq/cds-web/chips/SelectChip';
+import { SelectChip as OldSelectChip } from '@cbhq/cds-web/chips/SelectChip';
 import { TabbedChips as OldTabbedChips } from '@cbhq/cds-web/chips/TabbedChips';
 import { Coachmark } from '@cbhq/cds-web/coachmark/Coachmark';
 import { Collapsible } from '@cbhq/cds-web/collapsible/Collapsible';
@@ -183,6 +184,7 @@ const ReactLiveScope: Record<string, unknown> = {
   Chip,
   InputChip,
   MediaChip,
+  OldSelectChip,
   SelectChip,
   OldTabbedChips,
   TabbedChips,

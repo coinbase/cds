@@ -8,6 +8,35 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.27.2 ((12/4/2025, 04:23 PM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.27.1 ((12/4/2025, 06:51 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.27.0 (12/3/2025 PST)
+
+#### 🚀 Updates
+
+- Feat: introduce `unselected` state for ListCell. [[#194](https://github.com/coinbase/cds/pull/194)] [DX-4947]
+
+## 8.26.0 (12/1/2025 PST)
+
+#### 🚀 Updates
+
+- Add SelectChip alpha component. [[#180](https://github.com/coinbase/cds/pull/180)]
+- Add support for option grouping. [[#180](https://github.com/coinbase/cds/pull/180)]
+
+#### 🐞 Fixes
+
+- Fix Select select all when options disabled. [[#180](https://github.com/coinbase/cds/pull/180)]
+
+#### 📘 Misc
+
+- Update storybook examples. [[#200](https://github.com/coinbase/cds/pull/200)]
+
 ## 8.25.1 ((12/1/2025, 11:18 AM PST))
 
 This is an artificial version bump with no new change.

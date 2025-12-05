@@ -4,7 +4,7 @@ import { View } from 'react-native';
 import { Banner } from '../../banner/Banner';
 import { Button, ButtonGroup } from '../../buttons';
 import { TextInput } from '../../controls';
-import { ExampleScreen } from '../../examples/ExampleScreen';
+import { Example, ExampleScreen } from '../../examples/ExampleScreen';
 import { useSafeBottomPadding } from '../../hooks/useSafeBottomPadding';
 import { useTheme } from '../../hooks/useTheme';
 import { Box, HStack, VStack } from '../../layout';
@@ -211,10 +211,12 @@ const NumpadExample2 = () => {
 const NumpadScreen = () => {
   return (
     <ExampleScreen>
-      <VStack gap={2} padding={2}>
-        <NumpadExample1 />
-        <NumpadExample2 />
-      </VStack>
+      <Example title="Numpad Examples">
+        <VStack gap={2} padding={2}>
+          <NumpadExample1 />
+          <NumpadExample2 />
+        </VStack>
+      </Example>
     </ExampleScreen>
   );
 };

@@ -20,11 +20,11 @@ const DotSvg = ({
   width = 20,
 }: {
   color?: React.CSSProperties['color'];
-  width?: React.CSSProperties['width'];
+  width?: number;
 }) => {
   return (
     <svg fill="none" height={width} viewBox={`0 0 ${width} ${width}`} width={width}>
-      <circle cx="50%" cy="50%" fill={color} r={`calc(${width} / 3)`} />
+      <circle cx="50%" cy="50%" fill={color} r={width / 3} />
     </svg>
   );
 };

@@ -14,6 +14,7 @@ import { AnimatedCaret } from '../../motion/AnimatedCaret';
 import { Text } from '../../typography/Text';
 
 import type { SelectControlProps, SelectOption, SelectType } from './Select';
+import { isSelectOptionGroup } from './Select';
 
 // The height is smaller for the inside label variant since the label takes
 // up space above the input.
@@ -74,6 +75,52 @@ export const DefaultSelectControlComponent = memo(
       const shouldShowCompactLabel = compact && label && !isMultiSelect;
       const hasValue = value !== null && !(Array.isArray(value) && value.length === 0);
 
+      // Map of options to their values
+      // If multiple options share the same value, the first occurrence wins (matches native HTML select behavior)
+      const optionsMap = useMemo(() => {
+        const map = new Map<SelectOptionValue, SelectOption<SelectOptionValue>>();
+        const isDev = process.env.NODE_ENV !== 'production';
+
+        options.forEach((option, optionIndex) => {
+          if (isSelectOptionGroup<Type, SelectOptionValue>(option)) {
+            option.options.forEach((groupOption, groupOptionIndex) => {
+              if (groupOption.value !== null) {
+                const optionValue = groupOption.value as SelectOptionValue;
+                // Only set if not already present (first wins)
+                if (!map.has(optionValue)) {
+                  map.set(optionValue, groupOption);
+                } else if (isDev) {
+                  console.warn(
+                    `[Select] Duplicate option value detected: "${optionValue}". ` +
+                      `The first occurrence will be used for display. ` +
+                      `Found duplicate in group "${option.label}" at index ${groupOptionIndex}. ` +
+                      `First occurrence was at option index ${optionIndex}.`,
+                  );
+                }
+              }
+            });
+          } else {
+            const singleOption = option as SelectOption<SelectOptionValue>;
+            if (singleOption.value !== null) {
+              const optionValue = singleOption.value;
+              // Only set if not already present (first wins)
+              if (!map.has(optionValue)) {
+                map.set(optionValue, singleOption);
+              } else if (isDev) {
+                const existingOption = map.get(optionValue);
+                console.warn(
+                  `[Select] Duplicate option value detected: "${optionValue}". ` +
+                    `The first occurrence will be used for display. ` +
+                    `Found duplicate at option index ${optionIndex}. ` +
+                    `First occurrence label: "${existingOption?.label ?? existingOption?.value ?? 'unknown'}".`,
+                );
+              }
+            }
+          }
+        });
+        return map;
+      }, [options]);
+
       // Prop value doesn't have default value because it affects the color of the
       // animated caret
       const focusedVariant = useInputVariant(!!open, variant ?? 'foregroundMuted');
@@ -127,11 +174,11 @@ export const DefaultSelectControlComponent = memo(
         if (hasValue && isMultiSelect) {
           const valuesToShow =
             value.length <= maxSelectedOptionsToShow
-              ? (value as string[])
-              : (value as string[]).slice(0, maxSelectedOptionsToShow);
+              ? (value as SelectOptionValue[])
+              : (value as SelectOptionValue[]).slice(0, maxSelectedOptionsToShow);
           const optionsToShow = valuesToShow
-            .map((value) => options.find((option) => option.value === value))
-            .filter(Boolean) as SelectOption<SelectOptionValue>[];
+            .map((value) => optionsMap.get(value))
+            .filter((option): option is SelectOption<SelectOptionValue> => option !== undefined);
           return (
             <HStack flexWrap="wrap" gap={1}>
               {optionsToShow.map((option) => {
@@ -168,7 +215,7 @@ export const DefaultSelectControlComponent = memo(
           );
         }
 
-        const option = options.find((option) => option.value === value);
+        const option = !isMultiSelect ? optionsMap.get(value as SelectOptionValue) : undefined;
         const label = option?.label ?? option?.description ?? option?.value ?? placeholder;
         const content = hasValue ? label : placeholder;
         return typeof content === 'string' ? (
@@ -186,7 +233,7 @@ export const DefaultSelectControlComponent = memo(
       }, [
         hasValue,
         isMultiSelect,
-        options,
+        optionsMap,
         placeholder,
         shouldShowCompactLabel,
         value,

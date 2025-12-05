@@ -1,3 +1,7 @@
+:::note Duplicate Values
+Avoid using options with duplicate values. Each option's `value` should be unique within the options array to ensure proper selection behavior.
+:::
+
 ## Single Select
 
 Basic single selection with predefined options.
@@ -29,6 +33,10 @@ function SingleSelectExample() {
 
 Multi-selection mode allows users to select multiple options from the list.
 
+:::note Disabled Options and Select All
+Disabled options and options inside disabled groups will be skipped when "Select all" is pressed. Only enabled options will be selected.
+:::
+
 ```jsx live
 function MultiSelectExample() {
   const { value, onChange } = useMultiSelect({
@@ -59,6 +67,95 @@ function MultiSelectExample() {
       selectAllLabel="Select all options"
       clearAllLabel="Clear all selections"
       maxSelectedOptionsToShow={4}
+    />
+  );
+}
+```
+
+## Single Select with Groups
+
+Organize options into logical groups for better organization.
+
+```jsx live
+function SingleSelectWithGroupsExample() {
+  const [value, setValue] = useState(null);
+
+  const groupedOptions = [
+    {
+      label: 'Group A',
+      options: [
+        { value: '1', label: 'Option 1' },
+        { value: '2', label: 'Option 2' },
+        { value: '3', label: 'Option 3' },
+      ],
+    },
+    {
+      label: 'Group B',
+      options: [
+        { value: '4', label: 'Option 4' },
+        { value: '5', label: 'Option 5' },
+      ],
+    },
+    {
+      label: 'Group C',
+      options: [{ value: '6', label: 'Option 6' }],
+    },
+  ];
+
+  return (
+    <Select
+      label="Choose an option"
+      value={value}
+      onChange={setValue}
+      options={groupedOptions}
+      placeholder="Select an option"
+    />
+  );
+}
+```
+
+## Multi-Select with Groups
+
+Use groups in multi-select mode to organize selections.
+
+```jsx live
+function MultiSelectWithGroupsExample() {
+  const { value, onChange } = useMultiSelect({
+    initialValue: [],
+  });
+
+  const groupedOptions = [
+    {
+      label: 'Group A',
+      options: [
+        { value: '1', label: 'Option 1' },
+        { value: '2', label: 'Option 2' },
+        { value: '3', label: 'Option 3' },
+      ],
+    },
+    {
+      label: 'Group B',
+      options: [
+        { value: '4', label: 'Option 4' },
+        { value: '5', label: 'Option 5' },
+      ],
+    },
+    {
+      label: 'Group C',
+      options: [{ value: '6', label: 'Option 6' }],
+    },
+  ];
+
+  return (
+    <Select
+      type="multi"
+      label="Choose multiple options"
+      value={value}
+      onChange={onChange}
+      options={groupedOptions}
+      placeholder="Select options"
+      selectAllLabel="Select all options"
+      clearAllLabel="Clear all selections"
     />
   );
 }
@@ -139,6 +236,53 @@ function VariantExample() {
         placeholder="Select negative status"
       />
     </VStack>
+  );
+}
+```
+
+## With Disabled Option Group
+
+Disable entire groups to prevent selection of those options.
+
+```jsx live
+function DisabledGroupExample() {
+  const [value, setValue] = useState(null);
+
+  const groupedOptions = [
+    {
+      label: 'Available Options',
+      options: [
+        { value: '1', label: 'Option 1' },
+        { value: '2', label: 'Option 2' },
+        { value: '3', label: 'Option 3' },
+      ],
+    },
+    {
+      label: 'Unavailable Options (Group Disabled)',
+      disabled: true,
+      options: [
+        { value: '4', label: 'Option 4' },
+        { value: '5', label: 'Option 5' },
+        { value: '6', label: 'Option 6' },
+      ],
+    },
+    {
+      label: 'More Available Options',
+      options: [
+        { value: '7', label: 'Option 7' },
+        { value: '8', label: 'Option 8' },
+      ],
+    },
+  ];
+
+  return (
+    <Select
+      label="Choose an option"
+      value={value}
+      onChange={setValue}
+      options={groupedOptions}
+      placeholder="Select an option"
+    />
   );
 }
 ```
