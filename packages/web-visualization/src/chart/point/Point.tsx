@@ -226,6 +226,7 @@ export const Point = memo<PointProps>(
     dataX,
     dataY,
     yAxisId,
+    seriesId,
     fill = 'var(--color-fgPrimary)',
     radius = 5,
     opacity,
