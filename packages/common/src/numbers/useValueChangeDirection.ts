@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 
-import type { SingleDirection } from './RollingNumber';
+export type SingleDirection = 'up' | 'down';
 
 /**
  * Track the direction of value changes for RollingNumber animations.
@@ -20,3 +20,4 @@ export function useValueChangeDirection(value: number): SingleDirection | undefi
 
   return direction.current;
 }
+

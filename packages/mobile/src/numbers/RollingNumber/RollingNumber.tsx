@@ -18,6 +18,7 @@ import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import { curves, durations } from '@coinbase/cds-common/motion/tokens';
 import type { KeyedNumberPart } from '@coinbase/cds-common/numbers/IntlNumberFormat';
 import { IntlNumberFormat } from '@coinbase/cds-common/numbers/IntlNumberFormat';
+import { useValueChangeDirection } from '@coinbase/cds-common/numbers/useValueChangeDirection';
 import { useLocale } from '@coinbase/cds-common/system/LocaleProvider';
 import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 
@@ -45,7 +46,6 @@ import {
   type SingleDirection,
 } from './digitTypes';
 import { useColorPulse } from './useColorPulse';
-import { useValueChangeDirection } from './useValueChangeDirection';
 
 // Re-export shared types and constants for backward compatibility
 export {

@@ -5,6 +5,10 @@ import {
   IntlNumberFormat,
   type KeyedNumberPart,
 } from '@coinbase/cds-common/numbers/IntlNumberFormat';
+import {
+  useValueChangeDirection,
+  type SingleDirection,
+} from '@coinbase/cds-common/numbers/useValueChangeDirection';
 import { useLocale } from '@coinbase/cds-common/system/LocaleProvider';
 import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 import { css } from '@linaria/core';
@@ -26,7 +30,6 @@ import { DefaultRollingNumberMask } from './DefaultRollingNumberMask';
 import { DefaultRollingNumberSymbol } from './DefaultRollingNumberSymbol';
 import { DefaultRollingNumberValueSection } from './DefaultRollingNumberValueSection';
 import { useColorPulse } from './useColorPulse';
-import { useValueChangeDirection } from './useValueChangeDirection';
 
 const tickerCss = css`
   display: inline-flex;
@@ -78,13 +81,6 @@ type RollingNumberTransitionConfig = {
  * - `'single'`: Rolls directly to the new digit without showing intermediates.
  */
 export type DigitTransitionVariant = 'every' | 'single';
-
-/**
- * Direction for single variant animations. Only used when {@link digitTransitionVariant} is `'single'`.
- * - `'up'`: Value increased, digits animate upward.
- * - `'down'`: Value decreased, digits animate downward.
- */
-export type SingleDirection = 'up' | 'down';
 
 export const defaultTransitionConfig = {
   y: { type: 'spring', stiffness: 280, damping: 18, mass: 0.3 },

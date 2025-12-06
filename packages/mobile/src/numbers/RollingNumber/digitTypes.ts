@@ -46,12 +46,7 @@ export const defaultTransitionConfig = {
  */
 export type DigitTransitionVariant = 'every' | 'single';
 
-/**
- * Direction for single variant animations. Only used when {@link digitTransitionVariant} is `'single'`.
- * - `'up'`: Value increased, digits animate upward.
- * - `'down'`: Value decreased, digits animate downward.
- */
-export type SingleDirection = 'up' | 'down';
+export type { SingleDirection } from '@coinbase/cds-common/numbers/useValueChangeDirection';
 
 export type RollingNumberMaskProps = HStackProps & {
   /**
