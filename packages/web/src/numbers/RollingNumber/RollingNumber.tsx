@@ -577,7 +577,7 @@ export const RollingNumber: RollingNumberComponent = memo(
         [formattedValue, intlNumberFormatter],
       );
 
-      const direction = useValueChangeDirection({ value, formatted });
+      const direction = useValueChangeDirection(value);
 
       const colorControls = useColorPulse({
         value,

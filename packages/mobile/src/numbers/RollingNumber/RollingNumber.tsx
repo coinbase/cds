@@ -350,7 +350,7 @@ export const RollingNumber = memo(
         [formattedValue, intlNumberFormatter],
       );
 
-      const direction = useValueChangeDirection({ value, formatted });
+      const direction = useValueChangeDirection(value);
 
       const animatedColorStyle = useColorPulse({
         value,
