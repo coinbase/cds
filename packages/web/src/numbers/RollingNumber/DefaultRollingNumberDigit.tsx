@@ -1,4 +1,12 @@
-import { forwardRef, memo, useCallback, useImperativeHandle, useLayoutEffect, useRef } from 'react';
+import {
+  forwardRef,
+  memo,
+  useCallback,
+  useImperativeHandle,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+} from 'react';
 import { getWidthInEm } from '@coinbase/cds-common';
 import { css } from '@linaria/core';
 import { animate, m, type ValueAnimationOptions } from 'framer-motion';
@@ -79,7 +87,11 @@ export const DefaultRollingNumberDigit: RollingNumberDigitComponent = memo(
       const prevSectionRef = useRef<HTMLSpanElement>(null);
       const currentDigitRef = useRef<HTMLSpanElement>(null);
       const prevValue = useRef(initialValue ?? value);
-      const isSingleVariant = digitTransitionVariant === 'single';
+
+      const isSingleVariant = useMemo(
+        () => digitTransitionVariant === 'single',
+        [digitTransitionVariant],
+      );
 
       useLayoutEffect(() => {
         const prevDigit = numberRefs.current[prevValue.current];
