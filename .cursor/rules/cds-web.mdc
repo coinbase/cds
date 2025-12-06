@@ -1,5 +1,5 @@
 ---
-description: Always use this information to guide you when working on new or existing React components in cds-web (packages/web/)
+description: USE THIS when asked to work on a new or existing (WEB) CDS React component in packages/web
 alwaysApply: false
 ---
 

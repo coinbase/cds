@@ -1,5 +1,5 @@
 ---
-description: These rules help agents write React component code that follow our team's best practices. Reference for React component work in the packages cds-web, cds-mobile, cds-web-visualization and cds-mobile-visualization.
+description: USE THIS whenever you are asked to work on CDS React components
 alwaysApply: false
 ---
 
