@@ -9,11 +9,11 @@ import { Text } from '../../typography/Text';
 import { DefaultRollingNumberDigit } from './DefaultRollingNumberDigit';
 import { DefaultRollingNumberMask } from './DefaultRollingNumberMask';
 import { DefaultRollingNumberSymbol } from './DefaultRollingNumberSymbol';
-import {
-  digits,
-  type RollingNumberValueSectionComponent,
-  type RollingNumberValueSectionProps,
-} from './digitTypes';
+import type {
+  RollingNumberValueSectionComponent,
+  RollingNumberValueSectionProps,
+} from './RollingNumber';
+import { digits } from './RollingNumber';
 
 const AnimatedText = Animated.createAnimatedComponent(Text);
 
@@ -34,8 +34,6 @@ export const DefaultRollingNumberValueSection: RollingNumberValueSectionComponen
         styles,
         justifyContent = 'flex-start',
         transitionConfig,
-        digitTransitionVariant,
-        direction,
         ...props
       }: RollingNumberValueSectionProps,
       ref,
@@ -78,14 +76,12 @@ export const DefaultRollingNumberValueSection: RollingNumberValueSectionComponen
                 key={part.key}
                 RollingNumberMaskComponent={RollingNumberMaskComponent}
                 digitHeight={digitHeight}
-                digitTransitionVariant={digitTransitionVariant}
                 initialValue={numberSectionHasRendered ? 0 : undefined}
                 onLayout={() => setValueSectionHasRendered(true)}
                 styles={{ text: styles?.text }}
                 textProps={textProps}
                 transitionConfig={transitionConfig}
                 value={part.value}
-                direction={direction}
               />
             );
           }),
@@ -101,8 +97,6 @@ export const DefaultRollingNumberValueSection: RollingNumberValueSectionComponen
           fallbackDigit,
           justifyContent,
           transitionConfig,
-          digitTransitionVariant,
-          direction,
           RollingNumberMaskComponent,
         ],
       );
@@ -128,14 +122,12 @@ export const DefaultRollingNumberValueSection: RollingNumberValueSectionComponen
                 key={index}
                 RollingNumberMaskComponent={RollingNumberMaskComponent}
                 digitHeight={digitHeight}
-                digitTransitionVariant={digitTransitionVariant}
                 initialValue={numberSectionHasRendered ? 0 : undefined}
                 onLayout={() => setValueSectionHasRendered(true)}
                 styles={{ text: styles?.text }}
                 textProps={textProps}
                 transitionConfig={transitionConfig}
                 value={parseInt(char)}
-                direction={direction}
               />
             );
           }),
@@ -151,8 +143,6 @@ export const DefaultRollingNumberValueSection: RollingNumberValueSectionComponen
           fallbackDigit,
           justifyContent,
           transitionConfig,
-          digitTransitionVariant,
-          direction,
           RollingNumberMaskComponent,
         ],
       );
