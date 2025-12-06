@@ -1588,7 +1588,7 @@ function MonotoneAssetPrice() {
   );
 
   const CustomScrubberBeacon = memo(
-    ({ dataX, dataY, seriesId, isIdle, animate = true }: ScrubberBeaconProps) => {
+    forwardRef(({ dataX, dataY, seriesId, isIdle, animate = true }: ScrubberBeaconProps, ref) => {
       const { getSeries, getXSerializableScale, getYSerializableScale } =
         useCartesianChartContext();
 
@@ -1601,6 +1601,9 @@ function MonotoneAssetPrice() {
 
       const animatedX = useSharedValue(0);
       const animatedY = useSharedValue(0);
+
+      // Provide a no-op pulse implementation for simple beacons
+      useImperativeHandle(ref, () => ({ pulse: () => {} }), []);
 
       // Calculate the target point position - project data to pixels
       const targetPoint = useDerivedValue(() => {
@@ -1643,7 +1646,7 @@ function MonotoneAssetPrice() {
           <Circle c={animatedPoint} color={theme.color.fg} r={5} strokeWidth={3} style="stroke" />
         </>
       );
-    },
+    }),
   );
 
   return (

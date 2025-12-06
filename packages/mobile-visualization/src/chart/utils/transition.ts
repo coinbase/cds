@@ -206,60 +206,27 @@ export const usePathTransition = ({
    */
   transition?: Transition;
 }): SharedValue<SkPath> => {
-  const isInitialRender = useRef(true);
+  // Track the previous path - updated in useEffect AFTER render,
+  // so during render it naturally holds the "from" path value
   const previousPathRef = useRef(initialPath ?? currentPath);
-  const targetPathRef = useRef(currentPath);
   const progress = useSharedValue(0);
 
-  const { fromPath, toPath } = useMemo(() => {
-    const isNewPath = targetPathRef.current !== currentPath;
-
-    if (!isNewPath) {
-      return {
-        fromPath: previousPathRef.current,
-        toPath: targetPathRef.current,
-      };
-    }
-
-    const currentProgress = progress.value;
-    const isInterrupting = currentProgress > 0 && currentProgress < 1;
-
-    if (isInterrupting) {
-      // Animation was interrupted - capture current interpolated path
-      const pathInterpolator = interpolatePath(previousPathRef.current, targetPathRef.current);
-      const currentInterpolatedPath = pathInterpolator(currentProgress);
-
-      return {
-        fromPath: currentInterpolatedPath,
-        toPath: currentPath,
-      };
-    }
-
-    // Normal transition (from completed position to new target)
-    const startPath = isInitialRender.current && initialPath ? initialPath : targetPathRef.current;
-
-    return {
-      fromPath: startPath,
-      toPath: currentPath,
-    };
-  }, [currentPath, initialPath, progress]);
+  // During render: previousPathRef still has old value, currentPath is new
+  const fromPath = previousPathRef.current;
+  const toPath = currentPath;
 
   useEffect(() => {
-    const isPathChange = targetPathRef.current !== currentPath;
-    const isInitialAnimation = isInitialRender.current && initialPath;
+    const shouldAnimate = previousPathRef.current !== currentPath;
 
-    // Trigger animation if path changed OR if this is the initial render with an initialPath
-    if (isPathChange || isInitialAnimation) {
-      // Update refs for next render
-      previousPathRef.current = fromPath;
-      targetPathRef.current = toPath;
+    if (shouldAnimate) {
+      // Update ref for next path change (happens after this render)
+      previousPathRef.current = currentPath;
 
+      // Animate from old path to new path
       progress.value = 0;
       progress.value = buildTransition(1, transition);
-
-      isInitialRender.current = false;
     }
-  }, [currentPath, initialPath, transition, fromPath, toPath, progress]);
+  }, [currentPath, transition, progress]);
 
   return useD3PathInterpolation(progress, fromPath, toPath);
 };
