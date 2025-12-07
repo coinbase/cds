@@ -145,6 +145,7 @@ const TabbedChipsComponent = memo(
             gap={gap}
             onActiveTabElementChange={setScrollTarget}
             onChange={onChange}
+            style={styles?.tabs}
             tabs={tabs}
             {...accessibilityProps}
           />
