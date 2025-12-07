@@ -18,6 +18,10 @@ import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import { curves, durations } from '@coinbase/cds-common/motion/tokens';
 import type { KeyedNumberPart } from '@coinbase/cds-common/numbers/IntlNumberFormat';
 import { IntlNumberFormat } from '@coinbase/cds-common/numbers/IntlNumberFormat';
+import {
+  useValueChangeDirection,
+  type SingleDirection,
+} from '@coinbase/cds-common/numbers/useValueChangeDirection';
 import { useLocale } from '@coinbase/cds-common/system/LocaleProvider';
 import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 
@@ -78,6 +82,13 @@ export const defaultTransitionConfig = {
     easing: Easing.bezier(...curves.global),
   },
 } as const satisfies RollingNumberTransitionConfig;
+
+/**
+ * Defines the style of digit transition animation.
+ * - `'every'`: Rolls through every intermediate digit (e.g., 1→2→3→...→9). Default behavior.
+ * - `'single'`: Rolls directly to the new digit without showing intermediates.
+ */
+export type DigitTransitionVariant = 'every' | 'single';
 
 // Subcomponent prop and component type declarations
 export type RollingNumberMaskProps = HStackProps & {
@@ -149,6 +160,14 @@ export type RollingNumberValueSectionProps = HStackProps & {
    */
   transitionConfig?: RollingNumberTransitionConfig;
   /**
+   * Style of digit transition animation. Defaults to {@code 'every'}.
+   */
+  digitTransitionVariant?: DigitTransitionVariant;
+  /**
+   * Direction of the roll animation. Only used when {@link digitTransitionVariant} is `'single'`.
+   */
+  direction?: SingleDirection;
+  /**
    * Text props forwarded to Text children within the section.
    */
   textProps?: TextProps;
@@ -188,6 +207,14 @@ export type RollingNumberDigitProps = ViewProps & {
    * Component used to mask the digit column.
    */
   RollingNumberMaskComponent?: RollingNumberMaskComponent;
+  /**
+   * Style of digit transition animation. Defaults to {@code 'every'}.
+   */
+  digitTransitionVariant?: DigitTransitionVariant;
+  /**
+   * Direction of the roll animation. Only used when {@link digitTransitionVariant} is `'single'`.
+   */
+  direction?: SingleDirection;
   /**
    * Height of the digit column used to compute translations.
    */
@@ -326,6 +353,12 @@ export type RollingNumberBaseProps = SharedProps &
      */
     transition?: RollingNumberTransitionConfig;
     /**
+     * Style of digit transition animation. Defaults to {@code 'every'}.
+     * - `'every'`: Rolls through every intermediate digit (e.g., 1→2→3→...→9).
+     * - `'single'`: Rolls directly to the new digit without showing intermediates.
+     */
+    digitTransitionVariant?: DigitTransitionVariant;
+    /**
      * Accessibility label prefix announced before the value.
      */
     accessibilityLabelPrefix?: string;
@@ -418,6 +451,7 @@ export const RollingNumber = memo(
         styles,
         enableSubscriptNotation,
         transition = defaultTransitionConfig,
+        digitTransitionVariant = 'every',
         formattedValue,
         accessibilityLabel,
         accessibilityLabelPrefix,
@@ -434,6 +468,7 @@ export const RollingNumber = memo(
       const { locale: defaultLocale } = useLocale();
       const locale = localeProp ?? defaultLocale;
       const [digitHeight, setDigitHeight] = useState<number | undefined>();
+      const direction = useValueChangeDirection(value);
 
       const handleMeasureDigits = (e: LayoutChangeEvent) => {
         const { layout } = e.nativeEvent;
@@ -568,6 +603,8 @@ export const RollingNumber = memo(
               RollingNumberMaskComponent={RollingNumberMaskComponent}
               RollingNumberSymbolComponent={RollingNumberSymbolComponent}
               digitHeight={digitHeight}
+              digitTransitionVariant={digitTransitionVariant}
+              direction={direction}
               intlNumberParts={pre}
               justifyContent="flex-end"
               style={styles?.i18nPrefix}
@@ -580,6 +617,8 @@ export const RollingNumber = memo(
               RollingNumberMaskComponent={RollingNumberMaskComponent}
               RollingNumberSymbolComponent={RollingNumberSymbolComponent}
               digitHeight={digitHeight}
+              digitTransitionVariant={digitTransitionVariant}
+              direction={direction}
               intlNumberParts={integer}
               justifyContent="flex-end"
               style={styles?.integer}
@@ -592,6 +631,8 @@ export const RollingNumber = memo(
               RollingNumberMaskComponent={RollingNumberMaskComponent}
               RollingNumberSymbolComponent={RollingNumberSymbolComponent}
               digitHeight={digitHeight}
+              digitTransitionVariant={digitTransitionVariant}
+              direction={direction}
               intlNumberParts={fraction}
               justifyContent="flex-start"
               style={styles?.fraction}
@@ -605,6 +646,8 @@ export const RollingNumber = memo(
               RollingNumberMaskComponent={RollingNumberMaskComponent}
               RollingNumberSymbolComponent={RollingNumberSymbolComponent}
               digitHeight={digitHeight}
+              digitTransitionVariant={digitTransitionVariant}
+              direction={direction}
               intlNumberParts={post}
               justifyContent="flex-start"
               style={styles?.i18nSuffix}
@@ -628,6 +671,8 @@ export const RollingNumber = memo(
         RollingNumberMaskComponent,
         RollingNumberSymbolComponent,
         digitHeight,
+        digitTransitionVariant,
+        direction,
         animatedColorStyle,
         textProps,
         transitionConfig,
@@ -640,6 +685,8 @@ export const RollingNumber = memo(
             RollingNumberMaskComponent={RollingNumberMaskComponent}
             RollingNumberSymbolComponent={RollingNumberSymbolComponent}
             digitHeight={digitHeight}
+            digitTransitionVariant={digitTransitionVariant}
+            direction={direction}
             formattedValue={formattedValue}
             intlNumberParts={[]}
             justifyContent="flex-start"
@@ -658,6 +705,8 @@ export const RollingNumber = memo(
           RollingNumberSymbolComponent,
           formattedValue,
           digitHeight,
+          digitTransitionVariant,
+          direction,
           animatedColorStyle,
           textProps,
           transitionConfig,
