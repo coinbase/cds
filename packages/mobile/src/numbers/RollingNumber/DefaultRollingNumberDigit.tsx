@@ -3,7 +3,6 @@ import { StyleSheet, type View } from 'react-native';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
-  withSequence,
   withSpring,
   withTiming,
 } from 'react-native-reanimated';
@@ -53,46 +52,41 @@ export const DefaultRollingNumberDigit: RollingNumberDigitComponent = memo(
       },
       ref,
     ) => {
-      const isSingleVariant = digitTransitionVariant === 'single';
-      const position = useSharedValue(isSingleVariant ? 0 : initialValue * digitHeight * -1);
       const prevValue = useRef(initialValue);
+      const isSingleVariant = digitTransitionVariant === 'single';
+      const prevDigit = prevValue.current;
+      const position = useSharedValue(isSingleVariant ? 0 : initialValue * digitHeight * -1);
 
       // Opacity for single variant crossfade
       const prevOpacity = useSharedValue(0);
       const currentOpacity = useSharedValue(1);
 
+      const derivedDirection =
+        direction ?? (value > prevDigit ? 'up' : value < prevDigit ? 'down' : undefined);
+      const isGoingUp = derivedDirection === 'up';
+
       useLayoutEffect(() => {
         // Capture previous value before updating ref
         const prevVal = prevValue.current;
-        // Always update prevValue to current, even if no animation needed
-        prevValue.current = value;
 
         // Skip animation if value hasn't changed
         if (prevVal === value) return;
 
-        if (isSingleVariant && direction) {
+        if (isSingleVariant && derivedDirection) {
           // Single variant: animate 1 height with opacity crossfade
-          const startPosition = direction === 'up' ? digitHeight : -digitHeight;
+          const startPosition = derivedDirection === 'up' ? digitHeight : -digitHeight;
           const yConfig = transitionConfig?.y ?? defaultTransitionConfig.y;
 
-          // Use withSequence to ensure start position is set before animating
-          if (transitionConfig?.y?.type === 'spring') {
-            position.value = withSequence(
-              withTiming(startPosition, { duration: 0 }),
-              withSpring(0, transitionConfig?.y),
-            );
-          } else {
-            position.value = withSequence(
-              withTiming(startPosition, { duration: 0 }),
-              withTiming(0, yConfig),
-            );
-          }
-          // Crossfade: prev 1→0, current 0→1
-          prevOpacity.value = withSequence(withTiming(1, { duration: 0 }), withTiming(0, yConfig));
-          currentOpacity.value = withSequence(
-            withTiming(0, { duration: 0 }),
-            withTiming(1, yConfig),
-          );
+          // Initialize start pose before animating to avoid flashing the new digit
+          position.value = startPosition;
+          position.value =
+            transitionConfig?.y?.type === 'spring'
+              ? withSpring(0, transitionConfig?.y)
+              : withTiming(0, yConfig);
+          prevOpacity.value = 1;
+          prevOpacity.value = withTiming(0, yConfig);
+          currentOpacity.value = 0;
+          currentOpacity.value = withTiming(1, yConfig);
         } else {
           // Every variant: animate through all intermediate digits
           const newPosition = value * digitHeight * -1;
@@ -105,6 +99,9 @@ export const DefaultRollingNumberDigit: RollingNumberDigitComponent = memo(
             );
           }
         }
+
+        // Update prevValue only after scheduling animations so render uses the prior digit
+        prevValue.current = value;
       }, [
         digitHeight,
         position,
@@ -113,7 +110,7 @@ export const DefaultRollingNumberDigit: RollingNumberDigitComponent = memo(
         transitionConfig?.y,
         value,
         isSingleVariant,
-        direction,
+        derivedDirection,
       ]);
 
       const animatedStyle = useAnimatedStyle(() => ({
@@ -128,55 +125,57 @@ export const DefaultRollingNumberDigit: RollingNumberDigitComponent = memo(
         [animatedStyle, style, styles?.root],
       );
 
-      // For single variant: only show prev digit in direction of travel
-      const isGoingUp = direction === 'up';
-      const isGoingDown = direction === 'down';
+      const digitsForVariant = useMemo(
+        () => (isSingleVariant && derivedDirection ? [prevDigit, value] : digits),
+        [derivedDirection, isSingleVariant, prevDigit, value],
+      );
 
-      if (isSingleVariant) {
-        return (
-          <RollingNumberMaskComponent ref={ref} {...props}>
-            <Animated.View style={containerStyle}>
-              {/* Previous digit above (when going up) */}
-              {isGoingUp && (
-                <Animated.View style={[{ position: 'absolute', bottom: '100%' }, prevOpacityStyle]}>
-                  <AnimatedText style={styles?.text} {...textProps}>
-                    {prevValue.current}
-                  </AnimatedText>
-                </Animated.View>
-              )}
-              {/* Current digit with opacity crossfade */}
-              <Animated.View style={currentOpacityStyle}>
-                <AnimatedText style={styles?.text} {...textProps}>
-                  {value}
-                </AnimatedText>
-              </Animated.View>
-              {/* Previous digit below (when going down) */}
-              {isGoingDown && (
-                <Animated.View style={[{ position: 'absolute', top: '100%' }, prevOpacityStyle]}>
-                  <AnimatedText style={styles?.text} {...textProps}>
-                    {prevValue.current}
-                  </AnimatedText>
-                </Animated.View>
-              )}
-            </Animated.View>
-          </RollingNumberMaskComponent>
-        );
-      }
+      const digitEntries = useMemo(
+        () =>
+          digitsForVariant.map((digit, index) => {
+            if (isSingleVariant && derivedDirection) {
+              const isPrevDigit = index === 0;
+              const positionStyle = {
+                position: isPrevDigit ? 'absolute' : 'relative',
+                top: isPrevDigit ? (isGoingUp ? -digitHeight : digitHeight) : 0,
+              } as const;
 
-      // Every variant: render all 10 digits (original implementation)
+              return {
+                key: `${index}-${digit}`,
+                digit,
+                positionStyle,
+                animatedStyle: isPrevDigit ? prevOpacityStyle : currentOpacityStyle,
+              };
+            }
+
+            return {
+              key: digit.toString(),
+              digit,
+              positionStyle: {
+                position: digit === 0 ? 'relative' : 'absolute',
+                top: digit * digitHeight,
+              } as const,
+              animatedStyle: undefined,
+            };
+          }),
+        [
+          currentOpacityStyle,
+          derivedDirection,
+          digitHeight,
+          digitsForVariant,
+          isGoingUp,
+          isSingleVariant,
+          prevOpacityStyle,
+        ],
+      );
+
       return (
         <RollingNumberMaskComponent ref={ref} {...props}>
           <Animated.View style={containerStyle}>
-            {digits.map((digit) => (
+            {digitEntries.map(({ key, digit, positionStyle, animatedStyle }) => (
               <AnimatedText
-                key={digit}
-                style={[
-                  {
-                    position: digit === 0 ? 'relative' : 'absolute',
-                    top: digit * digitHeight,
-                  },
-                  styles?.text,
-                ]}
+                key={key}
+                style={[positionStyle, styles?.text, animatedStyle]}
                 {...textProps}
               >
                 {digit}
