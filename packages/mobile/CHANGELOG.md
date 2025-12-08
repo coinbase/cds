@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.27.4 (12/7/2025 PST)
+
+#### 🐞 Fixes
+
+- Add missing tabs style to TabbedChips. [[#217](https://github.com/coinbase/cds/pull/217)]
+
 ## 8.27.3 (12/5/2025 PST)
 
 #### 🐞 Fixes
