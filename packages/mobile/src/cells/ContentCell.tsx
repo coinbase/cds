@@ -10,6 +10,9 @@ import { Cell, type CellProps } from './Cell';
 import { CellAccessory, type CellAccessoryType } from './CellAccessory';
 import { condensedInnerSpacing, condensedOuterSpacing } from './ListCell';
 
+/**
+ * @deprecated Use `ListCell`. `ContentCell` remains only to support legacy surfaces that cannot migrate yet.
+ */
 export type ContentCellBaseProps = {
   /** Accessory to display at the end of the cell. */
   accessory?: CellAccessoryType;
@@ -94,6 +97,9 @@ function generateAccessibilityLabels(
   return computedLabel;
 }
 
+/**
+ * @deprecated Use `ListCell`. `ContentCell` remains only to support legacy surfaces that cannot migrate yet.
+ */
 export const ContentCell = memo(function ContentCell({
   accessory,
   accessoryNode,

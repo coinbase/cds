@@ -32,6 +32,9 @@ export const contentCellDefaultElement = 'div';
 
 export type ContentCellDefaultElement = typeof contentCellDefaultElement;
 
+/**
+ * @deprecated Use `ListCell`. `ContentCell` remains only to support legacy surfaces that cannot migrate yet.
+ */
 export type ContentCellBaseProps = Polymorphic.ExtendableProps<
   Omit<CellBaseProps, 'children'>,
   {
@@ -125,6 +128,9 @@ type ContentCellComponent = (<AsComponent extends React.ElementType = ContentCel
 ) => Polymorphic.ReactReturn) &
   Polymorphic.ReactNamed;
 
+/**
+ * @deprecated Use `ListCell`. `ContentCell` remains only to support legacy surfaces that cannot migrate yet.
+ */
 export const ContentCell: ContentCellComponent = memo(
   forwardRef<React.ReactElement<ContentCellBaseProps>, ContentCellBaseProps>(
     <AsComponent extends React.ElementType>(
