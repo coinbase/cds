@@ -1,0 +1,14 @@
+---
+description: Use these rules when asked to review CDS React component code
+alwaysApply: false
+---
+
+# CDS React Component Code Reviews
+
+Check for the following:
+
+- Structure: does the component's file follow the correct structure of imports, styles, types, and component?
+- Type safety: were any changes made backwards compatible? Were there any breaking changes? Are props clearly typed and following best practices? Are there any props that are unused / missing?
+- Styling: does the component rely on css variables and theme tokens where possible? Are there any missing className or styles props?
+- Accessibility: does the component follow best practices for accessibility for the platform?
+- Tests & stories: is the component used in a meaningful way by Jest tests and have story examples?
