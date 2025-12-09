@@ -2,24 +2,30 @@ import React, { forwardRef, memo } from 'react';
 import type { SharedAccessibilityProps, SharedProps } from '@coinbase/cds-common/types';
 
 import type { Polymorphic } from '../core/polymorphism';
-import { HStack, type HStackBaseProps } from '../layout/HStack';
+import { HStack } from '../layout/HStack';
 import { Pressable, type PressableBaseProps } from '../system/Pressable';
 
-export type CardRootBaseProps = SharedAccessibilityProps &
-  SharedProps & {
-    children: React.ReactNode;
+export type CardRootBaseProps = Polymorphic.ExtendableProps<
+  PressableBaseProps,
+  {
+    children?: React.ReactNode;
     actionable?: boolean;
-  } & PressableBaseProps;
+  }
+>;
 
-export const cardRootDefaultElement = 'article';
+export const nonActionableCardRootDefaultElement = 'article';
 export const actionableCardRootDefaultElement = 'button';
 
-export type CardRootDefaultElement = typeof cardRootDefaultElement;
+export type NonActionableCardRootDefaultElement = typeof nonActionableCardRootDefaultElement;
+export type ActionableCardRootDefaultElement = typeof actionableCardRootDefaultElement;
 
-export type CardRootProps<AsComponent extends React.ElementType = CardRootDefaultElement> =
-  Polymorphic.Props<AsComponent, CardRootBaseProps>;
+export type CardRootProps<
+  AsComponent extends React.ElementType = NonActionableCardRootDefaultElement,
+> = Polymorphic.Props<AsComponent, CardRootBaseProps>;
 
-type CardRootComponent = (<AsComponent extends React.ElementType = CardRootDefaultElement>(
+type CardRootComponent = (<
+  AsComponent extends React.ElementType = NonActionableCardRootDefaultElement,
+>(
   props: Polymorphic.Props<AsComponent, CardRootBaseProps>,
 ) => Polymorphic.ReactReturn) &
   Polymorphic.ReactNamed;

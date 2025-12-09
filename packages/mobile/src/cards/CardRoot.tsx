@@ -15,7 +15,7 @@ export type CardRootProps = CardRootBaseProps & PressableProps;
 
 export const CardRoot = memo(
   forwardRef<View, CardRootBaseProps>(({ children, actionable, ...props }, ref) => {
-    const Component = actionable ? Pressable : HStack
+    const Component = actionable ? Pressable : HStack;
     return (
       <Component ref={ref} {...props}>
         {children}
