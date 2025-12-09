@@ -11,7 +11,7 @@ import { CellAccessory, type CellAccessoryType } from './CellAccessory';
 import { condensedInnerSpacing, condensedOuterSpacing } from './ListCell';
 
 /**
- * @deprecated Use `ListCell`. `ContentCell` remains only to support legacy surfaces that cannot migrate yet.
+ * @deprecated this component will be removed in a future version. Use ListCell instead.
  */
 export type ContentCellBaseProps = {
   /** Accessory to display at the end of the cell. */
@@ -44,23 +44,37 @@ export type ContentCellBaseProps = {
   spacingVariant?: 'normal' | 'compact' | 'condensed';
   /** Description of content. Content will wrap accordingly. */
   description?: React.ReactNode;
-  /** React node to render description. Takes precedence over `description`. */
+  /**
+   * React node to render description. Takes precedence over `description`.
+   * When provided, `styles.description` is not applied.
+   */
   descriptionNode?: React.ReactNode;
   /** Media (icon, asset, image, etc) to display at the start of the cell. */
   media?: React.ReactElement;
   /** Meta information to display at the end of the title. */
   meta?: React.ReactNode;
-  /** React node to render meta. Takes precedence over `meta`. */
+  /**
+   * React node to render meta. Takes precedence over `meta`.
+   * When provided, `styles.meta` and `styles.metaContainer` are not applied.
+   */
   metaNode?: React.ReactNode;
   /** Subtitle of content. Max 1 line, otherwise will truncate. */
   subtitle?: React.ReactNode;
-  /** React node to render subtitle. Takes precedence over `subtitle`. */
+  /**
+   * React node to render subtitle. Takes precedence over `subtitle`.
+   * When provided, `styles.subtitle` is not applied.
+   */
   subtitleNode?: React.ReactNode;
   /** Title of content. Up to 2 lines depending on spacing variant. */
   title?: React.ReactNode;
-  /** React node to render title. Takes precedence over `title`. */
+  /**
+   * React node to render title. Takes precedence over `title`.
+   * When provided, `styles.title` is not applied.
+   */
   titleNode?: React.ReactNode;
-  /** Styles for the components */
+  /**
+   * Styles for the default subcomponents. Ignored when the corresponding `xxNode` prop is used.
+   */
   styles?: {
     root?: StyleProp<ViewStyle>;
     media?: StyleProp<ViewStyle>;
@@ -98,7 +112,7 @@ function generateAccessibilityLabels(
 }
 
 /**
- * @deprecated Use `ListCell`. `ContentCell` remains only to support legacy surfaces that cannot migrate yet.
+ * @deprecated this component will be removed in a future version. Use ListCell instead.
  */
 export const ContentCell = memo(function ContentCell({
   accessory,

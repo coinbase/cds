@@ -33,7 +33,7 @@ export const contentCellDefaultElement = 'div';
 export type ContentCellDefaultElement = typeof contentCellDefaultElement;
 
 /**
- * @deprecated Use `ListCell`. `ContentCell` remains only to support legacy surfaces that cannot migrate yet.
+ * @deprecated this component will be removed in a future version. Use ListCell instead.
  */
 export type ContentCellBaseProps = Polymorphic.ExtendableProps<
   Omit<CellBaseProps, 'children'>,
@@ -67,25 +67,39 @@ export type ContentCellBaseProps = Polymorphic.ExtendableProps<
      * @default 'normal'
      */
     spacingVariant?: 'normal' | 'compact' | 'condensed';
-    /** React node to render description. Takes precedence over `description`. */
+    /**
+     * React node to render description. Takes precedence over `description`.
+     * When provided, `classNames.description` and `styles.description` are not applied.
+     */
     descriptionNode?: React.ReactNode;
     /** Description of content. Content will wrap accordingly. */
     description?: React.ReactNode;
-    /** React node to render meta. Takes precedence over `meta`. */
+    /**
+     * React node to render meta. Takes precedence over `meta`.
+     * When provided, `classNames.meta` and `styles.meta` are not applied.
+     */
     metaNode?: React.ReactNode;
     /** Media (icon, asset, image, etc) to display at the start of the cell. */
     media?: React.ReactElement;
     /** Meta information to display at the end of the title. */
     meta?: React.ReactNode;
-    /** React node to render subtitle. Takes precedence over `subtitle`. */
+    /**
+     * React node to render subtitle. Takes precedence over `subtitle`.
+     * When provided, `classNames.subtitle` and `styles.subtitle` are not applied.
+     */
     subtitleNode?: React.ReactNode;
     /** Subtitle of content. Max 1 line, otherwise will truncate. */
     subtitle?: React.ReactNode;
-    /** React node to render title. Takes precedence over `title`. */
+    /**
+     * React node to render title. Takes precedence over `title`.
+     * When provided, `classNames.title` and `styles.title` are not applied.
+     */
     titleNode?: React.ReactNode;
     /** Title of content. Up to 2 lines depending on spacing variant. */
     title?: React.ReactNode;
-    /** Class names for the components */
+    /**
+     * Class names for default subcomponents. Ignored when the corresponding `xxNode` prop is used.
+     */
     classNames?: {
       root?: string;
       media?: string;
@@ -100,7 +114,9 @@ export type ContentCellBaseProps = Polymorphic.ExtendableProps<
       meta?: string;
       description?: string;
     };
-    /** Styles for the components */
+    /**
+     * Styles for default subcomponents. Ignored when the corresponding `xxNode` prop is used.
+     */
     styles?: {
       root?: React.CSSProperties;
       media?: React.CSSProperties;
@@ -129,7 +145,7 @@ type ContentCellComponent = (<AsComponent extends React.ElementType = ContentCel
   Polymorphic.ReactNamed;
 
 /**
- * @deprecated Use `ListCell`. `ContentCell` remains only to support legacy surfaces that cannot migrate yet.
+ * @deprecated this component will be removed in a future version. Use ListCell instead.
  */
 export const ContentCell: ContentCellComponent = memo(
   forwardRef<React.ReactElement<ContentCellBaseProps>, ContentCellBaseProps>(
