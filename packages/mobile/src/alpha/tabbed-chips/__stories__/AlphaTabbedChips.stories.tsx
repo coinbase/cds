@@ -22,12 +22,14 @@ const Demo = ({
   tabs = defaultTabs,
   compact = false,
   width,
+  defaultTabIndex = 0,
 }: {
   tabs?: TabValue[];
   compact?: boolean;
   width?: BoxProps['width'];
+  defaultTabIndex?: number;
 }) => {
-  const [value, setValue] = useState<TabValue | null>(tabs[0]);
+  const [value, setValue] = useState<TabValue | null>(tabs[defaultTabIndex]);
   return (
     <TabbedChips
       activeTab={value}
@@ -75,7 +77,7 @@ const TabbedChipsScreen = () => {
         <Demo />
       </Example>
       <Example title="Lots of tabs">
-        <Demo tabs={sampleTabs} />
+        <Demo defaultTabIndex={5} tabs={sampleTabs} />
       </Example>
       <Example title="Long text tabs">
         <Demo tabs={longTextTabs} />
