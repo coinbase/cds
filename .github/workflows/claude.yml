@@ -45,5 +45,4 @@ jobs:
       timestamp: ${{ inputs.timestamp }}
       options: ${{ inputs.options }}
       slack_email: ${{ inputs.slack_email }}
-      has_setup_action: true
-      use_merge_base_checkout: true
+      # has_setup_action: true // This fix bypasses the setup action, which includes an action from public GitHub and is blocking the Claude bot workflow.
