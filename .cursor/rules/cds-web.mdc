@@ -1,0 +1,123 @@
+---
+description: USE THIS when asked to work on a new or existing (WEB) CDS React component in packages/web
+alwaysApply: false
+---
+
+<!-- TODO: nested AGENTS.md files should work but they seem a little flaky at the moment. Intelligent mdc files are working better -->
+
+# CDS Web Package Guidelines
+
+## CSS with Linaria
+
+Use Linaria for zero-runtime CSS. **Always use CDS theme CSS variables** for colors, spacing, typography, and other design tokens.
+Reference packages/web/src/core/theme.ts:53-119 for the CSS variable naming pattern.
+
+```tsx
+import { css, cx } from '@linaria/core';
+
+const containerCss = css`
+  /* Spacing tokens */
+  padding: var(--space-2);
+  gap: var(--space-1);
+
+  /* Color tokens */
+  background: var(--color-bgPrimary);
+  color: var(--color-fgPrimary);
+  border: 1px solid var(--color-line);
+
+  /* Border radius tokens */
+  border-radius: var(--borderRadius-400);
+
+  /* Typography tokens */
+  font-size: var(--fontSize-body);
+
+  &:hover {
+    background: var(--color-bgPrimaryHover);
+  }
+`;
+
+// Merge classNames with cx utility **in CORRECT ORDER**
+<div
+  className={cx(
+    containerCss, // Base styles first
+    isCompact && conditionClassToApply, // Conditional computed styles
+    className, // User-provided className prop
+    classNames.root, // granular overrides last
+  )}
+/>;
+```
+
+**IMPORTANT:** Using CSS variables ensures components respond correctly to theme changes (light/dark mode, brand themes).
+
+### Granular classNames
+
+- Components can expose a `classNames` object prop for granular overrides on child elements within the component.
+- Since the keys of the `classNames` object are specific to the component they should never be on the `*BaseProps` type
+
+### data-attributes
+
+- Use data attributes for state-based styling: `data-active`, `data-disabled`, `data-variant`, `data-filled`
+
+## Inline styles
+
+- Web components should all expose a `style` and `styles` object props for overriding inline styles.
+- As styling is a concern of that specific component, the `style` and `styles` props should never be on the `*BaseProps` type.
+- Styles should be merged into a single object with a `useMemo` hook and applied in the correct order (deafult styles => `style` prop => `styles[ELEMENT_NAME]` prop).
+
+**Example:**
+
+```tsx
+type ComponentProps = ComponentBaseProps & {
+  style?: React.CSSProperties;
+  styles?: { root?: React.CSSProperties; label?: React.CSSProperties };
+};
+```
+
+## Animation
+
+Use Framer Motion for complex animations:
+
+```tsx
+import { m as motion, AnimatePresence } from 'framer-motion';
+
+<AnimatePresence>
+  {visible && (
+    <motion.div
+      initial={{ opacity: 0, y: -8 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -8 }}
+    />
+  )}
+</AnimatePresence>;
+```
+
+For simple transitions, prefer CSS transitions in Linaria.
+
+## Accessibility
+
+Use ARIA attributes:
+
+```tsx
+<div role="group" aria-roledescription="carousel" aria-live="polite">
+  <button aria-pressed={isActive} tabIndex={isVisible ? 0 : -1} />
+</div>
+```
+
+- Implement keyboard navigation (Arrow keys, Home, End) for interactive components.
+- Provide descriptive labels for all interactive elements
+- Associate form inputs with helper text using aria-describedby
+- Use semantic HTML elements whenever possible
+- Follow WCAG 2.1 AA standards for color contrast
+- Support screen readers by providing descriptive labels and instructions
+
+## Web-Specific Props
+
+- `className?: string` - CSS class always applied to root element
+- `style?: React.CSSProperties` - inline styles always applied to root elemenet
+- Polymorphic `as` prop for element type (where applicable e.g. see Box)
+
+## Reference Components
+
+- **Carousel**: compound components, imperative handle, context pattern
+- **Select** (alpha/): generics, controlled/uncontrolled
+- **RollingNumber**: animation config, measurement patterns
