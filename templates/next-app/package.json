@@ -16,7 +16,7 @@
     "@coinbase/cds-web": "^8",
     "@coinbase/cds-web-visualization": "^3",
     "framer-motion": "^10",
-    "next": "^15.4.5",
+    "next": "^15.4.8",
     "react": "^18",
     "react-dom": "^18"
   },
