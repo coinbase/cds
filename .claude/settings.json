@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ls:*)",
+      "Skill(cds-components)",
+      "Bash(yarn nx run web:typecheck)",
+      "Bash(yarn nx run mobile:typecheck)",
+      "Bash(yarn nx run common:typecheck)",
+      "Bash(yarn nx run web:test:*)",
+      "Bash(yarn nx run mobile:test:*)",
+      "Bash(yarn nx run common:test:*)",
+      "Bash(yarn nx format:write)",
+      "Bash(yarn nx format:check)",
+      "WebFetch",
+      "WebSearch"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
