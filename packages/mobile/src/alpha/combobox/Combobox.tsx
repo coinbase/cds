@@ -327,6 +327,7 @@ const ComboboxBase = memo(
           endNode,
           handleTrayVisibilityChange,
           label,
+          placeholder,
           setOpen,
           startNode,
         ],
