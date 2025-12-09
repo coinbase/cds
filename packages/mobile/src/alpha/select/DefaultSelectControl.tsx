@@ -18,6 +18,7 @@ import { isSelectOptionGroup } from './Select';
 
 // The height is smaller for the inside label variant since the label takes
 // up space above the input.
+const LABEL_VARIANT_INSIDE_HEIGHT = 24;
 const COMPACT_HEIGHT = 40;
 const DEFAULT_HEIGHT = 56;
 
@@ -52,6 +53,7 @@ export const DefaultSelectControlComponent = memo(
         variant,
         helperText,
         label,
+        labelVariant,
         contentNode,
         startNode,
         endNode: customEndNode,
@@ -152,14 +154,19 @@ export const DefaultSelectControlComponent = memo(
               onPress={() => setOpen((s) => !s)}
               style={styles?.controlLabelNode}
             >
-              <InputLabel color="fg" paddingX={0} paddingY={0.5}>
+              <InputLabel
+                color="fg"
+                paddingEnd={0}
+                paddingStart={labelVariant === 'inside' ? 2 : 0}
+                paddingY={labelVariant === 'inside' ? 0 : 0.5}
+              >
                 {label}
               </InputLabel>
             </Pressable>
           ) : (
             label
           ),
-        [disabled, label, setOpen, styles?.controlLabelNode],
+        [disabled, label, labelVariant, setOpen, styles?.controlLabelNode],
       );
 
       const valueNode = useMemo(() => {
@@ -245,9 +252,15 @@ export const DefaultSelectControlComponent = memo(
             <HStack
               alignItems="center"
               justifyContent="space-between"
-              minHeight={compact ? COMPACT_HEIGHT : DEFAULT_HEIGHT}
+              minHeight={
+                labelVariant === 'inside'
+                  ? LABEL_VARIANT_INSIDE_HEIGHT
+                  : compact
+                    ? COMPACT_HEIGHT
+                    : DEFAULT_HEIGHT
+              }
               paddingStart={startNode ? 0 : 2}
-              paddingY={compact ? 1 : 1.5}
+              paddingY={labelVariant === 'inside' ? 0 : compact ? 1 : 1.5}
             >
               <HStack alignItems="center" flexGrow={1}>
                 {!!startNode && (
@@ -256,7 +269,7 @@ export const DefaultSelectControlComponent = memo(
                   </HStack>
                 )}
                 {shouldShowCompactLabel ? (
-                  <HStack alignItems="center" paddingEnd={1} maxWidth="40%">
+                  <HStack alignItems="center" maxWidth="40%" paddingEnd={1}>
                     {labelNode}
                   </HStack>
                 ) : null}
@@ -281,8 +294,12 @@ export const DefaultSelectControlComponent = memo(
           styles?.controlStartNode,
           styles?.controlValueNode,
           props,
-          startNode,
+          labelVariant,
+          isMultiSelect,
           compact,
+          startNode,
+          shouldShowCompactLabel,
+          labelNode,
           valueNode,
           contentNode,
           setOpen,
@@ -323,6 +340,7 @@ export const DefaultSelectControlComponent = memo(
           helperTextNode={helperTextNode}
           inputNode={inputNode}
           labelNode={shouldShowCompactLabel ? null : labelNode}
+          labelVariant={labelVariant}
           variant={variant}
           {...props}
         />

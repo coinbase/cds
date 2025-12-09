@@ -5,9 +5,9 @@ import type { CellBaseProps } from '../../cells/Cell';
 import type { InputStackBaseProps } from '../../controls/InputStack';
 import type { AriaHasPopupType } from '../../hooks/useA11yControlledVisibility';
 import type { BoxDefaultElement, BoxProps } from '../../layout/Box';
+import type { TrayProps } from '../../overlays/tray/Tray';
 import type { PressableDefaultElement, PressableProps } from '../../system';
 import type { InteractableBlendStyles } from '../../system/Interactable';
-import type { TrayProps } from '../../overlays/tray/Tray';
 
 export type SelectType = 'single' | 'multi';
 

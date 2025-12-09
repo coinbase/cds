@@ -194,6 +194,21 @@ const CompactExample = () => {
   );
 };
 
+const InsideLabelVariantExample = () => {
+  const [value, setValue] = useState<string | null>('1');
+
+  return (
+    <Select
+      label="Inside label variant"
+      labelVariant="inside"
+      onChange={setValue}
+      options={exampleOptions}
+      placeholder="Empty value"
+      value={value}
+    />
+  );
+};
+
 const WithHelperTextExample = () => {
   const [value, setValue] = useState<string | null>('1');
 
@@ -625,6 +640,24 @@ const MultiSelectCompactExample = () => {
     <Select
       compact
       label="Compact"
+      onChange={onChange}
+      options={exampleOptions}
+      placeholder="Empty value"
+      type="multi"
+      value={value}
+    />
+  );
+};
+
+const MultiSelectInsideLabelVariantExample = () => {
+  const { value, onChange } = useMultiSelect({
+    initialValue: ['1'],
+  });
+
+  return (
+    <Select
+      label="Multi select - inside label variant"
+      labelVariant="inside"
       onChange={onChange}
       options={exampleOptions}
       placeholder="Empty value"
@@ -1113,6 +1146,9 @@ const SelectV3Screen = () => {
       <Example title="Compact">
         <CompactExample />
       </Example>
+      <Example title="Compact with inside label variant">
+        <InsideLabelVariantExample />
+      </Example>
       <Example title="With Helper Text">
         <WithHelperTextExample />
       </Example>
@@ -1193,6 +1229,9 @@ const SelectV3Screen = () => {
       </Example>
       <Example title="Multi Select Compact">
         <MultiSelectCompactExample />
+      </Example>
+      <Example title="Multi Select Inside Label Variant">
+        <MultiSelectInsideLabelVariantExample />
       </Example>
       <Example title="Multi Select Hide Select All">
         <MultiSelectHideSelectAllExample />

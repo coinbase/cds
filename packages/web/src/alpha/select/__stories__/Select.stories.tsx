@@ -92,6 +92,32 @@ export const Compact = () => {
   );
 };
 
+export const LabelVariant = () => {
+  const exampleOptions = [
+    { value: null, label: 'Remove selection' },
+    { value: '1', label: 'Option 1' },
+    { value: '2', label: 'Option 2' },
+    { value: '3', label: 'Option 3' },
+    { value: '4', label: 'Option 4' },
+    { value: '5', label: 'Option 5' },
+    { value: '6', label: 'Option 6' },
+    { value: '7', label: 'Option 7' },
+    { value: '8', label: 'Option 8' },
+    { value: '9', label: 'Option 9' },
+  ];
+  const [value, setValue] = useState<string | null>('1');
+  return (
+    <Select
+      label="Single select - label variant"
+      labelVariant="inside"
+      onChange={setValue}
+      options={exampleOptions}
+      placeholder="Empty value"
+      value={value}
+    />
+  );
+};
+
 export const ExampleForm = () => {
   const exampleOptions = [
     { value: null, label: 'Remove selection' },

@@ -61,6 +61,7 @@ const SelectBase = memo(
         helperText,
         compact,
         label,
+        labelVariant,
         accessibilityLabel = type === 'multi' ? 'Multi select control' : undefined,
         accessibilityHint,
         accessibilityRoles = defaultAccessibilityRoles,
@@ -176,6 +177,7 @@ const SelectBase = memo(
             helperText={helperText}
             hiddenSelectedOptionsLabel={hiddenSelectedOptionsLabel}
             label={label}
+            labelVariant={labelVariant}
             maxSelectedOptionsToShow={maxSelectedOptionsToShow}
             onChange={onChange}
             open={open}

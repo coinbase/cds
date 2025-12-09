@@ -23,6 +23,7 @@ import {
 
 // The height is smaller for the inside label variant since the label takes
 // up space above the input.
+const LABEL_VARIANT_INSIDE_HEIGHT = 32;
 const COMPACT_HEIGHT = 40;
 const DEFAULT_HEIGHT = 56;
 
@@ -65,6 +66,7 @@ const DefaultSelectControlComponent = memo(
         variant,
         helperText,
         label,
+        labelVariant,
         contentNode,
         startNode,
         endNode: customEndNode,
@@ -192,7 +194,19 @@ const DefaultSelectControlComponent = memo(
 
       const labelNode = useMemo(
         () =>
-          typeof label === 'string' ? (
+          labelVariant === 'inside' ? (
+            <Pressable noScaleOnPress onClick={() => setOpen((s) => !s)}>
+              <InputLabel
+                className={classNames?.controlLabelNode}
+                color="fg"
+                paddingBottom={0}
+                paddingStart={2}
+                style={styles?.controlLabelNode}
+              >
+                {label}
+              </InputLabel>
+            </Pressable>
+          ) : typeof label === 'string' ? (
             <InputLabel
               className={classNames?.controlLabelNode}
               color="fg"
@@ -203,7 +217,7 @@ const DefaultSelectControlComponent = memo(
           ) : (
             label
           ),
-        [label, classNames?.controlLabelNode, styles?.controlLabelNode],
+        [labelVariant, classNames?.controlLabelNode, styles?.controlLabelNode, label, setOpen],
       );
 
       const valueNode = useMemo(() => {
@@ -292,7 +306,13 @@ const DefaultSelectControlComponent = memo(
             disabled={disabled}
             flexGrow={1}
             focusable={false}
-            minHeight={compact ? COMPACT_HEIGHT : DEFAULT_HEIGHT}
+            minHeight={
+              labelVariant === 'inside'
+                ? LABEL_VARIANT_INSIDE_HEIGHT
+                : compact
+                  ? COMPACT_HEIGHT
+                  : DEFAULT_HEIGHT
+            }
             onClick={() => setOpen((s) => !s)}
             paddingStart={1}
             style={styles?.controlInputNode}
@@ -313,7 +333,7 @@ const DefaultSelectControlComponent = memo(
               </HStack>
             )}
             {shouldShowCompactLabel ? (
-              <HStack alignItems="center" paddingEnd={1} maxWidth="40%">
+              <HStack alignItems="center" maxWidth="40%" paddingEnd={1}>
                 {labelNode}
               </HStack>
             ) : null}
@@ -334,7 +354,7 @@ const DefaultSelectControlComponent = memo(
                 justifyContent="flex-start"
                 overflow="auto"
                 paddingX={1}
-                paddingY={compact ? 1 : 1.5}
+                paddingY={labelVariant === 'inside' && !isMultiSelect ? 0 : compact ? 1 : 1.5}
                 style={styles?.controlValueNode}
               >
                 {valueNode}
@@ -351,12 +371,16 @@ const DefaultSelectControlComponent = memo(
           classNames?.controlStartNode,
           classNames?.controlValueNode,
           disabled,
+          labelVariant,
           compact,
           styles?.controlInputNode,
           styles?.controlStartNode,
           styles?.controlValueNode,
           tabIndex,
           startNode,
+          shouldShowCompactLabel,
+          labelNode,
+          isMultiSelect,
           valueNode,
           contentNode,
           setOpen,
@@ -375,6 +399,7 @@ const DefaultSelectControlComponent = memo(
               alignItems="center"
               className={classNames?.controlEndNode}
               flexGrow={1}
+              justifyContent={labelVariant === 'inside' ? 'flex-end' : undefined}
               paddingX={2}
               paddingY={compact ? 1 : 1.5}
               style={styles?.controlEndNode}
@@ -392,6 +417,7 @@ const DefaultSelectControlComponent = memo(
         ),
         [
           classNames?.controlEndNode,
+          labelVariant,
           compact,
           styles?.controlEndNode,
           customEndNode,
@@ -410,6 +436,7 @@ const DefaultSelectControlComponent = memo(
           helperTextNode={helperTextNode}
           inputNode={inputNode}
           labelNode={shouldShowCompactLabel ? null : labelNode}
+          labelVariant={labelVariant}
           variant={variant}
           {...props}
         />
