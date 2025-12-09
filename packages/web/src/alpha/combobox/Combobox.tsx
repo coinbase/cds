@@ -40,6 +40,24 @@ const hasSelectedValue = (currentValue: unknown): boolean =>
   typeof currentValue !== 'undefined' &&
   !(Array.isArray(currentValue) && currentValue.length === 0);
 
+export type ComboboxControlProps<
+  Type extends SelectType = 'single',
+  SelectOptionValue extends string = string,
+> = SelectControlProps<Type, SelectOptionValue> &
+  Pick<ComboboxBaseProps<Type, SelectOptionValue>, 'hideSearchInput'> & {
+    /** Reference to the combobox control for positioning */
+    controlRef: React.RefObject<ComboboxRef | null>;
+    /** Custom SelectControlComponent to wrap */
+    SelectControlComponent?: SelectControlComponent<Type, SelectOptionValue>;
+  };
+
+type ComboboxControlComponentType = <
+  Type extends SelectType = 'single',
+  SelectOptionValue extends string = string,
+>(
+  props: ComboboxControlProps<Type, SelectOptionValue>,
+) => React.ReactElement;
+
 export type ComboboxBaseProps<
   Type extends SelectType = 'single',
   SelectOptionValue extends string = string,
@@ -58,26 +76,6 @@ export type ComboboxBaseProps<
   /** Hide the search input */
   hideSearchInput?: boolean;
 };
-
-export type ComboboxControlProps<
-  Type extends SelectType = 'single',
-  SelectOptionValue extends string = string,
-> = Omit<SelectControlProps<Type, SelectOptionValue>, 'options'> &
-  Pick<ComboboxBaseProps<Type, SelectOptionValue>, 'hideSearchInput'> & {
-    /** Reference to the combobox control for positioning */
-    controlRef: React.RefObject<ComboboxRef | null>;
-    /** Full options list (not filtered) for displaying selected values */
-    options: SelectOptionList<Type, SelectOptionValue>;
-    /** Custom SelectControlComponent to wrap */
-    SelectControlComponent?: SelectControlComponent<Type, SelectOptionValue>;
-  };
-
-type ComboboxControlComponentType = <
-  Type extends SelectType = 'single',
-  SelectOptionValue extends string = string,
->(
-  props: ComboboxControlProps<Type, SelectOptionValue>,
-) => React.ReactElement;
 
 export type ComboboxProps<
   Type extends SelectType = 'single',
@@ -207,6 +205,7 @@ const ComboboxBase = memo(
         onSearch: onSearchProp,
         defaultSearchText = '',
         filterFunction,
+        SelectControlComponent = DefaultSelectControl,
         ComboboxControlComponent = DefaultComboboxControl,
         hideSearchInput,
         ...props
@@ -268,12 +267,13 @@ const ComboboxBase = memo(
         (props: SelectControlProps<Type, SelectOptionValue>) => (
           <ComboboxControlComponent
             {...props}
+            SelectControlComponent={SelectControlComponent}
             controlRef={controlRef}
             hideSearchInput={hideSearchInput}
             options={options}
           />
         ),
-        [ComboboxControlComponent, hideSearchInput, controlRef, options],
+        [ComboboxControlComponent, SelectControlComponent, hideSearchInput, options],
       );
 
       return (
