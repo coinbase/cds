@@ -1,5 +1,5 @@
 import { forwardRef, memo, useImperativeHandle, useMemo, useRef, useState } from 'react';
-import { flip, useFloating, type UseFloatingReturn } from '@floating-ui/react-dom';
+import { autoUpdate, flip, useFloating, type UseFloatingReturn } from '@floating-ui/react-dom';
 
 import { cx } from '../../cx';
 import { useClickOutside } from '../../hooks/useClickOutside';
@@ -122,6 +122,7 @@ const SelectBase = memo(
         open,
         middleware: [flip()],
         placement: 'bottom-start',
+        whileElementsMounted: autoUpdate,
       });
 
       useClickOutside(() => !disableClickOutsideClose && setOpen(false), {
