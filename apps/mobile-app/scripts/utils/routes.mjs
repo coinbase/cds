@@ -360,6 +360,11 @@ export const routes = [
     getComponent: () => require('@coinbase/cds-mobile/chips/__stories__/MediaChip.stories').default,
   },
   {
+    key: 'MessagingCard',
+    getComponent: () =>
+      require('@coinbase/cds-mobile/cards/__stories__/MessagingCard.stories').default,
+  },
+  {
     key: 'ModalBackButton',
     getComponent: () =>
       require('@coinbase/cds-mobile/overlays/__stories__/ModalBackButton.stories').default,
