@@ -19,6 +19,27 @@ The rule catches deprecation markers on:
 - Class declarations (including members)
 - Export declarations
 
+### require-deprecated-in
+
+Enforces that any JSDoc comment containing `@deprecated` must also include a `@deprecatedIn` tag with a valid CDS major version number. This helps track how long things have been deprecated for.
+
+The version format must be `v[INTEGER]` (e.g., `v9`, `v10`).
+
+Example of valid usage:
+
+```ts
+/**
+ * @deprecated Use newFunction instead
+ * @deprecatedIn v9
+ */
+function oldFunction() {}
+```
+
+The rule reports errors when:
+
+- `@deprecated` is present without `@deprecatedIn`
+- `@deprecatedIn` has an invalid version format (e.g., `v9.1`, `9`, `vnine`)
+
 ### safely-spread-props
 
 This rule checks that React component `...spread` props do not contain properties that the receiving component does not expect.

@@ -1,6 +1,7 @@
 import exampleScreenContainsExampleRule from './example-screen-contains-example/index.mjs';
 import exampleScreenDefaultRule from './example-screen-default/index.mjs';
 import noDeprecatedJsdocRule from './no-deprecated-jsdoc/index.mjs';
+import requireDeprecatedInRule from './require-deprecated-in/index.mjs';
 import safelySpreadPropsRule from './safely-spread-props/index.mjs';
 
 const plugin = {
@@ -10,6 +11,7 @@ const plugin = {
     'example-screen-default': exampleScreenDefaultRule,
     'example-screen-contains-example': exampleScreenContainsExampleRule,
     'no-deprecated-jsdoc': noDeprecatedJsdocRule,
+    'require-deprecated-in': requireDeprecatedInRule,
   },
   configs: {},
 };
