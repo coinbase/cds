@@ -8,7 +8,7 @@ import { CardDescription, type CardDescriptionBaseProps } from '../CardDescripti
 import { CardSubtitle, type CardSubtitleBaseProps } from '../CardSubtitle';
 import { CardTitle, type CardTitleBaseProps } from '../CardTitle';
 
-export type CardOverrides = {
+export type MediaCardOverrides = {
   layoutContainer?: Omit<HStackBaseProps, 'children'>;
   contentContainer?: Omit<VStackBaseProps, 'children'>;
   textContainer?: Omit<VStackBaseProps, 'children'>;
@@ -20,15 +20,14 @@ export type CardOverrides = {
   mediaContainer?: Omit<BoxBaseProps, 'children'>;
 };
 
-type MediaCardLayoutProps = {
+export type MediaCardLayoutProps = {
   title?: React.ReactNode;
   subtitle?: React.ReactNode;
   description?: React.ReactNode;
   thumbnail?: React.ReactNode;
   media?: React.ReactNode;
   tag?: React.ReactNode;
-  actionable?: boolean;
-  overrides?: CardOverrides;
+  overrides?: MediaCardOverrides;
 };
 
 export const MediaCardLayout = memo(
@@ -39,19 +38,18 @@ export const MediaCardLayout = memo(
     thumbnail,
     media,
     tag,
-    actionable = false,
     overrides = {},
   }: MediaCardLayoutProps) => {
     const titleNode = useMemo(() => {
       if (typeof title === 'string') {
         return (
-          <CardTitle as={actionable ? 'p' : 'h3'} {...overrides.title}>
+          <CardTitle as="h3" {...overrides.title}>
             {title}
           </CardTitle>
         );
       }
       return title;
-    }, [actionable, overrides.title, title]);
+    }, [overrides.title, title]);
 
     const subtitleNode = useMemo(
       () =>
@@ -65,12 +63,12 @@ export const MediaCardLayout = memo(
 
     const headerNode = useMemo(
       () => (
-        <VStack as={actionable ? undefined : 'header'} {...overrides.headerContainer}>
+        <VStack as="header" {...overrides.headerContainer}>
           {subtitleNode}
           {titleNode}
         </VStack>
       ),
-      [actionable, subtitleNode, titleNode, overrides.headerContainer],
+      [subtitleNode, titleNode, overrides.headerContainer],
     );
 
     const descriptionNode = useMemo(
@@ -122,5 +120,3 @@ export const MediaCardLayout = memo(
     );
   },
 );
-
-MediaCardLayout.displayName = 'MediaCardLayout';

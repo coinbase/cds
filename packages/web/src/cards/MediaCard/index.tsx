@@ -8,19 +8,11 @@ import {
   type NonActionableCardRootDefaultElement,
 } from '../CardRoot';
 
-import { type CardOverrides, MediaCardLayout } from './MediaCardLayout';
+import { MediaCardLayout, type MediaCardLayoutProps } from './MediaCardLayout';
 
-type MediaCardBaseProps = Polymorphic.ExtendableProps<
+export type MediaCardBaseProps = Polymorphic.ExtendableProps<
   Omit<CardRootBaseProps, 'children'>,
-  {
-    title?: React.ReactNode;
-    subtitle?: React.ReactNode;
-    description?: React.ReactNode;
-    thumbnail?: React.ReactNode;
-    media?: React.ReactNode;
-    tag?: React.ReactNode;
-    overrides?: CardOverrides;
-  }
+  MediaCardLayoutProps
 >;
 
 export type MediaCardProps<
@@ -67,7 +59,6 @@ export const MediaCard: MediaCardComponent = memo(
         {...props}
       >
         <MediaCardLayout
-          actionable={!!props.actionable}
           description={description}
           media={media}
           overrides={overrides}

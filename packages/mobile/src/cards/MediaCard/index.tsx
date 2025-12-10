@@ -1,20 +1,12 @@
-import React, { forwardRef, memo } from 'react';
+import { forwardRef, memo } from 'react';
 import type { View } from 'react-native';
 import type { ThemeVars } from '@coinbase/cds-common';
 
 import { CardRoot, type CardRootProps } from '../CardRoot';
 
-import { type CardOverrides, MediaCardLayout } from './MediaCardLayout';
+import { MediaCardLayout, type MediaCardLayoutProps } from './MediaCardLayout';
 
-type MediaCardBaseProps = {
-  title?: React.ReactNode;
-  subtitle?: React.ReactNode;
-  description?: React.ReactNode;
-  thumbnail?: React.ReactNode;
-  media?: React.ReactNode;
-  tag?: React.ReactNode;
-  overrides?: CardOverrides;
-};
+export type MediaCardBaseProps = MediaCardLayoutProps;
 
 export type MediaCardProps = Omit<CardRootProps, 'children'> & MediaCardBaseProps;
 
@@ -33,7 +25,6 @@ export const MediaCard = memo(
     ) => (
       <CardRoot ref={ref} actionable={actionable} {...mediaCardContainerProps} {...props}>
         <MediaCardLayout
-          actionable={!!actionable}
           description={description}
           media={media}
           overrides={overrides}

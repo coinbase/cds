@@ -8,7 +8,7 @@ import { CardDescription, type CardDescriptionProps } from '../CardDescription';
 import { CardSubtitle, type CardSubtitleProps } from '../CardSubtitle';
 import { CardTitle, type CardTitleProps } from '../CardTitle';
 
-export type CardOverrides = {
+export type MediaCardOverrides = {
   layoutContainer?: Omit<BoxBaseProps, 'children'>;
   contentContainer?: Omit<BoxBaseProps, 'children'>;
   textContainer?: Omit<BoxBaseProps, 'children'>;
@@ -20,15 +20,14 @@ export type CardOverrides = {
   mediaContainer?: Omit<BoxBaseProps, 'children'>;
 };
 
-type MediaCardLayoutProps = {
+export type MediaCardLayoutProps = {
   title?: React.ReactNode;
   subtitle?: React.ReactNode;
   description?: React.ReactNode;
   thumbnail?: React.ReactNode;
   media?: React.ReactNode;
   tag?: React.ReactNode;
-  actionable?: boolean;
-  overrides?: CardOverrides;
+  overrides?: MediaCardOverrides;
 };
 
 const MediaCardLayout = memo(
@@ -115,7 +114,5 @@ const MediaCardLayout = memo(
     );
   },
 );
-
-MediaCardLayout.displayName = 'MediaCardLayout';
 
 export { MediaCardLayout };
