@@ -34,7 +34,7 @@ export type ChipBaseProps = SharedProps &
      * Invert the foreground and background colors to emphasize the Chip.
      * Depending on your theme, it may be dangerous to use this prop in conjunction with `transparentWhileInactive`.
      * @default false
-     * @deprecated Use the invertColorScheme prop instead something else
+     * @deprecated Use the invertColorScheme prop instead
      */
     inverted?: boolean;
     /**
