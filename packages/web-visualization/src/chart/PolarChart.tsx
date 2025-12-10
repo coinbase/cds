@@ -1,9 +1,12 @@
-import React, { forwardRef, memo, useCallback, useMemo } from 'react';
+import React, { forwardRef, memo, useCallback, useMemo, useRef } from 'react';
 import type { Rect } from '@coinbase/cds-common/types';
 import { cx } from '@coinbase/cds-web';
 import { useDimensions } from '@coinbase/cds-web/hooks/useDimensions';
 import { Box, type BoxBaseProps, type BoxProps } from '@coinbase/cds-web/layout';
+import { css } from '@linaria/core';
 
+import { Legend } from './legend/Legend';
+import type { LegendPosition } from './CartesianChart';
 import { PolarChartProvider } from './ChartProvider';
 import {
   type AngularAxisConfig,
@@ -23,6 +26,22 @@ import {
   type RadialAxisConfig,
   type RadialAxisConfigProps,
 } from './utils';
+
+const rootCss = css`
+  display: flex;
+  overflow: hidden;
+`;
+const verticalCss = css`
+  flex-direction: column;
+`;
+const horizontalCss = css`
+  flex-direction: row;
+`;
+const chartContainerCss = css`
+  flex: 1;
+  min-height: 0;
+  min-width: 0;
+`;
 
 export type PolarChartBaseProps = BoxBaseProps & {
   /**
@@ -97,6 +116,17 @@ export type PolarChartBaseProps = BoxBaseProps & {
    * Inset around the entire chart (outside the drawing area).
    */
   inset?: number | Partial<ChartInset>;
+  /**
+   * Whether to show a legend, or a custom legend element.
+   * When `true`, renders the default Legend component.
+   * When a ReactNode, renders the provided element.
+   */
+  legend?: boolean | React.ReactNode;
+  /**
+   * Position of the legend relative to the chart.
+   * @default 'bottom'
+   */
+  legendPosition?: LegendPosition;
 };
 
 export type PolarChartProps = Omit<BoxProps<'div'>, 'title'> &
@@ -117,6 +147,11 @@ export type PolarChartProps = Omit<BoxProps<'div'>, 'title'> &
        * Custom class name for the chart SVG element.
        */
       chart?: string;
+      /**
+       * Custom class name for the legend element.
+       * @note not used when legend is a ReactNode.
+       */
+      legend?: string;
     };
     /**
      * Custom styles for the root element.
@@ -134,6 +169,11 @@ export type PolarChartProps = Omit<BoxProps<'div'>, 'title'> &
        * Custom styles for the chart SVG element.
        */
       chart?: React.CSSProperties;
+      /**
+       * Custom styles for the legend element.
+       * @note not used when legend is a ReactNode.
+       */
+      legend?: React.CSSProperties;
     };
   };
 
@@ -151,6 +191,8 @@ export const PolarChart = memo(
         angularAxis,
         radialAxis,
         inset: insetInput,
+        legend,
+        legendPosition = 'bottom',
         width = '100%',
         height = '100%',
         className,
@@ -319,6 +361,7 @@ export const PolarChart = memo(
 
       const contextValue: PolarChartContextValue = useMemo(
         () => ({
+          type: 'polar',
           series: series ?? [],
           getSeries,
           getSeriesData,
@@ -350,35 +393,67 @@ export const PolarChart = memo(
         ],
       );
 
+      const isVerticalLegend = useMemo(
+        () => legendPosition === 'top' || legendPosition === 'bottom',
+        [legendPosition],
+      );
+      const isLegendBefore = useMemo(
+        () => legendPosition === 'top' || legendPosition === 'left',
+        [legendPosition],
+      );
+
+      const legendElement = useMemo(() => {
+        if (!legend) return;
+        if (typeof legend !== 'boolean') return legend;
+        return (
+          <Legend
+            className={classNames?.legend}
+            flexDirection={isVerticalLegend ? 'row' : 'column'}
+            style={styles?.legend}
+          />
+        );
+      }, [legend, isVerticalLegend, classNames?.legend, styles?.legend]);
+
       const rootClassNames = useMemo(
-        () => cx(className, classNames?.root),
-        [className, classNames],
+        () =>
+          cx(rootCss, isVerticalLegend ? verticalCss : horizontalCss, className, classNames?.root),
+        [className, classNames, isVerticalLegend],
       );
       const rootStyles = useMemo(() => ({ ...style, ...styles?.root }), [style, styles?.root]);
 
       return (
         <PolarChartProvider value={contextValue}>
           <Box
-            ref={(node) => {
-              observe(node as unknown as HTMLElement);
-            }}
             className={rootClassNames}
             height={height}
             style={rootStyles}
             width={width}
             {...props}
           >
+            {isLegendBefore && legendElement}
             <Box
-              ref={ref}
+              ref={(node) => {
+                const svgElement = node as unknown as SVGSVGElement;
+                observe(node as unknown as HTMLElement);
+                // Forward the ref to the user
+                if (ref) {
+                  if (typeof ref === 'function') {
+                    ref(svgElement);
+                  } else {
+                    (ref as React.MutableRefObject<SVGSVGElement | null>).current = svgElement;
+                  }
+                }
+              }}
               aria-live="polite"
               as="svg"
-              className={classNames?.chart}
+              className={cx(chartContainerCss, classNames?.chart)}
               height="100%"
               style={styles?.chart}
               width="100%"
             >
               {children}
             </Box>
+            {!isLegendBefore && legendElement}
           </Box>
         </PolarChartProvider>
       );

@@ -7,10 +7,6 @@ export type ScrubberProviderProps = Partial<
   Pick<ScrubberContextValue, 'enableScrubbing' | 'onScrubberPositionChange'>
 > & {
   children: React.ReactNode;
-  /**
-   * A reference to the root SVG element, where interaction event handlers will be attached.
-   */
-  svgRef: React.RefObject<SVGSVGElement> | null;
 };
 
 /**
@@ -19,7 +15,6 @@ export type ScrubberProviderProps = Partial<
  */
 export const ScrubberProvider: React.FC<ScrubberProviderProps> = ({
   children,
-  svgRef,
   enableScrubbing,
   onScrubberPositionChange,
 }) => {
@@ -29,7 +24,7 @@ export const ScrubberProvider: React.FC<ScrubberProviderProps> = ({
     throw new Error('ScrubberProvider must be used within a ChartContext');
   }
 
-  const { getXScale, getXAxis, series } = chartContext;
+  const { getXScale, getXAxis, series, ref } = chartContext;
   const [scrubberPosition, setScrubberPosition] = useState<number | undefined>(undefined);
 
   const getDataIndexFromX = useCallback(
@@ -233,9 +228,9 @@ export const ScrubberProvider: React.FC<ScrubberProviderProps> = ({
 
   // Attach event listeners to SVG element
   useEffect(() => {
-    if (!svgRef?.current || !enableScrubbing) return;
+    if (!ref?.current || !enableScrubbing) return;
 
-    const svg = svgRef.current;
+    const svg = ref.current;
 
     // Add event listeners
     svg.addEventListener('mousemove', handleMouseMove);
@@ -258,7 +253,7 @@ export const ScrubberProvider: React.FC<ScrubberProviderProps> = ({
       svg.removeEventListener('blur', handleBlur);
     };
   }, [
-    svgRef,
+    ref,
     enableScrubbing,
     handleMouseMove,
     handleMouseLeave,

@@ -1,0 +1,29 @@
+{
+  "import": "import { ChartTooltip } from '@coinbase/cds-web-visualization'",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/web-visualization/src/chart/ChartTooltip.tsx",
+  "description": "A tooltip component for displaying series data at the current scrubber position. Supports custom labels, value formatting, and series filtering.",
+  "relatedComponents": [
+    {
+      "label": "CartesianChart",
+      "url": "/components/graphs/CartesianChart/"
+    },
+    {
+      "label": "Legend",
+      "url": "/components/graphs/Legend/"
+    },
+    {
+      "label": "LineChart",
+      "url": "/components/graphs/LineChart/"
+    },
+    {
+      "label": "Scrubber",
+      "url": "/components/graphs/Scrubber/"
+    }
+  ],
+  "dependencies": [
+    {
+      "name": "framer-motion",
+      "version": "^10.18.0"
+    }
+  ]
+}

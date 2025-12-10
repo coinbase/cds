@@ -1,0 +1,404 @@
+ChartTooltip displays series data at the current scrubber position in a floating tooltip. It automatically shows all series values, supports custom formatting, and positions itself near the cursor.
+
+## Basic Usage
+
+Add ChartTooltip as a child of any chart with `enableScrubbing` to display values when hovering. The tooltip label defaults to the x-axis value.
+
+```jsx live
+function BasicTooltip() {
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
+  const revenue = [120, 150, 180, 165, 190, 210];
+  const expenses = [80, 95, 110, 105, 120, 130];
+
+  return (
+    <LineChart
+      enableScrubbing
+      showXAxis
+      showYAxis
+      height={{ base: 200, tablet: 250, desktop: 300 }}
+      series={[
+        { id: 'revenue', label: 'Revenue', data: revenue, color: 'rgb(var(--blue40))' },
+        { id: 'expenses', label: 'Expenses', data: expenses, color: 'rgb(var(--orange40))' },
+      ]}
+      xAxis={{ data: months }}
+      yAxis={{ domain: { min: 0 }, showGrid: true }}
+    >
+      <Scrubber hideBeaconLabels />
+      <ChartTooltip />
+    </LineChart>
+  );
+}
+```
+
+## Value Formatter
+
+Use the `valueFormatter` prop to customize how values are displayed. The formatter receives the numeric value and should return a string or ReactNode.
+
+```jsx live
+function ValueFormatterTooltip() {
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
+  const sales = [45000, 52000, 48000, 61000, 55000, 67000];
+  const profit = [12000, 15000, 11000, 18000, 14000, 21000];
+
+  const currencyFormatter = useCallback(
+    (value) =>
+      new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+        maximumFractionDigits: 0,
+      }).format(value),
+    [],
+  );
+
+  return (
+    <AreaChart
+      enableScrubbing
+      showXAxis
+      showYAxis
+      height={{ base: 200, tablet: 250, desktop: 300 }}
+      series={[
+        { id: 'sales', label: 'Sales', data: sales, color: 'rgb(var(--green40))' },
+        { id: 'profit', label: 'Profit', data: profit, color: 'rgb(var(--purple40))' },
+      ]}
+      xAxis={{ data: months }}
+      yAxis={{ domain: { min: 0 }, showGrid: true, tickLabelFormatter: currencyFormatter }}
+    >
+      <Scrubber hideBeaconLabels />
+      <ChartTooltip valueFormatter={currencyFormatter} />
+    </AreaChart>
+  );
+}
+```
+
+## Custom Label
+
+Use the `label` prop to customize the tooltip header. It can be a static string, ReactNode, or a function that receives the data index.
+
+```jsx live
+function CustomLabelTooltip() {
+  const dates = ['2024-01', '2024-02', '2024-03', '2024-04', '2024-05', '2024-06'];
+  const displayDates = [
+    'January 2024',
+    'February 2024',
+    'March 2024',
+    'April 2024',
+    'May 2024',
+    'June 2024',
+  ];
+  const temperature = [32, 35, 45, 58, 68, 78];
+  const humidity = [65, 60, 55, 50, 55, 60];
+
+  return (
+    <LineChart
+      enableScrubbing
+      showArea
+      showXAxis
+      showYAxis
+      height={{ base: 200, tablet: 250, desktop: 300 }}
+      series={[
+        {
+          id: 'temperature',
+          label: 'Temperature (°F)',
+          data: temperature,
+          color: 'rgb(var(--red40))',
+        },
+        { id: 'humidity', label: 'Humidity (%)', data: humidity, color: 'rgb(var(--blue40))' },
+      ]}
+      xAxis={{ data: dates }}
+      yAxis={{ domain: { min: 0 }, showGrid: true }}
+    >
+      <Scrubber hideBeaconLabels />
+      <ChartTooltip
+        label={(dataIndex) => (
+          <HStack alignItems="center" gap={1}>
+            <Text font="label1">{displayDates[dataIndex]}</Text>
+          </HStack>
+        )}
+      />
+    </LineChart>
+  );
+}
+```
+
+## Filtered Series
+
+Use the `seriesIds` prop to show only specific series in the tooltip. This is useful when you want to hide certain series from the tooltip while still displaying them on the chart.
+
+```jsx live
+function FilteredSeriesTooltip() {
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
+  const primary = [100, 120, 140, 130, 150, 170];
+  const secondary = [60, 70, 80, 75, 85, 95];
+  const tertiary = [30, 35, 40, 38, 42, 48];
+
+  return (
+    <LineChart
+      enableScrubbing
+      legend
+      showXAxis
+      showYAxis
+      height={{ base: 200, tablet: 250, desktop: 300 }}
+      legendPosition="bottom"
+      series={[
+        { id: 'primary', label: 'Primary', data: primary, color: 'rgb(var(--blue40))' },
+        { id: 'secondary', label: 'Secondary', data: secondary, color: 'rgb(var(--green40))' },
+        {
+          id: 'tertiary',
+          label: 'Tertiary (hidden from tooltip)',
+          data: tertiary,
+          color: 'rgb(var(--gray40))',
+        },
+      ]}
+      xAxis={{ data: months }}
+      yAxis={{ domain: { min: 0 }, showGrid: true }}
+    >
+      <Scrubber />
+      <ChartTooltip seriesIds={['primary', 'secondary']} />
+    </LineChart>
+  );
+}
+```
+
+## With Bar Chart
+
+ChartTooltip works with bar charts and other chart types.
+
+```jsx live
+function BarChartTooltip() {
+  const categories = ['Q1', 'Q2', 'Q3', 'Q4'];
+  const revenue = [250, 320, 280, 410];
+  const costs = [180, 220, 200, 280];
+
+  const numberFormatter = useCallback((value) => `$${value}k`, []);
+
+  return (
+    <CartesianChart
+      enableScrubbing
+      height={{ base: 200, tablet: 250, desktop: 300 }}
+      series={[
+        { id: 'revenue', label: 'Revenue', data: revenue, color: 'rgb(var(--green40))' },
+        { id: 'costs', label: 'Costs', data: costs, color: 'rgb(var(--red40))' },
+      ]}
+      xAxis={{ data: categories, scaleType: 'band' }}
+      yAxis={{ domain: { min: 0 } }}
+    >
+      <XAxis showLine showTickMarks />
+      <YAxis showGrid tickLabelFormatter={numberFormatter} />
+      <BarPlot />
+      <ChartTooltip valueFormatter={numberFormatter} />
+    </CartesianChart>
+  );
+}
+```
+
+## Stacked Area Tooltip
+
+When used with stacked charts, ChartTooltip shows individual series values rather than cumulative values.
+
+```jsx live
+function StackedAreaTooltip() {
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug'];
+  const desktop = [4000, 4200, 3800, 4500, 4800, 5200, 5000, 5500];
+  const mobile = [2400, 2800, 3000, 3200, 3500, 3800, 4000, 4200];
+  const tablet = [1200, 1300, 1400, 1500, 1600, 1700, 1800, 1900];
+
+  const numberFormatter = useCallback((value) => value.toLocaleString(), []);
+
+  return (
+    <AreaChart
+      enableScrubbing
+      legend
+      showXAxis
+      showYAxis
+      stacked
+      height={{ base: 250, tablet: 300, desktop: 350 }}
+      legendPosition="bottom"
+      series={[
+        { id: 'desktop', label: 'Desktop', data: desktop, color: 'rgb(var(--blue40))' },
+        { id: 'mobile', label: 'Mobile', data: mobile, color: 'rgb(var(--green40))' },
+        { id: 'tablet', label: 'Tablet', data: tablet, color: 'rgb(var(--orange40))' },
+      ]}
+      xAxis={{ data: months }}
+      yAxis={{ domain: { min: 0 }, showGrid: true, tickLabelFormatter: numberFormatter }}
+    >
+      <Scrubber hideBeaconLabels />
+      <ChartTooltip valueFormatter={numberFormatter} />
+    </AreaChart>
+  );
+}
+```
+
+## Custom Value Display
+
+The `valueFormatter` can return a ReactNode for rich value display, including icons, colors, and additional information.
+
+```jsx live
+function CustomValueDisplayTooltip() {
+  const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+  const steps = [8500, 12000, 7200, 9800, 11500, 15000, 6500];
+  const goal = 10000;
+
+  const stepsFormatter = useCallback((value) => {
+    const percentage = Math.round((value / goal) * 100);
+    const isGoalMet = value >= goal;
+    return (
+      <HStack alignItems="center" gap={1}>
+        <Text color={isGoalMet ? 'fgPositive' : 'fgMuted'} font="label2">
+          {value.toLocaleString()} steps
+        </Text>
+        <Text color={isGoalMet ? 'fgPositive' : 'fgMuted'} font="caption">
+          ({percentage}%)
+        </Text>
+      </HStack>
+    );
+  }, []);
+
+  return (
+    <AreaChart
+      enableScrubbing
+      showXAxis
+      showYAxis
+      height={{ base: 200, tablet: 250, desktop: 300 }}
+      series={[{ id: 'steps', label: 'Daily Steps', data: steps, color: 'rgb(var(--green40))' }]}
+      xAxis={{ data: days }}
+      yAxis={{ domain: { min: 0, max: 20000 }, showGrid: true }}
+    >
+      <Scrubber hideBeaconLabels />
+      <ChartTooltip label="Daily Activity" valueFormatter={stepsFormatter} />
+    </AreaChart>
+  );
+}
+```
+
+## Multi-Axis Tooltip
+
+ChartTooltip works with charts that have multiple y-axes, showing values from all series.
+
+```jsx live
+function MultiAxisTooltip() {
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
+  const revenue = [455, 520, 380, 455, 285, 235];
+  const profitMargin = [23, 20, 16, 38, 12, 9];
+
+  return (
+    <CartesianChart
+      enableScrubbing
+      height={{ base: 200, tablet: 250, desktop: 300 }}
+      series={[
+        {
+          id: 'revenue',
+          label: 'Revenue',
+          data: revenue,
+          yAxisId: 'revenue',
+          color: 'rgb(var(--blue40))',
+        },
+        {
+          id: 'profitMargin',
+          label: 'Profit Margin',
+          data: profitMargin,
+          yAxisId: 'profitMargin',
+          color: 'rgb(var(--green40))',
+        },
+      ]}
+      xAxis={{ data: months, scaleType: 'band' }}
+      yAxis={[
+        { id: 'revenue', domain: { min: 0 } },
+        { id: 'profitMargin', domain: { min: 0, max: 100 } },
+      ]}
+    >
+      <XAxis showLine showTickMarks />
+      <YAxis
+        showGrid
+        showLine
+        axisId="revenue"
+        position="left"
+        tickLabelFormatter={(value) => `$${value}k`}
+      />
+      <YAxis
+        showLine
+        axisId="profitMargin"
+        position="right"
+        tickLabelFormatter={(value) => `${value}%`}
+      />
+      <BarPlot />
+      <ChartTooltip
+        valueFormatter={(value) => {
+          return value < 100 ? `${value}%` : `$${value}k`;
+        }}
+      />
+    </CartesianChart>
+  );
+}
+```
+
+## With Legend
+
+ChartTooltip can be combined with Legend to provide both persistent series identification and on-hover details.
+
+```jsx live
+function TooltipWithLegend() {
+  const precipitationData = [
+    {
+      id: 'northeast',
+      label: 'Northeast',
+      data: [5.14, 1.53, 5.73, 4.29, 3.78, 3.92, 4.19, 5.54, 2.03, 1.42, 2.95, 3.89],
+      color: 'rgb(var(--blue40))',
+    },
+    {
+      id: 'upperMidwest',
+      label: 'Upper Midwest',
+      data: [1.44, 0.49, 2.16, 3.67, 5.44, 6.21, 4.02, 3.67, 0.92, 1.47, 3.05, 1.48],
+      color: 'rgb(var(--green40))',
+    },
+    {
+      id: 'southwest',
+      label: 'Southwest',
+      data: [1.12, 1.5, 1.52, 0.75, 0.76, 1.27, 1.44, 2.01, 0.62, 1.08, 1.23, 0.25],
+      color: 'rgb(var(--purple40))',
+    },
+  ];
+
+  const xAxisData = [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
+  ];
+
+  return (
+    <VStack gap={2}>
+      <Text font="headline" textAlign="center">
+        2024 Precipitation by Climate Region
+      </Text>
+      <LineChart
+        enableScrubbing
+        legend
+        showArea
+        showXAxis
+        showYAxis
+        height={{ base: 300, tablet: 400, desktop: 500 }}
+        legendPosition="bottom"
+        series={precipitationData}
+        xAxis={{ data: xAxisData, label: 'Month', showLine: true, showTickMarks: true }}
+        yAxis={{
+          label: 'Precipitation (in)',
+          showGrid: true,
+          showLine: true,
+          showTickMarks: true,
+        }}
+      >
+        <Scrubber hideBeaconLabels hideOverlay />
+        <ChartTooltip valueFormatter={(value) => `${value} in`} />
+      </LineChart>
+    </VStack>
+  );
+}
+```

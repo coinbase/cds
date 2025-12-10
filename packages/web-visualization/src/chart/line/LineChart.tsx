@@ -126,6 +126,7 @@ export const LineChart = memo(
             yAxisId: s.yAxisId,
             stackId: s.stackId,
             gradient: s.gradient,
+            legendShape: s.legendShape,
           }),
         );
       }, [series]);

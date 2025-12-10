@@ -1,12 +1,14 @@
-import React, { forwardRef, memo, useCallback, useMemo } from 'react';
-import { type StyleProp, type View, type ViewStyle } from 'react-native';
+import React, { forwardRef, memo, useCallback, useMemo, useRef } from 'react';
+import { type LayoutChangeEvent, type StyleProp, type View, type ViewStyle } from 'react-native';
 import type { Rect } from '@coinbase/cds-common/types';
 import { useLayout } from '@coinbase/cds-mobile/hooks/useLayout';
 import type { BoxBaseProps, BoxProps } from '@coinbase/cds-mobile/layout';
 import { Box } from '@coinbase/cds-mobile/layout';
 import { Canvas, Skia, type SkTypefaceFontProvider } from '@shopify/react-native-skia';
 
+import { Legend } from './legend/Legend';
 import { convertToSerializableScale, type SerializableScale } from './utils/scale';
+import type { LegendPosition } from './CartesianChart';
 import { useChartContextBridge } from './ChartContextBridge';
 import { PolarChartProvider } from './ChartProvider';
 import {
@@ -28,17 +30,21 @@ import {
   type RadialAxisConfigProps,
 } from './utils';
 
-const ChartCanvas = memo(
-  ({ children, style }: { children: React.ReactNode; style?: StyleProp<ViewStyle> }) => {
-    const ContextBridge = useChartContextBridge();
+type ChartCanvasProps = {
+  children: React.ReactNode;
+  style?: StyleProp<ViewStyle>;
+  onLayout?: (event: LayoutChangeEvent) => void;
+};
 
-    return (
-      <Canvas style={[{ width: '100%', height: '100%' }, style]}>
-        <ContextBridge>{children}</ContextBridge>
-      </Canvas>
-    );
-  },
-);
+const ChartCanvas = memo(({ children, style, onLayout }: ChartCanvasProps) => {
+  const ContextBridge = useChartContextBridge();
+
+  return (
+    <Canvas onLayout={onLayout} style={[{ flex: 1, width: '100%' }, style]}>
+      <ContextBridge>{children}</ContextBridge>
+    </Canvas>
+  );
+});
 
 export type PolarChartBaseProps = Omit<BoxBaseProps, 'fontFamily'> & {
   /**
@@ -113,6 +119,18 @@ export type PolarChartBaseProps = Omit<BoxBaseProps, 'fontFamily'> & {
    * Inset around the entire chart (outside the drawing area).
    */
   inset?: number | Partial<ChartInset>;
+  /**
+   * Whether to show a legend, or a custom legend element.
+   * When `true`, renders the default Legend component.
+   * When a ReactNode, renders the provided element.
+   * @default false
+   */
+  legend?: boolean | React.ReactNode;
+  /**
+   * Position of the legend relative to the chart.
+   * @default 'bottom'
+   */
+  legendPosition?: LegendPosition;
 };
 
 export type PolarChartProps = PolarChartBaseProps &
@@ -145,6 +163,11 @@ export type PolarChartProps = PolarChartBaseProps &
        * Custom styles for the chart canvas element.
        */
       chart?: StyleProp<ViewStyle>;
+      /**
+       * Custom styles for the legend element.
+       * @note not used when legend is a ReactNode.
+       */
+      legend?: StyleProp<ViewStyle>;
     };
   };
 
@@ -162,6 +185,8 @@ export const PolarChart = memo(
         angularAxis,
         radialAxis,
         inset: insetInput,
+        legend,
+        legendPosition = 'bottom',
         width = '100%',
         height = '100%',
         style,
@@ -370,8 +395,11 @@ export const PolarChart = memo(
         return Skia.TypefaceFontProvider.Make();
       }, [fontProviderProp]);
 
+      const chartRef = useRef<View | null>(null);
+
       const contextValue: PolarChartContextValue = useMemo(
         () => ({
+          type: 'polar',
           series: series ?? [],
           getSeries,
           getSeriesData,
@@ -389,6 +417,7 @@ export const PolarChart = memo(
           getAngularSerializableScale,
           getRadialSerializableScale,
           dataLength,
+          ref: chartRef,
         }),
         [
           series,
@@ -408,27 +437,55 @@ export const PolarChart = memo(
           getAngularSerializableScale,
           getRadialSerializableScale,
           dataLength,
+          chartRef,
         ],
       );
 
-      const rootStyles = useMemo(() => {
-        return [style, styles?.root];
-      }, [style, styles?.root]);
+      const isVerticalLegend = legendPosition === 'top' || legendPosition === 'bottom';
+      const isLegendBefore = legendPosition === 'top' || legendPosition === 'left';
+
+      const legendElement = useMemo(() => {
+        if (!legend) return;
+        if (typeof legend !== 'boolean') return legend;
+        return (
+          <Legend flexDirection={isVerticalLegend ? 'row' : 'column'} style={styles?.legend} />
+        );
+      }, [legend, isVerticalLegend, styles?.legend]);
+
+      const rootStyles = useMemo<ViewStyle[]>(() => {
+        return [
+          { flexDirection: isVerticalLegend ? 'column' : 'row' } as ViewStyle,
+          style as ViewStyle,
+          styles?.root as ViewStyle,
+        ].filter(Boolean);
+      }, [isVerticalLegend, style, styles?.root]);
 
       return (
         <PolarChartProvider value={contextValue}>
           <Box
-            ref={ref}
+            ref={(node) => {
+              chartRef.current = node;
+              if (ref) {
+                if (typeof ref === 'function') {
+                  ref(node);
+                } else {
+                  ref.current = node;
+                }
+              }
+            }}
             accessibilityLiveRegion="polite"
             accessibilityRole="image"
             collapsable={collapsable}
             height={height}
-            onLayout={onContainerLayout}
             style={rootStyles}
             width={width}
             {...props}
           >
-            <ChartCanvas style={styles?.chart}>{children}</ChartCanvas>
+            {isLegendBefore && legendElement}
+            <ChartCanvas onLayout={onContainerLayout} style={styles?.chart}>
+              {children}
+            </ChartCanvas>
+            {!isLegendBefore && legendElement}
           </Box>
         </PolarChartProvider>
       );

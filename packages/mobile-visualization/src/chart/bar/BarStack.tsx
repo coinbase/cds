@@ -7,10 +7,20 @@ import type { CartesianSeries, ChartScaleFunction, Transition } from '../utils';
 import { evaluateGradientAtValue, getGradientStops } from '../utils/gradient';
 import { convertToSerializableScale } from '../utils/scale';
 
-import { Bar, type BarProps } from './Bar';
+import { Bar, type BarComponent, type BarProps } from './Bar';
 import { DefaultBarStack } from './DefaultBarStack';
 
 const EPSILON = 1e-4;
+
+/**
+ * Extended series type that includes bar-specific properties.
+ */
+export type BarSeries = CartesianSeries & {
+  /**
+   * Custom component to render bars for this series.
+   */
+  BarComponent?: BarComponent;
+};
 
 export type BarStackBaseProps = Pick<
   BarProps,
@@ -19,7 +29,7 @@ export type BarStackBaseProps = Pick<
   /**
    * Array of series configurations that belong to this stack.
    */
-  series: CartesianSeries[];
+  series: BarSeries[];
   /**
    * The category index for this stack.
    */
@@ -180,6 +190,7 @@ export const BarStack = memo<BarStackProps>(
         roundTop?: boolean;
         roundBottom?: boolean;
         shouldApplyGap?: boolean;
+        BarComponent?: BarComponent;
       }> = [];
 
       // Track how many bars we've stacked in each direction for gap calculation
@@ -262,6 +273,7 @@ export const BarStack = memo<BarStackProps>(
           width,
           height,
           dataY: value, // Store the actual data value
+          BarComponent: s.BarComponent,
           fill: barFill,
           // Check if the bar should be rounded based on the baseline, with an epsilon to handle floating-point rounding
           roundTop: roundBaseline || Math.abs(barTop - baseline) >= EPSILON,
@@ -676,6 +688,7 @@ export const BarStack = memo<BarStackProps>(
         originY={baseline}
         roundBottom={bar.roundBottom}
         roundTop={bar.roundTop}
+        seriesId={bar.seriesId}
         stroke={defaultStroke}
         strokeWidth={defaultStrokeWidth}
         transition={transition}

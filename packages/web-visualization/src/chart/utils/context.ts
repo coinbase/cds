@@ -2,13 +2,27 @@ import { createContext, useContext } from 'react';
 import type { Rect } from '@coinbase/cds-common/types';
 
 import type { AngularAxisConfig, CartesianAxisConfig, RadialAxisConfig } from './axis';
-import type { CartesianSeries, PolarSeries } from './chart';
+import type { CartesianSeries, PolarSeries, Series } from './chart';
 import type { ChartScaleFunction } from './scale';
+
+/**
+ * Chart context type discriminator.
+ */
+export type ChartType = 'cartesian' | 'polar';
 
 /**
  * Base context value for all chart types.
  */
 export type ChartContextValue = {
+  /**
+   * The type of chart.
+   */
+  type: ChartType;
+  /**
+   * The series data for the chart.
+   * Contains common series properties (id, label, color, legendShape).
+   */
+  series: Series[];
   /**
    * Whether to animate the chart.
    */
@@ -29,13 +43,21 @@ export type ChartContextValue = {
    * Length of the data domain.
    */
   dataLength: number;
+  /**
+   * Reference to the chart's root element (SVG on web, Canvas on mobile).
+   */
+  ref?: React.RefObject<SVGSVGElement | null>;
 };
 
 /**
  * Context value for Cartesian (X/Y) coordinate charts.
  * Contains axis-specific methods and properties for rectangular coordinate systems.
  */
-export type CartesianChartContextValue = ChartContextValue & {
+export type CartesianChartContextValue = Omit<ChartContextValue, 'series' | 'type'> & {
+  /**
+   * The type of chart.
+   */
+  type: 'cartesian';
   /**
    * The series data for the chart.
    */
@@ -92,7 +114,11 @@ export type CartesianChartContextValue = ChartContextValue & {
  * Context value for Polar (Angular/Radial) coordinate charts.
  * Contains axis-specific methods and properties for polar coordinate systems.
  */
-export type PolarChartContextValue = ChartContextValue & {
+export type PolarChartContextValue = Omit<ChartContextValue, 'series' | 'type'> & {
+  /**
+   * The type of chart.
+   */
+  type: 'polar';
   /**
    * The series data for the chart.
    */

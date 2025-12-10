@@ -8,13 +8,13 @@ import {
 } from '../CartesianChart';
 import {
   type CartesianAxisConfigProps,
-  type CartesianSeries,
   defaultChartInset,
   defaultStackId,
   getChartInset,
 } from '../utils';
 
 import { BarPlot, type BarPlotProps } from './BarPlot';
+import type { BarSeries } from './BarStack';
 
 export type BarChartBaseProps = Omit<CartesianChartBaseProps, 'xAxis' | 'yAxis' | 'series'> &
   Pick<
@@ -35,7 +35,7 @@ export type BarChartBaseProps = Omit<CartesianChartBaseProps, 'xAxis' | 'yAxis' 
     /**
      * Configuration objects that define how to visualize the data.
      */
-    series?: Array<CartesianSeries>;
+    series?: Array<BarSeries>;
     /**
      * Whether to stack the areas on top of each other.
      * When true, each series builds cumulative values on top of the previous series.

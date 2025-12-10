@@ -1,0 +1,33 @@
+{
+  "import": "import { Legend } from '@coinbase/cds-web-visualization'",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/web-visualization/src/chart/legend/Legend.tsx",
+  "description": "A legend component for displaying series information in charts. Supports customizable shapes, layouts, and custom item components.",
+  "relatedComponents": [
+    {
+      "label": "CartesianChart",
+      "url": "/components/graphs/CartesianChart/"
+    },
+    {
+      "label": "ChartTooltip",
+      "url": "/components/graphs/ChartTooltip/"
+    },
+    {
+      "label": "DonutChart",
+      "url": "/components/graphs/DonutChart/"
+    },
+    {
+      "label": "LineChart",
+      "url": "/components/graphs/LineChart/"
+    },
+    {
+      "label": "PieChart",
+      "url": "/components/graphs/PieChart/"
+    }
+  ],
+  "dependencies": [
+    {
+      "name": "framer-motion",
+      "version": "^10.18.0"
+    }
+  ]
+}

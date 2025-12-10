@@ -8,6 +8,10 @@ import { DefaultBar } from './';
 
 export type BarBaseProps = {
   /**
+   * The series ID this bar belongs to.
+   */
+  seriesId?: string;
+  /**
    * X coordinate of the bar (left edge).
    */
   x: number;
@@ -101,6 +105,7 @@ export type BarComponent = React.FC<BarComponentProps>;
  */
 export const Bar = memo<BarProps>(
   ({
+    seriesId,
     x,
     y,
     width,
@@ -124,9 +129,7 @@ export const Bar = memo<BarProps>(
 
     const effectiveOriginY = originY ?? y + height;
 
-    if (!barPath) {
-      return null;
-    }
+    if (!barPath) return;
 
     return (
       <BarComponent
@@ -140,6 +143,7 @@ export const Bar = memo<BarProps>(
         originY={effectiveOriginY}
         roundBottom={roundBottom}
         roundTop={roundTop}
+        seriesId={seriesId}
         stroke={stroke}
         strokeWidth={strokeWidth}
         transition={transition}

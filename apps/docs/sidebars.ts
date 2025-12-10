@@ -605,8 +605,18 @@ const sidebars: SidebarsConfig = {
             },
             {
               type: 'doc',
+              id: 'components/graphs/ChartTooltip/chartTooltip',
+              label: 'ChartTooltip',
+            },
+            {
+              type: 'doc',
               id: 'components/graphs/DonutChart/donutChart',
               label: 'DonutChart',
+            },
+            {
+              type: 'doc',
+              id: 'components/graphs/Legend/legend',
+              label: 'Legend',
             },
             {
               type: 'doc',

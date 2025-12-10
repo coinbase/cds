@@ -1,0 +1,296 @@
+Legend displays series information for charts, showing labels and color indicators for each data series. It can be positioned around the chart and supports custom shapes and item components.
+
+## Basic Usage
+
+Use the `legend` prop on chart components to enable a default legend, or pass a `Legend` component for customization.
+
+```tsx
+function BasicLegend() {
+  const theme = useTheme();
+  const pages = useMemo(
+    () => ['Page A', 'Page B', 'Page C', 'Page D', 'Page E', 'Page F', 'Page G'],
+    [],
+  );
+  const pageViews = useMemo(() => [2400, 1398, 9800, 3908, 4800, 3800, 4300], []);
+  const uniqueVisitors = useMemo(() => [4000, 3000, 2000, 2780, 1890, 2390, 3490], []);
+
+  return (
+    <VStack gap={2}>
+      <LineChart
+        legend
+        showArea
+        height={200}
+        legendPosition="bottom"
+        series={[
+          {
+            id: 'pageViews',
+            data: pageViews,
+            color: `rgb(${theme.spectrum.green40})`,
+            label: 'Page Views',
+          },
+          {
+            id: 'uniqueVisitors',
+            data: uniqueVisitors,
+            color: `rgb(${theme.spectrum.purple40})`,
+            label: 'Unique Visitors',
+          },
+        ]}
+        width="100%"
+        xAxis={{
+          data: pages,
+        }}
+      />
+    </VStack>
+  );
+}
+```
+
+## Shape Variants
+
+Legend supports different shape variants: `pill`, `circle`, `square`, and `squircle`. Set the shape on each series using `legendShape`.
+
+```tsx
+function ShapeVariants() {
+  const theme = useTheme();
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
+
+  return (
+    <VStack gap={2}>
+      <LineChart
+        showArea
+        height={200}
+        legend={<Legend direction="column" />}
+        legendPosition="bottom"
+        series={[
+          {
+            id: 'pill',
+            label: 'Pill',
+            data: [120, 150, 130, 170, 160, 190],
+            color: `rgb(${theme.spectrum.blue40})`,
+            legendShape: 'pill',
+          },
+          {
+            id: 'circle',
+            label: 'Circle',
+            data: [80, 110, 95, 125, 115, 140],
+            color: `rgb(${theme.spectrum.green40})`,
+            legendShape: 'circle',
+          },
+          {
+            id: 'square',
+            label: 'Square',
+            data: [60, 85, 70, 100, 90, 115],
+            color: `rgb(${theme.spectrum.orange40})`,
+            legendShape: 'square',
+          },
+          {
+            id: 'squircle',
+            label: 'Squircle',
+            data: [40, 60, 50, 75, 65, 85],
+            color: `rgb(${theme.spectrum.purple40})`,
+            legendShape: 'squircle',
+          },
+        ]}
+        width="100%"
+        xAxis={{ data: months }}
+      />
+    </VStack>
+  );
+}
+```
+
+## Layout Direction
+
+Use the `direction` prop to arrange legend items in a row or column.
+
+```tsx
+function LayoutDirection() {
+  const theme = useTheme();
+
+  const series = [
+    {
+      id: 'stocks',
+      data: 45,
+      label: 'Stocks',
+      color: `rgb(${theme.spectrum.blue40})`,
+      legendShape: 'circle' as const,
+    },
+    {
+      id: 'bonds',
+      data: 25,
+      label: 'Bonds',
+      color: `rgb(${theme.spectrum.green40})`,
+      legendShape: 'circle' as const,
+    },
+    {
+      id: 'realEstate',
+      data: 15,
+      label: 'Real Estate',
+      color: `rgb(${theme.spectrum.orange40})`,
+      legendShape: 'circle' as const,
+    },
+    {
+      id: 'commodities',
+      data: 10,
+      label: 'Commodities',
+      color: `rgb(${theme.spectrum.purple40})`,
+      legendShape: 'circle' as const,
+    },
+    {
+      id: 'cash',
+      data: 5,
+      label: 'Cash',
+      color: `rgb(${theme.spectrum.gray40})`,
+      legendShape: 'circle' as const,
+    },
+  ];
+
+  return (
+    <VStack gap={2}>
+      <Text font="headline">Portfolio Allocation</Text>
+      <PieChart
+        height={150}
+        legend={<Legend direction="column" />}
+        legendPosition="right"
+        series={series}
+        width={300}
+      />
+    </VStack>
+  );
+}
+```
+
+## Donut Chart Legend
+
+Legend works with donut and pie charts to show segment information.
+
+```tsx
+function DonutChartLegend() {
+  const theme = useTheme();
+
+  const series = [
+    {
+      id: 'completed',
+      data: 68,
+      label: 'Completed',
+      color: theme.color.fgPositive,
+      legendShape: 'squircle' as const,
+    },
+    {
+      id: 'inProgress',
+      data: 22,
+      label: 'In Progress',
+      color: `rgb(${theme.spectrum.blue40})`,
+      legendShape: 'squircle' as const,
+    },
+    {
+      id: 'pending',
+      data: 10,
+      label: 'Pending',
+      color: `rgb(${theme.spectrum.gray40})`,
+      legendShape: 'squircle' as const,
+    },
+  ];
+
+  return (
+    <VStack gap={2}>
+      <Text font="headline">Task Status</Text>
+      <DonutChart legend height={150} legendPosition="bottom" series={series} width={150} />
+    </VStack>
+  );
+}
+```
+
+## Custom Legend Item
+
+Use `ItemComponent` to render custom legend items with additional information or interactions.
+
+```tsx
+function CustomLegendItem() {
+  const theme = useTheme();
+
+  const CustomItem = memo<LegendItemProps>(function CustomItem({ label, color, shape }) {
+    return (
+      <HStack gap={1} style={{ alignItems: 'center' }}>
+        <DefaultLegendShape color={color} shape={shape} />
+        <TextLabel2>{label}</TextLabel2>
+        <TextLabel1>100%</TextLabel1>
+      </HStack>
+    );
+  });
+
+  return (
+    <VStack gap={2}>
+      <Text font="headline">Custom Legend Item</Text>
+      <DonutChart
+        height={150}
+        legend={<Legend ItemComponent={CustomItem} />}
+        legendPosition="bottom"
+        series={[
+          {
+            id: 'btc',
+            data: 60,
+            label: 'Bitcoin',
+            color: `rgb(${theme.spectrum.orange40})`,
+          },
+          {
+            id: 'eth',
+            data: 30,
+            label: 'Ethereum',
+            color: `rgb(${theme.spectrum.purple40})`,
+          },
+          {
+            id: 'other',
+            data: 10,
+            label: 'Other',
+            color: `rgb(${theme.spectrum.gray40})`,
+          },
+        ]}
+        width={150}
+      />
+    </VStack>
+  );
+}
+```
+
+## DefaultLegendShape
+
+You can use `DefaultLegendShape` directly to create custom legend layouts or displays.
+
+```tsx
+function DefaultShapes() {
+  const theme = useTheme();
+
+  const spectrumColors = [
+    'blue40',
+    'green40',
+    'orange40',
+    'yellow40',
+    'gray40',
+    'indigo40',
+    'pink40',
+    'purple40',
+    'red40',
+    'teal40',
+  ];
+
+  const shapes: LegendShapeVariant[] = ['pill', 'circle', 'squircle', 'square'];
+
+  return (
+    <VStack gap={2}>
+      {shapes.map((shape) => (
+        <HStack key={shape} gap={1}>
+          {spectrumColors.map((color) => (
+            <Box key={color} style={{ width: 10, justifyContent: 'center' }}>
+              <DefaultLegendShape
+                color={`rgb(${theme.spectrum[color as keyof typeof theme.spectrum]})`}
+                shape={shape}
+              />
+            </Box>
+          ))}
+        </HStack>
+      ))}
+    </VStack>
+  );
+}
+```

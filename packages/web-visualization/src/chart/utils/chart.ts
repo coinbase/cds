@@ -17,6 +17,10 @@ export type AxisBounds = {
 export const isValidBounds = (bounds: Partial<AxisBounds>): bounds is AxisBounds =>
   bounds.min !== undefined && bounds.max !== undefined;
 
+export type LegendShapeVariant = 'circle' | 'square' | 'squircle' | 'pill';
+
+export type LegendShape = LegendShapeVariant | React.ReactNode;
+
 export type Series = {
   /**
    * Id of the series.
@@ -33,6 +37,12 @@ export type Series = {
    * Color will still be used by scrubber beacon labels
    */
   color?: string;
+  /**
+   * Legend shape for this series.
+   * Can be a LegendShapeVariant or a custom ReactNode.
+   * @default 'circle'
+   */
+  legendShape?: LegendShape;
 };
 
 export type CartesianSeries = Series & {

@@ -18,12 +18,9 @@ export type DefaultScrubberBeaconLabelProps = ScrubberBeaconLabelProps &
  */
 export const DefaultScrubberBeaconLabel = memo<DefaultScrubberBeaconLabelProps>(
   ({
-    background = 'var(--color-bg',
     color = 'var(--color-fgPrimary)',
     elevated = true,
-    borderRadius = 4,
     font = 'label1',
-    verticalAlignment = 'middle',
     inset = {
       left: labelHorizontalInset,
       right: labelHorizontalInset,
@@ -36,13 +33,10 @@ export const DefaultScrubberBeaconLabel = memo<DefaultScrubberBeaconLabelProps>(
     return (
       <ChartText
         disableRepositioning
-        background={background}
-        borderRadius={borderRadius}
         color={color}
         elevated={elevated}
         font={font}
         inset={inset}
-        verticalAlignment={verticalAlignment}
         {...chartTextProps}
       >
         {label}
