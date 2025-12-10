@@ -48,7 +48,6 @@ const ignores = [
 
 // These rules apply to all files
 const sharedRules = {
-  'internal/require-deprecated-in': 'error',
   'import/default': 'off',
   'import/extensions': 'off',
   'import/named': 'off',
@@ -182,7 +181,6 @@ const testRules = {
 // These plugins apply to all files
 const sharedPlugins = {
   'simple-import-sort': eslintSimpleImportSort,
-  internal: internalPlugin,
 };
 
 // These plugins only apply to TS/TSX files
