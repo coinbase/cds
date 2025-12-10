@@ -6,6 +6,19 @@ For simplicity there is no build process since the repo root depends on this lib
 
 The plugin encapsulates the following rules:
 
+### no-deprecated-jsdoc
+
+Detects JSDoc comments containing `@deprecated` tags. This rule helps identify deprecated code that should be migrated or removed in later, breaking version releases.
+
+The rule catches deprecation markers on:
+
+- Function declarations
+- Variable/const declarations
+- Type alias declarations (including properties within object types)
+- Interface declarations (including properties)
+- Class declarations (including members)
+- Export declarations
+
 ### safely-spread-props
 
 This rule checks that React component `...spread` props do not contain properties that the receiving component does not expect.
