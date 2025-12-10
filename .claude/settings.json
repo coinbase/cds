@@ -3,6 +3,8 @@
     "allow": [
       "Bash(ls:*)",
       "Skill(cds-components)",
+      "Bash(find:*)",
+      "Bash(yarn nx run-many:*)",
       "Bash(yarn nx run web:typecheck)",
       "Bash(yarn nx run mobile:typecheck)",
       "Bash(yarn nx run common:typecheck)",
