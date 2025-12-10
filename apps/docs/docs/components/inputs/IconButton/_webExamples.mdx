@@ -5,7 +5,7 @@ IconButton is a compact button that displays only an icon. Use it for actions wh
 The only required prop is `name` (which determines the icon) and `accessibilityLabel` (for screen readers).
 
 ```jsx live
-<HStack gap={2}>
+<HStack gap={2} flexWrap="wrap">
   <IconButton name="gear" accessibilityLabel="Open settings" onClick={console.log} />
   <IconButton name="close" accessibilityLabel="Close modal" onClick={console.log} />
   <IconButton name="refresh" accessibilityLabel="Refresh data" onClick={console.log} />
@@ -17,36 +17,34 @@ The only required prop is `name` (which determines the icon) and `accessibilityL
 Use variants to denote intent and importance. The `active` prop fills the icon when enabled.
 
 ```jsx live
-<VStack gap={2}>
-  <HStack gap={2}>
-    <IconButton
-      active
-      name="orderHistory"
-      accessibilityLabel="View transaction history"
-      variant="primary"
-      onClick={console.log}
-    />
-    <IconButton
-      active
-      name="gear"
-      accessibilityLabel="View settings"
-      variant="secondary"
-      onClick={console.log}
-    />
-    <IconButton
-      name="phone"
-      accessibilityLabel="Call support"
-      variant="tertiary"
-      onClick={console.log}
-    />
-    <IconButton
-      name="checkmark"
-      accessibilityLabel="Approve transaction"
-      variant="foregroundMuted"
-      onClick={console.log}
-    />
-  </HStack>
-</VStack>
+<HStack gap={2} flexWrap="wrap">
+  <IconButton
+    active
+    name="orderHistory"
+    accessibilityLabel="View transaction history"
+    variant="primary"
+    onClick={console.log}
+  />
+  <IconButton
+    active
+    name="gear"
+    accessibilityLabel="View settings"
+    variant="secondary"
+    onClick={console.log}
+  />
+  <IconButton
+    name="phone"
+    accessibilityLabel="Call support"
+    variant="tertiary"
+    onClick={console.log}
+  />
+  <IconButton
+    name="checkmark"
+    accessibilityLabel="Approve transaction"
+    variant="foregroundMuted"
+    onClick={console.log}
+  />
+</HStack>
 ```
 
 ### Transparent
@@ -54,7 +52,7 @@ Use variants to denote intent and importance. The `active` prop fills the icon w
 Use the `transparent` prop to remove the background until the user interacts with the button.
 
 ```jsx live
-<HStack gap={2}>
+<HStack gap={2} flexWrap="wrap">
   <IconButton
     active
     name="orderHistory"
@@ -104,7 +102,7 @@ function LoadingExample() {
   };
 
   return (
-    <HStack gap={2}>
+    <HStack gap={2} flexWrap="wrap">
       <IconButton
         name="checkmark"
         accessibilityLabel={isLoading ? 'Processing submission' : 'Submit form'}
@@ -129,7 +127,7 @@ function LoadingExample() {
 Use the `disabled` prop to prevent interaction and show a disabled visual state.
 
 ```jsx live
-<HStack gap={2}>
+<HStack gap={2} flexWrap="wrap">
   <IconButton
     active
     name="orderHistory"
@@ -161,7 +159,7 @@ Use the `disabled` prop to prevent interaction and show a disabled visual state.
 IconButtons are compact by default. Use `compact={false}` for larger touch targets.
 
 ```jsx live
-<HStack gap={2} alignItems="center">
+<HStack gap={2} flexWrap="wrap" alignItems="center">
   <IconButton
     active
     name="gear"
