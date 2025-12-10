@@ -153,8 +153,30 @@ const rule = createRule({
      * @param {string} reason - The deprecation reason if provided
      */
     function reportDeprecated(comment, node, reason) {
+      // Find the line and column of @deprecated within the comment
+      const deprecatedIndex = comment.value.indexOf('@deprecated');
+      const textBeforeDeprecated = comment.value.slice(0, deprecatedIndex);
+      const linesBeforeDeprecated = textBeforeDeprecated.split('\n').length - 1;
+      const deprecatedLine = comment.loc.start.line + linesBeforeDeprecated;
+
+      // Calculate column: find position after last newline before @deprecated
+      const lastNewlineIndex = textBeforeDeprecated.lastIndexOf('\n');
+      let deprecatedColumn;
+      if (lastNewlineIndex === -1) {
+        // @deprecated is on the first line of the comment, add offset for "/*"
+        deprecatedColumn = comment.loc.start.column + 2 + deprecatedIndex;
+      } else {
+        // @deprecated is on a subsequent line
+        deprecatedColumn = deprecatedIndex - lastNewlineIndex - 1;
+      }
+
+      const deprecatedEndColumn = deprecatedColumn + '@deprecated'.length;
+
       context.report({
-        loc: comment.loc,
+        loc: {
+          start: { line: deprecatedLine, column: deprecatedColumn },
+          end: { line: deprecatedLine, column: deprecatedEndColumn },
+        },
         messageId: 'deprecatedJsdoc',
         data: {
           name: getNodeName(node),

@@ -14,6 +14,7 @@
  *   yarn node scripts/findDeprecations.mjs          # all packages
  */
 
+import { execSync } from 'node:child_process';
 import { ESLint } from 'eslint';
 import { globSync } from 'glob';
 import fs from 'node:fs';
@@ -74,6 +75,46 @@ function getRelativeFilePath(filePath) {
   const relativePath = path.relative(PACKAGES_DIR, filePath);
   const parts = relativePath.split(path.sep);
   return parts.slice(1).join(path.sep); // Remove package name prefix
+}
+
+// Get the date when @deprecated was first introduced using git log -L
+function getDeprecationDate(filePath, line) {
+  try {
+    // Use git log -L to track line history, oldest first
+    const output = execSync(
+      `git log -L${line},${line}:"${filePath}" --reverse --format="COMMIT:%ct" -p`,
+      { encoding: 'utf8', cwd: REPO_ROOT, maxBuffer: 10 * 1024 * 1024 },
+    );
+
+    // Split by commits and find the first one where @deprecated was added
+    const commits = output.split(/^COMMIT:/m).filter(Boolean);
+
+    for (const commitBlock of commits) {
+      const lines = commitBlock.split('\n');
+      const timestamp = parseInt(lines[0], 10);
+
+      // Look for added lines (starting with +) containing @deprecated
+      const hasDeprecatedAddition = lines.some(
+        (l) => l.startsWith('+') && l.includes('@deprecated'),
+      );
+
+      if (hasDeprecatedAddition && !isNaN(timestamp)) {
+        const date = new Date(timestamp * 1000);
+        return date.toISOString().split('T')[0]; // YYYY-MM-DD
+      }
+    }
+
+    // Fallback: if no addition found, use the first commit's date
+    // (the line existed from the start of tracked history)
+    const firstTimestamp = parseInt(commits[0]?.split('\n')[0], 10);
+    if (!isNaN(firstTimestamp)) {
+      const date = new Date(firstTimestamp * 1000);
+      return date.toISOString().split('T')[0];
+    }
+  } catch {
+    // Git log failed (new file, uncommitted, etc.)
+  }
+  return 'unknown';
 }
 
 async function main() {
@@ -143,6 +184,7 @@ async function main() {
           name,
           file: getRelativeFilePath(result.filePath),
           package: getPackageFromPath(result.filePath),
+          date: getDeprecationDate(result.filePath, msg.line),
         });
       }
     }
