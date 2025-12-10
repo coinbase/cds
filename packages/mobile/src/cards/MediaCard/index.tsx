@@ -12,7 +12,6 @@ export type MediaCardProps = Omit<CardRootProps, 'children'> & MediaCardBaseProp
 
 const mediaCardContainerProps = {
   borderRadius: 500 as ThemeVars.BorderRadius,
-  flexDirection: 'row' as const,
   background: 'bgAlternate' as ThemeVars.Color,
   overflow: 'hidden' as const,
 };
