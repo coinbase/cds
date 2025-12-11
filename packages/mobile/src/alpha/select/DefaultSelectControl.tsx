@@ -158,7 +158,7 @@ export const DefaultSelectControlComponent = memo(
                 color="fg"
                 paddingEnd={0}
                 paddingStart={labelVariant === 'inside' ? 2 : 0}
-                paddingY={labelVariant === 'inside' ? 0 : 0.5}
+                paddingY={labelVariant === 'inside' || compact ? 0 : 0.5}
               >
                 {label}
               </InputLabel>
@@ -166,7 +166,7 @@ export const DefaultSelectControlComponent = memo(
           ) : (
             label
           ),
-        [disabled, label, labelVariant, setOpen, styles?.controlLabelNode],
+        [compact, disabled, label, labelVariant, setOpen, styles?.controlLabelNode],
       );
 
       const valueNode = useMemo(() => {

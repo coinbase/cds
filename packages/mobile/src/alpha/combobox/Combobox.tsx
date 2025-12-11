@@ -17,6 +17,7 @@ import { NativeInput } from '../../controls/NativeInput';
 import { useTheme } from '../../hooks/useTheme';
 import { Box } from '../../layout';
 import { StickyFooter } from '../../sticky-footer/StickyFooter';
+import { Text } from '../../typography/Text';
 import { DefaultSelectControl } from '../select/DefaultSelectControl';
 import { DefaultSelectDropdown } from '../select/DefaultSelectDropdown';
 import {
@@ -153,11 +154,19 @@ export const DefaultComboboxControl = <
               paddingTop: hasValue ? 8 : 0,
               // This is constrained by the parent container's width. The width is large
               // to ensure it grows to fill the control
-              width: 300,
+              width: open ? 300 : '100%',
             }}
             value={searchText}
           />
-        ) : null
+        ) : (
+          <>
+            {hasValue ? null : (
+              <Text color="fgMuted" font="body" paddingY={0}>
+                {typeof placeholder === 'string' ? placeholder : ''}
+              </Text>
+            )}
+          </>
+        )
       }
       placeholder={null}
       styles={{
@@ -311,6 +320,7 @@ const ComboboxBase = memo(
                   endNode={endNode}
                   placeholder={placeholder}
                   startNode={startNode}
+                  variant={variant}
                   {...props}
                   label={null}
                   styles={undefined}
@@ -330,6 +340,7 @@ const ComboboxBase = memo(
           placeholder,
           setOpen,
           startNode,
+          variant,
         ],
       );
 

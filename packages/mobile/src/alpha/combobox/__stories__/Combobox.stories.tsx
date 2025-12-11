@@ -6,9 +6,9 @@ import { Example, ExampleScreen } from '../../../examples/ExampleScreen';
 import { Icon } from '../../../icons/Icon';
 import { VStack } from '../../../layout';
 import { Text } from '../../../typography/Text';
+import type { SelectOptionList } from '../../select';
 import type { SelectOption } from '../../select/Select';
 import { Combobox, type ComboboxRef } from '../Combobox';
-import type { SelectOptionList } from '../../select';
 
 // Basic option sets
 const multiSelectOptions = [
@@ -280,7 +280,7 @@ const CompactExample = () => {
 };
 
 export const CompactSingleSelect = () => {
-  const [value, setValue] = useState<string | null>('apple');
+  const [value, setValue] = useState<string | null>(null);
 
   return (
     <VStack gap={4}>
@@ -288,7 +288,7 @@ export const CompactSingleSelect = () => {
         compact
         label="Compact size"
         onChange={setValue}
-        options={fruitOptions}
+        options={singleSelectOptions}
         placeholder="Compact combobox..."
         type="single"
         value={value}
