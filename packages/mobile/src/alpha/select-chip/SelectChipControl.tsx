@@ -34,7 +34,10 @@ const SelectChipControlComponent = memo(
         compact,
         invertColorScheme,
         numberOfLines,
-      }: SelectControlProps<Type, SelectOptionValue> & SelectChipBaseProps,
+        maxWidth,
+        displayValue,
+      }: SelectControlProps<Type, SelectOptionValue> &
+        SelectChipBaseProps & { displayValue?: React.ReactNode },
       ref: React.Ref<View>,
     ) => {
       const isMultiSelect = type === 'multi';
@@ -88,7 +91,7 @@ const SelectChipControlComponent = memo(
 
       const labelContent = useMemo(() => {
         if (!hasValue) return label ?? placeholder ?? null;
-
+        if (displayValue) return displayValue;
         if (isMultiSelect) {
           const values = value as SelectOptionValue[];
           const visible = values.slice(0, maxSelectedOptionsToShow);
@@ -110,6 +113,7 @@ const SelectChipControlComponent = memo(
         hasValue,
         label,
         placeholder,
+        displayValue,
         isMultiSelect,
         optionsMap,
         value,
@@ -149,6 +153,7 @@ const SelectChipControlComponent = memo(
           disabled={disabled}
           end={endNode}
           invertColorScheme={invertColorScheme}
+          maxWidth={maxWidth}
           numberOfLines={numberOfLines}
           onPress={() => setOpen((s) => !s)}
           start={startNode}
@@ -167,5 +172,6 @@ export const SelectChipControl = SelectChipControlComponent as <
   props: SelectControlProps<Type, SelectOptionValue> &
     Partial<Pick<ChipBaseProps, 'invertColorScheme' | 'numberOfLines'>> & {
       ref?: React.Ref<View>;
+      displayValue?: React.ReactNode;
     },
 ) => React.ReactElement;
