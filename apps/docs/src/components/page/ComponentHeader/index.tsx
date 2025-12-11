@@ -39,6 +39,8 @@ type MetadataType = {
   figma?: string;
   description?: string;
   warning?: string;
+  /** Indicates that this component is in alpha status */
+  alpha?: boolean;
   relatedComponents?: RelatedComponent[];
   /** Dependencies required by this component */
   dependencies?: Dependency[];
@@ -96,6 +98,7 @@ export const ComponentHeader = memo(
       relatedComponents,
       dependencies,
       warning,
+      alpha,
     } = activeMetadata ?? {};
 
     const descriptionText = activeMetadata?.description ?? description;
@@ -128,6 +131,14 @@ export const ComponentHeader = memo(
             {warning && (
               <Banner startIcon="warning" variant="warning">
                 {warning}
+              </Banner>
+            )}
+            {alpha && (
+              <Banner startIcon="info" title="Alpha component" variant="informational">
+                Alpha components are stable and safe to use. They allow us to provide new and
+                powerful features quickly, without forcing breaking changes. Components will exit
+                the alpha status when their deprecated counterpart is removed in the next major
+                version.
               </Banner>
             )}
           </VStack>

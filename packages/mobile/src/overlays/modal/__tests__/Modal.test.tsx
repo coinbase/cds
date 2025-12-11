@@ -155,6 +155,15 @@ describe('Modal', () => {
     expect(screen.getByTestId('mock-modal')).toBeAccessible();
   });
 
+  it('passes a11y when title is not provided', () => {
+    render(
+      <DefaultThemeProvider>
+        <MockModal visible testID="mock-modal" title="" />
+      </DefaultThemeProvider>,
+    );
+    expect(screen.getByTestId('mock-modal')).toBeAccessible();
+  });
+
   it('renders React Native Modal', () => {
     render(
       <DefaultThemeProvider>
