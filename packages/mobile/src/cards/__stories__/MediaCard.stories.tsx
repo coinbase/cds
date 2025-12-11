@@ -87,7 +87,7 @@ const MediaCardScreen = () => {
         <MediaCard
           {...exampleProps}
           media={exampleMedia}
-          overrides={{
+          slotProps={{
             title: { color: 'fgPositive' },
             subtitle: { font: 'label1' },
             description: { color: 'fgMuted' },
@@ -102,7 +102,7 @@ const MediaCardScreen = () => {
         <MediaCard
           {...exampleProps}
           media={exampleMedia}
-          overrides={{
+          slotProps={{
             layoutContainer: { gap: 3 },
             contentContainer: { padding: 3, gap: 2 },
             textContainer: { gap: 1 },

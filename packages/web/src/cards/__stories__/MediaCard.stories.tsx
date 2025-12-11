@@ -150,7 +150,7 @@ export const CustomOverrides = (): JSX.Element => {
       <MediaCard
         {...exampleProps}
         media={exampleMedia}
-        overrides={{
+        slotProps={{
           title: { color: 'fgPositive' },
           subtitle: { font: 'label1' },
           description: { color: 'fgMuted' },
@@ -169,7 +169,7 @@ export const WithLayoutOverrides = (): JSX.Element => {
       <MediaCard
         {...exampleProps}
         media={exampleMedia}
-        overrides={{
+        slotProps={{
           layoutContainer: { gap: 3 },
           contentContainer: { padding: 3, gap: 2 },
           textContainer: { gap: 1 },

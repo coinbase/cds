@@ -43,7 +43,7 @@ export const MediaCard: MediaCardComponent = memo(
         thumbnail,
         media,
         tag,
-        overrides,
+        slotProps,
         children,
         actionable,
         as,
@@ -61,7 +61,7 @@ export const MediaCard: MediaCardComponent = memo(
         <MediaCardLayout
           description={description}
           media={media}
-          overrides={overrides}
+          slotProps={slotProps}
           subtitle={subtitle}
           tag={tag}
           thumbnail={thumbnail}

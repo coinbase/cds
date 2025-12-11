@@ -19,14 +19,14 @@ const mediaCardContainerProps = {
 export const MediaCard = memo(
   forwardRef<View, MediaCardProps>(
     (
-      { title, subtitle, description, thumbnail, media, tag, actionable, overrides = {}, ...props },
+      { title, subtitle, description, thumbnail, media, tag, actionable, slotProps = {}, ...props },
       ref,
     ) => (
       <CardRoot ref={ref} actionable={actionable} {...mediaCardContainerProps} {...props}>
         <MediaCardLayout
           description={description}
           media={media}
-          overrides={overrides}
+          slotProps={slotProps}
           subtitle={subtitle}
           tag={tag}
           thumbnail={thumbnail}
