@@ -4,7 +4,6 @@ import {
   memo,
   useCallback,
   useContext,
-  useEffect,
   useImperativeHandle,
   useMemo,
   useRef,
@@ -12,9 +11,6 @@ import {
 } from 'react';
 import Fuse from 'fuse.js';
 
-import { NativeInput } from '../../controls/NativeInput';
-import { NAVIGATION_KEYS } from '../../overlays/FocusTrap';
-import { Text } from '../../typography';
 import type { SelectOptionList } from '../select';
 import { DefaultSelectControl } from '../select/DefaultSelectControl';
 import type {
@@ -28,35 +24,65 @@ import type {
 } from '../select/Select';
 import { Select } from '../select/Select';
 
-const ComboboxContext = createContext<{
+import { DefaultComboboxControl } from './DefaultComboboxControl';
+
+type ComboboxContextValue<
+  Type extends SelectType = SelectType,
+  SelectOptionValue extends string = string,
+> = {
+  options: SelectOptionList<Type, SelectOptionValue>;
   searchText: string;
   onSearch: (searchText: string) => void;
-}>({
-  searchText: '',
-  onSearch: () => {},
-});
+  hideSearchInput: boolean;
+};
 
-const hasSelectedValue = (currentValue: unknown): boolean =>
-  currentValue !== null &&
-  typeof currentValue !== 'undefined' &&
-  !(Array.isArray(currentValue) && currentValue.length === 0);
+/**
+ * Context used for Combobox props needed to render to the ComboboxControlComponent.
+ */
+const ComboboxContext = createContext<ComboboxContextValue<any, any> | null>(null);
+
+const useComboboxContext = <
+  Type extends SelectType = SelectType,
+  SelectOptionValue extends string = string,
+>() => {
+  const context = useContext(
+    ComboboxContext as React.Context<ComboboxContextValue<Type, SelectOptionValue> | null>,
+  );
+  if (!context) {
+    throw new Error('Combobox components must be used within ComboboxContext.Provider');
+  }
+  return context;
+};
 
 export type ComboboxControlProps<
   Type extends SelectType = 'single',
   SelectOptionValue extends string = string,
 > = SelectControlProps<Type, SelectOptionValue> &
   Pick<ComboboxBaseProps<Type, SelectOptionValue>, 'hideSearchInput'> & {
+    /** Search text value */
+    searchText: string;
+    /** Search text change handler */
+    onSearch: (searchText: string) => void;
     /** Reference to the combobox control for positioning */
     controlRef: React.RefObject<ComboboxRef | null>;
     /** Custom SelectControlComponent to wrap */
     SelectControlComponent?: SelectControlComponent<Type, SelectOptionValue>;
   };
 
-type ComboboxControlComponentType = <
+export type ComboboxControlComponentType = <
   Type extends SelectType = 'single',
   SelectOptionValue extends string = string,
 >(
   props: ComboboxControlProps<Type, SelectOptionValue>,
+) => React.ReactElement;
+
+type ComboboxControlWrapperType = <
+  Type extends SelectType = 'single',
+  SelectOptionValue extends string = string,
+>(
+  props: Omit<ComboboxControlProps<Type, SelectOptionValue>, 'onSearch' | 'searchText'> & {
+    ComboboxControlComponent: ComboboxControlComponentType;
+  },
 ) => React.ReactElement;
 
 export type ComboboxBaseProps<
@@ -76,15 +102,15 @@ export type ComboboxBaseProps<
   defaultSearchText?: string;
   /** Hide the search input */
   hideSearchInput?: boolean;
+  /** Custom ComboboxControlComponent to wrap SelectControlComponent. This component must be a stable reference */
+  ComboboxControlComponent?: ComboboxControlComponentType;
 };
 
 export type ComboboxProps<
   Type extends SelectType = 'single',
   SelectOptionValue extends string = string,
 > = ComboboxBaseProps<Type, SelectOptionValue> &
-  Pick<SelectProps<Type, SelectOptionValue>, 'styles' | 'classNames'> & {
-    ComboboxControlComponent?: ComboboxControlComponentType;
-  };
+  Pick<SelectProps<Type, SelectOptionValue>, 'styles' | 'classNames'>;
 
 export type ComboboxRef = SelectRef;
 
@@ -96,119 +122,33 @@ type ComboboxComponent = <
 ) => React.ReactElement;
 
 /**
- * A control component for Combobox that wraps a SelectControlComponent with search input functionality.
- * Can be used standalone or as part of Combobox.
+ * Wraps the ComboboxControlComponent with passed in props and the ComboboxContext values.
+ * This allows the usage of all props when wanting to use a custom SelectControlComponent in Combobox.
+ * Otherwise, a customer using a custom component would need to use props and context to get the
+ * <ComboboxControlComponent> rendering correctly.
  */
-export const DefaultComboboxControl = memo(
+const ComboboxControlWrapper = memo(
   <Type extends SelectType = 'single', SelectOptionValue extends string = string>({
-    SelectControlComponent = DefaultSelectControl,
-    value,
-    placeholder,
-    controlRef,
-    hideSearchInput,
-    options,
-    open,
-    setOpen,
-    compact,
+    ComboboxControlComponent,
     ...props
-  }: ComboboxControlProps<Type, SelectOptionValue>) => {
-    const { searchText, onSearch } = useContext(ComboboxContext);
-    const searchInputRef = useRef<HTMLInputElement | null>(null);
-    const hasValue = hasSelectedValue(value);
-    const shouldShowSearchInput = !hideSearchInput && (!hasValue || open);
-
-    useEffect(() => {
-      if (shouldShowSearchInput && open) {
-        searchInputRef.current?.focus();
-      }
-    }, [shouldShowSearchInput, open]);
-
-    const handleSearchChange = useCallback(
-      (event: React.ChangeEvent<HTMLInputElement>) => {
-        onSearch(event.target.value);
-      },
-      [onSearch],
-    );
-
-    const handleSearchClick = useCallback(
-      (event: React.MouseEvent<HTMLInputElement>) => {
-        event.stopPropagation();
-        setOpen(true);
-      },
-      [setOpen],
-    );
-
+  }: Omit<ComboboxControlProps<Type, SelectOptionValue>, 'onSearch' | 'searchText'> & {
+    ComboboxControlComponent: ComboboxControlComponentType;
+  }) => {
+    const { searchText, onSearch, hideSearchInput, options } = useComboboxContext<
+      Type,
+      SelectOptionValue
+    >();
     return (
-      <SelectControlComponent
-        ref={controlRef.current?.refs.setReference}
-        compact={compact}
-        open={open}
-        options={options}
-        setOpen={setOpen}
-        value={value}
+      <ComboboxControlComponent
         {...props}
-        contentNode={
-          shouldShowSearchInput ? (
-            <NativeInput
-              ref={searchInputRef}
-              onChange={handleSearchChange}
-              onClick={handleSearchClick}
-              onKeyDown={(event) => {
-                if (!NAVIGATION_KEYS.includes(event.key)) {
-                  event.stopPropagation();
-                }
-                if (
-                  event.key === 'Enter' ||
-                  (!NAVIGATION_KEYS.includes(event.key) && !event.shiftKey)
-                ) {
-                  setOpen(true);
-                }
-              }}
-              placeholder={typeof placeholder === 'string' ? placeholder : undefined}
-              style={{
-                paddingLeft: 0,
-                paddingRight: 0,
-                height: hasValue ? 24 : compact ? 40 : 48,
-                width: '100%',
-              }}
-              tabIndex={0}
-              value={searchText}
-            />
-          ) : (
-            <>
-              {hasValue ? null : (
-                <Text
-                  as="p"
-                  color="fgMuted"
-                  display="block"
-                  font="body"
-                  overflow="truncate"
-                  paddingY={0}
-                >
-                  {placeholder}
-                </Text>
-              )}
-            </>
-          )
-        }
-        placeholder={null}
-        styles={{
-          ...props.styles,
-          controlEndNode: {
-            ...props.styles?.controlEndNode,
-            alignItems: hasValue && shouldShowSearchInput ? 'flex-end' : 'center',
-          },
-          controlValueNode: {
-            ...props.styles?.controlValueNode,
-            paddingTop: hasValue ? (compact ? 'var(--space-1)' : 'var(--space-1_5)') : 0,
-            paddingBottom: hasValue ? (compact ? 'var(--space-1)' : 'var(--space-1_5)') : 0,
-          },
-        }}
-        tabIndex={shouldShowSearchInput ? -1 : 0}
+        hideSearchInput={hideSearchInput}
+        onSearch={onSearch}
+        options={options}
+        searchText={searchText}
       />
     );
   },
-) as ComboboxControlComponentType;
+) as ComboboxControlWrapperType;
 
 const ComboboxBase = memo(
   forwardRef(
@@ -287,19 +227,25 @@ const ComboboxBase = memo(
 
       const ComboboxControl = useCallback(
         (props: SelectControlProps<Type, SelectOptionValue>) => (
-          <ComboboxControlComponent
+          <ComboboxControlWrapper
             {...props}
+            ComboboxControlComponent={ComboboxControlComponent}
             SelectControlComponent={SelectControlComponent}
             controlRef={controlRef}
-            hideSearchInput={hideSearchInput}
-            options={options}
           />
         ),
-        [ComboboxControlComponent, SelectControlComponent, hideSearchInput, options],
+        [SelectControlComponent, ComboboxControlComponent],
       );
 
       return (
-        <ComboboxContext.Provider value={{ searchText, onSearch: setSearchText }}>
+        <ComboboxContext.Provider
+          value={{
+            searchText,
+            onSearch: setSearchText,
+            hideSearchInput: hideSearchInput ?? false,
+            options,
+          }}
+        >
           <Select
             ref={controlRef}
             SelectControlComponent={ComboboxControl}

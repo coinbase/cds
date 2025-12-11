@@ -9,7 +9,12 @@ import { VStack } from '../../../layout/VStack';
 import { Text } from '../../../typography/Text';
 import type { SelectOptionList } from '../../select';
 import type { SelectOption } from '../../select/Select';
-import { Combobox, type ComboboxRef } from '../Combobox';
+import {
+  Combobox,
+  type ComboboxControlComponentType,
+  type ComboboxRef,
+  DefaultComboboxControl,
+} from '../';
 
 export default {
   title: 'Components/Alpha/Combobox',
@@ -1033,6 +1038,28 @@ export const DynamicOptions = () => {
       <Button compact onClick={addOption}>
         Add more options
       </Button>
+    </VStack>
+  );
+};
+
+const CustomComponent: ComboboxControlComponentType = (props) => {
+  return <DefaultComboboxControl {...props} searchText={`${props.value?.length ?? 0}`} />;
+};
+
+export const CustomControlComponent = () => {
+  const { value, onChange } = useMultiSelect({ initialValue: [] });
+
+  return (
+    <VStack gap={4}>
+      <Combobox
+        ComboboxControlComponent={CustomComponent}
+        label="Custom control component - search field always shows the number of selected options"
+        onChange={onChange}
+        options={fruitOptions}
+        placeholder="Select fruits..."
+        type="multi"
+        value={value}
+      />
     </VStack>
   );
 };
