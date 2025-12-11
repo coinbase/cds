@@ -1,0 +1,21 @@
+{
+  "import": "import { DonutChart } from '@coinbase/cds-web-visualization'",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/web-visualization/src/chart/DonutChart.tsx",
+  "description": "A donut chart component built on PolarChart for visualizing proportional data with a hollow center.",
+  "relatedComponents": [
+    {
+      "label": "PolarChart",
+      "url": "/components/graphs/PolarChart/"
+    },
+    {
+      "label": "PieChart",
+      "url": "/components/graphs/PieChart/"
+    }
+  ],
+  "dependencies": [
+    {
+      "name": "framer-motion",
+      "version": "^10.18.0"
+    }
+  ]
+}

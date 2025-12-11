@@ -1,7 +1,7 @@
 {
   "import": "import { ReferenceLine } from '@coinbase/cds-mobile-visualization'",
   "source": "https://github.com/coinbase/cds/blob/master/packages/mobile-visualization/src/chart/line/ReferenceLine.tsx",
-  "description": "A horizontal or vertical reference line to mark important values on a chart, such as targets, thresholds, or baseline values.",
+  "description": "A horizontal or vertical reference line to mark important values on a cartesian based chart, such as targets, thresholds, or baseline values.",
   "relatedComponents": [
     {
       "label": "CartesianChart",

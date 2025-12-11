@@ -4,10 +4,13 @@ import type { Rect } from '@coinbase/cds-common/types';
 
 import {
   type AxisBounds,
-  getChartDomain,
-  getChartRange,
+  type CartesianSeries,
+  getCartesianDomain,
+  getCartesianRange,
+  getPolarAngularDomain,
+  getPolarRadialRange,
   isValidBounds,
-  type Series,
+  type PolarSeries,
 } from './chart';
 import {
   type ChartAxisScaleType,
@@ -26,8 +29,6 @@ export const defaultAxisScaleType = 'linear';
  * Axis configuration with computed bounds
  */
 export type AxisConfig = {
-  /** The type of scale to use */
-  scaleType: ChartAxisScaleType;
   /**
    * Domain bounds for the axis (data space)
    */
@@ -36,10 +37,17 @@ export type AxisConfig = {
    * Range bounds for the axis (visual space in pixels)
    */
   range: AxisBounds;
+};
+
+export type CartesianAxisConfig = AxisConfig & {
+  /** The type of scale to use */
+  scaleType: ChartAxisScaleType;
   /**
-   * Data for the axis
+   * Domain limit type for numeric scales
+   * - 'nice' (default for y axes): Rounds the domain to human-friendly values (e.g., 0-100 instead of 1.2-97.8)
+   * - 'strict' (default for x axes): Uses the exact min/max values from the data
    */
-  data?: string[] | number[];
+  domainLimit: 'nice' | 'strict';
   /**
    * Padding between categories for band scales (0-1, where 0.1 = 10% spacing)
    * Only used when scaleType is 'band'
@@ -47,43 +55,119 @@ export type AxisConfig = {
    */
   categoryPadding?: number;
   /**
-   * Domain limit type for numeric scales
-   * - 'nice': Rounds the domain to human-friendly values
-   * - 'strict': Uses the exact min/max values from the data
+   * Data for the axis
    */
-  domainLimit: 'nice' | 'strict';
+  data?: string[] | number[];
+};
+
+export type RadialAxisConfig = AxisConfig & {
+  /** The type of scale to use */
+  scaleType: Exclude<ChartAxisScaleType, 'band'>;
+};
+
+export type AngularAxisConfig = AxisConfig & {
+  /** The type of scale to use */
+  scaleType: Exclude<ChartAxisScaleType, 'band'>;
+  /**
+   * Padding angle between slices in degrees.
+   * @default 0
+   */
+  paddingAngle?: number;
 };
 
 /**
- * Axis configuration without computed bounds (used for input)
+ * Base axis configuration props (used for input, without computed bounds)
  */
-export type AxisConfigProps = Omit<AxisConfig, 'domain' | 'range'> & {
+type AxisConfigProps = {
   /**
    * Unique identifier for this axis.
    */
   id: string;
   /**
    * Domain configuration for the axis (data space).
-   *
-   * The domainLimit parameter (inherited from AxisConfig) controls how initial domain bounds are calculated:
-   * - 'nice' (default for y axes): Rounds the domain to human-friendly values (e.g., 0-100 instead of 1.2-97.8)
-   * - 'strict' (default for x axes): Uses the exact min/max values from the data
-   *
-   * The domain can be:
-   * - A partial bounds object to override specific min/max values
-   * - A function that receives the limit-processed bounds and allows further customization
-   *
-   * This allows you to first apply nice/strict processing, then optionally transform the result.
+   * Can be a partial bounds object to override specific min/max values,
+   * or a function that receives calculated bounds and allows customization.
    */
   domain?: Partial<AxisBounds> | ((bounds: AxisBounds) => AxisBounds);
   /**
    * Range configuration for the axis (visual space in pixels).
-   * Can be a partial bounds object to override specific values, or a function that transforms the calculated range.
-   *
-   * When using a function, it receives the initial calculated range bounds and allows you to adjust them.
-   * This replaces the previous rangeOffset approach and provides more flexibility for range customization.
+   * Can be a partial bounds object to override specific values,
+   * or a function that transforms the calculated range.
    */
   range?: Partial<AxisBounds> | ((bounds: AxisBounds) => AxisBounds);
+};
+
+/**
+ * Cartesian axis configuration props (for x/y axes).
+ * Inherits required scaleType and domainLimit from CartesianAxisConfig,
+ * with optional domain/range overrides for user input.
+ */
+export type CartesianAxisConfigProps = Omit<CartesianAxisConfig, 'domain' | 'range'> &
+  AxisConfigProps;
+
+/**
+ * Base polar axis configuration props (shared by angular and radial axes)
+ */
+type PolarAxisConfigProps = AxisConfigProps & {
+  /**
+   * The type of scale to use.
+   * @default 'linear'
+   */
+  scaleType?: Exclude<ChartAxisScaleType, 'band'>;
+};
+
+/**
+ * Angular axis configuration props (for polar charts)
+ */
+export type AngularAxisConfigProps = PolarAxisConfigProps & {
+  /**
+   * Padding angle between slices in degrees.
+   * @default 0
+   */
+  paddingAngle?: number;
+};
+
+/**
+ * Radial axis configuration props (for polar charts)
+ */
+export type RadialAxisConfigProps = PolarAxisConfigProps;
+
+/**
+ * Gets a D3 scale for a polar axis.
+ *
+ * @param params - Scale parameters
+ * @returns The D3 scale function
+ */
+export const getPolarAxisScale = ({
+  config,
+  range,
+  dataDomain,
+}: {
+  config?: AngularAxisConfig | RadialAxisConfig;
+  range: AxisBounds;
+  dataDomain: AxisBounds;
+}): ChartScaleFunction => {
+  const scaleType = config?.scaleType ?? 'linear';
+
+  let adjustedDomain = dataDomain;
+
+  if (config?.domain) {
+    adjustedDomain = {
+      min: config.domain.min ?? dataDomain.min,
+      max: config.domain.max ?? dataDomain.max,
+    };
+  }
+
+  if (!isValidBounds(adjustedDomain)) {
+    throw new Error('Invalid polar axis domain bounds.');
+  }
+
+  // Polar charts only use linear/log scales (no band scales)
+  return getNumericScale({
+    domain: adjustedDomain,
+    range,
+    scaleType: scaleType as 'linear' | 'log',
+  });
 };
 
 /**
@@ -97,13 +181,13 @@ export type AxisConfigProps = Omit<AxisConfig, 'domain' | 'range'> & {
  * @returns The D3 scale function
  * @throws An Error if bounds are invalid
  */
-export const getAxisScale = ({
+export const getCartesianAxisScale = ({
   config,
   type,
   range,
   dataDomain,
 }: {
-  config?: AxisConfig;
+  config?: CartesianAxisConfig;
   type: 'x' | 'y';
   range: AxisBounds;
   dataDomain: AxisBounds;
@@ -161,12 +245,12 @@ export const getAxisScale = ({
  * @param defaultScaleType - the default scale type to use for the axis
  * @returns array of axis configs with IDs
  */
-export const getAxisConfig = (
+export const getCartesianAxisConfig = (
   type: 'x' | 'y',
-  axes: Partial<AxisConfigProps> | Partial<AxisConfigProps>[] | undefined,
+  axes: Partial<CartesianAxisConfigProps> | Partial<CartesianAxisConfigProps>[] | undefined,
   defaultId: string = defaultAxisId,
   defaultScaleType: ChartAxisScaleType = defaultAxisScaleType,
-): AxisConfigProps[] => {
+): CartesianAxisConfigProps[] => {
   const defaultDomainLimit = type === 'x' ? 'strict' : 'nice';
   if (!axes) {
     return [{ id: defaultId, scaleType: defaultScaleType, domainLimit: defaultDomainLimit }];
@@ -203,9 +287,9 @@ export const getAxisConfig = (
  * @param axisType - Whether this is an 'x' or 'y' axis
  * @returns The calculated axis bounds
  */
-export const getAxisDomain = (
-  axisParam: AxisConfigProps,
-  series: Series[],
+export const getCartesianAxisDomain = (
+  axisParam: CartesianAxisConfigProps,
+  series: CartesianSeries[],
   axisType: 'x' | 'y',
 ): AxisBounds => {
   let dataDomain: AxisBounds | null = null;
@@ -230,7 +314,7 @@ export const getAxisDomain = (
   }
 
   // Calculate domain from series data
-  const seriesDomain = axisType === 'x' ? getChartDomain(series) : getChartRange(series);
+  const seriesDomain = axisType === 'x' ? getCartesianDomain(series) : getCartesianRange(series);
 
   // If data sets the domain, use that instead of the series domain
   const preferredDataDomain = dataDomain ?? seriesDomain;
@@ -301,6 +385,144 @@ export const getAxisRange = (
       max: rangeConfig.max ?? baseRange.max,
     };
   }
+};
+
+/**
+ * Formats the array of user-provided angular axis configs with default values.
+ * @param axes - array of axis configs or single axis config
+ * @param defaultId - the default id to use for the axis
+ * @returns array of angular axis configs with IDs
+ */
+export const getAngularAxisConfig = (
+  axes: Partial<AngularAxisConfigProps> | Partial<AngularAxisConfigProps>[] | undefined,
+  defaultId: string = defaultAxisId,
+): AngularAxisConfigProps[] => {
+  if (!axes) {
+    return [{ id: defaultId, scaleType: 'linear' }];
+  }
+
+  if (Array.isArray(axes)) {
+    const axesLength = axes.length;
+    if (axesLength > 1 && axes.some(({ id }) => id === undefined)) {
+      throw new Error('When defining multiple angular axes, each must have a unique id.');
+    }
+
+    return axes.map(({ id, ...axis }) => ({
+      id: axesLength > 1 ? (id ?? defaultAxisId) : (id as string),
+      scaleType: 'linear' as const,
+      ...axis,
+    }));
+  }
+
+  return [{ id: defaultId, scaleType: 'linear', ...axes }];
+};
+
+/**
+ * Formats the array of user-provided radial axis configs with default values.
+ * @param axes - array of axis configs or single axis config
+ * @param defaultId - the default id to use for the axis
+ * @returns array of radial axis configs with IDs
+ */
+export const getRadialAxisConfig = (
+  axes: Partial<RadialAxisConfigProps> | Partial<RadialAxisConfigProps>[] | undefined,
+  defaultId: string = defaultAxisId,
+): RadialAxisConfigProps[] => {
+  if (!axes) {
+    return [{ id: defaultId, scaleType: 'linear' }];
+  }
+
+  if (Array.isArray(axes)) {
+    const axesLength = axes.length;
+    if (axesLength > 1 && axes.some(({ id }) => id === undefined)) {
+      throw new Error('When defining multiple radial axes, each must have a unique id.');
+    }
+
+    return axes.map(({ id, ...axis }) => ({
+      id: axesLength > 1 ? (id ?? defaultAxisId) : (id as string),
+      scaleType: 'linear' as const,
+      ...axis,
+    }));
+  }
+
+  return [{ id: defaultId, scaleType: 'linear', ...axes }];
+};
+
+/**
+ * Calculates the data domain for a polar axis based on its configuration and series data.
+ *
+ * @param axisParam - The axis configuration
+ * @param series - Array of polar series objects
+ * @param axisType - Whether this is an 'angular' or 'radial' axis
+ * @returns The calculated axis bounds
+ */
+export const getPolarAxisDomain = (
+  axisParam: PolarAxisConfigProps,
+  series: PolarSeries[],
+  axisType: 'angular' | 'radial',
+): AxisBounds => {
+  // Calculate domain from series data
+  const seriesDomain =
+    axisType === 'angular' ? getPolarAngularDomain(series) : getPolarRadialRange(series);
+
+  const bounds = axisParam.domain;
+  let finalDomain: Partial<AxisBounds>;
+
+  if (typeof bounds === 'function') {
+    finalDomain = bounds({
+      min: seriesDomain.min ?? 0,
+      max: seriesDomain.max ?? 0,
+    });
+  } else if (bounds && typeof bounds === 'object') {
+    finalDomain = {
+      min: bounds.min ?? seriesDomain.min,
+      max: bounds.max ?? seriesDomain.max,
+    };
+  } else {
+    finalDomain = seriesDomain;
+  }
+
+  return {
+    min: finalDomain.min ?? 0,
+    max: finalDomain.max ?? 0,
+  };
+};
+
+/**
+ * Calculates the visual range for a polar axis.
+ *
+ * For angular axes, returns degrees (conversion to radians happens at path generation).
+ * For radial axes, returns pixels.
+ *
+ * @param axisParam - The axis configuration
+ * @param axisType - Whether this is an 'angular' or 'radial' axis
+ * @param outerRadius - The outer radius in pixels (used for radial axis)
+ * @returns The calculated axis range bounds (degrees for angular, pixels for radial)
+ */
+export const getPolarAxisRange = (
+  axisParam: AngularAxisConfigProps | RadialAxisConfigProps,
+  axisType: 'angular' | 'radial',
+  outerRadius: number,
+): AxisBounds => {
+  // Default ranges:
+  // Angular: full circle starting at 3 o'clock (0° to 360° in degrees)
+  // Radial: 0 to outerRadius (pixels)
+  const baseRange: AxisBounds =
+    axisType === 'angular' ? { min: 0, max: 360 } : { min: 0, max: outerRadius };
+
+  const rangeConfig = axisParam.range;
+
+  if (!rangeConfig) {
+    return baseRange;
+  }
+
+  if (typeof rangeConfig === 'function') {
+    return rangeConfig(baseRange);
+  }
+
+  return {
+    min: rangeConfig.min ?? baseRange.min,
+    max: rangeConfig.max ?? baseRange.max,
+  };
 };
 
 /**
@@ -729,7 +951,7 @@ export type RegisteredAxis = {
 
 /**
  * Calculates the total amount of padding needed to render a set of axes on the main drawing area of the chart.
- * Returns the registed axes, an API for adding/removing axes as well as the total calculated padding that must be reserved in the drawing area.
+ * Returns the registered axes, an API for adding/removing axes as well as the total calculated padding that must be reserved in the drawing area.
  */
 export const useTotalAxisPadding = () => {
   const [renderedAxes, setRenderedAxes] = useState<Map<string, RegisteredAxis>>(new Map());

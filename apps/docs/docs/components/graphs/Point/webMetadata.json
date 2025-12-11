@@ -1,7 +1,7 @@
 {
   "import": "import { Point } from '@coinbase/cds-web-visualization'",
   "source": "https://github.com/coinbase/cds/blob/master/packages/web-visualization/src/chart/Point.tsx",
-  "description": "Visual markers that highlight specific data values on a chart. Points can be customized with different colors, sizes, and interactivity.",
+  "description": "Visual markers that highlight specific data values on a cartesian based chart. Points can be customized with different colors, sizes, and interactivity.",
   "relatedComponents": [
     {
       "label": "CartesianChart",

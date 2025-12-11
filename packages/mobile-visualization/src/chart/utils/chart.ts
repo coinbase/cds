@@ -25,6 +25,17 @@ export type Series = {
    */
   id: string;
   /**
+   * Label of the series.
+   */
+  label?: string;
+  /**
+   * Color for the series.
+   */
+  color?: string;
+};
+
+export type CartesianSeries = Series & {
+  /**
    * Data array for this series. Use null values to create gaps in the visualization.
    *
    * Can be either:
@@ -33,19 +44,8 @@ export type Series = {
    */
   data?: Array<number | null> | Array<[number, number] | null>;
   /**
-   * Label of the series.
-   * Used for scrubber beacon labels.
-   */
-  label?: string;
-  /**
-   * Color for the series.
-   * If gradient is provided, that will be used for chart components
-   * Color will still be used by scrubber beacon labels
-   */
-  color?: string;
-  /**
    * Color gradient configuration.
-   * Takes precedence over color except for scrubber beacon labels.
+   * Takes precedence over color for drawing area components (such as Line, Area, Bar, and ScrubberBeacon).
    */
   gradient?: GradientDefinition;
   /**
@@ -61,12 +61,111 @@ export type Series = {
   stackId?: string;
 };
 
+export type PolarSeries = Series & {
+  /**
+   * Data for the series.
+   * - Single number for pie/donut charts (each series = one slice)
+   * - Array of numbers for radar/radial bar charts (each series = multiple points)
+   */
+  data: number | Array<number | null>;
+  /**
+   * ID of the angular axis this series should use.
+   * If not specified, uses the default angular axis.
+   */
+  angularAxisId?: string;
+  /**
+   * ID of the radial axis this series should use.
+   * If not specified, uses the default radial axis.
+   */
+  radialAxisId?: string;
+};
+
+/**
+ * Calculates the angular domain from polar series data.
+ * For pie/donut: domain is 0 to series.length - 1
+ * For radar: domain is 0 to data array length - 1
+ */
+export const getPolarAngularDomain = (
+  series: PolarSeries[],
+  min?: number,
+  max?: number,
+): Partial<AxisBounds> => {
+  const domain = { min, max };
+
+  if (domain.min !== undefined && domain.max !== undefined) {
+    return domain;
+  }
+
+  if (series.length === 0) {
+    return domain;
+  }
+
+  const firstSeriesData = series[0].data;
+
+  if (typeof firstSeriesData === 'number') {
+    // Pie/donut: each series is a slice
+    if (domain.min === undefined) domain.min = 0;
+    if (domain.max === undefined) domain.max = series.length - 1;
+  } else if (Array.isArray(firstSeriesData)) {
+    // Radar: domain is based on data array length
+    const dataLength = Math.max(...series.map((s) => (Array.isArray(s.data) ? s.data.length : 0)));
+    if (dataLength > 0) {
+      if (domain.min === undefined) domain.min = 0;
+      if (domain.max === undefined) domain.max = dataLength - 1;
+    }
+  }
+
+  return domain;
+};
+
+/**
+ * Calculates the radial range (value extent) from polar series data.
+ */
+export const getPolarRadialRange = (
+  series: PolarSeries[],
+  min?: number,
+  max?: number,
+): Partial<AxisBounds> => {
+  const range = { min, max };
+
+  if (range.min !== undefined && range.max !== undefined) {
+    return range;
+  }
+
+  if (series.length === 0) {
+    return range;
+  }
+
+  const allValues: number[] = [];
+
+  series.forEach((s) => {
+    if (typeof s.data === 'number') {
+      allValues.push(s.data);
+    } else if (Array.isArray(s.data)) {
+      s.data.forEach((value) => {
+        if (typeof value === 'number') {
+          allValues.push(value);
+        }
+      });
+    }
+  });
+
+  if (allValues.length > 0) {
+    const minValue = Math.min(...allValues);
+    const maxValue = Math.max(...allValues);
+    if (range.min === undefined) range.min = Math.min(0, minValue);
+    if (range.max === undefined) range.max = maxValue;
+  }
+
+  return range;
+};
+
 /**
  * Calculates the domain of a chart from series data.
  * Domain represents the range of x-values from the data.
  */
-export const getChartDomain = (
-  series: Series[],
+export const getCartesianDomain = (
+  series: CartesianSeries[],
   min?: number,
   max?: number,
 ): Partial<AxisBounds> => {
@@ -95,7 +194,7 @@ export const getChartDomain = (
  * Creates a composite stack key that includes both stack ID and y-axis ID.
  * This ensures series with different y-scales don't get stacked together.
  */
-const createStackKey = (series: Series): string | undefined => {
+const createCartesianStackKey = (series: CartesianSeries): string | undefined => {
   if (series.stackId === undefined) return undefined;
 
   // Include y-axis ID to prevent cross-scale stacking
@@ -110,8 +209,8 @@ const createStackKey = (series: Series): string | undefined => {
  * @param series - Array of series with potential stack properties
  * @returns Map of series ID to stacked data arrays
  */
-export const getStackedSeriesData = (
-  series: Series[],
+export const getCartesianStackedSeriesData = (
+  series: CartesianSeries[],
 ): Map<string, Array<[number, number] | null>> => {
   const stackedDataMap = new Map<string, Array<[number, number] | null>>();
 
@@ -119,7 +218,7 @@ export const getStackedSeriesData = (
   const individualSeries: typeof series = [];
 
   series.forEach((s) => {
-    const stackKey = createStackKey(s);
+    const stackKey = createCartesianStackKey(s);
     const hasTupleData = s.data?.some((val) => Array.isArray(val));
 
     if (hasTupleData || stackKey === undefined) {
@@ -220,8 +319,8 @@ export const getLineData = (
  * Range represents the range of y-values from the data.
  * Handles stacking by transforming data when series have stack properties.
  */
-export const getChartRange = (
-  series: Series[],
+export const getCartesianRange = (
+  series: CartesianSeries[],
   min?: number,
   max?: number,
 ): Partial<AxisBounds> => {
@@ -241,7 +340,7 @@ export const getChartRange = (
   // Group series by composite stack key for proper calculation
   const stackGroups = new Map<string | undefined, typeof series>();
   series.forEach((s) => {
-    const stackKey = createStackKey(s);
+    const stackKey = createCartesianStackKey(s);
     if (!stackGroups.has(stackKey)) {
       stackGroups.set(stackKey, []);
     }
@@ -253,7 +352,7 @@ export const getChartRange = (
 
   if (hasStacks) {
     // Get stacked data using the shared function
-    const stackedDataMap = getStackedSeriesData(series);
+    const stackedDataMap = getCartesianStackedSeriesData(series);
 
     // Find the extreme values from the stacked data
     let stackedMax = 0;

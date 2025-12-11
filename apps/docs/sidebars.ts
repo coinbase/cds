@@ -605,8 +605,23 @@ const sidebars: SidebarsConfig = {
             },
             {
               type: 'doc',
+              id: 'components/graphs/DonutChart/donutChart',
+              label: 'DonutChart',
+            },
+            {
+              type: 'doc',
               id: 'components/graphs/LineChart/lineChart',
               label: 'LineChart',
+            },
+            {
+              type: 'doc',
+              id: 'components/graphs/PieChart/pieChart',
+              label: 'PieChart',
+            },
+            {
+              type: 'doc',
+              id: 'components/graphs/PolarChart/polarChart',
+              label: 'PolarChart',
             },
             {
               type: 'doc',

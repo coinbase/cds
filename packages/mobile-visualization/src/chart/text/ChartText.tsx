@@ -21,7 +21,7 @@ import {
   type Transforms3d,
 } from '@shopify/react-native-skia';
 
-import { useCartesianChartContext } from '../ChartProvider';
+import { useChartContext } from '../ChartProvider';
 import { type ChartInset, getChartInset, getColorWithOpacity, unwrapAnimatedValue } from '../utils';
 
 /**
@@ -234,7 +234,7 @@ export const ChartText = memo<ChartTextProps>(
       height: chartHeight,
       fontFamilies: contextFontFamilies,
       fontProvider,
-    } = useCartesianChartContext();
+    } = useChartContext();
 
     const inset = useMemo(() => getChartInset(insetInput), [insetInput]);
 

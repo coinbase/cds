@@ -8,11 +8,16 @@ import {
   type CartesianChartBaseProps,
   type CartesianChartProps,
 } from '../CartesianChart';
-import { type AxisConfigProps, defaultChartInset, getChartInset, type Series } from '../utils';
+import {
+  type CartesianAxisConfigProps,
+  type CartesianSeries,
+  defaultChartInset,
+  getChartInset,
+} from '../utils';
 
 import { Line, type LineProps } from './Line';
 
-export type LineSeries = Series &
+export type LineSeries = CartesianSeries &
   Partial<
     Pick<
       LineProps,
@@ -67,13 +72,13 @@ export type LineChartBaseProps = Omit<CartesianChartBaseProps, 'xAxis' | 'yAxis'
      * Accepts axis config and axis props.
      * To show the axis, set `showXAxis` to true.
      */
-    xAxis?: Partial<AxisConfigProps> & XAxisProps;
+    xAxis?: Partial<CartesianAxisConfigProps> & XAxisProps;
     /**
      * Configuration for y-axis.
      * Accepts axis config and axis props.
      * To show the axis, set `showYAxis` to true.
      */
-    yAxis?: Partial<AxisConfigProps> & YAxisProps;
+    yAxis?: Partial<CartesianAxisConfigProps> & YAxisProps;
   };
 
 export type LineChartProps = LineChartBaseProps &
@@ -111,7 +116,7 @@ export const LineChart = memo(
       // Convert LineSeries to Series for Chart context
       const chartSeries = useMemo(() => {
         return series?.map(
-          (s): Series => ({
+          (s): CartesianSeries => ({
             id: s.id,
             data: s.data,
             label: s.label,
@@ -144,7 +149,7 @@ export const LineChart = memo(
         ...yAxisVisualProps
       } = yAxis || {};
 
-      const xAxisConfig: Partial<AxisConfigProps> = {
+      const xAxisConfig: Partial<CartesianAxisConfigProps> = {
         scaleType: xScaleType,
         data: xData,
         categoryPadding: xCategoryPadding,
@@ -153,7 +158,7 @@ export const LineChart = memo(
         range: xRange,
       };
 
-      const yAxisConfig: Partial<AxisConfigProps> = {
+      const yAxisConfig: Partial<CartesianAxisConfigProps> = {
         scaleType: yScaleType,
         data: yData,
         categoryPadding: yCategoryPadding,

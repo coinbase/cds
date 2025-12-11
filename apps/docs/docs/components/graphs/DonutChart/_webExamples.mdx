@@ -1,0 +1,447 @@
+DonutChart is built on [PolarChart](/components/graphs/PolarChart) for visualizing proportional data with a hollow center.
+
+## Basics
+
+The only prop required is `series`, which takes an array of series objects. Each series object needs an `id` and a `data` number representing the slice value.
+
+```jsx live
+<DonutChart
+  height={200}
+  width={200}
+  series={[
+    { id: 'btc', data: 40, label: 'Bitcoin', color: 'rgb(var(--orange40))' },
+    { id: 'eth', data: 30, label: 'Ethereum', color: 'rgb(var(--blue40))' },
+    { id: 'sol', data: 20, label: 'Solana', color: 'rgb(var(--purple40))' },
+    { id: 'other', data: 10, label: 'Other', color: 'rgb(var(--gray40))' },
+  ]}
+/>
+```
+
+### Inner Radius
+
+You can control the size of the center hole using `innerRadiusRatio` (0-1). The default is `0.5`.
+
+```jsx live
+<HStack gap={4} justifyContent="center">
+  <VStack alignItems="center" gap={2}>
+    <DonutChart
+      height={150}
+      width={150}
+      innerRadiusRatio={0.3}
+      series={[
+        { id: 'a', data: 60, color: 'rgb(var(--blue40))' },
+        { id: 'b', data: 40, color: 'rgb(var(--green40))' },
+      ]}
+    />
+    <Text font="label2" color="fgMuted">
+      innerRadiusRatio: 0.3
+    </Text>
+  </VStack>
+  <VStack alignItems="center" gap={2}>
+    <DonutChart
+      height={150}
+      width={150}
+      innerRadiusRatio={0.5}
+      series={[
+        { id: 'a', data: 60, color: 'rgb(var(--blue40))' },
+        { id: 'b', data: 40, color: 'rgb(var(--green40))' },
+      ]}
+    />
+    <Text font="label2" color="fgMuted">
+      innerRadiusRatio: 0.5
+    </Text>
+  </VStack>
+  <VStack alignItems="center" gap={2}>
+    <DonutChart
+      height={150}
+      width={150}
+      innerRadiusRatio={0.75}
+      series={[
+        { id: 'a', data: 60, color: 'rgb(var(--blue40))' },
+        { id: 'b', data: 40, color: 'rgb(var(--green40))' },
+      ]}
+    />
+    <Text font="label2" color="fgMuted">
+      innerRadiusRatio: 0.75
+    </Text>
+  </VStack>
+</HStack>
+```
+
+## Styling
+
+### Corner Radius
+
+Use `cornerRadius` to round the corners of each slice.
+
+```jsx live
+<HStack gap={4} justifyContent="center">
+  <VStack alignItems="center" gap={2}>
+    <DonutChart
+      height={150}
+      width={150}
+      cornerRadius={0}
+      series={[
+        { id: 'a', data: 30, color: 'rgb(var(--blue40))' },
+        { id: 'b', data: 40, color: 'rgb(var(--green40))' },
+        { id: 'c', data: 30, color: 'rgb(var(--purple40))' },
+      ]}
+    />
+    <Text font="label2" color="fgMuted">
+      cornerRadius: 0
+    </Text>
+  </VStack>
+  <VStack alignItems="center" gap={2}>
+    <DonutChart
+      height={150}
+      width={150}
+      cornerRadius={8}
+      series={[
+        { id: 'a', data: 30, color: 'rgb(var(--blue40))' },
+        { id: 'b', data: 40, color: 'rgb(var(--green40))' },
+        { id: 'c', data: 30, color: 'rgb(var(--purple40))' },
+      ]}
+    />
+    <Text font="label2" color="fgMuted">
+      cornerRadius: 8
+    </Text>
+  </VStack>
+</HStack>
+```
+
+### Stroke
+
+Use `stroke` and `strokeWidth` to add borders between slices.
+
+```jsx live
+<DonutChart
+  height={200}
+  width={200}
+  stroke="var(--color-bg)"
+  strokeWidth={3}
+  cornerRadius={4}
+  series={[
+    { id: 'a', data: 25, color: 'rgb(var(--blue40))' },
+    { id: 'b', data: 25, color: 'rgb(var(--green40))' },
+    { id: 'c', data: 25, color: 'rgb(var(--purple40))' },
+    { id: 'd', data: 25, color: 'rgb(var(--orange40))' },
+  ]}
+/>
+```
+
+### Padding Between Slices
+
+Use `angularAxis` with `paddingAngle` to add gaps between slices.
+
+```jsx live
+<DonutChart
+  height={200}
+  width={200}
+  angularAxis={{ paddingAngle: 4 }}
+  cornerRadius={100}
+  innerRadiusRatio={0.7}
+  series={[
+    { id: 'card', data: 15, label: 'Card', color: 'rgb(var(--blue40))' },
+    { id: 'cash', data: 45, label: 'Cash', color: 'rgb(var(--green40))' },
+    { id: 'stake', data: 20, label: 'Stake', color: 'rgb(var(--orange40))' },
+    { id: 'lend', data: 20, label: 'Lend', color: 'rgb(var(--teal40))' },
+  ]}
+/>
+```
+
+## Center Label
+
+You can add a label in the center of the donut using children with absolute positioning.
+
+```jsx live
+function DonutWithCenterLabel() {
+  const series = [
+    { id: 'btc', data: 40, label: 'Bitcoin', color: 'rgb(var(--orange40))' },
+    { id: 'eth', data: 30, label: 'Ethereum', color: 'rgb(var(--blue40))' },
+    { id: 'sol', data: 20, label: 'Solana', color: 'rgb(var(--purple40))' },
+    { id: 'other', data: 10, label: 'Other', color: 'rgb(var(--gray40))' },
+  ];
+
+  const total = series.reduce((sum, s) => sum + s.data, 0);
+
+  return (
+    <Box position="relative" width={200} height={200}>
+      <DonutChart
+        height={200}
+        width={200}
+        innerRadiusRatio={0.65}
+        stroke="var(--color-bg)"
+        strokeWidth={2}
+        series={series}
+      />
+      <Box
+        position="absolute"
+        top={0}
+        left={0}
+        right={0}
+        bottom={0}
+        display="flex"
+        alignItems="center"
+        justifyContent="center"
+        style={{ pointerEvents: 'none' }}
+      >
+        <VStack alignItems="center" gap={0.5}>
+          <Text font="label1" color="fgMuted">
+            Total
+          </Text>
+          <Text font="headline">${(total * 100).toLocaleString()}</Text>
+        </VStack>
+      </Box>
+    </Box>
+  );
+}
+```
+
+## Animations
+
+DonutChart animates by default when data changes. You can disable animations by setting `animate` to `false`.
+
+```jsx live
+function AnimatedDonutChart() {
+  const [dataSet, setDataSet] = useState(0);
+
+  const dataSets = useMemo(
+    () => [
+      [
+        { id: 'a', data: 30, label: 'A', color: 'rgb(var(--blue40))' },
+        { id: 'b', data: 40, label: 'B', color: 'rgb(var(--green40))' },
+        { id: 'c', data: 30, label: 'C', color: 'rgb(var(--orange40))' },
+      ],
+      [
+        { id: 'a', data: 60, label: 'A', color: 'rgb(var(--blue40))' },
+        { id: 'b', data: 20, label: 'B', color: 'rgb(var(--green40))' },
+        { id: 'c', data: 20, label: 'C', color: 'rgb(var(--orange40))' },
+      ],
+      [
+        { id: 'a', data: 15, label: 'A', color: 'rgb(var(--blue40))' },
+        { id: 'b', data: 55, label: 'B', color: 'rgb(var(--green40))' },
+        { id: 'c', data: 30, label: 'C', color: 'rgb(var(--orange40))' },
+      ],
+    ],
+    [],
+  );
+
+  return (
+    <VStack alignItems="center" gap={4}>
+      <DonutChart
+        animate
+        height={200}
+        width={200}
+        innerRadiusRatio={0.5}
+        series={dataSets[dataSet]}
+      />
+      <HStack gap={2}>
+        <IconButton
+          accessibilityLabel="Previous data set"
+          name="caretLeft"
+          onClick={() => setDataSet((prev) => (prev - 1 + dataSets.length) % dataSets.length)}
+          variant="secondary"
+        />
+        <Text font="label1">Data Set {dataSet + 1}</Text>
+        <IconButton
+          accessibilityLabel="Next data set"
+          name="caretRight"
+          onClick={() => setDataSet((prev) => (prev + 1) % dataSets.length)}
+          variant="secondary"
+        />
+      </HStack>
+    </VStack>
+  );
+}
+```
+
+## Interactive
+
+You can create interactive donut charts by using [PolarChart](/components/graphs/PolarChart) directly with `PiePlot`.
+
+```jsx live
+function InteractiveDonutChart() {
+  const [selectedSlice, setSelectedSlice] = useState(null);
+
+  const series = useMemo(
+    () => [
+      { id: 'btc', data: 40, label: 'Bitcoin', color: 'rgb(var(--orange40))' },
+      { id: 'eth', data: 30, label: 'Ethereum', color: 'rgb(var(--blue40))' },
+      { id: 'sol', data: 15, label: 'Solana', color: 'rgb(var(--purple40))' },
+      { id: 'other', data: 15, label: 'Other', color: 'rgb(var(--gray40))' },
+    ],
+    [],
+  );
+
+  const total = series.reduce((sum, s) => sum + s.data, 0);
+  const selectedData = selectedSlice ? series.find((s) => s.id === selectedSlice) : null;
+
+  const handleSliceClick = useCallback((data) => {
+    setSelectedSlice((prev) => (prev === data.id ? null : data.id));
+  }, []);
+
+  return (
+    <VStack alignItems="center" gap={4}>
+      <Box height={200} position="relative" width={200}>
+        <PolarChart
+          animate
+          height={200}
+          width={200}
+          radialAxis={{ range: ({ max }) => ({ min: max * 0.65, max }) }}
+          series={series.map((s) => ({
+            ...s,
+            color: selectedSlice && selectedSlice !== s.id ? `${s.color}80` : s.color,
+          }))}
+        >
+          <PiePlot cursor="pointer" onSliceClick={handleSliceClick} />
+        </PolarChart>
+        <Box
+          alignItems="center"
+          bottom={0}
+          display="flex"
+          flexDirection="column"
+          justifyContent="center"
+          left={0}
+          position="absolute"
+          right={0}
+          style={{ pointerEvents: 'none' }}
+          top={0}
+        >
+          <Text color="fgMuted" font="label1">
+            {selectedData ? selectedData.label : 'Total'}
+          </Text>
+          <Text font="headline">
+            {selectedData ? `${Math.round((selectedData.data / total) * 100)}%` : '$12,345'}
+          </Text>
+        </Box>
+      </Box>
+    </VStack>
+  );
+}
+```
+
+## Composed Examples
+
+### Portfolio Breakdown
+
+A common use case for donut charts is showing portfolio or wallet breakdowns.
+
+```jsx live
+function PortfolioBreakdown() {
+  const series = useMemo(
+    () => [
+      { id: 'crypto', data: 45000, label: 'Crypto', color: 'rgb(var(--blue40))' },
+      { id: 'cash', data: 30000, label: 'Cash', color: 'rgb(var(--green40))' },
+      { id: 'rewards', data: 15000, label: 'Rewards', color: 'rgb(var(--purple40))' },
+      { id: 'nft', data: 10000, label: 'NFTs', color: 'rgb(var(--orange40))' },
+    ],
+    [],
+  );
+
+  const total = series.reduce((sum, s) => sum + s.data, 0);
+
+  const formatCurrency = useCallback((value) => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(value);
+  }, []);
+
+  return (
+    <HStack gap={4} alignItems="center">
+      <Box position="relative" width={200} height={200}>
+        <DonutChart
+          height={200}
+          width={200}
+          innerRadiusRatio={0.7}
+          cornerRadius={4}
+          stroke="var(--color-bg)"
+          strokeWidth={2}
+          series={series}
+        />
+        <Box
+          position="absolute"
+          top={0}
+          left={0}
+          right={0}
+          bottom={0}
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+          style={{ pointerEvents: 'none' }}
+        >
+          <VStack alignItems="center" gap={0.5}>
+            <Text font="label2" color="fgMuted">
+              Portfolio Value
+            </Text>
+            <Text font="title2">{formatCurrency(total)}</Text>
+          </VStack>
+        </Box>
+      </Box>
+      <VStack gap={2}>
+        {series.map((item) => (
+          <HStack key={item.id} gap={2} alignItems="center">
+            <Box
+              width={12}
+              height={12}
+              borderRadius={1000}
+              style={{ backgroundColor: item.color }}
+            />
+            <VStack gap={0}>
+              <Text font="label1">{item.label}</Text>
+              <Text font="label2" color="fgMuted">
+                {formatCurrency(item.data)} ({Math.round((item.data / total) * 100)}%)
+              </Text>
+            </VStack>
+          </HStack>
+        ))}
+      </VStack>
+    </HStack>
+  );
+}
+```
+
+### Compact Donut
+
+For smaller spaces, you can create a compact donut chart.
+
+```jsx live
+<HStack gap={4}>
+  <HStack gap={2} alignItems="center">
+    <DonutChart
+      height={48}
+      width={48}
+      innerRadiusRatio={0.6}
+      series={[
+        { id: 'used', data: 75, color: 'rgb(var(--green40))' },
+        { id: 'remaining', data: 25, color: 'rgb(var(--gray20))' },
+      ]}
+    />
+    <VStack gap={0}>
+      <Text font="label1">75%</Text>
+      <Text font="label2" color="fgMuted">
+        Complete
+      </Text>
+    </VStack>
+  </HStack>
+  <HStack gap={2} alignItems="center">
+    <DonutChart
+      height={48}
+      width={48}
+      innerRadiusRatio={0.6}
+      series={[
+        { id: 'used', data: 30, color: 'rgb(var(--yellow40))' },
+        { id: 'remaining', data: 70, color: 'rgb(var(--gray20))' },
+      ]}
+    />
+    <VStack gap={0}>
+      <Text font="label1">30%</Text>
+      <Text font="label2" color="fgMuted">
+        In Progress
+      </Text>
+    </VStack>
+  </HStack>
+</HStack>
+```

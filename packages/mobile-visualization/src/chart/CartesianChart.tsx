@@ -11,20 +11,20 @@ import { convertToSerializableScale, type SerializableScale } from './utils/scal
 import { useChartContextBridge } from './ChartContextBridge';
 import { CartesianChartProvider } from './ChartProvider';
 import {
-  type AxisConfig,
-  type AxisConfigProps,
+  type CartesianAxisConfig,
+  type CartesianAxisConfigProps,
   type CartesianChartContextValue,
+  type CartesianSeries,
   type ChartInset,
   type ChartScaleFunction,
   defaultAxisId,
   defaultChartInset,
-  getAxisConfig,
-  getAxisDomain,
   getAxisRange,
-  getAxisScale,
+  getCartesianAxisConfig,
+  getCartesianAxisDomain,
+  getCartesianAxisScale,
+  getCartesianStackedSeriesData as calculateStackedSeriesData,
   getChartInset,
-  getStackedSeriesData as calculateStackedSeriesData,
-  type Series,
   useTotalAxisPadding,
 } from './utils';
 
@@ -46,7 +46,7 @@ export type CartesianChartBaseProps = Omit<BoxBaseProps, 'fontFamily'> &
      * Configuration objects that define how to visualize the data.
      * Each series contains its own data array.
      */
-    series?: Array<Series>;
+    series?: Array<CartesianSeries>;
     /**
      * Whether to animate the chart.
      * @default true
@@ -55,11 +55,11 @@ export type CartesianChartBaseProps = Omit<BoxBaseProps, 'fontFamily'> &
     /**
      * Configuration for x-axis.
      */
-    xAxis?: Partial<Omit<AxisConfigProps, 'id'>>;
+    xAxis?: Partial<Omit<CartesianAxisConfigProps, 'id'>>;
     /**
      * Configuration for y-axis(es). Can be a single config or array of configs.
      */
-    yAxis?: Partial<AxisConfigProps> | Partial<AxisConfigProps>[];
+    yAxis?: Partial<CartesianAxisConfigProps> | Partial<CartesianAxisConfigProps>[];
     /**
      * Inset around the entire chart (outside the axes).
      */
@@ -135,8 +135,14 @@ export const CartesianChart = memo(
       const calculatedInset = useMemo(() => getChartInset(inset, defaultChartInset), [inset]);
 
       // there can only be one x axis but the helper function always returns an array
-      const xAxisConfig = useMemo(() => getAxisConfig('x', xAxisConfigProp)[0], [xAxisConfigProp]);
-      const yAxisConfig = useMemo(() => getAxisConfig('y', yAxisConfigProp), [yAxisConfigProp]);
+      const xAxisConfig = useMemo(
+        () => getCartesianAxisConfig('x', xAxisConfigProp)[0],
+        [xAxisConfigProp],
+      );
+      const yAxisConfig = useMemo(
+        () => getCartesianAxisConfig('y', yAxisConfigProp),
+        [yAxisConfigProp],
+      );
 
       const { renderedAxes, registerAxis, unregisterAxis, axisPadding } = useTotalAxisPadding();
 
@@ -168,10 +174,10 @@ export const CartesianChart = memo(
         if (!chartRect || chartRect.width <= 0 || chartRect.height <= 0)
           return { xAxis: undefined, xScale: undefined };
 
-        const domain = getAxisDomain(xAxisConfig, series ?? [], 'x');
+        const domain = getCartesianAxisDomain(xAxisConfig, series ?? [], 'x');
         const range = getAxisRange(xAxisConfig, chartRect, 'x');
 
-        const axisConfig: AxisConfig = {
+        const axisConfig: CartesianAxisConfig = {
           scaleType: xAxisConfig.scaleType,
           domain,
           range,
@@ -181,7 +187,7 @@ export const CartesianChart = memo(
         };
 
         // Create the scale
-        const scale = getAxisScale({
+        const scale = getCartesianAxisScale({
           config: axisConfig,
           type: 'x',
           range: axisConfig.range,
@@ -211,7 +217,7 @@ export const CartesianChart = memo(
       }, [xScale]);
 
       const { yAxes, yScales } = useMemo(() => {
-        const axes = new Map<string, AxisConfig>();
+        const axes = new Map<string, CartesianAxisConfig>();
         const scales = new Map<string, ChartScaleFunction>();
         if (!chartRect || chartRect.width <= 0 || chartRect.height <= 0)
           return { yAxes: axes, yScales: scales };
@@ -224,20 +230,20 @@ export const CartesianChart = memo(
             series?.filter((s) => (s.yAxisId ?? defaultAxisId) === axisId) ?? [];
 
           // Calculate domain and range
-          const dataDomain = getAxisDomain(axisParam, relevantSeries, 'y');
+          const dataDomain = getCartesianAxisDomain(axisParam, relevantSeries, 'y');
           const range = getAxisRange(axisParam, chartRect, 'y');
 
-          const axisConfig: AxisConfig = {
+          const axisConfig: CartesianAxisConfig = {
             scaleType: axisParam.scaleType,
             domain: dataDomain,
             range,
             data: axisParam.data,
             categoryPadding: axisParam.categoryPadding,
-            domainLimit: axisParam.domainLimit ?? 'nice',
+            domainLimit: axisParam.domainLimit,
           };
 
           // Create the scale
-          const scale = getAxisScale({
+          const scale = getCartesianAxisScale({
             config: axisConfig,
             type: 'y',
             range: axisConfig.range,

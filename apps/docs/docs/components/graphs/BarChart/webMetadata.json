@@ -1,7 +1,7 @@
 {
   "import": "import { BarChart } from '@coinbase/cds-web-visualization'",
   "source": "https://github.com/coinbase/cds/blob/master/packages/web-visualization/src/chart/bar/BarChart.tsx",
-  "description": "A bar chart component for comparing values across categories. Supports horizontal and vertical orientations, stacked bars, and grouped series.",
+  "description": "A bar chart component built on CartesianChart for comparing values across categories. Supports horizontal and vertical orientations, stacked bars, and grouped series.",
   "relatedComponents": [
     {
       "label": "CartesianChart",

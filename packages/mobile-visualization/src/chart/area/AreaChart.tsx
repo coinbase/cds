@@ -9,16 +9,16 @@ import {
 } from '../CartesianChart';
 import { Line, type LineProps } from '../line/Line';
 import {
-  type AxisConfigProps,
+  type CartesianAxisConfigProps,
+  type CartesianSeries,
   defaultChartInset,
   defaultStackId,
   getChartInset,
-  type Series,
 } from '../utils';
 
 import { Area, type AreaProps } from './Area';
 
-export type AreaSeries = Series &
+export type AreaSeries = CartesianSeries &
   Partial<
     Pick<
       AreaProps,
@@ -77,13 +77,13 @@ export type AreaChartBaseProps = Omit<CartesianChartBaseProps, 'xAxis' | 'yAxis'
      * Accepts axis config and axis props.
      * To show the axis, set `showXAxis` to true.
      */
-    xAxis?: Partial<AxisConfigProps> & XAxisProps;
+    xAxis?: Partial<CartesianAxisConfigProps> & XAxisProps;
     /**
      * Configuration for y-axis.
      * Accepts axis config and axis props.
      * To show the axis, set `showYAxis` to true.
      */
-    yAxis?: Partial<AxisConfigProps> & YAxisProps;
+    yAxis?: Partial<CartesianAxisConfigProps> & YAxisProps;
   };
 
 export type AreaChartProps = AreaChartBaseProps &
@@ -117,10 +117,10 @@ export const AreaChart = memo(
     ) => {
       const calculatedInset = useMemo(() => getChartInset(inset, defaultChartInset), [inset]);
 
-      // Convert AreaSeries to Series for Chart context
+      // Convert AreaSeries to CartesianSeries for Chart context
       const chartSeries = useMemo(() => {
         return series?.map(
-          (s): Series => ({
+          (s): CartesianSeries => ({
             id: s.id,
             data: s.data,
             label: s.label,
@@ -160,7 +160,7 @@ export const AreaChart = memo(
         ...yAxisVisualProps
       } = yAxis || {};
 
-      const xAxisConfig: Partial<AxisConfigProps> = {
+      const xAxisConfig: Partial<CartesianAxisConfigProps> = {
         scaleType: xScaleType,
         data: xData,
         categoryPadding: xCategoryPadding,
@@ -181,7 +181,7 @@ export const AreaChart = memo(
       }, [series]);
 
       // Set default min domain to 0 for area chart, but only if there are no negative values
-      const yAxisConfig: Partial<AxisConfigProps> = {
+      const yAxisConfig: Partial<CartesianAxisConfigProps> = {
         scaleType: yScaleType,
         data: yData,
         categoryPadding: yCategoryPadding,

@@ -1,0 +1,29 @@
+{
+  "import": "import { DonutChart } from '@coinbase/cds-mobile-visualization'",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/mobile-visualization/src/chart/DonutChart.tsx",
+  "description": "A donut chart component built on PolarChart for visualizing proportional data with a hollow center.",
+  "relatedComponents": [
+    {
+      "label": "PolarChart",
+      "url": "/components/graphs/PolarChart/"
+    },
+    {
+      "label": "PieChart",
+      "url": "/components/graphs/PieChart/"
+    }
+  ],
+  "dependencies": [
+    {
+      "name": "@shopify/react-native-skia",
+      "version": "^1.12.4 || ^2.0.0"
+    },
+    {
+      "name": "react-native-gesture-handler",
+      "version": "^2.16.2"
+    },
+    {
+      "name": "react-native-reanimated",
+      "version": "^3.14.0"
+    }
+  ]
+}

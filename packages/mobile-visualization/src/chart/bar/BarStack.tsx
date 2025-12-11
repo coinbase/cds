@@ -3,7 +3,7 @@ import type { Rect } from '@coinbase/cds-common';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 
 import { useCartesianChartContext } from '../ChartProvider';
-import type { ChartScaleFunction, Series, Transition } from '../utils';
+import type { CartesianSeries, ChartScaleFunction, Transition } from '../utils';
 import { evaluateGradientAtValue, getGradientStops } from '../utils/gradient';
 import { convertToSerializableScale } from '../utils/scale';
 
@@ -19,7 +19,7 @@ export type BarStackBaseProps = Pick<
   /**
    * Array of series configurations that belong to this stack.
    */
-  series: Series[];
+  series: CartesianSeries[];
   /**
    * The category index for this stack.
    */

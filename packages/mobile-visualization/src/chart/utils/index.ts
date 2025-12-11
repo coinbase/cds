@@ -6,6 +6,7 @@ export * from './context';
 export * from './gradient';
 export * from './path';
 export * from './point';
+export * from './polar';
 export * from './scale';
 export * from './scrubber';
 export * from './transition';

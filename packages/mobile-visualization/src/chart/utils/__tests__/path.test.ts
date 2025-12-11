@@ -1,9 +1,12 @@
 import {
   type ChartPathCurveType,
+  getArcPath,
   getAreaPath,
   getBarPath,
+  getDottedAreaPath,
   getLinePath,
   getPathCurveFunction,
+  lineToPath,
 } from '../path';
 import { getCategoricalScale, getNumericScale } from '../scale';
 
@@ -373,5 +376,241 @@ describe('getBarPath', () => {
     expect(topRounding).not.toBe(bottomRounding);
     expect(bottomRounding).not.toBe(bothRounding);
     expect(noRounding).not.toBe(bothRounding);
+  });
+});
+
+describe('lineToPath', () => {
+  it('should generate a simple line path', () => {
+    const result = lineToPath(0, 0, 100, 100);
+    expect(result).toBe('M 0 0 L 100 100');
+  });
+
+  it('should handle negative coordinates', () => {
+    const result = lineToPath(-50, -25, 50, 25);
+    expect(result).toBe('M -50 -25 L 50 25');
+  });
+
+  it('should handle fractional coordinates', () => {
+    const result = lineToPath(10.5, 20.25, 30.75, 40.125);
+    expect(result).toBe('M 10.5 20.25 L 30.75 40.125');
+  });
+
+  it('should handle horizontal lines', () => {
+    const result = lineToPath(0, 50, 100, 50);
+    expect(result).toBe('M 0 50 L 100 50');
+  });
+
+  it('should handle vertical lines', () => {
+    const result = lineToPath(50, 0, 50, 100);
+    expect(result).toBe('M 50 0 L 50 100');
+  });
+
+  it('should handle zero-length lines (same start and end)', () => {
+    const result = lineToPath(25, 25, 25, 25);
+    expect(result).toBe('M 25 25 L 25 25');
+  });
+});
+
+describe('getDottedAreaPath', () => {
+  it('should generate dotted pattern within bounds', () => {
+    const result = getDottedAreaPath({ x: 0, y: 0, width: 100, height: 50 }, 10, 2);
+
+    expect(result).toBeTruthy();
+    // Should contain multiple circles (arc commands)
+    expect(result).toContain('a');
+    expect(result).toContain('M');
+  });
+
+  it('should return empty string for zero width', () => {
+    const result = getDottedAreaPath({ x: 0, y: 0, width: 0, height: 50 }, 10, 2);
+    expect(result).toBe('');
+  });
+
+  it('should return empty string for zero height', () => {
+    const result = getDottedAreaPath({ x: 0, y: 0, width: 100, height: 0 }, 10, 2);
+    expect(result).toBe('');
+  });
+
+  it('should return empty string for zero pattern size', () => {
+    const result = getDottedAreaPath({ x: 0, y: 0, width: 100, height: 50 }, 0, 2);
+    expect(result).toBe('');
+  });
+
+  it('should return empty string for zero dot size', () => {
+    const result = getDottedAreaPath({ x: 0, y: 0, width: 100, height: 50 }, 10, 0);
+    expect(result).toBe('');
+  });
+
+  it('should return empty string for negative dimensions', () => {
+    const result = getDottedAreaPath({ x: 0, y: 0, width: -100, height: 50 }, 10, 2);
+    expect(result).toBe('');
+  });
+
+  it('should handle offset bounds', () => {
+    const result = getDottedAreaPath({ x: 50, y: 25, width: 100, height: 50 }, 10, 2);
+
+    expect(result).toBeTruthy();
+    // Should have paths starting at offset positions
+    expect(result).toContain('M');
+  });
+
+  it('should scale with pattern size', () => {
+    const smallPattern = getDottedAreaPath({ x: 0, y: 0, width: 100, height: 100 }, 10, 2);
+    const largePattern = getDottedAreaPath({ x: 0, y: 0, width: 100, height: 100 }, 50, 2);
+
+    // Smaller pattern size should create more dots (longer path)
+    expect(smallPattern.length).toBeGreaterThan(largePattern.length);
+  });
+});
+
+describe('getArcPath', () => {
+  it('should generate arc path for pie slice', () => {
+    const result = getArcPath({
+      startAngle: 0,
+      endAngle: Math.PI / 2,
+      innerRadius: 0,
+      outerRadius: 100,
+    });
+
+    expect(result).toBeTruthy();
+    expect(result.startsWith('M')).toBe(true);
+    // Arc should contain arc commands
+    expect(result).toContain('A');
+  });
+
+  it('should generate arc path for donut slice', () => {
+    const result = getArcPath({
+      startAngle: 0,
+      endAngle: Math.PI / 2,
+      innerRadius: 50,
+      outerRadius: 100,
+    });
+
+    expect(result).toBeTruthy();
+    expect(result.startsWith('M')).toBe(true);
+    // Should have different path than pie (has inner radius)
+    expect(result).toContain('A');
+  });
+
+  it('should return empty string for zero outer radius', () => {
+    const result = getArcPath({
+      startAngle: 0,
+      endAngle: Math.PI,
+      innerRadius: 0,
+      outerRadius: 0,
+    });
+
+    expect(result).toBe('');
+  });
+
+  it('should return empty string for negative outer radius', () => {
+    const result = getArcPath({
+      startAngle: 0,
+      endAngle: Math.PI,
+      innerRadius: 0,
+      outerRadius: -100,
+    });
+
+    expect(result).toBe('');
+  });
+
+  it('should handle full circle (2π)', () => {
+    const result = getArcPath({
+      startAngle: 0,
+      endAngle: Math.PI * 2,
+      innerRadius: 0,
+      outerRadius: 100,
+    });
+
+    expect(result).toBeTruthy();
+    expect(result.startsWith('M')).toBe(true);
+  });
+
+  it('should handle corner radius', () => {
+    const withoutCorners = getArcPath({
+      startAngle: 0,
+      endAngle: Math.PI / 2,
+      innerRadius: 50,
+      outerRadius: 100,
+      cornerRadius: 0,
+    });
+
+    const withCorners = getArcPath({
+      startAngle: 0,
+      endAngle: Math.PI / 2,
+      innerRadius: 50,
+      outerRadius: 100,
+      cornerRadius: 8,
+    });
+
+    expect(withoutCorners).toBeTruthy();
+    expect(withCorners).toBeTruthy();
+    // Paths should be different
+    expect(withCorners).not.toBe(withoutCorners);
+  });
+
+  it('should handle pad angle', () => {
+    const withoutPadding = getArcPath({
+      startAngle: 0,
+      endAngle: Math.PI / 2,
+      innerRadius: 50,
+      outerRadius: 100,
+      paddingAngle: 0,
+    });
+
+    const withPadding = getArcPath({
+      startAngle: 0,
+      endAngle: Math.PI / 2,
+      innerRadius: 50,
+      outerRadius: 100,
+      paddingAngle: 0.05,
+    });
+
+    expect(withoutPadding).toBeTruthy();
+    expect(withPadding).toBeTruthy();
+    // Paths should be different when padding is applied
+    expect(withPadding).not.toBe(withoutPadding);
+  });
+
+  it('should handle collapsed arc (same start and end angle)', () => {
+    const result = getArcPath({
+      startAngle: Math.PI / 4,
+      endAngle: Math.PI / 4, // Same as start
+      innerRadius: 0,
+      outerRadius: 100,
+    });
+
+    // Should return empty string for collapsed arc (no area to draw)
+    expect(result).toBe('');
+  });
+
+  it('should handle negative inner radius (clamps to 0)', () => {
+    const result = getArcPath({
+      startAngle: 0,
+      endAngle: Math.PI,
+      innerRadius: -50,
+      outerRadius: 100,
+    });
+
+    expect(result).toBeTruthy();
+    expect(result.startsWith('M')).toBe(true);
+  });
+
+  it('should generate different paths for different angles', () => {
+    const quarterCircle = getArcPath({
+      startAngle: 0,
+      endAngle: Math.PI / 2,
+      innerRadius: 0,
+      outerRadius: 100,
+    });
+
+    const halfCircle = getArcPath({
+      startAngle: 0,
+      endAngle: Math.PI,
+      innerRadius: 0,
+      outerRadius: 100,
+    });
+
+    expect(quarterCircle).not.toBe(halfCircle);
   });
 });

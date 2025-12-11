@@ -44,6 +44,11 @@ export const routes = [
       require('@coinbase/cds-mobile/alpha/select/__stories__/AlphaSelect.stories').default,
   },
   {
+    key: 'AlphaSelectChip',
+    getComponent: () =>
+      require('@coinbase/cds-mobile/alpha/select-chip/__stories__/AlphaSelectChip.stories').default,
+  },
+  {
     key: 'AlphaTabbedChips',
     getComponent: () =>
       require('@coinbase/cds-mobile/alpha/tabbed-chips/__stories__/AlphaTabbedChips.stories')
@@ -465,6 +470,11 @@ export const routes = [
     key: 'Pictogram',
     getComponent: () =>
       require('@coinbase/cds-mobile/illustrations/__stories__/Pictogram.stories').default,
+  },
+  {
+    key: 'PolarChart',
+    getComponent: () =>
+      require('@coinbase/cds-mobile-visualization/chart/__stories__/PolarChart.stories').default,
   },
   {
     key: 'Pressable',

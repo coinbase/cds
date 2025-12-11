@@ -12,7 +12,7 @@ import {
 
 import type { Transition } from './utils/transition';
 import { usePathTransition } from './utils/transition';
-import { useCartesianChartContext } from './ChartProvider';
+import { useChartContext } from './ChartProvider';
 import { unwrapAnimatedValue } from './utils';
 
 /**
@@ -191,7 +191,7 @@ export const Path = memo<PathProps>((props) => {
     ...pathProps
   } = props;
 
-  const context = useCartesianChartContext();
+  const context = useChartContext();
   const rect = clipRect ?? context.drawingArea;
   const animate = animateProp ?? context.animate;
 

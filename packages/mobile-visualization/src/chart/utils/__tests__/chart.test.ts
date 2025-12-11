@@ -1,93 +1,96 @@
 import {
   type AxisBounds,
+  type CartesianSeries,
   type ChartInset,
   defaultChartInset,
   defaultStackId,
-  getChartDomain,
+  getCartesianDomain,
+  getCartesianRange,
+  getCartesianStackedSeriesData,
   getChartInset,
-  getChartRange,
-  getStackedSeriesData,
+  getPolarAngularDomain,
+  getPolarRadialRange,
   isValidBounds,
-  type Series,
+  type PolarSeries,
 } from '../chart';
 
-describe('getChartDomain', () => {
+describe('getCartesianDomain', () => {
   it('should return provided min and max when both are specified', () => {
-    const series: Series[] = [
+    const series: CartesianSeries[] = [
       { id: 'series1', data: [1, 2, 3, 4, 5] },
       { id: 'series2', data: [10, 20, 30] },
     ];
 
-    const result = getChartDomain(series, 5, 15);
+    const result = getCartesianDomain(series, 5, 15);
     expect(result).toEqual({ min: 5, max: 15 });
   });
 
   it('should calculate domain from series data when min/max not provided', () => {
-    const series: Series[] = [
+    const series: CartesianSeries[] = [
       { id: 'series1', data: [1, 2, 3, 4, 5] }, // length 5, so max index = 4
       { id: 'series2', data: [10, 20, 30] }, // length 3, so max index = 2
     ];
 
-    const result = getChartDomain(series);
+    const result = getCartesianDomain(series);
     expect(result).toEqual({ min: 0, max: 4 }); // Uses longest series (5 items, indices 0-4)
   });
 
   it('should use provided min with calculated max', () => {
-    const series: Series[] = [{ id: 'series1', data: [1, 2, 3] }];
+    const series: CartesianSeries[] = [{ id: 'series1', data: [1, 2, 3] }];
 
-    const result = getChartDomain(series, 10);
+    const result = getCartesianDomain(series, 10);
     expect(result).toEqual({ min: 10, max: 2 });
   });
 
   it('should use calculated min with provided max', () => {
-    const series: Series[] = [{ id: 'series1', data: [1, 2, 3, 4] }];
+    const series: CartesianSeries[] = [{ id: 'series1', data: [1, 2, 3, 4] }];
 
-    const result = getChartDomain(series, undefined, 10);
+    const result = getCartesianDomain(series, undefined, 10);
     expect(result).toEqual({ min: 0, max: 10 });
   });
 
   it('should handle empty series array', () => {
-    const result = getChartDomain([]);
+    const result = getCartesianDomain([]);
     expect(result).toEqual({ min: undefined, max: undefined });
   });
 
   it('should handle series with no data', () => {
-    const series: Series[] = [{ id: 'series1' }, { id: 'series2', data: undefined }];
+    const series: CartesianSeries[] = [{ id: 'series1' }, { id: 'series2', data: undefined }];
 
-    const result = getChartDomain(series);
+    const result = getCartesianDomain(series);
     expect(result).toEqual({ min: undefined, max: undefined });
   });
 
   it('should handle series with empty data arrays', () => {
-    const series: Series[] = [
+    const series: CartesianSeries[] = [
       { id: 'series1', data: [] },
       { id: 'series2', data: [] },
     ];
 
-    const result = getChartDomain(series);
+    const result = getCartesianDomain(series);
     expect(result).toEqual({ min: undefined, max: undefined });
   });
 
   it('should handle mixed series with and without data', () => {
-    const series: Series[] = [
+    const series: CartesianSeries[] = [
       { id: 'series1' },
       { id: 'series2', data: [1, 2, 3, 4, 5, 6] },
       { id: 'series3', data: [] },
     ];
 
-    const result = getChartDomain(series);
+    const result = getCartesianDomain(series);
     expect(result).toEqual({ min: 0, max: 5 });
   });
 });
 
-describe('getStackedSeriesData', () => {
+describe('getCartesianStackedSeriesData', () => {
   it('should handle individual series without stacking', () => {
-    const series: Series[] = [
+    const series: CartesianSeries[] = [
       { id: 'series1', data: [1, 2, 3] },
       { id: 'series2', data: [4, 5, 6] },
     ];
 
-    const result = getStackedSeriesData(series);
+    const result = getCartesianStackedSeriesData(series);
 
     expect(result.size).toBe(2);
     expect(result.get('series1')).toEqual([
@@ -103,7 +106,7 @@ describe('getStackedSeriesData', () => {
   });
 
   it('should handle series with tuple data', () => {
-    const series: Series[] = [
+    const series: CartesianSeries[] = [
       {
         id: 'series1',
         data: [
@@ -114,7 +117,7 @@ describe('getStackedSeriesData', () => {
       },
     ];
 
-    const result = getStackedSeriesData(series);
+    const result = getCartesianStackedSeriesData(series);
 
     expect(result.size).toBe(1);
     expect(result.get('series1')).toEqual([
@@ -125,12 +128,12 @@ describe('getStackedSeriesData', () => {
   });
 
   it('should stack series with same stackId', () => {
-    const series: Series[] = [
+    const series: CartesianSeries[] = [
       { id: 'series1', data: [1, 2, 3], stackId: 'stack1' },
       { id: 'series2', data: [4, 5, 6], stackId: 'stack1' },
     ];
 
-    const result = getStackedSeriesData(series);
+    const result = getCartesianStackedSeriesData(series);
 
     expect(result.size).toBe(2);
     // D3 stack will create cumulative values
@@ -144,12 +147,12 @@ describe('getStackedSeriesData', () => {
   });
 
   it('should not stack series with different yAxisId', () => {
-    const series: Series[] = [
+    const series: CartesianSeries[] = [
       { id: 'series1', data: [1, 2, 3], stackId: 'stack1', yAxisId: 'left' },
       { id: 'series2', data: [4, 5, 6], stackId: 'stack1', yAxisId: 'right' },
     ];
 
-    const result = getStackedSeriesData(series);
+    const result = getCartesianStackedSeriesData(series);
 
     expect(result.size).toBe(2);
     // Should be treated as individual series since they have different y-axes
@@ -166,33 +169,33 @@ describe('getStackedSeriesData', () => {
   });
 
   it('should handle null values in data', () => {
-    const series: Series[] = [{ id: 'series1', data: [1, null, 3] }];
+    const series: CartesianSeries[] = [{ id: 'series1', data: [1, null, 3] }];
 
-    const result = getStackedSeriesData(series);
+    const result = getCartesianStackedSeriesData(series);
 
     expect(result.get('series1')).toEqual([[0, 1], null, [0, 3]]);
   });
 
   it('should handle empty series array', () => {
-    const result = getStackedSeriesData([]);
+    const result = getCartesianStackedSeriesData([]);
     expect(result.size).toBe(0);
   });
 
   it('should handle series without data', () => {
-    const series: Series[] = [{ id: 'series1' }, { id: 'series2', data: undefined }];
+    const series: CartesianSeries[] = [{ id: 'series1' }, { id: 'series2', data: undefined }];
 
-    const result = getStackedSeriesData(series);
+    const result = getCartesianStackedSeriesData(series);
     expect(result.size).toBe(0);
   });
 
   it('should handle mixed stacked and individual series', () => {
-    const series: Series[] = [
+    const series: CartesianSeries[] = [
       { id: 'series1', data: [1, 2, 3], stackId: 'stack1' },
       { id: 'series2', data: [4, 5, 6], stackId: 'stack1' },
       { id: 'series3', data: [7, 8, 9] }, // No stackId
     ];
 
-    const result = getStackedSeriesData(series);
+    const result = getCartesianStackedSeriesData(series);
 
     expect(result.size).toBe(3);
     expect(result.get('series3')).toEqual([
@@ -203,26 +206,26 @@ describe('getStackedSeriesData', () => {
   });
 });
 
-describe('getChartRange', () => {
+describe('getCartesianRange', () => {
   it('should return provided min and max when both are specified', () => {
-    const series: Series[] = [{ id: 'series1', data: [1, 2, 3] }];
+    const series: CartesianSeries[] = [{ id: 'series1', data: [1, 2, 3] }];
 
-    const result = getChartRange(series, -10, 20);
+    const result = getCartesianRange(series, -10, 20);
     expect(result).toEqual({ min: -10, max: 20 });
   });
 
   it('should calculate range from simple numeric data', () => {
-    const series: Series[] = [
+    const series: CartesianSeries[] = [
       { id: 'series1', data: [1, 5, 3] },
       { id: 'series2', data: [2, 4, 6] },
     ];
 
-    const result = getChartRange(series);
+    const result = getCartesianRange(series);
     expect(result).toEqual({ min: 1, max: 6 });
   });
 
   it('should calculate range from tuple data', () => {
-    const series: Series[] = [
+    const series: CartesianSeries[] = [
       {
         id: 'series1',
         data: [
@@ -240,17 +243,17 @@ describe('getChartRange', () => {
       },
     ];
 
-    const result = getChartRange(series);
+    const result = getCartesianRange(series);
     expect(result).toEqual({ min: -1, max: 7 });
   });
 
   it('should calculate range from stacked data', () => {
-    const series: Series[] = [
+    const series: CartesianSeries[] = [
       { id: 'series1', data: [1, 2, 3], stackId: 'stack1' },
       { id: 'series2', data: [4, 5, 6], stackId: 'stack1' },
     ];
 
-    const result = getChartRange(series);
+    const result = getCartesianRange(series);
 
     // Stacked values should be cumulative
     expect(result.min).toBeDefined();
@@ -260,19 +263,19 @@ describe('getChartRange', () => {
   });
 
   it('should handle negative values', () => {
-    const series: Series[] = [{ id: 'series1', data: [-5, -2, 1, 3] }];
+    const series: CartesianSeries[] = [{ id: 'series1', data: [-5, -2, 1, 3] }];
 
-    const result = getChartRange(series);
+    const result = getCartesianRange(series);
     expect(result).toEqual({ min: -5, max: 3 });
   });
 
   it('should handle mixed positive and negative stacked values', () => {
-    const series: Series[] = [
+    const series: CartesianSeries[] = [
       { id: 'series1', data: [2, -1, 3], stackId: 'stack1' },
       { id: 'series2', data: [-3, 4, -2], stackId: 'stack1' },
     ];
 
-    const result = getChartRange(series);
+    const result = getCartesianRange(series);
 
     expect(result.min).toBeDefined();
     expect(result.max).toBeDefined();
@@ -281,48 +284,175 @@ describe('getChartRange', () => {
   });
 
   it('should handle empty series array', () => {
-    const result = getChartRange([]);
+    const result = getCartesianRange([]);
     expect(result).toEqual({ min: undefined, max: undefined });
   });
 
   it('should handle series with no data', () => {
-    const series: Series[] = [{ id: 'series1' }, { id: 'series2', data: undefined }];
+    const series: CartesianSeries[] = [{ id: 'series1' }, { id: 'series2', data: undefined }];
 
-    const result = getChartRange(series);
+    const result = getCartesianRange(series);
     expect(result).toEqual({ min: undefined, max: undefined });
   });
 
   it('should handle null values in data', () => {
-    const series: Series[] = [{ id: 'series1', data: [1, null, 5, null, 3] }];
+    const series: CartesianSeries[] = [{ id: 'series1', data: [1, null, 5, null, 3] }];
 
-    const result = getChartRange(series);
+    const result = getCartesianRange(series);
     expect(result).toEqual({ min: 1, max: 5 });
   });
 
   it('should use provided min with calculated max', () => {
-    const series: Series[] = [{ id: 'series1', data: [1, 2, 3] }];
+    const series: CartesianSeries[] = [{ id: 'series1', data: [1, 2, 3] }];
 
-    const result = getChartRange(series, -5);
+    const result = getCartesianRange(series, -5);
     expect(result).toEqual({ min: -5, max: 3 });
   });
 
   it('should use calculated min with provided max', () => {
-    const series: Series[] = [{ id: 'series1', data: [1, 2, 3] }];
+    const series: CartesianSeries[] = [{ id: 'series1', data: [1, 2, 3] }];
 
-    const result = getChartRange(series, undefined, 10);
+    const result = getCartesianRange(series, undefined, 10);
     expect(result).toEqual({ min: 1, max: 10 });
   });
 
   it('should handle series with different yAxisId in stacking', () => {
-    const series: Series[] = [
+    const series: CartesianSeries[] = [
       { id: 'series1', data: [1, 2, 3], stackId: 'stack1', yAxisId: 'left' },
       { id: 'series2', data: [4, 5, 6], stackId: 'stack1', yAxisId: 'right' },
     ];
 
-    const result = getChartRange(series);
+    const result = getCartesianRange(series);
 
     // Should treat as individual series, not stacked
     expect(result).toEqual({ min: 0, max: 6 });
+  });
+});
+
+describe('getPolarAngularDomain', () => {
+  it('should return provided min and max when both are specified', () => {
+    const series: PolarSeries[] = [
+      { id: 'series1', data: 10 },
+      { id: 'series2', data: 20 },
+    ];
+
+    const result = getPolarAngularDomain(series, 0, 100);
+    expect(result).toEqual({ min: 0, max: 100 });
+  });
+
+  it('should calculate domain for pie/donut charts (single number data)', () => {
+    const series: PolarSeries[] = [
+      { id: 'series1', data: 10 },
+      { id: 'series2', data: 20 },
+      { id: 'series3', data: 30 },
+    ];
+
+    const result = getPolarAngularDomain(series);
+    expect(result).toEqual({ min: 0, max: 2 }); // 3 slices, indices 0-2
+  });
+
+  it('should calculate domain for radar charts (array data)', () => {
+    const series: PolarSeries[] = [
+      { id: 'series1', data: [1, 2, 3, 4, 5] },
+      { id: 'series2', data: [5, 4, 3] },
+    ];
+
+    const result = getPolarAngularDomain(series);
+    expect(result).toEqual({ min: 0, max: 4 }); // Longest array has 5 items
+  });
+
+  it('should handle empty series array', () => {
+    const result = getPolarAngularDomain([]);
+    expect(result).toEqual({ min: undefined, max: undefined });
+  });
+
+  it('should use provided min with calculated max', () => {
+    const series: PolarSeries[] = [
+      { id: 'series1', data: 10 },
+      { id: 'series2', data: 20 },
+    ];
+
+    const result = getPolarAngularDomain(series, 5);
+    expect(result).toEqual({ min: 5, max: 1 });
+  });
+
+  it('should use calculated min with provided max', () => {
+    const series: PolarSeries[] = [
+      { id: 'series1', data: 10 },
+      { id: 'series2', data: 20 },
+    ];
+
+    const result = getPolarAngularDomain(series, undefined, 10);
+    expect(result).toEqual({ min: 0, max: 10 });
+  });
+});
+
+describe('getPolarRadialRange', () => {
+  it('should return provided min and max when both are specified', () => {
+    const series: PolarSeries[] = [
+      { id: 'series1', data: 10 },
+      { id: 'series2', data: 20 },
+    ];
+
+    const result = getPolarRadialRange(series, -5, 100);
+    expect(result).toEqual({ min: -5, max: 100 });
+  });
+
+  it('should calculate range for pie/donut charts (single number data)', () => {
+    const series: PolarSeries[] = [
+      { id: 'series1', data: 10 },
+      { id: 'series2', data: 20 },
+      { id: 'series3', data: 5 },
+    ];
+
+    const result = getPolarRadialRange(series);
+    expect(result).toEqual({ min: 0, max: 20 });
+  });
+
+  it('should calculate range for radar charts (array data)', () => {
+    const series: PolarSeries[] = [
+      { id: 'series1', data: [1, 5, 3] },
+      { id: 'series2', data: [2, 8, 4] },
+    ];
+
+    const result = getPolarRadialRange(series);
+    expect(result).toEqual({ min: 0, max: 8 });
+  });
+
+  it('should handle negative values', () => {
+    const series: PolarSeries[] = [
+      { id: 'series1', data: [-5, 10, 3] },
+      { id: 'series2', data: [2, -2, 4] },
+    ];
+
+    const result = getPolarRadialRange(series);
+    expect(result).toEqual({ min: -5, max: 10 });
+  });
+
+  it('should handle null values in array data', () => {
+    const series: PolarSeries[] = [{ id: 'series1', data: [1, null, 5, null, 3] }];
+
+    const result = getPolarRadialRange(series);
+    expect(result).toEqual({ min: 0, max: 5 });
+  });
+
+  it('should handle empty series array', () => {
+    const result = getPolarRadialRange([]);
+    expect(result).toEqual({ min: undefined, max: undefined });
+  });
+
+  it('should use provided min with calculated max', () => {
+    const series: PolarSeries[] = [{ id: 'series1', data: [1, 2, 3] }];
+
+    const result = getPolarRadialRange(series, -10);
+    expect(result).toEqual({ min: -10, max: 3 });
+  });
+
+  it('should use calculated min with provided max', () => {
+    const series: PolarSeries[] = [{ id: 'series1', data: [1, 2, 3] }];
+
+    const result = getPolarRadialRange(series, undefined, 100);
+    expect(result).toEqual({ min: 0, max: 100 });
   });
 });
 

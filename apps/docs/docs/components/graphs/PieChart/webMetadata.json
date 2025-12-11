@@ -1,0 +1,21 @@
+{
+  "import": "import { PieChart } from '@coinbase/cds-web-visualization'",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/web-visualization/src/chart/pie/PieChart.tsx",
+  "description": "A pie chart component built on PolarChart for visualizing proportional data.",
+  "relatedComponents": [
+    {
+      "label": "PolarChart",
+      "url": "/components/graphs/PolarChart/"
+    },
+    {
+      "label": "DonutChart",
+      "url": "/components/graphs/DonutChart/"
+    }
+  ],
+  "dependencies": [
+    {
+      "name": "framer-motion",
+      "version": "^10.18.0"
+    }
+  ]
+}

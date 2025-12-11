@@ -1,0 +1,425 @@
+DonutChart is built on [PolarChart](/components/graphs/PolarChart) for visualizing proportional data with a hollow center. Charts are built using `@shopify/react-native-skia`.
+
+## Setup
+
+Before using DonutChart, you need to wrap your app with `ChartBridgeProvider`. This enables charts to access CDS theming and other React contexts within the Skia renderer. See [CartesianChart](/components/graphs/CartesianChart/#setup) for details.
+
+## Basics
+
+The only prop required is `series`, which takes an array of series objects. Each series object needs an `id` and a `data` number representing the slice value.
+
+```jsx
+function BasicDonutChart() {
+  const theme = useTheme();
+
+  return (
+    <DonutChart
+      height={200}
+      width={200}
+      series={[
+        { id: 'btc', data: 40, label: 'Bitcoin', color: `rgb(${theme.spectrum.orange40})` },
+        { id: 'eth', data: 30, label: 'Ethereum', color: `rgb(${theme.spectrum.blue40})` },
+        { id: 'sol', data: 20, label: 'Solana', color: `rgb(${theme.spectrum.purple40})` },
+        { id: 'other', data: 10, label: 'Other', color: `rgb(${theme.spectrum.gray40})` },
+      ]}
+    />
+  );
+}
+```
+
+### Inner Radius
+
+You can control the size of the center hole using `innerRadiusRatio` (0-1). The default is `0.5`.
+
+```jsx
+function InnerRadiusExamples() {
+  const theme = useTheme();
+
+  return (
+    <HStack gap={4} justifyContent="center">
+      <VStack alignItems="center" gap={2}>
+        <DonutChart
+          height={100}
+          width={100}
+          innerRadiusRatio={0.3}
+          series={[
+            { id: 'a', data: 60, color: `rgb(${theme.spectrum.blue40})` },
+            { id: 'b', data: 40, color: `rgb(${theme.spectrum.green40})` },
+          ]}
+        />
+        <Text font="label2" color="fgMuted">
+          0.3
+        </Text>
+      </VStack>
+      <VStack alignItems="center" gap={2}>
+        <DonutChart
+          height={100}
+          width={100}
+          innerRadiusRatio={0.5}
+          series={[
+            { id: 'a', data: 60, color: `rgb(${theme.spectrum.blue40})` },
+            { id: 'b', data: 40, color: `rgb(${theme.spectrum.green40})` },
+          ]}
+        />
+        <Text font="label2" color="fgMuted">
+          0.5
+        </Text>
+      </VStack>
+      <VStack alignItems="center" gap={2}>
+        <DonutChart
+          height={100}
+          width={100}
+          innerRadiusRatio={0.75}
+          series={[
+            { id: 'a', data: 60, color: `rgb(${theme.spectrum.blue40})` },
+            { id: 'b', data: 40, color: `rgb(${theme.spectrum.green40})` },
+          ]}
+        />
+        <Text font="label2" color="fgMuted">
+          0.75
+        </Text>
+      </VStack>
+    </HStack>
+  );
+}
+```
+
+## Styling
+
+### Corner Radius
+
+Use `cornerRadius` to round the corners of each slice.
+
+```jsx
+function CornerRadiusExample() {
+  const theme = useTheme();
+
+  return (
+    <HStack gap={4} justifyContent="center">
+      <DonutChart
+        height={150}
+        width={150}
+        cornerRadius={0}
+        series={[
+          { id: 'a', data: 30, color: `rgb(${theme.spectrum.blue40})` },
+          { id: 'b', data: 40, color: `rgb(${theme.spectrum.green40})` },
+          { id: 'c', data: 30, color: `rgb(${theme.spectrum.purple40})` },
+        ]}
+      />
+      <DonutChart
+        height={150}
+        width={150}
+        cornerRadius={8}
+        series={[
+          { id: 'a', data: 30, color: `rgb(${theme.spectrum.blue40})` },
+          { id: 'b', data: 40, color: `rgb(${theme.spectrum.green40})` },
+          { id: 'c', data: 30, color: `rgb(${theme.spectrum.purple40})` },
+        ]}
+      />
+    </HStack>
+  );
+}
+```
+
+### Stroke
+
+Use `stroke` and `strokeWidth` to add borders between slices.
+
+```jsx
+function StrokeExample() {
+  const theme = useTheme();
+
+  return (
+    <DonutChart
+      height={200}
+      width={200}
+      stroke={theme.color.bg}
+      strokeWidth={3}
+      cornerRadius={4}
+      series={[
+        { id: 'a', data: 25, color: `rgb(${theme.spectrum.blue40})` },
+        { id: 'b', data: 25, color: `rgb(${theme.spectrum.green40})` },
+        { id: 'c', data: 25, color: `rgb(${theme.spectrum.purple40})` },
+        { id: 'd', data: 25, color: `rgb(${theme.spectrum.orange40})` },
+      ]}
+    />
+  );
+}
+```
+
+### Padding Between Slices
+
+Use `angularAxis` with `paddingAngle` to add gaps between slices.
+
+```jsx
+function PaddingExample() {
+  const theme = useTheme();
+
+  return (
+    <DonutChart
+      height={200}
+      width={200}
+      angularAxis={{ paddingAngle: 4 }}
+      cornerRadius={100}
+      innerRadiusRatio={0.7}
+      series={[
+        { id: 'card', data: 15, label: 'Card', color: `rgb(${theme.spectrum.blue40})` },
+        { id: 'cash', data: 45, label: 'Cash', color: `rgb(${theme.spectrum.green40})` },
+        { id: 'stake', data: 20, label: 'Stake', color: `rgb(${theme.spectrum.orange40})` },
+        { id: 'lend', data: 20, label: 'Lend', color: `rgb(${theme.spectrum.teal40})` },
+      ]}
+    />
+  );
+}
+```
+
+## Center Label
+
+You can add a label in the center of the donut by using [PolarChart](/components/graphs/PolarChart) with custom `ChartText` children.
+
+```jsx
+function DonutWithCenterLabel() {
+  const theme = useTheme();
+
+  const DonutCenterLabel = memo(({ children, ...props }) => {
+    const { drawingArea } = usePolarChartContext();
+
+    if (drawingArea.width <= 0 || drawingArea.height <= 0) return null;
+
+    const centerX = drawingArea.x + drawingArea.width / 2;
+    const centerY = drawingArea.y + drawingArea.height / 2;
+
+    return (
+      <ChartText {...props} x={centerX} y={centerY}>
+        {children}
+      </ChartText>
+    );
+  });
+
+  return (
+    <PolarChart
+      animate
+      height={200}
+      width={200}
+      radialAxis={{ range: ({ max }) => ({ min: max * 0.7, max }) }}
+      series={[
+        { id: 'teal', data: 10, color: `rgb(${theme.spectrum.teal40})` },
+        { id: 'blue', data: 25, color: `rgb(${theme.spectrum.blue40})` },
+        { id: 'purple', data: 20, color: `rgb(${theme.spectrum.purple40})` },
+        { id: 'pink', data: 15, color: `rgb(${theme.spectrum.pink40})` },
+        { id: 'orange', data: 30, color: `rgb(${theme.spectrum.orange40})` },
+      ]}
+    >
+      <PiePlot stroke={theme.color.bg} strokeWidth={2} />
+      <DonutCenterLabel color={theme.color.fgMuted} font="label2" verticalAlignment="bottom">
+        Portfolio
+      </DonutCenterLabel>
+      <DonutCenterLabel color={theme.color.fg} font="headline" verticalAlignment="top">
+        $9,999.99
+      </DonutCenterLabel>
+    </PolarChart>
+  );
+}
+```
+
+## Animations
+
+DonutChart animates by default when data changes. You can disable animations by setting `animate` to `false`.
+
+```jsx
+function AnimatedDonutChart() {
+  const theme = useTheme();
+  const [dataSet, setDataSet] = useState(0);
+
+  const dataSets = useMemo(
+    () => [
+      [
+        { id: 'a', data: 30, label: 'A', color: `rgb(${theme.spectrum.blue40})` },
+        { id: 'b', data: 40, label: 'B', color: `rgb(${theme.spectrum.green40})` },
+        { id: 'c', data: 30, label: 'C', color: `rgb(${theme.spectrum.orange40})` },
+      ],
+      [
+        { id: 'a', data: 60, label: 'A', color: `rgb(${theme.spectrum.blue40})` },
+        { id: 'b', data: 20, label: 'B', color: `rgb(${theme.spectrum.green40})` },
+        { id: 'c', data: 20, label: 'C', color: `rgb(${theme.spectrum.orange40})` },
+      ],
+      [
+        { id: 'a', data: 15, label: 'A', color: `rgb(${theme.spectrum.blue40})` },
+        { id: 'b', data: 55, label: 'B', color: `rgb(${theme.spectrum.green40})` },
+        { id: 'c', data: 30, label: 'C', color: `rgb(${theme.spectrum.orange40})` },
+      ],
+    ],
+    [theme],
+  );
+
+  return (
+    <VStack alignItems="center" gap={4}>
+      <DonutChart
+        animate
+        height={200}
+        width={200}
+        innerRadiusRatio={0.5}
+        series={dataSets[dataSet]}
+      />
+      <HStack alignItems="center" gap={2}>
+        <IconButton
+          accessibilityHint="Switch to previous data set"
+          accessibilityLabel="Previous"
+          name="arrowLeft"
+          onPress={() => setDataSet((prev) => (prev - 1 + dataSets.length) % dataSets.length)}
+          variant="secondary"
+        />
+        <Text font="label1">Data Set {dataSet + 1}</Text>
+        <IconButton
+          accessibilityHint="Switch to next data set"
+          accessibilityLabel="Next"
+          name="arrowRight"
+          onPress={() => setDataSet((prev) => (prev + 1) % dataSets.length)}
+          variant="secondary"
+        />
+      </HStack>
+    </VStack>
+  );
+}
+```
+
+## Composed Examples
+
+### Portfolio Breakdown
+
+A common use case for donut charts is showing portfolio or wallet breakdowns.
+
+```jsx
+function PortfolioBreakdown() {
+  const theme = useTheme();
+
+  const series = useMemo(
+    () => [
+      { id: 'crypto', data: 45000, label: 'Crypto', color: `rgb(${theme.spectrum.blue40})` },
+      { id: 'cash', data: 30000, label: 'Cash', color: `rgb(${theme.spectrum.green40})` },
+      { id: 'rewards', data: 15000, label: 'Rewards', color: `rgb(${theme.spectrum.purple40})` },
+      { id: 'nft', data: 10000, label: 'NFTs', color: `rgb(${theme.spectrum.orange40})` },
+    ],
+    [theme],
+  );
+
+  const total = series.reduce((sum, s) => sum + s.data, 0);
+
+  const formatCurrency = useCallback((value) => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(value);
+  }, []);
+
+  return (
+    <VStack gap={4} alignItems="center">
+      <DonutChart
+        height={200}
+        width={200}
+        innerRadiusRatio={0.7}
+        cornerRadius={4}
+        stroke={theme.color.bg}
+        strokeWidth={2}
+        series={series}
+      />
+      <VStack gap={2}>
+        {series.map((item) => (
+          <HStack key={item.id} gap={2} alignItems="center">
+            <Box
+              width={12}
+              height={12}
+              borderRadius={1000}
+              style={{ backgroundColor: item.color }}
+            />
+            <VStack gap={0}>
+              <Text font="label1">{item.label}</Text>
+              <Text font="label2" color="fgMuted">
+                {formatCurrency(item.data)} ({Math.round((item.data / total) * 100)}%)
+              </Text>
+            </VStack>
+          </HStack>
+        ))}
+      </VStack>
+    </VStack>
+  );
+}
+```
+
+### Compact Donut
+
+For smaller spaces, you can create a compact donut chart.
+
+```jsx
+function CompactDonut() {
+  const theme = useTheme();
+
+  return (
+    <HStack gap={4}>
+      <HStack gap={2} alignItems="center">
+        <DonutChart
+          height={48}
+          width={48}
+          innerRadiusRatio={0.6}
+          series={[
+            { id: 'used', data: 75, color: `rgb(${theme.spectrum.green40})` },
+            { id: 'remaining', data: 25, color: `rgb(${theme.spectrum.gray20})` },
+          ]}
+        />
+        <VStack gap={0}>
+          <Text font="label1">75%</Text>
+          <Text font="label2" color="fgMuted">
+            Complete
+          </Text>
+        </VStack>
+      </HStack>
+      <HStack gap={2} alignItems="center">
+        <DonutChart
+          height={48}
+          width={48}
+          innerRadiusRatio={0.6}
+          series={[
+            { id: 'used', data: 30, color: `rgb(${theme.spectrum.yellow40})` },
+            { id: 'remaining', data: 70, color: `rgb(${theme.spectrum.gray20})` },
+          ]}
+        />
+        <VStack gap={0}>
+          <Text font="label1">30%</Text>
+          <Text font="label2" color="fgMuted">
+            In Progress
+          </Text>
+        </VStack>
+      </HStack>
+    </HStack>
+  );
+}
+```
+
+### Wallet Breakdown with Padding
+
+A stylized wallet breakdown with rounded slices and padding.
+
+```jsx
+function WalletBreakdown() {
+  const theme = useTheme();
+
+  return (
+    <DonutChart
+      animate
+      angularAxis={{ paddingAngle: 3 }}
+      cornerRadius={100}
+      height={200}
+      innerRadiusRatio={0.8}
+      series={[
+        { id: 'card', data: 15, label: 'Card', color: `rgb(${theme.spectrum.blue40})` },
+        { id: 'cash', data: 45, label: 'Cash', color: `rgb(${theme.spectrum.green40})` },
+        { id: 'stake', data: 12, label: 'Stake', color: `rgb(${theme.spectrum.orange40})` },
+        { id: 'lend', data: 18, label: 'Lend', color: `rgb(${theme.spectrum.teal40})` },
+      ]}
+      width={200}
+    />
+  );
+}
+```

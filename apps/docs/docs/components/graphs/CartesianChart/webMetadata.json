@@ -4,6 +4,22 @@
   "description": "A flexible, low-level chart component for displaying data in an x/y coordinate space. Provides a foundation for building custom chart visualizations with full control over rendering.",
   "relatedComponents": [
     {
+      "label": "AreaChart",
+      "url": "/components/graphs/AreaChart/"
+    },
+    {
+      "label": "BarChart",
+      "url": "/components/graphs/BarChart/"
+    },
+    {
+      "label": "LineChart",
+      "url": "/components/graphs/LineChart/"
+    },
+    {
+      "label": "PolarChart",
+      "url": "/components/graphs/PolarChart/"
+    },
+    {
       "label": "Point",
       "url": "/components/graphs/Point/"
     },

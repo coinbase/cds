@@ -1,10 +1,476 @@
-import { formatAxisTick, getAxisTicksData } from '../axis';
+import {
+  formatAxisTick,
+  getAngularAxisConfig,
+  getAxisRange,
+  getAxisTicksData,
+  getCartesianAxisConfig,
+  getCartesianAxisDomain,
+  getCartesianAxisScale,
+  getPolarAxisDomain,
+  getPolarAxisRange,
+  getPolarAxisScale,
+  getRadialAxisConfig,
+} from '../axis';
+import { type CartesianSeries, type PolarSeries } from '../chart';
 import {
   type CategoricalScale,
   getCategoricalScale,
   getNumericScale,
   type NumericScale,
 } from '../scale';
+
+describe('getCartesianAxisScale', () => {
+  it('should create a linear scale for x-axis', () => {
+    const scale = getCartesianAxisScale({
+      type: 'x',
+      range: { min: 0, max: 400 },
+      dataDomain: { min: 0, max: 100 },
+    });
+
+    expect(scale(0)).toBe(0);
+    expect(scale(50)).toBe(200);
+    expect(scale(100)).toBe(400);
+  });
+
+  it('should create an inverted linear scale for y-axis', () => {
+    const scale = getCartesianAxisScale({
+      type: 'y',
+      range: { min: 0, max: 400 },
+      dataDomain: { min: 0, max: 100 },
+    });
+
+    // Y-axis is inverted for SVG coordinates
+    expect(scale(0)).toBe(400);
+    expect(scale(100)).toBe(0);
+  });
+
+  it('should use config domain when provided', () => {
+    const scale = getCartesianAxisScale({
+      config: {
+        domain: { min: 10, max: 90 },
+        range: { min: 0, max: 400 },
+        scaleType: 'linear',
+        domainLimit: 'strict',
+      },
+      type: 'x',
+      range: { min: 0, max: 400 },
+      dataDomain: { min: 0, max: 100 },
+    });
+
+    expect(scale(10)).toBe(0);
+    expect(scale(90)).toBe(400);
+  });
+
+  it('should apply nice() when domainLimit is nice', () => {
+    const scale = getCartesianAxisScale({
+      config: {
+        domain: { min: 0, max: 100 },
+        range: { min: 0, max: 400 },
+        scaleType: 'linear',
+        domainLimit: 'nice',
+      },
+      type: 'x',
+      range: { min: 0, max: 400 },
+      dataDomain: { min: 3, max: 97 },
+    });
+
+    // Scale should be created successfully
+    expect(scale).toBeDefined();
+    expect(typeof scale).toBe('function');
+  });
+
+  it('should create band scale when scaleType is band', () => {
+    const scale = getCartesianAxisScale({
+      config: {
+        domain: { min: 0, max: 4 },
+        range: { min: 0, max: 400 },
+        scaleType: 'band',
+        domainLimit: 'strict',
+        categoryPadding: 0.1,
+      },
+      type: 'x',
+      range: { min: 0, max: 400 },
+      dataDomain: { min: 0, max: 4 },
+    });
+
+    expect(scale).toBeDefined();
+    // Band scale should have bandwidth method
+    expect((scale as any).bandwidth).toBeDefined();
+  });
+
+  it('should throw error for invalid domain bounds', () => {
+    expect(() =>
+      getCartesianAxisScale({
+        type: 'x',
+        range: { min: 0, max: 400 },
+        dataDomain: { min: undefined as any, max: undefined as any },
+      }),
+    ).toThrow('Invalid domain bounds');
+  });
+});
+
+describe('getPolarAxisScale', () => {
+  it('should create a linear scale for radial axis', () => {
+    const scale = getPolarAxisScale({
+      range: { min: 0, max: 100 },
+      dataDomain: { min: 0, max: 50 },
+    });
+
+    expect(scale(0)).toBe(0);
+    expect(scale(25)).toBe(50);
+    expect(scale(50)).toBe(100);
+  });
+
+  it('should use config domain when provided', () => {
+    const scale = getPolarAxisScale({
+      config: {
+        domain: { min: 10, max: 40 },
+        range: { min: 0, max: 100 },
+        scaleType: 'linear',
+      },
+      range: { min: 0, max: 100 },
+      dataDomain: { min: 0, max: 50 },
+    });
+
+    expect(scale(10)).toBe(0);
+    expect(scale(40)).toBe(100);
+  });
+
+  it('should throw error for invalid domain bounds', () => {
+    expect(() =>
+      getPolarAxisScale({
+        range: { min: 0, max: 100 },
+        dataDomain: { min: undefined as any, max: undefined as any },
+      }),
+    ).toThrow('Invalid polar axis domain bounds');
+  });
+});
+
+describe('getCartesianAxisConfig', () => {
+  it('should return default config when no axes provided', () => {
+    const result = getCartesianAxisConfig('x', undefined);
+
+    expect(result).toHaveLength(1);
+    expect(result[0].id).toBe('DEFAULT_AXIS_ID');
+    expect(result[0].scaleType).toBe('linear');
+    expect(result[0].domainLimit).toBe('strict'); // x-axis default
+  });
+
+  it('should use nice domainLimit for y-axis by default', () => {
+    const result = getCartesianAxisConfig('y', undefined);
+
+    expect(result[0].domainLimit).toBe('nice');
+  });
+
+  it('should handle single axis config object', () => {
+    const result = getCartesianAxisConfig('x', { scaleType: 'log' });
+
+    expect(result).toHaveLength(1);
+    expect(result[0].scaleType).toBe('log');
+  });
+
+  it('should handle array of axis configs', () => {
+    const result = getCartesianAxisConfig('y', [
+      { id: 'left', scaleType: 'linear' },
+      { id: 'right', scaleType: 'log' },
+    ]);
+
+    expect(result).toHaveLength(2);
+    expect(result[0].id).toBe('left');
+    expect(result[1].id).toBe('right');
+  });
+
+  it('should throw error when multiple axes lack ids', () => {
+    expect(() =>
+      getCartesianAxisConfig('y', [{ scaleType: 'linear' }, { scaleType: 'log' }]),
+    ).toThrow('When defining multiple axes, each must have a unique id');
+  });
+});
+
+describe('getAngularAxisConfig', () => {
+  it('should return default config when no axes provided', () => {
+    const result = getAngularAxisConfig(undefined);
+
+    expect(result).toHaveLength(1);
+    expect(result[0].id).toBe('DEFAULT_AXIS_ID');
+    expect(result[0].scaleType).toBe('linear');
+  });
+
+  it('should handle single axis config object', () => {
+    const result = getAngularAxisConfig({ paddingAngle: 5 });
+
+    expect(result).toHaveLength(1);
+    expect(result[0].paddingAngle).toBe(5);
+  });
+
+  it('should handle array of axis configs', () => {
+    const result = getAngularAxisConfig([{ id: 'angular1' }, { id: 'angular2' }]);
+
+    expect(result).toHaveLength(2);
+    expect(result[0].id).toBe('angular1');
+    expect(result[1].id).toBe('angular2');
+  });
+
+  it('should throw error when multiple axes lack ids', () => {
+    expect(() => getAngularAxisConfig([{}, {}])).toThrow(
+      'When defining multiple angular axes, each must have a unique id',
+    );
+  });
+});
+
+describe('getRadialAxisConfig', () => {
+  it('should return default config when no axes provided', () => {
+    const result = getRadialAxisConfig(undefined);
+
+    expect(result).toHaveLength(1);
+    expect(result[0].id).toBe('DEFAULT_AXIS_ID');
+    expect(result[0].scaleType).toBe('linear');
+  });
+
+  it('should handle single axis config object', () => {
+    const result = getRadialAxisConfig({ scaleType: 'log' });
+
+    expect(result).toHaveLength(1);
+    expect(result[0].scaleType).toBe('log');
+  });
+
+  it('should handle array of axis configs', () => {
+    const result = getRadialAxisConfig([{ id: 'radial1' }, { id: 'radial2' }]);
+
+    expect(result).toHaveLength(2);
+    expect(result[0].id).toBe('radial1');
+    expect(result[1].id).toBe('radial2');
+  });
+
+  it('should throw error when multiple axes lack ids', () => {
+    expect(() => getRadialAxisConfig([{}, {}])).toThrow(
+      'When defining multiple radial axes, each must have a unique id',
+    );
+  });
+});
+
+describe('getCartesianAxisDomain', () => {
+  it('should calculate domain from series data for x-axis', () => {
+    const series: CartesianSeries[] = [
+      { id: 'series1', data: [1, 2, 3, 4, 5] },
+      { id: 'series2', data: [10, 20, 30] },
+    ];
+
+    const result = getCartesianAxisDomain(
+      { id: 'x', scaleType: 'linear', domainLimit: 'strict' },
+      series,
+      'x',
+    );
+
+    expect(result.min).toBe(0);
+    expect(result.max).toBe(4); // Longest series has 5 items (indices 0-4)
+  });
+
+  it('should calculate domain from series data for y-axis', () => {
+    const series: CartesianSeries[] = [
+      { id: 'series1', data: [1, 5, 3] },
+      { id: 'series2', data: [2, 8, 4] },
+    ];
+
+    const result = getCartesianAxisDomain(
+      { id: 'y', scaleType: 'linear', domainLimit: 'nice' },
+      series,
+      'y',
+    );
+
+    expect(result.min).toBe(1);
+    expect(result.max).toBe(8);
+  });
+
+  it('should use explicit domain bounds when provided', () => {
+    const series: CartesianSeries[] = [{ id: 'series1', data: [1, 2, 3] }];
+
+    const result = getCartesianAxisDomain(
+      { id: 'y', scaleType: 'linear', domainLimit: 'nice', domain: { min: 0, max: 100 } },
+      series,
+      'y',
+    );
+
+    expect(result.min).toBe(0);
+    expect(result.max).toBe(100);
+  });
+
+  it('should handle domain function', () => {
+    const series: CartesianSeries[] = [{ id: 'series1', data: [10, 20, 30] }];
+
+    const result = getCartesianAxisDomain(
+      {
+        id: 'y',
+        scaleType: 'linear',
+        domainLimit: 'nice',
+        domain: (bounds) => ({ min: bounds.min - 5, max: bounds.max + 5 }),
+      },
+      series,
+      'y',
+    );
+
+    expect(result.min).toBe(5); // 10 - 5
+    expect(result.max).toBe(35); // 30 + 5
+  });
+
+  it('should use data array for categorical domain', () => {
+    const series: CartesianSeries[] = [{ id: 'series1', data: [1, 2, 3] }];
+
+    const result = getCartesianAxisDomain(
+      { id: 'x', scaleType: 'band', domainLimit: 'strict', data: ['Jan', 'Feb', 'Mar', 'Apr'] },
+      series,
+      'x',
+    );
+
+    expect(result.min).toBe(0);
+    expect(result.max).toBe(3); // 4 categories
+  });
+});
+
+describe('getPolarAxisDomain', () => {
+  it('should calculate angular domain for pie chart data', () => {
+    const series: PolarSeries[] = [
+      { id: 'slice1', data: 10 },
+      { id: 'slice2', data: 20 },
+      { id: 'slice3', data: 30 },
+    ];
+
+    const result = getPolarAxisDomain({ id: 'angular' }, series, 'angular');
+
+    expect(result.min).toBe(0);
+    expect(result.max).toBe(2); // 3 slices
+  });
+
+  it('should calculate radial domain for radar chart data', () => {
+    const series: PolarSeries[] = [
+      { id: 'series1', data: [1, 5, 3, 8, 2] },
+      { id: 'series2', data: [2, 4, 6] },
+    ];
+
+    const result = getPolarAxisDomain({ id: 'radial' }, series, 'radial');
+
+    expect(result.min).toBe(0);
+    expect(result.max).toBe(8);
+  });
+
+  it('should use explicit domain bounds when provided', () => {
+    const series: PolarSeries[] = [{ id: 'series1', data: 50 }];
+
+    const result = getPolarAxisDomain(
+      { id: 'radial', domain: { min: 0, max: 100 } },
+      series,
+      'radial',
+    );
+
+    expect(result.min).toBe(0);
+    expect(result.max).toBe(100);
+  });
+});
+
+describe('getPolarAxisRange', () => {
+  it('should return default angular range in degrees', () => {
+    const result = getPolarAxisRange({ id: 'angular' }, 'angular', 100);
+
+    // Default is 0° to 360° (full circle starting at 3 o'clock)
+    expect(result.min).toBe(0);
+    expect(result.max).toBe(360);
+  });
+
+  it('should return default radial range in pixels', () => {
+    const result = getPolarAxisRange({ id: 'radial' }, 'radial', 150);
+
+    expect(result.min).toBe(0);
+    expect(result.max).toBe(150); // outerRadius in pixels
+  });
+
+  it('should return angular range in degrees (no conversion)', () => {
+    // User specifies degrees, output is degrees
+    const result = getPolarAxisRange(
+      { id: 'angular', range: { min: 0, max: 180 } }, // semicircle in degrees
+      'angular',
+      100,
+    );
+
+    // Output remains in degrees
+    expect(result.min).toBe(0);
+    expect(result.max).toBe(180);
+  });
+
+  it('should handle radial range function with pixels', () => {
+    // User can do percentage-based donut
+    const result = getPolarAxisRange(
+      { id: 'radial', range: (bounds) => ({ min: bounds.max * 0.5, max: bounds.max }) },
+      'radial',
+      100,
+    );
+
+    expect(result.min).toBe(50); // 50% of 100px
+    expect(result.max).toBe(100);
+  });
+
+  it('should handle radial range function with pixel offset', () => {
+    // User can do pixel-based thickness
+    const result = getPolarAxisRange(
+      { id: 'radial', range: (bounds) => ({ min: bounds.max - 6, max: bounds.max }) },
+      'radial',
+      100,
+    );
+
+    expect(result.min).toBe(94); // 100 - 6 = 94px inner radius
+    expect(result.max).toBe(100);
+  });
+
+  it('should handle angular range function with degrees', () => {
+    // User specifies function that works with degrees
+    const result = getPolarAxisRange(
+      { id: 'angular', range: (bounds) => ({ min: bounds.min + 45, max: bounds.max - 45 }) },
+      'angular',
+      100,
+    );
+
+    // Default base is 0° to 360°, so result is 45° to 315° (still in degrees)
+    expect(result.min).toBe(45);
+    expect(result.max).toBe(315);
+  });
+});
+
+describe('getAxisRange', () => {
+  it('should calculate range for x-axis', () => {
+    const chartRect = { x: 50, y: 20, width: 400, height: 300 };
+    const result = getAxisRange({ id: 'x' }, chartRect, 'x');
+
+    expect(result.min).toBe(50);
+    expect(result.max).toBe(450); // x + width
+  });
+
+  it('should calculate range for y-axis', () => {
+    const chartRect = { x: 50, y: 20, width: 400, height: 300 };
+    const result = getAxisRange({ id: 'y' }, chartRect, 'y');
+
+    expect(result.min).toBe(20);
+    expect(result.max).toBe(320); // y + height
+  });
+
+  it('should use explicit range when provided', () => {
+    const chartRect = { x: 0, y: 0, width: 400, height: 300 };
+    const result = getAxisRange({ id: 'x', range: { min: 100, max: 300 } }, chartRect, 'x');
+
+    expect(result.min).toBe(100);
+    expect(result.max).toBe(300);
+  });
+
+  it('should handle range function', () => {
+    const chartRect = { x: 0, y: 0, width: 400, height: 300 };
+    const result = getAxisRange(
+      { id: 'x', range: (bounds) => ({ min: bounds.min + 20, max: bounds.max - 20 }) },
+      chartRect,
+      'x',
+    );
+
+    expect(result.min).toBe(20);
+    expect(result.max).toBe(380);
+  });
+});
 
 describe('getAxisTicksData', () => {
   let numericScale: NumericScale;

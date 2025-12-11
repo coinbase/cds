@@ -7,11 +7,11 @@ import {
   type CartesianChartProps,
 } from '../CartesianChart';
 import {
-  type AxisConfigProps,
+  type CartesianAxisConfigProps,
+  type CartesianSeries,
   defaultChartInset,
   defaultStackId,
   getChartInset,
-  type Series,
 } from '../utils';
 
 import { BarPlot, type BarPlotProps } from './BarPlot';
@@ -35,7 +35,7 @@ export type BarChartBaseProps = Omit<CartesianChartBaseProps, 'xAxis' | 'yAxis' 
     /**
      * Configuration objects that define how to visualize the data.
      */
-    series?: Array<Series>;
+    series?: Array<CartesianSeries>;
     /**
      * Whether to stack the areas on top of each other.
      * When true, each series builds cumulative values on top of the previous series.
@@ -58,13 +58,13 @@ export type BarChartBaseProps = Omit<CartesianChartBaseProps, 'xAxis' | 'yAxis' 
      * Accepts axis config and axis props.
      * To show the axis, set `showXAxis` to true.
      */
-    xAxis?: Partial<AxisConfigProps> & XAxisProps;
+    xAxis?: Partial<CartesianAxisConfigProps> & XAxisProps;
     /**
      * Configuration for y-axis.
      * Accepts axis config and axis props.
      * To show the axis, set `showYAxis` to true.
      */
-    yAxis?: Partial<AxisConfigProps> & YAxisProps;
+    yAxis?: Partial<CartesianAxisConfigProps> & YAxisProps;
   };
 
 export type BarChartProps = BarChartBaseProps &
@@ -131,7 +131,7 @@ export const BarChart = memo(
         ...yAxisVisualProps
       } = yAxis || {};
 
-      const xAxisConfig: Partial<AxisConfigProps> = {
+      const xAxisConfig: Partial<CartesianAxisConfigProps> = {
         scaleType: xScaleType ?? 'band',
         data: xData,
         categoryPadding: xCategoryPadding,
@@ -152,7 +152,7 @@ export const BarChart = memo(
       }, [series]);
 
       // Set default min domain to 0 for area chart, but only if there are no negative values
-      const yAxisConfig: Partial<AxisConfigProps> = {
+      const yAxisConfig: Partial<CartesianAxisConfigProps> = {
         scaleType: yScaleType,
         data: yData,
         categoryPadding: yCategoryPadding,

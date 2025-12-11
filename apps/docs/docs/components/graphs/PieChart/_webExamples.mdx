@@ -1,0 +1,324 @@
+PieChart is built on [PolarChart](/components/graphs/PolarChart) for visualizing proportional data.
+
+## Basics
+
+The only prop required is `series`, which takes an array of series objects. Each series object needs an `id` and a `data` number representing the slice value.
+
+```jsx live
+<PieChart
+  height={200}
+  width={200}
+  series={[
+    { id: 'a', data: 30, label: 'Category A', color: 'rgb(var(--blue40))' },
+    { id: 'b', data: 40, label: 'Category B', color: 'rgb(var(--green40))' },
+    { id: 'c', data: 30, label: 'Category C', color: 'rgb(var(--orange40))' },
+  ]}
+/>
+```
+
+## Styling
+
+### Corner Radius
+
+Use `cornerRadius` to round the corners of each slice.
+
+```jsx live
+<HStack gap={4} justifyContent="center">
+  <VStack alignItems="center" gap={2}>
+    <PieChart
+      height={150}
+      width={150}
+      cornerRadius={0}
+      series={[
+        { id: 'a', data: 30, color: 'rgb(var(--blue40))' },
+        { id: 'b', data: 40, color: 'rgb(var(--green40))' },
+        { id: 'c', data: 30, color: 'rgb(var(--orange40))' },
+      ]}
+    />
+    <Text font="label2" color="fgMuted">
+      cornerRadius: 0
+    </Text>
+  </VStack>
+  <VStack alignItems="center" gap={2}>
+    <PieChart
+      height={150}
+      width={150}
+      cornerRadius={8}
+      series={[
+        { id: 'a', data: 30, color: 'rgb(var(--blue40))' },
+        { id: 'b', data: 40, color: 'rgb(var(--green40))' },
+        { id: 'c', data: 30, color: 'rgb(var(--orange40))' },
+      ]}
+    />
+    <Text font="label2" color="fgMuted">
+      cornerRadius: 8
+    </Text>
+  </VStack>
+</HStack>
+```
+
+### Stroke
+
+Use `stroke` and `strokeWidth` to add borders between slices.
+
+```jsx live
+<PieChart
+  height={200}
+  width={200}
+  stroke="var(--color-bg)"
+  strokeWidth={3}
+  cornerRadius={8}
+  series={[
+    { id: 'a', data: 25, color: 'rgb(var(--blue40))' },
+    { id: 'b', data: 25, color: 'rgb(var(--green40))' },
+    { id: 'c', data: 25, color: 'rgb(var(--purple40))' },
+    { id: 'd', data: 25, color: 'rgb(var(--orange40))' },
+  ]}
+/>
+```
+
+### Padding Between Slices
+
+Use `angularAxis` with `paddingAngle` to add gaps between slices.
+
+```jsx live
+<PieChart
+  height={200}
+  width={200}
+  angularAxis={{ paddingAngle: 4 }}
+  series={[
+    { id: 'a', data: 30, color: 'rgb(var(--blue40))' },
+    { id: 'b', data: 40, color: 'rgb(var(--purple40))' },
+    { id: 'c', data: 30, color: 'rgb(var(--orange40))' },
+  ]}
+/>
+```
+
+## Partial Charts
+
+### Semicircle
+
+Use `angularAxis` with `range` to create partial pie charts like semicircles.
+
+```jsx live
+<VStack alignItems="center" gap={2}>
+  <PieChart
+    height={120}
+    width={200}
+    angularAxis={{ range: { min: -90, max: 90 } }}
+    series={[
+      { id: 'low', data: 25, label: 'Low', color: 'rgb(var(--green40))' },
+      { id: 'medium', data: 50, label: 'Medium', color: 'rgb(var(--yellow40))' },
+      { id: 'high', data: 25, label: 'High', color: 'rgb(var(--red40))' },
+    ]}
+  />
+  <Text font="label2" color="fgMuted">
+    Risk Distribution
+  </Text>
+</VStack>
+```
+
+### Quarter Pie
+
+```jsx live
+<PieChart
+  height={150}
+  width={150}
+  angularAxis={{ range: { min: 0, max: 90 } }}
+  cornerRadius={4}
+  series={[
+    { id: 'a', data: 40, color: 'rgb(var(--blue40))' },
+    { id: 'b', data: 35, color: 'rgb(var(--green40))' },
+    { id: 'c', data: 25, color: 'rgb(var(--purple40))' },
+  ]}
+/>
+```
+
+## Animations
+
+PieChart animates by default when data changes. You can disable animations by setting `animate` to `false`.
+
+```jsx live
+function AnimatedPieChart() {
+  const [dataSet, setDataSet] = useState(0);
+
+  const dataSets = useMemo(
+    () => [
+      [
+        { id: 'a', data: 30, color: 'rgb(var(--blue40))' },
+        { id: 'b', data: 40, color: 'rgb(var(--green40))' },
+        { id: 'c', data: 30, color: 'rgb(var(--orange40))' },
+      ],
+      [
+        { id: 'a', data: 50, color: 'rgb(var(--blue40))' },
+        { id: 'b', data: 30, color: 'rgb(var(--green40))' },
+        { id: 'c', data: 20, color: 'rgb(var(--orange40))' },
+      ],
+      [
+        { id: 'a', data: 20, color: 'rgb(var(--blue40))' },
+        { id: 'b', data: 50, color: 'rgb(var(--green40))' },
+        { id: 'c', data: 30, color: 'rgb(var(--orange40))' },
+      ],
+    ],
+    [],
+  );
+
+  return (
+    <VStack alignItems="center" gap={4}>
+      <PieChart animate height={200} width={200} series={dataSets[dataSet]} />
+      <HStack gap={2}>
+        <IconButton
+          accessibilityLabel="Previous data set"
+          name="caretLeft"
+          onClick={() => setDataSet((prev) => (prev - 1 + dataSets.length) % dataSets.length)}
+          variant="secondary"
+        />
+        <Text font="label1">Data Set {dataSet + 1}</Text>
+        <IconButton
+          accessibilityLabel="Next data set"
+          name="caretRight"
+          onClick={() => setDataSet((prev) => (prev + 1) % dataSets.length)}
+          variant="secondary"
+        />
+      </HStack>
+    </VStack>
+  );
+}
+```
+
+## Composed Examples
+
+### Category Distribution
+
+```jsx live
+function CategoryDistribution() {
+  const series = useMemo(
+    () => [
+      { id: 'tech', data: 35, label: 'Technology', color: 'rgb(var(--blue40))' },
+      { id: 'health', data: 25, label: 'Healthcare', color: 'rgb(var(--green40))' },
+      { id: 'finance', data: 20, label: 'Finance', color: 'rgb(var(--purple40))' },
+      { id: 'energy', data: 12, label: 'Energy', color: 'rgb(var(--orange40))' },
+      { id: 'other', data: 8, label: 'Other', color: 'rgb(var(--gray40))' },
+    ],
+    [],
+  );
+
+  const total = series.reduce((sum, s) => sum + s.data, 0);
+
+  return (
+    <HStack gap={4} alignItems="center">
+      <PieChart
+        height={200}
+        width={200}
+        cornerRadius={4}
+        stroke="var(--color-bg)"
+        strokeWidth={2}
+        series={series}
+      />
+      <VStack gap={2}>
+        {series.map((item) => (
+          <HStack key={item.id} gap={2} alignItems="center">
+            <Box
+              width={12}
+              height={12}
+              borderRadius={1000}
+              style={{ backgroundColor: item.color }}
+            />
+            <Text font="label1" style={{ minWidth: 80 }}>
+              {item.label}
+            </Text>
+            <Text font="label2" color="fgMuted">
+              {Math.round((item.data / total) * 100)}%
+            </Text>
+          </HStack>
+        ))}
+      </VStack>
+    </HStack>
+  );
+}
+```
+
+### Gauge Chart
+
+A semicircle pie chart can be used as a gauge to show progress or status.
+
+```jsx live
+function GaugeChart() {
+  const value = 72;
+  const max = 100;
+
+  return (
+    <VStack alignItems="center" gap={2}>
+      <Box position="relative" width={200} height={120}>
+        <PieChart
+          height={120}
+          width={200}
+          angularAxis={{ range: { min: -90, max: 90 } }}
+          cornerRadius={100}
+          series={[
+            { id: 'value', data: value, color: 'rgb(var(--green40))' },
+            { id: 'remaining', data: max - value, color: 'rgb(var(--gray20))' },
+          ]}
+        />
+        <Box
+          position="absolute"
+          bottom={0}
+          left={0}
+          right={0}
+          display="flex"
+          justifyContent="center"
+        >
+          <VStack alignItems="center">
+            <Text font="title1">{value}%</Text>
+            <Text font="label2" color="fgMuted">
+              Goal Progress
+            </Text>
+          </VStack>
+        </Box>
+      </Box>
+    </VStack>
+  );
+}
+```
+
+### Compact Pie
+
+For smaller spaces, you can create compact pie charts.
+
+```jsx live
+<HStack gap={4}>
+  <HStack gap={2} alignItems="center">
+    <PieChart
+      height={40}
+      width={40}
+      series={[
+        { id: 'a', data: 60, color: 'rgb(var(--blue40))' },
+        { id: 'b', data: 40, color: 'rgb(var(--gray20))' },
+      ]}
+    />
+    <VStack gap={0}>
+      <Text font="label1">60%</Text>
+      <Text font="label2" color="fgMuted">
+        Allocation
+      </Text>
+    </VStack>
+  </HStack>
+  <HStack gap={2} alignItems="center">
+    <PieChart
+      height={40}
+      width={40}
+      series={[
+        { id: 'a', data: 33, color: 'rgb(var(--blue40))' },
+        { id: 'b', data: 33, color: 'rgb(var(--green40))' },
+        { id: 'c', data: 34, color: 'rgb(var(--purple40))' },
+      ]}
+    />
+    <VStack gap={0}>
+      <Text font="label1">Equal</Text>
+      <Text font="label2" color="fgMuted">
+        Split
+      </Text>
+    </VStack>
+  </HStack>
+</HStack>
+```

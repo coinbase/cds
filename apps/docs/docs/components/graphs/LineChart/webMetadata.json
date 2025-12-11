@@ -1,7 +1,7 @@
 {
   "import": "import { LineChart } from '@coinbase/cds-web-visualization'",
   "source": "https://github.com/coinbase/cds/blob/master/packages/web-visualization/src/chart/line/LineChart.tsx",
-  "description": "A flexible line chart component for displaying data trends over time. Supports multiple series, custom curves, areas, scrubbing, and interactive data exploration.",
+  "description": "A flexible line chart component built on CartesianChart for displaying data trends over time. Supports multiple series, custom curves, areas, scrubbing, and interactive data exploration.",
   "relatedComponents": [
     {
       "label": "CartesianChart",

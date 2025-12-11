@@ -4,7 +4,7 @@ import type { Rect, SharedProps } from '@coinbase/cds-common/types';
 import { m as motion, type Transition } from 'framer-motion';
 
 import { usePathTransition } from './utils/transition';
-import { useCartesianChartContext } from './ChartProvider';
+import { useChartContext } from './ChartProvider';
 
 /**
  * Duration in seconds for path enter transition.
@@ -70,7 +70,7 @@ const AnimatedPath = memo<Omit<PathProps, 'animate'>>(({ d = '', transition, ...
 export const Path = memo<PathProps>(
   ({ animate: animateProp, clipRect, clipOffset = 0, d = '', transition, ...pathProps }) => {
     const clipPathId = useId();
-    const context = useCartesianChartContext();
+    const context = useChartContext();
     const rect = clipRect !== undefined ? clipRect : context.drawingArea;
     const animate = animateProp ?? context.animate;
 
