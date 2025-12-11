@@ -1,201 +1,96 @@
-Icon buttons must have a name (which determines the icon), and can use variants to denote intent and importance.
+IconButton is a compact button that displays only an icon. Use it for actions where the icon alone clearly communicates the purpose.
 
-:::tip Accessibility tip
+## Basics
 
-To ensure your `IconButton` implementation is accessible, it must have an `accessibilityLabel` that describes the purpose of the button.
-
-<br />
-
-In cases where you're composing a button next to a label or some text that describes the buttons
-action, you can setup your system using `accessibilityLabelledBy` prop mapping to the `id` on the
-label node (See [Composed example](#composed-example)).
-
-:::
+The only required props are `name` (which determines the icon) and `accessibilityLabel` (for screen readers).
 
 ```jsx live
-<VStack gap={4}>
-  <VStack gap={2}>
-    <Text font="title3">Basic variants</Text>
-    <HStack gap={2}>
-      <IconButton
-        active
-        name="orderHistory"
-        accessibilityLabel="View transaction history"
-        variant="primary"
-        onClick={console.log}
-      />
-      <IconButton
-        active
-        name="gear"
-        accessibilityLabel="View settings"
-        variant="secondary"
-        onClick={console.log}
-      />
-      <IconButton
-        name="phone"
-        accessibilityLabel="View settings"
-        variant="tertiary"
-        onClick={console.log}
-      />
-      <IconButton
-        name="checkmark"
-        accessibilityLabel="Approve transaction"
-        variant="foregroundMuted"
-        onClick={console.log}
-      />
-    </HStack>
-  </VStack>
-
-  <VStack gap={2}>
-    <Text font="title3">Transparent variants</Text>
-    <HStack gap={2}>
-      <IconButton
-        active
-        name="orderHistory"
-        accessibilityLabel="View past order history"
-        variant="primary"
-        transparent
-        onClick={console.log}
-      />
-      <IconButton
-        name="phone"
-        accessibilityLabel="View settings"
-        variant="tertiary"
-        transparent
-        onClick={console.log}
-      />
-      <IconButton
-        active
-        name="gear"
-        accessibilityLabel="Update settings"
-        variant="secondary"
-        transparent
-        onClick={console.log}
-      />
-      <IconButton
-        name="checkmark"
-        accessibilityLabel="Verify your identity"
-        variant="foregroundMuted"
-        transparent
-        onClick={console.log}
-      />
-    </HStack>
-  </VStack>
-
-  <VStack gap={2}>
-    <Text font="title3">Loading states</Text>
-    <HStack gap={2}>
-      <IconButton
-        active
-        name="orderHistory"
-        accessibilityLabel="Loading transaction history"
-        variant="primary"
-        loading
-        onClick={console.log}
-      />
-      <IconButton
-        active
-        name="gear"
-        accessibilityLabel="Loading settings"
-        variant="secondary"
-        loading
-        onClick={console.log}
-      />
-      <IconButton
-        name="checkmark"
-        accessibilityLabel="Processing approval"
-        variant="foregroundMuted"
-        loading
-        onClick={console.log}
-      />
-    </HStack>
-  </VStack>
-
-  <VStack gap={2}>
-    <Text font="title3">Disabled states</Text>
-    <HStack gap={2}>
-      <IconButton
-        active
-        name="orderHistory"
-        accessibilityLabel="View transaction history"
-        variant="primary"
-        disabled
-        onClick={console.log}
-      />
-      <IconButton
-        active
-        name="gear"
-        accessibilityLabel="View settings"
-        variant="secondary"
-        disabled
-        onClick={console.log}
-      />
-      <IconButton
-        name="checkmark"
-        accessibilityLabel="Approve transaction"
-        variant="foregroundMuted"
-        disabled
-        onClick={console.log}
-      />
-    </HStack>
-  </VStack>
-
-  <VStack gap={2}>
-    <Text font="title3">Sizing</Text>
-    <HStack gap={2} alignItems="center">
-      <IconButton
-        active
-        name="gear"
-        accessibilityLabel="Settings - compact"
-        variant="primary"
-        compact
-        onClick={console.log}
-      />
-      <IconButton
-        active
-        name="gear"
-        accessibilityLabel="Settings - regular"
-        variant="primary"
-        compact={false}
-        onClick={console.log}
-      />
-    </HStack>
-  </VStack>
-</VStack>
+<HStack gap={2} flexWrap="wrap">
+  <IconButton name="gear" accessibilityLabel="Open settings" onClick={console.log} />
+  <IconButton name="close" accessibilityLabel="Close modal" onClick={console.log} />
+  <IconButton name="refresh" accessibilityLabel="Refresh data" onClick={console.log} />
+</HStack>
 ```
 
-### Composed example
+## Variants
 
-As referenced above, if you're building a composed system, use the `accessibilityLabelledBy` prop and an `id` on the text node.
+Use variants to denote intent and importance. The `active` prop fills the icon when enabled.
 
 ```jsx live
-function composedExample() {
-  const [active, setActive] = useState(false);
-  const name = useMemo(() => (active ? 'dropsActive' : 'dropsInactive'), [active]);
-  const variant = useMemo(() => (active ? 'primary' : 'foregroundMuted'), [active]);
-  const label = useMemo(() => (active ? 'Reject drop' : 'Claim drop'), [active]);
-
-  return (
-    <HStack gap={2} alignItems="center">
-      <IconButton
-        name={name}
-        variant={variant}
-        onClick={() => setActive((active) => !active)}
-        // Accessibility props
-        id="my-icon--id"
-        accessibilityLabelledBy="my-label--id"
-      />
-      <Text font="label1" as="label" htmlFor="my-icon--id" id="my-label--id">
-        {label}
-      </Text>
-    </HStack>
-  );
-}
+<HStack gap={2} flexWrap="wrap">
+  <IconButton
+    active
+    name="orderHistory"
+    accessibilityLabel="View transaction history"
+    variant="primary"
+    onClick={console.log}
+  />
+  <IconButton
+    active
+    name="gear"
+    accessibilityLabel="View settings"
+    variant="secondary"
+    onClick={console.log}
+  />
+  <IconButton
+    name="phone"
+    accessibilityLabel="Call support"
+    variant="tertiary"
+    onClick={console.log}
+  />
+  <IconButton
+    name="checkmark"
+    accessibilityLabel="Approve transaction"
+    variant="foregroundMuted"
+    onClick={console.log}
+  />
+</HStack>
 ```
 
-### Loading state
+### Transparent
 
-Use the `loading` prop to show a spinner when an action is in progress. The button becomes non-interactive and shows a loading spinner instead of the icon.
+Use the `transparent` prop to remove the background until the user interacts with the button.
+
+```jsx live
+<HStack gap={2} flexWrap="wrap">
+  <IconButton
+    active
+    name="orderHistory"
+    accessibilityLabel="View past order history"
+    variant="primary"
+    transparent
+    onClick={console.log}
+  />
+  <IconButton
+    active
+    name="gear"
+    accessibilityLabel="Update settings"
+    variant="secondary"
+    transparent
+    onClick={console.log}
+  />
+  <IconButton
+    name="phone"
+    accessibilityLabel="Call support"
+    variant="tertiary"
+    transparent
+    onClick={console.log}
+  />
+  <IconButton
+    name="checkmark"
+    accessibilityLabel="Verify your identity"
+    variant="foregroundMuted"
+    transparent
+    onClick={console.log}
+  />
+</HStack>
+```
+
+## States
+
+### Loading
+
+Use the `loading` prop to show a spinner when an action is in progress. The button becomes non-interactive and displays a loading spinner instead of the icon.
 
 ```jsx live
 function LoadingExample() {
@@ -203,12 +98,11 @@ function LoadingExample() {
 
   const handleSubmit = () => {
     setIsLoading(true);
-    // Simulate async operation
     setTimeout(() => setIsLoading(false), 2000);
   };
 
   return (
-    <HStack gap={2}>
+    <HStack gap={2} flexWrap="wrap">
       <IconButton
         name="checkmark"
         accessibilityLabel={isLoading ? 'Processing submission' : 'Submit form'}
@@ -228,18 +122,51 @@ function LoadingExample() {
 }
 ```
 
-### Sizing
+### Disabled
 
-IconButtons come in two sizes: compact (default) and regular. Use `compact={false}` for larger touch targets.
+Use the `disabled` prop to prevent interaction and show a disabled visual state.
 
 ```jsx live
-<HStack gap={2} alignItems="center">
+<HStack gap={2} flexWrap="wrap">
+  <IconButton
+    active
+    name="orderHistory"
+    accessibilityLabel="View transaction history"
+    variant="primary"
+    disabled
+    onClick={console.log}
+  />
+  <IconButton
+    active
+    name="gear"
+    accessibilityLabel="View settings"
+    variant="secondary"
+    disabled
+    onClick={console.log}
+  />
+  <IconButton
+    name="checkmark"
+    accessibilityLabel="Approve transaction"
+    variant="foregroundMuted"
+    disabled
+    onClick={console.log}
+  />
+</HStack>
+```
+
+## Sizing
+
+IconButtons are compact by default. Use `compact={false}` for larger touch targets.
+
+```jsx live
+<HStack gap={2} flexWrap="wrap" alignItems="center">
   <IconButton
     active
     name="gear"
     accessibilityLabel="Settings - compact"
     variant="primary"
     compact
+    onClick={console.log}
   />
   <IconButton
     active
@@ -247,14 +174,62 @@ IconButtons come in two sizes: compact (default) and regular. Use `compact={fals
     accessibilityLabel="Settings - regular"
     variant="primary"
     compact={false}
+    onClick={console.log}
   />
 </HStack>
 ```
 
-### A11y
+## Accessibility
 
-Since icon buttons have no descriptive text or children, an accessibility label must be provided.
+Since icon buttons have no visible text, an `accessibilityLabel` is required to describe the button's purpose for screen readers.
 
 ```jsx
 <IconButton name="close" accessibilityLabel="Close trade modal" />
+```
+
+When composing a button with a visible label, use `accessibilityLabelledBy` to reference the label's `id` instead. See the [Claim Drop example](#claim-drop) below.
+
+## Composed Examples
+
+### Claim Drop
+
+A toggleable icon button with an adjacent label. Uses `accessibilityLabelledBy` to associate the button with its visible label.
+
+```jsx live
+function ClaimDropExample() {
+  const [active, setActive] = useState(false);
+  const variant = useMemo(() => (active ? 'primary' : 'foregroundMuted'), [active]);
+  const label = useMemo(() => (active ? 'Reject drop' : 'Claim drop'), [active]);
+
+  return (
+    <HStack gap={2} alignItems="center">
+      <IconButton
+        name="drops"
+        active={active}
+        variant={variant}
+        onClick={() => setActive((active) => !active)}
+        id="claim-drop-button"
+        accessibilityLabelledBy="claim-drop-label"
+      />
+      <Text font="label1" as="label" htmlFor="claim-drop-button" id="claim-drop-label">
+        {label}
+      </Text>
+    </HStack>
+  );
+}
+```
+
+### Notification Bell
+
+An icon button with a badge showing the notification count. Uses `DotCount` to display the number of unread notifications.
+
+```jsx live
+<DotCount count={3} overlap="circular" pin="top-end">
+  <IconButton
+    name="bell"
+    accessibilityLabel="Notifications, 3 unread"
+    variant="secondary"
+    onClick={console.log}
+  />
+</DotCount>
 ```
