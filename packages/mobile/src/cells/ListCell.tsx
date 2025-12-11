@@ -68,7 +68,10 @@ export type ListCellBaseProps = CellDetailProps &
     spacingVariant?: 'normal' | 'compact' | 'condensed';
     /** Description of content. Max 1 line (with title) or 2 lines (without), otherwise will truncate. This prop is only intended to accept a string or Text component; other use cases, while allowed, are not supported and may result in unexpected behavior. For arbitrary content, use `descriptionNode`. */
     description?: React.ReactNode;
-    /** React node to render description. Takes precedence over `description`. */
+    /**
+     * React node to render description. Takes precedence over `description`.
+     * When provided, `styles.description` is not applied.
+     */
     descriptionNode?: React.ReactNode;
     /**
      * Disable the default accessory that is displayed when the cell is selected.
@@ -92,13 +95,21 @@ export type ListCellBaseProps = CellDetailProps &
     multiline?: boolean;
     /** Title of content. Max 1 line (with description) or 2 lines (without), otherwise will truncate. This prop is only intended to accept a string or Text component; other use cases, while allowed, are not supported and may result in unexpected behavior. For arbitrary content, use `titleNode`. */
     title?: React.ReactNode;
-    /** React node to render title. Takes precedence over `title`. */
+    /**
+     * React node to render title. Takes precedence over `title`.
+     * When provided, `styles.title` is not applied.
+     */
     titleNode?: React.ReactNode;
     /** Subtitle to display below the title and above the description. This prop is only intended to accept a string or Text component; other use cases, while allowed, are not supported and may result in unexpected behavior. For arbitrary content, use `subtitleNode`. */
     subtitle?: React.ReactNode;
-    /** React node to render subtitle. Takes precedence over `subtitle`. */
+    /**
+     * React node to render subtitle. Takes precedence over `subtitle`.
+     * When provided, `styles.subtitle` is not applied.
+     */
     subtitleNode?: React.ReactNode;
-    /** Styles for the components */
+    /**
+     * Styles for default subcomponents. Ignored when the corresponding `xxNode` prop is used.
+     */
     styles?: {
       root?: StyleProp<ViewStyle>;
       media?: StyleProp<ViewStyle>;

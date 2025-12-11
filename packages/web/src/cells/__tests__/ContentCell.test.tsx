@@ -98,7 +98,7 @@ describe('ContentCell', () => {
     );
 
     expect(spy).toHaveBeenCalledWith(
-      'ContentCell: Cannot use `meta` without a `title` or `subtitle`.',
+      'ContentCell: Cannot use meta content without a title or subtitle.',
     );
 
     spy.mockRestore();
@@ -162,6 +162,34 @@ describe('ContentCell', () => {
     );
 
     expect(screen.getByTestId('accessory')).toBeVisible();
+  });
+
+  it('renders override nodes when provided', () => {
+    render(
+      <DefaultThemeProvider>
+        <ContentCell
+          accessoryNode={<div data-testid="accessory-node">Accessory Node</div>}
+          description="Description"
+          descriptionNode={<div data-testid="description-node">Description Node</div>}
+          meta="Meta"
+          metaNode={<div data-testid="meta-node">Meta Node</div>}
+          subtitle="Subtitle"
+          subtitleNode={<div data-testid="subtitle-node">Subtitle Node</div>}
+          title="Title"
+          titleNode={<div data-testid="title-node">Title Node</div>}
+        />
+      </DefaultThemeProvider>,
+    );
+
+    expect(screen.getByTestId('title-node')).toBeVisible();
+    expect(screen.queryByText('Title')).not.toBeInTheDocument();
+    expect(screen.getByTestId('subtitle-node')).toBeVisible();
+    expect(screen.queryByText('Subtitle')).not.toBeInTheDocument();
+    expect(screen.getByTestId('description-node')).toBeVisible();
+    expect(screen.queryByText('Description')).not.toBeInTheDocument();
+    expect(screen.getByTestId('meta-node')).toBeVisible();
+    expect(screen.queryByText('Meta')).not.toBeInTheDocument();
+    expect(screen.getByTestId('accessory-node')).toBeVisible();
   });
 
   it('renders button when onClick is defined', () => {
@@ -256,6 +284,30 @@ describe('ContentCell', () => {
     );
 
     expect(screen.getByRole('link')).toHaveAttribute('target', target);
+  });
+
+  it('allows title to wrap to two lines in condensed spacing', () => {
+    render(
+      <DefaultThemeProvider>
+        <ContentCell description="Description" spacingVariant="condensed" title="Title" />
+      </DefaultThemeProvider>,
+    );
+
+    const title = screen.getByText('Title');
+
+    expect(title).toHaveStyle('--text-numberOfLines: 2');
+  });
+
+  it('limits title to a single line when description is present outside condensed spacing', () => {
+    render(
+      <DefaultThemeProvider>
+        <ContentCell description="Description" spacingVariant="normal" title="Title" />
+      </DefaultThemeProvider>,
+    );
+
+    const title = screen.getByText('Title');
+
+    expect(title).toHaveStyle('--text-numberOfLines: 1');
   });
 
   it('fires onClick', () => {

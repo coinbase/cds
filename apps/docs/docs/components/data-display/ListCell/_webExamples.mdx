@@ -398,6 +398,45 @@ The accessibility props are only applied when the `<ListCell>` has a value for t
 </VStack>
 ```
 
+## ContentCell
+
+```tsx live
+<ListCell
+  multiline
+  description={
+    <Text as="div" color="fgMuted" font="body">
+      Long description with multiple lines. This section can be arbitrarily long and occupy many
+      many lines.
+    </Text>
+  }
+  end={
+    <HStack alignItems="center" gap={2}>
+      <Text color="fgMuted" font="label2">
+        Meta
+      </Text>
+      <Icon color="fg" name="caretRight" size="s" />
+    </HStack>
+  }
+  media={<Avatar shape="circle" size="l" src={assets.eth.imageUrl} />}
+  onClick={() => console.log('clicked')}
+  priority="end"
+  spacingVariant="condensed"
+  styles={{
+    media: {
+      marginTop: 'var(--space-0_5)',
+      alignSelf: 'flex-start',
+    },
+    end: {
+      marginTop: 'var(--space-0_5)',
+      alignSelf: 'flex-start',
+    },
+  }}
+  subdetail="Subdetail"
+  subtitle="Subtitle"
+  title="Content-style layout"
+/>
+```
+
 ## Loading States
 
 The ListCellFallback component provides loading state representations of ListCell. It uses placeholder rectangles to indicate where content will appear, creating a smooth loading experience. The web version uses percentage-based widths and custom layouts to match the ListCell's four-column structure.
