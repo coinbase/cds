@@ -11,3 +11,5 @@ export * from './FeatureEntryCard';
 export * from './FeedCard';
 // Phoenix cards
 export * from './ContentCard';
+// Media card
+export * from './MediaCard';
