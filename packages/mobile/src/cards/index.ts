@@ -4,6 +4,7 @@ export * from './CardFooter';
 export * from './CardGroup';
 export * from './CardHeader';
 export * from './CardMedia';
+export * from './CardRoot';
 // Card variants
 export * from './AnnouncementCard';
 export * from './FeatureEntryCard';
