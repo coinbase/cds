@@ -7,9 +7,9 @@ import { Icon } from '../../../icons/Icon';
 import { HStack } from '../../../layout/HStack';
 import { VStack } from '../../../layout/VStack';
 import { Text } from '../../../typography/Text';
+import type { SelectOptionList } from '../../select';
 import type { SelectOption } from '../../select/Select';
 import { Combobox, type ComboboxRef } from '../Combobox';
-import type { SelectOptionList } from '../../select';
 
 export default {
   title: 'Components/Alpha/Combobox',
@@ -283,7 +283,7 @@ export const HideSearchInput = () => {
         label="Hide search input - multi"
         onChange={multiOnChange}
         options={fruitOptions}
-        placeholder="Search..."
+        placeholder="Empty value"
         type="multi"
         value={multiValue}
       />
@@ -292,7 +292,7 @@ export const HideSearchInput = () => {
         label="Hide search input - single"
         onChange={setSingleValue}
         options={fruitOptions}
-        placeholder="Search..."
+        placeholder="Empty value"
         type="single"
         value={singleValue}
       />
@@ -410,7 +410,7 @@ export const CompactSingleSelect = () => {
         compact
         label="Compact size"
         onChange={setValue}
-        options={fruitOptions}
+        options={singleFruitOptions}
         placeholder="Compact combobox..."
         type="single"
         value={value}

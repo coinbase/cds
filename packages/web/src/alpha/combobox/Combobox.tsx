@@ -14,6 +14,7 @@ import Fuse from 'fuse.js';
 
 import { NativeInput } from '../../controls/NativeInput';
 import { NAVIGATION_KEYS } from '../../overlays/FocusTrap';
+import { Text } from '../../typography';
 import type { SelectOptionList } from '../select';
 import { DefaultSelectControl } from '../select/DefaultSelectControl';
 import type {
@@ -108,6 +109,7 @@ export const DefaultComboboxControl = memo(
     options,
     open,
     setOpen,
+    compact,
     ...props
   }: ComboboxControlProps<Type, SelectOptionValue>) => {
     const { searchText, onSearch } = useContext(ComboboxContext);
@@ -116,10 +118,10 @@ export const DefaultComboboxControl = memo(
     const shouldShowSearchInput = !hideSearchInput && (!hasValue || open);
 
     useEffect(() => {
-      if (shouldShowSearchInput) {
+      if (shouldShowSearchInput && open) {
         searchInputRef.current?.focus();
       }
-    }, [shouldShowSearchInput]);
+    }, [shouldShowSearchInput, open]);
 
     const handleSearchChange = useCallback(
       (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -128,13 +130,18 @@ export const DefaultComboboxControl = memo(
       [onSearch],
     );
 
-    const handleOpen = useCallback(() => {
-      setOpen(true);
-    }, [setOpen]);
+    const handleSearchClick = useCallback(
+      (event: React.MouseEvent<HTMLInputElement>) => {
+        event.stopPropagation();
+        setOpen(true);
+      },
+      [setOpen],
+    );
 
     return (
       <SelectControlComponent
         ref={controlRef.current?.refs.setReference}
+        compact={compact}
         open={open}
         options={options}
         setOpen={setOpen}
@@ -145,7 +152,7 @@ export const DefaultComboboxControl = memo(
             <NativeInput
               ref={searchInputRef}
               onChange={handleSearchChange}
-              onClick={(event) => hasValue && event.stopPropagation()}
+              onClick={handleSearchClick}
               onKeyDown={(event) => {
                 if (!NAVIGATION_KEYS.includes(event.key)) {
                   event.stopPropagation();
@@ -154,20 +161,35 @@ export const DefaultComboboxControl = memo(
                   event.key === 'Enter' ||
                   (!NAVIGATION_KEYS.includes(event.key) && !event.shiftKey)
                 ) {
-                  handleOpen();
+                  setOpen(true);
                 }
               }}
               placeholder={typeof placeholder === 'string' ? placeholder : undefined}
               style={{
                 paddingLeft: 0,
                 paddingRight: 0,
-                height: hasValue ? 24 : 48,
+                height: hasValue ? 24 : compact ? 40 : 48,
                 width: '100%',
               }}
               tabIndex={0}
               value={searchText}
             />
-          ) : null
+          ) : (
+            <>
+              {hasValue ? null : (
+                <Text
+                  as="p"
+                  color="fgMuted"
+                  display="block"
+                  font="body"
+                  overflow="truncate"
+                  paddingY={0}
+                >
+                  {placeholder}
+                </Text>
+              )}
+            </>
+          )
         }
         placeholder={null}
         styles={{
@@ -178,8 +200,8 @@ export const DefaultComboboxControl = memo(
           },
           controlValueNode: {
             ...props.styles?.controlValueNode,
-            paddingTop: hasValue ? 'var(--space-1_5)' : 0,
-            paddingBottom: hasValue ? 'var(--space-1_5)' : 0,
+            paddingTop: hasValue ? (compact ? 'var(--space-1)' : 'var(--space-1_5)') : 0,
+            paddingBottom: hasValue ? (compact ? 'var(--space-1)' : 'var(--space-1_5)') : 0,
           },
         }}
         tabIndex={shouldShowSearchInput ? -1 : 0}

@@ -295,7 +295,6 @@ export const DefaultSelectControlComponent = memo(
           styles?.controlValueNode,
           props,
           labelVariant,
-          isMultiSelect,
           compact,
           startNode,
           shouldShowCompactLabel,

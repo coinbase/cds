@@ -333,16 +333,11 @@ const DefaultSelectControlComponent = memo(
               </HStack>
             )}
             {shouldShowCompactLabel ? (
-              <HStack alignItems="center" maxWidth="40%" paddingEnd={1}>
+              <HStack alignItems="center" paddingX={1}>
                 {labelNode}
               </HStack>
             ) : null}
-            <HStack
-              alignItems="center"
-              borderRadius={200}
-              justifyContent="space-between"
-              width="100%"
-            >
+            <HStack alignItems="center" borderRadius={200} justifyContent="space-between">
               <VStack
                 ref={valueNodeContainerRef}
                 alignItems="flex-start"
