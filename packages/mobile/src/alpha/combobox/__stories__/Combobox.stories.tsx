@@ -636,6 +636,42 @@ const ImperativeRefExample = () => {
   );
 };
 
+const OptionsWithAccessoryExample = () => {
+  const { value, onChange } = useMultiSelect({ initialValue: [] });
+  const optionsWithAccessory: SelectOption[] = fruitOptions.slice(0, 5).map((option) => ({
+    ...option,
+    accessory: <Icon color="fg" name="star" />,
+  }));
+  return (
+    <Combobox
+      label="Options with accessory"
+      onChange={onChange}
+      options={optionsWithAccessory}
+      placeholder="Select fruits..."
+      type="multi"
+      value={value}
+    />
+  );
+};
+
+const OptionsWithMediaExample = () => {
+  const { value, onChange } = useMultiSelect({ initialValue: [] });
+  const optionsWithMedia: SelectOption[] = fruitOptions.slice(0, 5).map((option) => ({
+    ...option,
+    media: <Icon color="fg" name="star" />,
+  }));
+  return (
+    <Combobox
+      label="Options with media"
+      onChange={onChange}
+      options={optionsWithMedia}
+      placeholder="Select fruits..."
+      type="multi"
+      value={value}
+    />
+  );
+};
+
 const DynamicOptionsExample = () => {
   const { value, onChange } = useMultiSelect({ initialValue: [] });
   const [options, setOptions] = useState(fruitOptions.slice(0, 5));
@@ -775,6 +811,12 @@ const Default = () => {
       </Example>
       <Example title="Imperative ref">
         <ImperativeRefExample />
+      </Example>
+      <Example title="Options with accessory">
+        <OptionsWithAccessoryExample />
+      </Example>
+      <Example title="Options with media">
+        <OptionsWithMediaExample />
       </Example>
       <Example title="Dynamic options">
         <DynamicOptionsExample />
