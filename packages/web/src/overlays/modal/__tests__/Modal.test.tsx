@@ -185,6 +185,16 @@ describe('Modal', () => {
     ).toHaveNoViolations();
   });
 
+  it('passes a11y when title is not provided', async () => {
+    expect(
+      await renderA11y(
+        <DefaultThemeProvider>
+          <MockModal visible accessibilityLabel={LABEL} closeAccessibilityLabel="Close" title="" />
+        </DefaultThemeProvider>,
+      ),
+    ).toHaveNoViolations();
+  });
+
   it('has expected default a11y attrs', () => {
     render(
       <DefaultThemeProvider>

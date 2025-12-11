@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.28.1 (12/10/2025 PST)
+
+#### 🐞 Fixes
+
+- Fix a11y bug on ModalHeader.
+
 ## 8.28.0 (12/10/2025 PST)
 
 #### 🚀 Updates
