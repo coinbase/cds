@@ -15,3 +15,5 @@ export * from './ContentCard';
 export * from './MediaCard';
 // Messaging card
 export * from './MessagingCard';
+// Data card
+export * from './DataCard';

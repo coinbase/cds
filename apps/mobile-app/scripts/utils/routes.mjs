@@ -201,6 +201,11 @@ export const routes = [
       require('@coinbase/cds-mobile/controls/__stories__/ControlGroup.stories').default,
   },
   {
+    key: 'DataCard',
+    getComponent: () =>
+      require('@coinbase/cds-mobile/alpha/data-card/__stories__/DataCard.stories').default,
+  },
+  {
     key: 'DateInput',
     getComponent: () => require('@coinbase/cds-mobile/dates/__stories__/DateInput.stories').default,
   },
