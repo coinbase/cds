@@ -1,5 +1,6 @@
 import exampleScreenContainsExampleRule from './example-screen-contains-example/index.mjs';
 import exampleScreenDefaultRule from './example-screen-default/index.mjs';
+import noDeprecatedJsdocRule from './no-deprecated-jsdoc/index.mjs';
 import safelySpreadPropsRule from './safely-spread-props/index.mjs';
 
 const plugin = {
@@ -8,6 +9,7 @@ const plugin = {
     'safely-spread-props': safelySpreadPropsRule,
     'example-screen-default': exampleScreenDefaultRule,
     'example-screen-contains-example': exampleScreenContainsExampleRule,
+    'no-deprecated-jsdoc': noDeprecatedJsdocRule,
   },
   configs: {},
 };
