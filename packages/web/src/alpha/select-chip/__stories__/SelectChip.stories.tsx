@@ -2,11 +2,9 @@ import { useState } from 'react';
 import { assets } from '@coinbase/cds-common/internal/data/assets';
 import { useMultiSelect } from '@coinbase/cds-common/select/useMultiSelect';
 
-import { Box } from '../../../layout/Box';
 import { VStack } from '../../../layout/VStack';
 import { RemoteImage } from '../../../media/RemoteImage';
 import { RemoteImageGroup } from '../../../media/RemoteImageGroup';
-import { Text } from '../../../typography/Text';
 import type { SelectOption, SelectOptionGroup, SelectType } from '../../select/Select';
 import { SelectChip } from '../SelectChip';
 
@@ -416,6 +414,36 @@ export const WithDescriptions = () => {
       onChange={setValue}
       options={exampleOptions}
       placeholder="Choose an option"
+      value={value}
+    />
+  );
+};
+
+export const WithDisplayValue = () => {
+  const exampleOptions = [
+    { value: '1', label: 'Option 1' },
+    { value: '2', label: 'Option 2' },
+    { value: '3', label: 'Option 3' },
+    { value: '4', label: 'Option 4' },
+    { value: '5', label: 'Option 5' },
+  ];
+  const { value, onChange } = useMultiSelect({
+    initialValue: [],
+  });
+
+  const displayValue =
+    Array.isArray(value) && value.length > 0
+      ? `${value.length} ${value.length === 1 ? 'option' : 'options'} selected`
+      : undefined;
+
+  return (
+    <SelectChip
+      controlAccessibilityLabel="Select multiple values"
+      displayValue={displayValue}
+      onChange={onChange}
+      options={exampleOptions}
+      placeholder="Choose options"
+      type="multi"
       value={value}
     />
   );
