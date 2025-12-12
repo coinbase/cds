@@ -282,6 +282,29 @@ When you pass the `end` prop, it overrides the `detail`/`subdetail`/`detailNode`
 />
 ```
 
+### Preserve Layout During Selection
+
+Use the `unselected` accessory to reserve space for the selection checkmark when toggling the `selected` state.
+
+```tsx live
+function PreserveLayoutExample() {
+  const [isSelected, setIsSelected] = useState(false);
+
+  return (
+    <VStack gap={1}>
+      <ListCell
+        accessory={isSelected ? 'selected' : 'unselected'}
+        description="Selected state uses the same space, no layout shift when selected"
+        spacingVariant="condensed"
+        title="Leverage unselected state"
+        selected={isSelected}
+        onClick={() => setIsSelected((prev) => !prev)}
+      />
+    </VStack>
+  );
+}
+```
+
 ### Custom Accessory via Node Prop
 
 ```tsx live
@@ -373,6 +396,45 @@ The accessibility props are only applied when the `<ListCell>` has a value for t
     end={<Button compact>Action</Button>}
   />
 </VStack>
+```
+
+## ContentCell
+
+```tsx live
+<ListCell
+  multiline
+  description={
+    <Text as="div" color="fgMuted" font="body">
+      Long description with multiple lines. This section can be arbitrarily long and occupy many
+      many lines.
+    </Text>
+  }
+  end={
+    <HStack alignItems="center" gap={2}>
+      <Text color="fgMuted" font="label2">
+        Meta
+      </Text>
+      <Icon color="fg" name="caretRight" size="s" />
+    </HStack>
+  }
+  media={<Avatar shape="circle" size="l" src={assets.eth.imageUrl} />}
+  onClick={() => console.log('clicked')}
+  priority="end"
+  spacingVariant="condensed"
+  styles={{
+    media: {
+      marginTop: 'var(--space-0_5)',
+      alignSelf: 'flex-start',
+    },
+    end: {
+      marginTop: 'var(--space-0_5)',
+      alignSelf: 'flex-start',
+    },
+  }}
+  subdetail="Subdetail"
+  subtitle="Subtitle"
+  title="Content-style layout"
+/>
 ```
 
 ## Loading States

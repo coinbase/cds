@@ -2,50 +2,118 @@
 
 ```tsx live
 <ContentCell
+  spacingVariant="condensed"
   title="Main Title"
   subtitle="Subtitle text"
   description="This is a detailed description of the content that can span multiple lines and will automatically handle overflow."
 />
 ```
 
-### With Meta Information and Truncation
+### Spacing variants
+
+```tsx live
+<VStack>
+  {/* Preferred configuration */}
+  <ContentCell
+    accessory="arrow"
+    description="New design (condensed)"
+    meta="Updated 2m ago"
+    spacingVariant="condensed"
+    media={<Avatar size="m" src={assets.eth.imageUrl} />}
+    title="Condensed"
+    onClick={() => console.log('clicked')}
+    styles={{
+      media: {
+        paddingTop: 'var(--space-0_5)',
+      },
+    }}
+  />
+
+  {/* Legacy spacing kept for backward compatibility */}
+  <ContentCell
+    accessory="arrow"
+    description="Legacy compact spacing"
+    meta="Updated 2m ago"
+    spacingVariant="compact"
+    media={<Avatar size="m" src={assets.eth.imageUrl} />}
+    title="Compact (legacy)"
+    onClick={() => console.log('clicked')}
+    styles={{
+      media: {
+        paddingTop: 'var(--space-0_5)',
+      },
+    }}
+  />
+
+  <ContentCell
+    accessory="arrow"
+    description="Legacy normal spacing"
+    meta="Updated 2m ago"
+    spacingVariant="normal"
+    media={<Avatar size="m" src={assets.eth.imageUrl} />}
+    title="Normal (legacy)"
+    onClick={() => console.log('clicked')}
+    styles={{
+      media: {
+        paddingTop: 'var(--space-0_5)',
+      },
+    }}
+  />
+</VStack>
+```
+
+When `spacingVariant="condensed"`, `meta` content is aligend with the accessory.
+
+### Meta and truncation
 
 ```tsx live
 <ContentCell
-  title="This is a very long title that will be truncated when it exceeds the available space in the container"
-  subtitle="This subtitle will also be truncated if it becomes too long for the container to display"
+  spacingVariant="condensed"
+  title="This is a very long title that wraps to two lines in condensed spacing"
+  subtitle="This subtitle truncates to a single line"
   meta="2 days ago"
-  description="The title and subtitle above will be truncated with ellipsis, while this description text will wrap to multiple lines and show scrollbars if needed."
+  description="The title wraps to a second line because condensed spacing is enabled. The subtitle truncates to a single line and meta content is right aligned."
 />
 ```
 
-### With Media and Accessory
+### With media and accessory
 
 ```tsx live
 <ContentCell
+  spacingVariant="condensed"
   title="Profile Information"
   subtitle="Active Status"
   media={<Avatar alt="Sneezy" name="Sneezy" size="m" colorScheme="blue" />}
   accessory="disclosure"
   description="This example demonstrates the use of media (avatar) and an accessory indicator."
+  styles={{
+    media: {
+      paddingTop: 'var(--space-0_5)',
+    },
+  }}
 />
 ```
 
-### Compact Layout
+:::tip
+Adjust the media `paddingTop` so the visual aligns with the text stack.
+:::
+
+### Compact spacing (legacy)
 
 ```tsx live
 <ContentCell
+  spacingVariant="compact"
   title="Compact Cell"
   subtitle="Reduced spacing"
   description="This cell uses compact spacing for denser layouts."
-  compact
 />
 ```
 
-### Selected State
+### Selected state
 
 ```tsx live
 <ContentCell
+  spacingVariant="condensed"
   title="Selected Item"
   subtitle="With checkmark"
   description="This cell shows the selected state with a checkmark accessory."
@@ -53,23 +121,24 @@
 />
 ```
 
-### Loading States
+### Loading states
 
-The ContentCellFallback component provides loading state representations of ContentCell. It uses placeholder rectangles to indicate where content will appear, creating a smooth loading experience. Each placeholder can have its width determined by a predefined set of values, which can be selected using the `rectWidthVariant` prop. The web version uses percentage-based widths and custom layouts to match the ContentCell structure.
+The `ContentCellFallback` component provides loading state representations of `ContentCell`. It uses placeholder rectangles to indicate where content will appear, creating a smooth loading experience. Each placeholder can have its width determined by a predefined set of values, which can be selected using the `rectWidthVariant` prop. The web version uses percentage-based widths and custom layouts to match the `ContentCell` structure.
 
 ```tsx live
 <VStack gap={3}>
   {/* Basic loading state */}
-  <ContentCellFallback title subtitle description />
+  <ContentCellFallback spacingVariant="condensed" title subtitle description />
 
   {/* Loading state with media */}
-  <ContentCellFallback title subtitle description media="avatar" />
+  <ContentCellFallback spacingVariant="condensed" title subtitle description media="avatar" />
 
   {/* Loading state with meta information */}
-  <ContentCellFallback title subtitle description meta />
+  <ContentCellFallback spacingVariant="condensed" title subtitle description meta />
 
   {/* Loading state with custom width variant and disabled randomization */}
   <ContentCellFallback
+    spacingVariant="condensed"
     title
     subtitle
     description

@@ -291,8 +291,8 @@ const svgJsMap = {
     dark: () => require('../svgJs/dark/documentSuccess-3.js').content,
   },
   downloadCoinbaseWalletArrow: {
-    light: () => require('../svgJs/light/downloadCoinbaseWalletArrow-6.js').content,
-    dark: () => require('../svgJs/dark/downloadCoinbaseWalletArrow-6.js').content,
+    light: () => require('../svgJs/light/downloadCoinbaseWalletArrow-7.js').content,
+    dark: () => require('../svgJs/dark/downloadCoinbaseWalletArrow-7.js').content,
   },
   downloadingStatement: {
     light: () => require('../svgJs/light/downloadingStatement-3.js').content,
@@ -371,8 +371,8 @@ const svgJsMap = {
     dark: () => require('../svgJs/dark/ethWrappedStakingRewards-4.js').content,
   },
   exploreDecentralizedApps: {
-    light: () => require('../svgJs/light/exploreDecentralizedApps-5.js').content,
-    dark: () => require('../svgJs/dark/exploreDecentralizedApps-5.js').content,
+    light: () => require('../svgJs/light/exploreDecentralizedApps-6.js').content,
+    dark: () => require('../svgJs/dark/exploreDecentralizedApps-6.js').content,
   },
   faceId: {
     light: () => require('../svgJs/light/faceId-1.js').content,
@@ -487,12 +487,12 @@ const svgJsMap = {
     dark: () => require('../svgJs/dark/lightningNetworkSend-1.js').content,
   },
   linkCoinbaseWallet: {
-    light: () => require('../svgJs/light/linkCoinbaseWallet-6.js').content,
-    dark: () => require('../svgJs/dark/linkCoinbaseWallet-6.js').content,
+    light: () => require('../svgJs/light/linkCoinbaseWallet-7.js').content,
+    dark: () => require('../svgJs/dark/linkCoinbaseWallet-7.js').content,
   },
   linkingYourWalletToYourCoinbaseAccount: {
-    light: () => require('../svgJs/light/linkingYourWalletToYourCoinbaseAccount-7.js').content,
-    dark: () => require('../svgJs/dark/linkingYourWalletToYourCoinbaseAccount-7.js').content,
+    light: () => require('../svgJs/light/linkingYourWalletToYourCoinbaseAccount-8.js').content,
+    dark: () => require('../svgJs/dark/linkingYourWalletToYourCoinbaseAccount-8.js').content,
   },
   liquidationBufferGreen: {
     light: () => require('../svgJs/light/liquidationBufferGreen-1.js').content,

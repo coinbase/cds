@@ -1,4 +1,5 @@
 import React, { memo } from 'react';
+import { compactListHeight, listHeight } from '@coinbase/cds-common/tokens/cell';
 import type { FallbackRectWidthProps } from '@coinbase/cds-common/types';
 import { getRectWidthVariant } from '@coinbase/cds-common/utils/getRectWidthVariant';
 
@@ -6,27 +7,42 @@ import { Box } from '../layout/Box';
 import { Fallback } from '../layout/Fallback';
 
 import { Cell } from './Cell';
+import { CellAccessory, type CellAccessoryType } from './CellAccessory';
 import type { CellMediaType } from './CellMedia';
+import type { ContentCellBaseProps } from './ContentCell';
+import { condensedInnerSpacing, condensedOuterSpacing } from './ListCell';
 import { MediaFallback } from './MediaFallback';
 
-export type ContentCellFallbackProps = FallbackRectWidthProps & {
-  /** Display description shimmer. */
-  description?: boolean;
-  /** Display media shimmer with a shape according to type. */
-  media?: CellMediaType;
-  /** Display meta shimmer. */
-  meta?: boolean;
-  /** Display subtitle shimmer. */
-  subtitle?: boolean;
-  /** Display title shimmer. */
-  title?: boolean;
-};
+type ContentCellFallbackSpacingProps = Pick<
+  ContentCellBaseProps,
+  'innerSpacing' | 'outerSpacing' | 'spacingVariant'
+>;
 
-const fullWidthStyle = { width: '100%' } as const;
+export type ContentCellFallbackProps = FallbackRectWidthProps &
+  ContentCellFallbackSpacingProps & {
+    /** Accessory to display at the end of the cell. */
+    accessory?: CellAccessoryType;
+    /** Custom accessory rendered at the end of the cell. Takes precedence over `accessory`. */
+    accessoryNode?: React.ReactNode;
+    /** Display description shimmer. */
+    description?: boolean;
+    /** Display media shimmer with a shape according to type. */
+    media?: CellMediaType;
+    /** Display meta shimmer. */
+    meta?: boolean;
+    /** Display subtitle shimmer. */
+    subtitle?: boolean;
+    /** Display title shimmer. */
+    title?: boolean;
+  };
+
+const fullWidthStyle = { width: '100%', display: 'block' } as const;
 
 const floatStyle = { float: 'right', width: '30%' } as const;
 
 export const ContentCellFallback = memo(function ContentCellFallback({
+  accessory,
+  accessoryNode,
   title,
   description,
   media,
@@ -34,12 +50,43 @@ export const ContentCellFallback = memo(function ContentCellFallback({
   subtitle,
   disableRandomRectWidth,
   rectWidthVariant,
+  spacingVariant = 'normal',
+  innerSpacing,
+  outerSpacing,
 }: ContentCellFallbackProps) {
   // We can't use ContentCell here as we need to account for percentage based widths.
   // Flexbox collides with percentages also, so we need to wrap in normal divs.
+  const minHeight =
+    spacingVariant === 'compact'
+      ? compactListHeight
+      : spacingVariant === 'normal'
+        ? listHeight
+        : undefined;
+  const subtitleHeight = spacingVariant === 'condensed' ? 18 : 16;
+
   return (
-    <Cell media={media && <MediaFallback type={media} />}>
-      <div style={fullWidthStyle}>
+    <Cell
+      accessory={accessory ? <CellAccessory paddingTop={0.5} type={accessory} /> : undefined}
+      accessoryNode={accessoryNode}
+      borderRadius={spacingVariant === 'condensed' ? 0 : undefined}
+      innerSpacing={
+        innerSpacing ?? (spacingVariant === 'condensed' ? condensedInnerSpacing : undefined)
+      }
+      media={media && <MediaFallback type={media} />}
+      minHeight={minHeight}
+      outerSpacing={
+        outerSpacing ?? (spacingVariant === 'condensed' ? condensedOuterSpacing : undefined)
+      }
+      styles={{
+        media: {
+          alignSelf: 'flex-start',
+        },
+        accessory: {
+          alignSelf: 'flex-start',
+        },
+      }}
+    >
+      <Box paddingTop={spacingVariant === 'condensed' ? 0.5 : 0} style={fullWidthStyle}>
         {meta && (
           <div style={floatStyle}>
             <Box flexShrink={0} justifyContent="flex-end">
@@ -67,7 +114,7 @@ export const ContentCellFallback = memo(function ContentCellFallback({
           <Fallback
             percentage
             disableRandomRectWidth={disableRandomRectWidth}
-            height={16}
+            height={subtitleHeight}
             paddingTop={0.5}
             rectWidthVariant={getRectWidthVariant(rectWidthVariant, 2)}
             width={35}
@@ -83,7 +130,7 @@ export const ContentCellFallback = memo(function ContentCellFallback({
             width={65}
           />
         )}
-      </div>
+      </Box>
     </Cell>
   );
 });

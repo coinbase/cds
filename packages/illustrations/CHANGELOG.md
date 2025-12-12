@@ -8,6 +8,84 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 4.29.0 (12/5/2025 PST)
+
+#### 🚀 Updates
+
+- Feat: Publish illustrations 2025/12/05. [[#215](https://github.com/coinbase/cds/pull/215)]
+
+##### ⭐️ Added (2)
+
+###### Pictogram (2)
+
+- futures
+- robot
+
+##### ⭐️ Updated (48)
+
+###### Pictogram (27)
+
+- cloudNavigation
+- baseGlobe
+- baseChatBubbleHeart
+- baseTile
+- baseRockon
+- basePower
+- baseCreatorCoin
+- baseSmile
+- baseRocket
+- coinbaseWalletApp
+- linkYourAccount
+- baseCoinStar
+- baseHandStar
+- baseConfetti
+- baseGem
+- baseSaved
+- baseStack
+- baseCertificateStar
+- baseLightningbolt
+- baseStar
+- baseAscend
+- baseRibbon
+- baseExchange
+- baseComet
+- baseComputer
+- baseDoor
+- baseLogo
+
+###### HeroSquare (10)
+
+- walletAsset
+- restrictedCountry
+- baseCreatorCoin
+- baseCreatorCoinEmpty
+- baseSocial
+- exploreDecentralizedApps
+- walletUi
+- referralsWalletPhones
+- downloadCoinbaseWallet
+- linkingYourWalletToYourCoinbaseAccount
+
+###### SpotIcon (2)
+
+- walletLogo
+- base
+
+###### SpotRectangle (4)
+
+- downloadCoinbaseWalletArrow
+- linkingYourWalletToYourCoinbaseAccount
+- linkCoinbaseWallet
+- exploreDecentralizedApps
+
+###### SpotSquare (5)
+
+- baseSwitch
+- linkingYourWalletToYourCoinbaseAccount
+- linkCoinbaseWallet
+- walletApp
+- baseCreatorCoin
+
 ## 4.28.0 (11/18/2025 PST)
 
 #### 🚀 Updates

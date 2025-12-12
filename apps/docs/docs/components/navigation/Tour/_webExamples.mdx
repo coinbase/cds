@@ -1,4 +1,7 @@
-### Basic usage
+The Tour component guides users through your app with step-by-step coachmarks.
+You define tour steps with unique IDs and wrap target elements with `TourStep` components.
+
+## Basic usage
 
 ```jsx live
 function Example() {
@@ -44,13 +47,13 @@ function Example() {
         }
         content={
           <VStack gap={2}>
-            <TextCaption as="p" color="fgMuted">
+            <Text as="p" color="fgMuted" font="caption">
               50%
-            </TextCaption>
+            </Text>
             <ProgressBar progress={0.5} />
-            <TextBody as="p">
+            <Text as="p" font="body">
               Add up to 3 lines of body copy. Deliver your message with clarity and impact
-            </TextBody>
+            </Text>
           </VStack>
         }
         media={<RemoteImage height={150} source={ethBackground} width="100%" />}
@@ -61,7 +64,7 @@ function Example() {
   };
 
   const StepThree = () => {
-    const { stopTour, goNextTourStep, goPreviousTourStep } = useTourContext();
+    const { stopTour, goPreviousTourStep } = useTourContext();
     return (
       <Coachmark
         action={
@@ -110,16 +113,20 @@ function Example() {
           Start tour
         </Button>
         <TourStep id="step1">
-          <Box background="bgAlternate" padding={4}>
-            <TextBody as="p">This is step 1</TextBody>
+          <Box background="bgSecondary" padding={4}>
+            <Text as="p" font="body">
+              This is step 1
+            </Text>
           </Box>
         </TourStep>
         <Box height={spacerHeightIncrement} />
         <HStack justifyContent="flex-end">
           <Box flexShrink={0} width={spacerWidthIncrement} />
           <TourStep id="step2">
-            <Box background="bgAlternate" padding={4} width={150}>
-              <TextBody as="p">This is step 2</TextBody>
+            <Box background="bgSecondary" padding={4} width={150}>
+              <Text as="p" font="body">
+                This is step 2
+              </Text>
             </Box>
           </TourStep>
         </HStack>
@@ -127,8 +134,10 @@ function Example() {
         <HStack>
           <Box flexShrink={0} width={spacerWidthIncrement * 2} />
           <TourStep id="step3">
-            <VStack background="bgAlternate" padding={4} width={150}>
-              <TextBody as="p">This is step 3</TextBody>
+            <VStack background="bgSecondary" padding={4} width={150}>
+              <Text as="p" font="body">
+                This is step 3
+              </Text>
             </VStack>
           </TourStep>
         </HStack>
@@ -141,5 +150,396 @@ function Example() {
       <TourExample />
     </Tour>
   );
+}
+```
+
+You can use TypeScript string literal types to ensure type safety for your step IDs.
+
+```tsx
+type StepId = 'intro' | 'feature-highlight' | 'call-to-action';
+
+function TypeSafeTourExample() {
+  const [activeTourStep, setActiveTourStep] = useState<TourStepValue<StepId> | null>(null);
+
+  const tourSteps: TourStepValue<StepId>[] = [
+    { id: 'intro', Component: IntroStep },
+    { id: 'feature-highlight', Component: FeatureStep },
+    { id: 'call-to-action', Component: CTAStep },
+  ];
+
+  return (
+    <Tour activeTourStep={activeTourStep} onChange={setActiveTourStep} steps={tourSteps}>
+      <TourStep id="intro">
+        <IntroContent />
+      </TourStep>
+      <TourStep id="feature-highlight">
+        <FeatureContent />
+      </TourStep>
+      {/* TypeScript error if id doesn't match StepId type */}
+      <TourStep id="call-to-action">
+        <CTAContent />
+      </TourStep>
+    </Tour>
+  );
+}
+```
+
+## Scrolling
+
+The Tour component automatically scrolls to bring off-screen targets into view.
+You can customize this behavior with the `scrollOptions` prop or disable it entirely with `disableAutoScroll`.
+
+```jsx
+function ScrollingExample() {
+  const [activeTourStep, setActiveTourStep] = useState(null);
+
+  const tourSteps = [
+    { id: 'step1', Component: StepOne },
+    {
+      id: 'step2',
+      // Disable auto-scroll for just this step
+      disableAutoScroll: true,
+      Component: StepTwo,
+    },
+    {
+      id: 'step3',
+      // Custom scroll options for this step
+      scrollOptions: {
+        behavior: 'smooth',
+        marginX: 50,
+        marginY: 150,
+      },
+      Component: StepThree,
+    },
+  ];
+
+  return (
+    <Tour
+      activeTourStep={activeTourStep}
+      onChange={setActiveTourStep}
+      steps={tourSteps}
+      // Global scroll options
+      scrollOptions={{
+        behavior: 'smooth',
+        marginX: 100,
+        marginY: 100,
+      }}
+    >
+      ...
+    </Tour>
+  );
+}
+```
+
+## Customization
+
+### Overlay
+
+You can hide the dimmed overlay behind the coachmark using the `hideOverlay` prop.
+This can be set globally on the `Tour` component or per-step.
+
+```jsx live
+function HideOverlayExample() {
+  const [activeTourStep, setActiveTourStep] = useState(null);
+  const [hideOverlay, setHideOverlay] = useState(false);
+
+  const StepOne = () => {
+    const { goNextTourStep, stopTour } = useTourContext();
+    return (
+      <Coachmark
+        action={
+          <Button compact onClick={goNextTourStep}>
+            Next
+          </Button>
+        }
+        content="This step respects the global hideOverlay setting."
+        onClose={stopTour}
+        title="Step One"
+      />
+    );
+  };
+
+  const StepTwo = () => {
+    const { stopTour, goPreviousTourStep } = useTourContext();
+    return (
+      <Coachmark
+        action={
+          <HStack gap={1}>
+            <Button compact onClick={goPreviousTourStep} variant="secondary">
+              Back
+            </Button>
+            <Button compact onClick={stopTour}>
+              Done
+            </Button>
+          </HStack>
+        }
+        content="This step also respects the global hideOverlay setting."
+        title="Step Two"
+      />
+    );
+  };
+
+  const tourSteps = [
+    { id: 'step1', Component: StepOne },
+    { id: 'step2', Component: StepTwo },
+  ];
+
+  const TourContent = () => {
+    const { startTour } = useTourContext();
+    return (
+      <VStack gap={2}>
+        <HStack gap={2} alignItems="center">
+          <Button compact onClick={() => startTour()}>
+            Start tour
+          </Button>
+          <Checkbox checked={hideOverlay} onChange={() => setHideOverlay((prev) => !prev)}>
+            Hide overlay
+          </Checkbox>
+        </HStack>
+        <HStack gap={4}>
+          <TourStep id="step1">
+            <Box background="bgSecondary" padding={4}>
+              <Text as="p" font="body">
+                Step 1
+              </Text>
+            </Box>
+          </TourStep>
+          <TourStep id="step2">
+            <Box background="bgSecondary" padding={4}>
+              <Text as="p" font="body">
+                Step 2
+              </Text>
+            </Box>
+          </TourStep>
+        </HStack>
+      </VStack>
+    );
+  };
+
+  return (
+    <Tour
+      hideOverlay={hideOverlay}
+      activeTourStep={activeTourStep}
+      onChange={setActiveTourStep}
+      steps={tourSteps}
+    >
+      <TourContent />
+    </Tour>
+  );
+}
+```
+
+### Mask
+
+Customize the mask (cutout) around the highlighted element with the `tourMaskPadding` and `tourMaskBorderRadius` props.
+
+```jsx
+<Tour
+  activeTourStep={activeTourStep}
+  onChange={setActiveTourStep}
+  steps={tourSteps}
+  // Padding around the highlighted element (default: 8)
+  tourMaskPadding={16}
+  // Border radius of the cutout (default: 8)
+  tourMaskBorderRadius={12}
+>
+  ...
+</Tour>
+```
+
+You can provide a completely custom mask component using the `TourMaskComponent` prop.
+
+```jsx
+function CustomMaskExample() {
+  const [activeTourStep, setActiveTourStep] = useState(null);
+
+  const CustomMask = ({ activeTourStepTargetRect, padding = 8, borderRadius = 8 }) => {
+    // Custom mask implementation
+    // activeTourStepTargetRect contains { x, y, width, height } of the target element
+    return (
+      <svg
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100vw',
+          height: '100vh',
+          pointerEvents: 'none',
+        }}
+      >
+        <defs>
+          <mask id="tour-mask">
+            <rect fill="white" height="100%" width="100%" />
+            <rect
+              fill="black"
+              height={activeTourStepTargetRect.height + padding * 2}
+              rx={borderRadius}
+              ry={borderRadius}
+              width={activeTourStepTargetRect.width + padding * 2}
+              x={activeTourStepTargetRect.x - padding}
+              y={activeTourStepTargetRect.y - padding}
+            />
+          </mask>
+        </defs>
+        <rect fill="rgba(0,0,0,0.5)" height="100%" mask="url(#tour-mask)" width="100%" />
+      </svg>
+    );
+  };
+
+  return (
+    <Tour
+      activeTourStep={activeTourStep}
+      onChange={setActiveTourStep}
+      steps={tourSteps}
+      TourMaskComponent={CustomMask}
+    >
+      ...
+    </Tour>
+  );
+}
+```
+
+### Positioning
+
+The Tour component uses `@floating-ui` to position coachmarks relative to their target elements.
+You can customize positioning with the `tourStepOffset`, `tourStepShift`, and `tourStepAutoPlacement` props.
+
+```jsx
+function PositioningExample() {
+  const [activeTourStep, setActiveTourStep] = useState(null);
+
+  const tourSteps = [
+    { id: 'step1', Component: StepOne },
+    { id: 'step2', Component: StepTwo },
+  ];
+
+  return (
+    <Tour
+      activeTourStep={activeTourStep}
+      onChange={setActiveTourStep}
+      steps={tourSteps}
+      // Distance between coachmark and target (default: 24)
+      tourStepOffset={32}
+      // Padding when shifting to stay in viewport (default: { padding: 32 })
+      tourStepShift={{ padding: 16 }}
+      // Auto-placement options from @floating-ui
+      tourStepAutoPlacement={{ allowedPlacements: ['top', 'bottom'] }}
+    >
+      ...
+    </Tour>
+  );
+}
+```
+
+### Arrow
+
+You can customize the arrow that points to the target element by providing a custom `TourStepArrowComponent`.
+
+```jsx
+function CustomArrowExample() {
+  const [activeTourStep, setActiveTourStep] = useState(null);
+
+  // Custom arrow component - MUST forward ref
+  const CustomArrow = memo(
+    forwardRef((props, ref) => {
+      return <DefaultTourStepArrow {...props} ref={ref} style={{ color: 'var(--color-blue60)' }} />;
+    }),
+  );
+
+  const tourSteps = [
+    {
+      id: 'step1',
+      Component: StepOne,
+      // Per-step custom arrow
+      ArrowComponent: CustomArrow,
+      // Or just customize the style
+      arrowStyle: { color: 'var(--color-purple60)' },
+    },
+    { id: 'step2', Component: StepTwo },
+  ];
+
+  return (
+    <Tour
+      activeTourStep={activeTourStep}
+      onChange={setActiveTourStep}
+      steps={tourSteps}
+      TourStepArrowComponent={CustomArrow}
+    >
+      ...
+    </Tour>
+  );
+}
+```
+
+### Portal
+
+By default, the Tour uses React portals to render outside the DOM hierarchy.
+You can disable this behavior if needed.
+
+```jsx
+<Tour
+  ...
+  disablePortal
+>
+  ...
+</Tour>
+```
+
+## Accessibility
+
+Always provide accessibility labels for close buttons using the `closeButtonAccessibilityLabel` prop and ensure coachmarks are navigable.
+
+```jsx
+function AccessibleTourExample() {
+  const AccessibleStep = () => {
+    const { goNextTourStep, stopTour } = useTourContext();
+
+    return (
+      <Coachmark
+        action={
+          <Button
+            aria-label="Advances to the next step in the tour"
+            compact
+            onClick={goNextTourStep}
+          >
+            Next
+          </Button>
+        }
+        closeButtonAccessibilityLabel="Close tour and return to main content"
+        content="This coachmark has proper accessibility labels for screen readers."
+        onClose={stopTour}
+        title="Accessible Step"
+      />
+    );
+  };
+}
+```
+
+## Callbacks
+
+Use the `onBeforeActive` callback to perform actions before a step becomes active,
+such as fetching data, preparing the UI, or custom scrolling logic.
+
+```jsx
+function CallbacksExample() {
+  const tourSteps = [
+    {
+      id: 'step1',
+      onBeforeActive: () => {
+        console.log('Step 1 is about to become active');
+        // Perform any setup needed
+      },
+      Component: StepOne,
+    },
+    {
+      id: 'step2',
+      onBeforeActive: async () => {
+        // Async operations are supported
+        await fetchStepData();
+        console.log('Step 2 data loaded');
+      },
+      Component: StepTwo,
+    },
+  ];
 }
 ```

@@ -10,21 +10,88 @@ export default {
 export const Fallbacks = () => {
   return (
     <>
-      <ContentCellFallback disableRandomRectWidth title />
-      <ContentCellFallback description disableRandomRectWidth title />
-      <ContentCellFallback disableRandomRectWidth meta title />
-      <ContentCellFallback disableRandomRectWidth subtitle title />
-      <ContentCellFallback description disableRandomRectWidth meta title />
-      <ContentCellFallback description disableRandomRectWidth meta subtitle title />
-      <ContentCellFallback disableRandomRectWidth title media="icon" />
-      <ContentCellFallback description disableRandomRectWidth title media="asset" />
-      <ContentCellFallback disableRandomRectWidth meta title media="image" />
-      <ContentCellFallback disableRandomRectWidth subtitle title media="avatar" />
-      <ContentCellFallback description disableRandomRectWidth meta title media="icon" />
-      <ContentCellFallback description disableRandomRectWidth meta subtitle title media="asset" />
-      <ContentCellFallback description meta subtitle title media="asset" rectWidthVariant={0} />
-      <ContentCellFallback description meta subtitle title media="asset" rectWidthVariant={1} />
-      <ContentCellFallback description meta subtitle title media="asset" rectWidthVariant={2} />
+      <ContentCellFallback disableRandomRectWidth title spacingVariant="condensed" />
+      <ContentCellFallback description disableRandomRectWidth title spacingVariant="condensed" />
+      <ContentCellFallback disableRandomRectWidth meta title spacingVariant="condensed" />
+      <ContentCellFallback disableRandomRectWidth subtitle title spacingVariant="condensed" />
+      <ContentCellFallback
+        description
+        disableRandomRectWidth
+        meta
+        title
+        spacingVariant="condensed"
+      />
+      <ContentCellFallback
+        description
+        disableRandomRectWidth
+        meta
+        subtitle
+        title
+        spacingVariant="condensed"
+      />
+      <ContentCellFallback disableRandomRectWidth title media="icon" spacingVariant="condensed" />
+      <ContentCellFallback
+        description
+        disableRandomRectWidth
+        title
+        media="asset"
+        spacingVariant="condensed"
+      />
+      <ContentCellFallback
+        disableRandomRectWidth
+        meta
+        title
+        media="image"
+        spacingVariant="condensed"
+      />
+      <ContentCellFallback
+        disableRandomRectWidth
+        subtitle
+        title
+        media="avatar"
+        spacingVariant="condensed"
+      />
+      <ContentCellFallback
+        description
+        disableRandomRectWidth
+        meta
+        title
+        media="icon"
+        spacingVariant="condensed"
+      />
+      <ContentCellFallback
+        description
+        disableRandomRectWidth
+        meta
+        subtitle
+        title
+        media="asset"
+        spacingVariant="condensed"
+      />
+      <ContentCellFallback
+        description
+        subtitle
+        title
+        media="asset"
+        rectWidthVariant={0}
+        spacingVariant="condensed"
+      />
+      <ContentCellFallback
+        description
+        subtitle
+        title
+        media="asset"
+        rectWidthVariant={1}
+        spacingVariant="condensed"
+      />
+      <ContentCellFallback
+        description
+        subtitle
+        title
+        media="asset"
+        rectWidthVariant={2}
+        spacingVariant="condensed"
+      />
     </>
   );
 };

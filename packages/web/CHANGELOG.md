@@ -8,6 +8,48 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.28.2 ((12/12/2025, 06:23 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.28.1 (12/10/2025 PST)
+
+#### 🐞 Fixes
+
+- Fix a11y bug on ModalHeader.
+
+## 8.28.0 (12/10/2025 PST)
+
+#### 🚀 Updates
+
+- Updated ContentCell to support condensed variant. [[#205](https://github.com/coinbase/cds/pull/205)] [DX-5013]
+
+## 8.27.4 ((12/7/2025, 11:54 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.27.3 ((12/5/2025, 01:46 PM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.27.2 (12/4/2025 PST)
+
+#### 🐞 Fixes
+
+- Fix a bug where Banner will incorrectly grow to its parent height. [[#209](https://github.com/coinbase/cds/pull/209)] [DX-5059]
+
+## 8.27.1 (12/4/2025 PST)
+
+#### 🐞 Fixes
+
+- Fix mobile safari not rendering radio icon issue. [[#208](https://github.com/coinbase/cds/pull/208)]
+
+## 8.27.0 (12/3/2025 PST)
+
+#### 🚀 Updates
+
+- Feat: introduce `unselected` state for ListCell. [[#194](https://github.com/coinbase/cds/pull/194)] [DX-4947]
+
 ## 8.26.0 (12/1/2025 PST)
 
 #### 🚀 Updates

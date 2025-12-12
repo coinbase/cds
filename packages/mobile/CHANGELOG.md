@@ -8,6 +8,50 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.28.2 (12/12/2025 PST)
+
+#### 🐞 Fixes
+
+- Export Text component in typography barrel. [[#238](https://github.com/coinbase/cds/pull/238)]
+
+## 8.28.1 (12/10/2025 PST)
+
+#### 🐞 Fixes
+
+- Fix a11y bug on ModalHeader.
+
+## 8.28.0 (12/10/2025 PST)
+
+#### 🚀 Updates
+
+- Updated ContentCell to support condensed variant. [[#205](https://github.com/coinbase/cds/pull/205)] [DX-5013]
+
+## 8.27.4 (12/7/2025 PST)
+
+#### 🐞 Fixes
+
+- Add missing tabs style to TabbedChips. [[#217](https://github.com/coinbase/cds/pull/217)]
+
+## 8.27.3 (12/5/2025 PST)
+
+#### 🐞 Fixes
+
+- Fix ProgressBar accessibilityValue for Fabric. [[#207](https://github.com/celsaad/cds/pull/207)]
+
+## 8.27.2 ((12/4/2025, 04:23 PM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.27.1 ((12/4/2025, 06:51 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.27.0 (12/3/2025 PST)
+
+#### 🚀 Updates
+
+- Feat: introduce `unselected` state for ListCell. [[#194](https://github.com/coinbase/cds/pull/194)] [DX-4947]
+
 ## 8.26.0 (12/1/2025 PST)
 
 #### 🚀 Updates

@@ -4,6 +4,7 @@
   "storybook": "https://cds-storybook.coinbase.com/?path=/story/components-alpha-tabbedchips--default",
   "figma": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/%E2%9C%A8-CDS-Components?node-id=10177-4851",
   "description": "A chip component commonly used in filter context to refine a date source",
+  "alpha": true,
   "relatedComponents": [
     {
       "label": "Chip",

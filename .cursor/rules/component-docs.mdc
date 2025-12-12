@@ -1,6 +1,5 @@
 ---
-description: Defines the process for creating documentation for CDS components in the docs web app.
-globs:
+description: Defines the process for creating documentation for CDS components on the docsite (apps/docs/).
 alwaysApply: false
 ---
 

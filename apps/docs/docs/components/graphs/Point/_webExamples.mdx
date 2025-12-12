@@ -51,14 +51,7 @@ function MyChart() {
     >
       <YAxis showGrid position="left" tickLabelFormatter={(value) => `$${value}`} />
       {prices.map((price, index) => (
-        <Point
-          seriesId="prices"
-          key={index}
-          dataX={index}
-          dataY={price}
-          label={`$${price}`}
-          labelPosition="right"
-        />
+        <Point key={index} dataX={index} dataY={price} label={`$${price}`} labelPosition="right" />
       ))}
     </CartesianChart>
   );
