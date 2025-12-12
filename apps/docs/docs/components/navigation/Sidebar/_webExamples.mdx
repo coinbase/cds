@@ -422,9 +422,7 @@ function RenderEndExample() {
 
 ## Styling
 
-### Custom Styles
-
-Use the `styles` and `classNames` props to customize specific parts of the sidebar. Both props accept objects with keys for `root`, `logo`, `content`, and `end`.
+Use the `styles` prop to customize specific parts of the sidebar.
 
 ```jsx live
 function CustomStyles() {
@@ -475,6 +473,44 @@ function CustomStyles() {
         ))}
       </Sidebar>
     </HStack>
+  );
+}
+```
+
+You can also use custom class names on the various subcomponents in Sidebar using the `classNames` prop.
+
+```jsx
+const customLogoStyles = css`
+  padding-bottom: var(--spacing-6);
+`;
+
+function CustomClassNamesExample() {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const items = [
+    { title: 'Home', icon: 'home' },
+    { title: 'Assets', icon: 'chartPie' },
+    { title: 'Trade', icon: 'trading' },
+    { title: 'Settings', icon: 'cog' },
+  ];
+
+  return (
+    <Sidebar
+      logo={<LogoMark />}
+      classNames={{
+        logo: customLogoStyles,
+      }}
+    >
+      {items.map((item, index) => (
+        <SidebarItem
+          key={item.title}
+          active={index === activeIndex}
+          icon={item.icon}
+          onClick={() => setActiveIndex(index)}
+          title={item.title}
+          tooltipContent={item.title}
+        />
+      ))}
+    </Sidebar>
   );
 }
 ```
