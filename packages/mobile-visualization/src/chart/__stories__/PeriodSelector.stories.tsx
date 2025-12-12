@@ -172,7 +172,7 @@ const BTCTab: TabComponent = memo(
     // For string labels, wrap with custom BTC color when active
     const wrappedLabel =
       typeof label === 'string' ? (
-        <Text font="label1" dangerouslySetColor={isActive ? btcColor : theme.color.fg}>
+        <Text dangerouslySetColor={isActive ? btcColor : theme.color.fg} font="label1">
           {label}
         </Text>
       ) : (
