@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.29.0 (12/12/2025 PST)
+
+#### 🚀 Updates
+
+- Combobox component and header + footer props for Tray. [[#182](https://github.com/coinbase/cds/pull/182)]
+
 ## 8.28.2 (12/12/2025 PST)
 
 #### 🐞 Fixes
