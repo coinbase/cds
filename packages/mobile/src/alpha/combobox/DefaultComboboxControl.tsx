@@ -64,7 +64,7 @@ export const DefaultComboboxControl = <
                 paddingTop: hasValue ? 8 : 0,
                 // This is constrained by the parent container's width. The width is large
                 // to ensure it grows to fill the control
-                width: '100%',
+                width: open ? '100%' : undefined,
               }}
               value={searchText}
             />
