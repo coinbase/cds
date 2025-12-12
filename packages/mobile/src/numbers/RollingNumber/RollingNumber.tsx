@@ -19,8 +19,8 @@ import { curves, durations } from '@coinbase/cds-common/motion/tokens';
 import type { KeyedNumberPart } from '@coinbase/cds-common/numbers/IntlNumberFormat';
 import { IntlNumberFormat } from '@coinbase/cds-common/numbers/IntlNumberFormat';
 import {
-  useValueChangeDirection,
   type SingleDirection,
+  useValueChangeDirection,
 } from '@coinbase/cds-common/numbers/useValueChangeDirection';
 import { useLocale } from '@coinbase/cds-common/system/LocaleProvider';
 import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
@@ -61,19 +61,30 @@ const baseStylesheet = StyleSheet.create({
  */
 export type RollingNumberTransitionConfig = {
   /**
-   * Transition override for the vertical translation animation.
+   * Transition override for the vertical translation animation (digit roll).
    */
   y?: ({ type: 'timing' } & WithTimingConfig) | ({ type: 'spring' } & WithSpringConfig);
   /**
-   * Transition override for the color interpolation animation.
+   * Transition override for the opacity animation during digit transitions.
+   * Controls how digits fade in/out during the single variant animation.
+   */
+  opacity?: ({ type: 'timing' } & WithTimingConfig) | ({ type: 'spring' } & WithSpringConfig);
+  /**
+   * Transition override for the color interpolation animation (color pulse).
    */
   color?: ({ type: 'timing' } & WithTimingConfig) | ({ type: 'spring' } & WithSpringConfig);
 };
 
 export const defaultTransitionConfig = {
   y: {
+    type: 'spring',
+    stiffness: 280,
+    damping: 18,
+    mass: 0.3,
+  },
+  opacity: {
     type: 'timing',
-    duration: durations.moderate3,
+    duration: durations.fast2,
     easing: Easing.bezier(...curves.global),
   },
   color: {
