@@ -43,10 +43,10 @@ const SparklineGradientExample = ({
     <VStack>
       <Cell media={<CellMedia source={imageUrl} type="image" />}>
         <VStack justifyContent="center">
-          <Text font="headline" ellipsize="tail" numberOfLines={1}>
+          <Text ellipsize="tail" font="headline" numberOfLines={1}>
             {name}
           </Text>
-          <Text font="body" ellipsize="tail" numberOfLines={1}>
+          <Text ellipsize="tail" font="body" numberOfLines={1}>
             {symbol}
           </Text>
         </VStack>
@@ -76,7 +76,7 @@ const SparklineScalingExample: React.FC<React.PropsWithChildren<SparklineCompact
 
   return (
     <VStack>
-      <Text font="headline" ellipsize="tail" numberOfLines={1}>
+      <Text ellipsize="tail" font="headline" numberOfLines={1}>
         Scale: {props.yAxisScalingFactor}
       </Text>
       <SparklineGradient

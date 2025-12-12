@@ -34,7 +34,7 @@ const SampleCard = ({ text }: { text: string }) => (
     }}
     width="100%"
   >
-    <Text as="p" font="label1" color="fgPrimary">
+    <Text as="p" color="fgPrimary" font="label1">
       {text}
     </Text>
   </Box>
@@ -112,7 +112,7 @@ const SquareAssetCard = ({
 }) => (
   <ContainedAssetCard
     description={
-      <Text as="p" font="label2" color="fgPositive" numberOfLines={2}>
+      <Text as="p" color="fgPositive" font="label2" numberOfLines={2}>
         &#x2197;6.37%
       </Text>
     }
@@ -282,7 +282,7 @@ const CustomComponentsExample = () => {
       paddingY={1}
       tabIndex={isVisible ? undefined : -1}
     >
-      <Text font="headline" color="fgPrimary" numberOfLines={1}>
+      <Text color="fgPrimary" font="headline" numberOfLines={1}>
         {children}
       </Text>
     </Pressable>
@@ -352,7 +352,7 @@ const CustomStylesExample = () => {
       paddingY={1}
       tabIndex={isVisible ? undefined : -1}
     >
-      <Text font="headline" color="fgPrimary" numberOfLines={1}>
+      <Text color="fgPrimary" font="headline" numberOfLines={1}>
         {children}
       </Text>
     </Pressable>
@@ -453,7 +453,7 @@ const AnimatedPaginationExample = () => {
       paddingY={1}
       tabIndex={isVisible ? undefined : -1}
     >
-      <Text font="headline" color="fgPrimary" numberOfLines={1}>
+      <Text color="fgPrimary" font="headline" numberOfLines={1}>
         {children}
       </Text>
     </Pressable>

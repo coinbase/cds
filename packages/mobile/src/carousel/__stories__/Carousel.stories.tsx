@@ -415,7 +415,7 @@ const AnimatedExample = () => {
       <Animated.View style={animatedStyle}>
         <ContainedAssetCard
           description={
-            <Text font="label2" color="fgPositive" numberOfLines={2}>
+            <Text color="fgPositive" font="label2" numberOfLines={2}>
               ↗6.37%
             </Text>
           }

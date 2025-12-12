@@ -102,7 +102,7 @@ export const SlideButtonStories = () => {
       <Example title="Labels as nodes">
         <SlideButtonExample
           checkedLabel={
-            <Text font="label2" color="fgInverse">
+            <Text color="fgInverse" font="label2">
               Node checked label
             </Text>
           }

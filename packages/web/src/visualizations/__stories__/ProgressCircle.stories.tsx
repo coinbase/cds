@@ -322,7 +322,7 @@ export const CustomStyles = () => {
       <HStack gap={2}>
         <ProgressCircle
           contentNode={
-            <Text font="title1" color={disabled ? 'fgMuted' : 'fgPrimary'}>
+            <Text color={disabled ? 'fgMuted' : 'fgPrimary'} font="title1">
               40%
             </Text>
           }

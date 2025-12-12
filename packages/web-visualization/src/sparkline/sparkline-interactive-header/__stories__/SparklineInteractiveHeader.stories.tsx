@@ -369,7 +369,7 @@ export const CustomTitle = () => {
   }, []);
 
   const RenderedDefaultTitle = (
-    <Text as="div" font="title3" color="fgPrimary">
+    <Text as="div" color="fgPrimary" font="title3">
       <span ref={titleRef}>${numToLocaleString(lastPoint.value)}</span>
     </Text>
   );

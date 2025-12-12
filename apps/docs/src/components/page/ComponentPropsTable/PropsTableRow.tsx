@@ -2,8 +2,8 @@ import React, { useMemo } from 'react';
 import { cx } from '@coinbase/cds-web';
 import { VStack } from '@coinbase/cds-web/layout';
 import { Divider } from '@coinbase/cds-web/layout/Divider';
-import { Link } from '@coinbase/cds-web/typography/Link';
 import { Text } from '@coinbase/cds-web/typography';
+import { Link } from '@coinbase/cds-web/typography/Link';
 import type {
   ProcessedPropItem,
   SharedTypeAliases,
@@ -119,12 +119,12 @@ function PropsTableRow({ prop, sharedTypeAliases, searchTerm = '' }: PropsTableR
         <Text as="p" font="body">
           {highlightedName}
           {required && (
-            <Text font="body" color="fgNegative">
+            <Text color="fgNegative" font="body">
               *
             </Text>
           )}
         </Text>
-        <Text as="p" font="label2" color="fgMuted" overflow="break" paddingTop={0.5}>
+        <Text as="p" color="fgMuted" font="label2" overflow="break" paddingTop={0.5}>
           {description}
         </Text>
       </VStack>

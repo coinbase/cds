@@ -37,10 +37,10 @@ const SparklineExample = ({ imageUrl, name, symbol, color }: SparklineExamplePro
             justifyContent="center"
             paddingStart={2}
           >
-            <Text font="body" align="end" numberOfLines={1}>
+            <Text align="end" font="body" numberOfLines={1}>
               $2,874.49
             </Text>
-            <Text font="body" align="end" color="fgMuted" numberOfLines={1}>
+            <Text align="end" color="fgMuted" font="body" numberOfLines={1}>
               +36.08%
             </Text>
           </VStack>
@@ -49,10 +49,10 @@ const SparklineExample = ({ imageUrl, name, symbol, color }: SparklineExamplePro
       media={<CellMedia source={imageUrl} title="Title" type="image" />}
     >
       <VStack justifyContent="center">
-        <Text font="headline" ellipsize="tail" numberOfLines={1}>
+        <Text ellipsize="tail" font="headline" numberOfLines={1}>
           {name}
         </Text>
-        <Text font="body" ellipsize="tail" numberOfLines={1}>
+        <Text ellipsize="tail" font="body" numberOfLines={1}>
           {symbol}
         </Text>
       </VStack>
@@ -78,7 +78,7 @@ const SparklineScalingExample: React.FC<React.PropsWithChildren<SparklineCompact
 
   return (
     <VStack>
-      <Text font="headline" ellipsize="tail" numberOfLines={1}>
+      <Text ellipsize="tail" font="headline" numberOfLines={1}>
         Scale: {props.yAxisScalingFactor}
       </Text>
       <Sparkline
