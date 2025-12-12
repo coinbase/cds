@@ -343,6 +343,7 @@ const DefaultSelectControlComponent = memo(
               alignItems="center"
               flexGrow={1}
               flexShrink={1}
+              height="100%"
               justifyContent="space-between"
               minWidth={0}
               width="100%"
@@ -399,6 +400,7 @@ const DefaultSelectControlComponent = memo(
               alignItems="center"
               className={classNames?.controlEndNode}
               flexGrow={1}
+              height="100%"
               justifyContent={labelVariant === 'inside' ? 'flex-end' : undefined}
               paddingX={2}
               paddingY={compact ? 1 : 1.5}
