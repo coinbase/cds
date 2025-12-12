@@ -1,8 +1,8 @@
-import { useContext } from 'react';
 import { StyleSheet } from 'react-native';
 
 import { NativeInput } from '../../controls/NativeInput';
 import { useTheme } from '../../hooks/useTheme';
+import { HStack } from '../../layout';
 import { Text } from '../../typography/Text';
 import { DefaultSelectControl } from '../select/DefaultSelectControl';
 import type { SelectType } from '../select/Select';
@@ -45,28 +45,30 @@ export const DefaultComboboxControl = <
       {...props}
       contentNode={
         shouldRenderSearchInput ? (
-          <NativeInput
-            ref={searchInputRef}
-            disabled={disabled || !open}
-            onChangeText={onSearch}
-            onPress={() => !disabled && setOpen(true)}
-            placeholder={typeof placeholder === 'string' ? placeholder : undefined}
-            style={{
-              flex: 0,
-              flexGrow: 1,
-              flexShrink: 1,
-              minWidth: 0,
-              padding: 0,
-              height: hasValue ? 24 : 48,
-              marginTop: hasValue ? 0 : -24,
-              marginBottom: hasValue ? -12 : -24,
-              paddingTop: hasValue ? 8 : 0,
-              // This is constrained by the parent container's width. The width is large
-              // to ensure it grows to fill the control
-              width: open ? 300 : '100%',
-            }}
-            value={searchText}
-          />
+          <HStack flexWrap="wrap">
+            <NativeInput
+              ref={searchInputRef}
+              disabled={disabled || !open}
+              onChangeText={onSearch}
+              onPress={() => !disabled && setOpen(true)}
+              placeholder={typeof placeholder === 'string' ? placeholder : undefined}
+              style={{
+                flex: 0,
+                flexGrow: 1,
+                flexShrink: 1,
+                minWidth: 0,
+                padding: 0,
+                height: hasValue ? 24 : 48,
+                marginTop: hasValue ? 0 : -24,
+                marginBottom: hasValue ? -12 : -24,
+                paddingTop: hasValue ? 8 : 0,
+                // This is constrained by the parent container's width. The width is large
+                // to ensure it grows to fill the control
+                width: '100%',
+              }}
+              value={searchText}
+            />
+          </HStack>
         ) : (
           <>
             {hasValue ? null : (
