@@ -40,13 +40,12 @@ type ComboboxContextValue<
   searchText: string;
   onSearch: (searchText: string) => void;
   hideSearchInput: boolean;
-  searchInputRef: React.RefObject<TextInput>;
 };
 
 /**
  * Context used for Combobox props needed to render to the ComboboxControlComponent.
  */
-export const ComboboxContext = createContext<ComboboxContextValue<any, any> | null>(null);
+const ComboboxContext = createContext<ComboboxContextValue<any, any> | null>(null);
 
 const useComboboxContext = <
   Type extends SelectType = SelectType,
@@ -329,7 +328,6 @@ const ComboboxBase = memo(
           value={{
             searchText,
             onSearch: setSearchText,
-            searchInputRef,
             hideSearchInput: hideSearchInput ?? false,
             options,
           }}
