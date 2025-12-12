@@ -36,52 +36,39 @@ const applyTransition = (value: number, config?: TransitionConfigValue) => {
 };
 
 /**
- * Creates a custom entering animation worklet for single variant.
- * Combines y translation with opacity fade-in.
+ * Creates a custom transition animation worklet for single variant.
+ * Combines y translation with opacity fade.
+ * @param isEntering - true for entering animation, false for exiting
+ * @param isGoingUp - direction of the number change
+ * @param transitionConfig - animation timing/spring configuration
  */
-const createEnteringAnimation =
-  (isGoingUp: boolean, transitionConfig?: RollingNumberTransitionConfig) =>
-  (targetValues: EntryAnimationsValues) => {
+const createTransitionAnimation =
+  (isEntering: boolean, isGoingUp: boolean, transitionConfig?: RollingNumberTransitionConfig) =>
+  (values: EntryAnimationsValues | ExitAnimationsValues) => {
     'worklet';
     const yConfig = transitionConfig?.y ?? defaultTransitionConfig.y;
     const opacityConfig = transitionConfig?.opacity ?? defaultTransitionConfig.opacity;
 
-    // Enter from opposite direction: if going up, enter from bottom (positive y)
-    const initialY = isGoingUp ? targetValues.targetHeight : -targetValues.targetHeight;
+    const height = isEntering
+      ? (values as EntryAnimationsValues).targetHeight
+      : (values as ExitAnimationsValues).currentHeight;
+
+    // Entering: come from opposite direction (going up = enter from bottom = positive Y)
+    // Exiting: go in direction of change (going up = exit upward = negative Y)
+    const yOffset = isGoingUp ? (isEntering ? height : -height) : isEntering ? -height : height;
+
+    const initialY = isEntering ? yOffset : 0;
+    const targetY = isEntering ? 0 : yOffset;
+    const initialOpacity = isEntering ? 0 : 1;
+    const targetOpacity = isEntering ? 1 : 0;
 
     return {
       initialValues: {
-        opacity: 0,
+        opacity: initialOpacity,
         transform: [{ translateY: initialY }],
       },
       animations: {
-        opacity: applyTransition(1, opacityConfig),
-        transform: [{ translateY: applyTransition(0, yConfig) }],
-      },
-    };
-  };
-
-/**
- * Creates a custom exiting animation worklet for single variant.
- * Combines y translation with opacity fade-out.
- */
-const createExitingAnimation =
-  (isGoingUp: boolean, transitionConfig?: RollingNumberTransitionConfig) =>
-  (values: ExitAnimationsValues) => {
-    'worklet';
-    const yConfig = transitionConfig?.y ?? defaultTransitionConfig.y;
-    const opacityConfig = transitionConfig?.opacity ?? defaultTransitionConfig.opacity;
-
-    // Exit in direction of change: if going up, exit upward (negative y)
-    const targetY = isGoingUp ? -values.currentHeight : values.currentHeight;
-
-    return {
-      initialValues: {
-        opacity: 1,
-        transform: [{ translateY: 0 }],
-      },
-      animations: {
-        opacity: applyTransition(0, opacityConfig),
+        opacity: applyTransition(targetOpacity, opacityConfig),
         transform: [{ translateY: applyTransition(targetY, yConfig) }],
       },
     };
@@ -99,10 +86,19 @@ const baseStylesheet = StyleSheet.create({
 });
 
 /**
- * Note that the DefaultRollingNumberDigit component implementation is different in web
- * and mobile due to different animation libraries and the performance issue in mobile.
- * This has nearly unnoticeable difference in animation effect.
- *  */
+ * Default digit component for RollingNumber on mobile.
+ *
+ * The mobile implementation differs from web due to platform-specific animation libraries:
+ * - Mobile uses react-native-reanimated with shared values and worklets
+ * - Web uses framer-motion with imperative `animate` calls
+ *
+ * For the "every" variant, mobile renders all 10 digits (0-9) stacked with absolute
+ * positioning and animates the container's translateY. Web renders only the necessary
+ * digits above/below the current value.
+ *
+ * For the "single" variant, mobile uses reanimated's `entering`/`exiting` props with
+ * custom animation worklets. Web uses imperative opacity crossfades on DOM sections.
+ */
 export const DefaultRollingNumberDigit: RollingNumberDigitComponent = memo(
   forwardRef<View, RollingNumberDigitProps>(
     (
@@ -121,7 +117,7 @@ export const DefaultRollingNumberDigit: RollingNumberDigitComponent = memo(
       },
       ref,
     ) => {
-      const [currentValue, setCurrentValue] = useState(initialValue);
+      const [singleVariantCurrentValue, setCurrentValue] = useState(initialValue);
 
       const position = useSharedValue(initialValue * digitHeight * -1);
       const prevValue = useRef(initialValue);
@@ -135,10 +131,10 @@ export const DefaultRollingNumberDigit: RollingNumberDigitComponent = memo(
 
       // Single variant needs to re-render to give time for exit animation direction to be updated
       useEffect(() => {
-        if (value !== currentValue) {
+        if (value !== singleVariantCurrentValue) {
           setCurrentValue(value);
         }
-      }, [value, currentValue]);
+      }, [value, singleVariantCurrentValue]);
 
       // Every variant needs to update the position of the digit immediately
       useEffect(() => {
@@ -170,12 +166,12 @@ export const DefaultRollingNumberDigit: RollingNumberDigitComponent = memo(
       );
 
       const singleVariantEnterTransition = useMemo(
-        () => createEnteringAnimation(isGoingUp, transitionConfig),
+        () => createTransitionAnimation(true, isGoingUp, transitionConfig),
         [isGoingUp, transitionConfig],
       );
 
       const singleVariantExitTransition = useMemo(
-        () => createExitingAnimation(isGoingUp, transitionConfig),
+        () => createTransitionAnimation(false, isGoingUp, transitionConfig),
         [isGoingUp, transitionConfig],
       );
 
@@ -184,13 +180,13 @@ export const DefaultRollingNumberDigit: RollingNumberDigitComponent = memo(
           <Animated.View style={containerStyle}>
             {isSingleVariant ? (
               <AnimatedText
-                key={currentValue}
+                key={singleVariantCurrentValue}
                 entering={singleVariantEnterTransition}
                 exiting={singleVariantExitTransition}
                 style={[styles?.text]}
                 {...textProps}
               >
-                {currentValue}
+                {singleVariantCurrentValue}
               </AnimatedText>
             ) : (
               digits.map((digit) => (

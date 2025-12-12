@@ -273,7 +273,6 @@ export const ColorAndTransition = () => {
       <Text font="label1">Color pulse and custom transition</Text>
       <RollingNumber
         colorPulseOnUpdate
-        digitTransitionVariant="single"
         font="title1"
         format={{ style: 'currency', currency: 'USD' }}
         transition={{
@@ -299,7 +298,6 @@ export const ColorAndTransition = () => {
       <RollingNumber
         colorPulseOnUpdate
         color="accentBoldBlue"
-        digitTransitionVariant="single"
         font="title1"
         format={{ style: 'currency', currency: 'USD' }}
         transition={{
@@ -325,7 +323,6 @@ export const ColorAndTransition = () => {
       <Text font="label1">Customize positive and negative change colors</Text>
       <RollingNumber
         colorPulseOnUpdate
-        digitTransitionVariant="single"
         font="title1"
         format={{ style: 'currency', currency: 'USD' }}
         negativePulseColor="bgWarning"
@@ -336,7 +333,6 @@ export const ColorAndTransition = () => {
       <Text font="label1">Fast digits, slow color</Text>
       <RollingNumber
         colorPulseOnUpdate
-        digitTransitionVariant="single"
         font="title1"
         format={{ style: 'currency', currency: 'EUR' }}
         transition={{
@@ -362,7 +358,6 @@ export const ColorAndTransition = () => {
       <Text font="label1">Springy digits</Text>
       <RollingNumber
         colorPulseOnUpdate
-        digitTransitionVariant="single"
         font="title1"
         format={{ style: 'currency', currency: 'USD' }}
         transition={{
@@ -374,7 +369,6 @@ export const ColorAndTransition = () => {
       <Text font="label1">Custom easings</Text>
       <RollingNumber
         colorPulseOnUpdate
-        digitTransitionVariant="single"
         font="title1"
         format={{ style: 'currency', currency: 'USD' }}
         transition={{

@@ -57,9 +57,18 @@ const digitSpanCss = css`
 `;
 
 /**
- * Note that the DefaultRollingNumberDigit component implementation is different in web
- * and mobile due to different animation libraries and the performance issue in mobile.
- * This has nearly unnoticeable difference in animation effect.
+ * Default digit component for RollingNumber on web.
+ *
+ * The web implementation differs from mobile due to platform-specific animation libraries:
+ * - Web uses framer-motion with imperative `animate` calls
+ * - Mobile uses react-native-reanimated with shared values and worklets
+ *
+ * For the "every" variant, web renders only the necessary digits above/below the current
+ * value using CSS positioning. Mobile renders all 10 digits (0-9) stacked with absolute
+ * positioning.
+ *
+ * For the "single" variant, web uses imperative opacity crossfades on DOM sections.
+ * Mobile uses reanimated's `entering`/`exiting` props with custom animation worklets.
  */
 export const DefaultRollingNumberDigit: RollingNumberDigitComponent = memo(
   forwardRef<HTMLSpanElement, RollingNumberDigitProps>(
@@ -84,8 +93,8 @@ export const DefaultRollingNumberDigit: RollingNumberDigitComponent = memo(
       useImperativeHandle(ref, () => internalRef.current as HTMLSpanElement);
 
       const numberRefs = useRef(new Array<HTMLSpanElement | null>(10));
-      const prevSectionRef = useRef<HTMLSpanElement>(null);
-      const currentDigitRef = useRef<HTMLSpanElement>(null);
+      const singleVariantPrevDigitRef = useRef<HTMLSpanElement>(null);
+      const singleVariantCurrentDigitRef = useRef<HTMLSpanElement>(null);
       const prevValue = useRef(initialValue ?? value);
 
       const isSingleVariant = useMemo(
@@ -107,17 +116,13 @@ export const DefaultRollingNumberDigit: RollingNumberDigitComponent = memo(
           : box.height * (value - prevValue.current);
         const prevWidth = getWidthInEm(prevDigit);
         const currentWidth = getWidthInEm(currDigit);
-
-        const yTransition = (transitionConfig?.y ??
-          defaultTransitionConfig.y) as ValueAnimationOptions;
-
         animate(
           internalRef.current,
           {
             y: [initialY, 0],
             width: [prevWidth, currentWidth],
           },
-          yTransition,
+          (transitionConfig?.y ?? defaultTransitionConfig.y) as ValueAnimationOptions,
         );
 
         // Single variant: add opacity crossfade (prev fades out, current fades in)
@@ -125,11 +130,11 @@ export const DefaultRollingNumberDigit: RollingNumberDigitComponent = memo(
           const opacityTransition = (transitionConfig?.opacity ??
             defaultTransitionConfig.opacity) as ValueAnimationOptions;
 
-          if (prevSectionRef.current) {
-            animate(prevSectionRef.current, { opacity: [1, 0] }, opacityTransition);
+          if (singleVariantPrevDigitRef.current) {
+            animate(singleVariantPrevDigitRef.current, { opacity: [1, 0] }, opacityTransition);
           }
-          if (currentDigitRef.current) {
-            animate(currentDigitRef.current, { opacity: [0, 1] }, opacityTransition);
+          if (singleVariantCurrentDigitRef.current) {
+            animate(singleVariantCurrentDigitRef.current, { opacity: [0, 1] }, opacityTransition);
           }
         }
 
@@ -177,16 +182,18 @@ export const DefaultRollingNumberDigit: RollingNumberDigitComponent = memo(
           >
             {showTopSection && (
               <span
-                ref={isSingleVariant ? prevSectionRef : undefined}
+                ref={isSingleVariant ? singleVariantPrevDigitRef : undefined}
                 className={cx(digitNonActiveCss, topNonActiveCss)}
               >
                 {topDigits}
               </span>
             )}
-            <span ref={isSingleVariant ? currentDigitRef : undefined}>{renderDigit(value)}</span>
+            <span ref={isSingleVariant ? singleVariantCurrentDigitRef : undefined}>
+              {renderDigit(value)}
+            </span>
             {showBottomSection && (
               <span
-                ref={isSingleVariant ? prevSectionRef : undefined}
+                ref={isSingleVariant ? singleVariantPrevDigitRef : undefined}
                 className={cx(digitNonActiveCss, bottomNonActiveCss)}
               >
                 {bottomDigits}
