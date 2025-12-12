@@ -32,18 +32,13 @@ function Example() {
     return (
       <Pressable
         as="button"
-        background="transparent"
+        background="bgPrimaryWash"
         borderRadius={1000}
+        transparentWhileInactive
         width="100%"
         onClick={() => console.log}
       >
-        <HStack
-          alignItems="center"
-          gap={2}
-          justifyContent="flex-start"
-          padding={2}
-          testID="sidebar-item-primary"
-        >
+        <HStack alignItems="center" gap={2} paddingX={2} paddingY={2}>
           <Icon name="documentation" />
           <TextHeadline as="span" color="foreground">
             End item
