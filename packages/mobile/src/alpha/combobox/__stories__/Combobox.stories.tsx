@@ -8,7 +8,8 @@ import { VStack } from '../../../layout';
 import { Text } from '../../../typography/Text';
 import type { SelectOptionList } from '../../select';
 import type { SelectOption } from '../../select/Select';
-import { Combobox, type ComboboxRef } from '../Combobox';
+import { Combobox, type ComboboxControlComponentType, type ComboboxRef } from '../Combobox';
+import { DefaultComboboxControl } from '../DefaultComboboxControl';
 
 // Basic option sets
 const multiSelectOptions = [
@@ -702,6 +703,25 @@ const DynamicOptionsExample = () => {
   );
 };
 
+const CustomComponent: ComboboxControlComponentType = (props) => {
+  return <DefaultComboboxControl {...props} searchText={`${props.value?.length ?? 0}`} />;
+};
+
+const CustomControlExample = () => {
+  const { value, onChange } = useMultiSelect({ initialValue: [] });
+
+  return (
+    <Combobox
+      ComboboxControlComponent={CustomComponent}
+      label="Custom control - search field always shows the number of selected options"
+      onChange={onChange}
+      options={fruitOptions}
+      type="multi"
+      value={value}
+    />
+  );
+};
+
 const TestIdentifierExample = () => {
   const { value, onChange } = useMultiSelect({ initialValue: [] });
 
@@ -820,6 +840,9 @@ const Default = () => {
       </Example>
       <Example title="Dynamic options">
         <DynamicOptionsExample />
+      </Example>
+      <Example title="Custom control">
+        <CustomControlExample />
       </Example>
       <Example title="With test ID">
         <TestIdentifierExample />
