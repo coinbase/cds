@@ -135,6 +135,7 @@ export type TextInputBaseProps = {
     | 'borderRadius'
     | 'enableColorSurge'
     | 'labelVariant'
+    | 'inputBackground'
   > &
   Omit<React.InputHTMLAttributes<HTMLInputElement>, 'width' | 'className'>;
 
@@ -182,6 +183,7 @@ export const TextInput = memo(
       helperTextErrorIconAccessibilityLabel = 'error',
       labelVariant = 'outside',
       labelNode,
+      inputBackground,
       ...htmlInputElmProps
     }: TextInputProps,
     ref: React.ForwardedRef<HTMLInputElement>,
@@ -222,7 +224,7 @@ export const TextInput = memo(
     }, [setFocused, internalRef]);
 
     // Define a distinct read-only style to differentiate it from the disabled style.
-    const inputBackground = useMemo(() => {
+    const readOnlyInputBackground = useMemo(() => {
       if (!disabled && htmlInputElmProps.readOnly) {
         return 'bgSecondary';
       }
@@ -301,7 +303,7 @@ export const TextInput = memo(
             (suffix !== '' || !!end) && (
               <HStack
                 alignItems="center"
-                background={inputBackground}
+                background={readOnlyInputBackground}
                 gap={2}
                 justifyContent="center"
                 onClick={handleNodePress}
@@ -336,6 +338,7 @@ export const TextInput = memo(
               helperText
             ))
           }
+          inputBackground={readOnlyInputBackground ?? inputBackground}
           inputNode={inputElement}
           labelNode={
             !compact &&
@@ -343,7 +346,7 @@ export const TextInput = memo(
               ? labelNode
               : !!label && (
                   <InputLabel
-                    background={labelVariant === 'inside' ? inputBackground : undefined}
+                    background={labelVariant === 'inside' ? readOnlyInputBackground : undefined}
                     className={cx(
                       labelVariant === 'inside' && insideLabelCss,
                       labelVariant === 'inside' && !!start && insideLabelCssStartCss,
@@ -360,7 +363,7 @@ export const TextInput = memo(
             (compact || !!start) && (
               <HStack
                 alignItems="center"
-                background={inputBackground}
+                background={readOnlyInputBackground}
                 gap={2}
                 justifyContent="center"
                 onClick={handleNodePress}
