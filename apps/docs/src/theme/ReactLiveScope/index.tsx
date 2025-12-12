@@ -34,6 +34,7 @@ import { useSparklinePath } from '@cbhq/cds-common/visualizations/useSparklinePa
 import * as CDSLottie from '@cbhq/cds-lottie-files';
 import { Accordion } from '@cbhq/cds-web/accordion/Accordion';
 import { AccordionItem } from '@cbhq/cds-web/accordion/AccordionItem';
+import { Combobox } from '@cbhq/cds-web/alpha/combobox/Combobox';
 import { Select } from '@cbhq/cds-web/alpha/select/Select';
 import { SelectChip } from '@cbhq/cds-web/alpha/select-chip/SelectChip';
 import { TabbedChips } from '@cbhq/cds-web/alpha/tabbed-chips/TabbedChips';
@@ -176,6 +177,7 @@ const ReactLiveScope: Record<string, unknown> = {
   ...CDSControls,
   InputLabel,
   Select,
+  Combobox,
   OldSelect,
   useMultiSelect,
   ...CDSSystem,

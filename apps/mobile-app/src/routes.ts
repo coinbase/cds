@@ -166,6 +166,11 @@ export const routes = [
       require('@cbhq/cds-mobile/collapsible/__stories__/Collapsible.stories').default,
   },
   {
+    key: 'Combobox',
+    getComponent: () =>
+      require('@cbhq/cds-mobile/alpha/combobox/__stories__/Combobox.stories').default,
+  },
+  {
     key: 'ContainedAssetCard',
     getComponent: () =>
       require('@cbhq/cds-mobile/cards/__stories__/ContainedAssetCard.stories').default,
