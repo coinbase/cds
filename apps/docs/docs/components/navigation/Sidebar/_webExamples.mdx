@@ -97,6 +97,11 @@ function DefaultVariant() {
           </Box>
         }
         renderEnd={renderEnd}
+        styles={{
+          end: {
+            width: '100%',
+          },
+        }}
       >
         {navItems.map((item, index) => (
           <SidebarItem
@@ -390,7 +395,15 @@ function RenderEndExample() {
 
   return (
     <HStack alignItems="flex-start" justifyContent="center" overflow="hidden">
-      <Sidebar logo={<LogoMark />} renderEnd={renderEnd}>
+      <Sidebar
+        logo={<LogoMark />}
+        renderEnd={renderEnd}
+        styles={{
+          end: {
+            width: '100%',
+          },
+        }}
+      >
         {items.map((item, index) => (
           <SidebarItem
             key={item.title}
@@ -447,7 +460,7 @@ function CustomStyles() {
               'linear-gradient(180deg, var(--color-bg) 0%, var(--color-bgAlternate) 100%)',
           },
           logo: { paddingBottom: 32 },
-          end: { paddingTop: 32 },
+          end: { width: '100%' },
         }}
       >
         {items.map((item, index) => (
@@ -577,7 +590,7 @@ function ApplicationShell() {
 }
 ```
 
-### Dark Trading Interface
+### Condensed Trading Interface
 
 A condensed sidebar optimized for professional trading interfaces with minimal visual footprint.
 
@@ -592,7 +605,7 @@ function TradingInterface() {
   const [activeIndex, setActiveIndex] = useState(0);
 
   return (
-    <HStack alignItems="stretch" height={350} overflow="hidden">
+    <HStack>
       <Sidebar logo={<LogoMark foreground />} variant="condensed">
         {items.map((item, index) => (
           <SidebarItem

@@ -217,9 +217,8 @@ export const Sidebar: React.FC<SidebarProps> = memo(
           </VStack>
           {!!renderEnd && (
             <Box
-              alignSelf={variant === 'condensed' ? 'center' : undefined}
+              alignSelf={variant === 'default' ? 'flex-start' : 'center'}
               className={classNames?.end}
-              marginStart={variant === 'default' ? -0.5 : undefined}
               paddingTop={4}
               style={styles?.end}
               testID="sidebar-end"
