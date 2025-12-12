@@ -9,7 +9,7 @@ import { useTheme } from '@cbhq/cds-mobile/hooks/useTheme';
 import { HStack } from '@cbhq/cds-mobile/layout';
 import { type TabComponent, type TabsActiveIndicatorProps } from '@cbhq/cds-mobile/tabs';
 import { SegmentedTab, type SegmentedTabProps } from '@cbhq/cds-mobile/tabs/SegmentedTab';
-import { Text, TextLabel1 } from '@cbhq/cds-mobile/typography';
+import { Text } from '@cbhq/cds-mobile/typography';
 
 import {
   LiveTabLabel,
@@ -172,7 +172,9 @@ const BTCTab: TabComponent = memo(
     // For string labels, wrap with custom BTC color when active
     const wrappedLabel =
       typeof label === 'string' ? (
-        <TextLabel1 dangerouslySetColor={isActive ? btcColor : theme.color.fg}>{label}</TextLabel1>
+        <Text dangerouslySetColor={isActive ? btcColor : theme.color.fg} font="label1">
+          {label}
+        </Text>
       ) : (
         label
       );

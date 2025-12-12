@@ -203,9 +203,9 @@ function Example() {
       <VStack>
         <HStack justifyContent="center" zIndex={1}>
           <Box background="background" paddingHorizontal={1.5}>
-            <TextBody as="span" color="foregroundMuted">
+            <Text as="span" font="body" color="foregroundMuted">
               OR
-            </TextBody>
+            </Text>
           </Box>
         </HStack>
         <Divider marginTop={-1.5} paddingBottom={1.5} />
@@ -223,9 +223,9 @@ function Example() {
             >
               <Box padding={2}>{icon}</Box>
             </Pressable>
-            <TextLabel2 as="span" color="foregroundMuted" paddingTop={1}>
+            <Text as="span" font="label2" color="foregroundMuted" paddingTop={1}>
               {name}
-            </TextLabel2>
+            </Text>
           </VStack>
         ))}
       </HStack>
@@ -239,13 +239,13 @@ function Example() {
         actionAccessibilityLabel="Continue"
         title="Sign in to Coinbase"
         description={
-          <TextBody as="p" color="foregroundMuted">
+          <Text as="p" font="body" color="foregroundMuted">
             By signing in, you agree to our{' '}
             <Link to="https://www.google.com/" openInNewWindow underline={false}>
               Privacy Policy
             </Link>
             . Not your device? Use a private window.
-          </TextBody>
+          </Text>
         }
         accessibilityLabel="Login section"
         pictogram={<LogoMark size={32} />}

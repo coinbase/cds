@@ -10,9 +10,9 @@ function Example() {
 
   return (
     <Box ref={ref} padding={3} background="bgAlternate" borderRadius={300} width="100%">
-      <TextHeadline>
+      <Text font="headline">
         This box is {width}px wide and {height}px tall
-      </TextHeadline>
+      </Text>
     </Box>
   );
 }
@@ -38,8 +38,8 @@ function Example() {
   return (
     <Box ref={ref} padding={3} background="bgAlternate" borderRadius={300} width="100%">
       <VStack gap={2}>
-        <TextHeadline>Width: {width}px</TextHeadline>
-        <TextHeadline>Current breakpoint: {currentBreakpoint || 'none'}</TextHeadline>
+        <Text font="headline">Width: {width}px</Text>
+        <Text font="headline">Current breakpoint: {currentBreakpoint || 'none'}</Text>
       </VStack>
     </Box>
   );

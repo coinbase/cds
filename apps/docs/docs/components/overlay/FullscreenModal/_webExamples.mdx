@@ -61,8 +61,12 @@ function DefaultModal() {
 
   const primaryContent = (
     <VStack>
-      <TextTitle1 as="h1">Fullscreen Modal</TextTitle1>
-      <TextBody as="p">This is a test Fullscreen Modal with components composition.</TextBody>
+      <Text as="h1" font="title1">
+        Fullscreen Modal
+      </Text>
+      <Text as="p" font="body">
+        This is a test Fullscreen Modal with components composition.
+      </Text>
       <ListCell
         title="Bitcoin"
         description="BTC"
@@ -84,10 +88,14 @@ function DefaultModal() {
     <VStack borderRadius={300} elevation={1}>
       <Accordion defaultActiveKey="2">
         <AccordionItem itemKey="1" title="Accordion #1" subtitle="subtitle1">
-          <TextBody as="p">{loremIpsum}</TextBody>
+          <Text as="p" font="body">
+            {loremIpsum}
+          </Text>
         </AccordionItem>
         <AccordionItem itemKey="2" title="Accordion #2" subtitle="subtitle2">
-          <TextBody as="p">{loremIpsum}</TextBody>
+          <Text as="p" font="body">
+            {loremIpsum}
+          </Text>
         </AccordionItem>
       </Accordion>
     </VStack>

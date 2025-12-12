@@ -73,17 +73,17 @@ function Example() {
       />
       <Box padding={3} background="bgPositiveWash">
         <VStack gap={3} background="bgPrimaryWash">
-          <TextTitle2>Configure Your Trading Preferences</TextTitle2>
-          <TextBody>
+          <Text font="title2">Configure Your Trading Preferences</Text>
+          <Text font="body">
             Customize your trading experience by adjusting the settings below. These preferences
             will apply to all your trading activities and can be modified at any time.
-          </TextBody>
-          <TextTitle4>Order Types</TextTitle4>
-          <TextBody color="fgSecondary">
+          </Text>
+          <Text font="title4">Order Types</Text>
+          <Text font="body" color="fgSecondary">
             Choose your preferred default order types for buying and selling. Market orders execute
             immediately at current prices, while limit orders allow you to set specific price
             targets.
-          </TextBody>
+          </Text>
         </VStack>
       </Box>
     </>
@@ -111,10 +111,12 @@ function Example() {
           paddingY={10}
         >
           <HeroSquare name="bigWarning" />
-          <TextTitle1 as="h3">You need to X before you Y</TextTitle1>
-          <TextBody align="center" as="sub">
+          <Text as="h3" font="title1">
+            You need to X before you Y
+          </Text>
+          <Text font="body" align="center" as="sub">
             You&apos;ll need to [add funds] before you can [complete this transaction]
-          </TextBody>
+          </Text>
         </VStack>
       </Box>
     </VStack>
