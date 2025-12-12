@@ -44,6 +44,8 @@ type ComboboxContextValue<
 
 /**
  * Context used for Combobox props needed to render to the ComboboxControlComponent.
+ * We use the any type here because the concrete type is not known at this point.
+ * The unknown type does not satisfy the SelectType type.
  */
 const ComboboxContext = createContext<ComboboxContextValue<any, any> | null>(null);
 
@@ -82,15 +84,6 @@ export type ComboboxControlComponent = <
   SelectOptionValue extends string = string,
 >(
   props: ComboboxControlProps<Type, SelectOptionValue>,
-) => React.ReactElement;
-
-type ComboboxControlWrapperType = <
-  Type extends SelectType = 'single',
-  SelectOptionValue extends string = string,
->(
-  props: Omit<ComboboxControlProps<Type, SelectOptionValue>, 'onSearch' | 'searchText'> & {
-    ComboboxControlComponent: ComboboxControlComponent;
-  },
 ) => React.ReactElement;
 
 export type ComboboxBaseProps<
@@ -132,13 +125,22 @@ type ComboboxComponent = <
   props: ComboboxProps<Type, SelectOptionValue> & { ref?: React.Ref<ComboboxRef> },
 ) => React.ReactElement;
 
+type ComboboxControlContextAdapterType = <
+  Type extends SelectType = 'single',
+  SelectOptionValue extends string = string,
+>(
+  props: Omit<ComboboxControlProps<Type, SelectOptionValue>, 'onSearch' | 'searchText'> & {
+    ComboboxControlComponent: ComboboxControlComponent;
+  },
+) => React.ReactElement;
+
 /**
  * Wraps the ComboboxControlComponent with passed in props and the ComboboxContext values.
  * This allows the usage of all props when wanting to use a custom SelectControlComponent in Combobox.
  * Otherwise, a customer using a custom component would need to use props and context to get the
  * <ComboboxControlComponent> rendering correctly.
  */
-const ComboboxControlWrapper = memo(
+const ComboboxControlContextAdapter = memo(
   <Type extends SelectType = 'single', SelectOptionValue extends string = string>({
     ComboboxControlComponent,
     ...props
@@ -159,7 +161,7 @@ const ComboboxControlWrapper = memo(
       />
     );
   },
-) as ComboboxControlWrapperType;
+) as ComboboxControlContextAdapterType;
 
 const ComboboxBase = memo(
   forwardRef(
@@ -253,7 +255,7 @@ const ComboboxBase = memo(
       const ComboboxControl = useCallback(
         (props: SelectControlProps<Type, SelectOptionValue>) => {
           return (
-            <ComboboxControlWrapper
+            <ComboboxControlContextAdapter
               {...props}
               ComboboxControlComponent={ComboboxControlComponent}
               SelectControlComponent={SelectControlComponent}
