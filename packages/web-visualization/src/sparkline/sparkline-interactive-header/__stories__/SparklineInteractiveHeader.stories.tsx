@@ -3,7 +3,7 @@ import type { ChartDataPoint, ChartScrubParams } from '@coinbase/cds-common';
 import { sparklineInteractiveData } from '@coinbase/cds-common/internal/visualizations/SparklineInteractiveData';
 import { Icon } from '@coinbase/cds-web/icons';
 import { HStack } from '@coinbase/cds-web/layout';
-import { TextTitle3 } from '@coinbase/cds-web/typography';
+import { Text } from '@coinbase/cds-web/typography';
 
 import { SparklineInteractive } from '../../sparkline-interactive/SparklineInteractive';
 import {
@@ -123,7 +123,9 @@ const HeaderLabel = () => {
   return (
     <HStack alignItems="center" gap={1} paddingBottom={0}>
       <Icon active name="wallet" size="s" />
-      <TextTitle3 as="span">CustomHeader</TextTitle3>
+      <Text as="span" font="title3">
+        CustomHeader
+      </Text>
     </HStack>
   );
 };
@@ -367,9 +369,9 @@ export const CustomTitle = () => {
   }, []);
 
   const RenderedDefaultTitle = (
-    <TextTitle3 as="div" color="fgPrimary">
+    <Text as="div" color="fgPrimary" font="title3">
       <span ref={titleRef}>${numToLocaleString(lastPoint.value)}</span>
-    </TextTitle3>
+    </Text>
   );
 
   const header = (

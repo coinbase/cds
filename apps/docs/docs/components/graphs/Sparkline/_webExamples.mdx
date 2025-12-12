@@ -64,7 +64,9 @@ function Example() {
   const path = useSparklinePath({ ...dimensions, data: prices, yAxisScalingFactor });
   return (
     <VStack gap={2}>
-      <TextLabel1 as="p">Scale {yAxisScalingFactor}</TextLabel1>
+      <Text as="p" font="label1">
+        Scale {yAxisScalingFactor}
+      </Text>
       <Sparkline {...dimensions} path={path} color="auto" yAxisScalingFactor={yAxisScalingFactor} />
     </VStack>
   );

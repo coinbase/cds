@@ -17,7 +17,7 @@ import {
   type TabComponent,
   type TabsActiveIndicatorProps,
 } from '@coinbase/cds-web/tabs';
-import { Text, TextLabel1 } from '@coinbase/cds-web/typography';
+import { Text } from '@coinbase/cds-web/typography';
 import { m } from 'framer-motion';
 
 import {
@@ -1057,14 +1057,15 @@ function AssetPriceWithDottedArea() {
           <SegmentedTab
             ref={ref}
             label={
-              <TextLabel1
+              <Text
+                font="label1"
                 style={{
                   transition: 'color 0.2s ease',
                   color: isActive ? assets.btc.color : undefined,
                 }}
               >
                 {label}
-              </TextLabel1>
+              </Text>
             }
             {...props}
           />

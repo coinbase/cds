@@ -5,7 +5,7 @@ import { candles as btcCandles } from '@coinbase/cds-common/internal/data/candle
 import { Example, ExampleScreen } from '@coinbase/cds-mobile/examples/ExampleScreen';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 import { Box, HStack, VStack } from '@coinbase/cds-mobile/layout';
-import { TextLabel1, TextLabel2, TextTitle1, TextTitle2 } from '@coinbase/cds-mobile/typography';
+import { Text } from '@coinbase/cds-mobile/typography';
 import { Circle, Group, Skia } from '@shopify/react-native-skia';
 
 import { Area } from '../area/Area';
@@ -180,7 +180,7 @@ const EarningsHistory = () => {
     return (
       <Box alignItems="center" flexDirection="row" gap={0.5}>
         <Box style={[styles.legendDot, { opacity }]} />
-        <TextLabel2>{label}</TextLabel2>
+        <Text font="label2">{label}</Text>
       </Box>
     );
   });
@@ -328,13 +328,13 @@ const PriceWithVolumeHeader = memo(({ currentIndex }: { currentIndex: number | u
   return (
     <HStack gap={2} justifyContent="space-between" paddingX={0}>
       <VStack gap={0}>
-        <TextTitle1>Bitcoin</TextTitle1>
-        <TextTitle2>{formatPrice(currentPrice)}</TextTitle2>
+        <Text font="title1">Bitcoin</Text>
+        <Text font="title2">{formatPrice(currentPrice)}</Text>
       </VStack>
       <HStack gap={2}>
         <VStack alignItems="flex-end" justifyContent="center">
-          <TextLabel1>{formatDate(currentDate)}</TextLabel1>
-          <TextLabel2>{volumeText}</TextLabel2>
+          <Text font="label1">{formatDate(currentDate)}</Text>
+          <Text font="label2">{volumeText}</Text>
         </VStack>
         <VStack justifyContent="center">
           <Image

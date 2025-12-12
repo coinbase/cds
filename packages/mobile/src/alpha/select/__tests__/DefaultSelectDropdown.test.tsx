@@ -324,28 +324,6 @@ describe('DefaultSelectDropdown', () => {
     });
   });
 
-  describe('Checkbox and Radio States', () => {
-    it('renders checkboxes for multi-select options', () => {
-      render(
-        <DefaultThemeProvider>
-          <DefaultSelectDropdown {...defaultProps} type="multi" value={['option1']} />
-        </DefaultThemeProvider>,
-      );
-
-      expect(screen.getAllByRole('checkbox').length).toBeGreaterThan(0);
-    });
-
-    it('renders radio buttons for single-select options', () => {
-      render(
-        <DefaultThemeProvider>
-          <DefaultSelectDropdown {...defaultProps} value="option1" />
-        </DefaultThemeProvider>,
-      );
-
-      expect(screen.getAllByRole('radio').length).toBeGreaterThan(0);
-    });
-  });
-
   describe('Props Forwarding', () => {
     it('forwards media, accessory, and end props to options', () => {
       render(

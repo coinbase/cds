@@ -18,9 +18,9 @@ function Example() {
           }
           meta={
             <Box marginLeft={-1}>
-              <TextLabel2 as="span" color="fgMuted" marginLeft={-1} numberOfLines={1}>
+              <Text as="span" font="label2" color="fgMuted" marginLeft={-1} numberOfLines={1}>
                 ・News・5 hrs
-              </TextLabel2>
+              </Text>
             </Box>
           }
           title="Description"
@@ -29,12 +29,12 @@ function Example() {
           body="Bitcoin Network Shatters Records With Hashrate Climbing to 464 EH/s"
           label={
             <HStack alignItems="flex-end" flexWrap="wrap" gap={0.5}>
-              <TextLabel2 as="p" color="fgMuted" numberOfLines={1}>
+              <Text as="p" font="label2" color="fgMuted" numberOfLines={1}>
                 BTC
-              </TextLabel2>
-              <TextLabel2 accessibilityLabel="Up 5.12%" as="p" color="fgPositive">
+              </Text>
+              <Text font="label2" accessibilityLabel="Up 5.12%" as="p" color="fgPositive">
                 ↗ 5.12%
-              </TextLabel2>
+              </Text>
             </HStack>
           }
         />
@@ -43,9 +43,9 @@ function Example() {
         <ContentCardHeader
           meta={
             <Box marginLeft={-1}>
-              <TextLabel2 as="span" color="fgMuted" numberOfLines={1}>
+              <Text as="span" font="label2" color="fgMuted" numberOfLines={1}>
                 ・News・5 hrs
-              </TextLabel2>
+              </Text>
             </Box>
           }
           title="Brian Armstrong"
@@ -54,12 +54,12 @@ function Example() {
           body="Bitcoin Network Shatters Records With Hashrate Climbing to 464 EH/s"
           label={
             <HStack alignItems="flex-end" flexWrap="wrap" gap={0.5}>
-              <TextLabel2 as="p" color="fgMuted" numberOfLines={1}>
+              <Text as="p" font="label2" color="fgMuted" numberOfLines={1}>
                 BTC
-              </TextLabel2>
-              <TextLabel2 accessibilityLabel="Up 5.12%" as="p" color="fgPositive">
+              </Text>
+              <Text font="label2" accessibilityLabel="Up 5.12%" as="p" color="fgPositive">
                 ↗ 5.12%
-              </TextLabel2>
+              </Text>
             </HStack>
           }
           media={
@@ -118,18 +118,18 @@ function Example() {
       <ContentCard gap={3}>
         <ContentCardBody
           body={
-            <TextBody as="p" paddingTop={0.5}>
+            <Text as="p" font="body" paddingTop={0.5}>
               Bitcoin Network Shatters Records With Hashrate Climbing to 464 EH/s
-            </TextBody>
+            </Text>
           }
           label={
             <HStack alignItems="flex-end" flexWrap="wrap" gap={0.5}>
-              <TextLabel2 as="p" color="fgMuted" numberOfLines={1}>
+              <Text as="p" font="label2" color="fgMuted" numberOfLines={1}>
                 BTC
-              </TextLabel2>
-              <TextLabel2 accessibilityLabel="Up 5.12%" as="p" color="fgPositive">
+              </Text>
+              <Text font="label2" accessibilityLabel="Up 5.12%" as="p" color="fgPositive">
                 ↗ 5.12%
-              </TextLabel2>
+              </Text>
             </HStack>
           }
           media={
@@ -153,7 +153,9 @@ function Example() {
               <TextLegal as="span" color="fgMuted">
                 Reward
               </TextLegal>
-              <TextHeadline as="span">+$15 ACS</TextHeadline>
+              <Text as="span" font="headline">
+                +$15 ACS
+              </Text>
             </VStack>
           </HStack>
           <Button compact accessibilityLabel="Claim now" variant="secondary">
@@ -191,9 +193,9 @@ function Example() {
         }
         meta={
           <Box marginLeft={-1}>
-            <TextLabel2 as="span" color="fgMuted" numberOfLines={1}>
+            <Text as="span" font="label2" color="fgMuted" numberOfLines={1}>
               @matdryhurst・7 mo
-            </TextLabel2>
+            </Text>
           </Box>
         }
         title="Mat Dryhurst"
@@ -208,9 +210,9 @@ function Example() {
           avatar="/img/card/content_card_custom_avatar_1.png"
           meta={
             <Box marginLeft={-1}>
-              <TextLabel2 as="span" color="fgMuted" numberOfLines={1}>
+              <Text as="span" font="label2" color="fgMuted" numberOfLines={1}>
                 ・News・5 hrs
-              </TextLabel2>
+              </Text>
             </Box>
           }
           title="Description"
@@ -228,12 +230,12 @@ function Example() {
           gap={1.5}
           label={
             <HStack alignItems="flex-end" flexWrap="wrap" gap={0.5}>
-              <TextLabel2 as="p" color="fgMuted" numberOfLines={1}>
+              <Text as="p" font="label2" color="fgMuted" numberOfLines={1}>
                 BTC
-              </TextLabel2>
-              <TextLabel2 accessibilityLabel="Up 5.12%" as="p" color="fgPositive">
+              </Text>
+              <Text font="label2" accessibilityLabel="Up 5.12%" as="p" color="fgPositive">
                 ↗ 5.12%
-              </TextLabel2>
+              </Text>
             </HStack>
           }
           paddingBottom={3}

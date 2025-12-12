@@ -8,11 +8,17 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
-## 8.28.3 (12/12/2025 PST)
+## 8.29.1 (12/12/2025 PST)
 
 #### 🐞 Fixes
 
 - Add classNames and styles to sidebar. [[#239](https://github.com/coinbase/cds/pull/239)]
+
+## 8.29.0 (12/12/2025 PST)
+
+#### 🚀 Updates
+
+- Combobox component and header prop for Tray. [[#182](https://github.com/coinbase/cds/pull/182)]
 
 ## 8.28.2 ((12/12/2025, 06:23 AM PST))
 

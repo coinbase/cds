@@ -98,10 +98,14 @@ You can control the visual prominence of the Tag using the `emphasis` prop. By d
 <HStack justifyContent="space-between" gap="2" alignItems="center">
   <VStack gap={0.5}>
     <HStack gap={1}>
-      <TextHeadline as="p">Tax account status</TextHeadline>
+      <Text as="p" font="headline">
+        Tax account status
+      </Text>
       <Tag colorScheme="red">Not verified</Tag>
     </HStack>
-    <TextBody as="p">Verify your info for tax reporting purposes.</TextBody>
+    <Text as="p" font="body">
+      Verify your info for tax reporting purposes.
+    </Text>
   </VStack>
   <Button>Get started</Button>
 </HStack>
@@ -113,9 +117,9 @@ You can control the visual prominence of the Tag using the `emphasis` prop. By d
 function MarginExample() {
   const renderStartLabelNum = useCallback((num, disabled) => {
     return (
-      <TextTitle3 disabled={disabled} as="span">
+      <Text disabled={disabled} as="span" font="title3">
         ${num.toLocaleString()} (10%)
-      </TextTitle3>
+      </Text>
     );
   }, []);
 
@@ -137,12 +141,14 @@ function MarginExample() {
       >
         <VStack gap={0.5}>
           <HStack gap={1}>
-            <TextHeadline as="p">Margin ratio</TextHeadline>
+            <Text as="p" font="headline">
+              Margin ratio
+            </Text>
             <Tag colorScheme="green">Low</Tag>
           </HStack>
-          <TextBody as="p">
+          <Text as="p" font="body">
             The portion of your balance being held on margin is low. No action is required.
-          </TextBody>
+          </Text>
         </VStack>
         <ProgressBarWithFixedLabels
           startLabel={{ value: 400, render: renderStartLabelNum }}
@@ -164,10 +170,14 @@ function MarginExample() {
       >
         <VStack gap={0.5}>
           <HStack gap={1}>
-            <TextHeadline as="p">Margin ratio</TextHeadline>
+            <Text as="p" font="headline">
+              Margin ratio
+            </Text>
             <Tag colorScheme="red">high</Tag>
           </HStack>
-          <TextBody as="p">Margin usage is high. Deposit funds to avoid liquidation</TextBody>
+          <Text as="p" font="body">
+            Margin usage is high. Deposit funds to avoid liquidation
+          </Text>
         </VStack>
         <ProgressBarWithFixedLabels
           startLabel={{ value: 60000, render: renderStartLabelNum }}

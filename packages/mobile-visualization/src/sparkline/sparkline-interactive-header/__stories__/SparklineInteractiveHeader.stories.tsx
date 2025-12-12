@@ -10,7 +10,7 @@ import { IconButton } from '@coinbase/cds-mobile/buttons';
 import { Example, ExampleScreen } from '@coinbase/cds-mobile/examples/ExampleScreen';
 import { Icon } from '@coinbase/cds-mobile/icons';
 import { Box, HStack } from '@coinbase/cds-mobile/layout';
-import { TextTitle3 } from '@coinbase/cds-mobile/typography/TextTitle3';
+import { Text } from '@coinbase/cds-mobile/typography';
 
 import {
   SparklineInteractive,
@@ -178,7 +178,7 @@ const HeaderLabel = () => {
   return (
     <HStack alignItems="center" gap={1} paddingBottom={0}>
       <Icon active name="wallet" size="s" />
-      <TextTitle3>CustomHeader</TextTitle3>
+      <Text font="title3">CustomHeader</Text>
     </HStack>
   );
 };
@@ -531,9 +531,9 @@ const SparklineInteractiveHeaderScreen = () => {
     <ExampleScreen>
       <Example padding={0}>
         <Box>
-          <TextTitle3 paddingX={3} paddingY={3}>
+          <Text font="title3" paddingX={3} paddingY={3}>
             SparklineInteractive Header Example
-          </TextTitle3>
+          </Text>
           <SparklineInteractiveWithHeaderBuild
             data={sparklineInteractiveData}
             strokeColor="#F7931A"
@@ -542,9 +542,9 @@ const SparklineInteractiveHeaderScreen = () => {
       </Example>
       <Example padding={0}>
         <Box>
-          <TextTitle3 paddingX={3} paddingY={3}>
+          <Text font="title3" paddingX={3} paddingY={3}>
             SparklineInteractive Header Trailing
-          </TextTitle3>
+          </Text>
           <SparklineInteractiveWithHeaderBuild
             data={sparklineInteractiveData}
             strokeColor="#F7931A"
@@ -554,9 +554,9 @@ const SparklineInteractiveHeaderScreen = () => {
       </Example>
       <Example padding={0}>
         <Box>
-          <TextTitle3 paddingX={3} paddingY={3}>
+          <Text font="title3" paddingX={3} paddingY={3}>
             SparklineInteractive Header Custom Label
-          </TextTitle3>
+          </Text>
           <SparklineInteractiveWithHeaderBuild
             data={sparklineInteractiveData}
             labelNode={<HeaderLabel />}
@@ -566,9 +566,9 @@ const SparklineInteractiveHeaderScreen = () => {
       </Example>
       <Example padding={0}>
         <Box>
-          <TextTitle3 paddingX={3} paddingY={3}>
+          <Text font="title3" paddingX={3} paddingY={3}>
             SparklineInteractive Header Example with AltHeader
-          </TextTitle3>
+          </Text>
           <SparklineInteractiveWithAltHeader
             data={sparklineInteractiveData}
             strokeColor="#F7931A"
@@ -577,9 +577,9 @@ const SparklineInteractiveHeaderScreen = () => {
       </Example>
       <Example padding={0}>
         <Box>
-          <TextTitle3 paddingX={3} paddingY={3}>
+          <Text font="title3" paddingX={3} paddingY={3}>
             SparklineInteractive Header Example with Smaller Period Set
-          </TextTitle3>
+          </Text>
           <SparklineInteractiveWithSmallerPeriodSet
             data={sparklineInteractiveData}
             strokeColor="#F7931A"
@@ -588,9 +588,9 @@ const SparklineInteractiveHeaderScreen = () => {
       </Example>
       <Example padding={0}>
         <Box>
-          <TextTitle3 paddingX={3} paddingY={3}>
+          <Text font="title3" paddingX={3} paddingY={3}>
             SparklineInteractive Header Example with No Period Set
-          </TextTitle3>
+          </Text>
           <SparklineInteractiveWithHeaderBuild
             hidePeriodSelector
             data={sparklineInteractiveData}
@@ -600,9 +600,9 @@ const SparklineInteractiveHeaderScreen = () => {
       </Example>
       <Example padding={0}>
         <Box>
-          <TextTitle3 paddingX={3} paddingY={3}>
+          <Text font="title3" paddingX={3} paddingY={3}>
             SparklineInteractive Header Custom Title
-          </TextTitle3>
+          </Text>
           <SparklineInteractiveHeaderWithCustomTitle />
         </Box>
       </Example>
