@@ -34,7 +34,7 @@ function Example() {
   return (
     <VStack gap={2}>
       <Box padding={3} background="bgAlternate" borderRadius={300}>
-        <TextHeadline>Current Color Scheme: {theme.activeColorScheme}</TextHeadline>
+        <Text font="headline">Current Color Scheme: {theme.activeColorScheme}</Text>
       </Box>
 
       <VStack padding={3} background="bgAlternate" borderRadius={300}>
@@ -94,9 +94,9 @@ function Example() {
   return (
     <Box gap={0.5} borderRadius={300} alignItems="baseline">
       <Text as="span">This box adapts to {isDarkMode ? 'dark' : 'light'} mode</Text>
-      <TextHeadline as="span" color={isDarkMode ? 'fgMuted' : 'fgPrimary'}>
+      <Text as="span" font="headline" color={isDarkMode ? 'fgMuted' : 'fgPrimary'}>
         with adaptive text colors
-      </TextHeadline>
+      </Text>
     </Box>
   );
 }

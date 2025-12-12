@@ -8,6 +8,27 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.30.0 (12/12/2025 PST)
+
+#### 🚀 Updates
+
+- Add overflow gradient to the left side of TabbedChips alpha. [[#232](https://github.com/coinbase/cds/pull/232)] [DX-5070]
+- Add autoScrollOffset prop to TabbedChips alpha. [[#232](https://github.com/coinbase/cds/pull/232)] [DX-5070]
+- Add maxWidth prop to SelectChip alpha [[#232](https://github.com/coinbase/cds/pull/232)] [DX-5072]
+- Add displayValue prop to SelectChip alpha [[#232](https://github.com/coinbase/cds/pull/232)]
+
+## 8.29.0 (12/12/2025 PST)
+
+#### 🚀 Updates
+
+- Combobox component and header + footer props for Tray. [[#182](https://github.com/coinbase/cds/pull/182)]
+
+## 8.28.2 (12/12/2025 PST)
+
+#### 🐞 Fixes
+
+- Export Text component in typography barrel. [[#238](https://github.com/coinbase/cds/pull/238)]
+
 ## 8.28.1 (12/10/2025 PST)
 
 #### 🐞 Fixes

@@ -44,9 +44,9 @@ function Example() {
 
   const renderLabelNum = useCallback((num, disabled) => {
     return (
-      <TextTitle3 as="span" disabled={disabled}>
+      <Text as="span" font="title3" disabled={disabled}>
         ${num.toLocaleString()}
-      </TextTitle3>
+      </Text>
     );
   }, []);
 

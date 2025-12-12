@@ -3,7 +3,7 @@ import { assets } from '@cbhq/cds-common/internal/data/assets';
 import { sparklineInteractiveData } from '@cbhq/cds-common/internal/visualizations/SparklineInteractiveData';
 import { useTheme } from '@cbhq/cds-web';
 import { VStack } from '@cbhq/cds-web/layout';
-import { TextHeadline } from '@cbhq/cds-web/typography';
+import { Text } from '@cbhq/cds-web/typography';
 
 import { useCartesianChartContext } from '../../ChartProvider';
 import { ChartText } from '../../text/ChartText';
@@ -23,7 +23,7 @@ const Example: React.FC<
 > = ({ children, title, description }) => {
   return (
     <VStack gap={2}>
-      <TextHeadline>{title}</TextHeadline>
+      <Text font="headline">{title}</Text>
       {description}
       {children}
     </VStack>

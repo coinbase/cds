@@ -78,7 +78,7 @@ const TabbedChipsComponent = memo(
   ) {
     const [scrollTarget, setScrollTarget] = useState<HTMLElement | null>(null);
     const { scrollRef, isScrollContentOffscreenLeft, isScrollContentOffscreenRight, handleScroll } =
-      useHorizontalScrollToTarget({ activeTarget: scrollTarget, scrollPadding: 50 });
+      useHorizontalScrollToTarget({ activeTarget: scrollTarget, autoScrollOffset: 50 });
     const activeTab = useMemo(() => tabs.find((tab) => tab.id === value), [tabs, value]);
 
     const handleChange = useCallback(

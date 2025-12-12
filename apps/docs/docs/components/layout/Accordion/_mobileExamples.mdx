@@ -26,7 +26,9 @@ Check [here](/components/layout/AccordionItem) for AccordionItem Props.
     media={<CellMedia active type="icon" name="wallet" title="BTC" />}
     onPress={(itemKey) => console.log(itemKey)}
   >
-    <TextBody as="p">{loremIpsum.repeat(20)}</TextBody>
+    <Text as="p" font="body">
+      {loremIpsum.repeat(20)}
+    </Text>
   </AccordionItem>
 </Accordion>
 ```

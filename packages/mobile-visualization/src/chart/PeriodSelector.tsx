@@ -10,7 +10,7 @@ import {
 } from '@cbhq/cds-mobile/tabs';
 import { SegmentedTab, type SegmentedTabProps } from '@cbhq/cds-mobile/tabs/SegmentedTab';
 import { tabsSpringConfig } from '@cbhq/cds-mobile/tabs/Tabs';
-import { Text, type TextBaseProps } from '@cbhq/cds-mobile/typography/Text';
+import { Text, type TextBaseProps } from '@cbhq/cds-mobile/typography';
 
 // Animated active indicator to support smooth transition of background color
 export const PeriodSelectorActiveIndicator = ({
