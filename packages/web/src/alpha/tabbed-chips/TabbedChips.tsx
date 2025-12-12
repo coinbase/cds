@@ -87,6 +87,11 @@ export type TabbedChipsBaseProps<T extends string = string> = Omit<
    * @default false
    */
   compact?: boolean;
+  /**
+   * X position offset when auto-scrolling to active tab (to avoid active tab being covered by the paddle on the left side, default: 50px)
+   * @default 50
+   */
+  autoScrollOffset?: number;
 };
 
 export type TabbedChipsProps<T extends string = string> = TabbedChipsBaseProps<T> &
@@ -162,13 +167,14 @@ const TabbedChipsComponent = memo(
       compact,
       styles,
       classNames,
+      autoScrollOffset = 50,
       ...accessibilityProps
     }: TabbedChipsProps<T>,
     ref: React.ForwardedRef<HTMLElement | null>,
   ) {
     const [scrollTarget, setScrollTarget] = useState<HTMLElement | null>(null);
     const { scrollRef, isScrollContentOffscreenLeft, isScrollContentOffscreenRight, handleScroll } =
-      useHorizontalScrollToTarget({ activeTarget: scrollTarget, scrollPadding: 50 });
+      useHorizontalScrollToTarget({ activeTarget: scrollTarget, autoScrollOffset });
 
     const handleScrollLeft = useCallback(() => {
       scrollRef?.current?.scrollTo({ left: 0, behavior: 'smooth' });

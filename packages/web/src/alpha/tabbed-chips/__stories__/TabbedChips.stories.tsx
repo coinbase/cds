@@ -51,15 +51,18 @@ const Demo = ({
   tabs = defaultTabs,
   compact = false,
   styles,
+  autoScrollOffset,
 }: {
   tabs?: TabbedChipProps[];
   styles?: TabbedChipsProps['styles'];
   compact?: boolean;
+  autoScrollOffset?: number;
 }) => {
   const [activeTab, setActiveTab] = useState<TabValue | null>(tabs[0]);
   return (
     <TabbedChips
       activeTab={activeTab}
+      autoScrollOffset={autoScrollOffset}
       compact={compact}
       onChange={setActiveTab}
       styles={styles}
@@ -105,6 +108,10 @@ export const Default = () => {
         Compact with start
       </Text>
       <Demo compact tabs={compactTabsWithStart} />
+      <Text as="p" display="block" font="headline">
+        With auto scroll offset
+      </Text>
+      <Demo autoScrollOffset={100} tabs={sampleTabs} />
     </VStack>
   );
 };
