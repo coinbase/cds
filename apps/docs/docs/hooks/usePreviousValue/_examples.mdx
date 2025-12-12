@@ -11,8 +11,8 @@ function Example() {
   return (
     <VStack gap={3} alignItems="start">
       <VStack gap={1}>
-        <TextHeadline>Current count: {count}</TextHeadline>
-        <TextHeadline>Previous count: {previousCount ?? 'None'}</TextHeadline>
+        <Text font="headline">Current count: {count}</Text>
+        <Text font="headline">Previous count: {previousCount ?? 'None'}</Text>
       </VStack>
       <Button onClick={() => setCount(count + 1)}>Increment</Button>
     </VStack>
@@ -38,9 +38,9 @@ function Example() {
   return (
     <VStack gap={3} alignItems="start">
       <VStack gap={1}>
-        <TextHeadline>Name: {user.name}</TextHeadline>
-        <TextHeadline>Age: {user.age}</TextHeadline>
-        <TextHeadline>Previous age: {previousUser?.age ?? 'None'}</TextHeadline>
+        <Text font="headline">Name: {user.name}</Text>
+        <Text font="headline">Age: {user.age}</Text>
+        <Text font="headline">Previous age: {previousUser?.age ?? 'None'}</Text>
       </VStack>
       <Button onClick={updateAge}>Add Year</Button>
     </VStack>

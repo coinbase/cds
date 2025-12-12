@@ -24,7 +24,7 @@ import { SectionHeader } from '@coinbase/cds-mobile/section-header/SectionHeader
 import { Pressable } from '@coinbase/cds-mobile/system';
 import { type TabComponent, type TabsActiveIndicatorProps } from '@coinbase/cds-mobile/tabs';
 import { SegmentedTab, type SegmentedTabProps } from '@coinbase/cds-mobile/tabs/SegmentedTab';
-import { Text, TextLabel1 } from '@coinbase/cds-mobile/typography';
+import { Text } from '@coinbase/cds-mobile/typography';
 import {
   Circle,
   FontWeight,
@@ -951,13 +951,14 @@ function AssetPriceWithDottedArea() {
         <SegmentedTab
           ref={ref}
           label={
-            <TextLabel1
+            <Text
+              font="label1"
               style={{
                 color: isActive ? assets.btc.color : undefined,
               }}
             >
               {label}
-            </TextLabel1>
+            </Text>
           }
           {...props}
         />
@@ -2571,9 +2572,9 @@ function ExampleNavigator() {
           />
           <VStack alignItems="center" gap={1}>
             <Text font="title3">{currentExample.title}</Text>
-            <TextLabel1 color="fgMuted">
+            <Text color="fgMuted" font="label1">
               {currentIndex + 1} / {examples.length}
-            </TextLabel1>
+            </Text>
           </VStack>
           <IconButton
             accessibilityHint="Navigate to next example"

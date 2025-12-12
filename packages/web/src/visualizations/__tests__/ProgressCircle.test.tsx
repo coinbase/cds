@@ -7,7 +7,7 @@ import { renderA11y } from '@coinbase/cds-web-utils/jest';
 import { render, screen, waitFor } from '@testing-library/react';
 
 import { Box } from '../../layout';
-import { TextLabel1 } from '../../typography';
+import { Text } from '../../typography';
 import { DefaultThemeProvider } from '../../utils/test';
 import { ProgressCircle } from '../ProgressCircle';
 
@@ -192,9 +192,9 @@ describe('ProgressCircle tests', () => {
     const progress = 0.75;
     const contentNode = (
       <Box testID="custom-content-node">
-        <TextLabel1>
+        <Text font="label1">
           {customText} {progress * 100}%
-        </TextLabel1>
+        </Text>
       </Box>
     );
 
@@ -215,9 +215,9 @@ describe('ProgressCircle tests', () => {
     const progress = 0.75;
     const contentNode = (
       <Box testID="custom-content-node">
-        <TextLabel1>
+        <Text font="label1">
           {customText} {progress * 100}%
-        </TextLabel1>
+        </Text>
       </Box>
     );
 

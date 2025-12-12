@@ -13,10 +13,10 @@ The global warning banner is used to communicate important alerts or warnings to
   primaryAction={<Link to="https://www.coinbase.com">Primary</Link>}
   secondaryAction={<Link to="https://www.coinbase.com">Secondary</Link>}
 >
-  <TextLabel2>
+  <Text font="label2">
     Your funds are safe. We’re looking into it and expect our usual service to return soon.
     <Link to="https://www.coinbase.com">Learn more</Link>
-  </TextLabel2>
+  </Text>
 </Banner>
 ```
 
@@ -34,10 +34,10 @@ The In-line Error Banner is used to display specific error messages directly ben
   primaryAction={<Link to="https://www.coinbase.com">Primary</Link>}
   secondaryAction={<Link to="https://www.coinbase.com">Secondary</Link>}
 >
-  <TextLabel2>
+  <Text font="label2">
     Your funds are safe. We’re looking into it and expect our usual service to return soon.
     <Link to="https://www.coinbase.com">Learn more</Link>
-  </TextLabel2>
+  </Text>
 </Banner>
 ```
 
@@ -53,10 +53,10 @@ The Contextual Promotional Banner is used to highlight special offers, promotion
   title="Some features are temporarily unavailable"
   variant="promotional"
 >
-  <TextLabel2>
+  <Text font="label2">
     Your funds are safe. We’re looking into it and expect our usual service to return soon.
     <Link to="https://www.coinbase.com">Learn more</Link>
-  </TextLabel2>
+  </Text>
 </Banner>
 ```
 
@@ -75,10 +75,10 @@ The in-line Informational Banner is used to provide users with additional inform
     primaryAction={<Link to="https://www.coinbase.com">Primary</Link>}
     secondaryAction={<Link to="https://www.coinbase.com">Secondary</Link>}
   >
-    <TextLabel2>
+    <Text font="label2">
       Your funds are safe. We’re looking into it and expect our usual service to return soon.
       <Link to="https://www.coinbase.com">Learn more</Link>
-    </TextLabel2>
+    </Text>
   </Banner>
   <Banner
     startIcon="warning"
@@ -87,9 +87,9 @@ The in-line Informational Banner is used to provide users with additional inform
     title="Some features are temporarily unavailable"
     variant="warning"
   >
-    <TextLabel2>
+    <Text font="label2">
       <Link to="https://www.coinbase.com">Retry</Link>
-    </TextLabel2>
+    </Text>
   </Banner>
 </VStack>
 ```
@@ -108,9 +108,9 @@ Customize `borderRadius` to align contextual or in-line banners with surrounding
     title="Rounded contextual banner"
     variant="informational"
   >
-    <TextLabel2>
+    <Text font="label2">
       Use moderate rounding to soften banners that live within card-based layouts.
-    </TextLabel2>
+    </Text>
   </Banner>
   <Banner
     borderRadius={400}
@@ -122,9 +122,9 @@ Customize `borderRadius` to align contextual or in-line banners with surrounding
     title="Rounded inline banner"
     variant="promotional"
   >
-    <TextLabel2>
+    <Text font="label2">
       Larger radii can help inline banners feel cohesive with pill-shaped buttons or chips nearby.
-    </TextLabel2>
+    </Text>
   </Banner>
 </VStack>
 ```

@@ -7,7 +7,7 @@ import { Box, type BoxBaseProps, Divider, HStack, VStack } from '@coinbase/cds-w
 import { RemoteImage } from '@coinbase/cds-web/media';
 import { SectionHeader } from '@coinbase/cds-web/section-header/SectionHeader';
 import { Pressable } from '@coinbase/cds-web/system';
-import { Text, TextHeadline } from '@coinbase/cds-web/typography';
+import { Text } from '@coinbase/cds-web/typography';
 
 import { Area } from '../area/Area';
 import { XAxis, YAxis } from '../axis';
@@ -557,7 +557,7 @@ const Example: React.FC<
 > = ({ children, title, description }) => {
   return (
     <VStack gap={2}>
-      <TextHeadline>{title}</TextHeadline>
+      <Text font="headline">{title}</Text>
       {description}
       {children}
     </VStack>

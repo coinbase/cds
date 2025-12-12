@@ -3,8 +3,7 @@ import { cx } from '@coinbase/cds-web';
 import { VStack } from '@coinbase/cds-web/layout';
 import { Divider } from '@coinbase/cds-web/layout/Divider';
 import { Link } from '@coinbase/cds-web/typography/Link';
-import { TextBody } from '@coinbase/cds-web/typography/TextBody';
-import { TextLabel2 } from '@coinbase/cds-web/typography/TextLabel2';
+import { Text } from '@coinbase/cds-web/typography';
 import type {
   ProcessedPropItem,
   SharedTypeAliases,
@@ -117,13 +116,17 @@ function PropsTableRow({ prop, sharedTypeAliases, searchTerm = '' }: PropsTableR
   const nameContent = useMemo(() => {
     return (
       <VStack as="h3" className={cx(styles.propsNameWrapper, 'anchor')} id={name}>
-        <TextBody as="p">
+        <Text as="p" font="body">
           {highlightedName}
-          {required && <TextBody color="fgNegative">*</TextBody>}
-        </TextBody>
-        <TextLabel2 as="p" color="fgMuted" overflow="break" paddingTop={0.5}>
+          {required && (
+            <Text font="body" color="fgNegative">
+              *
+            </Text>
+          )}
+        </Text>
+        <Text as="p" font="label2" color="fgMuted" overflow="break" paddingTop={0.5}>
           {description}
-        </TextLabel2>
+        </Text>
       </VStack>
     );
   }, [description, name, required, highlightedName]);
@@ -141,9 +144,9 @@ function PropsTableRow({ prop, sharedTypeAliases, searchTerm = '' }: PropsTableR
       );
     }
     return (
-      <TextBody mono font="body" overflow="break">
+      <Text mono font="body" overflow="break">
         {type}
-      </TextBody>
+      </Text>
     );
   }, [sharedTypeAliases, type]);
   return (
@@ -151,9 +154,9 @@ function PropsTableRow({ prop, sharedTypeAliases, searchTerm = '' }: PropsTableR
       <td className={styles.propsTableCell}>{nameContent}</td>
       <td className={styles.propsTableCell}>{typeContent}</td>
       <td className={styles.propsTableCell}>
-        <TextBody mono as="span">
+        <Text mono as="span" font="body">
           {defaultValue ?? '--'}
-        </TextBody>
+        </Text>
       </td>
     </tr>
   );

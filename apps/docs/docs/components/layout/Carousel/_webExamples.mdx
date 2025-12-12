@@ -20,9 +20,9 @@ function MyCarousel() {
     return (
       <ContainedAssetCard
         description={
-          <TextLabel2 as="p" color="fgPositive" numberOfLines={2}>
+          <Text as="p" font="label2" color="fgPositive" numberOfLines={2}>
             ↗6.37%
-          </TextLabel2>
+          </Text>
         }
         header={<RemoteImage height="32px" source={imageUrl} width="32px" />}
         subtitle={name}
@@ -101,7 +101,9 @@ function DynamicSizingCarousel() {
   return (
     <VStack gap={2}>
       <HStack justifyContent="flex-end" gap={2} alignItems="center">
-        <TextHeadline as="h3">Items per page</TextHeadline>
+        <Text as="h3" font="headline">
+          Items per page
+        </Text>
         <SegmentedTabs
           activeTab={selectedItemsPerPage}
           onChange={setSelectedItemsPerPage}
@@ -134,9 +136,9 @@ function DynamicSizingCarousel() {
                 }
                 minWidth="0"
                 title={
-                  <TextHeadline as="h3" id="recurring-buy-label">
+                  <Text as="h3" font="headline" id="recurring-buy-label">
                     Recurring Buy
-                  </TextHeadline>
+                  </Text>
                 }
                 width="100%"
               />
@@ -152,9 +154,9 @@ function DynamicSizingCarousel() {
                 action={<ActionButton isVisible={isVisible}>Start earning</ActionButton>}
                 dangerouslySetBackground="rgb(var(--purple70))"
                 description={
-                  <TextLabel2 as="p" numberOfLines={3} color="fgInverse">
+                  <Text as="p" font="label2" numberOfLines={3} color="fgInverse">
                     Earn staking rewards on ETH by holding it on Coinbase
-                  </TextLabel2>
+                  </Text>
                 }
                 media={
                   <Box left={16} position="relative" top={12}>
@@ -163,9 +165,9 @@ function DynamicSizingCarousel() {
                 }
                 minWidth="0"
                 title={
-                  <TextHeadline id="eths-apr-label" color="fgInverse" as="h3">
+                  <Text id="eths-apr-label" color="fgInverse" as="h3">
                     Up to 3.29% APR on ETHs
-                  </TextHeadline>
+                  </Text>
                 }
                 width="100%"
               />
@@ -181,9 +183,9 @@ function DynamicSizingCarousel() {
                 action={<ActionButton isVisible={isVisible}>Start chatting</ActionButton>}
                 dangerouslySetBackground="rgb(var(--teal70))"
                 description={
-                  <TextLabel2 as="p" numberOfLines={3} color="fgInverse">
+                  <Text as="p" font="label2" numberOfLines={3} color="fgInverse">
                     Chat with other devs in our Discord community
-                  </TextLabel2>
+                  </Text>
                 }
                 media={
                   <Box left={16} position="relative" top={4}>
@@ -192,9 +194,9 @@ function DynamicSizingCarousel() {
                 }
                 minWidth="0"
                 title={
-                  <TextHeadline id="join-the-community-label" color="fgInverse" as="h3">
+                  <Text id="join-the-community-label" color="fgInverse" as="h3">
                     Join the community
-                  </TextHeadline>
+                  </Text>
                 }
                 width="100%"
               />
@@ -210,9 +212,9 @@ function DynamicSizingCarousel() {
                 action={<ActionButton isVisible={isVisible}>Get 60 days free</ActionButton>}
                 dangerouslySetBackground="rgb(var(--blue80))"
                 description={
-                  <TextLabel2 as="p" numberOfLines={3} color="fgInverse">
+                  <Text as="p" font="label2" numberOfLines={3} color="fgInverse">
                     Use code NOV60 when you sign up for Coinbase One
-                  </TextLabel2>
+                  </Text>
                 }
                 media={
                   <Box left={16} position="relative" top={0}>
@@ -221,9 +223,9 @@ function DynamicSizingCarousel() {
                 }
                 minWidth="0"
                 title={
-                  <TextHeadline id="coinbase-one-offer-label" color="fgInverse" as="h3">
+                  <Text id="coinbase-one-offer-label" color="fgInverse" as="h3">
                     Coinbase One offer
-                  </TextHeadline>
+                  </Text>
                 }
                 width="100%"
               />
@@ -239,9 +241,9 @@ function DynamicSizingCarousel() {
                 action={<ActionButton isVisible={isVisible}>Get started</ActionButton>}
                 dangerouslySetBackground="rgb(var(--gray100))"
                 description={
-                  <TextLabel2 as="p" numberOfLines={3} color="fgInverse">
+                  <Text as="p" font="label2" numberOfLines={3} color="fgInverse">
                     Spend USDC to get rewards with our Visa® debit card
-                  </TextLabel2>
+                  </Text>
                 }
                 media={
                   <Box left={16} position="relative" top={0}>
@@ -250,9 +252,9 @@ function DynamicSizingCarousel() {
                 }
                 minWidth="0"
                 title={
-                  <TextHeadline id="coinbase-card-label" color="fgInverse" as="h3">
+                  <Text id="coinbase-card-label" color="fgInverse" as="h3">
                     Coinbase Card
-                  </TextHeadline>
+                  </Text>
                 }
                 width="100%"
               />
@@ -355,9 +357,9 @@ function VariedSizingCarousel() {
     return (
       <ContainedAssetCard
         description={
-          <TextLabel2 as="p" color="fgPositive" numberOfLines={2}>
+          <Text as="p" font="label2" color="fgPositive" numberOfLines={2}>
             ↗6.37%
-          </TextLabel2>
+          </Text>
         }
         header={<RemoteImage height="32px" source={imageUrl} width="32px" />}
         subtitle={name}
@@ -463,9 +465,9 @@ function DragCarousel() {
     return (
       <ContainedAssetCard
         description={
-          <TextLabel2 as="p" color="fgPositive" numberOfLines={2}>
+          <Text as="p" font="label2" color="fgPositive" numberOfLines={2}>
             ↗6.37%
-          </TextLabel2>
+          </Text>
         }
         header={<RemoteImage height="32px" source={imageUrl} width="32px" />}
         subtitle={name}
@@ -476,7 +478,9 @@ function DragCarousel() {
   return (
     <VStack gap={2}>
       <HStack justifyContent="flex-end" gap={2} alignItems="center">
-        <TextHeadline as="h3">Drag</TextHeadline>
+        <Text as="h3" font="headline">
+          Drag
+        </Text>
         <SegmentedTabs activeTab={drag} onChange={setDrag} tabs={dragOptions} />
       </HStack>
       <Box style={{ marginInline: 'calc(-1 * var(--space-3))' }}>
@@ -520,9 +524,9 @@ function SnapModeCarousel() {
     return (
       <ContainedAssetCard
         description={
-          <TextLabel2 as="p" color="fgPositive" numberOfLines={2}>
+          <Text as="p" font="label2" color="fgPositive" numberOfLines={2}>
             ↗6.37%
-          </TextLabel2>
+          </Text>
         }
         header={<RemoteImage height="32px" source={imageUrl} width="32px" />}
         subtitle={name}
@@ -533,7 +537,9 @@ function SnapModeCarousel() {
   return (
     <VStack gap={2}>
       <HStack justifyContent="flex-end" gap={2} alignItems="center">
-        <TextHeadline as="h3">Snap mode</TextHeadline>
+        <Text as="h3" font="headline">
+          Snap mode
+        </Text>
         <SegmentedTabs activeTab={snapMode} onChange={setSnapMode} tabs={snapModeOptions} />
       </HStack>
       <Box style={{ marginInline: 'calc(-1 * var(--space-3))' }}>
@@ -579,9 +585,9 @@ function OverflowCarousel() {
     return (
       <ContainedAssetCard
         description={
-          <TextLabel2 as="p" color="fgPositive" numberOfLines={2}>
+          <Text as="p" font="label2" color="fgPositive" numberOfLines={2}>
             ↗6.37%
-          </TextLabel2>
+          </Text>
         }
         header={<RemoteImage height="32px" source={imageUrl} width="32px" />}
         onClick={isVisible ? () => console.log('clicked') : undefined}
@@ -653,9 +659,9 @@ If you have elements that are focusable, you can use `isVisible` render prop to 
         }
         minWidth="0"
         title={
-          <TextHeadline as="h3" id="recurring-buy-label">
+          <Text as="h3" font="headline" id="recurring-buy-label">
             Recurring Buy
-          </TextHeadline>
+          </Text>
         }
         width="100%"
       />
@@ -674,11 +680,11 @@ You can customize the navigation and pagination components of the carousel using
 function CustomComponentsCarousel() {
   function SeeAllComponent({ style }) {
     return (
-      <TextHeadline style={style}>
+      <Text style={style}>
         <Link openInNewWindow href="https://coinbase.com/">
           See all
         </Link>
-      </TextHeadline>
+      </Text>
     );
   }
   function PaginationComponent({ totalPages, activePageIndex, onClickPage, style }) {
@@ -761,9 +767,9 @@ function CustomComponentsCarousel() {
           carousel: { gap: 'var(--space-1)' },
         }}
         title={
-          <TextHeadline as="h3">
+          <Text as="h3" font="headline">
             Learn more
-          </TextHeadline>
+          </Text>
         }
       >
         <CarouselItem id="recurring-buy" width={itemWidth}>
@@ -788,9 +794,9 @@ function CustomComponentsCarousel() {
               action={<ActionButton isVisible={isVisible}>Start earning</ActionButton>}
               dangerouslySetBackground="rgb(var(--purple70))"
               description={
-                <TextLabel2 as="p" numberOfLines={3} color="fgInverse">
+                <Text as="p" font="label2" numberOfLines={3} color="fgInverse">
                   Earn staking rewards on ETH by holding it on Coinbase
-                </TextLabel2>
+                </Text>
               }
               media={
                 <Box left={16} position="relative" top={12}>
@@ -799,9 +805,9 @@ function CustomComponentsCarousel() {
               }
               minWidth="0"
               title={
-                <TextHeadline color="fgInverse" as="h3">
+                <Text color="fgInverse" as="h3" font="headline">
                   Up to 3.29% APR on ETHs
-                </TextHeadline>
+                </Text>
               }
               width="100%"
             />
@@ -813,9 +819,9 @@ function CustomComponentsCarousel() {
               action={<ActionButton isVisible={isVisible}>Start chatting</ActionButton>}
               dangerouslySetBackground="rgb(var(--teal70))"
               description={
-                <TextLabel2 as="p" numberOfLines={3} color="fgInverse">
+                <Text as="p" font="label2" numberOfLines={3} color="fgInverse">
                   Chat with other devs in our Discord community
-                </TextLabel2>
+                </Text>
               }
               media={
                 <Box left={16} position="relative" top={4}>
@@ -824,9 +830,9 @@ function CustomComponentsCarousel() {
               }
               minWidth="0"
               title={
-                <TextHeadline color="fgInverse" as="h3">
+                <Text color="fgInverse" as="h3" font="headline">
                   Join the community
-                </TextHeadline>
+                </Text>
               }
               width="100%"
             />
@@ -838,9 +844,9 @@ function CustomComponentsCarousel() {
               action={<ActionButton isVisible={isVisible}>Get 60 days free</ActionButton>}
               dangerouslySetBackground="rgb(var(--blue80))"
               description={
-                <TextLabel2 as="p" numberOfLines={3} color="fgInverse">
+                <Text as="p" font="label2" numberOfLines={3} color="fgInverse">
                   Use code NOV60 when you  sign up for Coinbase One
-                </TextLabel2>
+                </Text>
               }
               media={
                 <Box left={16} position="relative" top={0}>
@@ -849,9 +855,9 @@ function CustomComponentsCarousel() {
               }
               minWidth="0"
               title={
-                <TextHeadline color="fgInverse" as="h3">
+                <Text color="fgInverse" as="h3" font="headline">
                   Coinbase One offer
-                </TextHeadline>
+                </Text>
               }
               width="100%"
             />
@@ -863,9 +869,9 @@ function CustomComponentsCarousel() {
               action={<ActionButton isVisible={isVisible}>Get started</ActionButton>}
               dangerouslySetBackground="rgb(var(--gray100))"
               description={
-                <TextLabel2 as="p" numberOfLines={3} color="fgInverse">
+                <Text as="p" font="label2" numberOfLines={3} color="fgInverse">
                   Spend USDC to get rewards with our Visa® debit card
-                </TextLabel2>
+                </Text>
               }
               media={
                 <Box left={16} position="relative" top={0}>
@@ -874,9 +880,9 @@ function CustomComponentsCarousel() {
               }
               minWidth="0"
               title={
-                <TextHeadline color="fgInverse" as="h3">
+                <Text color="fgInverse" as="h3" font="headline">
                   Coinbase Card
-                </TextHeadline>
+                </Text>
               }
               width="100%"
             />
@@ -990,9 +996,9 @@ function DynamicContentCarousel() {
     return (
       <ContainedAssetCard
         description={
-          <TextLabel2 as="p" color="fgPositive" numberOfLines={2}>
+          <Text as="p" font="label2" color="fgPositive" numberOfLines={2}>
             ↗6.37%
-          </TextLabel2>
+          </Text>
         }
         header={<RemoteImage height="32px" source={imageUrl} width="32px" />}
         subtitle={name}
@@ -1057,9 +1063,9 @@ function AnimatedCarousel() {
       >
         <ContainedAssetCard
           description={
-            <TextLabel2 as="p" color="fgPositive" numberOfLines={2}>
+            <Text as="p" font="label2" color="fgPositive" numberOfLines={2}>
               ↗6.37%
-            </TextLabel2>
+            </Text>
           }
           header={<RemoteImage height="32px" source={imageUrl} width="32px" />}
           subtitle={name}
@@ -1134,9 +1140,9 @@ function AnimatedSelectionCarousel() {
         >
           <ContainedAssetCard
             description={
-              <TextLabel2 as="p" color="fgPositive" numberOfLines={2}>
+              <Text as="p" font="label2" color="fgPositive" numberOfLines={2}>
                 ↗6.37%
-              </TextLabel2>
+              </Text>
             }
             header={<RemoteImage height="32px" source={imageUrl} width="32px" />}
             subtitle={name}
@@ -1193,9 +1199,9 @@ function HideNavigationAndPaginationCarousel() {
     return (
       <ContainedAssetCard
         description={
-          <TextLabel2 as="p" color="fgPositive" numberOfLines={2}>
+          <Text as="p" font="label2" color="fgPositive" numberOfLines={2}>
             ↗6.37%
-          </TextLabel2>
+          </Text>
         }
         header={<RemoteImage height="32px" source={imageUrl} width="32px" />}
         subtitle={name}
@@ -1270,9 +1276,9 @@ function AnimatedPaginationCarousel() {
     return (
       <ContainedAssetCard
         description={
-          <TextLabel2 as="p" color="fgPositive" numberOfLines={2}>
+          <Text as="p" font="label2" color="fgPositive" numberOfLines={2}>
             ↗6.37%
-          </TextLabel2>
+          </Text>
         }
         header={<RemoteImage height="32px" source={imageUrl} width="32px" />}
         subtitle={name}
@@ -1347,9 +1353,9 @@ function ImperativeApiCarousel() {
     return (
       <ContainedAssetCard
         description={
-          <TextLabel2 as="p" color="fgPositive" numberOfLines={2}>
+          <Text as="p" font="label2" color="fgPositive" numberOfLines={2}>
             ↗6.37%
-          </TextLabel2>
+          </Text>
         }
         header={<RemoteImage height="32px" source={imageUrl} width="32px" />}
         subtitle={name}

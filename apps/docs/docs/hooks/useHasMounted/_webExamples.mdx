@@ -11,7 +11,11 @@ const hasMounted = useHasMounted();
 
 // in component render
 {
-  hasMounted && isPhone && <TextHeadline as="h3">Welcome {username}!</TextHeadline>;
+  hasMounted && isPhone && (
+    <Text as="h3" font="headline">
+      Welcome {username}!
+    </Text>
+  );
 }
 ```
 
@@ -24,7 +28,7 @@ const hasMounted = useHasMounted();
 function Example() {
   const hasMounted = useHasMounted();
 
-  return <TextHeadline>Component has {hasMounted ? 'mounted' : 'not mounted'}</TextHeadline>;
+  return <Text font="headline">Component has {hasMounted ? 'mounted' : 'not mounted'}</Text>;
 }
 ```
 
@@ -46,7 +50,7 @@ function Example() {
     }
   }, [hasMounted]);
 
-  return <TextHeadline>{hasMounted ? `Current time: ${currentTime}` : 'Loading...'}</TextHeadline>;
+  return <Text font="headline">{hasMounted ? `Current time: ${currentTime}` : 'Loading...'}</Text>;
 }
 ```
 

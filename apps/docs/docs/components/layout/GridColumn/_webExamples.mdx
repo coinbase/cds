@@ -52,13 +52,19 @@ function FullBleedExample() {
   return (
     <Grid gap={0.5} templateColumns="100px 1fr 100px">
       <Item background="bg">
-        <TextBody as="p">Gutter</TextBody>
+        <Text as="p" font="body">
+          Gutter
+        </Text>
       </Item>
       <Item>
-        <TextBody as="p">Body</TextBody>
+        <Text as="p" font="body">
+          Body
+        </Text>
       </Item>
       <Item background="bg">
-        <TextBody as="p">Gutter</TextBody>
+        <Text as="p" font="body">
+          Gutter
+        </Text>
       </Item>
       <GridColumn
         // this is shorthand for first grid line to the last
@@ -69,7 +75,9 @@ function FullBleedExample() {
         background="bgAlternate"
         padding={2}
       >
-        <TextBody as="p">Full Bleed</TextBody>
+        <Text as="p" font="body">
+          Full Bleed
+        </Text>
       </GridColumn>
     </Grid>
   );
