@@ -134,7 +134,7 @@ const sidebars: SidebarsConfig = {
             {
               type: 'doc',
               id: 'components/inputs/Combobox/combobox',
-              label: 'Combobox',
+              label: 'Combobox (Alpha)',
             },
             {
               type: 'doc',
