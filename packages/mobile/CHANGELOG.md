@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.28.2 (12/12/2025 PST)
+
+#### 🐞 Fixes
+
+- Export Text component in typography barrel. [[#238](https://github.com/coinbase/cds/pull/238)]
+
 ## 8.28.1 (12/10/2025 PST)
 
 #### 🐞 Fixes

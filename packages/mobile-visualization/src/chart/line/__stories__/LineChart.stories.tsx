@@ -24,8 +24,7 @@ import { SectionHeader } from '@cbhq/cds-mobile/section-header/SectionHeader';
 import { Pressable } from '@cbhq/cds-mobile/system';
 import { type TabComponent, type TabsActiveIndicatorProps } from '@cbhq/cds-mobile/tabs';
 import { SegmentedTab, type SegmentedTabProps } from '@cbhq/cds-mobile/tabs/SegmentedTab';
-import { TextLabel1 } from '@cbhq/cds-mobile/typography';
-import { Text } from '@cbhq/cds-mobile/typography/Text';
+import { Text, TextLabel1 } from '@cbhq/cds-mobile/typography';
 import {
   Circle,
   FontWeight,
