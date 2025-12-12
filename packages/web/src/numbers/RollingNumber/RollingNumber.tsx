@@ -78,7 +78,7 @@ type RollingNumberTransitionConfig = {
 /**
  * Defines the style of digit transition animation.
  * - `'every'`: Rolls through every intermediate digit (e.g., 1→2→3→...→9). Default behavior.
- * - `'single'`: Rolls directly to the new digit without showing intermediates.
+ * - `'single'`: Rolls directly to the new digit without showing intermediates (e.g., 1→9).
  */
 export type DigitTransitionVariant = 'every' | 'single';
 
@@ -381,7 +381,7 @@ export type RollingNumberBaseProps = SharedProps &
     /**
      * Style of digit transition animation. Defaults to {@code 'every'}.
      * - `'every'`: Rolls through every intermediate digit (e.g., 1→2→3→...→9).
-     * - `'single'`: Rolls directly to the new digit without showing intermediates.
+     * - `'single'`: Rolls directly to the new digit without showing intermediates (e.g., 1→9).
      */
     digitTransitionVariant?: DigitTransitionVariant;
     /**
