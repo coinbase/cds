@@ -24,8 +24,7 @@ import { SectionHeader } from '@coinbase/cds-mobile/section-header/SectionHeader
 import { Pressable } from '@coinbase/cds-mobile/system';
 import { type TabComponent, type TabsActiveIndicatorProps } from '@coinbase/cds-mobile/tabs';
 import { SegmentedTab, type SegmentedTabProps } from '@coinbase/cds-mobile/tabs/SegmentedTab';
-import { TextLabel1 } from '@coinbase/cds-mobile/typography';
-import { Text } from '@coinbase/cds-mobile/typography/Text';
+import { Text, TextLabel1 } from '@coinbase/cds-mobile/typography';
 import {
   Circle,
   FontWeight,

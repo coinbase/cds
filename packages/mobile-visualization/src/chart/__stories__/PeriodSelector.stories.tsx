@@ -9,8 +9,7 @@ import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 import { HStack } from '@coinbase/cds-mobile/layout';
 import { type TabComponent, type TabsActiveIndicatorProps } from '@coinbase/cds-mobile/tabs';
 import { SegmentedTab, type SegmentedTabProps } from '@coinbase/cds-mobile/tabs/SegmentedTab';
-import { TextLabel1 } from '@coinbase/cds-mobile/typography';
-import { Text } from '@coinbase/cds-mobile/typography/Text';
+import { Text, TextLabel1 } from '@coinbase/cds-mobile/typography';
 
 import {
   LiveTabLabel,
