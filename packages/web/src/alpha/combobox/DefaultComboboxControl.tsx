@@ -65,7 +65,7 @@ export const DefaultComboboxControl = memo(
         {...props}
         contentNode={
           shouldShowSearchInput ? (
-            <HStack flexGrow={1} flexWrap="wrap">
+            <HStack flexGrow={1} flexWrap="wrap" width="100%">
               <NativeInput
                 ref={searchInputRef}
                 onChange={handleSearchChange}

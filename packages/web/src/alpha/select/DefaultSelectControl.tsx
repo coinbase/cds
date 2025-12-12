@@ -273,6 +273,7 @@ const DefaultSelectControlComponent = memo(
             display="block"
             font="body"
             overflow="truncate"
+            width="100%"
           >
             {content}
           </Text>
@@ -305,6 +306,7 @@ const DefaultSelectControlComponent = memo(
             className={cx(noFocusOutlineCss, classNames?.controlInputNode)}
             disabled={disabled}
             flexGrow={1}
+            flexShrink={1}
             focusable={false}
             minHeight={
               labelVariant === 'inside'
@@ -313,11 +315,11 @@ const DefaultSelectControlComponent = memo(
                   ? COMPACT_HEIGHT
                   : DEFAULT_HEIGHT
             }
+            minWidth={0}
             onClick={() => setOpen((s) => !s)}
             paddingStart={1}
             style={styles?.controlInputNode}
             tabIndex={tabIndex}
-            width="100%"
           >
             {!!startNode && (
               <HStack
@@ -337,7 +339,14 @@ const DefaultSelectControlComponent = memo(
                 {labelNode}
               </HStack>
             ) : null}
-            <HStack alignItems="center" borderRadius={200} justifyContent="space-between">
+            <HStack
+              alignItems="center"
+              flexGrow={1}
+              flexShrink={1}
+              justifyContent="space-between"
+              minWidth={0}
+              width="100%"
+            >
               <VStack
                 ref={valueNodeContainerRef}
                 alignItems="flex-start"
@@ -347,7 +356,8 @@ const DefaultSelectControlComponent = memo(
                 flexWrap="wrap"
                 gap={1}
                 justifyContent="flex-start"
-                overflow="auto"
+                minWidth={0}
+                overflow="hidden"
                 paddingX={1}
                 paddingY={labelVariant === 'inside' && !isMultiSelect ? 0 : compact ? 1 : 1.5}
                 style={styles?.controlValueNode}
@@ -384,12 +394,7 @@ const DefaultSelectControlComponent = memo(
 
       const endNode = useMemo(
         () => (
-          <Pressable
-            aria-hidden
-            onClick={() => setOpen((s) => !s)}
-            style={{ flexGrow: 1 }}
-            tabIndex={-1}
-          >
+          <Pressable aria-hidden flexShrink={0} onClick={() => setOpen((s) => !s)} tabIndex={-1}>
             <HStack
               alignItems="center"
               className={classNames?.controlEndNode}
