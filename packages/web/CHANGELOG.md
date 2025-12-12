@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.28.3 (12/12/2025 PST)
+
+#### 🐞 Fixes
+
+- Add classNames and styles to sidebar. [[#239](https://github.com/coinbase/cds/pull/239)]
+
 ## 8.28.2 ((12/12/2025, 06:23 AM PST))
 
 This is an artificial version bump with no new change.
