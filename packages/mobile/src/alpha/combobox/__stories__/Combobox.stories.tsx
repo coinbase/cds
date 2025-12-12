@@ -8,7 +8,7 @@ import { VStack } from '../../../layout';
 import { Text } from '../../../typography/Text';
 import type { SelectOptionList } from '../../select';
 import type { SelectOption } from '../../select/Select';
-import { Combobox, type ComboboxControlComponentType, type ComboboxRef } from '../Combobox';
+import { Combobox, type ComboboxControlComponent, type ComboboxRef } from '../Combobox';
 import { DefaultComboboxControl } from '../DefaultComboboxControl';
 
 // Basic option sets
@@ -703,7 +703,7 @@ const DynamicOptionsExample = () => {
   );
 };
 
-const CustomComponent: ComboboxControlComponentType = (props) => {
+const CustomComponent: ComboboxControlComponent = (props) => {
   return <DefaultComboboxControl {...props} searchText={`${props.value?.length ?? 0}`} />;
 };
 

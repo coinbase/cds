@@ -1,12 +1,13 @@
 import { memo, useCallback, useEffect, useRef } from 'react';
 
 import { NativeInput } from '../../controls/NativeInput';
+import { HStack } from '../../layout';
 import { NAVIGATION_KEYS } from '../../overlays/FocusTrap';
 import { Text } from '../../typography';
 import type { SelectType } from '../select';
 import { DefaultSelectControl } from '../select/DefaultSelectControl';
 
-import type { ComboboxControlComponentType, ComboboxControlProps } from './Combobox';
+import type { ComboboxControlComponent, ComboboxControlProps } from './Combobox';
 
 const hasSelectedValue = (currentValue: unknown): boolean =>
   currentValue !== null &&
@@ -64,31 +65,38 @@ export const DefaultComboboxControl = memo(
         {...props}
         contentNode={
           shouldShowSearchInput ? (
-            <NativeInput
-              ref={searchInputRef}
-              onChange={handleSearchChange}
-              onClick={handleSearchClick}
-              onKeyDown={(event) => {
-                if (!NAVIGATION_KEYS.includes(event.key)) {
-                  event.stopPropagation();
-                }
-                if (
-                  event.key === 'Enter' ||
-                  (!NAVIGATION_KEYS.includes(event.key) && !event.shiftKey)
-                ) {
-                  setOpen(true);
-                }
-              }}
-              placeholder={typeof placeholder === 'string' ? placeholder : undefined}
-              style={{
-                paddingLeft: 0,
-                paddingRight: 0,
-                height: hasValue ? 24 : compact ? 40 : 48,
-                width: '100%',
-              }}
-              tabIndex={0}
-              value={searchText}
-            />
+            <HStack flexGrow={1} flexWrap="wrap">
+              <NativeInput
+                ref={searchInputRef}
+                onChange={handleSearchChange}
+                onClick={handleSearchClick}
+                onKeyDown={(event) => {
+                  if (!NAVIGATION_KEYS.includes(event.key)) {
+                    event.stopPropagation();
+                  }
+                  if (
+                    event.key === 'Enter' ||
+                    (!NAVIGATION_KEYS.includes(event.key) && !event.shiftKey)
+                  ) {
+                    setOpen(true);
+                  }
+                }}
+                placeholder={typeof placeholder === 'string' ? placeholder : undefined}
+                style={{
+                  paddingLeft: 0,
+                  paddingRight: 0,
+                  height: hasValue ? 24 : compact ? 40 : 48,
+                  minWidth: 0,
+                  flexGrow: 1,
+                  width: '100%',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap',
+                }}
+                tabIndex={0}
+                value={searchText}
+              />
+            </HStack>
           ) : (
             <>
               {hasValue ? null : (
@@ -123,4 +131,4 @@ export const DefaultComboboxControl = memo(
       />
     );
   },
-) as ComboboxControlComponentType;
+) as ComboboxControlComponent;

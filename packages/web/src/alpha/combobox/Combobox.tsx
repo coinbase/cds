@@ -69,7 +69,7 @@ export type ComboboxControlProps<
     SelectControlComponent?: SelectControlComponent<Type, SelectOptionValue>;
   };
 
-export type ComboboxControlComponentType = <
+export type ComboboxControlComponent = <
   Type extends SelectType = 'single',
   SelectOptionValue extends string = string,
 >(
@@ -81,7 +81,7 @@ type ComboboxControlWrapperType = <
   SelectOptionValue extends string = string,
 >(
   props: Omit<ComboboxControlProps<Type, SelectOptionValue>, 'onSearch' | 'searchText'> & {
-    ComboboxControlComponent: ComboboxControlComponentType;
+    ComboboxControlComponent: ComboboxControlComponent;
   },
 ) => React.ReactElement;
 
@@ -103,7 +103,7 @@ export type ComboboxBaseProps<
   /** Hide the search input */
   hideSearchInput?: boolean;
   /** Custom ComboboxControlComponent to wrap SelectControlComponent. This component must be a stable reference */
-  ComboboxControlComponent?: ComboboxControlComponentType;
+  ComboboxControlComponent?: ComboboxControlComponent;
 };
 
 export type ComboboxProps<
@@ -132,7 +132,7 @@ const ComboboxControlWrapper = memo(
     ComboboxControlComponent,
     ...props
   }: Omit<ComboboxControlProps<Type, SelectOptionValue>, 'onSearch' | 'searchText'> & {
-    ComboboxControlComponent: ComboboxControlComponentType;
+    ComboboxControlComponent: ComboboxControlComponent;
   }) => {
     const { searchText, onSearch, hideSearchInput, options } = useComboboxContext<
       Type,

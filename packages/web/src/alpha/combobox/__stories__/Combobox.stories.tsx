@@ -11,7 +11,7 @@ import type { SelectOptionList } from '../../select';
 import type { SelectOption } from '../../select/Select';
 import {
   Combobox,
-  type ComboboxControlComponentType,
+  type ComboboxControlComponent,
   type ComboboxRef,
   DefaultComboboxControl,
 } from '../';
@@ -47,6 +47,44 @@ const singleFruitOptions: SelectOption[] = [
   { value: 'date', label: 'Date' },
   { value: 'elderberry', label: 'Elderberry' },
   { value: 'fig', label: 'Fig' },
+];
+
+const longLabelOptions: SelectOption[] = [
+  {
+    value: 'apple',
+    label:
+      'Apple is a very long label that should test how the component handles extensive label content',
+  },
+  {
+    value: 'banana',
+    label:
+      'Banana is a very long label that should test how the component handles extensive label content',
+  },
+  {
+    value: 'cherry',
+    label:
+      'Cherry is a very long label that should test how the component handles extensive label content',
+  },
+  {
+    value: 'date',
+    label:
+      'Date is a very long label that should test how the component handles extensive label content',
+  },
+  {
+    value: 'elderberry',
+    label:
+      'Elderberry is a very long label that should test how the component handles extensive label content',
+  },
+  {
+    value: 'fig',
+    label:
+      'Fig is a very long label that should test how the component handles extensive label content',
+  },
+  {
+    value: 'grape',
+    label:
+      'Grape is a very long label that should test how the component handles extensive label content',
+  },
 ];
 
 const countryOptions: SelectOption[] = [
@@ -158,9 +196,9 @@ export const MultipleComboboxes = () => {
   );
 };
 
-export const InitialValues = () => {
+export const EmptySelectedValues = () => {
   const { value, onChange } = useMultiSelect({
-    initialValue: ['apple', 'banana', 'cherry'],
+    initialValue: [],
   });
 
   return (
@@ -170,6 +208,57 @@ export const InitialValues = () => {
         onChange={onChange}
         options={fruitOptions}
         placeholder="Search fruits..."
+        type="multi"
+        value={value}
+      />
+    </VStack>
+  );
+};
+
+export const OptionsWithLongLabels = () => {
+  const { value, onChange } = useMultiSelect({ initialValue: [] });
+
+  return (
+    <VStack gap={4}>
+      <Combobox
+        label="Options with long labels"
+        onChange={onChange}
+        options={longLabelOptions}
+        placeholder="Search fruits..."
+        type="multi"
+        value={value}
+      />
+    </VStack>
+  );
+};
+
+export const OptionsWithLongLabelsSingleSelect = () => {
+  const [value, setValue] = useState<string | null>('apple');
+
+  return (
+    <VStack gap={4}>
+      <Combobox
+        label="Options with long labels"
+        onChange={setValue}
+        options={longLabelOptions}
+        placeholder="Search fruits..."
+        type="single"
+        value={value}
+      />
+    </VStack>
+  );
+};
+
+export const LongPlaceholder = () => {
+  const { value, onChange } = useMultiSelect({ initialValue: [] });
+
+  return (
+    <VStack gap={4}>
+      <Combobox
+        label="Long placeholder"
+        onChange={onChange}
+        options={fruitOptions}
+        placeholder="This is a very long placeholder text that should test how the component handles extensive placeholder content"
         type="multi"
         value={value}
       />
@@ -1042,7 +1131,7 @@ export const DynamicOptions = () => {
   );
 };
 
-const CustomComponent: ComboboxControlComponentType = (props) => {
+const CustomComponent: ComboboxControlComponent = (props) => {
   return <DefaultComboboxControl {...props} searchText={`${props.value?.length ?? 0}`} />;
 };
 
