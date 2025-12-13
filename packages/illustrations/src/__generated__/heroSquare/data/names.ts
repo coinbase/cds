@@ -372,6 +372,7 @@ const names: HeroSquareName[] = [
   'sustainable',
   'switchAdvancedToSimpleTrading',
   'taxesDetails',
+  'test',
   'tools',
   'tradeGeneral',
   'tradeHistory',

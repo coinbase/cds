@@ -366,6 +366,7 @@ export type HeroSquareName =
   | 'sustainable'
   | 'switchAdvancedToSimpleTrading'
   | 'taxesDetails'
+  | 'test'
   | 'tools'
   | 'tradeGeneral'
   | 'tradeHistory'

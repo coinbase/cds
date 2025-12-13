@@ -1454,6 +1454,10 @@ const svgJsMap = {
     light: () => require('../svgJs/light/taxesDetails-3.js').content,
     dark: () => require('../svgJs/dark/taxesDetails-3.js').content,
   },
+  test: {
+    light: () => require('../svgJs/light/test-0.js').content,
+    dark: () => require('../svgJs/dark/test-0.js').content,
+  },
   tools: {
     light: () => require('../svgJs/light/tools-1.js').content,
     dark: () => require('../svgJs/dark/tools-1.js').content,
