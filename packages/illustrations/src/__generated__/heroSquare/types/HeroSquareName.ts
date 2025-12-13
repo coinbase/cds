@@ -1,7 +1,7 @@
 /**
  * DO NOT MODIFY
  * Generated from yarn nx run illustration-tasks:sync-illustrations
- */
+*/
 
 export type HeroSquareName =
   | 'accessToAdvancedCharts'
@@ -366,6 +366,7 @@ export type HeroSquareName =
   | 'sustainable'
   | 'switchAdvancedToSimpleTrading'
   | 'taxesDetails'
+  | 'test'
   | 'tools'
   | 'tradeGeneral'
   | 'tradeHistory'

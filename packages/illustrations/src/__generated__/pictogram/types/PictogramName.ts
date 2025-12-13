@@ -1,7 +1,7 @@
 /**
  * DO NOT MODIFY
  * Generated from yarn nx run illustration-tasks:sync-illustrations
- */
+*/
 
 export type PictogramName =
   | '2fa'

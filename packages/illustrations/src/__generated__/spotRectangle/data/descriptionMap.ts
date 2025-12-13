@@ -1,7 +1,7 @@
 /**
  * DO NOT MODIFY
  * Generated from yarn nx run illustration-tasks:sync-illustrations
- */
+*/
 
 /**
  * Mapping of descriptions to associated illustrations.
@@ -9,1817 +9,3939 @@
  * The search query filters the shown illustrations based on matches with name or description.
  */
 const descriptionMap: Record<string, string[]> = {
-  '1': ['layeredNetworks'],
-  '2': ['layeredNetworks'],
-  decentralized: [
-    'decentralizedWebWeb3',
-    'moneyDecentralized',
-    'defiDecentralizedTradingExchange',
-    'didDecentralizedIdentity',
-    'defiDecentralizedBorrowingLending',
-    'blockchain',
-    'cryptoWallet',
-    'decentralization',
-    'backedByUsDollar',
+  '1': [
+    'layeredNetworks'
   ],
-  web: ['decentralizedWebWeb3', 'browserExtension'],
-  web3: ['decentralizedWebWeb3'],
-  network: [
-    'decentralizedWebWeb3',
-    'referralsGenericCoin',
-    'moneyDecentralized',
-    'poweredByEthereum',
-    'referralsCoinbaseOne',
-    'encryptedEverything',
-    'blockchain',
-    'referralsBitcoin',
-    'cryptoAssets',
-    'decentralization',
-    'lightningNetworkSend',
+  '2': [
+    'layeredNetworks'
   ],
-  self: ['decentralizedWebWeb3', 'selfCustody', 'stayInControlSelfHostedWalletsStorage'],
-  custody: ['decentralizedWebWeb3', 'selfCustody'],
-  ownership: ['decentralizedWebWeb3'],
-  data: [
-    'decentralizedWebWeb3',
-    'fileYourCryptoTaxesCheck',
+  'chart': [
     'accessToAdvancedCharts',
     'advancedTradeCharts',
-    'trade',
-    'ratDashboard',
-  ],
-  stable: ['stableValue'],
-  scale: ['stableValue'],
-  stablecoin: ['stableValue'],
-  value: [
-    'stableValue',
-    'coinbaseOneRewards',
-    'moneyDecentralized',
-    'mining',
-    'bigBtc',
-    'p2pPayments',
-    'retailUSDCRewards',
-  ],
-  store: [
-    'stableValue',
-    'selfCustody',
-    'bigBtc',
-    'defiDecentralizedBorrowingLending',
-    'cryptoWallet',
-    'holdingCrypto',
-    'secureStorage',
-    'secureAndTrusted',
-    'holdCrypto',
-  ],
-  earn: [
-    'stableValue',
-    'completeAQuiz',
-    'defiEarn',
-    'coinbaseOneRewards',
-    'freeBtc',
-    'earnInterest',
-    'staking',
-    'earn',
-    'defiRisk',
-    'startToday',
-    'invest',
-    'watchVideos',
-    'retailUSDCRewards',
-    'backedByUsDollar',
-  ],
-  '': [
-    'secureAccount',
-    'derivativesLoop',
-    'unauthorizedTransfers',
-    'trustedContacts',
-    'graphChartTrading',
-    'coinGateway',
-    'leadingProtocolMorpho',
-    'lendGraph',
-    'fileYourCryptoTaxes',
-    'basedInUsa',
-    'appUpdate',
-    'giftBoxRewards',
-    'concierge',
-    'update',
-    'tokenSales',
-    'calendar',
-    'coinbaseFees',
-  ],
-  margin: ['loanValue', 'marginWarning', 'margin'],
-  trading: [
-    'loanValue',
-    'readyToTrade',
-    'marginWarning',
-    'primePriceLadder',
-    'defiDecentralizedTradingExchange',
-    'futures',
+    'advancedTradingChartsIndicatorsCandles',
     'advancedTradingUi',
-    'margin',
-    'liquidationBufferRed',
-    'primeOrderConfirmation',
-    'accessToAdvancedCharts',
-    'liquidationBufferGreen',
-    'leverage',
-    'emptyTrading',
-    'advancedTrading',
-    'ethTradingTwo',
-    'advancedTradeCharts',
-    'liquidationBufferYellow',
-    'ethTrading',
-    'trade',
+    'earn',
+    'earnInterest',
+    'focusLimitOrders',
+    'invest',
+    'portfolioPerformance',
     'primeTradePreferences',
     'ratDashboard',
+    'staking',
+    'trade'
   ],
-  add: [
-    'loanValue',
-    'creditCardExcitementCoinbaseOne',
-    'coinbaseCardPocket',
-    'marginWarning',
-    'margin',
-    'sendingCrypto',
-    'addPhoneNumber',
+  'trading': [
+    'accessToAdvancedCharts',
+    'advancedTradeCharts',
+    'advancedTrading',
+    'advancedTradingUi',
+    'defiDecentralizedTradingExchange',
+    'emptyTrading',
+    'ethTrading',
+    'ethTradingTwo',
+    'futures',
     'leverage',
-    'coinbaseCardLock',
-    'addBank',
-    'cbEth',
-    'referralsBonus',
-    'creditCardExcitement',
-  ],
-  stack: ['loanValue', 'marginWarning', 'margin', 'leverage'],
-  more: ['loanValue', 'marginWarning', 'staking', 'margin', 'cryptoAndMore', 'leverage'],
-  lever: ['loanValue', 'marginWarning', 'margin', 'leverage'],
-  up: [
+    'liquidationBufferGreen',
+    'liquidationBufferRed',
+    'liquidationBufferYellow',
     'loanValue',
-    'marginWarning',
-    'portfolioPerformance',
-    'trendingHotAssets',
     'margin',
+    'marginWarning',
+    'primeOrderConfirmation',
+    'primePriceLadder',
+    'primeTradePreferences',
+    'ratDashboard',
+    'readyToTrade',
+    'trade'
+  ],
+  'candles': [
+    'accessToAdvancedCharts',
+    'advancedTradeCharts',
+    'ratDashboard'
+  ],
+  'graph': [
+    'accessToAdvancedCharts',
+    'advancedTradeCharts',
     'advancedTradingChartsIndicatorsCandles',
     'earn',
-    'leverage',
-    'trade',
-    'highFees',
-  ],
-  buy: ['loanValue', 'marginWarning', 'futures', 'margin', 'leverage'],
-  sell: [
-    'loanValue',
-    'marginWarning',
-    'futures',
-    'margin',
-    'wrapEthTwo',
-    'eth2SellSend',
-    'leverage',
-    'wrapEth',
-  ],
-  put: ['loanValue', 'marginWarning', 'futures', 'margin', 'leverage'],
-  options: ['loanValue', 'marginWarning', 'margin', 'leverage'],
-  trade: [
-    'loanValue',
-    'marginWarning',
-    'margin',
-    'primeOrderConfirmation',
-    'tradeImmediately',
-    'leverage',
     'ethStakingRewards',
     'ethWrappedStakingRewards',
-  ],
-  risk: ['loanValue', 'marginWarning', 'futures', 'margin', 'defiRisk', 'leverage'],
-  clock: ['loanValue', 'marginWarning', 'quickAndSimple', 'futures', 'getStartedInMinutes'],
-  'error state': ['loanValue', 'marginWarning', 'ratMigrationerror', 'ledgerSignatureRejected'],
-  open: ['openEmail'],
-  email: ['openEmail', 'verifyEmail'],
-  envelope: ['openEmail', 'verifyEmail'],
-  letter: ['openEmail'],
-  '📧 📥 📤 ✉ 📩 📨': ['openEmail'],
-  storage: [
-    'selfCustody',
-    'stayInControlSelfHostedWalletsStorage',
-    'hardwareWallets',
-    'stressTestedColdStorage',
-    'insuranceProtection',
-    'secureStorage',
-    'cryptoPortfolio',
-  ],
-  wallet: [
-    'selfCustody',
-    'borrowWallet',
-    'stayInControlSelfHostedWalletsStorage',
-    'downloadCoinbaseWalletArrow',
-    'linkingYourWalletToYourCoinbaseAccount',
-    'defiDecentralizedBorrowingLending',
-    'walletNotifications',
-    'emptyNfts',
-    'browserExtension',
-    'cryptoWallet',
-    'walletSecurity',
-    'linkCoinbaseWallet',
-    'walletReconnectSuccess',
-    'secureStorage',
-    'walletReconnect',
-    'transferFunds',
-    'transferEth',
-    'connectWalletTutorial',
     'exploreDecentralizedApps',
-  ],
-  coins: [
-    'selfCustody',
-    'defiEarn',
-    'crossBorderPayments',
-    'cryptoEconomyCoin',
-    'cryptoEconomyEurc',
-    'borrowWallet',
-    'stayInControlSelfHostedWalletsStorage',
-    'multicoinSupport',
-    'cryptoEconomy',
-    'leadingProtocol',
-    'digitalCollectibles',
-    'portfolioPerformance',
-    'moneyDecentralized',
-    'stressTestedColdStorage',
-    'defiDecentralizedTradingExchange',
-    'mining',
-    'linkingYourWalletToYourCoinbaseAccount',
+    'fileYourCryptoTaxesCheck',
+    'invest',
+    'ratDashboard',
     'staking',
-    'cryptoAndMore',
-    'defiDecentralizedBorrowingLending',
-    'encryptedEverything',
-    'multiPlatformMobileAppBrowserExtension',
-    'cryptoWallet',
-    'defiHow',
-    'insuranceProtection',
-    'cryptoEconomyUSDC',
-    'holdingCrypto',
-    'diamond',
-    'trade',
-    'sendCryptoFaster',
-    'invest',
-    'shareOnSocialMedia',
-    'ethStakingRewards',
-    'backedByUsDollar',
+    'switchAdvancedToSimpleTrading',
+    'trade'
+  ],
+  'numbers': [
+    'accessToAdvancedCharts',
+    'advancedTradeCharts',
+    'fileYourCryptoTaxesCheck',
+    'ratDashboard',
+    'trade'
+  ],
+  'data': [
+    'accessToAdvancedCharts',
+    'advancedTradeCharts',
+    'decentralizedWebWeb3',
+    'fileYourCryptoTaxesCheck',
+    'ratDashboard',
+    'trade'
+  ],
+  'visualization': [
+    'accessToAdvancedCharts',
+    'advancedTradeCharts',
+    'fileYourCryptoTaxesCheck',
+    'ratDashboard',
+    'trade'
+  ],
+  'positive': [
+    'accessToAdvancedCharts',
+    'advancedTradeCharts'
+  ],
+  'negative': [
+    'accessToAdvancedCharts',
+    'advancedTradeCharts'
+  ],
+  'trending': [
+    'accessToAdvancedCharts',
+    'advancedTradeCharts',
+    'portfolioOverview',
+    'portfolioOverviewRelaunch',
+    'trendingHotAssets'
+  ],
+  'advanced': [
+    'accessToAdvancedCharts',
+    'advancedTradeCharts',
+    'advancedTrading',
+    'advancedTradingUi',
+    'focusLimitOrders',
+    'switchAdvancedToSimpleTrading'
+  ],
+  '🕯': [
+    'accessToAdvancedCharts',
+    'advancedTradeCharts'
+  ],
+  '🪔': [
+    'accessToAdvancedCharts',
+    'advancedTradeCharts'
+  ],
+  '📈': [
+    'accessToAdvancedCharts',
+    'advancedTradeCharts',
+    'advancedTrading',
+    'coinbaseOneRewards',
+    'earnInterest',
+    'fileYourCryptoTaxesCheck',
+    'portfolioOverview',
+    'portfolioOverviewRelaunch',
+    'ratDashboard',
+    'retailUSDCRewards',
+    'trade'
+  ],
+  '📉': [
+    'accessToAdvancedCharts',
+    'advancedTradeCharts',
+    'advancedTrading',
+    'earnInterest',
+    'fileYourCryptoTaxesCheck',
+    'portfolioOverview',
+    'portfolioOverviewRelaunch',
+    'ratDashboard',
+    'trade'
+  ],
+  '📊': [
+    'accessToAdvancedCharts',
+    'advancedTradeCharts',
+    'advancedTrading',
+    'earnInterest',
+    'exploreDecentralizedApps',
+    'fileYourCryptoTaxesCheck',
+    'portfolioOverview',
+    'portfolioOverviewRelaunch',
+    'ratDashboard',
+    'trade'
+  ],
+  'bank': [
+    'addBank',
+    'borrowLoan',
+    'cb1BankTransfers',
+    'coinbaseOneSavingFunds',
+    'creditCardExcitement',
+    'creditCardExcitementCoinbaseOne',
+    'currency',
+    'fiatInterest',
+    'semiCustodial',
+    'uob'
+  ],
+  'fund': [
+    'addBank',
+    'currency'
+  ],
+  'stock': [
+    'addBank',
+    'currency'
+  ],
+  'currency': [
+    'addBank',
+    'currency',
+    'highFees',
     'holdCrypto',
-    'globalTransactions',
-    'ethWrappedStakingRewards',
+    'holdingCrypto',
+    'leadingProtocol',
+    'sendCryptoFaster',
+    'trade',
+    'tradeImmediately'
   ],
-  user: [
-    'selfCustody',
-    'borrowLoan',
-    'linkingYourWalletToYourCoinbaseAccount',
-    'didDecentralizedIdentity',
-    'semiCustodial',
-    'cb1BankTransfers',
-  ],
-  avatar: [
-    'selfCustody',
-    'referralsGenericCoin',
-    'borrowLoan',
-    'collectingNfts',
-    'digitalCollectibles',
-    'moneyDecentralized',
-    'linkingYourWalletToYourCoinbaseAccount',
-    'didDecentralizedIdentity',
-    'referralsCoinbaseOne',
-    'nft',
-    'semiCustodial',
-    'uob',
-    'cb1BankTransfers',
-    'referralsBitcoin',
-  ],
-  quiz: ['completeAQuiz'],
-  complete: ['completeAQuiz', 'documentSuccess'],
-  check: [
-    'completeAQuiz',
-    'stressTestedColdStorage',
-    'didDecentralizedIdentity',
-    'appTrackingTransparency',
-    'cardWaitlist',
-    'walletReconnectSuccess',
-  ],
-  checkmark: [
-    'completeAQuiz',
-    'stressTestedColdStorage',
-    'quickAndSimple',
-    'documentSuccess',
-    'primeOrderConfirmation',
-    'documentCertified',
-    'verifyEmail',
-    'onTheList',
-    'cardWaitlist',
-    'walletReconnectSuccess',
-  ],
-  X: ['completeAQuiz'],
-  wrong: ['completeAQuiz'],
-  right: ['completeAQuiz', 'portfolioPerformance', 'trendingHotAssets'],
-  pencil: ['completeAQuiz'],
-  money: [
+  'money': [
+    'addBank',
+    'backedByUsDollar',
+    'bigBtc',
+    'borrowWallet',
+    'cardBoosted',
+    'coinbaseCardLock',
+    'coinbaseCardPocket',
+    'coinbaseOneSavingFunds',
     'completeAQuiz',
     'crossBorderPayments',
+    'cryptoEconomy',
     'cryptoEconomyCoin',
     'cryptoEconomyEurc',
-    'borrowWallet',
-    'coinbaseCardPocket',
-    'cryptoEconomy',
-    'leadingProtocol',
-    'moneyDecentralized',
-    'coinbaseOneSavingFunds',
-    'freeBtc',
-    'noFees',
-    'bigBtc',
-    'earn',
-    'cardBoosted',
-    'transferCoins',
-    'coinbaseCardLock',
-    'addBank',
     'cryptoEconomyUSDC',
-    'p2pPayments',
     'currency',
-    'secureStorage',
-    'trade',
-    'highFees',
-    'sendCryptoFaster',
-    'invest',
-    'backedByUsDollar',
-    'globalTransactions',
+    'earn',
     'estimatedAmount',
     'fiatInterest',
-  ],
-  defi: ['defiEarn', 'defiHow'],
-  percentage: ['defiEarn', 'earnInterest'],
-  arrows: ['defiEarn', 'poweredByEthereum'],
-  card: [
-    'creditCardExcitementCoinbaseOne',
-    'coinbaseCardPocket',
-    'automaticPayments',
-    'cardBoosted',
-    'coinbaseCardLock',
-    'cardWaitlist',
-    'creditCardExcitement',
-  ],
-  bank: [
-    'creditCardExcitementCoinbaseOne',
-    'borrowLoan',
-    'coinbaseOneSavingFunds',
-    'semiCustodial',
-    'addBank',
-    'uob',
-    'cb1BankTransfers',
-    'currency',
-    'creditCardExcitement',
-    'fiatInterest',
-  ],
-  details: [
-    'creditCardExcitementCoinbaseOne',
-    'coinbaseCardPocket',
-    'addPhoneNumber',
-    'coinbaseCardLock',
-    'onTheList',
-    'creditCardExcitement',
-  ],
-  credit: [
-    'creditCardExcitementCoinbaseOne',
-    'coinbaseCardPocket',
-    'coinbaseCardLock',
-    'cardWaitlist',
-    'creditCardExcitement',
-  ],
-  excitement: ['creditCardExcitementCoinbaseOne', 'diamond', 'creditCardExcitement'],
-  hype: ['creditCardExcitementCoinbaseOne', 'diamond', 'creditCardExcitement'],
-  sparkle: [
-    'creditCardExcitementCoinbaseOne',
-    'fileYourCryptoTaxesCheck',
     'freeBtc',
-    'sendingCrypto',
-    'yieldHolding',
-    'transferCoins',
-    'portfolioOverviewRelaunch',
-    'referralsBonus',
-    'portfolioOverview',
-    'cardWaitlist',
-    'walletReconnectSuccess',
-    'diamond',
-    'creditCardExcitement',
-  ],
-  '✨': [
-    'creditCardExcitementCoinbaseOne',
-    'fileYourCryptoTaxesCheck',
-    'sendingCrypto',
-    'bigBtc',
-    'primeDeFi',
-    'nft',
-    'ratMigration',
-    'transferCoins',
-    'primeStaking',
-    'referralsBonus',
-    'cardWaitlist',
-    'walletReconnectSuccess',
-    'diamond',
-    'creditCardExcitement',
-    'primeEarn',
-  ],
-  '❇️': [
-    'creditCardExcitementCoinbaseOne',
-    'fileYourCryptoTaxesCheck',
-    'sendingCrypto',
-    'transferCoins',
-    'referralsBonus',
-    'cardWaitlist',
-    'walletReconnectSuccess',
-    'diamond',
-    'creditCardExcitement',
-    'connectWalletTutorial',
-  ],
-  '💳': ['creditCardExcitementCoinbaseOne', 'cardWaitlist', 'creditCardExcitement'],
-  '➕': [
-    'creditCardExcitementCoinbaseOne',
-    'commerceInvoices',
-    'addBank',
-    'referralsBonus',
-    'creditCardExcitement',
-  ],
-  '🏧': [
-    'creditCardExcitementCoinbaseOne',
-    'coinbaseOneSavingFunds',
-    'addBank',
-    'currency',
-    'creditCardExcitement',
-    'fiatInterest',
-  ],
-  '🏦': [
-    'creditCardExcitementCoinbaseOne',
-    'coinbaseOneSavingFunds',
-    'addBank',
-    'currency',
-    'creditCardExcitement',
-    'fiatInterest',
-  ],
-  '💸': [
-    'creditCardExcitementCoinbaseOne',
-    'coinbaseOneSavingFunds',
-    'transferCoins',
-    'addBank',
-    'portfolioOverviewRelaunch',
-    'portfolioOverview',
-    'currency',
-    'trade',
-    'creditCardExcitement',
+    'globalTransactions',
     'highFees',
-    'fiatInterest',
+    'invest',
+    'leadingProtocol',
+    'moneyDecentralized',
+    'noFees',
+    'p2pPayments',
+    'secureStorage',
+    'sendCryptoFaster',
+    'trade',
+    'transferCoins'
+  ],
+  'building': [
+    'addBank',
+    'currency'
+  ],
+  'institution': [
+    'addBank',
+    'currency',
+    'uob'
+  ],
+  'add': [
+    'addBank',
+    'addPhoneNumber',
+    'cbEth',
+    'coinbaseCardLock',
+    'coinbaseCardPocket',
+    'creditCardExcitement',
+    'creditCardExcitementCoinbaseOne',
+    'leverage',
+    'loanValue',
+    'margin',
+    'marginWarning',
+    'referralsBonus',
+    'sendingCrypto'
+  ],
+  'plus': [
+    'addBank',
+    'coinbaseCardLock',
+    'coinbaseCardPocket',
+    'commerceInvoices',
+    'futures'
+  ],
+  'addition': [
+    'addBank'
   ],
   '💵': [
-    'creditCardExcitementCoinbaseOne',
-    'coinbaseOneSavingFunds',
-    'transferCoins',
     'addBank',
-    'portfolioOverviewRelaunch',
-    'portfolioOverview',
+    'coinbaseOneSavingFunds',
+    'creditCardExcitement',
+    'creditCardExcitementCoinbaseOne',
     'currency',
+    'fiatInterest',
+    'highFees',
+    'portfolioOverview',
+    'portfolioOverviewRelaunch',
     'trade',
-    'creditCardExcitement',
-    'highFees',
-    'fiatInterest',
+    'transferCoins'
   ],
-  '💶': [
-    'creditCardExcitementCoinbaseOne',
-    'coinbaseOneSavingFunds',
-    'transferCoins',
+  '💸': [
     'addBank',
-    'portfolioOverviewRelaunch',
-    'portfolioOverview',
-    'currency',
+    'coinbaseOneSavingFunds',
     'creditCardExcitement',
-    'highFees',
-    'fiatInterest',
-  ],
-  '💷': [
     'creditCardExcitementCoinbaseOne',
-    'coinbaseOneSavingFunds',
-    'transferCoins',
-    'addBank',
-    'portfolioOverviewRelaunch',
-    'portfolioOverview',
     'currency',
+    'fiatInterest',
+    'highFees',
+    'portfolioOverview',
+    'portfolioOverviewRelaunch',
     'trade',
+    'transferCoins'
+  ],
+  '🏦': [
+    'addBank',
+    'coinbaseOneSavingFunds',
     'creditCardExcitement',
-    'highFees',
-    'fiatInterest',
+    'creditCardExcitementCoinbaseOne',
+    'currency',
+    'fiatInterest'
+  ],
+  '🏧': [
+    'addBank',
+    'coinbaseOneSavingFunds',
+    'creditCardExcitement',
+    'creditCardExcitementCoinbaseOne',
+    'currency',
+    'fiatInterest'
   ],
   '💴': [
-    'creditCardExcitementCoinbaseOne',
-    'coinbaseOneSavingFunds',
-    'transferCoins',
     'addBank',
-    'portfolioOverviewRelaunch',
-    'portfolioOverview',
-    'currency',
-    'trade',
+    'coinbaseOneSavingFunds',
     'creditCardExcitement',
-    'highFees',
-    'fiatInterest',
-  ],
-  '🪙': [
     'creditCardExcitementCoinbaseOne',
+    'currency',
+    'fiatInterest',
+    'highFees',
+    'portfolioOverview',
+    'portfolioOverviewRelaunch',
+    'trade',
+    'transferCoins'
+  ],
+  '💶': [
+    'addBank',
+    'coinbaseOneSavingFunds',
+    'creditCardExcitement',
+    'creditCardExcitementCoinbaseOne',
+    'currency',
+    'fiatInterest',
+    'highFees',
+    'portfolioOverview',
+    'portfolioOverviewRelaunch',
+    'transferCoins'
+  ],
+  '💷': [
+    'addBank',
+    'coinbaseOneSavingFunds',
+    'creditCardExcitement',
+    'creditCardExcitementCoinbaseOne',
+    'currency',
+    'fiatInterest',
+    'highFees',
+    'portfolioOverview',
+    'portfolioOverviewRelaunch',
+    'trade',
+    'transferCoins'
+  ],
+  '➕': [
+    'addBank',
+    'commerceInvoices',
+    'creditCardExcitement',
+    'creditCardExcitementCoinbaseOne',
+    'referralsBonus'
+  ],
+  'phone': [
+    'addPhoneNumber',
+    'appTrackingTransparency',
+    'cbEth',
+    'coinbaseOnePhoneLightning',
+    'connectWalletTutorial',
+    'downloadCoinbaseWalletArrow',
+    'emptyNfts',
+    'exploreDecentralizedApps',
+    'faceId',
+    'phoneNumber',
+    'transferFunds',
+    'walletNotifications',
+    'walletReconnect'
+  ],
+  'number': [
+    'addPhoneNumber',
+    'ethAddress',
+    'phoneNumber'
+  ],
+  'account': [
+    'addPhoneNumber',
+    'apiKey',
+    'appTrackingTransparency',
+    'coinbaseCardLock',
+    'coinbaseCardPocket',
+    'hardwareWallets',
+    'linkingYourWalletToYourCoinbaseAccount',
+    'readyToTrade',
+    'stayInControlSelfHostedWalletsStorage'
+  ],
+  'details': [
+    'addPhoneNumber',
+    'coinbaseCardLock',
+    'coinbaseCardPocket',
+    'creditCardExcitement',
+    'creditCardExcitementCoinbaseOne',
+    'onTheList'
+  ],
+  'onboarding': [
+    'addPhoneNumber',
+    'faceId',
+    'securityShield',
+    'verifyEmail'
+  ],
+  'security': [
+    'addPhoneNumber',
+    'cryptoWallet',
+    'defiDecentralizedBorrowingLending',
+    'faceId',
+    'insuranceProtection',
+    'phoneNumber',
+    'secureAndTrusted',
+    'secureStorage',
+    'securityShield',
+    'stressTestedColdStorage',
+    'walletSecurity'
+  ],
+  'switch': [
+    'advancedTradeCharts',
+    'advancedTrading',
+    'switchAdvancedToSimpleTrading',
+    'tradeImmediately'
+  ],
+  'swap': [
+    'advancedTradeCharts',
+    'defiDecentralizedTradingExchange',
+    'tradeImmediately'
+  ],
+  'improved': [
+    'advancedTradeCharts'
+  ],
+  'rat': [
+    'advancedTrading'
+  ],
+  'candlesticks': [
+    'advancedTrading',
+    'advancedTradingChartsIndicatorsCandles',
+    'primeTradePreferences',
+    'switchAdvancedToSimpleTrading'
+  ],
+  'candle': [
+    'advancedTradingChartsIndicatorsCandles',
+    'switchAdvancedToSimpleTrading'
+  ],
+  'wick': [
+    'advancedTradingChartsIndicatorsCandles'
+  ],
+  'up': [
+    'advancedTradingChartsIndicatorsCandles',
+    'earn',
+    'highFees',
+    'leverage',
+    'loanValue',
+    'margin',
+    'marginWarning',
+    'portfolioPerformance',
+    'trade',
+    'trendingHotAssets'
+  ],
+  'bar': [
+    'advancedTradingChartsIndicatorsCandles',
+    'earn',
+    'staking'
+  ],
+  'UI': [
+    'advancedTradingUi'
+  ],
+  'candlestick': [
+    'advancedTradingUi'
+  ],
+  'order': [
+    'advancedTradingUi',
+    'primeOrderConfirmation'
+  ],
+  'book': [
+    'advancedTradingUi',
+    'primeOrderConfirmation'
+  ],
+  'depth': [
+    'advancedTradingUi'
+  ],
+  'API': [
+    'apiKey'
+  ],
+  'key': [
+    'apiKey',
+    'protectedNotes',
+    'walletSecurity'
+  ],
+  'access': [
+    'apiKey',
+    'stayInControlSelfHostedWalletsStorage'
+  ],
+  'connect': [
+    'apiKey',
+    'connectWalletTutorial',
+    'linkCoinbaseWallet',
+    'linkingYourWalletToYourCoinbaseAccount',
+    'walletReconnect',
+    'walletReconnectSuccess'
+  ],
+  'unlock': [
+    'apiKey'
+  ],
+  'gain': [
+    'apiKey'
+  ],
+  'trust': [
+    'apiKey',
+    'defiRisk'
+  ],
+  'tracking': [
+    'appTrackingTransparency'
+  ],
+  'transparency': [
+    'appTrackingTransparency'
+  ],
+  'check': [
+    'appTrackingTransparency',
+    'cardWaitlist',
+    'completeAQuiz',
+    'didDecentralizedIdentity',
+    'stressTestedColdStorage',
+    'walletReconnectSuccess'
+  ],
+  '✔️': [
+    'appTrackingTransparency',
+    'cardWaitlist',
+    'walletReconnectSuccess'
+  ],
+  '📱': [
+    'appTrackingTransparency',
+    'cbEth',
+    'coinbaseOnePhoneLightning',
+    'connectWalletTutorial',
+    'emptyNfts',
+    'exploreDecentralizedApps',
+    'transferFunds',
+    'walletNotifications',
+    'walletReconnect',
+    'walletReconnectSuccess'
+  ],
+  'success state': [
+    'appTrackingTransparency',
+    'bigBtc',
+    'cardWaitlist',
+    'creditCardExcitement',
+    'creditCardExcitementCoinbaseOne',
+    'diamond',
+    'documentCertified',
+    'documentSuccess',
+    'onTheList',
+    'readyToTrade',
+    'verifyEmail'
+  ],
+  '': [
+    'appUpdate',
+    'basedInUsa',
+    'calendar',
+    'coinbaseFees',
+    'coinGateway',
+    'concierge',
+    'derivativesLoop',
+    'fileYourCryptoTaxes',
+    'giftBoxRewards',
+    'graphChartTrading',
+    'leadingProtocolMorpho',
+    'lendGraph',
+    'secureAccount',
+    'tokenSales',
+    'trustedContacts',
+    'unauthorizedTransfers',
+    'update'
+  ],
+  'recurring': [
+    'automaticPayments'
+  ],
+  'automatic': [
+    'automaticPayments'
+  ],
+  'payments': [
+    'automaticPayments',
+    'crossBorderPayments',
+    'p2pPayments'
+  ],
+  'pay': [
+    'automaticPayments'
+  ],
+  'card': [
+    'automaticPayments',
+    'cardBoosted',
+    'cardWaitlist',
+    'coinbaseCardLock',
+    'coinbaseCardPocket',
+    'creditCardExcitement',
+    'creditCardExcitementCoinbaseOne'
+  ],
+  'loan': [
+    'automaticPayments',
+    'borrowLoan',
+    'usdcLoan',
+    'usdcLoanEth'
+  ],
+  'arrow': [
+    'automaticPayments',
+    'coinbaseFees',
+    'coinbaseOneSavingFunds',
+    'commerceAccounting',
+    'defiHow',
+    'downloadCoinbaseWalletArrow',
+    'downloadingStatement',
+    'fiatInterest',
+    'focusLimitOrders',
+    'futures',
+    'highFees',
+    'holdingCrypto',
+    'noTransactions',
+    'portfolioPerformance',
+    'trendingHotAssets'
+  ],
+  'calendar': [
+    'automaticPayments',
+    'startToday'
+  ],
+  'once': [
+    'automaticPayments'
+  ],
+  'month': [
+    'automaticPayments'
+  ],
+  'one': [
+    'automaticPayments',
+    'coinbaseOneDiscountedAmount',
+    'coinbaseOneLogo',
+    'coinbaseOnePhoneLightning'
+  ],
+  'time': [
+    'automaticPayments',
+    'getStartedInMinutes',
+    'quickAndSimple'
+  ],
+  'coins': [
+    'backedByUsDollar',
+    'borrowWallet',
+    'crossBorderPayments',
+    'cryptoAndMore',
+    'cryptoEconomy',
+    'cryptoEconomyCoin',
+    'cryptoEconomyEurc',
+    'cryptoEconomyUSDC',
+    'cryptoWallet',
+    'defiDecentralizedBorrowingLending',
+    'defiDecentralizedTradingExchange',
+    'defiEarn',
+    'defiHow',
+    'diamond',
+    'digitalCollectibles',
+    'encryptedEverything',
+    'ethStakingRewards',
+    'ethWrappedStakingRewards',
+    'globalTransactions',
+    'holdCrypto',
+    'holdingCrypto',
+    'insuranceProtection',
+    'invest',
+    'leadingProtocol',
+    'linkingYourWalletToYourCoinbaseAccount',
+    'mining',
+    'moneyDecentralized',
+    'multicoinSupport',
+    'multiPlatformMobileAppBrowserExtension',
+    'portfolioPerformance',
+    'selfCustody',
+    'sendCryptoFaster',
+    'shareOnSocialMedia',
+    'staking',
+    'stayInControlSelfHostedWalletsStorage',
+    'stressTestedColdStorage',
+    'trade'
+  ],
+  'backed': [
+    'backedByUsDollar'
+  ],
+  'by': [
+    'backedByUsDollar',
+    'poweredByEthereum'
+  ],
+  'dollars': [
+    'backedByUsDollar'
+  ],
+  'US': [
+    'backedByUsDollar'
+  ],
+  'decentralized': [
+    'backedByUsDollar',
+    'blockchain',
+    'cryptoWallet',
+    'decentralization',
+    'decentralizedWebWeb3',
+    'defiDecentralizedBorrowingLending',
+    'defiDecentralizedTradingExchange',
+    'didDecentralizedIdentity',
+    'moneyDecentralized'
+  ],
+  'yield': [
+    'backedByUsDollar',
+    'defiRisk',
+    'holdCrypto',
+    'yieldHolding'
+  ],
+  'earn': [
+    'backedByUsDollar',
+    'coinbaseOneRewards',
+    'completeAQuiz',
+    'defiEarn',
+    'defiRisk',
+    'earn',
+    'earnInterest',
+    'freeBtc',
+    'invest',
+    'retailUSDCRewards',
+    'stableValue',
+    'staking',
+    'startToday',
+    'watchVideos'
+  ],
+  'made': [
+    'basedInUsa'
+  ],
+  'USA': [
+    'basedInUsa'
+  ],
+  'America': [
+    'basedInUsa'
+  ],
+  'fuck': [
+    'basedInUsa'
+  ],
+  'yeah': [
+    'basedInUsa'
+  ],
+  'star': [
+    'basedInUsa',
+    'freeBtc'
+  ],
+  'location': [
+    'basedInUsa'
+  ],
+  'marker': [
+    'basedInUsa'
+  ],
+  'pin': [
+    'basedInUsa'
+  ],
+  'United States': [
+    'basedInUsa'
+  ],
+  'Coin': [
+    'bigBtc',
+    'earnToLearn',
+    'primeDeFi',
+    'primeEarn',
+    'ratMigration'
+  ],
+  'Coins': [
+    'bigBtc',
+    'primeDeFi',
+    'primeEarn',
+    'primeStaking',
+    'ratMigration'
+  ],
+  'Currency': [
+    'bigBtc',
+    'primeEarn',
+    'ratMigration'
+  ],
+  'Crypto': [
+    'bigBtc',
+    'primeDeFi',
+    'primeEarn',
+    'primeStaking',
+    'ratMigration'
+  ],
+  'Bitcoin': [
+    'bigBtc',
+    'lightningNetworkSend',
+    'referralsBitcoin'
+  ],
+  'BTC': [
+    'bigBtc',
+    'freeBtc',
+    'referralsBitcoin'
+  ],
+  'store': [
+    'bigBtc',
+    'cryptoWallet',
+    'defiDecentralizedBorrowingLending',
+    'holdCrypto',
+    'holdingCrypto',
+    'secureAndTrusted',
+    'secureStorage',
+    'selfCustody',
+    'stableValue'
+  ],
+  'value': [
+    'bigBtc',
+    'coinbaseOneRewards',
+    'mining',
+    'moneyDecentralized',
+    'p2pPayments',
+    'retailUSDCRewards',
+    'stableValue'
+  ],
+  'asset': [
+    'bigBtc',
+    'leadingProtocol',
+    'sendCryptoFaster',
+    'tradeImmediately'
+  ],
+  'sparkles': [
+    'bigBtc',
+    'downloadingStatement',
+    'primeStaking'
+  ],
+  'stars': [
+    'bigBtc',
+    'concierge',
+    'ethStakingRewards',
+    'ethWrappedStakingRewards',
+    'usdcLoan',
+    'usdcLoanEth'
+  ],
+  '✨': [
+    'bigBtc',
+    'cardWaitlist',
+    'creditCardExcitement',
+    'creditCardExcitementCoinbaseOne',
+    'diamond',
+    'fileYourCryptoTaxesCheck',
+    'nft',
+    'primeDeFi',
+    'primeEarn',
+    'primeStaking',
+    'ratMigration',
+    'referralsBonus',
     'sendingCrypto',
     'transferCoins',
-    'portfolioOverviewRelaunch',
-    'portfolioOverview',
-    'walletReconnectSuccess',
-    'diamond',
-    'trade',
-    'creditCardExcitement',
-    'walletReconnect',
-    'transferEth',
+    'walletReconnectSuccess'
   ],
-  '💎': ['creditCardExcitementCoinbaseOne', 'diamond', 'creditCardExcitement'],
-  'success state': [
-    'creditCardExcitementCoinbaseOne',
-    'readyToTrade',
-    'documentSuccess',
-    'bigBtc',
-    'appTrackingTransparency',
-    'documentCertified',
-    'verifyEmail',
-    'onTheList',
-    'cardWaitlist',
-    'diamond',
-    'creditCardExcitement',
-  ],
-  success: [
-    'readyToTrade',
-    'documentSuccess',
-    'walletReconnectSuccess',
+  'crypto': [
+    'blockchain',
+    'cardBoosted',
     'congratulationsOnEarningCrypto',
+    'cryptoAssets',
+    'cryptoEconomy',
+    'cryptoEconomyCoin',
+    'cryptoEconomyEurc',
+    'cryptoEconomyUSDC',
+    'cryptoForBeginners',
+    'cryptoPortfolio',
+    'decentralization',
+    'diamond',
+    'emptyNfts',
+    'estimatedAmount',
+    'hardwareWallets',
+    'holdCrypto',
+    'holdingCrypto',
+    'insuranceProtection',
+    'leadingProtocol',
+    'mining',
+    'noTransactions',
+    'portfolioOverview',
+    'portfolioOverviewRelaunch',
+    'primePriceLadder',
+    'primeTradePreferences',
+    'ratMigrationerror',
+    'sendCryptoFaster',
+    'sendingCrypto',
+    'trade',
+    'transferCoins',
+    'transferEth',
+    'transferFunds',
+    'walletReconnect',
+    'walletReconnectSuccess',
+    'yieldHolding'
   ],
-  coin: [
-    'readyToTrade',
-    'usdcLoan',
+  'hex': [
+    'blockchain'
+  ],
+  'block': [
+    'blockchain'
+  ],
+  'chain': [
+    'blockchain',
+    'layeredNetworks',
+    'sidechain'
+  ],
+  'blockchain': [
+    'blockchain',
+    'bridging'
+  ],
+  'network': [
+    'blockchain',
+    'cryptoAssets',
+    'decentralization',
+    'decentralizedWebWeb3',
+    'encryptedEverything',
+    'lightningNetworkSend',
+    'moneyDecentralized',
+    'poweredByEthereum',
+    'referralsBitcoin',
+    'referralsCoinbaseOne',
+    'referralsGenericCoin'
+  ],
+  'borrow': [
     'borrowLoan',
+    'borrowWallet',
+    'cryptoWallet',
+    'defiDecentralizedBorrowingLending'
+  ],
+  'custodial': [
+    'borrowLoan',
+    'cb1BankTransfers',
+    'semiCustodial'
+  ],
+  'semi custodial': [
+    'borrowLoan',
+    'cb1BankTransfers',
+    'semiCustodial'
+  ],
+  'user': [
+    'borrowLoan',
+    'cb1BankTransfers',
+    'didDecentralizedIdentity',
+    'linkingYourWalletToYourCoinbaseAccount',
+    'selfCustody',
+    'semiCustodial'
+  ],
+  'avatar': [
+    'borrowLoan',
+    'cb1BankTransfers',
+    'collectingNfts',
+    'didDecentralizedIdentity',
+    'digitalCollectibles',
+    'linkingYourWalletToYourCoinbaseAccount',
+    'moneyDecentralized',
+    'nft',
+    'referralsBitcoin',
+    'referralsCoinbaseOne',
+    'referralsGenericCoin',
+    'selfCustody',
+    'semiCustodial',
+    'uob'
+  ],
+  'coin': [
+    'borrowLoan',
+    'cardBoosted',
+    'cardWaitlist',
+    'cb1BankTransfers',
+    'cbbtc',
+    'coinbaseFees',
     'coinbaseOneSavingFunds',
-    'trendingHotAssets',
+    'congratulationsOnEarningCrypto',
+    'cryptoAndMore',
+    'cryptoForBeginners',
+    'cryptoPortfolio',
+    'defiHow',
+    'estimatedAmount',
+    'fiatInterest',
     'freeBtc',
     'futures',
     'governance',
-    'cryptoForBeginners',
     'noTransactions',
-    'sendingCrypto',
-    'cryptoAndMore',
-    'cardBoosted',
-    'cbbtc',
-    'tradeImmediately',
-    'semiCustodial',
-    'defiHow',
-    'transferCoins',
-    'cb1BankTransfers',
-    'portfolioOverviewRelaunch',
     'portfolioOverview',
-    'cardWaitlist',
-    'walletReconnectSuccess',
-    'secureStorage',
-    'walletReconnect',
-    'transferEth',
-    'congratulationsOnEarningCrypto',
-    'cryptoPortfolio',
-    'secureAndTrusted',
-    'securityShield',
-    'coinbaseFees',
-    'estimatedAmount',
-    'fiatInterest',
-    'usdcLoanEth',
-  ],
-  balloon: ['readyToTrade'],
-  welcome: ['readyToTrade'],
-  account: [
+    'portfolioOverviewRelaunch',
     'readyToTrade',
-    'stayInControlSelfHostedWalletsStorage',
-    'coinbaseCardPocket',
-    'hardwareWallets',
-    'linkingYourWalletToYourCoinbaseAccount',
-    'addPhoneNumber',
-    'appTrackingTransparency',
-    'coinbaseCardLock',
-    'apiKey',
-  ],
-  created: ['readyToTrade'],
-  start: ['readyToTrade', 'tradeImmediately', 'startToday'],
-  cross: ['crossBorderPayments'],
-  border: ['crossBorderPayments'],
-  international: [
-    'crossBorderPayments',
-    'cryptoEconomyCoin',
-    'cryptoEconomyEurc',
-    'cryptoEconomy',
-    'cryptoEconomyUSDC',
-    'secureGlobalTransactions',
-    'globalTransactions',
-  ],
-  payments: ['crossBorderPayments', 'automaticPayments', 'p2pPayments'],
-  send: [
-    'crossBorderPayments',
-    'usdcLoan',
-    'leadingProtocol',
-    'noTransactions',
-    'sendingCrypto',
-    'wrapEthTwo',
-    'emptyNfts',
-    'ratMigrationerror',
-    'eth2SellSend',
-    'yieldHolding',
-    'transferCoins',
-    'wrapEth',
-    'secureGlobalTransactions',
-    'bridging',
-    'p2pPayments',
-    'referralsBonus',
-    'walletReconnectSuccess',
-    'walletReconnect',
-    'transferFunds',
-    'sendCryptoFaster',
-    'transferEth',
-    'globalTransactions',
-    'ethStakingMovement',
-    'lightningNetworkSend',
-    'usdcLoanEth',
-  ],
-  receive: [
-    'crossBorderPayments',
-    'borrowWallet',
-    'sendingCrypto',
-    'transferCoins',
-    'secureGlobalTransactions',
-    'p2pPayments',
-    'transferEth',
-    'globalTransactions',
-  ],
-  globe: [
-    'cryptoEconomyCoin',
-    'cryptoEconomyEurc',
-    'cryptoEconomy',
-    'cryptoEconomyUSDC',
-    'secureGlobalTransactions',
-    'globalTransactions',
-  ],
-  economy: ['cryptoEconomyCoin', 'cryptoEconomyEurc', 'cryptoEconomy', 'cryptoEconomyUSDC'],
-  freedom: ['cryptoEconomyCoin', 'cryptoEconomyEurc', 'cryptoEconomy', 'cryptoEconomyUSDC'],
-  growth: [
-    'cryptoEconomyCoin',
-    'cryptoEconomyEurc',
-    'coinbaseOneRewards',
-    'cryptoEconomy',
-    'cryptoEconomyUSDC',
-    'retailUSDCRewards',
-  ],
-  crypto: [
-    'cryptoEconomyCoin',
-    'cryptoEconomyEurc',
-    'hardwareWallets',
-    'cryptoEconomy',
-    'leadingProtocol',
-    'primePriceLadder',
-    'mining',
-    'cryptoForBeginners',
-    'noTransactions',
-    'sendingCrypto',
-    'cardBoosted',
-    'emptyNfts',
-    'blockchain',
-    'ratMigrationerror',
-    'yieldHolding',
-    'insuranceProtection',
-    'transferCoins',
-    'cryptoEconomyUSDC',
-    'portfolioOverviewRelaunch',
-    'portfolioOverview',
-    'holdingCrypto',
-    'walletReconnectSuccess',
-    'diamond',
-    'trade',
-    'walletReconnect',
-    'transferFunds',
-    'primeTradePreferences',
-    'sendCryptoFaster',
-    'transferEth',
-    'cryptoAssets',
-    'congratulationsOnEarningCrypto',
-    'cryptoPortfolio',
-    'decentralization',
-    'holdCrypto',
-    'estimatedAmount',
-  ],
-  economic: ['cryptoEconomyCoin', 'cryptoEconomyEurc', 'cryptoEconomy', 'cryptoEconomyUSDC'],
-  face: ['faceId'],
-  photo: ['faceId'],
-  camera: ['faceId'],
-  phone: [
-    'faceId',
-    'coinbaseOnePhoneLightning',
-    'downloadCoinbaseWalletArrow',
-    'addPhoneNumber',
-    'walletNotifications',
-    'appTrackingTransparency',
-    'emptyNfts',
-    'phoneNumber',
-    'cbEth',
-    'walletReconnect',
-    'transferFunds',
-    'connectWalletTutorial',
-    'exploreDecentralizedApps',
-  ],
-  onboarding: ['faceId', 'addPhoneNumber', 'verifyEmail', 'securityShield'],
-  security: [
-    'faceId',
-    'stressTestedColdStorage',
-    'addPhoneNumber',
-    'defiDecentralizedBorrowingLending',
-    'cryptoWallet',
-    'phoneNumber',
-    'walletSecurity',
-    'insuranceProtection',
-    'secureStorage',
     'secureAndTrusted',
+    'secureStorage',
     'securityShield',
-  ],
-  coinbase: [
-    'coinbaseOnePhoneLightning',
-    'referralsGenericCoin',
-    'coinbaseOneLogo',
-    'cardBoosted',
-    'referralsCoinbaseOne',
-    'browserExtension',
-    'linkCoinbaseWallet',
-    'cbEth',
-    'referralsBitcoin',
-    'exploreDecentralizedApps',
-  ],
-  one: [
-    'coinbaseOnePhoneLightning',
-    'coinbaseOneDiscountedAmount',
-    'automaticPayments',
-    'coinbaseOneLogo',
-  ],
-  cb1: ['coinbaseOnePhoneLightning', 'coinbaseOneLogo'],
-  authentication: ['coinbaseOnePhoneLightning', 'hardwareWallets', 'walletSecurity'],
-  device: ['coinbaseOnePhoneLightning', 'walletReconnect'],
-  mobile: ['coinbaseOnePhoneLightning', 'multiPlatformMobileAppBrowserExtension'],
-  support: ['coinbaseOnePhoneLightning', 'multicoinSupport'],
-  fast: [
-    'coinbaseOnePhoneLightning',
-    'quickAndSimple',
-    'getStartedInMinutes',
-    'p2pPayments',
-    'lightningNetworkSend',
-  ],
-  quick: ['coinbaseOnePhoneLightning', 'quickAndSimple', 'p2pPayments'],
-  lightning: ['coinbaseOnePhoneLightning', 'leadingProtocol', 'sendCryptoFaster'],
-  '⚡️': ['coinbaseOnePhoneLightning', 'leadingProtocol', 'sendCryptoFaster'],
-  '📞': ['coinbaseOnePhoneLightning', 'walletReconnectSuccess', 'walletReconnect'],
-  '☎️': ['coinbaseOnePhoneLightning', 'walletReconnectSuccess', 'walletReconnect'],
-  '📱': [
-    'coinbaseOnePhoneLightning',
-    'walletNotifications',
-    'appTrackingTransparency',
-    'emptyNfts',
-    'cbEth',
-    'walletReconnectSuccess',
+    'semiCustodial',
+    'sendingCrypto',
+    'tradeImmediately',
+    'transferCoins',
+    'transferEth',
+    'trendingHotAssets',
+    'usdcLoan',
+    'usdcLoanEth',
     'walletReconnect',
-    'transferFunds',
+    'walletReconnectSuccess'
+  ],
+  'wallet': [
+    'borrowWallet',
+    'browserExtension',
     'connectWalletTutorial',
+    'cryptoWallet',
+    'defiDecentralizedBorrowingLending',
+    'downloadCoinbaseWalletArrow',
+    'emptyNfts',
     'exploreDecentralizedApps',
+    'linkCoinbaseWallet',
+    'linkingYourWalletToYourCoinbaseAccount',
+    'secureStorage',
+    'selfCustody',
+    'stayInControlSelfHostedWalletsStorage',
+    'transferEth',
+    'transferFunds',
+    'walletNotifications',
+    'walletReconnect',
+    'walletReconnectSuccess',
+    'walletSecurity'
+  ],
+  'receive': [
+    'borrowWallet',
+    'crossBorderPayments',
+    'globalTransactions',
+    'p2pPayments',
+    'secureGlobalTransactions',
+    'sendingCrypto',
+    'transferCoins',
+    'transferEth'
+  ],
+  'finance': [
+    'borrowWallet',
+    'staking'
+  ],
+  'bridge': [
+    'bridging'
+  ],
+  'send': [
+    'bridging',
+    'crossBorderPayments',
+    'emptyNfts',
+    'eth2SellSend',
+    'ethStakingMovement',
+    'globalTransactions',
+    'leadingProtocol',
+    'lightningNetworkSend',
+    'noTransactions',
+    'p2pPayments',
+    'ratMigrationerror',
+    'referralsBonus',
+    'secureGlobalTransactions',
+    'sendCryptoFaster',
+    'sendingCrypto',
+    'transferCoins',
+    'transferEth',
+    'transferFunds',
+    'usdcLoan',
+    'usdcLoanEth',
+    'walletReconnect',
+    'walletReconnectSuccess',
+    'wrapEth',
+    'wrapEthTwo',
+    'yieldHolding'
+  ],
+  'one to another': [
+    'bridging'
+  ],
+  'tokens': [
+    'bridging'
+  ],
+  '🌁': [
+    'bridging'
+  ],
+  '🌉': [
+    'bridging'
+  ],
+  'browser': [
+    'browserExtension',
+    'estimatedAmount',
+    'portfolioOverview',
+    'portfolioOverviewRelaunch',
+    'ratDashboard',
+    'switchAdvancedToSimpleTrading',
+    'watchVideos'
+  ],
+  'extension': [
+    'browserExtension'
+  ],
+  'desktop': [
+    'browserExtension',
+    'multiPlatformMobileAppBrowserExtension'
+  ],
+  'integrate': [
+    'browserExtension'
+  ],
+  'leverage': [
+    'browserExtension',
+    'leverage',
+    'liquidationBufferGreen',
+    'liquidationBufferRed',
+    'liquidationBufferYellow'
+  ],
+  'web': [
+    'browserExtension',
+    'decentralizedWebWeb3'
+  ],
+  'website': [
+    'browserExtension'
+  ],
+  'coinbase': [
+    'browserExtension',
+    'cardBoosted',
+    'cbEth',
+    'coinbaseOneLogo',
+    'coinbaseOnePhoneLightning',
+    'exploreDecentralizedApps',
+    'linkCoinbaseWallet',
+    'referralsBitcoin',
+    'referralsCoinbaseOne',
+    'referralsGenericCoin'
+  ],
+  'browser History chart 📝': [
+    'browserHistory'
+  ],
+  'boosted': [
+    'cardBoosted'
+  ],
+  'rewards': [
+    'cardBoosted',
+    'congratulationsOnEarningCrypto',
+    'diamond'
+  ],
+  'chip': [
+    'cardBoosted'
+  ],
+  'visa': [
+    'cardBoosted'
+  ],
+  'select': [
+    'cardBoosted',
+    'primePriceLadder'
+  ],
+  'award': [
+    'cardBoosted'
+  ],
+  'credit': [
+    'cardWaitlist',
+    'coinbaseCardLock',
+    'coinbaseCardPocket',
+    'creditCardExcitement',
+    'creditCardExcitementCoinbaseOne'
+  ],
+  'sparkle': [
+    'cardWaitlist',
+    'creditCardExcitement',
+    'creditCardExcitementCoinbaseOne',
+    'diamond',
+    'fileYourCryptoTaxesCheck',
+    'freeBtc',
+    'portfolioOverview',
+    'portfolioOverviewRelaunch',
+    'referralsBonus',
+    'sendingCrypto',
+    'transferCoins',
+    'walletReconnectSuccess',
+    'yieldHolding'
+  ],
+  'list': [
+    'cardWaitlist',
+    'contactsListWarning',
+    'didDecentralizedIdentity',
+    'onTheList'
+  ],
+  'waiting': [
+    'cardWaitlist',
+    'onTheList'
+  ],
+  'pending': [
+    'cardWaitlist'
+  ],
+  'delay': [
+    'cardWaitlist'
+  ],
+  'checkmark': [
+    'cardWaitlist',
+    'completeAQuiz',
+    'documentCertified',
+    'documentSuccess',
+    'onTheList',
+    'primeOrderConfirmation',
+    'quickAndSimple',
+    'stressTestedColdStorage',
+    'verifyEmail',
+    'walletReconnectSuccess'
+  ],
+  'approved': [
+    'cardWaitlist',
+    'documentCertified'
+  ],
+  '✅': [
+    'cardWaitlist',
+    'documentSuccess',
+    'verifyEmail',
+    'walletReconnectSuccess'
+  ],
+  '📋': [
+    'cardWaitlist'
+  ],
+  '💳': [
+    'cardWaitlist',
+    'creditCardExcitement',
+    'creditCardExcitementCoinbaseOne'
+  ],
+  '❇️': [
+    'cardWaitlist',
+    'connectWalletTutorial',
+    'creditCardExcitement',
+    'creditCardExcitementCoinbaseOne',
+    'diamond',
+    'fileYourCryptoTaxesCheck',
+    'referralsBonus',
+    'sendingCrypto',
+    'transferCoins',
+    'walletReconnectSuccess'
+  ],
+  'semi': [
+    'cb1BankTransfers',
+    'semiCustodial'
+  ],
+  'bitcoin': [
+    'cbbtc',
+    'freeBtc'
+  ],
+  'cbbtc': [
+    'cbbtc'
+  ],
+  'conversion': [
+    'cbbtc'
+  ],
+  'convert': [
+    'cbbtc'
+  ],
+  'yellow': [
+    'cbbtc',
+    'liquidationBufferYellow',
+    'shareOnSocialMedia',
+    'sidechain'
+  ],
+  'blue': [
+    'cbbtc',
+    'shareOnSocialMedia',
+    'sidechain'
+  ],
+  'ethereum': [
+    'cbEth',
+    'eth2SellSend',
+    'eth2SendSell',
+    'eth2SendSellTwo',
+    'layeredNetworks',
+    'poweredByEthereum',
+    'wrapEth',
+    'wrapEthTwo'
+  ],
+  'sending': [
+    'cbEth'
+  ],
+  'movement': [
+    'cbEth',
+    'diamond',
+    'eth2SendSell',
+    'eth2SendSellTwo',
+    'ethStakeOrWrap',
+    'ethStakeOrWrapTwo',
+    'ethStakingMovement'
+  ],
+  'minus': [
+    'cbEth'
+  ],
+  'Empty state': [
+    'clawMachinePig'
+  ],
+  'NFT': [
+    'clawMachinePig',
+    'digitalCollectibles'
+  ],
+  'Claw machine': [
+    'clawMachinePig'
+  ],
+  'pig': [
+    'clawMachinePig',
+    'coinbaseOneSavingFunds',
+    'fiatInterest'
+  ],
+  'Buy NFT': [
+    'clawMachinePig'
+  ],
+  'Notorious P.I.G': [
+    'clawMachinePig'
+  ],
+  'plastic': [
+    'coinbaseCardLock',
+    'coinbaseCardPocket'
+  ],
+  'payment': [
+    'coinbaseCardLock',
+    'coinbaseCardPocket'
+  ],
+  'method': [
+    'coinbaseCardLock',
+    'coinbaseCardPocket'
+  ],
+  'confirm': [
+    'coinbaseCardLock',
+    'coinbaseCardPocket',
+    'documentSuccess'
+  ],
+  'fees': [
+    'coinbaseFees',
+    'noFees'
+  ],
+  'tag': [
+    'coinbaseOneDiscountedAmount',
+    'noFees'
+  ],
+  'coinbaseone': [
+    'coinbaseOneDiscountedAmount'
+  ],
+  'discounted': [
+    'coinbaseOneDiscountedAmount'
+  ],
+  'amount': [
+    'coinbaseOneDiscountedAmount',
+    'estimatedAmount'
+  ],
+  'cb1': [
+    'coinbaseOneLogo',
+    'coinbaseOnePhoneLightning'
+  ],
+  'logo': [
+    'coinbaseOneLogo'
+  ],
+  'logomark': [
+    'coinbaseOneLogo'
+  ],
+  'brand': [
+    'coinbaseOneLogo'
+  ],
+  'authentication': [
+    'coinbaseOnePhoneLightning',
+    'hardwareWallets',
+    'walletSecurity'
+  ],
+  'device': [
+    'coinbaseOnePhoneLightning',
+    'walletReconnect'
+  ],
+  'mobile': [
+    'coinbaseOnePhoneLightning',
+    'multiPlatformMobileAppBrowserExtension'
+  ],
+  'support': [
+    'coinbaseOnePhoneLightning',
+    'multicoinSupport'
+  ],
+  'fast': [
+    'coinbaseOnePhoneLightning',
+    'getStartedInMinutes',
+    'lightningNetworkSend',
+    'p2pPayments',
+    'quickAndSimple'
+  ],
+  'quick': [
+    'coinbaseOnePhoneLightning',
+    'p2pPayments',
+    'quickAndSimple'
+  ],
+  'lightning': [
+    'coinbaseOnePhoneLightning',
+    'leadingProtocol',
+    'sendCryptoFaster'
+  ],
+  '⚡️': [
+    'coinbaseOnePhoneLightning',
+    'leadingProtocol',
+    'sendCryptoFaster'
+  ],
+  '📞': [
+    'coinbaseOnePhoneLightning',
+    'walletReconnect',
+    'walletReconnectSuccess'
+  ],
+  '☎️': [
+    'coinbaseOnePhoneLightning',
+    'walletReconnect',
+    'walletReconnectSuccess'
   ],
   '🤳': [
     'coinbaseOnePhoneLightning',
     'emptyNfts',
-    'walletReconnectSuccess',
-    'walletReconnect',
     'transferFunds',
+    'walletReconnect',
+    'walletReconnectSuccess'
   ],
-  '📳': ['coinbaseOnePhoneLightning', 'walletReconnectSuccess', 'walletReconnect'],
-  cbone: ['coinbaseOneRewards'],
-  interest: ['coinbaseOneRewards', 'earnInterest', 'retailUSDCRewards'],
-  APY: ['coinbaseOneRewards', 'retailUSDCRewards'],
-  rate: ['coinbaseOneRewards', 'retailUSDCRewards'],
-  '📈': [
+  '📳': [
+    'coinbaseOnePhoneLightning',
+    'walletReconnect',
+    'walletReconnectSuccess'
+  ],
+  'cbone': [
+    'coinbaseOneRewards'
+  ],
+  'interest': [
     'coinbaseOneRewards',
-    'fileYourCryptoTaxesCheck',
     'earnInterest',
-    'accessToAdvancedCharts',
-    'advancedTrading',
-    'advancedTradeCharts',
-    'portfolioOverviewRelaunch',
+    'retailUSDCRewards'
+  ],
+  'APY': [
+    'coinbaseOneRewards',
+    'retailUSDCRewards'
+  ],
+  'growth': [
+    'coinbaseOneRewards',
+    'cryptoEconomy',
+    'cryptoEconomyCoin',
+    'cryptoEconomyEurc',
+    'cryptoEconomyUSDC',
+    'retailUSDCRewards'
+  ],
+  'rate': [
+    'coinbaseOneRewards',
+    'retailUSDCRewards'
+  ],
+  'piggy': [
+    'coinbaseOneSavingFunds',
+    'fiatInterest'
+  ],
+  'safe': [
+    'coinbaseOneSavingFunds',
+    'fiatInterest',
+    'secureAndTrusted'
+  ],
+  'funds': [
+    'coinbaseOneSavingFunds',
+    'fiatInterest',
     'portfolioOverview',
-    'trade',
-    'retailUSDCRewards',
-    'ratDashboard',
+    'portfolioOverviewRelaunch'
   ],
-  Layered: ['layeredNetworks'],
-  Networks: ['layeredNetworks'],
-  ethereum: [
-    'layeredNetworks',
-    'poweredByEthereum',
-    'wrapEthTwo',
-    'eth2SellSend',
-    'wrapEth',
-    'cbEth',
-    'eth2SendSell',
-    'eth2SendSellTwo',
+  'saving': [
+    'coinbaseOneSavingFunds',
+    'fiatInterest'
   ],
-  layer: ['layeredNetworks'],
-  eth: [
-    'layeredNetworks',
-    'ethAddress',
-    'poweredByEthereum',
-    'ethStakeOrWrap',
-    'ethStakeOrWrapTwo',
-    'transferEth',
-    'ethStakingRewards',
-    'ethStakingMovement',
-    'ethWrappedStakingRewards',
+  '🐖': [
+    'coinbaseOneSavingFunds',
+    'fiatInterest'
   ],
-  side: ['layeredNetworks'],
-  chain: ['layeredNetworks', 'blockchain', 'sidechain'],
-  borrow: ['borrowWallet', 'borrowLoan', 'defiDecentralizedBorrowingLending', 'cryptoWallet'],
-  finance: ['borrowWallet', 'staking'],
-  referral: ['referralsGenericCoin', 'freeBtc', 'referralsCoinbaseOne', 'referralsBitcoin'],
-  magic: ['referralsGenericCoin', 'referralsCoinbaseOne', 'referralsBitcoin'],
-  share: ['referralsGenericCoin', 'referralsCoinbaseOne', 'referralsBitcoin', 'shareOnSocialMedia'],
-  heads: ['referralsGenericCoin', 'referralsCoinbaseOne', 'referralsBitcoin'],
-  people: [
-    'referralsGenericCoin',
-    'referralsCoinbaseOne',
-    'referralsBonus',
-    'concierge',
-    'referralsBitcoin',
+  '💲': [
+    'coinbaseOneSavingFunds',
+    'commerceInvoices',
+    'fiatInterest',
+    'highFees'
   ],
-  profile: ['referralsGenericCoin', 'referralsCoinbaseOne', 'referralsBitcoin'],
-  pic: ['referralsGenericCoin', 'referralsCoinbaseOne', 'referralsBitcoin'],
-  PFP: ['referralsGenericCoin', 'digitalCollectibles', 'referralsCoinbaseOne', 'referralsBitcoin'],
-  reward: ['referralsGenericCoin', 'referralsCoinbaseOne', 'referralsBonus', 'referralsBitcoin'],
-  usdc: ['usdcLoan', 'usdcLoanEth'],
-  loan: ['usdcLoan', 'borrowLoan', 'automaticPayments', 'usdcLoanEth'],
-  portal: ['usdcLoan', 'usdcLoanEth'],
-  stars: [
-    'usdcLoan',
-    'bigBtc',
-    'concierge',
-    'ethStakingRewards',
-    'ethWrappedStakingRewards',
-    'usdcLoanEth',
+  'nfts': [
+    'collectingNfts'
   ],
-  Opt: ['optInPushNotificationsEmail'],
-  In: ['optInPushNotificationsEmail'],
-  Push: ['optInPushNotificationsEmail'],
-  Notifications: ['optInPushNotificationsEmail'],
-  Email: ['optInPushNotificationsEmail'],
-  Bubble: ['optInPushNotificationsEmail'],
-  Window: ['optInPushNotificationsEmail'],
-  Notify: ['optInPushNotificationsEmail'],
-  Account: ['optInPushNotificationsEmail'],
-  Security: ['optInPushNotificationsEmail'],
-  Prices: ['optInPushNotificationsEmail'],
-  hosted: ['stayInControlSelfHostedWalletsStorage'],
-  stay: ['stayInControlSelfHostedWalletsStorage'],
-  in: ['stayInControlSelfHostedWalletsStorage'],
-  control: ['stayInControlSelfHostedWalletsStorage'],
-  your: ['stayInControlSelfHostedWalletsStorage'],
-  access: ['stayInControlSelfHostedWalletsStorage', 'apiKey'],
-  custodial: ['borrowLoan', 'semiCustodial', 'cb1BankTransfers'],
-  'semi custodial': ['borrowLoan', 'semiCustodial', 'cb1BankTransfers'],
-  plastic: ['coinbaseCardPocket', 'coinbaseCardLock'],
-  plus: ['coinbaseCardPocket', 'futures', 'commerceInvoices', 'coinbaseCardLock', 'addBank'],
-  payment: ['coinbaseCardPocket', 'coinbaseCardLock'],
-  method: ['coinbaseCardPocket', 'coinbaseCardLock'],
-  confirm: ['coinbaseCardPocket', 'documentSuccess', 'coinbaseCardLock'],
-  multi: ['multicoinSupport', 'multiPlatformMobileAppBrowserExtension'],
-  multicoin: ['multicoinSupport'],
-  networks: ['multicoinSupport'],
-  many: ['multicoinSupport'],
-  Wallet: ['hardwareWallets', 'ratMigration', 'ratFoundWallet', 'primeEarn'],
-  Hardware: ['hardwareWallets'],
-  Ledger: ['hardwareWallets'],
-  USB: ['hardwareWallets'],
-  cold: ['hardwareWallets', 'stressTestedColdStorage'],
-  leading: ['leadingProtocol'],
-  protocol: ['leadingProtocol'],
-  faster: ['leadingProtocol', 'sendCryptoFaster'],
-  bolt: ['leadingProtocol', 'sendCryptoFaster', 'lightningNetworkSend'],
-  move: ['leadingProtocol', 'transferCoins', 'sendCryptoFaster'],
-  quicker: ['leadingProtocol', 'sendCryptoFaster'],
-  currency: [
-    'leadingProtocol',
-    'tradeImmediately',
-    'addBank',
-    'holdingCrypto',
-    'currency',
-    'trade',
-    'highFees',
-    'sendCryptoFaster',
-    'holdCrypto',
-  ],
-  asset: ['leadingProtocol', 'bigBtc', 'tradeImmediately', 'sendCryptoFaster'],
-  nfts: ['collectingNfts'],
-  music: ['collectingNfts', 'digitalCollectibles'],
-  play: ['collectingNfts', 'watchVideos'],
-  file: ['collectingNfts', 'fileYourCryptoTaxesCheck', 'protectedNotes'],
-  document: [
+  'music': [
     'collectingNfts',
-    'uploadDocument',
-    'verifyInfo',
+    'digitalCollectibles'
+  ],
+  'play': [
+    'collectingNfts',
+    'watchVideos'
+  ],
+  'file': [
+    'collectingNfts',
+    'fileYourCryptoTaxesCheck',
+    'protectedNotes'
+  ],
+  'document': [
+    'collectingNfts',
     'commerceAccounting',
     'commerceInvoices',
     'documentCertified',
-    'protectedNotes',
     'onTheList',
+    'protectedNotes',
+    'uploadDocument',
+    'verifyInfo'
   ],
-  non: ['collectingNfts'],
-  fungible: ['collectingNfts'],
-  token: ['collectingNfts'],
-  upload: ['uploadDocument'],
-  proof: ['uploadDocument'],
-  address: ['uploadDocument', 'ethAddress'],
-  paper: ['uploadDocument', 'onTheList'],
-  mailing: ['uploadDocument'],
-  'letter  papers': ['uploadDocument'],
-  prime: ['primePriceLadder', 'primeOrderConfirmation', 'primeTradePreferences'],
-  interface: [
-    'primePriceLadder',
-    'primeOrderConfirmation',
-    'primeTradePreferences',
-    'ratDashboard',
+  'non': [
+    'collectingNfts'
   ],
-  price: ['primePriceLadder', 'noFees'],
-  ladder: ['primePriceLadder'],
-  prices: ['primePriceLadder', 'estimatedAmount'],
-  select: ['primePriceLadder', 'cardBoosted'],
-  match: ['primePriceLadder'],
-  interact: ['primePriceLadder'],
-  Gains: ['gainsAndLosses'],
-  Losses: ['gainsAndLosses'],
-  Scale: ['gainsAndLosses'],
-  Growth: ['gainsAndLosses'],
-  Money: ['gainsAndLosses', 'earnToLearn', 'ratMigration', 'primeEarn'],
-  Chart: ['gainsAndLosses', 'gasFeesNetworkFees', 'taxesDetails'],
-  Up: ['gainsAndLosses', 'earnToLearn'],
-  Down: ['gainsAndLosses'],
-  Arrow: ['gainsAndLosses'],
-  NFT: ['digitalCollectibles', 'clawMachinePig'],
-  digital: ['digitalCollectibles'],
-  collect: ['digitalCollectibles'],
-  collectibles: ['digitalCollectibles'],
-  art: ['digitalCollectibles', 'nft', 'exploreDecentralizedApps'],
-  portfolio: [
-    'portfolioPerformance',
-    'portfolioOverviewRelaunch',
-    'portfolioOverview',
-    'cryptoPortfolio',
+  'fungible': [
+    'collectingNfts'
   ],
-  performance: ['portfolioPerformance'],
-  chart: [
-    'portfolioPerformance',
-    'earnInterest',
-    'advancedTradingUi',
-    'staking',
-    'advancedTradingChartsIndicatorsCandles',
-    'focusLimitOrders',
-    'earn',
-    'accessToAdvancedCharts',
-    'advancedTradeCharts',
-    'trade',
-    'primeTradePreferences',
-    'invest',
-    'ratDashboard',
+  'token': [
+    'collectingNfts'
   ],
-  to: [
-    'portfolioPerformance',
-    'trendingHotAssets',
-    'linkingYourWalletToYourCoinbaseAccount',
-    'p2pPayments',
-  ],
-  the: ['portfolioPerformance', 'trendingHotAssets'],
-  arrow: [
-    'portfolioPerformance',
-    'coinbaseOneSavingFunds',
-    'trendingHotAssets',
-    'downloadCoinbaseWalletArrow',
-    'futures',
-    'noTransactions',
+  'commerce': [
     'commerceAccounting',
-    'automaticPayments',
-    'focusLimitOrders',
-    'defiHow',
-    'downloadingStatement',
-    'holdingCrypto',
-    'highFees',
-    'coinbaseFees',
-    'fiatInterest',
+    'commerceInvoices'
   ],
-  ledger: ['ledgerFailed', 'cryptoAssets', 'ledgerSignatureRejected'],
-  plugin: ['ledgerFailed', 'ledgerSignatureRejected'],
-  instructional: ['ledgerFailed', 'ledgerSignatureRejected'],
-  warning: ['ledgerFailed', 'verifyInfo', 'noTransactions', 'contactsListWarning'],
-  alert: ['ledgerFailed', 'notificationsAlt'],
-  failed: ['ledgerFailed'],
-  declined: ['ledgerFailed'],
-  'warning state': ['ledgerFailed', 'verifyInfo', 'contactsListWarning'],
-  users: [
-    'moneyDecentralized',
-    'multipleAccountsWalletsForOneUser',
-    'multiPlatformMobileAppBrowserExtension',
+  'accounting': [
+    'commerceAccounting'
   ],
-  taxes: ['fileYourCryptoTaxesCheck', 'downloadingStatement'],
-  calculator: ['fileYourCryptoTaxesCheck'],
-  charts: ['fileYourCryptoTaxesCheck', 'cryptoApps'],
-  pie: ['fileYourCryptoTaxesCheck'],
-  visualization: [
-    'fileYourCryptoTaxesCheck',
-    'accessToAdvancedCharts',
-    'advancedTradeCharts',
-    'trade',
-    'ratDashboard',
+  '📝': [
+    'commerceAccounting',
+    'commerceInvoices'
   ],
-  numbers: [
-    'fileYourCryptoTaxesCheck',
-    'accessToAdvancedCharts',
-    'advancedTradeCharts',
-    'trade',
-    'ratDashboard',
+  '📄': [
+    'commerceAccounting',
+    'commerceInvoices',
+    'protectedNotes'
   ],
-  graph: [
-    'fileYourCryptoTaxesCheck',
-    'staking',
-    'advancedTradingChartsIndicatorsCandles',
-    'earn',
-    'accessToAdvancedCharts',
-    'switchAdvancedToSimpleTrading',
-    'advancedTradeCharts',
-    'trade',
-    'invest',
-    'ethStakingRewards',
-    'exploreDecentralizedApps',
-    'ratDashboard',
-    'ethWrappedStakingRewards',
+  '📃': [
+    'commerceAccounting',
+    'commerceInvoices',
+    'protectedNotes'
   ],
-  organize: ['fileYourCryptoTaxesCheck'],
-  '%': ['fileYourCryptoTaxesCheck'],
-  '📊': [
-    'fileYourCryptoTaxesCheck',
-    'earnInterest',
-    'accessToAdvancedCharts',
-    'advancedTrading',
-    'advancedTradeCharts',
-    'portfolioOverviewRelaunch',
-    'portfolioOverview',
-    'trade',
-    'exploreDecentralizedApps',
-    'ratDashboard',
+  '📑': [
+    'commerceAccounting',
+    'commerceInvoices',
+    'protectedNotes'
   ],
-  '📉': [
-    'fileYourCryptoTaxesCheck',
-    'earnInterest',
-    'accessToAdvancedCharts',
-    'advancedTrading',
-    'advancedTradeCharts',
-    'portfolioOverviewRelaunch',
-    'portfolioOverview',
-    'trade',
-    'ratDashboard',
+  '⬇': [
+    'commerceAccounting'
   ],
-  '🥧': ['fileYourCryptoTaxesCheck', 'portfolioOverviewRelaunch', 'portfolioOverview'],
-  '🧮': ['fileYourCryptoTaxesCheck'],
-  '🗄': ['fileYourCryptoTaxesCheck'],
-  '🗃': ['fileYourCryptoTaxesCheck'],
-  '📁': ['fileYourCryptoTaxesCheck'],
-  '📂': ['fileYourCryptoTaxesCheck'],
-  '🗂': ['fileYourCryptoTaxesCheck'],
-  contact: ['ethAddress', 'contactsListWarning'],
-  unique: ['ethAddress'],
-  number: ['ethAddress', 'addPhoneNumber', 'phoneNumber'],
-  code: ['ethAddress'],
-  '👶': ['ethAddress', 'sendingCrypto', 'referralsBonus'],
-  '👧': ['ethAddress', 'sendingCrypto', 'referralsBonus'],
-  '🧒': ['ethAddress', 'sendingCrypto', 'referralsBonus'],
-  '👦': ['ethAddress', 'sendingCrypto', 'referralsBonus'],
-  '👩': ['ethAddress', 'sendingCrypto', 'referralsBonus'],
-  '🧑': ['ethAddress', 'sendingCrypto', 'referralsBonus'],
-  '👨': ['ethAddress', 'sendingCrypto', 'referralsBonus'],
-  '👩‍🦱': ['ethAddress', 'sendingCrypto', 'referralsBonus'],
-  '🧑‍🦱': ['ethAddress', 'sendingCrypto', 'referralsBonus'],
-  '👨‍🦱': ['ethAddress', 'sendingCrypto', 'referralsBonus'],
-  '👩‍🦰': ['ethAddress', 'sendingCrypto', 'referralsBonus'],
-  '🧑‍🦰': ['ethAddress', 'sendingCrypto', 'referralsBonus'],
-  '👨‍🦰': ['ethAddress', 'sendingCrypto', 'referralsBonus'],
-  '👱‍♀️': ['ethAddress', 'sendingCrypto', 'referralsBonus'],
-  '👱': ['ethAddress', 'sendingCrypto', 'referralsBonus'],
-  '👱‍♂️': ['ethAddress', 'sendingCrypto', 'referralsBonus'],
-  '👩‍🦳': ['ethAddress', 'sendingCrypto', 'referralsBonus'],
-  '🧑‍🦳': ['ethAddress', 'sendingCrypto', 'referralsBonus'],
-  '👨‍🦳': ['ethAddress', 'sendingCrypto', 'referralsBonus'],
-  '👩‍🦲': ['ethAddress', 'sendingCrypto', 'referralsBonus'],
-  '🧑‍🦲': ['ethAddress', 'sendingCrypto', 'referralsBonus'],
-  '👨‍🦲': ['ethAddress', 'sendingCrypto', 'referralsBonus'],
-  '🧔': ['ethAddress', 'sendingCrypto', 'referralsBonus'],
-  '👵': ['ethAddress', 'sendingCrypto', 'referralsBonus'],
-  '🧓': ['ethAddress', 'sendingCrypto', 'referralsBonus'],
-  '👴': ['ethAddress', 'sendingCrypto', 'referralsBonus'],
-  '👲': ['ethAddress', 'sendingCrypto', 'referralsBonus'],
-  '👳‍♀️': ['ethAddress', 'sendingCrypto', 'referralsBonus'],
-  '👳': ['ethAddress', 'sendingCrypto', 'referralsBonus'],
-  '👳‍♂️': ['ethAddress', 'sendingCrypto', 'referralsBonus'],
-  '🧕': ['ethAddress', 'sendingCrypto', 'referralsBonus'],
-  '👮‍♀️': ['ethAddress', 'sendingCrypto', 'referralsBonus'],
-  '👮': ['ethAddress', 'sendingCrypto', 'referralsBonus'],
-  '👮‍♂️': ['ethAddress', 'sendingCrypto', 'referralsBonus'],
-  '👷‍♀️': ['ethAddress', 'sendingCrypto', 'referralsBonus'],
-  '👷': ['ethAddress', 'sendingCrypto', 'referralsBonus'],
-  '👷‍♂️': ['ethAddress', 'sendingCrypto', 'referralsBonus'],
-  '💂‍♀️': ['ethAddress', 'sendingCrypto', 'referralsBonus'],
-  '💂': ['ethAddress', 'sendingCrypto', 'referralsBonus'],
-  '💂‍♂️': ['ethAddress', 'sendingCrypto', 'referralsBonus'],
-  '🕵️‍♀️': ['ethAddress', 'sendingCrypto', 'referralsBonus'],
-  '🕵️': ['ethAddress', 'sendingCrypto', 'referralsBonus'],
-  '🕵️‍♂️': ['ethAddress', 'sendingCrypto', 'referralsBonus'],
-  '👩‍⚕️': ['ethAddress', 'sendingCrypto', 'referralsBonus'],
-  '🧑‍⚕️': ['ethAddress', 'sendingCrypto', 'referralsBonus'],
-  '👨‍⚕️': ['ethAddress', 'sendingCrypto', 'referralsBonus'],
-  '👩‍🌾': ['ethAddress', 'sendingCrypto', 'referralsBonus'],
-  '🧑‍🌾': ['ethAddress', 'sendingCrypto', 'referralsBonus'],
-  '👨‍🌾': ['ethAddress', 'sendingCrypto', 'referralsBonus'],
-  '👩‍🍳': ['ethAddress', 'sendingCrypto', 'referralsBonus'],
-  '🧑‍🍳': ['ethAddress', 'sendingCrypto', 'referralsBonus'],
-  '👨‍🍳': ['ethAddress', 'sendingCrypto', 'referralsBonus'],
-  '👩‍🎓': ['ethAddress', 'sendingCrypto', 'referralsBonus'],
-  '🧑‍🎓': ['ethAddress', 'sendingCrypto', 'referralsBonus'],
-  '👨‍🎓': ['ethAddress', 'sendingCrypto', 'referralsBonus'],
-  '👩‍🎤': ['ethAddress', 'sendingCrypto', 'referralsBonus'],
-  '🧑‍🎤': ['ethAddress', 'sendingCrypto', 'referralsBonus'],
-  '👨‍🎤': ['ethAddress', 'sendingCrypto', 'referralsBonus'],
-  '👩‍🏫': ['ethAddress', 'sendingCrypto', 'referralsBonus'],
-  '🧑‍🏫': ['ethAddress', 'sendingCrypto', 'referralsBonus'],
-  '👨‍🏫': ['ethAddress', 'sendingCrypto', 'referralsBonus'],
-  '👩‍🏭': ['ethAddress', 'sendingCrypto', 'referralsBonus'],
-  '🧑‍🏭': ['ethAddress', 'sendingCrypto', 'referralsBonus'],
-  '👨‍🏭': ['ethAddress', 'sendingCrypto', 'referralsBonus'],
-  '👩‍💻': [
-    'ethAddress',
-    'sendingCrypto',
-    'portfolioOverviewRelaunch',
+  'invoices': [
+    'commerceInvoices'
+  ],
+  'quiz': [
+    'completeAQuiz'
+  ],
+  'complete': [
+    'completeAQuiz',
+    'documentSuccess'
+  ],
+  'X': [
+    'completeAQuiz'
+  ],
+  'wrong': [
+    'completeAQuiz'
+  ],
+  'right': [
+    'completeAQuiz',
+    'portfolioPerformance',
+    'trendingHotAssets'
+  ],
+  'pencil': [
+    'completeAQuiz'
+  ],
+  'CB1': [
+    'concierge',
+    'referralsCoinbaseOne'
+  ],
+  'Concierge': [
+    'concierge'
+  ],
+  'people': [
+    'concierge',
+    'referralsBitcoin',
     'referralsBonus',
-    'portfolioOverview',
+    'referralsCoinbaseOne',
+    'referralsGenericCoin'
   ],
-  '🧑‍💻': [
-    'ethAddress',
-    'sendingCrypto',
-    'portfolioOverviewRelaunch',
-    'referralsBonus',
-    'portfolioOverview',
+  'trophy': [
+    'congratulationsOnEarningCrypto'
   ],
-  '👨‍💻': [
-    'ethAddress',
-    'sendingCrypto',
-    'portfolioOverviewRelaunch',
-    'referralsBonus',
-    'portfolioOverview',
+  'win': [
+    'congratulationsOnEarningCrypto'
   ],
-  '👩‍💼': ['ethAddress', 'sendingCrypto', 'referralsBonus'],
-  '🧑‍💼': ['ethAddress', 'sendingCrypto', 'referralsBonus'],
-  '👨‍💼': ['ethAddress', 'sendingCrypto', 'referralsBonus'],
-  '👩‍🔧': ['ethAddress', 'sendingCrypto', 'referralsBonus'],
-  '🧑‍🔧': ['ethAddress', 'sendingCrypto', 'referralsBonus'],
-  '👨‍🔧': ['ethAddress', 'sendingCrypto', 'referralsBonus'],
-  '👩‍🔬': ['ethAddress', 'sendingCrypto', 'referralsBonus'],
-  '🧑‍🔬': ['ethAddress', 'sendingCrypto', 'referralsBonus'],
-  '👨‍🔬': ['ethAddress', 'sendingCrypto', 'referralsBonus'],
-  '👩‍🎨': ['ethAddress', 'sendingCrypto', 'referralsBonus'],
-  '🧑‍🎨': ['ethAddress', 'sendingCrypto', 'referralsBonus'],
-  '👨‍🎨': ['ethAddress', 'sendingCrypto', 'referralsBonus'],
-  '👩‍🚒': ['ethAddress', 'sendingCrypto', 'referralsBonus'],
-  '🧑‍🚒': ['ethAddress', 'sendingCrypto', 'referralsBonus'],
-  '👨‍🚒': ['ethAddress', 'sendingCrypto', 'referralsBonus'],
-  '👩‍✈️': ['ethAddress', 'sendingCrypto', 'referralsBonus'],
-  '🧑‍✈️': ['ethAddress', 'sendingCrypto', 'referralsBonus'],
-  '👨‍✈️': ['ethAddress', 'sendingCrypto', 'referralsBonus'],
-  '👩‍🚀': ['ethAddress', 'sendingCrypto', 'referralsBonus'],
-  '🧑‍🚀': ['ethAddress', 'sendingCrypto', 'referralsBonus'],
-  '👨‍🚀': ['ethAddress', 'sendingCrypto', 'referralsBonus'],
-  '👩‍⚖️': ['ethAddress', 'sendingCrypto', 'referralsBonus'],
-  '🤵‍♀️': ['ethAddress', 'sendingCrypto', 'referralsBonus'],
-  '🤵': ['ethAddress', 'sendingCrypto', 'referralsBonus'],
-  '🤵‍♂️': ['ethAddress', 'sendingCrypto', 'referralsBonus'],
-  '👸': ['ethAddress', 'sendingCrypto', 'referralsBonus'],
-  '🤴': ['ethAddress', 'sendingCrypto', 'referralsBonus'],
-  '🥷': ['ethAddress', 'sendingCrypto', 'referralsBonus'],
-  '🦸‍♀️': ['ethAddress', 'sendingCrypto', 'referralsBonus'],
-  '🦸': ['ethAddress', 'sendingCrypto', 'referralsBonus'],
-  '🦸‍♂️': ['ethAddress', 'sendingCrypto', 'referralsBonus'],
-  '🦹‍♀️': ['ethAddress', 'sendingCrypto', 'referralsBonus'],
-  '🦹': ['ethAddress', 'sendingCrypto', 'referralsBonus'],
-  '🦹‍♂️': ['ethAddress', 'sendingCrypto', 'referralsBonus'],
-  '🤶': ['ethAddress', 'sendingCrypto', 'referralsBonus'],
-  '🧑‍🎄': ['ethAddress', 'sendingCrypto', 'referralsBonus'],
-  '🎅': ['ethAddress', 'sendingCrypto', 'referralsBonus'],
-  '🧙‍♀️': ['ethAddress', 'sendingCrypto', 'referralsBonus'],
-  '🧙': ['ethAddress', 'sendingCrypto', 'referralsBonus'],
-  '🧙‍♂️': ['ethAddress', 'sendingCrypto', 'referralsBonus'],
-  '🧝‍♀️': ['ethAddress', 'sendingCrypto', 'referralsBonus'],
-  '🧝': ['ethAddress', 'sendingCrypto', 'referralsBonus'],
-  '🧝‍♂️': ['ethAddress', 'sendingCrypto', 'referralsBonus'],
-  '🧛‍♀️': ['ethAddress', 'sendingCrypto', 'referralsBonus'],
-  '🧛': ['ethAddress', 'sendingCrypto', 'referralsBonus'],
-  '🧛‍♂️': ['ethAddress', 'sendingCrypto', 'referralsBonus'],
-  tag: ['coinbaseOneDiscountedAmount', 'noFees'],
-  coinbaseone: ['coinbaseOneDiscountedAmount'],
-  discounted: ['coinbaseOneDiscountedAmount'],
-  amount: ['coinbaseOneDiscountedAmount', 'estimatedAmount'],
-  clipboard: ['verifyInfo', 'onTheList'],
-  verify: ['verifyInfo', 'verifyEmail'],
-  info: ['verifyInfo'],
-  information: ['verifyInfo'],
-  error: ['verifyInfo'],
-  issue: ['verifyInfo'],
-  concern: ['verifyInfo'],
-  '⚠️': ['verifyInfo'],
-  mark: ['stressTestedColdStorage'],
-  secure: [
-    'stressTestedColdStorage',
-    'walletSecurity',
-    'insuranceProtection',
-    'secureGlobalTransactions',
-    'secureStorage',
-    'secureAndTrusted',
-    'securityShield',
+  'success': [
+    'congratulationsOnEarningCrypto',
+    'documentSuccess',
+    'readyToTrade',
+    'walletReconnectSuccess'
   ],
-  trusted: ['stressTestedColdStorage', 'secureAndTrusted'],
-  piggy: ['coinbaseOneSavingFunds', 'fiatInterest'],
-  pig: ['coinbaseOneSavingFunds', 'clawMachinePig', 'fiatInterest'],
-  safe: ['coinbaseOneSavingFunds', 'secureAndTrusted', 'fiatInterest'],
-  funds: [
-    'coinbaseOneSavingFunds',
-    'portfolioOverviewRelaunch',
-    'portfolioOverview',
-    'fiatInterest',
-  ],
-  saving: ['coinbaseOneSavingFunds', 'fiatInterest'],
-  '🐖': ['coinbaseOneSavingFunds', 'fiatInterest'],
-  '💲': ['coinbaseOneSavingFunds', 'commerceInvoices', 'highFees', 'fiatInterest'],
-  trend: ['trendingHotAssets'],
-  trending: [
-    'trendingHotAssets',
-    'accessToAdvancedCharts',
-    'advancedTradeCharts',
-    'portfolioOverviewRelaunch',
-    'portfolioOverview',
-  ],
-  assets: ['trendingHotAssets', 'holdingCrypto', 'cryptoAssets'],
-  hot: ['trendingHotAssets'],
-  and: ['trendingHotAssets'],
-  free: ['freeBtc'],
-  bitcoin: ['freeBtc', 'cbbtc'],
-  get: ['freeBtc', 'getStartedInMinutes'],
-  paid: ['freeBtc'],
-  star: ['freeBtc', 'basedInUsa'],
-  join: ['freeBtc'],
-  refer: ['freeBtc'],
-  BTC: ['freeBtc', 'bigBtc', 'referralsBitcoin'],
-  hodl: ['freeBtc', 'holdCrypto'],
-  DeFi: ['defiDecentralizedTradingExchange', 'primeDeFi'],
-  swap: ['defiDecentralizedTradingExchange', 'tradeImmediately', 'advancedTradeCharts'],
-  apps: ['cryptoApps', 'linkCoinbaseWallet'],
-  ghost: ['cryptoApps', 'exploreDecentralizedApps'],
-  unicorn: ['cryptoApps'],
-  simple: ['quickAndSimple', 'switchAdvancedToSimpleTrading'],
-  time: ['quickAndSimple', 'automaticPayments', 'getStartedInMinutes'],
-  efficient: ['quickAndSimple'],
-  mining: ['mining'],
-  MEV: ['mining'],
-  cart: ['mining'],
-  cryptocurrency: ['mining', 'holdingCrypto', 'cryptoPortfolio'],
-  download: ['downloadCoinbaseWalletArrow', 'downloadingStatement'],
-  link: [
-    'linkingYourWalletToYourCoinbaseAccount',
-    'linkCoinbaseWallet',
-    'walletReconnectSuccess',
-    'walletReconnect',
+  'education': [
     'connectWalletTutorial',
+    'cryptoForBeginners'
   ],
-  linking: ['linkingYourWalletToYourCoinbaseAccount'],
-  connect: [
-    'linkingYourWalletToYourCoinbaseAccount',
-    'linkCoinbaseWallet',
-    'apiKey',
-    'walletReconnectSuccess',
-    'walletReconnect',
+  'tutorial': [
+    'connectWalletTutorial'
+  ],
+  'attach': [
+    'connectWalletTutorial'
+  ],
+  'link': [
     'connectWalletTutorial',
+    'linkCoinbaseWallet',
+    'linkingYourWalletToYourCoinbaseAccount',
+    'walletReconnect',
+    'walletReconnectSuccess'
   ],
-  both: ['linkingYourWalletToYourCoinbaseAccount'],
-  barchart: ['earnInterest'],
-  futures: ['futures'],
-  future: ['futures', 'earn'],
-  short: ['futures'],
-  hedge: ['futures'],
-  balance: ['futures', 'cryptoAssets'],
-  Eth: ['gasFeesNetworkFees'],
-  Gas: ['gasFeesNetworkFees'],
-  Ethereum: ['gasFeesNetworkFees'],
-  Fees: ['gasFeesNetworkFees'],
-  Network: ['gasFeesNetworkFees'],
-  Payment: ['gasFeesNetworkFees'],
-  Pump: ['gasFeesNetworkFees'],
-  Token: ['gasFeesNetworkFees'],
-  Range: ['gasFeesNetworkFees'],
-  notification: ['notificationsAlt'],
-  bell: ['notificationsAlt'],
-  '🔔': ['notificationsAlt'],
-  '🔕': ['notificationsAlt'],
-  list: ['didDecentralizedIdentity', 'contactsListWarning', 'onTheList', 'cardWaitlist'],
-  checklist: ['didDecentralizedIdentity'],
-  id: ['didDecentralizedIdentity'],
-  did: ['didDecentralizedIdentity'],
-  identity: ['didDecentralizedIdentity'],
-  governance: ['governance'],
-  vote: ['governance'],
-  staking: [
-    'governance',
-    'staking',
-    'defiHow',
-    'ethStakingRewards',
-    'ethStakingMovement',
-    'ethWrappedStakingRewards',
+  '👛': [
+    'connectWalletTutorial'
   ],
-  proposal: ['governance'],
-  ballot: ['governance'],
-  box: ['governance'],
-  yes: ['governance', 'primeOrderConfirmation'],
-  no: ['governance', 'noFees', 'primeOrderConfirmation', 'ledgerSignatureRejected'],
-  maybe: ['governance'],
-  so: ['governance'],
-  UI: ['advancedTradingUi'],
-  advanced: [
-    'advancedTradingUi',
-    'focusLimitOrders',
-    'accessToAdvancedCharts',
-    'switchAdvancedToSimpleTrading',
-    'advancedTrading',
-    'advancedTradeCharts',
+  '👝': [
+    'connectWalletTutorial'
   ],
-  candlestick: ['advancedTradingUi'],
-  order: ['advancedTradingUi', 'primeOrderConfirmation'],
-  book: ['advancedTradingUi', 'primeOrderConfirmation'],
-  depth: ['advancedTradingUi'],
-  beginners: ['cryptoForBeginners'],
-  education: ['cryptoForBeginners', 'connectWalletTutorial'],
-  understanding: ['cryptoForBeginners'],
-  learning: ['cryptoForBeginners'],
-  article: ['cryptoForBeginners'],
-  reading: ['cryptoForBeginners'],
-  stake: [
-    'staking',
-    'ethStakeOrWrap',
-    'holdingCrypto',
-    'eth2SendSell',
-    'ethStakeOrWrapTwo',
-    'eth2SendSellTwo',
-    'holdCrypto',
+  '👜': [
+    'connectWalletTutorial'
   ],
-  liquid: ['staking'],
-  bar: ['staking', 'advancedTradingChartsIndicatorsCandles', 'earn'],
-  'no transaction': ['noTransactions'],
-  Light: ['earnToLearn'],
-  Bulb: ['earnToLearn'],
-  Earn: ['earnToLearn', 'ratMigration', 'primeStaking', 'primeEarn'],
-  Learn: ['earnToLearn'],
-  Coin: ['earnToLearn', 'bigBtc', 'primeDeFi', 'ratMigration', 'primeEarn'],
-  Make: ['earnToLearn'],
-  Documents: ['documentSuccess'],
-  reviewed: ['documentSuccess', 'documentCertified'],
-  '✅': ['documentSuccess', 'verifyEmail', 'cardWaitlist', 'walletReconnectSuccess'],
-  commerce: ['commerceAccounting', 'commerceInvoices'],
-  accounting: ['commerceAccounting'],
-  '📝': ['commerceAccounting', 'commerceInvoices'],
-  '📄': ['commerceAccounting', 'commerceInvoices', 'protectedNotes'],
-  '📃': ['commerceAccounting', 'commerceInvoices', 'protectedNotes'],
-  '📑': ['commerceAccounting', 'commerceInvoices', 'protectedNotes'],
-  '⬇': ['commerceAccounting'],
-  give: ['sendingCrypto', 'transferCoins'],
-  offer: ['sendingCrypto'],
-  recurring: ['automaticPayments'],
-  automatic: ['automaticPayments'],
-  pay: ['automaticPayments'],
-  calendar: ['automaticPayments', 'startToday'],
-  once: ['automaticPayments'],
-  month: ['automaticPayments'],
-  powered: ['poweredByEthereum'],
-  by: ['poweredByEthereum', 'backedByUsDollar'],
-  icon: ['poweredByEthereum'],
-  fees: ['noFees', 'coinbaseFees'],
-  save: ['noFees', 'holdingCrypto', 'invest'],
-  transactions: ['noFees', 'secureGlobalTransactions', 'cryptoAssets', 'globalTransactions'],
-  sale: ['noFees'],
-  reduced: ['noFees'],
-  costs: ['noFees'],
-  candle: ['advancedTradingChartsIndicatorsCandles', 'switchAdvancedToSimpleTrading'],
-  candlesticks: [
-    'advancedTradingChartsIndicatorsCandles',
-    'switchAdvancedToSimpleTrading',
-    'advancedTrading',
-    'primeTradePreferences',
+  '🔗': [
+    'connectWalletTutorial',
+    'linkCoinbaseWallet',
+    'walletReconnect',
+    'walletReconnectSuccess'
   ],
-  wick: ['advancedTradingChartsIndicatorsCandles'],
-  Coins: ['bigBtc', 'primeDeFi', 'ratMigration', 'primeStaking', 'primeEarn'],
-  Currency: ['bigBtc', 'ratMigration', 'primeEarn'],
-  Crypto: ['bigBtc', 'primeDeFi', 'ratMigration', 'primeStaking', 'primeEarn'],
-  Bitcoin: ['bigBtc', 'referralsBitcoin', 'lightningNetworkSend'],
-  sparkles: ['bigBtc', 'downloadingStatement', 'primeStaking'],
-  moon: ['cryptoAndMore'],
+  '🖇️': [
+    'connectWalletTutorial'
+  ],
+  'contacts': [
+    'contactsListWarning'
+  ],
+  'contact': [
+    'contactsListWarning',
+    'ethAddress'
+  ],
+  'warning': [
+    'contactsListWarning',
+    'ledgerFailed',
+    'noTransactions',
+    'verifyInfo'
+  ],
+  '⚠': [
+    'contactsListWarning'
+  ],
+  'warning state': [
+    'contactsListWarning',
+    'ledgerFailed',
+    'verifyInfo'
+  ],
+  'excitement': [
+    'creditCardExcitement',
+    'creditCardExcitementCoinbaseOne',
+    'diamond'
+  ],
+  'hype': [
+    'creditCardExcitement',
+    'creditCardExcitementCoinbaseOne',
+    'diamond'
+  ],
+  '🪙': [
+    'creditCardExcitement',
+    'creditCardExcitementCoinbaseOne',
+    'diamond',
+    'portfolioOverview',
+    'portfolioOverviewRelaunch',
+    'sendingCrypto',
+    'trade',
+    'transferCoins',
+    'transferEth',
+    'walletReconnect',
+    'walletReconnectSuccess'
+  ],
+  '💎': [
+    'creditCardExcitement',
+    'creditCardExcitementCoinbaseOne',
+    'diamond'
+  ],
+  'cross': [
+    'crossBorderPayments'
+  ],
+  'border': [
+    'crossBorderPayments'
+  ],
+  'international': [
+    'crossBorderPayments',
+    'cryptoEconomy',
+    'cryptoEconomyCoin',
+    'cryptoEconomyEurc',
+    'cryptoEconomyUSDC',
+    'globalTransactions',
+    'secureGlobalTransactions'
+  ],
+  'moon': [
+    'cryptoAndMore'
+  ],
+  'more': [
+    'cryptoAndMore',
+    'leverage',
+    'loanValue',
+    'margin',
+    'marginWarning',
+    'staking'
+  ],
   'empty state': [
     'cryptoAndMore',
     'emptyNfts',
-    'tradeImmediately',
     'emptyTrading',
-    'ethTradingTwo',
     'ethTrading',
-    'transferFunds',
+    'ethTradingTwo',
+    'tradeImmediately',
+    'transferFunds'
   ],
-  invoices: ['commerceInvoices'],
-  focus: ['focusLimitOrders'],
-  limit: ['focusLimitOrders'],
-  limitorders: ['focusLimitOrders'],
-  advancedtrading: ['focusLimitOrders'],
-  grow: ['earn', 'invest'],
-  invest: ['earn', 'invest'],
-  'browser History chart 📝': ['browserHistory'],
-  logo: ['coinbaseOneLogo'],
-  logomark: ['coinbaseOneLogo'],
-  brand: ['coinbaseOneLogo'],
-  boosted: ['cardBoosted'],
-  rewards: ['cardBoosted', 'diamond', 'congratulationsOnEarningCrypto'],
-  chip: ['cardBoosted'],
-  visa: ['cardBoosted'],
-  award: ['cardBoosted'],
-  lend: ['defiDecentralizedBorrowingLending', 'cryptoWallet'],
-  safety: [
-    'defiDecentralizedBorrowingLending',
-    'cryptoWallet',
+  'apps': [
+    'cryptoApps',
+    'linkCoinbaseWallet'
+  ],
+  'ghost': [
+    'cryptoApps',
+    'exploreDecentralizedApps'
+  ],
+  'unicorn': [
+    'cryptoApps'
+  ],
+  'charts': [
+    'cryptoApps',
+    'fileYourCryptoTaxesCheck'
+  ],
+  'assets': [
+    'cryptoAssets',
+    'holdingCrypto',
+    'trendingHotAssets'
+  ],
+  'cryptography': [
+    'cryptoAssets',
+    'decentralization',
+    'encryptedEverything'
+  ],
+  'ledger': [
+    'cryptoAssets',
+    'ledgerFailed',
+    'ledgerSignatureRejected'
+  ],
+  'balance': [
+    'cryptoAssets',
+    'futures'
+  ],
+  'transactions': [
+    'cryptoAssets',
+    'globalTransactions',
+    'noFees',
+    'secureGlobalTransactions'
+  ],
+  'globe': [
+    'cryptoEconomy',
+    'cryptoEconomyCoin',
+    'cryptoEconomyEurc',
+    'cryptoEconomyUSDC',
+    'globalTransactions',
+    'secureGlobalTransactions'
+  ],
+  'economy': [
+    'cryptoEconomy',
+    'cryptoEconomyCoin',
+    'cryptoEconomyEurc',
+    'cryptoEconomyUSDC'
+  ],
+  'freedom': [
+    'cryptoEconomy',
+    'cryptoEconomyCoin',
+    'cryptoEconomyEurc',
+    'cryptoEconomyUSDC'
+  ],
+  'economic': [
+    'cryptoEconomy',
+    'cryptoEconomyCoin',
+    'cryptoEconomyEurc',
+    'cryptoEconomyUSDC'
+  ],
+  'beginners': [
+    'cryptoForBeginners'
+  ],
+  'understanding': [
+    'cryptoForBeginners'
+  ],
+  'learning': [
+    'cryptoForBeginners'
+  ],
+  'article': [
+    'cryptoForBeginners'
+  ],
+  'reading': [
+    'cryptoForBeginners'
+  ],
+  'folder': [
+    'cryptoPortfolio'
+  ],
+  'portfolio': [
+    'cryptoPortfolio',
+    'portfolioOverview',
+    'portfolioOverviewRelaunch',
+    'portfolioPerformance'
+  ],
+  'storage': [
+    'cryptoPortfolio',
+    'hardwareWallets',
     'insuranceProtection',
-    'securityShield',
+    'secureStorage',
+    'selfCustody',
+    'stayInControlSelfHostedWalletsStorage',
+    'stressTestedColdStorage'
   ],
-  wallets: ['multipleAccountsWalletsForOneUser'],
-  multiple: ['multipleAccountsWalletsForOneUser'],
-  'single account': ['multipleAccountsWalletsForOneUser'],
-  lots: ['multipleAccountsWalletsForOneUser'],
-  of: ['multipleAccountsWalletsForOneUser'],
-  Pie: ['taxesDetails'],
-  Doc: ['taxesDetails'],
-  Plus: ['taxesDetails'],
-  Minus: ['taxesDetails'],
-  Check: ['taxesDetails'],
-  Mark: ['taxesDetails'],
-  Done: ['taxesDetails'],
-  Taxes: ['taxesDetails'],
-  Details: ['taxesDetails'],
-  notifications: ['walletNotifications'],
-  green: ['walletNotifications', 'liquidationBufferGreen'],
-  started: ['getStartedInMinutes'],
-  stopwatch: ['getStartedInMinutes'],
-  going: ['getStartedInMinutes'],
-  please: ['getStartedInMinutes'],
-  Prime: ['primeDeFi', 'ratMigration', 'primeStaking', 'primeEarn'],
-  Decentralized: ['primeDeFi'],
-  Finance: ['primeDeFi'],
-  Explore: ['primeDeFi'],
-  Assets: ['primeDeFi', 'ratMigration', 'primeStaking', 'primeEarn'],
-  Universe: ['primeDeFi', 'primeStaking'],
-  Circles: ['primeDeFi', 'primeStaking'],
-  Stars: ['primeDeFi'],
-  tracking: ['appTrackingTransparency'],
-  transparency: ['appTrackingTransparency'],
-  '✔️': ['appTrackingTransparency', 'cardWaitlist', 'walletReconnectSuccess'],
-  cbbtc: ['cbbtc'],
-  conversion: ['cbbtc'],
-  convert: ['cbbtc'],
-  yellow: ['cbbtc', 'sidechain', 'liquidationBufferYellow', 'shareOnSocialMedia'],
-  blue: ['cbbtc', 'sidechain', 'shareOnSocialMedia'],
-  CB1: ['referralsCoinbaseOne', 'concierge'],
-  Coinbase: ['referralsCoinbaseOne'],
-  One: ['referralsCoinbaseOne'],
-  transfer: [
-    'wrapEthTwo',
+  'cryptocurrency': [
+    'cryptoPortfolio',
+    'holdingCrypto',
+    'mining'
+  ],
+  'lend': [
+    'cryptoWallet',
+    'defiDecentralizedBorrowingLending'
+  ],
+  'safety': [
+    'cryptoWallet',
+    'defiDecentralizedBorrowingLending',
+    'insuranceProtection',
+    'securityShield'
+  ],
+  'connection': [
+    'decentralization',
+    'walletReconnect',
+    'walletReconnectSuccess'
+  ],
+  'web3': [
+    'decentralizedWebWeb3'
+  ],
+  'self': [
+    'decentralizedWebWeb3',
+    'selfCustody',
+    'stayInControlSelfHostedWalletsStorage'
+  ],
+  'custody': [
+    'decentralizedWebWeb3',
+    'selfCustody'
+  ],
+  'ownership': [
+    'decentralizedWebWeb3'
+  ],
+  'DeFi': [
+    'defiDecentralizedTradingExchange',
+    'primeDeFi'
+  ],
+  'defi': [
+    'defiEarn',
+    'defiHow'
+  ],
+  'percentage': [
+    'defiEarn',
+    'earnInterest'
+  ],
+  'arrows': [
+    'defiEarn',
+    'poweredByEthereum'
+  ],
+  'how': [
+    'defiHow'
+  ],
+  'staking': [
+    'defiHow',
+    'ethStakingMovement',
+    'ethStakingRewards',
+    'ethWrappedStakingRewards',
+    'governance',
+    'staking'
+  ],
+  'deFi': [
+    'defiRisk'
+  ],
+  'risk': [
+    'defiRisk',
+    'futures',
+    'leverage',
+    'loanValue',
+    'margin',
+    'marginWarning'
+  ],
+  'banner': [
+    'defiRisk'
+  ],
+  'percent': [
+    'defiRisk'
+  ],
+  'sign': [
+    'defiRisk'
+  ],
+  'gem': [
+    'diamond'
+  ],
+  'hand': [
+    'diamond'
+  ],
+  'holding': [
+    'diamond'
+  ],
+  'hold': [
+    'diamond',
+    'holdCrypto',
+    'yieldHolding'
+  ],
+  '💍': [
+    'diamond'
+  ],
+  '👋': [
+    'diamond'
+  ],
+  '✋': [
+    'diamond'
+  ],
+  '🤌': [
+    'diamond'
+  ],
+  'checklist': [
+    'didDecentralizedIdentity'
+  ],
+  'id': [
+    'didDecentralizedIdentity'
+  ],
+  'did': [
+    'didDecentralizedIdentity'
+  ],
+  'identity': [
+    'didDecentralizedIdentity'
+  ],
+  'digital': [
+    'digitalCollectibles'
+  ],
+  'collect': [
+    'digitalCollectibles'
+  ],
+  'collectibles': [
+    'digitalCollectibles'
+  ],
+  'art': [
+    'digitalCollectibles',
+    'exploreDecentralizedApps',
+    'nft'
+  ],
+  'PFP': [
+    'digitalCollectibles',
+    'referralsBitcoin',
+    'referralsCoinbaseOne',
+    'referralsGenericCoin'
+  ],
+  'certified': [
+    'documentCertified'
+  ],
+  'correct': [
+    'documentCertified'
+  ],
+  'ribbon': [
+    'documentCertified'
+  ],
+  'confirmed': [
+    'documentCertified',
+    'onTheList'
+  ],
+  'reviewed': [
+    'documentCertified',
+    'documentSuccess'
+  ],
+  'stamped': [
+    'documentCertified'
+  ],
+  'papers': [
+    'documentCertified'
+  ],
+  'Documents': [
+    'documentSuccess'
+  ],
+  'download': [
+    'downloadCoinbaseWalletArrow',
+    'downloadingStatement'
+  ],
+  'statement': [
+    'downloadingStatement'
+  ],
+  'taxes': [
+    'downloadingStatement',
+    'fileYourCryptoTaxesCheck'
+  ],
+  'grow': [
+    'earn',
+    'invest'
+  ],
+  'invest': [
+    'earn',
+    'invest'
+  ],
+  'future': [
+    'earn',
+    'futures'
+  ],
+  'barchart': [
+    'earnInterest'
+  ],
+  'Light': [
+    'earnToLearn'
+  ],
+  'Bulb': [
+    'earnToLearn'
+  ],
+  'Earn': [
+    'earnToLearn',
+    'primeEarn',
+    'primeStaking',
+    'ratMigration'
+  ],
+  'Learn': [
+    'earnToLearn'
+  ],
+  'Up': [
+    'earnToLearn',
+    'gainsAndLosses'
+  ],
+  'Make': [
+    'earnToLearn'
+  ],
+  'Money': [
+    'earnToLearn',
+    'gainsAndLosses',
+    'primeEarn',
+    'ratMigration'
+  ],
+  'empty': [
+    'emptyNfts',
+    'transferFunds'
+  ],
+  'state': [
+    'emptyNfts',
+    'transferFunds'
+  ],
+  'transfer': [
     'emptyNfts',
     'eth2SellSend',
-    'wrapEth',
-    'transferFunds',
-    'transferEth',
     'ethStakingMovement',
+    'transferEth',
+    'transferFunds',
+    'wrapEth',
+    'wrapEthTwo'
   ],
-  eth2: ['wrapEthTwo', 'eth2SellSend', 'wrapEth', 'ethStakingRewards', 'ethWrappedStakingRewards'],
-  '➡️': ['wrapEthTwo', 'eth2SellSend', 'wrapEth'],
-  liquidation: ['liquidationBufferRed', 'liquidationBufferGreen', 'liquidationBufferYellow'],
-  buffer: ['liquidationBufferRed', 'liquidationBufferGreen', 'liquidationBufferYellow'],
-  gauge: ['liquidationBufferRed', 'liquidationBufferGreen', 'liquidationBufferYellow'],
-  threshold: ['liquidationBufferRed', 'liquidationBufferGreen', 'liquidationBufferYellow'],
-  leverage: [
-    'liquidationBufferRed',
-    'browserExtension',
-    'liquidationBufferGreen',
-    'leverage',
-    'liquidationBufferYellow',
-  ],
-  derivatives: ['liquidationBufferRed', 'liquidationBufferGreen', 'liquidationBufferYellow'],
-  red: ['liquidationBufferRed'],
-  confirmation: ['primeOrderConfirmation', 'encryptedEverything'],
-  exclamation: ['primeOrderConfirmation'],
-  empty: ['emptyNfts', 'transferFunds'],
-  state: ['emptyNfts', 'transferFunds'],
   '📲': [
     'emptyNfts',
-    'walletReconnectSuccess',
-    'walletReconnect',
-    'transferFunds',
     'exploreDecentralizedApps',
+    'transferFunds',
+    'walletReconnect',
+    'walletReconnectSuccess'
   ],
-  deFi: ['defiRisk'],
-  banner: ['defiRisk'],
-  percent: ['defiRisk'],
-  sign: ['defiRisk'],
-  trust: ['defiRisk', 'apiKey'],
-  yield: ['defiRisk', 'yieldHolding', 'backedByUsDollar', 'holdCrypto'],
-  candles: ['accessToAdvancedCharts', 'advancedTradeCharts', 'ratDashboard'],
-  positive: ['accessToAdvancedCharts', 'advancedTradeCharts'],
-  negative: ['accessToAdvancedCharts', 'advancedTradeCharts'],
-  '🕯': ['accessToAdvancedCharts', 'advancedTradeCharts'],
-  '🪔': ['accessToAdvancedCharts', 'advancedTradeCharts'],
-  browser: [
-    'browserExtension',
-    'switchAdvancedToSimpleTrading',
-    'portfolioOverviewRelaunch',
-    'portfolioOverview',
-    'watchVideos',
+  'exchange': [
+    'emptyTrading',
+    'ethTrading',
+    'ethTradingTwo'
+  ],
+  'encrypted': [
+    'encryptedEverything'
+  ],
+  'computers': [
+    'encryptedEverything'
+  ],
+  'computation': [
+    'encryptedEverything'
+  ],
+  'confirmation': [
+    'encryptedEverything',
+    'primeOrderConfirmation'
+  ],
+  'estimated': [
+    'estimatedAmount'
+  ],
+  'prices': [
     'estimatedAmount',
-    'ratDashboard',
+    'primePriceLadder'
   ],
-  extension: ['browserExtension'],
-  desktop: ['browserExtension', 'multiPlatformMobileAppBrowserExtension'],
-  integrate: ['browserExtension'],
-  website: ['browserExtension'],
-  encrypted: ['encryptedEverything'],
-  cryptography: ['encryptedEverything', 'cryptoAssets', 'decentralization'],
-  computers: ['encryptedEverything'],
-  computation: ['encryptedEverything'],
-  login: ['login'],
-  signIn: ['login'],
-  computer: ['login'],
-  screen: ['login'],
-  useraccount: ['login'],
-  mouse: ['login'],
-  cursor: ['login'],
-  password: ['login'],
-  enter: ['login'],
-  light: ['login'],
-  switch: [
-    'switchAdvancedToSimpleTrading',
-    'tradeImmediately',
-    'advancedTrading',
-    'advancedTradeCharts',
+  'calculation': [
+    'estimatedAmount'
   ],
-  ui: ['switchAdvancedToSimpleTrading'],
-  change: ['switchAdvancedToSimpleTrading'],
-  nft: ['nft', 'exploreDecentralizedApps'],
-  'non fungible': ['nft'],
-  collectable: ['nft'],
-  collectible: ['nft'],
-  cat: ['nft'],
-  nyan: ['nft'],
-  artwork: ['nft'],
-  '🖼': ['nft', 'exploreDecentralizedApps'],
-  hex: ['blockchain'],
-  block: ['blockchain'],
-  blockchain: ['blockchain', 'bridging'],
-  immediately: ['tradeImmediately'],
-  now: ['tradeImmediately'],
-  today: ['tradeImmediately', 'startToday'],
-  platform: ['multiPlatformMobileAppBrowserExtension'],
-  certified: ['documentCertified'],
-  correct: ['documentCertified'],
-  ribbon: ['documentCertified'],
-  confirmed: ['documentCertified', 'onTheList'],
-  approved: ['documentCertified', 'cardWaitlist'],
-  stamped: ['documentCertified'],
-  papers: ['documentCertified'],
-  semi: ['semiCustodial', 'cb1BankTransfers'],
-  invalid: ['ratMigrationerror'],
-  broken: ['ratMigrationerror'],
-  'Empty state': ['clawMachinePig'],
-  'Claw machine': ['clawMachinePig'],
-  'Buy NFT': ['clawMachinePig'],
-  'Notorious P.I.G': ['clawMachinePig'],
-  Scan: ['scanCode'],
-  QR: ['scanCode'],
-  Code: ['scanCode'],
-  '2FA': ['phoneNumber', 'walletSecurity'],
-  passcode: ['phoneNumber', 'walletSecurity'],
-  lock: [
+  'sell': [
+    'eth2SellSend',
+    'futures',
+    'leverage',
+    'loanValue',
+    'margin',
+    'marginWarning',
+    'wrapEth',
+    'wrapEthTwo'
+  ],
+  'eth2': [
+    'eth2SellSend',
+    'ethStakingRewards',
+    'ethWrappedStakingRewards',
+    'wrapEth',
+    'wrapEthTwo'
+  ],
+  '➡️': [
+    'eth2SellSend',
+    'wrapEth',
+    'wrapEthTwo'
+  ],
+  'stake': [
+    'eth2SendSell',
+    'eth2SendSellTwo',
+    'ethStakeOrWrap',
+    'ethStakeOrWrapTwo',
+    'holdCrypto',
+    'holdingCrypto',
+    'staking'
+  ],
+  'wrap': [
+    'eth2SendSell',
+    'eth2SendSellTwo'
+  ],
+  'rush': [
+    'eth2SendSell',
+    'eth2SendSellTwo'
+  ],
+  'forward': [
+    'eth2SendSell',
+    'eth2SendSellTwo',
+    'ethStakingMovement'
+  ],
+  'exciting': [
+    'eth2SendSell',
+    'eth2SendSellTwo',
+    'ethStakingMovement'
+  ],
+  'eth': [
+    'ethAddress',
+    'ethStakeOrWrap',
+    'ethStakeOrWrapTwo',
+    'ethStakingMovement',
+    'ethStakingRewards',
+    'ethWrappedStakingRewards',
+    'layeredNetworks',
+    'poweredByEthereum',
+    'transferEth'
+  ],
+  'address': [
+    'ethAddress',
+    'uploadDocument'
+  ],
+  'unique': [
+    'ethAddress'
+  ],
+  'code': [
+    'ethAddress'
+  ],
+  '👶': [
+    'ethAddress',
+    'referralsBonus',
+    'sendingCrypto'
+  ],
+  '👧': [
+    'ethAddress',
+    'referralsBonus',
+    'sendingCrypto'
+  ],
+  '🧒': [
+    'ethAddress',
+    'referralsBonus',
+    'sendingCrypto'
+  ],
+  '👦': [
+    'ethAddress',
+    'referralsBonus',
+    'sendingCrypto'
+  ],
+  '👩': [
+    'ethAddress',
+    'referralsBonus',
+    'sendingCrypto'
+  ],
+  '🧑': [
+    'ethAddress',
+    'referralsBonus',
+    'sendingCrypto'
+  ],
+  '👨': [
+    'ethAddress',
+    'referralsBonus',
+    'sendingCrypto'
+  ],
+  '👩‍🦱': [
+    'ethAddress',
+    'referralsBonus',
+    'sendingCrypto'
+  ],
+  '🧑‍🦱': [
+    'ethAddress',
+    'referralsBonus',
+    'sendingCrypto'
+  ],
+  '👨‍🦱': [
+    'ethAddress',
+    'referralsBonus',
+    'sendingCrypto'
+  ],
+  '👩‍🦰': [
+    'ethAddress',
+    'referralsBonus',
+    'sendingCrypto'
+  ],
+  '🧑‍🦰': [
+    'ethAddress',
+    'referralsBonus',
+    'sendingCrypto'
+  ],
+  '👨‍🦰': [
+    'ethAddress',
+    'referralsBonus',
+    'sendingCrypto'
+  ],
+  '👱‍♀️': [
+    'ethAddress',
+    'referralsBonus',
+    'sendingCrypto'
+  ],
+  '👱': [
+    'ethAddress',
+    'referralsBonus',
+    'sendingCrypto'
+  ],
+  '👱‍♂️': [
+    'ethAddress',
+    'referralsBonus',
+    'sendingCrypto'
+  ],
+  '👩‍🦳': [
+    'ethAddress',
+    'referralsBonus',
+    'sendingCrypto'
+  ],
+  '🧑‍🦳': [
+    'ethAddress',
+    'referralsBonus',
+    'sendingCrypto'
+  ],
+  '👨‍🦳': [
+    'ethAddress',
+    'referralsBonus',
+    'sendingCrypto'
+  ],
+  '👩‍🦲': [
+    'ethAddress',
+    'referralsBonus',
+    'sendingCrypto'
+  ],
+  '🧑‍🦲': [
+    'ethAddress',
+    'referralsBonus',
+    'sendingCrypto'
+  ],
+  '👨‍🦲': [
+    'ethAddress',
+    'referralsBonus',
+    'sendingCrypto'
+  ],
+  '🧔': [
+    'ethAddress',
+    'referralsBonus',
+    'sendingCrypto'
+  ],
+  '👵': [
+    'ethAddress',
+    'referralsBonus',
+    'sendingCrypto'
+  ],
+  '🧓': [
+    'ethAddress',
+    'referralsBonus',
+    'sendingCrypto'
+  ],
+  '👴': [
+    'ethAddress',
+    'referralsBonus',
+    'sendingCrypto'
+  ],
+  '👲': [
+    'ethAddress',
+    'referralsBonus',
+    'sendingCrypto'
+  ],
+  '👳‍♀️': [
+    'ethAddress',
+    'referralsBonus',
+    'sendingCrypto'
+  ],
+  '👳': [
+    'ethAddress',
+    'referralsBonus',
+    'sendingCrypto'
+  ],
+  '👳‍♂️': [
+    'ethAddress',
+    'referralsBonus',
+    'sendingCrypto'
+  ],
+  '🧕': [
+    'ethAddress',
+    'referralsBonus',
+    'sendingCrypto'
+  ],
+  '👮‍♀️': [
+    'ethAddress',
+    'referralsBonus',
+    'sendingCrypto'
+  ],
+  '👮': [
+    'ethAddress',
+    'referralsBonus',
+    'sendingCrypto'
+  ],
+  '👮‍♂️': [
+    'ethAddress',
+    'referralsBonus',
+    'sendingCrypto'
+  ],
+  '👷‍♀️': [
+    'ethAddress',
+    'referralsBonus',
+    'sendingCrypto'
+  ],
+  '👷': [
+    'ethAddress',
+    'referralsBonus',
+    'sendingCrypto'
+  ],
+  '👷‍♂️': [
+    'ethAddress',
+    'referralsBonus',
+    'sendingCrypto'
+  ],
+  '💂‍♀️': [
+    'ethAddress',
+    'referralsBonus',
+    'sendingCrypto'
+  ],
+  '💂': [
+    'ethAddress',
+    'referralsBonus',
+    'sendingCrypto'
+  ],
+  '💂‍♂️': [
+    'ethAddress',
+    'referralsBonus',
+    'sendingCrypto'
+  ],
+  '🕵️‍♀️': [
+    'ethAddress',
+    'referralsBonus',
+    'sendingCrypto'
+  ],
+  '🕵️': [
+    'ethAddress',
+    'referralsBonus',
+    'sendingCrypto'
+  ],
+  '🕵️‍♂️': [
+    'ethAddress',
+    'referralsBonus',
+    'sendingCrypto'
+  ],
+  '👩‍⚕️': [
+    'ethAddress',
+    'referralsBonus',
+    'sendingCrypto'
+  ],
+  '🧑‍⚕️': [
+    'ethAddress',
+    'referralsBonus',
+    'sendingCrypto'
+  ],
+  '👨‍⚕️': [
+    'ethAddress',
+    'referralsBonus',
+    'sendingCrypto'
+  ],
+  '👩‍🌾': [
+    'ethAddress',
+    'referralsBonus',
+    'sendingCrypto'
+  ],
+  '🧑‍🌾': [
+    'ethAddress',
+    'referralsBonus',
+    'sendingCrypto'
+  ],
+  '👨‍🌾': [
+    'ethAddress',
+    'referralsBonus',
+    'sendingCrypto'
+  ],
+  '👩‍🍳': [
+    'ethAddress',
+    'referralsBonus',
+    'sendingCrypto'
+  ],
+  '🧑‍🍳': [
+    'ethAddress',
+    'referralsBonus',
+    'sendingCrypto'
+  ],
+  '👨‍🍳': [
+    'ethAddress',
+    'referralsBonus',
+    'sendingCrypto'
+  ],
+  '👩‍🎓': [
+    'ethAddress',
+    'referralsBonus',
+    'sendingCrypto'
+  ],
+  '🧑‍🎓': [
+    'ethAddress',
+    'referralsBonus',
+    'sendingCrypto'
+  ],
+  '👨‍🎓': [
+    'ethAddress',
+    'referralsBonus',
+    'sendingCrypto'
+  ],
+  '👩‍🎤': [
+    'ethAddress',
+    'referralsBonus',
+    'sendingCrypto'
+  ],
+  '🧑‍🎤': [
+    'ethAddress',
+    'referralsBonus',
+    'sendingCrypto'
+  ],
+  '👨‍🎤': [
+    'ethAddress',
+    'referralsBonus',
+    'sendingCrypto'
+  ],
+  '👩‍🏫': [
+    'ethAddress',
+    'referralsBonus',
+    'sendingCrypto'
+  ],
+  '🧑‍🏫': [
+    'ethAddress',
+    'referralsBonus',
+    'sendingCrypto'
+  ],
+  '👨‍🏫': [
+    'ethAddress',
+    'referralsBonus',
+    'sendingCrypto'
+  ],
+  '👩‍🏭': [
+    'ethAddress',
+    'referralsBonus',
+    'sendingCrypto'
+  ],
+  '🧑‍🏭': [
+    'ethAddress',
+    'referralsBonus',
+    'sendingCrypto'
+  ],
+  '👨‍🏭': [
+    'ethAddress',
+    'referralsBonus',
+    'sendingCrypto'
+  ],
+  '👩‍💻': [
+    'ethAddress',
+    'portfolioOverview',
+    'portfolioOverviewRelaunch',
+    'referralsBonus',
+    'sendingCrypto'
+  ],
+  '🧑‍💻': [
+    'ethAddress',
+    'portfolioOverview',
+    'portfolioOverviewRelaunch',
+    'referralsBonus',
+    'sendingCrypto'
+  ],
+  '👨‍💻': [
+    'ethAddress',
+    'portfolioOverview',
+    'portfolioOverviewRelaunch',
+    'referralsBonus',
+    'sendingCrypto'
+  ],
+  '👩‍💼': [
+    'ethAddress',
+    'referralsBonus',
+    'sendingCrypto'
+  ],
+  '🧑‍💼': [
+    'ethAddress',
+    'referralsBonus',
+    'sendingCrypto'
+  ],
+  '👨‍💼': [
+    'ethAddress',
+    'referralsBonus',
+    'sendingCrypto'
+  ],
+  '👩‍🔧': [
+    'ethAddress',
+    'referralsBonus',
+    'sendingCrypto'
+  ],
+  '🧑‍🔧': [
+    'ethAddress',
+    'referralsBonus',
+    'sendingCrypto'
+  ],
+  '👨‍🔧': [
+    'ethAddress',
+    'referralsBonus',
+    'sendingCrypto'
+  ],
+  '👩‍🔬': [
+    'ethAddress',
+    'referralsBonus',
+    'sendingCrypto'
+  ],
+  '🧑‍🔬': [
+    'ethAddress',
+    'referralsBonus',
+    'sendingCrypto'
+  ],
+  '👨‍🔬': [
+    'ethAddress',
+    'referralsBonus',
+    'sendingCrypto'
+  ],
+  '👩‍🎨': [
+    'ethAddress',
+    'referralsBonus',
+    'sendingCrypto'
+  ],
+  '🧑‍🎨': [
+    'ethAddress',
+    'referralsBonus',
+    'sendingCrypto'
+  ],
+  '👨‍🎨': [
+    'ethAddress',
+    'referralsBonus',
+    'sendingCrypto'
+  ],
+  '👩‍🚒': [
+    'ethAddress',
+    'referralsBonus',
+    'sendingCrypto'
+  ],
+  '🧑‍🚒': [
+    'ethAddress',
+    'referralsBonus',
+    'sendingCrypto'
+  ],
+  '👨‍🚒': [
+    'ethAddress',
+    'referralsBonus',
+    'sendingCrypto'
+  ],
+  '👩‍✈️': [
+    'ethAddress',
+    'referralsBonus',
+    'sendingCrypto'
+  ],
+  '🧑‍✈️': [
+    'ethAddress',
+    'referralsBonus',
+    'sendingCrypto'
+  ],
+  '👨‍✈️': [
+    'ethAddress',
+    'referralsBonus',
+    'sendingCrypto'
+  ],
+  '👩‍🚀': [
+    'ethAddress',
+    'referralsBonus',
+    'sendingCrypto'
+  ],
+  '🧑‍🚀': [
+    'ethAddress',
+    'referralsBonus',
+    'sendingCrypto'
+  ],
+  '👨‍🚀': [
+    'ethAddress',
+    'referralsBonus',
+    'sendingCrypto'
+  ],
+  '👩‍⚖️': [
+    'ethAddress',
+    'referralsBonus',
+    'sendingCrypto'
+  ],
+  '🤵‍♀️': [
+    'ethAddress',
+    'referralsBonus',
+    'sendingCrypto'
+  ],
+  '🤵': [
+    'ethAddress',
+    'referralsBonus',
+    'sendingCrypto'
+  ],
+  '🤵‍♂️': [
+    'ethAddress',
+    'referralsBonus',
+    'sendingCrypto'
+  ],
+  '👸': [
+    'ethAddress',
+    'referralsBonus',
+    'sendingCrypto'
+  ],
+  '🤴': [
+    'ethAddress',
+    'referralsBonus',
+    'sendingCrypto'
+  ],
+  '🥷': [
+    'ethAddress',
+    'referralsBonus',
+    'sendingCrypto'
+  ],
+  '🦸‍♀️': [
+    'ethAddress',
+    'referralsBonus',
+    'sendingCrypto'
+  ],
+  '🦸': [
+    'ethAddress',
+    'referralsBonus',
+    'sendingCrypto'
+  ],
+  '🦸‍♂️': [
+    'ethAddress',
+    'referralsBonus',
+    'sendingCrypto'
+  ],
+  '🦹‍♀️': [
+    'ethAddress',
+    'referralsBonus',
+    'sendingCrypto'
+  ],
+  '🦹': [
+    'ethAddress',
+    'referralsBonus',
+    'sendingCrypto'
+  ],
+  '🦹‍♂️': [
+    'ethAddress',
+    'referralsBonus',
+    'sendingCrypto'
+  ],
+  '🤶': [
+    'ethAddress',
+    'referralsBonus',
+    'sendingCrypto'
+  ],
+  '🧑‍🎄': [
+    'ethAddress',
+    'referralsBonus',
+    'sendingCrypto'
+  ],
+  '🎅': [
+    'ethAddress',
+    'referralsBonus',
+    'sendingCrypto'
+  ],
+  '🧙‍♀️': [
+    'ethAddress',
+    'referralsBonus',
+    'sendingCrypto'
+  ],
+  '🧙': [
+    'ethAddress',
+    'referralsBonus',
+    'sendingCrypto'
+  ],
+  '🧙‍♂️': [
+    'ethAddress',
+    'referralsBonus',
+    'sendingCrypto'
+  ],
+  '🧝‍♀️': [
+    'ethAddress',
+    'referralsBonus',
+    'sendingCrypto'
+  ],
+  '🧝': [
+    'ethAddress',
+    'referralsBonus',
+    'sendingCrypto'
+  ],
+  '🧝‍♂️': [
+    'ethAddress',
+    'referralsBonus',
+    'sendingCrypto'
+  ],
+  '🧛‍♀️': [
+    'ethAddress',
+    'referralsBonus',
+    'sendingCrypto'
+  ],
+  '🧛': [
+    'ethAddress',
+    'referralsBonus',
+    'sendingCrypto'
+  ],
+  '🧛‍♂️': [
+    'ethAddress',
+    'referralsBonus',
+    'sendingCrypto'
+  ],
+  'wrapped': [
+    'ethStakeOrWrap',
+    'ethStakeOrWrapTwo'
+  ],
+  'lfg': [
+    'ethStakeOrWrap',
+    'ethStakeOrWrapTwo'
+  ],
+  'circles': [
+    'ethStakingMovement',
+    'shareOnSocialMedia'
+  ],
+  '🟣': [
+    'ethStakingMovement'
+  ],
+  '🟢': [
+    'ethStakingMovement'
+  ],
+  '🔵': [
+    'ethStakingMovement'
+  ],
+  'trade': [
+    'ethStakingRewards',
+    'ethWrappedStakingRewards',
+    'leverage',
+    'loanValue',
+    'margin',
+    'marginWarning',
+    'primeOrderConfirmation',
+    'tradeImmediately'
+  ],
+  'stacks of coins': [
+    'ethStakingRewards',
+    'ethWrappedStakingRewards'
+  ],
+  'image': [
+    'exploreDecentralizedApps'
+  ],
+  'magical': [
+    'exploreDecentralizedApps'
+  ],
+  'nft': [
+    'exploreDecentralizedApps',
+    'nft'
+  ],
+  '👻': [
+    'exploreDecentralizedApps'
+  ],
+  '🖼': [
+    'exploreDecentralizedApps',
+    'nft'
+  ],
+  'face': [
+    'faceId'
+  ],
+  'photo': [
+    'faceId'
+  ],
+  'camera': [
+    'faceId'
+  ],
+  'calculator': [
+    'fileYourCryptoTaxesCheck'
+  ],
+  'pie': [
+    'fileYourCryptoTaxesCheck'
+  ],
+  'organize': [
+    'fileYourCryptoTaxesCheck'
+  ],
+  '%': [
+    'fileYourCryptoTaxesCheck'
+  ],
+  '🥧': [
+    'fileYourCryptoTaxesCheck',
+    'portfolioOverview',
+    'portfolioOverviewRelaunch'
+  ],
+  '🧮': [
+    'fileYourCryptoTaxesCheck'
+  ],
+  '🗄': [
+    'fileYourCryptoTaxesCheck'
+  ],
+  '🗃': [
+    'fileYourCryptoTaxesCheck'
+  ],
+  '📁': [
+    'fileYourCryptoTaxesCheck'
+  ],
+  '📂': [
+    'fileYourCryptoTaxesCheck'
+  ],
+  '🗂': [
+    'fileYourCryptoTaxesCheck'
+  ],
+  'focus': [
+    'focusLimitOrders'
+  ],
+  'limit': [
+    'focusLimitOrders'
+  ],
+  'limitorders': [
+    'focusLimitOrders'
+  ],
+  'advancedtrading': [
+    'focusLimitOrders'
+  ],
+  'free': [
+    'freeBtc'
+  ],
+  'get': [
+    'freeBtc',
+    'getStartedInMinutes'
+  ],
+  'paid': [
+    'freeBtc'
+  ],
+  'join': [
+    'freeBtc'
+  ],
+  'refer': [
+    'freeBtc'
+  ],
+  'referral': [
+    'freeBtc',
+    'referralsBitcoin',
+    'referralsCoinbaseOne',
+    'referralsGenericCoin'
+  ],
+  'hodl': [
+    'freeBtc',
+    'holdCrypto'
+  ],
+  'futures': [
+    'futures'
+  ],
+  'buy': [
+    'futures',
+    'leverage',
+    'loanValue',
+    'margin',
+    'marginWarning'
+  ],
+  'put': [
+    'futures',
+    'leverage',
+    'loanValue',
+    'margin',
+    'marginWarning'
+  ],
+  'short': [
+    'futures'
+  ],
+  'hedge': [
+    'futures'
+  ],
+  'clock': [
+    'futures',
+    'getStartedInMinutes',
+    'loanValue',
+    'marginWarning',
+    'quickAndSimple'
+  ],
+  'Gains': [
+    'gainsAndLosses'
+  ],
+  'Losses': [
+    'gainsAndLosses'
+  ],
+  'Scale': [
+    'gainsAndLosses'
+  ],
+  'Growth': [
+    'gainsAndLosses'
+  ],
+  'Chart': [
+    'gainsAndLosses',
+    'gasFeesNetworkFees',
+    'taxesDetails'
+  ],
+  'Down': [
+    'gainsAndLosses'
+  ],
+  'Arrow': [
+    'gainsAndLosses'
+  ],
+  'Eth': [
+    'gasFeesNetworkFees'
+  ],
+  'Gas': [
+    'gasFeesNetworkFees'
+  ],
+  'Ethereum': [
+    'gasFeesNetworkFees'
+  ],
+  'Fees': [
+    'gasFeesNetworkFees'
+  ],
+  'Network': [
+    'gasFeesNetworkFees'
+  ],
+  'Payment': [
+    'gasFeesNetworkFees'
+  ],
+  'Pump': [
+    'gasFeesNetworkFees'
+  ],
+  'Token': [
+    'gasFeesNetworkFees'
+  ],
+  'Range': [
+    'gasFeesNetworkFees'
+  ],
+  'started': [
+    'getStartedInMinutes'
+  ],
+  'stopwatch': [
+    'getStartedInMinutes'
+  ],
+  'going': [
+    'getStartedInMinutes'
+  ],
+  'please': [
+    'getStartedInMinutes'
+  ],
+  'world': [
+    'globalTransactions',
+    'secureGlobalTransactions'
+  ],
+  'i18n': [
+    'globalTransactions'
+  ],
+  'governance': [
+    'governance'
+  ],
+  'vote': [
+    'governance'
+  ],
+  'proposal': [
+    'governance'
+  ],
+  'ballot': [
+    'governance'
+  ],
+  'box': [
+    'governance'
+  ],
+  'yes': [
+    'governance',
+    'primeOrderConfirmation'
+  ],
+  'no': [
+    'governance',
+    'ledgerSignatureRejected',
+    'noFees',
+    'primeOrderConfirmation'
+  ],
+  'maybe': [
+    'governance'
+  ],
+  'so': [
+    'governance'
+  ],
+  'Wallet': [
+    'hardwareWallets',
+    'primeEarn',
+    'ratFoundWallet',
+    'ratMigration'
+  ],
+  'Hardware': [
+    'hardwareWallets'
+  ],
+  'Ledger': [
+    'hardwareWallets'
+  ],
+  'USB': [
+    'hardwareWallets'
+  ],
+  'cold': [
+    'hardwareWallets',
+    'stressTestedColdStorage'
+  ],
+  'cash': [
+    'highFees',
+    'portfolioOverview',
+    'portfolioOverviewRelaunch'
+  ],
+  '💰': [
+    'highFees',
+    'trade',
+    'transferCoins'
+  ],
+  '👆': [
+    'highFees',
+    'trade'
+  ],
+  '☝️': [
+    'highFees',
+    'trade'
+  ],
+  '🆙': [
+    'highFees',
+    'trade'
+  ],
+  '⬆️': [
+    'highFees',
+    'trade'
+  ],
+  '🔝': [
+    'highFees',
+    'trade'
+  ],
+  '🔼': [
+    'highFees',
+    'trade'
+  ],
+  '🔺': [
+    'highFees',
+    'trade'
+  ],
+  'basket': [
+    'holdCrypto'
+  ],
+  'bowl': [
+    'holdCrypto'
+  ],
+  'Hold': [
+    'holdingCrypto'
+  ],
+  'HODL': [
+    'holdingCrypto'
+  ],
+  'down': [
+    'holdingCrypto',
+    'trade',
+    'yieldHolding'
+  ],
+  'save': [
+    'holdingCrypto',
+    'invest',
+    'noFees'
+  ],
+  'umbrella': [
+    'insuranceProtection'
+  ],
+  'insurance': [
+    'insuranceProtection'
+  ],
+  'protection': [
+    'insuranceProtection',
+    'protectedNotes'
+  ],
+  'secure': [
+    'insuranceProtection',
+    'secureAndTrusted',
+    'secureGlobalTransactions',
+    'secureStorage',
+    'securityShield',
+    'stressTestedColdStorage',
+    'walletSecurity'
+  ],
+  'Layered': [
+    'layeredNetworks'
+  ],
+  'Networks': [
+    'layeredNetworks'
+  ],
+  'layer': [
+    'layeredNetworks'
+  ],
+  'side': [
+    'layeredNetworks'
+  ],
+  'leading': [
+    'leadingProtocol'
+  ],
+  'protocol': [
+    'leadingProtocol'
+  ],
+  'faster': [
+    'leadingProtocol',
+    'sendCryptoFaster'
+  ],
+  'bolt': [
+    'leadingProtocol',
+    'lightningNetworkSend',
+    'sendCryptoFaster'
+  ],
+  'move': [
+    'leadingProtocol',
+    'sendCryptoFaster',
+    'transferCoins'
+  ],
+  'quicker': [
+    'leadingProtocol',
+    'sendCryptoFaster'
+  ],
+  'plugin': [
+    'ledgerFailed',
+    'ledgerSignatureRejected'
+  ],
+  'instructional': [
+    'ledgerFailed',
+    'ledgerSignatureRejected'
+  ],
+  'alert': [
+    'ledgerFailed',
+    'notificationsAlt'
+  ],
+  'failed': [
+    'ledgerFailed'
+  ],
+  'declined': [
+    'ledgerFailed'
+  ],
+  'rejection': [
+    'ledgerSignatureRejected'
+  ],
+  'decline': [
+    'ledgerSignatureRejected'
+  ],
+  '❌': [
+    'ledgerSignatureRejected'
+  ],
+  'error state': [
+    'ledgerSignatureRejected',
+    'loanValue',
+    'marginWarning',
+    'ratMigrationerror'
+  ],
+  'stack': [
+    'leverage',
+    'loanValue',
+    'margin',
+    'marginWarning'
+  ],
+  'lever': [
+    'leverage',
+    'loanValue',
+    'margin',
+    'marginWarning'
+  ],
+  'options': [
+    'leverage',
+    'loanValue',
+    'margin',
+    'marginWarning'
+  ],
+  'Lighting': [
+    'lightningNetworkSend'
+  ],
+  'Lightingnetwork': [
+    'lightningNetworkSend'
+  ],
+  'speed': [
+    'lightningNetworkSend'
+  ],
+  'lightingbolt': [
+    'lightningNetworkSend'
+  ],
+  '⚡': [
+    'lightningNetworkSend'
+  ],
+  '🖇': [
+    'linkCoinbaseWallet',
+    'walletReconnect',
+    'walletReconnectSuccess'
+  ],
+  'linking': [
+    'linkingYourWalletToYourCoinbaseAccount'
+  ],
+  'to': [
+    'linkingYourWalletToYourCoinbaseAccount',
+    'p2pPayments',
+    'portfolioPerformance',
+    'trendingHotAssets'
+  ],
+  'both': [
+    'linkingYourWalletToYourCoinbaseAccount'
+  ],
+  'liquidation': [
+    'liquidationBufferGreen',
+    'liquidationBufferRed',
+    'liquidationBufferYellow'
+  ],
+  'buffer': [
+    'liquidationBufferGreen',
+    'liquidationBufferRed',
+    'liquidationBufferYellow'
+  ],
+  'gauge': [
+    'liquidationBufferGreen',
+    'liquidationBufferRed',
+    'liquidationBufferYellow'
+  ],
+  'threshold': [
+    'liquidationBufferGreen',
+    'liquidationBufferRed',
+    'liquidationBufferYellow'
+  ],
+  'derivatives': [
+    'liquidationBufferGreen',
+    'liquidationBufferRed',
+    'liquidationBufferYellow'
+  ],
+  'green': [
+    'liquidationBufferGreen',
+    'walletNotifications'
+  ],
+  'red': [
+    'liquidationBufferRed'
+  ],
+  'margin': [
+    'loanValue',
+    'margin',
+    'marginWarning'
+  ],
+  'login': [
+    'login'
+  ],
+  'signIn': [
+    'login'
+  ],
+  'computer': [
+    'login'
+  ],
+  'screen': [
+    'login'
+  ],
+  'useraccount': [
+    'login'
+  ],
+  'mouse': [
+    'login'
+  ],
+  'cursor': [
+    'login'
+  ],
+  'password': [
+    'login'
+  ],
+  'enter': [
+    'login'
+  ],
+  'light': [
+    'login'
+  ],
+  'mining': [
+    'mining'
+  ],
+  'MEV': [
+    'mining'
+  ],
+  'cart': [
+    'mining'
+  ],
+  'users': [
+    'moneyDecentralized',
+    'multiPlatformMobileAppBrowserExtension',
+    'multipleAccountsWalletsForOneUser'
+  ],
+  'multi': [
+    'multicoinSupport',
+    'multiPlatformMobileAppBrowserExtension'
+  ],
+  'multicoin': [
+    'multicoinSupport'
+  ],
+  'networks': [
+    'multicoinSupport'
+  ],
+  'many': [
+    'multicoinSupport'
+  ],
+  'platform': [
+    'multiPlatformMobileAppBrowserExtension'
+  ],
+  'wallets': [
+    'multipleAccountsWalletsForOneUser'
+  ],
+  'multiple': [
+    'multipleAccountsWalletsForOneUser'
+  ],
+  'single account': [
+    'multipleAccountsWalletsForOneUser'
+  ],
+  'lots': [
+    'multipleAccountsWalletsForOneUser'
+  ],
+  'of': [
+    'multipleAccountsWalletsForOneUser'
+  ],
+  'non fungible': [
+    'nft'
+  ],
+  'collectable': [
+    'nft'
+  ],
+  'collectible': [
+    'nft'
+  ],
+  'cat': [
+    'nft'
+  ],
+  'nyan': [
+    'nft'
+  ],
+  'artwork': [
+    'nft'
+  ],
+  'price': [
+    'noFees',
+    'primePriceLadder'
+  ],
+  'sale': [
+    'noFees'
+  ],
+  'reduced': [
+    'noFees'
+  ],
+  'costs': [
+    'noFees'
+  ],
+  'notification': [
+    'notificationsAlt'
+  ],
+  'bell': [
+    'notificationsAlt'
+  ],
+  '🔔': [
+    'notificationsAlt'
+  ],
+  '🔕': [
+    'notificationsAlt'
+  ],
+  'no transaction': [
+    'noTransactions'
+  ],
+  'clipboard': [
+    'onTheList',
+    'verifyInfo'
+  ],
+  'on': [
+    'onTheList'
+  ],
+  'notify': [
+    'onTheList'
+  ],
+  'paper': [
+    'onTheList',
+    'uploadDocument'
+  ],
+  'open': [
+    'openEmail'
+  ],
+  'email': [
+    'openEmail',
+    'verifyEmail'
+  ],
+  'envelope': [
+    'openEmail',
+    'verifyEmail'
+  ],
+  'letter': [
+    'openEmail'
+  ],
+  '📧 📥 📤 ✉ 📩 📨': [
+    'openEmail'
+  ],
+  'Opt': [
+    'optInPushNotificationsEmail'
+  ],
+  'In': [
+    'optInPushNotificationsEmail'
+  ],
+  'Push': [
+    'optInPushNotificationsEmail'
+  ],
+  'Notifications': [
+    'optInPushNotificationsEmail'
+  ],
+  'Email': [
+    'optInPushNotificationsEmail'
+  ],
+  'Bubble': [
+    'optInPushNotificationsEmail'
+  ],
+  'Window': [
+    'optInPushNotificationsEmail'
+  ],
+  'Notify': [
+    'optInPushNotificationsEmail'
+  ],
+  'Account': [
+    'optInPushNotificationsEmail'
+  ],
+  'Security': [
+    'optInPushNotificationsEmail'
+  ],
+  'Prices': [
+    'optInPushNotificationsEmail'
+  ],
+  'peer': [
+    'p2pPayments'
+  ],
+  'P2P': [
+    'p2pPayments'
+  ],
+  '2FA': [
+    'phoneNumber',
+    'walletSecurity'
+  ],
+  'passcode': [
+    'phoneNumber',
+    'walletSecurity'
+  ],
+  'lock': [
     'phoneNumber',
     'protectedNotes',
     'secureGlobalTransactions',
     'secureStorage',
-    'securityShield',
+    'securityShield'
   ],
-  asterisk: ['phoneNumber'],
-  hold: ['yieldHolding', 'diamond', 'holdCrypto'],
-  down: ['yieldHolding', 'holdingCrypto', 'trade'],
-  form: ['protectedNotes'],
-  key: ['protectedNotes', 'walletSecurity', 'apiKey'],
-  protection: ['protectedNotes', 'insuranceProtection'],
-  privacy: ['protectedNotes'],
-  investment: ['protectedNotes'],
-  contract: ['protectedNotes'],
-  'no access': ['protectedNotes'],
-  '🔒': ['protectedNotes'],
-  '🔐': ['protectedNotes'],
-  '🔑': ['protectedNotes'],
-  '🗝': ['protectedNotes'],
-  '📜': ['protectedNotes'],
-  Lock: ['walletSecurity'],
-  how: ['defiHow'],
-  hexagon: ['sidechain'],
-  connections: ['sidechain'],
-  umbrella: ['insuranceProtection'],
-  insurance: ['insuranceProtection'],
-  made: ['basedInUsa'],
-  USA: ['basedInUsa'],
-  America: ['basedInUsa'],
-  fuck: ['basedInUsa'],
-  yeah: ['basedInUsa'],
-  location: ['basedInUsa'],
-  marker: ['basedInUsa'],
-  pin: ['basedInUsa'],
-  'United States': ['basedInUsa'],
-  Rewards: ['ratMigration', 'primeEarn'],
-  Cash: ['ratMigration', 'primeEarn'],
-  contacts: ['contactsListWarning'],
-  '⚠': ['contactsListWarning'],
-  statement: ['downloadingStatement'],
-  nux: ['verifyEmail'],
-  exchange: ['emptyTrading', 'ethTradingTwo', 'ethTrading'],
-  transmit: ['transferCoins'],
-  '💰': ['transferCoins', 'trade', 'highFees'],
-  rat: ['advancedTrading'],
-  on: ['onTheList'],
-  waiting: ['onTheList', 'cardWaitlist'],
-  notify: ['onTheList'],
-  fund: ['addBank', 'currency'],
-  stock: ['addBank', 'currency'],
-  building: ['addBank', 'currency'],
-  institution: ['addBank', 'uob', 'currency'],
-  addition: ['addBank'],
-  watch: ['startToday', 'watchVideos'],
-  videos: ['startToday'],
-  week: ['startToday'],
-  learn: ['startToday'],
-  improved: ['advancedTradeCharts'],
-  '🔗': [
-    'linkCoinbaseWallet',
-    'walletReconnectSuccess',
-    'walletReconnect',
-    'connectWalletTutorial',
+  'asterisk': [
+    'phoneNumber'
   ],
-  '🖇': ['linkCoinbaseWallet', 'walletReconnectSuccess', 'walletReconnect'],
-  Staking: ['primeStaking'],
-  Stake: ['primeStaking'],
-  Interest: ['primeStaking'],
-  API: ['apiKey'],
-  unlock: ['apiKey'],
-  gain: ['apiKey'],
-  world: ['secureGlobalTransactions', 'globalTransactions'],
-  'peer to peer': ['secureGlobalTransactions'],
-  uob: ['uob'],
-  'coinbase logo': ['uob'],
-  person: ['uob', 'referralsBonus'],
-  sending: ['cbEth'],
-  movement: [
-    'cbEth',
-    'ethStakeOrWrap',
-    'eth2SendSell',
-    'diamond',
-    'ethStakeOrWrapTwo',
-    'eth2SendSellTwo',
-    'ethStakingMovement',
+  'investments': [
+    'portfolioOverview',
+    'portfolioOverviewRelaunch'
   ],
-  minus: ['cbEth'],
-  bridge: ['bridging'],
-  'one to another': ['bridging'],
-  tokens: ['bridging'],
-  '🌁': ['bridging'],
-  '🌉': ['bridging'],
-  peer: ['p2pPayments'],
-  P2P: ['p2pPayments'],
-  investments: ['portfolioOverviewRelaunch', 'portfolioOverview'],
-  stocks: ['portfolioOverviewRelaunch', 'portfolioOverview'],
-  cash: ['portfolioOverviewRelaunch', 'portfolioOverview', 'highFees'],
-  management: ['portfolioOverviewRelaunch', 'portfolioOverview'],
-  dashboard: ['portfolioOverviewRelaunch', 'portfolioOverview', 'ratDashboard'],
-  summary: ['portfolioOverviewRelaunch', 'portfolioOverview'],
-  '💼': ['portfolioOverviewRelaunch', 'portfolioOverview'],
-  '🧐': ['portfolioOverviewRelaunch', 'portfolioOverview'],
-  '🤑': ['portfolioOverviewRelaunch', 'portfolioOverview'],
-  '🔎': ['portfolioOverviewRelaunch', 'portfolioOverview'],
-  '🔍': ['portfolioOverviewRelaunch', 'portfolioOverview'],
-  '👀': ['portfolioOverviewRelaunch', 'portfolioOverview'],
-  recommendation: ['referralsBonus'],
-  human: ['referralsBonus'],
-  invitation: ['referralsBonus'],
-  invite: ['referralsBonus'],
-  request: ['referralsBonus'],
-  '💌': ['referralsBonus'],
-  '✉️': ['referralsBonus'],
-  '📨': ['referralsBonus'],
-  '📩': ['referralsBonus'],
-  '📧': ['referralsBonus'],
-  '🎁': ['referralsBonus'],
-  '📇': ['referralsBonus'],
-  wrapped: ['ethStakeOrWrap', 'ethStakeOrWrapTwo'],
-  lfg: ['ethStakeOrWrap', 'ethStakeOrWrapTwo'],
-  Hold: ['holdingCrypto'],
-  HODL: ['holdingCrypto'],
-  Concierge: ['concierge'],
-  wrap: ['eth2SendSell', 'eth2SendSellTwo'],
-  rush: ['eth2SendSell', 'eth2SendSellTwo'],
-  forward: ['eth2SendSell', 'eth2SendSellTwo', 'ethStakingMovement'],
-  exciting: ['eth2SendSell', 'eth2SendSellTwo', 'ethStakingMovement'],
-  pending: ['cardWaitlist'],
-  delay: ['cardWaitlist'],
-  '📋': ['cardWaitlist'],
-  connection: ['walletReconnectSuccess', 'walletReconnect', 'decentralization'],
-  gem: ['diamond'],
-  hand: ['diamond'],
-  holding: ['diamond'],
-  '💍': ['diamond'],
-  '👋': ['diamond'],
-  '✋': ['diamond'],
-  '🤌': ['diamond'],
-  keep: ['secureStorage'],
-  '👇': ['trade'],
-  '⬇️': ['trade'],
-  '🔻': ['trade'],
-  '👆': ['trade', 'highFees'],
-  '☝️': ['trade', 'highFees'],
-  '🆙': ['trade', 'highFees'],
-  '⬆️': ['trade', 'highFees'],
-  '🔝': ['trade', 'highFees'],
-  '🔼': ['trade', 'highFees'],
-  '🔺': ['trade', 'highFees'],
-  interaction: ['primeTradePreferences'],
-  settings: ['primeTradePreferences'],
-  gear: ['primeTradePreferences'],
-  preferences: ['primeTradePreferences'],
-  'Empty State': ['ratFoundWallet'],
-  'ASAP Ratty': ['ratFoundWallet'],
-  'Rat found wallet': ['ratFoundWallet'],
-  Rat: ['ratFoundWallet'],
-  rejection: ['ledgerSignatureRejected'],
-  decline: ['ledgerSignatureRejected'],
-  '❌': ['ledgerSignatureRejected'],
-  trophy: ['congratulationsOnEarningCrypto'],
-  win: ['congratulationsOnEarningCrypto'],
-  folder: ['cryptoPortfolio'],
-  social: ['shareOnSocialMedia'],
-  media: ['shareOnSocialMedia'],
-  circles: ['shareOnSocialMedia', 'ethStakingMovement'],
-  video: ['watchVideos'],
-  eye: ['watchVideos'],
-  window: ['watchVideos'],
-  button: ['watchVideos'],
-  Trust: ['secureAndTrusted'],
-  shield: ['secureAndTrusted'],
-  USDC: ['retailUSDCRewards'],
-  'stacks of coins': ['ethStakingRewards', 'ethWrappedStakingRewards'],
-  tutorial: ['connectWalletTutorial'],
-  attach: ['connectWalletTutorial'],
-  '👛': ['connectWalletTutorial'],
-  '👝': ['connectWalletTutorial'],
-  '👜': ['connectWalletTutorial'],
-  '🖇️': ['connectWalletTutorial'],
-  padlock: ['securityShield'],
-  backed: ['backedByUsDollar'],
-  dollars: ['backedByUsDollar'],
-  US: ['backedByUsDollar'],
-  basket: ['holdCrypto'],
-  bowl: ['holdCrypto'],
-  image: ['exploreDecentralizedApps'],
-  magical: ['exploreDecentralizedApps'],
-  '👻': ['exploreDecentralizedApps'],
-  i18n: ['globalTransactions'],
-  estimated: ['estimatedAmount'],
-  calculation: ['estimatedAmount'],
-  '🟣': ['ethStakingMovement'],
-  '🟢': ['ethStakingMovement'],
-  '🔵': ['ethStakingMovement'],
-  analyze: ['ratDashboard'],
-  breakdown: ['ratDashboard'],
-  '🐀': ['ratDashboard'],
-  '💻': ['ratDashboard'],
-  '🖥': ['ratDashboard'],
-  Lighting: ['lightningNetworkSend'],
-  Lightingnetwork: ['lightningNetworkSend'],
-  speed: ['lightningNetworkSend'],
-  lightingbolt: ['lightningNetworkSend'],
-  '⚡': ['lightningNetworkSend'],
+  'stocks': [
+    'portfolioOverview',
+    'portfolioOverviewRelaunch'
+  ],
+  'management': [
+    'portfolioOverview',
+    'portfolioOverviewRelaunch'
+  ],
+  'dashboard': [
+    'portfolioOverview',
+    'portfolioOverviewRelaunch',
+    'ratDashboard'
+  ],
+  'summary': [
+    'portfolioOverview',
+    'portfolioOverviewRelaunch'
+  ],
+  '💼': [
+    'portfolioOverview',
+    'portfolioOverviewRelaunch'
+  ],
+  '🧐': [
+    'portfolioOverview',
+    'portfolioOverviewRelaunch'
+  ],
+  '🤑': [
+    'portfolioOverview',
+    'portfolioOverviewRelaunch'
+  ],
+  '🔎': [
+    'portfolioOverview',
+    'portfolioOverviewRelaunch'
+  ],
+  '🔍': [
+    'portfolioOverview',
+    'portfolioOverviewRelaunch'
+  ],
+  '👀': [
+    'portfolioOverview',
+    'portfolioOverviewRelaunch'
+  ],
+  'performance': [
+    'portfolioPerformance'
+  ],
+  'the': [
+    'portfolioPerformance',
+    'trendingHotAssets'
+  ],
+  'powered': [
+    'poweredByEthereum'
+  ],
+  'icon': [
+    'poweredByEthereum'
+  ],
+  'Prime': [
+    'primeDeFi',
+    'primeEarn',
+    'primeStaking',
+    'ratMigration'
+  ],
+  'Decentralized': [
+    'primeDeFi'
+  ],
+  'Finance': [
+    'primeDeFi'
+  ],
+  'Explore': [
+    'primeDeFi'
+  ],
+  'Assets': [
+    'primeDeFi',
+    'primeEarn',
+    'primeStaking',
+    'ratMigration'
+  ],
+  'Universe': [
+    'primeDeFi',
+    'primeStaking'
+  ],
+  'Circles': [
+    'primeDeFi',
+    'primeStaking'
+  ],
+  'Stars': [
+    'primeDeFi'
+  ],
+  'Rewards': [
+    'primeEarn',
+    'ratMigration'
+  ],
+  'Cash': [
+    'primeEarn',
+    'ratMigration'
+  ],
+  'prime': [
+    'primeOrderConfirmation',
+    'primePriceLadder',
+    'primeTradePreferences'
+  ],
+  'interface': [
+    'primeOrderConfirmation',
+    'primePriceLadder',
+    'primeTradePreferences',
+    'ratDashboard'
+  ],
+  'exclamation': [
+    'primeOrderConfirmation'
+  ],
+  'ladder': [
+    'primePriceLadder'
+  ],
+  'match': [
+    'primePriceLadder'
+  ],
+  'interact': [
+    'primePriceLadder'
+  ],
+  'Staking': [
+    'primeStaking'
+  ],
+  'Stake': [
+    'primeStaking'
+  ],
+  'Interest': [
+    'primeStaking'
+  ],
+  'interaction': [
+    'primeTradePreferences'
+  ],
+  'settings': [
+    'primeTradePreferences'
+  ],
+  'gear': [
+    'primeTradePreferences'
+  ],
+  'preferences': [
+    'primeTradePreferences'
+  ],
+  'form': [
+    'protectedNotes'
+  ],
+  'privacy': [
+    'protectedNotes'
+  ],
+  'investment': [
+    'protectedNotes'
+  ],
+  'contract': [
+    'protectedNotes'
+  ],
+  'no access': [
+    'protectedNotes'
+  ],
+  '🔒': [
+    'protectedNotes'
+  ],
+  '🔐': [
+    'protectedNotes'
+  ],
+  '🔑': [
+    'protectedNotes'
+  ],
+  '🗝': [
+    'protectedNotes'
+  ],
+  '📜': [
+    'protectedNotes'
+  ],
+  'simple': [
+    'quickAndSimple',
+    'switchAdvancedToSimpleTrading'
+  ],
+  'efficient': [
+    'quickAndSimple'
+  ],
+  'analyze': [
+    'ratDashboard'
+  ],
+  'breakdown': [
+    'ratDashboard'
+  ],
+  '🐀': [
+    'ratDashboard'
+  ],
+  '💻': [
+    'ratDashboard'
+  ],
+  '🖥': [
+    'ratDashboard'
+  ],
+  'Empty State': [
+    'ratFoundWallet'
+  ],
+  'ASAP Ratty': [
+    'ratFoundWallet'
+  ],
+  'Rat found wallet': [
+    'ratFoundWallet'
+  ],
+  'Rat': [
+    'ratFoundWallet'
+  ],
+  'invalid': [
+    'ratMigrationerror'
+  ],
+  'broken': [
+    'ratMigrationerror'
+  ],
+  'balloon': [
+    'readyToTrade'
+  ],
+  'welcome': [
+    'readyToTrade'
+  ],
+  'created': [
+    'readyToTrade'
+  ],
+  'start': [
+    'readyToTrade',
+    'startToday',
+    'tradeImmediately'
+  ],
+  'magic': [
+    'referralsBitcoin',
+    'referralsCoinbaseOne',
+    'referralsGenericCoin'
+  ],
+  'share': [
+    'referralsBitcoin',
+    'referralsCoinbaseOne',
+    'referralsGenericCoin',
+    'shareOnSocialMedia'
+  ],
+  'heads': [
+    'referralsBitcoin',
+    'referralsCoinbaseOne',
+    'referralsGenericCoin'
+  ],
+  'profile': [
+    'referralsBitcoin',
+    'referralsCoinbaseOne',
+    'referralsGenericCoin'
+  ],
+  'pic': [
+    'referralsBitcoin',
+    'referralsCoinbaseOne',
+    'referralsGenericCoin'
+  ],
+  'reward': [
+    'referralsBitcoin',
+    'referralsBonus',
+    'referralsCoinbaseOne',
+    'referralsGenericCoin'
+  ],
+  'recommendation': [
+    'referralsBonus'
+  ],
+  'person': [
+    'referralsBonus',
+    'uob'
+  ],
+  'human': [
+    'referralsBonus'
+  ],
+  'invitation': [
+    'referralsBonus'
+  ],
+  'invite': [
+    'referralsBonus'
+  ],
+  'request': [
+    'referralsBonus'
+  ],
+  '💌': [
+    'referralsBonus'
+  ],
+  '✉️': [
+    'referralsBonus'
+  ],
+  '📨': [
+    'referralsBonus'
+  ],
+  '📩': [
+    'referralsBonus'
+  ],
+  '📧': [
+    'referralsBonus'
+  ],
+  '🎁': [
+    'referralsBonus'
+  ],
+  '📇': [
+    'referralsBonus'
+  ],
+  'Coinbase': [
+    'referralsCoinbaseOne'
+  ],
+  'One': [
+    'referralsCoinbaseOne'
+  ],
+  'USDC': [
+    'retailUSDCRewards'
+  ],
+  'Scan': [
+    'scanCode'
+  ],
+  'QR': [
+    'scanCode'
+  ],
+  'Code': [
+    'scanCode'
+  ],
+  'Trust': [
+    'secureAndTrusted'
+  ],
+  'trusted': [
+    'secureAndTrusted',
+    'stressTestedColdStorage'
+  ],
+  'shield': [
+    'secureAndTrusted'
+  ],
+  'peer to peer': [
+    'secureGlobalTransactions'
+  ],
+  'keep': [
+    'secureStorage'
+  ],
+  'padlock': [
+    'securityShield'
+  ],
+  'give': [
+    'sendingCrypto',
+    'transferCoins'
+  ],
+  'offer': [
+    'sendingCrypto'
+  ],
+  'social': [
+    'shareOnSocialMedia'
+  ],
+  'media': [
+    'shareOnSocialMedia'
+  ],
+  'hexagon': [
+    'sidechain'
+  ],
+  'connections': [
+    'sidechain'
+  ],
+  'stable': [
+    'stableValue'
+  ],
+  'scale': [
+    'stableValue'
+  ],
+  'stablecoin': [
+    'stableValue'
+  ],
+  'liquid': [
+    'staking'
+  ],
+  'today': [
+    'startToday',
+    'tradeImmediately'
+  ],
+  'watch': [
+    'startToday',
+    'watchVideos'
+  ],
+  'videos': [
+    'startToday'
+  ],
+  'week': [
+    'startToday'
+  ],
+  'learn': [
+    'startToday'
+  ],
+  'hosted': [
+    'stayInControlSelfHostedWalletsStorage'
+  ],
+  'stay': [
+    'stayInControlSelfHostedWalletsStorage'
+  ],
+  'in': [
+    'stayInControlSelfHostedWalletsStorage'
+  ],
+  'control': [
+    'stayInControlSelfHostedWalletsStorage'
+  ],
+  'your': [
+    'stayInControlSelfHostedWalletsStorage'
+  ],
+  'mark': [
+    'stressTestedColdStorage'
+  ],
+  'ui': [
+    'switchAdvancedToSimpleTrading'
+  ],
+  'change': [
+    'switchAdvancedToSimpleTrading'
+  ],
+  'Pie': [
+    'taxesDetails'
+  ],
+  'Doc': [
+    'taxesDetails'
+  ],
+  'Plus': [
+    'taxesDetails'
+  ],
+  'Minus': [
+    'taxesDetails'
+  ],
+  'Check': [
+    'taxesDetails'
+  ],
+  'Mark': [
+    'taxesDetails'
+  ],
+  'Done': [
+    'taxesDetails'
+  ],
+  'Taxes': [
+    'taxesDetails'
+  ],
+  'Details': [
+    'taxesDetails'
+  ],
+  '👇': [
+    'trade'
+  ],
+  '⬇️': [
+    'trade'
+  ],
+  '🔻': [
+    'trade'
+  ],
+  'immediately': [
+    'tradeImmediately'
+  ],
+  'now': [
+    'tradeImmediately'
+  ],
+  'transmit': [
+    'transferCoins'
+  ],
+  'trend': [
+    'trendingHotAssets'
+  ],
+  'hot': [
+    'trendingHotAssets'
+  ],
+  'and': [
+    'trendingHotAssets'
+  ],
+  'uob': [
+    'uob'
+  ],
+  'coinbase logo': [
+    'uob'
+  ],
+  'upload': [
+    'uploadDocument'
+  ],
+  'proof': [
+    'uploadDocument'
+  ],
+  'mailing': [
+    'uploadDocument'
+  ],
+  'letter  papers': [
+    'uploadDocument'
+  ],
+  'usdc': [
+    'usdcLoan',
+    'usdcLoanEth'
+  ],
+  'portal': [
+    'usdcLoan',
+    'usdcLoanEth'
+  ],
+  'verify': [
+    'verifyEmail',
+    'verifyInfo'
+  ],
+  'nux': [
+    'verifyEmail'
+  ],
+  'info': [
+    'verifyInfo'
+  ],
+  'information': [
+    'verifyInfo'
+  ],
+  'error': [
+    'verifyInfo'
+  ],
+  'issue': [
+    'verifyInfo'
+  ],
+  'concern': [
+    'verifyInfo'
+  ],
+  '⚠️': [
+    'verifyInfo'
+  ],
+  'notifications': [
+    'walletNotifications'
+  ],
+  'Lock': [
+    'walletSecurity'
+  ],
+  'video': [
+    'watchVideos'
+  ],
+  'eye': [
+    'watchVideos'
+  ],
+  'window': [
+    'watchVideos'
+  ],
+  'button': [
+    'watchVideos'
+  ]
 };
 
 export default descriptionMap;

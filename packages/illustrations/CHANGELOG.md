@@ -8,6 +8,25 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+
+
+##### ⭐️ Added (1)
+
+
+
+ ###### HeroSquare (1)
+
+- test
+
+
+##### ⭐️ Updated (1)
+
+
+
+ ###### HeroSquare (1)
+
+- baseCheck
+
 ## 4.29.0 (12/5/2025 PST)
 
 #### 🚀 Updates

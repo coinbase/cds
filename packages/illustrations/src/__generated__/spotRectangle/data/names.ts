@@ -1,7 +1,7 @@
 /**
  * DO NOT MODIFY
  * Generated from yarn nx run illustration-tasks:sync-illustrations
- */
+*/
 
 import type { SpotRectangleName } from '../types/SpotRectangleName';
 
@@ -34,10 +34,9 @@ const names: SpotRectangleName[] = [
   'cardBoosted',
   'cardWaitlist',
   'cb1BankTransfers',
-  'cbEth',
   'cbbtc',
+  'cbEth',
   'clawMachinePig',
-  'coinGateway',
   'coinbaseCardLock',
   'coinbaseCardPocket',
   'coinbaseFees',
@@ -46,6 +45,7 @@ const names: SpotRectangleName[] = [
   'coinbaseOnePhoneLightning',
   'coinbaseOneRewards',
   'coinbaseOneSavingFunds',
+  'coinGateway',
   'collectingNfts',
   'commerceAccounting',
   'commerceInvoices',
@@ -141,13 +141,13 @@ const names: SpotRectangleName[] = [
   'marginWarning',
   'mining',
   'moneyDecentralized',
-  'multiPlatformMobileAppBrowserExtension',
   'multicoinSupport',
+  'multiPlatformMobileAppBrowserExtension',
   'multipleAccountsWalletsForOneUser',
   'nft',
   'noFees',
-  'noTransactions',
   'notificationsAlt',
+  'noTransactions',
   'onTheList',
   'openEmail',
   'optInPushNotificationsEmail',

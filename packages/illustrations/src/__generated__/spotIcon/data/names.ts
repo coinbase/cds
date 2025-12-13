@@ -1,7 +1,7 @@
 /**
  * DO NOT MODIFY
  * Generated from yarn nx run illustration-tasks:sync-illustrations
- */
+*/
 
 import type { SpotIconName } from '../types/SpotIconName';
 
@@ -76,8 +76,8 @@ const names: SpotIconName[] = [
   'learningRewardsProduct',
   'multiCoin',
   'nftProduct',
-  'noFees',
   'nodeProduct',
+  'noFees',
   'outage',
   'participateProduct',
   'paySDKProduct',

@@ -1,7 +1,7 @@
 /**
  * DO NOT MODIFY
  * Generated from yarn nx run illustration-tasks:sync-illustrations
- */
+*/
 
 import type { SpotSquareName } from '../types/SpotSquareName';
 
@@ -35,6 +35,7 @@ const names: SpotSquareName[] = [
   'baseCreatorCoin',
   'baseDecentralizationMedium',
   'baseDiamondMedium',
+  'basedInUsa',
   'baseEmptyMedium',
   'baseErrorButterflyMedium',
   'baseErrorMedium',
@@ -60,7 +61,6 @@ const names: SpotSquareName[] = [
   'baseSwitch',
   'baseTargetMedium',
   'baseUsdcMedium',
-  'basedInUsa',
   'bigBtc',
   'blockchain',
   'bonusFivePercent',
@@ -78,7 +78,6 @@ const names: SpotSquareName[] = [
   'cardShipped',
   'cbEthWrappingUnavailable',
   'checkVerifacation',
-  'coinFifty',
   'coinbaseCardLock',
   'coinbaseCardPocket',
   'coinbaseCardSparkle',
@@ -100,6 +99,7 @@ const names: SpotSquareName[] = [
   'coinbaseOneZero',
   'coinbaseOneZeroPortal',
   'coinbaseUnlockOffers',
+  'coinFifty',
   'collectingNfts',
   'commerceAccounting',
   'commerceInvoices',
@@ -170,8 +170,8 @@ const names: SpotSquareName[] = [
   'insuranceProtection',
   'interestForYou',
   'invest',
-  'layerThree',
   'layeredNetworks',
+  'layerThree',
   'lightningNetworkSend',
   'linkCoinbaseWallet',
   'linkingYourWalletToYourCoinbaseAccount',
@@ -179,8 +179,8 @@ const names: SpotSquareName[] = [
   'mining',
   'moneyDecentralized',
   'moneyRewards',
-  'multiPlatformMobileAppBrowserExtension',
   'multicoinSupport',
+  'multiPlatformMobileAppBrowserExtension',
   'multipleAccountsWalletsForOneUser',
   'nft',
   'nftTag',
