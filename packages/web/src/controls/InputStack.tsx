@@ -132,6 +132,11 @@ export type InputStackBaseProps = SharedProps &
      * @default 'outside'
      */
     labelVariant?: 'inside' | 'outside';
+    /**
+     * Background color of the input.
+     * @default 'bg'
+     */
+    inputBackground?: ThemeVars.Color;
   };
 
 export type InputStackProps = Omit<
@@ -163,6 +168,7 @@ export const InputStack = memo(
         enableColorSurge,
         labelVariant = 'outside',
         blendStyles,
+        inputBackground = 'bg',
         ...props
       },
       ref,
@@ -236,7 +242,7 @@ export const InputStack = memo(
               <Interactable
                 ref={ref}
                 as="span"
-                background={variant === 'secondary' ? 'bgSecondary' : 'bg'}
+                background={variant === 'secondary' ? 'bgSecondary' : inputBackground}
                 blendStyles={blendStyles}
                 borderRadius={borderRadius}
                 borderWidth={borderWidth}
