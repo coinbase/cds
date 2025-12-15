@@ -70,6 +70,11 @@ export type InputStackBaseProps = SharedProps & {
    * @default 'outside'
    */
   labelVariant?: 'inside' | 'outside';
+  /**
+   * Background color of the input
+   * @default 'bg'
+   */
+  inputBackground?: ThemeVars.Color;
 };
 
 export type InputStackProps = Omit<BoxProps, 'width' | 'height' | 'borderRadius'> &
@@ -103,6 +108,7 @@ export const InputStack = memo(function InputStack({
   focused,
   enableColorSurge,
   labelVariant = 'outside',
+  inputBackground = 'bg',
   ...props
 }: InputStackProps) {
   const theme = useTheme();
@@ -133,12 +139,21 @@ export const InputStack = memo(function InputStack({
             ],
       flexDirection: 'row',
       flexGrow: 1,
-      backgroundColor: variant === 'secondary' ? theme.color.bgSecondary : theme.color.bg,
+      backgroundColor:
+        variant === 'secondary' ? theme.color.bgSecondary : theme.color[inputBackground],
       borderRadius: theme.borderRadius[borderRadius],
       overflow: 'hidden',
       ...inputBorderRadius,
     };
-  }, [prependNode, appendNode, variant, theme.color, theme.borderRadius, borderRadius]);
+  }, [
+    prependNode,
+    appendNode,
+    variant,
+    theme.color,
+    theme.borderRadius,
+    borderRadius,
+    inputBackground,
+  ]);
 
   const inputAreaStyles = useMemo(() => {
     return [inputAreaStyle, borderStyle];
