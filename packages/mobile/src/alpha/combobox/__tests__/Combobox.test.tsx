@@ -74,7 +74,7 @@ describe('Combobox', () => {
       );
 
       const button = screen.getByRole('button');
-      expect(button.props.accessibilityLabel).toBe('Custom combobox');
+      expect(button.props.accessibilityLabel).toBe('Custom combobox, Search and select...');
     });
 
     it('handles disabled prop', () => {
@@ -338,7 +338,9 @@ describe('Combobox', () => {
       );
 
       const button = screen.getByRole('button');
-      expect(button.props.accessibilityLabel).toBe('Custom accessibility label');
+      expect(button.props.accessibilityLabel).toBe(
+        'Custom accessibility label, Search and select...',
+      );
       expect(button.props.accessibilityHint).toBe('Custom accessibility hint');
     });
 
