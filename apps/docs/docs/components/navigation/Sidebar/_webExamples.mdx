@@ -1,9 +1,50 @@
-### Default
+Sidebar is a vertical navigation component for accessing different sections of an application. It supports multiple variants, collapsible states, and custom content areas.
 
-Use the Default variant on standard consumer-facing surfaces like Retail where maximum navigation and content space is desired.
+## Basics
+
+A Sidebar is composed of the following parts:
+
+- `Sidebar` - The main container with logo and navigation items
+- `SidebarItem` - Individual navigation items with icon and title
+- `SidebarMoreMenu` - Overflow menu for additional navigation options
 
 ```jsx live
-function Example() {
+function BasicSidebar() {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const items = [
+    { title: 'Home', icon: 'home' },
+    { title: 'Assets', icon: 'chartPie' },
+    { title: 'Trade', icon: 'trading' },
+    { title: 'Settings', icon: 'cog' },
+  ];
+
+  return (
+    <HStack alignItems="flex-start" justifyContent="center" overflow="hidden">
+      <Sidebar logo={<LogoMark />}>
+        {items.map((item, index) => (
+          <SidebarItem
+            key={item.title}
+            active={index === activeIndex}
+            icon={item.icon}
+            onClick={() => setActiveIndex(index)}
+            title={item.title}
+            tooltipContent={item.title}
+          />
+        ))}
+      </Sidebar>
+    </HStack>
+  );
+}
+```
+
+## Variants
+
+### Default
+
+Use the Default variant on standard consumer-facing surfaces like Retail where maximum navigation and content space is desired. This variant shows full labels alongside icons.
+
+```jsx live
+function DefaultVariant() {
   const items = [
     { title: 'Home', icon: 'home' },
     { title: 'Assets', icon: 'chartPie' },
@@ -32,18 +73,13 @@ function Example() {
     return (
       <Pressable
         as="button"
-        background="transparent"
+        background="bgPrimaryWash"
         borderRadius={1000}
+        transparentWhileInactive
         width="100%"
         onClick={() => console.log}
       >
-        <HStack
-          alignItems="center"
-          gap={2}
-          justifyContent="flex-start"
-          padding={2}
-          testID="sidebar-item-primary"
-        >
+        <HStack alignItems="center" gap={2} paddingX={2} paddingY={2}>
           <Icon name="documentation" />
           <Text as="span" font="headline" color="foreground">
             End item
@@ -61,6 +97,11 @@ function Example() {
           </Box>
         }
         renderEnd={renderEnd}
+        styles={{
+          end: {
+            width: '100%',
+          },
+        }}
       >
         {navItems.map((item, index) => (
           <SidebarItem
@@ -92,12 +133,77 @@ function Example() {
 }
 ```
 
-### Collapsed
+### Condensed
 
-Use for professional-focused interfaces such as Cloud that balance navigation importance with a desire to expand the content viewing area.
+Use in specialized workflows with complex data displays, such as Exchange and Advanced Trade, where navigation space is minimized to focus on core tasks. This variant displays icons with small labels below.
 
 ```jsx live
-function Example() {
+function CondensedVariant() {
+  const items = [
+    { title: 'Spot', icon: 'chartCandles' },
+    { title: 'Futures', icon: 'chartBar' },
+    { title: 'Portfolio', icon: 'chartPie' },
+    { title: 'Orders', icon: 'documentation' },
+    { title: 'For you', icon: 'newsFeed' },
+    { title: 'Earn', icon: 'giftBox' },
+    { title: 'Borrow', icon: 'cash' },
+    { title: 'DeFi', icon: 'defi' },
+  ];
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [moreMenuValue, setMoreMenuValue] = useState();
+  const navItems = items.slice(0, 4);
+  const moreMenuOptions = items.slice(4);
+  const handleMoreMenuChange = (newValue) => {
+    const moreIndex =
+      moreMenuOptions.findIndex((option) => option.title === newValue) + navItems.length;
+    setActiveIndex(moreIndex);
+    setMoreMenuValue(newValue);
+  };
+  const handleItemClick = (index) => {
+    setActiveIndex(index);
+    setMoreMenuValue(undefined);
+  };
+  return (
+    <HStack alignItems="flex-start" justifyContent="center" overflow="hidden">
+      <Sidebar logo={<LogoMark foreground />} variant="condensed">
+        {navItems.map((item, index) => (
+          <SidebarItem
+            key={`sidebar-item--${item.title}`}
+            active={index === activeIndex}
+            onClick={() => handleItemClick(index)}
+            tooltipContent={item.title}
+            {...item}
+          />
+        ))}
+        <SidebarMoreMenu
+          active={activeIndex >= navItems.length}
+          onChange={handleMoreMenuChange}
+          tooltipContent="More"
+          value={moreMenuValue}
+        >
+          {moreMenuOptions.map((item) => (
+            <SelectOption
+              key={`sidebar-more-menu-item--${item.title}`}
+              description={item.title}
+              media={<Icon name={item.icon} />}
+              value={item.title}
+            />
+          ))}
+        </SidebarMoreMenu>
+      </Sidebar>
+    </HStack>
+  );
+}
+```
+
+## Collapsed State
+
+### Controlled Collapse
+
+Use the `collapsed` prop to control the sidebar's collapsed state. When collapsed, only icons are shown with tooltips for labels.
+
+```jsx live
+function ControlledCollapse() {
   const items = [
     { title: 'Home', icon: 'home' },
     { title: 'Assets', icon: 'chartPie' },
@@ -163,46 +269,331 @@ function Example() {
 }
 ```
 
-### Condensed
+### Auto Collapse
 
-Use in specialized workflows with complex data displays, such as Exchange and Advanced Trade, where navigation space is minimized to focus on core tasks.
+Use the `autoCollapse` prop to automatically collapse the sidebar at or below the tablet breakpoint (768px). This is useful for responsive layouts where the sidebar should adapt to screen size.
 
 ```jsx live
-function Example() {
+function AutoCollapse() {
   const items = [
-    { title: 'Spot', icon: 'chartCandles' },
-    { title: 'Futures', icon: 'chartBar' },
-    { title: 'Portfolio', icon: 'chartPie' },
-    { title: 'Orders', icon: 'documentation' },
-    { title: 'For you', icon: 'newsFeed' },
-    { title: 'Earn', icon: 'giftBox' },
-    { title: 'Borrow', icon: 'cash' },
+    { title: 'Home', icon: 'home' },
+    { title: 'Assets', icon: 'chartPie' },
+    { title: 'Trade', icon: 'trading' },
+    { title: 'Settings', icon: 'cog' },
+  ];
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  return (
+    <HStack alignItems="flex-start" justifyContent="center" overflow="hidden">
+      <Sidebar autoCollapse logo={<LogoMark />}>
+        {items.map((item, index) => (
+          <SidebarItem
+            key={item.title}
+            active={index === activeIndex}
+            icon={item.icon}
+            onClick={() => setActiveIndex(index)}
+            title={item.title}
+            tooltipContent={item.title}
+          />
+        ))}
+      </Sidebar>
+      <VStack flexGrow={1} padding={3}>
+        <Text color="fgMuted" font="label1">
+          Resize the browser window to see the sidebar auto-collapse at the tablet breakpoint.
+        </Text>
+      </VStack>
+    </HStack>
+  );
+}
+```
+
+## Custom Content
+
+### Logo
+
+The `logo` prop accepts either a React element or a render function that receives the collapsed state. Use the render function when you need different logos for collapsed and expanded states.
+
+```jsx live
+function CustomLogo() {
+  const items = [
+    { title: 'Home', icon: 'home' },
+    { title: 'Assets', icon: 'chartPie' },
+    { title: 'Trade', icon: 'trading' },
+  ];
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [collapsed, setCollapsed] = useState(false);
+
+  const renderLogo = (isCollapsed) =>
+    isCollapsed ? (
+      <LogoMark />
+    ) : (
+      <Box height={32}>
+        <SubBrandLogoMark type="commerce" />
+      </Box>
+    );
+
+  return (
+    <HStack alignItems="flex-start" justifyContent="center" overflow="hidden">
+      <Sidebar
+        collapsed={collapsed}
+        logo={renderLogo}
+        renderEnd={() => (
+          <IconButton
+            name={collapsed ? 'caretRight' : 'caretLeft'}
+            onClick={() => setCollapsed(!collapsed)}
+          />
+        )}
+      >
+        {items.map((item, index) => (
+          <SidebarItem
+            key={item.title}
+            active={index === activeIndex}
+            icon={item.icon}
+            onClick={() => setActiveIndex(index)}
+            title={item.title}
+            tooltipContent={item.title}
+          />
+        ))}
+      </Sidebar>
+    </HStack>
+  );
+}
+```
+
+### Render End
+
+The `renderEnd` prop places content at the bottom of the sidebar. It receives the collapsed state as a parameter, allowing you to adapt the content based on the sidebar's state.
+
+```jsx live
+function RenderEndExample() {
+  const items = [
+    { title: 'Home', icon: 'home' },
+    { title: 'Assets', icon: 'chartPie' },
+    { title: 'Trade', icon: 'trading' },
+  ];
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  const renderEnd = (isCollapsed) => (
+    <Pressable
+      as="button"
+      background="bgPrimaryWash"
+      borderRadius={1000}
+      transparentWhileInactive
+      width="100%"
+      onClick={() => alert('Help clicked!')}
+    >
+      <HStack alignItems="center" gap={2} paddingX={2} paddingY={2}>
+        <Icon name="questionCircle" />
+        {!isCollapsed && (
+          <TextHeadline as="span" color="foreground">
+            Help & Support
+          </TextHeadline>
+        )}
+      </HStack>
+    </Pressable>
+  );
+
+  return (
+    <HStack alignItems="flex-start" justifyContent="center" overflow="hidden">
+      <Sidebar
+        logo={<LogoMark />}
+        renderEnd={renderEnd}
+        styles={{
+          end: {
+            width: '100%',
+          },
+        }}
+      >
+        {items.map((item, index) => (
+          <SidebarItem
+            key={item.title}
+            active={index === activeIndex}
+            icon={item.icon}
+            onClick={() => setActiveIndex(index)}
+            title={item.title}
+            tooltipContent={item.title}
+          />
+        ))}
+      </Sidebar>
+    </HStack>
+  );
+}
+```
+
+## Styling
+
+Use the `styles` prop to customize specific parts of the sidebar.
+
+```jsx live
+function CustomStyles() {
+  const items = [
+    { title: 'Home', icon: 'home' },
+    { title: 'Assets', icon: 'chartPie' },
+    { title: 'Trade', icon: 'trading' },
+    { title: 'Settings', icon: 'cog' },
+  ];
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  return (
+    <HStack alignItems="flex-start" justifyContent="center" overflow="hidden">
+      <Sidebar
+        logo={<LogoMark />}
+        renderEnd={() => (
+          <Pressable
+            as="button"
+            background="bgPrimaryWash"
+            borderRadius={1000}
+            transparentWhileInactive
+            width="100%"
+          >
+            <HStack alignItems="center" gap={2} paddingX={2} paddingY={2}>
+              <Icon name="questionCircle" />
+              <TextHeadline as="span">Help</TextHeadline>
+            </HStack>
+          </Pressable>
+        )}
+        styles={{
+          root: {
+            background:
+              'linear-gradient(180deg, var(--color-bg) 0%, var(--color-bgAlternate) 100%)',
+          },
+          logo: { paddingBottom: 32 },
+          end: { width: '100%' },
+        }}
+      >
+        {items.map((item, index) => (
+          <SidebarItem
+            key={item.title}
+            active={index === activeIndex}
+            icon={item.icon}
+            onClick={() => setActiveIndex(index)}
+            title={item.title}
+            tooltipContent={item.title}
+          />
+        ))}
+      </Sidebar>
+    </HStack>
+  );
+}
+```
+
+You can also use custom class names on the various subcomponents in Sidebar using the `classNames` prop.
+
+```jsx
+const customLogoStyles = css`
+  padding-bottom: var(--spacing-6);
+`;
+
+function CustomClassNamesExample() {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const items = [
+    { title: 'Home', icon: 'home' },
+    { title: 'Assets', icon: 'chartPie' },
+    { title: 'Trade', icon: 'trading' },
+    { title: 'Settings', icon: 'cog' },
+  ];
+
+  return (
+    <Sidebar
+      logo={<LogoMark />}
+      classNames={{
+        logo: customLogoStyles,
+      }}
+    >
+      {items.map((item, index) => (
+        <SidebarItem
+          key={item.title}
+          active={index === activeIndex}
+          icon={item.icon}
+          onClick={() => setActiveIndex(index)}
+          title={item.title}
+          tooltipContent={item.title}
+        />
+      ))}
+    </Sidebar>
+  );
+}
+```
+
+## Composed Examples
+
+### Application Shell
+
+A complete application layout with sidebar navigation, main content area, and responsive behavior.
+
+```jsx live
+function ApplicationShell() {
+  const items = [
+    { title: 'Dashboard', icon: 'home' },
+    { title: 'Analytics', icon: 'chartPie' },
+    { title: 'Transactions', icon: 'trading' },
+    { title: 'Payments', icon: 'pay' },
+    { title: 'News Feed', icon: 'newsFeed' },
+    { title: 'Rewards', icon: 'giftBox' },
+    { title: 'Lending', icon: 'cash' },
     { title: 'DeFi', icon: 'defi' },
   ];
   const [activeIndex, setActiveIndex] = useState(0);
   const [moreMenuValue, setMoreMenuValue] = useState();
-  const navItems = items.slice(0, 4);
-  const moreMenuOptions = items.slice(4);
+  const navItems = items.slice(0, 5);
+  const moreMenuOptions = items.slice(5);
+
   const handleMoreMenuChange = (newValue) => {
     const moreIndex =
       moreMenuOptions.findIndex((option) => option.title === newValue) + navItems.length;
     setActiveIndex(moreIndex);
     setMoreMenuValue(newValue);
   };
-  const handleItemClick = (index) => {
+
+  const handleItemPress = (index) => {
     setActiveIndex(index);
     setMoreMenuValue(undefined);
   };
+
+  const currentPage = items[activeIndex]?.title || 'Dashboard';
+
   return (
-    <HStack alignItems="flex-start" justifyContent="center" overflow="hidden">
-      <Sidebar logo={<LogoMark foreground />} variant="condensed">
+    <HStack alignItems="stretch" height={400} overflow="hidden">
+      <Sidebar
+        autoCollapse
+        logo={<LogoMark />}
+        renderEnd={(isCollapsed) => (
+          <VStack gap={1}>
+            <Pressable
+              as="button"
+              background="bgPrimaryWash"
+              borderRadius={1000}
+              transparentWhileInactive
+              width="100%"
+            >
+              <HStack alignItems="center" gap={2} paddingX={2} paddingY={2}>
+                <Icon name="cog" />
+                {!isCollapsed && <TextHeadline as="span">Settings</TextHeadline>}
+              </HStack>
+            </Pressable>
+            <Pressable
+              as="button"
+              background="bgPrimaryWash"
+              borderRadius={1000}
+              transparentWhileInactive
+              width="100%"
+            >
+              <HStack alignItems="center" gap={2} paddingX={2} paddingY={2}>
+                <Avatar size="s" />
+                {!isCollapsed && <TextHeadline as="span">Profile</TextHeadline>}
+              </HStack>
+            </Pressable>
+          </VStack>
+        )}
+      >
         {navItems.map((item, index) => (
           <SidebarItem
-            key={`sidebar-item--${item.title}`}
+            key={item.title}
             active={index === activeIndex}
-            onClick={() => handleItemClick(index)}
+            icon={item.icon}
+            onClick={() => handleItemPress(index)}
+            title={item.title}
             tooltipContent={item.title}
-            {...item}
           />
         ))}
         <SidebarMoreMenu
@@ -213,7 +604,7 @@ function Example() {
         >
           {moreMenuOptions.map((item) => (
             <SelectOption
-              key={`sidebar-more-menu-item--${item.title}`}
+              key={item.title}
               description={item.title}
               media={<Icon name={item.icon} />}
               value={item.title}
@@ -221,6 +612,69 @@ function Example() {
           ))}
         </SidebarMoreMenu>
       </Sidebar>
+      <VStack background="bgAlternate" flexGrow={1} padding={3}>
+        <Text as="h1" font="title2">
+          {currentPage}
+        </Text>
+        <Text color="fgMuted" font="body">
+          Welcome to the {currentPage.toLowerCase()} page. This is a sample application shell
+          demonstrating the Sidebar component with responsive behavior.
+        </Text>
+      </VStack>
+    </HStack>
+  );
+}
+```
+
+### Condensed Trading Interface
+
+A condensed sidebar optimized for professional trading interfaces with minimal visual footprint.
+
+```jsx live
+function TradingInterface() {
+  const items = [
+    { title: 'Spot', icon: 'chartCandles' },
+    { title: 'Futures', icon: 'chartBar' },
+    { title: 'Portfolio', icon: 'chartPie' },
+    { title: 'Orders', icon: 'documentation' },
+  ];
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  return (
+    <HStack>
+      <Sidebar logo={<LogoMark foreground />} variant="condensed">
+        {items.map((item, index) => (
+          <SidebarItem
+            key={item.title}
+            active={index === activeIndex}
+            icon={item.icon}
+            onClick={() => setActiveIndex(index)}
+            title={item.title}
+          />
+        ))}
+      </Sidebar>
+      <VStack background="bgAlternate" flexGrow={1} gap={2} padding={3}>
+        <HStack justifyContent="space-between">
+          <Text font="title3">BTC/USD</Text>
+          <Text color="fgPositive" font="title3">
+            $67,432.50
+          </Text>
+        </HStack>
+        <Box
+          background="bg"
+          borderRadius={200}
+          flexGrow={1}
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <Text color="fgMuted" font="label1">
+            {items[activeIndex].title} Chart Area
+          </Text>
+        </Box>
+      </VStack>
     </HStack>
   );
 }
