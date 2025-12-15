@@ -282,7 +282,7 @@ export const AccessibilityLabel = () => {
 
   return (
     <Select
-      accessibilityLabel="Custom accessibility label"
+      accessibilityLabel="Custom dropdown accessibility label"
       controlAccessibilityLabel="Custom control accessibility label"
       label="Single select - accessibility label"
       onChange={setValue}

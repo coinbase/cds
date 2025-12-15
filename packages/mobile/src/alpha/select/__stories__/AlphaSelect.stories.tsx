@@ -271,7 +271,7 @@ const AccessibilityLabelExample = () => {
 
   return (
     <Select
-      accessibilityLabel="Accessibility label"
+      accessibilityLabel="Custom accessibility label"
       label="Single select - accessibility label"
       onChange={setValue}
       options={exampleOptions}
