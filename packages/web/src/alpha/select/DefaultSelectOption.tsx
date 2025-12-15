@@ -134,6 +134,15 @@ const DefaultSelectOptionComponent = memo(
       );
 
       const handleClick = useCallback(() => onClick?.(value), [onClick, value]);
+      const handleKeyDown = useCallback(
+        (event: React.KeyboardEvent<HTMLButtonElement>) => {
+          if (event.key === 'Tab') {
+            event.preventDefault();
+            handleClick();
+          }
+        },
+        [handleClick],
+      );
 
       // Since Cell's ref prop is type HTMLDivElement, we need to wrap it in a Pressable to get ref forwarding.
       // On web, the option role doesn't work well with ara-checked and screen readers
@@ -147,6 +156,7 @@ const DefaultSelectOptionComponent = memo(
           className={cx(selectOptionCss, className)}
           disabled={disabled}
           onClick={handleClick}
+          onKeyDown={handleKeyDown}
           role={accessibilityRole}
           {...props}
         >
