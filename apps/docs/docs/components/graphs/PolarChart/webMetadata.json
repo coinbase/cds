@@ -1,7 +1,7 @@
 {
   "import": "import { PolarChart } from '@coinbase/cds-web-visualization'",
   "source": "https://github.com/coinbase/cds/blob/master/packages/web-visualization/src/chart/PolarChart.tsx",
-  "description": "A base component for polar coordinate charts (pie, donut, radial). Provides context and layout for polar chart child components.",
+  "description": "A base component for polar coordinate charts. Provides context and layout for polar chart child components.",
   "relatedComponents": [
     {
       "label": "CartesianChart",

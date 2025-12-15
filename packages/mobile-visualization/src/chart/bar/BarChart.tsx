@@ -7,12 +7,7 @@ import {
   type CartesianChartBaseProps,
   type CartesianChartProps,
 } from '../CartesianChart';
-import {
-  type CartesianAxisConfigProps,
-  defaultChartInset,
-  defaultStackId,
-  getChartInset,
-} from '../utils';
+import { type CartesianAxisConfigProps, defaultStackId } from '../utils';
 
 import { BarPlot, type BarPlotProps } from './BarPlot';
 import type { BarSeries } from './BarStack';
@@ -81,7 +76,6 @@ export const BarChart = memo(
         showYAxis,
         xAxis,
         yAxis,
-        inset,
         children,
         barPadding,
         BarComponent,
@@ -99,8 +93,6 @@ export const BarChart = memo(
       },
       ref,
     ) => {
-      const calculatedInset = useMemo(() => getChartInset(inset, defaultChartInset), [inset]);
-
       const transformedSeries = useMemo(() => {
         if (!stacked || !series) return series;
         return series.map((s) => ({ ...s, stackId: s.stackId ?? defaultStackId }));
@@ -166,7 +158,6 @@ export const BarChart = memo(
         <CartesianChart
           {...chartProps}
           ref={ref}
-          inset={calculatedInset}
           series={seriesToRender}
           xAxis={xAxisConfig}
           yAxis={yAxisConfig}

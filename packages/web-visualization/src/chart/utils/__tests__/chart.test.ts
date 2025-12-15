@@ -2,7 +2,8 @@ import {
   type AxisBounds,
   type CartesianSeries,
   type ChartInset,
-  defaultChartInset,
+  defaultCartesianChartInset,
+  defaultPolarChartInset,
   defaultStackId,
   getCartesianDomain,
   getCartesianRange,
@@ -370,13 +371,24 @@ describe('isValidBounds', () => {
   });
 });
 
-describe('defaultChartInset', () => {
+describe('defaultCartesianChartInset', () => {
   it('should have correct default values', () => {
-    expect(defaultChartInset).toEqual({
+    expect(defaultCartesianChartInset).toEqual({
       top: 32,
       left: 16,
       bottom: 16,
       right: 16,
+    });
+  });
+});
+
+describe('defaultPolarChartInset', () => {
+  it('should have correct default values', () => {
+    expect(defaultPolarChartInset).toEqual({
+      top: 8,
+      left: 8,
+      bottom: 8,
+      right: 8,
     });
   });
 });

@@ -369,25 +369,81 @@ function PositiveAndNegativeCashFlow() {
     0, 0, 0, -12, -10,
   ];
   const series = [
-    { id: 'gains', data: gains, color: 'var(--color-fgPositive)' },
-    { id: 'losses', data: losses, color: 'var(--color-fgNegative)' },
+    { id: 'gains', data: gains, color: 'var(--color-fgPositive)', stackId: 'bars' },
+    { id: 'losses', data: losses, color: 'var(--color-fgNegative)', stackId: 'bars' },
   ];
 
+  const DimmingBarComponent = memo(({ seriesId, dataX, ...props }) => {
+    const highlightContext = useHighlightContext();
+    const highlightedItem = highlightContext?.highlightedItem;
+    return (
+      <DefaultBar
+        {...props}
+        dataX={dataX}
+        fillOpacity={
+          highlightedItem?.dataIndex === undefined || highlightedItem.dataIndex === dataX ? 1 : 0.5
+        }
+        seriesId={seriesId}
+      />
+    );
+  });
+
+  // Custom line component that renders a rect to highlight the entire bandwidth including gaps
+  const BandwidthHighlight = memo(({ stroke }) => {
+    const { getXScale, drawingArea } = useCartesianChartContext();
+    const highlightContext = useHighlightContext();
+    const scrubberPosition = highlightContext?.highlightedItem?.dataIndex;
+    const xScale = getXScale();
+
+    if (!xScale || scrubberPosition === undefined) return null;
+
+    const xPos = xScale(scrubberPosition);
+
+    if (xPos === undefined) return null;
+
+    const bandwidth = 'bandwidth' in xScale ? xScale.bandwidth() : 0;
+    const step = 'step' in xScale ? xScale.step() : bandwidth;
+    const gap = step - bandwidth;
+
+    // Expand the highlight to include half the gap on each side
+    const highlightWidth = bandwidth + gap;
+    const highlightX = xPos - gap / 2;
+
+    return (
+      <rect
+        fill={stroke}
+        height={drawingArea.height}
+        width={highlightWidth}
+        x={highlightX}
+        y={drawingArea.y}
+      />
+    );
+  });
+
   return (
-    <BarChart
+    <CartesianChart
+      enableHighlighting
       height={{ base: 150, tablet: 200, desktop: 250 }}
       inset={{ top: 8, bottom: 8, left: 0, right: 0 }}
       series={series}
-      xAxis={{ data: categories }}
-      stacked
-      showXAxis
-      showYAxis
-      yAxis={{
-        showGrid: true,
-        GridLineComponent: ThinSolidLine,
-        tickLabelFormatter: (value) => `$${value}M`,
-      }}
-    />
+      xAxis={{ data: categories, scaleType: 'band' }}
+    >
+      <XAxis />
+      <YAxis
+        showGrid
+        GridLineComponent={ThinSolidLine}
+        tickLabelFormatter={(value) => `$${value}M`}
+      />
+      <BarPlot BarComponent={DimmingBarComponent} />
+      <ReferenceLine LineComponent={SolidLine} dataY={0} />
+      <Scrubber
+        hideOverlay
+        LineComponent={BandwidthHighlight}
+        lineStroke="var(--color-bgLine)"
+        seriesIds={[]}
+      />
+      <ChartTooltip />
+    </CartesianChart>
   );
 }
 ```
@@ -691,25 +747,33 @@ function Candlesticks() {
 
   const ThinSolidLine = memo((props: SolidLineProps) => <SolidLine {...props} strokeWidth={1} />);
 
-  // Custom line component that renders a rect to highlight the entire bandwidth
-  const BandwidthHighlight = memo(({ d, stroke }) => {
-    const { getXScale, drawingArea, getXAxis } = useCartesianChartContext();
-    const { scrubberPosition } = useScrubberContext();
+  // Custom line component that renders a rect to highlight the entire bandwidth including gaps
+  const BandwidthHighlight = memo(({ stroke }) => {
+    const { getXScale, drawingArea } = useCartesianChartContext();
+    const highlightContext = useHighlightContext();
+    const scrubberPosition = highlightContext?.highlightedItem?.dataIndex;
     const xScale = getXScale();
-    const xAxis = getXAxis();
 
-    if (!xScale || scrubberPosition === undefined) return
+    if (!xScale || scrubberPosition === undefined) return null;
 
     const xPos = xScale(scrubberPosition);
 
-    if (xPos === undefined) return
+    if (xPos === undefined) return null;
+
+    const bandwidth = 'bandwidth' in xScale ? xScale.bandwidth() : 0;
+    const step = 'step' in xScale ? xScale.step() : bandwidth;
+    const gap = step - bandwidth;
+
+    // Expand the highlight to include half the gap on each side
+    const highlightWidth = bandwidth + gap;
+    const highlightX = xPos - gap / 2;
 
     return (
       <rect
         fill={stroke}
         height={drawingArea.height}
-        width={xScale.bandwidth()}
-        x={xPos}
+        width={highlightWidth}
+        x={highlightX}
         y={drawingArea.y}
       />
     );
@@ -723,6 +787,8 @@ function Candlesticks() {
   const CandlestickBarComponent = memo<BarComponentProps>(
     ({ x, y, width, height, originY, dataX, ...props }) => {
       const { getYScale } = useCartesianChartContext();
+      const highlightContext = useHighlightContext();
+      const highlightedItem = highlightContext?.highlightedItem;
       const yScale = getYScale();
 
       const wickX = x + width / 2;
@@ -740,8 +806,11 @@ function Candlesticks() {
       const bodyHeight = Math.abs(openY - closeY);
       const bodyY = openY < closeY ? openY : closeY;
 
+      const fillOpacity =
+        highlightedItem?.dataIndex === undefined || highlightedItem.dataIndex === dataX ? 1 : 0.5;
+
       return (
-        <g>
+        <g opacity={fillOpacity}>
           <line stroke={color} strokeWidth={1} x1={wickX} x2={wickX} y1={y} y2={y + height} />
           <rect fill={color} height={bodyHeight} width={width} x={x} y={bodyY} />
         </g>
@@ -847,7 +916,7 @@ function Candlesticks() {
         <Scrubber
           hideOverlay
           LineComponent={BandwidthHighlight}
-          lineStroke="var(--color-fgMuted)"
+          lineStroke="var(--color-bgLine)"
           seriesIds={[]}
         />
       </BarChart>

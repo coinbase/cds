@@ -1,360 +1,747 @@
-import React, { memo, useCallback, useMemo, useState } from 'react';
-import { useTheme } from '@coinbase/cds-web';
-import { IconButton } from '@coinbase/cds-web/buttons';
-import { Box, HStack, VStack } from '@coinbase/cds-web/layout';
+import React, { memo, useMemo } from 'react';
+import { HStack, VStack } from '@coinbase/cds-web/layout';
 import { Text } from '@coinbase/cds-web/typography';
 
-import { usePolarChartContext } from '../ChartProvider';
+import { useChartContext, usePolarChartContext } from '../ChartProvider';
+import { ChartTooltip } from '../ChartTooltip';
 import { DonutChart } from '../DonutChart';
-import { Arc, PieChart, PiePlot, type PieSliceEventData } from '../pie';
+import { Legend } from '../legend';
+import { Arc, PieChart, PiePlot } from '../pie';
 import { PolarChart } from '../PolarChart';
-import { getArcPath } from '../utils';
+import { ChartText } from '../text';
+import { degreesToRadians, getArcPath, polarToCartesian, useHighlightContext } from '../utils';
 
 export default {
   component: PolarChart,
   title: 'Components/Chart/PolarChart',
 };
 
-const DonutCenterLabel = memo<{ children: React.ReactNode }>(({ children }) => {
-  const { drawingArea } = usePolarChartContext();
-
-  if (!drawingArea.width || !drawingArea.height) return;
-
-  const centerX = drawingArea.x + drawingArea.width / 2;
-  const centerY = drawingArea.y + drawingArea.height / 2;
-
+const Basics = () => {
   return (
-    <text
-      dominantBaseline="middle"
-      fill="var(--color-fgPrimary)"
-      fontSize={24}
-      fontWeight="bold"
-      textAnchor="middle"
-      x={centerX}
-      y={centerY}
-    >
-      {children}
-    </text>
-  );
-});
-
-const BasicPieChart = () => {
-  const theme = useTheme();
-
-  return (
-    <PieChart
-      animate
-      height={200}
-      inset={0}
-      series={[
-        { id: 'a', data: 30, label: 'A', color: `rgb(${theme.spectrum.blue40})` },
-        { id: 'b', data: 40, label: 'B', color: `rgb(${theme.spectrum.green40})` },
-        { id: 'c', data: 30, label: 'C', color: `rgb(${theme.spectrum.orange40})` },
-      ]}
-      width={200}
-    />
+    <HStack gap={4} justifyContent="center">
+      <VStack alignItems="center" gap={2}>
+        <PieChart
+          height={150}
+          series={[
+            { id: 'a', data: 30, color: 'rgb(var(--blue40))' },
+            { id: 'b', data: 40, color: 'rgb(var(--green40))' },
+            { id: 'c', data: 30, color: 'rgb(var(--purple40))' },
+          ]}
+          width={150}
+        />
+        <Text color="fgMuted" font="label2">
+          PieChart
+        </Text>
+      </VStack>
+      <VStack alignItems="center" gap={2}>
+        <DonutChart
+          height={150}
+          innerRadiusRatio={0.6}
+          series={[
+            { id: 'a', data: 30, color: 'rgb(var(--blue40))' },
+            { id: 'b', data: 40, color: 'rgb(var(--green40))' },
+            { id: 'c', data: 30, color: 'rgb(var(--purple40))' },
+          ]}
+          width={150}
+        />
+        <Text color="fgMuted" font="label2">
+          DonutChart
+        </Text>
+      </VStack>
+    </HStack>
   );
 };
 
-const BasicDonutChart = () => {
-  const theme = useTheme();
-
-  return (
-    <DonutChart
-      animate
-      height={200}
-      innerRadiusRatio={0.6}
-      inset={0}
-      series={[
-        { id: 'card', data: 15, label: 'Card', color: `rgb(${theme.spectrum.blue40})` },
-        { id: 'cash', data: 45, label: 'Cash', color: `rgb(${theme.spectrum.green40})` },
-        { id: 'stake', data: 12, label: 'Stake', color: `rgb(${theme.spectrum.orange40})` },
-        { id: 'lend', data: 18, label: 'Lend', color: `rgb(${theme.spectrum.teal40})` },
-      ]}
-      width={200}
-    />
-  );
-};
-
-const DonutWithCenterLabel = () => {
-  const theme = useTheme();
-
+const Series = () => {
   return (
     <PolarChart
-      animate
-      angularAxis={{ paddingAngle: 0 }}
       height={200}
-      inset={0}
-      radialAxis={{ range: ({ max }) => ({ min: max * 0.7, max }) }}
       series={[
-        { id: 'teal', data: 10, label: 'Other', color: `rgb(${theme.spectrum.teal40})` },
-        { id: 'blue', data: 25, label: 'Bitcoin', color: `rgb(${theme.spectrum.blue40})` },
-        { id: 'purple', data: 20, label: 'Ethereum', color: `rgb(${theme.spectrum.purple40})` },
-        { id: 'pink', data: 15, label: 'Solana', color: `rgb(${theme.spectrum.pink40})` },
-        { id: 'orange', data: 30, label: 'USDC', color: `rgb(${theme.spectrum.orange40})` },
+        { id: 'btc', data: 40, label: 'Bitcoin', color: 'rgb(var(--orange40))' },
+        { id: 'eth', data: 30, label: 'Ethereum', color: 'rgb(var(--blue40))' },
+        { id: 'sol', data: 20, label: 'Solana', color: 'rgb(var(--purple40))' },
+        { id: 'other', data: 10, label: 'Other', color: 'rgb(var(--gray40))' },
       ]}
-      width={200}
     >
-      <PiePlot cornerRadius={4} stroke="none" />
-      <DonutCenterLabel>$1,234</DonutCenterLabel>
+      <PiePlot />
     </PolarChart>
   );
 };
 
-const SemicircleDonut = () => {
-  const theme = useTheme();
-
+const CustomRange = () => {
   return (
-    <PolarChart
-      animate
-      angularAxis={{ range: { min: -90, max: 90 } }}
-      height={150}
-      inset={0}
-      radialAxis={{ range: ({ max }) => ({ min: max * 0.6, max }) }}
-      series={[
-        { id: 'a', data: 35, label: 'Complete', color: `rgb(${theme.spectrum.green40})` },
-        { id: 'b', data: 65, label: 'Remaining', color: `rgb(${theme.spectrum.gray30})` },
-      ]}
-      width={200}
-    >
-      <PiePlot cornerRadius={8} strokeWidth={0} />
-    </PolarChart>
-  );
-};
-
-const PieWithPadding = () => {
-  const theme = useTheme();
-
-  return (
-    <PieChart
-      animate
-      angularAxis={{ paddingAngle: 4 }}
-      height={200}
-      inset={0}
-      series={[
-        { id: 'a', data: 30, label: 'A', color: `rgb(${theme.spectrum.blue40})` },
-        { id: 'b', data: 40, label: 'B', color: `rgb(${theme.spectrum.purple40})` },
-        { id: 'c', data: 30, label: 'C', color: `rgb(${theme.spectrum.orange40})` },
-      ]}
-      width={200}
-    />
-  );
-};
-
-const CustomStyledPie = () => {
-  const theme = useTheme();
-
-  return (
-    <PieChart
-      animate
-      cornerRadius={8}
-      height={200}
-      inset={0}
-      series={[
-        { id: 'a', data: 25, label: 'A', color: `rgb(${theme.spectrum.blue40})` },
-        { id: 'b', data: 25, label: 'B', color: `rgb(${theme.spectrum.green40})` },
-        { id: 'c', data: 25, label: 'C', color: `rgb(${theme.spectrum.orange40})` },
-        { id: 'd', data: 25, label: 'D', color: `rgb(${theme.spectrum.purple40})` },
-      ]}
-      stroke="var(--color-bg)"
-      strokeWidth={3}
-      width={200}
-    />
-  );
-};
-
-const InteractiveDonutChart = () => {
-  const theme = useTheme();
-  const [selectedSlice, setSelectedSlice] = useState<string | null>(null);
-
-  const series = useMemo(
-    () => [
-      { id: 'btc', data: 40, label: 'Bitcoin', color: `rgb(${theme.spectrum.orange40})` },
-      { id: 'eth', data: 30, label: 'Ethereum', color: `rgb(${theme.spectrum.blue40})` },
-      { id: 'sol', data: 15, label: 'Solana', color: `rgb(${theme.spectrum.purple40})` },
-      { id: 'other', data: 15, label: 'Other', color: `rgb(${theme.spectrum.gray30})` },
-    ],
-    [theme],
-  );
-
-  const total = series.reduce((sum, s) => sum + s.data, 0);
-  const selectedData = selectedSlice ? series.find((s) => s.id === selectedSlice) : null;
-
-  const handleSliceClick = useCallback((data: PieSliceEventData) => {
-    setSelectedSlice((prev) => (prev === data.id ? null : data.id));
-  }, []);
-
-  return (
-    <VStack alignItems="center" gap={4}>
-      <Box height={200} position="relative" width={200}>
+    <HStack gap={4} justifyContent="center">
+      <VStack alignItems="center" gap={2}>
         <PolarChart
-          animate
-          height={200}
-          inset={0}
-          radialAxis={{ range: ({ max }) => ({ min: max * 0.65, max }) }}
-          series={series.map((s) => ({
-            ...s,
-            color: selectedSlice && selectedSlice !== s.id ? `${s.color}80` : s.color,
-          }))}
+          angularAxis={{ range: { min: -90, max: 90 } }}
+          height={120}
+          series={[
+            { id: 'a', data: 35, color: 'rgb(var(--green40))' },
+            { id: 'b', data: 65, color: 'rgb(var(--gray20))' },
+          ]}
           width={200}
         >
-          <PiePlot cursor="pointer" onSliceClick={handleSliceClick} />
+          <PiePlot cornerRadius={2} />
         </PolarChart>
-        <Box
-          alignItems="center"
-          bottom={0}
-          display="flex"
-          flexDirection="column"
-          justifyContent="center"
-          left={0}
-          position="absolute"
-          right={0}
-          style={{ pointerEvents: 'none' }}
-          top={0}
+        <Text color="fgMuted" font="label2">
+          Semicircle (top)
+        </Text>
+      </VStack>
+      <VStack alignItems="center" gap={2}>
+        <PolarChart
+          angularAxis={{ range: { min: 90, max: 270 } }}
+          height={120}
+          series={[
+            { id: 'a', data: 35, color: 'rgb(var(--green40))' },
+            { id: 'b', data: 65, color: 'rgb(var(--gray20))' },
+          ]}
+          width={200}
         >
-          <Text color="fgMuted" font="label1">
-            {selectedData ? selectedData.label : 'Total'}
-          </Text>
-          <Text font="headline">
-            {selectedData ? `${Math.round((selectedData.data / total) * 100)}%` : '$12,345'}
-          </Text>
-        </Box>
-      </Box>
-    </VStack>
+          <PiePlot cornerRadius={2} />
+        </PolarChart>
+        <Text color="fgMuted" font="label2">
+          Semicircle (bottom)
+        </Text>
+      </VStack>
+    </HStack>
   );
 };
 
-const AnimatedDataChange = () => {
-  const theme = useTheme();
-  const [dataSet, setDataSet] = useState(0);
-
-  const dataSets = [
-    [
-      { id: 'a', data: 30, label: 'A', color: `rgb(${theme.spectrum.blue40})` },
-      { id: 'b', data: 40, label: 'B', color: `rgb(${theme.spectrum.green40})` },
-      { id: 'c', data: 30, label: 'C', color: `rgb(${theme.spectrum.orange40})` },
-    ],
-    [
-      { id: 'a', data: 60, label: 'A', color: `rgb(${theme.spectrum.blue40})` },
-      { id: 'b', data: 20, label: 'B', color: `rgb(${theme.spectrum.green40})` },
-      { id: 'c', data: 20, label: 'C', color: `rgb(${theme.spectrum.orange40})` },
-    ],
-    [
-      { id: 'a', data: 15, label: 'A', color: `rgb(${theme.spectrum.blue40})` },
-      { id: 'b', data: 55, label: 'B', color: `rgb(${theme.spectrum.green40})` },
-      { id: 'c', data: 30, label: 'C', color: `rgb(${theme.spectrum.orange40})` },
-    ],
-  ];
-
+const PaddingAngle = () => {
   return (
-    <VStack alignItems="center" gap={4}>
-      <DonutChart
-        animate
-        height={200}
-        innerRadiusRatio={0.5}
-        inset={0}
-        series={dataSets[dataSet]}
-        width={200}
-      />
-      <HStack gap={2}>
-        <IconButton
-          accessibilityLabel="Previous data set"
-          name="caretLeft"
-          onClick={() => setDataSet((prev) => (prev - 1 + dataSets.length) % dataSets.length)}
-          variant="secondary"
-        />
-        <Text font="label1">Data Set {dataSet + 1}</Text>
-        <IconButton
-          accessibilityLabel="Next data set"
-          name="caretRight"
-          onClick={() => setDataSet((prev) => (prev + 1) % dataSets.length)}
-          variant="secondary"
-        />
-      </HStack>
-    </VStack>
+    <PolarChart
+      angularAxis={{ paddingAngle: 5 }}
+      height={200}
+      radialAxis={{
+        range: ({ max }) => ({ min: max - 16, max }),
+      }}
+      series={[
+        { id: 'a', data: 30, color: 'rgb(var(--blue40))' },
+        { id: 'b', data: 40, color: 'rgb(var(--green40))' },
+        { id: 'c', data: 30, color: 'rgb(var(--purple40))' },
+      ]}
+    >
+      <PiePlot cornerRadius={8} />
+    </PolarChart>
+  );
+};
+
+const MultipleAngularAxes = () => {
+  return (
+    <PolarChart
+      angularAxis={[
+        { id: 'top', range: { min: -45, max: 45 } },
+        { id: 'bottom', range: { min: 135, max: 225 } },
+      ]}
+      height={200}
+      radialAxis={{
+        range: ({ max }) => ({ min: max - 16, max }),
+      }}
+      series={[
+        { id: 'revenue', data: 30, color: 'rgb(var(--blue40))', angularAxisId: 'top' },
+        { id: 'profit', data: 50, color: 'rgb(var(--green40))', angularAxisId: 'top' },
+        { id: 'costs', data: 20, color: 'rgb(var(--orange40))', angularAxisId: 'top' },
+        { id: 'users', data: 40, color: 'rgb(var(--purple40))', angularAxisId: 'bottom' },
+        { id: 'sessions', data: 35, color: 'rgb(var(--yellow40))', angularAxisId: 'bottom' },
+        { id: 'conversions', data: 25, color: 'rgb(var(--teal40))', angularAxisId: 'bottom' },
+      ]}
+    >
+      <PiePlot angularAxisId="top" cornerRadius={4} />
+      <PiePlot angularAxisId="bottom" cornerRadius={4} />
+    </PolarChart>
+  );
+};
+
+const Donut = () => {
+  return (
+    <PolarChart
+      height={200}
+      radialAxis={{ range: ({ max }) => ({ min: max * 0.6, max }) }}
+      series={[
+        { id: 'a', data: 30, color: 'rgb(var(--blue40))' },
+        { id: 'b', data: 40, color: 'rgb(var(--green40))' },
+        { id: 'c', data: 30, color: 'rgb(var(--purple40))' },
+      ]}
+    >
+      <PiePlot cornerRadius={4} />
+    </PolarChart>
   );
 };
 
 const NestedRings = () => {
-  const theme = useTheme();
-
   return (
     <PolarChart
-      animate
       height={250}
-      inset={0}
       radialAxis={[
-        { id: 'inner', range: ({ max }) => ({ min: 0, max: max * 0.35 }) },
-        { id: 'outer', range: ({ max }) => ({ min: max * 0.45, max }) },
+        { id: 'inner', range: ({ max }) => ({ min: 0, max: max * 0.8 }) },
+        { id: 'outer', range: ({ max }) => ({ min: max * 0.85, max }) },
       ]}
       series={[
-        // Inner ring
         {
-          id: 'inner-a',
-          data: 60,
+          id: 'a',
           radialAxisId: 'inner',
-          color: `rgb(${theme.spectrum.blue40})`,
-        },
-        {
-          id: 'inner-b',
-          data: 40,
-          radialAxisId: 'inner',
-          color: `rgb(${theme.spectrum.blue60})`,
-        },
-        // Outer ring
-        {
-          id: 'outer-a',
           data: 30,
-          radialAxisId: 'outer',
-          color: `rgb(${theme.spectrum.green40})`,
+          label: 'Category A',
+          color: 'rgb(var(--blue40))',
         },
         {
-          id: 'outer-b',
-          data: 25,
-          radialAxisId: 'outer',
-          color: `rgb(${theme.spectrum.green50})`,
-        },
-        {
-          id: 'outer-c',
+          id: 'b',
+          radialAxisId: 'inner',
           data: 20,
-          radialAxisId: 'outer',
-          color: `rgb(${theme.spectrum.green60})`,
+          label: 'Category B',
+          color: 'rgb(var(--purple40))',
         },
         {
-          id: 'outer-d',
-          data: 25,
+          id: 'c',
+          radialAxisId: 'inner',
+          data: 15,
+          label: 'Category C',
+          color: 'rgb(var(--pink50))',
+        },
+        {
+          id: 'd',
+          radialAxisId: 'inner',
+          data: 10,
+          label: 'Category D',
+          color: 'rgb(var(--orange40))',
+        },
+        {
+          id: 'e',
+          radialAxisId: 'inner',
+          data: 15,
+          label: 'Category E',
+          color: 'rgb(var(--yellow40))',
+        },
+        {
+          id: 'f',
+          radialAxisId: 'inner',
+          data: 10,
+          label: 'Category F',
+          color: 'rgb(var(--green40))',
+        },
+        {
+          id: 'aa',
           radialAxisId: 'outer',
-          color: `rgb(${theme.spectrum.green70})`,
+          data: 20,
+          label: 'Category AA',
+          color: 'rgb(var(--blue30))',
+        },
+        {
+          id: 'ab',
+          radialAxisId: 'outer',
+          data: 10,
+          label: 'Category AB',
+          color: 'rgb(var(--blue50))',
+        },
+        {
+          id: 'ba',
+          radialAxisId: 'outer',
+          data: 15,
+          label: 'Category BA',
+          color: 'rgb(var(--purple30))',
+        },
+        {
+          id: 'bb',
+          radialAxisId: 'outer',
+          data: 5,
+          label: 'Category BB',
+          color: 'rgb(var(--purple50))',
+        },
+        {
+          id: 'ca',
+          radialAxisId: 'outer',
+          data: 12,
+          label: 'Category CA',
+          color: 'rgb(var(--pink40))',
+        },
+        {
+          id: 'cb',
+          radialAxisId: 'outer',
+          data: 3,
+          label: 'Category CB',
+          color: 'rgb(var(--pink60))',
+        },
+        {
+          id: 'da',
+          radialAxisId: 'outer',
+          data: 4,
+          label: 'Category DA',
+          color: 'rgb(var(--orange30))',
+        },
+        {
+          id: 'db',
+          radialAxisId: 'outer',
+          data: 6,
+          label: 'Category DB',
+          color: 'rgb(var(--orange50))',
+        },
+        {
+          id: 'ea',
+          radialAxisId: 'outer',
+          data: 15,
+          label: 'Category EA',
+          color: 'rgb(var(--yellow40))',
+        },
+        {
+          id: 'fa',
+          radialAxisId: 'outer',
+          data: 3,
+          label: 'Category FA',
+          color: 'rgb(var(--green30))',
+        },
+        {
+          id: 'fb',
+          radialAxisId: 'outer',
+          data: 7,
+          label: 'Category FB',
+          color: 'rgb(var(--green50))',
         },
       ]}
-      width={250}
     >
-      <PiePlot cornerRadius={4} radialAxisId="inner" strokeWidth={0} />
-      <PiePlot cornerRadius={4} radialAxisId="outer" strokeWidth={0} />
+      <PiePlot radialAxisId="inner" strokeWidth={0} />
+      <PiePlot radialAxisId="outer" strokeWidth={0} />
     </PolarChart>
   );
 };
 
-// Helper component for rewards background arcs
-const RewardsBackgroundArcs = memo<{
-  innerRadiusRatio: number;
-  startAngleDegrees: number;
-  firstSectionEnd: number;
-  secondSectionStart: number;
-  secondSectionEnd: number;
-  thirdSectionStart: number;
-  thirdSectionEnd: number;
-}>(
-  ({
-    innerRadiusRatio,
-    startAngleDegrees,
-    firstSectionEnd,
-    secondSectionStart,
-    secondSectionEnd,
-    thirdSectionStart,
-    thirdSectionEnd,
-  }) => {
-    const theme = useTheme();
+const CenterLabel = () => {
+  const series = [
+    { id: 'a', data: 30, label: 'Category A', color: 'rgb(var(--blue40))' },
+    { id: 'b', data: 20, label: 'Category B', color: 'rgb(var(--purple40))' },
+    { id: 'c', data: 15, label: 'Category C', color: 'rgb(var(--pink50))' },
+    { id: 'd', data: 10, label: 'Category D', color: 'rgb(var(--orange40))' },
+    { id: 'e', data: 15, label: 'Category E', color: 'rgb(var(--yellow40))' },
+    { id: 'f', data: 10, label: 'Category F', color: 'rgb(var(--green40))' },
+  ];
+
+  const total = series.reduce((sum, s) => sum + s.data, 0);
+
+  const Label = () => {
+    const { drawingArea } = useChartContext();
+
+    if (!drawingArea.width) return null;
+
+    const centerX = drawingArea.x + drawingArea.width / 2;
+    const centerY = drawingArea.y + drawingArea.height / 2;
+
+    return (
+      <>
+        <ChartText font="label2" verticalAlignment="bottom" x={centerX} y={centerY}>
+          Total
+        </ChartText>
+        <ChartText
+          color="var(--color-fg)"
+          font="headline"
+          verticalAlignment="top"
+          x={centerX}
+          y={centerY}
+        >
+          {`$${(total * 100).toLocaleString()}`}
+        </ChartText>
+      </>
+    );
+  };
+
+  return (
+    <DonutChart
+      height={200}
+      innerRadiusRatio={0.65}
+      series={series}
+      stroke="var(--color-bg)"
+      strokeWidth={2}
+    >
+      <Label />
+    </DonutChart>
+  );
+};
+
+const InteractiveNestedChart = () => {
+  const getParent = (seriesId: string | undefined) => seriesId?.[0];
+
+  type CustomArcProps = {
+    isRelated: boolean;
+    startAngle: number;
+    endAngle: number;
+    innerRadius: number;
+    outerRadius: number;
+    paddingAngle?: number;
+    fill?: string;
+    seriesId?: string;
+    onMouseEnter?: React.MouseEventHandler<SVGPathElement>;
+    onMouseLeave?: React.MouseEventHandler<SVGPathElement>;
+  };
+
+  const CustomArc = memo(({ isRelated, ...props }: CustomArcProps) => {
+    const highlightContext = useHighlightContext();
+    const highlightedId = highlightContext?.highlightedItem?.seriesId;
+    const { drawingArea } = usePolarChartContext();
+
+    const centerX = drawingArea.x + drawingArea.width / 2;
+    const centerY = drawingArea.y + drawingArea.height / 2;
+
+    const path = getArcPath({
+      startAngle: props.startAngle,
+      endAngle: props.endAngle,
+      innerRadius: props.innerRadius,
+      outerRadius: props.outerRadius,
+      paddingAngle: props.paddingAngle,
+    });
+
+    const shouldDim = highlightedId && !isRelated;
+
+    return (
+      <g transform={`translate(${centerX}, ${centerY})`}>
+        <path
+          d={path}
+          fill={props.fill}
+          fillOpacity={shouldDim ? 0.3 : 1}
+          onMouseEnter={props.onMouseEnter}
+          onMouseLeave={props.onMouseLeave}
+          style={{ transition: 'fill-opacity 0.2s ease-out' }}
+        />
+      </g>
+    );
+  });
+
+  const InnerArc = (props: Omit<CustomArcProps, 'isRelated'>) => {
+    const highlightContext = useHighlightContext();
+    const highlightedId = highlightContext?.highlightedItem?.seriesId;
+
+    const isExactMatch = props.seriesId === highlightedId;
+    const isParentOfHighlighted = getParent(highlightedId) === props.seriesId;
+    const isRelated = isExactMatch || isParentOfHighlighted;
+
+    return <CustomArc {...props} isRelated={isRelated} />;
+  };
+
+  const OuterArc = (props: Omit<CustomArcProps, 'isRelated'>) => {
+    const highlightContext = useHighlightContext();
+    const highlightedId = highlightContext?.highlightedItem?.seriesId;
+
+    const isExactMatch = props.seriesId === highlightedId;
+    const myParent = getParent(props.seriesId);
+    const isHighlightedMyParent = myParent === highlightedId;
+    const isRelated = isExactMatch || isHighlightedMyParent;
+
+    return <CustomArc {...props} isRelated={isRelated} />;
+  };
+
+  return (
+    <PolarChart
+      enableHighlighting
+      height={250}
+      legend={<Legend seriesIds={['a', 'b', 'c', 'd', 'e', 'f']} />}
+      legendPosition="bottom"
+      radialAxis={[
+        { id: 'inner', range: ({ max }) => ({ min: 0, max: max * 0.8 }) },
+        { id: 'outer', range: ({ max }) => ({ min: max * 0.85, max }) },
+      ]}
+      series={[
+        {
+          id: 'a',
+          radialAxisId: 'inner',
+          data: 30,
+          label: 'Category A',
+          color: 'rgb(var(--blue40))',
+        },
+        {
+          id: 'b',
+          radialAxisId: 'inner',
+          data: 20,
+          label: 'Category B',
+          color: 'rgb(var(--purple40))',
+        },
+        {
+          id: 'c',
+          radialAxisId: 'inner',
+          data: 15,
+          label: 'Category C',
+          color: 'rgb(var(--pink50))',
+        },
+        {
+          id: 'd',
+          radialAxisId: 'inner',
+          data: 10,
+          label: 'Category D',
+          color: 'rgb(var(--orange40))',
+        },
+        {
+          id: 'e',
+          radialAxisId: 'inner',
+          data: 15,
+          label: 'Category E',
+          color: 'rgb(var(--yellow40))',
+        },
+        {
+          id: 'f',
+          radialAxisId: 'inner',
+          data: 10,
+          label: 'Category F',
+          color: 'rgb(var(--green40))',
+        },
+        {
+          id: 'aa',
+          radialAxisId: 'outer',
+          data: 20,
+          label: 'Category AA',
+          color: 'rgb(var(--blue30))',
+        },
+        {
+          id: 'ab',
+          radialAxisId: 'outer',
+          data: 10,
+          label: 'Category AB',
+          color: 'rgb(var(--blue50))',
+        },
+        {
+          id: 'ba',
+          radialAxisId: 'outer',
+          data: 15,
+          label: 'Category BA',
+          color: 'rgb(var(--purple30))',
+        },
+        {
+          id: 'bb',
+          radialAxisId: 'outer',
+          data: 5,
+          label: 'Category BB',
+          color: 'rgb(var(--purple50))',
+        },
+        {
+          id: 'ca',
+          radialAxisId: 'outer',
+          data: 12,
+          label: 'Category CA',
+          color: 'rgb(var(--pink40))',
+        },
+        {
+          id: 'cb',
+          radialAxisId: 'outer',
+          data: 3,
+          label: 'Category CB',
+          color: 'rgb(var(--pink60))',
+        },
+        {
+          id: 'da',
+          radialAxisId: 'outer',
+          data: 4,
+          label: 'Category DA',
+          color: 'rgb(var(--orange30))',
+        },
+        {
+          id: 'db',
+          radialAxisId: 'outer',
+          data: 6,
+          label: 'Category DB',
+          color: 'rgb(var(--orange50))',
+        },
+        {
+          id: 'ea',
+          radialAxisId: 'outer',
+          data: 15,
+          label: 'Category EA',
+          color: 'rgb(var(--yellow40))',
+        },
+        {
+          id: 'fa',
+          radialAxisId: 'outer',
+          data: 3,
+          label: 'Category FA',
+          color: 'rgb(var(--green30))',
+        },
+        {
+          id: 'fb',
+          radialAxisId: 'outer',
+          data: 7,
+          label: 'Category FB',
+          color: 'rgb(var(--green50))',
+        },
+      ]}
+    >
+      <PiePlot ArcComponent={InnerArc} radialAxisId="inner" strokeWidth={0} />
+      <PiePlot ArcComponent={OuterArc} radialAxisId="outer" strokeWidth={0} />
+      <ChartTooltip />
+    </PolarChart>
+  );
+};
+
+const TemperatureRing = () => {
+  const minTemp = 14;
+  const maxTemp = 24;
+  const currentTemp = 22;
+
+  // Arc configuration - 3/4 circle with gap at top
+  const startAngleDegrees = -135;
+  const endAngleDegrees = 135;
+  const innerRadiusRatio = 0.75;
+
+  // Background track arc - uses the angular axis range for consistent positioning
+  const BackgroundArc = memo(() => {
+    const { drawingArea, getAngularAxis } = usePolarChartContext();
+    const angularAxis = getAngularAxis();
+
+    const { innerRadius, outerRadius } = useMemo(() => {
+      const r = Math.min(drawingArea.width, drawingArea.height) / 2;
+      return {
+        innerRadius: r * innerRadiusRatio,
+        outerRadius: r,
+      };
+    }, [drawingArea]);
+
+    if (!angularAxis) return null;
+
+    return (
+      <Arc
+        animate={false}
+        cornerRadius={100}
+        endAngle={degreesToRadians(angularAxis.range.max)}
+        fill="var(--color-bgSecondary)"
+        innerRadius={innerRadius}
+        outerRadius={outerRadius}
+        paddingAngle={0}
+        startAngle={degreesToRadians(angularAxis.range.min)}
+      />
+    );
+  });
+
+  // Circle indicator - uses getAngularScale + polarToCartesian for positioning
+  const CurrentTempIndicator = memo(() => {
+    const { drawingArea, getAngularScale } = usePolarChartContext();
+    const angularScale = getAngularScale();
+
+    const { x, y, indicatorRadius } = useMemo(() => {
+      if (!angularScale) return { x: 0, y: 0, indicatorRadius: 0 };
+
+      const r = Math.min(drawingArea.width, drawingArea.height) / 2;
+      const midRadius = r * ((1 + innerRadiusRatio) / 2);
+      // Use the scale to convert temperature to angle, then polarToCartesian for position
+      const angleDegrees = angularScale(currentTemp) as number;
+      const pos = polarToCartesian(angleDegrees, midRadius);
+
+      return {
+        ...pos,
+        indicatorRadius: (r * (1 - innerRadiusRatio)) / 2,
+      };
+    }, [drawingArea, angularScale]);
+
+    const centerX = drawingArea.x + drawingArea.width / 2;
+    const centerY = drawingArea.y + drawingArea.height / 2;
+
+    if (!angularScale) return null;
+
+    return (
+      <g transform={`translate(${centerX}, ${centerY})`}>
+        <circle cx={x} cy={y} fill="var(--color-bg)" r={indicatorRadius + 4} />
+        <circle cx={x} cy={y} fill="var(--color-fgMuted)" r={indicatorRadius} />
+      </g>
+    );
+  });
+
+  // Min/Max temperature labels - uses getAngularScale + polarToCartesian for positioning
+  const TempLabels = memo(() => {
+    const { drawingArea, getAngularScale } = usePolarChartContext();
+    const angularScale = getAngularScale();
+
+    const { minPos, maxPos, radius } = useMemo(() => {
+      if (!angularScale) return { minPos: { x: 0, y: 0 }, maxPos: { x: 0, y: 0 } };
+
+      const r = Math.min(drawingArea.width, drawingArea.height) / 2;
+      const labelRadius = r * innerRadiusRatio - 20;
+
+      // Use the scale to get angles for min/max temps, then polarToCartesian for positions
+      const minAngleDegrees = (angularScale(minTemp) as number) + 10;
+      const maxAngleDegrees = (angularScale(maxTemp) as number) - 10;
+
+      return {
+        minPos: polarToCartesian(minAngleDegrees, labelRadius),
+        maxPos: polarToCartesian(maxAngleDegrees, labelRadius),
+        radius: r,
+      };
+    }, [drawingArea, angularScale]);
+
+    const centerX = drawingArea.x + drawingArea.width / 2;
+    const centerY = drawingArea.y + drawingArea.height / 2;
+
+    if (!angularScale! || !radius) return;
+
+    return (
+      <>
+        <ChartText
+          color="var(--color-fgMuted)"
+          font="label2"
+          x={centerX + minPos.x}
+          y={centerY + minPos.y + radius / 2}
+        >
+          {`${minTemp}°`}
+        </ChartText>
+        <ChartText
+          color="var(--color-fgMuted)"
+          font="label2"
+          x={centerX + maxPos.x}
+          y={centerY + maxPos.y + radius / 2}
+        >
+          {`${maxTemp}°`}
+        </ChartText>
+      </>
+    );
+  });
+
+  // Center label showing current temperature
+  const CenterLabel = memo(() => {
+    const { drawingArea } = useChartContext();
+
+    if (!drawingArea.width) return null;
+
+    const centerX = drawingArea.x + drawingArea.width / 2;
+    const centerY = drawingArea.y + drawingArea.height / 2;
+
+    return (
+      <>
+        <ChartText color="var(--color-fg)" font="display1" x={centerX} y={centerY}>
+          {`${currentTemp}`}
+        </ChartText>
+      </>
+    );
+  });
+
+  return (
+    <PolarChart
+      // Configure angular axis: domain is temperature range, range is arc angles
+      angularAxis={{
+        domain: { min: minTemp, max: maxTemp },
+        range: { min: startAngleDegrees, max: endAngleDegrees },
+      }}
+      height={200}
+      inset={0}
+      radialAxis={{ range: ({ max }) => ({ min: innerRadiusRatio * max, max }) }}
+      series={[]}
+    >
+      <BackgroundArc />
+      <CurrentTempIndicator />
+      <TempLabels />
+      <CenterLabel />
+    </PolarChart>
+  );
+};
+
+const SegmentedProgressRing = () => {
+  const innerRadiusRatio = 0.75;
+  const angleEachSideGap = (45 / 4) * 3;
+  const startAngleDegrees = angleEachSideGap - 180;
+  const endAngleDegrees = 180 - angleEachSideGap;
+  const totalSweepDegrees = endAngleDegrees - startAngleDegrees;
+  const gapBetweenDegrees = 5;
+  // Subtract total gap space (2 gaps for 3 sections), then divide remaining space by 3
+  const sectionLengthDegrees = (totalSweepDegrees - gapBetweenDegrees * 2) / 3;
+
+  const firstSectionEnd = startAngleDegrees + sectionLengthDegrees;
+  const secondSectionStart = firstSectionEnd + gapBetweenDegrees;
+  const secondSectionEnd = secondSectionStart + sectionLengthDegrees;
+  const thirdSectionStart = secondSectionEnd + gapBetweenDegrees;
+  const thirdSectionEnd = thirdSectionStart + sectionLengthDegrees;
+  const progressAngle = -45;
+
+  const BackgroundArcs = memo(() => {
     const { drawingArea } = usePolarChartContext();
 
     const { innerRadius, outerRadius } = useMemo(() => {
@@ -363,7 +750,7 @@ const RewardsBackgroundArcs = memo<{
         innerRadius: r * innerRadiusRatio,
         outerRadius: r,
       };
-    }, [drawingArea, innerRadiusRatio]);
+    }, [drawingArea]);
 
     const sections = useMemo(
       () => [
@@ -380,14 +767,7 @@ const RewardsBackgroundArcs = memo<{
           endAngle: (thirdSectionEnd * Math.PI) / 180,
         },
       ],
-      [
-        startAngleDegrees,
-        firstSectionEnd,
-        secondSectionStart,
-        secondSectionEnd,
-        thirdSectionStart,
-        thirdSectionEnd,
-      ],
+      [],
     );
 
     return (
@@ -398,7 +778,7 @@ const RewardsBackgroundArcs = memo<{
             animate={false}
             cornerRadius={100}
             endAngle={section.endAngle}
-            fill={theme.color.fgMuted}
+            fill="var(--color-fgMuted)"
             fillOpacity={0.25}
             innerRadius={innerRadius}
             outerRadius={outerRadius}
@@ -408,28 +788,9 @@ const RewardsBackgroundArcs = memo<{
         ))}
       </>
     );
-  },
-);
+  });
 
-// Helper component for rewards clipped progress
-const RewardsClippedProgress = memo<{
-  innerRadiusRatio: number;
-  startAngleDegrees: number;
-  firstSectionEnd: number;
-  secondSectionStart: number;
-  secondSectionEnd: number;
-  thirdSectionStart: number;
-  thirdSectionEnd: number;
-}>(
-  ({
-    innerRadiusRatio,
-    startAngleDegrees,
-    firstSectionEnd,
-    secondSectionStart,
-    secondSectionEnd,
-    thirdSectionStart,
-    thirdSectionEnd,
-  }) => {
+  const ClippedProgress = memo(() => {
     const { drawingArea } = usePolarChartContext();
 
     const clipPathId = useMemo(() => {
@@ -467,16 +828,7 @@ const RewardsClippedProgress = memo<{
           }),
         )
         .join(' ');
-    }, [
-      drawingArea,
-      innerRadiusRatio,
-      startAngleDegrees,
-      firstSectionEnd,
-      secondSectionStart,
-      secondSectionEnd,
-      thirdSectionStart,
-      thirdSectionEnd,
-    ]);
+    }, [drawingArea]);
 
     const centerX = drawingArea.x + drawingArea.width / 2;
     const centerY = drawingArea.y + drawingArea.height / 2;
@@ -493,27 +845,7 @@ const RewardsClippedProgress = memo<{
         </g>
       </>
     );
-  },
-);
-
-const CoinbaseOneRewardsChart = () => {
-  const theme = useTheme();
-
-  const innerRadiusRatio = 0.75;
-  const angleEachSideGap = (45 / 4) * 3;
-  const startAngleDegrees = angleEachSideGap - 180;
-  const endAngleDegrees = 180 - angleEachSideGap;
-  const angleGapDegrees = 5;
-  const totalGapDegrees = angleGapDegrees * 2;
-  const gapBetweenDegrees = totalGapDegrees / 3;
-  const sectionLengthDegrees = (endAngleDegrees - startAngleDegrees) / 3 - gapBetweenDegrees;
-
-  const firstSectionEnd = startAngleDegrees + sectionLengthDegrees;
-  const secondSectionStart = firstSectionEnd + gapBetweenDegrees;
-  const secondSectionEnd = secondSectionStart + sectionLengthDegrees;
-  const thirdSectionStart = secondSectionEnd + gapBetweenDegrees;
-  const thirdSectionEnd = thirdSectionStart + sectionLengthDegrees;
-  const progressAngle = -45;
+  });
 
   return (
     <PolarChart
@@ -522,112 +854,28 @@ const CoinbaseOneRewardsChart = () => {
       height={200}
       inset={0}
       radialAxis={{ range: ({ max }) => ({ min: innerRadiusRatio * max, max }) }}
-      series={[{ id: 'progress', data: 100, label: 'Progress', color: theme.color.fg }]}
-      width={200}
+      series={[{ id: 'progress', data: 100, color: 'var(--color-fg)' }]}
     >
-      <RewardsBackgroundArcs
-        firstSectionEnd={firstSectionEnd}
-        innerRadiusRatio={innerRadiusRatio}
-        secondSectionEnd={secondSectionEnd}
-        secondSectionStart={secondSectionStart}
-        startAngleDegrees={startAngleDegrees}
-        thirdSectionEnd={thirdSectionEnd}
-        thirdSectionStart={thirdSectionStart}
-      />
-      <RewardsClippedProgress
-        firstSectionEnd={firstSectionEnd}
-        innerRadiusRatio={innerRadiusRatio}
-        secondSectionEnd={secondSectionEnd}
-        secondSectionStart={secondSectionStart}
-        startAngleDegrees={startAngleDegrees}
-        thirdSectionEnd={thirdSectionEnd}
-        thirdSectionStart={thirdSectionStart}
-      />
+      <BackgroundArcs />
+      <ClippedProgress />
     </PolarChart>
   );
 };
 
-export const Default = () => (
-  <VStack gap={6}>
-    <Text font="headline">Pie Charts</Text>
-    <HStack gap={6}>
-      <VStack alignItems="center" gap={2}>
-        <BasicPieChart />
-        <Text color="fgMuted" font="label2">
-          Basic Pie
-        </Text>
-      </VStack>
-      <VStack alignItems="center" gap={2}>
-        <PieWithPadding />
-        <Text color="fgMuted" font="label2">
-          With Padding
-        </Text>
-      </VStack>
-      <VStack alignItems="center" gap={2}>
-        <CustomStyledPie />
-        <Text color="fgMuted" font="label2">
-          Custom Styled
-        </Text>
-      </VStack>
-    </HStack>
-
-    <Text font="headline">Donut Charts</Text>
-    <HStack gap={6}>
-      <VStack alignItems="center" gap={2}>
-        <BasicDonutChart />
-        <Text color="fgMuted" font="label2">
-          Basic Donut
-        </Text>
-      </VStack>
-      <VStack alignItems="center" gap={2}>
-        <DonutWithCenterLabel />
-        <Text color="fgMuted" font="label2">
-          Center Label
-        </Text>
-      </VStack>
-      <VStack alignItems="center" gap={2}>
-        <SemicircleDonut />
-        <Text color="fgMuted" font="label2">
-          Semicircle
-        </Text>
-      </VStack>
-    </HStack>
-
-    <Text font="headline">Advanced Examples</Text>
-    <HStack gap={6}>
-      <VStack alignItems="center" gap={2}>
-        <InteractiveDonutChart />
-        <Text color="fgMuted" font="label2">
-          Interactive
-        </Text>
-      </VStack>
-      <VStack alignItems="center" gap={2}>
-        <AnimatedDataChange />
-        <Text color="fgMuted" font="label2">
-          Data Animation
-        </Text>
-      </VStack>
-      <VStack alignItems="center" gap={2}>
-        <NestedRings />
-        <Text color="fgMuted" font="label2">
-          Nested Rings
-        </Text>
-      </VStack>
-      <VStack alignItems="center" gap={2}>
-        <CoinbaseOneRewardsChart />
-        <Text color="fgMuted" font="label2">
-          Coinbase One Rewards
-        </Text>
-      </VStack>
-    </HStack>
-  </VStack>
-);
-
-export const Pie = () => <BasicPieChart />;
-export const Donut = () => <BasicDonutChart />;
-export const WithCenterLabel = () => <DonutWithCenterLabel />;
-export const Semicircle = () => <SemicircleDonut />;
-export const Interactive = () => <InteractiveDonutChart />;
-export const Animated = () => <AnimatedDataChange />;
-export const Nested = () => <NestedRings />;
-export const CoinbaseOneRewards = () => <CoinbaseOneRewardsChart />;
+export const All = () => {
+  return (
+    <VStack gap={4}>
+      <Basics />
+      <Series />
+      <CustomRange />
+      <PaddingAngle />
+      <MultipleAngularAxes />
+      <Donut />
+      <NestedRings />
+      <CenterLabel />
+      <InteractiveNestedChart />
+      <TemperatureRing />
+      <SegmentedProgressRing />
+    </VStack>
+  );
+};

@@ -182,6 +182,7 @@ const PieChartLegend = () => {
     <VStack gap={2}>
       <Text font="headline">Portfolio Allocation</Text>
       <PieChart
+        enableHighlighting
         height={150}
         legend={<Legend flexDirection="column" />}
         legendPosition="right"
@@ -222,7 +223,14 @@ const DonutChartLegend = () => {
   return (
     <VStack gap={2}>
       <Text font="headline">Task Status</Text>
-      <DonutChart legend height={150} legendPosition="bottom" series={series} width={150} />
+      <DonutChart
+        enableHighlighting
+        legend
+        height={150}
+        legendPosition="bottom"
+        series={series}
+        width={150}
+      />
     </VStack>
   );
 };
@@ -244,6 +252,7 @@ const CustomLegendItem = () => {
     <VStack gap={2}>
       <Text font="headline">Custom Legend Item</Text>
       <DonutChart
+        enableHighlighting
         height={150}
         legend={<Legend ItemComponent={CustomItem} />}
         legendPosition="bottom"

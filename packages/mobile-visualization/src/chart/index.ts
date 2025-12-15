@@ -7,6 +7,7 @@ export * from './ChartContextBridge';
 export * from './ChartProvider';
 export * from './DonutChart';
 export * from './gradient/index';
+export * from './HighlightProvider';
 export * from './legend/index';
 export * from './line/index';
 export * from './Path';

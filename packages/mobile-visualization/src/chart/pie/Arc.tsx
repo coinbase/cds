@@ -64,6 +64,14 @@ export type ArcBaseProps = {
    * If not provided, uses the chart context's animate value.
    */
   animate?: boolean;
+  /**
+   * Series ID for this arc. Used to determine if this arc is highlighted.
+   */
+  seriesId?: string;
+  /**
+   * Data index for this arc. Used to determine if this arc is highlighted.
+   */
+  dataIndex?: number;
 };
 
 export type ArcProps = ArcBaseProps;
@@ -87,6 +95,8 @@ export const Arc = memo<ArcProps>(
     clipPathId,
     angularAxisId,
     animate: animateProp,
+    seriesId: _seriesId,
+    dataIndex: _dataIndex,
   }) => {
     const { animate: contextAnimate, drawingArea, getAngularAxis } = usePolarChartContext();
     const animate = animateProp !== undefined ? animateProp : contextAnimate;

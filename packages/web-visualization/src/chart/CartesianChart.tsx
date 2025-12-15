@@ -1,4 +1,4 @@
-import React, { forwardRef, memo, useCallback, useMemo, useRef } from 'react';
+import React, { forwardRef, memo, useCallback, useEffect, useMemo, useRef } from 'react';
 import type { Rect } from '@coinbase/cds-common/types';
 import { cx } from '@coinbase/cds-web';
 import { useDimensions } from '@coinbase/cds-web/hooks/useDimensions';
@@ -8,6 +8,7 @@ import { css } from '@linaria/core';
 import { Legend } from './legend/Legend';
 import { ScrubberProvider, type ScrubberProviderProps } from './scrubber/ScrubberProvider';
 import { CartesianChartProvider } from './ChartProvider';
+import { HighlightProvider, type HighlightProviderBaseProps } from './HighlightProvider';
 import {
   type CartesianAxisConfig,
   type CartesianAxisConfigProps,
@@ -16,13 +17,15 @@ import {
   type ChartInset,
   type ChartScaleFunction,
   defaultAxisId,
-  defaultChartInset,
+  defaultCartesianChartInset,
   getAxisRange,
   getCartesianAxisConfig,
   getCartesianAxisDomain,
   getCartesianAxisScale,
   getCartesianStackedSeriesData as calculateStackedSeriesData,
   getChartInset,
+  type HighlightedItemData,
+  isCategoricalScale,
   useTotalAxisPadding,
 } from './utils';
 
@@ -35,8 +38,8 @@ const focusCss = css`
     outline: none;
   }
   &:focus-visible {
-    outline: 2px solid var(--color-bgPrimary);
-    outline-offset: 2px;
+    outline: 2px solid var(--color-fgPrimary);
+    outline-offset: -2px;
   }
 `;
 const verticalCss = css`
@@ -54,7 +57,7 @@ const chartContainerCss = css`
 export type LegendPosition = 'top' | 'bottom' | 'left' | 'right';
 
 export type CartesianChartBaseProps = BoxBaseProps &
-  Pick<ScrubberProviderProps, 'enableScrubbing' | 'onScrubberPositionChange'> & {
+  HighlightProviderBaseProps & {
     /**
      * Configuration objects that define how to visualize the data.
      * Each series contains its own data array.
@@ -65,6 +68,17 @@ export type CartesianChartBaseProps = BoxBaseProps &
      * @default true
      */
     animate?: boolean;
+    /**
+     * Whether scrubbing interaction is enabled.
+     * @deprecated Use `enableHighlighting` instead.
+     * @default false
+     */
+    enableScrubbing?: ScrubberProviderProps['enableScrubbing'];
+    /**
+     * Callback fired when the scrubber position changes.
+     * @deprecated Use `onHighlightChange` instead. Access `highlightedItem.dataIndex` for the same value.
+     */
+    onScrubberPositionChange?: ScrubberProviderProps['onScrubberPositionChange'];
     /**
      * Configuration for x-axis.
      */
@@ -77,6 +91,7 @@ export type CartesianChartBaseProps = BoxBaseProps &
       | Partial<Omit<CartesianAxisConfigProps, 'data'>>[];
     /**
      * Inset around the entire chart (outside the axes).
+     * @default { top: 32, left: 16, bottom: 16, right: 16 }
      */
     inset?: number | Partial<ChartInset>;
     /**
@@ -152,6 +167,9 @@ export const CartesianChart = memo(
         inset,
         enableScrubbing,
         onScrubberPositionChange,
+        enableHighlighting: enableHighlightingProp,
+        highlightedItem,
+        onHighlightChange,
         legend,
         legendPosition = 'bottom',
         width = '100%',
@@ -167,7 +185,10 @@ export const CartesianChart = memo(
       const { observe, width: chartWidth, height: chartHeight } = useDimensions();
       const chartRef = useRef<SVGSVGElement | null>(null);
 
-      const calculatedInset = useMemo(() => getChartInset(inset, defaultChartInset), [inset]);
+      const calculatedInset = useMemo(
+        () => getChartInset(inset, defaultCartesianChartInset),
+        [inset],
+      );
 
       // Axis configs store the properties of each axis, such as id, scale type, domain limit, etc.
       // We only support 1 x axis but allow for multiple y axes.
@@ -432,6 +453,255 @@ export const CartesianChart = memo(
         ],
       );
 
+      // Enable highlighting by default when scrubbing is enabled
+      const enableHighlighting = enableHighlightingProp ?? enableScrubbing ?? false;
+
+      // Track the last dataIndex to avoid unnecessary updates
+      const lastDataIndexRef = useRef<number | undefined>(undefined);
+      // Track internal highlight state for uncontrolled mode
+      const [internalHighlightedItem, setInternalHighlightedItem] = React.useState<
+        HighlightedItemData | undefined
+      >();
+      const isControlled = highlightedItem !== undefined;
+
+      // Determine the current highlighted item
+      const currentHighlightedItem = isControlled
+        ? (highlightedItem ?? undefined)
+        : internalHighlightedItem;
+
+      // Unified setter that handles both controlled and uncontrolled modes
+      const setHighlightedItemInternal = useCallback(
+        (
+          itemOrUpdater:
+            | HighlightedItemData
+            | undefined
+            | ((prev: HighlightedItemData | undefined) => HighlightedItemData | undefined),
+        ) => {
+          const newItem =
+            typeof itemOrUpdater === 'function'
+              ? itemOrUpdater(currentHighlightedItem)
+              : itemOrUpdater;
+
+          if (!isControlled) {
+            setInternalHighlightedItem(newItem);
+          }
+
+          // Call callbacks
+          onHighlightChange?.(newItem ?? null);
+          onScrubberPositionChange?.(newItem?.dataIndex);
+        },
+        [isControlled, currentHighlightedItem, onHighlightChange, onScrubberPositionChange],
+      );
+
+      // Convert mouse X position to data index
+      const getDataIndexFromX = useCallback(
+        (mouseX: number): number => {
+          if (!xScale || !xAxis) return 0;
+
+          if (isCategoricalScale(xScale)) {
+            const categories = xScale.domain?.() ?? xAxis.data ?? [];
+            const bandwidth = xScale.bandwidth?.() ?? 0;
+            let closestIndex = 0;
+            let closestDistance = Infinity;
+            for (let i = 0; i < categories.length; i++) {
+              const xPos = xScale(i);
+              if (xPos !== undefined) {
+                const distance = Math.abs(mouseX - (xPos + bandwidth / 2));
+                if (distance < closestDistance) {
+                  closestDistance = distance;
+                  closestIndex = i;
+                }
+              }
+            }
+            return closestIndex;
+          } else {
+            // For numeric scales with axis data, find the nearest data point
+            const axisData = xAxis.data;
+            if (axisData && Array.isArray(axisData) && typeof axisData[0] === 'number') {
+              const numericData = axisData as number[];
+              let closestIndex = 0;
+              let closestDistance = Infinity;
+
+              for (let i = 0; i < numericData.length; i++) {
+                const xValue = numericData[i];
+                const xPos = xScale(xValue);
+                if (xPos !== undefined) {
+                  const distance = Math.abs(mouseX - xPos);
+                  if (distance < closestDistance) {
+                    closestDistance = distance;
+                    closestIndex = i;
+                  }
+                }
+              }
+              return closestIndex;
+            } else {
+              const xValue = xScale.invert(mouseX);
+              const dataIndexVal = Math.round(xValue);
+              const domain = xAxis.domain;
+              return Math.max(domain.min ?? 0, Math.min(dataIndexVal, domain.max ?? 0));
+            }
+          }
+        },
+        [xScale, xAxis],
+      );
+
+      // Handle pointer move (mouse or touch)
+      const handlePointerMove = useCallback(
+        (clientX: number, target: SVGSVGElement) => {
+          if (!enableHighlighting || !series || series.length === 0) return;
+
+          const rect = target.getBoundingClientRect();
+          const x = clientX - rect.left;
+          const dataIndexVal = getDataIndexFromX(x);
+
+          // Only update if dataIndex changed
+          if (dataIndexVal !== lastDataIndexRef.current) {
+            lastDataIndexRef.current = dataIndexVal;
+            setHighlightedItemInternal((prev) => ({
+              ...prev,
+              dataIndex: dataIndexVal,
+            }));
+          }
+        },
+        [enableHighlighting, series, getDataIndexFromX, setHighlightedItemInternal],
+      );
+
+      // Handle pointer leave
+      const handlePointerLeave = useCallback(() => {
+        if (!enableHighlighting) return;
+        lastDataIndexRef.current = undefined;
+        setHighlightedItemInternal(undefined);
+      }, [enableHighlighting, setHighlightedItemInternal]);
+
+      // Handle keyboard navigation
+      const handleKeyDown = useCallback(
+        (event: KeyboardEvent) => {
+          if (!enableHighlighting) return;
+          if (!xScale || !xAxis) return;
+
+          const isBand = isCategoricalScale(xScale);
+
+          // Determine navigation bounds
+          let minIndex: number;
+          let maxIndex: number;
+
+          if (isBand) {
+            const categories = xScale.domain?.() ?? xAxis.data ?? [];
+            minIndex = 0;
+            maxIndex = Math.max(0, categories.length - 1);
+          } else {
+            const axisData = xAxis.data;
+            if (axisData && Array.isArray(axisData)) {
+              minIndex = 0;
+              maxIndex = Math.max(0, axisData.length - 1);
+            } else {
+              const domain = xAxis.domain;
+              minIndex = domain.min ?? 0;
+              maxIndex = domain.max ?? 0;
+            }
+          }
+
+          const currentIndex = currentHighlightedItem?.dataIndex ?? minIndex;
+          const dataRange = maxIndex - minIndex;
+
+          // Multi-step jump when shift is held (10% of data range, minimum 1, maximum 10)
+          const multiSkip = event.shiftKey;
+          const stepSize = multiSkip ? Math.min(10, Math.max(1, Math.floor(dataRange * 0.1))) : 1;
+
+          let newIndex: number | undefined;
+
+          switch (event.key) {
+            case 'ArrowLeft':
+              event.preventDefault();
+              newIndex = Math.max(minIndex, currentIndex - stepSize);
+              break;
+            case 'ArrowRight':
+              event.preventDefault();
+              newIndex = Math.min(maxIndex, currentIndex + stepSize);
+              break;
+            case 'Home':
+              event.preventDefault();
+              newIndex = minIndex;
+              break;
+            case 'End':
+              event.preventDefault();
+              newIndex = maxIndex;
+              break;
+            case 'Escape':
+              event.preventDefault();
+              newIndex = undefined;
+              break;
+            default:
+              return;
+          }
+
+          if (newIndex !== lastDataIndexRef.current) {
+            lastDataIndexRef.current = newIndex;
+            if (newIndex === undefined) {
+              setHighlightedItemInternal(undefined);
+            } else {
+              setHighlightedItemInternal((prev) => ({
+                ...prev,
+                dataIndex: newIndex,
+              }));
+            }
+          }
+        },
+        [enableHighlighting, xScale, xAxis, currentHighlightedItem, setHighlightedItemInternal],
+      );
+
+      // Handle blur - clear highlighting when focus leaves
+      const handleBlur = useCallback(() => {
+        if (!enableHighlighting) return;
+        if (currentHighlightedItem?.dataIndex === undefined) return;
+        lastDataIndexRef.current = undefined;
+        setHighlightedItemInternal(undefined);
+      }, [enableHighlighting, currentHighlightedItem, setHighlightedItemInternal]);
+
+      // Attach event listeners to SVG element
+      useEffect(() => {
+        if (!chartRef.current || !enableHighlighting) return;
+
+        const svg = chartRef.current;
+
+        const handleMouseMove = (event: MouseEvent) => {
+          handlePointerMove(event.clientX, svg);
+        };
+
+        const handleTouchStart = (event: TouchEvent) => {
+          if (!event.touches.length) return;
+          const touch = event.touches[0];
+          handlePointerMove(touch.clientX, svg);
+        };
+
+        const handleTouchMove = (event: TouchEvent) => {
+          if (!event.touches.length) return;
+          event.preventDefault();
+          const touch = event.touches[0];
+          handlePointerMove(touch.clientX, svg);
+        };
+
+        svg.addEventListener('mousemove', handleMouseMove);
+        svg.addEventListener('mouseleave', handlePointerLeave);
+        svg.addEventListener('touchstart', handleTouchStart, { passive: false });
+        svg.addEventListener('touchmove', handleTouchMove, { passive: false });
+        svg.addEventListener('touchend', handlePointerLeave);
+        svg.addEventListener('touchcancel', handlePointerLeave);
+        svg.addEventListener('keydown', handleKeyDown);
+        svg.addEventListener('blur', handleBlur);
+
+        return () => {
+          svg.removeEventListener('mousemove', handleMouseMove);
+          svg.removeEventListener('mouseleave', handlePointerLeave);
+          svg.removeEventListener('touchstart', handleTouchStart);
+          svg.removeEventListener('touchmove', handleTouchMove);
+          svg.removeEventListener('touchend', handlePointerLeave);
+          svg.removeEventListener('touchcancel', handlePointerLeave);
+          svg.removeEventListener('keydown', handleKeyDown);
+          svg.removeEventListener('blur', handleBlur);
+        };
+      }, [enableHighlighting, handlePointerMove, handlePointerLeave, handleKeyDown, handleBlur]);
+
       const isVerticalLegend = useMemo(
         () => legendPosition === 'top' || legendPosition === 'bottom',
         [legendPosition],
@@ -462,46 +732,62 @@ export const CartesianChart = memo(
 
       return (
         <CartesianChartProvider value={contextValue}>
-          <ScrubberProvider
-            enableScrubbing={!!enableScrubbing}
-            onScrubberPositionChange={onScrubberPositionChange}
+          <HighlightProvider
+            enableHighlighting={enableHighlighting}
+            highlightedItem={currentHighlightedItem}
+            onHighlightChange={(item) => {
+              // This allows child components (like bars) to also set highlights
+              if (!isControlled) {
+                setInternalHighlightedItem(item ?? undefined);
+              }
+              onHighlightChange?.(item);
+            }}
           >
-            <Box
-              className={rootClassNames}
-              height={height}
-              style={rootStyles}
-              width={width}
-              {...props}
+            <ScrubberProvider
+              enableScrubbing={!!enableScrubbing}
+              onScrubberPositionChange={onScrubberPositionChange}
             >
-              {isLegendBefore && legendElement}
               <Box
-                ref={(node) => {
-                  const svgElement = node as unknown as SVGSVGElement;
-                  chartRef.current = svgElement;
-                  observe(node as unknown as HTMLElement);
-
-                  // Forward the ref to the user
-                  if (ref) {
-                    if (typeof ref === 'function') {
-                      ref(svgElement);
-                    } else {
-                      (ref as React.MutableRefObject<SVGSVGElement | null>).current = svgElement;
-                    }
-                  }
-                }}
-                aria-live="polite"
-                as="svg"
-                className={cx(chartContainerCss, enableScrubbing && focusCss, classNames?.chart)}
-                height="100%"
-                style={styles?.chart}
-                tabIndex={enableScrubbing ? 0 : undefined}
-                width="100%"
+                className={rootClassNames}
+                height={height}
+                style={rootStyles}
+                width={width}
+                {...props}
               >
-                {children}
+                {isLegendBefore && legendElement}
+                <Box
+                  ref={(node) => {
+                    const svgElement = node as unknown as SVGSVGElement;
+                    chartRef.current = svgElement;
+                    observe(node as unknown as HTMLElement);
+
+                    // Forward the ref to the user
+                    if (ref) {
+                      if (typeof ref === 'function') {
+                        ref(svgElement);
+                      } else {
+                        (ref as React.MutableRefObject<SVGSVGElement | null>).current = svgElement;
+                      }
+                    }
+                  }}
+                  aria-live="polite"
+                  as="svg"
+                  className={cx(
+                    chartContainerCss,
+                    enableHighlighting && focusCss,
+                    classNames?.chart,
+                  )}
+                  height="100%"
+                  style={styles?.chart}
+                  tabIndex={enableHighlighting ? 0 : undefined}
+                  width="100%"
+                >
+                  {children}
+                </Box>
+                {!isLegendBefore && legendElement}
               </Box>
-              {!isLegendBefore && legendElement}
-            </Box>
-          </ScrubberProvider>
+            </ScrubberProvider>
+          </HighlightProvider>
         </CartesianChartProvider>
       );
     },

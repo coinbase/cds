@@ -195,6 +195,57 @@ export type PolarChartContextValue = Omit<ChartContextValue, 'series' | 'type'> 
   getRadialSerializableScale: (id?: string) => SerializableScale | undefined;
 };
 
+/**
+ * Data representing a highlighted item in a chart.
+ * Both fields are optional to support different interaction patterns:
+ * - { dataIndex } only: highlight all series at this index (scrubbing)
+ * - { seriesId } only: highlight entire series (legend hover)
+ * - { seriesId, dataIndex }: highlight specific item (bar/slice hover)
+ */
+export type HighlightedItemData = {
+  /**
+   * The series ID of the highlighted item.
+   * When undefined, the highlight applies to all series at the dataIndex.
+   */
+  seriesId?: string;
+  /**
+   * The index of the item within the series data.
+   * When undefined, the highlight applies to the entire series.
+   */
+  dataIndex?: number;
+};
+
+export type HighlightContextValue = {
+  /**
+   * Whether highlighting is enabled for this chart.
+   */
+  enableHighlighting: boolean;
+  /**
+   * The currently highlighted item as a shared value for animations.
+   */
+  highlightedItem: SharedValue<HighlightedItemData | undefined>;
+  /**
+   * Set the highlighted item. Pass undefined to clear.
+   */
+  setHighlightedItem: (item: HighlightedItemData | undefined) => void;
+};
+
+export const HighlightContext = createContext<HighlightContextValue | undefined>(undefined);
+
+export const useHighlightContext = (): HighlightContextValue | undefined => {
+  const context = useContext(HighlightContext);
+  return context;
+};
+
+/**
+ * @deprecated Use HighlightedItemData instead
+ */
+export type HighlightData = HighlightedItemData;
+
+/**
+ * Scrubber context - provides scrubbing-specific configuration.
+ * The actual highlight state is managed by HighlightContext.
+ */
 export type ScrubberContextValue = {
   /**
    * Enables scrubbing interactions.
@@ -203,6 +254,7 @@ export type ScrubberContextValue = {
   enableScrubbing: boolean;
   /**
    * The current position of the scrubber.
+   * @deprecated Use highlightedItem.dataIndex from HighlightContext instead
    */
   scrubberPosition: SharedValue<number | undefined>;
 };
@@ -212,7 +264,7 @@ export const ScrubberContext = createContext<ScrubberContextValue | undefined>(u
 export const useScrubberContext = (): ScrubberContextValue => {
   const context = useContext(ScrubberContext);
   if (!context) {
-    throw new Error('useScrubberContext must be used within a Chart component');
+    throw new Error('useScrubberContext must be used within a CartesianChart component');
   }
   return context;
 };

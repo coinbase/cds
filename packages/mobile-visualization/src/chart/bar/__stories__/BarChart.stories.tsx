@@ -1,4 +1,5 @@
 import { memo, useEffect, useState } from 'react';
+import { useDerivedValue } from 'react-native-reanimated';
 import { Button } from '@coinbase/cds-mobile/buttons';
 import { Example, ExampleScreen } from '@coinbase/cds-mobile/examples/ExampleScreen';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
@@ -7,15 +8,29 @@ import { VStack } from '@coinbase/cds-mobile/layout';
 import { XAxis, YAxis } from '../../axis';
 import { CartesianChart } from '../../CartesianChart';
 import { ReferenceLine, SolidLine, type SolidLineProps } from '../../line';
-import { Bar } from '../Bar';
+import { useHighlightContext } from '../../utils/context';
+import { Bar, type BarComponentProps } from '../Bar';
 import { BarChart } from '../BarChart';
 import { BarPlot } from '../BarPlot';
 import type { BarStackComponentProps } from '../BarStack';
+import { DefaultBar } from '../DefaultBar';
 import { DefaultBarStack } from '../DefaultBarStack';
 
 const ThinSolidLine = memo((props: SolidLineProps) => <SolidLine {...props} strokeWidth={1} />);
 
 const defaultChartHeight = 250;
+
+// Custom bar component that dims non-highlighted bars
+const DimmingBarComponent = memo<BarComponentProps>(({ dataX, ...props }) => {
+  const highlightContext = useHighlightContext();
+
+  const fillOpacity = useDerivedValue(() => {
+    const highlightedIndex = highlightContext?.highlightedItem.value?.dataIndex;
+    return highlightedIndex === undefined || highlightedIndex === dataX ? 1 : 0.5;
+  }, [highlightContext, dataX]);
+
+  return <DefaultBar {...props} dataX={dataX} fillOpacity={fillOpacity.value} />;
+});
 
 const PositiveAndNegativeCashFlow = () => {
   const theme = useTheme();
@@ -36,6 +51,7 @@ const PositiveAndNegativeCashFlow = () => {
 
   return (
     <CartesianChart
+      enableHighlighting
       height={420}
       inset={32}
       series={series}
@@ -47,7 +63,7 @@ const PositiveAndNegativeCashFlow = () => {
         GridLineComponent={ThinSolidLine}
         tickLabelFormatter={(value) => `$${value}M`}
       />
-      <BarPlot />
+      <BarPlot BarComponent={DimmingBarComponent} />
       <ReferenceLine LineComponent={SolidLine} dataY={0} />
     </CartesianChart>
   );

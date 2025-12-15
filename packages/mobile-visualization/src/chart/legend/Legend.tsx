@@ -64,7 +64,8 @@ export const Legend = memo(
       justifyContent = 'center',
       alignItems = flexDirection === 'row' ? 'center' : 'flex-start',
       flexWrap = 'wrap',
-      gap = 1,
+      rowGap = 0.75,
+      columnGap = 2,
       seriesIds,
       ItemComponent = DefaultLegendItem,
       ShapeComponent,
@@ -77,20 +78,21 @@ export const Legend = memo(
     const { series } = useChartContext();
 
     const filteredSeries = useMemo(() => {
-      if (seriesIds === undefined) return series;
-      return series.filter((s) => seriesIds.includes(s.id));
+      if (seriesIds === undefined) return series.filter((s) => s.label !== undefined);
+      return series.filter((s) => seriesIds.includes(s.id) && s.label !== undefined);
     }, [series, seriesIds]);
 
-    if (filteredSeries.length === 0) return null;
+    if (filteredSeries.length === 0) return;
 
     return (
       <Box
         ref={ref}
         alignItems={alignItems}
+        columnGap={columnGap}
         flexDirection={flexDirection}
         flexWrap={flexWrap}
-        gap={gap}
         justifyContent={justifyContent}
+        rowGap={rowGap}
         style={[style, styles?.root]}
         {...props}
       >
@@ -99,7 +101,7 @@ export const Legend = memo(
             key={s.id}
             ShapeComponent={ShapeComponent}
             color={s.color}
-            label={s.label ?? s.id}
+            label={s.label}
             seriesId={s.id}
             shape={s.legendShape}
             styles={{

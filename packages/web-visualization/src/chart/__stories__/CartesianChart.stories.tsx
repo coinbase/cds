@@ -20,6 +20,7 @@ import {
   BarPlot,
   CartesianChart,
   type ChartTextChildren,
+  Legend,
   PeriodSelector,
   Point,
   Scrubber,
@@ -158,7 +159,8 @@ const PredictionMarket = () => {
 
   const [scrubberLabel, setScrubberLabel] = useState<string | null>(null);
   const updateScrubberLabel = useCallback(
-    (scrubberPosition: number | undefined) => {
+    (item: { seriesId?: string; dataIndex?: number } | null) => {
+      const scrubberPosition = item?.dataIndex;
       if (
         scrubberPosition === null ||
         scrubberPosition === undefined ||
@@ -193,7 +195,7 @@ const PredictionMarket = () => {
         enableScrubbing
         height={300}
         inset={{ top: 40, right: 0, bottom: 32, left: 0 }}
-        onScrubberPositionChange={updateScrubberLabel}
+        onHighlightChange={updateScrubberLabel}
         paddingEnd={2}
         series={seriesConfig}
         xAxis={{
@@ -324,56 +326,53 @@ const EarningsHistory = () => {
     [actualEPS, estimatedEPS],
   );
 
-  const LegendItem = memo(({ opacity = 1, label }: { opacity?: number; label: string }) => {
-    return (
-      <Box alignItems="center" gap={0.5}>
-        <LegendDot opacity={opacity} />
-        <Text font="label2">{label}</Text>
-      </Box>
-    );
-  });
-
-  const LegendDot = memo((props: BoxBaseProps) => {
-    return <Box background="bgPositive" borderRadius={1000} height={10} width={10} {...props} />;
-  });
-
   return (
-    <VStack gap={0.5}>
-      <CartesianChart
-        animate={false}
-        height={250}
-        inset={0}
-        series={[
-          {
-            id: 'estimatedEPS',
-            data: estimatedEPS,
-            color: 'var(--color-bgPositive)',
-          },
-          { id: 'actualEPS', data: actualEPS, color: 'var(--color-bgPositive)' },
-        ]}
-        xAxis={{ scaleType: 'band', categoryPadding: 0.25 }}
-      >
-        <YAxis
-          showGrid
-          position="left"
-          requestedTickCount={3}
-          tickLabelFormatter={formatEarningAmount}
-        />
-        <XAxis height={20} tickLabelFormatter={(index) => quarters[index]} />
-        <XAxis height={20} tickLabelFormatter={surprisePercentage} />
-        <CirclePlot opacity={0.5} seriesId="estimatedEPS" />
-        <CirclePlot seriesId="actualEPS" />
-      </CartesianChart>
-      <HStack gap={2} justifyContent="flex-end">
-        <LegendItem label="Estimated EPS" opacity={0.5} />
-        <LegendItem label="Actual EPS" />
-      </HStack>
-    </VStack>
+    <CartesianChart
+      animate={false}
+      height={250}
+      inset={{ top: 32, bottom: 0, left: 0, right: 0 }}
+      legend={<Legend justifyContent="flex-end" paddingTop={1} />}
+      legendPosition="bottom"
+      series={[
+        {
+          id: 'estimatedEPS',
+          label: 'Estimated EPS',
+          data: estimatedEPS,
+          color: 'var(--color-bgPositive)',
+          legendShape: 'circle',
+        },
+        {
+          id: 'actualEPS',
+          label: 'Actual EPS',
+          data: actualEPS,
+          color: 'var(--color-bgPositive)',
+          legendShape: 'circle',
+        },
+      ]}
+      xAxis={{ scaleType: 'band', categoryPadding: 0.25 }}
+    >
+      <YAxis
+        showGrid
+        position="left"
+        requestedTickCount={3}
+        tickLabelFormatter={formatEarningAmount}
+      />
+      <XAxis height={20} tickLabelFormatter={(index) => quarters[index]} />
+      <XAxis height={20} tickLabelFormatter={surprisePercentage} />
+      <CirclePlot opacity={0.5} seriesId="estimatedEPS" />
+      <CirclePlot seriesId="actualEPS" />
+    </CartesianChart>
   );
 };
 
 const PriceWithVolume = () => {
   const [scrubIndex, setScrubIndex] = useState<number | undefined>(undefined);
+  const handleHighlightChange = useCallback(
+    (item: { seriesId?: string; dataIndex?: number } | null) => {
+      setScrubIndex(item?.dataIndex);
+    },
+    [],
+  );
   const btcData = btcCandles.slice(0, 180).reverse();
 
   const btcPrices = btcData.map((candle) => parseFloat(candle.close));
@@ -444,7 +443,7 @@ const PriceWithVolume = () => {
         accessibilityLabel={accessibilityLabel}
         aria-labelledby={headerId}
         height={250}
-        onScrubberPositionChange={setScrubIndex}
+        onHighlightChange={handleHighlightChange}
         series={[
           {
             id: 'prices',

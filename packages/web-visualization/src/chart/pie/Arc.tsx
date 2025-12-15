@@ -2,7 +2,7 @@ import React, { memo, useEffect, useMemo, useRef, useState } from 'react';
 import { animate as framerAnimate } from 'framer-motion';
 
 import { usePolarChartContext } from '../ChartProvider';
-import { defaultAxisId, getArcPath } from '../utils';
+import { defaultAxisId, getArcPath, useHighlightContext } from '../utils';
 import { degreesToRadians } from '../utils/polar';
 
 export type ArcBaseProps = {
@@ -78,6 +78,14 @@ export type ArcBaseProps = {
    * CSS cursor style for the arc.
    */
   cursor?: string;
+  /**
+   * Series ID for this arc. Used to determine if this arc is highlighted.
+   */
+  seriesId?: string;
+  /**
+   * Data index for this arc. Used to determine if this arc is highlighted.
+   */
+  dataIndex?: number;
 };
 
 export type ArcProps = ArcBaseProps;
@@ -105,9 +113,40 @@ export const Arc = memo<ArcProps>(
     onMouseEnter,
     onMouseLeave,
     cursor,
+    seriesId,
+    dataIndex,
   }) => {
+    const highlightContext = useHighlightContext();
     const { animate: contextAnimate, drawingArea, getAngularAxis } = usePolarChartContext();
     const animate = animateProp !== undefined ? animateProp : contextAnimate;
+
+    // Determine if this arc should be dimmed (something else is highlighted)
+    const highlightedItem = highlightContext?.highlightedItem;
+    const isHighlighted = seriesId !== undefined && highlightedItem?.seriesId === seriesId;
+    const isDimmed = highlightedItem !== undefined && !isHighlighted;
+
+    // Animated opacity for highlight dimming
+    const [animatedOpacity, setAnimatedOpacity] = useState(fillOpacity);
+    const currentOpacityRef = useRef(fillOpacity);
+
+    useEffect(() => {
+      const targetOpacity = isDimmed ? 0.5 : fillOpacity;
+
+      if (animate) {
+        const control = framerAnimate(currentOpacityRef.current, targetOpacity, {
+          duration: 0.2,
+          ease: 'easeOut',
+          onUpdate: (value) => {
+            currentOpacityRef.current = value;
+            setAnimatedOpacity(value);
+          },
+        });
+        return () => control.stop();
+      } else {
+        currentOpacityRef.current = targetOpacity;
+        setAnimatedOpacity(targetOpacity);
+      }
+    }, [isDimmed, fillOpacity, animate]);
 
     // Get the angular axis to determine the baseline angle
     const angularAxis = getAngularAxis(angularAxisId ?? defaultAxisId);
@@ -218,7 +257,7 @@ export const Arc = memo<ArcProps>(
         <path
           d={currentPath}
           fill={fill}
-          fillOpacity={fillOpacity}
+          fillOpacity={animatedOpacity}
           onClick={onClick}
           onMouseEnter={onMouseEnter}
           onMouseLeave={onMouseLeave}

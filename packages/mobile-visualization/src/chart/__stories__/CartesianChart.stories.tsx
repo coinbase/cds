@@ -17,7 +17,14 @@ import { Point } from '../point/Point';
 import { Scrubber } from '../scrubber/Scrubber';
 import { ChartText } from '../text';
 import { type GradientDefinition, isCategoricalScale } from '../utils';
-import { CartesianChart, DottedArea, ReferenceLine, SolidLine, type SolidLineProps } from '../';
+import {
+  CartesianChart,
+  DottedArea,
+  Legend,
+  ReferenceLine,
+  SolidLine,
+  type SolidLineProps,
+} from '../';
 
 const defaultChartHeight = 250;
 
@@ -167,55 +174,41 @@ const EarningsHistory = () => {
     [actualEPS, estimatedEPS],
   );
 
-  const styles = StyleSheet.create({
-    legendDot: {
-      width: 10,
-      height: 10,
-      borderRadius: 1000,
-      backgroundColor: theme.color.bgPositive,
-    },
-  });
-
-  const LegendItem = memo(({ opacity = 1, label }: { opacity?: number; label: string }) => {
-    return (
-      <Box alignItems="center" flexDirection="row" gap={0.5}>
-        <Box style={[styles.legendDot, { opacity }]} />
-        <TextLabel2>{label}</TextLabel2>
-      </Box>
-    );
-  });
-
   return (
-    <VStack gap={0.5}>
-      <CartesianChart
-        height={defaultChartHeight}
-        inset={{ top: 32, bottom: 0, left: 0, right: 0 }}
-        series={[
-          {
-            id: 'estimatedEPS',
-            data: estimatedEPS,
-            color: theme.color.bgPositive,
-          },
-          { id: 'actualEPS', data: actualEPS, color: theme.color.bgPositive },
-        ]}
-        xAxis={{ scaleType: 'band', categoryPadding: 0.25 }}
-      >
-        <YAxis
-          showGrid
-          position="left"
-          requestedTickCount={3}
-          tickLabelFormatter={formatEarningAmount}
-        />
-        <XAxis height={20} tickLabelFormatter={(index) => quarters[index]} />
-        <XAxis height={20} tickLabelFormatter={surprisePercentage} />
-        <CirclePlot opacity={0.5} seriesId="estimatedEPS" />
-        <CirclePlot seriesId="actualEPS" />
-      </CartesianChart>
-      <HStack gap={2} justifyContent="flex-end">
-        <LegendItem label="Estimated EPS" opacity={0.5} />
-        <LegendItem label="Actual EPS" />
-      </HStack>
-    </VStack>
+    <CartesianChart
+      height={defaultChartHeight}
+      inset={{ top: 32, bottom: 0, left: 0, right: 0 }}
+      legend={<Legend justifyContent="flex-end" paddingTop={1} />}
+      legendPosition="bottom"
+      series={[
+        {
+          id: 'estimatedEPS',
+          label: 'Estimated EPS',
+          data: estimatedEPS,
+          color: theme.color.bgPositive,
+          legendShape: 'circle',
+        },
+        {
+          id: 'actualEPS',
+          label: 'Actual EPS',
+          data: actualEPS,
+          color: theme.color.bgPositive,
+          legendShape: 'circle',
+        },
+      ]}
+      xAxis={{ scaleType: 'band', categoryPadding: 0.25 }}
+    >
+      <YAxis
+        showGrid
+        position="left"
+        requestedTickCount={3}
+        tickLabelFormatter={formatEarningAmount}
+      />
+      <XAxis height={20} tickLabelFormatter={(index) => quarters[index]} />
+      <XAxis height={20} tickLabelFormatter={surprisePercentage} />
+      <CirclePlot opacity={0.5} seriesId="estimatedEPS" />
+      <CirclePlot seriesId="actualEPS" />
+    </CartesianChart>
   );
 };
 

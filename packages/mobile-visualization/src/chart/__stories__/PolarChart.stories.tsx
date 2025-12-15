@@ -671,10 +671,10 @@ const CoinbaseOneRewardsChart = () => {
   const angleEachSideGap = (45 / 4) * 3;
   const startAngleDegrees = angleEachSideGap - 180;
   const endAngleDegrees = 180 - angleEachSideGap;
-  const angleGapDegrees = 5;
-  const totalGapDegrees = angleGapDegrees * 2;
-  const gapBetweenDegrees = totalGapDegrees / 3;
-  const sectionLengthDegrees = (endAngleDegrees - startAngleDegrees) / 3 - gapBetweenDegrees;
+  const totalSweepDegrees = endAngleDegrees - startAngleDegrees;
+  const gapBetweenDegrees = 5;
+  // Subtract total gap space (2 gaps for 3 sections), then divide remaining space by 3
+  const sectionLengthDegrees = (totalSweepDegrees - gapBetweenDegrees * 2) / 3;
 
   const firstSectionEnd = startAngleDegrees + sectionLengthDegrees;
   const secondSectionStart = firstSectionEnd + gapBetweenDegrees;
@@ -793,6 +793,87 @@ const WalletBreakdownDonut = () => {
   );
 };
 
+const PieChartWithLegend = () => {
+  const theme = useTheme();
+
+  return (
+    <PieChart
+      animate
+      legend
+      height={200}
+      legendPosition="bottom"
+      series={[
+        { id: 'btc', data: 40, label: 'Bitcoin', color: `rgb(${theme.spectrum.orange40})` },
+        { id: 'eth', data: 30, label: 'Ethereum', color: `rgb(${theme.spectrum.blue40})` },
+        { id: 'sol', data: 20, label: 'Solana', color: `rgb(${theme.spectrum.purple40})` },
+        { id: 'other', data: 10, label: 'Other', color: `rgb(${theme.spectrum.gray40})` },
+      ]}
+      width={200}
+    />
+  );
+};
+
+const DonutWithLegendRight = () => {
+  const theme = useTheme();
+
+  return (
+    <DonutChart
+      animate
+      legend
+      height={200}
+      innerRadiusRatio={0.6}
+      legendPosition="right"
+      series={[
+        { id: 'stocks', data: 45, label: 'Stocks', color: `rgb(${theme.spectrum.blue40})` },
+        { id: 'bonds', data: 25, label: 'Bonds', color: `rgb(${theme.spectrum.green40})` },
+        { id: 'crypto', data: 20, label: 'Crypto', color: `rgb(${theme.spectrum.orange40})` },
+        { id: 'cash', data: 10, label: 'Cash', color: `rgb(${theme.spectrum.gray40})` },
+      ]}
+      width={200}
+    />
+  );
+};
+
+const DonutWithLegendLeft = () => {
+  const theme = useTheme();
+
+  return (
+    <DonutChart
+      animate
+      legend
+      height={200}
+      innerRadiusRatio={0.6}
+      legendPosition="left"
+      series={[
+        { id: 'card', data: 35, label: 'Card', color: `rgb(${theme.spectrum.blue40})` },
+        { id: 'cash', data: 40, label: 'Cash', color: `rgb(${theme.spectrum.green40})` },
+        { id: 'rewards', data: 25, label: 'Rewards', color: `rgb(${theme.spectrum.purple40})` },
+      ]}
+      width={200}
+    />
+  );
+};
+
+const SemicircleWithLegend = () => {
+  const theme = useTheme();
+
+  return (
+    <PieChart
+      animate
+      legend
+      angularAxis={{ range: { min: -90, max: 90 } }}
+      height={120}
+      legendPosition="bottom"
+      series={[
+        { id: 'low', data: 25, label: 'Low', color: `rgb(${theme.spectrum.green40})` },
+        { id: 'medium', data: 50, label: 'Medium', color: `rgb(${theme.spectrum.yellow40})` },
+        { id: 'high', data: 25, label: 'High', color: `rgb(${theme.spectrum.orange40})` },
+      ]}
+      width={200}
+    />
+  );
+};
+
 type ExampleItem = {
   title: string;
   component: React.ReactNode;
@@ -805,6 +886,10 @@ function ExampleNavigator() {
     () => [
       { title: 'Basic Pie Chart', component: <BasicPieChart /> },
       { title: 'Basic Donut Chart', component: <BasicDonutChart /> },
+      { title: 'Pie with Legend', component: <PieChartWithLegend /> },
+      { title: 'Donut with Legend (Right)', component: <DonutWithLegendRight /> },
+      { title: 'Donut with Legend (Left)', component: <DonutWithLegendLeft /> },
+      { title: 'Semicircle with Legend', component: <SemicircleWithLegend /> },
       { title: 'Donut with Center Label', component: <DonutWithCenterLabel /> },
       { title: 'Animated Data Change', component: <AnimatedDataChange /> },
       { title: 'Wallet Breakdown', component: <WalletBreakdownDonut /> },

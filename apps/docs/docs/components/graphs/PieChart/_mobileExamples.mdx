@@ -1,8 +1,8 @@
-PieChart is built on [PolarChart](/components/graphs/PolarChart) for visualizing proportional data. Charts are built using `@shopify/react-native-skia`.
+PieChart is a wrapper for [PolarChart](/components/graphs/PolarChart) that makes it easy to create pie charts, supporting a single angular/radial axis pair. Charts are built using `@shopify/react-native-skia`.
 
 ## Setup
 
-Before using PieChart, you need to wrap your app with `ChartBridgeProvider`. This enables charts to access CDS theming and other React contexts within the Skia renderer. See [CartesianChart](/components/graphs/CartesianChart/#setup) for details.
+Before using PieChart, you need to wrap your app with `ChartBridgeProvider`. This enables charts to access CDS theming and other React contexts within the Skia renderer.
 
 ## Basics
 
@@ -15,11 +15,13 @@ function BasicPieChart() {
   return (
     <PieChart
       height={200}
-      width={200}
       series={[
         { id: 'a', data: 30, label: 'Category A', color: `rgb(${theme.spectrum.blue40})` },
-        { id: 'b', data: 40, label: 'Category B', color: `rgb(${theme.spectrum.green40})` },
-        { id: 'c', data: 30, label: 'Category C', color: `rgb(${theme.spectrum.orange40})` },
+        { id: 'b', data: 20, label: 'Category B', color: `rgb(${theme.spectrum.purple40})` },
+        { id: 'c', data: 15, label: 'Category C', color: `rgb(${theme.spectrum.pink50})` },
+        { id: 'd', data: 10, label: 'Category D', color: `rgb(${theme.spectrum.orange40})` },
+        { id: 'e', data: 15, label: 'Category E', color: `rgb(${theme.spectrum.yellow40})` },
+        { id: 'f', data: 10, label: 'Category F', color: `rgb(${theme.spectrum.green40})` },
       ]}
     />
   );
@@ -28,132 +30,75 @@ function BasicPieChart() {
 
 ## Styling
 
-### Corner Radius
+### Corners
 
-Use `cornerRadius` to round the corners of each slice.
+You can use `cornerRadius` to round the corners of each slice.
 
 ```jsx
-function CornerRadiusExample() {
+function RoundedCornersPieChart() {
   const theme = useTheme();
 
   return (
-    <HStack gap={4} justifyContent="center">
-      <PieChart
-        height={100}
-        width={100}
-        cornerRadius={0}
-        series={[
-          { id: 'a', data: 30, color: `rgb(${theme.spectrum.blue40})` },
-          { id: 'b', data: 40, color: `rgb(${theme.spectrum.green40})` },
-          { id: 'c', data: 30, color: `rgb(${theme.spectrum.orange40})` },
-        ]}
-      />
-      <PieChart
-        height={100}
-        width={100}
-        cornerRadius={8}
-        series={[
-          { id: 'a', data: 30, color: `rgb(${theme.spectrum.blue40})` },
-          { id: 'b', data: 40, color: `rgb(${theme.spectrum.green40})` },
-          { id: 'c', data: 30, color: `rgb(${theme.spectrum.orange40})` },
-        ]}
-      />
-    </HStack>
+    <PieChart
+      height={200}
+      cornerRadius={8}
+      series={[
+        { id: 'a', data: 30, label: 'Category A', color: `rgb(${theme.spectrum.blue40})` },
+        { id: 'b', data: 20, label: 'Category B', color: `rgb(${theme.spectrum.purple40})` },
+        { id: 'c', data: 15, label: 'Category C', color: `rgb(${theme.spectrum.pink50})` },
+        { id: 'd', data: 10, label: 'Category D', color: `rgb(${theme.spectrum.orange40})` },
+        { id: 'e', data: 15, label: 'Category E', color: `rgb(${theme.spectrum.yellow40})` },
+        { id: 'f', data: 10, label: 'Category F', color: `rgb(${theme.spectrum.green40})` },
+      ]}
+    />
   );
 }
 ```
 
 ### Stroke
 
-Use `stroke` and `strokeWidth` to add borders between slices.
+By default, slices have a stroke. You can remove this by setting `strokeWidth` to 0.
 
 ```jsx
-function StrokeExample() {
+function NoStrokePieChart() {
   const theme = useTheme();
 
   return (
     <PieChart
       height={200}
-      width={200}
-      stroke={theme.color.bg}
-      strokeWidth={3}
-      cornerRadius={8}
       series={[
-        { id: 'a', data: 25, color: `rgb(${theme.spectrum.blue40})` },
-        { id: 'b', data: 25, color: `rgb(${theme.spectrum.green40})` },
-        { id: 'c', data: 25, color: `rgb(${theme.spectrum.purple40})` },
-        { id: 'd', data: 25, color: `rgb(${theme.spectrum.orange40})` },
+        { id: 'a', data: 30, label: 'Category A', color: `rgb(${theme.spectrum.blue40})` },
+        { id: 'b', data: 20, label: 'Category B', color: `rgb(${theme.spectrum.purple40})` },
+        { id: 'c', data: 15, label: 'Category C', color: `rgb(${theme.spectrum.pink50})` },
+        { id: 'd', data: 10, label: 'Category D', color: `rgb(${theme.spectrum.orange40})` },
+        { id: 'e', data: 15, label: 'Category E', color: `rgb(${theme.spectrum.yellow40})` },
+        { id: 'f', data: 10, label: 'Category F', color: `rgb(${theme.spectrum.green40})` },
       ]}
+      strokeWidth={0}
     />
   );
 }
 ```
 
-### Padding Between Slices
+### Angles
 
-Use `angularAxis` with `paddingAngle` to add gaps between slices.
+Use `angularAxis` with `range` to adjust the start and end angle of a chart.
 
 ```jsx
-function PaddingExample() {
+function HalfPieChart() {
   const theme = useTheme();
 
   return (
     <PieChart
-      height={200}
-      width={200}
-      angularAxis={{ paddingAngle: 4 }}
-      series={[
-        { id: 'a', data: 30, color: `rgb(${theme.spectrum.blue40})` },
-        { id: 'b', data: 40, color: `rgb(${theme.spectrum.purple40})` },
-        { id: 'c', data: 30, color: `rgb(${theme.spectrum.orange40})` },
-      ]}
-    />
-  );
-}
-```
-
-## Partial Charts
-
-### Semicircle
-
-Use `angularAxis` with `range` to create partial pie charts like semicircles.
-
-```jsx
-function SemicircleChart() {
-  const theme = useTheme();
-
-  return (
-    <PieChart
+      legend
       height={120}
-      width={200}
       angularAxis={{ range: { min: -90, max: 90 } }}
       series={[
         { id: 'low', data: 25, label: 'Low', color: `rgb(${theme.spectrum.green40})` },
         { id: 'medium', data: 50, label: 'Medium', color: `rgb(${theme.spectrum.yellow40})` },
         { id: 'high', data: 25, label: 'High', color: `rgb(${theme.spectrum.red40})` },
       ]}
-    />
-  );
-}
-```
-
-### Quarter Pie
-
-```jsx
-function QuarterPieChart() {
-  const theme = useTheme();
-
-  return (
-    <PieChart
-      height={150}
-      width={150}
-      angularAxis={{ range: { min: 0, max: 90 } }}
-      cornerRadius={4}
-      series={[
-        { id: 'a', data: 40, color: `rgb(${theme.spectrum.blue40})` },
-        { id: 'b', data: 35, color: `rgb(${theme.spectrum.green40})` },
-        { id: 'c', data: 25, color: `rgb(${theme.spectrum.purple40})` },
-      ]}
+      legendPosition="bottom"
     />
   );
 }
@@ -186,30 +131,28 @@ function AnimatedPieChart() {
         { id: 'c', data: 30, color: `rgb(${theme.spectrum.orange40})` },
       ],
     ],
-    [theme],
+    [theme.spectrum.blue40, theme.spectrum.green40, theme.spectrum.orange40],
   );
 
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setDataSet((prev) => (prev + 1) % dataSets.length);
+    }, 500);
+
+    return () => clearInterval(intervalId);
+  }, [dataSets.length]);
+
   return (
-    <VStack alignItems="center" gap={4}>
-      <PieChart animate height={200} width={200} series={dataSets[dataSet]} />
-      <HStack alignItems="center" gap={2}>
-        <IconButton
-          accessibilityHint="Switch to previous data set"
-          accessibilityLabel="Previous"
-          name="arrowLeft"
-          onPress={() => setDataSet((prev) => (prev - 1 + dataSets.length) % dataSets.length)}
-          variant="secondary"
-        />
-        <Text font="label1">Data Set {dataSet + 1}</Text>
-        <IconButton
-          accessibilityHint="Switch to next data set"
-          accessibilityLabel="Next"
-          name="arrowRight"
-          onPress={() => setDataSet((prev) => (prev + 1) % dataSets.length)}
-          variant="secondary"
-        />
-      </HStack>
-    </VStack>
+    <HStack gap={4} justifyContent="center">
+      <VStack alignItems="center" gap={2}>
+        <Text font="label1">animate=true</Text>
+        <PieChart animate height={200} series={dataSets[dataSet]} />
+      </VStack>
+      <VStack alignItems="center" gap={2}>
+        <Text font="label1">animate=false</Text>
+        <PieChart animate={false} height={200} series={dataSets[dataSet]} />
+      </VStack>
+    </HStack>
   );
 }
 ```
@@ -218,85 +161,46 @@ function AnimatedPieChart() {
 
 ### Category Distribution
 
+### Tooltip
+
+Use `enableHighlighting` with `ChartTooltip` to show values on press. The `valueFormatter` prop customizes how values are displayed.
+
 ```jsx
-function CategoryDistribution() {
+function PieWithTooltip() {
   const theme = useTheme();
 
   const series = useMemo(
     () => [
-      { id: 'tech', data: 35, label: 'Technology', color: `rgb(${theme.spectrum.blue40})` },
-      { id: 'health', data: 25, label: 'Healthcare', color: `rgb(${theme.spectrum.green40})` },
-      { id: 'finance', data: 20, label: 'Finance', color: `rgb(${theme.spectrum.purple40})` },
-      { id: 'energy', data: 12, label: 'Energy', color: `rgb(${theme.spectrum.orange40})` },
-      { id: 'other', data: 8, label: 'Other', color: `rgb(${theme.spectrum.gray40})` },
+      { id: 'stocks', data: 45, label: 'Stocks', color: `rgb(${theme.spectrum.blue40})` },
+      { id: 'bonds', data: 25, label: 'Bonds', color: `rgb(${theme.spectrum.green40})` },
+      { id: 'crypto', data: 20, label: 'Crypto', color: `rgb(${theme.spectrum.orange40})` },
+      { id: 'cash', data: 10, label: 'Cash', color: `rgb(${theme.spectrum.gray40})` },
     ],
-    [theme],
+    [theme.spectrum.blue40, theme.spectrum.green40, theme.spectrum.orange40, theme.spectrum.gray40],
   );
 
-  const total = series.reduce((sum, s) => sum + s.data, 0);
+  const total = useMemo(() => series.reduce((sum, s) => sum + s.data, 0), [series]);
 
-  return (
-    <VStack gap={4} alignItems="center">
-      <PieChart
-        height={200}
-        width={200}
-        cornerRadius={4}
-        stroke={theme.color.bg}
-        strokeWidth={2}
-        series={series}
-      />
-      <VStack gap={2}>
-        {series.map((item) => (
-          <HStack key={item.id} gap={2} alignItems="center">
-            <Box
-              width={12}
-              height={12}
-              borderRadius={1000}
-              style={{ backgroundColor: item.color }}
-            />
-            <Text font="label1" style={{ minWidth: 80 }}>
-              {item.label}
-            </Text>
-            <Text font="label2" color="fgMuted">
-              {Math.round((item.data / total) * 100)}%
-            </Text>
-          </HStack>
-        ))}
-      </VStack>
-    </VStack>
+  const percentFormatter = useCallback(
+    (value) => {
+      const percent = Math.round((value / total) * 100);
+      return `${percent}% of portfolio`;
+    },
+    [total],
   );
-}
-```
-
-### Gauge Chart
-
-A semicircle pie chart can be used as a gauge to show progress or status.
-
-```jsx
-function GaugeChart() {
-  const theme = useTheme();
-  const value = 72;
-  const max = 100;
 
   return (
-    <VStack alignItems="center" gap={2}>
-      <PieChart
-        height={120}
-        width={200}
-        angularAxis={{ range: { min: -90, max: 90 } }}
-        cornerRadius={100}
-        series={[
-          { id: 'value', data: value, color: `rgb(${theme.spectrum.green40})` },
-          { id: 'remaining', data: max - value, color: `rgb(${theme.spectrum.gray20})` },
-        ]}
-      />
-      <VStack alignItems="center">
-        <Text font="title1">{value}%</Text>
-        <Text font="label2" color="fgMuted">
-          Goal Progress
-        </Text>
-      </VStack>
-    </VStack>
+    <PieChart
+      enableHighlighting
+      legend
+      height={200}
+      series={series}
+      legendPosition="right"
+      maxWidth={400}
+      style={{ margin: '0 auto' }}
+    >
+      <ChartTooltip label="Asset Allocation" valueFormatter={percentFormatter} />
+    </PieChart>
   );
 }
 ```
@@ -306,11 +210,11 @@ function GaugeChart() {
 For smaller spaces, you can create compact pie charts.
 
 ```jsx
-function CompactPie() {
+function CompactPieCharts() {
   const theme = useTheme();
 
   return (
-    <HStack gap={4}>
+    <HStack gap={4} flexWrap="wrap">
       <HStack gap={2} alignItems="center">
         <PieChart
           height={40}
@@ -319,6 +223,7 @@ function CompactPie() {
             { id: 'a', data: 60, color: `rgb(${theme.spectrum.blue40})` },
             { id: 'b', data: 40, color: `rgb(${theme.spectrum.gray20})` },
           ]}
+          inset={0}
         />
         <VStack gap={0}>
           <Text font="label1">60%</Text>
@@ -336,6 +241,7 @@ function CompactPie() {
             { id: 'b', data: 33, color: `rgb(${theme.spectrum.green40})` },
             { id: 'c', data: 34, color: `rgb(${theme.spectrum.purple40})` },
           ]}
+          inset={0}
         />
         <VStack gap={0}>
           <Text font="label1">Equal</Text>

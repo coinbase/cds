@@ -1,6 +1,6 @@
 Legend displays series information for charts, showing labels and color indicators for each data series. It can be positioned around the chart and supports custom shapes and item components.
 
-## Basic Usage
+## Basics
 
 Use the `legend` prop on chart components to enable a default legend, or pass a `Legend` component for customization.
 
@@ -56,7 +56,45 @@ function BasicLegend() {
 }
 ```
 
-## Legend Position
+Legend works with cartesian and polar charts.
+
+```jsx live
+<PieChart
+  legend
+  height={200}
+  radialAxis={{
+    range: ({ max }) => ({ min: max - 16, max }),
+  }}
+  angularAxis={{
+    paddingAngle: 3,
+  }}
+  cornerRadius={8}
+  legendPosition="bottom"
+  inset={{ bottom: 8 }}
+  series={[
+    {
+      id: 'completed',
+      data: 68,
+      label: 'Completed',
+      color: 'rgb(var(--green40))',
+    },
+    {
+      id: 'inProgress',
+      data: 22,
+      label: 'In Progress',
+      color: 'rgb(var(--blue40))',
+    },
+    {
+      id: 'pending',
+      data: 10,
+      label: 'Pending',
+      color: 'rgb(var(--yellow40))',
+    },
+  ]}
+/>
+```
+
+### Position
 
 Use `legendPosition` to place the legend at different positions around the chart. You can also customize alignment using the `justifyContent` prop on Legend.
 
@@ -66,7 +104,7 @@ function LegendPosition() {
     <CartesianChart
       height={{ base: 150, tablet: 200, desktop: 250 }}
       inset={{ bottom: 8, left: 0, right: 0, top: 8 }}
-      legend={<Legend justifyContent="flex-end" width="100%" />}
+      legend={<Legend justifyContent="flex-end" />}
       legendPosition="bottom"
       series={[
         {
@@ -126,7 +164,7 @@ function LegendPosition() {
 }
 ```
 
-## Shape Variants
+### Shape Variants
 
 Legend supports different shape variants: `pill`, `circle`, `square`, and `squircle`. Set the shape on each series using `legendShape`.
 
@@ -136,6 +174,7 @@ function ShapeVariants() {
 
   return (
     <LineChart
+      legend
       showArea
       showXAxis
       showYAxis
@@ -179,331 +218,9 @@ function ShapeVariants() {
 }
 ```
 
-## Layout Direction
+## Styling
 
-Use the `direction` prop to arrange legend items in a row or column.
-
-```jsx live
-function LayoutDirection() {
-  const series = [
-    {
-      id: 'stocks',
-      data: 45,
-      label: 'Stocks',
-      color: 'rgb(var(--blue40))',
-      legendShape: 'circle',
-    },
-    {
-      id: 'bonds',
-      data: 25,
-      label: 'Bonds',
-      color: 'rgb(var(--green40))',
-      legendShape: 'circle',
-    },
-    {
-      id: 'realEstate',
-      data: 15,
-      label: 'Real Estate',
-      color: 'rgb(var(--orange40))',
-      legendShape: 'circle',
-    },
-    {
-      id: 'commodities',
-      data: 10,
-      label: 'Commodities',
-      color: 'rgb(var(--purple40))',
-      legendShape: 'circle',
-    },
-    {
-      id: 'cash',
-      data: 5,
-      label: 'Cash',
-      color: 'rgb(var(--gray40))',
-      legendShape: 'circle',
-    },
-  ];
-
-  return (
-    <VStack gap={2}>
-      <Text font="headline" textAlign="center">
-        Portfolio Allocation
-      </Text>
-      <PieChart
-        height={{ base: 250, tablet: 300, desktop: 350 }}
-        legend
-        legendPosition="right"
-        series={series}
-      />
-    </VStack>
-  );
-}
-```
-
-## Custom Legend Item
-
-Use `ItemComponent` to render custom legend items with additional information or interactions.
-
-```jsx live
-function CustomLegendItem() {
-  const timeLabels = [
-    'Jan',
-    'Feb',
-    'Mar',
-    'Apr',
-    'May',
-    'Jun',
-    'Jul',
-    'Aug',
-    'Sep',
-    'Oct',
-    'Nov',
-    'Dec',
-  ];
-
-  const series = [
-    {
-      id: 'candidate-a',
-      label: 'Candidate A',
-      data: [48, 47, 46, 45, 44, 43, 42, 41, 40, 39, 38, 38],
-      color: 'rgb(var(--blue40))',
-      legendShape: 'circle',
-    },
-    {
-      id: 'candidate-b',
-      label: 'Candidate B',
-      data: [null, null, null, 6, 10, 14, 18, 22, 26, 29, 32, 35],
-      color: 'rgb(var(--orange40))',
-      legendShape: 'circle',
-    },
-    {
-      id: 'candidate-c',
-      label: 'Candidate C',
-      data: [52, 53, 54, 49, 46, 43, 40, 37, 34, 32, 30, 27],
-      color: 'rgb(var(--gray40))',
-      legendShape: 'circle',
-    },
-  ];
-
-  const ValueLegendItem = memo(function ValueLegendItem({ seriesId, label, color, shape }) {
-    const { scrubberPosition } = useScrubberContext();
-    const { series, dataLength } = useCartesianChartContext();
-
-    const dataIndex = scrubberPosition ?? dataLength - 1;
-
-    const seriesData = series.find((s) => s.id === seriesId);
-    const rawValue = seriesData?.data?.[dataIndex];
-
-    const formattedValue =
-      rawValue === null || rawValue === undefined ? '--' : `${Math.round(rawValue)}%`;
-
-    return (
-      <HStack alignItems="center" gap={1}>
-        <DefaultLegendShape color={color} shape={shape} />
-        <Text font="label2">{label}</Text>
-        <Text tabularNumbers font="label1">
-          {formattedValue}
-        </Text>
-      </HStack>
-    );
-  });
-
-  return (
-    <VStack gap={2}>
-      <Text font="headline" textAlign="center">
-        Election Polls
-      </Text>
-      <LineChart
-        enableScrubbing
-        showArea
-        showXAxis
-        showYAxis
-        height={{ base: 200, tablet: 250, desktop: 300 }}
-        legend={<Legend ItemComponent={ValueLegendItem} justifyContent="flex-start" paddingX={2} />}
-        legendPosition="top"
-        series={series}
-        xAxis={{
-          data: timeLabels,
-        }}
-        yAxis={{
-          domain: { max: 100, min: 0 },
-          showGrid: true,
-          tickLabelFormatter: (value) => `${value}%`,
-        }}
-      >
-        <Scrubber hideBeaconLabels />
-      </LineChart>
-    </VStack>
-  );
-}
-```
-
-## Interactive Legend
-
-Create interactive legends by using custom item components with state management.
-
-```jsx live
-function InteractiveLegend() {
-  const [emphasizedId, setEmphasizedId] = useState(null);
-
-  const months = [
-    'Jan',
-    'Feb',
-    'Mar',
-    'Apr',
-    'May',
-    'Jun',
-    'Jul',
-    'Aug',
-    'Sep',
-    'Oct',
-    'Nov',
-    'Dec',
-  ];
-
-  const seriesConfig = useMemo(
-    () => [
-      {
-        id: 'revenue',
-        label: 'Revenue',
-        data: [120, 150, 180, 165, 190, 210, 240, 220, 260, 280, 310, 350],
-        baseColor: '--blue',
-      },
-      {
-        id: 'expenses',
-        label: 'Expenses',
-        data: [80, 95, 110, 105, 120, 130, 145, 140, 155, 165, 180, 195],
-        baseColor: '--orange',
-      },
-      {
-        id: 'profit',
-        label: 'Profit',
-        data: [40, 55, 70, 60, 70, 80, 95, 80, 105, 115, 130, 155],
-        baseColor: '--green',
-      },
-    ],
-    [],
-  );
-
-  const handleToggle = useCallback((seriesId) => {
-    setEmphasizedId((prev) => (prev === seriesId ? null : seriesId));
-  }, []);
-
-  const ChipLegendItem = memo(function ChipLegendItem({ seriesId, label }) {
-    const isEmphasized = emphasizedId === seriesId;
-    const config = seriesConfig.find((s) => s.id === seriesId);
-    const baseColor = config?.baseColor ?? '--gray';
-
-    return (
-      <Chip
-        compact
-        aria-label={`${isEmphasized ? 'Remove emphasis from' : 'Emphasize'} ${label} series`}
-        aria-pressed={isEmphasized}
-        inverted={isEmphasized}
-        onClick={() => handleToggle(seriesId)}
-        style={{
-          backgroundColor: `rgb(var(${baseColor}10))`,
-          borderWidth: 0,
-          color: 'var(--color-fg)',
-          outlineColor: `rgb(var(${baseColor}50))`,
-        }}
-      >
-        <HStack alignItems="center" gap={1}>
-          <DefaultLegendShape color={`rgb(var(${baseColor}50))`} />
-          <Text font="label2">{label}</Text>
-        </HStack>
-      </Chip>
-    );
-  });
-
-  const series = useMemo(() => {
-    return seriesConfig.map((config) => {
-      const isEmphasized = emphasizedId === config.id;
-      const isDimmed = emphasizedId !== null && !isEmphasized;
-
-      return {
-        id: config.id,
-        label: config.label,
-        data: config.data,
-        color: `rgb(var(${config.baseColor}40))`,
-        opacity: isDimmed ? 0.3 : 1,
-      };
-    });
-  }, [emphasizedId, seriesConfig]);
-
-  return (
-    <VStack gap={2}>
-      <Text font="headline" textAlign="center">
-        Financial Overview
-      </Text>
-      <LineChart
-        showArea
-        showXAxis
-        showYAxis
-        height={{ base: 300, tablet: 350, desktop: 400 }}
-        legend={<Legend ItemComponent={ChipLegendItem} gap={1} paddingTop={1} />}
-        legendPosition="top"
-        series={series}
-        xAxis={{
-          data: months,
-        }}
-        yAxis={{
-          domain: { min: 0 },
-          showGrid: true,
-          tickLabelFormatter: (value) => `$${value}k`,
-        }}
-      />
-    </VStack>
-  );
-}
-```
-
-## Donut Chart Legend
-
-Legend works with donut and pie charts to show segment information.
-
-```jsx live
-function DonutChartLegend() {
-  const series = [
-    {
-      id: 'completed',
-      data: 68,
-      label: 'Completed',
-      color: 'var(--color-fgPositive)',
-      legendShape: 'squircle',
-    },
-    {
-      id: 'inProgress',
-      data: 22,
-      label: 'In Progress',
-      color: 'rgb(var(--blue40))',
-      legendShape: 'squircle',
-    },
-    {
-      id: 'pending',
-      data: 10,
-      label: 'Pending',
-      color: 'rgb(var(--gray40))',
-      legendShape: 'squircle',
-    },
-  ];
-
-  return (
-    <VStack gap={2}>
-      <Text font="headline" textAlign="center">
-        Task Status
-      </Text>
-      <DonutChart
-        legend
-        height={{ base: 250, tablet: 300, desktop: 350 }}
-        legendPosition="bottom"
-        series={series}
-      />
-    </VStack>
-  );
-}
-```
-
-## Custom Legend Shapes
+## Shape
 
 You can pass a custom ReactNode as `legendShape` for fully custom indicators.
 
@@ -652,4 +369,327 @@ function CustomLegendShapes () {
     />
   );
 };
+```
+
+## Composed Examples
+
+### Dynamic Label
+
+You can use `ItemComponent` to display a label that updates as a user interacts with the chart.
+
+```jsx live
+function CustomLegendItem() {
+  const timeLabels = [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
+  ];
+
+  const series = [
+    {
+      id: 'candidate-a',
+      label: 'Candidate A',
+      data: [48, 47, 46, 45, 44, 43, 42, 41, 40, 39, 38, 38],
+      color: 'rgb(var(--blue40))',
+      legendShape: 'circle',
+    },
+    {
+      id: 'candidate-b',
+      label: 'Candidate B',
+      data: [null, null, null, 6, 10, 14, 18, 22, 26, 29, 32, 35],
+      color: 'rgb(var(--orange40))',
+      legendShape: 'circle',
+    },
+    {
+      id: 'candidate-c',
+      label: 'Candidate C',
+      data: [52, 53, 54, 49, 46, 43, 40, 37, 34, 32, 30, 27],
+      color: 'rgb(var(--gray40))',
+      legendShape: 'circle',
+    },
+  ];
+
+  const ValueLegendItem = memo(function ValueLegendItem({ seriesId, label, color, shape }) {
+    const highlightContext = useHighlightContext();
+    const { series, dataLength } = useCartesianChartContext();
+
+    const dataIndex = highlightContext?.highlightedItem?.dataIndex ?? dataLength - 1;
+
+    const seriesData = series.find((s) => s.id === seriesId);
+    const rawValue = seriesData?.data?.[dataIndex];
+
+    const formattedValue =
+      rawValue === null || rawValue === undefined ? '--' : `${Math.round(rawValue)}%`;
+
+    return (
+      <HStack alignItems="center" gap={1}>
+        <DefaultLegendShape color={color} shape={shape} />
+        <Text font="label2">{label}</Text>
+        <Text tabularNumbers font="label1">
+          {formattedValue}
+        </Text>
+      </HStack>
+    );
+  });
+
+  return (
+    <VStack gap={2}>
+      <Text font="headline" textAlign="center">
+        Election Polls
+      </Text>
+      <LineChart
+        enableScrubbing
+        showArea
+        showXAxis
+        showYAxis
+        height={{ base: 200, tablet: 250, desktop: 300 }}
+        legend={<Legend ItemComponent={ValueLegendItem} justifyContent="flex-start" paddingX={2} />}
+        legendPosition="top"
+        series={series}
+        xAxis={{
+          data: timeLabels,
+        }}
+        yAxis={{
+          domain: { max: 100, min: 0 },
+          showGrid: true,
+          tickLabelFormatter: (value) => `${value}%`,
+        }}
+      >
+        <Scrubber hideBeaconLabels />
+      </LineChart>
+    </VStack>
+  );
+}
+```
+
+### Interactive Legend
+
+You can create an interactive legend that the user can use to toggle to emphasize a specific series.
+
+```jsx live
+function InteractiveLegend() {
+  const [emphasizedId, setEmphasizedId] = useState(null);
+
+  const months = [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
+  ];
+
+  const seriesConfig = useMemo(
+    () => [
+      {
+        id: 'revenue',
+        label: 'Revenue',
+        data: [120, 150, 180, 165, 190, 210, 240, 220, 260, 280, 310, 350],
+        baseColor: '--blue',
+      },
+      {
+        id: 'expenses',
+        label: 'Expenses',
+        data: [80, 95, 110, 105, 120, 130, 145, 140, 155, 165, 180, 195],
+        baseColor: '--orange',
+      },
+      {
+        id: 'profit',
+        label: 'Profit',
+        data: [40, 55, 70, 60, 70, 80, 95, 80, 105, 115, 130, 155],
+        baseColor: '--green',
+      },
+    ],
+    [],
+  );
+
+  const handleToggle = useCallback((seriesId) => {
+    setEmphasizedId((prev) => (prev === seriesId ? null : seriesId));
+  }, []);
+
+  const ChipLegendItem = memo(function ChipLegendItem({ seriesId, label }) {
+    const isEmphasized = emphasizedId === seriesId;
+    const config = seriesConfig.find((s) => s.id === seriesId);
+    const baseColor = config?.baseColor ?? '--gray';
+
+    return (
+      <Chip
+        compact
+        aria-label={`${isEmphasized ? 'Remove emphasis from' : 'Emphasize'} ${label} series`}
+        aria-pressed={isEmphasized}
+        inverted={isEmphasized}
+        onClick={() => handleToggle(seriesId)}
+        style={{
+          backgroundColor: `rgb(var(${baseColor}10))`,
+          borderWidth: 0,
+          color: 'var(--color-fg)',
+          outlineColor: `rgb(var(${baseColor}50))`,
+        }}
+      >
+        <HStack alignItems="center" gap={1}>
+          <DefaultLegendShape color={`rgb(var(${baseColor}50))`} />
+          <Text font="label2">{label}</Text>
+        </HStack>
+      </Chip>
+    );
+  });
+
+  const series = useMemo(() => {
+    return seriesConfig.map((config) => {
+      const isEmphasized = emphasizedId === config.id;
+      const isDimmed = emphasizedId !== null && !isEmphasized;
+
+      return {
+        id: config.id,
+        label: config.label,
+        data: config.data,
+        color: `rgb(var(${config.baseColor}40))`,
+        opacity: isDimmed ? 0.3 : 1,
+      };
+    });
+  }, [emphasizedId, seriesConfig]);
+
+  return (
+    <VStack gap={2}>
+      <Text font="headline" textAlign="center">
+        Financial Overview
+      </Text>
+      <LineChart
+        showArea
+        showXAxis
+        showYAxis
+        height={{ base: 300, tablet: 350, desktop: 400 }}
+        legend={<Legend ItemComponent={ChipLegendItem} gap={1} paddingTop={1} />}
+        legendPosition="top"
+        series={series}
+        xAxis={{
+          data: months,
+        }}
+        yAxis={{
+          domain: { min: 0 },
+          showGrid: true,
+          tickLabelFormatter: (value) => `$${value}k`,
+        }}
+      />
+    </VStack>
+  );
+}
+```
+
+### Wrapped Legend
+
+Legend will automatically wrap when there are too many items to fit on one line.
+
+```jsx live
+function WrappedLegend() {
+  const precipitationData = [
+    {
+      id: 'northeast',
+      label: 'Northeast',
+      data: [5.14, 1.53, 5.73, 4.29, 3.78, 3.92, 4.19, 5.54, 2.03, 1.42, 2.95, 3.89],
+      color: 'rgb(var(--blue40))',
+    },
+    {
+      id: 'upperMidwest',
+      label: 'Upper Midwest',
+      data: [1.44, 0.49, 2.16, 3.67, 5.44, 6.21, 4.02, 3.67, 0.92, 1.47, 3.05, 1.48],
+      color: 'rgb(var(--green40))',
+    },
+    {
+      id: 'ohioValley',
+      label: 'Ohio Valley',
+      data: [4.74, 1.83, 3.1, 5.42, 5.69, 3.29, 5.02, 2.57, 4.13, 0.79, 4.31, 3.67],
+      color: 'rgb(var(--orange40))',
+    },
+    {
+      id: 'southeast',
+      label: 'Southeast',
+      data: [5.48, 3.11, 5.73, 2.97, 5.45, 3.28, 7.18, 5.67, 7.93, 1.33, 2.69, 3.21],
+      color: 'rgb(var(--yellow40))',
+    },
+    {
+      id: 'northernRockiesAndPlains',
+      label: 'Northern Rockies and Plains',
+      data: [0.64, 1.01, 1.06, 2.12, 3.34, 2.65, 1.54, 1.89, 0.95, 0.57, 1.23, 0.67],
+      color: 'rgb(var(--indigo40))',
+    },
+    {
+      id: 'south',
+      label: 'South',
+      data: [4.19, 1.79, 2.93, 3.84, 5.25, 3.4, 4.27, 1.84, 3.08, 0.52, 4.5, 2.62],
+      color: 'rgb(var(--pink40))',
+    },
+    {
+      id: 'southwest',
+      label: 'Southwest',
+      data: [1.12, 1.5, 1.52, 0.75, 0.76, 1.27, 1.44, 2.01, 0.62, 1.08, 1.23, 0.25],
+      color: 'rgb(var(--purple40))',
+    },
+    {
+      id: 'northwest',
+      label: 'Northwest',
+      data: [5.69, 3.67, 3.32, 1.95, 2.08, 1.31, 0.28, 0.81, 0.95, 2.03, 5.45, 5.8],
+      color: 'rgb(var(--red40))',
+    },
+    {
+      id: 'west',
+      label: 'West',
+      data: [3.39, 4.7, 3.09, 1.07, 0.55, 0.12, 0.23, 0.26, 0.22, 0.4, 2.7, 2.54],
+      color: 'rgb(var(--teal40))',
+    },
+  ];
+
+  const xAxisData = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+  ];
+
+  return (
+    <LineChart
+      enableScrubbing
+      legend
+      showArea
+      showXAxis
+      showYAxis
+      height={{ base: 300, tablet: 400, desktop: 500 }}
+      legendPosition="bottom"
+      series={precipitationData}
+      xAxis={{ data: xAxisData, label: 'Month', showLine: true, showTickMarks: true }}
+      yAxis={{
+        label: 'Precipitation (in)',
+        showGrid: true,
+        showLine: true,
+        showTickMarks: true,
+      }}
+    >
+      <Scrubber hideBeaconLabels hideOverlay />
+      <ChartTooltip valueFormatter={(value) => `${value} in`} />
+    </LineChart>
+  );
+}
 ```

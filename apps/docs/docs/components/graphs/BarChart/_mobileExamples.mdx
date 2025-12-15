@@ -356,6 +356,7 @@ You can also round the baseline of the bars by setting the `roundBaseline` prop 
 
 ```jsx
 function PositiveAndNegativeCashFlow() {
+  const theme = useTheme();
   const ThinSolidLine = memo((props: SolidLineProps) => <SolidLine {...props} strokeWidth={1} />);
 
   const categories = Array.from({ length: 31 }, (_, i) => `3/${i + 1}`);
@@ -369,25 +370,39 @@ function PositiveAndNegativeCashFlow() {
     0, 0, 0, -12, -10,
   ];
   const series = [
-    { id: 'gains', data: gains, color: 'var(--color-fgPositive)' },
-    { id: 'losses', data: losses, color: 'var(--color-fgNegative)' },
+    { id: 'gains', data: gains, color: theme.color.fgPositive, stackId: 'bars' },
+    { id: 'losses', data: losses, color: theme.color.fgNegative, stackId: 'bars' },
   ];
 
+  // Custom bar component that dims non-highlighted bars
+  const DimmingBarComponent = memo(({ dataX, ...props }) => {
+    const highlightContext = useHighlightContext();
+
+    const fillOpacity = useDerivedValue(() => {
+      const highlightedIndex = highlightContext?.highlightedItem.value?.dataIndex;
+      return highlightedIndex === undefined || highlightedIndex === dataX ? 1 : 0.5;
+    }, [highlightContext, dataX]);
+
+    return <DefaultBar {...props} dataX={dataX} fillOpacity={fillOpacity.value} />;
+  });
+
   return (
-    <BarChart
+    <CartesianChart
+      enableHighlighting
       height={150}
       inset={{ top: 8, bottom: 8, left: 0, right: 0 }}
       series={series}
-      xAxis={{ data: categories }}
-      stacked
-      showXAxis
-      showYAxis
-      yAxis={{
-        showGrid: true,
-        GridLineComponent: ThinSolidLine,
-        tickLabelFormatter: (value) => `$${value}M`,
-      }}
-    />
+      xAxis={{ data: categories, scaleType: 'band' }}
+    >
+      <XAxis />
+      <YAxis
+        showGrid
+        GridLineComponent={ThinSolidLine}
+        tickLabelFormatter={(value) => `$${value}M`}
+      />
+      <BarPlot BarComponent={DimmingBarComponent} />
+      <ReferenceLine LineComponent={SolidLine} dataY={0} />
+    </CartesianChart>
   );
 }
 ```

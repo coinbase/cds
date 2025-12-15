@@ -18,6 +18,7 @@ import { useTheme } from '@coinbase/cds-mobile';
 import { Button, IconButton } from '@coinbase/cds-mobile/buttons';
 import { ListCell } from '@coinbase/cds-mobile/cells';
 import { Example, ExampleScreen } from '@coinbase/cds-mobile/examples/ExampleScreen';
+import { Icon } from '@coinbase/cds-mobile/icons';
 import { Box, type BoxBaseProps, HStack, VStack } from '@coinbase/cds-mobile/layout';
 import { Avatar, RemoteImage } from '@coinbase/cds-mobile/media';
 import { SectionHeader } from '@coinbase/cds-mobile/section-header/SectionHeader';
@@ -1381,17 +1382,21 @@ const CandlesticksChart = memo(
 
     const ThinSolidLine = memo((props: SolidLineProps) => <SolidLine {...props} strokeWidth={1} />);
 
-    // Custom line component that renders a rect to highlight the entire bandwidth
+    // Custom line component that renders a rect to highlight the entire bandwidth including gaps
     const BandwidthHighlight = memo(({ stroke }: LineComponentProps) => {
       const { getXSerializableScale, drawingArea } = useCartesianChartContext();
       const { scrubberPosition } = useScrubberContext();
       const xScale = useMemo(() => getXSerializableScale(), [getXSerializableScale]);
 
-      const rectWidth = useMemo(() => {
+      const { rectWidth, gap } = useMemo(() => {
         if (xScale !== undefined && xScale.type === 'band') {
-          return xScale.bandwidth;
+          const bandwidth = xScale.bandwidth;
+          const step = xScale.step ?? bandwidth;
+          const gap = step - bandwidth;
+          // Expand the highlight to include half the gap on each side
+          return { rectWidth: bandwidth + gap, gap };
         }
-        return 0;
+        return { rectWidth: 0, gap: 0 };
       }, [xScale]);
 
       const xPos = useDerivedValue(() => {
@@ -1400,8 +1405,9 @@ const CandlesticksChart = memo(
           position !== undefined && xScale
             ? getPointOnSerializableScale(position, xScale)
             : undefined;
-        return xPos !== undefined ? xPos - rectWidth / 2 : 0;
-      }, [scrubberPosition, xScale]);
+        // Shift left by half the gap to center the expanded highlight
+        return xPos !== undefined ? xPos - gap / 2 : 0;
+      }, [scrubberPosition, xScale, gap]);
 
       const opacity = useDerivedValue(() => (xPos.value !== undefined ? 1 : 0), [xPos]);
 
@@ -2282,6 +2288,366 @@ function TwoLineScrubberLabel() {
   );
 }
 
+function HighlightLineSegments() {
+  const prices = useMemo(
+    () => [...btcCandles].reverse().map((candle) => parseFloat(candle.close)),
+    [],
+  );
+
+  const [scrubberPosition, setScrubberPosition] = useState<number | undefined>(undefined);
+
+  const handleHighlightChange = useCallback(
+    (item: { seriesId?: string; dataIndex?: number } | undefined) => {
+      setScrubberPosition(item?.dataIndex);
+    },
+    [],
+  );
+
+  // Calculate which month (~30-day segment) the scrubber is in
+  const dataPointsPerMonth = 30;
+  const currentMonth =
+    scrubberPosition !== undefined ? Math.floor(scrubberPosition / dataPointsPerMonth) : undefined;
+
+  const monthStart = currentMonth !== undefined ? currentMonth * dataPointsPerMonth : undefined;
+  const monthEnd =
+    currentMonth !== undefined
+      ? Math.min((currentMonth + 1) * dataPointsPerMonth - 1, prices.length - 1)
+      : undefined;
+
+  // Create gradient to highlight the current month
+  const gradient = useMemo(() => {
+    const color = assets.btc.color;
+
+    if (monthStart === undefined || monthEnd === undefined) {
+      return {
+        axis: 'x' as const,
+        stops: [
+          { offset: 0, color, opacity: 1 },
+          { offset: prices.length - 1, color, opacity: 1 },
+        ],
+      };
+    }
+
+    const stops = [];
+    if (monthStart > 0) {
+      stops.push({ offset: 0, color, opacity: 0.25 });
+      stops.push({ offset: monthStart, color, opacity: 0.25 });
+    }
+    stops.push({ offset: monthStart, color, opacity: 1 });
+    stops.push({ offset: monthEnd, color, opacity: 1 });
+    if (monthEnd < prices.length - 1) {
+      stops.push({ offset: monthEnd, color, opacity: 0.25 });
+      stops.push({ offset: prices.length - 1, color, opacity: 0.25 });
+    }
+
+    return { axis: 'x' as const, stops };
+  }, [monthStart, monthEnd, prices.length]);
+
+  return (
+    <LineChart
+      enableScrubbing
+      animate={false}
+      height={200}
+      onHighlightChange={handleHighlightChange}
+      series={[{ id: 'btc', data: prices, gradient }]}
+    >
+      <Scrubber hideOverlay />
+    </LineChart>
+  );
+}
+
+function AdaptiveDetail() {
+  const theme = useTheme();
+
+  const BTCTab: TabComponent = memo(
+    forwardRef(({ label, ...props }: SegmentedTabProps, ref: React.ForwardedRef<View>) => {
+      const { activeTab } = useTabsContext();
+      const isActive = activeTab?.id === props.id;
+
+      return (
+        <SegmentedTab
+          ref={ref}
+          label={
+            <TextLabel1
+              style={{
+                color: isActive ? assets.btc.color : undefined,
+              }}
+            >
+              {label}
+            </TextLabel1>
+          }
+          {...props}
+        />
+      );
+    }),
+  );
+
+  const BTCActiveIndicator = memo(({ style, ...props }: TabsActiveIndicatorProps) => (
+    <PeriodSelectorActiveIndicator
+      {...props}
+      style={[style, { backgroundColor: `${assets.btc.color}1A` }]}
+    />
+  ));
+
+  // Sample data using a moving average for smoother results
+  const sampleData = useCallback((data: number[], targetPoints: number) => {
+    if (data.length <= targetPoints) return data;
+
+    // First, apply a moving average to smooth the data
+    const windowSize = Math.max(3, Math.floor(data.length / targetPoints));
+    const smoothed: number[] = [];
+
+    for (let i = 0; i < data.length; i++) {
+      const halfWindow = Math.floor(windowSize / 2);
+      const start = Math.max(0, i - halfWindow);
+      const end = Math.min(data.length, i + halfWindow + 1);
+      const window = data.slice(start, end);
+      const avg = window.reduce((sum, val) => sum + val, 0) / window.length;
+      smoothed.push(avg);
+    }
+
+    // Then sample from the smoothed data
+    const step = smoothed.length / targetPoints;
+    const sampled: number[] = [];
+
+    for (let i = 0; i < targetPoints; i++) {
+      const idx = Math.floor(i * step);
+      sampled.push(smoothed[idx]);
+    }
+
+    // Always include the last point for accuracy
+    sampled[sampled.length - 1] = data[data.length - 1];
+
+    return sampled;
+  }, []);
+
+  // Memoized chart component - only re-renders when data or isScrubbing changes
+  type MemoizedChartProps = {
+    data: number[];
+    isScrubbing: boolean;
+    onScrubberPositionChange: (position: number | undefined) => void;
+    scrubberLabel: (index: number) => string;
+  };
+
+  const MemoizedChart = memo(
+    ({ data, isScrubbing, onScrubberPositionChange, scrubberLabel }: MemoizedChartProps) => {
+      return (
+        <LineChart
+          enableScrubbing
+          height={250}
+          onScrubberPositionChange={onScrubberPositionChange}
+          series={[
+            {
+              id: 'btc',
+              data: data,
+              color: assets.btc.color,
+            },
+          ]}
+          strokeWidth={isScrubbing ? 2 : 4}
+          transition={{ type: 'timing', duration: 150 }}
+          yAxis={{ range: ({ min, max }) => ({ min: min + 8, max: max - 8 }) }}
+        >
+          <Scrubber label={scrubberLabel} seriesIds={[]} />
+        </LineChart>
+      );
+    },
+  );
+
+  const AdaptiveDetailChart = memo(() => {
+    const tabs = useMemo(
+      () => [
+        { id: 'hour', label: '1H' },
+        { id: 'day', label: '1D' },
+        { id: 'week', label: '1W' },
+        { id: 'month', label: '1M' },
+        { id: 'year', label: '1Y' },
+        { id: 'all', label: 'All' },
+      ],
+      [],
+    );
+    const [timePeriod, setTimePeriod] = useState<TabValue>(tabs[0]);
+    const [scrubberPosition, setScrubberPosition] = useState<number | undefined>(undefined);
+    const isScrubbing = scrubberPosition !== undefined;
+
+    const sparklineTimePeriodData = useMemo(() => {
+      return sparklineInteractiveData[timePeriod.id as keyof typeof sparklineInteractiveData];
+    }, [timePeriod]);
+
+    const sparklineTimePeriodDataValues = useMemo(() => {
+      return sparklineTimePeriodData.map((d) => d.value);
+    }, [sparklineTimePeriodData]);
+
+    const sparklineTimePeriodDataTimestamps = useMemo(() => {
+      return sparklineTimePeriodData.map((d) => d.date);
+    }, [sparklineTimePeriodData]);
+
+    // Sample more points for larger time frames
+    const samplePointCount = useMemo(() => {
+      switch (timePeriod.id) {
+        case 'hour':
+        case 'day':
+          return 24;
+        case 'week':
+          return 32;
+        case 'month':
+          return 40;
+        case 'year':
+        case 'all':
+        default:
+          return 48;
+      }
+    }, [timePeriod.id]);
+
+    // Sampled data for smooth display when not scrubbing
+    const sampledDataValues = useMemo(() => {
+      return sampleData(sparklineTimePeriodDataValues, samplePointCount);
+    }, [sparklineTimePeriodDataValues, samplePointCount]);
+
+    // Use sampled data for display when idle, full data when scrubbing
+    const displayData = useMemo(() => {
+      return isScrubbing ? sparklineTimePeriodDataValues : sampledDataValues;
+    }, [isScrubbing, sparklineTimePeriodDataValues, sampledDataValues]);
+
+    const onPeriodChange = useCallback(
+      (period: TabValue | null) => {
+        setTimePeriod(period || tabs[0]);
+      },
+      [tabs],
+    );
+
+    const handleScrubberPositionChange = useCallback((position: number | undefined) => {
+      setScrubberPosition(position);
+    }, []);
+
+    const priceFormatter = useMemo(
+      () =>
+        new Intl.NumberFormat('en-US', {
+          style: 'currency',
+          currency: 'USD',
+        }),
+      [],
+    );
+
+    const formatPrice = useCallback(
+      (price: number) => {
+        return priceFormatter.format(price);
+      },
+      [priceFormatter],
+    );
+
+    const formatDate = useCallback((date: Date, periodId: string) => {
+      const time = date.toLocaleTimeString('en-US', {
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: true,
+      });
+
+      switch (periodId) {
+        case 'hour':
+        case 'day':
+          return time;
+        case 'week': {
+          const dayOfWeek = date.toLocaleDateString('en-US', { weekday: 'long' });
+          return `${dayOfWeek} ${time}`;
+        }
+        case 'month':
+        case 'year':
+          return date.toLocaleDateString('en-US', {
+            month: 'short',
+            day: 'numeric',
+          });
+        case 'all':
+        default:
+          return date.toLocaleDateString('en-US', {
+            month: 'short',
+            day: 'numeric',
+            year: 'numeric',
+          });
+      }
+    }, []);
+
+    const scrubberLabel = useCallback(
+      (index: number) => {
+        // Map index from display data to full data for accurate timestamps
+        const fullIndex = isScrubbing
+          ? index
+          : Math.round(
+              (index / (sampledDataValues.length - 1)) *
+                (sparklineTimePeriodDataTimestamps.length - 1),
+            );
+        return formatDate(sparklineTimePeriodDataTimestamps[fullIndex], timePeriod.id);
+      },
+      [
+        isScrubbing,
+        sampledDataValues.length,
+        sparklineTimePeriodDataTimestamps,
+        formatDate,
+        timePeriod.id,
+      ],
+    );
+
+    // Calculate price change - use scrubber position when scrubbing, otherwise end of period
+    const startPrice = sparklineTimePeriodDataValues[0];
+    const displayPrice = useMemo(() => {
+      if (scrubberPosition === undefined) {
+        return sparklineTimePeriodDataValues[sparklineTimePeriodDataValues.length - 1];
+      }
+      // When scrubbing, position is relative to full data
+      if (scrubberPosition < sparklineTimePeriodDataValues.length) {
+        return sparklineTimePeriodDataValues[scrubberPosition];
+      }
+      return sparklineTimePeriodDataValues[sparklineTimePeriodDataValues.length - 1];
+    }, [scrubberPosition, sparklineTimePeriodDataValues]);
+
+    const difference = displayPrice - startPrice;
+    const percentChange = (difference / startPrice) * 100;
+    const trendColorToken = difference >= 0 ? 'fgPositive' : 'fgNegative';
+    const trendColorValue = difference >= 0 ? theme.color.fgPositive : theme.color.fgNegative;
+
+    return (
+      <VStack gap={2}>
+        <HStack alignItems="center" gap={2}>
+          <RemoteImage shape="circle" size="xl" source={assets.btc.imageUrl} />
+          <VStack gap={0.5}>
+            <Text font="title3">Bitcoin</Text>
+            <HStack alignItems="center" gap={1}>
+              <Text font="title2">{formatPrice(displayPrice)}</Text>
+              <HStack alignItems="center" gap={0.5}>
+                <Icon
+                  color={trendColorToken}
+                  name="diagonalUpArrow"
+                  size="xs"
+                  style={{
+                    transform: [{ rotate: difference >= 0 ? '0deg' : '90deg' }],
+                  }}
+                />
+                <Text font="body" style={{ color: trendColorValue }}>
+                  {formatPrice(Math.abs(difference))} ({Math.abs(percentChange).toFixed(2)}%)
+                </Text>
+              </HStack>
+            </HStack>
+          </VStack>
+        </HStack>
+        <MemoizedChart
+          data={displayData}
+          isScrubbing={isScrubbing}
+          onScrubberPositionChange={handleScrubberPositionChange}
+          scrubberLabel={scrubberLabel}
+        />
+        <PeriodSelector
+          TabComponent={BTCTab}
+          TabsActiveIndicatorComponent={BTCActiveIndicator}
+          activeTab={timePeriod}
+          onChange={onPeriodChange}
+          tabs={tabs}
+        />
+      </VStack>
+    );
+  });
+
+  return <AdaptiveDetailChart />;
+}
+
 type ExampleItem = {
   title: string;
   component: React.ReactNode;
@@ -2542,6 +2908,14 @@ function ExampleNavigator() {
         title: 'Two-Line Scrubber Label',
         component: <TwoLineScrubberLabel />,
       },
+      {
+        title: 'Highlight Line Segments',
+        component: <HighlightLineSegments />,
+      },
+      {
+        title: 'Adaptive Detail',
+        component: <AdaptiveDetail />,
+      },
     ],
     [theme.color.fg, theme.color.fgPositive, theme.spectrum.gray50],
   );
@@ -2559,7 +2933,7 @@ function ExampleNavigator() {
   }, [examples.length]);
 
   return (
-    <ExampleScreen>
+    <ExampleScreen paddingX={0}>
       <VStack gap={4}>
         <HStack alignItems="center" justifyContent="space-between" padding={2}>
           <IconButton

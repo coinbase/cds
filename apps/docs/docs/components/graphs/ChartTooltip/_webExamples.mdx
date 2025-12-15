@@ -1,6 +1,6 @@
 ChartTooltip displays series data at the current scrubber position in a floating tooltip. It automatically shows all series values, supports custom formatting, and positions itself near the cursor.
 
-## Basic Usage
+## Basics
 
 Add ChartTooltip as a child of any chart with `enableScrubbing` to display values when hovering. The tooltip label defaults to the x-axis value.
 
@@ -30,7 +30,7 @@ function BasicTooltip() {
 }
 ```
 
-## Value Formatter
+### Value Formatter
 
 Use the `valueFormatter` prop to customize how values are displayed. The formatter receives the numeric value and should return a string or ReactNode.
 
@@ -70,7 +70,7 @@ function ValueFormatterTooltip() {
 }
 ```
 
-## Custom Label
+### Custom Label
 
 Use the `label` prop to customize the tooltip header. It can be a static string, ReactNode, or a function that receives the data index.
 
@@ -120,7 +120,7 @@ function CustomLabelTooltip() {
 }
 ```
 
-## Filtered Series
+### Filtered Series
 
 Use the `seriesIds` prop to show only specific series in the tooltip. This is useful when you want to hide certain series from the tooltip while still displaying them on the chart.
 
@@ -159,9 +159,11 @@ function FilteredSeriesTooltip() {
 }
 ```
 
-## With Bar Chart
+## Cartesian Charts
 
-ChartTooltip works with bar charts and other chart types.
+### Bar Chart
+
+ChartTooltip works with bar charts. Non-highlighted bars can be dimmed for emphasis using a custom `BarComponent`.
 
 ```jsx live
 function BarChartTooltip() {
@@ -170,6 +172,54 @@ function BarChartTooltip() {
   const costs = [180, 220, 200, 280];
 
   const numberFormatter = useCallback((value) => `$${value}k`, []);
+
+  // Custom bar component that dims non-highlighted bars
+  const DimmingBarComponent = memo(({ seriesId, dataX, ...props }) => {
+    const highlightContext = useHighlightContext();
+    const highlightedItem = highlightContext?.highlightedItem;
+    return (
+      <DefaultBar
+        {...props}
+        dataX={dataX}
+        fillOpacity={
+          highlightedItem?.dataIndex === undefined || highlightedItem.dataIndex === dataX ? 1 : 0.5
+        }
+        seriesId={seriesId}
+      />
+    );
+  });
+
+  // Custom line component that renders a rect to highlight the entire bandwidth including gaps
+  const BandwidthHighlight = memo(({ stroke }) => {
+    const { getXScale, drawingArea } = useCartesianChartContext();
+    const highlightContext = useHighlightContext();
+    const scrubberPosition = highlightContext?.highlightedItem?.dataIndex;
+    const xScale = getXScale();
+
+    if (!xScale || scrubberPosition === undefined) return null;
+
+    const xPos = xScale(scrubberPosition);
+
+    if (xPos === undefined) return null;
+
+    const bandwidth = 'bandwidth' in xScale ? xScale.bandwidth() : 0;
+    const step = 'step' in xScale ? xScale.step() : bandwidth;
+    const gap = step - bandwidth;
+
+    // Expand the highlight to include half the gap on each side
+    const highlightWidth = bandwidth + gap;
+    const highlightX = xPos - gap / 2;
+
+    return (
+      <rect
+        fill={stroke}
+        height={drawingArea.height}
+        width={highlightWidth}
+        x={highlightX}
+        y={drawingArea.y}
+      />
+    );
+  });
 
   return (
     <CartesianChart
@@ -184,16 +234,22 @@ function BarChartTooltip() {
     >
       <XAxis showLine showTickMarks />
       <YAxis showGrid tickLabelFormatter={numberFormatter} />
-      <BarPlot />
+      <BarPlot BarComponent={DimmingBarComponent} />
+      <Scrubber
+        hideOverlay
+        LineComponent={BandwidthHighlight}
+        lineStroke="var(--color-bgLine)"
+        seriesIds={[]}
+      />
       <ChartTooltip valueFormatter={numberFormatter} />
     </CartesianChart>
   );
 }
 ```
 
-## Stacked Area Tooltip
+### Stacked Area
 
-When used with stacked charts, ChartTooltip shows individual series values rather than cumulative values.
+When used with stacked charts, ChartTooltip shows the individual series values (not cumulative totals). This means each series displays its own data value, making it easy to understand the contribution of each series.
 
 ```jsx live
 function StackedAreaTooltip() {
@@ -228,7 +284,7 @@ function StackedAreaTooltip() {
 }
 ```
 
-## Custom Value Display
+### Custom Value Display
 
 The `valueFormatter` can return a ReactNode for rich value display, including icons, colors, and additional information.
 
@@ -270,7 +326,7 @@ function CustomValueDisplayTooltip() {
 }
 ```
 
-## Multi-Axis Tooltip
+### Multi-Axis
 
 ChartTooltip works with charts that have multiple y-axes, showing values from all series.
 
@@ -279,6 +335,54 @@ function MultiAxisTooltip() {
   const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
   const revenue = [455, 520, 380, 455, 285, 235];
   const profitMargin = [23, 20, 16, 38, 12, 9];
+
+  // Custom bar component that dims non-highlighted bars
+  const DimmingBarComponent = memo(({ seriesId, dataX, ...props }) => {
+    const highlightContext = useHighlightContext();
+    const highlightedItem = highlightContext?.highlightedItem;
+    return (
+      <DefaultBar
+        {...props}
+        dataX={dataX}
+        fillOpacity={
+          highlightedItem?.dataIndex === undefined || highlightedItem.dataIndex === dataX ? 1 : 0.5
+        }
+        seriesId={seriesId}
+      />
+    );
+  });
+
+  // Custom line component that renders a rect to highlight the entire bandwidth including gaps
+  const BandwidthHighlight = memo(({ stroke }) => {
+    const { getXScale, drawingArea } = useCartesianChartContext();
+    const highlightContext = useHighlightContext();
+    const scrubberPosition = highlightContext?.highlightedItem?.dataIndex;
+    const xScale = getXScale();
+
+    if (!xScale || scrubberPosition === undefined) return null;
+
+    const xPos = xScale(scrubberPosition);
+
+    if (xPos === undefined) return null;
+
+    const bandwidth = 'bandwidth' in xScale ? xScale.bandwidth() : 0;
+    const step = 'step' in xScale ? xScale.step() : bandwidth;
+    const gap = step - bandwidth;
+
+    // Expand the highlight to include half the gap on each side
+    const highlightWidth = bandwidth + gap;
+    const highlightX = xPos - gap / 2;
+
+    return (
+      <rect
+        fill={stroke}
+        height={drawingArea.height}
+        width={highlightWidth}
+        x={highlightX}
+        y={drawingArea.y}
+      />
+    );
+  });
 
   return (
     <CartesianChart
@@ -320,7 +424,13 @@ function MultiAxisTooltip() {
         position="right"
         tickLabelFormatter={(value) => `${value}%`}
       />
-      <BarPlot />
+      <BarPlot BarComponent={DimmingBarComponent} />
+      <Scrubber
+        hideOverlay
+        LineComponent={BandwidthHighlight}
+        lineStroke="var(--color-bgLine)"
+        seriesIds={[]}
+      />
       <ChartTooltip
         valueFormatter={(value) => {
           return value < 100 ? `${value}%` : `$${value}k`;
@@ -331,7 +441,98 @@ function MultiAxisTooltip() {
 }
 ```
 
-## With Legend
+## Polar Charts
+
+### Pie Chart
+
+ChartTooltip works with polar charts. For pie and donut charts, hover over slices to see the tooltip. When no `label` prop is provided, only the series information is shown.
+
+```jsx live
+function PieChartTooltip() {
+  const series = useMemo(
+    () => [
+      { id: 'stocks', data: 45, label: 'Stocks', color: 'rgb(var(--blue40))' },
+      { id: 'bonds', data: 25, label: 'Bonds', color: 'rgb(var(--green40))' },
+      { id: 'crypto', data: 20, label: 'Crypto', color: 'rgb(var(--orange40))' },
+      { id: 'cash', data: 10, label: 'Cash', color: 'rgb(var(--gray40))' },
+    ],
+    [],
+  );
+
+  return (
+    <PieChart enableHighlighting series={series} height={300}>
+      <ChartTooltip />
+    </PieChart>
+  );
+}
+```
+
+### Donut Chart
+
+Use `valueFormatter` to customize how values are displayed in polar chart tooltips.
+
+```jsx live
+function DonutChartTooltip() {
+  const series = useMemo(
+    () => [
+      { id: 'completed', data: 68, label: 'Completed', color: 'rgb(var(--green40))' },
+      { id: 'inProgress', data: 22, label: 'In Progress', color: 'rgb(var(--blue40))' },
+      { id: 'pending', data: 10, label: 'Pending', color: 'rgb(var(--gray40))' },
+    ],
+    [],
+  );
+
+  const percentFormatter = useCallback((value) => {
+    const total = 68 + 22 + 10;
+    const percent = Math.round((value / total) * 100);
+    return `${value} tasks (${percent}%)`;
+  }, []);
+
+  return (
+    <DonutChart enableHighlighting innerRadiusRatio={0.6} series={series} height={300}>
+      <ChartTooltip valueFormatter={percentFormatter} />
+    </DonutChart>
+  );
+}
+```
+
+### Donut Chart with Label
+
+Provide a `label` prop to add a header to the tooltip. When provided, a divider separates the label from the series value.
+
+```jsx live
+function DonutChartCustomLabel() {
+  const series = useMemo(
+    () => [
+      { id: 'btc', data: 42000, label: 'Bitcoin', color: 'rgb(var(--orange40))' },
+      { id: 'eth', data: 28000, label: 'Ethereum', color: 'rgb(var(--blue40))' },
+      { id: 'sol', data: 15000, label: 'Solana', color: 'rgb(var(--purple40))' },
+      { id: 'other', data: 15000, label: 'Other', color: 'rgb(var(--gray40))' },
+    ],
+    [],
+  );
+
+  const currencyFormatter = useCallback(
+    (value) =>
+      new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+        maximumFractionDigits: 0,
+      }).format(value),
+    [],
+  );
+
+  return (
+    <DonutChart enableHighlighting innerRadiusRatio={0.5} series={series} height={300}>
+      <ChartTooltip label="Portfolio Holdings" valueFormatter={currencyFormatter} />
+    </DonutChart>
+  );
+}
+```
+
+## Composed Examples
+
+### With Legend
 
 ChartTooltip can be combined with Legend to provide both persistent series identification and on-hover details.
 

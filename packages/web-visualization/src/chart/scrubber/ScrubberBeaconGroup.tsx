@@ -7,7 +7,7 @@ import {
   type ChartScaleFunction,
   evaluateGradientAtValue,
   getGradientConfig,
-  useScrubberContext,
+  useHighlightContext,
 } from '../utils';
 
 import { DefaultScrubberBeacon } from './DefaultScrubberBeacon';
@@ -166,7 +166,8 @@ export const ScrubberBeaconGroup = memo(
       ref,
     ) => {
       const ScrubberBeaconRefs = useRefMap<ScrubberBeaconRef>();
-      const { scrubberPosition } = useScrubberContext();
+      const highlightContext = useHighlightContext();
+      const scrubberPosition = highlightContext?.highlightedItem?.dataIndex;
       const { getXScale, getXAxis, dataLength, series } = useCartesianChartContext();
 
       // Expose imperative handle with pulse method

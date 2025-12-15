@@ -554,8 +554,8 @@ You can also create your own type of cartesian chart by using `getSeriesData`, `
 ```jsx
 function EarningsHistory() {
   const theme = useTheme();
-  const CirclePlot = memo(({ seriesId, opacity = 1 }: { seriesId: string, opacity?: number }) => {
-    const { drawingArea, getSeries, getSeriesData, getXScale, getYScale } = useCartesianChartContext();
+  const CirclePlot = memo(({ seriesId, opacity = 1 }: { seriesId: string; opacity?: number }) => {
+    const { getSeries, getSeriesData, getXScale, getYScale } = useCartesianChartContext();
     const series = getSeries(seriesId);
     const data = getSeriesData(seriesId);
     const xScale = getXScale();
@@ -611,74 +611,54 @@ function EarningsHistory() {
   }, []);
 
   const surprisePercentage = useCallback(
-    (index: number): ChartTextChildren => {
+    (index: number): string => {
       const percentage = (actualEPS[index] - estimatedEPS[index]) / estimatedEPS[index];
       const percentageString = percentage.toLocaleString('en-US', {
         style: 'percent',
         minimumFractionDigits: 2,
         maximumFractionDigits: 2,
       });
-
-      return (
-        <tspan
-          style={{
-            fill: percentage > 0 ? theme.color.fgPositive : theme.color.fgNegative,
-            fontWeight: 'bold',
-          }}
-        >
-          {percentage > 0 ? '+' : ''}
-          {percentageString}
-        </tspan>
-      );
+      const prefix = percentage > 0 ? '+' : '';
+      return `${prefix}${percentageString}`;
     },
     [actualEPS, estimatedEPS],
   );
 
-  const LegendItem = memo(({ opacity = 1, label }: { opacity?: number, label: string }) => {
-    return (
-      <Box alignItems="center" gap={0.5}>
-        <LegendDot opacity={opacity} />
-        <Text font="label2">{label}</Text>
-      </Box>
-    );
-  });
-
-  const LegendDot = memo((props: BoxBaseProps) => {
-    return <Box borderRadius={1000} width={10} height={10} background="bgPositive" {...props} />;
-  });
-
   return (
-    <VStack gap={0.5}>
-      <CartesianChart
-        animate={false}
-        height={150}
-        padding={0}
-        series={[
-          {
-            id: 'estimatedEPS',
-            data: estimatedEPS,
-            color: theme.color.bgPositive,
-          },
-          { id: 'actualEPS', data: actualEPS, color: theme.color.bgPositive },
-        ]}
-        xAxis={{ scaleType: 'band', categoryPadding: 0.25 }}
-      >
-        <YAxis
-          showGrid
-          position="left"
-          requestedTickCount={3}
-          tickLabelFormatter={formatEarningAmount}
-        />
-        <XAxis height={20} tickLabelFormatter={(index) => quarters[index]} />
-        <XAxis height={20} tickLabelFormatter={surprisePercentage} />
-        <CirclePlot opacity={0.5} seriesId="estimatedEPS" />
-        <CirclePlot seriesId="actualEPS" />
-      </CartesianChart>
-      <HStack justifyContent="flex-end" gap={2}>
-        <LegendItem opacity={0.5} label="Estimated EPS" />
-        <LegendItem label="Actual EPS" />
-      </HStack>
-    </VStack>
+    <CartesianChart
+      height={150}
+      inset={{ top: 32, bottom: 0, left: 0, right: 0 }}
+      legend={<Legend justifyContent="flex-end" paddingTop={1} />}
+      legendPosition="bottom"
+      series={[
+        {
+          id: 'estimatedEPS',
+          label: 'Estimated EPS',
+          data: estimatedEPS,
+          color: theme.color.bgPositive,
+          legendShape: 'circle',
+        },
+        {
+          id: 'actualEPS',
+          label: 'Actual EPS',
+          data: actualEPS,
+          color: theme.color.bgPositive,
+          legendShape: 'circle',
+        },
+      ]}
+      xAxis={{ scaleType: 'band', categoryPadding: 0.25 }}
+    >
+      <YAxis
+        showGrid
+        position="left"
+        requestedTickCount={3}
+        tickLabelFormatter={formatEarningAmount}
+      />
+      <XAxis height={20} tickLabelFormatter={(index) => quarters[index]} />
+      <XAxis height={20} tickLabelFormatter={surprisePercentage} />
+      <CirclePlot opacity={0.5} seriesId="estimatedEPS" />
+      <CirclePlot seriesId="actualEPS" />
+    </CartesianChart>
   );
 }
 ```

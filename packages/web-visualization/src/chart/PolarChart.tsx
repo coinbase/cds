@@ -1,4 +1,4 @@
-import React, { forwardRef, memo, useCallback, useMemo, useRef } from 'react';
+import React, { forwardRef, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { Rect } from '@coinbase/cds-common/types';
 import { cx } from '@coinbase/cds-web';
 import { useDimensions } from '@coinbase/cds-web/hooks/useDimensions';
@@ -8,19 +8,21 @@ import { css } from '@linaria/core';
 import { Legend } from './legend/Legend';
 import type { LegendPosition } from './CartesianChart';
 import { PolarChartProvider } from './ChartProvider';
+import { HighlightProvider, type HighlightProviderProps } from './HighlightProvider';
 import {
   type AngularAxisConfig,
   type AngularAxisConfigProps,
   type ChartInset,
   type ChartScaleFunction,
   defaultAxisId,
-  defaultChartInset,
+  defaultPolarChartInset,
   getAngularAxisConfig,
   getChartInset,
   getPolarAxisDomain,
   getPolarAxisRange,
   getPolarAxisScale,
   getRadialAxisConfig,
+  type HighlightedItemData,
   type PolarChartContextValue,
   type PolarSeries,
   type RadialAxisConfig,
@@ -30,6 +32,15 @@ import {
 const rootCss = css`
   display: flex;
   overflow: hidden;
+`;
+const focusCss = css`
+  &:focus {
+    outline: none;
+  }
+  &:focus-visible {
+    outline: 2px solid var(--color-fgPrimary);
+    outline-offset: -2px;
+  }
 `;
 const verticalCss = css`
   flex-direction: column;
@@ -43,91 +54,98 @@ const chartContainerCss = css`
   min-width: 0;
 `;
 
-export type PolarChartBaseProps = BoxBaseProps & {
-  /**
-   * Configuration object that defines the data to visualize.
-   */
-  series?: PolarSeries[];
-  /**
-   * Whether to animate the chart.
-   * @default true
-   */
-  animate?: boolean;
-  /**
-   * Configuration for angular axis/axes (controls start/end angles).
-   * Can be a single axis config or an array of axis configs for multiple angular ranges.
-   * Default range: { min: 0, max: 360 } (full circle)
-   *
-   * @example
-   * Single axis (default):
-   * ```tsx
-   * // Semicircle
-   * <PolarChart angularAxis={{ range: { min: 0, max: 180 } }} />
-   *
-   * // Add padding between slices
-   * <PolarChart angularAxis={{ paddingAngle: 2 }} />
-   * ```
-   *
-   * @example
-   * Multiple axes:
-   * ```tsx
-   * <PolarChart
-   *   angularAxis={[
-   *     { id: 'top', range: { min: 0, max: 180 } },
-   *     { id: 'bottom', range: { min: 180, max: 360 } },
-   *   ]}
-   *   series={[
-   *     { id: 'topData', data: [...], angularAxisId: 'top' },
-   *     { id: 'bottomData', data: [...], angularAxisId: 'bottom' },
-   *   ]}
-   * />
-   * ```
-   */
-  angularAxis?: Partial<AngularAxisConfigProps> | Partial<AngularAxisConfigProps>[];
-  /**
-   * Configuration for radial axis/axes (controls inner/outer radii).
-   * Can be a single axis config or an array of axis configs for multiple radial ranges.
-   * Default range: { min: 0, max: [radius in pixels] } (pie chart using full radius)
-   *
-   * @example
-   * Single axis (default):
-   * ```tsx
-   * // Donut chart with 50% inner radius
-   * <PolarChart radialAxis={{ range: ({ max }) => ({ min: max * 0.5, max }) }} />
-   * ```
-   *
-   * @example
-   * Multiple axes (nested rings):
-   * ```tsx
-   * <PolarChart
-   *   radialAxis={[
-   *     { id: 'inner', range: ({ max }) => ({ min: 0, max: max * 0.4 }) },
-   *     { id: 'outer', range: ({ max }) => ({ min: max * 0.6, max }) },
-   *   ]}
-   *   series={[
-   *     { id: 'innerData', data: [...], radialAxisId: 'inner' },
-   *     { id: 'outerData', data: [...], radialAxisId: 'outer' },
-   *   ]}
-   * />
-   * ```
-   */
-  radialAxis?: Partial<RadialAxisConfigProps> | Partial<RadialAxisConfigProps>[];
-  /**
-   * Inset around the entire chart (outside the drawing area).
-   */
-  inset?: number | Partial<ChartInset>;
-  /**
-   * Whether to show a legend, or a custom legend element.
-   * When `true`, renders the default Legend component.
-   * When a ReactNode, renders the provided element.
-   */
-  legend?: boolean | React.ReactNode;
-  /**
-   * Position of the legend relative to the chart.
-   * @default 'bottom'
-   */
-  legendPosition?: LegendPosition;
-};
+export type PolarChartBaseProps = BoxBaseProps &
+  Pick<HighlightProviderProps, 'highlightedItem' | 'onHighlightChange'> & {
+    /**
+     * Configuration object that defines the data to visualize.
+     */
+    series?: PolarSeries[];
+    /**
+     * Whether to enable slice highlighting (for tooltips).
+     * @default false
+     */
+    enableHighlighting?: boolean;
+    /**
+     * Whether to animate the chart.
+     * @default true
+     */
+    animate?: boolean;
+    /**
+     * Configuration for angular axis/axes (controls start/end angles).
+     * Can be a single axis config or an array of axis configs for multiple angular ranges.
+     * Default range: { min: 0, max: 360 } (full circle)
+     *
+     * @example
+     * Single axis (default):
+     * ```tsx
+     * // Semicircle
+     * <PolarChart angularAxis={{ range: { min: 0, max: 180 } }} />
+     *
+     * // Add padding between slices
+     * <PolarChart angularAxis={{ paddingAngle: 2 }} />
+     * ```
+     *
+     * @example
+     * Multiple axes:
+     * ```tsx
+     * <PolarChart
+     *   angularAxis={[
+     *     { id: 'top', range: { min: 0, max: 180 } },
+     *     { id: 'bottom', range: { min: 180, max: 360 } },
+     *   ]}
+     *   series={[
+     *     { id: 'topData', data: [...], angularAxisId: 'top' },
+     *     { id: 'bottomData', data: [...], angularAxisId: 'bottom' },
+     *   ]}
+     * />
+     * ```
+     */
+    angularAxis?: Partial<AngularAxisConfigProps> | Partial<AngularAxisConfigProps>[];
+    /**
+     * Configuration for radial axis/axes (controls inner/outer radii).
+     * Can be a single axis config or an array of axis configs for multiple radial ranges.
+     * Default range: { min: 0, max: [radius in pixels] } (pie chart using full radius)
+     *
+     * @example
+     * Single axis (default):
+     * ```tsx
+     * // Donut chart with 50% inner radius
+     * <PolarChart radialAxis={{ range: ({ max }) => ({ min: max * 0.5, max }) }} />
+     * ```
+     *
+     * @example
+     * Multiple axes (nested rings):
+     * ```tsx
+     * <PolarChart
+     *   radialAxis={[
+     *     { id: 'inner', range: ({ max }) => ({ min: 0, max: max * 0.4 }) },
+     *     { id: 'outer', range: ({ max }) => ({ min: max * 0.6, max }) },
+     *   ]}
+     *   series={[
+     *     { id: 'innerData', data: [...], radialAxisId: 'inner' },
+     *     { id: 'outerData', data: [...], radialAxisId: 'outer' },
+     *   ]}
+     * />
+     * ```
+     */
+    radialAxis?: Partial<RadialAxisConfigProps> | Partial<RadialAxisConfigProps>[];
+    /**
+     * Inset around the entire chart (outside the drawing area).
+     * @default 8
+     */
+    inset?: number | Partial<ChartInset>;
+    /**
+     * Whether to show a legend, or a custom legend element.
+     * When `true`, renders the default Legend component.
+     * When a ReactNode, renders the provided element.
+     */
+    legend?: boolean | React.ReactNode;
+    /**
+     * Position of the legend relative to the chart.
+     * @default 'bottom'
+     */
+    legendPosition?: LegendPosition;
+  };
 
 export type PolarChartProps = Omit<BoxProps<'div'>, 'title'> &
   PolarChartBaseProps & {
@@ -191,6 +209,9 @@ export const PolarChart = memo(
         angularAxis,
         radialAxis,
         inset: insetInput,
+        enableHighlighting,
+        highlightedItem,
+        onHighlightChange,
         legend,
         legendPosition = 'bottom',
         width = '100%',
@@ -204,9 +225,10 @@ export const PolarChart = memo(
       ref,
     ) => {
       const { observe, width: chartWidth, height: chartHeight } = useDimensions();
+      const chartRef = useRef<SVGSVGElement | null>(null);
 
       const inset = useMemo(() => {
-        return getChartInset(insetInput, defaultChartInset);
+        return getChartInset(insetInput, defaultPolarChartInset);
       }, [insetInput]);
 
       // Normalize axis configs (same pattern as CartesianChart)
@@ -375,6 +397,7 @@ export const PolarChart = memo(
           getAngularScale,
           getRadialScale,
           dataLength,
+          ref: chartRef,
         }),
         [
           series,
@@ -392,6 +415,111 @@ export const PolarChart = memo(
           dataLength,
         ],
       );
+
+      // Track internal highlight state for uncontrolled mode
+      const [internalHighlightedItem, setInternalHighlightedItem] = useState<
+        HighlightedItemData | undefined
+      >();
+      const isControlled = highlightedItem !== undefined;
+
+      // Determine the current highlighted item
+      const currentHighlightedItem = isControlled
+        ? (highlightedItem ?? undefined)
+        : internalHighlightedItem;
+
+      // Unified setter that handles both controlled and uncontrolled modes
+      const setHighlightedItemInternal = useCallback(
+        (
+          itemOrUpdater:
+            | HighlightedItemData
+            | undefined
+            | ((prev: HighlightedItemData | undefined) => HighlightedItemData | undefined),
+        ) => {
+          const newItem =
+            typeof itemOrUpdater === 'function'
+              ? itemOrUpdater(currentHighlightedItem)
+              : itemOrUpdater;
+
+          if (!isControlled) {
+            setInternalHighlightedItem(newItem);
+          }
+
+          onHighlightChange?.(newItem ?? null);
+        },
+        [isControlled, currentHighlightedItem, onHighlightChange],
+      );
+
+      // Handle keyboard navigation for polar charts (cycles through series)
+      const handleKeyDown = useCallback(
+        (event: KeyboardEvent) => {
+          if (!enableHighlighting || !series || series.length === 0) return;
+
+          const seriesCount = series.length;
+          const currentIndex = currentHighlightedItem?.dataIndex ?? -1;
+
+          let newIndex: number | undefined;
+
+          switch (event.key) {
+            case 'ArrowLeft':
+              event.preventDefault();
+              // Move to previous slice, wrap around
+              newIndex = currentIndex <= 0 ? seriesCount - 1 : currentIndex - 1;
+              break;
+            case 'ArrowRight':
+              event.preventDefault();
+              // Move to next slice, wrap around
+              newIndex = currentIndex >= seriesCount - 1 ? 0 : currentIndex + 1;
+              break;
+            case 'Home':
+              event.preventDefault();
+              newIndex = 0;
+              break;
+            case 'End':
+              event.preventDefault();
+              newIndex = seriesCount - 1;
+              break;
+            case 'Escape':
+              event.preventDefault();
+              newIndex = undefined;
+              break;
+            default:
+              return;
+          }
+
+          if (newIndex === undefined) {
+            setHighlightedItemInternal(undefined);
+          } else {
+            const targetSeriesItem = series[newIndex];
+            setHighlightedItemInternal({
+              seriesId: targetSeriesItem?.id,
+              dataIndex: newIndex,
+            });
+          }
+        },
+        [enableHighlighting, series, currentHighlightedItem, setHighlightedItemInternal],
+      );
+
+      // Handle blur - clear highlighting when focus leaves
+      const handleBlur = useCallback(() => {
+        if (!enableHighlighting) return;
+        if (currentHighlightedItem === undefined) return;
+        setHighlightedItemInternal(undefined);
+      }, [enableHighlighting, currentHighlightedItem, setHighlightedItemInternal]);
+
+      // Attach keyboard event listeners to SVG element
+      useEffect(() => {
+        if (!chartRef.current || !enableHighlighting) return;
+
+        const svg = chartRef.current;
+
+        svg.addEventListener('keydown', handleKeyDown);
+        svg.addEventListener('blur', handleBlur);
+
+        return () => {
+          svg.removeEventListener('keydown', handleKeyDown);
+          svg.removeEventListener('blur', handleBlur);
+        };
+      }, [enableHighlighting, handleKeyDown, handleBlur]);
 
       const isVerticalLegend = useMemo(
         () => legendPosition === 'top' || legendPosition === 'bottom',
@@ -423,38 +551,52 @@ export const PolarChart = memo(
 
       return (
         <PolarChartProvider value={contextValue}>
-          <Box
-            className={rootClassNames}
-            height={height}
-            style={rootStyles}
-            width={width}
-            {...props}
+          <HighlightProvider
+            enableHighlighting={enableHighlighting}
+            highlightedItem={currentHighlightedItem}
+            onHighlightChange={(item) => {
+              // This allows child components (like arcs) to also set highlights
+              if (!isControlled) {
+                setInternalHighlightedItem(item ?? undefined);
+              }
+              onHighlightChange?.(item);
+            }}
           >
-            {isLegendBefore && legendElement}
             <Box
-              ref={(node) => {
-                const svgElement = node as unknown as SVGSVGElement;
-                observe(node as unknown as HTMLElement);
-                // Forward the ref to the user
-                if (ref) {
-                  if (typeof ref === 'function') {
-                    ref(svgElement);
-                  } else {
-                    (ref as React.MutableRefObject<SVGSVGElement | null>).current = svgElement;
-                  }
-                }
-              }}
-              aria-live="polite"
-              as="svg"
-              className={cx(chartContainerCss, classNames?.chart)}
-              height="100%"
-              style={styles?.chart}
-              width="100%"
+              className={rootClassNames}
+              height={height}
+              style={rootStyles}
+              width={width}
+              {...props}
             >
-              {children}
+              {isLegendBefore && legendElement}
+              <Box
+                ref={(node) => {
+                  const svgElement = node as unknown as SVGSVGElement;
+                  chartRef.current = svgElement;
+                  observe(node as unknown as HTMLElement);
+                  // Forward the ref to the user
+                  if (ref) {
+                    if (typeof ref === 'function') {
+                      ref(svgElement);
+                    } else {
+                      (ref as React.MutableRefObject<SVGSVGElement | null>).current = svgElement;
+                    }
+                  }
+                }}
+                aria-live="polite"
+                as="svg"
+                className={cx(chartContainerCss, enableHighlighting && focusCss, classNames?.chart)}
+                height="100%"
+                style={styles?.chart}
+                tabIndex={enableHighlighting ? 0 : undefined}
+                width="100%"
+              >
+                {children}
+              </Box>
+              {!isLegendBefore && legendElement}
             </Box>
-            {!isLegendBefore && legendElement}
-          </Box>
+          </HighlightProvider>
         </PolarChartProvider>
       );
     },

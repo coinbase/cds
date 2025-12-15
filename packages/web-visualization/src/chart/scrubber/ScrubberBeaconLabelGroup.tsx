@@ -3,7 +3,7 @@ import type { SharedProps } from '@coinbase/cds-common/types';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import type { ChartTextProps } from '../text';
-import { getPointOnScale, useScrubberContext } from '../utils';
+import { getPointOnScale, useHighlightContext } from '../utils';
 import {
   calculateLabelYPositions,
   getLabelPosition,
@@ -106,7 +106,8 @@ export const ScrubberBeaconLabelGroup = memo<ScrubberBeaconLabelGroupProps>(
   }) => {
     const { getSeries, getSeriesData, getXScale, getYScale, getXAxis, drawingArea, dataLength } =
       useCartesianChartContext();
-    const { scrubberPosition } = useScrubberContext();
+    const highlightContext = useHighlightContext();
+    const scrubberPosition = highlightContext?.highlightedItem?.dataIndex;
 
     const [labelDimensions, setLabelDimensions] = useState<Record<string, LabelDimensions>>({});
 

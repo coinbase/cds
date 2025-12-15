@@ -2,9 +2,9 @@ import { memo } from 'react';
 import { type StyleProp, StyleSheet, type ViewStyle } from 'react-native';
 import type { SharedProps } from '@coinbase/cds-common/types';
 import { Box, HStack, type HStackProps } from '@coinbase/cds-mobile/layout';
-import { TextLabel2 } from '@coinbase/cds-mobile/typography';
+import { Text } from '@coinbase/cds-mobile/typography/Text';
 
-import type { Series } from '../utils';
+import type { LegendShape } from '../utils';
 
 import { DefaultLegendShape, type LegendShapeComponent } from './DefaultLegendShape';
 
@@ -27,20 +27,21 @@ export type LegendItemBaseProps = Omit<HStackProps, 'children' | 'color'> &
      */
     seriesId: string;
     /**
-     * Display label for the legend item.
-     * Can be a string or a custom ReactNode.
+     * Label of the series.
+     * @default label for the series.
      * If a ReactNode is provided, it replaces the default Text component.
      */
     label: React.ReactNode;
     /**
-     * Color associated with the series.
-     * This is a raw string color value (e.g. 'rgb(...)' or hex).
+     * Color of the series.
+     * @default theme.color.fgPrimary
      */
     color?: string;
     /**
-     * Shape to display in the legend.
+     * Shape of the series.
+     *
      */
-    shape?: Series['legendShape'];
+    shape?: LegendShape;
     /**
      * Custom component to render the legend shape.
      * @default DefaultLegendShape
@@ -97,7 +98,9 @@ export const DefaultLegendItem = memo<LegendItemProps>(function DefaultLegendIte
         <ShapeComponent color={color} shape={shape} style={stylesProp?.shape} />
       </Box>
       {typeof label === 'string' ? (
-        <TextLabel2 style={stylesProp?.label}>{label}</TextLabel2>
+        <Text font="label1" style={stylesProp?.label}>
+          {label}
+        </Text>
       ) : (
         label
       )}

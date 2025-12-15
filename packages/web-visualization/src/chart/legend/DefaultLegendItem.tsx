@@ -11,7 +11,7 @@ import {
 import { Text } from '@coinbase/cds-web/typography';
 import { css } from '@linaria/core';
 
-import type { Series } from '../utils';
+import type { LegendShape } from '../utils';
 
 import { DefaultLegendShape, type LegendShapeComponent } from './DefaultLegendShape';
 
@@ -34,19 +34,20 @@ export type LegendItemBaseProps = Omit<HStackBaseProps, 'children'> &
      */
     seriesId: string;
     /**
-     * Display label for the legend item.
-     * Can be a string or a custom ReactNode.
+     * Label of the series.
      * If a ReactNode is provided, it replaces the default Text component.
      */
     label: React.ReactNode;
     /**
-     * Color associated with the series.
+     * Color of the series.
+     * @default 'var(--color-fgPrimary)'
      */
-    color?: Series['color'];
+    color?: string;
     /**
-     * Shape to display in the legend.
+     * Shape of the series.
+     *
      */
-    shape?: Series['legendShape'];
+    shape?: LegendShape;
     /**
      * Custom component to render the legend shape.
      * @default DefaultLegendShape

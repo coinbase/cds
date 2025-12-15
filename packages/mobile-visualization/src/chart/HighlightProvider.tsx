@@ -4,51 +4,71 @@ import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import { runOnJS, useAnimatedReaction, useSharedValue } from 'react-native-reanimated';
 import { Haptics } from '@coinbase/cds-mobile/utils/haptics';
 
-import { useCartesianChartContext } from '../ChartProvider';
-import { invertSerializableScale, ScrubberContext, type ScrubberContextValue } from '../utils';
-import { getPointOnSerializableScale } from '../utils/point';
+import { getPointOnSerializableScale } from './utils/point';
+import { useCartesianChartContext } from './ChartProvider';
+import {
+  HighlightContext,
+  type HighlightContextValue,
+  type HighlightedItemData,
+  invertSerializableScale,
+} from './utils';
 
-export type ScrubberProviderProps = {
-  children: React.ReactNode;
+export type HighlightProviderBaseProps = {
   /**
-   * Whether scrubbing interaction is enabled.
-   * @deprecated Use `enableHighlighting` on the chart component instead.
+   * Whether highlighting is enabled.
    * @default false
    */
-  enableScrubbing?: boolean;
+  enableHighlighting?: boolean;
   /**
    * Allows continuous gestures on the chart to continue outside the bounds of the chart element.
    */
   allowOverflowGestures?: boolean;
   /**
-   * Callback fired when the scrubber position changes.
-   * Receives the dataIndex of the scrubber or undefined when not scrubbing.
-   * @deprecated Use `onHighlightChange` on the chart component instead.
+   * Callback when highlighted item changes.
    */
-  onScrubberPositionChange?: (index: number | undefined) => void;
+  onHighlightChange?: (item: HighlightedItemData | undefined) => void;
+};
+
+export type HighlightProviderProps = HighlightProviderBaseProps & {
+  children: React.ReactNode;
 };
 
 /**
- * A component which encapsulates the ScrubberContext.
- * It depends on a ChartContext in order to provide accurate touch tracking.
+ * A component which encapsulates the HighlightContext.
+ * Provides unified highlight state management for both Cartesian and Polar charts on mobile.
+ *
+ * Uses SharedValue for smooth animations with react-native-reanimated.
+ * Handles gesture detection when enableHighlighting is true.
  */
-export const ScrubberProvider: React.FC<ScrubberProviderProps> = ({
+export const HighlightProvider: React.FC<HighlightProviderProps> = ({
   children,
-  enableScrubbing,
-  onScrubberPositionChange,
+  enableHighlighting = false,
   allowOverflowGestures,
+  onHighlightChange,
 }) => {
   const chartContext = useCartesianChartContext();
+  const highlightedItem = useSharedValue<HighlightedItemData | undefined>(undefined);
 
-  if (!chartContext) {
-    throw new Error('ScrubberProvider must be used within a ChartContext');
-  }
+  const setHighlightedItem = useCallback(
+    (item: HighlightedItemData | undefined) => {
+      highlightedItem.value = item;
+      onHighlightChange?.(item);
+    },
+    [highlightedItem, onHighlightChange],
+  );
 
-  const { getXSerializableScale, getXAxis } = chartContext;
-  const scrubberPosition = useSharedValue<number | undefined>(undefined);
+  const contextValue: HighlightContextValue = useMemo(
+    () => ({
+      enableHighlighting,
+      highlightedItem,
+      setHighlightedItem,
+    }),
+    [enableHighlighting, highlightedItem, setHighlightedItem],
+  );
 
-  const xAxis = useMemo(() => getXAxis(), [getXAxis]);
-  const xScale = useMemo(() => getXSerializableScale(), [getXSerializableScale]);
+  // Get scale info for gesture handling (only available in Cartesian charts)
+  const xAxis = useMemo(() => chartContext?.getXAxis?.(), [chartContext]);
+  const xScale = useMemo(() => chartContext?.getXSerializableScale?.(), [chartContext]);
 
   const getDataIndexFromX = useCallback(
     (touchX: number): number => {
@@ -77,7 +97,6 @@ export const ScrubberProvider: React.FC<ScrubberProviderProps> = ({
         // For numeric scales with axis data, find the nearest data point
         const axisData = xAxis.data;
         if (axisData && Array.isArray(axisData) && typeof axisData[0] === 'number') {
-          // We have numeric axis data - find the closest data point
           const numericData = axisData as number[];
           let closestIndex = 0;
           let closestDistance = Infinity;
@@ -109,19 +128,18 @@ export const ScrubberProvider: React.FC<ScrubberProviderProps> = ({
     void Haptics.lightImpact();
   }, []);
 
+  // Notify callback when highlighted item changes
   useAnimatedReaction(
-    () => scrubberPosition.value,
+    () => highlightedItem.value,
     (currentValue, previousValue) => {
-      // Confirm changes here and inside of our gesture handler before calling JS thread
-      // To prevent any rerenders
-      if (onScrubberPositionChange !== undefined && currentValue !== previousValue) {
-        runOnJS(onScrubberPositionChange)(currentValue);
+      if (onHighlightChange !== undefined && currentValue !== previousValue) {
+        runOnJS(onHighlightChange)(currentValue);
       }
     },
-    [onScrubberPositionChange],
+    [onHighlightChange],
   );
 
-  // Create the long press pan gesture
+  // Create the long press pan gesture for highlighting
   const longPressGesture = useMemo(
     () =>
       Gesture.Pan()
@@ -130,54 +148,48 @@ export const ScrubberProvider: React.FC<ScrubberProviderProps> = ({
         .onStart(function onStart(event) {
           runOnJS(handleStartEndHaptics)();
 
-          // Android does not trigger onUpdate when the gesture starts. This achieves consistent behavior across both iOS and Android
+          // Android does not trigger onUpdate when the gesture starts
           if (Platform.OS === 'android') {
-            const newScrubberPosition = getDataIndexFromX(event.x);
-            if (newScrubberPosition !== scrubberPosition.value) {
-              scrubberPosition.value = newScrubberPosition;
+            const dataIndex = getDataIndexFromX(event.x);
+            const current = highlightedItem.value;
+            if (current?.dataIndex !== dataIndex) {
+              highlightedItem.value = { ...current, dataIndex };
             }
           }
         })
         .onUpdate(function onUpdate(event) {
-          const newScrubberPosition = getDataIndexFromX(event.x);
-          if (newScrubberPosition !== scrubberPosition.value) {
-            scrubberPosition.value = newScrubberPosition;
+          const dataIndex = getDataIndexFromX(event.x);
+          const current = highlightedItem.value;
+          if (current?.dataIndex !== dataIndex) {
+            highlightedItem.value = { ...current, dataIndex };
           }
         })
         .onEnd(function onEnd() {
-          if (enableScrubbing) {
+          if (enableHighlighting) {
             runOnJS(handleStartEndHaptics)();
-            scrubberPosition.value = undefined;
+            highlightedItem.value = undefined;
           }
         })
         .onTouchesCancelled(function onTouchesCancelled() {
-          if (enableScrubbing) {
-            scrubberPosition.value = undefined;
+          if (enableHighlighting) {
+            highlightedItem.value = undefined;
           }
         }),
     [
       allowOverflowGestures,
       handleStartEndHaptics,
       getDataIndexFromX,
-      scrubberPosition,
-      enableScrubbing,
+      highlightedItem,
+      enableHighlighting,
     ],
   );
 
-  const contextValue: ScrubberContextValue = useMemo(
-    () => ({
-      enableScrubbing: !!enableScrubbing,
-      scrubberPosition,
-    }),
-    [enableScrubbing, scrubberPosition],
-  );
-
   const content = (
-    <ScrubberContext.Provider value={contextValue}>{children}</ScrubberContext.Provider>
+    <HighlightContext.Provider value={contextValue}>{children}</HighlightContext.Provider>
   );
 
-  // Wrap with gesture handler only if scrubbing is enabled
-  if (enableScrubbing) {
+  // Wrap with gesture handler only if highlighting is enabled and we have chart context
+  if (enableHighlighting && chartContext) {
     return <GestureDetector gesture={longPressGesture}>{content}</GestureDetector>;
   }
 

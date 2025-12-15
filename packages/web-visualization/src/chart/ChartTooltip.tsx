@@ -12,9 +12,9 @@ import { Text } from '@coinbase/cds-web/typography';
 import { flip, offset, shift, useFloating, type VirtualElement } from '@floating-ui/react-dom';
 
 import type { LegendShapeComponent } from './legend/DefaultLegendShape';
-import { useCartesianChartContext } from './ChartProvider';
+import { useChartContext } from './ChartProvider';
 import { type ChartTooltipItemComponent, DefaultChartTooltipItem } from './DefaultChartTooltipItem';
-import { useScrubberContext } from './utils';
+import { type CartesianChartContextValue, useHighlightContext } from './utils';
 
 export type ChartTooltipBaseProps = VStackBaseProps & {
   /**
@@ -157,10 +157,16 @@ export const ChartTooltip = ({
   styles,
   ...props
 }: ChartTooltipProps) => {
-  const { ref, series, getXAxis } = useCartesianChartContext();
-  const { scrubberPosition, enableScrubbing } = useScrubberContext();
+  const chartContext = useChartContext();
+  const { ref, series, type, drawingArea } = chartContext;
+  const highlightContext = useHighlightContext();
 
-  const isTooltipVisible = enableScrubbing && scrubberPosition !== undefined;
+  const enableHighlighting = highlightContext?.enableHighlighting ?? false;
+  const highlightedItem = highlightContext?.highlightedItem;
+  const dataIndex = highlightedItem?.dataIndex;
+  const highlightedSeriesId = highlightedItem?.seriesId;
+
+  const isTooltipVisible = enableHighlighting && dataIndex !== undefined;
 
   const { refs, floatingStyles } = useFloating({
     open: isTooltipVisible,
@@ -179,12 +185,39 @@ export const ChartTooltip = ({
     ],
   });
 
+  // Set default position when tooltip becomes visible (centered, near bottom)
+  // This covers keyboard navigation; mousemove will override when mouse is used
+  useEffect(() => {
+    if (!isTooltipVisible || !ref?.current) return;
+
+    const svgRect = ref.current.getBoundingClientRect();
+    const centerX = svgRect.left + drawingArea.x + drawingArea.width / 2;
+    const bottomY = svgRect.top + drawingArea.y + drawingArea.height * 0.75;
+
+    const virtualEl: VirtualElement = {
+      getBoundingClientRect() {
+        return {
+          width: 0,
+          height: 0,
+          x: centerX,
+          y: bottomY,
+          left: centerX,
+          right: centerX,
+          top: bottomY,
+          bottom: bottomY,
+        };
+      },
+    };
+    refs.setReference(virtualEl);
+  }, [isTooltipVisible, ref, drawingArea, refs]);
+
+  // Handle mouse-based positioning (overrides default position when mouse moves)
   useEffect(() => {
     const element = ref?.current;
-    if (!element || !enableScrubbing) return;
+    if (!element || !enableHighlighting) return;
 
-    const handleMouseMove = (event: Event) => {
-      const { clientX, clientY } = event as MouseEvent;
+    const handleMouseMove = (event: MouseEvent) => {
+      const { clientX, clientY } = event;
       const virtualEl: VirtualElement = {
         getBoundingClientRect() {
           return {
@@ -196,7 +229,7 @@ export const ChartTooltip = ({
             right: clientX,
             top: clientY,
             bottom: clientY,
-          } as DOMRect;
+          };
         },
       };
       refs.setReference(virtualEl);
@@ -205,30 +238,35 @@ export const ChartTooltip = ({
     element.addEventListener('mousemove', handleMouseMove);
 
     return () => element.removeEventListener('mousemove', handleMouseMove);
-  }, [enableScrubbing, refs, ref]);
+  }, [enableHighlighting, refs, ref]);
 
   const filteredSeries = useMemo(() => {
+    // If a specific series is highlighted, show only that series
+    if (highlightedSeriesId !== undefined) {
+      return series.filter((s) => s.id === highlightedSeriesId);
+    }
+    // Otherwise filter by seriesIds prop (or show all)
     if (seriesIds === undefined) return series;
     return series.filter((s) => seriesIds.includes(s.id));
-  }, [series, seriesIds]);
+  }, [series, seriesIds, highlightedSeriesId]);
 
   const resolvedLabel = useMemo(() => {
-    if (scrubberPosition === undefined) return;
+    if (dataIndex === undefined) return;
 
-    let resolved: React.ReactNode;
+    // Use explicit label prop if provided
     if (label !== undefined) {
-      resolved = typeof label === 'function' ? label(scrubberPosition) : label;
-    } else {
-      // Default to x-axis data value
+      return typeof label === 'function' ? label(dataIndex) : label;
+    }
+
+    // Default to x-axis data value for Cartesian charts
+    if (type === 'cartesian') {
+      const { getXAxis } = chartContext as CartesianChartContextValue;
       const xAxis = getXAxis();
-      if (xAxis?.data && xAxis.data[scrubberPosition] !== undefined) {
-        resolved = xAxis.data[scrubberPosition];
-      } else {
-        resolved = scrubberPosition;
+      if (xAxis?.data?.[dataIndex] !== undefined) {
+        return xAxis.data[dataIndex];
       }
     }
-    return resolved;
-  }, [scrubberPosition, label, getXAxis]);
+  }, [dataIndex, label, type, chartContext]);
 
   if (!isTooltipVisible) return;
 
@@ -271,7 +309,7 @@ export const ChartTooltip = ({
                 shape: classNames?.itemShape,
                 label: classNames?.itemLabel,
               }}
-              scrubberPosition={scrubberPosition!}
+              dataIndex={dataIndex}
               series={s}
               styles={{
                 root: styles?.item,

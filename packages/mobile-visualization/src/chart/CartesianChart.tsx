@@ -11,6 +11,7 @@ import { ScrubberProvider, type ScrubberProviderProps } from './scrubber/Scrubbe
 import { convertToSerializableScale, type SerializableScale } from './utils/scale';
 import { useChartContextBridge } from './ChartContextBridge';
 import { CartesianChartProvider } from './ChartProvider';
+import { HighlightProvider, type HighlightProviderBaseProps } from './HighlightProvider';
 import {
   type CartesianAxisConfig,
   type CartesianAxisConfigProps,
@@ -19,7 +20,7 @@ import {
   type ChartInset,
   type ChartScaleFunction,
   defaultAxisId,
-  defaultChartInset,
+  defaultCartesianChartInset,
   getAxisRange,
   getCartesianAxisConfig,
   getCartesianAxisDomain,
@@ -48,12 +49,25 @@ const ChartCanvas = memo(({ children, style, onLayout }: ChartCanvasProps) => {
 export type LegendPosition = 'top' | 'bottom' | 'left' | 'right';
 
 export type CartesianChartBaseProps = Omit<BoxBaseProps, 'fontFamily'> &
-  Pick<ScrubberProviderProps, 'enableScrubbing' | 'onScrubberPositionChange'> & {
+  Pick<
+    HighlightProviderBaseProps,
+    'enableHighlighting' | 'allowOverflowGestures' | 'onHighlightChange'
+  > & {
     /**
      * Configuration objects that define how to visualize the data.
      * Each series contains its own data array.
      */
     series?: Array<CartesianSeries>;
+    /**
+     * Whether scrubbing interaction is enabled.
+     * @deprecated Use `enableHighlighting` instead.
+     */
+    enableScrubbing?: ScrubberProviderProps['enableScrubbing'];
+    /**
+     * Callback fired when the scrubber position changes.
+     * @deprecated Use `onHighlightChange` instead. Access `highlightedItem.dataIndex` for the same value.
+     */
+    onScrubberPositionChange?: ScrubberProviderProps['onScrubberPositionChange'];
     /**
      * Whether to animate the chart.
      * @default true
@@ -69,6 +83,7 @@ export type CartesianChartBaseProps = Omit<BoxBaseProps, 'fontFamily'> &
     yAxis?: Partial<CartesianAxisConfigProps> | Partial<CartesianAxisConfigProps>[];
     /**
      * Inset around the entire chart (outside the axes).
+     * @default { top: 32, left: 16, bottom: 16, right: 16 }
      */
     inset?: number | Partial<ChartInset>;
     /**
@@ -86,7 +101,6 @@ export type CartesianChartBaseProps = Omit<BoxBaseProps, 'fontFamily'> &
   };
 
 export type CartesianChartProps = CartesianChartBaseProps &
-  Pick<ScrubberProviderProps, 'allowOverflowGestures'> &
   Omit<BoxProps, 'fontFamily'> & {
     /**
      * Default font families to use within ChartText.
@@ -132,10 +146,12 @@ export const CartesianChart = memo(
         children,
         animate = true,
         enableScrubbing,
+        enableHighlighting,
         xAxis: xAxisConfigProp,
         yAxis: yAxisConfigProp,
         inset,
         onScrubberPositionChange,
+        onHighlightChange,
         legend,
         legendPosition = 'bottom',
         width = '100%',
@@ -158,7 +174,10 @@ export const CartesianChart = memo(
       const chartWidth = containerLayout.width;
       const chartHeight = containerLayout.height;
 
-      const calculatedInset = useMemo(() => getChartInset(inset, defaultChartInset), [inset]);
+      const calculatedInset = useMemo(
+        () => getChartInset(inset, defaultCartesianChartInset),
+        [inset],
+      );
 
       // there can only be one x axis but the helper function always returns an array
       const xAxisConfig = useMemo(
@@ -483,37 +502,43 @@ export const CartesianChart = memo(
 
       return (
         <CartesianChartProvider value={contextValue}>
-          <ScrubberProvider
+          <HighlightProvider
             allowOverflowGestures={allowOverflowGestures}
-            enableScrubbing={enableScrubbing}
-            onScrubberPositionChange={onScrubberPositionChange}
+            enableHighlighting={enableHighlighting}
+            onHighlightChange={onHighlightChange}
           >
-            <Box
-              ref={(node) => {
-                chartRef.current = node;
-                if (ref) {
-                  if (typeof ref === 'function') {
-                    ref(node);
-                  } else {
-                    ref.current = node;
-                  }
-                }
-              }}
-              accessibilityLiveRegion="polite"
-              accessibilityRole="image"
-              collapsable={collapsable}
-              height={height}
-              style={rootStyles}
-              width={width}
-              {...props}
+            <ScrubberProvider
+              allowOverflowGestures={allowOverflowGestures}
+              enableScrubbing={enableScrubbing}
+              onScrubberPositionChange={onScrubberPositionChange}
             >
-              {isLegendBefore && legendElement}
-              <ChartCanvas onLayout={onContainerLayout} style={styles?.chart}>
-                {children}
-              </ChartCanvas>
-              {!isLegendBefore && legendElement}
-            </Box>
-          </ScrubberProvider>
+              <Box
+                ref={(node) => {
+                  chartRef.current = node;
+                  if (ref) {
+                    if (typeof ref === 'function') {
+                      ref(node);
+                    } else {
+                      ref.current = node;
+                    }
+                  }
+                }}
+                accessibilityLiveRegion="polite"
+                accessibilityRole="image"
+                collapsable={collapsable}
+                height={height}
+                style={rootStyles}
+                width={width}
+                {...props}
+              >
+                {isLegendBefore && legendElement}
+                <ChartCanvas onLayout={onContainerLayout} style={styles?.chart}>
+                  {children}
+                </ChartCanvas>
+                {!isLegendBefore && legendElement}
+              </Box>
+            </ScrubberProvider>
+          </HighlightProvider>
         </CartesianChartProvider>
       );
     },

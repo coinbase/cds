@@ -4,7 +4,7 @@ PolarChart is a customizable component for displaying data in a polar coordinate
 
 Before using PolarChart, you need to wrap your app with `ChartBridgeProvider`. This enables charts to access CDS theming and other React contexts within the Skia renderer.
 
-## Basic Example
+## Basics
 
 [PieChart](/components/graphs/PieChart/) and [DonutChart](/components/graphs/DonutChart/) are built on top of PolarChart and have default functionality for your chart.
 
@@ -48,7 +48,7 @@ function BasicExample() {
 }
 ```
 
-## Series
+### Series
 
 Series are the data that will be displayed on the chart. Each series must have a defined `id` and `data` (a single number representing the value).
 
@@ -59,12 +59,11 @@ function SeriesExample() {
   return (
     <PolarChart
       height={200}
-      width={200}
       series={[
         { id: 'btc', data: 40, label: 'Bitcoin', color: `rgb(${theme.spectrum.orange40})` },
         { id: 'eth', data: 30, label: 'Ethereum', color: `rgb(${theme.spectrum.blue40})` },
         { id: 'sol', data: 20, label: 'Solana', color: `rgb(${theme.spectrum.purple40})` },
-        { id: 'other', data: 10, label: 'Other', color: `rgb(${theme.spectrum.gray30})` },
+        { id: 'other', data: 10, label: 'Other', color: `rgb(${theme.spectrum.gray40})` },
       ]}
     >
       <PiePlot />
@@ -93,11 +92,11 @@ function CustomRangeExample() {
           width={200}
           angularAxis={{ range: { min: -90, max: 90 } }}
           series={[
-            { id: 'a', data: 35, color: theme.color.fgPositive },
-            { id: 'b', data: 65, color: `rgb(${theme.spectrum.gray30})` },
+            { id: 'a', data: 35, color: `rgb(${theme.spectrum.green40})` },
+            { id: 'b', data: 65, color: `rgb(${theme.spectrum.gray20})` },
           ]}
         >
-          <PiePlot cornerRadius={8} />
+          <PiePlot cornerRadius={2} />
         </PolarChart>
         <Text font="label2" color="fgMuted">
           Semicircle (top)
@@ -109,11 +108,11 @@ function CustomRangeExample() {
           width={200}
           angularAxis={{ range: { min: 90, max: 270 } }}
           series={[
-            { id: 'a', data: 35, color: theme.color.fgPositive },
-            { id: 'b', data: 65, color: `rgb(${theme.spectrum.gray30})` },
+            { id: 'a', data: 35, color: `rgb(${theme.spectrum.green40})` },
+            { id: 'b', data: 65, color: `rgb(${theme.spectrum.gray20})` },
           ]}
         >
-          <PiePlot cornerRadius={8} />
+          <PiePlot cornerRadius={2} />
         </PolarChart>
         <Text font="label2" color="fgMuted">
           Semicircle (bottom)
@@ -135,7 +134,9 @@ function PaddingAngleExample() {
   return (
     <PolarChart
       height={200}
-      width={200}
+      radialAxis={{
+        range: ({ max }) => ({ min: max - 16, max }),
+      }}
       angularAxis={{ paddingAngle: 5 }}
       series={[
         { id: 'a', data: 30, color: `rgb(${theme.spectrum.blue40})` },
@@ -143,7 +144,7 @@ function PaddingAngleExample() {
         { id: 'c', data: 30, color: `rgb(${theme.spectrum.purple40})` },
       ]}
     >
-      <PiePlot />
+      <PiePlot cornerRadius={8} />
     </PolarChart>
   );
 }
@@ -160,11 +161,13 @@ function MultipleAngularAxesExample() {
   return (
     <PolarChart
       height={200}
-      width={200}
       angularAxis={[
-        { id: 'top', range: { min: -90, max: 90 } },
-        { id: 'bottom', range: { min: 90, max: 270 } },
+        { id: 'top', range: { min: -45, max: 45 } },
+        { id: 'bottom', range: { min: 135, max: 225 } },
       ]}
+      radialAxis={{
+        range: ({ max }) => ({ min: max - 16, max }),
+      }}
       series={[
         { id: 'revenue', data: 30, color: `rgb(${theme.spectrum.blue40})`, angularAxisId: 'top' },
         { id: 'profit', data: 50, color: `rgb(${theme.spectrum.green40})`, angularAxisId: 'top' },
@@ -200,18 +203,17 @@ function MultipleAngularAxesExample() {
 
 The radial axis controls the inner and outer radii of the chart. By default, it starts from 0 (center) to the full radius.
 
-### Donut Effect
+### Donut
 
 Use `radialAxis` with `range` to create a donut chart with a hollow center.
 
 ```jsx
-function DonutEffectExample() {
+function DonutExample() {
   const theme = useTheme();
 
   return (
     <PolarChart
       height={200}
-      width={200}
       radialAxis={{ range: ({ max }) => ({ min: max * 0.6, max }) }}
       series={[
         { id: 'a', data: 30, color: `rgb(${theme.spectrum.blue40})` },
@@ -236,58 +238,134 @@ function NestedRingsExample() {
   return (
     <PolarChart
       height={250}
-      width={250}
       radialAxis={[
-        { id: 'inner', range: ({ max }) => ({ min: 0, max: max * 0.35 }) },
-        { id: 'outer', range: ({ max }) => ({ min: max * 0.45, max }) },
+        { id: 'inner', range: ({ max }) => ({ min: 0, max: max * 0.8 }) },
+        { id: 'outer', range: ({ max }) => ({ min: max * 0.85, max }) },
       ]}
       series={[
-        { id: 'inner-a', data: 60, radialAxisId: 'inner', color: `rgb(${theme.spectrum.blue40})` },
-        { id: 'inner-b', data: 40, radialAxisId: 'inner', color: `rgb(${theme.spectrum.blue60})` },
-        { id: 'outer-a', data: 30, radialAxisId: 'outer', color: `rgb(${theme.spectrum.green40})` },
-        { id: 'outer-b', data: 25, radialAxisId: 'outer', color: `rgb(${theme.spectrum.green50})` },
-        { id: 'outer-c', data: 20, radialAxisId: 'outer', color: `rgb(${theme.spectrum.green60})` },
-        { id: 'outer-d', data: 25, radialAxisId: 'outer', color: `rgb(${theme.spectrum.green70})` },
+        {
+          id: 'a',
+          radialAxisId: 'inner',
+          data: 30,
+          label: 'Category A',
+          color: `rgb(${theme.spectrum.blue40})`,
+        },
+        {
+          id: 'b',
+          radialAxisId: 'inner',
+          data: 20,
+          label: 'Category B',
+          color: `rgb(${theme.spectrum.purple40})`,
+        },
+        {
+          id: 'c',
+          radialAxisId: 'inner',
+          data: 15,
+          label: 'Category C',
+          color: `rgb(${theme.spectrum.pink50})`,
+        },
+        {
+          id: 'd',
+          radialAxisId: 'inner',
+          data: 10,
+          label: 'Category D',
+          color: `rgb(${theme.spectrum.orange40})`,
+        },
+        {
+          id: 'e',
+          radialAxisId: 'inner',
+          data: 15,
+          label: 'Category E',
+          color: `rgb(${theme.spectrum.yellow40})`,
+        },
+        {
+          id: 'f',
+          radialAxisId: 'inner',
+          data: 10,
+          label: 'Category F',
+          color: `rgb(${theme.spectrum.green40})`,
+        },
+        {
+          id: 'aa',
+          radialAxisId: 'outer',
+          data: 20,
+          label: 'Category AA',
+          color: `rgb(${theme.spectrum.blue30})`,
+        },
+        {
+          id: 'ab',
+          radialAxisId: 'outer',
+          data: 10,
+          label: 'Category AB',
+          color: `rgb(${theme.spectrum.blue50})`,
+        },
+        {
+          id: 'ba',
+          radialAxisId: 'outer',
+          data: 15,
+          label: 'Category BA',
+          color: `rgb(${theme.spectrum.purple30})`,
+        },
+        {
+          id: 'bb',
+          radialAxisId: 'outer',
+          data: 5,
+          label: 'Category BB',
+          color: `rgb(${theme.spectrum.purple50})`,
+        },
+        {
+          id: 'ca',
+          radialAxisId: 'outer',
+          data: 12,
+          label: 'Category CA',
+          color: `rgb(${theme.spectrum.pink40})`,
+        },
+        {
+          id: 'cb',
+          radialAxisId: 'outer',
+          data: 3,
+          label: 'Category CB',
+          color: `rgb(${theme.spectrum.pink60})`,
+        },
+        {
+          id: 'da',
+          radialAxisId: 'outer',
+          data: 4,
+          label: 'Category DA',
+          color: `rgb(${theme.spectrum.orange30})`,
+        },
+        {
+          id: 'db',
+          radialAxisId: 'outer',
+          data: 6,
+          label: 'Category DB',
+          color: `rgb(${theme.spectrum.orange50})`,
+        },
+        {
+          id: 'ea',
+          radialAxisId: 'outer',
+          data: 15,
+          label: 'Category EA',
+          color: `rgb(${theme.spectrum.yellow40})`,
+        },
+        {
+          id: 'fa',
+          radialAxisId: 'outer',
+          data: 3,
+          label: 'Category FA',
+          color: `rgb(${theme.spectrum.green30})`,
+        },
+        {
+          id: 'fb',
+          radialAxisId: 'outer',
+          data: 7,
+          label: 'Category FB',
+          color: `rgb(${theme.spectrum.green50})`,
+        },
       ]}
     >
-      <PiePlot cornerRadius={4} radialAxisId="inner" strokeWidth={0} />
-      <PiePlot cornerRadius={4} radialAxisId="outer" strokeWidth={0} />
-    </PolarChart>
-  );
-}
-```
-
-## Customization
-
-### Center Label
-
-You can add custom content in the center of donut charts using `DonutCenterLabel`.
-
-```jsx
-function CenterLabelExample() {
-  const theme = useTheme();
-
-  return (
-    <PolarChart
-      animate
-      height={200}
-      width={200}
-      radialAxis={{ range: ({ max }) => ({ min: max * 0.7, max }) }}
-      series={[
-        { id: 'teal', data: 10, color: `rgb(${theme.spectrum.teal40})` },
-        { id: 'blue', data: 25, color: `rgb(${theme.spectrum.blue40})` },
-        { id: 'purple', data: 20, color: `rgb(${theme.spectrum.purple40})` },
-        { id: 'pink', data: 15, color: `rgb(${theme.spectrum.pink40})` },
-        { id: 'orange', data: 30, color: `rgb(${theme.spectrum.orange40})` },
-      ]}
-    >
-      <PiePlot stroke={theme.color.bg} strokeWidth={2} />
-      <DonutCenterLabel color={theme.color.fgMuted} font="label2" verticalAlignment="bottom">
-        Total
-      </DonutCenterLabel>
-      <DonutCenterLabel color={theme.color.fg} font="headline" verticalAlignment="top">
-        $1,234
-      </DonutCenterLabel>
+      <PiePlot radialAxisId="inner" strokeWidth={0} />
+      <PiePlot radialAxisId="outer" strokeWidth={0} />
     </PolarChart>
   );
 }
@@ -295,44 +373,40 @@ function CenterLabelExample() {
 
 ## Composed Examples
 
-### Quadrant Chart
+### Center Label
 
-A chart divided into four quadrants, each with its own data.
+Add custom content to the center of donut-style charts using `DonutCenterLabel`.
 
 ```jsx
-function QuadrantChartExample() {
+function CenterLabelExample() {
   const theme = useTheme();
 
+  const series = [
+    { id: 'a', data: 30, label: 'Category A', color: `rgb(${theme.spectrum.blue40})` },
+    { id: 'b', data: 20, label: 'Category B', color: `rgb(${theme.spectrum.purple40})` },
+    { id: 'c', data: 15, label: 'Category C', color: `rgb(${theme.spectrum.pink50})` },
+    { id: 'd', data: 10, label: 'Category D', color: `rgb(${theme.spectrum.orange40})` },
+    { id: 'e', data: 15, label: 'Category E', color: `rgb(${theme.spectrum.yellow40})` },
+    { id: 'f', data: 10, label: 'Category F', color: `rgb(${theme.spectrum.green40})` },
+  ];
+
+  const total = series.reduce((sum, s) => sum + s.data, 0);
+
   return (
-    <PolarChart
+    <DonutChart
       height={200}
-      width={200}
-      angularAxis={[
-        { id: 'q1', range: { min: 0, max: 90 }, paddingAngle: 3 },
-        { id: 'q2', range: { min: 90, max: 180 }, paddingAngle: 3 },
-        { id: 'q3', range: { min: 180, max: 270 }, paddingAngle: 3 },
-        { id: 'q4', range: { min: 270, max: 360 }, paddingAngle: 3 },
-      ]}
-      series={[
-        { id: 'a', data: 50, color: `rgb(${theme.spectrum.blue40})`, angularAxisId: 'q1' },
-        { id: 'b', data: 30, color: `rgb(${theme.spectrum.blue30})`, angularAxisId: 'q1' },
-        { id: 'c', data: 20, color: `rgb(${theme.spectrum.blue20})`, angularAxisId: 'q1' },
-        { id: 'd', data: 40, color: `rgb(${theme.spectrum.green40})`, angularAxisId: 'q2' },
-        { id: 'e', data: 35, color: `rgb(${theme.spectrum.green30})`, angularAxisId: 'q2' },
-        { id: 'f', data: 25, color: `rgb(${theme.spectrum.green20})`, angularAxisId: 'q2' },
-        { id: 'g', data: 45, color: `rgb(${theme.spectrum.pink40})`, angularAxisId: 'q3' },
-        { id: 'h', data: 30, color: `rgb(${theme.spectrum.pink30})`, angularAxisId: 'q3' },
-        { id: 'i', data: 25, color: `rgb(${theme.spectrum.purple40})`, angularAxisId: 'q3' },
-        { id: 'j', data: 35, color: `rgb(${theme.spectrum.orange40})`, angularAxisId: 'q4' },
-        { id: 'k', data: 40, color: `rgb(${theme.spectrum.orange30})`, angularAxisId: 'q4' },
-        { id: 'l', data: 25, color: `rgb(${theme.spectrum.yellow40})`, angularAxisId: 'q4' },
-      ]}
+      innerRadiusRatio={0.65}
+      stroke={theme.background.bg}
+      strokeWidth={2}
+      series={series}
     >
-      <PiePlot angularAxisId="q1" cornerRadius={6} />
-      <PiePlot angularAxisId="q2" cornerRadius={6} />
-      <PiePlot angularAxisId="q3" cornerRadius={6} />
-      <PiePlot angularAxisId="q4" cornerRadius={6} />
-    </PolarChart>
+      <DonutCenterLabel color={theme.color.fgMuted} font="label2" verticalAlignment="bottom">
+        Total
+      </DonutCenterLabel>
+      <DonutCenterLabel color={theme.color.fg} font="headline" verticalAlignment="top">
+        ${(total * 100).toLocaleString()}
+      </DonutCenterLabel>
+    </DonutChart>
   );
 }
 ```
@@ -349,10 +423,10 @@ function SegmentedProgressRing() {
   const angleEachSideGap = (45 / 4) * 3;
   const startAngleDegrees = angleEachSideGap - 180;
   const endAngleDegrees = 180 - angleEachSideGap;
-  const angleGapDegrees = 5;
-  const totalGapDegrees = angleGapDegrees * 2;
-  const gapBetweenDegrees = totalGapDegrees / 3;
-  const sectionLengthDegrees = (endAngleDegrees - startAngleDegrees) / 3 - gapBetweenDegrees;
+  const totalSweepDegrees = endAngleDegrees - startAngleDegrees;
+  const gapBetweenDegrees = 5;
+  // Subtract total gap space (2 gaps for 3 sections), then divide remaining space by 3
+  const sectionLengthDegrees = (totalSweepDegrees - gapBetweenDegrees * 2) / 3;
 
   const firstSectionEnd = startAngleDegrees + sectionLengthDegrees;
   const secondSectionStart = firstSectionEnd + gapBetweenDegrees;
@@ -457,7 +531,6 @@ function SegmentedProgressRing() {
       inset={0}
       radialAxis={{ range: ({ max }) => ({ min: innerRadiusRatio * max, max }) }}
       series={[{ id: 'progress', data: 100, label: 'Progress', color: theme.color.fg }]}
-      width={200}
     >
       <BackgroundArcs />
       <ClippedProgress />

@@ -16,7 +16,7 @@ import {
   type ChartScaleFunction,
   getPointOnScale,
   type Series,
-  useScrubberContext,
+  useHighlightContext,
 } from '../utils';
 
 import { DefaultScrubberBeacon } from './DefaultScrubberBeacon';
@@ -257,7 +257,8 @@ export const Scrubber = memo(
     ) => {
       const beaconGroupRef = React.useRef<ScrubberBeaconGroupRef>(null);
 
-      const { scrubberPosition } = useScrubberContext();
+      const highlightContext = useHighlightContext();
+      const scrubberPosition = highlightContext?.highlightedItem?.dataIndex;
       const { getXScale, getXAxis, animate, series, drawingArea, dataLength } =
         useCartesianChartContext();
 

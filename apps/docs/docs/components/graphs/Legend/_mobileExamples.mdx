@@ -1,10 +1,10 @@
 Legend displays series information for charts, showing labels and color indicators for each data series. It can be positioned around the chart and supports custom shapes and item components.
 
-## Basic Usage
+## Basics
 
 Use the `legend` prop on chart components to enable a default legend, or pass a `Legend` component for customization.
 
-```tsx
+```jsx
 function BasicLegend() {
   const theme = useTheme();
   const pages = useMemo(
@@ -45,11 +45,129 @@ function BasicLegend() {
 }
 ```
 
-## Shape Variants
+Legend works with cartesian and polar charts.
+
+```jsx
+function PieChartLegend() {
+  const theme = useTheme();
+
+  return (
+    <PieChart
+      legend
+      height={200}
+      radialAxis={{
+        range: ({ max }) => ({ min: max - 16, max }),
+      }}
+      angularAxis={{
+        paddingAngle: 3,
+      }}
+      cornerRadius={8}
+      legendPosition="bottom"
+      inset={{ bottom: 8 }}
+      series={[
+        {
+          id: 'completed',
+          data: 68,
+          label: 'Completed',
+          color: `rgb(${theme.spectrum.green40})`,
+        },
+        {
+          id: 'inProgress',
+          data: 22,
+          label: 'In Progress',
+          color: `rgb(${theme.spectrum.blue40})`,
+        },
+        {
+          id: 'pending',
+          data: 10,
+          label: 'Pending',
+          color: `rgb(${theme.spectrum.yellow40})`,
+        },
+      ]}
+      width={300}
+    />
+  );
+}
+```
+
+### Position
+
+Use `legendPosition` to place the legend at different positions around the chart. You can also customize alignment using the `justifyContent` prop on Legend.
+
+```jsx
+function LegendPosition() {
+  const theme = useTheme();
+
+  return (
+    <CartesianChart
+      height={200}
+      inset={{ bottom: 8, left: 0, right: 0, top: 8 }}
+      legend={<Legend justifyContent="flex-end" />}
+      legendPosition="bottom"
+      series={[
+        {
+          id: 'revenue',
+          label: 'Revenue',
+          data: [455, 520, 380, 455, 285, 235],
+          yAxisId: 'revenue',
+          color: `rgb(${theme.spectrum.yellow40})`,
+          legendShape: 'squircle',
+        },
+        {
+          id: 'profitMargin',
+          label: 'Profit Margin',
+          data: [23, 20, 16, 38, 12, 9],
+          yAxisId: 'profitMargin',
+          color: theme.color.fgPositive,
+          legendShape: 'squircle',
+        },
+      ]}
+      width="100%"
+      xAxis={{
+        data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+        scaleType: 'band',
+      }}
+      yAxis={[
+        {
+          id: 'revenue',
+          domain: { min: 0 },
+        },
+        {
+          id: 'profitMargin',
+          domain: { max: 100, min: 0 },
+        },
+      ]}
+    >
+      <XAxis showLine showTickMarks />
+      <YAxis
+        showGrid
+        showLine
+        showTickMarks
+        axisId="revenue"
+        position="left"
+        requestedTickCount={5}
+        tickLabelFormatter={(value) => `$${value}k`}
+        width={60}
+      />
+      <YAxis
+        showLine
+        showTickMarks
+        axisId="profitMargin"
+        position="right"
+        requestedTickCount={5}
+        tickLabelFormatter={(value) => `${value}%`}
+      />
+      <BarPlot />
+    </CartesianChart>
+  );
+}
+```
+
+### Shape Variants
 
 Legend supports different shape variants: `pill`, `circle`, `square`, and `squircle`. Set the shape on each series using `legendShape`.
 
-```tsx
+```jsx
 function ShapeVariants() {
   const theme = useTheme();
   const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
@@ -99,197 +217,373 @@ function ShapeVariants() {
 }
 ```
 
-## Layout Direction
+## Styling
 
-Use the `direction` prop to arrange legend items in a row or column.
+## Shape
 
-```tsx
-function LayoutDirection() {
+You can pass a custom ReactNode as `legendShape` for fully custom indicators.
+
+```jsx
+function CustomLegendShapes() {
   const theme = useTheme();
 
-  const series = [
-    {
-      id: 'stocks',
-      data: 45,
-      label: 'Stocks',
-      color: `rgb(${theme.spectrum.blue40})`,
-      legendShape: 'circle' as const,
-    },
-    {
-      id: 'bonds',
-      data: 25,
-      label: 'Bonds',
-      color: `rgb(${theme.spectrum.green40})`,
-      legendShape: 'circle' as const,
-    },
-    {
-      id: 'realEstate',
-      data: 15,
-      label: 'Real Estate',
-      color: `rgb(${theme.spectrum.orange40})`,
-      legendShape: 'circle' as const,
-    },
-    {
-      id: 'commodities',
-      data: 10,
-      label: 'Commodities',
-      color: `rgb(${theme.spectrum.purple40})`,
-      legendShape: 'circle' as const,
-    },
-    {
-      id: 'cash',
-      data: 5,
-      label: 'Cash',
-      color: `rgb(${theme.spectrum.gray40})`,
-      legendShape: 'circle' as const,
-    },
+  const months = [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
   ];
 
-  return (
-    <VStack gap={2}>
-      <Text font="headline">Portfolio Allocation</Text>
-      <PieChart
-        height={150}
-        legend={<Legend direction="column" />}
-        legendPosition="right"
-        series={series}
-        width={300}
+  // Actual revenue (first 9 months)
+  const actualRevenue = [320, 380, 420, 390, 450, 480, 520, 490, 540, null, null, null];
+
+  // Forecasted revenue (last 3 months)
+  const forecastRevenue = [null, null, null, null, null, null, null, null, null, 580, 620, 680];
+
+  const numberFormatter = useCallback(
+    (value) => `$${new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 }).format(value)}k`,
+    [],
+  );
+
+  // Pattern settings for dotted fill
+  const patternSize = 4;
+  const dotSize = 1;
+  const patternId = useId();
+  const maskId = useId();
+  const legendPatternId = useId();
+
+  // Custom legend indicator that matches the dotted bar pattern
+  const DottedLegendIndicator = (
+    <Svg height={10} viewBox="0 0 10 10" width={10}>
+      <Defs>
+        <SvgPattern
+          height={patternSize / 2}
+          id={legendPatternId}
+          patternUnits="userSpaceOnUse"
+          width={patternSize / 2}
+        >
+          <SvgCircle cx={patternSize / 4} cy={patternSize / 4} fill="white" r={dotSize / 2} />
+        </SvgPattern>
+        <Mask id={`${legendPatternId}-mask`}>
+          <Rect fill={`url(#${legendPatternId})`} height={8} rx={2} width={8} x={1} y={1} />
+        </Mask>
+      </Defs>
+      <G mask={`url(#${legendPatternId}-mask)`}>
+        <Rect fill={theme.color.fgPositive} height={8} rx={2} width={8} x={1} y={1} />
+      </G>
+      <Rect
+        fill="transparent"
+        height={8}
+        rx={2}
+        stroke={theme.color.fgPositive}
+        strokeWidth={2}
+        width={8}
+        x={1}
+        y={1}
       />
-    </VStack>
+    </Svg>
+  );
+
+  // Custom bar component that renders bars with dotted pattern fill
+  const DottedBarComponent = memo((props) => {
+    const { dataX, x, y } = props;
+    // Create unique IDs per bar so patterns are scoped to each bar
+    const uniqueMaskId = `${maskId}-${dataX}`;
+    const uniquePatternId = `${patternId}-${dataX}`;
+    return (
+      <>
+        <Defs>
+          {/* Pattern positioned relative to this bar's origin */}
+          <SvgPattern
+            height={patternSize}
+            id={uniquePatternId}
+            patternUnits="userSpaceOnUse"
+            width={patternSize}
+            x={x}
+            y={y}
+          >
+            <SvgCircle cx={patternSize / 2} cy={patternSize / 2} fill="white" r={dotSize} />
+          </SvgPattern>
+          <Mask id={uniqueMaskId}>
+            <DefaultBar {...props} fill={`url(#${uniquePatternId})`} />
+          </Mask>
+        </Defs>
+        <G mask={`url(#${uniqueMaskId})`}>
+          <DefaultBar {...props} />
+        </G>
+        <DefaultBar {...props} fill="transparent" stroke={props.fill} strokeWidth={4} />
+      </>
+    );
+  });
+
+  return (
+    <BarChart
+      legend
+      showXAxis
+      showYAxis
+      height={250}
+      inset={0}
+      legendPosition="top"
+      series={[
+        {
+          id: 'actual',
+          label: 'Historical',
+          data: actualRevenue,
+          color: theme.color.fgPositive,
+          legendShape: 'squircle',
+          stackId: 'revenue',
+        },
+        {
+          id: 'forecast',
+          label: 'Forecasted',
+          data: forecastRevenue,
+          color: theme.color.fgPositive,
+          legendShape: DottedLegendIndicator,
+          stackId: 'revenue',
+          BarComponent: DottedBarComponent,
+        },
+      ]}
+      width="100%"
+      xAxis={{
+        data: months,
+        scaleType: 'band',
+        showLine: true,
+        showTickMarks: true,
+      }}
+      yAxis={{
+        domain: { min: 0 },
+        showGrid: true,
+        showLine: true,
+        showTickMarks: true,
+        position: 'left',
+        tickLabelFormatter: numberFormatter,
+        width: 60,
+      }}
+    />
   );
 }
 ```
 
-## Donut Chart Legend
+## Composed Examples
 
-Legend works with donut and pie charts to show segment information.
+### Dynamic Label
 
-```tsx
-function DonutChartLegend() {
+You can use `ItemComponent` to display a label that updates as a user interacts with the chart.
+
+```jsx
+function DynamicLegendLabel() {
   const theme = useTheme();
+
+  const timeLabels = [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
+  ];
 
   const series = [
     {
-      id: 'completed',
-      data: 68,
-      label: 'Completed',
-      color: theme.color.fgPositive,
-      legendShape: 'squircle' as const,
-    },
-    {
-      id: 'inProgress',
-      data: 22,
-      label: 'In Progress',
+      id: 'candidate-a',
+      label: 'Candidate A',
+      data: [48, 47, 46, 45, 44, 43, 42, 41, 40, 39, 38, 38],
       color: `rgb(${theme.spectrum.blue40})`,
-      legendShape: 'squircle' as const,
+      legendShape: 'circle',
     },
     {
-      id: 'pending',
-      data: 10,
-      label: 'Pending',
+      id: 'candidate-b',
+      label: 'Candidate B',
+      data: [null, null, null, 6, 10, 14, 18, 22, 26, 29, 32, 35],
+      color: `rgb(${theme.spectrum.orange40})`,
+      legendShape: 'circle',
+    },
+    {
+      id: 'candidate-c',
+      label: 'Candidate C',
+      data: [52, 53, 54, 49, 46, 43, 40, 37, 34, 32, 30, 27],
       color: `rgb(${theme.spectrum.gray40})`,
-      legendShape: 'squircle' as const,
+      legendShape: 'circle',
     },
   ];
 
-  return (
-    <VStack gap={2}>
-      <Text font="headline">Task Status</Text>
-      <DonutChart legend height={150} legendPosition="bottom" series={series} width={150} />
-    </VStack>
-  );
-}
-```
+  const ValueLegendItem = memo(function ValueLegendItem({ seriesId, label, color, shape }) {
+    const highlightContext = useHighlightContext();
+    const { series: chartSeries, dataLength } = useCartesianChartContext();
 
-## Custom Legend Item
+    const dataIndex = highlightContext?.highlightedItem?.dataIndex ?? dataLength - 1;
 
-Use `ItemComponent` to render custom legend items with additional information or interactions.
+    const seriesData = chartSeries.find((s) => s.id === seriesId);
+    const rawValue = seriesData?.data?.[dataIndex];
 
-```tsx
-function CustomLegendItem() {
-  const theme = useTheme();
+    const formattedValue =
+      rawValue === null || rawValue === undefined ? '--' : `${Math.round(rawValue)}%`;
 
-  const CustomItem = memo<LegendItemProps>(function CustomItem({ label, color, shape }) {
     return (
       <HStack gap={1} style={{ alignItems: 'center' }}>
         <DefaultLegendShape color={color} shape={shape} />
         <TextLabel2>{label}</TextLabel2>
-        <TextLabel1>100%</TextLabel1>
+        <TextLabel1 style={{ fontVariant: ['tabular-nums'] }}>{formattedValue}</TextLabel1>
       </HStack>
     );
   });
 
   return (
     <VStack gap={2}>
-      <Text font="headline">Custom Legend Item</Text>
-      <DonutChart
-        height={150}
-        legend={<Legend ItemComponent={CustomItem} />}
-        legendPosition="bottom"
-        series={[
-          {
-            id: 'btc',
-            data: 60,
-            label: 'Bitcoin',
-            color: `rgb(${theme.spectrum.orange40})`,
-          },
-          {
-            id: 'eth',
-            data: 30,
-            label: 'Ethereum',
-            color: `rgb(${theme.spectrum.purple40})`,
-          },
-          {
-            id: 'other',
-            data: 10,
-            label: 'Other',
-            color: `rgb(${theme.spectrum.gray40})`,
-          },
-        ]}
-        width={150}
+      <Text font="headline" textAlign="center">
+        Election Polls
+      </Text>
+      <LineChart
+        enableScrubbing
+        showArea
+        height={250}
+        legend={<Legend ItemComponent={ValueLegendItem} justifyContent="flex-start" paddingX={2} />}
+        legendPosition="top"
+        series={series}
+        width="100%"
+        xAxis={{
+          data: timeLabels,
+        }}
+        yAxis={{
+          domain: { max: 100, min: 0 },
+          showGrid: true,
+          tickLabelFormatter: (value) => `${value}%`,
+        }}
       />
     </VStack>
   );
 }
 ```
 
-## DefaultLegendShape
+### Interactive Legend
 
-You can use `DefaultLegendShape` directly to create custom legend layouts or displays.
+You can create an interactive legend that the user can use to toggle to emphasize a specific series.
 
-```tsx
-function DefaultShapes() {
+```jsx
+function InteractiveLegend() {
   const theme = useTheme();
+  const [emphasizedId, setEmphasizedId] = useState(null);
 
-  const spectrumColors = [
-    'blue40',
-    'green40',
-    'orange40',
-    'yellow40',
-    'gray40',
-    'indigo40',
-    'pink40',
-    'purple40',
-    'red40',
-    'teal40',
+  const months = [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
   ];
 
-  const shapes: LegendShapeVariant[] = ['pill', 'circle', 'squircle', 'square'];
+  const seriesConfig = useMemo(
+    () => [
+      {
+        id: 'revenue',
+        label: 'Revenue',
+        data: [120, 150, 180, 165, 190, 210, 240, 220, 260, 280, 310, 350],
+        baseColor: 'blue',
+      },
+      {
+        id: 'expenses',
+        label: 'Expenses',
+        data: [80, 95, 110, 105, 120, 130, 145, 140, 155, 165, 180, 195],
+        baseColor: 'orange',
+      },
+      {
+        id: 'profit',
+        label: 'Profit',
+        data: [40, 55, 70, 60, 70, 80, 95, 80, 105, 115, 130, 155],
+        baseColor: 'green',
+      },
+    ],
+    [],
+  );
+
+  const handleToggle = useCallback((seriesId) => {
+    setEmphasizedId((prev) => (prev === seriesId ? null : seriesId));
+  }, []);
+
+  const ChipLegendItem = memo(function ChipLegendItem({ seriesId, label }) {
+    const isEmphasized = emphasizedId === seriesId;
+    const config = seriesConfig.find((s) => s.id === seriesId);
+    const baseColor = config?.baseColor ?? 'gray';
+
+    const color10 = theme.spectrum[`${baseColor}10`];
+    const color50 = theme.spectrum[`${baseColor}50`];
+
+    return (
+      <Chip
+        compact
+        accessibilityLabel={`${isEmphasized ? 'Remove emphasis from' : 'Emphasize'} ${label} series`}
+        inverted={isEmphasized}
+        onPress={() => handleToggle(seriesId)}
+        style={{
+          backgroundColor: `rgb(${color10})`,
+          borderWidth: 0,
+        }}
+      >
+        <HStack gap={1} style={{ alignItems: 'center' }}>
+          <DefaultLegendShape color={`rgb(${color50})`} />
+          <TextLabel2>{label}</TextLabel2>
+        </HStack>
+      </Chip>
+    );
+  });
+
+  const series = useMemo(() => {
+    return seriesConfig.map((config) => {
+      const isEmphasized = emphasizedId === config.id;
+      const isDimmed = emphasizedId !== null && !isEmphasized;
+
+      return {
+        id: config.id,
+        label: config.label,
+        data: config.data,
+        color: `rgb(${theme.spectrum[`${config.baseColor}40`]})`,
+        opacity: isDimmed ? 0.3 : 1,
+      };
+    });
+  }, [emphasizedId, seriesConfig, theme.spectrum]);
 
   return (
     <VStack gap={2}>
-      {shapes.map((shape) => (
-        <HStack key={shape} gap={1}>
-          {spectrumColors.map((color) => (
-            <Box key={color} style={{ width: 10, justifyContent: 'center' }}>
-              <DefaultLegendShape
-                color={`rgb(${theme.spectrum[color as keyof typeof theme.spectrum]})`}
-                shape={shape}
-              />
-            </Box>
-          ))}
-        </HStack>
-      ))}
+      <Text font="headline" textAlign="center">
+        Financial Overview
+      </Text>
+      <LineChart
+        showArea
+        height={300}
+        legend={<Legend ItemComponent={ChipLegendItem} gap={1} paddingTop={1} />}
+        legendPosition="top"
+        series={series}
+        width="100%"
+        xAxis={{
+          data: months,
+        }}
+        yAxis={{
+          domain: { min: 0 },
+          showGrid: true,
+          tickLabelFormatter: (value) => `$${value}k`,
+        }}
+      />
     </VStack>
   );
 }

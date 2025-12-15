@@ -417,11 +417,18 @@ export type ChartInset = {
   right: number;
 };
 
-export const defaultChartInset: ChartInset = {
+export const defaultCartesianChartInset: ChartInset = {
   top: 32,
   left: 16,
   bottom: 16,
   right: 16,
+};
+
+export const defaultPolarChartInset: ChartInset = {
+  top: 8,
+  left: 8,
+  bottom: 8,
+  right: 8,
 };
 
 /**

@@ -59,10 +59,7 @@ export type LegendShapeComponent = React.FC<LegendShapeProps>;
  */
 export const DefaultLegendShape = memo<LegendShapeProps>(
   ({ color = 'var(--color-fgPrimary)', shape = 'circle', className, style, ...props }) => {
-    // If shape is a custom ReactNode, render it directly
-    if (!isVariantShape(shape)) {
-      return <>{shape}</>;
-    }
+    if (!isVariantShape(shape)) return shape;
 
     const variantStyle = stylesByVariant[shape];
 

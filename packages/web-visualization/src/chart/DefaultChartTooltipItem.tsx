@@ -10,8 +10,8 @@ import { Text } from '@coinbase/cds-web/typography';
 
 import { DefaultLegendItem, type LegendItemComponent } from './legend/DefaultLegendItem';
 import type { LegendShapeComponent } from './legend/DefaultLegendShape';
-import { useCartesianChartContext } from './ChartProvider';
-import type { CartesianSeries } from './utils';
+import { useChartContext } from './ChartProvider';
+import type { CartesianChartContextValue, CartesianSeries, PolarChartContextValue } from './utils';
 
 export type ChartTooltipItemBaseProps = Omit<HStackBaseProps, 'children'> &
   SharedProps & {
@@ -20,9 +20,9 @@ export type ChartTooltipItemBaseProps = Omit<HStackBaseProps, 'children'> &
      */
     series: CartesianSeries;
     /**
-     * The current scrubber position (data index).
+     * The current data index being highlighted.
      */
-    scrubberPosition: number;
+    dataIndex: number;
     /**
      * Formatter function for series values.
      * Receives the numeric series value and should return a ReactNode.
@@ -115,7 +115,7 @@ export const DefaultChartTooltipItem = memo<ChartTooltipItemProps>(
     alignItems = 'center',
     justifyContent = 'space-between',
     series,
-    scrubberPosition,
+    dataIndex,
     valueFormatter,
     LegendItemComponent = DefaultLegendItem,
     ShapeComponent,
@@ -126,27 +126,34 @@ export const DefaultChartTooltipItem = memo<ChartTooltipItemProps>(
     testID,
     ...props
   }) => {
-    const { getSeriesData } = useCartesianChartContext();
+    const chartContext = useChartContext();
+
+    const chartType = useMemo(() => chartContext.type, [chartContext.type]);
+
+    // Use raw series data for tooltip display (not stacked/transformed data)
+    const rawSeriesData = useMemo(() => {
+      if (chartType === 'cartesian') {
+        return (chartContext as CartesianChartContextValue).getSeries(series.id)?.data;
+      } else {
+        return (chartContext as PolarChartContextValue).getSeries(series.id)?.data;
+      }
+    }, [chartContext, chartType, series.id]);
 
     const formattedValue: React.ReactNode = useMemo(() => {
-      const data = getSeriesData(series.id);
-      const dataPoint = data?.[scrubberPosition];
-      let value: number | undefined;
+      if (rawSeriesData === undefined) return;
 
-      if (dataPoint && dataPoint !== null) {
-        const [start, end] = dataPoint;
-        value = end - start;
-      } else if (series.data) {
-        const rawPoint = series.data[scrubberPosition];
-        if (rawPoint !== undefined && rawPoint !== null) {
-          value = Array.isArray(rawPoint) ? rawPoint.at(-1) : rawPoint;
-        }
-      }
+      const data = typeof rawSeriesData === 'number' ? rawSeriesData : rawSeriesData?.[dataIndex];
+
+      if (data === null) return;
+
+      // For tuple data [baseline, value], show the value (second element)
+      // For numeric data, show as-is
+      const value = Array.isArray(data) ? data[1] : data;
 
       if (value === undefined || value === null || Number.isNaN(value)) return;
 
       return valueFormatter ? valueFormatter(value) : value;
-    }, [series.id, series.data, scrubberPosition, getSeriesData, valueFormatter]);
+    }, [rawSeriesData, dataIndex, valueFormatter]);
 
     if (formattedValue === undefined) return;
 

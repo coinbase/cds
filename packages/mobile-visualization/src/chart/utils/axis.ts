@@ -70,7 +70,6 @@ export type AngularAxisConfig = AxisConfig & {
   scaleType: Exclude<ChartAxisScaleType, 'band'>;
   /**
    * Padding angle between slices in degrees.
-   * @default 0
    */
   paddingAngle?: number;
 };
@@ -117,7 +116,6 @@ type PolarAxisConfigProps = AxisConfigProps & {
 export type AngularAxisConfigProps = PolarAxisConfigProps & {
   /**
    * Padding angle between slices in degrees.
-   * @default 0
    */
   paddingAngle?: number;
 };
