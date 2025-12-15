@@ -11,8 +11,7 @@ import { Example, ExampleScreen } from '@coinbase/cds-mobile/examples/ExampleScr
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 import { HStack } from '@coinbase/cds-mobile/layout/HStack';
 import { VStack } from '@coinbase/cds-mobile/layout/VStack';
-import { TextBody } from '@coinbase/cds-mobile/typography/TextBody';
-import { TextHeadline } from '@coinbase/cds-mobile/typography/TextHeadline';
+import { Text } from '@coinbase/cds-mobile/typography';
 
 import { Sparkline } from '../Sparkline';
 import { SparklineArea } from '../SparklineArea';
@@ -38,24 +37,24 @@ const SparklineExample = ({ imageUrl, name, symbol, color }: SparklineExamplePro
             justifyContent="center"
             paddingStart={2}
           >
-            <TextBody align="end" numberOfLines={1}>
+            <Text align="end" font="body" numberOfLines={1}>
               $2,874.49
-            </TextBody>
-            <TextBody align="end" color="fgMuted" numberOfLines={1}>
+            </Text>
+            <Text align="end" color="fgMuted" font="body" numberOfLines={1}>
               +36.08%
-            </TextBody>
+            </Text>
           </VStack>
         </HStack>
       }
       media={<CellMedia source={imageUrl} title="Title" type="image" />}
     >
       <VStack justifyContent="center">
-        <TextHeadline ellipsize="tail" numberOfLines={1}>
+        <Text ellipsize="tail" font="headline" numberOfLines={1}>
           {name}
-        </TextHeadline>
-        <TextBody ellipsize="tail" numberOfLines={1}>
+        </Text>
+        <Text ellipsize="tail" font="body" numberOfLines={1}>
           {symbol}
-        </TextBody>
+        </Text>
       </VStack>
     </Cell>
   );
@@ -79,9 +78,9 @@ const SparklineScalingExample: React.FC<React.PropsWithChildren<SparklineCompact
 
   return (
     <VStack>
-      <TextHeadline ellipsize="tail" numberOfLines={1}>
+      <Text ellipsize="tail" font="headline" numberOfLines={1}>
         Scale: {props.yAxisScalingFactor}
-      </TextHeadline>
+      </Text>
       <Sparkline
         {...dimensions}
         color="#F7931A"

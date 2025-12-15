@@ -14,8 +14,7 @@ import { useTheme } from '../../hooks/useTheme';
 import { Box, HStack, VStack } from '../../layout';
 import { RemoteImage } from '../../media';
 import { Pressable } from '../../system/Pressable';
-import { Link, TextHeadline, TextLabel2 } from '../../typography';
-import { Text } from '../../typography/Text';
+import { Link, Text } from '../../typography';
 import {
   Carousel,
   type CarouselImperativeHandle,
@@ -91,9 +90,9 @@ const sampleItems = [
 ];
 
 const SeeAllComponent = () => (
-  <TextHeadline>
+  <Text font="headline">
     <Link to="https://coinbase.com/">See all</Link>
-  </TextHeadline>
+  </Text>
 );
 
 const SquareAssetCard = ({ imageUrl, name }: { imageUrl: string; name: string }) => (
@@ -416,9 +415,9 @@ const AnimatedExample = () => {
       <Animated.View style={animatedStyle}>
         <ContainedAssetCard
           description={
-            <TextLabel2 color="fgPositive" numberOfLines={2}>
+            <Text color="fgPositive" font="label2" numberOfLines={2}>
               ↗6.37%
-            </TextLabel2>
+            </Text>
           }
           header={<RemoteImage height={32} source={imageUrl} width={32} />}
           onPress={handleClick}

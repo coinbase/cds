@@ -44,6 +44,11 @@ export const routes = [
       require('@coinbase/cds-mobile/alpha/select/__stories__/AlphaSelect.stories').default,
   },
   {
+    key: 'AlphaSelectChip',
+    getComponent: () =>
+      require('@coinbase/cds-mobile/alpha/select-chip/__stories__/AlphaSelectChip.stories').default,
+  },
+  {
     key: 'AlphaTabbedChips',
     getComponent: () =>
       require('@coinbase/cds-mobile/alpha/tabbed-chips/__stories__/AlphaTabbedChips.stories')
@@ -164,6 +169,11 @@ export const routes = [
     key: 'Collapsible',
     getComponent: () =>
       require('@coinbase/cds-mobile/collapsible/__stories__/Collapsible.stories').default,
+  },
+  {
+    key: 'Combobox',
+    getComponent: () =>
+      require('@coinbase/cds-mobile/alpha/combobox/__stories__/Combobox.stories').default,
   },
   {
     key: 'ContainedAssetCard',
@@ -539,7 +549,7 @@ export const routes = [
   {
     key: 'SelectChip',
     getComponent: () =>
-      require('@coinbase/cds-mobile/alpha/select-chip/__stories__/SelectChip.stories').default,
+      require('@coinbase/cds-mobile/chips/__stories__/SelectChip.stories').default,
   },
   {
     key: 'SelectOption',

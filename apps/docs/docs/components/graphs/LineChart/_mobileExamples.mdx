@@ -1302,13 +1302,14 @@ function AssetPriceWithDottedArea() {
         <SegmentedTab
           ref={ref}
           label={
-            <TextLabel1
+            <Text
+              font="label1"
               style={{
                 color: isActive ? assets.btc.color : undefined,
               }}
             >
               {label}
-            </TextLabel1>
+            </Text>
           }
           {...props}
         />

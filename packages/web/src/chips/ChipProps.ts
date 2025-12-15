@@ -4,7 +4,11 @@ import type {
   SharedProps,
 } from '@coinbase/cds-common/types';
 
-import type { PressableDefaultElement, PressableProps } from '../system/Pressable';
+import type {
+  PressableBaseProps,
+  PressableDefaultElement,
+  PressableProps,
+} from '../system/Pressable';
 
 export type ChipBaseProps = SharedProps &
   Omit<
@@ -29,7 +33,7 @@ export type ChipBaseProps = SharedProps &
      * If text content overflows, it will get truncated with an ellipsis.
      * @default 200
      */
-    maxWidth?: DimensionValue;
+    maxWidth?: PressableBaseProps['maxWidth'];
     /**
      * Invert the foreground and background colors to emphasize the Chip.
      * Depending on your theme, it may be dangerous to use this prop in conjunction with `transparentWhileInactive`.

@@ -15,7 +15,7 @@ function Example() {
 
   return (
     <VStack gap={3} alignItems="start">
-      <TextHeadline>Scroll is currently {isBlocked ? 'blocked' : 'enabled'}</TextHeadline>
+      <Text font="headline">Scroll is currently {isBlocked ? 'blocked' : 'enabled'}</Text>
       <Button onClick={toggleScroll}>{isBlocked ? 'Enable Scroll' : 'Block Scroll'}</Button>
     </VStack>
   );

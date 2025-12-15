@@ -425,6 +425,39 @@ export const WithDescriptions = () => {
   );
 };
 
+export const WithDisplayValue = () => {
+  const exampleOptions = [
+    { value: '1', label: 'Option 1' },
+    { value: '2', label: 'Option 2' },
+    { value: '3', label: 'Option 3' },
+    { value: '4', label: 'Option 4' },
+    { value: '5', label: 'Option 5' },
+  ];
+  const { value, onChange } = useMultiSelect({
+    initialValue: [],
+  });
+
+  const displayValue =
+    Array.isArray(value) && value.length > 0
+      ? `${value.length} ${value.length === 1 ? 'option' : 'options'} selected`
+      : undefined;
+
+  return (
+    <VStack gap={2}>
+      <Text>Select with custom displayed value:</Text>
+      <SelectChip
+        accessibilityLabel="Select multiple values"
+        displayValue={displayValue}
+        onChange={onChange}
+        options={exampleOptions}
+        placeholder="Choose options"
+        type="multi"
+        value={value}
+      />
+    </VStack>
+  );
+};
+
 const SelectChipScreen = () => {
   return (
     <ExampleScreen>
@@ -469,6 +502,9 @@ const SelectChipScreen = () => {
       </Example>
       <Example title="With Descriptions">
         <WithDescriptions />
+      </Example>
+      <Example title="With Display Value">
+        <WithDisplayValue />
       </Example>
     </ExampleScreen>
   );

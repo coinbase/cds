@@ -9,7 +9,7 @@ import {
 import type { ChartData, ChartDataPoint, ChartScrubParams } from '@coinbase/cds-common/types';
 import { Example, ExampleScreen } from '@coinbase/cds-mobile/examples/ExampleScreen';
 import { Box } from '@coinbase/cds-mobile/layout';
-import { TextTitle3 } from '@coinbase/cds-mobile/typography/TextTitle3';
+import { Text } from '@coinbase/cds-mobile/typography';
 
 import {
   SparklineInteractiveHeader,
@@ -249,17 +249,17 @@ const SparklineInteractiveScreen = () => {
     <ExampleScreen>
       <Example padding={0}>
         <Box>
-          <TextTitle3 paddingX={3} paddingY={3}>
+          <Text font="title3" paddingX={3} paddingY={3}>
             Default
-          </TextTitle3>
+          </Text>
           <SparklineInteractiveBuild data={sparklineInteractiveData} strokeColor={strokeColor} />
         </Box>
       </Example>
       <Example padding={0}>
         <Box>
-          <TextTitle3 paddingX={3} paddingY={3}>
+          <Text font="title3" paddingX={3} paddingY={3}>
             Compact
-          </TextTitle3>
+          </Text>
           <SparklineInteractiveBuild
             compact
             data={sparklineInteractiveData}
@@ -269,9 +269,9 @@ const SparklineInteractiveScreen = () => {
       </Example>
       <Example padding={0}>
         <Box>
-          <TextTitle3 paddingX={3} paddingY={3}>
+          <Text font="title3" paddingX={3} paddingY={3}>
             Disable Scrubbing
-          </TextTitle3>
+          </Text>
           <SparklineInteractiveBuild
             disableScrubbing
             data={sparklineInteractiveData}
@@ -281,9 +281,9 @@ const SparklineInteractiveScreen = () => {
       </Example>
       <Example padding={0}>
         <Box>
-          <TextTitle3 paddingX={3} paddingY={3}>
+          <Text font="title3" paddingX={3} paddingY={3}>
             Hide period selector
-          </TextTitle3>
+          </Text>
           <SparklineInteractiveBuild
             hidePeriodSelector
             data={sparklineInteractiveData}
@@ -293,9 +293,9 @@ const SparklineInteractiveScreen = () => {
       </Example>
       <Example padding={0}>
         <Box>
-          <TextTitle3 paddingX={3} paddingY={3}>
+          <Text font="title3" paddingX={3} paddingY={3}>
             Hide min/max label
-          </TextTitle3>
+          </Text>
           <SparklineInteractiveBuild
             hideMinMaxLabel
             data={sparklineInteractiveData}
@@ -305,9 +305,9 @@ const SparklineInteractiveScreen = () => {
       </Example>
       <Example padding={0}>
         <Box>
-          <TextTitle3 paddingX={3} paddingY={3}>
+          <Text font="title3" paddingX={3} paddingY={3}>
             Default period All
-          </TextTitle3>
+          </Text>
           <SparklineInteractiveBuild
             data={sparklineInteractiveData}
             defaultPeriod="all"
@@ -317,9 +317,9 @@ const SparklineInteractiveScreen = () => {
       </Example>
       <Example padding={0}>
         <Box>
-          <TextTitle3 paddingX={3} paddingY={3}>
+          <Text font="title3" paddingX={3} paddingY={3}>
             Fill Disabled
-          </TextTitle3>
+          </Text>
           <SparklineInteractiveBuild
             data={sparklineInteractiveData}
             fill={false}
@@ -329,9 +329,9 @@ const SparklineInteractiveScreen = () => {
       </Example>
       <Example padding={0}>
         <Box>
-          <TextTitle3 paddingX={3} paddingY={3}>
+          <Text font="title3" paddingX={3} paddingY={3}>
             Y axis scaling
-          </TextTitle3>
+          </Text>
           <SparklineInteractiveBuild
             data={sparklineInteractiveData}
             strokeColor={strokeColor}
@@ -341,33 +341,33 @@ const SparklineInteractiveScreen = () => {
       </Example>
       <Example padding={0}>
         <Box>
-          <TextTitle3 paddingX={3} paddingY={3}>
+          <Text font="title3" paddingX={3} paddingY={3}>
             Fallback
-          </TextTitle3>
+          </Text>
           <SparklineInteractiveBuild strokeColor={strokeColor} />
         </Box>
       </Example>
       <Example padding={0}>
         <Box>
-          <TextTitle3 paddingX={3} paddingY={3}>
+          <Text font="title3" paddingX={3} paddingY={3}>
             Fallback Negative
-          </TextTitle3>
+          </Text>
           <SparklineInteractiveBuild fallbackType="negative" strokeColor={strokeColor} />
         </Box>
       </Example>
       <Example padding={0}>
         <Box>
-          <TextTitle3 paddingX={3} paddingY={3}>
+          <Text font="title3" paddingX={3} paddingY={3}>
             Fallback Compact
-          </TextTitle3>
+          </Text>
           <SparklineInteractiveBuild compact strokeColor={strokeColor} />
         </Box>
       </Example>
       <Example padding={0}>
         <Box>
-          <TextTitle3 paddingX={3} paddingY={3}>
+          <Text font="title3" paddingX={3} paddingY={3}>
             No Hover Date
-          </TextTitle3>
+          </Text>
           <SparklineInteractiveBuild
             hideHoverDate
             data={sparklineInteractiveData}
@@ -377,9 +377,9 @@ const SparklineInteractiveScreen = () => {
       </Example>
       <Example padding={0}>
         <Box>
-          <TextTitle3 paddingX={3} paddingY={3}>
+          <Text font="title3" paddingX={3} paddingY={3}>
             With Header Node
-          </TextTitle3>
+          </Text>
           <SparklineInteractiveWithHeaderBuild
             data={sparklineInteractiveData}
             strokeColor="#F7931A"
@@ -388,9 +388,9 @@ const SparklineInteractiveScreen = () => {
       </Example>
       <Example padding={0}>
         <Box>
-          <TextTitle3 paddingX={3} paddingY={3}>
+          <Text font="title3" paddingX={3} paddingY={3}>
             No padding
-          </TextTitle3>
+          </Text>
           <SparklineInteractiveBuild
             data={sparklineInteractiveData}
             gutter={0}
@@ -401,7 +401,9 @@ const SparklineInteractiveScreen = () => {
       </Example>
       <Example padding={4}>
         <Box>
-          <TextTitle3 paddingY={3}>In Container With 4 padding</TextTitle3>
+          <Text font="title3" paddingY={3}>
+            In Container With 4 padding
+          </Text>
           <SparklineInteractiveWithHeaderBuild
             disableHorizontalPadding
             data={sparklineInteractiveData}
@@ -412,9 +414,9 @@ const SparklineInteractiveScreen = () => {
       </Example>
       <Example padding={0}>
         <Box>
-          <TextTitle3 paddingX={3} paddingY={3}>
+          <Text font="title3" paddingX={3} paddingY={3}>
             Custom screen padding 6
-          </TextTitle3>
+          </Text>
           <SparklineInteractiveBuild
             data={sparklineInteractiveData}
             gutter={6}
@@ -424,9 +426,9 @@ const SparklineInteractiveScreen = () => {
       </Example>
       <Example padding={0}>
         <Box>
-          <TextTitle3 paddingX={3} paddingY={3}>
+          <Text font="title3" paddingX={3} paddingY={3}>
             Hover data
-          </TextTitle3>
+          </Text>
           <SparklineInteractiveBuild
             data={sparklineInteractiveData}
             hoverData={sparklineInteractiveHoverData}
@@ -436,9 +438,9 @@ const SparklineInteractiveScreen = () => {
       </Example>
       <Example padding={0}>
         <Box>
-          <TextTitle3 paddingX={3} paddingY={3}>
+          <Text font="title3" paddingX={3} paddingY={3}>
             Auto Stoke Color
-          </TextTitle3>
+          </Text>
           <SparklineInteractiveBuild
             data={sparklineInteractiveData}
             strokeColor={autoStrokeColor}
@@ -447,17 +449,17 @@ const SparklineInteractiveScreen = () => {
       </Example>
       <Example padding={0}>
         <Box>
-          <TextTitle3 paddingX={3} paddingY={3}>
+          <Text font="title3" paddingX={3} paddingY={3}>
             Custom RGB Stoke Color
-          </TextTitle3>
+          </Text>
           <SparklineInteractiveBuild data={sparklineInteractiveData} strokeColor={rgbStrokeColor} />
         </Box>
       </Example>
       <Example padding={0}>
         <Box>
-          <TextTitle3 paddingX={3} paddingY={3}>
+          <Text font="title3" paddingX={3} paddingY={3}>
             Custom RGBA Stoke Color
-          </TextTitle3>
+          </Text>
           <SparklineInteractiveBuild
             data={sparklineInteractiveData}
             strokeColor={rgbaStrokeColor}
@@ -466,9 +468,9 @@ const SparklineInteractiveScreen = () => {
       </Example>
       <Example padding={0}>
         <Box>
-          <TextTitle3 paddingX={3} paddingY={3}>
+          <Text font="title3" paddingX={3} paddingY={3}>
             No Data In SelectedPeriod
-          </TextTitle3>
+          </Text>
           <SparklineInteractiveBuild
             data={{ ...sparklineInteractiveData, hour: [] }}
             strokeColor={rgbaStrokeColor}
@@ -477,9 +479,9 @@ const SparklineInteractiveScreen = () => {
       </Example>
       <Example padding={0}>
         <Box>
-          <TextTitle3 paddingX={3} paddingY={3}>
+          <Text font="title3" paddingX={3} paddingY={3}>
             Enable Interaction When Outside
-          </TextTitle3>
+          </Text>
           <SparklineInteractiveBuild
             allowOverflowGestures
             data={sparklineInteractiveData}
@@ -489,9 +491,9 @@ const SparklineInteractiveScreen = () => {
       </Example>
       <Example padding={0}>
         <Box>
-          <TextTitle3 paddingX={3} paddingY={3}>
+          <Text font="title3" paddingX={3} paddingY={3}>
             Custom Node Header Styles
-          </TextTitle3>
+          </Text>
           <SparklineInteractiveWithHeaderBuild
             data={sparklineInteractiveData}
             strokeColor="#F7931A"
@@ -505,9 +507,9 @@ const SparklineInteractiveScreen = () => {
       </Example>
       <Example padding={0}>
         <Box>
-          <TextTitle3 paddingX={3} paddingY={3}>
+          <Text font="title3" paddingX={3} paddingY={3}>
             Dotted Fill Type
-          </TextTitle3>
+          </Text>
           <SparklineInteractiveBuild
             data={sparklineInteractiveData}
             fillType="dotted"
@@ -517,9 +519,9 @@ const SparklineInteractiveScreen = () => {
       </Example>
       <Example padding={0}>
         <Box>
-          <TextTitle3 paddingX={3} paddingY={3}>
+          <Text font="title3" paddingX={3} paddingY={3}>
             Y Scale Custom
-          </TextTitle3>
+          </Text>
           <SparklineInteractiveBuild
             data={sparklineInteractiveData}
             fillType="dotted"

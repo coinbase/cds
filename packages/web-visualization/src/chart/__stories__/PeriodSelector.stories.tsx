@@ -11,7 +11,7 @@ import {
   type TabComponent,
   type TabsActiveIndicatorProps,
 } from '@coinbase/cds-web/tabs';
-import { TextHeadline, TextLabel1 } from '@coinbase/cds-web/typography';
+import { Text } from '@coinbase/cds-web/typography';
 import { css } from '@linaria/core';
 
 import { LiveTabLabel, PeriodSelector, PeriodSelectorActiveIndicator } from '../PeriodSelector';
@@ -26,7 +26,7 @@ const Example: React.FC<
 > = ({ children, title, description }) => {
   return (
     <VStack gap={2}>
-      <TextHeadline>{title}</TextHeadline>
+      <Text font="headline">{title}</Text>
       {description}
       {children}
     </VStack>
@@ -214,14 +214,15 @@ const BTCTab: TabComponent = memo(
         <SegmentedTab
           ref={ref}
           label={
-            <TextLabel1
+            <Text
+              font="label1"
               style={{
                 transition: 'color 0.2s ease',
                 color: btcThemeColor,
               }}
             >
               {label}
-            </TextLabel1>
+            </Text>
           }
           {...props}
         />

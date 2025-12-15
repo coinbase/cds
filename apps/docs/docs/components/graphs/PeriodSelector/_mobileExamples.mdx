@@ -162,9 +162,9 @@ function ColoredBTCExample() {
 
       const wrappedLabel =
         typeof label === 'string' ? (
-          <TextLabel1 dangerouslySetColor={isActive ? btcColor : theme.color.fg}>
+          <Text font="label1" dangerouslySetColor={isActive ? btcColor : theme.color.fg}>
             {label}
-          </TextLabel1>
+          </Text>
         ) : (
           label
         );
@@ -262,9 +262,9 @@ function ColoredExcludingLiveExample() {
 
       const wrappedLabel =
         typeof label === 'string' ? (
-          <TextLabel1 dangerouslySetColor={isActive ? btcColor : theme.color.fg}>
+          <Text font="label1" dangerouslySetColor={isActive ? btcColor : theme.color.fg}>
             {label}
-          </TextLabel1>
+          </Text>
         ) : (
           label
         );

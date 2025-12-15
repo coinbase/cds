@@ -45,6 +45,35 @@ function ExampleManyTabs() {
 }
 ```
 
+### With autoScrollOffset
+
+:::tip Auto-scroll offset
+The `autoScrollOffset` prop controls the X position offset when auto-scrolling to the active tab. This prevents the active tab from being covered by the overflow gradient on the left side. Try clicking tabs near the edges to see the difference.
+:::
+
+```tsx
+function ExampleAutoScrollOffset() {
+  const tabs = Array.from({ length: 25 }).map((_, i) => ({
+    id: `tab_${i + 1}`,
+    label: `Tab ${i + 1}`,
+  }));
+  const [activeTab, setActiveTab] = useState(tabs[0]);
+  return (
+    <VStack gap={2}>
+      <Text>Default offset (30px)</Text>
+      <TabbedChips activeTab={activeTab} onChange={setActiveTab} tabs={tabs} />
+      <Text>Custom offset (60px)</Text>
+      <TabbedChips
+        activeTab={activeTab}
+        onChange={setActiveTab}
+        tabs={tabs}
+        autoScrollOffset={60}
+      />
+    </VStack>
+  );
+}
+```
+
 ### Long text tabs
 
 ```tsx

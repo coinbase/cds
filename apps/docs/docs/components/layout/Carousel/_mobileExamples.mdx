@@ -95,9 +95,9 @@ function DynamicSizingCarousel() {
           action="Start earning"
           dangerouslySetBackground="rgb(var(--purple70))"
           description={
-            <TextLabel2 as="p" numberOfLines={3} color="fgInverse">
+            <Text as="p" font="label2" numberOfLines={3} color="fgInverse">
               Earn staking rewards on ETH by holding it on Coinbase
-            </TextLabel2>
+            </Text>
           }
           media={
             <Box left={16} position="relative" top={12}>
@@ -107,9 +107,9 @@ function DynamicSizingCarousel() {
           minWidth="0"
           onActionPress={NoopFn}
           title={
-            <TextHeadline color="fgInverse" as="h3">
+            <Text color="fgInverse" as="h3" font="headline">
               Up to 3.29% APR on ETHs
-            </TextHeadline>
+            </Text>
           }
           width="100%"
         />
@@ -405,9 +405,9 @@ Similar to web, you are provided the `isVisible` render prop, however it is not 
         }
         minWidth="0"
         title={
-          <TextHeadline as="h3" id="recurring-buy-label">
+          <Text as="h3" font="headline" id="recurring-buy-label">
             Recurring Buy
-          </TextHeadline>
+          </Text>
         }
         width="100%"
       />
@@ -485,9 +485,9 @@ function CustomComponentsCarousel() {
           carousel: { gap: horizontalGap },
         }}
         title={
-          <TextHeadline as="h3">
+          <Text as="h3" font="headline">
             Learn more
-          </TextHeadline>
+          </Text>
         }
       >
         <CarouselItem id="recurring-buy" width={itemWidth}>
@@ -510,9 +510,9 @@ function CustomComponentsCarousel() {
             action="Start earning"
             dangerouslySetBackground="rgb(var(--purple70))"
             description={
-              <TextLabel2 as="p" numberOfLines={3} color="fgInverse">
+              <Text as="p" font="label2" numberOfLines={3} color="fgInverse">
                 Earn staking rewards on ETH by holding it on Coinbase
-              </TextLabel2>
+              </Text>
             }
             media={
               <Box left={16} position="relative" top={12}>
@@ -522,9 +522,9 @@ function CustomComponentsCarousel() {
             minWidth={0}
             onActionPress={NoopFn}
             title={
-              <TextHeadline color="fgInverse" as="h3">
+              <Text color="fgInverse" as="h3" font="headline">
                 Up to 3.29% APR on ETHs
-              </TextHeadline>
+              </Text>
             }
             width="100%"
           />
@@ -534,9 +534,9 @@ function CustomComponentsCarousel() {
             action="Start chatting"
             dangerouslySetBackground="rgb(var(--teal70))"
             description={
-              <TextLabel2 as="p" numberOfLines={3} color="fgInverse">
+              <Text as="p" font="label2" numberOfLines={3} color="fgInverse">
                 Chat with other devs in our Discord community
-              </TextLabel2>
+              </Text>
             }
             media={
               <Box left={16} position="relative" top={4}>
@@ -546,9 +546,9 @@ function CustomComponentsCarousel() {
             minWidth={0}
             onActionPress={NoopFn}
             title={
-              <TextHeadline color="fgInverse" as="h3">
+              <Text color="fgInverse" as="h3" font="headline">
                 Join the community
-              </TextHeadline>
+              </Text>
             }
             width="100%"
           />
@@ -558,9 +558,9 @@ function CustomComponentsCarousel() {
             action="Get 60 days free"
             dangerouslySetBackground="rgb(var(--blue80))"
             description={
-              <TextLabel2 as="p" numberOfLines={3} color="fgInverse">
+              <Text as="p" font="label2" numberOfLines={3} color="fgInverse">
                 Use code NOV60 when you  sign up for Coinbase One
-              </TextLabel2>
+              </Text>
             }
             media={
               <Box left={16} position="relative" top={0}>
@@ -570,9 +570,9 @@ function CustomComponentsCarousel() {
             minWidth={0}
             onActionPress={NoopFn}
             title={
-              <TextHeadline color="fgInverse" as="h3">
+              <Text color="fgInverse" as="h3" font="headline">
                 Coinbase One offer
-              </TextHeadline>
+              </Text>
             }
             width="100%"
           />
@@ -582,9 +582,9 @@ function CustomComponentsCarousel() {
             action="Get started"
             dangerouslySetBackground="rgb(var(--gray100))"
             description={
-              <TextLabel2 as="p" numberOfLines={3} color="fgInverse">
+              <Text as="p" font="label2" numberOfLines={3} color="fgInverse">
                 Spend USDC to get rewards with our Visa® debit card
-              </TextLabel2>
+              </Text>
             }
             media={
               <Box left={16} position="relative" top={0}>
@@ -594,9 +594,9 @@ function CustomComponentsCarousel() {
             minWidth={0}
             onActionPress={NoopFn}
             title={
-              <TextHeadline color="fgInverse" as="h3">
+              <Text color="fgInverse" as="h3" font="headline">
                 Coinbase Card
-              </TextHeadline>
+              </Text>
             }
             width="100%"
           />

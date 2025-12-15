@@ -105,7 +105,9 @@ function AlertOnModalExample() {
       openModal(
         <Modal visible onRequestClose={closeModal}>
           <ModalBody>
-            <TextBody as="p">{loremIpsum}</TextBody>
+            <Text as="p" font="body">
+              {loremIpsum}
+            </Text>
           </ModalBody>
           <ModalFooter
             primaryAction={<Button onClick={closeModal}>Save</Button>}
