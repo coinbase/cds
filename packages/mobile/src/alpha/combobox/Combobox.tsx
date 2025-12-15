@@ -298,6 +298,7 @@ const ComboboxBase = memo(
             header={
               <Box paddingX={3}>
                 <ComboboxControl
+                  accessibilityLabel={accessibilityLabel}
                   endNode={endNode}
                   placeholder={placeholder}
                   startNode={startNode}

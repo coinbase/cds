@@ -140,7 +140,7 @@ export const DefaultSelectControlComponent = memo(
             })
             .slice(0, maxSelectedOptionsToShow)
             .join(', ');
-          return `${accessibilityLabel}, ${(value as SelectOptionValue[]).length > 0 ? selectedValues : placeholder}${(value as SelectOptionValue[]).length > maxSelectedOptionsToShow ? ', ' + hiddenSelectedOptionsLabel : ''}`;
+          return `${accessibilityLabel}, ${(value as SelectOptionValue[]).length > 0 ? selectedValues : (placeholder ?? '')}${(value as SelectOptionValue[]).length > maxSelectedOptionsToShow ? ', ' + hiddenSelectedOptionsLabel : ''}`;
         }
         // If value is React node, fallback to only using passed in accessibility label
         return `${accessibilityLabel ?? ''}${typeof singleValueContent === 'string' ? ', ' + singleValueContent : ''}`;
