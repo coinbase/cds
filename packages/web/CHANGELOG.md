@@ -8,6 +8,24 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.31.1 (12/15/2025 PST)
+
+#### 🐞 Fixes
+
+- Chore: add barrel files to web/mobile components. [[#251](https://github.com/coinbase/cds/pull/251)]
+
+## 8.31.0 (12/12/2025 PST)
+
+#### 🚀 Updates
+
+- Add inputBackground prop to InputStack and TextInput.
+
+## 8.30.1 (12/12/2025 PST)
+
+#### 🐞 Fixes
+
+- Add classNames and styles to sidebar. [[#239](https://github.com/coinbase/cds/pull/239)]
+
 ## 8.30.0 (12/12/2025 PST)
 
 #### 🚀 Updates
