@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.31.0 (12/12/2025 PST)
+
+#### 🚀 Updates
+
+- Add inputBackground prop to InputStack and TextInput.
+
 ## 8.30.1 (12/12/2025 PST)
 
 #### 🐞 Fixes
