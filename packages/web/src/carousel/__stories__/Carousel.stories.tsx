@@ -8,7 +8,7 @@ import { ContainedAssetCard, NudgeCard, UpsellCard } from '../../cards';
 import { Box, HStack, VStack } from '../../layout';
 import { RemoteImage } from '../../media';
 import { Pressable } from '../../system/Pressable';
-import { Link, TextHeadline, TextLabel1, TextLabel2, TextTitle2 } from '../../typography';
+import { Link, Text } from '../../typography';
 import { Carousel } from '../Carousel';
 import { CarouselItem } from '../CarouselItem';
 import { DefaultCarouselNavigation } from '../DefaultCarouselNavigation';
@@ -34,9 +34,9 @@ const SampleCard = ({ text }: { text: string }) => (
     }}
     width="100%"
   >
-    <TextLabel1 as="p" color="fgPrimary">
+    <Text as="p" color="fgPrimary" font="label1">
       {text}
-    </TextLabel1>
+    </Text>
   </Box>
 );
 
@@ -94,11 +94,11 @@ const NegativeMargin = ({ children }: { children: React.ReactNode }) => (
 );
 
 const SeeAllComponent = () => (
-  <TextHeadline paddingEnd={2}>
+  <Text font="headline" paddingEnd={2}>
     <Link openInNewWindow href="https://coinbase.com/">
       See all
     </Link>
-  </TextHeadline>
+  </Text>
 );
 
 const SquareAssetCard = ({
@@ -112,9 +112,9 @@ const SquareAssetCard = ({
 }) => (
   <ContainedAssetCard
     description={
-      <TextLabel2 as="p" color="fgPositive" numberOfLines={2}>
+      <Text as="p" color="fgPositive" font="label2" numberOfLines={2}>
         &#x2197;6.37%
-      </TextLabel2>
+      </Text>
     }
     header={<RemoteImage draggable={false} height="32px" source={imageUrl} width="32px" />}
     onClick={isVisible ? () => console.log('clicked') : undefined}
@@ -171,7 +171,11 @@ const BasicExamples = () => (
       drag="snap"
       snapMode="page"
       styles={gapOnlyStyles}
-      title={<TextTitle2 as="h3">Full Width Cards</TextTitle2>}
+      title={
+        <Text as="h3" font="title2">
+          Full Width Cards
+        </Text>
+      }
     >
       <CarouselItem id="upsell-1" width="100%">
         {({ isVisible }) => <SampleUpsellCard isVisible={isVisible} />}
@@ -278,9 +282,9 @@ const CustomComponentsExample = () => {
       paddingY={1}
       tabIndex={isVisible ? undefined : -1}
     >
-      <TextHeadline color="fgPrimary" numberOfLines={1}>
+      <Text color="fgPrimary" font="headline" numberOfLines={1}>
         {children}
-      </TextHeadline>
+      </Text>
     </Pressable>
   );
 
@@ -348,9 +352,9 @@ const CustomStylesExample = () => {
       paddingY={1}
       tabIndex={isVisible ? undefined : -1}
     >
-      <TextHeadline color="fgPrimary" numberOfLines={1}>
+      <Text color="fgPrimary" font="headline" numberOfLines={1}>
         {children}
-      </TextHeadline>
+      </Text>
     </Pressable>
   );
 
@@ -449,9 +453,9 @@ const AnimatedPaginationExample = () => {
       paddingY={1}
       tabIndex={isVisible ? undefined : -1}
     >
-      <TextHeadline color="fgPrimary" numberOfLines={1}>
+      <Text color="fgPrimary" font="headline" numberOfLines={1}>
         {children}
-      </TextHeadline>
+      </Text>
     </Pressable>
   );
 

@@ -16,7 +16,7 @@ function ExampleComponent() {
 
   return (
     <VStack gap={2}>
-      <TextHeadline>Overlay Context Information</TextHeadline>
+      <Text font="headline">Overlay Context Information</Text>
       <Text>Is inside any overlay: {isOverlay ? 'Yes' : 'No'}</Text>
       <Text>Is inside modal: {isModal ? 'Yes' : 'No'}</Text>
       <Text>Is inside drawer/tray: {isDrawer ? 'Yes' : 'No'}</Text>
@@ -43,7 +43,7 @@ function ModalExample() {
 
     return (
       <VStack gap={2}>
-        <TextHeadline>Overlay Context Information</TextHeadline>
+        <Text font="headline">Overlay Context Information</Text>
         <Text>Is inside any overlay: {isOverlay ? 'Yes' : 'No'}</Text>
         <Text>Is inside modal: {isModal ? 'Yes' : 'No'}</Text>
         <Text>Is inside drawer/tray: {isDrawer ? 'Yes' : 'No'}</Text>
@@ -55,7 +55,7 @@ function ModalExample() {
   return (
     <VStack gap={3}>
       <VStack gap={2} padding={3} background="bgSecondary" borderRadius={400}>
-        <TextHeadline>Outside Modal</TextHeadline>
+        <Text font="headline">Outside Modal</Text>
         <ExampleComponent />
       </VStack>
 
@@ -97,7 +97,7 @@ function ContextProviderExample() {
 
     return (
       <VStack gap={2}>
-        <TextHeadline>Overlay Context Information</TextHeadline>
+        <Text font="headline">Overlay Context Information</Text>
         <Text>Is inside any overlay: {isOverlay ? 'Yes' : 'No'}</Text>
         <Text>Is inside modal: {isModal ? 'Yes' : 'No'}</Text>
         <Text>Is inside drawer/tray: {isDrawer ? 'Yes' : 'No'}</Text>
@@ -115,7 +115,7 @@ function ContextProviderExample() {
   return (
     <OverlayContentContext.Provider value={contextValue}>
       <VStack gap={2} padding={3} background="bgSecondary" borderRadius={400}>
-        <TextHeadline>Inside Context Provider</TextHeadline>
+        <Text font="headline">Inside Context Provider</Text>
         <ExampleComponent />
       </VStack>
     </OverlayContentContext.Provider>
@@ -140,7 +140,7 @@ function ConditionalRenderingExample() {
 
     return (
       <VStack gap={2}>
-        <TextHeadline>Conditional Content</TextHeadline>
+        <Text font="headline">Conditional Content</Text>
         {isOverlay ? (
           <VStack gap={1}>
             <Text color="fgPositive">✓ This content shows when inside an overlay</Text>
@@ -156,7 +156,7 @@ function ConditionalRenderingExample() {
   return (
     <VStack gap={3}>
       <VStack gap={2} padding={3} background="bgSecondary" borderRadius={400}>
-        <TextHeadline>Outside Modal</TextHeadline>
+        <Text font="headline">Outside Modal</Text>
         <ConditionalContent />
       </VStack>
 
@@ -200,7 +200,7 @@ function StylingExample() {
 
     return (
       <VStack padding={3} background={getBackgroundColor()} borderRadius={400} gap={2}>
-        <TextHeadline>Dynamic Styling</TextHeadline>
+        <Text font="headline">Dynamic Styling</Text>
         <Text>{getStatusText()}</Text>
         <Text color="fgMuted" font="caption">
           Background color: {getBackgroundColor()}

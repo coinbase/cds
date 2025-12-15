@@ -55,6 +55,11 @@ export type TabbedChipsBaseProps<T extends string = string> = Omit<
    * @default false
    */
   compact?: boolean;
+  /**
+   * X position offset when auto-scrolling to active tab (to avoid active tab being covered by the overflow gradient on the left side, default: 30px)
+   * @default 30
+   */
+  autoScrollOffset?: number;
 };
 
 export type TabbedChipsProps<T extends string = string> = TabbedChipsBaseProps<T> &
@@ -98,6 +103,7 @@ const TabbedChipsComponent = memo(
       gap = 1,
       compact,
       styles,
+      autoScrollOffset = 30,
       ...accessibilityProps
     }: TabbedChipsProps<T>,
     ref: React.ForwardedRef<View>,
@@ -106,11 +112,12 @@ const TabbedChipsComponent = memo(
     const {
       scrollRef,
       isScrollContentOverflowing,
+      isScrollContentOffscreenLeft,
       isScrollContentOffscreenRight,
       handleScroll,
       handleScrollContainerLayout,
       handleScrollContentSizeChange,
-    } = useHorizontalScrollToTarget({ activeTarget: scrollTarget });
+    } = useHorizontalScrollToTarget({ activeTarget: scrollTarget, autoScrollOffset });
 
     const TabComponentWithCompact = useCallback(
       (props: TabValue<T>) => {
@@ -122,9 +129,7 @@ const TabbedChipsComponent = memo(
     return (
       <Box
         ref={ref}
-        overflow={
-          isScrollContentOverflowing && isScrollContentOffscreenRight ? undefined : 'visible'
-        }
+        overflow={isScrollContentOverflowing ? undefined : 'visible'}
         style={styles?.root}
         testID={testID}
         width={width}
@@ -150,7 +155,12 @@ const TabbedChipsComponent = memo(
             {...accessibilityProps}
           />
         </ScrollView>
-        {isScrollContentOverflowing && isScrollContentOffscreenRight ? <OverflowGradient /> : null}
+        {isScrollContentOverflowing && isScrollContentOffscreenLeft && (
+          <OverflowGradient pin="left" />
+        )}
+        {isScrollContentOverflowing && isScrollContentOffscreenRight && (
+          <OverflowGradient pin="right" />
+        )}
       </Box>
     );
   }),

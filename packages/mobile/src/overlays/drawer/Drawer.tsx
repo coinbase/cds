@@ -6,8 +6,17 @@ import React, {
   useImperativeHandle,
   useMemo,
   useRef,
+  useState,
 } from 'react';
-import { Animated, Modal, Platform, StyleSheet, useWindowDimensions, View } from 'react-native';
+import {
+  Animated,
+  Keyboard,
+  Modal,
+  Platform,
+  StyleSheet,
+  useWindowDimensions,
+  View,
+} from 'react-native';
 import type { ModalProps } from 'react-native';
 import {
   drawerAnimationDefaultDuration,
@@ -186,10 +195,24 @@ export const Drawer = memo(
       () => width * horizontalDrawerPercentageOfView + MAX_OVER_DRAG,
       [width],
     );
+
+    const [keyboardInset, setKeyboardInset] = useState(0);
+    useEffect(() => {
+      if (Platform.OS !== 'android') return;
+      const show = Keyboard.addListener('keyboardDidShow', (e) =>
+        setKeyboardInset(e.endCoordinates.height),
+      );
+      const hide = Keyboard.addListener('keyboardDidHide', () => setKeyboardInset(0));
+      return () => {
+        show.remove();
+        hide.remove();
+      };
+    }, []);
+
     // drawer will automatically size itself based on content, but will cap at 75% of viewport height (can override)
     const verticalDrawerMaxHeight = useMemo(
-      () => height * verticalDrawerPercentageOfView + MAX_OVER_DRAG,
-      [height, verticalDrawerPercentageOfView],
+      () => height * verticalDrawerPercentageOfView + MAX_OVER_DRAG - keyboardInset,
+      [height, verticalDrawerPercentageOfView, keyboardInset],
     );
 
     const getPanGestureHandlers = !preventDismissGestures

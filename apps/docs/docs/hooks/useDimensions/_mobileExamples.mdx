@@ -10,10 +10,10 @@ function Example() {
   return (
     <Box backgroundColor="bgAlternate" padding={3} borderRadius={300} width="100%">
       <VStack gap={2}>
-        <TextHeadline>
+        <Text font="headline">
           Screen dimensions: {screenWidth}x{screenHeight}
-        </TextHeadline>
-        <TextHeadline>Status bar height: {statusBarHeight}px</TextHeadline>
+        </Text>
+        <Text font="headline">Status bar height: {statusBarHeight}px</Text>
       </VStack>
     </Box>
   );
@@ -32,7 +32,7 @@ function Example() {
 
   return (
     <Box backgroundColor="bgAlternate" height={contentHeight} paddingTop={statusBarHeight}>
-      <TextHeadline>Content below status bar</TextHeadline>
+      <Text font="headline">Content below status bar</Text>
     </Box>
   );
 }

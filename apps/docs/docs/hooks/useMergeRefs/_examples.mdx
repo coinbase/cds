@@ -15,7 +15,7 @@ function Example() {
 
     return (
       <Box ref={refs} padding={3} background="bgAlternate" borderRadius={300}>
-        <TextBody>This box uses a merged ref</TextBody>
+        <Text font="body">This box uses a merged ref</Text>
       </Box>
     );
   });
@@ -47,7 +47,7 @@ function Example() {
   return (
     <VStack gap={2}>
       <Box ref={mergedRefs} padding={3} background="bgAlternate" borderRadius={300}>
-        <TextBody>This element is referenced by three refs</TextBody>
+        <Text font="body">This element is referenced by three refs</Text>
       </Box>
       <Button onClick={checkRefs}>Check Refs</Button>
     </VStack>
@@ -80,9 +80,9 @@ function Example() {
   return (
     <VStack gap={2}>
       <Box ref={refs} padding={3} background="bgAlternate" borderRadius={300} width="100%">
-        <TextBody>This box uses both function and object refs</TextBody>
+        <Text font="body">This box uses both function and object refs</Text>
       </Box>
-      <TextBody>Box width: {elementWidth}px</TextBody>
+      <Text font="body">Box width: {elementWidth}px</Text>
     </VStack>
   );
 }

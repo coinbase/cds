@@ -84,6 +84,31 @@ export const Compact = () => {
   );
 };
 
+export const InsideLabelVariant = () => {
+  const exampleOptions = [
+    { value: null, label: 'Remove selection' },
+    { value: '1', label: 'Option 1' },
+    { value: '2', label: 'Option 2' },
+    { value: '3', label: 'Option 3' },
+    { value: '4', label: 'Option 4' },
+  ];
+  const { value, onChange } = useMultiSelect({
+    initialValue: ['1', '2', '3', '4'],
+  });
+
+  return (
+    <Select
+      label="Multi select - inside label variant"
+      labelVariant="inside"
+      onChange={onChange}
+      options={exampleOptions}
+      placeholder="Empty value"
+      type="multi"
+      value={value}
+    />
+  );
+};
+
 export const CompactManySelected = () => {
   const exampleOptions = [
     { value: null, label: 'Remove selection' },

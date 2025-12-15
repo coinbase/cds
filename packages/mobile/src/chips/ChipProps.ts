@@ -8,7 +8,7 @@ import {
 import type { PressableProps } from '../system';
 
 export type ChipBaseProps = SharedProps &
-  Omit<PressableProps, 'children' | 'maxWidth' | 'style'> &
+  Omit<PressableProps, 'children' | 'maxWidth' | 'style' | 'onChange' | 'maxWidth'> &
   Pick<SharedAccessibilityProps, 'accessibilityLabel'> & {
     /** ReactNode placed in the center of the Chip */
     children?: React.ReactNode;

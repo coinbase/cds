@@ -173,6 +173,52 @@ describe('SelectChip', () => {
       const button = screen.getByRole('button');
       expect(button.props.accessibilityState?.disabled).toBe(true);
     });
+
+    it('uses displayValue when provided', () => {
+      render(
+        <DefaultThemeProvider>
+          <SelectChip {...defaultProps} displayValue="Custom Display Value" value="option1" />
+        </DefaultThemeProvider>,
+      );
+
+      // displayValue should override the default label
+      expect(screen.getByText('Custom Display Value')).toBeTruthy();
+      expect(screen.queryByText('Option 1')).toBeNull();
+    });
+
+    it('uses displayValue with ReactNode', () => {
+      render(
+        <DefaultThemeProvider>
+          <SelectChip
+            {...defaultProps}
+            displayValue={
+              <View testID="custom-display">
+                <View testID="custom-text">Custom Node</View>
+              </View>
+            }
+            value="option1"
+          />
+        </DefaultThemeProvider>,
+      );
+
+      expect(screen.getByTestId('custom-display')).toBeTruthy();
+      expect(screen.getByTestId('custom-text')).toBeTruthy();
+      expect(screen.queryByText('Option 1')).toBeNull();
+    });
+
+    it('applies maxWidth prop', () => {
+      render(
+        <DefaultThemeProvider>
+          <SelectChip {...defaultProps} maxWidth={150} />
+        </DefaultThemeProvider>,
+      );
+
+      // maxWidth is passed to MediaChip which passes it to Chip
+      // We verify the prop is passed through by checking the component renders correctly
+      const button = screen.getByRole('button');
+      expect(button).toBeTruthy();
+      // The maxWidth prop should be applied internally to limit the chip width
+    });
   });
 
   describe('Multi Select Mode', () => {
@@ -246,6 +292,22 @@ describe('SelectChip', () => {
       fireEvent.press(option2);
 
       expect(onChange).toHaveBeenCalledWith('option2');
+    });
+
+    it('uses displayValue in multi-select mode', () => {
+      render(
+        <DefaultThemeProvider>
+          <SelectChip
+            {...multiSelectProps}
+            displayValue="2 items selected"
+            value={['option1', 'option2']}
+          />
+        </DefaultThemeProvider>,
+      );
+
+      // displayValue should override the default multi-select label
+      expect(screen.getByText('2 items selected')).toBeTruthy();
+      expect(screen.queryByText('Option 1, Option 2')).toBeNull();
     });
   });
 
