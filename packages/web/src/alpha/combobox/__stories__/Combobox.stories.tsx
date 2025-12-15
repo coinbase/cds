@@ -681,7 +681,8 @@ export const AccessibilityLabel = () => {
   return (
     <VStack gap={4}>
       <Combobox
-        accessibilityLabel="Fruit selection combobox"
+        accessibilityLabel="Custom dropdown accessibility label"
+        controlAccessibilityLabel="Custom control accessibility label"
         label="Accessible combobox"
         onChange={onChange}
         options={fruitOptions}
