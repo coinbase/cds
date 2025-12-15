@@ -6,11 +6,10 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withSpring,
-  type WithSpringConfig,
   withTiming,
-  type WithTimingConfig,
 } from 'react-native-reanimated';
 
+import type { Transition } from '../../motion/types';
 import { Text } from '../../typography/Text';
 
 import { DefaultRollingNumberMask } from './DefaultRollingNumberMask';
@@ -22,14 +21,10 @@ import {
   type RollingNumberTransitionConfig,
 } from './RollingNumber';
 
-type TransitionConfigValue =
-  | ({ type: 'timing' } & WithTimingConfig)
-  | ({ type: 'spring' } & WithSpringConfig);
-
 /**
  * Apply timing or spring animation based on a config.
  */
-const applyTransition = (value: number, config?: TransitionConfigValue) => {
+const applyTransition = (value: number, config?: Transition) => {
   'worklet';
   if (config?.type === 'timing') return withTiming(value, config);
   return withSpring(value, config);

@@ -8,12 +8,7 @@ import {
   type ViewProps,
   type ViewStyle,
 } from 'react-native';
-import {
-  type AnimatedStyle,
-  Easing,
-  type WithSpringConfig,
-  type WithTimingConfig,
-} from 'react-native-reanimated';
+import { type AnimatedStyle, Easing } from 'react-native-reanimated';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import { curves, durations } from '@coinbase/cds-common/motion/tokens';
 import type { KeyedNumberPart } from '@coinbase/cds-common/numbers/IntlNumberFormat';
@@ -26,6 +21,7 @@ import { useLocale } from '@coinbase/cds-common/system/LocaleProvider';
 import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 
 import { HStack, type HStackProps } from '../../layout/HStack';
+import type { Transition } from '../../motion/types';
 import { Text, type TextBaseProps, type TextProps } from '../../typography/Text';
 
 import { DefaultRollingNumberAffixSection } from './DefaultRollingNumberAffixSection';
@@ -63,19 +59,19 @@ export type RollingNumberTransitionConfig = {
   /**
    * Transition override for the vertical translation animation (digit roll).
    */
-  y?: ({ type: 'timing' } & WithTimingConfig) | ({ type: 'spring' } & WithSpringConfig);
+  y?: Transition;
   /**
    * Transition override for the opacity animation during digit transitions.
    * Controls how digits fade in/out during the single variant animation.
    */
-  opacity?: ({ type: 'timing' } & WithTimingConfig) | ({ type: 'spring' } & WithSpringConfig);
+  opacity?: Transition;
   /**
    * Transition override for the color interpolation animation (color pulse).
    */
-  color?: ({ type: 'timing' } & WithTimingConfig) | ({ type: 'spring' } & WithSpringConfig);
+  color?: Transition;
 };
 
-export const defaultTransitionConfig = {
+export const defaultTransitionConfig: RollingNumberTransitionConfig = {
   y: {
     type: 'spring',
     stiffness: 280,
@@ -92,7 +88,7 @@ export const defaultTransitionConfig = {
     duration: durations.slow4,
     easing: Easing.bezier(...curves.global),
   },
-} as const satisfies RollingNumberTransitionConfig;
+};
 
 /**
  * Defines the style of digit transition animation.
