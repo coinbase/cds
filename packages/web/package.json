@@ -56,6 +56,10 @@
       "types": "./dts/controls/index.d.ts",
       "default": "./esm/controls/index.js"
     },
+    "./dates": {
+      "types": "./dts/dates/index.d.ts",
+      "default": "./esm/dates/index.js"
+    },
     "./dots": {
       "types": "./dts/dots/index.d.ts",
       "default": "./esm/dots/index.js"
