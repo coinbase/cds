@@ -40,6 +40,7 @@ const containerCss = css`
   position: relative;
   display: flex;
   align-items: center;
+  isolation: isolate;
 `;
 const scrollContainerCss = css`
   overflow-y: hidden;
