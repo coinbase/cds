@@ -439,6 +439,7 @@ const sidebars: SidebarsConfig = {
           label: 'Overlay',
           items: [
             { type: 'doc', id: 'components/overlay/Alert/alert', label: 'Alert' },
+            { type: 'doc', id: 'components/overlay/FocusTrap/focus-trap', label: 'FocusTrap' },
             {
               type: 'doc',
               id: 'components/overlay/FullscreenAlert/fullscreenAlert',
