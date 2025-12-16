@@ -2461,6 +2461,7 @@ __metadata:
     "@types/react": "npm:^18.3.12"
     "@types/react-test-renderer": "npm:^18.3.0"
     eslint-plugin-reanimated: "npm:^2.0.1"
+    fuse.js: "npm:^7.1.0"
     lodash: "npm:^4.17.21"
     lottie-react-native: "npm:6.7.0"
     react-native-accessibility-engine: "npm:^3.2.0"
@@ -2644,6 +2645,7 @@ __metadata:
     d3-interpolate-path: "npm:^2.3.0"
     d3-selection: "npm:^3.0.0"
     framer-motion: "npm:^10.18.0"
+    fuse.js: "npm:^7.1.0"
     glob: "npm:^10.3.10"
     lodash: "npm:^4.17.21"
     lottie-web: "npm:^5.13.0"
@@ -21363,6 +21365,13 @@ __metadata:
   version: 6.6.2
   resolution: "fuse.js@npm:6.6.2"
   checksum: 10c0/c2fe4f234f516e9ea83b06f06f8f3c8b7117f51aa75bbccd052eed0c0423364bf1e360ffbf29cadae8ef6aa39476b7961eaf9d07bed779cea5c83d62b34e2df9
+  languageName: node
+  linkType: hard
+
+"fuse.js@npm:^7.1.0":
+  version: 7.1.0
+  resolution: "fuse.js@npm:7.1.0"
+  checksum: 10c0/c0d1b1d192a4bdf3eade897453ddd28aff96b70bf3e49161a45880f9845ebaee97265595db633776700a5bcf8942223c752754a848d70c508c3c9fd997faad1e
   languageName: node
   linkType: hard
 
