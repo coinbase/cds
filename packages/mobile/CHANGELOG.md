@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.31.4 (12/16/2025 PST)
+
+#### 🐞 Fixes
+
+- Update date types barrel to export. [[#255](https://github.com/coinbase/cds/pull/255)]
+
 ## 8.31.3 ((12/16/2025, 07:55 AM PST))
 
 This is an artificial version bump with no new change.
