@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.31.5 (12/16/2025 PST)
+
+#### 🐞 Fixes
+
+- Fixed caption font-size on web dense theme.
+
 ## 8.31.4 (12/16/2025 PST)
 
 #### 🐞 Fixes
