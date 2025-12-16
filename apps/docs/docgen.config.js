@@ -102,6 +102,7 @@ module.exports = {
     'controls/Switch',
     'controls/TextInput',
     'dates/Calendar',
+    'dates/DateInput',
     'dates/DatePicker',
     'dots/DotCount',
     'dots/DotStatusColor',
