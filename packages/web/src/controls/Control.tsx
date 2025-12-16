@@ -13,7 +13,7 @@ import type { FilteredHTMLAttributes } from '../types';
 import { Text } from '../typography/Text';
 import { isRtl } from '../utils/isRtl';
 
-const COMPONENT_STATIC_CLASSNAME = 'control';
+export const COMPONENT_STATIC_CLASSNAME = 'cds-Control';
 
 const pointerCss = css`
   &:not(:disabled),

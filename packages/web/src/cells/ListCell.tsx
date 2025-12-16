@@ -12,7 +12,7 @@ import { Cell, type CellBaseProps, type CellSpacing } from './Cell';
 import { CellAccessory, type CellAccessoryType } from './CellAccessory';
 import { CellDetail, type CellDetailProps } from './CellDetail';
 
-const COMPONENT_STATIC_CLASSNAME = 'list-cell';
+export const COMPONENT_STATIC_CLASSNAME = 'cds-ListCell';
 
 const overflowCss = css`
   overflow: auto;

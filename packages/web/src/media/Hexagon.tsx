@@ -14,8 +14,6 @@ export const cdsHexagonTestId = 'cds-hexagon';
 export const hexagonClipPathContainerId = 'cds-hexagon-clipPath-container';
 export const hexagonAvatarClipId = 'cds-hexagon-avatar-clipper';
 
-const COMPONENT_STATIC_CLASSNAME_HEXAGON_BORDER = 'hexagon-border';
-
 const hexagonBorderWidth = 2;
 
 /**
@@ -103,11 +101,7 @@ export const HexagonBorder = memo(
     return (
       <Box
         aria-hidden
-        className={cx(
-          COMPONENT_STATIC_CLASSNAME_HEXAGON_BORDER,
-          hexagonBorderContainerCss,
-          className,
-        )}
+        className={cx(hexagonBorderContainerCss, className)}
         data-offset={!!offset}
         data-testid={testID}
       >
