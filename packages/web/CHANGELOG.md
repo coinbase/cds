@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.31.3 (12/16/2025 PST)
+
+#### 🐞 Fixes
+
+- Isolate tabs container so the paddles don't cover elements outside. [[#254](https://github.com/coinbase/cds/pull/254)]
+
 ## 8.31.2 ((12/15/2025, 01:12 PM PST))
 
 This is an artificial version bump with no new change.
