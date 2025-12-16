@@ -63,8 +63,7 @@ import { Collapsible } from '@coinbase/cds-web/collapsible/Collapsible';
 import * as CDSControls from '@coinbase/cds-web/controls';
 import { InputLabel } from '@coinbase/cds-web/controls/InputLabel';
 import { Select as OldSelect } from '@coinbase/cds-web/controls/Select';
-import { Calendar } from '@coinbase/cds-web/dates/Calendar';
-import { DatePicker } from '@coinbase/cds-web/dates/DatePicker';
+import * as CDSDates from '@coinbase/cds-web/dates';
 import * as CDSDots from '@coinbase/cds-web/dots';
 import { Dropdown } from '@coinbase/cds-web/dropdown/Dropdown';
 import { useA11yControlledVisibility } from '@coinbase/cds-web/hooks/useA11yControlledVisibility';
@@ -215,8 +214,7 @@ const ReactLiveScope: Record<string, unknown> = {
   sparklineInteractiveHoverData,
   // other
   ...CDSDots,
-  DatePicker,
-  Calendar,
+  ...CDSDates,
   LocaleProvider,
   DateInputValidationError,
   Banner,
