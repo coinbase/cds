@@ -10,7 +10,7 @@ import { css } from '@linaria/core';
 import { cx } from '../cx';
 import { Box, type BoxProps } from '../layout/Box';
 
-export const COMPONENT_STATIC_CLASSNAME = 'cds-RemoteImage';
+const COMPONENT_STATIC_CLASSNAME = 'cds-RemoteImage';
 
 const baseCss = css`
   display: block;

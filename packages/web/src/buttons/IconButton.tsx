@@ -12,7 +12,7 @@ import { Pressable, type PressableBaseProps } from '../system/Pressable';
 
 import { type ButtonBaseProps, spinnerHeight } from './Button';
 
-export const COMPONENT_STATIC_CLASSNAME = 'cds-IconButton';
+const COMPONENT_STATIC_CLASSNAME = 'cds-IconButton';
 
 const baseSpinnerCss = css`
   border: 2px solid;

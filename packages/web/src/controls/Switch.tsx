@@ -10,7 +10,7 @@ import { convertTransition } from '../motion/utils';
 
 import { Control, type ControlBaseProps } from './Control';
 
-export const COMPONENT_STATIC_CLASSNAME = 'cds-Switch';
+const COMPONENT_STATIC_CLASSNAME = 'cds-Switch';
 
 const trackCss = css`
   width: var(--controlSize-switchWidth);

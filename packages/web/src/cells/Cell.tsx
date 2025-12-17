@@ -13,7 +13,7 @@ import { Pressable, type PressableProps } from '../system/Pressable';
 
 import type { CellAccessoryProps } from './CellAccessory';
 
-export const COMPONENT_STATIC_CLASSNAME = 'cds-Cell';
+const COMPONENT_STATIC_CLASSNAME = 'cds-Cell';
 
 const pressCss = css`
   border-style: hidden;

@@ -9,7 +9,7 @@ import { cx } from '../cx';
 import { useTheme } from '../hooks/useTheme';
 import { Box, type BoxBaseProps, type BoxDefaultElement, type BoxProps } from '../layout/Box';
 
-export const COMPONENT_STATIC_CLASSNAME = 'cds-Icon';
+const COMPONENT_STATIC_CLASSNAME = 'cds-Icon';
 
 export type IconBaseProps = SharedProps &
   Pick<

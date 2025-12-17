@@ -7,7 +7,7 @@ import { HStack } from '../layout/HStack';
 
 import { useCollapsibleMotionProps } from './useCollapsibleMotionProps';
 
-export const COMPONENT_STATIC_CLASSNAME = 'cds-Collapsible';
+const COMPONENT_STATIC_CLASSNAME = 'cds-Collapsible';
 
 export type CollapsibleBaseProps = SharedProps &
   PaddingProps &

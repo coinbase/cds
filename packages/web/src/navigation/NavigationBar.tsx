@@ -8,7 +8,7 @@ import { Collapsible } from '../collapsible/Collapsible';
 import { HStack, VStack } from '../layout';
 import type { ResponsiveProp } from '../styles/styleProps';
 
-export const COMPONENT_STATIC_CLASSNAME = 'cds-NavigationBar';
+const COMPONENT_STATIC_CLASSNAME = 'cds-NavigationBar';
 
 export type NavigationBarProps = SharedProps & {
   /**

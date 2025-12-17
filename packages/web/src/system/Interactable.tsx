@@ -28,7 +28,7 @@ import {
   interactablePressedOpacity,
 } from './interactableCSSProperties';
 
-export const COMPONENT_STATIC_CLASSNAME = 'cds-Interactable';
+const COMPONENT_STATIC_CLASSNAME = 'cds-Interactable';
 
 const baseCss = css`
   appearance: none;

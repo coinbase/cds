@@ -4,7 +4,7 @@ import { css } from '@linaria/core';
 import { cx } from '../cx';
 import { Box, type BoxDefaultElement, type BoxProps } from '../layout/Box';
 
-export const COMPONENT_STATIC_CLASSNAME = 'cds-Spinner';
+const COMPONENT_STATIC_CLASSNAME = 'cds-Spinner';
 
 export type SpinnerBaseProps = {
   /**
