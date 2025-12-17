@@ -1,6 +1,6 @@
 {
   "name": "@coinbase/cds-web",
-  "version": "8.31.0",
+  "version": "8.31.4",
   "description": "Coinbase Design System - Web",
   "repository": {
     "type": "git",
@@ -55,6 +55,10 @@
     "./controls": {
       "types": "./dts/controls/index.d.ts",
       "default": "./esm/controls/index.js"
+    },
+    "./dates": {
+      "types": "./dts/dates/index.d.ts",
+      "default": "./esm/dates/index.js"
     },
     "./dots": {
       "types": "./dts/dots/index.d.ts",

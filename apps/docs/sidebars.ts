@@ -701,6 +701,7 @@ const sidebars: SidebarsConfig = {
               id: 'components/other/Calendar/calendar',
               label: 'Calendar',
             },
+            { type: 'doc', id: 'components/other/DateInput/date-input', label: 'DateInput' },
             { type: 'doc', id: 'components/other/DatePicker/date-picker', label: 'DatePicker' },
             { type: 'doc', id: 'components/other/DotCount/dot-count', label: 'DotCount' },
             {
