@@ -4,6 +4,8 @@ import { css } from '@linaria/core';
 import { cx } from '../cx';
 import { Box, type BoxDefaultElement, type BoxProps } from '../layout/Box';
 
+const COMPONENT_STATIC_CLASSNAME = 'cds-Spinner';
+
 export type SpinnerBaseProps = {
   /**
    * The font size of the spinner in pixels - used to calculate the width, height, and borderWidth. Width and height are 10em while borderWidth is 1.1em.
@@ -63,7 +65,7 @@ export const Spinner = memo(
     return (
       <Box
         aria-describedby="spinnerStatus"
-        className={cx(baseCss, className)}
+        className={cx(COMPONENT_STATIC_CLASSNAME, baseCss, className)}
         color={color}
         data-testid={testID}
         role="status"

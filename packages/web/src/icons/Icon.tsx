@@ -9,6 +9,8 @@ import { cx } from '../cx';
 import { useTheme } from '../hooks/useTheme';
 import { Box, type BoxBaseProps, type BoxDefaultElement, type BoxProps } from '../layout/Box';
 
+const COMPONENT_STATIC_CLASSNAME = 'cds-Icon';
+
 export type IconBaseProps = SharedProps &
   Pick<
     BoxBaseProps,
@@ -154,7 +156,7 @@ export const Icon = memo(
 
       return (
         <Box
-          className={cx(className, classNames?.root)}
+          className={cx(COMPONENT_STATIC_CLASSNAME, className, classNames?.root)}
           color={color}
           position="relative"
           style={rootStyle}
