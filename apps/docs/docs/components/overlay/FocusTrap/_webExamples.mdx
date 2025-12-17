@@ -1,0 +1,122 @@
+:::note Before using FocusTrap
+`<FocusTrap>` is intended to prevent keyboard users from interacting with elements on the page that a mouse user cannot interact with either. An example of this is `<Modal>` where the user cannot click the items behind the modal. If you want to shift focus based on UI events, consider using the [.focus](https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/focus) method instead.
+:::
+
+:::warning Accessibility
+It is **required** that when using a `<FocusTrap>` there is logic using only key presses to escape the focus trap. Otherwise, keyboard users will be blocked after they enter a `<FocusTrap>`.
+:::
+
+## Basic example
+
+:::note
+All the examples have controls to enable / disable the focus trap so that page keyboard navigation isn't blocked.
+:::
+
+When enabled, only the children of the `<FocusTrap>` will be able to receive focus. Otherwise, standard DOM focus order follows.
+
+```jsx live
+function Example() {
+  const [focusTrapEnabled, setFocusTrapEnabled] = useState(false);
+
+  return (
+    <VStack gap={2}>
+      <Checkbox
+        checked={focusTrapEnabled}
+        onChange={() => setFocusTrapEnabled((prev) => !prev)}
+        label="Focus trap enabled"
+      />
+      {focusTrapEnabled && (
+        <FocusTrap>
+          <VStack gap={2} background="bgAlternate" padding={2}>
+            <Text>Inside FocusTrap</Text>
+            <HStack gap={1}>
+              <Button>1</Button>
+              <Button>2</Button>
+              <Button>3</Button>
+            </HStack>
+            <Checkbox
+              checked={focusTrapEnabled}
+              onChange={() => setFocusTrapEnabled((prev) => !prev)}
+              label="Focus trap enabled"
+            />
+          </VStack>
+        </FocusTrap>
+      )}
+    </VStack>
+  );
+}
+```
+
+## Include trigger in FocusTrap
+
+The `includeTriggerInFocusTrap` prop includes the triggering element causing the `<FocusTrap>` to render as part of the focus order.
+
+```jsx live
+function Example() {
+  const [focusTrapEnabled, setFocusTrapEnabled] = useState(false);
+
+  return (
+    <VStack gap={2}>
+      <Checkbox
+        checked={focusTrapEnabled}
+        onChange={() => setFocusTrapEnabled((prev) => !prev)}
+        label="Focus trap enabled"
+      />
+      {focusTrapEnabled && (
+        <FocusTrap includeTriggerInFocusTrap>
+          <VStack gap={2} background="bgAlternate" padding={2}>
+            <Text>Inside FocusTrap</Text>
+            <HStack gap={1}>
+              <Button>1</Button>
+              <Button>2</Button>
+              <Button>3</Button>
+            </HStack>
+            <Checkbox
+              checked={focusTrapEnabled}
+              onChange={() => setFocusTrapEnabled((prev) => !prev)}
+              label="Focus trap enabled"
+            />
+          </VStack>
+        </FocusTrap>
+      )}
+    </VStack>
+  );
+}
+```
+
+## Restore focus on unmount
+
+The `restoreFocusOnUnmount` prop returns focus to the triggering element when the `<FocusTrap>` is unmounted.
+
+```jsx live
+function Example() {
+  const [focusTrapEnabled, setFocusTrapEnabled] = useState(false);
+
+  return (
+    <VStack gap={2}>
+      <Checkbox
+        checked={focusTrapEnabled}
+        onChange={() => setFocusTrapEnabled((prev) => !prev)}
+        label="Focus trap enabled"
+      />
+      {focusTrapEnabled && (
+        <FocusTrap restoreFocusOnUnmount>
+          <VStack gap={2} background="bgAlternate" padding={2}>
+            <Text>Inside FocusTrap</Text>
+            <HStack gap={1}>
+              <Button>1</Button>
+              <Button>2</Button>
+              <Button>3</Button>
+            </HStack>
+            <Checkbox
+              checked={focusTrapEnabled}
+              onChange={() => setFocusTrapEnabled((prev) => !prev)}
+              label="Focus trap enabled"
+            />
+          </VStack>
+        </FocusTrap>
+      )}
+    </VStack>
+  );
+}
+```

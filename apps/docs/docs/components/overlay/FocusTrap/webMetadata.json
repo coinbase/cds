@@ -1,7 +1,7 @@
 {
   "import": "import { FocusTrap } from '@coinbase/cds-web/overlays/FocusTrap'",
   "source": "https://github.com/coinbase/cds/blob/master/packages/web/src/overlays/FocusTrap.tsx",
-  "description": "FocusTrap is a component that traps focus within a container.",
+  "description": "FocusTrap is a component that traps focus within its children.",
   "relatedComponents": [
     {
       "label": "Modal",
