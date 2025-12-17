@@ -8,7 +8,7 @@ import { Collapsible } from '../collapsible/Collapsible';
 import { HStack, VStack } from '../layout';
 import type { ResponsiveProp } from '../styles/styleProps';
 
-export const NAVIGATION_BAR_STATIC_CLASSNAME = 'cds-NavigationBar';
+export const COMPONENT_STATIC_CLASSNAME = 'cds-NavigationBar';
 
 export type NavigationBarProps = SharedProps & {
   /**
@@ -81,7 +81,7 @@ export const NavigationBar = memo(
         accessibilityLabel={accessibilityLabel}
         as="nav"
         background="bg"
-        className={NAVIGATION_BAR_STATIC_CLASSNAME}
+        className={COMPONENT_STATIC_CLASSNAME}
         gap={rowGap}
         left={0}
         paddingBottom={paddingBottom}

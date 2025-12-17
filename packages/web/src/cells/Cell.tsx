@@ -13,7 +13,7 @@ import { Pressable, type PressableProps } from '../system/Pressable';
 
 import type { CellAccessoryProps } from './CellAccessory';
 
-export const CELL_STATIC_CLASSNAME = 'cds-Cell';
+export const COMPONENT_STATIC_CLASSNAME = 'cds-Cell';
 
 const pressCss = css`
   border-style: hidden;
@@ -439,7 +439,7 @@ export const Cell: CellComponent = memo(
           ref={ref}
           alignItems="stretch"
           as={Component}
-          className={cx(CELL_STATIC_CLASSNAME, className, classNames?.root)}
+          className={cx(COMPONENT_STATIC_CLASSNAME, className, classNames?.root)}
           maxHeight={maxHeight}
           minHeight={minHeight}
           style={{ ...style, ...styles?.root }}

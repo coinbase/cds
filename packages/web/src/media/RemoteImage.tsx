@@ -10,7 +10,7 @@ import { css } from '@linaria/core';
 import { cx } from '../cx';
 import { Box, type BoxProps } from '../layout/Box';
 
-export const REMOTE_IMAGE_STATIC_CLASSNAME = 'cds-RemoteImage';
+export const COMPONENT_STATIC_CLASSNAME = 'cds-RemoteImage';
 
 const baseCss = css`
   display: block;
@@ -123,7 +123,7 @@ export const RemoteImage = memo(
         borderColor={borderColor}
         borderWidth={borderWidth}
         className={cx(
-          REMOTE_IMAGE_STATIC_CLASSNAME,
+          COMPONENT_STATIC_CLASSNAME,
           baseCss,
           shape === 'hexagon' && hexagonOverflowCss,
           resizeCss[resizeMode],

@@ -12,7 +12,7 @@ import { Cell, type CellBaseProps, type CellSpacing } from './Cell';
 import { CellAccessory, type CellAccessoryType } from './CellAccessory';
 import { CellDetail, type CellDetailProps } from './CellDetail';
 
-export const LIST_CELL_STATIC_CLASSNAME = 'cds-ListCell';
+export const COMPONENT_STATIC_CLASSNAME = 'cds-ListCell';
 
 const overflowCss = css`
   overflow: auto;
@@ -248,7 +248,7 @@ export const ListCell: ListCellComponent = memo(
           as={Component}
           borderRadius={props.borderRadius ?? (spacingVariant === 'condensed' ? 0 : undefined)}
           bottomContent={helperText}
-          className={cx(LIST_CELL_STATIC_CLASSNAME, className, classNames?.root)}
+          className={cx(COMPONENT_STATIC_CLASSNAME, className, classNames?.root)}
           disabled={disabled}
           end={end}
           innerSpacing={
