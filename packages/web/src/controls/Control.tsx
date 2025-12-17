@@ -13,7 +13,7 @@ import type { FilteredHTMLAttributes } from '../types';
 import { Text } from '../typography/Text';
 import { isRtl } from '../utils/isRtl';
 
-export const COMPONENT_STATIC_CLASSNAME = 'cds-Control';
+export const CONTROL_STATIC_CLASSNAME = 'cds-Control';
 
 const pointerCss = css`
   &:not(:disabled),
@@ -192,7 +192,7 @@ const ControlWithRef = forwardRef(function ControlWithRef<T extends string>(
     if (!label) return iconElement;
     return (
       <label
-        className={cx(COMPONENT_STATIC_CLASSNAME, pointerCss)}
+        className={cx(CONTROL_STATIC_CLASSNAME, pointerCss)}
         htmlFor={inputId}
         style={labelStyle}
       >

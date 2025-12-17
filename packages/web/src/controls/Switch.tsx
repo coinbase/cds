@@ -10,7 +10,7 @@ import { convertTransition } from '../motion/utils';
 
 import { Control, type ControlBaseProps } from './Control';
 
-export const COMPONENT_STATIC_CLASSNAME = 'cds-Switch';
+export const SWITCH_STATIC_CLASSNAME = 'cds-Switch';
 
 const trackCss = css`
   width: var(--controlSize-switchWidth);
@@ -114,7 +114,7 @@ const SwitchWithRef = forwardRef<HTMLInputElement, SwitchProps>(function SwitchW
   return children ? (
     <Box
       alignItems="center"
-      className={COMPONENT_STATIC_CLASSNAME}
+      className={SWITCH_STATIC_CLASSNAME}
       minHeight="var(--controlSize-switchHeight)"
       role="presentation"
       width="fit-content"
