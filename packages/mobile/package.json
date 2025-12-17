@@ -1,13 +1,13 @@
 {
   "name": "@cbhq/cds-mobile",
-  "version": "8.32.0",
+  "version": "8.32.1",
   "description": "Coinbase Design System - Mobile",
   "repository": {
     "type": "git",
     "url": "git@github.com:coinbase/cds.git",
     "directory": "packages/mobile"
   },
-  "react-native": "./src/index.ts",
+  "react-native": "./esm/index.js",
   "type": "module",
   "main": "./esm/index.js",
   "types": "./dts/index.d.ts",
