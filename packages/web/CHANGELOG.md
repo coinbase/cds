@@ -8,6 +8,34 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.32.0 (12/16/2025 PST)
+
+#### 🚀 Updates
+
+- Add static class names to components.
+
+## 8.31.5 (12/16/2025 PST)
+
+#### 🐞 Fixes
+
+- Fixed caption font-size on web dense theme.
+
+## 8.31.4 (12/16/2025 PST)
+
+#### 🐞 Fixes
+
+- Update date types barrel to export. [[#255](https://github.com/coinbase/cds/pull/255)]
+
+## 8.31.3 (12/16/2025 PST)
+
+#### 🐞 Fixes
+
+- Isolate tabs container so the paddles don't cover elements outside. [[#254](https://github.com/coinbase/cds/pull/254)]
+
+## 8.31.2 ((12/15/2025, 01:12 PM PST))
+
+This is an artificial version bump with no new change.
+
 ## 8.31.1 (12/15/2025 PST)
 
 #### 🐞 Fixes

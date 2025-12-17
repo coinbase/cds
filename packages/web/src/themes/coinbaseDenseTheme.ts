@@ -74,7 +74,7 @@ export const coinbaseDenseTheme = {
     body: '0.875rem', // 14px
     label1: '0.6875rem', // 11px
     label2: '0.6875rem', // 11px
-    caption: '0.8125rem', // 10px
+    caption: '0.625rem', // 10px
     legal: '0.625rem', // 10px
   },
   fontWeight: {

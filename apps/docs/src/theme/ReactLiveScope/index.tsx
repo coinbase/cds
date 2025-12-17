@@ -63,8 +63,7 @@ import { Collapsible } from '@cbhq/cds-web/collapsible/Collapsible';
 import * as CDSControls from '@cbhq/cds-web/controls';
 import { InputLabel } from '@cbhq/cds-web/controls/InputLabel';
 import { Select as OldSelect } from '@cbhq/cds-web/controls/Select';
-import { Calendar } from '@cbhq/cds-web/dates/Calendar';
-import { DatePicker } from '@cbhq/cds-web/dates/DatePicker';
+import * as CDSDates from '@cbhq/cds-web/dates';
 import * as CDSDots from '@cbhq/cds-web/dots';
 import { Dropdown } from '@cbhq/cds-web/dropdown/Dropdown';
 import { useA11yControlledVisibility } from '@cbhq/cds-web/hooks/useA11yControlledVisibility';
@@ -215,8 +214,7 @@ const ReactLiveScope: Record<string, unknown> = {
   sparklineInteractiveHoverData,
   // other
   ...CDSDots,
-  DatePicker,
-  Calendar,
+  ...CDSDates,
   LocaleProvider,
   DateInputValidationError,
   Banner,

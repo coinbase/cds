@@ -13,6 +13,8 @@ import type { FilteredHTMLAttributes } from '../types';
 import { Text } from '../typography/Text';
 import { isRtl } from '../utils/isRtl';
 
+const COMPONENT_STATIC_CLASSNAME = 'cds-Control';
+
 const pointerCss = css`
   &:not(:disabled),
   &:not(:read-only) {
@@ -189,7 +191,11 @@ const ControlWithRef = forwardRef(function ControlWithRef<T extends string>(
      */
     if (!label) return iconElement;
     return (
-      <label className={pointerCss} htmlFor={inputId} style={labelStyle}>
+      <label
+        className={cx(COMPONENT_STATIC_CLASSNAME, pointerCss)}
+        htmlFor={inputId}
+        style={labelStyle}
+      >
         <Box alignItems="flex-start" flexDirection={isRtl() ? 'row-reverse' : 'row'} gap={1}>
           <Box alignItems="center" height="var(--lineHeight-body)" role="presentation">
             {iconElement}

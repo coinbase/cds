@@ -17,6 +17,10 @@ import {
   type TabsProps,
 } from '../../tabs';
 
+const containerCss = css`
+  isolation: isolate;
+`;
+
 const scrollContainerCss = css`
   &::-webkit-scrollbar {
     display: none;
@@ -196,7 +200,7 @@ const TabbedChipsComponent = memo(
     return (
       <HStack
         alignItems="center"
-        className={classNames?.root}
+        className={cx(containerCss, classNames?.root)}
         position="relative"
         style={styles?.root}
         testID={testID}
