@@ -12,6 +12,8 @@ import { Pressable, type PressableBaseProps } from '../system/Pressable';
 
 import { type ButtonBaseProps, spinnerHeight } from './Button';
 
+const COMPONENT_STATIC_CLASSNAME = 'cds-IconButton';
+
 const baseSpinnerCss = css`
   border: 2px solid;
   border-top-color: var(--color-transparent);
@@ -124,6 +126,7 @@ export const IconButton: IconButtonComponent = memo(
           borderRadius={borderRadius}
           borderWidth={borderWidth}
           className={cx(
+            COMPONENT_STATIC_CLASSNAME,
             flush && flushSpaceCss,
             flush === 'start' && flushStartCss,
             flush === 'end' && flushEndCss,

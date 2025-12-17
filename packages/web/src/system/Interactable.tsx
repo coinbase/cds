@@ -28,6 +28,8 @@ import {
   interactablePressedOpacity,
 } from './interactableCSSProperties';
 
+const COMPONENT_STATIC_CLASSNAME = 'cds-Interactable';
+
 const baseCss = css`
   appearance: none;
   cursor: pointer;
@@ -244,6 +246,7 @@ export const Interactable: InteractableComponent = forwardRef<
         as={Component}
         borderWidth={borderWidth}
         className={cx(
+          COMPONENT_STATIC_CLASSNAME,
           baseCss,
           block && blockCss,
           transparentWhileInactive && transparentWhileInactiveCss,

@@ -5,8 +5,16 @@
   "description": "Date Picker allows our global users to input past, present, future and important dates into our interface in a simple and intuitive manner. Date Picker offers both manual and calendar entry options - accommodating both internationalization and accessibility needs while being adaptable across screen platforms.",
   "relatedComponents": [
     {
+      "label": "DateInput",
+      "url": "/components/other/DateInput/"
+    },
+    {
       "label": "TextInput",
       "url": "/components/inputs/TextInput/"
+    },
+    {
+      "label": "Calendar",
+      "url": "/components/other/Calendar/"
     },
     {
       "label": "Modal",
