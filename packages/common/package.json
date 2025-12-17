@@ -7,7 +7,7 @@
     "url": "git@github.com:coinbase/cds.git",
     "directory": "packages/common"
   },
-  "react-native": "./src/index.ts",
+  "react-native": "./esm/index.js",
   "type": "module",
   "main": "./esm/index.js",
   "types": "./dts/index.d.ts",
