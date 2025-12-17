@@ -171,6 +171,9 @@ export const DefaultRollingNumberDigit: RollingNumberDigitComponent = memo(
         [isGoingUp, transitionConfig],
       );
 
+      // LayoutAnimationConfig disables mount/unmount animations on the digit container itself
+      // (e.g. when digits are added/removed going from $1,000 to $10,000 or vice versa).
+      // AnimatedText entering/exiting props handle value change animations separately.
       return (
         <RollingNumberMaskComponent ref={ref} {...props}>
           <LayoutAnimationConfig skipEntering skipExiting>
