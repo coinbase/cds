@@ -3,6 +3,7 @@ import { StyleSheet, type View } from 'react-native';
 import Animated, {
   type EntryAnimationsValues,
   type ExitAnimationsValues,
+  LayoutAnimationConfig,
   useAnimatedStyle,
   useSharedValue,
   withSpring,
@@ -172,35 +173,37 @@ export const DefaultRollingNumberDigit: RollingNumberDigitComponent = memo(
 
       return (
         <RollingNumberMaskComponent ref={ref} {...props}>
-          <Animated.View style={containerStyle}>
-            {isSingleVariant ? (
-              <AnimatedText
-                key={singleVariantCurrentValue}
-                entering={singleVariantEnterTransition}
-                exiting={singleVariantExitTransition}
-                style={[styles?.text]}
-                {...textProps}
-              >
-                {singleVariantCurrentValue}
-              </AnimatedText>
-            ) : (
-              digits.map((digit) => (
+          <LayoutAnimationConfig skipEntering skipExiting>
+            <Animated.View style={containerStyle}>
+              {isSingleVariant ? (
                 <AnimatedText
-                  key={digit}
-                  style={[
-                    {
-                      position: digit === 0 ? 'relative' : 'absolute',
-                      top: digit * digitHeight,
-                    },
-                    styles?.text,
-                  ]}
+                  key={singleVariantCurrentValue}
+                  entering={singleVariantEnterTransition}
+                  exiting={singleVariantExitTransition}
+                  style={[styles?.text]}
                   {...textProps}
                 >
-                  {digit}
+                  {singleVariantCurrentValue}
                 </AnimatedText>
-              ))
-            )}
-          </Animated.View>
+              ) : (
+                digits.map((digit) => (
+                  <AnimatedText
+                    key={digit}
+                    style={[
+                      {
+                        position: digit === 0 ? 'relative' : 'absolute',
+                        top: digit * digitHeight,
+                      },
+                      styles?.text,
+                    ]}
+                    {...textProps}
+                  >
+                    {digit}
+                  </AnimatedText>
+                ))
+              )}
+            </Animated.View>
+          </LayoutAnimationConfig>
         </RollingNumberMaskComponent>
       );
     },
