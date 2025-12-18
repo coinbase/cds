@@ -62,7 +62,7 @@ const SelectBase = memo(
         compact,
         label,
         labelVariant,
-        accessibilityLabel = 'Select control',
+        accessibilityLabel,
         accessibilityHint,
         accessibilityRoles = defaultAccessibilityRoles,
         selectAllLabel,
@@ -104,6 +104,8 @@ const SelectBase = memo(
         throw Error(
           'Select component must be fully controlled or uncontrolled: "open" and "setOpen" props must be provided together or not at all',
         );
+
+      const fallbackAccessibilityLabel = typeof label === 'string' ? label : 'Select control';
 
       const rootStyles = useMemo(() => {
         return [style, styles?.root];
@@ -170,7 +172,7 @@ const SelectBase = memo(
         <View ref={containerRef} style={rootStyles} testID={testID}>
           <SelectControlComponent
             accessibilityHint={accessibilityHint}
-            accessibilityLabel={accessibilityLabel}
+            accessibilityLabel={accessibilityLabel ?? fallbackAccessibilityLabel}
             blendStyles={styles?.controlBlendStyles}
             bordered={bordered}
             compact={compact}
