@@ -51,17 +51,17 @@ function Example() {
 
   const renderStartLabelNum = useCallback((num, disabled) => {
     return (
-      <TextTitle3 disabled={disabled} as="span">
+      <Text disabled={disabled} as="span" font="title3">
         ${num.toLocaleString()}
-      </TextTitle3>
+      </Text>
     );
   }, []);
 
   const renderEndLabelNum = useCallback((num, disabled) => {
     return (
-      <TextLabel2 disabled={disabled} as="span" align="end" noWrap>
+      <Text disabled={disabled} as="span" font="label2" align="end" noWrap>
         ${num.toLocaleString()} left
-      </TextLabel2>
+      </Text>
     );
   }, []);
 

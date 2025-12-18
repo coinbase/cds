@@ -10,7 +10,7 @@ import { CellMedia } from '@coinbase/cds-mobile/cells/CellMedia';
 import { Example, ExampleScreen } from '@coinbase/cds-mobile/examples/ExampleScreen';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 import { VStack } from '@coinbase/cds-mobile/layout';
-import { TextBody, TextHeadline } from '@coinbase/cds-mobile/typography';
+import { Text } from '@coinbase/cds-mobile/typography';
 
 import { SparklineArea } from '../SparklineArea';
 import { SparklineGradient } from '../SparklineGradient';
@@ -43,12 +43,12 @@ const SparklineGradientExample = ({
     <VStack>
       <Cell media={<CellMedia source={imageUrl} type="image" />}>
         <VStack justifyContent="center">
-          <TextHeadline ellipsize="tail" numberOfLines={1}>
+          <Text ellipsize="tail" font="headline" numberOfLines={1}>
             {name}
-          </TextHeadline>
-          <TextBody ellipsize="tail" numberOfLines={1}>
+          </Text>
+          <Text ellipsize="tail" font="body" numberOfLines={1}>
             {symbol}
-          </TextBody>
+          </Text>
         </VStack>
       </Cell>
       <SparklineGradient {...dimensions} color={color} path={path}>
@@ -76,9 +76,9 @@ const SparklineScalingExample: React.FC<React.PropsWithChildren<SparklineCompact
 
   return (
     <VStack>
-      <TextHeadline ellipsize="tail" numberOfLines={1}>
+      <Text ellipsize="tail" font="headline" numberOfLines={1}>
         Scale: {props.yAxisScalingFactor}
-      </TextHeadline>
+      </Text>
       <SparklineGradient
         {...dimensions}
         color="#F7931A"

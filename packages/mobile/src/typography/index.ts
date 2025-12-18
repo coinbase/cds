@@ -1,5 +1,5 @@
 export * from './Link';
-export type { TextProps } from './Text';
+export * from './Text';
 export * from './TextBody';
 export * from './TextCaption';
 export * from './TextDisplay1';

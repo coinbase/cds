@@ -4,7 +4,7 @@ import throttle from 'lodash/throttle';
 export type UseHorizontalScrollToTargetOptions = {
   scrollThrottleWaitTime?: number;
   activeTarget?: HTMLElement | null;
-  scrollPadding?: number;
+  autoScrollOffset?: number;
   overflowThreshold?: number;
 };
 
@@ -15,13 +15,13 @@ export type UseHorizontalScrollToTargetOptions = {
  *
  * @param scrollThrottleWaitTime - Throttle time for scroll events (default: 200ms)
  * @param activeTarget - The active element to scroll to when it's offscreen
- * @param scrollPadding - Padding to add when scrolling to position elements (useful for paddles/overlays, default: 0)
+ * @param autoScrollOffset - X position offset when auto-scrolling to active target
  * @param overflowThreshold - Threshold for detecting if content is offscreen (default: 5px)
  */
 export const useHorizontalScrollToTarget = ({
   scrollThrottleWaitTime = 200,
   activeTarget,
-  scrollPadding = 0,
+  autoScrollOffset = 0,
   overflowThreshold = 5,
 }: UseHorizontalScrollToTargetOptions = {}) => {
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -71,17 +71,17 @@ export const useHorizontalScrollToTarget = ({
     const scrollLeft = container.scrollLeft;
     const containerWidth = container.clientWidth;
 
-    const isOffscreenLeft = targetX < scrollLeft + scrollPadding;
-    const isOffscreenRight = targetX + targetWidth > scrollLeft + containerWidth - scrollPadding;
+    const isOffscreenLeft = targetX < scrollLeft + autoScrollOffset;
+    const isOffscreenRight = targetX + targetWidth > scrollLeft + containerWidth - autoScrollOffset;
 
     if (isOffscreenLeft || isOffscreenRight) {
       const scrollToX = isOffscreenLeft
-        ? Math.max(0, targetX - scrollPadding)
-        : targetX - scrollPadding;
+        ? Math.max(0, targetX - autoScrollOffset)
+        : targetX - autoScrollOffset;
 
       container.scrollTo({ left: scrollToX, behavior: 'smooth' });
     }
-  }, [activeTarget, scrollPadding]);
+  }, [activeTarget, autoScrollOffset]);
 
   return {
     scrollRef,

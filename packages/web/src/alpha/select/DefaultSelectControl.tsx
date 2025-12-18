@@ -8,6 +8,7 @@ import { InputLabel } from '../../controls/InputLabel';
 import { InputStack } from '../../controls/InputStack';
 import { cx } from '../../cx';
 import { HStack } from '../../layout/HStack';
+import { VStack } from '../../layout/VStack';
 import { AnimatedCaret } from '../../motion/AnimatedCaret';
 import { Pressable } from '../../system/Pressable';
 import { Text } from '../../typography/Text';
@@ -66,6 +67,7 @@ const DefaultSelectControlComponent = memo(
         helperText,
         label,
         labelVariant,
+        contentNode,
         startNode,
         endNode: customEndNode,
         compact,
@@ -75,6 +77,7 @@ const DefaultSelectControlComponent = memo(
         removeSelectedOptionAccessibilityLabel = 'Remove',
         accessibilityLabel,
         ariaHaspopup,
+        tabIndex = 0,
         styles,
         classNames,
         ...props
@@ -84,8 +87,8 @@ const DefaultSelectControlComponent = memo(
       type ValueType = Type extends 'multi'
         ? SelectOptionValue | SelectOptionValue[] | null
         : SelectOptionValue | null;
-      const shouldShowCompactLabel = compact && label;
       const isMultiSelect = type === 'multi';
+      const shouldShowCompactLabel = compact && label && !isMultiSelect;
       const hasValue = value !== null && !(Array.isArray(value) && value.length === 0);
 
       // Map of options to their values
@@ -191,31 +194,30 @@ const DefaultSelectControlComponent = memo(
 
       const labelNode = useMemo(
         () =>
-          typeof label === 'string' && labelVariant === 'inside' ? (
-            <Pressable
-              noScaleOnPress
-              className={classNames?.controlLabelNode}
-              disabled={disabled}
-              height={28}
-              onClick={() => setOpen((s) => !s)}
-              style={styles?.controlLabelNode}
-              tabIndex={-1}
-            >
-              <InputLabel color="fg" paddingBottom={0} paddingTop={1} paddingX={2}>
+          labelVariant === 'inside' ? (
+            <Pressable noScaleOnPress onClick={() => setOpen((s) => !s)}>
+              <InputLabel
+                className={classNames?.controlLabelNode}
+                color="fg"
+                paddingBottom={0}
+                paddingStart={2}
+                style={styles?.controlLabelNode}
+              >
                 {label}
               </InputLabel>
             </Pressable>
+          ) : typeof label === 'string' ? (
+            <InputLabel
+              className={classNames?.controlLabelNode}
+              color="fg"
+              style={styles?.controlLabelNode}
+            >
+              {label}
+            </InputLabel>
           ) : (
             label
           ),
-        [
-          label,
-          labelVariant,
-          disabled,
-          setOpen,
-          classNames?.controlLabelNode,
-          styles?.controlLabelNode,
-        ],
+        [labelVariant, classNames?.controlLabelNode, styles?.controlLabelNode, label, setOpen],
       );
 
       const valueNode = useMemo(() => {
@@ -271,6 +273,7 @@ const DefaultSelectControlComponent = memo(
             display="block"
             font="body"
             overflow="truncate"
+            width="100%"
           >
             {content}
           </Text>
@@ -303,6 +306,7 @@ const DefaultSelectControlComponent = memo(
             className={cx(noFocusOutlineCss, classNames?.controlInputNode)}
             disabled={disabled}
             flexGrow={1}
+            flexShrink={1}
             focusable={false}
             minHeight={
               labelVariant === 'inside'
@@ -315,6 +319,7 @@ const DefaultSelectControlComponent = memo(
             onClick={() => setOpen((s) => !s)}
             paddingStart={1}
             style={styles?.controlInputNode}
+            tabIndex={tabIndex}
           >
             {!!startNode && (
               <HStack
@@ -330,35 +335,37 @@ const DefaultSelectControlComponent = memo(
               </HStack>
             )}
             {shouldShowCompactLabel ? (
-              <HStack alignItems="center" height="100%" paddingStart={1} width="40%">
-                <InputLabel color="fg" overflow="truncate">
-                  {label}
-                </InputLabel>
+              <HStack alignItems="center" paddingX={1}>
+                {labelNode}
               </HStack>
             ) : null}
             <HStack
               alignItems="center"
-              borderRadius={200}
+              flexGrow={1}
+              flexShrink={1}
+              height="100%"
               justifyContent="space-between"
-              width={shouldShowCompactLabel ? '60%' : '100%'}
+              minWidth={0}
+              width="100%"
             >
-              <HStack
+              <VStack
                 ref={valueNodeContainerRef}
-                alignItems="center"
+                alignItems="flex-start"
                 className={classNames?.controlValueNode}
                 flexGrow={1}
                 flexShrink={1}
                 flexWrap="wrap"
                 gap={1}
-                justifyContent={shouldShowCompactLabel ? 'flex-end' : 'flex-start'}
-                overflow="auto"
-                paddingTop={labelVariant === 'inside' ? 0 : undefined}
+                justifyContent="flex-start"
+                minWidth={0}
+                overflow="hidden"
                 paddingX={1}
-                paddingY={labelVariant === 'inside' || compact ? 0.5 : 1.5}
+                paddingY={labelVariant === 'inside' && !isMultiSelect ? 0 : compact ? 1 : 1.5}
                 style={styles?.controlValueNode}
               >
                 {valueNode}
-              </HStack>
+                {contentNode}
+              </VStack>
             </HStack>
           </Pressable>
         ),
@@ -370,28 +377,35 @@ const DefaultSelectControlComponent = memo(
           classNames?.controlStartNode,
           classNames?.controlValueNode,
           disabled,
+          labelVariant,
+          compact,
           styles?.controlInputNode,
           styles?.controlStartNode,
           styles?.controlValueNode,
+          tabIndex,
           startNode,
           shouldShowCompactLabel,
-          label,
-          labelVariant,
-          compact,
+          labelNode,
+          isMultiSelect,
           valueNode,
+          contentNode,
           setOpen,
         ],
       );
 
       const endNode = useMemo(
         () => (
-          <HStack
-            alignItems="center"
-            className={classNames?.controlEndNode}
-            paddingX={2}
-            style={styles?.controlEndNode}
-          >
-            <Pressable aria-hidden onClick={() => setOpen((s) => !s)} tabIndex={-1}>
+          <Pressable aria-hidden flexShrink={0} onClick={() => setOpen((s) => !s)} tabIndex={-1}>
+            <HStack
+              alignItems="center"
+              className={classNames?.controlEndNode}
+              flexGrow={1}
+              height="100%"
+              justifyContent={labelVariant === 'inside' ? 'flex-end' : undefined}
+              paddingX={2}
+              paddingY={compact ? 1 : 1.5}
+              style={styles?.controlEndNode}
+            >
               {customEndNode ? (
                 customEndNode
               ) : (
@@ -400,10 +414,19 @@ const DefaultSelectControlComponent = memo(
                   rotate={open ? 0 : 180}
                 />
               )}
-            </Pressable>
-          </HStack>
+            </HStack>
+          </Pressable>
         ),
-        [open, variant, setOpen, customEndNode, classNames?.controlEndNode, styles?.controlEndNode],
+        [
+          classNames?.controlEndNode,
+          labelVariant,
+          compact,
+          styles?.controlEndNode,
+          customEndNode,
+          open,
+          variant,
+          setOpen,
+        ],
       );
 
       return (

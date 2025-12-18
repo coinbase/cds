@@ -58,6 +58,7 @@ export type TextInputBaseProps = SharedProps &
     | 'borderRadius'
     | 'enableColorSurge'
     | 'labelVariant'
+    | 'inputBackground'
   > & {
     /**
      * Aligns text inside input and helperText
@@ -147,6 +148,7 @@ export const TextInput = memo(
         bordered = true,
         labelVariant = 'outside',
         labelNode,
+        inputBackground,
         ...editableInputProps
       }: TextInputProps,
       ref: ForwardedRef<RNTextInput>,
@@ -219,7 +221,7 @@ export const TextInput = memo(
         return start;
       }, [start]);
 
-      const inputBackground = useMemo(() => {
+      const readOnlyInputBackground = useMemo(() => {
         if (!disabled && editableInputAddonProps.readOnly) {
           return 'bgSecondary';
         }
@@ -237,7 +239,7 @@ export const TextInput = memo(
             (suffix !== '' || !!end) && (
               <HStack
                 alignItems="center"
-                background={inputBackground}
+                background={readOnlyInputBackground}
                 gap={2}
                 justifyContent="center"
                 testID={testIDMap?.end ?? ''}
@@ -276,6 +278,7 @@ export const TextInput = memo(
               helperText
             ))
           }
+          inputBackground={readOnlyInputBackground ?? inputBackground}
           inputNode={
             <NativeInput
               ref={refs}
@@ -305,7 +308,7 @@ export const TextInput = memo(
                         paddingBottom: 0,
                         paddingStart: start ? 0.5 : 2,
                         paddingEnd: 2,
-                        background: inputBackground,
+                        background: readOnlyInputBackground,
                       })}
                       testID={testIDMap?.label ?? ''}
                     >
@@ -319,7 +322,7 @@ export const TextInput = memo(
             ((compact && !!label) || !!start) && (
               <Box
                 alignItems="center"
-                background={inputBackground}
+                background={readOnlyInputBackground}
                 justifyContent="center"
                 testID={testIDMap?.start}
               >

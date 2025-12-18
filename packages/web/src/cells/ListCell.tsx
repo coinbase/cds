@@ -12,6 +12,8 @@ import { Cell, type CellBaseProps, type CellSpacing } from './Cell';
 import { CellAccessory, type CellAccessoryType } from './CellAccessory';
 import { CellDetail, type CellDetailProps } from './CellDetail';
 
+const COMPONENT_STATIC_CLASSNAME = 'cds-ListCell';
+
 const overflowCss = css`
   overflow: auto;
   text-overflow: unset;
@@ -79,7 +81,10 @@ export type ListCellBaseProps = Polymorphic.ExtendableProps<
     spacingVariant?: 'normal' | 'compact' | 'condensed';
     /** Description of content. Max 1 line (with title) or 2 lines (without), otherwise will truncate. This prop is only intended to accept a string or Text component; other use cases, while allowed, are not supported and may result in unexpected behavior. For arbitrary content, use `descriptionNode`. */
     description?: React.ReactNode;
-    /** React node to render description. Takes precedence over `description`. */
+    /**
+     * React node to render description. Takes precedence over `description`.
+     * When provided, `classNames.description` and `styles.description` are not applied.
+     */
     descriptionNode?: React.ReactNode;
     /**
      * When there is no description the title will take up two lines by default.
@@ -102,13 +107,21 @@ export type ListCellBaseProps = Polymorphic.ExtendableProps<
     multiline?: boolean;
     /** Title of content. Max 1 line (with description) or 2 lines (without), otherwise will truncate. This prop is only intended to accept a string or Text component; other use cases, while allowed, are not supported and may result in unexpected behavior. For arbitrary content, use `titleNode`. */
     title?: React.ReactNode;
-    /** React node to render title. Takes precedence over `title`. */
+    /**
+     * React node to render title. Takes precedence over `title`.
+     * When provided, `classNames.title` and `styles.title` are not applied.
+     */
     titleNode?: React.ReactNode;
     /** Subtitle to display below the title and above the description. This prop is only intended to accept a string or Text component; other use cases, while allowed, are not supported and may result in unexpected behavior. For arbitrary content, use `subtitleNode`. */
     subtitle?: React.ReactNode;
-    /** React node to render subtitle. Takes precedence over `subtitle`. */
+    /**
+     * React node to render subtitle. Takes precedence over `subtitle`.
+     * When provided, `classNames.subtitle` and `styles.subtitle` are not applied.
+     */
     subtitleNode?: React.ReactNode;
-    /** Class names for the components */
+    /**
+     * Class names for default subcomponents. Ignored when the corresponding `xxNode` prop is used.
+     */
     classNames?: {
       root?: string;
       media?: string;
@@ -123,7 +136,9 @@ export type ListCellBaseProps = Polymorphic.ExtendableProps<
       subtitle?: string;
       description?: string;
     };
-    /** Styles for the components */
+    /**
+     * Styles for default subcomponents. Ignored when the corresponding `xxNode` prop is used.
+     */
     styles?: {
       root?: React.CSSProperties;
       media?: React.CSSProperties;
@@ -233,7 +248,7 @@ export const ListCell: ListCellComponent = memo(
           as={Component}
           borderRadius={props.borderRadius ?? (spacingVariant === 'condensed' ? 0 : undefined)}
           bottomContent={helperText}
-          className={cx(className, classNames?.root)}
+          className={cx(COMPONENT_STATIC_CLASSNAME, className, classNames?.root)}
           disabled={disabled}
           end={end}
           innerSpacing={

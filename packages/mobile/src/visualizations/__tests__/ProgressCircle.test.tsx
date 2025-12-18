@@ -4,7 +4,7 @@ import { getCircumference, getRadius } from '@coinbase/cds-common/utils/circle';
 import type { UseCounterParams } from '@coinbase/cds-common/visualizations/useCounter';
 import { render, screen } from '@testing-library/react-native';
 
-import { TextLabel1 } from '../../typography';
+import { Text } from '../../typography';
 import { DefaultThemeProvider } from '../../utils/testHelpers';
 import { ProgressCircle } from '../ProgressCircle';
 
@@ -165,9 +165,9 @@ describe('ProgressCircle tests and passes a11y', () => {
     const progress = 0.75;
     const contentNode = (
       <View testID="custom-content-node">
-        <TextLabel1>
+        <Text font="label1">
           {customText} {progress * 100}%
-        </TextLabel1>
+        </Text>
       </View>
     );
 
@@ -194,9 +194,9 @@ describe('ProgressCircle tests and passes a11y', () => {
     const progress = 0.75;
     const contentNode = (
       <View testID="custom-content-node">
-        <TextLabel1>
+        <Text font="label1">
           {customText} {progress * 100}%
-        </TextLabel1>
+        </Text>
       </View>
     );
 

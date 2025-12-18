@@ -1,13 +1,13 @@
 {
   "name": "@coinbase/cds-lottie-files",
-  "version": "3.3.3",
+  "version": "3.3.4",
   "description": "Coinbase Design System - Lottie Files",
   "repository": {
     "type": "git",
     "url": "git@github.com:coinbase/cds.git",
     "directory": "packages/lottie-files"
   },
-  "react-native": "./src/index.ts",
+  "react-native": "./esm/index.js",
   "type": "module",
   "main": "./esm/index.js",
   "types": "./dts/index.d.ts",

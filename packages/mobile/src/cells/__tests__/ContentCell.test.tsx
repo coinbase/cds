@@ -2,6 +2,7 @@ import { Text, View } from 'react-native';
 import { render, screen } from '@testing-library/react-native';
 
 import { VStack } from '../../layout';
+import { Text as TypographyText } from '../../typography/Text';
 import { DefaultThemeProvider } from '../../utils/testHelpers';
 import { Cell } from '../Cell';
 import { CellMedia } from '../CellMedia';
@@ -231,5 +232,95 @@ describe('ContentCell', () => {
     );
 
     expect(screen.container).not.toBeNull();
+  });
+
+  it('renders override nodes when provided', () => {
+    render(
+      <DefaultThemeProvider>
+        <ContentCell
+          accessoryNode={<View testID="accessory-node" />}
+          description="Default description"
+          descriptionNode={
+            <View testID="description-node">
+              <Text>Description Node</Text>
+            </View>
+          }
+          meta="Default meta"
+          metaNode={
+            <View testID="meta-node">
+              <Text>Meta Node</Text>
+            </View>
+          }
+          subtitle="Default subtitle"
+          subtitleNode={
+            <View testID="subtitle-node">
+              <Text>Subtitle Node</Text>
+            </View>
+          }
+          title="Default title"
+          titleNode={
+            <View testID="title-node">
+              <Text>Title Node</Text>
+            </View>
+          }
+        />
+      </DefaultThemeProvider>,
+    );
+
+    expect(screen.getByTestId('title-node')).not.toBeNull();
+    expect(screen.queryByText('Default title')).toBeNull();
+    expect(screen.getByTestId('subtitle-node')).not.toBeNull();
+    expect(screen.queryByText('Default subtitle')).toBeNull();
+    expect(screen.getByTestId('description-node')).not.toBeNull();
+    expect(screen.queryByText('Default description')).toBeNull();
+    expect(screen.getByTestId('meta-node')).not.toBeNull();
+    expect(screen.queryByText('Default meta')).toBeNull();
+    expect(screen.getByTestId('accessory-node')).not.toBeNull();
+  });
+
+  it('uses condensed typography when spacingVariant is condensed', () => {
+    render(
+      <DefaultThemeProvider>
+        <ContentCell
+          description="Description"
+          spacingVariant="condensed"
+          subtitle="Subtitle"
+          title="Title"
+        />
+      </DefaultThemeProvider>,
+    );
+
+    const titleInstance = screen.getByText('Title').parent;
+    const subtitleInstance = screen.getByText('Subtitle').parent;
+    const descriptionInstance = screen.getByText('Description').parent;
+
+    expect(titleInstance?.props.numberOfLines).toBe(2);
+    expect(subtitleInstance?.props.font).toBe('label1');
+    expect(descriptionInstance?.props.font).toBe('body');
+  });
+
+  it('limits title to a single line when description is present outside condensed spacing', () => {
+    render(
+      <DefaultThemeProvider>
+        <ContentCell description="Description" spacingVariant="normal" title="Title" />
+      </DefaultThemeProvider>,
+    );
+
+    const titleInstance = screen.getByText('Title').parent;
+
+    expect(titleInstance?.props.numberOfLines).toBe(1);
+  });
+
+  it('applies styles prop to meta text', () => {
+    const metaStyle = { color: 'purple' };
+
+    render(
+      <DefaultThemeProvider>
+        <ContentCell meta="Meta" styles={{ meta: metaStyle }} title="Title" />
+      </DefaultThemeProvider>,
+    );
+
+    const metaInstance = screen.getByText('Meta').parent;
+    expect(metaInstance?.props.style).toBe(metaStyle);
   });
 });

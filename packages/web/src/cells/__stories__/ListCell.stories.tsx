@@ -12,7 +12,6 @@ import { RollingNumber } from '../../numbers/RollingNumber';
 import { Tag } from '../../tag/Tag';
 import { Text } from '../../typography/Text';
 import { CellHelperText } from '../CellHelperText';
-import { CellMedia } from '../CellMedia';
 import { ListCell } from '../ListCell';
 import { ListCellFallback } from '../ListCellFallback';
 
@@ -844,7 +843,7 @@ const WithHelperText = () => (
           Please review this information carefully before proceeding
         </CellHelperText>
       }
-      media={<CellMedia source={assets.eth.imageUrl} type="asset" />}
+      media={<Avatar src={assets.eth.imageUrl} />}
       priority="end"
       spacingVariant="condensed"
       title="With Media and Helper Text"
@@ -876,7 +875,7 @@ const WithHelperText = () => (
           This action cannot be undone.
         </CellHelperText>
       }
-      media={<CellMedia source={assets.eth.imageUrl} type="asset" />}
+      media={<Avatar src={assets.eth.imageUrl} />}
       priority="end"
       spacingVariant="condensed"
       title="With Media and Action"
@@ -985,7 +984,12 @@ const CondensedListCell = () => {
       />
       <ListCell
         multiline
-        description="Long description with multiple lines. This section can be arbitrarily long and occupy many many lines."
+        description={
+          <Text color="fgMuted" font="body">
+            Long description with multiple lines. This section can be arbitrarily long and occupy
+            many many lines.
+          </Text>
+        }
         end={
           <HStack alignItems="center" gap={2}>
             <Text color="fgMuted" font="label2">

@@ -28,7 +28,9 @@ export type TrayRenderChildren = React.FC<{ handleClose: () => void }>;
 
 export type TrayBaseProps = {
   children: React.ReactNode | TrayRenderChildren;
-  /** Optional footer content that will be fixed to the bottom of the tray */
+  /** ReactNode to render as the Drawer header */
+  header?: React.ReactNode;
+  /** ReactNode to render as the Drawer footer */
   footer?: React.ReactNode;
   /** HTML ID for the tray */
   id?: string;
@@ -124,6 +126,8 @@ export const Tray = memo(
   forwardRef<TrayRefProps, TrayProps>(function Tray(
     {
       children,
+      header,
+      footer,
       title,
       onVisibilityChange,
       verticalDrawerPercentageOfView = '85%',
@@ -133,7 +137,6 @@ export const Tray = memo(
       preventDismiss = false,
       id,
       role = 'dialog',
-      footer,
       accessibilityLabel = 'Tray',
       focusTabIndexElements = false,
       restoreFocusOnUnmount = true,
@@ -144,7 +147,6 @@ export const Tray = memo(
   ) {
     const [isOpen, setIsOpen] = useState(true);
     const trayRef = useRef<HTMLDivElement>(null);
-    const footerRef = useRef<HTMLDivElement>(null);
     const controls = useAnimation();
 
     const blockScroll = useScrollBlocker();
@@ -234,7 +236,7 @@ export const Tray = memo(
                   accessibilityLabel={accessibilityLabel}
                   alignItems="center"
                   aria-modal="true"
-                  background={'bg'}
+                  background="bg"
                   borderTopLeftRadius={400}
                   borderTopRightRadius={400}
                   data-testid="tray"
@@ -246,9 +248,9 @@ export const Tray = memo(
                   role={role}
                 >
                   <VStack maxWidth="70em" paddingX={6} width="100%">
+                    {header}
                     <HStack
                       alignItems="center"
-                      background="bg"
                       justifyContent={title ? 'space-between' : 'flex-end'}
                       paddingBottom={1}
                       paddingTop={3}
@@ -278,17 +280,7 @@ export const Tray = memo(
                     >
                       {typeof children === 'function' ? children({ handleClose }) : children}
                     </VStack>
-                    {footer && (
-                      <VStack
-                        ref={footerRef}
-                        background="bg"
-                        style={{
-                          flexShrink: 0,
-                        }}
-                      >
-                        {footer}
-                      </VStack>
-                    )}
+                    {footer}
                   </VStack>
                 </VStack>
               </m.div>

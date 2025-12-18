@@ -34,6 +34,7 @@ import { useSparklinePath } from '@coinbase/cds-common/visualizations/useSparkli
 import * as CDSLottie from '@coinbase/cds-lottie-files';
 import { Accordion } from '@coinbase/cds-web/accordion/Accordion';
 import { AccordionItem } from '@coinbase/cds-web/accordion/AccordionItem';
+import { Combobox } from '@coinbase/cds-web/alpha/combobox/Combobox';
 import { Select } from '@coinbase/cds-web/alpha/select/Select';
 import { SelectChip } from '@coinbase/cds-web/alpha/select-chip/SelectChip';
 import { TabbedChips } from '@coinbase/cds-web/alpha/tabbed-chips/TabbedChips';
@@ -62,8 +63,7 @@ import { Collapsible } from '@coinbase/cds-web/collapsible/Collapsible';
 import * as CDSControls from '@coinbase/cds-web/controls';
 import { InputLabel } from '@coinbase/cds-web/controls/InputLabel';
 import { Select as OldSelect } from '@coinbase/cds-web/controls/Select';
-import { Calendar } from '@coinbase/cds-web/dates/Calendar';
-import { DatePicker } from '@coinbase/cds-web/dates/DatePicker';
+import * as CDSDates from '@coinbase/cds-web/dates';
 import * as CDSDots from '@coinbase/cds-web/dots';
 import { Dropdown } from '@coinbase/cds-web/dropdown/Dropdown';
 import { useA11yControlledVisibility } from '@coinbase/cds-web/hooks/useA11yControlledVisibility';
@@ -176,6 +176,7 @@ const ReactLiveScope: Record<string, unknown> = {
   ...CDSControls,
   InputLabel,
   Select,
+  Combobox,
   OldSelect,
   useMultiSelect,
   ...CDSSystem,
@@ -213,8 +214,7 @@ const ReactLiveScope: Record<string, unknown> = {
   sparklineInteractiveHoverData,
   // other
   ...CDSDots,
-  DatePicker,
-  Calendar,
+  ...CDSDates,
   LocaleProvider,
   DateInputValidationError,
   Banner,

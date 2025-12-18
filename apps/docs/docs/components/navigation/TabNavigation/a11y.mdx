@@ -76,42 +76,46 @@ function TabNavigationExample() {
     return (
       <>
         <MockTabPanel id={tabs[0].id}>
-          <TextTitle1 as="h2" paddingBottom={2}>
+          <Text as="h2" font="title1" paddingBottom={2}>
             Let's tab!
-          </TextTitle1>
-          <TextBody as="p">
+          </Text>
+          <Text as="p" font="body">
             Press the tab key until the <b>Tab one</b> tab is focused.
-          </TextBody>
-          <TextBody as="p">
+          </Text>
+          <Text as="p" font="body">
             Now try using the right arrow key to move through the tab list.
-          </TextBody>
-          <TextBody as="p">
+          </Text>
+          <Text as="p" font="body">
             Pretty neat, hey? Okay, what happens if you press the right arrow key when you're at the
             end of the list?
-          </TextBody>
-          <TextBody as="p">
+          </Text>
+          <Text as="p" font="body">
             <Link to="https://www.w3.org/WAI/ARIA/apg/example-index/tabs/tabs-manual.html">
               This link
             </Link>{' '}
             in the body of the tab is here to provide another thing to focus on.
-          </TextBody>
+          </Text>
         </MockTabPanel>
         <MockTabPanel id={tabs[1].id}>
-          <TextTitle1 as="h2" paddingBottom={2}>
+          <Text as="h2" font="title1" paddingBottom={2}>
             You made it to tab two!
-          </TextTitle1>
-          <TextBody as="p">You're a natural 🕺</TextBody>
-          <TextBody as="p">Can you make it to tab three?</TextBody>
+          </Text>
+          <Text as="p" font="body">
+            You're a natural 🕺
+          </Text>
+          <Text as="p" font="body">
+            Can you make it to tab three?
+          </Text>
         </MockTabPanel>
         <MockTabPanel id={tabs[2].id}>
-          <TextTitle1 as="h2" paddingBottom={2}>
+          <Text as="h2" font="title1" paddingBottom={2}>
             Heyooo, tab three!
-          </TextTitle1>
-          <TextBody as="p">
+          </Text>
+          <Text as="p" font="body">
             Now if you really want to have some fun, turn on a screen reader like{' '}
             <Link href="https://www.apple.com/voiceover/info/guide/_1121.html">VoiceOver</Link> and
             see how it sounds!
-          </TextBody>
+          </Text>
         </MockTabPanel>
       </>
     );
@@ -119,9 +123,9 @@ function TabNavigationExample() {
 
   return (
     <VStack gap={2}>
-      <TextTitle1 as="h2" id="tab-label">
+      <Text as="h2" font="title1" id="tab-label">
         Tab navigation example
-      </TextTitle1>
+      </Text>
       <TabNavigation
         value={primary}
         tabs={tabs}

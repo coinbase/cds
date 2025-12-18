@@ -2,6 +2,7 @@ import React, { Children, memo, useMemo } from 'react';
 import { zIndex } from '@coinbase/cds-common/tokens/zIndex';
 import { css } from '@linaria/core';
 
+import { cx } from '../cx';
 import { useDimensions } from '../hooks/useDimensions';
 import { Box, type BoxBaseProps, type BoxProps, VStack } from '../layout';
 import { breakpoints } from '../styles/media';
@@ -70,6 +71,48 @@ export type SidebarBaseProps = BoxBaseProps & {
    */
   renderEnd?: (isCollapsed: boolean) => React.ReactNode;
   variant?: 'default' | 'condensed';
+  /**
+   * Custom class names for the sidebar components.
+   */
+  classNames?: {
+    /**
+     * Custom class name for the root sidebar container.
+     */
+    root?: string;
+    /**
+     * Custom class name for the logo container.
+     */
+    logo?: string;
+    /**
+     * Custom class name for the content container (children list).
+     */
+    content?: string;
+    /**
+     * Custom class name for the end container (renderEnd).
+     */
+    end?: string;
+  };
+  /**
+   * Custom styles for the sidebar components.
+   */
+  styles?: {
+    /**
+     * Custom style for the root sidebar container.
+     */
+    root?: React.CSSProperties;
+    /**
+     * Custom style for the logo container.
+     */
+    logo?: React.CSSProperties;
+    /**
+     * Custom style for the content container (children list).
+     */
+    content?: React.CSSProperties;
+    /**
+     * Custom style for the end container (renderEnd).
+     */
+    end?: React.CSSProperties;
+  };
 };
 
 export type SidebarProps = SidebarBaseProps & Omit<BoxProps<SidebarDefaultElement>, 'children'>;
@@ -85,6 +128,10 @@ export const Sidebar: React.FC<SidebarProps> = memo(
     accessibilityLabel = 'Sidebar',
     width,
     variant = 'default',
+    className,
+    classNames,
+    style,
+    styles,
     ...props
   }) => {
     const { ref, currentBreakpoint } = useDimensions(breakpointConfig);
@@ -132,6 +179,7 @@ export const Sidebar: React.FC<SidebarProps> = memo(
           as={sidebarDefaultElement}
           background="bg"
           bottom="0"
+          className={cx(className, classNames?.root)}
           height="100%"
           justifyContent="space-between"
           left="0"
@@ -139,6 +187,7 @@ export const Sidebar: React.FC<SidebarProps> = memo(
           paddingX={variant === 'default' ? 2 : 1.5}
           paddingY={2}
           position="sticky"
+          style={{ ...style, ...styles?.root }}
           testID={testID}
           top="0"
           width={width ?? computedWidth}
@@ -147,15 +196,21 @@ export const Sidebar: React.FC<SidebarProps> = memo(
         >
           <VStack>
             {logo && (
-              <VStack {...logoContainerProps} testID="sidebar-logo">
+              <VStack
+                {...logoContainerProps}
+                className={classNames?.logo}
+                style={styles?.logo}
+                testID="sidebar-logo"
+              >
                 {typeof logo === 'function' ? logo(!!computedCollapse) : logo}
               </VStack>
             )}
             <VStack
               as="ul"
-              className={ulCss}
+              className={cx(ulCss, classNames?.content)}
               gap={0.5}
               marginStart={variant === 'default' ? -0.5 : undefined}
+              style={styles?.content}
             >
               {liWrappedChildren}
             </VStack>
@@ -163,7 +218,9 @@ export const Sidebar: React.FC<SidebarProps> = memo(
           {!!renderEnd && (
             <Box
               alignSelf={variant === 'default' ? 'flex-start' : 'center'}
+              className={classNames?.end}
               paddingTop={4}
+              style={styles?.end}
               testID="sidebar-end"
             >
               {renderEnd(!!computedCollapse)}

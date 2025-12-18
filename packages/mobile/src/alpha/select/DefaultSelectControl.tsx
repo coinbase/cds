@@ -54,6 +54,7 @@ export const DefaultSelectControlComponent = memo(
         helperText,
         label,
         labelVariant,
+        contentNode,
         startNode,
         endNode: customEndNode,
         compact,
@@ -154,12 +155,10 @@ export const DefaultSelectControlComponent = memo(
               style={styles?.controlLabelNode}
             >
               <InputLabel
-                alignSelf={labelVariant === 'inside' ? 'flex-start' : undefined}
                 color="fg"
-                ellipsizeMode="tail"
-                numberOfLines={2}
-                paddingX={labelVariant === 'inside' ? 2 : 0}
-                paddingY={shouldShowCompactLabel || labelVariant === 'inside' ? 0 : 0.5}
+                paddingEnd={0}
+                paddingStart={labelVariant === 'inside' ? 2 : 0}
+                paddingY={labelVariant === 'inside' || compact ? 0 : 0.5}
               >
                 {label}
               </InputLabel>
@@ -167,7 +166,7 @@ export const DefaultSelectControlComponent = memo(
           ) : (
             label
           ),
-        [disabled, label, labelVariant, setOpen, shouldShowCompactLabel, styles?.controlLabelNode],
+        [compact, disabled, label, labelVariant, setOpen, styles?.controlLabelNode],
       );
 
       const valueNode = useMemo(() => {
@@ -194,7 +193,7 @@ export const DefaultSelectControlComponent = memo(
                     compact
                     accessibilityLabel={`${removeSelectedOptionAccessibilityLabel} ${accessibilityLabel}`}
                     borderWidth={0}
-                    disabled={option.disabled}
+                    disabled={disabled || option.disabled}
                     invertColorScheme={false}
                     maxWidth={200}
                     onPress={(event) => {
@@ -219,12 +218,7 @@ export const DefaultSelectControlComponent = memo(
         const label = option?.label ?? option?.description ?? option?.value ?? placeholder;
         const content = hasValue ? label : placeholder;
         return typeof content === 'string' ? (
-          <Text
-            color={hasValue ? 'fg' : 'fgMuted'}
-            ellipsize="tail"
-            font="body"
-            textAlign={shouldShowCompactLabel ? 'right' : 'left'}
-          >
+          <Text color={hasValue ? 'fg' : 'fgMuted'} ellipsize="tail" font="body" textAlign="left">
             {content}
           </Text>
         ) : (
@@ -235,11 +229,11 @@ export const DefaultSelectControlComponent = memo(
         isMultiSelect,
         optionsMap,
         placeholder,
-        shouldShowCompactLabel,
         value,
         maxSelectedOptionsToShow,
         hiddenSelectedOptionsLabel,
         removeSelectedOptionAccessibilityLabel,
+        disabled,
         onChange,
       ]);
 
@@ -266,7 +260,7 @@ export const DefaultSelectControlComponent = memo(
                     : DEFAULT_HEIGHT
               }
               paddingStart={startNode ? 0 : 2}
-              paddingY={labelVariant === 'inside' ? 0 : compact ? 0.5 : 1.5}
+              paddingY={labelVariant === 'inside' ? 0 : compact ? 1 : 1.5}
             >
               <HStack alignItems="center" flexGrow={1}>
                 {!!startNode && (
@@ -275,16 +269,17 @@ export const DefaultSelectControlComponent = memo(
                   </HStack>
                 )}
                 {shouldShowCompactLabel ? (
-                  <HStack alignItems="center" paddingEnd={1} width="40%">
+                  <HStack alignItems="center" maxWidth="40%" paddingEnd={1}>
                     {labelNode}
                   </HStack>
                 ) : null}
                 <VStack
                   justifyContent="center"
-                  maxWidth={shouldShowCompactLabel ? '45%' : startNode ? '70%' : '85%'}
+                  maxWidth={startNode ? '70%' : '85%'}
                   style={styles?.controlValueNode}
                 >
                   {valueNode}
+                  {contentNode}
                 </VStack>
               </HStack>
             </HStack>
@@ -299,20 +294,27 @@ export const DefaultSelectControlComponent = memo(
           styles?.controlStartNode,
           styles?.controlValueNode,
           props,
-          startNode,
           labelVariant,
           compact,
+          startNode,
           shouldShowCompactLabel,
           labelNode,
           valueNode,
+          contentNode,
           setOpen,
         ],
       );
 
       const endNode = useMemo(
         () => (
-          <HStack alignItems="center" paddingX={2} style={styles?.controlEndNode}>
-            <Pressable onPress={() => setOpen((s) => !s)}>
+          <Pressable disabled={disabled} onPress={() => setOpen((s) => !s)}>
+            <HStack
+              alignItems="center"
+              flexGrow={1}
+              paddingX={2}
+              paddingY={compact ? 1 : 1.5}
+              style={styles?.controlEndNode}
+            >
               {customEndNode ? (
                 customEndNode
               ) : (
@@ -321,10 +323,10 @@ export const DefaultSelectControlComponent = memo(
                   rotate={open ? 0 : 180}
                 />
               )}
-            </Pressable>
-          </HStack>
+            </HStack>
+          </Pressable>
         ),
-        [open, variant, setOpen, customEndNode, styles?.controlEndNode],
+        [compact, styles?.controlEndNode, disabled, customEndNode, open, variant, setOpen],
       );
 
       return (

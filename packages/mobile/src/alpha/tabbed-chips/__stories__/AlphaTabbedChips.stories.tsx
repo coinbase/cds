@@ -22,15 +22,18 @@ const Demo = ({
   tabs = defaultTabs,
   compact = false,
   width,
+  autoScrollOffset,
 }: {
   tabs?: TabValue[];
   compact?: boolean;
   width?: BoxProps['width'];
+  autoScrollOffset?: number;
 }) => {
   const [value, setValue] = useState<TabValue | null>(tabs[0]);
   return (
     <TabbedChips
       activeTab={value}
+      autoScrollOffset={autoScrollOffset}
       compact={compact}
       onChange={setValue}
       tabs={tabs}
@@ -91,6 +94,9 @@ const TabbedChipsScreen = () => {
       </Example>
       <Example title="Compact with start">
         <Demo compact tabs={compactTabsWithStart} />
+      </Example>
+      <Example title="With auto scroll offset">
+        <Demo autoScrollOffset={100} tabs={sampleTabs} />
       </Example>
     </ExampleScreen>
   );

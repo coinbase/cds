@@ -10,7 +10,7 @@ import {
 } from '@coinbase/cds-mobile/tabs';
 import { SegmentedTab, type SegmentedTabProps } from '@coinbase/cds-mobile/tabs/SegmentedTab';
 import { tabsSpringConfig } from '@coinbase/cds-mobile/tabs/Tabs';
-import { Text, type TextBaseProps } from '@coinbase/cds-mobile/typography/Text';
+import { Text, type TextBaseProps } from '@coinbase/cds-mobile/typography';
 
 // Animated active indicator to support smooth transition of background color
 export const PeriodSelectorActiveIndicator = ({

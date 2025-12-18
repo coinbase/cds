@@ -1,13 +1,13 @@
 {
   "name": "@coinbase/cds-utils",
-  "version": "2.3.4",
+  "version": "2.3.5",
   "description": "Coinbase Design System - Utils",
   "repository": {
     "type": "git",
     "url": "git@github.com:coinbase/cds.git",
     "directory": "packages/utils"
   },
-  "react-native": "./src/index.ts",
+  "react-native": "./esm/index.js",
   "type": "module",
   "main": "./esm/index.js",
   "types": "./dts/index.d.ts",

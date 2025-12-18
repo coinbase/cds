@@ -44,6 +44,7 @@ module.exports = {
    * Plese add sourceFiles in alphabetical order.
    */
   sourceFiles: [
+    'alpha/combobox/Combobox',
     'alpha/select/Select',
     'alpha/select-chip/SelectChip',
     'alpha/tabbed-chips/TabbedChips',
@@ -101,6 +102,7 @@ module.exports = {
     'controls/Switch',
     'controls/TextInput',
     'dates/Calendar',
+    'dates/DateInput',
     'dates/DatePicker',
     'dots/DotCount',
     'dots/DotStatusColor',
