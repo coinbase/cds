@@ -8,6 +8,8 @@ import { Collapsible } from '../collapsible/Collapsible';
 import { HStack, VStack } from '../layout';
 import type { ResponsiveProp } from '../styles/styleProps';
 
+const COMPONENT_STATIC_CLASSNAME = 'cds-NavigationBar';
+
 export type NavigationBarProps = SharedProps & {
   /**
    * Node (ie Back button) to display at the start of the nav bar
@@ -79,6 +81,7 @@ export const NavigationBar = memo(
         accessibilityLabel={accessibilityLabel}
         as="nav"
         background="bg"
+        className={COMPONENT_STATIC_CLASSNAME}
         gap={rowGap}
         left={0}
         paddingBottom={paddingBottom}

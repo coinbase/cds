@@ -8,6 +8,34 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.32.3 (12/18/2025 PST)
+
+#### 🐞 Fixes
+
+- Fix: update package exports. [[#261](https://github.com/coinbase/cds/pull/261)]
+
+## 8.32.2 (12/18/2025 PST)
+
+#### 🐞 Fixes
+
+- Add fuse.js dependency. [[#256](https://github.com/coinbase/cds/pull/256)]
+
+## 8.32.1 ((12/17/2025, 11:31 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.32.0 (12/16/2025 PST)
+
+#### 🚀 Updates
+
+- Add static class names to components.
+
+## 8.31.5 (12/16/2025 PST)
+
+#### 🐞 Fixes
+
+- Fixed caption font-size on web dense theme.
+
 ## 8.31.4 (12/16/2025 PST)
 
 #### 🐞 Fixes

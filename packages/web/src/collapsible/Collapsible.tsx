@@ -7,6 +7,8 @@ import { HStack } from '../layout/HStack';
 
 import { useCollapsibleMotionProps } from './useCollapsibleMotionProps';
 
+const COMPONENT_STATIC_CLASSNAME = 'cds-Collapsible';
+
 export type CollapsibleBaseProps = SharedProps &
   PaddingProps &
   Pick<BoxProps<BoxDefaultElement>, 'role' | 'id' | 'accessibilityLabelledBy'> & {
@@ -112,6 +114,7 @@ export const Collapsible = memo(
           {...motionProps}
           ref={forwardedRef}
           aria-labelledby={accessibilityLabelledBy}
+          className={COMPONENT_STATIC_CLASSNAME}
           data-testid={testID}
           id={id}
           onAnimationComplete={handleAnimationComplete}
