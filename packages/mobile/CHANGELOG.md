@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.32.2 (12/18/2025 PST)
+
+#### 🐞 Fixes
+
+- Add fuse.js dependency. [[#256](https://github.com/coinbase/cds/pull/256)]
+
 ## 8.32.1 (12/17/2025 PST)
 
 #### 🐞 Fixes
