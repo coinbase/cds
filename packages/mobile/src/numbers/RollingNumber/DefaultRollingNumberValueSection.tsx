@@ -34,6 +34,8 @@ export const DefaultRollingNumberValueSection: RollingNumberValueSectionComponen
         styles,
         justifyContent = 'flex-start',
         transitionConfig,
+        digitTransitionVariant,
+        direction,
         ...props
       }: RollingNumberValueSectionProps,
       ref,
@@ -76,6 +78,8 @@ export const DefaultRollingNumberValueSection: RollingNumberValueSectionComponen
                 key={part.key}
                 RollingNumberMaskComponent={RollingNumberMaskComponent}
                 digitHeight={digitHeight}
+                digitTransitionVariant={digitTransitionVariant}
+                direction={direction}
                 initialValue={numberSectionHasRendered ? 0 : undefined}
                 onLayout={() => setValueSectionHasRendered(true)}
                 styles={{ text: styles?.text }}
@@ -90,6 +94,8 @@ export const DefaultRollingNumberValueSection: RollingNumberValueSectionComponen
           setValueSectionHasRendered,
           intlNumberParts,
           digitHeight,
+          digitTransitionVariant,
+          direction,
           RollingNumberDigitComponent,
           RollingNumberSymbolComponent,
           styles?.text,
@@ -122,6 +128,8 @@ export const DefaultRollingNumberValueSection: RollingNumberValueSectionComponen
                 key={index}
                 RollingNumberMaskComponent={RollingNumberMaskComponent}
                 digitHeight={digitHeight}
+                digitTransitionVariant={digitTransitionVariant}
+                direction={direction}
                 initialValue={numberSectionHasRendered ? 0 : undefined}
                 onLayout={() => setValueSectionHasRendered(true)}
                 styles={{ text: styles?.text }}
@@ -139,6 +147,8 @@ export const DefaultRollingNumberValueSection: RollingNumberValueSectionComponen
           RollingNumberSymbolComponent,
           styles?.text,
           digitHeight,
+          digitTransitionVariant,
+          direction,
           textProps,
           fallbackDigit,
           justifyContent,

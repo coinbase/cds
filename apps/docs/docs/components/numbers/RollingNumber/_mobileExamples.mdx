@@ -262,6 +262,43 @@ function ColorAndTransition() {
 }
 ```
 
+## Digit Transition Variants
+
+RollingNumber supports two digit transition styles via the `digitTransitionVariant` prop:
+
+- **`'every'`** (default): Rolls through every intermediate digit (e.g., 1→2→3→...→9).
+- **`'single'`**: Rolls directly to the new digit without showing intermediates. Direction (up/down) is based on the total value change.
+
+```tsx
+function DigitTransitionVariants() {
+  const price = 12345.67;
+  return (
+    <VStack gap={2}>
+      <Text font="label1">Every variant (default)</Text>
+      <RollingNumber
+        colorPulseOnUpdate
+        digitTransitionVariant="every"
+        font="display3"
+        format={{ style: 'currency', currency: 'USD' }}
+        value={price}
+      />
+      <Text font="label1">Single variant</Text>
+      <RollingNumber
+        colorPulseOnUpdate
+        digitTransitionVariant="single"
+        font="display3"
+        format={{ style: 'currency', currency: 'USD' }}
+        value={price}
+      />
+    </VStack>
+  );
+}
+```
+
+::::tip Direction-aware animation
+The single variant determines scroll direction based on the **total value change**, not individual digit changes. When the value increases, digits roll up (new digits enter from below). When the value decreases, digits roll down (new digits enter from above). This matches the behavior of the color pulse feature.
+::::
+
 ## Prefix and Suffix
 
 Attach text or React nodes before/after the number to create rich compositions. If the prefix/suffix is a string, it will pulse color together with the main number.

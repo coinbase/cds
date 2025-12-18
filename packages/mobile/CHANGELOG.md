@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.33.0 (12/18/2025 PST)
+
+#### 🚀 Updates
+
+- New digitTransitionVariant for RollingNumber. [[#237](https://github.com/coinbase/cds/pull/237)]
+
 ## 8.32.3 (12/18/2025 PST)
 
 #### 🐞 Fixes
