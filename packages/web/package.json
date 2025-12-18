@@ -214,6 +214,7 @@
     "d3-interpolate": "^3.0.1",
     "d3-interpolate-path": "^2.3.0",
     "d3-selection": "^3.0.0",
+    "fuse.js": "^7.1.0",
     "lodash": "^4.17.21",
     "lottie-web": "^5.13.0",
     "react-popper": "^2.2.4",
