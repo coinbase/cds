@@ -2676,7 +2676,7 @@ __metadata:
     "@types/ejs": "npm:^3.1.0"
     "@types/lodash": "npm:^4.14.178"
     ejs: "npm:^3.1.7"
-    react-docgen-typescript: "npm:^2.2.2"
+    react-docgen-typescript: "npm:^2.4.0"
   peerDependencies:
     fast-glob: ^3.2.11
     lodash: ^4.17.21
@@ -32272,6 +32272,15 @@ __metadata:
   peerDependencies:
     typescript: ">= 4.3.x"
   checksum: 10c0/d31a061a21b5d4b67d4af7bc742541fd9e16254bd32861cd29c52565bc2175f40421a3550d52b6a6b0d0478e7cc408558eb0060a0bdd2957b02cfceeb0ee1e88
+  languageName: node
+  linkType: hard
+
+"react-docgen-typescript@npm:^2.4.0":
+  version: 2.4.0
+  resolution: "react-docgen-typescript@npm:2.4.0"
+  peerDependencies:
+    typescript: ">= 4.3.x"
+  checksum: 10c0/18e3e1c80d28abcdd72e62261d2f70b0904d9b088f9c2ebe485ffee5e46f5735208bc174a20ed2772112b3ca6432b5f3d5f0ac345872fe76e541f84543e49e50
   languageName: node
   linkType: hard
 
