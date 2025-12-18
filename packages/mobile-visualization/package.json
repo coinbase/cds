@@ -16,6 +16,10 @@
       "types": "./dts/index.d.ts",
       "default": "./esm/index.js"
     },
+    "./chart": {
+      "types": "./dts/chart/index.d.ts",
+      "default": "./esm/chart/index.js"
+    },
     "./sparkline": {
       "types": "./dts/sparkline/index.d.ts",
       "default": "./esm/sparkline/index.js"
