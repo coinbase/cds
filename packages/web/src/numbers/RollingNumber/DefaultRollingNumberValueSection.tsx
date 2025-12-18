@@ -65,11 +65,11 @@ export const DefaultRollingNumberValueSection: RollingNumberValueSectionComponen
                 RollingNumberMaskComponent={RollingNumberMaskComponent}
                 classNames={{ text: classNames?.text }}
                 digitTransitionVariant={digitTransitionVariant}
+                direction={direction}
                 initialValue={hasMounted ? 0 : undefined}
                 styles={{ text: styles?.text }}
                 transitionConfig={transitionConfig}
                 value={part.value}
-                direction={direction}
               />
             ),
           ),
@@ -99,11 +99,11 @@ export const DefaultRollingNumberValueSection: RollingNumberValueSectionComponen
                   RollingNumberMaskComponent={RollingNumberMaskComponent}
                   classNames={{ text: classNames?.text }}
                   digitTransitionVariant={digitTransitionVariant}
+                  direction={direction}
                   initialValue={hasMounted ? 0 : undefined}
                   styles={{ text: styles?.text }}
                   transitionConfig={transitionConfig}
                   value={parseInt(char)}
-                  direction={direction}
                 />
               ) : (
                 <RollingNumberSymbolComponent

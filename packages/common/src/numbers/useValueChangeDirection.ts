@@ -20,4 +20,3 @@ export function useValueChangeDirection(value: number): SingleDirection | undefi
 
   return direction.current;
 }
-
