@@ -1,6 +1,37 @@
 const isTypeAlias = require('./isTypeAlias');
 const shouldAddToParentTypes = require('./shouldAddToParentTypes');
 
+// This is a temporary fix to show onClick prop for polymorphic components on web. We could be having a docgen rewrite in the future to be more dynamic with these types.
+function ensureWebPolymorphicOnClick(doc, props) {
+  // Docgen runs across web + mobile. Only surface DOM props for web components.
+  const isWeb = typeof doc.filePath === 'string' && doc.filePath.includes('/packages/web/');
+  if (!isWeb) return props;
+
+  // Only apply to polymorphic components; otherwise this would add "onClick" to everything on web.
+  const isPolymorphic =
+    props.some((p) => p.name === 'as') || props.some((p) => p.parent === 'polymorphism');
+  if (!isPolymorphic) return props;
+
+  if (props.some((p) => p.name === 'onClick')) return props;
+
+  return [
+    ...props,
+    {
+      name: 'onClick',
+      required: false,
+      defaultValue: undefined,
+      description:
+        'Click handler for the underlying element. This is exposed for polymorphic components, but support and event target typing depend on `as` (especially when `as` is a custom component).',
+      parent: 'HTMLAttributes',
+      tags: {},
+      // String type is supported by the plugin pipeline (processed later by docgenParser).
+      // For polymorphic components, the underlying element depends on `as`, so we intentionally use a
+      // safe element-agnostic type to avoid implying a specific element like HTMLDivElement.
+      type: 'React.MouseEventHandler<HTMLElement>',
+    },
+  ];
+}
+
 /**
  * Used in docgen plugin
  *
@@ -62,7 +93,7 @@ function onProcessDoc(doc, { addToSharedTypeAliases, addToParentTypes, formatStr
       return true;
     });
 
-  return { ...doc, props };
+  return { ...doc, props: ensureWebPolymorphicOnClick(doc, props) };
 }
 
 /**

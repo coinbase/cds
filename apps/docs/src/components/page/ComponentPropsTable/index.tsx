@@ -80,6 +80,9 @@ function ComponentPropsTable({
           sharedParentTypes={sharedParentTypes}
           sharedTypeAliases={sharedTypeAliases}
         />
+        <Text as="p" color="fgMuted" font="label2">
+          Note: Some props inherited from native HTML elements may not be shown in this table.
+        </Text>
       </VStack>
       {filteredProps.length > 0 ? (
         <Box maxWidth="100%" paddingBottom={{ base: 4, phone: 2 }} paddingX={{ base: 4, phone: 2 }}>
