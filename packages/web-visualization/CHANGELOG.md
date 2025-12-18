@@ -8,6 +8,10 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 3.4.0-beta.9 (12/18/2025 PST)
+
+This is an artificial version bump with no new change.
+
 ## 3.4.0-beta.8 (12/2/2025 PST)
 
 This is an artificial version bump with no new change.

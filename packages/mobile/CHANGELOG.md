@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.32.3 (12/18/2025 PST)
+
+#### 🐞 Fixes
+
+- Fix: update package exports. [[#261](https://github.com/coinbase/cds/pull/261)]
+
 ## 8.32.2 (12/18/2025 PST)
 
 #### 🐞 Fixes
