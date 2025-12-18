@@ -87,7 +87,11 @@ function preProcessPropItem(prop: PropItem) {
     parent,
     tags,
     type: { name, raw: formatString(raw), value },
-    ...(process.env.NODE_ENV !== 'production' ? { originalType: prop.type } : {}),
+    // NOTE: react-docgen-typescript may include TypeScript AST nodes on `prop.type` (circular refs),
+    // which breaks our JSON.stringify-based writer in dev. Keep only a JSON-safe snapshot.
+    ...(process.env.NODE_ENV !== 'production'
+      ? { originalType: { name, raw: formatString(raw) } }
+      : {}),
   };
 }
 
@@ -122,6 +126,11 @@ function processDoc({ parentTypes = {}, ...doc }: PreProcessedDoc | ProcessedDoc
   const docCopy = { ...doc };
   if ('expression' in docCopy) {
     delete docCopy.expression;
+  }
+  // react-docgen-typescript@2.4.0 can attach a `rootExpression` containing TS AST nodes (circular refs),
+  // which breaks our JSON.stringify-based writer.
+  if ('rootExpression' in docCopy) {
+    delete docCopy.rootExpression;
   }
 
   const processedProps = doc.props.map(processPropItem);
