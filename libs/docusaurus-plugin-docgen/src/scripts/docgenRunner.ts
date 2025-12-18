@@ -25,6 +25,22 @@ type DocgenRunnerParams = PluginOptions & {
   pluginDir: string;
 };
 
+function selectPrimaryDocs(docs: ProcessedDoc[]) {
+  /**
+   * react-docgen-typescript can return multiple "docs" for a single file when that file exports
+   * multiple components/types. Our output paths (`destDir`) are derived only from `doc.filePath`,
+   * so multiple docs for the same file would collide on `data.js`, `api.mdx`, etc.
+   *
+   * Heuristic: for each file, prefer the doc whose displayName matches the filename
+   * (e.g. `RollingNumber.tsx` -> `RollingNumber`). Otherwise, fall back to the first parsed doc.
+   */
+  return Object.values(groupBy(docs, 'filePath')).map((docsForFile) => {
+    const filePath = docsForFile[0]?.filePath ?? '';
+    const fileBaseName = path.basename(filePath, path.extname(filePath));
+    return docsForFile.find((d) => d.displayName === fileBaseName) ?? docsForFile[0];
+  });
+}
+
 function getTempDirForDoc({ projectDir, doc }: { projectDir: string; doc: ProcessedDoc }) {
   const relativeFilePath = doc.filePath
     .replace(`${path.dirname(projectDir)}/`, '')
@@ -145,7 +161,7 @@ export async function docgenRunner(params: DocgenRunnerParams): Promise<PluginCo
       template: 'shared/objectMap',
     });
 
-    docgenParser({ tsconfigPath, projectDir, files, onProcessDoc }).forEach(
+    selectPrimaryDocs(docgenParser({ tsconfigPath, projectDir, files, onProcessDoc })).forEach(
       ({ example, ...doc }) => {
         /**
          * Turn absolute path of parsed doc into path relative to project.
