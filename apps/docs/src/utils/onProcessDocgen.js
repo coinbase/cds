@@ -1,8 +1,12 @@
 const isTypeAlias = require('./isTypeAlias');
 const shouldAddToParentTypes = require('./shouldAddToParentTypes');
 
-// This is a temporary fix to show onClick prop for polymorphic components on web. We could be having a docgen rewrite in the future to be more dynamic with these types.
-function ensureWebPolymorphicOnClick(doc, props) {
+/**
+ * Docgen is not picking up the props inherited from native HTML elements. This caused some components like Button to not show the onClick prop in the props table.
+ * This helper can fix the onClick prop for polymorphic components on web, but not all props inherited from native HTML elements.
+ * We don't want to add all props since it will overcrowd the props table, we could consider add more important props here in the future.
+ *  */
+function addWebPolymorphicProps(doc, props) {
   // Docgen runs across web + mobile. Only surface DOM props for web components.
   const isWeb = typeof doc.filePath === 'string' && doc.filePath.includes('/packages/web/');
   if (!isWeb) return props;
@@ -93,7 +97,7 @@ function onProcessDoc(doc, { addToSharedTypeAliases, addToParentTypes, formatStr
       return true;
     });
 
-  return { ...doc, props: ensureWebPolymorphicOnClick(doc, props) };
+  return { ...doc, props: addWebPolymorphicProps(doc, props) };
 }
 
 /**
