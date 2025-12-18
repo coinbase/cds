@@ -167,7 +167,8 @@ export type RollingNumberValueSectionProps = HStackProps & {
    */
   transitionConfig?: RollingNumberTransitionConfig;
   /**
-   * Style of digit transition animation. Defaults to {@code 'every'}.
+   * Style of digit transition animation.
+   * @default 'every'
    */
   digitTransitionVariant?: DigitTransitionVariant;
   /**
@@ -215,7 +216,8 @@ export type RollingNumberDigitProps = ViewProps & {
    */
   RollingNumberMaskComponent?: RollingNumberMaskComponent;
   /**
-   * Style of digit transition animation. Defaults to {@code 'every'}.
+   * Style of digit transition animation.
+   * @default 'every'
    */
   digitTransitionVariant?: DigitTransitionVariant;
   /**
@@ -336,7 +338,8 @@ export type RollingNumberBaseProps = SharedProps &
      */
     locale?: Intl.LocalesArgument;
     /**
-     * Base text color token. When {@link colorPulseOnUpdate} is true, the color briefly pulses to a positive or negative mid color before returning to this base color. Defaults to {@code 'fg'}.
+     * Base text color token. When {@link colorPulseOnUpdate} is true, the color briefly pulses to a positive or negative mid color before returning to this base color.
+     * @default 'fg'
      */
     color?: ThemeVars.Color;
     /**
@@ -344,11 +347,13 @@ export type RollingNumberBaseProps = SharedProps &
      */
     colorPulseOnUpdate?: boolean;
     /**
-     * Color token used for positive numeric changes. Defaults to {@code 'fgPositive'}.
+     * Color token used for positive numeric changes.
+     * @default 'fgPositive'
      */
     positivePulseColor?: ThemeVars.Color;
     /**
-     * Color token used for negative numeric changes. Defaults to {@code 'fgNegative'}.
+     * Color token used for negative numeric changes.
+     * @default 'fgNegative'
      */
     negativePulseColor?: ThemeVars.Color;
     /**
@@ -360,9 +365,10 @@ export type RollingNumberBaseProps = SharedProps &
      */
     transition?: RollingNumberTransitionConfig;
     /**
-     * Style of digit transition animation. Defaults to {@code 'every'}.
+     * Style of digit transition animation.
      * - `'every'`: Rolls through every intermediate digit (e.g., 1→2→3→...→9).
      * - `'single'`: Rolls directly to the new digit without showing intermediates (e.g., 1→9).
+     * @default 'every'
      */
     digitTransitionVariant?: DigitTransitionVariant;
     /**
@@ -374,11 +380,13 @@ export type RollingNumberBaseProps = SharedProps &
      */
     accessibilityLabelSuffix?: string;
     /**
-     * accessibilityLiveRegion value used for screen readers on Android. Defaults to {@code 'polite'}.
+     * accessibilityLiveRegion value used for screen readers on Android.
+     * @default 'polite'
      */
     accessibilityLiveRegion?: React.ComponentProps<typeof Text>['accessibilityLiveRegion'];
     /**
-     * Enables tabular figures on the underlying {@link Text}. All digits render with equal width. Defaults to {@code true}.
+     * Enables tabular figures on the underlying {@link Text}. All digits render with equal width.
+     * @default true
      */
     tabularNumbers?: boolean;
   };
