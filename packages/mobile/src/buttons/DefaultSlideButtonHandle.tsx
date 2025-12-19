@@ -61,18 +61,17 @@ export const styles = StyleSheet.create({
 export const SlideButtonHandleChecked = memo(
   ({ label, end, compact }: SlideButtonHandleCheckedProps) => {
     const theme = useTheme();
-    const containerSize = compact ? 40 : 56;
+    const handleWidth = compact ? 40 : 56;
 
     return (
       <Box alignItems="center" height="100%" justifyContent="center" width="100%">
         {typeof label !== 'string' ? label : <TextHeadline color="fgInverse">{label}</TextHeadline>}
         <Box
           alignItems="center"
-          display="flex"
           height="100%"
           justifyContent="center"
           pin="right"
-          width={containerSize}
+          width={handleWidth}
         >
           {end ?? <Spinner color={theme.color.fgInverse} size="small" />}
         </Box>
@@ -84,16 +83,15 @@ export const SlideButtonHandleChecked = memo(
 export const SlideButtonHandleUnchecked = memo(
   ({ start, compact }: SlideButtonHandleUncheckedProps) => {
     const iconSize = compact ? 's' : 'm';
-    const containerSize = compact ? 40 : 56;
+    const handleWidth = compact ? 40 : 56;
 
     return (
       <Box
         alignItems="center"
-        display="flex"
         height="100%"
         justifyContent="center"
         pin="right"
-        width={containerSize}
+        width={handleWidth}
       >
         {start ?? <Icon color="fgInverse" name="forwardArrow" size={iconSize} />}
       </Box>
