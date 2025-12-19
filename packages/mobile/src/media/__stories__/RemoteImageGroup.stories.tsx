@@ -1,4 +1,3 @@
-import React from 'react';
 import { assets, squareAssets } from '@coinbase/cds-common/internal/data/assets';
 import { avatarSizes } from '@coinbase/cds-common/internal/data/avatars';
 

@@ -4,6 +4,7 @@ import type { ViewStyle } from 'react-native';
 import { shapeBorderRadius } from '@coinbase/cds-common/tokens/borderRadius';
 import type {
   AvatarSize,
+  NegativeSpace,
   Shape,
   SharedAccessibilityProps,
   SharedProps,
@@ -49,7 +50,7 @@ export const RemoteImageGroup = ({
 
   const shapeStyle = shapeStyles[shape];
   const sizeAsNumber = typeof size === 'number' ? size : avatarSize[size];
-  const overlapSpacing = sizeAsNumber <= 40 ? 8 : 16;
+  const overlapSpacing: NegativeSpace = sizeAsNumber <= 40 ? -1 : -2;
 
   const excess = Children.count(children) - max;
   const groupChildren = useMemo(() => {
@@ -98,7 +99,7 @@ export const RemoteImageGroup = ({
         return (
           <Box
             key={index}
-            left={index === 0 ? 'initial' : overlapSpacing * zIndex}
+            marginStart={index === 0 ? undefined : overlapSpacing}
             position="relative"
             testID={`${testID ? `${testID}-` : ''}inner-box-${index}`}
             zIndex={zIndex}
@@ -113,7 +114,7 @@ export const RemoteImageGroup = ({
           background="bgOverlay"
           height={sizeAsNumber}
           justifyContent="center"
-          left={groupChildren.length * overlapSpacing * -1}
+          marginStart={overlapSpacing}
           position="relative"
           style={shapeStyle}
           width={sizeAsNumber}
