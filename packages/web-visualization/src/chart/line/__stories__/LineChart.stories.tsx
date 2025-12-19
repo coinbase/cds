@@ -906,9 +906,9 @@ function DynamicChartSizing() {
         borderBottomLeftRadius={300}
         borderTopLeftRadius={300}
         flexGrow={1}
-        marginTop={-3}
-        marginStart={-3}
         marginBottom={-3}
+        marginStart={-3}
+        marginTop={-3}
         style={{
           background: 'linear-gradient(0deg, #D07609 0%, #F7931A 100%)',
         }}
