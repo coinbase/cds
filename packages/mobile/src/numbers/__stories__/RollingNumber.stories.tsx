@@ -281,6 +281,11 @@ export const ColorAndTransition = () => {
             duration: durations.moderate3,
             easing: Easing.inOut(Easing.quad),
           },
+          opacity: {
+            type: 'timing',
+            duration: durations.moderate3,
+            easing: Easing.inOut(Easing.quad),
+          },
           y: {
             type: 'timing',
             duration: durations.moderate3,
@@ -297,6 +302,11 @@ export const ColorAndTransition = () => {
         format={{ style: 'currency', currency: 'USD' }}
         transition={{
           color: {
+            type: 'timing',
+            duration: durations.slow4,
+            easing: Easing.inOut(Easing.quad),
+          },
+          opacity: {
             type: 'timing',
             duration: durations.slow4,
             easing: Easing.inOut(Easing.quad),
@@ -326,15 +336,20 @@ export const ColorAndTransition = () => {
         font="title1"
         format={{ style: 'currency', currency: 'EUR' }}
         transition={{
-          y: {
-            type: 'timing',
-            duration: durations.fast1,
-            easing: Easing.bezier(...curves.enterFunctional),
-          },
           color: {
             type: 'timing',
             duration: 5000,
             easing: Easing.bezier(...curves.global),
+          },
+          opacity: {
+            type: 'timing',
+            duration: durations.fast1,
+            easing: Easing.bezier(...curves.enterFunctional),
+          },
+          y: {
+            type: 'timing',
+            duration: durations.fast1,
+            easing: Easing.bezier(...curves.enterFunctional),
           },
         }}
         value={price}
@@ -357,15 +372,20 @@ export const ColorAndTransition = () => {
         font="title1"
         format={{ style: 'currency', currency: 'USD' }}
         transition={{
-          y: {
-            type: 'timing',
-            duration: durations.moderate2,
-            easing: Easing.bezier(...curves.enterExpressive),
-          },
           color: {
             type: 'timing',
             duration: durations.slow1,
             easing: Easing.bezier(...curves.exitFunctional),
+          },
+          opacity: {
+            type: 'timing',
+            duration: durations.moderate2,
+            easing: Easing.bezier(...curves.enterExpressive),
+          },
+          y: {
+            type: 'timing',
+            duration: durations.moderate2,
+            easing: Easing.bezier(...curves.enterExpressive),
           },
         }}
         value={price}
@@ -776,6 +796,52 @@ const FunExamples = () => {
   );
 };
 
+const SingleTransition = () => {
+  const [price, setPrice] = React.useState<number>(12345.67);
+  const onUp = () => setPrice((p) => Math.round((p + Math.random() * 100) * 100) / 100);
+  const onDown = () =>
+    setPrice((p) => Math.max(0, Math.round((p - Math.random() * 100) * 100) / 100));
+
+  return (
+    <VStack gap={2}>
+      <RollingNumber
+        digitTransitionVariant="single"
+        font="title1"
+        format={{ style: 'currency', currency: 'USD' }}
+        value={price}
+      />
+      <HStack gap={2}>
+        <Button onPress={onUp}>Increase</Button>
+        <Button onPress={onDown}>Decrease</Button>
+      </HStack>
+      <Text font="label1">Comparison: Every vs Single</Text>
+      <HStack gap={2}>
+        <VStack gap={0.5}>
+          <Text color="fgMuted" font="caption">
+            Every (default)
+          </Text>
+          <RollingNumber
+            font="title1"
+            format={{ style: 'currency', currency: 'USD' }}
+            value={price}
+          />
+        </VStack>
+        <VStack gap={0.5}>
+          <Text color="fgMuted" font="caption">
+            Single
+          </Text>
+          <RollingNumber
+            digitTransitionVariant="single"
+            font="title1"
+            format={{ style: 'currency', currency: 'USD' }}
+            value={price}
+          />
+        </VStack>
+      </HStack>
+    </VStack>
+  );
+};
+
 const Accessibility = () => {
   return (
     <VStack gap={2}>
@@ -812,6 +878,9 @@ const RollingNumberScreen = () => {
       </Example>
       <Example title="Color and Transition">
         <ColorAndTransition />
+      </Example>
+      <Example title="Single Transition">
+        <SingleTransition />
       </Example>
       <Example title="Format">
         <Format />

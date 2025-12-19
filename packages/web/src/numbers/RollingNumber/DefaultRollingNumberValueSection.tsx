@@ -36,6 +36,8 @@ export const DefaultRollingNumberValueSection: RollingNumberValueSectionComponen
         RollingNumberMaskComponent = DefaultRollingNumberMask,
         formattedValue,
         transitionConfig,
+        digitTransitionVariant,
+        direction,
         styles,
         classNames,
         style,
@@ -62,6 +64,8 @@ export const DefaultRollingNumberValueSection: RollingNumberValueSectionComponen
                 key={part.key}
                 RollingNumberMaskComponent={RollingNumberMaskComponent}
                 classNames={{ text: classNames?.text }}
+                digitTransitionVariant={digitTransitionVariant}
+                direction={direction}
                 initialValue={hasMounted ? 0 : undefined}
                 styles={{ text: styles?.text }}
                 transitionConfig={transitionConfig}
@@ -76,6 +80,8 @@ export const DefaultRollingNumberValueSection: RollingNumberValueSectionComponen
           RollingNumberDigitComponent,
           hasMounted,
           transitionConfig,
+          digitTransitionVariant,
+          direction,
           RollingNumberMaskComponent,
           styles?.text,
           classNames?.text,
@@ -92,6 +98,8 @@ export const DefaultRollingNumberValueSection: RollingNumberValueSectionComponen
                   key={index}
                   RollingNumberMaskComponent={RollingNumberMaskComponent}
                   classNames={{ text: classNames?.text }}
+                  digitTransitionVariant={digitTransitionVariant}
+                  direction={direction}
                   initialValue={hasMounted ? 0 : undefined}
                   styles={{ text: styles?.text }}
                   transitionConfig={transitionConfig}
@@ -115,6 +123,8 @@ export const DefaultRollingNumberValueSection: RollingNumberValueSectionComponen
           justifyContent,
           RollingNumberMaskComponent,
           transitionConfig,
+          digitTransitionVariant,
+          direction,
           styles?.text,
           classNames?.text,
         ],

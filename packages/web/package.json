@@ -1,6 +1,6 @@
 {
   "name": "@cbhq/cds-web",
-  "version": "8.32.0",
+  "version": "8.33.0",
   "description": "Coinbase Design System - Web",
   "repository": {
     "type": "git",
@@ -16,13 +16,37 @@
       "types": "./dts/index.d.ts",
       "default": "./esm/index.js"
     },
+    "./AccessibilityAnnouncer": {
+      "types": "./dts/AccessibilityAnnouncer/index.d.ts",
+      "default": "./esm/AccessibilityAnnouncer/index.js"
+    },
     "./accordion": {
       "types": "./dts/accordion/index.d.ts",
       "default": "./esm/accordion/index.js"
     },
+    "./alpha": {
+      "types": "./dts/alpha/index.d.ts",
+      "default": "./esm/alpha/index.js"
+    },
+    "./alpha/combobox": {
+      "types": "./dts/alpha/combobox/index.d.ts",
+      "default": "./esm/alpha/combobox/index.js"
+    },
+    "./alpha/select": {
+      "types": "./dts/alpha/select/index.d.ts",
+      "default": "./esm/alpha/select/index.js"
+    },
+    "./alpha/select-chip": {
+      "types": "./dts/alpha/select-chip/index.d.ts",
+      "default": "./esm/alpha/select-chip/index.js"
+    },
     "./animation": {
       "types": "./dts/animation/index.d.ts",
       "default": "./esm/animation/index.js"
+    },
+    "./banner": {
+      "types": "./dts/banner/index.d.ts",
+      "default": "./esm/banner/index.js"
     },
     "./buttons": {
       "types": "./dts/buttons/index.d.ts",
@@ -47,6 +71,10 @@
     "./chips": {
       "types": "./dts/chips/index.d.ts",
       "default": "./esm/chips/index.js"
+    },
+    "./coachmark": {
+      "types": "./dts/coachmark/index.d.ts",
+      "default": "./esm/coachmark/index.js"
     },
     "./collapsible": {
       "types": "./dts/collapsible/index.d.ts",
@@ -88,6 +116,10 @@
       "types": "./dts/media/index.d.ts",
       "default": "./esm/media/index.js"
     },
+    "./multi-content-module": {
+      "types": "./dts/multi-content-module/index.d.ts",
+      "default": "./esm/multi-content-module/index.js"
+    },
     "./navigation": {
       "types": "./dts/navigation/index.d.ts",
       "default": "./esm/navigation/index.js"
@@ -104,6 +136,22 @@
       "types": "./dts/overlays/index.d.ts",
       "default": "./esm/overlays/index.js"
     },
+    "./page": {
+      "types": "./dts/page/index.d.ts",
+      "default": "./esm/page/index.js"
+    },
+    "./pagination": {
+      "types": "./dts/pagination/index.d.ts",
+      "default": "./esm/pagination/index.js"
+    },
+    "./section-header": {
+      "types": "./dts/section-header/index.d.ts",
+      "default": "./esm/section-header/index.js"
+    },
+    "./stepper": {
+      "types": "./dts/stepper/index.d.ts",
+      "default": "./esm/stepper/index.js"
+    },
     "./system": {
       "types": "./dts/system/index.d.ts",
       "default": "./esm/system/index.js"
@@ -115,6 +163,10 @@
     "./tabs": {
       "types": "./dts/tabs/index.d.ts",
       "default": "./esm/tabs/index.js"
+    },
+    "./tag": {
+      "types": "./dts/tag/index.d.ts",
+      "default": "./esm/tag/index.js"
     },
     "./tour": {
       "types": "./dts/tour/index.d.ts",
@@ -162,6 +214,7 @@
     "d3-interpolate": "^3.0.1",
     "d3-interpolate-path": "^2.3.0",
     "d3-selection": "^3.0.0",
+    "fuse.js": "^7.1.0",
     "lodash": "^4.17.21",
     "lottie-web": "^5.13.0",
     "react-popper": "^2.2.4",
