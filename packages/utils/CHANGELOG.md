@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 2.3.5 (12/17/2025 PST)
+
+#### 🐞 Fixes
+
+- Fix: update react-native export pointer. [[#259](https://github.com/coinbase/cds/pull/259)]
+
 ## 2.3.4 (11/4/2025 PST)
 
 This is an artificial version bump with no new change.

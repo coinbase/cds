@@ -477,6 +477,54 @@ export const Accessibility = () => {
   );
 };
 
+export const SingleTransition = () => {
+  const [price, setPrice] = useState<number>(12345.67);
+  const onUp = () => setPrice((p) => Math.round((p + Math.random() * 100) * 100) / 100);
+  const onDown = () =>
+    setPrice((p) => Math.max(0, Math.round((p - Math.random() * 100) * 100) / 100));
+
+  return (
+    <VStack gap={3}>
+      <RollingNumber
+        colorPulseOnUpdate
+        digitTransitionVariant="single"
+        font="display1"
+        format={{ style: 'currency', currency: 'USD' }}
+        value={price}
+      />
+      <HStack gap={2}>
+        <Button onClick={onUp}>Increase</Button>
+        <Button onClick={onDown}>Decrease</Button>
+      </HStack>
+      <HStack gap={4}>
+        <VStack gap={1}>
+          <Text color="fgMuted" font="caption">
+            Every (default)
+          </Text>
+          <RollingNumber
+            colorPulseOnUpdate
+            font="title1"
+            format={{ style: 'currency', currency: 'USD' }}
+            value={price}
+          />
+        </VStack>
+        <VStack gap={1}>
+          <Text color="fgMuted" font="caption">
+            Single
+          </Text>
+          <RollingNumber
+            colorPulseOnUpdate
+            digitTransitionVariant="single"
+            font="title1"
+            format={{ style: 'currency', currency: 'USD' }}
+            value={price}
+          />
+        </VStack>
+      </HStack>
+    </VStack>
+  );
+};
+
 export const Fun = () => {
   // Counter
   const [count, setCount] = useState(0);

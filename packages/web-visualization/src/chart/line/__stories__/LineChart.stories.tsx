@@ -906,11 +906,11 @@ function DynamicChartSizing() {
         borderBottomLeftRadius={300}
         borderTopLeftRadius={300}
         flexGrow={1}
+        marginBottom={-3}
+        marginStart={-3}
+        marginTop={-3}
         style={{
           background: 'linear-gradient(0deg, #D07609 0%, #F7931A 100%)',
-          marginTop: 'calc(-1 * var(--space-3))',
-          marginLeft: 'calc(-1 * var(--space-3))',
-          marginBottom: 'calc(-1 * var(--space-3))',
         }}
       >
         {/* LineChart fills to take up available width and height */}

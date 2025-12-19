@@ -236,6 +236,7 @@ function Example() {
         format={{ style: 'currency', currency: 'USD' }}
         transition={{
           color: { duration: 0.3, ease: 'easeInOut' },
+          opacity: { duration: 0.3, ease: 'easeInOut' },
           y: { duration: 0.3, ease: 'easeIn' },
         }}
         value={price}
@@ -248,6 +249,7 @@ function Example() {
         format={{ style: 'currency', currency: 'USD' }}
         transition={{
           color: { duration: 1.2, ease: 'easeInOut' },
+          opacity: { duration: 1.2, ease: 'easeInOut' },
           y: { duration: 1.2, ease: 'easeIn' },
         }}
         value={price}
@@ -272,8 +274,9 @@ function Example() {
         font="title1"
         format={{ style: 'currency', currency: 'USD' }}
         transition={{
-          y: { duration: 0.1, ease: 'easeIn' },
           color: { duration: 1.2, ease: 'easeInOut' },
+          opacity: { duration: 0.1, ease: 'easeInOut' },
+          y: { duration: 0.1, ease: 'easeIn' },
         }}
         value={price}
       />
@@ -286,6 +289,7 @@ function Example() {
         font="title1"
         format={{ style: 'currency', currency: 'USD' }}
         transition={{
+          opacity: { duration: 2, ease: 'easeInOut' },
           y: {
             type: 'spring',
             stiffness: 1000,
@@ -304,8 +308,9 @@ function Example() {
         font="title1"
         format={{ style: 'currency', currency: 'USD' }}
         transition={{
-          y: { duration: 0.25, ease: 'easeOut' },
           color: { duration: 0.5, ease: 'easeInOut' },
+          opacity: { duration: 0.5, ease: 'easeInOut' },
+          y: { duration: 0.25, ease: 'easeOut' },
         }}
         value={price}
       />
@@ -316,6 +321,108 @@ function Example() {
   );
 }
 ```
+
+## Digit Transition Variants
+
+RollingNumber supports two digit transition styles via the `digitTransitionVariant` prop:
+
+- **`'every'`** (default): Rolls through every intermediate digit (e.g., 1→2→3→...→9).
+- **`'single'`**: Rolls directly to the new digit without showing intermediates. Direction (up/down) is based on the total value change.
+
+```tsx live
+function Example() {
+  const [price, setPrice] = React.useState(12345.67);
+  const [variant, setVariant] = React.useState<'every' | 'single'>('single');
+
+  const onIncrease = () => setPrice((p) => Math.round((p + Math.random() * 500 + 100) * 100) / 100);
+  const onDecrease = () =>
+    setPrice((p) => Math.max(0, Math.round((p - Math.random() * 500 - 100) * 100) / 100));
+  const onRandom = () =>
+    setPrice((p) => {
+      const delta = (Math.random() - 0.5) * 1000;
+      return Math.max(0, Math.round((p + delta) * 100) / 100);
+    });
+
+  return (
+    <VStack gap={2}>
+      <Text as="p" display="block" font="label1">
+        Digit transition variant: <strong>{variant}</strong>
+      </Text>
+      <RollingNumber
+        digitTransitionVariant={variant}
+        font="display1"
+        format={{ style: 'currency', currency: 'USD' }}
+        value={price}
+      />
+      <HStack gap={2}>
+        <Button onClick={onIncrease}>Increase</Button>
+        <Button onClick={onDecrease}>Decrease</Button>
+        <Button onClick={onRandom}>Random</Button>
+      </HStack>
+      <HStack gap={2}>
+        <Button
+          variant={variant === 'every' ? 'primary' : 'secondary'}
+          onClick={() => setVariant('every')}
+        >
+          Every
+        </Button>
+        <Button
+          variant={variant === 'single' ? 'primary' : 'secondary'}
+          onClick={() => setVariant('single')}
+        >
+          Single
+        </Button>
+      </HStack>
+    </VStack>
+  );
+}
+```
+
+### Variant comparison
+
+```tsx live
+function Example() {
+  const [price, setPrice] = React.useState(98765.43);
+
+  const onNext = () =>
+    setPrice((p) => {
+      const delta = (Math.random() - 0.5) * 2000;
+      return Math.max(0, Math.round((p + delta) * 100) / 100);
+    });
+
+  return (
+    <VStack gap={2}>
+      <Text as="p" display="block" font="label1">
+        Every variant (default)
+      </Text>
+      <RollingNumber
+        colorPulseOnUpdate
+        digitTransitionVariant="every"
+        font="display3"
+        format={{ style: 'currency', currency: 'USD' }}
+        value={price}
+      />
+      <Text as="p" display="block" font="label1">
+        Single variant
+      </Text>
+      <RollingNumber
+        colorPulseOnUpdate
+        digitTransitionVariant="single"
+        font="display3"
+        format={{ style: 'currency', currency: 'USD' }}
+        value={price}
+      />
+      <Button alignSelf="flex-start" onClick={onNext}>
+        Random Change
+      </Button>
+    </VStack>
+  );
+}
+```
+
+::::tip Direction-aware animation
+The single variant determines scroll direction based on the **total value change**, not individual digit changes. When the value increases, digits roll up (new digits enter from below). When the value decreases, digits roll down (new digits enter from above). This matches the behavior of the color pulse feature.
+::::
 
 ## Prefix and Suffix
 

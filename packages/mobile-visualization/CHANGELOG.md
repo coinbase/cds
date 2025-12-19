@@ -8,7 +8,11 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
-## Unreleased
+## 3.4.0-beta.9 (12/18/2025 PST)
+
+#### 🐞 Fixes
+
+- Fix: update package exports. [[#261](https://github.com/coinbase/cds/pull/261)]
 
 #### 📘 Misc
 

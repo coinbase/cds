@@ -1,8 +1,12 @@
 {
   "permissions": {
     "allow": [
-      "Bash(ls:*)",
+      "WebFetch",
+      "WebSearch",
+      "Write",
       "Skill(cds-components)",
+      "mcp__linear-server__get_issue",
+      "Bash(ls:*)",
       "Bash(find:*)",
       "Bash(yarn nx run-many:*)",
       "Bash(yarn nx run web:typecheck)",
@@ -12,9 +16,7 @@
       "Bash(yarn nx run mobile:test:*)",
       "Bash(yarn nx run common:test:*)",
       "Bash(yarn nx format:write)",
-      "Bash(yarn nx format:check)",
-      "WebFetch",
-      "WebSearch"
+      "Bash(yarn nx format:check)"
     ],
     "deny": [],
     "ask": []
