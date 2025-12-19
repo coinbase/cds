@@ -74,8 +74,6 @@ const sampleItems = [
   <SampleCard key="10" text="Slide 10" />,
 ];
 
-const marginInline = 'calc(-1 * var(--space-2))';
-
 const gapOnlyStyles = {
   carousel: {
     gap: 'var(--space-2)',
@@ -90,7 +88,7 @@ const overflowStyles = {
 };
 
 const NegativeMargin = ({ children }: { children: React.ReactNode }) => (
-  <Box style={{ marginInline }}>{children}</Box>
+  <Box marginX={-2}>{children}</Box>
 );
 
 const SeeAllComponent = () => (

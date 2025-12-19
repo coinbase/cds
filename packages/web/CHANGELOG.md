@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## Unreleased
+
+#### 📘 Misc
+
+- Fix: rename invalid class names on docsite. [[#265](https://github.com/coinbase/cds/pull/265)]
+
 ## 8.33.0 (12/18/2025 PST)
 
 #### 🚀 Updates
