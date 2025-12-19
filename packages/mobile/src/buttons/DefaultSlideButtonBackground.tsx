@@ -18,8 +18,10 @@ export const styles = StyleSheet.create({
 
 export const DefaultSlideButtonBackground = memo(
   forwardRef<View, SlideButtonBackgroundProps>(
-    ({ progress, uncheckedLabel, disabled, style, borderRadius = 900 }, ref) => {
+    ({ progress, uncheckedLabel, disabled, compact, style, borderRadius }, ref) => {
       const theme = useTheme();
+
+      const horizontalPadding = compact ? 7 : 9;
 
       const containerStyle = useMemo(
         () => [
@@ -44,7 +46,11 @@ export const DefaultSlideButtonBackground = memo(
             {typeof uncheckedLabel !== 'string' ? (
               uncheckedLabel
             ) : (
-              <TextHeadline numberOfLines={1} paddingEnd={9} paddingStart={9}>
+              <TextHeadline
+                numberOfLines={1}
+                paddingEnd={horizontalPadding}
+                paddingStart={horizontalPadding}
+              >
                 {uncheckedLabel}
               </TextHeadline>
             )}
