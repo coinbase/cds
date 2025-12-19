@@ -18,7 +18,7 @@ export const styles = StyleSheet.create({
 
 export const DefaultSlideButtonBackground = memo(
   forwardRef<View, SlideButtonBackgroundProps>(
-    ({ progress, uncheckedLabel, disabled, compact, style, borderRadius = 900 }, ref) => {
+    ({ progress, uncheckedLabel, disabled, compact, style, borderRadius }, ref) => {
       const theme = useTheme();
 
       const horizontalPadding = compact ? 7 : 9;

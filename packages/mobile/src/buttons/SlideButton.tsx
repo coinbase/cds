@@ -156,9 +156,9 @@ export const SlideButton = memo(
   forwardRef(
     (
       {
-        borderRadius,
         checked,
         compact,
+        borderRadius = compact ? 700 : 900,
         uncheckedLabel,
         checkedLabel,
         onSlideStart,
@@ -188,7 +188,6 @@ export const SlideButton = memo(
 
       const buttonMinHeight = interactableHeight[compact ? 'compact' : 'regular'];
       const buttonMinWidth = buttonMinHeight;
-      const borderRadiusValue = borderRadius ?? (compact ? 700 : 900);
 
       const handleComplete = useCallback(() => {
         void progress.start(1);
@@ -293,7 +292,7 @@ export const SlideButton = memo(
       return (
         <View ref={ref} id={labelId} onLayout={onLayout} style={containerStyle} testID={testID}>
           <SlideButtonBackgroundComponent
-            borderRadius={borderRadiusValue}
+            borderRadius={borderRadius}
             checked={checked}
             compact={compact}
             disabled={disabled}
@@ -310,7 +309,7 @@ export const SlideButton = memo(
                 {...(typeof accessibilityLabel === 'string'
                   ? { accessibilityLabel }
                   : { accessibilityLabelledBy: labelId })}
-                borderRadius={borderRadiusValue}
+                borderRadius={borderRadius}
                 checked={checked}
                 checkedLabel={checkedLabel}
                 compact={compact}

@@ -113,7 +113,7 @@ export const DefaultSlideButtonHandle = memo(
         startUncheckedNode,
         endCheckedNode,
         checkedLabel,
-        borderRadius = 900,
+        borderRadius,
         ...props
       },
       ref,
