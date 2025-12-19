@@ -173,4 +173,35 @@ describe('SlideButton', () => {
 
     expect(onSlideComplete).toHaveBeenCalled();
   });
+
+  describe('compact variant', () => {
+    it('renders correctly with compact prop', () => {
+      render(<SlideButtonExample compact />);
+      expect(screen.getByText(uncheckedLabel)).toBeTruthy();
+    });
+
+    it('applies compact height of 40px', () => {
+      render(<SlideButtonExample compact />);
+      const buttonContainer = screen.getByTestId(testID);
+      expect(buttonContainer.props.style).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            height: 40,
+          }),
+        ]),
+      );
+    });
+
+    it('applies regular height of 56px when not compact', () => {
+      render(<SlideButtonExample />);
+      const buttonContainer = screen.getByTestId(testID);
+      expect(buttonContainer.props.style).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            height: 56,
+          }),
+        ]),
+      );
+    });
+  });
 });

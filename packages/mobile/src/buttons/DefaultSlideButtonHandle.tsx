@@ -17,12 +17,11 @@ import { Spinner } from '../loaders/Spinner';
 import { Pressable } from '../system/Pressable';
 import { TextHeadline } from '../typography/TextHeadline';
 
-import type { ButtonProps } from './Button';
-import type { SlideButtonHandleProps } from './SlideButton';
+import type { SlideButtonBaseProps, SlideButtonHandleProps } from './SlideButton';
 
 export const animationConfig = { tension: 300, clamp: true } as const satisfies SpringConfig;
 
-export type SlideButtonHandleCheckedProps = Pick<ButtonProps, 'variant'> & {
+export type SlideButtonHandleCheckedProps = Pick<SlideButtonBaseProps, 'variant' | 'compact'> & {
   label?: React.ReactNode;
   end?: React.ReactNode;
   disabled?: boolean;
@@ -32,7 +31,7 @@ export type SlideButtonHandleCheckedComponent = (
   props: SlideButtonHandleCheckedProps,
 ) => React.ReactElement | null;
 
-export type SlideButtonHandleUncheckedProps = Pick<ButtonProps, 'variant'> & {
+export type SlideButtonHandleUncheckedProps = Pick<SlideButtonBaseProps, 'variant' | 'compact'> & {
   disabled?: boolean;
   start?: React.ReactNode;
 };
@@ -59,32 +58,55 @@ export const styles = StyleSheet.create({
   },
 });
 
-export const SlideButtonHandleChecked = memo(({ label, end }: SlideButtonHandleCheckedProps) => {
-  const theme = useTheme();
+export const SlideButtonHandleChecked = memo(
+  ({ label, end, compact }: SlideButtonHandleCheckedProps) => {
+    const theme = useTheme();
+    const containerSize = compact ? 40 : 56;
 
-  return (
-    <Box alignItems="center" height="100%" justifyContent="center" width="100%">
-      {typeof label !== 'string' ? label : <TextHeadline color="fgInverse">{label}</TextHeadline>}
-      <Box alignItems="center" justifyContent="center" padding={2} pin="right">
-        {end ?? <Spinner color={theme.color.fgInverse} size="small" />}
+    return (
+      <Box alignItems="center" height="100%" justifyContent="center" width="100%">
+        {typeof label !== 'string' ? label : <TextHeadline color="fgInverse">{label}</TextHeadline>}
+        <Box
+          alignItems="center"
+          display="flex"
+          height="100%"
+          justifyContent="center"
+          pin="right"
+          width={containerSize}
+        >
+          {end ?? <Spinner color={theme.color.fgInverse} size="small" />}
+        </Box>
       </Box>
-    </Box>
-  );
-});
+    );
+  },
+);
 
-export const SlideButtonHandleUnchecked = memo(({ start }: SlideButtonHandleUncheckedProps) => {
-  return (
-    <Box alignItems="center" justifyContent="center" padding={2} pin="right">
-      {start ?? <Icon color="fgInverse" name="forwardArrow" size="m" />}
-    </Box>
-  );
-});
+export const SlideButtonHandleUnchecked = memo(
+  ({ start, compact }: SlideButtonHandleUncheckedProps) => {
+    const iconSize = compact ? 's' : 'm';
+    const containerSize = compact ? 40 : 56;
+
+    return (
+      <Box
+        alignItems="center"
+        display="flex"
+        height="100%"
+        justifyContent="center"
+        pin="right"
+        width={containerSize}
+      >
+        {start ?? <Icon color="fgInverse" name="forwardArrow" size={iconSize} />}
+      </Box>
+    );
+  },
+);
 
 export const DefaultSlideButtonHandle = memo(
   forwardRef<View, SlideButtonHandleProps>(
     (
       {
         checked,
+        compact,
         disabled,
         style,
         variant = 'primary',
@@ -139,6 +161,7 @@ export const DefaultSlideButtonHandle = memo(
         >
           <animated.View style={animatedCheckedStyle}>
             <SlideButtonHandleChecked
+              compact={compact}
               disabled={disabled}
               end={endCheckedNode}
               label={checkedLabel}
@@ -147,6 +170,7 @@ export const DefaultSlideButtonHandle = memo(
           </animated.View>
           <animated.View style={animatedUncheckedStyle}>
             <SlideButtonHandleUnchecked
+              compact={compact}
               disabled={disabled}
               start={startUncheckedNode}
               variant={variant}

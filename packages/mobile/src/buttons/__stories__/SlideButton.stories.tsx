@@ -118,6 +118,12 @@ export const SlideButtonStories = () => {
       <Example title="Checked and Disabled">
         <SlideButtonExample checked disabled />
       </Example>
+      <Example title="Compact">
+        <SlideButtonExample compact />
+      </Example>
+      <Example title="Compact and disabled">
+        <SlideButtonExample compact disabled />
+      </Example>
       <Example title="Custom components">
         <SlideButtonExample
           SlideButtonBackgroundComponent={CustomBackground}

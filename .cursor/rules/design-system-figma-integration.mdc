@@ -1,0 +1,579 @@
+---
+description: Comprehensive design system rules for integrating Figma designs using the Model Context Protocol (MCP). Use this when implementing designs from Figma or working with the CDS theme system.
+alwaysApply: false
+---
+
+# CDS Design System - Figma Integration Rules
+
+This document provides comprehensive rules for integrating Figma designs with the Coinbase Design System (CDS) codebase using the Model Context Protocol (MCP).
+
+## 1. Design Token Definitions
+
+### Token Location & Structure
+
+Design tokens are defined in `packages/common/src/core/theme.ts` using TypeScript namespace interfaces:
+
+```typescript
+// Core token categories defined in ThemeVarsDefault namespace:
+namespace ThemeVarsDefault {
+  interface Color { fg, fgMuted, fgInverse, fgPrimary, ... }
+  interface Space { 0, 0.25, 0.5, 0.75, 1, 1.5, 2, 3, 4, 5, 6, 7, 8, 9, 10 }
+  interface IconSize { xs, s, m, l }
+  interface AvatarSize { s, m, l, xl, xxl, xxxl }
+  interface BorderWidth { 0, 100, 200, 300, 400, 500 }
+  interface BorderRadius { 0, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000 }
+  interface Font { display1, display2, display3, title1-4, headline, body, label1-2, caption, legal }
+  interface Shadow { elevation1, elevation2 }
+}
+```
+
+### Theme Definitions
+
+Concrete theme values are defined in platform-specific theme files:
+
+- **Web**: `packages/web/src/themes/coinbaseTheme.ts`
+- **Mobile**: Similar structure in `packages/mobile/`
+
+### Spectrum Colors
+
+Colors use a spectrum system with hue + step notation:
+
+```typescript
+// Hues: blue, green, orange, yellow, gray, indigo, pink, purple, red, teal, chartreuse
+// Steps: 0, 5, 10, 15, 20, 30, 40, 50, 60, 70, 80, 90, 100
+// Example: blue60 = Coinbase brand blue (#0052FF)
+
+lightSpectrum: {
+  blue60: '0,82,255',     // RGB values
+  gray100: '10,11,13',
+  green60: '9,133,81',
+  // ...
+}
+```
+
+### Semantic Color Tokens
+
+Semantic tokens map to spectrum colors based on color scheme:
+
+| Token | Purpose | Light Mode | Dark Mode |
+|-------|---------|------------|-----------|
+| `fg` | Primary foreground | gray100 | gray100 |
+| `fgMuted` | Secondary text | gray60 | gray60 |
+| `fgPrimary` | Brand color text | blue60 | blue70 |
+| `bgPrimary` | Primary brand bg | blue60 | blue70 |
+| `bgSecondary` | Secondary bg | gray10 | gray15 |
+| `bgNegative` | Error/danger bg | red60 | red60 |
+| `bgPositive` | Success bg | green60 | green60 |
+
+### Space Scale (8px Base Unit)
+
+```typescript
+space: {
+  '0': 0,      // 0px
+  '0.25': 2,   // 2px
+  '0.5': 4,    // 4px
+  '0.75': 6,   // 6px
+  '1': 8,      // 8px
+  '1.5': 12,   // 12px
+  '2': 16,     // 16px
+  '3': 24,     // 24px
+  '4': 32,     // 32px
+  '5': 40,     // 40px
+  // ... up to 10 (80px)
+}
+```
+
+---
+
+## 2. Component Library Structure
+
+### Package Organization
+
+| Package | Platform | Import Path |
+|---------|----------|-------------|
+| `packages/web/` | React Web | `@coinbase/cds-web` |
+| `packages/mobile/` | React Native | `@coinbase/cds-mobile` |
+| `packages/common/` | Shared Logic | `@coinbase/cds-common` |
+| `packages/icons/` | Icon Data | `@coinbase/cds-icons` |
+| `packages/illustrations/` | Illustrations | `@coinbase/illustrations` |
+
+### Component File Structure
+
+```
+packages/web/src/
+├── [category]/
+│   ├── __figma__/           # Figma Code Connect files
+│   │   └── Component.figma.tsx
+│   ├── __stories__/         # Storybook stories
+│   │   └── Component.stories.tsx
+│   ├── __tests__/           # Unit tests
+│   │   └── Component.test.tsx
+│   ├── Component.tsx        # Main component
+│   └── index.ts             # Public exports
+```
+
+### Common Categories
+
+- `buttons` - Button, IconButton, SlideButton
+- `controls` - TextInput, Select, Checkbox, Radio, Switch
+- `cards` - Card, DataCard, ContentCard
+- `overlays` - Modal, Toast, Alert, Drawer
+- `layout` - Box, Stack, Divider
+- `typography` - Text, Heading
+- `icons` - Icon
+- `navigation` - Tabs, Breadcrumb
+
+---
+
+## 3. Frameworks & Libraries
+
+### Web Stack
+
+| Concern | Library |
+|---------|---------|
+| Framework | React 18+ |
+| Styling | Linaria (zero-runtime CSS-in-JS) |
+| Animation | Framer Motion |
+| Build | Vite + Nx |
+| Testing | Jest + React Testing Library |
+
+### Mobile Stack
+
+| Concern | Library |
+|---------|---------|
+| Framework | React Native |
+| Styling | StyleSheet + Theme Hook |
+| Animation | React Native Reanimated |
+| Gestures | react-native-gesture-handler |
+| Testing | Jest + @testing-library/react-native |
+
+---
+
+## 4. Styling Approach
+
+### Web: Linaria CSS-in-JS
+
+**CRITICAL**: Always use CSS variables for theme tokens:
+
+```tsx
+import { css, cx } from '@linaria/core';
+
+const containerCss = css`
+  /* ✅ CORRECT: Use CSS variables */
+  padding: var(--space-2);
+  background: var(--color-bgPrimary);
+  color: var(--color-fgPrimary);
+  border-radius: var(--borderRadius-400);
+  font-size: var(--fontSize-body);
+  
+  /* ❌ WRONG: Hardcoded values */
+  padding: 16px;
+  background: #0052FF;
+`;
+
+// Merge classNames in correct order
+<div className={cx(
+  baseCss,              // 1. Base styles
+  isActive && activeCss, // 2. Conditional styles
+  className,            // 3. User className prop
+  classNames?.root      // 4. Granular overrides
+)} />
+```
+
+### CSS Variable Naming Convention
+
+```css
+/* Colors */
+--color-{tokenName}     /* e.g., --color-bgPrimary, --color-fgMuted */
+
+/* Spacing */
+--space-{scale}         /* e.g., --space-2, --space-0.5 */
+
+/* Typography */
+--fontSize-{font}       /* e.g., --fontSize-body, --fontSize-title1 */
+--fontWeight-{font}
+--lineHeight-{font}
+--fontFamily-{font}
+
+/* Border */
+--borderRadius-{size}   /* e.g., --borderRadius-400 */
+--borderWidth-{size}
+
+/* Sizing */
+--iconSize-{size}       /* e.g., --iconSize-m */
+--avatarSize-{size}
+--controlSize-{name}
+
+/* Shadows */
+--shadow-{level}        /* e.g., --shadow-elevation1 */
+```
+
+### Mobile: StyleSheet + Theme
+
+```tsx
+import { StyleSheet, type StyleProp, type ViewStyle } from 'react-native';
+import { useTheme } from '../hooks/useTheme';
+
+const styles = StyleSheet.create({
+  container: { position: 'relative', width: '100%' },
+});
+
+const Component = ({ style }: { style?: StyleProp<ViewStyle> }) => {
+  const theme = useTheme();
+  
+  const dynamicStyle = useMemo(() => ({
+    backgroundColor: theme.color.bgPrimary,
+    padding: theme.space[2],
+    borderRadius: theme.borderRadius[400],
+  }), [theme]);
+
+  return <View style={[styles.container, dynamicStyle, style]} />;
+};
+```
+
+---
+
+## 5. Responsive Design
+
+### Breakpoints
+
+```typescript
+// packages/web/src/styles/media.ts
+export const breakpoints = {
+  phone: 0,
+  phoneLandscape: 560,
+  tablet: 768,
+  tabletLandscape: 1024,
+  desktop: 1280,
+  desktopLarge: 1440,
+  extraWide: 1600,
+};
+
+export const media = {
+  phone: '(max-width: 767px)',
+  tablet: '(min-width: 768px) and (max-width: 1279px)',
+  desktop: '(min-width: 1280px)',
+};
+```
+
+### Responsive Props API
+
+Use object notation for responsive values:
+
+```tsx
+<Box
+  padding={{ base: 2, phone: 1, tablet: 2, desktop: 3 }}
+  flexDirection={{ base: 'column', desktop: 'row' }}
+  width={{ base: '100%', desktop: 800 }}
+/>
+```
+
+---
+
+## 6. Icon System
+
+### Icon Package Structure
+
+```
+packages/icons/src/
+├── svgs/              # 2598 SVG source files
+├── fonts/
+│   ├── native/CoinbaseIcons.ttf
+│   └── web/CoinbaseIcons-*.woff2
+├── glyphMap.ts        # Icon name → glyph mapping
+├── IconName.ts        # Type definitions
+└── names.ts           # Icon name list
+```
+
+### Icon Sizes
+
+| Size | Pixels | Usage |
+|------|--------|-------|
+| `xs` | 12px | Tight spaces, inline with small text |
+| `s` | 16px | Compact buttons, small controls |
+| `m` | 24px | Default, most common |
+| `l` | 32px | Large buttons, emphasis |
+
+### Icon Usage
+
+```tsx
+// Web
+import { Icon } from '@coinbase/cds-web/icons/Icon';
+<Icon name="arrow-right" size="m" color="fgPrimary" />
+
+// Mobile
+import { Icon } from '@coinbase/cds-mobile/icons/Icon';
+<Icon name="arrow-right" size="m" color="fgPrimary" />
+```
+
+### Icon Naming Convention
+
+Icons follow the pattern: `{name}-{size}-{state}`
+
+- Names use kebab-case: `arrow-right`, `chevron-down`, `wallet-outlined`
+- States: `active` (filled) or `inactive` (outlined)
+
+---
+
+## 7. Illustration System
+
+### Illustration Types
+
+| Type | Dimensions | Usage |
+|------|------------|-------|
+| `spotIcon` | Small square | UI accents, small spots |
+| `spotSquare` | Square | Cards, feature highlights |
+| `spotRectangle` | Rectangular | Wider compositions |
+| `pictogram` | Various | Complex illustrations |
+| `heroSquare` | Large square | Hero sections, marketing |
+
+### Illustration Structure
+
+```
+packages/illustrations/src/__generated__/
+├── [type]/
+│   ├── svg/
+│   │   ├── light/      # Light mode versions
+│   │   ├── dark/       # Dark mode versions
+│   │   └── themeable/  # CSS-variable themed
+│   ├── png/
+│   │   ├── light/
+│   │   └── dark/
+│   └── data/
+│       ├── names.ts
+│       └── descriptionMap.ts
+```
+
+---
+
+## 8. Figma Code Connect Integration
+
+### File Location
+
+- Web: `packages/web/src/[category]/__figma__/[Component].figma.tsx`
+- Mobile: `packages/mobile/src/[category]/__figma__/[Component].figma.tsx`
+
+### Code Connect Template
+
+```tsx
+import React from 'react';
+import type { IconName } from '@coinbase/cds-icons';
+import { figma } from '@figma/code-connect';
+
+import { Button } from '../Button';
+
+figma.connect(
+  Button,
+  'https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/✨-CDS-Components?node-id=NODE_ID&m=dev',
+  {
+    imports: ["import { Button } from '@coinbase/cds-web/buttons/Button';"],
+    props: {
+      // Map Figma properties to component props
+      variant: figma.enum('variant', {
+        primary: 'primary',
+        secondary: 'secondary',
+        negative: 'negative',
+      }),
+      disabled: figma.enum('state', {
+        disabled: true,
+        default: false,
+      }),
+      compact: figma.boolean('compact'),
+      startIcon: figma.enum('icon', {
+        leading: figma.instance('↳ icon') as IconName,
+        none: undefined,
+      }),
+    },
+    example: (props) => <Button {...props}>Button</Button>,
+  }
+);
+```
+
+### Property Mapping Helpers
+
+| Helper | Figma Property Type | Example |
+|--------|---------------------|---------|
+| `figma.enum()` | Dropdown/variant | `figma.enum('size', { small: 's', large: 'l' })` |
+| `figma.boolean()` | Toggle | `figma.boolean('disabled')` |
+| `figma.string()` | Text | `figma.string('↳ label')` |
+| `figma.instance()` | Nested component | `figma.instance('↳ icon')` |
+| `figma.nestedProps()` | Complex nested | See Figma docs |
+
+---
+
+## 9. Figma to Code Mapping
+
+### Figma Design Tokens → CSS Variables
+
+| Figma Token | CSS Variable |
+|-------------|--------------|
+| `color/bg-primary` | `--color-bgPrimary` |
+| `color/fg-muted` | `--color-fgMuted` |
+| `spacing/2` | `--space-2` |
+| `radius/400` | `--borderRadius-400` |
+| `typography/body` | `--fontSize-body`, `--fontWeight-body`, etc. |
+
+### Common Figma Property → Prop Mappings
+
+| Figma Property | CDS Prop | Values |
+|----------------|----------|--------|
+| `variant` | `variant` | primary, secondary, negative, positive |
+| `state` | `disabled`, `loading` | Boolean from enum |
+| `size` | `size` / `compact` | s, m, l or boolean |
+| `width` | `block`, `flush` | full → block, flush → 'start' |
+| `icon` | `startIcon`, `endIcon` | IconName from instance |
+
+---
+
+## 10. Component Props Patterns
+
+### Base Props (Shared)
+
+```typescript
+type SharedProps = {
+  testID?: string;                    // For testing
+  accessibilityLabel?: string;        // Screen reader label
+};
+```
+
+### Web-Specific Props
+
+```typescript
+type WebProps = SharedProps & {
+  className?: string;
+  style?: React.CSSProperties;
+  classNames?: { root?: string; [key: string]: string };
+  styles?: { root?: React.CSSProperties; [key: string]: React.CSSProperties };
+};
+```
+
+### Mobile-Specific Props
+
+```typescript
+type MobileProps = SharedProps & {
+  style?: StyleProp<ViewStyle>;
+  styles?: { root?: StyleProp<ViewStyle>; [key: string]: StyleProp<any> };
+};
+```
+
+### Style Props (Layout)
+
+Both platforms support these via the `Box` component:
+
+```typescript
+type StyleProps = {
+  // Spacing
+  padding?: Space;
+  paddingX?: Space;
+  paddingY?: Space;
+  margin?: Space;
+  gap?: Space;
+  
+  // Layout
+  display?: 'flex' | 'block' | 'inline' | 'grid' | 'none';
+  flexDirection?: 'row' | 'column';
+  alignItems?: 'flex-start' | 'center' | 'flex-end' | 'stretch';
+  justifyContent?: 'flex-start' | 'center' | 'flex-end' | 'space-between';
+  
+  // Sizing
+  width?: number | string;
+  height?: number | string;
+  
+  // Colors (use token names)
+  color?: ColorToken;         // e.g., 'fgPrimary'
+  background?: ColorToken;    // e.g., 'bgSecondary'
+  
+  // Border
+  borderRadius?: BorderRadiusToken;  // e.g., 400
+  borderWidth?: BorderWidthToken;    // e.g., 100
+  borderColor?: ColorToken;
+};
+```
+
+---
+
+## 11. Animation Patterns
+
+### Web: Framer Motion
+
+```tsx
+import { m as motion, AnimatePresence } from 'framer-motion';
+
+<AnimatePresence>
+  {visible && (
+    <motion.div
+      initial={{ opacity: 0, y: -8 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -8 }}
+      transition={{ duration: 0.2 }}
+    />
+  )}
+</AnimatePresence>
+```
+
+### Mobile: React Native Reanimated
+
+```tsx
+import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
+
+const opacity = useSharedValue(0);
+const animatedStyle = useAnimatedStyle(() => ({
+  opacity: opacity.value,
+  transform: [{ translateY: withTiming(opacity.value * -8) }],
+}));
+
+<Animated.View style={animatedStyle} />
+```
+
+---
+
+## 12. Figma MCP Workflow
+
+### Getting Design Context
+
+1. **Extract URL parts**: `https://figma.com/design/{fileKey}/{fileName}?node-id={nodeId}`
+2. **Use MCP tools**:
+   - `mcp_Figma_get_screenshot` - Visual reference
+   - `mcp_Figma_get_design_context` - Code generation hints
+   - `mcp_Figma_get_variable_defs` - Token mappings
+
+### Implementation Checklist
+
+When implementing a Figma design:
+
+1. ☐ Get screenshot of the design
+2. ☐ Identify component type and category
+3. ☐ Map Figma properties to CDS props
+4. ☐ Use correct CSS variables for tokens
+5. ☐ Follow platform-specific patterns (Web/Mobile)
+6. ☐ Create Figma Code Connect file
+7. ☐ Add Storybook stories
+8. ☐ Write unit tests
+
+---
+
+## Quick Reference
+
+### Figma Node ID → File Key Extraction
+
+```
+URL: https://figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/✨-CDS-Components?node-id=52736-6729
+                         └─────────────────────────┘                    └─────────┘
+                               fileKey                                    nodeId (use : not -)
+```
+
+### Common Token Values
+
+```css
+/* Spacing shortcuts */
+--space-1: 8px;   --space-2: 16px;  --space-3: 24px;  --space-4: 32px;
+
+/* Border radius shortcuts */
+--borderRadius-100: 4px;   --borderRadius-200: 8px;
+--borderRadius-300: 12px;  --borderRadius-400: 16px;
+--borderRadius-1000: fully rounded (100000px)
+
+/* Icon sizes */
+--iconSize-xs: 12px;  --iconSize-s: 16px;
+--iconSize-m: 24px;   --iconSize-l: 32px;
+```
