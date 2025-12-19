@@ -8,7 +8,15 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
-## Unreleased
+## 8.34.0 ((12/19/2025, 02:32 PM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.33.1 (12/19/2025 PST)
+
+#### 🐞 Fixes
+
+- Fix RemoteImageGroup zIndex and trailing space issue. [[#170](https://github.com/coinbase/cds/pull/170)]
 
 #### 📘 Misc
 

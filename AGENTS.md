@@ -69,6 +69,7 @@ Runtime: NodeJS (see .nvmrc for version)
 - Prefer constants over magic numbers: replace hard-coded values with descriptively named constants in camelCase
 - Use meaningful names: variables and functions should reveal their purpose
 - Code is self-documenting: code shouldn't need comments unless it is unusually complex in which case add brief comments where appropriate
+- NEVER use exports marked as deprecated in the codebase when writing code or a plan.
 
 ### React
 
