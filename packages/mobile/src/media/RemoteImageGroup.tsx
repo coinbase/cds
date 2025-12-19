@@ -119,22 +119,28 @@ export const RemoteImageGroup = ({
       })}
       {excess > 0 && (
         <Box
-          alignItems="center"
           background="bgOverlay"
-          height={sizeAsNumber}
-          justifyContent="center"
+          borderColor={borderColor}
+          borderWidth={borderWidth}
           marginStart={overlapSpacing}
+          overflow="hidden"
           position="relative"
           style={shapeStyle}
-          width={sizeAsNumber}
           zIndex={groupChildren.length * -1}
         >
-          <Text
-            style={[typographyStyles, styles.centerText]}
-            testID={`${testID ? `${testID}-` : ''}excess-text`}
+          <Box
+            alignItems="center"
+            height={sizeAsNumber}
+            justifyContent="center"
+            width={sizeAsNumber}
           >
-            +{excess}
-          </Text>
+            <Text
+              style={[typographyStyles, styles.centerText]}
+              testID={`${testID ? `${testID}-` : ''}excess-text`}
+            >
+              +{excess}
+            </Text>
+          </Box>
         </Box>
       )}
     </Box>

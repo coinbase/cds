@@ -9,6 +9,7 @@ import type {
 } from '@coinbase/cds-common/types';
 import { css, type LinariaClassName } from '@linaria/core';
 
+import { cx } from '../cx';
 import { useTheme } from '../hooks/useTheme';
 import { Box, type BoxDefaultElement, type BoxProps } from '../layout/Box';
 import { Text } from '../typography/Text';
@@ -61,6 +62,10 @@ const isolateCss = css`
   isolation: isolate;
 `;
 
+const excessContainerCss = css`
+  box-sizing: content-box;
+`;
+
 export const RemoteImageGroup = ({
   children,
   size = 'm',
@@ -73,7 +78,6 @@ export const RemoteImageGroup = ({
 }: RemoteImageGroupProps) => {
   const { avatarSize } = useTheme();
 
-  const excessContainerCss = borderRadiusCss[shape];
   const sizeAsNumber = typeof size === 'number' ? size : avatarSize[size];
   const overlapSpacing: NegativeSpace = sizeAsNumber <= 40 ? -1 : -2;
 
@@ -136,7 +140,9 @@ export const RemoteImageGroup = ({
         <Box
           alignItems="center"
           background="bgOverlay"
-          className={excessContainerCss}
+          borderColor={borderColor}
+          borderWidth={borderWidth}
+          className={cx(excessContainerCss, borderRadiusCss[shape])}
           height={sizeAsNumber}
           justifyContent="center"
           marginStart={overlapSpacing}
