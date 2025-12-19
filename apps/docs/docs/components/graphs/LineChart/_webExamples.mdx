@@ -1091,11 +1091,11 @@ function DynamicChartSizing() {
         borderBottomLeftRadius={300}
         borderTopLeftRadius={300}
         flexGrow={1}
+        marginTop={-3}
+        marginStart={-3}
+        marginBottom={-3}
         style={{
           background: 'linear-gradient(0deg, #D07609 0%, #F7931A 100%)',
-          marginTop: 'calc(-1 * var(--space-3))',
-          marginLeft: 'calc(-1 * var(--space-3))',
-          marginBottom: 'calc(-1 * var(--space-3))',
         }}
       >
         {/* LineChart fills to take up available width and height */}
@@ -1676,12 +1676,7 @@ function AssetPriceWidget() {
           </Text>
         </VStack>
       </HStack>
-      <div
-        style={{
-          marginLeft: 'calc(-1 * var(--space-2))',
-          marginRight: 'calc(-1 * var(--space-2))',
-        }}
-      >
+      <Box marginX={-2}>
         <LineChart
           showArea
           accessibilityLabel={chartAccessibilityLabel}
@@ -1702,7 +1697,7 @@ function AssetPriceWidget() {
             styles={{ beacon: { stroke: 'white' } }}
           />
         </LineChart>
-      </div>
+      </Box>
     </VStack>
   );
 }
