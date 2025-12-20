@@ -49,6 +49,31 @@ const containerCss = css`
 
 **IMPORTANT:** Using CSS variables ensures components respond correctly to theme changes (light/dark mode, brand themes).
 
+### CSS Variable Naming
+
+Design tokens from `packages/common/src/core/theme.ts` map to CSS variables:
+
+- Colors: `--color-{tokenName}` (e.g., `--color-bgPrimary`, `--color-fgMuted`)
+- Spacing: `--space-{scale}` (e.g., `--space-2` = 16px, `--space-3` = 24px)
+- Typography: `--fontSize-{font}`, `--fontWeight-{font}`, `--lineHeight-{font}`, `--fontFamily-{font}`
+- Border: `--borderRadius-{size}`, `--borderWidth-{size}`
+- Sizing: `--iconSize-{size}`, `--avatarSize-{size}`, `--controlSize-{name}`
+- Shadows: `--shadow-{level}`
+
+### Responsive Breakpoints
+
+Reference `packages/web/src/styles/media.ts` for breakpoint values:
+
+- **phone**: 0-767px
+- **tablet**: 768-1279px
+- **desktop**: 1280px+
+
+Use the `Box` component's responsive prop API for responsive values:
+
+```tsx
+<Box padding={{ base: 2, phone: 1, desktop: 3 }} />
+```
+
 ### Granular classNames
 
 - Components can expose a `classNames` object prop for granular overrides on child elements within the component.

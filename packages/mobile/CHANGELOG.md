@@ -8,6 +8,18 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.34.0 (12/19/2025 PST)
+
+#### 🚀 Updates
+
+- Feat: support compact SlideButtons. [[#264](https://github.com/coinbase/cds/pull/264)]
+
+## 8.33.1 (12/19/2025 PST)
+
+#### 🐞 Fixes
+
+- Fix RemoteImageGroup zIndex and trailing space issue. [[#170](https://github.com/coinbase/cds/pull/170)]
+
 ## 8.33.0 (12/18/2025 PST)
 
 #### 🚀 Updates

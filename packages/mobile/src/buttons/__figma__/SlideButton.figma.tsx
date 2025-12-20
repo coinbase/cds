@@ -14,6 +14,7 @@ figma.connect(
         Middle: false,
         End: true,
       }),
+      compact: figma.boolean('compact'),
     },
     example: ({ checked = false, ...props }) => {
       return <SlideButton checked={checked} {...props} />;

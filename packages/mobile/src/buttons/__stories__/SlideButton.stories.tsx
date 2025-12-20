@@ -84,6 +84,12 @@ export const SlideButtonStories = () => {
       <Example title="Long label">
         <SlideButtonExample uncheckedLabel="Super long label that will get truncated when it exceeds the available space" />
       </Example>
+      <Example title="Compact & long label">
+        <SlideButtonExample
+          compact
+          uncheckedLabel="Super long label that will get truncated when it exceeds the available space"
+        />
+      </Example>
       <Example title="Auto complete slide on threshold met">
         <SlideButtonExample autoCompleteSlideOnThresholdMet />
       </Example>
@@ -117,6 +123,12 @@ export const SlideButtonStories = () => {
       </Example>
       <Example title="Checked and Disabled">
         <SlideButtonExample checked disabled />
+      </Example>
+      <Example title="Compact">
+        <SlideButtonExample compact />
+      </Example>
+      <Example title="Compact and disabled">
+        <SlideButtonExample compact disabled />
       </Example>
       <Example title="Custom components">
         <SlideButtonExample

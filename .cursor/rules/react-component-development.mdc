@@ -25,18 +25,35 @@ These high quality components demonstrate proper use of patterns/conventions:
 
 ## Organization
 
-- Every main CDS component should live within it own folder.
-- Component folders main contain other React component that used exclusively by the main component.
-  **Sample structure:**
-  ```
-  ComponentName/
-  ├── ComponentName.tsx       # Main component file
-  ├── SubComponent.tsx        # Supporting component
-  ├── index.ts                # Re-exports for public API
-  ├── __stories__/            # Storybook stories
-  ├── __tests__/              # Unit tests
-  ├── __figma__/              # Figma exports (Code Connect bindings)
-  ```
+### File Structure
+
+Every main CDS component should live within its own folder:
+
+```
+ComponentName/
+├── ComponentName.tsx       # Main component file
+├── SubComponent.tsx        # Supporting component (if needed)
+├── index.ts                # Re-exports for public API
+├── __stories__/            # Storybook stories
+│   └── ComponentName.stories.tsx
+├── __tests__/              # Unit tests
+│   └── ComponentName.test.tsx
+├── __figma__/              # Figma Code Connect files
+│   └── ComponentName.figma.tsx
+```
+
+### Component Categories
+
+Organize components into category folders:
+
+- `buttons` - Button, IconButton, SlideButton
+- `controls` - TextInput, Select, Checkbox, Radio, Switch
+- `cards` - Card, DataCard, ContentCard
+- `overlays` - Modal, Toast, Alert, Drawer
+- `layout` - Box, Stack, Divider
+- `typography` - Text, Heading
+- `icons` - Icon
+- `navigation` - Tabs, Breadcrumb
 
 ## Component Conventions
 
@@ -48,6 +65,54 @@ These high quality components demonstrate proper use of patterns/conventions:
 - **testID**: Support `testID` prop on root element for every component
 - **Use design tokens**: Reference packages/common/src/core/theme.ts:57-331 as the definitive source for available token names
 - **Padding over margin**: Use padding in combination with flex gap to achieve spacing instead of margin.
+
+## Design Token System
+
+### Token Categories
+
+Design tokens are defined in `packages/common/src/core/theme.ts`:
+
+- **Color**: fg, fgMuted, fgInverse, fgPrimary, bgPrimary, bgSecondary, bgNegative, bgPositive, etc.
+- **Space**: 0, 0.25, 0.5, 0.75, 1, 1.5, 2, 3, 4, 5, 6, 7, 8, 9, 10 (8px base unit)
+- **IconSize**: xs (12px), s (16px), m (24px), l (32px)
+- **AvatarSize**: s, m, l, xl, xxl, xxxl
+- **BorderWidth**: 0, 100, 200, 300, 400, 500
+- **BorderRadius**: 0, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000
+- **Font**: display1-3, title1-4, headline, body, label1-2, caption, legal
+- **Shadow**: elevation1, elevation2
+
+### Semantic Color System
+
+Colors use a spectrum system with hue + step notation:
+
+- **Hues**: blue, green, orange, yellow, gray, indigo, pink, purple, red, teal, chartreuse
+- **Steps**: 0, 5, 10, 15, 20, 30, 40, 50, 60, 70, 80, 90, 100
+- **Example**: blue60 = Coinbase brand blue (#0052FF)
+
+Semantic tokens map to spectrum colors and adapt to light/dark mode:
+
+- `fgPrimary`: blue60 (light) / blue70 (dark)
+- `bgPrimary`: blue60 (light) / blue70 (dark)
+- `bgNegative`: red60 (both modes)
+- `bgPositive`: green60 (both modes)
+
+### Space Scale
+
+```typescript
+space: {
+  '0': 0,      // 0px
+  '0.25': 2,   // 2px
+  '0.5': 4,    // 4px
+  '0.75': 6,   // 6px
+  '1': 8,      // 8px - base unit
+  '1.5': 12,   // 12px
+  '2': 16,     // 16px
+  '3': 24,     // 24px
+  '4': 32,     // 32px
+  '5': 40,     // 40px
+  // ... up to 10 (80px)
+}
+```
 
 ## Component Patterns
 
