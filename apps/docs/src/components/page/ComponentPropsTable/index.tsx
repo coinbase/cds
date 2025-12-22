@@ -152,7 +152,7 @@ function ComponentPropsTable({
             </Text>
             {polymorphicDefaultElement && (
               <Text as="p" color="fgMuted" font="label2">
-                The default element for this component is{' '}
+                The default element for this component is {`'${polymorphicDefaultElement}'`}.{' '}
                 <ModalLink
                   content={
                     <DefaultElementPropsModalContent
@@ -163,11 +163,10 @@ function ComponentPropsTable({
                   }
                   font="label2"
                   modalBodyProps={{ paddingX: 2, paddingY: 2 }}
-                  title={`<${polymorphicDefaultElement}> props`}
+                  title={`Inherited '${polymorphicDefaultElement}' props`}
                 >
-                  {`<${polymorphicDefaultElement}>`}
+                  {`View inherited '${polymorphicDefaultElement}' props.`}
                 </ModalLink>
-                .
               </Text>
             )}
           </VStack>
