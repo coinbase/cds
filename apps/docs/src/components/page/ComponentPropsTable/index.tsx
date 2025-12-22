@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from 'react';
-import { SearchInput } from '@coinbase/cds-web/controls';
+import { SearchInput } from '@coinbase/cds-web/controls/SearchInput';
 import { useDimensions } from '@coinbase/cds-web/hooks/useDimensions';
 import { Box, VStack } from '@coinbase/cds-web/layout';
 import { Text } from '@coinbase/cds-web/typography/Text';
@@ -144,7 +144,7 @@ function ComponentPropsTable({
           sharedParentTypes={sharedParentTypes}
           sharedTypeAliases={sharedTypeAliases}
         />
-        {isPolymorphicComponent ? (
+        {isPolymorphicComponent && (
           <VStack gap={0.5}>
             <Text as="p" color="fgMuted" font="label2">
               This is a polymorphic component — the &apos;as&apos; prop determines what underlying
@@ -170,7 +170,7 @@ function ComponentPropsTable({
               </Text>
             )}
           </VStack>
-        ) : null}
+        )}
       </VStack>
       {filteredProps.length > 0 ? (
         <Box maxWidth="100%" paddingBottom={{ base: 4, phone: 2 }} paddingX={{ base: 4, phone: 2 }}>

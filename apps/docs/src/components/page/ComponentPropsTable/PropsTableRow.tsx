@@ -1,9 +1,7 @@
 import React, { useMemo } from 'react';
 import { cx } from '@coinbase/cds-web';
-import { Icon } from '@coinbase/cds-web/icons/Icon';
-import { HStack, VStack } from '@coinbase/cds-web/layout';
+import { VStack } from '@coinbase/cds-web/layout';
 import { Divider } from '@coinbase/cds-web/layout/Divider';
-import { Tooltip } from '@coinbase/cds-web/overlays';
 import { Text } from '@coinbase/cds-web/typography';
 import { Link } from '@coinbase/cds-web/typography/Link';
 import type {
@@ -111,23 +109,21 @@ function highlightText(text: string, highlight: string) {
 }
 
 function PropsTableRow({ prop, sharedTypeAliases, searchTerm = '' }: PropsTableRowProps) {
-  const { defaultValue, name, description, type, required, parent } = prop;
+  const { defaultValue, name, description, type, required } = prop;
 
   const highlightedName = useMemo(() => highlightText(name, searchTerm), [name, searchTerm]);
 
   const nameContent = useMemo(() => {
     return (
       <VStack as="h3" className={cx(styles.propsNameWrapper, 'anchor')} id={name}>
-        <HStack alignItems="center">
-          <Text as="p" font="body">
-            {highlightedName}
-            {required && (
-              <Text color="fgNegative" font="body">
-                *
-              </Text>
-            )}
-          </Text>
-        </HStack>
+        <Text as="p" font="body">
+          {highlightedName}
+          {required && (
+            <Text color="fgNegative" font="body">
+              *
+            </Text>
+          )}
+        </Text>
         <Text as="p" color="fgMuted" font="label2" overflow="break" paddingTop={0.5}>
           {description}
         </Text>
