@@ -263,7 +263,10 @@ export const descriptionMap: Record<string, IconName[]> = {
     'queryTransact',
     'participate',
     'cloud',
-    'cloudProduct'
+    'cloudProduct',
+    'cloudPartial',
+    'cloudPartial',
+    'singlecloud'
   ],
   'query': [
     'queryTransact'
@@ -457,7 +460,12 @@ export const descriptionMap: Record<string, IconName[]> = {
     'stake',
     'crypto',
     'baseQuickBuy',
-    'coinsCrypto'
+    'coinsCrypto',
+    'tokenLaunchCoin',
+    'tokenLaunchRocket',
+    'stablecoinStack',
+    'airdropCoins',
+    'airdropParachute'
   ],
   'adventure': [
     'planet'
@@ -607,14 +615,22 @@ export const descriptionMap: Record<string, IconName[]> = {
   ],
   'win': [
     'trophyCup',
-    'trophy'
+    'trophy',
+    'medal',
+    'ribbon',
+    'starTrophy',
+    'starAward'
   ],
   'reward': [
     'trophyCup',
     'interest',
     'percentage',
     'trophy',
-    'peopleStar'
+    'peopleStar',
+    'medal',
+    'ribbon',
+    'starTrophy',
+    'starAward'
   ],
   'triumph': [
     'trophyCup',
@@ -702,7 +718,8 @@ export const descriptionMap: Record<string, IconName[]> = {
     'developerAPIProduct'
   ],
   'moon': [
-    'moon'
+    'moon',
+    'scienceMoon'
   ],
   'night': [
     'moon'
@@ -980,7 +997,24 @@ export const descriptionMap: Record<string, IconName[]> = {
     'config',
     'baseQuickBuy',
     'moneyCardCoin',
-    'crystalBallInsight'
+    'crystalBallInsight',
+    'football',
+    'basketball',
+    'pillBottle',
+    'needle',
+    'scienceMoon',
+    'microscope',
+    'greenEnergy',
+    'umbrella',
+    'hurricane',
+    'barChartPredictions',
+    'computerChip',
+    'cloudPartial',
+    'apothecary',
+    'briefcasePredictions',
+    'pillCapsule',
+    'singlecloud',
+    'rain'
   ],
   'profile': [
     'account',
@@ -1020,7 +1054,11 @@ export const descriptionMap: Record<string, IconName[]> = {
   'building': [
     'hammer',
     'home',
-    'bank'
+    'bank',
+    'city',
+    'factory',
+    'corporation',
+    'building'
   ],
   'mint': [
     'hammer',
@@ -1061,7 +1099,11 @@ export const descriptionMap: Record<string, IconName[]> = {
     'learningRewardsProduct',
     'rewardsProduct',
     'coinbaseRewards',
-    'earnRewards'
+    'earnRewards',
+    'medal',
+    'ribbon',
+    'starTrophy',
+    'starAward'
   ],
   'joy': [
     'giftBox'
@@ -1239,7 +1281,8 @@ export const descriptionMap: Record<string, IconName[]> = {
     'sofort',
     'paypal',
     'directDepositIcon',
-    'ideal'
+    'ideal',
+    'calendarMoney'
   ],
   'pay': [
     'directDeposit',
@@ -1333,7 +1376,20 @@ export const descriptionMap: Record<string, IconName[]> = {
     'crystalBall',
     'crystalBall',
     'nft',
-    'nft'
+    'nft',
+    'entertainment',
+    'entertainment',
+    'tv',
+    'filmStrip',
+    'singleNote',
+    'singleNote',
+    'playbutton',
+    'playbutton',
+    'musicArticles',
+    'musicArticles',
+    'microphoneCordless',
+    'microphoneCordless',
+    'tvStand'
   ],
   'photos': [
     'crystalBall',
@@ -1686,7 +1742,8 @@ export const descriptionMap: Record<string, IconName[]> = {
     'gear'
   ],
   'helmet': [
-    'astronautHelmet'
+    'astronautHelmet',
+    'motorsport'
   ],
   'astronaut': [
     'astronautHelmet'
@@ -1755,7 +1812,8 @@ export const descriptionMap: Record<string, IconName[]> = {
   ],
   'finance': [
     'pay',
-    'defi'
+    'defi',
+    'calendarMoney'
   ],
   'assets': [
     'pay',
@@ -1771,7 +1829,8 @@ export const descriptionMap: Record<string, IconName[]> = {
     'savingsBank',
     'creatorCoin',
     'distribution',
-    'baseQuickBuy'
+    'baseQuickBuy',
+    'stableCoin'
   ],
   'defi': [
     'defi'
@@ -1864,7 +1923,8 @@ export const descriptionMap: Record<string, IconName[]> = {
   ],
   'pencil': [
     'pencil',
-    'compose'
+    'compose',
+    'educationPencil'
   ],
   'pen': [
     'pencil'
@@ -2389,11 +2449,19 @@ export const descriptionMap: Record<string, IconName[]> = {
   'calendar': [
     'calendar',
     'calendarEmpty',
-    'calendarBlank'
+    'calendarBlank',
+    'calendarDates',
+    'calendarMoney',
+    'calendarStar',
+    'calendarHeart'
   ],
   'date': [
     'calendar',
-    'calendarEmpty'
+    'calendarEmpty',
+    'calendarDates',
+    'calendarMoney',
+    'calendarStar',
+    'calendarHeart'
   ],
   'year': [
     'calendar',
@@ -2409,7 +2477,8 @@ export const descriptionMap: Record<string, IconName[]> = {
   ],
   'schedule': [
     'calendar',
-    'calendarEmpty'
+    'calendarEmpty',
+    'calendarDates'
   ],
   '📆': [
     'calendar',
@@ -2615,7 +2684,8 @@ export const descriptionMap: Record<string, IconName[]> = {
     'recurring',
     'clockOutline',
     'clock',
-    'chatRequests'
+    'chatRequests',
+    'calendarDates'
   ],
   'back': [
     'recurring'
@@ -2831,7 +2901,8 @@ export const descriptionMap: Record<string, IconName[]> = {
     'step0'
   ],
   'favorite': [
-    'star'
+    'star',
+    'calendarHeart'
   ],
   '⭐️': [
     'star'
@@ -2854,7 +2925,10 @@ export const descriptionMap: Record<string, IconName[]> = {
     'soundOff',
     'play',
     'pause',
-    'speaker'
+    'speaker',
+    'entertainment',
+    'singleNote',
+    'musicArticles'
   ],
   'on': [
     'soundOn',
@@ -2877,7 +2951,10 @@ export const descriptionMap: Record<string, IconName[]> = {
     'play',
     'music',
     'pause',
-    'speaker'
+    'speaker',
+    'entertainment',
+    'singleNote',
+    'musicArticles'
   ],
   'songs': [
     'soundOn',
@@ -3158,7 +3235,10 @@ export const descriptionMap: Record<string, IconName[]> = {
   ],
   'play': [
     'play',
-    'auto'
+    'auto',
+    'gaming',
+    'playbutton',
+    'tvStand'
   ],
   'continue': [
     'play'
@@ -3174,7 +3254,11 @@ export const descriptionMap: Record<string, IconName[]> = {
     'play',
     'metaverse',
     'games',
-    'pause'
+    'pause',
+    'tv',
+    'filmStrip',
+    'playbutton',
+    'tvStand'
   ],
   '▶️': [
     'play'
@@ -3263,7 +3347,9 @@ export const descriptionMap: Record<string, IconName[]> = {
     'paperclip'
   ],
   'movie': [
-    'paperclip'
+    'paperclip',
+    'filmStrip',
+    'tvStand'
   ],
   'sound file': [
     'paperclip'
@@ -3354,7 +3440,10 @@ export const descriptionMap: Record<string, IconName[]> = {
   ],
   'note': [
     'music',
-    'annotation'
+    'annotation',
+    'entertainment',
+    'singleNote',
+    'musicArticles'
   ],
   'notes': [
     'music',
@@ -3389,7 +3478,8 @@ export const descriptionMap: Record<string, IconName[]> = {
   ],
   'controller': [
     'metaverse',
-    'games'
+    'games',
+    'gaming'
   ],
   'game': [
     'metaverse',
@@ -3466,7 +3556,8 @@ export const descriptionMap: Record<string, IconName[]> = {
     'laptop'
   ],
   'screen': [
-    'laptop'
+    'laptop',
+    'tv'
   ],
   '💻': [
     'laptop'
@@ -3732,7 +3823,8 @@ export const descriptionMap: Record<string, IconName[]> = {
   'gear': [
     'gear',
     'auto',
-    'config'
+    'config',
+    'mma'
   ],
   'tool': [
     'gear',
@@ -3804,7 +3896,8 @@ export const descriptionMap: Record<string, IconName[]> = {
     'bookmark'
   ],
   'save': [
-    'bookmark'
+    'bookmark',
+    'calendarHeart'
   ],
   'keys': [
     'keyboard'
@@ -3972,7 +4065,8 @@ export const descriptionMap: Record<string, IconName[]> = {
     'crossTrade',
     'circleCross',
     'close',
-    'cross'
+    'cross',
+    'hospitalCross'
   ],
   'trade': [
     'crossTrade',
@@ -4199,7 +4293,8 @@ export const descriptionMap: Record<string, IconName[]> = {
     'pyramid'
   ],
   'important': [
-    'pyramid'
+    'pyramid',
+    'calendarStar'
   ],
   'pyramid': [
     'pyramid'
@@ -4372,7 +4467,8 @@ export const descriptionMap: Record<string, IconName[]> = {
   ],
   'thunder': [
     'lightningBolt',
-    'instantUnstakingClock'
+    'instantUnstakingClock',
+    'lightning'
   ],
   'fast': [
     'lightningBolt'
@@ -4411,7 +4507,9 @@ export const descriptionMap: Record<string, IconName[]> = {
     'arrowRight'
   ],
   'airdrop': [
-    'airdrop'
+    'airdrop',
+    'airdropCoins',
+    'airdropParachute'
   ],
   '🪂': [
     'airdrop'
@@ -4564,19 +4662,23 @@ export const descriptionMap: Record<string, IconName[]> = {
     'close'
   ],
   'business': [
-    'briefcase'
+    'briefcase',
+    'briefcasePredictions'
   ],
   'briefcase': [
-    'briefcase'
+    'briefcase',
+    'briefcasePredictions'
   ],
   'careers': [
     'briefcase'
   ],
   'work': [
-    'briefcase'
+    'briefcase',
+    'briefcasePredictions'
   ],
   'bag': [
-    'briefcase'
+    'briefcase',
+    'mma'
   ],
   'pause': [
     'pause'
@@ -4711,7 +4813,8 @@ export const descriptionMap: Record<string, IconName[]> = {
   ],
   'book': [
     'passport',
-    'orderBook'
+    'orderBook',
+    'educationBook'
   ],
   'world': [
     'passport'
@@ -4862,7 +4965,11 @@ export const descriptionMap: Record<string, IconName[]> = {
     'key'
   ],
   'gas': [
-    'gasFees'
+    'gasFees',
+    'greenEnergy',
+    'gasPredictions',
+    'gasPredictions',
+    'oil'
   ],
   'fees': [
     'gasFees'
@@ -4886,7 +4993,8 @@ export const descriptionMap: Record<string, IconName[]> = {
     'gasFees'
   ],
   'pump': [
-    'gasFees'
+    'gasFees',
+    'gasPredictions'
   ],
   'handle': [
     'gasFees'
@@ -5148,7 +5256,9 @@ export const descriptionMap: Record<string, IconName[]> = {
   ],
   'box': [
     'folderOpen',
-    'gif'
+    'gif',
+    'ballotbox',
+    'ballot'
   ],
   'filezilla': [
     'folderOpen'
@@ -5175,7 +5285,16 @@ export const descriptionMap: Record<string, IconName[]> = {
   'health': [
     'gaugeHigh',
     'gaugeHighMid',
-    'cross'
+    'cross',
+    'pillBottle',
+    'needle',
+    'hospital',
+    'bug',
+    'bandage',
+    'hospitalCross',
+    'apothecary',
+    'virus',
+    'pillCapsule'
   ],
   'futures': [
     'gaugeHigh',
@@ -5226,7 +5345,8 @@ export const descriptionMap: Record<string, IconName[]> = {
     'microphone'
   ],
   'mic': [
-    'microphone'
+    'microphone',
+    'microphoneCordless'
   ],
   'talk': [
     'microphone'
@@ -5330,7 +5450,11 @@ export const descriptionMap: Record<string, IconName[]> = {
     'coinbaseRewards'
   ],
   'trophy': [
-    'coinbaseRewards'
+    'coinbaseRewards',
+    'medal',
+    'ribbon',
+    'starTrophy',
+    'starAward'
   ],
   'ribbon': [
     'coinbaseRewards'
@@ -5356,7 +5480,8 @@ export const descriptionMap: Record<string, IconName[]> = {
     'dinnerPlate'
   ],
   'food': [
-    'dinnerPlate'
+    'dinnerPlate',
+    'rottenTomato'
   ],
   'eat': [
     'dinnerPlate'
@@ -5374,7 +5499,9 @@ export const descriptionMap: Record<string, IconName[]> = {
     'wellness'
   ],
   'healthcare': [
-    'cross'
+    'cross',
+    'needle',
+    'hospital'
   ],
   'nurse': [
     'cross'
@@ -5392,13 +5519,17 @@ export const descriptionMap: Record<string, IconName[]> = {
     'plane'
   ],
   'clothing': [
-    'clothing'
+    'clothing',
+    'tshirt',
+    'shoe'
   ],
   'hanger': [
     'clothing'
   ],
   'fashion': [
-    'clothing'
+    'clothing',
+    'tshirt',
+    'shoe'
   ],
   'clothes': [
     'clothing'
@@ -5410,7 +5541,8 @@ export const descriptionMap: Record<string, IconName[]> = {
     'powerTool'
   ],
   'equipment': [
-    'powerTool'
+    'powerTool',
+    'mma'
   ],
   'compose': [
     'compose'
@@ -5487,7 +5619,8 @@ export const descriptionMap: Record<string, IconName[]> = {
     'endArrow'
   ],
   'apple': [
-    'appleLogo'
+    'appleLogo',
+    'apple'
   ],
   'jobs': [
     'appleLogo'
@@ -5613,5 +5746,748 @@ export const descriptionMap: Record<string, IconName[]> = {
   ],
   'robot': [
     'robot'
+  ],
+  'test': [
+    'test'
+  ],
+  'Predictions': [
+    'tokenLaunchCoin',
+    'football',
+    'mma',
+    'hockey',
+    'chess',
+    'soccer',
+    'tennis',
+    'cricket',
+    'baseball',
+    'strategy',
+    'motorsport',
+    'golf',
+    'basketball',
+    'tokenLaunchRocket',
+    'boxing',
+    'ballotbox',
+    'speechBubble',
+    'starBubble',
+    'atSign',
+    'medal',
+    'ribbon',
+    'starTrophy',
+    'calendarDates',
+    'calendarMoney',
+    'stableCoin',
+    'politicsGavel',
+    'politicsBuilding',
+    'politicsStar',
+    'politicsPodium',
+    'apple',
+    'educationPencil',
+    'ratingsStar',
+    'podiumStar',
+    'ratingsCheck',
+    'pillBottle',
+    'needle',
+    'hospital',
+    'bug',
+    'bandage',
+    'scienceMoon',
+    'alien',
+    'microscope',
+    'scienceBeaker',
+    'city',
+    'factory',
+    'corporation',
+    'greenEnergy',
+    'thermometer',
+    'umbrella',
+    'hurricane',
+    'stablecoinStack',
+    'entertainment',
+    'tshirt',
+    'rottenTomato',
+    'tv',
+    'filmStrip',
+    'singleNote',
+    'educationBook',
+    'gaming',
+    'ratingsChecks',
+    'playbutton',
+    'scienceAtom',
+    'earthquake',
+    'shoe',
+    'quotation',
+    'musicArticles',
+    'politicsFlag',
+    'building',
+    'tornado',
+    'computerChip',
+    'cloudPartial',
+    'airdropCoins',
+    'gasPredictions',
+    'atomScience',
+    'hospitalCross',
+    'oil',
+    'apothecary',
+    'briefcasePredictions',
+    'virus',
+    'pillCapsule',
+    'starAward',
+    'calendarStar',
+    'calendarHeart',
+    'singlecloud',
+    'lightning',
+    'microphoneCordless',
+    'snow',
+    'tvStand',
+    'wind',
+    'politicsCandidate',
+    'ballot',
+    'rain',
+    'airdropParachute'
+  ],
+  'token launch': [
+    'tokenLaunchCoin',
+    'tokenLaunchRocket'
+  ],
+  'football': [
+    'football',
+    'soccer'
+  ],
+  'nfl': [
+    'football'
+  ],
+  'touchdown': [
+    'football'
+  ],
+  'sport': [
+    'football',
+    'football',
+    'hockey',
+    'chess',
+    'soccer',
+    'tennis',
+    'cricket',
+    'baseball',
+    'motorsport',
+    'golf',
+    'basketball',
+    'boxing'
+  ],
+  'boxing': [
+    'mma',
+    'boxing'
+  ],
+  'gym': [
+    'mma'
+  ],
+  'sports': [
+    'mma',
+    'hockey',
+    'chess',
+    'soccer',
+    'tennis',
+    'cricket',
+    'baseball',
+    'strategy',
+    'motorsport',
+    'golf',
+    'basketball',
+    'boxing'
+  ],
+  'Hokey': [
+    'hockey'
+  ],
+  'NHL': [
+    'hockey'
+  ],
+  'chess': [
+    'chess'
+  ],
+  'soccer': [
+    'soccer'
+  ],
+  'match': [
+    'soccer',
+    'tennis',
+    'cricket'
+  ],
+  'ball': [
+    'soccer',
+    'cricket',
+    'baseball'
+  ],
+  'Tennis': [
+    'tennis'
+  ],
+  'racket': [
+    'tennis'
+  ],
+  'court': [
+    'tennis'
+  ],
+  'cricket': [
+    'cricket'
+  ],
+  'baseball': [
+    'baseball'
+  ],
+  'mlb': [
+    'baseball'
+  ],
+  'strategy': [
+    'strategy'
+  ],
+  'tactics': [
+    'strategy'
+  ],
+  'playbook': [
+    'strategy'
+  ],
+  'coaching': [
+    'strategy'
+  ],
+  'planning': [
+    'strategy'
+  ],
+  'Motor sport': [
+    'motorsport'
+  ],
+  'Bike': [
+    'motorsport'
+  ],
+  'golf': [
+    'golf'
+  ],
+  'pGA': [
+    'golf'
+  ],
+  'basketball': [
+    'basketball'
+  ],
+  'nba': [
+    'basketball'
+  ],
+  'hoop': [
+    'basketball'
+  ],
+  'voting': [
+    'ballotbox',
+    'politicsGavel',
+    'politicsBuilding',
+    'politicsStar',
+    'politicsPodium',
+    'ratingsStar',
+    'podiumStar',
+    'ratingsCheck',
+    'ratingsChecks',
+    'politicsFlag',
+    'politicsCandidate',
+    'ballot'
+  ],
+  'politics': [
+    'ballotbox',
+    'politicsGavel',
+    'politicsBuilding',
+    'politicsStar',
+    'politicsPodium',
+    'politicsFlag',
+    'politicsCandidate',
+    'ballot'
+  ],
+  'vote': [
+    'ballotbox',
+    'politicsGavel',
+    'politicsBuilding',
+    'politicsStar',
+    'politicsPodium',
+    'politicsFlag',
+    'politicsCandidate',
+    'ballot'
+  ],
+  'democracy': [
+    'ballotbox',
+    'politicsGavel',
+    'politicsBuilding',
+    'politicsStar',
+    'politicsPodium',
+    'politicsFlag',
+    'politicsCandidate',
+    'ballot'
+  ],
+  'politic': [
+    'ballotbox',
+    'politicsGavel',
+    'politicsBuilding',
+    'politicsStar',
+    'politicsPodium',
+    'politicsFlag',
+    'ballot'
+  ],
+  'ballot': [
+    'ballotbox',
+    'ballot'
+  ],
+  'ballot box': [
+    'ballotbox',
+    'ballot'
+  ],
+  'mentions': [
+    'speechBubble',
+    'starBubble',
+    'atSign',
+    'quotation'
+  ],
+  'mention': [
+    'speechBubble',
+    'starBubble',
+    'atSign',
+    'quotation'
+  ],
+  'award': [
+    'medal',
+    'ribbon',
+    'starTrophy',
+    'starAward'
+  ],
+  'achievement': [
+    'medal',
+    'ribbon',
+    'starTrophy',
+    'starAward'
+  ],
+  'event': [
+    'calendarDates',
+    'calendarStar',
+    'calendarHeart'
+  ],
+  'dates': [
+    'calendarMoney',
+    'calendarStar',
+    'calendarHeart'
+  ],
+  'billing': [
+    'calendarMoney'
+  ],
+  'Stablecoin': [
+    'stableCoin'
+  ],
+  'stable': [
+    'stableCoin',
+    'stablecoinStack'
+  ],
+  'podium': [
+    'politicsPodium'
+  ],
+  'education': [
+    'apple',
+    'educationPencil',
+    'educationBook'
+  ],
+  'teaching': [
+    'educationPencil',
+    'educationBook'
+  ],
+  'ratings': [
+    'ratingsStar',
+    'podiumStar',
+    'ratingsCheck',
+    'ratingsChecks'
+  ],
+  'rating': [
+    'ratingsStar',
+    'podiumStar',
+    'ratingsCheck',
+    'ratingsChecks'
+  ],
+  'medicine': [
+    'pillBottle',
+    'pillBottle',
+    'bug',
+    'bandage',
+    'hospitalCross',
+    'apothecary',
+    'virus',
+    'pillCapsule',
+    'pillCapsule'
+  ],
+  'medical': [
+    'pillBottle',
+    'needle',
+    'hospital',
+    'hospitalCross',
+    'apothecary',
+    'pillCapsule'
+  ],
+  'pharmacy': [
+    'pillBottle',
+    'bandage',
+    'apothecary',
+    'pillCapsule'
+  ],
+  'apothecary': [
+    'pillBottle',
+    'apothecary',
+    'pillCapsule'
+  ],
+  'pill': [
+    'pillBottle',
+    'pillCapsule'
+  ],
+  'capsule': [
+    'pillBottle',
+    'pillCapsule'
+  ],
+  'hospital': [
+    'needle',
+    'hospital',
+    'hospitalCross'
+  ],
+  'clinic': [
+    'needle',
+    'hospital'
+  ],
+  'syringe': [
+    'needle'
+  ],
+  'injection': [
+    'needle'
+  ],
+  'vaccine': [
+    'needle',
+    'bug',
+    'virus'
+  ],
+  'virus': [
+    'bug',
+    'virus'
+  ],
+  'bug': [
+    'bug',
+    'virus'
+  ],
+  'drug': [
+    'bandage'
+  ],
+  'bandaid': [
+    'bandage'
+  ],
+  'bandage': [
+    'bandage'
+  ],
+  'tech': [
+    'scienceMoon',
+    'alien',
+    'microscope',
+    'scienceBeaker',
+    'scienceAtom',
+    'computerChip',
+    'atomScience'
+  ],
+  'technology': [
+    'scienceMoon',
+    'alien',
+    'microscope',
+    'scienceBeaker',
+    'scienceAtom',
+    'computerChip',
+    'atomScience'
+  ],
+  'Science': [
+    'scienceMoon',
+    'alien',
+    'microscope',
+    'scienceBeaker',
+    'scienceAtom',
+    'computerChip',
+    'atomScience'
+  ],
+  'lab': [
+    'scienceMoon',
+    'alien',
+    'microscope',
+    'scienceBeaker',
+    'scienceAtom',
+    'computerChip',
+    'atomScience'
+  ],
+  'experiment': [
+    'scienceMoon',
+    'alien',
+    'microscope',
+    'scienceBeaker',
+    'scienceAtom',
+    'computerChip',
+    'atomScience'
+  ],
+  'chemistry': [
+    'scienceMoon',
+    'alien',
+    'microscope',
+    'scienceBeaker',
+    'scienceAtom',
+    'computerChip',
+    'atomScience'
+  ],
+  'research': [
+    'scienceMoon',
+    'alien',
+    'microscope',
+    'scienceBeaker',
+    'scienceAtom',
+    'computerChip',
+    'atomScience'
+  ],
+  'alien': [
+    'alien'
+  ],
+  'Beaker': [
+    'scienceBeaker'
+  ],
+  'Markets': [
+    'city',
+    'factory',
+    'corporation',
+    'building'
+  ],
+  'Economics': [
+    'city',
+    'factory',
+    'corporation',
+    'greenEnergy',
+    'building',
+    'oil',
+    'briefcasePredictions'
+  ],
+  'companies': [
+    'city',
+    'factory',
+    'corporation',
+    'building'
+  ],
+  'energy': [
+    'greenEnergy',
+    'gasPredictions',
+    'oil'
+  ],
+  'Green Energy': [
+    'greenEnergy'
+  ],
+  'growth': [
+    'greenEnergy'
+  ],
+  'weather': [
+    'thermometer',
+    'umbrella',
+    'hurricane',
+    'earthquake',
+    'tornado',
+    'cloudPartial',
+    'singlecloud',
+    'lightning',
+    'snow',
+    'snow',
+    'wind',
+    'rain'
+  ],
+  'temperature': [
+    'thermometer'
+  ],
+  'heat': [
+    'thermometer'
+  ],
+  'cold': [
+    'thermometer',
+    'snow'
+  ],
+  'climate': [
+    'thermometer',
+    'earthquake',
+    'lightning',
+    'wind'
+  ],
+  'Climate': [
+    'umbrella',
+    'hurricane',
+    'cloudPartial',
+    'singlecloud',
+    'snow',
+    'rain'
+  ],
+  'rain': [
+    'umbrella',
+    'rain'
+  ],
+  'Raining': [
+    'umbrella',
+    'rain'
+  ],
+  'hurricane': [
+    'hurricane'
+  ],
+  'stablecoin': [
+    'stablecoinStack'
+  ],
+  'Music': [
+    'entertainment',
+    'tv',
+    'filmStrip',
+    'singleNote',
+    'playbutton',
+    'musicArticles',
+    'microphoneCordless',
+    'tvStand'
+  ],
+  'entertainment': [
+    'entertainment',
+    'rottenTomato',
+    'tv',
+    'filmStrip',
+    'singleNote',
+    'gaming',
+    'playbutton',
+    'musicArticles',
+    'microphoneCordless',
+    'tvStand'
+  ],
+  'media': [
+    'entertainment',
+    'tv',
+    'filmStrip',
+    'singleNote',
+    'playbutton',
+    'musicArticles',
+    'microphoneCordless',
+    'tvStand'
+  ],
+  'shirt': [
+    'tshirt'
+  ],
+  'apparel': [
+    'tshirt',
+    'shoe'
+  ],
+  'retail': [
+    'tshirt',
+    'shoe'
+  ],
+  'rotten': [
+    'rottenTomato'
+  ],
+  'rotten tomato': [
+    'rottenTomato'
+  ],
+  'vegetable': [
+    'rottenTomato'
+  ],
+  'produce': [
+    'rottenTomato'
+  ],
+  'cooking': [
+    'rottenTomato'
+  ],
+  'tomato': [
+    'rottenTomato'
+  ],
+  'tv': [
+    'tv'
+  ],
+  'broadcast': [
+    'tv'
+  ],
+  'film': [
+    'filmStrip',
+    'tvStand'
+  ],
+  'cinema': [
+    'filmStrip',
+    'tvStand'
+  ],
+  'games': [
+    'gaming'
+  ],
+  'gaming': [
+    'gaming'
+  ],
+  'console': [
+    'gaming'
+  ],
+  'esports': [
+    'gaming'
+  ],
+  'start': [
+    'playbutton'
+  ],
+  'atom': [
+    'scienceAtom',
+    'atomScience'
+  ],
+  'earthquake': [
+    'earthquake'
+  ],
+  'shoe': [
+    'shoe'
+  ],
+  'sneakers': [
+    'shoe'
+  ],
+  'tornado': [
+    'tornado'
+  ],
+  'chip': [
+    'computerChip'
+  ],
+  'Partially': [
+    'cloudPartial'
+  ],
+  'fuel': [
+    'gasPredictions'
+  ],
+  'station': [
+    'gasPredictions'
+  ],
+  'care': [
+    'hospitalCross'
+  ],
+  'oil': [
+    'oil'
+  ],
+  'job': [
+    'briefcasePredictions'
+  ],
+  'featured': [
+    'calendarStar'
+  ],
+  'lighting': [
+    'lightning'
+  ],
+  'recording': [
+    'microphoneCordless'
+  ],
+  'voice': [
+    'microphoneCordless'
+  ],
+  'winter': [
+    'snow'
+  ],
+  'snow': [
+    'snow'
+  ],
+  'ice': [
+    'snow'
+  ],
+  'wind': [
+    'wind'
+  ],
+  'air': [
+    'wind'
+  ],
+  'breeze': [
+    'wind'
+  ],
+  'flow': [
+    'wind'
+  ],
+  'candidate': [
+    'politicsCandidate'
   ]
 };
