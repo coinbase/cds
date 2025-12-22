@@ -1,8 +1,7 @@
 import { useCallback, useMemo, useState } from 'react';
 import { SearchInput } from '@coinbase/cds-web/controls';
 import { useDimensions } from '@coinbase/cds-web/hooks/useDimensions';
-import { Icon } from '@coinbase/cds-web/icons/Icon';
-import { Box, HStack, VStack } from '@coinbase/cds-web/layout';
+import { Box, VStack } from '@coinbase/cds-web/layout';
 import { Text } from '@coinbase/cds-web/typography/Text';
 import type {
   ProcessedPropItem,
@@ -93,7 +92,12 @@ function ComponentPropsTable({
   const [searchValue, setSearchValue] = useState('');
   const filteredProps = useMemo(() => {
     const searchTerm = searchValue.toLowerCase();
-    return props.filter((item) => item.name.toLowerCase().includes(searchTerm));
+    return props.filter((item) => {
+      // Default-element props are shown in a dedicated modal to avoid overcrowding the main table.
+      const isDefaultElementProp = String(item.parent ?? '').startsWith('PolymorphicDefault<');
+      if (isDefaultElementProp) return false;
+      return item.name.toLowerCase().includes(searchTerm);
+    });
   }, [searchValue, props]);
   const handleSearchChange = useCallback((value: string) => {
     setSearchValue(value);
