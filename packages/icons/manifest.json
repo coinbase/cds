@@ -1,6 +1,6 @@
 {
-  "lastUpdated": "2025-12-05T17:24:14.954Z",
-  "lastUnicode": 985638,
+  "lastUpdated": "2025-12-22T20:44:30.548Z",
+  "lastUnicode": 986214,
   "iconSets": [
     {
       "nodeId": "4:39245",
@@ -20350,6 +20350,4518 @@
           "active": true,
           "size": 12,
           "unicode": 985633
+        }
+      ]
+    },
+    {
+      "nodeId": "6056:2",
+      "name": "test",
+      "description": "test",
+      "assetsHash": "BZe/Dz4uQ1D4MC53CTTS0ir5MZWliMBPJqVHeqVKP9I=",
+      "nameHash": "48HAYFR+PZXovl3wvIntOtyMD6nOt+kHDWZxMIM9wXQ=",
+      "createdAt": "2025-12-10T22:53:24.616Z",
+      "lastUpdated": "2025-12-10T22:53:24.616Z",
+      "svgs": [
+        {
+          "name": "test-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 986154
+        },
+        {
+          "name": "test-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 986153
+        },
+        {
+          "name": "test-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 986152
+        },
+        {
+          "name": "test-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 986151
+        },
+        {
+          "name": "test-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 986150
+        },
+        {
+          "name": "test-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 986149
+        }
+      ]
+    },
+    {
+      "nodeId": "6246:1704",
+      "name": "tokenLaunchCoin",
+      "description": "Predictions, crypto, token launch",
+      "assetsHash": "x9uxMdYfqEsRv0rNMLWfTSvf2ou20vIBHaBnOxnOHPA=",
+      "nameHash": "xlOUupCBzoprfW2BIH9H2z15xL5iSaGxDY/wu7G1qI0=",
+      "createdAt": "2025-12-21T23:49:05.443Z",
+      "lastUpdated": "2025-12-22T20:33:38.202Z",
+      "svgs": [
+        {
+          "name": "tokenLaunchCoin-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 986166
+        },
+        {
+          "name": "tokenLaunchCoin-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 986165
+        },
+        {
+          "name": "tokenLaunchCoin-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 986164
+        },
+        {
+          "name": "tokenLaunchCoin-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 986163
+        },
+        {
+          "name": "tokenLaunchCoin-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 986162
+        },
+        {
+          "name": "tokenLaunchCoin-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 986161
+        }
+      ]
+    },
+    {
+      "nodeId": "6246:1665",
+      "name": "football",
+      "description": "Predictions, football, nfl, touchdown, sport, sport,",
+      "assetsHash": "mIoOPL71oUSzeEO7koj+bx6BCR9iMuoKCKPxcwi6WWU=",
+      "nameHash": "Q7UXFaukD7KrpWB9+AMPKNZp2wm3YBfeaKvwVv01BqY=",
+      "createdAt": "2025-12-21T23:49:05.453Z",
+      "lastUpdated": "2025-12-22T20:33:38.160Z",
+      "svgs": [
+        {
+          "name": "football-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 985848
+        },
+        {
+          "name": "football-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 985847
+        },
+        {
+          "name": "football-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 985846
+        },
+        {
+          "name": "football-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 985845
+        },
+        {
+          "name": "football-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 985844
+        },
+        {
+          "name": "football-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 985843
+        }
+      ]
+    },
+    {
+      "nodeId": "6246:1613",
+      "name": "mma",
+      "description": "Predictions, bag, boxing, gear, gym, equipment, sports",
+      "assetsHash": "Xz+sXx4vEWdy3mjlzSMjIicldz8BXt2+7cqGo3Z1zr8=",
+      "nameHash": "Stt2At6hldeKLGbk/FudaS7IH7mn1hKFG/QfzNNl3nc=",
+      "createdAt": "2025-12-21T23:49:05.463Z",
+      "lastUpdated": "2025-12-22T20:33:38.116Z",
+      "svgs": [
+        {
+          "name": "mma-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 985926
+        },
+        {
+          "name": "mma-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 985925
+        },
+        {
+          "name": "mma-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 985924
+        },
+        {
+          "name": "mma-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 985923
+        },
+        {
+          "name": "mma-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 985922
+        },
+        {
+          "name": "mma-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 985921
+        }
+      ]
+    },
+    {
+      "nodeId": "6246:1600",
+      "name": "hockey",
+      "description": "Predictions, Hokey, NHL, sport, sports",
+      "assetsHash": "t73jIqBcDY7o+xgPmI1Xqc+cX//XLa21SlQoEmLxpGs=",
+      "nameHash": "DdpkZ9ThMMnBtCKAr5//I1pcdN9eRXwtRoGqnGgfA5U=",
+      "createdAt": "2025-12-21T23:49:05.472Z",
+      "lastUpdated": "2025-12-22T20:33:38.152Z",
+      "svgs": [
+        {
+          "name": "hockey-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 985878
+        },
+        {
+          "name": "hockey-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 985877
+        },
+        {
+          "name": "hockey-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 985876
+        },
+        {
+          "name": "hockey-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 985875
+        },
+        {
+          "name": "hockey-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 985874
+        },
+        {
+          "name": "hockey-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 985873
+        }
+      ]
+    },
+    {
+      "nodeId": "6246:1587",
+      "name": "chess",
+      "description": "Predictions, chess, sports, sport",
+      "assetsHash": "XAWuwsh9dZ3VlVVV9dshfUPMcKI/ORhBhn+COE98Y0w=",
+      "nameHash": "JsnVPbBa0HqDY7XiknVJvaSAAU7WkeRURUTPijUtBSs=",
+      "createdAt": "2025-12-21T23:49:05.476Z",
+      "lastUpdated": "2025-12-22T20:33:38.073Z",
+      "svgs": [
+        {
+          "name": "chess-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 985776
+        },
+        {
+          "name": "chess-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 985775
+        },
+        {
+          "name": "chess-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 985774
+        },
+        {
+          "name": "chess-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 985773
+        },
+        {
+          "name": "chess-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 985772
+        },
+        {
+          "name": "chess-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 985771
+        }
+      ]
+    },
+    {
+      "nodeId": "6246:1561",
+      "name": "soccer",
+      "description": "Predictions, soccer, football, match, sport, ball, sports",
+      "assetsHash": "mZCGE0uRQSUxTIAaXSm4bC6LMrTCWYso5TGKjk1Az+k=",
+      "nameHash": "tgZ3RYbn+GOTlbAelXUuy3MgNUurxOr0EuxjTx3cSiA=",
+      "createdAt": "2025-12-21T23:49:05.481Z",
+      "lastUpdated": "2025-12-22T20:33:38.136Z",
+      "svgs": [
+        {
+          "name": "soccer-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 986100
+        },
+        {
+          "name": "soccer-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 986099
+        },
+        {
+          "name": "soccer-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 986098
+        },
+        {
+          "name": "soccer-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 986097
+        },
+        {
+          "name": "soccer-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 986096
+        },
+        {
+          "name": "soccer-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 986095
+        }
+      ]
+    },
+    {
+      "nodeId": "6246:1548",
+      "name": "tennis",
+      "description": "Predictions, Tennis, match, racket, court, sport, sports",
+      "assetsHash": "tL6ZRHxK60xMD7o+wbK5UNi5OxnXh8bqJkuI5EJfyvs=",
+      "nameHash": "wK9p+qSDs5cuZCgm3Jlgq3ja5e0T/Oz0kKQbE0ND7Wo=",
+      "createdAt": "2025-12-21T23:49:05.486Z",
+      "lastUpdated": "2025-12-22T20:33:38.141Z",
+      "svgs": [
+        {
+          "name": "tennis-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 986148
+        },
+        {
+          "name": "tennis-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 986147
+        },
+        {
+          "name": "tennis-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 986146
+        },
+        {
+          "name": "tennis-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 986145
+        },
+        {
+          "name": "tennis-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 986144
+        },
+        {
+          "name": "tennis-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 986143
+        }
+      ]
+    },
+    {
+      "nodeId": "6246:1535",
+      "name": "cricket",
+      "description": "Predictions, cricket, match, sport, ball, sports",
+      "assetsHash": "31zNA7QRJ5V/YgRQIGiN5DQgtcjlcMKOGp6yWJbxTKo=",
+      "nameHash": "KxlLnhOEvtjtgf7+GwKTWC38PITDyiwKKBXphXcN7Wk=",
+      "createdAt": "2025-12-21T23:49:05.491Z",
+      "lastUpdated": "2025-12-22T20:33:38.208Z",
+      "svgs": [
+        {
+          "name": "cricket-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 985806
+        },
+        {
+          "name": "cricket-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 985805
+        },
+        {
+          "name": "cricket-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 985804
+        },
+        {
+          "name": "cricket-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 985803
+        },
+        {
+          "name": "cricket-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 985802
+        },
+        {
+          "name": "cricket-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 985801
+        }
+      ]
+    },
+    {
+      "nodeId": "6246:1626",
+      "name": "baseball",
+      "description": "Predictions, baseball, mlb, sport, ball, sports",
+      "assetsHash": "QsKYi/8g4FUPcSmJBuc9EBZ8aj+iRKdzjqAaawdSy3w=",
+      "nameHash": "7641Z/rD9e4weJN4g54SEU416MJ/h/F6FPUiWfoTWyw=",
+      "createdAt": "2025-12-21T23:49:05.523Z",
+      "lastUpdated": "2025-12-22T20:33:38.091Z",
+      "svgs": [
+        {
+          "name": "baseball-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 985716
+        },
+        {
+          "name": "baseball-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 985715
+        },
+        {
+          "name": "baseball-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 985714
+        },
+        {
+          "name": "baseball-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 985713
+        },
+        {
+          "name": "baseball-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 985712
+        },
+        {
+          "name": "baseball-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 985711
+        }
+      ]
+    },
+    {
+      "nodeId": "6246:1522",
+      "name": "strategy",
+      "description": "Predictions, strategy, tactics, playbook, coaching, planning, sports",
+      "assetsHash": "QhCArRFQuSOwox/qk2uSA5kQ/9mgQHJpkG09nZIKzPY=",
+      "nameHash": "y6uq+Xqq2HqsppG9LeBUoLjWNdGptqj/5Maq0XeekMw=",
+      "createdAt": "2025-12-21T23:49:05.540Z",
+      "lastUpdated": "2025-12-22T20:33:51.960Z",
+      "svgs": [
+        {
+          "name": "strategy-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 986142
+        },
+        {
+          "name": "strategy-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 986141
+        },
+        {
+          "name": "strategy-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 986140
+        },
+        {
+          "name": "strategy-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 986139
+        },
+        {
+          "name": "strategy-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 986138
+        },
+        {
+          "name": "strategy-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 986137
+        }
+      ]
+    },
+    {
+      "nodeId": "6246:1574",
+      "name": "motorsport",
+      "description": "Predictions, Motor sport, Bike, helmet, sports, sport",
+      "assetsHash": "YnnmfX+dHYxBdG1dJFL20RgDsKRDSRbq06fksPlZH2I=",
+      "nameHash": "cEhM+sW+RW524UvSiEyg4bplt9gR6mhKMMSLK4JJSvM=",
+      "createdAt": "2025-12-21T23:49:17.971Z",
+      "lastUpdated": "2025-12-22T20:33:51.872Z",
+      "svgs": [
+        {
+          "name": "motorsport-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 985932
+        },
+        {
+          "name": "motorsport-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 985931
+        },
+        {
+          "name": "motorsport-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 985930
+        },
+        {
+          "name": "motorsport-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 985929
+        },
+        {
+          "name": "motorsport-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 985928
+        },
+        {
+          "name": "motorsport-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 985927
+        }
+      ]
+    },
+    {
+      "nodeId": "6246:1652",
+      "name": "golf",
+      "description": "Predictions, golf, sport, pGA, sports",
+      "assetsHash": "s1CWZaiGy5wpszcnkTJ2pAB1PEHapi+XpSqft0YphDA=",
+      "nameHash": "m4v3iWZRQ2JohbPy/3lx1KMR+jgJ+7ppHvkLVux0kRY=",
+      "createdAt": "2025-12-21T23:49:22.091Z",
+      "lastUpdated": "2025-12-22T20:33:51.892Z",
+      "svgs": [
+        {
+          "name": "golf-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 985866
+        },
+        {
+          "name": "golf-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 985865
+        },
+        {
+          "name": "golf-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 985864
+        },
+        {
+          "name": "golf-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 985863
+        },
+        {
+          "name": "golf-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 985862
+        },
+        {
+          "name": "golf-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 985861
+        }
+      ]
+    },
+    {
+      "nodeId": "6246:1639",
+      "name": "basketball",
+      "description": "Predictions, basketball, nba, hoop, sport, sports,",
+      "assetsHash": "L88aW1T6FvHBOn6JvHkVra8URKCjrTxyZOp89ERIxvg=",
+      "nameHash": "bc+CCnyOjABgkQBcQ6Frzjro9IudxxHpCeIP1FHhzEg=",
+      "createdAt": "2025-12-21T23:49:22.102Z",
+      "lastUpdated": "2025-12-22T20:33:57.255Z",
+      "svgs": [
+        {
+          "name": "basketball-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 985722
+        },
+        {
+          "name": "basketball-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 985721
+        },
+        {
+          "name": "basketball-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 985720
+        },
+        {
+          "name": "basketball-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 985719
+        },
+        {
+          "name": "basketball-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 985718
+        },
+        {
+          "name": "basketball-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 985717
+        }
+      ]
+    },
+    {
+      "nodeId": "6246:1691",
+      "name": "tokenLaunchRocket",
+      "description": "Predictions, crypto, token launch",
+      "assetsHash": "CP4/c/kwvoSuRRP9K2iXjagKMooGyRhfYeSa6KTDPP8=",
+      "nameHash": "y1XczNZbuyqJFrX05VLrhDrv71GTRnoqcRtEwOBwlFk=",
+      "createdAt": "2025-12-21T23:49:22.118Z",
+      "lastUpdated": "2025-12-22T20:33:57.267Z",
+      "svgs": [
+        {
+          "name": "tokenLaunchRocket-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 986172
+        },
+        {
+          "name": "tokenLaunchRocket-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 986171
+        },
+        {
+          "name": "tokenLaunchRocket-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 986170
+        },
+        {
+          "name": "tokenLaunchRocket-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 986169
+        },
+        {
+          "name": "tokenLaunchRocket-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 986168
+        },
+        {
+          "name": "tokenLaunchRocket-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 986167
+        }
+      ]
+    },
+    {
+      "nodeId": "6246:1678",
+      "name": "boxing",
+      "description": "Predictions, boxing, sports, sport",
+      "assetsHash": "Riz7+V8ENXh3ayVCpnAfWtqoCcsz4zOlwX+hGJIKJRU=",
+      "nameHash": "KG0noIQnprM7H7jjaX/sSdKdMBHjrdb44IJeo5AEXlQ=",
+      "createdAt": "2025-12-21T23:49:22.145Z",
+      "lastUpdated": "2025-12-22T20:33:57.242Z",
+      "svgs": [
+        {
+          "name": "boxing-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 985728
+        },
+        {
+          "name": "boxing-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 985727
+        },
+        {
+          "name": "boxing-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 985726
+        },
+        {
+          "name": "boxing-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 985725
+        },
+        {
+          "name": "boxing-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 985724
+        },
+        {
+          "name": "boxing-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 985723
+        }
+      ]
+    },
+    {
+      "nodeId": "6261:1035",
+      "name": "ballotbox",
+      "description": "Predictions, voting, politics, vote, democracy, politic, ballot, ballot box, box",
+      "assetsHash": "nQXAdi/yWqkH8TrwaLfqllayM6Lmek+QvBqfPnajpX8=",
+      "nameHash": "srUwTkLvtou5tTC8uPkBpUVe2tZdn7Hrw51/r+Jcub0=",
+      "createdAt": "2025-12-22T17:30:21.599Z",
+      "lastUpdated": "2025-12-22T20:33:24.712Z",
+      "svgs": [
+        {
+          "name": "ballotbox-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 985698
+        },
+        {
+          "name": "ballotbox-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 985697
+        },
+        {
+          "name": "ballotbox-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 985696
+        },
+        {
+          "name": "ballotbox-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 985695
+        },
+        {
+          "name": "ballotbox-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 985694
+        },
+        {
+          "name": "ballotbox-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 985693
+        }
+      ]
+    },
+    {
+      "nodeId": "6261:1022",
+      "name": "speechBubble",
+      "description": "Predictions, mentions, mention",
+      "assetsHash": "CRA/NpFQot2DfSvbSZ/WtP5kSh/cgsR5I5QwZMXu4AI=",
+      "nameHash": "OmRVBeJUKjg+1VHX34Xxl+JmWg/GM5jBnefNBH0sg+g=",
+      "createdAt": "2025-12-22T17:30:21.611Z",
+      "lastUpdated": "2025-12-22T20:33:24.649Z",
+      "svgs": [
+        {
+          "name": "speechBubble-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 986106
+        },
+        {
+          "name": "speechBubble-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 986105
+        },
+        {
+          "name": "speechBubble-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 986104
+        },
+        {
+          "name": "speechBubble-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 986103
+        },
+        {
+          "name": "speechBubble-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 986102
+        },
+        {
+          "name": "speechBubble-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 986101
+        }
+      ]
+    },
+    {
+      "nodeId": "6261:1009",
+      "name": "starBubble",
+      "description": "Predictions, mentions, mention",
+      "assetsHash": "uOtbFEz9S1mOU0f0sTeS1M+t82JV6yWImzuQg2v56aM=",
+      "nameHash": "Kk2GZ90uo4LGwpVhbSFrwAKjouu9vFVjFY5vtU+hnYk=",
+      "createdAt": "2025-12-22T17:30:21.620Z",
+      "lastUpdated": "2025-12-22T20:33:24.573Z",
+      "svgs": [
+        {
+          "name": "starBubble-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 986130
+        },
+        {
+          "name": "starBubble-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 986129
+        },
+        {
+          "name": "starBubble-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 986128
+        },
+        {
+          "name": "starBubble-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 986127
+        },
+        {
+          "name": "starBubble-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 986126
+        },
+        {
+          "name": "starBubble-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 986125
+        }
+      ]
+    },
+    {
+      "nodeId": "6261:983",
+      "name": "atSign",
+      "description": "Predictions, mentions, mention",
+      "assetsHash": "iWGsDIIHmD7sxiACyXZIv/puWFBlcJ7e/XFHrYZiHig=",
+      "nameHash": "h/IcCcSAR5K2U4Zb+uqIH+SefkoB/iTdtYJy/kBDsaU=",
+      "createdAt": "2025-12-22T17:30:21.627Z",
+      "lastUpdated": "2025-12-22T20:33:24.593Z",
+      "svgs": [
+        {
+          "name": "atSign-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 985680
+        },
+        {
+          "name": "atSign-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 985679
+        },
+        {
+          "name": "atSign-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 985678
+        },
+        {
+          "name": "atSign-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 985677
+        },
+        {
+          "name": "atSign-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 985676
+        },
+        {
+          "name": "atSign-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 985675
+        }
+      ]
+    },
+    {
+      "nodeId": "6261:970",
+      "name": "medal",
+      "description": "Predictions, trophy, award, win, achievement, reward, rewards",
+      "assetsHash": "ap3JroynSBWhFeeRSE4xvH8fE6PM5LyA0bkeBjdls4w=",
+      "nameHash": "VciyrrZTNlfH11KMGTN2+xHF1AzKJdqRllviILNBvvk=",
+      "createdAt": "2025-12-22T17:30:21.633Z",
+      "lastUpdated": "2025-12-22T20:33:24.690Z",
+      "svgs": [
+        {
+          "name": "medal-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 985908
+        },
+        {
+          "name": "medal-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 985907
+        },
+        {
+          "name": "medal-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 985906
+        },
+        {
+          "name": "medal-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 985905
+        },
+        {
+          "name": "medal-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 985904
+        },
+        {
+          "name": "medal-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 985903
+        }
+      ]
+    },
+    {
+      "nodeId": "6261:957",
+      "name": "ribbon",
+      "description": "Predictions, trophy, award, win, achievement, reward, rewards",
+      "assetsHash": "UmD6O2zW4zqyZ0Q5KWCZI//VybCIBRzN30PGANYfrxg=",
+      "nameHash": "89x3vYeAYjdgCW1fpWieduZWc1UqQeS4Bjby8knF1Uw=",
+      "createdAt": "2025-12-22T17:30:21.640Z",
+      "lastUpdated": "2025-12-22T20:33:24.566Z",
+      "svgs": [
+        {
+          "name": "ribbon-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 986046
+        },
+        {
+          "name": "ribbon-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 986045
+        },
+        {
+          "name": "ribbon-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 986044
+        },
+        {
+          "name": "ribbon-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 986043
+        },
+        {
+          "name": "ribbon-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 986042
+        },
+        {
+          "name": "ribbon-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 986041
+        }
+      ]
+    },
+    {
+      "nodeId": "6261:944",
+      "name": "starTrophy",
+      "description": "Predictions, trophy, award, win, achievement, reward, rewards",
+      "assetsHash": "SUCvoh2Tl6VreYdfitCR1ikpI+LAbaxTFEhQklIOP80=",
+      "nameHash": "vcUqrmuuz1/2hVqCufFsPxCtKhDLnlDYEXbsgePDvfw=",
+      "createdAt": "2025-12-22T17:30:21.717Z",
+      "lastUpdated": "2025-12-22T20:33:24.655Z",
+      "svgs": [
+        {
+          "name": "starTrophy-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 986136
+        },
+        {
+          "name": "starTrophy-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 986135
+        },
+        {
+          "name": "starTrophy-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 986134
+        },
+        {
+          "name": "starTrophy-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 986133
+        },
+        {
+          "name": "starTrophy-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 986132
+        },
+        {
+          "name": "starTrophy-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 986131
+        }
+      ]
+    },
+    {
+      "nodeId": "6261:918",
+      "name": "calendarDates",
+      "description": "Predictions, calendar, date, schedule, event, time",
+      "assetsHash": "hdVMBwc4j4tUvgFuMnzMdwI0pN2fyzGYYqvOKTBdhnc=",
+      "nameHash": "cHgXD21XN/BZzrYAbqgvoT9dosTc001sVCcoX2EzpCc=",
+      "createdAt": "2025-12-22T17:30:21.726Z",
+      "lastUpdated": "2025-12-22T20:33:24.696Z",
+      "svgs": [
+        {
+          "name": "calendarDates-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 985752
+        },
+        {
+          "name": "calendarDates-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 985751
+        },
+        {
+          "name": "calendarDates-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 985750
+        },
+        {
+          "name": "calendarDates-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 985749
+        },
+        {
+          "name": "calendarDates-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 985748
+        },
+        {
+          "name": "calendarDates-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 985747
+        }
+      ]
+    },
+    {
+      "nodeId": "6261:891",
+      "name": "calendarMoney",
+      "description": "Predictions, dates, calendar, payment, billing, finance, date",
+      "assetsHash": "3t0iSQonyAuLXmLNGxICga17uk0Y5Nlqs4yOHErWYuM=",
+      "nameHash": "OsckypEUmPGcg6HyLROj/djm/NVh98zUal8w8JqFgLs=",
+      "createdAt": "2025-12-22T17:30:21.734Z",
+      "lastUpdated": "2025-12-22T20:33:24.550Z",
+      "svgs": [
+        {
+          "name": "calendarMoney-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 985764
+        },
+        {
+          "name": "calendarMoney-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 985763
+        },
+        {
+          "name": "calendarMoney-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 985762
+        },
+        {
+          "name": "calendarMoney-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 985761
+        },
+        {
+          "name": "calendarMoney-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 985760
+        },
+        {
+          "name": "calendarMoney-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 985759
+        }
+      ]
+    },
+    {
+      "nodeId": "6261:865",
+      "name": "stableCoin",
+      "description": "Predictions, Stablecoin, stable, coin",
+      "assetsHash": "VcgtEWMHEtrwiybF0/QWTht0VgjgxK3FLo1SS7CGXyo=",
+      "nameHash": "iFSTlTEM4KxKmQCyHC0SYAGqJcN1VHtj7oB5TJhvjNQ=",
+      "createdAt": "2025-12-22T17:30:21.742Z",
+      "lastUpdated": "2025-12-22T20:33:24.660Z",
+      "svgs": [
+        {
+          "name": "stableCoin-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 986112
+        },
+        {
+          "name": "stableCoin-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 986111
+        },
+        {
+          "name": "stableCoin-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 986110
+        },
+        {
+          "name": "stableCoin-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 986109
+        },
+        {
+          "name": "stableCoin-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 986108
+        },
+        {
+          "name": "stableCoin-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 986107
+        }
+      ]
+    },
+    {
+      "nodeId": "6261:852",
+      "name": "politicsGavel",
+      "description": "Predictions, voting, politics, vote, democracy, politic",
+      "assetsHash": "MwfXar1/d3YyU02EAbrgsC6w+marwzYIw7UY8bleXyk=",
+      "nameHash": "+Luh2M7cOUM0xLASb+fx2so78TMwcx6jROc4i2KnXFQ=",
+      "createdAt": "2025-12-22T17:30:21.751Z",
+      "lastUpdated": "2025-12-22T20:33:24.724Z",
+      "svgs": [
+        {
+          "name": "politicsGavel-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 985998
+        },
+        {
+          "name": "politicsGavel-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 985997
+        },
+        {
+          "name": "politicsGavel-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 985996
+        },
+        {
+          "name": "politicsGavel-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 985995
+        },
+        {
+          "name": "politicsGavel-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 985994
+        },
+        {
+          "name": "politicsGavel-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 985993
+        }
+      ]
+    },
+    {
+      "nodeId": "6261:813",
+      "name": "politicsBuilding",
+      "description": "Predictions, voting, politics, vote, democracy, politic",
+      "assetsHash": "ffHwQSgnPxpx4OEsbRMIHKCEA7gMaSB4QeSzU4ENJzI=",
+      "nameHash": "EHweMjIjDUn09/pGegURduyjjFGvM6SguaXgUpb2uUc=",
+      "createdAt": "2025-12-22T17:30:21.758Z",
+      "lastUpdated": "2025-12-22T20:33:24.684Z",
+      "svgs": [
+        {
+          "name": "politicsBuilding-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 985980
+        },
+        {
+          "name": "politicsBuilding-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 985979
+        },
+        {
+          "name": "politicsBuilding-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 985978
+        },
+        {
+          "name": "politicsBuilding-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 985977
+        },
+        {
+          "name": "politicsBuilding-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 985976
+        },
+        {
+          "name": "politicsBuilding-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 985975
+        }
+      ]
+    },
+    {
+      "nodeId": "6261:800",
+      "name": "politicsStar",
+      "description": "Predictions, voting, politics, vote, democracy, politic",
+      "assetsHash": "LdJRXf1VoKnn+X2hb5dzJfHOPgC86F+camf2uf+dOeE=",
+      "nameHash": "V+6AW/HrW5vxQzWwhH6usOhvt3lW1raXtFWSLythGkw=",
+      "createdAt": "2025-12-22T17:30:21.767Z",
+      "lastUpdated": "2025-12-22T20:33:24.623Z",
+      "svgs": [
+        {
+          "name": "politicsStar-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 986010
+        },
+        {
+          "name": "politicsStar-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 986009
+        },
+        {
+          "name": "politicsStar-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 986008
+        },
+        {
+          "name": "politicsStar-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 986007
+        },
+        {
+          "name": "politicsStar-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 986006
+        },
+        {
+          "name": "politicsStar-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 986005
+        }
+      ]
+    },
+    {
+      "nodeId": "6261:787",
+      "name": "politicsPodium",
+      "description": "Predictions, voting, politics, vote, democracy, politic, podium",
+      "assetsHash": "QbffnobYSQzu6vVWsXS655l5QhRqMz7RBN/xFyR/5aE=",
+      "nameHash": "jZkg6F58rGc9QzCrzlimX25gYD86+YKslEvw7UKuOrE=",
+      "createdAt": "2025-12-22T17:30:21.776Z",
+      "lastUpdated": "2025-12-22T20:33:24.671Z",
+      "svgs": [
+        {
+          "name": "politicsPodium-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 986004
+        },
+        {
+          "name": "politicsPodium-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 986003
+        },
+        {
+          "name": "politicsPodium-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 986002
+        },
+        {
+          "name": "politicsPodium-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 986001
+        },
+        {
+          "name": "politicsPodium-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 986000
+        },
+        {
+          "name": "politicsPodium-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 985999
+        }
+      ]
+    },
+    {
+      "nodeId": "6261:761",
+      "name": "apple",
+      "description": "Predictions, education, apple",
+      "assetsHash": "oa4rLBg18MnPRXakjaTf3qQhW6mNHz3hbFPC7L7rphk=",
+      "nameHash": "Ft8JwUlxh1POfA+WgIjWUjY1FhUi2qS32ysM7Yf+u80=",
+      "createdAt": "2025-12-22T17:30:21.785Z",
+      "lastUpdated": "2025-12-22T20:33:24.665Z",
+      "svgs": [
+        {
+          "name": "apple-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 985674
+        },
+        {
+          "name": "apple-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 985673
+        },
+        {
+          "name": "apple-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 985672
+        },
+        {
+          "name": "apple-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 985671
+        },
+        {
+          "name": "apple-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 985670
+        },
+        {
+          "name": "apple-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 985669
+        }
+      ]
+    },
+    {
+      "nodeId": "6261:735",
+      "name": "educationPencil",
+      "description": "Predictions, education, pencil, teaching",
+      "assetsHash": "cxFq08mW8j/RrWKGtqCmV7WGAFPGxck0Tq7SWXr8QwE=",
+      "nameHash": "Uyu+7iqxGGsOPNzfky2qyYQp4tvvYV0UUDA9xVSPLjI=",
+      "createdAt": "2025-12-22T17:30:21.794Z",
+      "lastUpdated": "2025-12-22T20:33:24.677Z",
+      "svgs": [
+        {
+          "name": "educationPencil-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 985824
+        },
+        {
+          "name": "educationPencil-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 985823
+        },
+        {
+          "name": "educationPencil-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 985822
+        },
+        {
+          "name": "educationPencil-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 985821
+        },
+        {
+          "name": "educationPencil-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 985820
+        },
+        {
+          "name": "educationPencil-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 985819
+        }
+      ]
+    },
+    {
+      "nodeId": "6261:722",
+      "name": "ratingsStar",
+      "description": "Predictions, ratings, voting, rating",
+      "assetsHash": "b+YwFRzoRncZVevJ1t7swNqtKWAIZf+oOJQ8uxZDqQo=",
+      "nameHash": "0VK8LbIKaWyBsGQnx1q8EEHxBrwMeBbqCFBhKnIrnI0=",
+      "createdAt": "2025-12-22T17:30:21.801Z",
+      "lastUpdated": "2025-12-22T20:33:24.616Z",
+      "svgs": [
+        {
+          "name": "ratingsStar-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 986040
+        },
+        {
+          "name": "ratingsStar-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 986039
+        },
+        {
+          "name": "ratingsStar-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 986038
+        },
+        {
+          "name": "ratingsStar-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 986037
+        },
+        {
+          "name": "ratingsStar-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 986036
+        },
+        {
+          "name": "ratingsStar-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 986035
+        }
+      ]
+    },
+    {
+      "nodeId": "6261:709",
+      "name": "podiumStar",
+      "description": "Predictions, ratings, voting, rating",
+      "assetsHash": "4zC8tCMOw/UoDtby47TWwaJqTPNy8DlHTSeFRX3cVB0=",
+      "nameHash": "jDont3VvPuSj3d6GR+1gASmShahwUFyi5MZ3zxpbSEs=",
+      "createdAt": "2025-12-22T17:30:21.807Z",
+      "lastUpdated": "2025-12-22T20:33:24.559Z",
+      "svgs": [
+        {
+          "name": "podiumStar-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 985974
+        },
+        {
+          "name": "podiumStar-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 985973
+        },
+        {
+          "name": "podiumStar-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 985972
+        },
+        {
+          "name": "podiumStar-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 985971
+        },
+        {
+          "name": "podiumStar-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 985970
+        },
+        {
+          "name": "podiumStar-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 985969
+        }
+      ]
+    },
+    {
+      "nodeId": "6261:683",
+      "name": "ratingsCheck",
+      "description": "Predictions, ratings, voting, rating",
+      "assetsHash": "6gc1kxedKKW+ZyD8D0Rhm7Wpm5DyhSliCvXHwNAbwJE=",
+      "nameHash": "/Mvb4tcx+5V5UfoanzYEODvIiPDiGPJRGwikZ6H3WLc=",
+      "createdAt": "2025-12-22T17:30:21.815Z",
+      "lastUpdated": "2025-12-22T20:33:24.630Z",
+      "svgs": [
+        {
+          "name": "ratingsCheck-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 986028
+        },
+        {
+          "name": "ratingsCheck-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 986027
+        },
+        {
+          "name": "ratingsCheck-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 986026
+        },
+        {
+          "name": "ratingsCheck-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 986025
+        },
+        {
+          "name": "ratingsCheck-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 986024
+        },
+        {
+          "name": "ratingsCheck-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 986023
+        }
+      ]
+    },
+    {
+      "nodeId": "6261:657",
+      "name": "pillBottle",
+      "description": "Predictions, medicine, health, medical, pharmacy, medicine, apothecary, pill, capsule,",
+      "assetsHash": "0nXsQgAVCS2He+bHCSggdU4AbWvIZFQqsDEWpQj7Vow=",
+      "nameHash": "cxBVgNp+WRbVY7WfEjVr07tiJ9FstXaY/8D3EZcpGr0=",
+      "createdAt": "2025-12-22T17:30:21.821Z",
+      "lastUpdated": "2025-12-22T20:33:24.587Z",
+      "svgs": [
+        {
+          "name": "pillBottle-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 985956
+        },
+        {
+          "name": "pillBottle-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 985955
+        },
+        {
+          "name": "pillBottle-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 985954
+        },
+        {
+          "name": "pillBottle-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 985953
+        },
+        {
+          "name": "pillBottle-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 985952
+        },
+        {
+          "name": "pillBottle-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 985951
+        }
+      ]
+    },
+    {
+      "nodeId": "6261:644",
+      "name": "needle",
+      "description": "Predictions, hospital, medical, clinic, healthcare, health, syringe, injection, vaccine,",
+      "assetsHash": "v5YJA+3bd/ShG4AFWv9h8KixjfRWkKsE/lkx6AN0x6w=",
+      "nameHash": "RYuPk5nqH6tG9FzgDP3Jq3l7RZ/pSQV3zjJBWHuO0HQ=",
+      "createdAt": "2025-12-22T17:30:21.828Z",
+      "lastUpdated": "2025-12-22T20:33:24.707Z",
+      "svgs": [
+        {
+          "name": "needle-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 985944
+        },
+        {
+          "name": "needle-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 985943
+        },
+        {
+          "name": "needle-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 985942
+        },
+        {
+          "name": "needle-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 985941
+        },
+        {
+          "name": "needle-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 985940
+        },
+        {
+          "name": "needle-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 985939
+        }
+      ]
+    },
+    {
+      "nodeId": "6261:631",
+      "name": "hospital",
+      "description": "Predictions, hospital, medical, clinic, healthcare, health",
+      "assetsHash": "XIEWnYThK2XWS5l+4uQn4rp/CrdgWfPKerzjpD1w5Vo=",
+      "nameHash": "CpNW8GAqv7fHM0oh7+UIfzD8sw6ppEi64OfQahr2imE=",
+      "createdAt": "2025-12-22T17:30:21.837Z",
+      "lastUpdated": "2025-12-22T20:33:24.600Z",
+      "svgs": [
+        {
+          "name": "hospital-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 985884
+        },
+        {
+          "name": "hospital-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 985883
+        },
+        {
+          "name": "hospital-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 985882
+        },
+        {
+          "name": "hospital-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 985881
+        },
+        {
+          "name": "hospital-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 985880
+        },
+        {
+          "name": "hospital-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 985879
+        }
+      ]
+    },
+    {
+      "nodeId": "6261:579",
+      "name": "bug",
+      "description": "Predictions, medicine, health, virus, bug, vaccine",
+      "assetsHash": "4CUpoFer5AUV9LcuXNo0/T5Mb9WeENnvEcxQe+Cbo2w=",
+      "nameHash": "rA+zx+ZTvFqtXJyDhnqINwyTSMFu3xXF6HARRLNc3PQ=",
+      "createdAt": "2025-12-22T17:30:21.846Z",
+      "lastUpdated": "2025-12-22T20:33:24.701Z",
+      "svgs": [
+        {
+          "name": "bug-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 985740
+        },
+        {
+          "name": "bug-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 985739
+        },
+        {
+          "name": "bug-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 985738
+        },
+        {
+          "name": "bug-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 985737
+        },
+        {
+          "name": "bug-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 985736
+        },
+        {
+          "name": "bug-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 985735
+        }
+      ]
+    },
+    {
+      "nodeId": "6261:566",
+      "name": "bandage",
+      "description": "Predictions, medicine, health, drug, pharmacy, bandaid, bandage",
+      "assetsHash": "F1CM77Xz1+sLod13FxxPzugHiiqLPCVVEFN3vAnHigY=",
+      "nameHash": "bLMGBgfr7Up6NqukqM8gm0aPpR3iKxhWIbGyQ+HPPIk=",
+      "createdAt": "2025-12-22T17:30:21.853Z",
+      "lastUpdated": "2025-12-22T20:33:24.643Z",
+      "svgs": [
+        {
+          "name": "bandage-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 985704
+        },
+        {
+          "name": "bandage-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 985703
+        },
+        {
+          "name": "bandage-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 985702
+        },
+        {
+          "name": "bandage-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 985701
+        },
+        {
+          "name": "bandage-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 985700
+        },
+        {
+          "name": "bandage-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 985699
+        }
+      ]
+    },
+    {
+      "nodeId": "6261:540",
+      "name": "scienceMoon",
+      "description": "Predictions, tech, technology, Science, moon, lab, experiment, chemistry, research,",
+      "assetsHash": "A8Q1ucv7HWBmuJiDaVRTdkS6ajIs533qjN3yrxPRtnU=",
+      "nameHash": "VJgPYkeO055Vt0VewsghNwpog480GSs9vtAi6t620gk=",
+      "createdAt": "2025-12-22T17:30:21.859Z",
+      "lastUpdated": "2025-12-22T20:33:24.606Z",
+      "svgs": [
+        {
+          "name": "scienceMoon-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 986070
+        },
+        {
+          "name": "scienceMoon-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 986069
+        },
+        {
+          "name": "scienceMoon-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 986068
+        },
+        {
+          "name": "scienceMoon-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 986067
+        },
+        {
+          "name": "scienceMoon-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 986066
+        },
+        {
+          "name": "scienceMoon-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 986065
+        }
+      ]
+    },
+    {
+      "nodeId": "6261:527",
+      "name": "alien",
+      "description": "Predictions, tech, technology, Science, lab, experiment, chemistry, research, alien",
+      "assetsHash": "iuKRkSkPbUhm7bxTOF67xxR7tkR50I9ull1c7VIXOJI=",
+      "nameHash": "y4P0lnJnMp9h96QCESVxvg1qaqPMPAzjkPieclejca0=",
+      "createdAt": "2025-12-22T17:30:21.866Z",
+      "lastUpdated": "2025-12-22T20:33:24.719Z",
+      "svgs": [
+        {
+          "name": "alien-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 985662
+        },
+        {
+          "name": "alien-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 985661
+        },
+        {
+          "name": "alien-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 985660
+        },
+        {
+          "name": "alien-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 985659
+        },
+        {
+          "name": "alien-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 985658
+        },
+        {
+          "name": "alien-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 985657
+        }
+      ]
+    },
+    {
+      "nodeId": "6261:501",
+      "name": "microscope",
+      "description": "Predictions, tech, technology, Science, lab, experiment, chemistry, research,",
+      "assetsHash": "3EJsImMIcApPESLf/+WEiYXLZCBQNSC66gtIr4pyM48=",
+      "nameHash": "qTvWX5Sa72JHlX6INXDrPEzPsEhHAuB9UpUGxvocnSE=",
+      "createdAt": "2025-12-22T17:30:21.873Z",
+      "lastUpdated": "2025-12-22T20:33:24.637Z",
+      "svgs": [
+        {
+          "name": "microscope-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 985920
+        },
+        {
+          "name": "microscope-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 985919
+        },
+        {
+          "name": "microscope-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 985918
+        },
+        {
+          "name": "microscope-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 985917
+        },
+        {
+          "name": "microscope-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 985916
+        },
+        {
+          "name": "microscope-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 985915
+        }
+      ]
+    },
+    {
+      "nodeId": "6261:488",
+      "name": "scienceBeaker",
+      "description": "Predictions, tech, technology, Science, lab, experiment, chemistry, research, Beaker",
+      "assetsHash": "VwWGIlPzo5cBqwzVq2DvN3X3kXMTnVx48jscIIKgp/M=",
+      "nameHash": "L9We+fo82AlkvFrMZym4I7ESzDXNjlO3CYHWflaQgws=",
+      "createdAt": "2025-12-22T17:30:21.881Z",
+      "lastUpdated": "2025-12-22T20:33:24.580Z",
+      "svgs": [
+        {
+          "name": "scienceBeaker-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 986064
+        },
+        {
+          "name": "scienceBeaker-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 986063
+        },
+        {
+          "name": "scienceBeaker-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 986062
+        },
+        {
+          "name": "scienceBeaker-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 986061
+        },
+        {
+          "name": "scienceBeaker-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 986060
+        },
+        {
+          "name": "scienceBeaker-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 986059
+        }
+      ]
+    },
+    {
+      "nodeId": "6261:462",
+      "name": "city",
+      "description": "Predictions, Markets, Economics, companies, building",
+      "assetsHash": "9SHmh+atKTS8dI3D5t3jKJwgMf3RU6m6RWCauuAMMkI=",
+      "nameHash": "22BQFqRx51run1Q6ZsF/rQt35VcoZ6PLExrCFa1qDNU=",
+      "createdAt": "2025-12-22T17:30:36.365Z",
+      "lastUpdated": "2025-12-22T20:33:38.147Z",
+      "svgs": [
+        {
+          "name": "city-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 985782
+        },
+        {
+          "name": "city-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 985781
+        },
+        {
+          "name": "city-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 985780
+        },
+        {
+          "name": "city-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 985779
+        },
+        {
+          "name": "city-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 985778
+        },
+        {
+          "name": "city-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 985777
+        }
+      ]
+    },
+    {
+      "nodeId": "6261:449",
+      "name": "factory",
+      "description": "Predictions, Markets, Economics, companies, building",
+      "assetsHash": "CLtK/GweDOlTw4ahtdcGF/+SNJ+nDYx6Sli+qEazQpU=",
+      "nameHash": "ugRo2W0MIxajN+quVuvV1X0Vy7AKhCfQ5aOqF0Wvjt8=",
+      "createdAt": "2025-12-22T17:30:36.375Z",
+      "lastUpdated": "2025-12-22T20:33:38.085Z",
+      "svgs": [
+        {
+          "name": "factory-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 985836
+        },
+        {
+          "name": "factory-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 985835
+        },
+        {
+          "name": "factory-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 985834
+        },
+        {
+          "name": "factory-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 985833
+        },
+        {
+          "name": "factory-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 985832
+        },
+        {
+          "name": "factory-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 985831
+        }
+      ]
+    },
+    {
+      "nodeId": "6261:436",
+      "name": "corporation",
+      "description": "Predictions, Markets, Economics, companies, building",
+      "assetsHash": "UUZwjeeYtJa/pnr5VKqGkO3Yv7TDREnoJonhL19Ic4o=",
+      "nameHash": "0N93Se0aup9uW1+iB1RFZcgDBERDt5aBLWH8x3wfvRE=",
+      "createdAt": "2025-12-22T17:30:36.383Z",
+      "lastUpdated": "2025-12-22T20:33:38.182Z",
+      "svgs": [
+        {
+          "name": "corporation-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 985800
+        },
+        {
+          "name": "corporation-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 985799
+        },
+        {
+          "name": "corporation-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 985798
+        },
+        {
+          "name": "corporation-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 985797
+        },
+        {
+          "name": "corporation-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 985796
+        },
+        {
+          "name": "corporation-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 985795
+        }
+      ]
+    },
+    {
+      "nodeId": "6261:397",
+      "name": "greenEnergy",
+      "description": "Predictions, Economics, gas, energy, Green Energy, growth,",
+      "assetsHash": "jYxrvDq27wXCV5dTQyd86a8VJN3ltUWvaAqzzaaKkuU=",
+      "nameHash": "sBLwdWMxwvg8YB4uA7/xkthXHNHLBv4B9okW4oUTkE0=",
+      "createdAt": "2025-12-22T17:30:36.389Z",
+      "lastUpdated": "2025-12-22T20:33:38.131Z",
+      "svgs": [
+        {
+          "name": "greenEnergy-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 985872
+        },
+        {
+          "name": "greenEnergy-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 985871
+        },
+        {
+          "name": "greenEnergy-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 985870
+        },
+        {
+          "name": "greenEnergy-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 985869
+        },
+        {
+          "name": "greenEnergy-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 985868
+        },
+        {
+          "name": "greenEnergy-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 985867
+        }
+      ]
+    },
+    {
+      "nodeId": "6261:306",
+      "name": "thermometer",
+      "description": "Predictions, weather, temperature, heat, cold, climate",
+      "assetsHash": "7KkZ3gYx0Dle7HiRv8sP9EYq+rjKuLoflNW64kZ2Mfg=",
+      "nameHash": "ujgiCHkFUFMKMT0VnTnlYxtN4X2l/7NJeIOKk6SyjdA=",
+      "createdAt": "2025-12-22T17:30:36.395Z",
+      "lastUpdated": "2025-12-22T20:33:38.122Z",
+      "svgs": [
+        {
+          "name": "thermometer-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 986160
+        },
+        {
+          "name": "thermometer-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 986159
+        },
+        {
+          "name": "thermometer-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 986158
+        },
+        {
+          "name": "thermometer-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 986157
+        },
+        {
+          "name": "thermometer-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 986156
+        },
+        {
+          "name": "thermometer-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 986155
+        }
+      ]
+    },
+    {
+      "nodeId": "6261:267",
+      "name": "umbrella",
+      "description": "Predictions, weather, Climate, rain, Raining,",
+      "assetsHash": "ivxiP1I2u2V635UJ5kz10u3NeJRMtY7U6IOMEd58tCw=",
+      "nameHash": "x8PjpY9YNHSrZcNpQL9FFZjXeToXuv2OXEditcE56VI=",
+      "createdAt": "2025-12-22T17:30:36.402Z",
+      "lastUpdated": "2025-12-22T20:33:38.097Z",
+      "svgs": [
+        {
+          "name": "umbrella-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 986202
+        },
+        {
+          "name": "umbrella-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 986201
+        },
+        {
+          "name": "umbrella-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 986200
+        },
+        {
+          "name": "umbrella-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 986199
+        },
+        {
+          "name": "umbrella-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 986198
+        },
+        {
+          "name": "umbrella-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 986197
+        }
+      ]
+    },
+    {
+      "nodeId": "6261:241",
+      "name": "hurricane",
+      "description": "Predictions, weather, Climate, hurricane,",
+      "assetsHash": "bsm2eNk7AesPbpfF1hosiycqA1LNxteOh29kh1w9gII=",
+      "nameHash": "Jf+pPsrnJeFV8cKQhKxFi3Prf+0EiqXMU5STteb6iPs=",
+      "createdAt": "2025-12-22T17:30:36.408Z",
+      "lastUpdated": "2025-12-22T20:33:38.156Z",
+      "svgs": [
+        {
+          "name": "hurricane-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 985896
+        },
+        {
+          "name": "hurricane-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 985895
+        },
+        {
+          "name": "hurricane-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 985894
+        },
+        {
+          "name": "hurricane-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 985893
+        },
+        {
+          "name": "hurricane-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 985892
+        },
+        {
+          "name": "hurricane-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 985891
+        }
+      ]
+    },
+    {
+      "nodeId": "6261:162",
+      "name": "stablecoinStack",
+      "description": "Predictions, crypto, stable, stablecoin",
+      "assetsHash": "v98sk733glXDePmGwFe/KtjMprn50IqjIk8pVuKv9iM=",
+      "nameHash": "4lEWbty3199mKK7pX4dbJoqOLgUyFpVIumoIgUwcG2c=",
+      "createdAt": "2025-12-22T17:30:36.414Z",
+      "lastUpdated": "2025-12-22T20:33:38.060Z",
+      "svgs": [
+        {
+          "name": "stablecoinStack-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 986118
+        },
+        {
+          "name": "stablecoinStack-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 986117
+        },
+        {
+          "name": "stablecoinStack-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 986116
+        },
+        {
+          "name": "stablecoinStack-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 986115
+        },
+        {
+          "name": "stablecoinStack-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 986114
+        },
+        {
+          "name": "stablecoinStack-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 986113
+        }
+      ]
+    },
+    {
+      "nodeId": "6261:149",
+      "name": "entertainment",
+      "description": "Predictions, Music, audio, entertainment, music, audio, sound, note, media",
+      "assetsHash": "jagmwMYQim8jwRREu/MludfS/9iKuphFKXMYiwmobQ4=",
+      "nameHash": "MLa9covuDl/YmIBC+kLp2D1KnCXJKb0Gdh19k1EuVlo=",
+      "createdAt": "2025-12-22T17:30:36.421Z",
+      "lastUpdated": "2025-12-22T20:33:38.126Z",
+      "svgs": [
+        {
+          "name": "entertainment-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 985830
+        },
+        {
+          "name": "entertainment-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 985829
+        },
+        {
+          "name": "entertainment-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 985828
+        },
+        {
+          "name": "entertainment-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 985827
+        },
+        {
+          "name": "entertainment-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 985826
+        },
+        {
+          "name": "entertainment-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 985825
+        }
+      ]
+    },
+    {
+      "nodeId": "6261:136",
+      "name": "tshirt",
+      "description": "Predictions, clothing, shirt, apparel, fashion, retail",
+      "assetsHash": "cvN+5DvA1ozsV1VZ0okUQewd2VBMioIb8ILMdckmmxI=",
+      "nameHash": "x8GrTlOtS8FuyYvnG1hUYK6A1cvNR59W3eMnTGeWfG4=",
+      "createdAt": "2025-12-22T17:30:36.428Z",
+      "lastUpdated": "2025-12-22T20:33:38.104Z",
+      "svgs": [
+        {
+          "name": "tshirt-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 986184
+        },
+        {
+          "name": "tshirt-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 986183
+        },
+        {
+          "name": "tshirt-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 986182
+        },
+        {
+          "name": "tshirt-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 986181
+        },
+        {
+          "name": "tshirt-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 986180
+        },
+        {
+          "name": "tshirt-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 986179
+        }
+      ]
+    },
+    {
+      "nodeId": "6261:110",
+      "name": "rottenTomato",
+      "description": "Predictions, entertainment, rotten, rotten tomato, vegetable, food, produce, cooking, tomato",
+      "assetsHash": "FVNv7/l0aMVey4jL0HcJoFYDUmzDnaBXNahEF6AoAPw=",
+      "nameHash": "ORsjoa6ki7cZmWFO2Gjstb1bRsS/vgTKr3M3Vx+0LWs=",
+      "createdAt": "2025-12-22T17:30:36.434Z",
+      "lastUpdated": "2025-12-22T20:33:38.198Z",
+      "svgs": [
+        {
+          "name": "rottenTomato-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 986052
+        },
+        {
+          "name": "rottenTomato-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 986051
+        },
+        {
+          "name": "rottenTomato-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 986050
+        },
+        {
+          "name": "rottenTomato-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 986049
+        },
+        {
+          "name": "rottenTomato-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 986048
+        },
+        {
+          "name": "rottenTomato-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 986047
+        }
+      ]
+    },
+    {
+      "nodeId": "6261:58",
+      "name": "tv",
+      "description": "Predictions, Music, audio, entertainment, tv, broadcast, screen, media, video",
+      "assetsHash": "NNm/l36cfEnTTeUNXVmcPc02dVf+rqASbXgh6l9+6HA=",
+      "nameHash": "HSZ2oeCmiMh/Wa3YpMdrQISK32199pDCzqv3mw5EgGE=",
+      "createdAt": "2025-12-22T17:30:36.440Z",
+      "lastUpdated": "2025-12-22T20:33:38.079Z",
+      "svgs": [
+        {
+          "name": "tv-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 986190
+        },
+        {
+          "name": "tv-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 986189
+        },
+        {
+          "name": "tv-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 986188
+        },
+        {
+          "name": "tv-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 986187
+        },
+        {
+          "name": "tv-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 986186
+        },
+        {
+          "name": "tv-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 986185
+        }
+      ]
+    },
+    {
+      "nodeId": "6261:45",
+      "name": "filmStrip",
+      "description": "Predictions, Music, audio, entertainment, video, film, movie, media, cinema",
+      "assetsHash": "pQVfcvZgAEfVFfxwBE3m2wfLG8N8UidQ93egERWS2/k=",
+      "nameHash": "SfImlA2qqmp0gb+RoyOSFS8Vz0S+2ftjKZ6zJSFnQ1g=",
+      "createdAt": "2025-12-22T17:30:36.446Z",
+      "lastUpdated": "2025-12-22T20:33:38.170Z",
+      "svgs": [
+        {
+          "name": "filmStrip-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 985842
+        },
+        {
+          "name": "filmStrip-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 985841
+        },
+        {
+          "name": "filmStrip-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 985840
+        },
+        {
+          "name": "filmStrip-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 985839
+        },
+        {
+          "name": "filmStrip-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 985838
+        },
+        {
+          "name": "filmStrip-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 985837
+        }
+      ]
+    },
+    {
+      "nodeId": "6261:32",
+      "name": "singleNote",
+      "description": "Predictions, Music, audio, entertainment, music, audio, sound, note, media",
+      "assetsHash": "mPgtAOUZXvxYahzEinrmrZP46MxAiSp6KSE00Eu3Aag=",
+      "nameHash": "XsNzXzq6xtSje6MfPBHgZIqmaqHXcrq9sju+icaInk8=",
+      "createdAt": "2025-12-22T17:30:36.452Z",
+      "lastUpdated": "2025-12-22T20:33:38.110Z",
+      "svgs": [
+        {
+          "name": "singleNote-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 986082
+        },
+        {
+          "name": "singleNote-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 986081
+        },
+        {
+          "name": "singleNote-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 986080
+        },
+        {
+          "name": "singleNote-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 986079
+        },
+        {
+          "name": "singleNote-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 986078
+        },
+        {
+          "name": "singleNote-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 986077
+        }
+      ]
+    },
+    {
+      "nodeId": "6261:748",
+      "name": "educationBook",
+      "description": "Predictions, education, book, teaching",
+      "assetsHash": "iPFvMJ6alHXSPoKeTL5lsjKhN8lQoqHEbrKp6yWbptE=",
+      "nameHash": "KhWv02XYkUuZpWcSbbP5hDAyJ8YPt4texnT8ovNG8H0=",
+      "createdAt": "2025-12-22T17:30:36.458Z",
+      "lastUpdated": "2025-12-22T20:33:38.177Z",
+      "svgs": [
+        {
+          "name": "educationBook-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 985818
+        },
+        {
+          "name": "educationBook-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 985817
+        },
+        {
+          "name": "educationBook-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 985816
+        },
+        {
+          "name": "educationBook-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 985815
+        },
+        {
+          "name": "educationBook-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 985814
+        },
+        {
+          "name": "educationBook-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 985813
+        }
+      ]
+    },
+    {
+      "nodeId": "6261:97",
+      "name": "gaming",
+      "description": "Predictions, entertainment, games, gaming, controller, console, esports, play",
+      "assetsHash": "V6jY/Bg9lEIocHhwv0+mydo58KiL0w/kvbdOTTOiLj8=",
+      "nameHash": "YeoJjBLPX0PLK7iQOfR3lCtt8UZEsWje92QxMdR4lmc=",
+      "createdAt": "2025-12-22T17:30:36.464Z",
+      "lastUpdated": "2025-12-22T20:33:38.193Z",
+      "svgs": [
+        {
+          "name": "gaming-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 985854
+        },
+        {
+          "name": "gaming-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 985853
+        },
+        {
+          "name": "gaming-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 985852
+        },
+        {
+          "name": "gaming-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 985851
+        },
+        {
+          "name": "gaming-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 985850
+        },
+        {
+          "name": "gaming-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 985849
+        }
+      ]
+    },
+    {
+      "nodeId": "6261:696",
+      "name": "ratingsChecks",
+      "description": "Predictions, ratings, voting, rating",
+      "assetsHash": "YB3xWADxpLkOV8qhJJxHI7U3NdusYwmMb4hQOUShhIg=",
+      "nameHash": "Wgi3CFtwke8GyoFGYgfpqu1junnpCTyXPej4OKofli4=",
+      "createdAt": "2025-12-22T17:30:36.471Z",
+      "lastUpdated": "2025-12-22T20:33:38.166Z",
+      "svgs": [
+        {
+          "name": "ratingsChecks-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 986034
+        },
+        {
+          "name": "ratingsChecks-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 986033
+        },
+        {
+          "name": "ratingsChecks-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 986032
+        },
+        {
+          "name": "ratingsChecks-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 986031
+        },
+        {
+          "name": "ratingsChecks-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 986030
+        },
+        {
+          "name": "ratingsChecks-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 986029
+        }
+      ]
+    },
+    {
+      "nodeId": "6261:71",
+      "name": "playbutton",
+      "description": "Predictions, Music, audio, entertainment, play, video, audio, start, media",
+      "assetsHash": "BKUZ2N8WVPT0IxXUJf8DaphtptPkXadHoxvpq+I4IiA=",
+      "nameHash": "UmzK2RtfV1A39wqTri2arCO26iFu9HK4X1aCcsSYGSM=",
+      "createdAt": "2025-12-22T17:30:36.477Z",
+      "lastUpdated": "2025-12-22T20:33:38.067Z",
+      "svgs": [
+        {
+          "name": "playbutton-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 985968
+        },
+        {
+          "name": "playbutton-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 985967
+        },
+        {
+          "name": "playbutton-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 985966
+        },
+        {
+          "name": "playbutton-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 985965
+        },
+        {
+          "name": "playbutton-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 985964
+        },
+        {
+          "name": "playbutton-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 985963
+        }
+      ]
+    },
+    {
+      "nodeId": "6261:553",
+      "name": "scienceAtom",
+      "description": "Predictions, tech, technology, Science, atom, lab, experiment, chemistry, research",
+      "assetsHash": "vQTXEXlVJx+82AQiZQIJfgwzKJQB01NUKr6PWocYGw0=",
+      "nameHash": "kg/Tj1ySpiTcql0kRKp6cGsY8TFahBtMmMwW1+ynT+4=",
+      "createdAt": "2025-12-22T17:30:36.484Z",
+      "lastUpdated": "2025-12-22T20:33:38.187Z",
+      "svgs": [
+        {
+          "name": "scienceAtom-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 986058
+        },
+        {
+          "name": "scienceAtom-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 986057
+        },
+        {
+          "name": "scienceAtom-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 986056
+        },
+        {
+          "name": "scienceAtom-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 986055
+        },
+        {
+          "name": "scienceAtom-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 986054
+        },
+        {
+          "name": "scienceAtom-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 986053
+        }
+      ]
+    },
+    {
+      "nodeId": "6261:345",
+      "name": "earthquake",
+      "description": "Predictions, weather, earthquake, climate",
+      "assetsHash": "PTd2zXij0c9v1rFvLBHVPb3XQ4XIONtRcfdE/rgWjQo=",
+      "nameHash": "8PGxmdrkhd2d7DjxxUp2wuOVgVDg2pzva5rJ+SZVadw=",
+      "createdAt": "2025-12-22T17:30:36.490Z",
+      "lastUpdated": "2025-12-22T20:33:51.812Z",
+      "svgs": [
+        {
+          "name": "earthquake-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 985812
+        },
+        {
+          "name": "earthquake-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 985811
+        },
+        {
+          "name": "earthquake-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 985810
+        },
+        {
+          "name": "earthquake-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 985809
+        },
+        {
+          "name": "earthquake-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 985808
+        },
+        {
+          "name": "earthquake-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 985807
+        }
+      ]
+    },
+    {
+      "nodeId": "6261:123",
+      "name": "shoe",
+      "description": "Predictions, shoe, sneakers, clothing, apparel, fashion, retail",
+      "assetsHash": "Lo/Iu14xvcICpTXQqhGGWOC6J+SN9MzMwHynOxT6/OU=",
+      "nameHash": "zAOoU30fvVBcxG3WrwWTAEUShiSR3RciCLPfDf4jFO4=",
+      "createdAt": "2025-12-22T17:30:36.498Z",
+      "lastUpdated": "2025-12-22T20:33:51.835Z",
+      "svgs": [
+        {
+          "name": "shoe-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 986076
+        },
+        {
+          "name": "shoe-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 986075
+        },
+        {
+          "name": "shoe-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 986074
+        },
+        {
+          "name": "shoe-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 986073
+        },
+        {
+          "name": "shoe-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 986072
+        },
+        {
+          "name": "shoe-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 986071
+        }
+      ]
+    },
+    {
+      "nodeId": "6261:996",
+      "name": "quotation",
+      "description": "Predictions, mentions, mention",
+      "assetsHash": "TkWKtjBDmLH/AqK3AgV2rOOUjArahnGx9oHeoMoBPiU=",
+      "nameHash": "w/ZUNWbDZb79FOde9J/2bGeCKlaaVZYFx7vsWTzhYfU=",
+      "createdAt": "2025-12-22T17:30:50.699Z",
+      "lastUpdated": "2025-12-22T20:33:51.827Z",
+      "svgs": [
+        {
+          "name": "quotation-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 986016
+        },
+        {
+          "name": "quotation-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 986015
+        },
+        {
+          "name": "quotation-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 986014
+        },
+        {
+          "name": "quotation-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 986013
+        },
+        {
+          "name": "quotation-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 986012
+        },
+        {
+          "name": "quotation-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 986011
+        }
+      ]
+    },
+    {
+      "nodeId": "6261:19",
+      "name": "musicArticles",
+      "description": "Predictions, Music, audio, entertainment, music, audio, sound, note, media",
+      "assetsHash": "5A5y47HsJxkBaN9SPt8e09wGDW2E36/7FWlpqRWu59I=",
+      "nameHash": "Rxzgo2SXUkYx7kZYD4Fhd+S8shNsN21xjihMTW8CAYY=",
+      "createdAt": "2025-12-22T17:30:50.707Z",
+      "lastUpdated": "2025-12-22T20:33:51.843Z",
+      "svgs": [
+        {
+          "name": "musicArticles-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 985938
+        },
+        {
+          "name": "musicArticles-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 985937
+        },
+        {
+          "name": "musicArticles-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 985936
+        },
+        {
+          "name": "musicArticles-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 985935
+        },
+        {
+          "name": "musicArticles-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 985934
+        },
+        {
+          "name": "musicArticles-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 985933
+        }
+      ]
+    },
+    {
+      "nodeId": "6261:826",
+      "name": "politicsFlag",
+      "description": "Predictions, voting, politics, vote, democracy, politic",
+      "assetsHash": "LG/IddZ/svZjBF2AID1aoEKsMIbpJZyivfRUSodCZFk=",
+      "nameHash": "trQJCEGfFKD6T+nG4dVbVBVWHaPFXOOYX4N3yRBLr9Q=",
+      "createdAt": "2025-12-22T17:30:50.713Z",
+      "lastUpdated": "2025-12-22T20:33:51.865Z",
+      "svgs": [
+        {
+          "name": "politicsFlag-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 985992
+        },
+        {
+          "name": "politicsFlag-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 985991
+        },
+        {
+          "name": "politicsFlag-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 985990
+        },
+        {
+          "name": "politicsFlag-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 985989
+        },
+        {
+          "name": "politicsFlag-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 985988
+        },
+        {
+          "name": "politicsFlag-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 985987
+        }
+      ]
+    },
+    {
+      "nodeId": "6261:410",
+      "name": "barChartSimple",
+      "description": "",
+      "assetsHash": "CigrE2BTjdomLPyGV0xSzyuUysGOB1fJZO0IOax5vtM=",
+      "nameHash": "iFUXMMINIO6Jb3Gem6ugTAUFKh6kRpBVzB7NIbmWjmY=",
+      "createdAt": "2025-12-22T17:30:50.719Z",
+      "lastUpdated": "2025-12-22T20:33:51.945Z",
+      "svgs": [
+        {
+          "name": "barChartSimple-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 985710
+        },
+        {
+          "name": "barChartSimple-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 985709
+        },
+        {
+          "name": "barChartSimple-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 985708
+        },
+        {
+          "name": "barChartSimple-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 985707
+        },
+        {
+          "name": "barChartSimple-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 985706
+        },
+        {
+          "name": "barChartSimple-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 985705
+        }
+      ]
+    },
+    {
+      "nodeId": "6261:423",
+      "name": "building",
+      "description": "Predictions, Markets, Economics, companies, building",
+      "assetsHash": "osid5kiMzDYQ7YDe9R/1onGocxDcOuOk5znYsmPLx5c=",
+      "nameHash": "QUzecVuVMDX2FSPFuCtwULNp6sBXaCa+hf5BqtU4aOk=",
+      "createdAt": "2025-12-22T17:30:50.725Z",
+      "lastUpdated": "2025-12-22T20:33:51.819Z",
+      "svgs": [
+        {
+          "name": "building-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 985746
+        },
+        {
+          "name": "building-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 985745
+        },
+        {
+          "name": "building-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 985744
+        },
+        {
+          "name": "building-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 985743
+        },
+        {
+          "name": "building-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 985742
+        },
+        {
+          "name": "building-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 985741
+        }
+      ]
+    },
+    {
+      "nodeId": "6261:319",
+      "name": "tornado",
+      "description": "Predictions, weather, tornado",
+      "assetsHash": "tE3kmBCgBA/6LR5lD3rdyv0NC2lEoqedD0j41scIYW8=",
+      "nameHash": "E1ycc3dVGo9+A+/AP7ufRzMjtUFSnItw5mh6GL8yGrs=",
+      "createdAt": "2025-12-22T17:30:50.732Z",
+      "lastUpdated": "2025-12-22T20:33:51.953Z",
+      "svgs": [
+        {
+          "name": "tornado-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 986178
+        },
+        {
+          "name": "tornado-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 986177
+        },
+        {
+          "name": "tornado-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 986176
+        },
+        {
+          "name": "tornado-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 986175
+        },
+        {
+          "name": "tornado-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 986174
+        },
+        {
+          "name": "tornado-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 986173
+        }
+      ]
+    },
+    {
+      "nodeId": "6261:514",
+      "name": "computerChip",
+      "description": "Predictions, tech, technology, Science, chip, lab, experiment, chemistry, research,",
+      "assetsHash": "ibpjJxPYqKhv903LsoKGMgRbPrjS9sRMVT2qlV9rMZE=",
+      "nameHash": "ecpodyOsB6K/SsPbuGRo/aef/Wj72k/3oHHFKSgcgOA=",
+      "createdAt": "2025-12-22T17:30:50.738Z",
+      "lastUpdated": "2025-12-22T20:33:51.858Z",
+      "svgs": [
+        {
+          "name": "computerChip-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 985794
+        },
+        {
+          "name": "computerChip-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 985793
+        },
+        {
+          "name": "computerChip-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 985792
+        },
+        {
+          "name": "computerChip-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 985791
+        },
+        {
+          "name": "computerChip-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 985790
+        },
+        {
+          "name": "computerChip-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 985789
+        }
+      ]
+    },
+    {
+      "nodeId": "6261:332",
+      "name": "cloudPartial",
+      "description": "Partially, cloud, Predictions, weather, Climate, cloud,",
+      "assetsHash": "XImNUlhxM3+mU13FwCPOtcKwsyjWHu434lS21YXwpEg=",
+      "nameHash": "YsSDX7Baeyc22tB1dlRxpK0W4vZ1nzIgzVb40mD3Mfc=",
+      "createdAt": "2025-12-22T17:30:50.745Z",
+      "lastUpdated": "2025-12-22T20:33:51.785Z",
+      "svgs": [
+        {
+          "name": "cloudPartial-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 985788
+        },
+        {
+          "name": "cloudPartial-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 985787
+        },
+        {
+          "name": "cloudPartial-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 985786
+        },
+        {
+          "name": "cloudPartial-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 985785
+        },
+        {
+          "name": "cloudPartial-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 985784
+        },
+        {
+          "name": "cloudPartial-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 985783
+        }
+      ]
+    },
+    {
+      "nodeId": "6261:175",
+      "name": "airdropCoins",
+      "description": "Predictions, crypto, airdrop",
+      "assetsHash": "WKcQkNx8sn+gbmIR73/Iq4OyrH77HMbgdkx14D5F9rY=",
+      "nameHash": "xw+Q2cEGYGRFF/zhVIX3JDQ2k60KDxFTH4u5LkNrOhs=",
+      "createdAt": "2025-12-22T17:30:50.751Z",
+      "lastUpdated": "2025-12-22T20:33:52.072Z",
+      "svgs": [
+        {
+          "name": "airdropCoins-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 985650
+        },
+        {
+          "name": "airdropCoins-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 985649
+        },
+        {
+          "name": "airdropCoins-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 985648
+        },
+        {
+          "name": "airdropCoins-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 985647
+        },
+        {
+          "name": "airdropCoins-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 985646
+        },
+        {
+          "name": "airdropCoins-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 985645
+        }
+      ]
+    },
+    {
+      "nodeId": "6261:358",
+      "name": "gasFeesAlt",
+      "description": "Predictions, gas, gas, fuel, pump, station, energy",
+      "assetsHash": "eMKkGUqNM1MoyeXy/cl4bHgo5+w+YbbGHdj+c5P3aZw=",
+      "nameHash": "V1mc9OMt6XVfsKFO8WT1TRwmW3pcydLFRZRnVj1+EiY=",
+      "createdAt": "2025-12-22T17:30:50.758Z",
+      "lastUpdated": "2025-12-22T20:33:52.064Z",
+      "svgs": [
+        {
+          "name": "gasFeesAlt-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 985860
+        },
+        {
+          "name": "gasFeesAlt-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 985859
+        },
+        {
+          "name": "gasFeesAlt-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 985858
+        },
+        {
+          "name": "gasFeesAlt-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 985857
+        },
+        {
+          "name": "gasFeesAlt-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 985856
+        },
+        {
+          "name": "gasFeesAlt-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 985855
+        }
+      ]
+    },
+    {
+      "nodeId": "6261:475",
+      "name": "atomScience",
+      "description": "Predictions, tech, technology, Science, atom, lab, experiment, chemistry, research",
+      "assetsHash": "6+OzzQWyvPckicRHEWHG9jNUW5TqZnAywIfYDJ1zNdg=",
+      "nameHash": "75pzTO6CA0KBr/WiyTRfM3kjApvkCS7RUPTvvb7q4sM=",
+      "createdAt": "2025-12-22T17:30:50.765Z",
+      "lastUpdated": "2025-12-22T20:33:51.899Z",
+      "svgs": [
+        {
+          "name": "atomScience-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 985686
+        },
+        {
+          "name": "atomScience-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 985685
+        },
+        {
+          "name": "atomScience-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 985684
+        },
+        {
+          "name": "atomScience-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 985683
+        },
+        {
+          "name": "atomScience-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 985682
+        },
+        {
+          "name": "atomScience-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 985681
+        }
+      ]
+    },
+    {
+      "nodeId": "6261:592",
+      "name": "hospitalCross",
+      "description": "Predictions, medicine, health, medical, hospital, care, cross",
+      "assetsHash": "0FQ/TNglllHQIaIo3Kcv3amzIK1MuOBAKWBwnDSU2w8=",
+      "nameHash": "zQB/LCSPfoV5Dbt+mwmFVxBHL/b6+mzhwLF6GW6gWPM=",
+      "createdAt": "2025-12-22T17:30:50.771Z",
+      "lastUpdated": "2025-12-22T20:33:52.057Z",
+      "svgs": [
+        {
+          "name": "hospitalCross-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 985890
+        },
+        {
+          "name": "hospitalCross-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 985889
+        },
+        {
+          "name": "hospitalCross-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 985888
+        },
+        {
+          "name": "hospitalCross-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 985887
+        },
+        {
+          "name": "hospitalCross-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 985886
+        },
+        {
+          "name": "hospitalCross-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 985885
+        }
+      ]
+    },
+    {
+      "nodeId": "6261:202",
+      "name": "airdropAlt",
+      "description": "Predictions, crypto, airdrop, balloon, travel, flight, leisure, adventure",
+      "assetsHash": "tEZQ6F47imEEfPm7KPhDSISpCQXcrWouHXBzhLW5k5Y=",
+      "nameHash": "xQCeJcWk8v+xDakK3UIByMmO5e5gQeVDboZyUOsF/Go=",
+      "createdAt": "2025-12-22T17:30:50.778Z",
+      "lastUpdated": "2025-12-22T20:33:51.937Z",
+      "svgs": [
+        {
+          "name": "airdropAlt-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 985644
+        },
+        {
+          "name": "airdropAlt-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 985643
+        },
+        {
+          "name": "airdropAlt-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 985642
+        },
+        {
+          "name": "airdropAlt-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 985641
+        },
+        {
+          "name": "airdropAlt-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 985640
+        },
+        {
+          "name": "airdropAlt-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 985639
+        }
+      ]
+    },
+    {
+      "nodeId": "6261:384",
+      "name": "oil",
+      "description": "Predictions, Economics, gas, energy, oil",
+      "assetsHash": "Qk/7J3se4M8NGzya55NQQBBoxAdeFVQ3EpmykCWSqXg=",
+      "nameHash": "8kyH6A9h/KmDYw1aHGI5zIOM7gxs4TDQhpD5IPPOF84=",
+      "createdAt": "2025-12-22T17:30:50.785Z",
+      "lastUpdated": "2025-12-22T20:33:51.850Z",
+      "svgs": [
+        {
+          "name": "oil-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 985950
+        },
+        {
+          "name": "oil-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 985949
+        },
+        {
+          "name": "oil-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 985948
+        },
+        {
+          "name": "oil-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 985947
+        },
+        {
+          "name": "oil-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 985946
+        },
+        {
+          "name": "oil-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 985945
+        }
+      ]
+    },
+    {
+      "nodeId": "6261:605",
+      "name": "apothecary",
+      "description": "Predictions, medicine, health, medical, pharmacy, apothecary,",
+      "assetsHash": "H3mWr/T5gCu5r8tKnAcepqmfvhiglcjXFzILY/AHBWM=",
+      "nameHash": "ER6po+LAmYwIbcDT64RULZp9q1Xhj2K24HBZJNvIF+E=",
+      "createdAt": "2025-12-22T17:30:50.792Z",
+      "lastUpdated": "2025-12-22T20:33:52.049Z",
+      "svgs": [
+        {
+          "name": "apothecary-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 985668
+        },
+        {
+          "name": "apothecary-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 985667
+        },
+        {
+          "name": "apothecary-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 985666
+        },
+        {
+          "name": "apothecary-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 985665
+        },
+        {
+          "name": "apothecary-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 985664
+        },
+        {
+          "name": "apothecary-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 985663
+        }
+      ]
+    },
+    {
+      "nodeId": "6261:371",
+      "name": "briefcaseAlt",
+      "description": "Predictions, briefcase, work, business, job, Economics,",
+      "assetsHash": "nEjcgLA0vd1Z164Msz4yjoTDRVVcn8B+2wSUsJjVmBg=",
+      "nameHash": "StzUBr3DQwi55ptoBLgls0mq+60X+OqOX0YrFhKeyXM=",
+      "createdAt": "2025-12-22T17:30:50.798Z",
+      "lastUpdated": "2025-12-22T20:33:52.118Z",
+      "svgs": [
+        {
+          "name": "briefcaseAlt-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 985734
+        },
+        {
+          "name": "briefcaseAlt-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 985733
+        },
+        {
+          "name": "briefcaseAlt-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 985732
+        },
+        {
+          "name": "briefcaseAlt-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 985731
+        },
+        {
+          "name": "briefcaseAlt-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 985730
+        },
+        {
+          "name": "briefcaseAlt-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 985729
+        }
+      ]
+    },
+    {
+      "nodeId": "6261:670",
+      "name": "virus",
+      "description": "Predictions, medicine, health, virus, bug, vaccine",
+      "assetsHash": "BJQCTP+ip2YF4fXgdpKclfw1/UmUQ4l0gF4cMD1wVV8=",
+      "nameHash": "FEPdFuBTwU9rW0Ebf82JkT31KTDpB5fpyBbwjcI53N4=",
+      "createdAt": "2025-12-22T17:30:50.805Z",
+      "lastUpdated": "2025-12-22T20:33:51.879Z",
+      "svgs": [
+        {
+          "name": "virus-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 986208
+        },
+        {
+          "name": "virus-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 986207
+        },
+        {
+          "name": "virus-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 986206
+        },
+        {
+          "name": "virus-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 986205
+        },
+        {
+          "name": "virus-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 986204
+        },
+        {
+          "name": "virus-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 986203
+        }
+      ]
+    },
+    {
+      "nodeId": "6261:618",
+      "name": "pillCapsule",
+      "description": "Predictions, medicine, health, medical, pharmacy, medicine, apothecary, pill, capsule,",
+      "assetsHash": "uPP8SWtgoNsxWmK/hPmLw0SCqSBdSHQ7NPcLkjWe838=",
+      "nameHash": "Ed15r0LFE0XMeeXVg/f33IwXjrMggiW1tpK0/4yRGnY=",
+      "createdAt": "2025-12-22T17:30:50.811Z",
+      "lastUpdated": "2025-12-22T20:33:51.907Z",
+      "svgs": [
+        {
+          "name": "pillCapsule-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 985962
+        },
+        {
+          "name": "pillCapsule-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 985961
+        },
+        {
+          "name": "pillCapsule-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 985960
+        },
+        {
+          "name": "pillCapsule-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 985959
+        },
+        {
+          "name": "pillCapsule-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 985958
+        },
+        {
+          "name": "pillCapsule-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 985957
+        }
+      ]
+    },
+    {
+      "nodeId": "6261:931",
+      "name": "starAward",
+      "description": "Predictions, trophy, award, win, achievement, reward, rewards",
+      "assetsHash": "RMY4wc/ESQ/ZpztTVudjzv0a+0AndHdZkBhb+OZl3dg=",
+      "nameHash": "811CjEOwEUswD/85SSiYg7wTR551UwDBQEcWdzy3GiA=",
+      "createdAt": "2025-12-22T17:30:50.818Z",
+      "lastUpdated": "2025-12-22T20:33:51.915Z",
+      "svgs": [
+        {
+          "name": "starAward-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 986124
+        },
+        {
+          "name": "starAward-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 986123
+        },
+        {
+          "name": "starAward-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 986122
+        },
+        {
+          "name": "starAward-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 986121
+        },
+        {
+          "name": "starAward-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 986120
+        },
+        {
+          "name": "starAward-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 986119
+        }
+      ]
+    },
+    {
+      "nodeId": "6261:904",
+      "name": "calendarStar",
+      "description": "Predictions, dates, calendar, event, featured, important, date",
+      "assetsHash": "9sq8a+9nhW5kJ8IcK5TX0/GFPSKnDStBBpD74bSq0bc=",
+      "nameHash": "/vpFo/6wIVnBOox7N5WQ78ocEhL3B9fMarqlyBfI86w=",
+      "createdAt": "2025-12-22T17:30:50.824Z",
+      "lastUpdated": "2025-12-22T20:33:51.886Z",
+      "svgs": [
+        {
+          "name": "calendarStar-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 985770
+        },
+        {
+          "name": "calendarStar-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 985769
+        },
+        {
+          "name": "calendarStar-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 985768
+        },
+        {
+          "name": "calendarStar-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 985767
+        },
+        {
+          "name": "calendarStar-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 985766
+        },
+        {
+          "name": "calendarStar-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 985765
+        }
+      ]
+    },
+    {
+      "nodeId": "6261:878",
+      "name": "calendarHeart",
+      "description": "Predictions, dates, calendar, event, favorite, save, date",
+      "assetsHash": "V4uJkazcCFfQjZa8wbx3jYzZgBl5yBwYGPpVlyh2VGM=",
+      "nameHash": "3oNw0/1YGeF1NEs/O68rKf7MAbQhFPS9MJZFOrbhnbc=",
+      "createdAt": "2025-12-22T17:30:50.830Z",
+      "lastUpdated": "2025-12-22T20:33:52.080Z",
+      "svgs": [
+        {
+          "name": "calendarHeart-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 985758
+        },
+        {
+          "name": "calendarHeart-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 985757
+        },
+        {
+          "name": "calendarHeart-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 985756
+        },
+        {
+          "name": "calendarHeart-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 985755
+        },
+        {
+          "name": "calendarHeart-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 985754
+        },
+        {
+          "name": "calendarHeart-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 985753
+        }
+      ]
+    },
+    {
+      "nodeId": "6261:228",
+      "name": "singlecloud",
+      "description": "Predictions, weather, Climate, cloud,",
+      "assetsHash": "1a8FI5LfB5BU+6wqaMjraFUDwtc6MyLWEwKVgo1bAhk=",
+      "nameHash": "Qtobq2ZqBg/PCwIH3gaLX7qD+6Jci6TYoCbFgj/oCgc=",
+      "createdAt": "2025-12-22T17:30:50.836Z",
+      "lastUpdated": "2025-12-22T20:33:51.802Z",
+      "svgs": [
+        {
+          "name": "singlecloud-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 986088
+        },
+        {
+          "name": "singlecloud-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 986087
+        },
+        {
+          "name": "singlecloud-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 986086
+        },
+        {
+          "name": "singlecloud-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 986085
+        },
+        {
+          "name": "singlecloud-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 986084
+        },
+        {
+          "name": "singlecloud-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 986083
+        }
+      ]
+    },
+    {
+      "nodeId": "6261:293",
+      "name": "lightning",
+      "description": "Predictions, weather, climate, thunder, lighting",
+      "assetsHash": "u9a8eDZ+IVV9dnotbkVf6w7L09C9AWb1hULESy9JPA0=",
+      "nameHash": "V/iquhGU4FhNbFApqNnOM2Mpjdrb1gkdMbkaBLzQcxI=",
+      "createdAt": "2025-12-22T17:30:50.843Z",
+      "lastUpdated": "2025-12-22T20:33:52.126Z",
+      "svgs": [
+        {
+          "name": "lightning-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 985902
+        },
+        {
+          "name": "lightning-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 985901
+        },
+        {
+          "name": "lightning-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 985900
+        },
+        {
+          "name": "lightning-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 985899
+        },
+        {
+          "name": "lightning-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 985898
+        },
+        {
+          "name": "lightning-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 985897
+        }
+      ]
+    },
+    {
+      "nodeId": "6261:6",
+      "name": "microphoneCordless",
+      "description": "Predictions, Music, audio, entertainment, mic, audio, recording, voice, media",
+      "assetsHash": "P87mCUeUqQsh/BneJhaWlyu/F6RWRDf7bzQ82cD9tn8=",
+      "nameHash": "6T4Asm43aLDcVmmd5uan0IvNRcGDUbnTQLQU9QjiCUQ=",
+      "createdAt": "2025-12-22T17:30:50.849Z",
+      "lastUpdated": "2025-12-22T20:33:57.301Z",
+      "svgs": [
+        {
+          "name": "microphoneCordless-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 985914
+        },
+        {
+          "name": "microphoneCordless-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 985913
+        },
+        {
+          "name": "microphoneCordless-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 985912
+        },
+        {
+          "name": "microphoneCordless-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 985911
+        },
+        {
+          "name": "microphoneCordless-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 985910
+        },
+        {
+          "name": "microphoneCordless-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 985909
+        }
+      ]
+    },
+    {
+      "nodeId": "6261:215",
+      "name": "snow",
+      "description": "Predictions, weather, Climate, winter, snow, cold, weather, ice",
+      "assetsHash": "kjfn8QsGMIs1r4MoB0hxxmIrn8Z9VTkrTURLokFJrLc=",
+      "nameHash": "8YR7lfv+aLD8XkT8Fh5yOBin/sREUiOxUsolKmV/5ZU=",
+      "createdAt": "2025-12-22T17:30:50.855Z",
+      "lastUpdated": "2025-12-22T20:33:57.261Z",
+      "svgs": [
+        {
+          "name": "snow-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 986094
+        },
+        {
+          "name": "snow-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 986093
+        },
+        {
+          "name": "snow-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 986092
+        },
+        {
+          "name": "snow-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 986091
+        },
+        {
+          "name": "snow-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 986090
+        },
+        {
+          "name": "snow-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 986089
+        }
+      ]
+    },
+    {
+      "nodeId": "6261:84",
+      "name": "tvStand",
+      "description": "Predictions, Music, audio, entertainment, video, film, movie, media, cinema, play",
+      "assetsHash": "gMOwakEk5IJ4pFAt6jDXJ2/4jFYj4IRSv2okBx/BGNU=",
+      "nameHash": "wdWnPw0AwYZ2EHXTy4qP0LvJA30M+V+FYuZNcVDMeLI=",
+      "createdAt": "2025-12-22T17:30:50.862Z",
+      "lastUpdated": "2025-12-22T20:33:57.290Z",
+      "svgs": [
+        {
+          "name": "tvStand-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 986196
+        },
+        {
+          "name": "tvStand-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 986195
+        },
+        {
+          "name": "tvStand-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 986194
+        },
+        {
+          "name": "tvStand-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 986193
+        },
+        {
+          "name": "tvStand-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 986192
+        },
+        {
+          "name": "tvStand-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 986191
+        }
+      ]
+    },
+    {
+      "nodeId": "6261:280",
+      "name": "wind",
+      "description": "Predictions, weather, climate, wind, air, breeze, flow",
+      "assetsHash": "2ULqrPBIoocZ2rFZSj5R9E6UHIMd8YXpQu9HLEucU0E=",
+      "nameHash": "+N70GZo3TTUQDeHH1LbO9EXQVPxqTC6BF5nNn0tG6Rc=",
+      "createdAt": "2025-12-22T17:30:55.415Z",
+      "lastUpdated": "2025-12-22T20:33:57.295Z",
+      "svgs": [
+        {
+          "name": "wind-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 986214
+        },
+        {
+          "name": "wind-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 986213
+        },
+        {
+          "name": "wind-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 986212
+        },
+        {
+          "name": "wind-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 986211
+        },
+        {
+          "name": "wind-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 986210
+        },
+        {
+          "name": "wind-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 986209
+        }
+      ]
+    },
+    {
+      "nodeId": "6261:839",
+      "name": "politicsCandidate",
+      "description": "Predictions, voting, politics, vote, democracy, candidate",
+      "assetsHash": "8U1NHZknFo4Ti4Hl8o3d7MOk9QxImqi4cUKpPq1kKaw=",
+      "nameHash": "CUBJgYZniuoXc+yfZWhnV2OLusAYTCS6D0X8LvbeXEk=",
+      "createdAt": "2025-12-22T17:30:55.428Z",
+      "lastUpdated": "2025-12-22T20:33:57.278Z",
+      "svgs": [
+        {
+          "name": "politicsCandidate-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 985986
+        },
+        {
+          "name": "politicsCandidate-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 985985
+        },
+        {
+          "name": "politicsCandidate-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 985984
+        },
+        {
+          "name": "politicsCandidate-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 985983
+        },
+        {
+          "name": "politicsCandidate-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 985982
+        },
+        {
+          "name": "politicsCandidate-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 985981
+        }
+      ]
+    },
+    {
+      "nodeId": "6261:774",
+      "name": "ballot",
+      "description": "Predictions, voting, politics, vote, democracy, politic, ballot, ballot box, box",
+      "assetsHash": "Z4Krtt5Y7JYzPk09mRPFGaatozXE06/OPyfQKoYUd40=",
+      "nameHash": "yu0nol75kWDykWwtjCXksDdEevtyB4Cr5qBBViy9l0M=",
+      "createdAt": "2025-12-22T17:30:55.435Z",
+      "lastUpdated": "2025-12-22T20:33:57.250Z",
+      "svgs": [
+        {
+          "name": "ballot-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 985692
+        },
+        {
+          "name": "ballot-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 985691
+        },
+        {
+          "name": "ballot-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 985690
+        },
+        {
+          "name": "ballot-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 985689
+        },
+        {
+          "name": "ballot-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 985688
+        },
+        {
+          "name": "ballot-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 985687
+        }
+      ]
+    },
+    {
+      "nodeId": "6261:254",
+      "name": "rain",
+      "description": "Predictions, weather, Climate, rain, Raining,",
+      "assetsHash": "wq5QjC7f3YZteuV4WbLb49br7GpXIdV4Xxp4ScNPBvs=",
+      "nameHash": "NkjGP66Od4SZ/mXjmyeTXSxI5nBow4STPgWe35RkFTU=",
+      "createdAt": "2025-12-22T17:30:55.442Z",
+      "lastUpdated": "2025-12-22T20:33:57.284Z",
+      "svgs": [
+        {
+          "name": "rain-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 986022
+        },
+        {
+          "name": "rain-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 986021
+        },
+        {
+          "name": "rain-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 986020
+        },
+        {
+          "name": "rain-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 986019
+        },
+        {
+          "name": "rain-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 986018
+        },
+        {
+          "name": "rain-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 986017
+        }
+      ]
+    },
+    {
+      "nodeId": "6261:189",
+      "name": "airdropParachute",
+      "description": "Predictions, crypto, airdrop",
+      "assetsHash": "Xc7FSDoMPQ4QbpEPbnbDyH3ep85jfXYUNRsc1MwTPBo=",
+      "nameHash": "rf0A1LRQZoUPX5BuQ/ZjCvdcwMWPLtDo/vzBmXHb3mQ=",
+      "createdAt": "2025-12-22T17:30:55.449Z",
+      "lastUpdated": "2025-12-22T20:33:57.273Z",
+      "svgs": [
+        {
+          "name": "airdropParachute-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 985656
+        },
+        {
+          "name": "airdropParachute-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 985655
+        },
+        {
+          "name": "airdropParachute-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 985654
+        },
+        {
+          "name": "airdropParachute-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 985653
+        },
+        {
+          "name": "airdropParachute-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 985652
+        },
+        {
+          "name": "airdropParachute-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 985651
         }
       ]
     }
