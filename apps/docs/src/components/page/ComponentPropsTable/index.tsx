@@ -1,8 +1,8 @@
-import { type ChangeEvent, useCallback, useMemo, useState } from 'react';
-import { SearchInput, Switch } from '@coinbase/cds-web/controls';
+import { useCallback, useMemo, useState } from 'react';
+import { SearchInput } from '@coinbase/cds-web/controls';
 import { useDimensions } from '@coinbase/cds-web/hooks/useDimensions';
 import { Icon } from '@coinbase/cds-web/icons/Icon';
-import { Box, VStack } from '@coinbase/cds-web/layout';
+import { Box, HStack, VStack } from '@coinbase/cds-web/layout';
 import { Text } from '@coinbase/cds-web/typography/Text';
 import type {
   ProcessedPropItem,
@@ -11,6 +11,7 @@ import type {
 } from '@coinbase/docusaurus-plugin-docgen/types';
 import { useIsSticky } from '@site/src/utils/useIsSticky';
 
+import ModalLink from './ModalLink';
 import ParentTypesList from './ParentTypesList';
 import PropsTable from './PropsTable';
 
@@ -25,6 +26,48 @@ type ComponentPropsTableProps = {
 
 const tabsHeight = 67;
 const stickyTopOffset = 115;
+
+function DefaultElementPropsModalContent({
+  defaultElement,
+  props,
+  sharedTypeAliases,
+}: {
+  defaultElement: string;
+  props: ProcessedPropItem[];
+  sharedTypeAliases: SharedTypeAliases;
+}) {
+  const [searchValue, setSearchValue] = useState('');
+  const inherited = useMemo(() => {
+    const parentPrefix = `PolymorphicDefault<${defaultElement}>`;
+    const search = searchValue.toLowerCase();
+    return props.filter((p) => {
+      if (String(p.parent ?? '') !== parentPrefix) return false;
+      return p.name.toLowerCase().includes(search);
+    });
+  }, [defaultElement, props, searchValue]);
+
+  return (
+    <VStack gap={2}>
+      <VStack gap={1}>
+        <Text as="p" color="fgMuted" font="label2">
+          These props come from the default polymorphic element and may or may not apply depending
+          on the <Text mono as="span" color="fgPositive">{`as`}</Text> you render.
+        </Text>
+        <SearchInput
+          compact
+          onChangeText={setSearchValue}
+          placeholder="Search"
+          value={searchValue}
+        />
+      </VStack>
+      <PropsTable
+        props={inherited}
+        searchTerm={searchValue}
+        sharedTypeAliases={sharedTypeAliases}
+      />
+    </VStack>
+  );
+}
 
 function ComponentPropsTable({
   props: { props, parentTypes },
@@ -47,23 +90,11 @@ function ComponentPropsTable({
     );
   }, [props]);
 
-  const [showDefaultElementProps, setShowDefaultElementProps] = useState(false);
-  const handleShowDefaultElementPropsChange = useCallback(
-    (event: ChangeEvent<HTMLInputElement>) => {
-      setShowDefaultElementProps(event.target.checked);
-    },
-    [],
-  );
-
   const [searchValue, setSearchValue] = useState('');
   const filteredProps = useMemo(() => {
     const searchTerm = searchValue.toLowerCase();
-    return props.filter((item) => {
-      const isDefaultElementProp = String(item.parent ?? '').startsWith('PolymorphicDefault<');
-      if (!showDefaultElementProps && isDefaultElementProp) return false;
-      return item.name.toLowerCase().includes(searchTerm);
-    });
-  }, [searchValue, props, showDefaultElementProps]);
+    return props.filter((item) => item.name.toLowerCase().includes(searchTerm));
+  }, [searchValue, props]);
   const handleSearchChange = useCallback((value: string) => {
     setSearchValue(value);
   }, []);
@@ -116,23 +147,24 @@ function ComponentPropsTable({
               element is rendered and what props are inherited.
             </Text>
             {polymorphicDefaultElement && (
-              <Box alignItems="center" gap={1}>
-                <Text as="p" color="fgMuted" font="label2">
-                  The default element for this component is{' '}
-                  <Text mono color="fgPositive">
-                    {polymorphicDefaultElement}
-                  </Text>
-                  . Show inherited{' '}
-                  <Text mono color="fgPositive">
-                    {polymorphicDefaultElement}
-                  </Text>{' '}
-                  props
-                </Text>
-                <Switch
-                  checked={showDefaultElementProps}
-                  onChange={handleShowDefaultElementPropsChange}
-                />
-              </Box>
+              <Text as="p" color="fgMuted" font="label2">
+                The default element for this component is{' '}
+                <ModalLink
+                  content={
+                    <DefaultElementPropsModalContent
+                      defaultElement={polymorphicDefaultElement}
+                      props={props}
+                      sharedTypeAliases={sharedTypeAliases}
+                    />
+                  }
+                  font="label2"
+                  modalBodyProps={{ paddingX: 2, paddingY: 2 }}
+                  title={`<${polymorphicDefaultElement}> props`}
+                >
+                  {`<${polymorphicDefaultElement}>`}
+                </ModalLink>
+                .
+              </Text>
             )}
           </VStack>
         ) : null}

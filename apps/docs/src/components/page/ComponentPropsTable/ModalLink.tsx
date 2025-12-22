@@ -11,6 +11,7 @@ export type ModalLinkProps = {
   content: React.ReactElement;
   modalBodyRef?: React.RefObject<HTMLDivElement>;
   modalBodyProps?: Omit<ModalBodyProps, 'children'>;
+  title?: string;
 } & Omit<LinkBaseProps, 'content'>;
 
 /**
@@ -19,7 +20,14 @@ export type ModalLinkProps = {
  */
 export const ModalChildContext = createContext<boolean>(false);
 
-function ModalLink({ children, content, modalBodyRef, modalBodyProps, ...props }: ModalLinkProps) {
+function ModalLink({
+  children,
+  content,
+  modalBodyRef,
+  modalBodyProps,
+  title,
+  ...props
+}: ModalLinkProps) {
   const [visible, { toggleOn, toggleOff }] = useToggler();
   return (
     <>
@@ -28,7 +36,7 @@ function ModalLink({ children, content, modalBodyRef, modalBodyProps, ...props }
       </Link>
       <ModalChildContext.Provider value>
         <Modal onRequestClose={toggleOff} visible={visible}>
-          <ModalHeader title={children} />
+          <ModalHeader title={title ?? children} />
           <ModalBody ref={modalBodyRef} {...modalBodyProps}>
             {content}
           </ModalBody>

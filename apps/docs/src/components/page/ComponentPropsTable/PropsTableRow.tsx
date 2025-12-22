@@ -112,7 +112,6 @@ function highlightText(text: string, highlight: string) {
 
 function PropsTableRow({ prop, sharedTypeAliases, searchTerm = '' }: PropsTableRowProps) {
   const { defaultValue, name, description, type, required, parent } = prop;
-  const isPolymorphicDefaultProp = parent?.startsWith('PolymorphicDefault<');
 
   const highlightedName = useMemo(() => highlightText(name, searchTerm), [name, searchTerm]);
 
@@ -128,20 +127,13 @@ function PropsTableRow({ prop, sharedTypeAliases, searchTerm = '' }: PropsTableR
               </Text>
             )}
           </Text>
-          {isPolymorphicDefaultProp ? (
-            <Tooltip content="Inherited from the default polymorphic element. It may or may not exist based on the actual `as` you pass in.">
-              <span style={{ display: 'inline-flex', marginInlineStart: 'var(--space-1)' }}>
-                <Icon name="info" size="s" />
-              </span>
-            </Tooltip>
-          ) : null}
         </HStack>
         <Text as="p" color="fgMuted" font="label2" overflow="break" paddingTop={0.5}>
           {description}
         </Text>
       </VStack>
     );
-  }, [description, name, required, highlightedName, isPolymorphicDefaultProp]);
+  }, [description, name, required, highlightedName]);
   const typeContent = useMemo(() => {
     if (type in sharedTypeAliases) {
       const typeAlias = sharedTypeAliases[type];
