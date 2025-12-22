@@ -457,7 +457,9 @@ export const descriptionMap: Record<string, IconName[]> = {
     'stake',
     'crypto',
     'baseQuickBuy',
-    'coinsCrypto'
+    'coinsCrypto',
+    'tokenLaunchCoin',
+    'tokenLaunchRocket'
   ],
   'adventure': [
     'planet'
@@ -980,7 +982,9 @@ export const descriptionMap: Record<string, IconName[]> = {
     'config',
     'baseQuickBuy',
     'moneyCardCoin',
-    'crystalBallInsight'
+    'crystalBallInsight',
+    'football',
+    'basketball'
   ],
   'profile': [
     'account',
@@ -1686,7 +1690,8 @@ export const descriptionMap: Record<string, IconName[]> = {
     'gear'
   ],
   'helmet': [
-    'astronautHelmet'
+    'astronautHelmet',
+    'motorsport'
   ],
   'astronaut': [
     'astronautHelmet'
@@ -3732,7 +3737,8 @@ export const descriptionMap: Record<string, IconName[]> = {
   'gear': [
     'gear',
     'auto',
-    'config'
+    'config',
+    'mma'
   ],
   'tool': [
     'gear',
@@ -4576,7 +4582,8 @@ export const descriptionMap: Record<string, IconName[]> = {
     'briefcase'
   ],
   'bag': [
-    'briefcase'
+    'briefcase',
+    'mma'
   ],
   'pause': [
     'pause'
@@ -5410,7 +5417,8 @@ export const descriptionMap: Record<string, IconName[]> = {
     'powerTool'
   ],
   'equipment': [
-    'powerTool'
+    'powerTool',
+    'mma'
   ],
   'compose': [
     'compose'
@@ -5613,5 +5621,150 @@ export const descriptionMap: Record<string, IconName[]> = {
   ],
   'robot': [
     'robot'
+  ],
+  'test': [
+    'test'
+  ],
+  'Predictions': [
+    'tokenLaunchCoin',
+    'football',
+    'mma',
+    'hockey',
+    'chess',
+    'soccer',
+    'tennis',
+    'cricket',
+    'baseball',
+    'strategy',
+    'motorsport',
+    'golf',
+    'basketball',
+    'tokenLaunchRocket',
+    'boxing'
+  ],
+  'token launch': [
+    'tokenLaunchCoin',
+    'tokenLaunchRocket'
+  ],
+  'football': [
+    'football',
+    'soccer'
+  ],
+  'nfl': [
+    'football'
+  ],
+  'touchdown': [
+    'football'
+  ],
+  'sport': [
+    'football',
+    'football',
+    'hockey',
+    'chess',
+    'soccer',
+    'tennis',
+    'cricket',
+    'baseball',
+    'motorsport',
+    'golf',
+    'basketball',
+    'boxing'
+  ],
+  'boxing': [
+    'mma',
+    'boxing'
+  ],
+  'gym': [
+    'mma'
+  ],
+  'sports': [
+    'mma',
+    'hockey',
+    'chess',
+    'soccer',
+    'tennis',
+    'cricket',
+    'baseball',
+    'strategy',
+    'motorsport',
+    'golf',
+    'basketball',
+    'boxing'
+  ],
+  'Hokey': [
+    'hockey'
+  ],
+  'NHL': [
+    'hockey'
+  ],
+  'chess': [
+    'chess'
+  ],
+  'soccer': [
+    'soccer'
+  ],
+  'match': [
+    'soccer',
+    'tennis',
+    'cricket'
+  ],
+  'ball': [
+    'soccer',
+    'cricket',
+    'baseball'
+  ],
+  'Tennis': [
+    'tennis'
+  ],
+  'racket': [
+    'tennis'
+  ],
+  'court': [
+    'tennis'
+  ],
+  'cricket': [
+    'cricket'
+  ],
+  'baseball': [
+    'baseball'
+  ],
+  'mlb': [
+    'baseball'
+  ],
+  'strategy': [
+    'strategy'
+  ],
+  'tactics': [
+    'strategy'
+  ],
+  'playbook': [
+    'strategy'
+  ],
+  'coaching': [
+    'strategy'
+  ],
+  'planning': [
+    'strategy'
+  ],
+  'Motor sport': [
+    'motorsport'
+  ],
+  'Bike': [
+    'motorsport'
+  ],
+  'golf': [
+    'golf'
+  ],
+  'pGA': [
+    'golf'
+  ],
+  'basketball': [
+    'basketball'
+  ],
+  'nba': [
+    'basketball'
+  ],
+  'hoop': [
+    'basketball'
   ]
 };

@@ -437,5 +437,21 @@ export const names: IconName[] = [
   'coinsCrypto',
   'crystalBallInsight',
   'loop',
-  'robot'
+  'robot',
+  'test',
+  'tokenLaunchCoin',
+  'football',
+  'mma',
+  'hockey',
+  'chess',
+  'soccer',
+  'tennis',
+  'cricket',
+  'baseball',
+  'strategy',
+  'motorsport',
+  'golf',
+  'basketball',
+  'tokenLaunchRocket',
+  'boxing'
 ];

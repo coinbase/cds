@@ -1,6 +1,6 @@
 {
-  "lastUpdated": "2025-12-05T17:24:14.954Z",
-  "lastUnicode": 985638,
+  "lastUpdated": "2025-12-22T16:47:27.061Z",
+  "lastUnicode": 985734,
   "iconSets": [
     {
       "nodeId": "4:39245",
@@ -20350,6 +20350,758 @@
           "active": true,
           "size": 12,
           "unicode": 985633
+        }
+      ]
+    },
+    {
+      "nodeId": "6056:2",
+      "name": "test",
+      "description": "test",
+      "assetsHash": "BZe/Dz4uQ1D4MC53CTTS0ir5MZWliMBPJqVHeqVKP9I=",
+      "nameHash": "48HAYFR+PZXovl3wvIntOtyMD6nOt+kHDWZxMIM9wXQ=",
+      "createdAt": "2025-12-10T22:53:24.616Z",
+      "lastUpdated": "2025-12-10T22:53:24.616Z",
+      "svgs": [
+        {
+          "name": "test-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 985722
+        },
+        {
+          "name": "test-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 985721
+        },
+        {
+          "name": "test-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 985720
+        },
+        {
+          "name": "test-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 985719
+        },
+        {
+          "name": "test-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 985718
+        },
+        {
+          "name": "test-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 985717
+        }
+      ]
+    },
+    {
+      "nodeId": "6246:1704",
+      "name": "tokenLaunchCoin",
+      "description": "Predictions, crypto, token launch",
+      "assetsHash": "x9uxMdYfqEsRv0rNMLWfTSvf2ou20vIBHaBnOxnOHPA=",
+      "nameHash": "xlOUupCBzoprfW2BIH9H2z15xL5iSaGxDY/wu7G1qI0=",
+      "createdAt": "2025-12-21T23:49:05.443Z",
+      "lastUpdated": "2025-12-22T16:40:03.619Z",
+      "svgs": [
+        {
+          "name": "tokenLaunchCoin-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 985728
+        },
+        {
+          "name": "tokenLaunchCoin-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 985727
+        },
+        {
+          "name": "tokenLaunchCoin-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 985726
+        },
+        {
+          "name": "tokenLaunchCoin-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 985725
+        },
+        {
+          "name": "tokenLaunchCoin-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 985724
+        },
+        {
+          "name": "tokenLaunchCoin-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 985723
+        }
+      ]
+    },
+    {
+      "nodeId": "6246:1665",
+      "name": "football",
+      "description": "Predictions, football, nfl, touchdown, sport, sport,",
+      "assetsHash": "KBxNAWKRSzicd+RWUm2wf0NxD2xqcFcvUbq3FL/i8+0=",
+      "nameHash": "Q7UXFaukD7KrpWB9+AMPKNZp2wm3YBfeaKvwVv01BqY=",
+      "createdAt": "2025-12-21T23:49:05.453Z",
+      "lastUpdated": "2025-12-22T16:40:03.610Z",
+      "svgs": [
+        {
+          "name": "football-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 985674
+        },
+        {
+          "name": "football-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 985673
+        },
+        {
+          "name": "football-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 985672
+        },
+        {
+          "name": "football-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 985671
+        },
+        {
+          "name": "football-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 985670
+        },
+        {
+          "name": "football-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 985669
+        }
+      ]
+    },
+    {
+      "nodeId": "6246:1613",
+      "name": "mma",
+      "description": "Predictions, bag, boxing, gear, gym, equipment, sports",
+      "assetsHash": "iGAiXY0ljEyOtIxC/+7AzSVZCkvjJ56N5zBp/VEAb1E=",
+      "nameHash": "Stt2At6hldeKLGbk/FudaS7IH7mn1hKFG/QfzNNl3nc=",
+      "createdAt": "2025-12-21T23:49:05.463Z",
+      "lastUpdated": "2025-12-22T16:40:03.593Z",
+      "svgs": [
+        {
+          "name": "mma-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 985692
+        },
+        {
+          "name": "mma-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 985691
+        },
+        {
+          "name": "mma-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 985690
+        },
+        {
+          "name": "mma-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 985689
+        },
+        {
+          "name": "mma-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 985688
+        },
+        {
+          "name": "mma-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 985687
+        }
+      ]
+    },
+    {
+      "nodeId": "6246:1600",
+      "name": "hockey",
+      "description": "Predictions, Hokey, NHL, sport, sports",
+      "assetsHash": "jh/QteJ0uTm7dab3xY4nL8KXBXT2Ul7XyjfkTyHVglI=",
+      "nameHash": "DdpkZ9ThMMnBtCKAr5//I1pcdN9eRXwtRoGqnGgfA5U=",
+      "createdAt": "2025-12-21T23:49:05.472Z",
+      "lastUpdated": "2025-12-22T16:40:03.605Z",
+      "svgs": [
+        {
+          "name": "hockey-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 985686
+        },
+        {
+          "name": "hockey-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 985685
+        },
+        {
+          "name": "hockey-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 985684
+        },
+        {
+          "name": "hockey-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 985683
+        },
+        {
+          "name": "hockey-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 985682
+        },
+        {
+          "name": "hockey-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 985681
+        }
+      ]
+    },
+    {
+      "nodeId": "6246:1587",
+      "name": "chess",
+      "description": "Predictions, chess, sports, sport",
+      "assetsHash": "XAWuwsh9dZ3VlVVV9dshfUPMcKI/ORhBhn+COE98Y0w=",
+      "nameHash": "JsnVPbBa0HqDY7XiknVJvaSAAU7WkeRURUTPijUtBSs=",
+      "createdAt": "2025-12-21T23:49:05.476Z",
+      "lastUpdated": "2025-12-22T16:40:03.571Z",
+      "svgs": [
+        {
+          "name": "chess-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 985662
+        },
+        {
+          "name": "chess-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 985661
+        },
+        {
+          "name": "chess-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 985660
+        },
+        {
+          "name": "chess-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 985659
+        },
+        {
+          "name": "chess-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 985658
+        },
+        {
+          "name": "chess-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 985657
+        }
+      ]
+    },
+    {
+      "nodeId": "6246:1561",
+      "name": "soccer",
+      "description": "Predictions, soccer, football, match, sport, ball, sports",
+      "assetsHash": "OP8h0u9FxNT5fIjkh9OixvPqs3nn7IydKDWVKMH1l7s=",
+      "nameHash": "tgZ3RYbn+GOTlbAelXUuy3MgNUurxOr0EuxjTx3cSiA=",
+      "createdAt": "2025-12-21T23:49:05.481Z",
+      "lastUpdated": "2025-12-22T16:40:03.597Z",
+      "svgs": [
+        {
+          "name": "soccer-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 985704
+        },
+        {
+          "name": "soccer-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 985703
+        },
+        {
+          "name": "soccer-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 985702
+        },
+        {
+          "name": "soccer-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 985701
+        },
+        {
+          "name": "soccer-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 985700
+        },
+        {
+          "name": "soccer-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 985699
+        }
+      ]
+    },
+    {
+      "nodeId": "6246:1548",
+      "name": "tennis",
+      "description": "Predictions, Tennis, match, racket, court, sport, sports",
+      "assetsHash": "dhllasOq7b89357BpTfFEjS+kIIRnxfcUI0n3HecdHw=",
+      "nameHash": "wK9p+qSDs5cuZCgm3Jlgq3ja5e0T/Oz0kKQbE0ND7Wo=",
+      "createdAt": "2025-12-21T23:49:05.486Z",
+      "lastUpdated": "2025-12-22T16:40:03.601Z",
+      "svgs": [
+        {
+          "name": "tennis-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 985716
+        },
+        {
+          "name": "tennis-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 985715
+        },
+        {
+          "name": "tennis-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 985714
+        },
+        {
+          "name": "tennis-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 985713
+        },
+        {
+          "name": "tennis-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 985712
+        },
+        {
+          "name": "tennis-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 985711
+        }
+      ]
+    },
+    {
+      "nodeId": "6246:1535",
+      "name": "cricket",
+      "description": "Predictions, cricket, match, sport, ball, sports",
+      "assetsHash": "lWPApd9axX6dDRH5LDGajB3F/7dlSITbPzFoyIl49rY=",
+      "nameHash": "KxlLnhOEvtjtgf7+GwKTWC38PITDyiwKKBXphXcN7Wk=",
+      "createdAt": "2025-12-21T23:49:05.491Z",
+      "lastUpdated": "2025-12-22T16:40:03.624Z",
+      "svgs": [
+        {
+          "name": "cricket-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 985668
+        },
+        {
+          "name": "cricket-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 985667
+        },
+        {
+          "name": "cricket-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 985666
+        },
+        {
+          "name": "cricket-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 985665
+        },
+        {
+          "name": "cricket-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 985664
+        },
+        {
+          "name": "cricket-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 985663
+        }
+      ]
+    },
+    {
+      "nodeId": "6246:1626",
+      "name": "baseball",
+      "description": "Predictions, baseball, mlb, sport, ball, sports",
+      "assetsHash": "QsKYi/8g4FUPcSmJBuc9EBZ8aj+iRKdzjqAaawdSy3w=",
+      "nameHash": "7641Z/rD9e4weJN4g54SEU416MJ/h/F6FPUiWfoTWyw=",
+      "createdAt": "2025-12-21T23:49:05.523Z",
+      "lastUpdated": "2025-12-22T16:40:03.580Z",
+      "svgs": [
+        {
+          "name": "baseball-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 985644
+        },
+        {
+          "name": "baseball-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 985643
+        },
+        {
+          "name": "baseball-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 985642
+        },
+        {
+          "name": "baseball-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 985641
+        },
+        {
+          "name": "baseball-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 985640
+        },
+        {
+          "name": "baseball-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 985639
+        }
+      ]
+    },
+    {
+      "nodeId": "6246:1522",
+      "name": "strategy",
+      "description": "Predictions, strategy, tactics, playbook, coaching, planning, sports",
+      "assetsHash": "QhCArRFQuSOwox/qk2uSA5kQ/9mgQHJpkG09nZIKzPY=",
+      "nameHash": "y6uq+Xqq2HqsppG9LeBUoLjWNdGptqj/5Maq0XeekMw=",
+      "createdAt": "2025-12-21T23:49:05.540Z",
+      "lastUpdated": "2025-12-22T16:40:03.614Z",
+      "svgs": [
+        {
+          "name": "strategy-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 985710
+        },
+        {
+          "name": "strategy-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 985709
+        },
+        {
+          "name": "strategy-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 985708
+        },
+        {
+          "name": "strategy-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 985707
+        },
+        {
+          "name": "strategy-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 985706
+        },
+        {
+          "name": "strategy-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 985705
+        }
+      ]
+    },
+    {
+      "nodeId": "6246:1574",
+      "name": "motorsport",
+      "description": "Predictions, Motor sport, Bike, helmet, sports, sport",
+      "assetsHash": "YnnmfX+dHYxBdG1dJFL20RgDsKRDSRbq06fksPlZH2I=",
+      "nameHash": "cEhM+sW+RW524UvSiEyg4bplt9gR6mhKMMSLK4JJSvM=",
+      "createdAt": "2025-12-21T23:49:17.971Z",
+      "lastUpdated": "2025-12-22T16:40:03.576Z",
+      "svgs": [
+        {
+          "name": "motorsport-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 985698
+        },
+        {
+          "name": "motorsport-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 985697
+        },
+        {
+          "name": "motorsport-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 985696
+        },
+        {
+          "name": "motorsport-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 985695
+        },
+        {
+          "name": "motorsport-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 985694
+        },
+        {
+          "name": "motorsport-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 985693
+        }
+      ]
+    },
+    {
+      "nodeId": "6246:1652",
+      "name": "golf",
+      "description": "Predictions, golf, sport, pGA, sports",
+      "assetsHash": "s1CWZaiGy5wpszcnkTJ2pAB1PEHapi+XpSqft0YphDA=",
+      "nameHash": "m4v3iWZRQ2JohbPy/3lx1KMR+jgJ+7ppHvkLVux0kRY=",
+      "createdAt": "2025-12-21T23:49:22.091Z",
+      "lastUpdated": "2025-12-22T16:40:03.589Z",
+      "svgs": [
+        {
+          "name": "golf-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 985680
+        },
+        {
+          "name": "golf-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 985679
+        },
+        {
+          "name": "golf-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 985678
+        },
+        {
+          "name": "golf-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 985677
+        },
+        {
+          "name": "golf-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 985676
+        },
+        {
+          "name": "golf-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 985675
+        }
+      ]
+    },
+    {
+      "nodeId": "6246:1639",
+      "name": "basketball",
+      "description": "Predictions, basketball, nba, hoop, sport, sports,",
+      "assetsHash": "L88aW1T6FvHBOn6JvHkVra8URKCjrTxyZOp89ERIxvg=",
+      "nameHash": "bc+CCnyOjABgkQBcQ6Frzjro9IudxxHpCeIP1FHhzEg=",
+      "createdAt": "2025-12-21T23:49:22.102Z",
+      "lastUpdated": "2025-12-22T16:40:03.566Z",
+      "svgs": [
+        {
+          "name": "basketball-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 985650
+        },
+        {
+          "name": "basketball-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 985649
+        },
+        {
+          "name": "basketball-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 985648
+        },
+        {
+          "name": "basketball-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 985647
+        },
+        {
+          "name": "basketball-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 985646
+        },
+        {
+          "name": "basketball-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 985645
+        }
+      ]
+    },
+    {
+      "nodeId": "6246:1691",
+      "name": "tokenLaunchRocket",
+      "description": "Predictions, crypto, token launch",
+      "assetsHash": "CP4/c/kwvoSuRRP9K2iXjagKMooGyRhfYeSa6KTDPP8=",
+      "nameHash": "y1XczNZbuyqJFrX05VLrhDrv71GTRnoqcRtEwOBwlFk=",
+      "createdAt": "2025-12-21T23:49:22.118Z",
+      "lastUpdated": "2025-12-22T16:40:03.585Z",
+      "svgs": [
+        {
+          "name": "tokenLaunchRocket-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 985734
+        },
+        {
+          "name": "tokenLaunchRocket-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 985733
+        },
+        {
+          "name": "tokenLaunchRocket-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 985732
+        },
+        {
+          "name": "tokenLaunchRocket-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 985731
+        },
+        {
+          "name": "tokenLaunchRocket-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 985730
+        },
+        {
+          "name": "tokenLaunchRocket-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 985729
+        }
+      ]
+    },
+    {
+      "nodeId": "6246:1678",
+      "name": "boxing",
+      "description": "Predictions, boxing, sports, sport",
+      "assetsHash": "tKPCPHIMkTBdYbwF3RIiG2mY8BpEfn/RMzuAySD65Fo=",
+      "nameHash": "KG0noIQnprM7H7jjaX/sSdKdMBHjrdb44IJeo5AEXlQ=",
+      "createdAt": "2025-12-21T23:49:22.145Z",
+      "lastUpdated": "2025-12-22T16:40:03.561Z",
+      "svgs": [
+        {
+          "name": "boxing-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 985656
+        },
+        {
+          "name": "boxing-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 985655
+        },
+        {
+          "name": "boxing-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 985654
+        },
+        {
+          "name": "boxing-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 985653
+        },
+        {
+          "name": "boxing-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 985652
+        },
+        {
+          "name": "boxing-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 985651
         }
       ]
     }

@@ -8,6 +8,27 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+
+
+##### ⭐️ Added (16)
+
+- test
+- basketball
+- golf
+- football
+- tokenLaunchCoin
+- chess
+- baseball
+- strategy
+- motorsport
+- tokenLaunchRocket
+- boxing
+- mma
+- soccer
+- tennis
+- hockey
+- cricket
+
 ## 5.8.0 (12/5/2025 PST)
 
 #### 🚀 Updates
