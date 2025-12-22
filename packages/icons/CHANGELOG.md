@@ -8,6 +8,106 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+
+
+##### ⭐️ Added (95)
+
+- test
+- golf
+- ribbon
+- basketball
+- needle
+- barChartPredictions
+- airdropParachute
+- starBubble
+- stableCoin
+- politicsCandidate
+- politicsBuilding
+- politicsStar
+- politicsPodium
+- ballot
+- ratingsStar
+- podiumStar
+- ratingsCheck
+- pillBottle
+- hospital
+- pillCapsule
+- apothecary
+- bug
+- bandage
+- greenEnergy
+- briefcasePredictions
+- microscope
+- wind
+- hurricane
+- corporation
+- snow
+- entertainment
+- tshirt
+- filmStrip
+- ballotbox
+- microphoneCordless
+- speechBubble
+- tokenLaunchCoin
+- atSign
+- football
+- starAward
+- mma
+- calendarDates
+- hockey
+- chess
+- soccer
+- tennis
+- cricket
+- atomScience
+- rain
+- gasPredictions
+- shoe
+- airdropCoins
+- starTrophy
+- baseball
+- calendarHeart
+- educationPencil
+- hospitalCross
+- strategy
+- computerChip
+- lightning
+- educationBook
+- stablecoinStack
+- earthquake
+- oil
+- politicsFlag
+- ratingsChecks
+- politicsGavel
+- singleNote
+- gaming
+- rottenTomato
+- scienceBeaker
+- umbrella
+- city
+- building
+- alien
+- musicArticles
+- motorsport
+- calendarMoney
+- apple
+- virus
+- thermometer
+- scienceAtom
+- cloudPartial
+- tv
+- tvStand
+- scienceMoon
+- tornado
+- medal
+- tokenLaunchRocket
+- playbutton
+- calendarStar
+- factory
+- singlecloud
+- quotation
+- boxing
+
 ## 5.8.0 (12/5/2025 PST)
 
 #### 🚀 Updates
