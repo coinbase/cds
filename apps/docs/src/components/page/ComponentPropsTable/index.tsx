@@ -1,5 +1,5 @@
-import { useCallback, useMemo, useState } from 'react';
-import { SearchInput } from '@coinbase/cds-web/controls/SearchInput';
+import { type ChangeEvent, useCallback, useMemo, useState } from 'react';
+import { SearchInput, Switch } from '@coinbase/cds-web/controls';
 import { useDimensions } from '@coinbase/cds-web/hooks/useDimensions';
 import { Icon } from '@coinbase/cds-web/icons/Icon';
 import { Box, VStack } from '@coinbase/cds-web/layout';
@@ -47,11 +47,23 @@ function ComponentPropsTable({
     );
   }, [props]);
 
+  const [showDefaultElementProps, setShowDefaultElementProps] = useState(false);
+  const handleShowDefaultElementPropsChange = useCallback(
+    (event: ChangeEvent<HTMLInputElement>) => {
+      setShowDefaultElementProps(event.target.checked);
+    },
+    [],
+  );
+
   const [searchValue, setSearchValue] = useState('');
   const filteredProps = useMemo(() => {
     const searchTerm = searchValue.toLowerCase();
-    return props.filter((item) => item.name.toLowerCase().includes(searchTerm));
-  }, [searchValue, props]);
+    return props.filter((item) => {
+      const isDefaultElementProp = String(item.parent ?? '').startsWith('PolymorphicDefault<');
+      if (!showDefaultElementProps && isDefaultElementProp) return false;
+      return item.name.toLowerCase().includes(searchTerm);
+    });
+  }, [searchValue, props, showDefaultElementProps]);
   const handleSearchChange = useCallback((value: string) => {
     setSearchValue(value);
   }, []);
@@ -98,25 +110,31 @@ function ComponentPropsTable({
           sharedTypeAliases={sharedTypeAliases}
         />
         {isPolymorphicComponent ? (
-          <Text as="p" color="fgMuted" font="label2">
-            Note: This is a polymorphic component — use the &apos;as&apos; prop to change what is
-            rendered. Props with the info icon
-            <span style={{ display: 'inline-flex', verticalAlign: 'text-bottom' }}>
-              <Icon name="info" size="s" />
-            </span>{' '}
-            are inherited from the default polymorphic element
-            {polymorphicDefaultElement ? (
-              <>
-                {' '}
-                (default:{' '}
-                <Text mono as="span" color="fgMuted">
-                  {`'${polymorphicDefaultElement}'`}
+          <VStack gap={0.5}>
+            <Text as="p" color="fgMuted" font="label2">
+              This is a polymorphic component — the &apos;as&apos; prop determines what underlying
+              element is rendered and what props are inherited.
+            </Text>
+            {polymorphicDefaultElement && (
+              <Box alignItems="center" gap={1}>
+                <Text as="p" color="fgMuted" font="label2">
+                  The default element for this component is{' '}
+                  <Text mono color="fgPositive">
+                    {polymorphicDefaultElement}
+                  </Text>
+                  . Show inherited{' '}
+                  <Text mono color="fgPositive">
+                    {polymorphicDefaultElement}
+                  </Text>{' '}
+                  props
                 </Text>
-                )
-              </>
-            ) : null}
-            , and may not apply depending on the `as` you render.
-          </Text>
+                <Switch
+                  checked={showDefaultElementProps}
+                  onChange={handleShowDefaultElementPropsChange}
+                />
+              </Box>
+            )}
+          </VStack>
         ) : null}
       </VStack>
       {filteredProps.length > 0 ? (
