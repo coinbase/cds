@@ -2,41 +2,6 @@ const isTypeAlias = require('./isTypeAlias');
 const shouldAddToParentTypes = require('./shouldAddToParentTypes');
 
 /**
- * Docgen is not picking up the props inherited from native HTML elements. This caused some components like Button to not show the onClick prop in the props table.
- * This helper can fix the onClick prop for polymorphic components on web, but not all props inherited from native HTML elements.
- * We don't want to add all props since it will overcrowd the props table, we could consider add more important props here in the future.
- *  */
-function addWebPolymorphicProps(doc, props) {
-  // Docgen runs across web + mobile. Only surface DOM props for web components.
-  const isWeb = typeof doc.filePath === 'string' && doc.filePath.includes('/packages/web/');
-  if (!isWeb) return props;
-
-  // Only apply to polymorphic components; otherwise this would add "onClick" to everything on web.
-  const isPolymorphic =
-    props.some((p) => p.name === 'as') || props.some((p) => p.parent === 'polymorphism');
-  if (!isPolymorphic) return props;
-
-  if (props.some((p) => p.name === 'onClick')) return props;
-
-  return [
-    ...props,
-    {
-      name: 'onClick',
-      required: false,
-      defaultValue: undefined,
-      description:
-        'Click handler for the underlying element. This is exposed for polymorphic components, but support and event target typing depend on `as` (especially when `as` is a custom component).',
-      parent: 'HTMLAttributes',
-      tags: {},
-      // String type is supported by the plugin pipeline (processed later by docgenParser).
-      // For polymorphic components, the underlying element depends on `as`, so we intentionally use a
-      // safe element-agnostic type to avoid implying a specific element like HTMLDivElement.
-      type: 'React.MouseEventHandler<HTMLElement>',
-    },
-  ];
-}
-
-/**
  * Used in docgen plugin
  *
  * This is a callback function that gets called for each doc the plugin has parsed and allows us to transform
@@ -97,7 +62,7 @@ function onProcessDoc(doc, { addToSharedTypeAliases, addToParentTypes, formatStr
       return true;
     });
 
-  return { ...doc, props: addWebPolymorphicProps(doc, props) };
+  return { ...doc, props };
 }
 
 /**

@@ -1,6 +1,7 @@
 import { useCallback, useMemo, useState } from 'react';
 import { SearchInput } from '@coinbase/cds-web/controls/SearchInput';
 import { useDimensions } from '@coinbase/cds-web/hooks/useDimensions';
+import { Icon } from '@coinbase/cds-web/icons/Icon';
 import { Box, VStack } from '@coinbase/cds-web/layout';
 import { Text } from '@coinbase/cds-web/typography/Text';
 import type {
@@ -30,6 +31,22 @@ function ComponentPropsTable({
   sharedTypeAliases,
   sharedParentTypes,
 }: ComponentPropsTableProps) {
+  const polymorphicDefaultElement = useMemo(() => {
+    const asProp = props.find((p) => p.name === 'as');
+    const defaultValue =
+      typeof asProp?.defaultValue === 'string' && asProp.defaultValue.trim()
+        ? asProp.defaultValue.trim()
+        : undefined;
+    return defaultValue;
+  }, [props]);
+
+  const isPolymorphicComponent = useMemo(() => {
+    return (
+      props.some((p) => p.name === 'as') ||
+      props.some((p) => String(p.parent ?? '').startsWith('PolymorphicDefault<'))
+    );
+  }, [props]);
+
   const [searchValue, setSearchValue] = useState('');
   const filteredProps = useMemo(() => {
     const searchTerm = searchValue.toLowerCase();
@@ -80,9 +97,27 @@ function ComponentPropsTable({
           sharedParentTypes={sharedParentTypes}
           sharedTypeAliases={sharedTypeAliases}
         />
-        <Text as="p" color="fgMuted" font="label2">
-          Note: Some props inherited from native HTML elements may not be shown in this table.
-        </Text>
+        {isPolymorphicComponent ? (
+          <Text as="p" color="fgMuted" font="label2">
+            Note: This is a polymorphic component — use the &apos;as&apos; prop to change what is
+            rendered. Props with the info icon
+            <span style={{ display: 'inline-flex', verticalAlign: 'text-bottom' }}>
+              <Icon name="info" size="s" />
+            </span>{' '}
+            are inherited from the default polymorphic element
+            {polymorphicDefaultElement ? (
+              <>
+                {' '}
+                (default:{' '}
+                <Text mono as="span" color="fgMuted">
+                  {`'${polymorphicDefaultElement}'`}
+                </Text>
+                )
+              </>
+            ) : null}
+            , and may not apply depending on the `as` you render.
+          </Text>
+        ) : null}
       </VStack>
       {filteredProps.length > 0 ? (
         <Box maxWidth="100%" paddingBottom={{ base: 4, phone: 2 }} paddingX={{ base: 4, phone: 2 }}>

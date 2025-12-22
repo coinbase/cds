@@ -1,7 +1,9 @@
 import React, { useMemo } from 'react';
 import { cx } from '@coinbase/cds-web';
-import { VStack } from '@coinbase/cds-web/layout';
+import { Icon } from '@coinbase/cds-web/icons/Icon';
+import { HStack, VStack } from '@coinbase/cds-web/layout';
 import { Divider } from '@coinbase/cds-web/layout/Divider';
+import { Tooltip } from '@coinbase/cds-web/overlays';
 import { Text } from '@coinbase/cds-web/typography';
 import { Link } from '@coinbase/cds-web/typography/Link';
 import type {
@@ -109,27 +111,37 @@ function highlightText(text: string, highlight: string) {
 }
 
 function PropsTableRow({ prop, sharedTypeAliases, searchTerm = '' }: PropsTableRowProps) {
-  const { defaultValue, name, description, type, required } = prop;
+  const { defaultValue, name, description, type, required, parent } = prop;
+  const isPolymorphicDefaultProp = parent?.startsWith('PolymorphicDefault<');
 
   const highlightedName = useMemo(() => highlightText(name, searchTerm), [name, searchTerm]);
 
   const nameContent = useMemo(() => {
     return (
       <VStack as="h3" className={cx(styles.propsNameWrapper, 'anchor')} id={name}>
-        <Text as="p" font="body">
-          {highlightedName}
-          {required && (
-            <Text color="fgNegative" font="body">
-              *
-            </Text>
-          )}
-        </Text>
+        <HStack alignItems="center">
+          <Text as="p" font="body">
+            {highlightedName}
+            {required && (
+              <Text color="fgNegative" font="body">
+                *
+              </Text>
+            )}
+          </Text>
+          {isPolymorphicDefaultProp ? (
+            <Tooltip content="Inherited from the default polymorphic element. It may or may not exist based on the actual `as` you pass in.">
+              <span style={{ display: 'inline-flex', marginInlineStart: 'var(--space-1)' }}>
+                <Icon name="info" size="s" />
+              </span>
+            </Tooltip>
+          ) : null}
+        </HStack>
         <Text as="p" color="fgMuted" font="label2" overflow="break" paddingTop={0.5}>
           {description}
         </Text>
       </VStack>
     );
-  }, [description, name, required, highlightedName]);
+  }, [description, name, required, highlightedName, isPolymorphicDefaultProp]);
   const typeContent = useMemo(() => {
     if (type in sharedTypeAliases) {
       const typeAlias = sharedTypeAliases[type];
