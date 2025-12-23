@@ -49,8 +49,8 @@ function DefaultElementPropsModalContent({
     <VStack gap={2}>
       <VStack gap={1}>
         <Text as="p" color="fgMuted" font="label2">
-          These props come from the default polymorphic element and may or may not apply depending
-          on the <Text mono as="span" color="fgPositive">{`as`}</Text> you render.
+          These props are inherited from the default polymorphic element and may or may not apply
+          depending on the value of &apos;as&apos;.
         </Text>
         <SearchInput
           compact
@@ -146,13 +146,29 @@ function ComponentPropsTable({
         />
         {isPolymorphicComponent && (
           <VStack gap={0.5}>
-            <Text as="p" color="fgMuted" font="label2">
-              This is a polymorphic component — the &apos;as&apos; prop determines what underlying
-              element is rendered and what props are inherited.
+            <Text as="p" font="headline">
+              🧩 Polymorphic Component
             </Text>
+            <Text as="p" color="fgMuted" font="label2">
+              The value passed to the &apos;as&apos; prop determines:
+            </Text>
+            <ul>
+              <li>
+                <Text color="fgMuted" font="label2">
+                  The HTML element rendered in the DOM.
+                </Text>
+              </li>
+              <li>
+                <Text color="fgMuted" font="label2">
+                  The inherited props available to the component (e.g. as=&quot;a&quot;, the
+                  component accepts href).
+                </Text>
+              </li>
+            </ul>
             {polymorphicDefaultElement && (
               <Text as="p" color="fgMuted" font="label2">
-                The default element for this component is {`'${polymorphicDefaultElement}'`}.{' '}
+                <b>Default element:</b> <Text color="fgPrimary">{polymorphicDefaultElement}</Text>{' '}
+                (Extends all{' '}
                 <ModalLink
                   content={
                     <DefaultElementPropsModalContent
@@ -163,10 +179,12 @@ function ComponentPropsTable({
                   }
                   font="label2"
                   modalBodyProps={{ paddingX: 2, paddingY: 2 }}
-                  title={`Inherited '${polymorphicDefaultElement}' props`}
+                  style={{ textDecoration: 'underline' }}
+                  title={`${polymorphicDefaultElement} attributes`}
                 >
-                  {`View inherited '${polymorphicDefaultElement}' props.`}
+                  {`${polymorphicDefaultElement} attributes`}
                 </ModalLink>
+                ).
               </Text>
             )}
           </VStack>
