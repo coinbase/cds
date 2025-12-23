@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.34.1 (12/23/2025 PST)
+
+#### 🐞 Fixes
+
+- Updated docgen version and enhanced props table with polymorphic default element extraction. [[#276](https://github.com/coinbase/cds/pull/276)]
+
 ## 8.34.0 ((12/19/2025, 02:32 PM PST))
 
 This is an artificial version bump with no new change.
