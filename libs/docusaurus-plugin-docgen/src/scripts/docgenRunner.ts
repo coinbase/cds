@@ -25,7 +25,7 @@ type DocgenRunnerParams = PluginOptions & {
   pluginDir: string;
 };
 
-function selectPrimaryDocs(docs: ProcessedDoc[]) {
+export function selectPrimaryDocs(docs: ProcessedDoc[]) {
   /**
    * react-docgen-typescript can return multiple "docs" for a single file when that file exports
    * multiple components/types. Our output paths (`destDir`) are derived only from `doc.filePath`,

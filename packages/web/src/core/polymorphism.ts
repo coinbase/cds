@@ -23,7 +23,7 @@ export namespace Polymorphic {
     AsComponent,
     Props & {
       /**
-       * Polymorphic render target. Controls which underlying element/component gets rendered.
+       * The underlying element or component the polymorphic component will render.
        *
        * Changing `as` also changes the inherited native props (e.g. `href` for `as="a"`) and the
        * expected `ref` type.
