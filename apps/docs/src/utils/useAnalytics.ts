@@ -9,7 +9,37 @@ type GtagAnalyticsEvent = {
   value?: number;
 };
 
-const sessionId = `session_${Date.now()}_${Math.random().toString(36).substring(7)}`;
+function generateSecureId(): string {
+  // Prefer browser crypto APIs when available
+  if (typeof window !== 'undefined' && window.crypto) {
+    if (typeof window.crypto.randomUUID === 'function') {
+      return window.crypto.randomUUID();
+    }
+    if (typeof window.crypto.getRandomValues === 'function') {
+      const bytes = new Uint8Array(16);
+      window.crypto.getRandomValues(bytes);
+      // Convert to hex string
+      return Array.from(bytes)
+        .map((b) => b.toString(16).padStart(2, '0'))
+        .join('');
+    }
+  }
+
+  // Fallback for Node or environments without window.crypto
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires,@typescript-eslint/no-require-imports
+    const nodeCrypto = require('crypto') as typeof import('crypto');
+    if (typeof nodeCrypto.randomUUID === 'function') {
+      return nodeCrypto.randomUUID();
+    }
+    return nodeCrypto.randomBytes(16).toString('hex');
+  } catch {
+    // Last-resort fallback: still better than predictable Math.random() only
+    return `${Date.now().toString(36)}_${Math.random().toString(36).substring(2)}`;
+  }
+}
+
+const sessionId = `session_${Date.now()}_${generateSecureId()}`;
 
 const ANALYTICS_URL = 'https://api.developer.coinbase.com/analytics';
 
