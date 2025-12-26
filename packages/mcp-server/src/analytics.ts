@@ -4,8 +4,9 @@
  */
 
 import pkg from '../package.json' with { type: 'json' };
+import { randomBytes } from 'node:crypto';
 
-const sessionId = `session_${Date.now()}_${Math.random().toString(36).substring(7)}`;
+const sessionId = `session_${Date.now()}_${randomBytes(8).toString('hex')}`;
 
 const ANALYTICS_URL = 'https://api.developer.coinbase.com/analytics';
 
