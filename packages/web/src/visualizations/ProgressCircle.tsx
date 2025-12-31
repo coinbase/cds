@@ -99,7 +99,10 @@ export type ProgressCircleProps = ProgressCircleBaseProps & {
   };
 };
 
-export type ProgressCircleContentProps = Pick<ProgressCircleBaseProps, 'progress' | 'disabled'> & {
+export type ProgressCircleContentProps = Pick<
+  ProgressCircleBaseProps,
+  'progress' | 'disableAnimateOnMount' | 'disabled'
+> & {
   /**
    * Custom text color.
    * @default fgMuted
@@ -271,7 +274,11 @@ export const ProgressCircle = memo(
                       width="100%"
                     >
                       {contentNode ?? (
-                        <DefaultProgressCircleContent disabled={disabled} progress={progress} />
+                        <DefaultProgressCircleContent
+                          disableAnimateOnMount={disableAnimateOnMount}
+                          disabled={disabled}
+                          progress={progress}
+                        />
                       )}
                     </Box>
                   </Box>

@@ -253,5 +253,8 @@ describe('ProgressCircle tests', () => {
 
     // Should start at target offset, not at circumference (empty)
     expect(innerCircle).toHaveAttribute('stroke-dashoffset', expectedOffset.toString());
+
+    // Should show target percentage immediately, not animate from 0
+    expect(screen.getAllByText('50%').length).toBeGreaterThan(0);
   });
 });
