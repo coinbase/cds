@@ -12,7 +12,7 @@ All notable changes to this project will be documented in this file.
 
 #### 🐞 Fixes
 
-- Handle disableAnimateOnMount prop for web ProgressCircle. [[#280](https://github.com/bpk9/cds/pull/280)]
+- Handle disableAnimateOnMount prop for web ProgressCircle. [[#280](https://github.com/coinbase/cds/pull/280)]
 
 ## 8.34.1 (12/23/2025 PST)
 
