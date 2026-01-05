@@ -82,7 +82,10 @@ export type ProgressCircleProps = ProgressCircleBaseProps & {
   };
 };
 
-export type ProgressCircleContentProps = Pick<ProgressCircleBaseProps, 'progress' | 'disabled'> &
+export type ProgressCircleContentProps = Pick<
+  ProgressCircleBaseProps,
+  'progress' | 'disableAnimateOnMount' | 'disabled'
+> &
   BoxProps & {
     /**
      * Custom text color.
@@ -93,7 +96,7 @@ export type ProgressCircleContentProps = Pick<ProgressCircleBaseProps, 'progress
 
 type ProgressInnerCircleProps = Pick<
   ProgressCircleBaseProps,
-  'progress' | 'onAnimationEnd' | 'onAnimationStart'
+  'progress' | 'onAnimationEnd' | 'onAnimationStart' | 'disableAnimateOnMount'
 > &
   Required<Pick<ProgressCircleBaseProps, 'size' | 'weight' | 'color'>> & {
     visuallyDisabled?: boolean;
@@ -110,13 +113,17 @@ const ProgressCircleInner = memo(
     style,
     onAnimationEnd,
     onAnimationStart,
+    disableAnimateOnMount,
   }: ProgressInnerCircleProps) => {
     const strokeWidth = useProgressSize(weight);
     const theme = useTheme();
     const circleRef = useRef<React.Component<CircleProps>>(null);
 
     const circumference = getCircumference(getRadius(size, strokeWidth));
-    const animatedStrokeDashOffset = React.useRef(new Animated.Value(circumference));
+    const initialOffset = disableAnimateOnMount
+      ? circumference - circumference * progress
+      : circumference;
+    const animatedStrokeDashOffset = React.useRef(new Animated.Value(initialOffset));
 
     useEffect(() => {
       const strokeDashoffset = circumference - circumference * progress;
@@ -164,6 +171,7 @@ export const ProgressCircle = memo(
         accessibilityLabel = '',
         color = 'bgPrimary',
         disabled = false,
+        disableAnimateOnMount = false,
         testID,
         hideContent,
         hideText,
@@ -233,6 +241,7 @@ export const ProgressCircle = memo(
                     />
                     <ProgressCircleInner
                       color={color}
+                      disableAnimateOnMount={disableAnimateOnMount}
                       onAnimationEnd={onAnimationEnd}
                       onAnimationStart={onAnimationStart}
                       progress={progress}
@@ -255,7 +264,11 @@ export const ProgressCircle = memo(
                       width="100%"
                     >
                       {contentNode ?? (
-                        <DefaultProgressCircleContent disabled={disabled} progress={progress} />
+                        <DefaultProgressCircleContent
+                          disableAnimateOnMount={disableAnimateOnMount}
+                          disabled={disabled}
+                          progress={progress}
+                        />
                       )}
                     </Box>
                   </Box>

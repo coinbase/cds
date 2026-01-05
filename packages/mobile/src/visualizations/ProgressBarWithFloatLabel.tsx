@@ -21,16 +21,24 @@ import { ProgressTextLabel } from './ProgressTextLabel';
 
 export type ProgressBarFloatLabelProps = Pick<
   ProgressBarWithFloatLabelProps,
-  'label' | 'progress' | 'disabled' | 'labelPlacement' | 'styles'
+  'label' | 'progress' | 'disableAnimateOnMount' | 'disabled' | 'labelPlacement' | 'styles'
 >;
 
 const ProgressBarFloatLabel = memo(
-  ({ label, disabled, progress, labelPlacement, styles }: ProgressBarFloatLabelProps) => {
+  ({
+    label,
+    disabled,
+    progress,
+    disableAnimateOnMount,
+    labelPlacement,
+    styles,
+  }: ProgressBarFloatLabelProps) => {
     const [textWidth, setTextWidth] = useState<number>(-1);
     const { getPreviousValue: getPreviousPercent, addPreviousValue: addPreviousPercent } =
-      usePreviousValues<number>([0]);
+      usePreviousValues<number>([disableAnimateOnMount ? progress : 0]);
     const [size, onLayout] = useLayout();
     const containerWidth = size.width;
+    const isFirstRender = useRef(true);
 
     addPreviousPercent(progress);
     const previousPercent = getPreviousPercent() ?? 0;
@@ -39,18 +47,28 @@ const ProgressBarFloatLabel = memo(
 
     const { value: labelNum, render: renderLabel } = getProgressBarLabelParts(label);
 
+    // Check if dimensions are ready
+    const isDimensionsReady = containerWidth > 0 && textWidth > -1;
+
     useEffect(() => {
-      if (containerWidth > 0 && textWidth > -1) {
-        Animated.timing(
-          animatedProgress.current,
-          convertMotionConfig({
-            toValue: progress,
-            ...animateProgressBaseSpec,
-            useNativeDriver: true,
-          }),
-        )?.start();
+      if (isDimensionsReady) {
+        // When disableAnimateOnMount is true and this is the first render,
+        // set position immediately without animation
+        if (isFirstRender.current && disableAnimateOnMount) {
+          animatedProgress.current.setValue(progress);
+        } else {
+          Animated.timing(
+            animatedProgress.current,
+            convertMotionConfig({
+              toValue: progress,
+              ...animateProgressBaseSpec,
+              useNativeDriver: true,
+            }),
+          )?.start();
+        }
+        isFirstRender.current = false;
       }
-    }, [progress, animatedProgress, containerWidth, textWidth, addPreviousPercent]);
+    }, [progress, isDimensionsReady, disableAnimateOnMount]);
 
     const handleTextLayout = useCallback((event: LayoutChangeEvent) => {
       setTextWidth(event.nativeEvent.layout.width);
@@ -61,6 +79,8 @@ const ProgressBarFloatLabel = memo(
     const labelStyle = useMemo(
       () => [
         {
+          // Hide until dimensions are ready to prevent flash at wrong position
+          opacity: isDimensionsReady ? 1 : 0,
           transform: [
             {
               translateX: animatedProgress.current.interpolate({
@@ -74,7 +94,7 @@ const ProgressBarFloatLabel = memo(
           ],
         },
       ],
-      [containerWidth, textWidth],
+      [containerWidth, textWidth, isDimensionsReady],
     );
 
     return (
@@ -97,6 +117,7 @@ const ProgressBarFloatLabel = memo(
         >
           <ProgressTextLabel
             color="fgMuted"
+            disableAnimateOnMount={disableAnimateOnMount}
             disabled={disabled}
             renderLabel={renderLabel}
             style={styles?.label}
@@ -110,7 +131,7 @@ const ProgressBarFloatLabel = memo(
 
 export type ProgressBarWithFloatLabelProps = Pick<
   ProgressBaseProps,
-  'progress' | 'disabled' | 'testID'
+  'progress' | 'disableAnimateOnMount' | 'disabled' | 'testID'
 > & {
   /** Label that is floated at the end of the filled in bar. If a number is used then it will format it as a percentage. */
   label: ProgressBarLabel;
@@ -145,11 +166,22 @@ export type ProgressBarWithFloatLabelProps = Pick<
 export const ProgressBarWithFloatLabel: React.FC<
   React.PropsWithChildren<ProgressBarWithFloatLabelProps>
 > = memo(
-  ({ label, labelPlacement = 'above', progress, disabled, children, testID, style, styles }) => {
+  ({
+    label,
+    labelPlacement = 'above',
+    progress,
+    disableAnimateOnMount,
+    disabled,
+    children,
+    testID,
+    style,
+    styles,
+  }) => {
     const rootStyle = useMemo(() => [style, styles?.root], [style, styles?.root]);
 
     const progressBarFloatLabel = (
       <ProgressBarFloatLabel
+        disableAnimateOnMount={disableAnimateOnMount}
         disabled={disabled}
         label={label}
         labelPlacement={labelPlacement}

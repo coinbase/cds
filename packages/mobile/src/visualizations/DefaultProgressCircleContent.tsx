@@ -6,10 +6,20 @@ import type { ProgressCircleContentProps } from './ProgressCircle';
 import { ProgressTextLabel } from './ProgressTextLabel';
 
 export const DefaultProgressCircleContent = memo(
-  ({ progress, disabled, color = 'fgMuted' }: ProgressCircleContentProps) => {
+  ({
+    progress,
+    disableAnimateOnMount,
+    disabled,
+    color = 'fgMuted',
+  }: ProgressCircleContentProps) => {
     return (
       <Box alignSelf="center" flexGrow={0} flexShrink={0}>
-        <ProgressTextLabel color={color} disabled={disabled} value={Math.round(progress * 100)} />
+        <ProgressTextLabel
+          color={color}
+          disableAnimateOnMount={disableAnimateOnMount}
+          disabled={disabled}
+          value={Math.round(progress * 100)}
+        />
       </Box>
     );
   },

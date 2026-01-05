@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useRef } from 'react';
+import React, { memo, useCallback, useRef, useState } from 'react';
 import { animateProgressBaseSpec } from '@coinbase/cds-common/animation/progress';
 import { usePreviousValues } from '@coinbase/cds-common/hooks/usePreviousValues';
 import type { Placement } from '@coinbase/cds-common/types';
@@ -21,7 +21,13 @@ import { ProgressTextLabel } from './ProgressTextLabel';
 
 export type ProgressBarFloatLabelProps = Pick<
   ProgressBarWithFloatLabelProps,
-  'label' | 'progress' | 'disabled' | 'labelPlacement' | 'styles' | 'classNames'
+  | 'label'
+  | 'progress'
+  | 'disableAnimateOnMount'
+  | 'disabled'
+  | 'labelPlacement'
+  | 'styles'
+  | 'classNames'
 >;
 
 const floatingTextContainerCss = css`
@@ -37,6 +43,7 @@ const ProgressBarFloatLabel = memo(
     label,
     disabled,
     progress,
+    disableAnimateOnMount,
     labelPlacement,
     styles,
     classNames,
@@ -44,8 +51,10 @@ const ProgressBarFloatLabel = memo(
     const containerRef = useRef<HTMLDivElement | null>(null);
     const textContainerRef = useRef<HTMLDivElement>(null);
     const { getPreviousValue: getPreviousPercent, addPreviousValue: addPreviousPercent } =
-      usePreviousValues<number>([0]);
+      usePreviousValues<number>([disableAnimateOnMount ? progress : 0]);
     const animationControls = useAnimation();
+    const [isReady, setIsReady] = useState(false);
+    const isFirstRender = useRef(true);
 
     addPreviousPercent(progress);
     const previousPercent = getPreviousPercent() ?? 0;
@@ -73,12 +82,21 @@ const ProgressBarFloatLabel = memo(
             )
           : Math.max(0, containerWidth * progress - textContainerWidth);
 
-        void animationControls.start({
-          x: [startLeftTranslate, endLeftTranslate],
-          transition: convertTransition(animateProgressBaseSpec),
-        });
+        // When disableAnimateOnMount is true and this is the first render,
+        // set position immediately without animation
+        if (isFirstRender.current && disableAnimateOnMount) {
+          void animationControls.set({ x: endLeftTranslate });
+          setIsReady(true);
+        } else {
+          void animationControls.start({
+            x: [startLeftTranslate, endLeftTranslate],
+            transition: convertTransition(animateProgressBaseSpec),
+          });
+          setIsReady(true);
+        }
+        isFirstRender.current = false;
       }
-    }, [progress, cWidth, cHeight, previousPercent]);
+    }, [progress, cWidth, cHeight, previousPercent, disableAnimateOnMount]);
 
     const setupContainerRef = useCallback(
       (ref: HTMLDivElement) => {
@@ -104,11 +122,12 @@ const ProgressBarFloatLabel = memo(
           animate={animationControls}
           className={floatingTextContainerCss}
           data-testid="cds-progress-bar-float-label"
-          style={motionStyle}
+          style={{ ...motionStyle, opacity: isReady ? 1 : 0 }}
         >
           <ProgressTextLabel
             className={classNames?.label}
             color="fgMuted"
+            disableAnimateOnMount={disableAnimateOnMount}
             disabled={disabled}
             renderLabel={renderLabel}
             style={styles?.label}
@@ -122,7 +141,7 @@ const ProgressBarFloatLabel = memo(
 
 export type ProgressBarWithFloatLabelProps = Pick<
   ProgressBaseProps,
-  'progress' | 'disabled' | 'testID'
+  'progress' | 'disableAnimateOnMount' | 'disabled' | 'testID'
 > & {
   /** Label that is floated at the end of the filled in bar. If a number is used then it will format it as a percentage. */
   label: ProgressBarLabel;
@@ -182,6 +201,7 @@ export const ProgressBarWithFloatLabel: React.FC<
     label,
     labelPlacement = 'above',
     progress,
+    disableAnimateOnMount,
     disabled,
     children,
     testID,
@@ -194,6 +214,7 @@ export const ProgressBarWithFloatLabel: React.FC<
     const progressBarFloatLabel = !skipLabel && (
       <ProgressBarFloatLabel
         classNames={classNames}
+        disableAnimateOnMount={disableAnimateOnMount}
         disabled={disabled}
         label={label}
         labelPlacement={labelPlacement}
