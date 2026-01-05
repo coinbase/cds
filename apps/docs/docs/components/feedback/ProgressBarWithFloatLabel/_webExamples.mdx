@@ -171,6 +171,7 @@ By default, ProgressBar animates progress changes. Use `disableAnimateOnMount` t
 
       <Text variant="label2">Disable animation on mount</Text>
       <ProgressBarWithFloatLabel
+        disableAnimateOnMount
         label={Math.round(calculateProgress(0.3) * 100)}
         progress={calculateProgress(0.3)}
         labelPlacement="above"
