@@ -11,12 +11,13 @@ import type {
 } from '@coinbase/cds-common/types';
 
 import { useTheme } from '../hooks/useTheme';
-import { Box } from '../layout/Box';
+import { Box, type BoxProps } from '../layout/Box';
 
 import type { RemoteImageProps } from './RemoteImage';
 
 export type RemoteImageGroupBaseProps = SharedProps &
-  SharedAccessibilityProps & {
+  SharedAccessibilityProps &
+  Pick<BoxProps, 'borderWidth' | 'borderColor'> & {
     /**
      * Indicates the number of remote image before it collapses
      * @default 4
@@ -44,6 +45,8 @@ export const RemoteImageGroup = ({
   max = 4,
   shape = 'circle',
   testID,
+  borderWidth,
+  borderColor = borderWidth ? 'bg' : undefined,
   ...props
 }: RemoteImageGroupProps) => {
   const { avatarSize, fontFamily, color } = useTheme();
@@ -84,23 +87,29 @@ export const RemoteImageGroup = ({
         if (!isValidElement(child)) {
           return null;
         }
+        const childShape: RemoteImageProps['shape'] = child.props.shape;
 
         // dynamically apply uniform sizing and shape to all RemoteImage children elements
         const clonedChild = React.cloneElement<RemoteImageProps>(child as React.ReactElement, {
           testID: `${testID ? `${testID}-` : ''}image-${index}`,
           width: sizeAsNumber,
           height: sizeAsNumber,
-          ...(child.props.shape ? undefined : { shape }),
+          ...(childShape ? undefined : { shape }),
         });
 
         // zIndex is progressively lower so that each child is stacked below the previous one
         const zIndex = -index;
 
+        const childShapeStyle = borderWidth ? shapeStyles[childShape ?? shape] : undefined;
+
         return (
           <Box
             key={index}
+            borderColor={borderColor}
+            borderWidth={borderWidth}
             marginStart={index === 0 ? undefined : overlapSpacing}
             position="relative"
+            style={childShapeStyle}
             testID={`${testID ? `${testID}-` : ''}inner-box-${index}`}
             zIndex={zIndex}
           >
@@ -110,22 +119,28 @@ export const RemoteImageGroup = ({
       })}
       {excess > 0 && (
         <Box
-          alignItems="center"
           background="bgOverlay"
-          height={sizeAsNumber}
-          justifyContent="center"
+          borderColor={borderColor}
+          borderWidth={borderWidth}
           marginStart={overlapSpacing}
+          overflow="hidden"
           position="relative"
           style={shapeStyle}
-          width={sizeAsNumber}
           zIndex={groupChildren.length * -1}
         >
-          <Text
-            style={[typographyStyles, styles.centerText]}
-            testID={`${testID ? `${testID}-` : ''}excess-text`}
+          <Box
+            alignItems="center"
+            height={sizeAsNumber}
+            justifyContent="center"
+            width={sizeAsNumber}
           >
-            +{excess}
-          </Text>
+            <Text
+              style={[typographyStyles, styles.centerText]}
+              testID={`${testID ? `${testID}-` : ''}excess-text`}
+            >
+              +{excess}
+            </Text>
+          </Box>
         </Box>
       )}
     </Box>

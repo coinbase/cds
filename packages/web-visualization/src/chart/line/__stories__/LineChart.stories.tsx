@@ -373,140 +373,6 @@ function Points() {
   );
 }
 
-function Transitions() {
-  const dataCount = 20;
-  const maxDataOffset = 15000;
-  const minStepOffset = 2500;
-  const maxStepOffset = 10000;
-  const domainLimit = 20000;
-  const updateInterval = 500;
-
-  const myTransitionConfig = { type: 'spring', stiffness: 700, damping: 20 };
-  const negativeColor = 'rgb(var(--gray15))';
-  const positiveColor = 'var(--color-fgPositive)';
-
-  function generateNextValue(previousValue: number) {
-    const range = maxStepOffset - minStepOffset;
-    const offset = Math.random() * range + minStepOffset;
-
-    let direction;
-    if (previousValue >= maxDataOffset) {
-      direction = -1;
-    } else if (previousValue <= -maxDataOffset) {
-      direction = 1;
-    } else {
-      direction = Math.random() < 0.5 ? -1 : 1;
-    }
-
-    let newValue = previousValue + offset * direction;
-    newValue = Math.max(-maxDataOffset, Math.min(maxDataOffset, newValue));
-    return newValue;
-  }
-
-  function generateInitialData() {
-    const data = [];
-
-    let previousValue = Math.random() * 2 * maxDataOffset - maxDataOffset;
-    data.push(previousValue);
-
-    for (let i = 1; i < dataCount; i++) {
-      const newValue = generateNextValue(previousValue);
-      data.push(newValue);
-      previousValue = newValue;
-    }
-
-    return data;
-  }
-
-  const MyGradient = memo((props: DottedAreaProps) => {
-    const areaGradient = {
-      stops: ({ min, max }: AxisBounds) => [
-        { offset: min, color: negativeColor, opacity: 1 },
-        { offset: 0, color: negativeColor, opacity: 0 },
-        { offset: 0, color: positiveColor, opacity: 0 },
-        { offset: max, color: positiveColor, opacity: 1 },
-      ],
-    };
-
-    return <DottedArea {...props} gradient={areaGradient} />;
-  });
-
-  function CustomTransitionsChart() {
-    const [data, setData] = useState(generateInitialData);
-
-    useEffect(() => {
-      const intervalId = setInterval(() => {
-        setData((currentData) => {
-          const lastValue = currentData[currentData.length - 1] ?? 0;
-          const newValue = generateNextValue(lastValue);
-
-          return [...currentData.slice(1), newValue];
-        });
-      }, updateInterval);
-
-      return () => clearInterval(intervalId);
-    }, []);
-
-    const tickLabelFormatter = useCallback(
-      (value: number) =>
-        new Intl.NumberFormat('en-US', {
-          style: 'currency',
-          currency: 'USD',
-          maximumFractionDigits: 0,
-        }).format(value),
-      [],
-    );
-
-    const valueAtIndexFormatter = useCallback(
-      (dataIndex: number) =>
-        new Intl.NumberFormat('en-US', {
-          style: 'currency',
-          currency: 'USD',
-        }).format(data[dataIndex]),
-      [data],
-    );
-
-    const lineGradient = {
-      stops: [
-        { offset: 0, color: negativeColor },
-        { offset: 0, color: positiveColor },
-      ],
-    };
-
-    return (
-      <CartesianChart
-        enableScrubbing
-        height={{ base: 200, tablet: 250, desktop: 300 }}
-        inset={{ top: 32, bottom: 32, left: 16, right: 16 }}
-        series={[
-          {
-            id: 'prices',
-            data: data,
-            gradient: lineGradient,
-          },
-        ]}
-        yAxis={{ domain: { min: -domainLimit, max: domainLimit } }}
-      >
-        <YAxis showGrid requestedTickCount={2} tickLabelFormatter={tickLabelFormatter} />
-        <Line
-          showArea
-          AreaComponent={MyGradient}
-          seriesId="prices"
-          strokeWidth={3}
-          transition={myTransitionConfig}
-        />
-        <Scrubber
-          hideOverlay
-          beaconTransitions={{ update: myTransitionConfig }}
-          label={valueAtIndexFormatter}
-        />
-      </CartesianChart>
-    );
-  }
-
-  return <CustomTransitionsChart />;
-}
-
 function BasicAccessible() {
   const data = useMemo(() => [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58], []);
 
@@ -1798,9 +1664,6 @@ export const All = () => {
       <Example title="Points">
         <Points />
       </Example>
-      <Example title="Transitions">
-        <Transitions />
-      </Example>
       <Example title="Basic Accessible">
         <BasicAccessible />
       </Example>
@@ -1936,4 +1799,138 @@ export const All = () => {
       </Example>
     </VStack>
   );
+};
+
+export const Transitions = () => {
+  const dataCount = 20;
+  const maxDataOffset = 15000;
+  const minStepOffset = 2500;
+  const maxStepOffset = 10000;
+  const domainLimit = 20000;
+  const updateInterval = 500;
+
+  const myTransitionConfig = { type: 'spring', stiffness: 700, damping: 20 };
+  const negativeColor = 'rgb(var(--gray15))';
+  const positiveColor = 'var(--color-fgPositive)';
+
+  function generateNextValue(previousValue: number) {
+    const range = maxStepOffset - minStepOffset;
+    const offset = Math.random() * range + minStepOffset;
+
+    let direction;
+    if (previousValue >= maxDataOffset) {
+      direction = -1;
+    } else if (previousValue <= -maxDataOffset) {
+      direction = 1;
+    } else {
+      direction = Math.random() < 0.5 ? -1 : 1;
+    }
+
+    let newValue = previousValue + offset * direction;
+    newValue = Math.max(-maxDataOffset, Math.min(maxDataOffset, newValue));
+    return newValue;
+  }
+
+  function generateInitialData() {
+    const data = [];
+
+    let previousValue = Math.random() * 2 * maxDataOffset - maxDataOffset;
+    data.push(previousValue);
+
+    for (let i = 1; i < dataCount; i++) {
+      const newValue = generateNextValue(previousValue);
+      data.push(newValue);
+      previousValue = newValue;
+    }
+
+    return data;
+  }
+
+  const MyGradient = memo((props: DottedAreaProps) => {
+    const areaGradient = {
+      stops: ({ min, max }: AxisBounds) => [
+        { offset: min, color: negativeColor, opacity: 1 },
+        { offset: 0, color: negativeColor, opacity: 0 },
+        { offset: 0, color: positiveColor, opacity: 0 },
+        { offset: max, color: positiveColor, opacity: 1 },
+      ],
+    };
+
+    return <DottedArea {...props} gradient={areaGradient} />;
+  });
+
+  function CustomTransitionsChart() {
+    const [data, setData] = useState(generateInitialData);
+
+    useEffect(() => {
+      const intervalId = setInterval(() => {
+        setData((currentData) => {
+          const lastValue = currentData[currentData.length - 1] ?? 0;
+          const newValue = generateNextValue(lastValue);
+
+          return [...currentData.slice(1), newValue];
+        });
+      }, updateInterval);
+
+      return () => clearInterval(intervalId);
+    }, []);
+
+    const tickLabelFormatter = useCallback(
+      (value: number) =>
+        new Intl.NumberFormat('en-US', {
+          style: 'currency',
+          currency: 'USD',
+          maximumFractionDigits: 0,
+        }).format(value),
+      [],
+    );
+
+    const valueAtIndexFormatter = useCallback(
+      (dataIndex: number) =>
+        new Intl.NumberFormat('en-US', {
+          style: 'currency',
+          currency: 'USD',
+        }).format(data[dataIndex]),
+      [data],
+    );
+
+    const lineGradient = {
+      stops: [
+        { offset: 0, color: negativeColor },
+        { offset: 0, color: positiveColor },
+      ],
+    };
+
+    return (
+      <CartesianChart
+        enableScrubbing
+        height={{ base: 200, tablet: 250, desktop: 300 }}
+        inset={{ top: 32, bottom: 32, left: 16, right: 16 }}
+        series={[
+          {
+            id: 'prices',
+            data: data,
+            gradient: lineGradient,
+          },
+        ]}
+        yAxis={{ domain: { min: -domainLimit, max: domainLimit } }}
+      >
+        <YAxis showGrid requestedTickCount={2} tickLabelFormatter={tickLabelFormatter} />
+        <Line
+          showArea
+          AreaComponent={MyGradient}
+          seriesId="prices"
+          strokeWidth={3}
+          transition={myTransitionConfig}
+        />
+        <Scrubber
+          hideOverlay
+          beaconTransitions={{ update: myTransitionConfig }}
+          label={valueAtIndexFormatter}
+        />
+      </CartesianChart>
+    );
+  }
+
+  return <CustomTransitionsChart />;
 };

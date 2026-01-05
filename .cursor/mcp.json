@@ -1,12 +1,8 @@
 {
   "mcpServers": {
     "linear": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "mcp-remote",
-        "https://mcp.linear.app/sse"
-      ]
+      "url": "https://mcp.linear.app/mcp",
+      "headers": {}
     },
     "Figma": {
       "url": "https://mcp.figma.com/mcp",

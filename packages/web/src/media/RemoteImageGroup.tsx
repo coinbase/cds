@@ -9,14 +9,16 @@ import type {
 } from '@coinbase/cds-common/types';
 import { css, type LinariaClassName } from '@linaria/core';
 
+import { cx } from '../cx';
 import { useTheme } from '../hooks/useTheme';
-import { Box } from '../layout/Box';
+import { Box, type BoxDefaultElement, type BoxProps } from '../layout/Box';
 import { Text } from '../typography/Text';
 
 import type { RemoteImageProps } from './RemoteImage';
 
 export type RemoteImageGroupBaseProps = SharedProps &
-  SharedAccessibilityProps & {
+  SharedAccessibilityProps &
+  Pick<BoxProps<BoxDefaultElement>, 'borderWidth' | 'borderColor'> & {
     /**
      * Indicates the number of remote image before it collapses
      * @default 4
@@ -60,17 +62,22 @@ const isolateCss = css`
   isolation: isolate;
 `;
 
+const excessContainerCss = css`
+  box-sizing: content-box;
+`;
+
 export const RemoteImageGroup = ({
   children,
   size = 'm',
   max = 4,
   shape = 'circle',
   testID,
+  borderWidth,
+  borderColor = borderWidth ? 'bg' : undefined,
   ...props
 }: RemoteImageGroupProps) => {
   const { avatarSize } = useTheme();
 
-  const borderRadius = borderRadiusCss[shape];
   const sizeAsNumber = typeof size === 'number' ? size : avatarSize[size];
   const overlapSpacing: NegativeSpace = sizeAsNumber <= 40 ? -1 : -2;
 
@@ -100,19 +107,26 @@ export const RemoteImageGroup = ({
           return null;
         }
 
+        const childShape: RemoteImageProps['shape'] = child.props.shape;
+
         // dynamically apply uniform sizing and shape to all RemoteImage children elements
         const clonedChild = React.cloneElement(child as React.ReactElement<RemoteImageProps>, {
           width: sizeAsNumber,
           height: sizeAsNumber,
-          ...(child.props.shape ? undefined : { shape }),
+          ...(childShape ? undefined : { shape }),
         });
 
         // zIndex is progressively lower so that each child is stacked below the previous one
         const zIndex = -index;
 
+        const childContainerCss = borderWidth ? borderRadiusCss[childShape ?? shape] : undefined;
+
         return (
           <Box
             key={index}
+            borderColor={borderColor}
+            borderWidth={borderWidth}
+            className={childContainerCss}
             marginStart={index === 0 ? undefined : overlapSpacing}
             position="relative"
             testID={`${testID ? `${testID}-` : ''}inner-box-${index}`}
@@ -126,7 +140,9 @@ export const RemoteImageGroup = ({
         <Box
           alignItems="center"
           background="bgOverlay"
-          className={borderRadius}
+          borderColor={borderColor}
+          borderWidth={borderWidth}
+          className={cx(excessContainerCss, borderRadiusCss[shape])}
           height={sizeAsNumber}
           justifyContent="center"
           marginStart={overlapSpacing}
