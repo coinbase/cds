@@ -374,4 +374,66 @@ describe('ProgressBar test', () => {
       now: 78,
     });
   });
+
+  it('skips mount animation when disableAnimateOnMount is true for ProgressBar', () => {
+    render(
+      <DefaultThemeProvider>
+        <Box width="200">
+          <ProgressBar disableAnimateOnMount progress={0.5} testID="mock-progress-bar" />
+        </Box>
+      </DefaultThemeProvider>,
+    );
+
+    fireTextContainerEvent(screen.getByTestId('mock-progress-bar'));
+
+    const bar = screen.getByTestId('cds-progress-bar');
+
+    // Should start at target position immediately without animation
+    expect(bar).toHaveStyle({
+      transform: [{ translateX: -100 }], // -1 * (200 - (200 * 0.5))
+    });
+  });
+
+  it('skips mount animation when disableAnimateOnMount is true for ProgressBarWithFixedLabels', () => {
+    render(
+      <DefaultThemeProvider>
+        <Box width="200">
+          <ProgressBarWithFixedLabels
+            disableAnimateOnMount
+            endLabel={50}
+            labelPlacement="above"
+            startLabel={0}
+            testID="mock-progress-bar"
+          >
+            <ProgressBar disableAnimateOnMount progress={0.5} />
+          </ProgressBarWithFixedLabels>
+        </Box>
+      </DefaultThemeProvider>,
+    );
+
+    // Should show target percentage immediately, not animate from 0
+    expect(screen.getAllByText('0%').length).toBeGreaterThan(0);
+    expect(screen.getAllByText('50%').length).toBeGreaterThan(0);
+  });
+
+  it('skips mount animation when disableAnimateOnMount is true for ProgressBarWithFloatLabel', () => {
+    render(
+      <DefaultThemeProvider>
+        <Box width="200">
+          <ProgressBarWithFloatLabel
+            disableAnimateOnMount
+            label={50}
+            labelPlacement="above"
+            progress={0.5}
+            testID="mock-progress-bar"
+          >
+            <ProgressBar disableAnimateOnMount progress={0.5} />
+          </ProgressBarWithFloatLabel>
+        </Box>
+      </DefaultThemeProvider>,
+    );
+
+    // Should show target percentage immediately, not animate from 0
+    expect(screen.getAllByText('50%').length).toBeGreaterThan(0);
+  });
 });
