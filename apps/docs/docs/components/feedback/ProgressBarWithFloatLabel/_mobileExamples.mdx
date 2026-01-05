@@ -109,3 +109,56 @@ You can customize the appearance of the progress bar and float label using the `
   )}
 </ProgressContainerWithButtons>
 ```
+
+## Animation
+
+By default, ProgressBar animates progress changes. Use `disableAnimateOnMount` to skip the initial animation while still animating subsequent changes.
+
+```tsx
+<VStack gap={2}>
+  <Text variant="label2">Normal animation</Text>
+  <ProgressBarWithFloatLabel label={50} progress={0.5} labelPlacement="above">
+    <ProgressBar progress={0.5} />
+  </ProgressBarWithFloatLabel>
+
+  <Text variant="label2">Disable animation on mount</Text>
+  <ProgressBarWithFloatLabel label={50} progress={0.5} labelPlacement="above">
+    <ProgressBar disableAnimateOnMount progress={0.5} />
+  </ProgressBarWithFloatLabel>
+</VStack>
+```
+
+### Callbacks
+
+You can use the `onAnimationStart` and `onAnimationEnd` callbacks to track the progress of the animation.
+
+```jsx
+function Example() {
+  const [animationStatus, setAnimationStatus] = React.useState('Ready');
+
+  const handleAnimationStart = useCallback(() => {
+    setAnimationStatus('Animating...');
+  }, []);
+
+  const handleAnimationEnd = useCallback(() => {
+    setAnimationStatus('Animation Ended');
+  }, []);
+
+  return (
+    <VStack gap={2}>
+      <Text>Animation Status: {animationStatus}</Text>
+      <ProgressBarWithFloatLabel
+        label={20}
+        progress={0.2}
+        labelPlacement="above"
+      >
+        <ProgressBar
+          onAnimationEnd={handleAnimationEnd}
+          onAnimationStart={handleAnimationStart}
+          progress={0.2}
+        />
+      </ProgressBarWithFloatLabel>
+    </VStack>
+  );
+}
+```
