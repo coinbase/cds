@@ -147,11 +147,7 @@ function Example() {
   return (
     <VStack gap={2}>
       <Text>Animation Status: {animationStatus}</Text>
-      <ProgressBarWithFloatLabel
-        label={20}
-        progress={0.2}
-        labelPlacement="above"
-      >
+      <ProgressBarWithFloatLabel label={20} progress={0.2} labelPlacement="above">
         <ProgressBar
           onAnimationEnd={handleAnimationEnd}
           onAnimationStart={handleAnimationStart}

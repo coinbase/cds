@@ -145,7 +145,12 @@ By default, ProgressBar animates progress changes. Use `disableAnimateOnMount` t
   </ProgressBarWithFixedLabels>
 
   <Text variant="label2">Disable animation on mount</Text>
-  <ProgressBarWithFixedLabels disableAnimateOnMount startLabel={0} endLabel={50} labelPlacement="above">
+  <ProgressBarWithFixedLabels
+    disableAnimateOnMount
+    startLabel={0}
+    endLabel={50}
+    labelPlacement="above"
+  >
     <ProgressBar disableAnimateOnMount progress={0.5} />
   </ProgressBarWithFixedLabels>
 </VStack>
@@ -170,11 +175,7 @@ function Example() {
   return (
     <VStack gap={2}>
       <Text>Animation Status: {animationStatus}</Text>
-      <ProgressBarWithFixedLabels
-        startLabel={0}
-        endLabel={20}
-        labelPlacement="above"
-      >
+      <ProgressBarWithFixedLabels startLabel={0} endLabel={20} labelPlacement="above">
         <ProgressBar
           onAnimationEnd={handleAnimationEnd}
           onAnimationStart={handleAnimationStart}

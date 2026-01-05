@@ -343,11 +343,7 @@ const ProgressBarScreen = () => {
       <Example title="Disable Mount Animation">
         <ProgressContainerWithButtons>
           {({ calculateProgress }) => (
-            <ProgressCircle
-              disableAnimateOnMount
-              progress={calculateProgress(0.8)}
-              size={100}
-            />
+            <ProgressCircle disableAnimateOnMount progress={calculateProgress(0.8)} size={100} />
           )}
         </ProgressContainerWithButtons>
       </Example>
