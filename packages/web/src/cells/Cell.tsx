@@ -139,6 +139,8 @@ export type CellBaseProps = Polymorphic.ExtendableProps<
       bottomContent?: React.CSSProperties;
       pressable?: React.CSSProperties;
       media?: React.CSSProperties;
+      /** Wrapper around `children` inside the top content row (controls flex behavior). */
+      childrenContainer?: React.CSSProperties;
       intermediary?: React.CSSProperties;
       /** Applied to the container of detail or action */
       end?: React.CSSProperties;
@@ -152,6 +154,8 @@ export type CellBaseProps = Polymorphic.ExtendableProps<
       bottomContent?: string;
       pressable?: string;
       media?: string;
+      /** Wrapper around `children` inside the top content row (controls flex behavior). */
+      childrenContainer?: string;
       intermediary?: string;
       /** Applied to the container of detail or action */
       end?: string;
@@ -269,10 +273,11 @@ export const Cell: CellComponent = memo(
             )}
 
             <Box
-              className={contentTruncationStyle}
+              className={cx(contentTruncationStyle, classNames?.childrenContainer)}
               flexGrow={1}
               flexShrink={hasCellPriority('start', priority) ? 0 : 1}
               justifyContent="flex-start"
+              style={styles?.childrenContainer}
             >
               {children}
             </Box>
@@ -345,6 +350,7 @@ export const Cell: CellComponent = memo(
         classNames?.contentContainer,
         classNames?.topContent,
         classNames?.media,
+        classNames?.childrenContainer,
         classNames?.intermediary,
         classNames?.end,
         classNames?.accessory,
@@ -358,6 +364,7 @@ export const Cell: CellComponent = memo(
         styles?.contentContainer,
         styles?.topContent,
         styles?.media,
+        styles?.childrenContainer,
         styles?.intermediary,
         styles?.end,
         styles?.accessory,

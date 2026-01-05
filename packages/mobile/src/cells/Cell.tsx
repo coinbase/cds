@@ -80,6 +80,8 @@ export type CellBaseProps = SharedProps &
       bottomContent?: StyleProp<ViewStyle>;
       pressable?: StyleProp<ViewStyle>;
       media?: StyleProp<ViewStyle>;
+      /** Wrapper around `children` inside the top content row (controls flex behavior). */
+      childrenContainer?: StyleProp<ViewStyle>;
       intermediary?: StyleProp<ViewStyle>;
       /** Applied to the container of detail or action */
       end?: StyleProp<ViewStyle>;
@@ -166,6 +168,7 @@ export const Cell = memo(function Cell({
           flexGrow={1}
           flexShrink={hasCellPriority('start', priority) ? 0 : 1}
           justifyContent="flex-start"
+          style={styles?.childrenContainer}
         >
           {children}
         </Box>
@@ -236,6 +239,7 @@ export const Cell = memo(function Cell({
     styles?.media,
     priority,
     children,
+    styles?.childrenContainer,
     intermediary,
     styles?.intermediary,
     end,

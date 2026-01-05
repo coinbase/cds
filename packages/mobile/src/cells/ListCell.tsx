@@ -119,6 +119,10 @@ export type ListCellBaseProps = CellDetailProps &
       contentContainer?: StyleProp<ViewStyle>;
       pressable?: StyleProp<ViewStyle>;
       mainContent?: StyleProp<ViewStyle>;
+      /** Applied to the VStack of title/subtitle/description. */
+      titleStack?: StyleProp<ViewStyle>;
+      /** Applied to the Box that wraps around `titleStack` (controls flex behavior). */
+      titleStackContainer?: StyleProp<ViewStyle>;
       helperText?: StyleProp<ViewStyle>;
       title?: StyleProp<TextStyle>;
       subtitle?: StyleProp<TextStyle>;
@@ -226,6 +230,7 @@ export const ListCell = memo(function ListCell({
       styles={{
         accessory: styles?.accessory,
         bottomContent: styles?.helperText,
+        childrenContainer: styles?.titleStackContainer,
         contentContainer: styles?.contentContainer,
         end: styles?.end,
         intermediary: styles?.intermediary,
@@ -239,7 +244,7 @@ export const ListCell = memo(function ListCell({
       }}
       {...props}
     >
-      <VStack justifyContent="center">
+      <VStack justifyContent="center" style={styles?.titleStack}>
         {titleNode ? (
           titleNode
         ) : title ? (
