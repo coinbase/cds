@@ -312,7 +312,7 @@ When using the `inside` label variant, you should always include a `placeholder`
   label="Password"
   labelVariant="inside"
   secureTextEntry
-  end={<InputIconButton name="visibleInactive" />}
+  end={<InputIconButton name="visible" />}
   placeholder="Enter your password"
 />
 ```
@@ -397,6 +397,7 @@ Password Input - Use Icon Buttons at the end for actions like showing a password
 function PasswordInput() {
   const [isVisible, setIsVisible] = useState(false);
   const type = useMemo(() => (isVisible ? 'text' : 'password'), [isVisible]);
+  const iconName = useMemo(() => (isVisible ? 'visible' : 'invisible'), [isVisible]);
 
   return (
     <TextInput
@@ -404,8 +405,8 @@ function PasswordInput() {
       type={type}
       end={
         <InputIconButton
-          name={isVisible ? 'visibleActive' : 'visibleInactive'}
-          onPress={() => setIsVisible((isVisible) => !setIsVisible)}
+          name={iconName}
+          onPress={() => setIsVisible((isVisible) => !isVisible)}
           accessibilityLabel={isVisible ? 'Hide password' : 'Show password'}
         />
       }
