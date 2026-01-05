@@ -21,7 +21,15 @@ export namespace Polymorphic {
     Props,
   > = Polymorphic.InheritableElementProps<
     AsComponent,
-    Props & { as?: AsComponent } & { ref?: Polymorphic.Ref<AsComponent> }
+    Props & {
+      /**
+       * The underlying element or component the polymorphic component will render.
+       *
+       * Changing `as` also changes the inherited native props (e.g. `href` for `as="a"`) and the
+       * expected `ref` type.
+       */
+      as?: AsComponent;
+    } & { ref?: Polymorphic.Ref<AsComponent> }
   >;
 
   export type ReactReturn = ReturnType<React.ExoticComponent>;

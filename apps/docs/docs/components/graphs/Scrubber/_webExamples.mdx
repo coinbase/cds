@@ -468,7 +468,7 @@ You can use `labelFont` to customize the font of the scrubber line label and `be
 Use `labelBoundsInset` to prevent the scrubber line label from getting too close to chart edges.
 
 ```jsx live
-<Box style={{ marginLeft: 'calc(-1 * var(--space-3))', marginRight: 'calc(-1 * var(--space-3))' }}>
+<Box marginX={-3}>
   <LineChart
     enableScrubbing
     showArea
@@ -487,7 +487,7 @@ Use `labelBoundsInset` to prevent the scrubber line label from getting too close
 ```
 
 ```jsx live
-<Box style={{ marginLeft: 'calc(-1 * var(--space-3))', marginRight: 'calc(-1 * var(--space-3))' }}>
+<Box marginX={-3}>
   <LineChart
     enableScrubbing
     showArea

@@ -17,7 +17,7 @@ export const slideButtonTestID = 'slide-button';
 
 export type SlideButtonBackgroundProps = Pick<
   SlideButtonBaseProps,
-  'borderRadius' | 'checked' | 'disabled' | 'uncheckedLabel' | 'variant'
+  'borderRadius' | 'checked' | 'compact' | 'disabled' | 'uncheckedLabel' | 'variant'
 > & {
   progress: SpringValue<number>;
   style?: StyleProp<ViewStyle>;
@@ -26,7 +26,13 @@ export type SlideButtonBackgroundProps = Pick<
 export type SlideButtonHandleProps = PressableProps &
   Pick<
     SlideButtonBaseProps,
-    'checked' | 'checkedLabel' | 'disabled' | 'startUncheckedNode' | 'endCheckedNode' | 'variant'
+    | 'checked'
+    | 'checkedLabel'
+    | 'compact'
+    | 'disabled'
+    | 'startUncheckedNode'
+    | 'endCheckedNode'
+    | 'variant'
   > & {
     progress: SpringValue<number>;
     style?: StyleProp<ViewStyle>;
@@ -79,6 +85,10 @@ export type SlideButtonBaseProps = Omit<PressableProps, 'loading'> & {
    * When true, prevents gesture events from firing.
    */
   disabled?: boolean;
+  /**
+   * Reduces the height, borderRadius and inner padding within the button.
+   */
+  compact?: boolean;
   /**
    * Height of the entire button component (background and handle).
    * If you pass a custom SlideButtonBackgroundComponent or SlideButtonHandleComponent,
@@ -146,8 +156,9 @@ export const SlideButton = memo(
   forwardRef(
     (
       {
-        borderRadius,
         checked,
+        compact,
+        borderRadius = compact ? 700 : 900,
         uncheckedLabel,
         checkedLabel,
         onSlideStart,
@@ -175,7 +186,7 @@ export const SlideButton = memo(
 
       const { progress } = useSpring({ progress: checked ? 1 : 0, config: animationConfig });
 
-      const buttonMinHeight = interactableHeight.regular;
+      const buttonMinHeight = interactableHeight[compact ? 'compact' : 'regular'];
       const buttonMinWidth = buttonMinHeight;
 
       const handleComplete = useCallback(() => {
@@ -283,6 +294,7 @@ export const SlideButton = memo(
           <SlideButtonBackgroundComponent
             borderRadius={borderRadius}
             checked={checked}
+            compact={compact}
             disabled={disabled}
             progress={progress}
             style={styles?.background}
@@ -300,6 +312,7 @@ export const SlideButton = memo(
                 borderRadius={borderRadius}
                 checked={checked}
                 checkedLabel={checkedLabel}
+                compact={compact}
                 disabled={disabled}
                 endCheckedNode={endCheckedNode}
                 onAccessibilityAction={handleAccessibilityAction}

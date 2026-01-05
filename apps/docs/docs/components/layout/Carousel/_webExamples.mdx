@@ -31,7 +31,7 @@ function MyCarousel() {
     );
   }
   return (
-    <Box style={{ marginInline: 'calc(-1 * var(--space-3))' }}>
+    <Box marginX={-3}>
       <Carousel
         hidePagination
         title="Explore Assets"
@@ -110,7 +110,7 @@ function DynamicSizingCarousel() {
           tabs={itemsPerPage}
         />
       </HStack>
-      <Box style={{ marginInline: 'calc(-1 * var(--space-3))' }}>
+      <Box marginX={-3}>
         <Carousel
           hidePagination
           title="Learn more"
@@ -298,7 +298,7 @@ function ResponsiveSizingCarousel() {
     );
   }
   return (
-    <Box style={{ marginInline: 'calc(-1 * var(--space-3))' }}>
+    <Box marginX={-3}>
       <Carousel
         hidePagination
         title="Learn more"
@@ -391,7 +391,7 @@ function VariedSizingCarousel() {
     desktop: 'calc((100% - var(--space-1)) / 2)',
   };
   return (
-    <Box style={{ marginInline: 'calc(-1 * var(--space-3))' }}>
+    <Box marginX={-3}>
       <Carousel
         hidePagination
         title="Varied Sizing"
@@ -483,7 +483,7 @@ function DragCarousel() {
         </Text>
         <SegmentedTabs activeTab={drag} onChange={setDrag} tabs={dragOptions} />
       </HStack>
-      <Box style={{ marginInline: 'calc(-1 * var(--space-3))' }}>
+      <Box marginX={-3}>
         <Carousel
           title="Explore Assets"
           hidePagination
@@ -542,7 +542,7 @@ function SnapModeCarousel() {
         </Text>
         <SegmentedTabs activeTab={snapMode} onChange={setSnapMode} tabs={snapModeOptions} />
       </HStack>
-      <Box style={{ marginInline: 'calc(-1 * var(--space-3))' }}>
+      <Box marginX={-3}>
         <Carousel
           title="Explore Assets"
           styles={{
@@ -597,7 +597,7 @@ function OverflowCarousel() {
     );
   }
   return (
-    <Box style={{ marginInline: 'calc(-1 * var(--space-3))' }}>
+    <Box marginX={-3}>
       <Carousel
         title="Explore Assets"
         snapMode="item"
@@ -758,7 +758,7 @@ function CustomComponentsCarousel() {
     desktop: 'round(down, calc((100% - var(--space-1)) / 2), 1px)',
   };
   return (
-    <Box style={{ marginInline: 'calc(-1 * var(--space-3))' }}>
+    <Box marginX={-3}>
       <Carousel
         NavigationComponent={SeeAllComponent}
         PaginationComponent={PaginationComponent}
@@ -901,7 +901,7 @@ You can use the `classNames` and `styles` props to customize different parts of 
 ```jsx live
 function CustomStylesCarousel() {
   return (
-    <Box style={{ marginInline: 'calc(-1 * var(--space-3))' }}>
+    <Box marginX={-3}>
       <Carousel
         styles={{
           root: { position: 'relative', paddingInline: 'var(--space-6)' },
@@ -1021,7 +1021,7 @@ function DynamicContentCarousel() {
           Remove Last
         </Button>
       </HStack>
-      <Box style={{ marginInline: 'calc(-1 * var(--space-3))' }}>
+      <Box marginX={-3}>
         <Carousel
           title="Explore Assets"
           styles={{
@@ -1075,7 +1075,7 @@ function AnimatedCarousel() {
     );
   }
   return (
-    <Box style={{ marginInline: 'calc(-1 * var(--space-3))' }}>
+    <Box marginX={-3}>
       <Carousel
         title="Explore Assets"
         styles={{
@@ -1159,7 +1159,7 @@ function AnimatedSelectionCarousel() {
     );
   });
   return (
-    <Box style={{ marginInline: 'calc(-1 * var(--space-3))' }}>
+    <Box marginX={-3}>
       <Carousel
         title="Explore Assets"
         styles={{
@@ -1210,7 +1210,7 @@ function HideNavigationAndPaginationCarousel() {
     );
   }
   return (
-    <Box style={{ marginInline: 'calc(-1 * var(--space-3))' }}>
+    <Box marginX={-3}>
       <Carousel
         title="Explore Assets"
         hidePagination
@@ -1288,7 +1288,7 @@ function AnimatedPaginationCarousel() {
   }
 
   return (
-    <Box style={{ marginInline: 'calc(-1 * var(--space-3))' }}>
+    <Box marginX={-3}>
       <Carousel
         PaginationComponent={AnimatedPagination}
         drag="snap"
@@ -1412,7 +1412,7 @@ function ImperativeApiCarousel() {
           />
         </HStack>
       </HStack>
-      <Box style={{ marginInline: 'calc(-1 * var(--space-3))' }}>
+      <Box marginX={-3}>
         <Carousel
           ref={carouselRef}
           hidePagination

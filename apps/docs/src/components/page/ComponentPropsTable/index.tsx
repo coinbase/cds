@@ -10,6 +10,7 @@ import type {
 } from '@coinbase/docusaurus-plugin-docgen/types';
 import { useIsSticky } from '@site/src/utils/useIsSticky';
 
+import ModalLink from './ModalLink';
 import ParentTypesList from './ParentTypesList';
 import PropsTable from './PropsTable';
 
@@ -25,15 +26,78 @@ type ComponentPropsTableProps = {
 const tabsHeight = 67;
 const stickyTopOffset = 115;
 
+function DefaultElementPropsModalContent({
+  defaultElement,
+  props,
+  sharedTypeAliases,
+}: {
+  defaultElement: string;
+  props: ProcessedPropItem[];
+  sharedTypeAliases: SharedTypeAliases;
+}) {
+  const [searchValue, setSearchValue] = useState('');
+  const inherited = useMemo(() => {
+    const parentPrefix = `PolymorphicDefault<${defaultElement}>`;
+    const search = searchValue.toLowerCase();
+    return props.filter((p) => {
+      if (String(p.parent ?? '') !== parentPrefix) return false;
+      return p.name.toLowerCase().includes(search);
+    });
+  }, [defaultElement, props, searchValue]);
+
+  return (
+    <VStack gap={2}>
+      <VStack gap={1}>
+        <Text as="p" color="fgMuted" font="label2">
+          These props are inherited from the default polymorphic element and may or may not apply
+          depending on the value of &apos;as&apos;.
+        </Text>
+        <SearchInput
+          compact
+          onChangeText={setSearchValue}
+          placeholder="Search"
+          value={searchValue}
+        />
+      </VStack>
+      <PropsTable
+        props={inherited}
+        searchTerm={searchValue}
+        sharedTypeAliases={sharedTypeAliases}
+      />
+    </VStack>
+  );
+}
+
 function ComponentPropsTable({
   props: { props, parentTypes },
   sharedTypeAliases,
   sharedParentTypes,
 }: ComponentPropsTableProps) {
+  const polymorphicDefaultElement = useMemo(() => {
+    const asProp = props.find((p) => p.name === 'as');
+    const defaultValue =
+      typeof asProp?.defaultValue === 'string' && asProp.defaultValue.trim()
+        ? asProp.defaultValue.trim()
+        : undefined;
+    return defaultValue;
+  }, [props]);
+
+  const isPolymorphicComponent = useMemo(() => {
+    return (
+      props.some((p) => p.name === 'as') ||
+      props.some((p) => String(p.parent ?? '').startsWith('PolymorphicDefault<'))
+    );
+  }, [props]);
+
   const [searchValue, setSearchValue] = useState('');
   const filteredProps = useMemo(() => {
     const searchTerm = searchValue.toLowerCase();
-    return props.filter((item) => item.name.toLowerCase().includes(searchTerm));
+    return props.filter((item) => {
+      // Default-element props are shown in a dedicated modal to avoid overcrowding the main table.
+      const isDefaultElementProp = String(item.parent ?? '').startsWith('PolymorphicDefault<');
+      if (isDefaultElementProp) return false;
+      return item.name.toLowerCase().includes(searchTerm);
+    });
   }, [searchValue, props]);
   const handleSearchChange = useCallback((value: string) => {
     setSearchValue(value);
@@ -80,6 +144,51 @@ function ComponentPropsTable({
           sharedParentTypes={sharedParentTypes}
           sharedTypeAliases={sharedTypeAliases}
         />
+        {isPolymorphicComponent && (
+          <VStack gap={0.5}>
+            <Text as="p" font="headline">
+              🧩 Polymorphic Component
+            </Text>
+            <Text as="p" color="fgMuted" font="label2">
+              The value passed to the &apos;as&apos; prop determines:
+            </Text>
+            <ul>
+              <li>
+                <Text color="fgMuted" font="label2">
+                  The HTML element rendered in the DOM.
+                </Text>
+              </li>
+              <li>
+                <Text color="fgMuted" font="label2">
+                  The inherited props available to the component (e.g. as=&quot;a&quot;, the
+                  component accepts href).
+                </Text>
+              </li>
+            </ul>
+            {polymorphicDefaultElement && (
+              <Text as="p" color="fgMuted" font="label2">
+                <b>Default element:</b> <Text color="fgPrimary">{polymorphicDefaultElement}</Text>{' '}
+                (Extends all{' '}
+                <ModalLink
+                  content={
+                    <DefaultElementPropsModalContent
+                      defaultElement={polymorphicDefaultElement}
+                      props={props}
+                      sharedTypeAliases={sharedTypeAliases}
+                    />
+                  }
+                  font="label2"
+                  modalBodyProps={{ paddingX: 2, paddingY: 2 }}
+                  style={{ textDecoration: 'underline' }}
+                  title={`${polymorphicDefaultElement} attributes`}
+                >
+                  {`${polymorphicDefaultElement} attributes`}
+                </ModalLink>
+                ).
+              </Text>
+            )}
+          </VStack>
+        )}
       </VStack>
       {filteredProps.length > 0 ? (
         <Box maxWidth="100%" paddingBottom={{ base: 4, phone: 2 }} paddingX={{ base: 4, phone: 2 }}>

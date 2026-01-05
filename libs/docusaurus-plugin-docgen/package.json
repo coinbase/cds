@@ -41,7 +41,7 @@
     "@docusaurus/logger": "^3.7.0",
     "@docusaurus/utils": "^3.7.0",
     "ejs": "^3.1.7",
-    "react-docgen-typescript": "^2.2.2"
+    "react-docgen-typescript": "^2.4.0"
   },
   "devDependencies": {
     "@babel/core": "^7.28.0",

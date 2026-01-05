@@ -20,6 +20,15 @@ if (
 )
   throw new Error('CDS common, mobile, and web packages must be the same version!');
 
+// Characters that are invalid at the start of CSS class names
+const invalidClassNameStartChars = '-0123456789';
+
+// Custom class name generator that ensures CSS-valid class names
+const createClassName = (hash: string, title: string) => {
+  const needsEscaping = invalidClassNameStartChars.includes(title.charAt(0));
+  return `${needsEscaping ? '_' : ''}${title}-${hash}`;
+};
+
 const webpackPlugin = () => {
   const plugin: Plugin = {
     name: 'cds-docusaurus-webpack-plugin',
@@ -71,6 +80,7 @@ const webpackPlugin = () => {
                   displayName: true,
                   sourceMap: true,
                   babelOptions: { configFile: true },
+                  classNameSlug: createClassName,
                 },
               },
         ],

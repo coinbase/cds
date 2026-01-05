@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { assets } from '@coinbase/cds-common/internal/data/assets';
 import { useMultiSelect } from '@coinbase/cds-common/select/useMultiSelect';
 
@@ -122,47 +122,47 @@ const assetImageMap: Record<string, string> = {
   xrp: assets.xrp.imageUrl,
 };
 
-// TODO: Add multi-select with assets story when RemoteImageGroup is fixed
-// export const MultiSelectWithAssets = () => {
-//   const exampleOptions = [
-//     { value: 'btc', label: assets.btc.name },
-//     { value: 'eth', label: assets.eth.name },
-//     { value: 'dai', label: assets.dai.name },
-//     { value: 'ltc', label: assets.ltc.name },
-//     { value: 'xrp', label: assets.xrp.name },
-//   ];
-//   const { value, onChange } = useMultiSelect({
-//     initialValue: ['eth', 'btc'],
-//   });
+export const MultiSelectWithAssets = () => {
+  const exampleOptions = [
+    { value: 'btc', label: assets.btc.name },
+    { value: 'eth', label: assets.eth.name },
+    { value: 'dai', label: assets.dai.name },
+    { value: 'ltc', label: assets.ltc.name },
+    { value: 'xrp', label: assets.xrp.name },
+  ];
+  const { value, onChange } = useMultiSelect({
+    initialValue: ['eth', 'btc'],
+  });
 
-//   // Get startNode based on selected assets
-//   const startNode = useMemo(() => {
-//     if (value.length === 0) return null;
+  // Get startNode based on selected assets
+  const startNode = useMemo(() => {
+    if (value.length === 0) return null;
 
-//     // Multiple assets selected - use RemoteImageGroup
-//     return (
-//       <RemoteImageGroup shape="circle" size={24}>
-//         {value.map((assetValue) => {
-//           const imageUrl = assetImageMap[assetValue];
-//           if (!imageUrl) return null;
-//           return <RemoteImage key={assetValue} source={imageUrl} />;
-//         })}
-//       </RemoteImageGroup>
-//     );
-//   }, [value]);
+    // Multiple assets selected - use RemoteImageGroup
+    return (
+      <RemoteImageGroup shape="circle" size={24}>
+        {value.map((assetValue) => {
+          const imageUrl = assetImageMap[assetValue];
+          if (!imageUrl) return null;
+          return <RemoteImage key={assetValue} source={imageUrl} />;
+        })}
+      </RemoteImageGroup>
+    );
+  }, [value]);
 
-//   return (
-//     <SelectChip
-//       controlAccessibilityLabel="Select multiple assets"
-//       onChange={onChange}
-//       options={exampleOptions}
-//       placeholder="Choose assets"
-//       startNode={startNode}
-//       type="multi"
-//       value={value}
-//     />
-//   );
-// };
+  return (
+    <SelectChip
+      controlAccessibilityLabel="Select multiple assets"
+      maxWidth={400}
+      onChange={onChange}
+      options={exampleOptions}
+      placeholder="Choose assets"
+      startNode={startNode}
+      type="multi"
+      value={value}
+    />
+  );
+};
 
 export const InvertColorScheme = () => {
   const exampleOptions = [

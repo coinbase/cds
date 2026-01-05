@@ -34,15 +34,15 @@ describe('RemoteImageGroup', () => {
 
     const remoteImage1 = screen.getByTestId(`${TEST_ID}-inner-box-0`);
 
-    expect(remoteImage1).toHaveStyle({
-      left: 'initial',
+    expect(remoteImage1).not.toHaveStyle({
+      marginStart: -8,
     });
 
     remoteImageIndices.slice(1).forEach((index) => {
       const imageChildren = screen.getByTestId(`${TEST_ID}-inner-box-${index}`);
 
       expect(imageChildren).toHaveStyle({
-        left: -index * 8,
+        marginStart: -8,
       });
     });
   });
@@ -52,15 +52,15 @@ describe('RemoteImageGroup', () => {
 
     const remoteImage1 = screen.getByTestId(`${TEST_ID}-inner-box-0`);
 
-    expect(remoteImage1).toHaveStyle({
-      left: 'initial',
+    expect(remoteImage1).not.toHaveStyle({
+      marginStart: -16,
     });
 
     remoteImageIndices.slice(1).forEach((index) => {
       const imageChildren = screen.getByTestId(`${TEST_ID}-inner-box-${index}`);
 
       expect(imageChildren).toHaveStyle({
-        left: -index * 16,
+        marginStart: -16,
       });
     });
   });

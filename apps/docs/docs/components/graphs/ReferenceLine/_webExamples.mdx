@@ -136,7 +136,7 @@ You can customize label appearance using `labelFont`, `labelDx`, `labelDy`, `lab
 Use `labelBoundsInset` to prevent labels from getting too close to chart edges.
 
 ```jsx live
-<Box style={{ marginLeft: 'calc(-1 * var(--space-3))', marginRight: 'calc(-1 * var(--space-3))' }}>
+<Box marginX={-3}>
   <LineChart
     height={{ base: 150, tablet: 200, desktop: 250 }}
     inset={{ left: 0, right: 0 }}

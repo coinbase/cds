@@ -8,6 +8,111 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 5.9.0 (12/22/2025 PST)
+
+#### 🚀 Updates
+
+- Feat: Publish icons 2025-12-22. [[#274](https://github.com/coinbase/cds/pull/274)]
+
+##### ⭐️ Added (96)
+
+- test
+- golf
+- basketball
+- football
+- tokenLaunchCoin
+- chess
+- baseball
+- strategy
+- motorsport
+- tokenLaunchRocket
+- boxing
+- cricket
+- starBubble
+- tennis
+- factory
+- building
+- podiumStar
+- pillBottle
+- tshirt
+- singleNote
+- playbutton
+- ratingsChecks
+- scienceAtom
+- earthquake
+- cloudPartial
+- oil
+- virus
+- singlecloud
+- calendarHeart
+- ballot
+- tv
+- airdropParachute
+- educationBook
+- bug
+- briefcaseAlt
+- politicsFlag
+- mma
+- pillCapsule
+- microphoneCordless
+- snow
+- politicsCandidate
+- rain
+- tvStand
+- wind
+- quotation
+- shoe
+- tornado
+- calendarMoney
+- ribbon
+- scienceBeaker
+- atSign
+- hospital
+- scienceMoon
+- ratingsStar
+- politicsStar
+- ratingsCheck
+- microscope
+- bandage
+- speechBubble
+- starTrophy
+- stableCoin
+- apple
+- politicsPodium
+- educationPencil
+- politicsBuilding
+- medal
+- calendarDates
+- needle
+- ballotbox
+- alien
+- politicsGavel
+- stablecoinStack
+- umbrella
+- thermometer
+- entertainment
+- greenEnergy
+- soccer
+- city
+- hockey
+- hurricane
+- filmStrip
+- corporation
+- gaming
+- rottenTomato
+- musicArticles
+- computerChip
+- calendarStar
+- atomScience
+- starAward
+- airdropAlt
+- barChartSimple
+- apothecary
+- hospitalCross
+- gasFeesAlt
+- airdropCoins
+- lightning
+
 ## 5.8.0 (12/5/2025 PST)
 
 #### 🚀 Updates

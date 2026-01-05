@@ -8,6 +8,32 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.34.2 (1/2/2026 PST)
+
+#### 🐞 Fixes
+
+- Handle disableAnimateOnMount prop for web ProgressCircle. [[#280](https://github.com/coinbase/cds/pull/280)]
+
+## 8.34.1 (12/23/2025 PST)
+
+#### 🐞 Fixes
+
+- Updated docgen version and enhanced props table with polymorphic default element extraction. [[#276](https://github.com/coinbase/cds/pull/276)]
+
+## 8.34.0 ((12/19/2025, 02:32 PM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.33.1 (12/19/2025 PST)
+
+#### 🐞 Fixes
+
+- Fix RemoteImageGroup zIndex and trailing space issue. [[#170](https://github.com/coinbase/cds/pull/170)]
+
+#### 📘 Misc
+
+- Fix: rename invalid class names on docsite. [[#265](https://github.com/coinbase/cds/pull/265)]
+
 ## 8.33.0 (12/18/2025 PST)
 
 #### 🚀 Updates
