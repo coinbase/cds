@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.34.2 (1/2/2026 PST)
+
+#### 🐞 Fixes
+
+- Handle disableAnimateOnMount prop for web ProgressCircle. [[#280](https://github.com/coinbase/cds/pull/280)]
+
 ## 8.34.1 (12/23/2025 PST)
 
 #### 🐞 Fixes
