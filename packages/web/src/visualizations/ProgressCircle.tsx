@@ -99,7 +99,10 @@ export type ProgressCircleProps = ProgressCircleBaseProps & {
   };
 };
 
-export type ProgressCircleContentProps = Pick<ProgressCircleBaseProps, 'progress' | 'disabled'> & {
+export type ProgressCircleContentProps = Pick<
+  ProgressCircleBaseProps,
+  'progress' | 'disableAnimateOnMount' | 'disabled'
+> & {
   /**
    * Custom text color.
    * @default fgMuted
@@ -109,7 +112,7 @@ export type ProgressCircleContentProps = Pick<ProgressCircleBaseProps, 'progress
 
 type ProgressInnerCircleProps = Pick<
   ProgressCircleBaseProps,
-  'progress' | 'onAnimationEnd' | 'onAnimationStart'
+  'progress' | 'onAnimationEnd' | 'onAnimationStart' | 'disableAnimateOnMount'
 > &
   Required<Pick<ProgressCircleBaseProps, 'size' | 'weight' | 'color'>> & {
     visuallyDisabled?: boolean;
@@ -128,6 +131,7 @@ const ProgressCircleInner = memo(
     className,
     onAnimationEnd,
     onAnimationStart,
+    disableAnimateOnMount,
   }: ProgressInnerCircleProps) => {
     const strokeWidth = useProgressSize(weight);
     const circleRef = useRef<SVGCircleElement>(null);
@@ -145,7 +149,9 @@ const ProgressCircleInner = memo(
         strokeDashoffset: progressOffset,
       },
       transition: animateProgressBaseSpec,
-      initial: { strokeDashoffset: circumference },
+      initial: {
+        strokeDashoffset: disableAnimateOnMount ? progressOffset : circumference,
+      },
     });
 
     return (
@@ -176,6 +182,7 @@ export const ProgressCircle = memo(
         progress,
         color = 'bgPrimary',
         disabled = false,
+        disableAnimateOnMount = false,
         testID,
         hideContent,
         hideText,
@@ -240,6 +247,7 @@ export const ProgressCircle = memo(
                   <ProgressCircleInner
                     className={classNames?.progress}
                     color={color}
+                    disableAnimateOnMount={disableAnimateOnMount}
                     onAnimationEnd={onAnimationEnd}
                     onAnimationStart={onAnimationStart}
                     progress={progress}
@@ -266,7 +274,11 @@ export const ProgressCircle = memo(
                       width="100%"
                     >
                       {contentNode ?? (
-                        <DefaultProgressCircleContent disabled={disabled} progress={progress} />
+                        <DefaultProgressCircleContent
+                          disableAnimateOnMount={disableAnimateOnMount}
+                          disabled={disabled}
+                          progress={progress}
+                        />
                       )}
                     </Box>
                   </Box>

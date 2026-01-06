@@ -372,3 +372,14 @@ export const Thin = () => {
     </ProgressContainerWithButtons>
   );
 };
+
+export const DisableAnimateOnMount = () => {
+  return (
+    <ProgressContainerWithButtons>
+      {({ calculateProgress }) => (
+        <ProgressCircle disableAnimateOnMount progress={calculateProgress(0.8)} size={100} />
+      )}
+    </ProgressContainerWithButtons>
+  );
+};
+DisableAnimateOnMount.parameters = { percy: { enableJavaScript: true } };

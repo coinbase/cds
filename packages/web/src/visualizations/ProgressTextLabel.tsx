@@ -10,7 +10,10 @@ import { Text } from '../typography/Text';
 import { Counter } from './Counter';
 import type { ProgressBaseProps } from './ProgressBar';
 
-export type ProgressTextLabelProps = Pick<ProgressBaseProps, 'disabled'> & {
+export type ProgressTextLabelProps = Pick<
+  ProgressBaseProps,
+  'disableAnimateOnMount' | 'disabled'
+> & {
   value: number;
   renderLabel?: (num: number, disabled?: boolean) => React.ReactNode;
   color?: ThemeVars.Color;
@@ -25,8 +28,18 @@ export type ProgressTextLabelProps = Pick<ProgressBaseProps, 'disabled'> & {
 };
 
 export const ProgressTextLabel = memo(
-  ({ value, renderLabel, disabled, color, style, className }: ProgressTextLabelProps) => {
-    const { getPreviousValue, addPreviousValue } = usePreviousValues<number>([0]);
+  ({
+    value,
+    renderLabel,
+    disableAnimateOnMount,
+    disabled,
+    color,
+    style,
+    className,
+  }: ProgressTextLabelProps) => {
+    const { getPreviousValue, addPreviousValue } = usePreviousValues<number>([
+      disableAnimateOnMount ? value : 0,
+    ]);
 
     addPreviousValue(value);
 
