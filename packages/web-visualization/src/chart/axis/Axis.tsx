@@ -1,4 +1,5 @@
 import type React from 'react';
+import type { SharedProps } from '@coinbase/cds-common/types';
 
 import { type LineComponent } from '../line';
 import type { ChartTextChildren, ChartTextProps } from '../text/ChartText';
@@ -67,7 +68,7 @@ export type AxisTickLabelComponentProps = Pick<
 
 export type AxisTickLabelComponent = React.FC<AxisTickLabelComponentProps>;
 
-export type AxisBaseProps = {
+export type AxisBaseProps = SharedProps & {
   /**
    * Label text to display for the axis.
    */
