@@ -81,8 +81,6 @@ const ProgressBarFloatLabel = memo(
             )
           : Math.max(0, containerWidth * progress - textContainerWidth);
 
-        // When disableAnimateOnMount is true and this is the first render,
-        // set position immediately without animation
         if (!hasAnimationMounted && disableAnimateOnMount) {
           void animationControls.set({ x: endLeftTranslate });
           setHasAnimationMounted(true);

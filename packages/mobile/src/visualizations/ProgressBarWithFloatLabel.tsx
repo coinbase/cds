@@ -47,8 +47,6 @@ const ProgressBarFloatLabel = memo(
 
     useEffect(() => {
       if (containerWidth > 0 && textWidth > -1) {
-        // When disableAnimateOnMount is true and this is the first render,
-        // set position immediately without animation
         if (!hasAnimationMounted && disableAnimateOnMount) {
           animatedProgress.setValue(progress);
           setHasAnimationMounted(true);
@@ -81,7 +79,6 @@ const ProgressBarFloatLabel = memo(
     const labelStyle = useMemo(
       () => [
         {
-          // Hide until animation has mounted to prevent flash at wrong position
           opacity: hasAnimationMounted ? 1 : 0,
           transform: [
             {
