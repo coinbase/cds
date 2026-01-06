@@ -63,8 +63,14 @@ const ProgressBarFloatLabel = memo(
           )?.start();
         }
       }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [progress, containerWidth, textWidth, animatedProgress, disableAnimateOnMount]);
+    }, [
+      progress,
+      containerWidth,
+      textWidth,
+      animatedProgress,
+      disableAnimateOnMount,
+      hasAnimationMounted,
+    ]);
 
     const handleTextLayout = useCallback((event: LayoutChangeEvent) => {
       setTextWidth(event.nativeEvent.layout.width);
