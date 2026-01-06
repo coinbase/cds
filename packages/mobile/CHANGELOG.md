@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.36.1 (1/6/2026 PST)
+
+#### 🐞 Fixes
+
+- Added customization for ListCell `titleStack`. [[#283](https://github.com/coinbase/cds/pull/283)] [DX-5075]
+
 ## 8.36.0 ((1/6/2026, 01:00 PM PST))
 
 This is an artificial version bump with no new change.
