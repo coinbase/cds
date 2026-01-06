@@ -1,6 +1,6 @@
 ## Label Below
 
-```jsx live
+```jsx
 <VStack gap={2}>
   <ProgressBarWithFixedLabels startLabel={0} endLabel={20} labelPlacement="below">
     <ProgressBar progress={0.2} />
@@ -13,7 +13,7 @@
 
 ## Label Beside
 
-```jsx live
+```jsx
 <VStack gap={2}>
   <ProgressBarWithFixedLabels startLabel={0} endLabel={20} labelPlacement="beside">
     <ProgressBar progress={0.2} />
@@ -26,7 +26,7 @@
 
 ## Disabled
 
-```jsx live
+```jsx
 <VStack gap={2}>
   <ProgressBarWithFixedLabels startLabel={0} endLabel={20} disabled labelPlacement="beside">
     <ProgressBar disabled progress={0.2} />
@@ -39,7 +39,7 @@
 
 ## Custom Labels
 
-```jsx live
+```jsx
 function Example() {
   const renderStartLabelNumStr = useCallback((num) => {
     return `$${num.toLocaleString()}`;
@@ -107,7 +107,7 @@ function Example() {
 
 You can customize the appearance of the progress bar and labels using the `styles` prop.
 
-```tsx live
+```tsx
 <ProgressContainerWithButtons>
   {({ calculateProgress }) => (
     <VStack gap={2}>
