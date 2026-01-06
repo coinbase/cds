@@ -34,8 +34,9 @@ const ProgressBarFloatLabel = memo(
     styles,
   }: ProgressBarFloatLabelProps) => {
     const [textWidth, setTextWidth] = useState<number>(-1);
-    const { getPreviousValue: getPreviousPercent, addPreviousValue: addPreviousPercent } =
-      usePreviousValues<number>([disableAnimateOnMount ? progress : 0]);
+    const { addPreviousValue: addPreviousPercent } = usePreviousValues<number>([
+      disableAnimateOnMount ? progress : 0,
+    ]);
     const [size, onLayout] = useLayout();
     const containerWidth = size.width;
     const [hasAnimationMounted, setHasAnimationMounted] = useState(!disableAnimateOnMount);

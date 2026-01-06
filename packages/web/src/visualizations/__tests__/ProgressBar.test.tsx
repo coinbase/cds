@@ -285,21 +285,34 @@ describe('ProgressBar test', () => {
     expect(floatLabelText).toHaveStyle({ fontWeight: 'bold' });
   });
 
-  it('skips mount animation when disableAnimateOnMount is true for ProgressBar', async () => {
-    const progress = 0.5;
+  it('skips mount animation when disableAnimateOnMount is true for ProgressBar', () => {
     render(
       <Box width="200">
-        <ProgressBar disableAnimateOnMount progress={progress} />
+        <ProgressBar disableAnimateOnMount progress={0.5} />
       </Box>,
     );
 
     const bar = screen.getByTestId('cds-progress-bar');
 
-    // Should start at target position, not animate from 0
-    await waitFor(() => {
-      expect(bar).toHaveStyle({
-        transform: 'translateX(-50%) translateZ(0)',
-      });
+    // With disableAnimateOnMount, should start at target position (-50%) immediately
+    // not at animation start position (-100%)
+    expect(bar).toHaveStyle({
+      transform: 'translateX(-50%) translateZ(0)',
+    });
+  });
+
+  it('starts at animation start position when disableAnimateOnMount is not set', () => {
+    render(
+      <Box width="200">
+        <ProgressBar progress={0.5} />
+      </Box>,
+    );
+
+    const bar = screen.getByTestId('cds-progress-bar');
+
+    // Without disableAnimateOnMount, should start at -100% (empty) and animate to target
+    expect(bar).toHaveStyle({
+      transform: 'translateX(-100%) translateZ(0)',
     });
   });
 

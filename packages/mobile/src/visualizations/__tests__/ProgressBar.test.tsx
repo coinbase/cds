@@ -394,6 +394,25 @@ describe('ProgressBar test', () => {
     });
   });
 
+  it('starts at animation start position when disableAnimateOnMount is not set', () => {
+    render(
+      <DefaultThemeProvider>
+        <Box width="200">
+          <ProgressBar progress={0.5} testID="mock-progress-bar" />
+        </Box>
+      </DefaultThemeProvider>,
+    );
+
+    fireTextContainerEvent(screen.getByTestId('mock-progress-bar'));
+
+    const bar = screen.getByTestId('cds-progress-bar');
+
+    // Without disableAnimateOnMount, should start at -200 (empty) and animate to target
+    expect(bar).toHaveStyle({
+      transform: [{ translateX: -200 }], // -1 * 200 (full width, empty state)
+    });
+  });
+
   it('skips mount animation when disableAnimateOnMount is true for ProgressBarWithFixedLabels', () => {
     render(
       <DefaultThemeProvider>

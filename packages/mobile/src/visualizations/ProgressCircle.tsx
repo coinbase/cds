@@ -123,7 +123,7 @@ const ProgressCircleInner = memo(
     const initialOffset = disableAnimateOnMount
       ? circumference - circumference * progress
       : circumference;
-    const animatedStrokeDashOffset = React.useRef(new Animated.Value(initialOffset));
+    const animatedStrokeDashOffset = useRef(new Animated.Value(initialOffset));
 
     useEffect(() => {
       const strokeDashoffset = circumference - circumference * progress;
