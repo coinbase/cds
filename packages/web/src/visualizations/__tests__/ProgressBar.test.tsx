@@ -284,4 +284,72 @@ describe('ProgressBar test', () => {
     expect(labelContainer).toHaveStyle({ padding: '6px' });
     expect(floatLabelText).toHaveStyle({ fontWeight: 'bold' });
   });
+
+  it('skips mount animation when disableAnimateOnMount is true for ProgressBar', () => {
+    render(
+      <Box width="200">
+        <ProgressBar disableAnimateOnMount progress={0.5} />
+      </Box>,
+    );
+
+    const bar = screen.getByTestId('cds-progress-bar');
+
+    // With disableAnimateOnMount, should start at target position (-50%) immediately
+    // not at animation start position (-100%)
+    expect(bar).toHaveStyle({
+      transform: 'translateX(-50%) translateZ(0)',
+    });
+  });
+
+  it('starts at animation start position when disableAnimateOnMount is not set', () => {
+    render(
+      <Box width="200">
+        <ProgressBar progress={0.5} />
+      </Box>,
+    );
+
+    const bar = screen.getByTestId('cds-progress-bar');
+
+    // Without disableAnimateOnMount, should start at -100% (empty) and animate to target
+    expect(bar).toHaveStyle({
+      transform: 'translateX(-100%) translateZ(0)',
+    });
+  });
+
+  it('skips mount animation when disableAnimateOnMount is true for ProgressBarWithFixedLabels', () => {
+    render(
+      <Box width="200">
+        <ProgressBarWithFixedLabels
+          disableAnimateOnMount
+          endLabel={50}
+          labelPlacement="above"
+          startLabel={0}
+        >
+          <ProgressBar disableAnimateOnMount progress={0.5} />
+        </ProgressBarWithFixedLabels>
+      </Box>,
+    );
+
+    // Should show target percentage immediately, not animate from 0
+    expect(screen.getAllByText('0%').length).toBeGreaterThan(0);
+    expect(screen.getAllByText('50%').length).toBeGreaterThan(0);
+  });
+
+  it('skips mount animation when disableAnimateOnMount is true for ProgressBarWithFloatLabel', () => {
+    render(
+      <Box width="200">
+        <ProgressBarWithFloatLabel
+          disableAnimateOnMount
+          label={50}
+          labelPlacement="above"
+          progress={0.5}
+        >
+          <ProgressBar disableAnimateOnMount progress={0.5} />
+        </ProgressBarWithFloatLabel>
+      </Box>,
+    );
+
+    // Should show target percentage immediately, not animate from 0
+    expect(screen.getAllByText('50%').length).toBeGreaterThan(0);
+  });
 });

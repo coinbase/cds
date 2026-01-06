@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.35.1 (1/5/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix disableAnimateOnMount for progress bar label components. [[#284](https://github.com/coinbase/cds/pull/284)]
+
 ## 8.35.0 (1/5/2026 PST)
 
 #### 🚀 Updates
