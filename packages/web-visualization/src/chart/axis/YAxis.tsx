@@ -70,6 +70,7 @@ export const YAxis = memo<YAxisProps>(
     label,
     labelGap = 4,
     width = label ? AXIS_WIDTH + LABEL_SIZE : AXIS_WIDTH,
+    testID = 'y-axis',
     ...props
   }) => {
     const registrationId = useId();
@@ -189,31 +190,33 @@ export const YAxis = memo<YAxisProps>(
         {...props}
       >
         {showGrid && (
-          <AnimatePresence initial={false}>
-            {ticksData.map((tick, index) => {
-              const horizontalLine = (
-                <ReferenceLine
-                  LineComponent={GridLineComponent}
-                  dataY={tick.tick}
-                  yAxisId={axisId}
-                />
-              );
+          <g data-testid={`${testID}-grid`}>
+            <AnimatePresence initial={false}>
+              {ticksData.map((tick, index) => {
+                const horizontalLine = (
+                  <ReferenceLine
+                    LineComponent={GridLineComponent}
+                    dataY={tick.tick}
+                    yAxisId={axisId}
+                  />
+                );
 
-              return animate ? (
-                <motion.g
-                  key={`grid-${tick.tick}-${index}`}
-                  animate="animate"
-                  exit="exit"
-                  initial="initial"
-                  variants={axisUpdateAnimationVariants}
-                >
-                  {horizontalLine}
-                </motion.g>
-              ) : (
-                <g key={`grid-${tick.tick}-${index}`}>{horizontalLine}</g>
-              );
-            })}
-          </AnimatePresence>
+                return animate ? (
+                  <motion.g
+                    key={`grid-${tick.tick}-${index}`}
+                    animate="animate"
+                    exit="exit"
+                    initial="initial"
+                    variants={axisUpdateAnimationVariants}
+                  >
+                    {horizontalLine}
+                  </motion.g>
+                ) : (
+                  <g key={`grid-${tick.tick}-${index}`}>{horizontalLine}</g>
+                );
+              })}
+            </AnimatePresence>
+          </g>
         )}
         {chartTextData && (
           <ChartTextGroup
@@ -224,7 +227,7 @@ export const YAxis = memo<YAxisProps>(
           />
         )}
         {showTickMarks && (
-          <g data-testid="tick-marks">
+          <g data-testid={`${testID}-tick-marks`}>
             {ticksData.map((tick, index) => {
               const tickX = position === 'left' ? axisBounds.x + axisBounds.width : axisBounds.x;
               const tickMarkSizePixels = tickMarkSize;
@@ -253,12 +256,14 @@ export const YAxis = memo<YAxisProps>(
           <LineComponent
             animate={false}
             className={cx(axisLineCss, classNames?.line)}
+            clipRect={null}
             d={lineToPath(
               position === 'left' ? axisBounds.x + axisBounds.width : axisBounds.x,
               axisBounds.y,
               position === 'left' ? axisBounds.x + axisBounds.width : axisBounds.x,
               axisBounds.y + axisBounds.height,
             )}
+            data-testid={`${testID}-line`}
             stroke="var(--color-fg)"
             strokeLinecap="square"
             strokeWidth={1}
@@ -267,6 +272,7 @@ export const YAxis = memo<YAxisProps>(
         )}
         {label && (
           <g
+            data-testid={`${testID}-label`}
             style={{
               transformOrigin: `${labelX}px ${labelY}px`,
               transform: `rotate(${position === 'left' ? -90 : 90}deg)`,
@@ -277,6 +283,7 @@ export const YAxis = memo<YAxisProps>(
               className={classNames?.label}
               horizontalAlignment="center"
               style={styles?.label}
+              testID={`${testID}-label-text`}
               verticalAlignment="middle"
               x={labelX}
               y={labelY}
