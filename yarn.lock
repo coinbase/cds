@@ -2386,14 +2386,10 @@ __metadata:
   dependencies:
     "@babel/core": "npm:^7.28.0"
     "@babel/preset-env": "npm:^7.28.0"
-    "@babel/preset-react": "npm:^7.27.1"
     "@babel/preset-typescript": "npm:^7.27.1"
     "@inquirer/prompts": "npm:^7.5.3"
     "@modelcontextprotocol/sdk": "npm:^1.13.1"
     zod: "npm:^3.23.8"
-  peerDependencies:
-    react: ^18.3.1
-    react-dom: ^18.3.1
   bin:
     cds-mcp: ./esm/server.js
     cds-mcp-server: ./esm/server.js
