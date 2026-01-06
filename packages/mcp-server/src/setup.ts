@@ -160,7 +160,7 @@ const installCursorMcpServer = (repoRoot: string, cursorRoot: string) => {
   const prefix = relativeWorkspaceRoot === '' ? '.' : `./${relativeWorkspaceRoot}`;
 
   // --prefix is needed because Cursor runs the server from "/" instead of the workspace root.
-  const mcpServerArgs = ['--prefix', prefix, '-y', '@cbhq/cds-mcp-server'];
+  const mcpServerArgs = ['--prefix', prefix, '-y', '@coinbase/cds-mcp-server'];
 
   if (args.noTelemetry) mcpServerArgs.unshift('DISABLE_CDS_MCP_TELEMETRY=1');
 
@@ -195,7 +195,7 @@ const installClaudeMcpServer = (repoRoot: string) => {
   };
 
   // Claude Code doesn't need --prefix args
-  const mcpServerArgs = ['-y', '@cbhq/cds-mcp-server'];
+  const mcpServerArgs = ['-y', '@coinbase/cds-mcp-server'];
 
   if (args.noTelemetry) mcpServerArgs.unshift('DISABLE_CDS_MCP_TELEMETRY=1');
 
