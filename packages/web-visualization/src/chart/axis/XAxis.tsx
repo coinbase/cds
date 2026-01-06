@@ -71,6 +71,7 @@ export const XAxis = memo<XAxisProps>(
     label,
     labelGap = 4,
     height = label ? AXIS_HEIGHT + LABEL_SIZE : AXIS_HEIGHT,
+    testID = 'x-axis',
     ...props
   }) => {
     const registrationId = useId();
@@ -211,27 +212,29 @@ export const XAxis = memo<XAxisProps>(
         {...props}
       >
         {showGrid && (
-          <AnimatePresence initial={false}>
-            {ticksData.map((tick, index) => {
-              const verticalLine = (
-                <ReferenceLine LineComponent={GridLineComponent} dataX={tick.tick} />
-              );
+          <g data-testid={`${testID}-grid`}>
+            <AnimatePresence initial={false}>
+              {ticksData.map((tick, index) => {
+                const verticalLine = (
+                  <ReferenceLine LineComponent={GridLineComponent} dataX={tick.tick} />
+                );
 
-              return animate ? (
-                <motion.g
-                  key={`grid-${tick.tick}-${index}`}
-                  animate="animate"
-                  exit="exit"
-                  initial="initial"
-                  variants={axisUpdateAnimationVariants}
-                >
-                  {verticalLine}
-                </motion.g>
-              ) : (
-                <g key={`grid-${tick.tick}-${index}`}>{verticalLine}</g>
-              );
-            })}
-          </AnimatePresence>
+                return animate ? (
+                  <motion.g
+                    key={`grid-${tick.tick}-${index}`}
+                    animate="animate"
+                    exit="exit"
+                    initial="initial"
+                    variants={axisUpdateAnimationVariants}
+                  >
+                    {verticalLine}
+                  </motion.g>
+                ) : (
+                  <g key={`grid-${tick.tick}-${index}`}>{verticalLine}</g>
+                );
+              })}
+            </AnimatePresence>
+          </g>
         )}
         {chartTextData && (
           <ChartTextGroup
@@ -242,7 +245,7 @@ export const XAxis = memo<XAxisProps>(
           />
         )}
         {axisBounds && showTickMarks && (
-          <g data-testid="tick-marks">
+          <g data-testid={`${testID}-tick-marks`}>
             {ticksData.map((tick, index) => {
               const tickY = position === 'bottom' ? axisBounds.y : axisBounds.y + axisBounds.height;
               const tickY2 = position === 'bottom' ? tickY + tickMarkSize : tickY - tickMarkSize;
@@ -267,12 +270,14 @@ export const XAxis = memo<XAxisProps>(
           <LineComponent
             animate={false}
             className={cx(axisLineCss, classNames?.line)}
+            clipRect={null}
             d={lineToPath(
               axisBounds.x,
               position === 'bottom' ? axisBounds.y : axisBounds.y + axisBounds.height,
               axisBounds.x + axisBounds.width,
               position === 'bottom' ? axisBounds.y : axisBounds.y + axisBounds.height,
             )}
+            data-testid={`${testID}-line`}
             stroke="var(--color-fg)"
             strokeLinecap="square"
             strokeWidth={1}
@@ -285,6 +290,7 @@ export const XAxis = memo<XAxisProps>(
             className={classNames?.label}
             horizontalAlignment="center"
             style={styles?.label}
+            testID={`${testID}-label`}
             verticalAlignment="middle"
             x={labelX}
             y={labelY}

@@ -234,6 +234,7 @@ export const XAxis = memo<XAxisProps>(
         {showLine && (
           <LineComponent
             animate={false}
+            clipPath={null}
             d={lineToPath(
               axisBounds.x,
               position === 'bottom' ? axisBounds.y : axisBounds.y + axisBounds.height,
