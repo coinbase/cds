@@ -12,7 +12,7 @@ All notable changes to this project will be documented in this file.
 
 #### 🐞 Fixes
 
-- Added customization for ListCell `titleStack`. [[#283](https://github.com/coinbase/cds/pull/283)] [DX-5075]
+- Added customization for ListCell `titleStack`. [[#288](https://github.com/coinbase/cds/pull/288)] [DX-5075]
 
 ## 8.36.0 ((1/6/2026, 01:00 PM PST))
 
