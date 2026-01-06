@@ -64,3 +64,16 @@ function Component() {
   );
 }
 ```
+
+### Bordered Images
+
+Use the `borderWidth` and `borderColor` props to change border style of the images in the group. `borderColor` defaults to `bg` when `borderWidth` is set.
+
+```tsx live
+<RemoteImageGroup borderWidth={300} max={3}>
+  <RemoteImage source={assets.eth.imageUrl} />
+  <RemoteImage source={assets.btc.imageUrl} />
+  <RemoteImage source={assets.dai.imageUrl} />
+  <RemoteImage source={assets.hbar.imageUrl} />
+</RemoteImageGroup>
+```

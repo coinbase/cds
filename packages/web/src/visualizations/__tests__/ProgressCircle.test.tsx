@@ -237,4 +237,24 @@ describe('ProgressCircle tests', () => {
     expect(screen.queryByText(`${customText} ${progress * 100}%`)).toBeNull();
     expect(screen.queryByTestId('custom-content-node')).toBeNull();
   });
+
+  it('skips mount animation when disableAnimateOnMount is true', () => {
+    const size = 100;
+    const progress = 0.5;
+    render(
+      <DefaultThemeProvider>
+        <ProgressCircle disableAnimateOnMount progress={progress} size={size} />
+      </DefaultThemeProvider>,
+    );
+
+    const circumference = getCircumference(getRadius(size, 4));
+    const expectedOffset = (1 - progress) * circumference;
+    const innerCircle = screen.getByTestId('cds-progress-circle-inner');
+
+    // Should start at target offset, not at circumference (empty)
+    expect(innerCircle).toHaveAttribute('stroke-dashoffset', expectedOffset.toString());
+
+    // Should show target percentage immediately, not animate from 0
+    expect(screen.getAllByText('50%').length).toBeGreaterThan(0);
+  });
 });

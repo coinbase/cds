@@ -7,6 +7,12 @@
     "build": {
       "command": "rm -rf cjs && babel ./src --out-dir cjs --extensions .ts,.tsx,.js,.jsx --copy-files --no-copy-ignored"
     },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "options": {
+        "jestConfig": "{projectRoot}/jest.config.mjs"
+      }
+    },
     "debug": {
       "command": "tsx ./src/scripts/debug.ts",
       "options": {
