@@ -253,6 +253,7 @@ export const YAxis = memo<YAxisProps>(
           <LineComponent
             animate={false}
             className={cx(axisLineCss, classNames?.line)}
+            clipRect={null}
             d={lineToPath(
               position === 'left' ? axisBounds.x + axisBounds.width : axisBounds.x,
               axisBounds.y,

@@ -267,6 +267,7 @@ export const XAxis = memo<XAxisProps>(
           <LineComponent
             animate={false}
             className={cx(axisLineCss, classNames?.line)}
+            clipRect={null}
             d={lineToPath(
               axisBounds.x,
               position === 'bottom' ? axisBounds.y : axisBounds.y + axisBounds.height,

@@ -224,6 +224,7 @@ export const YAxis = memo<YAxisProps>(
         {showLine && (
           <LineComponent
             animate={false}
+            clipPath={null}
             d={lineToPath(
               position === 'left' ? axisBounds.x + axisBounds.width : axisBounds.x,
               axisBounds.y,
