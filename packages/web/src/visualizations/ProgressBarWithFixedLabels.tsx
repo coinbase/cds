@@ -7,10 +7,13 @@ import { VStack } from '../layout/VStack';
 import { isRtl } from '../utils/isRtl';
 
 import { getProgressBarLabelParts, type ProgressBarLabel } from './getProgressBarLabelParts';
-import { type ProgressBaseProps } from './ProgressBar';
+import { type ProgressBarProps } from './ProgressBar';
 import { ProgressTextLabel } from './ProgressTextLabel';
 
-export type ProgressBarWithFixedLabelsProps = Pick<ProgressBaseProps, 'disabled' | 'testID'> & {
+export type ProgressBarWithFixedLabelsProps = Pick<
+  ProgressBarProps,
+  'disableAnimateOnMount' | 'disabled' | 'testID'
+> & {
   /** Label that is pinned to the start of the container. If a number is used then it will format it as a percentage. */
   startLabel?: ProgressBarLabel;
   /** Label that is pinned to the end of the container. If a number is used then it will format it as a percentage. */
@@ -80,29 +83,38 @@ export type ProgressBarFixedLabelContainerProps = Omit<
     visuallyDisabled: boolean;
   };
 
-export type ProgressBarFixedLabelBesideProps = {
+export type ProgressBarFixedLabelBesideProps = Pick<
+  ProgressBarProps,
+  'disableAnimateOnMount' | 'style' | 'className'
+> & {
   label: ProgressBarLabel;
   visuallyDisabled: boolean;
-  style?: React.CSSProperties;
-  className?: string;
 };
 
-export type ProgressBarFixedLabelProps = {
+export type ProgressBarFixedLabelProps = Pick<
+  ProgressBarProps,
+  'disableAnimateOnMount' | 'style' | 'className'
+> & {
   position: 'start' | 'end';
   label: ProgressBarLabel;
   visuallyDisabled: boolean;
-  style?: React.CSSProperties;
-  className?: string;
 };
 
 const ProgressBarFixedLabelBeside = memo(
-  ({ label, visuallyDisabled, style, className }: ProgressBarFixedLabelBesideProps) => {
+  ({
+    label,
+    visuallyDisabled,
+    disableAnimateOnMount,
+    style,
+    className,
+  }: ProgressBarFixedLabelBesideProps) => {
     const { value: labelNum, render: renderLabel } = getProgressBarLabelParts(label);
 
     return (
       <ProgressTextLabel
         className={className}
         color="fg"
+        disableAnimateOnMount={disableAnimateOnMount}
         disabled={visuallyDisabled}
         renderLabel={renderLabel}
         style={style}
@@ -113,11 +125,19 @@ const ProgressBarFixedLabelBeside = memo(
 );
 
 const ProgressBarFixedLabel = memo(
-  ({ label, position, visuallyDisabled, style, className }: ProgressBarFixedLabelProps) => {
+  ({
+    label,
+    position,
+    visuallyDisabled,
+    disableAnimateOnMount,
+    style,
+    className,
+  }: ProgressBarFixedLabelProps) => {
     return (
       <span data-testid={`cds-progress-bar-fixed-label-${position}`}>
         <ProgressBarFixedLabelBeside
           className={className}
+          disableAnimateOnMount={disableAnimateOnMount}
           label={label}
           style={style}
           visuallyDisabled={visuallyDisabled}
@@ -132,6 +152,7 @@ const ProgressBarFixedLabelContainer = memo(
     startLabel,
     endLabel,
     visuallyDisabled,
+    disableAnimateOnMount,
     paddingBottom,
     paddingTop,
     styles,
@@ -143,6 +164,7 @@ const ProgressBarFixedLabelContainer = memo(
         <ProgressBarFixedLabel
           key="start-label"
           className={classNames?.startLabel}
+          disableAnimateOnMount={disableAnimateOnMount}
           label={startLabel}
           position="start"
           style={styles?.startLabel}
@@ -159,6 +181,7 @@ const ProgressBarFixedLabelContainer = memo(
         <ProgressBarFixedLabel
           key="end-label"
           className={classNames?.endLabel}
+          disableAnimateOnMount={disableAnimateOnMount}
           label={endLabel}
           position="end"
           style={styles?.endLabel}
@@ -198,6 +221,7 @@ export const ProgressBarWithFixedLabels: React.FC<
     startLabel,
     endLabel,
     labelPlacement = 'beside',
+    disableAnimateOnMount,
     disabled = false,
     children,
     testID,
@@ -210,6 +234,7 @@ export const ProgressBarWithFixedLabels: React.FC<
       <Box flexGrow={0} flexShrink={0} paddingEnd={1}>
         <ProgressBarFixedLabelBeside
           className={classNames?.startLabel}
+          disableAnimateOnMount={disableAnimateOnMount}
           label={startLabel}
           style={styles?.startLabel}
           visuallyDisabled={disabled}
@@ -221,6 +246,7 @@ export const ProgressBarWithFixedLabels: React.FC<
       <Box flexGrow={0} flexShrink={0} paddingStart={1}>
         <ProgressBarFixedLabelBeside
           className={classNames?.endLabel}
+          disableAnimateOnMount={disableAnimateOnMount}
           label={endLabel}
           style={styles?.endLabel}
           visuallyDisabled={disabled}
@@ -241,6 +267,7 @@ export const ProgressBarWithFixedLabels: React.FC<
         {labelPlacement === 'above' && (
           <ProgressBarFixedLabelContainer
             classNames={classNames}
+            disableAnimateOnMount={disableAnimateOnMount}
             endLabel={endLabel}
             paddingBottom={1}
             startLabel={startLabel}
@@ -258,6 +285,7 @@ export const ProgressBarWithFixedLabels: React.FC<
         {labelPlacement === 'below' && (
           <ProgressBarFixedLabelContainer
             classNames={classNames}
+            disableAnimateOnMount={disableAnimateOnMount}
             endLabel={endLabel}
             paddingTop={1}
             startLabel={startLabel}
