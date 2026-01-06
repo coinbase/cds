@@ -53,8 +53,7 @@ const ProgressBarFloatLabel = memo(
     const { getPreviousValue: getPreviousPercent, addPreviousValue: addPreviousPercent } =
       usePreviousValues<number>([disableAnimateOnMount ? progress : 0]);
     const animationControls = useAnimation();
-    const [isReady, setIsReady] = useState(false);
-    const isFirstRender = useRef(true);
+    const [hasAnimationMounted, setHasAnimationMounted] = useState(!disableAnimateOnMount);
 
     addPreviousPercent(progress);
     const previousPercent = getPreviousPercent() ?? 0;
@@ -84,17 +83,15 @@ const ProgressBarFloatLabel = memo(
 
         // When disableAnimateOnMount is true and this is the first render,
         // set position immediately without animation
-        if (isFirstRender.current && disableAnimateOnMount) {
+        if (!hasAnimationMounted && disableAnimateOnMount) {
           void animationControls.set({ x: endLeftTranslate });
-          setIsReady(true);
+          setHasAnimationMounted(true);
         } else {
           void animationControls.start({
             x: [startLeftTranslate, endLeftTranslate],
             transition: convertTransition(animateProgressBaseSpec),
           });
-          setIsReady(true);
         }
-        isFirstRender.current = false;
       }
     }, [progress, cWidth, cHeight, previousPercent, disableAnimateOnMount]);
 
@@ -122,7 +119,7 @@ const ProgressBarFloatLabel = memo(
           animate={animationControls}
           className={floatingTextContainerCss}
           data-testid="cds-progress-bar-float-label"
-          style={{ ...motionStyle, opacity: isReady ? 1 : 0 }}
+          style={{ ...motionStyle, opacity: hasAnimationMounted ? 1 : 0 }}
         >
           <ProgressTextLabel
             className={classNames?.label}

@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import {
   Animated,
   I18nManager,
@@ -38,27 +38,23 @@ const ProgressBarFloatLabel = memo(
       usePreviousValues<number>([disableAnimateOnMount ? progress : 0]);
     const [size, onLayout] = useLayout();
     const containerWidth = size.width;
-    const isFirstRender = useRef(true);
+    const [hasAnimationMounted, setHasAnimationMounted] = useState(!disableAnimateOnMount);
+    const animatedProgress = useMemo(() => new Animated.Value(0), []);
 
     addPreviousPercent(progress);
-    const previousPercent = getPreviousPercent() ?? 0;
-
-    const animatedProgress = useRef(new Animated.Value(previousPercent));
 
     const { value: labelNum, render: renderLabel } = getProgressBarLabelParts(label);
 
-    // Check if dimensions are ready
-    const isDimensionsReady = containerWidth > 0 && textWidth > -1;
-
     useEffect(() => {
-      if (isDimensionsReady) {
+      if (containerWidth > 0 && textWidth > -1) {
         // When disableAnimateOnMount is true and this is the first render,
         // set position immediately without animation
-        if (isFirstRender.current && disableAnimateOnMount) {
-          animatedProgress.current.setValue(progress);
+        if (!hasAnimationMounted && disableAnimateOnMount) {
+          animatedProgress.setValue(progress);
+          setHasAnimationMounted(true);
         } else {
           Animated.timing(
-            animatedProgress.current,
+            animatedProgress,
             convertMotionConfig({
               toValue: progress,
               ...animateProgressBaseSpec,
@@ -66,9 +62,9 @@ const ProgressBarFloatLabel = memo(
             }),
           )?.start();
         }
-        isFirstRender.current = false;
       }
-    }, [progress, isDimensionsReady, disableAnimateOnMount]);
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [progress, containerWidth, textWidth, animatedProgress, disableAnimateOnMount]);
 
     const handleTextLayout = useCallback((event: LayoutChangeEvent) => {
       setTextWidth(event.nativeEvent.layout.width);
@@ -79,11 +75,11 @@ const ProgressBarFloatLabel = memo(
     const labelStyle = useMemo(
       () => [
         {
-          // Hide until dimensions are ready to prevent flash at wrong position
-          opacity: isDimensionsReady ? 1 : 0,
+          // Hide until animation has mounted to prevent flash at wrong position
+          opacity: hasAnimationMounted ? 1 : 0,
           transform: [
             {
-              translateX: animatedProgress.current.interpolate({
+              translateX: animatedProgress.interpolate({
                 inputRange: [0, 1],
                 outputRange: [
                   I18nManager.isRTL ? containerWidth - textWidth : 0,
@@ -94,7 +90,7 @@ const ProgressBarFloatLabel = memo(
           ],
         },
       ],
-      [containerWidth, textWidth, isDimensionsReady],
+      [containerWidth, textWidth, hasAnimationMounted, animatedProgress],
     );
 
     return (
