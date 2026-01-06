@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.36.0 (1/6/2026 PST)
+
+#### 🚀 Updates
+
+- Update MCP Serer setup script to follow latest Claude Code and Cursor guidelines.
+
 ## 8.35.1 ((1/5/2026, 03:28 PM PST))
 
 This is an artificial version bump with no new change.
