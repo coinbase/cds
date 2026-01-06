@@ -29,7 +29,6 @@ export type ProgressBaseProps = SharedProps &
     weight?: Weight;
     /**
      * Toggle used to show a disabled progress visualization
-     * @default false
      */
     disabled?: boolean;
     /**
@@ -74,8 +73,8 @@ export const ProgressBar = memo(
         weight = 'normal',
         progress,
         color = 'bgPrimary',
-        disabled = false,
-        disableAnimateOnMount = false,
+        disabled,
+        disableAnimateOnMount,
         testID,
         accessibilityLabel,
         style,

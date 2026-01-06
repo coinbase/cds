@@ -170,8 +170,8 @@ export const ProgressCircle = memo(
         // a11y label isn't specified
         accessibilityLabel = '',
         color = 'bgPrimary',
-        disabled = false,
-        disableAnimateOnMount = false,
+        disabled,
+        disableAnimateOnMount,
         testID,
         hideContent,
         hideText,
