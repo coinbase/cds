@@ -7,11 +7,11 @@ import { VStack } from '../layout/VStack';
 import { isRtl } from '../utils/isRtl';
 
 import { getProgressBarLabelParts, type ProgressBarLabel } from './getProgressBarLabelParts';
-import { type ProgressBaseProps } from './ProgressBar';
+import { type ProgressBarProps } from './ProgressBar';
 import { ProgressTextLabel } from './ProgressTextLabel';
 
 export type ProgressBarWithFixedLabelsProps = Pick<
-  ProgressBaseProps,
+  ProgressBarProps,
   'disableAnimateOnMount' | 'disabled' | 'testID'
 > & {
   /** Label that is pinned to the start of the container. If a number is used then it will format it as a percentage. */
@@ -81,24 +81,23 @@ export type ProgressBarFixedLabelContainerProps = Omit<
 > &
   Pick<PaddingProps, 'paddingBottom' | 'paddingTop'> & {
     visuallyDisabled: boolean;
-    disableAnimateOnMount?: boolean;
   };
 
-export type ProgressBarFixedLabelBesideProps = {
+export type ProgressBarFixedLabelBesideProps = Pick<
+  ProgressBarProps,
+  'disableAnimateOnMount' | 'style' | 'className'
+> & {
   label: ProgressBarLabel;
   visuallyDisabled: boolean;
-  disableAnimateOnMount?: boolean;
-  style?: React.CSSProperties;
-  className?: string;
 };
 
-export type ProgressBarFixedLabelProps = {
+export type ProgressBarFixedLabelProps = Pick<
+  ProgressBarProps,
+  'disableAnimateOnMount' | 'style' | 'className'
+> & {
   position: 'start' | 'end';
   label: ProgressBarLabel;
   visuallyDisabled: boolean;
-  disableAnimateOnMount?: boolean;
-  style?: React.CSSProperties;
-  className?: string;
 };
 
 const ProgressBarFixedLabelBeside = memo(

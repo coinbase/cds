@@ -5,11 +5,11 @@ import type { PaddingProps, Placement } from '@coinbase/cds-common/types';
 import { Box, VStack } from '../layout';
 
 import { getProgressBarLabelParts, type ProgressBarLabel } from './getProgressBarLabelParts';
-import { type ProgressBaseProps } from './ProgressBar';
+import { type ProgressBarProps } from './ProgressBar';
 import { ProgressTextLabel } from './ProgressTextLabel';
 
 export type ProgressBarWithFixedLabelsProps = Pick<
-  ProgressBaseProps,
+  ProgressBarProps,
   'disableAnimateOnMount' | 'disabled' | 'testID'
 > & {
   /** Label that is pinned to the start of the container. If a number is used then it will format it as a percentage. */
@@ -48,11 +48,12 @@ export type ProgressBarWithFixedLabelsProps = Pick<
   };
 };
 
-export type ProgressBarFixedLabelBesideProps = {
+export type ProgressBarFixedLabelBesideProps = Pick<
+  ProgressBarProps,
+  'disableAnimateOnMount' | 'style'
+> & {
   label: ProgressBarLabel;
   visuallyDisabled: boolean;
-  disableAnimateOnMount?: boolean;
-  style?: StyleProp<ViewStyle>;
 };
 
 export type ProgressBarFixedLabelContainerProps = Omit<
@@ -61,15 +62,15 @@ export type ProgressBarFixedLabelContainerProps = Omit<
 > &
   Pick<PaddingProps, 'paddingBottom' | 'paddingTop'> & {
     visuallyDisabled: boolean;
-    disableAnimateOnMount?: boolean;
   };
 
-export type ProgressBarFixedLabelProps = {
+export type ProgressBarFixedLabelProps = Pick<
+  ProgressBarProps,
+  'disableAnimateOnMount' | 'style'
+> & {
   position: 'start' | 'end';
   label: ProgressBarLabel;
   visuallyDisabled: boolean;
-  disableAnimateOnMount?: boolean;
-  style?: StyleProp<ViewStyle>;
 };
 
 const ProgressBarFixedLabelBeside = memo(
