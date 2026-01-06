@@ -8,6 +8,8 @@ import { XAxis, YAxis } from '..';
 jest.mock('@coinbase/cds-web/hooks/useDimensions', () => ({
   useDimensions: jest.fn(() => ({
     observe: jest.fn(),
+    width: 600,
+    height: 400,
   })),
 }));
 
