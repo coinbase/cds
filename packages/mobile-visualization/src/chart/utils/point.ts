@@ -86,6 +86,14 @@ export function getPointOnSerializableScale(
   // Handle band scales with the specified position
   if (scale.type === 'band') {
     const bandScale = scale as SerializableBandScale;
+    const [domainMin, domainMax] = bandScale.domain;
+    const index = dataValue - domainMin;
+    const n = domainMax - domainMin + 1;
+
+    if (index < 0 || index >= n) {
+      return 0;
+    }
+
     const bandStart = applyBandScale(dataValue, bandScale);
 
     const paddingOffset = (bandScale.step - bandScale.bandwidth) / 2;

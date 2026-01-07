@@ -267,7 +267,7 @@ export function applyBandScale(value: number, scale: SerializableBandScale): num
     return r0;
   }
 
-  const paddingOffset = step - scale.bandwidth;
+  const paddingOffset = (step - scale.bandwidth) / 2;
   const bandStart = r0 + step * index + paddingOffset;
 
   return bandStart;
