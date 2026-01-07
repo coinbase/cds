@@ -272,8 +272,6 @@ export const YAxis = memo<YAxisProps>(
         style={{ ...style, ...styles?.root }}
         {...props}
       >
-        {/* Note: Web uses fade animation for grid lines because it relies on async ResizeObserver
-            for text measurements. Mobile renders immediately since Skia measures synchronously. */}
         {showGrid && (
           <g data-testid={`${testID}-grid`}>
             {gridLinePositions.map(({ y, key }) =>
