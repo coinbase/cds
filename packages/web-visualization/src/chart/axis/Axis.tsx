@@ -1,9 +1,9 @@
 import type React from 'react';
 import type { SharedProps } from '@coinbase/cds-common/types';
 
-import { type LineComponent } from '../line';
+import { type LineComponent, type LineComponentProps } from '../line';
 import type { ChartTextChildren, ChartTextProps } from '../text/ChartText';
-import { accessoryFadeTransitionDuration } from '../utils';
+import { accessoryFadeTransitionDuration, type AxisBandPosition } from '../utils';
 
 export const axisLineStyles = `
   stroke: var(--color-fg);
@@ -20,23 +20,9 @@ export const axisTickMarkStyles = `
 /**
  * Animation variants for axis elements - updates (used for both grid lines and tick labels)
  */
-export const axisUpdateAnimationVariants = {
-  initial: {
-    opacity: 0,
-  },
-  animate: {
-    opacity: 1,
-    transition: {
-      duration: accessoryFadeTransitionDuration,
-      delay: accessoryFadeTransitionDuration,
-    },
-  },
-  exit: {
-    opacity: 0,
-    transition: {
-      duration: accessoryFadeTransitionDuration,
-    },
-  },
+export const axisUpdateAnimationTransition = {
+  duration: accessoryFadeTransitionDuration,
+  ease: 'easeOut' as const,
 };
 
 export type AxisTickLabelComponentProps = Pick<
@@ -69,6 +55,18 @@ export type AxisTickLabelComponentProps = Pick<
 export type AxisTickLabelComponent = React.FC<AxisTickLabelComponentProps>;
 
 export type AxisBaseProps = SharedProps & {
+  /**
+   * Position of grid lines relative to each band.
+   * @note This property only applies to band scales.
+   * @default 'extremities'
+   */
+  bandGridPosition?: AxisBandPosition;
+  /**
+   * Position of tick marks relative to each band.
+   * @note This property only applies to band scales.
+   * @default 'middle'
+   */
+  bandTickMarkPosition?: AxisBandPosition;
   /**
    * Label text to display for the axis.
    */
@@ -234,7 +232,7 @@ export type AxisProps = AxisBaseProps & {
    * Component to render the tick marks.
    * @default SolidLine
    */
-  TickMarkLineComponent?: LineComponent;
+  TickMarkComponent?: LineComponent;
   /**
    * Formatter function for axis tick values.
    * Tick values will be wrapped in ChartText component.

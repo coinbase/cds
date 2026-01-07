@@ -1,18 +1,22 @@
 import { memo, useCallback, useEffect, useId, useMemo } from 'react';
 import { cx } from '@coinbase/cds-web';
 import { css } from '@linaria/core';
-import { AnimatePresence, m as motion } from 'framer-motion';
+import { m as motion } from 'framer-motion';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import { DottedLine } from '../line/DottedLine';
-import { ReferenceLine } from '../line/ReferenceLine';
 import { SolidLine } from '../line/SolidLine';
 import { ChartText } from '../text/ChartText';
 import { ChartTextGroup, type TextLabelData } from '../text/ChartTextGroup';
 import { getAxisTicksData, isCategoricalScale, lineToPath } from '../utils';
 
-import type { AxisBaseProps, AxisProps } from './Axis';
-import { axisLineStyles, axisTickMarkStyles, axisUpdateAnimationVariants } from './Axis';
+import {
+  type AxisBaseProps,
+  axisLineStyles,
+  type AxisProps,
+  axisTickMarkStyles,
+  axisUpdateAnimationTransition,
+} from './Axis';
 import { DefaultAxisTickLabel } from './DefaultAxisTickLabel';
 
 const AXIS_WIDTH = 44;
@@ -60,7 +64,7 @@ export const YAxis = memo<YAxisProps>(
     classNames,
     GridLineComponent = DottedLine,
     LineComponent = SolidLine,
-    TickMarkLineComponent = SolidLine,
+    TickMarkComponent = SolidLine,
     tickMarkLabelGap = 8,
     minTickLabelGap = 0,
     showTickMarks,
@@ -74,8 +78,15 @@ export const YAxis = memo<YAxisProps>(
     ...props
   }) => {
     const registrationId = useId();
-    const { animate, getYScale, getYAxis, registerAxis, unregisterAxis, getAxisBounds } =
-      useCartesianChartContext();
+    const {
+      animate,
+      getYScale,
+      getYAxis,
+      registerAxis,
+      unregisterAxis,
+      getAxisBounds,
+      drawingArea,
+    } = useCartesianChartContext();
 
     const yScale = getYScale(axisId);
     const yAxis = getYAxis(axisId);
@@ -137,6 +148,22 @@ export const YAxis = memo<YAxisProps>(
       });
     }, [ticks, yScale, requestedTickCount, tickInterval, yAxis?.data]);
 
+    // Compute grid line positions
+    const gridLinePositions = useMemo((): Array<{ y: number; key: string }> => {
+      return ticksData.map((tick, index) => ({
+        y: tick.position,
+        key: `grid-${tick.tick}-${index}`,
+      }));
+    }, [ticksData]);
+
+    // Compute tick mark positions
+    const tickMarkPositions = useMemo((): Array<{ y: number; key: string }> => {
+      return ticksData.map((tick, index) => ({
+        y: tick.position,
+        key: `tick-mark-${tick.tick}-${index}`,
+      }));
+    }, [ticksData]);
+
     const chartTextData: TextLabelData[] | null = useMemo(() => {
       if (!axisBounds) return null;
 
@@ -173,13 +200,19 @@ export const YAxis = memo<YAxisProps>(
       styles?.tickLabel,
     ]);
 
-    if (!yScale || !axisBounds) return;
+    if (!yScale || !axisBounds || !drawingArea) return;
 
     const labelX =
       position === 'left'
         ? axisBounds.x + LABEL_SIZE / 2
         : axisBounds.x + axisBounds.width - LABEL_SIZE / 2;
     const labelY = axisBounds.y + axisBounds.height / 2;
+
+    const tickX = position === 'left' ? axisBounds.x + axisBounds.width : axisBounds.x;
+    const tickX2 =
+      position === 'left'
+        ? axisBounds.x + axisBounds.width - tickMarkSize
+        : axisBounds.x + tickMarkSize;
 
     return (
       <g
@@ -191,31 +224,35 @@ export const YAxis = memo<YAxisProps>(
       >
         {showGrid && (
           <g data-testid={`${testID}-grid`}>
-            <AnimatePresence initial={false}>
-              {ticksData.map((tick, index) => {
-                const horizontalLine = (
-                  <ReferenceLine
-                    LineComponent={GridLineComponent}
-                    dataY={tick.tick}
-                    yAxisId={axisId}
+            {gridLinePositions.map(({ y, key }) =>
+              animate ? (
+                <motion.g
+                  key={key}
+                  animate={{ opacity: 1 }}
+                  initial={{ opacity: 0 }}
+                  transition={axisUpdateAnimationTransition}
+                >
+                  <GridLineComponent
+                    animate={false}
+                    className={classNames?.gridLine}
+                    clipRect={null}
+                    d={lineToPath(drawingArea.x, y, drawingArea.x + drawingArea.width, y)}
+                    stroke="var(--color-bgLine)"
+                    style={styles?.gridLine}
                   />
-                );
-
-                return animate ? (
-                  <motion.g
-                    key={`grid-${tick.tick}-${index}`}
-                    animate="animate"
-                    exit="exit"
-                    initial="initial"
-                    variants={axisUpdateAnimationVariants}
-                  >
-                    {horizontalLine}
-                  </motion.g>
-                ) : (
-                  <g key={`grid-${tick.tick}-${index}`}>{horizontalLine}</g>
-                );
-              })}
-            </AnimatePresence>
+                </motion.g>
+              ) : (
+                <GridLineComponent
+                  key={key}
+                  animate={false}
+                  className={classNames?.gridLine}
+                  clipRect={null}
+                  d={lineToPath(drawingArea.x, y, drawingArea.x + drawingArea.width, y)}
+                  stroke="var(--color-bgLine)"
+                  style={styles?.gridLine}
+                />
+              ),
+            )}
           </g>
         )}
         {chartTextData && (
@@ -228,28 +265,39 @@ export const YAxis = memo<YAxisProps>(
         )}
         {showTickMarks && (
           <g data-testid={`${testID}-tick-marks`}>
-            {ticksData.map((tick, index) => {
-              const tickX = position === 'left' ? axisBounds.x + axisBounds.width : axisBounds.x;
-              const tickMarkSizePixels = tickMarkSize;
-              const tickX2 =
-                position === 'left'
-                  ? axisBounds.x + axisBounds.width - tickMarkSizePixels
-                  : axisBounds.x + tickMarkSizePixels;
-
-              return (
-                <TickMarkLineComponent
-                  key={`tick-mark-${tick.tick}-${index}`}
+            {tickMarkPositions.map(({ y, key }) =>
+              animate ? (
+                <motion.g
+                  key={key}
+                  animate={{ opacity: 1 }}
+                  initial={{ opacity: 0 }}
+                  transition={axisUpdateAnimationTransition}
+                >
+                  <TickMarkComponent
+                    animate={false}
+                    className={cx(axisTickMarkCss, classNames?.tickMark)}
+                    clipRect={null}
+                    d={lineToPath(tickX, y, tickX2, y)}
+                    stroke="var(--color-fg)"
+                    strokeLinecap="square"
+                    strokeWidth={1}
+                    style={styles?.tickMark}
+                  />
+                </motion.g>
+              ) : (
+                <TickMarkComponent
+                  key={key}
                   animate={false}
                   className={cx(axisTickMarkCss, classNames?.tickMark)}
                   clipRect={null}
-                  d={lineToPath(tickX, tick.position, tickX2, tick.position)}
+                  d={lineToPath(tickX, y, tickX2, y)}
                   stroke="var(--color-fg)"
                   strokeLinecap="square"
                   strokeWidth={1}
                   style={styles?.tickMark}
                 />
-              );
-            })}
+              ),
+            )}
           </g>
         )}
         {showLine && (

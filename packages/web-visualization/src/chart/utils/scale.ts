@@ -65,6 +65,7 @@ export const getCategoricalScale = ({
   const scale = scaleBand<number>()
     .domain(domainArray)
     .range([range.min, range.max])
-    .padding(padding);
+    .paddingInner(padding)
+    .paddingOuter(padding / 2);
   return scale;
 };

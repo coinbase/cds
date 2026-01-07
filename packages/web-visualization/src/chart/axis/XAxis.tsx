@@ -1,22 +1,27 @@
 import { memo, useCallback, useEffect, useId, useMemo } from 'react';
 import { cx } from '@coinbase/cds-web';
 import { css } from '@linaria/core';
-import { AnimatePresence, m as motion } from 'framer-motion';
+import { m as motion } from 'framer-motion';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import { DottedLine } from '../line/DottedLine';
-import { ReferenceLine } from '../line/ReferenceLine';
 import { SolidLine } from '../line/SolidLine';
 import { ChartText } from '../text/ChartText';
 import { ChartTextGroup, type TextLabelData } from '../text/ChartTextGroup';
-import { getAxisTicksData, isCategoricalScale, lineToPath } from '../utils';
+import {
+  type CategoricalScale,
+  getAxisTicksData,
+  getBandPosition,
+  isCategoricalScale,
+  lineToPath,
+} from '../utils';
 
 import {
   type AxisBaseProps,
   axisLineStyles,
   type AxisProps,
   axisTickMarkStyles,
-  axisUpdateAnimationVariants,
+  axisUpdateAnimationTransition,
 } from './Axis';
 import { DefaultAxisTickLabel } from './DefaultAxisTickLabel';
 
@@ -59,7 +64,7 @@ export const XAxis = memo<XAxisProps>(
     classNames,
     GridLineComponent = DottedLine,
     LineComponent = SolidLine,
-    TickMarkLineComponent = SolidLine,
+    TickMarkComponent = SolidLine,
     tickMarkLabelGap = 2,
     minTickLabelGap = 4,
     showTickMarks,
@@ -72,11 +77,20 @@ export const XAxis = memo<XAxisProps>(
     labelGap = 4,
     height = label ? AXIS_HEIGHT + LABEL_SIZE : AXIS_HEIGHT,
     testID = 'x-axis',
+    bandGridPosition = 'extremities',
+    bandTickMarkPosition = 'middle',
     ...props
   }) => {
     const registrationId = useId();
-    const { animate, getXScale, getXAxis, registerAxis, unregisterAxis, getAxisBounds } =
-      useCartesianChartContext();
+    const {
+      animate,
+      getXScale,
+      getXAxis,
+      registerAxis,
+      unregisterAxis,
+      getAxisBounds,
+      drawingArea,
+    } = useCartesianChartContext();
 
     const xScale = getXScale();
     const xAxis = getXAxis();
@@ -128,17 +142,6 @@ export const XAxis = memo<XAxisProps>(
         categories = domain.map(String);
       }
 
-      let possibleTickValues: number[];
-
-      // If we have discrete data, we can use the indices as possible tick values
-      if (
-        axisData &&
-        Array.isArray(axisData) &&
-        (typeof axisData[0] === 'string' ||
-          (typeof axisData[0] === 'number' && isCategoricalScale(xScale)))
-      )
-        possibleTickValues = Array.from({ length: axisData.length }, (_, i) => i);
-
       return getAxisTicksData({
         scaleFunction: xScale,
         ticks,
@@ -155,6 +158,66 @@ export const XAxis = memo<XAxisProps>(
         },
       });
     }, [ticks, xScale, requestedTickCount, tickInterval, tickMinStep, tickMaxStep, xAxis?.data]);
+
+    const isBandScale = xScale ? isCategoricalScale(xScale) : false;
+
+    // Compute grid line positions (including extremities closing line for band scales)
+    const gridLinePositions = useMemo((): Array<{ x: number; key: string }> => {
+      if (!xScale) return [];
+
+      return ticksData.flatMap((tick, index) => {
+        if (!isBandScale) {
+          return [{ x: tick.position, key: `grid-${tick.tick}-${index}` }];
+        }
+
+        const bandScale = xScale as CategoricalScale;
+        const isLastTick = index === ticksData.length - 1;
+        const isExtremities = bandGridPosition === 'extremities';
+        const effectivePosition = isExtremities ? 'start' : bandGridPosition;
+
+        const startX = getBandPosition(bandScale, index, effectivePosition) ?? tick.position;
+        const positions = [{ x: startX, key: `grid-${tick.tick}-${index}` }];
+
+        // For extremities on last tick, add the closing line
+        if (isLastTick && isExtremities) {
+          const endX = getBandPosition(bandScale, index, 'end');
+          if (endX !== undefined) {
+            positions.push({ x: endX, key: `grid-${tick.tick}-${index}-end` });
+          }
+        }
+
+        return positions;
+      });
+    }, [ticksData, xScale, isBandScale, bandGridPosition]);
+
+    // Compute tick mark positions (including extremities closing tick mark for band scales)
+    const tickMarkPositions = useMemo((): Array<{ x: number; key: string }> => {
+      if (!xScale) return [];
+
+      return ticksData.flatMap((tick, index) => {
+        if (!isBandScale) {
+          return [{ x: tick.position, key: `tick-mark-${tick.tick}-${index}` }];
+        }
+
+        const bandScale = xScale as CategoricalScale;
+        const isLastTick = index === ticksData.length - 1;
+        const isExtremities = bandTickMarkPosition === 'extremities';
+        const effectivePosition = isExtremities ? 'start' : bandTickMarkPosition;
+
+        const startX = getBandPosition(bandScale, index, effectivePosition) ?? tick.position;
+        const positions = [{ x: startX, key: `tick-mark-${tick.tick}-${index}` }];
+
+        // For extremities on last tick, add the closing tick mark
+        if (isLastTick && isExtremities) {
+          const endX = getBandPosition(bandScale, index, 'end');
+          if (endX !== undefined) {
+            positions.push({ x: endX, key: `tick-mark-${tick.tick}-${index}-end` });
+          }
+        }
+
+        return positions;
+      });
+    }, [ticksData, xScale, isBandScale, bandTickMarkPosition]);
 
     const chartTextData: TextLabelData[] | null = useMemo(() => {
       if (!axisBounds) return null;
@@ -195,13 +258,16 @@ export const XAxis = memo<XAxisProps>(
       label,
     ]);
 
-    if (!xScale || !axisBounds) return;
+    if (!xScale || !axisBounds || !drawingArea) return;
 
     const labelX = axisBounds.x + axisBounds.width / 2;
     const labelY =
       position === 'bottom'
         ? axisBounds.y + axisBounds.height - LABEL_SIZE / 2
         : axisBounds.y + LABEL_SIZE / 2;
+
+    const tickY = position === 'bottom' ? axisBounds.y : axisBounds.y + axisBounds.height;
+    const tickY2 = position === 'bottom' ? tickY + tickMarkSize : tickY - tickMarkSize;
 
     return (
       <g
@@ -213,27 +279,35 @@ export const XAxis = memo<XAxisProps>(
       >
         {showGrid && (
           <g data-testid={`${testID}-grid`}>
-            <AnimatePresence initial={false}>
-              {ticksData.map((tick, index) => {
-                const verticalLine = (
-                  <ReferenceLine LineComponent={GridLineComponent} dataX={tick.tick} />
-                );
-
-                return animate ? (
-                  <motion.g
-                    key={`grid-${tick.tick}-${index}`}
-                    animate="animate"
-                    exit="exit"
-                    initial="initial"
-                    variants={axisUpdateAnimationVariants}
-                  >
-                    {verticalLine}
-                  </motion.g>
-                ) : (
-                  <g key={`grid-${tick.tick}-${index}`}>{verticalLine}</g>
-                );
-              })}
-            </AnimatePresence>
+            {gridLinePositions.map(({ x, key }) =>
+              animate ? (
+                <motion.g
+                  key={key}
+                  animate={{ opacity: 1 }}
+                  initial={{ opacity: 0 }}
+                  transition={axisUpdateAnimationTransition}
+                >
+                  <GridLineComponent
+                    animate={false}
+                    className={classNames?.gridLine}
+                    clipRect={null}
+                    d={lineToPath(x, drawingArea.y, x, drawingArea.y + drawingArea.height)}
+                    stroke="var(--color-bgLine)"
+                    style={styles?.gridLine}
+                  />
+                </motion.g>
+              ) : (
+                <GridLineComponent
+                  key={key}
+                  animate={false}
+                  className={classNames?.gridLine}
+                  clipRect={null}
+                  d={lineToPath(x, drawingArea.y, x, drawingArea.y + drawingArea.height)}
+                  stroke="var(--color-bgLine)"
+                  style={styles?.gridLine}
+                />
+              ),
+            )}
           </g>
         )}
         {chartTextData && (
@@ -246,24 +320,39 @@ export const XAxis = memo<XAxisProps>(
         )}
         {axisBounds && showTickMarks && (
           <g data-testid={`${testID}-tick-marks`}>
-            {ticksData.map((tick, index) => {
-              const tickY = position === 'bottom' ? axisBounds.y : axisBounds.y + axisBounds.height;
-              const tickY2 = position === 'bottom' ? tickY + tickMarkSize : tickY - tickMarkSize;
-
-              return (
-                <TickMarkLineComponent
-                  key={`tick-mark-${tick.tick}-${index}`}
+            {tickMarkPositions.map(({ x, key }) =>
+              animate ? (
+                <motion.g
+                  key={key}
+                  animate={{ opacity: 1 }}
+                  initial={{ opacity: 0 }}
+                  transition={axisUpdateAnimationTransition}
+                >
+                  <TickMarkComponent
+                    animate={false}
+                    className={cx(axisTickMarkCss, classNames?.tickMark)}
+                    clipRect={null}
+                    d={lineToPath(x, tickY2, x, tickY)}
+                    stroke="var(--color-fg)"
+                    strokeLinecap="square"
+                    strokeWidth={1}
+                    style={styles?.tickMark}
+                  />
+                </motion.g>
+              ) : (
+                <TickMarkComponent
+                  key={key}
                   animate={false}
                   className={cx(axisTickMarkCss, classNames?.tickMark)}
                   clipRect={null}
-                  d={lineToPath(tick.position, tickY2, tick.position, tickY)}
+                  d={lineToPath(x, tickY2, x, tickY)}
                   stroke="var(--color-fg)"
                   strokeLinecap="square"
                   strokeWidth={1}
                   style={styles?.tickMark}
                 />
-              );
-            })}
+              ),
+            )}
           </g>
         )}
         {showLine && (

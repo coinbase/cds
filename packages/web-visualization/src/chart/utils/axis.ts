@@ -10,6 +10,7 @@ import {
   type Series,
 } from './chart';
 import {
+  type CategoricalScale,
   type ChartAxisScaleType,
   type ChartScaleFunction,
   getCategoricalScale,
@@ -21,6 +22,57 @@ import {
 
 export const defaultAxisId = 'DEFAULT_AXIS_ID';
 export const defaultAxisScaleType = 'linear';
+
+/**
+ * Position options for band scale axis elements (grid lines, tick marks, labels).
+ *
+ * - `'start'` - At the beginning of each step (before bar padding)
+ * - `'middle'` - At the center of each bar
+ * - `'end'` - At the end of each step (after bar padding)
+ * - `'extremities'` - At the start of each step, plus a closing line at the end of the last step
+ *
+ * @note These properties only apply when using a band scale (`scaleType: 'band'`).
+ */
+export type AxisBandPosition = 'start' | 'middle' | 'end' | 'extremities';
+
+// todo: see how we can best merge this in with our other logic to get the center of a band and things like that
+/**
+ * Calculates the position for a band scale element based on the placement setting.
+ * Uses the full step width (including padding) for positioning at step boundaries,
+ * rather than bar boundaries.
+ *
+ * @param scale - The band scale
+ * @param index - The category index
+ * @param placement - The placement setting
+ * @returns The absolute position
+ */
+export const getBandPosition = (
+  scale: CategoricalScale,
+  index: number,
+  placement: AxisBandPosition = 'middle',
+): number | undefined => {
+  const barStart = scale(index);
+  if (barStart === undefined) return undefined;
+
+  const bandwidth = scale.bandwidth?.() ?? 0;
+  const step = scale.step?.() ?? bandwidth;
+  // Calculate the padding on each side of the bar
+  const paddingOffset = (step - bandwidth) / 2;
+  // The step starts before the bar (at the padding)
+  const stepStart = barStart - paddingOffset;
+
+  switch (placement) {
+    case 'start':
+    case 'extremities':
+      return stepStart;
+    case 'end':
+      return stepStart + step;
+    case 'middle':
+    default:
+      // For middle, position at center of the bar (not step) for better alignment
+      return barStart + bandwidth / 2;
+  }
+};
 
 /**
  * Axis configuration with computed bounds
