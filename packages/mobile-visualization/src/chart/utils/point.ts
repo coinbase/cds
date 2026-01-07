@@ -1,10 +1,10 @@
 import type { TextHorizontalAlignment, TextVerticalAlignment } from '../text';
 
 import {
+  applyBandScale,
   applySerializableScale,
   type CategoricalScale,
   type ChartScaleFunction,
-  getPointOnSerializableBandScale,
   isCategoricalScale,
   isLogScale,
   isNumericScale,
@@ -85,7 +85,24 @@ export function getPointOnSerializableScale(
 
   // Handle band scales with the specified position
   if (scale.type === 'band') {
-    return getPointOnSerializableBandScale(scale as SerializableBandScale, dataValue, anchor);
+    const bandScale = scale as SerializableBandScale;
+    const bandStart = applyBandScale(dataValue, bandScale);
+
+    const paddingOffset = (bandScale.step - bandScale.bandwidth) / 2;
+    const stepStart = bandStart - paddingOffset;
+
+    switch (anchor) {
+      case 'stepStart':
+        return stepStart;
+      case 'bandStart':
+        return bandStart;
+      case 'middle':
+        return bandStart + bandScale.bandwidth / 2;
+      case 'bandEnd':
+        return bandStart + bandScale.bandwidth;
+      case 'stepEnd':
+        return stepStart + bandScale.step;
+    }
   }
 
   // For log scales, ensure the value is positive

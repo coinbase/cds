@@ -378,36 +378,3 @@ export function invertSerializableScale(rangeValue: number, scale: SerializableS
       return 0;
   }
 }
-
-/**
- * Get a point from a data value and a serializable band scale (worklet-compatible).
- *
- * @param scale - The serializable band scale
- * @param index - The category index
- * @param anchor - Where to anchor the point within the band
- * @returns The pixel position
- */
-export function getPointOnSerializableBandScale(
-  scale: SerializableBandScale,
-  index: number,
-  anchor: PointAnchor = 'middle',
-): number {
-  'worklet';
-
-  const bandStart = applyBandScale(index, scale);
-  const paddingOffset = (scale.step - scale.bandwidth) / 2;
-  const stepStart = bandStart - paddingOffset;
-
-  switch (anchor) {
-    case 'stepStart':
-      return stepStart;
-    case 'bandStart':
-      return bandStart;
-    case 'middle':
-      return bandStart + scale.bandwidth / 2;
-    case 'bandEnd':
-      return bandStart + scale.bandwidth;
-    case 'stepEnd':
-      return stepStart + scale.step;
-  }
-}
