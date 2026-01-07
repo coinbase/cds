@@ -2,7 +2,7 @@ import { TextInput as RNTextInput } from 'react-native';
 import TestRenderer from 'react-test-renderer';
 import { render, screen } from '@testing-library/react-native';
 
-import { DefaultThemeProvider } from '../../utils/testHelpers';
+import { DefaultThemeProvider, theme } from '../../utils/testHelpers';
 import type { InputStackProps } from '../InputStack';
 import { InputStack } from '../InputStack';
 import { NativeInput } from '../NativeInput';
@@ -60,5 +60,19 @@ describe('styles', () => {
     await screen.findByTestId(`${TEST_ID}-input-area`);
 
     expect(screen.getByTestId(`${TEST_ID}-input-area`)).toHaveStyle(borderStyle);
+  });
+
+  it('uses bgLineHeavy border color for default foregroundMuted variant', async () => {
+    render(
+      <DefaultThemeProvider>
+        <InputStack inputNode={<NativeInput />} testID={TEST_ID} variant="foregroundMuted" />
+      </DefaultThemeProvider>,
+    );
+
+    await screen.findByTestId(`${TEST_ID}-input-area`);
+
+    expect(screen.getByTestId(`${TEST_ID}-input-area`)).toHaveStyle({
+      borderColor: theme.lightColor.bgLineHeavy,
+    });
   });
 });
