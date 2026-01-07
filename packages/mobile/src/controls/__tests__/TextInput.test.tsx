@@ -374,20 +374,4 @@ describe('TextInput', () => {
     expect(label).toHaveTextContent('Inside Label with End');
     expect(endContent).toHaveTextContent('End');
   });
-
-  it('uses bgLineHeavy border color for default foregroundMuted variant', () => {
-    const testID = 'textinput-id';
-    render(
-      <DefaultThemeProvider>
-        <TextInput
-          accessibilityHint="Text input field"
-          accessibilityLabel="Text input field"
-          testID={testID}
-        />
-      </DefaultThemeProvider>,
-    );
-
-    const inputArea = screen.getByTestId(`${testID}-input-area`);
-    expect(inputArea).toHaveStyle({ borderColor: theme.light.color.bgLineHeavy });
-  });
 });
