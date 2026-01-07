@@ -343,13 +343,13 @@ function CustomGridLineExample() {
 }
 ```
 
-On band scales, you can also use `bandGridPosition` to control where grid lines appear relative to each band.
+On band scales, you can also use `bandGridPlacement` to control where grid lines appear relative to each band.
 
 Using edges will place a grid line at the start of each band, plus a grid line at the end of the last band.
 
 ```jsx
-function BandGridPosition() {
-  const [selectedBandGridPosition, setSelectedBandGridPosition] = useState('edges');
+function BandGridPlacement() {
+  const [selectedBandGridPlacement, setSelectedBandGridPlacement] = useState('edges');
 
   return (
     <CartesianChart
@@ -367,7 +367,7 @@ function BandGridPosition() {
       yAxis={{ domain: { min: 0 } }}
     >
       <XAxis
-        bandGridPosition={selectedBandGridPosition}
+        bandGridPlacement={selectedBandGridPlacement}
         GridLineComponent={SolidLine}
         showGrid
         showLine
@@ -572,13 +572,13 @@ function XAxisTickMarksExample() {
 }
 ```
 
-On band scales, you can also use `bandTickMarkPosition` to control where tick marks appear relative to each band.
+On band scales, you can also use `bandTickMarkPlacement` to control where tick marks appear relative to each band.
 
 Using edges will place a tick mark at the start of each band, plus a tick mark at the end of the last band.
 
 ```jsx
-function BandTickMarkPosition() {
-  const [selectedBandTickMarkPosition, setSelectedBandTickMarkPosition] = useState('middle');
+function BandTickMarkPlacement() {
+  const [selectedBandTickMarkPlacement, setSelectedBandTickMarkPlacement] = useState('middle');
 
   return (
     <CartesianChart
@@ -596,7 +596,7 @@ function BandTickMarkPosition() {
       yAxis={{ domain: { min: 0 } }}
     >
       <XAxis
-        bandTickMarkPosition={selectedBandTickMarkPosition}
+        bandTickMarkPlacement={selectedBandTickMarkPlacement}
         showLine
         showTickMarks
         tickMarkSize={8}
