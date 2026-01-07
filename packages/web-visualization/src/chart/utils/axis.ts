@@ -45,12 +45,11 @@ export type AxisBandPlacement = 'start' | 'middle' | 'end' | 'edges';
  */
 export const toPointAnchor = (placement: AxisBandPlacement): PointAnchor => {
   switch (placement) {
+    case 'edges': // edges uses stepStart for each tick, stepEnd handled separately
     case 'start':
       return 'stepStart';
     case 'end':
       return 'stepEnd';
-    case 'edges':
-      return 'stepStart'; // edges uses stepStart for each tick, stepEnd handled separately
     case 'middle':
     default:
       return 'middle';
