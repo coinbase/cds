@@ -130,6 +130,10 @@ export type ListCellBaseProps = Polymorphic.ExtendableProps<
       accessory?: string;
       contentContainer?: string;
       pressable?: string;
+      /** Applied to the VStack of title/subtitle/description. */
+      titleStack?: string;
+      /** Applied to the Box that Wrapped around `titleStack` (controls flex behavior). */
+      titleStackContainer?: string;
       mainContent?: string;
       helperText?: string;
       title?: string;
@@ -147,6 +151,10 @@ export type ListCellBaseProps = Polymorphic.ExtendableProps<
       accessory?: React.CSSProperties;
       contentContainer?: React.CSSProperties;
       pressable?: React.CSSProperties;
+      /** Applied to the VStack of title/subtitle/description. */
+      titleStack?: React.CSSProperties;
+      /** Applied to the Box that Wrapped around `titleStack` (controls flex behavior). */
+      titleStackContainer?: React.CSSProperties;
       mainContent?: React.CSSProperties;
       helperText?: React.CSSProperties;
       title?: React.CSSProperties;
@@ -249,6 +257,17 @@ export const ListCell: ListCellComponent = memo(
           borderRadius={props.borderRadius ?? (spacingVariant === 'condensed' ? 0 : undefined)}
           bottomContent={helperText}
           className={cx(COMPONENT_STATIC_CLASSNAME, className, classNames?.root)}
+          classNames={{
+            accessory: classNames?.accessory,
+            bottomContent: classNames?.helperText,
+            childrenContainer: classNames?.titleStackContainer,
+            contentContainer: classNames?.contentContainer,
+            end: classNames?.end,
+            intermediary: classNames?.intermediary,
+            media: classNames?.media,
+            pressable: classNames?.pressable,
+            topContent: classNames?.mainContent,
+          }}
           disabled={disabled}
           end={end}
           innerSpacing={
@@ -271,16 +290,18 @@ export const ListCell: ListCellComponent = memo(
             topContent: styles?.mainContent,
             bottomContent: styles?.helperText,
             contentContainer: styles?.contentContainer,
+            childrenContainer: styles?.titleStackContainer,
             pressable: styles?.pressable,
           }}
           {...props}
         >
-          <VStack>
+          <VStack className={classNames?.titleStack} style={styles?.titleStack}>
             {titleNode ? (
               titleNode
             ) : title ? (
               <Text
                 as="div"
+                className={classNames?.title}
                 display="block"
                 font="headline"
                 numberOfLines={
@@ -305,6 +326,7 @@ export const ListCell: ListCellComponent = memo(
             ) : subtitle ? (
               <Text
                 as="div"
+                className={classNames?.subtitle}
                 color="fgMuted"
                 display="block"
                 font="label1"

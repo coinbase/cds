@@ -66,22 +66,18 @@ CDS is designed to make your development workflow as smooth as possible.
 - **Extensive documentation** - Every component includes Storybook stories, interactive examples, detailed prop tables, and usage guidelines.
 
 ```jsx
-import { ThemeProvider } from '@coinbase/cds-web';
+import { ThemeProvider } from '@coinbase/cds-web/system';
 import { defaultTheme } from '@coinbase/cds-web/themes/defaultTheme';
-import { Box } from '@coinbase/cds-web/layout';
+import { VStack } from '@coinbase/cds-web/layout';
 import { Text } from '@coinbase/cds-web/typography';
 import { Button } from '@coinbase/cds-web/buttons';
 
 const App = () => (
   <ThemeProvider theme={defaultTheme} activeColorScheme="light">
-    <Box padding={4} background="bgPrimary" borderRadius={200}>
-      <Text font="title1" color="fg">
-        Welcome to CDS
-      </Text>
-      <Button variant="positive" marginTop={2}>
-        Get started
-      </Button>
-    </Box>
+    <VStack gap={2} padding={4} background="bgSecondary" borderRadius={200}>
+      <Text font="title1">Welcome to CDS</Text>
+      <Button variant="positive">Get started</Button>
+    </VStack>
   </ThemeProvider>
 );
 ```
