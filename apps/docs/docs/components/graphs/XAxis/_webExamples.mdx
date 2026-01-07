@@ -354,7 +354,9 @@ function BandGridPlacement() {
     { id: 'middle', label: 'Middle' },
     { id: 'end', label: 'End' },
   ];
-  const [selectedBandGridPlacement, setSelectedBandGridPlacement] = useState(bandGridLinePlacements[0]);
+  const [selectedBandGridPlacement, setSelectedBandGridPlacement] = useState(
+    bandGridLinePlacements[0],
+  );
 
   return (
     <VStack gap={2}>
