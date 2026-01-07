@@ -237,6 +237,75 @@ describe('getAxisTicksData', () => {
       expect(result.length).toBe(3);
       expect(result.map((r) => r.tick)).toEqual([0, 1, 2]);
     });
+
+    it('should use middle anchor by default', () => {
+      const categories = ['Jan', 'Feb', 'Mar', 'Apr', 'May'];
+      const result = getAxisTicksData({
+        scaleFunction: bandScale,
+        categories,
+        ticks: [0],
+      });
+
+      const bandwidth = bandScale.bandwidth();
+      expect(result[0].position).toBe(bandScale(0)! + bandwidth / 2);
+    });
+
+    it('should respect anchor option for band scale positioning', () => {
+      const categories = ['Jan', 'Feb', 'Mar', 'Apr', 'May'];
+
+      // Test stepStart anchor
+      const stepStartResult = getAxisTicksData({
+        scaleFunction: bandScale,
+        categories,
+        ticks: [0],
+        options: { anchor: 'stepStart' },
+      });
+      expect(stepStartResult[0].position).toBe(bandScale(0)!);
+
+      // Test middle anchor (explicit)
+      const middleResult = getAxisTicksData({
+        scaleFunction: bandScale,
+        categories,
+        ticks: [0],
+        options: { anchor: 'middle' },
+      });
+      const bandwidth = bandScale.bandwidth();
+      expect(middleResult[0].position).toBe(bandScale(0)! + bandwidth / 2);
+
+      // Test stepEnd anchor
+      const stepEndResult = getAxisTicksData({
+        scaleFunction: bandScale,
+        categories,
+        ticks: [0],
+        options: { anchor: 'stepEnd' },
+      });
+      expect(stepEndResult[0].position).toBe(bandScale(0)! + bandScale.step());
+    });
+
+    it('should apply anchor option with tick filter function', () => {
+      const categories = ['Jan', 'Feb', 'Mar', 'Apr', 'May'];
+      const result = getAxisTicksData({
+        scaleFunction: bandScale,
+        categories,
+        ticks: (index) => index === 0,
+        options: { anchor: 'stepStart' },
+      });
+
+      expect(result.length).toBe(1);
+      expect(result[0].position).toBe(bandScale(0)!);
+    });
+
+    it('should apply anchor option when showing all categories', () => {
+      const categories = ['Jan', 'Feb'];
+      const result = getAxisTicksData({
+        scaleFunction: bandScale,
+        categories,
+        options: { anchor: 'stepStart' },
+      });
+
+      expect(result[0].position).toBe(bandScale(0)!);
+      expect(result[1].position).toBe(bandScale(1)!);
+    });
   });
 
   describe('tick generation options', () => {

@@ -9,6 +9,7 @@ import {
   isValidBounds,
   type Series,
 } from './chart';
+import { getPointOnScale } from './point';
 import {
   type CategoricalScale,
   type ChartAxisScaleType,
@@ -18,59 +19,41 @@ import {
   isCategoricalScale,
   isNumericScale,
   type NumericScale,
+  type PointAnchor,
 } from './scale';
 
 export const defaultAxisId = 'DEFAULT_AXIS_ID';
 export const defaultAxisScaleType = 'linear';
 
 /**
- * Position options for band scale axis elements (grid lines, tick marks, labels).
+ * Position options for band scale axis elements.
  *
- * - `'start'` - At the beginning of each step (before bar padding)
- * - `'middle'` - At the center of each bar
+ * - `'start'` - At the start of each step (before bar padding)
+ * - `'middle'` - At the center of each band
  * - `'end'` - At the end of each step (after bar padding)
- * - `'extremities'` - At the start of each step, plus a closing line at the end of the last step
+ * - `'edges'` - At start of each tick, plus end for the last tick (encloses the chart)
  *
  * @note These properties only apply when using a band scale (`scaleType: 'band'`).
  */
-export type AxisBandPosition = 'start' | 'middle' | 'end' | 'extremities';
+export type AxisBandPlacement = 'start' | 'middle' | 'end' | 'edges';
 
-// todo: see how we can best merge this in with our other logic to get the center of a band and things like that
 /**
- * Calculates the position for a band scale element based on the placement setting.
- * Uses the full step width (including padding) for positioning at step boundaries,
- * rather than bar boundaries.
+ * Converts an AxisBandPlacement to the corresponding PointAnchor for use with getPointOnScale.
  *
- * @param scale - The band scale
- * @param index - The category index
- * @param placement - The placement setting
- * @returns The absolute position
+ * @param placement - The axis placement value
+ * @returns The corresponding PointAnchor for scale calculations
  */
-export const getBandPosition = (
-  scale: CategoricalScale,
-  index: number,
-  placement: AxisBandPosition = 'middle',
-): number | undefined => {
-  const barStart = scale(index);
-  if (barStart === undefined) return undefined;
-
-  const bandwidth = scale.bandwidth?.() ?? 0;
-  const step = scale.step?.() ?? bandwidth;
-  // Calculate the padding on each side of the bar
-  const paddingOffset = (step - bandwidth) / 2;
-  // The step starts before the bar (at the padding)
-  const stepStart = barStart - paddingOffset;
-
+export const toPointAnchor = (placement: AxisBandPlacement): PointAnchor => {
   switch (placement) {
     case 'start':
-    case 'extremities':
-      return stepStart;
+      return 'stepStart';
     case 'end':
-      return stepStart + step;
+      return 'stepEnd';
+    case 'edges':
+      return 'stepStart'; // edges uses stepStart for each tick, stepEnd handled separately
     case 'middle':
     default:
-      // For middle, position at center of the bar (not step) for better alignment
-      return barStart + bandwidth / 2;
+      return 'middle';
   }
 };
 
@@ -376,6 +359,12 @@ type TickGenerationOptions = {
    * @default 4
    */
   minTickCount?: number;
+  /**
+   * Anchor position for band/categorical scales.
+   * Controls where tick labels are positioned within each band.
+   * @default 'middle'
+   */
+  anchor?: PointAnchor;
 };
 
 export type GetAxisTicksDataProps = {
@@ -675,23 +664,20 @@ export const getAxisTicksData = ({
   tickInterval,
   options,
 }: GetAxisTicksDataProps): Array<{ tick: number; position: number }> => {
+  const anchor = options?.anchor ?? 'middle';
+
   // Handle band scales
   if (isCategoricalScale(scaleFunction)) {
+    const bandScale = scaleFunction;
+
     // If explicit ticks are provided as array, use them
     if (Array.isArray(ticks)) {
       return ticks
         .filter((index) => index >= 0 && index < categories.length)
-        .map((index) => {
-          // Band scales expect numeric indices, not category strings
-          const position = scaleFunction(index);
-          if (position === undefined) return null;
-
-          return {
-            tick: index,
-            position: position + ((scaleFunction as any).bandwidth?.() ?? 0) / 2,
-          };
-        })
-        .filter(Boolean) as Array<{ tick: number; position: number }>;
+        .map((index) => ({
+          tick: index,
+          position: getPointOnScale(index, bandScale, anchor),
+        }));
     }
 
     // If a tick function is provided, use it to filter
@@ -700,36 +686,20 @@ export const getAxisTicksData = ({
         .map((category, index) => {
           if (!ticks(index)) return null;
 
-          // Band scales expect numeric indices, not category strings
-          const position = scaleFunction(index);
-          if (position === undefined) return null;
-
           return {
             tick: index,
-            position: position + ((scaleFunction as any).bandwidth?.() ?? 0) / 2,
+            position: getPointOnScale(index, bandScale, anchor),
           };
         })
         .filter(Boolean) as Array<{ tick: number; position: number }>;
     }
 
-    if (typeof ticks === 'boolean' && !ticks) {
-      return [];
-    }
-
     // For band scales without explicit ticks, show all categories
     // requestedTickCount is ignored for categorical scales - use ticks parameter to control visibility
-    return categories
-      .map((category, index) => {
-        // Band scales expect numeric indices, not category strings
-        const position = scaleFunction(index);
-        if (position === undefined) return null;
-
-        return {
-          tick: index,
-          position: position + ((scaleFunction as any).bandwidth?.() ?? 0) / 2,
-        };
-      })
-      .filter(Boolean) as Array<{ tick: number; position: number }>;
+    return categories.map((_, index) => ({
+      tick: index,
+      position: getPointOnScale(index, bandScale, anchor),
+    }));
   }
 
   // Handle numeric scales

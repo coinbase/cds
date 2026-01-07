@@ -3,7 +3,7 @@ import type { SharedProps } from '@coinbase/cds-common/types';
 
 import { type LineComponent, type LineComponentProps } from '../line';
 import type { ChartTextChildren, ChartTextProps } from '../text/ChartText';
-import { accessoryFadeTransitionDuration, type AxisBandPosition } from '../utils';
+import { accessoryFadeTransitionDuration, type AxisBandPlacement } from '../utils';
 
 export const axisLineStyles = `
   stroke: var(--color-fg);
@@ -57,16 +57,18 @@ export type AxisTickLabelComponent = React.FC<AxisTickLabelComponentProps>;
 export type AxisBaseProps = SharedProps & {
   /**
    * Position of grid lines relative to each band.
+   * Options: 'start', 'middle', 'end', 'edges'
    * @note This property only applies to band scales.
-   * @default 'extremities'
+   * @default 'edges'
    */
-  bandGridPosition?: AxisBandPosition;
+  bandGridPosition?: AxisBandPlacement;
   /**
    * Position of tick marks relative to each band.
+   * Options: 'start', 'middle', 'end', 'edges'
    * @note This property only applies to band scales.
    * @default 'middle'
    */
-  bandTickMarkPosition?: AxisBandPosition;
+  bandTickMarkPosition?: AxisBandPlacement;
   /**
    * Label text to display for the axis.
    */

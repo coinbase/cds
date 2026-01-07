@@ -8,7 +8,14 @@ import { DottedLine } from '../line/DottedLine';
 import { SolidLine } from '../line/SolidLine';
 import { ChartText } from '../text/ChartText';
 import { ChartTextGroup, type TextLabelData } from '../text/ChartTextGroup';
-import { getAxisTicksData, isCategoricalScale, lineToPath } from '../utils';
+import {
+  type CategoricalScale,
+  getAxisTicksData,
+  getPointOnScale,
+  isCategoricalScale,
+  lineToPath,
+  toPointAnchor,
+} from '../utils';
 
 import {
   type AxisBaseProps,
@@ -75,6 +82,8 @@ export const YAxis = memo<YAxisProps>(
     labelGap = 4,
     width = label ? AXIS_WIDTH + LABEL_SIZE : AXIS_WIDTH,
     testID = 'y-axis',
+    bandGridPosition = 'edges',
+    bandTickMarkPosition = 'middle',
     ...props
   }) => {
     const registrationId = useId();
@@ -148,21 +157,59 @@ export const YAxis = memo<YAxisProps>(
       });
     }, [ticks, yScale, requestedTickCount, tickInterval, yAxis?.data]);
 
-    // Compute grid line positions
-    const gridLinePositions = useMemo((): Array<{ y: number; key: string }> => {
-      return ticksData.map((tick, index) => ({
-        y: tick.position,
-        key: `grid-${tick.tick}-${index}`,
-      }));
-    }, [ticksData]);
+    const isBandScale = yScale ? isCategoricalScale(yScale) : false;
 
-    // Compute tick mark positions
+    // Compute grid line positions (including bounds closing line for band scales)
+    const gridLinePositions = useMemo((): Array<{ y: number; key: string }> => {
+      if (!yScale) return [];
+
+      return ticksData.flatMap((tick, index) => {
+        if (!isBandScale) {
+          return [{ y: tick.position, key: `grid-${tick.tick}-${index}` }];
+        }
+
+        const bandScale = yScale as CategoricalScale;
+        const isLastTick = index === ticksData.length - 1;
+        const isEdges = bandGridPosition === 'edges';
+
+        const startY = getPointOnScale(tick.tick, bandScale, toPointAnchor(bandGridPosition));
+        const positions = [{ y: startY, key: `grid-${tick.tick}-${index}` }];
+
+        // For edges on last tick, add the closing line at stepEnd
+        if (isLastTick && isEdges) {
+          const endY = getPointOnScale(tick.tick, bandScale, 'stepEnd');
+          positions.push({ y: endY, key: `grid-${tick.tick}-${index}-end` });
+        }
+
+        return positions;
+      });
+    }, [ticksData, yScale, isBandScale, bandGridPosition]);
+
+    // Compute tick mark positions (including bounds closing tick mark for band scales)
     const tickMarkPositions = useMemo((): Array<{ y: number; key: string }> => {
-      return ticksData.map((tick, index) => ({
-        y: tick.position,
-        key: `tick-mark-${tick.tick}-${index}`,
-      }));
-    }, [ticksData]);
+      if (!yScale) return [];
+
+      return ticksData.flatMap((tick, index) => {
+        if (!isBandScale) {
+          return [{ y: tick.position, key: `tick-mark-${tick.tick}-${index}` }];
+        }
+
+        const bandScale = yScale as CategoricalScale;
+        const isLastTick = index === ticksData.length - 1;
+        const isEdges = bandTickMarkPosition === 'edges';
+
+        const startY = getPointOnScale(tick.tick, bandScale, toPointAnchor(bandTickMarkPosition));
+        const positions = [{ y: startY, key: `tick-mark-${tick.tick}-${index}` }];
+
+        // For edges on last tick, add the closing tick mark at stepEnd
+        if (isLastTick && isEdges) {
+          const endY = getPointOnScale(tick.tick, bandScale, 'stepEnd');
+          positions.push({ y: endY, key: `tick-mark-${tick.tick}-${index}-end` });
+        }
+
+        return positions;
+      });
+    }, [ticksData, yScale, isBandScale, bandTickMarkPosition]);
 
     const chartTextData: TextLabelData[] | null = useMemo(() => {
       if (!axisBounds) return null;
@@ -222,6 +269,8 @@ export const YAxis = memo<YAxisProps>(
         style={{ ...style, ...styles?.root }}
         {...props}
       >
+        {/* Note: Web uses fade animation for grid lines because it relies on async ResizeObserver
+            for text measurements. Mobile renders immediately since Skia measures synchronously. */}
         {showGrid && (
           <g data-testid={`${testID}-grid`}>
             {gridLinePositions.map(({ y, key }) =>

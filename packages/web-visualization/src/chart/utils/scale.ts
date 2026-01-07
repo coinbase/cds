@@ -69,3 +69,15 @@ export const getCategoricalScale = ({
     .paddingOuter(padding / 2);
   return scale;
 };
+
+/**
+ * Anchor position for points on a scale. Currently used only for band scales.
+ *
+ * For band scales, this determines where within the band to position a point:
+ * - `'stepStart'` - At the start of the step
+ * - `'bandStart'` - At the start of the band
+ * - `'middle'` - At the center of the band
+ * - `'bandEnd'` - At the end of the band
+ * - `'stepEnd'` - At the end of the step
+ */
+export type PointAnchor = 'stepStart' | 'bandStart' | 'middle' | 'bandEnd' | 'stepEnd';

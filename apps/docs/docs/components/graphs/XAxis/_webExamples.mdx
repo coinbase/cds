@@ -342,6 +342,60 @@ function CustomGridLineExample() {
 }
 ```
 
+On band scales, you can also use `bandTickMarkPosition` to control where tick marks appear relative to each band.
+
+Using edges will place a tick mark at the start of each band, plus a tick mark at the end of the last band.
+
+```jsx live
+function BandGridPosition() {
+  const bandGridPositions = [
+    { id: 'edges', label: 'Edges' },
+    { id: 'start', label: 'Start' },
+    { id: 'middle', label: 'Middle' },
+    { id: 'end', label: 'End' },
+  ];
+  const [selectedBandGridPosition, setSelectedBandGridPosition] = useState(bandGridPositions[0]);
+
+  return (
+    <VStack gap={2}>
+      <HStack justifyContent="flex-end" gap={2} alignItems="center">
+        <Text as="h3" font="headline">
+          Band Grid Position
+        </Text>
+        <SegmentedTabs
+          activeTab={selectedBandGridPosition}
+          onChange={setSelectedBandGridPosition}
+          tabs={bandGridPositions}
+        />
+      </HStack>
+      <CartesianChart
+        height={250}
+        series={[
+          {
+            id: 'prices',
+            data: [10, 22, 29, 45, 98, 45, 22],
+          },
+        ]}
+        xAxis={{
+          scaleType: 'band',
+          data: ['April 1', 'April 2', 'April 3', 'April 4', 'April 5', 'April 6', 'April 7'],
+        }}
+        yAxis={{ domain: { min: 0 } }}
+      >
+        <XAxis
+          bandGridPosition={selectedBandGridPosition.id}
+          GridLineComponent={SolidLine}
+          showGrid
+          showLine
+          showTickMarks
+        />
+        <BarPlot />
+      </CartesianChart>
+    </VStack>
+  );
+}
+```
+
 ### Line
 
 You can show the axis line using the `showLine` prop.
@@ -528,6 +582,61 @@ function XAxisTickMarksExample() {
         <XAxis showLine showTickMarks={showTickMarks} tickMarkSize={16} showGrid />
         <Line seriesId="prices" showArea />
         <Scrubber />
+      </CartesianChart>
+    </VStack>
+  );
+}
+```
+
+On band scales, you can also use `bandTickMarkPosition` to control where tick marks appear relative to each band.
+
+Using edges will place a tick mark at the start of each band, plus a tick mark at the end of the last band.
+
+```jsx live
+function BandTickMarkPosition() {
+  const bandTickMarkPositions = [
+    { id: 'middle', label: 'Middle' },
+    { id: 'edges', label: 'Edges' },
+    { id: 'start', label: 'Start' },
+    { id: 'end', label: 'End' },
+  ];
+  const [selectedBandTickMarkPosition, setSelectedBandTickMarkPosition] = useState(
+    bandTickMarkPositions[0],
+  );
+
+  return (
+    <VStack gap={2}>
+      <HStack justifyContent="flex-end" gap={2} alignItems="center">
+        <Text as="h3" font="headline">
+          Band Tick Mark Position
+        </Text>
+        <SegmentedTabs
+          activeTab={selectedBandTickMarkPosition}
+          onChange={setSelectedBandTickMarkPosition}
+          tabs={bandTickMarkPositions}
+        />
+      </HStack>
+      <CartesianChart
+        height={250}
+        series={[
+          {
+            id: 'prices',
+            data: [10, 22, 29, 45, 98, 45, 22],
+          },
+        ]}
+        xAxis={{
+          scaleType: 'band',
+          data: ['April 1', 'April 2', 'April 3', 'April 4', 'April 5', 'April 6', 'April 7'],
+        }}
+        yAxis={{ domain: { min: 0 } }}
+      >
+        <XAxis
+          bandTickMarkPosition={selectedBandTickMarkPosition.id}
+          showLine
+          showTickMarks
+          tickMarkSize={8}
+        />
+        <BarPlot />
       </CartesianChart>
     </VStack>
   );

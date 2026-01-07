@@ -11,9 +11,10 @@ import { ChartTextGroup, type TextLabelData } from '../text/ChartTextGroup';
 import {
   type CategoricalScale,
   getAxisTicksData,
-  getBandPosition,
+  getPointOnScale,
   isCategoricalScale,
   lineToPath,
+  toPointAnchor,
 } from '../utils';
 
 import {
@@ -77,7 +78,7 @@ export const XAxis = memo<XAxisProps>(
     labelGap = 4,
     height = label ? AXIS_HEIGHT + LABEL_SIZE : AXIS_HEIGHT,
     testID = 'x-axis',
-    bandGridPosition = 'extremities',
+    bandGridPosition = 'edges',
     bandTickMarkPosition = 'middle',
     ...props
   }) => {
@@ -161,7 +162,7 @@ export const XAxis = memo<XAxisProps>(
 
     const isBandScale = xScale ? isCategoricalScale(xScale) : false;
 
-    // Compute grid line positions (including extremities closing line for band scales)
+    // Compute grid line positions (including bounds closing line for band scales)
     const gridLinePositions = useMemo((): Array<{ x: number; key: string }> => {
       if (!xScale) return [];
 
@@ -172,25 +173,22 @@ export const XAxis = memo<XAxisProps>(
 
         const bandScale = xScale as CategoricalScale;
         const isLastTick = index === ticksData.length - 1;
-        const isExtremities = bandGridPosition === 'extremities';
-        const effectivePosition = isExtremities ? 'start' : bandGridPosition;
+        const isEdges = bandGridPosition === 'edges';
 
-        const startX = getBandPosition(bandScale, index, effectivePosition) ?? tick.position;
+        const startX = getPointOnScale(tick.tick, bandScale, toPointAnchor(bandGridPosition));
         const positions = [{ x: startX, key: `grid-${tick.tick}-${index}` }];
 
-        // For extremities on last tick, add the closing line
-        if (isLastTick && isExtremities) {
-          const endX = getBandPosition(bandScale, index, 'end');
-          if (endX !== undefined) {
-            positions.push({ x: endX, key: `grid-${tick.tick}-${index}-end` });
-          }
+        // For edges on last tick, add the closing line at stepEnd
+        if (isLastTick && isEdges) {
+          const endX = getPointOnScale(tick.tick, bandScale, 'stepEnd');
+          positions.push({ x: endX, key: `grid-${tick.tick}-${index}-end` });
         }
 
         return positions;
       });
     }, [ticksData, xScale, isBandScale, bandGridPosition]);
 
-    // Compute tick mark positions (including extremities closing tick mark for band scales)
+    // Compute tick mark positions (including bounds closing tick mark for band scales)
     const tickMarkPositions = useMemo((): Array<{ x: number; key: string }> => {
       if (!xScale) return [];
 
@@ -201,18 +199,15 @@ export const XAxis = memo<XAxisProps>(
 
         const bandScale = xScale as CategoricalScale;
         const isLastTick = index === ticksData.length - 1;
-        const isExtremities = bandTickMarkPosition === 'extremities';
-        const effectivePosition = isExtremities ? 'start' : bandTickMarkPosition;
+        const isEdges = bandTickMarkPosition === 'edges';
 
-        const startX = getBandPosition(bandScale, index, effectivePosition) ?? tick.position;
+        const startX = getPointOnScale(tick.tick, bandScale, toPointAnchor(bandTickMarkPosition));
         const positions = [{ x: startX, key: `tick-mark-${tick.tick}-${index}` }];
 
-        // For extremities on last tick, add the closing tick mark
-        if (isLastTick && isExtremities) {
-          const endX = getBandPosition(bandScale, index, 'end');
-          if (endX !== undefined) {
-            positions.push({ x: endX, key: `tick-mark-${tick.tick}-${index}-end` });
-          }
+        // For edges on last tick, add the closing tick mark at stepEnd
+        if (isLastTick && isEdges) {
+          const endX = getPointOnScale(tick.tick, bandScale, 'stepEnd');
+          positions.push({ x: endX, key: `tick-mark-${tick.tick}-${index}-end` });
         }
 
         return positions;
@@ -277,6 +272,8 @@ export const XAxis = memo<XAxisProps>(
         style={{ ...style, ...styles?.root }}
         {...props}
       >
+        {/* Note: Web uses fade animation for grid lines because it relies on async ResizeObserver
+            for text measurements. Mobile renders immediately since Skia measures synchronously. */}
         {showGrid && (
           <g data-testid={`${testID}-grid`}>
             {gridLinePositions.map(({ x, key }) =>
