@@ -47,7 +47,7 @@ export const XAxis = memo<XAxisProps>(
     TickLabelComponent = DefaultAxisTickLabel,
     GridLineComponent = DottedLine,
     LineComponent = SolidLine,
-    TickMarkComponent = SolidLine,
+    TickMarkLineComponent = SolidLine,
     tickMarkLabelGap = 2,
     minTickLabelGap = 4,
     showTickMarks,
@@ -292,7 +292,7 @@ export const XAxis = memo<XAxisProps>(
         {axisBounds && showTickMarks && (
           <Group>
             {tickMarkPositions.map(({ x, key }) => (
-              <TickMarkComponent
+              <TickMarkLineComponent
                 key={key}
                 animate={false}
                 clipPath={null}

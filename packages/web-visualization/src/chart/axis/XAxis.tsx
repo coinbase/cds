@@ -65,7 +65,7 @@ export const XAxis = memo<XAxisProps>(
     classNames,
     GridLineComponent = DottedLine,
     LineComponent = SolidLine,
-    TickMarkComponent = SolidLine,
+    TickMarkLineComponent = SolidLine,
     tickMarkLabelGap = 2,
     minTickLabelGap = 4,
     showTickMarks,
@@ -328,7 +328,7 @@ export const XAxis = memo<XAxisProps>(
                   initial={{ opacity: 0 }}
                   transition={axisUpdateAnimationTransition}
                 >
-                  <TickMarkComponent
+                  <TickMarkLineComponent
                     animate={false}
                     className={cx(axisTickMarkCss, classNames?.tickMark)}
                     clipRect={null}
@@ -340,7 +340,7 @@ export const XAxis = memo<XAxisProps>(
                   />
                 </motion.g>
               ) : (
-                <TickMarkComponent
+                <TickMarkLineComponent
                   key={key}
                   animate={false}
                   className={cx(axisTickMarkCss, classNames?.tickMark)}

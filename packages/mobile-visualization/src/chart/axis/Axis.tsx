@@ -146,7 +146,7 @@ export type AxisProps = AxisBaseProps & {
    * Component to render the tick marks.
    * @default SolidLine
    */
-  TickMarkComponent?: LineComponent;
+  TickMarkLineComponent?: LineComponent;
   /**
    * Formatter function for axis tick values.
    * Tick values will be wrapped in ChartText component.

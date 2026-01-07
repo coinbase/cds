@@ -53,7 +53,7 @@ export const YAxis = memo<YAxisProps>(
     TickLabelComponent = DefaultAxisTickLabel,
     GridLineComponent = DottedLine,
     LineComponent = SolidLine,
-    TickMarkComponent = SolidLine,
+    TickMarkLineComponent = SolidLine,
     tickMarkLabelGap = 8,
     minTickLabelGap = 0,
     showTickMarks,
@@ -277,7 +277,7 @@ export const YAxis = memo<YAxisProps>(
         {axisBounds && showTickMarks && (
           <Group>
             {tickMarkPositions.map(({ y, key }) => (
-              <TickMarkComponent
+              <TickMarkLineComponent
                 key={key}
                 animate={false}
                 clipPath={null}

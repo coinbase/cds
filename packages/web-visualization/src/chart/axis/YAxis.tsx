@@ -71,7 +71,7 @@ export const YAxis = memo<YAxisProps>(
     classNames,
     GridLineComponent = DottedLine,
     LineComponent = SolidLine,
-    TickMarkComponent = SolidLine,
+    TickMarkLineComponent = SolidLine,
     tickMarkLabelGap = 8,
     minTickLabelGap = 0,
     showTickMarks,
@@ -325,7 +325,7 @@ export const YAxis = memo<YAxisProps>(
                   initial={{ opacity: 0 }}
                   transition={axisUpdateAnimationTransition}
                 >
-                  <TickMarkComponent
+                  <TickMarkLineComponent
                     animate={false}
                     className={cx(axisTickMarkCss, classNames?.tickMark)}
                     clipRect={null}
@@ -337,7 +337,7 @@ export const YAxis = memo<YAxisProps>(
                   />
                 </motion.g>
               ) : (
-                <TickMarkComponent
+                <TickMarkLineComponent
                   key={key}
                   animate={false}
                   className={cx(axisTickMarkCss, classNames?.tickMark)}
