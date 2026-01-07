@@ -261,10 +261,10 @@ const BandAxisGridAlignment = () => (
     }}
   >
     <XAxis showGrid showLine showTickMarks label="Default" />
-    <XAxis showLine showTickMarks bandTickMarkPosition="start" label="Start" />
-    <XAxis showLine showTickMarks bandTickMarkPosition="end" label="End" />
-    <XAxis showLine showTickMarks bandTickMarkPosition="middle" label="Middle" />
-    <XAxis showLine showTickMarks bandTickMarkPosition="edges" label="Edges" />
+    <XAxis showLine showTickMarks bandTickMarkPlacement="start" label="Start" />
+    <XAxis showLine showTickMarks bandTickMarkPlacement="end" label="End" />
+    <XAxis showLine showTickMarks bandTickMarkPlacement="middle" label="Middle" />
+    <XAxis showLine showTickMarks bandTickMarkPlacement="edges" label="Edges" />
     <BarPlot />
   </CartesianChart>
 );
@@ -292,11 +292,11 @@ const BandScaleTickFiltering = () => (
   </CartesianChart>
 );
 
-// Line chart on band scale - comparing grid positions
+// Line chart on band scale - comparing grid placements
 const LineChartOnBandScale = ({
-  bandGridPosition,
+  bandGridPlacement,
 }: {
-  bandGridPosition: 'start' | 'middle' | 'end' | 'edges';
+  bandGridPlacement: 'start' | 'middle' | 'end' | 'edges';
 }) => (
   <CartesianChart
     height={220}
@@ -315,9 +315,9 @@ const LineChartOnBandScale = ({
       showGrid
       showLine
       showTickMarks
-      bandGridPosition={bandGridPosition}
-      bandTickMarkPosition={bandGridPosition}
-      label={`bandGridPosition: ${bandGridPosition}`}
+      bandGridPlacement={bandGridPlacement}
+      bandTickMarkPlacement={bandGridPlacement}
+      label={`bandGridPlacement: ${bandGridPlacement}`}
     />
     <YAxis showGrid position="left" />
     <Line seriesId="line1" />
@@ -443,10 +443,10 @@ export const All = () => {
       </Example>
       <Example title="Line Chart on Band Scale - Grid Positions">
         <HStack gap={2} style={{ flexWrap: 'wrap' }}>
-          <LineChartOnBandScale bandGridPosition="edges" />
-          <LineChartOnBandScale bandGridPosition="start" />
-          <LineChartOnBandScale bandGridPosition="middle" />
-          <LineChartOnBandScale bandGridPosition="end" />
+          <LineChartOnBandScale bandGridPlacement="edges" />
+          <LineChartOnBandScale bandGridPlacement="start" />
+          <LineChartOnBandScale bandGridPlacement="middle" />
+          <LineChartOnBandScale bandGridPlacement="end" />
         </HStack>
       </Example>
     </VStack>

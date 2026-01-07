@@ -57,19 +57,19 @@ export type AxisTickLabelComponent = React.FC<AxisTickLabelComponentProps>;
 
 export type AxisBaseProps = SharedProps & {
   /**
-   * Position of grid lines relative to each band.
+   * Placement of grid lines relative to each band.
    * Options: 'start', 'middle', 'end', 'edges'
    * @note This property only applies to band scales.
    * @default 'edges'
    */
-  bandGridPosition?: AxisBandPlacement;
+  bandGridPlacement?: AxisBandPlacement;
   /**
-   * Position of tick marks relative to each band.
+   * Placement of tick marks relative to each band.
    * Options: 'start', 'middle', 'end', 'edges'
    * @note This property only applies to band scales.
    * @default 'middle'
    */
-  bandTickMarkPosition?: AxisBandPlacement;
+  bandTickMarkPlacement?: AxisBandPlacement;
   /**
    * Label text to display for the axis.
    */

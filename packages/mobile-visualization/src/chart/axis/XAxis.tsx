@@ -59,8 +59,8 @@ export const XAxis = memo<XAxisProps>(
     label,
     labelGap = 4,
     height = label ? AXIS_HEIGHT + LABEL_SIZE : AXIS_HEIGHT,
-    bandGridPosition = 'edges',
-    bandTickMarkPosition = 'middle',
+    bandGridPlacement = 'edges',
+    bandTickMarkPlacement = 'middle',
     ...props
   }) => {
     const theme = useTheme();
@@ -166,9 +166,9 @@ export const XAxis = memo<XAxisProps>(
 
         const bandScale = xScale as CategoricalScale;
         const isLastTick = index === ticksData.length - 1;
-        const isEdges = bandGridPosition === 'edges';
+        const isEdges = bandGridPlacement === 'edges';
 
-        const startX = getPointOnScale(tick.tick, bandScale, toPointAnchor(bandGridPosition));
+        const startX = getPointOnScale(tick.tick, bandScale, toPointAnchor(bandGridPlacement));
         const positions = [{ x: startX, key: `grid-${tick.tick}-${index}` }];
 
         // For edges on last tick, add the closing line at stepEnd
@@ -179,7 +179,7 @@ export const XAxis = memo<XAxisProps>(
 
         return positions;
       });
-    }, [ticksData, xScale, isBandScale, bandGridPosition]);
+    }, [ticksData, xScale, isBandScale, bandGridPlacement]);
 
     // Compute tick mark positions (including bounds closing tick for band scales)
     const tickMarkPositions = useMemo((): Array<{ x: number; key: string }> => {
@@ -192,9 +192,9 @@ export const XAxis = memo<XAxisProps>(
 
         const bandScale = xScale as CategoricalScale;
         const isLastTick = index === ticksData.length - 1;
-        const isEdges = bandTickMarkPosition === 'edges';
+        const isEdges = bandTickMarkPlacement === 'edges';
 
-        const startX = getPointOnScale(tick.tick, bandScale, toPointAnchor(bandTickMarkPosition));
+        const startX = getPointOnScale(tick.tick, bandScale, toPointAnchor(bandTickMarkPlacement));
         const positions = [{ x: startX, key: `tick-mark-${tick.tick}-${index}` }];
 
         // For edges on last tick, add the closing tick mark at stepEnd
@@ -205,7 +205,7 @@ export const XAxis = memo<XAxisProps>(
 
         return positions;
       });
-    }, [ticksData, xScale, isBandScale, bandTickMarkPosition]);
+    }, [ticksData, xScale, isBandScale, bandTickMarkPlacement]);
 
     const chartTextData: TextLabelData[] | null = useMemo(() => {
       if (!axisBounds) return null;

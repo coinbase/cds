@@ -63,8 +63,8 @@ export const YAxis = memo<YAxisProps>(
     label,
     labelGap = 4,
     width = label ? AXIS_WIDTH + LABEL_SIZE : AXIS_WIDTH,
-    bandGridPosition = 'edges',
-    bandTickMarkPosition = 'middle',
+    bandGridPlacement = 'edges',
+    bandTickMarkPlacement = 'middle',
     ...props
   }) => {
     const theme = useTheme();
@@ -159,9 +159,9 @@ export const YAxis = memo<YAxisProps>(
 
         const bandScale = yScale as CategoricalScale;
         const isLastTick = index === ticksData.length - 1;
-        const isEdges = bandGridPosition === 'edges';
+        const isEdges = bandGridPlacement === 'edges';
 
-        const startY = getPointOnScale(tick.tick, bandScale, toPointAnchor(bandGridPosition));
+        const startY = getPointOnScale(tick.tick, bandScale, toPointAnchor(bandGridPlacement));
         const positions = [{ y: startY, key: `grid-${tick.tick}-${index}` }];
 
         // For edges on last tick, add the closing line at stepEnd
@@ -172,7 +172,7 @@ export const YAxis = memo<YAxisProps>(
 
         return positions;
       });
-    }, [ticksData, yScale, isBandScale, bandGridPosition]);
+    }, [ticksData, yScale, isBandScale, bandGridPlacement]);
 
     // Compute tick mark positions (including bounds closing tick for band scales)
     const tickMarkPositions = useMemo((): Array<{ y: number; key: string }> => {
@@ -185,9 +185,9 @@ export const YAxis = memo<YAxisProps>(
 
         const bandScale = yScale as CategoricalScale;
         const isLastTick = index === ticksData.length - 1;
-        const isEdges = bandTickMarkPosition === 'edges';
+        const isEdges = bandTickMarkPlacement === 'edges';
 
-        const startY = getPointOnScale(tick.tick, bandScale, toPointAnchor(bandTickMarkPosition));
+        const startY = getPointOnScale(tick.tick, bandScale, toPointAnchor(bandTickMarkPlacement));
         const positions = [{ y: startY, key: `tick-mark-${tick.tick}-${index}` }];
 
         // For edges on last tick, add the closing tick mark at stepEnd
@@ -198,7 +198,7 @@ export const YAxis = memo<YAxisProps>(
 
         return positions;
       });
-    }, [ticksData, yScale, isBandScale, bandTickMarkPosition]);
+    }, [ticksData, yScale, isBandScale, bandTickMarkPlacement]);
 
     const chartTextData: TextLabelData[] | null = useMemo(() => {
       if (!axisBounds) return null;
