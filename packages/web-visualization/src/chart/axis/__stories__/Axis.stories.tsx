@@ -294,9 +294,9 @@ const BandScaleTickFiltering = () => (
 
 // Line chart on band scale - comparing grid placements
 const LineChartOnBandScale = ({
-  bandGridPlacement,
+  bandGridLinePlacement,
 }: {
-  bandGridPlacement: 'start' | 'middle' | 'end' | 'edges';
+  bandGridLinePlacement: 'start' | 'middle' | 'end' | 'edges';
 }) => (
   <CartesianChart
     height={220}
@@ -315,9 +315,9 @@ const LineChartOnBandScale = ({
       showGrid
       showLine
       showTickMarks
-      bandGridPlacement={bandGridPlacement}
-      bandTickMarkPlacement={bandGridPlacement}
-      label={`bandGridPlacement: ${bandGridPlacement}`}
+      bandGridLinePlacement={bandGridLinePlacement}
+      bandTickMarkPlacement={bandGridLinePlacement}
+      label={`bandGridLinePlacement: ${bandGridLinePlacement}`}
     />
     <YAxis showGrid position="left" />
     <Line seriesId="line1" />
@@ -443,10 +443,10 @@ export const All = () => {
       </Example>
       <Example title="Line Chart on Band Scale - Grid Positions">
         <HStack gap={2} style={{ flexWrap: 'wrap' }}>
-          <LineChartOnBandScale bandGridPlacement="edges" />
-          <LineChartOnBandScale bandGridPlacement="start" />
-          <LineChartOnBandScale bandGridPlacement="middle" />
-          <LineChartOnBandScale bandGridPlacement="end" />
+          <LineChartOnBandScale bandGridLinePlacement="edges" />
+          <LineChartOnBandScale bandGridLinePlacement="start" />
+          <LineChartOnBandScale bandGridLinePlacement="middle" />
+          <LineChartOnBandScale bandGridLinePlacement="end" />
         </HStack>
       </Example>
     </VStack>

@@ -217,7 +217,7 @@ const BandGridPositionExample = ({
     xAxis={{ scaleType: 'band', data: ['A', 'B', 'C', 'D', 'E'] }}
     yAxis={{ domain: { min: 0 } }}
   >
-    <XAxis showGrid showLine bandGridPlacement={position} label={position} />
+    <XAxis showGrid showLine bandGridLinePlacement={position} label={position} />
     <BarPlot />
   </CartesianChart>
 );

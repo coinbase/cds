@@ -342,19 +342,19 @@ function CustomGridLineExample() {
 }
 ```
 
-On band scales, you can also use `bandGridPlacement` to control where grid lines appear relative to each band.
+On band scales, you can also use `bandGridLinePlacement` to control where grid lines appear relative to each band.
 
 Using edges will place a grid line at the start of each band, plus a grid line at the end of the last band.
 
 ```jsx live
 function BandGridPlacement() {
-  const bandGridPlacements = [
+  const bandGridLinePlacements = [
     { id: 'edges', label: 'Edges' },
     { id: 'start', label: 'Start' },
     { id: 'middle', label: 'Middle' },
     { id: 'end', label: 'End' },
   ];
-  const [selectedBandGridPlacement, setSelectedBandGridPlacement] = useState(bandGridPlacements[0]);
+  const [selectedBandGridPlacement, setSelectedBandGridPlacement] = useState(bandGridLinePlacements[0]);
 
   return (
     <VStack gap={2}>
@@ -365,7 +365,7 @@ function BandGridPlacement() {
         <SegmentedTabs
           activeTab={selectedBandGridPlacement}
           onChange={setSelectedBandGridPlacement}
-          tabs={bandGridPlacements}
+          tabs={bandGridLinePlacements}
         />
       </HStack>
       <CartesianChart
@@ -383,7 +383,7 @@ function BandGridPlacement() {
         yAxis={{ domain: { min: 0 } }}
       >
         <XAxis
-          bandGridPlacement={selectedBandGridPlacement.id}
+          bandGridLinePlacement={selectedBandGridPlacement.id}
           GridLineComponent={SolidLine}
           showGrid
           showLine

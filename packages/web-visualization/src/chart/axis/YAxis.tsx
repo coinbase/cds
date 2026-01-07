@@ -82,7 +82,7 @@ export const YAxis = memo<YAxisProps>(
     labelGap = 4,
     width = label ? AXIS_WIDTH + LABEL_SIZE : AXIS_WIDTH,
     testID = 'y-axis',
-    bandGridPlacement = 'edges',
+    bandGridLinePlacement = 'edges',
     bandTickMarkPlacement = 'middle',
     ...props
   }) => {
@@ -173,9 +173,9 @@ export const YAxis = memo<YAxisProps>(
 
         const bandScale = yScale as CategoricalScale;
         const isLastTick = index === ticksData.length - 1;
-        const isEdges = bandGridPlacement === 'edges';
+        const isEdges = bandGridLinePlacement === 'edges';
 
-        const startY = getPointOnScale(tick.tick, bandScale, toPointAnchor(bandGridPlacement));
+        const startY = getPointOnScale(tick.tick, bandScale, toPointAnchor(bandGridLinePlacement));
         const positions = [{ y: startY, key: `grid-${tick.tick}-${index}` }];
 
         // For edges on last tick, add the closing line at stepEnd
@@ -186,7 +186,7 @@ export const YAxis = memo<YAxisProps>(
 
         return positions;
       });
-    }, [ticksData, yScale, isBandScale, bandGridPlacement]);
+    }, [ticksData, yScale, isBandScale, bandGridLinePlacement]);
 
     // Compute tick mark positions (including bounds closing tick mark for band scales)
     const tickMarkPositions = useMemo((): Array<{ y: number; key: string }> => {

@@ -59,7 +59,7 @@ export const XAxis = memo<XAxisProps>(
     label,
     labelGap = 4,
     height = label ? AXIS_HEIGHT + LABEL_SIZE : AXIS_HEIGHT,
-    bandGridPlacement = 'edges',
+    bandGridLinePlacement = 'edges',
     bandTickMarkPlacement = 'middle',
     ...props
   }) => {
@@ -166,9 +166,9 @@ export const XAxis = memo<XAxisProps>(
 
         const bandScale = xScale as CategoricalScale;
         const isLastTick = index === ticksData.length - 1;
-        const isEdges = bandGridPlacement === 'edges';
+        const isEdges = bandGridLinePlacement === 'edges';
 
-        const startX = getPointOnScale(tick.tick, bandScale, toPointAnchor(bandGridPlacement));
+        const startX = getPointOnScale(tick.tick, bandScale, toPointAnchor(bandGridLinePlacement));
         const positions = [{ x: startX, key: `grid-${tick.tick}-${index}` }];
 
         // For edges on last tick, add the closing line at stepEnd
@@ -179,7 +179,7 @@ export const XAxis = memo<XAxisProps>(
 
         return positions;
       });
-    }, [ticksData, xScale, isBandScale, bandGridPlacement]);
+    }, [ticksData, xScale, isBandScale, bandGridLinePlacement]);
 
     // Compute tick mark positions (including bounds closing tick for band scales)
     const tickMarkPositions = useMemo((): Array<{ x: number; key: string }> => {

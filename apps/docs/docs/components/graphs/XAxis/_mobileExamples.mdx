@@ -343,7 +343,7 @@ function CustomGridLineExample() {
 }
 ```
 
-On band scales, you can also use `bandGridPlacement` to control where grid lines appear relative to each band.
+On band scales, you can also use `bandGridLinePlacement` to control where grid lines appear relative to each band.
 
 Using edges will place a grid line at the start of each band, plus a grid line at the end of the last band.
 
@@ -367,7 +367,7 @@ function BandGridPlacement() {
       yAxis={{ domain: { min: 0 } }}
     >
       <XAxis
-        bandGridPlacement={selectedBandGridPlacement}
+        bandGridLinePlacement={selectedBandGridPlacement}
         GridLineComponent={SolidLine}
         showGrid
         showLine

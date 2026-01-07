@@ -39,7 +39,7 @@ export type AxisBaseProps = {
    * @note This property only applies to band scales.
    * @default 'edges'
    */
-  bandGridPlacement?: AxisBandPlacement;
+  bandGridLinePlacement?: AxisBandPlacement;
   /**
    * Placement of tick marks relative to each band.
    * Options: 'start', 'middle', 'end', 'edges'
