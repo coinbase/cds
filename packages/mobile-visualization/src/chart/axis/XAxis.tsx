@@ -150,8 +150,10 @@ export const XAxis = memo<XAxisProps>(
       });
     }, [ticks, xScale, requestedTickCount, tickInterval, tickMinStep, tickMaxStep, xAxis?.data]);
 
-    // Determine if using band scale for grid lines and tick marks
-    const isBandScale = xScale ? isCategoricalScale(xScale) : false;
+    const isBandScale = useMemo(() => {
+      if (!xScale) return false;
+      return isCategoricalScale(xScale);
+    }, [xScale]);
 
     // Compute grid line positions (including bounds closing line for band scales)
     const gridLinePositions = useMemo((): Array<{ x: number; key: string }> => {

@@ -157,7 +157,10 @@ export const YAxis = memo<YAxisProps>(
       });
     }, [ticks, yScale, requestedTickCount, tickInterval, yAxis?.data]);
 
-    const isBandScale = yScale ? isCategoricalScale(yScale) : false;
+    const isBandScale = useMemo(() => {
+      if (!yScale) return false;
+      return isCategoricalScale(yScale);
+    }, [yScale]);
 
     // Compute grid line positions (including bounds closing line for band scales)
     const gridLinePositions = useMemo((): Array<{ y: number; key: string }> => {
