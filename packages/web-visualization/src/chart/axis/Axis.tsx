@@ -1,7 +1,8 @@
 import type React from 'react';
 import type { SharedProps } from '@coinbase/cds-common/types';
+import type { Transition } from 'framer-motion';
 
-import { type LineComponent, type LineComponentProps } from '../line';
+import { type LineComponent } from '../line';
 import type { ChartTextChildren, ChartTextProps } from '../text/ChartText';
 import { accessoryFadeTransitionDuration, type AxisBandPlacement } from '../utils';
 
@@ -20,9 +21,9 @@ export const axisTickMarkStyles = `
 /**
  * Animation variants for axis elements - updates (used for both grid lines and tick labels)
  */
-export const axisUpdateAnimationTransition = {
+export const axisUpdateAnimationTransition: Transition = {
   duration: accessoryFadeTransitionDuration,
-  ease: 'easeOut' as const,
+  ease: 'easeOut',
 };
 
 export type AxisTickLabelComponentProps = Pick<
