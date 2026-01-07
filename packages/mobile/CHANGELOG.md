@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.36.2 (1/7/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: input border color does not match design. [[#290](https://github.com/coinbase/cds/pull/290)]
+
 ## 8.36.1 (1/6/2026 PST)
 
 #### 🐞 Fixes
