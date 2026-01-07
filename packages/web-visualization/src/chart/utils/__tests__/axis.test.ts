@@ -252,15 +252,19 @@ describe('getAxisTicksData', () => {
 
     it('should respect anchor option for band scale positioning', () => {
       const categories = ['Jan', 'Feb', 'Mar', 'Apr', 'May'];
+      const bandwidth = bandScale.bandwidth();
+      const step = bandScale.step();
+      const paddingOffset = (step - bandwidth) / 2;
 
-      // Test stepStart anchor
+      // Test stepStart anchor - should be at the start of the step (before band padding)
       const stepStartResult = getAxisTicksData({
         scaleFunction: bandScale,
         categories,
         ticks: [0],
         options: { anchor: 'stepStart' },
       });
-      expect(stepStartResult[0].position).toBe(bandScale(0)!);
+      const expectedStepStart = bandScale(0)! - paddingOffset;
+      expect(stepStartResult[0].position).toBeCloseTo(expectedStepStart, 5);
 
       // Test middle anchor (explicit)
       const middleResult = getAxisTicksData({
@@ -269,21 +273,26 @@ describe('getAxisTicksData', () => {
         ticks: [0],
         options: { anchor: 'middle' },
       });
-      const bandwidth = bandScale.bandwidth();
       expect(middleResult[0].position).toBe(bandScale(0)! + bandwidth / 2);
 
-      // Test stepEnd anchor
+      // Test stepEnd anchor - should be at the end of the step
       const stepEndResult = getAxisTicksData({
         scaleFunction: bandScale,
         categories,
         ticks: [0],
         options: { anchor: 'stepEnd' },
       });
-      expect(stepEndResult[0].position).toBe(bandScale(0)! + bandScale.step());
+      const expectedStepEnd = bandScale(0)! - paddingOffset + step;
+      expect(stepEndResult[0].position).toBeCloseTo(expectedStepEnd, 5);
     });
 
     it('should apply anchor option with tick filter function', () => {
       const categories = ['Jan', 'Feb', 'Mar', 'Apr', 'May'];
+      const bandwidth = bandScale.bandwidth();
+      const step = bandScale.step();
+      const paddingOffset = (step - bandwidth) / 2;
+      const expectedStepStart = bandScale(0)! - paddingOffset;
+
       const result = getAxisTicksData({
         scaleFunction: bandScale,
         categories,
@@ -292,19 +301,23 @@ describe('getAxisTicksData', () => {
       });
 
       expect(result.length).toBe(1);
-      expect(result[0].position).toBe(bandScale(0)!);
+      expect(result[0].position).toBeCloseTo(expectedStepStart, 5);
     });
 
     it('should apply anchor option when showing all categories', () => {
       const categories = ['Jan', 'Feb'];
+      const bandwidth = bandScale.bandwidth();
+      const step = bandScale.step();
+      const paddingOffset = (step - bandwidth) / 2;
+
       const result = getAxisTicksData({
         scaleFunction: bandScale,
         categories,
         options: { anchor: 'stepStart' },
       });
 
-      expect(result[0].position).toBe(bandScale(0)!);
-      expect(result[1].position).toBe(bandScale(1)!);
+      expect(result[0].position).toBeCloseTo(bandScale(0)! - paddingOffset, 5);
+      expect(result[1].position).toBeCloseTo(bandScale(1)! - paddingOffset, 5);
     });
   });
 

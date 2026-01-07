@@ -1,7 +1,8 @@
-import { memo, useCallback, useMemo } from 'react';
+import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { Example, ExampleScreen } from '@coinbase/cds-mobile/examples/ExampleScreen';
 import { useTheme } from '@coinbase/cds-mobile/hooks/useTheme';
 
+import { BarChart, BarPlot } from '../../bar';
 import { CartesianChart } from '../../CartesianChart';
 import { LineChart, SolidLine, type SolidLineProps } from '../../line';
 import { Line } from '../../line/Line';
@@ -286,6 +287,86 @@ const DomainLimitType = ({ limit }: { limit: 'nice' | 'strict' }) => {
   );
 };
 
+// Band scale with tick filtering - show every other tick
+const BandScaleTickFiltering = () => (
+  <CartesianChart
+    height={defaultChartHeight}
+    inset={8}
+    series={[{ id: 'data', data: [10, 22, 29, 45, 98, 45, 22, 35, 42, 18, 55, 67] }]}
+    xAxis={{
+      scaleType: 'band',
+      data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+    }}
+    yAxis={{ domain: { min: 0 } }}
+  >
+    <XAxis
+      showGrid
+      showLine
+      showTickMarks
+      label="ticks={(i) => i % 2 === 0}"
+      ticks={(i) => i % 2 === 0}
+    />
+    <BarPlot />
+  </CartesianChart>
+);
+
+// Band scale with explicit ticks array
+const BandScaleExplicitTicks = () => (
+  <CartesianChart
+    height={defaultChartHeight}
+    inset={8}
+    series={[{ id: 'data', data: [10, 22, 29, 45, 98, 45, 22] }]}
+    xAxis={{
+      scaleType: 'band',
+      data: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+    }}
+    yAxis={{ domain: { min: 0 } }}
+  >
+    <XAxis
+      showGrid
+      showLine
+      showTickMarks
+      label="ticks={[0, 3, 6]} (first, middle, last)"
+      ticks={[0, 3, 6]}
+    />
+    <BarPlot />
+  </CartesianChart>
+);
+
+// Line chart on band scale - comparing grid positions
+const LineChartOnBandScale = ({
+  bandGridPosition,
+}: {
+  bandGridPosition: 'start' | 'middle' | 'end' | 'edges';
+}) => {
+  const theme = useTheme();
+  return (
+    <CartesianChart
+      height={180}
+      inset={8}
+      series={[
+        { id: 'line1', data: [10, 22, 29, 45, 98, 45, 22], color: theme.color.accentBoldBlue },
+      ]}
+      xAxis={{
+        scaleType: 'band',
+        data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+      }}
+      yAxis={{ domain: { min: 0 } }}
+    >
+      <XAxis
+        showGrid
+        showLine
+        showTickMarks
+        bandGridPosition={bandGridPosition}
+        bandTickMarkPosition={bandGridPosition}
+        label={`bandGridPosition: ${bandGridPosition}`}
+      />
+      <YAxis showGrid position="left" />
+      <Line seriesId="line1" />
+    </CartesianChart>
+  );
+};
+
 const AxisStories = () => {
   return (
     <ExampleScreen>
@@ -303,6 +384,44 @@ const AxisStories = () => {
       </Example>
       <Example title="Nice Domain Limit">
         <DomainLimitType limit="nice" />
+      </Example>
+      <Example title="Band Axis Grid Alignment">
+        <CartesianChart
+          height={350}
+          inset={8}
+          series={[
+            {
+              id: 'prices',
+              data: [10, 22, 29, 45, 98, 45, 22],
+            },
+          ]}
+          xAxis={{
+            scaleType: 'band',
+            data: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+          }}
+          yAxis={{
+            domain: { min: 0 },
+          }}
+        >
+          <XAxis showGrid showLine showTickMarks label="Default" />
+          <XAxis showLine showTickMarks bandTickMarkPosition="start" label="Start" />
+          <XAxis showLine showTickMarks bandTickMarkPosition="end" label="End" />
+          <XAxis showLine showTickMarks bandTickMarkPosition="middle" label="Middle" />
+          <XAxis showLine showTickMarks bandTickMarkPosition="edges" label="Edges" />
+          <BarPlot />
+        </CartesianChart>
+      </Example>
+      <Example title="Band Scale - Tick Filtering">
+        <BandScaleTickFiltering />
+      </Example>
+      <Example title="Band Scale - Explicit Ticks">
+        <BandScaleExplicitTicks />
+      </Example>
+      <Example title="Line Chart on Band Scale - Grid Positions">
+        <LineChartOnBandScale bandGridPosition="edges" />
+        <LineChartOnBandScale bandGridPosition="start" />
+        <LineChartOnBandScale bandGridPosition="middle" />
+        <LineChartOnBandScale bandGridPosition="end" />
       </Example>
     </ExampleScreen>
   );

@@ -2,10 +2,14 @@ import type { TextHorizontalAlignment, TextVerticalAlignment } from '../text';
 
 import {
   applySerializableScale,
+  type CategoricalScale,
   type ChartScaleFunction,
+  getPointOnSerializableBandScale,
   isCategoricalScale,
   isLogScale,
   isNumericScale,
+  type PointAnchor,
+  type SerializableBandScale,
   type SerializableScale,
 } from './scale';
 
@@ -20,17 +24,39 @@ export type PointLabelPosition = 'top' | 'bottom' | 'left' | 'right' | 'center';
 
 /**
  * Get a point from a data value and a scale.
- * @note for categorical scales, the point will be centered within the band.
- * @note for log scales, zero and negative values are clamped to a small positive value.
- * @param data - the data value.
- * @param scale - the scale function.
- * @returns the pixel value (defaulting to 0 if data value is not defined in scale).
+ *
+ * @param dataValue - The data value to convert to a pixel position.
+ * @param scale - The scale function.
+ * @param anchor (@default 'middle') - For band scales, where to anchor the point within the band.
+ * @returns The pixel value (@default 0 if data value is not defined in scale).
  */
-export const getPointOnScale = (dataValue: number, scale: ChartScaleFunction): number => {
+export const getPointOnScale = (
+  dataValue: number,
+  scale: ChartScaleFunction,
+  anchor: PointAnchor = 'middle',
+): number => {
   if (isCategoricalScale(scale)) {
-    const bandStart = scale(dataValue) ?? 0;
-    const bandwidth = scale.bandwidth() ?? 0;
-    return bandStart + bandwidth / 2;
+    const bandScale = scale as CategoricalScale;
+    const bandStart = bandScale(dataValue);
+    if (bandStart === undefined) return 0;
+
+    const bandwidth = bandScale.bandwidth?.() ?? 0;
+    const step = bandScale.step?.() ?? bandwidth;
+    const paddingOffset = (step - bandwidth) / 2;
+    const stepStart = bandStart - paddingOffset;
+
+    switch (anchor) {
+      case 'stepStart':
+        return stepStart;
+      case 'bandStart':
+        return bandStart;
+      case 'middle':
+        return bandStart + bandwidth / 2;
+      case 'bandEnd':
+        return bandStart + bandwidth;
+      case 'stepEnd':
+        return stepStart + step;
+    }
   }
 
   // For log scales, ensure the value is positive
@@ -44,18 +70,22 @@ export const getPointOnScale = (dataValue: number, scale: ChartScaleFunction): n
 
 /**
  * Get a point from a data value and a serializable scale (worklet-compatible).
- * @note for categorical scales, the point will be centered within the band.
- * @note for log scales, zero and negative values are clamped to a small positive value.
- * @param dataValue - the data value.
- * @param scale - the serializable scale object.
- * @returns the pixel value (defaulting to 0 if data value is not defined in scale).
+ *
+ * @param dataValue - The data value to convert to a pixel position.
+ * @param scale - The serializable scale function.
+ * @param anchor (@default 'middle') - For band scales, where to anchor the point within the band.
+ * @returns The pixel value (@default 0 if data value is not defined in scale).
  */
-export function getPointOnSerializableScale(dataValue: number, scale: SerializableScale): number {
+export function getPointOnSerializableScale(
+  dataValue: number,
+  scale: SerializableScale,
+  anchor: PointAnchor = 'middle',
+): number {
   'worklet';
 
+  // Handle band scales with the specified position
   if (scale.type === 'band') {
-    const bandStart = applySerializableScale(dataValue, scale);
-    return bandStart + scale.bandwidth / 2;
+    return getPointOnSerializableBandScale(scale as SerializableBandScale, dataValue, anchor);
   }
 
   // For log scales, ensure the value is positive
