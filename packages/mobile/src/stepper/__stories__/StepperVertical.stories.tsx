@@ -13,6 +13,8 @@ import { Icon } from '../../icons/Icon';
 import { Box, HStack, VStack } from '../../layout';
 import { Pressable } from '../../system';
 import { Text } from '../../typography/Text';
+import { DefaultStepperIconVertical } from '../DefaultStepperIconVertical';
+import { DefaultStepperLabelVertical } from '../DefaultStepperLabelVertical';
 import { DefaultStepperProgressVertical } from '../DefaultStepperProgressVertical';
 import {
   Stepper,
@@ -627,92 +629,88 @@ const NullComponents = () => {
   );
 };
 
-const ErrorStepperIcon: StepperIconComponent = memo(function ErrorStepperIcon({
-  depth,
-  active,
-  visited,
-  complete,
-  isDescendentActive,
-  style,
-}) {
-  if (depth > 0) return null;
+type ErrorStepMetadata = {
+  isError?: boolean;
+};
 
-  const showError = visited || complete;
+const ErrorStepperIcon: StepperIconComponent<ErrorStepMetadata> = memo(
+  function ErrorStepperIcon(props) {
+    const { step, visited, complete } = props;
+    const showError = step.metadata?.isError && (visited || complete);
 
-  return (
-    <Icon
-      active
-      color={
-        showError ? 'bgNegative' : active || isDescendentActive ? 'bgLinePrimarySubtle' : 'bgLine'
-      }
-      name={showError ? 'circleCross' : 'outline'}
-      size="s"
-      style={style}
-    />
-  );
-});
+    if (!showError) {
+      return <DefaultStepperIconVertical {...props} />;
+    }
 
-const ErrorStepperLabel: StepperLabelComponent = memo(function ErrorStepperLabel({
-  step,
-  depth,
-  active,
-  visited,
-  complete,
-  isDescendentActive,
-  style,
-  setActiveStepLabelElement,
-}) {
-  const font = depth === 0 ? 'label1' : 'label2';
-  const showError = visited || complete;
+    return (
+      <DefaultStepperIconVertical
+        {...props}
+        activeColor="bgNegative"
+        completeColor="bgNegative"
+        completeName="circleCross"
+        visitedColor="bgNegative"
+        visitedName="circleCross"
+      />
+    );
+  },
+);
 
-  const color = showError ? 'fgNegative' : active || isDescendentActive ? 'fgPrimary' : 'fgMuted';
+const ErrorStepperLabel: StepperLabelComponent<ErrorStepMetadata> = memo(
+  function ErrorStepperLabel(props) {
+    const { step, visited, complete } = props;
+    const showError = step.metadata?.isError && (visited || complete);
 
-  return (
-    <Box
-      ref={(node) => {
-        if (active && node) setActiveStepLabelElement(node);
-      }}
-      paddingBottom={3}
-      style={style}
-    >
-      {!!step.label && (
-        <Text color={color} font={font} numberOfLines={1}>
-          {step.label}
-        </Text>
-      )}
-    </Box>
-  );
-});
+    if (!showError) {
+      return <DefaultStepperLabelVertical {...props} />;
+    }
 
-const ErrorStepperProgress: StepperProgressComponent = memo(function ErrorStepperProgress(props) {
-  const { visited, complete } = props;
-  const showError = visited || complete;
+    return (
+      <DefaultStepperLabelVertical
+        {...props}
+        activeColor="fgNegative"
+        completeColor="fgNegative"
+        visitedColor="fgNegative"
+      />
+    );
+  },
+);
 
-  return (
-    <DefaultStepperProgressVertical
-      {...props}
-      completeFill={showError ? 'bgNegative' : 'bgPrimary'}
-      visitedFill={showError ? 'bgNegative' : 'bgPrimary'}
-    />
-  );
-});
+const ErrorStepperProgress: StepperProgressComponent<ErrorStepMetadata> = memo(
+  function ErrorStepperProgress(props) {
+    const { step, visited, complete } = props;
+    const showError = step.metadata?.isError && (visited || complete);
+
+    if (!showError) {
+      return <DefaultStepperProgressVertical {...props} />;
+    }
+
+    return (
+      <DefaultStepperProgressVertical
+        {...props}
+        completeFill="bgNegative"
+        visitedFill="bgNegative"
+      />
+    );
+  },
+);
 
 const CustomErrorStep = () => {
-  const steps: StepperValue[] = [
+  const steps: StepperValue<ErrorStepMetadata>[] = [
     { id: '1', label: 'Account Details' },
     { id: '2', label: 'Personal Information' },
     {
       id: '3',
       label: 'Payment Method',
-      StepperIconComponent: ErrorStepperIcon,
-      StepperLabelComponent: ErrorStepperLabel,
-      StepperProgressComponent: ErrorStepperProgress,
+      metadata: { isError: true },
     },
     { id: '4', label: 'Review & Submit' },
   ];
 
   return (
     <StepperVerticalExample
+      StepperIconComponent={ErrorStepperIcon}
+      StepperLabelComponent={ErrorStepperLabel}
+      StepperProgressComponent={ErrorStepperProgress}
       defaultActiveStepId={'1'}
       steps={steps}
       title="Custom Error Step (shows error state after step is visited)"
