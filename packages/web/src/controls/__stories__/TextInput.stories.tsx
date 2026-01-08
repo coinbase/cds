@@ -264,6 +264,46 @@ export const LabelWithTooltip = function LabelWithTooltip() {
   );
 };
 
+export const LabelNodeWithCompact = function LabelNodeWithCompact() {
+  return (
+    <TextInput
+      compact
+      label="Amount"
+      labelNode={
+        <HStack alignItems="center" gap={1} paddingStart={2}>
+          <InputLabel>Amount</InputLabel>
+          <Tooltip content="Enter the amount in USD.">
+            <Icon active color="fg" name="info" size="xs" tabIndex={0} />
+          </Tooltip>
+        </HStack>
+      }
+      placeholder="0.00"
+      suffix="USD"
+    />
+  );
+};
+
+export const LabelNodeWithInsideVariant = function LabelNodeWithInsideVariant() {
+  return (
+    <TextInput
+      id="inside-label-tooltip"
+      label="Email"
+      labelNode={
+        <InputLabel htmlFor="inside-label-tooltip">
+          <HStack alignItems="center" gap={1} paddingStart={2} paddingTop={1}>
+            Email
+            <Tooltip content="We'll never share your email.">
+              <Icon active color="fg" name="info" size="xs" tabIndex={0} />
+            </Tooltip>
+          </HStack>
+        </InputLabel>
+      }
+      labelVariant="inside"
+      placeholder="satoshi@nakamoto.com"
+    />
+  );
+};
+
 export const StartContent = function StartContent() {
   return (
     <TextInput

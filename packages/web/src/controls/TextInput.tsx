@@ -369,11 +369,17 @@ export const TextInput = memo(
                 onClick={handleNodePress}
                 testID={testIDMap?.start ?? ''}
               >
-                {compact && !!label && (
-                  <InputLabel htmlFor={shouldSetLabelId ? labelId : undefined} paddingStart={2}>
-                    {label}
-                  </InputLabel>
-                )}
+                {compact &&
+                  (labelNode
+                    ? labelNode
+                    : !!label && (
+                        <InputLabel
+                          htmlFor={shouldSetLabelId ? labelId : undefined}
+                          paddingStart={2}
+                        >
+                          {label}
+                        </InputLabel>
+                      ))}
                 {!!start && <>{start}</>}
               </HStack>
             )

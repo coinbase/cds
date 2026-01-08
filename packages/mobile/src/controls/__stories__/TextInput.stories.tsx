@@ -469,6 +469,36 @@ const InputScreen = () => {
           placeholder="Satoshi Nakamoto"
         />
       </Example>
+      <Example inline title="TextInput with labelNode and compact">
+        <MockCompactTextInput
+          label="Amount"
+          labelNode={
+            <HStack alignItems="center" gap={1} paddingStart={2}>
+              <InputLabel>Amount</InputLabel>
+              <Tooltip content="Enter the amount in USD.">
+                <Icon active color="fg" name="info" size="xs" />
+              </Tooltip>
+            </HStack>
+          }
+          placeholder="0.00"
+          suffix="USD"
+        />
+      </Example>
+      <Example inline title="TextInput with labelNode and inside variant">
+        <MockTextInput
+          label="Email"
+          labelNode={
+            <HStack alignItems="center" gap={1} paddingStart={2} paddingTop={1}>
+              <InputLabel>Email</InputLabel>
+              <Tooltip content="We'll never share your email.">
+                <Icon active color="fg" name="info" size="xs" />
+              </Tooltip>
+            </HStack>
+          }
+          labelVariant="inside"
+          placeholder="satoshi@nakamoto.com"
+        />
+      </Example>
     </ExampleScreen>
   );
 };
