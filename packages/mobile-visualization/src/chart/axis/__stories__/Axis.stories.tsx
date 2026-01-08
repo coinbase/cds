@@ -280,9 +280,30 @@ const CustomTickMarkSizes = () => {
       }}
     >
       <XAxis showLine showTickMarks label="tickMarkSize=4 (default)" tickMarkSize={4} />
-      <XAxis showLine showTickMarks height={60} label="tickMarkSize=8" position="top" tickMarkSize={8} />
-      <YAxis showLine showTickMarks label="tickMarkSize=16" position="left" tickMarkSize={16} width={76} />
-      <YAxis showLine showTickMarks label="tickMarkSize=24" position="right" tickMarkSize={24} width={84} />
+      <XAxis
+        showLine
+        showTickMarks
+        height={60}
+        label="tickMarkSize=8"
+        position="top"
+        tickMarkSize={8}
+      />
+      <YAxis
+        showLine
+        showTickMarks
+        label="tickMarkSize=16"
+        position="left"
+        tickMarkSize={16}
+        width={76}
+      />
+      <YAxis
+        showLine
+        showTickMarks
+        label="tickMarkSize=24"
+        position="right"
+        tickMarkSize={24}
+        width={84}
+      />
       <Line curve="monotone" seriesId="data" />
     </CartesianChart>
   );
