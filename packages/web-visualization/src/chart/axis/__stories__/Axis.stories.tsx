@@ -368,10 +368,22 @@ const AxesOnAllSides = () => {
         domain: { min: 0, max: 100 },
       }}
     >
-      <XAxis showLine showTickMarks label="Bottom Axis" position="bottom" tickMarkSize={12} />
-      <XAxis showLine showTickMarks label="Top Axis" position="top" tickMarkSize={12} />
-      <YAxis showLine showTickMarks label="Left Axis" position="left" tickMarkSize={12} />
-      <YAxis showLine showTickMarks label="Right Axis" position="right" tickMarkSize={12} />
+      <XAxis
+        showLine
+        showTickMarks
+        label="Bottom Axis"
+        position="bottom"
+        ticks={labels.map((label, index) => index)}
+      />
+      <XAxis
+        showLine
+        showTickMarks
+        label="Top Axis"
+        position="top"
+        ticks={labels.map((label, index) => index)}
+      />
+      <YAxis showLine showTickMarks label="Left Axis" position="left" />
+      <YAxis showLine showTickMarks label="Right Axis" position="right" />
       <Line curve="natural" seriesId="data" />
     </CartesianChart>
   );
