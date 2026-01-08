@@ -227,7 +227,6 @@ export const XAxis = memo<XAxisProps>(
         const labelOffset = availableSpace / 2;
 
         const labelY =
-          position === 'top' ? baseY + labelOffset - tickOffset : baseY + labelOffset + tickOffset;
           position === 'top'
             ? axisBounds.y + axisBounds.height - tickOffset - labelOffset
             : axisBounds.y + labelOffset + tickOffset;
