@@ -46,15 +46,6 @@
     },
     "report-disabled-eslint-rules": {
       "executor": "@coinbase/prevent-eslint-disable:report"
-    },
-    "publish-figma": {
-      "executor": "nx:run-commands",
-      "options": {
-        "commands": [
-          "figma connect publish --token $FIGMA_CODE_CONNECT_TOKEN"
-        ],
-        "cwd": "packages/mobile-visualization"
-      }
     }
   }
 }
