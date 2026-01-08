@@ -63,3 +63,89 @@ function Example() {
   return <Button onClick={handlePress}>Open Modal</Button>;
 }
 ```
+
+### Chained Modals
+
+:::tip Accessibility tip
+For chained modals, set `restoreFocusOnUnmount={false}` on each one and return focus to the opener when exiting the chain (e.g., `triggerRef.current?.focus()`) to keep tab order predictable.
+:::
+
+```jsx live
+function ChainedModalsExample() {
+  const triggerRef = useRef(null);
+  const [isFirstModalOpen, setIsFirstModalOpen] = useState(false);
+  const [isSecondModalOpen, setIsSecondModalOpen] = useState(false);
+
+  const closeFirstModal = () => {
+    setIsFirstModalOpen(false);
+    triggerRef.current?.focus();
+  };
+
+  const openSecondModal = () => {
+    setIsFirstModalOpen(false);
+    setIsSecondModalOpen(true);
+  };
+
+  const closeSecondModal = () => {
+    setIsSecondModalOpen(false);
+    triggerRef.current?.focus();
+  };
+
+  const goBackToFirstModal = () => {
+    setIsSecondModalOpen(false);
+    setIsFirstModalOpen(true);
+  };
+
+  return (
+    <>
+      <Button ref={triggerRef} onClick={() => setIsFirstModalOpen(true)}>
+        Open Modal
+      </Button>
+      <Modal
+        onRequestClose={closeFirstModal}
+        restoreFocusOnUnmount={false}
+        visible={isFirstModalOpen}
+      >
+        <ModalHeader
+          closeAccessibilityLabel="Close"
+          onBackButtonClick={closeFirstModal}
+          title="First Modal"
+        />
+        <ModalBody tabIndex={0} testID="first-modal-body">
+          <Text>First modal content</Text>
+        </ModalBody>
+        <ModalFooter
+          primaryAction={<Button onClick={openSecondModal}>Next</Button>}
+          secondaryAction={
+            <Button onClick={closeFirstModal} variant="secondary">
+              Cancel
+            </Button>
+          }
+        />
+      </Modal>
+      <Modal
+        onRequestClose={closeSecondModal}
+        restoreFocusOnUnmount={false}
+        visible={isSecondModalOpen}
+      >
+        <ModalHeader
+          closeAccessibilityLabel="Close"
+          onBackButtonClick={goBackToFirstModal}
+          title="Second Modal"
+        />
+        <ModalBody tabIndex={0} testID="second-modal-body">
+          <Text>Second modal content</Text>
+        </ModalBody>
+        <ModalFooter
+          primaryAction={<Button onClick={closeSecondModal}>Close</Button>}
+          secondaryAction={
+            <Button onClick={closeSecondModal} variant="secondary">
+              Cancel
+            </Button>
+          }
+        />
+      </Modal>
+    </>
+  );
+}
+```
