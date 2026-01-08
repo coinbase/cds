@@ -319,64 +319,65 @@ When using the `inside` label variant, you should always include a `placeholder`
 
 ### Custom Label
 
-If you need to render a custom label (e.g. a label with a tooltip), you can use the `labelNode` prop. This works with the default, `compact`, and `labelVariant="inside"` variants.
+If you need to render a custom label (e.g. a label with a tooltip), you can use the `labelNode` prop.
 
 ```jsx
 <VStack gap={2}>
   <TextInput
-    label="Display name"
+    accessibilityLabel="Display name"
     labelNode={
-      <HStack alignItems="center" gap={1}>
-        <InputLabel>Display name</InputLabel>
-        <Tooltip content="This will be visible to other users.">
-          <Icon active color="fg" name="info" size="xs" />
-        </Tooltip>
-      </HStack>
+      <InputLabel>
+        <HStack alignItems="center" gap={1}>
+          Display name
+          <Tooltip content="This will be visible to other users.">
+            <Icon active color="fg" name="info" size="xs" />
+          </Tooltip>
+        </HStack>
+      </InputLabel>
     }
     placeholder="Satoshi Nakamoto"
   />
   <TextInput
+    accessibilityLabel="Amount"
     compact
-    label="Amount"
     labelNode={
-      <HStack alignItems="center" gap={1} paddingStart={2}>
-        <Text font="label1" color="fgMuted">
+      <InputLabel>
+        <HStack alignItems="center" gap={0.5}>
           Amount
-        </Text>
-        <Tooltip content="Enter the amount in USD.">
-          <Icon active color="fg" name="info" size="xs" />
-        </Tooltip>
-      </HStack>
+          <Text color="fgNegative" font="label1">
+            *
+          </Text>
+        </HStack>
+      </InputLabel>
     }
     placeholder="0.00"
     suffix="USD"
   />
   <TextInput
-    label="Email"
+    accessibilityLabel="Bio"
     labelVariant="inside"
     labelNode={
-      <HStack alignItems="center" gap={1} paddingStart={2} paddingTop={1}>
-        <InputLabel>Email</InputLabel>
-        <Tooltip content="We'll never share your email.">
-          <Icon active color="fg" name="info" size="xs" />
-        </Tooltip>
-      </HStack>
+      <InputLabel paddingY={0}>
+        <HStack alignItems="center" gap={1}>
+          Bio
+          <Text color="fgMuted" font="legal">
+            (optional)
+          </Text>
+        </HStack>
+      </InputLabel>
     }
-    placeholder="satoshi@nakamoto.com"
+    placeholder="Tell us about yourself"
   />
   <TextInput
-    label="Search"
+    accessibilityLabel="Notes"
     labelVariant="inside"
     labelNode={
-      <HStack alignItems="center" gap={1} paddingTop={1}>
-        <InputLabel>Search</InputLabel>
-        <Tooltip content="Search across all assets.">
-          <Icon active color="fg" name="info" size="xs" />
-        </Tooltip>
-      </HStack>
+      <Text color="fgMuted" font="body" paddingY={0}>
+        Notes
+      </Text>
     }
-    placeholder="Search for anything"
-    start={<InputIconButton name="search" />}
+    placeholder="Add a note"
+    start={<InputIcon name="pencil" />}
   />
 </VStack>
 ```
@@ -638,16 +639,6 @@ function testExample() {
       end={<InputIcon active color="primary" name="visible" />}
     />
   );
-}
-```
-
-## Date Picker Example
-
-You can construct a DatePicker using TextInput
-
-```jsx
-function DatePicker() {
-  return <TextInput label="Pick a date" type="date" />;
 }
 ```
 

@@ -184,17 +184,19 @@ export const TextInput = memo(
         }
       }, [setFocused, internalRef, editableInputAddonProps.readOnly]);
 
+      const hasLabel = useMemo(() => !!label || !!labelNode, [label, labelNode]);
+
       const containerSpacing: ViewStyle = useMemo(
         () => ({
           ...(!!start && { paddingStart: theme.space[0.5] }),
           ...(labelVariant === 'inside' &&
-            Boolean(label) &&
+            hasLabel &&
             !compact && {
               paddingBottom: 0,
               paddingTop: 0,
             }),
         }),
-        [start, labelVariant, theme.space, compact, label],
+        [start, labelVariant, theme.space, compact, hasLabel],
       );
 
       // Get the accessability label from the start node child
@@ -294,32 +296,43 @@ export const TextInput = memo(
           }
           labelNode={
             !compact &&
-            (labelNode
-              ? labelNode
-              : !!label && (
-                  <Pressable
-                    accessibilityRole="button"
-                    disabled={disabled}
-                    onPress={handleNodePress}
+            (labelNode ? (
+              labelVariant === 'inside' ? (
+                <Pressable accessibilityRole="button" disabled={disabled} onPress={handleNodePress}>
+                  <Box
+                    background={readOnlyInputBackground}
+                    paddingEnd={2}
+                    paddingStart={start ? 0.5 : 2}
+                    paddingTop={1}
                   >
-                    <InputLabel
-                      {...(labelVariant === 'inside' && {
-                        paddingTop: 0,
-                        paddingBottom: 0,
-                        paddingStart: start ? 0.5 : 2,
-                        paddingEnd: 2,
-                        background: readOnlyInputBackground,
-                      })}
-                      testID={testIDMap?.label ?? ''}
-                    >
-                      {label}
-                    </InputLabel>
-                  </Pressable>
-                ))
+                    {labelNode}
+                  </Box>
+                </Pressable>
+              ) : (
+                labelNode
+              )
+            ) : (
+              !!label && (
+                <Pressable accessibilityRole="button" disabled={disabled} onPress={handleNodePress}>
+                  <InputLabel
+                    {...(labelVariant === 'inside' && {
+                      paddingTop: 0,
+                      paddingBottom: 0,
+                      paddingStart: start ? 0.5 : 2,
+                      paddingEnd: 2,
+                      background: readOnlyInputBackground,
+                    })}
+                    testID={testIDMap?.label ?? ''}
+                  >
+                    {label}
+                  </InputLabel>
+                </Pressable>
+              )
+            ))
           }
           labelVariant={labelVariant}
           startNode={
-            ((compact && (!!label || !!labelNode)) || !!start) && (
+            ((compact && hasLabel) || !!start) && (
               <Box
                 alignItems="center"
                 background={readOnlyInputBackground}
@@ -335,11 +348,9 @@ export const TextInput = memo(
                   importantForAccessibility={startIconA11yLabel ? 'auto' : 'no'}
                   onPress={handleNodePress}
                 >
-                  <HStack>
+                  <HStack paddingStart={compact && hasLabel ? 2 : undefined}>
                     {compact &&
-                      (labelNode
-                        ? labelNode
-                        : !!label && <InputLabel paddingStart={2}>{label}</InputLabel>)}
+                      (labelNode ? labelNode : !!label && <InputLabel>{label}</InputLabel>)}
                     {!!start && (
                       <TextInputFocusVariantContext.Provider value={focusedVariant}>
                         {inaccessibleStart}

@@ -262,15 +262,15 @@ When using the `inside` label variant, you should always include a `placeholder`
 
 ### Custom Label
 
-If you need to render a custom label (e.g. a label with a tooltip), you can use the `labelNode` prop. This works with the default, `compact`, and `labelVariant="inside"` variants.
+If you need to render a custom label (e.g. a label with a tooltip), you can use the `labelNode` prop.
 
 ```jsx live
 <VStack gap={2}>
   <TextInput
-    id="display-name-tooltip"
-    label="Display name"
+    accessibilityLabel="Display name"
+    id="display-name-input"
     labelNode={
-      <InputLabel htmlFor="display-name-tooltip">
+      <InputLabel htmlFor="display-name-input">
         <HStack alignItems="center" gap={1}>
           Display name
           <Tooltip content="This will be visible to other users.">
@@ -282,53 +282,48 @@ If you need to render a custom label (e.g. a label with a tooltip), you can use 
     placeholder="Satoshi Nakamoto"
   />
   <TextInput
+    accessibilityLabel="Amount"
     compact
-    label="Amount"
     labelNode={
-      <HStack alignItems="center" gap={1} paddingStart={2}>
-        <Text font="label1" color="fgMuted">
+      <InputLabel>
+        <HStack alignItems="center" gap={0.5}>
           Amount
-        </Text>
-        <Tooltip content="Enter the amount in USD.">
-          <Icon active color="fg" name="info" size="xs" tabIndex={0} />
-        </Tooltip>
-      </HStack>
+          <Text color="fgNegative" font="label1">
+            *
+          </Text>
+        </HStack>
+      </InputLabel>
     }
     placeholder="0.00"
     suffix="USD"
   />
   <TextInput
-    id="inside-label-tooltip"
-    label="Email"
+    accessibilityLabel="Bio"
+    id="bio-input"
     labelVariant="inside"
     labelNode={
-      <InputLabel htmlFor="inside-label-tooltip">
-        <HStack alignItems="center" gap={1} paddingStart={2} paddingTop={1}>
-          Email
-          <Tooltip content="We'll never share your email.">
-            <Icon active color="fg" name="info" size="xs" tabIndex={0} />
-          </Tooltip>
+      <InputLabel htmlFor="bio-input" paddingY={0}>
+        <HStack alignItems="center" gap={1}>
+          Bio
+          <Text color="fgMuted" font="legal">
+            (optional)
+          </Text>
         </HStack>
       </InputLabel>
     }
-    placeholder="satoshi@nakamoto.com"
+    placeholder="Tell us about yourself"
   />
   <TextInput
-    id="inside-label-search"
-    label="Search"
+    accessibilityLabel="Notes"
+    id="notes-input"
     labelVariant="inside"
     labelNode={
-      <InputLabel htmlFor="inside-label-search">
-        <HStack alignItems="center" gap={1} paddingTop={1}>
-          Search
-          <Tooltip content="Search across all assets.">
-            <Icon active color="fg" name="info" size="xs" tabIndex={0} />
-          </Tooltip>
-        </HStack>
-      </InputLabel>
+      <Text color="fgMuted" font="body" htmlFor="notes-input" paddingY={0}>
+        Notes
+      </Text>
     }
-    placeholder="Search for anything"
-    start={<InputIconButton name="search" />}
+    placeholder="Add a note"
+    start={<InputIcon name="pencil" />}
   />
 </VStack>
 ```
@@ -533,38 +528,6 @@ function CopyTextField() {
 </VStack>
 ```
 
-### TextArea Example (mobile)
-
-On mobile, TextInput is versatile enough to support
-a "TextArea" as well. You just need to add multiline prop.
-Here is an example
-
-```jsx
-const [text, onChangeText] = useState('');
-
-<MockTextInput
-  onChangeText={onChangeText}
-  value={text}
-  label="Textarea"
-  helperText="Write about yourself"
-  variant="foregroundMuted"
-  multiline
-  value="
-      A really really really really
-      long piece 
-      of text
-      displayed. A really really really really
-      long piece 
-      of text
-      displayed. 
-      A really really really really
-      long piece 
-      of text
-      displayed
-    "
-/>;
-```
-
 ### Example of a Form
 
 We recommend that you use spacing 3 when building stacked forms.
@@ -657,16 +620,6 @@ function testExample() {
       end={<InputIcon active color="primary" name="visible" />}
     />
   );
-}
-```
-
-## Date Picker Example
-
-You can construct a DatePicker using TextInput
-
-```jsx live
-function DatePicker() {
-  return <TextInput label="Pick a date" type="date" />;
 }
 ```
 

@@ -10,6 +10,7 @@ import { VStack } from '../../layout/VStack';
 import { Avatar } from '../../media/Avatar';
 import { Tooltip } from '../../overlays/tooltip/Tooltip';
 import { Link } from '../../typography/Link';
+import { Text } from '../../typography/Text';
 import { InputIcon } from '../InputIcon';
 import { InputIconButton } from '../InputIconButton';
 import { InputLabel } from '../InputLabel';
@@ -247,8 +248,8 @@ export const NoLabel = function NoLabel() {
 export const LabelWithTooltip = function LabelWithTooltip() {
   return (
     <TextInput
+      accessibilityLabel="Display name"
       id="display-name-tooltip"
-      label="Display name"
       labelNode={
         <InputLabel htmlFor="display-name-tooltip">
           <HStack alignItems="center" gap={1}>
@@ -268,14 +269,16 @@ export const LabelNodeWithCompact = function LabelNodeWithCompact() {
   return (
     <TextInput
       compact
-      label="Amount"
+      accessibilityLabel="Amount"
       labelNode={
-        <HStack alignItems="center" gap={1} paddingStart={2}>
-          <InputLabel>Amount</InputLabel>
-          <Tooltip content="Enter the amount in USD.">
-            <Icon active color="fg" name="info" size="xs" tabIndex={0} />
-          </Tooltip>
-        </HStack>
+        <InputLabel>
+          <HStack alignItems="center" gap={0.5}>
+            Amount
+            <Text color="fgNegative" font="label1">
+              *
+            </Text>
+          </HStack>
+        </InputLabel>
       }
       placeholder="0.00"
       suffix="USD"
@@ -283,24 +286,77 @@ export const LabelNodeWithCompact = function LabelNodeWithCompact() {
   );
 };
 
+export const LabelNodeWithCompactAndStart = function LabelNodeWithCompactAndStart() {
+  return (
+    <VStack gap={2}>
+      <TextInput
+        compact
+        accessibilityLabel="Search"
+        labelNode={<InputLabel>Search</InputLabel>}
+        placeholder="Search..."
+        start={<InputIconButton transparent accessibilityLabel="Search" name="search" />}
+      />
+      <TextInput
+        compact
+        accessibilityLabel="Amount"
+        labelNode={
+          <InputLabel>
+            <HStack alignItems="center" gap={0.5}>
+              Amount
+              <Text color="fgNegative" font="label1">
+                *
+              </Text>
+            </HStack>
+          </InputLabel>
+        }
+        placeholder="0.00"
+        start={
+          <Box paddingX={1}>
+            <Avatar
+              alt="USD"
+              size="s"
+              src="https://dynamic-assets.coinbase.com/e785e0181f1a23a30d9476038d9be91e9f6c63959b538eabbc51a1abc8898940383291eede695c3b8dfaa1829a9b57f5a2d0a16b0523580346c6b8fab67af14b/asset_icons/b57ac673f06a4b0338a596817eb0a50ce16e2059f327dc117744449a47915cb2.png"
+            />
+          </Box>
+        }
+        suffix="USD"
+      />
+    </VStack>
+  );
+};
+
 export const LabelNodeWithInsideVariant = function LabelNodeWithInsideVariant() {
   return (
-    <TextInput
-      id="inside-label-tooltip"
-      label="Email"
-      labelNode={
-        <InputLabel htmlFor="inside-label-tooltip">
-          <HStack alignItems="center" gap={1} paddingStart={2} paddingTop={1}>
-            Email
-            <Tooltip content="We'll never share your email.">
-              <Icon active color="fg" name="info" size="xs" tabIndex={0} />
-            </Tooltip>
-          </HStack>
-        </InputLabel>
-      }
-      labelVariant="inside"
-      placeholder="satoshi@nakamoto.com"
-    />
+    <VStack gap={2}>
+      <TextInput
+        accessibilityLabel="Bio"
+        id="bio-input"
+        labelNode={
+          <InputLabel htmlFor="bio-input" paddingY={0}>
+            <HStack alignItems="center" gap={1}>
+              Bio
+              <Text color="fgMuted" font="legal">
+                (optional)
+              </Text>
+            </HStack>
+          </InputLabel>
+        }
+        labelVariant="inside"
+        placeholder="Tell us about yourself"
+      />
+      <TextInput
+        accessibilityLabel="Notes"
+        id="notes-input"
+        labelNode={
+          <Text color="fgMuted" font="body" paddingY={0}>
+            Notes
+          </Text>
+        }
+        labelVariant="inside"
+        placeholder="Add a note"
+        start={<InputIcon name="pencil" />}
+      />
+    </VStack>
   );
 };
 
