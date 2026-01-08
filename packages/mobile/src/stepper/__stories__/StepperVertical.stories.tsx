@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { memo, useState } from 'react';
 import {
   type StepperApi,
   type StepperState,
@@ -10,12 +10,17 @@ import { ListCell } from '../../cells';
 import { Collapsible } from '../../collapsible';
 import { Example, ExampleScreen } from '../../examples/ExampleScreen';
 import { Icon } from '../../icons/Icon';
-import { HStack, VStack } from '../../layout';
+import { Box, HStack, VStack } from '../../layout';
 import { Pressable } from '../../system';
 import { Text } from '../../typography/Text';
+import { DefaultStepperIconVertical } from '../DefaultStepperIconVertical';
+import { DefaultStepperLabelVertical } from '../DefaultStepperLabelVertical';
+import { DefaultStepperProgressVertical } from '../DefaultStepperProgressVertical';
 import {
   Stepper,
+  type StepperIconComponent,
   type StepperLabelComponent,
+  type StepperProgressComponent,
   type StepperProps,
   type StepperSubstepContainerProps,
   type StepperValue,
@@ -624,6 +629,95 @@ const NullComponents = () => {
   );
 };
 
+type ErrorStepMetadata = {
+  isError?: boolean;
+};
+
+const ErrorStepperIcon: StepperIconComponent<ErrorStepMetadata> = memo(
+  function ErrorStepperIcon(props) {
+    const { step, visited, complete } = props;
+    const showError = step.metadata?.isError && (visited || complete);
+
+    if (!showError) {
+      return <DefaultStepperIconVertical {...props} />;
+    }
+
+    return (
+      <DefaultStepperIconVertical
+        {...props}
+        activeColor="bgNegative"
+        completeColor="bgNegative"
+        completeName="circleCross"
+        visitedColor="bgNegative"
+        visitedName="circleCross"
+      />
+    );
+  },
+);
+
+const ErrorStepperLabel: StepperLabelComponent<ErrorStepMetadata> = memo(
+  function ErrorStepperLabel(props) {
+    const { step, visited, complete } = props;
+    const showError = step.metadata?.isError && (visited || complete);
+
+    if (!showError) {
+      return <DefaultStepperLabelVertical {...props} />;
+    }
+
+    return (
+      <DefaultStepperLabelVertical
+        {...props}
+        activeColor="fgNegative"
+        completeColor="fgNegative"
+        visitedColor="fgNegative"
+      />
+    );
+  },
+);
+
+const ErrorStepperProgress: StepperProgressComponent<ErrorStepMetadata> = memo(
+  function ErrorStepperProgress(props) {
+    const { step, visited, complete } = props;
+    const showError = step.metadata?.isError && (visited || complete);
+
+    if (!showError) {
+      return <DefaultStepperProgressVertical {...props} />;
+    }
+
+    return (
+      <DefaultStepperProgressVertical
+        {...props}
+        completeFill="bgNegative"
+        visitedFill="bgNegative"
+      />
+    );
+  },
+);
+
+const CustomErrorStep = () => {
+  const steps: StepperValue<ErrorStepMetadata>[] = [
+    { id: '1', label: 'Account Details' },
+    { id: '2', label: 'Personal Information' },
+    {
+      id: '3',
+      label: 'Payment Method',
+      metadata: { isError: true },
+    },
+    { id: '4', label: 'Review & Submit' },
+  ];
+
+  return (
+    <StepperVerticalExample
+      StepperIconComponent={ErrorStepperIcon}
+      StepperLabelComponent={ErrorStepperLabel}
+      StepperProgressComponent={ErrorStepperProgress}
+      defaultActiveStepId={'1'}
+      steps={steps}
+      title="Custom Error Step (shows error state after step is visited)"
+    />
+  );
+};
+
 const StepperVerticalScreen = () => {
   return (
     <ExampleScreen>
@@ -653,6 +747,10 @@ const StepperVerticalScreen = () => {
 
       <Example title="Null Components">
         <NullComponents />
+      </Example>
+
+      <Example title="Custom Error Step">
+        <CustomErrorStep />
       </Example>
     </ExampleScreen>
   );
