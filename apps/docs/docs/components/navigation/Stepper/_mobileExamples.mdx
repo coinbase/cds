@@ -369,6 +369,100 @@ function StepperCustomMetadataExample() {
 }
 ```
 
+#### Custom Step with Error State
+
+You can create custom icon, label, and progress components for individual steps to show special states like errors.
+In this example, the "Payment Method" step uses metadata to indicate an error condition. The custom components check this metadata and the completion state to dynamically render an error indicator, falling back to default components otherwise.
+
+```jsx
+const ErrorStepperIcon = memo(function ErrorStepperIcon(props) {
+  const { step, visited, complete } = props;
+  const showError = step.metadata?.isError && (visited || complete);
+
+  if (!showError) {
+    return <DefaultStepperIconVertical {...props} />;
+  }
+
+  return (
+    <DefaultStepperIconVertical
+      {...props}
+      activeColor="bgNegative"
+      completeName="circleCross"
+      completeColor="bgNegative"
+      visitedName="circleCross"
+      visitedColor="bgNegative"
+    />
+  );
+});
+
+const ErrorStepperLabel = memo(function ErrorStepperLabel(props) {
+  const { step, visited, complete } = props;
+  const showError = step.metadata?.isError && (visited || complete);
+
+  if (!showError) {
+    return <DefaultStepperLabelVertical {...props} />;
+  }
+
+  return (
+    <DefaultStepperLabelVertical
+      {...props}
+      activeColor="fgNegative"
+      completeColor="fgNegative"
+      visitedColor="fgNegative"
+    />
+  );
+});
+
+const ErrorStepperProgress = memo(function ErrorStepperProgress(props) {
+  const { step, visited, complete } = props;
+  const showError = step.metadata?.isError && (visited || complete);
+
+  if (!showError) {
+    return <DefaultStepperProgressVertical {...props} />;
+  }
+
+  return (
+    <DefaultStepperProgressVertical {...props} completeFill="bgNegative" visitedFill="bgNegative" />
+  );
+});
+
+function StepperErrorStepExample() {
+  const steps = [
+    { id: '1', label: 'Account Details' },
+    { id: '2', label: 'Personal Information' },
+    {
+      id: '3',
+      label: 'Payment Method',
+      metadata: { isError: true },
+    },
+    { id: '4', label: 'Review & Submit' },
+  ];
+
+  const [stepperState, stepperApi] = useStepper({ steps });
+  const [complete, setComplete] = useState(false);
+
+  const handleNext = () => {
+    if (stepperState.activeStepId === '4') {
+      setComplete(true);
+    } else {
+      stepperApi.goNextStep();
+    }
+  };
+
+  return (
+    <Stepper
+      direction="vertical"
+      activeStepId={stepperState.activeStepId}
+      steps={steps}
+      complete={complete}
+      StepperIconComponent={ErrorStepperIcon}
+      StepperLabelComponent={ErrorStepperLabel}
+      StepperProgressComponent={ErrorStepperProgress}
+    />
+  );
+}
+```
+
 ### 2. styles API
 
 The Stepper component provides flexible styling options through the `styles` prop.

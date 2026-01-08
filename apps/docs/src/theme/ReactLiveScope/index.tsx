@@ -90,7 +90,7 @@ import { PageHeader } from '@coinbase/cds-web/page/PageHeader';
 import { Pagination } from '@coinbase/cds-web/pagination/Pagination';
 import { usePagination } from '@coinbase/cds-web/pagination/usePagination';
 import { SectionHeader } from '@coinbase/cds-web/section-header/SectionHeader';
-import { Stepper } from '@coinbase/cds-web/stepper/Stepper';
+import * as StepperComponents from '@coinbase/cds-web/stepper';
 import * as CDSSystem from '@coinbase/cds-web/system';
 import { MediaQueryProvider } from '@coinbase/cds-web/system/MediaQueryProvider';
 import { ThemeProvider } from '@coinbase/cds-web/system/ThemeProvider';
@@ -164,7 +164,7 @@ const ReactLiveScope: Record<string, unknown> = {
   Coachmark,
   useTourContext,
   // stepper
-  Stepper,
+  ...StepperComponents,
   useStepper,
   // typography
   ...CDSTypography,
