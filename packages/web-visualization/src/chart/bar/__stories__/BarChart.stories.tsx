@@ -213,7 +213,7 @@ const BandGridPositionExample = ({
     height={200}
     inset={4}
     series={[{ id: 'data', data: [30, 50, 40, 60, 35] }]}
-    style={{ flex: '1 1 200px', minWidth: 200 }}
+    width={250}
     xAxis={{ scaleType: 'band', data: ['A', 'B', 'C', 'D', 'E'] }}
     yAxis={{ domain: { min: 0 } }}
   >
