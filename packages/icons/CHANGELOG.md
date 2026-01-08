@@ -8,6 +8,15 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+
+##### ⭐️ Updated (1)
+
+- smartContract
+
+##### ☠️ Renamed (1)
+
+- pencil → pencil
+
 ## 5.9.0 (12/22/2025 PST)
 
 #### 🚀 Updates
