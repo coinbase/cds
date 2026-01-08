@@ -226,9 +226,11 @@ export const XAxis = memo<XAxisProps>(
         const availableSpace = AXIS_HEIGHT - tickOffset;
         const labelOffset = availableSpace / 2;
 
-        const baseY = position === 'top' && label ? axisBounds.y + LABEL_SIZE : axisBounds.y;
         const labelY =
           position === 'top' ? baseY + labelOffset - tickOffset : baseY + labelOffset + tickOffset;
+          position === 'top'
+            ? axisBounds.y + axisBounds.height - tickOffset - labelOffset
+            : axisBounds.y + labelOffset + tickOffset;
 
         return {
           x: tick.position,
@@ -253,7 +255,6 @@ export const XAxis = memo<XAxisProps>(
       formatTick,
       classNames?.tickLabel,
       styles?.tickLabel,
-      label,
     ]);
 
     if (!xScale || !axisBounds || !drawingArea) return;
@@ -264,8 +265,10 @@ export const XAxis = memo<XAxisProps>(
         ? axisBounds.y + axisBounds.height - LABEL_SIZE / 2
         : axisBounds.y + LABEL_SIZE / 2;
 
-    const tickY = position === 'bottom' ? axisBounds.y : axisBounds.y + axisBounds.height;
-    const tickY2 = position === 'bottom' ? tickY + tickMarkSize : tickY - tickMarkSize;
+    const tickYTop = axisBounds.y;
+    const tickYBottom = axisBounds.y + axisBounds.height;
+    const tickYStart = position === 'bottom' ? tickYTop : tickYBottom;
+    const tickYEnd = position === 'bottom' ? tickYTop + tickMarkSize : tickYBottom - tickMarkSize;
 
     return (
       <g
@@ -330,7 +333,7 @@ export const XAxis = memo<XAxisProps>(
                     animate={false}
                     className={cx(axisTickMarkCss, classNames?.tickMark)}
                     clipRect={null}
-                    d={lineToPath(x, tickY2, x, tickY)}
+                    d={lineToPath(x, tickYEnd, x, tickYStart)}
                     stroke="var(--color-fg)"
                     strokeLinecap="square"
                     strokeWidth={1}
@@ -343,7 +346,7 @@ export const XAxis = memo<XAxisProps>(
                   animate={false}
                   className={cx(axisTickMarkCss, classNames?.tickMark)}
                   clipRect={null}
-                  d={lineToPath(x, tickY2, x, tickY)}
+                  d={lineToPath(x, tickYEnd, x, tickYStart)}
                   stroke="var(--color-fg)"
                   strokeLinecap="square"
                   strokeWidth={1}

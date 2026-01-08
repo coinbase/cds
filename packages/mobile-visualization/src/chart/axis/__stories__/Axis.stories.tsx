@@ -227,6 +227,67 @@ const MultipleYAxesExample = () => (
   </CartesianChart>
 );
 
+const AxesOnAllSides = () => {
+  const theme = useTheme();
+  const data = [30, 45, 60, 80, 55, 40, 65];
+  const labels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+
+  return (
+    <CartesianChart
+      height={defaultChartHeight}
+      series={[
+        {
+          id: 'data',
+          data,
+          color: theme.color.accentBoldBlue,
+        },
+      ]}
+      xAxis={{
+        data: labels,
+      }}
+      yAxis={{
+        domain: { min: 0, max: 100 },
+      }}
+    >
+      <XAxis showLine showTickMarks label="Bottom Axis" position="bottom" tickMarkSize={12} />
+      <XAxis showLine showTickMarks label="Top Axis" position="top" tickMarkSize={12} />
+      <YAxis showLine showTickMarks label="Left Axis" position="left" tickMarkSize={12} />
+      <YAxis showLine showTickMarks label="Right Axis" position="right" tickMarkSize={12} />
+      <Line curve="natural" seriesId="data" />
+    </CartesianChart>
+  );
+};
+
+const CustomTickMarkSizes = () => {
+  const theme = useTheme();
+  const data = [25, 50, 75, 60, 45, 80, 35];
+
+  return (
+    <CartesianChart
+      height={300}
+      series={[
+        {
+          id: 'data',
+          data,
+          color: theme.color.accentBoldGreen,
+        },
+      ]}
+      xAxis={{
+        data: ['A', 'B', 'C', 'D', 'E', 'F', 'G'],
+      }}
+      yAxis={{
+        domain: { min: 0, max: 100 },
+      }}
+    >
+      <XAxis showLine showTickMarks label="tickMarkSize=4 (default)" tickMarkSize={4} />
+      <XAxis showLine showTickMarks height={60} label="tickMarkSize=8" position="top" tickMarkSize={8} />
+      <YAxis showLine showTickMarks label="tickMarkSize=16" position="left" tickMarkSize={16} width={76} />
+      <YAxis showLine showTickMarks label="tickMarkSize=24" position="right" tickMarkSize={24} width={84} />
+      <Line curve="monotone" seriesId="data" />
+    </CartesianChart>
+  );
+};
+
 const DomainLimitType = ({ limit }: { limit: 'nice' | 'strict' }) => {
   const exponentialData = [
     1, 2, 4, 8, 15, 30, 65, 140, 280, 580, 1200, 2400, 4800, 9500, 19000, 38000, 75000, 150000,
@@ -384,6 +445,12 @@ const AxisStories = () => {
       </Example>
       <Example title="Nice Domain Limit">
         <DomainLimitType limit="nice" />
+      </Example>
+      <Example title="Axes on All Sides">
+        <AxesOnAllSides />
+      </Example>
+      <Example title="Custom Tick Mark Sizes">
+        <CustomTickMarkSizes />
       </Example>
       <Example title="Band Axis Grid Alignment">
         <CartesianChart

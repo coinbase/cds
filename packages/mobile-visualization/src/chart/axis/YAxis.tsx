@@ -242,11 +242,10 @@ export const YAxis = memo<YAxisProps>(
     const labelY = axisBounds.y + axisBounds.height / 2;
 
     // Pre-compute tick mark X coordinates
-    const tickX = position === 'left' ? axisBounds.x + axisBounds.width : axisBounds.x;
-    const tickX2 =
-      position === 'left'
-        ? axisBounds.x + axisBounds.width - tickMarkSize
-        : axisBounds.x + tickMarkSize;
+    const tickXLeft = axisBounds.x;
+    const tickXRight = axisBounds.x + axisBounds.width;
+    const tickXStart = position === 'left' ? tickXRight : tickXLeft;
+    const tickXEnd = position === 'left' ? tickXRight - tickMarkSize : tickXLeft + tickMarkSize;
 
     // Note: Unlike web, mobile renders grid lines and tick marks immediately without fade animation.
     // This is because Skia can measure text dimensions synchronously, so there's no need to hide
@@ -281,7 +280,7 @@ export const YAxis = memo<YAxisProps>(
                 key={key}
                 animate={false}
                 clipPath={null}
-                d={lineToPath(tickX, y, tickX2, y)}
+                d={lineToPath(tickXStart, y, tickXEnd, y)}
                 stroke={theme.color.fg}
                 strokeCap="square"
                 strokeWidth={1}

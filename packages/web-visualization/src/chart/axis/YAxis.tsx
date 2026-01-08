@@ -258,11 +258,10 @@ export const YAxis = memo<YAxisProps>(
         : axisBounds.x + axisBounds.width - LABEL_SIZE / 2;
     const labelY = axisBounds.y + axisBounds.height / 2;
 
-    const tickX = position === 'left' ? axisBounds.x + axisBounds.width : axisBounds.x;
-    const tickX2 =
-      position === 'left'
-        ? axisBounds.x + axisBounds.width - tickMarkSize
-        : axisBounds.x + tickMarkSize;
+    const tickXLeft = axisBounds.x;
+    const tickXRight = axisBounds.x + axisBounds.width;
+    const tickXStart = position === 'left' ? tickXRight : tickXLeft;
+    const tickXEnd = position === 'left' ? tickXRight - tickMarkSize : tickXLeft + tickMarkSize;
 
     return (
       <g
@@ -327,7 +326,7 @@ export const YAxis = memo<YAxisProps>(
                     animate={false}
                     className={cx(axisTickMarkCss, classNames?.tickMark)}
                     clipRect={null}
-                    d={lineToPath(tickX, y, tickX2, y)}
+                    d={lineToPath(tickXStart, y, tickXEnd, y)}
                     stroke="var(--color-fg)"
                     strokeLinecap="square"
                     strokeWidth={1}
@@ -340,7 +339,7 @@ export const YAxis = memo<YAxisProps>(
                   animate={false}
                   className={cx(axisTickMarkCss, classNames?.tickMark)}
                   clipRect={null}
-                  d={lineToPath(tickX, y, tickX2, y)}
+                  d={lineToPath(tickXStart, y, tickXEnd, y)}
                   stroke="var(--color-fg)"
                   strokeLinecap="square"
                   strokeWidth={1}

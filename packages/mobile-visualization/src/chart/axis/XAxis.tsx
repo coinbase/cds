@@ -218,12 +218,11 @@ export const XAxis = memo<XAxisProps>(
         const availableSpace = AXIS_HEIGHT - tickOffset;
         const labelOffset = availableSpace / 2;
 
-        // For bottom position: start at axisBounds.y
-        // For top position with label: start at axisBounds.y + LABEL_SIZE
-        const baseY = position === 'top' && label ? axisBounds.y + LABEL_SIZE : axisBounds.y;
-
         const labelY =
           position === 'top' ? baseY + labelOffset - tickOffset : baseY + labelOffset + tickOffset;
+          position === 'top'
+            ? axisBounds.y + axisBounds.height - tickOffset - labelOffset
+            : axisBounds.y + labelOffset + tickOffset;
 
         return {
           x: tick.position,
@@ -245,7 +244,6 @@ export const XAxis = memo<XAxisProps>(
       tickMarkSize,
       position,
       formatTick,
-      label,
     ]);
 
     if (!xScale || !axisBounds) return;
@@ -257,11 +255,10 @@ export const XAxis = memo<XAxisProps>(
         : axisBounds.y + LABEL_SIZE / 2;
 
     // Pre-compute tick mark Y coordinates
-    const tickY = position === 'bottom' ? axisBounds.y : axisBounds.y + axisBounds.height;
-    const tickY2 =
-      position === 'bottom'
-        ? axisBounds.y + tickMarkSize
-        : axisBounds.y + axisBounds.height - tickMarkSize;
+    const tickYTop = axisBounds.y;
+    const tickYBottom = axisBounds.y + axisBounds.height;
+    const tickYStart = position === 'bottom' ? tickYTop : tickYBottom;
+    const tickYEnd = position === 'bottom' ? tickYTop + tickMarkSize : tickYBottom - tickMarkSize;
 
     // Note: Unlike web, mobile renders grid lines and tick marks immediately without fade animation.
     // This is because Skia can measure text dimensions synchronously, so there's no need to hide
@@ -296,7 +293,7 @@ export const XAxis = memo<XAxisProps>(
                 key={key}
                 animate={false}
                 clipPath={null}
-                d={lineToPath(x, tickY, x, tickY2)}
+                d={lineToPath(x, tickYStart, x, tickYEnd)}
                 stroke={theme.color.fg}
                 strokeCap="square"
                 strokeWidth={1}
