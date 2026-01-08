@@ -7,6 +7,7 @@ import { m as motion } from 'framer-motion';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import { type ChartInset, getChartInset } from '../utils';
+import { accessoryFadeTransitionDuration } from '../utils/transition';
 
 type ValidChartTextChildElements =
   | React.ReactElement<React.SVGProps<SVGTSpanElement>, 'tspan'>
@@ -320,7 +321,9 @@ export const ChartText = memo<ChartTextProps>(
       >
         <motion.g
           animate={{ opacity: isDimensionsReady ? 1 : 0 }}
-          transition={animate ? { duration: 0.2, ease: 'easeOut' } : undefined}
+          transition={
+            animate ? { duration: accessoryFadeTransitionDuration, ease: 'easeOut' } : undefined
+          }
         >
           <Box
             as="rect"
