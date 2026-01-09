@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.36.3 (1/9/2026 PST)
+
+#### 🐞 Fixes
+
+- Remove focus ring from inside label for Select. [[#299](https://github.com/coinbase/cds/pull/299)]
+
 ## 8.36.2 ((1/7/2026, 10:19 AM PST))
 
 This is an artificial version bump with no new change.
