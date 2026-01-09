@@ -1,6 +1,13 @@
 import type { TextHorizontalAlignment, TextVerticalAlignment } from '../text';
 
-import { type ChartScaleFunction, isCategoricalScale, isLogScale, isNumericScale } from './scale';
+import {
+  type CategoricalScale,
+  type ChartScaleFunction,
+  isCategoricalScale,
+  isLogScale,
+  isNumericScale,
+  type PointAnchor,
+} from './scale';
 
 /**
  * Position a label should be placed relative to the point
@@ -13,17 +20,40 @@ export type PointLabelPosition = 'top' | 'bottom' | 'left' | 'right' | 'center';
 
 /**
  * Get a point from a data value and a scale.
- * @note for categorical scales, the point will be centered within the band.
- * @note for log scales, zero and negative values are clamped to a small positive value.
- * @param data - the data value.
- * @param scale - the scale function.
- * @returns the pixel value (defaulting to 0 if data value is not defined in scale).
+ *
+ * @param dataValue - The data value to convert to a pixel position.
+ * @param scale - The scale function.
+ * @param anchor (@default 'middle') - For band scales, where to anchor the point within the band.
+ * @returns The pixel value (@default 0 if data value is not defined in scale).
  */
-export const getPointOnScale = (dataValue: number, scale: ChartScaleFunction): number => {
+export const getPointOnScale = (
+  dataValue: number,
+  scale: ChartScaleFunction,
+  anchor: PointAnchor = 'middle',
+): number => {
   if (isCategoricalScale(scale)) {
-    const bandStart = scale(dataValue) ?? 0;
-    const bandwidth = scale.bandwidth() ?? 0;
-    return bandStart + bandwidth / 2;
+    const bandScale = scale;
+    const bandStart = bandScale(dataValue);
+    if (bandStart === undefined) return 0;
+
+    const bandwidth = bandScale.bandwidth?.() ?? 0;
+    const step = bandScale.step?.() ?? bandwidth;
+    const paddingOffset = (step - bandwidth) / 2;
+    const stepStart = bandStart - paddingOffset;
+
+    switch (anchor) {
+      case 'stepStart':
+        return stepStart;
+      case 'bandStart':
+        return bandStart;
+      case 'bandEnd':
+        return bandStart + bandwidth;
+      case 'stepEnd':
+        return stepStart + step;
+      case 'middle':
+      default:
+        return bandStart + bandwidth / 2;
+    }
   }
 
   // For log scales, ensure the value is positive

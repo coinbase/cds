@@ -1,6 +1,6 @@
 import React, { memo, useId } from 'react';
 import { candles as btcCandles } from '@coinbase/cds-common/internal/data/candles';
-import { VStack } from '@coinbase/cds-web/layout';
+import { HStack, VStack } from '@coinbase/cds-web/layout';
 import { Text } from '@coinbase/cds-web/typography';
 
 import { CartesianChart } from '../..';
@@ -203,6 +203,24 @@ const ScrubberRect = memo(() => {
     />
   );
 });
+
+const BandGridPositionExample = ({
+  position,
+}: {
+  position: 'start' | 'middle' | 'end' | 'edges';
+}) => (
+  <CartesianChart
+    height={200}
+    inset={4}
+    series={[{ id: 'data', data: [30, 50, 40, 60, 35] }]}
+    width={250}
+    xAxis={{ scaleType: 'band', data: ['A', 'B', 'C', 'D', 'E'] }}
+    yAxis={{ domain: { min: 0 } }}
+  >
+    <XAxis showGrid showLine bandGridLinePlacement={position} label={position} />
+    <BarPlot />
+  </CartesianChart>
+);
 
 const Candlesticks = () => {
   const infoTextRef = React.useRef<HTMLSpanElement>(null);
@@ -750,6 +768,14 @@ export const All = () => {
             showGrid: true,
           }}
         />
+      </Example>
+      <Example title="Band Grid Position">
+        <HStack gap={2} style={{ flexWrap: 'wrap' }}>
+          <BandGridPositionExample position="edges" />
+          <BandGridPositionExample position="start" />
+          <BandGridPositionExample position="middle" />
+          <BandGridPositionExample position="end" />
+        </HStack>
       </Example>
     </VStack>
   );

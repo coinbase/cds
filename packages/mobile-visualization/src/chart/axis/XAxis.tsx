@@ -4,11 +4,17 @@ import { Group } from '@shopify/react-native-skia';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import { DottedLine } from '../line/DottedLine';
-import { ReferenceLine } from '../line/ReferenceLine';
 import { SolidLine } from '../line/SolidLine';
 import { ChartText } from '../text/ChartText';
 import { ChartTextGroup, type TextLabelData } from '../text/ChartTextGroup';
-import { getAxisTicksData, isCategoricalScale, lineToPath } from '../utils';
+import {
+  type CategoricalScale,
+  getAxisTicksData,
+  getPointOnScale,
+  isCategoricalScale,
+  lineToPath,
+  toPointAnchor,
+} from '../utils';
 
 import { type AxisBaseProps, type AxisProps } from './Axis';
 import { DefaultAxisTickLabel } from './DefaultAxisTickLabel';
@@ -53,19 +59,25 @@ export const XAxis = memo<XAxisProps>(
     label,
     labelGap = 4,
     height = label ? AXIS_HEIGHT + LABEL_SIZE : AXIS_HEIGHT,
+    bandGridLinePlacement = 'edges',
+    bandTickMarkPlacement = 'middle',
     ...props
   }) => {
     const theme = useTheme();
     const registrationId = useId();
-    const { animate, getXScale, getXAxis, registerAxis, unregisterAxis, getAxisBounds } =
-      useCartesianChartContext();
+    const {
+      animate,
+      drawingArea,
+      getXScale,
+      getXAxis,
+      registerAxis,
+      unregisterAxis,
+      getAxisBounds,
+    } = useCartesianChartContext();
 
     const xScale = getXScale();
     const xAxis = getXAxis();
     const axisBounds = getAxisBounds(registrationId);
-
-    // Note: gridOpacity not currently used in Skia version
-    // const gridOpacity = useSharedValue(1);
 
     useEffect(() => {
       registerAxis(registrationId, position, height);
@@ -138,6 +150,63 @@ export const XAxis = memo<XAxisProps>(
       });
     }, [ticks, xScale, requestedTickCount, tickInterval, tickMinStep, tickMaxStep, xAxis?.data]);
 
+    const isBandScale = useMemo(() => {
+      if (!xScale) return false;
+      return isCategoricalScale(xScale);
+    }, [xScale]);
+
+    // Compute grid line positions (including bounds closing line for band scales)
+    const gridLinePositions = useMemo((): Array<{ x: number; key: string }> => {
+      if (!xScale) return [];
+
+      return ticksData.flatMap((tick, index) => {
+        if (!isBandScale) {
+          return [{ x: tick.position, key: `grid-${tick.tick}-${index}` }];
+        }
+
+        const bandScale = xScale as CategoricalScale;
+        const isLastTick = index === ticksData.length - 1;
+        const isEdges = bandGridLinePlacement === 'edges';
+
+        const startX = getPointOnScale(tick.tick, bandScale, toPointAnchor(bandGridLinePlacement));
+        const positions = [{ x: startX, key: `grid-${tick.tick}-${index}` }];
+
+        // For edges on last tick, add the closing line at stepEnd
+        if (isLastTick && isEdges) {
+          const endX = getPointOnScale(tick.tick, bandScale, 'stepEnd');
+          positions.push({ x: endX, key: `grid-${tick.tick}-${index}-end` });
+        }
+
+        return positions;
+      });
+    }, [ticksData, xScale, isBandScale, bandGridLinePlacement]);
+
+    // Compute tick mark positions (including bounds closing tick for band scales)
+    const tickMarkPositions = useMemo((): Array<{ x: number; key: string }> => {
+      if (!xScale) return [];
+
+      return ticksData.flatMap((tick, index) => {
+        if (!isBandScale) {
+          return [{ x: tick.position, key: `tick-mark-${tick.tick}-${index}` }];
+        }
+
+        const bandScale = xScale as CategoricalScale;
+        const isLastTick = index === ticksData.length - 1;
+        const isEdges = bandTickMarkPlacement === 'edges';
+
+        const startX = getPointOnScale(tick.tick, bandScale, toPointAnchor(bandTickMarkPlacement));
+        const positions = [{ x: startX, key: `tick-mark-${tick.tick}-${index}` }];
+
+        // For edges on last tick, add the closing tick mark at stepEnd
+        if (isLastTick && isEdges) {
+          const endX = getPointOnScale(tick.tick, bandScale, 'stepEnd');
+          positions.push({ x: endX, key: `tick-mark-${tick.tick}-${index}-end` });
+        }
+
+        return positions;
+      });
+    }, [ticksData, xScale, isBandScale, bandTickMarkPlacement]);
+
     const chartTextData: TextLabelData[] | null = useMemo(() => {
       if (!axisBounds) return null;
 
@@ -149,12 +218,10 @@ export const XAxis = memo<XAxisProps>(
         const availableSpace = AXIS_HEIGHT - tickOffset;
         const labelOffset = availableSpace / 2;
 
-        // For bottom position: start at axisBounds.y
-        // For top position with label: start at axisBounds.y + LABEL_SIZE
-        const baseY = position === 'top' && label ? axisBounds.y + LABEL_SIZE : axisBounds.y;
-
         const labelY =
-          position === 'top' ? baseY + labelOffset - tickOffset : baseY + labelOffset + tickOffset;
+          position === 'top'
+            ? axisBounds.y + axisBounds.height - tickOffset - labelOffset
+            : axisBounds.y + labelOffset + tickOffset;
 
         return {
           x: tick.position,
@@ -176,7 +243,6 @@ export const XAxis = memo<XAxisProps>(
       tickMarkSize,
       position,
       formatTick,
-      label,
     ]);
 
     if (!xScale || !axisBounds) return;
@@ -187,17 +253,28 @@ export const XAxis = memo<XAxisProps>(
         ? axisBounds.y + axisBounds.height - LABEL_SIZE / 2
         : axisBounds.y + LABEL_SIZE / 2;
 
+    // Pre-compute tick mark Y coordinates
+    const tickYTop = axisBounds.y;
+    const tickYBottom = axisBounds.y + axisBounds.height;
+    const tickYStart = position === 'bottom' ? tickYTop : tickYBottom;
+    const tickYEnd = position === 'bottom' ? tickYTop + tickMarkSize : tickYBottom - tickMarkSize;
+
+    // Note: Unlike web, mobile renders grid lines and tick marks immediately without fade animation.
+    // This is because Skia can measure text dimensions synchronously, so there's no need to hide
+    // elements while waiting for measurements (web uses async ResizeObserver).
     return (
       <Group>
         {showGrid && (
           <Group>
-            {ticksData.map((tick, index) => {
-              const verticalLine = (
-                <ReferenceLine LineComponent={GridLineComponent} dataX={tick.tick} />
-              );
-
-              return <Group key={`grid-${tick.tick}-${index}`}>{verticalLine}</Group>;
-            })}
+            {gridLinePositions.map(({ x, key }) => (
+              <GridLineComponent
+                key={key}
+                animate={false}
+                clipPath={null}
+                d={lineToPath(x, drawingArea.y, x, drawingArea.y + drawingArea.height)}
+                stroke={theme.color.bgLine}
+              />
+            ))}
           </Group>
         )}
         {chartTextData && (
@@ -210,25 +287,17 @@ export const XAxis = memo<XAxisProps>(
         )}
         {axisBounds && showTickMarks && (
           <Group>
-            {ticksData.map((tick, index) => {
-              const tickY = position === 'bottom' ? axisBounds.y : axisBounds.y + axisBounds.height;
-              const tickY2 =
-                position === 'bottom'
-                  ? axisBounds.y + tickMarkSize
-                  : axisBounds.y + axisBounds.height - tickMarkSize;
-
-              return (
-                <TickMarkLineComponent
-                  key={`tick-mark-${tick.tick}-${index}`}
-                  animate={false}
-                  clipPath={null}
-                  d={lineToPath(tick.position, tickY, tick.position, tickY2)}
-                  stroke={theme.color.fg}
-                  strokeCap="square"
-                  strokeWidth={1}
-                />
-              );
-            })}
+            {tickMarkPositions.map(({ x, key }) => (
+              <TickMarkLineComponent
+                key={key}
+                animate={false}
+                clipPath={null}
+                d={lineToPath(x, tickYStart, x, tickYEnd)}
+                stroke={theme.color.fg}
+                strokeCap="square"
+                strokeWidth={1}
+              />
+            ))}
           </Group>
         )}
         {showLine && (

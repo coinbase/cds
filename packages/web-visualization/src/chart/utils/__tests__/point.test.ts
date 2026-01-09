@@ -123,6 +123,69 @@ describe('getPointOnScale', () => {
       expect(typeof result).toBe('number');
     });
   });
+
+  describe('with categorical scale and anchor parameter', () => {
+    it('should use middle anchor by default', () => {
+      const result = getPointOnScale(0, categoricalScale);
+      const bandStart = categoricalScale(0) ?? 0;
+      const bandwidth = categoricalScale.bandwidth();
+      expect(result).toBe(bandStart + bandwidth / 2);
+    });
+
+    it('should position at stepStart when anchor is stepStart', () => {
+      const result = getPointOnScale(0, categoricalScale, 'stepStart');
+      const bandStart = categoricalScale(0) ?? 0;
+      const step = categoricalScale.step();
+      const bandwidth = categoricalScale.bandwidth();
+      const paddingOffset = (step - bandwidth) / 2;
+      const stepStart = bandStart - paddingOffset;
+      expect(result).toBeCloseTo(stepStart, 5);
+    });
+
+    it('should position at bandStart when anchor is bandStart', () => {
+      const result = getPointOnScale(0, categoricalScale, 'bandStart');
+      const bandStart = categoricalScale(0) ?? 0;
+      expect(result).toBe(bandStart);
+    });
+
+    it('should position at middle when anchor is middle', () => {
+      const result = getPointOnScale(0, categoricalScale, 'middle');
+      const bandStart = categoricalScale(0) ?? 0;
+      const bandwidth = categoricalScale.bandwidth();
+      expect(result).toBe(bandStart + bandwidth / 2);
+    });
+
+    it('should position at bandEnd when anchor is bandEnd', () => {
+      const result = getPointOnScale(0, categoricalScale, 'bandEnd');
+      const bandStart = categoricalScale(0) ?? 0;
+      const bandwidth = categoricalScale.bandwidth();
+      expect(result).toBe(bandStart + bandwidth);
+    });
+
+    it('should position at stepEnd when anchor is stepEnd', () => {
+      const result = getPointOnScale(0, categoricalScale, 'stepEnd');
+      const bandStart = categoricalScale(0) ?? 0;
+      const step = categoricalScale.step();
+      const bandwidth = categoricalScale.bandwidth();
+      const paddingOffset = (step - bandwidth) / 2;
+      const stepStart = bandStart - paddingOffset;
+      expect(result).toBeCloseTo(stepStart + step, 5);
+    });
+
+    it('should maintain consistent spacing between anchor positions', () => {
+      const stepStart = getPointOnScale(0, categoricalScale, 'stepStart');
+      const bandStart = getPointOnScale(0, categoricalScale, 'bandStart');
+      const middle = getPointOnScale(0, categoricalScale, 'middle');
+      const bandEnd = getPointOnScale(0, categoricalScale, 'bandEnd');
+      const stepEnd = getPointOnScale(0, categoricalScale, 'stepEnd');
+
+      // Positions should be in order
+      expect(stepStart).toBeLessThanOrEqual(bandStart);
+      expect(bandStart).toBeLessThan(middle);
+      expect(middle).toBeLessThan(bandEnd);
+      expect(bandEnd).toBeLessThanOrEqual(stepEnd);
+    });
+  });
 });
 
 describe('projectPoint', () => {
