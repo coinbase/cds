@@ -91,10 +91,11 @@ It's also advised you always format `helperText` with `Error: ${errorMessage}`. 
 <TextInput label="Label" placeholder="Placeholder" />
 ```
 
-### Borderless TextInput (web)
+### Borderless
 
-A borderless TextInput SHOULD NOT be used alone. It should be used
-with a TypeAhead component.
+:::warning
+You should not use a borderless TextInput alone. It should be used with a TypeAhead component.
+:::
 
 ```jsx live
 <HStack padding={2}>
@@ -619,22 +620,6 @@ function testExample() {
       }
       end={<InputIcon active color="primary" name="visible" />}
     />
-  );
-}
-```
-
-## TextInput While Keyboard Is Open (mobile)
-
-If you have the keyboard open, then closing the keyboard and interacting with the text input requires 2 taps, which isn't a great user experience.
-
-To fix this issue, you can wrap the TextInput in a ScrollView, and set keyboardShouldPersistTaps="always".
-
-```jsx
-function TextInputKeyboardExample() {
-  return (
-    <ScrollView style={{ height: '100%' }} keyboardShouldPersistTaps="always">
-      <TextInput label="Amount" type="number" compact placeholder="98329.23" suffix="USD" />
-    </ScrollView>
   );
 }
 ```
