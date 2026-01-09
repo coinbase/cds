@@ -326,14 +326,12 @@ If you need to render a custom label (e.g. a label with a tooltip), you can use 
   <TextInput
     accessibilityLabel="Display name"
     labelNode={
-      <InputLabel>
-        <HStack alignItems="center" gap={1}>
-          Display name
-          <Tooltip content="This will be visible to other users.">
-            <Icon active color="fg" name="info" size="xs" />
-          </Tooltip>
-        </HStack>
-      </InputLabel>
+      <HStack alignItems="center" gap={1}>
+        <InputLabel>Display name</InputLabel>
+        <Tooltip content="This will be visible to other users.">
+          <Icon active color="fg" name="info" size="xs" />
+        </Tooltip>
+      </HStack>
     }
     placeholder="Satoshi Nakamoto"
   />
@@ -341,14 +339,12 @@ If you need to render a custom label (e.g. a label with a tooltip), you can use 
     accessibilityLabel="Amount"
     compact
     labelNode={
-      <InputLabel>
-        <HStack alignItems="center" gap={0.5}>
-          Amount
-          <Text color="fgNegative" font="label1">
-            *
-          </Text>
-        </HStack>
-      </InputLabel>
+      <HStack alignItems="center" gap={0.5}>
+        <InputLabel>Amount</InputLabel>
+        <Text color="fgNegative" font="label1">
+          *
+        </Text>
+      </HStack>
     }
     placeholder="0.00"
     suffix="USD"
@@ -357,25 +353,19 @@ If you need to render a custom label (e.g. a label with a tooltip), you can use 
     accessibilityLabel="Bio"
     labelVariant="inside"
     labelNode={
-      <InputLabel paddingY={0}>
-        <HStack alignItems="center" gap={1}>
-          Bio
-          <Text color="fgMuted" font="legal">
-            (optional)
-          </Text>
-        </HStack>
-      </InputLabel>
+      <HStack alignItems="center" gap={1}>
+        <InputLabel paddingY={0}>Bio</InputLabel>
+        <Text color="fgMuted" font="legal">
+          (optional)
+        </Text>
+      </HStack>
     }
     placeholder="Tell us about yourself"
   />
   <TextInput
     accessibilityLabel="Notes"
     labelVariant="inside"
-    labelNode={
-      <Text color="fgMuted" font="body" paddingY={0}>
-        Notes
-      </Text>
-    }
+    labelNode={<InputLabel paddingY={0}>Notes</InputLabel>}
     placeholder="Add a note"
     start={<InputIcon name="pencil" />}
   />

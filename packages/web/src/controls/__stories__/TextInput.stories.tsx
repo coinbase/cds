@@ -245,50 +245,43 @@ export const NoLabel = function NoLabel() {
   return <TextInput accessibilityLabel="No Label" />;
 };
 
-export const LabelWithTooltip = function LabelWithTooltip() {
-  return (
-    <TextInput
-      accessibilityLabel="Display name"
-      id="display-name-tooltip"
-      labelNode={
-        <InputLabel htmlFor="display-name-tooltip">
-          <HStack alignItems="center" gap={1}>
-            Display name
-            <Tooltip content="This will be visible to other users.">
-              <Icon active color="fg" name="info" size="xs" tabIndex={0} />
-            </Tooltip>
-          </HStack>
-        </InputLabel>
-      }
-      placeholder="Satoshi Nakamoto"
-    />
-  );
-};
-
-export const LabelNodeWithCompact = function LabelNodeWithCompact() {
-  return (
-    <TextInput
-      compact
-      accessibilityLabel="Amount"
-      labelNode={
-        <InputLabel>
-          <HStack alignItems="center" gap={0.5}>
-            Amount
-            <Text color="fgNegative" font="label1">
-              *
-            </Text>
-          </HStack>
-        </InputLabel>
-      }
-      placeholder="0.00"
-      suffix="USD"
-    />
-  );
-};
-
-export const LabelNodeWithCompactAndStart = function LabelNodeWithCompactAndStart() {
+export const CustomLabel = function CustomLabel() {
   return (
     <VStack gap={2}>
+      {/* Default with tooltip */}
+      <TextInput
+        accessibilityLabel="Display name"
+        id="display-name-tooltip"
+        labelNode={
+          <InputLabel htmlFor="display-name-tooltip">
+            <HStack alignItems="center" gap={1}>
+              Display name
+              <Tooltip content="This will be visible to other users.">
+                <Icon active color="fg" name="info" size="xs" tabIndex={0} />
+              </Tooltip>
+            </HStack>
+          </InputLabel>
+        }
+        placeholder="Satoshi Nakamoto"
+      />
+      {/* Compact with required indicator */}
+      <TextInput
+        compact
+        accessibilityLabel="Amount"
+        labelNode={
+          <InputLabel>
+            <HStack alignItems="center" gap={0.5}>
+              Amount
+              <Text color="fgNegative" font="label1">
+                *
+              </Text>
+            </HStack>
+          </InputLabel>
+        }
+        placeholder="0.00"
+        suffix="USD"
+      />
+      {/* Compact with start icon */}
       <TextInput
         compact
         accessibilityLabel="Search"
@@ -296,6 +289,7 @@ export const LabelNodeWithCompactAndStart = function LabelNodeWithCompactAndStar
         placeholder="Search..."
         start={<InputIconButton transparent accessibilityLabel="Search" name="search" />}
       />
+      {/* Compact with start avatar */}
       <TextInput
         compact
         accessibilityLabel="Amount"
@@ -321,13 +315,7 @@ export const LabelNodeWithCompactAndStart = function LabelNodeWithCompactAndStar
         }
         suffix="USD"
       />
-    </VStack>
-  );
-};
-
-export const LabelNodeWithInsideVariant = function LabelNodeWithInsideVariant() {
-  return (
-    <VStack gap={2}>
+      {/* Inside variant with optional indicator */}
       <TextInput
         accessibilityLabel="Bio"
         id="bio-input"
@@ -344,13 +332,14 @@ export const LabelNodeWithInsideVariant = function LabelNodeWithInsideVariant() 
         labelVariant="inside"
         placeholder="Tell us about yourself"
       />
+      {/* Inside variant with start icon */}
       <TextInput
         accessibilityLabel="Notes"
         id="notes-input"
         labelNode={
-          <Text color="fgMuted" font="body" paddingY={0}>
+          <InputLabel htmlFor="notes-input" paddingY={0}>
             Notes
-          </Text>
+          </InputLabel>
         }
         labelVariant="inside"
         placeholder="Add a note"
@@ -362,10 +351,7 @@ export const LabelNodeWithInsideVariant = function LabelNodeWithInsideVariant() 
 
 export const StartContent = function StartContent() {
   return (
-    <TextInput
-      label="Label"
-      start={<InputIconButton transparent accessibilityLabel="Add" name="add" />}
-    />
+    <TextInput label="Label" start={<InputIconButton accessibilityLabel="Add" name="add" />} />
   );
 };
 

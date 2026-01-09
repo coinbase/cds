@@ -37,24 +37,26 @@ function Example() {
 
   return (
     <DatePicker
+      accessibilityLabel="Birthdate"
+      calendarIconButtonAccessibilityLabel="Birthdate calendar"
       date={date}
       error={error}
-      onChangeDate={setDate}
-      onErrorDate={setError}
-      label="Birthdate"
-      labelNode={
-        <HStack alignItems="center" gap={1}>
-          <InputLabel>Birthdate</InputLabel>
-          <Tooltip content="This will be visible to other users.">
-            <Icon active color="fg" name="info" size="xs" tabIndex={0} />
-          </Tooltip>
-        </HStack>
-      }
-      calendarIconButtonAccessibilityLabel="Birthdate calendar"
-      nextArrowAccessibilityLabel="Next month"
-      previousArrowAccessibilityLabel="Previous month"
       helperTextErrorIconAccessibilityLabel="Error"
       invalidDateError="Please enter a valid date"
+      labelNode={
+        <InputLabel>
+          <HStack alignItems="center" gap={1}>
+            Birthdate
+            <Tooltip content="This will be visible to other users.">
+              <Icon active color="fg" name="info" size="xs" tabIndex={0} />
+            </Tooltip>
+          </HStack>
+        </InputLabel>
+      }
+      nextArrowAccessibilityLabel="Next month"
+      onChangeDate={setDate}
+      onErrorDate={setError}
+      previousArrowAccessibilityLabel="Previous month"
     />
   );
 }

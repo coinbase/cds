@@ -2297,15 +2297,24 @@ function ExampleNavigator() {
         title: 'Basic',
         component: (
           <LineChart
+            allowOverflowGestures
+            enableScrubbing
             showArea
-            height={200}
+            showYAxis
+            animate={false}
+            areaType="dotted"
+            curve="bump"
+            fontFamilies={['Coinbase Sans']}
+            height={204}
             series={[
               {
                 id: 'prices',
                 data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
               },
             ]}
-          />
+          >
+            <Scrubber idlePulse labelFont="legal" />
+          </LineChart>
         ),
       },
       {

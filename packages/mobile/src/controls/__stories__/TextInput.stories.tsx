@@ -233,6 +233,20 @@ const InputScreen = () => {
           placeholder="ex. Bitcoin"
         />
       </Example>
+      <Example inline title="TextInput start icon">
+        <MockTextInput
+          helperText="Search for assets here"
+          label="Search"
+          placeholder="ex. Bitcoin"
+          start={<InputIconButton transparent name="search" />}
+        />
+        <MockTextInput
+          helperText="Search for assets here"
+          label="Search"
+          placeholder="ex. Bitcoin"
+          start={<InputIconButton transparent name="search" />}
+        />
+      </Example>
       <Example inline title="TextInput start/end Node">
         <MockTextInput
           end={
@@ -455,72 +469,54 @@ const InputScreen = () => {
           variant="negative"
         />
       </Example>
-      <Example inline title="TextInput with labelNode">
+      <Example inline title="TextInput with custom label">
         <MockTextInput
           accessibilityLabel="Display name"
           labelNode={
-            <InputLabel>
-              <HStack alignItems="center" gap={1}>
-                Display name
-                <Tooltip content="This will be visible to other users.">
-                  <Icon active color="fg" name="info" size="xs" />
-                </Tooltip>
-              </HStack>
-            </InputLabel>
+            <HStack alignItems="center" gap={1}>
+              <InputLabel>Display name</InputLabel>
+              <Tooltip content="This will be visible to other users.">
+                <Icon active color="fg" name="info" size="xs" />
+              </Tooltip>
+            </HStack>
           }
           placeholder="Satoshi Nakamoto"
         />
-      </Example>
-      <Example inline title="TextInput with labelNode and compact">
         <MockCompactTextInput
           accessibilityLabel="Amount"
           labelNode={
-            <InputLabel>
-              <HStack alignItems="center" gap={0.5}>
-                Amount
-                <Text color="fgNegative" font="label1">
-                  *
-                </Text>
-              </HStack>
-            </InputLabel>
+            <HStack alignItems="center" gap={0.5}>
+              <InputLabel>Amount</InputLabel>
+              <Text color="fgNegative" font="label1">
+                *
+              </Text>
+            </HStack>
           }
           placeholder="0.00"
           suffix="USD"
         />
-      </Example>
-      <Example inline title="TextInput with labelNode and compact and start">
         <MockCompactTextInput
           accessibilityLabel="Search"
           labelNode={<InputLabel>Search</InputLabel>}
           placeholder="Search..."
           start={<InputIconButton transparent name="search" />}
         />
-      </Example>
-      <Example inline title="TextInput with labelNode and inside variant">
         <MockTextInput
           accessibilityLabel="Bio"
           labelNode={
-            <InputLabel paddingY={0}>
-              <HStack alignItems="center" gap={1}>
-                Bio
-                <Text color="fgMuted" font="legal">
-                  (optional)
-                </Text>
-              </HStack>
-            </InputLabel>
+            <HStack alignItems="center" gap={1}>
+              <InputLabel paddingY={0}>Bio</InputLabel>
+              <Text color="fgMuted" font="legal">
+                (optional)
+              </Text>
+            </HStack>
           }
           labelVariant="inside"
           placeholder="Tell us about yourself"
         />
-      </Example>
-      <Example inline title="TextInput with labelNode and inside variant with start">
         <MockTextInput
           accessibilityLabel="Notes"
-          labelNode={
-            <Text color="fgMuted" font="body" paddingY={0}>
-              Notes
-            </Text>
-          }
+          labelNode={<InputLabel paddingY={0}>Notes</InputLabel>}
           labelVariant="inside"
           placeholder="Add a note"
           start={<InputIcon name="pencil" />}
