@@ -76,6 +76,11 @@ export type InputStackBaseProps = SharedProps &
      */
     borderWidth?: ThemeVars.BorderWidth;
     /**
+     * Width of the focus ring when the input is focused.
+     * Defaults to the `borderWidth` value.
+     */
+    focusedBorderWidth?: ThemeVars.BorderWidth;
+    /**
      * Determines the sentiment of the input. Because
      * we allow startContent and endContent to be custom ReactNode,
      * the content placed inside these slots will not change colors according
@@ -158,6 +163,7 @@ export const InputStack = memo(
         inputNode,
         helperTextNode,
         borderWidth = 100,
+        focusedBorderWidth = borderWidth,
         variant = 'foregroundMuted',
         labelNode,
         testID = '',
@@ -220,10 +226,10 @@ export const InputStack = memo(
         return {
           '--border-color-unfocused': borderColorUnfocused,
           '--border-color-focused': borderColorFocused,
-          '--border-width-focused': `var(--borderWidth-${borderWidth})`,
+          '--border-width-focused': `var(--borderWidth-${focusedBorderWidth})`,
           ...inputBorderRadius,
         };
-      }, [borderColorUnfocused, borderColorFocused, borderWidth, inputBorderRadius]);
+      }, [borderColorUnfocused, borderColorFocused, focusedBorderWidth, inputBorderRadius]);
 
       return (
         <VStack

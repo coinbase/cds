@@ -430,14 +430,17 @@ const DefaultSelectControlComponent = memo(
         ],
       );
 
+      const borderWidth = bordered ? 100 : 0;
+      const focusedBorderWidth = bordered ? borderWidth : 200;
+
       return (
         <InputStack
           ref={ref}
           blendStyles={interactableBlendStyles}
           borderWidth={bordered ? 100 : 0}
-          disableFocusedStyle={!bordered}
           disabled={disabled}
           endNode={endNode}
+          focusedBorderWidth={focusedBorderWidth}
           helperTextNode={helperTextNode}
           inputNode={inputNode}
           labelNode={shouldShowCompactLabel ? null : labelNode}
