@@ -1194,39 +1194,43 @@ function StressTestExample() {
 }
 ```
 
-## Bordered
+## Borderless
 
-Control whether the select has a visible border. The `bordered` prop defaults to `true`.
+You can remove the border from the select control by setting `bordered` to `false`.
 
 ```jsx
-function BorderedExample() {
-  const [borderedValue, setBorderedValue] = useState('1');
-  const [borderlessValue, setBorderlessValue] = useState('1');
+function BorderlessExample() {
+  const [singleValue, setSingleValue] = useState('1');
+  const { value: multiValue, onChange: multiOnChange } = useMultiSelect({
+    initialValue: ['1', '2'],
+  });
 
   const options = [
     { value: '1', label: 'Option 1' },
     { value: '2', label: 'Option 2' },
     { value: '3', label: 'Option 3' },
+    { value: '4', label: 'Option 4' },
   ];
 
   return (
     <VStack gap={4}>
       <Select
-        bordered
-        label="Bordered (default)"
-        value={borderedValue}
-        onChange={setBorderedValue}
+        bordered={false}
+        label="Borderless single select"
+        value={singleValue}
+        onChange={setSingleValue}
         options={options}
         placeholder="Select an option"
       />
 
       <Select
         bordered={false}
-        label="Borderless"
-        value={borderlessValue}
-        onChange={setBorderlessValue}
+        type="multi"
+        label="Borderless multi select"
+        value={multiValue}
+        onChange={multiOnChange}
         options={options}
-        placeholder="Select an option"
+        placeholder="Select options"
       />
     </VStack>
   );

@@ -1632,7 +1632,7 @@ export const RefImperativeHandle = () => {
   );
 };
 
-export const Bordered = () => {
+export const Borderless = () => {
   const exampleOptions = [
     { value: null, label: 'Remove selection' },
     { value: '1', label: 'Option 1' },
@@ -1640,26 +1640,30 @@ export const Bordered = () => {
     { value: '3', label: 'Option 3' },
     { value: '4', label: 'Option 4' },
   ];
-  const [borderedValue, setBorderedValue] = useState<string | null>('1');
-  const [borderlessValue, setBorderlessValue] = useState<string | null>('1');
+  const [singleValue, setSingleValue] = useState<string | null>('1');
+  const { value: multiValue, onChange: multiOnChange } = useMultiSelect({
+    initialValue: ['1', '2'],
+  });
 
   return (
     <VStack gap={4}>
       <Select
-        bordered
-        label="Bordered (default)"
-        onChange={setBorderedValue}
+        bordered={false}
+        label="Borderless single select"
+        onChange={setSingleValue}
         options={exampleOptions}
         placeholder="Empty value"
-        value={borderedValue}
+        value={singleValue}
       />
       <Select
         bordered={false}
-        label="Borderless"
-        onChange={setBorderlessValue}
+        controlAccessibilityLabel="Borderless multi select"
+        label="Borderless multi select"
+        onChange={multiOnChange}
         options={exampleOptions}
         placeholder="Empty value"
-        value={borderlessValue}
+        type="multi"
+        value={multiValue}
       />
     </VStack>
   );

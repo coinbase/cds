@@ -738,6 +738,36 @@ const TestIdentifierExample = () => {
   );
 };
 
+const BorderlessExample = () => {
+  const [singleValue, setSingleValue] = useState<string | null>('1');
+  const { value: multiValue, onChange: multiOnChange } = useMultiSelect({
+    initialValue: ['apple'],
+  });
+
+  return (
+    <VStack gap={4}>
+      <Combobox
+        bordered={false}
+        label="Borderless single select"
+        onChange={setSingleValue}
+        options={singleSelectOptions}
+        placeholder="Search..."
+        type="single"
+        value={singleValue}
+      />
+      <Combobox
+        bordered={false}
+        label="Borderless multi select"
+        onChange={multiOnChange}
+        options={fruitOptions}
+        placeholder="Search fruits..."
+        type="multi"
+        value={multiValue}
+      />
+    </VStack>
+  );
+};
+
 // Main component with all examples
 const Default = () => {
   return (
@@ -846,6 +876,9 @@ const Default = () => {
       </Example>
       <Example title="With test ID">
         <TestIdentifierExample />
+      </Example>
+      <Example title="Borderless">
+        <BorderlessExample />
       </Example>
     </ExampleScreen>
   );
