@@ -1,12 +1,14 @@
-import { forwardRef, memo, useImperativeHandle, useMemo } from 'react';
+import { forwardRef, memo, useEffect, useImperativeHandle, useMemo } from 'react';
 import {
   cancelAnimation,
   Easing,
   useAnimatedReaction,
   useDerivedValue,
   useSharedValue,
+  withDelay,
   withRepeat,
   withSequence,
+  withTiming,
 } from 'react-native-reanimated';
 import { useTheme } from '@coinbase/cds-mobile';
 import { Circle, Group } from '@shopify/react-native-skia';
@@ -84,6 +86,14 @@ export const DefaultScrubberBeacon = memo(
       const pulseOpacity = useSharedValue(0);
       const pulseRadius = useSharedValue(pulseRadiusStart);
 
+      // Convert idlePulse prop to SharedValue so useAnimatedReaction can detect changes.
+      // In the new React Native architecture, regular JS props are captured by value in worklets
+      // and won't update when the prop changes.
+      const idlePulseShared = useSharedValue(idlePulse ?? false);
+      useEffect(() => {
+        idlePulseShared.value = idlePulse ?? false;
+      }, [idlePulse, idlePulseShared]);
+
       const animatedX = useSharedValue(0);
       const animatedY = useSharedValue(0);
 
@@ -127,41 +137,36 @@ export const DefaultScrubberBeacon = memo(
         () => ({
           pulse: () => {
             // Only trigger manual pulse when idlePulse is not enabled
-            if (!idlePulse) {
+            if (!idlePulseShared.value) {
               cancelAnimation(pulseOpacity);
               cancelAnimation(pulseRadius);
 
               // Manual pulse without delay
-              const immediatePulseTransition = { ...pulseTransition, delay: 0 };
               pulseOpacity.value = pulseOpacityStart;
               pulseRadius.value = pulseRadiusStart;
-              pulseOpacity.value = buildTransition(pulseOpacityEnd, immediatePulseTransition);
-              pulseRadius.value = buildTransition(pulseRadiusEnd, immediatePulseTransition);
+              pulseOpacity.value = buildTransition(pulseOpacityEnd, pulseTransition);
+              pulseRadius.value = buildTransition(pulseRadiusEnd, pulseTransition);
             }
           },
         }),
-        [idlePulse, pulseOpacity, pulseRadius, pulseTransition],
+        [idlePulseShared, pulseOpacity, pulseRadius, pulseTransition],
       );
 
       // Watch idlePulse changes and control continuous pulse
       useAnimatedReaction(
-        () => idlePulse,
+        () => idlePulseShared.value,
         (current, previous) => {
           if (!animate) return;
 
           if (current) {
             // Start continuous pulse when idlePulse is enabled
-            // Create instant transition to reset pulse after delay
-            const instantTransition: Transition = { type: 'timing', duration: 0 };
-            const resetWithDelay = { ...instantTransition, delay: pulseRepeatDelay };
-
             pulseOpacity.value = pulseOpacityStart;
             pulseRadius.value = pulseRadiusStart;
 
             pulseOpacity.value = withRepeat(
               withSequence(
                 buildTransition(pulseOpacityEnd, pulseTransition),
-                buildTransition(pulseOpacityStart, resetWithDelay),
+                withDelay(pulseRepeatDelay, withTiming(pulseOpacityStart, { duration: 0 })),
               ),
               -1, // infinite loop
               false,
@@ -170,7 +175,7 @@ export const DefaultScrubberBeacon = memo(
             pulseRadius.value = withRepeat(
               withSequence(
                 buildTransition(pulseRadiusEnd, pulseTransition),
-                buildTransition(pulseRadiusStart, resetWithDelay),
+                withDelay(pulseRepeatDelay, withTiming(pulseRadiusStart, { duration: 0 })),
               ),
               -1, // infinite loop
               false,
