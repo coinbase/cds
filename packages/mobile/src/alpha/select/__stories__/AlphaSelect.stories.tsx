@@ -1151,8 +1151,8 @@ const BorderlessExample = () => {
         value={singleValue}
       />
       <Select
+        accessibilityLabel="Borderless multi select"
         bordered={false}
-        controlAccessibilityLabel="Borderless multi select"
         label="Borderless multi select"
         onChange={multiOnChange}
         options={exampleOptions}
