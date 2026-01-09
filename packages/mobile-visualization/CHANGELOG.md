@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 3.4.0-beta.12 (1/8/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix pulse with spread operator broken on new react-native architecture. [[#296](https://github.com/coinbase/cds/pull/296)]
+
 ## 3.4.0-beta.11 (1/7/2026 PST)
 
 #### 🐞 Fixes
