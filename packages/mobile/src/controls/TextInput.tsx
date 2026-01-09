@@ -321,7 +321,7 @@ export const TextInput = memo(
           }
           labelVariant={labelVariant}
           startNode={
-            ((compact && !!label) || !!start) && (
+            ((compact && hasLabel) || !!start) && (
               <Box
                 alignItems="center"
                 background={readOnlyInputBackground}
@@ -337,8 +337,9 @@ export const TextInput = memo(
                   importantForAccessibility={startIconA11yLabel ? 'auto' : 'no'}
                   onPress={handleNodePress}
                 >
-                  <HStack>
-                    {compact && !!label && <InputLabel paddingStart={2}>{label}</InputLabel>}
+                  <HStack paddingStart={compact ? 2 : undefined}>
+                    {compact &&
+                      (labelNode ? labelNode : !!label && <InputLabel>{label}</InputLabel>)}
                     {!!start && (
                       <TextInputFocusVariantContext.Provider value={focusedVariant}>
                         {inaccessibleStart}
