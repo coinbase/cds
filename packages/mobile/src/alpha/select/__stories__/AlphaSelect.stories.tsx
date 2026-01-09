@@ -1134,6 +1134,32 @@ const RefImperativeHandleExample = () => {
   );
 };
 
+const BorderedExample = () => {
+  const [borderedValue, setBorderedValue] = useState<string | null>('1');
+  const [borderlessValue, setBorderlessValue] = useState<string | null>('1');
+
+  return (
+    <VStack gap={4}>
+      <Select
+        bordered
+        label="Bordered (default)"
+        onChange={setBorderedValue}
+        options={exampleOptions}
+        placeholder="Empty value"
+        value={borderedValue}
+      />
+      <Select
+        bordered={false}
+        label="Borderless"
+        onChange={setBorderlessValue}
+        options={exampleOptions}
+        placeholder="Empty value"
+        value={borderlessValue}
+      />
+    </VStack>
+  );
+};
+
 const SelectV3Screen = () => {
   return (
     <ExampleScreen>
@@ -1295,6 +1321,9 @@ const SelectV3Screen = () => {
       </Example>
       <Example title="Ref Imperative Handle">
         <RefImperativeHandleExample />
+      </Example>
+      <Example title="Bordered">
+        <BorderedExample />
       </Example>
     </ExampleScreen>
   );

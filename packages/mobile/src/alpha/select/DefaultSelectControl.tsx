@@ -58,6 +58,7 @@ export const DefaultSelectControlComponent = memo(
         startNode,
         endNode: customEndNode,
         compact,
+        bordered = true,
         maxSelectedOptionsToShow = 3,
         accessibilityLabel,
         accessibilityHint,
@@ -129,6 +130,7 @@ export const DefaultSelectControlComponent = memo(
         !!open,
         variant ?? 'foregroundMuted',
         focusedVariant,
+        bordered,
       );
 
       const helperTextNode = useMemo(

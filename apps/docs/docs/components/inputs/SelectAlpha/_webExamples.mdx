@@ -1202,6 +1202,45 @@ function CustomLabelExample() {
 }
 ```
 
+## Bordered
+
+Control whether the select has a visible border. The `bordered` prop defaults to `true`.
+
+```jsx live
+function BorderedExample() {
+  const [borderedValue, setBorderedValue] = useState('1');
+  const [borderlessValue, setBorderlessValue] = useState('1');
+
+  const options = [
+    { value: '1', label: 'Option 1' },
+    { value: '2', label: 'Option 2' },
+    { value: '3', label: 'Option 3' },
+  ];
+
+  return (
+    <VStack gap={4}>
+      <Select
+        bordered
+        label="Bordered (default)"
+        value={borderedValue}
+        onChange={setBorderedValue}
+        options={options}
+        placeholder="Select an option"
+      />
+
+      <Select
+        bordered={false}
+        label="Borderless"
+        value={borderlessValue}
+        onChange={setBorderlessValue}
+        options={options}
+        placeholder="Select an option"
+      />
+    </VStack>
+  );
+}
+```
+
 ## Custom components
 
 Select is highly customizable. Use the _Component_ props to customize the various subcomponents in Select.

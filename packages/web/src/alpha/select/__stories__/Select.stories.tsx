@@ -1631,3 +1631,36 @@ export const RefImperativeHandle = () => {
     </VStack>
   );
 };
+
+export const Bordered = () => {
+  const exampleOptions = [
+    { value: null, label: 'Remove selection' },
+    { value: '1', label: 'Option 1' },
+    { value: '2', label: 'Option 2' },
+    { value: '3', label: 'Option 3' },
+    { value: '4', label: 'Option 4' },
+  ];
+  const [borderedValue, setBorderedValue] = useState<string | null>('1');
+  const [borderlessValue, setBorderlessValue] = useState<string | null>('1');
+
+  return (
+    <VStack gap={4}>
+      <Select
+        bordered
+        label="Bordered (default)"
+        onChange={setBorderedValue}
+        options={exampleOptions}
+        placeholder="Empty value"
+        value={borderedValue}
+      />
+      <Select
+        bordered={false}
+        label="Borderless"
+        onChange={setBorderlessValue}
+        options={exampleOptions}
+        placeholder="Empty value"
+        value={borderlessValue}
+      />
+    </VStack>
+  );
+};
