@@ -184,19 +184,17 @@ export const TextInput = memo(
         }
       }, [setFocused, internalRef, editableInputAddonProps.readOnly]);
 
-      const hasLabel = useMemo(() => !!label || !!labelNode, [label, labelNode]);
-
       const containerSpacing: ViewStyle = useMemo(
         () => ({
           ...(!!start && { paddingStart: theme.space[0.5] }),
           ...(labelVariant === 'inside' &&
-            hasLabel &&
+            Boolean(label) &&
             !compact && {
               paddingBottom: 0,
               paddingTop: 0,
             }),
         }),
-        [start, labelVariant, theme.space, compact, hasLabel],
+        [start, labelVariant, theme.space, compact, label],
       );
 
       // Get the accessability label from the start node child
@@ -229,6 +227,8 @@ export const TextInput = memo(
         }
         return undefined;
       }, [disabled, editableInputAddonProps.readOnly]);
+
+      const hasLabel = useMemo(() => !!label || !!labelNode, [label, labelNode]);
 
       return (
         <InputStack
@@ -296,43 +296,32 @@ export const TextInput = memo(
           }
           labelNode={
             !compact &&
-            (labelNode ? (
-              labelVariant === 'inside' ? (
-                <Pressable accessibilityRole="button" disabled={disabled} onPress={handleNodePress}>
-                  <Box
-                    background={readOnlyInputBackground}
-                    paddingEnd={2}
-                    paddingStart={start ? 0.5 : 2}
-                    paddingTop={1}
+            (labelNode
+              ? labelNode
+              : !!label && (
+                  <Pressable
+                    accessibilityRole="button"
+                    disabled={disabled}
+                    onPress={handleNodePress}
                   >
-                    {labelNode}
-                  </Box>
-                </Pressable>
-              ) : (
-                labelNode
-              )
-            ) : (
-              !!label && (
-                <Pressable accessibilityRole="button" disabled={disabled} onPress={handleNodePress}>
-                  <InputLabel
-                    {...(labelVariant === 'inside' && {
-                      paddingTop: 0,
-                      paddingBottom: 0,
-                      paddingStart: start ? 0.5 : 2,
-                      paddingEnd: 2,
-                      background: readOnlyInputBackground,
-                    })}
-                    testID={testIDMap?.label ?? ''}
-                  >
-                    {label}
-                  </InputLabel>
-                </Pressable>
-              )
-            ))
+                    <InputLabel
+                      {...(labelVariant === 'inside' && {
+                        paddingTop: 0,
+                        paddingBottom: 0,
+                        paddingStart: start ? 0.5 : 2,
+                        paddingEnd: 2,
+                        background: readOnlyInputBackground,
+                      })}
+                      testID={testIDMap?.label ?? ''}
+                    >
+                      {label}
+                    </InputLabel>
+                  </Pressable>
+                ))
           }
           labelVariant={labelVariant}
           startNode={
-            ((compact && hasLabel) || !!start) && (
+            ((compact && !!label) || !!start) && (
               <Box
                 alignItems="center"
                 background={readOnlyInputBackground}
@@ -348,9 +337,8 @@ export const TextInput = memo(
                   importantForAccessibility={startIconA11yLabel ? 'auto' : 'no'}
                   onPress={handleNodePress}
                 >
-                  <HStack paddingStart={compact && hasLabel ? 2 : undefined}>
-                    {compact &&
-                      (labelNode ? labelNode : !!label && <InputLabel>{label}</InputLabel>)}
+                  <HStack>
+                    {compact && !!label && <InputLabel paddingStart={2}>{label}</InputLabel>}
                     {!!start && (
                       <TextInputFocusVariantContext.Provider value={focusedVariant}>
                         {inaccessibleStart}

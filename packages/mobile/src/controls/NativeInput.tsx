@@ -1,5 +1,5 @@
 import React, { forwardRef, memo, useMemo } from 'react';
-import { TextInput, View } from 'react-native';
+import { TextInput } from 'react-native';
 import type { TextInputProps, ViewStyle } from 'react-native';
 import type { SharedProps } from '@coinbase/cds-common/types';
 import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
@@ -56,40 +56,21 @@ export const NativeInput = memo(
       const theme = useTheme();
       const textAlignInputTransformed = useTextAlign(align).textAlign;
 
-      // Text styling only - lineHeight provides vertical rhythm
-      // Note: iOS doesn't support textAlignVertical, so we don't set explicit height
-      // The text will be naturally centered within its lineHeight
       const inputTextStyle = useMemo(
         () => ({
           fontSize: theme.fontSize.body,
           fontFamily: theme.fontFamily.body,
-          lineHeight: theme.lineHeight.body,
+          minHeight: theme.lineHeight.body,
           padding: 0,
           margin: 0,
           color: theme.color.fg,
-          flexGrow: 1,
-          textAlignVertical: 'center' as const, // Android only
-          /**
-           * To workaround a known RN bug (link below) where long text does not ellipsis correctly in TextInput
-           * @link https://github.com/facebook/react-native/issues/29068
-           */
-          textAlign: textAlign === 'unset' ? undefined : textAlignInputTransformed,
         }),
-        [
-          theme.fontSize.body,
-          theme.fontFamily.body,
-          theme.lineHeight.body,
-          theme.color.fg,
-          textAlign,
-          textAlignInputTransformed,
-        ],
+        [theme.fontSize, theme.fontFamily, theme.lineHeight, theme.color.fg],
       );
 
-      // Container styling - handles padding, flex, background
-      const containerStyle = useMemo(() => {
-        const baseStyle: ViewStyle = {
+      const containerStyle: ViewStyle = useMemo(() => {
+        return {
           flex: 2,
-          justifyContent: 'center',
           padding: theme.space[compact ? 1 : 2],
           ...containerSpacing,
           ...(!disabled &&
@@ -97,8 +78,6 @@ export const NativeInput = memo(
               backgroundColor: theme.color.bgSecondary,
             }),
         };
-        // Merge with custom style if provided
-        return style ? [baseStyle, style] : baseStyle;
       }, [
         containerSpacing,
         theme.space,
@@ -106,25 +85,35 @@ export const NativeInput = memo(
         compact,
         editableInputAddonProps.readOnly,
         disabled,
-        style,
       ]);
 
+      const inputRootStyles = useMemo(() => {
+        return [
+          inputTextStyle,
+          containerStyle,
+          /**
+           * To workaround a known RN bug (link below) where long text does not ellipsis correctly in TextInput
+           * @link https://github.com/facebook/react-native/issues/29068
+           */
+          { textAlign: textAlign === 'unset' ? undefined : textAlignInputTransformed },
+          style,
+        ];
+      }, [inputTextStyle, containerStyle, textAlign, textAlignInputTransformed, style]);
+
       return (
-        <View style={containerStyle}>
-          <TextInput
-            ref={ref}
-            accessibilityHint={accessibilityLabel}
-            accessibilityLabel={accessibilityLabel}
-            accessibilityRole="search"
-            editable={!disabled}
-            keyboardAppearance={theme.activeColorScheme}
-            placeholderTextColor={theme.color.fgMuted}
-            style={inputTextStyle}
-            testID={testID}
-            textAlign={textAlign !== 'unset' ? textAlign : undefined}
-            {...editableInputAddonProps}
-          />
-        </View>
+        <TextInput
+          ref={ref}
+          accessibilityHint={accessibilityLabel}
+          accessibilityLabel={accessibilityLabel}
+          accessibilityRole="search"
+          editable={!disabled}
+          keyboardAppearance={theme.activeColorScheme}
+          placeholderTextColor={theme.color.fgMuted}
+          style={inputRootStyles}
+          testID={testID}
+          textAlign={textAlign !== 'unset' ? textAlign : undefined}
+          {...editableInputAddonProps}
+        />
       );
     },
   ),
