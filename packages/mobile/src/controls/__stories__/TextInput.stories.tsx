@@ -497,7 +497,11 @@ const InputScreen = () => {
         />
         <MockCompactTextInput
           accessibilityLabel="Search"
-          labelNode={<InputLabel>Search</InputLabel>}
+          labelNode={
+            <VStack justifyContent="center">
+              <InputLabel>Search</InputLabel>
+            </VStack>
+          }
           placeholder="Search..."
           start={<InputIconButton transparent name="search" />}
         />
