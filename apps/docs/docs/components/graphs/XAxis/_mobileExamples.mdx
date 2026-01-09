@@ -343,6 +343,42 @@ function CustomGridLineExample() {
 }
 ```
 
+On band scales, you can also use `bandGridLinePlacement` to control where grid lines appear relative to each band.
+
+Using edges will place a grid line at the start of each band, plus a grid line at the end of the last band.
+
+```jsx
+function BandGridPlacement() {
+  const [selectedBandGridPlacement, setSelectedBandGridPlacement] = useState('edges');
+
+  return (
+    <CartesianChart
+      height={250}
+      series={[
+        {
+          id: 'prices',
+          data: [10, 22, 29, 45, 98, 45, 22],
+        },
+      ]}
+      xAxis={{
+        scaleType: 'band',
+        data: ['April 1', 'April 2', 'April 3', 'April 4', 'April 5', 'April 6', 'April 7'],
+      }}
+      yAxis={{ domain: { min: 0 } }}
+    >
+      <XAxis
+        bandGridLinePlacement={selectedBandGridPlacement}
+        GridLineComponent={SolidLine}
+        showGrid
+        showLine
+        showTickMarks
+      />
+      <BarPlot />
+    </CartesianChart>
+  );
+}
+```
+
 ### Line
 
 You can show the axis line using the `showLine` prop.
@@ -532,6 +568,41 @@ function XAxisTickMarksExample() {
         <Scrubber />
       </CartesianChart>
     </VStack>
+  );
+}
+```
+
+On band scales, you can also use `bandTickMarkPlacement` to control where tick marks appear relative to each band.
+
+Using edges will place a tick mark at the start of each band, plus a tick mark at the end of the last band.
+
+```jsx
+function BandTickMarkPlacement() {
+  const [selectedBandTickMarkPlacement, setSelectedBandTickMarkPlacement] = useState('middle');
+
+  return (
+    <CartesianChart
+      height={250}
+      series={[
+        {
+          id: 'prices',
+          data: [10, 22, 29, 45, 98, 45, 22],
+        },
+      ]}
+      xAxis={{
+        scaleType: 'band',
+        data: ['April 1', 'April 2', 'April 3', 'April 4', 'April 5', 'April 6', 'April 7'],
+      }}
+      yAxis={{ domain: { min: 0 } }}
+    >
+      <XAxis
+        bandTickMarkPlacement={selectedBandTickMarkPlacement}
+        showLine
+        showTickMarks
+        tickMarkSize={8}
+      />
+      <BarPlot />
+    </CartesianChart>
   );
 }
 ```

@@ -210,4 +210,44 @@ describe('ProgressCircle tests and passes a11y', () => {
     expect(screen.queryByText(`${customText} ${progress * 100}%`)).toBeNull();
     expect(screen.queryByTestId('custom-content-node')).toBeNull();
   });
+
+  it('skips mount animation when disableAnimateOnMount is true', () => {
+    const size = 100;
+    const progress = 0.5;
+    render(
+      <DefaultThemeProvider>
+        <ProgressCircle
+          disableAnimateOnMount
+          progress={progress}
+          size={size}
+          testID="mock-progress-circle"
+        />
+      </DefaultThemeProvider>,
+    );
+
+    const circumference = getCircumference(getRadius(size, 4));
+    const expectedOffset = (1 - progress) * circumference;
+    const innerCircle = screen.getByTestId('cds-progress-circle-inner');
+
+    // Should start at target offset, not at circumference (empty)
+    expect(innerCircle.props.strokeDashoffset._value).toEqual(expectedOffset);
+
+    // Should show target percentage immediately, not animate from 0
+    expect(screen.getAllByText('50%').length).toBeGreaterThan(0);
+  });
+
+  it('starts at animation start position when disableAnimateOnMount is not set', () => {
+    const size = 100;
+    render(
+      <DefaultThemeProvider>
+        <ProgressCircle progress={0.5} size={size} testID="mock-progress-circle" />
+      </DefaultThemeProvider>,
+    );
+
+    const circumference = getCircumference(getRadius(size, 4));
+    const innerCircle = screen.getByTestId('cds-progress-circle-inner');
+
+    // Without disableAnimateOnMount, should start at full circumference (empty) and animate to target
+    expect(innerCircle.props.strokeDashoffset._value).toEqual(circumference);
+  });
 });

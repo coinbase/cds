@@ -8,6 +8,24 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 3.4.0-beta.12 (1/8/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix pulse with spread operator broken on new react-native architecture. [[#296](https://github.com/coinbase/cds/pull/296)]
+
+## 3.4.0-beta.11 (1/7/2026 PST)
+
+#### 🐞 Fixes
+
+- Allow customization of axis tick mark and grid line alignment in band scale. [[#291](https://github.com/coinbase/cds/pull/291)]
+
+## 3.4.0-beta.10 (1/6/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix axis clip line issues when multiple axes are present on one side. [[#285](https://github.com/coinbase/cds/pull/285)]
+
 ## 3.4.0-beta.9 (12/18/2025 PST)
 
 #### 🐞 Fixes

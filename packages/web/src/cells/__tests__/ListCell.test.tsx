@@ -355,4 +355,132 @@ describe('ListCell', () => {
 
     expect(onKeyDownSpy).toHaveBeenCalledTimes(1);
   });
+
+  it('applies classNames to internal components', () => {
+    render(
+      <DefaultThemeProvider>
+        <ListCell
+          accessory="arrow"
+          classNames={{
+            accessory: 'accessory',
+            contentContainer: 'content-container',
+            description: 'description',
+            end: 'end',
+            helperText: 'helper-text',
+            intermediary: 'intermediary',
+            mainContent: 'main-content',
+            media: 'media',
+            pressable: 'pressable',
+            root: 'root',
+            subtitle: 'subtitle',
+            titleStack: 'title-stack',
+            titleStackContainer: 'title-stack-container',
+            title: 'title',
+          }}
+          description="Description"
+          detail="Detail"
+          helperText={<div>Helper text</div>}
+          intermediary={<div data-testid="intermediary-node" />}
+          media={<div data-testid="media-node" />}
+          onClick={noop}
+          subtitle="Subtitle"
+          title="Title"
+        />
+      </DefaultThemeProvider>,
+    );
+
+    expect(document.querySelector('.root')).toBeInTheDocument();
+    expect(document.querySelector('.pressable')).toBeInTheDocument();
+    expect(document.querySelector('.content-container')).toBeInTheDocument();
+    expect(document.querySelector('.main-content')).toBeInTheDocument();
+    expect(document.querySelector('.title-stack-container')).toBeInTheDocument();
+    expect(document.querySelector('.title-stack')).toBeInTheDocument();
+    expect(document.querySelector('.title')).toHaveTextContent('Title');
+    expect(document.querySelector('.subtitle')).toHaveTextContent('Subtitle');
+    expect(document.querySelector('.description')).toHaveTextContent('Description');
+    expect(document.querySelector('.helper-text')).toHaveTextContent('Helper text');
+    expect(document.querySelector('.media')).toBeInTheDocument();
+    expect(document.querySelector('.intermediary')).toBeInTheDocument();
+    expect(document.querySelector('.end')).toBeInTheDocument();
+    expect(document.querySelector('.accessory')).toBeInTheDocument();
+  });
+
+  it('applies styles to internal components', () => {
+    render(
+      <DefaultThemeProvider>
+        <ListCell
+          accessory="arrow"
+          classNames={{
+            accessory: 'accessory',
+            contentContainer: 'content-container',
+            description: 'description',
+            end: 'end',
+            helperText: 'helper-text',
+            intermediary: 'intermediary',
+            mainContent: 'main-content',
+            media: 'media',
+            pressable: 'pressable',
+            root: 'root',
+            subtitle: 'subtitle',
+            titleStack: 'title-stack',
+            titleStackContainer: 'title-stack-container',
+            title: 'title',
+          }}
+          description="Description"
+          detail="Detail"
+          helperText={<div>Helper text</div>}
+          intermediary={<div data-testid="intermediary-node" />}
+          media={<div data-testid="media-node" />}
+          onClick={noop}
+          styles={{
+            accessory: { outline: '1px solid rgb(1, 2, 3)' },
+            contentContainer: { outline: '1px solid rgb(4, 5, 6)' },
+            description: { outline: '1px solid rgb(7, 8, 9)' },
+            end: { outline: '1px solid rgb(10, 11, 12)' },
+            helperText: { outline: '1px solid rgb(13, 14, 15)' },
+            intermediary: { outline: '1px solid rgb(16, 17, 18)' },
+            mainContent: { outline: '1px solid rgb(19, 20, 21)' },
+            media: { outline: '1px solid rgb(22, 23, 24)' },
+            pressable: { outline: '1px solid rgb(25, 26, 27)' },
+            root: { outline: '1px solid rgb(28, 29, 30)' },
+            subtitle: { outline: '1px solid rgb(31, 32, 33)' },
+            title: { outline: '1px solid rgb(34, 35, 36)' },
+            titleStack: { outline: '1px solid rgb(37, 38, 39)' },
+            titleStackContainer: { outline: '1px solid rgb(40, 41, 42)' },
+          }}
+          subtitle="Subtitle"
+          title="Title"
+        />
+      </DefaultThemeProvider>,
+    );
+
+    expect(document.querySelector('.root')).toHaveStyle('outline: 1px solid rgb(28, 29, 30)');
+    expect(document.querySelector('.pressable')).toHaveStyle('outline: 1px solid rgb(25, 26, 27)');
+    expect(document.querySelector('.content-container')).toHaveStyle(
+      'outline: 1px solid rgb(4, 5, 6)',
+    );
+    expect(document.querySelector('.main-content')).toHaveStyle(
+      'outline: 1px solid rgb(19, 20, 21)',
+    );
+    expect(document.querySelector('.title-stack-container')).toHaveStyle(
+      'outline: 1px solid rgb(40, 41, 42)',
+    );
+    expect(document.querySelector('.title-stack')).toHaveStyle(
+      'outline: 1px solid rgb(37, 38, 39)',
+    );
+
+    expect(document.querySelector('.title')).toHaveStyle('outline: 1px solid rgb(34, 35, 36)');
+    expect(document.querySelector('.subtitle')).toHaveStyle('outline: 1px solid rgb(31, 32, 33)');
+    expect(document.querySelector('.description')).toHaveStyle('outline: 1px solid rgb(7, 8, 9)');
+
+    expect(document.querySelector('.helper-text')).toHaveStyle(
+      'outline: 1px solid rgb(13, 14, 15)',
+    );
+    expect(document.querySelector('.media')).toHaveStyle('outline: 1px solid rgb(22, 23, 24)');
+    expect(document.querySelector('.intermediary')).toHaveStyle(
+      'outline: 1px solid rgb(16, 17, 18)',
+    );
+    expect(document.querySelector('.end')).toHaveStyle('outline: 1px solid rgb(10, 11, 12)');
+    expect(document.querySelector('.accessory')).toHaveStyle('outline: 1px solid rgb(1, 2, 3)');
+  });
 });

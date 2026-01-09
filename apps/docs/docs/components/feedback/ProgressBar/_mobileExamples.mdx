@@ -46,7 +46,7 @@
 
 You can customize the appearance of the progress bar using the `styles` prop. The `root` style controls the container, and `progress` controls the fill bar.
 
-```tsx live
+```tsx
 <ProgressContainerWithButtons>
   {({ calculateProgress }) => (
     <VStack gap={2}>
@@ -68,7 +68,21 @@ You can customize the appearance of the progress bar using the `styles` prop. Th
 </ProgressContainerWithButtons>
 ```
 
-### Animation Callbacks
+## Animation
+
+By default, ProgressBar animates progress changes. Use `disableAnimateOnMount` to skip the initial animation while still animating subsequent changes.
+
+```tsx
+<VStack gap={2}>
+  <Text variant="label2">Normal animation</Text>
+  <ProgressBar progress={0.5} />
+
+  <Text variant="label2">Disable animation on mount</Text>
+  <ProgressBar disableAnimateOnMount progress={0.5} />
+</VStack>
+```
+
+### Callbacks
 
 You can use the `onAnimationStart` and `onAnimationEnd` callbacks to track the progress of the animation.
 
@@ -90,7 +104,7 @@ function Example() {
       <ProgressBar
         onAnimationEnd={handleAnimationEnd}
         onAnimationStart={handleAnimationStart}
-        progress={calculateProgress(0.2)}
+        progress={0.2}
       />
     </VStack>
   );

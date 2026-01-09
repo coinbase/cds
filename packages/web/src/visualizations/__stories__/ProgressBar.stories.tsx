@@ -350,8 +350,37 @@ AnimationCallbacks.parameters = { percy: { enableJavaScript: true } };
 
 export const DisableAnimateOnMount = () => {
   return (
-    <ProgressContainerWithButtons hideIncrease>
-      {() => <ProgressBar disableAnimateOnMount progress={0.8} />}
+    <ProgressContainerWithButtons>
+      {({ calculateProgress }) => (
+        <VStack gap={4}>
+          <VStack gap={1}>
+            <Text font="label1">ProgressBar</Text>
+            <ProgressBar disableAnimateOnMount progress={calculateProgress(0.8)} />
+          </VStack>
+          <VStack gap={1}>
+            <Text font="label1">ProgressBarWithFixedLabels</Text>
+            <ProgressBarWithFixedLabels
+              disableAnimateOnMount
+              endLabel={Math.round(calculateProgress(0.8) * 100)}
+              labelPlacement="above"
+              startLabel={0}
+            >
+              <ProgressBar disableAnimateOnMount progress={calculateProgress(0.8)} />
+            </ProgressBarWithFixedLabels>
+          </VStack>
+          <VStack gap={1}>
+            <Text font="label1">ProgressBarWithFloatLabel</Text>
+            <ProgressBarWithFloatLabel
+              disableAnimateOnMount
+              label={Math.round(calculateProgress(0.8) * 100)}
+              labelPlacement="above"
+              progress={calculateProgress(0.8)}
+            >
+              <ProgressBar disableAnimateOnMount progress={calculateProgress(0.8)} />
+            </ProgressBarWithFloatLabel>
+          </VStack>
+        </VStack>
+      )}
     </ProgressContainerWithButtons>
   );
 };
