@@ -1,6 +1,6 @@
 {
   "name": "@cbhq/cds-mcp-server",
-  "version": "8.35.0",
+  "version": "8.36.2",
   "description": "Coinbase Design System - MCP Server",
   "repository": {
     "type": "git",
@@ -29,10 +29,6 @@
     "mcp-docs",
     "CHANGELOG"
   ],
-  "peerDependencies": {
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1"
-  },
   "dependencies": {
     "@inquirer/prompts": "^7.5.3",
     "@modelcontextprotocol/sdk": "^1.13.1",
@@ -41,7 +37,6 @@
   "devDependencies": {
     "@babel/core": "^7.28.0",
     "@babel/preset-env": "^7.28.0",
-    "@babel/preset-react": "^7.27.1",
     "@babel/preset-typescript": "^7.27.1"
   }
 }

@@ -92,6 +92,11 @@ export const Path = memo<PathProps>(
       };
     }, [rect, totalOffset]);
 
+    const clipPath = useMemo(
+      () => (rect !== null ? `url(#${clipPathId})` : undefined),
+      [rect, clipPathId],
+    );
+
     return (
       <>
         {rect !== null && (
@@ -118,14 +123,9 @@ export const Path = memo<PathProps>(
           </defs>
         )}
         {!animate ? (
-          <path clipPath={`url(#${clipPathId})`} d={d} {...pathProps} />
+          <path clipPath={clipPath} d={d} {...pathProps} />
         ) : (
-          <AnimatedPath
-            clipPath={`url(#${clipPathId})`}
-            d={d}
-            transition={transition}
-            {...pathProps}
-          />
+          <AnimatedPath clipPath={clipPath} d={d} transition={transition} {...pathProps} />
         )}
       </>
     );

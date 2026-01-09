@@ -9,7 +9,9 @@ import {
   isValidBounds,
   type Series,
 } from './chart';
+import { getPointOnScale } from './point';
 import {
+  type CategoricalScale,
   type ChartAxisScaleType,
   type ChartScaleFunction,
   getCategoricalScale,
@@ -17,10 +19,42 @@ import {
   isCategoricalScale,
   isNumericScale,
   type NumericScale,
+  type PointAnchor,
 } from './scale';
 
 export const defaultAxisId = 'DEFAULT_AXIS_ID';
 export const defaultAxisScaleType = 'linear';
+
+/**
+ * Position options for band scale axis elements (grid lines, tick marks, labels).
+ *
+ * - `'start'` - At the start of each step (before bar padding)
+ * - `'middle'` - At the center of each band
+ * - `'end'` - At the end of each step (after bar padding)
+ * - `'edges'` - At start of each tick, plus end for the last tick (encloses the chart)
+ *
+ * @note These properties only apply when using a band scale (`scaleType: 'band'`).
+ */
+export type AxisBandPlacement = 'start' | 'middle' | 'end' | 'edges';
+
+/**
+ * Converts an AxisBandPlacement to the corresponding PointAnchor for use with getPointOnScale.
+ *
+ * @param placement - The axis placement value
+ * @returns The corresponding PointAnchor for scale calculations
+ */
+export const toPointAnchor = (placement: AxisBandPlacement): PointAnchor => {
+  switch (placement) {
+    case 'edges': // edges uses stepStart for each tick, stepEnd handled separately
+    case 'start':
+      return 'stepStart';
+    case 'end':
+      return 'stepEnd';
+    case 'middle':
+    default:
+      return 'middle';
+  }
+};
 
 /**
  * Axis configuration with computed bounds
@@ -324,6 +358,12 @@ type TickGenerationOptions = {
    * @default 4
    */
   minTickCount?: number;
+  /**
+   * Anchor position for band/categorical scales.
+   * Controls where tick labels are positioned within each band.
+   * @default 'middle'
+   */
+  anchor?: PointAnchor;
 };
 
 export type GetAxisTicksDataProps = {
@@ -623,23 +663,20 @@ export const getAxisTicksData = ({
   tickInterval,
   options,
 }: GetAxisTicksDataProps): Array<{ tick: number; position: number }> => {
+  const anchor = options?.anchor ?? 'middle';
+
   // Handle band scales
   if (isCategoricalScale(scaleFunction)) {
+    const bandScale = scaleFunction;
+
     // If explicit ticks are provided as array, use them
     if (Array.isArray(ticks)) {
       return ticks
         .filter((index) => index >= 0 && index < categories.length)
-        .map((index) => {
-          // Band scales expect numeric indices, not category strings
-          const position = scaleFunction(index);
-          if (position === undefined) return null;
-
-          return {
-            tick: index,
-            position: position + ((scaleFunction as any).bandwidth?.() ?? 0) / 2,
-          };
-        })
-        .filter(Boolean) as Array<{ tick: number; position: number }>;
+        .map((index) => ({
+          tick: index,
+          position: getPointOnScale(index, bandScale, anchor),
+        }));
     }
 
     // If a tick function is provided, use it to filter
@@ -648,36 +685,20 @@ export const getAxisTicksData = ({
         .map((category, index) => {
           if (!ticks(index)) return null;
 
-          // Band scales expect numeric indices, not category strings
-          const position = scaleFunction(index);
-          if (position === undefined) return null;
-
           return {
             tick: index,
-            position: position + ((scaleFunction as any).bandwidth?.() ?? 0) / 2,
+            position: getPointOnScale(index, bandScale, anchor),
           };
         })
         .filter(Boolean) as Array<{ tick: number; position: number }>;
     }
 
-    if (typeof ticks === 'boolean' && !ticks) {
-      return [];
-    }
-
     // For band scales without explicit ticks, show all categories
     // requestedTickCount is ignored for categorical scales - use ticks parameter to control visibility
-    return categories
-      .map((category, index) => {
-        // Band scales expect numeric indices, not category strings
-        const position = scaleFunction(index);
-        if (position === undefined) return null;
-
-        return {
-          tick: index,
-          position: position + ((scaleFunction as any).bandwidth?.() ?? 0) / 2,
-        };
-      })
-      .filter(Boolean) as Array<{ tick: number; position: number }>;
+    return categories.map((_, index) => ({
+      tick: index,
+      position: getPointOnScale(index, bandScale, anchor),
+    }));
   }
 
   // Handle numeric scales

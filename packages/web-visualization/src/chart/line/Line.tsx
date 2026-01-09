@@ -5,6 +5,7 @@ import { m as motion, type Transition } from 'framer-motion';
 
 import { Area, type AreaComponent } from '../area/Area';
 import { useCartesianChartContext } from '../ChartProvider';
+import type { PathProps } from '../Path';
 import { Point, type PointBaseProps, type PointProps } from '../point';
 import {
   accessoryFadeTransitionDelay,
@@ -118,22 +119,38 @@ export type LineProps = LineBaseProps & {
    * Passed through to Point components rendered via points.
    */
   onPointClick?: PointProps['onClick'];
+  /**
+   * Custom style for the line.
+   */
+  style?: React.CSSProperties;
+  /**
+   * Custom className for the line.
+   */
+  className?: string;
 };
 
 export type LineComponentProps = Pick<
   LineProps,
-  'stroke' | 'strokeOpacity' | 'strokeWidth' | 'gradient' | 'animate' | 'transition'
-> & {
-  /**
-   * Path of the line
-   */
-  d: SVGProps<SVGPathElement>['d'];
-  /**
-   * ID of the y-axis to use.
-   * If not provided, defaults to the default y-axis.
-   */
-  yAxisId?: string;
-};
+  | 'stroke'
+  | 'strokeOpacity'
+  | 'strokeWidth'
+  | 'gradient'
+  | 'animate'
+  | 'transition'
+  | 'style'
+  | 'className'
+> &
+  Pick<PathProps, 'clipRect' | 'strokeLinecap'> & {
+    /**
+     * Path of the line.
+     */
+    d: SVGProps<SVGPathElement>['d'];
+    /**
+     * ID of the y-axis to use.
+     * If not provided, defaults to the default y-axis.
+     */
+    yAxisId?: string;
+  };
 
 export type LineComponent = React.FC<LineComponentProps>;
 

@@ -90,7 +90,7 @@ import { PageHeader } from '@cbhq/cds-web/page/PageHeader';
 import { Pagination } from '@cbhq/cds-web/pagination/Pagination';
 import { usePagination } from '@cbhq/cds-web/pagination/usePagination';
 import { SectionHeader } from '@cbhq/cds-web/section-header/SectionHeader';
-import { Stepper } from '@cbhq/cds-web/stepper/Stepper';
+import * as StepperComponents from '@cbhq/cds-web/stepper';
 import * as CDSSystem from '@cbhq/cds-web/system';
 import { MediaQueryProvider } from '@cbhq/cds-web/system/MediaQueryProvider';
 import { ThemeProvider } from '@cbhq/cds-web/system/ThemeProvider';
@@ -164,7 +164,7 @@ const ReactLiveScope: Record<string, unknown> = {
   Coachmark,
   useTourContext,
   // stepper
-  Stepper,
+  ...StepperComponents,
   useStepper,
   // typography
   ...CDSTypography,
