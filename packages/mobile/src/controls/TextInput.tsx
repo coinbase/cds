@@ -184,17 +184,19 @@ export const TextInput = memo(
         }
       }, [setFocused, internalRef, editableInputAddonProps.readOnly]);
 
+      const hasLabel = useMemo(() => !!label || !!labelNode, [label, labelNode]);
+
       const containerSpacing: ViewStyle = useMemo(
         () => ({
           ...(!!start && { paddingStart: theme.space[0.5] }),
           ...(labelVariant === 'inside' &&
-            Boolean(label) &&
+            hasLabel &&
             !compact && {
               paddingBottom: 0,
               paddingTop: 0,
             }),
         }),
-        [start, labelVariant, theme.space, compact, label],
+        [start, theme.space, labelVariant, hasLabel, compact],
       );
 
       // Get the accessability label from the start node child
@@ -227,8 +229,6 @@ export const TextInput = memo(
         }
         return undefined;
       }, [disabled, editableInputAddonProps.readOnly]);
-
-      const hasLabel = useMemo(() => !!label || !!labelNode, [label, labelNode]);
 
       return (
         <InputStack
@@ -296,26 +296,35 @@ export const TextInput = memo(
           }
           labelNode={
             !compact &&
-            (labelNode
+            (labelNode && labelVariant !== 'inside'
               ? labelNode
-              : !!label && (
+              : hasLabel && (
                   <Pressable
                     accessibilityRole="button"
                     disabled={disabled}
                     onPress={handleNodePress}
                   >
-                    <InputLabel
+                    <Box
                       {...(labelVariant === 'inside' && {
-                        paddingTop: 0,
-                        paddingBottom: 0,
                         paddingStart: start ? 0.5 : 2,
                         paddingEnd: 2,
                         background: readOnlyInputBackground,
                       })}
-                      testID={testIDMap?.label ?? ''}
                     >
-                      {label}
-                    </InputLabel>
+                      {labelNode ? (
+                        labelNode
+                      ) : (
+                        <InputLabel
+                          testID={testIDMap?.label ?? ''}
+                          {...(labelVariant === 'inside' && {
+                            paddingTop: 0,
+                            paddingBottom: 0,
+                          })}
+                        >
+                          {label}
+                        </InputLabel>
+                      )}
+                    </Box>
                   </Pressable>
                 ))
           }
