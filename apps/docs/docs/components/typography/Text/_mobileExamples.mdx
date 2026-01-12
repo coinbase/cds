@@ -85,3 +85,15 @@ In a nutshell, you can reference the following for the most common text semantic
 - `time`, `abbr`, `sup`, `kbd`, etc, for granular semantics.
 - `pre` and `code` for preformatted code blocks.
 - `span` when no semantics are required (within buttons for example) and it also has default inline display.
+
+### With Links
+
+When applying padding to a `Text` component that contains instances of `Link`, wrap in a `Box` to prevent the hitbox from being misaligned.
+
+```jsx
+<Box paddingTop={2}>
+  <Text font="legal" color="fgMuted">
+    By continuing, you agree to the <Link to="/terms">Terms of Service</Link>.
+  </Text>
+</Box>
+```
