@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.36.4 (1/12/2026 PST)
+
+#### 🐞 Fixes
+
+- Support TextInput labelNode on compact and inside labelVariant. [[#293](https://github.com/coinbase/cds/pull/293)]
+
 ## 8.36.3 ((1/9/2026, 01:51 PM PST))
 
 This is an artificial version bump with no new change.
