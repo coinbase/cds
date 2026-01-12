@@ -196,7 +196,7 @@ const DefaultSelectControlComponent = memo(
       const labelNode = useMemo(
         () =>
           labelVariant === 'inside' ? (
-            <Pressable noScaleOnPress onClick={() => setOpen((s) => !s)}>
+            <Pressable noScaleOnPress onClick={() => setOpen((s) => !s)} tabIndex={-1}>
               <InputLabel
                 className={classNames?.controlLabelNode}
                 color="fg"
