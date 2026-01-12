@@ -248,6 +248,11 @@ export const Button: ButtonComponent = memo(
             className,
           )}
           color={colorValue}
+          data-block={block}
+          data-compact={compact}
+          data-flush={flush}
+          data-transparent={transparent}
+          data-variant={variant}
           height={height}
           loading={loading}
           noScaleOnPress={noScaleOnPress}
