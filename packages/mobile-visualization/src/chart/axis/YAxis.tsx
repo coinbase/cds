@@ -4,11 +4,17 @@ import { Group, vec } from '@shopify/react-native-skia';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import { DottedLine } from '../line/DottedLine';
-import { ReferenceLine } from '../line/ReferenceLine';
 import { SolidLine } from '../line/SolidLine';
 import { ChartText } from '../text/ChartText';
 import { ChartTextGroup, type TextLabelData } from '../text/ChartTextGroup';
-import { getAxisTicksData, isCategoricalScale, lineToPath } from '../utils';
+import {
+  type CategoricalScale,
+  getAxisTicksData,
+  getPointOnScale,
+  isCategoricalScale,
+  lineToPath,
+  toPointAnchor,
+} from '../utils';
 
 import { type AxisBaseProps, type AxisProps } from './Axis';
 import { DefaultAxisTickLabel } from './DefaultAxisTickLabel';
@@ -57,20 +63,26 @@ export const YAxis = memo<YAxisProps>(
     label,
     labelGap = 4,
     width = label ? AXIS_WIDTH + LABEL_SIZE : AXIS_WIDTH,
+    bandGridLinePlacement = 'edges',
+    bandTickMarkPlacement = 'middle',
     ...props
   }) => {
     const theme = useTheme();
     const registrationId = useId();
-    const { animate, getYScale, getYAxis, registerAxis, unregisterAxis, getAxisBounds } =
-      useCartesianChartContext();
+    const {
+      animate,
+      drawingArea,
+      getYScale,
+      getYAxis,
+      registerAxis,
+      unregisterAxis,
+      getAxisBounds,
+    } = useCartesianChartContext();
 
     const yScale = getYScale(axisId);
     const yAxis = getYAxis(axisId);
 
     const axisBounds = getAxisBounds(registrationId);
-
-    // Note: gridOpacity not currently used in Skia version
-    // const gridOpacity = useSharedValue(1);
 
     useEffect(() => {
       registerAxis(registrationId, position, width);
@@ -131,6 +143,63 @@ export const YAxis = memo<YAxisProps>(
       });
     }, [ticks, yScale, requestedTickCount, tickInterval, yAxis?.data]);
 
+    const isBandScale = useMemo(() => {
+      if (!yScale) return false;
+      return isCategoricalScale(yScale);
+    }, [yScale]);
+
+    // Compute grid line positions (including bounds closing line for band scales)
+    const gridLinePositions = useMemo((): Array<{ y: number; key: string }> => {
+      if (!yScale) return [];
+
+      return ticksData.flatMap((tick, index) => {
+        if (!isBandScale) {
+          return [{ y: tick.position, key: `grid-${tick.tick}-${index}` }];
+        }
+
+        const bandScale = yScale as CategoricalScale;
+        const isLastTick = index === ticksData.length - 1;
+        const isEdges = bandGridLinePlacement === 'edges';
+
+        const startY = getPointOnScale(tick.tick, bandScale, toPointAnchor(bandGridLinePlacement));
+        const positions = [{ y: startY, key: `grid-${tick.tick}-${index}` }];
+
+        // For edges on last tick, add the closing line at stepEnd
+        if (isLastTick && isEdges) {
+          const endY = getPointOnScale(tick.tick, bandScale, 'stepEnd');
+          positions.push({ y: endY, key: `grid-${tick.tick}-${index}-end` });
+        }
+
+        return positions;
+      });
+    }, [ticksData, yScale, isBandScale, bandGridLinePlacement]);
+
+    // Compute tick mark positions (including bounds closing tick for band scales)
+    const tickMarkPositions = useMemo((): Array<{ y: number; key: string }> => {
+      if (!yScale) return [];
+
+      return ticksData.flatMap((tick, index) => {
+        if (!isBandScale) {
+          return [{ y: tick.position, key: `tick-mark-${tick.tick}-${index}` }];
+        }
+
+        const bandScale = yScale as CategoricalScale;
+        const isLastTick = index === ticksData.length - 1;
+        const isEdges = bandTickMarkPlacement === 'edges';
+
+        const startY = getPointOnScale(tick.tick, bandScale, toPointAnchor(bandTickMarkPlacement));
+        const positions = [{ y: startY, key: `tick-mark-${tick.tick}-${index}` }];
+
+        // For edges on last tick, add the closing tick mark at stepEnd
+        if (isLastTick && isEdges) {
+          const endY = getPointOnScale(tick.tick, bandScale, 'stepEnd');
+          positions.push({ y: endY, key: `tick-mark-${tick.tick}-${index}-end` });
+        }
+
+        return positions;
+      });
+    }, [ticksData, yScale, isBandScale, bandTickMarkPlacement]);
+
     const chartTextData: TextLabelData[] | null = useMemo(() => {
       if (!axisBounds) return null;
 
@@ -172,21 +241,28 @@ export const YAxis = memo<YAxisProps>(
         : axisBounds.x + axisBounds.width - LABEL_SIZE / 2;
     const labelY = axisBounds.y + axisBounds.height / 2;
 
+    // Pre-compute tick mark X coordinates
+    const tickXLeft = axisBounds.x;
+    const tickXRight = axisBounds.x + axisBounds.width;
+    const tickXStart = position === 'left' ? tickXRight : tickXLeft;
+    const tickXEnd = position === 'left' ? tickXRight - tickMarkSize : tickXLeft + tickMarkSize;
+
+    // Note: Unlike web, mobile renders grid lines and tick marks immediately without fade animation.
+    // This is because Skia can measure text dimensions synchronously, so there's no need to hide
+    // elements while waiting for measurements (web uses async ResizeObserver).
     return (
       <Group>
         {showGrid && (
           <Group>
-            {ticksData.map((tick, index) => {
-              const horizontalLine = (
-                <ReferenceLine
-                  LineComponent={GridLineComponent}
-                  dataY={tick.tick}
-                  yAxisId={axisId}
-                />
-              );
-
-              return <Group key={`grid-${tick.tick}-${index}`}>{horizontalLine}</Group>;
-            })}
+            {gridLinePositions.map(({ y, key }) => (
+              <GridLineComponent
+                key={key}
+                animate={false}
+                clipPath={null}
+                d={lineToPath(drawingArea.x, y, drawingArea.x + drawingArea.width, y)}
+                stroke={theme.color.bgLine}
+              />
+            ))}
           </Group>
         )}
         {chartTextData && (
@@ -199,26 +275,17 @@ export const YAxis = memo<YAxisProps>(
         )}
         {axisBounds && showTickMarks && (
           <Group>
-            {ticksData.map((tick, index) => {
-              const tickX = position === 'left' ? axisBounds.x + axisBounds.width : axisBounds.x;
-              const tickMarkSizePixels = tickMarkSize;
-              const tickX2 =
-                position === 'left'
-                  ? axisBounds.x + axisBounds.width - tickMarkSizePixels
-                  : axisBounds.x + tickMarkSizePixels;
-
-              return (
-                <TickMarkLineComponent
-                  key={`tick-mark-${tick.tick}-${index}`}
-                  animate={false}
-                  clipPath={null}
-                  d={lineToPath(tickX, tick.position, tickX2, tick.position)}
-                  stroke={theme.color.fg}
-                  strokeCap="square"
-                  strokeWidth={1}
-                />
-              );
-            })}
+            {tickMarkPositions.map(({ y, key }) => (
+              <TickMarkLineComponent
+                key={key}
+                animate={false}
+                clipPath={null}
+                d={lineToPath(tickXStart, y, tickXEnd, y)}
+                stroke={theme.color.fg}
+                strokeCap="square"
+                strokeWidth={1}
+              />
+            ))}
           </Group>
         )}
         {showLine && (

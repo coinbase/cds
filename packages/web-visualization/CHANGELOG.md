@@ -8,6 +8,16 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 3.4.0-beta.12 (1/8/2026 PST)
+
+This is an artificial version bump with no new change.
+
+## 3.4.0-beta.11 (1/7/2026 PST)
+
+#### 🐞 Fixes
+
+- Allow customization of axis tick mark and grid line alignment in band scale. [[#291](https://github.com/coinbase/cds/pull/291)]
+
 ## 3.4.0-beta.10 (1/6/2026 PST)
 
 #### 🐞 Fixes

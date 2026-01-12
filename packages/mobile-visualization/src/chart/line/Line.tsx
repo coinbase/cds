@@ -5,6 +5,7 @@ import { type AnimatedProp, Group } from '@shopify/react-native-skia';
 
 import { Area, type AreaComponent } from '../area/Area';
 import { useCartesianChartContext } from '../ChartProvider';
+import { type PathProps } from '../Path';
 import { Point, type PointBaseProps, type PointProps } from '../point';
 import {
   accessoryFadeTransitionDelay,
@@ -119,17 +120,18 @@ export type LineProps = LineBaseProps & {
 export type LineComponentProps = Pick<
   LineProps,
   'stroke' | 'strokeOpacity' | 'strokeWidth' | 'gradient' | 'animate' | 'transition'
-> & {
-  /**
-   * Path of the line
-   */
-  d: AnimatedProp<string | undefined>;
-  /**
-   * ID of the y-axis to use.
-   * If not provided, defaults to the default y-axis.
-   */
-  yAxisId?: string;
-};
+> &
+  Pick<PathProps, 'clipPath' | 'strokeCap'> & {
+    /**
+     * Path of the line
+     */
+    d: AnimatedProp<string | undefined>;
+    /**
+     * ID of the y-axis to use.
+     * If not provided, defaults to the default y-axis.
+     */
+    yAxisId?: string;
+  };
 
 export type LineComponent = React.FC<LineComponentProps>;
 

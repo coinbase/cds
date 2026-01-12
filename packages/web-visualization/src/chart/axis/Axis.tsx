@@ -1,9 +1,10 @@
 import type React from 'react';
 import type { SharedProps } from '@coinbase/cds-common/types';
+import type { Transition } from 'framer-motion';
 
 import { type LineComponent } from '../line';
 import type { ChartTextChildren, ChartTextProps } from '../text/ChartText';
-import { accessoryFadeTransitionDuration } from '../utils';
+import { accessoryFadeTransitionDuration, type AxisBandPlacement } from '../utils';
 
 export const axisLineStyles = `
   stroke: var(--color-fg);
@@ -20,23 +21,9 @@ export const axisTickMarkStyles = `
 /**
  * Animation variants for axis elements - updates (used for both grid lines and tick labels)
  */
-export const axisUpdateAnimationVariants = {
-  initial: {
-    opacity: 0,
-  },
-  animate: {
-    opacity: 1,
-    transition: {
-      duration: accessoryFadeTransitionDuration,
-      delay: accessoryFadeTransitionDuration,
-    },
-  },
-  exit: {
-    opacity: 0,
-    transition: {
-      duration: accessoryFadeTransitionDuration,
-    },
-  },
+export const axisUpdateAnimationTransition: Transition = {
+  duration: accessoryFadeTransitionDuration,
+  ease: 'easeOut',
 };
 
 export type AxisTickLabelComponentProps = Pick<
@@ -69,6 +56,20 @@ export type AxisTickLabelComponentProps = Pick<
 export type AxisTickLabelComponent = React.FC<AxisTickLabelComponentProps>;
 
 export type AxisBaseProps = SharedProps & {
+  /**
+   * Placement of grid lines relative to each band.
+   * Options: 'start', 'middle', 'end', 'edges'
+   * @note This property only applies to band scales.
+   * @default 'edges'
+   */
+  bandGridLinePlacement?: AxisBandPlacement;
+  /**
+   * Placement of tick marks relative to each band.
+   * Options: 'start', 'middle', 'end', 'edges'
+   * @note This property only applies to band scales.
+   * @default 'middle'
+   */
+  bandTickMarkPlacement?: AxisBandPlacement;
   /**
    * Label text to display for the axis.
    */

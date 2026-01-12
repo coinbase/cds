@@ -595,6 +595,23 @@ const ColorMapWithOpacity = () => {
   );
 };
 
+const BandGridPositionExample = ({
+  position,
+}: {
+  position: 'start' | 'middle' | 'end' | 'edges';
+}) => (
+  <CartesianChart
+    height={180}
+    inset={4}
+    series={[{ id: 'data', data: [30, 50, 40, 60, 35] }]}
+    xAxis={{ scaleType: 'band', data: ['A', 'B', 'C', 'D', 'E'] }}
+    yAxis={{ domain: { min: 0 } }}
+  >
+    <XAxis showGrid showLine bandGridLinePlacement={position} label={position} />
+    <BarPlot />
+  </CartesianChart>
+);
+
 const BarChartStories = () => {
   return (
     <ExampleScreen>
@@ -636,6 +653,12 @@ const BarChartStories = () => {
       </Example>
       <Example title="ColorMap with Opacity">
         <ColorMapWithOpacity />
+      </Example>
+      <Example title="Band Grid Position">
+        <BandGridPositionExample position="edges" />
+        <BandGridPositionExample position="start" />
+        <BandGridPositionExample position="middle" />
+        <BandGridPositionExample position="end" />
       </Example>
     </ExampleScreen>
   );
