@@ -163,3 +163,15 @@ function MultipleLinksA11yExample() {
   );
 }
 ```
+
+### With padding
+
+When applying padding to a `Text` component that contains instances of `Link`, wrap in a `Box` to prevent the hitbox from being misaligned.
+
+```jsx
+<Box paddingTop={2}>
+  <Text font="legal" color="fgMuted">
+    By continuing, you agree to the <Link to="/terms">Terms of Service</Link>.
+  </Text>
+</Box>
+```
