@@ -235,11 +235,19 @@ export type SelectControlProps<
   Omit<BoxProps, 'borderWidth' | 'onChange'> &
   Pick<
     InputStackBaseProps,
-    'disabled' | 'startNode' | 'variant' | 'labelVariant' | 'testID' | 'endNode'
+    | 'disabled'
+    | 'startNode'
+    | 'variant'
+    | 'labelVariant'
+    | 'testID'
+    | 'endNode'
+    | 'borderWidth'
+    | 'focusedBorderWidth'
   > &
   SelectState<Type, SelectOptionValue> & {
     /**
-     * Determines if the control should have a border
+     * Determines if the control should have a default border.
+     * @note focusedBorderWidth on the control still shows a border when focused by default.
      * @default true
      */
     bordered?: boolean;

@@ -59,6 +59,8 @@ export const DefaultSelectControlComponent = memo(
         endNode: customEndNode,
         compact,
         bordered = true,
+        borderWidth = bordered ? 100 : 0,
+        focusedBorderWidth = bordered ? undefined : 200,
         maxSelectedOptionsToShow = 3,
         accessibilityLabel,
         accessibilityHint,
@@ -131,6 +133,8 @@ export const DefaultSelectControlComponent = memo(
         variant ?? 'foregroundMuted',
         focusedVariant,
         bordered,
+        borderWidth,
+        focusedBorderWidth,
       );
 
       const helperTextNode = useMemo(
@@ -335,9 +339,11 @@ export const DefaultSelectControlComponent = memo(
         <InputStack
           borderFocusedStyle={borderFocusedStyle}
           borderStyle={borderUnfocusedStyle}
+          borderWidth={borderWidth}
           disabled={disabled}
           endNode={endNode}
           focused={open}
+          focusedBorderWidth={focusedBorderWidth}
           helperTextNode={helperTextNode}
           inputNode={inputNode}
           labelNode={shouldShowCompactLabel ? null : labelNode}
