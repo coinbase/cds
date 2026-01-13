@@ -15,6 +15,8 @@ import { Spinner } from '../loaders/Spinner';
 import { Pressable, type PressableBaseProps } from '../system/Pressable';
 import { Text } from '../typography/Text';
 
+const COMPONENT_STATIC_CLASSNAME = 'cds-Button';
+
 export const spinnerHeight = 2.5;
 
 const baseCss = css`
@@ -237,6 +239,7 @@ export const Button: ButtonComponent = memo(
           borderRadius={borderRadius}
           borderWidth={borderWidth}
           className={cx(
+            COMPONENT_STATIC_CLASSNAME,
             baseCss,
             compact && compactCss,
             numberOfLines && unsetNoWrapCss,
@@ -248,6 +251,11 @@ export const Button: ButtonComponent = memo(
             className,
           )}
           color={colorValue}
+          data-block={block}
+          data-compact={compact}
+          data-flush={flush}
+          data-transparent={transparent}
+          data-variant={variant}
           height={height}
           loading={loading}
           noScaleOnPress={noScaleOnPress}
