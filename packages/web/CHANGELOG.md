@@ -8,11 +8,17 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
-## 8.36.4 (1/12/2026 PST)
+## 8.37.1 (1/13/2026 PST)
 
 #### 🐞 Fixes
 
 - Support TextInput labelNode on compact and inside labelVariant. [[#293](https://github.com/coinbase/cds/pull/293)]
+
+## 8.37.0 (1/12/2026 PST)
+
+#### 🚀 Updates
+
+- Add state data attributes to Button and IconButton on web.
 
 ## 8.36.3 (1/9/2026 PST)
 
