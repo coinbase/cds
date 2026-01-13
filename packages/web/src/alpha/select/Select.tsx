@@ -103,7 +103,6 @@ const SelectBase = memo(
         className,
         classNames,
         testID,
-        ...props
       }: SelectProps<Type, SelectOptionValue>,
       ref: React.Ref<SelectRef>,
     ) => {

@@ -76,8 +76,8 @@ export type InputStackBaseProps = SharedProps &
      */
     borderWidth?: ThemeVars.BorderWidth;
     /**
-     * Width of the focus ring when the input is focused.
-     * Defaults to the `borderWidth` value.
+     * Additional border width when focused.
+     * @default borderWidth
      */
     focusedBorderWidth?: ThemeVars.BorderWidth;
     /**
@@ -125,7 +125,6 @@ export type InputStackBaseProps = SharedProps &
     borderRadius?: BoxBaseProps['borderRadius'];
     /**
      * Disable default focus styles
-     * @default false
      */
     disableFocusedStyle?: boolean;
     /**
@@ -170,7 +169,7 @@ export const InputStack = memo(
         focused = false,
         borderRadius = 200,
         height,
-        disableFocusedStyle = false,
+        disableFocusedStyle,
         enableColorSurge,
         labelVariant = 'outside',
         blendStyles,
