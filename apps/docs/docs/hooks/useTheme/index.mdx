@@ -14,21 +14,24 @@ import WebApi, { toc as webApiToc } from './_webApi.mdx';
 import MobileApi, { toc as mobileApiToc } from './_mobileApi.mdx';
 import WebExamples, { toc as webExamplesToc } from './_webExamples.mdx';
 import MobileExamples, { toc as mobileExamplesToc } from './_mobileExamples.mdx';
+import { VStack } from '@coinbase/cds-web/layout';
 
-<ComponentHeader
-  title="useTheme"
-  banner={<HooksBanner />}
-  webMetadata={webMetadata}
-  mobileMetadata={mobileMetadata}
-/>
+<VStack gap={5}>
+  <ComponentHeader
+    title="useTheme"
+    banner={<HooksBanner />}
+    webMetadata={webMetadata}
+    mobileMetadata={mobileMetadata}
+  />
 
-<HookTabsContainer
-  webApi={<WebApi />}
-  mobileApi={<MobileApi />}
-  webExamples={<WebExamples />}
-  mobileExamples={<MobileExamples />}
-  webApiToc={webApiToc}
-  mobileApiToc={mobileApiToc}
-  webExamplesToc={webExamplesToc}
-  mobileExamplesToc={mobileExamplesToc}
-/>
+  <HookTabsContainer
+    webApi={<WebApi />}
+    mobileApi={<MobileApi />}
+    webExamples={<WebExamples />}
+    mobileExamples={<MobileExamples />}
+    webApiToc={webApiToc}
+    mobileApiToc={mobileApiToc}
+    webExamplesToc={webExamplesToc}
+    mobileExamplesToc={mobileExamplesToc}
+  />
+</VStack>
