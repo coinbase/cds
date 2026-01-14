@@ -18,7 +18,7 @@ type LinkChipProps = Omit<PressableProps<typeof DocusaurusLink>, 'as' | 'childre
 export const LinkChip = memo(
   ({
     children,
-    startIcon = 'chainLink',
+    startIcon = 'externalLink',
     endIcon,
     background = 'bgSecondary',
     borderRadius = 700,
