@@ -391,6 +391,25 @@ describe('TextInput', () => {
     expect(customLabel).toHaveTextContent('Custom Label Node');
   });
 
+  it('renders labelNode with labelVariant inside', () => {
+    const labelTestID = 'custom-label';
+    render(
+      <DefaultThemeProvider>
+        <TextInput
+          accessibilityHint="Text input field"
+          accessibilityLabel="Text input field"
+          labelNode={<Text testID={labelTestID}>Custom Inside Label</Text>}
+          labelVariant="inside"
+          placeholder="Enter text"
+        />
+      </DefaultThemeProvider>,
+    );
+
+    const customLabel = screen.getByTestId(labelTestID);
+    expect(customLabel).toBeTruthy();
+    expect(customLabel).toHaveTextContent('Custom Inside Label');
+  });
+
   it('labelNode takes precedence over label with labelVariant inside', () => {
     const labelTestID = 'custom-label';
     render(
