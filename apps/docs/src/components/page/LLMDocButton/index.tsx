@@ -61,11 +61,11 @@ export const LLMDocButtons = memo(() => {
   }, [llmDocUrl, toast]);
 
   return (
-    <HStack gap={1}>
+    <>
       <Chip compact onClick={handleCopy} start={<Icon color="fg" name="copy" size="s" />}>
         Copy for LLM
       </Chip>
       <LinkChip href={llmDocUrl}>View as Markdown</LinkChip>
-    </HStack>
+    </>
   );
 });
