@@ -235,9 +235,22 @@ export type SelectControlProps<
   Omit<BoxProps, 'borderWidth' | 'onChange'> &
   Pick<
     InputStackBaseProps,
-    'disabled' | 'startNode' | 'variant' | 'labelVariant' | 'testID' | 'endNode'
+    | 'disabled'
+    | 'startNode'
+    | 'variant'
+    | 'labelVariant'
+    | 'testID'
+    | 'endNode'
+    | 'borderWidth'
+    | 'focusedBorderWidth'
   > &
   SelectState<Type, SelectOptionValue> & {
+    /**
+     * Determines if the control should have a default border.
+     * @note focusedBorderWidth on the control still shows a border when focused by default.
+     * @default true
+     */
+    bordered?: boolean;
     /** Array of options to display in the select dropdown. Can be individual options or groups with `label` and `options` */
     options: SelectOptionList<Type, SelectOptionValue>;
     /** Label displayed above the control */
@@ -395,6 +408,7 @@ export type SelectBaseProps<
     | 'disabled'
     | 'labelVariant'
     | 'endNode'
+    | 'bordered'
   > &
   Pick<SelectOptionProps<Type, SelectOptionValue>, 'accessory' | 'media' | 'end'> &
   Pick<

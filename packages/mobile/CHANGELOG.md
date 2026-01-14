@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.38.0 (1/14/2026 PST)
+
+#### 🚀 Updates
+
+- Add bordered prop to Select. [[#298](https://github.com/coinbase/cds/pull/298)]
+
 ## 8.37.1 ((1/14/2026, 12:37 PM PST))
 
 This is an artificial version bump with no new change.

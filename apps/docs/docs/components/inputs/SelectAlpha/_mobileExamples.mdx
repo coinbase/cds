@@ -1194,6 +1194,49 @@ function StressTestExample() {
 }
 ```
 
+## Borderless
+
+You can remove the border from the select control by setting `bordered` to `false`. Now Select will only show a border when focused.
+
+```jsx
+function BorderlessExample() {
+  const [singleValue, setSingleValue] = useState('1');
+  const { value: multiValue, onChange: multiOnChange } = useMultiSelect({
+    initialValue: ['1', '2'],
+  });
+
+  const options = [
+    { value: '1', label: 'Option 1' },
+    { value: '2', label: 'Option 2' },
+    { value: '3', label: 'Option 3' },
+    { value: '4', label: 'Option 4' },
+  ];
+
+  return (
+    <VStack gap={4}>
+      <Select
+        bordered={false}
+        label="Borderless single select"
+        value={singleValue}
+        onChange={setSingleValue}
+        options={options}
+        placeholder="Select an option"
+      />
+
+      <Select
+        bordered={false}
+        type="multi"
+        label="Borderless multi select"
+        value={multiValue}
+        onChange={multiOnChange}
+        options={options}
+        placeholder="Select options"
+      />
+    </VStack>
+  );
+}
+```
+
 ## Custom styles
 
 You can use custom styles on the various subcomponents in Select.
