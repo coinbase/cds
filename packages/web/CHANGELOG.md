@@ -8,6 +8,18 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.38.0 (1/14/2026 PST)
+
+#### 🚀 Updates
+
+- Add bordered prop to Select. [[#298](https://github.com/coinbase/cds/pull/298)]
+
+## 8.37.1 (1/14/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix focus shift bug for includeTriggerInFocusTrap prop being true in FocusTrap. [[#258](https://github.com/coinbase/cds/pull/258)]
+
 ## 8.37.0 (1/12/2026 PST)
 
 #### 🚀 Updates

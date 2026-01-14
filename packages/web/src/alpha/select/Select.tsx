@@ -91,6 +91,7 @@ const SelectBase = memo(
         accessory,
         media,
         end,
+        bordered = true,
         SelectOptionComponent = DefaultSelectOption,
         SelectAllOptionComponent = DefaultSelectAllOption,
         SelectDropdownComponent = DefaultSelectDropdown,
@@ -102,7 +103,6 @@ const SelectBase = memo(
         className,
         classNames,
         testID,
-        ...props
       }: SelectProps<Type, SelectOptionValue>,
       ref: React.Ref<SelectRef>,
     ) => {
@@ -255,6 +255,7 @@ const SelectBase = memo(
             accessibilityLabel={controlAccessibilityLabel}
             ariaHaspopup={accessibilityRoles?.dropdown}
             blendStyles={styles?.controlBlendStyles}
+            bordered={bordered}
             className={classNames?.control}
             classNames={controlClassNames}
             compact={compact}

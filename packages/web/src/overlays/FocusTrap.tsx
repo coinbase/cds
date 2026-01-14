@@ -348,7 +348,10 @@ export const FocusTrap = memo(function FocusTrap({
       return;
     }
 
-    const focusableElements = elements.querySelectorAll(FOCUSABLE_ELEMENTS);
+    let focusableElements = Array.from(elements.querySelectorAll(FOCUSABLE_ELEMENTS));
+    if (includeTriggerInFocusTrap && previouslyFocusedElement.current) {
+      focusableElements = [previouslyFocusedElement.current, ...focusableElements];
+    }
 
     if (focusableElements?.length) {
       const elementToAutoFocus = focusableElements[0] as HTMLElement;

@@ -72,6 +72,9 @@ const DefaultSelectControlComponent = memo(
         endNode: customEndNode,
         compact,
         blendStyles,
+        bordered = true,
+        borderWidth = bordered ? 100 : 0,
+        focusedBorderWidth = bordered ? undefined : 200,
         maxSelectedOptionsToShow = 6,
         hiddenSelectedOptionsLabel = 'more',
         removeSelectedOptionAccessibilityLabel = 'Remove',
@@ -433,8 +436,10 @@ const DefaultSelectControlComponent = memo(
         <InputStack
           ref={ref}
           blendStyles={interactableBlendStyles}
+          borderWidth={borderWidth}
           disabled={disabled}
           endNode={endNode}
+          focusedBorderWidth={focusedBorderWidth}
           helperTextNode={helperTextNode}
           inputNode={inputNode}
           labelNode={shouldShowCompactLabel ? null : labelNode}
