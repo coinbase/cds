@@ -469,9 +469,6 @@ const InputScreen = () => {
           placeholder="Satoshi Nakamoto"
         />
       </Example>
-      <Example inline title="TextInput borderless">
-        <MockTextInput bordered={false} label="Borderless TextInput" placeholder="placeholder" />
-      </Example>
     </ExampleScreen>
   );
 };
