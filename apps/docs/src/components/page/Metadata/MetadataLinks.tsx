@@ -2,21 +2,33 @@ import React, { memo, useCallback, useMemo } from 'react';
 import { Chip } from '@coinbase/cds-web/chips/Chip';
 import { Icon } from '@coinbase/cds-web/icons';
 import { HStack } from '@coinbase/cds-web/layout/HStack';
+import { Tooltip } from '@coinbase/cds-web/overlays';
 import { useToast } from '@coinbase/cds-web/overlays/useToast';
 import { useLocation } from '@docusaurus/router';
 import { LinkChip } from '@site/src/components/page/LinkChip';
 import { usePlatformContext } from '@site/src/utils/PlatformContext';
 
+type MetadataLinksProps = {
+  /** URL to source code */
+  source?: string;
+  /** URL to Storybook */
+  storybook?: string;
+  /** URL to changelog */
+  changelog?: string;
+  /** URL to Figma */
+  figma?: string;
+};
+
 /**
- * A button group that provides access to LLM-friendly documentation.
+ * Displays metadata links (Source, Storybook, Changelog, Figma) and LLM doc buttons.
  */
-export const LLMDocButtons = memo(() => {
+export const MetadataLinks = memo(({ source, storybook, changelog, figma }: MetadataLinksProps) => {
   const { platform } = usePlatformContext();
   const toast = useToast();
   const location = useLocation();
 
   // Parse the current URL to determine doc type and title
-  const { docType, title } = useMemo(() => {
+  const llmDocUrl = useMemo(() => {
     const pathname = location.pathname;
     const parts = pathname.split('/').filter(Boolean);
 
@@ -25,33 +37,19 @@ export const LLMDocButtons = memo(() => {
     // e.g., /components/layout/AccordionItem -> { docType: 'components', title: 'AccordionItem' }
     // e.g., /hooks/useTheme -> { docType: 'hooks', title: 'useTheme' }
     // e.g., /getting-started/installation -> { docType: 'getting-started', title: 'installation' }
+    const docType = parts.length >= 2 ? parts[0] : 'components';
+    const title = parts.length >= 2 ? parts[parts.length - 1] : 'unknown';
 
-    if (parts.length >= 2) {
-      const docType = parts[0];
-      const title = parts[parts.length - 1]; // Get the last segment
-      return {
-        docType,
-        title,
-      };
-    }
+    return `/llms/${platform}/${docType}/${title}.txt`;
+  }, [location.pathname, platform]);
 
-    // Fallback
-    return { docType: 'components', title: 'unknown' };
-  }, [location.pathname]);
-
-  // Construct the URL path to the LLM text file
-  const llmDocUrl = `/llms/${platform}/${docType}/${title}.txt`;
-
-  const handleCopy = useCallback(async () => {
+  const handleCopyLLMDoc = useCallback(async () => {
     try {
-      // Fetch the text file content
       const response = await fetch(llmDocUrl);
       if (!response.ok) {
         throw new Error('Failed to fetch LLM doc');
       }
       const text = await response.text();
-
-      // Copy to clipboard
       await navigator.clipboard.writeText(text);
       toast.show('Copied to clipboard');
     } catch (error) {
@@ -61,11 +59,25 @@ export const LLMDocButtons = memo(() => {
   }, [llmDocUrl, toast]);
 
   return (
-    <>
-      <Chip compact onClick={handleCopy} start={<Icon color="fg" name="copy" size="s" />}>
+    <HStack flexWrap="wrap" gap={1}>
+      {source && (
+        <LinkChip href={source} startIcon="gitHubLogo">
+          Source
+        </LinkChip>
+      )}
+      {storybook && <LinkChip href={storybook}>Storybook</LinkChip>}
+      {changelog && <LinkChip href={changelog}>Changelog</LinkChip>}
+      {figma && (
+        <Tooltip content="Internal only">
+          <LinkChip endIcon="lock" href={figma}>
+            Figma
+          </LinkChip>
+        </Tooltip>
+      )}
+      <Chip compact onClick={handleCopyLLMDoc} start={<Icon color="fg" name="copy" size="s" />}>
         Copy for LLM
       </Chip>
       <LinkChip href={llmDocUrl}>View as Markdown</LinkChip>
-    </>
+    </HStack>
   );
 });
