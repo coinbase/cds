@@ -8,11 +8,17 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
-## 8.37.0 (1/12/2026 PST)
+## 8.38.0 (1/14/2026 PST)
 
 #### 🚀 Updates
 
 - Add bordered prop to Select. [[#298](https://github.com/coinbase/cds/pull/298)]
+
+## 8.37.0 (1/12/2026 PST)
+
+#### 🚀 Updates
+
+- Add state data attributes to Button and IconButton on web.
 
 ## 8.36.3 (1/9/2026 PST)
 

@@ -133,6 +133,10 @@ export const IconButton: IconButtonComponent = memo(
             className,
           )}
           color={colorValue}
+          data-compact={compact}
+          data-flush={flush}
+          data-transparent={transparent}
+          data-variant={variant}
           height={height}
           justifyContent={justifyContent}
           loading={loading}

@@ -145,4 +145,36 @@ describe('Button', () => {
     expect(button).toBeDefined();
     expect(screen.getByTestId('custom-react-node')).toBeInTheDocument();
   });
+
+  it('sets data attributes for style variants', () => {
+    render(
+      <DefaultThemeProvider>
+        <Button block compact transparent flush="start" variant="primary">
+          Child
+        </Button>
+      </DefaultThemeProvider>,
+    );
+
+    const button = screen.getByRole('button');
+    expect(button).toHaveAttribute('data-block', 'true');
+    expect(button).toHaveAttribute('data-compact', 'true');
+    expect(button).toHaveAttribute('data-flush', 'start');
+    expect(button).toHaveAttribute('data-transparent', 'true');
+    expect(button).toHaveAttribute('data-variant', 'primary');
+  });
+
+  it('omits optional data attributes for default button', () => {
+    render(
+      <DefaultThemeProvider>
+        <Button>Child</Button>
+      </DefaultThemeProvider>,
+    );
+
+    const button = screen.getByRole('button');
+    expect(button).not.toHaveAttribute('data-block');
+    expect(button).not.toHaveAttribute('data-compact');
+    expect(button).not.toHaveAttribute('data-flush');
+    expect(button).not.toHaveAttribute('data-transparent');
+    expect(button).toHaveAttribute('data-variant');
+  });
 });
