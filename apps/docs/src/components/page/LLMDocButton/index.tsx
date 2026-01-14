@@ -1,9 +1,10 @@
 import React, { memo, useCallback, useMemo } from 'react';
+import { Chip } from '@coinbase/cds-web/chips/Chip';
 import { Icon } from '@coinbase/cds-web/icons';
-import { Box } from '@coinbase/cds-web/layout';
+import { HStack } from '@coinbase/cds-web/layout/HStack';
 import { useToast } from '@coinbase/cds-web/overlays/useToast';
-import { Link } from '@coinbase/cds-web/typography/Link';
 import { useLocation } from '@docusaurus/router';
+import { LinkChip } from '@site/src/components/page/LinkChip';
 import { usePlatformContext } from '@site/src/utils/PlatformContext';
 
 /**
@@ -60,23 +61,11 @@ export const LLMDocButtons = memo(() => {
   }, [llmDocUrl, toast]);
 
   return (
-    <Box alignItems="flex-start" gap={2}>
-      <Link as="button" font="label2" onClick={handleCopy}>
-        <Icon
-          name="copy"
-          size="s"
-          style={{ display: 'inline-flex', verticalAlign: 'text-bottom' }}
-        />{' '}
+    <HStack gap={1}>
+      <Chip compact onClick={handleCopy} start={<Icon color="fg" name="copy" size="s" />}>
         Copy for LLM
-      </Link>
-      <Link openInNewWindow font="label2" href={llmDocUrl}>
-        <Icon
-          name="externalLink"
-          size="s"
-          style={{ display: 'inline-flex', verticalAlign: 'text-bottom' }}
-        />{' '}
-        View as Markdown
-      </Link>
-    </Box>
+      </Chip>
+      <LinkChip href={llmDocUrl}>View as Markdown</LinkChip>
+    </HStack>
   );
 });

@@ -1,12 +1,13 @@
 import React, { memo } from 'react';
 import { Banner } from '@coinbase/cds-web/banner/Banner';
-import { Grid } from '@coinbase/cds-web/layout';
 import { Divider } from '@coinbase/cds-web/layout/Divider';
 import { HStack } from '@coinbase/cds-web/layout/HStack';
 import { VStack } from '@coinbase/cds-web/layout/VStack';
+import { Tooltip } from '@coinbase/cds-web/overlays';
 import { Link } from '@coinbase/cds-web/typography/Link';
 import { Text } from '@coinbase/cds-web/typography/Text';
 import DocusaurusLink from '@docusaurus/Link';
+import { LinkChip } from '@site/src/components/page/LinkChip';
 import { LLMDocButtons } from '@site/src/components/page/LLMDocButton';
 import { VersionLabel } from '@site/src/components/page/VersionLabel';
 import { useDocsTheme } from '@site/src/theme/Layout/Provider/UnifiedThemeContext';
@@ -69,18 +70,6 @@ type ContentHeaderProps = {
   bannerDark?: React.ReactNode;
 };
 
-type MetadataItemProps = {
-  label: string;
-  children: React.ReactNode;
-};
-
-const MetadataItem = ({ label, children }: MetadataItemProps) => (
-  <>
-    <Text font="label1">{label}</Text>
-    {children}
-  </>
-);
-
 export const ComponentHeader = memo(
   ({ title, description, webMetadata, mobileMetadata, banner, bannerDark }: ContentHeaderProps) => {
     const { platform } = usePlatformContext();
@@ -121,7 +110,7 @@ export const ComponentHeader = memo(
             )}
           </VStack>
         )}
-        <VStack gap={4} padding={{ base: 4, phone: 2 }}>
+        <VStack gap={2} padding={{ base: 4, phone: 2 }}>
           <VStack gap={3}>
             <HStack alignItems="center" flexWrap="wrap" gap={2} justifyContent="space-between">
               <Text font="display2">{title}</Text>
@@ -142,58 +131,29 @@ export const ComponentHeader = memo(
               </Banner>
             )}
           </VStack>
+          {importText && (
+            <CodeBlock className={styles.importText} language="tsx">
+              {importText}
+            </CodeBlock>
+          )}
           {activeMetadata && (
-            <Grid
-              alignItems="center"
-              columnGap={2}
-              gridTemplateColumns={{ base: '100px minmax(0, 1fr)', phone: 'minmax(0, 1fr)' }}
-              overflow="hidden"
-              rowGap={{ base: 1.5, phone: 1 }}
-            >
-              {importText && (
-                <MetadataItem label="Import">
-                  <CodeBlock className={styles.importText} language="tsx">
-                    {importText}
-                  </CodeBlock>
-                </MetadataItem>
-              )}
-              {changelog && (
-                <MetadataItem label="Changelog">
-                  <Text font="body">
-                    <Link as={DocusaurusLink} target="_blank" to={changelog}>
-                      View changelog
-                    </Link>
-                  </Text>
-                </MetadataItem>
-              )}
+            <HStack flexWrap="wrap" gap={1}>
               {source && (
-                <MetadataItem label="Source">
-                  <Text font="body">
-                    <Link as={DocusaurusLink} target="_blank" to={source}>
-                      View source code
-                    </Link>
-                  </Text>
-                </MetadataItem>
+                <LinkChip href={source} startIcon="gitHubLogo">
+                  Source
+                </LinkChip>
               )}
-              {storybook && (
-                <MetadataItem label="Storybook">
-                  <Text font="body">
-                    <Link as={DocusaurusLink} target="_blank" to={storybook}>
-                      View Storybook
-                    </Link>
-                  </Text>
-                </MetadataItem>
-              )}
+              {storybook && <LinkChip href={storybook}>Storybook</LinkChip>}
+              {changelog && <LinkChip href={changelog}>Changelog</LinkChip>}
               {figma && (
-                <MetadataItem label="Figma">
-                  <Text font="body">
-                    <Link as={DocusaurusLink} target="_blank" to={figma}>
-                      View Figma (internal only)
-                    </Link>
-                  </Text>
-                </MetadataItem>
+                <Tooltip content="Internal only">
+                  <LinkChip endIcon="lock" href={figma}>
+                    Figma
+                  </LinkChip>
+                </Tooltip>
               )}
-            </Grid>
+              <LLMDocButtons />
+            </HStack>
           )}
         </VStack>
 
@@ -259,10 +219,6 @@ export const ComponentHeader = memo(
             </VStack>
           </>
         )}
-        <Divider />
-        <HStack paddingX={{ base: 4, phone: 2 }} paddingY={2}>
-          <LLMDocButtons />
-        </HStack>
       </VStack>
     );
   },

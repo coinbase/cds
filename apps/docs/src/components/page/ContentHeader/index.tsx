@@ -120,7 +120,7 @@ export const ContentHeader = memo(
             )}
           </VStack>
         )}
-        <VStack gap={4} padding={4} paddingTop={4}>
+        <VStack gap={2} padding={{ base: 4, phone: 2 }}>
           <VStack gap={3}>
             <Text font="display2">{title}</Text>
             {descriptionText && <Text font="title4">{descriptionText}</Text>}
