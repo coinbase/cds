@@ -29,3 +29,20 @@ export const Playground = () => {
     </VStack>
   );
 };
+
+export const SingleFocusableChild = () => {
+  return (
+    <VStack gap={3}>
+      <TextInput label="I am not within a FocusTrap" />
+      <Button>Submit</Button>
+      <FocusTrap>
+        <VStack background="bgPrimaryWash" gap={1} padding={3}>
+          <Text as="h1" display="block" font="headline">
+            This single component is trapped
+          </Text>
+          <TextInput label="Test 1" />
+        </VStack>
+      </FocusTrap>
+    </VStack>
+  );
+};
