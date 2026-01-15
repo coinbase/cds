@@ -1,11 +1,48 @@
----
-description: Defines the process for creating documentation for CDS components on the docsite (apps/docs/).
-alwaysApply: false
----
+# Component Documentation
 
-# Component Documentation Rule
+Create or update documentation for a CDS component on the docsite (apps/docs/).
 
-## Research Phase
+**Usage:** `/component-docs <ComponentName> [additional context]`
+
+Examples:
+
+- `/component-docs Button`
+- `/component-docs LineChart add examples for real-time data updates`
+- `/component-docs Avatar needs accessibility improvements`
+
+If no component name is provided, ask the user which component they want to document.
+
+## Step 1: Check for Existing Documentation
+
+First, check if documentation already exists for this component:
+
+```bash
+apps/docs/docs/components/*/[ComponentName]/
+```
+
+- **If docs exist**: Review the existing documentation and identify what needs to be added, updated, or improved. Consider the user's additional context if provided.
+- **If docs don't exist**: Follow the full workflow below to create new documentation.
+
+For updates, focus on the specific areas that need improvement rather than rewriting everything.
+
+### Reference Components
+
+When creating or updating docs, reference these well-documented components to understand the documentation style and patterns:
+
+- **LineChart** (`apps/docs/docs/components/graphs/LineChart/`) - Comprehensive example with many composed examples
+- **Button** (`apps/docs/docs/components/buttons/Button/`) - Good basic component documentation
+- **IconButton** (`apps/docs/docs/components/buttons/IconButton/`) - Simple component with clear examples
+- **Sidebar** (`apps/docs/docs/components/navigation/Sidebar/`) - Complex component with multiple sub-components
+
+Review these before writing to ensure consistency in style, structure, and depth.
+
+### Reference Files
+
+When writing examples, reference these files for valid values:
+
+- **Icon names** (`packages/icons/src/IconName.ts`) - All valid icon names for the `icon` prop (e.g., `'checkmark'`, `'close'`, `'warning'`)
+
+## Step 2: Research Phase (for new docs or major updates)
 
 Before writing documentation, research how other popular component libraries document the same (or similar) component. Use web search to find documentation for the component in:
 
@@ -25,11 +62,25 @@ Look for:
 
 Use these insights to inform your documentation structure and examples.
 
-## Required Setup Steps
+## Step 3: Check Component Availability
 
-Before creating the component documentation, complete these three setup steps:
+Verify where the component exists:
 
-### 1. Add to ReactLiveScope
+```bash
+packages/web/src/[source-category]/[ComponentName].tsx    # for web
+packages/mobile/src/[source-category]/[ComponentName].tsx # for mobile
+```
+
+Also check visualization packages if applicable:
+
+- `packages/web-visualization/src/...`
+- `packages/mobile-visualization/src/...`
+
+## Step 4: Required Setup Steps (for new docs only)
+
+Before creating the component documentation, complete these setup steps:
+
+### 4.1 Add to ReactLiveScope
 
 In `apps/docs/src/components/page/ReactLiveScope.ts`, add the component imports and add them to the scope:
 
@@ -46,7 +97,7 @@ const ReactLiveScope = {
 
 There is a chance that the component has already been imported.
 
-### 2. Update sidebars.ts
+### 4.2 Update sidebars.ts
 
 In `apps/docs/sidebars.ts`, add the component to its category section:
 
@@ -66,7 +117,7 @@ module.exports = {
 };
 ```
 
-### 3. Update docgen.config.js
+### 4.3 Update docgen.config.js
 
 In `apps/docs/docgen.config.js`, add the component paths to generate props data:
 
@@ -93,22 +144,7 @@ module.exports = {
 };
 ```
 
-## Overview
-
-This rule provides a standardized approach for creating component documentation in the CDS documentation site.
-
-## Initial Setup
-
-### 1. Check Component Availability
-
-First, verify where the component exists:
-
-```bash
-packages/cds-web/src/[source-category]/[ComponentName].tsx    # for web
-packages/cds-mobile/src/[source-category]/[ComponentName].tsx # for mobile
-```
-
-### 2. Create Directory Structure
+## Step 5: Create Directory Structure (for new docs only)
 
 Create the documentation directory and files based on component availability:
 
@@ -125,7 +161,7 @@ apps/docs/docs/components/[docs-category]/[ComponentName]/
 
 ## File Templates
 
-### 1. Metadata Files
+### Metadata Files
 
 #### webMetadata.json
 
@@ -145,6 +181,7 @@ apps/docs/docs/components/[docs-category]/[ComponentName]/
 
 **Notes:**
 
+- `description` should be the full component description - what the component is and when to use it (e.g., "A non-intrusive notification component that temporarily displays brief messages at the bottom of the screen.")
 - `figma` and `storybook` fields are optional - only add if provided
 - `dependencies` is optional - only include if the component imports from external packages that are peer dependencies. To determine:
   1. Check the component's source file for imports from external packages (e.g., `framer-motion`)
@@ -175,7 +212,7 @@ apps/docs/docs/components/[docs-category]/[ComponentName]/
   2. Cross-reference those imports with `peerDependencies` in `packages/mobile/package.json`
   3. Use the exact version range from `peerDependencies` in the package.json file
 
-### 2. Props Tables
+### Props Tables
 
 #### \_webPropsTable.mdx
 
@@ -207,7 +244,7 @@ import { sharedTypeAliases } from ':docgen/_types/sharedTypeAliases';
 />
 ```
 
-### 3. Main Documentation (index.mdx)
+### Main Documentation (index.mdx)
 
 #### For Web-Only Components
 
@@ -311,28 +348,30 @@ import mobileMetadata from './mobileMetadata.json';
 </VStack>
 ```
 
-### 4. Examples
+### Examples
 
 #### Example Structure Guidelines
 
 Examples should follow this recommended structure:
 
-1. **Introductory prose** - Start with 1-2 sentences explaining what the component does
-2. **Basics** - Simplest usage with minimal props
+1. **Brief intro** - A short functional note (NOT the full description - that goes in metadata). Mention what the component uses/wraps or key dependencies.
+2. **Basics** - Simplest usage explaining how to use the core API
 3. **Feature sections** - Group related functionality (Data, Interaction, Styling, etc.)
 4. **Accessibility** - How to make the component accessible
 5. **Composed Examples** - Real-world use cases combining multiple features
+
+**Important:** Do NOT repeat the full component description from metadata in the examples. The examples should focus on _how_ to use the component, not _what_ it is.
 
 #### \_webExamples.mdx (Live Examples)
 
 Web examples use `jsx live` blocks which render interactively in the browser. For short, incomplete code snippets that are meant to illustrate a concept rather than be runnable, you may use plain `jsx` blocks instead.
 
 ````mdx
-[ComponentName] is a [brief description of what it does and when to use it]. It supports [key features].
+[ComponentName] uses [dependency/wrapper] to [brief functional note]. [Any key setup requirement in one sentence].
 
 ## Basics
 
-The simplest usage requires only the `[requiredProp]` prop.
+[Explain how to use the component's core API - e.g., "Call `toast.show()` with a message string to display a toast."]
 
 ```jsx live
 <[ComponentName]
@@ -399,17 +438,11 @@ function [UseCaseName]() {
 Mobile examples use static `jsx` blocks only. **Do not use `jsx live`** - React Native cannot run in the browser.
 
 ````mdx
-[ComponentName] is a [brief description of what it does and when to use it]. It supports [key features].
-
-## Setup
-
-[Include if the component requires special setup, e.g., providers or initialization]
-
-Before using [ComponentName], you need to [setup instructions]. See [RelatedComponent](/components/category/RelatedComponent) for details.
+[ComponentName] uses [dependency/wrapper] to [brief functional note]. [Any mobile-specific behavior in one sentence, e.g., "On mobile, toasts can be swiped away."]
 
 ## Basics
 
-The simplest usage requires only the `[requiredProp]` prop.
+[Explain how to use the component's core API - e.g., "Call `toast.show()` with a message string to display a toast."]
 
 ```jsx
 <[ComponentName]
@@ -495,6 +528,8 @@ Depending on the component, consider including these sections:
 
 ## Final Checklist
 
+Before completing, verify:
+
 - [ ] Researched similar components in other libraries for inspiration
 - [ ] Verified component existence in web/mobile
 - [ ] Created only necessary platform-specific files
@@ -511,7 +546,7 @@ Depending on the component, consider including these sections:
 - [ ] Component description is clear and helpful
 - [ ] Added optional storybook/figma links if provided
 
-## Notes
+## Additional Notes
 
 1. Source category might differ from docs category
 2. Add storybook and figma links to metadata if provided
