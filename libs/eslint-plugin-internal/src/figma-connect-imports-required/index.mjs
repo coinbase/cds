@@ -52,9 +52,7 @@ const rule = createRule({
 
       return configNode.properties.find(
         (prop) =>
-          prop.type === 'Property' &&
-          prop.key.type === 'Identifier' &&
-          prop.key.name === 'imports',
+          prop.type === 'Property' && prop.key.type === 'Identifier' && prop.key.name === 'imports',
       );
     }
 
