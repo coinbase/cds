@@ -11,8 +11,8 @@ on:
     branches: master
 
 jobs:
-  # Validate Figma Code Connect mappings on PRs
-  validate-code-connect:
+  # Validate web Figma Code Connect mappings on PRs
+  validate-code-connect-web:
     name: Validate Code Connect
     runs-on: ubuntu-latest
     if: github.event_name == 'pull_request'
@@ -26,9 +26,24 @@ jobs:
       - name: Validate Code Connect (dry-run)
         env:
           FIGMA_ACCESS_TOKEN: ${{ secrets.FIGMA_ACCESS_TOKEN }}
-        run: |
-          yarn code-connect:publish:web --dry-run
-          yarn code-connect:publish:mobile --dry-run
+        run: yarn code-connect:publish:web --dry-run
+
+  # Validate mobile Figma Code Connect mappings on PRs
+  validate-code-connect-mobile:
+    name: Validate Code Connect
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        with:
+          egress-policy: audit
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+      - uses: ./.github/actions/setup
+      - name: Validate Code Connect (dry-run)
+        env:
+          FIGMA_ACCESS_TOKEN: ${{ secrets.FIGMA_ACCESS_TOKEN }}
+        run: yarn code-connect:publish:mobile --dry-run
 
   # Publish Figma Code Connect mappings for affected packages
   publish-code-connect:
