@@ -13,7 +13,7 @@ on:
 jobs:
   # Validate web Figma Code Connect mappings on PRs
   validate-code-connect-web:
-    name: Validate Code Connect
+    name: Validate Code Connect (Web)
     runs-on: ubuntu-latest
     if: github.event_name == 'pull_request'
     steps:
@@ -30,7 +30,7 @@ jobs:
 
   # Validate mobile Figma Code Connect mappings on PRs
   validate-code-connect-mobile:
-    name: Validate Code Connect
+    name: Validate Code Connect (Mobile)
     runs-on: ubuntu-latest
     if: github.event_name == 'pull_request'
     steps:
