@@ -5,6 +5,26 @@ alwaysApply: false
 
 # Component Documentation Rule
 
+## Research Phase
+
+Before writing documentation, research how other popular component libraries document the same (or similar) component. Use web search to find documentation for the component in:
+
+- **Material UI** (mui.com)
+- **Radix UI** (radix-ui.com)
+- **Mantine** (mantine.dev)
+- **Ant Design** (ant.design)
+- **Base UI** (base-ui.com)
+
+Look for:
+
+- What examples they provide and how they're organized
+- Common use cases they demonstrate
+- Edge cases or patterns worth highlighting
+- Accessibility guidance they include
+- How they explain complex features
+
+Use these insights to inform your documentation structure and examples.
+
 ## Required Setup Steps
 
 Before creating the component documentation, complete these three setup steps:
@@ -114,14 +134,23 @@ apps/docs/docs/components/[docs-category]/[ComponentName]/
   "import": "import { ComponentName } from '@coinbase/cds-web/[source-category]/[ComponentName]'",
   "source": "https://github.com/coinbase/cds/blob/master/packages/web/src/[source-category]/[ComponentName].tsx",
   "description": "[Component description]",
-  "figma": "[figma link]", // only add if provided
-  "storybook": "[storybook link]", // only add if provided
+  "figma": "[figma link]",
+  "storybook": "[storybook link]",
   "relatedComponents": [
     { "label": "[componentName]", "url": "/components/[category]/[componentName]" }
-    //...other related components
-  ]
+  ],
+  "dependencies": [{ "name": "[peer-dependency-name]", "version": "[version-range]" }]
 }
 ```
+
+**Notes:**
+
+- `figma` and `storybook` fields are optional - only add if provided
+- `dependencies` is optional - only include if the component imports from external packages that are peer dependencies. To determine:
+  1. Check the component's source file for imports from external packages (e.g., `framer-motion`)
+  2. Cross-reference those imports with `peerDependencies` in `packages/web/package.json`
+  3. Use the exact version range from `peerDependencies` in the package.json file
+- `relatedComponents` should link to components commonly used together
 
 #### mobileMetadata.json
 
@@ -130,13 +159,21 @@ apps/docs/docs/components/[docs-category]/[ComponentName]/
   "import": "import { ComponentName } from '@coinbase/cds-mobile/[source-category]/[ComponentName]'",
   "source": "https://github.com/coinbase/cds/blob/master/packages/mobile/src/[source-category]/[ComponentName].tsx",
   "description": "[Component description]",
-  "figma": "[figma link]", // only add if provided
+  "figma": "[figma link]",
   "relatedComponents": [
     { "label": "[componentName]", "url": "/components/[category]/[componentName]" }
-    //...other related components
-  ]
+  ],
+  "dependencies": [{ "name": "[peer-dependency-name]", "version": "[version-range]" }]
 }
 ```
+
+**Notes:**
+
+- `figma` is optional - only add if provided
+- `dependencies` is optional - only include if the component imports from external packages that are peer dependencies. To determine:
+  1. Check the component's source file for imports from external packages (e.g., `@shopify/react-native-skia`, `react-native-reanimated`, `react-native-gesture-handler`)
+  2. Cross-reference those imports with `peerDependencies` in `packages/mobile/package.json`
+  3. Use the exact version range from `peerDependencies` in the package.json file
 
 ### 2. Props Tables
 
@@ -159,12 +196,12 @@ import { sharedTypeAliases } from ':docgen/_types/sharedTypeAliases';
 
 ```mdx
 import ComponentPropsTable from '@site/src/components/page/ComponentPropsTable';
-import webPropsData from ':docgen/mobile/[source-category]/[ComponentName]/data';
+import mobilePropsData from ':docgen/mobile/[source-category]/[ComponentName]/data';
 import { sharedParentTypes } from ':docgen/_types/sharedParentTypes';
 import { sharedTypeAliases } from ':docgen/_types/sharedTypeAliases';
 
 <ComponentPropsTable
-  props={webPropsData}
+  props={mobilePropsData}
   sharedTypeAliases={sharedTypeAliases}
   sharedParentTypes={sharedParentTypes}
 />
@@ -276,72 +313,199 @@ import mobileMetadata from './mobileMetadata.json';
 
 ### 4. Examples
 
+#### Example Structure Guidelines
+
+Examples should follow this recommended structure:
+
+1. **Introductory prose** - Start with 1-2 sentences explaining what the component does
+2. **Basics** - Simplest usage with minimal props
+3. **Feature sections** - Group related functionality (Data, Interaction, Styling, etc.)
+4. **Accessibility** - How to make the component accessible
+5. **Composed Examples** - Real-world use cases combining multiple features
+
 #### \_webExamples.mdx (Live Examples)
 
+Web examples use `jsx live` blocks which render interactively in the browser. For short, incomplete code snippets that are meant to illustrate a concept rather than be runnable, you may use plain `jsx` blocks instead.
+
 ````mdx
-### Basic Usage
+[ComponentName] is a [brief description of what it does and when to use it]. It supports [key features].
 
-```tsx live
-  <[ComponentName]
-    webSpecificProp="value"
-    sharedProp="value"
-  />
+## Basics
+
+The simplest usage requires only the `[requiredProp]` prop.
+
+```jsx live
+<[ComponentName]
+  requiredProp="value"
+/>
 ```
 
-### Web-Specific Features
+## [Feature Category]
 
-```tsx live
-  <[ComponentName]
-    webOnlyFeature="value"
-    webSpecificHandler={() => {}}
-  />
-</Example>
+[Brief explanation of this feature category]
+
+### [Specific Feature]
+
+```jsx live
+<[ComponentName]
+  featureProp="value"
+/>
 ```
 
-### Common Use Cases
+## Accessibility
 
-```tsx live
-  <[ComponentName] ... />
-</Example>
+Use `accessibilityLabel` to provide context for screen readers. When [specific scenario], also consider [accessibility guidance].
+
+```jsx live
+<[ComponentName]
+  accessibilityLabel="Descriptive label for screen readers"
+  requiredProp="value"
+/>
+```
+
+## Composed Examples
+
+### [Real-World Use Case Name]
+
+[Brief description of what this example demonstrates]
+
+```jsx live
+function [UseCaseName]() {
+  // Use hooks at the top
+  const [state, setState] = useState(initialValue);
+
+  // Memoize expensive computations
+  const computedValue = useMemo(() => {
+    return expensiveComputation(state);
+  }, [state]);
+
+  // Memoize callbacks passed to children
+  const handleEvent = useCallback(() => {
+    // handle event
+  }, []);
+
+  return (
+    <[ComponentName]
+      prop={computedValue}
+      onEvent={handleEvent}
+    />
+  );
+}
 ```
 ````
 
 #### \_mobileExamples.mdx (Static Examples)
 
+Mobile examples use static `jsx` blocks only. **Do not use `jsx live`** - React Native cannot run in the browser.
+
 ````mdx
-### Basic Usage
+[ComponentName] is a [brief description of what it does and when to use it]. It supports [key features].
 
-```tsx
-  <[ComponentName]
-    mobileSpecificProp="value"
-    sharedProp="value"
-  />
+## Setup
+
+[Include if the component requires special setup, e.g., providers or initialization]
+
+Before using [ComponentName], you need to [setup instructions]. See [RelatedComponent](/components/category/RelatedComponent) for details.
+
+## Basics
+
+The simplest usage requires only the `[requiredProp]` prop.
+
+```jsx
+<[ComponentName]
+  requiredProp="value"
+/>
 ```
 
-### Mobile-Specific Features
+## [Feature Category]
 
-```tsx
-  <[ComponentName]
-    mobileOnlyFeature="value"
-    onMobileSpecificEvent={() => {}}
-  />
+[Brief explanation of this feature category]
+
+### [Specific Feature]
+
+```jsx
+<[ComponentName]
+  featureProp="value"
+/>
 ```
 
-### Common Use Cases
+## Accessibility
 
-```tsx
-  <[ComponentName] ... />
+Use `accessibilityLabel` to provide context for screen readers.
+
+```jsx
+<[ComponentName]
+  accessibilityLabel="Descriptive label for screen readers"
+  requiredProp="value"
+/>
+```
+
+## Composed Examples
+
+### [Real-World Use Case Name]
+
+[Brief description of what this example demonstrates]
+
+```jsx
+function [UseCaseName]() {
+  const [state, setState] = useState(initialValue);
+
+  const computedValue = useMemo(() => {
+    return expensiveComputation(state);
+  }, [state]);
+
+  return (
+    <[ComponentName]
+      prop={computedValue}
+    />
+  );
+}
 ```
 ````
 
+## Best Practices for Examples
+
+### Code Quality
+
+- **Use named functions** for complex examples that need state or effects
+- **Memoize with `useMemo`** for expensive computations or computed styles
+- **Memoize with `useCallback`** for event handlers passed as props
+- **Include accessibility labels** in interactive examples
+- **Format values for display** using `Intl.NumberFormat`, `Intl.DateTimeFormat`, etc.
+
+### Documentation Quality
+
+- **Start with introductory prose** explaining what the component does before any code
+- **Progress from simple to complex** - basic examples first, composed examples last
+- **Cross-reference related components** using markdown links: `[ComponentName](/components/category/ComponentName)`
+- **Explain the "why"** not just the "how" - help users understand when to use each feature
+- **Show edge cases** like empty states, loading states, error states, missing data
+
+### Common Sections to Consider
+
+Depending on the component, consider including these sections:
+
+- **Setup** - Prerequisites or providers needed (especially for mobile)
+- **Data** - How to pass and format data
+- **Interaction** - User interaction patterns (click, hover, touch, etc.)
+- **Animations** - Motion and transition options
+- **Styling** - Customization and theming options
+- **Sizing** - Responsive and fixed sizing options
+- **Composed Examples** - Real-world use cases
+
 ## Final Checklist
 
-- [ ] Verified component existence in web/mobile2
+- [ ] Researched similar components in other libraries for inspiration
+- [ ] Verified component existence in web/mobile
 - [ ] Created only necessary platform-specific files
 - [ ] Set correct `platform_switcher_options`
 - [ ] Metadata files have correct package imports
-- [ ] Props tables import from correct package
-- [ ] Examples use components correctly in the code snippet. Check the implementation of the components in cds-web or cds-mobile package to verify.
+- [ ] Added `dependencies` field if component has peer dependencies
+- [ ] Props tables import from correct package with correct variable names
+- [ ] Examples start with introductory prose
+- [ ] Examples include accessibility guidance
+- [ ] Examples progress from basic to composed
+- [ ] Web examples use `jsx live` (or `jsx` for short snippets); mobile examples use `jsx` only (no `live`)
 - [ ] ComponentTabsContainer includes only existing platform props
 - [ ] All imports use correct source categories
 - [ ] Component description is clear and helpful
@@ -352,5 +516,6 @@ import mobileMetadata from './mobileMetadata.json';
 1. Source category might differ from docs category
 2. Add storybook and figma links to metadata if provided
 3. Ensure all examples work and have proper code snippets
-4. Include accessibility considerations if applicable
+4. Include accessibility section with specific examples
 5. Test all examples and props tables render correctly
+6. For visualization components, use paths like `web-visualization` or `mobile-visualization` instead of `web` or `mobile`
