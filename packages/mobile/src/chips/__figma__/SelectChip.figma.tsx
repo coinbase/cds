@@ -11,14 +11,10 @@ figma.connect(
   {
     imports: ["import { SelectChip } from '@coinbase/cds-mobile/chips'"],
     props: {
-      // state: figma.enum('state', {
-      //   default: 'default',
-      //   hovered: 'hovered',
-      //   pressed: 'pressed',
-      //   focused: 'focused',
-      //   open: 'open',
-      // }),
-      disabled: figma.boolean('disabled'),
+      // 'disabled' is derived from state='disabled' in Figma (not a separate boolean)
+      disabled: figma.enum('state', {
+        disabled: true,
+      }),
       active: figma.boolean('active'),
       compact: figma.boolean('compact'),
       start: figma.boolean('show start', {
@@ -26,12 +22,15 @@ figma.connect(
         false: undefined,
       }),
       end: figma.instance('end'),
+      // Note: 'show label' property not mapped - React component always renders
+      // valueLabel, value, or placeholder text (no prop to hide the label).
     },
     example: (props) => {
       const options = ['USD', 'CAD', 'GBP', 'JPY'];
       const [value, setValue] = useState(options[0]);
+
       return (
-        <SelectChip {...props} onChange={setValue} value={value}>
+        <SelectChip {...props} disabled={props.disabled} onChange={setValue} value={value}>
           {options.map((option) => (
             <SelectOption key={option} title={option} value={option} />
           ))}

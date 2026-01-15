@@ -6,7 +6,7 @@ figma.connect(
   CheckboxCell,
   'https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/%E2%9C%A8-CDS-Components?node-id=54927-2772&t=pdfsCDffPYWTRujC-4',
   {
-    imports: ["import { CheckboxCell } from '@coinbase/cds-web/controls/CheckboxCell'"],
+    imports: ["import { CheckboxCell } from '@coinbase/cds-mobile/controls/CheckboxCell'"],
     props: {
       title: figma.string('title text'),
       description: figma.boolean('description', {
@@ -22,7 +22,7 @@ figma.connect(
   CheckboxCell,
   'https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/%E2%9C%A8-CDS-Components?node-id=54927-2772&t=pdfsCDffPYWTRujC-4',
   {
-    imports: ["import { CheckboxCell } from '@coinbase/cds-web/controls/CheckboxCell'"],
+    imports: ["import { CheckboxCell } from '@coinbase/cds-mobile/controls/CheckboxCell'"],
     variant: {
       state: 'selected',
     },

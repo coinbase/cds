@@ -7,6 +7,7 @@ figma.connect(
   AnnouncementCard,
   'https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/✨-CDS-Components?node-id=61%3A956',
   {
+    imports: ["import { AnnouncementCard } from '@coinbase/cds-web/cards/AnnouncementCard';"],
     props: {
       showtopdivider29390: figma.boolean('show top divider'),
       illustration5960: figma.instance('illustration'),

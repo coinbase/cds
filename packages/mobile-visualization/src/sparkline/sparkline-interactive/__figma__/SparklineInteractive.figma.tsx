@@ -7,7 +7,7 @@ figma.connect(
   SparklineInteractive,
   'https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/%E2%9C%A8-CDS-Components?node-id=320-14858&m=dev',
   {
-    imports: ["import { SparklineInteractive } from '@coinbase/cds-web-visualization';"],
+    imports: ["import { SparklineInteractive } from '@coinbase/cds-mobile-visualization';"],
     props: {
       compact: figma.boolean('compact'),
       disableScrubbing: figma.boolean('scrubbing', {
