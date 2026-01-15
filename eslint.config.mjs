@@ -305,6 +305,11 @@ export default tseslint.config(
     files: ['packages/mobile/**/*.stories.tsx'],
     extends: [internalPlugin.configs.mobileStoryRules],
   },
+  // Rules specific to Figma Code Connect files
+  {
+    files: ['**/*.figma.tsx'],
+    extends: [internalPlugin.configs.figmaConnectRules],
+  },
   {
     files: ['**/*.test.{ts,tsx}', '**/__tests__/**', '**/setup.js'],
     settings: sharedSettings,
