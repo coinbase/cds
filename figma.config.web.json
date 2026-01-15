@@ -3,8 +3,8 @@
     "parser": "react",
     "label": "React",
     "include": [
-      "packages/web/src/**/*.figma.tsx",
-      "packages/web-visualization/src/**/*.figma.tsx"
+      "packages/web/src/**/*.tsx",
+      "packages/web-visualization/src/**/*.tsx"
     ],
     "exclude": [
       "**/__tests__/**",
