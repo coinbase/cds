@@ -2,7 +2,6 @@ import React, { memo, useMemo } from 'react';
 import { Animated, StyleSheet, View } from 'react-native';
 import type { StyleProp, ViewStyle } from 'react-native';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
-import { focusedInputBorderWidth, inputBorderWidth } from '@coinbase/cds-common/tokens/input';
 import { accessibleOpacityDisabled } from '@coinbase/cds-common/tokens/interactable';
 import type { InputVariant } from '@coinbase/cds-common/types/InputBaseProps';
 import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
@@ -36,6 +35,16 @@ export type InputStackBaseProps = SharedProps & {
    * @default false
    */
   disabled?: boolean;
+  /**
+   * Width of the border.
+   * @default 100
+   */
+  borderWidth?: ThemeVars.BorderWidth;
+  /**
+   * Additional border width when focused.
+   * @default borderWidth
+   */
+  focusedBorderWidth?: ThemeVars.BorderWidth;
   /** Prepends custom content to the start. Content is not part of input */
   prependNode?: React.ReactNode;
   /** Adds content to the start of the inner input. Refer to diagram for location of startNode in InputStack component */
@@ -109,6 +118,8 @@ export const InputStack = memo(function InputStack({
   enableColorSurge,
   labelVariant = 'outside',
   inputBackground = 'bg',
+  borderWidth = 100,
+  focusedBorderWidth = borderWidth,
   ...props
 }: InputStackProps) {
   const theme = useTheme();
@@ -137,6 +148,7 @@ export const InputStack = memo(function InputStack({
           : theme.color[
               variant === 'foregroundMuted' || !variant ? 'bgLineHeavy' : variantColorMap[variant]
             ],
+      borderWidth: theme.borderWidth[borderWidth],
       flexDirection: 'row',
       flexGrow: 1,
       backgroundColor:
@@ -150,9 +162,11 @@ export const InputStack = memo(function InputStack({
     appendNode,
     variant,
     theme.color,
+    theme.borderWidth,
     theme.borderRadius,
-    borderRadius,
+    borderWidth,
     inputBackground,
+    borderRadius,
   ]);
 
   const inputAreaStyles = useMemo(() => {
@@ -160,23 +174,53 @@ export const InputStack = memo(function InputStack({
   }, [borderStyle, inputAreaStyle]);
 
   const borderFocusedStyles: Animated.WithAnimatedValue<StyleProp<ViewStyle>> = useMemo(() => {
+    const resolvedFocusedBorderWidth = theme.borderWidth[focusedBorderWidth];
+    const resolvedBorderRadius = theme.borderRadius[borderRadius];
+    const overlayBorderRadius = resolvedBorderRadius + resolvedFocusedBorderWidth;
+
+    const overlayBorderRadiusStyle: ViewStyle = {
+      borderRadius: overlayBorderRadius,
+      ...(prependNode
+        ? {
+            borderTopLeftRadius: 0,
+            borderBottomLeftRadius: 0,
+          }
+        : {}),
+      ...(appendNode
+        ? {
+            borderTopRightRadius: 0,
+            borderBottomRightRadius: 0,
+          }
+        : {}),
+    };
+
     return [
-      inputAreaStyle,
       borderFocusedStyle,
       {
         transform: [
-          { translateX: inputAreaSize.x - inputBorderWidth },
-          { translateY: inputAreaSize.y - inputBorderWidth },
+          { translateX: inputAreaSize.x - resolvedFocusedBorderWidth },
+          { translateY: inputAreaSize.y - resolvedFocusedBorderWidth },
         ],
-        width: inputAreaSize.width + focusedInputBorderWidth,
-        height: inputAreaSize.height + focusedInputBorderWidth,
-        x: inputAreaSize.x,
-        y: inputAreaSize.y,
+        width: inputAreaSize.width + resolvedFocusedBorderWidth * 2,
+        height: inputAreaSize.height + resolvedFocusedBorderWidth * 2,
         position: 'absolute',
-        borderWidth: focusedInputBorderWidth,
+        backgroundColor: 'transparent',
+        ...overlayBorderRadiusStyle,
       },
     ];
-  }, [borderFocusedStyle, inputAreaSize, inputAreaStyle]);
+  }, [
+    theme.borderWidth,
+    theme.borderRadius,
+    focusedBorderWidth,
+    borderRadius,
+    prependNode,
+    appendNode,
+    borderFocusedStyle,
+    inputAreaSize.x,
+    inputAreaSize.y,
+    inputAreaSize.width,
+    inputAreaSize.height,
+  ]);
 
   return (
     <VStack
@@ -221,10 +265,10 @@ export const InputStack = memo(function InputStack({
 // Fixes a problem found in Accordion children element.
 // When `overflow: auto` is set the thickened border when focused is not accounted for
 // hence you see a cutoff.
-// Fix was to add this so there is always 2px outer layer space
+// Padding must accommodate the focus border extension (default 2px for focusedBorderWidth: 200)
 const styles = StyleSheet.create({
   inputAreaContainerStyle: {
-    padding: 1,
+    padding: 2,
     flexGrow: 1,
   },
 });

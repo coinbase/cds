@@ -1134,6 +1134,36 @@ const RefImperativeHandleExample = () => {
   );
 };
 
+const BorderlessExample = () => {
+  const [singleValue, setSingleValue] = useState<string | null>('1');
+  const { value: multiValue, onChange: multiOnChange } = useMultiSelect({
+    initialValue: ['1', '2'],
+  });
+
+  return (
+    <VStack gap={4}>
+      <Select
+        bordered={false}
+        label="Borderless single select"
+        onChange={setSingleValue}
+        options={exampleOptions}
+        placeholder="Empty value"
+        value={singleValue}
+      />
+      <Select
+        accessibilityLabel="Borderless multi select"
+        bordered={false}
+        label="Borderless multi select"
+        onChange={multiOnChange}
+        options={exampleOptions}
+        placeholder="Empty value"
+        type="multi"
+        value={multiValue}
+      />
+    </VStack>
+  );
+};
+
 const SelectV3Screen = () => {
   return (
     <ExampleScreen>
@@ -1295,6 +1325,9 @@ const SelectV3Screen = () => {
       </Example>
       <Example title="Ref Imperative Handle">
         <RefImperativeHandleExample />
+      </Example>
+      <Example title="Borderless">
+        <BorderlessExample />
       </Example>
     </ExampleScreen>
   );
