@@ -59,10 +59,10 @@
     "clean-expo2": "rm -rf apps/mobile-app/ios && rm -rf apps/mobile-app/.expo",
     "release": "tsx tools/ci/validators/validateVersioned.ts && yarn nx run codegen:update-packages-generic-bump && tsx ./tools/validateCDSVersions.ts",
     "generate-tarballs": "node tools/generateTarballs.mjs",
-    "audit-figma-integration": "node scripts/auditFigmaIntegration/index.mjs --ci",
-    "code-connect:publish": "figma connect publish --config figma.config.web.json --exit-on-unreadable-files && figma connect publish --config figma.config.mobile.json --exit-on-unreadable-files",
-    "code-connect:publish:web": "figma connect publish --config figma.config.web.json --exit-on-unreadable-files",
-    "code-connect:publish:mobile": "figma connect publish --config figma.config.mobile.json --exit-on-unreadable-files"
+    "audit-figma-integration": "node scripts/auditFigmaIntegration/index.mjs",
+    "code-connect:publish": "yarn code-connect:publish:web && yarn code-connect:publish:mobile",
+    "code-connect:publish:web": "figma connect publish --config figma.config.web.json --exit-on-unreadable-files --batch-size 50",
+    "code-connect:publish:mobile": "figma connect publish --config figma.config.mobile.json --exit-on-unreadable-files --batch-size 50"
   },
   "resolutions": {
     "@testing-library/user-event@^14.0.4": "patch:@testing-library/user-event@npm:14.0.4#.yarn/patches/@testing-library-user-event-npm-14.0.4-109d618170",
