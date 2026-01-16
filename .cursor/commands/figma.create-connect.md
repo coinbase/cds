@@ -31,6 +31,7 @@ If you do not have either, MUST NEVER proceed with the task.
    - ALWAYS reference the guidelines for writing code connect mappings here: .cursor/rules/code-connect.mdc
    - Create the mapping file for the component
    - Provide a brief description of the mappings you created when you are done.
+   - ALWAYS check to make sure there are no EsLint errors or warnings in your new mapping file.
 
 ## Code Connect Best Practices
 
@@ -64,7 +65,7 @@ figma.connect(
   ComponentName,
   // FIGMA URL HERE,
   {
-    imports: ["import { ComponentName } from '@coinbase/cds-package-name/path/to/ComponentName';"],
+    imports: ["import { ComponentName } from '@coinbase/cds-package-name/path/to/ComponentName'"],
     props: {
       // MAP FIGMA PROPERTIES TO COMPONENT PROPS USING FIGMA CODE CONNECT API HERE
     },
