@@ -10,6 +10,7 @@ import { VStack } from '../../layout/VStack';
 import { Avatar } from '../../media/Avatar';
 import { Tooltip } from '../../overlays/tooltip/Tooltip';
 import { Link } from '../../typography/Link';
+import { Text } from '../../typography/Text';
 import { InputIcon } from '../InputIcon';
 import { InputIconButton } from '../InputIconButton';
 import { InputLabel } from '../InputLabel';
@@ -244,32 +245,113 @@ export const NoLabel = function NoLabel() {
   return <TextInput accessibilityLabel="No Label" />;
 };
 
-export const LabelWithTooltip = function LabelWithTooltip() {
+export const CustomLabel = function CustomLabel() {
   return (
-    <TextInput
-      id="display-name-tooltip"
-      label="Display name"
-      labelNode={
-        <InputLabel htmlFor="display-name-tooltip">
-          <HStack alignItems="center" gap={1}>
-            Display name
-            <Tooltip content="This will be visible to other users.">
-              <Icon active color="fg" name="info" size="xs" tabIndex={0} />
-            </Tooltip>
-          </HStack>
-        </InputLabel>
-      }
-      placeholder="Satoshi Nakamoto"
-    />
+    <VStack gap={2}>
+      {/* Default with tooltip */}
+      <TextInput
+        accessibilityLabel="Display name"
+        id="display-name-tooltip"
+        labelNode={
+          <InputLabel htmlFor="display-name-tooltip">
+            <HStack alignItems="center" gap={1}>
+              Display name
+              <Tooltip content="This will be visible to other users.">
+                <Icon active color="fg" name="info" size="xs" tabIndex={0} />
+              </Tooltip>
+            </HStack>
+          </InputLabel>
+        }
+        placeholder="Satoshi Nakamoto"
+      />
+      {/* Compact with required indicator */}
+      <TextInput
+        compact
+        accessibilityLabel="Amount"
+        labelNode={
+          <InputLabel>
+            <HStack alignItems="center" gap={0.5}>
+              Amount
+              <Text color="fgNegative" font="label1">
+                *
+              </Text>
+            </HStack>
+          </InputLabel>
+        }
+        placeholder="0.00"
+        suffix="USD"
+      />
+      {/* Compact with start icon */}
+      <TextInput
+        compact
+        accessibilityLabel="Search"
+        labelNode={<InputLabel>Search</InputLabel>}
+        placeholder="Search..."
+        start={<InputIconButton transparent accessibilityLabel="Search" name="search" />}
+      />
+      {/* Compact with start avatar */}
+      <TextInput
+        compact
+        accessibilityLabel="Amount"
+        labelNode={
+          <InputLabel>
+            <HStack alignItems="center" gap={0.5}>
+              Amount
+              <Text color="fgNegative" font="label1">
+                *
+              </Text>
+            </HStack>
+          </InputLabel>
+        }
+        placeholder="0.00"
+        start={
+          <Box paddingX={1}>
+            <Avatar
+              alt="USD"
+              size="s"
+              src="https://dynamic-assets.coinbase.com/e785e0181f1a23a30d9476038d9be91e9f6c63959b538eabbc51a1abc8898940383291eede695c3b8dfaa1829a9b57f5a2d0a16b0523580346c6b8fab67af14b/asset_icons/b57ac673f06a4b0338a596817eb0a50ce16e2059f327dc117744449a47915cb2.png"
+            />
+          </Box>
+        }
+        suffix="USD"
+      />
+      {/* Inside variant with optional indicator */}
+      <TextInput
+        accessibilityLabel="Bio"
+        id="bio-input"
+        labelNode={
+          <InputLabel htmlFor="bio-input" paddingY={0}>
+            <HStack alignItems="center" gap={1}>
+              Bio
+              <Text color="fgMuted" font="legal">
+                (optional)
+              </Text>
+            </HStack>
+          </InputLabel>
+        }
+        labelVariant="inside"
+        placeholder="Tell us about yourself"
+      />
+      {/* Inside variant with start icon */}
+      <TextInput
+        accessibilityLabel="Notes"
+        id="notes-input"
+        labelNode={
+          <InputLabel htmlFor="notes-input" paddingY={0}>
+            Notes
+          </InputLabel>
+        }
+        labelVariant="inside"
+        placeholder="Add a note"
+        start={<InputIcon name="pencil" />}
+      />
+    </VStack>
   );
 };
 
 export const StartContent = function StartContent() {
   return (
-    <TextInput
-      label="Label"
-      start={<InputIconButton transparent accessibilityLabel="Add" name="add" />}
-    />
+    <TextInput label="Label" start={<InputIconButton accessibilityLabel="Add" name="add" />} />
   );
 };
 
