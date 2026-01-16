@@ -114,6 +114,7 @@ export const NativeInput = memo(
       onKeyDown,
       onChange,
       accessibilityLabel,
+      accessibilityLabelledBy,
       accessibilityHint,
       compact,
       className,
@@ -141,6 +142,7 @@ export const NativeInput = memo(
         ref={ref}
         aria-describedby={accessibilityHint}
         aria-label={accessibilityLabel}
+        aria-labelledby={accessibilityLabelledBy}
         className={cx(baseCss, containerSpacing ?? defaultContainerPadding, className)}
         data-testid={testID}
         onBlur={onBlur}

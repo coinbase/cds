@@ -280,20 +280,20 @@ function Example() {
 
   return (
     <DateInput
+      accessibilityLabel="Birthdate"
       date={date}
       error={error}
-      onChangeDate={setDate}
-      onErrorDate={setError}
-      label="Birthdate"
+      invalidDateError="Please enter a valid date"
       labelNode={
         <HStack alignItems="center" gap={1}>
           <InputLabel>Birthdate</InputLabel>
           <Tooltip content="This will be visible to other users.">
-            <Icon active color="fg" name="info" size="xs" />
+            <Icon color="fgMuted" name="info" size="xs" />
           </Tooltip>
         </HStack>
       }
-      invalidDateError="Please enter a valid date"
+      onChangeDate={setDate}
+      onErrorDate={setError}
     />
   );
 }
