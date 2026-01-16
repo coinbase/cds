@@ -10,7 +10,7 @@ figma.connect(
   Tray,
   'https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/✨-CDS-Components?node-id=14729-33327&m=dev',
   {
-    imports: ["import { Tray } from '@coinbase/cds-mobile/overlays/tray/Tray';"],
+    imports: ["import { Tray } from '@coinbase/cds-mobile/overlays/tray/Tray'"],
     props: {
       title: figma.boolean('show section header', {
         true: figma.textContent('SectionHeader'),
@@ -53,7 +53,7 @@ figma.connect(
   Tray,
   'https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/✨-CDS-Components?node-id=14729-33472&m=dev',
   {
-    imports: ["import { Tray } from '@coinbase/cds-mobile/overlays/tray/Tray';"],
+    imports: ["import { Tray } from '@coinbase/cds-mobile/overlays/tray/Tray'"],
     props: {
       pictogram: figma.boolean('show pictogram', {
         true: figma.children('Spot Square/blockchain'),
@@ -102,7 +102,7 @@ figma.connect(
   Tray,
   'https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/✨-CDS-Components?node-id=14729-33505&m=dev',
   {
-    imports: ["import { Tray } from '@coinbase/cds-mobile/overlays/tray/Tray';"],
+    imports: ["import { Tray } from '@coinbase/cds-mobile/overlays/tray/Tray'"],
     props: {
       spotRectangle: figma.instance('spot rectangle'),
       title: figma.string('title'),
@@ -152,7 +152,7 @@ figma.connect(
   Tray,
   'https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/✨-CDS-Components?node-id=14729-33538&m=dev',
   {
-    imports: ["import { Tray } from '@coinbase/cds-mobile/overlays/tray/Tray';"],
+    imports: ["import { Tray } from '@coinbase/cds-mobile/overlays/tray/Tray'"],
     props: {
       children: figma.children('*'),
     },
@@ -184,7 +184,7 @@ figma.connect(
   Tray,
   'https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/✨-CDS-Components?node-id=14729-77780&m=dev',
   {
-    imports: ["import { Tray } from '@coinbase/cds-mobile/overlays/tray/Tray';"],
+    imports: ["import { Tray } from '@coinbase/cds-mobile/overlays/tray/Tray'"],
     props: {
       content: figma.instance('content'),
       stickyFooter: figma.children('StickyFooter'),

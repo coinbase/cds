@@ -7,7 +7,7 @@ figma.connect(
   'https://www.figma.com/design/46lNmiV1z8I888My5kNq7R/%E2%9C%A8-Logos?node-id=1268-79',
   {
     imports: [
-      "import { SubBrandLogoWordmark } from '@coinbase/cds-web/icons/SubBrandLogoWordmark';",
+      "import { SubBrandLogoWordmark } from '@coinbase/cds-web/icons/SubBrandLogoWordmark'",
     ],
     props: {
       foreground: figma.nestedProps('Logo Wordmark', {

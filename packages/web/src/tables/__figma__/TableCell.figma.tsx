@@ -11,10 +11,10 @@ figma.connect(
   'https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/✨-CDS-Components?node-id=8298-12299&m=dev',
   {
     imports: [
-      "import { Table } from '@coinbase/cds-web/tables/Table';",
-      "import { TableBody } from '@coinbase/cds-web/tables/TableBody';",
-      "import { TableRow } from '@coinbase/cds-web/tables/TableRow';",
-      "import { TableCell } from '@coinbase/cds-web/tables/TableCell';",
+      "import { Table } from '@coinbase/cds-web/tables/Table'",
+      "import { TableBody } from '@coinbase/cds-web/tables/TableBody'",
+      "import { TableRow } from '@coinbase/cds-web/tables/TableRow'",
+      "import { TableCell } from '@coinbase/cds-web/tables/TableCell'",
     ],
     props: {
       alignItems: figma.enum('alignment', {
@@ -61,10 +61,10 @@ figma.connect(
   'https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/✨-CDS-Components?node-id=8298-12088&m=dev',
   {
     imports: [
-      "import { Table } from '@coinbase/cds-web/tables/Table';",
-      "import { TableHeader } from '@coinbase/cds-web/tables/TableHeader';",
-      "import { TableRow } from '@coinbase/cds-web/tables/TableRow';",
-      "import { TableCell } from '@coinbase/cds-web/tables/TableCell';",
+      "import { Table } from '@coinbase/cds-web/tables/Table'",
+      "import { TableHeader } from '@coinbase/cds-web/tables/TableHeader'",
+      "import { TableRow } from '@coinbase/cds-web/tables/TableRow'",
+      "import { TableCell } from '@coinbase/cds-web/tables/TableCell'",
     ],
     props: {
       alignItems: figma.enum('alignment', {

@@ -6,7 +6,7 @@ figma.connect(
   Switch,
   'https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/✨-CDS-Components?node-id=155%3A9924',
   {
-    imports: ["import { Switch } from '@coinbase/cds-mobile/controls/Switch';"],
+    imports: ["import { Switch } from '@coinbase/cds-mobile/controls/Switch'"],
     props: {
       children: figma.boolean('show label', {
         true: figma.string('↳ label'),

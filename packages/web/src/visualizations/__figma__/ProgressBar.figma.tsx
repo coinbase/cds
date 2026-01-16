@@ -9,8 +9,8 @@ figma.connect(
   'https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/✨-CDS-Components?node-id=64-746&m=dev',
   {
     imports: [
-      "import { ProgressBar } from '@coinbase/cds-web/visualizations/ProgressBar';",
-      "import { ProgressBarWithFloatLabel } from '@coinbase/cds-web/visualizations/ProgressBarWithFloatLabel';",
+      "import { ProgressBar } from '@coinbase/cds-web/visualizations/ProgressBar'",
+      "import { ProgressBarWithFloatLabel } from '@coinbase/cds-web/visualizations/ProgressBarWithFloatLabel'",
     ],
     props: {
       weight: figma.enum('weight', {
@@ -55,8 +55,8 @@ figma.connect(
   'https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/✨-CDS-Components?node-id=64-746&m=dev',
   {
     imports: [
-      "import { ProgressBar } from '@coinbase/cds-web/visualizations/ProgressBar';",
-      "import { ProgressBarWithFloatLabel } from '@coinbase/cds-web/visualizations/ProgressBarWithFloatLabel';",
+      "import { ProgressBar } from '@coinbase/cds-web/visualizations/ProgressBar'",
+      "import { ProgressBarWithFloatLabel } from '@coinbase/cds-web/visualizations/ProgressBarWithFloatLabel'",
     ],
     props: {
       weight: figma.enum('weight', {

@@ -8,7 +8,7 @@ figma.connect(
   'https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/✨-CDS-Components?node-id=10414%3A896',
   {
     imports: [
-      "import { AndroidNavigationBar } from '@coinbase/cds-mobile/system/AndroidNavigationBar';",
+      "import { AndroidNavigationBar } from '@coinbase/cds-mobile/system/AndroidNavigationBar'",
     ],
     props: {
       showsearch27799: figma.boolean('show search'),

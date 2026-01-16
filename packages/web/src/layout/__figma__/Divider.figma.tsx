@@ -7,7 +7,7 @@ figma.connect(
   Divider,
   'https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/✨-CDS-Components?node-id=283-19869&m=dev',
   {
-    imports: ["import { Divider } from '@coinbase/cds-web/layout/Divider';"],
+    imports: ["import { Divider } from '@coinbase/cds-web/layout/Divider'"],
     props: {
       color: figma.enum('type', {
         line: 'bgLine',
@@ -22,7 +22,7 @@ figma.connect(
   Divider,
   'https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/✨-CDS-Components?node-id=60-654&m=dev',
   {
-    imports: ["import { Divider } from '@coinbase/cds-web/layout/Divider';"],
+    imports: ["import { Divider } from '@coinbase/cds-web/layout/Divider'"],
     props: {
       color: figma.enum('type', {
         line: 'bgLine',
