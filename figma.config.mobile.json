@@ -1,9 +1,10 @@
 {
   "codeConnect": {
     "parser": "react",
-    "label": "React",
+    "label": "React Native",
     "include": [
-      "**/*.tsx"
+      "packages/mobile/src/**/*.tsx",
+      "packages/mobile-visualization/src/**/*.tsx"
     ],
     "exclude": [
       "**/__tests__/**",

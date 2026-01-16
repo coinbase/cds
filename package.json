@@ -59,7 +59,10 @@
     "clean-expo2": "rm -rf apps/mobile-app/ios && rm -rf apps/mobile-app/.expo",
     "release": "tsx tools/ci/validators/validateVersioned.ts && yarn nx run codegen:update-packages-generic-bump && tsx ./tools/validateCDSVersions.ts",
     "generate-tarballs": "node tools/generateTarballs.mjs",
-    "regenerate-icons-code-connect": "node scripts/regenerate-icons-code-connect.mjs"
+    "audit-figma-integration": "node scripts/auditFigmaIntegration/index.mjs --ci",
+    "code-connect:publish": "figma connect publish --config figma.config.web.json --exit-on-unreadable-files && figma connect publish --config figma.config.mobile.json --exit-on-unreadable-files",
+    "code-connect:publish:web": "figma connect publish --config figma.config.web.json --exit-on-unreadable-files",
+    "code-connect:publish:mobile": "figma connect publish --config figma.config.mobile.json --exit-on-unreadable-files"
   },
   "resolutions": {
     "@testing-library/user-event@^14.0.4": "patch:@testing-library/user-event@npm:14.0.4#.yarn/patches/@testing-library-user-event-npm-14.0.4-109d618170",
@@ -105,7 +108,7 @@
     "@babel/template": "^7.20.7",
     "@babel/types": "^7.20.7",
     "@coinbase/eslint-plugin-internal": "workspace:^",
-    "@figma/code-connect": "^1.3.4",
+    "@figma/code-connect": "^1.3.12",
     "@graphql-tools/jest-transform": "^2.0.0",
     "@inquirer/prompts": "^7.5.3",
     "@joshcena/docusaurus-plugin-utils": "^0.1.3",

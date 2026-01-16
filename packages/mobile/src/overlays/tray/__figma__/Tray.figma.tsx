@@ -13,13 +13,13 @@ figma.connect(
     imports: ["import { Tray } from '@coinbase/cds-mobile/overlays/tray/Tray';"],
     props: {
       title: figma.boolean('show section header', {
-        true: figma.children('SectionHeader'),
+        true: figma.textContent('SectionHeader'),
         false: undefined,
       }),
       stickyFooter: figma.children('StickyFooter'),
-      content: figma.children(['Select Option', 'Action Cell', 'TabbedChips']),
+      content: figma.children('.Select Option*'),
     },
-    example: function TrayExample({ stickyFooter, content, ...props }) {
+    example: function TrayExample({ stickyFooter, content, title }) {
       const [isTrayVisible, setIsTrayVisible] = useState(false);
       const trayRef = useRef(null);
 
@@ -33,7 +33,7 @@ figma.connect(
               handleBarAccessibilityLabel="Dismiss"
               onCloseComplete={() => setIsTrayVisible(false)}
               onVisibilityChange={() => {}}
-              {...props}
+              title={title}
             >
               {({ handleClose }) => (
                 <TrayStickyFooter>
@@ -53,16 +53,16 @@ figma.connect(
   Tray,
   'https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/✨-CDS-Components?node-id=14729-33472&m=dev',
   {
-    imports: ["import { Tray } from '@coinbase/cds-mobile/overlays/Tray/Tray';"],
+    imports: ["import { Tray } from '@coinbase/cds-mobile/overlays/tray/Tray';"],
     props: {
       pictogram: figma.boolean('show pictogram', {
         true: figma.children('Spot Square/blockchain'),
         false: undefined,
       }),
-      sectionHeader: figma.children('SectionHeader'),
+      title: figma.textContent('SectionHeader'),
       stickyFooter: figma.children('StickyFooter'),
     },
-    example: function TrayExample({ pictogram, stickyFooter, sectionHeader }) {
+    example: function TrayExample({ pictogram, title, stickyFooter }) {
       const [isTrayVisible, setIsTrayVisible] = useState(false);
       const trayRef = useRef(null);
 
@@ -76,11 +76,11 @@ figma.connect(
               handleBarAccessibilityLabel="Dismiss"
               onCloseComplete={() => setIsTrayVisible(false)}
               onVisibilityChange={() => {}}
+              title={title}
             >
               {({ handleClose }) => (
                 <TrayStickyFooter>
                   {pictogram}
-                  {sectionHeader}
                   <TextBody>
                     Lorem ipsum dolor sit amet consectetur. Lacus vitae vulputate maecenas sed ac
                     cursus enim elementum euismod. Ac vulputate gravida mauris id nulla imperdiet
@@ -102,7 +102,7 @@ figma.connect(
   Tray,
   'https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/✨-CDS-Components?node-id=14729-33505&m=dev',
   {
-    imports: ["import { Tray } from '@coinbase/cds-mobile/overlays/Tray/Tray';"],
+    imports: ["import { Tray } from '@coinbase/cds-mobile/overlays/tray/Tray';"],
     props: {
       spotRectangle: figma.instance('spot rectangle'),
       title: figma.string('title'),
@@ -152,7 +152,7 @@ figma.connect(
   Tray,
   'https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/✨-CDS-Components?node-id=14729-33538&m=dev',
   {
-    imports: ["import { Tray } from '@coinbase/cds-mobile/overlays/Tray/Tray';"],
+    imports: ["import { Tray } from '@coinbase/cds-mobile/overlays/tray/Tray';"],
     props: {
       children: figma.children('*'),
     },
@@ -184,16 +184,16 @@ figma.connect(
   Tray,
   'https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/✨-CDS-Components?node-id=14729-77780&m=dev',
   {
-    imports: ["import { Tray } from '@coinbase/cds-mobile/overlays/Tray/Tray';"],
+    imports: ["import { Tray } from '@coinbase/cds-mobile/overlays/tray/Tray';"],
     props: {
       content: figma.instance('content'),
       stickyFooter: figma.children('StickyFooter'),
       title: figma.boolean('show section header', {
-        true: figma.children('SectionHeader'),
+        true: figma.textContent('SectionHeader'),
         false: undefined,
       }),
     },
-    example: function TrayExample({ content, stickyFooter, ...props }) {
+    example: function TrayExample({ content, stickyFooter, title }) {
       const [isTrayVisible, setIsTrayVisible] = useState(false);
       const trayRef = useRef(null);
 
@@ -207,7 +207,7 @@ figma.connect(
               handleBarAccessibilityLabel="Dismiss"
               onCloseComplete={() => setIsTrayVisible(false)}
               onVisibilityChange={() => {}}
-              {...props}
+              title={title}
             >
               {({ handleClose }) => (
                 <TrayStickyFooter>

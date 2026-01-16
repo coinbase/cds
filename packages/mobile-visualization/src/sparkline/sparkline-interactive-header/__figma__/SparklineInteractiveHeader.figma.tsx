@@ -9,8 +9,8 @@ figma.connect(
   'https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/✨-CDS-Components?node-id=320-14931&m=dev',
   {
     imports: [
-      "import { SparklineInteractiveHeader } from '@coinbase/cds-web-visualization';",
-      "import { SparklineInteractive } from '@coinbase/cds-web-visualization';",
+      "import { SparklineInteractiveHeader } from '@coinbase/cds-mobile-visualization';",
+      "import { SparklineInteractive } from '@coinbase/cds-mobile-visualization';",
     ],
     props: {
       compact: figma.boolean('compact'),
