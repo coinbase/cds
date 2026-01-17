@@ -12,7 +12,7 @@ const URL =
 
 figma.connect(ContentCardFooter, URL, {
   imports: [
-    "import { ContentCardFooter } from '@cbhq/cds-mobile/cards/ContentCard/ContentCardFooter';",
+    "import { ContentCardFooter } from '@cbhq/cds-mobile/cards/ContentCard/ContentCardFooter'",
   ],
   variant: {
     type: 'button',
@@ -29,8 +29,8 @@ figma.connect(ContentCardFooter, URL, {
 
 figma.connect(ContentCardFooter, URL, {
   imports: [
-    "import { ContentCardFooter } from '@cbhq/cds-mobile/cards/ContentCard/ContentCardFooter';",
-    "import { RemoteImageGroup } from '@cbhq/cds-mobile/media/RemoteImageGroup';",
+    "import { ContentCardFooter } from '@cbhq/cds-mobile/cards/ContentCard/ContentCardFooter'",
+    "import { RemoteImageGroup } from '@cbhq/cds-mobile/media/RemoteImageGroup'",
   ],
   variant: {
     type: 'media + button',
@@ -48,10 +48,10 @@ figma.connect(ContentCardFooter, URL, {
 
 figma.connect(ContentCardFooter, URL, {
   imports: [
-    "import { ContentCardFooter } from '@cbhq/cds-mobile/cards/ContentCard/ContentCardFooter';",
-    "import { Avatar } from '@cbhq/cds-mobile/media/Avatar';",
-    "import { VStack } from '@cbhq/cds-mobile/layout/VStack';",
-    "import { HStack } from '@cbhq/cds-mobile/layout/HStack';",
+    "import { ContentCardFooter } from '@cbhq/cds-mobile/cards/ContentCard/ContentCardFooter'",
+    "import { Avatar } from '@cbhq/cds-mobile/media/Avatar'",
+    "import { VStack } from '@cbhq/cds-mobile/layout/VStack'",
+    "import { HStack } from '@cbhq/cds-mobile/layout/HStack'",
     "import { Text } from '@cbhq/cds-mobile/typography/Text'",
     "import { Text } from '@cbhq/cds-mobile/typography/Text'",
   ],
@@ -77,9 +77,9 @@ figma.connect(ContentCardFooter, URL, {
 
 figma.connect(ContentCardFooter, URL, {
   imports: [
-    "import { ContentCardFooter } from '@cbhq/cds-mobile/cards/ContentCard/ContentCardFooter';",
-    "import { IconCounterButton } from '@cbhq/cds-mobile/buttons/IconCounterButton';",
-    "import { HStack } from '@cbhq/cds-mobile/layout/HStack';",
+    "import { ContentCardFooter } from '@cbhq/cds-mobile/cards/ContentCard/ContentCardFooter'",
+    "import { IconCounterButton } from '@cbhq/cds-mobile/buttons/IconCounterButton'",
+    "import { HStack } from '@cbhq/cds-mobile/layout/HStack'",
   ],
   variant: {
     type: 'engagement + button',
@@ -106,9 +106,9 @@ figma.connect(ContentCardFooter, URL, {
 
 figma.connect(ContentCardFooter, URL, {
   imports: [
-    "import { ContentCardFooter } from '@cbhq/cds-mobile/cards/ContentCard/ContentCardFooter';",
-    "import { IconCounterButton } from '@cbhq/cds-mobile/buttons/IconCounterButton';",
-    "import { HStack } from '@cbhq/cds-mobile/layout/HStack';",
+    "import { ContentCardFooter } from '@cbhq/cds-mobile/cards/ContentCard/ContentCardFooter'",
+    "import { IconCounterButton } from '@cbhq/cds-mobile/buttons/IconCounterButton'",
+    "import { HStack } from '@cbhq/cds-mobile/layout/HStack'",
   ],
   variant: {
     type: 'engagement',
