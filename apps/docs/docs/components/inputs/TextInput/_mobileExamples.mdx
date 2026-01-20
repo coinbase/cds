@@ -91,10 +91,11 @@ It's also advised you always format `helperText` with `Error: ${errorMessage}`. 
 <TextInput label="Label" placeholder="Placeholder" />
 ```
 
-### Borderless TextInput (web)
+### Borderless
 
-A borderless TextInput SHOULD NOT be used alone. It should be used
-with a TypeAhead component.
+:::warning
+You should not use a borderless TextInput alone. It should be used with a TypeAhead component.
+:::
 
 ```jsx
 <HStack padding={2}>
@@ -322,18 +323,54 @@ When using the `inside` label variant, you should always include a `placeholder`
 If you need to render a custom label (e.g. a label with a tooltip), you can use the `labelNode` prop.
 
 ```jsx
-<TextInput
-  label="Display name"
-  labelNode={
-    <HStack alignItems="center" gap={1}>
-      <InputLabel>Display name</InputLabel>
-      <Tooltip content="This will be visible to other users.">
-        <Icon active color="fg" name="info" size="xs" />
-      </Tooltip>
-    </HStack>
-  }
-  placeholder="Satoshi Nakamoto"
-/>
+<VStack gap={2}>
+  <TextInput
+    accessibilityLabel="Display name"
+    labelNode={
+      <HStack alignItems="center" gap={1}>
+        <InputLabel>Display name</InputLabel>
+        <Tooltip content="This will be visible to other users.">
+          <Icon active color="fg" name="info" size="xs" />
+        </Tooltip>
+      </HStack>
+    }
+    placeholder="Satoshi Nakamoto"
+  />
+  <TextInput
+    accessibilityLabel="Amount"
+    compact
+    labelNode={
+      <HStack alignItems="center" gap={0.5}>
+        <InputLabel>Amount</InputLabel>
+        <Text color="fgNegative" font="label1">
+          *
+        </Text>
+      </HStack>
+    }
+    placeholder="0.00"
+    suffix="USD"
+  />
+  <TextInput
+    accessibilityLabel="Bio"
+    labelVariant="inside"
+    labelNode={
+      <HStack alignItems="center" gap={1}>
+        <InputLabel paddingY={0}>Bio</InputLabel>
+        <Text color="fgMuted" font="legal">
+          (optional)
+        </Text>
+      </HStack>
+    }
+    placeholder="Tell us about yourself"
+  />
+  <TextInput
+    accessibilityLabel="Notes"
+    labelVariant="inside"
+    labelNode={<InputLabel paddingY={0}>Notes</InputLabel>}
+    placeholder="Add a note"
+    start={<InputIcon name="pencil" />}
+  />
+</VStack>
 ```
 
 ## Example of Input Objects placed at the End
@@ -593,16 +630,6 @@ function testExample() {
       end={<InputIcon active color="primary" name="visible" />}
     />
   );
-}
-```
-
-## Date Picker Example
-
-You can construct a DatePicker using TextInput
-
-```jsx
-function DatePicker() {
-  return <TextInput label="Pick a date" type="date" />;
 }
 ```
 

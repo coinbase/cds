@@ -1,9 +1,0 @@
-{
-  "codeConnect": {
-    "parser": "react",
-    "label": "React Native",
-    "include": [
-      "/**/*.{tsx,jsx}"
-    ]
-  }
-}

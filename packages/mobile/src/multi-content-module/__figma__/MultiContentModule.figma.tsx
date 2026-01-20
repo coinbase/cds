@@ -8,7 +8,7 @@ figma.connect(
   'https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/✨-CDS-Components?node-id=14727%3A26365',
   {
     imports: [
-      "import { MultiContentModule } from '@cbhq/cds-mobile/multi-content-module/MultiContentModule';",
+      "import { MultiContentModule } from '@cbhq/cds-mobile/multi-content-module/MultiContentModule'",
     ],
     props: {
       title: figma.string('headline'),
