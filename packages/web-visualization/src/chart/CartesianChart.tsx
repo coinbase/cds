@@ -2,7 +2,7 @@ import React, { forwardRef, memo, useCallback, useMemo, useRef } from 'react';
 import type { Rect } from '@coinbase/cds-common/types';
 import { cx } from '@coinbase/cds-web';
 import { useDimensions } from '@coinbase/cds-web/hooks/useDimensions';
-import { Box, type BoxBaseProps, type BoxProps, HStack, VStack } from '@coinbase/cds-web/layout';
+import { Box, type BoxBaseProps, type BoxProps } from '@coinbase/cds-web/layout';
 import { css } from '@linaria/core';
 
 import { ScrubberProvider, type ScrubberProviderProps } from './scrubber/ScrubberProvider';
@@ -73,6 +73,11 @@ export type CartesianChartBaseProps = BoxBaseProps &
      * @default 'bottom'
      */
     legendPosition?: LegendPosition;
+    /**
+     * Accessibility label for the legend group.
+     * @default 'Legend'
+     */
+    legendAccessibilityLabel?: string;
   };
 
 export type CartesianChartProps = Omit<BoxProps<'div'>, 'title'> &
@@ -127,12 +132,14 @@ export const CartesianChart = memo(
         onScrubberPositionChange,
         legend,
         legendPosition = 'bottom',
+        legendAccessibilityLabel,
         width = '100%',
         height = '100%',
         className,
         classNames,
         style,
         styles,
+        accessibilityLabel,
         ...props
       },
       ref,
@@ -402,27 +409,20 @@ export const CartesianChart = memo(
       );
       const rootStyles = useMemo(() => ({ ...style, ...styles?.root }), [style, styles?.root]);
 
-      // Render legend element based on legend prop
       const legendElement = useMemo(() => {
-        if (!legend) return null;
-
-        // Determine flex direction based on position
-        const isHorizontal = legendPosition === 'top' || legendPosition === 'bottom';
-        const flexDirection = isHorizontal ? 'row' : 'column';
+        if (!legend) return;
 
         if (legend === true) {
-          return <Legend flexDirection={flexDirection} />;
+          const isHorizontal = legendPosition === 'top' || legendPosition === 'bottom';
+          const flexDirection = isHorizontal ? 'row' : 'column';
+
+          return (
+            <Legend accessibilityLabel={legendAccessibilityLabel} flexDirection={flexDirection} />
+          );
         }
 
-        // Clone the element to ensure proper flex direction if not explicitly set
-        return React.cloneElement(legend, {
-          flexDirection: legend.props.flexDirection ?? flexDirection,
-        });
-      }, [legend, legendPosition]);
-
-      // Determine layout direction based on legend position
-      const isVerticalLayout = legendPosition === 'top' || legendPosition === 'bottom';
-      const LayoutStack = isVerticalLayout ? VStack : HStack;
+        return legend;
+      }, [legend, legendAccessibilityLabel, legendPosition]);
 
       const chartContent = (
         <Box
@@ -446,6 +446,7 @@ export const CartesianChart = memo(
                 }
               }
             }}
+            accessibilityLabel={accessibilityLabel}
             aria-live="polite"
             as="svg"
             className={cx(enableScrubbing && focusStylesCss, classNames?.chart)}
@@ -467,8 +468,11 @@ export const CartesianChart = memo(
             svgRef={svgRef}
           >
             {legend ? (
-              <LayoutStack
+              <Box
                 className={rootClassNames}
+                flexDirection={
+                  legendPosition === 'top' || legendPosition === 'bottom' ? 'column' : 'row'
+                }
                 height={height}
                 style={rootStyles}
                 width={width}
@@ -477,7 +481,7 @@ export const CartesianChart = memo(
                 {(legendPosition === 'top' || legendPosition === 'left') && legendElement}
                 {chartContent}
                 {(legendPosition === 'bottom' || legendPosition === 'right') && legendElement}
-              </LayoutStack>
+              </Box>
             ) : (
               <Box
                 className={rootClassNames}

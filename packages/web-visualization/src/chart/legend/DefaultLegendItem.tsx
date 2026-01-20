@@ -107,6 +107,7 @@ export type LegendItemComponent = React.FC<LegendItemProps>;
 
 export const DefaultLegendItem = memo(
   ({
+    seriesId,
     label,
     color,
     shape,

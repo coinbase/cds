@@ -3,7 +3,7 @@ import { type StyleProp, type View, type ViewStyle } from 'react-native';
 import type { Rect } from '@coinbase/cds-common/types';
 import { useLayout } from '@coinbase/cds-mobile/hooks/useLayout';
 import type { BoxBaseProps, BoxProps } from '@coinbase/cds-mobile/layout';
-import { Box, HStack, VStack } from '@coinbase/cds-mobile/layout';
+import { Box } from '@coinbase/cds-mobile/layout';
 import { Canvas, Skia, type SkTypefaceFontProvider } from '@shopify/react-native-skia';
 
 import { ScrubberProvider, type ScrubberProviderProps } from './scrubber/ScrubberProvider';
@@ -78,6 +78,11 @@ export type CartesianChartBaseProps = Omit<BoxBaseProps, 'fontFamily'> &
      * @default 'bottom'
      */
     legendPosition?: LegendPosition;
+    /**
+     * Accessibility label for the legend group.
+     * @default 'Legend'
+     */
+    legendAccessibilityLabel?: string;
   };
 
 export type CartesianChartProps = CartesianChartBaseProps &
@@ -128,6 +133,7 @@ export const CartesianChart = memo(
         onScrubberPositionChange,
         legend,
         legendPosition = 'bottom',
+        legendAccessibilityLabel,
         width = '100%',
         height = '100%',
         style,
@@ -445,33 +451,20 @@ export const CartesianChart = memo(
         return [style, styles?.root];
       }, [style, styles?.root]);
 
-      // Render legend element based on legend prop
       const legendElement = useMemo(() => {
-        if (!legend) return null;
-
-        // Determine flex direction based on position
-        const isHorizontal = legendPosition === 'top' || legendPosition === 'bottom';
-        const flexDirection = isHorizontal ? 'row' : 'column';
+        if (!legend) return;
 
         if (legend === true) {
-          return <Legend flexDirection={flexDirection} />;
+          const isHorizontal = legendPosition === 'top' || legendPosition === 'bottom';
+          const flexDirection = isHorizontal ? 'row' : 'column';
+
+          return (
+            <Legend accessibilityLabel={legendAccessibilityLabel} flexDirection={flexDirection} />
+          );
         }
 
-        // Clone the element to ensure proper flex direction if not explicitly set
-        return React.cloneElement(legend, {
-          flexDirection: legend.props.flexDirection ?? flexDirection,
-        });
-      }, [legend, legendPosition]);
-
-      // Determine layout direction based on legend position
-      const isVerticalLayout = legendPosition === 'top' || legendPosition === 'bottom';
-      const LayoutStack = isVerticalLayout ? VStack : HStack;
-
-      const chartContent = (
-        <Box collapsable={collapsable} onLayout={onContainerLayout} style={{ flex: 1 }}>
-          <ChartCanvas style={styles?.chart}>{children}</ChartCanvas>
-        </Box>
-      );
+        return legend;
+      }, [legend, legendAccessibilityLabel, legendPosition]);
 
       return (
         <CartesianChartProvider value={contextValue}>
@@ -481,19 +474,24 @@ export const CartesianChart = memo(
             onScrubberPositionChange={onScrubberPositionChange}
           >
             {legend ? (
-              <LayoutStack
+              <Box
                 ref={ref}
                 accessibilityLiveRegion="polite"
                 accessibilityRole="image"
+                flexDirection={
+                  legendPosition === 'top' || legendPosition === 'bottom' ? 'column' : 'row'
+                }
                 height={height}
                 style={rootStyles}
                 width={width}
                 {...props}
               >
                 {(legendPosition === 'top' || legendPosition === 'left') && legendElement}
-                {chartContent}
+                <Box collapsable={collapsable} onLayout={onContainerLayout} style={{ flex: 1 }}>
+                  <ChartCanvas style={styles?.chart}>{children}</ChartCanvas>
+                </Box>
                 {(legendPosition === 'bottom' || legendPosition === 'right') && legendElement}
-              </LayoutStack>
+              </Box>
             ) : (
               <Box
                 ref={ref}

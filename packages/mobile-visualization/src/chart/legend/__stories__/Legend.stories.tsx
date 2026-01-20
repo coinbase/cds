@@ -419,6 +419,38 @@ const Interactive = () => {
   );
 };
 
+const Accessible = () => {
+  const theme = useTheme();
+  const months = useMemo(() => ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'], []);
+
+  return (
+    <LineChart
+      legend
+      showArea
+      height={200}
+      legendAccessibilityLabel="Financial performance chart, legend"
+      legendPosition="bottom"
+      series={[
+        {
+          id: 'revenue',
+          label: 'Revenue',
+          data: [120, 150, 180, 165, 190, 210],
+          color: `rgb(${theme.spectrum.green40})`,
+        },
+        {
+          id: 'expenses',
+          label: 'Expenses',
+          data: [80, 95, 110, 105, 120, 130],
+          color: `rgb(${theme.spectrum.orange40})`,
+        },
+      ]}
+      width="100%"
+      xAxis={{ data: months }}
+      yAxis={{ domain: { min: 0 }, showGrid: true }}
+    />
+  );
+};
+
 const LegendShapes = () => {
   const theme = useTheme();
   const months = [
@@ -585,6 +617,9 @@ const LegendStories = () => {
         </Example>
         <Example title="Legend Shapes">
           <LegendShapes />
+        </Example>
+        <Example title="Accessible Legend">
+          <Accessible />
         </Example>
       </ExampleScreen>
     </ScrollView>

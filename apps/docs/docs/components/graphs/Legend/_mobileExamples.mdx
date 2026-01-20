@@ -2,7 +2,7 @@ Legend displays series information for charts, showing labels and color indicato
 
 ## Basics
 
-Use the `legend` prop on chart components to enable a default legend, or pass a `Legend` component for customization.
+Use the `legend` prop on chart components to enable a default legend, or pass a `Legend` component for customization. Legend's `flexDirection` is automatically set to `row` for top/bottom `legendPosition` and `column` otherwise.
 
 ```jsx
 function BasicLegend() {
@@ -310,6 +310,84 @@ function CustomLegendShapes() {
         tickLabelFormatter: numberFormatter,
         width: 60,
       }}
+    />
+  );
+}
+```
+
+## Accessibility
+
+Use `legendAccessibilityLabel` on chart components to provide a descriptive label for the legend group. This helps screen reader users understand what the legend represents.
+
+```jsx
+function AccessibleLegend() {
+  const theme = useTheme();
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
+
+  return (
+    <LineChart
+      legend
+      showArea
+      height={200}
+      legendAccessibilityLabel="Financial performance chart, legend"
+      legendPosition="bottom"
+      series={[
+        {
+          id: 'revenue',
+          label: 'Revenue',
+          data: [120, 150, 180, 165, 190, 210],
+          color: `rgb(${theme.spectrum.green40})`,
+        },
+        {
+          id: 'expenses',
+          label: 'Expenses',
+          data: [80, 95, 110, 105, 120, 130],
+          color: `rgb(${theme.spectrum.orange40})`,
+        },
+      ]}
+      width="100%"
+      xAxis={{ data: months }}
+      yAxis={{ domain: { min: 0 }, showGrid: true }}
+    />
+  );
+}
+```
+
+You can also set `accessibilityLabel` directly on the `Legend` component for more control:
+
+```jsx
+function CustomAccessibleLegend() {
+  const theme = useTheme();
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
+
+  return (
+    <LineChart
+      showArea
+      height={200}
+      legend={
+        <Legend
+          accessibilityLabel="Sales comparison, legend: Online sales shown in blue, In-store sales shown in purple"
+          justifyContent="center"
+        />
+      }
+      legendPosition="top"
+      series={[
+        {
+          id: 'online',
+          label: 'Online Sales',
+          data: [45, 52, 48, 61, 55, 67],
+          color: `rgb(${theme.spectrum.blue40})`,
+        },
+        {
+          id: 'instore',
+          label: 'In-Store Sales',
+          data: [38, 41, 44, 39, 47, 51],
+          color: `rgb(${theme.spectrum.purple40})`,
+        },
+      ]}
+      width="100%"
+      xAxis={{ data: months }}
+      yAxis={{ domain: { min: 0 }, showGrid: true }}
     />
   );
 }

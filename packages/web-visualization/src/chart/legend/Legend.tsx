@@ -28,6 +28,11 @@ export type LegendBaseProps = BoxBaseProps & {
    * @default DefaultLegendShape
    */
   ShapeComponent?: LegendShapeComponent;
+  /**
+   * Accessibility label for the legend group.
+   * @default 'Legend'
+   */
+  accessibilityLabel?: string;
 };
 
 export type LegendProps = BoxProps<BoxDefaultElement> &
@@ -99,6 +104,7 @@ export const Legend = memo(
         seriesIds,
         ItemComponent = DefaultLegendItem,
         ShapeComponent,
+        accessibilityLabel = 'Legend',
         className,
         classNames,
         style,
@@ -119,12 +125,14 @@ export const Legend = memo(
       return (
         <Box
           ref={ref}
+          accessibilityLabel={accessibilityLabel}
           alignItems={alignItems}
           className={classNames?.root ?? className}
           columnGap={columnGap}
           flexDirection={flexDirection}
           flexWrap={flexWrap}
           justifyContent={justifyContent}
+          role="group"
           rowGap={rowGap}
           style={{ ...style, ...styles?.root }}
           {...props}

@@ -544,6 +544,44 @@ const Interactive = () => {
   );
 };
 
+const Accessible = () => {
+  const months = useMemo(() => ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'], []);
+
+  const chartAccessibilityLabel =
+    'Monthly financial performance chart showing revenue and expenses over 6 months.';
+
+  return (
+    <Example title="Accessible Legend">
+      <LineChart
+        legend
+        showArea
+        showXAxis
+        showYAxis
+        accessibilityLabel={chartAccessibilityLabel}
+        height={{ base: 200, tablet: 225, desktop: 250 }}
+        legendAccessibilityLabel="Financial performance chart, legend"
+        legendPosition="bottom"
+        series={[
+          {
+            id: 'revenue',
+            label: 'Revenue',
+            data: [120, 150, 180, 165, 190, 210],
+            color: 'rgb(var(--green40))',
+          },
+          {
+            id: 'expenses',
+            label: 'Expenses',
+            data: [80, 95, 110, 105, 120, 130],
+            color: 'rgb(var(--orange40))',
+          },
+        ]}
+        xAxis={{ data: months }}
+        yAxis={{ domain: { min: 0 }, showGrid: true }}
+      />
+    </Example>
+  );
+};
+
 const LegendShapes = () => {
   const months = [
     'Jan',
@@ -702,6 +740,7 @@ export const All = () => {
       <DynamicData />
       <Interactive />
       <LegendShapes />
+      <Accessible />
     </VStack>
   );
 };

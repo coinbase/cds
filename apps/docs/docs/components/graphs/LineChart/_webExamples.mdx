@@ -141,7 +141,7 @@ You can also use the `useRef` hook to reference the scrubber and pulse it on eac
 
 ```jsx live
 function LiveUpdates() {
-  const scrubberRef = useRef<ScrubberRef>(null);
+  const scrubberRef = useRef();
 
   const initialData = useMemo(() => {
     return sparklineInteractiveData.hour.map((d) => d.value);
@@ -194,23 +194,10 @@ function LiveUpdates() {
     return () => clearInterval(priceUpdateInterval);
   }, [intervalSeconds, maxPercentChange]);
 
-  const chartAccessibilityLabel = useMemo(() => {
-    return `Live Bitcoin price chart. Current price: $${priceData[priceData.length - 1].toFixed(2)}`;
-  }, [priceData]);
-
-  const scrubberAccessibilityLabel = useCallback(
-    (index: number) => {
-      const price = priceData[index];
-      return `Bitcoin price at position ${index + 1}: $${price.toFixed(2)}`;
-    },
-    [priceData],
-  );
-
   return (
     <LineChart
       enableScrubbing
       showArea
-      accessibilityLabel={chartAccessibilityLabel}
       height={{ base: 200, tablet: 225, desktop: 250 }}
       inset={{ right: 64 }}
       series={[
@@ -221,10 +208,7 @@ function LiveUpdates() {
         },
       ]}
     >
-      <Scrubber
-        ref={scrubberRef}
-        accessibilityLabel={scrubberAccessibilityLabel}
-      />
+      <Scrubber ref={scrubberRef} />
     </LineChart>
   );
 }
@@ -522,6 +506,7 @@ function Transitions() {
           },
         ]}
         yAxis={{ domain: { min: -domainLimit, max: domainLimit } }}
+        aria-hidden="true"
       >
         <YAxis showGrid requestedTickCount={2} tickLabelFormatter={tickLabelFormatter} />
         <Line
@@ -865,6 +850,7 @@ You can use `legendPosition` to place the legend at different positions around t
   showYAxis
   height={{ base: 200, tablet: 225, desktop: 250 }}
   legendPosition="right"
+  legendAccessibilityLabel="Page Views and Unique Visitors chart, legend"
   series={[
     {
       id: 'pageViews',
