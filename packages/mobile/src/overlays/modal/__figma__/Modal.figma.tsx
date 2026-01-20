@@ -14,11 +14,11 @@ figma.connect(
   'https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/✨-CDS-Components?node-id=68-1065&m=dev',
   {
     imports: [
-      "import { Modal } from '@cbhq/cds-mobile/overlays/Modal/Modal';",
-      "import { ModalHeader } from '@cbhq/cds-mobile/overlays/Modal/ModalHeader';",
-      "import { ModalFooter } from '@cbhq/cds-mobile/overlays/Modal/ModalFooter';",
-      "import { ModalBody } from '@cbhq/cds-mobile/overlays/Modal/ModalBody';",
-      "import { useToggler } from '@cbhq/cds-common/hooks/useToggler';",
+      "import { Modal } from '@cbhq/cds-mobile/overlays/Modal/Modal'",
+      "import { ModalHeader } from '@cbhq/cds-mobile/overlays/Modal/ModalHeader'",
+      "import { ModalFooter } from '@cbhq/cds-mobile/overlays/Modal/ModalFooter'",
+      "import { ModalBody } from '@cbhq/cds-mobile/overlays/Modal/ModalBody'",
+      "import { useToggler } from '@cbhq/cds-common/hooks/useToggler'",
     ],
     props: {
       modalHeader: figma.nestedProps('.Modal Header', {

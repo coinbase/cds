@@ -7,7 +7,7 @@ figma.connect(
   ContentCard,
   'https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/✨-CDS-Components?node-id=14705%3A22920',
   {
-    imports: ["import { ContentCard } from '@cbhq/cds-mobile/cards/ContentCard/ContentCard';"],
+    imports: ["import { ContentCard } from '@cbhq/cds-mobile/cards/ContentCard/ContentCard'"],
     props: {
       header: figma.boolean('show card header', {
         true: figma.children('.📦 ContentCardHeader'),

@@ -8,6 +8,20 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.38.1 (1/15/2026 PST)
+
+#### 🐞 Fixes
+
+- Support TextInput labelNode on compact and inside labelVariant. [[#293](https://github.com/coinbase/cds/pull/293)]
+
+#### 📘 Misc
+
+- Internal: code connect file lint fixes. [[#311](https://github.com/coinbase/cds/pull/311)]
+
+#### 📘 Misc
+
+- Internal: update figma code connect config and some mapping files. [[#304](https://github.com/coinbase/cds/pull/304)]
+
 ## 8.38.0 (1/14/2026 PST)
 
 #### 🚀 Updates

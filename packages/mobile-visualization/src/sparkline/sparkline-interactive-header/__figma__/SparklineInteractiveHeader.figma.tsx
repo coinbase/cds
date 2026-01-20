@@ -9,8 +9,8 @@ figma.connect(
   'https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/✨-CDS-Components?node-id=320-14931&m=dev',
   {
     imports: [
-      "import { SparklineInteractiveHeader } from '@cbhq/cds-web-visualization';",
-      "import { SparklineInteractive } from '@cbhq/cds-web-visualization';",
+      "import { SparklineInteractiveHeader } from '@cbhq/cds-mobile-visualization'",
+      "import { SparklineInteractive } from '@cbhq/cds-mobile-visualization'",
     ],
     props: {
       compact: figma.boolean('compact'),

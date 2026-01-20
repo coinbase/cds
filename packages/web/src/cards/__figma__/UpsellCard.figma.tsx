@@ -8,8 +8,8 @@ figma.connect(
   'https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/✨-CDS-Components?node-id=10085%3A6279',
   {
     imports: [
-      "import { useTheme } from '@cbhq/cds-web/hooks/useTheme';",
-      "import { UpsellCard } from '@cbhq/cds-web/cards/UpsellCard';",
+      "import { useTheme } from '@cbhq/cds-web/hooks/useTheme'",
+      "import { UpsellCard } from '@cbhq/cds-web/cards/UpsellCard'",
     ],
     props: {
       media: figma.instance('media'),

@@ -9,8 +9,8 @@ figma.connect(
   'https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/✨-CDS-Components?node-id=148%3A2954',
   {
     imports: [
-      "import { Accordion } from '@cbhq/cds-mobile/accordion/Accordion';",
-      "import { AccordionItem } from '@cbhq/cds-mobile/accordion/AccordionItem';",
+      "import { Accordion } from '@cbhq/cds-mobile/accordion/Accordion'",
+      "import { AccordionItem } from '@cbhq/cds-mobile/accordion/AccordionItem'",
     ],
     props: {
       subtitle: figma.boolean('show subtitle', {

@@ -7,7 +7,7 @@ figma.connect(
   DotStatusColor,
   'https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/✨-CDS-Components?node-id=155%3A11983',
   {
-    imports: ["import { DotStatusColor } from '@cbhq/cds-mobile/dots/DotStatusColor';"],
+    imports: ["import { DotStatusColor } from '@cbhq/cds-mobile/dots/DotStatusColor'"],
     props: {
       variant: figma.enum('variant', {
         positive: 'positive',

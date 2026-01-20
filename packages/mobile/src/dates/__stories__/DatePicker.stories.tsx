@@ -7,7 +7,9 @@ import { TextInput } from '../../controls/TextInput';
 import { Example, ExampleScreen } from '../../examples/ExampleScreen';
 import { Icon } from '../../icons';
 import { HStack } from '../../layout';
+import { VStack } from '../../layout/VStack';
 import { Tooltip } from '../../overlays/tooltip/Tooltip';
+import { Text } from '../../typography/Text';
 import { DatePicker } from '../DatePicker';
 
 const today = new Date(new Date(2024, 7, 18).setHours(0, 0, 0, 0));
@@ -27,7 +29,10 @@ const ExampleDatePicker = (props: {
   required?: boolean;
   calendarIconButtonAccessibilityLabel?: string;
   label?: string;
+  accessibilityLabel?: string;
   width?: DimensionValue;
+  compact?: boolean;
+  labelVariant?: 'outside' | 'inside';
 }) => {
   const [date, setDate] = useState<Date | null>(null);
   const [error, setError] = useState<DateInputValidationError | null>(null);
@@ -89,8 +94,8 @@ export const FullExample = () => {
       </Example>
       <Example title="DatePicker with labelNode">
         <ExampleDatePicker
+          accessibilityLabel="Birthdate"
           calendarIconButtonAccessibilityLabel="Birthdate calendar"
-          label="Birthdate"
           labelNode={
             <HStack alignItems="center" gap={1}>
               <InputLabel>Birthdate</InputLabel>
@@ -119,6 +124,58 @@ export const FullExample = () => {
             width="fit-content"
           />
         </HStack>
+      </Example>
+    </ExampleScreen>
+  );
+};
+
+export const CustomLabel = () => {
+  return (
+    <ExampleScreen>
+      <Example title="DatePicker with custom label">
+        <VStack gap={2}>
+          {/* Default with tooltip */}
+          <ExampleDatePicker
+            accessibilityLabel="Date of birth"
+            calendarIconButtonAccessibilityLabel="Date of birth calendar"
+            labelNode={
+              <HStack alignItems="center" gap={1}>
+                <InputLabel>Date of birth</InputLabel>
+                <Tooltip content="This will be visible to other users.">
+                  <Icon color="fgMuted" name="info" size="xs" />
+                </Tooltip>
+              </HStack>
+            }
+          />
+          {/* Compact with required indicator */}
+          <ExampleDatePicker
+            compact
+            accessibilityLabel="Start date"
+            calendarIconButtonAccessibilityLabel="Start date calendar"
+            labelNode={
+              <HStack alignItems="center" gap={0.5}>
+                <InputLabel>Start date</InputLabel>
+                <Text color="fgNegative" font="label1">
+                  *
+                </Text>
+              </HStack>
+            }
+          />
+          {/* Inside variant with optional indicator */}
+          <ExampleDatePicker
+            accessibilityLabel="End date"
+            calendarIconButtonAccessibilityLabel="End date calendar"
+            labelNode={
+              <HStack alignItems="center" gap={1}>
+                <InputLabel paddingY={0}>End date</InputLabel>
+                <Text color="fgMuted" font="legal">
+                  (optional)
+                </Text>
+              </HStack>
+            }
+            labelVariant="inside"
+          />
+        </VStack>
       </Example>
     </ExampleScreen>
   );
