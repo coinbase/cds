@@ -74,9 +74,9 @@ const SelectBase = memo(
         compact,
         label,
         labelVariant,
-        accessibilityLabel,
+        accessibilityLabel = typeof label === 'string' ? label : 'Select dropdown',
         accessibilityRoles = defaultAccessibilityRoles,
-        controlAccessibilityLabel,
+        controlAccessibilityLabel = typeof label === 'string' ? label : 'Select control',
         selectAllLabel,
         emptyOptionsLabel,
         clearAllLabel,
@@ -130,10 +130,6 @@ const SelectBase = memo(
         ref: refs.floating,
         excludeRefs: [refs.reference as React.MutableRefObject<HTMLElement>],
       });
-
-      const fallbackAccessibilityLabel = typeof label === 'string' ? label : 'Select dropdown';
-      const fallbackControlAccessibilityLabel =
-        typeof label === 'string' ? label : 'Select control';
 
       const rootStyles = useMemo(
         () => ({
@@ -256,7 +252,7 @@ const SelectBase = memo(
         >
           <SelectControlComponent
             ref={refs.setReference}
-            accessibilityLabel={controlAccessibilityLabel ?? fallbackControlAccessibilityLabel}
+            accessibilityLabel={controlAccessibilityLabel}
             ariaHaspopup={accessibilityRoles?.dropdown}
             blendStyles={styles?.controlBlendStyles}
             bordered={bordered}
@@ -290,7 +286,7 @@ const SelectBase = memo(
               SelectEmptyDropdownContentsComponent={SelectEmptyDropdownContentsComponent}
               SelectOptionComponent={SelectOptionComponent}
               SelectOptionGroupComponent={SelectOptionGroupComponent}
-              accessibilityLabel={accessibilityLabel ?? fallbackAccessibilityLabel}
+              accessibilityLabel={accessibilityLabel}
               accessibilityRoles={accessibilityRoles}
               accessory={accessory}
               classNames={dropdownClassNames}
