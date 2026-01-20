@@ -14,6 +14,7 @@ All notable changes to this project will be documented in this file.
 
 - Add chart Legend component. [[#302](https://github.com/coinbase/cds/pull/302)]
 - Add support for hideBeaconLabels in Scrubber. [[#302](https://github.com/coinbase/cds/pull/302)]
+- Add support for custom bar components. [[#302](https://github.com/coinbase/cds/pull/302)]
 
 #### 📘 Misc
 
