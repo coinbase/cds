@@ -106,7 +106,7 @@ export const Props = () => {
         <DateInput
           {...sharedProps}
           {...props}
-          label="Date of birth"
+          accessibilityLabel="Date of birth"
           labelNode={
             <InputLabel>
               <HStack alignItems="center" gap={1}>
@@ -142,3 +142,65 @@ export const Props = () => {
 };
 
 Props.parameters = { a11y: { disable: true } };
+
+export const CustomLabel = () => {
+  const [date, setDate] = useState<Date | null>(null);
+  const [error, setError] = useState<DateInputValidationError | null>(null);
+  const props = { date, onChangeDate: setDate, error, onErrorDate: setError };
+  return (
+    <VStack gap={2}>
+      {/* Default with tooltip */}
+      <DateInput
+        {...sharedProps}
+        {...props}
+        accessibilityLabel="Date of birth"
+        id="dob-tooltip"
+        labelNode={
+          <InputLabel htmlFor="dob-tooltip">
+            <HStack alignItems="center" gap={1}>
+              Date of birth
+              <Tooltip content="This will be visible to other users.">
+                <Icon active color="fg" name="info" size="xs" tabIndex={0} />
+              </Tooltip>
+            </HStack>
+          </InputLabel>
+        }
+      />
+      {/* Compact with required indicator */}
+      <DateInput
+        compact
+        {...sharedProps}
+        {...props}
+        accessibilityLabel="Start date"
+        labelNode={
+          <InputLabel>
+            <HStack alignItems="center" gap={0.5}>
+              Start date
+              <span style={{ color: 'var(--color-fgNegative)' }}>*</span>
+            </HStack>
+          </InputLabel>
+        }
+      />
+      {/* Inside variant with optional indicator */}
+      <DateInput
+        {...sharedProps}
+        {...props}
+        accessibilityLabel="End date"
+        id="end-date-inside"
+        labelNode={
+          <InputLabel htmlFor="end-date-inside" paddingY={0}>
+            <HStack alignItems="center" gap={1}>
+              End date
+              <span style={{ color: 'var(--color-fgMuted)', fontSize: 'var(--font-legal)' }}>
+                (optional)
+              </span>
+            </HStack>
+          </InputLabel>
+        }
+        labelVariant="inside"
+      />
+    </VStack>
+  );
+};
+
+CustomLabel.parameters = { a11y: { disable: true } };

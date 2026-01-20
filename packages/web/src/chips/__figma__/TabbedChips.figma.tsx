@@ -8,7 +8,7 @@ figma.connect(
   TabbedChips,
   'https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/✨-CDS-Components?node-id=10188%3A4476',
   {
-    imports: ["import { TabbedChips } from '@coinbase/cds-web/chips/TabbedChips';"],
+    imports: ["import { TabbedChips } from '@coinbase/cds-web/chips/TabbedChips'"],
     props: {
       overflow: figma.boolean('overflowing'),
       platform: figma.enum('platform', {

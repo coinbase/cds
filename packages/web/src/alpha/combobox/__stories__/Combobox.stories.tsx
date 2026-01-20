@@ -1178,3 +1178,33 @@ export const StressTest = () => {
     </VStack>
   );
 };
+
+export const Borderless = () => {
+  const [singleValue, setSingleValue] = useState<string | null>('apple');
+  const { value: multiValue, onChange: multiOnChange } = useMultiSelect({
+    initialValue: ['apple'],
+  });
+
+  return (
+    <VStack gap={4}>
+      <Combobox
+        bordered={false}
+        label="Borderless single select"
+        onChange={setSingleValue}
+        options={singleFruitOptions}
+        placeholder="Search fruits..."
+        type="single"
+        value={singleValue}
+      />
+      <Combobox
+        bordered={false}
+        label="Borderless multi select"
+        onChange={multiOnChange}
+        options={fruitOptions}
+        placeholder="Search fruits..."
+        type="multi"
+        value={multiValue}
+      />
+    </VStack>
+  );
+};

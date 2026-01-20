@@ -9,9 +9,7 @@ figma.connect(
   FullscreenModal,
   'https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/✨-CDS-Components?node-id=302%3A20262',
   {
-    imports: [
-      "import { FullscreenModal } from '@coinbase/cds-web/overlays/Modal/FullscreenModal';",
-    ],
+    imports: ["import { FullscreenModal } from '@coinbase/cds-web/overlays/Modal/FullscreenModal'"],
     variant: { layout: 'primary + secondary' },
     props: {
       showSecondaryContentDivider: figma.boolean('show divider'),
@@ -47,9 +45,7 @@ figma.connect(
   FullscreenModal,
   'https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/✨-CDS-Components?node-id=302%3A20262',
   {
-    imports: [
-      "import { FullscreenModal } from '@coinbase/cds-web/overlays/Modal/FullscreenModal';",
-    ],
+    imports: ["import { FullscreenModal } from '@coinbase/cds-web/overlays/Modal/FullscreenModal'"],
     variant: { layout: 'primary left aligned' },
     props: {
       showSecondaryContentDivider: figma.boolean('show divider'),
@@ -84,9 +80,7 @@ figma.connect(
   FullscreenModal,
   'https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/✨-CDS-Components?node-id=302%3A20262',
   {
-    imports: [
-      "import { FullscreenModal } from '@coinbase/cds-web/overlays/Modal/FullscreenModal';",
-    ],
+    imports: ["import { FullscreenModal } from '@coinbase/cds-web/overlays/Modal/FullscreenModal'"],
     variant: { layout: 'primary centered' },
     props: {
       showSecondaryContentDivider: figma.boolean('show divider'),

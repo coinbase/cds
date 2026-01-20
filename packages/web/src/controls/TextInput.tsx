@@ -17,6 +17,7 @@ import type { TextAlignProps } from '@coinbase/cds-common/types/TextBaseProps';
 import { css } from '@linaria/core';
 
 import { cx } from '../cx';
+import { Box } from '../layout/Box';
 import { HStack } from '../layout/HStack';
 import { Text } from '../typography/Text';
 
@@ -231,6 +232,8 @@ export const TextInput = memo(
       return undefined;
     }, [disabled, htmlInputElmProps.readOnly]);
 
+    const hasLabel = useMemo(() => !!label || !!labelNode, [label, labelNode]);
+
     const inputElement = useMemo(() => {
       /** Ensures that the renderedInput has the blurring, focusing, disabled features */
       if (inputNode) {
@@ -258,7 +261,7 @@ export const TextInput = memo(
           compact={compact}
           containerSpacing={nativeInputContainerCss}
           data-compact={compact}
-          data-labelvariant={compact || !label ? 'outside' : labelVariant}
+          data-labelvariant={compact || !hasLabel ? 'outside' : labelVariant}
           data-start={!!start || compact}
           disabled={disabled}
           id={shouldSetLabelId ? labelId : undefined}
@@ -275,6 +278,7 @@ export const TextInput = memo(
       helperTextId,
       accessibilityLabel,
       label,
+      hasLabel,
       align,
       variant,
       compact,
@@ -342,21 +346,34 @@ export const TextInput = memo(
           inputNode={inputElement}
           labelNode={
             !compact &&
-            (labelNode
-              ? labelNode
-              : !!label && (
-                  <InputLabel
-                    background={labelVariant === 'inside' ? readOnlyInputBackground : undefined}
-                    className={cx(
-                      labelVariant === 'inside' && insideLabelCss,
-                      labelVariant === 'inside' && !!start && insideLabelCssStartCss,
-                    )}
-                    htmlFor={shouldSetLabelId ? labelId : undefined}
-                    testID={testIDMap?.label ?? ''}
-                  >
-                    {label}
-                  </InputLabel>
-                ))
+            (labelNode ? (
+              labelVariant === 'inside' ? (
+                <Box
+                  background={readOnlyInputBackground}
+                  paddingEnd={2}
+                  paddingStart={start ? 0.5 : 2}
+                  paddingTop={1}
+                >
+                  {labelNode}
+                </Box>
+              ) : (
+                labelNode
+              )
+            ) : (
+              !!label && (
+                <InputLabel
+                  background={labelVariant === 'inside' ? readOnlyInputBackground : undefined}
+                  className={cx(
+                    labelVariant === 'inside' && insideLabelCss,
+                    labelVariant === 'inside' && !!start && insideLabelCssStartCss,
+                  )}
+                  htmlFor={shouldSetLabelId ? labelId : undefined}
+                  testID={testIDMap?.label ?? ''}
+                >
+                  {label}
+                </InputLabel>
+              )
+            ))
           }
           labelVariant={labelVariant}
           startNode={
@@ -367,13 +384,17 @@ export const TextInput = memo(
                 gap={2}
                 justifyContent="center"
                 onClick={handleNodePress}
+                paddingStart={compact && hasLabel ? 2 : undefined}
                 testID={testIDMap?.start ?? ''}
               >
-                {compact && !!label && (
-                  <InputLabel htmlFor={shouldSetLabelId ? labelId : undefined} paddingStart={2}>
-                    {label}
-                  </InputLabel>
-                )}
+                {compact &&
+                  (labelNode
+                    ? labelNode
+                    : !!label && (
+                        <InputLabel htmlFor={shouldSetLabelId ? labelId : undefined}>
+                          {label}
+                        </InputLabel>
+                      ))}
                 {!!start && <>{start}</>}
               </HStack>
             )

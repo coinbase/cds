@@ -6,7 +6,7 @@ figma.connect(
   NudgeCard,
   'https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/✨-CDS-Components?node-id=10085%3A4433',
   {
-    imports: ["import { NudgeCard } from '@coinbase/cds-mobile/cards/NudgeCard';"],
+    imports: ["import { NudgeCard } from '@coinbase/cds-mobile/cards/NudgeCard'"],
     props: {
       // onActionPress: figma.boolean('compact', {
       //   true: undefined,

@@ -11,7 +11,7 @@ figma.connect(
   Toast,
   'https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/✨-CDS-Components?node-id=8500%3A674',
   {
-    imports: ["import { useToast } from '@coinbase/cds-web/overlays/useToast';"],
+    imports: ["import { useToast } from '@coinbase/cds-web/overlays/useToast'"],
     props: {
       hideCloseButton: figma.boolean('close', {
         true: undefined,

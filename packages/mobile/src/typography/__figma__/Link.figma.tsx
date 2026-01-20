@@ -6,7 +6,7 @@ figma.connect(
   Link,
   'https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/✨-CDS-Components?node-id=324-14982&m=dev',
   {
-    imports: ["import { Link } from '@coinbase/cds-mobile/typography/Link';"],
+    imports: ["import { Link } from '@coinbase/cds-mobile/typography/Link'"],
     props: {
       children: figma.string('string'),
       color: figma.enum('variant', {

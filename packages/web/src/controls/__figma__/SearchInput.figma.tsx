@@ -6,7 +6,7 @@ figma.connect(
   SearchInput,
   'https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/✨-CDS-Components?node-id=67-767&m=dev',
   {
-    imports: ["import { SearchInput } from '@coinbase/cds-web/controls/SearchInput';"],
+    imports: ["import { SearchInput } from '@coinbase/cds-web/controls/SearchInput'"],
     props: {
       // state: figma.enum('state', {
       //   active: 'active',

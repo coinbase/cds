@@ -146,6 +146,7 @@ module.exports = {
     'numpad/Numpad',
     'overlays/Alert',
     'overlays/OverlayContentContext',
+    'overlays/FocusTrap',
     'overlays/FullscreenAlert',
     'overlays/modal/Modal',
     'overlays/modal/ModalHeader',

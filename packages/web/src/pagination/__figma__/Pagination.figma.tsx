@@ -6,7 +6,7 @@ figma.connect(
   Pagination,
   'https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/%E2%9C%A8-CDS-Components?node-id=49607-6651&m=dev',
   {
-    imports: ["import { Pagination } from '@coinbase/cds-web/pagination/Pagination';"],
+    imports: ["import { Pagination } from '@coinbase/cds-web/pagination/Pagination'"],
     props: {
       totalPages: figma.enum('number of pages', {
         '5< pages': 5,

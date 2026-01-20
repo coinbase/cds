@@ -10,8 +10,8 @@ figma.connect(
   'https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/✨-CDS-Components?node-id=14012%3A4589',
   {
     imports: [
-      "import { Numpad } from '@coinbase/cds-mobile/numpad/Numpad';",
-      "import { HStack } from '@coinbase/cds-mobile/layout/HStack';",
+      "import { Numpad } from '@coinbase/cds-mobile/numpad/Numpad'",
+      "import { HStack } from '@coinbase/cds-mobile/layout/HStack'",
     ],
     props: {
       disabled: figma.boolean('disabled'),

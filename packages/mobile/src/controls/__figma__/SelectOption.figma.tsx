@@ -7,7 +7,7 @@ figma.connect(
   SelectOption,
   'https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/✨-CDS-Components?node-id=244-11050&m=dev',
   {
-    imports: ["import { SelectOption } from '@coinbase/cds-mobile/controls/SelectOption';"],
+    imports: ["import { SelectOption } from '@coinbase/cds-mobile/controls/SelectOption'"],
     props: {
       disabled: figma.boolean('disabled'),
       compact: figma.boolean('compact'),

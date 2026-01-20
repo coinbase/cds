@@ -7,7 +7,7 @@ figma.connect(
   Tag,
   'https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/✨-CDS-Components?node-id=68%3A996',
   {
-    imports: ["import { Tag } from '@coinbase/cds-mobile/tag/Tag';"],
+    imports: ["import { Tag } from '@coinbase/cds-mobile/tag/Tag'"],
     variant: { intent: 'informational' },
     props: {
       emphasis: figma.enum('emphasis', {
@@ -41,7 +41,7 @@ figma.connect(
   Tag,
   'https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/✨-CDS-Components?node-id=68%3A996',
   {
-    imports: ["import { Tag } from '@coinbase/cds-mobile/tag/Tag';"],
+    imports: ["import { Tag } from '@coinbase/cds-mobile/tag/Tag'"],
     variant: { intent: 'promotional' },
     props: {
       emphasis: figma.enum('emphasis', {

@@ -8,7 +8,7 @@ figma.connect(
   TextInput,
   'https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/✨-CDS-Components?node-id=252%3A16679',
   {
-    imports: ["import { TextInput } from '@coinbase/cds-mobile/controls/TextInput';"],
+    imports: ["import { TextInput } from '@coinbase/cds-mobile/controls/TextInput'"],
     props: {
       align: figma.boolean('right align text', {
         true: 'end',
@@ -60,7 +60,7 @@ figma.connect(
   TextInput,
   'https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/✨-CDS-Components?node-id=252%3A16679',
   {
-    imports: ["import { TextInput } from '@coinbase/cds-mobile/controls/TextInput';"],
+    imports: ["import { TextInput } from '@coinbase/cds-mobile/controls/TextInput'"],
     variant: { 'show end': true, '↳ show suffix': true },
     props: {
       align: figma.boolean('right align text', {

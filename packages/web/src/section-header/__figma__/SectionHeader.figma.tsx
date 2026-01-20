@@ -7,7 +7,7 @@ figma.connect(
   SectionHeader,
   'https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/✨-CDS-Components?node-id=19270%3A19118',
   {
-    imports: ["import { SectionHeader } from '@coinbase/cds-web/section-header/SectionHeader';"],
+    imports: ["import { SectionHeader } from '@coinbase/cds-web/section-header/SectionHeader'"],
     props: {
       title: figma.children('string.section title'),
       balance: figma.enum('type', {

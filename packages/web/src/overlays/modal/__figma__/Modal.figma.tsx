@@ -12,10 +12,10 @@ figma.connect(
   'https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/✨-CDS-Components?node-id=68-1065&m=dev',
   {
     imports: [
-      "import { Modal } from '@coinbase/cds-web/overlays/Modal/Modal';",
-      "import { ModalHeader } from '@coinbase/cds-web/overlays/Modal/ModalHeader';",
-      "import { ModalFooter } from '@coinbase/cds-web/overlays/Modal/ModalFooter';",
-      "import { ModalBody } from '@coinbase/cds-web/overlays/Modal/ModalBody';",
+      "import { Modal } from '@coinbase/cds-web/overlays/Modal/Modal'",
+      "import { ModalHeader } from '@coinbase/cds-web/overlays/Modal/ModalHeader'",
+      "import { ModalFooter } from '@coinbase/cds-web/overlays/Modal/ModalFooter'",
+      "import { ModalBody } from '@coinbase/cds-web/overlays/Modal/ModalBody'",
     ],
     props: {
       modalHeader: figma.nestedProps('.Modal Header', {

@@ -2,7 +2,7 @@
   "import": "import { Accordion } from '@coinbase/cds-web/accordion/Accordion'",
   "source": "https://github.com/coinbase/cds/blob/master/packages/web/src/accordion/Accordion.tsx",
   "storybook": "https://cds-storybook.coinbase.com/?path=/story/components-accordion--basic-accordion",
-  "figma": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/%E2%9C%A8-CDS-Components?m=auto&node-id=61-569&t=8hgl6nX25pIzCo0y-1",
+  "figma": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/%E2%9C%A8-CDS-Components?node-id=148-2954",
   "description": "A collapsible component for displaying auxiliary content.",
   "relatedComponents": [
     {

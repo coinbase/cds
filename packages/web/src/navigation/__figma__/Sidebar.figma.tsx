@@ -9,9 +9,9 @@ figma.connect(
   'https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/✨-CDS-Components?node-id=252-13321&m=dev',
   {
     imports: [
-      "import { Sidebar } from '@coinbase/cds-web/navigation/Sidebar';",
-      "import { SidebarItem } from '@coinbase/cds-web/navigation/SidebarItem';",
-      "import { LogoMark } from '@coinbase/cds-web/icons/LogoMark';",
+      "import { Sidebar } from '@coinbase/cds-web/navigation/Sidebar'",
+      "import { SidebarItem } from '@coinbase/cds-web/navigation/SidebarItem'",
+      "import { LogoMark } from '@coinbase/cds-web/icons/LogoMark'",
     ],
     props: {
       type: figma.enum('type', {
