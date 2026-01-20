@@ -26,41 +26,9 @@ function Example() {
 }
 ```
 
-### Custom Label
+### Validation
 
-If you need to render a custom label (e.g. a label with a tooltip), you can use the `labelNode` prop.
-
-```jsx
-function Example() {
-  const [date, setDate] = useState(null);
-  const [error, setError] = useState(null);
-
-  return (
-    <DatePicker
-      date={date}
-      error={error}
-      onChangeDate={setDate}
-      onErrorDate={setError}
-      label="Birthdate"
-      labelNode={
-        <HStack alignItems="center" gap={1}>
-          <InputLabel>Birthdate</InputLabel>
-          <Tooltip content="This will be visible to other users.">
-            <Icon color="fgMuted" name="info" size="xs" />
-          </Tooltip>
-        </HStack>
-      }
-      calendarIconButtonAccessibilityLabel="Birthdate calendar"
-      nextArrowAccessibilityLabel="Next month"
-      previousArrowAccessibilityLabel="Previous month"
-      helperTextErrorIconAccessibilityLabel="Error"
-      invalidDateError="Please enter a valid date"
-    />
-  );
-}
-```
-
-### Invalid dates
+#### Invalid dates
 
 Always provide the `invalidDateError` prop for when users type an impossible date like 99/99/2000.
 
@@ -82,7 +50,60 @@ function Example() {
 }
 ```
 
-### Validation
+#### Minimum and maximum dates
+
+Make sure to provide the `disabledDateError` prop when providing `minDate`, `maxDate`, or `disabledDates` props. Navigation to dates before the `minDate` and after the `maxDate` is disabled.
+
+```jsx
+function Example() {
+  const [date, setDate] = useState(null);
+  const [error, setError] = useState(null);
+
+  const today = new Date(new Date().setHours(0, 0, 0, 0));
+  const lastMonth15th = new Date(today.getFullYear(), today.getMonth() - 1, 15);
+  const nextMonth15th = new Date(today.getFullYear(), today.getMonth() + 1, 15);
+
+  return (
+    <DatePicker
+      date={date}
+      error={error}
+      onChangeDate={setDate}
+      onErrorDate={setError}
+      minDate={lastMonth15th}
+      maxDate={nextMonth15th}
+      label="Birthdate"
+      invalidDateError="Please enter a valid date"
+      disabledDateError="Date unavailable"
+    />
+  );
+}
+```
+
+#### Required field
+
+Make sure to provide the `requiredError` prop when setting the `required` prop to true. The `requiredError` will be displayed if a user blurs the input, without a date selected, after having typed into it.
+
+```jsx
+function Example() {
+  const [date, setDate] = useState(null);
+  const [error, setError] = useState(null);
+
+  return (
+    <DatePicker
+      required
+      date={date}
+      error={error}
+      onChangeDate={setDate}
+      onErrorDate={setError}
+      label="Birthdate"
+      invalidDateError="Please enter a valid date"
+      requiredError="This field is required"
+    />
+  );
+}
+```
+
+#### Custom validation
 
 The DatePicker handles common error states internally, and calls `onErrorDate` when the validity / error state changes.
 
@@ -110,7 +131,7 @@ function Example() {
 }
 ```
 
-### Accessibility
+## Accessibility
 
 Always provide the accessibility label props and all necessary error props. See the Accessibility section under the Guidelines tab at the top of the page for more info.
 
@@ -140,7 +161,7 @@ function Example() {
 }
 ```
 
-### Localization
+## Localization
 
 The date format is automatically adjusted to the `LocaleContext`. Check `LocaleProvider` usage below.
 
@@ -160,6 +181,201 @@ function Example() {
         invalidDateError="Please enter a valid date"
       />
     </LocaleProvider>
+  );
+}
+```
+
+## Styling
+
+DatePicker supports the same styling functionality as [DateInput](/components/other/DateInput/).
+
+### Compact
+
+Use the `compact` prop for a smaller input size.
+
+```jsx
+function Example() {
+  const [date, setDate] = useState(null);
+  const [error, setError] = useState(null);
+
+  return (
+    <VStack gap={3}>
+      <DatePicker
+        date={date}
+        error={error}
+        onChangeDate={setDate}
+        onErrorDate={setError}
+        label="Default size"
+        invalidDateError="Please enter a valid date"
+      />
+      <DatePicker
+        compact
+        date={date}
+        error={error}
+        onChangeDate={setDate}
+        onErrorDate={setError}
+        label="Compact size"
+        invalidDateError="Please enter a valid date"
+      />
+    </VStack>
+  );
+}
+```
+
+### Disabled
+
+```jsx
+function Example() {
+  const [date, setDate] = useState(new Date());
+  const [error, setError] = useState(null);
+
+  return (
+    <DatePicker
+      disabled
+      date={date}
+      error={error}
+      onChangeDate={setDate}
+      onErrorDate={setError}
+      label="Disabled picker"
+      invalidDateError="Please enter a valid date"
+    />
+  );
+}
+```
+
+### Helper text
+
+Use the `helperText` prop to provide additional context below the input.
+
+```jsx
+function Example() {
+  const [date, setDate] = useState(null);
+  const [error, setError] = useState(null);
+
+  return (
+    <DatePicker
+      date={date}
+      error={error}
+      onChangeDate={setDate}
+      onErrorDate={setError}
+      label="Start date"
+      helperText="Select when you'd like to begin"
+      invalidDateError="Please enter a valid date"
+    />
+  );
+}
+```
+
+### Label
+
+If you need to render a custom label (e.g. a label with a tooltip), you can use the `labelNode` prop.
+
+```jsx
+function Example() {
+  const [date, setDate] = useState(null);
+  const [error, setError] = useState(null);
+
+  return (
+    <VStack gap={2}>
+      <DatePicker
+        accessibilityLabel="Birthdate"
+        calendarIconButtonAccessibilityLabel="Birthdate calendar"
+        date={date}
+        error={error}
+        helperTextErrorIconAccessibilityLabel="Error"
+        invalidDateError="Please enter a valid date"
+        labelNode={
+          <HStack alignItems="center" gap={1}>
+            <InputLabel>Birthdate</InputLabel>
+            <Tooltip content="This will be visible to other users.">
+              <Icon color="fgMuted" name="info" size="xs" />
+            </Tooltip>
+          </HStack>
+        }
+        nextArrowAccessibilityLabel="Next month"
+        onChangeDate={setDate}
+        onErrorDate={setError}
+        previousArrowAccessibilityLabel="Previous month"
+      />
+      <DatePicker
+        required
+        accessibilityLabel="Event date"
+        date={date}
+        error={error}
+        invalidDateError="Please enter a valid date"
+        labelNode={
+          <HStack alignItems="center" gap={0.5}>
+            <InputLabel>Event date</InputLabel>
+            <Text color="fgNegative" font="label1">
+              *
+            </Text>
+          </HStack>
+        }
+        onChangeDate={setDate}
+        onErrorDate={setError}
+        requiredError="This field is required"
+      />
+    </VStack>
+  );
+}
+```
+
+#### Label Variant
+
+Use the `labelVariant` prop to position the label inside the input.
+
+```jsx
+function Example() {
+  const [date, setDate] = useState(null);
+  const [error, setError] = useState(null);
+
+  return (
+    <VStack gap={3}>
+      <DatePicker
+        date={date}
+        error={error}
+        onChangeDate={setDate}
+        onErrorDate={setError}
+        label="Default label"
+        invalidDateError="Please enter a valid date"
+      />
+      <DatePicker
+        date={date}
+        error={error}
+        onChangeDate={setDate}
+        onErrorDate={setError}
+        label="Inside label"
+        labelVariant="inside"
+        invalidDateError="Please enter a valid date"
+      />
+      <DatePicker
+        compact
+        date={date}
+        error={error}
+        onChangeDate={setDate}
+        onErrorDate={setError}
+        label="Compact inside label"
+        labelVariant="inside"
+        invalidDateError="Please enter a valid date"
+      />
+      <DatePicker
+        accessibilityLabel="Event date"
+        date={date}
+        error={error}
+        invalidDateError="Please enter a valid date"
+        labelVariant="inside"
+        labelNode={
+          <HStack alignItems="center" gap={1}>
+            <InputLabel paddingY={0}>Event date</InputLabel>
+            <Text color="fgMuted" font="legal">
+              (optional)
+            </Text>
+          </HStack>
+        }
+        onChangeDate={setDate}
+        onErrorDate={setError}
+      />
+    </VStack>
   );
 }
 ```
@@ -191,60 +407,9 @@ function Example() {
 }
 ```
 
-### Required field
+## Composed Examples
 
-Make sure to provide the `requiredError` prop when setting the `required` prop to true. The `requiredError` will be displayed if a user blurs the input, without a date selected, after having typed into it.
-
-```jsx
-function Example() {
-  const [date, setDate] = useState(null);
-  const [error, setError] = useState(null);
-
-  return (
-    <DatePicker
-      required
-      date={date}
-      error={error}
-      onChangeDate={setDate}
-      onErrorDate={setError}
-      label="Birthdate"
-      invalidDateError="Please enter a valid date"
-      requiredError="This field is required"
-    />
-  );
-}
-```
-
-### Minimum and maximum dates
-
-Make sure to provide the `disabledDateError` prop when providing `minDate`, `maxDate`, or `disabledDates` props. Navigation to dates before the `minDate` and after the `maxDate` is disabled.
-
-```jsx
-function Example() {
-  const [date, setDate] = useState(null);
-  const [error, setError] = useState(null);
-
-  const today = new Date(new Date().setHours(0, 0, 0, 0));
-  const lastMonth15th = new Date(today.getFullYear(), today.getMonth() - 1, 15);
-  const nextMonth15th = new Date(today.getFullYear(), today.getMonth() + 1, 15);
-
-  return (
-    <DatePicker
-      date={date}
-      error={error}
-      onChangeDate={setDate}
-      onErrorDate={setError}
-      minDate={lastMonth15th}
-      maxDate={nextMonth15th}
-      label="Birthdate"
-      invalidDateError="Please enter a valid date"
-      disabledDateError="Date unavailable"
-    />
-  );
-}
-```
-
-### Multiple pickers
+### Date range selector
 
 This is a complex example using many different props. We use multiple DatePickers together to allow a user to select a date range.
 
@@ -346,7 +511,7 @@ function Example() {
 }
 ```
 
-### Event lifecycle
+## Event Lifecycle
 
 - Selecting a date with the native picker (mobile) or Calendar (web):
 

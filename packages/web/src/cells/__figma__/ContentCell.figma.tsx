@@ -7,7 +7,7 @@ figma.connect(
   ContentCell,
   'https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/✨-CDS-Components?node-id=237-16238&m=dev',
   {
-    imports: ["import { ContentCell } from '@coinbase/cds-web/cells/ContentCell';"],
+    imports: ["import { ContentCell } from '@coinbase/cds-web/cells/ContentCell'"],
     props: {
       selected: figma.enum('state', {
         selected: true,

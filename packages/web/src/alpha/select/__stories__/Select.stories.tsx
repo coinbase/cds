@@ -1631,3 +1631,40 @@ export const RefImperativeHandle = () => {
     </VStack>
   );
 };
+
+export const Borderless = () => {
+  const exampleOptions = [
+    { value: null, label: 'Remove selection' },
+    { value: '1', label: 'Option 1' },
+    { value: '2', label: 'Option 2' },
+    { value: '3', label: 'Option 3' },
+    { value: '4', label: 'Option 4' },
+  ];
+  const [singleValue, setSingleValue] = useState<string | null>('1');
+  const { value: multiValue, onChange: multiOnChange } = useMultiSelect({
+    initialValue: ['1', '2'],
+  });
+
+  return (
+    <VStack gap={4}>
+      <Select
+        bordered={false}
+        label="Borderless single select"
+        onChange={setSingleValue}
+        options={exampleOptions}
+        placeholder="Empty value"
+        value={singleValue}
+      />
+      <Select
+        bordered={false}
+        controlAccessibilityLabel="Borderless multi select"
+        label="Borderless multi select"
+        onChange={multiOnChange}
+        options={exampleOptions}
+        placeholder="Empty value"
+        type="multi"
+        value={multiValue}
+      />
+    </VStack>
+  );
+};

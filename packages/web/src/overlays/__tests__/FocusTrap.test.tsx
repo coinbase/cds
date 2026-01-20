@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import useMeasure from 'react-use-measure';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 
@@ -383,5 +384,40 @@ describe('FocusTrap', () => {
     expect(initialFocusElement).toHaveFocus();
 
     document.body.removeChild(initialFocusElement);
+  });
+
+  it('includes the trigger in the focus trap when includeTriggerInFocusTrap is true', () => {
+    const TestComponent = () => {
+      const [open, setOpen] = useState(false);
+
+      return (
+        <div>
+          <button data-testid="trigger" onClick={() => setOpen(true)}>
+            Open
+          </button>
+          {open && (
+            <FocusTrap includeTriggerInFocusTrap>
+              <div>
+                <button data-testid="first">First</button>
+                <button data-testid="second">Second</button>
+              </div>
+            </FocusTrap>
+          )}
+        </div>
+      );
+    };
+
+    render(<TestComponent />);
+
+    const trigger = screen.getByTestId('trigger');
+    trigger.focus();
+    fireEvent.click(trigger);
+
+    // Trigger should stay in the focusable set once the trap is active
+    expect(trigger).toHaveFocus();
+    fireEvent.keyDown(trigger, { key: 'Tab', code: 'Tab' });
+    expect(screen.getByTestId('first')).toHaveFocus();
+    fireEvent.keyDown(screen.getByTestId('first'), { key: 'Tab', code: 'Tab', shiftKey: true });
+    expect(trigger).toHaveFocus();
   });
 });

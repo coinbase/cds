@@ -6,9 +6,7 @@ figma.connect(
   ContainedAssetCard,
   'https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/✨-CDS-Components?node-id=10084%3A2875',
   {
-    imports: [
-      "import { ContainedAssetCard } from '@coinbase/cds-mobile/cards/ContainedAssetCard';",
-    ],
+    imports: ["import { ContainedAssetCard } from '@coinbase/cds-mobile/cards/ContainedAssetCard'"],
     props: {
       // showverified1025912: figma.boolean('↳ show verified'),
       header: figma.instance('header'),

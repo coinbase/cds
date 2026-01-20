@@ -26,41 +26,9 @@ function Example() {
 }
 ```
 
-### Custom Label
+### Validation
 
-If you need to render a custom label (e.g. a label with a tooltip), you can use the `labelNode` prop.
-
-```jsx live
-function Example() {
-  const [date, setDate] = useState(null);
-  const [error, setError] = useState(null);
-
-  return (
-    <DatePicker
-      date={date}
-      error={error}
-      onChangeDate={setDate}
-      onErrorDate={setError}
-      label="Birthdate"
-      labelNode={
-        <HStack alignItems="center" gap={1}>
-          <InputLabel>Birthdate</InputLabel>
-          <Tooltip content="This will be visible to other users.">
-            <Icon active color="fg" name="info" size="xs" tabIndex={0} />
-          </Tooltip>
-        </HStack>
-      }
-      calendarIconButtonAccessibilityLabel="Birthdate calendar"
-      nextArrowAccessibilityLabel="Next month"
-      previousArrowAccessibilityLabel="Previous month"
-      helperTextErrorIconAccessibilityLabel="Error"
-      invalidDateError="Please enter a valid date"
-    />
-  );
-}
-```
-
-### Invalid dates
+#### Invalid dates
 
 Always provide the `invalidDateError` prop for when users type an impossible date like 99/99/2000.
 
@@ -82,174 +50,7 @@ function Example() {
 }
 ```
 
-### Validation
-
-The DatePicker handles common error states internally, and calls `onErrorDate` when the validity / error state changes.
-
-You can use the `DateInputValidationError` class to create custom error states.
-
-```jsx live
-function Example() {
-  const [date, setDate] = useState(null);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    setError(new DateInputValidationError('custom', 'Hello world!'));
-  }, []);
-
-  return (
-    <DatePicker
-      date={date}
-      error={error}
-      onChangeDate={setDate}
-      onErrorDate={setError}
-      label="Birthdate"
-      invalidDateError="Please enter a valid date"
-    />
-  );
-}
-```
-
-### Accessibility
-
-Always provide the accessibility label props and all necessary error props. See the Accessibility section under the Guidelines tab at the top of the page for more info.
-
-```jsx live
-function Example() {
-  const [date, setDate] = useState(null);
-  const [error, setError] = useState(null);
-
-  return (
-    <DatePicker
-      required
-      date={date}
-      error={error}
-      onChangeDate={setDate}
-      onErrorDate={setError}
-      disabledDates={[new Date()]}
-      label="Birthdate"
-      calendarIconButtonAccessibilityLabel="Birthdate calendar"
-      nextArrowAccessibilityLabel="Next month"
-      previousArrowAccessibilityLabel="Previous month"
-      helperTextErrorIconAccessibilityLabel="Error"
-      invalidDateError="Please enter a valid date"
-      disabledDateError="Date unavailable"
-      requiredError="This field is required"
-    />
-  );
-}
-```
-
-### Localization
-
-The date format is automatically adjusted to the `LocaleContext`. Check `LocaleProvider` usage below.
-
-```jsx live
-function Example() {
-  const [date, setDate] = useState(null);
-  const [error, setError] = useState(null);
-
-  return (
-    <LocaleProvider locale="es-ES">
-      <DatePicker
-        date={date}
-        error={error}
-        onChangeDate={setDate}
-        onErrorDate={setError}
-        label="Birthdate"
-        invalidDateError="Please enter a valid date"
-      />
-    </LocaleProvider>
-  );
-}
-```
-
-### Seeding the date
-
-Defaults to today when undefined.
-
-On web the `seedDate` prop is used to generate the Calendar month when there is no selected date value.
-
-On mobile the `seedDate` prop is the default date that the react-native-date-picker keyboard control will open to when there is no selected date value.
-
-```jsx live
-function Example() {
-  const [date, setDate] = useState(null);
-  const [error, setError] = useState(null);
-
-  const seedDate = new Date('11/16/1991');
-
-  return (
-    <DatePicker
-      date={date}
-      error={error}
-      onChangeDate={setDate}
-      onErrorDate={setError}
-      seedDate={seedDate}
-      label="Birthdate"
-      invalidDateError="Please enter a valid date"
-    />
-  );
-}
-```
-
-### Required field
-
-Make sure to provide the `requiredError` prop when setting the `required` prop to true. The `requiredError` will be displayed if a user blurs the input, without a date selected, after having typed into it.
-
-```jsx live
-function Example() {
-  const [date, setDate] = useState(null);
-  const [error, setError] = useState(null);
-
-  return (
-    <DatePicker
-      required
-      date={date}
-      error={error}
-      onChangeDate={setDate}
-      onErrorDate={setError}
-      label="Birthdate"
-      invalidDateError="Please enter a valid date"
-      requiredError="This field is required"
-    />
-  );
-}
-```
-
-### Highlighted dates
-
-The `highlightedDates` prop is an array of Dates and Date tuples for date ranges. A number is created for every individual date within a tuple range, so do not abuse this with massive ranges.
-
-The `highlightedDates` prop is only available on web because the mobile DatePicker uses react-native-date-picker instead of a Calendar component.
-
-```jsx live
-function Example() {
-  const [date, setDate] = useState(null);
-  const [error, setError] = useState(null);
-
-  const today = new Date(new Date().setHours(0, 0, 0, 0));
-  const oneWeekAgo = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 7);
-  const twoDaysAgo = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 2);
-  const oneWeekLater = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 7);
-
-  const disabledDates = [[oneWeekAgo, twoDaysAgo], oneWeekLater];
-
-  return (
-    <DatePicker
-      date={date}
-      error={error}
-      onChangeDate={setDate}
-      onErrorDate={setError}
-      highlightedDates={disabledDates}
-      label="Birthdate"
-      invalidDateError="Please enter a valid date"
-    />
-  );
-}
-```
-
-### Minimum and maximum dates
+#### Minimum and maximum dates
 
 Make sure to provide the `disabledDateError` prop when providing `minDate`, `maxDate`, or `disabledDates` props. Navigation to dates before the `minDate` and after the `maxDate` is disabled.
 
@@ -278,7 +79,7 @@ function Example() {
 }
 ```
 
-### Disabled dates
+#### Disabled dates
 
 The `disabledDates` prop is an array of Dates and Date tuples for date ranges. A number is created for every individual date within a tuple range, so do not abuse this with massive ranges.
 
@@ -313,7 +114,379 @@ function Example() {
 }
 ```
 
-### Multiple pickers
+#### Required field
+
+Make sure to provide the `requiredError` prop when setting the `required` prop to true. The `requiredError` will be displayed if a user blurs the input, without a date selected, after having typed into it.
+
+```jsx live
+function Example() {
+  const [date, setDate] = useState(null);
+  const [error, setError] = useState(null);
+
+  return (
+    <DatePicker
+      required
+      date={date}
+      error={error}
+      onChangeDate={setDate}
+      onErrorDate={setError}
+      label="Birthdate"
+      invalidDateError="Please enter a valid date"
+      requiredError="This field is required"
+    />
+  );
+}
+```
+
+#### Custom validation
+
+The DatePicker handles common error states internally, and calls `onErrorDate` when the validity / error state changes.
+
+You can use the `DateInputValidationError` class to create custom error states.
+
+```jsx live
+function Example() {
+  const [date, setDate] = useState(null);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    setError(new DateInputValidationError('custom', 'Hello world!'));
+  }, []);
+
+  return (
+    <DatePicker
+      date={date}
+      error={error}
+      onChangeDate={setDate}
+      onErrorDate={setError}
+      label="Birthdate"
+      invalidDateError="Please enter a valid date"
+    />
+  );
+}
+```
+
+## Accessibility
+
+Always provide the accessibility label props and all necessary error props. See the Accessibility section under the Guidelines tab at the top of the page for more info.
+
+```jsx live
+function Example() {
+  const [date, setDate] = useState(null);
+  const [error, setError] = useState(null);
+
+  return (
+    <DatePicker
+      required
+      date={date}
+      error={error}
+      onChangeDate={setDate}
+      onErrorDate={setError}
+      disabledDates={[new Date()]}
+      label="Birthdate"
+      calendarIconButtonAccessibilityLabel="Birthdate calendar"
+      nextArrowAccessibilityLabel="Next month"
+      previousArrowAccessibilityLabel="Previous month"
+      helperTextErrorIconAccessibilityLabel="Error"
+      invalidDateError="Please enter a valid date"
+      disabledDateError="Date unavailable"
+      requiredError="This field is required"
+    />
+  );
+}
+```
+
+## Localization
+
+The date format is automatically adjusted to the `LocaleContext`. Check `LocaleProvider` usage below.
+
+```jsx live
+function Example() {
+  const [date, setDate] = useState(null);
+  const [error, setError] = useState(null);
+
+  return (
+    <LocaleProvider locale="es-ES">
+      <DatePicker
+        date={date}
+        error={error}
+        onChangeDate={setDate}
+        onErrorDate={setError}
+        label="Birthdate"
+        invalidDateError="Please enter a valid date"
+      />
+    </LocaleProvider>
+  );
+}
+```
+
+## Styling
+
+DatePicker supports the same styling functionality as [DateInput](/components/other/DateInput/).
+
+### Compact
+
+Use the `compact` prop for a smaller input size.
+
+```jsx live
+function Example() {
+  const [date, setDate] = useState(null);
+  const [error, setError] = useState(null);
+
+  return (
+    <VStack gap={3}>
+      <DatePicker
+        date={date}
+        error={error}
+        onChangeDate={setDate}
+        onErrorDate={setError}
+        label="Default size"
+        invalidDateError="Please enter a valid date"
+      />
+      <DatePicker
+        compact
+        date={date}
+        error={error}
+        onChangeDate={setDate}
+        onErrorDate={setError}
+        label="Compact size"
+        invalidDateError="Please enter a valid date"
+      />
+    </VStack>
+  );
+}
+```
+
+### Disabled
+
+```jsx live
+function Example() {
+  const [date, setDate] = useState(new Date());
+  const [error, setError] = useState(null);
+
+  return (
+    <DatePicker
+      disabled
+      date={date}
+      error={error}
+      onChangeDate={setDate}
+      onErrorDate={setError}
+      label="Disabled picker"
+      invalidDateError="Please enter a valid date"
+    />
+  );
+}
+```
+
+### Helper text
+
+Use the `helperText` prop to provide additional context below the input.
+
+```jsx live
+function Example() {
+  const [date, setDate] = useState(null);
+  const [error, setError] = useState(null);
+
+  return (
+    <DatePicker
+      date={date}
+      error={error}
+      onChangeDate={setDate}
+      onErrorDate={setError}
+      label="Start date"
+      helperText="Select when you'd like to begin"
+      invalidDateError="Please enter a valid date"
+    />
+  );
+}
+```
+
+### Label
+
+If you need to render a custom label (e.g. a label with a tooltip), you can use the `labelNode` prop.
+
+```jsx live
+function Example() {
+  const [date, setDate] = useState(null);
+  const [error, setError] = useState(null);
+
+  return (
+    <VStack gap={2}>
+      <DatePicker
+        accessibilityLabel="Birthdate"
+        calendarIconButtonAccessibilityLabel="Birthdate calendar"
+        date={date}
+        error={error}
+        helperTextErrorIconAccessibilityLabel="Error"
+        id="birthdate-tooltip"
+        invalidDateError="Please enter a valid date"
+        labelNode={
+          <InputLabel htmlFor="birthdate-tooltip">
+            <HStack alignItems="center" gap={1}>
+              Birthdate
+              <Tooltip content="This will be visible to other users.">
+                <Icon active color="fg" name="info" size="xs" tabIndex={0} />
+              </Tooltip>
+            </HStack>
+          </InputLabel>
+        }
+        nextArrowAccessibilityLabel="Next month"
+        onChangeDate={setDate}
+        onErrorDate={setError}
+        previousArrowAccessibilityLabel="Previous month"
+      />
+      <DatePicker
+        required
+        accessibilityLabel="Event date"
+        date={date}
+        error={error}
+        invalidDateError="Please enter a valid date"
+        labelNode={
+          <InputLabel>
+            <HStack alignItems="center" gap={0.5}>
+              Event date
+              <Text color="fgNegative" font="label1">
+                *
+              </Text>
+            </HStack>
+          </InputLabel>
+        }
+        onChangeDate={setDate}
+        onErrorDate={setError}
+        requiredError="This field is required"
+      />
+    </VStack>
+  );
+}
+```
+
+#### Label Variant
+
+Use the `labelVariant` prop to position the label inside the input.
+
+```jsx live
+function Example() {
+  const [date, setDate] = useState(null);
+  const [error, setError] = useState(null);
+
+  return (
+    <VStack gap={3}>
+      <DatePicker
+        date={date}
+        error={error}
+        onChangeDate={setDate}
+        onErrorDate={setError}
+        label="Default label"
+        invalidDateError="Please enter a valid date"
+      />
+      <DatePicker
+        date={date}
+        error={error}
+        onChangeDate={setDate}
+        onErrorDate={setError}
+        label="Inside label"
+        labelVariant="inside"
+        invalidDateError="Please enter a valid date"
+      />
+      <DatePicker
+        compact
+        date={date}
+        error={error}
+        onChangeDate={setDate}
+        onErrorDate={setError}
+        label="Compact inside label"
+        labelVariant="inside"
+        invalidDateError="Please enter a valid date"
+      />
+      <DatePicker
+        accessibilityLabel="Event date"
+        date={date}
+        error={error}
+        id="event-date-inside"
+        invalidDateError="Please enter a valid date"
+        labelVariant="inside"
+        labelNode={
+          <InputLabel htmlFor="event-date-inside" paddingY={0}>
+            <HStack alignItems="center" gap={1}>
+              Event date
+              <Text color="fgMuted" font="legal">
+                (optional)
+              </Text>
+            </HStack>
+          </InputLabel>
+        }
+        onChangeDate={setDate}
+        onErrorDate={setError}
+      />
+    </VStack>
+  );
+}
+```
+
+### Seeding the date
+
+Defaults to today when undefined.
+
+On web the `seedDate` prop is used to generate the Calendar month when there is no selected date value.
+
+On mobile the `seedDate` prop is the default date that the react-native-date-picker keyboard control will open to when there is no selected date value.
+
+```jsx live
+function Example() {
+  const [date, setDate] = useState(null);
+  const [error, setError] = useState(null);
+
+  const seedDate = new Date('11/16/1991');
+
+  return (
+    <DatePicker
+      date={date}
+      error={error}
+      onChangeDate={setDate}
+      onErrorDate={setError}
+      seedDate={seedDate}
+      label="Birthdate"
+      invalidDateError="Please enter a valid date"
+    />
+  );
+}
+```
+
+### Highlighted dates
+
+The `highlightedDates` prop is an array of Dates and Date tuples for date ranges. A number is created for every individual date within a tuple range, so do not abuse this with massive ranges.
+
+The `highlightedDates` prop is only available on web because the mobile DatePicker uses react-native-date-picker instead of a Calendar component.
+
+```jsx live
+function Example() {
+  const [date, setDate] = useState(null);
+  const [error, setError] = useState(null);
+
+  const today = new Date(new Date().setHours(0, 0, 0, 0));
+  const oneWeekAgo = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 7);
+  const twoDaysAgo = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 2);
+  const oneWeekLater = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 7);
+
+  const highlightedDates = [[oneWeekAgo, twoDaysAgo], oneWeekLater];
+
+  return (
+    <DatePicker
+      date={date}
+      error={error}
+      onChangeDate={setDate}
+      onErrorDate={setError}
+      highlightedDates={highlightedDates}
+      label="Birthdate"
+      invalidDateError="Please enter a valid date"
+    />
+  );
+}
+```
+
+## Composed Examples
+
+### Date range selector
 
 This is a complex example using many different props. We use multiple DatePickers together to allow a user to select a date range.
 
@@ -417,7 +590,7 @@ function Example() {
 }
 ```
 
-### Event lifecycle
+## Event Lifecycle
 
 - Selecting a date with the native picker (mobile) or Calendar (web):
 

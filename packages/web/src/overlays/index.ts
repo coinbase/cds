@@ -1,4 +1,5 @@
 export * from './Alert';
+export * from './FocusTrap';
 export * from './FullscreenAlert';
 export * from './modal/FullscreenModal';
 export * from './modal/FullscreenModalHeader';

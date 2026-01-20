@@ -8,6 +8,16 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## Unreleased
+
+#### 📘 Misc
+
+- Internal: code connect file lint fixes. [[#311](https://github.com/coinbase/cds/pull/311)]
+
+#### 📘 Misc
+
+- Internal: update figma code connect config and some mapping files. [[#304](https://github.com/coinbase/cds/pull/304)]
+
 ## 3.4.0-beta.12 (1/8/2026 PST)
 
 This is an artificial version bump with no new change.

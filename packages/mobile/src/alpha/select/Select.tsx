@@ -79,6 +79,7 @@ const SelectBase = memo(
         accessory,
         media,
         end,
+        bordered = true,
         SelectOptionComponent = DefaultSelectOption,
         SelectAllOptionComponent = DefaultSelectAllOption,
         SelectDropdownComponent = DefaultSelectDropdown,
@@ -171,6 +172,7 @@ const SelectBase = memo(
             accessibilityHint={accessibilityHint}
             accessibilityLabel={accessibilityLabel}
             blendStyles={styles?.controlBlendStyles}
+            bordered={bordered}
             compact={compact}
             disabled={disabled}
             endNode={endNode}

@@ -34,3 +34,27 @@ Ensures every Storybook file default-exports a component whose rendered output i
 ### example-screen-contains-example
 
 Validates that any `ExampleScreen` Storybook story ultimately renders at least one `<Example>` component. The rule looks through components defined in the same file to make sure examples exist even when they are encapsulated in helper components.
+
+### figma-connect-no-semicolon
+
+Ensures that import strings in `figma.connect()` imports arrays do not contain trailing semicolons. Code Connect parses semicolons incorrectly when they appear inside the import string, which can lead to parsing errors.
+
+**Why this rule exists**: Figma Code Connect expects import strings in the `imports` array to be valid import statements without semicolons. Since these are string literals, any semicolon should be outside the quotes, not inside them.
+
+**Bad**:
+
+```typescript
+figma.connect(Component, 'url', {
+  imports: ["import { Button } from '@coinbase/cds-web/buttons/Button';"],
+});
+```
+
+**Good**:
+
+```typescript
+figma.connect(Component, 'url', {
+  imports: ["import { Button } from '@coinbase/cds-web/buttons/Button'"],
+});
+```
+
+This rule includes an automatic fix that removes the trailing semicolon from import strings.

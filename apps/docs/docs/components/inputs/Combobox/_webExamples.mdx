@@ -108,3 +108,54 @@ const fruitOptions: SelectOption[] = [
   );
 }
 ```
+
+## Borderless
+
+You can remove the border from the combobox control by setting `bordered` to `false`.
+
+```jsx live
+function BorderlessExample() {
+  const singleSelectOptions = [
+    { value: null, label: 'Remove selection' },
+    { value: 'apple', label: 'Apple' },
+    { value: 'banana', label: 'Banana' },
+    { value: 'cherry', label: 'Cherry' },
+    { value: 'date', label: 'Date' },
+  ];
+
+  const fruitOptions = [
+    { value: 'apple', label: 'Apple' },
+    { value: 'banana', label: 'Banana' },
+    { value: 'cherry', label: 'Cherry' },
+    { value: 'date', label: 'Date' },
+    { value: 'elderberry', label: 'Elderberry' },
+  ];
+
+  const [singleValue, setSingleValue] = useState('apple');
+  const { value: multiValue, onChange: multiOnChange } = useMultiSelect({
+    initialValue: ['apple'],
+  });
+
+  return (
+    <VStack gap={4}>
+      <Combobox
+        bordered={false}
+        label="Borderless single select"
+        onChange={setSingleValue}
+        options={singleSelectOptions}
+        placeholder="Search fruits..."
+        value={singleValue}
+      />
+      <Combobox
+        bordered={false}
+        label="Borderless multi select"
+        onChange={multiOnChange}
+        options={fruitOptions}
+        placeholder="Search fruits..."
+        type="multi"
+        value={multiValue}
+      />
+    </VStack>
+  );
+}
+```

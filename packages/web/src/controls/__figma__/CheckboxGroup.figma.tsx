@@ -6,7 +6,7 @@ figma.connect(
   CheckboxGroup,
   'https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/✨-CDS-Components?node-id=155%3A10032',
   {
-    imports: ["import { CheckboxGroup } from '@coinbase/cds-web/controls/CheckboxGroup';"],
+    imports: ["import { CheckboxGroup } from '@coinbase/cds-web/controls/CheckboxGroup'"],
     props: {
       children: figma.children('*'),
     },

@@ -9,8 +9,8 @@ figma.connect(
   'https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/✨-CDS-Components?node-id=148%3A2954',
   {
     imports: [
-      "import { Accordion } from '@coinbase/cds-web/accordion/Accordion';",
-      "import { AccordionItem } from '@coinbase/cds-web/accordion/AccordionItem';",
+      "import { Accordion } from '@coinbase/cds-web/accordion/Accordion'",
+      "import { AccordionItem } from '@coinbase/cds-web/accordion/AccordionItem'",
     ],
     props: {
       subtitle: figma.boolean('show subtitle', {

@@ -8,6 +8,32 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.38.1 (1/15/2026 PST)
+
+#### 🐞 Fixes
+
+- Support TextInput labelNode on compact and inside labelVariant. [[#293](https://github.com/coinbase/cds/pull/293)]
+
+#### 📘 Misc
+
+- Internal: code connect file lint fixes. [[#311](https://github.com/coinbase/cds/pull/311)]
+
+#### 📘 Misc
+
+- Internal: update figma code connect config and some mapping files. [[#304](https://github.com/coinbase/cds/pull/304)]
+
+## 8.38.0 (1/14/2026 PST)
+
+#### 🚀 Updates
+
+- Add bordered prop to Select. [[#298](https://github.com/coinbase/cds/pull/298)]
+
+## 8.37.1 (1/14/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix focus shift bug for includeTriggerInFocusTrap prop being true in FocusTrap. [[#258](https://github.com/coinbase/cds/pull/258)]
+
 ## 8.37.0 (1/12/2026 PST)
 
 #### 🚀 Updates

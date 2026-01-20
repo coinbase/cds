@@ -387,6 +387,147 @@ describe('TextInput', () => {
     expect(screen.getByText('Compact Label')).toBeTruthy();
   });
 
+  it('renders labelNode without compact', () => {
+    const labelTestID = 'custom-label';
+    render(
+      <DefaultThemeProvider>
+        <TextInput
+          labelNode={<span data-testid={labelTestID}>Custom Label Node</span>}
+          placeholder="Enter text"
+        />
+      </DefaultThemeProvider>,
+    );
+
+    const customLabel = screen.getByTestId(labelTestID);
+    expect(customLabel).toBeInTheDocument();
+    expect(customLabel).toHaveTextContent('Custom Label Node');
+  });
+
+  it('labelNode takes precedence over label without compact', () => {
+    const labelTestID = 'custom-label';
+    render(
+      <DefaultThemeProvider>
+        <TextInput
+          label="Regular Label"
+          labelNode={<span data-testid={labelTestID}>Custom Label Node</span>}
+          placeholder="Enter text"
+        />
+      </DefaultThemeProvider>,
+    );
+
+    const customLabel = screen.getByTestId(labelTestID);
+    expect(customLabel).toBeInTheDocument();
+    expect(customLabel).toHaveTextContent('Custom Label Node');
+    expect(screen.queryByText('Regular Label')).not.toBeInTheDocument();
+  });
+
+  it('renders labelNode when compact is true', () => {
+    const startTestID = 'start-test';
+    const labelTestID = 'custom-label';
+    render(
+      <DefaultThemeProvider>
+        <TextInput
+          compact
+          labelNode={<span data-testid={labelTestID}>Custom Label Node</span>}
+          testIDMap={{
+            start: startTestID,
+          }}
+        />
+      </DefaultThemeProvider>,
+    );
+
+    const startNode = screen.getByTestId(startTestID);
+    const customLabel = screen.getByTestId(labelTestID);
+    expect(startNode).toContainElement(customLabel);
+    expect(customLabel).toHaveTextContent('Custom Label Node');
+  });
+
+  it('renders labelNode with labelVariant inside', () => {
+    const labelTestID = 'custom-label';
+    render(
+      <DefaultThemeProvider>
+        <TextInput
+          labelNode={<span data-testid={labelTestID}>Custom Inside Label</span>}
+          labelVariant="inside"
+          placeholder="Enter text"
+        />
+      </DefaultThemeProvider>,
+    );
+
+    const customLabel = screen.getByTestId(labelTestID);
+    const inputArea = screen.getByTestId('input-interactable-area');
+    expect(customLabel).toBeInTheDocument();
+    expect(inputArea).toContainElement(customLabel);
+    expect(customLabel).toHaveTextContent('Custom Inside Label');
+  });
+
+  it('labelNode takes precedence over label with labelVariant inside', () => {
+    const labelTestID = 'custom-label';
+    render(
+      <DefaultThemeProvider>
+        <TextInput
+          label="Regular Label"
+          labelNode={<span data-testid={labelTestID}>Custom Inside Label</span>}
+          labelVariant="inside"
+          placeholder="Enter text"
+        />
+      </DefaultThemeProvider>,
+    );
+
+    const customLabel = screen.getByTestId(labelTestID);
+    const inputArea = screen.getByTestId('input-interactable-area');
+    expect(customLabel).toBeInTheDocument();
+    expect(inputArea).toContainElement(customLabel);
+    expect(customLabel).toHaveTextContent('Custom Inside Label');
+    expect(screen.queryByText('Regular Label')).not.toBeInTheDocument();
+  });
+
+  it('renders labelNode with labelVariant inside and start content', () => {
+    const labelTestID = 'custom-label';
+    const startTestID = 'start-content';
+    render(
+      <DefaultThemeProvider>
+        <TextInput
+          labelNode={<span data-testid={labelTestID}>Custom Inside Label</span>}
+          labelVariant="inside"
+          placeholder="Enter text"
+          start={<span data-testid={startTestID}>Start</span>}
+        />
+      </DefaultThemeProvider>,
+    );
+
+    const customLabel = screen.getByTestId(labelTestID);
+    const startContent = screen.getByTestId(startTestID);
+    const inputArea = screen.getByTestId('input-interactable-area');
+    expect(customLabel).toBeInTheDocument();
+    expect(startContent).toBeInTheDocument();
+    expect(inputArea).toContainElement(customLabel);
+    expect(inputArea).toContainElement(startContent);
+  });
+
+  it('labelNode takes precedence over label when compact is true', () => {
+    const startTestID = 'start-test';
+    const labelTestID = 'custom-label';
+    render(
+      <DefaultThemeProvider>
+        <TextInput
+          compact
+          label="Regular Label"
+          labelNode={<span data-testid={labelTestID}>Custom Label Node</span>}
+          testIDMap={{
+            start: startTestID,
+          }}
+        />
+      </DefaultThemeProvider>,
+    );
+
+    const startNode = screen.getByTestId(startTestID);
+    const customLabel = screen.getByTestId(labelTestID);
+    expect(startNode).toContainElement(customLabel);
+    expect(customLabel).toHaveTextContent('Custom Label Node');
+    expect(screen.queryByText('Regular Label')).not.toBeInTheDocument();
+  });
+
   it('positions label correctly with inside variant and start content', () => {
     render(
       <DefaultThemeProvider>
