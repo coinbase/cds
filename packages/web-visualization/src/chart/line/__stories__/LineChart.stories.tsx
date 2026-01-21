@@ -1599,6 +1599,35 @@ function CustomLabelComponent() {
   );
 }
 
+function CustomBeaconStroke() {
+  const backgroundColor = 'rgb(var(--red40))';
+  const foregroundColor = 'rgb(var(--gray0))';
+
+  return (
+    <Box borderRadius={300} padding={2} style={{ background: backgroundColor }}>
+      <LineChart
+        enableScrubbing
+        showArea
+        height={{ base: 150, tablet: 200, desktop: 250 }}
+        series={[
+          {
+            id: 'prices',
+            data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+            color: foregroundColor,
+          },
+        ]}
+      >
+        <Scrubber
+          hideOverlay
+          idlePulse
+          BeaconComponent={(props) => <DefaultScrubberBeacon {...props} stroke={backgroundColor} />}
+          lineStroke={foregroundColor}
+        />
+      </LineChart>
+    </Box>
+  );
+}
+
 export const All = () => {
   return (
     <VStack gap={2}>
@@ -1796,6 +1825,9 @@ export const All = () => {
       </Example>
       <Example title="Custom Label Component">
         <CustomLabelComponent />
+      </Example>
+      <Example title="Custom Beacon Stroke">
+        <CustomBeaconStroke />
       </Example>
     </VStack>
   );

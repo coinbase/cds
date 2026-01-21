@@ -11,8 +11,9 @@ import { defaultTransition, projectPoint } from '../utils';
 
 import type { ScrubberBeaconProps, ScrubberBeaconRef } from './Scrubber';
 
-const radius = 5;
-const strokeWidth = 2;
+const defaultRadius = 5;
+const defaultStrokeWidth = 2;
+const defaultStroke = 'var(--color-bg)';
 
 const pulseOpacityStart = 0.5;
 const pulseOpacityEnd = 0;
@@ -26,7 +27,23 @@ const defaultPulseTransition: Transition = {
 
 const defaultPulseRepeatDelay = 0.4;
 
-export type DefaultScrubberBeaconProps = ScrubberBeaconProps;
+export type DefaultScrubberBeaconProps = ScrubberBeaconProps & {
+  /**
+   * Radius of the beacon circle.
+   * @default 5
+   */
+  radius?: number;
+  /**
+   * Stroke color of the beacon circle.
+   * @default 'var(--color-bg)'
+   */
+  stroke?: string;
+  /**
+   * Stroke width of the beacon circle.
+   * @default 2
+   */
+  strokeWidth?: number;
+};
 
 export const DefaultScrubberBeacon = memo(
   forwardRef<ScrubberBeaconRef, DefaultScrubberBeaconProps>(
@@ -38,16 +55,27 @@ export const DefaultScrubberBeacon = memo(
         dataY,
         isIdle,
         idlePulse,
+        animate: animateProp,
         transitions,
         opacity = 1,
+        radius = defaultRadius,
+        stroke = defaultStroke,
+        strokeWidth = defaultStrokeWidth,
         className,
         style,
         testID,
       },
       ref,
     ) => {
-      const [scope, animate] = useAnimate();
-      const { getSeries, getXScale, getYScale, drawingArea } = useCartesianChartContext();
+      const [scope, animateFn] = useAnimate();
+      const {
+        animate: animateContext,
+        getSeries,
+        getXScale,
+        getYScale,
+        drawingArea,
+      } = useCartesianChartContext();
+      const animate = animateProp ?? animateContext;
 
       const targetSeries = getSeries(seriesId);
       const xScale = getXScale();
@@ -82,7 +110,7 @@ export const DefaultScrubberBeacon = memo(
           pulse: () => {
             // Only pulse when idle and idlePulse is not enabled
             if (isIdle && !idlePulse && scope.current) {
-              animate(
+              animateFn(
                 scope.current,
                 {
                   opacity: [pulseOpacityStart, pulseOpacityEnd],
@@ -93,7 +121,7 @@ export const DefaultScrubberBeacon = memo(
             }
           },
         }),
-        [isIdle, idlePulse, scope, animate, pulseTransition],
+        [isIdle, idlePulse, scope, animateFn, pulseTransition],
       );
 
       // Create continuous pulse transition by repeating the base pulse transition with delay
@@ -120,69 +148,73 @@ export const DefaultScrubberBeacon = memo(
 
       if (!pixelCoordinate) return;
 
-      if (isIdle) {
-        return (
-          <g data-testid={testID} opacity={isWithinDrawingArea ? opacity : 0}>
-            <motion.g
-              animate={{
-                x: pixelCoordinate.x,
-                y: pixelCoordinate.y,
-              }}
-              initial={false}
-              transition={updateTransition}
-            >
-              <motion.circle
-                ref={scope}
-                animate={
-                  shouldPulse
-                    ? {
-                        opacity: [pulseOpacityStart, pulseOpacityEnd],
-                        r: [pulseRadiusStart, pulseRadiusEnd],
-                        transition: continuousPulseTransition,
-                      }
-                    : { opacity: pulseOpacityEnd, r: pulseRadiusStart }
+      const pulseCircle = (
+        <motion.circle
+          ref={scope}
+          animate={
+            shouldPulse
+              ? {
+                  opacity: [pulseOpacityStart, pulseOpacityEnd],
+                  r: [pulseRadiusStart, pulseRadiusEnd],
+                  transition: continuousPulseTransition,
                 }
-                cx={0}
-                cy={0}
-                fill={color}
-                initial={{
-                  opacity: shouldPulse ? pulseOpacityStart : pulseOpacityEnd,
-                  r: pulseRadiusStart,
-                }}
-              />
-            </motion.g>
-            <motion.circle
-              animate={{
-                cx: pixelCoordinate.x,
-                cy: pixelCoordinate.y,
-              }}
-              className={className}
-              cx={pixelCoordinate.x}
-              cy={pixelCoordinate.y}
-              fill={color}
-              initial={false}
-              r={radius}
-              stroke="var(--color-bg)"
-              strokeWidth={strokeWidth}
-              style={style}
-              transition={updateTransition}
-            />
-          </g>
-        );
-      }
+              : { opacity: pulseOpacityEnd, r: pulseRadiusStart }
+          }
+          cx={0}
+          cy={0}
+          fill={color}
+          initial={{
+            opacity: shouldPulse ? pulseOpacityStart : pulseOpacityEnd,
+            r: pulseRadiusStart,
+          }}
+        />
+      );
 
-      return (
-        <g data-testid={testID} opacity={isWithinDrawingArea ? opacity : 0}>
+      const beaconCircle =
+        isIdle && animate ? (
+          <motion.circle
+            animate={{ cx: pixelCoordinate.x, cy: pixelCoordinate.y }}
+            className={className}
+            cx={pixelCoordinate.x}
+            cy={pixelCoordinate.y}
+            fill={color}
+            initial={false}
+            r={radius}
+            stroke={stroke}
+            strokeWidth={strokeWidth}
+            style={style}
+            transition={updateTransition}
+          />
+        ) : (
           <circle
             className={className}
             cx={pixelCoordinate.x}
             cy={pixelCoordinate.y}
             fill={color}
             r={radius}
-            stroke="var(--color-bg)"
+            stroke={stroke}
             strokeWidth={strokeWidth}
             style={style}
           />
+        );
+
+      return (
+        <g data-testid={testID} opacity={isWithinDrawingArea ? opacity : 0}>
+          {isIdle &&
+            (animate ? (
+              <motion.g
+                animate={{ x: pixelCoordinate.x, y: pixelCoordinate.y }}
+                initial={false}
+                transition={updateTransition}
+              >
+                {pulseCircle}
+              </motion.g>
+            ) : (
+              <g transform={`translate(${pixelCoordinate.x}, ${pixelCoordinate.y})`}>
+                {pulseCircle}
+              </g>
+            ))}
+          {beaconCircle}
         </g>
       );
     },

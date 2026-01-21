@@ -21,6 +21,7 @@ const BeaconWithData = memo<{
   isIdle: boolean;
   BeaconComponent: ScrubberBeaconComponent;
   idlePulse?: boolean;
+  animate?: boolean;
   transitions?: ScrubberBeaconProps['transitions'];
   className?: string;
   style?: React.CSSProperties;
@@ -34,6 +35,7 @@ const BeaconWithData = memo<{
     isIdle,
     BeaconComponent,
     idlePulse,
+    animate,
     transitions,
     className,
     style,
@@ -98,6 +100,7 @@ const BeaconWithData = memo<{
     return (
       <BeaconComponent
         ref={beaconRef}
+        animate={animate}
         className={className}
         color={color}
         dataX={dataX}
@@ -167,7 +170,7 @@ export const ScrubberBeaconGroup = memo(
     ) => {
       const ScrubberBeaconRefs = useRefMap<ScrubberBeaconRef>();
       const { scrubberPosition } = useScrubberContext();
-      const { getXScale, getXAxis, dataLength, series } = useCartesianChartContext();
+      const { getXScale, getXAxis, dataLength, series, animate } = useCartesianChartContext();
 
       // Expose imperative handle with pulse method
       useImperativeHandle(ref, () => ({
@@ -220,6 +223,7 @@ export const ScrubberBeaconGroup = memo(
         <BeaconWithData
           key={s.id}
           BeaconComponent={BeaconComponent}
+          animate={animate}
           beaconRef={createBeaconRef(s.id)}
           className={className}
           dataIndex={dataIndex}

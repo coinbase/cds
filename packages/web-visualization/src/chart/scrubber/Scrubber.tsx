@@ -64,8 +64,16 @@ export type ScrubberBeaconProps = SharedProps & {
   isIdle?: boolean;
   /**
    * Pulse the beacon while it is at rest.
+   *
+   * @note Only has an effect when `isIdle` is `true`. Pulse animations work
+   * regardless of the chart's `animate` prop.
    */
   idlePulse?: boolean;
+  /**
+   * Whether position animations are enabled.
+   * @default to ChartContext's animate value
+   */
+  animate?: boolean;
   /**
    * Transition configuration for beacon animations.
    */

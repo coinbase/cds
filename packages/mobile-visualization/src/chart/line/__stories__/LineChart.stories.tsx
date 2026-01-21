@@ -2164,6 +2164,36 @@ function HiddenScrubberWhenIdle() {
   );
 }
 
+function CustomBeaconStroke() {
+  const theme = useTheme();
+  const backgroundColor = `rgb(${theme.spectrum.red40})`;
+  const foregroundColor = `rgb(${theme.spectrum.gray0})`;
+
+  return (
+    <Box borderRadius={300} padding={2} style={{ backgroundColor }}>
+      <LineChart
+        enableScrubbing
+        showArea
+        height={150}
+        series={[
+          {
+            id: 'prices',
+            data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+            color: foregroundColor,
+          },
+        ]}
+      >
+        <Scrubber
+          hideOverlay
+          idlePulse
+          BeaconComponent={(props) => <DefaultScrubberBeacon {...props} stroke={backgroundColor} />}
+          lineStroke={foregroundColor}
+        />
+      </LineChart>
+    </Box>
+  );
+}
+
 function TwoLineScrubberLabel() {
   const theme = useTheme();
   const data = useMemo(() => [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58], []);
@@ -2541,6 +2571,10 @@ function ExampleNavigator() {
       {
         title: 'Two-Line Scrubber Label',
         component: <TwoLineScrubberLabel />,
+      },
+      {
+        title: 'Custom Beacon Stroke',
+        component: <CustomBeaconStroke />,
       },
     ],
     [theme.color.fg, theme.color.fgPositive, theme.spectrum.gray50],

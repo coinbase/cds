@@ -67,7 +67,9 @@ setting `label` on Scrubber displays a label above the scrubber line.
 
 ## Pulsing
 
-Setting `idlePulse` to `true` will cause the scrubber beacons to pulse when the user is not actively scrubbing.
+Pulses will show even when animation is disabled for the chart or scrubber.
+
+Set `idlePulse` to cause scrubber beacons to pulse when the user is not actively scrubbing.
 
 ```jsx
 <LineChart
@@ -129,7 +131,41 @@ function ImperativeHandle() {
 
 ### Beacons
 
-You can use `BeaconComponent` to customize the visual appearance of scrubber beacons.
+You can use `BeaconComponent` to customize the visual appearance of scrubber beacons. This simplest way is to modify the props for `DefaultScrubberBeacon`.
+
+```jsx
+function CustomStrokeColor() {
+  const theme = useTheme();
+  const backgroundColor = `rgb(${theme.spectrum.red40})`;
+  const foregroundColor = `rgb(${theme.spectrum.gray0})`;
+
+  return (
+    <Box background={backgroundColor} borderRadius="lg" padding={4}>
+      <LineChart
+        enableScrubbing
+        showArea
+        height={150}
+        series={[
+          {
+            id: 'prices',
+            data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+            color: foregroundColor,
+          },
+        ]}
+      >
+        <Scrubber
+          idlePulse
+          lineStroke={foregroundColor}
+          BeaconComponent={(props) => <DefaultScrubberBeacon {...props} stroke={backgroundColor} />}
+          hideOverlay
+        />
+      </LineChart>
+    </Box>
+  );
+}
+```
+
+You can also pass a custom component to `BeaconComponent` to further customize the visual appearance of scrubber beacons.
 
 ```jsx
 function OutlineBeacon() {
