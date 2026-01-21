@@ -1628,6 +1628,33 @@ function CustomBeaconStroke() {
   );
 }
 
+function CustomBeaconSize() {
+  return (
+    <LineChart
+      enableScrubbing
+      height={{ base: 150, tablet: 200, desktop: 250 }}
+      series={[
+        {
+          id: 'prices',
+          data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+        },
+      ]}
+    >
+      <Scrubber
+        idlePulse
+        BeaconComponent={(props) => (
+          <DefaultScrubberBeacon
+            {...props}
+            radius={10}
+            stroke="var(--color-bgPrimaryWash)"
+            strokeWidth={5}
+          />
+        )}
+      />
+    </LineChart>
+  );
+}
+
 export const All = () => {
   return (
     <VStack gap={2}>
@@ -1828,6 +1855,9 @@ export const All = () => {
       </Example>
       <Example title="Custom Beacon Stroke">
         <CustomBeaconStroke />
+      </Example>
+      <Example title="Custom Beacon Size">
+        <CustomBeaconSize />
       </Example>
     </VStack>
   );

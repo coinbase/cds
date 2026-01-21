@@ -17,8 +17,8 @@ const defaultStroke = 'var(--color-bg)';
 
 const pulseOpacityStart = 0.5;
 const pulseOpacityEnd = 0;
-const pulseRadiusStart = 10;
-const pulseRadiusEnd = 15;
+const pulseRadiusStartMultiplier = 2;
+const pulseRadiusEndMultiplier = 3;
 
 const defaultPulseTransition: Transition = {
   duration: 1.6,
@@ -63,7 +63,7 @@ export const DefaultScrubberBeacon = memo(
         strokeWidth = defaultStrokeWidth,
         className,
         style,
-        testID,
+        testID = `${seriesId}-beacon`,
       },
       ref,
     ) => {
@@ -104,6 +104,9 @@ export const DefaultScrubberBeacon = memo(
         return projectPoint({ x: dataX, y: dataY, xScale, yScale });
       }, [dataX, dataY, xScale, yScale]);
 
+      const pulseRadiusStart = radius * pulseRadiusStartMultiplier;
+      const pulseRadiusEnd = radius * pulseRadiusEndMultiplier;
+
       useImperativeHandle(
         ref,
         () => ({
@@ -121,7 +124,7 @@ export const DefaultScrubberBeacon = memo(
             }
           },
         }),
-        [isIdle, idlePulse, scope, animateFn, pulseTransition],
+        [isIdle, idlePulse, scope, animateFn, pulseTransition, pulseRadiusStart, pulseRadiusEnd],
       );
 
       // Create continuous pulse transition by repeating the base pulse transition with delay
@@ -162,6 +165,7 @@ export const DefaultScrubberBeacon = memo(
           }
           cx={0}
           cy={0}
+          data-testid={`${testID}-pulse`}
           fill={color}
           initial={{
             opacity: shouldPulse ? pulseOpacityStart : pulseOpacityEnd,

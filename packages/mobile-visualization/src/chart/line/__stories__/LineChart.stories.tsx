@@ -2194,6 +2194,35 @@ function CustomBeaconStroke() {
   );
 }
 
+function CustomBeaconSize() {
+  const theme = useTheme();
+
+  return (
+    <LineChart
+      enableScrubbing
+      height={150}
+      series={[
+        {
+          id: 'prices',
+          data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+        },
+      ]}
+    >
+      <Scrubber
+        idlePulse
+        BeaconComponent={(props) => (
+          <DefaultScrubberBeacon
+            {...props}
+            radius={10}
+            stroke={theme.color.bgPrimaryWash}
+            strokeWidth={5}
+          />
+        )}
+      />
+    </LineChart>
+  );
+}
+
 function TwoLineScrubberLabel() {
   const theme = useTheme();
   const data = useMemo(() => [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58], []);
@@ -2575,6 +2604,10 @@ function ExampleNavigator() {
       {
         title: 'Custom Beacon Stroke',
         component: <CustomBeaconStroke />,
+      },
+      {
+        title: 'Custom Beacon Size',
+        component: <CustomBeaconSize />,
       },
     ],
     [theme.color.fg, theme.color.fgPositive, theme.spectrum.gray50],

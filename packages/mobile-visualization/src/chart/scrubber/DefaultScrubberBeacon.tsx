@@ -25,8 +25,8 @@ const defaultStrokeWidth = 2;
 
 const pulseOpacityStart = 0.5;
 const pulseOpacityEnd = 0;
-const pulseRadiusStart = 10;
-const pulseRadiusEnd = 15;
+const pulseRadiusStartMultiplier = 2;
+const pulseRadiusEndMultiplier = 3;
 
 const defaultPulseTransition: Transition = {
   type: 'timing',
@@ -102,6 +102,9 @@ export const DefaultScrubberBeacon = memo(
         [transitions?.pulseRepeatDelay],
       );
 
+      const pulseRadiusStart = radius * pulseRadiusStartMultiplier;
+      const pulseRadiusEnd = radius * pulseRadiusEndMultiplier;
+
       const pulseOpacity = useSharedValue(0);
       const pulseRadius = useSharedValue(pulseRadiusStart);
 
@@ -168,7 +171,14 @@ export const DefaultScrubberBeacon = memo(
             }
           },
         }),
-        [idlePulseShared, pulseOpacity, pulseRadius, pulseTransition],
+        [
+          idlePulseShared,
+          pulseOpacity,
+          pulseRadius,
+          pulseTransition,
+          pulseRadiusStart,
+          pulseRadiusEnd,
+        ],
       );
 
       // Watch idlePulse changes and control continuous pulse
@@ -205,7 +215,7 @@ export const DefaultScrubberBeacon = memo(
             pulseRadius.value = pulseRadiusStart;
           }
         },
-        [pulseTransition, pulseRepeatDelay],
+        [pulseTransition, pulseRepeatDelay, pulseRadiusStart, pulseRadiusEnd],
       );
 
       const pulseVisibility = useDerivedValue(() => {
