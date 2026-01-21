@@ -1,14 +1,13 @@
 import { forwardRef, memo, useMemo } from 'react';
 import type { StyleProp, View, ViewStyle } from 'react-native';
-import type { SharedProps } from '@coinbase/cds-common/types';
-import { Box, type BoxProps } from '@coinbase/cds-mobile/layout';
+import { Box, type BoxBaseProps, type BoxProps } from '@coinbase/cds-mobile/layout';
 
 import { useCartesianChartContext } from '../ChartProvider';
 
 import { DefaultLegendItem, type LegendItemComponent } from './DefaultLegendItem';
 import type { LegendShapeComponent } from './DefaultLegendShape';
 
-export type LegendBaseProps = SharedProps & {
+export type LegendBaseProps = BoxBaseProps & {
   /**
    * Array of series IDs to display in the legend.
    * By default, all series will be displayed.

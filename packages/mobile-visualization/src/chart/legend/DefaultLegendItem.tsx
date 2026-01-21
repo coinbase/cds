@@ -1,7 +1,7 @@
 import { memo } from 'react';
 import { type StyleProp, StyleSheet, type ViewStyle } from 'react-native';
 import type { SharedProps } from '@coinbase/cds-common/types';
-import { Box, HStack, type HStackProps } from '@coinbase/cds-mobile/layout';
+import { Box, type BoxBaseProps, HStack, type HStackProps } from '@coinbase/cds-mobile/layout';
 import { Text } from '@coinbase/cds-mobile/typography/Text';
 
 import type { LegendShape } from '../utils';
@@ -20,8 +20,8 @@ const styles = StyleSheet.create({
   },
 });
 
-export type LegendItemBaseProps = Omit<HStackProps, 'children' | 'color'> &
-  SharedProps & {
+export type LegendItemBaseProps = SharedProps &
+  Omit<BoxBaseProps, 'children' | 'color'> & {
     /**
      * Id of the series.
      */
@@ -49,30 +49,31 @@ export type LegendItemBaseProps = Omit<HStackProps, 'children' | 'color'> &
     ShapeComponent?: LegendShapeComponent;
   };
 
-export type LegendItemProps = LegendItemBaseProps & {
-  /**
-   * Custom styles for the component parts.
-   */
-  styles?: {
+export type LegendItemProps = LegendItemBaseProps &
+  Omit<HStackProps, 'children' | 'color'> & {
     /**
-     * Custom styles for the root element.
+     * Custom styles for the component parts.
      */
-    root?: StyleProp<ViewStyle>;
-    /**
-     * Custom styles for the shape wrapper element.
-     */
-    shapeWrapper?: StyleProp<ViewStyle>;
-    /**
-     * Custom styles for the shape element.
-     */
-    shape?: StyleProp<ViewStyle>;
-    /**
-     * Custom styles for the label element.
-     * @note not applied when label is a ReactNode.
-     */
-    label?: StyleProp<ViewStyle>;
+    styles?: {
+      /**
+       * Custom styles for the root element.
+       */
+      root?: StyleProp<ViewStyle>;
+      /**
+       * Custom styles for the shape wrapper element.
+       */
+      shapeWrapper?: StyleProp<ViewStyle>;
+      /**
+       * Custom styles for the shape element.
+       */
+      shape?: StyleProp<ViewStyle>;
+      /**
+       * Custom styles for the label element.
+       * @note not applied when label is a ReactNode.
+       */
+      label?: StyleProp<ViewStyle>;
+    };
   };
-};
 
 export type LegendItemComponent = React.FC<LegendItemProps>;
 

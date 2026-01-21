@@ -29,7 +29,7 @@ export type BarChartBaseProps = Omit<CartesianChartBaseProps, 'xAxis' | 'yAxis' 
   > & {
     /**
      * Configuration objects that define how to visualize the data.
-     * Each series can optionally have its own BarComponent.
+     * Each series can optionally define its own BarComponent.
      */
     series?: Array<BarSeries>;
     /**

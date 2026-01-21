@@ -27,8 +27,8 @@ const legendItemCss = css`
   align-items: center;
 `;
 
-export type LegendItemBaseProps = Omit<HStackBaseProps, 'children'> &
-  SharedProps & {
+export type LegendItemBaseProps = SharedProps &
+  Omit<HStackBaseProps, 'children'> & {
     /**
      * Id of the series.
      */
@@ -55,8 +55,8 @@ export type LegendItemBaseProps = Omit<HStackBaseProps, 'children'> &
     ShapeComponent?: LegendShapeComponent;
   };
 
-export type LegendItemProps = Omit<HStackProps<HStackDefaultElement>, 'children'> &
-  LegendItemBaseProps & {
+export type LegendItemProps = LegendItemBaseProps &
+  Omit<HStackProps<HStackDefaultElement>, 'children'> & {
     /**
      * Custom class names for the component parts.
      */

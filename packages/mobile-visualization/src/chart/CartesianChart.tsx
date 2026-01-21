@@ -72,7 +72,7 @@ export type CartesianChartBaseProps = Omit<BoxBaseProps, 'fontFamily'> &
      * - A React element renders that element as the legend
      * - `false` or omitted hides the legend
      */
-    legend?: boolean | React.ReactElement<LegendProps>;
+    legend?: boolean | React.ReactNode;
     /**
      * Position of the legend relative to the chart.
      * @default 'bottom'
