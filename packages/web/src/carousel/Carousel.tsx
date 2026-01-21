@@ -20,6 +20,7 @@ import {
   useAnimation,
   useDragControls,
   useMotionValue,
+  useTransform,
 } from 'framer-motion';
 
 import { cx } from '../cx';
@@ -235,6 +236,11 @@ export type CarouselBaseProps = SharedProps &
      * Callback fired when the user ends dragging the carousel.
      */
     onDragEnd?: () => void;
+    /**
+     * Enables infinite looping. When true, the carousel will seamlessly
+     * loop from the last item back to the first.
+     */
+    loop?: boolean;
   };
 
 export type CarouselProps = Omit<BoxProps<BoxDefaultElement>, 'title'> &
@@ -308,6 +314,18 @@ export type CarouselProps = Omit<BoxProps<BoxDefaultElement>, 'title'> &
   };
 
 /**
+ * Wraps a value within a range (min, max) for circular indexing.
+ * @param min - The minimum value of the range.
+ * @param max - The maximum value of the range (exclusive).
+ * @param value - The value to wrap.
+ * @returns The wrapped value within the range.
+ */
+const wrap = (min: number, max: number, value: number): number => {
+  const range = max - min;
+  return min + ((((value - min) % range) + range) % range);
+};
+
+/**
  * Calculates the locations of each item in the carousel, offset from the first item.
  * @param itemRects - The items to get the offsets for.
  * @returns The item offsets.
@@ -345,13 +363,25 @@ const getNearestPageIndexFromOffset = (scrollOffset: number, pageOffsets: number
  * @param items - The items to get the page offsets for.
  * @param containerWidth - The width of the container.
  * @param maxScrollOffset - The maximum scroll offset.
+ * @param loop - Whether looping is enabled.
  * @returns The page offsets and the total number of pages.
  */
 const getSnapItemPageOffsets = (
   items: Rect[],
   containerWidth: number,
   maxScrollOffset: number,
+  loop?: boolean,
 ): { totalPages: number; pageOffsets: number[] } => {
+  if (loop) {
+    // When looping, all items become snap targets
+    const offsets: number[] = [];
+    for (let i = 0; i < items.length; i++) {
+      offsets.push(items[i].x);
+    }
+    return { totalPages: offsets.length, pageOffsets: offsets };
+  }
+
+  // Non-looping behavior (original logic)
   let lastPageStartIndex = items.length - 1;
   const lastItem = items[lastPageStartIndex];
   const lastItemsEndPosition = lastItem.x + lastItem.width;
@@ -494,6 +524,7 @@ export const Carousel = memo(
         onChangePage,
         onDragStart,
         onDragEnd,
+        loop,
         ...props
       }: CarouselProps,
       ref: React.ForwardedRef<CarouselImperativeHandle>,
@@ -514,45 +545,38 @@ export const Carousel = memo(
 
       const isDragEnabled = drag !== 'none';
 
-      const updateVisibleCarouselItems = useCallback(
-        (scrollOffset: number) => {
-          if (containerWidth === 0) {
-            setVisibleCarouselItems(new Set());
-            return;
-          }
-
-          setVisibleCarouselItems(getVisibleItems(carouselItemRects, containerWidth, scrollOffset));
-        },
-        [carouselItemRects, containerWidth],
-      );
-
-      useEffect(() => {
-        const element = containerRef.current;
-        if (!element) return;
-        const observer = new window.ResizeObserver((entries) => {
-          for (const entry of entries) {
-            setContainerWidth(entry.contentRect.width);
-            updateVisibleCarouselItems(Math.abs(carouselScrollX.get()));
-          }
-        });
-        observer.observe(element);
-        return () => observer.unobserve(element);
-      }, [carouselItemRects, carouselScrollX, updateVisibleCarouselItems]);
-
       useEffect(() => {
         const observer = new window.ResizeObserver(() => {
           const newRects: { [itemId: string]: Rect } = {};
+          const cloneRects: { [itemId: string]: Rect } = {};
           Object.entries(carouselItemRefMap.refs).forEach(([id, element]) => {
             if (element) {
-              newRects[id] = {
+              const rect = {
                 x: element.offsetLeft,
                 y: element.offsetTop,
                 width: element.offsetWidth,
                 height: element.offsetHeight,
               };
+              // Only track original items for calculations, not clones (clones have "clone-" prefix in their ID)
+              if (!id.startsWith('clone-')) {
+                newRects[id] = rect;
+              } else {
+                cloneRects[id] = rect;
+              }
             }
           });
           setCarouselItemRects(newRects);
+          if (process.env.NODE_ENV === 'development' && loop) {
+            console.log(
+              '[Carousel] Item rects updated',
+              JSON.stringify({
+                originalItems: Object.keys(newRects).length,
+                cloneItems: Object.keys(cloneRects).length,
+                originalRects: newRects,
+                cloneRects,
+              }),
+            );
+          }
         });
 
         Object.values(carouselItemRefMap.refs).forEach((element) => {
@@ -567,7 +591,7 @@ export const Carousel = memo(
         }
 
         return () => observer.disconnect();
-      }, [carouselItemRefMap.refs, children]);
+      }, [carouselItemRefMap.refs, children, loop]);
 
       const contentWidth = useMemo(() => {
         if (Object.keys(carouselItemRects).length === 0) return 0;
@@ -578,6 +602,154 @@ export const Carousel = memo(
 
       const maxScrollOffset = Math.max(0, contentWidth - containerWidth);
       const hasDimensions = contentWidth > 0 && containerWidth > 0;
+
+      // Calculate gap from item spacing
+      const gap = useMemo(() => {
+        if (Object.keys(carouselItemRects).length < 2) return 0;
+        const items = getItemOffsets(carouselItemRects);
+        const firstItemEnd = items[0].x + items[0].width;
+        const secondItemStart = items[1].x;
+        return Math.max(0, secondItemStart - firstItemEnd);
+      }, [carouselItemRects]);
+
+      // Calculate wrap inset for looping
+      const wrapInset = useMemo(() => {
+        if (!loop || !hasDimensions) return null;
+        // Don't enable looping if content fits in viewport (single page)
+        if (maxScrollOffset <= 0) return null;
+        return contentWidth + gap;
+      }, [loop, contentWidth, gap, hasDimensions, maxScrollOffset]);
+
+      // Get current iteration for looping
+      const getIteration = useCallback(
+        (scrollOffset: number): number => {
+          if (!loop || !wrapInset) return 0;
+          return Math.floor(scrollOffset / wrapInset);
+        },
+        [loop, wrapInset],
+      );
+
+      const updateVisibleCarouselItems = useCallback(
+        (scrollOffset: number) => {
+          if (containerWidth === 0) {
+            setVisibleCarouselItems(new Set());
+            return;
+          }
+
+          // When looping, adjust scroll offset to account for iteration
+          let adjustedScrollOffset = scrollOffset;
+          let iteration = 0;
+          if (loop && wrapInset) {
+            iteration = getIteration(scrollOffset);
+            adjustedScrollOffset = scrollOffset - iteration * wrapInset;
+          }
+
+          // Get visible items from original items only
+          // Note: adjustedScrollOffset accounts for iteration, so we check original items at their base positions
+          const visibleOriginalItems = getVisibleItems(
+            carouselItemRects,
+            containerWidth,
+            adjustedScrollOffset,
+          );
+
+          if (process.env.NODE_ENV === 'development' && loop) {
+            console.log(
+              '[Carousel] updateVisibleCarouselItems',
+              JSON.stringify({
+                scrollOffset,
+                adjustedScrollOffset,
+                iteration,
+                wrapInset,
+                containerWidth,
+                visibleOriginalItems: Array.from(visibleOriginalItems),
+                itemRects: Object.keys(carouselItemRects),
+                itemRectsDetails: Object.entries(carouselItemRects).map(([id, rect]) => ({
+                  id,
+                  x: rect.x,
+                  width: rect.width,
+                  end: rect.x + rect.width,
+                  viewportStart: adjustedScrollOffset,
+                  viewportEnd: adjustedScrollOffset + containerWidth,
+                  isVisible:
+                    rect.x < adjustedScrollOffset + containerWidth &&
+                    rect.x + rect.width > adjustedScrollOffset,
+                })),
+              }),
+            );
+          }
+
+          // When looping, we need to check if we're viewing clones instead of originals
+          // Clones appear at different scroll offsets:
+          // - Forward clones: visible when scrollOffset is near wrapInset (iteration 1)
+          // - Backward clones: visible when scrollOffset is near -wrapInset (iteration -1)
+          const visibleItems = new Set<string>(visibleOriginalItems);
+
+          if (loop && wrapInset) {
+            // If we're at iteration 1 or higher, we might be viewing forward clones
+            // Forward clones are positioned at wrapInset offset in the DOM (after originals)
+            // So when scrollOffset is around wrapInset, we're seeing forward clones
+            // Map those back to original item IDs
+            if (iteration >= 1 || scrollOffset >= wrapInset * 0.5) {
+              // Check if forward clones would be visible at this scroll position
+              // Forward clones are at: originalPosition + wrapInset
+              // So we check visibility at scrollOffset - wrapInset to see which originals would be visible as clones
+              const forwardCloneViewOffset = adjustedScrollOffset;
+              const forwardCloneOriginalItems = getVisibleItems(
+                carouselItemRects,
+                containerWidth,
+                forwardCloneViewOffset,
+              );
+              forwardCloneOriginalItems.forEach((id) => {
+                visibleItems.add(id);
+              });
+              if (process.env.NODE_ENV === 'development' && forwardCloneOriginalItems.size > 0) {
+                console.log('[Carousel] Forward clones visible (mapped to originals)', {
+                  originalItems: Array.from(forwardCloneOriginalItems),
+                });
+              }
+            }
+
+            // If we're at iteration -1 or lower, we might be viewing backward clones
+            // Backward clones are positioned before originals with transform -wrapInset
+            // So they appear at: originalPosition - wrapInset visually
+            if (iteration <= -1 || scrollOffset <= -wrapInset * 0.5) {
+              // Check if backward clones would be visible
+              // Backward clones are at: originalPosition - wrapInset visually
+              // So we check visibility at scrollOffset + wrapInset
+              const backwardCloneViewOffset = adjustedScrollOffset;
+              const backwardCloneOriginalItems = getVisibleItems(
+                carouselItemRects,
+                containerWidth,
+                backwardCloneViewOffset,
+              );
+              backwardCloneOriginalItems.forEach((id) => {
+                visibleItems.add(id);
+              });
+              if (process.env.NODE_ENV === 'development' && backwardCloneOriginalItems.size > 0) {
+                console.log('[Carousel] Backward clones visible (mapped to originals)', {
+                  originalItems: Array.from(backwardCloneOriginalItems),
+                });
+              }
+            }
+          }
+
+          setVisibleCarouselItems(visibleItems);
+        },
+        [carouselItemRects, containerWidth, loop, wrapInset, getIteration],
+      );
+
+      useEffect(() => {
+        const element = containerRef.current;
+        if (!element) return;
+        const observer = new window.ResizeObserver((entries) => {
+          for (const entry of entries) {
+            setContainerWidth(entry.contentRect.width);
+            updateVisibleCarouselItems(Math.abs(carouselScrollX.get()));
+          }
+        });
+        observer.observe(element);
+        return () => observer.unobserve(element);
+      }, [carouselItemRects, carouselScrollX, updateVisibleCarouselItems]);
 
       const updateActivePageIndex = useCallback(
         (newPageIndexOrUpdater: number | ((prevIndex: number) => number)) => {
@@ -597,6 +769,77 @@ export const Carousel = memo(
         [onChangePage],
       );
 
+      // Clone children for looping to create visual continuity
+      // When looping, we need to clone items and position them correctly
+      const clonedChildren = useMemo(() => {
+        if (!loop || !wrapInset || !children) return children;
+
+        const childrenArray = React.Children.toArray(children) as CarouselItemElement[];
+        if (childrenArray.length === 0) return children;
+
+        if (process.env.NODE_ENV === 'development') {
+          console.log(
+            '[Carousel] Cloning children for looping',
+            JSON.stringify({
+              wrapInset,
+              itemCount: childrenArray.length,
+            }),
+          );
+        }
+
+        const cloned: CarouselItemElement[] = [];
+
+        // Get item positions from rects to position backward clones correctly
+        const items = getItemOffsets(carouselItemRects);
+        const itemPositions = items.map((item) => item.x);
+
+        // Add backward clone (positioned before original items in DOM)
+        // These are absolutely positioned at their natural positions minus wrapInset
+        // So they appear before originals when scrolling backward
+        childrenArray.forEach((child, index) => {
+          // Use the item's position from rects if available, otherwise estimate
+          const itemPosition = itemPositions[index] ?? index * 218; // fallback estimate
+          const clonedChild = React.cloneElement(child, {
+            key: `clone-backward-${child.props.id}`,
+            id: `clone-backward-${child.props.id}`,
+            style: {
+              ...child.props.style,
+              position: 'absolute',
+              left: `${itemPosition - wrapInset}px`,
+            },
+          });
+          cloned.push(clonedChild);
+        });
+
+        // Add original items (in flex flow, normal positions)
+        cloned.push(...childrenArray);
+
+        // Add forward clone (positioned after original items in DOM)
+        // They're in flex flow so they naturally appear at wrapInset offset and beyond
+        childrenArray.forEach((child) => {
+          const clonedChild = React.cloneElement(child, {
+            key: `clone-forward-${child.props.id}`,
+            id: `clone-forward-${child.props.id}`,
+          });
+          cloned.push(clonedChild);
+        });
+
+        if (process.env.NODE_ENV === 'development') {
+          console.log(
+            '[Carousel] Cloned children',
+            JSON.stringify({
+              totalCloned: cloned.length,
+              originalCount: childrenArray.length,
+              backwardClones: childrenArray.length,
+              forwardClones: childrenArray.length,
+              itemPositions,
+            }),
+          );
+        }
+
+        return cloned;
+      }, [loop, wrapInset, children, carouselItemRects]);
+
       // Calculate pages and their offsets based on snapMode
       const { totalPages, pageOffsets } = useMemo(() => {
         if (!hasDimensions || Object.keys(carouselItemRects).length === 0) {
@@ -610,6 +853,7 @@ export const Carousel = memo(
             getItemOffsets(carouselItemRects),
             containerWidth,
             maxScrollOffset,
+            loop,
           );
         } else {
           pageOffsets = getSnapPageOffsets(
@@ -628,22 +872,161 @@ export const Carousel = memo(
         snapMode,
         containerWidth,
         maxScrollOffset,
+        loop,
         updateActivePageIndex,
       ]);
 
       const goToPage = useCallback(
         (page: number) => {
-          const newPage = Math.max(0, Math.min(totalPages - 1, page));
-          updateActivePageIndex(newPage);
-          const targetOffset = pageOffsets[newPage];
-          updateVisibleCarouselItems(targetOffset);
-          // Carousel needs to scroll to the left to view pages to the right
-          animationApi.start({
-            x: -targetOffset,
-            transition: { type: 'tween', duration: 0.25 },
-          });
+          if (process.env.NODE_ENV === 'development') {
+            console.log(
+              '[Carousel] goToPage',
+              JSON.stringify({
+                page,
+                loop,
+                wrapInset,
+                activePageIndex,
+                totalPages,
+                pageOffsets,
+              }),
+            );
+          }
+
+          if (loop && wrapInset) {
+            const currentPage = activePageIndex;
+            const currentScrollOffset = Math.abs(carouselScrollX.get());
+            const currentIteration = getIteration(currentScrollOffset);
+
+            if (process.env.NODE_ENV === 'development') {
+              console.log(
+                '[Carousel] goToPage (looping)',
+                JSON.stringify({
+                  currentPage,
+                  currentScrollOffset,
+                  currentIteration,
+                  targetPage: page,
+                }),
+              );
+            }
+
+            // Check if we're crossing a boundary (e.g., page 3 → page 0)
+            const isWrappingForward = currentPage === totalPages - 1 && page === 0;
+            const isWrappingBackward = currentPage === 0 && page === totalPages - 1;
+
+            if (isWrappingForward) {
+              // Wrapping forward: animate to next iteration, then snap to iteration 0
+              updateActivePageIndex(page);
+              const targetOffsetNextIteration =
+                pageOffsets[page] + (currentIteration + 1) * wrapInset;
+              updateVisibleCarouselItems(pageOffsets[page]);
+
+              if (process.env.NODE_ENV === 'development') {
+                console.log(
+                  '[Carousel] Wrapping forward',
+                  JSON.stringify({
+                    targetOffsetNextIteration,
+                    targetOffsetIteration0: pageOffsets[page],
+                  }),
+                );
+              }
+
+              animationApi
+                .start({
+                  x: -targetOffsetNextIteration,
+                  transition: { type: 'tween', duration: 0.25 },
+                })
+                .then(() => {
+                  // After animation completes, instantly snap to iteration 0
+                  const targetOffsetIteration0 = pageOffsets[page];
+                  carouselScrollX.set(-targetOffsetIteration0);
+                  animationApi.set({ x: -targetOffsetIteration0 });
+                  updateVisibleCarouselItems(targetOffsetIteration0);
+                  if (process.env.NODE_ENV === 'development') {
+                    console.log('[Carousel] Snapped to iteration 0', { targetOffsetIteration0 });
+                  }
+                });
+            } else if (isWrappingBackward) {
+              // Wrapping backward: animate to previous iteration, then snap to iteration 0
+              // Backward clones are absolutely positioned at left: itemPosition - wrapInset
+              // To show page 9 (offset 1962), the backward clone is at left: 1962 - 2180 = -218
+              // To show it, we need to scroll carousel to x = -(-218) = 218 (carouselScrollX = -218)
+              // So targetOffsetPrevIteration = pageOffsets[page] - wrapInset
+              updateActivePageIndex(page);
+              // The backward clone of the target page is positioned at: pageOffsets[page] - wrapInset
+              // To show it, we scroll to that offset (negated for carousel x)
+              const targetOffsetPrevIteration = pageOffsets[page] - wrapInset;
+              updateVisibleCarouselItems(pageOffsets[page]);
+
+              if (process.env.NODE_ENV === 'development') {
+                console.log(
+                  '[Carousel] Wrapping backward',
+                  JSON.stringify({
+                    targetOffsetPrevIteration,
+                    targetOffsetIteration0: pageOffsets[page],
+                    pageOffsets,
+                  }),
+                );
+              }
+
+              animationApi
+                .start({
+                  // Negate because carousel x is negative of scroll offset
+                  x: -targetOffsetPrevIteration,
+                  transition: { type: 'tween', duration: 0.25 },
+                })
+                .then(() => {
+                  // After animation completes, instantly snap to iteration 0
+                  const targetOffsetIteration0 = pageOffsets[page];
+                  carouselScrollX.set(-targetOffsetIteration0);
+                  animationApi.set({ x: -targetOffsetIteration0 });
+                  updateVisibleCarouselItems(targetOffsetIteration0);
+                  if (process.env.NODE_ENV === 'development') {
+                    console.log(
+                      '[Carousel] Snapped to iteration 0',
+                      JSON.stringify({ targetOffsetIteration0 }),
+                    );
+                  }
+                });
+            } else {
+              // Normal page transition within same iteration
+              updateActivePageIndex(page);
+              const targetOffset = pageOffsets[page] + currentIteration * wrapInset;
+              updateVisibleCarouselItems(pageOffsets[page]);
+              if (process.env.NODE_ENV === 'development') {
+                console.log(
+                  '[Carousel] Normal transition',
+                  JSON.stringify({ targetOffset, currentIteration }),
+                );
+              }
+              animationApi.start({
+                x: -targetOffset,
+                transition: { type: 'tween', duration: 0.25 },
+              });
+            }
+          } else {
+            // Existing non-looping logic
+            const newPage = Math.max(0, Math.min(totalPages - 1, page));
+            updateActivePageIndex(newPage);
+            const targetOffset = pageOffsets[newPage];
+            updateVisibleCarouselItems(targetOffset);
+            animationApi.start({
+              x: -targetOffset,
+              transition: { type: 'tween', duration: 0.25 },
+            });
+          }
         },
-        [totalPages, pageOffsets, animationApi, updateVisibleCarouselItems, updateActivePageIndex],
+        [
+          loop,
+          wrapInset,
+          activePageIndex,
+          totalPages,
+          pageOffsets,
+          carouselScrollX,
+          getIteration,
+          animationApi,
+          updateVisibleCarouselItems,
+          updateActivePageIndex,
+        ],
       );
 
       useImperativeHandle(
@@ -661,26 +1044,77 @@ export const Carousel = memo(
           if (drag === 'none') return targetOffsetScroll;
           const negatedTargetOffsetScroll = -targetOffsetScroll;
 
-          // Allows us to calculate where the scroll offset will end up
-          const clampedScrollOffset = clampWithElasticResistance(
-            negatedTargetOffsetScroll,
-            maxScrollOffset,
-            0,
-          );
-          const closestPageIndex = getNearestPageIndexFromOffset(clampedScrollOffset, pageOffsets);
-          updateActivePageIndex(closestPageIndex);
+          if (loop && wrapInset) {
+            // Don't clamp - allow infinite scrolling
+            const iteration = getIteration(negatedTargetOffsetScroll);
 
-          if (drag === 'snap') {
-            const snapOffset = pageOffsets[closestPageIndex];
-            updateVisibleCarouselItems(snapOffset);
-            return -snapOffset;
+            // Calculate page index accounting for iteration
+            const transformInset = iteration * wrapInset;
+            const adjustedOffset = negatedTargetOffsetScroll - transformInset;
+            const closestPageIndex = getNearestPageIndexFromOffset(adjustedOffset, pageOffsets);
+            updateActivePageIndex(closestPageIndex);
+
+            if (drag === 'snap') {
+              // Snap to page accounting for iteration
+              const snapOffset = pageOffsets[closestPageIndex] + transformInset;
+              updateVisibleCarouselItems(pageOffsets[closestPageIndex]);
+
+              // After snap completes, instantly reposition to iteration 0 if we crossed boundary
+              setTimeout(() => {
+                const currentIteration = getIteration(Math.abs(carouselScrollX.get()));
+                if (currentIteration !== 0) {
+                  const iteration0Offset = pageOffsets[closestPageIndex];
+                  carouselScrollX.set(-iteration0Offset);
+                  animationApi.set({ x: -iteration0Offset });
+                  updateVisibleCarouselItems(iteration0Offset);
+                }
+              }, 50);
+
+              return -snapOffset;
+            }
+
+            // For free drag, wrap the offset to stay within [0, wrapInset) range
+            // This ensures smooth continuous scrolling without jumps
+            const wrappedOffset = wrap(0, wrapInset, negatedTargetOffsetScroll);
+            updateVisibleCarouselItems(wrappedOffset);
+
+            // Return the wrapped offset (negated for carousel x)
+            return -wrappedOffset;
+          } else {
+            // Existing non-looping logic with clamping
+            const clampedScrollOffset = clampWithElasticResistance(
+              negatedTargetOffsetScroll,
+              maxScrollOffset,
+              0,
+            );
+            const closestPageIndex = getNearestPageIndexFromOffset(
+              clampedScrollOffset,
+              pageOffsets,
+            );
+            updateActivePageIndex(closestPageIndex);
+
+            if (drag === 'snap') {
+              const snapOffset = pageOffsets[closestPageIndex];
+              updateVisibleCarouselItems(snapOffset);
+              return -snapOffset;
+            }
+
+            updateVisibleCarouselItems(clampedScrollOffset);
+            return targetOffsetScroll;
           }
-          // We need the clamped scroll offset to properly determine which items will be visible
-          updateVisibleCarouselItems(clampedScrollOffset);
-          // Keeping the target scroll offset will allow framer motion to clamp smoothly
-          return targetOffsetScroll;
         },
-        [drag, maxScrollOffset, pageOffsets, updateVisibleCarouselItems, updateActivePageIndex],
+        [
+          drag,
+          loop,
+          wrapInset,
+          getIteration,
+          maxScrollOffset,
+          pageOffsets,
+          carouselScrollX,
+          animationApi,
+          updateVisibleCarouselItems,
+          updateActivePageIndex,
+        ],
       );
 
       const handleDragStart = useCallback(() => {
@@ -697,6 +1131,13 @@ export const Carousel = memo(
         }),
         [visibleCarouselItems],
       );
+
+      // When looping, we need to offset the carousel so backward clones are visible
+      // Backward clones are in flex flow before originals, so they're at negative positions
+      // When scrollX = 0, we want to see originals (at x = 0)
+      // When scrollX goes negative, we want to see backward clones
+      // So we offset by -wrapInset: when scrollX = 0, carousel x = -wrapInset, showing originals
+      // When scrollX = -wrapInset, carousel x = -2*wrapInset, showing backward clones
 
       return (
         <LazyMotion features={domMax}>
@@ -724,11 +1165,25 @@ export const Carousel = memo(
                   {!hideNavigation && (
                     <NavigationComponent
                       className={classNames?.navigation}
-                      disableGoNext={activePageIndex >= totalPages - 1}
-                      disableGoPrevious={activePageIndex <= 0}
+                      disableGoNext={
+                        totalPages <= 1 || (!loop && activePageIndex >= totalPages - 1)
+                      }
+                      disableGoPrevious={totalPages <= 1 || (!loop && activePageIndex <= 0)}
                       nextPageAccessibilityLabel={nextPageAccessibilityLabel}
-                      onGoNext={() => goToPage(activePageIndex + 1)}
-                      onGoPrevious={() => goToPage(activePageIndex - 1)}
+                      onGoNext={() => {
+                        if (loop && totalPages > 1) {
+                          goToPage(wrap(0, totalPages, activePageIndex + 1));
+                        } else {
+                          goToPage(activePageIndex + 1);
+                        }
+                      }}
+                      onGoPrevious={() => {
+                        if (loop && totalPages > 1) {
+                          goToPage(wrap(0, totalPages, activePageIndex - 1));
+                        } else {
+                          goToPage(activePageIndex - 1);
+                        }
+                      }}
                       previousPageAccessibilityLabel={previousPageAccessibilityLabel}
                       style={styles?.navigation}
                     />
@@ -756,7 +1211,7 @@ export const Carousel = memo(
                     animate={animationApi}
                     className={cx(classNames?.carousel, defaultCarouselCss)}
                     drag={isDragEnabled ? 'x' : false}
-                    dragConstraints={{ left: -maxScrollOffset, right: 0 }}
+                    dragConstraints={loop ? undefined : { left: -maxScrollOffset, right: 0 }}
                     dragControls={dragControls}
                     dragTransition={{
                       // How much inertia affects the target
@@ -768,6 +1223,9 @@ export const Carousel = memo(
                     onDragEnd={handleDragEnd}
                     style={{
                       display: 'flex',
+                      position: 'relative',
+                      // When looping, offset by wrapInset so backward clones (at -wrapInset) are positioned correctly
+                      // When scrollX = 0, carousel x = -wrapInset, showing originals at x = 0
                       x: carouselScrollX,
                       ...styles?.carousel,
                     }}
@@ -775,7 +1233,7 @@ export const Carousel = memo(
                       pointerEvents: 'none',
                     }}
                   >
-                    {children}
+                    {clonedChildren}
                   </m.div>
                 </CarouselContext.Provider>
               </div>

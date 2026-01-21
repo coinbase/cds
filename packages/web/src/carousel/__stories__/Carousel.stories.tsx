@@ -519,6 +519,70 @@ const AnimatedPaginationExample = () => {
   );
 };
 
+export const LoopingSnapPage = () => (
+  <NegativeMargin>
+    <Carousel loop snapMode="page" styles={overflowStyles} title="Looping - Snap Page">
+      {sampleItems.map((item, index) => (
+        <CarouselItem
+          key={`loop-page-${index}`}
+          id={`loop-page-${index}`}
+          width="calc((100% - 2 * var(--space-2)) / 3)"
+        >
+          {item}
+        </CarouselItem>
+      ))}
+    </Carousel>
+  </NegativeMargin>
+);
+
+export const LoopingSnapPageMinContent = () => (
+  <NegativeMargin>
+    <Carousel loop snapMode="page" styles={overflowStyles} title="Looping - Snap Page">
+      {sampleItems.slice(0, 3).map((item, index) => (
+        <CarouselItem
+          key={`loop-page-${index}`}
+          id={`loop-page-${index}`}
+          width="calc((100% - 2 * var(--space-2)) / 3)"
+        >
+          {item}
+        </CarouselItem>
+      ))}
+    </Carousel>
+  </NegativeMargin>
+);
+
+export const LoopingSnapItem = () => (
+  <NegativeMargin>
+    <Carousel drag="snap" loop snapMode="item" styles={overflowStyles} title="Looping - Snap Item">
+      {sampleItems.map((item, index) => (
+        <CarouselItem
+          key={`loop-item-${index}`}
+          id={`loop-item-${index}`}
+          width="calc((100% - 2 * var(--space-2)) / 3)"
+        >
+          {item}
+        </CarouselItem>
+      ))}
+    </Carousel>
+  </NegativeMargin>
+);
+
+export const LoopingFreeDrag = () => (
+  <NegativeMargin>
+    <Carousel drag="free" loop snapMode="item" styles={overflowStyles} title="Looping - Free Drag">
+      {sampleItems.map((item, index) => (
+        <CarouselItem
+          key={`loop-free-${index}`}
+          id={`loop-free-${index}`}
+          width="calc((100% - 2 * var(--space-2)) / 3)"
+        >
+          {item}
+        </CarouselItem>
+      ))}
+    </Carousel>
+  </NegativeMargin>
+);
+
 export const All = () => (
   <VStack gap={2}>
     <BasicExamples />
