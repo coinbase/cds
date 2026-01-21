@@ -2184,10 +2184,10 @@ function CustomBeaconStroke() {
         ]}
       >
         <Scrubber
-          hideOverlay
           idlePulse
-          BeaconComponent={(props) => <DefaultScrubberBeacon {...props} stroke={backgroundColor} />}
+          hideOverlay
           lineStroke={foregroundColor}
+          beaconStroke={backgroundColor}
         />
       </LineChart>
     </Box>
@@ -2197,30 +2197,98 @@ function CustomBeaconStroke() {
 function CustomBeaconSize() {
   const theme = useTheme();
 
-  return (
-    <LineChart
-      enableScrubbing
-      height={150}
-      series={[
-        {
-          id: 'prices',
-          data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
-        },
-      ]}
-    >
-      <Scrubber
-        idlePulse
-        BeaconComponent={(props) => (
-          <DefaultScrubberBeacon
-            {...props}
-            radius={10}
-            stroke={theme.color.bgPrimaryWash}
-            strokeWidth={5}
-          />
-        )}
+  const dataCount = 14;
+  const minDataValue = 0;
+  const maxDataValue = 100;
+  const minStepOffset = 5;
+  const maxStepOffset = 20;
+  const updateInterval = 2000;
+
+  function generateNextValue(previousValue: number) {
+    const range = maxStepOffset - minStepOffset;
+    const offset = Math.random() * range + minStepOffset;
+
+    let direction;
+    if (previousValue >= maxDataValue) {
+      direction = -1;
+    } else if (previousValue <= minDataValue) {
+      direction = 1;
+    } else {
+      direction = Math.random() < 0.5 ? -1 : 1;
+    }
+
+    const newValue = previousValue + offset * direction;
+    return Math.max(minDataValue, Math.min(maxDataValue, newValue));
+  }
+
+  function generateInitialData() {
+    const data = [];
+    let previousValue = Math.random() * (maxDataValue - minDataValue) + minDataValue;
+    data.push(previousValue);
+
+    for (let i = 1; i < dataCount; i++) {
+      const newValue = generateNextValue(previousValue);
+      data.push(newValue);
+      previousValue = newValue;
+    }
+    return data;
+  }
+
+  const InvertedBeacon = useMemo(
+    () => (props: ScrubberBeaconProps) => (
+      <DefaultScrubberBeacon
+        {...props}
+        stroke={theme.color.fg}
+        color={theme.color.bg}
+        radius={5}
+        strokeWidth={3}
       />
-    </LineChart>
+    ),
+    [theme.color.fg, theme.color.bg],
   );
+
+  const CustomBeaconSizeChart = memo(() => {
+    const [data, setData] = useState(generateInitialData);
+
+    useEffect(() => {
+      const intervalId = setInterval(() => {
+        setData((currentData) => {
+          const lastValue = currentData[currentData.length - 1] ?? 50;
+          const newValue = generateNextValue(lastValue);
+          return [...currentData.slice(1), newValue];
+        });
+      }, updateInterval);
+
+      return () => clearInterval(intervalId);
+    }, []);
+
+    return (
+      <LineChart
+        enableScrubbing
+        showArea
+        showYAxis
+        height={150}
+        series={[
+          {
+            id: 'prices',
+            data,
+            color: theme.color.fg,
+          },
+        ]}
+        xAxis={{
+          range: ({ min, max }) => ({ min, max: max - 16 }),
+        }}
+        yAxis={{
+          showGrid: true,
+          domain: { min: 0, max: 100 },
+        }}
+      >
+        <Scrubber BeaconComponent={InvertedBeacon} />
+      </LineChart>
+    );
+  });
+
+  return <CustomBeaconSizeChart />;
 }
 
 function TwoLineScrubberLabel() {
