@@ -466,6 +466,19 @@ export const CartesianChart = memo(
         return legend;
       }, [legend, legendAccessibilityLabel, legendPosition]);
 
+      const rootBoxProps: BoxProps = useMemo(
+        () => ({
+          ref,
+          accessibilityLiveRegion: 'polite',
+          accessibilityRole: 'image',
+          height,
+          style: rootStyles,
+          width,
+          ...props,
+        }),
+        [ref, height, rootStyles, width, props],
+      );
+
       return (
         <CartesianChartProvider value={contextValue}>
           <ScrubberProvider
@@ -475,16 +488,10 @@ export const CartesianChart = memo(
           >
             {legend ? (
               <Box
-                ref={ref}
-                accessibilityLiveRegion="polite"
-                accessibilityRole="image"
+                {...rootBoxProps}
                 flexDirection={
                   legendPosition === 'top' || legendPosition === 'bottom' ? 'column' : 'row'
                 }
-                height={height}
-                style={rootStyles}
-                width={width}
-                {...props}
               >
                 {(legendPosition === 'top' || legendPosition === 'left') && legendElement}
                 <Box collapsable={collapsable} onLayout={onContainerLayout} style={{ flex: 1 }}>
@@ -494,15 +501,9 @@ export const CartesianChart = memo(
               </Box>
             ) : (
               <Box
-                ref={ref}
-                accessibilityLiveRegion="polite"
-                accessibilityRole="image"
+                {...rootBoxProps}
                 collapsable={collapsable}
-                height={height}
                 onLayout={onContainerLayout}
-                style={rootStyles}
-                width={width}
-                {...props}
               >
                 <ChartCanvas style={styles?.chart}>{children}</ChartCanvas>
               </Box>

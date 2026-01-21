@@ -424,6 +424,17 @@ export const CartesianChart = memo(
         return legend;
       }, [legend, legendAccessibilityLabel, legendPosition]);
 
+      const rootBoxProps: BoxProps<'div'> = useMemo(
+        () => ({
+          className: rootClassNames,
+          height,
+          style: rootStyles,
+          width,
+          ...props,
+        }),
+        [rootClassNames, height, rootStyles, width, props],
+      );
+
       const chartContent = (
         <Box
           ref={(node) => {
@@ -469,29 +480,17 @@ export const CartesianChart = memo(
           >
             {legend ? (
               <Box
-                className={rootClassNames}
+                {...rootBoxProps}
                 flexDirection={
                   legendPosition === 'top' || legendPosition === 'bottom' ? 'column' : 'row'
                 }
-                height={height}
-                style={rootStyles}
-                width={width}
-                {...props}
               >
                 {(legendPosition === 'top' || legendPosition === 'left') && legendElement}
                 {chartContent}
                 {(legendPosition === 'bottom' || legendPosition === 'right') && legendElement}
               </Box>
             ) : (
-              <Box
-                className={rootClassNames}
-                height={height}
-                style={rootStyles}
-                width={width}
-                {...props}
-              >
-                {chartContent}
-              </Box>
+              <Box {...rootBoxProps}>{chartContent}</Box>
             )}
           </ScrubberProvider>
         </CartesianChartProvider>
