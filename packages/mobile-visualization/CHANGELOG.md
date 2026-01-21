@@ -13,6 +13,7 @@ All notable changes to this project will be documented in this file.
 #### 🚀 Updates
 
 - Feat: support styling default scrubber beacon. [[#315](https://github.com/coinbase/cds/pull/315)]
+- Fix: idlePulse works on mobile even when Chart animation is off, matching web. [[#315](https://github.com/coinbase/cds/pull/315)]
 
 #### 📘 Misc
 
