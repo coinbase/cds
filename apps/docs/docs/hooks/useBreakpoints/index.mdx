@@ -14,12 +14,15 @@ import { ComponentTabsContainer } from '@site/src/components/page/ComponentTabsC
 import { HookTabsContainer } from '@site/src/components/page/HookTabsContainer';
 import WebExamples, { toc as webExamplesToc } from './_webExamples.mdx';
 import WebApi, { toc as webApiToc } from './_webApi.mdx';
+import { VStack } from '@coinbase/cds-web/layout';
 
-<ComponentHeader title="useBreakpoints" banner={<HooksBanner />} webMetadata={webMetadata} />
+<VStack gap={5}>
+  <ComponentHeader title="useBreakpoints" banner={<HooksBanner />} webMetadata={webMetadata} />
 
-<HookTabsContainer
-  webExamples={<WebExamples />}
-  webExamplesToc={webExamplesToc}
-  webApi={<WebApi />}
-  webApiToc={webApiToc}
-/>
+  <HookTabsContainer
+    webExamples={<WebExamples />}
+    webExamplesToc={webExamplesToc}
+    webApi={<WebApi />}
+    webApiToc={webApiToc}
+  />
+</VStack>
