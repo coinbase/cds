@@ -415,17 +415,17 @@ const PerformanceHeader = memo(
 
     return (
       <HStack gap={1} paddingX={1}>
-        <LegendItem
+        <LegendEntry
           color={theme.color.fgPositive}
           label="High Price"
           value={formatPriceThousands(sparklineTimePeriodDataValues[shownPosition] * 1.2)}
         />
-        <LegendItem
+        <LegendEntry
           color={assets.btc.color}
           label="Actual Price"
           value={formatPriceThousands(sparklineTimePeriodDataValues[shownPosition])}
         />
-        <LegendItem
+        <LegendEntry
           color={theme.color.fgNegative}
           label="Low Price"
           value={formatPriceThousands(sparklineTimePeriodDataValues[shownPosition] * 0.8)}

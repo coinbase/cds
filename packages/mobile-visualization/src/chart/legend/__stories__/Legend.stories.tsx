@@ -17,7 +17,7 @@ import { Scrubber } from '../../scrubber';
 import type { LegendShapeVariant, Series } from '../../utils/chart';
 import { getDottedAreaPath } from '../../utils/path';
 import { DefaultLegendShape } from '../DefaultLegendShape';
-import { Legend, type LegendItemProps } from '../Legend';
+import { Legend, type LegendEntryProps } from '../Legend';
 
 const spectrumColors = [
   'blue40',
@@ -263,8 +263,8 @@ const DynamicData = () => {
 
   const chartAccessibilityLabel = `Candidate polling data over ${timeLabels.length} months showing support percentages for 3 candidates.`;
 
-  const ValueLegendItem = useCallback(
-    ({ seriesId, label, color, shape }: LegendItemProps) => {
+  const ValueLegendEntry = useCallback(
+    ({ seriesId, label, color, shape }: LegendEntryProps) => {
       const seriesData = seriesConfig.find((s) => s.id === seriesId);
       const rawValue = seriesData?.data?.[dataIndex];
 
@@ -288,7 +288,7 @@ const DynamicData = () => {
       showArea
       accessibilityLabel={chartAccessibilityLabel}
       height={250}
-      legend={<Legend ItemComponent={ValueLegendItem} justifyContent="flex-start" paddingX={2} />}
+      legend={<Legend EntryComponent={ValueLegendEntry} justifyContent="flex-start" paddingX={2} />}
       legendPosition="top"
       onScrubberPositionChange={setScrubberPosition}
       series={seriesConfig}
@@ -354,7 +354,7 @@ const Interactive = () => {
     setEmphasizedId((prev) => (prev === seriesId ? null : seriesId));
   }, []);
 
-  const ChipLegendItem = memo(function ChipLegendItem({ seriesId, label }: LegendItemProps) {
+  const ChipLegendEntry = memo(function ChipLegendEntry({ seriesId, label }: LegendEntryProps) {
     const isEmphasized = emphasizedId === seriesId;
     const config = seriesConfig.find((s) => s.id === seriesId);
     const baseColor = config?.baseColor ?? 'gray';
@@ -402,7 +402,7 @@ const Interactive = () => {
     <LineChart
       showArea
       height={300}
-      legend={<Legend ItemComponent={ChipLegendItem} gap={1} paddingTop={1} />}
+      legend={<Legend EntryComponent={ChipLegendEntry} gap={1} paddingTop={1} />}
       legendPosition="top"
       series={series}
       width="100%"

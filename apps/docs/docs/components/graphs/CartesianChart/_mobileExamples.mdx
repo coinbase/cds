@@ -634,7 +634,7 @@ function EarningsHistory() {
     [actualEPS, estimatedEPS],
   );
 
-  const LegendItem = memo(({ opacity = 1, label }: { opacity?: number, label: string }) => {
+  const LegendEntry = memo(({ opacity = 1, label }: { opacity?: number, label: string }) => {
     return (
       <Box alignItems="center" gap={0.5}>
         <LegendDot opacity={opacity} />
@@ -675,8 +675,8 @@ function EarningsHistory() {
         <CirclePlot seriesId="actualEPS" />
       </CartesianChart>
       <HStack justifyContent="flex-end" gap={2}>
-        <LegendItem opacity={0.5} label="Estimated EPS" />
-        <LegendItem label="Actual EPS" />
+        <LegendEntry opacity={0.5} label="Estimated EPS" />
+        <LegendEntry label="Actual EPS" />
       </HStack>
     </VStack>
   );

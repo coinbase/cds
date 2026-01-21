@@ -1,3 +1,3 @@
-export * from './DefaultLegendItem';
+export * from './DefaultLegendEntry';
 export * from './DefaultLegendShape';
 export * from './Legend';

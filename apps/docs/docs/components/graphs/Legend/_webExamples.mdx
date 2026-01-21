@@ -541,10 +541,10 @@ function CustomAccessibleLegend() {
 
 ### Dynamic Label
 
-You can use `ItemComponent` to display a label that updates as a user interacts with the chart.
+You can use `EntryComponent` to display a label that updates as a user interacts with the chart.
 
 ```jsx live
-function CustomLegendItem() {
+function CustomLegendEntry() {
   const timeLabels = [
     'Jan',
     'Feb',
@@ -600,7 +600,7 @@ function CustomLegendItem() {
     [timeLabels, series],
   );
 
-  const ValueLegendItem = memo(function ValueLegendItem({ seriesId, label, color, shape }) {
+  const ValueLegendEntry = memo(function ValueLegendEntry({ seriesId, label, color, shape }) {
     const { scrubberPosition } = useScrubberContext();
     const { series: chartSeries, dataLength } = useCartesianChartContext();
 
@@ -631,7 +631,7 @@ function CustomLegendItem() {
       showYAxis
       accessibilityLabel={chartAccessibilityLabel}
       height={{ base: 200, tablet: 250, desktop: 300 }}
-      legend={<Legend ItemComponent={ValueLegendItem} justifyContent="flex-start" paddingX={2} />}
+      legend={<Legend EntryComponent={ValueLegendEntry} justifyContent="flex-start" paddingX={2} />}
       legendPosition="top"
       series={series}
       xAxis={{
@@ -700,7 +700,7 @@ function InteractiveLegend() {
     setEmphasizedId((prev) => (prev === seriesId ? null : seriesId));
   }, []);
 
-  const ChipLegendItem = memo(function ChipLegendItem({ seriesId, label }) {
+  const ChipLegendEntry = memo(function ChipLegendEntry({ seriesId, label }) {
     const isEmphasized = emphasizedId === seriesId;
     const config = seriesConfig.find((s) => s.id === seriesId);
     const baseColor = config?.baseColor ?? '--gray';
@@ -748,7 +748,7 @@ function InteractiveLegend() {
       showXAxis
       showYAxis
       height={{ base: 300, tablet: 350, desktop: 400 }}
-      legend={<Legend ItemComponent={ChipLegendItem} gap={1} paddingTop={1} />}
+      legend={<Legend EntryComponent={ChipLegendEntry} gap={1} paddingTop={1} />}
       legendPosition="top"
       series={series}
       xAxis={{

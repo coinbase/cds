@@ -12,7 +12,7 @@ import { Scrubber } from '../../scrubber';
 import { useScrubberContext } from '../../utils';
 import type { LegendShapeVariant, Series } from '../../utils/chart';
 import { DefaultLegendShape } from '../DefaultLegendShape';
-import { Legend, type LegendItemProps } from '../Legend';
+import { Legend, type LegendEntryProps } from '../Legend';
 
 export default {
   component: Legend,
@@ -369,12 +369,12 @@ const DynamicData = () => {
     },
   ];
 
-  const ValueLegendItem = memo(function ValueLegendItem({
+  const ValueLegendEntry = memo(function ValueLegendEntry({
     seriesId,
     label,
     color,
     shape,
-  }: LegendItemProps) {
+  }: LegendEntryProps) {
     const { scrubberPosition } = useScrubberContext();
     const { series, dataLength } = useCartesianChartContext();
 
@@ -405,7 +405,9 @@ const DynamicData = () => {
         showXAxis
         showYAxis
         height={{ base: 200, tablet: 250, desktop: 300 }}
-        legend={<Legend ItemComponent={ValueLegendItem} justifyContent="flex-start" paddingX={2} />}
+        legend={
+          <Legend EntryComponent={ValueLegendEntry} justifyContent="flex-start" paddingX={2} />
+        }
         legendPosition="top"
         series={series}
         xAxis={{
@@ -469,7 +471,7 @@ const Interactive = () => {
     setEmphasizedId((prev) => (prev === seriesId ? null : seriesId));
   }, []);
 
-  const ChipLegendItem = memo(function ChipLegendItem({ seriesId, label }: LegendItemProps) {
+  const ChipLegendEntry = memo(function ChipLegendEntry({ seriesId, label }: LegendEntryProps) {
     const chipRef = useRef<HTMLButtonElement>(null);
     const isEmphasized = emphasizedId === seriesId;
     const config = seriesConfig.find((s) => s.id === seriesId);
@@ -527,7 +529,7 @@ const Interactive = () => {
         showXAxis
         showYAxis
         height={{ base: 300, tablet: 350, desktop: 400 }}
-        legend={<Legend ItemComponent={ChipLegendItem} gap={1} paddingTop={1} />}
+        legend={<Legend EntryComponent={ChipLegendEntry} gap={1} paddingTop={1} />}
         legendPosition="top"
         series={series}
         xAxis={{

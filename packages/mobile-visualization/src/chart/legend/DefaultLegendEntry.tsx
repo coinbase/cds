@@ -4,17 +4,17 @@ import { HStack, type HStackProps } from '@coinbase/cds-mobile/layout';
 import { Text } from '@coinbase/cds-mobile/typography/Text';
 
 import { DefaultLegendShape } from './DefaultLegendShape';
-import type { LegendItemProps } from './Legend';
+import type { LegendEntryProps } from './Legend';
 
 const styles = StyleSheet.create({
-  legendItem: {
+  legendEntry: {
     alignItems: 'center',
   },
 });
 
-export type DefaultLegendItemProps = LegendItemProps & Omit<HStackProps, 'children' | 'color'>;
+export type DefaultLegendEntryProps = LegendEntryProps & Omit<HStackProps, 'children' | 'color'>;
 
-export const DefaultLegendItem = memo<DefaultLegendItemProps>(
+export const DefaultLegendEntry = memo<DefaultLegendEntryProps>(
   ({
     label,
     color,
@@ -29,7 +29,7 @@ export const DefaultLegendItem = memo<DefaultLegendItemProps>(
     return (
       <HStack
         gap={gap}
-        style={[styles.legendItem, style, stylesProp?.root]}
+        style={[styles.legendEntry, style, stylesProp?.root]}
         testID={testID}
         {...props}
       >

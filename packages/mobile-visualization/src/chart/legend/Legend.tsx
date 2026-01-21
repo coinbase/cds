@@ -5,7 +5,7 @@ import { Box, type BoxBaseProps, type BoxProps } from '@coinbase/cds-mobile/layo
 import { useCartesianChartContext } from '../ChartProvider';
 import type { LegendShape } from '../utils';
 
-import { DefaultLegendItem } from './DefaultLegendItem';
+import { DefaultLegendEntry } from './DefaultLegendEntry';
 import { DefaultLegendShape } from './DefaultLegendShape';
 
 export type LegendShapeProps = {
@@ -27,7 +27,7 @@ export type LegendShapeProps = {
 
 export type LegendShapeComponent = React.FC<LegendShapeProps>;
 
-export type LegendItemProps = {
+export type LegendEntryProps = {
   /**
    * Id of the series.
    */
@@ -75,7 +75,7 @@ export type LegendItemProps = {
   };
 };
 
-export type LegendItemComponent = React.FC<LegendItemProps>;
+export type LegendEntryComponent = React.FC<LegendEntryProps>;
 
 export type LegendBaseProps = Omit<BoxBaseProps, 'children'> & {
   /**
@@ -84,13 +84,13 @@ export type LegendBaseProps = Omit<BoxBaseProps, 'children'> & {
    */
   seriesIds?: string[];
   /**
-   * Custom component to render each legend item.
-   * @default DefaultLegendItem
+   * Custom component to render each legend entry.
+   * @default DefaultLegendEntry
    */
-  ItemComponent?: LegendItemComponent;
+  EntryComponent?: LegendEntryComponent;
   /**
-   * Custom component to render the legend shape within each item.
-   * Only used when ItemComponent is not provided or is DefaultLegendItem.
+   * Custom component to render the legend shape within each entry.
+   * Only used when EntryComponent is not provided or is DefaultLegendEntry.
    * @default DefaultLegendShape
    */
   ShapeComponent?: LegendShapeComponent;
@@ -112,18 +112,18 @@ export type LegendProps = Omit<BoxProps, 'children'> &
        */
       root?: StyleProp<ViewStyle>;
       /**
-       * Custom styles for each item element.
+       * Custom styles for each entry element.
        */
-      item?: StyleProp<ViewStyle>;
+      entry?: StyleProp<ViewStyle>;
       /**
-       * Custom styles for the shape element within each item.
+       * Custom styles for the shape element within each entry.
        */
-      itemShape?: StyleProp<ViewStyle>;
+      entryShape?: StyleProp<ViewStyle>;
       /**
-       * Custom styles for the label element within each item.
+       * Custom styles for the label element within each entry.
        * @note not applied when label is a ReactNode.
        */
-      itemLabel?: StyleProp<ViewStyle>;
+      entryLabel?: StyleProp<ViewStyle>;
     };
   };
 
@@ -138,7 +138,7 @@ export const Legend = memo(
         rowGap = 0.75,
         columnGap = 2,
         seriesIds,
-        ItemComponent = DefaultLegendItem,
+        EntryComponent = DefaultLegendEntry,
         ShapeComponent = DefaultLegendShape,
         accessibilityLabel = 'Legend',
         style,
@@ -171,7 +171,7 @@ export const Legend = memo(
           {...props}
         >
           {filteredSeries.map((s) => (
-            <ItemComponent
+            <EntryComponent
               key={s.id}
               ShapeComponent={ShapeComponent}
               color={s.color}
@@ -179,9 +179,9 @@ export const Legend = memo(
               seriesId={s.id}
               shape={s.legendShape}
               styles={{
-                root: styles?.item,
-                shape: styles?.itemShape,
-                label: styles?.itemLabel,
+                root: styles?.entry,
+                shape: styles?.entryShape,
+                label: styles?.entryLabel,
               }}
             />
           ))}

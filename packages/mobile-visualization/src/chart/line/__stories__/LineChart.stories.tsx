@@ -1164,7 +1164,7 @@ const LegendDot = memo((props: BoxBaseProps) => {
   return <Box borderRadius={1000} height={10} width={10} {...props} />;
 });
 
-const LegendItem = memo(
+const LegendEntry = memo(
   ({
     color = assets.btc.color,
     label,
@@ -1212,17 +1212,17 @@ const PerformanceHeader = memo(
 
     return (
       <HStack gap={1} paddingX={1}>
-        <LegendItem
+        <LegendEntry
           color={theme.color.fgPositive}
           label="High Price"
           value={formatPriceThousands(sparklineTimePeriodDataValues[shownPosition] * 1.2)}
         />
-        <LegendItem
+        <LegendEntry
           color={assets.btc.color}
           label="Actual Price"
           value={formatPriceThousands(sparklineTimePeriodDataValues[shownPosition])}
         />
-        <LegendItem
+        <LegendEntry
           color={theme.color.fgNegative}
           label="Low Price"
           value={formatPriceThousands(sparklineTimePeriodDataValues[shownPosition] * 0.8)}

@@ -5,16 +5,16 @@ import { Text } from '@coinbase/cds-web/typography';
 import { css } from '@linaria/core';
 
 import { DefaultLegendShape } from './DefaultLegendShape';
-import type { LegendItemProps } from './Legend';
+import type { LegendEntryProps } from './Legend';
 
-const legendItemCss = css`
+const legendEntryCss = css`
   align-items: center;
 `;
 
-export type DefaultLegendItemProps = LegendItemProps &
+export type DefaultLegendEntryProps = LegendEntryProps &
   Omit<HStackProps<HStackDefaultElement>, 'children' | 'color'>;
 
-export const DefaultLegendItem = memo(
+export const DefaultLegendEntry = memo(
   ({
     seriesId,
     label,
@@ -28,10 +28,10 @@ export const DefaultLegendItem = memo(
     styles,
     testID,
     ...props
-  }: DefaultLegendItemProps) => {
+  }: DefaultLegendEntryProps) => {
     return (
       <HStack
-        className={cx(legendItemCss, className, classNames?.root)}
+        className={cx(legendEntryCss, className, classNames?.root)}
         data-testid={testID}
         gap={gap}
         style={{ ...style, ...styles?.root }}
