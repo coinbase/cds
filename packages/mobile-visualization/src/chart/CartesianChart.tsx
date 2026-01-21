@@ -500,11 +500,7 @@ export const CartesianChart = memo(
                 {(legendPosition === 'bottom' || legendPosition === 'right') && legendElement}
               </Box>
             ) : (
-              <Box
-                {...rootBoxProps}
-                collapsable={collapsable}
-                onLayout={onContainerLayout}
-              >
+              <Box {...rootBoxProps} collapsable={collapsable} onLayout={onContainerLayout}>
                 <ChartCanvas style={styles?.chart}>{children}</ChartCanvas>
               </Box>
             )}
