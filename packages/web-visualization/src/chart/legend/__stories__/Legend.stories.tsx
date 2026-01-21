@@ -11,9 +11,8 @@ import { LineChart } from '../../line';
 import { Scrubber } from '../../scrubber';
 import { useScrubberContext } from '../../utils';
 import type { LegendShapeVariant, Series } from '../../utils/chart';
-import { type LegendItemProps } from '../DefaultLegendItem';
 import { DefaultLegendShape } from '../DefaultLegendShape';
-import { Legend } from '../Legend';
+import { Legend, type LegendItemProps } from '../Legend';
 
 export default {
   component: Legend,

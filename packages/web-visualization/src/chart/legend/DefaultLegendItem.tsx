@@ -1,109 +1,18 @@
 import { memo } from 'react';
-import type { SharedProps } from '@coinbase/cds-common/types';
 import { cx } from '@coinbase/cds-web';
-import {
-  Box,
-  HStack,
-  type HStackBaseProps,
-  type HStackDefaultElement,
-  type HStackProps,
-} from '@coinbase/cds-web/layout';
+import { HStack, type HStackDefaultElement, type HStackProps } from '@coinbase/cds-web/layout';
 import { Text } from '@coinbase/cds-web/typography';
 import { css } from '@linaria/core';
 
-import type { LegendShape } from '../utils';
-
-import { DefaultLegendShape, type LegendShapeComponent } from './DefaultLegendShape';
-
-const shapeWrapperCss = css`
-  width: 10px;
-  height: 24px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
+import { DefaultLegendShape } from './DefaultLegendShape';
+import type { LegendItemProps } from './Legend';
 
 const legendItemCss = css`
   align-items: center;
 `;
 
-export type LegendItemBaseProps = SharedProps &
-  Omit<HStackBaseProps, 'children'> & {
-    /**
-     * Id of the series.
-     */
-    seriesId: string;
-    /**
-     * Label of the series.
-     * If a ReactNode is provided, it replaces the default Text component.
-     */
-    label: React.ReactNode;
-    /**
-     * Color of the series.
-     * @default 'var(--color-fgPrimary)'
-     */
-    color?: string;
-    /**
-     * Shape of the series.
-     *
-     */
-    shape?: LegendShape;
-    /**
-     * Custom component to render the legend shape.
-     * @default DefaultLegendShape
-     */
-    ShapeComponent?: LegendShapeComponent;
-  };
-
-export type LegendItemProps = LegendItemBaseProps &
-  Omit<HStackProps<HStackDefaultElement>, 'children'> & {
-    /**
-     * Custom class names for the component parts.
-     */
-    classNames?: {
-      /**
-       * Custom class name for the root element.
-       */
-      root?: string;
-      /**
-       * Custom class name for the shape wrapper element.
-       */
-      shapeWrapper?: string;
-      /**
-       * Custom class name for the shape element.
-       */
-      shape?: string;
-      /**
-       * Custom class name for the label element.
-       * @note not applied when label is a ReactNode.
-       */
-      label?: string;
-    };
-    /**
-     * Custom styles for the component parts.
-     */
-    styles?: {
-      /**
-       * Custom styles for the root element.
-       */
-      root?: React.CSSProperties;
-      /**
-       * Custom styles for the shape wrapper element.
-       */
-      shapeWrapper?: React.CSSProperties;
-      /**
-       * Custom styles for the shape element.
-       */
-      shape?: React.CSSProperties;
-      /**
-       * Custom styles for the label element.
-       * @note not applied when label is a ReactNode.
-       */
-      label?: React.CSSProperties;
-    };
-  };
-
-export type LegendItemComponent = React.FC<LegendItemProps>;
+export type DefaultLegendItemProps = LegendItemProps &
+  Omit<HStackProps<HStackDefaultElement>, 'children' | 'color'>;
 
 export const DefaultLegendItem = memo(
   ({
@@ -119,7 +28,7 @@ export const DefaultLegendItem = memo(
     styles,
     testID,
     ...props
-  }: LegendItemProps) => {
+  }: DefaultLegendItemProps) => {
     return (
       <HStack
         className={cx(legendItemCss, className, classNames?.root)}
@@ -128,14 +37,12 @@ export const DefaultLegendItem = memo(
         style={{ ...style, ...styles?.root }}
         {...props}
       >
-        <Box className={cx(shapeWrapperCss, classNames?.shapeWrapper)} style={styles?.shapeWrapper}>
-          <ShapeComponent
-            className={classNames?.shape}
-            color={color}
-            shape={shape}
-            style={styles?.shape}
-          />
-        </Box>
+        <ShapeComponent
+          className={classNames?.shape}
+          color={color}
+          shape={shape}
+          style={styles?.shape}
+        />
         {typeof label === 'string' ? (
           <Text className={classNames?.label} font="label1" style={styles?.label}>
             {label}

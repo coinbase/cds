@@ -1,12 +1,19 @@
 import { memo } from 'react';
-import { StyleSheet, type ViewStyle } from 'react-native';
-import type { SharedProps } from '@coinbase/cds-common/types';
+import { StyleSheet, View, type ViewStyle } from 'react-native';
 import { useTheme } from '@coinbase/cds-mobile';
 import { Box, type BoxProps } from '@coinbase/cds-mobile/layout';
 
 import type { LegendShape, LegendShapeVariant } from '../utils/chart';
 
+import type { LegendShapeProps } from './Legend';
+
 const styles = StyleSheet.create({
+  container: {
+    width: 10,
+    height: 24,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   pill: {
     width: 6,
     height: 24,
@@ -38,45 +45,20 @@ const stylesByVariant: Record<LegendShapeVariant, ViewStyle> = {
 const isVariantShape = (shape: LegendShape): shape is LegendShapeVariant =>
   typeof shape === 'string' && shape in stylesByVariant;
 
-export type LegendShapeBaseProps = SharedProps & {
-  /**
-   * Color of the legend shape.
-   * @default theme.color.fgPrimary
-   */
-  color?: string;
-  /**
-   * Shape to display. Can be a preset shape or a custom ReactNode.
-   * @default 'circle'
-   */
-  shape?: LegendShape;
-};
+export type DefaultLegendShapeProps = LegendShapeProps & Omit<BoxProps, 'children' | 'color'>;
 
-export type LegendShapeProps = Omit<BoxProps, 'children' | 'color'> & LegendShapeBaseProps;
+export const DefaultLegendShape = memo<DefaultLegendShapeProps>(
+  ({ color, shape = 'circle', style, testID, ...props }) => {
+    const theme = useTheme();
 
-export type LegendShapeComponent = React.FC<LegendShapeProps>;
+    if (!isVariantShape(shape)) return shape;
 
-/**
- * Default shape component for chart legends.
- * Renders a colored shape (pill, circle, square, or squircle) or a custom ReactNode.
- */
-export const DefaultLegendShape = memo<LegendShapeProps>(function DefaultLegendShape({
-  color,
-  shape = 'circle',
-  style,
-  testID,
-  ...props
-}) {
-  const theme = useTheme();
+    const variantStyle = stylesByVariant[shape];
 
-  if (!isVariantShape(shape)) return shape;
-
-  const variantStyle = stylesByVariant[shape];
-
-  return (
-    <Box
-      style={[variantStyle, { backgroundColor: color ?? theme.color.fgPrimary }, style]}
-      testID={testID}
-      {...props}
-    />
-  );
-});
+    return (
+      <Box style={[styles.container, style]} testID={testID} {...props}>
+        <View style={[variantStyle, { backgroundColor: color ?? theme.color.fgPrimary }]} />
+      </Box>
+    );
+  },
+);

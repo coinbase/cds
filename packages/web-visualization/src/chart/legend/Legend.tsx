@@ -7,11 +7,107 @@ import {
 } from '@coinbase/cds-web/layout';
 
 import { useCartesianChartContext } from '../ChartProvider';
+import type { LegendShape } from '../utils';
 
-import { DefaultLegendItem, type LegendItemComponent } from './DefaultLegendItem';
-import type { LegendShapeComponent } from './DefaultLegendShape';
+import { DefaultLegendItem } from './DefaultLegendItem';
+import { DefaultLegendShape } from './DefaultLegendShape';
 
-export type LegendBaseProps = BoxBaseProps & {
+export type LegendShapeProps = {
+  /**
+   * Color of the legend shape.
+   * @default 'var(--color-fgPrimary)'
+   */
+  color?: string;
+  /**
+   * Shape to display. Can be a preset shape or a custom ReactNode.
+   * @default 'circle'
+   */
+  shape?: LegendShape;
+  /**
+   * Custom class name for the shape element.
+   */
+  className?: string;
+  /**
+   * Custom styles for the shape element.
+   */
+  style?: React.CSSProperties;
+};
+
+export type LegendShapeComponent = React.FC<LegendShapeProps>;
+
+export type LegendItemProps = {
+  /**
+   * Id of the series.
+   */
+  seriesId: string;
+  /**
+   * Label of the series.
+   * If a ReactNode is provided, it replaces the default Text component.
+   */
+  label: React.ReactNode;
+  /**
+   * Color of the series.
+   * @default 'var(--color-fgPrimary)'
+   */
+  color?: string;
+  /**
+   * Shape of the series.
+   */
+  shape?: LegendShape;
+  /**
+   * Custom component to render the legend shape.
+   * @default DefaultLegendShape
+   */
+  ShapeComponent?: LegendShapeComponent;
+  /**
+   * Custom class name for the root element.
+   */
+  className?: string;
+  /**
+   * Custom class names for the component parts.
+   */
+  classNames?: {
+    /**
+     * Custom class name for the root element.
+     */
+    root?: string;
+    /**
+     * Custom class name for the shape element.
+     */
+    shape?: string;
+    /**
+     * Custom class name for the label element.
+     * @note not applied when label is a ReactNode.
+     */
+    label?: string;
+  };
+  /**
+   * Custom styles for the root element.
+   */
+  style?: React.CSSProperties;
+  /**
+   * Custom styles for the component parts.
+   */
+  styles?: {
+    /**
+     * Custom styles for the root element.
+     */
+    root?: React.CSSProperties;
+    /**
+     * Custom styles for the shape element.
+     */
+    shape?: React.CSSProperties;
+    /**
+     * Custom styles for the label element.
+     * @note not applied when label is a ReactNode.
+     */
+    label?: React.CSSProperties;
+  };
+};
+
+export type LegendItemComponent = React.FC<LegendItemProps>;
+
+export type LegendBaseProps = Omit<BoxBaseProps, 'children'> & {
   /**
    * Array of series IDs to display in the legend.
    * By default, all series will be displayed.
@@ -35,7 +131,7 @@ export type LegendBaseProps = BoxBaseProps & {
   accessibilityLabel?: string;
 };
 
-export type LegendProps = BoxProps<BoxDefaultElement> &
+export type LegendProps = Omit<BoxProps<BoxDefaultElement>, 'children'> &
   LegendBaseProps & {
     /**
      * Custom class names for the component parts.
@@ -49,10 +145,6 @@ export type LegendProps = BoxProps<BoxDefaultElement> &
        * Custom class name for each item element.
        */
       item?: string;
-      /**
-       * Custom class name for the shape wrapper element within each item.
-       */
-      itemShapeWrapper?: string;
       /**
        * Custom class name for the shape element within each item.
        */
@@ -75,10 +167,6 @@ export type LegendProps = BoxProps<BoxDefaultElement> &
        * Custom styles for each item element.
        */
       item?: React.CSSProperties;
-      /**
-       * Custom styles for the shape wrapper element within each item.
-       */
-      itemShapeWrapper?: React.CSSProperties;
       /**
        * Custom styles for the shape element within each item.
        */
@@ -103,7 +191,7 @@ export const Legend = memo(
         rowGap = 0.75,
         seriesIds,
         ItemComponent = DefaultLegendItem,
-        ShapeComponent,
+        ShapeComponent = DefaultLegendShape,
         accessibilityLabel = 'Legend',
         className,
         classNames,
@@ -143,7 +231,6 @@ export const Legend = memo(
               ShapeComponent={ShapeComponent}
               classNames={{
                 root: classNames?.item,
-                shapeWrapper: classNames?.itemShapeWrapper,
                 shape: classNames?.itemShape,
                 label: classNames?.itemLabel,
               }}
@@ -153,7 +240,6 @@ export const Legend = memo(
               shape={s.legendShape}
               styles={{
                 root: styles?.item,
-                shapeWrapper: styles?.itemShapeWrapper,
                 shape: styles?.itemShape,
                 label: styles?.itemLabel,
               }}

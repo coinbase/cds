@@ -5,6 +5,16 @@ import { css } from '@linaria/core';
 
 import type { LegendShape, LegendShapeVariant } from '../utils/chart';
 
+import type { LegendShapeProps } from './Legend';
+
+const containerCss = css`
+  width: 10px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
 const pillCss = css`
   width: 6px;
   height: 24px;
@@ -38,37 +48,19 @@ const stylesByVariant: Record<LegendShapeVariant, string> = {
 const isVariantShape = (shape: LegendShape): shape is LegendShapeVariant =>
   typeof shape === 'string' && shape in stylesByVariant;
 
-export type LegendShapeProps = BoxProps<'div'> & {
-  /**
-   * Color of the legend shape.
-   * @default 'var(--color-fgPrimary)'
-   */
-  color?: string;
-  /**
-   * Shape to display. Can be a preset shape or a custom ReactNode.
-   * @default 'circle'
-   */
-  shape?: LegendShape;
-};
+export type DefaultLegendShapeProps = LegendShapeProps &
+  Omit<BoxProps<'div'>, 'children' | 'color'>;
 
-export type LegendShapeComponent = React.FC<LegendShapeProps>;
-
-/**
- * Default shape component for chart legends.
- * Renders a colored shape (pill, circle, square, or squircle) or a custom ReactNode.
- */
-export const DefaultLegendShape = memo<LegendShapeProps>(
+export const DefaultLegendShape = memo<DefaultLegendShapeProps>(
   ({ color = 'var(--color-fgPrimary)', shape = 'circle', className, style, ...props }) => {
     if (!isVariantShape(shape)) return shape;
 
     const variantStyle = stylesByVariant[shape];
 
     return (
-      <Box
-        className={cx(variantStyle, className)}
-        style={{ backgroundColor: color, ...style }}
-        {...props}
-      />
+      <Box className={cx(containerCss, className)} style={style} {...props}>
+        <span className={variantStyle} style={{ backgroundColor: color }} />
+      </Box>
     );
   },
 );
