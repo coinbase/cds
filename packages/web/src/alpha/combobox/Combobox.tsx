@@ -163,8 +163,8 @@ const ComboboxBase = memo(
         open: openProp,
         setOpen: setOpenProp,
         label,
-        accessibilityLabel,
-        controlAccessibilityLabel,
+        accessibilityLabel = typeof label === 'string' ? label : 'Combobox dropdown',
+        controlAccessibilityLabel = typeof label === 'string' ? label : 'Combobox control',
         defaultOpen,
         searchText: searchTextProp,
         onSearch: onSearchProp,
@@ -193,10 +193,6 @@ const ComboboxBase = memo(
         throw Error(
           'Combobox component must be fully controlled or uncontrolled: "open" and "setOpen" props must be provided together or not at all',
         );
-
-      const fallbackAccessibilityLabel = typeof label === 'string' ? label : 'Combobox dropdown';
-      const fallbackControlAccessibilityLabel =
-        typeof label === 'string' ? label : 'Combobox control';
 
       const fuse = useMemo(
         () =>
@@ -256,10 +252,8 @@ const ComboboxBase = memo(
           <Select
             ref={controlRef}
             SelectControlComponent={ComboboxControl}
-            accessibilityLabel={accessibilityLabel ?? fallbackAccessibilityLabel}
-            controlAccessibilityLabel={
-              controlAccessibilityLabel ?? fallbackControlAccessibilityLabel
-            }
+            accessibilityLabel={accessibilityLabel}
+            controlAccessibilityLabel={controlAccessibilityLabel}
             defaultOpen={defaultOpen}
             label={label}
             onChange={handleChange}
