@@ -3,7 +3,7 @@ import fs from 'fs';
 import { glob } from 'glob';
 import path from 'path';
 
-import type { Dependency } from '../src/components/page/ComponentHeader';
+import type { Dependency } from '../src/components/page/Metadata';
 
 type ComponentPeerDeps = {
   [componentName: string]: {

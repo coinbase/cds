@@ -11,21 +11,24 @@ import metadata from './metadata.json';
 import { HookTabsContainer } from '@site/src/components/page/HookTabsContainer';
 import Examples, { toc as ExamplesToc } from './_examples.mdx';
 import Api, { toc as ApiToc } from './_api.mdx';
+import { VStack } from '@coinbase/cds-web/layout';
 
-<ComponentHeader
-  title="usePreviousValue"
-  banner={<HooksBanner />}
-  webMetadata={metadata}
-  mobileMetadata={metadata}
-/>
+<VStack gap={5}>
+  <ComponentHeader
+    title="usePreviousValue"
+    banner={<HooksBanner />}
+    webMetadata={metadata}
+    mobileMetadata={metadata}
+  />
 
-<HookTabsContainer
-  webExamples={<Examples />}
-  webExamplesToc={ExamplesToc}
-  webApi={<Api />}
-  webApiToc={ApiToc}
-  mobileExamples={<Examples />}
-  mobileExamplesToc={ExamplesToc}
-  mobileApi={<Api />}
-  mobileApiToc={ApiToc}
-/>
+  <HookTabsContainer
+    webExamples={<Examples />}
+    webExamplesToc={ExamplesToc}
+    webApi={<Api />}
+    webApiToc={ApiToc}
+    mobileExamples={<Examples />}
+    mobileExamplesToc={ExamplesToc}
+    mobileApi={<Api />}
+    mobileApiToc={ApiToc}
+  />
+</VStack>
