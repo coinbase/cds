@@ -23,12 +23,26 @@ type ContentCardFooterComponent = (<
 export const ContentCardFooter: ContentCardFooterComponent = memo(
   forwardRef<React.ReactElement<ContentCardFooterBaseProps>, ContentCardFooterBaseProps>(
     <AsComponent extends React.ElementType>(
-      { as, testID, children, ...props }: ContentCardFooterProps<AsComponent>,
+      {
+        as,
+        children,
+        justifyContent = 'space-between',
+        paddingX = 2,
+        paddingBottom = 2,
+        ...props
+      }: ContentCardFooterProps<AsComponent>,
       ref?: Polymorphic.Ref<AsComponent>,
     ) => {
       const Component = (as ?? contentCardFooterDefaultElement) satisfies React.ElementType;
       return (
-        <HStack ref={ref} as={Component} justifyContent="space-between" testID={testID} {...props}>
+        <HStack
+          ref={ref}
+          as={Component}
+          justifyContent={justifyContent}
+          paddingBottom={paddingBottom}
+          paddingX={paddingX}
+          {...props}
+        >
           {children}
         </HStack>
       );

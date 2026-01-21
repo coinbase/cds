@@ -22,41 +22,50 @@ describe('ContentCardHeader', () => {
     expect(screen.getByText('Test Title')).toBeInTheDocument();
   });
 
-  it('renders avatar', () => {
-    render(<ContentCardHeader avatar={<div>Test Avatar</div>} title="Test Title" />);
-    expect(screen.getByText('Test Avatar')).toBeInTheDocument();
+  it('renders thumbnail', () => {
+    render(<ContentCardHeader thumbnail={<div>Test Thumbnail</div>} title="Test Title" />);
+    expect(screen.getByText('Test Thumbnail')).toBeInTheDocument();
   });
 
-  it('renders meta', () => {
-    render(<ContentCardHeader meta={<div>Test Meta</div>} title="Test Title" />);
-    expect(screen.getByText('Test Meta')).toBeInTheDocument();
+  it('renders subtitle', () => {
+    render(<ContentCardHeader subtitle={<div>Test Subtitle</div>} title="Test Title" />);
+    expect(screen.getByText('Test Subtitle')).toBeInTheDocument();
   });
 
-  it('renders end', () => {
-    render(<ContentCardHeader end={<div>Test End</div>} title="Test Title" />);
-    expect(screen.getByText('Test End')).toBeInTheDocument();
+  it('renders actions', () => {
+    render(<ContentCardHeader actions={<div>Test Actions</div>} title="Test Title" />);
+    expect(screen.getByText('Test Actions')).toBeInTheDocument();
   });
 });
 
 describe('ContentCardBody', () => {
   it('has no accessibility violations', async () => {
     expect(
-      await renderA11y(<ContentCardBody body="Test Body" label="Test Label" />),
+      await renderA11y(
+        <ContentCardBody description="Test Description" label="Test Label" title="Test Title" />,
+      ),
     ).toHaveNoViolations();
   });
-  it('renders body and label', () => {
-    render(<ContentCardBody body="Test Body" label="Test Label" />);
-    expect(screen.getByText('Test Body')).toBeInTheDocument();
+  it('renders title and description', () => {
+    render(<ContentCardBody description="Test Description" title="Test Title" />);
+    expect(screen.getByText('Test Title')).toBeInTheDocument();
+    expect(screen.getByText('Test Description')).toBeInTheDocument();
+  });
+
+  it('renders label', () => {
+    render(<ContentCardBody label="Test Label" title="Test Title" />);
     expect(screen.getByText('Test Label')).toBeInTheDocument();
   });
 
   it('renders media', () => {
-    render(<ContentCardBody media={<div>Test Media</div>} />);
+    render(<ContentCardBody media={<div>Test Media</div>} title="Test Title" />);
     expect(screen.getByText('Test Media')).toBeInTheDocument();
   });
 
   it('renders media at the top', () => {
-    render(<ContentCardBody media={<div>Test Media</div>} mediaPosition="top" />);
+    render(
+      <ContentCardBody media={<div>Test Media</div>} mediaPlacement="top" title="Test Title" />,
+    );
     const mediaElement = screen.getByText('Test Media');
     expect(mediaElement).toBeInTheDocument();
     // Check that media is the first child of its parent
@@ -64,15 +73,19 @@ describe('ContentCardBody', () => {
   });
 
   it('renders media at the bottom', () => {
-    render(<ContentCardBody media={<div>Test Media</div>} mediaPosition="bottom" />);
+    render(
+      <ContentCardBody media={<div>Test Media</div>} mediaPlacement="bottom" title="Test Title" />,
+    );
     const mediaElement = screen.getByText('Test Media');
     expect(mediaElement).toBeInTheDocument();
     // Check that media is the last child of its parent
     expect(mediaElement).toEqual(mediaElement.parentNode?.lastChild);
   });
 
-  it('renders media at the right', () => {
-    render(<ContentCardBody media={<div>Test Media</div>} mediaPosition="right" />);
+  it('renders media at the end', () => {
+    render(
+      <ContentCardBody media={<div>Test Media</div>} mediaPlacement="end" title="Test Title" />,
+    );
     const mediaElement = screen.getByText('Test Media');
     expect(mediaElement).toBeInTheDocument();
     // Check that media is the last child of its parent
@@ -81,7 +94,7 @@ describe('ContentCardBody', () => {
 
   it('renders children', () => {
     render(
-      <ContentCardBody body="Test Body" label="Test Label">
+      <ContentCardBody description="Test Description" title="Test Title">
         <div>Test Children</div>
       </ContentCardBody>,
     );

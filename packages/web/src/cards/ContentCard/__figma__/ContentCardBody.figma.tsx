@@ -11,7 +11,8 @@ figma.connect(
       "import { ContentCardBody } from '@coinbase/cds-web/cards/ContentCard/ContentCardBody'",
     ],
     props: {
-      body: figma.string('body'),
+      title: figma.string('title'),
+      description: figma.string('description'),
       label: figma.string('label'),
       children: figma.enum('type', {
         custom: figma.children('*'),
@@ -22,11 +23,11 @@ figma.connect(
         'image bottom': <img alt="" src="" />,
         'image left': <img alt="" src="" />,
       }),
-      mediaPosition: figma.enum('type', {
-        'image right': 'right',
+      mediaPlacement: figma.enum('type', {
+        'image right': 'end',
         'image top': 'top',
         'image bottom': 'bottom',
-        'image left': 'left',
+        'image left': 'start',
       }),
     },
     example: ({ children, ...props }) => <ContentCardBody {...props}>{children}</ContentCardBody>,

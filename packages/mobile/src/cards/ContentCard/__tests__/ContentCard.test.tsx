@@ -45,31 +45,31 @@ describe('ContentCardHeader', () => {
     expect(screen.getByText('Test Title')).toBeTruthy();
   });
 
-  it('renders avatar', () => {
+  it('renders thumbnail', () => {
     render(
       <DefaultThemeProvider>
-        <ContentCardHeader avatar={<Text>Test Avatar</Text>} title="Test Title" />
+        <ContentCardHeader thumbnail={<Text>Test Thumbnail</Text>} title="Test Title" />
       </DefaultThemeProvider>,
     );
-    expect(screen.getByText('Test Avatar')).toBeTruthy();
+    expect(screen.getByText('Test Thumbnail')).toBeTruthy();
   });
 
-  it('renders meta', () => {
+  it('renders subtitle', () => {
     render(
       <DefaultThemeProvider>
-        <ContentCardHeader meta={<Text>Test Meta</Text>} title="Test Title" />
+        <ContentCardHeader subtitle={<Text>Test Subtitle</Text>} title="Test Title" />
       </DefaultThemeProvider>,
     );
-    expect(screen.getByText('Test Meta')).toBeTruthy();
+    expect(screen.getByText('Test Subtitle')).toBeTruthy();
   });
 
-  it('renders end', () => {
+  it('renders actions', () => {
     render(
       <DefaultThemeProvider>
-        <ContentCardHeader end={<Text>Test End</Text>} title="Test Title" />
+        <ContentCardHeader actions={<Text>Test Actions</Text>} title="Test Title" />
       </DefaultThemeProvider>,
     );
-    expect(screen.getByText('Test End')).toBeTruthy();
+    expect(screen.getByText('Test Actions')).toBeTruthy();
   });
 });
 
@@ -77,25 +77,39 @@ describe('ContentCardBody', () => {
   it('has no accessibility violations', () => {
     render(
       <DefaultThemeProvider>
-        <ContentCardBody body="Test Body" label="Test Label" testID="content-card-test-id" />
+        <ContentCardBody
+          description="Test Description"
+          label="Test Label"
+          testID="content-card-test-id"
+          title="Test Title"
+        />
       </DefaultThemeProvider>,
     );
     expect(screen.getByTestId('content-card-test-id')).toBeAccessible();
   });
-  it('renders body and label', () => {
+  it('renders title and description', () => {
     render(
       <DefaultThemeProvider>
-        <ContentCardBody body="Test Body" label="Test Label" />
+        <ContentCardBody description="Test Description" title="Test Title" />
       </DefaultThemeProvider>,
     );
-    expect(screen.getByText('Test Body')).toBeTruthy();
+    expect(screen.getByText('Test Title')).toBeTruthy();
+    expect(screen.getByText('Test Description')).toBeTruthy();
+  });
+
+  it('renders label', () => {
+    render(
+      <DefaultThemeProvider>
+        <ContentCardBody label="Test Label" title="Test Title" />
+      </DefaultThemeProvider>,
+    );
     expect(screen.getByText('Test Label')).toBeTruthy();
   });
 
   it('renders media', () => {
     render(
       <DefaultThemeProvider>
-        <ContentCardBody media={<Text>Test Media</Text>} />
+        <ContentCardBody media={<Text>Test Media</Text>} title="Test Title" />
       </DefaultThemeProvider>,
     );
     expect(screen.getByText('Test Media')).toBeTruthy();
@@ -104,7 +118,7 @@ describe('ContentCardBody', () => {
   it('renders children', () => {
     render(
       <DefaultThemeProvider>
-        <ContentCardBody body="Test Body" label="Test Label">
+        <ContentCardBody description="Test Description" title="Test Title">
           <Text>Test Children</Text>
         </ContentCardBody>
       </DefaultThemeProvider>,
