@@ -2184,10 +2184,10 @@ function CustomBeaconStroke() {
         ]}
       >
         <Scrubber
-          idlePulse
           hideOverlay
-          lineStroke={foregroundColor}
+          idlePulse
           beaconStroke={backgroundColor}
+          lineStroke={foregroundColor}
         />
       </LineChart>
     </Box>
@@ -2238,9 +2238,9 @@ function CustomBeaconSize() {
     () => (props: ScrubberBeaconProps) => (
       <DefaultScrubberBeacon
         {...props}
-        stroke={theme.color.fg}
         color={theme.color.bg}
         radius={5}
+        stroke={theme.color.fg}
         strokeWidth={3}
       />
     ),
