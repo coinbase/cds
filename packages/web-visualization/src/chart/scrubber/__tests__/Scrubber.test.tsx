@@ -75,7 +75,6 @@ describe('Scrubber', () => {
       renderChartWithScrubber({ testID: 'scrubber' });
 
       const svg = screen.getByTestId('test-chart');
-      // The scrubber should have a beacon group
       const scrubberGroup = svg.querySelector('[data-testid="scrubber"]');
       expect(scrubberGroup).toBeInTheDocument();
     });
@@ -149,10 +148,8 @@ describe('DefaultScrubberBeacon', () => {
   });
 
   describe('custom props', () => {
-    // Helper to get the main beacon circle (the one with stroke attribute, not the pulse circle)
     const getMainBeaconCircle = (beacon: Element | null) => {
       const circles = beacon?.querySelectorAll('circle');
-      // The main beacon circle has stroke attribute, pulse circle doesn't
       return Array.from(circles ?? []).find((c) => c.hasAttribute('stroke'));
     };
 
@@ -190,11 +187,8 @@ describe('DefaultScrubberBeacon', () => {
       const beacon = svg.querySelector('[data-testid="test-beacon"]');
       const circle = getMainBeaconCircle(beacon);
 
-      // Default radius is 5
       expect(circle?.getAttribute('r')).toBe('5');
-      // Default strokeWidth is 2
       expect(circle?.getAttribute('stroke-width')).toBe('2');
-      // Default stroke is var(--color-bg)
       expect(circle?.getAttribute('stroke')).toBe('var(--color-bg)');
     });
   });
@@ -205,7 +199,6 @@ describe('DefaultScrubberBeacon', () => {
 
       const svg = screen.getByTestId('test-chart');
       const beacon = svg.querySelector('[data-testid="test-beacon"]');
-      // Should have a static circle element (not motion.circle)
       const circles = beacon?.querySelectorAll('circle');
       expect(circles?.length).toBeGreaterThan(0);
     });
