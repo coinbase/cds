@@ -43,11 +43,6 @@ export type DefaultScrubberBeaconProps = ScrubberBeaconProps & {
    */
   radius?: number;
   /**
-   * Stroke color of the beacon circle.
-   * @default theme.color.bg
-   */
-  stroke?: string;
-  /**
    * Stroke width of the beacon circle.
    * @default 2
    */

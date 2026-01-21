@@ -101,6 +101,11 @@ export type ScrubberBeaconProps = SharedProps & {
    */
   opacity?: number;
   /**
+   * Stroke color of the beacon circle.
+   * @default 'var(--color-bg)'
+   */
+  stroke?: string;
+  /**
    * Custom className for styling.
    */
   className?: string;
@@ -196,6 +201,11 @@ export type ScrubberBaseProps = SharedProps &
      * Transition configuration for the scrubber beacon.
      */
     beaconTransitions?: ScrubberBeaconProps['transitions'];
+    /**
+     * Stroke color of the scrubber beacon circle.
+     * @default 'var(--color-bg)'
+     */
+    beaconStroke?: string;
   };
 
 export type ScrubberProps = ScrubberBaseProps & {
@@ -253,6 +263,7 @@ export const Scrubber = memo(
         testID,
         idlePulse,
         beaconTransitions,
+        beaconStroke,
         styles,
         classNames,
       },
@@ -387,6 +398,7 @@ export const Scrubber = memo(
             className={classNames?.beacon}
             idlePulse={idlePulse}
             seriesIds={filteredSeriesIds}
+            stroke={beaconStroke}
             style={styles?.beacon}
             testID={testID}
             transitions={beaconTransitions}

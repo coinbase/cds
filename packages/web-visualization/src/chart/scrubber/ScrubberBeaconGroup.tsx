@@ -13,21 +13,19 @@ import {
 import { DefaultScrubberBeacon } from './DefaultScrubberBeacon';
 import type { ScrubberBeaconComponent, ScrubberBeaconProps, ScrubberBeaconRef } from './Scrubber';
 
-// Helper component to calculate beacon data for a specific series
-const BeaconWithData = memo<{
-  seriesId: string;
+type BeaconWithDataProps = Pick<
+  ScrubberBeaconProps,
+  'seriesId' | 'idlePulse' | 'animate' | 'transitions' | 'stroke' | 'className' | 'style' | 'testID'
+> & {
   dataIndex: number;
   dataX: number;
   isIdle: boolean;
   BeaconComponent: ScrubberBeaconComponent;
-  idlePulse?: boolean;
-  animate?: boolean;
-  transitions?: ScrubberBeaconProps['transitions'];
-  className?: string;
-  style?: React.CSSProperties;
-  testID?: string;
   beaconRef: (ref: ScrubberBeaconRef | null) => void;
-}>(
+};
+
+// Helper component to calculate beacon data for a specific series
+const BeaconWithData = memo<BeaconWithDataProps>(
   ({
     seriesId,
     dataIndex,
@@ -41,6 +39,7 @@ const BeaconWithData = memo<{
     style,
     testID,
     beaconRef,
+    stroke,
   }) => {
     const { getSeries, getSeriesData, getXScale, getYScale } = useCartesianChartContext();
 
@@ -108,6 +107,7 @@ const BeaconWithData = memo<{
         idlePulse={idlePulse}
         isIdle={isIdle}
         seriesId={seriesId}
+        stroke={stroke}
         style={style}
         testID={testID}
         transitions={transitions}
@@ -152,6 +152,11 @@ export type ScrubberBeaconGroupProps = ScrubberBeaconGroupBaseProps & {
    * Custom inline styles for beacons.
    */
   style?: React.CSSProperties;
+  /**
+   * Stroke color of the beacon circle.
+   * @default 'var(--color-bg)'
+   */
+  stroke?: string;
 };
 
 export const ScrubberBeaconGroup = memo(
@@ -165,6 +170,7 @@ export const ScrubberBeaconGroup = memo(
         className,
         style,
         testID,
+        stroke,
       },
       ref,
     ) => {
@@ -231,6 +237,7 @@ export const ScrubberBeaconGroup = memo(
           idlePulse={idlePulse}
           isIdle={isIdle}
           seriesId={s.id}
+          stroke={stroke}
           style={style}
           testID={testID ? `${testID ?? 'beacon'}-${s.id}` : undefined}
           transitions={transitions}

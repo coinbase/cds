@@ -131,7 +131,7 @@ function ImperativeHandle() {
 
 ### Beacons
 
-You can use `BeaconComponent` to customize the visual appearance of scrubber beacons. This simplest way is to modify the props for `DefaultScrubberBeacon`.
+You can use the `beaconStroke` prop to customize the stroke color of the scrubber beacon.
 
 ```jsx
 function CustomStrokeColor() {
@@ -155,9 +155,9 @@ function CustomStrokeColor() {
       >
         <Scrubber
           idlePulse
-          lineStroke={foregroundColor}
-          BeaconComponent={(props) => <DefaultScrubberBeacon {...props} stroke={backgroundColor} />}
           hideOverlay
+          lineStroke={foregroundColor}
+          beaconStroke={backgroundColor}
         />
       </LineChart>
     </Box>
@@ -165,77 +165,11 @@ function CustomStrokeColor() {
 }
 ```
 
-You can also pass a custom component to `BeaconComponent` to further customize the visual appearance of scrubber beacons.
+For more advanced customizations, you can pass a custom component to `BeaconComponent`.
 
 ```jsx
 function OutlineBeacon() {
-  // Simple outline beacon with no pulse animation
-  const OutlineBeaconComponent = memo(
-    forwardRef(({ dataX, dataY, seriesId, isIdle, animate = true }: ScrubberBeaconProps, ref) => {
-      const theme = useTheme();
-      const { getSeries, getXSerializableScale, getYSerializableScale } = useCartesianChartContext();
-
-      const targetSeries = useMemo(() => getSeries(seriesId), [getSeries, seriesId]);
-      const xScale = useMemo(() => getXSerializableScale(), [getXSerializableScale]);
-      const yScale = useMemo(
-        () => getYSerializableScale(targetSeries?.yAxisId),
-        [getYSerializableScale, targetSeries?.yAxisId],
-      );
-
-      const color = useMemo(
-        () => targetSeries?.color ?? theme.color.fgPrimary,
-        [targetSeries?.color, theme.color.fgPrimary],
-      );
-
-      const animatedX = useSharedValue(0);
-      const animatedY = useSharedValue(0);
-
-      // Provide a no-op pulse implementation for simple beacons
-      useImperativeHandle(ref, () => ({ pulse: () => {} }), []);
-
-      // Calculate the target point position - project data to pixels
-      const targetPoint = useDerivedValue(() => {
-        if (!xScale || !yScale) return { x: 0, y: 0 };
-        return projectPointWithSerializableScale({
-          x: unwrapAnimatedValue(dataX),
-          y: unwrapAnimatedValue(dataY),
-          xScale,
-          yScale,
-        });
-      }, [dataX, dataY, xScale, yScale]);
-
-      useAnimatedReaction(
-        () => {
-          return { point: targetPoint.value, isIdle: unwrapAnimatedValue(isIdle) };
-        },
-        (current, previous) => {
-          // When animation is disabled, on initial render, or when we are starting,
-          // continuing, or finishing scrubbing we should immediately transition
-          if (!animate || previous === null || !previous.isIdle || !current.isIdle) {
-            animatedX.value = current.point.x;
-            animatedY.value = current.point.y;
-            return;
-          }
-
-          animatedX.value = buildTransition(current.point.x, defaultTransition);
-          animatedY.value = buildTransition(current.point.y, defaultTransition);
-        },
-        [animate],
-      );
-
-      // Create animated point using the animated values
-      const animatedPoint = useDerivedValue(() => {
-        return { x: animatedX.value, y: animatedY.value };
-      }, [animatedX, animatedY]);
-
-      return (
-        <>
-          <Circle c={animatedPoint} color={color} r={6} />
-          <Circle c={animatedPoint} color={theme.color.bg} r={3} />
-        </>
-      );
-    }),
-  );
+  const theme = useTheme();
 
   const dataCount = 14;
   const minDataValue = 0;
@@ -274,6 +208,18 @@ function OutlineBeacon() {
     return data;
   }
 
+  const InvertedBeacon = useMemo(
+    () => (props) => (
+      <DefaultScrubberBeacon
+        {...props}
+        stroke={theme.color.fg}
+        color={theme.color.bg}
+        radius={5}
+        strokeWidth={3}
+      />
+    ),
+    [theme.color.fg, theme.color.bg],
+  );
 
   const OutlineBeaconChart = memo(() => {
     const [data, setData] = useState(generateInitialData);
@@ -300,7 +246,7 @@ function OutlineBeacon() {
           {
             id: 'prices',
             data,
-            color: 'var(--color-fg)',
+            color: theme.color.fg,
           },
         ]}
         xAxis={{
@@ -308,10 +254,10 @@ function OutlineBeacon() {
         }}
         yAxis={{
           showGrid: true,
-          domain: { min: 0, max: 100 }
+          domain: { min: 0, max: 100 },
         }}
       >
-        <Scrubber BeaconComponent={OutlineBeaconComponent} />
+        <Scrubber BeaconComponent={InvertedBeacon} />
       </LineChart>
     );
   });
