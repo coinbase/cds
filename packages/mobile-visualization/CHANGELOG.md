@@ -8,10 +8,11 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
-## Unreleased
+## 3.4.0-beta.13 (1/20/2026 PST)
 
-#### 📘 Misc
+#### 🚀 Updates
 
+- Feat: support stlying default scrubber beacon. [[#315](https://github.com/coinbase/cds/pull/315)]
 - Internal: code connect file lint fixes. [[#311](https://github.com/coinbase/cds/pull/311)]
 
 #### 📘 Misc
