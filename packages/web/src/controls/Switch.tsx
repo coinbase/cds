@@ -42,6 +42,10 @@ export type SwitchProps = ControlBaseProps<string> & {
    * @default bgPrimary
    */
   controlColor?: ThemeVars.Color;
+  /** Sets the elevation/drop shadow of the control.
+   * @default 0
+   */
+  elevation?: ThemeVars.Elevation;
 };
 
 const MotionBox = motion(Box);
@@ -60,6 +64,7 @@ const SwitchWithRef = forwardRef<HTMLInputElement, SwitchProps>(function SwitchW
     children,
     checked,
     disabled,
+    elevation = 0,
     controlColor,
     background = checked ? 'bgPrimary' : 'bgTertiary',
     borderColor,
@@ -101,7 +106,7 @@ const SwitchWithRef = forwardRef<HTMLInputElement, SwitchProps>(function SwitchW
           borderRadius={1000}
           className={thumbCss}
           data-testid="switch-thumb"
-          elevation={1}
+          elevation={elevation}
           initial={false}
           testID="switch-thumb"
           transition={convertTransition(switchTransitionConfig)}
