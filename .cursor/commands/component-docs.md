@@ -77,7 +77,7 @@ Also check visualization packages if applicable:
 - `packages/web-visualization/src/...`
 - `packages/mobile-visualization/src/...`
 
-Also check for Storybook stories (`packages/web/src/**/__stories__/[ComponentName].stories.tsx`). If one exists, add the `storybook` field to webMetadata.json.
+Also check for Storybook stories (`packages/*/src/**/__stories__/[ComponentName].stories.tsx`). If one exists, add the `storybook` field to webMetadata.json.
 
 ## Step 4: Required Setup Steps (for new docs only)
 
