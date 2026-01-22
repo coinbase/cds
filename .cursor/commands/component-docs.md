@@ -77,6 +77,8 @@ Also check visualization packages if applicable:
 - `packages/web-visualization/src/...`
 - `packages/mobile-visualization/src/...`
 
+Also check for Storybook stories (`packages/*/src/**/__stories__/[ComponentName].stories.tsx`). If one exists, add the `storybook` field to webMetadata.json.
+
 ## Step 4: Required Setup Steps (for new docs only)
 
 Before creating the component documentation, complete these setup steps:
@@ -183,7 +185,7 @@ apps/docs/docs/components/[docs-category]/[ComponentName]/
 **Notes:**
 
 - `description` should be the full component description - what the component is and when to use it (e.g., "A non-intrusive notification component that temporarily displays brief messages at the bottom of the screen.")
-- `figma` and `storybook` fields are optional - only add if provided
+- `figma` and `storybook` fields are optional - only add if provided (check for story files in `packages/web/src/**/__stories__/`)
 - `dependencies` is optional - only include if the component imports from external packages that are peer dependencies. To determine:
   1. Check the component's source file for imports from external packages (e.g., `framer-motion`)
   2. Cross-reference those imports with `peerDependencies` in `packages/web/package.json`
@@ -528,7 +530,7 @@ Before completing, verify:
 - [ ] ComponentTabsContainer includes only existing platform props
 - [ ] All imports use correct source categories
 - [ ] Component description is clear and helpful
-- [ ] Added optional storybook/figma links if provided
+- [ ] Added storybook/figma links if story files exist or links are provided
 - [ ] Design token values are valid (reference `.cursor/rules/react-component-development.mdc`)
 
 ## Additional Notes
