@@ -8,9 +8,9 @@ import { Tag } from '../../tag/Tag';
 import { Text } from '../../typography';
 
 export type DataCardLayoutBaseProps = {
-  /** Text or React node to display as the card title. When a string is provided, it will be rendered in a CardTitle component. */
+  /** Text or React node to display as the card title. Use a Text component to override default color and font. */
   title: React.ReactNode;
-  /** Text or React node to display as the card subtitle. When a string is provided, it will be rendered in a CardSubtitle component. */
+  /** Text or React node to display as the card subtitle. Use a Text component to override default color and font. */
   subtitle?: React.ReactNode;
   /** React node to display as a title accessary. */
   titleAccessory?: React.ReactNode;
@@ -26,7 +26,7 @@ export type DataCardLayoutProps = DataCardLayoutBaseProps & {
   styles?: {
     layoutContainer?: StyleProp<ViewStyle>;
     headerContainer?: StyleProp<ViewStyle>;
-    headerContent?: StyleProp<ViewStyle>;
+    textContainer?: StyleProp<ViewStyle>;
     titleContainer?: StyleProp<ViewStyle>;
   };
 };
@@ -73,7 +73,9 @@ export const DataCardLayout = memo(
     const headerSpacingProps = useMemo(() => {
       return {
         flexDirection: layout === 'horizontal' ? ('column' as const) : ('row' as const),
-        gap: layout === 'horizontal' ? 2 : 1,
+        gap: layout === 'horizontal' ? 2 : 1.5,
+        justifyContent:
+          layout === 'horizontal' ? ('space-between' as const) : ('flex-start' as const),
         alignItems: layout === 'horizontal' ? ('flex-start' as const) : ('center' as const),
       } as const;
     }, [layout]);
@@ -88,7 +90,7 @@ export const DataCardLayout = memo(
       >
         <Box flexGrow={1} flexShrink={1} style={styles?.headerContainer} {...headerSpacingProps}>
           {thumbnail}
-          <VStack flexShrink={1} overflow="hidden" style={styles?.headerContent}>
+          <VStack flexShrink={1} overflow="hidden" style={styles?.textContainer}>
             {subtitleNode}
             <HStack alignItems="center" flexWrap="wrap" gap={0.5} style={styles?.titleContainer}>
               {titleNode}

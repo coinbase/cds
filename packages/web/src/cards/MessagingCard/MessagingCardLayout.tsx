@@ -1,28 +1,37 @@
 import { memo, useMemo } from 'react';
 
+import { Button } from '../../buttons/Button';
 import { IconButton } from '../../buttons/IconButton';
 import { Box, VStack } from '../../layout';
 import { HStack } from '../../layout/HStack';
+import { Pressable } from '../../system/Pressable';
 import { Tag } from '../../tag/Tag';
 import { Text } from '../../typography/Text';
 
 export type MessagingCardLayoutProps = {
   /** Type of messaging card. Determines background color and text color. */
   type: 'upsell' | 'nudge';
-  /** Text or React node to display as the card title. When a string is provided, it will be rendered in a CardTitle component with appropriate color based on type. */
+  /** Text or React node to display as the card title. Use a Text component to override default color and font. */
   title?: React.ReactNode;
-  /** Text or React node to display as the card subtitle. */
-  subtitle?: React.ReactNode;
-  /** Text or React node to display as the card description. When a string is provided, it will be rendered in a CardDescription component with appropriate color based on type. */
+  /** Text or React node to display as the card description. Use a Text component to override default color and font. */
   description?: React.ReactNode;
   /** Text or React node to display as a tag. When a string is provided, it will be rendered in a Tag component. */
   tag?: React.ReactNode;
-  /** React node to display as actions (typically buttons) at the bottom of the content area. */
-  actions?: React.ReactNode;
-  /** React node to display as the dismiss button. When provided, a dismiss button will be rendered in the top-right corner. */
+  /**
+   * Action element to display. Can be a string (renders as default button) or a custom ReactNode.
+   * When a string is provided, use `onActionButtonClick` to handle clicks.
+   */
+  action?: React.ReactNode;
+  /** Callback fired when the action button is clicked. Only used when `action` is a string. */
+  onActionButtonClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  /** Accessibility label for the action button. Only used when `action` is a string.
+   * @default action value (when action is a string)
+   */
+  actionButtonAccessibilityLabel?: string;
+  /** React node to display as the dismiss button. When provided, this will be rendered instead of the default dismiss button. */
   dismissButton?: React.ReactNode;
-  /** Callback fired when the dismiss button is pressed. When provided, a dismiss button will be rendered in the top-right corner. */
-  onDismiss?: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  /** Callback fired when the dismiss button is clicked. When provided, a default dismiss button will be rendered in the top-right corner. */
+  onDismissButtonClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
   /** Accessibility label for the dismiss button.
    * @default 'Dismiss card'
    */
@@ -53,8 +62,10 @@ export const MessagingCardLayout = memo(
     title,
     description,
     tag,
-    actions,
-    onDismiss,
+    action,
+    onActionButtonClick,
+    actionButtonAccessibilityLabel,
+    onDismissButtonClick,
     dismissButtonAccessibilityLabel = 'Dismiss card',
     mediaPlacement = 'end',
     media,
@@ -65,12 +76,7 @@ export const MessagingCardLayout = memo(
     const titleNode = useMemo(() => {
       if (typeof title === 'string') {
         return (
-          <Text
-            as="h3"
-            color={type === 'upsell' ? 'fgInverse' : 'fg'}
-            font="headline"
-            numberOfLines={2}
-          >
+          <Text color={type === 'upsell' ? 'fgInverse' : 'fg'} font="headline" numberOfLines={2}>
             {title}
           </Text>
         );
@@ -96,15 +102,57 @@ export const MessagingCardLayout = memo(
       return tag;
     }, [tag]);
 
+    const actionButtonNode = useMemo(() => {
+      if (!action) return null;
+
+      // If action is a string, render in a default button
+      if (typeof action === 'string') {
+        const handleActionClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+          event.preventDefault();
+          event.stopPropagation();
+          onActionButtonClick?.(event);
+        };
+
+        if (type === 'upsell') {
+          return (
+            <Button
+              compact
+              accessibilityLabel={actionButtonAccessibilityLabel ?? action}
+              onClick={handleActionClick}
+              variant="secondary"
+            >
+              {action}
+            </Button>
+          );
+        }
+
+        return (
+          <Pressable
+            accessibilityLabel={actionButtonAccessibilityLabel ?? action}
+            background="transparent"
+            onClick={handleActionClick}
+            paddingY={1}
+          >
+            <Text color="fgPrimary" font="headline">
+              {action}
+            </Text>
+          </Pressable>
+        );
+      }
+
+      // Otherwise, render action as-is (custom React element)
+      return action;
+    }, [action, actionButtonAccessibilityLabel, onActionButtonClick, type]);
+
     const dismissButtonNode = useMemo(() => {
       if (dismissButton) {
         return dismissButton;
       }
-      if (onDismiss) {
+      if (onDismissButtonClick) {
         const handleDismiss = (event: React.MouseEvent<HTMLButtonElement>) => {
           event.preventDefault();
           event.stopPropagation();
-          onDismiss(event);
+          onDismissButtonClick(event);
         };
 
         return (
@@ -132,12 +180,12 @@ export const MessagingCardLayout = memo(
       classNames?.dismissButtonContainer,
       dismissButton,
       dismissButtonAccessibilityLabel,
-      onDismiss,
+      onDismissButtonClick,
       styles?.dismissButtonContainer,
     ]);
 
     const contentContainerPaddingProps = useMemo(() => {
-      if (mediaPlacement === 'start' && onDismiss) {
+      if (mediaPlacement === 'start' && dismissButtonNode) {
         // needs to add additional padding to the end of the content area when media is placed at the start and there is a dismiss button
         // this is to avoid dismiss button from overlapping with the content area
         return {
@@ -149,7 +197,7 @@ export const MessagingCardLayout = memo(
       return {
         padding: 2,
       } as const;
-    }, [mediaPlacement, onDismiss]);
+    }, [dismissButtonNode, mediaPlacement]);
 
     const mediaContainerPaddingProps = useMemo(() => {
       if (type === 'upsell') return;
@@ -158,10 +206,10 @@ export const MessagingCardLayout = memo(
       }
       // when media is placed at the end, we need to add additional padding to the end of the media container
       // this is to avoid the dismiss button from overlapping with the media
-      return onDismiss
+      return dismissButtonNode
         ? ({ paddingStart: 1, paddingEnd: 6 } as const)
         : ({ paddingStart: 1, paddingEnd: 3 } as const);
-    }, [mediaPlacement, onDismiss, type]);
+    }, [dismissButtonNode, mediaPlacement, type]);
 
     return (
       <HStack
@@ -190,11 +238,12 @@ export const MessagingCardLayout = memo(
             {titleNode}
             {descriptionNode}
           </VStack>
-          {actions}
+          {actionButtonNode}
         </VStack>
         <Box
           alignItems="center"
           className={classNames?.mediaContainer}
+          flexShrink={0}
           style={styles?.mediaContainer}
           {...mediaContainerPaddingProps}
         >

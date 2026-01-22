@@ -1942,15 +1942,22 @@ function ForecastAssetPrice() {
 }
 
 function DataCardWithLineChart() {
+  const { spectrum } = useTheme();
   const exampleThumbnail = (
-    <RemoteImage accessibilityLabel="Ethereum" source={ethBackground} testID="thumbnail" />
+    <RemoteImage
+      accessibilityLabel="Ethereum"
+      shape="circle"
+      size="xl"
+      source={ethBackground}
+      testID="thumbnail"
+    />
   );
 
   const getLineChartSeries = () => [
     {
       id: 'price',
       data: prices.slice(0, 30).map((price: string) => parseFloat(price)),
-      color: 'accentBoldBlue',
+      color: `rgb(${spectrum.green70})`,
     },
   ];
 
@@ -1981,7 +1988,7 @@ function DataCardWithLineChart() {
         thumbnail={exampleThumbnail}
         title="Line Chart with Tag"
         titleAccessory={
-          <Text color="fgPositive" font="label1">
+          <Text dangerouslySetColor={`rgb(${spectrum.green70})`} font="label1">
             ↗ 25.25%
           </Text>
         }
@@ -2004,7 +2011,7 @@ function DataCardWithLineChart() {
         thumbnail={exampleThumbnail}
         title="Actionable Line Chart"
         titleAccessory={
-          <Text color="fgPositive" font="label1">
+          <Text dangerouslySetColor={`rgb(${spectrum.green70})`} font="label1">
             ↗ 8.5%
           </Text>
         }
@@ -2027,14 +2034,14 @@ function DataCardWithLineChart() {
           <RemoteImage
             accessibilityLabel="Bitcoin"
             shape="circle"
-            size="l"
+            size="xl"
             source={assets.btc.imageUrl}
             testID="thumbnail"
           />
         }
         title="Card with Line Chart"
         titleAccessory={
-          <Text color="fgPositive" font="label1">
+          <Text dangerouslySetColor={`rgb(${spectrum.green70})`} font="label1">
             ↗ 25.25%
           </Text>
         }

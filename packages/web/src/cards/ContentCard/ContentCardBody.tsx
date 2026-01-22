@@ -12,12 +12,14 @@ export type ContentCardBodyDefaultElement = typeof contentCardBodyDefaultElement
 export type ContentCardBodyBaseProps = Polymorphic.ExtendableProps<
   BoxBaseProps,
   SharedProps & {
+    /** Text or React node to display as the card title. Use a Text component to override default color and font. */
     title?: React.ReactNode;
     /**
      * @deprecated Use description instead
      * Main body copy
      */
     body?: React.ReactNode;
+    /** Text or React node to display as the card description. Use a Text component to override default color and font. */
     description?: React.ReactNode;
     /**
      * @deprecated Use a ReactNode as `description` instead if you need to display content below the description.
@@ -118,7 +120,6 @@ export const ContentCardBody: ContentCardBodyComponent = memo(
         style,
         classNames,
         className,
-        padding = 2,
         ...props
       }: ContentCardBodyProps<AsComponent>,
       ref?: Polymorphic.Ref<AsComponent>,
@@ -180,19 +181,23 @@ export const ContentCardBody: ContentCardBodyComponent = memo(
         descriptionNode,
         labelNode,
       ]);
+
       const mediaBox = isHorizontal ? (
-        <Box flexShrink={0} height={96} width={96}>
+        <Box borderRadius={500} flexShrink={0} height={96} overflow="hidden" width={96}>
           {media}
         </Box>
       ) : (
-        media
+        <Box borderRadius={500} overflow="hidden">
+          {media}
+        </Box>
       );
+
       return (
         <VStack
           ref={ref}
           as={Component}
           className={cx(classNames?.root, className)}
-          padding={padding}
+          gap={gap}
           style={{ ...style, ...styles?.root }}
           testID={testID}
           {...props}

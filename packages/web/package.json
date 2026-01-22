@@ -32,6 +32,10 @@
       "types": "./dts/alpha/combobox/index.d.ts",
       "default": "./esm/alpha/combobox/index.js"
     },
+    "./alpha/data-card": {
+      "types": "./dts/alpha/data-card/index.d.ts",
+      "default": "./esm/alpha/data-card/index.js"
+    },
     "./alpha/select": {
       "types": "./dts/alpha/select/index.d.ts",
       "default": "./esm/alpha/select/index.js"

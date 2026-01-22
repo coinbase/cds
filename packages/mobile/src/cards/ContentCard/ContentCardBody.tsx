@@ -17,12 +17,14 @@ const mapMediaPositionToMediaPlacement: Record<
 };
 
 export type ContentCardBodyBaseProps = SharedProps & {
+  /** Text or React node to display as the card title. Use a Text component to override default color and font. */
   title?: React.ReactNode;
   /**
    * @deprecated Use description instead
    * Main body copy
    */
   body?: React.ReactNode;
+  /** Text or React node to display as the card description. Use a Text component to override default color and font. */
   description?: React.ReactNode;
   /**
    * @deprecated Use a ReactNode as `description` instead if you need to display content below the description.
@@ -77,7 +79,6 @@ export const ContentCardBody = memo(
       description = body,
       children,
       gap = 1,
-      padding = 2,
       testID,
       style,
       styles,
@@ -88,6 +89,7 @@ export const ContentCardBody = memo(
     const hasMedia = !!media;
     const isHorizontal = mediaPlacement === 'start' || mediaPlacement === 'end';
     const isMediaFirst = hasMedia && (mediaPlacement === 'top' || mediaPlacement === 'start');
+    const isMediaLast = hasMedia && (mediaPlacement === 'bottom' || mediaPlacement === 'end');
 
     const titleNode = useMemo(() => {
       if (typeof title === 'string') {
@@ -132,22 +134,24 @@ export const ContentCardBody = memo(
     }, [titleNode, descriptionNode, labelNode, isHorizontal, styles?.textContainer]);
 
     const mediaBox = isHorizontal ? (
-      <Box flexShrink={0} height={96} style={styles?.mediaContainer} width={96}>
+      <Box
+        borderRadius={500}
+        flexShrink={0}
+        height={96}
+        overflow="hidden"
+        style={styles?.mediaContainer}
+        width={96}
+      >
         {media}
       </Box>
     ) : (
-      media
+      <Box borderRadius={500} overflow="hidden">
+        {media}
+      </Box>
     );
 
     return (
-      <VStack
-        ref={ref}
-        gap={gap}
-        padding={padding}
-        style={[styles?.root, style]}
-        testID={testID}
-        {...props}
-      >
+      <VStack ref={ref} gap={gap} style={[styles?.root, style]} testID={testID} {...props}>
         {(mediaBox || textNode) && (
           <Box
             flexDirection={isHorizontal ? 'row' : 'column'}
@@ -157,7 +161,7 @@ export const ContentCardBody = memo(
           >
             {isMediaFirst && mediaBox}
             {textNode}
-            {!isMediaFirst && mediaBox}
+            {isMediaLast && mediaBox}
           </Box>
         )}
         {children}

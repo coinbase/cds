@@ -78,5 +78,3 @@ export const MediaCard: MediaCardComponent = memo(
     ),
   ),
 );
-
-export { MediaCardLayout };

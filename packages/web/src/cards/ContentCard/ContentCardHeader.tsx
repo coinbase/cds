@@ -7,7 +7,7 @@ import { type BoxBaseProps, HStack, VStack } from '../../layout';
 import { Avatar } from '../../media';
 import { Text } from '../../typography/Text';
 
-export const contentCardHeaderDefaultElement = 'div';
+export const contentCardHeaderDefaultElement = 'header';
 export type ContentCardHeaderDefaultElement = typeof contentCardHeaderDefaultElement;
 
 export type ContentCardHeaderBaseProps = Polymorphic.ExtendableProps<
@@ -85,8 +85,6 @@ export const ContentCardHeader: ContentCardHeaderComponent = memo(
         classNames,
         className,
         gap = 1.5,
-        paddingX = 2,
-        paddingTop = 2,
         ...props
       }: ContentCardHeaderProps<AsComponent>,
       ref?: Polymorphic.Ref<AsComponent>,
@@ -115,20 +113,9 @@ export const ContentCardHeader: ContentCardHeaderComponent = memo(
       }, [subtitle]);
 
       const thumbnailNode = useMemo(() => {
-        // Handle new thumbnail prop (string URL or ReactNode)
-        if (typeof thumbnail === 'string') {
-          return (
-            <Avatar
-              alt={typeof title === 'string' ? title : undefined}
-              name={typeof title === 'string' ? title : undefined}
-              shape="circle"
-              size="l"
-              src={thumbnail}
-            />
-          );
-        }
+        // Use new thumbnail prop if provided
         if (thumbnail) return thumbnail;
-        // Fallback to deprecated avatar prop
+        // Fallback to deprecated avatar prop (supports string for backward compatibility)
         if (typeof avatar === 'string') {
           return (
             <Avatar
@@ -151,8 +138,6 @@ export const ContentCardHeader: ContentCardHeaderComponent = memo(
           className={cx(classNames?.root, className)}
           gap={gap}
           justifyContent="space-between"
-          paddingTop={paddingTop}
-          paddingX={paddingX}
           style={{ ...style, ...styles?.root }}
           {...props}
         >

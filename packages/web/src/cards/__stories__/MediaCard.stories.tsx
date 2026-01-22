@@ -16,13 +16,12 @@ const exampleProps = {
 } as const;
 
 const exampleThumbnail = (
-  <RemoteImage alt="Ethereum" aria-hidden="true" shape="circle" size="l" source={ethBackground} />
+  <RemoteImage alt="Ethereum thumbnail" shape="circle" size="l" source={ethBackground} />
 );
 
 const exampleMedia = (
   <RemoteImage
-    alt="Media"
-    aria-hidden="true"
+    alt="Ethereum background"
     height="100%"
     resizeMode="cover"
     shape="rectangle"
@@ -78,6 +77,7 @@ export const PolymorphicAndInteractive = (): JSX.Element => {
       <MediaCard
         ref={anchorPressableRef}
         renderAsPressable
+        accessibilityLabel="View interactive card details"
         as="a"
         description="Clickable card with href"
         href="https://www.google.com"
@@ -90,6 +90,7 @@ export const PolymorphicAndInteractive = (): JSX.Element => {
       <MediaCard
         ref={buttonPressableRef}
         renderAsPressable
+        accessibilityLabel="View interactive card details"
         as="button"
         description="Clickable card with onClick handler"
         media={exampleMedia}
@@ -111,6 +112,7 @@ export const TextContent = (): JSX.Element => {
       <MediaCard
         ref={buttonRef}
         renderAsPressable
+        accessibilityLabel="View card with long text content"
         as="button"
         description="This is a very long description text that demonstrates how the card handles longer content"
         media={exampleMedia}
@@ -193,6 +195,7 @@ export const MultipleCards = (): JSX.Element => {
         <MediaCard
           ref={ref}
           renderAsPressable
+          accessibilityLabel="View Bitcoin details"
           as="a"
           description="Another card with different content"
           href="https://www.google.com"
@@ -200,8 +203,7 @@ export const MultipleCards = (): JSX.Element => {
           subtitle="BTC"
           thumbnail={
             <RemoteImage
-              alt="Bitcoin"
-              aria-hidden="true"
+              alt="Bitcoin thumbnail"
               shape="circle"
               size="l"
               source={assets.btc.imageUrl}
@@ -215,6 +217,7 @@ export const MultipleCards = (): JSX.Element => {
         <MediaCard
           ref={ref2}
           renderAsPressable
+          accessibilityLabel="View Ethereum details"
           as="button"
           description="Card with onClick handler"
           onClick={() => console.log('clicked')}

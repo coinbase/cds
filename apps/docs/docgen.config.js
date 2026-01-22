@@ -45,6 +45,7 @@ module.exports = {
    */
   sourceFiles: [
     'alpha/combobox/Combobox',
+    'alpha/data-card/DataCard',
     'alpha/select/Select',
     'alpha/select-chip/SelectChip',
     'alpha/tabbed-chips/TabbedChips',
@@ -65,6 +66,8 @@ module.exports = {
     'cards/ContentCard/ContentCardBody',
     'cards/ContentCard/ContentCardFooter',
     'cards/FloatingAssetCard',
+    'cards/MediaCard/index',
+    'cards/MessagingCard/index',
     'cards/NudgeCard',
     'cards/UpsellCard',
     'carousel/Carousel',

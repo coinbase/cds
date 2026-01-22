@@ -50,8 +50,6 @@ export const ContentCardHeader = memo(
       thumbnail,
       gap = 1.5,
       testID,
-      paddingX = 2,
-      paddingTop = 2,
       styles,
       style,
       ...props
@@ -81,20 +79,9 @@ export const ContentCardHeader = memo(
     }, [subtitle]);
 
     const thumbnailNode = useMemo(() => {
-      // Handle new thumbnail prop (string URL or ReactNode)
-      if (typeof thumbnail === 'string') {
-        return (
-          <Avatar
-            accessibilityLabel={typeof title === 'string' ? title : undefined}
-            name={typeof title === 'string' ? title : undefined}
-            shape="circle"
-            size="l"
-            src={thumbnail}
-          />
-        );
-      }
+      // Use new thumbnail prop if provided
       if (thumbnail) return thumbnail;
-      // Fallback to deprecated avatar prop
+      // Fallback to deprecated avatar prop (supports string for backward compatibility)
       if (typeof avatar === 'string') {
         return (
           <Avatar
@@ -115,8 +102,6 @@ export const ContentCardHeader = memo(
         alignItems="center"
         gap={gap}
         justifyContent="space-between"
-        paddingTop={paddingTop}
-        paddingX={paddingX}
         style={[styles?.root, style]}
         testID={testID}
         {...props}

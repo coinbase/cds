@@ -2,18 +2,12 @@ import React, { forwardRef, memo } from 'react';
 import { contentCardMaxWidth, contentCardMinWidth } from '@coinbase/cds-common/tokens/card';
 
 import type { Polymorphic } from '../../core/polymorphism';
-import { VStack } from '../../layout';
-import { Pressable, type PressableBaseProps } from '../../system';
+import { VStack, type VStackBaseProps } from '../../layout';
 
-export const contentCardDefaultElement = 'div';
+export const contentCardDefaultElement = 'article';
 export type ContentCardDefaultElement = typeof contentCardDefaultElement;
 
-export type ContentCardBaseProps = Polymorphic.ExtendableProps<
-  PressableBaseProps,
-  {
-    renderAsPressable?: boolean;
-  }
->;
+export type ContentCardBaseProps = Polymorphic.ExtendableProps<VStackBaseProps, object>;
 
 export type ContentCardProps<AsComponent extends React.ElementType> = Polymorphic.Props<
   AsComponent,
@@ -35,36 +29,22 @@ export const ContentCard: ContentCardComponent = memo(
         maxWidth = contentCardMaxWidth,
         minWidth = contentCardMinWidth,
         borderRadius = 500,
-        renderAsPressable = false,
+        padding = 2,
+        gap = 2,
         ...props
       }: ContentCardProps<AsComponent>,
       ref?: Polymorphic.Ref<AsComponent>,
     ) => {
-      if (renderAsPressable) {
-        return (
-          <Pressable
-            ref={ref}
-            as={(as ?? 'button') satisfies React.ElementType}
-            borderRadius={borderRadius}
-            flexDirection="column"
-            maxWidth={maxWidth}
-            minWidth={minWidth}
-            testID={testID}
-            {...props}
-          >
-            {children}
-          </Pressable>
-        );
-      }
-
       const Component = (as ?? contentCardDefaultElement) satisfies React.ElementType;
       return (
         <VStack
           ref={ref}
           as={Component}
           borderRadius={borderRadius}
+          gap={gap}
           maxWidth={maxWidth}
           minWidth={minWidth}
+          padding={padding}
           testID={testID}
           {...props}
         >

@@ -8,8 +8,8 @@ import { MessagingCardLayout, type MessagingCardLayoutProps } from './MessagingC
 
 export type MessagingCardBaseProps = MessagingCardLayoutProps;
 
-export type MessagingCardProps = Omit<CardRootProps, 'children'> &
-  MessagingCardBaseProps & {
+export type MessagingCardProps = MessagingCardBaseProps &
+  Omit<CardRootProps, 'children'> & {
     styles?: {
       root?: StyleProp<ViewStyle>;
     };
@@ -28,9 +28,11 @@ export const MessagingCard = memo(
         title,
         description,
         tag,
-        actions,
+        action,
+        onActionButtonPress,
+        actionButtonAccessibilityLabel,
         dismissButton,
-        onDismiss,
+        onDismissButtonPress,
         dismissButtonAccessibilityLabel,
         mediaPlacement,
         media,
@@ -51,13 +53,15 @@ export const MessagingCard = memo(
           {...props}
         >
           <MessagingCardLayout
-            actions={actions}
+            action={action}
+            actionButtonAccessibilityLabel={actionButtonAccessibilityLabel}
             description={description}
             dismissButton={dismissButton}
             dismissButtonAccessibilityLabel={dismissButtonAccessibilityLabel}
             media={media}
             mediaPlacement={mediaPlacement}
-            onDismiss={onDismiss}
+            onActionButtonPress={onActionButtonPress}
+            onDismissButtonPress={onDismissButtonPress}
             styles={layoutStyles}
             tag={tag}
             title={title}

@@ -16,12 +16,11 @@ const exampleProps: Omit<MediaCardProps, 'thumbnail'> = {
   title: 'Title',
   subtitle: 'Subtitle',
   description: 'Description',
-  width: 320,
 };
 
 const exampleThumbnail = (
   <RemoteImage
-    accessibilityLabel="Ethereum"
+    accessibilityLabel="Ethereum thumbnail"
     shape="circle"
     size="l"
     source={ethBackground}
@@ -31,7 +30,7 @@ const exampleThumbnail = (
 
 const exampleMedia = (
   <RemoteImage
-    accessibilityLabel="Media"
+    accessibilityLabel="Ethereum media"
     height="100%"
     resizeMode="cover"
     shape="rectangle"
@@ -77,11 +76,9 @@ const MediaCardScreen = () => {
         <MediaCard
           description="This is a very long description text that demonstrates how the card handles longer content"
           media={exampleMedia}
-          onPress={NoopFn}
           subtitle="This is a very long subtitle text that will get truncated"
           thumbnail={exampleThumbnail}
           title="This is a very long title text that will get truncated"
-          width={320}
         />
       </Example>
 
@@ -97,7 +94,6 @@ const MediaCardScreen = () => {
           subtitle={<TextHeadline color="fgPositive">Custom Subtitle</TextHeadline>}
           thumbnail={exampleThumbnail}
           title={<TextTitle3>Custom Title</TextTitle3>}
-          width={320}
         />
       </Example>
 
@@ -132,13 +128,13 @@ const MediaCardScreen = () => {
       <Example title="Interactive with onPress">
         <MediaCard
           renderAsPressable
+          accessibilityLabel="View interactive card details"
           description="Clickable card with onPress handler"
           media={exampleMedia}
           onPress={() => console.log('Card clicked!')}
           subtitle="Button"
           thumbnail={exampleThumbnail}
           title="Interactive Card"
-          width={320}
         />
       </Example>
 
@@ -151,31 +147,31 @@ const MediaCardScreen = () => {
           <CarouselItem id="card2">
             <MediaCard
               renderAsPressable
+              accessibilityLabel="View Bitcoin details"
               description="Another card with different content"
               media={exampleMedia}
               onPress={NoopFn}
               subtitle="BTC"
               thumbnail={
                 <RemoteImage
-                  accessibilityLabel="Bitcoin"
-                  shape="square"
+                  accessibilityLabel="Bitcoin thumbnail"
+                  shape="circle"
                   size="l"
                   source={assets.btc.imageUrl}
                 />
               }
               title="Bitcoin"
-              width={320}
             />
           </CarouselItem>
           <CarouselItem id="card3">
             <MediaCard
               renderAsPressable
+              accessibilityLabel="View Ethereum details"
               description="Card with onPress handler"
               onPress={NoopFn}
               subtitle="ETH"
               thumbnail={exampleThumbnail}
               title="Ethereum"
-              width={320}
             />
           </CarouselItem>
         </Carousel>

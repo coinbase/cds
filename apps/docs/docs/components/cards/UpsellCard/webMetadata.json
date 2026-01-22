@@ -4,14 +4,15 @@
   "storybook": "https://cds-storybook.coinbase.com/?path=/story/components-cards-upsellcard--default&globals=backgrounds.grid:false",
   "figma": "https://www.figma.com/file/k5CtyJccNQUGMI5bI4lJ2g/%E2%9C%A8-Normal-Components?type=design&node-id=10085%3A6246&mode=design&t=CXWB883JGKycJnlr-1",
   "description": "A card component for promoting new features, products, or actions.",
+  "warning": "This component is deprecated. Please use MessagingCard with type=\"upsell\" instead.",
   "relatedComponents": [
+    {
+      "label": "MessagingCard",
+      "url": "/components/cards/MessagingCard/"
+    },
     {
       "label": "Banner",
       "url": "/components/feedback/Banner/"
-    },
-    {
-      "label": "NudgeCard",
-      "url": "/components/cards/NudgeCard/"
     },
     {
       "label": "ContentCard",

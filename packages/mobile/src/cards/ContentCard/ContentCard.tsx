@@ -2,12 +2,9 @@ import React, { forwardRef, memo } from 'react';
 import type { View } from 'react-native';
 import { contentCardMaxWidth, contentCardMinWidth } from '@coinbase/cds-common/tokens/card';
 
-import { VStack } from '../../layout';
-import { Pressable, type PressableProps } from '../../system';
+import { VStack, type VStackProps } from '../../layout';
 
-export type ContentCardBaseProps = PressableProps & {
-  renderAsPressable?: boolean;
-};
+export type ContentCardBaseProps = VStackProps;
 
 export type ContentCardProps = ContentCardBaseProps;
 
@@ -18,25 +15,26 @@ export const ContentCard = memo(
       children,
       maxWidth = contentCardMaxWidth,
       minWidth = contentCardMinWidth,
-      renderAsPressable,
       borderRadius = 500,
-      style,
+      padding = 2,
+      gap = 2,
       ...props
     }: ContentCardProps,
     ref: React.ForwardedRef<View>,
   ) {
-    const Component = renderAsPressable ? Pressable : VStack;
     return (
-      <Component
+      <VStack
         ref={ref}
         borderRadius={borderRadius}
+        gap={gap}
         maxWidth={maxWidth}
         minWidth={minWidth}
+        padding={padding}
         testID={testID}
         {...props}
       >
         {children}
-      </Component>
+      </VStack>
     );
   }),
 );

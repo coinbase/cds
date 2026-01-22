@@ -1,6 +1,5 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { Alert, type View } from 'react-native';
-import { StyleSheet } from 'react-native';
 import { coinbaseOneLogo, svgs } from '@coinbase/cds-common/internal/data/assets';
 import { NoopFn } from '@coinbase/cds-common/utils/mockUtils';
 
@@ -23,6 +22,93 @@ const exampleProps: MessagingCardProps = {
   type: 'nudge',
 } as const;
 
+const dismissibleCards = [
+  {
+    id: '1',
+    title: 'Welcome to Coinbase',
+    description: 'Get started with your crypto journey',
+    type: 'upsell' as const,
+  },
+  {
+    id: '2',
+    title: 'Complete your profile',
+    description: 'Add your details to unlock more features',
+    type: 'nudge' as const,
+  },
+  {
+    id: '3',
+    title: 'Enable notifications',
+    description: 'Stay updated on market movements',
+    type: 'upsell' as const,
+  },
+  {
+    id: '4',
+    title: 'Invite friends',
+    description: 'Earn rewards when friends join',
+    type: 'nudge' as const,
+  },
+];
+
+const DismissibleCardsExample = () => {
+  const [dismissedIds, setDismissedIds] = useState<Set<string>>(new Set());
+
+  const handleDismiss = (id: string) => {
+    setDismissedIds((prev) => new Set(prev).add(id));
+  };
+
+  const handleReset = () => {
+    setDismissedIds(new Set());
+  };
+
+  const visibleCards = dismissibleCards.filter((card) => !dismissedIds.has(card.id));
+
+  return (
+    <Example title="Interactive Dismissible Cards">
+      <VStack gap={2}>
+        <VStack gap={2}>
+          {visibleCards.map((card) => (
+            <MessagingCard
+              key={card.id}
+              description={card.description}
+              dismissButtonAccessibilityLabel={`Dismiss ${card.title}`}
+              media={
+                card.type === 'upsell' ? (
+                  <RemoteImage
+                    accessibilityLabel="Coinbase One promotional image"
+                    height={100}
+                    resizeMode="cover"
+                    shape="rectangle"
+                    source={{ uri: coinbaseOneLogo }}
+                    width={80}
+                  />
+                ) : (
+                  <Pictogram
+                    accessibilityLabel="Add to watchlist"
+                    dimension="48x48"
+                    name="addToWatchlist"
+                  />
+                )
+              }
+              mediaPlacement="end"
+              onDismissButtonPress={() => handleDismiss(card.id)}
+              title={card.title}
+              type={card.type}
+            />
+          ))}
+          {visibleCards.length === 0 && (
+            <Text color="fgNegative" font="label1">
+              All cards dismissed!
+            </Text>
+          )}
+        </VStack>
+        <Button onPress={handleReset} variant="tertiary">
+          Reset Cards
+        </Button>
+      </VStack>
+    </Example>
+  );
+};
+
 const MessagingCardScreen = () => {
   const ref = useRef<View>(null);
   return (
@@ -35,7 +121,7 @@ const MessagingCardScreen = () => {
             description="This is an upsell card with primary background"
             media={
               <RemoteImage
-                accessibilityLabel="Media"
+                accessibilityLabel="Coinbase One promotional image"
                 height={120}
                 resizeMode="cover"
                 shape="rectangle"
@@ -54,7 +140,7 @@ const MessagingCardScreen = () => {
             height={100}
             media={
               <RemoteImage
-                accessibilityLabel="Media"
+                accessibilityLabel="Promotional illustration"
                 height={100}
                 resizeMode="cover"
                 shape="rectangle"
@@ -69,7 +155,13 @@ const MessagingCardScreen = () => {
           <MessagingCard
             {...exampleProps}
             description="This is a nudge card with alternate background"
-            media={<Pictogram dimension="48x48" name="addToWatchlist" />}
+            media={
+              <Pictogram
+                accessibilityLabel="Add to watchlist"
+                dimension="48x48"
+                name="addToWatchlist"
+              />
+            }
             mediaPlacement="end"
             title="Nudge Card"
             type="nudge"
@@ -77,7 +169,13 @@ const MessagingCardScreen = () => {
           <MessagingCard
             {...exampleProps}
             description="This is a nudge card with alternate background"
-            media={<Pictogram dimension="48x48" name="addToWatchlist" />}
+            media={
+              <Pictogram
+                accessibilityLabel="Add to watchlist"
+                dimension="48x48"
+                name="addToWatchlist"
+              />
+            }
             mediaPlacement="start"
             title="Nudge Card"
             type="nudge"
@@ -94,7 +192,7 @@ const MessagingCardScreen = () => {
             dismissButtonAccessibilityLabel="Close card"
             media={
               <RemoteImage
-                accessibilityLabel="Media"
+                accessibilityLabel="Coinbase One promotional image"
                 height={120}
                 resizeMode="cover"
                 shape="rectangle"
@@ -103,16 +201,26 @@ const MessagingCardScreen = () => {
               />
             }
             mediaPlacement="end"
-            onDismiss={() => Alert.alert('Card dismissed!')}
+            onDismissButtonPress={() => Alert.alert('Card dismissed!')}
             title="Dismissible Card"
             type="upsell"
+          />
+          <MessagingCard
+            {...exampleProps}
+            description="Nudge card with dismiss button"
+            dismissButtonAccessibilityLabel="Dismiss nudge"
+            media={<Pictogram accessibilityLabel="Star" dimension="48x48" name="baseStar" />}
+            mediaPlacement="end"
+            onDismissButtonPress={() => Alert.alert('Card dismissed!')}
+            title="Dismissible Nudge"
+            type="nudge"
           />
           <MessagingCard
             {...exampleProps}
             description="Card with a tag"
             media={
               <RemoteImage
-                accessibilityLabel="Media"
+                accessibilityLabel="Coinbase One promotional image"
                 height={120}
                 resizeMode="cover"
                 shape="rectangle"
@@ -127,15 +235,20 @@ const MessagingCardScreen = () => {
           />
           <MessagingCard
             {...exampleProps}
-            actions={
-              <Button compact variant="secondary">
-                Action
-              </Button>
-            }
+            description="Nudge card with a tag"
+            media={<Pictogram accessibilityLabel="Key" dimension="48x48" name="key" />}
+            mediaPlacement="end"
+            tag="New"
+            title="Tagged Nudge"
+            type="nudge"
+          />
+          <MessagingCard
+            {...exampleProps}
+            action="Action"
             description="Upsell card with action button"
             media={
               <RemoteImage
-                accessibilityLabel="Media"
+                accessibilityLabel="Coinbase One promotional image"
                 height={156}
                 resizeMode="cover"
                 shape="rectangle"
@@ -144,21 +257,28 @@ const MessagingCardScreen = () => {
               />
             }
             mediaPlacement="end"
+            onActionButtonPress={() => Alert.alert('Action pressed!')}
             title="Upsell with Action"
             type="upsell"
           />
           <MessagingCard
             {...exampleProps}
-            actions={
-              <Button compact variant="secondary">
-                Get Started
-              </Button>
-            }
+            action="Get Started"
+            description="Nudge card with action button"
+            media={<Pictogram accessibilityLabel="Wallet" dimension="48x48" name="wallet" />}
+            mediaPlacement="end"
+            onActionButtonPress={() => Alert.alert('Action pressed!')}
+            title="Nudge with Action"
+            type="nudge"
+          />
+          <MessagingCard
+            {...exampleProps}
+            action="Get Started"
             description="Complete upsell card with all features"
             dismissButtonAccessibilityLabel="Dismiss"
             media={
               <RemoteImage
-                accessibilityLabel="Media"
+                accessibilityLabel="Coinbase One promotional image"
                 height={186}
                 resizeMode="cover"
                 shape="rectangle"
@@ -167,10 +287,72 @@ const MessagingCardScreen = () => {
               />
             }
             mediaPlacement="end"
-            onDismiss={() => Alert.alert('Dismissed')}
+            onActionButtonPress={() => Alert.alert('Action pressed!')}
+            onDismissButtonPress={() => Alert.alert('Dismissed')}
             tag="New"
             title="Complete Upsell Card"
             type="upsell"
+          />
+          <MessagingCard
+            {...exampleProps}
+            action="Learn More"
+            description="Complete nudge card with all features"
+            dismissButtonAccessibilityLabel="Dismiss"
+            media={<Pictogram accessibilityLabel="Gift" dimension="48x48" name="giftbox" />}
+            mediaPlacement="end"
+            onActionButtonPress={() => Alert.alert('Action pressed!')}
+            onDismissButtonPress={() => Alert.alert('Dismissed')}
+            tag="New"
+            title="Complete Nudge Card"
+            type="nudge"
+          />
+          <MessagingCard
+            {...exampleProps}
+            action={
+              <Button
+                compact
+                onPress={() => Alert.alert('Custom button pressed!')}
+                variant="primary"
+              >
+                Custom Button
+              </Button>
+            }
+            description="Upsell card with custom action button"
+            media={
+              <RemoteImage
+                accessibilityLabel="Coinbase One promotional image"
+                height={156}
+                resizeMode="cover"
+                shape="rectangle"
+                source={{ uri: coinbaseOneLogo }}
+                width={120}
+              />
+            }
+            mediaPlacement="end"
+            title="Custom Action Button"
+            type="upsell"
+          />
+          <MessagingCard
+            {...exampleProps}
+            action={
+              <HStack gap={1}>
+                <Button compact onPress={() => Alert.alert('Primary pressed!')} variant="secondary">
+                  Primary
+                </Button>
+                <Button
+                  compact
+                  onPress={() => Alert.alert('Secondary pressed!')}
+                  variant="tertiary"
+                >
+                  Secondary
+                </Button>
+              </HStack>
+            }
+            description="Nudge card with multiple custom buttons"
+            media={<Pictogram accessibilityLabel="Wallet" dimension="48x48" name="wallet" />}
+            mediaPlacement="end"
+            title="Multiple Action Buttons"
+            type="nudge"
           />
           <MessagingCard
             {...exampleProps}
@@ -187,7 +369,7 @@ const MessagingCardScreen = () => {
             }
             media={
               <RemoteImage
-                accessibilityLabel="Media"
+                accessibilityLabel="Coinbase One promotional image"
                 height={120}
                 resizeMode="cover"
                 shape="rectangle"
@@ -199,30 +381,61 @@ const MessagingCardScreen = () => {
             title="Custom Dismiss Button"
             type="upsell"
           />
+          <MessagingCard
+            {...exampleProps}
+            description="Nudge with custom dismiss button"
+            dismissButton={
+              <HStack paddingEnd={1} paddingTop={1} position="absolute" right={0} top={0}>
+                <IconButton
+                  accessibilityLabel="Custom dismiss"
+                  name="close"
+                  onPress={() => Alert.alert('Custom dismiss pressed!')}
+                  variant="secondary"
+                />
+              </HStack>
+            }
+            media={<Pictogram accessibilityLabel="Rocket" dimension="48x48" name="baseRocket" />}
+            mediaPlacement="end"
+            title="Custom Dismiss Nudge"
+            type="nudge"
+          />
         </VStack>
       </Example>
 
       {/* Interactive */}
       <Example title="Interactive with onPress">
-        <MessagingCard
-          ref={ref}
-          renderAsPressable
-          description="Clickable card with onPress handler"
-          media={
-            <RemoteImage
-              accessibilityLabel="Media"
-              height={120}
-              resizeMode="cover"
-              shape="rectangle"
-              source={{ uri: coinbaseOneLogo }}
-              width={90}
-            />
-          }
-          mediaPlacement="end"
-          onPress={NoopFn}
-          title="Interactive Card"
-          type="upsell"
-        />
+        <VStack gap={2}>
+          <MessagingCard
+            ref={ref}
+            renderAsPressable
+            accessibilityLabel="View interactive card details"
+            description="Clickable card with onPress handler"
+            media={
+              <RemoteImage
+                accessibilityLabel="Coinbase One promotional image"
+                height={120}
+                resizeMode="cover"
+                shape="rectangle"
+                source={{ uri: coinbaseOneLogo }}
+                width={90}
+              />
+            }
+            mediaPlacement="end"
+            onPress={NoopFn}
+            title="Interactive Card"
+            type="upsell"
+          />
+          <MessagingCard
+            renderAsPressable
+            accessibilityLabel="View nudge details"
+            description="Clickable nudge with onPress handler"
+            media={<Pictogram accessibilityLabel="Rocket" dimension="48x48" name="baseRocket" />}
+            mediaPlacement="end"
+            onPress={NoopFn}
+            title="Interactive Nudge"
+            type="nudge"
+          />
+        </VStack>
       </Example>
 
       {/* Text Content */}
@@ -233,7 +446,7 @@ const MessagingCardScreen = () => {
             description="This is a very long description text that demonstrates how the card handles longer content and wraps appropriately within the card layout"
             media={
               <RemoteImage
-                accessibilityLabel="Media"
+                accessibilityLabel="Coinbase One promotional image"
                 height={160}
                 resizeMode="cover"
                 shape="rectangle"
@@ -254,7 +467,7 @@ const MessagingCardScreen = () => {
             }
             media={
               <RemoteImage
-                accessibilityLabel="Media"
+                accessibilityLabel="Coinbase One promotional image"
                 height={140}
                 resizeMode="cover"
                 shape="rectangle"
@@ -270,6 +483,9 @@ const MessagingCardScreen = () => {
         </VStack>
       </Example>
 
+      {/* Interactive Dismissible Cards */}
+      <DismissibleCardsExample />
+
       <Example title="Multiple Cards">
         <Carousel styles={{ carousel: { gap: 16 } }}>
           <CarouselItem id="card1">
@@ -278,7 +494,7 @@ const MessagingCardScreen = () => {
               description="Non-interactive card"
               media={
                 <RemoteImage
-                  accessibilityLabel="Media"
+                  accessibilityLabel="Coinbase One promotional image"
                   height={108}
                   resizeMode="cover"
                   shape="rectangle"
@@ -296,8 +512,15 @@ const MessagingCardScreen = () => {
             <MessagingCard
               {...exampleProps}
               renderAsPressable
+              accessibilityLabel="View Card 2 details"
               description="Clickable card with onPress"
-              media={<Pictogram dimension="64x64" name="addToWatchlist" />}
+              media={
+                <Pictogram
+                  accessibilityLabel="Add to watchlist"
+                  dimension="64x64"
+                  name="addToWatchlist"
+                />
+              }
               mediaPlacement="end"
               onPress={NoopFn}
               tag="Link"
@@ -310,10 +533,11 @@ const MessagingCardScreen = () => {
             <MessagingCard
               {...exampleProps}
               renderAsPressable
+              accessibilityLabel="View Card 3 details"
               description="Card with onPress handler"
               media={
                 <RemoteImage
-                  accessibilityLabel="Media"
+                  accessibilityLabel="Coinbase One promotional image"
                   height={108}
                   resizeMode="cover"
                   shape="rectangle"

@@ -6,11 +6,11 @@ import { VStack } from '../../layout/VStack';
 import { Text } from '../../typography/Text';
 
 export type MediaCardLayoutBaseProps = {
-  /** Text or React node to display as the card title. When a string is provided, it will be rendered in a CardTitle component. */
+  /** Text or React node to display as the card title. Use a Text component to override default color and font. */
   title?: React.ReactNode;
-  /** Text or React node to display as the card subtitle. When a string is provided, it will be rendered in a CardSubtitle component. */
+  /** Text or React node to display as the card subtitle. Use a Text component to override default color and font. */
   subtitle?: React.ReactNode;
-  /** Text or React node to display as the card description. When a string is provided, it will be rendered in a CardDescription component. */
+  /** Text or React node to display as the card description. Use a Text component to override default color and font. */
   description?: React.ReactNode;
   /** React node to display as a thumbnail in the content area. */
   thumbnail: React.ReactNode;
@@ -43,7 +43,7 @@ const MediaCardLayout = memo(
     const titleNode = useMemo(() => {
       if (typeof title === 'string') {
         return (
-          <Text font="headline" numberOfLines={1}>
+          <Text font="headline" numberOfLines={2}>
             {title}
           </Text>
         );

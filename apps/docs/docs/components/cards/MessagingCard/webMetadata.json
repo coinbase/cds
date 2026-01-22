@@ -1,0 +1,21 @@
+{
+  "import": "import { MessagingCard } from '@coinbase/cds-web/cards/MessagingCard'",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/web/src/cards/MessagingCard/index.tsx",
+  "storybook": "https://cds-storybook.coinbase.com/?path=/story/components-cards-messagingcard--basic-types",
+  "description": "MessagingCard displays promotional or informational content with two variants: 'upsell' for promoting features with a primary background, and 'nudge' for encouraging actions with an alternate background. It replaces the deprecated NudgeCard and UpsellCard components.",
+  "relatedComponents": [
+    {
+      "label": "ContentCard",
+      "url": "/components/cards/ContentCard/"
+    },
+    {
+      "label": "MediaCard",
+      "url": "/components/cards/MediaCard/"
+    },
+    {
+      "label": "Banner",
+      "url": "/components/feedback/Banner/"
+    }
+  ],
+  "dependencies": []
+}

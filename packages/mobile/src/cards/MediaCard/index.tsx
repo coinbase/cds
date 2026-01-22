@@ -8,8 +8,8 @@ import { MediaCardLayout, type MediaCardLayoutProps } from './MediaCardLayout';
 
 export type MediaCardBaseProps = MediaCardLayoutProps;
 
-export type MediaCardProps = Omit<CardRootProps, 'children'> &
-  MediaCardBaseProps & {
+export type MediaCardProps = MediaCardBaseProps &
+  Omit<CardRootProps, 'children'> & {
     styles?: {
       root?: StyleProp<ViewStyle>;
     };

@@ -18,3 +18,5 @@ export * from './UpsellCard';
 export * from './ContentCard';
 // Media card
 export * from './MediaCard';
+// Messaging card
+export * from './MessagingCard';

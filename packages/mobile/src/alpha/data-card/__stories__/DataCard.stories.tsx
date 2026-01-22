@@ -4,6 +4,7 @@ import { ethBackground } from '@coinbase/cds-common/internal/data/assets';
 import { NoopFn } from '@coinbase/cds-common/utils/mockUtils';
 
 import { Example, ExampleScreen } from '../../../examples/ExampleScreen';
+import { useTheme } from '../../../hooks/useTheme';
 import { HStack } from '../../../layout';
 import { Box } from '../../../layout/Box';
 import { VStack } from '../../../layout/VStack';
@@ -22,9 +23,16 @@ const exampleThumbnail = (
   />
 );
 
+const renderProgressLabel = (num: number) => (
+  <Text color="fgMuted" font="legal">
+    {num}%
+  </Text>
+);
+
 const DataCardScreen = () => {
   const ref1 = useRef<View>(null);
   const ref2 = useRef<View>(null);
+  const { spectrum } = useTheme();
 
   return (
     <ExampleScreen>
@@ -37,13 +45,16 @@ const DataCardScreen = () => {
             thumbnail={exampleThumbnail}
             title="Progress Bar Card"
             titleAccessory={
-              <Text color="fgPositive" font="label1">
+              <Text dangerouslySetColor={`rgb(${spectrum.green70})`} font="label1">
                 ↗ 25.25%
               </Text>
             }
           >
             <Box paddingTop={5}>
-              <ProgressBarWithFixedLabels endLabel={45} labelPlacement="below" startLabel={0}>
+              <ProgressBarWithFixedLabels
+                labelPlacement="below"
+                startLabel={{ value: 45, render: renderProgressLabel }}
+              >
                 <ProgressBar accessibilityLabel="45% complete" progress={0.45} weight="semiheavy" />
               </ProgressBarWithFixedLabels>
             </Box>
@@ -54,8 +65,8 @@ const DataCardScreen = () => {
             thumbnail={exampleThumbnail}
             title="Progress Circle Card"
             titleAccessory={
-              <Text color="fgPositive" font="label1">
-                ↗ 25.25%
+              <Text color="fgNegative" font="label1">
+                ↘ 3.12%
               </Text>
             }
           >
@@ -74,8 +85,8 @@ const DataCardScreen = () => {
             thumbnail={exampleThumbnail}
             title="Progress Circle Card with very very very very very long title"
             titleAccessory={
-              <Text color="fgPositive" font="label1">
-                ↗ 25.25%
+              <Text color="fgNegative" font="label1">
+                ↘ 1.8%
               </Text>
             }
           >
@@ -100,13 +111,16 @@ const DataCardScreen = () => {
             thumbnail={exampleThumbnail}
             title="High Progress"
             titleAccessory={
-              <Text color="fgPositive" font="label1">
+              <Text dangerouslySetColor={`rgb(${spectrum.green70})`} font="label1">
                 ↗ 25.25%
               </Text>
             }
           >
             <Box paddingTop={5}>
-              <ProgressBarWithFixedLabels endLabel={90} labelPlacement="below" startLabel={0}>
+              <ProgressBarWithFixedLabels
+                labelPlacement="below"
+                startLabel={{ value: 90, render: renderProgressLabel }}
+              >
                 <ProgressBar
                   accessibilityLabel="90% complete"
                   color="fgPositive"
@@ -118,12 +132,12 @@ const DataCardScreen = () => {
           </DataCard>
           <DataCard
             layout="horizontal"
-            subtitle="High completion"
+            subtitle="Below target"
             thumbnail={exampleThumbnail}
-            title="High Completion"
+            title="Below Target"
             titleAccessory={
-              <Text color="fgPositive" font="label1">
-                ↗ 25.25%
+              <Text color="fgNegative" font="label1">
+                ↘ 5.2%
               </Text>
             }
           >
@@ -161,19 +175,23 @@ const DataCardScreen = () => {
           <DataCard
             ref={ref1}
             renderAsPressable
+            accessibilityLabel="View progress bar details"
             layout="vertical"
             onPress={() => Alert.alert('Progress bar card clicked!')}
             subtitle="Clickable progress card"
             thumbnail={exampleThumbnail}
             title="Progress Bar with Button"
             titleAccessory={
-              <Text color="fgPositive" font="label1">
+              <Text dangerouslySetColor={`rgb(${spectrum.green70})`} font="label1">
                 ↗ 8.5%
               </Text>
             }
           >
-            <Box paddingTop={6}>
-              <ProgressBarWithFixedLabels endLabel={75} labelPlacement="below" startLabel={0}>
+            <Box paddingTop={5}>
+              <ProgressBarWithFixedLabels
+                labelPlacement="below"
+                startLabel={{ value: 75, render: renderProgressLabel }}
+              >
                 <ProgressBar accessibilityLabel="75% complete" progress={0.75} weight="semiheavy" />
               </ProgressBarWithFixedLabels>
             </Box>
@@ -181,14 +199,15 @@ const DataCardScreen = () => {
           <DataCard
             ref={ref2}
             renderAsPressable
+            accessibilityLabel="View progress circle details"
             layout="horizontal"
             onPress={NoopFn}
             subtitle="Clickable progress circle card"
             thumbnail={exampleThumbnail}
             title="Progress Circle with Button"
             titleAccessory={
-              <Text color="fgMuted" font="label1">
-                ↗ 8.5%
+              <Text color="fgNegative" font="label1">
+                ↘ 8.5%
               </Text>
             }
           >
@@ -217,7 +236,10 @@ const DataCardScreen = () => {
             title="Custom Root Styles"
           >
             <Box paddingTop={5}>
-              <ProgressBarWithFixedLabels endLabel={50} labelPlacement="below" startLabel={0}>
+              <ProgressBarWithFixedLabels
+                labelPlacement="below"
+                startLabel={{ value: 50, render: renderProgressLabel }}
+              >
                 <ProgressBar accessibilityLabel="50% complete" progress={0.5} weight="semiheavy" />
               </ProgressBarWithFixedLabels>
             </Box>
@@ -253,7 +275,10 @@ const DataCardScreen = () => {
             title="Multiple Style Overrides"
           >
             <Box paddingTop={5}>
-              <ProgressBarWithFixedLabels endLabel={80} labelPlacement="below" startLabel={0}>
+              <ProgressBarWithFixedLabels
+                labelPlacement="below"
+                startLabel={{ value: 80, render: renderProgressLabel }}
+              >
                 <ProgressBar accessibilityLabel="80% complete" progress={0.8} weight="semiheavy" />
               </ProgressBarWithFixedLabels>
             </Box>
@@ -271,9 +296,32 @@ const DataCardScreen = () => {
             title="Card 1"
           >
             <Box paddingTop={5}>
-              <ProgressBarWithFixedLabels endLabel={30} labelPlacement="below" startLabel={0}>
+              <ProgressBarWithFixedLabels
+                labelPlacement="below"
+                startLabel={{ value: 30, render: renderProgressLabel }}
+              >
                 <ProgressBar accessibilityLabel="30% complete" progress={0.3} weight="semiheavy" />
               </ProgressBarWithFixedLabels>
+            </Box>
+          </DataCard>
+          <DataCard
+            layout="horizontal"
+            subtitle="Completion status"
+            thumbnail={exampleThumbnail}
+            title="Card 2"
+            titleAccessory={
+              <Text dangerouslySetColor={`rgb(${spectrum.green70})`} font="label1">
+                ↗ 25.25%
+              </Text>
+            }
+          >
+            <Box alignItems="center" height="100%">
+              <ProgressCircle
+                accessibilityLabel="95% complete"
+                progress={0.95}
+                size={120}
+                weight="heavy"
+              />
             </Box>
           </DataCard>
         </VStack>

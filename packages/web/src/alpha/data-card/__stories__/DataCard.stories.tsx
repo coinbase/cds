@@ -22,6 +22,12 @@ const exampleThumbnail = (
   />
 );
 
+const renderProgressLabel = (num: number) => (
+  <Text color="fgMuted" font="legal">
+    {num}%
+  </Text>
+);
+
 // Basic Examples
 export const BasicExamples = (): JSX.Element => {
   return (
@@ -32,13 +38,16 @@ export const BasicExamples = (): JSX.Element => {
         thumbnail={exampleThumbnail}
         title="Progress Bar Card"
         titleAccessory={
-          <Text color="fgPositive" font="label1">
+          <Text dangerouslySetColor="rgb(var(--green70))" font="label1">
             ↗ 25.25%
           </Text>
         }
       >
         <Box paddingTop={5}>
-          <ProgressBarWithFixedLabels endLabel={45} labelPlacement="below" startLabel={0}>
+          <ProgressBarWithFixedLabels
+            labelPlacement="below"
+            startLabel={{ value: 45, render: renderProgressLabel }}
+          >
             <ProgressBar accessibilityLabel="45% complete" progress={0.45} weight="semiheavy" />
           </ProgressBarWithFixedLabels>
         </Box>
@@ -49,8 +58,8 @@ export const BasicExamples = (): JSX.Element => {
         thumbnail={exampleThumbnail}
         title="Progress Circle Card"
         titleAccessory={
-          <Text color="fgPositive" font="label1">
-            ↗ 25.25%
+          <Text color="fgNegative" font="label1">
+            ↘ 3.12%
           </Text>
         }
       >
@@ -69,8 +78,8 @@ export const BasicExamples = (): JSX.Element => {
         thumbnail={exampleThumbnail}
         title="Progress Circle Card with very very very very very long title"
         titleAccessory={
-          <Text color="fgPositive" font="label1">
-            ↗ 25.25%
+          <Text color="fgNegative" font="label1">
+            ↘ 1.8%
           </Text>
         }
       >
@@ -97,13 +106,16 @@ export const Features = (): JSX.Element => {
         thumbnail={exampleThumbnail}
         title="High Progress"
         titleAccessory={
-          <Text color="fgPositive" font="label1">
+          <Text dangerouslySetColor="rgb(var(--green70))" font="label1">
             ↗ 25.25%
           </Text>
         }
       >
         <Box paddingTop={5}>
-          <ProgressBarWithFixedLabels endLabel={90} labelPlacement="below" startLabel={0}>
+          <ProgressBarWithFixedLabels
+            labelPlacement="below"
+            startLabel={{ value: 90, render: renderProgressLabel }}
+          >
             <ProgressBar
               accessibilityLabel="90% complete"
               color="fgPositive"
@@ -115,12 +127,12 @@ export const Features = (): JSX.Element => {
       </DataCard>
       <DataCard
         layout="horizontal"
-        subtitle="High completion"
+        subtitle="Below target"
         thumbnail={exampleThumbnail}
-        title="High Completion"
+        title="Below Target"
         titleAccessory={
-          <Text color="fgPositive" font="label1">
-            ↗ 25.25%
+          <Text color="fgNegative" font="label1">
+            ↘ 5.2%
           </Text>
         }
       >
@@ -162,19 +174,23 @@ export const Interactive = (): JSX.Element => {
       <DataCard
         ref={ref1}
         renderAsPressable
+        aria-label="View progress bar details"
         layout="vertical"
         onClick={() => alert('Progress bar card clicked!')}
         subtitle="Clickable progress card"
         thumbnail={exampleThumbnail}
         title="Progress Bar with Button"
         titleAccessory={
-          <Text color="fgPositive" font="label1">
+          <Text dangerouslySetColor="rgb(var(--green70))" font="label1">
             ↗ 8.5%
           </Text>
         }
       >
         <Box paddingTop={5}>
-          <ProgressBarWithFixedLabels endLabel={75} labelPlacement="below" startLabel={0}>
+          <ProgressBarWithFixedLabels
+            labelPlacement="below"
+            startLabel={{ value: 75, render: renderProgressLabel }}
+          >
             <ProgressBar accessibilityLabel="75% complete" progress={0.75} weight="semiheavy" />
           </ProgressBarWithFixedLabels>
         </Box>
@@ -182,6 +198,7 @@ export const Interactive = (): JSX.Element => {
       <DataCard
         ref={ref2}
         renderAsPressable
+        aria-label="View progress circle details on Coinbase"
         as="a"
         href="https://www.coinbase.com"
         layout="horizontal"
@@ -190,7 +207,7 @@ export const Interactive = (): JSX.Element => {
         thumbnail={exampleThumbnail}
         title="Progress Circle with Link"
         titleAccessory={
-          <Text color="fgMuted" font="label1">
+          <Text dangerouslySetColor="rgb(var(--green70))" font="label1">
             ↗ 8.5%
           </Text>
         }
@@ -222,7 +239,10 @@ export const StyleOverrides = (): JSX.Element => {
         title="Custom Root Styles"
       >
         <Box paddingTop={5}>
-          <ProgressBarWithFixedLabels endLabel={50} labelPlacement="below" startLabel={0}>
+          <ProgressBarWithFixedLabels
+            labelPlacement="below"
+            startLabel={{ value: 50, render: renderProgressLabel }}
+          >
             <ProgressBar accessibilityLabel="50% complete" progress={0.5} weight="semiheavy" />
           </ProgressBarWithFixedLabels>
         </Box>
@@ -258,7 +278,10 @@ export const StyleOverrides = (): JSX.Element => {
         title="Multiple Style Overrides"
       >
         <Box paddingTop={5}>
-          <ProgressBarWithFixedLabels endLabel={80} labelPlacement="below" startLabel={0}>
+          <ProgressBarWithFixedLabels
+            labelPlacement="below"
+            startLabel={{ value: 80, render: renderProgressLabel }}
+          >
             <ProgressBar accessibilityLabel="80% complete" progress={0.8} weight="semiheavy" />
           </ProgressBarWithFixedLabels>
         </Box>
@@ -278,7 +301,10 @@ export const MultipleCards = (): JSX.Element => {
         title="Card 1"
       >
         <Box paddingTop={5}>
-          <ProgressBarWithFixedLabels endLabel={100} labelPlacement="beside" startLabel={0}>
+          <ProgressBarWithFixedLabels
+            labelPlacement="below"
+            startLabel={{ value: 30, render: renderProgressLabel }}
+          >
             <ProgressBar accessibilityLabel="30% complete" progress={0.3} weight="semiheavy" />
           </ProgressBarWithFixedLabels>
         </Box>
@@ -289,7 +315,7 @@ export const MultipleCards = (): JSX.Element => {
         thumbnail={exampleThumbnail}
         title="Card 2"
         titleAccessory={
-          <Text color="fgPositive" font="label1">
+          <Text dangerouslySetColor="rgb(var(--green70))" font="label1">
             ↗ 25.25%
           </Text>
         }

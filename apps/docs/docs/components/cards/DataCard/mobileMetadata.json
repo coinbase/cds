@@ -1,0 +1,24 @@
+{
+  "import": "import { DataCard } from '@coinbase/cds-mobile/alpha/data-card'",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/mobile/src/alpha/data-card/DataCard.tsx",
+  "description": "A flexible card component for displaying data with visualizations like progress bars and circles. It supports horizontal and vertical layouts with customizable thumbnails and title accessories.",
+  "relatedComponents": [
+    {
+      "label": "ContentCard",
+      "url": "/components/cards/ContentCard/"
+    },
+    {
+      "label": "MediaCard",
+      "url": "/components/cards/MediaCard/"
+    },
+    {
+      "label": "ProgressBar",
+      "url": "/components/feedback/ProgressBar/"
+    },
+    {
+      "label": "ProgressCircle",
+      "url": "/components/feedback/ProgressCircle/"
+    }
+  ],
+  "dependencies": []
+}

@@ -1930,7 +1930,7 @@ function DataCardWithLineChart() {
         thumbnail={exampleThumbnail}
         title="Line Chart with Tag"
         titleAccessory={
-          <Text color="fgPositive" font="label1">
+          <Text dangerouslySetColor="rgb(var(--green70))" font="label1">
             ↗ 25.25%
           </Text>
         }
@@ -1955,7 +1955,7 @@ function DataCardWithLineChart() {
         thumbnail={exampleThumbnail}
         title="Actionable Line Chart"
         titleAccessory={
-          <Text color="fgPositive" font="label1">
+          <Text dangerouslySetColor="rgb(var(--green70))" font="label1">
             ↗ 25.25%
           </Text>
         }
@@ -1984,7 +1984,7 @@ function DataCardWithLineChart() {
         }
         title="Card with Line Chart"
         titleAccessory={
-          <Text color="fgPositive" font="label1">
+          <Text dangerouslySetColor="rgb(var(--green70))" font="label1">
             ↗ 25.25%
           </Text>
         }

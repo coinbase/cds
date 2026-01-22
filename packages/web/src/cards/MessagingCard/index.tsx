@@ -35,12 +35,13 @@ export const MessagingCard: MessagingCardComponent = memo(
         title,
         description,
         tag,
-        actions,
-        onDismiss,
+        action,
+        onActionButtonClick,
+        actionButtonAccessibilityLabel,
+        onDismissButtonClick,
         dismissButtonAccessibilityLabel,
         mediaPlacement,
         media,
-        slotProps,
         dismissButton,
         styles: { root: rootStyle, ...layoutStyles } = {},
         classNames: { root: rootClassName, ...layoutClassNames } = {},
@@ -62,14 +63,16 @@ export const MessagingCard: MessagingCardComponent = memo(
         {...props}
       >
         <MessagingCardLayout
-          actions={actions}
+          action={action}
+          actionButtonAccessibilityLabel={actionButtonAccessibilityLabel}
           classNames={layoutClassNames}
           description={description}
           dismissButton={dismissButton}
           dismissButtonAccessibilityLabel={dismissButtonAccessibilityLabel}
           media={media}
           mediaPlacement={mediaPlacement}
-          onDismiss={onDismiss}
+          onActionButtonClick={onActionButtonClick}
+          onDismissButtonClick={onDismissButtonClick}
           styles={layoutStyles}
           tag={tag}
           title={title}

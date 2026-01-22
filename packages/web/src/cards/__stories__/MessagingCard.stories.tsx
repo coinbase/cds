@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { coinbaseOneLogo, svgs } from '@coinbase/cds-common/internal/data/assets';
 
 import { Button } from '../../buttons/Button';
@@ -6,7 +6,7 @@ import { IconButton } from '../../buttons/IconButton';
 import { Carousel } from '../../carousel/Carousel';
 import { CarouselItem } from '../../carousel/CarouselItem';
 import { Pictogram } from '../../illustrations';
-import { Box } from '../../layout';
+import { Box, HStack } from '../../layout';
 import { VStack } from '../../layout/VStack';
 import { RemoteImage } from '../../media/RemoteImage';
 import { Text } from '../../typography';
@@ -28,8 +28,7 @@ export const BasicTypes = (): JSX.Element => {
         height={100}
         media={
           <RemoteImage
-            alt="Media"
-            aria-hidden="true"
+            alt="Coinbase One promotional image"
             height={100}
             resizeMode="cover"
             shape="rectangle"
@@ -47,8 +46,7 @@ export const BasicTypes = (): JSX.Element => {
         height={100}
         media={
           <RemoteImage
-            alt="Media"
-            aria-hidden="true"
+            alt="Promotional illustration"
             height={100}
             resizeMode="cover"
             shape="rectangle"
@@ -89,8 +87,7 @@ export const Features = (): JSX.Element => {
         dismissButtonAccessibilityLabel="Close card"
         media={
           <RemoteImage
-            alt="Media"
-            aria-hidden="true"
+            alt="Coinbase One promotional image"
             height={100}
             resizeMode="cover"
             shape="rectangle"
@@ -98,17 +95,26 @@ export const Features = (): JSX.Element => {
           />
         }
         mediaPlacement="end"
-        onDismiss={() => alert('Card dismissed!')}
+        onDismissButtonClick={() => alert('Card dismissed!')}
         title="Dismissible Card"
         type="upsell"
+      />
+      <MessagingCard
+        {...exampleProps}
+        description="Nudge card with dismiss button"
+        dismissButtonAccessibilityLabel="Dismiss nudge"
+        media={<Pictogram dimension="48x48" name="baseStar" />}
+        mediaPlacement="end"
+        onDismissButtonClick={() => alert('Card dismissed!')}
+        title="Dismissible Nudge"
+        type="nudge"
       />
       <MessagingCard
         {...exampleProps}
         description="Card with a tag"
         media={
           <RemoteImage
-            alt="Media"
-            aria-hidden="true"
+            alt="Coinbase One promotional image"
             height={108}
             resizeMode="cover"
             shape="rectangle"
@@ -122,16 +128,20 @@ export const Features = (): JSX.Element => {
       />
       <MessagingCard
         {...exampleProps}
-        actions={
-          <Button compact variant="secondary">
-            Action
-          </Button>
-        }
+        description="Nudge card with a tag"
+        media={<Pictogram dimension="48x48" name="key" />}
+        mediaPlacement="end"
+        tag="New"
+        title="Tagged Nudge"
+        type="nudge"
+      />
+      <MessagingCard
+        {...exampleProps}
+        action="Action"
         description="Upsell card with action button"
         media={
           <RemoteImage
-            alt="Media"
-            aria-hidden="true"
+            alt="Coinbase One promotional image"
             height={156}
             resizeMode="cover"
             shape="rectangle"
@@ -139,22 +149,28 @@ export const Features = (): JSX.Element => {
           />
         }
         mediaPlacement="end"
+        onActionButtonClick={() => alert('Action clicked!')}
         title="Upsell with Action"
         type="upsell"
       />
       <MessagingCard
         {...exampleProps}
-        actions={
-          <Button compact variant="secondary">
-            Get Started
-          </Button>
-        }
+        action="Get Started"
+        description="Nudge card with action button"
+        media={<Pictogram dimension="48x48" name="wallet" />}
+        mediaPlacement="end"
+        onActionButtonClick={() => alert('Action clicked!')}
+        title="Nudge with Action"
+        type="nudge"
+      />
+      <MessagingCard
+        {...exampleProps}
+        action="Get Started"
         description="Complete upsell card with all features"
         dismissButtonAccessibilityLabel="Dismiss"
         media={
           <RemoteImage
-            alt="Media"
-            aria-hidden="true"
+            alt="Coinbase One promotional image"
             height={184}
             resizeMode="cover"
             shape="rectangle"
@@ -162,11 +178,65 @@ export const Features = (): JSX.Element => {
           />
         }
         mediaPlacement="end"
-        onDismiss={() => alert('Dismissed')}
+        onActionButtonClick={() => alert('Action clicked!')}
+        onDismissButtonClick={() => alert('Dismissed')}
         tag="New"
         title="Complete Upsell Card"
         type="upsell"
         width={360}
+      />
+      <MessagingCard
+        {...exampleProps}
+        action="Learn More"
+        description="Complete nudge card with all features"
+        dismissButtonAccessibilityLabel="Dismiss"
+        media={<Pictogram dimension="48x48" name="giftbox" />}
+        mediaPlacement="end"
+        onActionButtonClick={() => alert('Action clicked!')}
+        onDismissButtonClick={() => alert('Dismissed')}
+        tag="New"
+        title="Complete Nudge Card"
+        type="nudge"
+        width={360}
+      />
+      <MessagingCard
+        {...exampleProps}
+        action={
+          <Button compact onClick={() => alert('Custom button clicked!')} variant="primary">
+            Custom Button
+          </Button>
+        }
+        description="Upsell card with custom action button"
+        media={
+          <RemoteImage
+            alt="Coinbase One promotional image"
+            height={156}
+            resizeMode="cover"
+            shape="rectangle"
+            source={coinbaseOneLogo}
+          />
+        }
+        mediaPlacement="end"
+        title="Custom Action Button"
+        type="upsell"
+      />
+      <MessagingCard
+        {...exampleProps}
+        action={
+          <HStack gap={1}>
+            <Button compact onClick={() => alert('Primary clicked!')} variant="secondary">
+              Primary
+            </Button>
+            <Button compact onClick={() => alert('Secondary clicked!')} variant="tertiary">
+              Secondary
+            </Button>
+          </HStack>
+        }
+        description="Nudge card with multiple custom buttons"
+        media={<Pictogram dimension="48x48" name="wallet" />}
+        mediaPlacement="end"
+        title="Multiple Action Buttons"
+        type="nudge"
       />
       <MessagingCard
         {...exampleProps}
@@ -191,8 +261,7 @@ export const Features = (): JSX.Element => {
         }
         media={
           <RemoteImage
-            alt="Media"
-            aria-hidden="true"
+            alt="Coinbase One promotional image"
             height={100}
             resizeMode="cover"
             shape="rectangle"
@@ -202,6 +271,32 @@ export const Features = (): JSX.Element => {
         mediaPlacement="end"
         title="Custom Dismiss Button"
         type="upsell"
+      />
+      <MessagingCard
+        {...exampleProps}
+        description="Nudge with custom dismiss button"
+        dismissButton={
+          <Box
+            style={{
+              position: 'absolute',
+              right: 0,
+              top: 0,
+              paddingTop: 'var(--space-2)',
+              paddingRight: 'var(--space-2)',
+            }}
+          >
+            <IconButton
+              accessibilityLabel="Custom dismiss"
+              name="close"
+              onClick={() => alert('Custom dismiss pressed!')}
+              variant="secondary"
+            />
+          </Box>
+        }
+        media={<Pictogram dimension="48x48" name="baseRocket" />}
+        mediaPlacement="end"
+        title="Custom Dismiss Nudge"
+        type="nudge"
       />
     </VStack>
   );
@@ -220,8 +315,7 @@ export const PolymorphicAndInteractive = (): JSX.Element => {
         {...exampleProps}
         media={
           <RemoteImage
-            alt="Media"
-            aria-hidden="true"
+            alt="Coinbase One promotional image"
             height={100}
             resizeMode="cover"
             shape="rectangle"
@@ -234,13 +328,13 @@ export const PolymorphicAndInteractive = (): JSX.Element => {
       <MessagingCard
         ref={anchorRef}
         renderAsPressable
+        aria-label="View interactive card details"
         as="a"
         description="Clickable card with href"
         href="https://www.google.com"
         media={
           <RemoteImage
-            alt="Media"
-            aria-hidden="true"
+            alt="Coinbase One promotional image"
             height={100}
             resizeMode="cover"
             shape="rectangle"
@@ -254,14 +348,27 @@ export const PolymorphicAndInteractive = (): JSX.Element => {
         width={320}
       />
       <MessagingCard
+        renderAsPressable
+        aria-label="View nudge details"
+        as="a"
+        description="Clickable nudge with href"
+        href="https://www.google.com"
+        media={<Pictogram dimension="48x48" name="baseRocket" />}
+        mediaPlacement="end"
+        target="_blank"
+        title="Interactive Nudge"
+        type="nudge"
+        width={320}
+      />
+      <MessagingCard
         ref={buttonRef}
         renderAsPressable
+        aria-label="View interactive card details"
         as="button"
         description="Clickable card with onClick handler"
         media={
           <RemoteImage
-            alt="Media"
-            aria-hidden="true"
+            alt="Coinbase One promotional image"
             height={100}
             resizeMode="cover"
             shape="rectangle"
@@ -272,6 +379,18 @@ export const PolymorphicAndInteractive = (): JSX.Element => {
         onClick={() => alert('Card clicked!')}
         title="Interactive Card"
         type="upsell"
+        width={320}
+      />
+      <MessagingCard
+        renderAsPressable
+        aria-label="View nudge details"
+        as="button"
+        description="Clickable nudge with onClick handler"
+        media={<Pictogram dimension="48x48" name="key" />}
+        mediaPlacement="end"
+        onClick={() => alert('Card clicked!')}
+        title="Interactive Nudge"
+        type="nudge"
         width={320}
       />
     </VStack>
@@ -287,8 +406,7 @@ export const TextContent = (): JSX.Element => {
         description="This is a very long description text that demonstrates how the card handles longer content and wraps appropriately within the card layout"
         media={
           <RemoteImage
-            alt="Media"
-            aria-hidden="true"
+            alt="Coinbase One promotional image"
             height={150}
             resizeMode="cover"
             shape="rectangle"
@@ -308,8 +426,7 @@ export const TextContent = (): JSX.Element => {
         }
         media={
           <RemoteImage
-            alt="Media"
-            aria-hidden="true"
+            alt="Coinbase One promotional image"
             height={130}
             resizeMode="cover"
             shape="rectangle"
@@ -334,6 +451,88 @@ export const TextContent = (): JSX.Element => {
   );
 };
 
+// Interactive Dismissible Cards
+const cards = [
+  {
+    id: '1',
+    title: 'Welcome to Coinbase',
+    description: 'Get started with your crypto journey',
+    type: 'upsell' as const,
+  },
+  {
+    id: '2',
+    title: 'Complete your profile',
+    description: 'Add your details to unlock more features',
+    type: 'nudge' as const,
+  },
+  {
+    id: '3',
+    title: 'Enable notifications',
+    description: 'Stay updated on market movements',
+    type: 'upsell' as const,
+  },
+  {
+    id: '4',
+    title: 'Invite friends',
+    description: 'Earn rewards when friends join',
+    type: 'nudge' as const,
+  },
+];
+
+export const DismissibleCards = (): JSX.Element => {
+  const [dismissedIds, setDismissedIds] = useState<Set<string>>(new Set());
+
+  const handleDismiss = (id: string) => {
+    setDismissedIds((prev) => new Set(prev).add(id));
+  };
+
+  const handleReset = () => {
+    setDismissedIds(new Set());
+  };
+
+  const visibleCards = cards.filter((card) => !dismissedIds.has(card.id));
+
+  return (
+    <VStack gap={2}>
+      <HStack flexWrap="wrap" gap={2}>
+        {visibleCards.map((card) => (
+          <MessagingCard
+            key={card.id}
+            description={card.description}
+            dismissButtonAccessibilityLabel={`Dismiss ${card.title}`}
+            media={
+              card.type === 'upsell' ? (
+                <RemoteImage
+                  alt="Coinbase One promotional image"
+                  height={100}
+                  resizeMode="cover"
+                  shape="rectangle"
+                  source={coinbaseOneLogo}
+                />
+              ) : (
+                <Pictogram dimension="48x48" name="addToWatchlist" />
+              )
+            }
+            mediaPlacement="end"
+            onDismissButtonClick={() => handleDismiss(card.id)}
+            title={card.title}
+            type={card.type}
+            width={360}
+          />
+        ))}
+        {visibleCards.length === 0 && (
+          <Text color="fgNegative" font="label1">
+            All cards dismissed!
+          </Text>
+        )}
+      </HStack>
+      <Button onClick={handleReset} variant="tertiary">
+        Reset Cards
+      </Button>
+    </VStack>
+  );
+};
+
 export const MultipleCards = (): JSX.Element => {
   const ref1 = useRef<HTMLAnchorElement>(null);
   const ref2 = useRef<HTMLButtonElement>(null);
@@ -346,9 +545,8 @@ export const MultipleCards = (): JSX.Element => {
           description="Non-interactive card"
           media={
             <RemoteImage
-              alt="Media"
-              aria-hidden="true"
-              height={100}
+              alt="Coinbase One promotional image"
+              height={108}
               resizeMode="cover"
               shape="rectangle"
               source={coinbaseOneLogo}
@@ -363,6 +561,7 @@ export const MultipleCards = (): JSX.Element => {
         <MessagingCard
           ref={ref1}
           renderAsPressable
+          aria-label="View Card 2 details"
           as="a"
           description="Clickable card with href"
           href="https://www.google.com"
@@ -378,12 +577,12 @@ export const MultipleCards = (): JSX.Element => {
         <MessagingCard
           ref={ref2}
           renderAsPressable
+          aria-label="View Card 3 details"
           as="button"
           description="Card with onClick handler"
           media={
             <RemoteImage
-              alt="Media"
-              aria-hidden="true"
+              alt="Coinbase One promotional image"
               height={108}
               resizeMode="cover"
               shape="rectangle"

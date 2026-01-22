@@ -30,20 +30,13 @@ export const DataCard = memo(
         thumbnail,
         children,
         layout,
-        renderAsPressable,
         style,
         styles: { root: rootStyle, ...layoutStyles } = {},
         ...props
       },
       ref,
     ) => (
-      <CardRoot
-        ref={ref}
-        renderAsPressable={renderAsPressable}
-        style={[style, rootStyle]}
-        {...dataCardContainerProps}
-        {...props}
-      >
+      <CardRoot ref={ref} style={[style, rootStyle]} {...dataCardContainerProps} {...props}>
         <DataCardLayout
           layout={layout}
           styles={layoutStyles}

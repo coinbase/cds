@@ -5,9 +5,9 @@ import { Tag } from '../../tag/Tag';
 import { Text } from '../../typography';
 
 export type DataCardLayoutBaseProps = {
-  /** Text or React node to display as the card title. When a string is provided, it will be rendered in a CardTitle component. */
+  /** Text or React node to display as the card title. Use a Text component to override default color and font. */
   title: React.ReactNode;
-  /** Text or React node to display as the card subtitle. When a string is provided, it will be rendered in a CardSubtitle component. */
+  /** Text or React node to display as the card subtitle. Use a Text component to override default color and font. */
   subtitle?: React.ReactNode;
   /** React node to display as a title accessary. */
   titleAccessory?: React.ReactNode;
@@ -48,7 +48,7 @@ export const DataCardLayout = memo(
     const titleNode = useMemo(() => {
       if (typeof title === 'string') {
         return (
-          <Text as="h3" font="headline" numberOfLines={2}>
+          <Text font="headline" numberOfLines={2}>
             {title}
           </Text>
         );
@@ -78,8 +78,9 @@ export const DataCardLayout = memo(
     const headerSpacingProps = useMemo(() => {
       return {
         flexDirection: layout === 'horizontal' ? 'column' : 'row',
-        gap: layout === 'horizontal' ? 1.5 : 1,
+        gap: layout === 'horizontal' ? 2 : 1.5,
         alignItems: layout === 'horizontal' ? 'flex-start' : 'center',
+        justifyContent: layout === 'horizontal' ? 'space-between' : 'flex-start',
       } as const;
     }, [layout]);
 
@@ -93,7 +94,6 @@ export const DataCardLayout = memo(
         <Box
           flexGrow={1}
           {...headerSpacingProps}
-          as="header"
           className={classNames?.headerContainer}
           style={styles?.headerContainer}
         >
