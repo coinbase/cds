@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.38.4 (1/22/2026 PST)
+
+#### 🐞 Fixes
+
+- Fixed spacing props not working on web Button.
+
 ## 8.38.3 (1/22/2026 PST)
 
 #### 🐞 Fixes
