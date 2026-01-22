@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.38.5 (1/23/2026 PST)
+
+#### 🐞 Fixes
+
+- Update ARIA labels used for Select and Combobox. [[#250](https://github.com/coinbase/cds/pull/250)]
+
 ## 8.38.4 ((1/22/2026, 01:55 PM PST))
 
 This is an artificial version bump with no new change.

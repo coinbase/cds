@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.38.5 (1/23/2026 PST)
+
+#### 🐞 Fixes
+
+- Improve keyboard navigation and ARIA labels on Select and Combobox. [[#250](https://github.com/coinbase/cds/pull/250)]
+
 ## 8.38.4 (1/22/2026 PST)
 
 #### 🐞 Fixes
