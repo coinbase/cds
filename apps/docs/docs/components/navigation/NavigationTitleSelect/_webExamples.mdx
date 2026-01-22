@@ -1,23 +1,170 @@
-### Basic usage
+NavigationTitleSelect wraps a [Dropdown](/components/layout/Dropdown) to create a context-switching control styled as a navigation title. Use it to let users switch between accounts, portfolios, or other contexts in a header.
 
-```tsx live
-function Example() {
+## Basics
+
+Provide an array of `options` with `label` and `id` fields, a `value` matching the selected option's `id`, and an `onChange` handler.
+
+```jsx live
+function BasicExample() {
   const options = [
     { label: 'My Portfolio', id: 'portfolio' },
     { label: 'Family Account', id: 'family' },
     { label: 'Business Account', id: 'business' },
   ];
-  const [selected, setSelected] = useState('portfolio');
+  const [value, setValue] = useState('portfolio');
 
   return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+    <NavigationTitleSelect
+      options={options}
+      value={value}
+      onChange={setValue}
+      accessibilityLabel="Switch account"
+    />
+  );
+}
+```
+
+## Custom Labels
+
+Option labels can be React nodes for richer content, such as displaying an icon alongside text.
+
+```jsx live
+function CustomLabelExample() {
+  const options = [
+    {
+      label: (
+        <HStack alignItems="center" gap={1}>
+          <Icon name="wallet" size="s" />
+          <Text font="title1">Personal Wallet</Text>
+        </HStack>
+      ),
+      id: 'personal',
+    },
+    {
+      label: (
+        <HStack alignItems="center" gap={1}>
+          <Icon name="users" size="s" />
+          <Text font="title1">Shared Vault</Text>
+        </HStack>
+      ),
+      id: 'shared',
+    },
+  ];
+  const [value, setValue] = useState('personal');
+
+  return (
+    <NavigationTitleSelect
+      options={options}
+      value={value}
+      onChange={setValue}
+      accessibilityLabel="Switch wallet type"
+    />
+  );
+}
+```
+
+## Styling
+
+### Color
+
+Use `color` to customize the text and caret icon color. Any valid CDS design token color works.
+
+```jsx live
+function ColorExample() {
+  const options = [
+    { label: 'Assets', id: 'assets' },
+    { label: 'Activity', id: 'activity' },
+  ];
+  const [value, setValue] = useState('assets');
+
+  return (
+    <HStack gap={4} alignItems="center" flexWrap="wrap">
       <NavigationTitleSelect
         options={options}
-        value={selected}
-        onChange={setSelected}
-        accessibilityLabel="Switch account"
+        value={value}
+        onChange={setValue}
+        color="fg"
+        accessibilityLabel="View selector"
       />
-    </div>
+      <NavigationTitleSelect
+        options={options}
+        value={value}
+        onChange={setValue}
+        color="fgMuted"
+        accessibilityLabel="View selector"
+      />
+      <NavigationTitleSelect
+        options={options}
+        value={value}
+        onChange={setValue}
+        color="fgPrimary"
+        accessibilityLabel="View selector"
+      />
+    </HStack>
+  );
+}
+```
+
+### Font
+
+Use `font` to adjust the typography. The default is `title1`.
+
+```jsx live
+function FontExample() {
+  const options = [
+    { label: 'Dashboard', id: 'dashboard' },
+    { label: 'Settings', id: 'settings' },
+  ];
+  const [value, setValue] = useState('dashboard');
+
+  return (
+    <VStack gap={3} alignItems="flex-start">
+      <NavigationTitleSelect
+        options={options}
+        value={value}
+        onChange={setValue}
+        font="title1"
+        accessibilityLabel="Page selector"
+      />
+      <NavigationTitleSelect
+        options={options}
+        value={value}
+        onChange={setValue}
+        font="title2"
+        accessibilityLabel="Page selector"
+      />
+      <NavigationTitleSelect
+        options={options}
+        value={value}
+        onChange={setValue}
+        font="headline"
+        accessibilityLabel="Page selector"
+      />
+    </VStack>
+  );
+}
+```
+
+## Accessibility
+
+Always provide `accessibilityLabel` to describe the purpose of the select for screen readers. The component manages focus and keyboard navigation through the underlying [Dropdown](/components/layout/Dropdown).
+
+```jsx live
+function AccessibilityExample() {
+  const accounts = [
+    { label: 'Checking ••4521', id: 'checking' },
+    { label: 'Savings ••8832', id: 'savings' },
+    { label: 'Investment ••2109', id: 'investment' },
+  ];
+  const [account, setAccount] = useState('checking');
+
+  return (
+    <NavigationTitleSelect
+      options={accounts}
+      value={account}
+      onChange={setAccount}
+      accessibilityLabel="Select bank account"
+    />
   );
 }
 ```

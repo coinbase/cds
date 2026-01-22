@@ -95,7 +95,9 @@ setting `label` on Scrubber displays a label above the scrubber line.
 
 ## Pulsing
 
-Setting `idlePulse` to `true` will cause the scrubber beacons to pulse when the user is not actively scrubbing.
+Pulses will show even when animation is disabled for the chart or scrubber.
+
+Set `idlePulse` to cause scrubber beacons to pulse when the user is not actively scrubbing.
 
 ```jsx live
 <LineChart
@@ -149,60 +151,36 @@ function ImperativeHandle() {
 
 ### Beacons
 
-You can use `BeaconComponent` to customize the visual appearance of scrubber beacons.
+You can use the `beaconStroke` prop to customize the stroke color of the scrubber beacon.
+
+```jsx live
+<Box borderRadius={300} padding={2} style={{ background: 'rgb(var(--red40))' }}>
+  <LineChart
+    enableScrubbing
+    showArea
+    height={{ base: 150, tablet: 200, desktop: 250 }}
+    series={[
+      {
+        id: 'prices',
+        data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+        color: 'rgb(var(--gray0))',
+      },
+    ]}
+  >
+    <Scrubber
+      idlePulse
+      hideOverlay
+      lineStroke="rgb(var(--gray0))"
+      beaconStroke="rgb(var(--red40))"
+    />
+  </LineChart>
+</Box>
+```
+
+For more advanced customizations, you can pass a custom component to `BeaconComponent`.
 
 ```jsx live
 function OutlineBeacon() {
-  // Simple outline beacon with no pulse animation
-  const OutlineBeaconComponent = memo(
-    forwardRef(({ dataX, dataY, seriesId, color, isIdle }: ScrubberBeaconProps, ref) => {
-      const { getSeries, getXScale, getYScale } = useCartesianChartContext();
-      const targetSeries = getSeries(seriesId);
-      const xScale = getXScale();
-      const yScale = getYScale(targetSeries?.yAxisId);
-
-      const pixelCoordinate = useMemo(() => {
-        if (!xScale || !yScale) return;
-        return projectPoint({ x: dataX, y: dataY, xScale, yScale });
-      }, [dataX, dataY, xScale, yScale]);
-
-      // Provide a no-op pulse implementation for simple beacons
-      useImperativeHandle(ref, () => ({ pulse: () => {} }), []);
-
-      if (!pixelCoordinate) return;
-
-      if (isIdle) {
-        return (
-          <>
-            <m.circle
-              animate={{ cx: pixelCoordinate.x, cy: pixelCoordinate.y }}
-              cx={pixelCoordinate.x}
-              cy={pixelCoordinate.y}
-              transition={defaultTransition}
-              r={6}
-              fill={color}
-            />
-            <m.circle
-              animate={{ cx: pixelCoordinate.x, cy: pixelCoordinate.y }}
-              cx={pixelCoordinate.x}
-              cy={pixelCoordinate.y}
-              transition={defaultTransition}
-              r={3}
-              fill="var(--color-bg)"
-            />
-          </>
-        );
-      }
-
-      return (
-        <>
-          <circle cx={pixelCoordinate.x} cy={pixelCoordinate.y} r={6} fill={color} />
-          <circle cx={pixelCoordinate.x} cy={pixelCoordinate.y} r={3} fill="var(--color-bg)" />
-        </>
-      );
-    }),
-  );
-
   const dataCount = 14;
   const minDataValue = 0;
   const maxDataValue = 100;
@@ -240,6 +218,18 @@ function OutlineBeacon() {
     return data;
   }
 
+  const InvertedBeacon = useMemo(
+    () => (props) => (
+      <DefaultScrubberBeacon
+        {...props}
+        stroke="var(--color-fg)"
+        color="var(--color-bg)"
+        radius={5}
+        strokeWidth={3}
+      />
+    ),
+    [],
+  );
 
   const OutlineBeaconChart = memo(() => {
     const [data, setData] = useState(generateInitialData);
@@ -274,10 +264,10 @@ function OutlineBeacon() {
         }}
         yAxis={{
           showGrid: true,
-          domain: { min: 0, max: 100 }
+          domain: { min: 0, max: 100 },
         }}
       >
-        <Scrubber BeaconComponent={OutlineBeaconComponent} />
+        <Scrubber BeaconComponent={InvertedBeacon} />
       </LineChart>
     );
   });

@@ -1,7 +1,7 @@
 {
   "import": "import { FullscreenAlert } from '@coinbase/cds-web/overlays/alert/FullscreenAlert'",
   "source": "https://github.com/coinbase/cds/blob/master/packages/web/src/overlays/FullscreenAlert.tsx",
-  "storybook": "https://cds-storybook.coinbase.com/?path=/story/components-fullscreenalert--basic-fullscreen-alert",
+  "storybook": "https://cds-storybook.coinbase.com/?path=/story/components-fullscreenalert--basic",
   "figma": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/%E2%9C%A8-CDS-Components?node-id=68-1053",
   "description": "A fullscreen alert component for displaying important messages that require user attention.",
   "relatedComponents": [

@@ -3,11 +3,15 @@
   "source": "https://github.com/coinbase/cds/blob/master/packages/web/src/navigation/SidebarItem.tsx",
   "storybook": "https://cds-storybook.coinbase.com/?path=/story/components-navigation-sidebaritem--sidebar-item-default",
   "figma": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/%E2%9C%A8-CDS-Components?node-id=155-12187",
-  "description": "SidebarItem represents a single navigation item within the Sidebar component.",
+  "description": "A navigation item component designed to work within a Sidebar.",
   "relatedComponents": [
     {
       "label": "Sidebar",
       "url": "/components/navigation/Sidebar/"
+    },
+    {
+      "label": "SidebarMoreMenu",
+      "url": "/components/navigation/SidebarMoreMenu/"
     }
   ],
   "dependencies": []

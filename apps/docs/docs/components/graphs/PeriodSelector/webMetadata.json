@@ -1,6 +1,7 @@
 {
   "import": "import { PeriodSelector } from '@coinbase/cds-web-visualization'",
   "source": "https://github.com/coinbase/cds/blob/master/packages/web-visualization/src/chart/PeriodSelector.tsx",
+  "storybook": "https://cds-storybook.coinbase.com/?path=/story/components-chart-periodselector--all",
   "description": "A selector component for choosing time periods in charts.",
   "relatedComponents": [
     {

@@ -20,13 +20,13 @@ import { buildTransition, defaultTransition, type Transition } from '../utils/tr
 
 import type { ScrubberBeaconProps, ScrubberBeaconRef } from './Scrubber';
 
-const radius = 5;
-const strokeWidth = 2;
+const defaultRadius = 5;
+const defaultStrokeWidth = 2;
 
 const pulseOpacityStart = 0.5;
 const pulseOpacityEnd = 0;
-const pulseRadiusStart = 10;
-const pulseRadiusEnd = 15;
+const pulseRadiusStartMultiplier = 2;
+const pulseRadiusEndMultiplier = 3;
 
 const defaultPulseTransition: Transition = {
   type: 'timing',
@@ -36,7 +36,18 @@ const defaultPulseTransition: Transition = {
 
 const defaultPulseRepeatDelay = 400;
 
-export type DefaultScrubberBeaconProps = ScrubberBeaconProps;
+export type DefaultScrubberBeaconProps = ScrubberBeaconProps & {
+  /**
+   * Radius of the beacon circle.
+   * @default 5
+   */
+  radius?: number;
+  /**
+   * Stroke width of the beacon circle.
+   * @default 2
+   */
+  strokeWidth?: number;
+};
 
 export const DefaultScrubberBeacon = memo(
   forwardRef<ScrubberBeaconRef, DefaultScrubberBeaconProps>(
@@ -51,6 +62,9 @@ export const DefaultScrubberBeacon = memo(
         animate = true,
         transitions,
         opacity: opacityProp = 1,
+        radius = defaultRadius,
+        stroke,
+        strokeWidth = defaultStrokeWidth,
       },
       ref,
     ) => {
@@ -82,6 +96,9 @@ export const DefaultScrubberBeacon = memo(
         () => transitions?.pulseRepeatDelay ?? defaultPulseRepeatDelay,
         [transitions?.pulseRepeatDelay],
       );
+
+      const pulseRadiusStart = radius * pulseRadiusStartMultiplier;
+      const pulseRadiusEnd = radius * pulseRadiusEndMultiplier;
 
       const pulseOpacity = useSharedValue(0);
       const pulseRadius = useSharedValue(pulseRadiusStart);
@@ -149,15 +166,20 @@ export const DefaultScrubberBeacon = memo(
             }
           },
         }),
-        [idlePulseShared, pulseOpacity, pulseRadius, pulseTransition],
+        [
+          idlePulseShared,
+          pulseOpacity,
+          pulseRadius,
+          pulseTransition,
+          pulseRadiusStart,
+          pulseRadiusEnd,
+        ],
       );
 
       // Watch idlePulse changes and control continuous pulse
       useAnimatedReaction(
         () => idlePulseShared.value,
-        (current, previous) => {
-          if (!animate) return;
-
+        (current) => {
           if (current) {
             // Start continuous pulse when idlePulse is enabled
             pulseOpacity.value = pulseOpacityStart;
@@ -188,7 +210,7 @@ export const DefaultScrubberBeacon = memo(
             pulseRadius.value = pulseRadiusStart;
           }
         },
-        [animate, pulseTransition, pulseRepeatDelay],
+        [pulseTransition, pulseRepeatDelay, pulseRadiusStart, pulseRadiusEnd],
       );
 
       const pulseVisibility = useDerivedValue(() => {
@@ -211,7 +233,7 @@ export const DefaultScrubberBeacon = memo(
       return (
         <Group opacity={beaconOpacity}>
           <Circle c={animatedPoint} color={color} opacity={pulseVisibility} r={pulseRadius} />
-          <Circle c={animatedPoint} color={theme.color.bg} r={radius + strokeWidth / 2} />
+          <Circle c={animatedPoint} color={stroke ?? theme.color.bg} r={radius + strokeWidth / 2} />
           <Circle c={animatedPoint} color={color} r={radius - strokeWidth / 2} />
         </Group>
       );

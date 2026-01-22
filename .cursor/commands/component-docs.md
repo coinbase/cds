@@ -40,7 +40,8 @@ Review these before writing to ensure consistency in style, structure, and depth
 
 When writing examples, reference these files for valid values:
 
-- **Icon names** (`packages/icons/src/IconName.ts`) - All valid icon names for the `icon` prop (e.g., `'checkmark'`, `'close'`, `'warning'`)
+- **Icon names** (`packages/icons/src/IconName.ts`) - All valid icon names (e.g., `'checkmark'`, `'close'`, `'warning'`)
+- **Design tokens** - Follow `.cursor/rules/react-component-development.mdc` for valid CDS design token values (Color, Space, BorderRadius, Font, etc.)
 
 ## Step 2: Research Phase (for new docs or major updates)
 
@@ -75,6 +76,8 @@ Also check visualization packages if applicable:
 
 - `packages/web-visualization/src/...`
 - `packages/mobile-visualization/src/...`
+
+Also check for Storybook stories (`packages/*/src/**/__stories__/[ComponentName].stories.tsx`). If one exists, add the `storybook` field to webMetadata.json.
 
 ## Step 4: Required Setup Steps (for new docs only)
 
@@ -182,7 +185,7 @@ apps/docs/docs/components/[docs-category]/[ComponentName]/
 **Notes:**
 
 - `description` should be the full component description - what the component is and when to use it (e.g., "A non-intrusive notification component that temporarily displays brief messages at the bottom of the screen.")
-- `figma` and `storybook` fields are optional - only add if provided
+- `figma` and `storybook` fields are optional - only add if provided (check for story files in `packages/web/src/**/__stories__/`)
 - `dependencies` is optional - only include if the component imports from external packages that are peer dependencies. To determine:
   1. Check the component's source file for imports from external packages (e.g., `framer-motion`)
   2. Cross-reference those imports with `peerDependencies` in `packages/web/package.json`
@@ -356,9 +359,8 @@ Examples should follow this recommended structure:
 
 1. **Brief intro** - A short functional note (NOT the full description - that goes in metadata). Mention what the component uses/wraps or key dependencies.
 2. **Basics** - Simplest usage explaining how to use the core API
-3. **Feature sections** - Group related functionality (Data, Interaction, Styling, etc.)
+3. **Feature sections** - Group related functionality by topic (e.g., Styling with Color/Sizing subsections)
 4. **Accessibility** - How to make the component accessible
-5. **Composed Examples** - Real-world use cases combining multiple features
 
 **Important:** Do NOT repeat the full component description from metadata in the examples. The examples should focus on _how_ to use the component, not _what_ it is.
 
@@ -391,6 +393,24 @@ Web examples use `jsx live` blocks which render interactively in the browser. Fo
 />
 ```
 
+## Styling
+
+### Color
+
+[Show color customization options]
+
+```jsx live
+<[ComponentName] color="fgPrimary" />
+```
+
+### Sizing
+
+[Show sizing options]
+
+```jsx live
+<[ComponentName] size="large" />
+```
+
 ## Accessibility
 
 Use `accessibilityLabel` to provide context for screen readers. When [specific scenario], also consider [accessibility guidance].
@@ -400,36 +420,6 @@ Use `accessibilityLabel` to provide context for screen readers. When [specific s
   accessibilityLabel="Descriptive label for screen readers"
   requiredProp="value"
 />
-```
-
-## Composed Examples
-
-### [Real-World Use Case Name]
-
-[Brief description of what this example demonstrates]
-
-```jsx live
-function [UseCaseName]() {
-  // Use hooks at the top
-  const [state, setState] = useState(initialValue);
-
-  // Memoize expensive computations
-  const computedValue = useMemo(() => {
-    return expensiveComputation(state);
-  }, [state]);
-
-  // Memoize callbacks passed to children
-  const handleEvent = useCallback(() => {
-    // handle event
-  }, []);
-
-  return (
-    <[ComponentName]
-      prop={computedValue}
-      onEvent={handleEvent}
-    />
-  );
-}
 ```
 ````
 
@@ -462,6 +452,24 @@ Mobile examples use static `jsx` blocks only. **Do not use `jsx live`** - React 
 />
 ```
 
+## Styling
+
+### Color
+
+[Show color customization options]
+
+```jsx
+<[ComponentName] color="fgPrimary" />
+```
+
+### Sizing
+
+[Show sizing options]
+
+```jsx
+<[ComponentName] size="large" />
+```
+
 ## Accessibility
 
 Use `accessibilityLabel` to provide context for screen readers.
@@ -471,28 +479,6 @@ Use `accessibilityLabel` to provide context for screen readers.
   accessibilityLabel="Descriptive label for screen readers"
   requiredProp="value"
 />
-```
-
-## Composed Examples
-
-### [Real-World Use Case Name]
-
-[Brief description of what this example demonstrates]
-
-```jsx
-function [UseCaseName]() {
-  const [state, setState] = useState(initialValue);
-
-  const computedValue = useMemo(() => {
-    return expensiveComputation(state);
-  }, [state]);
-
-  return (
-    <[ComponentName]
-      prop={computedValue}
-    />
-  );
-}
 ```
 ````
 
@@ -505,11 +491,12 @@ function [UseCaseName]() {
 - **Memoize with `useCallback`** for event handlers passed as props
 - **Include accessibility labels** in interactive examples
 - **Format values for display** using `Intl.NumberFormat`, `Intl.DateTimeFormat`, etc.
+- **Ensure live examples are responsive** - The doc site can be viewed on mobile viewports, so examples should render well at narrow widths (e.g., add `flexWrap="wrap"` to HStacks with multiple items)
 
 ### Documentation Quality
 
 - **Start with introductory prose** explaining what the component does before any code
-- **Progress from simple to complex** - basic examples first, composed examples last
+- **Progress from simple to complex** - basic examples first, advanced examples last
 - **Cross-reference related components** using markdown links: `[ComponentName](/components/category/ComponentName)`
 - **Explain the "why"** not just the "how" - help users understand when to use each feature
 - **Show edge cases** like empty states, loading states, error states, missing data
@@ -519,12 +506,11 @@ function [UseCaseName]() {
 Depending on the component, consider including these sections:
 
 - **Setup** - Prerequisites or providers needed (especially for mobile)
-- **Data** - How to pass and format data
-- **Interaction** - User interaction patterns (click, hover, touch, etc.)
-- **Animations** - Motion and transition options
-- **Styling** - Customization and theming options
-- **Sizing** - Responsive and fixed sizing options
-- **Composed Examples** - Real-world use cases
+- **Basics** - Core API usage
+- **Feature-specific sections** - Group related functionality (e.g., if the component works with other components, show that integration)
+- **Styling** - Color, Sizing, and other customization options as subsections
+- **Accessibility** - Screen reader support, keyboard navigation, etc.
+- **Composed Examples** - Used for complex components where showing real-world patterns that combine multiple features into new component compositions adds significant value.
 
 ## Final Checklist
 
@@ -539,12 +525,13 @@ Before completing, verify:
 - [ ] Props tables import from correct package with correct variable names
 - [ ] Examples start with introductory prose
 - [ ] Examples include accessibility guidance
-- [ ] Examples progress from basic to composed
+- [ ] Examples progress from basic to advanced
 - [ ] Web examples use `jsx live` (or `jsx` for short snippets); mobile examples use `jsx` only (no `live`)
 - [ ] ComponentTabsContainer includes only existing platform props
 - [ ] All imports use correct source categories
 - [ ] Component description is clear and helpful
-- [ ] Added optional storybook/figma links if provided
+- [ ] Added storybook/figma links if story files exist or links are provided
+- [ ] Design token values are valid (reference `.cursor/rules/react-component-development.mdc`)
 
 ## Additional Notes
 
