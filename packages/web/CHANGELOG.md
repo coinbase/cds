@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.38.3 (1/22/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: destructure unused props from default horizontal stepper components to prevent dev mode React warnings. [[#324](https://github.com/coinbase/cds/pull/324)]
+
 ## 8.38.2 (1/22/2026 PST)
 
 #### 🐞 Fixes
