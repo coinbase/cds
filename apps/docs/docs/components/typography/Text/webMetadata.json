@@ -1,7 +1,7 @@
 {
   "import": "import { Text } from '@coinbase/cds-web/typography/Text'",
   "source": "https://github.com/coinbase/cds/blob/master/packages/web/src/typography/Text.tsx",
-  "storybook": "https://cds-storybook.coinbase.com/?path=/story/components-text-text--default",
+  "storybook": "https://cds-storybook.coinbase.com/?path=/story/components-text-tsx--normal",
   "description": "A generic text element.",
   "relatedComponents": [
     {

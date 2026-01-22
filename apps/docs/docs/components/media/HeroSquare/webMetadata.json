@@ -2,7 +2,7 @@
   "import": "import { HeroSquare } from '@coinbase/cds-web/illustrations/HeroSquare'",
   "changelog": "https://github.com/coinbase/cds/blob/master/packages/illustrations/CHANGELOG.md",
   "source": "https://github.com/coinbase/cds/blob/master/packages/web/src/illustrations/HeroSquare.tsx",
-  "storybook": "https://cds-storybook.coinbase.com/?path=/story/components-herosquare--default",
+  "storybook": "https://cds-storybook.coinbase.com/?path=/story/illustrations--hero-square",
   "figma": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/%E2%9C%A8-CDS-Components?node-id=68-975",
   "description": "Displays a square-shaped hero illustration.",
   "relatedComponents": [

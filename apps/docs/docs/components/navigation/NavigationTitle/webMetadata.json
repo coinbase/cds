@@ -1,7 +1,7 @@
 {
   "import": "import { NavigationTitle } from '@coinbase/cds-web/navigation/NavigationTitle'",
   "source": "https://github.com/coinbase/cds/blob/master/packages/web/src/navigation/NavigationTitle.tsx",
-  "storybook": "https://cds-storybook.coinbase.com/?path=/story/components-navigation-navigationtitle--navigation-title-default",
+  "storybook": "https://cds-storybook.coinbase.com/?path=/story/components-navigation-navigationtitle--default",
   "figma": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/%E2%9C%A8-CDS-Components?node-id=155-12187",
   "description": "Navigation Title is used to display the current page or section title in the Navigation Bar.",
   "relatedComponents": [
