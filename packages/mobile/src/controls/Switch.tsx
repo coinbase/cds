@@ -1,12 +1,12 @@
 import React, { forwardRef, memo, useMemo } from 'react';
 import { StyleSheet, type View } from 'react-native';
+import type { ElevationLevels } from '@coinbase/cds-common';
 
 import { useTheme } from '../hooks/useTheme';
 import { Box } from '../layout/Box';
 import { Interactable } from '../system/Interactable';
 
 import { Control, type ControlBaseProps, type ControlIconProps } from './Control';
-import type { ElevationLevels } from '@coinbase/cds-common';
 
 export type SwitchBaseProps<T extends string> = Omit<ControlBaseProps<T>, 'style'>;
 

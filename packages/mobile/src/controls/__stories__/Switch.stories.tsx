@@ -62,7 +62,7 @@ const SwitchScreen = () => {
         {() => {
           const toggleChecked = () => setIsChecked3((prevChecked) => !prevChecked);
           return (
-            <Switch elevation={1} checked={isChecked3} onChange={toggleChecked}>
+            <Switch checked={isChecked3} elevation={1} onChange={toggleChecked}>
               Elevation
             </Switch>
           );
