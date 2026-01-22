@@ -17,6 +17,8 @@ import { Text } from '../typography/Text';
 
 const COMPONENT_STATIC_CLASSNAME = 'cds-Button';
 
+const DEFAULT_MIN_WIDTH = 100;
+
 export const spinnerHeight = 2.5;
 
 const baseCss = css`
@@ -204,9 +206,10 @@ export const Button: ButtonComponent = memo(
         borderWidth = 100,
         borderRadius = compact ? 700 : 900,
         accessibilityLabel,
-        paddingX,
         padding,
-        margin,
+        paddingX = padding ?? (compact ? 2 : 4),
+        margin = 0,
+        minWidth = compact ? 'auto' : DEFAULT_MIN_WIDTH,
         ...props
       }: ButtonProps<AsComponent>,
       ref?: Polymorphic.Ref<AsComponent>,
@@ -250,11 +253,11 @@ export const Button: ButtonComponent = memo(
           data-variant={variant}
           height={height}
           loading={loading}
-          margin={margin ?? 0}
-          minWidth={compact ? 'auto' : 100}
+          margin={margin}
+          minWidth={minWidth}
           noScaleOnPress={noScaleOnPress}
           padding={padding}
-          paddingX={paddingX ?? padding ?? (compact ? 2 : 4)}
+          paddingX={paddingX}
           transparentWhileInactive={transparent}
           {...props}
         >
