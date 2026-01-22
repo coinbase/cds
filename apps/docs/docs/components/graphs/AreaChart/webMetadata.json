@@ -1,6 +1,7 @@
 {
   "import": "import { AreaChart } from '@coinbase/cds-web-visualization'",
   "source": "https://github.com/coinbase/cds/blob/master/packages/web-visualization/src/chart/area/AreaChart.tsx",
+  "storybook": "https://cds-storybook.coinbase.com/?path=/story/components-chart-areachart--all",
   "description": "A chart component that displays data as filled areas beneath lines. Ideal for showing cumulative values, stacked data, or emphasizing volume over time.",
   "relatedComponents": [
     {

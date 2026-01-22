@@ -1,6 +1,7 @@
 {
   "import": "import { NavigationTitleSelect } from '@coinbase/cds-web/navigation/NavigationTitleSelect'",
   "source": "https://github.com/coinbase/cds/blob/master/packages/web/src/navigation/NavigationTitleSelect.tsx",
+  "storybook": "https://cds-storybook.coinbase.com/?path=/story/components-navigation-navigationtitleselect--default",
   "description": "A select component styled as a navigation title, allowing users to switch between different views or contexts from the header. It uses a Dropdown to display options.",
   "relatedComponents": [
     {
