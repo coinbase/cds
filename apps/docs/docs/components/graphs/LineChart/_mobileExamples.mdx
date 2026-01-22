@@ -1588,66 +1588,17 @@ function MonotoneAssetPrice() {
     [],
   );
 
-  const CustomScrubberBeacon = memo(
-    forwardRef(({ dataX, dataY, seriesId, isIdle, animate = true }: ScrubberBeaconProps, ref) => {
-      const { getSeries, getXSerializableScale, getYSerializableScale } =
-        useCartesianChartContext();
-
-      const targetSeries = useMemo(() => getSeries(seriesId), [getSeries, seriesId]);
-      const xScale = useMemo(() => getXSerializableScale(), [getXSerializableScale]);
-      const yScale = useMemo(
-        () => getYSerializableScale(targetSeries?.yAxisId),
-        [getYSerializableScale, targetSeries?.yAxisId],
-      );
-
-      const animatedX = useSharedValue(0);
-      const animatedY = useSharedValue(0);
-
-      // Provide a no-op pulse implementation for simple beacons
-      useImperativeHandle(ref, () => ({ pulse: () => {} }), []);
-
-      // Calculate the target point position - project data to pixels
-      const targetPoint = useDerivedValue(() => {
-        if (!xScale || !yScale) return { x: 0, y: 0 };
-        return projectPointWithSerializableScale({
-          x: unwrapAnimatedValue(dataX),
-          y: unwrapAnimatedValue(dataY),
-          xScale,
-          yScale,
-        });
-      }, [dataX, dataY, xScale, yScale]);
-
-      useAnimatedReaction(
-        () => {
-          return { point: targetPoint.value, isIdle: unwrapAnimatedValue(isIdle) };
-        },
-        (current, previous) => {
-          // When animation is disabled, on initial render, or when we are starting,
-          // continuing, or finishing scrubbing we should immediately transition
-          if (!animate || previous === null || !previous.isIdle || !current.isIdle) {
-            animatedX.value = current.point.x;
-            animatedY.value = current.point.y;
-            return;
-          }
-
-          animatedX.value = buildTransition(current.point.x, defaultTransition);
-          animatedY.value = buildTransition(current.point.y, defaultTransition);
-        },
-        [animate],
-      );
-
-      // Create animated point using the animated values
-      const animatedPoint = useDerivedValue(() => {
-        return { x: animatedX.value, y: animatedY.value };
-      }, [animatedX, animatedY]);
-
-      return (
-        <>
-          <Circle c={animatedPoint} color={theme.color.bg} r={5} />
-          <Circle c={animatedPoint} color={theme.color.fg} r={5} strokeWidth={3} style="stroke" />
-        </>
-      );
-    }),
+  const InvertedBeacon = useMemo(
+    () => (props) => (
+      <DefaultScrubberBeacon
+        {...props}
+        stroke={theme.color.fg}
+        color={theme.color.bg}
+        radius={5}
+        strokeWidth={3}
+      />
+    ),
+    [theme.color.fg, theme.color.bg],
   );
 
   return (
@@ -1682,11 +1633,11 @@ function MonotoneAssetPrice() {
       }}
     >
       <Scrubber
-        labelElevated
         hideOverlay
-        BeaconComponent={CustomScrubberBeacon}
+        BeaconComponent={InvertedBeacon}
         LineComponent={SolidLine}
         label={scrubberLabel}
+        labelElevated
       />
     </LineChart>
   );
