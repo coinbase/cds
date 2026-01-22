@@ -489,6 +489,7 @@ Use `accessibilityLabel` to provide context for screen readers.
 - **Memoize with `useCallback`** for event handlers passed as props
 - **Include accessibility labels** in interactive examples
 - **Format values for display** using `Intl.NumberFormat`, `Intl.DateTimeFormat`, etc.
+- **Ensure live examples are responsive** - The doc site can be viewed on mobile viewports, so examples should render well at narrow widths (e.g., add `flexWrap="wrap"` to HStacks with multiple items)
 
 ### Documentation Quality
 

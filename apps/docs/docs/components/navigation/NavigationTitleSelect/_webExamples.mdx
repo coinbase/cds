@@ -78,7 +78,7 @@ function ColorExample() {
   const [value, setValue] = useState('assets');
 
   return (
-    <HStack gap={4} alignItems="center">
+    <HStack gap={4} alignItems="center" flexWrap="wrap">
       <NavigationTitleSelect
         options={options}
         value={value}
