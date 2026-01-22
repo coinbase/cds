@@ -1,11 +1,86 @@
 import { useState } from 'react';
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 import { DefaultThemeProvider } from '../../utils/test';
 import { LongModal } from '../__stories__/Modal.stories';
 import { FocusTrap } from '../FocusTrap';
 
 describe('FocusTrap', () => {
+  it('focuses on the first focusable element when the trap is opened', () => {
+    render(
+      <DefaultThemeProvider>
+        <FocusTrap>
+          <div>
+            <button data-testid="focus-element">Focus me</button>
+          </div>
+        </FocusTrap>
+      </DefaultThemeProvider>,
+    );
+    expect(screen.getByTestId('focus-element')).toHaveFocus();
+  });
+
+  it('handles only one focusable child', () => {
+    render(
+      <DefaultThemeProvider>
+        <FocusTrap>
+          <div>
+            <button data-testid="focus-element">Focus me</button>
+          </div>
+        </FocusTrap>
+      </DefaultThemeProvider>,
+    );
+    fireEvent.keyDown(screen.getByTestId('focus-element'), {
+      key: 'Tab',
+      code: 'Tab',
+    });
+    expect(screen.getByTestId('focus-element')).toHaveFocus();
+  });
+
+  it('keeps focus inside the focusable children when the trap is opened', () => {
+    render(
+      <DefaultThemeProvider>
+        <button data-testid="outside-element">Outside</button>
+        <FocusTrap>
+          <div>
+            <button data-testid="focus-element">Focus me</button>
+          </div>
+        </FocusTrap>
+      </DefaultThemeProvider>,
+    );
+    fireEvent.keyDown(screen.getByTestId('outside-element'), {
+      key: 'Tab',
+      code: 'Tab',
+    });
+    expect(screen.getByTestId('focus-element')).toHaveFocus();
+
+    fireEvent.keyDown(screen.getByTestId('focus-element'), {
+      key: 'Tab',
+      code: 'Tab',
+    });
+    expect(screen.getByTestId('focus-element')).toHaveFocus();
+  });
+
+  it('allows focus to escape when the trap is disabled', async () => {
+    render(
+      <DefaultThemeProvider>
+        <button data-testid="outside-element">Outside</button>
+        <FocusTrap disableAutoFocus disableFocusTrap>
+          <div>
+            <button data-testid="focus-element">Focus me</button>
+          </div>
+        </FocusTrap>
+      </DefaultThemeProvider>,
+    );
+
+    screen.getByTestId('outside-element').focus();
+    await userEvent.tab();
+    expect(screen.getByTestId('focus-element')).toHaveFocus();
+
+    await userEvent.tab({ shift: true });
+    expect(screen.getByTestId('outside-element')).toHaveFocus();
+  });
+
   it('focuses on the next interactive element in Modal when Tab is typed', async () => {
     render(
       <DefaultThemeProvider>
