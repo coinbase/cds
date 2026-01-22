@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 8.38.2 (1/22/2026 PST)
+
+#### 🐞 Fixes
+
+- FocusTrap supports single focusable child and updates to its tests. [[#306](https://github.com/coinbase/cds/pull/306)]
+
 ## 8.38.1 (1/15/2026 PST)
 
 #### 🐞 Fixes
