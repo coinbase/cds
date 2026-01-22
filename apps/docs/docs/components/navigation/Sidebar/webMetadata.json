@@ -1,7 +1,7 @@
 {
   "import": "import { Sidebar } from '@coinbase/cds-web/navigation/Sidebar'",
   "source": "https://github.com/coinbase/cds/blob/master/packages/web/src/navigation/Sidebar.tsx",
-  "storybook": "https://cds-storybook.coinbase.com/?path=/story/components-navigation-sidebar--sidebar-default",
+  "storybook": "https://cds-storybook.coinbase.com/?path=/story/components-navigation-sidebar--default",
   "figma": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/%E2%9C%A8-CDS-Components?node-id=155-12187",
   "description": "A composable and customizable vertical navigation component with support for multiple variants, collapsible states, and custom content areas.",
   "relatedComponents": [

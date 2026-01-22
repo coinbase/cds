@@ -3,11 +3,23 @@
   "source": "https://github.com/coinbase/cds/blob/master/packages/web/src/navigation/SidebarMoreMenu.tsx",
   "storybook": "https://cds-storybook.coinbase.com/?path=/story/components-navigation-sidebarmoremenu--sidebar-more-menu-default",
   "figma": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/%E2%9C%A8-CDS-Components?node-id=155-12187",
-  "description": "SidebarMoreMenu provides a dropdown menu for additional navigation options in the Sidebar.",
+  "description": "SidebarMoreMenu provides a dropdown menu for additional navigation options in the Sidebar. Use it when you have more navigation items than can comfortably fit in the visible sidebar area.",
   "relatedComponents": [
     {
       "label": "Sidebar",
       "url": "/components/navigation/Sidebar/"
+    },
+    {
+      "label": "SidebarItem",
+      "url": "/components/navigation/SidebarItem/"
+    },
+    {
+      "label": "Dropdown",
+      "url": "/components/layout/Dropdown/"
+    },
+    {
+      "label": "SelectOption",
+      "url": "/components/inputs/SelectOption/"
     }
   ],
   "dependencies": []

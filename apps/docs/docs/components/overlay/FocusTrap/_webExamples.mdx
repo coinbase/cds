@@ -14,6 +14,8 @@ All the examples have controls to enable / disable the focus trap so that page k
 
 When enabled, only the children of the `<FocusTrap>` will be able to receive focus. Otherwise, standard DOM focus order follows.
 
+Please ensure there is at least one child element that can be focused in the `<FocusTrap>`.
+
 ```jsx live
 function Example() {
   const [focusTrapEnabled, setFocusTrapEnabled] = useState(false);

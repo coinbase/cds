@@ -1,11 +1,124 @@
-Basic example
+## Basics
+
+The `size` prop is required and controls the spinner dimensions. The value is in pixels and determines the font size from which the width (10em), height (10em), and border width (1.1em) are calculated.
 
 ```jsx live
 <Spinner size={2} />
 ```
 
-Change color of spinner
+## Buttons
+
+Use `loading` on [Button](/components/inputs/Button) and [IconButton](/components/inputs/IconButton) to show a spinner during async operations. The button becomes non-interactive while preserving its dimensions.
 
 ```jsx live
-<Spinner size={2} color="bgPrimary" />
+function LoadingButtons() {
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleClick = useCallback(() => {
+    setIsLoading(true);
+    setTimeout(() => setIsLoading(false), 2000);
+  }, []);
+
+  return (
+    <HStack gap={2} alignItems="center">
+      <Button onClick={handleClick} loading={isLoading}>
+        Submit
+      </Button>
+      <Button onClick={handleClick} loading={isLoading} variant="secondary">
+        Save
+      </Button>
+      <IconButton
+        onClick={handleClick}
+        loading={isLoading}
+        name="refresh"
+        accessibilityLabel="Refresh"
+      />
+    </HStack>
+  );
+}
+```
+
+## Styling
+
+### Color
+
+Use the `color` prop to customize the spinner's color. The default is `fgMuted`. Any valid CDS design token color can be used.
+
+```jsx live
+<HStack gap={3} alignItems="center">
+  <Spinner size={3} color="fgMuted" />
+  <Spinner size={3} color="fgPrimary" />
+  <Spinner size={3} color="fgPositive" />
+  <Spinner size={3} color="fgNegative" />
+</HStack>
+```
+
+#### On Colored Backgrounds
+
+When placing a spinner on a colored background, choose a color with sufficient contrast.
+
+```jsx live
+<HStack gap={2}>
+  <Box
+    background="fgMuted"
+    borderRadius={200}
+    padding={2}
+    display="flex"
+    alignItems="center"
+    justifyContent="center"
+  >
+    <Spinner size={3} color="fg" />
+  </Box>
+  <Box
+    background="fgPrimary"
+    borderRadius={200}
+    padding={2}
+    display="flex"
+    alignItems="center"
+    justifyContent="center"
+  >
+    <Spinner size={3} color="fg" />
+  </Box>
+  <Box
+    background="fgPositive"
+    borderRadius={200}
+    padding={2}
+    display="flex"
+    alignItems="center"
+    justifyContent="center"
+  >
+    <Spinner size={3} color="fg" />
+  </Box>
+  <Box
+    background="fgNegative"
+    borderRadius={200}
+    padding={2}
+    display="flex"
+    alignItems="center"
+    justifyContent="center"
+  >
+    <Spinner size={3} color="fg" />
+  </Box>
+</HStack>
+```
+
+### Sizing
+
+Use different sizes to match the context - smaller spinners work well inline or within buttons, while larger spinners are appropriate for page or section loading states.
+
+```jsx live
+<HStack gap={3} alignItems="center">
+  <Spinner size={2} />
+  <Spinner size={3} />
+  <Spinner size={4} />
+  <Spinner size={6} />
+</HStack>
+```
+
+## Accessibility
+
+Use `accessibilityLabel` to provide context for screen readers. The spinner uses `role="status"` and `aria-live="polite"` to announce the loading state.
+
+```jsx live
+<Spinner size={3} accessibilityLabel="Loading your account details" />
 ```

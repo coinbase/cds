@@ -170,7 +170,7 @@ export const FocusTrap = memo(function FocusTrap({
         : undefined;
 
       const secondElementIsMenuItemOrOption =
-        secondElement.role === 'menuitem' || secondElement.role === 'option';
+        secondElement?.role === 'menuitem' || secondElement?.role === 'option';
 
       // bring focus inside modal
       if (
@@ -239,7 +239,7 @@ export const FocusTrap = memo(function FocusTrap({
           (event.key === 'ArrowDown' &&
             (activeElementIsMenuItemOrOption || secondElementIsMenuItemOrOption))
         ) {
-          secondElement.focus();
+          secondElement?.focus();
         }
       };
 

@@ -1516,49 +1516,17 @@ function MonotoneAssetPrice() {
     [scrubberPriceFormatter, prices, formatDate],
   );
 
-  const CustomScrubberBeacon = memo(
-    forwardRef(({ dataX, dataY, seriesId, isIdle }: ScrubberBeaconProps, ref) => {
-      const { getSeries, getXScale, getYScale } = useCartesianChartContext();
-      const targetSeries = getSeries(seriesId);
-      const xScale = getXScale();
-      const yScale = getYScale(targetSeries?.yAxisId);
-
-      const pixelCoordinate = useMemo(() => {
-        if (!xScale || !yScale) return;
-        return projectPoint({ x: dataX, y: dataY, xScale, yScale });
-      }, [dataX, dataY, xScale, yScale]);
-
-      // Provide a no-op pulse implementation for simple beacons
-      useImperativeHandle(ref, () => ({ pulse: () => {} }), []);
-
-      if (!pixelCoordinate) return;
-
-      if (isIdle) {
-        return (
-          <m.circle
-            animate={{ cx: pixelCoordinate.x, cy: pixelCoordinate.y }}
-            cx={pixelCoordinate.x}
-            cy={pixelCoordinate.y}
-            fill="var(--color-bg)"
-            r={5}
-            stroke="var(--color-fg)"
-            strokeWidth={3}
-            transition={defaultTransition}
-          />
-        );
-      }
-
-      return (
-        <circle
-          cx={pixelCoordinate.x}
-          cy={pixelCoordinate.y}
-          fill="var(--color-bg)"
-          r={5}
-          stroke="var(--color-fg)"
-          strokeWidth={3}
-        />
-      );
-    }),
+  const InvertedBeacon = useMemo(
+    () => (props) => (
+      <DefaultScrubberBeacon
+        {...props}
+        stroke="var(--color-fg)"
+        color="var(--color-bg)"
+        radius={5}
+        strokeWidth={3}
+      />
+    ),
+    [],
   );
 
   return (
@@ -1595,7 +1563,7 @@ function MonotoneAssetPrice() {
     >
       <Scrubber
         hideOverlay
-        BeaconComponent={CustomScrubberBeacon}
+        BeaconComponent={InvertedBeacon}
         LineComponent={SolidLine}
         label={scrubberLabel}
         labelElevated
