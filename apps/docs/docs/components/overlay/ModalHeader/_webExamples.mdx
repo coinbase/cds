@@ -1,1 +1,204 @@
-Check [Modal](/components/overlay/Modal) for usage examples
+ModalHeader provides a consistent header section for [Modal](/components/overlay/Modal). It displays a centered title with optional back and close buttons that integrate with Modal's context.
+
+## Basics
+
+Pass a `title` to display centered text. The close button automatically appears and uses Modal's `onRequestClose` handler.
+
+```jsx live
+function BasicExample() {
+  const [visible, setVisible] = useState(false);
+  return (
+    <>
+      <Button onClick={() => setVisible(true)}>Open Modal</Button>
+      <Modal onRequestClose={() => setVisible(false)} visible={visible}>
+        <ModalHeader title="Account Settings" closeAccessibilityLabel="Close" />
+        <ModalBody>
+          <Text>Modal content goes here.</Text>
+        </ModalBody>
+      </Modal>
+    </>
+  );
+}
+```
+
+## Back Button
+
+Use `onBackButtonClick` to show a back arrow for multi-step flows. The back button appears on the left side of the header.
+
+```jsx live
+function BackButtonExample() {
+  const [visible, setVisible] = useState(false);
+  return (
+    <>
+      <Button onClick={() => setVisible(true)}>Open Modal</Button>
+      <Modal onRequestClose={() => setVisible(false)} visible={visible}>
+        <ModalHeader
+          title="Confirm Details"
+          onBackButtonClick={() => setVisible(false)}
+          backAccessibilityLabel="Go back"
+          closeAccessibilityLabel="Close"
+        />
+        <ModalBody>
+          <Text>Step 2 of 3</Text>
+        </ModalBody>
+      </Modal>
+    </>
+  );
+}
+```
+
+## Title Only
+
+Omit buttons by not providing `onBackButtonClick` and setting `hideCloseButton` on the Modal.
+
+```jsx live
+function TitleOnlyExample() {
+  const [visible, setVisible] = useState(false);
+  return (
+    <>
+      <Button onClick={() => setVisible(true)}>Open Modal</Button>
+      <Modal hideCloseButton onRequestClose={() => setVisible(false)} visible={visible}>
+        <ModalHeader title="Processing..." />
+        <ModalBody>
+          <VStack alignItems="center" gap={3} padding={4}>
+            <Spinner />
+            <Text>Please wait while we process your request.</Text>
+          </VStack>
+        </ModalBody>
+      </Modal>
+    </>
+  );
+}
+```
+
+## Styling
+
+### Spacing
+
+ModalHeader extends [Box](/components/layout/Box) and supports style props like `paddingX` and `paddingY` to customize spacing.
+
+```jsx live
+function SpacingExample() {
+  const [visible, setVisible] = useState(false);
+  return (
+    <>
+      <Button onClick={() => setVisible(true)}>Open Modal</Button>
+      <Modal onRequestClose={() => setVisible(false)} visible={visible}>
+        <ModalHeader
+          title="Custom Spacing"
+          closeAccessibilityLabel="Close"
+          paddingX={5}
+          paddingY={4}
+        />
+        <ModalBody>
+          <Text>The header has increased padding.</Text>
+        </ModalBody>
+      </Modal>
+    </>
+  );
+}
+```
+
+### Without Divider
+
+Set `hideDividers` on Modal to remove the bottom border from the header.
+
+```jsx live
+function NoDividerExample() {
+  const [visible, setVisible] = useState(false);
+  return (
+    <>
+      <Button onClick={() => setVisible(true)}>Open Modal</Button>
+      <Modal hideDividers onRequestClose={() => setVisible(false)} visible={visible}>
+        <ModalHeader title="No Divider" closeAccessibilityLabel="Close" />
+        <ModalBody>
+          <Text>The header has no bottom border.</Text>
+        </ModalBody>
+      </Modal>
+    </>
+  );
+}
+```
+
+## Accessibility
+
+Always provide `closeAccessibilityLabel` for the close button and `backAccessibilityLabel` when using the back button. These labels are announced by screen readers.
+
+```jsx live
+function AccessibilityExample() {
+  const [visible, setVisible] = useState(false);
+  return (
+    <>
+      <Button onClick={() => setVisible(true)}>Open Modal</Button>
+      <Modal onRequestClose={() => setVisible(false)} visible={visible}>
+        <ModalHeader
+          title="Transfer Funds"
+          onBackButtonClick={() => setVisible(false)}
+          backAccessibilityLabel="Go back to account selection"
+          backAccessibilityHint="Returns to the previous step"
+          closeAccessibilityLabel="Close transfer modal"
+          closeAccessibilityHint="Cancels the transfer and returns to the main screen"
+        />
+        <ModalBody>
+          <Text>Enter transfer details.</Text>
+        </ModalBody>
+      </Modal>
+    </>
+  );
+}
+```
+
+## Composed Examples
+
+### Multi-Step Wizard
+
+Use `onBackButtonClick` to navigate between steps in a wizard flow.
+
+```jsx live
+function WizardExample() {
+  const [visible, setVisible] = useState(false);
+  const [step, setStep] = useState(1);
+  const titles = ['Select Asset', 'Enter Amount', 'Confirm Transfer'];
+
+  const handleClose = () => {
+    setVisible(false);
+    setStep(1);
+  };
+
+  return (
+    <>
+      <Button onClick={() => setVisible(true)}>Start Transfer</Button>
+      <Modal onRequestClose={handleClose} visible={visible}>
+        <ModalHeader
+          title={titles[step - 1]}
+          onBackButtonClick={step > 1 ? () => setStep((s) => s - 1) : undefined}
+          backAccessibilityLabel="Go back"
+          closeAccessibilityLabel="Close"
+        />
+        <ModalBody>
+          <VStack gap={3}>
+            <Text color="fgMuted">Step {step} of 3</Text>
+            <Text>
+              {step === 1 && 'Choose which asset to transfer.'}
+              {step === 2 && 'Enter the amount you want to send.'}
+              {step === 3 && 'Review and confirm your transfer.'}
+            </Text>
+          </VStack>
+        </ModalBody>
+        <ModalFooter
+          primaryAction={
+            <Button onClick={step < 3 ? () => setStep((s) => s + 1) : handleClose}>
+              {step < 3 ? 'Continue' : 'Confirm'}
+            </Button>
+          }
+          secondaryAction={
+            <Button onClick={handleClose} variant="secondary">
+              Cancel
+            </Button>
+          }
+        />
+      </Modal>
+    </>
+  );
+}
+```
