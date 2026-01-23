@@ -233,6 +233,7 @@ export type CarouselBaseProps = SharedProps &
     /**
      * Enables infinite looping. When true, the carousel will seamlessly
      * loop from the last item back to the first.
+     * @note Requires at least 2 pages worth of content to function.
      */
     loop?: boolean;
   };
@@ -420,6 +421,26 @@ const clampWithElasticResistance = (
 };
 
 /**
+ * Calculates how many items need to be cloned for looping to fill the viewport.
+ * @param items - The item rects sorted by position.
+ * @param containerWidth - The width of the container viewport.
+ * @param gap - The gap between items.
+ * @returns The number of items to clone for each direction.
+ */
+const getCloneCount = (items: Rect[], containerWidth: number, gap: number): number => {
+  let widthSum = 0;
+  let count = 0;
+
+  for (const item of items) {
+    widthSum += item.width + gap;
+    count++;
+    if (widthSum >= containerWidth) break;
+  }
+
+  return Math.max(1, count);
+};
+
+/**
  * Calculates which items are visible in the carousel based on scroll offset and viewport.
  * @param itemRects - The items to get the visibility for.
  * @param containerWidth - The width of the container viewport.
@@ -570,18 +591,7 @@ export const Carousel = memo(
         ) {
           return 0;
         }
-
-        const items = getItemOffsets(carouselItemRects);
-        let widthSum = 0;
-        let count = 0;
-
-        for (const item of items) {
-          widthSum += item.width + gap;
-          count++;
-          if (widthSum >= containerSize.width) break;
-        }
-
-        return Math.max(1, count);
+        return getCloneCount(getItemOffsets(carouselItemRects), containerSize.width, gap);
       }, [shouldLoop, carouselItemRects, containerSize.width, gap]);
 
       // Calculate pages and their offsets based on snapMode
@@ -823,7 +833,7 @@ export const Carousel = memo(
       // Key insight: we always return a consistent structure when loop=true
       // to prevent children from remounting when shouldLoop changes
       // Clones are rendered as plain Views (not CarouselItem) to avoid registering
-      const clonedChildren = useMemo(() => {
+      const childrenWithClones = useMemo(() => {
         // When loop prop is false, just return children as-is
         if (!loop) return children;
 
@@ -1011,7 +1021,7 @@ export const Carousel = memo(
             <GestureDetector gesture={panGesture}>
               <View onLayout={onLayout} style={scrollViewStyle}>
                 <animated.View style={[animatedStyle, animatedTransform]}>
-                  {clonedChildren}
+                  {childrenWithClones}
                 </animated.View>
               </View>
             </GestureDetector>
