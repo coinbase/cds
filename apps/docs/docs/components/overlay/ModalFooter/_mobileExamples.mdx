@@ -1,1 +1,158 @@
-Check [Modal](/components/overlay/Modal) for usage examples
+ModalFooter provides a consistent action area for [Modal](/components/overlay/Modal). It accepts `primaryAction` and optional `secondaryAction` buttons using [ButtonGroup](/components/inputs/ButtonGroup) for layout.
+
+## Basics
+
+Pass a `primaryAction` button to create a simple footer. The footer automatically displays a top border.
+
+```jsx
+function BasicExample() {
+  const [visible, setVisible] = useState(false);
+  return (
+    <>
+      <Button onPress={() => setVisible(true)}>Open Modal</Button>
+      <Modal onRequestClose={() => setVisible(false)} visible={visible}>
+        <ModalHeader title="Success" closeAccessibilityLabel="Close" />
+        <ModalBody>
+          <Text>Your changes have been saved.</Text>
+        </ModalBody>
+        <ModalFooter primaryAction={<Button onPress={() => setVisible(false)}>Done</Button>} />
+      </Modal>
+    </>
+  );
+}
+```
+
+## Two Actions
+
+Add a `secondaryAction` for cancel/dismiss patterns. By default, buttons display side-by-side horizontally.
+
+```jsx
+function TwoActionsExample() {
+  const [visible, setVisible] = useState(false);
+  return (
+    <>
+      <Button onPress={() => setVisible(true)}>Open Modal</Button>
+      <Modal onRequestClose={() => setVisible(false)} visible={visible}>
+        <ModalHeader title="Confirm Action" closeAccessibilityLabel="Close" />
+        <ModalBody>
+          <Text>Are you sure you want to proceed with this action?</Text>
+        </ModalBody>
+        <ModalFooter
+          primaryAction={<Button onPress={() => setVisible(false)}>Confirm</Button>}
+          secondaryAction={
+            <Button onPress={() => setVisible(false)} variant="secondary">
+              Cancel
+            </Button>
+          }
+        />
+      </Modal>
+    </>
+  );
+}
+```
+
+## Vertical Layout
+
+Use `direction="vertical"` to stack buttons. The primary action appears on top when stacked.
+
+```jsx
+function VerticalExample() {
+  const [visible, setVisible] = useState(false);
+  return (
+    <>
+      <Button onPress={() => setVisible(true)}>Open Modal</Button>
+      <Modal onRequestClose={() => setVisible(false)} visible={visible}>
+        <ModalHeader title="Subscribe" closeAccessibilityLabel="Close" />
+        <ModalBody>
+          <Text>Get premium features for $9.99/month.</Text>
+        </ModalBody>
+        <ModalFooter
+          direction="vertical"
+          primaryAction={<Button onPress={() => setVisible(false)}>Subscribe Now</Button>}
+          secondaryAction={
+            <Button onPress={() => setVisible(false)} variant="secondary">
+              Maybe Later
+            </Button>
+          }
+        />
+      </Modal>
+    </>
+  );
+}
+```
+
+## Destructive Actions
+
+Use `variant="negative"` on the primary button for destructive actions.
+
+```jsx
+function DestructiveExample() {
+  const [visible, setVisible] = useState(false);
+  return (
+    <>
+      <Button onPress={() => setVisible(true)}>Delete Account</Button>
+      <Modal onRequestClose={() => setVisible(false)} visible={visible}>
+        <ModalHeader title="Delete Account" closeAccessibilityLabel="Close" />
+        <ModalBody>
+          <Text>This action cannot be undone. All your data will be permanently deleted.</Text>
+        </ModalBody>
+        <ModalFooter
+          primaryAction={
+            <Button onPress={() => setVisible(false)} variant="negative">
+              Delete
+            </Button>
+          }
+          secondaryAction={
+            <Button onPress={() => setVisible(false)} variant="secondary">
+              Cancel
+            </Button>
+          }
+        />
+      </Modal>
+    </>
+  );
+}
+```
+
+## Loading State
+
+Show a loading state on the primary button while an action is processing.
+
+```jsx
+function LoadingExample() {
+  const [visible, setVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const handleSave = () => {
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+      setVisible(false);
+    }, 2000);
+  };
+
+  return (
+    <>
+      <Button onPress={() => setVisible(true)}>Open Modal</Button>
+      <Modal onRequestClose={() => setVisible(false)} visible={visible}>
+        <ModalHeader title="Save Changes" closeAccessibilityLabel="Close" />
+        <ModalBody>
+          <Text>Your changes will be saved to the server.</Text>
+        </ModalBody>
+        <ModalFooter
+          primaryAction={
+            <Button onPress={handleSave} loading={loading}>
+              Save
+            </Button>
+          }
+          secondaryAction={
+            <Button onPress={() => setVisible(false)} variant="secondary" disabled={loading}>
+              Cancel
+            </Button>
+          }
+        />
+      </Modal>
+    </>
+  );
+}
+```

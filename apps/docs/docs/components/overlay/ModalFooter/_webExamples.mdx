@@ -1,1 +1,128 @@
-Check [Modal](/components/overlay/Modal) for usage examples
+ModalFooter provides a consistent action area for [Modal](/components/overlay/Modal). It accepts `primaryAction` and optional `secondaryAction` buttons with responsive layout behavior.
+
+## Basics
+
+Pass a `primaryAction` button to create a simple footer. The footer automatically displays a top border.
+
+```jsx live
+function BasicExample() {
+  const [visible, setVisible] = useState(false);
+  return (
+    <>
+      <Button onClick={() => setVisible(true)}>Open Modal</Button>
+      <Modal onRequestClose={() => setVisible(false)} visible={visible}>
+        <ModalHeader title="Success" closeAccessibilityLabel="Close" />
+        <ModalBody>
+          <Text>Your changes have been saved.</Text>
+        </ModalBody>
+        <ModalFooter primaryAction={<Button onClick={() => setVisible(false)}>Done</Button>} />
+      </Modal>
+    </>
+  );
+}
+```
+
+## Two Actions
+
+Add a `secondaryAction` for cancel/dismiss patterns. On larger screens, buttons display side-by-side. On smaller screens, they stack vertically with the primary action on top.
+
+```jsx live
+function TwoActionsExample() {
+  const [visible, setVisible] = useState(false);
+  return (
+    <>
+      <Button onClick={() => setVisible(true)}>Open Modal</Button>
+      <Modal onRequestClose={() => setVisible(false)} visible={visible}>
+        <ModalHeader title="Confirm Action" closeAccessibilityLabel="Close" />
+        <ModalBody>
+          <Text>Are you sure you want to proceed with this action?</Text>
+        </ModalBody>
+        <ModalFooter
+          primaryAction={<Button onClick={() => setVisible(false)}>Confirm</Button>}
+          secondaryAction={
+            <Button onClick={() => setVisible(false)} variant="secondary">
+              Cancel
+            </Button>
+          }
+        />
+      </Modal>
+    </>
+  );
+}
+```
+
+## Destructive Actions
+
+Use `variant="negative"` on the primary button for destructive actions.
+
+```jsx live
+function DestructiveExample() {
+  const [visible, setVisible] = useState(false);
+  return (
+    <>
+      <Button onClick={() => setVisible(true)}>Delete Account</Button>
+      <Modal onRequestClose={() => setVisible(false)} visible={visible}>
+        <ModalHeader title="Delete Account" closeAccessibilityLabel="Close" />
+        <ModalBody>
+          <Text>This action cannot be undone. All your data will be permanently deleted.</Text>
+        </ModalBody>
+        <ModalFooter
+          primaryAction={
+            <Button onClick={() => setVisible(false)} variant="negative">
+              Delete
+            </Button>
+          }
+          secondaryAction={
+            <Button onClick={() => setVisible(false)} variant="secondary">
+              Cancel
+            </Button>
+          }
+        />
+      </Modal>
+    </>
+  );
+}
+```
+
+## Loading State
+
+Show a loading state on the primary button while an action is processing.
+
+```jsx live
+function LoadingExample() {
+  const [visible, setVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const handleSave = () => {
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+      setVisible(false);
+    }, 2000);
+  };
+
+  return (
+    <>
+      <Button onClick={() => setVisible(true)}>Open Modal</Button>
+      <Modal onRequestClose={() => setVisible(false)} visible={visible}>
+        <ModalHeader title="Save Changes" closeAccessibilityLabel="Close" />
+        <ModalBody>
+          <Text>Your changes will be saved to the server.</Text>
+        </ModalBody>
+        <ModalFooter
+          primaryAction={
+            <Button onClick={handleSave} loading={loading}>
+              Save
+            </Button>
+          }
+          secondaryAction={
+            <Button onClick={() => setVisible(false)} variant="secondary" disabled={loading}>
+              Cancel
+            </Button>
+          }
+        />
+      </Modal>
+    </>
+  );
+}
+```
